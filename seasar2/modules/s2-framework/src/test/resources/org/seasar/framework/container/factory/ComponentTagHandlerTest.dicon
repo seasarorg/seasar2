@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<!DOCTYPE components PUBLIC "-//SEASAR2.1//DTD S2Container//EN"
+"http://www.seasar.org/dtd/components21.dtd">
+<components>
+	<component class="java.util.ArrayList"/>
+	<component class="java.util.HashMap" name="aaa"/>
+	<component class="java.lang.Integer" name="bbb">
+		<arg>
+			<component class="java.lang.String">
+				<arg>"1"</arg>
+			</component>
+		</arg>
+	</component>
+	<component class="java.lang.Integer" name="ccc" instance="prototype">
+		<arg>1</arg>
+	</component>
+	<component class="java.lang.String" name="ddd" autoBinding="none"/>
+	<component name="eee" instance="outer">
+		<initMethod name="put">
+			<arg>'aaa'</arg>
+			<arg>'111'</arg>
+		</initMethod>
+	</component>
+	<component name="fff">
+		<!-- hoge -->
+		new java.lang.Object()
+	</component>
+	<component name="ggg">
+		<!-- hoge -->
+		fff.hashCode()
+	</component>
+	<component class="java.lang.String" name="hhh" instance="request">
+		<arg>"hhh"</arg>
+	</component>
+	<component class="java.lang.String" name="iii" instance="session">
+		<arg>"iii"</arg>
+	</component>
+</components>

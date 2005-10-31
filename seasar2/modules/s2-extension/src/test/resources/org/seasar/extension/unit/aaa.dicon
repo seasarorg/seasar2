@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container//EN"
+"http://www.seasar.org/dtd/components.dtd">
+<components>
+	<component name="date" class="java.util.Date">
+		<property name="time">0</property>
+	</component>
+	<component name="date2" class="java.util.Date"/>
+</components>

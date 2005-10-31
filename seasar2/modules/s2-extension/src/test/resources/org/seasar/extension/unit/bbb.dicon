@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container//EN"
+"http://www.seasar.org/dtd/components.dtd">
+<components namespace="bbb">
+	<component name="date" class="java.util.Date">
+		<property name="time">0</property>
+	</component>
+	<component name="ccc">"hoge"</component>
+	<component class="org.seasar.extension.unit.Employee"/>
+</components>

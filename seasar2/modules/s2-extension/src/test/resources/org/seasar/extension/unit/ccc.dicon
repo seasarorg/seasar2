@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container//EN"
+"http://www.seasar.org/dtd/components.dtd">
+<components>
+	<component name="list1" class="java.util.ArrayList"/>
+	<component name="list2" class="java.util.ArrayList"/>
+</components>

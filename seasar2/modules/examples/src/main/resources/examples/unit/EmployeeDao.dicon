@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container//EN"
+"http://www.seasar.org/dtd/components.dtd">
+<components>
+	<include path="j2ee.dicon"/>
+	<component class="examples.unit.EmployeeDaoImpl">
+		<property name="getEmployeeHandler">
+			<component class="org.seasar.extension.jdbc.impl.BasicSelectHandler">
+				<property name="sql">
+"SELECT e.empno, e.ename, e.deptno, d.dname FROM emp e, dept d
+WHERE e.empno = ? AND e.deptno = d.deptno"
+				</property>
+				<property name="resultSetHandler">
+					<component class="org.seasar.extension.jdbc.impl.BeanResultSetHandler">
+						<arg>@examples.unit.Employee@class</arg>
+					</component>
+				</property>
+			</component>
+		</property>
+	</component>
+</components>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE components PUBLIC
+    "-//SEASAR//DTD S2Container 2.3//EN"
+    "http://www.seasar.org/dtd/components23.dtd">
+<components>
+	<component name="greeting"
+		class="examples.di.impl.GreetingImpl"/>
+	<component name="greetingClient"
+		class="examples.di.impl.GreetingClientImpl">
+		<property name="greeting">greeting</property>
+	</component>
+</components>

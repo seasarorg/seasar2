@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container//EN"
+"http://www.seasar.org/dtd/components.dtd">
+<components>
+	<component class="org.seasar.extension.jta.TransactionManagerImpl"/>
+	<component name="requiredTx"
+		class="org.seasar.extension.tx.RequiredInterceptor"/>
+	<component class="org.seasar.extension.tx.TxBeanImpl">
+		<aspect>requiredTx</aspect>
+	</component>
+	<component class="org.seasar.extension.tx.ExceptionBeanImpl">
+		<aspect>requiredTx</aspect>
+	</component>
+</components>

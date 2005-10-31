@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container//EN"
+"http://www.seasar.org/dtd/components.dtd">
+<components>
+	<component class="org.seasar.framework.aop.interceptors.TraceInterceptor"
+		name="traceInterceptor"/>
+	<component class="java.util.Date">
+		<arg>0</arg>
+		<aspect pointcut="getTime, hashCode">traceInterceptor</aspect>
+	</component>
+	<component class="java.util.ArrayList">
+		<aspect>traceInterceptor</aspect>
+	</component>
+</components>

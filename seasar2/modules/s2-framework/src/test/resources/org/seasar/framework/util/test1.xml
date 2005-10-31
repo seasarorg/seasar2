@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+
+<tag1 attr1="aaa" attr2="bbb">
+  111
+  222
+  <tag2>c c </tag2>
+  <tag2>ddd</tag2>
+  <tag3>
+    <tag4>eee</tag4>
+    <tag5>ddd</tag5>
+  </tag3>
+  333
+</tag1>

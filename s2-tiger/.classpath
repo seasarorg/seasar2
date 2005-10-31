@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry output="target/classes" kind="src" path="src/main/java"/>
+	<classpathentry output="target/classes" kind="src" path="src/main/resources"/>
+	<classpathentry output="target/test-classes" kind="src" path="src/test/java"/>
+	<classpathentry output="target/test-classes" kind="src" path="src/test/resources"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/seasar2"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="output" path="target/classes"/>
+</classpath>
