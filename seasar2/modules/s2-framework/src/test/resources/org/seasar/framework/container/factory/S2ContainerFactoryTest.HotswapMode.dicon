@@ -4,5 +4,5 @@
 <components>
 	<component class="org.seasar.framework.container.factory.S2ContainerFactory$DefaultProvider">
 		<property name="hotswapMode">true</property>
-	</component>	
+	</component>
 </components>
