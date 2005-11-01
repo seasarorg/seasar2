@@ -130,6 +130,13 @@ public class S2ContainerFactoryTest extends TestCase {
         assertNull("1", baz.getFoo());
     }
 
+    public void testHotswapMode() throws Exception {
+        configure("HotswapMode.dicon");
+        S2Container container = S2ContainerFactory.create(getClass().getName().replace('.', '/')
+                + ".foo.dicon");
+        assertTrue("1", container.isHotswapMode());
+    }
+
     public void configure(String name) throws Exception {
         String path = getClass().getName().replace('.', '/') + "." + name;
         System.setProperty(S2ContainerFactory.FACTORY_CONFIG_KEY, path);
