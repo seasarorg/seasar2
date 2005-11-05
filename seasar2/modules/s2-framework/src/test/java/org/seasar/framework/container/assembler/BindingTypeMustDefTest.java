@@ -48,6 +48,23 @@ public class BindingTypeMustDefTest extends TestCase {
         assertEquals("1", "aaa", a.getMessage());
     }
     
+    public void testBindByNameForDefferentType() throws Exception {
+        BeanDesc beanDesc = BeanDescFactory.getBeanDesc(A.class);
+        PropertyDesc propDesc = beanDesc.getPropertyDesc("message");
+        S2Container container = new S2ContainerImpl();
+        ComponentDefImpl cd = new ComponentDefImpl(A.class);
+        PropertyDef propDef = new PropertyDefImpl("message");
+        cd.addPropertyDef(propDef);
+        container.register(cd);
+        container.register(new Integer(1), "message");
+        A a = new A();
+        try {
+            BindingTypeDefFactory.MUST.bind(cd, propDef, propDesc, a);
+        } catch (IllegalAutoBindingPropertyRuntimeException ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+    
     public void testBindByType() throws Exception {
         BeanDesc beanDesc = BeanDescFactory.getBeanDesc(A.class);
         PropertyDesc propDesc = beanDesc.getPropertyDesc("hoge");

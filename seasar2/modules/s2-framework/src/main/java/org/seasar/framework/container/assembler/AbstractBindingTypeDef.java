@@ -64,19 +64,22 @@ public abstract class AbstractBindingTypeDef implements BindingTypeDef {
             doBind(componentDef, propertyDesc, component);
         }
     }
-    
-    protected boolean bindAuto(ComponentDef componentDef, PropertyDesc propertyDesc,
-            Object component) {
-        
+
+    protected boolean bindAuto(ComponentDef componentDef,
+            PropertyDesc propertyDesc, Object component) {
+
         S2Container container = componentDef.getContainer();
-        String propName = propertyDesc.getPropertyName(); 
+        String propName = propertyDesc.getPropertyName();
+        Class propType = propertyDesc.getPropertyType();
         if (container.hasComponentDef(propName)) {
             Object value = container.getComponent(propName);
-            setValue(componentDef, propertyDesc, component, value);
-            return true;
+            if (propType.isInstance(value)) {
+                setValue(componentDef, propertyDesc, component, value);
+                return true;
+            }
         }
-        Class propType = propertyDesc.getPropertyType();
-        if (BindingUtil.isAutoBindable(propType) && container.hasComponentDef(propType)) {
+        if (BindingUtil.isAutoBindable(propType)
+                && container.hasComponentDef(propType)) {
             Object value = container.getComponent(propType);
             setValue(componentDef, propertyDesc, component, value);
             return true;
@@ -110,9 +113,9 @@ public abstract class AbstractBindingTypeDef implements BindingTypeDef {
                     .getComponentClass(), propertyDesc.getPropertyName(), ex);
         }
     }
-    
-    protected void bindManual(ComponentDef componentDef, PropertyDef propertyDef,
-            PropertyDesc propertyDesc, Object component) {
+
+    protected void bindManual(ComponentDef componentDef,
+            PropertyDef propertyDef, PropertyDesc propertyDesc, Object component) {
 
         Object value = getValue(componentDef, propertyDef, component);
         setValue(componentDef, propertyDesc, component, value);
