@@ -13,16 +13,32 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.mock.servlet;
+package org.seasar.framework.mock.servlet;
 
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletContext;
+import java.io.IOException;
+
+import javax.servlet.GenericServlet;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 
 /**
- * @author Satoshi Kimura
+ * @author higa
+ *
  */
-public interface MockServletConfig extends ServletConfig {
-    void setServletName(String servletName);
-    void setServletContext(ServletContext servletContext);
-    void setInitParameter(String name, final String value);
+public class MockServlet extends GenericServlet {
+
+    private static final long serialVersionUID = -2690818043808621124L;
+
+	/**
+	 * @see javax.servlet.Servlet#service(javax.servlet.ServletRequest, javax.servlet.ServletResponse)
+	 */
+	public void service(ServletRequest request, ServletResponse response)
+			throws ServletException, IOException {
+	}
+	
+	public void log(String msg) {
+	}
+
+
 }

@@ -239,20 +239,6 @@ public class SingletonComponentDeployerTest extends TestCase {
         assertSame("2", foo, foo2);
     }
 
-	/*
-	 * @see TestCase#setUp()
-	 */
-	protected void setUp() throws Exception {
-		super.setUp();
-	}
-
-	/*
-	 * @see TestCase#tearDown()
-	 */
-	protected void tearDown() throws Exception {
-		super.tearDown();
-	}
-
 	public interface Foo {
 		public String getHogeName();
 	}

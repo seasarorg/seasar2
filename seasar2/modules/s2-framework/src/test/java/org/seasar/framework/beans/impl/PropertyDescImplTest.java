@@ -17,18 +17,6 @@ import junit.framework.TestCase;
  *
  */
 public class PropertyDescImplTest extends TestCase {
-
-	/**
-	 * Constructor for BeanDescFactory.
-	 * @param arg0
-	 */
-	public PropertyDescImplTest(String arg0) {
-		super(arg0);
-	}
-
-	public static void main(String[] args) {
-		junit.textui.TestRunner.run(PropertyDescImplTest.class);
-	}
 	
 	public void testSetValue() throws Exception {
 		MyBean myBean = new MyBean();
@@ -72,20 +60,6 @@ public class PropertyDescImplTest extends TestCase {
 		PropertyDesc propDesc = beanDesc.getPropertyDesc("URL");
 		propDesc.setValue(myBean, "http://www.seasar.org");
 		assertNotNull("1", myBean.getURL());
-	}
-
-	/*
-	 * @see TestCase#setUp()
-	 */
-	protected void setUp() throws Exception {
-		super.setUp();
-	}
-
-	/*
-	 * @see TestCase#tearDown()
-	 */
-	protected void tearDown() throws Exception {
-		super.tearDown();
 	}
 	
 	public static class MyBean {

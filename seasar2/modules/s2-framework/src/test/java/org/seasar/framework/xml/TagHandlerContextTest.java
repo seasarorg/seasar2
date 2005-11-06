@@ -13,14 +13,6 @@ import junit.framework.TestCase;
  */
 public class TagHandlerContextTest extends TestCase {
 
-	public TagHandlerContextTest(String arg0) {
-		super(arg0);
-	}
-
-	public static void main(String[] args) {
-		junit.textui.TestRunner.run(TagHandlerContextTest.class);
-	}
-
 	public void testStartElementAndEndElement() throws Exception {
 		TagHandlerContext ctx = new TagHandlerContext();
 		ctx.startElement("aaa");

@@ -16,13 +16,6 @@ import org.seasar.framework.container.util.Traversal;
 public class TraversalTest extends TestCase {
     private S2Container container;
 
-    public TraversalTest() {
-    }
-
-    public TraversalTest(String name) {
-        super(name);
-    }
-
     protected void setUp() throws Exception {
         container = S2ContainerFactory
                 .create("org/seasar/framework/container/util/TraversalTest.dicon");

@@ -14,18 +14,6 @@ import org.seasar.framework.aop.proxy.AopProxy;
  */
 public class TraceThrowsInterceptorTest extends TestCase {
 
-	/**
-	 * Constructor for InvocationImplTest.
-	 * @param arg0
-	 */
-	public TraceThrowsInterceptorTest(String arg0) {
-		super(arg0);
-	}
-
-	public static void main(String[] args) {
-		junit.textui.TestRunner.run(TraceThrowsInterceptorTest.class);
-	}
-
 	public void testHandleThrowable() throws Throwable {
 		MethodInterceptor interceptor = new TraceThrowsInterceptor();
 		Aspect aspect = new AspectImpl(interceptor);
@@ -38,21 +26,6 @@ public class TraceThrowsInterceptorTest extends TestCase {
 		} catch (Throwable t) {
 			assertEquals("1", "hoge", t.getMessage());
 		}
-	}
-	
-
-	/*
-	 * @see TestCase#setUp()
-	 */
-	protected void setUp() throws Exception {
-		super.setUp();
-	}
-
-	/*
-	 * @see TestCase#tearDown()
-	 */
-	protected void tearDown() throws Exception {
-		super.tearDown();
 	}
 	
 	public interface Thrower {

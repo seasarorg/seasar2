@@ -17,14 +17,6 @@ public class IncludeTagHandlerTest extends TestCase {
 
 	private static final String PATH2 = "org/seasar/framework/container/factory/aaa.dicon";
 
-	public IncludeTagHandlerTest(String arg0) {
-		super(arg0);
-	}
-
-	public static void main(String[] args) {
-		junit.textui.TestRunner.run(IncludeTagHandlerTest.class);
-	}
-
 	public void testInclude() throws Exception {
 		S2Container container = S2ContainerFactory.create(PATH);
 		assertEquals("1", new Date(0), container.getComponent(Date.class));

@@ -16,18 +16,6 @@ import org.seasar.framework.container.impl.S2ContainerImpl;
  */
 public class PrototypeComponentDeployerTest extends TestCase {
 
-	/**
-	 * Constructor for InvocationImplTest.
-	 * @param arg0
-	 */
-	public PrototypeComponentDeployerTest(String arg0) {
-		super(arg0);
-	}
-
-	public static void main(String[] args) {
-		junit.textui.TestRunner.run(PrototypeComponentDeployerTest.class);
-	}
-
 	public void testDeployAutoAutoConstructor() throws Exception {
 		S2Container container = new S2ContainerImpl();
 		ComponentDefImpl cd = new ComponentDefImpl(A.class);
@@ -64,20 +52,6 @@ public class PrototypeComponentDeployerTest extends TestCase {
 		} catch (UnsupportedOperationException ex) {
 			System.out.println(ex);
 		}
-	}
-
-	/*
-	 * @see TestCase#setUp()
-	 */
-	protected void setUp() throws Exception {
-		super.setUp();
-	}
-
-	/*
-	 * @see TestCase#tearDown()
-	 */
-	protected void tearDown() throws Exception {
-		super.tearDown();
 	}
 
 	public interface Foo {

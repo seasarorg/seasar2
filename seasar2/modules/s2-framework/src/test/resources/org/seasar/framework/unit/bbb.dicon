@@ -6,5 +6,5 @@
 		<property name="time">0</property>
 	</component>
 	<component name="ccc">"hoge"</component>
-	<component class="org.seasar.extension.unit.Employee"/>
+	<component class="java.util.HashMap"/>
 </components>

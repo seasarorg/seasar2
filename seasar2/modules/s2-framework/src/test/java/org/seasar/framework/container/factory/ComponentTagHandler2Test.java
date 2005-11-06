@@ -1,12 +1,12 @@
 package org.seasar.framework.container.factory;
 
-import org.seasar.extension.unit.S2TestCase;
 import org.seasar.framework.container.S2Container;
+import org.seasar.framework.unit.S2FrameworkTestCase;
 
 /**
  * @author higa
  */
-public class ComponentTagHandler2Test extends S2TestCase {
+public class ComponentTagHandler2Test extends S2FrameworkTestCase {
 
     private S2Container child;
     

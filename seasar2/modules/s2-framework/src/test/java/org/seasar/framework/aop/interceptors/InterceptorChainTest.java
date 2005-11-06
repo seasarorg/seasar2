@@ -1,14 +1,9 @@
 package org.seasar.framework.aop.interceptors;
 
 import org.aopalliance.intercept.MethodInvocation;
-import org.seasar.extension.unit.S2TestCase;
-import org.seasar.framework.aop.interceptors.AbstractInterceptor;
+import org.seasar.framework.unit.S2FrameworkTestCase;
 
-public class InterceptorChainTest extends S2TestCase {
-	
-	public InterceptorChainTest(String name) {
-		super(name);
-	}
+public class InterceptorChainTest extends S2FrameworkTestCase {
 
 	public void setUp() {
 		include("InterceptorChainTest.dicon");

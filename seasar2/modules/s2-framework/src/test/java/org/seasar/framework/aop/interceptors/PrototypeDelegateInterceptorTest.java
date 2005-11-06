@@ -18,17 +18,6 @@ public class PrototypeDelegateInterceptorTest extends TestCase {
     private static List list = new ArrayList();
     private S2Container container;
 
-    public PrototypeDelegateInterceptorTest() {
-    }
-
-    public PrototypeDelegateInterceptorTest(String name) {
-        super(name);
-    }
-
-    public static void main(String[] args) {
-        junit.textui.TestRunner.run(PrototypeDelegateInterceptorTest.class);
-    }
-
     public void setUp() {
         list.clear();
         S2ContainerImpl containerImpl = new S2ContainerImpl();

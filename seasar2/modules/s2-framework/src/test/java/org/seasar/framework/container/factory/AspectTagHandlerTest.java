@@ -17,14 +17,6 @@ public class AspectTagHandlerTest extends TestCase {
 	private static final String PATH =
 		"org/seasar/framework/container/factory/AspectTagHandlerTest.dicon";
 
-	public AspectTagHandlerTest(String arg0) {
-		super(arg0);
-	}
-
-	public static void main(String[] args) {
-		junit.textui.TestRunner.run(AspectTagHandlerTest.class);
-	}
-
 	public void testAspect() throws Exception {
 		S2Container container = S2ContainerFactory.create(PATH);
 		Date date = (Date) container.getComponent(Date.class);

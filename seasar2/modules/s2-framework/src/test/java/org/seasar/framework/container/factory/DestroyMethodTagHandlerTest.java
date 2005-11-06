@@ -17,14 +17,6 @@ public class DestroyMethodTagHandlerTest extends TestCase {
 	private static final String PATH =
 		"org/seasar/framework/container/factory/DestroyMethodTagHandlerTest.dicon";
 
-	public DestroyMethodTagHandlerTest(String arg0) {
-		super(arg0);
-	}
-
-	public static void main(String[] args) {
-		junit.textui.TestRunner.run(DestroyMethodTagHandlerTest.class);
-	}
-
 	public void testArg() throws Exception {
 		S2Container container = S2ContainerFactory.create(PATH);
 		container.init();

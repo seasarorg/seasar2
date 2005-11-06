@@ -1,13 +1,13 @@
 package org.seasar.framework.container.deployer;
 
-import org.seasar.extension.unit.S2TestCase;
+import junit.framework.TestCase;
+
 import org.seasar.framework.container.IllegalInstanceDefRuntimeException;
-import org.seasar.framework.container.deployer.InstanceDefFactory;
 
 /**
  * @author higa
  */
-public class InstanceDefFactoryTest extends S2TestCase {
+public class InstanceDefFactoryTest extends TestCase {
     
     public void testGetInstanceDef() throws Exception {
         assertEquals("1", InstanceDefFactory.SESSION,

@@ -18,14 +18,6 @@ public class InitMethodTagHandlerTest extends TestCase {
 	private static final String PATH =
 		"org/seasar/framework/container/factory/InitMethodTagHandlerTest.dicon";
 
-	public InitMethodTagHandlerTest(String arg0) {
-		super(arg0);
-	}
-
-	public static void main(String[] args) {
-		junit.textui.TestRunner.run(InitMethodTagHandlerTest.class);
-	}
-
 	public void testArg() throws Exception {
 		S2Container container = S2ContainerFactory.create(PATH);
 		Map aaa = (HashMap) container.getComponent("aaa");

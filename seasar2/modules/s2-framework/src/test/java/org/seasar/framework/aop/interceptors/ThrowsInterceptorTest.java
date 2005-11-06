@@ -16,18 +16,6 @@ import org.seasar.framework.beans.MethodNotFoundRuntimeException;
  */
 public class ThrowsInterceptorTest extends TestCase {
 
-	/**
-	 * Constructor for InvocationImplTest.
-	 * @param arg0
-	 */
-	public ThrowsInterceptorTest(String arg0) {
-		super(arg0);
-	}
-
-	public static void main(String[] args) {
-		junit.textui.TestRunner.run(ThrowsInterceptorTest.class);
-	}
-
 	public void testHandleThrowable() throws Throwable {
 		MethodInterceptor interceptor = new MyThrowsInterceptor();
 		Aspect aspect = new AspectImpl(interceptor);

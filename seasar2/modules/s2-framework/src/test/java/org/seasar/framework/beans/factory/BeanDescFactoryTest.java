@@ -7,23 +7,8 @@ import org.seasar.framework.beans.factory.BeanDescFactory;
 
 /**
  * @author higa
- *
- * この生成されたコメントの挿入されるテンプレートを変更するため
- * ウィンドウ > 設定 > Java > コード生成 > コードとコメント
  */
 public class BeanDescFactoryTest extends TestCase {
-
-	/**
-	 * Constructor for BeanDescFactory.
-	 * @param arg0
-	 */
-	public BeanDescFactoryTest(String arg0) {
-		super(arg0);
-	}
-
-	public static void main(String[] args) {
-		junit.textui.TestRunner.run(BeanDescFactoryTest.class);
-	}
 
 	public void testGetBeanDesc() throws Exception {
 		BeanDesc beanDesc = BeanDescFactory.getBeanDesc(MyBean.class);

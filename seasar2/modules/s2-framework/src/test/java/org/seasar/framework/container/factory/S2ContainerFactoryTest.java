@@ -35,17 +35,6 @@ import org.xml.sax.SAXException;
 public class S2ContainerFactoryTest extends TestCase {
     protected Method configureMethod_;
 
-    public S2ContainerFactoryTest() {
-    }
-
-    public S2ContainerFactoryTest(String name) {
-        super(name);
-    }
-
-    public static void main(String[] args) {
-        junit.textui.TestRunner.run(S2ContainerFactoryTest.class);
-    }
-
     public void setUp() throws Exception {
         configureMethod_ = S2ContainerFactory.class.getDeclaredMethod("configure", new Class[0]);
         configureMethod_.setAccessible(true);

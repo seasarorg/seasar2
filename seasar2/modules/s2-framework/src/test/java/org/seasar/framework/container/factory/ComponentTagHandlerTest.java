@@ -8,11 +8,10 @@ import javax.servlet.http.HttpServletRequest;
 
 import junit.framework.TestCase;
 
-import org.seasar.extension.mock.servlet.MockServletContextImpl;
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.assembler.AutoBindingDefFactory;
-import org.seasar.framework.container.factory.S2ContainerFactory;
+import org.seasar.framework.mock.servlet.MockServletContextImpl;
 
 /**
  * @author higa

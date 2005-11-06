@@ -1,13 +1,13 @@
 package org.seasar.framework.container.assembler;
 
-import org.seasar.extension.unit.S2TestCase;
+import junit.framework.TestCase;
+
 import org.seasar.framework.container.IllegalBindingTypeDefRuntimeException;
-import org.seasar.framework.container.assembler.BindingTypeDefFactory;
 
 /**
  * @author higa
  */
-public class BindingTypeDefFactoryTest extends S2TestCase {
+public class BindingTypeDefFactoryTest extends TestCase {
 
     public void testGetBindingTypeDef() throws Exception {
         assertEquals("1", BindingTypeDefFactory.MUST, BindingTypeDefFactory

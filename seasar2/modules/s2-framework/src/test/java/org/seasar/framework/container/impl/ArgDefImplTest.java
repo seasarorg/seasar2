@@ -61,20 +61,6 @@ public class ArgDefImplTest extends TestCase {
 		assertEquals("2", "bbb", facade2.getStr());
 	}
 
-	/*
-	 * @see TestCase#setUp()
-	 */
-	protected void setUp() throws Exception {
-		super.setUp();
-	}
-
-	/*
-	 * @see TestCase#tearDown()
-	 */
-	protected void tearDown() throws Exception {
-		super.tearDown();
-	}
-
 	public static class A {
 
 		private Hoge hoge_;

@@ -1,14 +1,14 @@
 package org.seasar.framework.container.autoregister;
 
-import org.seasar.extension.unit.S2TestCase;
 import org.seasar.framework.container.AspectDef;
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.S2Container;
+import org.seasar.framework.unit.S2FrameworkTestCase;
 
 /**
  * @author higa
  */
-public class AspectAutoRegisterTest extends S2TestCase {
+public class AspectAutoRegisterTest extends S2FrameworkTestCase {
 
     private S2Container child;
   

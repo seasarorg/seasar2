@@ -2,25 +2,17 @@ package org.seasar.framework.container.impl;
 
 import java.util.Map;
 
-import org.seasar.extension.unit.S2TestCase;
 import org.seasar.framework.container.ComponentNotFoundRuntimeException;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.TooManyRegistrationComponentDef;
 import org.seasar.framework.container.TooManyRegistrationRuntimeException;
+import org.seasar.framework.unit.S2FrameworkTestCase;
 
 /**
  * @author koichik
  */
-public class S2ContainerBehaviorTest extends S2TestCase {
-    S2Container container;
-
-    public static void main(String[] args) {
-        junit.textui.TestRunner.run(S2ContainerBehaviorTest.class);
-    }
-
-    public S2ContainerBehaviorTest(String name) {
-        super(name);
-    }
+public class S2ContainerBehaviorTest extends S2FrameworkTestCase {
+    private S2Container container;
 
     public void setUp() throws Exception {
         include("S2ContainerBehaviorTest.dicon");

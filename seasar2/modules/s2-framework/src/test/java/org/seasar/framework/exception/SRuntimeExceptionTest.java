@@ -6,10 +6,6 @@ import junit.framework.*;
 
 public class SRuntimeExceptionTest extends TestCase {
 
-	public SRuntimeExceptionTest(String name) {
-		super(name);
-	}
-
 	public void testSeasarRuntimeException() throws Exception {
 		SRuntimeException ex =
 			new SRuntimeException("ESSR0001", new Object[] { "hoge" });
@@ -25,20 +21,5 @@ public class SRuntimeExceptionTest extends TestCase {
 			new SRuntimeException("ESSR0017", new Object[] { t }, t);
 		assertEquals("1", t, ex.getCause());
 		ex.printStackTrace();
-	}
-
-	protected void setUp() throws Exception {
-	}
-
-	protected void tearDown() throws Exception {
-	}
-
-	public static Test suite() {
-		return new TestSuite(SRuntimeExceptionTest.class);
-	}
-
-	public static void main(String[] args) {
-		junit.textui.TestRunner.main(
-			new String[] { SRuntimeExceptionTest.class.getName()});
 	}
 }

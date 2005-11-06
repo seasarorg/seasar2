@@ -16,18 +16,6 @@ import junit.framework.TestCase;
  */
 public class BeanDescImplTest extends TestCase {
 
-	/**
-	 * Constructor for BeanDescFactory.
-	 * @param arg0
-	 */
-	public BeanDescImplTest(String arg0) {
-		super(arg0);
-	}
-
-	public static void main(String[] args) {
-		junit.textui.TestRunner.run(BeanDescImplTest.class);
-	}
-
 	public void testPropertyDesc() throws Exception {
 		BeanDesc beanDesc = new BeanDescImpl(MyBean.class);
 		assertEquals("1", 3, beanDesc.getPropertyDescSize());
@@ -158,20 +146,6 @@ public class BeanDescImplTest extends TestCase {
 	public void testInvalidProperty() throws Exception {
 		BeanDesc beanDesc = new BeanDescImpl(MyBean2.class);
 		assertEquals("1", false, beanDesc.hasPropertyDesc("aaa"));
-	}
-
-	/*
-	 * @see TestCase#setUp()
-	 */
-	protected void setUp() throws Exception {
-		super.setUp();
-	}
-
-	/*
-	 * @see TestCase#tearDown()
-	 */
-	protected void tearDown() throws Exception {
-		super.tearDown();
 	}
     
     public static interface MyInterface {

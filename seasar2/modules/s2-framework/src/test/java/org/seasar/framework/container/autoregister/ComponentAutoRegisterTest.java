@@ -17,23 +17,16 @@ package org.seasar.framework.container.autoregister;
 
 import junit.framework.TestSuite;
 
-import org.seasar.extension.unit.S2TestCase;
 import org.seasar.framework.container.S2Container;
+import org.seasar.framework.unit.S2FrameworkTestCase;
 
 /**
  * 
  * @author koichik
  */
-public class ComponentAutoRegisterTest extends S2TestCase {
+public class ComponentAutoRegisterTest extends S2FrameworkTestCase {
 
     private S2Container child;
-
-    public ComponentAutoRegisterTest() {
-    }
-
-    public ComponentAutoRegisterTest(String name) {
-        super(name);
-    }
 
     protected void setUp() throws Exception {
         include("ComponentAutoRegisterTest.dicon");

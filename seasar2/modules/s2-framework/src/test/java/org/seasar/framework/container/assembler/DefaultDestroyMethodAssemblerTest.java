@@ -21,14 +21,6 @@ import org.seasar.framework.container.impl.S2ContainerImpl;
  */
 public class DefaultDestroyMethodAssemblerTest extends TestCase {
 
-	public DefaultDestroyMethodAssemblerTest(String arg0) {
-		super(arg0);
-	}
-
-	public static void main(String[] args) {
-		junit.textui.TestRunner.run(DefaultDestroyMethodAssemblerTest.class);
-	}
-
 	public void testAssemble() throws Exception {
 		S2Container container = new S2ContainerImpl();
 		ComponentDefImpl cd = new ComponentDefImpl(HashMap.class);
@@ -72,20 +64,6 @@ public class DefaultDestroyMethodAssemblerTest extends TestCase {
 		} catch (MethodNotFoundRuntimeException ex) {
 			System.out.println(ex);
 		}
-	}
-
-	/*
-	 * @see TestCase#setUp()
-	 */
-	protected void setUp() throws Exception {
-		super.setUp();
-	}
-
-	/*
-	 * @see TestCase#tearDown()
-	 */
-	protected void tearDown() throws Exception {
-		super.tearDown();
 	}
 
 	public interface Foo {

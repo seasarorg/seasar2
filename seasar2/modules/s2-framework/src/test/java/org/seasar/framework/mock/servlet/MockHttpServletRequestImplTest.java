@@ -1,20 +1,11 @@
-package org.seasar.extension.mock.servlet;
+package org.seasar.framework.mock.servlet;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
-
-import org.seasar.extension.mock.servlet.MockHttpServletRequestImpl;
-import org.seasar.extension.mock.servlet.MockServletContextImpl;
 
 public class MockHttpServletRequestImplTest extends TestCase {
 
 	private MockServletContextImpl context_;
 	private MockHttpServletRequestImpl request_;
-
-	public MockHttpServletRequestImplTest(String name) {
-		super(name);
-	}
 
 	public void testAddParameter() throws Exception {
 		request_.addParameter("aaa", "111");
@@ -38,17 +29,5 @@ public class MockHttpServletRequestImplTest extends TestCase {
 	protected void setUp() throws Exception {
 		context_ = new MockServletContextImpl("/s2jsf-example");
 		request_ = context_.createRequest("/hello.html");
-	}
-
-	protected void tearDown() throws Exception {
-	}
-
-	public static Test suite() {
-		return new TestSuite(MockHttpServletRequestImplTest.class);
-	}
-
-	public static void main(String[] args) {
-		junit.textui.TestRunner
-				.main(new String[] { MockHttpServletRequestImplTest.class.getName() });
 	}
 }

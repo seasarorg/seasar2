@@ -13,17 +13,16 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.mock.servlet;
+package org.seasar.framework.mock.servlet;
 
-import java.io.PrintWriter;
-
-import javax.servlet.ServletOutputStream;
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
 
 /**
  * @author Satoshi Kimura
  */
-public abstract class MockServletOutputStream extends ServletOutputStream {
-    public abstract PrintWriter getPrintWriter();
-    public abstract void setPrintWriter(PrintWriter writer);
-
+public interface MockServletConfig extends ServletConfig {
+    void setServletName(String servletName);
+    void setServletContext(ServletContext servletContext);
+    void setInitParameter(String name, final String value);
 }

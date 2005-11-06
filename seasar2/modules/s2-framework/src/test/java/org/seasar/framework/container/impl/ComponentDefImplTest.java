@@ -171,20 +171,6 @@ public class ComponentDefImplTest extends TestCase {
         assertNotSame("1", foo.getClass(), foo2.getClass());
         assertFalse("1", foo2 instanceof FooImpl);
     }
-
-	/*
-	 * @see TestCase#setUp()
-	 */
-	protected void setUp() throws Exception {
-		super.setUp();
-	}
-
-	/*
-	 * @see TestCase#tearDown()
-	 */
-	protected void tearDown() throws Exception {
-		super.tearDown();
-	}
 	
 	public interface Foo {
 		public String getHogeName();

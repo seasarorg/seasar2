@@ -25,13 +25,6 @@ import org.seasar.framework.container.autoregister.QualifiedAutoNaming;
  */
 public class QualifiedAutoNamingTest extends TestCase {
 
-    public QualifiedAutoNamingTest() {
-    }
-
-    public QualifiedAutoNamingTest(String name) {
-        super(name);
-    }
-
     public void testDefineName() throws Exception {
         QualifiedAutoNaming naming = new QualifiedAutoNaming();
         naming.addIgnorePackagePrefix("foo.bar");

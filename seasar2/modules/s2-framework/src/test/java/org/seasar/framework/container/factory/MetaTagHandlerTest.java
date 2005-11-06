@@ -14,13 +14,6 @@ public class MetaTagHandlerTest extends TestCase {
 
 	private static final String PATH =
 		"org/seasar/framework/container/factory/MetaTagHandlerTest.dicon";
-	public MetaTagHandlerTest(String arg0) {
-		super(arg0);
-	}
-
-	public static void main(String[] args) {
-		junit.textui.TestRunner.run(MetaTagHandlerTest.class);
-	}
 
 	public void testMeta() throws Exception {
 		S2Container container = S2ContainerFactory.create(PATH);

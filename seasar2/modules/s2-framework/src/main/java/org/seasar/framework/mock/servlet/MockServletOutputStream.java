@@ -13,32 +13,17 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.mock.servlet;
+package org.seasar.framework.mock.servlet;
 
-import java.io.IOException;
+import java.io.PrintWriter;
 
-import javax.servlet.GenericServlet;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import javax.servlet.ServletOutputStream;
 
 /**
- * @author higa
- *
+ * @author Satoshi Kimura
  */
-public class MockServlet extends GenericServlet {
-
-    private static final long serialVersionUID = -2690818043808621124L;
-
-	/**
-	 * @see javax.servlet.Servlet#service(javax.servlet.ServletRequest, javax.servlet.ServletResponse)
-	 */
-	public void service(ServletRequest request, ServletResponse response)
-			throws ServletException, IOException {
-	}
-	
-	public void log(String msg) {
-	}
-
+public abstract class MockServletOutputStream extends ServletOutputStream {
+    public abstract PrintWriter getPrintWriter();
+    public abstract void setPrintWriter(PrintWriter writer);
 
 }

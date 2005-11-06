@@ -13,7 +13,7 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.mock.servlet;
+package org.seasar.framework.mock.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;

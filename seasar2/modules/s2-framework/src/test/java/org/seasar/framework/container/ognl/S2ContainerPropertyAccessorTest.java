@@ -13,18 +13,6 @@ import org.seasar.framework.container.ognl.S2ContainerPropertyAccessor;
  *
  */
 public class S2ContainerPropertyAccessorTest extends TestCase {
-
-	/**
-	 * Constructor for InvocationImplTest.
-	 * @param arg0
-	 */
-	public S2ContainerPropertyAccessorTest(String arg0) {
-		super(arg0);
-	}
-
-	public static void main(String[] args) {
-		junit.textui.TestRunner.run(S2ContainerPropertyAccessorTest.class);
-	}
 	
 	protected void tearDown() throws Exception {
 		OgnlRuntime.setPropertyAccessor(S2Container.class, null);

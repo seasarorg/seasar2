@@ -1,13 +1,13 @@
 package org.seasar.framework.container.assembler;
 
-import org.seasar.extension.unit.S2TestCase;
+import junit.framework.TestCase;
+
 import org.seasar.framework.container.IllegalAutoBindingDefRuntimeException;
-import org.seasar.framework.container.assembler.AutoBindingDefFactory;
 
 /**
  * @author higa
  */
-public class AutoBindingDefFactoryTest extends S2TestCase {
+public class AutoBindingDefFactoryTest extends TestCase {
     
     public void testGetAutoBindingDef() throws Exception {
         assertEquals("1", AutoBindingDefFactory.AUTO,

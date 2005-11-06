@@ -17,18 +17,6 @@ import org.seasar.framework.aop.proxy.AopProxy;
  */
 public class TraceInterceptorTest extends TestCase {
 
-	/**
-	 * Constructor for InvocationImplTest.
-	 * @param arg0
-	 */
-	public TraceInterceptorTest(String arg0) {
-		super(arg0);
-	}
-
-	public static void main(String[] args) {
-		junit.textui.TestRunner.run(TraceInterceptorTest.class);
-	}
-
 	public void testIntercept() throws Exception {
 		TraceInterceptor interceptor = new TraceInterceptor();
 		Pointcut pointcut =
@@ -52,20 +40,6 @@ public class TraceInterceptorTest extends TestCase {
 			proxy.hoge();
 		} catch (Throwable ignore) {
 		}
-	}
-
-	/*
-	 * @see TestCase#setUp()
-	 */
-	protected void setUp() throws Exception {
-		super.setUp();
-	}
-
-	/*
-	 * @see TestCase#tearDown()
-	 */
-	protected void tearDown() throws Exception {
-		super.tearDown();
 	}
 	
 	public static class ThrowError {

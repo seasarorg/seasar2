@@ -18,14 +18,6 @@ import org.seasar.framework.container.impl.S2ContainerImpl;
  */
 public class ManualOnlyPropertyAssemblerTest extends TestCase {
 
-	public ManualOnlyPropertyAssemblerTest(String arg0) {
-		super(arg0);
-	}
-
-	public static void main(String[] args) {
-		junit.textui.TestRunner.run(ManualOnlyPropertyAssemblerTest.class);
-	}
-
 	public void testAssemble() throws Exception {
 		S2Container container = new S2ContainerImpl();
 		ComponentDefImpl cd = new ComponentDefImpl(A.class);
@@ -88,20 +80,6 @@ public class ManualOnlyPropertyAssemblerTest extends TestCase {
 		} catch (IllegalPropertyRuntimeException ex) {
 			System.out.println(ex);
 		}
-	}
-
-	/*
-	 * @see TestCase#setUp()
-	 */
-	protected void setUp() throws Exception {
-		super.setUp();
-	}
-
-	/*
-	 * @see TestCase#tearDown()
-	 */
-	protected void tearDown() throws Exception {
-		super.tearDown();
 	}
 
 	public interface Foo {

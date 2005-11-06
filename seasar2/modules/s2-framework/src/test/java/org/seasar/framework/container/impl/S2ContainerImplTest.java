@@ -12,8 +12,6 @@ import javax.servlet.http.HttpSession;
 
 import junit.framework.TestCase;
 
-import org.seasar.extension.mock.servlet.MockHttpServletResponseImpl;
-import org.seasar.extension.mock.servlet.MockServletContextImpl;
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.ContainerConstants;
 import org.seasar.framework.container.InitMethodDef;
@@ -21,30 +19,14 @@ import org.seasar.framework.container.PropertyDef;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.TooManyRegistrationRuntimeException;
 import org.seasar.framework.container.deployer.InstanceDefFactory;
-import org.seasar.framework.container.impl.ArgDefImpl;
-import org.seasar.framework.container.impl.ComponentDefImpl;
-import org.seasar.framework.container.impl.DestroyMethodDefImpl;
-import org.seasar.framework.container.impl.InitMethodDefImpl;
-import org.seasar.framework.container.impl.PropertyDefImpl;
-import org.seasar.framework.container.impl.S2ContainerImpl;
+import org.seasar.framework.mock.servlet.MockHttpServletResponseImpl;
+import org.seasar.framework.mock.servlet.MockServletContextImpl;
 
 /**
  * @author higa
  *
  */
 public class S2ContainerImplTest extends TestCase {
-
-	/**
-	 * Constructor for InvocationImplTest.
-	 * @param arg0
-	 */
-	public S2ContainerImplTest(String arg0) {
-		super(arg0);
-	}
-
-	public static void main(String[] args) {
-		junit.textui.TestRunner.run(S2ContainerImplTest.class);
-	}
 
 	public void testRegister() throws Exception {
 		S2Container container = new S2ContainerImpl();
@@ -327,20 +309,6 @@ public class S2ContainerImplTest extends TestCase {
 		container.setServletContext(ctx);
 		ServletContextClient client = (ServletContextClient) container.getComponent(ServletContextClient.class);
 		assertNotNull("1", client.getServletContext());
-	}
-
-	/*
-	 * @see TestCase#setUp()
-	 */
-	protected void setUp() throws Exception {
-		super.setUp();
-	}
-
-	/*
-	 * @see TestCase#tearDown()
-	 */
-	protected void tearDown() throws Exception {
-		super.tearDown();
 	}
 
 	public static class A {

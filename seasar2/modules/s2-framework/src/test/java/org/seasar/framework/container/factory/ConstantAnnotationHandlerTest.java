@@ -1,6 +1,5 @@
 package org.seasar.framework.container.factory;
 
-import org.seasar.extension.unit.S2TestCase;
 import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.beans.factory.BeanDescFactory;
@@ -10,12 +9,12 @@ import org.seasar.framework.container.PropertyDef;
 import org.seasar.framework.container.assembler.AutoBindingDefFactory;
 import org.seasar.framework.container.assembler.BindingTypeDefFactory;
 import org.seasar.framework.container.deployer.InstanceDefFactory;
-import org.seasar.framework.container.factory.ConstantAnnotationHandler;
+import org.seasar.framework.unit.S2FrameworkTestCase;
 
 /**
  * @author higa
  */
-public class ConstantAnnotationHandlerTest extends S2TestCase {
+public class ConstantAnnotationHandlerTest extends S2FrameworkTestCase {
 
     private ConstantAnnotationHandler handler = new ConstantAnnotationHandler();
 

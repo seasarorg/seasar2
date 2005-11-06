@@ -13,18 +13,6 @@ import org.seasar.framework.aop.proxy.AopProxy;
  */
 public class MockInterceptorTest extends TestCase {
 
-	/**
-	 * Constructor for InvocationImplTest.
-	 * @param arg0
-	 */
-	public MockInterceptorTest(String arg0) {
-		super(arg0);
-	}
-
-	public static void main(String[] args) {
-		junit.textui.TestRunner.run(MockInterceptorTest.class);
-	}
-
 	public void testInvoke() throws Exception {
 		MockInterceptor mi = new MockInterceptor("Hello");
 		Aspect aspect = new AspectImpl(mi);

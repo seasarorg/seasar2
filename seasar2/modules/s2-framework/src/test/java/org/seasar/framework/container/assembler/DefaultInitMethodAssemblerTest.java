@@ -24,14 +24,6 @@ import org.seasar.framework.container.impl.S2ContainerImpl;
  */
 public class DefaultInitMethodAssemblerTest extends TestCase {
 
-	public DefaultInitMethodAssemblerTest(String arg0) {
-		super(arg0);
-	}
-
-	public static void main(String[] args) {
-		junit.textui.TestRunner.run(DefaultInitMethodAssemblerTest.class);
-	}
-
 	public void testAssemble() throws Exception {
 		S2Container container = new S2ContainerImpl();
 		ComponentDefImpl cd = new ComponentDefImpl(HashMap.class);
@@ -116,20 +108,6 @@ public class DefaultInitMethodAssemblerTest extends TestCase {
 		container.register(cd);
 		MethodAssembler assembler = new DefaultInitMethodAssembler(cd);
 		assembler.assemble(new Integer(1));
-	}
-
-	/*
-	 * @see TestCase#setUp()
-	 */
-	protected void setUp() throws Exception {
-		super.setUp();
-	}
-
-	/*
-	 * @see TestCase#tearDown()
-	 */
-	protected void tearDown() throws Exception {
-		super.tearDown();
 	}
 
 	public interface Foo {

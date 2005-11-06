@@ -22,48 +22,68 @@ import org.seasar.framework.container.ConstructorAssembler;
 import org.seasar.framework.container.MethodAssembler;
 import org.seasar.framework.container.PropertyAssembler;
 import org.seasar.framework.container.assembler.AssemblerFactory;
+import org.seasar.framework.util.ClassUtil;
+import org.seasar.framework.util.StringUtil;
 
 /**
  * @author higa
- *
+ * 
  */
 public abstract class AbstractComponentDeployer implements ComponentDeployer {
-	private ComponentDef componentDef_;
-	private ConstructorAssembler constructorAssembler_;
-	private PropertyAssembler propertyAssembler_;
-	private MethodAssembler initMethodAssembler_;
-	private MethodAssembler destroyMethodAssembler_;
+    private ComponentDef componentDef_;
 
-	public AbstractComponentDeployer(ComponentDef componentDef) {
-		componentDef_ = componentDef;
-		setupAssembler();
-	}
+    private ConstructorAssembler constructorAssembler_;
 
-	protected final ComponentDef getComponentDef() {
-		return componentDef_;
-	}
+    private PropertyAssembler propertyAssembler_;
 
-	protected final ConstructorAssembler getConstructorAssembler() {
-		return constructorAssembler_;
-	}
+    private MethodAssembler initMethodAssembler_;
 
-	protected final PropertyAssembler getPropertyAssembler() {
-		return propertyAssembler_;
-	}
+    private MethodAssembler destroyMethodAssembler_;
 
-	protected final MethodAssembler getInitMethodAssembler() {
-		return initMethodAssembler_;
-	}
+    public AbstractComponentDeployer(ComponentDef componentDef) {
+        componentDef_ = componentDef;
+        setupAssembler();
+    }
 
-	protected final MethodAssembler getDestroyMethodAssembler() {
-		return destroyMethodAssembler_;
-	}
+    protected final ComponentDef getComponentDef() {
+        return componentDef_;
+    }
 
-	protected void setupAssembler() {
+    protected final ConstructorAssembler getConstructorAssembler() {
+        return constructorAssembler_;
+    }
+
+    protected final PropertyAssembler getPropertyAssembler() {
+        return propertyAssembler_;
+    }
+
+    protected final MethodAssembler getInitMethodAssembler() {
+        return initMethodAssembler_;
+    }
+
+    protected final MethodAssembler getDestroyMethodAssembler() {
+        return destroyMethodAssembler_;
+    }
+
+    protected void setupAssembler() {
         AutoBindingDef autoBindingDef = componentDef_.getAutoBindingDef();
-		constructorAssembler_ = autoBindingDef.createConstructorAssembler(componentDef_);
-		propertyAssembler_ = autoBindingDef.createPropertyAssembler(componentDef_);
-		initMethodAssembler_ = AssemblerFactory.createInitMethodAssembler(componentDef_);
-		destroyMethodAssembler_ = AssemblerFactory.createDestroyMethodAssembler(componentDef_);
-	}
+        constructorAssembler_ = autoBindingDef
+                .createConstructorAssembler(componentDef_);
+        propertyAssembler_ = autoBindingDef
+                .createPropertyAssembler(componentDef_);
+        initMethodAssembler_ = AssemblerFactory
+                .createInitMethodAssembler(componentDef_);
+        destroyMethodAssembler_ = AssemblerFactory
+                .createDestroyMethodAssembler(componentDef_);
+    }
+
+    protected String getComponentName() {
+        String componentName = componentDef_.getComponentName();
+        if (componentName == null) {
+            componentName = ClassUtil.getShortClassName(componentDef_
+                    .getComponentClass());
+            componentName = StringUtil.decapitalize(componentName);
+        }
+        return componentName;
+    }
 }

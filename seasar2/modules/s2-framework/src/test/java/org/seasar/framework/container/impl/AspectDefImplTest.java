@@ -15,18 +15,6 @@ import org.seasar.framework.container.impl.S2ContainerImpl;
  */
 public class AspectDefImplTest extends TestCase {
 
-	/**
-	 * Constructor for InvocationImplTest.
-	 * @param arg0
-	 */
-	public AspectDefImplTest(String arg0) {
-		super(arg0);
-	}
-
-	public static void main(String[] args) {
-		junit.textui.TestRunner.run(AspectDefImplTest.class);
-	}
-
 	public void testSetExpression() throws Exception {
 		S2Container container = new S2ContainerImpl();
 		AspectDef ad = new AspectDefImpl();
@@ -39,20 +27,6 @@ public class AspectDefImplTest extends TestCase {
 			"1",
 			TraceInterceptor.class,
 			ad.getAspect().getMethodInterceptor().getClass());
-	}
-
-	/*
-	 * @see TestCase#setUp()
-	 */
-	protected void setUp() throws Exception {
-		super.setUp();
-	}
-
-	/*
-	 * @see TestCase#tearDown()
-	 */
-	protected void tearDown() throws Exception {
-		super.tearDown();
 	}
 
 	public static class A {
