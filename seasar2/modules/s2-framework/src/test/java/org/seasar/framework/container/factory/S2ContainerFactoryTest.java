@@ -3,7 +3,6 @@ package org.seasar.framework.container.factory;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.Properties;
 
@@ -33,14 +32,11 @@ import org.xml.sax.SAXException;
  * @author koichik
  */
 public class S2ContainerFactoryTest extends TestCase {
-    protected Method configureMethod_;
 
-    public void setUp() throws Exception {
-        configureMethod_ = S2ContainerFactory.class.getDeclaredMethod("configure", new Class[0]);
-        configureMethod_.setAccessible(true);
+    protected void setUp() throws Exception {
     }
 
-    public void tearDown() throws Exception {
+    protected void tearDown() throws Exception {
         S2ContainerFactory.setProvider(new S2ContainerFactory.DefaultProvider());
         S2ContainerFactory.setDefaultBuilder(new XmlS2ContainerBuilder());
         S2ContainerBehavior.setProvider(new S2ContainerBehavior.DefaultProvider());
@@ -126,10 +122,17 @@ public class S2ContainerFactoryTest extends TestCase {
         assertTrue("1", container.isHotswapMode());
     }
 
+    public void testDestroy() throws Exception {
+        assertNotNull("1", S2ContainerFactory.configurationContainer_);
+        S2ContainerFactory.destroy();
+        assertNull("2", S2ContainerFactory.configurationContainer_);
+        configure("ContainerFactory.dicon");
+        assertNotNull("3", S2ContainerFactory.configurationContainer_);
+    }
+
     public void configure(String name) throws Exception {
         String path = getClass().getName().replace('.', '/') + "." + name;
-        System.setProperty(S2ContainerFactory.FACTORY_CONFIG_KEY, path);
-        configureMethod_.invoke(null, null);
+        S2ContainerFactory.configure(path);
     }
 
     public static class EmptyContainerFactory extends S2ContainerFactory.DefaultProvider {
