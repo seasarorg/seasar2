@@ -1,0 +1,24 @@
+<project name="s2-tiger" default="dist" basedir=".">
+	<property name="ver" value="2.3.0"/>
+
+	<target name="clean">
+		<delete>
+			<fileset dir="lib" includes="s2*.jar"/>
+		</delete>
+	</target>
+
+	<target name="jar" depends="">
+		<jar jarfile="lib/s2-tiger-${ver}.jar" basedir="target/classes"/>
+	</target>
+
+	<target name="dist" depends="clean,jar">
+		<zip zipfile="target/S2Tiger-${ver}.zip">
+			<zipfileset prefix="s2-tiger" dir=".">
+				<exclude name="**/target/**"/>
+				<exclude name=".settings"/>
+				<exclude name=".settings/**"/>
+			</zipfileset>
+		</zip>
+	</target>
+
+</project>
