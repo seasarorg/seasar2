@@ -17,8 +17,11 @@
 		<zip zipfile="target/S${ver}.zip">
 			<zipfileset prefix="seasar2" dir=".">
 				<exclude name="**/target/**"/>
-				<exclude name=".settings"/>
-				<exclude name=".settings/**"/>
+				<exclude name="**/.settings/**"/>
+			</zipfileset>
+			<zipfileset prefix="seasar2/doc" dir="../s2container-www">
+				<exclude name="**/download/**"/>
+				<exclude name=".project"/>
 			</zipfileset>
 		</zip>
 	</target>
