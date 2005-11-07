@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE components PUBLIC
+    "-//SEASAR//DTD S2Container 2.3//EN"
+    "http://www.seasar.org/dtd/components23.dtd">
+<components>
+    <include path="aop.dicon"/>
+    <component name="greeting"
+        class="examples.di.impl.GreetingImpl">
+        <aspect>aop.traceInterceptor</aspect>
+    </component>
+    <component name="greetingClient"
+        class="examples.di.impl.GreetingClientImpl">
+        <property name="greeting">greeting</property>
+        <aspect>aop.traceInterceptor</aspect>
+    </component>
+</components>

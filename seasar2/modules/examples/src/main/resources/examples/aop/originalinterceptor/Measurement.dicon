@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container//EN"
+"http://www.seasar.org/dtd/components.dtd">
+<components>
+	<component name="measurement" class="examples.aop.originalinterceptor.MeasurementInterceptor"/>
+	<component class="examples.aop.originalinterceptor.HeavyProcess">
+    	<aspect pointcut="heavy">
+        	measurement
+	    </aspect>
+	</component>
+</components>

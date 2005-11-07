@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container//EN"
+"http://www.seasar.org/dtd/components.dtd">
+<components>
+
+	<component class="java.lang.Object">
+		<initMethod>#out.println("初期化中")</initMethod>
+		<destroyMethod>#out.println("終了中")</destroyMethod>
+	</component>
+
+</components>

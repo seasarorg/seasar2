@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<!DOCTYPE components PUBLIC "-//SEASAR2.1//DTD S2Container//EN"
+    "http://www.seasar.org/dtd/components21.dtd">
+<components>
+    <component name="counter" class="org.seasar.framework.aop.interceptors.InterceptorChainTest$CounterImpl"/>
+
+    <component name="interceptor1">
+    	new org.seasar.framework.aop.interceptors.InterceptorChainTest$CountInterceptor(1)
+    </component>
+
+    <component name="interceptor2">
+    	new org.seasar.framework.aop.interceptors.InterceptorChainTest$CountInterceptor(2)
+    </component>
+
+    <component name="interceptor3">
+    	new org.seasar.framework.aop.interceptors.InterceptorChainTest$CountInterceptor(3)
+    </component>
+
+    <component name="interceptor4">
+    	new org.seasar.framework.aop.interceptors.InterceptorChainTest$CountInterceptor(4)
+    </component>
+
+    <component name="interceptor5">
+    	new org.seasar.framework.aop.interceptors.InterceptorChainTest$CountInterceptor(5)
+    </component>
+
+    <component name="chain" class="org.seasar.framework.aop.interceptors.InterceptorChain">
+        <initMethod name="add"><arg>interceptor2</arg></initMethod>
+        <initMethod name="add"><arg>interceptor3</arg></initMethod>
+        <initMethod name="add"><arg>interceptor4</arg></initMethod>
+    </component>
+
+    <component class="org.seasar.framework.aop.interceptors.InterceptorChainTest$Foo">
+        <aspect pointcut="foo">interceptor1</aspect>
+        <aspect pointcut="foo">chain</aspect>
+        <aspect pointcut="foo">interceptor5</aspect>
+    </component>
+</components>

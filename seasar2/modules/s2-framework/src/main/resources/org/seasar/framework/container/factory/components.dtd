@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+<!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container//EN" 
+	"http://www.seasar.org/dtd/components.dtd">
+-->
+<!ELEMENT components (
+        description?,
+        include*,
+        component*
+)>
+<!ATTLIST components namespace CDATA #IMPLIED>
+
+<!ELEMENT description (
+        #PCDATA
+)>
+
+<!ELEMENT include EMPTY>
+<!ATTLIST include path CDATA #REQUIRED>
+
+
+<!ELEMENT component (
+  #PCDATA | description | arg | property |
+            initMethod | destroyMethod | aspect)*>
+<!ATTLIST component instance (
+  singleton | prototype | outer) "singleton">
+<!ATTLIST component class CDATA #IMPLIED>
+<!ATTLIST component name CDATA #IMPLIED>
+<!ATTLIST component autoBinding (auto | constructor | property | none) "auto">
+
+<!ELEMENT arg (
+        #PCDATA | description | component
+)*>
+
+<!ELEMENT property (
+        #PCDATA | description | component
+)*>
+
+<!ATTLIST property name CDATA #REQUIRED>
+
+<!ELEMENT aspect (
+        #PCDATA | description | component)*>
+<!ATTLIST aspect pointcut CDATA #IMPLIED>
+
+<!ELEMENT initMethod (
+        #PCDATA | description | arg
+)*>
+<!ATTLIST initMethod name CDATA #IMPLIED>
+
+<!ELEMENT destroyMethod (
+        #PCDATA | description | arg
+)*>
+<!ATTLIST destroyMethod name CDATA #IMPLIED>

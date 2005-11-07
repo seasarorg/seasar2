@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container//EN"
+"http://www.seasar.org/dtd/components.dtd">
+<components>
+	<component class="java.util.HashMap">
+		<destroyMethod name="put">
+			<arg>'aaa'</arg>
+			<arg>111</arg>
+		</destroyMethod>
+	</component>
+</components>

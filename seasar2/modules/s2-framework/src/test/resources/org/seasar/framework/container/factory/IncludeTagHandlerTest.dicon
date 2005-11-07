@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container//EN"
+"http://www.seasar.org/dtd/components.dtd">
+<components>
+	<include path="org/seasar/framework/container/factory/IncludeTagHandlerTestGrandChild.dicon"/>
+	<include path="org/seasar/framework/container/factory/IncludeTagHandlerTestChild.dicon"/>
+</components>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE components PUBLIC "-//SEASAR2.1//DTD S2Container//EN"
+	"http://www.seasar.org/dtd/components21.dtd">
+<components>
+	<component class="org.seasar.framework.container.factory.S2ContainerFactoryTest$StringResourceResolver">
+		<property name="definition"><![CDATA[
+"<?xml version='1.0' encoding='UTF-8'?>" +
+"<!DOCTYPE components PUBLIC '-//SEASAR2.1//DTD S2Container//EN'" +
+"	'http://www.seasar.org/dtd/components21.dtd'>" +
+"<components>" +
+"	<component name='list' class='java.util.ArrayList'/>" +
+"	<component name='map' class='java.util.HashMap'/>" +
+"</components>"
+		]]></property>
+	</component>
+</components>
