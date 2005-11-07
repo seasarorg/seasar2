@@ -1,0 +1,63 @@
+<project
+  xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"
+>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.seasar</groupId>
+  <artifactId>s2</artifactId>
+  <packaging>pom</packaging>
+  <name>Seasar2</name>
+  <version>2.3-SNAPSHOT</version>
+  <description>DI Container with AOP</description>
+  <url>http://s2container.seasar.org/</url>
+  <inceptionYear>2004</inceptionYear>
+  <modules>
+    <module>modules/s2-framework</module>
+    <module>modules/s2-extension</module>
+    <module>modules/examples</module>
+  </modules>
+  <repositories>
+    <repository>
+      <id>maven.seasar.org</id>
+      <name>The Seasar Foundation Maven2 Repository</name>
+      <url>http://maven.seasar.org/maven2</url>
+    </repository>
+  </repositories>
+  <dependencies>
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>servlet-api</artifactId>
+      <version>2.3</version>
+      <type>jar</type>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>hsqldb</groupId>
+      <artifactId>hsqldb</artifactId>
+      <version>1.7.3.3</version>
+      <type>jar</type>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>geronimo-spec</groupId>
+      <artifactId>geronimo-spec-jta</artifactId>
+      <version>1.0.1B-rc4</version>
+      <type>jar</type>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
+  <distributionManagement>
+    <repository>
+      <uniqueVersion>false</uniqueVersion>
+      <id>maven.seasar.org</id>
+      <name>The Seasar Foundation Maven2 Repository</name>
+      <url>scp://www.seasar.org/home/groups/maven/public_html/maven2/</url>
+    </repository>
+  </distributionManagement>
+  <properties>
+  <!--
+    <maven.test.skip>true</maven.test.skip>
+  -->
+  </properties>
+</project>
