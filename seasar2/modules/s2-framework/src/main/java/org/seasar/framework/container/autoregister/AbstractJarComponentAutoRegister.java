@@ -29,18 +29,18 @@ import org.seasar.framework.util.StringUtil;
  * @author koichik, higa
  */
 public abstract class AbstractJarComponentAutoRegister extends AbstractComponentAutoRegister {
-    
+
     private String baseDir;
-    
+
     private Pattern[] jarFileNamePatterns;
 
     public AbstractJarComponentAutoRegister() {
     }
-    
+
     public String getBaseDir() {
         return baseDir;
     }
-    
+
     public void setBaseDir(String baseDir) {
         this.baseDir = baseDir;
     }
@@ -59,12 +59,16 @@ public abstract class AbstractJarComponentAutoRegister extends AbstractComponent
             ClassTraversal.forEach(jarFile, this);
         }
     }
-    
+
     protected abstract void setupBaseDir();
-    
+
     protected boolean isAppliedJar(final String jarFileName) {
         if (jarFileNamePatterns == null) {
             return true;
+        }
+        String extention = ResourceUtil.getExtension(jarFileName);
+        if (extention == null || !extention.equalsIgnoreCase("jar")) {
+            return false;
         }
         String name = ResourceUtil.removeExtension(jarFileName);
         for (int i = 0; i < jarFileNamePatterns.length; ++i) {
@@ -74,11 +78,11 @@ public abstract class AbstractJarComponentAutoRegister extends AbstractComponent
         }
         return false;
     }
-    
+
     protected File findJar(final String jarFileName) {
         return new File(baseDir, jarFileName);
     }
-    
+
     public void setJarFileNames(String jarFileNames) {
         String[] array = StringUtil.split(jarFileNames, ",");
         jarFileNamePatterns = new Pattern[array.length];
