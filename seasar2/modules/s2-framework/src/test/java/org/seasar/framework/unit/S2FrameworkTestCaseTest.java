@@ -8,7 +8,7 @@ import org.seasar.framework.container.TooManyRegistrationRuntimeException;
 
 public class S2FrameworkTestCaseTest extends S2FrameworkTestCase {
 
-	private static final String J2EE_PATH = "j2ee.dicon";
+	private static final String J2EE_PATH = "S2FrameworkTestCaseTest_j2ee.dicon";
 	private boolean testAaaSetUpInvoked_ = false;
 	private Date date_;
 	private String ccc_;
@@ -43,7 +43,7 @@ public class S2FrameworkTestCaseTest extends S2FrameworkTestCase {
 	public void testGetDataSource() {
 		assertNotNull("1", getDataSource());
 	}
-		
+	
 	public void setUpBindField() {
 		include(J2EE_PATH);
 		register(Date.class);
