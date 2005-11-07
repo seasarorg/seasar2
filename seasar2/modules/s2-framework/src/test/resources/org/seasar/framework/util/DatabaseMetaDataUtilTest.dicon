@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container//EN"
+"http://www.seasar.org/dtd/components.dtd">
+<components namespace="j2ee">
+	<component name="dataSource"
+		class="org.seasar.framework.util.DatabaseMetaDataUtilTest$SimpleDataSource"
+	>
+		<property name="driverClassName">
+			"org.hsqldb.jdbcDriver"
+		</property>
+		<property name="URL">
+			"jdbc:hsqldb:hsql://localhost:9001"
+		</property>
+		<property name="user">"sa"</property>
+		<property name="password">""</property>
+	</component>
+</components>
