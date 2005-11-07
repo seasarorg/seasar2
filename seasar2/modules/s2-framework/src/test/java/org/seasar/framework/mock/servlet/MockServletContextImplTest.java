@@ -18,7 +18,7 @@ public class MockServletContextImplTest extends TestCase {
 	}
 	
 	public void testGetResourcePaths() throws Exception {
-		Set paths = context_.getResourcePaths("/lib");
+		Set paths = context_.getResourcePaths("/classes");
 		System.out.println(paths);
 		assertNotNull("1", paths);
 	}
