@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="Shift_JIS"?>
-<!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container//EN"
-"http://www.seasar.org/dtd/components.dtd">
-<components>
-	<include path="j2ee.dicon"/>
-	<component class="examples.tx.HogeImpl">
-		<aspect>j2ee.requiredTx</aspect>
-	</component>
-</components>
