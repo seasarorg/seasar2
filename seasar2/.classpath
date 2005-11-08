@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="modules/s2-framework/src/main/java"/>
-	<classpathentry kind="src" path="modules/s2-framework/src/main/resources"/>
-	<classpathentry output="modules/s2-framework/target/test-classes" kind="src" path="modules/s2-framework/src/test/java"/>
-	<classpathentry output="modules/s2-framework/target/test-classes" kind="src" path="modules/s2-framework/src/test/resources"/>
-	<classpathentry output="modules/s2-extension/target/classes" kind="src" path="modules/s2-extension/src/main/java"/>
-	<classpathentry output="modules/s2-extension/target/classes" kind="src" path="modules/s2-extension/src/main/resources"/>
-	<classpathentry output="modules/s2-extension/target/test-classes" kind="src" path="modules/s2-extension/src/test/java"/>
-	<classpathentry output="modules/s2-extension/target/test-classes" kind="src" path="modules/s2-extension/src/test/resources"/>
-	<classpathentry output="modules/examples/target/classes" kind="src" path="modules/examples/src/main/java"/>
-	<classpathentry output="modules/examples/target/classes" kind="src" path="modules/examples/src/main/resources"/>
+	<classpathentry kind="src" path="s2-framework/src/main/java"/>
+	<classpathentry kind="src" path="s2-framework/src/main/resources"/>
+	<classpathentry output="s2-framework/target/test-classes" kind="src" path="s2-framework/src/test/java"/>
+	<classpathentry output="s2-framework/target/test-classes" kind="src" path="s2-framework/src/test/resources"/>
+	<classpathentry output="s2-extension/target/classes" kind="src" path="s2-extension/src/main/java"/>
+	<classpathentry output="s2-extension/target/classes" kind="src" path="s2-extension/src/main/resources"/>
+	<classpathentry output="s2-extension/target/test-classes" kind="src" path="s2-extension/src/test/java"/>
+	<classpathentry output="s2-extension/target/test-classes" kind="src" path="s2-extension/src/test/resources"/>
+	<classpathentry output="examples/target/classes" kind="src" path="examples/src/main/java"/>
+	<classpathentry output="examples/target/classes" kind="src" path="examples/src/main/resources"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry exported="true" kind="lib" path="lib/jta.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/servlet-api.jar"/>
@@ -21,5 +21,5 @@
 	<classpathentry exported="true" kind="lib" path="lib/poi-2.5.1-final-20040804.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/junit-3.8.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/hsqldb.jar"/>
-	<classpathentry kind="output" path="modules/s2-framework/target/classes"/>
+	<classpathentry kind="output" path="s2-framework/target/classes"/>
 </classpath>
