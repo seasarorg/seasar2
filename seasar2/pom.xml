@@ -13,9 +13,9 @@
   <url>http://s2container.seasar.org/</url>
   <inceptionYear>2004</inceptionYear>
   <modules>
-    <module>modules/s2-framework</module>
-    <module>modules/s2-extension</module>
-    <module>modules/examples</module>
+    <module>s2-framework</module>
+    <module>s2-extension</module>
+    <module>examples</module>
   </modules>
   <repositories>
     <repository>
