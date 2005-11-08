@@ -3,7 +3,6 @@
 	"http://www.seasar.org/dtd/components21.dtd">
 <components namespace="child" >
 	<component class="org.seasar.framework.container.autoregister.FileSystemComponentAutoRegister">
-		<property name="fileNameOfRoot">"framework-test.dicon"</property>
 		<property name="autoNaming">
 			<component class="org.seasar.framework.container.autoregister.DefaultAutoNaming"/>
 		</property>

@@ -19,18 +19,13 @@ import java.io.File;
 
 import org.seasar.framework.util.ClassTraversal;
 import org.seasar.framework.util.ResourceUtil;
+import org.seasar.framework.util.StringUtil;
 
 /**
  * @author higa
  *
  */
 public class FileSystemComponentAutoRegister extends AbstractComponentAutoRegister {
-
-    private String fileNameOfRoot = "j2ee.dicon";
-        
-    public void setFileNameOfRoot(String fileNameOfRoot) {
-        this.fileNameOfRoot = fileNameOfRoot;
-    }
 
     public void registAll() {
         for (int i = 0; i < getClassPatternSize(); ++i) {
@@ -46,6 +41,12 @@ public class FileSystemComponentAutoRegister extends AbstractComponentAutoRegist
     }
     
     protected File getRootDir() {
-        return ResourceUtil.getResourceAsFile(fileNameOfRoot).getParentFile();
+        String path = getContainer().getPath(); 
+        File file = ResourceUtil.getResourceAsFile(path);
+        String[] names = StringUtil.split(path, "/");
+        for (int i = 0; i < names.length; ++i) {
+            file = file.getParentFile();
+        }
+        return file;
     }
 }

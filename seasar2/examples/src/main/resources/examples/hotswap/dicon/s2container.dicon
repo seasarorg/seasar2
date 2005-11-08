@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.3//EN"
+	"http://www.seasar.org/dtd/components23.dtd">
+<components>
+	<component
+	  class="org.seasar.framework.container.factory.S2ContainerFactory$DefaultProvider">
+		<property name="hotswapMode">true</property>
+	</component>
+</components>

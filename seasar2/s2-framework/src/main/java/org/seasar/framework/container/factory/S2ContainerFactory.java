@@ -129,6 +129,8 @@ public final class S2ContainerFactory {
 
     public static class DefaultProvider implements Provider {
 
+        public static final String pathResolver_BINDING = "bindingType=may";
+        
         protected PathResolver pathResolver_ = new SimplePathResolver();
         protected boolean hotswapMode;
 
