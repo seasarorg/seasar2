@@ -10,8 +10,6 @@ import org.seasar.framework.container.InstanceDef;
 import org.seasar.framework.container.PropertyDef;
 import org.seasar.framework.container.deployer.InstanceDefFactory;
 import org.seasar.framework.container.factory.TigerAnnotationHandler;
-import org.seasar.framework.container.factory.ConstantAnnotationHandlerTest.Hoge;
-
 
 /**
  * @author higa
