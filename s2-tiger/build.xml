@@ -7,11 +7,11 @@
 		</delete>
 	</target>
 
-	<target name="jar" depends="">
-		<jar jarfile="lib/s2-tiger-${ver}.jar" basedir="target/classes"/>
+	<target name="copy" depends="clean">
+		<copy file="target/s2-tiger-${ver}.jar" todir="lib"/>
 	</target>
 
-	<target name="dist" depends="clean,jar">
+	<target name="dist" depends="copy">
 		<zip zipfile="target/S2Tiger-${ver}.zip">
 			<zipfileset prefix="s2-tiger" dir=".">
 				<exclude name="**/target/**"/>
