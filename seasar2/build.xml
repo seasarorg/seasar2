@@ -7,12 +7,12 @@
 		</delete>
 	</target>
 
-	<target name="jar" depends="">
-		<jar jarfile="lib/s2-framework-${ver}.jar" basedir="modules/s2-framework/target/classes"/>
-		<jar jarfile="lib/s2-extension-${ver}.jar" basedir="modules/s2-extension/target/classes"/>
+	<target name="copy" depends="clean">
+		<copy file="modules/s2-framework/target/s2-framework-${ver}.jar" todir="lib"/>
+		<copy file="modules/s2-extension/target/s2-extension-${ver}.jar" todir="lib"/>
 	</target>
 
-	<target name="dist" depends="clean,jar">
+	<target name="dist" depends="copy">
 		<mkdir dir="target"/>
 		<zip zipfile="target/S${ver}.zip">
 			<zipfileset prefix="seasar2" dir=".">
