@@ -1,22 +1,15 @@
 <project name="s2-tiger" default="dist" basedir=".">
 	<property name="ver" value="1.0.0"/>
 
-	<target name="clean">
-		<delete>
-			<fileset dir="lib" includes="s2*.jar"/>
-		</delete>
-	</target>
-
-	<target name="copy" depends="clean">
-		<copy file="target/s2-tiger-${ver}.jar" todir="lib"/>
-	</target>
-
-	<target name="dist" depends="copy">
+	<target name="dist">
 		<zip zipfile="target/S2Tiger-${ver}.zip">
 			<zipfileset prefix="s2-tiger" dir=".">
 				<exclude name="**/target/**"/>
 				<exclude name=".settings"/>
 				<exclude name=".settings/**"/>
+			</zipfileset>
+			<zipfileset prefix="s2-tiger/lib" dir="target">
+				<include name="s2-tiger-${ver}.jar"/>
 			</zipfileset>
 		</zip>
 	</target>
