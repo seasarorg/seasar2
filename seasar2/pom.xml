@@ -55,9 +55,4 @@
       <url>scp://www.seasar.org/home/groups/maven/public_html/maven2/</url>
     </repository>
   </distributionManagement>
-  <properties>
-  <!--
-    <maven.test.skip>true</maven.test.skip>
-  -->
-  </properties>
 </project>
