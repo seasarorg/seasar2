@@ -14,6 +14,14 @@
 			<zipfileset prefix="seasar2/lib" dir="s2-extension/target">
 				<include name="s2-extension-${ver}.jar"/>
 			</zipfileset>
+			<zipfileset prefix="seasar2/resources" dir="s2-framework/src/test/resources">
+				<include name="aop.dicon"/>
+				<include name="log4j.properties"/>
+			</zipfileset>
+			<zipfileset prefix="seasar2/resources" dir="s2-extension/src/test/resources">
+				<include name="ejbtx.dicon"/>
+				<include name="j2ee.dicon"/>
+			</zipfileset>
 			<zipfileset prefix="seasar2/doc" dir="../s2container-www">
 				<exclude name="**/download/**"/>
 				<exclude name=".project"/>
