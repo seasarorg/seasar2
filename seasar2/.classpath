@@ -13,9 +13,9 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry exported="true" kind="lib" path="lib/jta.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/servlet-api.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/aopalliance.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/javassist.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/commons-logging.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/aopalliance-1.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/javassist-3.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/commons-logging-1.0.4.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/log4j-1.2.8.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/ognl-2.6.5.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/poi-2.5.1-final-20040804.jar"/>
