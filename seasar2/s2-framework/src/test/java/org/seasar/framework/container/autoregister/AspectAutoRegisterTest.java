@@ -12,11 +12,11 @@ public class AspectAutoRegisterTest extends S2FrameworkTestCase {
 
     private S2Container child;
   
-    public void setUpRegistAll2() throws Exception {
+    public void setUpRegisterAll2() throws Exception {
         include("autoRegister2.dicon");
     }
     
-    public void testRegistAll2() throws Exception {
+    public void testRegisterAll2() throws Exception {
         Bar bar = (Bar) child.getComponent("bar");
         assertNotNull("1", bar);
         assertEquals("2", "Hello", bar.greet());

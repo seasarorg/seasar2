@@ -45,7 +45,7 @@ public abstract class AbstractJarComponentAutoRegister extends AbstractComponent
         this.baseDir = baseDir;
     }
 
-    public void registAll() {
+    public void registerAll() {
         if (baseDir == null) {
             setupBaseDir();
         }

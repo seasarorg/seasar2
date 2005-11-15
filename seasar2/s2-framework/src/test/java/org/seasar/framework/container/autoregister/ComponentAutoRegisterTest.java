@@ -32,7 +32,7 @@ public class ComponentAutoRegisterTest extends S2FrameworkTestCase {
         include("ComponentAutoRegisterTest.dicon");
     }
 
-    public void testRegistAll() throws Exception {
+    public void testRegisterAll() throws Exception {
         Foo foo = (Foo) child.getComponent(Foo.class);
         assertNotNull("1", foo);
         Foo2 foo2 = (Foo2) child.getComponent(Foo2.class);

@@ -27,14 +27,14 @@ import org.seasar.framework.util.StringUtil;
  */
 public class FileSystemComponentAutoRegister extends AbstractComponentAutoRegister {
 
-    public void registAll() {
+    public void registerAll() {
         for (int i = 0; i < getClassPatternSize(); ++i) {
             ClassPattern cp = getClassPattern(i);
-            regist(cp);
+            register(cp);
         }
     }
     
-    protected void regist(ClassPattern classPattern) {
+    protected void register(ClassPattern classPattern) {
         String packageName = classPattern.getPackageName();
         File packageDir = getRootDir();
         ClassTraversal.forEach(packageDir, packageName, this);

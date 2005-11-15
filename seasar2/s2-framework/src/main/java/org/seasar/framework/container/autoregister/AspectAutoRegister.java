@@ -39,15 +39,15 @@ public class AspectAutoRegister extends AbstractAutoRegister {
         this.pointcut = pointcut;
     }
 
-    public void registAll() {
+    public void registerAll() {
         S2Container container = getContainer();
         for (int i = 0; i < container.getComponentDefSize(); ++i) {
             ComponentDef cd = container.getComponentDef(i);
-            regist(cd);
+            register(cd);
         }
     }
     
-    protected void regist(ComponentDef componentDef) {
+    protected void register(ComponentDef componentDef) {
         Class componentClass = componentDef.getComponentClass();
         if (componentClass == null) {
             return;
@@ -68,13 +68,13 @@ public class AspectAutoRegister extends AbstractAutoRegister {
                 continue;
             }
             if (cp.isAppliedShortClassName(shortClassName)) {
-                registInterceptor(componentDef);
+                registerInterceptor(componentDef);
                 return;
             }
         }
     }
     
-    protected void registInterceptor(ComponentDef componentDef) {
+    protected void registerInterceptor(ComponentDef componentDef) {
         AspectDef aspectDef = AspectDefFactory.createAspectDef(interceptor, pointcut);
         componentDef.addAspectDef(aspectDef);
     }

@@ -46,7 +46,7 @@ public class ComponentAutoRegister extends AbstractComponentAutoRegister impleme
         referenceClasses.add(referenceClass);
     }
 
-    public void registAll() {
+    public void registerAll() {
         for (int i = 0; i < referenceClasses.size(); ++i) {
             final Class referenceClass = (Class) referenceClasses.get(i);
             final String baseClassPath = ResourceUtil.getResourcePath(referenceClass);

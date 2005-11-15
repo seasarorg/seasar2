@@ -61,12 +61,12 @@ public abstract class AbstractComponentAutoRegister extends AbstractAutoRegister
         for (int i = 0; i < getClassPatternSize(); ++i) {
             final ClassPattern cp = getClassPattern(i);
             if (cp.isAppliedPackageName(packageName) && cp.isAppliedShortClassName(shortClassName)) {
-                regist(packageName, shortClassName);
+                register(packageName, shortClassName);
             }
         }
     }
 
-    protected void regist(final String packageName, final String shortClassName) {
+    protected void register(final String packageName, final String shortClassName) {
         final AnnotationHandler annoHandler = AnnotationHandlerFactory
                 .getAnnotationHandler();
         final String className = ClassUtil.concatName(packageName, shortClassName);

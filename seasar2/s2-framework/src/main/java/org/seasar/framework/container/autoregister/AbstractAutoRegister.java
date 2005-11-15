@@ -69,7 +69,7 @@ public abstract class AbstractAutoRegister {
         ignoreClassPatterns.add(classPattern);
     }
     
-    public abstract void registAll();
+    public abstract void registerAll();
 
     protected boolean hasComponentDef(String name) {
         return findComponentDef(name) != null;
