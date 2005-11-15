@@ -13,7 +13,7 @@
   <artifactId>s2-extension</artifactId>
   <packaging>jar</packaging>
   <name>Seasar2 Extension</name>
-  <version>2.3.1-SNAPSHOT</version>
+  <url>http://s2container.seasar.org/</url>
   <dependencies>
     <dependency>
       <groupId>org.seasar.framework</groupId>

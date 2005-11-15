@@ -13,7 +13,7 @@
   <artifactId>s2-framework</artifactId>
   <packaging>jar</packaging>
   <name>Seasar2 Framework</name>
-  <version>2.3.1-SNAPSHOT</version>
+  <url>http://s2container.seasar.org/</url>
   <dependencies>
     <dependency>
       <groupId>aopalliance</groupId>
@@ -38,13 +38,6 @@
       <artifactId>junit</artifactId>
       <version>3.8.1</version>
       <type>jar</type>
-    </dependency>
-    <dependency>
-      <groupId>log4j</groupId>
-      <artifactId>log4j</artifactId>
-      <version>1.2.8</version>
-      <type>jar</type>
-      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>ognl</groupId>
