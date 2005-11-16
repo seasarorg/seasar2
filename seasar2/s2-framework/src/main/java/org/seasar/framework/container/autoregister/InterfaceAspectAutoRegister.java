@@ -16,6 +16,7 @@
 package org.seasar.framework.container.autoregister;
 
 import org.aopalliance.intercept.MethodInterceptor;
+import org.seasar.framework.aop.Pointcut;
 import org.seasar.framework.container.AspectDef;
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.S2Container;
@@ -25,22 +26,33 @@ import org.seasar.framework.container.factory.AspectDefFactory;
  * @author higa
  *
  */
-public class AspectAutoRegister extends AbstractAutoRegister {
+public class InterfaceAspectAutoRegister {
 
+    private S2Container container;
+    
     private MethodInterceptor interceptor;
     
-    private String pointcut;
+    private Class targetInterface;
+    
+    private Pointcut pointcut;
+
+    public void setContainer(S2Container container) {
+        this.container = container;
+    }
     
     public void setInterceptor(MethodInterceptor interceptor) {
         this.interceptor = interceptor;
     }
     
-    public void setPointcut(String pointcut) {
-        this.pointcut = pointcut;
+    public void setTargetInterface(Class targetInterface) {
+        if (!targetInterface.isInterface()) {
+            throw new IllegalArgumentException(targetInterface.getName());
+        }
+        this.targetInterface = targetInterface;
+        this.pointcut = AspectDefFactory.createPointcut(targetInterface);
     }
 
     public void registerAll() {
-        S2Container container = getContainer();
         for (int i = 0; i < container.getComponentDefSize(); ++i) {
             ComponentDef cd = container.getComponentDef(i);
             register(cd);
@@ -52,28 +64,12 @@ public class AspectAutoRegister extends AbstractAutoRegister {
         if (componentClass == null) {
             return;
         }
-        /*if (componentDef.getAspectDefSize() > 0) {
+        if (!targetInterface.isAssignableFrom(componentClass)) {
             return;
-        }*/
-        String className = componentClass.getName();
-        for (int i = 0; i < getClassPatternSize(); ++i) {
-            ClassPattern cp = getClassPattern(i);
-            String packageName = cp.getPackageName();
-            if (!className.startsWith(packageName)) {
-                continue;
-            }
-            String shortClassName = className.substring(
-                    packageName.length() + 1);
-            if (isIgnore(packageName, shortClassName)) {
-                continue;
-            }
-            if (cp.isAppliedShortClassName(shortClassName)) {
-                registerInterceptor(componentDef);
-                return;
-            }
         }
+        registerInterceptor(componentDef);
     }
-    
+   
     protected void registerInterceptor(ComponentDef componentDef) {
         AspectDef aspectDef = AspectDefFactory.createAspectDef(interceptor, pointcut);
         componentDef.addAspectDef(aspectDef);

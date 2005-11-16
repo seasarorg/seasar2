@@ -29,18 +29,36 @@ public class AspectDefFactory {
     protected AspectDefFactory() {
     }
     
-    public static AspectDef createAspectDef(String interceptorName, String pointcutStr) {
-        Pointcut pointcut = createPointcut(pointcutStr);
+    public static AspectDef createAspectDef(MethodInterceptor interceptor, Pointcut pointcut) {
+        AspectDef aspectDef = new AspectDefImpl(pointcut);
+        aspectDef.setValue(interceptor);
+        return aspectDef;
+    }
+    
+    public static AspectDef createAspectDef(String interceptorName, Pointcut pointcut) {
         AspectDef aspectDef = new AspectDefImpl(pointcut);
         aspectDef.setExpression(interceptorName);
         return aspectDef;
     }
     
+    public static AspectDef createAspectDef(String interceptorName, String pointcutStr) {
+        Pointcut pointcut = createPointcut(pointcutStr);
+        return createAspectDef(interceptorName, pointcut);
+    }
+    
     public static AspectDef createAspectDef(MethodInterceptor interceptor, String pointcutStr) {
         Pointcut pointcut = createPointcut(pointcutStr);
-        AspectDef aspectDef = new AspectDefImpl(pointcut);
-        aspectDef.setValue(interceptor);
-        return aspectDef;
+        return createAspectDef(interceptor, pointcut);
+    }
+    
+    public static AspectDef createAspectDef(String interceptorName, Method method) {
+        Pointcut pointcut = createPointcut(method);
+        return createAspectDef(interceptorName, pointcut);
+    }
+    
+    public static AspectDef createAspectDef(MethodInterceptor interceptor, Method method) {
+        Pointcut pointcut = createPointcut(method);
+        return createAspectDef(interceptor, pointcut);
     }
     
     public static Pointcut createPointcut(String pointcutStr) {
@@ -51,18 +69,8 @@ public class AspectDefFactory {
         return null;
     }
     
-    public static AspectDef createAspectDef(String interceptorName, Method method) {
-        Pointcut pointcut = createPointcut(method);
-        AspectDef aspectDef = new AspectDefImpl(pointcut);
-        aspectDef.setExpression(interceptorName);
-        return aspectDef;
-    }
-    
-    public static AspectDef createAspectDef(MethodInterceptor interceptor, Method method) {
-        Pointcut pointcut = createPointcut(method);
-        AspectDef aspectDef = new AspectDefImpl(pointcut);
-        aspectDef.setValue(interceptor);
-        return aspectDef;
+    public static Pointcut createPointcut(Class clazz) {
+        return new PointcutImpl(clazz);
     }
     
     public static Pointcut createPointcut(Method method) {

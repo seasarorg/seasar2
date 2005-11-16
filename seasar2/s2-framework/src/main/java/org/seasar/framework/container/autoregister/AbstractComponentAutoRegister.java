@@ -33,14 +33,14 @@ public abstract class AbstractComponentAutoRegister extends AbstractAutoRegister
     
     private AutoNaming autoNaming = new DefaultAutoNaming();
     
-    public static final String instanceDef_BINDING = "bindingType=may";
-    
     private InstanceDef instanceDef;
     
     public AutoNaming getAutoNaming() {
         return autoNaming;
     }
 
+    public static final String autoNaming_BINDING = "bindingType=may";
+    
     public void setAutoNaming(AutoNaming autoNaming) {
         this.autoNaming = autoNaming;
     }
@@ -48,6 +48,8 @@ public abstract class AbstractComponentAutoRegister extends AbstractAutoRegister
     public InstanceDef getInstanceDef() {
         return instanceDef;
     }
+
+    public static final String instanceDef_BINDING = "bindingType=may";
 
     public void setInstanceDef(InstanceDef instanceDef) {
         this.instanceDef = instanceDef;
