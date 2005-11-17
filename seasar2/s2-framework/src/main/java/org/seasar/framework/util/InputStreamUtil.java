@@ -58,4 +58,11 @@ public final class InputStreamUtil {
         return bytes;
     }
 
+    public static int available(InputStream is) {
+        try {
+            return is.available();
+        } catch (IOException e) {
+            throw new IORuntimeException(e);
+        }
+    }
 }

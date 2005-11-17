@@ -15,6 +15,7 @@
  */
 package org.seasar.extension.jdbc.types;
 
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.sql.Types;
@@ -37,7 +38,8 @@ public final class ValueTypes {
 	public final static ValueType TIME = new TimeType();
 	public final static ValueType SQLDATE = new SqlDateType();
 	public final static ValueType TIMESTAMP = new TimestampType();
-	public final static ValueType BINARY = new BinaryType();
+	public final static ValueType BINARY = new BinaryStreamType();
+    public final static ValueType BINARY_STREAM = new BinaryType();
 	public final static ValueType BOOLEAN = new BooleanType();
 	public final static ValueType OBJECT = new ObjectType();
 
@@ -63,6 +65,7 @@ public final class ValueTypes {
 		registerValueType(Timestamp.class, TIMESTAMP);
 		registerValueType(Calendar.class, TIMESTAMP);
 		registerValueType(BYTE_ARRAY_CLASS, BINARY);
+        registerValueType(InputStream.class, BINARY_STREAM);
 		registerValueType(boolean.class, BOOLEAN);
 		registerValueType(Boolean.class, BOOLEAN);
 	}
@@ -84,13 +87,12 @@ public final class ValueTypes {
 	}
 
 	public static ValueType getValueType(Class clazz) {
-		if (clazz == null) {
-			return OBJECT;
-		}
-		ValueType valueType = getValueType0(clazz);
-		if (valueType != null) {
-			return valueType;
-		}
+		for (Class c = clazz; c != null; c = c.getSuperclass()) {
+            ValueType valueType = getValueType0(c);
+            if (valueType != null) {
+                return valueType;
+            }
+        }
 		return OBJECT;
 	}
 	

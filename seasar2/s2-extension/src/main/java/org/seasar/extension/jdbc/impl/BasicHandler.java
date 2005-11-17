@@ -103,7 +103,7 @@ public class BasicHandler {
 			return;
 		}
 		for (int i = 0; i < args.length; ++i) {
-			ValueType valueType = ValueTypes.getValueType(argTypes[i]);
+			ValueType valueType = getValueType(argTypes[i]);
 			try {
 				valueType.bindValue(ps, i + 1, args[i]);
 			} catch (SQLException ex) {
@@ -167,4 +167,8 @@ public class BasicHandler {
 			return "'" + bindVariable.toString() + "'";
 		}
 	}
+    
+    protected ValueType getValueType(Class clazz) {
+        return ValueTypes.getValueType(clazz);
+    }
 }

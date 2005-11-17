@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<!DOCTYPE components PUBLIC "-//SEASAR2.1//DTD S2Container//EN"
+	"http://www.seasar.org/dtd/components21.dtd">
+<components namespace="child" >
+	<component class="org.seasar.framework.container.autoregister.FileSystemComponentAutoRegister">
+		<initMethod name="addClassPattern">
+			<arg>"org.seasar.framework.container.autoregister"</arg>
+			<arg>"Foo.*"</arg>
+		</initMethod>
+		<initMethod name="registerAll"></initMethod>
+	</component>
+	<component class="org.seasar.framework.container.autoregister.InterfaceAspectAutoRegister">
+		<property name="interceptor">greetingInterceptor</property>
+		<property name="targetInterface">
+			@org.seasar.framework.container.autoregister.Greeting@class
+		</property>
+		<initMethod name="registerAll"></initMethod>
+	</component>
+	<component name="greetingInterceptor" class="org.seasar.framework.container.autoregister.GreetingInterceptor"/>
+</components>

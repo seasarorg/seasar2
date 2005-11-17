@@ -23,18 +23,18 @@ import org.seasar.framework.container.factory.AspectDefFactory;
 
 /**
  * @author higa
- *
+ * 
  */
 public class AspectAutoRegister extends AbstractAutoRegister {
 
     private MethodInterceptor interceptor;
-    
+
     private String pointcut;
-    
+
     public void setInterceptor(MethodInterceptor interceptor) {
         this.interceptor = interceptor;
     }
-    
+
     public void setPointcut(String pointcut) {
         this.pointcut = pointcut;
     }
@@ -46,36 +46,36 @@ public class AspectAutoRegister extends AbstractAutoRegister {
             register(cd);
         }
     }
-    
+
     protected void register(ComponentDef componentDef) {
         Class componentClass = componentDef.getComponentClass();
         if (componentClass == null) {
             return;
         }
-        /*if (componentDef.getAspectDefSize() > 0) {
-            return;
-        }*/
+        /*
+         * if (componentDef.getAspectDefSize() > 0) { return; }
+         */
         String className = componentClass.getName();
+        int pos = className.lastIndexOf('.');
+        String packageName = pos < 0 ? null : className.substring(0, pos);
+        String shortClassName = pos < 0 ? className : className
+                .substring(pos + 1);
         for (int i = 0; i < getClassPatternSize(); ++i) {
             ClassPattern cp = getClassPattern(i);
-            String packageName = cp.getPackageName();
-            if (!className.startsWith(packageName)) {
-                continue;
-            }
-            String shortClassName = className.substring(
-                    packageName.length() + 1);
             if (isIgnore(packageName, shortClassName)) {
                 continue;
             }
-            if (cp.isAppliedShortClassName(shortClassName)) {
+            if (cp.isAppliedPackageName(packageName)
+                    && cp.isAppliedShortClassName(shortClassName)) {
                 registerInterceptor(componentDef);
                 return;
             }
         }
     }
-    
+
     protected void registerInterceptor(ComponentDef componentDef) {
-        AspectDef aspectDef = AspectDefFactory.createAspectDef(interceptor, pointcut);
+        AspectDef aspectDef = AspectDefFactory.createAspectDef(interceptor,
+                pointcut);
         componentDef.addAspectDef(aspectDef);
     }
 }
