@@ -52,18 +52,18 @@ public class ComponentAutoRegister extends AbstractComponentAutoRegister impleme
             final String baseClassPath = ResourceUtil.getResourcePath(referenceClass);
             final URL url = ResourceUtil.getResource(baseClassPath);
             final Strategy strategy = (Strategy) strategies.get(url.getProtocol());
-            strategy.registAll(referenceClass, url);
+            strategy.registerAll(referenceClass, url);
         }
     }
 
     private interface Strategy {
 
-        void registAll(Class referenceClass, URL url);
+        void registerAll(Class referenceClass, URL url);
     }
 
     private class FileSystemStrategy implements Strategy {
 
-        public void registAll(final Class referenceClass, final URL url) {
+        public void registerAll(final Class referenceClass, final URL url) {
             final File rootDir = getRootDir(referenceClass, url);
             for (int i = 0; i < getClassPatternSize(); ++i) {
                 ClassTraversal.forEach(rootDir, getClassPattern(i).getPackageName(),
@@ -83,7 +83,7 @@ public class ComponentAutoRegister extends AbstractComponentAutoRegister impleme
 
     private class JarFileStrategy implements Strategy {
 
-        public void registAll(final Class referenceClass, final URL url) {
+        public void registerAll(final Class referenceClass, final URL url) {
             final JarFile jarFile = createJarFile(url);
             ClassTraversal.forEach(jarFile, ComponentAutoRegister.this);
         }
