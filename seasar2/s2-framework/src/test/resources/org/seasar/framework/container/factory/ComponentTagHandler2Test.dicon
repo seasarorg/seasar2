@@ -8,7 +8,7 @@
 			<arg>"org.seasar.framework.container.factory"</arg>
 			<arg>"Foo.*"</arg>
 		</initMethod>
-		<initMethod name="registAll"></initMethod>
+		<initMethod name="registerAll"></initMethod>
 	</component>
 	<component name="aaa">"111"</component>
 	<component name="bbb">"222"</component>
