@@ -5,6 +5,7 @@ import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.beans.factory.BeanDescFactory;
 import org.seasar.framework.container.AspectDef;
 import org.seasar.framework.container.ComponentDef;
+import org.seasar.framework.container.InitMethodDef;
 import org.seasar.framework.container.PropertyDef;
 import org.seasar.framework.container.assembler.AutoBindingDefFactory;
 import org.seasar.framework.container.assembler.BindingTypeDefFactory;
@@ -70,14 +71,33 @@ public class ConstantAnnotationHandlerTest extends S2FrameworkTestCase {
         AspectDef aspectDef = cd.getAspectDef(0);
         assertEquals("2", "aop.traceInterceptor", aspectDef.getExpression());
     }
+    
+    public void testAppendInitMethod() throws Exception {
+        ComponentDef cd = handler.createComponentDefWithDI(Hoge.class, null);
+        assertEquals("1", 1, cd.getInitMethodDefSize());
+        InitMethodDef initMethodDef = cd.getInitMethodDef(0);
+        assertEquals("2", "init", initMethodDef.getMethodName());
+    }
 
     public static class Hoge {
+        
+        public static final String INIT_METHOD = "init";
+        
+        private boolean inited = false;
         
         public static final String ASPECT =
             "value=aop.traceInterceptor, pointcut=getAaa\ngetBbb";
 
         public String getAaa() {
             return null;
+        }
+        
+        public void init() {
+            inited = true;
+        }
+        
+        public boolean isInited() {
+            return inited;
         }
     }
 

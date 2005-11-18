@@ -46,6 +46,8 @@ public abstract class AbstractAnnotationHandler implements AnnotationHandler {
     
     protected static final String ASPECT = "ASPECT";
     
+    protected static final String INIT_METHOD = "INIT_METHOD";
+    
     protected static final String INTERCEPTOR = "interceptor";
     
     protected static final String POINTCUT = "pointcut";
@@ -78,6 +80,7 @@ public abstract class AbstractAnnotationHandler implements AnnotationHandler {
             componentDef.addPropertyDef(propDef);
         }
         appendAspect(componentDef);
+        appendInitMethod(componentDef);
     }
     
     protected ComponentDef createComponentDefInternal(Class componentClass, InstanceDef instanceDef) {

@@ -38,8 +38,8 @@ public final class ValueTypes {
 	public final static ValueType TIME = new TimeType();
 	public final static ValueType SQLDATE = new SqlDateType();
 	public final static ValueType TIMESTAMP = new TimestampType();
-	public final static ValueType BINARY = new BinaryStreamType();
-    public final static ValueType BINARY_STREAM = new BinaryType();
+	public final static ValueType BINARY = new BinaryType();
+    public final static ValueType BINARY_STREAM = new BinaryStreamType();
 	public final static ValueType BOOLEAN = new BooleanType();
 	public final static ValueType OBJECT = new ObjectType();
 

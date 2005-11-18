@@ -23,10 +23,12 @@ import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.beans.factory.BeanDescFactory;
 import org.seasar.framework.container.AspectDef;
 import org.seasar.framework.container.ComponentDef;
+import org.seasar.framework.container.InitMethodDef;
 import org.seasar.framework.container.InstanceDef;
 import org.seasar.framework.container.PropertyDef;
 import org.seasar.framework.container.assembler.AutoBindingDefFactory;
 import org.seasar.framework.container.deployer.InstanceDefFactory;
+import org.seasar.framework.container.impl.InitMethodDefImpl;
 import org.seasar.framework.exception.EmptyRuntimeException;
 import org.seasar.framework.util.FieldUtil;
 import org.seasar.framework.util.StringUtil;
@@ -136,5 +138,27 @@ public class ConstantAnnotationHandler extends AbstractAnnotationHandler {
         }
         AspectDef aspectDef = AspectDefFactory.createAspectDef(interceptor, pointcut);
         componentDef.addAspectDef(aspectDef);
+    }
+
+    public void appendInitMethod(ComponentDef componentDef) {
+        Class componentClass = componentDef.getComponentClass();
+        BeanDesc beanDesc = BeanDescFactory.getBeanDesc(componentClass);
+        if (!beanDesc.hasField(INIT_METHOD)) {
+            return;
+        }
+        String initMethodStr = (String) beanDesc.getFieldValue(INIT_METHOD, null);
+        String[] array = StringUtil.split(initMethodStr, ", ");
+        for (int i = 0; i < array.length; ++i) {
+            String methodName = array[i].trim();
+            if (!beanDesc.hasMethod(methodName)) {
+                throw new IllegalArgumentException(methodName);
+            }
+            appendInitMethod(componentDef, methodName);
+        }
+    }
+    
+    protected void appendInitMethod(ComponentDef componentDef, String methodName) {
+        InitMethodDef initMethodDef = new InitMethodDefImpl(methodName);
+        componentDef.addInitMethodDef(initMethodDef);
     }
 }
