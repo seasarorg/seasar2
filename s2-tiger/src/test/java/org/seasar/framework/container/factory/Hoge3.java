@@ -9,10 +9,15 @@ public class Hoge3 {
     public static final String aaa_BINDING = "aaa2";
 
     public static final String bbb_BINDING = "bindingType=none";
+    
+    public static final String INIT_METHOD = "init";
 
     public void setAaa(String aaa) {
     }
 
     public void setBbb(String bbb) {
+    }
+    
+    public void init() {
     }
 }

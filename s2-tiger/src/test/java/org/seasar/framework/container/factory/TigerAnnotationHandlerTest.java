@@ -6,6 +6,7 @@ import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.beans.factory.BeanDescFactory;
 import org.seasar.framework.container.AspectDef;
 import org.seasar.framework.container.ComponentDef;
+import org.seasar.framework.container.InitMethodDef;
 import org.seasar.framework.container.InstanceDef;
 import org.seasar.framework.container.PropertyDef;
 import org.seasar.framework.container.deployer.InstanceDefFactory;
@@ -81,5 +82,19 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
         assertEquals("1", 1, cd.getAspectDefSize());
         AspectDef aspectDef = cd.getAspectDef(0);
         assertEquals("2", "aop.traceInterceptor", aspectDef.getExpression());
+    }
+
+    public void testAppendInitMethod() throws Exception {
+        ComponentDef cd = handler.createComponentDefWithDI(Hoge.class, null);
+        assertEquals("1", 1, cd.getInitMethodDefSize());
+        InitMethodDef initMethodDef = cd.getInitMethodDef(0);
+        assertEquals("2", "init", initMethodDef.getMethodName());
+    }
+
+    public void testAppendInitMethodForConstantAnnotation() throws Exception {
+        ComponentDef cd = handler.createComponentDefWithDI(Hoge3.class, null);
+        assertEquals("1", 1, cd.getInitMethodDefSize());
+        InitMethodDef initMethodDef = cd.getInitMethodDef(0);
+        assertEquals("2", "init", initMethodDef.getMethodName());
     }
 }

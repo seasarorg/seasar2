@@ -26,6 +26,7 @@ import org.seasar.framework.container.annotation.tiger.Aspect;
 import org.seasar.framework.container.annotation.tiger.AutoBindingType;
 import org.seasar.framework.container.annotation.tiger.Binding;
 import org.seasar.framework.container.annotation.tiger.Component;
+import org.seasar.framework.container.annotation.tiger.InitMethod;
 import org.seasar.framework.container.annotation.tiger.InstanceType;
 import org.seasar.framework.container.assembler.AutoBindingDefFactory;
 import org.seasar.framework.container.deployer.InstanceDefFactory;
@@ -91,5 +92,19 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
             }
         }
         super.appendAspect(componentDef);
+    }
+
+    public void appendInitMethod(ComponentDef componentDef) {
+        Class<?> clazz = componentDef.getComponentClass();
+        Method[] methods = clazz.getMethods();
+        for (Method method : methods) {
+            InitMethod initMethod = method.getAnnotation(InitMethod.class);
+            if (initMethod != null) {
+                if (method.getParameterTypes().length == 0) {
+                    appendInitMethod(componentDef, method.getName());
+                }
+            }
+        }
+        super.appendInitMethod(componentDef);
     }
 }
