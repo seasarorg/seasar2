@@ -9,7 +9,6 @@
 			<arg>"org.seasar.framework.container.autoregister"</arg>
 			<arg>"Bar.*"</arg>
 		</initMethod>
-		<initMethod name="registerAll"></initMethod>
 	</component>
 	<component name="greetingInterceptor" class="org.seasar.framework.container.autoregister.GreetingInterceptor"/>
 	<component name="greetingInterceptor2" class="org.seasar.framework.container.autoregister.GreetingInterceptor"/>

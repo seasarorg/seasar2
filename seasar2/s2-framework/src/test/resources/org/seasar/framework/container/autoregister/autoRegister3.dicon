@@ -14,6 +14,5 @@
 			<arg>"org.seasar.framework.container.autoregister"</arg>
 			<arg>"Foo4Impl"</arg>
 		</initMethod>
-		<initMethod name="registerAll"></initMethod>
 	</component>
 </components>

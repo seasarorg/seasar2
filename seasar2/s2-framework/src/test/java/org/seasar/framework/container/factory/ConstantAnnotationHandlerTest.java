@@ -5,6 +5,7 @@ import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.beans.factory.BeanDescFactory;
 import org.seasar.framework.container.AspectDef;
 import org.seasar.framework.container.ComponentDef;
+import org.seasar.framework.container.IllegalInitMethodAnnotationRuntimeException;
 import org.seasar.framework.container.InitMethodDef;
 import org.seasar.framework.container.PropertyDef;
 import org.seasar.framework.container.assembler.AutoBindingDefFactory;
@@ -59,24 +60,44 @@ public class ConstantAnnotationHandlerTest extends S2FrameworkTestCase {
     }
 
     public void testAppendAspect() throws Exception {
-        ComponentDef cd = handler.createComponentDefWithDI(Hoge.class, null);
+        ComponentDef cd = handler.createComponentDef(Hoge.class, null);
+        handler.appendAspect(cd);
         assertEquals("1", 1, cd.getAspectDefSize());
         AspectDef aspectDef = cd.getAspectDef(0);
         assertEquals("2", "aop.traceInterceptor", aspectDef.getExpression());
     }
     
     public void testAppendAspect2() throws Exception {
-        ComponentDef cd = handler.createComponentDefWithDI(Hoge2.class, null);
+        ComponentDef cd = handler.createComponentDef(Hoge2.class, null);
+        handler.appendAspect(cd);
         assertEquals("1", 1, cd.getAspectDefSize());
         AspectDef aspectDef = cd.getAspectDef(0);
         assertEquals("2", "aop.traceInterceptor", aspectDef.getExpression());
     }
     
     public void testAppendInitMethod() throws Exception {
-        ComponentDef cd = handler.createComponentDefWithDI(Hoge.class, null);
+        ComponentDef cd = handler.createComponentDef(Hoge.class, null);
+        handler.appendInitMethod(cd);
         assertEquals("1", 1, cd.getInitMethodDefSize());
         InitMethodDef initMethodDef = cd.getInitMethodDef(0);
         assertEquals("2", "init", initMethodDef.getMethodName());
+    }
+    
+    public void testAppendInitMethodForException() throws Exception {
+        try {
+            ComponentDef cd = handler.createComponentDef(Hoge4.class, null);
+            handler.appendInitMethod(cd);
+            fail("1");
+        } catch (IllegalInitMethodAnnotationRuntimeException ex) {
+            System.out.println(ex);
+        }
+        try {
+            ComponentDef cd = handler.createComponentDef(Hoge5.class, null);
+            handler.appendInitMethod(cd);
+            fail("2");
+        } catch (IllegalInitMethodAnnotationRuntimeException ex) {
+            System.out.println(ex);
+        }
     }
 
     public static class Hoge {
@@ -126,5 +147,16 @@ public class ConstantAnnotationHandlerTest extends S2FrameworkTestCase {
 
     public static class Hoge3 {
         public static final String COMPONENT = "dummy = aaa";
+    }
+    
+    public static class Hoge4 {
+        public static final String INIT_METHOD = "xxx";
+    }
+    
+    public static class Hoge5 {
+        public static final String INIT_METHOD = "init";
+        
+        public void init(String s) {
+        }
     }
 }

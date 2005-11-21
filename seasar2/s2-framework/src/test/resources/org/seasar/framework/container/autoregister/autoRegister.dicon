@@ -14,7 +14,6 @@
 			<arg>"org.seasar.framework.container.autoregister"</arg>
 			<arg>"Foo4Impl"</arg>
 		</initMethod>
-		<initMethod name="registerAll"></initMethod>
 	</component>
 	<component class="org.seasar.framework.container.autoregister.AspectAutoRegister">
 		<property name="interceptor">greetingInterceptor</property>
@@ -22,7 +21,6 @@
 			<arg>"org.seasar.framework.container.autoregister"</arg>
 			<arg>"Foo.*"</arg>
 		</initMethod>
-		<initMethod name="registerAll"></initMethod>
 	</component>
 	<component name="greetingInterceptor" class="org.seasar.framework.container.autoregister.GreetingInterceptor"/>
 </components>

@@ -6,6 +6,7 @@ import java.util.Map;
 
 import junit.framework.TestCase;
 
+import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.factory.S2ContainerFactory;
 
@@ -25,17 +26,40 @@ public class InitMethodTagHandlerTest extends TestCase {
 		Bbb bbb = (Bbb) container.getComponent("bbb");
 		assertEquals("2", false, bbb.isEmpty());
 	}
+    
+    public void testInitMethodAnnotation() throws Exception {
+        S2Container container = S2ContainerFactory.create(PATH);
+        container.init();
+        Bbb bbb = (Bbb) container.getComponent("bbb");
+        Bbb bbb2 = (Bbb) container.getComponent("bbb2");
+        ComponentDef cd = container.getComponentDef("bbb2");
+        assertEquals("1", 1, bbb.getInitCount());
+        assertEquals("2", 1, cd.getInitMethodDefSize());
+        assertEquals("3", 1, bbb2.getInitCount());
+    }
 	
 	public static class Bbb {
 		
-		private List value_;
+        public static final String INIT_METHOD = "init";
+        
+		private List value;
+        
+        private int initCount = 0;
 		
 		public void value(List value) {
-			value_ = value;
+			this.value = value;
 		}
 		
 		public boolean isEmpty() {
-			return value_ == null;
+			return value == null;
 		}
+        
+        public void init() {
+            ++initCount;
+        }
+        
+        public int getInitCount() {
+            return initCount;
+        }
 	}
 }
