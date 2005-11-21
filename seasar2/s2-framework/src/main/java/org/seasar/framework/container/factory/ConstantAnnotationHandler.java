@@ -23,6 +23,7 @@ import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.beans.factory.BeanDescFactory;
 import org.seasar.framework.container.AspectDef;
 import org.seasar.framework.container.ComponentDef;
+import org.seasar.framework.container.IllegalInitMethodAnnotationRuntimeException;
 import org.seasar.framework.container.InitMethodDef;
 import org.seasar.framework.container.InstanceDef;
 import org.seasar.framework.container.PropertyDef;
@@ -94,6 +95,9 @@ public class ConstantAnnotationHandler extends AbstractAnnotationHandler {
 
     public void appendAspect(ComponentDef componentDef) {
         Class componentClass = componentDef.getComponentClass();
+        if (componentClass == null) {
+            return;
+        }
         BeanDesc beanDesc = BeanDescFactory.getBeanDesc(componentClass);
         if (!beanDesc.hasField(ASPECT)) {
             return;
@@ -142,16 +146,29 @@ public class ConstantAnnotationHandler extends AbstractAnnotationHandler {
 
     public void appendInitMethod(ComponentDef componentDef) {
         Class componentClass = componentDef.getComponentClass();
+        if (componentClass == null) {
+            return;
+        }
         BeanDesc beanDesc = BeanDescFactory.getBeanDesc(componentClass);
         if (!beanDesc.hasField(INIT_METHOD)) {
             return;
         }
         String initMethodStr = (String) beanDesc.getFieldValue(INIT_METHOD, null);
+        if (StringUtil.isEmpty(initMethodStr)) {
+            return;
+        }
         String[] array = StringUtil.split(initMethodStr, ", ");
         for (int i = 0; i < array.length; ++i) {
             String methodName = array[i].trim();
             if (!beanDesc.hasMethod(methodName)) {
-                throw new IllegalArgumentException(methodName);
+                throw new IllegalInitMethodAnnotationRuntimeException(componentClass, methodName);
+            }
+            Method[] methods = beanDesc.getMethods(methodName);
+            if (methods.length != 1 || methods[0].getParameterTypes().length != 0) {
+                throw new IllegalInitMethodAnnotationRuntimeException(componentClass, methodName);
+            }
+            if (!isInitMethodRegisterable(componentDef, methodName)) {
+                continue;
             }
             appendInitMethod(componentDef, methodName);
         }

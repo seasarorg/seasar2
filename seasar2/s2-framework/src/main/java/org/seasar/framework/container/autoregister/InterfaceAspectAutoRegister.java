@@ -28,6 +28,8 @@ import org.seasar.framework.container.factory.AspectDefFactory;
  */
 public class InterfaceAspectAutoRegister {
 
+    public static final String INIT_METHOD = "registerAll";
+
     private S2Container container;
     
     private MethodInterceptor interceptor;

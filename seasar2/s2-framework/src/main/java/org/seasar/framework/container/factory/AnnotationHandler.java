@@ -26,11 +26,7 @@ public interface AnnotationHandler {
     public ComponentDef createComponentDef(String className, InstanceDef instanceDef);
 
     public ComponentDef createComponentDef(Class componentClass, InstanceDef instanceDef);
-        
-    public ComponentDef createComponentDefWithDI(String className, InstanceDef instanceDef);
-
-    public ComponentDef createComponentDefWithDI(Class componentClass, InstanceDef instanceDef);
-    
+  
     public void appendDI(ComponentDef componentDef);
     
     public void appendAspect(ComponentDef componentDef);

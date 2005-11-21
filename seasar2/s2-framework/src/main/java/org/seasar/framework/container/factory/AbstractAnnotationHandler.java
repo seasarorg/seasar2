@@ -20,6 +20,7 @@ import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.beans.factory.BeanDescFactory;
 import org.seasar.framework.container.BindingTypeDef;
 import org.seasar.framework.container.ComponentDef;
+import org.seasar.framework.container.InitMethodDef;
 import org.seasar.framework.container.InstanceDef;
 import org.seasar.framework.container.PropertyDef;
 import org.seasar.framework.container.assembler.BindingTypeDefFactory;
@@ -56,16 +57,6 @@ public abstract class AbstractAnnotationHandler implements AnnotationHandler {
         return createComponentDef(ClassUtil.forName(className), instanceDef);
     }
 
-    public ComponentDef createComponentDefWithDI(String className, InstanceDef instanceDef) {
-        return createComponentDefWithDI(ClassUtil.forName(className), instanceDef);
-    }
-    
-    public ComponentDef createComponentDefWithDI(Class componentClass, InstanceDef instanceDef) {
-        ComponentDef componentDef = createComponentDef(componentClass, instanceDef);
-        appendDI(componentDef);
-        return componentDef;
-    }
-    
     public void appendDI(ComponentDef componentDef) {
         BeanDesc beanDesc = BeanDescFactory.getBeanDesc(componentDef.getComponentClass());
         for (int i = 0; i < beanDesc.getPropertyDescSize(); ++i) {
@@ -79,8 +70,6 @@ public abstract class AbstractAnnotationHandler implements AnnotationHandler {
             }
             componentDef.addPropertyDef(propDef);
         }
-        appendAspect(componentDef);
-        appendInitMethod(componentDef);
     }
     
     protected ComponentDef createComponentDefInternal(Class componentClass, InstanceDef instanceDef) {
@@ -101,5 +90,18 @@ public abstract class AbstractAnnotationHandler implements AnnotationHandler {
             propertyDef.setExpression(expression);
         }
         return propertyDef;
+    }
+    
+    protected boolean isInitMethodRegisterable(ComponentDef cd, String methodName) {
+        if (StringUtil.isEmpty(methodName)) {
+            return false;
+        }
+        for (int i = 0; i < cd.getInitMethodDefSize(); ++i) {
+            InitMethodDef other = cd.getInitMethodDef(i);
+            if (methodName.equals(other.getMethodName()) && other.getArgDefSize() == 0) {
+                return false;
+            }
+        }
+        return true;
     }
 }

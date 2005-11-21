@@ -42,8 +42,8 @@ public class InitMethodTagHandler extends MethodTagHandler {
 	 */
 	public void end(TagHandlerContext context, String body) {
 		InitMethodDef methodDef = (InitMethodDef) context.pop();
-		processExpression(methodDef, body, "initMethod");
-		ComponentDef componentDef = (ComponentDef) context.peek();
+        ComponentDef componentDef = (ComponentDef) context.peek();
+        processExpression(methodDef, body, "initMethod");
 		componentDef.addInitMethodDef(methodDef);
 	}
 

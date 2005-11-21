@@ -27,6 +27,8 @@ import org.seasar.framework.container.S2Container;
  */
 public abstract class AbstractAutoRegister {
 
+    public static final String INIT_METHOD = "registerAll";
+
     private S2Container container;
     
     private List classPatterns = new ArrayList();

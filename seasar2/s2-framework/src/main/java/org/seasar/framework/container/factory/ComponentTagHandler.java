@@ -48,10 +48,12 @@ public class ComponentTagHandler extends TagHandler {
 		String name = attributes.getValue("name");
 		ComponentDef componentDef = null;
         if (componentClass != null) {
-            componentDef = annoHandler.createComponentDefWithDI(componentClass, null);
+            componentDef = annoHandler.createComponentDef(componentClass, null);
             if (name != null) {
                 componentDef.setComponentName(name);
             }
+            annoHandler.appendDI(componentDef);
+            annoHandler.appendAspect(componentDef);
         } else {
             componentDef = createComponentDef(componentClass, name);
         }
@@ -73,6 +75,8 @@ public class ComponentTagHandler extends TagHandler {
 	 */
 	public void end(TagHandlerContext context, String body) {
 		ComponentDef componentDef = (ComponentDef) context.pop();
+        AnnotationHandler annoHandler = AnnotationHandlerFactory.getAnnotationHandler();
+        annoHandler.appendInitMethod(componentDef);
 		String expression = null;
 		if (body != null) {
 			expression = body.trim();
