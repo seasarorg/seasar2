@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container//EN"
+"http://www.seasar.org/dtd/components.dtd">
+<components>
+	<component name="hoge5" class="org.seasar.framework.container.factory.Hoge5">
+		<initMethod name="init"/>
+	</component>
+</components>

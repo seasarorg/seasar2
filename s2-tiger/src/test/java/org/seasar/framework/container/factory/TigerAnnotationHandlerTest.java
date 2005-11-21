@@ -6,6 +6,7 @@ import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.beans.factory.BeanDescFactory;
 import org.seasar.framework.container.AspectDef;
 import org.seasar.framework.container.ComponentDef;
+import org.seasar.framework.container.IllegalInitMethodAnnotationRuntimeException;
 import org.seasar.framework.container.InitMethodDef;
 import org.seasar.framework.container.InstanceDef;
 import org.seasar.framework.container.PropertyDef;
@@ -62,14 +63,16 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
     }
 
     public void testAppendAspect() throws Exception {
-        ComponentDef cd = handler.createComponentDefWithDI(Hoge.class, null);
+        ComponentDef cd = handler.createComponentDef(Hoge.class, null);
+        handler.appendAspect(cd);
         assertEquals("1", 1, cd.getAspectDefSize());
         AspectDef aspectDef = cd.getAspectDef(0);
         assertEquals("2", "aop.traceInterceptor", aspectDef.getExpression());
     }
     
     public void testAppendAspectForMethod() throws Exception {
-        ComponentDef cd = handler.createComponentDefWithDI(Hoge4.class, null);
+        ComponentDef cd = handler.createComponentDef(Hoge4.class, null);
+        handler.appendAspect(cd);
         assertEquals("1", 1, cd.getAspectDefSize());
         AspectDef aspectDef = cd.getAspectDef(0);
         assertEquals("2", "aop.traceInterceptor", aspectDef.getExpression());
@@ -78,23 +81,45 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
     }
 
     public void testAppendAspectForConstantAnnotation() throws Exception {
-        ComponentDef cd = handler.createComponentDefWithDI(Hoge3.class, null);
+        ComponentDef cd = handler.createComponentDef(Hoge3.class, null);
+        handler.appendAspect(cd);
         assertEquals("1", 1, cd.getAspectDefSize());
         AspectDef aspectDef = cd.getAspectDef(0);
         assertEquals("2", "aop.traceInterceptor", aspectDef.getExpression());
     }
 
     public void testAppendInitMethod() throws Exception {
-        ComponentDef cd = handler.createComponentDefWithDI(Hoge.class, null);
+        ComponentDef cd = handler.createComponentDef(Hoge.class, null);
+        handler.appendInitMethod(cd);
         assertEquals("1", 1, cd.getInitMethodDefSize());
         InitMethodDef initMethodDef = cd.getInitMethodDef(0);
         assertEquals("2", "init", initMethodDef.getMethodName());
     }
 
     public void testAppendInitMethodForConstantAnnotation() throws Exception {
-        ComponentDef cd = handler.createComponentDefWithDI(Hoge3.class, null);
+        ComponentDef cd = handler.createComponentDef(Hoge3.class, null);
+        handler.appendInitMethod(cd);
         assertEquals("1", 1, cd.getInitMethodDefSize());
         InitMethodDef initMethodDef = cd.getInitMethodDef(0);
         assertEquals("2", "init", initMethodDef.getMethodName());
+    }
+    
+    public void setUpAppendInitMethodForDicon() throws Exception {
+        include("TigerAnnotationHandlerTest.dicon");
+    }
+    
+    public void testAppendInitMethodForDicon() throws Exception {
+        ComponentDef cd = getComponentDef(Hoge5.class);
+        assertEquals("1", 1, cd.getInitMethodDefSize());
+    }
+    
+    public void testAppendInitMethodForException() throws Exception {
+        ComponentDef cd = handler.createComponentDef(Hoge6.class, null);
+        try {
+            handler.appendInitMethod(cd);
+            fail("1");
+        } catch (IllegalInitMethodAnnotationRuntimeException ex) {
+            System.out.println(ex);
+        }
     }
 }

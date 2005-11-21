@@ -20,6 +20,7 @@ import java.lang.reflect.Method;
 import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.container.ComponentDef;
+import org.seasar.framework.container.IllegalInitMethodAnnotationRuntimeException;
 import org.seasar.framework.container.InstanceDef;
 import org.seasar.framework.container.PropertyDef;
 import org.seasar.framework.container.annotation.tiger.Aspect;
@@ -93,17 +94,25 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
         }
         super.appendAspect(componentDef);
     }
-
+    
     public void appendInitMethod(ComponentDef componentDef) {
-        Class<?> clazz = componentDef.getComponentClass();
-        Method[] methods = clazz.getMethods();
+        Class componentClass = componentDef.getComponentClass();
+        if (componentClass == null) {
+            return;
+        }
+        Method[] methods = componentClass.getMethods();
         for (Method method : methods) {
-            InitMethod initMethod = method.getAnnotation(InitMethod.class);
-            if (initMethod != null) {
-                if (method.getParameterTypes().length == 0) {
-                    appendInitMethod(componentDef, method.getName());
-                }
+        	InitMethod initMethod = method.getAnnotation(InitMethod.class);
+            if (initMethod == null) {
+                continue;
             }
+            if (method.getParameterTypes().length != 0) {
+                throw new IllegalInitMethodAnnotationRuntimeException(componentClass, method.getName());
+            }
+            if (!isInitMethodRegisterable(componentDef, method.getName())) {
+                continue;
+            }
+            appendInitMethod(componentDef, method.getName());
         }
         super.appendInitMethod(componentDef);
     }
