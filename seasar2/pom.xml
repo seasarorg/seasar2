@@ -12,6 +12,17 @@
   <description>DI Container with AOP</description>
   <url>http://s2container.seasar.org/</url>
   <inceptionYear>2004</inceptionYear>
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+  <organization>
+    <name>The Seasar Foundation</name>
+    <url>http://www.seasar.org/</url>
+  </organization>
   <modules>
     <module>s2-framework</module>
     <module>s2-extension</module>
