@@ -12,6 +12,62 @@
   <description>DI Container with AOP</description>
   <url>http://s2container.seasar.org/</url>
   <inceptionYear>2004</inceptionYear>
+  <mailingLists>
+    <mailingList>
+      <name>Seasar-user</name>
+      <subscribe>http://lists.sourceforge.jp/mailman/listinfo/seasar-user</subscribe>
+      <unsubscribe>http://lists.sourceforge.jp/mailman/listinfo/seasar-user</unsubscribe>
+      <post>seasar-user@lists.sourceforge.jp</post>
+      <archive>http://lists.sourceforge.jp/mailman/archives/seasar-user/</archive>
+    </mailingList>
+    <mailingList>
+      <name>Seasar-dev</name>
+      <subscribe>http://lists.sourceforge.jp/mailman/listinfo/seasar-dev</subscribe>
+      <unsubscribe>http://lists.sourceforge.jp/mailman/listinfo/seasar-dev</unsubscribe>
+      <post>seasar-user@lists.sourceforge.jp</post>
+      <archive>http://lists.sourceforge.jp/mailman/archives/seasar-dev/</archive>
+    </mailingList>
+  </mailingLists>
+  <developers>
+    <developer>
+      <id>higa</id>
+      <name>HIGA Yasuo</name>
+      <email></email>
+      <url>http://d.hatena.ne.jp/higayasuo/</url>
+      <organization></organization>
+      <timezone>+9</timezone>
+    </developer>
+    <developer>
+      <id>taichi_sato</id>
+      <name>SATO Taichi</name>
+      <email></email>
+      <url>http://d.hatena.ne.jp/taichitaichi/</url>
+      <timezone>+9</timezone>
+    </developer>
+    <developer>
+      <id>koichik</id>
+      <name>KOBAYASHI Koichi</name>
+      <email></email>
+      <url>http://d.hatena.ne.jp/koichik/</url>
+      <timezone>+9</timezone>
+    </developer>
+  </developers>
+  <contributors>
+    <contributor>
+      <name>KAKUTANI Shintaro</name>
+      <url>http://www.kakutani.com/</url>
+    </contributor>
+    <contributor>
+      <name>NAKAMURA Toshihiro</name>
+      <url>http://d.hatena.ne.jp/taedium/</url>
+    </contributor>
+    <contributor>
+      <name>FUKUZAWA Susumu</name>
+    </contributor>
+    <contributor>
+      <name>KUDO Kazuki</name>
+    </contributor>
+  </contributors>
   <licenses>
     <license>
       <name>The Apache Software License, Version 2.0</name>
