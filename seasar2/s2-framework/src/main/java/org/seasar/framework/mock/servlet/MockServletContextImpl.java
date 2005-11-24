@@ -148,7 +148,15 @@ public class MockServletContextImpl implements MockServletContext, Serializable 
      * @see javax.servlet.ServletContext#getResourceAsStream(java.lang.String)
      */
     public InputStream getResourceAsStream(String path) {
-        return ResourceUtil.getResourceAsStream(adjustPath(path));
+        path = adjustPath(path);
+        if (ResourceUtil.isExist(path)) {
+            return ResourceUtil.getResourceAsStream(path);
+        }
+        if (path.startsWith("WEB-INF")) {
+            path = path.substring("WEB-INF".length());
+            return getResourceAsStream(path);
+        }
+        return null;
     }
 
     protected String adjustPath(String path) {
@@ -297,7 +305,8 @@ public class MockServletContextImpl implements MockServletContext, Serializable 
             queryString = path.substring(question + 1);
             path = path.substring(0, question);
         }
-        MockHttpServletRequestImpl request = new MockHttpServletRequestImpl(this, path);
+        MockHttpServletRequestImpl request = new MockHttpServletRequestImpl(
+            this, path);
         request.setQueryString(queryString);
         return request;
     }
