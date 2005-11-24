@@ -27,6 +27,13 @@
       <post>seasar-user@lists.sourceforge.jp</post>
       <archive>http://lists.sourceforge.jp/mailman/archives/seasar-dev/</archive>
     </mailingList>
+    <mailingList>
+      <name>Seasar-user-en</name>
+      <subscribe>https://www.seasar.org/mailman/listinfo/seasar-user-en</subscribe>
+      <unsubscribe>https://www.seasar.org/mailman/listinfo/seasar-user-en</unsubscribe>
+      <post>seasar-user-en@ml.seasar.org</post>
+      <archive>http://ml.seasar.org/archives/seasar-user-en/</archive>
+    </mailingList>
   </mailingLists>
   <developers>
     <developer>
