@@ -6,7 +6,7 @@
   <parent>
     <groupId>org.seasar</groupId>
     <artifactId>s2</artifactId>
-    <version>2.3.3-SNAPSHOT</version>
+    <version>2.3.3</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.seasar.examples</groupId>
@@ -18,7 +18,7 @@
     <dependency>
       <groupId>org.seasar.extension</groupId>
       <artifactId>s2-extension</artifactId>
-      <version>2.3.3-SNAPSHOT</version>
+      <version>2.3.3</version>
       <type>jar</type>
     </dependency>
   </dependencies>
