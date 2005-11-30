@@ -11,8 +11,6 @@
 	<classpathentry output="examples/target/classes" kind="src" path="examples/src/main/java"/>
 	<classpathentry output="examples/target/classes" kind="src" path="examples/src/main/resources"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry exported="true" kind="lib" path="lib/jta.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/servlet-api.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/aopalliance-1.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/javassist-3.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-logging-1.0.4.jar"/>
@@ -21,5 +19,6 @@
 	<classpathentry exported="true" kind="lib" path="lib/poi-2.5.1-final-20040804.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/junit-3.8.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/hsqldb.jar"/>
+	<classpathentry kind="lib" path="lib/geronimo-spec-j2ee-1.4-rc4.jar"/>
 	<classpathentry kind="output" path="s2-framework/target/classes"/>
 </classpath>

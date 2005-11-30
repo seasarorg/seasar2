@@ -100,13 +100,6 @@
   </repositories>
   <dependencies>
     <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>servlet-api</artifactId>
-      <version>2.3</version>
-      <type>jar</type>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
       <groupId>hsqldb</groupId>
       <artifactId>hsqldb</artifactId>
       <version>1.7.3.3</version>
@@ -115,8 +108,8 @@
     </dependency>
     <dependency>
       <groupId>geronimo-spec</groupId>
-      <artifactId>geronimo-spec-jta</artifactId>
-      <version>1.0.1B-rc4</version>
+      <artifactId>geronimo-spec-j2ee</artifactId>
+      <version>1.4-rc4</version>
       <type>jar</type>
       <scope>provided</scope>
     </dependency>
