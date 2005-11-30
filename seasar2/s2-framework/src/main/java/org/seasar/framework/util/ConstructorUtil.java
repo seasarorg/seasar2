@@ -28,9 +28,6 @@ import org.seasar.framework.exception.InvocationTargetRuntimeException;
  */
 public final class ConstructorUtil {
  
-	/**
-	 * 
-	 */
 	private ConstructorUtil() {
 	}
 

@@ -39,14 +39,14 @@ public class XmlS2ContainerBuilder extends AbstractS2ContainerBuilder {
     public static final String DTD_PATH21 = "org/seasar/framework/container/factory/components21.dtd";
     public static final String DTD_PATH23 = "org/seasar/framework/container/factory/components23.dtd";
 
-    protected S2ContainerTagHandlerRule rule_ = new S2ContainerTagHandlerRule();
+    protected S2ContainerTagHandlerRule rule = new S2ContainerTagHandlerRule();
 
     public S2ContainerTagHandlerRule getRule() {
-        return rule_;
+        return rule;
     }
 
     public void setRule(final S2ContainerTagHandlerRule rule) {
-        rule_ = rule;
+        this.rule = rule;
     }
 
     public S2Container build(final String path) {
@@ -76,7 +76,7 @@ public class XmlS2ContainerBuilder extends AbstractS2ContainerBuilder {
 
         final SAXParser saxParser = SAXParserFactoryUtil.newSAXParser(factory);
 
-        final SaxHandler handler = new SaxHandler(rule_);
+        final SaxHandler handler = new SaxHandler(rule);
         handler.registerDtdPath(PUBLIC_ID, DTD_PATH);
         handler.registerDtdPath(PUBLIC_ID21, DTD_PATH21);
         handler.registerDtdPath(PUBLIC_ID23, DTD_PATH23);

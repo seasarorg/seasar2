@@ -22,52 +22,52 @@ import org.seasar.framework.exception.EmptyRuntimeException;
 
 public final class SingletonS2ContainerFactory {
 
-	private static String configPath_ = "app.dicon";
-	private static ServletContext servletContext_;
-	private static S2Container container_;
+	private static String configPath = "app.dicon";
+	private static ServletContext servletContext;
+	private static S2Container container;
 	
 	private SingletonS2ContainerFactory() {
 	}
 	
 	public static String getConfigPath() {
-		return configPath_;
+		return configPath;
 	}
 	
-	public static void setConfigPath(String configPath) {
-		configPath_ = configPath;
+	public static void setConfigPath(String path) {
+		configPath = path;
 	}
 	
 	public static ServletContext getServletContext() {
-		return servletContext_;
+		return servletContext;
 	}
 	
-	public static void setServletContext(ServletContext servletContext) {
-		servletContext_ = servletContext;
+	public static void setServletContext(ServletContext context) {
+		servletContext = context;
 	}
 
 	public static void init() {
-		container_ = S2ContainerFactory.create(configPath_);
-		container_.setServletContext(servletContext_);
-		container_.init();
+		container = S2ContainerFactory.create(configPath);
+		container.setServletContext(servletContext);
+		container.init();
 	}
 	
 	public static void destroy() {
-		container_.destroy();
-		container_ = null;
+		container.destroy();
+		container = null;
 	}
 	
 	public static S2Container getContainer() {
-		if (container_ == null) {
+		if (container == null) {
 			throw new EmptyRuntimeException("S2Container");
 		}
-		return container_;
+		return container;
 	}
 	
-	public static void setContainer(S2Container container) {
-		container_ = container;
+	public static void setContainer(S2Container c) {
+		container = c;
 	}
 	
 	public static boolean hasContainer() {
-		return container_ != null;
+		return container != null;
 	}
 }

@@ -25,15 +25,15 @@ import org.seasar.framework.container.S2Container;
  */
 public class ServletContextComponentDef extends SimpleComponentDef {
 
-	private S2Container container_;
+	private S2Container container;
 	
 	public ServletContextComponentDef(S2Container container) {
 		super(ServletContext.class);
-		container_ = container;
+		this.container = container;
 	}
 	
 	public S2Container getRoot() {
-		return container_.getRoot();
+		return container.getRoot();
 	}
 	
 	/**

@@ -22,44 +22,44 @@ import java.util.Stack;
 public final class TagHandlerContext {
 
 	private static final Integer ONE = new Integer(1);
-	private StringBuffer body_ = null;
-	private StringBuffer characters_ = new StringBuffer();
-	private Stack bodyStack_ = new Stack();
-	private StringBuffer path_ = new StringBuffer();
-	private StringBuffer detailPath_ = new StringBuffer();
-	private String qName_ = "";
-	private Stack qNameStack_ = new Stack();
-	private Object result_;
-	private Stack stack_ = new Stack();
-	private Map pathCounts_ = new HashMap();
-	private Map parameters_ = new HashMap();
+	private StringBuffer body = null;
+	private StringBuffer characters = new StringBuffer();
+	private Stack bodyStack = new Stack();
+	private StringBuffer path = new StringBuffer();
+	private StringBuffer detailPath = new StringBuffer();
+	private String qName = "";
+	private Stack qNameStack = new Stack();
+	private Object result;
+	private Stack stack = new Stack();
+	private Map pathCounts = new HashMap();
+	private Map parameters = new HashMap();
 
 	public void push(Object o) {
-		if (stack_.empty()) {
-			result_ = o;
+		if (stack.empty()) {
+			result = o;
 		}
-		stack_.push(o);
+		stack.push(o);
 	}
 
 	public Object getResult() {
-		return result_;
+		return result;
 	}
 
 	public Object pop() {
-		return stack_.pop();
+		return stack.pop();
 	}
 
 	public Object peek() {
-		return stack_.peek();
+		return stack.peek();
 	}
 
 	public Object peek(final int n) {
-		return stack_.get(stack_.size() - n - 1);
+		return stack.get(stack.size() - n - 1);
 	}
 
 	public Object peek(final Class clazz) {
-		for (int i = stack_.size() - 1; i >= 0; --i) {
-			Object o = stack_.get(i);
+		for (int i = stack.size() - 1; i >= 0; --i) {
+			Object o = stack.get(i);
 			if (clazz.isInstance(o)) {
 				return o;
 			}
@@ -68,62 +68,62 @@ public final class TagHandlerContext {
 	}
 
 	public Object peekFirst() {
-		return stack_.get(0);
+		return stack.get(0);
 	}
 	
 	public Object getParameter(String name) {
-		return parameters_.get(name);
+		return parameters.get(name);
 	}
 	
 	public void addParameter(String name, Object parameter) {
-		parameters_.put(name, parameter);
+		parameters.put(name, parameter);
 	}
 
 	public void startElement(String qName) {
-		bodyStack_.push(body_);
-		body_ = new StringBuffer();
-		characters_ = new StringBuffer();
-		qNameStack_.push(qName_);
-		qName_ = qName;
-		path_.append("/");
-		path_.append(qName);
+		bodyStack.push(body);
+		body = new StringBuffer();
+		characters = new StringBuffer();
+		qNameStack.push(qName);
+		this.qName = qName;
+		path.append("/");
+		path.append(qName);
 		int pathCount = incrementPathCount();
-		detailPath_.append("/");
-		detailPath_.append(qName);
-		detailPath_.append("[");
-		detailPath_.append(pathCount);
-		detailPath_.append("]");
+		detailPath.append("/");
+		detailPath.append(qName);
+		detailPath.append("[");
+		detailPath.append(pathCount);
+		detailPath.append("]");
 	}
 
 	public void characters(char[] buffer, int start, int length) {
-		body_.append(buffer, start, length);
-		characters_.append(buffer, start, length);
+		body.append(buffer, start, length);
+		characters.append(buffer, start, length);
 	}
 
 	public String getCharacters() {
-		return characters_.toString().trim();
+		return characters.toString().trim();
 	}
 	
 	public String getBody() {
-		return body_.toString().trim();
+		return body.toString().trim();
 	}
 	
 	public boolean isCharactersEol() {
-		if (characters_.length() == 0) {
+		if (characters.length() == 0) {
 			return false;
 		}
-		return characters_.charAt(characters_.length() - 1) == '\n';
+		return characters.charAt(characters.length() - 1) == '\n';
 	}
 
 	public void clearCharacters() {
-		characters_ = new StringBuffer();
+		characters = new StringBuffer();
 	}
 
 	public void endElement() {
-		body_ = (StringBuffer) bodyStack_.pop();
-		remoteLastPath(path_);
-		remoteLastPath(detailPath_);
-		qName_ = (String) qNameStack_.pop();
+		body = (StringBuffer) bodyStack.pop();
+		remoteLastPath(path);
+		remoteLastPath(detailPath);
+		qName = (String) qNameStack.pop();
 	}
 
 	private static void remoteLastPath(StringBuffer path) {
@@ -131,26 +131,26 @@ public final class TagHandlerContext {
 	}
 
 	public String getPath() {
-		return path_.toString();
+		return path.toString();
 	}
 
 	public String getDetailPath() {
-		return detailPath_.toString();
+		return detailPath.toString();
 	}
 	
 	public String getQName() {
-		return qName_;
+		return qName;
 	}
 
 	private int incrementPathCount() {
 		String path = getPath();
-		Integer pathCount = (Integer) pathCounts_.get(path);
+		Integer pathCount = (Integer) pathCounts.get(path);
 		if (pathCount == null) {
 			pathCount = ONE;
 		} else {
 			pathCount = new Integer(pathCount.intValue() + 1);
 		}
-		pathCounts_.put(path, pathCount);
+		pathCounts.put(path, pathCount);
 		return pathCount.intValue();
 	}
 }

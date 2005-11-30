@@ -23,21 +23,21 @@ import org.seasar.framework.message.MessageFormatter;
 public class SIllegalArgumentException extends IllegalArgumentException {
     private static final long serialVersionUID = -3701473506893554853L;
 
-    private String messageCode_;
-    private Object[] args_;
+    private String messageCode;
+    private Object[] args;
 
     public SIllegalArgumentException(String messageCode, Object[] args) {
         super(MessageFormatter.getMessage(messageCode, args));
 
-        messageCode_ = messageCode;
-        args_ = args;
+        this.messageCode = messageCode;
+        this.args = args;
     }
 
     public String getMessageCode() {
-        return messageCode_;
+        return messageCode;
     }
 
     public Object[] getArgs() {
-        return args_;
+        return args;
     }
 }

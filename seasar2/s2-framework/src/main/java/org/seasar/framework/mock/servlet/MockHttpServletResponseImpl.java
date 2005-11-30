@@ -40,52 +40,52 @@ import org.seasar.framework.util.SPrintWriter;
  */
 public class MockHttpServletResponseImpl implements MockHttpServletResponse {
 
-	private List cookieList_;
+	private List cookieList;
 
-	private Map headers_ = new HashMap();
+	private Map headers = new HashMap();
 
-	private boolean committed_ = false;
+	private boolean committed = false;
 
-	private int status_;
+	private int status;
 
-	private String message_;
+	private String message;
 
-	private byte[] buffer_ = new byte[1024];
+	private byte[] buffer = new byte[1024];
 
-	private Locale locale_;
+	private Locale locale;
 
-	private String characterEncoding_;
+	private String characterEncoding;
 
-	private PrintWriter writer_ = new SPrintWriter();
+	private PrintWriter writer = new SPrintWriter();
 
-	private ServletOutputStream outputStream_ = new MockServletOutputStreamImpl(
-			writer_);
+	private ServletOutputStream outputStream = new MockServletOutputStreamImpl(
+			writer);
 
 	/**
 	 *  
 	 */
 	public MockHttpServletResponseImpl(HttpServletRequest request) {
-		cookieList_ = new ArrayList(Arrays.asList(request.getCookies()));
-		locale_ = request.getLocale();
-		characterEncoding_ = request.getCharacterEncoding();
+		cookieList = new ArrayList(Arrays.asList(request.getCookies()));
+		locale = request.getLocale();
+		characterEncoding = request.getCharacterEncoding();
 	}
 
 	public Cookie[] getCookies() {
-		return (Cookie[]) cookieList_.toArray(new Cookie[cookieList_.size()]);
+		return (Cookie[]) cookieList.toArray(new Cookie[cookieList.size()]);
 	}
 
 	/**
 	 * @see javax.servlet.http.HttpServletResponse#addCookie(javax.servlet.http.Cookie)
 	 */
 	public void addCookie(Cookie cookie) {
-		cookieList_.add(cookie);
+		cookieList.add(cookie);
 	}
 
 	/**
 	 * @see javax.servlet.http.HttpServletResponse#containsHeader(java.lang.String)
 	 */
 	public boolean containsHeader(String name) {
-		return headers_.containsKey(name);
+		return headers.containsKey(name);
 	}
 
 	/**
@@ -119,11 +119,11 @@ public class MockHttpServletResponseImpl implements MockHttpServletResponse {
 	}
 
 	public int getStatus() {
-		return status_;
+		return status;
 	}
 
 	public String getMessage() {
-		return message_;
+		return message;
 	}
 
 	/**
@@ -166,7 +166,7 @@ public class MockHttpServletResponseImpl implements MockHttpServletResponse {
 	}
 
 	public Enumeration getHeaderNames() {
-		return new EnumerationAdapter(headers_.keySet().iterator());
+		return new EnumerationAdapter(headers.keySet().iterator());
 	}
 
 	/**
@@ -196,7 +196,7 @@ public class MockHttpServletResponseImpl implements MockHttpServletResponse {
 	public void setHeader(String name, String value) {
 		List values = new ArrayList();
 		values.add(value);
-		headers_.put(name.toLowerCase(), values);
+		headers.put(name.toLowerCase(), values);
 	}
 
 	/**
@@ -210,7 +210,7 @@ public class MockHttpServletResponseImpl implements MockHttpServletResponse {
 			values = new ArrayList();
 		}
 		values.add(value);
-		headers_.put(name.toLowerCase(), values);
+		headers.put(name.toLowerCase(), values);
 	}
 
 	public int getIntHeader(String name) {
@@ -239,7 +239,7 @@ public class MockHttpServletResponseImpl implements MockHttpServletResponse {
 
 	private List getHeaderList(String name) {
 		name = name.toLowerCase();
-		return (List) headers_.get(name);
+		return (List) headers.get(name);
 	}
 
 	/**
@@ -351,8 +351,8 @@ public class MockHttpServletResponseImpl implements MockHttpServletResponse {
 	 */
 	public void setStatus(int status, String message) {
 		assertNotCommitted();
-		status_ = status;
-		message_ = message;
+		this.status = status;
+		this.message = message;
 		resetBuffer();
 	}
 
@@ -367,11 +367,11 @@ public class MockHttpServletResponseImpl implements MockHttpServletResponse {
 	 * @see javax.servlet.ServletResponse#getCharacterEncoding()
 	 */
 	public String getCharacterEncoding() {
-		return characterEncoding_;
+		return characterEncoding;
 	}
 
 	public void setCharacterEncoding(String characterEncoding) {
-		characterEncoding_ = characterEncoding;
+		this.characterEncoding = characterEncoding;
 	}
 
 	/**
@@ -379,7 +379,7 @@ public class MockHttpServletResponseImpl implements MockHttpServletResponse {
 	 * @see javax.servlet.ServletResponse#getOutputStream()
 	 */
 	public ServletOutputStream getOutputStream() throws IOException {
-		return outputStream_;
+		return outputStream;
 	}
 
 	/**
@@ -387,7 +387,7 @@ public class MockHttpServletResponseImpl implements MockHttpServletResponse {
 	 * @see javax.servlet.ServletResponse#getWriter()
 	 */
 	public PrintWriter getWriter() throws IOException {
-		return writer_;
+		return writer;
 	}
 
 	/**
@@ -420,10 +420,10 @@ public class MockHttpServletResponseImpl implements MockHttpServletResponse {
 	 */
 	public void setBufferSize(int size) {
 		assertNotCommitted();
-		if (size <= buffer_.length) {
+		if (size <= buffer.length) {
 			return;
 		}
-		buffer_ = new byte[size];
+		buffer = new byte[size];
 
 	}
 
@@ -431,7 +431,7 @@ public class MockHttpServletResponseImpl implements MockHttpServletResponse {
 	 * @see javax.servlet.ServletResponse#getBufferSize()
 	 */
 	public int getBufferSize() {
-		return buffer_.length;
+		return buffer.length;
 	}
 
 	/**
@@ -451,28 +451,28 @@ public class MockHttpServletResponseImpl implements MockHttpServletResponse {
 	 * @see javax.servlet.ServletResponse#isCommitted()
 	 */
 	public boolean isCommitted() {
-		return committed_;
+		return committed;
 	}
 
 	/**
 	 * @see javax.servlet.ServletResponse#reset()
 	 */
 	public void reset() {
-		committed_ = false;
+		committed = false;
 	}
 
 	/**
 	 * @see javax.servlet.ServletResponse#setLocale(java.util.Locale)
 	 */
 	public void setLocale(Locale locale) {
-		locale_ = locale;
+		this.locale = locale;
 	}
 
 	/**
 	 * @see javax.servlet.ServletResponse#getLocale()
 	 */
 	public Locale getLocale() {
-		return locale_;
+		return locale;
 	}
 
 }

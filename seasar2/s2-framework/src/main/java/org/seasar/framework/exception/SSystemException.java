@@ -27,8 +27,8 @@ public class SSystemException extends SystemException {
 
     private static final long serialVersionUID = -404340896339687907L;
 
-	private String messageCode_;
-	private Object[] args_;
+	private String messageCode;
+	private Object[] args;
 	
 	public SSystemException(String messageCode, Object[] args) {
 		this(messageCode, args, null);
@@ -36,16 +36,16 @@ public class SSystemException extends SystemException {
 
 	public SSystemException(String messageCode, Object[] args, Throwable cause) {
 		super(MessageFormatter.getMessage(messageCode, args));
-		messageCode_ = messageCode;
-		args_ = args;
-		this.initCause(cause);
+		this.messageCode = messageCode;
+		this.args = args;
+		initCause(cause);
 	}
 
 	public String getMessageCode() {
-		return messageCode_;
+		return messageCode;
 	}
 	
 	public Object[] getArgs() {
-		return args_;
+		return args;
 	}
 }

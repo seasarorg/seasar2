@@ -34,10 +34,10 @@ import org.seasar.framework.hotswap.Hotswap;
  */
 public class SimpleComponentDef implements ComponentDef {
 
-	private Object component_;
-	private Class componentClass_;
-	private String componentName_;
-	private S2Container container_;
+	private Object component;
+	private Class componentClass;
+	private String componentName;
+	private S2Container container;
 
 	public SimpleComponentDef() {
 	}
@@ -61,16 +61,16 @@ public class SimpleComponentDef implements ComponentDef {
 	public SimpleComponentDef(Object component, Class componentClass,
 		String componentName) {
 			
-		component_ = component;
-		componentClass_ = componentClass;
-		componentName_ = componentName;
+		this.component = component;
+		this.componentClass = componentClass;
+		this.componentName = componentName;
 	}
 
 	/*
 	 * @see org.seasar.framework.container.ComponentDef#getComponent()
 	 */
 	public Object getComponent() throws TooManyRegistrationRuntimeException {
-		return component_;
+		return component;
 	}
 	
 	/*
@@ -84,42 +84,42 @@ public class SimpleComponentDef implements ComponentDef {
 	 * @see org.seasar.framework.container.ComponentDef#getContainer()
 	 */
 	public S2Container getContainer() {
-		return container_;
+		return container;
 	}
 
 	/*
 	 * @see org.seasar.framework.container.ComponentDef#setContainer(org.seasar.framework.container.S2Container)
 	 */
 	public void setContainer(S2Container container) {
-		container_ = container;
+		this.container = container;
 	}
 
 	/*
 	 * @see org.seasar.framework.container.ComponentDef#getComponentClass()
 	 */
 	public Class getComponentClass() {
-		return componentClass_;
+		return componentClass;
 	}
 
 	/*
 	 * @see org.seasar.framework.container.ComponentDef#getComponentName()
 	 */
 	public String getComponentName() {
-		return componentName_;
+		return componentName;
 	}
     
     /*
      * @see org.seasar.framework.container.ComponentDef#setComponentName(java.lang.String)
      */
     public void setComponentName(String componentName) {
-        componentName_ = componentName;
+        this.componentName = componentName;
     }
 
 	/*
 	 * @see org.seasar.framework.container.ComponentDef#getConcreteClass()
 	 */
 	public Class getConcreteClass() {
-		return componentClass_;
+		return componentClass;
 	}
 
 	/*

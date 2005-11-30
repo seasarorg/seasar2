@@ -28,29 +28,29 @@ import org.seasar.framework.container.S2Container;
  */
 public final class ArgDefSupport {
 
-	private List argDefs_ = Collections.synchronizedList(new ArrayList());
-	private S2Container container_;
+	private List argDefs = Collections.synchronizedList(new ArrayList());
+	private S2Container container;
 	
 	public ArgDefSupport() {
 	}
 
 	public void addArgDef(ArgDef argDef) {
-		if (container_ != null) {
-			argDef.setContainer(container_);
+		if (container != null) {
+			argDef.setContainer(container);
 		}
-		argDefs_.add(argDef);
+		argDefs.add(argDef);
 	}
 	
 	public int getArgDefSize() {
-		return argDefs_.size();
+		return argDefs.size();
 	}
 	
 	public ArgDef getArgDef(int index) {
-		return (ArgDef) argDefs_.get(index);
+		return (ArgDef) argDefs.get(index);
 	}
 	
 	public void setContainer(S2Container container) {
-		container_ = container;
+		this.container = container;
 		for (int i = 0; i < getArgDefSize(); ++i) {
 			getArgDef(i).setContainer(container);
 		}

@@ -28,10 +28,10 @@ public final class Logger {
 
 	private static Map loggerMap_ = Collections.synchronizedMap(new HashMap());
 
-	private Log log_;
+	private Log log;
 
 	private Logger(Class clazz) {
-		log_ = LogFactory.getLog(clazz);
+		log = LogFactory.getLog(clazz);
 	}
 
 	public static final Logger getLogger(Class clazz) {
@@ -44,59 +44,59 @@ public final class Logger {
 	}
 
 	public final boolean isDebugEnabled() {
-		return log_.isDebugEnabled();
+		return log.isDebugEnabled();
 	}
 
 	public final void debug(Object message, Throwable throwable) {
 		if (isDebugEnabled()) {
-			log_.debug(message, throwable);
+			log.debug(message, throwable);
 		}
 	}
 
 	public final void debug(Object message) {
 		if (isDebugEnabled()) {
-			log_.debug(message);
+			log.debug(message);
 		}
 	}
 
 	public final boolean isInfoEnabled() {
-		return log_.isInfoEnabled();
+		return log.isInfoEnabled();
 	}
 
 	public final void info(Object message, Throwable throwable) {
 		if (isInfoEnabled()) {
-			log_.info(message, throwable);
+			log.info(message, throwable);
 		}
 	}
 
 	public final void info(Object message) {
 		if (isInfoEnabled()) {
-			log_.info(message);
+			log.info(message);
 		}
 	}
 
 	public final void warn(Object message, Throwable throwable) {
-		log_.warn(message, throwable);
+		log.warn(message, throwable);
 	}
 
 	public final void warn(Object message) {
-		log_.warn(message);
+		log.warn(message);
 	}
 
 	public final void error(Object message, Throwable throwable) {
-		log_.error(message, throwable);
+		log.error(message, throwable);
 	}
 
 	public final void error(Object message) {
-		log_.error(message);
+		log.error(message);
 	}
 
 	public final void fatal(Object message, Throwable throwable) {
-		log_.fatal(message, throwable);
+		log.fatal(message, throwable);
 	}
 
 	public final void fatal(Object message) {
-		log_.fatal(message);
+		log.fatal(message);
 	}
 
 	public final void log(Throwable throwable) {
@@ -114,19 +114,19 @@ public final class Logger {
 					args);
 			switch (messageType) {
 			case 'D':
-				log_.debug(message, throwable);
+				log.debug(message, throwable);
 				break;
 			case 'I':
-				log_.info(message, throwable);
+				log.info(message, throwable);
 				break;
 			case 'W':
-				log_.warn(message, throwable);
+				log.warn(message, throwable);
 				break;
 			case 'E':
-				log_.error(message, throwable);
+				log.error(message, throwable);
 				break;
 			case 'F':
-				log_.fatal(message, throwable);
+				log.fatal(message, throwable);
 				break;
 			default:
 				throw new IllegalArgumentException(String.valueOf(messageType));
@@ -137,15 +137,15 @@ public final class Logger {
 	private boolean isEnabledFor(final char messageType) {
 		switch (messageType) {
 		case 'D':
-			return log_.isDebugEnabled();
+			return log.isDebugEnabled();
 		case 'I':
-			return log_.isInfoEnabled();
+			return log.isInfoEnabled();
 		case 'W':
-			return log_.isWarnEnabled();
+			return log.isWarnEnabled();
 		case 'E':
-			return log_.isErrorEnabled();
+			return log.isErrorEnabled();
 		case 'F':
-			return log_.isFatalEnabled();
+			return log.isFatalEnabled();
 		default:
 			throw new IllegalArgumentException(String.valueOf(messageType));
 		}

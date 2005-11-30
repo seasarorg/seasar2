@@ -24,17 +24,18 @@ import org.seasar.framework.container.S2Container;
  * @author koichik
  */
 public final class S2ContainerBehavior {
-    private static Provider provider_ = new DefaultProvider();
+    
+    private static Provider provider = new DefaultProvider();
 
     private S2ContainerBehavior() {
     }
 
     public static Provider getProvider() {
-        return provider_;
+        return provider;
     }
 
-    public static void setProvider(final Provider provider) {
-        provider_ = provider;
+    public static void setProvider(final Provider p) {
+        provider = p;
     }
 
     public static ComponentDef acquireFromGetComponent(S2Container container, final Object key) {

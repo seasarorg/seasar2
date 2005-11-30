@@ -28,29 +28,29 @@ import org.seasar.framework.container.S2Container;
  */
 public final class InitMethodDefSupport {
 
-	private List methodDefs_ = Collections.synchronizedList(new ArrayList());
-	private S2Container container_;
+	private List methodDefs = Collections.synchronizedList(new ArrayList());
+	private S2Container container;
 
 	public InitMethodDefSupport() {
 	}
 
 	public void addInitMethodDef(InitMethodDef methodDef) {
-		if (container_ != null) {
-			methodDef.setContainer(container_);
+		if (container != null) {
+			methodDef.setContainer(container);
 		}
-		methodDefs_.add(methodDef);
+		methodDefs.add(methodDef);
 	}
 
 	public int getInitMethodDefSize() {
-		return methodDefs_.size();
+		return methodDefs.size();
 	}
 
 	public InitMethodDef getInitMethodDef(int index) {
-		return (InitMethodDef) methodDefs_.get(index);
+		return (InitMethodDef) methodDefs.get(index);
 	}
 
 	public void setContainer(S2Container container) {
-		container_ = container;
+		this.container = container;
 		for (int i = 0; i < getInitMethodDefSize(); ++i) {
 			getInitMethodDef(i).setContainer(container);
 		}

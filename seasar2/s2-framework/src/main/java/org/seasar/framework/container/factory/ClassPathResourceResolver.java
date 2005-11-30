@@ -25,6 +25,7 @@ import org.seasar.framework.util.URLUtil;
  * @author koichik
  */
 public class ClassPathResourceResolver implements ResourceResolver {
+    
     public ClassPathResourceResolver() {
     }
 

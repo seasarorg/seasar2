@@ -23,24 +23,24 @@ import org.seasar.framework.container.MetaDef;
  */
 public class MetaDefImpl extends ArgDefImpl implements MetaDef {
 
-	private String name_;
+	private String name;
 	
 	public MetaDefImpl() {
 	}
 	
 	public MetaDefImpl(String name) {
-		name_ = name;
+		this.name = name;
 	}
 		
 	public MetaDefImpl(String name, Object value) {
 		super(value);
-		name_ = name;
+		this.name = name;
 	}
 	
 	/**
 	 * @see org.seasar.framework.container.MetaDef#getName()
 	 */
 	public String getName() {
-		return name_;
+		return name;
 	}
 }

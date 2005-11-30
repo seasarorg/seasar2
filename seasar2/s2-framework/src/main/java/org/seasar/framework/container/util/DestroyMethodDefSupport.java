@@ -28,29 +28,29 @@ import org.seasar.framework.container.S2Container;
  */
 public final class DestroyMethodDefSupport {
 
-	private List methodDefs_ = Collections.synchronizedList(new ArrayList());
-	private S2Container container_;
+	private List methodDefs = Collections.synchronizedList(new ArrayList());
+	private S2Container container;
 
 	public DestroyMethodDefSupport() {
 	}
 
 	public void addDestroyMethodDef(DestroyMethodDef methodDef) {
-		if (container_ != null) {
-			methodDef.setContainer(container_);
+		if (container != null) {
+			methodDef.setContainer(container);
 		}
-		methodDefs_.add(methodDef);
+		methodDefs.add(methodDef);
 	}
 
 	public int getDestroyMethodDefSize() {
-		return methodDefs_.size();
+		return methodDefs.size();
 	}
 
 	public DestroyMethodDef getDestroyMethodDef(int index) {
-		return (DestroyMethodDef) methodDefs_.get(index);
+		return (DestroyMethodDef) methodDefs.get(index);
 	}
 
 	public void setContainer(S2Container container) {
-		container_ = container;
+		this.container = container;
 		for (int i = 0; i < getDestroyMethodDefSize(); ++i) {
 			getDestroyMethodDef(i).setContainer(container);
 		}

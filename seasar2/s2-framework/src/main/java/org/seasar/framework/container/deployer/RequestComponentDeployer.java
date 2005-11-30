@@ -28,7 +28,7 @@ import org.seasar.framework.log.Logger;
  */
 public class RequestComponentDeployer extends AbstractComponentDeployer {
 
-    private static Logger logger_ = Logger
+    private static Logger logger = Logger
             .getLogger(RequestComponentDeployer.class);
 
     /**
@@ -46,7 +46,7 @@ public class RequestComponentDeployer extends AbstractComponentDeployer {
         HttpServletRequest request = cd.getContainer().getRoot().getRequest();
         if (request == null) {
             RuntimeException re = new EmptyRuntimeException("request");
-            logger_.log(re);
+            logger.log(re);
             throw re;
         }
         String componentName = getComponentName();

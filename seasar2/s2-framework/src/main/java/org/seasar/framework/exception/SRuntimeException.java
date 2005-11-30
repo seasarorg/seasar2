@@ -25,10 +25,10 @@ public class SRuntimeException extends RuntimeException {
 
     private static final long serialVersionUID = -4452607868694297329L;
 
-	private String messageCode_;
-	private Object[] args_;
-	private String message_;
-	private String simpleMessage_;
+	private String messageCode;
+	private Object[] args;
+	private String message;
+	private String simpleMessage;
 
 	public SRuntimeException(String messageCode) {
 		this(messageCode, null, null);
@@ -44,29 +44,29 @@ public class SRuntimeException extends RuntimeException {
 		Throwable cause) {
 
 		super(cause);
-		messageCode_ = messageCode;
-		args_ = args;
-		simpleMessage_ = MessageFormatter.getSimpleMessage(messageCode_, args_);
-		message_ = "[" + messageCode + "]" + simpleMessage_;
+		this.messageCode = messageCode;
+		this.args = args;
+		simpleMessage = MessageFormatter.getSimpleMessage(messageCode, args);
+		message = "[" + messageCode + "]" + simpleMessage;
 	}
 
 	public final String getMessageCode() {
-		return messageCode_;
+		return messageCode;
 	}
 
 	public final Object[] getArgs() {
-		return args_;
+		return args;
 	}
 
 	public final String getMessage() {
-		return message_;
+		return message;
 	}
 	
 	protected void setMessage(String message) {
-		message_ = message;
+		this.message = message;
 	}
 	
 	public final String getSimpleMessage() {
-		return simpleMessage_;
+		return simpleMessage;
 	}
 }

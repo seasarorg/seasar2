@@ -23,16 +23,16 @@ public class TagHandlerRule implements Serializable {
 
 	static final long serialVersionUID = 1L;
 
-	private Map tagHandlers_ = new HashMap();
+	private Map tagHandlers = new HashMap();
 
 	public TagHandlerRule() {
 	}
 
 	public final void addTagHandler(String path, TagHandler tagHandler) {
-		tagHandlers_.put(path, tagHandler);
+		tagHandlers.put(path, tagHandler);
 	}
 
 	public final TagHandler getTagHandler(String path) {
-		return (TagHandler) tagHandlers_.get(path);
+		return (TagHandler) tagHandlers.get(path);
 	}
 }

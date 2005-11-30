@@ -25,9 +25,9 @@ public class NoSuchMethodRuntimeException extends SRuntimeException {
 
     private static final long serialVersionUID = -5673845060079098617L;
 
-	private Class targetClass_;
-	private String methodName_;
-	private Class[] argTypes_;
+	private Class targetClass;
+	private String methodName;
+	private Class[] argTypes;
 
 	public NoSuchMethodRuntimeException(
 		Class targetClass,
@@ -40,21 +40,21 @@ public class NoSuchMethodRuntimeException extends SRuntimeException {
 			new Object[] { targetClass.getName(),
 				MethodUtil.getSignature(methodName, argTypes), cause},
 			cause);
-		targetClass_ = targetClass;
-		methodName_ = methodName;
-		argTypes_ = argTypes;
+		this.targetClass = targetClass;
+		this.methodName = methodName;
+		this.argTypes = argTypes;
 	}
 	
 	public Class getTargetClass() {
-		return targetClass_;
+		return targetClass;
 	}
 	
 	public String getMethodName() {
-		return methodName_;
+		return methodName;
 	}
 	
 	public Class[] getArgTypes() {
-		return argTypes_;
+		return argTypes;
 	}
 	
 }

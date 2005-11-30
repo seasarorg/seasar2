@@ -27,7 +27,7 @@ import java.util.Map;
  */
 public final class DecimalFormatSymbolsUtil {
 
-	private static Map cache_ = Collections.synchronizedMap(new HashMap());
+	private static Map cache = Collections.synchronizedMap(new HashMap());
 	
 	private DecimalFormatSymbolsUtil() {
 	}
@@ -37,10 +37,10 @@ public final class DecimalFormatSymbolsUtil {
 	}
 
 	public static DecimalFormatSymbols getDecimalFormatSymbols(Locale locale) {
-		DecimalFormatSymbols symbols = (DecimalFormatSymbols) cache_.get(locale);
+		DecimalFormatSymbols symbols = (DecimalFormatSymbols) cache.get(locale);
 		if (symbols == null) {
 			symbols = new DecimalFormatSymbols(locale);
-			cache_.put(locale, symbols);
+			cache.put(locale, symbols);
 		}
 		return symbols;
 	}

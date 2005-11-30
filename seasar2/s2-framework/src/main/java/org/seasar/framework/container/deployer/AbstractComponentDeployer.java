@@ -30,57 +30,58 @@ import org.seasar.framework.util.StringUtil;
  * 
  */
 public abstract class AbstractComponentDeployer implements ComponentDeployer {
-    private ComponentDef componentDef_;
+    
+    private ComponentDef componentDef;
 
-    private ConstructorAssembler constructorAssembler_;
+    private ConstructorAssembler constructorAssembler;
 
-    private PropertyAssembler propertyAssembler_;
+    private PropertyAssembler propertyAssembler;
 
-    private MethodAssembler initMethodAssembler_;
+    private MethodAssembler initMethodAssembler;
 
-    private MethodAssembler destroyMethodAssembler_;
+    private MethodAssembler destroyMethodAssembler;
 
     public AbstractComponentDeployer(ComponentDef componentDef) {
-        componentDef_ = componentDef;
+        this.componentDef = componentDef;
         setupAssembler();
     }
 
     protected final ComponentDef getComponentDef() {
-        return componentDef_;
+        return componentDef;
     }
 
     protected final ConstructorAssembler getConstructorAssembler() {
-        return constructorAssembler_;
+        return constructorAssembler;
     }
 
     protected final PropertyAssembler getPropertyAssembler() {
-        return propertyAssembler_;
+        return propertyAssembler;
     }
 
     protected final MethodAssembler getInitMethodAssembler() {
-        return initMethodAssembler_;
+        return initMethodAssembler;
     }
 
     protected final MethodAssembler getDestroyMethodAssembler() {
-        return destroyMethodAssembler_;
+        return destroyMethodAssembler;
     }
 
     protected void setupAssembler() {
-        AutoBindingDef autoBindingDef = componentDef_.getAutoBindingDef();
-        constructorAssembler_ = autoBindingDef
-                .createConstructorAssembler(componentDef_);
-        propertyAssembler_ = autoBindingDef
-                .createPropertyAssembler(componentDef_);
-        initMethodAssembler_ = AssemblerFactory
-                .createInitMethodAssembler(componentDef_);
-        destroyMethodAssembler_ = AssemblerFactory
-                .createDestroyMethodAssembler(componentDef_);
+        AutoBindingDef autoBindingDef = componentDef.getAutoBindingDef();
+        constructorAssembler = autoBindingDef
+                .createConstructorAssembler(componentDef);
+        propertyAssembler = autoBindingDef
+                .createPropertyAssembler(componentDef);
+        initMethodAssembler = AssemblerFactory
+                .createInitMethodAssembler(componentDef);
+        destroyMethodAssembler = AssemblerFactory
+                .createDestroyMethodAssembler(componentDef);
     }
 
     protected String getComponentName() {
-        String componentName = componentDef_.getComponentName();
+        String componentName = componentDef.getComponentName();
         if (componentName == null) {
-            componentName = ClassUtil.getShortClassName(componentDef_
+            componentName = ClassUtil.getShortClassName(componentDef
                     .getComponentClass());
             componentName = StringUtil.decapitalize(componentName);
         }

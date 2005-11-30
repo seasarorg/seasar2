@@ -25,20 +25,21 @@ import org.seasar.framework.util.URLUtil;
  * @author koichik
  */
 public class WebResourceResolver implements ResourceResolver {
-    protected ResourceResolver parent_;
+    
+    protected ResourceResolver parent;
 
     public WebResourceResolver() {
         this(new ClassPathResourceResolver());
     }
 
     public WebResourceResolver(final ResourceResolver parent) {
-        parent_ = parent;
+        this.parent = parent;
     }
 
     public InputStream getInputStream(final String path) {
         try {
-            if (parent_ != null) {
-                InputStream is = parent_.getInputStream(path);
+            if (parent != null) {
+                InputStream is = parent.getInputStream(path);
                 if (is != null) {
                     return is;
                 }

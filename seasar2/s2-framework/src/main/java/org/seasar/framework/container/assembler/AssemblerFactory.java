@@ -25,14 +25,14 @@ import org.seasar.framework.container.PropertyAssembler;
  * @author koichik
  */
 public class AssemblerFactory {
-    private static Provider provider_ = new DefaultProvider();
+    private static Provider provider = new DefaultProvider();
 
     public static Provider getProvider() {
-        return provider_;
+        return provider;
     }
 
-    public static void setProvider(final Provider provider) {
-        provider_ = provider;
+    public static void setProvider(final Provider p) {
+        provider = p;
     }
 
     public static MethodAssembler createInitMethodAssembler(final ComponentDef cd) {

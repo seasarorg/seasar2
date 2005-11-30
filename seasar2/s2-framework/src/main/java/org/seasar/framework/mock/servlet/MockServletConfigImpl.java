@@ -28,11 +28,11 @@ public class MockServletConfigImpl implements MockServletConfig, Serializable {
 
     private static final long serialVersionUID = 5515573574823840162L;
 
-	private String servletName_;
+	private String servletName;
 
-	private ServletContext servletContext_;
+	private ServletContext servletContext;
 
-	private Map initParameters_ = new HashMap();
+	private Map initParameters = new HashMap();
 
 	public MockServletConfigImpl() {
 	}
@@ -41,39 +41,39 @@ public class MockServletConfigImpl implements MockServletConfig, Serializable {
 	 * @see javax.servlet.ServletConfig#getServletName()
 	 */
 	public String getServletName() {
-		return servletName_;
+		return servletName;
 	}
 
 	public void setServletName(String servletName) {
-		servletName_ = servletName;
+		this.servletName = servletName;
 	}
 
 	/**
 	 * @see javax.servlet.ServletConfig#getServletContext()
 	 */
 	public ServletContext getServletContext() {
-		return servletContext_;
+		return servletContext;
 	}
 
 	public void setServletContext(ServletContext servletContext) {
-		servletContext_ = servletContext;
+		this.servletContext = servletContext;
 	}
 
 	/**
 	 * @see javax.servlet.ServletConfig#getInitParameter(java.lang.String)
 	 */
 	public String getInitParameter(String name) {
-		return (String) initParameters_.get(name);
+		return (String) initParameters.get(name);
 	}
 
 	public void setInitParameter(String name, final String value) {
-		initParameters_.put(name, value);
+		initParameters.put(name, value);
 	}
 
 	/**
 	 * @see javax.servlet.ServletConfig#getInitParameterNames()
 	 */
 	public Enumeration getInitParameterNames() {
-		return new EnumerationAdapter(initParameters_.keySet().iterator());
+		return new EnumerationAdapter(initParameters.keySet().iterator());
 	}
 }

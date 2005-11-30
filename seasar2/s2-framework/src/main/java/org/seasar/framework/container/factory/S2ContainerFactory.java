@@ -35,10 +35,10 @@ public final class S2ContainerFactory {
     public static final String FACTORY_CONFIG_PATH = "s2container.dicon";
     public static final String DEFAULT_BUILDER_NAME = "defaultBuilder";
 
-    protected static S2Container configurationContainer_;
-    protected static Provider provider_ = new DefaultProvider();
-    protected static S2ContainerBuilder defaultBuilder_ = new XmlS2ContainerBuilder();
-    protected static ThreadLocal processingPaths_ = new ThreadLocal() {
+    protected static S2Container configurationContainer;
+    protected static Provider provider = new DefaultProvider();
+    protected static S2ContainerBuilder defaultBuilder = new XmlS2ContainerBuilder();
+    protected static ThreadLocal processingPaths = new ThreadLocal() {
 
         protected Object initialValue() {
             return new LinkedHashSet();
@@ -69,44 +69,44 @@ public final class S2ContainerFactory {
     public static synchronized void configure(final String configFile) {
         if (ResourceUtil.isExist(configFile)) {
             final S2ContainerBuilder builder = new XmlS2ContainerBuilder();
-            configurationContainer_ = builder.build(configFile);
+            configurationContainer = builder.build(configFile);
             Configurator configurator;
-            if (configurationContainer_.hasComponentDef(Configurator.class)) {
-                configurator = (Configurator) configurationContainer_
+            if (configurationContainer.hasComponentDef(Configurator.class)) {
+                configurator = (Configurator) configurationContainer
                         .getComponent(Configurator.class);
             }
             else {
                 configurator = new DefaultConfigurator();
             }
-            configurator.configure(configurationContainer_);
+            configurator.configure(configurationContainer);
         }
     }
 
     public static synchronized void destroy() {
-        defaultBuilder_ = null;
-        provider_ = null;
-        configurationContainer_.destroy();
-        configurationContainer_ = null;
+        defaultBuilder = null;
+        provider = null;
+        configurationContainer.destroy();
+        configurationContainer = null;
     }
 
     protected static Provider getProvider() {
-        return provider_;
+        return provider;
     }
 
-    protected static void setProvider(final Provider provider) {
-        provider_ = provider;
+    protected static void setProvider(final Provider p) {
+        provider = p;
     }
 
     protected static S2ContainerBuilder getDefaultBuilder() {
-        return defaultBuilder_;
+        return defaultBuilder;
     }
 
-    protected static void setDefaultBuilder(final S2ContainerBuilder defaultBuilder) {
-        defaultBuilder_ = defaultBuilder;
+    protected static void setDefaultBuilder(final S2ContainerBuilder builder) {
+        defaultBuilder = builder;
     }
 
     protected static void enter(final String path) {
-        final Set paths = (Set) processingPaths_.get();
+        final Set paths = (Set) processingPaths.get();
         if (paths.contains(path)) {
             throw new CircularIncludeRuntimeException(path, paths);
         }
@@ -114,7 +114,7 @@ public final class S2ContainerFactory {
     }
 
     protected static void leave(final String path) {
-        final Set paths = (Set) processingPaths_.get();
+        final Set paths = (Set) processingPaths.get();
         paths.remove(path);
     }
 
@@ -211,10 +211,10 @@ public final class S2ContainerFactory {
         }
 
         protected S2ContainerBuilder getBuilder(final String ext) {
-            if (configurationContainer_ != null && configurationContainer_.hasComponentDef(ext)) {
-                return (S2ContainerBuilder) configurationContainer_.getComponent(ext);
+            if (configurationContainer != null && configurationContainer.hasComponentDef(ext)) {
+                return (S2ContainerBuilder) configurationContainer.getComponent(ext);
             }
-            return defaultBuilder_;
+            return defaultBuilder;
         }
     }
 
@@ -226,41 +226,41 @@ public final class S2ContainerFactory {
     public static class DefaultConfigurator implements Configurator {
 
         public void configure(final S2Container bootstrapContainer) {
-            if (configurationContainer_.hasComponentDef(Provider.class)) {
-                provider_ = (Provider) configurationContainer_.getComponent(Provider.class);
+            if (configurationContainer.hasComponentDef(Provider.class)) {
+                provider = (Provider) configurationContainer.getComponent(Provider.class);
             }
-            else if (configurationContainer_.hasComponentDef(PathResolver.class)
-                    && provider_ instanceof DefaultProvider) {
-                ((DefaultProvider) provider_)
-                        .setPathResolver((PathResolver) configurationContainer_
+            else if (configurationContainer.hasComponentDef(PathResolver.class)
+                    && provider instanceof DefaultProvider) {
+                ((DefaultProvider) provider)
+                        .setPathResolver((PathResolver) configurationContainer
                                 .getComponent(PathResolver.class));
             }
 
-            if (configurationContainer_.hasComponentDef(DEFAULT_BUILDER_NAME)) {
-                defaultBuilder_ = (S2ContainerBuilder) configurationContainer_
+            if (configurationContainer.hasComponentDef(DEFAULT_BUILDER_NAME)) {
+                defaultBuilder = (S2ContainerBuilder) configurationContainer
                         .getComponent(DEFAULT_BUILDER_NAME);
             }
-            else if (configurationContainer_.hasComponentDef(ResourceResolver.class)
-                    && defaultBuilder_ instanceof AbstractS2ContainerBuilder) {
-                ((AbstractS2ContainerBuilder) defaultBuilder_)
-                        .setResourceResolver((ResourceResolver) configurationContainer_
+            else if (configurationContainer.hasComponentDef(ResourceResolver.class)
+                    && defaultBuilder instanceof AbstractS2ContainerBuilder) {
+                ((AbstractS2ContainerBuilder) defaultBuilder)
+                        .setResourceResolver((ResourceResolver) configurationContainer
                                 .getComponent(ResourceResolver.class));
             }
 
-            if (configurationContainer_.hasComponentDef(S2ContainerBehavior.Provider.class)) {
+            if (configurationContainer.hasComponentDef(S2ContainerBehavior.Provider.class)) {
                 S2ContainerBehavior
-                        .setProvider((S2ContainerBehavior.Provider) configurationContainer_
+                        .setProvider((S2ContainerBehavior.Provider) configurationContainer
                                 .getComponent(S2ContainerBehavior.Provider.class));
             }
 
-            if (configurationContainer_.hasComponentDef(ComponentDeployerFactory.Provider.class)) {
+            if (configurationContainer.hasComponentDef(ComponentDeployerFactory.Provider.class)) {
                 ComponentDeployerFactory
-                        .setProvider((ComponentDeployerFactory.Provider) configurationContainer_
+                        .setProvider((ComponentDeployerFactory.Provider) configurationContainer
                                 .getComponent(ComponentDeployerFactory.Provider.class));
             }
 
-            if (configurationContainer_.hasComponentDef(AssemblerFactory.Provider.class)) {
-                AssemblerFactory.setProvider((AssemblerFactory.Provider) configurationContainer_
+            if (configurationContainer.hasComponentDef(AssemblerFactory.Provider.class)) {
+                AssemblerFactory.setProvider((AssemblerFactory.Provider) configurationContainer
                         .getComponent(AssemblerFactory.Provider.class));
             }
         }

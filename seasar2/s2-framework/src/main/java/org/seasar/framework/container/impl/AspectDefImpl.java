@@ -27,13 +27,13 @@ import org.seasar.framework.container.AspectDef;
  */
 public class AspectDefImpl extends ArgDefImpl implements AspectDef {
 
-	private Pointcut pointcut_;
+	private Pointcut pointcut;
 
 	public AspectDefImpl() {
 	}
 
 	public AspectDefImpl(Pointcut pointcut) {
-		pointcut_ = pointcut;
+		setPointcut(pointcut);
 	}
 	
 	public AspectDefImpl(MethodInterceptor interceptor) {
@@ -42,15 +42,15 @@ public class AspectDefImpl extends ArgDefImpl implements AspectDef {
 
 	public AspectDefImpl(MethodInterceptor interceptor, Pointcut pointcut) {
 		setValue(interceptor);
-		pointcut_ = pointcut;
+		setPointcut(pointcut);
 	}
     
     public Pointcut getPointcut() {
-        return pointcut_;
+        return pointcut;
     }
 
     public void setPointcut(Pointcut pointcut) {
-        pointcut_ = pointcut;
+        this.pointcut = pointcut;
     }
 
 	/**
@@ -58,6 +58,6 @@ public class AspectDefImpl extends ArgDefImpl implements AspectDef {
 	 */
 	public Aspect getAspect() {
 		MethodInterceptor interceptor = (MethodInterceptor) getValue();
-		return new AspectImpl(interceptor, pointcut_);
+		return new AspectImpl(interceptor, pointcut);
 	}
 }

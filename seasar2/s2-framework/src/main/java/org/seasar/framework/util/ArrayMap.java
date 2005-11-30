@@ -48,11 +48,11 @@ public class ArrayMap
 	static final long serialVersionUID = 1L;
 	private static final int INITIAL_CAPACITY = 17;
 	private static final float LOAD_FACTOR = 0.75f;
-	private transient int threshold_;
-	private transient Entry[] mapTable_;
-	private transient Entry[] listTable_;
-	private transient int size_ = 0;
-	private transient Set entrySet_ = null;
+	private transient int threshold;
+	private transient Entry[] mapTable;
+	private transient Entry[] listTable;
+	private transient int size = 0;
+	private transient Set entrySet = null;
 
 	public ArrayMap() {
 		this(INITIAL_CAPACITY);
@@ -62,9 +62,9 @@ public class ArrayMap
 		if (initialCapacity <= 0) {
 			initialCapacity = INITIAL_CAPACITY;
 		}
-		mapTable_ = new Entry[initialCapacity];
-		listTable_ = new Entry[initialCapacity];
-		threshold_ = (int) (initialCapacity * LOAD_FACTOR);
+		mapTable = new Entry[initialCapacity];
+		listTable = new Entry[initialCapacity];
+		threshold = (int) (initialCapacity * LOAD_FACTOR);
 	}
 
 	public ArrayMap(Map map) {
@@ -73,11 +73,11 @@ public class ArrayMap
 	}
 
 	public final int size() {
-		return size_;
+		return size;
 	}
 
 	public final boolean isEmpty() {
-		return size_ == 0;
+		return size == 0;
 	}
 
 	public final boolean containsValue(Object value) {
@@ -86,14 +86,14 @@ public class ArrayMap
 
 	public final int indexOf(Object value) {
 		if (value != null) {
-			for (int i = 0; i < size_; i++) {
-				if (value.equals(listTable_[i].value_)) {
+			for (int i = 0; i < size; i++) {
+				if (value.equals(listTable[i].value_)) {
 					return i;
 				}
 			}
 		} else {
-			for (int i = 0; i < size_; i++) {
-				if (listTable_[i].value_ == null) {
+			for (int i = 0; i < size; i++) {
+				if (listTable[i].value_ == null) {
 					return i;
 				}
 			}
@@ -102,17 +102,17 @@ public class ArrayMap
 	}
 
 	public boolean containsKey(final Object key) {
-		Entry[] mapTable = mapTable_;
+		Entry[] tbl = mapTable;
 		if (key != null) {
 			int hashCode = key.hashCode();
-			int index = (hashCode & 0x7FFFFFFF) % mapTable.length;
-			for (Entry e = mapTable[index]; e != null; e = e.next_) {
+			int index = (hashCode & 0x7FFFFFFF) % tbl.length;
+			for (Entry e = tbl[index]; e != null; e = e.next_) {
 				if (e.hashCode_ == hashCode && key.equals(e.key_)) {
 					return true;
 				}
 			}
 		} else {
-			for (Entry e = mapTable[0]; e != null; e = e.next_) {
+			for (Entry e = tbl[0]; e != null; e = e.next_) {
 				if (e.key_ == null) {
 					return true;
 				}
@@ -122,17 +122,17 @@ public class ArrayMap
 	}
 
 	public Object get(final Object key) {
-		Entry[] mapTable = mapTable_;
+		Entry[] tbl = mapTable;
 		if (key != null) {
 			int hashCode = key.hashCode();
-			int index = (hashCode & 0x7FFFFFFF) % mapTable.length;
-			for (Entry e = mapTable[index]; e != null; e = e.next_) {
+			int index = (hashCode & 0x7FFFFFFF) % tbl.length;
+			for (Entry e = tbl[index]; e != null; e = e.next_) {
 				if (e.hashCode_ == hashCode && key.equals(e.key_)) {
 					return e.value_;
 				}
 			}
 		} else {
-			for (Entry e = mapTable[0]; e != null; e = e.next_) {
+			for (Entry e = tbl[0]; e != null; e = e.next_) {
 				if (e.key_ == null) {
 					return e.value_;
 				}
@@ -150,11 +150,11 @@ public class ArrayMap
 	}
 
 	public final Entry getEntry(final int index) {
-		if (index >= size_) {
+		if (index >= size) {
 			throw new IndexOutOfBoundsException(
-				"Index:" + index + ", Size:" + size_);
+				"Index:" + index + ", Size:" + size);
 		}
-		return listTable_[index];
+		return listTable[index];
 	}
 
 	public Object put(final Object key, final Object value) {
@@ -163,24 +163,24 @@ public class ArrayMap
 
 		if (key != null) {
 			hashCode = key.hashCode();
-			index = (hashCode & 0x7FFFFFFF) % mapTable_.length;
-			for (Entry e = mapTable_[index]; e != null; e = e.next_) {
+			index = (hashCode & 0x7FFFFFFF) % mapTable.length;
+			for (Entry e = mapTable[index]; e != null; e = e.next_) {
 				if ((e.hashCode_ == hashCode) && key.equals(e.key_)) {
 					return swapValue(e, value);
 				}
 			}
 		} else {
-			for (Entry e = mapTable_[0]; e != null; e = e.next_) {
+			for (Entry e = mapTable[0]; e != null; e = e.next_) {
 				if (e.key_ == null) {
 					return swapValue(e, value);
 				}
 			}
 		}
 		ensureCapacity();
-		index = (hashCode & 0x7FFFFFFF) % mapTable_.length;
-		Entry e = new Entry(hashCode, key, value, mapTable_[index]);
-		mapTable_[index] = e;
-		listTable_[size_++] = e;
+		index = (hashCode & 0x7FFFFFFF) % mapTable.length;
+		Entry e = new Entry(hashCode, key, value, mapTable[index]);
+		mapTable[index] = e;
+		listTable[size++] = e;
 		return null;
 	}
 	
@@ -215,17 +215,17 @@ public class ArrayMap
 	}
 
 	public final void clear() {
-		for (int i = 0; i < mapTable_.length; i++) {
-			mapTable_[i] = null;
+		for (int i = 0; i < mapTable.length; i++) {
+			mapTable[i] = null;
 		}
-		for (int i = 0; i < listTable_.length; i++) {
-			listTable_[i] = null;
+		for (int i = 0; i < listTable.length; i++) {
+			listTable[i] = null;
 		}
-		size_ = 0;
+		size = 0;
 	}
 
 	public final Object[] toArray() {
-		Object[] array = new Object[size_];
+		Object[] array = new Object[size];
 		for (int i = 0; i < array.length; i++) {
 			array[i] = get(i);
 		}
@@ -234,17 +234,17 @@ public class ArrayMap
 
 	public final Object[] toArray(final Object proto[]) {
 		Object[] array = proto;
-		if (proto.length < size_) {
+		if (proto.length < size) {
 			array =
 				(Object[]) Array.newInstance(
 					proto.getClass().getComponentType(),
-					size_);
+					size);
 		}
 		for (int i = 0; i < array.length; i++) {
 			array[i] = get(i);
 		}
-		if (array.length > size_) {
-			array[size_] = null;
+		if (array.length > size) {
+			array[size] = null;
 		}
 		return array;
 	}
@@ -254,11 +254,11 @@ public class ArrayMap
 			return false;
 		}
 		ArrayMap e = (ArrayMap) o;
-		if (size_ != e.size_) {
+		if (size != e.size) {
 			return false;
 		}
-		for (int i = 0; i < size_; i++) {
-			if (!listTable_[i].equals(e.listTable_[i])) {
+		for (int i = 0; i < size; i++) {
+			if (!listTable[i].equals(e.listTable[i])) {
 				return false;
 			}
 		}
@@ -266,8 +266,8 @@ public class ArrayMap
 	}
 
 	public final Set entrySet() {
-		if (entrySet_ == null) {
-			entrySet_ = new AbstractSet() {
+		if (entrySet == null) {
+			entrySet = new AbstractSet() {
 				public Iterator iterator() {
 					return new ArrayMapIterator();
 				}
@@ -278,8 +278,8 @@ public class ArrayMap
 					}
 					Entry entry = (Entry) o;
 					int index =
-						(entry.hashCode_ & 0x7FFFFFFF) % mapTable_.length;
-					for (Entry e = mapTable_[index]; e != null; e = e.next_) {
+						(entry.hashCode_ & 0x7FFFFFFF) % mapTable.length;
+					for (Entry e = mapTable[index]; e != null; e = e.next_) {
 						if (e.equals(entry)) {
 							return true;
 						}
@@ -296,7 +296,7 @@ public class ArrayMap
 				}
 
 				public int size() {
-					return size_;
+					return size;
 				}
 
 				public void clear() {
@@ -304,16 +304,16 @@ public class ArrayMap
 				}
 			};
 		}
-		return entrySet_;
+		return entrySet;
 	}
 
 	public final void writeExternal(final ObjectOutput out)
 		throws IOException {
-		out.writeInt(listTable_.length);
-		out.writeInt(size_);
-		for (int i = 0; i < size_; i++) {
-			out.writeObject(listTable_[i].key_);
-			out.writeObject(listTable_[i].value_);
+		out.writeInt(listTable.length);
+		out.writeInt(size);
+		for (int i = 0; i < size; i++) {
+			out.writeObject(listTable[i].key_);
+			out.writeObject(listTable[i].value_);
 		}
 	}
 
@@ -321,9 +321,9 @@ public class ArrayMap
 		throws IOException, ClassNotFoundException {
 
 		int num = in.readInt();
-		mapTable_ = new Entry[num];
-		listTable_ = new Entry[num];
-		threshold_ = (int) (num * LOAD_FACTOR);
+		mapTable = new Entry[num];
+		listTable = new Entry[num];
+		threshold = (int) (num * LOAD_FACTOR);
 		int size = in.readInt();
 		for (int i = 0; i < size; i++) {
 			Object key = in.readObject();
@@ -334,16 +334,16 @@ public class ArrayMap
 	
 	public Object clone() {
 		ArrayMap copy = new ArrayMap();
-		copy.threshold_ = threshold_;
-		copy.mapTable_ = mapTable_;
-		copy.listTable_ = listTable_;
-		copy.size_ = size_;
+		copy.threshold = threshold;
+		copy.mapTable = mapTable;
+		copy.listTable = listTable;
+		copy.size = size;
 		return copy;
 	}
 	
 	private final int indexOf(final Entry entry) {
-		for (int i = 0; i < size_; i++) {
-			if (listTable_[i] == entry) {
+		for (int i = 0; i < size; i++) {
+			if (listTable[i] == entry) {
 				return i;
 			}
 		}
@@ -356,28 +356,28 @@ public class ArrayMap
 
 		if (key != null) {
 			hashCode = key.hashCode();
-			index = (hashCode & 0x7FFFFFFF) % mapTable_.length;
-			for (Entry e = mapTable_[index], prev = null;
+			index = (hashCode & 0x7FFFFFFF) % mapTable.length;
+			for (Entry e = mapTable[index], prev = null;
 				e != null;
 				prev = e, e = e.next_) {
 				if ((e.hashCode_ == hashCode) && key.equals(e.key_)) {
 					if (prev != null) {
 						prev.next_ = e.next_;
 					} else {
-						mapTable_[index] = e.next_;
+						mapTable[index] = e.next_;
 					}
 					return e;
 				}
 			}
 		} else {
-			for (Entry e = mapTable_[index], prev = null;
+			for (Entry e = mapTable[index], prev = null;
 				e != null;
 				prev = e, e = e.next_) {
 				if ((e.hashCode_ == hashCode) && e.key_ == null) {
 					if (prev != null) {
 						prev.next_ = e.next_;
 					} else {
-						mapTable_[index] = e.next_;
+						mapTable[index] = e.next_;
 					}
 					return e;
 				}
@@ -387,29 +387,29 @@ public class ArrayMap
 	}
 
 	private final Entry removeList(int index) {
-		Entry e = listTable_[index];
-		int numMoved = size_ - index - 1;
+		Entry e = listTable[index];
+		int numMoved = size - index - 1;
 		if (numMoved > 0) {
 			System.arraycopy(
-				listTable_,
+				listTable,
 				index + 1,
-				listTable_,
+				listTable,
 				index,
 				numMoved);
 		}
-		listTable_[--size_] = null;
+		listTable[--size] = null;
 		return e;
 	}
 
 	private final void ensureCapacity() {
-		if (size_ >= threshold_) {
-			Entry[] oldTable = listTable_;
+		if (size >= threshold) {
+			Entry[] oldTable = listTable;
 			int newCapacity = oldTable.length * 2 + 1;
 			Entry[] newMapTable = new Entry[newCapacity];
 			Entry[] newListTable = new Entry[newCapacity];
-			threshold_ = (int) (newCapacity * LOAD_FACTOR);
-			System.arraycopy(oldTable, 0, newListTable, 0, size_);
-			for (int i = 0; i < size_; i++) {
+			threshold = (int) (newCapacity * LOAD_FACTOR);
+			System.arraycopy(oldTable, 0, newListTable, 0, size);
+			for (int i = 0; i < size; i++) {
 				Entry old = oldTable[i];
 				int index = (old.hashCode_ & 0x7FFFFFFF) % newCapacity;
 				Entry e = old;
@@ -417,8 +417,8 @@ public class ArrayMap
 				e.next_ = newMapTable[index];
 				newMapTable[index] = e;
 			}
-			mapTable_ = newMapTable;
-			listTable_ = newListTable;
+			mapTable = newMapTable;
+			listTable = newListTable;
 		}
 	}
 
@@ -434,12 +434,12 @@ public class ArrayMap
 		private int last_ = -1;
 
 		public boolean hasNext() {
-			return current_ != size_;
+			return current_ != size;
 		}
 
 		public Object next() {
 			try {
-				Object n = listTable_[current_];
+				Object n = listTable[current_];
 				last_ = current_++;
 				return n;
 			} catch (IndexOutOfBoundsException e) {

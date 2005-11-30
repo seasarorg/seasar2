@@ -26,8 +26,8 @@ public class NoSuchConstructorRuntimeException extends SRuntimeException {
 
     private static final long serialVersionUID = 8688818589925114466L;
 
-	private Class targetClass_;
-	private Class[] argTypes_;
+	private Class targetClass;
+	private Class[] argTypes;
 
 	public NoSuchConstructorRuntimeException(
 		Class targetClass,
@@ -39,15 +39,15 @@ public class NoSuchConstructorRuntimeException extends SRuntimeException {
 			new Object[] { targetClass.getName(),
 				MethodUtil.getSignature(ClassUtil.getShortClassName(targetClass), argTypes), cause},
 			cause);
-		targetClass_ = targetClass;
-		argTypes_ = argTypes;
+		this.targetClass = targetClass;
+		this.argTypes = argTypes;
 	}
 	
 	public Class getTargetClass() {
-		return targetClass_;
+		return targetClass;
 	}
 	
 	public Class[] getArgTypes() {
-		return argTypes_;
+		return argTypes;
 	}
 }

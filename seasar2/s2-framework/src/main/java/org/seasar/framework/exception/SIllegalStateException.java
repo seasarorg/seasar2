@@ -25,21 +25,21 @@ public class SIllegalStateException extends IllegalStateException {
 
     private static final long serialVersionUID = 7321239007471022687L;
 
-	private String messageCode_;
-	private Object[] args_;
+	private String messageCode;
+	private Object[] args;
 
 	public SIllegalStateException(String messageCode, Object[] args) {
 		super(MessageFormatter.getMessage(messageCode, args));
 		
-		messageCode_ = messageCode;
-		args_ = args;
+		this.messageCode = messageCode;
+		this.args = args;
 	}
 
 	public String getMessageCode() {
-		return messageCode_;
+		return messageCode;
 	}
 	
 	public Object[] getArgs() {
-		return args_;
+		return args;
 	}
 }

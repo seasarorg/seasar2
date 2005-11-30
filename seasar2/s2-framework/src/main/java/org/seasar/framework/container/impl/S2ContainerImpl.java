@@ -47,19 +47,19 @@ import org.seasar.framework.util.StringUtil;
  */
 public class S2ContainerImpl implements S2Container, ContainerConstants {
 
-	private Map componentDefMap_ = new HashMap();
-	private List componentDefList_ = new ArrayList();
-	private String namespace_;
-	private String path_;
+	private Map componentDefMap = new HashMap();
+	private List componentDefList = new ArrayList();
+	private String namespace;
+	private String path;
 	private List children_ = new ArrayList();
-	private CaseInsensitiveMap descendants_ = new CaseInsensitiveMap();
-	private S2Container root_;
+	private CaseInsensitiveMap descendants = new CaseInsensitiveMap();
+	private S2Container root;
 	private ThreadLocal requests_ = new ThreadLocal();
-	private ThreadLocal responses_ = new ThreadLocal();
-	private ServletContext servletContext_;
-	private MetaDefSupport metaDefSupport_ = new MetaDefSupport(this);
-	private boolean inited_ = false;
-    private boolean hotswapMode_ = false;
+	private ThreadLocal responses = new ThreadLocal();
+	private ServletContext servletContext;
+	private MetaDefSupport metaDefSupport = new MetaDefSupport(this);
+	private boolean inited = false;
+    private boolean hotswapMode = false;
 
 	static {
 		OgnlRuntime.setPropertyAccessor(S2Container.class,
@@ -67,30 +67,30 @@ public class S2ContainerImpl implements S2Container, ContainerConstants {
 	}
 
 	public S2ContainerImpl() {
-		root_ = this;
+		root = this;
 		ComponentDef componentDef = new SimpleComponentDef(this, CONTAINER_NAME);
-		componentDefMap_.put(CONTAINER_NAME, componentDef);
-		componentDefMap_.put(S2Container.class, componentDef);
+		componentDefMap.put(CONTAINER_NAME, componentDef);
+		componentDefMap.put(S2Container.class, componentDef);
 		ComponentDef requestCd = new RequestComponentDef(this);
-		componentDefMap_.put(REQUEST_NAME, requestCd);
-		componentDefMap_.put(HttpServletRequest.class, requestCd);
+		componentDefMap.put(REQUEST_NAME, requestCd);
+		componentDefMap.put(HttpServletRequest.class, requestCd);
 		ComponentDef sessionCd = new SessionComponentDef(this);
-		componentDefMap_.put(SESSION_NAME, sessionCd);
-		componentDefMap_.put(HttpSession.class, sessionCd);
+		componentDefMap.put(SESSION_NAME, sessionCd);
+		componentDefMap.put(HttpSession.class, sessionCd);
 		ComponentDef responseCd = new ResponseComponentDef(this);
-		componentDefMap_.put(RESPONSE_NAME, responseCd);
-		componentDefMap_.put(HttpServletResponse.class, responseCd);
+		componentDefMap.put(RESPONSE_NAME, responseCd);
+		componentDefMap.put(HttpServletResponse.class, responseCd);
 		ComponentDef servletContextCd = new ServletContextComponentDef(this);
-		componentDefMap_.put(SERVLET_CONTEXT_NAME, servletContextCd);
-		componentDefMap_.put(ServletContext.class, servletContextCd);
+		componentDefMap.put(SERVLET_CONTEXT_NAME, servletContextCd);
+		componentDefMap.put(ServletContext.class, servletContextCd);
 	}
 	
 	public S2Container getRoot() {
-		return root_;
+		return root;
 	}
 	
 	public void setRoot(S2Container root) {
-		root_ = root;
+		this.root = root;
 	}
 	
 	/**
@@ -189,7 +189,7 @@ public class S2ContainerImpl implements S2Container, ContainerConstants {
 	public synchronized void register(ComponentDef componentDef) {
 		assertParameterIsNotNull(componentDef, "componentDef");
 		register0(componentDef);
-		componentDefList_.add(componentDef);
+		componentDefList.add(componentDef);
 	}
 
 	private void register0(ComponentDef componentDef) {
@@ -215,10 +215,10 @@ public class S2ContainerImpl implements S2Container, ContainerConstants {
 	}
 
 	private void registerMap(Object key, ComponentDef componentDef) {
-		if (componentDefMap_.containsKey(key)) {
+		if (componentDefMap.containsKey(key)) {
 			processTooManyRegistration(key, componentDef);
 		} else {
-			componentDefMap_.put(key, componentDef);
+			componentDefMap.put(key, componentDef);
 		}
 	}
 
@@ -226,14 +226,14 @@ public class S2ContainerImpl implements S2Container, ContainerConstants {
 	 * @see org.seasar.framework.container.S2Container#getComponentDefSize()
 	 */
 	public synchronized int getComponentDefSize() {
-		return componentDefList_.size();
+		return componentDefList.size();
 	}
 
 	/**
 	 * @see org.seasar.framework.container.S2Container#getComponentDef(int)
 	 */
 	public synchronized ComponentDef getComponentDef(int index) {
-		return (ComponentDef) componentDefList_.get(index);
+		return (ComponentDef) componentDefList.get(index);
 	}
 
 	/**
@@ -262,7 +262,7 @@ public class S2ContainerImpl implements S2Container, ContainerConstants {
 	}
 
 	protected synchronized ComponentDef internalGetComponentDef(Object key) {
-		ComponentDef cd = (ComponentDef) componentDefMap_.get(key);
+		ComponentDef cd = (ComponentDef) componentDefMap.get(key);
 		if (cd != null) {
 			return cd;
 		}
@@ -302,11 +302,11 @@ public class S2ContainerImpl implements S2Container, ContainerConstants {
 	 */
 	public synchronized boolean hasDescendant(String path) {
 		assertParameterIsNotEmpty(path, "path");
-		return descendants_.containsKey(path);
+		return descendants.containsKey(path);
 	}
 	
 	public synchronized S2Container getDescendant(String path) {
-		S2Container descendant = (S2Container) descendants_.get(path);
+		S2Container descendant = (S2Container) descendants.get(path);
 		if (descendant != null) {
 			return descendant;
 		}
@@ -315,7 +315,7 @@ public class S2ContainerImpl implements S2Container, ContainerConstants {
 	
 	public synchronized void registerDescendant(S2Container descendant) {
 		assertParameterIsNotNull(descendant, "descendant");
-		descendants_.put(descendant.getPath(), descendant);
+		descendants.put(descendant.getPath(), descendant);
 	}
 	
 	/**
@@ -349,7 +349,7 @@ public class S2ContainerImpl implements S2Container, ContainerConstants {
 	 * @see org.seasar.framework.container.S2Container#init()
 	 */
 	public void init() {
-		if (inited_) {
+		if (inited) {
 			return;
 		}
 		for (int i = 0; i < getChildSize(); ++i) {
@@ -358,14 +358,14 @@ public class S2ContainerImpl implements S2Container, ContainerConstants {
 		for (int i = 0; i < getComponentDefSize(); ++i) {
 			getComponentDef(i).init();
 		}
-		inited_ = true;
+		inited = true;
 	}
 
 	/**
 	 * @see org.seasar.framework.container.S2Container#destroy()
 	 */
 	public void destroy() {
-		if (!inited_) {
+		if (!inited) {
 			return;
 		}
 		for (int i = getComponentDefSize() - 1; 0 <= i; --i) {
@@ -379,38 +379,38 @@ public class S2ContainerImpl implements S2Container, ContainerConstants {
 		for (int i = getChildSize() - 1; 0 <= i; --i) {
 			getChild(i).destroy();
 		}
-		inited_ = false;
+		inited = false;
 	}
 
 	/**
 	 * @see org.seasar.framework.container.S2Container#getNamespace()
 	 */
 	public String getNamespace() {
-		return namespace_;
+		return namespace;
 	}
 
 	/**
 	 * @see org.seasar.framework.container.S2Container#setNamespace(java.lang.String)
 	 */
 	public synchronized void setNamespace(String namespace) {
-		componentDefMap_.remove(namespace_);
-		namespace_ = namespace;
-		componentDefMap_.put(namespace_, new SimpleComponentDef(this,
-				namespace_));
+		componentDefMap.remove(namespace);
+		this.namespace = namespace;
+		componentDefMap.put(namespace, new SimpleComponentDef(this,
+				namespace));
 	}
 
 	/**
 	 * @see org.seasar.framework.container.S2Container#getPath()
 	 */
 	public String getPath() {
-		return path_;
+		return path;
 	}
 
 	/**
 	 * @see org.seasar.framework.container.S2Container#setPath(java.lang.String)
 	 */
 	public void setPath(String path) {
-		path_ = path;
+		this.path = path;
 	}
 	
 	/**
@@ -442,71 +442,71 @@ public class S2ContainerImpl implements S2Container, ContainerConstants {
 	 * @see org.seasar.framework.container.S2Container#getResponse()
 	 */
 	public HttpServletResponse getResponse() {
-		return (HttpServletResponse) responses_.get();
+		return (HttpServletResponse) responses.get();
 	}
 	
 	/**
 	 * @see org.seasar.framework.container.S2Container#setResponse(javax.servlet.http.HttpServletResponse)
 	 */
 	public void setResponse(HttpServletResponse response) {
-		responses_.set(response);
+		responses.set(response);
 	}
 	
 	/**
 	 * @see org.seasar.framework.container.S2Container#getServletContext()
 	 */
 	public ServletContext getServletContext() {
-		return servletContext_;
+		return servletContext;
 	}
 	
 	/**
 	 * @see org.seasar.framework.container.S2Container#setServletContext(javax.servlet.ServletContext)
 	 */
 	public void setServletContext(ServletContext servletContext) {
-		servletContext_ = servletContext;
+		this.servletContext = servletContext;
 	}
 	
 	/**
 	 * @see org.seasar.framework.container.MetaDefAware#addMetaDef(org.seasar.framework.container.MetaDef)
 	 */
 	public void addMetaDef(MetaDef metaDef) {
-		metaDefSupport_.addMetaDef(metaDef);
+		metaDefSupport.addMetaDef(metaDef);
 	}
 	
 	/**
 	 * @see org.seasar.framework.container.MetaDefAware#getMetaDef(int)
 	 */
 	public MetaDef getMetaDef(int index) {
-		return metaDefSupport_.getMetaDef(index);
+		return metaDefSupport.getMetaDef(index);
 	}
 	
 	/**
 	 * @see org.seasar.framework.container.MetaDefAware#getMetaDef(java.lang.String)
 	 */
 	public MetaDef getMetaDef(String name) {
-		return metaDefSupport_.getMetaDef(name);
+		return metaDefSupport.getMetaDef(name);
 	}
 	
 	/**
 	 * @see org.seasar.framework.container.MetaDefAware#getMetaDefs(java.lang.String)
 	 */
 	public MetaDef[] getMetaDefs(String name) {
-		return metaDefSupport_.getMetaDefs(name);
+		return metaDefSupport.getMetaDefs(name);
 	}
 	
 	/**
 	 * @see org.seasar.framework.container.MetaDefAware#getMetaDefSize()
 	 */
 	public int getMetaDefSize() {
-		return metaDefSupport_.getMetaDefSize();
+		return metaDefSupport.getMetaDefSize();
 	}
     
     public boolean isHotswapMode() {
-        return hotswapMode_;
+        return hotswapMode;
     }
     
     public void setHotswapMode(boolean hotswapMode) {
-        hotswapMode_ = hotswapMode;
+        this.hotswapMode = hotswapMode;
     }
 
 	private static Class[] getAssignableClasses(Class componentClass) {
@@ -532,7 +532,7 @@ public class S2ContainerImpl implements S2Container, ContainerConstants {
 	private void processTooManyRegistration(Object key,
 			ComponentDef componentDef) {
 
-		ComponentDef cd = (ComponentDef) componentDefMap_.get(key);
+		ComponentDef cd = (ComponentDef) componentDefMap.get(key);
 		if (cd instanceof TooManyRegistrationComponentDef) {
 			((TooManyRegistrationComponentDef) cd)
 					.addComponentDef(componentDef);
@@ -541,7 +541,7 @@ public class S2ContainerImpl implements S2Container, ContainerConstants {
 					key);
 			tmrcf.addComponentDef(cd);
 			tmrcf.addComponentDef(componentDef);
-			componentDefMap_.put(key, tmrcf);
+			componentDefMap.put(key, tmrcf);
 		}
 	}
 	

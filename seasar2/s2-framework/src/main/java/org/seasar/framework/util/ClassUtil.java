@@ -34,27 +34,27 @@ import org.seasar.framework.exception.NoSuchMethodRuntimeException;
  */
 public final class ClassUtil {
 
-	private static Map wrapperToPrimitiveMap_ = new HashMap();
-	private static Map primitiveToWrapperMap_ = new HashMap();
+	private static Map wrapperToPrimitiveMap = new HashMap();
+	private static Map primitiveToWrapperMap = new HashMap();
 
 	static {
-		wrapperToPrimitiveMap_.put(Character.class, Character.TYPE);
-		wrapperToPrimitiveMap_.put(Byte.class, Byte.TYPE);
-		wrapperToPrimitiveMap_.put(Short.class, Short.TYPE);
-		wrapperToPrimitiveMap_.put(Integer.class, Integer.TYPE);
-		wrapperToPrimitiveMap_.put(Long.class, Long.TYPE);
-		wrapperToPrimitiveMap_.put(Double.class, Double.TYPE);
-		wrapperToPrimitiveMap_.put(Float.class, Float.TYPE);
-		wrapperToPrimitiveMap_.put(Boolean.class, Boolean.TYPE);
+		wrapperToPrimitiveMap.put(Character.class, Character.TYPE);
+		wrapperToPrimitiveMap.put(Byte.class, Byte.TYPE);
+		wrapperToPrimitiveMap.put(Short.class, Short.TYPE);
+		wrapperToPrimitiveMap.put(Integer.class, Integer.TYPE);
+		wrapperToPrimitiveMap.put(Long.class, Long.TYPE);
+		wrapperToPrimitiveMap.put(Double.class, Double.TYPE);
+		wrapperToPrimitiveMap.put(Float.class, Float.TYPE);
+		wrapperToPrimitiveMap.put(Boolean.class, Boolean.TYPE);
 
-		primitiveToWrapperMap_.put(Character.TYPE, Character.class);
-		primitiveToWrapperMap_.put(Byte.TYPE, Byte.class);
-		primitiveToWrapperMap_.put(Short.TYPE, Short.class);
-		primitiveToWrapperMap_.put(Integer.TYPE, Integer.class);
-		primitiveToWrapperMap_.put(Long.TYPE, Long.class);
-		primitiveToWrapperMap_.put(Double.TYPE, Double.class);
-		primitiveToWrapperMap_.put(Float.TYPE, Float.class);
-		primitiveToWrapperMap_.put(Boolean.TYPE, Boolean.class);
+		primitiveToWrapperMap.put(Character.TYPE, Character.class);
+		primitiveToWrapperMap.put(Byte.TYPE, Byte.class);
+		primitiveToWrapperMap.put(Short.TYPE, Short.class);
+		primitiveToWrapperMap.put(Integer.TYPE, Integer.class);
+		primitiveToWrapperMap.put(Long.TYPE, Long.class);
+		primitiveToWrapperMap.put(Double.TYPE, Double.class);
+		primitiveToWrapperMap.put(Float.TYPE, Float.class);
+		primitiveToWrapperMap.put(Boolean.TYPE, Boolean.class);
 	}
 
 	/**
@@ -106,7 +106,7 @@ public final class ClassUtil {
 	}
 
 	public static Class getPrimitiveClass(Class clazz) {
-		return (Class) wrapperToPrimitiveMap_.get(clazz);
+		return (Class) wrapperToPrimitiveMap.get(clazz);
 	}
 
 	public static Class getPrimitiveClassIfWrapper(Class clazz) {
@@ -118,7 +118,7 @@ public final class ClassUtil {
 	}
 
 	public static Class getWrapperClass(Class clazz) {
-		return (Class) primitiveToWrapperMap_.get(clazz);
+		return (Class) primitiveToWrapperMap.get(clazz);
 	}
 
 	public static Class getWrapperClassIfPrimitive(Class clazz) {

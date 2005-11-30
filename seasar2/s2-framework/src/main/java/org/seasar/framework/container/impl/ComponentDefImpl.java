@@ -45,35 +45,35 @@ import org.seasar.framework.hotswap.Hotswap;
  */
 public class ComponentDefImpl implements ComponentDef, ContainerConstants {
 
-    private Class componentClass_;
+    private Class componentClass;
 
-    private String componentName_;
+    private String componentName;
 
-    private Class concreteClass_;
+    private Class concreteClass;
 
-    private S2Container container_;
+    private S2Container container;
 
-    private String expression_;
+    private String expression;
 
-    private ArgDefSupport argDefSupport_ = new ArgDefSupport();
+    private ArgDefSupport argDefSupport = new ArgDefSupport();
 
-    private PropertyDefSupport propertyDefSupport_ = new PropertyDefSupport();
+    private PropertyDefSupport propertyDefSupport = new PropertyDefSupport();
 
-    private InitMethodDefSupport initMethodDefSupport_ = new InitMethodDefSupport();
+    private InitMethodDefSupport initMethodDefSupport = new InitMethodDefSupport();
 
-    private DestroyMethodDefSupport destroyMethodDefSupport_ = new DestroyMethodDefSupport();
+    private DestroyMethodDefSupport destroyMethodDefSupport = new DestroyMethodDefSupport();
 
-    private AspectDefSupport aspectDefSupport_ = new AspectDefSupport();
+    private AspectDefSupport aspectDefSupport = new AspectDefSupport();
 
-    private MetaDefSupport metaDefSupport_ = new MetaDefSupport();
+    private MetaDefSupport metaDefSupport = new MetaDefSupport();
 
-    private InstanceDef instanceDef_ = InstanceDefFactory.SINGLETON;
+    private InstanceDef instanceDef = InstanceDefFactory.SINGLETON;
 
-    private AutoBindingDef autoBindingDef_ = AutoBindingDefFactory.AUTO;
+    private AutoBindingDef autoBindingDef = AutoBindingDefFactory.AUTO;
 
-    private ComponentDeployer componentDeployer_;
+    private ComponentDeployer componentDeployer;
 
-    private Hotswap hotswap_;
+    private Hotswap hotswap;
 
     public ComponentDefImpl() {
     }
@@ -83,8 +83,8 @@ public class ComponentDefImpl implements ComponentDef, ContainerConstants {
     }
 
     public ComponentDefImpl(Class componentClass, String componentName) {
-        componentClass_ = componentClass;
-        componentName_ = componentName;
+        this.componentClass = componentClass;
+        setComponentName(componentName);
     }
 
     /**
@@ -106,13 +106,13 @@ public class ComponentDefImpl implements ComponentDef, ContainerConstants {
      */
     public final Class getComponentClass() {
         updateComponentClass();
-        return componentClass_;
+        return componentClass;
     }
 
     protected synchronized void updateComponentClass() {
-        if (hotswap_ != null && hotswap_.isModified()) {
-            componentClass_ = hotswap_.updateTargetClass();
-            concreteClass_ = null;
+        if (hotswap != null && hotswap.isModified()) {
+            componentClass = hotswap.updateTargetClass();
+            concreteClass = null;
         }
     }
 
@@ -120,14 +120,14 @@ public class ComponentDefImpl implements ComponentDef, ContainerConstants {
      * @see org.seasar.framework.container.ComponentDef#getComponentName()
      */
     public final String getComponentName() {
-        return componentName_;
+        return componentName;
     }
 
     /**
      * @see org.seasar.framework.container.ComponentDef#setComponentName(java.lang.String)
      */
     public void setComponentName(String componentName) {
-        componentName_ = componentName;
+        this.componentName = componentName;
     }
 
     /**
@@ -135,139 +135,139 @@ public class ComponentDefImpl implements ComponentDef, ContainerConstants {
      */
     public synchronized final Class getConcreteClass() {
         updateComponentClass();
-        if (concreteClass_ == null) {
-            concreteClass_ = AopProxyUtil.getConcreteClass(this);
+        if (concreteClass == null) {
+            concreteClass = AopProxyUtil.getConcreteClass(this);
         }
-        return concreteClass_;
+        return concreteClass;
     }
 
     /**
      * @see org.seasar.framework.container.ComponentDef#getContainer()
      */
     public final S2Container getContainer() {
-        return container_;
+        return container;
     }
 
     /**
      * @see org.seasar.framework.container.ComponentDef#setContainer(org.seasar.framework.container.S2Container)
      */
     public final void setContainer(S2Container container) {
-        container_ = container;
-        argDefSupport_.setContainer(container);
-        metaDefSupport_.setContainer(container);
-        propertyDefSupport_.setContainer(container);
-        initMethodDefSupport_.setContainer(container);
-        destroyMethodDefSupport_.setContainer(container);
-        aspectDefSupport_.setContainer(container);
+        this.container = container;
+        argDefSupport.setContainer(container);
+        metaDefSupport.setContainer(container);
+        propertyDefSupport.setContainer(container);
+        initMethodDefSupport.setContainer(container);
+        destroyMethodDefSupport.setContainer(container);
+        aspectDefSupport.setContainer(container);
     }
 
     /**
      * @see org.seasar.framework.container.ComponentDef#addArgDef(org.seasar.framework.container.ArgDef)
      */
     public void addArgDef(ArgDef argDef) {
-        argDefSupport_.addArgDef(argDef);
+        argDefSupport.addArgDef(argDef);
     }
 
     /**
      * @see org.seasar.framework.container.ComponentDef#addPropertyDef(org.seasar.framework.container.PropertyDef)
      */
     public void addPropertyDef(PropertyDef propertyDef) {
-        propertyDefSupport_.addPropertyDef(propertyDef);
+        propertyDefSupport.addPropertyDef(propertyDef);
     }
 
     /**
      * @see org.seasar.framework.container.InitMethodDefAware#addInitMethodDef(org.seasar.framework.container.InitMethodDef)
      */
     public void addInitMethodDef(InitMethodDef methodDef) {
-        initMethodDefSupport_.addInitMethodDef(methodDef);
+        initMethodDefSupport.addInitMethodDef(methodDef);
     }
 
     /**
      * @see org.seasar.framework.container.DestroyMethodDefAware#addDestroyMethodDef(org.seasar.framework.container.DestroyMethodDef)
      */
     public void addDestroyMethodDef(DestroyMethodDef methodDef) {
-        destroyMethodDefSupport_.addDestroyMethodDef(methodDef);
+        destroyMethodDefSupport.addDestroyMethodDef(methodDef);
     }
 
     /**
      * @see org.seasar.framework.container.ComponentDef#addAspectDef(org.seasar.framework.container.AspectDef)
      */
     public synchronized void addAspectDef(AspectDef aspectDef) {
-        aspectDefSupport_.addAspectDef(aspectDef);
-        concreteClass_ = null;
+        aspectDefSupport.addAspectDef(aspectDef);
+        concreteClass = null;
     }
 
     /**
      * @see org.seasar.framework.container.ArgDefAware#getArgDefSize()
      */
     public int getArgDefSize() {
-        return argDefSupport_.getArgDefSize();
+        return argDefSupport.getArgDefSize();
     }
 
     /**
      * @see org.seasar.framework.container.PropertyDefAware#getPropertyDefSize()
      */
     public int getPropertyDefSize() {
-        return propertyDefSupport_.getPropertyDefSize();
+        return propertyDefSupport.getPropertyDefSize();
     }
 
     /**
      * @see org.seasar.framework.container.InitMethodDefAware#getInitMethodDefSize()
      */
     public int getInitMethodDefSize() {
-        return initMethodDefSupport_.getInitMethodDefSize();
+        return initMethodDefSupport.getInitMethodDefSize();
     }
 
     /**
      * @see org.seasar.framework.container.DestroyMethodDefAware#getDestroyMethodDefSize()
      */
     public int getDestroyMethodDefSize() {
-        return destroyMethodDefSupport_.getDestroyMethodDefSize();
+        return destroyMethodDefSupport.getDestroyMethodDefSize();
     }
 
     /**
      * @see org.seasar.framework.container.AspectDefAware#getAspectDefSize()
      */
     public int getAspectDefSize() {
-        return aspectDefSupport_.getAspectDefSize();
+        return aspectDefSupport.getAspectDefSize();
     }
 
     /*
      * @see org.seasar.framework.container.ComponentDef#getInstanceDef()
      */
     public InstanceDef getInstanceDef() {
-        return instanceDef_;
+        return instanceDef;
     }
 
     /*
      * @see org.seasar.framework.container.ComponentDef#setInstanceDef(org.seasar.framework.container.InstanceDef)
      */
     public void setInstanceDef(InstanceDef instanceDef) {
-        instanceDef_ = instanceDef;
+        this.instanceDef = instanceDef;
     }
 
     /**
      * @see org.seasar.framework.container.ComponentDef#getAutoBindingDef()
      */
     public AutoBindingDef getAutoBindingDef() {
-        return autoBindingDef_;
+        return autoBindingDef;
     }
 
     /**
      * @see org.seasar.framework.container.ComponentDef#setAutoBindingDef(org.seasar.framework.container.AutoBindingDef)
      */
     public void setAutoBindingDef(AutoBindingDef autoBindingDef) {
-        autoBindingDef_ = autoBindingDef;
+        this.autoBindingDef = autoBindingDef;
     }
 
     /**
      * @see org.seasar.framework.container.ComponentDef#init()
      */
     public void init() {
-        if (hotswap_ == null && componentClass_ != null && container_ != null
-                && container_.getRoot().isHotswapMode()) {
+        if (hotswap == null && componentClass != null && container != null
+                && container.getRoot().isHotswapMode()) {
             
-            hotswap_ = new Hotswap(componentClass_);
+            hotswap = new Hotswap(componentClass);
         }
         getComponentDeployer().init();
     }
@@ -283,28 +283,28 @@ public class ComponentDefImpl implements ComponentDef, ContainerConstants {
      * @see org.seasar.framework.container.ComponentDef#getExpression()
      */
     public String getExpression() {
-        return expression_;
+        return expression;
     }
 
     /**
      * @see org.seasar.framework.container.ComponentDef#setExpression(java.lang.String)
      */
     public void setExpression(String expression) {
-        expression_ = expression;
+        this.expression = expression;
     }
 
     /**
      * @see org.seasar.framework.container.ArgDefAware#getArgDef(int)
      */
     public ArgDef getArgDef(int index) {
-        return argDefSupport_.getArgDef(index);
+        return argDefSupport.getArgDef(index);
     }
 
     /**
      * @see org.seasar.framework.container.PropertyDefAware#getPropertyDef(int)
      */
     public PropertyDef getPropertyDef(int index) {
-        return propertyDefSupport_.getPropertyDef(index);
+        return propertyDefSupport.getPropertyDef(index);
     }
 
     /**
@@ -312,9 +312,9 @@ public class ComponentDefImpl implements ComponentDef, ContainerConstants {
      */
     public PropertyDef getPropertyDef(String propertyName) {
         if (hasPropertyDef(propertyName)) {
-            return propertyDefSupport_.getPropertyDef(propertyName);
+            return propertyDefSupport.getPropertyDef(propertyName);
         }
-        throw new PropertyNotFoundRuntimeException(componentClass_,
+        throw new PropertyNotFoundRuntimeException(componentClass,
                 propertyName);
     }
 
@@ -322,73 +322,73 @@ public class ComponentDefImpl implements ComponentDef, ContainerConstants {
      * @see org.seasar.framework.container.PropertyDefAware#hasPropertyDef(java.lang.String)
      */
     public boolean hasPropertyDef(String propertyName) {
-        return propertyDefSupport_.hasPropertyDef(propertyName);
+        return propertyDefSupport.hasPropertyDef(propertyName);
     }
 
     /**
      * @see org.seasar.framework.container.InitMethodDefAware#getInitMethodDef(int)
      */
     public InitMethodDef getInitMethodDef(int index) {
-        return initMethodDefSupport_.getInitMethodDef(index);
+        return initMethodDefSupport.getInitMethodDef(index);
     }
 
     /**
      * @see org.seasar.framework.container.DestroyMethodDefAware#getDestroyMethodDef(int)
      */
     public DestroyMethodDef getDestroyMethodDef(int index) {
-        return destroyMethodDefSupport_.getDestroyMethodDef(index);
+        return destroyMethodDefSupport.getDestroyMethodDef(index);
     }
 
     /**
      * @see org.seasar.framework.container.AspectDefAware#getAspectDef(int)
      */
     public AspectDef getAspectDef(int index) {
-        return aspectDefSupport_.getAspectDef(index);
+        return aspectDefSupport.getAspectDef(index);
     }
 
     /**
      * @see org.seasar.framework.container.MetaDefAware#addMetaDef(org.seasar.framework.container.MetaDef)
      */
     public void addMetaDef(MetaDef metaDef) {
-        metaDefSupport_.addMetaDef(metaDef);
+        metaDefSupport.addMetaDef(metaDef);
     }
 
     /**
      * @see org.seasar.framework.container.MetaDefAware#getMetaDef(int)
      */
     public MetaDef getMetaDef(int index) {
-        return metaDefSupport_.getMetaDef(index);
+        return metaDefSupport.getMetaDef(index);
     }
 
     /**
      * @see org.seasar.framework.container.MetaDefAware#getMetaDef(java.lang.String)
      */
     public MetaDef getMetaDef(String name) {
-        return metaDefSupport_.getMetaDef(name);
+        return metaDefSupport.getMetaDef(name);
     }
 
     /**
      * @see org.seasar.framework.container.MetaDefAware#getMetaDefs(java.lang.String)
      */
     public MetaDef[] getMetaDefs(String name) {
-        return metaDefSupport_.getMetaDefs(name);
+        return metaDefSupport.getMetaDefs(name);
     }
 
     /**
      * @see org.seasar.framework.container.MetaDefAware#getMetaDefSize()
      */
     public int getMetaDefSize() {
-        return metaDefSupport_.getMetaDefSize();
+        return metaDefSupport.getMetaDefSize();
     }
     
     public Hotswap getHotswap() {
-        return hotswap_;
+        return hotswap;
     }
 
     public synchronized ComponentDeployer getComponentDeployer() {
-        if (componentDeployer_ == null) {
-            componentDeployer_ = instanceDef_.createComponentDeployer(this);
+        if (componentDeployer == null) {
+            componentDeployer = instanceDef.createComponentDeployer(this);
         }
-        return componentDeployer_;
+        return componentDeployer;
     }
 }

@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
 
 public final class LikeUtil {
 
-	private static Map patterns_ = Collections.synchronizedMap(new HashMap());
+	private static Map patterns = Collections.synchronizedMap(new HashMap());
 
 	private LikeUtil() {
 	}
@@ -32,12 +32,12 @@ public final class LikeUtil {
 		if (StringUtil.isEmpty(patternStr)) {
 			return false;
 		}
-		Pattern pattern = (Pattern) patterns_.get(patternStr);
+		Pattern pattern = (Pattern) patterns.get(patternStr);
 		if (pattern == null) {
 			String regexp = StringUtil.replace(patternStr, "_", ".");
 			regexp = StringUtil.replace(regexp, "%", ".*");
 			pattern = Pattern.compile(regexp);
-			patterns_.put(patternStr, pattern);
+			patterns.put(patternStr, pattern);
 		}
 		return pattern.matcher(value).matches();
 	}

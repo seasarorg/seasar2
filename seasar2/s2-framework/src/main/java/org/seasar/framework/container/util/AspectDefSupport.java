@@ -28,29 +28,29 @@ import org.seasar.framework.container.S2Container;
  */
 public final class AspectDefSupport {
 
-	private List aspectDefs_ = Collections.synchronizedList(new ArrayList());
-	private S2Container container_;
+	private List aspectDefs = Collections.synchronizedList(new ArrayList());
+	private S2Container container;
 
 	public AspectDefSupport() {
 	}
 
 	public void addAspectDef(AspectDef aspectDef) {
-		if (container_ != null) {
-			aspectDef.setContainer(container_);
+		if (container != null) {
+			aspectDef.setContainer(container);
 		}
-		aspectDefs_.add(aspectDef);
+		aspectDefs.add(aspectDef);
 	}
 
 	public int getAspectDefSize() {
-		return aspectDefs_.size();
+		return aspectDefs.size();
 	}
 
 	public AspectDef getAspectDef(int index) {
-		return (AspectDef) aspectDefs_.get(index);
+		return (AspectDef) aspectDefs.get(index);
 	}
 
 	public void setContainer(S2Container container) {
-		container_ = container;
+		this.container = container;
 		for (int i = 0; i < getAspectDefSize(); ++i) {
 			getAspectDef(i).setContainer(container);
 		}

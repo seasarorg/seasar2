@@ -30,14 +30,14 @@ import org.xml.sax.Attributes;
 public class ComponentsTagHandler extends TagHandler {
     private static final long serialVersionUID = 3182865184697069169L;
 
-	protected Class containerImplClass_ = S2ContainerImpl.class;
+	protected Class containerImplClass = S2ContainerImpl.class;
 	
 	public Class getContainerImplClass() {
-		return containerImplClass_;
+		return containerImplClass;
 	}
 	
 	public void setContainerImplClass(Class containerImplClass) {
-		containerImplClass_ = containerImplClass;
+		this.containerImplClass = containerImplClass;
 	}
 	
 	/**
@@ -60,6 +60,6 @@ public class ComponentsTagHandler extends TagHandler {
 	}
 
 	protected S2Container createContainer() {
-		return (S2Container) ClassUtil.newInstance(containerImplClass_);
+		return (S2Container) ClassUtil.newInstance(containerImplClass);
 	}
 }

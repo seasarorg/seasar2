@@ -28,13 +28,13 @@ import org.seasar.framework.hotswap.HotswapTargetFactory;
 public class SingletonComponentDeployer extends AbstractComponentDeployer
     implements HotswapTargetFactory {
 
-    private Object component_;
+    private Object component;
     
-    private Object hotswapTarget_;
+    private Object hotswapTarget;
     
-    private Hotswap hotswap_;
+    private Hotswap hotswap;
 
-    private boolean instantiating_ = false;
+    private boolean instantiating = false;
 
     /**
      * @param componentDef
@@ -47,10 +47,10 @@ public class SingletonComponentDeployer extends AbstractComponentDeployer
      * @see org.seasar.framework.container.ComponentDeployer#deploy()
      */
     public synchronized Object deploy() {
-        if (component_ == null) {
+        if (component == null) {
             assemble();
         }
-        return component_;
+        return component;
     }
 
     public void injectDependency(Object component) {
@@ -58,40 +58,40 @@ public class SingletonComponentDeployer extends AbstractComponentDeployer
     }
 
     private void assemble() {
-        if (instantiating_) {
+        if (instantiating) {
             throw new CyclicReferenceRuntimeException(getComponentDef()
                     .getComponentClass());
         }
-        instantiating_ = true;
+        instantiating = true;
         try {
             Object o = getConstructorAssembler().assemble();
-            if (hotswap_ != null) {
-                hotswapTarget_ = o;
-                if (component_ == null) {
-                    component_ = HotswapProxy.create(getComponentDef()
+            if (hotswap != null) {
+                hotswapTarget = o;
+                if (component == null) {
+                    component = HotswapProxy.create(getComponentDef()
                             .getComponentClass(), this, Thread.currentThread().getContextClassLoader());
                 }
             } else {
-                component_ = o;
+                component = o;
             }
         } finally {
-            instantiating_ = false;
+            instantiating = false;
         }
         getPropertyAssembler().assemble(getTarget());
         getInitMethodAssembler().assemble(getTarget());
     }
     
     protected Object getTarget() {
-        return hotswapTarget_ != null ? hotswapTarget_ : component_;
+        return hotswapTarget != null ? hotswapTarget : component;
     }
 
     /**
      * @see org.seasar.framework.container.ComponentDeployer#init()
      */
     public void init() {
-        hotswap_ = getComponentDef().getHotswap();
-        if (hotswap_ != null && !isAppliedHotswap()) {
-            hotswap_ = null;
+        hotswap = getComponentDef().getHotswap();
+        if (hotswap != null && !isAppliedHotswap()) {
+            hotswap = null;
         }
         deploy();
     }
@@ -117,19 +117,19 @@ public class SingletonComponentDeployer extends AbstractComponentDeployer
      * @see org.seasar.framework.container.ComponentDeployer#destroy()
      */
     public void destroy() {
-        if (component_ == null) {
+        if (component == null) {
             return;
         }
         getDestroyMethodAssembler().assemble(getTarget());
-        component_ = null;
-        hotswapTarget_ = null;
+        component = null;
+        hotswapTarget = null;
     }
 
     public synchronized Object updateTarget() {
-        if (hotswap_.isModified()) {
+        if (hotswap.isModified()) {
             assemble();
         }
-        return hotswapTarget_;
+        return hotswapTarget;
     }
     
     

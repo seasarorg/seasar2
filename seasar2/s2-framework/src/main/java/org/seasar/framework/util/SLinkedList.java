@@ -24,18 +24,18 @@ import java.util.NoSuchElementException;
 public class SLinkedList implements Cloneable, Externalizable {
 
     static final long serialVersionUID = 1L;
-    private transient Entry header_ = new Entry(null, null, null);
-    private transient int size_ = 0;
+    private transient Entry header = new Entry(null, null, null);
+    private transient int size = 0;
 
     public SLinkedList() {
-        header_._next = header_._previous = header_;
+        header._next = header._previous = header;
     }
 
     public Entry getFirstEntry() {
         if (isEmpty()) {
             return null;
         }
-        return header_._next;
+        return header._next;
     }
 
     public Object getFirst() {
@@ -49,7 +49,7 @@ public class SLinkedList implements Cloneable, Externalizable {
         if (isEmpty()) {
             return null;
         }
-        return header_._previous;
+        return header._previous;
     }
 
     public Object getLast()  {
@@ -63,8 +63,8 @@ public class SLinkedList implements Cloneable, Externalizable {
         if (isEmpty()) {
             throw new NoSuchElementException();
         }
-        Object first = header_._next._element;
-        header_._next.remove();
+        Object first = header._next._element;
+        header._next.remove();
         return first;
     }
 
@@ -72,17 +72,17 @@ public class SLinkedList implements Cloneable, Externalizable {
         if (isEmpty()) {
             throw new NoSuchElementException();
         }
-        Object last = header_._previous._element;
-        header_._previous.remove();
+        Object last = header._previous._element;
+        header._previous.remove();
         return last;
     }
 
     public void addFirst(final Object o) {
-        header_._next.addBefore(o);
+        header._next.addBefore(o);
     }
 
     public void addLast(final Object o) {
-        header_.addBefore(o);
+        header.addBefore(o);
     }
 
     public void add(final int index, final Object element) {
@@ -90,11 +90,11 @@ public class SLinkedList implements Cloneable, Externalizable {
     }
 
     public int size() {
-        return size_;
+        return size;
     }
 
     public boolean isEmpty() {
-        return size_ == 0;
+        return size == 0;
     }
 
     public boolean contains(final Object o) {
@@ -103,14 +103,14 @@ public class SLinkedList implements Cloneable, Externalizable {
 
     public boolean remove(final Object o) {
         if (o == null) {
-            for (Entry e = header_._next; e != header_; e = e._next) {
+            for (Entry e = header._next; e != header; e = e._next) {
                 if (e._element == null) {
                    e.remove();
                     return true;
                 }
             }
         } else {
-            for (Entry e = header_._next; e != header_; e = e._next) {
+            for (Entry e = header._next; e != header; e = e._next) {
                 if (o.equals(e._element)) {
                     e.remove();
                     return true;
@@ -127,22 +127,22 @@ public class SLinkedList implements Cloneable, Externalizable {
     }
 
     public void clear() {
-        header_._next = header_._previous = header_;
-        size_ = 0;
+        header._next = header._previous = header;
+        size = 0;
     }
 
     public Entry getEntry(final int index) {
-        if (index < 0 || index >= size_) {
+        if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException(
-                "Index: " + index + ", Size: " + size_);
+                "Index: " + index + ", Size: " + size);
         }
-        Entry e = header_;
-        if (index < size_ / 2) {
+        Entry e = header;
+        if (index < size / 2) {
             for (int i = 0; i <= index; i++) {
                 e = e._next;
             }
         } else {
-            for (int i = size_; i > index; i--) {
+            for (int i = size; i > index; i--) {
                 e = e._previous;
             }
         }
@@ -163,14 +163,14 @@ public class SLinkedList implements Cloneable, Externalizable {
     public int indexOf(final Object o) {
         int index = 0;
         if (o == null) {
-            for (Entry e = header_._next; e != header_; e = e._next) {
+            for (Entry e = header._next; e != header; e = e._next) {
                 if (e._element == null) {
                     return index;
                 }
                 index++;
             }
         } else {
-            for (Entry e = header_._next; e != header_; e = e._next) {
+            for (Entry e = header._next; e != header; e = e._next) {
                 if (o.equals(e._element)) {
                     return index;
                 }
@@ -181,8 +181,8 @@ public class SLinkedList implements Cloneable, Externalizable {
     }
 
     public void writeExternal(final ObjectOutput s) throws IOException {
-        s.writeInt(size_);
-        for (Entry e = header_._next; e != header_; e = e._next) {
+        s.writeInt(size);
+        for (Entry e = header._next; e != header; e = e._next) {
             s.writeObject(e._element);
         }
     }
@@ -191,8 +191,8 @@ public class SLinkedList implements Cloneable, Externalizable {
             throws IOException, ClassNotFoundException {
 
         int size = s.readInt();
-        header_ = new Entry(null, null, null);
-        header_._next = header_._previous = header_;
+        header = new Entry(null, null, null);
+        header._next = header._previous = header;
         for (int i = 0; i < size; i++) {
             addLast(s.readObject());
         }
@@ -200,16 +200,16 @@ public class SLinkedList implements Cloneable, Externalizable {
 
     public Object clone() {
         SLinkedList copy = new SLinkedList();
-        for (Entry e = header_._next; e != header_; e = e._next) {
+        for (Entry e = header._next; e != header; e = e._next) {
             copy.addLast(e._element);
         }
         return copy;
     }
 
     public Object[] toArray() {
-        Object[] result = new Object[size_];
+        Object[] result = new Object[size];
         int i = 0;
-        for (Entry e = header_._next; e != header_; e = e._next) {
+        for (Entry e = header._next; e != header; e = e._next) {
             result[i++] = e._element;
         }
         return result;
@@ -232,14 +232,14 @@ public class SLinkedList implements Cloneable, Externalizable {
         }
 
         public Entry getNext() {
-            if (_next != SLinkedList.this.header_) {
+            if (_next != SLinkedList.this.header) {
                 return _next;
             }
             return null;
         }
 
         public Entry getPrevious() {
-            if (_previous != SLinkedList.this.header_) {
+            if (_previous != SLinkedList.this.header) {
                 return _previous;
             }
             return null;
@@ -248,14 +248,14 @@ public class SLinkedList implements Cloneable, Externalizable {
         public void remove() {
             _previous._next = _next;
             _next._previous = _previous;
-            SLinkedList.this.size_--;
+            SLinkedList.this.size--;
         }
 
         public Entry addBefore(final Object o) {
             Entry newEntry = new Entry(o, this, _previous);
             _previous._next = newEntry;
             _previous = newEntry;
-            SLinkedList.this.size_++;
+            SLinkedList.this.size++;
             return newEntry;
         }
     }

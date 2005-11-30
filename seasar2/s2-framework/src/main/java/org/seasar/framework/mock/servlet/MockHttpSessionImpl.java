@@ -28,79 +28,79 @@ public class MockHttpSessionImpl implements MockHttpSession, Serializable {
 
     private static final long serialVersionUID = 2182279632419560836L;
 
-	private final long creationTime_ = System.currentTimeMillis();
+	private final long creationTime = System.currentTimeMillis();
 
-	private long lastAccessedTime_ = creationTime_;
+	private long lastAccessedTime = creationTime;
 
-	private ServletContext servletContext_;
+	private ServletContext servletContext;
 
-	private String id_;
+	private String id;
 
 	private boolean new_ = true;
 
-	private boolean valid_ = true;
+	private boolean valid = true;
 
-	private int maxInactiveInterval_ = -1;
+	private int maxInactiveInterval = -1;
 
-	private Map attributes_ = new HashMap();
+	private Map attributes = new HashMap();
 
 	public MockHttpSessionImpl(ServletContext servletContext) {
-		servletContext_ = servletContext;
-		id_ = "id/" + hashCode();
+		this.servletContext = servletContext;
+		this.id = "id/" + hashCode();
 	}
 
 	/**
 	 * @see javax.servlet.http.HttpSession#getCreationTime()
 	 */
 	public long getCreationTime() {
-		return creationTime_;
+		return creationTime;
 	}
 
 	/**
 	 * @see javax.servlet.http.HttpSession#getId()
 	 */
 	public String getId() {
-		return id_;
+		return id;
 	}
 
 	/**
 	 * @see javax.servlet.http.HttpSession#getLastAccessedTime()
 	 */
 	public long getLastAccessedTime() {
-		return lastAccessedTime_;
+		return lastAccessedTime;
 	}
 
 	public void access() {
 		new_ = false;
-		lastAccessedTime_ = System.currentTimeMillis();
+		lastAccessedTime = System.currentTimeMillis();
 	}
 
 	/**
 	 * @see javax.servlet.http.HttpSession#getServletContext()
 	 */
 	public ServletContext getServletContext() {
-		return servletContext_;
+		return servletContext;
 	}
 
 	/**
 	 * @see javax.servlet.http.HttpSession#setMaxInactiveInterval(int)
 	 */
 	public void setMaxInactiveInterval(int maxInactiveInterval) {
-		maxInactiveInterval_ = maxInactiveInterval;
+		this.maxInactiveInterval = maxInactiveInterval;
 	}
 
 	/**
 	 * @see javax.servlet.http.HttpSession#getMaxInactiveInterval()
 	 */
 	public int getMaxInactiveInterval() {
-		return maxInactiveInterval_;
+		return maxInactiveInterval;
 	}
 
 	/**
 	 * @see javax.servlet.http.HttpSession#getAttribute(java.lang.String)
 	 */
 	public Object getAttribute(String name) {
-		return attributes_.get(name);
+		return attributes.get(name);
 	}
 
 	/**
@@ -108,14 +108,14 @@ public class MockHttpSessionImpl implements MockHttpSession, Serializable {
 	 *      java.lang.Object)
 	 */
 	public void setAttribute(String name, Object value) {
-		attributes_.put(name, value);
+		attributes.put(name, value);
 	}
 
 	/**
 	 * @see javax.servlet.http.HttpSession#removeAttribute(java.lang.String)
 	 */
 	public void removeAttribute(String name) {
-		attributes_.remove(name);
+		attributes.remove(name);
 	}
 
 	/**
@@ -137,7 +137,7 @@ public class MockHttpSessionImpl implements MockHttpSession, Serializable {
 	 * @see javax.servlet.http.HttpSession#getAttributeNames()
 	 */
 	public Enumeration getAttributeNames() {
-		return new EnumerationAdapter(attributes_.keySet().iterator());
+		return new EnumerationAdapter(attributes.keySet().iterator());
 	}
 
 	/**
@@ -145,8 +145,8 @@ public class MockHttpSessionImpl implements MockHttpSession, Serializable {
 	 * @see javax.servlet.http.HttpSession#getValueNames()
 	 */
 	public String[] getValueNames() {
-		return (String[]) attributes_.keySet().toArray(
-				new String[attributes_.size()]);
+		return (String[]) attributes.keySet().toArray(
+				new String[attributes.size()]);
 	}
 
 	/**
@@ -170,11 +170,11 @@ public class MockHttpSessionImpl implements MockHttpSession, Serializable {
 	 * @see javax.servlet.http.HttpSession#invalidate()
 	 */
 	public void invalidate() {
-		if (!valid_) {
+		if (!valid) {
 			return;
 		}
-		attributes_.clear();
-		valid_ = false;
+		attributes.clear();
+		valid = false;
 	}
 
 	/**
@@ -185,10 +185,10 @@ public class MockHttpSessionImpl implements MockHttpSession, Serializable {
 	}
 	
 	public boolean isValid() {
-		return valid_;
+		return valid;
 	}
 	
 	public void setValid(boolean valid) {
-		valid_ = valid;
+		this.valid = valid;
 	}
 }

@@ -22,14 +22,15 @@ import org.seasar.framework.container.ComponentDeployer;
  * @author higa
  */
 public class ComponentDeployerFactory {
-    private static Provider provider_ = new DefaultProvider();
+    
+    private static Provider provider = new DefaultProvider();
 
     public static Provider getProvider() {
-        return provider_;
+        return provider;
     }
 
-    public static void setProvider(final Provider provider) {
-        provider_ = provider;
+    public static void setProvider(final Provider p) {
+        provider = p;
     }
 
     public static ComponentDeployer createSingletonComponentDeployer(final ComponentDef cd) {

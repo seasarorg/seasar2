@@ -20,17 +20,17 @@ import java.util.Iterator;
 
 public class EnumerationAdapter implements Enumeration {
 
-	private Iterator iterator_;
+	private Iterator iterator;
 
 	public EnumerationAdapter(Iterator iterator) {
-		iterator_ = iterator;
+		this.iterator = iterator;
 	}
 
 	public boolean hasMoreElements() {
-		return iterator_.hasNext();
+		return iterator.hasNext();
 	}
 
 	public Object nextElement() {
-		return iterator_.next();
+		return iterator.next();
 	}
 }

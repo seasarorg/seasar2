@@ -26,7 +26,7 @@ import org.seasar.framework.container.ContainerConstants;
  */
 public final class BindingUtil implements ContainerConstants {
 
-	private BindingUtil() {
+	protected BindingUtil() {
 	}
 
 	public static final boolean isAutoBindable(Class clazz) {

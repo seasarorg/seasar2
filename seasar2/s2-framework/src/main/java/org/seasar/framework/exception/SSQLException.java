@@ -27,8 +27,8 @@ public class SSQLException extends SQLException {
 
     private static final long serialVersionUID = 4098267431221202677L;
 
-	private String messageCode_;
-	private Object[] args_;
+	private String messageCode;
+	private Object[] args;
 	
 	public SSQLException(String messageCode, Object[] args) {
 	    this(messageCode, args, null, 0, null);
@@ -52,19 +52,19 @@ public class SSQLException extends SQLException {
 
 	public SSQLException(String messageCode, Object[] args, String sqlState, int vendorCode, Throwable cause) {
 		super(MessageFormatter.getMessage(messageCode, args), sqlState, vendorCode);
-		messageCode_ = messageCode;
-		args_ = args;
-		this.initCause(cause);
+		this.messageCode = messageCode;
+		this.args = args;
+		initCause(cause);
 		if (cause instanceof SQLException) {
 		    setNextException((SQLException) cause);
 		}
 	}
 
 	public String getMessageCode() {
-		return messageCode_;
+		return messageCode;
 	}
 	
 	public Object[] getArgs() {
-		return args_;
+		return args;
 	}
 }

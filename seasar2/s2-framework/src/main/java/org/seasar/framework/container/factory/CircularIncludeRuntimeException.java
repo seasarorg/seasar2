@@ -26,24 +26,24 @@ import org.seasar.framework.exception.SRuntimeException;
 public class CircularIncludeRuntimeException extends SRuntimeException {
     private static final long serialVersionUID = -8674493688526055877L;
 
-    protected String path_;
-    protected Set paths_;
+    protected String path;
+    protected Set paths;
 
     /**
      * @param componentClasses
      */
     public CircularIncludeRuntimeException(final String path, final Set paths) {
         super("ESSR0076", new Object[] { path, toString(path, paths) });
-        path_ = path;
-        paths_ = paths;
+        this.path = path;
+        this.paths = paths;
     }
 
     public String getPath() {
-        return path_;
+        return path;
     }
 
     public Set getPaths() {
-        return paths_;
+        return paths;
     }
 
     protected static String toString(final String path, final Set paths) {

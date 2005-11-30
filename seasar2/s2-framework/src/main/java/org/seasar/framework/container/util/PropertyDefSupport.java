@@ -21,43 +21,44 @@ import org.seasar.framework.util.CaseInsensitiveMap;
 
 /**
  * @author higa
- *
+ * 
  */
 public final class PropertyDefSupport {
 
-	private CaseInsensitiveMap propertyDefs_ = new CaseInsensitiveMap();
-	private S2Container container_;
+    private CaseInsensitiveMap propertyDefs = new CaseInsensitiveMap();
 
-	public PropertyDefSupport() {
-	}
+    private S2Container container;
 
-	public synchronized void addPropertyDef(PropertyDef propertyDef) {
-		if (container_ != null) {
-			propertyDef.setContainer(container_);
-		}
-		propertyDefs_.put(propertyDef.getPropertyName(), propertyDef);
-	}
+    public PropertyDefSupport() {
+    }
 
-	public synchronized int getPropertyDefSize() {
-		return propertyDefs_.size();
-	}
+    public synchronized void addPropertyDef(PropertyDef propertyDef) {
+        if (container != null) {
+            propertyDef.setContainer(container);
+        }
+        propertyDefs.put(propertyDef.getPropertyName(), propertyDef);
+    }
 
-	public synchronized PropertyDef getPropertyDef(int index) {
-		return (PropertyDef) propertyDefs_.get(index);
-	}
-	
-	public synchronized PropertyDef getPropertyDef(String propertyName) {
-		return (PropertyDef) propertyDefs_.get(propertyName);
-	}
-	
-	public synchronized boolean hasPropertyDef(String propertyName) {
-		return propertyDefs_.containsKey(propertyName);
-	}
+    public synchronized int getPropertyDefSize() {
+        return propertyDefs.size();
+    }
 
-	public void setContainer(S2Container container) {
-		container_ = container;
-		for (int i = 0; i < getPropertyDefSize(); ++i) {
-			getPropertyDef(i).setContainer(container);
-		}
-	}
+    public synchronized PropertyDef getPropertyDef(int index) {
+        return (PropertyDef) propertyDefs.get(index);
+    }
+
+    public synchronized PropertyDef getPropertyDef(String propertyName) {
+        return (PropertyDef) propertyDefs.get(propertyName);
+    }
+
+    public synchronized boolean hasPropertyDef(String propertyName) {
+        return propertyDefs.containsKey(propertyName);
+    }
+
+    public void setContainer(S2Container container) {
+        this.container = container;
+        for (int i = 0; i < getPropertyDefSize(); ++i) {
+            getPropertyDef(i).setContainer(container);
+        }
+    }
 }

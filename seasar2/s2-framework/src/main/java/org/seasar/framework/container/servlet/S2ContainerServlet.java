@@ -34,15 +34,15 @@ public class S2ContainerServlet extends HttpServlet {
 	public static final String DEBUG_KEY = "debug";
 	public static final String COMMAND = "command";
 	public static final String RESTART = "restart";
-	private static S2ContainerServlet instance_;
-	private boolean debug_;
+	private static S2ContainerServlet instance;
+	private boolean debug;
 	
 	public S2ContainerServlet() {
-		instance_ = this;
+		instance = this;
 	}
 	
 	public static S2ContainerServlet getInstance() {
-		return instance_;
+		return instance;
 	}
 
 	public void init() {
@@ -57,7 +57,7 @@ public class S2ContainerServlet extends HttpServlet {
 			SingletonS2ContainerFactory.setConfigPath(configPath);
 		}
 		if (!StringUtil.isEmpty(debugStr)) {
-			debug_ = Boolean.valueOf(debugStr).booleanValue();
+			debug = Boolean.valueOf(debugStr).booleanValue();
 		}
 		SingletonS2ContainerFactory.setServletContext(getServletContext());
 		SingletonS2ContainerFactory.init();
@@ -75,7 +75,7 @@ public class S2ContainerServlet extends HttpServlet {
 		throws IOException, ServletException {
 
 		String command = request.getParameter(COMMAND);
-		if (debug_ && command != null && RESTART.equalsIgnoreCase(command)) {
+		if (debug && command != null && RESTART.equalsIgnoreCase(command)) {
 			destroy();
 			init();
 			response.getWriter().write("S2ContainerServlet is restarted.");

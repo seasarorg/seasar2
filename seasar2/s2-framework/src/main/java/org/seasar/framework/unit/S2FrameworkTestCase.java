@@ -61,25 +61,25 @@ public abstract class S2FrameworkTestCase extends TestCase {
     private static final String DATASOURCE_NAME = "j2ee"
             + ContainerConstants.NS_SEP + "dataSource";
 
-    private S2Container container_;
+    private S2Container container;
 
-    private Servlet servlet_;
+    private Servlet servlet;
 
-    private MockServletConfig servletConfig_;
+    private MockServletConfig servletConfig;
 
-    private MockServletContext servletContext_;
+    private MockServletContext servletContext;
 
-    private MockHttpServletRequest request_;
+    private MockHttpServletRequest request;
 
-    private MockHttpServletResponse response_;
+    private MockHttpServletResponse response;
 
-    private DataSource dataSource_;
+    private DataSource dataSource;
 
-    private Connection connection_;
+    private Connection connection;
 
-    private DatabaseMetaData dbMetaData_;
+    private DatabaseMetaData dbMetaData;
 
-    private List bindedFields_;
+    private List bindedFields;
 
     public S2FrameworkTestCase() {
     }
@@ -89,47 +89,47 @@ public abstract class S2FrameworkTestCase extends TestCase {
     }
 
     public S2Container getContainer() {
-        return container_;
+        return container;
     }
 
     public Object getComponent(String componentName) {
-        return container_.getComponent(componentName);
+        return container.getComponent(componentName);
     }
 
     public Object getComponent(Class componentClass) {
-        return container_.getComponent(componentClass);
+        return container.getComponent(componentClass);
     }
 
     public ComponentDef getComponentDef(String componentName) {
-        return container_.getComponentDef(componentName);
+        return container.getComponentDef(componentName);
     }
 
     public ComponentDef getComponentDef(Class componentClass) {
-        return container_.getComponentDef(componentClass);
+        return container.getComponentDef(componentClass);
     }
 
     public void register(Class componentClass) {
-        container_.register(componentClass);
+        container.register(componentClass);
     }
 
     public void register(Class componentClass, String componentName) {
-        container_.register(componentClass, componentName);
+        container.register(componentClass, componentName);
     }
 
     public void register(Object component) {
-        container_.register(component);
+        container.register(component);
     }
 
     public void register(Object component, String componentName) {
-        container_.register(component, componentName);
+        container.register(component, componentName);
     }
 
     public void register(ComponentDef componentDef) {
-        container_.register(componentDef);
+        container.register(componentDef);
     }
 
     public void include(String path) {
-        S2ContainerFactory.include(container_, convertPath(path));
+        S2ContainerFactory.include(container, convertPath(path));
     }
 
     protected String convertPath(String path) {
@@ -142,26 +142,26 @@ public abstract class S2FrameworkTestCase extends TestCase {
     }
 
     public DataSource getDataSource() {
-        if (dataSource_ == null) {
+        if (dataSource == null) {
             throw new EmptyRuntimeException("dataSource");
         }
-        return dataSource_;
+        return dataSource;
     }
 
     public Connection getConnection() {
-        if (connection_ != null) {
-            return connection_;
+        if (connection != null) {
+            return connection;
         }
-        connection_ = DataSourceUtil.getConnection(getDataSource());
-        return connection_;
+        connection = DataSourceUtil.getConnection(getDataSource());
+        return connection;
     }
 
     public DatabaseMetaData getDatabaseMetaData() {
-        if (dbMetaData_ != null) {
-            return dbMetaData_;
+        if (dbMetaData != null) {
+            return dbMetaData;
         }
-        dbMetaData_ = ConnectionUtil.getMetaData(getConnection());
-        return dbMetaData_;
+        dbMetaData = ConnectionUtil.getMetaData(getConnection());
+        return dbMetaData;
     }
 
     /**
@@ -173,7 +173,7 @@ public abstract class S2FrameworkTestCase extends TestCase {
         try {
             setUpForEachTestMethod();
             try {
-                container_.init();
+                container.init();
                 try {
                     setupDataSource();
                     try {
@@ -207,29 +207,29 @@ public abstract class S2FrameworkTestCase extends TestCase {
     }
 
     protected void setUpContainer() throws Throwable {
-        container_ = new S2ContainerImpl();
-        servletContext_ = new MockServletContextImpl("s2jsf-example");
-        request_ = servletContext_.createRequest("/hello.html");
-        response_ = new MockHttpServletResponseImpl(request_);
-        servletConfig_ = new MockServletConfigImpl();
-        servletConfig_.setServletContext(servletContext_);
-        servlet_ = new MockServlet();
-        servlet_.init(servletConfig_);
-        container_.setServletContext(servletContext_);
-        container_.setRequest(request_);
-        container_.setResponse(response_);
-        SingletonS2ContainerFactory.setContainer(container_);
+        container = new S2ContainerImpl();
+        servletContext = new MockServletContextImpl("s2jsf-example");
+        request = servletContext.createRequest("/hello.html");
+        response = new MockHttpServletResponseImpl(request);
+        servletConfig = new MockServletConfigImpl();
+        servletConfig.setServletContext(servletContext);
+        servlet = new MockServlet();
+        servlet.init(servletConfig);
+        container.setServletContext(servletContext);
+        container.setRequest(request);
+        container.setResponse(response);
+        SingletonS2ContainerFactory.setContainer(container);
     }
 
     protected void tearDownContainer() throws Throwable {
-        container_.destroy();
+        container.destroy();
         SingletonS2ContainerFactory.setContainer(null);
-        container_ = null;
-        servletContext_ = null;
-        request_ = null;
-        response_ = null;
-        servletConfig_ = null;
-        servlet_ = null;
+        container = null;
+        servletContext = null;
+        request = null;
+        response = null;
+        servletConfig = null;
+        servlet = null;
     }
 
     protected void setUpAfterContainerInit() throws Throwable {
@@ -259,43 +259,43 @@ public abstract class S2FrameworkTestCase extends TestCase {
     }
 
     protected Servlet getServlet() {
-        return servlet_;
+        return servlet;
     }
 
     protected void setServlet(Servlet servlet) {
-        servlet_ = servlet;
+        this.servlet = servlet;
     }
 
     protected MockServletConfig getServletConfig() {
-        return servletConfig_;
+        return servletConfig;
     }
 
     protected void setServletConfig(MockServletConfig servletConfig) {
-        servletConfig_ = servletConfig;
+        this.servletConfig = servletConfig;
     }
 
     protected MockServletContext getServletContext() {
-        return servletContext_;
+        return servletContext;
     }
 
     protected void setServletContext(MockServletContext servletContext) {
-        servletContext_ = servletContext;
+        this.servletContext = servletContext;
     }
 
     protected MockHttpServletRequest getRequest() {
-        return request_;
+        return request;
     }
 
     protected void setRequest(MockHttpServletRequest request) {
-        request_ = request;
+        this.request = request;
     }
 
     protected MockHttpServletResponse getResponse() {
-        return response_;
+        return response;
     }
 
     protected void setResponse(MockHttpServletResponse response) {
-        response_ = response;
+        this.response = response;
     }
 
     protected String getTargetName() {
@@ -311,7 +311,7 @@ public abstract class S2FrameworkTestCase extends TestCase {
     }
 
     protected void bindFields() throws Throwable {
-        bindedFields_ = new ArrayList();
+        bindedFields = new ArrayList();
         for (Class clazz = getClass(); clazz != S2FrameworkTestCase.class
                 && clazz != null; clazz = clazz.getSuperclass()) {
 
@@ -354,7 +354,7 @@ public abstract class S2FrameworkTestCase extends TestCase {
             }
             if (component != null) {
                 FieldUtil.set(field, this, component);
-                bindedFields_.add(field);
+                bindedFields.add(field);
             }
         }
     }
@@ -370,8 +370,8 @@ public abstract class S2FrameworkTestCase extends TestCase {
     }
 
     protected void unbindFields() {
-        for (int i = 0; i < bindedFields_.size(); ++i) {
-            Field field = (Field) bindedFields_.get(i);
+        for (int i = 0; i < bindedFields.size(); ++i) {
+            Field field = (Field) bindedFields.get(i);
             try {
                 field.set(this, null);
             } catch (IllegalArgumentException e) {
@@ -407,11 +407,11 @@ public abstract class S2FrameworkTestCase extends TestCase {
 
     protected void setupDataSource() {
         try {
-            if (container_.hasComponentDef(DATASOURCE_NAME)) {
-                dataSource_ = (DataSource) container_
+            if (container.hasComponentDef(DATASOURCE_NAME)) {
+                dataSource = (DataSource) container
                         .getComponent(DATASOURCE_NAME);
-            } else if (container_.hasComponentDef(DataSource.class)) {
-                dataSource_ = (DataSource) container_
+            } else if (container.hasComponentDef(DataSource.class)) {
+                dataSource = (DataSource) container
                         .getComponent(DataSource.class);
             }
         } catch (Throwable t) {
@@ -420,11 +420,11 @@ public abstract class S2FrameworkTestCase extends TestCase {
     }
 
     protected void tearDownDataSource() {
-        dbMetaData_ = null;
-        if (connection_ != null) {
-            ConnectionUtil.close(connection_);
-            connection_ = null;
+        dbMetaData = null;
+        if (connection != null) {
+            ConnectionUtil.close(connection);
+            connection = null;
         }
-        dataSource_ = null;
+        dataSource = null;
     }
 }

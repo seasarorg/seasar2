@@ -27,23 +27,23 @@ import org.xml.sax.helpers.DefaultHandler;
 
 public final class SaxHandler extends DefaultHandler {
 
-	private TagHandlerRule tagHandlerRule_;
-	private TagHandlerContext context_ = new TagHandlerContext();
-	private Map dtdPaths_ = new HashMap();
+	private TagHandlerRule tagHandlerRule;
+	private TagHandlerContext context = new TagHandlerContext();
+	private Map dtdPaths = new HashMap();
 
 	public SaxHandler(TagHandlerRule tagHandlerRule) {
-		tagHandlerRule_ = tagHandlerRule;
+		this.tagHandlerRule = tagHandlerRule;
 	}
 	
 	public TagHandlerContext getTagHandlerContext() {
-		return context_;
+		return context;
 	}
 
 	public void startElement(String namespaceURI, String localName,
 			String qName, Attributes attributes) {
 
 		appendBody();
-		context_.startElement(qName);
+		context.startElement(qName);
 		start(attributes);
 	}
 
@@ -52,13 +52,13 @@ public final class SaxHandler extends DefaultHandler {
 		int end = start + length;
 		for (int i = begin; i < end; ++i) {
 			if (buffer[i] == '\n') {
-				context_.characters(buffer, begin, i - begin + 1);
+				context.characters(buffer, begin, i - begin + 1);
 				appendBody();
 				begin = i + 1;
 			}
 		}
 		if (begin < end) {
-			context_.characters(buffer, begin, end - begin);
+			context.characters(buffer, begin, end - begin);
 		}
 	}
 
@@ -66,7 +66,7 @@ public final class SaxHandler extends DefaultHandler {
 
 		appendBody();
 		end();
-		context_.endElement();
+		context.endElement();
 	}
 
 	public InputSource resolveEntity(String publicId, String systemId)
@@ -74,7 +74,7 @@ public final class SaxHandler extends DefaultHandler {
 
 		String dtdPath = null;
 		if (publicId != null) {
-			dtdPath = (String) dtdPaths_.get(publicId);
+			dtdPath = (String) dtdPaths.get(publicId);
 		}
 		if (dtdPath == null) {
 			return null;
@@ -91,19 +91,19 @@ public final class SaxHandler extends DefaultHandler {
 	}
 
 	public void registerDtdPath(String publicId, String dtdPath) {
-		dtdPaths_.put(publicId, dtdPath);
+		dtdPaths.put(publicId, dtdPath);
 	}
 
 	public Object getResult() {
-		return context_.getResult();
+		return context.getResult();
 	}
 
 	private TagHandler getTagHandlerByPath() {
-		return tagHandlerRule_.getTagHandler(context_.getPath());
+		return tagHandlerRule.getTagHandler(context.getPath());
 	}
 
 	private TagHandler getTagHandlerByQName() {
-		return tagHandlerRule_.getTagHandler(context_.getQName());
+		return tagHandlerRule.getTagHandler(context.getQName());
 	}
 
 	private void start(Attributes attributes) {
@@ -116,7 +116,7 @@ public final class SaxHandler extends DefaultHandler {
 	private void start(TagHandler handler, Attributes attributes) {
 		if (handler != null) {
 			try {
-				handler.start(context_, attributes);
+				handler.start(context, attributes);
 			} catch (RuntimeException ex) {
 				reportDetailPath();
 				ex.printStackTrace();
@@ -127,20 +127,20 @@ public final class SaxHandler extends DefaultHandler {
 	}
 
 	private void appendBody() {
-		String characters = context_.getCharacters();
+		String characters = context.getCharacters();
 		if (characters.length() > 0) {
 			TagHandler th = getTagHandlerByPath();
 			appendBody(th, characters);
 			th = getTagHandlerByQName();
 			appendBody(th, characters);
-			context_.clearCharacters();
+			context.clearCharacters();
 		}
 	}
 
 	private void appendBody(TagHandler handler, String characters) {
 		if (handler != null) {
 			try {
-				handler.appendBody(context_, characters);
+				handler.appendBody(context, characters);
 			} catch (RuntimeException ex) {
 				reportDetailPath();
 				ex.printStackTrace();
@@ -151,7 +151,7 @@ public final class SaxHandler extends DefaultHandler {
 	}
 
 	private void end() {
-		String body = context_.getBody();
+		String body = context.getBody();
 		TagHandler th = getTagHandlerByPath();
 		end(th, body);
 		th = getTagHandlerByQName();
@@ -161,7 +161,7 @@ public final class SaxHandler extends DefaultHandler {
 	private void end(TagHandler handler, String body) {
 		if (handler != null) {
 			try {
-				handler.end(context_, body);
+				handler.end(context, body);
 			} catch (RuntimeException ex) {
 				reportDetailPath();
 				ex.printStackTrace();
@@ -172,6 +172,6 @@ public final class SaxHandler extends DefaultHandler {
 	}
 
 	private void reportDetailPath() {
-		System.err.println("Exception occured at " + context_.getDetailPath());
+		System.err.println("Exception occured at " + context.getDetailPath());
 	}
 }

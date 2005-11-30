@@ -28,9 +28,9 @@ import org.seasar.framework.container.S2Container;
  */
 public final class MetaDefSupport {
 
-	private List metaDefs_ = Collections.synchronizedList(new ArrayList());
+	private List metaDefs = Collections.synchronizedList(new ArrayList());
 
-	private S2Container container_;
+	private S2Container container;
 
 	public MetaDefSupport() {
 	}
@@ -40,18 +40,18 @@ public final class MetaDefSupport {
 	}
 
 	public void addMetaDef(MetaDef metaDef) {
-		if (container_ != null) {
-			metaDef.setContainer(container_);
+		if (container != null) {
+			metaDef.setContainer(container);
 		}
-		metaDefs_.add(metaDef);
+		metaDefs.add(metaDef);
 	}
 
 	public int getMetaDefSize() {
-		return metaDefs_.size();
+		return metaDefs.size();
 	}
 
 	public MetaDef getMetaDef(int index) {
-		return (MetaDef) metaDefs_.get(index);
+		return (MetaDef) metaDefs.get(index);
 	}
 
 	public MetaDef getMetaDef(String name) {
@@ -78,7 +78,7 @@ public final class MetaDefSupport {
 	}
 
 	public void setContainer(S2Container container) {
-		container_ = container;
+		this.container = container;
 		for (int i = 0; i < getMetaDefSize(); ++i) {
 			getMetaDef(i).setContainer(container);
 		}

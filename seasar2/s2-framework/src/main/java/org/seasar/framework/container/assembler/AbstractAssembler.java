@@ -27,16 +27,16 @@ import org.seasar.framework.log.Logger;
  */
 public abstract class AbstractAssembler {
 	
-	private static Logger logger_ = Logger.getLogger(AbstractAssembler.class);
+	private static Logger logger = Logger.getLogger(AbstractAssembler.class);
 
-	private ComponentDef componentDef_;
+	private ComponentDef componentDef;
 
 	public AbstractAssembler(ComponentDef componentDef) {
-		componentDef_ = componentDef;
+		this.componentDef = componentDef;
 	}
 
 	protected final ComponentDef getComponentDef() {
-		return componentDef_;
+		return componentDef;
 	}
 	
 	protected BeanDesc getBeanDesc(Object component) {
@@ -54,7 +54,7 @@ public abstract class AbstractAssembler {
 				args[i] =
 					getComponentDef().getContainer().getComponent(argTypes[i]);
 			} catch (ComponentNotFoundRuntimeException ex) {
-				logger_.log("WSSR0007",
+				logger.log("WSSR0007",
 						new Object[] {
 							getComponentDef().getComponentClass().getName(),
 							ex.getComponentKey()});

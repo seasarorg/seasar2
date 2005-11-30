@@ -25,22 +25,22 @@ public final class TagAttributeNotDefinedRuntimeException extends SRuntimeExcept
 
     private static final long serialVersionUID = -1635401319074240988L;
 
-	private String tagName_;
-	private String attributeName_;
+	private String tagName;
+	private String attributeName;
 	
 	public TagAttributeNotDefinedRuntimeException(String tagName,
 		String attributeName) {
 			
 		super("ESSR0056", new Object[]{tagName, attributeName});
-		tagName_ = tagName;
-		attributeName_ = attributeName;
+		this.tagName = tagName;
+		this.attributeName = attributeName;
 	}
 	
 	public String getTagName() {
-		return tagName_;
+		return tagName;
 	}
 	
 	public String getAttributeName() {
-		return attributeName_;
+		return attributeName;
 	}
 }

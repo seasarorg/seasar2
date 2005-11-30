@@ -28,12 +28,12 @@ import org.seasar.framework.util.OgnlUtil;
  */
 public class ArgDefImpl implements ArgDef {
 
-	private Object value_;
-	private S2Container container_;
-	private String expression_;
-	private Object exp_;
-	private ComponentDef childComponentDef_;
-	private MetaDefSupport metaDefSupport_ = new MetaDefSupport();
+	private Object value;
+	private S2Container container;
+	private String expression;
+	private Object exp;
+	private ComponentDef childComponentDef;
+	private MetaDefSupport metaDefSupport = new MetaDefSupport();
 
 	public ArgDefImpl() {
 	}
@@ -46,97 +46,97 @@ public class ArgDefImpl implements ArgDef {
 	 * @see org.seasar.framework.container.ConstructorArgDef#getReturnValue()
 	 */
 	public final Object getValue() {
-		if (exp_ != null) {
-			return OgnlUtil.getValue(exp_, container_);
+		if (exp != null) {
+			return OgnlUtil.getValue(exp, container);
 		}
-		if (childComponentDef_ != null) {
-			return childComponentDef_.getComponent();
+		if (childComponentDef != null) {
+			return childComponentDef.getComponent();
 		}
-		return value_;
+		return value;
 	}
 
 	public final void setValue(Object value) {
-		value_ = value;
+		this.value = value;
 	}
     
     public boolean isValueGettable() {
-        return value_ != null || childComponentDef_ != null || exp_ != null;
+        return value != null || childComponentDef != null || exp != null;
     }
 	
 	/**
 	 * @see org.seasar.framework.container.ArgDef#getContainer()
 	 */
 	public final S2Container getContainer() {
-		return container_;
+		return container;
 	}
 
 	/**
 	 * @see org.seasar.framework.container.ArgDef#setContainer(org.seasar.framework.container.S2Container)
 	 */
 	public final void setContainer(S2Container container) {
-		container_ = container;
-		if (childComponentDef_ != null) {
-			childComponentDef_.setContainer(container);
+		this.container = container;
+		if (childComponentDef != null) {
+			childComponentDef.setContainer(container);
 		}
-		metaDefSupport_.setContainer(container);
+		metaDefSupport.setContainer(container);
 	}
 
 	/**
 	 * @see org.seasar.framework.container.ArgDef#getExpression()
 	 */
 	public final String getExpression() {
-		return expression_;
+		return expression;
 	}
 	/**
 	 * @see org.seasar.framework.container.ArgDef#setExpression(java.lang.String)
 	 */
 	public final void setExpression(String expression) {
-		expression_ = expression;
-		exp_ = OgnlUtil.parseExpression(expression);
+		this.expression = expression;
+		exp = OgnlUtil.parseExpression(expression);
 	}
 
 	/**
 	 * @see org.seasar.framework.container.ArgDef#setChildComponentDef(org.seasar.framework.container.ComponentDef)
 	 */
 	public final void setChildComponentDef(ComponentDef componentDef) {
-		if (container_ != null) {
-			componentDef.setContainer(container_);
+		if (container != null) {
+			componentDef.setContainer(container);
 		}
-		childComponentDef_ = componentDef;
+		childComponentDef = componentDef;
 	}
 	
 	/**
 	 * @see org.seasar.framework.container.MetaDefAware#addMetaDef(org.seasar.framework.container.MetaDef)
 	 */
 	public void addMetaDef(MetaDef metaDef) {
-		metaDefSupport_.addMetaDef(metaDef);
+		metaDefSupport.addMetaDef(metaDef);
 	}
 	
 	/**
 	 * @see org.seasar.framework.container.MetaDefAware#getMetaDef(int)
 	 */
 	public MetaDef getMetaDef(int index) {
-		return metaDefSupport_.getMetaDef(index);
+		return metaDefSupport.getMetaDef(index);
 	}
 	
 	/**
 	 * @see org.seasar.framework.container.MetaDefAware#getMetaDef(java.lang.String)
 	 */
 	public MetaDef getMetaDef(String name) {
-		return metaDefSupport_.getMetaDef(name);
+		return metaDefSupport.getMetaDef(name);
 	}
 	
 	/**
 	 * @see org.seasar.framework.container.MetaDefAware#getMetaDefs(java.lang.String)
 	 */
 	public MetaDef[] getMetaDefs(String name) {
-		return metaDefSupport_.getMetaDefs(name);
+		return metaDefSupport.getMetaDefs(name);
 	}
 	
 	/**
 	 * @see org.seasar.framework.container.MetaDefAware#getMetaDefSize()
 	 */
 	public int getMetaDefSize() {
-		return metaDefSupport_.getMetaDefSize();
+		return metaDefSupport.getMetaDefSize();
 	}
 }

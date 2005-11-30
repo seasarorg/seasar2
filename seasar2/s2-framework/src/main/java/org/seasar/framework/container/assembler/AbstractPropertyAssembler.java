@@ -20,13 +20,12 @@ import org.seasar.framework.container.PropertyAssembler;
 
 /**
  * @author higa
- *
+ * 
  */
-public abstract class AbstractPropertyAssembler
-	extends AbstractAssembler
-	implements PropertyAssembler {
+public abstract class AbstractPropertyAssembler extends AbstractAssembler
+        implements PropertyAssembler {
 
-	public AbstractPropertyAssembler(ComponentDef componentDef) {
-		super(componentDef);
-	}
+    public AbstractPropertyAssembler(ComponentDef componentDef) {
+        super(componentDef);
+    }
 }

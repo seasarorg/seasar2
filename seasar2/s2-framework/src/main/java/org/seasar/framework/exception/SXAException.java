@@ -27,8 +27,8 @@ public class SXAException extends XAException {
 
     private static final long serialVersionUID = 9069430381428399030L;
 
-	private String messageCode_;
-	private Object[] messageArgs_;
+	private String messageCode;
+	private Object[] messageArgs;
 	
 	public SXAException(Throwable t) {
 		this("ESSR0017", new Object[]{t}, t);
@@ -42,16 +42,16 @@ public class SXAException extends XAException {
 		Throwable t) {
 
 		super(MessageFormatter.getMessage(messageCode, messageArgs));
-		messageCode_ = messageCode;
-		messageArgs_ = messageArgs;
+		this.messageCode = messageCode;
+		this.messageArgs = messageArgs;
 		initCause(t);
 	}
 
 	public String getMessageCode() {
-		return messageCode_;
+		return messageCode;
 	}
 	
 	public Object[] getMessageArgs() {
-		return messageArgs_;
+		return messageArgs;
 	}
 }

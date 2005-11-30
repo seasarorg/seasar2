@@ -26,24 +26,24 @@ import org.xml.sax.InputSource;
 
 public final class SaxHandlerParser {
 
-	private SaxHandler saxHandler_;
-	private SAXParser saxParser_;
+	private SaxHandler saxHandler;
+	private SAXParser saxParser;
 
 	public SaxHandlerParser(SaxHandler saxHandler) {
 		this(saxHandler, SAXParserFactoryUtil.newSAXParser());
 	}
 
 	public SaxHandlerParser(SaxHandler saxHandler, SAXParser saxParser) {
-		saxHandler_ = saxHandler;
-		saxParser_ = saxParser;
+		this.saxHandler = saxHandler;
+		this.saxParser = saxParser;
 	}
 	
 	public SaxHandler getSaxHandler() {
-		return saxHandler_;
+		return saxHandler;
 	}
 	
 	public SAXParser getSAXParser() {
-		return saxParser_;
+		return saxParser;
 	}
 
 	public Object parse(String path) {
@@ -55,7 +55,7 @@ public final class SaxHandlerParser {
 	}
 
 	public Object parse(InputSource inputSource) {
-		SAXParserUtil.parse(saxParser_, inputSource, saxHandler_);
-		return saxHandler_.getResult();
+		SAXParserUtil.parse(saxParser, inputSource, saxHandler);
+		return saxHandler.getResult();
 	}
 }

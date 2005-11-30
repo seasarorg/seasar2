@@ -24,17 +24,17 @@ public final class IllegalAccessRuntimeException extends SRuntimeException {
 
     private static final long serialVersionUID = -3649900343028907465L;
 
-	private Class targetClass_;
+	private Class targetClass;
 
 	public IllegalAccessRuntimeException(
 		Class targetClass,
 		IllegalAccessException cause) {
 
 		super("ESSR0042", new Object[] { targetClass.getName(), cause }, cause);
-		targetClass_ = targetClass;
+		this.targetClass = targetClass;
 	}
 
 	public Class getTargetClass() {
-		return targetClass_;
+		return targetClass;
 	}
 }

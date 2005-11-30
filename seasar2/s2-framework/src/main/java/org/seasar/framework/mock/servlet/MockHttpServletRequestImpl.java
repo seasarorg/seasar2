@@ -41,66 +41,66 @@ import org.seasar.framework.util.EnumerationAdapter;
  */
 public class MockHttpServletRequestImpl implements MockHttpServletRequest {
 
-	private ServletContext servletContext_;
+	private ServletContext servletContext;
 
-	private String servletPath_;
+	private String servletPath;
 
-	private String authType_;
+	private String authType;
 
 	private List cookieList = new ArrayList();
 
-	private Map headers_ = new HashMap();
+	private Map headers = new HashMap();
 
-	private String method_ = "POST";
+	private String method = "POST";
 
-	private String pathInfo_;
+	private String pathInfo;
 
-	private String pathTranslated_;
+	private String pathTranslated;
 
-	private String queryString_;
+	private String queryString;
 
-	private MockHttpSessionImpl session_;
+	private MockHttpSessionImpl session;
 
-	private String scheme_ = "http";
+	private String scheme = "http";
 
-	private int serverPort_ = 80;
+	private int serverPort = 80;
 
-	private String protocol_ = "HTTP/1.1";
+	private String protocol = "HTTP/1.1";
 
-	private String serverName_ = "localhost";
+	private String serverName = "localhost";
 
-	private Map attributes_ = new HashMap();
+	private Map attributes = new HashMap();
 
-	private String characterEncoding_ = "ISO-8859-1";
+	private String characterEncoding = "ISO-8859-1";
 
-	private int contentLength_;
+	private int contentLength;
 
-	private String contentType_;
+	private String contentType;
 
-	private Map parameters_ = new HashMap();
+	private Map parameters = new HashMap();
 	
-	private String remoteAddr_;
+	private String remoteAddr;
 	
-	private String remoteHost_;
+	private String remoteHost;
 	
-	private int remotePort_;
+	private int remotePort;
 	
-	private String localAddr_;
+	private String localAddr;
 	
-	private String localName_;
+	private String localName;
 	
-	private int localPort_;
+	private int localPort;
 	
-	private Locale locale_;
+	private Locale locale;
 
 	public MockHttpServletRequestImpl(ServletContext servletContext,
 			String servletPath) {
 
-		servletContext_ = servletContext;
+		this.servletContext = servletContext;
 		if (servletPath.charAt(0) == '/') {
-			servletPath_ = servletPath;
+			this.servletPath = servletPath;
 		} else {
-			servletPath_ = "/" + servletPath;
+			this.servletPath = "/" + servletPath;
 		}
 	}
 
@@ -108,11 +108,11 @@ public class MockHttpServletRequestImpl implements MockHttpServletRequest {
 	 * @see javax.servlet.http.HttpServletRequest#getAuthType()
 	 */
 	public String getAuthType() {
-		return authType_;
+		return authType;
 	}
 
 	public void setAuthType(String authType) {
-		authType_ = authType;
+		this.authType = authType;
 	}
 
 	/**
@@ -160,7 +160,7 @@ public class MockHttpServletRequestImpl implements MockHttpServletRequest {
 	 * @see javax.servlet.http.HttpServletRequest#getHeaderNames()
 	 */
 	public Enumeration getHeaderNames() {
-		return new EnumerationAdapter(headers_.keySet().iterator());
+		return new EnumerationAdapter(headers.keySet().iterator());
 	}
 
 	/**
@@ -177,7 +177,7 @@ public class MockHttpServletRequestImpl implements MockHttpServletRequest {
 			values = new ArrayList();
 		}
 		values.add(value);
-		headers_.put(name.toLowerCase(), values);
+		headers.put(name.toLowerCase(), values);
 	}
 
 	public void addDateHeader(String name, long value) {
@@ -190,54 +190,54 @@ public class MockHttpServletRequestImpl implements MockHttpServletRequest {
 
 	private List getHeaderList(String name) {
 		name = name.toLowerCase();
-		return (List) headers_.get(name);
+		return (List) headers.get(name);
 	}
 
 	/**
 	 * @see javax.servlet.http.HttpServletRequest#getMethod()
 	 */
 	public String getMethod() {
-		return method_;
+		return method;
 	}
 
 	/**
 	 * @see javax.servlet.http.HttpServletRequest#getPathInfo()
 	 */
 	public String getPathInfo() {
-		return pathInfo_;
+		return pathInfo;
 	}
 
 	public void setPathInfo(String pathInfo) {
-		pathInfo_ = pathInfo;
+		this.pathInfo = pathInfo;
 	}
 
 	/**
 	 * @see javax.servlet.http.HttpServletRequest#getPathTranslated()
 	 */
 	public String getPathTranslated() {
-		return pathTranslated_;
+		return pathTranslated;
 	}
 
 	public void setPathTranslated(String pathTranslated) {
-		pathTranslated_ = pathTranslated;
+		this.pathTranslated = pathTranslated;
 	}
 
 	/**
 	 * @see javax.servlet.http.HttpServletRequest#getContextPath()
 	 */
 	public String getContextPath() {
-		return servletContext_.getServletContextName();
+		return servletContext.getServletContextName();
 	}
 
 	/**
 	 * @see javax.servlet.http.HttpServletRequest#getQueryString()
 	 */
 	public String getQueryString() {
-		return queryString_;
+		return queryString;
 	}
 
 	public void setQueryString(String queryString) {
-		queryString_ = queryString;
+		this.queryString = queryString;
 	}
 
 	/**
@@ -265,8 +265,8 @@ public class MockHttpServletRequestImpl implements MockHttpServletRequest {
 	 * @see javax.servlet.http.HttpServletRequest#getRequestedSessionId()
 	 */
 	public String getRequestedSessionId() {
-		if (session_ != null) {
-			return session_.getId();
+		if (session != null) {
+			return session.getId();
 		}
 		return null;
 	}
@@ -277,9 +277,9 @@ public class MockHttpServletRequestImpl implements MockHttpServletRequest {
 	public String getRequestURI() {
 		String contextPath = getContextPath();
 		if (contextPath.equals("/")) {
-			return servletPath_;
+			return servletPath;
 		}
-		return contextPath + servletPath_;
+		return contextPath + servletPath;
 	}
 
 	/**
@@ -287,14 +287,14 @@ public class MockHttpServletRequestImpl implements MockHttpServletRequest {
 	 */
 	public StringBuffer getRequestURL() {
 		StringBuffer url = new StringBuffer();
-		url.append(scheme_);
+		url.append(scheme);
 		url.append("://");
-		url.append(serverName_);
-		if ((scheme_.equals("http") && (serverPort_ != 80))
-				|| (scheme_.equals("https") && (serverPort_ != 443))) {
+		url.append(serverName);
+		if ((scheme.equals("http") && (serverPort != 80))
+				|| (scheme.equals("https") && (serverPort != 443))) {
 
 			url.append(':');
-			url.append(serverPort_);
+			url.append(serverPort);
 		}
 		url.append(getRequestURI());
 		return url;
@@ -304,23 +304,23 @@ public class MockHttpServletRequestImpl implements MockHttpServletRequest {
 	 * @see javax.servlet.http.HttpServletRequest#getServletPath()
 	 */
 	public String getServletPath() {
-		return servletPath_;
+		return servletPath;
 	}
 
 	/**
 	 * @see javax.servlet.http.HttpServletRequest#getSession(boolean)
 	 */
 	public HttpSession getSession(boolean create) {
-		if (session_ != null) {
-			return session_;
+		if (session != null) {
+			return session;
 		}
 		if (create) {
-			session_ = new MockHttpSessionImpl(servletContext_);
+			session = new MockHttpSessionImpl(servletContext);
 		}
-		if (session_ != null) {
-			session_.access();
+		if (session != null) {
+			session.access();
 		}
-		return session_;
+		return session;
 	}
 
 	/**
@@ -334,8 +334,8 @@ public class MockHttpServletRequestImpl implements MockHttpServletRequest {
 	 * @see javax.servlet.http.HttpServletRequest#isRequestedSessionIdValid()
 	 */
 	public boolean isRequestedSessionIdValid() {
-		if (session_ != null) {
-			return session_.isValid();
+		if (session != null) {
+			return session.isValid();
 		}
 		return false;
 	}
@@ -344,7 +344,7 @@ public class MockHttpServletRequestImpl implements MockHttpServletRequest {
 	 * @see javax.servlet.http.HttpServletRequest#isRequestedSessionIdFromCookie()
 	 */
 	public boolean isRequestedSessionIdFromCookie() {
-		return session_ != null;
+		return session != null;
 	}
 
 	/**
@@ -366,14 +366,14 @@ public class MockHttpServletRequestImpl implements MockHttpServletRequest {
 	 * @see javax.servlet.ServletRequest#getAttribute(java.lang.String)
 	 */
 	public Object getAttribute(String name) {
-		return attributes_.get(name);
+		return attributes.get(name);
 	}
 
 	/**
 	 * @see javax.servlet.ServletRequest#getAttributeNames()
 	 */
 	public Enumeration getAttributeNames() {
-		return new EnumerationAdapter(attributes_.keySet().iterator());
+		return new EnumerationAdapter(attributes.keySet().iterator());
 	}
 
 	/**
@@ -381,21 +381,21 @@ public class MockHttpServletRequestImpl implements MockHttpServletRequest {
 	 *      java.lang.Object)
 	 */
 	public void setAttribute(String name, Object value) {
-		attributes_.put(name, value);
+		attributes.put(name, value);
 	}
 
 	/**
 	 * @see javax.servlet.ServletRequest#removeAttribute(java.lang.String)
 	 */
 	public void removeAttribute(String name) {
-		attributes_.remove(name);
+		attributes.remove(name);
 	}
 
 	/**
 	 * @see javax.servlet.ServletRequest#getCharacterEncoding()
 	 */
 	public String getCharacterEncoding() {
-		return characterEncoding_;
+		return characterEncoding;
 	}
 
 	/**
@@ -404,29 +404,29 @@ public class MockHttpServletRequestImpl implements MockHttpServletRequest {
 	public void setCharacterEncoding(String characterEncoding)
 			throws UnsupportedEncodingException {
 
-		characterEncoding_ = characterEncoding;
+		this.characterEncoding = characterEncoding;
 	}
 
 	/**
 	 * @see javax.servlet.ServletRequest#getContentLength()
 	 */
 	public int getContentLength() {
-		return contentLength_;
+		return contentLength;
 	}
 
 	public void setContentLength(int contentLength) {
-		contentLength_ = contentLength;
+		this.contentLength = contentLength;
 	}
 
 	/**
 	 * @see javax.servlet.ServletRequest#getContentType()
 	 */
 	public String getContentType() {
-		return contentType_;
+		return contentType;
 	}
 
 	public void setContentType(String contentType) {
-		contentType_ = contentType;
+		this.contentType = contentType;
 	}
 
 	/**
@@ -440,7 +440,7 @@ public class MockHttpServletRequestImpl implements MockHttpServletRequest {
 	 * @see javax.servlet.ServletRequest#getParameter(java.lang.String)
 	 */
 	public String getParameter(String name) {
-		String[] values = (String[]) parameters_.get(name);
+		String[] values = (String[]) parameters.get(name);
 		if (values == null || values.length == 0) {
 			return null;
 		}
@@ -451,7 +451,7 @@ public class MockHttpServletRequestImpl implements MockHttpServletRequest {
 	 * @see javax.servlet.ServletRequest#getParameterNames()
 	 */
 	public Enumeration getParameterNames() {
-		return new EnumerationAdapter(parameters_.keySet().iterator());
+		return new EnumerationAdapter(parameters.keySet().iterator());
 	}
 
 	/**
@@ -459,7 +459,7 @@ public class MockHttpServletRequestImpl implements MockHttpServletRequest {
 	 * @see javax.servlet.ServletRequest#getParameterValues(java.lang.String)
 	 */
 	public String[] getParameterValues(String name) {
-		return (String[]) parameters_.get(name);
+		return (String[]) parameters.get(name);
 	}
 
 	/**
@@ -467,7 +467,7 @@ public class MockHttpServletRequestImpl implements MockHttpServletRequest {
 	 * @see javax.servlet.ServletRequest#getParameterMap()
 	 */
 	public Map getParameterMap() {
-		return parameters_;
+		return parameters;
 	}
 
 	public void addParameter(String name, String value) {
@@ -478,7 +478,7 @@ public class MockHttpServletRequestImpl implements MockHttpServletRequest {
 			String[] newArray = new String[values.length + 1];
 			System.arraycopy(values, 0, newArray, 0, values.length);
 			newArray[newArray.length - 1] = value;
-			parameters_.put(name, newArray);
+			parameters.put(name, newArray);
 		}
 	}
 	
@@ -494,60 +494,60 @@ public class MockHttpServletRequestImpl implements MockHttpServletRequest {
 			String[] newArray = new String[vals.length + values.length];
 			System.arraycopy(vals, 0, newArray, 0, vals.length);
 			System.arraycopy(values, 0, newArray, vals.length, values.length);
-			parameters_.put(name, newArray);
+			parameters.put(name, newArray);
 		}
 	}
 
 	public void setParameter(String name, String value) {
-		parameters_.put(name, new String[] { value });
+		parameters.put(name, new String[] { value });
 	}
 	
 	public void setParameter(String name, String[] values) {
-		parameters_.put(name, values);
+		parameters.put(name, values);
 	}
 
 	/**
 	 * @see javax.servlet.ServletRequest#getProtocol()
 	 */
 	public String getProtocol() {
-		return protocol_;
+		return protocol;
 	}
 
 	public void setProtocol(String protocol) {
-		protocol_ = protocol;
+		this.protocol = protocol;
 	}
 
 	/**
 	 * @see javax.servlet.ServletRequest#getScheme()
 	 */
 	public String getScheme() {
-		return scheme_;
+		return scheme;
 	}
 
 	public void setScheme(String scheme) {
-		scheme_ = scheme;
+		this.scheme = scheme;
 	}
 
 	/**
 	 * @see javax.servlet.ServletRequest#getServerName()
 	 */
 	public String getServerName() {
-		return serverName_;
+		return serverName;
 	}
 
 	public void setServerName(String serverName) {
-		serverName_ = serverName;
+		this.serverName = serverName;
 	}
 
 	/**
 	 * @see javax.servlet.ServletRequest#getServerPort()
 	 */
 	public int getServerPort() {
-		return serverPort_;
+		return serverPort;
 	}
 
 	public void setServerPort(int serverPort) {
-		serverPort_ = serverPort;
+		this.serverPort = serverPort;
 	}
 
 	/**
@@ -563,11 +563,11 @@ public class MockHttpServletRequestImpl implements MockHttpServletRequest {
 	 * @see javax.servlet.ServletRequest#getRemoteAddr()
 	 */
 	public String getRemoteAddr() {
-		return remoteAddr_;
+		return remoteAddr;
 	}
 	
 	public void setRemoteAddr(String remoteAddr) {
-		remoteAddr_ = remoteAddr;
+		this.remoteAddr = remoteAddr;
 	}
 
 	/**
@@ -575,55 +575,55 @@ public class MockHttpServletRequestImpl implements MockHttpServletRequest {
 	 * @see javax.servlet.ServletRequest#getRemoteHost()
 	 */
 	public String getRemoteHost() {
-		return remoteHost_;
+		return remoteHost;
 	}
 	
 	public void setRemoteHost(String remoteHost) {
-		remoteHost_ = remoteHost;
+		this.remoteHost = remoteHost;
 	}
 	
 	/**
 	 * @see javax.servlet.ServletRequest#getLocalAddr()
 	 */
 	public String getLocalAddr() {
-		return localAddr_;
+		return localAddr;
 	}
 	
 	public void setLocalAddr(String localAddr) {
-		localAddr_ = localAddr;
+		this.localAddr = localAddr;
 	}
 
 	/**
 	 * @see javax.servlet.ServletRequest#getLocalName()
 	 */
 	public String getLocalName() {
-		return localName_;
+		return localName;
 	}
 	
 	public void setLocalName(String localName) {
-		localName_ = localName;
+		this.localName = localName;
 	}
 
 	/**
 	 * @see javax.servlet.ServletRequest#getLocalPort()
 	 */
 	public int getLocalPort() {
-		return localPort_;
+		return localPort;
 	}
 	
 	public void setLocalPort(int localPort) {
-		localPort_ = localPort;
+		this.localPort = localPort;
 	}
 
 	/**
 	 * @see javax.servlet.ServletRequest#getRemotePort()
 	 */
 	public int getRemotePort() {
-		return remotePort_;
+		return remotePort;
 	}
 	
 	public void setRemotePort(int remotePort) {
-		remotePort_ = remotePort;
+		this.remotePort = remotePort;
 	}
 
 	/**
@@ -631,11 +631,11 @@ public class MockHttpServletRequestImpl implements MockHttpServletRequest {
 	 * @see javax.servlet.ServletRequest#getLocale()
 	 */
 	public Locale getLocale() {
-		return locale_;
+		return locale;
 	}
 	
 	public void setLocale(Locale locale) {
-		locale_ = locale;
+		this.locale = locale;
 	}
 
 	/**

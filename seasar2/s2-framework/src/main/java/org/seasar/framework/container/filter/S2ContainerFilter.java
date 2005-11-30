@@ -31,18 +31,18 @@ import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 
 public class S2ContainerFilter implements Filter {
 
-	//private FilterConfig config_ = null;
+	//private FilterConfig config = null;
 
 	public S2ContainerFilter() {
 		super();
 	}
 
 	public void init(FilterConfig config) throws ServletException {
-		//config_ = config;
+		//this.config = config;
 	}
 
 	public void destroy() {
-		//config_ = null;
+		//config = null;
 	}
 
 	/**
