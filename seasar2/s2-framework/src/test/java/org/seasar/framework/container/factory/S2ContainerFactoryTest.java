@@ -37,7 +37,7 @@ public class S2ContainerFactoryTest extends TestCase {
     }
 
     protected void tearDown() throws Exception {
-        S2ContainerFactory.configurationContainer_ = null;
+        S2ContainerFactory.configurationContainer = null;
         S2ContainerFactory.setProvider(new S2ContainerFactory.DefaultProvider());
         S2ContainerFactory.setDefaultBuilder(new XmlS2ContainerBuilder());
         S2ContainerBehavior.setProvider(new S2ContainerBehavior.DefaultProvider());
@@ -125,9 +125,9 @@ public class S2ContainerFactoryTest extends TestCase {
 
     public void testDestroy() throws Exception {
         configure("ContainerFactory.dicon");
-        assertNotNull("1", S2ContainerFactory.configurationContainer_);
+        assertNotNull("1", S2ContainerFactory.configurationContainer);
         S2ContainerFactory.destroy();
-        assertNull("2", S2ContainerFactory.configurationContainer_);
+        assertNull("2", S2ContainerFactory.configurationContainer);
     }
 
     public void configure(String name) throws Exception {

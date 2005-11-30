@@ -83,7 +83,7 @@ public final class TagHandlerContext {
 		bodyStack.push(body);
 		body = new StringBuffer();
 		characters = new StringBuffer();
-		qNameStack.push(qName);
+		qNameStack.push(this.qName);
 		this.qName = qName;
 		path.append("/");
 		path.append(qName);
