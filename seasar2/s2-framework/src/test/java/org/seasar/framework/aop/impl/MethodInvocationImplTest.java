@@ -18,18 +18,6 @@ import org.seasar.framework.aop.proxy.AopProxy;
  */
 public class MethodInvocationImplTest extends TestCase {
 
-	/**
-	 * Constructor for InvocationImplTest.
-	 * @param arg0
-	 */
-	public MethodInvocationImplTest(String arg0) {
-		super(arg0);
-	}
-
-	public static void main(String[] args) {
-		junit.textui.TestRunner.run(MethodInvocationImplTest.class);
-	}
-
 	public void testProceed() throws Exception {
 		TestInterceptor interceptor = new TestInterceptor();
 		TestInterceptor interceptor2 = new TestInterceptor();
@@ -52,20 +40,6 @@ public class MethodInvocationImplTest extends TestCase {
 			new AopProxy(Hoge.class, new Aspect[] { aspect });
 		Hoge proxy = (Hoge) aopProxy.create();
 		assertEquals("1", "Hello", proxy.foo());
-	}
-
-	/*
-	 * @see TestCase#setUp()
-	 */
-	protected void setUp() throws Exception {
-		super.setUp();
-	}
-
-	/*
-	 * @see TestCase#tearDown()
-	 */
-	protected void tearDown() throws Exception {
-		super.tearDown();
 	}
 
 	public class TestInterceptor implements MethodInterceptor {
