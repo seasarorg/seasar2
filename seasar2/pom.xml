@@ -126,7 +126,7 @@
       <uniqueVersion>false</uniqueVersion>
       <id>maven.seasar.org</id>
       <name>The Seasar Foundation Maven2 Repository</name>
-      <url>scp://www.seasar.org/home/groups/maven/public_html/maven2</url>
+      <url>scp://www.seasar.org/home/groups/s2container/maven/maven2</url>
     </repository>
   </distributionManagement>
 </project>
