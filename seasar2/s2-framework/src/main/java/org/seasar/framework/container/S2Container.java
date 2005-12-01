@@ -112,4 +112,6 @@ public interface S2Container extends MetaDefAware {
     public boolean isHotswapMode();
     
     public void setHotswapMode(boolean hotswapMode);
+    
+    public ClassLoader getClassLoader();
 }

@@ -60,6 +60,7 @@ public class S2ContainerImpl implements S2Container, ContainerConstants {
 	private MetaDefSupport metaDefSupport = new MetaDefSupport(this);
 	private boolean inited = false;
     private boolean hotswapMode = false;
+    private ClassLoader classLoader = null;
 
 	static {
 		OgnlRuntime.setPropertyAccessor(S2Container.class,
@@ -83,6 +84,7 @@ public class S2ContainerImpl implements S2Container, ContainerConstants {
 		ComponentDef servletContextCd = new ServletContextComponentDef(this);
 		componentDefMap.put(SERVLET_CONTEXT_NAME, servletContextCd);
 		componentDefMap.put(ServletContext.class, servletContextCd);
+        classLoader = Thread.currentThread().getContextClassLoader();
 	}
 	
 	public S2Container getRoot() {
@@ -507,6 +509,10 @@ public class S2ContainerImpl implements S2Container, ContainerConstants {
     
     public void setHotswapMode(boolean hotswapMode) {
         this.hotswapMode = hotswapMode;
+    }
+
+    public ClassLoader getClassLoader() {
+        return classLoader;
     }
 
 	private static Class[] getAssignableClasses(Class componentClass) {

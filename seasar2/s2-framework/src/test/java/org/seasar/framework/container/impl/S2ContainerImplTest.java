@@ -1,5 +1,12 @@
 package org.seasar.framework.container.impl;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,6 +28,7 @@ import org.seasar.framework.container.TooManyRegistrationRuntimeException;
 import org.seasar.framework.container.deployer.InstanceDefFactory;
 import org.seasar.framework.mock.servlet.MockHttpServletResponseImpl;
 import org.seasar.framework.mock.servlet.MockServletContextImpl;
+import org.seasar.framework.util.ResourceUtil;
 
 /**
  * @author higa
@@ -311,7 +319,69 @@ public class S2ContainerImplTest extends TestCase {
 		assertNotNull("1", client.getServletContext());
 	}
 
-	public static class A {
+    public void testOgnlClassResolvingWhileClassLoaderSpecified() throws Exception {
+        S2Container container = new S2ContainerImpl() {
+            public ClassLoader getClassLoader() {
+                return null;
+            }
+        };
+        ComponentDef componentDef = new ComponentDefImpl();
+        componentDef.setComponentName("component");
+        componentDef.setExpression("@org.seasar.framework.container.impl.S2ContainerImpl@class");
+        container.register(componentDef);
+        Object obj = container.getComponent("component");
+        assertNotNull("1", obj);
+        assertEquals("2", S2ContainerImpl.class, obj);
+
+        File componentClassFile = ResourceUtil.getResourceAsFile("org/seasar/framework/container/impl/classes/test/Component");
+        File parentDir = componentClassFile.getParentFile();
+
+        byte[] buf = new byte[4096];
+        InputStream is = null;
+        OutputStream os = null;
+        try {
+            is = new FileInputStream(componentClassFile);
+            os = new FileOutputStream(new File(parentDir, "Component.class"));
+            int len;
+            while ((len = is.read(buf)) != -1) {
+                os.write(buf, 0, len);
+            }
+        } finally {
+            if (os != null) {
+                try {
+                    os.close();
+                } catch (Throwable t) {
+                    ;
+                }
+            }
+            if (is != null) {
+                try {
+                    is.close();
+                } catch (Throwable t) {
+                    ;
+                }
+            }
+        }
+        File classesDir = parentDir.getParentFile();
+
+        ClassLoader customCl = new URLClassLoader(new URL[]{ classesDir.toURI().toURL() });
+        ClassLoader cl = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader(customCl);
+            container = new S2ContainerImpl();
+            componentDef = new ComponentDefImpl();
+            componentDef.setComponentName("component");
+            componentDef.setExpression("@test.Component@class");
+            container.register(componentDef);
+            obj = container.getComponent("component");
+            assertNotNull("3", obj);
+            assertSame("4", customCl, ((Class)obj).getClassLoader());
+        } finally {
+            Thread.currentThread().setContextClassLoader(cl);
+        }
+    }
+
+    public static class A {
 
 		private Hoge hoge_;
 
