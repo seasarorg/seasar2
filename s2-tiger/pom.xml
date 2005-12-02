@@ -11,7 +11,34 @@
   <version>2.3.2</version>
   <description></description>
   <url>http://s2container.seasar.org/</url>
+  <issueManagement>
+    <system>sourceforge.jp</system>
+    <url><![CDATA[http://sourceforge.jp/tracker/?atid=6582&group_id=689&func=browse]]></url>
+  </issueManagement>
   <inceptionYear>2005</inceptionYear>
+  <mailingLists>
+    <mailingList>
+      <name>Seasar-user</name>
+      <subscribe>http://lists.sourceforge.jp/mailman/listinfo/seasar-user</subscribe>
+      <unsubscribe>http://lists.sourceforge.jp/mailman/listinfo/seasar-user</unsubscribe>
+      <post>seasar-user@lists.sourceforge.jp</post>
+      <archive>http://lists.sourceforge.jp/mailman/archives/seasar-user/</archive>
+    </mailingList>
+    <mailingList>
+      <name>Seasar-dev</name>
+      <subscribe>http://lists.sourceforge.jp/mailman/listinfo/seasar-dev</subscribe>
+      <unsubscribe>http://lists.sourceforge.jp/mailman/listinfo/seasar-dev</unsubscribe>
+      <post>seasar-dev@lists.sourceforge.jp</post>
+      <archive>http://lists.sourceforge.jp/mailman/archives/seasar-dev/</archive>
+    </mailingList>
+    <mailingList>
+      <name>Seasar-user-en</name>
+      <subscribe>https://www.seasar.org/mailman/listinfo/seasar-user-en</subscribe>
+      <unsubscribe>https://www.seasar.org/mailman/listinfo/seasar-user-en</unsubscribe>
+      <post>seasar-user-en@ml.seasar.org</post>
+      <archive>http://ml.seasar.org/archives/seasar-user-en/</archive>
+    </mailingList>
+  </mailingLists>
   <licenses>
     <license>
       <name>The Apache Software License, Version 2.0</name>
@@ -19,6 +46,11 @@
       <distribution>repo</distribution>
     </license>
   </licenses>
+  <scm>
+    <connection>scm:svn:https://www.seasar.org/svn/s2container/trunk/s2-tiger/</connection>
+    <developerConnection>scm:svn:https://www.seasar.org/svn/s2container/trunk/s2-tiger/</developerConnection>
+    <url>http://www.seasar.org/websvn/listing.php?repname=s2container</url>
+  </scm>
   <organization>
     <name>The Seasar Foundation</name>
     <url>http://www.seasar.org/</url>
@@ -65,7 +97,7 @@
       <uniqueVersion>false</uniqueVersion>
       <id>maven.seasar.org</id>
       <name>The Seasar Foundation Maven2 Repository</name>
-      <url>scp://www.seasar.org/home/groups/maven/public_html/maven2</url>
+      <url>scp://www.seasar.org/home/groups/s2container/maven/maven2</url>
     </repository>
   </distributionManagement>
 </project>
