@@ -26,9 +26,9 @@ import javax.sql.DataSource;
 import org.seasar.extension.jdbc.StatementFactory;
 import org.seasar.extension.jdbc.ValueType;
 import org.seasar.extension.jdbc.types.ValueTypes;
+import org.seasar.extension.jdbc.util.DataSourceUtil;
 import org.seasar.framework.exception.EmptyRuntimeException;
 import org.seasar.framework.exception.SQLRuntimeException;
-import org.seasar.framework.util.DataSourceUtil;
 
 /**
  * @author higa

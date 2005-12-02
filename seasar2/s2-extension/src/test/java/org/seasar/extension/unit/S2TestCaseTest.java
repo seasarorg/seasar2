@@ -15,6 +15,14 @@ public class S2TestCaseTest extends S2TestCase {
 
     private static final String J2EE_PATH = "j2ee.dicon";
 
+    public void setUpGetDataSource() {
+        include(J2EE_PATH);
+    }
+
+    public void testGetDataSource() {
+        assertNotNull("1", getDataSource());
+    }
+
     public void testReadXls() {
         DataSet dataSet = readXls("testdata.xls");
         System.out.println(dataSet);

@@ -20,7 +20,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 
 import org.seasar.extension.jdbc.StatementFactory;
-import org.seasar.framework.util.ConnectionUtil;
+import org.seasar.extension.jdbc.util.ConnectionUtil;
 
 /**
  * @author higa

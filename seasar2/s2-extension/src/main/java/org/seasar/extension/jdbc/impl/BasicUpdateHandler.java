@@ -22,9 +22,9 @@ import javax.sql.DataSource;
 
 import org.seasar.extension.jdbc.StatementFactory;
 import org.seasar.extension.jdbc.UpdateHandler;
+import org.seasar.extension.jdbc.util.ConnectionUtil;
 import org.seasar.framework.exception.SQLRuntimeException;
 import org.seasar.framework.log.Logger;
-import org.seasar.framework.util.ConnectionUtil;
 import org.seasar.framework.util.PreparedStatementUtil;
 import org.seasar.framework.util.StatementUtil;
 

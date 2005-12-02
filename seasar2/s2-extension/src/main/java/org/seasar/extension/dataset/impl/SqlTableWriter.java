@@ -23,8 +23,8 @@ import org.seasar.extension.dataset.DataRow;
 import org.seasar.extension.dataset.DataTable;
 import org.seasar.extension.dataset.RowState;
 import org.seasar.extension.dataset.TableWriter;
-import org.seasar.framework.util.ConnectionUtil;
-import org.seasar.framework.util.DataSourceUtil;
+import org.seasar.extension.jdbc.util.ConnectionUtil;
+import org.seasar.extension.jdbc.util.DataSourceUtil;
 
 /**
  * @author higa

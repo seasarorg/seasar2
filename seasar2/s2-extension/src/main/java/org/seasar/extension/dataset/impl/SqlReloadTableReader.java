@@ -28,8 +28,8 @@ import org.seasar.extension.dataset.DataTable;
 import org.seasar.extension.dataset.TableReader;
 import org.seasar.extension.jdbc.SelectHandler;
 import org.seasar.extension.jdbc.impl.BasicSelectHandler;
-import org.seasar.framework.util.ConnectionUtil;
-import org.seasar.framework.util.DataSourceUtil;
+import org.seasar.extension.jdbc.util.ConnectionUtil;
+import org.seasar.extension.jdbc.util.DataSourceUtil;
 
 /**
  * @author higa

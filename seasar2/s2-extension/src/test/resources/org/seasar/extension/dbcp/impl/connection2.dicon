@@ -17,7 +17,7 @@
 			"org.hsqldb.jdbcDriver"
 		</property>
 		<property name="URL">
-			"jdbc:hsqldb:hsql://localhost:9001"
+			"jdbc:hsqldb:file:" + @org.seasar.framework.util.EclipseUtil@getProjectRoot("seasar2").getAbsolutePath() + "/s2-extension/target/test-classes/data/demo"
 		</property>
 		<property name="user">"sa"</property>
 		<property name="password">""</property>

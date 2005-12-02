@@ -16,10 +16,15 @@
 package org.seasar.extension.unit;
 
 import java.io.File;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+
+import javax.sql.DataSource;
+import javax.transaction.TransactionManager;
 
 import junit.framework.Assert;
 import junit.framework.AssertionFailedError;
@@ -40,6 +45,11 @@ import org.seasar.extension.dataset.impl.XlsWriter;
 import org.seasar.extension.dataset.types.ColumnTypes;
 import org.seasar.extension.jdbc.UpdateHandler;
 import org.seasar.extension.jdbc.impl.BasicUpdateHandler;
+import org.seasar.extension.jdbc.util.ConnectionUtil;
+import org.seasar.extension.jdbc.util.DataSourceUtil;
+import org.seasar.framework.container.ContainerConstants;
+import org.seasar.framework.container.S2Container;
+import org.seasar.framework.exception.EmptyRuntimeException;
 import org.seasar.framework.unit.S2FrameworkTestCase;
 import org.seasar.framework.util.FileOutputStreamUtil;
 import org.seasar.framework.util.ResourceUtil;
@@ -49,12 +59,101 @@ import org.seasar.framework.util.ResourceUtil;
  */
 public abstract class S2TestCase extends S2FrameworkTestCase {
 
+    private static final String DATASOURCE_NAME = "j2ee"
+        + ContainerConstants.NS_SEP + "dataSource";
+    
+    private DataSource dataSource;
+
+    private Connection connection;
+
+    private DatabaseMetaData dbMetaData;
+    
 	public S2TestCase() {
 	}
 
 	public S2TestCase(String name) {
 		super(name);
 	}
+    
+    protected void runTest() throws Throwable {
+        TransactionManager tm = null;
+        if (needTransaction()) {
+            try {
+                tm = (TransactionManager) getComponent(TransactionManager.class);
+                tm.begin();
+            } catch (Throwable t) {
+                System.err.println(t);
+            }
+        }
+        try {
+            super.runTest();
+        } finally {
+            if (tm != null) {
+                tm.rollback();
+            }
+        }
+    }
+
+    protected boolean needTransaction() {
+        return getName().endsWith("Tx");
+    }
+    
+    protected void setUpAfterContainerInit() throws Throwable {
+        super.setUpAfterContainerInit();
+        setupDataSource();
+    }
+
+    protected void tearDownBeforeContainerDestroy() throws Throwable {
+        tearDownDataSource();
+        super.tearDownBeforeContainerDestroy();
+    }
+    
+    protected void setupDataSource() {
+        S2Container container = getContainer();
+        try {
+            if (container.hasComponentDef(DATASOURCE_NAME)) {
+                dataSource = (DataSource) container
+                        .getComponent(DATASOURCE_NAME);
+            } else if (container.hasComponentDef(DataSource.class)) {
+                dataSource = (DataSource) container
+                        .getComponent(DataSource.class);
+            }
+        } catch (Throwable t) {
+            System.err.println(t);
+        }
+    }
+
+    protected void tearDownDataSource() {
+        dbMetaData = null;
+        if (connection != null) {
+            ConnectionUtil.close(connection);
+            connection = null;
+        }
+        dataSource = null;
+    }
+    
+    public DataSource getDataSource() {
+        if (dataSource == null) {
+            throw new EmptyRuntimeException("dataSource");
+        }
+        return dataSource;
+    }
+
+    public Connection getConnection() {
+        if (connection != null) {
+            return connection;
+        }
+        connection = DataSourceUtil.getConnection(getDataSource());
+        return connection;
+    }
+
+    public DatabaseMetaData getDatabaseMetaData() {
+        if (dbMetaData != null) {
+            return dbMetaData;
+        }
+        dbMetaData = ConnectionUtil.getMetaData(getConnection());
+        return dbMetaData;
+    }
 
 	public DataSet readXls(String path) {
 		DataReader reader = new XlsReader(convertPath(path));

@@ -1,4 +1,4 @@
-package org.seasar.framework.util;
+package org.seasar.extension.jdbc.util;
 
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -9,10 +9,10 @@ import java.util.Set;
 
 import javax.sql.DataSource;
 
+import org.seasar.extension.unit.S2TestCase;
 import org.seasar.framework.exception.ClassNotFoundRuntimeException;
-import org.seasar.framework.unit.S2FrameworkTestCase;
 
-public class DatabaseMetaDataUtilTest extends S2FrameworkTestCase {
+public class DatabaseMetaDataUtilTest extends S2TestCase {
 
     public void testGetColumnList() throws Exception {
         DatabaseMetaData dbMetaData = getConnection().getMetaData();

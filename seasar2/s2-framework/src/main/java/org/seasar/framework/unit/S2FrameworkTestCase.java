@@ -18,24 +18,18 @@ package org.seasar.framework.unit;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.Servlet;
-import javax.sql.DataSource;
-import javax.transaction.TransactionManager;
 
 import junit.framework.TestCase;
 
 import org.seasar.framework.container.ComponentDef;
-import org.seasar.framework.container.ContainerConstants;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.factory.S2ContainerFactory;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 import org.seasar.framework.container.impl.S2ContainerImpl;
-import org.seasar.framework.exception.EmptyRuntimeException;
 import org.seasar.framework.exception.NoSuchMethodRuntimeException;
 import org.seasar.framework.mock.servlet.MockHttpServletRequest;
 import org.seasar.framework.mock.servlet.MockHttpServletResponse;
@@ -46,8 +40,6 @@ import org.seasar.framework.mock.servlet.MockServletConfigImpl;
 import org.seasar.framework.mock.servlet.MockServletContext;
 import org.seasar.framework.mock.servlet.MockServletContextImpl;
 import org.seasar.framework.util.ClassUtil;
-import org.seasar.framework.util.ConnectionUtil;
-import org.seasar.framework.util.DataSourceUtil;
 import org.seasar.framework.util.FieldUtil;
 import org.seasar.framework.util.MethodUtil;
 import org.seasar.framework.util.ResourceUtil;
@@ -57,9 +49,6 @@ import org.seasar.framework.util.StringUtil;
  * @author higa
  */
 public abstract class S2FrameworkTestCase extends TestCase {
-
-    private static final String DATASOURCE_NAME = "j2ee"
-            + ContainerConstants.NS_SEP + "dataSource";
 
     private S2Container container;
 
@@ -72,12 +61,6 @@ public abstract class S2FrameworkTestCase extends TestCase {
     private MockHttpServletRequest request;
 
     private MockHttpServletResponse response;
-
-    private DataSource dataSource;
-
-    private Connection connection;
-
-    private DatabaseMetaData dbMetaData;
 
     private List bindedFields;
 
@@ -141,29 +124,6 @@ public abstract class S2FrameworkTestCase extends TestCase {
         return prefix + "/" + path;
     }
 
-    public DataSource getDataSource() {
-        if (dataSource == null) {
-            throw new EmptyRuntimeException("dataSource");
-        }
-        return dataSource;
-    }
-
-    public Connection getConnection() {
-        if (connection != null) {
-            return connection;
-        }
-        connection = DataSourceUtil.getConnection(getDataSource());
-        return connection;
-    }
-
-    public DatabaseMetaData getDatabaseMetaData() {
-        if (dbMetaData != null) {
-            return dbMetaData;
-        }
-        dbMetaData = ConnectionUtil.getMetaData(getConnection());
-        return dbMetaData;
-    }
-
     /**
      * @see junit.framework.TestCase#runBare()
      */
@@ -175,23 +135,21 @@ public abstract class S2FrameworkTestCase extends TestCase {
             try {
                 container.init();
                 try {
-                    setupDataSource();
+                    setUpAfterContainerInit();
                     try {
-                        setUpAfterContainerInit();
                         bindFields();
                         setUpAfterBindFields();
                         try {
-                            runTestTx();
+                            runTest();
                         } finally {
                             tearDownBeforeUnbindFields();
                             unbindFields();
                         }
-                        tearDownBeforeContainerDestroy();
                     } finally {
-                        tearDownDataSource();
+                        tearDownBeforeContainerDestroy();
                     }
                 } finally {
-                    tearDownContainer();
+                    container.destroy();
                 }
             } finally {
                 tearDownForEachTestMethod();
@@ -203,6 +161,7 @@ public abstract class S2FrameworkTestCase extends TestCase {
                 System.gc();
             }
             tearDown();
+            tearDownContainer();
         }
     }
 
@@ -222,7 +181,6 @@ public abstract class S2FrameworkTestCase extends TestCase {
     }
 
     protected void tearDownContainer() throws Throwable {
-        container.destroy();
         SingletonS2ContainerFactory.setContainer(null);
         container = null;
         servletContext = null;
@@ -380,51 +338,5 @@ public abstract class S2FrameworkTestCase extends TestCase {
                 System.err.println(e);
             }
         }
-    }
-
-    protected void runTestTx() throws Throwable {
-        TransactionManager tm = null;
-        if (needTransaction()) {
-            try {
-                tm = (TransactionManager) getComponent(TransactionManager.class);
-                tm.begin();
-            } catch (Throwable t) {
-                System.err.println(t);
-            }
-        }
-        try {
-            runTest();
-        } finally {
-            if (tm != null) {
-                tm.rollback();
-            }
-        }
-    }
-
-    protected boolean needTransaction() {
-        return getName().endsWith("Tx");
-    }
-
-    protected void setupDataSource() {
-        try {
-            if (container.hasComponentDef(DATASOURCE_NAME)) {
-                dataSource = (DataSource) container
-                        .getComponent(DATASOURCE_NAME);
-            } else if (container.hasComponentDef(DataSource.class)) {
-                dataSource = (DataSource) container
-                        .getComponent(DataSource.class);
-            }
-        } catch (Throwable t) {
-            System.err.println(t);
-        }
-    }
-
-    protected void tearDownDataSource() {
-        dbMetaData = null;
-        if (connection != null) {
-            ConnectionUtil.close(connection);
-            connection = null;
-        }
-        dataSource = null;
     }
 }

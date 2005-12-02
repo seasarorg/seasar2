@@ -36,14 +36,6 @@ public class S2FrameworkTestCaseTest extends S2FrameworkTestCase {
 		System.out.println("testBbbTx");
 	}
 	
-	public void setUpGetDataSource() {
-		include(J2EE_PATH);
-	}
-
-	public void testGetDataSource() {
-		assertNotNull("1", getDataSource());
-	}
-	
 	public void setUpBindField() {
 		include(J2EE_PATH);
 		register(Date.class);

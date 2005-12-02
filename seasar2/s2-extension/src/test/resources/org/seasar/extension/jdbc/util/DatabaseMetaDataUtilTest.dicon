@@ -3,13 +3,13 @@
 "http://www.seasar.org/dtd/components.dtd">
 <components namespace="j2ee">
 	<component name="dataSource"
-		class="org.seasar.framework.util.DatabaseMetaDataUtilTest$SimpleDataSource"
+		class="org.seasar.extension.jdbc.util.DatabaseMetaDataUtilTest$SimpleDataSource"
 	>
 		<property name="driverClassName">
 			"org.hsqldb.jdbcDriver"
 		</property>
 		<property name="URL">
-			"jdbc:hsqldb:hsql://localhost:9001"
+			"jdbc:hsqldb:file:" + @org.seasar.framework.util.EclipseUtil@getProjectRoot("seasar2").getAbsolutePath() + "/s2-extension/target/test-classes/data/demo"
 		</property>
 		<property name="user">"sa"</property>
 		<property name="password">""</property>
