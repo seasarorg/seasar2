@@ -49,23 +49,19 @@ public class MockServletContextImpl implements MockServletContext, Serializable 
 
     public static final String SERVER_INFO = "seasar/2.0";
 
-    private String path_;
+    private String path;
 
-    private Map mimeTypes_ = new HashMap();
+    private Map mimeTypes = new HashMap();
 
-    private Map initParameters_ = new HashMap();
+    private Map initParameters = new HashMap();
 
-    private Map attributes_ = new HashMap();
+    private Map attributes = new HashMap();
 
     public MockServletContextImpl(String path) {
-        if (path == null) {
+        if (path == null || path.charAt(0) != '/') {
             path = "/";
         }
-        if (path.charAt(0) == '/') {
-            path_ = path;
-        } else {
-            path_ = "/" + path;
-        }
+        this.path = path;
     }
 
     /**
@@ -93,11 +89,11 @@ public class MockServletContextImpl implements MockServletContext, Serializable 
      * @see javax.servlet.ServletContext#getMimeType(java.lang.String)
      */
     public String getMimeType(String file) {
-        return (String) mimeTypes_.get(file);
+        return (String) mimeTypes.get(file);
     }
 
     public void addMimeType(String file, String type) {
-        mimeTypes_.put(file, type);
+        mimeTypes.put(file, type);
     }
 
     /**
@@ -248,32 +244,32 @@ public class MockServletContextImpl implements MockServletContext, Serializable 
      * @see javax.servlet.ServletContext#getInitParameter(java.lang.String)
      */
     public String getInitParameter(String name) {
-        return (String) initParameters_.get(name);
+        return (String) initParameters.get(name);
     }
 
     /**
      * @see javax.servlet.ServletContext#getInitParameterNames()
      */
     public Enumeration getInitParameterNames() {
-        return new EnumerationAdapter(initParameters_.keySet().iterator());
+        return new EnumerationAdapter(initParameters.keySet().iterator());
     }
 
     public void setInitParameter(String name, String value) {
-        initParameters_.put(name, value);
+        initParameters.put(name, value);
     }
 
     /**
      * @see javax.servlet.ServletContext#getAttribute(java.lang.String)
      */
     public Object getAttribute(String name) {
-        return attributes_.get(name);
+        return attributes.get(name);
     }
 
     /**
      * @see javax.servlet.ServletContext#getAttributeNames()
      */
     public Enumeration getAttributeNames() {
-        return new EnumerationAdapter(attributes_.keySet().iterator());
+        return new EnumerationAdapter(attributes.keySet().iterator());
     }
 
     /**
@@ -281,21 +277,21 @@ public class MockServletContextImpl implements MockServletContext, Serializable 
      *      java.lang.Object)
      */
     public void setAttribute(String name, Object value) {
-        attributes_.put(name, value);
+        attributes.put(name, value);
     }
 
     /**
      * @see javax.servlet.ServletContext#removeAttribute(java.lang.String)
      */
     public void removeAttribute(String name) {
-        attributes_.remove(name);
+        attributes.remove(name);
     }
 
     /**
      * @see javax.servlet.ServletContext#getServletContextName()
      */
     public String getServletContextName() {
-        return path_;
+        return path;
     }
 
     public MockHttpServletRequestImpl createRequest(String path) {

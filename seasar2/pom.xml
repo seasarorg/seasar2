@@ -8,7 +8,7 @@
   <artifactId>s2-container-project</artifactId>
   <packaging>pom</packaging>
   <name>Seasar2</name>
-  <version>2.3.4-SNAPSHOT</version>
+  <version>2.3.4</version>
   <description>DI Container with AOP</description>
   <url>http://s2container.seasar.org/</url>
   <issueManagement>
@@ -28,7 +28,7 @@
       <name>Seasar-dev</name>
       <subscribe>http://lists.sourceforge.jp/mailman/listinfo/seasar-dev</subscribe>
       <unsubscribe>http://lists.sourceforge.jp/mailman/listinfo/seasar-dev</unsubscribe>
-      <post>seasar-dev@lists.sourceforge.jp</post>
+      <post>seasar-user@lists.sourceforge.jp</post>
       <archive>http://lists.sourceforge.jp/mailman/archives/seasar-dev/</archive>
     </mailingList>
     <mailingList>
