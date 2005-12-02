@@ -64,10 +64,11 @@
 			"org.hsqldb.jdbcDriver"
 		</property>
 		<property name="URL">
-			"jdbc:hsqldb:hsql://localhost:9001"
+			"jdbc:hsqldb:file:" + @org.seasar.framework.util.EclipseUtil@getProjectRoot("seasar2").getAbsolutePath() + "/hsql/data/demo"
 		</property>
 		<property name="user">"sa"</property>
 		<property name="password">""</property>
+		<!--<initMethod>#out.println(@org.seasar.framework.util.EclipseUtil@getProjectRoot("seasar2").getAbsolutePath())</initMethod>-->
 	</component>
 
 	<component name="connectionPool"
