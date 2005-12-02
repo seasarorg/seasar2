@@ -8,7 +8,7 @@
   <artifactId>s2-tiger</artifactId>
   <packaging>jar</packaging>
   <name>S2 Tiger</name>
-  <version>2.3.2</version>
+  <version>2.3.4</version>
   <description></description>
   <url>http://s2container.seasar.org/</url>
   <issueManagement>
@@ -81,13 +81,13 @@
     <dependency>
       <groupId>org.seasar.container</groupId>
       <artifactId>s2-extension</artifactId>
-      <version>2.3.4-SNAPSHOT</version>
+      <version>2.3.4</version>
       <type>jar</type>
     </dependency>
     <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>servlet-api</artifactId>
-      <version>2.3</version>
+      <groupId>geronimo-spec</groupId>
+      <artifactId>geronimo-spec-j2ee</artifactId>
+      <version>1.4-rc4</version>
       <type>jar</type>
       <scope>provided</scope>
     </dependency>
