@@ -136,7 +136,17 @@ public class ComponentDefImpl implements ComponentDef, ContainerConstants {
     public synchronized final Class getConcreteClass() {
         updateComponentClass();
         if (concreteClass == null) {
-            concreteClass = AopProxyUtil.getConcreteClass(this);
+            ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+            try {
+                ClassLoader loader = (container != null ? container.getClassLoader() : null);
+                if (loader != null) {
+                    Thread.currentThread().setContextClassLoader(loader);
+                }
+                concreteClass = AopProxyUtil.getConcreteClass(this);
+            }
+            finally {
+                Thread.currentThread().setContextClassLoader(oldLoader);
+            }
         }
         return concreteClass;
     }
