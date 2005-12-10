@@ -22,9 +22,9 @@
 
 <!ELEMENT component (
   #PCDATA | description | arg | property | meta |
-            initMethod | destroyMethod | aspect)*>
+            initMethod | destroyMethod | aspect | interType)*>
 <!ATTLIST component instance (
-  singleton | prototype | outer | request | session) "singleton">
+  singleton | prototype | outer | request | session | application) "singleton">
 <!ATTLIST component class CDATA #IMPLIED>
 <!ATTLIST component name CDATA #IMPLIED>
 <!ATTLIST component autoBinding (auto | constructor | property | none) "auto">
@@ -44,6 +44,9 @@
 <!ELEMENT aspect (
         #PCDATA | description | component)*>
 <!ATTLIST aspect pointcut CDATA #IMPLIED>
+
+<!ELEMENT interType (
+		#PCDATA | description | component)*>
 
 <!ELEMENT initMethod (
         #PCDATA | description | arg

@@ -25,6 +25,7 @@ import org.seasar.framework.container.ContainerConstants;
 import org.seasar.framework.container.DestroyMethodDef;
 import org.seasar.framework.container.InitMethodDef;
 import org.seasar.framework.container.InstanceDef;
+import org.seasar.framework.container.InterTypeDef;
 import org.seasar.framework.container.MetaDef;
 import org.seasar.framework.container.PropertyDef;
 import org.seasar.framework.container.S2Container;
@@ -35,6 +36,7 @@ import org.seasar.framework.container.util.ArgDefSupport;
 import org.seasar.framework.container.util.AspectDefSupport;
 import org.seasar.framework.container.util.DestroyMethodDefSupport;
 import org.seasar.framework.container.util.InitMethodDefSupport;
+import org.seasar.framework.container.util.InterTypeDefSupport;
 import org.seasar.framework.container.util.MetaDefSupport;
 import org.seasar.framework.container.util.PropertyDefSupport;
 import org.seasar.framework.hotswap.Hotswap;
@@ -64,6 +66,8 @@ public class ComponentDefImpl implements ComponentDef, ContainerConstants {
     private DestroyMethodDefSupport destroyMethodDefSupport = new DestroyMethodDefSupport();
 
     private AspectDefSupport aspectDefSupport = new AspectDefSupport();
+    
+    private InterTypeDefSupport interTypeDefSupport = new InterTypeDefSupport();
 
     private MetaDefSupport metaDefSupport = new MetaDefSupport();
 
@@ -169,6 +173,7 @@ public class ComponentDefImpl implements ComponentDef, ContainerConstants {
         initMethodDefSupport.setContainer(container);
         destroyMethodDefSupport.setContainer(container);
         aspectDefSupport.setContainer(container);
+        interTypeDefSupport.setContainer(container);
     }
 
     /**
@@ -208,6 +213,14 @@ public class ComponentDefImpl implements ComponentDef, ContainerConstants {
     }
 
     /**
+     * @see org.seasar.framework.container.ComponentDef#addInterTypeDef(org.seasar.framework.container.InterTypeDef)
+     */
+    public void addInterTypeDef(InterTypeDef interTypeDef) {
+        interTypeDefSupport.addInterTypeDef(interTypeDef);
+        concreteClass = null;
+    }
+
+    /**
      * @see org.seasar.framework.container.ArgDefAware#getArgDefSize()
      */
     public int getArgDefSize() {
@@ -240,6 +253,13 @@ public class ComponentDefImpl implements ComponentDef, ContainerConstants {
      */
     public int getAspectDefSize() {
         return aspectDefSupport.getAspectDefSize();
+    }
+
+    /**
+     * @see org.seasar.framework.container.InterTypeDefAware#getInterTypeDefSize()
+     */
+    public int getInterTypeDefSize() {
+        return interTypeDefSupport.getInterTypeDefSize();
     }
 
     /*
@@ -354,6 +374,13 @@ public class ComponentDefImpl implements ComponentDef, ContainerConstants {
      */
     public AspectDef getAspectDef(int index) {
         return aspectDefSupport.getAspectDef(index);
+    }
+
+    /**
+     * @see org.seasar.framework.container.InterTypeDefAware#getInterTypeDef(int)
+     */
+    public InterTypeDef getInterTypeDef(int index) {
+        return interTypeDefSupport.getInterTypeDef(index);
     }
 
     /**

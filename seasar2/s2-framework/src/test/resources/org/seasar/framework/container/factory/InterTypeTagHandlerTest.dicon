@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.3//EN"
+	"http://www.seasar.org/dtd/components23.dtd">
+<components>
+	<component name="fieldInterType" 
+		class="org.seasar.framework.container.factory.FieldInterType"/>
+
+	<component class="java.util.ArrayList">
+		<interType>fieldInterType</interType>
+	</component>
+</components>

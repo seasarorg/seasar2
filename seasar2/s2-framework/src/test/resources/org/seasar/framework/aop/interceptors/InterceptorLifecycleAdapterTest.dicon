@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.3//EN"
+	"http://www.seasar.org/dtd/components23.dtd">
+<components>
+	<include path="aop.dicon"/>
+
+	<component class="java.util.ArrayList"/>
+
+	<component class="java.lang.Runnable">
+		<aspect>
+			<component instance="prototype"
+				class="org.seasar.framework.aop.interceptors.InterceptorLifecycleAdapterTest$PrototypeInterceptor">
+				<aspect>aop.lifecycleAdapter</aspect>
+			</component>
+		</aspect>
+	</component>
+</components>

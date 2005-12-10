@@ -23,43 +23,44 @@ import org.seasar.framework.aop.Pointcut;
 
 /**
  * @author higa
- *
+ * 
  */
 public class AspectImpl implements Aspect, Serializable {
 
-	static final long serialVersionUID = 0L;
+    static final long serialVersionUID = 0L;
 
-	private MethodInterceptor methodInterceptor_;
-	private Pointcut pointcut_;
+    private MethodInterceptor methodInterceptor;
 
-	public AspectImpl(MethodInterceptor methodInterceptor) {
-		this(methodInterceptor, null);
-	}
-	
-	public AspectImpl(MethodInterceptor methodInterceptor, Pointcut pointcut) {
-		methodInterceptor_ = methodInterceptor;
-		pointcut_ = pointcut;
-	}
+    private Pointcut pointcut;
 
-	/**
-	 * @see org.seasar.framework.aop.Aspect#getMethodInterceptor()
-	 */
-	public MethodInterceptor getMethodInterceptor() {
-		return methodInterceptor_;
-	}
+    public AspectImpl(MethodInterceptor methodInterceptor) {
+        this(methodInterceptor, null);
+    }
 
-	/**
-	 * @see org.seasar.framework.aop.Aspect#getPointcut()
-	 */
-	public Pointcut getPointcut() {
-		return pointcut_;
-	}
+    public AspectImpl(MethodInterceptor methodInterceptor, Pointcut pointcut) {
+        this.methodInterceptor = methodInterceptor;
+        this.pointcut = pointcut;
+    }
 
-	/**
-	 * @see org.seasar.framework.aop.Aspect#setPointcut(org.seasar.framework.aop.Pointcut)
-	 */
-	public void setPointcut(Pointcut pointcut) {
-		pointcut_ = pointcut;
-	}
+    /**
+     * @see org.seasar.framework.aop.Aspect#getMethodInterceptor()
+     */
+    public MethodInterceptor getMethodInterceptor() {
+        return methodInterceptor;
+    }
+
+    /**
+     * @see org.seasar.framework.aop.Aspect#getPointcut()
+     */
+    public Pointcut getPointcut() {
+        return pointcut;
+    }
+
+    /**
+     * @see org.seasar.framework.aop.Aspect#setPointcut(org.seasar.framework.aop.Pointcut)
+     */
+    public void setPointcut(Pointcut pointcut) {
+        this.pointcut = pointcut;
+    }
 
 }

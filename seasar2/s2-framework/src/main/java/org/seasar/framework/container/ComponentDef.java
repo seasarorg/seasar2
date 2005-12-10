@@ -24,6 +24,7 @@ import org.seasar.framework.hotswap.Hotswap;
 public interface ComponentDef
 	extends
 		ArgDefAware,
+        InterTypeDefAware,
 		PropertyDefAware,
 		InitMethodDefAware,
 		DestroyMethodDefAware,

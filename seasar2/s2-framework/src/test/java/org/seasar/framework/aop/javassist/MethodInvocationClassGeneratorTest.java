@@ -80,7 +80,7 @@ public class MethodInvocationClassGeneratorTest extends TestCase {
         Method[] methods = TargetInterface.class.getDeclaredMethods();
         for (int i = 0; i < methods.length; ++i) {
             MethodInvocationClassGenerator generator = new MethodInvocationClassGenerator(
-                    ClassPoolUtil.getClassPool(), TargetInterface.class.getName() + i,
+                    ClassPoolUtil.getClassPool(TargetInterface.class), TargetInterface.class.getName() + i,
                     TargetClass.class.getName());
             generator.createProceedMethod(methods[i], methods[i].getName());
             Class clazz = generator.toClass(getClass().getClassLoader());
@@ -94,7 +94,7 @@ public class MethodInvocationClassGeneratorTest extends TestCase {
         Method[] methods = TargetClass.class.getDeclaredMethods();
         for (int i = 0; i < methods.length; ++i) {
             MethodInvocationClassGenerator generator = new MethodInvocationClassGenerator(
-                    ClassPoolUtil.getClassPool(), TargetClass.class.getName() + i,
+                    ClassPoolUtil.getClassPool(TargetClass.class), TargetClass.class.getName() + i,
                     TargetClass.class.getName());
             generator.createProceedMethod(methods[i], methods[i].getName());
             Class clazz = generator.toClass(getClass().getClassLoader());

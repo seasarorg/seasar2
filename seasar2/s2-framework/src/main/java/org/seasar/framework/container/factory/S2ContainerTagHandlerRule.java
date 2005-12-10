@@ -34,6 +34,7 @@ public class S2ContainerTagHandlerRule extends TagHandlerRule {
 		addTagHandler("initMethod", new InitMethodTagHandler());
 		addTagHandler("destroyMethod", new DestroyMethodTagHandler());
 		addTagHandler("aspect", new AspectTagHandler());
+        addTagHandler("interType", new InterTypeTagHandler());
 		addTagHandler("/components/include", new IncludeTagHandler());
 	}
 }

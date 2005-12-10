@@ -13,26 +13,21 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.framework.aop.interceptors;
+package org.seasar.framework.container.factory;
 
-import org.aopalliance.intercept.MethodInvocation;
-import org.seasar.framework.log.Logger;
+import java.util.List;
 
-/**
- * @author higa
- * 
- */
-public class TraceThrowsInterceptor extends ThrowsInterceptor {
+import junit.framework.TestCase;
 
-    private static final long serialVersionUID = 8251459775450537214L;
+import org.seasar.framework.container.S2Container;
 
-    private static Logger logger = Logger
-            .getLogger(TraceThrowsInterceptor.class);
+public class InterTypeTagHandlerTest extends TestCase {
 
-    public void handleThrowable(Throwable t, MethodInvocation invocation)
-            throws Throwable {
-        logger.log(t);
-        throw t;
+    private static final String PATH = "org/seasar/framework/container/factory/InterTypeTagHandlerTest.dicon";
+
+    public void testInterType() throws Exception {
+        S2Container container = S2ContainerFactory.create(PATH);
+        List list = (List) container.getComponent(List.class);
+        assertNotNull("1", list.getClass().getDeclaredField("test"));
     }
-
 }

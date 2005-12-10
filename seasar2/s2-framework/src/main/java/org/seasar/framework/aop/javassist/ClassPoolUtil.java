@@ -29,8 +29,8 @@ public class ClassPoolUtil {
     //static fields
     protected static final Map classPoolMap = Collections.synchronizedMap(new WeakHashMap());
 
-    public static ClassPool getClassPool() {
-        final ClassLoader classLoader = getClassLoader();
+    public static ClassPool getClassPool(final Class targetClass) {
+        final ClassLoader classLoader = ClassLoaderUtil.getClassLoader(targetClass);
 
         ClassPool classPool = (ClassPool) classPoolMap.get(classLoader);
         if (classPool == null) {
@@ -42,19 +42,5 @@ public class ClassPoolUtil {
             classPoolMap.put(classLoader, classPool);
         }
         return classPool;
-    }
-
-    protected static ClassLoader getClassLoader() {
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        if (classLoader != null) {
-            return classLoader;
-        }
-
-        classLoader = ClassPoolUtil.class.getClassLoader();
-        if (classLoader != null) {
-            return classLoader;
-        }
-
-        return null;
     }
 }

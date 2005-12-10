@@ -7,6 +7,7 @@ import org.seasar.framework.container.AspectDef;
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.IllegalInitMethodAnnotationRuntimeException;
 import org.seasar.framework.container.InitMethodDef;
+import org.seasar.framework.container.InterTypeDef;
 import org.seasar.framework.container.PropertyDef;
 import org.seasar.framework.container.assembler.AutoBindingDefFactory;
 import org.seasar.framework.container.assembler.BindingTypeDefFactory;
@@ -74,6 +75,14 @@ public class ConstantAnnotationHandlerTest extends S2FrameworkTestCase {
         AspectDef aspectDef = cd.getAspectDef(0);
         assertEquals("2", "aop.traceInterceptor", aspectDef.getExpression());
     }
+
+    public void testAppendInterType() throws Exception {
+        ComponentDef cd = handler.createComponentDef(Hoge.class, null);
+        handler.appendInterType(cd);
+        assertEquals("1", 1, cd.getInterTypeDefSize());
+        InterTypeDef interTypeDef = cd.getInterTypeDef(0);
+        assertEquals("2", "fieldInterType", interTypeDef.getExpression());
+    }
     
     public void testAppendInitMethod() throws Exception {
         ComponentDef cd = handler.createComponentDef(Hoge.class, null);
@@ -108,6 +117,8 @@ public class ConstantAnnotationHandlerTest extends S2FrameworkTestCase {
         
         public static final String ASPECT =
             "value=aop.traceInterceptor, pointcut=getAaa\ngetBbb";
+
+        public static final String INTER_TYPE = "fieldInterType";
 
         public String getAaa() {
             return null;

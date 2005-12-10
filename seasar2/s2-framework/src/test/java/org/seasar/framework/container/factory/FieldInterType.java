@@ -13,26 +13,21 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.framework.aop.interceptors;
+package org.seasar.framework.container.factory;
 
-import org.aopalliance.intercept.MethodInvocation;
-import org.seasar.framework.log.Logger;
+import javassist.CannotCompileException;
+import javassist.CtClass;
+import javassist.CtField;
 
-/**
- * @author higa
- * 
- */
-public class TraceThrowsInterceptor extends ThrowsInterceptor {
+import org.seasar.framework.aop.InterType;
 
-    private static final long serialVersionUID = 8251459775450537214L;
-
-    private static Logger logger = Logger
-            .getLogger(TraceThrowsInterceptor.class);
-
-    public void handleThrowable(Throwable t, MethodInvocation invocation)
-            throws Throwable {
-        logger.log(t);
-        throw t;
+public class FieldInterType implements InterType {
+    public void introduce(Class targetClass, CtClass enhancedClass) {
+        try {
+            enhancedClass.addField(new CtField(CtClass.booleanType, "test",
+                    enhancedClass));
+        } catch (CannotCompileException e) {
+            throw new RuntimeException(e);
+        }
     }
-
 }

@@ -22,6 +22,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 
+import org.seasar.framework.aop.InterType;
+
 import javassist.ClassPool;
 import javassist.CtClass;
 
@@ -54,6 +56,10 @@ public class EnhancedClassGenerator extends AbstractGenerator {
         createMethod(enhancedClass, method.getModifiers(), method.getReturnType(),
                 invokeSuperMethodName, method.getParameterTypes(), method.getExceptionTypes(),
                 createInvokeSuperMethodSource(method));
+    }
+
+    public void applyInterType(final InterType interType) {
+        interType.introduce(targetClass, enhancedClass);
     }
 
     public Class toClass(final ClassLoader classLoader) {

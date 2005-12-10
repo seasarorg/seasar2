@@ -22,6 +22,7 @@ import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.DestroyMethodDef;
 import org.seasar.framework.container.InitMethodDef;
 import org.seasar.framework.container.InstanceDef;
+import org.seasar.framework.container.InterTypeDef;
 import org.seasar.framework.container.MetaDef;
 import org.seasar.framework.container.PropertyDef;
 import org.seasar.framework.container.S2Container;
@@ -157,7 +158,14 @@ public class SimpleComponentDef implements ComponentDef {
 		throw new UnsupportedOperationException("addAspectDef");
 	}
 
-	/*
+    /*
+     * @see org.seasar.framework.container.ComponentDef#addInterTypeDef(org.seasar.framework.container.InterTypeDef)
+     */
+	public void addInterTypeDef(InterTypeDef interTypeDef) {
+        throw new UnsupportedOperationException("addInterTypeDef");
+    }
+
+    /*
 	 * @see org.seasar.framework.container.ArgDefAware#getArgDefSize()
 	 */
 	public int getArgDefSize() {
@@ -192,7 +200,14 @@ public class SimpleComponentDef implements ComponentDef {
 		throw new UnsupportedOperationException("getAspectDefSize");
 	}
 
-	/*
+    /*
+     * @see org.seasar.framework.container.InterTypeDefAware#getInterTypeDefSize()
+     */
+	public int getInterTypeDefSize() {
+        throw new UnsupportedOperationException("getInterTypeDefSize");
+    }
+
+    /*
 	 * @see org.seasar.framework.container.ArgDefAware#getArgDef(int)
 	 */
 	public ArgDef getArgDef(int index) {
@@ -241,7 +256,14 @@ public class SimpleComponentDef implements ComponentDef {
 		throw new UnsupportedOperationException("getAspectDef");
 	}
 	
-	/*
+    /*
+     * @see org.seasar.framework.container.InterTypeDefAware#getInterTypeDef(int)
+     */
+	public InterTypeDef getInterTypeDef(int index) {
+        throw new UnsupportedOperationException("getInterTypeDef");
+    }
+
+    /*
 	 * @see org.seasar.framework.container.MetaDefAware#addMetaDef(org.seasar.framework.container.MetaDef)
 	 */
 	public void addMetaDef(MetaDef metaDef) {

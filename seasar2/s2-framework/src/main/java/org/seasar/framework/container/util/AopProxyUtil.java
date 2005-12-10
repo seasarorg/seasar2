@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.seasar.framework.aop.Aspect;
+import org.seasar.framework.aop.InterType;
 import org.seasar.framework.aop.proxy.AopProxy;
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.ContainerConstants;
@@ -27,28 +28,39 @@ import org.seasar.framework.container.ContainerConstants;
  * @author koichik
  */
 public class AopProxyUtil {
-    
+
     protected AopProxyUtil() {
     }
 
     public static Class getConcreteClass(final ComponentDef componentDef) {
-        if (componentDef.getAspectDefSize() == 0) {
+        if (componentDef.getAspectDefSize() == 0
+                && componentDef.getInterTypeDefSize() == 0) {
             return componentDef.getComponentClass();
         }
 
         final Map parameters = new HashMap();
         parameters.put(ContainerConstants.COMPONENT_DEF_NAME, componentDef);
-        AopProxy proxy = new AopProxy(componentDef.getComponentClass(), getAspects(componentDef),
+        AopProxy proxy = new AopProxy(componentDef.getComponentClass(),
+                getAspects(componentDef), getInterTypes(componentDef),
                 parameters);
         return proxy.getEnhancedClass();
     }
 
-    private static Aspect[] getAspects(final ComponentDef componentDef) {
+    protected static Aspect[] getAspects(final ComponentDef componentDef) {
         final int size = componentDef.getAspectDefSize();
         Aspect[] aspects = new Aspect[size];
         for (int i = 0; i < size; ++i) {
             aspects[i] = componentDef.getAspectDef(i).getAspect();
         }
         return aspects;
+    }
+
+    protected static InterType[] getInterTypes(final ComponentDef componentDef) {
+        final int size = componentDef.getInterTypeDefSize();
+        InterType[] interTypes = new InterType[size];
+        for (int i = 0; i < size; ++i) {
+            interTypes[i] = componentDef.getInterTypeDef(i).getInterType();
+        }
+        return interTypes;
     }
 }

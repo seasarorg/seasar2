@@ -110,7 +110,7 @@ public class EnhancedClassGeneratorTest extends TestCase {
         Method[] methods = TargetInterface.class.getDeclaredMethods();
         for (int i = 0; i < methods.length; ++i) {
             EnhancedClassGenerator generator = new EnhancedClassGenerator(ClassPoolUtil
-                    .getClassPool(), TargetInterface.class, TargetInterface.class.getName() + i);
+                    .getClassPool(TargetInterface.class), TargetInterface.class, TargetInterface.class.getName() + i);
             generator.createTargetMethod(methods[i],
                     MethodInvocationClassGenerator.MethodInvocationTemplate.class.getName());
             Class clazz = generator.toClass(getClass().getClassLoader());
@@ -125,7 +125,7 @@ public class EnhancedClassGeneratorTest extends TestCase {
         Method[] methods = TargetClass.class.getDeclaredMethods();
         for (int i = 0; i < methods.length; ++i) {
             EnhancedClassGenerator generator = new EnhancedClassGenerator(ClassPoolUtil
-                    .getClassPool(), TargetClass.class, TargetClass.class.getName() + i);
+                    .getClassPool(TargetClass.class), TargetClass.class, TargetClass.class.getName() + i);
             generator.createInvokeSuperMethod(methods[i], methods[i].getName() + "__invokeSuper__");
             generator.createTargetMethod(methods[i],
                     MethodInvocationClassGenerator.MethodInvocationTemplate.class.getName());

@@ -46,7 +46,9 @@ public abstract class AbstractAnnotationHandler implements AnnotationHandler {
     protected static final String VALUE = "value";
     
     protected static final String ASPECT = "ASPECT";
-    
+
+    protected static final String INTER_TYPE = "INTER_TYPE";
+
     protected static final String INIT_METHOD = "INIT_METHOD";
     
     protected static final String INTERCEPTOR = "interceptor";

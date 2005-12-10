@@ -25,6 +25,7 @@ import java.util.Map;
 
 import org.aopalliance.intercept.MethodInterceptor;
 import org.seasar.framework.aop.Aspect;
+import org.seasar.framework.aop.InterType;
 import org.seasar.framework.aop.Pointcut;
 import org.seasar.framework.aop.impl.PointcutImpl;
 import org.seasar.framework.aop.javassist.AspectWeaver;
@@ -39,48 +40,59 @@ import org.seasar.framework.util.ConstructorUtil;
  */
 public final class AopProxy implements Serializable {
 
-	static final long serialVersionUID = 0L;
+    static final long serialVersionUID = 0L;
 
-	private static Logger logger_ = Logger.getLogger(AopProxy.class);
+    private static Logger logger = Logger.getLogger(AopProxy.class);
 
-	private Class targetClass_;
+    private final Class targetClass;
 
-    private Class enhancedClass_;
+    private final Class enhancedClass;
 
-	private Pointcut defaultPointcut_;
+    private final Pointcut defaultPointcut;
 
-	private Map parameters_;
+    private final AspectWeaver weaver;
 
-	public AopProxy(Class targetClass, Aspect[] aspects) {
-		this(targetClass, aspects, null);
-	}
+    public AopProxy(final Class targetClass, final Aspect[] aspects) {
+        this(targetClass, aspects, null, null);
+    }
 
-	public AopProxy(Class targetClass, Aspect[] aspects, Map parameters) {
-		parameters_ = parameters;
-		setTargetClass(targetClass);
-		setAspects(aspects);
-	}
+    public AopProxy(final Class targetClass, final Aspect[] aspects, final InterType[] interTypes) {
+        this(targetClass, aspects, interTypes, null);
+    }
 
-	private void setTargetClass(Class targetClass) {
-		targetClass_ = targetClass;
-		defaultPointcut_ = new PointcutImpl(targetClass);
-	}
+    public AopProxy(final Class targetClass, final Aspect[] aspects, final Map parameters) {
+        this(targetClass, aspects, null, parameters);
+    }
 
-	private void setAspects(Aspect[] aspects) {
-		if (aspects == null || aspects.length == 0) {
-			throw new EmptyRuntimeException("aspects");
-		}
+    public AopProxy(final Class targetClass, final Aspect[] aspects,
+            final InterType[] interTypes, final Map parameters) {
+        if ((aspects == null || aspects.length == 0) && (interTypes == null
+                || interTypes.length == 0)) {
+            throw new EmptyRuntimeException("aspects and interTypes");
+        }
 
-		AspectWeaver weaver = new AspectWeaver(targetClass_, parameters_);
+        this.targetClass = targetClass;
+        defaultPointcut = new PointcutImpl(targetClass);
+
+        weaver = new AspectWeaver(targetClass, parameters);
+        setAspects(aspects);
+        weaver.setInterTypes(interTypes);
+        enhancedClass = weaver.generateClass();
+    }
+
+    private void setAspects(Aspect[] aspects) {
+        if (aspects == null || aspects.length == 0) {
+            return;
+        }
 
         for (int i = 0; i < aspects.length; ++i) {
             Aspect aspect = aspects[i];
             if (aspect.getPointcut() == null) {
-                aspect.setPointcut(defaultPointcut_);
+                aspect.setPointcut(defaultPointcut);
             }
         }
 
-        Method[] methods = targetClass_.getMethods();
+        Method[] methods = targetClass.getMethods();
         for (int i = 0; i < methods.length; ++i) {
             Method method = methods[i];
             List interceptorList = new ArrayList();
@@ -92,34 +104,36 @@ public final class AopProxy implements Serializable {
             }
             if (interceptorList.size() > 0) {
                 if (isApplicableAspect(method)) {
-                    weaver.setInterceptors(method, (MethodInterceptor[]) interceptorList
-                            .toArray(new MethodInterceptor[interceptorList.size()]));
-                }
-                else {
-                    logger_.log("WSSR0009", new Object[] { targetClass_.getName(),
-                            method.getName() });
+                    weaver
+                            .setInterceptors(
+                                    method,
+                                    (MethodInterceptor[]) interceptorList
+                                            .toArray(new MethodInterceptor[interceptorList
+                                                    .size()]));
+                } else {
+                    logger.log("WSSR0009", new Object[] {
+                            targetClass.getName(), method.getName() });
                 }
             }
         }
+    }
 
-		enhancedClass_ = weaver.generateClass();
-	}
+    public Class getEnhancedClass() {
+        return enhancedClass;
+    }
 
-	public Class getEnhancedClass() {
-	    return enhancedClass_;
-	}
+    public Object create() {
+        return ClassUtil.newInstance(enhancedClass);
+    }
 
-	public Object create() {
-        return ClassUtil.newInstance(enhancedClass_);
-	}
-
-	public Object create(Class[] argTypes, Object[] args) {
-        final Constructor constructor = ClassUtil.getConstructor(enhancedClass_, argTypes);
+    public Object create(Class[] argTypes, Object[] args) {
+        final Constructor constructor = ClassUtil.getConstructor(enhancedClass,
+                argTypes);
         return ConstructorUtil.newInstance(constructor, args);
-	}
+    }
 
-	private boolean isApplicableAspect(Method method) {
-		int mod = method.getModifiers();
-		return !Modifier.isFinal(mod) && !Modifier.isStatic(mod);
-	}
+    private boolean isApplicableAspect(Method method) {
+        int mod = method.getModifiers();
+        return !Modifier.isFinal(mod) && !Modifier.isStatic(mod);
+    }
 }

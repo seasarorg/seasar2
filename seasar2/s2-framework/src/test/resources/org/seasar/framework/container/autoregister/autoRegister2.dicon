@@ -10,8 +10,18 @@
 			<arg>"Bar.*"</arg>
 		</initMethod>
 	</component>
+
+	<component class="org.seasar.framework.container.autoregister.InterTypeAutoRegister">
+		<initMethod name="addClassPattern">
+			<arg>"org.seasar.framework.container.autoregister"</arg>
+			<arg>"Bar.*"</arg>
+		</initMethod>
+	</component>
+
 	<component name="greetingInterceptor" class="org.seasar.framework.container.autoregister.GreetingInterceptor"/>
 	<component name="greetingInterceptor2" class="org.seasar.framework.container.autoregister.GreetingInterceptor"/>
+	<component name="fieldInterType" class="org.seasar.framework.container.factory.FieldInterType"/>
+
 	<component name="bar" class="org.seasar.framework.container.autoregister.Bar"/>
 	<component name="bar2" class="org.seasar.framework.container.autoregister.Bar">
 		<aspect pointcut="greet">greetingInterceptor2</aspect>

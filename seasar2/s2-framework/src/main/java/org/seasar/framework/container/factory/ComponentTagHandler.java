@@ -54,6 +54,7 @@ public class ComponentTagHandler extends TagHandler {
             }
             annoHandler.appendDI(componentDef);
             annoHandler.appendAspect(componentDef);
+            annoHandler.appendInterType(componentDef);
         } else {
             componentDef = createComponentDef(componentClass, name);
         }

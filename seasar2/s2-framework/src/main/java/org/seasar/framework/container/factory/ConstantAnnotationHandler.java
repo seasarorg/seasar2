@@ -26,10 +26,12 @@ import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.IllegalInitMethodAnnotationRuntimeException;
 import org.seasar.framework.container.InitMethodDef;
 import org.seasar.framework.container.InstanceDef;
+import org.seasar.framework.container.InterTypeDef;
 import org.seasar.framework.container.PropertyDef;
 import org.seasar.framework.container.assembler.AutoBindingDefFactory;
 import org.seasar.framework.container.deployer.InstanceDefFactory;
 import org.seasar.framework.container.impl.InitMethodDefImpl;
+import org.seasar.framework.container.impl.InterTypeDefImpl;
 import org.seasar.framework.exception.EmptyRuntimeException;
 import org.seasar.framework.util.FieldUtil;
 import org.seasar.framework.util.StringUtil;
@@ -142,6 +144,29 @@ public class ConstantAnnotationHandler extends AbstractAnnotationHandler {
         }
         AspectDef aspectDef = AspectDefFactory.createAspectDef(interceptor, pointcut);
         componentDef.addAspectDef(aspectDef);
+    }
+
+    public void appendInterType(ComponentDef componentDef) {
+        Class componentClass = componentDef.getComponentClass();
+        if (componentClass == null) {
+            return;
+        }
+        BeanDesc beanDesc = BeanDescFactory.getBeanDesc(componentClass);
+        if (!beanDesc.hasField(INTER_TYPE)) {
+            return;
+        }
+        String interTypeStr = (String) beanDesc.getFieldValue(INTER_TYPE, null);
+        String[] array = StringUtil.split(interTypeStr, ", ");
+        for (int i = 0; i < array.length; i += 2) {
+            String interTypeName = array[i].trim();
+            appendInterType(componentDef, interTypeName);
+        }
+    }
+    
+    protected void appendInterType(ComponentDef componentDef, String interTypeName) {
+        InterTypeDef interTypeDef = new InterTypeDefImpl();
+        interTypeDef.setExpression(interTypeName);
+        componentDef.addInterTypeDef(interTypeDef);
     }
 
     public void appendInitMethod(ComponentDef componentDef) {

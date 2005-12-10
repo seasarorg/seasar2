@@ -13,26 +13,10 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.framework.aop.interceptors;
+package org.seasar.framework.container;
 
-import org.aopalliance.intercept.MethodInvocation;
-import org.seasar.framework.log.Logger;
+import org.seasar.framework.aop.InterType;
 
-/**
- * @author higa
- * 
- */
-public class TraceThrowsInterceptor extends ThrowsInterceptor {
-
-    private static final long serialVersionUID = 8251459775450537214L;
-
-    private static Logger logger = Logger
-            .getLogger(TraceThrowsInterceptor.class);
-
-    public void handleThrowable(Throwable t, MethodInvocation invocation)
-            throws Throwable {
-        logger.log(t);
-        throw t;
-    }
-
+public interface InterTypeDef extends ArgDef {
+    InterType getInterType();
 }
