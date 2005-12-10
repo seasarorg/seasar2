@@ -9,6 +9,7 @@ import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.IllegalInitMethodAnnotationRuntimeException;
 import org.seasar.framework.container.InitMethodDef;
 import org.seasar.framework.container.InstanceDef;
+import org.seasar.framework.container.InterTypeDef;
 import org.seasar.framework.container.PropertyDef;
 import org.seasar.framework.container.deployer.InstanceDefFactory;
 import org.seasar.framework.container.factory.TigerAnnotationHandler;
@@ -86,6 +87,22 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
         assertEquals("1", 1, cd.getAspectDefSize());
         AspectDef aspectDef = cd.getAspectDef(0);
         assertEquals("2", "aop.traceInterceptor", aspectDef.getExpression());
+    }
+
+    public void testInterType() throws Exception {
+        ComponentDef cd = handler.createComponentDef(Hoge.class, null);
+        handler.appendInterType(cd);
+        assertEquals("1", 1, cd.getInterTypeDefSize());
+        InterTypeDef interTypeDef = cd.getInterTypeDef(0);
+        assertEquals("2", "fieldInterType", interTypeDef.getExpression());
+    }
+
+    public void testAppendInterTypeForConstantAnnotation() throws Exception {
+        ComponentDef cd = handler.createComponentDef(Hoge3.class, null);
+        handler.appendInterType(cd);
+        assertEquals("1", 1, cd.getInterTypeDefSize());
+        InterTypeDef interTypeDef = cd.getInterTypeDef(0);
+        assertEquals("2", "fieldInterType", interTypeDef.getExpression());
     }
 
     public void testAppendInitMethod() throws Exception {

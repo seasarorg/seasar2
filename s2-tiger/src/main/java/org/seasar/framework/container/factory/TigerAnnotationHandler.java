@@ -29,6 +29,7 @@ import org.seasar.framework.container.annotation.tiger.Binding;
 import org.seasar.framework.container.annotation.tiger.Component;
 import org.seasar.framework.container.annotation.tiger.InitMethod;
 import org.seasar.framework.container.annotation.tiger.InstanceType;
+import org.seasar.framework.container.annotation.tiger.InterType;
 import org.seasar.framework.container.assembler.AutoBindingDefFactory;
 import org.seasar.framework.container.deployer.InstanceDefFactory;
 
@@ -93,6 +94,15 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
             }
         }
         super.appendAspect(componentDef);
+    }
+
+    public void appendInterType(ComponentDef componentDef) {
+        Class<?> clazz = componentDef.getComponentClass();
+        InterType interType = clazz.getAnnotation(InterType.class);
+        if (interType != null) {
+            appendInterType(componentDef, interType.value());
+        }
+        super.appendInterType(componentDef);
     }
     
     public void appendInitMethod(ComponentDef componentDef) {

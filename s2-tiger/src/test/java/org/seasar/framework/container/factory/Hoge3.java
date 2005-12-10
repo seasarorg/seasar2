@@ -6,6 +6,8 @@ public class Hoge3 {
     
     public static final String ASPECT = "value=aop.traceInterceptor, pointcut=setAaa";
 
+    public static final String INTER_TYPE = "fieldInterType";
+
     public static final String aaa_BINDING = "aaa2";
 
     public static final String bbb_BINDING = "bindingType=none";
