@@ -107,44 +107,31 @@ public class AbstractGenerator {
     }
 
     protected CtClass toCtClass(final Class clazz) {
-        return toCtClass(ClassUtil.getSimpleClassName(clazz));
+        return ClassPoolUtil.toCtClass(classPool, clazz);
     }
 
     protected CtClass toCtClass(final String className) {
-        try {
-            return classPool.get(className);
-        }
-        catch (final NotFoundException e) {
-            throw new NotFoundRuntimeException(e);
-        }
+        return ClassPoolUtil.toCtClass(classPool, className);
     }
 
     protected CtClass[] toCtClassArray(final String[] classNames) {
-        final CtClass[] result = new CtClass[classNames.length];
-        for (int i = 0; i < result.length; ++i) {
-            result[i] = toCtClass(classNames[i]);
-        }
-        return result;
+        return ClassPoolUtil.toCtClassArray(classPool, classNames);
     }
 
     protected CtClass[] toCtClassArray(final Class[] classes) {
-        final CtClass[] result = new CtClass[classes.length];
-        for (int i = 0; i < result.length; ++i) {
-            result[i] = toCtClass(classes[i]);
-        }
-        return result;
+        return ClassPoolUtil.toCtClassArray(classPool, classes);
     }
 
     protected CtClass createCtClass(final String name) {
-        return createCtClass(name, Object.class);
+        return ClassPoolUtil.createCtClass(classPool, name);
     }
 
     protected CtClass createCtClass(final String name, final Class superClass) {
-        return createCtClass(name, toCtClass(superClass));
+        return ClassPoolUtil.createCtClass(classPool, name, superClass);
     }
 
     protected CtClass createCtClass(final String name, final CtClass superClass) {
-        return classPool.makeClass(name, superClass);
+        return ClassPoolUtil.createCtClass(classPool, name, superClass);
     }
 
     protected CtClass getAndRenameCtClass(final Class orgClass, final String newName) {

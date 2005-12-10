@@ -15,19 +15,10 @@
  */
 package org.seasar.framework.container.factory;
 
-import javassist.CannotCompileException;
-import javassist.CtClass;
-import javassist.CtField;
+import org.seasar.framework.aop.intertype.AbstractInterType;
 
-import org.seasar.framework.aop.InterType;
-
-public class FieldInterType implements InterType {
-    public void introduce(Class targetClass, CtClass enhancedClass) {
-        try {
-            enhancedClass.addField(new CtField(CtClass.booleanType, "test",
-                    enhancedClass));
-        } catch (CannotCompileException e) {
-            throw new RuntimeException(e);
-        }
+public class FieldInterType extends AbstractInterType {
+    public void introduce() {
+        addField(boolean.class, "test");
     }
 }
