@@ -27,8 +27,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface Component {
-
-    String name();
+    String name() default "";
     
     InstanceType instance() default InstanceType.SINGLETON;
     

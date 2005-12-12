@@ -32,6 +32,7 @@ import org.seasar.framework.container.annotation.tiger.InstanceType;
 import org.seasar.framework.container.annotation.tiger.InterType;
 import org.seasar.framework.container.assembler.AutoBindingDefFactory;
 import org.seasar.framework.container.deployer.InstanceDefFactory;
+import org.seasar.framework.util.StringUtil;
 
 /**
  * @author higa
@@ -46,7 +47,10 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
             return super.createComponentDef(componentClass, instanceDef);
         }
         ComponentDef componentDef = createComponentDefInternal(componentClass, instanceDef);
-        componentDef.setComponentName(component.name());
+        String name = component.name();
+        if (!StringUtil.isEmpty(name)) {
+            componentDef.setComponentName(name);
+        }
         InstanceType instanceType = component.instance();
         if (instanceType != null) {
             componentDef.setInstanceDef(
