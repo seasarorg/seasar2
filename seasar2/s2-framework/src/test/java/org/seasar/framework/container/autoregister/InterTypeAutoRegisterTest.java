@@ -32,12 +32,14 @@ public class InterTypeAutoRegisterTest extends S2FrameworkTestCase {
         Bar bar = (Bar) child.getComponent("bar");
         assertNotNull("1", bar);
         Field field = bar.getClass().getDeclaredField("test");
+        field.setAccessible(true);
         assertNotNull("2", field);
         assertFalse("3", field.getBoolean(bar));
 
         Bar bar2 = (Bar) child.getComponent("bar");
         assertNotNull("3", bar2);
         field = bar2.getClass().getDeclaredField("test");
+        field.setAccessible(true);
         assertNotNull("4", field);
         assertFalse("5", field.getBoolean(bar2));
     }

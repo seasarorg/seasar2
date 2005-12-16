@@ -225,7 +225,7 @@ public final class S2ContainerFactory {
 
     public static class DefaultConfigurator implements Configurator {
 
-        public void configure(final S2Container bootstrapContainer) {
+        public void configure(final S2Container configurationContainer) {
             if (configurationContainer.hasComponentDef(Provider.class)) {
                 provider = (Provider) configurationContainer.getComponent(Provider.class);
             }

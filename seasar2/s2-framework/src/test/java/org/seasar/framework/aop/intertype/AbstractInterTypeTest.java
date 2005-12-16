@@ -42,14 +42,14 @@ public class AbstractInterTypeTest extends TestCase {
                 new InterType[] { new TestInterType() });
         Runnable o = (Runnable) aopProxy.create();
         o.run();
-        assertEquals("1", "0", o.toString());
+        assertEquals("1", "1", o.toString());
     }
 
     public static class TestInterType extends AbstractInterType {
-        protected void introduce() throws CannotCompileException,
-                NotFoundException {
+        protected void introduce() {
             addInterface(Runnable.class);
-            addMethod("run", "return;");
+            addField(String.class, "hoge", "\"hoge\"");
+            addMethod("run", "add(hoge);");
             addMethod(String.class, "toString",
                     "return Integer.toString(size());");
         }
