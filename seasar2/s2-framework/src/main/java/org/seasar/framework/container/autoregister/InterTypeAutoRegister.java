@@ -17,7 +17,6 @@ package org.seasar.framework.container.autoregister;
 
 import org.seasar.framework.aop.InterType;
 import org.seasar.framework.container.ComponentDef;
-import org.seasar.framework.container.InterTypeDef;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.impl.InterTypeDefImpl;
 

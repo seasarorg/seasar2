@@ -17,8 +17,6 @@ package org.seasar.framework.aop.intertype;
 
 import java.util.ArrayList;
 
-import javassist.CannotCompileException;
-import javassist.NotFoundException;
 import junit.framework.TestCase;
 
 import org.seasar.framework.aop.Aspect;
