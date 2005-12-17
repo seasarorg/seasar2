@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.3//EN"
+	"http://www.seasar.org/dtd/components23.dtd">
+<components>
+	<component name="foo"
+		class="org.seasar.framework.container.factory.DICapableClassLoaderTest$Foo"
+	/>
+
+	<component name="bar" instance="outer"
+		class="org.seasar.framework.container.factory.DICapableClassLoaderTest$Bar"
+	>
+		<property name="foo">foo</property>
+		<property name="name">"bar"</property>
+	</component>
+</components>

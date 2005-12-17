@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.3//EN"
+	"http://www.seasar.org/dtd/components23.dtd">
+<components>
+	<component name="date" class="java.util.Date"/>
+	<component name="text">"Hoge"</component>
+	<component name="hoge" class="org.seasar.framework.container.factory.DICapableClassLoaderTest$Hoge"/>	
+</components>

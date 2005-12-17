@@ -137,6 +137,14 @@ public final class ClassUtil {
 		}
 	}
 
+    public static Constructor getDeclaredConstructor(Class clazz, Class[] argTypes) {
+        try {
+            return clazz.getDeclaredConstructor(argTypes);
+        } catch (NoSuchMethodException ex) {
+            throw new NoSuchConstructorRuntimeException(clazz, argTypes, ex);
+        }
+    }
+
 	public static Method getMethod(
 		Class clazz,
 		String methodName,
@@ -152,6 +160,22 @@ public final class ClassUtil {
 				ex);
 		}
 	}
+
+    public static Method getDeclaredMethod(
+        Class clazz,
+        String methodName,
+        Class[] argTypes) {
+
+        try {
+            return clazz.getDeclaredMethod(methodName, argTypes);
+        } catch (NoSuchMethodException ex) {
+            throw new NoSuchMethodRuntimeException(
+                clazz,
+                methodName,
+                argTypes,
+                ex);
+        }
+    }
 	
 	public static Field getField(
 		Class clazz,
@@ -166,6 +190,20 @@ public final class ClassUtil {
 				ex);
 		}
 	}
+    
+    public static Field getDeclaredField(
+        Class clazz,
+        String fieldName) {
+
+        try {
+            return clazz.getDeclaredField(fieldName);
+        } catch (NoSuchFieldException ex) {
+            throw new NoSuchFieldRuntimeException(
+                clazz,
+                fieldName,
+                ex);
+        }
+    }
 
 	public static String getShortClassName(Class clazz) {
 		String s = clazz.getName();
