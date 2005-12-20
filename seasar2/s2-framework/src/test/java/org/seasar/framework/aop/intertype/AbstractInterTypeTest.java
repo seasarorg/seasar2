@@ -40,16 +40,19 @@ public class AbstractInterTypeTest extends TestCase {
                 new InterType[] { new TestInterType() });
         Runnable o = (Runnable) aopProxy.create();
         o.run();
-        assertEquals("1", "1", o.toString());
+        assertEquals("1", "Hoge1", o.toString());
     }
 
     public static class TestInterType extends AbstractInterType {
         protected void introduce() {
             addInterface(Runnable.class);
-            addField(String.class, "hoge", "\"hoge\"");
-            addMethod("run", "add(hoge);");
+
+            addField(String.class, "hoge");
+            addMethod("setHoge", new Class[] { String.class }, "hoge = $1;");
+            addMethod(String.class, "getHoge", "return hoge;");
+            addMethod("public void run() {setHoge(\"Hoge\"); add(getHoge());}");
             addMethod(String.class, "toString",
-                    "return Integer.toString(size());");
+                    "return getHoge() + Integer.toString(size());");
         }
     }
 }

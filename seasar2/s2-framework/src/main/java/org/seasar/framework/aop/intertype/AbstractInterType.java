@@ -120,6 +120,14 @@ public abstract class AbstractInterType implements InterType {
         }
     }
 
+    protected void addField(final String src) {
+        try {
+            enhancedClass.addField(CtField.make(src, enhancedClass));
+        } catch (final CannotCompileException e) {
+            throw new CannotCompileRuntimeException(e);
+        }
+    }
+
     protected void addField(final int modifiers, final Class type,
             final String name, final String init) {
         try {
@@ -176,34 +184,38 @@ public abstract class AbstractInterType implements InterType {
     }
 
     protected void addStaticMethod(final String name, final String src) {
-        addMethod(Modifier.PUBLIC | Modifier.STATIC, void.class, name, null, null, src);
+        addMethod(Modifier.PUBLIC | Modifier.STATIC, void.class, name, null,
+                null, src);
     }
 
     protected void addStaticMethod(final String name, final Class[] paramTypes,
             final String src) {
-        addMethod(Modifier.PUBLIC | Modifier.STATIC, void.class, name, paramTypes, null, src);
+        addMethod(Modifier.PUBLIC | Modifier.STATIC, void.class, name,
+                paramTypes, null, src);
     }
 
     protected void addStaticMethod(final String name, final Class[] paramTypes,
             Class[] exceptionTypes, final String src) {
-        addMethod(Modifier.PUBLIC | Modifier.STATIC, void.class, name, paramTypes,
-                exceptionTypes, src);
+        addMethod(Modifier.PUBLIC | Modifier.STATIC, void.class, name,
+                paramTypes, exceptionTypes, src);
     }
 
     protected void addStaticMethod(final Class returnType, final String name,
             final String src) {
-        addMethod(Modifier.PUBLIC | Modifier.STATIC, returnType, name, null, null, src);
+        addMethod(Modifier.PUBLIC | Modifier.STATIC, returnType, name, null,
+                null, src);
     }
 
     protected void addStaticMethod(final Class returnType, final String name,
             final Class[] paramTypes, final String src) {
-        addMethod(Modifier.PUBLIC | Modifier.STATIC, returnType, name, paramTypes, null, src);
+        addMethod(Modifier.PUBLIC | Modifier.STATIC, returnType, name,
+                paramTypes, null, src);
     }
 
     protected void addStaticMethod(final Class returnType, final String name,
             final Class[] paramTypes, Class[] exceptionTypes, final String src) {
-        addMethod(Modifier.PUBLIC | Modifier.STATIC, returnType, name, paramTypes,
-                exceptionTypes, src);
+        addMethod(Modifier.PUBLIC | Modifier.STATIC, returnType, name,
+                paramTypes, exceptionTypes, src);
     }
 
     protected void addMethod(final int modifiers, final Class returnType,
@@ -214,6 +226,14 @@ public abstract class AbstractInterType implements InterType {
                     toCtClass(returnType), name, toCtClassArray(paramTypes),
                     toCtClassArray(exceptionTypes), src, enhancedClass);
             enhancedClass.addMethod(ctMethod);
+        } catch (final CannotCompileException e) {
+            throw new CannotCompileRuntimeException(e);
+        }
+    }
+
+    protected void addMethod(final String src) {
+        try {
+            enhancedClass.addMethod(CtNewMethod.make(src, enhancedClass));
         } catch (final CannotCompileException e) {
             throw new CannotCompileRuntimeException(e);
         }
