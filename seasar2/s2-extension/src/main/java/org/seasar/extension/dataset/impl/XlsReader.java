@@ -155,13 +155,17 @@ public class XlsReader implements DataReader, DataSetConstants {
 		if (cell == null) {
 			return null;
 		}
-		switch (cell.getCellType()) {
+        switch (cell.getCellType()) {
 			case HSSFCell.CELL_TYPE_NUMERIC :
 				if (isCellDateFormatted(cell)) {
 					return TimestampConversionUtil.toTimestamp(
 						cell.getDateCellValue());
 				}
-				return new BigDecimal(cell.getNumericCellValue());
+				final double numericCellValue = cell.getNumericCellValue();
+                if (Math.ceil(numericCellValue) == numericCellValue) {
+                    return new BigDecimal(numericCellValue);
+                }
+				return new BigDecimal(Double.toString(numericCellValue));
 			case HSSFCell.CELL_TYPE_STRING :
 				String s = cell.getStringCellValue();
 				if (s != null) {
