@@ -162,8 +162,8 @@ public class XlsReader implements DataReader, DataSetConstants {
 						cell.getDateCellValue());
 				}
 				final double numericCellValue = cell.getNumericCellValue();
-                if (Math.ceil(numericCellValue) == numericCellValue) {
-                    return new BigDecimal(numericCellValue);
+                if (isInt(numericCellValue)) {
+                    return new BigDecimal((int)numericCellValue);
                 }
 				return new BigDecimal(Double.toString(numericCellValue));
 			case HSSFCell.CELL_TYPE_STRING :
@@ -185,4 +185,9 @@ public class XlsReader implements DataReader, DataSetConstants {
 				return null;
 		}
 	}
+
+    private boolean isInt(final double numericCellValue) {
+        return ((int)numericCellValue) == numericCellValue;
+    }
+
 }
