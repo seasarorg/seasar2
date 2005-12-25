@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.3//EN"
+	"http://www.seasar.org/dtd/components23.dtd">
+<components>
+	<component class="org.seasar.framework.aop.intertype.AbstractInterTypeTest$FooImpl"/>
+	<component class="java.util.ArrayList">
+		<interType>
+			<component class="org.seasar.framework.aop.intertype.AbstractInterTypeTest$TestInterType"/>
+		</interType>
+	</component>
+</components>

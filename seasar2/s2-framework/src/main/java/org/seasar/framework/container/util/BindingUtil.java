@@ -48,7 +48,7 @@ public final class BindingUtil implements ContainerConstants {
     }
     
     public static Class getComponentClass(ComponentDef componentDef, Object component) {
-        Class clazz = componentDef.getComponentClass();
+        Class clazz = componentDef.getConcreteClass();
         if (clazz != null) {
             return clazz;
         }

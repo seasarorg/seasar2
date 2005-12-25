@@ -15,17 +15,12 @@
  */
 package org.seasar.framework.aop.intertype;
 
-import java.util.ArrayList;
+import java.lang.reflect.Method;
+import java.util.List;
 
-import junit.framework.TestCase;
+import org.seasar.framework.unit.S2FrameworkTestCase;
 
-import org.seasar.framework.aop.Aspect;
-import org.seasar.framework.aop.InterType;
-import org.seasar.framework.aop.impl.AspectImpl;
-import org.seasar.framework.aop.interceptors.TraceInterceptor;
-import org.seasar.framework.aop.proxy.AopProxy;
-
-public class AbstractInterTypeTest extends TestCase {
+public class AbstractInterTypeTest extends S2FrameworkTestCase {
 
     public AbstractInterTypeTest() {
     }
@@ -34,13 +29,24 @@ public class AbstractInterTypeTest extends TestCase {
         super(name);
     }
 
+    protected void setUp() throws Exception {
+        include(AbstractInterTypeTest.class.getName().replace('.', '/')
+                + ".dicon");
+    }
+
     public void test() throws Exception {
-        AopProxy aopProxy = new AopProxy(ArrayList.class,
-                new Aspect[] { new AspectImpl(new TraceInterceptor()) },
-                new InterType[] { new TestInterType() });
-        Runnable o = (Runnable) aopProxy.create();
+        Runnable o = (Runnable) getComponent(List.class);
         o.run();
         assertEquals("1", "Hoge1", o.toString());
+
+        Method m = o.getClass().getMethod("getFoo", null);
+        assertSame("2", getComponent(Foo.class), m.invoke(o, null));
+    }
+
+    public interface Foo {
+    }
+
+    public static class FooImpl implements Foo {
     }
 
     public static class TestInterType extends AbstractInterType {
@@ -50,9 +56,14 @@ public class AbstractInterTypeTest extends TestCase {
             addField(String.class, "hoge");
             addMethod("setHoge", new Class[] { String.class }, "hoge = $1;");
             addMethod(String.class, "getHoge", "return hoge;");
+
             addMethod("public void run() {setHoge(\"Hoge\"); add(getHoge());}");
             addMethod(String.class, "toString",
                     "return getHoge() + Integer.toString(size());");
+
+            addField(Foo.class, "foo");
+            addMethod("setFoo", new Class[] { Foo.class }, "foo = $1;");
+            addMethod(Foo.class, "getFoo", "return foo;");
         }
     }
 }

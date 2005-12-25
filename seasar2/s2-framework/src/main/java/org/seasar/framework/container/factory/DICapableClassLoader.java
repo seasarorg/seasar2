@@ -70,7 +70,8 @@ public class DICapableClassLoader extends ClassLoader {
         addIgnoreClassPattern(new ClassPattern(packageName, shortClassNames));
     }
 
-    public synchronized void addIgnoreClassPattern(final ClassPattern classPattern) {
+    public synchronized void addIgnoreClassPattern(
+            final ClassPattern classPattern) {
         ignoreClassPatterns.add(classPattern);
     }
 
@@ -82,26 +83,24 @@ public class DICapableClassLoader extends ClassLoader {
     protected synchronized Class loadClass(final String name,
             final boolean resolve) throws ClassNotFoundException {
         try {
-            final Class clazz = Class.forName(name, false, null);
-            if (resolve) {
-                resolveClass(clazz);
-            }
-            return clazz;
+            return resolveClassIfNecessary(Class.forName(name, false, null),
+                    resolve);
         } catch (final ClassNotFoundException ignore) {
         }
 
         if (!isTargetClass(name)) {
-            final Class clazz = getParent().loadClass(name);
-            if (resolve) {
-                resolveClass(clazz);
-            }
-            return clazz;
+            return resolveClassIfNecessary(getParent().loadClass(name), resolve);
         }
 
         Class clazz = findLoadedClass(name);
         if (clazz == null) {
             clazz = findClass(name);
         }
+        return resolveClassIfNecessary(clazz, resolve);
+    }
+
+    protected Class resolveClassIfNecessary(final Class clazz,
+            final boolean resolve) {
         if (resolve) {
             resolveClass(clazz);
         }
@@ -162,34 +161,25 @@ public class DICapableClassLoader extends ClassLoader {
             if (componentName == null) {
                 continue;
             } else if (StringUtil.isEmpty(componentName)) {
-                enhanceConstructor(ctors[i]);
+                enhanceConstructor(ctors[i], "");
             } else {
-                enhanceConstructor(ctors[i], componentName);
+                enhanceConstructor(ctors[i], ", \"" + componentName + "\"");
             }
         }
     }
 
-    protected void enhanceConstructor(final CtConstructor constructor)
-            throws CannotCompileException {
-        constructor
-                .insertAfter("ClassLoader loader = getClass().getClassLoader();"
-                        + "Class clazz = loader.getClass();"
-                        + "java.lang.reflect.Field f = org.seasar.framework.util.ClassUtil.getDeclaredField(clazz, \"container\");"
-                        + "f.setAccessible(true);"
-                        + "org.seasar.framework.container.S2Container container = org.seasar.framework.util.FieldUtil.get(f, loader);"
-                        + "container.injectDependency(this);");
-    }
-
     protected void enhanceConstructor(final CtConstructor constructor,
-            final String componentName) throws CannotCompileException {
+            final String arg) throws CannotCompileException {
         constructor
                 .insertAfter("ClassLoader loader = getClass().getClassLoader();"
                         + "Class clazz = loader.getClass();"
-                        + "java.lang.reflect.Field f = org.seasar.framework.util.ClassUtil.getDeclaredField(clazz, \"container\");"
-                        + "f.setAccessible(true);"
-                        + "org.seasar.framework.container.S2Container container = org.seasar.framework.util.FieldUtil.get(f, loader);"
-                        + "container.injectDependency(this, \"" + componentName
-                        + "\");");
+                        + "java.lang.reflect.Method method = "
+                        + "  org.seasar.framework.util.ClassUtil"
+                        + "    .getMethod(clazz, \"getContainer\", null);"
+                        + "org.seasar.framework.container.S2Container container = "
+                        + "  (org.seasar.framework.container.S2Container)"
+                        + "    org.seasar.framework.util.MethodUtil.invoke(method, loader, null);"
+                        + "container.injectDependency(this" + arg + ");");
     }
 
     protected String getDefaultComponentName(final CtClass ctClass) {
