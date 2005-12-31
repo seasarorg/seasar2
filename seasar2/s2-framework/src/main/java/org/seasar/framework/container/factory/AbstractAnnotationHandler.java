@@ -18,12 +18,15 @@ package org.seasar.framework.container.factory;
 import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.beans.factory.BeanDescFactory;
+import org.seasar.framework.container.AutoBindingDef;
 import org.seasar.framework.container.BindingTypeDef;
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.InitMethodDef;
 import org.seasar.framework.container.InstanceDef;
 import org.seasar.framework.container.PropertyDef;
+import org.seasar.framework.container.assembler.AutoBindingDefFactory;
 import org.seasar.framework.container.assembler.BindingTypeDefFactory;
+import org.seasar.framework.container.deployer.InstanceDefFactory;
 import org.seasar.framework.container.impl.ComponentDefImpl;
 import org.seasar.framework.container.impl.PropertyDefImpl;
 import org.seasar.framework.util.ClassUtil;
@@ -74,14 +77,42 @@ public abstract class AbstractAnnotationHandler implements AnnotationHandler {
         }
     }
     
-    protected ComponentDef createComponentDefInternal(Class componentClass, InstanceDef instanceDef) {
+    protected InstanceDef getInstanceDef(String name, InstanceDef defaultInstanceDef) {
+        InstanceDef instanceDef = getInstanceDef(name);
+        if (instanceDef != null) {
+            return instanceDef;
+        }
+        return defaultInstanceDef;
+    }
+    
+    protected InstanceDef getInstanceDef(String name) {
+        if (StringUtil.isEmpty(name)) {
+            return null;
+        }
+        return InstanceDefFactory.getInstanceDef(name);
+    }
+    
+    protected AutoBindingDef getAutoBindingDef(String name) {
+        if (StringUtil.isEmpty(name)) {
+            return null;
+        }
+        return AutoBindingDefFactory.getAutoBindingDef(name);
+    }
+
+    protected ComponentDef createComponentDef(Class componentClass, String name, InstanceDef instanceDef, AutoBindingDef autoBindingDef) {
         ComponentDef componentDef = new ComponentDefImpl(componentClass);
+        if (!StringUtil.isEmpty(name)) {
+            componentDef.setComponentName(name);
+        }
         if (instanceDef != null) {
             componentDef.setInstanceDef(instanceDef);
         }
+        if (autoBindingDef != null) {
+            componentDef.setAutoBindingDef(autoBindingDef);
+        }
         return componentDef;
     }
-
+    
     protected PropertyDef createPropertyDef(String propertyName, String expression, String bindingTypeName) {
         PropertyDef propertyDef = new PropertyDefImpl(propertyName);
         if (!StringUtil.isEmpty(bindingTypeName)) {

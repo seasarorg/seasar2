@@ -22,14 +22,13 @@ import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.beans.factory.BeanDescFactory;
 import org.seasar.framework.container.AspectDef;
+import org.seasar.framework.container.AutoBindingDef;
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.IllegalInitMethodAnnotationRuntimeException;
 import org.seasar.framework.container.InitMethodDef;
 import org.seasar.framework.container.InstanceDef;
 import org.seasar.framework.container.InterTypeDef;
 import org.seasar.framework.container.PropertyDef;
-import org.seasar.framework.container.assembler.AutoBindingDefFactory;
-import org.seasar.framework.container.deployer.InstanceDefFactory;
 import org.seasar.framework.container.impl.InitMethodDefImpl;
 import org.seasar.framework.container.impl.InterTypeDefImpl;
 import org.seasar.framework.exception.EmptyRuntimeException;
@@ -38,34 +37,39 @@ import org.seasar.framework.util.StringUtil;
 
 public class ConstantAnnotationHandler extends AbstractAnnotationHandler {
 
-    public ComponentDef createComponentDef(Class componentClass, InstanceDef instanceDef) {
+    public ComponentDef createComponentDef(Class componentClass,
+            InstanceDef defaultInstanceDef) {
+        
+        String name = null;
+        InstanceDef instanceDef = null;
+        AutoBindingDef autoBindingDef = null;
         BeanDesc beanDesc = BeanDescFactory.getBeanDesc(componentClass);
         if (!beanDesc.hasField(COMPONENT)) {
-            return createComponentDefInternal(componentClass, instanceDef);
+            return createComponentDef(componentClass, name, defaultInstanceDef,
+                    autoBindingDef);
         }
         Field field = beanDesc.getField(COMPONENT);
         String componentStr = (String) FieldUtil.get(field, null);
         String[] array = StringUtil.split(componentStr, "=, ");
-        ComponentDef componentDef = createComponentDefInternal(componentClass, instanceDef);
         for (int i = 0; i < array.length; i += 2) {
             String key = array[i].trim();
             String value = array[i + 1].trim();
             if (NAME.equalsIgnoreCase(key)) {
-                componentDef.setComponentName(value);
+                name = value;
             } else if (INSTANCE.equalsIgnoreCase(key)) {
-                componentDef.setInstanceDef(
-                        InstanceDefFactory.getInstanceDef(value));
+                instanceDef = getInstanceDef(value, defaultInstanceDef);
             } else if (AUTO_BINDING.equalsIgnoreCase(key)) {
-                componentDef.setAutoBindingDef(
-                        AutoBindingDefFactory.getAutoBindingDef(value));
+                autoBindingDef = getAutoBindingDef(value);
             } else {
                 throw new IllegalArgumentException(componentStr);
             }
         }
-        return componentDef;
+        return createComponentDef(componentClass, name, instanceDef,
+                autoBindingDef);
     }
 
-    public PropertyDef createPropertyDef(BeanDesc beanDesc, PropertyDesc propertyDesc) {
+    public PropertyDef createPropertyDef(BeanDesc beanDesc,
+            PropertyDesc propertyDesc) {
         String propName = propertyDesc.getPropertyName();
         String fieldName = propName + BINDING_SUFFIX;
         if (!beanDesc.hasField(fieldName)) {
@@ -125,24 +129,26 @@ public class ConstantAnnotationHandler extends AbstractAnnotationHandler {
         }
         appendAspect(componentDef, interceptor, pointcut);
     }
-    
-    protected void appendAspect(ComponentDef componentDef,
-            String interceptor, String pointcut) {
-        
+
+    protected void appendAspect(ComponentDef componentDef, String interceptor,
+            String pointcut) {
+
         if (interceptor == null) {
             throw new EmptyRuntimeException("interceptor");
         }
-        AspectDef aspectDef = AspectDefFactory.createAspectDef(interceptor, pointcut);
+        AspectDef aspectDef = AspectDefFactory.createAspectDef(interceptor,
+                pointcut);
         componentDef.addAspectDef(aspectDef);
     }
-    
-    protected void appendAspect(ComponentDef componentDef,
-            String interceptor, Method pointcut) {
-        
+
+    protected void appendAspect(ComponentDef componentDef, String interceptor,
+            Method pointcut) {
+
         if (interceptor == null) {
             throw new EmptyRuntimeException("interceptor");
         }
-        AspectDef aspectDef = AspectDefFactory.createAspectDef(interceptor, pointcut);
+        AspectDef aspectDef = AspectDefFactory.createAspectDef(interceptor,
+                pointcut);
         componentDef.addAspectDef(aspectDef);
     }
 
@@ -162,8 +168,9 @@ public class ConstantAnnotationHandler extends AbstractAnnotationHandler {
             appendInterType(componentDef, interTypeName);
         }
     }
-    
-    protected void appendInterType(ComponentDef componentDef, String interTypeName) {
+
+    protected void appendInterType(ComponentDef componentDef,
+            String interTypeName) {
         InterTypeDef interTypeDef = new InterTypeDefImpl();
         interTypeDef.setExpression(interTypeName);
         componentDef.addInterTypeDef(interTypeDef);
@@ -178,7 +185,8 @@ public class ConstantAnnotationHandler extends AbstractAnnotationHandler {
         if (!beanDesc.hasField(INIT_METHOD)) {
             return;
         }
-        String initMethodStr = (String) beanDesc.getFieldValue(INIT_METHOD, null);
+        String initMethodStr = (String) beanDesc.getFieldValue(INIT_METHOD,
+                null);
         if (StringUtil.isEmpty(initMethodStr)) {
             return;
         }
@@ -186,11 +194,14 @@ public class ConstantAnnotationHandler extends AbstractAnnotationHandler {
         for (int i = 0; i < array.length; ++i) {
             String methodName = array[i].trim();
             if (!beanDesc.hasMethod(methodName)) {
-                throw new IllegalInitMethodAnnotationRuntimeException(componentClass, methodName);
+                throw new IllegalInitMethodAnnotationRuntimeException(
+                        componentClass, methodName);
             }
             Method[] methods = beanDesc.getMethods(methodName);
-            if (methods.length != 1 || methods[0].getParameterTypes().length != 0) {
-                throw new IllegalInitMethodAnnotationRuntimeException(componentClass, methodName);
+            if (methods.length != 1
+                    || methods[0].getParameterTypes().length != 0) {
+                throw new IllegalInitMethodAnnotationRuntimeException(
+                        componentClass, methodName);
             }
             if (!isInitMethodRegisterable(componentDef, methodName)) {
                 continue;
@@ -198,7 +209,7 @@ public class ConstantAnnotationHandler extends AbstractAnnotationHandler {
             appendInitMethod(componentDef, methodName);
         }
     }
-    
+
     protected void appendInitMethod(ComponentDef componentDef, String methodName) {
         InitMethodDef initMethodDef = new InitMethodDefImpl(methodName);
         componentDef.addInitMethodDef(initMethodDef);
