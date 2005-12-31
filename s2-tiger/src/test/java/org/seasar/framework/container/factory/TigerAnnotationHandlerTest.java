@@ -5,6 +5,7 @@ import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.beans.factory.BeanDescFactory;
 import org.seasar.framework.container.AspectDef;
+import org.seasar.framework.container.AutoBindingDef;
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.IllegalInitMethodAnnotationRuntimeException;
 import org.seasar.framework.container.InitMethodDef;
@@ -29,6 +30,10 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
         assertEquals("4", "property", cd.getAutoBindingDef().getName());
         ComponentDef cd2 = handler.createComponentDef(Hoge.class, InstanceDefFactory.REQUEST);
         assertEquals("5", InstanceDef.REQUEST_NAME, cd2.getInstanceDef().getName());
+        ComponentDef cd3 = handler.createComponentDef(Hoge7.class, InstanceDefFactory.REQUEST);
+        assertEquals("6", "hoge7", cd3.getComponentName());
+        assertEquals("7", InstanceDef.SINGLETON_NAME, cd3.getInstanceDef().getName());
+        assertEquals("8", AutoBindingDef.NONE_NAME, cd3.getAutoBindingDef().getName());
     }
 
     public void testCreatePropertyDef() throws Exception {
