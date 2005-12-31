@@ -15,6 +15,8 @@
  */
 package org.seasar.framework.container.assembler;
 
+import java.lang.reflect.Field;
+
 import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.util.BindingUtil;
@@ -26,17 +28,28 @@ import org.seasar.framework.log.Logger;
  */
 public class BindingTypeShouldDef extends AbstractBindingTypeDef {
 
-    private static Logger logger = Logger
-            .getLogger(BindingTypeShouldDef.class);
+    private static Logger logger = Logger.getLogger(BindingTypeShouldDef.class);
 
     protected BindingTypeShouldDef(String name) {
         super(name);
     }
 
+    protected void doBind(ComponentDef componentDef, Field field,
+            Object component) {
+
+        if (!bindAuto(componentDef, field, component)
+                && BindingUtil.isAutoBindable(field.getType())) {
+            logger.log("WSSR0008", new Object[] {
+                    BindingUtil.getComponentClass(componentDef, component)
+                            .getName(), field.getName() });
+        }
+    }
+
     protected void doBind(ComponentDef componentDef, PropertyDesc propertyDesc,
             Object component) {
 
-        if (!bindAuto(componentDef, propertyDesc, component) && BindingUtil.isAutoBindable(propertyDesc.getPropertyType())) {
+        if (!bindAuto(componentDef, propertyDesc, component)
+                && BindingUtil.isAutoBindable(propertyDesc.getPropertyType())) {
             logger.log("WSSR0008", new Object[] {
                     BindingUtil.getComponentClass(componentDef, component)
                             .getName(), propertyDesc.getPropertyName() });

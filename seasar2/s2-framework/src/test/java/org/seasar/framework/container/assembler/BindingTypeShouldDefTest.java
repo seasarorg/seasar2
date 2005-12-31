@@ -27,7 +27,7 @@ public class BindingTypeShouldDefTest extends TestCase {
         cd.addPropertyDef(propDef);
         container.register(cd);
         A a = new A();
-        BindingTypeDefFactory.SHOULD.bind(cd, propDef, propDesc, a);
+        BindingTypeDefFactory.SHOULD.bind(cd, propDef, propDesc, null, a);
     }
 
     public interface Foo {

@@ -15,6 +15,10 @@
  */
 package org.seasar.framework.container.assembler;
 
+import java.lang.reflect.Field;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.container.BindingTypeDef;
@@ -37,16 +41,33 @@ public class AutoPropertyAssembler extends AbstractPropertyAssembler {
 	public void assemble(Object component) {
 		BeanDesc beanDesc = getBeanDesc(component);
         ComponentDef cd = getComponentDef();
+        int size = cd.getPropertyDefSize();
+        Set names = new HashSet();
+        for (int i = 0; i < size; ++i) {
+            PropertyDef propDef = cd.getPropertyDef(i);
+            BindingTypeDef bindingTypeDef = propDef.getBindingTypeDef();
+            String propName = propDef.getPropertyName();
+            PropertyDesc propDesc = null;
+            Field field = null;
+            if (beanDesc.hasField(propName)) {
+                field = beanDesc.getField(propName);
+            }
+            if (field == null) {
+                propDesc = beanDesc.getPropertyDesc(propName);
+            }
+            bindingTypeDef.bind(cd, propDef, propDesc, field, component);
+            names.add(propName);
+        }
 		for (int i = 0; i < beanDesc.getPropertyDescSize(); ++i) {
 			PropertyDesc propDesc = beanDesc.getPropertyDesc(i);
 			String propName = propDesc.getPropertyName();
-			if (cd.hasPropertyDef(propName)) {
-				PropertyDef propDef = cd.getPropertyDef(propName);
-                BindingTypeDef bindingTypeDef = propDef.getBindingTypeDef();
-                bindingTypeDef.bind(cd, propDef, propDesc, component);
-			} else {
-                BindingTypeDefFactory.SHOULD.bind(cd, null, propDesc, component);
-			}
+            if (!names.contains(propName)) {
+                Field field = null;
+                if (beanDesc.hasField(propName)) {
+                    field = beanDesc.getField(propName);
+                }
+                BindingTypeDefFactory.SHOULD.bind(cd, null, propDesc, field, component);
+            }
 		}
 	}
 }

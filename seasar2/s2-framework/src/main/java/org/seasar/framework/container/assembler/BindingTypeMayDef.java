@@ -15,6 +15,8 @@
  */
 package org.seasar.framework.container.assembler;
 
+import java.lang.reflect.Field;
+
 import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.container.ComponentDef;
 
@@ -28,6 +30,12 @@ public class BindingTypeMayDef extends AbstractBindingTypeDef {
         super(name);
     }
 
+    protected void doBind(ComponentDef componentDef, Field field,
+            Object component) {
+
+        bindAuto(componentDef, field, component);
+    }
+    
     protected void doBind(ComponentDef componentDef, PropertyDesc propertyDesc,
             Object component) {
 

@@ -148,6 +148,12 @@ public class BeanDescImplTest extends TestCase {
 		assertEquals("1", false, beanDesc.hasPropertyDesc("aaa"));
 	}
     
+    public void testAddFields() throws Exception {
+        BeanDesc beanDesc = new BeanDescImpl(MyBean.class);
+        Field eee = beanDesc.getField("eee");
+        assertEquals("1", true, eee.isAccessible());
+    }
+    
     public static interface MyInterface {
         String HOGE = "hoge";
     }
@@ -159,6 +165,7 @@ public class BeanDescImplTest extends TestCase {
 	public static class MyBean implements MyInterface2 {
         
         private String aaa;
+        private String eee;
 
 		public String getAaa() {
 			return aaa;
@@ -177,10 +184,11 @@ public class BeanDescImplTest extends TestCase {
 		}
 
 		public String getEee() {
-			return null;
+			return eee;
 		}
 
 		public void setEee(String eee) {
+            this.eee = eee;
 		}
 
 		public Number add(Number arg1, Number arg2) {

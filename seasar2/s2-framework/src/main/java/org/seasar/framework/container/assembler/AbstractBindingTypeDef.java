@@ -15,6 +15,8 @@
  */
 package org.seasar.framework.container.assembler;
 
+import java.lang.reflect.Field;
+
 import org.seasar.framework.beans.IllegalPropertyRuntimeException;
 import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.container.BindingTypeDef;
@@ -23,6 +25,7 @@ import org.seasar.framework.container.ComponentNotFoundRuntimeException;
 import org.seasar.framework.container.PropertyDef;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.util.BindingUtil;
+import org.seasar.framework.util.FieldUtil;
 
 public abstract class AbstractBindingTypeDef implements BindingTypeDef {
 
@@ -53,18 +56,59 @@ public abstract class AbstractBindingTypeDef implements BindingTypeDef {
     }
 
     public void bind(ComponentDef componentDef, PropertyDef propertyDef,
-            PropertyDesc propertyDesc, Object component) {
+            PropertyDesc propertyDesc, Field field, Object component) {
 
-        if (!propertyDesc.hasWriteMethod()) {
-            return;
-        }
         if (propertyDef != null && propertyDef.isValueGettable()) {
-            bindManual(componentDef, propertyDef, propertyDesc, component);
+            if (field != null) {
+                bindManual(componentDef, propertyDef, field, component);
+            } else if (propertyDesc != null && propertyDesc.hasWriteMethod()) {
+                bindManual(componentDef, propertyDef, propertyDesc, component);
+            }
         } else {
-            doBind(componentDef, propertyDesc, component);
+            if (field != null) {
+                doBind(componentDef, field, component);
+            } else if (propertyDesc != null && propertyDesc.hasWriteMethod()) {
+                doBind(componentDef, propertyDesc, component);
+            }
         }
     }
 
+    protected void bindManual(ComponentDef componentDef,
+            PropertyDef propertyDef, Field field, Object component) {
+
+        Object value = getValue(componentDef, propertyDef, component);
+        setValue(componentDef, field, component, value);
+    }
+    
+    protected void bindManual(ComponentDef componentDef,
+            PropertyDef propertyDef, PropertyDesc propertyDesc, Object component) {
+
+        Object value = getValue(componentDef, propertyDef, component);
+        setValue(componentDef, propertyDesc, component, value);
+    }
+    
+    protected boolean bindAuto(ComponentDef componentDef,
+            Field field, Object component) {
+
+        S2Container container = componentDef.getContainer();
+        String propName = field.getName();
+        Class propType = field.getType();
+        if (container.hasComponentDef(propName)) {
+            Object value = container.getComponent(propName);
+            if (propType.isInstance(value)) {
+                setValue(componentDef, field, component, value);
+                return true;
+            }
+        }
+        if (BindingUtil.isAutoBindable(propType)
+                && container.hasComponentDef(propType)) {
+            Object value = container.getComponent(propType);
+            setValue(componentDef, field, component, value);
+            return true;
+        }
+        return false;
+    }
+    
     protected boolean bindAuto(ComponentDef componentDef,
             PropertyDesc propertyDesc, Object component) {
 
@@ -113,14 +157,25 @@ public abstract class AbstractBindingTypeDef implements BindingTypeDef {
                     .getComponentClass(), propertyDesc.getPropertyName(), ex);
         }
     }
+    
+    protected void setValue(ComponentDef componentDef,
+            Field field, Object component, Object value)
+            throws IllegalPropertyRuntimeException {
 
-    protected void bindManual(ComponentDef componentDef,
-            PropertyDef propertyDef, PropertyDesc propertyDesc, Object component) {
-
-        Object value = getValue(componentDef, propertyDef, component);
-        setValue(componentDef, propertyDesc, component, value);
+        if (value == null) {
+            return;
+        }
+        try {
+            FieldUtil.set(field, component, value);
+        } catch (NumberFormatException ex) {
+            throw new IllegalPropertyRuntimeException(componentDef
+                    .getComponentClass(), field.getName(), ex);
+        }
     }
 
     protected abstract void doBind(ComponentDef componentDef,
             PropertyDesc propertyDesc, Object component);
+    
+    protected abstract void doBind(ComponentDef componentDef,
+            Field field, Object component);
 }

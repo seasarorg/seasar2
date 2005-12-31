@@ -1,5 +1,7 @@
 package org.seasar.framework.container.assembler;
 
+import java.lang.reflect.Field;
+
 import junit.framework.TestCase;
 
 import org.seasar.framework.beans.BeanDesc;
@@ -30,7 +32,7 @@ public class BindingTypeMustDefTest extends TestCase {
 		container.register(cd);
 		container.register(B.class, "hoge");
 		A a = new A();
-        BindingTypeDefFactory.MUST.bind(cd, propDef, propDesc, a);
+        BindingTypeDefFactory.MUST.bind(cd, propDef, propDesc, null, a);
         assertNotNull("1", a.getHoge());
 	}
     
@@ -44,8 +46,37 @@ public class BindingTypeMustDefTest extends TestCase {
         container.register(cd);
         container.register("aaa", "message");
         A a = new A();
-        BindingTypeDefFactory.MUST.bind(cd, propDef, propDesc, a);
+        BindingTypeDefFactory.MUST.bind(cd, propDef, propDesc, null, a);
         assertEquals("1", "aaa", a.getMessage());
+    }
+    
+    public void testBindByField() throws Exception {
+        BeanDesc beanDesc = BeanDescFactory.getBeanDesc(A.class);
+        PropertyDesc propDesc = beanDesc.getPropertyDesc("message2");
+        Field field = beanDesc.getField("message2");
+        S2Container container = new S2ContainerImpl();
+        ComponentDefImpl cd = new ComponentDefImpl(A.class);
+        PropertyDef propDef = new PropertyDefImpl("message2");
+        cd.addPropertyDef(propDef);
+        container.register(cd);
+        container.register("aaa", "message2");
+        A a = new A();
+        BindingTypeDefFactory.MUST.bind(cd, propDef, propDesc, field, a);
+        assertEquals("1", "aaa", a.getMessage2());
+    }
+    
+    public void testBindByFieldNullPropertyDesc() throws Exception {
+        BeanDesc beanDesc = BeanDescFactory.getBeanDesc(A.class);
+        Field field = beanDesc.getField("message3");
+        S2Container container = new S2ContainerImpl();
+        ComponentDefImpl cd = new ComponentDefImpl(A.class);
+        PropertyDef propDef = new PropertyDefImpl("message3");
+        cd.addPropertyDef(propDef);
+        container.register(cd);
+        container.register("aaa", "message3");
+        A a = new A();
+        BindingTypeDefFactory.MUST.bind(cd, propDef, null, field, a);
+        assertEquals("1", "aaa", a.message3);
     }
     
     public void testBindByNameForDefferentType() throws Exception {
@@ -59,7 +90,7 @@ public class BindingTypeMustDefTest extends TestCase {
         container.register(new Integer(1), "message");
         A a = new A();
         try {
-            BindingTypeDefFactory.MUST.bind(cd, propDef, propDesc, a);
+            BindingTypeDefFactory.MUST.bind(cd, propDef, propDesc, null, a);
         } catch (IllegalAutoBindingPropertyRuntimeException ex) {
             System.out.println(ex.getMessage());
         }
@@ -75,7 +106,7 @@ public class BindingTypeMustDefTest extends TestCase {
         container.register(cd);
         container.register(B.class);
         A a = new A();
-        BindingTypeDefFactory.MUST.bind(cd, propDef, propDesc, a);
+        BindingTypeDefFactory.MUST.bind(cd, propDef, propDesc, null, a);
         assertNotNull("1", a.getHoge());
     }
     
@@ -89,7 +120,7 @@ public class BindingTypeMustDefTest extends TestCase {
         container.register(cd);
         A a = new A();
         try {
-            BindingTypeDefFactory.MUST.bind(cd, propDef, propDesc, a);
+            BindingTypeDefFactory.MUST.bind(cd, propDef, propDesc, null, a);
             fail("1");
         } catch (IllegalAutoBindingPropertyRuntimeException ex) {
             System.out.println(ex.getMessage());
@@ -104,6 +135,8 @@ public class BindingTypeMustDefTest extends TestCase {
 
 		private Hoge hoge_;
 		private String message_;
+        private String message2;
+        private String message3;
 
 		public A() {
 		}
@@ -123,6 +156,10 @@ public class BindingTypeMustDefTest extends TestCase {
 		public void setMessage(String message) {
 			message_ = message;
 		}
+        
+        public String getMessage2() {
+            return message2;
+        }
 
 		public String getHogeName() {
 			return hoge_.getName();

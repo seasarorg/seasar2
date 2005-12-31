@@ -27,7 +27,7 @@ public class BindingTypeMayDefTest extends TestCase {
         cd.addPropertyDef(propDef);
         container.register(cd);
         A a = new A();
-        BindingTypeDefFactory.MAY.bind(cd, propDef, propDesc, a);
+        BindingTypeDefFactory.MAY.bind(cd, propDef, propDesc, null, a);
     }
 
     public interface Foo {

@@ -513,6 +513,7 @@ public final class BeanDescImpl implements BeanDesc {
             Field field = fields[i];
             String fname = field.getName();
             if (!fieldCache.containsKey(fname)) {
+                field.setAccessible(true);
                 fieldCache.put(fname, field);
             }
         }

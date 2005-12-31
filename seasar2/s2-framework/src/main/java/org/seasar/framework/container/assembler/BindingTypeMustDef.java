@@ -15,6 +15,8 @@
  */
 package org.seasar.framework.container.assembler;
 
+import java.lang.reflect.Field;
+
 import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.IllegalAutoBindingPropertyRuntimeException;
@@ -28,6 +30,16 @@ public class BindingTypeMustDef extends AbstractBindingTypeDef {
 
     protected BindingTypeMustDef(String name) {
         super(name);
+    }
+
+    protected void doBind(ComponentDef componentDef, Field field,
+            Object component) {
+
+        if (!bindAuto(componentDef, field, component)) {
+            throw new IllegalAutoBindingPropertyRuntimeException(BindingUtil
+                    .getComponentClass(componentDef, component), field
+                    .getName());
+        }
     }
 
     protected void doBind(ComponentDef componentDef, PropertyDesc propertyDesc,
