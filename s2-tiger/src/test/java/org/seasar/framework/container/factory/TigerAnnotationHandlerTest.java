@@ -30,10 +30,16 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
         assertEquals("4", "property", cd.getAutoBindingDef().getName());
         ComponentDef cd2 = handler.createComponentDef(Hoge.class, InstanceDefFactory.REQUEST);
         assertEquals("5", InstanceDef.REQUEST_NAME, cd2.getInstanceDef().getName());
-        ComponentDef cd3 = handler.createComponentDef(Hoge7.class, InstanceDefFactory.REQUEST);
+        ComponentDef cd3 = handler.createComponentDef(Hoge7.class, null);
         assertEquals("6", "hoge7", cd3.getComponentName());
-        assertEquals("7", InstanceDef.SINGLETON_NAME, cd3.getInstanceDef().getName());
+        assertEquals("7", InstanceDef.PROTOTYPE_NAME, cd3.getInstanceDef().getName());
         assertEquals("8", AutoBindingDef.NONE_NAME, cd3.getAutoBindingDef().getName());
+        ComponentDef cd4 = handler.createComponentDef(Hoge8.class, null);
+        assertEquals("9", "hoge7x", cd4.getComponentName());
+        assertEquals("10", InstanceDef.SINGLETON_NAME, cd4.getInstanceDef().getName());
+        assertEquals("11", AutoBindingDef.PROPERTY_NAME, cd4.getAutoBindingDef().getName());
+        ComponentDef cd5 = handler.createComponentDef(Hoge7.class, InstanceDefFactory.REQUEST);
+        assertEquals("12", InstanceDef.REQUEST_NAME, cd5.getInstanceDef().getName());
     }
 
     public void testCreatePropertyDef() throws Exception {

@@ -53,26 +53,25 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
         Stateless stateless = clazz.getAnnotation(Stateless.class);
         if (stateless != null) {
         	name = stateless.name();
-        	instanceDef = InstanceDefFactory.SINGLETON;
+        	instanceDef = defaultInstanceDef != null ? defaultInstanceDef : InstanceDefFactory.PROTOTYPE;
         	autoBindingDef = AutoBindingDefFactory.NONE;
-        } else {
-			Component component = clazz.getAnnotation(Component.class);
-			if (component != null) {
-				if (!StringUtil.isEmpty(component.name())) {
-					name = component.name();
-				}
-				InstanceType instanceType = component.instance();
-				if (instanceType != null) {
-					instanceDef = getInstanceDef(instanceType.getName(), defaultInstanceDef);
-				}
-				AutoBindingType autoBindingType = component.autoBinding();
-				if (autoBindingType != null) {
-					autoBindingDef = getAutoBindingDef(autoBindingType.getName());
-				}
-			} else {
-				return super.createComponentDef(componentClass, defaultInstanceDef);
-			}
         }
+		Component component = clazz.getAnnotation(Component.class);
+		if (component != null) {
+			if (!StringUtil.isEmpty(component.name())) {
+				name = component.name();
+			}
+			InstanceType instanceType = component.instance();
+			if (instanceType != null) {
+				instanceDef = getInstanceDef(instanceType.getName(), instanceDef);
+			}
+			AutoBindingType autoBindingType = component.autoBinding();
+			if (autoBindingType != null) {
+				autoBindingDef = getAutoBindingDef(autoBindingType.getName());
+			}
+		} else if (stateless == null) {
+			return super.createComponentDef(componentClass, defaultInstanceDef);
+		}
 		return createComponentDef(componentClass, name,
 				instanceDef, autoBindingDef);
 	}
