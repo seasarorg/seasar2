@@ -423,6 +423,7 @@ public final class ConnectionWrapperImpl implements ConnectionWrapper {
 
 	public void rollback(Savepoint savepoint) throws SQLException {
 		assertOpened();
+        assertLocalTx();
 		try {
 			physicalConnection_.rollback(savepoint);
 		} catch (SQLException ex) {
@@ -433,6 +434,7 @@ public final class ConnectionWrapperImpl implements ConnectionWrapper {
 
 	public void releaseSavepoint(Savepoint savepoint) throws SQLException {
 		assertOpened();
+        assertLocalTx();
 		try {
 			physicalConnection_.releaseSavepoint(savepoint);
 		} catch (SQLException ex) {
