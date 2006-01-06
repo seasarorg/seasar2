@@ -36,13 +36,15 @@ public class PropertyInterType extends AbstractInterType {
 
     private static final String GETTER_PREFIX = "get";
 
-    protected static final int NONE = 0;
+    protected static final int UNSPECIFIED = 0;
 
     protected static final int READ = 1;
 
     protected static final int WRITE = 2;
 
     protected static final int READWRITE = 3;
+
+    protected static final int NONE = 4;
 
     private static final String TIGER_ANNOTATION_HANDLER = "org.seasar.framework.aop.intertype.TigerPropertyAnnotationHandler";
 
@@ -85,11 +87,15 @@ public class PropertyInterType extends AbstractInterType {
                     + targetClass.getName());
         }
 
+        int defaultValue = annotationHandler.getPropertyType(getTargetClass());
         List targetFields = getTargetFields(targetClass);
 
         for (Iterator iter = targetFields.iterator(); iter.hasNext();) {
             Field field = (Field) iter.next();
             int property = annotationHandler.getPropertyType(field);
+            if (property == UNSPECIFIED) {
+                property = defaultValue;
+            }
             switch (property) {
             case READ:
                 createGetter(targetClass, field);
@@ -177,11 +183,9 @@ public class PropertyInterType extends AbstractInterType {
         Field[] nominationFields = getFields(targetClass);
         for (int i = 0; i < nominationFields.length; i++) {
             Field field = nominationFields[i];
-            if (annotationHandler.isPropertyAnnotatted(field)) {
-                int modifier = field.getModifiers();
-                if (!Modifier.isPrivate(modifier)) {
-                    targetFields.add(field);
-                }
+            int modifier = field.getModifiers();
+            if (!Modifier.isPrivate(modifier)) {
+                targetFields.add(field);
             }
         }
 
@@ -215,7 +219,7 @@ public class PropertyInterType extends AbstractInterType {
     }
 
     public interface PropertyAnnotationHandler {
-        boolean isPropertyAnnotatted(Field field);
+        int getPropertyType(Class clazz);
 
         int getPropertyType(Field field);
     }

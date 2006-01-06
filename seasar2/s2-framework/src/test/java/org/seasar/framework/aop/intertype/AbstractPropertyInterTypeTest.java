@@ -19,6 +19,8 @@ import java.lang.reflect.Method;
 
 import junit.framework.TestCase;
 
+import org.seasar.framework.container.S2Container;
+import org.seasar.framework.container.factory.S2ContainerFactory;
 import org.seasar.framework.exception.NoSuchMethodRuntimeException;
 import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.MethodUtil;
@@ -29,17 +31,26 @@ import org.seasar.framework.util.MethodUtil;
  */
 public abstract class AbstractPropertyInterTypeTest extends TestCase {
 
-    protected PropertyInterTypeTarget target_;
+    private PropertyInterTypeTarget target;
 
-    private Class targetClass_;
+    private Class targetClass;
 
-    abstract protected PropertyInterTypeTarget getTarget();
+    private Object target2;
+
+    private Class targetClass2;
+
+    abstract protected String getPath();
 
     protected void setUp() throws Exception {
         super.setUp();
 
-        target_ = getTarget();
-        targetClass_ = target_.getClass();
+        S2Container container = S2ContainerFactory.create(getPath());
+
+        target = (PropertyInterTypeTarget) container.getComponent("target");
+        targetClass = target.getClass();
+
+        target2 = container.getComponent("target2");
+        targetClass2 = target2.getClass();
     }
 
     public void testSetterGetter() throws Exception {
@@ -48,7 +59,7 @@ public abstract class AbstractPropertyInterTypeTest extends TestCase {
 
         // setter test
         setIntField("setIntWriteField", 456);
-        assertEquals(target_.getIntWriteField(), 456);
+        assertEquals(target.getIntWriteField(), 456);
 
         // setter/getter test
         setIntField("setIntReadWriteField", 789);
@@ -103,27 +114,59 @@ public abstract class AbstractPropertyInterTypeTest extends TestCase {
         assertMethodNotExists("setNoneAnnotatedField", Integer.TYPE);
     }
 
+    public void testClassAnnotated() throws Exception {
+        // Does default (not annotated) field's getter exist?
+        assertMethodExists(targetClass2, "getDefaultField");
+
+        // Does default (not annotated) field's setter exist?
+        assertMethodExists(targetClass2, "setDefaultField", Integer.TYPE);
+
+        // Does read only (override) field's getter exist?
+        assertMethodExists(targetClass2, "getReadField");
+
+        // Does read only (override) field's setter exist?
+        assertMethodNotExists(targetClass2, "setReadField", Integer.TYPE);
+
+        // Does write only (override) field's getter exist?
+        assertMethodNotExists(targetClass2, "getWriteField");
+
+        // Does read only (override) field's setter exist?
+        assertMethodExists(targetClass2, "setWriteField", Integer.TYPE);
+
+        // Does read-write (override) field's getter exist?
+        assertMethodExists(targetClass2, "getReadWriteField");
+
+        // Does read-write (override) field's setter exist?
+        assertMethodExists(targetClass2, "setReadWriteField", Integer.TYPE);
+
+        // Does none (override) field's getter exist?
+        assertMethodNotExists(targetClass2, "getNoneField");
+
+        // Does none (override) field's setter exist?
+        assertMethodNotExists(targetClass2, "setNoneField", Integer.TYPE);
+    }
+
     private void setIntField(String methodName, int param) {
-        Method setter = ClassUtil.getMethod(targetClass_, methodName,
+        Method setter = ClassUtil.getMethod(targetClass, methodName,
                 new Class[] { Integer.TYPE });
-        MethodUtil.invoke(setter, target_, new Object[] { new Integer(param) });
+        MethodUtil.invoke(setter, target, new Object[] { new Integer(param) });
     }
 
     private int getIntField(String methodName) {
-        Method getter = ClassUtil.getMethod(targetClass_, methodName, null);
-        Integer value = (Integer) MethodUtil.invoke(getter, target_, null);
+        Method getter = ClassUtil.getMethod(targetClass, methodName, null);
+        Integer value = (Integer) MethodUtil.invoke(getter, target, null);
         return value.intValue();
     }
 
     private void setField(String methodName, Object param) {
-        Method setter = ClassUtil.getMethod(targetClass_, methodName,
+        Method setter = ClassUtil.getMethod(targetClass, methodName,
                 new Class[] { param.getClass() });
-        MethodUtil.invoke(setter, target_, new Object[] { param });
+        MethodUtil.invoke(setter, target, new Object[] { param });
     }
 
     private Object getField(String methodName) {
-        Method getter = ClassUtil.getMethod(targetClass_, methodName, null);
-        Object value = MethodUtil.invoke(getter, target_, null);
+        Method getter = ClassUtil.getMethod(targetClass, methodName, null);
+        Object value = MethodUtil.invoke(getter, target, null);
         return value;
     }
 
@@ -132,11 +175,20 @@ public abstract class AbstractPropertyInterTypeTest extends TestCase {
     }
 
     private void assertMethodExists(String methodName, Class paramType) {
+        assertMethodExists(targetClass, methodName, paramType);
+    }
+
+    private void assertMethodExists(Class targetClass, String methodName) {
+        assertMethodExists(targetClass, methodName, null);
+    }
+
+    private void assertMethodExists(Class targetClass, String methodName,
+            Class paramType) {
         Class[] param = null;
         if (paramType != null) {
             param = new Class[] { paramType };
         }
-        ClassUtil.getMethod(targetClass_, methodName, param);
+        ClassUtil.getMethod(targetClass, methodName, param);
         assertNotNull(methodName);
     }
 
@@ -145,14 +197,23 @@ public abstract class AbstractPropertyInterTypeTest extends TestCase {
     }
 
     private void assertMethodNotExists(String methodName, Class paramType) {
+        assertMethodNotExists(targetClass, methodName, paramType);
+    }
+
+    private void assertMethodNotExists(Class targetClass, String methodName) {
+        assertMethodNotExists(targetClass, methodName, null);
+    }
+
+    private void assertMethodNotExists(Class targetClass, String methodName,
+            Class paramType) {
         Class[] param = null;
         if (paramType != null) {
             param = new Class[] { paramType };
         }
 
         try {
-            ClassUtil.getMethod(targetClass_, methodName, param);
-            fail("The method " + methodName + "exsts.");
+            ClassUtil.getMethod(targetClass, methodName, param);
+            fail("The method " + methodName + " exsts.");
         } catch (NoSuchMethodRuntimeException e) {
         }
     }
