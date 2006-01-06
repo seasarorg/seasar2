@@ -26,7 +26,7 @@ public class InterTypeChain implements InterType {
     public InterTypeChain() {
     }
 
-    public void addInterType(final InterType interType) {
+    public void add(final InterType interType) {
         interTypes = (InterType[]) ArrayUtil.add(interTypes, interType);
     }
 
