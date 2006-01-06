@@ -15,6 +15,7 @@
  */
 package org.seasar.framework.aop.intertype;
 
+import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
 
 import org.seasar.framework.aop.intertype.PropertyInterType.PropertyAnnotationHandler;
@@ -26,15 +27,18 @@ import org.seasar.framework.container.annotation.tiger.PropertyType;
  * 
  */
 public class TigerPropertyAnnotationHandler implements PropertyAnnotationHandler {
-
-    public boolean isPropertyAnnotatted(Field field) {
-        Property property = field.getAnnotation(Property.class);
-        return (property != null) ? true : false;
+    public int getPropertyType(Class clazz) {
+        return getPropertyTypeInternal(clazz);
     }
 
     public int getPropertyType(Field field) {
-        Property property = field.getAnnotation(Property.class);
-        int propertyType = PropertyInterType.NONE;
+        return getPropertyTypeInternal(field);
+
+    }
+
+    public int getPropertyTypeInternal(AnnotatedElement element) {
+        Property property = element.getAnnotation(Property.class);
+        int propertyType = PropertyInterType.UNSPECIFIED;
         if (property != null) {
             PropertyType type = property.value();
             if (type == PropertyType.NONE) {

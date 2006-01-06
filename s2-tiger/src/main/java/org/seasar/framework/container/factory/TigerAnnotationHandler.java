@@ -116,7 +116,9 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
 		Class<?> clazz = componentDef.getComponentClass();
 		InterType interType = clazz.getAnnotation(InterType.class);
 		if (interType != null) {
-			appendInterType(componentDef, interType.value());
+            for (String interTypeName : interType.value()) {
+                appendInterType(componentDef, interTypeName);
+            }
 		}
 		super.appendInterType(componentDef);
 	}

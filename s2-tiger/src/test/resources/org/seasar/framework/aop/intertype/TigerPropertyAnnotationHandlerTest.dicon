@@ -3,7 +3,13 @@
 <components>
 	<include path="aop.dicon"/>
 
-	<component class="org.seasar.framework.aop.intertype.TigerPropertyAnnotationHandlerTarget">
+	<component name="target"
+		class="org.seasar.framework.aop.intertype.TigerPropertyAnnotationHandlerTarget"
+	>
 		<interType>aop.propertyInterType</interType>
 	</component>
+
+	<component name="target2"
+		class="org.seasar.framework.aop.intertype.TigerPropertyAnnotationHandlerTarget2"
+	/>
 </components>

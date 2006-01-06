@@ -15,16 +15,11 @@
  */
 package org.seasar.framework.aop.intertype;
 
-import org.seasar.framework.container.S2Container;
-import org.seasar.framework.container.factory.S2ContainerFactory;
-
 public class TigerPropertyAnnotationHandlerTest extends AbstractPropertyInterTypeTest {
 
     private static final String PATH = "org/seasar/framework/aop/intertype/TigerPropertyAnnotationHandlerTest.dicon";
 
-    protected PropertyInterTypeTarget getTarget() {
-        S2Container container = S2ContainerFactory.create(PATH);
-        return (PropertyInterTypeTarget) container
-                .getComponent(TigerPropertyAnnotationHandlerTarget.class);
+    protected String getPath() {
+        return PATH;
     }
 }
