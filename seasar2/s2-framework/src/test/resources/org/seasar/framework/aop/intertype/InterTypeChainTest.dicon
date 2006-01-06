@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.3//EN"
+	"http://www.seasar.org/dtd/components23.dtd">
+<components>
+	<component name="interType1" class="org.seasar.framework.aop.intertype.InterTypeChainTest$InterType1"/>
+
+	<component name="interType2" class="org.seasar.framework.aop.intertype.InterTypeChainTest$InterType2"/>
+
+	<component name="chain" class="org.seasar.framework.aop.intertype.InterTypeChain">
+		<initMethod name="addInterType"><arg>interType1</arg></initMethod>
+		<initMethod name="addInterType"><arg>interType2</arg></initMethod>
+	</component>
+
+	<component name="test" class="org.seasar.framework.aop.intertype.InterTypeChainTest$TestClass">
+		<interType>chain</interType>
+	</component>
+</components>
