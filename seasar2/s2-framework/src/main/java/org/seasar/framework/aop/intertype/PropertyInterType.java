@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.seasar.framework.exception.SRuntimeException;
 import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.StringUtil;
@@ -36,7 +35,7 @@ public class PropertyInterType extends AbstractInterType {
 
     private static final String GETTER_PREFIX = "get";
 
-    protected static final int UNSPECIFIED = 0;
+    protected static final int NONE = 0;
 
     protected static final int READ = 1;
 
@@ -44,7 +43,13 @@ public class PropertyInterType extends AbstractInterType {
 
     protected static final int READWRITE = 3;
 
-    protected static final int NONE = 4;
+    protected static final String STR_NONE = "none";
+
+    protected static final String STR_READ = "read";
+
+    protected static final String STR_WRITE = "write";
+
+    protected static final String STR_READWRITE = "readwrite";
 
     private static final String TIGER_ANNOTATION_HANDLER = "org.seasar.framework.aop.intertype.TigerPropertyAnnotationHandler";
 
@@ -52,12 +57,26 @@ public class PropertyInterType extends AbstractInterType {
 
     private static Logger logger = Logger.getLogger(PropertyInterType.class);
 
-    private static PropertyAnnotationHandler annotationHandler;
+    private static PropertyAnnotationHandler annotationHandler = new DefaultPropertyAnnotationHandler();
 
     private boolean trace;
 
+    private int defaultPropertyType = READWRITE;
+
     static {
         setupAnnotationHandler();
+    }
+
+    protected static int valueOf(String type) {
+        int propertyType = NONE;
+        if (STR_READ.equals(type)) {
+            propertyType = READ;
+        } else if (STR_WRITE.equals(type)) {
+            propertyType = WRITE;
+        } else if (STR_READWRITE.equals(type)) {
+            propertyType = READWRITE;
+        }
+        return propertyType;
     }
 
     private static void setupAnnotationHandler() {
@@ -77,25 +96,28 @@ public class PropertyInterType extends AbstractInterType {
                 .newInstance(clazz);
     }
 
+    public void setTrace(boolean trace) {
+        this.trace = trace;
+    }
+
+    public void setDefaultPropertyType(String defaultPropertyType) {
+        this.defaultPropertyType = valueOf(defaultPropertyType);
+    }
+
     protected void introduce() {
-        if (annotationHandler == null) {
-            throw new SRuntimeException("ESSR0001",
-                    new Object[] { "PropertyAnnotationHandler implementation" });
-        }
         if (logger.isDebugEnabled()) {
             logger.debug("[PropertyInterType] Introducing... "
                     + targetClass.getName());
         }
 
-        int defaultValue = annotationHandler.getPropertyType(getTargetClass());
+        int defaultValue = annotationHandler.getPropertyType(getTargetClass(),
+                defaultPropertyType);
         List targetFields = getTargetFields(targetClass);
 
         for (Iterator iter = targetFields.iterator(); iter.hasNext();) {
             Field field = (Field) iter.next();
-            int property = annotationHandler.getPropertyType(field);
-            if (property == UNSPECIFIED) {
-                property = defaultValue;
-            }
+            int property = annotationHandler.getPropertyType(field,
+                    defaultValue);
             switch (property) {
             case READ:
                 createGetter(targetClass, field);
@@ -116,13 +138,12 @@ public class PropertyInterType extends AbstractInterType {
         }
     }
 
-    public void setTrace(boolean trace) {
-        this.trace = trace;
-    }
-
     private void createGetter(Class targetClass, Field targetField) {
         String targetFieldName = targetField.getName();
         String methodName = GETTER_PREFIX + createMethodName(targetFieldName);
+        if (hasMethod(methodName, null)) {
+            return;
+        }
 
         if (logger.isDebugEnabled()) {
             logger.debug("[PropertyInterType] Creating getter "
@@ -152,6 +173,9 @@ public class PropertyInterType extends AbstractInterType {
     private void createSetter(Class targetClass, Field targetField) {
         String targetFieldName = targetField.getName();
         String methodName = SETTER_PREFIX + createMethodName(targetFieldName);
+        if (hasMethod(methodName, targetField.getType())) {
+            return;
+        }
 
         if (logger.isDebugEnabled()) {
             logger.debug("[PropertyInterType] Creating setter "
@@ -218,9 +242,35 @@ public class PropertyInterType extends AbstractInterType {
         return methodName;
     }
 
-    public interface PropertyAnnotationHandler {
-        int getPropertyType(Class clazz);
+    private boolean hasMethod(String methodName, Class paramType) {
+        Class[] param = null;
+        if (paramType != null) {
+            param = new Class[] { paramType };
+        }
+        try {
+            getTargetClass().getMethod(methodName, param);
+            return true;
+        } catch (NoSuchMethodException e) {
+            return false;
+        }
+    }
 
-        int getPropertyType(Field field);
+    public interface PropertyAnnotationHandler {
+        int getPropertyType(Class clazz, int defaultValue);
+
+        int getPropertyType(Field field, int defaultValue);
+    }
+
+    public static class DefaultPropertyAnnotationHandler implements
+            PropertyAnnotationHandler {
+
+        public int getPropertyType(Class clazz, int defaultValue) {
+            return defaultValue;
+        }
+
+        public int getPropertyType(Field field, int defaultValue) {
+            return defaultValue;
+        }
+
     }
 }

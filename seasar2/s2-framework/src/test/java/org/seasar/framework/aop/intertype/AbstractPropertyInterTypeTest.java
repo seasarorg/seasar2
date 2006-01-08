@@ -41,6 +41,13 @@ public abstract class AbstractPropertyInterTypeTest extends TestCase {
 
     abstract protected String getPath();
 
+    public AbstractPropertyInterTypeTest() {
+    }
+
+    public AbstractPropertyInterTypeTest(String name) {
+        super(name);
+    }
+
     protected void setUp() throws Exception {
         super.setUp();
 
@@ -108,10 +115,10 @@ public abstract class AbstractPropertyInterTypeTest extends TestCase {
         assertMethodNotExists("setIntNoneField", Integer.TYPE);
 
         // Does none annotated field's getter exist?
-        assertMethodNotExists("getNoneAnnotatedField");
+        assertMethodNotExists("getNonAnnotatedField");
 
         // Does none annotated field's setter exist?
-        assertMethodNotExists("setNoneAnnotatedField", Integer.TYPE);
+        assertMethodNotExists("setNonAnnotatedField", Integer.TYPE);
     }
 
     public void testClassAnnotated() throws Exception {
@@ -144,6 +151,17 @@ public abstract class AbstractPropertyInterTypeTest extends TestCase {
 
         // Does none (override) field's setter exist?
         assertMethodNotExists(targetClass2, "setNoneField", Integer.TYPE);
+    }
+
+    public void testHasMethod() throws Exception {
+        assertMethodNotExists(targetClass2, "getHasGetter");
+        assertMethodExists(targetClass2, "setHasGetter", Integer.TYPE);
+
+        assertMethodExists(targetClass2, "getHasSetter");
+        assertMethodNotExists(targetClass2, "setHasSetter", Integer.TYPE);
+
+        assertMethodNotExists(targetClass2, "getHasGetterSetter");
+        assertMethodNotExists(targetClass2, "setHasGetterSetter", Integer.TYPE);
     }
 
     private void setIntField(String methodName, int param) {
@@ -188,7 +206,7 @@ public abstract class AbstractPropertyInterTypeTest extends TestCase {
         if (paramType != null) {
             param = new Class[] { paramType };
         }
-        ClassUtil.getMethod(targetClass, methodName, param);
+        ClassUtil.getDeclaredMethod(targetClass, methodName, param);
         assertNotNull(methodName);
     }
 
@@ -212,7 +230,7 @@ public abstract class AbstractPropertyInterTypeTest extends TestCase {
         }
 
         try {
-            ClassUtil.getMethod(targetClass, methodName, param);
+            ClassUtil.getDeclaredMethod(targetClass, methodName, param);
             fail("The method " + methodName + " exsts.");
         } catch (NoSuchMethodRuntimeException e) {
         }
