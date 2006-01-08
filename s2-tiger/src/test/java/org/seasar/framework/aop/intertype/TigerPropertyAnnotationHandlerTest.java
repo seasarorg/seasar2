@@ -19,6 +19,13 @@ public class TigerPropertyAnnotationHandlerTest extends AbstractPropertyInterTyp
 
     private static final String PATH = "org/seasar/framework/aop/intertype/TigerPropertyAnnotationHandlerTest.dicon";
 
+    public TigerPropertyAnnotationHandlerTest() {
+    }
+
+    public TigerPropertyAnnotationHandlerTest(String name) {
+        super(name);
+    }
+
     protected String getPath() {
         return PATH;
     }

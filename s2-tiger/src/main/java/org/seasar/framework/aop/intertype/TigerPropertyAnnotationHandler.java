@@ -27,18 +27,17 @@ import org.seasar.framework.container.annotation.tiger.PropertyType;
  * 
  */
 public class TigerPropertyAnnotationHandler implements PropertyAnnotationHandler {
-    public int getPropertyType(Class clazz) {
-        return getPropertyTypeInternal(clazz);
+    public int getPropertyType(Class clazz, int defaultValue) {
+        return getPropertyTypeInternal(clazz, defaultValue);
     }
 
-    public int getPropertyType(Field field) {
-        return getPropertyTypeInternal(field);
-
+    public int getPropertyType(Field field, int defaultValue) {
+        return getPropertyTypeInternal(field, defaultValue);
     }
 
-    public int getPropertyTypeInternal(AnnotatedElement element) {
+    public int getPropertyTypeInternal(AnnotatedElement element, int defaultValue) {
         Property property = element.getAnnotation(Property.class);
-        int propertyType = PropertyInterType.UNSPECIFIED;
+        int propertyType = defaultValue;
         if (property != null) {
             PropertyType type = property.value();
             if (type == PropertyType.NONE) {
