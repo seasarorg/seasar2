@@ -35,9 +35,11 @@ public class XmlS2ContainerBuilder extends AbstractS2ContainerBuilder {
     public static final String PUBLIC_ID = "-//SEASAR//DTD S2Container//EN";
     public static final String PUBLIC_ID21 = "-//SEASAR2.1//DTD S2Container//EN";
     public static final String PUBLIC_ID23 = "-//SEASAR//DTD S2Container 2.3//EN";
+    public static final String PUBLIC_ID24 = "-//SEASAR//DTD S2Container 2.4//EN";
     public static final String DTD_PATH = "org/seasar/framework/container/factory/components.dtd";
     public static final String DTD_PATH21 = "org/seasar/framework/container/factory/components21.dtd";
     public static final String DTD_PATH23 = "org/seasar/framework/container/factory/components23.dtd";
+    public static final String DTD_PATH24 = "org/seasar/framework/container/factory/components24.dtd";
 
     protected S2ContainerTagHandlerRule rule = new S2ContainerTagHandlerRule();
 
@@ -80,6 +82,7 @@ public class XmlS2ContainerBuilder extends AbstractS2ContainerBuilder {
         handler.registerDtdPath(PUBLIC_ID, DTD_PATH);
         handler.registerDtdPath(PUBLIC_ID21, DTD_PATH21);
         handler.registerDtdPath(PUBLIC_ID23, DTD_PATH23);
+        handler.registerDtdPath(PUBLIC_ID24, DTD_PATH24);
 
         final TagHandlerContext ctx = handler.getTagHandlerContext();
         ctx.addParameter("parent", parent);
