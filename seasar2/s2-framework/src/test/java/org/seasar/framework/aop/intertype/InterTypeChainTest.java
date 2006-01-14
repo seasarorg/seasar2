@@ -31,7 +31,7 @@ public class InterTypeChainTest extends S2FrameworkTestCase {
     }
 
     protected void setUp() throws Exception {
-        include(InterTypeChainTest.class.getName().replace('.', '/') + ".dicon");
+        include(InterTypeChainTest.class.getSimpleName() + ".dicon");
     }
 
     public void test() throws Exception {

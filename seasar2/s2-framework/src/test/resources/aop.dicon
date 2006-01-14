@@ -10,6 +10,8 @@
 		class="org.seasar.framework.aop.interceptors.TraceThrowsInterceptor"/>
 	<component name="lifecycleAdapter"
 		class="org.seasar.framework.aop.interceptors.InterceptorLifecycleAdapter"/>
+	<component name="toStringInterceptor"
+		class="org.seasar.framework.aop.interceptors.ToStringInterceptor"/>
 
 	<component name="propertyInterType"
 		class="org.seasar.framework.aop.intertype.PropertyInterType">

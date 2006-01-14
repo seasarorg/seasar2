@@ -30,8 +30,7 @@ public class AbstractInterTypeTest extends S2FrameworkTestCase {
     }
 
     protected void setUp() throws Exception {
-        include(AbstractInterTypeTest.class.getName().replace('.', '/')
-                + ".dicon");
+        include(AbstractInterTypeTest.class.getSimpleName() + ".dicon");
     }
 
     public void test() throws Exception {
