@@ -18,8 +18,6 @@ package org.seasar.framework.unit;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.servlet.Servlet;
 
@@ -61,8 +59,6 @@ public abstract class S2FrameworkTestCase extends TestCase {
     private MockHttpServletRequest request;
 
     private MockHttpServletResponse response;
-
-    private List bindedFields;
 
     public S2FrameworkTestCase() {
     }
@@ -156,10 +152,6 @@ public abstract class S2FrameworkTestCase extends TestCase {
             }
 
         } finally {
-            for (int i = 0; i < 5; ++i) {
-                System.runFinalization();
-                System.gc();
-            }
             tearDown();
             tearDownContainer();
         }
@@ -269,7 +261,6 @@ public abstract class S2FrameworkTestCase extends TestCase {
     }
 
     protected void bindFields() throws Throwable {
-        bindedFields = new ArrayList();
         for (Class clazz = getClass(); clazz != S2FrameworkTestCase.class
                 && clazz != null; clazz = clazz.getSuperclass()) {
 
@@ -312,7 +303,6 @@ public abstract class S2FrameworkTestCase extends TestCase {
             }
             if (component != null) {
                 FieldUtil.set(field, this, component);
-                bindedFields.add(field);
             }
         }
     }
@@ -327,16 +317,10 @@ public abstract class S2FrameworkTestCase extends TestCase {
                 && !field.getType().isPrimitive();
     }
 
+    /**
+     * @deprecated
+     */
     protected void unbindFields() {
-        for (int i = 0; i < bindedFields.size(); ++i) {
-            Field field = (Field) bindedFields.get(i);
-            try {
-                field.set(this, null);
-            } catch (IllegalArgumentException e) {
-                System.err.println(e);
-            } catch (IllegalAccessException e) {
-                System.err.println(e);
-            }
-        }
     }
+
 }
