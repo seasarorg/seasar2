@@ -19,6 +19,7 @@ import java.lang.reflect.Method;
 import java.util.List;
 
 import org.seasar.framework.unit.S2FrameworkTestCase;
+import org.seasar.framework.util.ClassUtil;
 
 public class AbstractInterTypeTest extends S2FrameworkTestCase {
 
@@ -30,7 +31,8 @@ public class AbstractInterTypeTest extends S2FrameworkTestCase {
     }
 
     protected void setUp() throws Exception {
-        include(AbstractInterTypeTest.class.getSimpleName() + ".dicon");
+        include(ClassUtil.getShortClassName(AbstractInterTypeTest.class)
+                + ".dicon");
     }
 
     public void test() throws Exception {

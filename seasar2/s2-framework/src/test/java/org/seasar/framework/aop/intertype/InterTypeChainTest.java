@@ -21,6 +21,7 @@ import javassist.CannotCompileException;
 import javassist.NotFoundException;
 
 import org.seasar.framework.unit.S2FrameworkTestCase;
+import org.seasar.framework.util.ClassUtil;
 
 public class InterTypeChainTest extends S2FrameworkTestCase {
     public InterTypeChainTest() {
@@ -31,7 +32,8 @@ public class InterTypeChainTest extends S2FrameworkTestCase {
     }
 
     protected void setUp() throws Exception {
-        include(InterTypeChainTest.class.getSimpleName() + ".dicon");
+        include(ClassUtil.getShortClassName(InterTypeChainTest.class)
+                + ".dicon");
     }
 
     public void test() throws Exception {
