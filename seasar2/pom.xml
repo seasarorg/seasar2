@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project
   xmlns="http://maven.apache.org/POM/4.0.0"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -8,7 +9,7 @@
   <artifactId>s2-container-project</artifactId>
   <packaging>pom</packaging>
   <name>Seasar2</name>
-  <version>2.3.4</version>
+  <version>2.3.5-SNAPSHOT</version>
   <description>DI Container with AOP</description>
   <url>http://s2container.seasar.org/</url>
   <issueManagement>
@@ -72,7 +73,7 @@
     <developer>
       <id>manhole</id>
       <name>HONMA Hirotaka</name>
-      <email></email>
+      <email>manholex@gmail.com</email>
       <url>http://popo.dyndns.info/~manhole/diary/</url>
       <timezone>+9</timezone>
     </developer>
