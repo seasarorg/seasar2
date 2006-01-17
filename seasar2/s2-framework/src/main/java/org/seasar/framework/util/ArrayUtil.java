@@ -39,7 +39,7 @@ public class ArrayUtil {
         return newArray;
     }
 
-    public static Object[] add(final Object a[], final Object[] b) {
+    public static Object[] add(final Object[] a, final Object[] b) {
         if (a != null && b != null) {
             if (a.length != 0 && b.length != 0) {
                 Object[] array = (Object[]) Array.newInstance(a.getClass()
