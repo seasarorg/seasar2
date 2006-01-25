@@ -15,4 +15,10 @@ public class EclipseUtilTest extends TestCase {
         System.out.println(file.getAbsolutePath());
         assertEquals("1", "seasar2", file.getName());
     }
+
+    public void testGetCurrentProjectRoot() {
+        File file = EclipseUtil.getCurrentProjectRoot();
+        System.out.println(file.getAbsolutePath());
+        assertEquals("1", "seasar2", file.getName());
+    }
 }

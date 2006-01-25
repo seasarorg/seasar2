@@ -17,6 +17,8 @@ package org.seasar.framework.util;
 
 import java.io.File;
 
+import org.seasar.framework.exception.SIllegalStateException;
+
 /**
  * @author higa
  * 
@@ -27,12 +29,31 @@ public final class EclipseUtil {
     }
 
     public static File getProjectRoot(String projectName) {
-        File file = ResourceUtil.getResourceAsFile(".");
-        for (File f = file; f != null; f = f.getParentFile()) {
-            if (f.getName().equalsIgnoreCase(projectName)) {
-                return f;
+        File dir = ResourceUtil.getResourceAsFile(".");
+        while (dir != null) {
+            if (dir.getName().equalsIgnoreCase(projectName)) {
+                return dir;
             }
+            File child = new File(dir, projectName);
+            if (child.exists()) {
+                return child;
+            }
+            dir = dir.getParentFile();
         }
-        return null;
+        throw new SIllegalStateException("ESSR0001",
+                new Object[] { projectName });
+    }
+
+    public static File getCurrentProjectRoot() {
+        File dir = ResourceUtil.getResourceAsFile(".");
+        while (dir != null) {
+            File projectFile = new File(dir, ".project");
+            if (projectFile.exists()) {
+                return dir;
+            }
+            dir = dir.getParentFile();
+        }
+        throw new SIllegalStateException("ESSR0001",
+                new Object[] { ".project" });
     }
 }
