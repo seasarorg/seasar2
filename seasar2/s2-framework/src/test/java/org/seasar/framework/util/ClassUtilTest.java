@@ -83,6 +83,13 @@ public class ClassUtilTest extends TestCase {
 			ClassUtil.isAssignableFrom(int.class, Integer.class));
 	}
 
+    public void testGetPackageName() {
+        assertEquals(
+            "1",
+            "org.seasar.framework.util",
+            ClassUtil.getPackageName(getClass()));
+    }
+
 	public void testGetShortClassName() {
 		assertEquals(
 			"1",
