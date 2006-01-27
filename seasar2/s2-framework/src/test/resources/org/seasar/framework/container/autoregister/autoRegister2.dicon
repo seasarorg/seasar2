@@ -18,6 +18,16 @@
 		</initMethod>
 	</component>
 
+	<component class="org.seasar.framework.container.autoregister.MetaAutoRegister">
+		<meta name="hoge"/>
+		<meta name="fuga">"fugafuga"</meta>
+
+		<initMethod name="addClassPattern">
+			<arg>"org.seasar.framework.container.autoregister"</arg>
+			<arg>"Bar.*"</arg>
+		</initMethod>
+	</component>
+
 	<component name="greetingInterceptor" class="org.seasar.framework.container.autoregister.GreetingInterceptor"/>
 	<component name="greetingInterceptor2" class="org.seasar.framework.container.autoregister.GreetingInterceptor"/>
 	<component name="fieldInterType" class="org.seasar.framework.container.factory.FieldInterType"/>
