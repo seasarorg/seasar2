@@ -151,29 +151,28 @@ public final class S2ContainerFactory {
         }
 
         public S2Container create(final String path) {
-            final String realPath = pathResolver_.resolvePath(null, path);
-            enter(realPath);
-            try {
-                final String ext = getExtension(realPath);
-                final S2Container container = getBuilder(ext).build(realPath);
-                container.setHotswapMode(hotswapMode);
-                return container;
+            ClassLoader classLoader;
+            if (configurationContainer != null
+                    && configurationContainer
+                            .hasComponentDef(ClassLoader.class)) {
+                classLoader = (ClassLoader) configurationContainer
+                        .getComponent(ClassLoader.class);
+            } else {
+                classLoader = Thread.currentThread().getContextClassLoader();
             }
-            finally {
-                leave(realPath);
-            }
+            return build(path, classLoader);
         }
 
         public S2Container create(final String path, final ClassLoader classLoader) {
-            final String realPath = pathResolver_.resolvePath(null, path);
-            enter(realPath);
+            final ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
             try {
-                final String ext = getExtension(realPath);
-                final S2Container container = getBuilder(ext).build(realPath, classLoader);
-                return container;
+                if (classLoader != null) {
+                    Thread.currentThread().setContextClassLoader(classLoader);
+                }
+                return create(path);
             }
             finally {
-                leave(realPath);
+                Thread.currentThread().setContextClassLoader(oldLoader);
             }
         }
 
@@ -202,6 +201,20 @@ public final class S2ContainerFactory {
             }
         }
 
+        protected S2Container build(final String path, final ClassLoader classLoader) {
+            final String realPath = pathResolver_.resolvePath(null, path);
+            enter(realPath);
+            try {
+                final String ext = getExtension(realPath);
+                final S2Container container = getBuilder(ext).build(realPath, classLoader);
+                container.setHotswapMode(hotswapMode);
+                return container;
+            }
+            finally {
+                leave(realPath);
+            }
+        }
+
         protected String getExtension(final String path) {
             final String ext = ResourceUtil.getExtension(path);
             if (ext == null) {
@@ -220,7 +233,7 @@ public final class S2ContainerFactory {
 
     public interface Configurator {
 
-        void configure(S2Container bootstrapContainer);
+        void configure(S2Container configurationContainer);
     }
 
     public static class DefaultConfigurator implements Configurator {

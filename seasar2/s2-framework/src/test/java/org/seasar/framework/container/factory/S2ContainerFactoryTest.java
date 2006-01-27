@@ -16,14 +16,9 @@ import org.seasar.framework.container.assembler.AssemblerFactory;
 import org.seasar.framework.container.assembler.ManualOnlyPropertyAssembler;
 import org.seasar.framework.container.deployer.ComponentDeployerFactory;
 import org.seasar.framework.container.deployer.SingletonComponentDeployer;
-import org.seasar.framework.container.factory.AbstractS2ContainerBuilder;
-import org.seasar.framework.container.factory.CircularIncludeRuntimeException;
-import org.seasar.framework.container.factory.ResourceResolver;
-import org.seasar.framework.container.factory.S2ContainerFactory;
-import org.seasar.framework.container.factory.SimplePathResolver;
-import org.seasar.framework.container.factory.XmlS2ContainerBuilder;
 import org.seasar.framework.container.impl.S2ContainerBehavior;
 import org.seasar.framework.container.impl.S2ContainerImpl;
+import org.seasar.framework.exception.IORuntimeException;
 import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.ResourceUtil;
 import org.xml.sax.SAXException;
@@ -114,6 +109,17 @@ public class S2ContainerFactoryTest extends TestCase {
         container.init();
         Baz baz = (Baz) container.getComponent("baz");
         assertNull("1", baz.getFoo());
+    }
+
+    public void testCustomizeClassLoader() throws Exception {
+        configure("ClassLoader.dicon");
+        S2Container container = S2ContainerFactory.create(getClass().getName().replace('.', '/')
+                + ".foo.dicon");
+        container.init();
+        Object baz = container.getComponent("baz");
+        ClassLoader cl = baz.getClass().getClassLoader();
+        assertTrue("1", cl instanceof ChildFirstClassLoader);
+        assertEquals("2", Thread.currentThread().getContextClassLoader(), cl.getParent());
     }
 
     public void testHotswapMode() throws Exception {
@@ -219,6 +225,36 @@ public class S2ContainerFactoryTest extends TestCase {
 
         public void setFoo(Foo foo) {
             this.foo = foo;
+        }
+    }
+
+    public static class ChildFirstClassLoader extends ClassLoader {
+        public ChildFirstClassLoader(ClassLoader parent) {
+            super(parent);
+        }
+
+        protected synchronized Class loadClass(String name, boolean resolve)
+                throws ClassNotFoundException {
+            if (!name.equals(Baz.class.getName())) {
+                return super.loadClass(name, resolve);
+            }
+
+            InputStream is = getParent().getResourceAsStream(
+                    name.replace('.', '/') + ".class");
+            if (is == null) {
+                throw new ClassNotFoundException(name);
+            }
+            try {
+                byte[] bytes = new byte[is.available()];
+                is.read(bytes);
+                Class clazz = defineClass(name, bytes, 0, bytes.length);
+                if (resolve) {
+                    resolveClass(clazz);
+                }
+                return clazz;
+            } catch (IOException e) {
+                throw new IORuntimeException(e);
+            }
         }
     }
 }

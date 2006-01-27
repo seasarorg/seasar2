@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE components PUBLIC "-//SEASAR2.1//DTD S2Container//EN"
+	"http://www.seasar.org/dtd/components21.dtd">
+<components>
+	<component instance="prototype"
+			class="org.seasar.framework.container.factory.S2ContainerFactoryTest$ChildFirstClassLoader">
+		<arg>@Thread@currentThread().getContextClassLoader()</arg>
+	</component>
+</components>
