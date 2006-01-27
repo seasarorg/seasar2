@@ -16,6 +16,11 @@ public class JndiContextTest extends S2TestCase {
 		assertNotNull("2", ctx_.lookup("jndi.dataSource"));
 	}
 
+    public void testLookupENC() throws Exception {
+        assertNotNull("1", ctx_.lookup("java:comp/env/transactionManager"));
+        assertNotNull("2", ctx_.lookup("java:comp/env/jndi/dataSource"));
+    }
+
 	protected void setUp() throws Exception {
         include("jndi.dicon");
 		Hashtable env = new Hashtable();

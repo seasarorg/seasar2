@@ -31,6 +31,7 @@ import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
  *
  */
 public class JndiContext implements Context {
+    private static final String ENC_PREFIX = "java:comp/env/";
 
 	private Hashtable env_;
 	private S2Container container_;
@@ -94,7 +95,7 @@ public class JndiContext implements Context {
 	 * @see javax.naming.Context#lookup(java.lang.String)
 	 */
 	public Object lookup(String name) throws NamingException {
-		return container_.getComponent(name);
+		return container_.getComponent(resolveENC(name));
 	}
 
 	/**
@@ -249,4 +250,11 @@ public class JndiContext implements Context {
 	public Name composeName(Name name, Name prefix) throws NamingException {
 		throw new UnsupportedOperationException("composeName");
 	}
+
+    protected String resolveENC(final String name) {
+        if (name.startsWith(ENC_PREFIX)) {
+            return name.substring(ENC_PREFIX.length()).replace('/', '.');
+        }
+        return name;
+    }
 }
