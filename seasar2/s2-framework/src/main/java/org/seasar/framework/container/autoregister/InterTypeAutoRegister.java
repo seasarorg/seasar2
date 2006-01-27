@@ -17,10 +17,9 @@ package org.seasar.framework.container.autoregister;
 
 import org.seasar.framework.aop.InterType;
 import org.seasar.framework.container.ComponentDef;
-import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.impl.InterTypeDefImpl;
 
-public class InterTypeAutoRegister extends AbstractAutoRegister {
+public class InterTypeAutoRegister extends AbstractComponentTargetAutoRegister {
 
     protected InterType interType;
 
@@ -28,38 +27,7 @@ public class InterTypeAutoRegister extends AbstractAutoRegister {
         this.interType = interType;
     }
 
-    public void registerAll() {
-        final S2Container container = getContainer();
-        for (int i = 0; i < container.getComponentDefSize(); ++i) {
-            register(container.getComponentDef(i));
-        }
-    }
-
     protected void register(final ComponentDef componentDef) {
-        final Class componentClass = componentDef.getComponentClass();
-        if (componentClass == null) {
-            return;
-        }
-
-        final String className = componentClass.getName();
-        final int pos = className.lastIndexOf('.');
-        final String packageName = pos < 0 ? null : className.substring(0, pos);
-        final String shortClassName = pos < 0 ? className : className
-                .substring(pos + 1);
-        for (int i = 0; i < getClassPatternSize(); ++i) {
-            final ClassPattern cp = getClassPattern(i);
-            if (isIgnore(packageName, shortClassName)) {
-                continue;
-            }
-            if (cp.isAppliedPackageName(packageName)
-                    && cp.isAppliedShortClassName(shortClassName)) {
-                registerInterType(componentDef);
-                return;
-            }
-        }
-    }
-
-    protected void registerInterType(final ComponentDef componentDef) {
         componentDef.addInterTypeDef(new InterTypeDefImpl(interType));
     }
 }

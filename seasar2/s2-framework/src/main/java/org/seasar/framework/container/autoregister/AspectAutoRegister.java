@@ -25,7 +25,7 @@ import org.seasar.framework.container.factory.AspectDefFactory;
  * @author higa
  * 
  */
-public class AspectAutoRegister extends AbstractAutoRegister {
+public class AspectAutoRegister extends AbstractComponentTargetAutoRegister {
 
     private MethodInterceptor interceptor;
 
@@ -48,32 +48,6 @@ public class AspectAutoRegister extends AbstractAutoRegister {
     }
 
     protected void register(ComponentDef componentDef) {
-        Class componentClass = componentDef.getComponentClass();
-        if (componentClass == null) {
-            return;
-        }
-        /*
-         * if (componentDef.getAspectDefSize() > 0) { return; }
-         */
-        String className = componentClass.getName();
-        int pos = className.lastIndexOf('.');
-        String packageName = pos < 0 ? null : className.substring(0, pos);
-        String shortClassName = pos < 0 ? className : className
-                .substring(pos + 1);
-        for (int i = 0; i < getClassPatternSize(); ++i) {
-            ClassPattern cp = getClassPattern(i);
-            if (isIgnore(packageName, shortClassName)) {
-                continue;
-            }
-            if (cp.isAppliedPackageName(packageName)
-                    && cp.isAppliedShortClassName(shortClassName)) {
-                registerInterceptor(componentDef);
-                return;
-            }
-        }
-    }
-
-    protected void registerInterceptor(ComponentDef componentDef) {
         AspectDef aspectDef = AspectDefFactory.createAspectDef(interceptor,
                 pointcut);
         componentDef.addAspectDef(aspectDef);
