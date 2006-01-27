@@ -100,11 +100,16 @@ public abstract class AbstractBindingTypeDef implements BindingTypeDef {
                 return true;
             }
         }
-        if (BindingUtil.isAutoBindable(propType)
-                && container.hasComponentDef(propType)) {
-            Object value = container.getComponent(propType);
-            setValue(componentDef, field, component, value);
-            return true;
+        if (BindingUtil.isAutoBindable(propType)) {
+            if (container.hasComponentDef(propType)) {
+                Object value = container.getComponent(propType);
+                setValue(componentDef, field, component, value);
+                return true;
+            }
+            if (propType.isAssignableFrom(ComponentDef.class)) {
+                setValue(componentDef, field, component, componentDef);
+                return true;
+            }
         }
         return false;
     }
