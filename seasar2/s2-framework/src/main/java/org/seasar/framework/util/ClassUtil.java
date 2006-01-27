@@ -205,7 +205,16 @@ public final class ClassUtil {
         }
     }
 
-	public static String getShortClassName(Class clazz) {
+    public static String getPackageName(Class clazz) {
+        String fqcn = clazz.getName();
+        int pos = fqcn.lastIndexOf('.');
+        if (pos > 0) {
+            return fqcn.substring(0, pos);
+        }
+        return null;
+    }
+
+    public static String getShortClassName(Class clazz) {
 		String s = clazz.getName();
 		int i = s.lastIndexOf('.');
 		if (i > 0) {
