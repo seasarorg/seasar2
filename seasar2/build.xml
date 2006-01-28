@@ -23,6 +23,8 @@
 			<zipfileset prefix="seasar2/resources" dir="s2-extension/src/test/resources">
 				<include name="ejbtx.dicon"/>
 				<include name="j2ee.dicon"/>
+				<include name="jdbc.dicon"/>
+				<include name="jta.dicon"/>
 			</zipfileset>
 			<zipfileset prefix="seasar2/doc" dir="../s2container-www">
 				<exclude name="**/download/**"/>
