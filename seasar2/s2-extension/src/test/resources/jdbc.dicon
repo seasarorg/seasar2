@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE components PUBLIC "-//SEASAR2.1//DTD S2Container//EN"
+	"http://www.seasar.org/dtd/components21.dtd">
+<components namespace="jdbc">
+	<include path="jta.dicon"/>
+
+	<component class="org.seasar.extension.jdbc.impl.BasicResultSetFactory"/>
+	<component class="org.seasar.extension.jdbc.impl.BasicStatementFactory"/>
+	<!--
+	<component class="org.seasar.extension.jdbc.impl.OracleResultSetFactory"/>
+	<component class="org.seasar.extension.jdbc.impl.BooleanToIntStatementFactory"/>
+	-->
+
+	<!-- for HSQLDB -->
+	<component name="xaDataSource"
+		class="org.seasar.extension.dbcp.impl.XADataSourceImpl">
+		<property name="driverClassName">
+			"org.hsqldb.jdbcDriver"
+		</property>
+		<property name="URL">
+			<!--
+			"jdbc:hsqldb:hsql://localhost:9001"
+			-->
+			"jdbc:hsqldb:file:" 
+				+ @org.seasar.framework.util.EclipseUtil@getProjectRoot("seasar2").getAbsolutePath() 
+				+ "/s2-extension/target/test-classes/data/demo"
+		</property>
+		<property name="user">"sa"</property>
+		<property name="password">""</property>
+	</component>
+
+	<!-- for Oracle -->
+	<!--
+	<component name="xaDataSource"
+		class="org.seasar.extension.dbcp.impl.XADataSourceImpl">
+		<property name="driverClassName">
+			"oracle.jdbc.driver.OracleDriver"
+		</property>
+		<property name="URL">
+			"jdbc:oracle:thin:@xxx:1521:xxx"
+		</property>
+		<property name="user">"xxx"</property>
+		<property name="password">"xxx"</property>
+	</component>
+	-->
+
+	<!-- for PostgreSQL -->
+	<!--
+	<component name="xaDataSource"
+		class="org.seasar.extension.dbcp.impl.XADataSourceImpl">
+		<property name="driverClassName">
+			"org.postgresql.Driver"
+        </property>
+        <property name="URL">
+          "jdbc:postgresql://localhost/TEST"
+        </property>
+        <property name="user">"xxxx"</property>
+        <property name="password">"xxxx"</property>
+    </component>
+    -->
+
+	<!-- for SQLServer -->
+	<!--
+	<component name="xaDataSource"
+		class="org.seasar.extension.dbcp.impl.XADataSourceImpl">
+		<property name="driverClassName">
+			"net.sourceforge.jtds.jdbc.Driver"
+        </property>
+        <property name="URL">
+            "jdbc:jtds:sqlserver://localhost/TEST;instance=SQLEXPRESS"
+        </property>
+        <property name="user">"xxxx"</property>
+        <property name="password">"xxxx"</property>
+    </component>
+	-->
+
+	<component name="connectionPool"
+		class="org.seasar.extension.dbcp.impl.ConnectionPoolImpl">
+		<property name="timeout">600</property>
+		<property name="maxPoolSize">10</property>
+		<property name="allowLocalTx">true</property>
+		<destroyMethod name="close"/>
+	</component>
+
+	<component name="DataSource"
+		class="org.seasar.extension.dbcp.impl.DataSourceImpl"
+	/>
+
+	<!-- from JNDI -->
+	<!--
+	<component name="DataSource"
+		class="javax.sql.DataSource">
+		@org.seasar.extension.j2ee.JndiResourceLocator@lookup("java:comp/env/jdbc/DataSource")
+	</component>
+	-->
+</components>

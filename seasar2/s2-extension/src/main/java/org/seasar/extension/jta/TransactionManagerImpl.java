@@ -24,7 +24,6 @@ import javax.transaction.Status;
 import javax.transaction.SystemException;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
-import javax.transaction.UserTransaction;
 import javax.transaction.xa.XAException;
 
 import org.seasar.framework.exception.SIllegalStateException;
@@ -32,7 +31,7 @@ import org.seasar.framework.exception.SNotSupportedException;
 import org.seasar.framework.exception.SSystemException;
 
 public final class TransactionManagerImpl
-	implements TransactionManager, UserTransaction {
+	implements TransactionManager {
 
 	private ThreadLocal threadAttachTx_ = new ThreadLocal();
 

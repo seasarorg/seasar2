@@ -15,246 +15,252 @@
  */
 package org.seasar.extension.j2ee;
 
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Map;
 
 import javax.naming.Context;
 import javax.naming.Name;
+import javax.naming.NameAlreadyBoundException;
 import javax.naming.NameParser;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
+import javax.naming.OperationNotSupportedException;
 
+import org.seasar.framework.container.ComponentNotFoundRuntimeException;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
+import org.seasar.framework.exception.SRuntimeException;
+import org.seasar.framework.util.StringUtil;
 
 /**
  * @author higa
- *
+ * 
  */
 public class JndiContext implements Context {
-    private static final String ENC_PREFIX = "java:comp/env/";
+    public static final String ENC_PREFIX = "java:comp/env/";
 
-	private Hashtable env_;
-	private S2Container container_;
+    public static final String ENC_NAMESPACE = "j2ee";
 
-	public JndiContext(Hashtable env) {
-		env_ = env;
-		container_ = SingletonS2ContainerFactory.getContainer();
-	}
+    protected static final Map MAGIC_COMPONENTS = new HashMap();
+    static {
+        MAGIC_COMPONENTS
+                .put("java:comp/UserTransaction", "jta/UserTransaction");
+    }
 
-	/**
-	 * @see javax.naming.Context#close()
-	 */
-	public void close() throws NamingException {
-		container_ = null;
-	}
+    protected final Hashtable env;
 
-	/**
-	 * @see javax.naming.Context#getNameInNamespace()
-	 */
-	public String getNameInNamespace() throws NamingException {
-		throw new UnsupportedOperationException("getNameInNamespace");
-	}
+    protected final String path;
 
-	/**
-	 * @see javax.naming.Context#destroySubcontext(java.lang.String)
-	 */
-	public void destroySubcontext(String name) throws NamingException {
-		throw new UnsupportedOperationException("destroySubcontext");
-	}
+    protected S2Container container;
 
-	/**
-	 * @see javax.naming.Context#unbind(java.lang.String)
-	 */
-	public void unbind(String name) throws NamingException {
-		throw new UnsupportedOperationException("unbind");
-	}
+    public JndiContext(final Hashtable env) throws NamingException {
+        this.env = env;
+        this.path = (String) env.get(PROVIDER_URL);
+        this.container = SingletonS2ContainerFactory.getContainer();
+    }
 
-	/**
-	 * @see javax.naming.Context#getEnvironment()
-	 */
-	public Hashtable getEnvironment() throws NamingException {
-		return env_;
-	}
+    public Object addToEnvironment(final String propName, final Object propVal)
+            throws NamingException {
+        return env.put(propName, propVal);
+    }
 
-	/**
-	 * @see javax.naming.Context#destroySubcontext(javax.naming.Name)
-	 */
-	public void destroySubcontext(Name name) throws NamingException {
-		throw new UnsupportedOperationException("destroySubcontext");
+    public void bind(final Name name, final Object obj) throws NamingException {
+        if (name.isEmpty()) {
+            throw new NamingException("name is empty");
+        }
+        bind(toStringArray(name), obj);
+    }
 
-	}
+    public void bind(final String name, final Object obj)
+            throws NamingException {
+        bind(resolveName(name).split("/"), obj);
+    }
 
-	/**
-	 * @see javax.naming.Context#unbind(javax.naming.Name)
-	 */
-	public void unbind(Name name) throws NamingException {
-		throw new UnsupportedOperationException("unbind");
-	}
+    public void close() throws NamingException {
+        container = null;
+    }
 
-	/**
-	 * @see javax.naming.Context#lookup(java.lang.String)
-	 */
-	public Object lookup(String name) throws NamingException {
-		return container_.getComponent(resolveENC(name));
-	}
+    public Name composeName(final Name name, final Name prefix)
+            throws NamingException {
+        throw new OperationNotSupportedException("composeName");
+    }
 
-	/**
-	 * @see javax.naming.Context#lookupLink(java.lang.String)
-	 */
-	public Object lookupLink(String name) throws NamingException {
-		throw new UnsupportedOperationException("lookupLink");
-	}
+    public String composeName(final String name, final String prefix)
+            throws NamingException {
+        throw new OperationNotSupportedException("composeName");
+    }
 
-	/**
-	 * @see javax.naming.Context#removeFromEnvironment(java.lang.String)
-	 */
-	public Object removeFromEnvironment(String propName)
-		throws NamingException {
+    public Context createSubcontext(final Name name) throws NamingException {
+        throw new OperationNotSupportedException("createSubcontext");
+    }
 
-		return env_.remove(propName);
-	}
+    public Context createSubcontext(final String name) throws NamingException {
+        throw new OperationNotSupportedException("createSubcontext");
+    }
 
-	/**
-	 * @see javax.naming.Context#bind(java.lang.String, java.lang.Object)
-	 */
-	public void bind(String name, Object obj) throws NamingException {
-		container_.register(obj, name);
-	}
+    public void destroySubcontext(final Name name) throws NamingException {
+        throw new OperationNotSupportedException("destroySubcontext");
+    }
 
-	/**
-	 * @see javax.naming.Context#rebind(java.lang.String, java.lang.Object)
-	 */
-	public void rebind(String name, Object obj) throws NamingException {
-		throw new UnsupportedOperationException("rebind");
-	}
+    public void destroySubcontext(final String name) throws NamingException {
+        throw new OperationNotSupportedException("destroySubcontext");
+    }
 
-	/**
-	 * @see javax.naming.Context#lookup(javax.naming.Name)
-	 */
-	public Object lookup(Name name) throws NamingException {
-		return container_.getComponent(name.toString());
-	}
+    public Hashtable getEnvironment() throws NamingException {
+        return env;
+    }
 
-	/**
-	 * @see javax.naming.Context#lookupLink(javax.naming.Name)
-	 */
-	public Object lookupLink(Name name) throws NamingException {
-		throw new UnsupportedOperationException("lookupLink");
-	}
+    public String getNameInNamespace() throws NamingException {
+        throw new OperationNotSupportedException("getNameInNamespace");
+    }
 
-	/**
-	 * @see javax.naming.Context#bind(javax.naming.Name, java.lang.Object)
-	 */
-	public void bind(Name name, Object obj) throws NamingException {
-		container_.register(obj, name.toString());
-	}
+    public NameParser getNameParser(final Name name) throws NamingException {
+        throw new OperationNotSupportedException("getNameParser");
+    }
 
-	/**
-	 * @see javax.naming.Context#rebind(javax.naming.Name, java.lang.Object)
-	 */
-	public void rebind(Name name, Object obj) throws NamingException {
-		throw new UnsupportedOperationException("rebind");
-	}
+    public NameParser getNameParser(final String name) throws NamingException {
+        throw new OperationNotSupportedException("getNameParser");
+    }
 
-	/**
-	 * @see javax.naming.Context#rename(java.lang.String, java.lang.String)
-	 */
-	public void rename(String oldName, String newName) throws NamingException {
-		throw new UnsupportedOperationException("rename");
-	}
+    public NamingEnumeration list(final Name name) throws NamingException {
+        throw new OperationNotSupportedException("list");
+    }
 
-	/**
-	 * @see javax.naming.Context#createSubcontext(java.lang.String)
-	 */
-	public Context createSubcontext(String name) throws NamingException {
-		throw new UnsupportedOperationException("createSubcontext");
-	}
+    public NamingEnumeration list(final String name) throws NamingException {
+        throw new OperationNotSupportedException("list");
+    }
 
-	/**
-	 * @see javax.naming.Context#createSubcontext(javax.naming.Name)
-	 */
-	public Context createSubcontext(Name name) throws NamingException {
-		throw new UnsupportedOperationException("createSubcontext");
-	}
+    public NamingEnumeration listBindings(final Name name)
+            throws NamingException {
+        throw new OperationNotSupportedException("listBindings");
+    }
 
-	/**
-	 * @see javax.naming.Context#rename(javax.naming.Name, javax.naming.Name)
-	 */
-	public void rename(Name oldName, Name newName) throws NamingException {
-		throw new UnsupportedOperationException("rename");
-	}
+    public NamingEnumeration listBindings(final String name)
+            throws NamingException {
+        throw new OperationNotSupportedException("listBindings");
+    }
 
-	/**
-	 * @see javax.naming.Context#getNameParser(java.lang.String)
-	 */
-	public NameParser getNameParser(String name) throws NamingException {
-		throw new UnsupportedOperationException("getNameParser");
-	}
+    public Object lookup(final Name name) throws NamingException {
+        if (name.isEmpty()) {
+            return new JndiContext(new Hashtable(env));
+        }
+        return lookup(toStringArray(name));
+    }
 
-	/**
-	 * @see javax.naming.Context#getNameParser(javax.naming.Name)
-	 */
-	public NameParser getNameParser(Name name) throws NamingException {
-		throw new UnsupportedOperationException("getNameParser");
-	}
+    public Object lookup(final String name) throws NamingException {
+        if (StringUtil.isEmpty(name)) {
+            return new JndiContext(new Hashtable(env));
+        }
+        return lookup(resolveName(name).split("/"));
+    }
 
-	/**
-	 * @see javax.naming.Context#list(java.lang.String)
-	 */
-	public NamingEnumeration list(String name) throws NamingException {
-		throw new UnsupportedOperationException("list");
-	}
+    public Object lookupLink(final Name name) throws NamingException {
+        throw new OperationNotSupportedException("lookupLink");
+    }
 
-	/**
-	 * @see javax.naming.Context#listBindings(java.lang.String)
-	 */
-	public NamingEnumeration listBindings(String name) throws NamingException {
-		throw new UnsupportedOperationException("listBindings");
-	}
+    public Object lookupLink(final String name) throws NamingException {
+        throw new OperationNotSupportedException("lookupLink");
+    }
 
-	/**
-	 * @see javax.naming.Context#list(javax.naming.Name)
-	 */
-	public NamingEnumeration list(Name name) throws NamingException {
-		throw new UnsupportedOperationException("list");
-	}
+    public void rebind(final Name name, final Object obj)
+            throws NamingException {
+        throw new OperationNotSupportedException("rebind");
+    }
 
-	/**
-	 * @see javax.naming.Context#listBindings(javax.naming.Name)
-	 */
-	public NamingEnumeration listBindings(Name name) throws NamingException {
-		throw new UnsupportedOperationException("listBindings");
-	}
+    public void rebind(final String name, final Object obj)
+            throws NamingException {
+        throw new OperationNotSupportedException("rebind");
+    }
 
-	/**
-	 * @see javax.naming.Context#addToEnvironment(java.lang.String, java.lang.Object)
-	 */
-	public Object addToEnvironment(String propName, Object propVal)
-		throws NamingException {
+    public Object removeFromEnvironment(final String propName)
+            throws NamingException {
+        return env.remove(propName);
+    }
 
-		return env_.put(propName, propVal);
-	}
+    public void rename(final Name oldName, final Name newName)
+            throws NamingException {
+        throw new OperationNotSupportedException("rename");
+    }
 
-	/**
-	 * @see javax.naming.Context#composeName(java.lang.String, java.lang.String)
-	 */
-	public String composeName(String name, String prefix)
-		throws NamingException {
+    public void rename(final String oldName, final String newName)
+            throws NamingException {
+        throw new OperationNotSupportedException("rename");
+    }
 
-		throw new UnsupportedOperationException("composeName");
-	}
+    public void unbind(final Name name) throws NamingException {
+        throw new OperationNotSupportedException("unbind");
+    }
 
-	/**
-	 * @see javax.naming.Context#composeName(javax.naming.Name, javax.naming.Name)
-	 */
-	public Name composeName(Name name, Name prefix) throws NamingException {
-		throw new UnsupportedOperationException("composeName");
-	}
+    public void unbind(final String name) throws NamingException {
+        throw new OperationNotSupportedException("unbind");
+    }
 
-    protected String resolveENC(final String name) {
+    protected void bind(final String[] names, final Object obj)
+            throws NamingException {
+        final StringBuffer buf = new StringBuffer(100);
+        try {
+            S2Container context = container;
+            for (int i = 0; i < names.length - 1; ++i) {
+                buf.append(names[i]);
+                context = (S2Container) container.getComponent(names[i]);
+                buf.append('/');
+            }
+            final String name = names[names.length - 1];
+            buf.append(name);
+            if (context.hasComponentDef(name)) {
+                throw new NameAlreadyBoundException(new String(buf));
+            }
+            context.register(obj, name);
+        } catch (final ComponentNotFoundRuntimeException e) {
+            throw createNamingException(new String(buf), e);
+        } catch (final SRuntimeException e) {
+            throw createNamingException(e.getMessage(), e);
+        }
+    }
+
+    protected Object lookup(final String[] names) throws NamingException {
+        final StringBuffer buf = new StringBuffer(100);
+        try {
+            S2Container context = container;
+            for (int i = 0; i < names.length - 1; ++i) {
+                buf.append(names[i]);
+                context = (S2Container) container.getComponent(names[i]);
+                buf.append('/');
+            }
+            final String name = names[names.length - 1];
+            buf.append(name);
+            return context.getComponent(name);
+        } catch (final ComponentNotFoundRuntimeException e) {
+            throw createNamingException(new String(buf), e);
+        } catch (final SRuntimeException e) {
+            throw createNamingException(e.getMessage(), e);
+        }
+    }
+
+    protected String resolveName(final String name) {
+        if (MAGIC_COMPONENTS.containsKey(name)) {
+            return (String) MAGIC_COMPONENTS.get(name);
+        }
         if (name.startsWith(ENC_PREFIX)) {
-            return name.substring(ENC_PREFIX.length()).replace('/', '.');
+            return ENC_NAMESPACE + "/"
+                    + name.substring(ENC_PREFIX.length()).replace('/', '.');
         }
         return name;
+    }
+
+    protected String[] toStringArray(final Name name) {
+        final String[] names = new String[name.size()];
+        for (int i = 0; i < name.size(); ++i) {
+            names[i] = name.get(i);
+        }
+        return names;
+    }
+
+    protected NamingException createNamingException(final String message,
+            final Throwable cause) {
+        final NamingException e = new NamingException(message);
+        e.initCause(cause);
+        return e;
     }
 }

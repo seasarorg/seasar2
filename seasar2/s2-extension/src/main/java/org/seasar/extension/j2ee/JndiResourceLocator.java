@@ -15,32 +15,23 @@
  */
 package org.seasar.extension.j2ee;
 
+import java.util.Hashtable;
+
 import javax.naming.InitialContext;
-import javax.sql.DataSource;
+import javax.naming.NamingException;
 
-import org.seasar.framework.util.InitialContextUtil;
+public class JndiResourceLocator {
+    public static Object lookup(final String name) throws NamingException {
+        return lookup(name, null);
+    }
 
-/**
- * @author higa
- *
- */
-public final class JndiDataSource extends DataSourceWrapper {
-
-	private InitialContext initialContext_;
-	private String jndiName_;
-
-	public JndiDataSource(InitialContext initialContext, String jndiName) {
-		initialContext_ = initialContext;
-		jndiName_ = jndiName;
-		setPhysicalDataSource(
-			(DataSource) InitialContextUtil.lookup(initialContext, jndiName));
-	}
-	
-	public InitialContext getInitialContext() {
-		return initialContext_;
-	}
-
-	public String getJndiName() {
-		return jndiName_;
-	}
+    public static Object lookup(final String name, final Hashtable env)
+            throws NamingException {
+        final InitialContext context = new InitialContext(env);
+        try {
+            return context.lookup(name);
+        } finally {
+            context.close();
+        }
+    }
 }

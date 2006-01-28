@@ -12,17 +12,17 @@ public class JndiContextTest extends S2TestCase {
 	private Context ctx_;
 
 	public void testLookup() throws Exception {
-		assertNotNull("1", ctx_.lookup("jndi.transactionManager"));
-		assertNotNull("2", ctx_.lookup("jndi.dataSource"));
+		assertNotNull("1", ctx_.lookup("jdbc.DataSource"));
+		assertNotNull("2", ctx_.lookup("jta.TransactionManager"));
 	}
 
     public void testLookupENC() throws Exception {
-        assertNotNull("1", ctx_.lookup("java:comp/env/transactionManager"));
-        assertNotNull("2", ctx_.lookup("java:comp/env/jndi/dataSource"));
+        assertNotNull("1", ctx_.lookup("java:comp/env/jdbc/DataSource"));
+        assertNotNull("2", ctx_.lookup("java:comp/UserTransaction"));
     }
 
 	protected void setUp() throws Exception {
-        include("jndi.dicon");
+        include("j2ee.dicon");
 		Hashtable env = new Hashtable();
 		ctx_ = new JndiContext(env);
 	}
