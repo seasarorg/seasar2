@@ -59,17 +59,17 @@ public abstract class AbstractBindingTypeDef implements BindingTypeDef {
             PropertyDesc propertyDesc, Field field, Object component) {
 
         if (propertyDef != null && propertyDef.isValueGettable()) {
-            if (field != null) {
-                bindManual(componentDef, propertyDef, field, component);
-            } else if (propertyDesc != null && propertyDesc.hasWriteMethod()) {
+            if (propertyDesc != null && propertyDesc.hasWriteMethod()) {
                 bindManual(componentDef, propertyDef, propertyDesc, component);
+            } else if (field != null) {
+                bindManual(componentDef, propertyDef, field, component);
             }
         } else {
-            if (field != null) {
-                doBind(componentDef, field, component);
-            } else if (propertyDesc != null && propertyDesc.hasWriteMethod()) {
+            if (propertyDesc != null && propertyDesc.hasWriteMethod()) {
                 doBind(componentDef, propertyDesc, component);
-            }
+            } else if (field != null) {
+                doBind(componentDef, field, component);
+            } 
         }
     }
 
@@ -127,11 +127,16 @@ public abstract class AbstractBindingTypeDef implements BindingTypeDef {
                 return true;
             }
         }
-        if (BindingUtil.isAutoBindable(propType)
-                && container.hasComponentDef(propType)) {
-            Object value = container.getComponent(propType);
-            setValue(componentDef, propertyDesc, component, value);
-            return true;
+        if (BindingUtil.isAutoBindable(propType)) {
+            if (container.hasComponentDef(propType)) {
+                Object value = container.getComponent(propType);
+                setValue(componentDef, propertyDesc, component, value);
+                return true;
+            }
+            if (propType.isAssignableFrom(ComponentDef.class)) {
+                setValue(componentDef, propertyDesc, component, componentDef);
+                return true;
+            }
         }
         return false;
     }
