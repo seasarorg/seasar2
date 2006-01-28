@@ -42,7 +42,7 @@ public class DestroyMethodTagHandler extends MethodTagHandler {
 	 */
 	public void end(TagHandlerContext context, String body) {
 		DestroyMethodDef methodDef = (DestroyMethodDef) context.pop();
-		processExpression(methodDef, body, "destroyMethod");
+		processExpression(methodDef, body, "destroyMethod", context.getLocator());
 		ComponentDef componentDef = (ComponentDef) context.peek();
 		componentDef.addDestroyMethodDef(methodDef);
 	}

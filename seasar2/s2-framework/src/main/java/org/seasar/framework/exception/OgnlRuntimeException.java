@@ -15,17 +15,32 @@
  */
 package org.seasar.framework.exception;
 
-import ognl.OgnlException;
+import org.seasar.framework.util.StringUtil;
 
 /**
  * @author higa
- *
+ * 
  */
 public final class OgnlRuntimeException extends SRuntimeException {
-
     private static final long serialVersionUID = 6780487105649327767L;
 
-	public OgnlRuntimeException(OgnlException cause) {
-		super("ESSR0073", new Object[] { cause }, cause);
-	}
+    public OgnlRuntimeException(Exception cause) {
+        this(cause, null, 0);
+    }
+
+    public OgnlRuntimeException(Exception cause, String path, int lineNumber) {
+        super("ESSR0073",
+                new Object[] { createMessage(cause, path, lineNumber) }, cause);
+    }
+
+    protected static String createMessage(Exception cause, String path,
+            int lineNumber) {
+        StringBuffer buf = new StringBuffer(100);
+        buf.append(cause.getMessage());
+        if (!StringUtil.isEmpty(path)) {
+            buf.append(" at ").append(path).append("(").append(lineNumber)
+                    .append(")");
+        }
+        return new String(buf);
+    }
 }

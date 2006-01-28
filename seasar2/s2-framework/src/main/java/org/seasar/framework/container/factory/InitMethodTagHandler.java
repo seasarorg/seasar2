@@ -23,31 +23,33 @@ import org.xml.sax.Attributes;
 
 /**
  * @author higa
- *
+ * 
  */
 public class InitMethodTagHandler extends MethodTagHandler {
 
     private static final long serialVersionUID = 514017929221501933L;
 
-	/**
-	 * @see org.seasar.framework.xml.sax.handler.TagHandler#start(org.seasar.framework.xml.sax.handler.TagHandlerContext, org.xml.sax.Attributes)
-	 */
-	public void start(TagHandlerContext context, Attributes attributes) {
-		String name = attributes.getValue("name");
-		context.push(createInitMethodDef(name));
-	}
+    /**
+     * @see org.seasar.framework.xml.sax.handler.TagHandler#start(org.seasar.framework.xml.sax.handler.TagHandlerContext,
+     *      org.xml.sax.Attributes)
+     */
+    public void start(TagHandlerContext context, Attributes attributes) {
+        String name = attributes.getValue("name");
+        context.push(createInitMethodDef(name));
+    }
 
-	/**
-	 * @see org.seasar.framework.xml.sax.handler.TagHandler#end(org.seasar.framework.xml.sax.handler.TagHandlerContext, java.lang.String)
-	 */
-	public void end(TagHandlerContext context, String body) {
-		InitMethodDef methodDef = (InitMethodDef) context.pop();
+    /**
+     * @see org.seasar.framework.xml.sax.handler.TagHandler#end(org.seasar.framework.xml.sax.handler.TagHandlerContext,
+     *      java.lang.String)
+     */
+    public void end(TagHandlerContext context, String body) {
+        InitMethodDef methodDef = (InitMethodDef) context.pop();
         ComponentDef componentDef = (ComponentDef) context.peek();
-        processExpression(methodDef, body, "initMethod");
-		componentDef.addInitMethodDef(methodDef);
-	}
+        processExpression(methodDef, body, "initMethod", context.getLocator());
+        componentDef.addInitMethodDef(methodDef);
+    }
 
-	protected InitMethodDefImpl createInitMethodDef(String name) {
-		return new InitMethodDefImpl(name);
+    protected InitMethodDefImpl createInitMethodDef(String name) {
+        return new InitMethodDefImpl(name);
     }
 }

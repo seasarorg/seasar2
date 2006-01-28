@@ -24,51 +24,56 @@ import org.seasar.framework.util.StringUtil;
 import org.seasar.framework.xml.TagHandler;
 import org.seasar.framework.xml.TagHandlerContext;
 import org.xml.sax.Attributes;
+import org.xml.sax.Locator;
 
 /**
  * @author higa
- *
+ * 
  */
 public class AspectTagHandler extends TagHandler {
 
     private static final long serialVersionUID = 5619707344253136193L;
 
-	/**
-	 * @see org.seasar.framework.xml.sax.handler.TagHandler#start(org.seasar.framework.xml.sax.handler.TagHandlerContext, org.xml.sax.Attributes)
-	 */
-	public void start(TagHandlerContext context, Attributes attributes) {
-		AspectDef aspectDef = null;
-		String pointcutStr = attributes.getValue("pointcut");
-		if (pointcutStr != null) {
-			String[] methodNames = StringUtil.split(pointcutStr, ", ");
-			aspectDef = createAspectDef(createPointcut(methodNames));
-		} else {
-			aspectDef = createAspectDef();
-		}
-		context.push(aspectDef);
-	}
+    /**
+     * @see org.seasar.framework.xml.sax.handler.TagHandler#start(org.seasar.framework.xml.sax.handler.TagHandlerContext,
+     *      org.xml.sax.Attributes)
+     */
+    public void start(TagHandlerContext context, Attributes attributes) {
+        AspectDef aspectDef = null;
+        String pointcutStr = attributes.getValue("pointcut");
+        if (pointcutStr != null) {
+            String[] methodNames = StringUtil.split(pointcutStr, ", ");
+            aspectDef = createAspectDef(createPointcut(methodNames));
+        } else {
+            aspectDef = createAspectDef();
+        }
+        context.push(aspectDef);
+    }
 
     /**
-	 * @see org.seasar.framework.xml.sax.handler.TagHandler#end(org.seasar.framework.xml.sax.handler.TagHandlerContext, java.lang.String)
-	 */
-	public void end(TagHandlerContext context, String body) {
-		AspectDef aspectDef = (AspectDef) context.pop();
-		if (!StringUtil.isEmpty(body)) {
-			aspectDef.setExpression(body);
-		}
-		ComponentDef componentDef = (ComponentDef) context.peek();
-		componentDef.addAspectDef(aspectDef);
-	}
+     * @see org.seasar.framework.xml.sax.handler.TagHandler#end(org.seasar.framework.xml.sax.handler.TagHandlerContext,
+     *      java.lang.String)
+     */
+    public void end(TagHandlerContext context, String body) {
+        AspectDef aspectDef = (AspectDef) context.pop();
+        if (!StringUtil.isEmpty(body)) {
+            Locator locator = context.getLocator();
+            aspectDef.setExpression(body, locator.getSystemId(), locator
+                    .getLineNumber());
+        }
+        ComponentDef componentDef = (ComponentDef) context.peek();
+        componentDef.addAspectDef(aspectDef);
+    }
 
-	protected AspectDefImpl createAspectDef() {
-		return new AspectDefImpl();
-	}
+    protected AspectDefImpl createAspectDef() {
+        return new AspectDefImpl();
+    }
 
-	protected AspectDefImpl createAspectDef(Pointcut pointcut) {
-		return new AspectDefImpl(pointcut);
-	}
+    protected AspectDefImpl createAspectDef(Pointcut pointcut) {
+        return new AspectDefImpl(pointcut);
+    }
 
-	protected Pointcut createPointcut(String[] methodNames) {
-		return new PointcutImpl(methodNames);
-	}
+    protected Pointcut createPointcut(String[] methodNames) {
+        return new PointcutImpl(methodNames);
+    }
 }

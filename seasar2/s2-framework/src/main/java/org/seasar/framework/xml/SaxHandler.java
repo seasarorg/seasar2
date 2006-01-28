@@ -21,6 +21,7 @@ import java.util.Map;
 import org.seasar.framework.util.ResourceUtil;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
+import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -30,6 +31,7 @@ public final class SaxHandler extends DefaultHandler {
 	private TagHandlerRule tagHandlerRule;
 	private TagHandlerContext context = new TagHandlerContext();
 	private Map dtdPaths = new HashMap();
+    private Locator locator;
 
 	public SaxHandler(TagHandlerRule tagHandlerRule) {
 		this.tagHandlerRule = tagHandlerRule;
@@ -39,7 +41,16 @@ public final class SaxHandler extends DefaultHandler {
 		return context;
 	}
 
-	public void startElement(String namespaceURI, String localName,
+    
+    public void setDocumentLocator(Locator locator) {
+        this.locator = locator;
+    }
+
+    public void startDocument() throws SAXException {
+        context.setLocator(locator);
+    }
+
+    public void startElement(String namespaceURI, String localName,
 			String qName, Attributes attributes) {
 
 		appendBody();

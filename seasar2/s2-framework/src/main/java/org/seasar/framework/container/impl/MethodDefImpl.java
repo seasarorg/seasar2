@@ -22,88 +22,110 @@ import org.seasar.framework.container.util.ArgDefSupport;
 
 /**
  * @author higa
- *
+ * 
  */
 public abstract class MethodDefImpl implements MethodDef {
 
-	private String methodName;
-	private ArgDefSupport argDefSupport = new ArgDefSupport();
-	private S2Container container;
-	private String expression;
+    private String methodName;
 
-	public MethodDefImpl() {
-	}
+    private ArgDefSupport argDefSupport = new ArgDefSupport();
 
-	public MethodDefImpl(String methodName) {
-		this.methodName = methodName;
-	}
+    private S2Container container;
 
-	/**
-	 * @see org.seasar.framework.container.MethodDef#getMethodName()
-	 */
-	public String getMethodName() {
-		return methodName;
-	}
+    private String expression;
 
-	/**
-	 * @see org.seasar.framework.container.MethodDef#addArgDef(org.seasar.framework.container.ArgDef)
-	 */
-	public void addArgDef(ArgDef argDef) {
-		argDefSupport.addArgDef(argDef);
-	}
+    private String path;
 
-	/**
-	 * @see org.seasar.framework.container.ArgDefAware#getArgDefSize()
-	 */
-	public int getArgDefSize() {
-		return argDefSupport.getArgDefSize();
-	}
+    private int lineNumber;
 
-	/**
-	 * @see org.seasar.framework.container.ArgDefAware#getArgDef(int)
-	 */
-	public ArgDef getArgDef(int index) {
-		return argDefSupport.getArgDef(index);
-	}
+    public MethodDefImpl() {
+    }
 
-	/**
-	 * @see org.seasar.framework.container.MethodDef#getArgs()
-	 */
-	public Object[] getArgs() {
-		Object[] args = new Object[getArgDefSize()];
-		for (int i = 0; i < getArgDefSize(); ++i) {
-			args[i] = getArgDef(i).getValue();
-		}
-		return args;
-	}
+    public MethodDefImpl(String methodName) {
+        this.methodName = methodName;
+    }
 
-	/**
-	 * @see org.seasar.framework.container.MethodDef#getContainer()
-	 */
-	public S2Container getContainer() {
-		return container;
-	}
+    /**
+     * @see org.seasar.framework.container.MethodDef#getMethodName()
+     */
+    public String getMethodName() {
+        return methodName;
+    }
 
-	/**
-	 * @see org.seasar.framework.container.MethodDef#setContainer(org.seasar.framework.container.S2Container)
-	 */
-	public void setContainer(S2Container container) {
-		this.container = container;
-		argDefSupport.setContainer(container);
-	}
+    /**
+     * @see org.seasar.framework.container.MethodDef#addArgDef(org.seasar.framework.container.ArgDef)
+     */
+    public void addArgDef(ArgDef argDef) {
+        argDefSupport.addArgDef(argDef);
+    }
 
-	/**
-	 * @see org.seasar.framework.container.MethodDef#getExpression()
-	 */
-	public String getExpression() {
-		return expression;
-	}
+    /**
+     * @see org.seasar.framework.container.ArgDefAware#getArgDefSize()
+     */
+    public int getArgDefSize() {
+        return argDefSupport.getArgDefSize();
+    }
 
-	/**
-	 * @see org.seasar.framework.container.MethodDef#setExpression(java.lang.String)
-	 */
-	public void setExpression(String expression) {
-		this.expression = expression;
-	}
+    /**
+     * @see org.seasar.framework.container.ArgDefAware#getArgDef(int)
+     */
+    public ArgDef getArgDef(int index) {
+        return argDefSupport.getArgDef(index);
+    }
 
+    /**
+     * @see org.seasar.framework.container.MethodDef#getArgs()
+     */
+    public Object[] getArgs() {
+        Object[] args = new Object[getArgDefSize()];
+        for (int i = 0; i < getArgDefSize(); ++i) {
+            args[i] = getArgDef(i).getValue();
+        }
+        return args;
+    }
+
+    /**
+     * @see org.seasar.framework.container.MethodDef#getContainer()
+     */
+    public S2Container getContainer() {
+        return container;
+    }
+
+    /**
+     * @see org.seasar.framework.container.MethodDef#setContainer(org.seasar.framework.container.S2Container)
+     */
+    public void setContainer(S2Container container) {
+        this.container = container;
+        argDefSupport.setContainer(container);
+    }
+
+    /**
+     * @see org.seasar.framework.container.MethodDef#getExpression()
+     */
+    public String getExpression() {
+        return expression;
+    }
+
+    /**
+     * @see org.seasar.framework.container.MethodDef#setExpression(java.lang.String)
+     */
+    public void setExpression(String expression) {
+        this.expression = expression;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public int getLineNumber() {
+        return lineNumber;
+    }
+
+    public void setLineNumber(int lineNumber) {
+        this.lineNumber = lineNumber;
+    }
 }

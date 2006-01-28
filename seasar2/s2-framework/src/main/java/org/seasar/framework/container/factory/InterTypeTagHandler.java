@@ -22,6 +22,7 @@ import org.seasar.framework.util.StringUtil;
 import org.seasar.framework.xml.TagHandler;
 import org.seasar.framework.xml.TagHandlerContext;
 import org.xml.sax.Attributes;
+import org.xml.sax.Locator;
 
 public class InterTypeTagHandler extends TagHandler {
     private static final long serialVersionUID = 1L;
@@ -34,7 +35,9 @@ public class InterTypeTagHandler extends TagHandler {
     public void end(TagHandlerContext context, String body) {
         final InterTypeDef interTypeDef = (InterTypeDef) context.pop();
         if (!StringUtil.isEmpty(body)) {
-            interTypeDef.setExpression(body);
+            Locator locator = context.getLocator();
+            interTypeDef.setExpression(body, locator.getSystemId(), locator
+                    .getLineNumber());
         }
         ComponentDef componentDef = (ComponentDef) context.peek();
         componentDef.addInterTypeDef(interTypeDef);

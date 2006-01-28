@@ -19,6 +19,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
+import org.xml.sax.Locator;
+
 public final class TagHandlerContext {
 
 	private static final Integer ONE = new Integer(1);
@@ -33,6 +35,20 @@ public final class TagHandlerContext {
 	private Stack stack = new Stack();
 	private Map pathCounts = new HashMap();
 	private Map parameters = new HashMap();
+    private Locator locator = new Locator() {
+        public int getColumnNumber() {
+            return 0;
+        }
+        public int getLineNumber() {
+            return 0;
+        }
+        public String getPublicId() {
+            return null;
+        }
+        public String getSystemId() {
+            return null;
+        }
+    };
 
 	public void push(Object o) {
 		if (stack.empty()) {
@@ -79,7 +95,15 @@ public final class TagHandlerContext {
 		parameters.put(name, parameter);
 	}
 
-	public void startElement(String qName) {
+	public Locator getLocator() {
+        return locator;
+    }
+
+    public void setLocator(Locator locator) {
+        this.locator = locator;
+    }
+
+    public void startElement(String qName) {
 		bodyStack.push(body);
 		body = new StringBuffer();
 		characters = new StringBuffer();

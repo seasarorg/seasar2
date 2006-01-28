@@ -22,32 +22,37 @@ import org.seasar.framework.util.StringUtil;
 import org.seasar.framework.xml.TagHandler;
 import org.seasar.framework.xml.TagHandlerContext;
 import org.xml.sax.Attributes;
+import org.xml.sax.Locator;
 
 /**
  * @author higa
- *
+ * 
  */
 public class ArgTagHandler extends TagHandler {
 
     private static final long serialVersionUID = -6210356712008358336L;
 
-	/**
-	 * @see org.seasar.framework.xml.sax.handler.TagHandler#start(org.seasar.framework.xml.sax.handler.TagHandlerContext, org.xml.sax.Attributes)
-	 */
-	public void start(TagHandlerContext context, Attributes attributes) {
-		context.push(new ArgDefImpl());
-	}
+    /**
+     * @see org.seasar.framework.xml.sax.handler.TagHandler#start(org.seasar.framework.xml.sax.handler.TagHandlerContext,
+     *      org.xml.sax.Attributes)
+     */
+    public void start(TagHandlerContext context, Attributes attributes) {
+        context.push(new ArgDefImpl());
+    }
 
-	/**
-	 * @see org.seasar.framework.xml.sax.handler.TagHandler#end(org.seasar.framework.xml.sax.handler.TagHandlerContext, java.lang.String)
-	 */
-	public void end(TagHandlerContext context, String body) {
-		ArgDef argDef = (ArgDef) context.pop();
-		if (!StringUtil.isEmpty(body)) {
-			argDef.setExpression(body);
-		}
-		ArgDefAware argDefAware = (ArgDefAware) context.peek();
-		argDefAware.addArgDef(argDef);
-	}
+    /**
+     * @see org.seasar.framework.xml.sax.handler.TagHandler#end(org.seasar.framework.xml.sax.handler.TagHandlerContext,
+     *      java.lang.String)
+     */
+    public void end(TagHandlerContext context, String body) {
+        ArgDef argDef = (ArgDef) context.pop();
+        if (!StringUtil.isEmpty(body)) {
+            Locator locator = context.getLocator();
+            argDef.setExpression(body, locator.getSystemId(), locator
+                    .getLineNumber());
+        }
+        ArgDefAware argDefAware = (ArgDefAware) context.peek();
+        argDefAware.addArgDef(argDef);
+    }
 
 }

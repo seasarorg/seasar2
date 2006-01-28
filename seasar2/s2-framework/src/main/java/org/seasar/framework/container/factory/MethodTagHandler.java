@@ -18,30 +18,28 @@ package org.seasar.framework.container.factory;
 import org.seasar.framework.container.MethodDef;
 import org.seasar.framework.util.StringUtil;
 import org.seasar.framework.xml.TagHandler;
+import org.xml.sax.Locator;
 
 /**
  * @author higa
- *
+ * 
  */
 public abstract class MethodTagHandler extends TagHandler {
-
-	protected void processExpression(
-		MethodDef methodDef,
-		String expression,
-		String tagName) {
-
-		String expr = expression;
-		if (expr != null) {
-			expr = expr.trim();
-			if (!StringUtil.isEmpty(expr)) {
-				methodDef.setExpression(expr);
-			} else {
-				expr = null;
-			}
-		}
-		if (methodDef.getMethodName() == null && expr == null) {
-			throw new TagAttributeNotDefinedRuntimeException(tagName, "name");
-		}
-	}
-
+    protected void processExpression(MethodDef methodDef, String expression,
+            String tagName, Locator locator) {
+        String expr = expression;
+        if (expr != null) {
+            expr = expr.trim();
+            if (!StringUtil.isEmpty(expr)) {
+                methodDef.setExpression(expr);
+                methodDef.setPath(locator.getSystemId());
+                methodDef.setLineNumber(locator.getLineNumber());
+            } else {
+                expr = null;
+            }
+        }
+        if (methodDef.getMethodName() == null && expr == null) {
+            throw new TagAttributeNotDefinedRuntimeException(tagName, "name");
+        }
+    }
 }

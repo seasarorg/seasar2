@@ -15,22 +15,29 @@
  */
 package org.seasar.framework.container;
 
-
 /**
  * @author higa
- *
+ * 
  */
 public interface MethodDef extends ArgDefAware {
-	
-	public String getMethodName();
-	
-	public Object[] getArgs();
-	
-	public S2Container getContainer();
-	
-	public void setContainer(S2Container container);
-	
-	public String getExpression();
-	
-	public void setExpression(String expression);
+
+    public String getMethodName();
+
+    public Object[] getArgs();
+
+    public S2Container getContainer();
+
+    public void setContainer(S2Container container);
+
+    public String getExpression();
+
+    public void setExpression(String expression);
+
+    public String getPath();
+
+    public void setPath(String path);
+
+    public int getLineNumber();
+
+    public void setLineNumber(int lineNumber);
 }

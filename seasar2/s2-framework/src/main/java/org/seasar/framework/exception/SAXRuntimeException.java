@@ -16,16 +16,29 @@
 package org.seasar.framework.exception;
 
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 /**
  * @author higa
- *
+ * 
  */
 public final class SAXRuntimeException extends SRuntimeException {
-
     private static final long serialVersionUID = -4933312103385038765L;
 
-	public SAXRuntimeException(SAXException cause) {
-		super("ESSR0054", new Object[] { cause }, cause);
-	}
+    public SAXRuntimeException(SAXException cause) {
+        super("ESSR0054", new Object[] { createMessage(cause) }, cause);
+    }
+
+    protected static String createMessage(final SAXException cause) {
+        StringBuffer buf = new StringBuffer(100);
+        buf.append(cause);
+        if (cause instanceof SAXParseException) {
+            SAXParseException e = (SAXParseException) cause;
+            if (e.getSystemId() != null) {
+                buf.append(" at ").append(e.getSystemId()).append("(").append(
+                        e.getLineNumber()).append(")");
+            }
+        }
+        return new String(buf);
+    }
 }

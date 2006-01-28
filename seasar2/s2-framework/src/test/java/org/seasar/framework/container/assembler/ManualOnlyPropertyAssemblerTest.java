@@ -7,10 +7,10 @@ import org.seasar.framework.beans.PropertyNotFoundRuntimeException;
 import org.seasar.framework.container.PropertyAssembler;
 import org.seasar.framework.container.PropertyDef;
 import org.seasar.framework.container.S2Container;
-import org.seasar.framework.container.assembler.ManualOnlyPropertyAssembler;
 import org.seasar.framework.container.impl.ComponentDefImpl;
 import org.seasar.framework.container.impl.PropertyDefImpl;
 import org.seasar.framework.container.impl.S2ContainerImpl;
+import org.seasar.framework.exception.OgnlRuntimeException;
 
 /**
  * @author higa
@@ -45,7 +45,7 @@ public class ManualOnlyPropertyAssemblerTest extends TestCase {
 		try {
 			assembler.assemble(a);
 			fail("1");
-		} catch (IllegalPropertyRuntimeException ex) {
+		} catch (OgnlRuntimeException ex) {
 			System.out.println(ex);
 		}
 	}

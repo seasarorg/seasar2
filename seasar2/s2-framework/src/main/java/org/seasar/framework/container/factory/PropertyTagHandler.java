@@ -24,47 +24,51 @@ import org.seasar.framework.util.StringUtil;
 import org.seasar.framework.xml.TagHandler;
 import org.seasar.framework.xml.TagHandlerContext;
 import org.xml.sax.Attributes;
+import org.xml.sax.Locator;
 
 /**
  * @author higa
- *
+ * 
  */
 public class PropertyTagHandler extends TagHandler {
 
     private static final long serialVersionUID = -8153752681379626269L;
 
-	/**
-	 * @see org.seasar.framework.xml.sax.handler.TagHandler#start(org.seasar.framework.xml.sax.handler.TagHandlerContext, org.xml.sax.Attributes)
-	 */
-	public void start(TagHandlerContext context, Attributes attributes) {
-		String name = attributes.getValue("name");
-		if (name == null) {
-			throw new TagAttributeNotDefinedRuntimeException(
-				"property",
-				"name");
-		}
+    /**
+     * @see org.seasar.framework.xml.sax.handler.TagHandler#start(org.seasar.framework.xml.sax.handler.TagHandlerContext,
+     *      org.xml.sax.Attributes)
+     */
+    public void start(TagHandlerContext context, Attributes attributes) {
+        String name = attributes.getValue("name");
+        if (name == null) {
+            throw new TagAttributeNotDefinedRuntimeException("property", "name");
+        }
         PropertyDef pd = createPropertyDef(name);
         String bindingTypeName = attributes.getValue("bindingType");
         if (bindingTypeName != null) {
-            BindingTypeDef bindingTypeDef = BindingTypeDefFactory.getBindingTypeDef(bindingTypeName);
+            BindingTypeDef bindingTypeDef = BindingTypeDefFactory
+                    .getBindingTypeDef(bindingTypeName);
             pd.setBindingTypeDef(bindingTypeDef);
         }
-		context.push(pd);
-	}
+        context.push(pd);
+    }
 
-	/**
-	 * @see org.seasar.framework.xml.sax.handler.TagHandler#end(org.seasar.framework.xml.sax.handler.TagHandlerContext, java.lang.String)
-	 */
-	public void end(TagHandlerContext context, String body) {
-		PropertyDef propertyDef = (PropertyDef) context.pop();
-		if (!StringUtil.isEmpty(body)) {
-			propertyDef.setExpression(body);
-		}
-		ComponentDef componentDef = (ComponentDef) context.peek();
-		componentDef.addPropertyDef(propertyDef);
-	}
+    /**
+     * @see org.seasar.framework.xml.sax.handler.TagHandler#end(org.seasar.framework.xml.sax.handler.TagHandlerContext,
+     *      java.lang.String)
+     */
+    public void end(TagHandlerContext context, String body) {
+        PropertyDef propertyDef = (PropertyDef) context.pop();
+        if (!StringUtil.isEmpty(body)) {
+            Locator locator = context.getLocator();
+            propertyDef.setExpression(body, locator.getSystemId(), locator
+                    .getLineNumber());
+        }
+        ComponentDef componentDef = (ComponentDef) context.peek();
+        componentDef.addPropertyDef(propertyDef);
+    }
 
-	protected PropertyDefImpl createPropertyDef(String name) {
-		return new PropertyDefImpl(name);
-	}
+    protected PropertyDefImpl createPropertyDef(String name) {
+        return new PropertyDefImpl(name);
+    }
 }

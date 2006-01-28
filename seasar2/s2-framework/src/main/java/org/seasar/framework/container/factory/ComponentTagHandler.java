@@ -26,6 +26,7 @@ import org.seasar.framework.util.StringUtil;
 import org.seasar.framework.xml.TagHandler;
 import org.seasar.framework.xml.TagHandlerContext;
 import org.xml.sax.Attributes;
+import org.xml.sax.Locator;
 
 /**
  * @author higa
@@ -82,7 +83,10 @@ public class ComponentTagHandler extends TagHandler {
 		if (body != null) {
 			expression = body.trim();
 			if (!StringUtil.isEmpty(expression)) {
+                Locator locator = context.getLocator();
 				componentDef.setExpression(expression);
+                componentDef.setPath(locator.getSystemId());
+                componentDef.setLineNumber(locator.getLineNumber());
 			} else {
 				expression = null;
 			}

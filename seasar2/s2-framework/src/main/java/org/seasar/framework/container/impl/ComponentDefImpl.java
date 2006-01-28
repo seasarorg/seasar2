@@ -58,6 +58,10 @@ public class ComponentDefImpl implements ComponentDef, ContainerConstants {
 
     private String expression;
 
+    private String path;
+
+    private int lineNumber;
+
     private ArgDefSupport argDefSupport = new ArgDefSupport();
 
     private PropertyDefSupport propertyDefSupport = new PropertyDefSupport();
@@ -339,6 +343,22 @@ public class ComponentDefImpl implements ComponentDef, ContainerConstants {
      */
     public void setExpression(String expression) {
         this.expression = expression;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public int getLineNumber() {
+        return lineNumber;
+    }
+
+    public void setLineNumber(int lineNumber) {
+        this.lineNumber = lineNumber;
     }
 
     /**

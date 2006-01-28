@@ -17,24 +17,26 @@ package org.seasar.framework.container;
 
 /**
  * @author higa
- *
+ * 
  */
 public interface ArgDef extends MetaDefAware {
-	
-	public Object getValue();
-    
-    public void setValue(Object value);
-	
-	public S2Container getContainer();
-	
-	public void setContainer(S2Container container);
-	
-	public String getExpression();
 
-	public void setExpression(String str);
-    
+    public Object getValue();
+
+    public void setValue(Object value);
+
+    public S2Container getContainer();
+
+    public void setContainer(S2Container container);
+
+    public String getExpression();
+
+    public void setExpression(String expression);
+
+    public void setExpression(String expression, String path, int lineNumber);
+
     public boolean isValueGettable();
-	
-	public void setChildComponentDef(ComponentDef componentDef);
+
+    public void setChildComponentDef(ComponentDef componentDef);
 
 }

@@ -19,61 +19,75 @@ import java.util.Map;
 
 import ognl.ClassResolver;
 import ognl.Ognl;
-import ognl.OgnlException;
 
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.exception.OgnlRuntimeException;
 
 /**
  * @author higa
- *
+ * 
  */
 public final class OgnlUtil {
 
-	private OgnlUtil() {
-	}
+    private OgnlUtil() {
+    }
 
-	public static Object getValue(Object exp, Object root) {
+    public static Object getValue(Object exp, Object root) {
+        return getValue(exp, root, null, 0);
+    }
+
+    public static Object getValue(Object exp, Object root, String path,
+            int lineNumber) {
         Map ctx = addClassResolverIfNecessary(null, root);
         if (ctx != null) {
             try {
                 return Ognl.getValue(exp, ctx, root);
-            } catch (OgnlException ex) {
-                throw new OgnlRuntimeException(ex);
+            } catch (Exception ex) {
+                throw new OgnlRuntimeException(ex, path, lineNumber);
             }
         } else {
             try {
                 return Ognl.getValue(exp, root);
-            } catch (OgnlException ex) {
-                throw new OgnlRuntimeException(ex);
+            } catch (Exception ex) {
+                throw new OgnlRuntimeException(ex, path, lineNumber);
             }
         }
-	}
-	
+    }
+
     public static Object getValue(Object exp, Map ctx, Object root) {
+        return getValue(exp, ctx, root, null, 0);
+    }
+
+    public static Object getValue(Object exp, Map ctx, Object root,
+            String path, int lineNumber) {
         Map newCtx = addClassResolverIfNecessary(ctx, root);
-		try {
-			return Ognl.getValue(exp, newCtx, root);
-		} catch (OgnlException ex) {
-			throw new OgnlRuntimeException(ex);
-		}
-	}
-	
-	public static Object parseExpression(String expression) {
-		try {
-			return Ognl.parseExpression(expression);
-		} catch (OgnlException ex) {
-			System.err.println("parseExpression[" + expression + "]");
-			throw new OgnlRuntimeException(ex);
-		}
-	}
+        try {
+            return Ognl.getValue(exp, newCtx, root);
+        } catch (Exception ex) {
+            throw new OgnlRuntimeException(ex, path, lineNumber);
+        }
+    }
+
+    public static Object parseExpression(String expression) {
+        return parseExpression(expression, null, 0);
+    }
+
+    public static Object parseExpression(String expression, String path,
+            int lineNumber) {
+        try {
+            return Ognl.parseExpression(expression);
+        } catch (Exception ex) {
+            throw new OgnlRuntimeException(ex, path, lineNumber);
+        }
+    }
 
     static Map addClassResolverIfNecessary(Map ctx, Object root) {
         if (root instanceof S2Container) {
-            S2Container container = (S2Container)root;
+            S2Container container = (S2Container) root;
             ClassLoader classLoader = container.getClassLoader();
             if (classLoader != null) {
-                ClassResolverImpl classResolver = new ClassResolverImpl(classLoader);
+                ClassResolverImpl classResolver = new ClassResolverImpl(
+                        classLoader);
                 if (ctx == null) {
                     ctx = Ognl.createDefaultContext(root, classResolver);
                 } else {
@@ -91,13 +105,15 @@ public final class OgnlUtil {
             classLoader_ = classLoader;
         }
 
-        public Class classForName(String className, Map ctx) throws ClassNotFoundException {
+        public Class classForName(String className, Map ctx)
+                throws ClassNotFoundException {
             try {
                 return Class.forName(className, true, classLoader_);
             } catch (ClassNotFoundException ex) {
                 int dot = className.indexOf('.');
                 if (dot < 0) {
-                    return Class.forName("java.lang." + className, true, classLoader_);
+                    return Class.forName("java.lang." + className, true,
+                            classLoader_);
                 } else {
                     throw ex;
                 }

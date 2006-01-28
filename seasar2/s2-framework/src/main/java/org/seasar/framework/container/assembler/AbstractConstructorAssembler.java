@@ -58,8 +58,10 @@ public abstract class AbstractConstructorAssembler extends AbstractAssembler
         String expression = cd.getExpression();
         Class componentClass = cd.getComponentClass();
         Object component = null;
-        Object exp = OgnlUtil.parseExpression(expression);
-        component = OgnlUtil.getValue(exp, container);
+        Object exp = OgnlUtil.parseExpression(expression, cd.getPath(), cd
+                .getLineNumber());
+        component = OgnlUtil.getValue(exp, container, cd.getPath(), cd
+                .getLineNumber());
         if (componentClass != null) {
             if (!componentClass.isInstance(component)) {
                 throw new ClassUnmatchRuntimeException(componentClass,

@@ -47,15 +47,21 @@ public final class SaxHandlerParser {
 	}
 
 	public Object parse(String path) {
-		return parse(ResourceUtil.getResourceAsStream(path));
+		return parse(ResourceUtil.getResourceAsStream(path), path);
 	}
 
 	public Object parse(InputStream inputStream) {
 		return parse(new InputSource(inputStream));
 	}
 
-	public Object parse(InputSource inputSource) {
-		SAXParserUtil.parse(saxParser, inputSource, saxHandler);
-		return saxHandler.getResult();
-	}
+    public Object parse(InputStream inputStream, String path) {
+        InputSource is = new InputSource(inputStream);
+        is.setSystemId(path);
+        return parse(is);
+    }
+
+    public Object parse(InputSource inputSource) {
+        SAXParserUtil.parse(saxParser, inputSource, saxHandler);
+        return saxHandler.getResult();
+    }
 }

@@ -19,50 +19,52 @@ import org.seasar.framework.hotswap.Hotswap;
 
 /**
  * @author higa
- *
+ * 
  */
-public interface ComponentDef
-	extends
-		ArgDefAware,
-        InterTypeDefAware,
-		PropertyDefAware,
-		InitMethodDefAware,
-		DestroyMethodDefAware,
-		AspectDefAware,
-		MetaDefAware {
+public interface ComponentDef extends ArgDefAware, InterTypeDefAware,
+        PropertyDefAware, InitMethodDefAware, DestroyMethodDefAware,
+        AspectDefAware, MetaDefAware {
 
-	public Object getComponent()
-		throws TooManyRegistrationRuntimeException, CyclicReferenceRuntimeException;
-		
-	public void injectDependency(Object outerComponent);
+    public Object getComponent() throws TooManyRegistrationRuntimeException,
+            CyclicReferenceRuntimeException;
 
-	public S2Container getContainer();
+    public void injectDependency(Object outerComponent);
 
-	public void setContainer(S2Container container);
+    public S2Container getContainer();
 
-	public Class getComponentClass();
+    public void setContainer(S2Container container);
 
-	public String getComponentName();
-    
+    public Class getComponentClass();
+
+    public String getComponentName();
+
     public void setComponentName(String componentName);
 
-	public Class getConcreteClass();
+    public Class getConcreteClass();
 
-	public AutoBindingDef getAutoBindingDef();
+    public AutoBindingDef getAutoBindingDef();
 
-	public void setAutoBindingDef(AutoBindingDef autoBindingDef);
+    public void setAutoBindingDef(AutoBindingDef autoBindingDef);
 
-	public InstanceDef getInstanceDef();
+    public InstanceDef getInstanceDef();
 
-	public void setInstanceDef(InstanceDef instanceDef);
-	
-	public String getExpression();
+    public void setInstanceDef(InstanceDef instanceDef);
 
-	public void setExpression(String expression);
+    public String getExpression();
 
-	public void init();
+    public void setExpression(String expression);
 
-	public void destroy();
-    
+    public String getPath();
+
+    public void setPath(String path);
+
+    public int getLineNumber();
+
+    public void setLineNumber(int lineNumber);
+
+    public void init();
+
+    public void destroy();
+
     public Hotswap getHotswap();
 }

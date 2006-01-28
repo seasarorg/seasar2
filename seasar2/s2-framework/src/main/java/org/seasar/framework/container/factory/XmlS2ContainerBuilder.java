@@ -65,7 +65,7 @@ public class XmlS2ContainerBuilder extends AbstractS2ContainerBuilder {
         final SaxHandlerParser parser = createSaxHandlerParser(parent, path);
         final InputStream is = getInputStream(path);
         try {
-            return (S2Container) parser.parse(is);
+            return (S2Container) parser.parse(is, path);
         }
         finally {
             InputStreamUtil.close(is);

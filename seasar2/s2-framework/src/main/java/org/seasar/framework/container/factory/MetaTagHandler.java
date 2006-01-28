@@ -22,36 +22,41 @@ import org.seasar.framework.util.StringUtil;
 import org.seasar.framework.xml.TagHandler;
 import org.seasar.framework.xml.TagHandlerContext;
 import org.xml.sax.Attributes;
+import org.xml.sax.Locator;
 
 /**
  * @author higa
- *
+ * 
  */
 public class MetaTagHandler extends TagHandler {
 
     private static final long serialVersionUID = -3372861766134433725L;
 
-	/**
-	 * @see org.seasar.framework.xml.sax.handler.TagHandler#start(org.seasar.framework.xml.sax.handler.TagHandlerContext, org.xml.sax.Attributes)
-	 */
-	public void start(TagHandlerContext context, Attributes attributes) {
-		String name = attributes.getValue("name");
-		context.push(createMetaDef(name));
-	}
+    /**
+     * @see org.seasar.framework.xml.sax.handler.TagHandler#start(org.seasar.framework.xml.sax.handler.TagHandlerContext,
+     *      org.xml.sax.Attributes)
+     */
+    public void start(TagHandlerContext context, Attributes attributes) {
+        String name = attributes.getValue("name");
+        context.push(createMetaDef(name));
+    }
 
-	/**
-	 * @see org.seasar.framework.xml.sax.handler.TagHandler#end(org.seasar.framework.xml.sax.handler.TagHandlerContext, java.lang.String)
-	 */
-	public void end(TagHandlerContext context, String body) {
-		MetaDef metaDef = (MetaDef) context.pop();
-		if (!StringUtil.isEmpty(body)) {
-			metaDef.setExpression(body);
-		}
-		MetaDefAware metaDefAware = (MetaDefAware) context.peek();
-		metaDefAware.addMetaDef(metaDef);
-	}
+    /**
+     * @see org.seasar.framework.xml.sax.handler.TagHandler#end(org.seasar.framework.xml.sax.handler.TagHandlerContext,
+     *      java.lang.String)
+     */
+    public void end(TagHandlerContext context, String body) {
+        MetaDef metaDef = (MetaDef) context.pop();
+        if (!StringUtil.isEmpty(body)) {
+            Locator locator = context.getLocator();
+            metaDef.setExpression(body, locator.getSystemId(), locator
+                    .getLineNumber());
+        }
+        MetaDefAware metaDefAware = (MetaDefAware) context.peek();
+        metaDefAware.addMetaDef(metaDef);
+    }
 
-	protected MetaDefImpl createMetaDef(String name) {
-		return new MetaDefImpl(name);
-	}
+    protected MetaDefImpl createMetaDef(String name) {
+        return new MetaDefImpl(name);
+    }
 }

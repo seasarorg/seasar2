@@ -24,119 +24,133 @@ import org.seasar.framework.util.OgnlUtil;
 
 /**
  * @author higa
- *
+ * 
  */
 public class ArgDefImpl implements ArgDef {
 
-	private Object value;
-	private S2Container container;
-	private String expression;
-	private Object exp;
-	private ComponentDef childComponentDef;
-	private MetaDefSupport metaDefSupport = new MetaDefSupport();
+    private Object value;
 
-	public ArgDefImpl() {
-	}
-	
-	public ArgDefImpl(Object value) {
-		setValue(value);
-	}
+    private S2Container container;
 
-	/**
-	 * @see org.seasar.framework.container.ConstructorArgDef#getReturnValue()
-	 */
-	public final Object getValue() {
-		if (exp != null) {
-			return OgnlUtil.getValue(exp, container);
-		}
-		if (childComponentDef != null) {
-			return childComponentDef.getComponent();
-		}
-		return value;
-	}
+    private String expression;
 
-	public final void setValue(Object value) {
-		this.value = value;
-	}
-    
+    private String path;
+
+    private int lineNumber;
+
+    private Object exp;
+
+    private ComponentDef childComponentDef;
+
+    private MetaDefSupport metaDefSupport = new MetaDefSupport();
+
+    public ArgDefImpl() {
+    }
+
+    public ArgDefImpl(Object value) {
+        setValue(value);
+    }
+
+    public final Object getValue() {
+        if (exp != null) {
+            return OgnlUtil.getValue(exp, container, path, lineNumber);
+        }
+        if (childComponentDef != null) {
+            return childComponentDef.getComponent();
+        }
+        return value;
+    }
+
+    public final void setValue(Object value) {
+        this.value = value;
+    }
+
     public boolean isValueGettable() {
         return value != null || childComponentDef != null || exp != null;
     }
-	
-	/**
-	 * @see org.seasar.framework.container.ArgDef#getContainer()
-	 */
-	public final S2Container getContainer() {
-		return container;
-	}
 
-	/**
-	 * @see org.seasar.framework.container.ArgDef#setContainer(org.seasar.framework.container.S2Container)
-	 */
-	public final void setContainer(S2Container container) {
-		this.container = container;
-		if (childComponentDef != null) {
-			childComponentDef.setContainer(container);
-		}
-		metaDefSupport.setContainer(container);
-	}
+    /**
+     * @see org.seasar.framework.container.ArgDef#getContainer()
+     */
+    public final S2Container getContainer() {
+        return container;
+    }
 
-	/**
-	 * @see org.seasar.framework.container.ArgDef#getExpression()
-	 */
-	public final String getExpression() {
-		return expression;
-	}
-	/**
-	 * @see org.seasar.framework.container.ArgDef#setExpression(java.lang.String)
-	 */
-	public final void setExpression(String expression) {
-		this.expression = expression;
-		exp = OgnlUtil.parseExpression(expression);
-	}
+    /**
+     * @see org.seasar.framework.container.ArgDef#setContainer(org.seasar.framework.container.S2Container)
+     */
+    public final void setContainer(S2Container container) {
+        this.container = container;
+        if (childComponentDef != null) {
+            childComponentDef.setContainer(container);
+        }
+        metaDefSupport.setContainer(container);
+    }
 
-	/**
-	 * @see org.seasar.framework.container.ArgDef#setChildComponentDef(org.seasar.framework.container.ComponentDef)
-	 */
-	public final void setChildComponentDef(ComponentDef componentDef) {
-		if (container != null) {
-			componentDef.setContainer(container);
-		}
-		childComponentDef = componentDef;
-	}
-	
-	/**
-	 * @see org.seasar.framework.container.MetaDefAware#addMetaDef(org.seasar.framework.container.MetaDef)
-	 */
-	public void addMetaDef(MetaDef metaDef) {
-		metaDefSupport.addMetaDef(metaDef);
-	}
-	
-	/**
-	 * @see org.seasar.framework.container.MetaDefAware#getMetaDef(int)
-	 */
-	public MetaDef getMetaDef(int index) {
-		return metaDefSupport.getMetaDef(index);
-	}
-	
-	/**
-	 * @see org.seasar.framework.container.MetaDefAware#getMetaDef(java.lang.String)
-	 */
-	public MetaDef getMetaDef(String name) {
-		return metaDefSupport.getMetaDef(name);
-	}
-	
-	/**
-	 * @see org.seasar.framework.container.MetaDefAware#getMetaDefs(java.lang.String)
-	 */
-	public MetaDef[] getMetaDefs(String name) {
-		return metaDefSupport.getMetaDefs(name);
-	}
-	
-	/**
-	 * @see org.seasar.framework.container.MetaDefAware#getMetaDefSize()
-	 */
-	public int getMetaDefSize() {
-		return metaDefSupport.getMetaDefSize();
-	}
+    /**
+     * @see org.seasar.framework.container.ArgDef#getExpression()
+     */
+    public final String getExpression() {
+        return expression;
+    }
+
+    /**
+     * @see org.seasar.framework.container.ArgDef#setExpression(java.lang.String)
+     */
+    public final void setExpression(String expression) {
+        setExpression(expression, null, 0);
+    }
+
+    public final void setExpression(String expression, String path,
+            int lineNumber) {
+        this.expression = expression;
+        this.path = path;
+        this.lineNumber = lineNumber;
+        exp = OgnlUtil.parseExpression(expression, path, lineNumber);
+    }
+
+    /**
+     * @see org.seasar.framework.container.ArgDef#setChildComponentDef(org.seasar.framework.container.ComponentDef)
+     */
+    public final void setChildComponentDef(ComponentDef componentDef) {
+        if (container != null) {
+            componentDef.setContainer(container);
+        }
+        childComponentDef = componentDef;
+    }
+
+    /**
+     * @see org.seasar.framework.container.MetaDefAware#addMetaDef(org.seasar.framework.container.MetaDef)
+     */
+    public void addMetaDef(MetaDef metaDef) {
+        metaDefSupport.addMetaDef(metaDef);
+    }
+
+    /**
+     * @see org.seasar.framework.container.MetaDefAware#getMetaDef(int)
+     */
+    public MetaDef getMetaDef(int index) {
+        return metaDefSupport.getMetaDef(index);
+    }
+
+    /**
+     * @see org.seasar.framework.container.MetaDefAware#getMetaDef(java.lang.String)
+     */
+    public MetaDef getMetaDef(String name) {
+        return metaDefSupport.getMetaDef(name);
+    }
+
+    /**
+     * @see org.seasar.framework.container.MetaDefAware#getMetaDefs(java.lang.String)
+     */
+    public MetaDef[] getMetaDefs(String name) {
+        return metaDefSupport.getMetaDefs(name);
+    }
+
+    /**
+     * @see org.seasar.framework.container.MetaDefAware#getMetaDefSize()
+     */
+    public int getMetaDefSize() {
+        return metaDefSupport.getMetaDefSize();
+    }
 }

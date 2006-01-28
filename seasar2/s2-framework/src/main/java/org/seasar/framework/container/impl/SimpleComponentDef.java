@@ -311,8 +311,24 @@ public class SimpleComponentDef implements ComponentDef {
 	public void setExpression(String str) {
 		throw new UnsupportedOperationException("setExpression");
 	}
-	
-	/*
+
+    public String getPath() {
+        throw new UnsupportedOperationException("getPath");
+    }
+
+    public void setPath(String path) {
+        throw new UnsupportedOperationException("setPath");
+    }
+    
+    public int getLineNumber() {
+        throw new UnsupportedOperationException("getLineNumber");
+    }
+
+    public void setLineNumber(int lineNumber) {
+        throw new UnsupportedOperationException("setLineNumber");
+    }
+
+    /*
 	 * @see org.seasar.framework.container.ComponentDef#getInstanceDef()
 	 */
 	public InstanceDef getInstanceDef() {
