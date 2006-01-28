@@ -24,12 +24,20 @@
 		@com.ibm.ejs.jts.jta.JTSXA@getTransactionManager()
 	</component>
 	-->
-	
+
 	<!-- WebSphere 5 -->
 	<!--
 	<component name="TransactionManager"
 			class="javax.transaction.TransactionManager">
 		@com.ibm.ejs.jts.jta.TransactionManagerFactory@getTransactionManager()
+	</component>
+	-->
+
+	<!-- WebSphere 5.1 -->
+	<!--
+	<component name="TransactionManager"
+			class="javax.transaction.TransactionManager">
+		@com.ibm.ws.Transction.TransactionManagerFactory@getTransactionManager()
 	</component>
 	-->
 	
