@@ -27,6 +27,7 @@ import org.seasar.framework.container.PropertyDef;
 import org.seasar.framework.container.assembler.AutoBindingDefFactory;
 import org.seasar.framework.container.assembler.BindingTypeDefFactory;
 import org.seasar.framework.container.deployer.InstanceDefFactory;
+import org.seasar.framework.container.ognl.OgnlExpression;
 import org.seasar.framework.unit.S2FrameworkTestCase;
 
 /**
@@ -63,7 +64,8 @@ public class ConstantAnnotationHandlerTest extends S2FrameworkTestCase {
         PropertyDef propDef = handler.createPropertyDef(
                 beanDesc, propDesc);
         assertEquals("2", "aaa", propDef.getPropertyName());
-        assertEquals("3", "aaa2", propDef.getExpression());
+        assertEquals("3", "aaa2", ((OgnlExpression) propDef.getExpression())
+                .getSource());
 
         propDesc = beanDesc.getPropertyDesc("bbb");
         propDef = handler.createPropertyDef(beanDesc, propDesc);
@@ -80,7 +82,8 @@ public class ConstantAnnotationHandlerTest extends S2FrameworkTestCase {
         handler.appendAspect(cd);
         assertEquals("1", 1, cd.getAspectDefSize());
         AspectDef aspectDef = cd.getAspectDef(0);
-        assertEquals("2", "aop.traceInterceptor", aspectDef.getExpression());
+        assertEquals("2", "aop.traceInterceptor", ((OgnlExpression) aspectDef
+                .getExpression()).getSource());
     }
     
     public void testAppendAspect2() throws Exception {
@@ -88,7 +91,8 @@ public class ConstantAnnotationHandlerTest extends S2FrameworkTestCase {
         handler.appendAspect(cd);
         assertEquals("1", 1, cd.getAspectDefSize());
         AspectDef aspectDef = cd.getAspectDef(0);
-        assertEquals("2", "aop.traceInterceptor", aspectDef.getExpression());
+        assertEquals("2", "aop.traceInterceptor", ((OgnlExpression) aspectDef
+                .getExpression()).getSource());
     }
 
     public void testAppendInterType() throws Exception {
@@ -96,7 +100,8 @@ public class ConstantAnnotationHandlerTest extends S2FrameworkTestCase {
         handler.appendInterType(cd);
         assertEquals("1", 1, cd.getInterTypeDefSize());
         InterTypeDef interTypeDef = cd.getInterTypeDef(0);
-        assertEquals("2", "fieldInterType", interTypeDef.getExpression());
+        assertEquals("2", "fieldInterType", ((OgnlExpression) interTypeDef
+                .getExpression()).getSource());
     }
     
     public void testAppendInitMethod() throws Exception {

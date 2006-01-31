@@ -23,13 +23,14 @@ import junit.framework.TestCase;
 import org.seasar.framework.aop.InterType;
 import org.seasar.framework.container.InterTypeDef;
 import org.seasar.framework.container.S2Container;
+import org.seasar.framework.container.ognl.OgnlExpression;
 
 public class InterTypeDefImplTest extends TestCase {
 
     public void testSetExpression() throws Exception {
         S2Container container = new S2ContainerImpl();
         InterTypeDef id = new InterTypeDefImpl();
-        id.setExpression("fieldInterType");
+        id.setExpression(new OgnlExpression("fieldInterType"));
         id.setContainer(container);
         ComponentDefImpl cd = new ComponentDefImpl(FieldInterType.class,
                 "fieldInterType");

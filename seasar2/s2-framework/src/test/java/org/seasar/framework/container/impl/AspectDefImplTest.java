@@ -20,9 +20,7 @@ import junit.framework.TestCase;
 import org.seasar.framework.aop.interceptors.TraceInterceptor;
 import org.seasar.framework.container.AspectDef;
 import org.seasar.framework.container.S2Container;
-import org.seasar.framework.container.impl.AspectDefImpl;
-import org.seasar.framework.container.impl.ComponentDefImpl;
-import org.seasar.framework.container.impl.S2ContainerImpl;
+import org.seasar.framework.container.ognl.OgnlExpression;
 
 /**
  * @author higa
@@ -33,7 +31,7 @@ public class AspectDefImplTest extends TestCase {
 	public void testSetExpression() throws Exception {
 		S2Container container = new S2ContainerImpl();
 		AspectDef ad = new AspectDefImpl();
-		ad.setExpression("traceAdvice");
+		ad.setExpression(new OgnlExpression("traceAdvice"));
 		ad.setContainer(container);
 		ComponentDefImpl cd =
 			new ComponentDefImpl(TraceInterceptor.class, "traceAdvice");

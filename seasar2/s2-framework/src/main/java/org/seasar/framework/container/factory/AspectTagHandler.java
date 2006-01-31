@@ -21,17 +21,14 @@ import org.seasar.framework.container.AspectDef;
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.impl.AspectDefImpl;
 import org.seasar.framework.util.StringUtil;
-import org.seasar.framework.xml.TagHandler;
 import org.seasar.framework.xml.TagHandlerContext;
 import org.xml.sax.Attributes;
-import org.xml.sax.Locator;
 
 /**
  * @author higa
  * 
  */
-public class AspectTagHandler extends TagHandler {
-
+public class AspectTagHandler extends AbstractTagHandler {
     private static final long serialVersionUID = 5619707344253136193L;
 
     /**
@@ -57,9 +54,7 @@ public class AspectTagHandler extends TagHandler {
     public void end(TagHandlerContext context, String body) {
         AspectDef aspectDef = (AspectDef) context.pop();
         if (!StringUtil.isEmpty(body)) {
-            Locator locator = context.getLocator();
-            aspectDef.setExpression(body, locator.getSystemId(), locator
-                    .getLineNumber());
+            aspectDef.setExpression(createExpression(context, body));
         }
         ComponentDef componentDef = (ComponentDef) context.peek();
         componentDef.addAspectDef(aspectDef);

@@ -29,15 +29,7 @@ public interface MethodDef extends ArgDefAware {
 
     public void setContainer(S2Container container);
 
-    public String getExpression();
+    public Expression getExpression();
 
-    public void setExpression(String expression);
-
-    public String getPath();
-
-    public void setPath(String path);
-
-    public int getLineNumber();
-
-    public void setLineNumber(int lineNumber);
+    public void setExpression(Expression expression);
 }

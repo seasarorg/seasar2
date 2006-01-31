@@ -24,11 +24,11 @@ import org.seasar.framework.container.ArgDef;
 import org.seasar.framework.container.DestroyMethodDef;
 import org.seasar.framework.container.MethodAssembler;
 import org.seasar.framework.container.S2Container;
-import org.seasar.framework.container.assembler.DefaultDestroyMethodAssembler;
 import org.seasar.framework.container.impl.ArgDefImpl;
 import org.seasar.framework.container.impl.ComponentDefImpl;
 import org.seasar.framework.container.impl.DestroyMethodDefImpl;
 import org.seasar.framework.container.impl.S2ContainerImpl;
+import org.seasar.framework.container.ognl.OgnlExpression;
 
 /**
  * @author higa
@@ -56,7 +56,7 @@ public class DefaultDestroyMethodAssemblerTest extends TestCase {
 		S2Container container = new S2ContainerImpl();
 		ComponentDefImpl cd = new ComponentDefImpl(HashMap.class);
 		DestroyMethodDef md = new DestroyMethodDefImpl();
-		md.setExpression("#self.put('aaa', '111')");
+		md.setExpression(new OgnlExpression("#self.put('aaa', '111')"));
 		cd.addDestroyMethodDef(md);
 		container.register(cd);
 		MethodAssembler assembler = new DefaultDestroyMethodAssembler(cd);

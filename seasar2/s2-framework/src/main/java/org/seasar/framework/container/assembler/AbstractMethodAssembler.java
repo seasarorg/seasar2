@@ -25,9 +25,9 @@ import org.seasar.framework.container.ComponentNotFoundRuntimeException;
 import org.seasar.framework.container.IllegalMethodRuntimeException;
 import org.seasar.framework.container.MethodAssembler;
 import org.seasar.framework.container.MethodDef;
+import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.util.BindingUtil;
 import org.seasar.framework.util.MethodUtil;
-import org.seasar.framework.util.OgnlUtil;
 
 /**
  * @author higa
@@ -72,14 +72,12 @@ public abstract class AbstractMethodAssembler extends AbstractAssembler
     }
 
     private void invokeExpression(Object component, MethodDef methodDef) {
-        Object exp = OgnlUtil.parseExpression(methodDef.getExpression(),
-                methodDef.getPath(), methodDef.getLineNumber());
         Map ctx = new HashMap();
         ctx.put("self", component);
         ctx.put("out", System.out);
         ctx.put("err", System.err);
-        OgnlUtil.getValue(exp, ctx, getComponentDef().getContainer(), methodDef
-                .getPath(), methodDef.getLineNumber());
+        S2Container container = getComponentDef().getContainer();
+        methodDef.getExpression().evaluate(container, ctx);
     }
 
     private Method getSuitableMethod(Method[] methods) {

@@ -41,6 +41,7 @@ import org.seasar.framework.container.PropertyDef;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.TooManyRegistrationRuntimeException;
 import org.seasar.framework.container.deployer.InstanceDefFactory;
+import org.seasar.framework.container.ognl.OgnlExpression;
 import org.seasar.framework.mock.servlet.MockHttpServletResponseImpl;
 import org.seasar.framework.mock.servlet.MockServletContextImpl;
 import org.seasar.framework.util.ResourceUtil;
@@ -244,7 +245,7 @@ public class S2ContainerImplTest extends TestCase {
 		S2Container container = new S2ContainerImpl();
 		ComponentDef cd = new ComponentDefImpl(D.class);
 		PropertyDef pd = new PropertyDefImpl("container");
-		pd.setExpression(ContainerConstants.CONTAINER_NAME);
+		pd.setExpression(new OgnlExpression(ContainerConstants.CONTAINER_NAME));
 		cd.addPropertyDef(pd);
 		container.register(cd);
 		D d = (D) container.getComponent(D.class);
@@ -342,7 +343,8 @@ public class S2ContainerImplTest extends TestCase {
         };
         ComponentDef componentDef = new ComponentDefImpl();
         componentDef.setComponentName("component");
-        componentDef.setExpression("@org.seasar.framework.container.impl.S2ContainerImpl@class");
+        componentDef.setExpression(new OgnlExpression(
+                "@org.seasar.framework.container.impl.S2ContainerImpl@class"));
         container.register(componentDef);
         Object obj = container.getComponent("component");
         assertNotNull("1", obj);
@@ -386,7 +388,7 @@ public class S2ContainerImplTest extends TestCase {
             container = new S2ContainerImpl();
             componentDef = new ComponentDefImpl();
             componentDef.setComponentName("component");
-            componentDef.setExpression("@test.Component@class");
+            componentDef.setExpression(new OgnlExpression("@test.Component@class"));
             container.register(componentDef);
             obj = container.getComponent("component");
             assertNotNull("3", obj);

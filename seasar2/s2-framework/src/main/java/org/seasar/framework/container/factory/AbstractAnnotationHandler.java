@@ -29,6 +29,7 @@ import org.seasar.framework.container.assembler.BindingTypeDefFactory;
 import org.seasar.framework.container.deployer.InstanceDefFactory;
 import org.seasar.framework.container.impl.ComponentDefImpl;
 import org.seasar.framework.container.impl.PropertyDefImpl;
+import org.seasar.framework.container.ognl.OgnlExpression;
 import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.StringUtil;
 
@@ -120,7 +121,7 @@ public abstract class AbstractAnnotationHandler implements AnnotationHandler {
             propertyDef.setBindingTypeDef(bindingTypeDef);
         }
         if (!StringUtil.isEmpty(expression)) {
-            propertyDef.setExpression(expression);
+            propertyDef.setExpression(new OgnlExpression(expression));
         }
         return propertyDef;
     }

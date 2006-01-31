@@ -26,10 +26,10 @@ import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.ConstructorAssembler;
 import org.seasar.framework.container.ContainerConstants;
 import org.seasar.framework.container.S2Container;
-import org.seasar.framework.container.assembler.AutoConstructorAssembler;
 import org.seasar.framework.container.impl.AspectDefImpl;
 import org.seasar.framework.container.impl.ComponentDefImpl;
 import org.seasar.framework.container.impl.S2ContainerImpl;
+import org.seasar.framework.container.ognl.OgnlExpression;
 import org.seasar.framework.exception.NoSuchConstructorRuntimeException;
 
 /**
@@ -117,7 +117,7 @@ public class AutoConstructorAssemblerTest extends TestCase {
         ComponentDefImpl cd = new ComponentDefImpl(Object.class, "obj");
         container.register(cd);
         ComponentDefImpl cd2 = new ComponentDefImpl();
-        cd2.setExpression("obj.hashCode()");
+        cd2.setExpression(new OgnlExpression("obj.hashCode()"));
         container.register(cd2);
         AutoConstructorAssembler assembler =
             new AutoConstructorAssembler(cd2);
@@ -128,7 +128,7 @@ public class AutoConstructorAssemblerTest extends TestCase {
     public void testAssembleForClassUnmatch() throws Exception {
         S2Container container = new S2ContainerImpl();
         ComponentDefImpl cd = new ComponentDefImpl(Object.class, "obj");
-        cd.setExpression("null");
+        cd.setExpression(new OgnlExpression("null"));
         container.register(cd);
         AutoConstructorAssembler assembler =
             new AutoConstructorAssembler(cd);

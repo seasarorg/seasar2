@@ -20,6 +20,7 @@ import org.seasar.framework.container.AspectDef;
 import org.seasar.framework.container.AutoBindingDef;
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.DestroyMethodDef;
+import org.seasar.framework.container.Expression;
 import org.seasar.framework.container.InitMethodDef;
 import org.seasar.framework.container.InstanceDef;
 import org.seasar.framework.container.InterTypeDef;
@@ -301,32 +302,16 @@ public class SimpleComponentDef implements ComponentDef {
 	/*
 	 * @see org.seasar.framework.container.ComponentDef#getExpression()
 	 */
-	public String getExpression() {
+	public Expression getExpression() {
 		throw new UnsupportedOperationException("getExpression");
 	}
     
 	/*
 	 * @see org.seasar.framework.container.ComponentDef#setExpression(java.lang.String)
 	 */
-	public void setExpression(String str) {
+	public void setExpression(Expression str) {
 		throw new UnsupportedOperationException("setExpression");
 	}
-
-    public String getPath() {
-        throw new UnsupportedOperationException("getPath");
-    }
-
-    public void setPath(String path) {
-        throw new UnsupportedOperationException("setPath");
-    }
-    
-    public int getLineNumber() {
-        throw new UnsupportedOperationException("getLineNumber");
-    }
-
-    public void setLineNumber(int lineNumber) {
-        throw new UnsupportedOperationException("setLineNumber");
-    }
 
     /*
 	 * @see org.seasar.framework.container.ComponentDef#getInstanceDef()

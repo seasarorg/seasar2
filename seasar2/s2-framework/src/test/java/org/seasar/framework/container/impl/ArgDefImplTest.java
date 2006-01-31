@@ -23,6 +23,7 @@ import org.seasar.framework.container.deployer.InstanceDefFactory;
 import org.seasar.framework.container.impl.ArgDefImpl;
 import org.seasar.framework.container.impl.ComponentDefImpl;
 import org.seasar.framework.container.impl.S2ContainerImpl;
+import org.seasar.framework.container.ognl.OgnlExpression;
 
 /**
  * @author higa
@@ -34,7 +35,7 @@ public class ArgDefImplTest extends TestCase {
 		S2Container container = new S2ContainerImpl();
 		ComponentDefImpl cd = new ComponentDefImpl(A.class);
 		ArgDef ad = new ArgDefImpl();
-		ad.setExpression("hoge");
+		ad.setExpression(new OgnlExpression("hoge"));
 		cd.addArgDef(ad);
 		container.register(cd);
 		ComponentDefImpl cd2 = new ComponentDefImpl(B.class, "hoge");
@@ -64,7 +65,7 @@ public class ArgDefImplTest extends TestCase {
 		ComponentDefImpl cd2 = new ComponentDefImpl(StrFacadeImpl.class);
 		cd2.setInstanceDef(InstanceDefFactory.PROTOTYPE);
 		ArgDef ad = new ArgDefImpl();
-		ad.setExpression("foo");
+		ad.setExpression(new OgnlExpression("foo"));
 		cd2.addArgDef(ad);
 		container.register(cd);
 		container.register(cd2);

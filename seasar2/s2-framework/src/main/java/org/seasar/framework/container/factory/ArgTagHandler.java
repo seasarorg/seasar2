@@ -19,17 +19,14 @@ import org.seasar.framework.container.ArgDef;
 import org.seasar.framework.container.ArgDefAware;
 import org.seasar.framework.container.impl.ArgDefImpl;
 import org.seasar.framework.util.StringUtil;
-import org.seasar.framework.xml.TagHandler;
 import org.seasar.framework.xml.TagHandlerContext;
 import org.xml.sax.Attributes;
-import org.xml.sax.Locator;
 
 /**
  * @author higa
  * 
  */
-public class ArgTagHandler extends TagHandler {
-
+public class ArgTagHandler extends AbstractTagHandler {
     private static final long serialVersionUID = -6210356712008358336L;
 
     /**
@@ -47,12 +44,9 @@ public class ArgTagHandler extends TagHandler {
     public void end(TagHandlerContext context, String body) {
         ArgDef argDef = (ArgDef) context.pop();
         if (!StringUtil.isEmpty(body)) {
-            Locator locator = context.getLocator();
-            argDef.setExpression(body, locator.getSystemId(), locator
-                    .getLineNumber());
+            argDef.setExpression(createExpression(context, body));
         }
         ArgDefAware argDefAware = (ArgDefAware) context.peek();
         argDefAware.addArgDef(argDef);
     }
-
 }

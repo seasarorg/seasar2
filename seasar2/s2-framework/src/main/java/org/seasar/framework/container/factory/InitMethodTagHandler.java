@@ -26,7 +26,6 @@ import org.xml.sax.Attributes;
  * 
  */
 public class InitMethodTagHandler extends MethodTagHandler {
-
     private static final long serialVersionUID = 514017929221501933L;
 
     /**
@@ -45,7 +44,7 @@ public class InitMethodTagHandler extends MethodTagHandler {
     public void end(TagHandlerContext context, String body) {
         InitMethodDef methodDef = (InitMethodDef) context.pop();
         ComponentDef componentDef = (ComponentDef) context.peek();
-        processExpression(methodDef, body, "initMethod", context.getLocator());
+        processExpression(methodDef, body, "initMethod", context);
         componentDef.addInitMethodDef(methodDef);
     }
 

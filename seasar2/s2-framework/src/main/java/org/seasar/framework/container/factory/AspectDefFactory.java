@@ -22,6 +22,7 @@ import org.seasar.framework.aop.Pointcut;
 import org.seasar.framework.aop.impl.PointcutImpl;
 import org.seasar.framework.container.AspectDef;
 import org.seasar.framework.container.impl.AspectDefImpl;
+import org.seasar.framework.container.ognl.OgnlExpression;
 import org.seasar.framework.util.StringUtil;
 
 public class AspectDefFactory {
@@ -37,7 +38,7 @@ public class AspectDefFactory {
     
     public static AspectDef createAspectDef(String interceptorName, Pointcut pointcut) {
         AspectDef aspectDef = new AspectDefImpl(pointcut);
-        aspectDef.setExpression(interceptorName);
+        aspectDef.setExpression(new OgnlExpression(interceptorName));
         return aspectDef;
     }
     

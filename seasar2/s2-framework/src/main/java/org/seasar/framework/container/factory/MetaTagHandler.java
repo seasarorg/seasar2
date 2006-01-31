@@ -19,17 +19,14 @@ import org.seasar.framework.container.MetaDef;
 import org.seasar.framework.container.MetaDefAware;
 import org.seasar.framework.container.impl.MetaDefImpl;
 import org.seasar.framework.util.StringUtil;
-import org.seasar.framework.xml.TagHandler;
 import org.seasar.framework.xml.TagHandlerContext;
 import org.xml.sax.Attributes;
-import org.xml.sax.Locator;
 
 /**
  * @author higa
  * 
  */
-public class MetaTagHandler extends TagHandler {
-
+public class MetaTagHandler extends AbstractTagHandler {
     private static final long serialVersionUID = -3372861766134433725L;
 
     /**
@@ -48,9 +45,7 @@ public class MetaTagHandler extends TagHandler {
     public void end(TagHandlerContext context, String body) {
         MetaDef metaDef = (MetaDef) context.pop();
         if (!StringUtil.isEmpty(body)) {
-            Locator locator = context.getLocator();
-            metaDef.setExpression(body, locator.getSystemId(), locator
-                    .getLineNumber());
+            metaDef.setExpression(createExpression(context, body));
         }
         MetaDefAware metaDefAware = (MetaDefAware) context.peek();
         metaDefAware.addMetaDef(metaDef);

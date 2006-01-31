@@ -25,6 +25,7 @@ import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.impl.ComponentDefImpl;
 import org.seasar.framework.container.impl.PropertyDefImpl;
 import org.seasar.framework.container.impl.S2ContainerImpl;
+import org.seasar.framework.container.ognl.OgnlExpression;
 import org.seasar.framework.exception.OgnlRuntimeException;
 
 /**
@@ -38,7 +39,7 @@ public class ManualOnlyPropertyAssemblerTest extends TestCase {
 		ComponentDefImpl cd = new ComponentDefImpl(A.class);
         ComponentDefImpl cd2 = new ComponentDefImpl(B.class, "hoge");
 		PropertyDef pd = new PropertyDefImpl("hoge");
-        pd.setExpression("hoge");
+        pd.setExpression(new OgnlExpression("hoge"));
 		cd.addPropertyDef(pd);
 		container.register(cd);
         container.register(cd2);
@@ -52,7 +53,7 @@ public class ManualOnlyPropertyAssemblerTest extends TestCase {
 		S2Container container = new S2ContainerImpl();
 		ComponentDefImpl cd = new ComponentDefImpl(A.class);
 		PropertyDef pd = new PropertyDefImpl("hoge");
-		pd.setExpression("b");
+		pd.setExpression(new OgnlExpression("b"));
 		cd.addPropertyDef(pd);
 		container.register(cd);
 		PropertyAssembler assembler = new ManualOnlyPropertyAssembler(cd);

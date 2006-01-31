@@ -38,20 +38,7 @@ public final class OgnlUtil {
 
     public static Object getValue(Object exp, Object root, String path,
             int lineNumber) {
-        Map ctx = addClassResolverIfNecessary(null, root);
-        if (ctx != null) {
-            try {
-                return Ognl.getValue(exp, ctx, root);
-            } catch (Exception ex) {
-                throw new OgnlRuntimeException(ex, path, lineNumber);
-            }
-        } else {
-            try {
-                return Ognl.getValue(exp, root);
-            } catch (Exception ex) {
-                throw new OgnlRuntimeException(ex, path, lineNumber);
-            }
-        }
+        return getValue(exp, null, root, path, lineNumber);
     }
 
     public static Object getValue(Object exp, Map ctx, Object root) {
@@ -60,9 +47,13 @@ public final class OgnlUtil {
 
     public static Object getValue(Object exp, Map ctx, Object root,
             String path, int lineNumber) {
-        Map newCtx = addClassResolverIfNecessary(ctx, root);
         try {
-            return Ognl.getValue(exp, newCtx, root);
+            Map newCtx = addClassResolverIfNecessary(ctx, root);
+            if (newCtx != null) {
+                return Ognl.getValue(exp, newCtx, root);
+            } else {
+                return Ognl.getValue(exp, root);
+            }
         } catch (Exception ex) {
             throw new OgnlRuntimeException(ex, path, lineNumber);
         }

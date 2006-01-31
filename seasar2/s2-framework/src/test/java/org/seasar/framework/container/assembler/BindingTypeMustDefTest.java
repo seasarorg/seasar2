@@ -25,10 +25,10 @@ import org.seasar.framework.beans.factory.BeanDescFactory;
 import org.seasar.framework.container.IllegalAutoBindingPropertyRuntimeException;
 import org.seasar.framework.container.PropertyDef;
 import org.seasar.framework.container.S2Container;
-import org.seasar.framework.container.assembler.BindingTypeDefFactory;
 import org.seasar.framework.container.impl.ComponentDefImpl;
 import org.seasar.framework.container.impl.PropertyDefImpl;
 import org.seasar.framework.container.impl.S2ContainerImpl;
+import org.seasar.framework.container.ognl.OgnlExpression;
 
 /**
  * @author higa
@@ -42,7 +42,7 @@ public class BindingTypeMustDefTest extends TestCase {
 		S2Container container = new S2ContainerImpl();
 		ComponentDefImpl cd = new ComponentDefImpl(A.class);
         PropertyDef propDef = new PropertyDefImpl("hoge");
-        propDef.setExpression("hoge");
+        propDef.setExpression(new OgnlExpression("hoge"));
         cd.addPropertyDef(propDef);
 		container.register(cd);
 		container.register(B.class, "hoge");

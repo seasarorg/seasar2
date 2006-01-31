@@ -23,11 +23,11 @@ import org.seasar.framework.container.ClassUnmatchRuntimeException;
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.ComponentNotFoundRuntimeException;
 import org.seasar.framework.container.ConstructorAssembler;
+import org.seasar.framework.container.Expression;
 import org.seasar.framework.container.IllegalConstructorRuntimeException;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.ConstructorUtil;
-import org.seasar.framework.util.OgnlUtil;
 
 /**
  * @author higa
@@ -55,13 +55,9 @@ public abstract class AbstractConstructorAssembler extends AbstractAssembler
     protected Object assembleExpression() {
         ComponentDef cd = getComponentDef();
         S2Container container = cd.getContainer();
-        String expression = cd.getExpression();
+        Expression expression = cd.getExpression();
+        Object component = expression.evaluate(container, null);
         Class componentClass = cd.getComponentClass();
-        Object component = null;
-        Object exp = OgnlUtil.parseExpression(expression, cd.getPath(), cd
-                .getLineNumber());
-        component = OgnlUtil.getValue(exp, container, cd.getPath(), cd
-                .getLineNumber());
         if (componentClass != null) {
             if (!componentClass.isInstance(component)) {
                 throw new ClassUnmatchRuntimeException(componentClass,

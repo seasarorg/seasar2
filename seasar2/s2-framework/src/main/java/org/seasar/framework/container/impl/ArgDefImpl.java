@@ -17,10 +17,10 @@ package org.seasar.framework.container.impl;
 
 import org.seasar.framework.container.ArgDef;
 import org.seasar.framework.container.ComponentDef;
+import org.seasar.framework.container.Expression;
 import org.seasar.framework.container.MetaDef;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.util.MetaDefSupport;
-import org.seasar.framework.util.OgnlUtil;
 
 /**
  * @author higa
@@ -32,13 +32,7 @@ public class ArgDefImpl implements ArgDef {
 
     private S2Container container;
 
-    private String expression;
-
-    private String path;
-
-    private int lineNumber;
-
-    private Object exp;
+    private Expression expression;
 
     private ComponentDef childComponentDef;
 
@@ -52,8 +46,8 @@ public class ArgDefImpl implements ArgDef {
     }
 
     public final Object getValue() {
-        if (exp != null) {
-            return OgnlUtil.getValue(exp, container, path, lineNumber);
+        if (expression != null) {
+            return expression.evaluate(container, null);
         }
         if (childComponentDef != null) {
             return childComponentDef.getComponent();
@@ -66,7 +60,7 @@ public class ArgDefImpl implements ArgDef {
     }
 
     public boolean isValueGettable() {
-        return value != null || childComponentDef != null || exp != null;
+        return value != null || childComponentDef != null || expression != null;
     }
 
     /**
@@ -90,23 +84,15 @@ public class ArgDefImpl implements ArgDef {
     /**
      * @see org.seasar.framework.container.ArgDef#getExpression()
      */
-    public final String getExpression() {
+    public final Expression getExpression() {
         return expression;
     }
 
     /**
      * @see org.seasar.framework.container.ArgDef#setExpression(java.lang.String)
      */
-    public final void setExpression(String expression) {
-        setExpression(expression, null, 0);
-    }
-
-    public final void setExpression(String expression, String path,
-            int lineNumber) {
+    public final void setExpression(Expression expression) {
         this.expression = expression;
-        this.path = path;
-        this.lineNumber = lineNumber;
-        exp = OgnlUtil.parseExpression(expression, path, lineNumber);
     }
 
     /**

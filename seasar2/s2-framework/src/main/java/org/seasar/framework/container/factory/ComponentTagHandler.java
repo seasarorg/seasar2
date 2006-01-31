@@ -23,31 +23,30 @@ import org.seasar.framework.container.deployer.InstanceDefFactory;
 import org.seasar.framework.container.impl.ComponentDefImpl;
 import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.StringUtil;
-import org.seasar.framework.xml.TagHandler;
 import org.seasar.framework.xml.TagHandlerContext;
 import org.xml.sax.Attributes;
-import org.xml.sax.Locator;
 
 /**
  * @author higa
- *
+ * 
  */
-public class ComponentTagHandler extends TagHandler {
-
+public class ComponentTagHandler extends AbstractTagHandler {
     private static final long serialVersionUID = -8182227769800177833L;
 
-	/**
-	 * @see org.seasar.framework.xml.sax.handler.TagHandler#start(org.seasar.framework.xml.sax.handler.TagHandlerContext, org.xml.sax.Attributes)
-	 */
-	public void start(TagHandlerContext context, Attributes attributes) {
-        AnnotationHandler annoHandler = AnnotationHandlerFactory.getAnnotationHandler();
-		String className = attributes.getValue("class");
-		Class componentClass = null;
-		if (className != null) {
-			componentClass = ClassUtil.forName(className);
-		}
-		String name = attributes.getValue("name");
-		ComponentDef componentDef = null;
+    /**
+     * @see org.seasar.framework.xml.sax.handler.TagHandler#start(org.seasar.framework.xml.sax.handler.TagHandlerContext,
+     *      org.xml.sax.Attributes)
+     */
+    public void start(TagHandlerContext context, Attributes attributes) {
+        AnnotationHandler annoHandler = AnnotationHandlerFactory
+                .getAnnotationHandler();
+        String className = attributes.getValue("class");
+        Class componentClass = null;
+        if (className != null) {
+            componentClass = ClassUtil.forName(className);
+        }
+        String name = attributes.getValue("name");
+        ComponentDef componentDef = null;
         if (componentClass != null) {
             componentDef = annoHandler.createComponentDef(componentClass, null);
             if (name != null) {
@@ -59,55 +58,54 @@ public class ComponentTagHandler extends TagHandler {
         } else {
             componentDef = createComponentDef(componentClass, name);
         }
-		String instanceMode = attributes.getValue("instance");
-		if (instanceMode != null) {
-			componentDef.setInstanceDef(
-                    InstanceDefFactory.getInstanceDef(instanceMode));
-		}
-		String autoBindingName = attributes.getValue("autoBinding");
-		if (autoBindingName != null) {
-			componentDef.setAutoBindingDef(
-                    AutoBindingDefFactory.getAutoBindingDef(autoBindingName));
-		}
-		context.push(componentDef);
-	}
+        String instanceMode = attributes.getValue("instance");
+        if (instanceMode != null) {
+            componentDef.setInstanceDef(InstanceDefFactory
+                    .getInstanceDef(instanceMode));
+        }
+        String autoBindingName = attributes.getValue("autoBinding");
+        if (autoBindingName != null) {
+            componentDef.setAutoBindingDef(AutoBindingDefFactory
+                    .getAutoBindingDef(autoBindingName));
+        }
+        context.push(componentDef);
+    }
 
-	/**
-	 * @see org.seasar.framework.xml.sax.handler.TagHandler#end(org.seasar.framework.xml.sax.handler.TagHandlerContext, java.lang.String)
-	 */
-	public void end(TagHandlerContext context, String body) {
-		ComponentDef componentDef = (ComponentDef) context.pop();
-        AnnotationHandler annoHandler = AnnotationHandlerFactory.getAnnotationHandler();
+    /**
+     * @see org.seasar.framework.xml.sax.handler.TagHandler#end(org.seasar.framework.xml.sax.handler.TagHandlerContext,
+     *      java.lang.String)
+     */
+    public void end(TagHandlerContext context, String body) {
+        ComponentDef componentDef = (ComponentDef) context.pop();
+        AnnotationHandler annoHandler = AnnotationHandlerFactory
+                .getAnnotationHandler();
         annoHandler.appendInitMethod(componentDef);
-		String expression = null;
-		if (body != null) {
-			expression = body.trim();
-			if (!StringUtil.isEmpty(expression)) {
-                Locator locator = context.getLocator();
-				componentDef.setExpression(expression);
-                componentDef.setPath(locator.getSystemId());
-                componentDef.setLineNumber(locator.getLineNumber());
-			} else {
-				expression = null;
-			}
-		}
-		if (componentDef.getComponentClass() == null
-			&& !InstanceDefFactory.OUTER.equals(componentDef.getInstanceDef())
-			&& expression == null) {
-			throw new TagAttributeNotDefinedRuntimeException(
-				"component",
-				"class");
-		}
-		if (context.peek() instanceof S2Container) {
-			S2Container container = (S2Container) context.peek();
-			container.register(componentDef);
-		} else {
-			ArgDef argDef = (ArgDef) context.peek();
-			argDef.setChildComponentDef(componentDef);
-		}
-	}
+        String expression = null;
+        if (body != null) {
+            expression = body.trim();
+            if (!StringUtil.isEmpty(expression)) {
+                componentDef
+                        .setExpression(createExpression(context, expression));
+            } else {
+                expression = null;
+            }
+        }
+        if (componentDef.getComponentClass() == null
+                && !InstanceDefFactory.OUTER.equals(componentDef
+                        .getInstanceDef()) && expression == null) {
+            throw new TagAttributeNotDefinedRuntimeException("component",
+                    "class");
+        }
+        if (context.peek() instanceof S2Container) {
+            S2Container container = (S2Container) context.peek();
+            container.register(componentDef);
+        } else {
+            ArgDef argDef = (ArgDef) context.peek();
+            argDef.setChildComponentDef(componentDef);
+        }
+    }
 
-	protected ComponentDef createComponentDef(Class componentClass, String name) {
-		return new ComponentDefImpl(componentClass, name);
-	}
+    protected ComponentDef createComponentDef(Class componentClass, String name) {
+        return new ComponentDefImpl(componentClass, name);
+    }
 }

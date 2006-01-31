@@ -27,11 +27,11 @@ import org.seasar.framework.container.IllegalMethodRuntimeException;
 import org.seasar.framework.container.InitMethodDef;
 import org.seasar.framework.container.MethodAssembler;
 import org.seasar.framework.container.S2Container;
-import org.seasar.framework.container.assembler.DefaultInitMethodAssembler;
 import org.seasar.framework.container.impl.ArgDefImpl;
 import org.seasar.framework.container.impl.ComponentDefImpl;
 import org.seasar.framework.container.impl.InitMethodDefImpl;
 import org.seasar.framework.container.impl.S2ContainerImpl;
+import org.seasar.framework.container.ognl.OgnlExpression;
 
 /**
  * @author higa
@@ -59,7 +59,7 @@ public class DefaultInitMethodAssemblerTest extends TestCase {
 		S2Container container = new S2ContainerImpl();
 		ComponentDefImpl cd = new ComponentDefImpl(HashMap.class);
 		InitMethodDef md = new InitMethodDefImpl();
-		md.setExpression("#self.put('aaa', '111')");
+		md.setExpression(new OgnlExpression("#self.put('aaa', '111')"));
 		cd.addInitMethodDef(md);
 		container.register(cd);
 		MethodAssembler assembler = new DefaultInitMethodAssembler(cd);
@@ -118,7 +118,7 @@ public class DefaultInitMethodAssemblerTest extends TestCase {
 		S2Container container = new S2ContainerImpl();
 		ComponentDefImpl cd = new ComponentDefImpl(Integer.class);
 		InitMethodDef md = new InitMethodDefImpl();
-		md.setExpression("#out.println(@Integer@MIN_VALUE)");
+		md.setExpression(new OgnlExpression("#out.println(@Integer@MIN_VALUE)"));
 		cd.addInitMethodDef(md);
 		container.register(cd);
 		MethodAssembler assembler = new DefaultInitMethodAssembler(cd);

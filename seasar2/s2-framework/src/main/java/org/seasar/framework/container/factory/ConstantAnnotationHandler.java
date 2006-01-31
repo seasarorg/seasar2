@@ -31,6 +31,7 @@ import org.seasar.framework.container.InterTypeDef;
 import org.seasar.framework.container.PropertyDef;
 import org.seasar.framework.container.impl.InitMethodDefImpl;
 import org.seasar.framework.container.impl.InterTypeDefImpl;
+import org.seasar.framework.container.ognl.OgnlExpression;
 import org.seasar.framework.exception.EmptyRuntimeException;
 import org.seasar.framework.util.FieldUtil;
 import org.seasar.framework.util.StringUtil;
@@ -172,7 +173,7 @@ public class ConstantAnnotationHandler extends AbstractAnnotationHandler {
     protected void appendInterType(ComponentDef componentDef,
             String interTypeName) {
         InterTypeDef interTypeDef = new InterTypeDefImpl();
-        interTypeDef.setExpression(interTypeName);
+        interTypeDef.setExpression(new OgnlExpression(interTypeName));
         componentDef.addInterTypeDef(interTypeDef);
     }
 

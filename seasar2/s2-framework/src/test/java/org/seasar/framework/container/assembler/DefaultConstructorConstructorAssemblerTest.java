@@ -28,6 +28,7 @@ import org.seasar.framework.container.impl.ArgDefImpl;
 import org.seasar.framework.container.impl.AspectDefImpl;
 import org.seasar.framework.container.impl.ComponentDefImpl;
 import org.seasar.framework.container.impl.S2ContainerImpl;
+import org.seasar.framework.container.ognl.OgnlExpression;
 import org.seasar.framework.exception.OgnlRuntimeException;
 
 /**
@@ -69,7 +70,7 @@ public class DefaultConstructorConstructorAssemblerTest extends TestCase {
         S2Container container = new S2ContainerImpl();
         ComponentDefImpl cd = new ComponentDefImpl(A.class);
         ArgDef argDef = new ArgDefImpl();
-        argDef.setExpression("hoge");
+        argDef.setExpression(new OgnlExpression("hoge"));
         cd.addArgDef(argDef);
         container.register(cd);
         ConstructorAssembler assembler = new DefaultConstructorConstructorAssembler(cd);

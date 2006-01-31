@@ -36,6 +36,7 @@ import org.seasar.framework.container.impl.DestroyMethodDefImpl;
 import org.seasar.framework.container.impl.InitMethodDefImpl;
 import org.seasar.framework.container.impl.PropertyDefImpl;
 import org.seasar.framework.container.impl.S2ContainerImpl;
+import org.seasar.framework.container.ognl.OgnlExpression;
 import org.seasar.framework.hotswap.Hotswap;
 
 /**
@@ -106,7 +107,7 @@ public class ComponentDefImplTest extends TestCase {
 		S2Container container = new S2ContainerImpl();
 		container.register(Object.class, "obj");
 		ComponentDefImpl cd = new ComponentDefImpl(null, "hash");
-		cd.setExpression("obj.hashCode()");
+		cd.setExpression(new OgnlExpression("obj.hashCode()"));
 		container.register(cd);
 		assertNotNull("1", container.getComponent("hash"));
 	}

@@ -21,17 +21,14 @@ import org.seasar.framework.container.PropertyDef;
 import org.seasar.framework.container.assembler.BindingTypeDefFactory;
 import org.seasar.framework.container.impl.PropertyDefImpl;
 import org.seasar.framework.util.StringUtil;
-import org.seasar.framework.xml.TagHandler;
 import org.seasar.framework.xml.TagHandlerContext;
 import org.xml.sax.Attributes;
-import org.xml.sax.Locator;
 
 /**
  * @author higa
  * 
  */
-public class PropertyTagHandler extends TagHandler {
-
+public class PropertyTagHandler extends AbstractTagHandler {
     private static final long serialVersionUID = -8153752681379626269L;
 
     /**
@@ -60,9 +57,7 @@ public class PropertyTagHandler extends TagHandler {
     public void end(TagHandlerContext context, String body) {
         PropertyDef propertyDef = (PropertyDef) context.pop();
         if (!StringUtil.isEmpty(body)) {
-            Locator locator = context.getLocator();
-            propertyDef.setExpression(body, locator.getSystemId(), locator
-                    .getLineNumber());
+            propertyDef.setExpression(createExpression(context, body));
         }
         ComponentDef componentDef = (ComponentDef) context.peek();
         componentDef.addPropertyDef(propertyDef);

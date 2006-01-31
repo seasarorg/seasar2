@@ -17,23 +17,20 @@ package org.seasar.framework.container.factory;
 
 import org.seasar.framework.container.MethodDef;
 import org.seasar.framework.util.StringUtil;
-import org.seasar.framework.xml.TagHandler;
-import org.xml.sax.Locator;
+import org.seasar.framework.xml.TagHandlerContext;
 
 /**
  * @author higa
  * 
  */
-public abstract class MethodTagHandler extends TagHandler {
+public abstract class MethodTagHandler extends AbstractTagHandler {
     protected void processExpression(MethodDef methodDef, String expression,
-            String tagName, Locator locator) {
+            String tagName, TagHandlerContext context) {
         String expr = expression;
         if (expr != null) {
             expr = expr.trim();
             if (!StringUtil.isEmpty(expr)) {
-                methodDef.setExpression(expr);
-                methodDef.setPath(locator.getSystemId());
-                methodDef.setLineNumber(locator.getLineNumber());
+                methodDef.setExpression(createExpression(context, expr));
             } else {
                 expr = null;
             }

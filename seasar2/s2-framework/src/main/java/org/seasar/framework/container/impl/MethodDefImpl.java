@@ -16,6 +16,7 @@
 package org.seasar.framework.container.impl;
 
 import org.seasar.framework.container.ArgDef;
+import org.seasar.framework.container.Expression;
 import org.seasar.framework.container.MethodDef;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.util.ArgDefSupport;
@@ -32,11 +33,7 @@ public abstract class MethodDefImpl implements MethodDef {
 
     private S2Container container;
 
-    private String expression;
-
-    private String path;
-
-    private int lineNumber;
+    private Expression expression;
 
     public MethodDefImpl() {
     }
@@ -102,30 +99,14 @@ public abstract class MethodDefImpl implements MethodDef {
     /**
      * @see org.seasar.framework.container.MethodDef#getExpression()
      */
-    public String getExpression() {
+    public Expression getExpression() {
         return expression;
     }
 
     /**
      * @see org.seasar.framework.container.MethodDef#setExpression(java.lang.String)
      */
-    public void setExpression(String expression) {
+    public void setExpression(Expression expression) {
         this.expression = expression;
-    }
-
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
-    }
-
-    public int getLineNumber() {
-        return lineNumber;
-    }
-
-    public void setLineNumber(int lineNumber) {
-        this.lineNumber = lineNumber;
     }
 }

@@ -24,6 +24,7 @@ import org.seasar.framework.container.ComponentDeployer;
 import org.seasar.framework.container.ComponentProvider;
 import org.seasar.framework.container.ContainerConstants;
 import org.seasar.framework.container.DestroyMethodDef;
+import org.seasar.framework.container.Expression;
 import org.seasar.framework.container.InitMethodDef;
 import org.seasar.framework.container.InstanceDef;
 import org.seasar.framework.container.InterTypeDef;
@@ -56,11 +57,7 @@ public class ComponentDefImpl implements ComponentDef, ContainerConstants {
 
     private S2Container container;
 
-    private String expression;
-
-    private String path;
-
-    private int lineNumber;
+    private Expression expression;
 
     private ArgDefSupport argDefSupport = new ArgDefSupport();
 
@@ -334,31 +331,15 @@ public class ComponentDefImpl implements ComponentDef, ContainerConstants {
     /**
      * @see org.seasar.framework.container.ComponentDef#getExpression()
      */
-    public String getExpression() {
+    public Expression getExpression() {
         return expression;
     }
 
     /**
      * @see org.seasar.framework.container.ComponentDef#setExpression(java.lang.String)
      */
-    public void setExpression(String expression) {
+    public void setExpression(Expression expression) {
         this.expression = expression;
-    }
-
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
-    }
-
-    public int getLineNumber() {
-        return lineNumber;
-    }
-
-    public void setLineNumber(int lineNumber) {
-        this.lineNumber = lineNumber;
     }
 
     /**
