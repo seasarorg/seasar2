@@ -124,14 +124,12 @@
     <defaultGoal>validate</defaultGoal>
     <pluginManagement>
       <plugins>
-        <!--
         <plugin>
           <artifactId>maven-compiler-plugin</artifactId>
           <configuration>
-            <encoding>MS932</encoding>
+            <encoding>UTF-8</encoding>
           </configuration>
         </plugin>
-        -->
         <plugin>
           <artifactId>maven-deploy-plugin</artifactId>
           <configuration>
