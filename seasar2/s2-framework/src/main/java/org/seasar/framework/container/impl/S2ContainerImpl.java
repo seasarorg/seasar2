@@ -351,37 +351,53 @@ public class S2ContainerImpl implements S2Container, ContainerConstants {
 	 * @see org.seasar.framework.container.S2Container#init()
 	 */
 	public void init() {
-		if (inited) {
-			return;
-		}
-		for (int i = 0; i < getChildSize(); ++i) {
-			getChild(i).init();
-		}
-		for (int i = 0; i < getComponentDefSize(); ++i) {
-			getComponentDef(i).init();
-		}
-		inited = true;
-	}
+        if (inited) {
+            return;
+        }
+
+        final ClassLoader currentLoader = Thread.currentThread()
+                .getContextClassLoader();
+        Thread.currentThread().setContextClassLoader(classLoader);
+        try {
+            for (int i = 0; i < getChildSize(); ++i) {
+                getChild(i).init();
+            }
+            for (int i = 0; i < getComponentDefSize(); ++i) {
+                getComponentDef(i).init();
+            }
+            inited = true;
+        } finally {
+            Thread.currentThread().setContextClassLoader(currentLoader);
+        }
+    }
 
 	/**
 	 * @see org.seasar.framework.container.S2Container#destroy()
 	 */
 	public void destroy() {
 		if (!inited) {
-			return;
-		}
-		for (int i = getComponentDefSize() - 1; 0 <= i; --i) {
-			try {
-				getComponentDef(i).destroy();
-			} catch (Throwable t) {
-				t.printStackTrace();
-			}
+            return;
+        }
 
-		}
-		for (int i = getChildSize() - 1; 0 <= i; --i) {
-			getChild(i).destroy();
-		}
-		inited = false;
+        final ClassLoader currentLoader = Thread.currentThread()
+                .getContextClassLoader();
+        Thread.currentThread().setContextClassLoader(classLoader);
+        try {
+            for (int i = getComponentDefSize() - 1; 0 <= i; --i) {
+                try {
+                    getComponentDef(i).destroy();
+                } catch (Throwable t) {
+                    t.printStackTrace();
+                }
+
+            }
+            for (int i = getChildSize() - 1; 0 <= i; --i) {
+                getChild(i).destroy();
+            }
+            inited = false;
+        } finally {
+            Thread.currentThread().setContextClassLoader(currentLoader);
+        }
 	}
 
 	/**

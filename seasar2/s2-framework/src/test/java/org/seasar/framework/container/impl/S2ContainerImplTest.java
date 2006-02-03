@@ -36,6 +36,7 @@ import junit.framework.TestCase;
 
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.ContainerConstants;
+import org.seasar.framework.container.Expression;
 import org.seasar.framework.container.InitMethodDef;
 import org.seasar.framework.container.PropertyDef;
 import org.seasar.framework.container.S2Container;
@@ -210,6 +211,67 @@ public class S2ContainerImplTest extends TestCase {
 		assertEquals("7", "c1", destroyList.get(1));
 		assertEquals("8", "c3", destroyList.get(2));
 	}
+
+    public void testContextClassLoaderWhenInit() throws Exception {
+        final ClassLoader[] loader = new ClassLoader[1];
+        S2Container container = new S2ContainerImpl();
+        ComponentDef cd = new ComponentDefImpl(Runnable.class);
+        cd.setExpression(new Expression() {
+            public Object evaluate(S2Container container, Map context) {
+                return new Runnable() {
+                    public void run() {
+                        loader[0] = Thread.currentThread()
+                                .getContextClassLoader();
+                    }
+                };
+            }
+        });
+        cd.addInitMethodDef(new InitMethodDefImpl("run"));
+        container.register(cd);
+
+        ClassLoader loader1 = Thread.currentThread().getContextClassLoader();
+        ClassLoader loader2 = new URLClassLoader(new URL[0]);
+        Thread.currentThread().setContextClassLoader(loader2);
+        try {
+            container.init();
+            assertEquals("1", loader1, loader[0]);
+            assertEquals("2", loader2, Thread.currentThread()
+                    .getContextClassLoader());
+        } finally {
+            Thread.currentThread().setContextClassLoader(loader1);
+        }
+    }
+
+    public void testContextClassLoaderWhenDestroy() throws Exception {
+        final ClassLoader[] loader = new ClassLoader[1];
+        S2Container container = new S2ContainerImpl();
+        ComponentDef cd = new ComponentDefImpl(Runnable.class);
+        cd.setExpression(new Expression() {
+            public Object evaluate(S2Container container, Map context) {
+                return new Runnable() {
+                    public void run() {
+                        loader[0] = Thread.currentThread()
+                                .getContextClassLoader();
+                    }
+                };
+            }
+        });
+        cd.addDestroyMethodDef(new DestroyMethodDefImpl("run"));
+        container.register(cd);
+        container.init();
+
+        ClassLoader loader1 = Thread.currentThread().getContextClassLoader();
+        ClassLoader loader2 = new URLClassLoader(new URL[0]);
+        Thread.currentThread().setContextClassLoader(loader2);
+        try {
+            container.destroy();
+            assertEquals("1", loader1, loader[0]);
+            assertEquals("2", loader2, Thread.currentThread()
+                    .getContextClassLoader());
+        } finally {
+            Thread.currentThread().setContextClassLoader(loader1);
+        }
+    }
 
 	public void testInjectDependency() throws Exception {
 		S2Container container = new S2ContainerImpl();
