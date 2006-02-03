@@ -5,8 +5,6 @@
 		<zip zipfile="target/S2Tiger-${ver}.zip">
 			<zipfileset prefix="s2-tiger" dir=".">
 				<exclude name="**/target/**"/>
-				<exclude name=".settings"/>
-				<exclude name=".settings/**"/>
 			</zipfileset>
 			<zipfileset prefix="s2-tiger/lib" dir="target">
 				<include name="s2-tiger-${ver}.jar"/>
