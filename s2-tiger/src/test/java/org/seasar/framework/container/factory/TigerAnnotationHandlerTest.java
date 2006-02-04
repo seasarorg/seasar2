@@ -28,7 +28,7 @@ import org.seasar.framework.container.InstanceDef;
 import org.seasar.framework.container.InterTypeDef;
 import org.seasar.framework.container.PropertyDef;
 import org.seasar.framework.container.deployer.InstanceDefFactory;
-import org.seasar.framework.container.factory.TigerAnnotationHandler;
+import org.seasar.framework.container.ognl.OgnlExpression;
 
 /**
  * @author higa
@@ -66,7 +66,7 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
         propDesc = beanDesc.getPropertyDesc("aaa");
         PropertyDef propDef = handler.createPropertyDef(beanDesc, propDesc);
         assertEquals("2", "aaa", propDef.getPropertyName());
-        assertEquals("3", "aaa2", propDef.getExpression());
+        assertEquals("3", "aaa2", ((OgnlExpression) propDef.getExpression()).getSource());
 
         propDesc = beanDesc.getPropertyDesc("bbb");
         propDef = handler.createPropertyDef(beanDesc, propDesc);
@@ -82,7 +82,7 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
         propDesc = beanDesc.getPropertyDesc("aaa");
         PropertyDef propDef = handler.createPropertyDef(beanDesc, propDesc);
         assertEquals("2", "aaa", propDef.getPropertyName());
-        assertEquals("3", "aaa2", propDef.getExpression());
+        assertEquals("3", "aaa2", ((OgnlExpression) propDef.getExpression()).getSource());
 
         propDesc = beanDesc.getPropertyDesc("bbb");
         propDef = handler.createPropertyDef(beanDesc, propDesc);
@@ -94,17 +94,20 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
         handler.appendAspect(cd);
         assertEquals("1", 1, cd.getAspectDefSize());
         AspectDef aspectDef = cd.getAspectDef(0);
-        assertEquals("2", "aop.traceInterceptor", aspectDef.getExpression());
+        assertEquals("2", "aop.traceInterceptor", ((OgnlExpression) aspectDef.getExpression())
+                .getSource());
     }
-    
+
     public void testAppendAspectForMethod() throws Exception {
         ComponentDef cd = handler.createComponentDef(Hoge4.class, null);
         handler.appendAspect(cd);
         assertEquals("1", 1, cd.getAspectDefSize());
         AspectDef aspectDef = cd.getAspectDef(0);
-        assertEquals("2", "aop.traceInterceptor", aspectDef.getExpression());
+        assertEquals("2", "aop.traceInterceptor", ((OgnlExpression) aspectDef.getExpression())
+                .getSource());
         assertTrue("3", aspectDef.getPointcut().isApplied(Hoge4.class.getMethod("getAaa")));
-        assertFalse("4", aspectDef.getPointcut().isApplied(Hoge4.class.getMethod("getAaa", new Class[] {String.class})));
+        assertFalse("4", aspectDef.getPointcut().isApplied(
+                Hoge4.class.getMethod("getAaa", new Class[] { String.class })));
     }
 
     public void testAppendAspectForConstantAnnotation() throws Exception {
@@ -112,7 +115,8 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
         handler.appendAspect(cd);
         assertEquals("1", 1, cd.getAspectDefSize());
         AspectDef aspectDef = cd.getAspectDef(0);
-        assertEquals("2", "aop.traceInterceptor", aspectDef.getExpression());
+        assertEquals("2", "aop.traceInterceptor", ((OgnlExpression) aspectDef.getExpression())
+                .getSource());
     }
 
     public void testInterType() throws Exception {
@@ -120,7 +124,8 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
         handler.appendInterType(cd);
         assertEquals("1", 1, cd.getInterTypeDefSize());
         InterTypeDef interTypeDef = cd.getInterTypeDef(0);
-        assertEquals("2", "fieldInterType", interTypeDef.getExpression());
+        assertEquals("2", "fieldInterType", ((OgnlExpression) interTypeDef.getExpression())
+                .getSource());
     }
 
     public void testAppendInterTypeForConstantAnnotation() throws Exception {
@@ -128,7 +133,8 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
         handler.appendInterType(cd);
         assertEquals("1", 1, cd.getInterTypeDefSize());
         InterTypeDef interTypeDef = cd.getInterTypeDef(0);
-        assertEquals("2", "fieldInterType", interTypeDef.getExpression());
+        assertEquals("2", "fieldInterType", ((OgnlExpression) interTypeDef.getExpression())
+                .getSource());
     }
 
     public void testAppendInitMethod() throws Exception {
@@ -146,22 +152,23 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
         InitMethodDef initMethodDef = cd.getInitMethodDef(0);
         assertEquals("2", "init", initMethodDef.getMethodName());
     }
-    
+
     public void setUpAppendInitMethodForDicon() throws Exception {
         include("TigerAnnotationHandlerTest.dicon");
     }
-    
+
     public void testAppendInitMethodForDicon() throws Exception {
         ComponentDef cd = getComponentDef(Hoge5.class);
         assertEquals("1", 1, cd.getInitMethodDefSize());
     }
-    
+
     public void testAppendInitMethodForException() throws Exception {
         ComponentDef cd = handler.createComponentDef(Hoge6.class, null);
         try {
             handler.appendInitMethod(cd);
             fail("1");
-        } catch (IllegalInitMethodAnnotationRuntimeException ex) {
+        }
+        catch (IllegalInitMethodAnnotationRuntimeException ex) {
             System.out.println(ex);
         }
     }
