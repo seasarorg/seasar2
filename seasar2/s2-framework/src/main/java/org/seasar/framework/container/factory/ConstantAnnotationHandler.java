@@ -17,6 +17,7 @@ package org.seasar.framework.container.factory;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 
 import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.PropertyDesc;
@@ -40,7 +41,7 @@ public class ConstantAnnotationHandler extends AbstractAnnotationHandler {
 
     public ComponentDef createComponentDef(Class componentClass,
             InstanceDef defaultInstanceDef) {
-        
+
         String name = null;
         InstanceDef instanceDef = null;
         AutoBindingDef autoBindingDef = null;
@@ -50,6 +51,10 @@ public class ConstantAnnotationHandler extends AbstractAnnotationHandler {
                     autoBindingDef);
         }
         Field field = beanDesc.getField(COMPONENT);
+        if (!isConstantAnnotationField(field)) {
+            return createComponentDef(componentClass, name, defaultInstanceDef,
+                    autoBindingDef);
+        }
         String componentStr = (String) FieldUtil.get(field, null);
         String[] array = StringUtil.split(componentStr, "=, ");
         for (int i = 0; i < array.length; i += 2) {
@@ -67,6 +72,12 @@ public class ConstantAnnotationHandler extends AbstractAnnotationHandler {
         }
         return createComponentDef(componentClass, name, instanceDef,
                 autoBindingDef);
+    }
+
+    protected boolean isConstantAnnotationField(Field field) {
+        final int modifiers = field.getModifiers();
+        return Modifier.isFinal(modifiers) && Modifier.isPublic(modifiers)
+                && Modifier.isStatic(modifiers);
     }
 
     public PropertyDef createPropertyDef(BeanDesc beanDesc,

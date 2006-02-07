@@ -32,6 +32,7 @@ import org.seasar.framework.unit.S2FrameworkTestCase;
 
 /**
  * @author higa
+ * @author manhole
  */
 public class ConstantAnnotationHandlerTest extends S2FrameworkTestCase {
 
@@ -42,8 +43,10 @@ public class ConstantAnnotationHandlerTest extends S2FrameworkTestCase {
         ComponentDef cd = handler.createComponentDef(Hoge2.class, null);
         assertEquals("2", "aaa", cd.getComponentName());
         assertEquals("3", InstanceDefFactory.PROTOTYPE, cd.getInstanceDef());
-        assertEquals("4", AutoBindingDefFactory.PROPERTY, cd.getAutoBindingDef());
-        ComponentDef cd2 = handler.createComponentDef(Hoge.class, InstanceDefFactory.REQUEST);
+        assertEquals("4", AutoBindingDefFactory.PROPERTY, cd
+                .getAutoBindingDef());
+        ComponentDef cd2 = handler.createComponentDef(Hoge.class,
+                InstanceDefFactory.REQUEST);
         assertEquals("5", InstanceDefFactory.REQUEST, cd2.getInstanceDef());
         try {
             handler.createComponentDef(Hoge3.class, null);
@@ -56,23 +59,21 @@ public class ConstantAnnotationHandlerTest extends S2FrameworkTestCase {
     public void testCreatePropertyDef() throws Exception {
         BeanDesc beanDesc = BeanDescFactory.getBeanDesc(Hoge.class);
         PropertyDesc propDesc = beanDesc.getPropertyDesc("aaa");
-        assertNull("1", handler.createPropertyDef(beanDesc,
-                propDesc));
+        assertNull("1", handler.createPropertyDef(beanDesc, propDesc));
 
         beanDesc = BeanDescFactory.getBeanDesc(Hoge2.class);
         propDesc = beanDesc.getPropertyDesc("aaa");
-        PropertyDef propDef = handler.createPropertyDef(
-                beanDesc, propDesc);
+        PropertyDef propDef = handler.createPropertyDef(beanDesc, propDesc);
         assertEquals("2", "aaa", propDef.getPropertyName());
         assertEquals("3", "aaa2", ((OgnlExpression) propDef.getExpression())
                 .getSource());
 
         propDesc = beanDesc.getPropertyDesc("bbb");
         propDef = handler.createPropertyDef(beanDesc, propDesc);
-        assertEquals("4", BindingTypeDefFactory.NONE,
-                propDef.getBindingTypeDef());
+        assertEquals("4", BindingTypeDefFactory.NONE, propDef
+                .getBindingTypeDef());
     }
-    
+
     public void setUpAppendAspect() {
         include("aop.dicon");
     }
@@ -85,7 +86,7 @@ public class ConstantAnnotationHandlerTest extends S2FrameworkTestCase {
         assertEquals("2", "aop.traceInterceptor", ((OgnlExpression) aspectDef
                 .getExpression()).getSource());
     }
-    
+
     public void testAppendAspect2() throws Exception {
         ComponentDef cd = handler.createComponentDef(Hoge2.class, null);
         handler.appendAspect(cd);
@@ -103,7 +104,7 @@ public class ConstantAnnotationHandlerTest extends S2FrameworkTestCase {
         assertEquals("2", "fieldInterType", ((OgnlExpression) interTypeDef
                 .getExpression()).getSource());
     }
-    
+
     public void testAppendInitMethod() throws Exception {
         ComponentDef cd = handler.createComponentDef(Hoge.class, null);
         handler.appendInitMethod(cd);
@@ -111,7 +112,7 @@ public class ConstantAnnotationHandlerTest extends S2FrameworkTestCase {
         InitMethodDef initMethodDef = cd.getInitMethodDef(0);
         assertEquals("2", "init", initMethodDef.getMethodName());
     }
-    
+
     public void testAppendInitMethodForException() throws Exception {
         try {
             ComponentDef cd = handler.createComponentDef(Hoge4.class, null);
@@ -129,41 +130,69 @@ public class ConstantAnnotationHandlerTest extends S2FrameworkTestCase {
         }
     }
 
+    public void testNotMistakeAsConstantAnnotation1() throws Exception {
+        ComponentDef cd = handler.createComponentDef(Hoge6.class, null);
+        assertEquals(null, cd.getComponentName());
+    }
+
+    public void testNotMistakeAsConstantAnnotation2() throws Exception {
+        ComponentDef cd = handler.createComponentDef(Hoge7.class, null);
+        assertEquals(null, cd.getComponentName());
+    }
+
+    public void testNotMistakeAsConstantAnnotation3() throws Exception {
+        ComponentDef cd = handler.createComponentDef(Hoge8.class, null);
+        assertEquals(null, cd.getComponentName());
+    }
+
+    public void testNotMistakeAsConstantAnnotation4() throws Exception {
+        ComponentDef cd = handler.createComponentDef(Hoge9.class, null);
+        assertEquals(null, cd.getComponentName());
+    }
+
+    public void testNotMistakeAsConstantAnnotation5() throws Exception {
+        ComponentDef cd = handler.createComponentDef(Hoge10.class, null);
+        assertEquals(null, cd.getComponentName());
+    }
+
+    public void testNotMistakeAsConstantAnnotation6() throws Exception {
+        ComponentDef cd = handler.createComponentDef(Hoge11.class, null);
+        assertEquals(null, cd.getComponentName());
+    }
+
     public static class Hoge {
-        
+
         public static final String INIT_METHOD = "init";
-        
+
         private boolean inited = false;
-        
-        public static final String ASPECT =
-            "value=aop.traceInterceptor, pointcut=getAaa\ngetBbb";
+
+        public static final String ASPECT = "value=aop.traceInterceptor, pointcut=getAaa\ngetBbb";
 
         public static final String INTER_TYPE = "fieldInterType";
 
         public String getAaa() {
             return null;
         }
-        
+
         public void init() {
             inited = true;
         }
-        
+
         public boolean isInited() {
             return inited;
         }
     }
 
     public static class Hoge2 {
-        
-        public static final String ASPECT =
-            "aop.traceInterceptor";
-        
+
+        public static final String ASPECT = "aop.traceInterceptor";
+
         public static final String COMPONENT = "name = aaa, instance = prototype, autoBinding = property";
 
         public static final String aaa_BINDING = "aaa2";
 
         public static final String bbb_BINDING = "bindingType=none";
-        
+
         public static final String ccc_BINDING = null;
 
         public void setAaa(String aaa) {
@@ -171,7 +200,7 @@ public class ConstantAnnotationHandlerTest extends S2FrameworkTestCase {
 
         public void setBbb(String bbb) {
         }
-        
+
         public void setCcc(String ccc) {
         }
     }
@@ -179,15 +208,63 @@ public class ConstantAnnotationHandlerTest extends S2FrameworkTestCase {
     public static class Hoge3 {
         public static final String COMPONENT = "dummy = aaa";
     }
-    
+
     public static class Hoge4 {
         public static final String INIT_METHOD = "xxx";
     }
-    
+
     public static class Hoge5 {
         public static final String INIT_METHOD = "init";
-        
+
         public void init(String s) {
         }
+    }
+
+    public static class Hoge6 {
+        private String component = "name = a";
+
+        private String aspect;
+
+        private String init_method;
+    }
+
+    public static class Hoge7 {
+        private String COMPONENT = "name = a";
+
+        private String ASPECT;
+
+        private String INIT_METHOD;
+    }
+
+    public static class Hoge8 {
+        public String COMPONENT = "name = a";
+
+        public String ASPECT;
+
+        public String INIT_METHOD;
+    }
+
+    public static class Hoge9 {
+        public static String COMPONENT = "name = a";
+
+        public static String ASPECT;
+
+        public static String INIT_METHOD;
+    }
+
+    public static class Hoge10 {
+        public final String COMPONENT = "name = a";
+
+        public final String ASPECT = "a";
+
+        public final String INIT_METHOD = "a";
+    }
+
+    public static class Hoge11 {
+        private static final String COMPONENT = "name = a";
+
+        private static final String ASPECT = "a";
+
+        private static final String INIT_METHOD = "a";
     }
 }
