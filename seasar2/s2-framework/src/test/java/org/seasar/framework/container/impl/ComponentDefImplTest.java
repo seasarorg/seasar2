@@ -23,19 +23,9 @@ import junit.framework.TestCase;
 
 import org.seasar.framework.aop.interceptors.TraceInterceptor;
 import org.seasar.framework.container.ComponentDef;
-import org.seasar.framework.container.ComponentDeployer;
-import org.seasar.framework.container.ComponentProvider;
 import org.seasar.framework.container.InitMethodDef;
-import org.seasar.framework.container.MetaDef;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.deployer.InstanceDefFactory;
-import org.seasar.framework.container.impl.ArgDefImpl;
-import org.seasar.framework.container.impl.AspectDefImpl;
-import org.seasar.framework.container.impl.ComponentDefImpl;
-import org.seasar.framework.container.impl.DestroyMethodDefImpl;
-import org.seasar.framework.container.impl.InitMethodDefImpl;
-import org.seasar.framework.container.impl.PropertyDefImpl;
-import org.seasar.framework.container.impl.S2ContainerImpl;
 import org.seasar.framework.container.ognl.OgnlExpression;
 import org.seasar.framework.hotswap.Hotswap;
 
@@ -191,24 +181,6 @@ public class ComponentDefImplTest extends TestCase {
         assertFalse("1", foo2 instanceof FooImpl);
     }
 	
-    public void testComponentProvider() throws Exception {
-        final Foo foo = new FooImpl();
-        MetaDef meta = new MetaDefImpl(
-                ComponentProvider.COMPONENT_PROVIDER_META_NAME,
-                new ComponentProvider() {
-                    public Object getComponent(ComponentDef componentDef,
-                            ComponentDeployer componentDeployer) {
-                        return foo;
-                    }
-                });
-        ComponentDefImpl cd = new ComponentDefImpl(FooImpl.class);
-        cd.setInstanceDef(InstanceDefFactory.PROTOTYPE);
-        cd.addMetaDef(meta);
-        cd.init();
-
-        assertSame("1", foo, cd.getComponent());
-    }
-
     public interface Foo {
 		public String getHogeName();
 	}

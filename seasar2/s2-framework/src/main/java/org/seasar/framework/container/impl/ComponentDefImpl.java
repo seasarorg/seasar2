@@ -21,7 +21,6 @@ import org.seasar.framework.container.AspectDef;
 import org.seasar.framework.container.AutoBindingDef;
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.ComponentDeployer;
-import org.seasar.framework.container.ComponentProvider;
 import org.seasar.framework.container.ContainerConstants;
 import org.seasar.framework.container.DestroyMethodDef;
 import org.seasar.framework.container.Expression;
@@ -81,8 +80,6 @@ public class ComponentDefImpl implements ComponentDef, ContainerConstants {
 
     private Hotswap hotswap;
 
-    private ComponentProvider componentProvider;
-
     public ComponentDefImpl() {
     }
 
@@ -99,12 +96,6 @@ public class ComponentDefImpl implements ComponentDef, ContainerConstants {
      * @see org.seasar.framework.container.ComponentDef#getComponent()
      */
     public Object getComponent() {
-        if (componentProvider != null) {
-            Object component = componentProvider.getComponent(this, getComponentDeployer());
-            if (component != null) {
-                return component;
-            }
-        }
         return getComponentDeployer().deploy();
     }
 
@@ -308,14 +299,6 @@ public class ComponentDefImpl implements ComponentDef, ContainerConstants {
                 && container.getRoot().isHotswapMode()) {
             
             hotswap = new Hotswap(componentClass);
-        }
-
-        MetaDef meta = getMetaDef(ComponentProvider.COMPONENT_PROVIDER_META_NAME);
-        if (meta != null) {
-            Object value = meta.getValue();
-            if (value instanceof ComponentProvider) {
-                componentProvider = (ComponentProvider) value;
-            }
         }
 
         getComponentDeployer().init();
