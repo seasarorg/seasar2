@@ -15,6 +15,8 @@
  */
 package org.seasar.framework.container.impl;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
@@ -180,7 +182,49 @@ public class ComponentDefImplTest extends TestCase {
         assertNotSame("1", foo.getClass(), foo2.getClass());
         assertFalse("1", foo2 instanceof FooImpl);
     }
-	
+
+    public void testGetConcreteClass() throws Exception {
+        final ClassLoader loader1 = Thread.currentThread()
+                .getContextClassLoader();
+        ClassLoader loader2 = new ClassLoader(loader1) {
+            public Class loadClass(String name) throws ClassNotFoundException {
+                if (!name.equals(Foo.class.getName())) {
+                    return super.loadClass(name);
+                }
+                try {
+                    InputStream is = loader1.getResourceAsStream(name.replace(
+                            '.', '/')
+                            + ".class");
+                    byte[] bytes = new byte[is.available()];
+                    is.read(bytes, 0, bytes.length);
+                    return defineClass(name, bytes, 0, bytes.length);
+                } catch (IOException e) {
+                    throw new ClassNotFoundException(name, e);
+                }
+            }
+
+        };
+        Thread.currentThread().setContextClassLoader(loader2);
+        S2Container container;
+        try {
+            container = new S2ContainerImpl();
+            ComponentDef cd = new ComponentDefImpl(Foo.class);
+            cd.addAspectDef(new AspectDefImpl(new TraceInterceptor()));
+            container.register(cd);
+            container.init();
+        } finally {
+            Thread.currentThread().setContextClassLoader(loader1);
+        }
+
+        Object component = container.getComponent(Foo.class);
+        Class concreteClass = component.getClass();
+        assertTrue("1", concreteClass.getName().startsWith(Foo.class.getName() + "$$"));
+        assertEquals("2", loader2, concreteClass.getClassLoader());
+        Class superClass = concreteClass.getInterfaces()[0];
+        assertEquals("3", Foo.class.getName(), superClass.getName());
+        assertEquals("4", loader2, superClass.getClassLoader());
+    }
+
     public interface Foo {
 		public String getHogeName();
 	}
