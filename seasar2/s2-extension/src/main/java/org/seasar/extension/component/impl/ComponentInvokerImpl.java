@@ -28,7 +28,7 @@ public class ComponentInvokerImpl implements ComponentInvoker {
 	public Object invoke(String componentName, String methodName, Object[] args)
 			throws Throwable {
 
-		Object component = container.getComponent(componentName);
+		Object component = container.getRoot().getComponent(componentName);
 		BeanDesc beanDesc = BeanDescFactory.getBeanDesc(component.getClass());
 		try {
 			return beanDesc.invoke(component, methodName, args);
