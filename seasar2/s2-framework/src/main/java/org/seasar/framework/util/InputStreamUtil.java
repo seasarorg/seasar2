@@ -31,6 +31,9 @@ public final class InputStreamUtil {
     }
 
     public static void close(InputStream is) {
+        if (is == null) {
+            return;
+        }
         try {
             is.close();
         } catch (IOException e) {
