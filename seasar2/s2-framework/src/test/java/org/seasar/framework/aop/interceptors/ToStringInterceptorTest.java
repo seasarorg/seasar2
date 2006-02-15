@@ -33,6 +33,7 @@ public class ToStringInterceptorTest extends TestCase {
 
     public void testIntercept() throws Exception {
         ToStringInterceptor interceptor = new ToStringInterceptor();
+        interceptor.setDateFormat("yy/MM/dd H:mm");
         Pointcut pointcut = new PointcutImpl(new String[] { "toString" });
         Aspect aspect = new AspectImpl(interceptor, pointcut);
         AopProxy aopProxy = new AopProxy(FooEntity.class,
