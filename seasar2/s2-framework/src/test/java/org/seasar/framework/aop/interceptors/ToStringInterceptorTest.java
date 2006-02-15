@@ -112,6 +112,7 @@ public class ToStringInterceptorTest extends TestCase {
     public void testIncludeConstantAndStatic() throws Exception {
         interceptor.setIncludeConstant(true);
         interceptor.setIncludeStatic(true);
+        interceptor.setDateFormat("yy/MM/dd H:mm");
         FooEntity proxy = (FooEntity) applyInterceptor(FooEntity.class);
 
         String identityHashCode = Integer.toHexString(System
