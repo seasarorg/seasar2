@@ -24,5 +24,6 @@ public interface ColumnType {
 	public Object convert(Object value, String formatPattern);
 	
 	public boolean equals(Object arg1, Object arg2);
-
+    
+    public Class getType();
 }

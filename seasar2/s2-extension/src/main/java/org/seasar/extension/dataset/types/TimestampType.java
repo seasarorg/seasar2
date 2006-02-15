@@ -15,6 +15,8 @@
  */
 package org.seasar.extension.dataset.types;
 
+import java.sql.Timestamp;
+
 import org.seasar.framework.util.TimestampConversionUtil;
 
 /**
@@ -29,4 +31,8 @@ public class TimestampType extends ObjectType {
 	public Object convert(Object value, String formatPattern) {
 		return TimestampConversionUtil.toTimestamp(value, formatPattern);
 	}
+    
+    public Class getType() {
+        return Timestamp.class;
+    }
 }

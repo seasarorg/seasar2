@@ -50,4 +50,8 @@ public class ObjectType implements ColumnType {
 		}
 		return arg1.equals(arg2);
 	}
+    
+    public Class getType() {
+        return Object.class;
+    }
 }

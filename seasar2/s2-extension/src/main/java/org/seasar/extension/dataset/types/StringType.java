@@ -36,4 +36,8 @@ public class StringType extends ObjectType {
 		}
 		return s;
 	}
+    
+    public Class getType() {
+        return String.class;
+    }
 }

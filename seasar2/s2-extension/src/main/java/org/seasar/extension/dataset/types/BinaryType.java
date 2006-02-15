@@ -25,6 +25,8 @@ import org.seasar.framework.util.BinaryConversionUtil;
  */
 public class BinaryType extends ObjectType {
 
+    private static final Class TYPE = new byte[0].getClass();
+
 	BinaryType() {
 	}
 
@@ -38,4 +40,8 @@ public class BinaryType extends ObjectType {
 		}
 		return false;
 	}
+    
+    public Class getType() {
+        return TYPE;
+    }
 }

@@ -16,10 +16,7 @@
 package org.seasar.extension.dataset.states;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.WeakHashMap;
 
 import org.seasar.extension.dataset.DataColumn;
 import org.seasar.extension.dataset.DataRow;
@@ -31,17 +28,45 @@ import org.seasar.extension.dataset.DataTable;
  */
 public class CreatedState extends AbstractRowState {
 
-	private static Map sqlCache_ = Collections.synchronizedMap(new WeakHashMap());
-
 	public String toString() {
 		return "CREATED";
 	}
-
+    
+    protected SqlContext getSqlContext(DataRow row) {
+        DataTable table = row.getTable();
+        StringBuffer buf = new StringBuffer(100);
+        List argList = new ArrayList();
+        List argTypeList = new ArrayList();
+        buf.append("INSERT INTO ");
+        buf.append(table.getTableName());
+        buf.append(" (");
+        int writableColumnSize = 0;
+        for (int i = 0; i < table.getColumnSize(); ++i) {
+            DataColumn column = table.getColumn(i);
+            if (column.isWritable()) {
+                ++writableColumnSize;
+                buf.append(column.getColumnName());
+                buf.append(", ");
+                argList.add(row.getValue(i));
+                argTypeList.add(column.getColumnType().getType());
+            }
+        }
+        buf.setLength(buf.length() - 2);
+        buf.append(") VALUES (");
+        for (int i = 0; i < writableColumnSize; ++i) {
+            buf.append("?, ");
+        }
+        buf.setLength(buf.length() - 2);
+        buf.append(")");
+        return new SqlContext(buf.toString(), argList.toArray(),
+                (Class[]) argTypeList.toArray(new Class[argTypeList.size()]));
+    }
+/*
 	protected String getSql(DataTable table) {
-		String sql = (String) sqlCache_.get(table);
+		String sql = (String) sqlCache.get(table);
 		if (sql == null) {
 			sql = createSql(table);
-			sqlCache_.put(table, sql);
+			sqlCache.put(table, sql);
 		}
 		return sql;
 	}
@@ -80,4 +105,5 @@ public class CreatedState extends AbstractRowState {
 		}
 		return bindVariables.toArray();
 	}
+*/
 }

@@ -26,11 +26,13 @@ import org.apache.poi.hssf.usermodel.HSSFDataFormat;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.seasar.extension.dataset.ColumnType;
 import org.seasar.extension.dataset.DataReader;
 import org.seasar.extension.dataset.DataRow;
 import org.seasar.extension.dataset.DataSet;
 import org.seasar.extension.dataset.DataSetConstants;
 import org.seasar.extension.dataset.DataTable;
+import org.seasar.extension.dataset.types.ColumnTypes;
 import org.seasar.framework.exception.IORuntimeException;
 import org.seasar.framework.util.Base64Util;
 import org.seasar.framework.util.FileInputStreamUtil;
@@ -87,26 +89,31 @@ public class XlsReader implements DataReader, DataSetConstants {
 	private DataTable createTable(String sheetName, HSSFSheet sheet) {
 		DataTable table = dataSet_.addTable(sheetName);
 		int rowCount = sheet.getLastRowNum();
-		if (rowCount >= 0) {
-			setupColumns(table, sheet.getRow(0));
-			if (rowCount > 0) {
-				setupRows(table, sheet);
-			}
-		}
+        if (rowCount > 0) {
+            setupColumns(table, sheet.getRow(0), sheet.getRow(1));
+            setupRows(table, sheet);
+        } else if (rowCount == 0) {
+            setupColumns(table, sheet.getRow(0), null);
+        }
 		return table;
 	}
 
-	private void setupColumns(DataTable table, HSSFRow row) {
+	private void setupColumns(DataTable table, HSSFRow nameRow, HSSFRow valueRow) {
 		for (int i = 0;; ++i) {
-			HSSFCell nameCell = row.getCell((short) i);
+			HSSFCell nameCell = nameRow.getCell((short) i);
 			if (nameCell == null) {
 				break;
 			}
-			String nameCellValue = nameCell.getStringCellValue().trim();
-		    if (nameCellValue.length() == 0) {
+			String columnName = nameCell.getStringCellValue().trim();
+		    if (columnName.length() == 0) {
 		      break;
 		    }
-		    table.addColumn(nameCellValue);
+            if (valueRow != null) {
+                HSSFCell valueCell = valueRow.getCell((short) i);
+                table.addColumn(columnName, getColumnType(valueCell));
+            } else {
+                table.addColumn(columnName);
+            }
 		}
 	}
 
@@ -185,6 +192,23 @@ public class XlsReader implements DataReader, DataSetConstants {
 				return null;
 		}
 	}
+    
+    protected ColumnType getColumnType(HSSFCell cell) {
+        switch (cell.getCellType()) {
+            case HSSFCell.CELL_TYPE_NUMERIC :
+                if (isCellDateFormatted(cell)) {
+                    return ColumnTypes.TIMESTAMP;
+                }
+                return ColumnTypes.BIGDECIMAL;
+            case HSSFCell.CELL_TYPE_STRING :
+                if (isCellBase64Formatted(cell)) {
+                    return ColumnTypes.BINARY;
+                }
+                return ColumnTypes.STRING;
+            default :
+                return ColumnTypes.STRING;
+        }
+    }
 
     private boolean isInt(final double numericCellValue) {
         return ((int)numericCellValue) == numericCellValue;

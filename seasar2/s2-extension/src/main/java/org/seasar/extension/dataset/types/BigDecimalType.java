@@ -15,6 +15,8 @@
  */
 package org.seasar.extension.dataset.types;
 
+import java.math.BigDecimal;
+
 import org.seasar.framework.util.BigDecimalConversionUtil;
 
 /**
@@ -29,4 +31,8 @@ public class BigDecimalType extends ObjectType {
 	public Object convert(Object value, String formatPattern) {
 		return BigDecimalConversionUtil.toBigDecimal(value, formatPattern);
 	}
+    
+    public Class getType() {
+        return BigDecimal.class;
+    }
 }
