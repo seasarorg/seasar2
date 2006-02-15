@@ -17,14 +17,12 @@ package org.seasar.extension.dataset.impl;
 
 import java.math.BigDecimal;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 import org.seasar.extension.dataset.DataRow;
 import org.seasar.extension.dataset.DataSet;
 import org.seasar.extension.dataset.DataTable;
-import org.seasar.extension.dataset.impl.XlsReader;
+import org.seasar.extension.dataset.types.ColumnTypes;
 import org.seasar.framework.util.Base64Util;
 import org.seasar.framework.util.TimestampConversionUtil;
 
@@ -34,20 +32,21 @@ public class XlsReaderTest extends TestCase {
 
     private DataSet dataSet_;
 
-    public XlsReaderTest(String name) {
-        super(name);
-    }
-
     public void testCreateTable() throws Exception {
         assertEquals("1", 4, dataSet_.getTableSize());
     }
 
     public void testSetupColumns() throws Exception {
-        DataTable table = dataSet_.getTable(0);
-        assertEquals("1", 4, table.getColumnSize());
+        DataTable table = dataSet_.getTable(2);
+        assertEquals("1", 5, table.getColumnSize());
         for (int i = 0; i < table.getColumnSize(); ++i) {
             assertEquals("2", "COLUMN" + i, table.getColumnName(i));
         }
+        assertEquals("3", ColumnTypes.TIMESTAMP, table.getColumnType(0));
+        assertEquals("4", ColumnTypes.BIGDECIMAL, table.getColumnType(1));
+        assertEquals("5", ColumnTypes.STRING, table.getColumnType(2));
+        assertEquals("6", ColumnTypes.BINARY, table.getColumnType(3));
+        assertEquals("7", ColumnTypes.BIGDECIMAL, table.getColumnType(4));
     }
 
     public void testSetupRows() throws Exception {
@@ -76,17 +75,5 @@ public class XlsReaderTest extends TestCase {
 
     protected void setUp() throws Exception {
         dataSet_ = new XlsReader(PATH).read();
-    }
-
-    protected void tearDown() throws Exception {
-    }
-
-    public static Test suite() {
-        return new TestSuite(XlsReaderTest.class);
-    }
-
-    public static void main(String[] args) {
-        junit.textui.TestRunner.main(new String[] { XlsReaderTest.class
-                .getName() });
     }
 }
