@@ -17,6 +17,7 @@ package org.seasar.framework.aop.interceptors;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -50,7 +51,21 @@ public class ToStringInterceptor extends AbstractInterceptor {
     private static final Logger logger = Logger
             .getLogger(ToStringInterceptor.class);
 
+    public static final String includeConstant_BINDING = "bindingType=none";
+    private boolean includeConstant;
+
+    public static final String includeStatic_BINDING = "bindingType=none";
+    private boolean includeStatic;
+
     private DateFormat dateFormat = new SimpleDateFormat();
+
+    public void setIncludeConstant(boolean includeConstant) {
+        this.includeConstant = includeConstant;
+    }
+
+    public void setIncludeStatic(boolean includeStatic) {
+        this.includeStatic = includeStatic;
+    }
 
     public void setDateFormat(String format) {
         dateFormat = new SimpleDateFormat(format);
@@ -88,6 +103,14 @@ public class ToStringInterceptor extends AbstractInterceptor {
             for (int i = 0; i < fields.length; i++) {
                 Field field = fields[i];
                 field.setAccessible(true);
+
+                int modifiers = field.getModifiers();
+                if (Modifier.isStatic(modifiers) && Modifier.isFinal(modifiers) && !includeConstant) {
+                    continue;
+                }
+                if (Modifier.isStatic(modifiers) && !Modifier.isFinal(modifiers) && !includeStatic) {
+                    continue;
+                }
 
                 buf.append(field.getName());
                 buf.append(VALUE_SEPARATOR);

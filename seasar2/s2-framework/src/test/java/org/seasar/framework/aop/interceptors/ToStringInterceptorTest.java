@@ -30,15 +30,16 @@ import org.seasar.framework.aop.proxy.AopProxy;
  * 
  */
 public class ToStringInterceptorTest extends TestCase {
+    ToStringInterceptor interceptor;
+
+    protected void setUp() throws Exception {
+        super.setUp();
+        interceptor = new ToStringInterceptor();
+    }
 
     public void testIntercept() throws Exception {
-        ToStringInterceptor interceptor = new ToStringInterceptor();
         interceptor.setDateFormat("yy/MM/dd H:mm");
-        Pointcut pointcut = new PointcutImpl(new String[] { "toString" });
-        Aspect aspect = new AspectImpl(interceptor, pointcut);
-        AopProxy aopProxy = new AopProxy(FooEntity.class,
-                new Aspect[] { aspect });
-        FooEntity proxy = (FooEntity) aopProxy.create();
+        FooEntity proxy = (FooEntity) applyInterceptor(FooEntity.class);
 
         String identityHashCode = Integer.toHexString(System
                 .identityHashCode(proxy));
@@ -54,13 +55,8 @@ public class ToStringInterceptorTest extends TestCase {
     }
 
     public void testInterceptExtendsField() throws Exception {
-        ToStringInterceptor interceptor = new ToStringInterceptor();
         interceptor.setDateFormat("yyyy/MM/dd HH:mm:ss.SSS");
-        Pointcut pointcut = new PointcutImpl(new String[] { "toString" });
-        Aspect aspect = new AspectImpl(interceptor, pointcut);
-        AopProxy aopProxy = new AopProxy(BarEntity.class,
-                new Aspect[] { aspect });
-        BarEntity proxy = (BarEntity) aopProxy.create();
+        BarEntity proxy = (BarEntity) applyInterceptor(BarEntity.class);
 
         String identityHashCode = Integer.toHexString(System
                 .identityHashCode(proxy));
@@ -77,7 +73,72 @@ public class ToStringInterceptorTest extends TestCase {
                         + "stringArray={\"1\",\"2\",\"3\"}]", proxy.toString());
     }
 
+    public void testIncludeConstant() throws Exception {
+        interceptor.setIncludeConstant(true);
+        interceptor.setDateFormat("yy/MM/dd H:mm");
+        FooEntity proxy = (FooEntity) applyInterceptor(FooEntity.class);
+
+        String identityHashCode = Integer.toHexString(System
+                .identityHashCode(proxy));
+        System.out.println(proxy.toString());
+        assertEquals(
+                "org.seasar.framework.aop.interceptors.ToStringInterceptorTest$FooEntity@"
+                        + identityHashCode
+                        + "[CONSTANT=\"Hoge\",intVal=12,longVal=123,charVal='a',doubleVal=1234.5"
+                        + ",dateVal=70/01/01 9:00,nullVal=null,longArray={1,2,3},intArray={1,2,3},shortArray={1,2,3}"
+                        + ",byteArray={1,2,3},charArray={'1','2','3'},doubleArray={1.0,2.0,3.0},floatArray={1.0,2.0,3.0}"
+                        + ",booleanArray={true,false,true},booleanClassArray={true,false,false},"
+                        + "stringArray={\"1\",\"2\",\"3\"}]", proxy.toString());
+    }
+
+    public void testIncludeStatic() throws Exception {
+        interceptor.setIncludeStatic(true);
+        interceptor.setDateFormat("yy/MM/dd H:mm");
+        FooEntity proxy = (FooEntity) applyInterceptor(FooEntity.class);
+
+        String identityHashCode = Integer.toHexString(System
+                .identityHashCode(proxy));
+        System.out.println(proxy.toString());
+        assertEquals(
+                "org.seasar.framework.aop.interceptors.ToStringInterceptorTest$FooEntity@"
+                        + identityHashCode
+                        + "[staticInt=1,intVal=12,longVal=123,charVal='a',doubleVal=1234.5"
+                        + ",dateVal=70/01/01 9:00,nullVal=null,longArray={1,2,3},intArray={1,2,3},shortArray={1,2,3}"
+                        + ",byteArray={1,2,3},charArray={'1','2','3'},doubleArray={1.0,2.0,3.0},floatArray={1.0,2.0,3.0}"
+                        + ",booleanArray={true,false,true},booleanClassArray={true,false,false},"
+                        + "stringArray={\"1\",\"2\",\"3\"}]", proxy.toString());
+    }
+
+    public void testIncludeConstantAndStatic() throws Exception {
+        interceptor.setIncludeConstant(true);
+        interceptor.setIncludeStatic(true);
+        FooEntity proxy = (FooEntity) applyInterceptor(FooEntity.class);
+
+        String identityHashCode = Integer.toHexString(System
+                .identityHashCode(proxy));
+        System.out.println(proxy.toString());
+        assertEquals(
+                "org.seasar.framework.aop.interceptors.ToStringInterceptorTest$FooEntity@"
+                        + identityHashCode
+                        + "[CONSTANT=\"Hoge\",staticInt=1,intVal=12,longVal=123,charVal='a',doubleVal=1234.5"
+                        + ",dateVal=70/01/01 9:00,nullVal=null,longArray={1,2,3},intArray={1,2,3},shortArray={1,2,3}"
+                        + ",byteArray={1,2,3},charArray={'1','2','3'},doubleArray={1.0,2.0,3.0},floatArray={1.0,2.0,3.0}"
+                        + ",booleanArray={true,false,true},booleanClassArray={true,false,false},"
+                        + "stringArray={\"1\",\"2\",\"3\"}]", proxy.toString());
+    }
+
+    private Object applyInterceptor(Class clazz) {
+        Pointcut pointcut = new PointcutImpl(new String[] { "toString" });
+        Aspect aspect = new AspectImpl(interceptor, pointcut);
+        AopProxy aopProxy = new AopProxy(clazz, new Aspect[] { aspect });
+        return aopProxy.create();
+    }
+
     static class FooEntity {
+        private static final String CONSTANT = "Hoge";
+
+        private static int staticInt = 1;
+
         private int intVal = 12;
 
         protected long longVal = 123;
