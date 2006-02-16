@@ -83,4 +83,13 @@ public class ArrayUtilTest extends TestCase {
         assertFalse(ArrayUtil.isEmpty(new Object[] { "aaa" }));
     }
 
+    public void testContains() throws Exception {
+        assertEquals(true, ArrayUtil.contains(new Object[] { "1" }, "1"));
+        assertEquals(false, ArrayUtil.contains(new Object[] { "1" }, "2"));
+        assertEquals(true, ArrayUtil.contains(new Object[] { "2", "1" }, "1"));
+        assertEquals(false, ArrayUtil.contains((Object[]) null, "1"));
+        assertEquals(false, ArrayUtil.contains((Object[]) null, null));
+        assertEquals(true, ArrayUtil.contains(new Object[] { null }, null));
+    }
+
 }

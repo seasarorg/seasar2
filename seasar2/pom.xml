@@ -74,7 +74,9 @@
       <id>manhole</id>
       <name>HONMA Hirotaka</name>
       <email>manholex@gmail.com</email>
-      <url>http://popo.dyndns.info/~manhole/diary/</url>
+      <url></url>
+      <organization>ARK Systems Co., Ltd.</organization>
+      <organizationUrl>http://www.arksystems.co.jp/</organizationUrl>
       <timezone>+9</timezone>
     </developer>
     <developer>

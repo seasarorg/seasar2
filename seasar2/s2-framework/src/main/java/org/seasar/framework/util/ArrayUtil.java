@@ -97,4 +97,8 @@ public class ArrayUtil {
         return (arrays == null || arrays.length == 0);
     }
 
+    public static boolean contains(Object[] array, Object obj) {
+        return -1 < indexOf(array, obj);
+    }
+
 }
