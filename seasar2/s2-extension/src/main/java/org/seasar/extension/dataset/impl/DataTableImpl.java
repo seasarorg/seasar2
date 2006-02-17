@@ -18,6 +18,7 @@ package org.seasar.extension.dataset.impl;
 import java.sql.DatabaseMetaData;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.seasar.extension.dataset.ColumnType;
@@ -27,6 +28,7 @@ import org.seasar.extension.dataset.DataTable;
 import org.seasar.extension.dataset.states.RowStates;
 import org.seasar.extension.dataset.types.ColumnTypes;
 import org.seasar.extension.jdbc.ColumnNotFoundRuntimeException;
+import org.seasar.extension.jdbc.util.ColumnDesc;
 import org.seasar.extension.jdbc.util.DatabaseMetaDataUtil;
 import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.PropertyDesc;
@@ -221,7 +223,7 @@ public class DataTableImpl implements DataTable {
 	public void setupMetaData(DatabaseMetaData dbMetaData) {
 		Set primaryKeySet = DatabaseMetaDataUtil.getPrimaryKeySet(dbMetaData,
 				tableName_);
-		Set columnSet = DatabaseMetaDataUtil.getColumnSet(dbMetaData,
+		Map columnMap = DatabaseMetaDataUtil.getColumnMap(dbMetaData,
 				tableName_);
 		for (int i = 0; i < getColumnSize(); ++i) {
 			DataColumn column = getColumn(i);
@@ -230,8 +232,10 @@ public class DataTableImpl implements DataTable {
 			} else {
 				column.setPrimaryKey(false);
 			}
-			if (columnSet.contains(column.getColumnName())) {
+			if (columnMap.containsKey(column.getColumnName())) {
 				column.setWritable(true);
+                ColumnDesc cd = (ColumnDesc) columnMap.get(column.getColumnName());
+                column.setColumnType(ColumnTypes.getColumnType(cd.getSqlType()));
 			} else {
 				column.setWritable(false);
 			}

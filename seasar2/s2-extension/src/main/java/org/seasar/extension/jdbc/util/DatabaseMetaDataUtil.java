@@ -18,9 +18,13 @@ package org.seasar.extension.jdbc.util;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
 import org.seasar.framework.exception.SQLRuntimeException;
+import org.seasar.framework.util.CaseInsensitiveMap;
 import org.seasar.framework.util.CaseInsensitiveSet;
 
 /**
@@ -79,11 +83,17 @@ public final class DatabaseMetaDataUtil {
 	public static String[] getColumns(DatabaseMetaData dbMetaData,
 			String tableName) {
 
-		Set set = getColumnSet(dbMetaData, tableName);
-		return (String[]) set.toArray(new String[set.size()]);
+		Map map = getColumnMap(dbMetaData, tableName);
+        String[] ret = new String[map.size()];
+        int index = 0;
+        for (Iterator i = map.values().iterator(); i.hasNext(); ) {
+            ColumnDesc cd = (ColumnDesc) i.next();
+            ret[index++] = cd.getName();
+        }
+		return ret;
 	}
 
-	public static Set getColumnSet(DatabaseMetaData dbMetaData, String tableName) {
+	public static Map getColumnMap(DatabaseMetaData dbMetaData, String tableName) {
 		String schema = null;
 		int index = tableName.indexOf('.');
 		if (index >= 0) {
@@ -91,25 +101,28 @@ public final class DatabaseMetaDataUtil {
 			tableName = tableName.substring(index + 1);
 		}
 		String convertedTableName = convertIdentifier(dbMetaData, tableName);
-		Set set = new CaseInsensitiveSet();
-		addColumns(dbMetaData, convertIdentifier(dbMetaData, schema), convertedTableName, set);
-		if (set.size() == 0) {
-			addColumns(dbMetaData, schema, tableName, set);
+		Map map = new CaseInsensitiveMap();
+		addColumns(dbMetaData, convertIdentifier(dbMetaData, schema), convertedTableName, map);
+		if (map.size() == 0) {
+			addColumns(dbMetaData, schema, tableName, map);
 		}
-		if (set.size() == 0 && schema != null) {
-			addColumns(dbMetaData, null, convertedTableName, set);
-			if (set.size() == 0) {
-				addColumns(dbMetaData, null, tableName, set);
+		if (map.size() == 0 && schema != null) {
+			addColumns(dbMetaData, null, convertedTableName, map);
+			if (map.size() == 0) {
+				addColumns(dbMetaData, null, tableName, map);
 			}
 		}
-		return set;
+		return map;
 	}
 	
-	private static void addColumns(DatabaseMetaData dbMetaData, String schema, String tableName, Set set) {
+	private static void addColumns(DatabaseMetaData dbMetaData, String schema, String tableName, Map map) {
 		try {
 			ResultSet rs = dbMetaData.getColumns(null, schema, tableName, null);
 			while (rs.next()) {
-				set.add(rs.getString(4));
+                ColumnDesc cd = new ColumnDesc();
+                cd.setName(rs.getString(4));
+                cd.setSqlType(rs.getInt(5));
+				map.put(cd.getName(), cd);
 			}
 			rs.close();
 		} catch (SQLException ex) {

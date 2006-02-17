@@ -108,8 +108,11 @@ public class XlsReader implements DataReader, DataSetConstants {
 		    if (columnName.length() == 0) {
 		      break;
 		    }
+            HSSFCell valueCell = null;
             if (valueRow != null) {
-                HSSFCell valueCell = valueRow.getCell((short) i);
+                valueCell = valueRow.getCell((short) i);
+            }
+            if (valueCell != null) {
                 table.addColumn(columnName, getColumnType(valueCell));
             } else {
                 table.addColumn(columnName);

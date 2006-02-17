@@ -20,6 +20,7 @@ import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Map;
 import java.util.Set;
 
 import javax.sql.DataSource;
@@ -31,22 +32,22 @@ public class DatabaseMetaDataUtilTest extends S2TestCase {
 
     public void testGetColumnList() throws Exception {
         DatabaseMetaData dbMetaData = getConnection().getMetaData();
-        Set columnSet = DatabaseMetaDataUtil.getColumnSet(dbMetaData, "emp");
-        System.out.println(columnSet);
-        assertTrue("1", columnSet.size() > 0);
+        Map columnMap = DatabaseMetaDataUtil.getColumnMap(dbMetaData, "emp");
+        System.out.println(columnMap);
+        assertTrue("1", columnMap.size() > 0);
     }
 
     public void testGetColumnListForNotExistTable() throws Exception {
         DatabaseMetaData dbMetaData = getConnection().getMetaData();
-        Set columnSet = DatabaseMetaDataUtil.getColumnSet(dbMetaData, "_emp_");
-        assertEquals("1", 0, columnSet.size());
+        Map columnMap = DatabaseMetaDataUtil.getColumnMap(dbMetaData, "_emp_");
+        assertEquals("1", 0, columnMap.size());
     }
 
     public void testGetColumnListForSchema() throws Exception {
         DatabaseMetaData dbMetaData = getConnection().getMetaData();
-        Set columnSet = DatabaseMetaDataUtil.getColumnSet(dbMetaData, "SA.emp");
-        System.out.println(columnSet);
-        assertTrue("1", columnSet.size() > 0);
+        Map columnMap = DatabaseMetaDataUtil.getColumnMap(dbMetaData, "SA.emp");
+        System.out.println(columnMap);
+        assertTrue("1", columnMap.size() > 0);
     }
 
     public void testGetPrimaryKeyList() throws Exception {

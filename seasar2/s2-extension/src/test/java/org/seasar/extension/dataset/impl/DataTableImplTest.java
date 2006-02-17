@@ -19,21 +19,13 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-
 import org.seasar.extension.dataset.DataRow;
 import org.seasar.extension.dataset.DataTable;
-import org.seasar.extension.dataset.impl.DataTableImpl;
 import org.seasar.extension.dataset.states.RowStates;
 import org.seasar.extension.dataset.types.ColumnTypes;
+import org.seasar.extension.unit.S2TestCase;
 
-public class DataTableImplTest extends TestCase {
-
-	public DataTableImplTest(String name) {
-		super(name);
-	}
+public class DataTableImplTest extends S2TestCase {
 
 	public void testRemoveRows() throws Exception {
 		DataTable table = new DataTableImpl("hoge");
@@ -171,21 +163,17 @@ public class DataTableImplTest extends TestCase {
 		table.addColumn("aaa_bbb");
 		assertNotNull("1", table.getColumn("aaaBbb"));
 	}
+    
+    public void setUpSetupMetaData() throws Exception {
+        include("j2ee.dicon");
+    }
 
-	protected void setUp() throws Exception {
-	}
-
-	protected void tearDown() throws Exception {
-	}
-
-	public static Test suite() {
-		return new TestSuite(DataTableImplTest.class);
-	}
-
-	public static void main(String[] args) {
-		junit.textui.TestRunner.main(
-			new String[] { DataTableImplTest.class.getName()});
-	}
+    public void testSetupMetaData() throws Exception {
+        DataTable table = new DataTableImpl("emp");
+        table.addColumn("empno");
+        table.setupMetaData(getDatabaseMetaData());
+        assertEquals("1", ColumnTypes.BIGDECIMAL, table.getColumnType("empno"));
+    }
 	
 	public static class MyBean {
 		

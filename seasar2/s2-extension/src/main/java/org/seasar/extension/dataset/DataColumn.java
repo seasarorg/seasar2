@@ -26,6 +26,8 @@ public interface DataColumn {
 	public int getColumnIndex();
 	
 	public ColumnType getColumnType();
+    
+    public void setColumnType(ColumnType columnType);
 	
 	public boolean isPrimaryKey();
 	

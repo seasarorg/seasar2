@@ -33,7 +33,7 @@ public class XlsReaderTest extends TestCase {
     private DataSet dataSet_;
 
     public void testCreateTable() throws Exception {
-        assertEquals("1", 4, dataSet_.getTableSize());
+        assertEquals("1", 5, dataSet_.getTableSize());
     }
 
     public void testSetupColumns() throws Exception {
@@ -47,6 +47,11 @@ public class XlsReaderTest extends TestCase {
         assertEquals("5", ColumnTypes.STRING, table.getColumnType(2));
         assertEquals("6", ColumnTypes.BINARY, table.getColumnType(3));
         assertEquals("7", ColumnTypes.BIGDECIMAL, table.getColumnType(4));
+    }
+
+    public void testSetupColumnsForNull() throws Exception {
+        DataTable table = dataSet_.getTable(4);
+        assertEquals("1", ColumnTypes.OBJECT, table.getColumnType(1));
     }
 
     public void testSetupRows() throws Exception {
