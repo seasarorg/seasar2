@@ -13,25 +13,22 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.framework.container;
+package org.seasar.framework.container.deployer;
+
+import org.seasar.framework.container.ComponentDef;
+import org.seasar.framework.container.ComponentDeployer;
 
 /**
  * @author higa
  *
  */
-public interface ContainerConstants {
-	
-	public char NS_SEP = '.';
-	
-	public String CONTAINER_NAME = "container";
-	
-	public String REQUEST_NAME = "request";
-	
-	public String RESPONSE_NAME = "response";
-	
-	public String SESSION_NAME = "session";
-	
-	public String SERVLET_CONTEXT_NAME = "application";
-	
-	public String COMPONENT_DEF_NAME = "componentDef";
+public class InstanceApplicationDef extends AbstractInstanceDef {
+
+    protected InstanceApplicationDef(String name) {
+        super(name);
+    }
+    
+    public ComponentDeployer createComponentDeployer(ComponentDef componentDef) {
+        return ComponentDeployerFactory.createServletContextComponentDeployer(componentDef);
+    }
 }

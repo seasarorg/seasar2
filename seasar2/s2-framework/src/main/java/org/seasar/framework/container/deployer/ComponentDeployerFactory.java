@@ -41,6 +41,10 @@ public class ComponentDeployerFactory {
         return getProvider().createPrototypeComponentDeployer(cd);
     }
     
+    public static ComponentDeployer createServletContextComponentDeployer(final ComponentDef cd) {
+        return getProvider().createServletContextComponentDeployer(cd);
+    }
+    
     public static ComponentDeployer createSessionComponentDeployer(final ComponentDef cd) {
         return getProvider().createSessionComponentDeployer(cd);
     }
@@ -58,6 +62,8 @@ public class ComponentDeployerFactory {
         ComponentDeployer createSingletonComponentDeployer(ComponentDef cd);
         
         ComponentDeployer createPrototypeComponentDeployer(ComponentDef cd);
+        
+        ComponentDeployer createServletContextComponentDeployer(ComponentDef cd);
         
         ComponentDeployer createSessionComponentDeployer(ComponentDef cd);
         
@@ -82,6 +88,10 @@ public class ComponentDeployerFactory {
 
         public ComponentDeployer createSessionComponentDeployer(final ComponentDef cd) {
             return new SessionComponentDeployer(cd);
+        }
+        
+        public ComponentDeployer createServletContextComponentDeployer(final ComponentDef cd) {
+            return new ServletContextComponentDeployer(cd);
         }
 
         public ComponentDeployer createOuterComponentDeployer(final ComponentDef cd) {

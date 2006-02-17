@@ -26,6 +26,8 @@ public interface InstanceDef {
     
     String PROTOTYPE_NAME = "prototype";
     
+    String APPLICATION_NAME = "application";
+    
     String REQUEST_NAME = "request";
     
     String SESSION_NAME = "session";

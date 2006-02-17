@@ -27,6 +27,8 @@ public class InstanceDefFactory {
     
     public static final InstanceDef PROTOTYPE = new InstancePrototypeDef(InstanceDef.PROTOTYPE_NAME);
     
+    public static final InstanceDef APPLICATION = new InstanceApplicationDef(InstanceDef.APPLICATION_NAME);
+    
     public static final InstanceDef SESSION = new InstanceSessionDef(InstanceDef.SESSION_NAME);
     
     public static final InstanceDef REQUEST = new InstanceRequestDef(InstanceDef.REQUEST_NAME);
@@ -38,6 +40,7 @@ public class InstanceDefFactory {
     static {
         addInstanceDef(SINGLETON);
         addInstanceDef(PROTOTYPE);
+        addInstanceDef(APPLICATION);
         addInstanceDef(SESSION);
         addInstanceDef(REQUEST);
         addInstanceDef(OUTER);

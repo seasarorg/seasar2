@@ -61,7 +61,10 @@ public class ComponentTagHandlerTest extends TestCase {
 		MockServletContextImpl ctx = new MockServletContextImpl("s2jsf-example");
 		HttpServletRequest request = ctx.createRequest("/hello.html");
 		container.setRequest(request);
+        container.setServletContext(ctx);
 		assertNotNull("9", container.getComponent("hhh"));
 		assertNotNull("10", container.getComponent("iii"));
+        assertEquals("11", "jjj", container.getComponent("jjj"));
+        assertEquals("12", "jjj", ctx.getAttribute("jjj"));
 	}
 }

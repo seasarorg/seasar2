@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="Shift_JIS"?>
-<!DOCTYPE components PUBLIC "-//SEASAR2.1//DTD S2Container//EN"
-"http://www.seasar.org/dtd/components21.dtd">
+<!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN" 
+	"http://www.seasar.org/dtd/components24.dtd">
 <components>
 	<component class="java.util.ArrayList"/>
 	<component class="java.util.HashMap" name="aaa"/>
@@ -34,5 +34,8 @@
 	</component>
 	<component class="java.lang.String" name="iii" instance="session">
 		<arg>"iii"</arg>
+	</component>
+	<component class="java.lang.String" name="jjj" instance="application">
+		<arg>"jjj"</arg>
 	</component>
 </components>

@@ -54,6 +54,13 @@ public class ComponentDeployerFactoryTest extends TestCase {
         assertTrue("1", deployer instanceof RequestComponentDeployer);
     }
 
+    public void testApplication() throws Exception {
+        ComponentDef cd = new ComponentDefImpl();
+        cd.setInstanceDef(InstanceDefFactory.APPLICATION);
+        ComponentDeployer deployer = ComponentDeployerFactory.createServletContextComponentDeployer(cd);
+        assertTrue("1", deployer instanceof ServletContextComponentDeployer);
+    }
+    
     public void testSession() throws Exception {
         ComponentDef cd = new ComponentDefImpl();
         cd.setInstanceDef(InstanceDefFactory.SESSION);
