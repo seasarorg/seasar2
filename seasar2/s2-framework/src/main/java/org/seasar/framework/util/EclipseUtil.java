@@ -29,8 +29,8 @@ public final class EclipseUtil {
     }
 
     public static File getProjectRoot(String projectName) {
-        File dir = ResourceUtil.getResourceAsFile(".");
-        while (dir != null) {
+        File from = ResourceUtil.getResourceAsFile(".");
+        for (File dir = from; dir != null;) {
             if (dir.getName().equalsIgnoreCase(projectName)) {
                 return dir;
             }
@@ -40,20 +40,20 @@ public final class EclipseUtil {
             }
             dir = dir.getParentFile();
         }
-        throw new SIllegalStateException("ESSR0001",
-                new Object[] { projectName });
+        throw new SIllegalStateException("ESSR0004", new Object[] {
+                projectName, from.getAbsolutePath() });
     }
 
     public static File getCurrentProjectRoot() {
-        File dir = ResourceUtil.getResourceAsFile(".");
-        while (dir != null) {
+        File from = ResourceUtil.getResourceAsFile(".");
+        for (File dir = from; dir != null;) {
             File projectFile = new File(dir, ".project");
             if (projectFile.exists()) {
                 return dir;
             }
             dir = dir.getParentFile();
         }
-        throw new SIllegalStateException("ESSR0001",
-                new Object[] { ".project" });
+        throw new SIllegalStateException("ESSR0004", new Object[] { ".project",
+                from.getAbsolutePath() });
     }
 }

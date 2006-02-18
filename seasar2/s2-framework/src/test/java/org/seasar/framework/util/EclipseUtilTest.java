@@ -19,6 +19,8 @@ import java.io.File;
 
 import junit.framework.TestCase;
 
+import org.seasar.framework.exception.SIllegalStateException;
+
 /**
  * @author higa
  * 
@@ -31,9 +33,21 @@ public class EclipseUtilTest extends TestCase {
         assertEquals("1", "seasar2", file.getName());
     }
 
+    public void testGetProjectRootNotFound() {
+        try {
+            EclipseUtil.getProjectRoot("no_such_project_1111");
+            fail();
+        } catch (SIllegalStateException e) {
+            String message = e.getMessage();
+            System.out.println(message);
+            assertEquals(true, -1 < message.indexOf("no_such_project_1111"));
+        }
+    }
+
     public void testGetCurrentProjectRoot() {
         File file = EclipseUtil.getCurrentProjectRoot();
         System.out.println(file.getAbsolutePath());
         assertEquals("1", "seasar2", file.getName());
     }
+
 }
