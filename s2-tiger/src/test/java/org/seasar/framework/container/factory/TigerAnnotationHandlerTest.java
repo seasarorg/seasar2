@@ -15,6 +15,8 @@
  */
 package org.seasar.framework.container.factory;
 
+import java.lang.reflect.Field;
+
 import org.seasar.extension.unit.S2TestCase;
 import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.PropertyDesc;
@@ -43,18 +45,35 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
         assertEquals("2", "aaa", cd.getComponentName());
         assertEquals("3", "prototype", cd.getInstanceDef().getName());
         assertEquals("4", "property", cd.getAutoBindingDef().getName());
+        
         ComponentDef cd2 = handler.createComponentDef(Hoge.class, InstanceDefFactory.REQUEST);
         assertEquals("5", InstanceDef.REQUEST_NAME, cd2.getInstanceDef().getName());
+        
         ComponentDef cd3 = handler.createComponentDef(Hoge7.class, null);
-        assertEquals("6", "hoge7", cd3.getComponentName());
+        assertEquals("6", "hoge77", cd3.getComponentName());
         assertEquals("7", InstanceDef.PROTOTYPE_NAME, cd3.getInstanceDef().getName());
         assertEquals("8", AutoBindingDef.NONE_NAME, cd3.getAutoBindingDef().getName());
+        
         ComponentDef cd4 = handler.createComponentDef(Hoge8.class, null);
         assertEquals("9", "hoge7x", cd4.getComponentName());
         assertEquals("10", InstanceDef.SINGLETON_NAME, cd4.getInstanceDef().getName());
         assertEquals("11", AutoBindingDef.PROPERTY_NAME, cd4.getAutoBindingDef().getName());
+        
         ComponentDef cd5 = handler.createComponentDef(Hoge7.class, InstanceDefFactory.REQUEST);
         assertEquals("12", InstanceDef.REQUEST_NAME, cd5.getInstanceDef().getName());
+        
+        ComponentDef cd6 = handler.createComponentDef(Hoge9.class, null);
+        assertEquals("13", "hoge99", cd6.getComponentName());
+        assertEquals("14", InstanceDef.PROTOTYPE_NAME, cd6.getInstanceDef().getName());
+        assertEquals("15", AutoBindingDef.NONE_NAME, cd6.getAutoBindingDef().getName());
+        
+        ComponentDef cd7 = handler.createComponentDef(Hoge10.class, null);
+        assertEquals("16", "hoge10x", cd7.getComponentName());
+        assertEquals("17", InstanceDef.SINGLETON_NAME, cd7.getInstanceDef().getName());
+        assertEquals("18", AutoBindingDef.PROPERTY_NAME, cd7.getAutoBindingDef().getName());
+        
+        ComponentDef cd8 = handler.createComponentDef(Hoge9.class, InstanceDefFactory.REQUEST);
+        assertEquals("19", InstanceDef.REQUEST_NAME, cd8.getInstanceDef().getName());
     }
 
     public void testCreatePropertyDef() throws Exception {
@@ -71,6 +90,37 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
         propDesc = beanDesc.getPropertyDesc("bbb");
         propDef = handler.createPropertyDef(beanDesc, propDesc);
         assertEquals("4", "none", propDef.getBindingTypeDef().getName());
+    }
+    
+    public void testCreatePropertyDefForEJB3() throws Exception {
+        BeanDesc beanDesc = BeanDescFactory.getBeanDesc(Hoge2.class);
+        PropertyDesc propDesc = beanDesc.getPropertyDesc("ddd");
+        PropertyDef propDef = handler.createPropertyDef(beanDesc, propDesc);
+        assertEquals("1", "ddd", propDef.getPropertyName());
+        assertNull("2", propDef.getExpression());
+        
+        propDesc = beanDesc.getPropertyDesc("eee");
+        propDef = handler.createPropertyDef(beanDesc, propDesc);
+        assertEquals("3", "eee2", ((OgnlExpression) propDef.getExpression()).getSource());
+    }
+    
+    public void testCreatePropertyDefForEJB3ForField() throws Exception {
+        BeanDesc beanDesc = BeanDescFactory.getBeanDesc(Hoge2.class);
+        Field field = beanDesc.getField("fff");
+        PropertyDef propDef = handler.createPropertyDef(beanDesc, field);
+        assertEquals("1", "fff", propDef.getPropertyName());
+        assertNull("2", propDef.getExpression());
+        
+        field = beanDesc.getField("ggg");
+        propDef = handler.createPropertyDef(beanDesc, field);
+        assertEquals("3", "ggg2", ((OgnlExpression) propDef.getExpression()).getSource());
+    }
+    
+    public void testAppendDIForEJB3() throws Exception {
+        ComponentDef cd = handler.createComponentDef(Hoge2.class, null);
+        handler.appendDI(cd);
+        PropertyDef propDef = cd.getPropertyDef("ggg");
+        assertEquals("1", "ggg2", ((OgnlExpression) propDef.getExpression()).getSource());
     }
 
     public void testCreatePropertyDefForConstantAnnotation() throws Exception {

@@ -15,13 +15,17 @@
  */
 package org.seasar.framework.container.factory;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
+import javax.ejb.EJB;
+import javax.ejb.Stateful;
 import javax.ejb.Stateless;
 
 import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.container.AutoBindingDef;
+import org.seasar.framework.container.BindingTypeDef;
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.IllegalInitMethodAnnotationRuntimeException;
 import org.seasar.framework.container.InstanceDef;
@@ -56,6 +60,12 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
         	instanceDef = defaultInstanceDef != null ? defaultInstanceDef : InstanceDefFactory.PROTOTYPE;
         	autoBindingDef = AutoBindingDefFactory.NONE;
         }
+        Stateful stateful = clazz.getAnnotation(Stateful.class);
+        if (stateful != null) {
+        	name = stateful.name();
+        	instanceDef = defaultInstanceDef != null ? defaultInstanceDef : InstanceDefFactory.PROTOTYPE;
+        	autoBindingDef = AutoBindingDefFactory.NONE;
+        }
 		Component component = clazz.getAnnotation(Component.class);
 		if (component != null) {
 			if (!StringUtil.isEmpty(component.name())) {
@@ -69,28 +79,43 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
 			if (autoBindingType != null) {
 				autoBindingDef = getAutoBindingDef(autoBindingType.getName());
 			}
-		} else if (stateless == null) {
-			return super.createComponentDef(componentClass, defaultInstanceDef);
 		}
-		return createComponentDef(componentClass, name,
+		if (stateless == null && stateful == null && component == null) {
+			return super.createComponentDef(componentClass, defaultInstanceDef);
+		} else {
+			return createComponentDef(componentClass, name,
 				instanceDef, autoBindingDef);
+		}
 	}
 	
 	public PropertyDef createPropertyDef(BeanDesc beanDesc,
 			PropertyDesc propertyDesc) {
 
-		if (!propertyDesc.hasWriteMethod()) {
-			return super.createPropertyDef(beanDesc, propertyDesc);
-		}
-		Method method = propertyDesc.getWriteMethod();
-		Binding binding = method.getAnnotation(Binding.class);
-		if (binding != null) {
-			String bindingTypeName = binding.bindingType().getName();
-			String expression = binding.value();
-			String propName = propertyDesc.getPropertyName();
-			return createPropertyDef(propName, expression, bindingTypeName);
+		String propName = propertyDesc.getPropertyName();
+		if (propertyDesc.hasWriteMethod()) {
+			Method method = propertyDesc.getWriteMethod();
+			Binding binding = method.getAnnotation(Binding.class);
+			if (binding != null) {
+				String bindingTypeName = binding.bindingType().getName();
+				String expression = binding.value();
+				return createPropertyDef(propName, expression, bindingTypeName);
+			}
+			EJB ejb = method.getAnnotation(EJB.class);
+			if (ejb != null) {
+				String expression = ejb.name();
+				return createPropertyDef(propName, expression, null);
+			}
 		}
 		return super.createPropertyDef(beanDesc, propertyDesc);
+	}
+	
+	public PropertyDef createPropertyDef(BeanDesc beanDesc, Field field) {
+		EJB ejb = field.getAnnotation(EJB.class);
+		if (ejb != null) {
+			String expression = ejb.name();
+			return createPropertyDef(field.getName(), expression, null);
+		}
+		return super.createPropertyDef(beanDesc, field);
 	}
 
 	public void appendAspect(ComponentDef componentDef) {

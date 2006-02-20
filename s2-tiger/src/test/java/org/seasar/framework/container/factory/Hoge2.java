@@ -15,6 +15,8 @@
  */
 package org.seasar.framework.container.factory;
 
+import javax.ejb.EJB;
+
 import org.seasar.framework.container.annotation.tiger.AutoBindingType;
 import org.seasar.framework.container.annotation.tiger.Binding;
 import org.seasar.framework.container.annotation.tiger.BindingType;
@@ -24,7 +26,13 @@ import org.seasar.framework.container.annotation.tiger.InstanceType;
 @Component(name="aaa", instance=InstanceType.PROTOTYPE,
         autoBinding=AutoBindingType.PROPERTY)
 public class Hoge2 {    
-    
+
+	@EJB
+	private String fff;
+	
+	@EJB(name="ggg2")
+	private String ggg;
+	
     @Binding("aaa2")
     public void setAaa(String aaa) {
     }
@@ -35,5 +43,13 @@ public class Hoge2 {
     
     @Binding
     public void setCcc(String ccc) {
+    }
+    
+    @EJB
+    public void setDdd(String ddd) {
+    }
+    
+    @EJB(name="eee2")
+    public void setEee(String eee) {
     }
 }

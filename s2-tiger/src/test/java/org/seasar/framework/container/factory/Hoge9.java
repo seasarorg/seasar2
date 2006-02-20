@@ -15,8 +15,8 @@
  */
 package org.seasar.framework.container.factory;
 
-import javax.ejb.Stateless;
+import javax.ejb.Stateful;
 
-@Stateless(name="hoge77")
-public class Hoge7 {
+@Stateful(name="hoge99")
+public class Hoge9 {
 }
