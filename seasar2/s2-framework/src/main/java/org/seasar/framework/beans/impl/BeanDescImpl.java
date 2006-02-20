@@ -62,7 +62,7 @@ public final class BeanDescImpl implements BeanDesc {
 
     private Map methodsCache = new HashMap();
 
-    private Map fieldCache = new HashMap();
+    private ArrayMap fieldCache = new ArrayMap();
 
     private transient Set invalidPropertyNames = new HashSet();
 
@@ -139,6 +139,13 @@ public final class BeanDescImpl implements BeanDesc {
         }
         return field;
     }
+    
+    /**
+     * @see org.seasar.framework.beans.BeanDesc#getField(int)
+     */
+    public Field getField(int index) {
+        return (Field) fieldCache.get(index);
+    }
 
     /**
      * @see org.seasar.framework.beans.BeanDesc#getFieldValue(java.lang.String,
@@ -148,6 +155,13 @@ public final class BeanDescImpl implements BeanDesc {
             throws FieldNotFoundRuntimeException {
         Field field = getField(fieldName);
         return FieldUtil.get(field, target);
+    }
+    
+    /**
+     * @see org.seasar.framework.beans.BeanDesc#getFieldSize()
+     */
+    public int getFieldSize() {
+        return fieldCache.size();
     }
 
     /**

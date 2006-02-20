@@ -41,7 +41,11 @@ public interface BeanDesc {
 	
 	public Field getField(String fieldName) throws FieldNotFoundRuntimeException;
     
+    public Field getField(int index);
+    
     public Object getFieldValue(String fieldName, Object target) throws FieldNotFoundRuntimeException;
+    
+    public int getFieldSize();
 	
 	public Object newInstance(Object[] args)
 		throws ConstructorNotFoundRuntimeException;

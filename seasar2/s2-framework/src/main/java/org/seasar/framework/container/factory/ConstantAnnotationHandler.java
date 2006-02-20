@@ -110,6 +110,10 @@ public class ConstantAnnotationHandler extends AbstractAnnotationHandler {
         }
         return createPropertyDef(propName, expression, bindingTypeName);
     }
+    
+    public PropertyDef createPropertyDef(BeanDesc beanDesc, Field field) {
+        return null;
+    }
 
     public void appendAspect(ComponentDef componentDef) {
         Class componentClass = componentDef.getComponentClass();

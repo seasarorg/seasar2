@@ -15,6 +15,9 @@
  */
 package org.seasar.framework.container.factory;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+
 import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.beans.factory.BeanDescFactory;
@@ -71,6 +74,17 @@ public abstract class AbstractAnnotationHandler implements AnnotationHandler {
                 continue;
             }
             PropertyDef propDef = createPropertyDef(beanDesc, pd);
+            if (propDef == null) {
+                continue;
+            }
+            componentDef.addPropertyDef(propDef);
+        }
+        for (int i = 0; i < beanDesc.getFieldSize(); ++i) {
+            Field field = beanDesc.getField(i);
+            if (!isFieldInjectionTarget(field)) {
+                continue;
+            }
+            PropertyDef propDef = createPropertyDef(beanDesc, field);
             if (propDef == null) {
                 continue;
             }
@@ -137,5 +151,10 @@ public abstract class AbstractAnnotationHandler implements AnnotationHandler {
             }
         }
         return true;
+    }
+    
+    protected boolean isFieldInjectionTarget(Field field) {
+        return !Modifier.isStatic(field.getModifiers()) &&
+            !Modifier.isFinal(field.getModifiers());
     }
 }

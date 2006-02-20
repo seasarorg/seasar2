@@ -15,6 +15,8 @@
  */
 package org.seasar.framework.container.factory;
 
+import java.lang.reflect.Field;
+
 import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.container.ComponentDef;
@@ -36,4 +38,6 @@ public interface AnnotationHandler {
     public void appendInitMethod(ComponentDef componentDef);
     
     public PropertyDef createPropertyDef(BeanDesc beanDesc, PropertyDesc propertyDesc);
+    
+    public PropertyDef createPropertyDef(BeanDesc beanDesc, Field field);
 }
