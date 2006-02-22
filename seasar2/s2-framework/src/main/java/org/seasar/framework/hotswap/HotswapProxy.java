@@ -20,6 +20,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
+import org.seasar.framework.util.ArrayUtil;
 import org.seasar.framework.util.MethodUtil;
 
 public class HotswapProxy extends Hotswap implements InvocationHandler,
@@ -57,6 +58,9 @@ public class HotswapProxy extends Hotswap implements InvocationHandler,
             intfs2[0] = targetClass;
             System.arraycopy(intfs, 0, intfs2, 1, intfs.length);
             return intfs2;
+        } else if (!targetClass.equals(Object.class)) {
+            intfs = (Class[]) ArrayUtil.add(intfs, getInterfaces(targetClass
+                    .getSuperclass()));
         }
         return intfs;
     }

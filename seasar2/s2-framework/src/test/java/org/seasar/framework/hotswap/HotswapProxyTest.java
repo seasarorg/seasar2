@@ -61,4 +61,9 @@ public class HotswapProxyTest extends TestCase {
         assertEquals("4", proxy.getLastModified(), otherProxy.getLastModified());
         assertNotNull("5", otherProxy.getFile());
     }
+
+    public void testInherit() throws Exception {
+        greeting = (Greeting) HotswapProxy.create(GreetingImpl2.class,
+                new SimpleHotswapTargetFactory(GreetingImpl2.class));
+    }
 }
