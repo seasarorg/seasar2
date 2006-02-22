@@ -46,8 +46,19 @@ public class HotswapProxy extends Hotswap implements InvocationHandler,
 
     public static Object create(Class targetClass,
             HotswapTargetFactory hotswapTargetFactory, ClassLoader classLoader) {
-        return Proxy.newProxyInstance(classLoader, targetClass.getInterfaces(),
+        return Proxy.newProxyInstance(classLoader, getInterfaces(targetClass),
                 new HotswapProxy(targetClass, hotswapTargetFactory));
+    }
+    
+    static Class[] getInterfaces(Class targetClass) {
+        Class[] intfs = targetClass.getInterfaces();
+        if (targetClass.isInterface()) {
+            Class[] intfs2 = new Class[intfs.length + 1];
+            intfs2[0] = targetClass;
+            System.arraycopy(intfs, 0, intfs2, 1, intfs.length);
+            return intfs2;
+        }
+        return intfs;
     }
 
     public static HotswapProxy getProxy(Object o) {

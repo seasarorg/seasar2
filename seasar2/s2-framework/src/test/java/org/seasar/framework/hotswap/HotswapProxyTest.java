@@ -17,8 +17,6 @@ package org.seasar.framework.hotswap;
 
 import junit.framework.TestCase;
 
-import org.seasar.framework.hotswap.HotswapProxy;
-import org.seasar.framework.hotswap.SimpleHotswapTargetFactory;
 import org.seasar.framework.util.SerializeUtil;
 
 /**

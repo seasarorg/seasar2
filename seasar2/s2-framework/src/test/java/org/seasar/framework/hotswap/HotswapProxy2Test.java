@@ -15,19 +15,22 @@
  */
 package org.seasar.framework.hotswap;
 
+import junit.framework.TestCase;
 
-public class GreetingMain {
+/**
+ * @author higa
+ * 
+ */
+public class HotswapProxy2Test extends TestCase {
 
-    /**
-     * @param args
-     */
-    public static void main(String[] args) throws Exception {
-        Greeting greeting = (Greeting) HotswapProxy.create(GreetingImpl.class, new SimpleHotswapTargetFactory(GreetingImpl.class));
-        System.out.println(greeting.greet());
-        System.out.println("Let's modify GreetingImpl, then press ENTER.");
-        System.in.read();
-        System.out.println("after modify");
-        System.out.println(greeting.greet());
+    private Greeting2 greeting;
+
+    protected void setUp() {
+        greeting = (Greeting2) HotswapProxy.create(Greeting2.class,
+                new Greeting2HotswapTargetFactory());
     }
 
+    public void testGreet() {
+        assertEquals("1", "Hello", greeting.greet());
+    }
 }
