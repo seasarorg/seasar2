@@ -27,7 +27,7 @@ public class EnumerationIterator implements Iterator {
 
     public EnumerationIterator(final Enumeration e) {
         if (e == null) {
-            throw new NullPointerException();
+            throw new NullPointerException("Enumeration");
         }
         this.enumeration = e;
     }
