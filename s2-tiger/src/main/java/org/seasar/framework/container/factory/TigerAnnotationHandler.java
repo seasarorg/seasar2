@@ -25,7 +25,6 @@ import javax.ejb.Stateless;
 import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.container.AutoBindingDef;
-import org.seasar.framework.container.BindingTypeDef;
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.IllegalInitMethodAnnotationRuntimeException;
 import org.seasar.framework.container.InstanceDef;
@@ -57,7 +56,7 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
         Stateless stateless = clazz.getAnnotation(Stateless.class);
         if (stateless != null) {
         	name = stateless.name();
-        	instanceDef = defaultInstanceDef != null ? defaultInstanceDef : InstanceDefFactory.PROTOTYPE;
+        	instanceDef = defaultInstanceDef != null ? defaultInstanceDef : InstanceDefFactory.SINGLETON;
         	autoBindingDef = AutoBindingDefFactory.NONE;
         }
         Stateful stateful = clazz.getAnnotation(Stateful.class);
@@ -102,7 +101,7 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
 			}
 			EJB ejb = method.getAnnotation(EJB.class);
 			if (ejb != null) {
-				String expression = ejb.name();
+				String expression = ejb.name().replace('/', '.');
 				return createPropertyDef(propName, expression, null);
 			}
 		}
@@ -112,7 +111,7 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
 	public PropertyDef createPropertyDef(BeanDesc beanDesc, Field field) {
 		EJB ejb = field.getAnnotation(EJB.class);
 		if (ejb != null) {
-			String expression = ejb.name();
+			String expression = ejb.name().replace('/', '.');
 			return createPropertyDef(field.getName(), expression, null);
 		}
 		return super.createPropertyDef(beanDesc, field);

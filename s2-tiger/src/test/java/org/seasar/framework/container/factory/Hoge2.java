@@ -33,6 +33,9 @@ public class Hoge2 {
 	@EJB(name="ggg2")
 	private String ggg;
 	
+	@EJB(name="ejb/hhh")
+	private String hhh;
+	
     @Binding("aaa2")
     public void setAaa(String aaa) {
     }
@@ -51,5 +54,9 @@ public class Hoge2 {
     
     @EJB(name="eee2")
     public void setEee(String eee) {
+    }
+    
+    @EJB(name="ejb/iii")
+    public void setIii(String iii) {
     }
 }
