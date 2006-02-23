@@ -15,7 +15,8 @@
  */
 package org.seasar.framework.util;
 
-import java.util.NoSuchElementException;
+import java.util.Enumeration;
+import java.util.Vector;
 
 import junit.framework.TestCase;
 
@@ -23,36 +24,33 @@ import junit.framework.TestCase;
  * @author shot
  * @author manhole
  */
-public class ArrayIteratorTest extends TestCase {
+public class EnumerationIteratorTest extends TestCase {
 
-    public void testNext() {
-        ArrayIterator itr = new ArrayIterator(new Object[] { "a", "b", "c" });
+    public void testEnumerationIterator() {
+        Vector vector = new Vector();
+        vector.add("a");
+        EnumerationIterator itr = new EnumerationIterator(vector.elements());
+        assertTrue(itr.hasNext());
         assertEquals("a", itr.next());
-        assertEquals("b", itr.next());
-        assertEquals("c", itr.next());
-        try {
-            itr.next();
-            fail();
-        } catch (NoSuchElementException expected) {
-            ExceptionAssert.assertMessageExist(expected);
-        }
-    }
-
-    public void testHasNext() {
-        ArrayIterator itr = new ArrayIterator(new Object[] { "A", "B" });
-        assertEquals(true, itr.hasNext());
-        itr.next();
-        assertEquals(true, itr.hasNext());
-        itr.next();
         assertEquals(false, itr.hasNext());
-    }
-
-    public void testRemove() throws Exception {
-        ArrayIterator itr = new ArrayIterator(new String[] { "1", "2" });
         try {
             itr.remove();
             fail();
         } catch (UnsupportedOperationException expected) {
+            ExceptionAssert.assertMessageExist(expected);
+        }
+    }
+
+    public void testNext() throws Exception {
+        EnumerationIterator itr = new EnumerationIterator(new Vector()
+                .elements());
+        assertEquals(false, itr.hasNext());
+    }
+
+    public void testConstructorWithNull() throws Exception {
+        try {
+            new EnumerationIterator((Enumeration) null);
+        } catch (NullPointerException expected) {
             ExceptionAssert.assertMessageExist(expected);
         }
     }
