@@ -76,7 +76,7 @@ public class SQLRuntimeExceptionTest extends TestCase {
         System.out.println(message);
         assertContains(message, "ErrorCode=1234");
         assertContains(message, "SQLState=barState");
-        assertContains(message, "many reason");
+        assertContains(message, "manyReason");
     }
 
 }
