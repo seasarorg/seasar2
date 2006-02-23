@@ -52,8 +52,8 @@
           <groupId>logkit</groupId>
         </exclusion>
         <exclusion>
-          <groupId>log4j</groupId>
           <artifactId>log4j</artifactId>
+          <groupId>log4j</groupId>
         </exclusion>
       </exclusions>
     </dependency>
