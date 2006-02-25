@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container//EN"
+"http://www.seasar.org/dtd/components.dtd">
+<components>
+	<component class="org.seasar.extension.jta.TransactionManagerImpl"/>
+	<component name="neverTx"
+		class="org.seasar.extension.tx.NeverInterceptor"/>
+	<component class="org.seasar.extension.tx.TxBeanImpl">
+		<aspect>neverTx</aspect>
+	</component>
+</components>

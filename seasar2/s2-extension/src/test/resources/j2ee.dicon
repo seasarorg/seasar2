@@ -13,4 +13,6 @@
 		class="org.seasar.extension.tx.MandatoryInterceptor"/>
 	<component name="notSupportedTx"
 		class="org.seasar.extension.tx.NotSupportedInterceptor"/>
+	<component name="neverTx"
+		class="org.seasar.extension.tx.NeverInterceptor"/>
 </components>

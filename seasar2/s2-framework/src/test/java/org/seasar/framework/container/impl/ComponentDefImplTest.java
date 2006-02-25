@@ -208,16 +208,16 @@ public class ComponentDefImplTest extends TestCase {
         S2Container container;
         try {
             container = new S2ContainerImpl();
-            ComponentDef cd = new ComponentDefImpl(Foo.class);
+            Class fooClass = loader2.loadClass(Foo.class.getName());
+            ComponentDef cd = new ComponentDefImpl(fooClass, "foo");
             cd.addAspectDef(new AspectDefImpl(new TraceInterceptor()));
             container.register(cd);
-            container.init();
         } finally {
             Thread.currentThread().setContextClassLoader(loader1);
         }
 
-        Object component = container.getComponent(Foo.class);
-        Class concreteClass = component.getClass();
+        ComponentDefImpl cd = (ComponentDefImpl) container.getComponentDef("foo");
+        Class concreteClass = cd.getConcreteClass();
         assertTrue("1", concreteClass.getName().startsWith(Foo.class.getName() + "$$"));
         assertEquals("2", loader2, concreteClass.getClassLoader());
         Class superClass = concreteClass.getInterfaces()[0];
