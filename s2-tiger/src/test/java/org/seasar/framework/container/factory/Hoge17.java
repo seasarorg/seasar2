@@ -13,17 +13,17 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package javax.ejb;
+package org.seasar.framework.container.factory;
 
-import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.ElementType.TYPE;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import javax.ejb.AroundInvoke;
+import javax.ejb.InvocationContext;
+import javax.ejb.Stateless;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
+@Stateless
+public class Hoge17 implements IHoge17 {
 
-@Target( { METHOD, TYPE })
-@Retention(RUNTIME)
-public @interface TransactionAttribute {
-    TransactionAttributeType value() default TransactionAttributeType.REQUIRED;
+    @AroundInvoke
+    public void interceptor2(InvocationContext context) throws Exception {
+        context.setParameters(null);
+    }
 }

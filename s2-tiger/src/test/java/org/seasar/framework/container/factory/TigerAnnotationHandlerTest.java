@@ -177,6 +177,83 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
                 .getSource());
     }
 
+    public void testAppendAspectForEJB3CMT1() throws Exception {
+        ComponentDef cd = handler.createComponentDef(Hoge11.class, null);
+        handler.appendAspect(cd);
+        assertEquals("1", 6, cd.getAspectDefSize());
+        assertEquals("2", "ejbtx.mandatoryTx", ((OgnlExpression) cd.getAspectDef(0)
+                .getExpression()).getSource());
+        assertEquals("3", "ejbtx.requiredTx", ((OgnlExpression) cd.getAspectDef(1)
+                .getExpression()).getSource());
+        assertEquals("4", "ejbtx.requiresNewTx", ((OgnlExpression) cd.getAspectDef(2)
+                .getExpression()).getSource());
+        assertEquals("5", "ejbtx.notSupportedTx", ((OgnlExpression) cd.getAspectDef(3)
+                .getExpression()).getSource());
+        assertEquals("6", "ejbtx.neverTx", ((OgnlExpression) cd.getAspectDef(4)
+                .getExpression()).getSource());
+        assertEquals("7", "ejbtx.requiredTx", ((OgnlExpression) cd.getAspectDef(5)
+                .getExpression()).getSource());
+    }
+
+    public void testAppendAspectForEJB3CMT2() throws Exception {
+        ComponentDef cd = handler.createComponentDef(Hoge12.class, null);
+        handler.appendAspect(cd);
+        assertEquals("1", 2, cd.getAspectDefSize());
+        assertEquals("2", "ejbtx.requiredTx", ((OgnlExpression) cd.getAspectDef(0)
+                .getExpression()).getSource());
+        assertEquals("2", "ejbtx.mandatoryTx", ((OgnlExpression) cd.getAspectDef(1)
+                .getExpression()).getSource());
+    }
+
+    public void testAppendAspectForEJB3BMT() throws Exception {
+        ComponentDef cd = handler.createComponentDef(Hoge13.class, null);
+        handler.appendAspect(cd);
+        assertEquals("1", 0, cd.getAspectDefSize());
+    }
+
+    public void testAppendAspectForEJB3AroundInvoke() throws Exception {
+        ComponentDef cd = handler.createComponentDef(Hoge14.class, null);
+        handler.appendAspect(cd);
+        assertEquals("1", 2, cd.getAspectDefSize());
+        Hoge14 hoge14 = (Hoge14) cd.getComponent();
+        assertEquals("2", "start-before-foo-after", hoge14.foo("start"));
+        assertEquals("3", "start-before-bar-after", hoge14.bar("start"));
+        assertEquals("4", "start-baz", hoge14.baz("start"));
+    }
+
+    public void testAppendAspectForEJB3AroundInvokeInvalid1() throws Exception {
+        ComponentDef cd = handler.createComponentDef(Hoge15.class, null);
+        try {
+            handler.appendAspect(cd);
+            fail("1");
+        }
+        catch (Exception expected) {
+            System.out.println(expected);
+        }
+    }
+
+    public void testAppendAspectForEJB3AroundInvokeInvalid2() throws Exception {
+        ComponentDef cd = handler.createComponentDef(Hoge16.class, null);
+        try {
+            handler.appendAspect(cd);
+            fail("1");
+        }
+        catch (Exception expected) {
+            System.out.println(expected);
+        }
+    }
+
+    public void testAppendAspectForEJB3AroundInvokeInvalid3() throws Exception {
+        ComponentDef cd = handler.createComponentDef(Hoge17.class, null);
+        try {
+            handler.appendAspect(cd);
+            fail("1");
+        }
+        catch (Exception expected) {
+            System.out.println(expected);
+        }
+    }
+
     public void testInterType() throws Exception {
         ComponentDef cd = handler.createComponentDef(Hoge.class, null);
         handler.appendInterType(cd);

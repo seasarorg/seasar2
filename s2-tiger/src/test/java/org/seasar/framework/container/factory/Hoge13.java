@@ -13,17 +13,23 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package javax.ejb;
+package org.seasar.framework.container.factory;
 
-import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.ElementType.TYPE;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import javax.ejb.Remote;
+import javax.ejb.Stateful;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionManagement;
+import javax.ejb.TransactionManagementType;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
+@Stateful
+@Remote(IHoge13.class)
+@TransactionManagement(TransactionManagementType.BEAN)
+public class Hoge13 implements IHoge13 {
 
-@Target( { METHOD, TYPE })
-@Retention(RUNTIME)
-public @interface TransactionAttribute {
-    TransactionAttributeType value() default TransactionAttributeType.REQUIRED;
+    @TransactionAttribute
+    public void required() {
+    }
+
+    public void notAnnotated() {
+    }
 }
