@@ -16,6 +16,8 @@
 package org.seasar.framework.container.factory;
 
 import java.lang.reflect.Field;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.seasar.extension.unit.S2TestCase;
 import org.seasar.framework.beans.BeanDesc;
@@ -24,6 +26,7 @@ import org.seasar.framework.beans.factory.BeanDescFactory;
 import org.seasar.framework.container.AspectDef;
 import org.seasar.framework.container.AutoBindingDef;
 import org.seasar.framework.container.ComponentDef;
+import org.seasar.framework.container.Expression;
 import org.seasar.framework.container.IllegalInitMethodAnnotationRuntimeException;
 import org.seasar.framework.container.InitMethodDef;
 import org.seasar.framework.container.InstanceDef;
@@ -181,28 +184,28 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
         ComponentDef cd = handler.createComponentDef(Hoge11.class, null);
         handler.appendAspect(cd);
         assertEquals("1", 6, cd.getAspectDefSize());
-        assertEquals("2", "ejbtx.mandatoryTx", ((OgnlExpression) cd.getAspectDef(0)
-                .getExpression()).getSource());
-        assertEquals("3", "ejbtx.requiredTx", ((OgnlExpression) cd.getAspectDef(1)
-                .getExpression()).getSource());
-        assertEquals("4", "ejbtx.requiresNewTx", ((OgnlExpression) cd.getAspectDef(2)
-                .getExpression()).getSource());
-        assertEquals("5", "ejbtx.notSupportedTx", ((OgnlExpression) cd.getAspectDef(3)
-                .getExpression()).getSource());
-        assertEquals("6", "ejbtx.neverTx", ((OgnlExpression) cd.getAspectDef(4)
-                .getExpression()).getSource());
-        assertEquals("7", "ejbtx.requiredTx", ((OgnlExpression) cd.getAspectDef(5)
-                .getExpression()).getSource());
+        Set<String> set = new HashSet<String>();
+        for (int i = 0; i < 6; ++i) {
+            set.add(((OgnlExpression) cd.getAspectDef(i).getExpression()).getSource());
+        }
+        assertTrue("2", set.contains("ejbtx.mandatoryTx"));
+        assertTrue("3", set.contains("ejbtx.requiredTx"));
+        assertTrue("4", set.contains("ejbtx.requiresNewTx"));
+        assertTrue("5", set.contains("ejbtx.notSupportedTx"));
+        assertTrue("6", set.contains("ejbtx.neverTx"));
+        assertTrue("7", set.contains("ejbtx.requiredTx"));
     }
 
     public void testAppendAspectForEJB3CMT2() throws Exception {
         ComponentDef cd = handler.createComponentDef(Hoge12.class, null);
         handler.appendAspect(cd);
         assertEquals("1", 2, cd.getAspectDefSize());
-        assertEquals("2", "ejbtx.requiredTx", ((OgnlExpression) cd.getAspectDef(0)
-                .getExpression()).getSource());
-        assertEquals("2", "ejbtx.mandatoryTx", ((OgnlExpression) cd.getAspectDef(1)
-                .getExpression()).getSource());
+        Set<String> set = new HashSet<String>();
+        for (int i = 0; i < 2; ++i) {
+            set.add(((OgnlExpression) cd.getAspectDef(i).getExpression()).getSource());
+        }
+        assertTrue("2", set.contains("ejbtx.mandatoryTx"));
+        assertTrue("3", set.contains("ejbtx.requiredTx"));
     }
 
     public void testAppendAspectForEJB3BMT() throws Exception {
@@ -223,35 +226,20 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
 
     public void testAppendAspectForEJB3AroundInvokeInvalid1() throws Exception {
         ComponentDef cd = handler.createComponentDef(Hoge15.class, null);
-        try {
-            handler.appendAspect(cd);
-            fail("1");
-        }
-        catch (Exception expected) {
-            System.out.println(expected);
-        }
+        handler.appendAspect(cd);
+        assertEquals("1", 0, cd.getAspectDefSize());
     }
 
     public void testAppendAspectForEJB3AroundInvokeInvalid2() throws Exception {
         ComponentDef cd = handler.createComponentDef(Hoge16.class, null);
-        try {
-            handler.appendAspect(cd);
-            fail("1");
-        }
-        catch (Exception expected) {
-            System.out.println(expected);
-        }
+        handler.appendAspect(cd);
+        assertEquals("1", 0, cd.getAspectDefSize());
     }
 
     public void testAppendAspectForEJB3AroundInvokeInvalid3() throws Exception {
         ComponentDef cd = handler.createComponentDef(Hoge17.class, null);
-        try {
-            handler.appendAspect(cd);
-            fail("1");
-        }
-        catch (Exception expected) {
-            System.out.println(expected);
-        }
+        handler.appendAspect(cd);
+        assertEquals("1", 0, cd.getAspectDefSize());
     }
 
     public void testInterType() throws Exception {

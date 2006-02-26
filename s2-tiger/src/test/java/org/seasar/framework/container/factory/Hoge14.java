@@ -35,7 +35,7 @@ public class Hoge14 implements IHoge14 {
     }
 
     @AroundInvoke
-    public Object interceptor(InvocationContext context) throws Exception {
+    private Object interceptor(InvocationContext context) throws Exception {
         String param = (String) context.getParameters()[0];
         context.setParameters(new Object[] { param + "-before" });
         String result = (String) context.proceed();

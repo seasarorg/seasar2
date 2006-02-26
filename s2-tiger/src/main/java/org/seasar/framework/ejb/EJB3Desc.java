@@ -20,6 +20,8 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import javax.ejb.AroundInvoke;
 import javax.ejb.InvocationContext;
@@ -30,21 +32,48 @@ import javax.ejb.Stateless;
 import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
 
+import org.seasar.framework.log.Logger;
+
 public class EJB3Desc {
 
+    private static final Logger logger = Logger.getLogger(EJB3Desc.class);
+
+    protected static final ConcurrentMap<Class<?>, EJB3Desc> EJB3_DESCS = new ConcurrentHashMap<Class<?>, EJB3Desc>();
+
     protected Class<?> beanClass;
+
     protected String beanClassName;
+
     protected List<Class<?>> businessInterfaces = new ArrayList<Class<?>>();
+
     protected List<Method> businessMethods = new ArrayList<Method>();
+
     protected Method aroundInvokeMethod;
+
     protected boolean stateless;
+
     protected boolean stateful;
+
     protected boolean cmt;
+
+    public static EJB3Desc getEJB3Desc(final Class<?> beanClass) {
+        EJB3Desc ejb3Desc = EJB3_DESCS.get(beanClass);
+        if (ejb3Desc == null) {
+            ejb3Desc = new EJB3Desc(beanClass);
+            EJB3_DESCS.putIfAbsent(beanClass, ejb3Desc);
+        }
+        return ejb3Desc;
+    }
 
     public EJB3Desc(final Class<?> beanClass) {
         this.beanClass = beanClass;
         this.beanClassName = beanClass.getName();
-        introspection();
+        try {
+            introspection();
+        } catch (final Exception e) {
+            stateless = stateful = false;
+            logger.log("ESSR0406", new Object[] { beanClassName, e }, e);
+        }
     }
 
     public boolean isEJB3() {
@@ -80,7 +109,8 @@ public class EJB3Desc {
     }
 
     protected void introspection() {
-        if (beanClass.isInterface() || Modifier.isAbstract(beanClass.getModifiers())) {
+        if (beanClass.isInterface()
+                || Modifier.isAbstract(beanClass.getModifiers())) {
             return;
         }
 
@@ -174,9 +204,11 @@ public class EJB3Desc {
     }
 
     protected void findAroundInvokeMethod() {
-        for (Class<?> clazz = beanClass; clazz != null; clazz = clazz.getSuperclass()) {
+        for (Class<?> clazz = beanClass; clazz != null; clazz = clazz
+                .getSuperclass()) {
             for (final Method method : clazz.getDeclaredMethods()) {
-                final AroundInvoke aroundInvoke = method.getAnnotation(AroundInvoke.class);
+                final AroundInvoke aroundInvoke = method
+                        .getAnnotation(AroundInvoke.class);
                 if (aroundInvoke == null) {
                     continue;
                 }
@@ -195,9 +227,6 @@ public class EJB3Desc {
                     throw new SEJBException("ESSR0405", beanClassName, method);
                 }
 
-                if (Modifier.isPrivate(method.getModifiers())) {
-                    throw new SEJBException("ESSR0406", beanClassName, method);
-                }
                 aroundInvokeMethod = method;
             }
         }
@@ -225,10 +254,10 @@ public class EJB3Desc {
     protected boolean isBusinessMethod(final Method method) {
         for (final Class<?> type : businessInterfaces) {
             try {
-                type.getDeclaredMethod(method.getName(), method.getParameterTypes());
+                type.getDeclaredMethod(method.getName(), method
+                        .getParameterTypes());
                 return true;
-            }
-            catch (final NoSuchMethodException ignore) {
+            } catch (final NoSuchMethodException ignore) {
             }
         }
         return false;

@@ -19,7 +19,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateful;
@@ -56,18 +55,19 @@ import org.seasar.framework.util.StringUtil;
  */
 public class TigerAnnotationHandler extends ConstantAnnotationHandler {
 
-    private static final Map<Class<?>, EJB3Desc> EJB3_DESCS = new ConcurrentHashMap<Class<?>, EJB3Desc>();
-
     private static final Map<TransactionAttributeType, String> TX_ATTRS = new HashMap<TransactionAttributeType, String>();
     static {
         TX_ATTRS.put(TransactionAttributeType.MANDATORY, "ejbtx.mandatoryTx");
         TX_ATTRS.put(TransactionAttributeType.REQUIRED, "ejbtx.requiredTx");
-        TX_ATTRS.put(TransactionAttributeType.REQUIRES_NEW, "ejbtx.requiresNewTx");
-        TX_ATTRS.put(TransactionAttributeType.NOT_SUPPORTED, "ejbtx.notSupportedTx");
+        TX_ATTRS.put(TransactionAttributeType.REQUIRES_NEW,
+                "ejbtx.requiresNewTx");
+        TX_ATTRS.put(TransactionAttributeType.NOT_SUPPORTED,
+                "ejbtx.notSupportedTx");
         TX_ATTRS.put(TransactionAttributeType.NEVER, "ejbtx.neverTx");
     }
 
-    public ComponentDef createComponentDef(Class componentClass, InstanceDef defaultInstanceDef) {
+    public ComponentDef createComponentDef(Class componentClass,
+            InstanceDef defaultInstanceDef) {
 
         String name = null;
         InstanceDef instanceDef = null;
@@ -94,7 +94,8 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
             }
             InstanceType instanceType = component.instance();
             if (instanceType != null) {
-                instanceDef = getInstanceDef(instanceType.getName(), instanceDef);
+                instanceDef = getInstanceDef(instanceType.getName(),
+                        instanceDef);
             }
             AutoBindingType autoBindingType = component.autoBinding();
             if (autoBindingType != null) {
@@ -104,10 +105,12 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
         if (stateless == null && stateful == null && component == null) {
             return super.createComponentDef(componentClass, defaultInstanceDef);
         }
-        return createComponentDef(componentClass, name, instanceDef, autoBindingDef);
+        return createComponentDef(componentClass, name, instanceDef,
+                autoBindingDef);
     }
 
-    public PropertyDef createPropertyDef(BeanDesc beanDesc, PropertyDesc propertyDesc) {
+    public PropertyDef createPropertyDef(BeanDesc beanDesc,
+            PropertyDesc propertyDesc) {
 
         String propName = propertyDesc.getPropertyName();
         if (propertyDesc.hasWriteMethod()) {
@@ -181,8 +184,8 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
                 continue;
             }
             if (method.getParameterTypes().length != 0) {
-                throw new IllegalInitMethodAnnotationRuntimeException(componentClass, method
-                        .getName());
+                throw new IllegalInitMethodAnnotationRuntimeException(
+                        componentClass, method.getName());
             }
             if (!isInitMethodRegisterable(componentDef, method.getName())) {
                 continue;
@@ -192,17 +195,9 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
         super.appendInitMethod(componentDef);
     }
 
-    protected EJB3Desc getEJB3Desc(final Class<?> clazz) {
-        EJB3Desc ejb3desc = EJB3_DESCS.get(clazz);
-        if (ejb3desc == null) {
-            ejb3desc = new EJB3Desc(clazz);
-            EJB3_DESCS.put(clazz, ejb3desc);
-        }
-        return ejb3desc;
-    }
-
     protected void appendEJB3Aspect(final ComponentDef componentDef) {
-        final EJB3Desc ejb3desc = getEJB3Desc(componentDef.getComponentClass());
+        final EJB3Desc ejb3desc = EJB3Desc.getEJB3Desc(componentDef
+                .getComponentClass());
         if (!ejb3desc.isEJB3()) {
             return;
         }
@@ -210,19 +205,23 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
         appendEJB3AroundInvokeAspect(componentDef, ejb3desc);
     }
 
-    protected void appendEJB3TxnAspect(final ComponentDef componentDef, final EJB3Desc ejb3desc) {
+    protected void appendEJB3TxnAspect(final ComponentDef componentDef,
+            final EJB3Desc ejb3desc) {
         if (!ejb3desc.isCMT()) {
             return;
         }
 
-        final TransactionAttribute classAttr = ejb3desc.getBeanClass().getAnnotation(
-                TransactionAttribute.class);
-        final TransactionAttributeType classType = (classAttr != null) ? classAttr.value() : null;
+        final TransactionAttribute classAttr = ejb3desc.getBeanClass()
+                .getAnnotation(TransactionAttribute.class);
+        final TransactionAttributeType classType = (classAttr != null) ? classAttr
+                .value()
+                : null;
 
         for (final Method method : ejb3desc.getBusinessMethods()) {
             final TransactionAttribute methodAttr = method
                     .getAnnotation(TransactionAttribute.class);
-            final TransactionAttributeType methodType = (methodAttr != null) ? methodAttr.value()
+            final TransactionAttributeType methodType = (methodAttr != null) ? methodAttr
+                    .value()
                     : classType;
             if (methodType == null) {
                 continue;
@@ -243,10 +242,12 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
             return;
         }
 
-        final MethodInterceptor interceptor = new AroundInvokeSupportInterceptor(aroundInvokeMethod);
+        aroundInvokeMethod.setAccessible(true);
+        final MethodInterceptor interceptor = new AroundInvokeSupportInterceptor(
+                aroundInvokeMethod);
         for (final Method method : ejb3desc.getBusinessMethods()) {
-            final AspectDef aspectDef = AspectDefFactory.createAspectDef(interceptor,
-                    new PointcutImpl(method));
+            final AspectDef aspectDef = AspectDefFactory.createAspectDef(
+                    interceptor, new PointcutImpl(method));
             componentDef.addAspectDef(aspectDef);
         }
     }
