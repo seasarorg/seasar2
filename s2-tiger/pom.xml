@@ -97,7 +97,6 @@
       <artifactId>s2-framework</artifactId>
       <version>2.4.0-SNAPSHOT</version>
       <type>test-jar</type>
-      <scope>test</scope>
     </dependency>
   </dependencies>
   <distributionManagement>
