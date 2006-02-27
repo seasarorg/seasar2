@@ -77,7 +77,7 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
         if (stateless != null) {
             name = stateless.name();
             instanceDef = defaultInstanceDef != null ? defaultInstanceDef
-                    : InstanceDefFactory.SINGLETON;
+                    : InstanceDefFactory.PROTOTYPE;
             autoBindingDef = AutoBindingDefFactory.NONE;
         }
         Stateful stateful = clazz.getAnnotation(Stateful.class);

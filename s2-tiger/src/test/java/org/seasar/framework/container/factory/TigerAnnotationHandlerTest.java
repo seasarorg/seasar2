@@ -54,7 +54,7 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
         
         ComponentDef cd3 = handler.createComponentDef(Hoge7.class, null);
         assertEquals("6", "hoge77", cd3.getComponentName());
-        assertEquals("7", InstanceDef.SINGLETON_NAME, cd3.getInstanceDef().getName());
+        assertEquals("7", InstanceDef.PROTOTYPE_NAME, cd3.getInstanceDef().getName());
         assertEquals("8", AutoBindingDef.NONE_NAME, cd3.getAutoBindingDef().getName());
         
         ComponentDef cd4 = handler.createComponentDef(Hoge8.class, null);
