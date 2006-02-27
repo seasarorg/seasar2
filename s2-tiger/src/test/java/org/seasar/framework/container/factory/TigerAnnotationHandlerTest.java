@@ -26,7 +26,6 @@ import org.seasar.framework.beans.factory.BeanDescFactory;
 import org.seasar.framework.container.AspectDef;
 import org.seasar.framework.container.AutoBindingDef;
 import org.seasar.framework.container.ComponentDef;
-import org.seasar.framework.container.Expression;
 import org.seasar.framework.container.IllegalInitMethodAnnotationRuntimeException;
 import org.seasar.framework.container.InitMethodDef;
 import org.seasar.framework.container.InstanceDef;
