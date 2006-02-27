@@ -21,8 +21,10 @@ import junit.framework.TestCase;
 
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.ComponentDeployer;
+import org.seasar.framework.container.ExternalContext;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.impl.ComponentDefImpl;
+import org.seasar.framework.container.impl.HttpServletExternalContext;
 import org.seasar.framework.container.impl.S2ContainerImpl;
 import org.seasar.framework.hotswap.Hotswap;
 import org.seasar.framework.mock.servlet.MockServletContextImpl;
@@ -36,7 +38,9 @@ public class ServletContextComponentDeployerTest extends TestCase {
 	public void testDeployAutoAutoConstructor() throws Exception {
 		MockServletContextImpl ctx = new MockServletContextImpl("s2jsf-example");
 		S2Container container = new S2ContainerImpl();
-		container.setServletContext(ctx);
+        ExternalContext extCtx = new HttpServletExternalContext();
+        extCtx.setApplication(ctx);
+        container.setExternalContext(extCtx);
 		ComponentDef cd = new ComponentDefImpl(Foo.class, "foo");
 		container.register(cd);
 		ComponentDeployer deployer = new ServletContextComponentDeployer(cd);
@@ -49,7 +53,9 @@ public class ServletContextComponentDeployerTest extends TestCase {
         MockServletContextImpl ctx = new MockServletContextImpl("s2jsf-example");
         S2Container container = new S2ContainerImpl();
         container.setHotswapMode(true);
-        container.setServletContext(ctx);
+        ExternalContext extCtx = new HttpServletExternalContext();
+        extCtx.setApplication(ctx);
+        container.setExternalContext(extCtx);
         ComponentDef cd = new ComponentDefImpl(Foo.class, "foo");
         container.register(cd);
         container.init();

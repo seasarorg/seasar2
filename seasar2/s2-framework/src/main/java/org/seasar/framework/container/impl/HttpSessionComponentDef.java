@@ -15,24 +15,24 @@
  */
 package org.seasar.framework.container.impl;
 
-import javax.servlet.ServletContext;
+import javax.servlet.http.HttpSession;
 
 import org.seasar.framework.container.ContainerConstants;
 
 /**
  * @author higa
- * 
+ *  
  */
-public class ServletContextComponentDef extends SimpleComponentDef {
+public class HttpSessionComponentDef extends SimpleComponentDef {
 
-    public ServletContextComponentDef() {
-        super(ServletContext.class, ContainerConstants.SERVLET_CONTEXT_NAME);
-    }
+	public HttpSessionComponentDef() {
+		super(HttpSession.class, ContainerConstants.SESSION_NAME);
+	}
 
-    /**
-     * @see org.seasar.framework.container.ComponentDef#getComponent()
-     */
-    public Object getComponent() {
-        return getContainer().getRoot().getExternalContext().getApplication();
-    }
+	/**
+	 * @see org.seasar.framework.container.ComponentDef#getComponent()
+	 */
+	public Object getComponent() {
+		return getContainer().getRoot().getExternalContext().getSession();
+	}
 }

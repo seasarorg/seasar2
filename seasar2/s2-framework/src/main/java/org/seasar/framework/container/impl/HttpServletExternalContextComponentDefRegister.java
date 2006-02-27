@@ -15,24 +15,21 @@
  */
 package org.seasar.framework.container.impl;
 
-import javax.servlet.ServletContext;
-
-import org.seasar.framework.container.ContainerConstants;
+import org.seasar.framework.container.ExternalContextComponentDefRegister;
+import org.seasar.framework.container.S2Container;
 
 /**
  * @author higa
- * 
+ *
  */
-public class ServletContextComponentDef extends SimpleComponentDef {
+public class HttpServletExternalContextComponentDefRegister implements
+        ExternalContextComponentDefRegister {
 
-    public ServletContextComponentDef() {
-        super(ServletContext.class, ContainerConstants.SERVLET_CONTEXT_NAME);
-    }
-
-    /**
-     * @see org.seasar.framework.container.ComponentDef#getComponent()
-     */
-    public Object getComponent() {
-        return getContainer().getRoot().getExternalContext().getApplication();
+    public void registerComponentDefs(S2Container container) {
+        S2ContainerImpl impl = (S2ContainerImpl) container;
+        impl.register0(new HttpServletRequestComponentDef());
+        impl.register0(new HttpServletResponseComponentDef());
+        impl.register0(new HttpSessionComponentDef());
+        impl.register0(new ServletContextComponentDef());
     }
 }

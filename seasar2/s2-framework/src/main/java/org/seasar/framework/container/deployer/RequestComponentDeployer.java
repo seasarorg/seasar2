@@ -18,6 +18,7 @@ package org.seasar.framework.container.deployer;
 import javax.servlet.http.HttpServletRequest;
 
 import org.seasar.framework.container.ComponentDef;
+import org.seasar.framework.container.ExternalContext;
 import org.seasar.framework.exception.EmptyRuntimeException;
 import org.seasar.framework.hotswap.Hotswap;
 import org.seasar.framework.log.Logger;
@@ -43,7 +44,11 @@ public class RequestComponentDeployer extends AbstractComponentDeployer {
      */
     public Object deploy() {
         ComponentDef cd = getComponentDef();
-        HttpServletRequest request = cd.getContainer().getRoot().getRequest();
+        HttpServletRequest request = null;
+        ExternalContext extCtx = cd.getContainer().getRoot().getExternalContext();
+        if (extCtx != null && extCtx.getRequest() instanceof HttpServletRequest) {
+            request = (HttpServletRequest) extCtx.getRequest();
+        }
         if (request == null) {
             RuntimeException re = new EmptyRuntimeException("request");
             logger.log(re);

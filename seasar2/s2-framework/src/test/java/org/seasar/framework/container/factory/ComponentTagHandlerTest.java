@@ -24,8 +24,12 @@ import javax.servlet.http.HttpServletRequest;
 import junit.framework.TestCase;
 
 import org.seasar.framework.container.ComponentDef;
+import org.seasar.framework.container.ExternalContext;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.assembler.AutoBindingDefFactory;
+import org.seasar.framework.container.deployer.ComponentDeployerFactory;
+import org.seasar.framework.container.deployer.HttpServletComponentDeployerProvider;
+import org.seasar.framework.container.impl.HttpServletExternalContext;
 import org.seasar.framework.mock.servlet.MockServletContextImpl;
 
 /**
@@ -39,6 +43,7 @@ public class ComponentTagHandlerTest extends TestCase {
 
 	public void testComponent() throws Exception {
 		S2Container container = S2ContainerFactory.create(PATH);
+        ComponentDeployerFactory.setProvider(new HttpServletComponentDeployerProvider());
 		container.init();
 		assertNotNull("1", container.getComponent(List.class));
 		assertNotNull("2", container.getComponent("aaa"));
@@ -60,8 +65,10 @@ public class ComponentTagHandlerTest extends TestCase {
 		assertNotNull("8", container.getComponent("ggg"));
 		MockServletContextImpl ctx = new MockServletContextImpl("s2jsf-example");
 		HttpServletRequest request = ctx.createRequest("/hello.html");
-		container.setRequest(request);
-        container.setServletContext(ctx);
+        ExternalContext extCtx = new HttpServletExternalContext();
+        extCtx.setRequest(request);
+        extCtx.setApplication(ctx);
+        container.setExternalContext(extCtx);
 		assertNotNull("9", container.getComponent("hhh"));
 		assertNotNull("10", container.getComponent("iii"));
         assertEquals("11", "jjj", container.getComponent("jjj"));

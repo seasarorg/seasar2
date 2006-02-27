@@ -23,44 +23,47 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
+import org.seasar.framework.container.ExternalContext;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
+import org.seasar.framework.exception.EmptyRuntimeException;
 
 public class S2ContainerFilter implements Filter {
 
-	//private FilterConfig config = null;
+    // private FilterConfig config = null;
 
-	public S2ContainerFilter() {
-		super();
-	}
+    public S2ContainerFilter() {
+    }
 
-	public void init(FilterConfig config) throws ServletException {
-		//this.config = config;
-	}
+    public void init(FilterConfig config) throws ServletException {
+        // this.config = config;
+    }
 
-	public void destroy() {
-		//config = null;
-	}
+    public void destroy() {
+        // config = null;
+    }
 
-	/**
-	 * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest,
-	 *      javax.servlet.ServletResponse, javax.servlet.FilterChain)
-	 */
-	public void doFilter(ServletRequest request, ServletResponse response,
-			FilterChain chain) throws IOException, ServletException {
-		
-		S2Container container = SingletonS2ContainerFactory.getContainer();
-		container.setRequest((HttpServletRequest) request);
-		container.setResponse((HttpServletResponse) response);
+    /**
+     * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest,
+     *      javax.servlet.ServletResponse, javax.servlet.FilterChain)
+     */
+    public void doFilter(ServletRequest request, ServletResponse response,
+            FilterChain chain) throws IOException, ServletException {
 
-		try {
-			chain.doFilter(request, response);
-		} finally {
-			container.setRequest(null);
-			container.setResponse(null);
-		}
-	}
+        S2Container container = SingletonS2ContainerFactory.getContainer();
+        ExternalContext externalContext = container.getExternalContext();
+        if (externalContext == null) {
+            throw new EmptyRuntimeException("externalContext");
+        }
+        externalContext.setRequest(request);
+        externalContext.setResponse(response);
+
+        try {
+            chain.doFilter(request, response);
+        } finally {
+            externalContext.setRequest(null);
+            externalContext.setResponse(null);
+        }
+    }
 }

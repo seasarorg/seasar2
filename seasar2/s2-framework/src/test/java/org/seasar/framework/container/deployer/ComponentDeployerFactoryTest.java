@@ -33,6 +33,14 @@ import org.seasar.framework.container.impl.ComponentDefImpl;
  */
 public class ComponentDeployerFactoryTest extends TestCase {
 
+    public void setUp() throws Exception {
+        ComponentDeployerFactory.setProvider(new HttpServletComponentDeployerProvider());
+    }
+    
+    public void tearDown() throws Exception {
+        ComponentDeployerFactory.setProvider(new ComponentDeployerFactory.DefaultProvider());
+    }
+    
     public void testSingleton() throws Exception {
         ComponentDef cd = new ComponentDefImpl();
         cd.setInstanceDef(InstanceDefFactory.SINGLETON);
@@ -50,10 +58,11 @@ public class ComponentDeployerFactoryTest extends TestCase {
     public void testRequest() throws Exception {
         ComponentDef cd = new ComponentDefImpl();
         cd.setInstanceDef(InstanceDefFactory.REQUEST);
+        
         ComponentDeployer deployer = ComponentDeployerFactory.createRequestComponentDeployer(cd);
         assertTrue("1", deployer instanceof RequestComponentDeployer);
     }
-
+    
     public void testApplication() throws Exception {
         ComponentDef cd = new ComponentDefImpl();
         cd.setInstanceDef(InstanceDefFactory.APPLICATION);

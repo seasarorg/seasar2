@@ -24,9 +24,14 @@ import javax.servlet.Servlet;
 import junit.framework.TestCase;
 
 import org.seasar.framework.container.ComponentDef;
+import org.seasar.framework.container.ExternalContext;
 import org.seasar.framework.container.S2Container;
+import org.seasar.framework.container.deployer.ComponentDeployerFactory;
+import org.seasar.framework.container.deployer.HttpServletComponentDeployerProvider;
 import org.seasar.framework.container.factory.S2ContainerFactory;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
+import org.seasar.framework.container.impl.HttpServletExternalContext;
+import org.seasar.framework.container.impl.HttpServletExternalContextComponentDefRegister;
 import org.seasar.framework.container.impl.S2ContainerImpl;
 import org.seasar.framework.exception.NoSuchMethodRuntimeException;
 import org.seasar.framework.mock.servlet.MockHttpServletRequest;
@@ -159,20 +164,26 @@ public abstract class S2FrameworkTestCase extends TestCase {
 
     protected void setUpContainer() throws Throwable {
         container = new S2ContainerImpl();
-        servletContext = new MockServletContextImpl("s2jsf-example");
+        servletContext = new MockServletContextImpl("s2-example");
         request = servletContext.createRequest("/hello.html");
         response = new MockHttpServletResponseImpl(request);
         servletConfig = new MockServletConfigImpl();
         servletConfig.setServletContext(servletContext);
         servlet = new MockServlet();
         servlet.init(servletConfig);
-        container.setServletContext(servletContext);
-        container.setRequest(request);
-        container.setResponse(response);
+        ExternalContext externalContext = new HttpServletExternalContext();
+        externalContext.setApplication(servletContext);
+        externalContext.setRequest(request);
+        externalContext.setResponse(response);
+        container.setExternalContext(externalContext);
+        container.setExternalContextComponentDefRegister(
+                new HttpServletExternalContextComponentDefRegister());
         SingletonS2ContainerFactory.setContainer(container);
+        ComponentDeployerFactory.setProvider(new HttpServletComponentDeployerProvider());
     }
 
     protected void tearDownContainer() throws Throwable {
+        ComponentDeployerFactory.setProvider(new ComponentDeployerFactory.DefaultProvider());
         SingletonS2ContainerFactory.setContainer(null);
         container = null;
         servletContext = null;

@@ -18,6 +18,7 @@ package org.seasar.framework.container.deployer;
 import javax.servlet.ServletContext;
 
 import org.seasar.framework.container.ComponentDef;
+import org.seasar.framework.container.ExternalContext;
 import org.seasar.framework.exception.EmptyRuntimeException;
 import org.seasar.framework.hotswap.Hotswap;
 
@@ -39,7 +40,11 @@ public class ServletContextComponentDeployer extends AbstractComponentDeployer {
      */
     public Object deploy() {
         ComponentDef cd = getComponentDef();
-        ServletContext servletContext = cd.getContainer().getRoot().getServletContext();
+        ServletContext servletContext = null;
+        ExternalContext extCtx = cd.getContainer().getRoot().getExternalContext();
+        if (extCtx != null && extCtx.getApplication() instanceof ServletContext) {
+            servletContext = (ServletContext) extCtx.getApplication();
+        }
         if (servletContext == null) {
             throw new EmptyRuntimeException("servletContext");
         }

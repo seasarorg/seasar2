@@ -19,6 +19,10 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import javax.servlet.ServletContext;
+
+import org.seasar.framework.container.ExternalContext;
+import org.seasar.framework.container.S2Container;
 import org.seasar.framework.util.URLUtil;
 
 /**
@@ -44,8 +48,16 @@ public class WebResourceResolver implements ResourceResolver {
                     return is;
                 }
             }
-
-            URL url = SingletonS2ContainerFactory.getServletContext().getResource(path);
+            S2Container container = SingletonS2ContainerFactory.getContainer();
+            ExternalContext externalContext = container.getExternalContext();
+            if (externalContext == null) {
+                return null;
+            }
+            if (!(externalContext.getApplication() instanceof ServletContext)) {
+                return null;
+            }
+            ServletContext servletContext = (ServletContext) externalContext.getApplication(); 
+            URL url = servletContext.getResource(path);
             if (url == null) {
                 final StringBuffer buf = new StringBuffer(path.length() + 10);
                 buf.append("/WEB-INF");
@@ -53,7 +65,7 @@ public class WebResourceResolver implements ResourceResolver {
                     buf.append("/");
                 }
                 buf.append(path);
-                url = SingletonS2ContainerFactory.getServletContext().getResource(new String(buf));
+                url = servletContext.getResource(new String(buf));
             }
             if (url == null) {
                 return null;

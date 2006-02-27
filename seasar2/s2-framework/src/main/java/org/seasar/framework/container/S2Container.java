@@ -15,10 +15,6 @@
  */
 package org.seasar.framework.container;
 
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -26,92 +22,86 @@ import javax.servlet.http.HttpSession;
  */
 public interface S2Container extends MetaDefAware {
 
-	public Object getComponent(Object componentKey)
+	Object getComponent(Object componentKey)
 		throws
 			ComponentNotFoundRuntimeException,
 			TooManyRegistrationRuntimeException,
 			CyclicReferenceRuntimeException;
 
-	public Object[] findComponents(Object componentKey)
+	Object[] findComponents(Object componentKey)
 		throws
 			CyclicReferenceRuntimeException;
 
-	public void injectDependency(Object outerComponent)
+	void injectDependency(Object outerComponent)
 		throws ClassUnmatchRuntimeException;
 
-	public void injectDependency(Object outerComponent, Class componentClass)
+	void injectDependency(Object outerComponent, Class componentClass)
 		throws ClassUnmatchRuntimeException;
 
-	public void injectDependency(Object outerComponent, String componentName)
+	void injectDependency(Object outerComponent, String componentName)
 		throws ClassUnmatchRuntimeException;
 
-	public void register(Object component);
+	void register(Object component);
 	
-	public void register(Object component, String componentName);
+	void register(Object component, String componentName);
 
-	public void register(Class componentClass);
+	void register(Class componentClass);
 
-	public void register(Class componentClass, String componentName);
+	void register(Class componentClass, String componentName);
 
-	public void register(ComponentDef componentDef);
+	void register(ComponentDef componentDef);
 
-	public int getComponentDefSize();
+	int getComponentDefSize();
 
-	public ComponentDef getComponentDef(int index);
+	ComponentDef getComponentDef(int index);
 
-	public ComponentDef getComponentDef(Object componentKey)
+	ComponentDef getComponentDef(Object componentKey)
 		throws ComponentNotFoundRuntimeException;
 
-	public ComponentDef[] findComponentDefs(Object componentKey);
+	ComponentDef[] findComponentDefs(Object componentKey);
 
-	public boolean hasComponentDef(Object componentKey);
+	boolean hasComponentDef(Object componentKey);
 	
-	public boolean hasDescendant(String path);
+	boolean hasDescendant(String path);
 	
-	public S2Container getDescendant(String path)
+	S2Container getDescendant(String path)
 		throws ContainerNotRegisteredRuntimeException;
 	
-	public void registerDescendant(S2Container descendant);
+	void registerDescendant(S2Container descendant);
 
-	public void include(S2Container child);
+	void include(S2Container child);
 	
-	public int getChildSize();
+	int getChildSize();
 	
-	public S2Container getChild(int index);
+	S2Container getChild(int index);
 
-	public void init();
+	void init();
 
-	public void destroy();
+	void destroy();
 	
-	public String getNamespace();
+	String getNamespace();
 	
-	public void setNamespace(String namespace);
+	void setNamespace(String namespace);
 	
-	public String getPath();
+	String getPath();
 	
-	public void setPath(String path);
+	void setPath(String path);
 
-	public S2Container getRoot();
+	S2Container getRoot();
 	
-	public void setRoot(S2Container root);
+	void setRoot(S2Container root);
 	
-	public HttpServletRequest getRequest();
+	ExternalContext getExternalContext();
 	
-	public void setRequest(HttpServletRequest request);
-	
-	public HttpSession getSession();
-	
-	public HttpServletResponse getResponse();
-	
-	public void setResponse(HttpServletResponse response);
-	
-	public ServletContext getServletContext();
-	
-	public void setServletContext(ServletContext servletContext);
+	void setExternalContext(ExternalContext externalContext);
     
-    public boolean isHotswapMode();
+	ExternalContextComponentDefRegister getExternalContextComponentDefRegister();
     
-    public void setHotswapMode(boolean hotswapMode);
+    void setExternalContextComponentDefRegister(ExternalContextComponentDefRegister externalContextComponentDefRegister);
     
-    public ClassLoader getClassLoader();
+    boolean isHotswapMode();
+    
+    void setHotswapMode(boolean hotswapMode);
+    
+    ClassLoader getClassLoader();
 }

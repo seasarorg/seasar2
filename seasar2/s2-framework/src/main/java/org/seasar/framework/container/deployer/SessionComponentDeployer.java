@@ -18,6 +18,7 @@ package org.seasar.framework.container.deployer;
 import javax.servlet.http.HttpSession;
 
 import org.seasar.framework.container.ComponentDef;
+import org.seasar.framework.container.ExternalContext;
 import org.seasar.framework.exception.EmptyRuntimeException;
 import org.seasar.framework.hotswap.Hotswap;
 
@@ -39,7 +40,11 @@ public class SessionComponentDeployer extends AbstractComponentDeployer {
      */
     public Object deploy() {
         ComponentDef cd = getComponentDef();
-        HttpSession session = cd.getContainer().getRoot().getSession();
+        HttpSession session = null;
+        ExternalContext extCtx = cd.getContainer().getRoot().getExternalContext();
+        if (extCtx != null && extCtx.getSession() instanceof HttpSession) {
+            session = (HttpSession) extCtx.getSession();
+        }
         if (session == null) {
             throw new EmptyRuntimeException("session");
         }

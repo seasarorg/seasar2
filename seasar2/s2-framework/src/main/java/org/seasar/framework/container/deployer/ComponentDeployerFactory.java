@@ -42,7 +42,7 @@ public class ComponentDeployerFactory {
     }
     
     public static ComponentDeployer createServletContextComponentDeployer(final ComponentDef cd) {
-        return getProvider().createServletContextComponentDeployer(cd);
+        return getProvider().createApplicationComponentDeployer(cd);
     }
     
     public static ComponentDeployer createSessionComponentDeployer(final ComponentDef cd) {
@@ -63,7 +63,7 @@ public class ComponentDeployerFactory {
         
         ComponentDeployer createPrototypeComponentDeployer(ComponentDef cd);
         
-        ComponentDeployer createServletContextComponentDeployer(ComponentDef cd);
+        ComponentDeployer createApplicationComponentDeployer(ComponentDef cd);
         
         ComponentDeployer createSessionComponentDeployer(ComponentDef cd);
         
@@ -83,15 +83,15 @@ public class ComponentDeployerFactory {
         }
 
         public ComponentDeployer createRequestComponentDeployer(final ComponentDef cd) {
-            return new RequestComponentDeployer(cd);
+            throw new UnsupportedOperationException("createRequestComponentDeployer");
         }
 
         public ComponentDeployer createSessionComponentDeployer(final ComponentDef cd) {
-            return new SessionComponentDeployer(cd);
+            throw new UnsupportedOperationException("createSessionComponentDeployer");
         }
         
-        public ComponentDeployer createServletContextComponentDeployer(final ComponentDef cd) {
-            return new ServletContextComponentDeployer(cd);
+        public ComponentDeployer createApplicationComponentDeployer(final ComponentDef cd) {
+            throw new UnsupportedOperationException("createApplicationComponentDeployer");
         }
 
         public ComponentDeployer createOuterComponentDeployer(final ComponentDef cd) {

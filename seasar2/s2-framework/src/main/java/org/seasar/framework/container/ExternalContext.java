@@ -13,26 +13,25 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.framework.container.impl;
-
-import javax.servlet.ServletContext;
-
-import org.seasar.framework.container.ContainerConstants;
+package org.seasar.framework.container;
 
 /**
  * @author higa
- * 
+ *
  */
-public class ServletContextComponentDef extends SimpleComponentDef {
+public interface ExternalContext {
 
-    public ServletContextComponentDef() {
-        super(ServletContext.class, ContainerConstants.SERVLET_CONTEXT_NAME);
-    }
-
-    /**
-     * @see org.seasar.framework.container.ComponentDef#getComponent()
-     */
-    public Object getComponent() {
-        return getContainer().getRoot().getExternalContext().getApplication();
-    }
+    Object getRequest();
+    
+    void setRequest(Object request);
+    
+    Object getResponse();
+    
+    void setResponse(Object response);
+    
+    Object getSession();
+    
+    Object getApplication();
+    
+    void setApplication(Object application);
 }

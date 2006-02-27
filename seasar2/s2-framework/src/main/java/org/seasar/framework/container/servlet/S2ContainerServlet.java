@@ -24,7 +24,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.seasar.framework.container.S2Container;
+import org.seasar.framework.container.deployer.ComponentDeployerFactory;
+import org.seasar.framework.container.deployer.HttpServletComponentDeployerProvider;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
+import org.seasar.framework.container.impl.HttpServletExternalContext;
+import org.seasar.framework.container.impl.HttpServletExternalContextComponentDefRegister;
 import org.seasar.framework.util.StringUtil;
 
 public class S2ContainerServlet extends HttpServlet {
@@ -59,7 +63,14 @@ public class S2ContainerServlet extends HttpServlet {
 		if (!StringUtil.isEmpty(debugStr)) {
 			debug = Boolean.valueOf(debugStr).booleanValue();
 		}
-		SingletonS2ContainerFactory.setServletContext(getServletContext());
+        if (ComponentDeployerFactory.getProvider() instanceof ComponentDeployerFactory.DefaultProvider) {
+            ComponentDeployerFactory.setProvider(new HttpServletComponentDeployerProvider());
+        }
+        HttpServletExternalContext extCtx = new HttpServletExternalContext();
+        extCtx.setApplication(getServletContext());
+		SingletonS2ContainerFactory.setExternalContext(extCtx);
+        SingletonS2ContainerFactory.setExternalContextComponentDefRegister(
+                new HttpServletExternalContextComponentDefRegister());
 		SingletonS2ContainerFactory.init();
 	}
 

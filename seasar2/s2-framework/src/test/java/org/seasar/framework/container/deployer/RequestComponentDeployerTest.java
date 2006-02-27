@@ -23,8 +23,10 @@ import junit.framework.TestCase;
 
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.ComponentDeployer;
+import org.seasar.framework.container.ExternalContext;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.impl.ComponentDefImpl;
+import org.seasar.framework.container.impl.HttpServletExternalContext;
 import org.seasar.framework.container.impl.S2ContainerImpl;
 import org.seasar.framework.hotswap.Hotswap;
 import org.seasar.framework.mock.servlet.MockServletContextImpl;
@@ -39,7 +41,9 @@ public class RequestComponentDeployerTest extends TestCase {
         MockServletContextImpl ctx = new MockServletContextImpl("s2jsf-example");
         HttpServletRequest request = ctx.createRequest("/hello.html");
         S2Container container = new S2ContainerImpl();
-        container.setRequest(request);
+        ExternalContext extCtx = new HttpServletExternalContext();
+        extCtx.setRequest(request);
+        container.setExternalContext(extCtx);
         ComponentDef cd = new ComponentDefImpl(Foo.class, "foo");
         container.register(cd);
         ComponentDeployer deployer = new RequestComponentDeployer(cd);
@@ -53,7 +57,9 @@ public class RequestComponentDeployerTest extends TestCase {
         HttpServletRequest request = ctx.createRequest("/hello.html");
         S2Container container = new S2ContainerImpl();
         container.setHotswapMode(true);
-        container.setRequest(request);
+        ExternalContext extCtx = new HttpServletExternalContext();
+        extCtx.setRequest(request);
+        container.setExternalContext(extCtx);
         ComponentDef cd = new ComponentDefImpl(Foo.class, "foo");
         container.register(cd);
         container.init();

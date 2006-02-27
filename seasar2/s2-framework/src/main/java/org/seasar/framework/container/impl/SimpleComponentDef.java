@@ -47,6 +47,10 @@ public class SimpleComponentDef implements ComponentDef {
 	public SimpleComponentDef(Class componentClass) {
 		this(null, componentClass, null);
 	}
+    
+    public SimpleComponentDef(Class componentClass, String componentName) {
+        this(null, componentClass, componentName);
+    }
 
 	public SimpleComponentDef(Object component) {
 		this(component, component.getClass());

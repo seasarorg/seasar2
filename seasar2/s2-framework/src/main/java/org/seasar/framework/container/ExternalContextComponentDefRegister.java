@@ -13,33 +13,13 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.framework.container.impl;
-
-import javax.servlet.http.HttpSession;
-
-import org.seasar.framework.container.S2Container;
+package org.seasar.framework.container;
 
 /**
  * @author higa
- *  
+ *
  */
-public class SessionComponentDef extends SimpleComponentDef {
+public interface ExternalContextComponentDefRegister {
 
-	private S2Container container;
-
-	public SessionComponentDef(S2Container container) {
-		super(HttpSession.class);
-		this.container = container;
-	}
-
-	public S2Container getRoot() {
-		return container.getRoot();
-	}
-
-	/**
-	 * @see org.seasar.framework.container.ComponentDef#getComponent()
-	 */
-	public Object getComponent() {
-		return getRoot().getSession();
-	}
+    void registerComponentDefs(S2Container container);
 }

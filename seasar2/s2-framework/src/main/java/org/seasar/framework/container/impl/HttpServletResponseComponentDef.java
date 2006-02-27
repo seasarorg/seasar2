@@ -17,29 +17,22 @@ package org.seasar.framework.container.impl;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.seasar.framework.container.S2Container;
+import org.seasar.framework.container.ContainerConstants;
 
 /**
  * @author higa
  *
  */
-public class ResponseComponentDef extends SimpleComponentDef {
-
-	private S2Container container;
+public class HttpServletResponseComponentDef extends SimpleComponentDef {
 	
-	public ResponseComponentDef(S2Container container) {
-		super(HttpServletResponse.class);
-		this.container = container;
-	}
-	
-	public S2Container getRoot() {
-		return container.getRoot();
+	public HttpServletResponseComponentDef() {
+		super(HttpServletResponse.class, ContainerConstants.RESPONSE_NAME);
 	}
 	
 	/**
 	 * @see org.seasar.framework.container.ComponentDef#getComponent()
 	 */
 	public Object getComponent() {
-		return getRoot().getResponse();
+		return getContainer().getRoot().getExternalContext().getResponse();
 	}
 }

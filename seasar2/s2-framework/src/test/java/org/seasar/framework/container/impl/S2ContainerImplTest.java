@@ -37,10 +37,12 @@ import junit.framework.TestCase;
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.ContainerConstants;
 import org.seasar.framework.container.Expression;
+import org.seasar.framework.container.ExternalContext;
 import org.seasar.framework.container.InitMethodDef;
 import org.seasar.framework.container.PropertyDef;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.TooManyRegistrationRuntimeException;
+import org.seasar.framework.container.deployer.HttpServletComponentDeployerProvider;
 import org.seasar.framework.container.deployer.InstanceDefFactory;
 import org.seasar.framework.container.ognl.OgnlExpression;
 import org.seasar.framework.mock.servlet.MockHttpServletResponseImpl;
@@ -353,7 +355,11 @@ public class S2ContainerImplTest extends TestCase {
 		container.include(child);
 		MockServletContextImpl ctx = new MockServletContextImpl("/s2jsf-example");
 		HttpServletRequest request = ctx.createRequest("/hello.html");
-		container.setRequest(request);
+        ExternalContext extCtx = new HttpServletExternalContext();
+        extCtx.setRequest(request);
+        container.setExternalContext(extCtx);
+        container.setExternalContextComponentDefRegister(new HttpServletExternalContextComponentDefRegister());
+        container.init();
 		RequestClient client = (RequestClient) container.getComponent(RequestClient.class);
 		assertNotNull("1", client.getRequest());
 	}
@@ -366,7 +372,11 @@ public class S2ContainerImplTest extends TestCase {
 		container.include(child);
 		MockServletContextImpl ctx = new MockServletContextImpl("/s2jsf-example");
 		HttpServletRequest request = ctx.createRequest("/hello.html");
-		container.setRequest(request);
+        ExternalContext extCtx = new HttpServletExternalContext();
+        extCtx.setRequest(request);
+        container.setExternalContext(extCtx);
+        container.setExternalContextComponentDefRegister(new HttpServletExternalContextComponentDefRegister());
+        container.init();
 		SessionClient client = (SessionClient) container.getComponent(SessionClient.class);
 		assertNotNull("1", client.getSession());
 	}
@@ -380,7 +390,11 @@ public class S2ContainerImplTest extends TestCase {
 		MockServletContextImpl ctx = new MockServletContextImpl("/s2jsf-example");
 		HttpServletRequest request = ctx.createRequest("/hello.html");
 		HttpServletResponse response = new MockHttpServletResponseImpl(request);
-		container.setResponse(response);
+        ExternalContext extCtx = new HttpServletExternalContext();
+        extCtx.setResponse(response);
+        container.setExternalContext(extCtx);
+        container.setExternalContextComponentDefRegister(new HttpServletExternalContextComponentDefRegister());
+        container.init();
 		ResponseClient client = (ResponseClient) container.getComponent(ResponseClient.class);
 		assertNotNull("1", client.getResponse());
 	}
@@ -392,7 +406,11 @@ public class S2ContainerImplTest extends TestCase {
 		child.register(ServletContextClient.class);
 		container.include(child);
 		MockServletContextImpl ctx = new MockServletContextImpl("/s2jsf-example");
-		container.setServletContext(ctx);
+        ExternalContext extCtx = new HttpServletExternalContext();
+        extCtx.setApplication(ctx);
+        container.setExternalContext(extCtx);
+        container.setExternalContextComponentDefRegister(new HttpServletExternalContextComponentDefRegister());
+        container.init();
 		ServletContextClient client = (ServletContextClient) container.getComponent(ServletContextClient.class);
 		assertNotNull("1", client.getServletContext());
 	}
