@@ -33,6 +33,7 @@ import org.seasar.framework.exception.EmptyRuntimeException;
 import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.ConstructorUtil;
+import org.seasar.framework.util.MethodUtil;
 
 /**
  * 
@@ -43,6 +44,8 @@ public final class AopProxy implements Serializable {
     static final long serialVersionUID = 0L;
 
     private static Logger logger = Logger.getLogger(AopProxy.class);
+    
+    private static final Method IS_BRIDGE_METHOD = getIsBridgeMethod();
 
     private final Class targetClass;
 
@@ -75,12 +78,12 @@ public final class AopProxy implements Serializable {
         defaultPointcut = new PointcutImpl(targetClass);
 
         weaver = new AspectWeaver(targetClass, parameters);
-        setAspects(aspects);
+        setupAspects(aspects);
         weaver.setInterTypes(interTypes);
         enhancedClass = weaver.generateClass();
     }
 
-    private void setAspects(Aspect[] aspects) {
+    private void setupAspects(Aspect[] aspects) {
         if (aspects == null || aspects.length == 0) {
             return;
         }
@@ -95,6 +98,10 @@ public final class AopProxy implements Serializable {
         Method[] methods = targetClass.getMethods();
         for (int i = 0; i < methods.length; ++i) {
             Method method = methods[i];
+            if (isBridgeMethod(method)) {
+                continue;
+            }
+
             List interceptorList = new ArrayList();
             for (int j = 0; j < aspects.length; ++j) {
                 Aspect aspect = aspects[j];
@@ -102,19 +109,18 @@ public final class AopProxy implements Serializable {
                     interceptorList.add(aspect.getMethodInterceptor());
                 }
             }
-            if (interceptorList.size() > 0) {
-                if (isApplicableAspect(method)) {
-                    weaver
-                            .setInterceptors(
-                                    method,
-                                    (MethodInterceptor[]) interceptorList
-                                            .toArray(new MethodInterceptor[interceptorList
-                                                    .size()]));
-                } else {
-                    logger.log("WSSR0009", new Object[] {
-                            targetClass.getName(), method.getName() });
-                }
+            if (interceptorList.size() == 0) {
+                continue;
             }
+            if (!isApplicableAspect(method)) {
+                logger.log("WSSR0009", new Object[] { targetClass.getName(),
+                        method.getName() });
+                continue;
+            }
+            weaver.setInterceptors(method,
+                    (MethodInterceptor[]) interceptorList
+                            .toArray(new MethodInterceptor[interceptorList
+                                    .size()]));
         }
     }
 
@@ -135,5 +141,21 @@ public final class AopProxy implements Serializable {
     private boolean isApplicableAspect(Method method) {
         int mod = method.getModifiers();
         return !Modifier.isFinal(mod) && !Modifier.isStatic(mod);
+    }
+    
+    private boolean isBridgeMethod(final Method method) {
+        if (IS_BRIDGE_METHOD == null) {
+            return false;
+        }
+        return ((Boolean) MethodUtil.invoke(IS_BRIDGE_METHOD, method, null))
+                .booleanValue();
+    }
+
+    private static Method getIsBridgeMethod() {
+        try {
+            return Class.class.getMethod("isBridge", null);
+        } catch (NoSuchMethodException e) {
+            return null;
+        }
     }
 }
