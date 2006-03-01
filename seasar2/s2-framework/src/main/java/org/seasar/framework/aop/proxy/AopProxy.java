@@ -145,6 +145,7 @@ public final class AopProxy implements Serializable {
     
     private boolean isBridgeMethod(final Method method) {
         if (IS_BRIDGE_METHOD == null) {
+            System.out.println("not tiger:" + method);
             return false;
         }
         return ((Boolean) MethodUtil.invoke(IS_BRIDGE_METHOD, method, null))
@@ -153,7 +154,7 @@ public final class AopProxy implements Serializable {
 
     private static Method getIsBridgeMethod() {
         try {
-            return Class.class.getMethod("isBridge", null);
+            return Method.class.getMethod("isBridge", null);
         } catch (NoSuchMethodException e) {
             return null;
         }
