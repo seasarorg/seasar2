@@ -37,16 +37,22 @@ public class AopProxyTest extends TestCase {
         TestInterceptor interceptor = new TestInterceptor();
         Pointcut pointcut = new PointcutImpl(new String[] { "get" });
         Aspect aspect = new AspectImpl(interceptor, pointcut);
-        AopProxy aopProxy = new AopProxy(Generic.class, new Aspect[] { aspect });
-        Generic<String> generic = (Generic<String>) aopProxy.create();
-        String result = generic.get("Hoge");
+        AopProxy aopProxy = new AopProxy(Bar.class, new Aspect[] { aspect });
+        Bar generic = (Bar) aopProxy.create();
+        String result = generic.get();
         assertEquals("1", "Hoge", result);
         assertTrue("2", interceptor.invoked);
     }
 
-    public static class Generic<T> {
-        public T get(T arg) {
-            return arg;
+    public static class Foo<T> {
+        public T get() {
+            return null;
+        }
+    }
+
+    public static class Bar extends Foo<String> {
+        public String get() {
+            return "Hoge";
         }
     }
 
