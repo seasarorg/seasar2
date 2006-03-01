@@ -123,18 +123,24 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
             }
             EJB ejb = method.getAnnotation(EJB.class);
             if (ejb != null) {
-                String expression = ejb.name().replace('/', '.');
-                return createPropertyDef(propName, expression, null);
+                return createPropertyDef(propName, getExpression(ejb), null);
             }
         }
         return super.createPropertyDef(beanDesc, propertyDesc);
+    }
+    
+    protected String getExpression(EJB ejb) {
+        String name = ejb.beanName();
+        if (StringUtil.isEmpty(name)) {
+            name = ejb.name();
+        }
+        return name.replace('/', '.');
     }
 
     public PropertyDef createPropertyDef(BeanDesc beanDesc, Field field) {
         EJB ejb = field.getAnnotation(EJB.class);
         if (ejb != null) {
-            String expression = ejb.name().replace('/', '.');
-            return createPropertyDef(field.getName(), expression, null);
+            return createPropertyDef(field.getName(), getExpression(ejb), null);
         }
         return super.createPropertyDef(beanDesc, field);
     }

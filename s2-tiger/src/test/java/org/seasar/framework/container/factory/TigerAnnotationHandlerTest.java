@@ -108,6 +108,14 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
         propDesc = beanDesc.getPropertyDesc("iii");
         propDef = handler.createPropertyDef(beanDesc, propDesc);
         assertEquals("4", "ejb.iii", ((OgnlExpression) propDef.getExpression()).getSource());
+        
+        propDesc = beanDesc.getPropertyDesc("jjj");
+        propDef = handler.createPropertyDef(beanDesc, propDesc);
+        assertEquals("5", "jjj2", ((OgnlExpression) propDef.getExpression()).getSource());
+        
+        propDesc = beanDesc.getPropertyDesc("kkk");
+        propDef = handler.createPropertyDef(beanDesc, propDesc);
+        assertEquals("6", "kkk2", ((OgnlExpression) propDef.getExpression()).getSource());
     }
     
     public void testCreatePropertyDefForEJB3ForField() throws Exception {
@@ -124,6 +132,14 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
         field = beanDesc.getField("hhh");
         propDef = handler.createPropertyDef(beanDesc, field);
         assertEquals("3", "ejb.hhh", ((OgnlExpression) propDef.getExpression()).getSource());
+        
+        field = beanDesc.getField("lll");
+        propDef = handler.createPropertyDef(beanDesc, field);
+        assertEquals("4", "lll2", ((OgnlExpression) propDef.getExpression()).getSource());
+        
+        field = beanDesc.getField("mmm");
+        propDef = handler.createPropertyDef(beanDesc, field);
+        assertEquals("5", "mmm2", ((OgnlExpression) propDef.getExpression()).getSource());
     }
     
     public void testAppendDIForEJB3() throws Exception {

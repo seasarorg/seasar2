@@ -35,6 +35,12 @@ public class Hoge2 {
 	
 	@EJB(name="ejb/hhh")
 	private String hhh;
+    
+    @EJB(beanName="lll2")
+    private String lll;
+    
+    @EJB(beanName="mmm2", name="ejb/mmm2")
+    private String mmm;
 	
     @Binding("aaa2")
     public void setAaa(String aaa) {
@@ -58,5 +64,13 @@ public class Hoge2 {
     
     @EJB(name="ejb/iii")
     public void setIii(String iii) {
+    }
+    
+    @EJB(beanName="jjj2")
+    public void setJjj(String jjj) {
+    }
+    
+    @EJB(beanName="kkk2", name="ejb/kkk2")
+    public void setKkk(String kkk) {
     }
 }
