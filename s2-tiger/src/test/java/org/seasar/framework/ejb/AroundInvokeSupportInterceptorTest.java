@@ -2,7 +2,7 @@ package org.seasar.framework.ejb;
 
 import java.lang.reflect.Method;
 
-import javax.ejb.InvocationContext;
+import javax.interceptor.InvocationContext;
 
 import junit.framework.TestCase;
 

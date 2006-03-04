@@ -57,13 +57,13 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
 
     private static final Map<TransactionAttributeType, String> TX_ATTRS = new HashMap<TransactionAttributeType, String>();
     static {
-        TX_ATTRS.put(TransactionAttributeType.MANDATORY, "ejbtx.mandatoryTx");
-        TX_ATTRS.put(TransactionAttributeType.REQUIRED, "ejbtx.requiredTx");
+        TX_ATTRS.put(TransactionAttributeType.MANDATORY, "ejb3tx.mandatoryTx");
+        TX_ATTRS.put(TransactionAttributeType.REQUIRED, "ejb3tx.requiredTx");
         TX_ATTRS.put(TransactionAttributeType.REQUIRES_NEW,
-                "ejbtx.requiresNewTx");
+                "ejb3tx.requiresNewTx");
         TX_ATTRS.put(TransactionAttributeType.NOT_SUPPORTED,
-                "ejbtx.notSupportedTx");
-        TX_ATTRS.put(TransactionAttributeType.NEVER, "ejbtx.neverTx");
+                "ejb3tx.notSupportedTx");
+        TX_ATTRS.put(TransactionAttributeType.NEVER, "ejb3tx.neverTx");
     }
 
     public ComponentDef createComponentDef(Class componentClass,
@@ -128,7 +128,7 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
         }
         return super.createPropertyDef(beanDesc, propertyDesc);
     }
-    
+
     protected String getExpression(EJB ejb) {
         String name = ejb.beanName();
         if (StringUtil.isEmpty(name)) {

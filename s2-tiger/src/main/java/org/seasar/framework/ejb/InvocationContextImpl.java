@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.ejb.EJBException;
-import javax.ejb.InvocationContext;
+import javax.interceptor.InvocationContext;
 
 import org.aopalliance.intercept.MethodInvocation;
 

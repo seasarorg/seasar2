@@ -13,15 +13,18 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package javax.ejb;
+package javax.interceptor;
 
-import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-@Target( { METHOD })
+@Target( { TYPE })
 @Retention(RUNTIME)
-public @interface AroundInvoke {
+public @interface Interceptors {
+
+    Class[] value();
+
 }

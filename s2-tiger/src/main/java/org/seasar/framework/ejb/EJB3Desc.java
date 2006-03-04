@@ -23,14 +23,14 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-import javax.ejb.AroundInvoke;
-import javax.ejb.InvocationContext;
 import javax.ejb.Local;
 import javax.ejb.Remote;
 import javax.ejb.Stateful;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
+import javax.interceptor.AroundInvoke;
+import javax.interceptor.InvocationContext;
 
 import org.seasar.framework.log.Logger;
 
@@ -72,7 +72,7 @@ public class EJB3Desc {
             introspection();
         } catch (final Exception e) {
             stateless = stateful = false;
-            logger.log("ESSR0406", new Object[] { beanClassName, e }, e);
+            logger.log("ESSR0406", new Object[] { beanClassName, e });
         }
     }
 

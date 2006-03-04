@@ -15,7 +15,7 @@
  */
 package org.seasar.framework.container.factory;
 
-import javax.ejb.InvocationContext;
+import javax.interceptor.InvocationContext;
 
 public interface IHoge17 {
 

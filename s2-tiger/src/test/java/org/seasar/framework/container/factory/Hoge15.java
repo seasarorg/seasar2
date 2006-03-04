@@ -15,9 +15,9 @@
  */
 package org.seasar.framework.container.factory;
 
-import javax.ejb.AroundInvoke;
-import javax.ejb.InvocationContext;
 import javax.ejb.Stateless;
+import javax.interceptor.AroundInvoke;
+import javax.interceptor.InvocationContext;
 
 @Stateless
 public class Hoge15 implements IHoge15 {
