@@ -146,7 +146,7 @@ public class ComponentDefImplTest extends TestCase {
         container.register(cd);
         container.init();
         Hotswap hotswap = cd.getHotswap();
-        Thread.sleep(500);
+        Thread.sleep(1000);
         assertSame("1", FooImpl.class, cd.getComponentClass());
         hotswap.getFile().setLastModified(new Date().getTime());
         assertNotSame("2", FooImpl.class, cd.getComponentClass());
@@ -161,7 +161,7 @@ public class ComponentDefImplTest extends TestCase {
         container.init();
         Class clazz = cd.getConcreteClass();
         Hotswap hotswap = cd.getHotswap();
-        Thread.sleep(500);
+        Thread.sleep(1000);
         assertSame("1", clazz, cd.getConcreteClass());
         hotswap.getFile().setLastModified(new Date().getTime());
         assertNotSame("2", clazz, cd.getConcreteClass());
@@ -175,7 +175,7 @@ public class ComponentDefImplTest extends TestCase {
         container.register(cd);
         container.init();
         Hotswap hotswap = cd.getHotswap();
-        Thread.sleep(500);
+        Thread.sleep(1000);
         Foo foo = (Foo) container.getComponent(Foo.class);
         hotswap.getFile().setLastModified(new Date().getTime());
         Foo foo2 = (Foo) container.getComponent(Foo.class);
