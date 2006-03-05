@@ -1,0 +1,15 @@
+<!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN"
+	"http://www.seasar.org/dtd/components24.dtd">
+<components namespace="ejb3tx">
+	<include path="j2ee.dicon"/>
+	<component name="requiredTx"
+		class="org.seasar.framework.ejb.tx.RequiredInterceptor"/>
+	<component name="requiresNewTx"
+		class="org.seasar.framework.ejb.tx.RequiresNewInterceptor"/>
+	<component name="mandatoryTx"
+		class="org.seasar.extension.tx.MandatoryInterceptor"/>
+	<component name="notSupportedTx"
+		class="org.seasar.extension.tx.NotSupportedInterceptor"/>
+	<component name="neverTx"
+		class="org.seasar.extension.tx.NeverInterceptor"/>
+</components>
