@@ -15,6 +15,8 @@
  */
 package org.seasar.framework.container.impl;
 
+import java.lang.reflect.Method;
+
 import org.seasar.framework.container.InitMethodDef;
 
 /**
@@ -26,7 +28,11 @@ public class InitMethodDefImpl extends MethodDefImpl implements InitMethodDef {
 	public InitMethodDefImpl() {
 	}
 	
-	public InitMethodDefImpl(String methodName) {
+    public InitMethodDefImpl(Method method) {
+        super(method);
+    }
+
+    public InitMethodDefImpl(String methodName) {
 		super(methodName);
 	}
 

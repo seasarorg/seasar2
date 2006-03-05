@@ -226,6 +226,11 @@ public class ConstantAnnotationHandler extends AbstractAnnotationHandler {
         }
     }
 
+    protected void appendInitMethod(ComponentDef componentDef, Method method) {
+        InitMethodDef initMethodDef = new InitMethodDefImpl(method);
+        componentDef.addInitMethodDef(initMethodDef);
+    }
+
     protected void appendInitMethod(ComponentDef componentDef, String methodName) {
         InitMethodDef initMethodDef = new InitMethodDefImpl(methodName);
         componentDef.addInitMethodDef(initMethodDef);

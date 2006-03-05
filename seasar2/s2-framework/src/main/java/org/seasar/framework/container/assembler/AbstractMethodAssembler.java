@@ -16,6 +16,7 @@
 package org.seasar.framework.container.assembler;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,10 +44,24 @@ public abstract class AbstractMethodAssembler extends AbstractAssembler
     protected void invoke(BeanDesc beanDesc, Object component,
             MethodDef methodDef) throws IllegalMethodRuntimeException {
 
+        Method method = methodDef.getMethod();
+        if (method != null) {
+            if (!Modifier.isPublic(method.getModifiers())
+                    && !method.isAccessible()) {
+                method.setAccessible(true);
+            }
+            try {
+                MethodUtil.invoke(method, component, methodDef.getArgs());
+            } catch (Exception cause) {
+                throw new IllegalMethodRuntimeException(
+                        getComponentClass(component), method.getName(), cause);
+            }
+            return;
+        }
+
         String methodName = methodDef.getMethodName();
         if (methodName != null) {
             Object[] args = null;
-            Method method = null;
             try {
                 if (methodDef.getArgDefSize() > 0) {
                     args = methodDef.getArgs();
@@ -66,9 +81,10 @@ public abstract class AbstractMethodAssembler extends AbstractAssembler
             } else {
                 invoke(beanDesc, component, methodName, args);
             }
-        } else {
-            invokeExpression(component, methodDef);
+            return;
         }
+
+        invokeExpression(component, methodDef);
     }
 
     private void invokeExpression(Object component, MethodDef methodDef) {

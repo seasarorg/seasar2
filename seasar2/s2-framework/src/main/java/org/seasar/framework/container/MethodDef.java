@@ -15,11 +15,15 @@
  */
 package org.seasar.framework.container;
 
+import java.lang.reflect.Method;
+
 /**
  * @author higa
  * 
  */
 public interface MethodDef extends ArgDefAware {
+
+    public Method getMethod();
 
     public String getMethodName();
 

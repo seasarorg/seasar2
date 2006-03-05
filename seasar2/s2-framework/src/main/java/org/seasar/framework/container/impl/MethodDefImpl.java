@@ -15,6 +15,8 @@
  */
 package org.seasar.framework.container.impl;
 
+import java.lang.reflect.Method;
+
 import org.seasar.framework.container.ArgDef;
 import org.seasar.framework.container.Expression;
 import org.seasar.framework.container.MethodDef;
@@ -27,6 +29,8 @@ import org.seasar.framework.container.util.ArgDefSupport;
  */
 public abstract class MethodDefImpl implements MethodDef {
 
+    private Method method;
+
     private String methodName;
 
     private ArgDefSupport argDefSupport = new ArgDefSupport();
@@ -38,8 +42,16 @@ public abstract class MethodDefImpl implements MethodDef {
     public MethodDefImpl() {
     }
 
+    public MethodDefImpl(Method method) {
+        this.method = method;
+    }
+
     public MethodDefImpl(String methodName) {
         this.methodName = methodName;
+    }
+
+    public Method getMethod() {
+        return method;
     }
 
     /**

@@ -55,6 +55,20 @@ public class DefaultInitMethodAssemblerTest extends TestCase {
 		assertEquals("1", "111", map.get("aaa"));
 	}
 
+    public void testAssembleForMethod() throws Exception {
+        S2Container container = new S2ContainerImpl();
+        ComponentDefImpl cd = new ComponentDefImpl(HashMap.class);
+        InitMethodDef md = new InitMethodDefImpl(HashMap.class.getMethod("clear", null));
+        cd.addInitMethodDef(md);
+        container.register(cd);
+        MethodAssembler assembler = new DefaultInitMethodAssembler(cd);
+        HashMap map = new HashMap();
+        map.put("aaa", "111");
+        map.put("bbb", "222");
+        assembler.assemble(map);
+        assertEquals("1", 0, map.size());
+    }
+
 	public void testAssembleForExpression() throws Exception {
 		S2Container container = new S2ContainerImpl();
 		ComponentDefImpl cd = new ComponentDefImpl(HashMap.class);
@@ -113,6 +127,23 @@ public class DefaultInitMethodAssemblerTest extends TestCase {
 			System.out.println(ex);
 		}
 	}
+
+    public void testAssembleIllegalArgument3() throws Exception {
+        S2Container container = new S2ContainerImpl();
+        ComponentDefImpl cd = new ComponentDefImpl(B.class);
+        InitMethodDef md = new InitMethodDefImpl(B.class.getMethod("getName", null));
+        ArgDef argDef = new ArgDefImpl("aaa");
+        md.addArgDef(argDef);
+        cd.addInitMethodDef(md);
+        container.register(cd);
+        MethodAssembler assembler = new DefaultInitMethodAssembler(cd);
+        try {
+            assembler.assemble(new B());
+            fail("1");
+        } catch (IllegalMethodRuntimeException ex) {
+            System.out.println(ex);
+        }
+    }
 	
 	public void testAssembleField() throws Exception {
 		S2Container container = new S2ContainerImpl();
