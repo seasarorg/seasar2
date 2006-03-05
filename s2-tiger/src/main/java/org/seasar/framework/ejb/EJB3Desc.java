@@ -48,6 +48,8 @@ public class EJB3Desc {
 
     protected List<Method> businessMethods = new ArrayList<Method>();
 
+    protected List<Method> allMethods = new ArrayList<Method>();
+
     protected Method aroundInvokeMethod;
 
     protected boolean stateless;
@@ -104,6 +106,10 @@ public class EJB3Desc {
         return businessMethods;
     }
 
+    public List<Method> getAllMethods() {
+        return allMethods;
+    }
+
     public Method getAroundInvokeMethod() {
         return aroundInvokeMethod;
     }
@@ -139,6 +145,7 @@ public class EJB3Desc {
 
         cmt = detectTransactionManagementType();
         findBusinessMethods();
+        findAllMethods();
         findAroundInvokeMethod();
         return;
     }
@@ -203,32 +210,38 @@ public class EJB3Desc {
         }
     }
 
-    protected void findAroundInvokeMethod() {
-        for (Class<?> clazz = beanClass; clazz != null; clazz = clazz
+    protected void findAllMethods() {
+        for (Class<?> clazz = beanClass; clazz != Object.class; clazz = clazz
                 .getSuperclass()) {
             for (final Method method : clazz.getDeclaredMethods()) {
-                final AroundInvoke aroundInvoke = method
-                        .getAnnotation(AroundInvoke.class);
-                if (aroundInvoke == null) {
-                    continue;
-                }
-                if (aroundInvokeMethod != null) {
-                    throw new SEJBException("ESSR0403", beanClassName);
-                }
-
-                final Class<?>[] paramTypes = method.getParameterTypes();
-                if (paramTypes == null || paramTypes.length != 1
-                        || !InvocationContext.class.equals(paramTypes[0])) {
-                    throw new SEJBException("ESSR0404", beanClassName, method);
-                }
-
-                final Class<?> returnType = method.getReturnType();
-                if (returnType == null || !Object.class.equals(returnType)) {
-                    throw new SEJBException("ESSR0405", beanClassName, method);
-                }
-
-                aroundInvokeMethod = method;
+                allMethods.add(method);
             }
+        }
+    }
+
+    protected void findAroundInvokeMethod() {
+        for (final Method method : allMethods) {
+            final AroundInvoke aroundInvoke = method
+                    .getAnnotation(AroundInvoke.class);
+            if (aroundInvoke == null) {
+                continue;
+            }
+            if (aroundInvokeMethod != null) {
+                throw new SEJBException("ESSR0403", beanClassName);
+            }
+
+            final Class<?>[] paramTypes = method.getParameterTypes();
+            if (paramTypes == null || paramTypes.length != 1
+                    || !InvocationContext.class.equals(paramTypes[0])) {
+                throw new SEJBException("ESSR0404", beanClassName, method.getName());
+            }
+
+            final Class<?> returnType = method.getReturnType();
+            if (returnType == null || !Object.class.equals(returnType)) {
+                throw new SEJBException("ESSR0405", beanClassName, method.getName());
+            }
+
+            aroundInvokeMethod = method;
         }
     }
 

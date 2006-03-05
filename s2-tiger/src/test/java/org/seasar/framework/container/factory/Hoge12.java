@@ -15,6 +15,7 @@
  */
 package org.seasar.framework.container.factory;
 
+import javax.ejb.PostConstruct;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -30,5 +31,9 @@ public class Hoge12 implements IHoge12 {
 
     @TransactionAttribute(TransactionAttributeType.MANDATORY)
     public void notAnnotated() {
+    }
+
+    @PostConstruct
+    static void initialize() {
     }
 }

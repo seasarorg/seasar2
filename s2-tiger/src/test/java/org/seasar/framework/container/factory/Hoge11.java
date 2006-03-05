@@ -16,6 +16,7 @@
 package org.seasar.framework.container.factory;
 
 import javax.ejb.Local;
+import javax.ejb.PostConstruct;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -23,6 +24,7 @@ import javax.ejb.TransactionAttributeType;
 @Stateless
 @Local( { IHoge11A.class, IHoge11B.class })
 public class Hoge11 implements IHoge11A, IHoge11B {
+    String foo;
 
     @TransactionAttribute(TransactionAttributeType.MANDATORY)
     public void mandatory() {
@@ -53,5 +55,10 @@ public class Hoge11 implements IHoge11A, IHoge11B {
     }
 
     public void notAnnotated() {
+    }
+
+    @PostConstruct
+    private void initialize() {
+        foo = "FOO";
     }
 }

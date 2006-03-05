@@ -17,10 +17,12 @@ package org.seasar.framework.container.factory;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.ejb.EJB;
+import javax.ejb.PostConstruct;
 import javax.ejb.Stateful;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -47,6 +49,7 @@ import org.seasar.framework.container.assembler.AutoBindingDefFactory;
 import org.seasar.framework.container.deployer.InstanceDefFactory;
 import org.seasar.framework.ejb.AroundInvokeSupportInterceptor;
 import org.seasar.framework.ejb.EJB3Desc;
+import org.seasar.framework.ejb.SEJBException;
 import org.seasar.framework.util.StringUtil;
 
 /**
@@ -198,6 +201,7 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
             }
             appendInitMethod(componentDef, method.getName());
         }
+        appendEJB3InitMethod(componentDef);
         super.appendInitMethod(componentDef);
     }
 
@@ -241,8 +245,8 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
         }
     }
 
-    private void appendEJB3AroundInvokeAspect(final ComponentDef componentDef,
-            final EJB3Desc ejb3desc) {
+    protected void appendEJB3AroundInvokeAspect(
+            final ComponentDef componentDef, final EJB3Desc ejb3desc) {
         final Method aroundInvokeMethod = ejb3desc.getAroundInvokeMethod();
         if (aroundInvokeMethod == null) {
             return;
@@ -255,6 +259,33 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
             final AspectDef aspectDef = AspectDefFactory.createAspectDef(
                     interceptor, new PointcutImpl(method));
             componentDef.addAspectDef(aspectDef);
+        }
+    }
+
+    protected void appendEJB3InitMethod(final ComponentDef componentDef) {
+        final Class<?> componentClass = componentDef.getComponentClass();
+        final EJB3Desc ejb3desc = EJB3Desc.getEJB3Desc(componentClass);
+        if (!ejb3desc.isEJB3()) {
+            return;
+        }
+
+        for (final Method method : ejb3desc.getAllMethods()) {
+            final PostConstruct annotation = method
+                    .getAnnotation(PostConstruct.class);
+            if (annotation == null) {
+                continue;
+            }
+            final int modifiers = method.getModifiers();
+            if (method.getParameterTypes().length != 0
+                    || Modifier.isStatic(modifiers)
+                    || Modifier.isFinal(modifiers)) {
+                throw new SEJBException("ESSR0409", "PostConstruct",
+                        componentClass.getName(), method.getName());
+            }
+            if (!isInitMethodRegisterable(componentDef, method.getName())) {
+                continue;
+            }
+            appendInitMethod(componentDef, method);
         }
     }
 }

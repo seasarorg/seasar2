@@ -32,6 +32,7 @@ import org.seasar.framework.container.InterTypeDef;
 import org.seasar.framework.container.PropertyDef;
 import org.seasar.framework.container.deployer.InstanceDefFactory;
 import org.seasar.framework.container.ognl.OgnlExpression;
+import org.seasar.framework.ejb.SEJBException;
 
 /**
  * @author higa
@@ -350,6 +351,28 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
             handler.appendInitMethod(cd);
             fail("1");
         } catch (IllegalInitMethodAnnotationRuntimeException ex) {
+            System.out.println(ex);
+        }
+    }
+
+    public void testAppendInitMethodForEJB3() throws Exception {
+        ComponentDef cd = handler.createComponentDef(Hoge11.class, null);
+        handler.appendInitMethod(cd);
+        assertEquals("1", 1, cd.getInitMethodDefSize());
+        InitMethodDef initMethodDef = cd.getInitMethodDef(0);
+        assertEquals("2", "initialize", initMethodDef.getMethod().getName());
+
+        cd.init();
+        Hoge11 hoge = (Hoge11) cd.getComponent();
+        assertEquals("3", "FOO", hoge.foo);
+    }
+
+    public void testAppendInitMethodForEJB3Exception() throws Exception {
+        ComponentDef cd = handler.createComponentDef(Hoge12.class, null);
+        try {
+            handler.appendInitMethod(cd);
+            fail("1");
+        } catch (SEJBException ex) {
             System.out.println(ex);
         }
     }
