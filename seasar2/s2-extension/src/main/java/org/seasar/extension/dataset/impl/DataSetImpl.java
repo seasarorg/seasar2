@@ -53,6 +53,13 @@ public class DataSetImpl implements DataSet {
 		return (DataTable) tables_.get(index);
 	}
 
+    /**
+     * @see org.seasar.extension.dataset.DataSet#hasTable(java.lang.String)
+     */
+    public boolean hasTable(String tableName) {
+        return tables_.containsKey(tableName);
+    }
+    
 	/**
 	 * @see org.seasar.extension.dataset.DataSet#getTable(java.lang.String)
 	 */

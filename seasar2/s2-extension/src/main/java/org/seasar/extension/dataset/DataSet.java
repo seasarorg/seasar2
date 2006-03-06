@@ -25,6 +25,8 @@ public interface DataSet {
 	
 	public String getTableName(int index);
 	
+    public boolean hasTable(String tableName);
+    
 	public DataTable getTable(String tableName)
 		throws TableNotFoundRuntimeException;
 	
