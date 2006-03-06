@@ -6,5 +6,6 @@
 	<classpathentry output="target/test-classes" kind="src" path="src/test/resources"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/seasar2"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="lib/ejb3-persistence.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
