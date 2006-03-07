@@ -22,6 +22,8 @@ package org.seasar.framework.container;
 public interface ContainerConstants {
 	
 	public char NS_SEP = '.';
+    
+    public String NS_SEP_STR = Character.toString(NS_SEP);
 	
 	public String CONTAINER_NAME = "container";
 	

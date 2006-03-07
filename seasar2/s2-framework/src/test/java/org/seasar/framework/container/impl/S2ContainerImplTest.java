@@ -23,6 +23,7 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,7 +43,6 @@ import org.seasar.framework.container.InitMethodDef;
 import org.seasar.framework.container.PropertyDef;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.TooManyRegistrationRuntimeException;
-import org.seasar.framework.container.deployer.HttpServletComponentDeployerProvider;
 import org.seasar.framework.container.deployer.InstanceDefFactory;
 import org.seasar.framework.container.ognl.OgnlExpression;
 import org.seasar.framework.mock.servlet.MockHttpServletResponseImpl;
@@ -171,6 +171,20 @@ public class S2ContainerImplTest extends TestCase {
 			System.out.println(ex);
 		}
 	}
+    
+    public void testInclude6() throws Exception {
+        S2Container root = new S2ContainerImpl();
+        S2Container aaa = new S2ContainerImpl();
+        aaa.setPath("aaa.xml");
+        aaa.setNamespace("aaa");
+        S2Container bbb = new S2ContainerImpl();
+        bbb.setPath("bbb.xml");
+        bbb.setNamespace("bbb");
+        bbb.register(new Date(), "date");
+        aaa.include(bbb);
+        root.include(aaa);
+        assertNotNull("1", root.getComponentDef("bbb.date"));
+    }
 
 	public void testInitAndDestroy() throws Exception {
 		S2Container container = new S2ContainerImpl();

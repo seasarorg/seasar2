@@ -18,6 +18,7 @@ package org.seasar.framework.container.impl;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -220,6 +221,12 @@ public class S2ContainerImpl implements S2Container, ContainerConstants {
             componentDefMap.put(key, componentDef);
         }
     }
+    
+    protected void registerMapIfNotContains(Object key, ComponentDef componentDef) {
+        if (!componentDefMap.containsKey(key)) {
+            componentDefMap.put(key, componentDef);
+        }
+    }
 
     /**
      * @see org.seasar.framework.container.S2Container#getComponentDefSize()
@@ -279,12 +286,14 @@ public class S2ContainerImpl implements S2Container, ContainerConstants {
                 }
             }
         }
+        /*
         for (int i = 0; i < getChildSize(); ++i) {
             S2Container child = getChild(i);
             if (child.hasComponentDef(key)) {
                 return child.getComponentDef(key);
             }
         }
+        */
         return null;
     }
 
@@ -324,11 +333,33 @@ public class S2ContainerImpl implements S2Container, ContainerConstants {
     public synchronized void include(S2Container child) {
         assertParameterIsNotNull(child, "child");
         child.setRoot(getRoot());
+        ((S2ContainerImpl) child).addComponentDefsToParent(this);
         children.add(child);
         String ns = child.getNamespace();
         if (ns != null) {
             registerMap(ns, new S2ContainerComponentDef(child, ns));
         }
+    }
+    
+    protected void addComponentDefsToParent(S2Container parent) {
+        S2ContainerImpl pimpl = (S2ContainerImpl) parent;
+        for (Iterator i = componentDefMap.keySet().iterator(); i.hasNext(); ) {
+            Object key = i.next();
+            if (namespace == key) {
+                continue;
+            }
+            ComponentDef cd = (ComponentDef) componentDefMap.get(key);
+            if (isNeedNSForKey(key)) {
+                pimpl.registerMapIfNotContains(namespace + NS_SEP + key, cd);
+            } else {
+                pimpl.registerMapIfNotContains(key, cd);
+            }
+            
+        }
+    }
+    
+    protected boolean isNeedNSForKey(Object key) {
+        return key instanceof String && ((String) key).indexOf(NS_SEP) < 0 && namespace != null;
     }
 
     /**

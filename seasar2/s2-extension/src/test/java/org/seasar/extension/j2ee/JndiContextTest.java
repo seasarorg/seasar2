@@ -29,6 +29,7 @@ public class JndiContextTest extends S2TestCase {
 	public void testLookup() throws Exception {
 		assertNotNull("1", ctx_.lookup("jdbc.DataSource"));
 		assertNotNull("2", ctx_.lookup("jta.TransactionManager"));
+        assertNotNull("2", ctx_.lookup("jta.UserTransaction"));
 	}
 
     public void testLookupENC() throws Exception {
