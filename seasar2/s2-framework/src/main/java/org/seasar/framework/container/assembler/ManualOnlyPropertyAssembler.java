@@ -42,13 +42,10 @@ public class ManualOnlyPropertyAssembler extends AbstractPropertyAssembler {
         for (int i = 0; i < size; ++i) {
             PropertyDef propDef = cd.getPropertyDef(i);
             String propName = propDef.getPropertyName();
-            PropertyDesc propDesc = null;
+            PropertyDesc propDesc = beanDesc.getPropertyDesc(propName);
             Field field = null;
             if (beanDesc.hasField(propName)) {
                 field = beanDesc.getField(propName);
-            }
-            if (field == null) {
-                propDesc = beanDesc.getPropertyDesc(propName);
             }
             BindingTypeDefFactory.NONE.bind(getComponentDef(), propDef,
                     propDesc, field, component);
