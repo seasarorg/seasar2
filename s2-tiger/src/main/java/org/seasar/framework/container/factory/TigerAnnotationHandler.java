@@ -35,6 +35,7 @@ import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.container.AspectDef;
 import org.seasar.framework.container.AutoBindingDef;
 import org.seasar.framework.container.ComponentDef;
+import org.seasar.framework.container.IllegalDestroyMethodAnnotationRuntimeException;
 import org.seasar.framework.container.IllegalInitMethodAnnotationRuntimeException;
 import org.seasar.framework.container.InstanceDef;
 import org.seasar.framework.container.PropertyDef;
@@ -42,6 +43,7 @@ import org.seasar.framework.container.annotation.tiger.Aspect;
 import org.seasar.framework.container.annotation.tiger.AutoBindingType;
 import org.seasar.framework.container.annotation.tiger.Binding;
 import org.seasar.framework.container.annotation.tiger.Component;
+import org.seasar.framework.container.annotation.tiger.DestroyMethod;
 import org.seasar.framework.container.annotation.tiger.InitMethod;
 import org.seasar.framework.container.annotation.tiger.InstanceType;
 import org.seasar.framework.container.annotation.tiger.InterType;
@@ -203,6 +205,30 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
         }
         appendEJB3InitMethod(componentDef);
         super.appendInitMethod(componentDef);
+    }
+
+    public void appendDestroyMethod(ComponentDef componentDef) {
+        Class componentClass = componentDef.getComponentClass();
+        if (componentClass == null) {
+            return;
+        }
+        Method[] methods = componentClass.getMethods();
+        for (Method method : methods) {
+            DestroyMethod destroyMethod = method
+                    .getAnnotation(DestroyMethod.class);
+            if (destroyMethod == null) {
+                continue;
+            }
+            if (method.getParameterTypes().length != 0) {
+                throw new IllegalDestroyMethodAnnotationRuntimeException(
+                        componentClass, method.getName());
+            }
+            if (!isDestroyMethodRegisterable(componentDef, method.getName())) {
+                continue;
+            }
+            appendDestroyMethod(componentDef, method.getName());
+        }
+        super.appendDestroyMethod(componentDef);
     }
 
     protected void appendEJB3Aspect(final ComponentDef componentDef) {

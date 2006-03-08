@@ -16,10 +16,11 @@
 package org.seasar.framework.container.factory;
 
 import org.seasar.framework.container.annotation.tiger.Aspect;
+import org.seasar.framework.container.annotation.tiger.DestroyMethod;
 import org.seasar.framework.container.annotation.tiger.InitMethod;
 import org.seasar.framework.container.annotation.tiger.InterType;
 
-@Aspect(value="aop.traceInterceptor", pointcut="getAaa")
+@Aspect(value = "aop.traceInterceptor", pointcut = "getAaa")
 @InterType("fieldInterType")
 public class Hoge {
     public String getAaa() {
@@ -28,5 +29,9 @@ public class Hoge {
 
     @InitMethod
     public void init() {
+    }
+
+    @DestroyMethod
+    public void destroy() {
     }
 }

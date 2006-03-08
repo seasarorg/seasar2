@@ -3,6 +3,5 @@
 "http://www.seasar.org/dtd/components.dtd">
 <components>
 	<component name="hoge5" class="org.seasar.framework.container.factory.Hoge5">
-		<initMethod name="init"/>
 	</component>
 </components>
