@@ -80,6 +80,7 @@ public class ComponentTagHandler extends AbstractTagHandler {
         AnnotationHandler annoHandler = AnnotationHandlerFactory
                 .getAnnotationHandler();
         annoHandler.appendInitMethod(componentDef);
+        annoHandler.appendDestroyMethod(componentDef);
         String expression = null;
         if (body != null) {
             expression = body.trim();

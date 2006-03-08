@@ -24,6 +24,7 @@ import org.seasar.framework.beans.factory.BeanDescFactory;
 import org.seasar.framework.container.AutoBindingDef;
 import org.seasar.framework.container.BindingTypeDef;
 import org.seasar.framework.container.ComponentDef;
+import org.seasar.framework.container.DestroyMethodDef;
 import org.seasar.framework.container.InitMethodDef;
 import org.seasar.framework.container.InstanceDef;
 import org.seasar.framework.container.PropertyDef;
@@ -47,27 +48,31 @@ public abstract class AbstractAnnotationHandler implements AnnotationHandler {
     protected static final String AUTO_BINDING = "autoBinding";
 
     protected static final String BINDING_SUFFIX = "_BINDING";
-    
+
     protected static final String BINDING_TYPE = "bindingType";
 
     protected static final String VALUE = "value";
-    
+
     protected static final String ASPECT = "ASPECT";
 
     protected static final String INTER_TYPE = "INTER_TYPE";
 
     protected static final String INIT_METHOD = "INIT_METHOD";
-    
+
+    protected static final String DESTROY_METHOD = "DESTROY_METHOD";
+
     protected static final String INTERCEPTOR = "interceptor";
-    
+
     protected static final String POINTCUT = "pointcut";
 
-    public ComponentDef createComponentDef(String className, InstanceDef instanceDef) {
+    public ComponentDef createComponentDef(String className,
+            InstanceDef instanceDef) {
         return createComponentDef(ClassUtil.forName(className), instanceDef);
     }
 
     public void appendDI(ComponentDef componentDef) {
-        BeanDesc beanDesc = BeanDescFactory.getBeanDesc(componentDef.getComponentClass());
+        BeanDesc beanDesc = BeanDescFactory.getBeanDesc(componentDef
+                .getComponentClass());
         for (int i = 0; i < beanDesc.getPropertyDescSize(); ++i) {
             PropertyDesc pd = beanDesc.getPropertyDesc(i);
             if (!pd.hasWriteMethod()) {
@@ -91,22 +96,23 @@ public abstract class AbstractAnnotationHandler implements AnnotationHandler {
             componentDef.addPropertyDef(propDef);
         }
     }
-    
-    protected InstanceDef getInstanceDef(String name, InstanceDef defaultInstanceDef) {
+
+    protected InstanceDef getInstanceDef(String name,
+            InstanceDef defaultInstanceDef) {
         InstanceDef instanceDef = getInstanceDef(name);
         if (instanceDef != null) {
             return instanceDef;
         }
         return defaultInstanceDef;
     }
-    
+
     protected InstanceDef getInstanceDef(String name) {
         if (StringUtil.isEmpty(name)) {
             return null;
         }
         return InstanceDefFactory.getInstanceDef(name);
     }
-    
+
     protected AutoBindingDef getAutoBindingDef(String name) {
         if (StringUtil.isEmpty(name)) {
             return null;
@@ -114,7 +120,8 @@ public abstract class AbstractAnnotationHandler implements AnnotationHandler {
         return AutoBindingDefFactory.getAutoBindingDef(name);
     }
 
-    protected ComponentDef createComponentDef(Class componentClass, String name, InstanceDef instanceDef, AutoBindingDef autoBindingDef) {
+    protected ComponentDef createComponentDef(Class componentClass,
+            String name, InstanceDef instanceDef, AutoBindingDef autoBindingDef) {
         ComponentDef componentDef = new ComponentDefImpl(componentClass);
         if (!StringUtil.isEmpty(name)) {
             componentDef.setComponentName(name);
@@ -127,11 +134,13 @@ public abstract class AbstractAnnotationHandler implements AnnotationHandler {
         }
         return componentDef;
     }
-    
-    protected PropertyDef createPropertyDef(String propertyName, String expression, String bindingTypeName) {
+
+    protected PropertyDef createPropertyDef(String propertyName,
+            String expression, String bindingTypeName) {
         PropertyDef propertyDef = new PropertyDefImpl(propertyName);
         if (!StringUtil.isEmpty(bindingTypeName)) {
-            BindingTypeDef bindingTypeDef = BindingTypeDefFactory.getBindingTypeDef(bindingTypeName);
+            BindingTypeDef bindingTypeDef = BindingTypeDefFactory
+                    .getBindingTypeDef(bindingTypeName);
             propertyDef.setBindingTypeDef(bindingTypeDef);
         }
         if (!StringUtil.isEmpty(expression)) {
@@ -139,22 +148,39 @@ public abstract class AbstractAnnotationHandler implements AnnotationHandler {
         }
         return propertyDef;
     }
-    
-    protected boolean isInitMethodRegisterable(ComponentDef cd, String methodName) {
+
+    protected boolean isInitMethodRegisterable(ComponentDef cd,
+            String methodName) {
         if (StringUtil.isEmpty(methodName)) {
             return false;
         }
         for (int i = 0; i < cd.getInitMethodDefSize(); ++i) {
             InitMethodDef other = cd.getInitMethodDef(i);
-            if (methodName.equals(other.getMethodName()) && other.getArgDefSize() == 0) {
+            if (methodName.equals(other.getMethodName())
+                    && other.getArgDefSize() == 0) {
                 return false;
             }
         }
         return true;
     }
-    
+
+    protected boolean isDestroyMethodRegisterable(ComponentDef cd,
+            String methodName) {
+        if (StringUtil.isEmpty(methodName)) {
+            return false;
+        }
+        for (int i = 0; i < cd.getDestroyMethodDefSize(); ++i) {
+            DestroyMethodDef other = cd.getDestroyMethodDef(i);
+            if (methodName.equals(other.getMethodName())
+                    && other.getArgDefSize() == 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     protected boolean isFieldInjectionTarget(Field field) {
-        return !Modifier.isStatic(field.getModifiers()) &&
-            !Modifier.isFinal(field.getModifiers());
+        return !Modifier.isStatic(field.getModifiers())
+                && !Modifier.isFinal(field.getModifiers());
     }
 }

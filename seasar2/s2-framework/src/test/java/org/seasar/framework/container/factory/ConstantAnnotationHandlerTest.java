@@ -20,6 +20,8 @@ import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.beans.factory.BeanDescFactory;
 import org.seasar.framework.container.AspectDef;
 import org.seasar.framework.container.ComponentDef;
+import org.seasar.framework.container.DestroyMethodDef;
+import org.seasar.framework.container.IllegalDestroyMethodAnnotationRuntimeException;
 import org.seasar.framework.container.IllegalInitMethodAnnotationRuntimeException;
 import org.seasar.framework.container.InitMethodDef;
 import org.seasar.framework.container.InterTypeDef;
@@ -130,6 +132,31 @@ public class ConstantAnnotationHandlerTest extends S2FrameworkTestCase {
         }
     }
 
+    public void testAppendDestroyMethod() throws Exception {
+        ComponentDef cd = handler.createComponentDef(Hoge.class, null);
+        handler.appendDestroyMethod(cd);
+        assertEquals("1", 1, cd.getDestroyMethodDefSize());
+        DestroyMethodDef destroyMethodDef = cd.getDestroyMethodDef(0);
+        assertEquals("2", "destroy", destroyMethodDef.getMethodName());
+    }
+
+    public void testAppendDestroyMethodForException() throws Exception {
+        try {
+            ComponentDef cd = handler.createComponentDef(Hoge4.class, null);
+            handler.appendDestroyMethod(cd);
+            fail("1");
+        } catch (IllegalDestroyMethodAnnotationRuntimeException ex) {
+            System.out.println(ex);
+        }
+        try {
+            ComponentDef cd = handler.createComponentDef(Hoge5.class, null);
+            handler.appendDestroyMethod(cd);
+            fail("2");
+        } catch (IllegalDestroyMethodAnnotationRuntimeException ex) {
+            System.out.println(ex);
+        }
+    }
+
     public void testNotMistakeAsConstantAnnotation1() throws Exception {
         ComponentDef cd = handler.createComponentDef(Hoge6.class, null);
         assertEquals(null, cd.getComponentName());
@@ -164,7 +191,11 @@ public class ConstantAnnotationHandlerTest extends S2FrameworkTestCase {
 
         public static final String INIT_METHOD = "init";
 
+        public static final String DESTROY_METHOD = "destroy";
+
         private boolean inited = false;
+
+        private boolean destroyed = false;
 
         public static final String ASPECT = "value=aop.traceInterceptor, pointcut=getAaa\ngetBbb";
 
@@ -180,6 +211,14 @@ public class ConstantAnnotationHandlerTest extends S2FrameworkTestCase {
 
         public boolean isInited() {
             return inited;
+        }
+
+        public void destroy() {
+            destroyed = true;
+        }
+
+        public boolean isDestroyed() {
+            return destroyed;
         }
     }
 
@@ -211,12 +250,19 @@ public class ConstantAnnotationHandlerTest extends S2FrameworkTestCase {
 
     public static class Hoge4 {
         public static final String INIT_METHOD = "xxx";
+
+        public static final String DESTROY_METHOD = "xxx";
     }
 
     public static class Hoge5 {
         public static final String INIT_METHOD = "init";
 
+        public static final String DESTROY_METHOD = "destroy";
+
         public void init(String s) {
+        }
+
+        public void destroy(String s) {
         }
     }
 

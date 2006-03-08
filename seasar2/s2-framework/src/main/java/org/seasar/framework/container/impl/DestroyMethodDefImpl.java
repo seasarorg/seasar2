@@ -15,21 +15,26 @@
  */
 package org.seasar.framework.container.impl;
 
+import java.lang.reflect.Method;
+
 import org.seasar.framework.container.DestroyMethodDef;
 
 /**
  * @author higa
- *
+ * 
  */
-public class DestroyMethodDefImpl
-	extends MethodDefImpl
-	implements DestroyMethodDef {
+public class DestroyMethodDefImpl extends MethodDefImpl implements
+        DestroyMethodDef {
 
-	public DestroyMethodDefImpl() {
-	}
+    public DestroyMethodDefImpl() {
+    }
 
-	public DestroyMethodDefImpl(String methodName) {
-		super(methodName);
-	}
+    public DestroyMethodDefImpl(Method method) {
+        super(method);
+    }
+
+    public DestroyMethodDefImpl(String methodName) {
+        super(methodName);
+    }
 
 }
