@@ -16,6 +16,9 @@
 package org.seasar.framework.util;
 
 import java.io.File;
+import java.io.IOException;
+
+import org.seasar.framework.exception.IORuntimeException;
 
 /**
  * @author higa
@@ -29,4 +32,13 @@ public final class FileUtil {
     public static byte[] getBytes(File file) {
         return InputStreamUtil.getBytes(FileInputStreamUtil.create(file));
     }
+
+    public static String getCanonicalPath(File file) {
+        try {
+            return file.getCanonicalPath();
+        } catch (IOException e) {
+            throw new IORuntimeException(e);
+        }
+    }
+
 }
