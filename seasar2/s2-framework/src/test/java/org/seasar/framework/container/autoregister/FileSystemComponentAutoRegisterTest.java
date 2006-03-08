@@ -60,4 +60,12 @@ public class FileSystemComponentAutoRegisterTest extends S2FrameworkTestCase {
             System.out.println(ex);
         }
     }
+    
+    public void setUpGetComponentDefForRoot() throws Exception {
+        include("autoRegister.dicon");
+    }
+    
+    public void testGetComponentDefForRoot() throws Exception {
+        assertNotNull("1", getComponentDef(Foo.class));
+    }
 }

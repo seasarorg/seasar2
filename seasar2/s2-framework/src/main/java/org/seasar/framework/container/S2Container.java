@@ -74,6 +74,12 @@ public interface S2Container extends MetaDefAware {
 	int getChildSize();
 	
 	S2Container getChild(int index);
+    
+	int getParentSize();
+    
+    S2Container getParent(int index);
+    
+    void addParent(S2Container parent);
 
 	void init();
 

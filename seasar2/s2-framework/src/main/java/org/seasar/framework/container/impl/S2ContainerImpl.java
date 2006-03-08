@@ -15,6 +15,7 @@
  */
 package org.seasar.framework.container.impl;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -45,6 +46,8 @@ import org.seasar.framework.util.StringUtil;
  */
 public class S2ContainerImpl implements S2Container, ContainerConstants {
 
+    private static Set notAssignableClasses = new HashSet();
+    
     private Map componentDefMap = new HashMap();
 
     private List componentDefList = new ArrayList();
@@ -54,6 +57,8 @@ public class S2ContainerImpl implements S2Container, ContainerConstants {
     private String path;
 
     private List children = new ArrayList();
+    
+    private List parents = new ArrayList();
 
     private CaseInsensitiveMap descendants = new CaseInsensitiveMap();
 
@@ -74,6 +79,9 @@ public class S2ContainerImpl implements S2Container, ContainerConstants {
     static {
         OgnlRuntime.setPropertyAccessor(S2Container.class,
                 new S2ContainerPropertyAccessor());
+        notAssignableClasses.add(Cloneable.class);
+        notAssignableClasses.add(Serializable.class);
+        notAssignableClasses.add(ContainerConstants.class);
     }
 
     public S2ContainerImpl() {
@@ -198,6 +206,11 @@ public class S2ContainerImpl implements S2Container, ContainerConstants {
         }
         registerByClass(componentDef);
         registerByName(componentDef);
+        for (int i = 0; i < getParentSize(); i++) {
+            S2ContainerImpl parent = (S2ContainerImpl) getParent(i);
+            parent.registerByClassIfNotContainsRecursively(componentDef);
+            parent.registerByNameIfNotContainsRecursively(componentDef);
+        }
     }
 
     protected void registerByClass(ComponentDef componentDef) {
@@ -206,11 +219,25 @@ public class S2ContainerImpl implements S2Container, ContainerConstants {
             registerMap(classes[i], componentDef);
         }
     }
+    
+    protected void registerByClassIfNotContainsRecursively(ComponentDef componentDef) {
+        Class[] classes = getAssignableClasses(componentDef.getComponentClass());
+        for (int i = 0; i < classes.length; ++i) {
+            registerMapIfNotContainsRecursively(classes[i], componentDef);
+        }
+    }
 
     protected void registerByName(ComponentDef componentDef) {
         String componentName = componentDef.getComponentName();
         if (componentName != null) {
             registerMap(componentName, componentDef);
+        }
+    }
+    
+    protected void registerByNameIfNotContainsRecursively(ComponentDef componentDef) {
+        String componentName = componentDef.getComponentName();
+        if (componentName != null) {
+            registerMapIfNotContainsRecursively(componentName, componentDef);
         }
     }
 
@@ -225,6 +252,14 @@ public class S2ContainerImpl implements S2Container, ContainerConstants {
     protected void registerMapIfNotContains(Object key, ComponentDef componentDef) {
         if (!componentDefMap.containsKey(key)) {
             componentDefMap.put(key, componentDef);
+        }
+    }
+    
+    protected void registerMapIfNotContainsRecursively(Object key, ComponentDef componentDef) {
+        registerMapIfNotContains(key, componentDef);
+        for (int i = 0; i < getParentSize(); i++) {
+            S2ContainerImpl parent = (S2ContainerImpl) getParent(i);
+            parent.registerMapIfNotContainsRecursively(key, componentDef);
         }
     }
 
@@ -277,12 +312,13 @@ public class S2ContainerImpl implements S2Container, ContainerConstants {
             int index = name.indexOf(NS_SEP);
             if (index > 0) {
                 String ns = name.substring(0, index);
+                name = name.substring(index + 1);
+                if (ns.equals(namespace)) {
+                    return internalGetComponentDef(name);
+                }
                 if (internalGetComponentDef(ns) != null) {
-                    S2Container child = (S2Container) getComponent(ns);
-                    name = name.substring(index + 1);
-                    if (child.hasComponentDef(name)) {
-                        return child.getComponentDef(name);
-                    }
+                    S2ContainerImpl child = (S2ContainerImpl) getComponent(ns);
+                    return child.internalGetComponentDef(name);
                 }
             }
         }
@@ -332,24 +368,18 @@ public class S2ContainerImpl implements S2Container, ContainerConstants {
      */
     public synchronized void include(S2Container child) {
         assertParameterIsNotNull(child, "child");
-        child.setRoot(getRoot());
-        ((S2ContainerImpl) child).addComponentDefsToParent(this);
         children.add(child);
-        String ns = child.getNamespace();
-        if (ns != null) {
-            registerMap(ns, new S2ContainerComponentDef(child, ns));
-        }
+        child.setRoot(getRoot());
+        child.addParent(this);
+        ((S2ContainerImpl) child).addComponentDefsToParent(this);
     }
     
     protected void addComponentDefsToParent(S2Container parent) {
         S2ContainerImpl pimpl = (S2ContainerImpl) parent;
         for (Iterator i = componentDefMap.keySet().iterator(); i.hasNext(); ) {
             Object key = i.next();
-            if (namespace == key) {
-                continue;
-            }
             ComponentDef cd = (ComponentDef) componentDefMap.get(key);
-            if (isNeedNSForKey(key)) {
+            if (isNeedNS(key, cd)) {
                 pimpl.registerMapIfNotContains(namespace + NS_SEP + key, cd);
             } else {
                 pimpl.registerMapIfNotContains(key, cd);
@@ -358,8 +388,8 @@ public class S2ContainerImpl implements S2Container, ContainerConstants {
         }
     }
     
-    protected boolean isNeedNSForKey(Object key) {
-        return key instanceof String && ((String) key).indexOf(NS_SEP) < 0 && namespace != null;
+    protected boolean isNeedNS(Object key, ComponentDef cd) {
+        return key instanceof String && namespace != null && this == cd.getContainer() && !(cd instanceof S2ContainerComponentDef);
     }
 
     /**
@@ -374,6 +404,27 @@ public class S2ContainerImpl implements S2Container, ContainerConstants {
      */
     public synchronized S2Container getChild(int index) {
         return (S2Container) children.get(index);
+    }
+    
+    /**
+     * @see org.seasar.framework.container.S2Container#getParentSize()
+     */
+    public synchronized int getParentSize() {
+        return parents.size();
+    }
+    
+    /**
+     * @see org.seasar.framework.container.S2Container#getParent(int)
+     */
+    public synchronized S2Container getParent(int index) {
+        return (S2Container) parents.get(index);
+    }
+    
+    /**
+     * @see org.seasar.framework.container.S2Container#addParent(org.seasar.framework.container.S2Container)
+     */
+    public void addParent(S2Container parent) {
+        parents.add(parent);
     }
 
     /**
@@ -445,7 +496,7 @@ public class S2ContainerImpl implements S2Container, ContainerConstants {
     public synchronized void setNamespace(String namespace) {
         componentDefMap.remove(namespace);
         this.namespace = namespace;
-        componentDefMap.put(namespace, new SimpleComponentDef(this, namespace));
+        componentDefMap.put(namespace, new S2ContainerComponentDef(this, namespace));
     }
 
     /**
@@ -549,7 +600,9 @@ public class S2ContainerImpl implements S2Container, ContainerConstants {
     }
 
     private static void addAssignableClasses(Set classes, Class clazz) {
-
+        if (notAssignableClasses.contains(clazz)) {
+            return;
+        }
         classes.add(clazz);
         Class[] interfaces = clazz.getInterfaces();
         for (int i = 0; i < interfaces.length; ++i) {

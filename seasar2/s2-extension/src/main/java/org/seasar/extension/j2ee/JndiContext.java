@@ -75,7 +75,7 @@ public class JndiContext implements Context {
 
     public void bind(final String name, final Object obj)
             throws NamingException {
-        bind(resolveName(name).split("/"), obj);
+        bind(resolveName(name).split("."), obj);
     }
 
     public void close() throws NamingException {
@@ -153,7 +153,7 @@ public class JndiContext implements Context {
         if (StringUtil.isEmpty(name)) {
             return new JndiContext(new Hashtable(env));
         }
-        return container.getComponent(StringUtil.replace(resolveName(name), "/", "."));
+        return container.getComponent(resolveName(name));
     }
 
     public Object lookupLink(final Name name) throws NamingException {
@@ -204,7 +204,7 @@ public class JndiContext implements Context {
             S2Container context = container;
             for (int i = 0; i < names.length - 1; ++i) {
                 buf.append(names[i]);
-                context = (S2Container) container.getComponent(names[i]);
+                context = (S2Container) context.getComponent(names[i]);
                 buf.append('/');
             }
             final String name = names[names.length - 1];
