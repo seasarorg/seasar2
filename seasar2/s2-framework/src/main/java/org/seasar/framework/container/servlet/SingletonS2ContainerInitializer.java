@@ -13,31 +13,28 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.framework.container.listener;
-
-import javax.servlet.ServletContext;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
+package org.seasar.framework.container.servlet;
 
 import org.seasar.framework.container.deployer.ComponentDeployerFactory;
 import org.seasar.framework.container.deployer.HttpServletComponentDeployerProvider;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 import org.seasar.framework.container.impl.HttpServletExternalContext;
 import org.seasar.framework.container.impl.HttpServletExternalContextComponentDefRegister;
-import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.StringUtil;
 
 /**
  * @author manhole
  */
-public class S2ContainerListener implements ServletContextListener {
+class SingletonS2ContainerInitializer {
 
-    public static final String CONFIG_PATH_KEY = "org.seasar.framework.container.configPath";
+    private Object application;
 
-    private static Logger logger = Logger.getLogger(S2ContainerListener.class);
+    private String configPath;
 
-    private void initializeContainer(ServletContext servletContext) {
-        String configPath = servletContext.getInitParameter(CONFIG_PATH_KEY);
+    public void initialize() {
+        if (isAlreadyInitialized()) {
+            return;
+        }
         if (!StringUtil.isEmpty(configPath)) {
             SingletonS2ContainerFactory.setConfigPath(configPath);
         }
@@ -46,27 +43,23 @@ public class S2ContainerListener implements ServletContextListener {
                     .setProvider(new HttpServletComponentDeployerProvider());
         }
         HttpServletExternalContext extCtx = new HttpServletExternalContext();
-        extCtx.setApplication(servletContext);
+        extCtx.setApplication(application);
         SingletonS2ContainerFactory.setExternalContext(extCtx);
         SingletonS2ContainerFactory
                 .setExternalContextComponentDefRegister(new HttpServletExternalContextComponentDefRegister());
         SingletonS2ContainerFactory.init();
     }
 
-    public void contextInitialized(ServletContextEvent event) {
-        logger.debug("S2Container initialize start");
-        ServletContext servletContext = event.getServletContext();
-        try {
-            initializeContainer(servletContext);
-        } catch (RuntimeException e) {
-            logger.log(e);
-            throw e;
-        }
-        logger.debug("S2Container initialize end");
+    private boolean isAlreadyInitialized() {
+        return SingletonS2ContainerFactory.hasContainer();
     }
 
-    public void contextDestroyed(ServletContextEvent event) {
-        SingletonS2ContainerFactory.destroy();
+    public void setApplication(Object application) {
+        this.application = application;
+    }
+
+    public void setConfigPath(String configPath) {
+        this.configPath = configPath;
     }
 
 }
