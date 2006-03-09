@@ -36,7 +36,6 @@ import javax.servlet.http.HttpSession;
 import junit.framework.TestCase;
 
 import org.seasar.framework.container.ComponentDef;
-import org.seasar.framework.container.ComponentNotFoundRuntimeException;
 import org.seasar.framework.container.ContainerConstants;
 import org.seasar.framework.container.Expression;
 import org.seasar.framework.container.ExternalContext;
@@ -190,28 +189,23 @@ public class S2ContainerImplTest extends TestCase {
         aaa.setNamespace("aaa");
         S2Container bbb = new S2ContainerImpl();
         bbb.setNamespace("bbb");
-        bbb.register(new Date(), "date");
+        bbb.register(new Date(0), "date");
         S2Container ccc = new S2ContainerImpl();
         ccc.setNamespace("ccc");
-        ccc.register(new Date(), "date");
+        ccc.register(new Date(1), "date");
         bbb.include(ccc);
         aaa.include(bbb);
         root.include(aaa);
-        assertNotNull("1", root.getComponentDef("aaa.bbb.ccc.date"));
-        assertNotNull("2", root.getComponentDef("aaa.bbb.date"));
-        assertNotNull("3", root.getComponentDef("bbb.date"));
-        assertNotNull("4", root.getComponentDef("bbb.ccc.date"));
-        assertNotNull("5", root.getComponentDef("ccc.date"));
-        assertNotNull("6", root.getComponentDef("aaa.bbb"));
-        assertNotNull("7", root.getComponentDef("bbb"));
-        assertNotNull("8", root.getComponentDef("bbb.ccc"));
-        assertNotNull("9", root.getComponentDef("ccc"));
-        try {
-            root.getComponent("date");
-            fail("10");
-        } catch (ComponentNotFoundRuntimeException ex) {
-            System.out.println(ex);
-        }
+        assertEquals("1", new Date(1), root.getComponent("aaa.bbb.ccc.date"));
+        assertEquals("2", new Date(0), root.getComponent("aaa.bbb.date"));
+        assertEquals("3", new Date(0), root.getComponent("bbb.date"));
+        assertEquals("4", new Date(1), root.getComponent("bbb.ccc.date"));
+        assertEquals("5", new Date(1), root.getComponent("ccc.date"));
+        assertEquals("6", new Date(0), root.getComponent("date"));
+        assertEquals("7", "bbb", ((S2Container) root.getComponent("aaa.bbb")).getNamespace());
+        assertEquals("8", "bbb", ((S2Container) root.getComponent("bbb")).getNamespace());
+        assertEquals("9", "ccc", ((S2Container) root.getComponent("bbb.ccc")).getNamespace());
+        assertEquals("10", "ccc", ((S2Container) root.getComponent("ccc")).getNamespace());
     }
 
     public void testRegisterAfterInclude() throws Exception {

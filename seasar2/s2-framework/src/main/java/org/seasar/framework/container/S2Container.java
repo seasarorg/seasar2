@@ -110,4 +110,6 @@ public interface S2Container extends MetaDefAware {
     void setHotswapMode(boolean hotswapMode);
     
     ClassLoader getClassLoader();
+
+    void registerMap(Object key, ComponentDef componentDef, S2Container container);
 }
