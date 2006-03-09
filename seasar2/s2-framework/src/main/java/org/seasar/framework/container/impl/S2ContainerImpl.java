@@ -232,7 +232,7 @@ public class S2ContainerImpl implements S2Container, ContainerConstants {
         registerMap(key, componentDef, this);
     }
 
-    public void registerMap(Object key, ComponentDef componentDef,
+    public synchronized void registerMap(Object key, ComponentDef componentDef,
             S2Container container) {
         int position = getContainerPosition(container);
         ComponentDefHolder holder = (ComponentDefHolder) componentDefMap
@@ -248,8 +248,8 @@ public class S2ContainerImpl implements S2Container, ContainerConstants {
         } else if (container != this) {
             holder.setComponentDef(componentDef);
         } else {
-            holder.setComponentDef(createTooManyRegistration(key,
-                    holder.componentDef, componentDef));
+            holder.setComponentDef(createTooManyRegistration(key, holder
+                    .getComponentDef(), componentDef));
         }
 
         registerParent(key, holder.getComponentDef());
@@ -357,10 +357,12 @@ public class S2ContainerImpl implements S2Container, ContainerConstants {
     /**
      * @see org.seasar.framework.container.S2Container#include(org.seasar.framework.container.S2Container)
      */
-    public synchronized void include(S2Container child) {
-        assertParameterIsNotNull(child, "child");
-        children.add(child);
-        childPositions.put(child, new Integer(children.size()));
+    public void include(S2Container child) {
+        synchronized (this) {
+            assertParameterIsNotNull(child, "child");
+            children.add(child);
+            childPositions.put(child, new Integer(children.size()));
+        }
         child.setRoot(getRoot());
         child.addParent(this);
     }
@@ -407,7 +409,7 @@ public class S2ContainerImpl implements S2Container, ContainerConstants {
     /**
      * @see org.seasar.framework.container.S2Container#addParent(org.seasar.framework.container.S2Container)
      */
-    public void addParent(S2Container parent) {
+    public synchronized void addParent(S2Container parent) {
         parents.add(parent);
 
         for (Iterator it = componentDefMap.entrySet().iterator(); it.hasNext();) {
