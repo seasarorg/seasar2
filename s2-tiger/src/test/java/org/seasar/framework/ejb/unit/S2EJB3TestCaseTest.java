@@ -3,6 +3,8 @@ package org.seasar.framework.ejb.unit;
 import java.util.ArrayList;
 import java.util.List;
 
+import junit.framework.TestCase;
+
 import org.seasar.extension.dataset.DataRow;
 import org.seasar.extension.dataset.DataSet;
 import org.seasar.extension.dataset.DataTable;
@@ -13,12 +15,7 @@ import org.seasar.framework.ejb.unit.annotation.Rollback;
  * @author taedium
  * 
  */
-public class S2EJB3TestCaseTest extends S2EJB3TestCase {
-
-    @Override
-    public void setUp() {
-        include("j2ee.dicon");
-    }
+public class S2EJB3TestCaseTest extends TestCase {
 
     public void testAssertEntityEquals() {
         DataSet expected = new DataSetImpl();
@@ -33,7 +30,9 @@ public class S2EJB3TestCaseTest extends S2EJB3TestCase {
 
         Employee clark = new Employee(new Long(1), 7782, "CLARK", null);
 
-        assertEntityEquals("1", expected, clark);
+        S2EJB3TestCase testCase = new S2EJB3TestCase() {
+        };
+        testCase.assertEntityEquals("1", expected, clark);
     }
 
     public void testAssertEntityListEquals() {
@@ -57,12 +56,31 @@ public class S2EJB3TestCaseTest extends S2EJB3TestCase {
         employees.add(clark);
         employees.add(king);
 
-        assertEntityListEquals("1", expected, employees);
+        S2EJB3TestCase testCase = new S2EJB3TestCase() {
+        };
+        testCase.assertEntityListEquals("1", expected, employees);
     }
 
-    @Rollback
-    public void testRollback() {
-        assertTrue("1", needTransaction());
+    public void testNeedTransactionReturnsTrue() throws Exception {
+        RollbackAnnotationTest test = new RollbackAnnotationTest();
+        test.setName("testRollbackAnnotated");
+        assertEquals(true, test.needTransaction());
+    }
+
+    public void testNeedTransactionReturnsFalse() throws Exception {
+        RollbackAnnotationTest test = new RollbackAnnotationTest();
+        test.setName("testNoRollbackAnnotated");
+        assertEquals(false, test.needTransaction());
+    }
+
+    private static class RollbackAnnotationTest extends S2EJB3TestCase {
+
+        @Rollback
+        public void testRollbackAnnotated() throws Exception {
+        }
+
+        public void testNoRollbackAnnotated() throws Exception {
+        }
     }
 
 }
