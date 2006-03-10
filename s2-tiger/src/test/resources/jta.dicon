@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE components PUBLIC "-//SEASAR2.1//DTD S2Container//EN"
+	"http://www.seasar.org/dtd/components21.dtd">
+<components namespace="jta">
+	<component name="TransactionManager"
+		class="org.seasar.extension.jta.TransactionManagerImpl"
+	/>
+	<component name="UserTransaction"
+		class="org.seasar.extension.jta.UserTransactionImpl"
+	/>
+
+	<!-- WebLogic -->
+	<!--
+	<component name="TransactionManager"
+			class="javax.transaction.TransactionManager">
+		@org.seasar.extension.j2ee.JndiResourceLocator@lookup("javax.transaction.TransactionManager")
+	</component>
+	-->
+
+	<!-- WebSphere 4 -->
+	<!--
+	<component name="TransactionManager"
+			class="javax.transaction.TransactionManager">
+		@com.ibm.ejs.jts.jta.JTSXA@getTransactionManager()
+	</component>
+	-->
+
+	<!-- WebSphere 5 -->
+	<!--
+	<component name="TransactionManager"
+			class="javax.transaction.TransactionManager">
+		@com.ibm.ejs.jts.jta.TransactionManagerFactory@getTransactionManager()
+	</component>
+	-->
+
+	<!-- WebSphere 5.1 -->
+	<!--
+	<component name="TransactionManager"
+			class="javax.transaction.TransactionManager">
+		@com.ibm.ws.Transction.TransactionManagerFactory@getTransactionManager()
+	</component>
+	-->
+	
+	<!-- JBoss -->
+	<!--
+	<component name="TransactionManager"
+			class="javax.transaction.TransactionManager">
+		@org.seasar.extension.j2ee.JndiResourceLocator@lookup("java:/TransactionManager")
+	</component>
+	-->
+	
+	<!-- Oracle10gAS -->
+	<!--
+	<component name="TransactionManager"
+			class="javax.transaction.TransactionManager">
+		@org.seasar.extension.j2ee.JndiResourceLocator@lookup("java:comp/UserTransaction")
+	</component>
+	-->
+	
+	<!-- UserTransaction from JNDI -->
+	<!--
+	<component name="UserTransaction"
+			class="javax.transaction.UserTransaction">
+		@org.seasar.extension.j2ee.JndiResourceLocator@lookup("java:comp/UserTransaction")
+	</component>
+	-->
+</components>
