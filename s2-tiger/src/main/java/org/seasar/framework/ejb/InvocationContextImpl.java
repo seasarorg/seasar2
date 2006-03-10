@@ -24,6 +24,10 @@ import javax.interceptor.InvocationContext;
 
 import org.aopalliance.intercept.MethodInvocation;
 
+/**
+ * @author koichik
+ * 
+ */
 public class InvocationContextImpl implements InvocationContext {
     protected MethodInvocation context;
 

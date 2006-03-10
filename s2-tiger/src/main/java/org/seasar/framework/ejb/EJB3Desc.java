@@ -39,11 +39,11 @@ import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptors;
 import javax.interceptor.InvocationContext;
 
-import org.seasar.framework.log.Logger;
-
+/**
+ * @author koichik
+ * 
+ */
 public class EJB3Desc {
-
-    private static final Logger logger = Logger.getLogger(EJB3Desc.class);
 
     protected static final ConcurrentMap<Class<?>, EJB3Desc> EJB3_DESCS = new ConcurrentHashMap<Class<?>, EJB3Desc>();
 

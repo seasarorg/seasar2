@@ -22,6 +22,10 @@ import javax.interceptor.InvocationContext;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 
+/**
+ * @author koichik
+ * 
+ */
 public class AroundInvokeSupportInterceptor implements MethodInterceptor {
     protected Method aroundInvokeMethod;
 

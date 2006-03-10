@@ -19,6 +19,10 @@ import javax.ejb.EJBException;
 
 import org.seasar.framework.message.MessageFormatter;
 
+/**
+ * @author koichik
+ * 
+ */
 public class SEJBException extends EJBException {
 
     private static final long serialVersionUID = 1L;
