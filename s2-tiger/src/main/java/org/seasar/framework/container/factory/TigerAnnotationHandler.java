@@ -17,15 +17,14 @@ package org.seasar.framework.container.factory;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import javax.ejb.EJB;
-import javax.ejb.PostConstruct;
 import javax.ejb.Stateful;
 import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 
 import org.aopalliance.intercept.MethodInterceptor;
@@ -49,9 +48,14 @@ import org.seasar.framework.container.annotation.tiger.InstanceType;
 import org.seasar.framework.container.annotation.tiger.InterType;
 import org.seasar.framework.container.assembler.AutoBindingDefFactory;
 import org.seasar.framework.container.deployer.InstanceDefFactory;
+import org.seasar.framework.container.impl.InterTypeDefImpl;
+import org.seasar.framework.container.impl.PropertyDefImpl;
 import org.seasar.framework.ejb.AroundInvokeSupportInterceptor;
+import org.seasar.framework.ejb.EJB3BusinessMethodDesc;
 import org.seasar.framework.ejb.EJB3Desc;
-import org.seasar.framework.ejb.SEJBException;
+import org.seasar.framework.ejb.EJB3InterceptorDesc;
+import org.seasar.framework.ejb.EJB3InterceptorSupportInterType;
+import org.seasar.framework.ejb.EJB3InterceptorSupportInterceptor;
 import org.seasar.framework.util.StringUtil;
 
 /**
@@ -180,6 +184,7 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
                 appendInterType(componentDef, interTypeName);
             }
         }
+        appendEJB3InterType(componentDef);
         super.appendInterType(componentDef);
     }
 
@@ -237,55 +242,97 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
         if (!ejb3desc.isEJB3()) {
             return;
         }
-        appendEJB3TxnAspect(componentDef, ejb3desc);
+        appendEJB3TxAspect(componentDef, ejb3desc);
+        appendEJB3InterceptorsAspect(componentDef, ejb3desc);
         appendEJB3AroundInvokeAspect(componentDef, ejb3desc);
     }
 
-    protected void appendEJB3TxnAspect(final ComponentDef componentDef,
+    protected void appendEJB3TxAspect(final ComponentDef componentDef,
             final EJB3Desc ejb3desc) {
         if (!ejb3desc.isCMT()) {
             return;
         }
 
-        final TransactionAttribute classAttr = ejb3desc.getBeanClass()
-                .getAnnotation(TransactionAttribute.class);
-        final TransactionAttributeType classType = (classAttr != null) ? classAttr
-                .value()
-                : null;
-
-        for (final Method method : ejb3desc.getBusinessMethods()) {
-            final TransactionAttribute methodAttr = method
-                    .getAnnotation(TransactionAttribute.class);
-            final TransactionAttributeType methodType = (methodAttr != null) ? methodAttr
-                    .value()
-                    : classType;
-            if (methodType == null) {
-                continue;
-            }
-
-            final String txInterceptor = TX_ATTRS.get(methodType);
+        for (final EJB3BusinessMethodDesc methodDesc : ejb3desc
+                .getBusinessMethods()) {
+            final String txInterceptor = TX_ATTRS.get(methodDesc
+                    .getTransactionAttributeType());
             if (txInterceptor == null) {
                 continue;
             }
-            appendAspect(componentDef, txInterceptor, method);
+            appendAspect(componentDef, txInterceptor, methodDesc.getMethod());
+        }
+    }
+
+    protected void appendEJB3InterceptorsAspect(
+            final ComponentDef componentDef, final EJB3Desc ejb3desc) {
+        for (final EJB3BusinessMethodDesc methodDesc : ejb3desc
+                .getBusinessMethods()) {
+            for (final EJB3InterceptorDesc interceptorDesc : methodDesc
+                    .getInterceptors()) {
+                for (final Method interceptorMethod : interceptorDesc
+                        .getInterceptorMethods()) {
+                    final EJB3InterceptorSupportInterceptor interceptor = new EJB3InterceptorSupportInterceptor(
+                            interceptorDesc.getInterceptorClass(),
+                            interceptorMethod);
+                    final AspectDef aspectDef = AspectDefFactory
+                            .createAspectDef(interceptor, new PointcutImpl(
+                                    methodDesc.getMethod()));
+                    componentDef.addAspectDef(aspectDef);
+                }
+            }
         }
     }
 
     protected void appendEJB3AroundInvokeAspect(
             final ComponentDef componentDef, final EJB3Desc ejb3desc) {
-        final Method aroundInvokeMethod = ejb3desc.getAroundInvokeMethod();
-        if (aroundInvokeMethod == null) {
+        for (final Method aroundInvokeMethod : ejb3desc
+                .getAroundInvokeMethods()) {
+            final MethodInterceptor interceptor = new AroundInvokeSupportInterceptor(
+                    aroundInvokeMethod);
+            for (final EJB3BusinessMethodDesc methodDesc : ejb3desc
+                    .getBusinessMethods()) {
+                final AspectDef aspectDef = AspectDefFactory.createAspectDef(
+                        interceptor, new PointcutImpl(methodDesc.getMethod()));
+                componentDef.addAspectDef(aspectDef);
+            }
+        }
+    }
+
+    protected void appendEJB3InterType(final ComponentDef componentDef) {
+        final Class<?> componentClass = componentDef.getComponentClass();
+        final EJB3Desc ejb3desc = EJB3Desc.getEJB3Desc(componentClass);
+        if (!ejb3desc.isEJB3()) {
             return;
         }
 
-        aroundInvokeMethod.setAccessible(true);
-        final MethodInterceptor interceptor = new AroundInvokeSupportInterceptor(
-                aroundInvokeMethod);
-        for (final Method method : ejb3desc.getBusinessMethods()) {
-            final AspectDef aspectDef = AspectDefFactory.createAspectDef(
-                    interceptor, new PointcutImpl(method));
-            componentDef.addAspectDef(aspectDef);
+        final Set<Class<?>> interceptorClasses = new HashSet<Class<?>>();
+        for (final EJB3InterceptorDesc interceptorDesc : ejb3desc
+                .getInterceptors()) {
+            interceptorClasses.add(interceptorDesc.getInterceptorClass());
         }
+        for (final EJB3BusinessMethodDesc methodDesc : ejb3desc
+                .getBusinessMethods()) {
+            for (final EJB3InterceptorDesc interceptorDesc : methodDesc
+                    .getInterceptors()) {
+                interceptorClasses.add(interceptorDesc.getInterceptorClass());
+            }
+        }
+        final EJB3InterceptorSupportInterType interType = new EJB3InterceptorSupportInterType();
+        for (final Class<?> interceptorClass : interceptorClasses) {
+            interType.addInterceptor(interceptorClass);
+            PropertyDefImpl propDef = new PropertyDefImpl(
+                    EJB3InterceptorSupportInterType
+                            .getFieldName(interceptorClass));
+            final ComponentDef interceptorCd = createComponentDef(
+                    interceptorClass, null);
+            appendDI(interceptorCd);
+            appendAspect(interceptorCd);
+            appendInterType(interceptorCd);
+            propDef.setChildComponentDef(interceptorCd);
+            componentDef.addPropertyDef(propDef);
+        }
+        componentDef.addInterTypeDef(new InterTypeDefImpl(interType));
     }
 
     protected void appendEJB3InitMethod(final ComponentDef componentDef) {
@@ -295,19 +342,7 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
             return;
         }
 
-        for (final Method method : ejb3desc.getAllMethods()) {
-            final PostConstruct annotation = method
-                    .getAnnotation(PostConstruct.class);
-            if (annotation == null) {
-                continue;
-            }
-            final int modifiers = method.getModifiers();
-            if (method.getParameterTypes().length != 0
-                    || Modifier.isStatic(modifiers)
-                    || Modifier.isFinal(modifiers)) {
-                throw new SEJBException("ESSR0409", "PostConstruct",
-                        componentClass.getName(), method.getName());
-            }
+        for (final Method method : ejb3desc.getPostConstructMethods()) {
             if (!isInitMethodRegisterable(componentDef, method.getName())) {
                 continue;
             }

@@ -17,6 +17,10 @@ package org.seasar.framework.container.factory;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.ejb.EJBException;
 
 import org.seasar.extension.unit.S2TestCase;
 import org.seasar.framework.beans.BeanDesc;
@@ -226,27 +230,29 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
     public void testAppendAspectForEJB3CMT1() throws Exception {
         ComponentDef cd = handler.createComponentDef(Hoge11.class, null);
         handler.appendAspect(cd);
-        assertEquals("1", 6, cd.getAspectDefSize());
+        assertEquals("1", 7, cd.getAspectDefSize());
         String[] methodNames = new String[] { "mandatory", "required",
-                "requiresNew", "notSupported", "never", "defaultValue" };
-        String[] interceptors = new String[6];
+                "requiresNew", "notSupported", "never", "defaultValue",
+                "notAnnotated" };
+        Map<String, String> map = new HashMap<String, String>();
         for (int i = 0; i < methodNames.length; ++i) {
             Method method = cd.getComponentClass().getMethod(methodNames[i],
                     null);
-            for (int j = 0; j < interceptors.length; ++j) {
+            for (int j = 0; j < cd.getAspectDefSize(); ++j) {
                 AspectDef aspectDef = cd.getAspectDef(j);
                 if (aspectDef.getPointcut().isApplied(method)) {
-                    interceptors[i] = ((OgnlExpression) aspectDef
-                            .getExpression()).getSource();
+                    map.put(methodNames[i], ((OgnlExpression) aspectDef
+                            .getExpression()).getSource());
                 }
             }
         }
-        assertEquals("2", "ejb3tx.mandatoryTx", interceptors[0]);
-        assertEquals("3", "ejb3tx.requiredTx", interceptors[1]);
-        assertEquals("4", "ejb3tx.requiresNewTx", interceptors[2]);
-        assertEquals("5", "ejb3tx.notSupportedTx", interceptors[3]);
-        assertEquals("6", "ejb3tx.neverTx", interceptors[4]);
-        assertEquals("7", "ejb3tx.requiredTx", interceptors[5]);
+        assertEquals("2", "ejb3tx.mandatoryTx", map.get("mandatory"));
+        assertEquals("3", "ejb3tx.requiredTx", map.get("required"));
+        assertEquals("4", "ejb3tx.requiresNewTx", map.get("requiresNew"));
+        assertEquals("5", "ejb3tx.notSupportedTx", map.get("notSupported"));
+        assertEquals("6", "ejb3tx.neverTx", map.get("never"));
+        assertEquals("7", "ejb3tx.requiredTx", map.get("defaultValue"));
+        assertEquals("8", "ejb3tx.requiredTx", map.get("notAnnotated"));
     }
 
     public void testAppendAspectForEJB3CMT2() throws Exception {
@@ -276,32 +282,51 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
         assertEquals("1", 0, cd.getAspectDefSize());
     }
 
-    public void testAppendAspectForEJB3AroundInvoke() throws Exception {
+    public void testAppendAspectForEJB3Interceptor() throws Exception {
+        include("ejb3tx.dicon");
         ComponentDef cd = handler.createComponentDef(Hoge14.class, null);
         handler.appendAspect(cd);
-        assertEquals("1", 2, cd.getAspectDefSize());
+        handler.appendInterType(cd);
+        register(cd);
+        assertEquals("1", 10, cd.getAspectDefSize());
         Hoge14 hoge14 = (Hoge14) cd.getComponent();
-        assertEquals("2", "start-before-foo-after", hoge14.foo("start"));
-        assertEquals("3", "start-before-bar-after", hoge14.bar("start"));
-        assertEquals("4", "start-baz", hoge14.baz("start"));
+        assertEquals("2", "start-BEFORE-before-foo-after-AFTER", hoge14
+                .foo("start"));
+        assertEquals("3", "start-BEFORE-Before-before-bar-after-After-AFTER",
+                hoge14.bar("start"));
+        assertEquals("4", "start-Before-before-baz-after-After", hoge14
+                .baz("start"));
+        assertEquals("4", "start-hoge", hoge14.hoge("start"));
     }
 
-    public void testAppendAspectForEJB3AroundInvokeInvalid1() throws Exception {
+    public void testAppendAspectForEJB3InterceptorInvalid1() throws Exception {
         ComponentDef cd = handler.createComponentDef(Hoge15.class, null);
-        handler.appendAspect(cd);
-        assertEquals("1", 0, cd.getAspectDefSize());
+        try {
+            handler.appendAspect(cd);
+            fail("1");
+        } catch (EJBException ex) {
+            System.out.println(ex);
+        }
     }
 
-    public void testAppendAspectForEJB3AroundInvokeInvalid2() throws Exception {
+    public void testAppendAspectForEJB3InterceptorInvalid2() throws Exception {
         ComponentDef cd = handler.createComponentDef(Hoge16.class, null);
-        handler.appendAspect(cd);
-        assertEquals("1", 0, cd.getAspectDefSize());
+        try {
+            handler.appendAspect(cd);
+            fail("1");
+        } catch (EJBException ex) {
+            System.out.println(ex);
+        }
     }
 
-    public void testAppendAspectForEJB3AroundInvokeInvalid3() throws Exception {
+    public void testAppendAspectForEJB3InterceptorInvalid3() throws Exception {
         ComponentDef cd = handler.createComponentDef(Hoge17.class, null);
-        handler.appendAspect(cd);
-        assertEquals("1", 0, cd.getAspectDefSize());
+        try {
+            handler.appendAspect(cd);
+            fail("1");
+        } catch (EJBException ex) {
+            System.out.println(ex);
+        }
     }
 
     public void testInterType() throws Exception {
@@ -358,19 +383,23 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
     }
 
     public void testAppendInitMethodForEJB3() throws Exception {
+        include("ejb3tx.dicon");
         ComponentDef cd = handler.createComponentDef(Hoge11.class, null);
+        handler.appendAspect(cd);
+        handler.appendInterType(cd);
         handler.appendInitMethod(cd);
+        register(cd);
         assertEquals("1", 1, cd.getInitMethodDefSize());
         InitMethodDef initMethodDef = cd.getInitMethodDef(0);
-        assertEquals("2", "initialize", initMethodDef.getMethod().getName());
+        assertEquals("3", "initialize", initMethodDef.getMethod().getName());
 
         cd.init();
         Hoge11 hoge = (Hoge11) cd.getComponent();
-        assertEquals("3", "FOO", hoge.foo);
+        assertEquals("4", "FOO", hoge.foo);
     }
 
     public void testAppendInitMethodForEJB3Exception() throws Exception {
-        ComponentDef cd = handler.createComponentDef(Hoge12.class, null);
+        ComponentDef cd = handler.createComponentDef(Hoge18.class, null);
         try {
             handler.appendInitMethod(cd);
             fail("1");

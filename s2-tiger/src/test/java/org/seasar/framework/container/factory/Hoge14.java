@@ -17,21 +17,31 @@ package org.seasar.framework.container.factory;
 
 import javax.ejb.Stateful;
 import javax.interceptor.AroundInvoke;
+import javax.interceptor.ExcludeClassInterceptors;
+import javax.interceptor.Interceptors;
 import javax.interceptor.InvocationContext;
 
 @Stateful
+@Interceptors(Interceptor1.class)
 public class Hoge14 implements IHoge14 {
 
     public String foo(String param) {
         return param + "-foo";
     }
 
+    @Interceptors(Interceptor2.class)
     public String bar(String param) {
         return param + "-bar";
     }
 
+    @ExcludeClassInterceptors
+    @Interceptors(Interceptor2.class)
     public String baz(String param) {
         return param + "-baz";
+    }
+
+    public String hoge(String param) {
+        return param + "-hoge";
     }
 
     @AroundInvoke

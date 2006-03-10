@@ -34,6 +34,6 @@ public class Hoge12 implements IHoge12 {
     }
 
     @PostConstruct
-    static void initialize() {
+    void initialize() {
     }
 }

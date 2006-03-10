@@ -26,18 +26,23 @@ import org.aopalliance.intercept.MethodInvocation;
 
 public class InvocationContextImpl implements InvocationContext {
     protected MethodInvocation context;
-    protected Map data = new HashMap();
+
+    protected boolean lifecycleCallback;
+
+    protected Map<String, Object> contextData = new HashMap<String, Object>();
 
     public InvocationContextImpl(final MethodInvocation context) {
+        this(context, false);
+    }
+
+    public InvocationContextImpl(final MethodInvocation context,
+            final boolean lifecycleCallback) {
         this.context = context;
+        this.lifecycleCallback = lifecycleCallback;
     }
 
-    public Object getBean() {
+    public Object getTarget() {
         return context.getThis();
-    }
-
-    public Map getContextData() {
-        return data;
     }
 
     public Method getMethod() {
@@ -45,31 +50,39 @@ public class InvocationContextImpl implements InvocationContext {
     }
 
     public Object[] getParameters() {
+        if (lifecycleCallback) {
+            throw new IllegalStateException();
+        }
         return context.getArguments();
+    }
+
+    public void setParameters(final Object[] newParameters) {
+        if (lifecycleCallback) {
+            throw new IllegalStateException();
+        }
+        final Object[] oldParameters = getParameters();
+        if (newParameters.length != oldParameters.length) {
+            throw new EJBException();
+        }
+        System.arraycopy(newParameters, 0, oldParameters, 0,
+                newParameters.length);
+    }
+
+    public Map<String, Object> getContextData() {
+        return contextData;
     }
 
     public Object proceed() throws Exception {
         try {
             return context.proceed();
-        }
-        catch (final Exception e) {
+        } catch (final Exception e) {
             throw e;
-        }
-        catch (final Error e) {
+        } catch (final Error e) {
             throw e;
-        }
-        catch (final Throwable t) {
+        } catch (final Throwable t) {
             final EJBException e = new EJBException();
             e.initCause(t);
             throw e;
         }
-    }
-
-    public void setParameters(final Object[] newParameters) {
-        final Object[] oldParameters = getParameters();
-        if (newParameters.length != oldParameters.length) {
-            throw new EJBException();
-        }
-        System.arraycopy(newParameters, 0, oldParameters, 0, newParameters.length);
     }
 }

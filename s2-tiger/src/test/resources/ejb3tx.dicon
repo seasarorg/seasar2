@@ -3,9 +3,9 @@
 <components namespace="ejb3tx">
 	<include path="j2ee.dicon"/>
 	<component name="requiredTx"
-		class="org.seasar.framework.ejb.tx.RequiredInterceptor"/>
+		class="org.seasar.framework.ejb.tx.EJB3RequiredInterceptor"/>
 	<component name="requiresNewTx"
-		class="org.seasar.framework.ejb.tx.RequiresNewInterceptor"/>
+		class="org.seasar.framework.ejb.tx.EJB3RequiresNewInterceptor"/>
 	<component name="mandatoryTx"
 		class="org.seasar.extension.tx.MandatoryInterceptor"/>
 	<component name="notSupportedTx"

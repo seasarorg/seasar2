@@ -9,6 +9,9 @@
 			<zipfileset prefix="s2-tiger/lib" dir="target">
 				<include name="s2-tiger-${ver}.jar"/>
 			</zipfileset>
+			<zipfileset prefix="s2-tiger/resources" dir="src/test/resources">
+				<include name="ejb3tx.dicon"/>
+			</zipfileset>
 		</zip>
 	</target>
 

@@ -27,6 +27,7 @@ public class AroundInvokeSupportInterceptor implements MethodInterceptor {
 
     public AroundInvokeSupportInterceptor(final Method method) {
         this.aroundInvokeMethod = method;
+        aroundInvokeMethod.setAccessible(true);
     }
 
     public Object invoke(final MethodInvocation invocation) throws Throwable {

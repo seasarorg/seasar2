@@ -20,4 +20,6 @@ public interface IHoge14 {
     String foo(String param);
 
     String bar(String param);
+
+    String baz(String param);
 }
