@@ -3,19 +3,20 @@ package org.seasar.framework.ejb.unit;
 import java.util.ArrayList;
 import java.util.List;
 
-import junit.framework.TestCase;
+import javax.persistence.EntityManager;
 
 import org.seasar.extension.dataset.DataRow;
 import org.seasar.extension.dataset.DataSet;
 import org.seasar.extension.dataset.DataTable;
 import org.seasar.extension.dataset.impl.DataSetImpl;
+import org.seasar.framework.aop.interceptors.MockInterceptor;
 import org.seasar.framework.ejb.unit.annotation.Rollback;
 
 /**
  * @author taedium
  * 
  */
-public class S2EJB3TestCaseTest extends TestCase {
+public class S2EJB3TestCaseTest extends S2EJB3TestCase {
 
     public void testAssertEntityEquals() {
         DataSet expected = new DataSetImpl();
@@ -30,9 +31,7 @@ public class S2EJB3TestCaseTest extends TestCase {
 
         Employee clark = new Employee(new Long(1), 7782, "CLARK", null);
 
-        S2EJB3TestCase testCase = new S2EJB3TestCase() {
-        };
-        testCase.assertEntityEquals("1", expected, clark);
+        assertEntityEquals("1", expected, clark);
     }
 
     public void testAssertEntityListEquals() {
@@ -56,9 +55,7 @@ public class S2EJB3TestCaseTest extends TestCase {
         employees.add(clark);
         employees.add(king);
 
-        S2EJB3TestCase testCase = new S2EJB3TestCase() {
-        };
-        testCase.assertEntityListEquals("1", expected, employees);
+        assertEntityListEquals("1", expected, employees);
     }
 
     public void testNeedTransactionReturnsTrue() throws Exception {
@@ -71,6 +68,15 @@ public class S2EJB3TestCaseTest extends TestCase {
         RollbackAnnotationTest test = new RollbackAnnotationTest();
         test.setName("testNoRollbackAnnotated");
         assertEquals(false, test.needTransaction());
+    }
+
+    public void setUpGetEntityManager() {
+        MockInterceptor mi = new MockInterceptor();
+        register(mi.createProxy(EntityManager.class));
+    }
+
+    public void testGetEntityManager() {
+        assertNotNull("1", getEntityManager());
     }
 
     private static class RollbackAnnotationTest extends S2EJB3TestCase {
