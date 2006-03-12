@@ -5,19 +5,19 @@ import java.lang.reflect.Type;
 import java.util.Collection;
 
 import org.seasar.framework.beans.PropertyDesc;
-import org.seasar.framework.ejb.unit.PersistentState;
+import org.seasar.framework.ejb.unit.PersistentStateDesc;
 import org.seasar.framework.exception.EmptyRuntimeException;
 
 /**
  * @author taedium
  *
  */
-public class PersistentProperty extends AbstractPersistentState implements
-		PersistentState {
+public class PersistentPropertyDesc extends AbstractPersistentStateDesc implements
+		PersistentStateDesc {
 
 	private final PropertyDesc propertyDesc;
 
-	public PersistentProperty(PropertyDesc propertyDesc, String primaryTableName) {
+	public PersistentPropertyDesc(PropertyDesc propertyDesc, String primaryTableName) {
 		
 		super(propertyDesc.getPropertyName(), propertyDesc.getPropertyType(),
 				primaryTableName);
@@ -27,7 +27,7 @@ public class PersistentProperty extends AbstractPersistentState implements
 		}
 		this.propertyDesc = propertyDesc;
 		
-		if (Collection.class.isAssignableFrom(stateType)) {
+		if (Collection.class.isAssignableFrom(persistentStateType)) {
 			Type type;
 			if (propertyDesc.hasReadMethod()) {
 				Method m = propertyDesc.getReadMethod();

@@ -15,7 +15,7 @@ import org.seasar.extension.dataset.DataTable;
 import org.seasar.extension.dataset.impl.DataSetImpl;
 import org.seasar.extension.dataset.states.RowStates;
 import org.seasar.extension.dataset.types.ColumnTypes;
-import org.seasar.framework.ejb.unit.impl.EntityClass;
+import org.seasar.framework.ejb.unit.impl.EntityClassDesc;
 
 /**
  * @author taedium
@@ -35,19 +35,19 @@ public class EntityReader implements DataReader {
     }
 
     public EntityReader(Object entity) {
-        PersistentClass psh = new EntityClass(entity.getClass());
+        PersistentClassDesc psh = new EntityClassDesc(entity.getClass());
         setupColumns(psh);
         setupRow(psh, entity);
     }
 
-    protected void setupColumns(PersistentClass psh) {
-        if (processedClasses.contains(psh.getPersistentClassType())) {
+    protected void setupColumns(PersistentClassDesc psh) {
+        if (processedClasses.contains(psh.getPersistentClass())) {
             return;
         }
-        processedClasses.add(psh.getPersistentClassType());
+        processedClasses.add(psh.getPersistentClass());
 
-        for (int i = 0; i < psh.getPersistentStateSize(); ++i) {
-            PersistentState ps = psh.getPersistentState(i);
+        for (int i = 0; i < psh.getStateDescSize(); ++i) {
+            PersistentStateDesc ps = psh.getStateDesc(i);
             if (ps.isPersistent()) {
                 if (ps.isRelationship() || ps.isEmbedded()) {
                     setupColumns(ps.createPersistentClass());
@@ -60,32 +60,32 @@ public class EntityReader implements DataReader {
                 } else {
                     dataTable = dataSet.addTable(tableName);
                 }
-                Class<?> type = ps.getStateType();
+                Class<?> type = ps.getPersistentStateType();
                 dataTable.addColumn(ps.getColumnName(), ColumnTypes
                         .getColumnType(type));
             }
         }
     }
 
-    protected void setupRow(PersistentClass me, Object entity) {
+    protected void setupRow(PersistentClassDesc me, Object entity) {
         if (processedEntities.contains(entity)) {
             return;
         }
         processedEntities.add(entity);
 
-        List<PersistentClass> relationships = new ArrayList<PersistentClass>();
-        Map<PersistentClass, Object> relationshipValues = new HashMap<PersistentClass, Object>();
+        List<PersistentClassDesc> relationships = new ArrayList<PersistentClassDesc>();
+        Map<PersistentClassDesc, Object> relationshipValues = new HashMap<PersistentClassDesc, Object>();
 
         DataRow row = null;
-        for (int i = 0; i < me.getPersistentStateSize(); ++i) {
-            PersistentState ps = me.getPersistentState(i);
+        for (int i = 0; i < me.getStateDescSize(); ++i) {
+            PersistentStateDesc ps = me.getStateDesc(i);
             if (ps.isPersistent()) {
-                Class type = ps.getStateType();
+                Class type = ps.getPersistentStateType();
                 Object value = ps.getValue(entity);
                 if (ps.isRelationship()) {
-                    PersistentClass you = ps.createPersistentClass();
-                    Class from = me.getPersistentClassType();
-                    Class to = you.getPersistentClassType();
+                    PersistentClassDesc you = ps.createPersistentClass();
+                    Class from = me.getPersistentClass();
+                    Class to = you.getPersistentClass();
                     if (!paths.contains(new Path(to, from))
                             && isNotEmpty(value)) {
                         paths.add(new Path(from, to));
@@ -106,7 +106,7 @@ public class EntityReader implements DataReader {
         }
         row.setState(RowStates.UNCHANGED);
 
-        for (PersistentClass holder : relationships) {
+        for (PersistentClassDesc holder : relationships) {
             Object value = relationshipValues.get(holder);
             if (value instanceof Collection) {
                 for (Object element : (Collection) value) {
@@ -128,11 +128,11 @@ public class EntityReader implements DataReader {
         return true;
     }
 
-    private void setupRow(DataRow row, PersistentClass psh, Object obj) {
-        for (int j = 0; j < psh.getPersistentStateSize(); ++j) {
-            PersistentState ps = psh.getPersistentState(j);
+    private void setupRow(DataRow row, PersistentClassDesc psh, Object obj) {
+        for (int j = 0; j < psh.getStateDescSize(); ++j) {
+            PersistentStateDesc ps = psh.getStateDesc(j);
             if (ps.isPersistent()) {
-                Class type = ps.getStateType();
+                Class type = ps.getPersistentStateType();
                 Object value = ps.getValue(obj);
                 ColumnType ct = ColumnTypes.getColumnType(type);
                 row.setValue(ps.getColumnName(), ct.convert(value, null));

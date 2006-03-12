@@ -4,19 +4,15 @@ package org.seasar.framework.ejb.unit;
  * @author taedium
  *
  */
-public interface PersistentState {
-	
-	boolean hasTableName();
+public interface PersistentStateDesc {
 	
 	String getTableName();
-
-	boolean hasColumnName();
 	
 	String getColumnName();
 
 	String getStateName();
 
-	Class<?> getStateType();
+	Class<?> getPersistentStateType();
 
 	boolean isCollection();
 	
@@ -34,5 +30,5 @@ public interface PersistentState {
 	
 	boolean isProperty();
 	
-	PersistentClass createPersistentClass();
+	PersistentClassDesc createPersistentClass();
 }

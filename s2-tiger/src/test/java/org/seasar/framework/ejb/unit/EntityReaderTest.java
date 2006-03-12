@@ -4,16 +4,17 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.Calendar;
 
+import junit.framework.TestCase;
+
 import org.seasar.extension.dataset.DataRow;
 import org.seasar.extension.dataset.DataSet;
 import org.seasar.extension.dataset.DataTable;
-import org.seasar.extension.unit.S2TestCase;
 
 /**
  * @author taedium
  * 
  */
-public class EntityReaderTest extends S2TestCase {
+public class EntityReaderTest extends TestCase {
 
     public void testManyToOneRelationship() {
         Department accounting = new Department(new Long(1), 10, "ACCOUNTING");

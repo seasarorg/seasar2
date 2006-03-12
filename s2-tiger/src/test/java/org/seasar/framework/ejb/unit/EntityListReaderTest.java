@@ -3,14 +3,15 @@ package org.seasar.framework.ejb.unit;
 import java.util.ArrayList;
 import java.util.List;
 
+import junit.framework.TestCase;
+
 import org.seasar.extension.dataset.DataSet;
-import org.seasar.extension.unit.S2TestCase;
 
 /**
  * @author taedium
  * 
  */
-public class EntityListReaderTest extends S2TestCase {
+public class EntityListReaderTest extends TestCase {
 
     public void test() {
         Department accounting = new Department(new Long(1), 10, "ACCOUNTING");
