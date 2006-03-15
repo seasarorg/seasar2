@@ -18,9 +18,9 @@ import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 
 import org.seasar.framework.ejb.unit.PersistentClassDesc;
-import org.seasar.framework.ejb.unit.PersistentClassDescNotFoundException;
 import org.seasar.framework.ejb.unit.PersistentStateDesc;
 import org.seasar.framework.exception.EmptyRuntimeException;
+import org.seasar.framework.exception.SIllegalStateException;
 import org.seasar.framework.util.StringUtil;
 
 /**
@@ -214,7 +214,7 @@ public abstract class AbstractPersistentStateDesc implements PersistentStateDesc
             return new AttributeOverridableClassDesc(getPersistentStateType(), getTableName(),
                     isProperty(), Collections.unmodifiableMap(attribOverrides));
         }
-        throw new PersistentClassDescNotFoundException(getPersistentStateType());
+        throw new SIllegalStateException("ESSR0501", new Object[]{getPersistentStateType().getName()});
     }
 
     public abstract Object getValue(Object target);

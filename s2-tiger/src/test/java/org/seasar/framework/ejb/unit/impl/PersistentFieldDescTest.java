@@ -6,6 +6,7 @@ import junit.framework.TestCase;
 
 import org.seasar.framework.ejb.unit.PersistentClassDesc;
 import org.seasar.framework.ejb.unit.PersistentStateDesc;
+import org.seasar.framework.exception.SIllegalStateException;
 
 /**
  * @author taedium
@@ -115,5 +116,22 @@ public class PersistentFieldDescTest extends TestCase {
         PersistentStateDesc finish = embeddedClass.getStateDesc("endDate");
         assertEquals("3", "FINISHDATE", finish.getColumnName());
         assertEquals("4", "EMPLOYEE4", finish.getTableName());
+    }
+
+    public void testCreatePersistentClass() {
+        PersistentClassDesc pc = new EntityClassDesc(Employee.class);
+        PersistentStateDesc ps = pc.getStateDesc("department");
+        assertNotNull("1", ps.createPersistentClass());
+    }
+
+    public void testCreatePersistentClassForException() {
+        PersistentClassDesc pc = new EntityClassDesc(Employee.class);
+        PersistentStateDesc ps = pc.getStateDesc("empno");
+        try {
+            ps.createPersistentClass();
+            fail("1");
+        } catch (SIllegalStateException expected) {
+            System.out.println(expected);
+        }
     }
 }

@@ -9,6 +9,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 
 import javax.persistence.AttributeOverride;
@@ -30,13 +31,12 @@ import javax.persistence.SecondaryTables;
 import javax.persistence.Table;
 
 import org.seasar.framework.beans.BeanDesc;
-import org.seasar.framework.beans.FieldNotFoundRuntimeException;
 import org.seasar.framework.beans.PropertyDesc;
-import org.seasar.framework.beans.PropertyNotFoundRuntimeException;
 import org.seasar.framework.beans.factory.BeanDescFactory;
 import org.seasar.framework.ejb.unit.AnnotationNotFoundException;
 import org.seasar.framework.ejb.unit.PersistentClassDesc;
 import org.seasar.framework.ejb.unit.PersistentStateDesc;
+import org.seasar.framework.ejb.unit.PersistentStateNotFoundException;
 import org.seasar.framework.exception.EmptyRuntimeException;
 import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.StringUtil;
@@ -48,6 +48,8 @@ import org.seasar.framework.util.StringUtil;
 public class EntityClassDesc implements PersistentClassDesc {
 
     private static String DEFAULT_DISCRIMINATOR_COLUMN = "DTYPE";
+
+    private static Map<String, Column> EMPTY_OVERRIDES = new HashMap<String, Column>();
 
     private final Class<?> entityClass;
 
@@ -63,10 +65,6 @@ public class EntityClassDesc implements PersistentClassDesc {
 
     private boolean propertyAccessed;
 
-    private PersistentClassDesc mappedSuperclassDesc;
-
-    private EntityClassDesc superClassDesc;
-
     private Map<String, Column> attribOverrides = new HashMap<String, Column>();
 
     private InheritanceType inheritanceType;
@@ -79,7 +77,11 @@ public class EntityClassDesc implements PersistentClassDesc {
 
     private Map<String, String> pkJoinColumns = new HashMap<String, String>();
 
-    private boolean rootEntity;
+    private List<Class<?>> hierarchy = new ArrayList<Class<?>>();
+
+    private List<PersistentClassDesc> superClassDescs = new ArrayList<PersistentClassDesc>();
+
+    private EntityClassDesc rootEntity;
 
     public EntityClassDesc(Class<?> entityClass) {
         if (entityClass == null) {
@@ -89,17 +91,16 @@ public class EntityClassDesc implements PersistentClassDesc {
 
         Entity entity = entityClass.getAnnotation(Entity.class);
         if (entity == null) {
-            throw new AnnotationNotFoundException("@Entity", entityClass
-                    .getName());
+            throw new AnnotationNotFoundException(entityClass, Entity.class);
         }
-        name = StringUtil.isEmpty(entity.name()) ? ClassUtil
+        this.name = StringUtil.isEmpty(entity.name()) ? ClassUtil
                 .getShortClassName(entityClass) : entity.name();
 
         setupTableNames();
-        setupAccessType();
         setupAttributeOverrides();
         setupPrimaryKeyJoinColumns();
-        setupSuperclass();
+        setupSuperclasses();
+        setupAccessType();
         setupInheritanceStrategy();
         setupPersistentStateDescs();
     }
@@ -128,12 +129,7 @@ public class EntityClassDesc implements PersistentClassDesc {
     }
 
     private void setupAccessType() {
-        List<Class<?>> entityHierarchy = new ArrayList<Class<?>>();
-        for (Class<?> clazz = entityClass; clazz != Object.class
-                && clazz != null; clazz = clazz.getSuperclass()) {
-            entityHierarchy.add(clazz);
-        }
-        for (Class<?> clazz : entityHierarchy) {
+        for (Class<?> clazz : hierarchy) {
             BeanDesc beanDesc2 = BeanDescFactory.getBeanDesc(clazz);
             for (int i = 0; i < beanDesc2.getPropertyDescSize(); i++) {
                 PropertyDesc propertyDesc = beanDesc2.getPropertyDesc(i);
@@ -187,25 +183,51 @@ public class EntityClassDesc implements PersistentClassDesc {
         }
     }
 
-    private void setupSuperclass() {
-        Class<?> superclass = entityClass.getSuperclass();
-
-        if (superclass.isAnnotationPresent(Entity.class)) {
-            superClassDesc = new EntityClassDesc(superclass);
-        } else {
-            rootEntity = true;
+    private void setupSuperclasses() {
+        for (Class<?> clazz = entityClass; clazz != Object.class
+                && clazz != null; clazz = clazz.getSuperclass()) {
+            hierarchy.add(clazz);
         }
 
-        if (superclass.isAnnotationPresent(MappedSuperclass.class)) {
-            mappedSuperclassDesc = new AttributeOverridableClassDesc(
-                    superclass, tableNames.get(0), propertyAccessed,
-                    attribOverrides);
+        Map<Class<?>, EntityClassDesc> superEntityDescsByClass = new HashMap<Class<?>, EntityClassDesc>();
+        List<Class<?>> superClasses = hierarchy.subList(1, hierarchy.size());
+        ListIterator<Class<?>> li = superClasses.listIterator(superClasses
+                .size());
+        while (li.hasPrevious()) {
+            Class<?> clazz = li.previous();
+            if (clazz.isAnnotationPresent(Entity.class)) {
+                EntityClassDesc entityDesc = new EntityClassDesc(clazz);
+                superClassDescs.add(entityDesc);
+                superEntityDescsByClass.put(clazz, entityDesc);
+                if (rootEntity == null) {
+                    rootEntity = entityDesc;
+                }
+            }
+        }
+        if (rootEntity == null) {
+            rootEntity = this;
         }
 
+        Map<String, Column> ovrrides = attribOverrides;
+        PersistentClassDesc subclass = this;
+        while (li.hasNext()) {
+            Class<?> clazz = li.next();
+            if (superEntityDescsByClass.containsKey(clazz)) {
+                ovrrides = superEntityDescsByClass.get(clazz).attribOverrides;
+                subclass = superEntityDescsByClass.get(clazz);
+                continue;
+            } else if (clazz.isAnnotationPresent(MappedSuperclass.class)) {
+                AttributeOverridableClassDesc ao = new AttributeOverridableClassDesc(
+                        clazz, subclass.getTableName(0), subclass
+                                .isPropertyAccessed(), ovrrides);
+                superClassDescs.add(ao);
+            }
+            ovrrides = EMPTY_OVERRIDES;
+        }
     }
 
     private void setupInheritanceStrategy() {
-        if (rootEntity) {
+        if (rootEntity == this) {
             Inheritance inheritance = entityClass
                     .getAnnotation(Inheritance.class);
             if (inheritance != null) {
@@ -232,29 +254,14 @@ public class EntityClassDesc implements PersistentClassDesc {
     }
 
     private EntityClassDesc getRootEntity() {
-        if (rootEntity) {
-            return this;
-        }
-        return superClassDesc.getRootEntity();
-    }
-
-    private InheritanceType getInheritanceType() {
-        if (rootEntity) {
-            return inheritanceType;
-        }
-        return superClassDesc.getInheritanceType();
+        return rootEntity;
     }
 
     private void setupPersistentStateDescs() {
-        if (mappedSuperclassDesc != null) {
-            for (int i = 0; i < mappedSuperclassDesc.getStateDescSize(); i++) {
-                setupPersistentStateDescs(mappedSuperclassDesc.getStateDesc(i));
-            }
-        }
 
-        if (superClassDesc != null) {
-            for (int i = 0; i < superClassDesc.getStateDescSize(); i++) {
-                setupPersistentStateDescs(superClassDesc.getStateDesc(i));
+        for (PersistentClassDesc pcd : superClassDescs) {
+            for (int i = 0; i < pcd.getStateDescSize(); i++) {
+                setupPersistentStateDescs(pcd.getStateDesc(i));
             }
         }
 
@@ -308,15 +315,11 @@ public class EntityClassDesc implements PersistentClassDesc {
     }
 
     private String getPrimaryTableName() {
-        if (rootEntity) {
-            return tableNames.get(0);
+        EntityClassDesc root = getRootEntity();
+        if (root.inheritanceType == SINGLE_TABLE) {
+            return root.getTableName(0);
         } else {
-            EntityClassDesc root = getRootEntity();
-            if (root.getInheritanceType() == SINGLE_TABLE) {
-                return root.getTableName(0);
-            } else {
-                return tableNames.get(0);
-            }
+            return tableNames.get(0);
         }
     }
 
@@ -332,18 +335,13 @@ public class EntityClassDesc implements PersistentClassDesc {
         return stateDescs.get(index);
     }
 
-    public PersistentStateDesc getStateDesc(String persistentStateName) {
+    public PersistentStateDesc getStateDesc(String persistentStateName)
+            throws PersistentStateNotFoundException {
         if (stateDescsByName.containsKey(persistentStateName)) {
             return stateDescsByName.get(persistentStateName);
         }
-        if (propertyAccessed) {
-            throw new PropertyNotFoundRuntimeException(entityClass,
-                    persistentStateName);
-
-        } else {
-            throw new FieldNotFoundRuntimeException(entityClass,
-                    persistentStateName);
-        }
+        throw new PersistentStateNotFoundException(entityClass,
+                persistentStateName, propertyAccessed);
     }
 
     public int getStateDescSize() {

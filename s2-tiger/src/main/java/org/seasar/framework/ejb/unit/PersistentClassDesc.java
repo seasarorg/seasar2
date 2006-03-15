@@ -2,23 +2,24 @@ package org.seasar.framework.ejb.unit;
 
 /**
  * @author taedium
- *
+ * 
  */
 public interface PersistentClassDesc {
-	
+
     String getName();
-	
-	int getStateDescSize();
 
-	PersistentStateDesc getStateDesc(int index);
+    int getStateDescSize();
 
-	PersistentStateDesc getStateDesc(String entityStateName);
+    PersistentStateDesc getStateDesc(int index);
 
-	boolean isPropertyAccessed();
+    PersistentStateDesc getStateDesc(String entityStateName)
+            throws PersistentStateNotFoundException;
 
-	Class<?> getPersistentClass();
+    boolean isPropertyAccessed();
 
-	int getTableSize();
+    Class<?> getPersistentClass();
 
-	String getTableName(int index);
+    int getTableSize();
+
+    String getTableName(int index);
 }

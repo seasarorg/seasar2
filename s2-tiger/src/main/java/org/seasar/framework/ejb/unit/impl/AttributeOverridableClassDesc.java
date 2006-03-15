@@ -13,6 +13,7 @@ import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.beans.factory.BeanDescFactory;
 import org.seasar.framework.ejb.unit.PersistentClassDesc;
 import org.seasar.framework.ejb.unit.PersistentStateDesc;
+import org.seasar.framework.ejb.unit.PersistentStateNotFoundException;
 import org.seasar.framework.exception.EmptyRuntimeException;
 import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.StringUtil;
@@ -70,8 +71,7 @@ class AttributeOverridableClassDesc implements PersistentClassDesc {
             if (ps != null) {
                 PersistentStateDesc newPs = null;
                 if (attribOverrides.containsKey(ps.getStateName())) {
-                    newPs = override(ps, attribOverrides
-                            .get(ps.getStateName()));
+                    newPs = override(ps, attribOverrides.get(ps.getStateName()));
                 } else {
                     newPs = ps;
                 }
@@ -103,8 +103,13 @@ class AttributeOverridableClassDesc implements PersistentClassDesc {
         return stateDescs.get(index);
     }
 
-    public PersistentStateDesc getStateDesc(String entityStateName) {
-        return stateDescsByName.get(entityStateName);
+    public PersistentStateDesc getStateDesc(String persistentStateName)
+            throws PersistentStateNotFoundException {
+        if (stateDescsByName.containsKey(persistentStateName)) {
+            return stateDescsByName.get(persistentStateName);
+        }
+        throw new PersistentStateNotFoundException(persistentClass,
+                persistentStateName, propertyAccessed);
     }
 
     public int getStateDescSize() {
