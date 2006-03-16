@@ -59,7 +59,7 @@ public class EJB3Desc {
 
     protected boolean cmt = true;
 
-    protected TransactionAttributeType transactionAttributeType = TransactionAttributeType.REQUIRED;
+    protected TransactionAttributeType transactionAttributeType;
 
     protected List<EJB3InterceptorDesc> interceptors = new ArrayList<EJB3InterceptorDesc>();
 

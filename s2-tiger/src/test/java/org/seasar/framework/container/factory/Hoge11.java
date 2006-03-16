@@ -22,6 +22,7 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 
 @Stateless
+@TransactionAttribute
 @Local( { IHoge11A.class, IHoge11B.class })
 public class Hoge11 implements IHoge11A, IHoge11B {
     String foo;

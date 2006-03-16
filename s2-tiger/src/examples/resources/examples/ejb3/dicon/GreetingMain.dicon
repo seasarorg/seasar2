@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN" 
+	"http://www.seasar.org/dtd/components24.dtd">
+<components>
+    <component
+      class="org.seasar.framework.container.autoregister.FileSystemComponentAutoRegister">
+        <initMethod name="addClassPattern">
+            <arg>"examples.ejb3.impl"</arg>
+            <arg>".*Impl"</arg>
+        </initMethod>
+    </component>
+</components>

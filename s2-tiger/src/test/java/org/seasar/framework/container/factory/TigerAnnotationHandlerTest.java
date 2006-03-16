@@ -63,7 +63,7 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
         assertEquals("6", "hoge77", cd3.getComponentName());
         assertEquals("7", InstanceDef.PROTOTYPE_NAME, cd3.getInstanceDef()
                 .getName());
-        assertEquals("8", AutoBindingDef.NONE_NAME, cd3.getAutoBindingDef()
+        assertEquals("8", AutoBindingDef.SEMIAUTO_NAME, cd3.getAutoBindingDef()
                 .getName());
 
         ComponentDef cd4 = handler.createComponentDef(Hoge8.class, null);
@@ -82,7 +82,7 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
         assertEquals("13", "hoge99", cd6.getComponentName());
         assertEquals("14", InstanceDef.PROTOTYPE_NAME, cd6.getInstanceDef()
                 .getName());
-        assertEquals("15", AutoBindingDef.NONE_NAME, cd6.getAutoBindingDef()
+        assertEquals("15", AutoBindingDef.SEMIAUTO_NAME, cd6.getAutoBindingDef()
                 .getName());
 
         ComponentDef cd7 = handler.createComponentDef(Hoge10.class, null);
@@ -274,6 +274,12 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
         }
         assertEquals("2", "ejb3tx.requiredTx", interceptors[0]);
         assertEquals("3", "ejb3tx.mandatoryTx", interceptors[1]);
+    }
+    
+    public void testAppendAspectForEJB3CMT3() throws Exception {
+        ComponentDef cd = handler.createComponentDef(Hoge7.class, null);
+        handler.appendAspect(cd);
+        assertEquals("1", 0, cd.getAspectDefSize());
     }
 
     public void testAppendAspectForEJB3BMT() throws Exception {

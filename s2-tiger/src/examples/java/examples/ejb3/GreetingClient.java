@@ -13,13 +13,9 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.framework.container.factory;
+package examples.ejb3;
 
-import javax.ejb.Stateless;
+public interface GreetingClient {
 
-@Stateless(name="hoge77")
-public class Hoge7 implements IHoge7 {
-    
-    public void execute() {
-    }
+    void execute();
 }

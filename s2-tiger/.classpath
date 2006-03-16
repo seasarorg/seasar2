@@ -4,6 +4,8 @@
 	<classpathentry output="target/classes" kind="src" path="src/main/resources"/>
 	<classpathentry output="target/test-classes" kind="src" path="src/test/java"/>
 	<classpathentry output="target/test-classes" kind="src" path="src/test/resources"/>
+       <classpathentry output="target/examples-classes" kind="src" path="src/examples/java"/>
+	<classpathentry output="target/examples-classes" kind="src" path="src/examples/resources"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/seasar2"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="output" path="target/classes"/>

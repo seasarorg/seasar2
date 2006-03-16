@@ -13,13 +13,16 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.framework.container.factory;
+package examples.ejb3.impl;
 
 import javax.ejb.Stateless;
 
-@Stateless(name="hoge77")
-public class Hoge7 implements IHoge7 {
-    
-    public void execute() {
+import examples.di.Greeting;
+
+@Stateless
+public class GreetingImpl implements Greeting {
+
+    public String greet() {
+        return "Hello World!";
     }
 }
