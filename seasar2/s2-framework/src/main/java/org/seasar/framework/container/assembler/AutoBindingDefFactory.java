@@ -31,6 +31,8 @@ public class AutoBindingDefFactory {
     
     public static final AutoBindingDef NONE = new AutoBindingNoneDef(AutoBindingDef.NONE_NAME);
     
+    public static final AutoBindingDef SEMIAUTO = new AutoBindingSemiAutoDef(AutoBindingDef.SEMIAUTO_NAME);
+    
     private static Map autoBindingDefs = new HashMap();
     
     static {
@@ -38,6 +40,7 @@ public class AutoBindingDefFactory {
         addAutoBindingDef(CONSTRUCTOR);
         addAutoBindingDef(PROPERTY);
         addAutoBindingDef(NONE);
+        addAutoBindingDef(SEMIAUTO);
     }
     
     protected AutoBindingDefFactory() {

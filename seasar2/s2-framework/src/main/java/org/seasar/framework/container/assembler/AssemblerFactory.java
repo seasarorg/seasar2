@@ -58,6 +58,10 @@ public class AssemblerFactory {
     public static PropertyAssembler createManualOnlyPropertyAssembler(final ComponentDef cd) {
         return getProvider().createManualOnlyPropertyAssembler(cd);
     }
+    
+    public static PropertyAssembler createSemiAutoPropertyAssembler(final ComponentDef cd) {
+        return getProvider().createSemiAutoPropertyAssembler(cd);
+    }
 
     public interface Provider {
         
@@ -72,6 +76,8 @@ public class AssemblerFactory {
         PropertyAssembler createAutoPropertyAssembler(ComponentDef cd);
 
         PropertyAssembler createManualOnlyPropertyAssembler(ComponentDef cd);
+        
+        PropertyAssembler createSemiAutoPropertyAssembler(ComponentDef cd);
     }
 
     public static class DefaultProvider implements Provider {
@@ -98,6 +104,10 @@ public class AssemblerFactory {
 
         public PropertyAssembler createManualOnlyPropertyAssembler(final ComponentDef cd) {
             return new ManualOnlyPropertyAssembler(cd);
+        }
+        
+        public PropertyAssembler createSemiAutoPropertyAssembler(final ComponentDef cd) {
+            return new SemiAutoPropertyAssembler(cd);
         }
     }
 }

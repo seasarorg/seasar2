@@ -23,6 +23,8 @@ public interface AutoBindingDef {
 
     String AUTO_NAME = "auto";
     
+    String SEMIAUTO_NAME = "semiauto";
+    
     String CONSTRUCTOR_NAME = "constructor";
     
     String PROPERTY_NAME = "property";

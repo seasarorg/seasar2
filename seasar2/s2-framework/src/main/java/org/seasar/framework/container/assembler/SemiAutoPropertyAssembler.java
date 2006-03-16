@@ -26,12 +26,12 @@ import org.seasar.framework.container.PropertyDef;
  * @author higa
  * 
  */
-public class ManualOnlyPropertyAssembler extends AbstractPropertyAssembler {
+public class SemiAutoPropertyAssembler extends AbstractPropertyAssembler {
 
     /**
      * @param componentDef
      */
-    public ManualOnlyPropertyAssembler(ComponentDef componentDef) {
+    public SemiAutoPropertyAssembler(ComponentDef componentDef) {
         super(componentDef);
     }
 
@@ -50,7 +50,7 @@ public class ManualOnlyPropertyAssembler extends AbstractPropertyAssembler {
             if (field == null || beanDesc.hasPropertyDesc(propName)) {
                 propDesc = beanDesc.getPropertyDesc(propName);
             }
-            BindingTypeDefFactory.NONE.bind(getComponentDef(), propDef,
+            BindingTypeDefFactory.SHOULD.bind(getComponentDef(), propDef,
                     propDesc, field, component);
         }
     }

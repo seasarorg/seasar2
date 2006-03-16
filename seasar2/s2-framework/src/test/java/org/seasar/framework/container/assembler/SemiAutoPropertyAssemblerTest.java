@@ -32,7 +32,7 @@ import org.seasar.framework.exception.OgnlRuntimeException;
  * @author higa
  *
  */
-public class ManualOnlyPropertyAssemblerTest extends TestCase {
+public class SemiAutoPropertyAssemblerTest extends TestCase {
 
 	public void testAssemble() throws Exception {
 		S2Container container = new S2ContainerImpl();
@@ -43,7 +43,7 @@ public class ManualOnlyPropertyAssemblerTest extends TestCase {
 		cd.addPropertyDef(pd);
 		container.register(cd);
         container.register(cd2);
-		PropertyAssembler assembler = new ManualOnlyPropertyAssembler(cd);
+		PropertyAssembler assembler = new SemiAutoPropertyAssembler(cd);
 		A a = new A();
 		assembler.assemble(a);
 		assertEquals("1", "B", a.getHogeName());
@@ -53,13 +53,27 @@ public class ManualOnlyPropertyAssemblerTest extends TestCase {
         S2Container container = new S2ContainerImpl();
         ComponentDefImpl cd = new ComponentDefImpl(C.class);
         PropertyDef pd = new PropertyDefImpl("aaa");
-        pd.setExpression(new OgnlExpression("\"a\""));
         cd.addPropertyDef(pd);
         container.register(cd);
-        PropertyAssembler assembler = new ManualOnlyPropertyAssembler(cd);
+        container.register("a", "aaa");
+        PropertyAssembler assembler = new SemiAutoPropertyAssembler(cd);
         C c = new C();
         assembler.assemble(c);
         assertEquals("1", "a", c.aaa);
+    }
+    
+    public void testAssembleForField2() throws Exception {
+        S2Container container = new S2ContainerImpl();
+        ComponentDefImpl cd = new ComponentDefImpl(D.class);
+        ComponentDefImpl cd2 = new ComponentDefImpl(B.class, "hoge2");
+        PropertyDef pd = new PropertyDefImpl("hoge");
+        cd.addPropertyDef(pd);
+        container.register(cd);
+        container.register(cd2);
+        PropertyAssembler assembler = new SemiAutoPropertyAssembler(cd);
+        D d = new D();
+        assembler.assemble(d);
+        assertEquals("1", "B", d.getHogeName());
     }
 	
 	public void testAssembleIllegalProperty() throws Exception {
@@ -69,7 +83,7 @@ public class ManualOnlyPropertyAssemblerTest extends TestCase {
 		pd.setExpression(new OgnlExpression("b"));
 		cd.addPropertyDef(pd);
 		container.register(cd);
-		PropertyAssembler assembler = new ManualOnlyPropertyAssembler(cd);
+		PropertyAssembler assembler = new SemiAutoPropertyAssembler(cd);
 		A a = new A();
 		try {
 			assembler.assemble(a);
@@ -85,7 +99,7 @@ public class ManualOnlyPropertyAssemblerTest extends TestCase {
 		PropertyDef pd = new PropertyDefImpl("abc", "111");
 		cd.addPropertyDef(pd);
 		container.register(cd);
-		PropertyAssembler assembler = new ManualOnlyPropertyAssembler(cd);
+		PropertyAssembler assembler = new SemiAutoPropertyAssembler(cd);
 		A a = new A();
 		try {
 			assembler.assemble(a);
@@ -101,7 +115,7 @@ public class ManualOnlyPropertyAssemblerTest extends TestCase {
 		PropertyDef pd = new PropertyDefImpl("aaa", "abc");
 		cd.addPropertyDef(pd);
 		container.register(cd);
-		PropertyAssembler assembler = new ManualOnlyPropertyAssembler(cd);
+		PropertyAssembler assembler = new SemiAutoPropertyAssembler(cd);
 		B b = new B();
 		try {
 			assembler.assemble(b);
@@ -153,5 +167,14 @@ public class ManualOnlyPropertyAssemblerTest extends TestCase {
     public static class C {
         
         private String aaa;
+    }
+    
+    public static class D implements Foo {
+
+        private Hoge hoge;
+
+        public String getHogeName() {
+            return hoge.getName();
+        }
     }
 }
