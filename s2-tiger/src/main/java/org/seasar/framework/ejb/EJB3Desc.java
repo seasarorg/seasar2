@@ -31,8 +31,6 @@ import javax.ejb.PostConstruct;
 import javax.ejb.Remote;
 import javax.ejb.Stateful;
 import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
 import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
 import javax.interceptor.AroundInvoke;
@@ -58,8 +56,6 @@ public class EJB3Desc {
     protected List<Class<?>> businessInterfaces = new ArrayList<Class<?>>();
 
     protected boolean cmt = true;
-
-    protected TransactionAttributeType transactionAttributeType = TransactionAttributeType.REQUIRED;
 
     protected List<EJB3InterceptorDesc> interceptors = new ArrayList<EJB3InterceptorDesc>();
 
@@ -108,10 +104,6 @@ public class EJB3Desc {
         return cmt;
     }
 
-    public TransactionAttributeType getTransactionAttributeType() {
-        return transactionAttributeType;
-    }
-
     public List<EJB3InterceptorDesc> getInterceptors() {
         return interceptors;
     }
@@ -129,8 +121,9 @@ public class EJB3Desc {
     }
 
     protected void introspection() {
-        if (beanClass.isInterface()
-                || Modifier.isAbstract(beanClass.getModifiers())) {
+        final int modifiers = beanClass.getModifiers();
+        if (beanClass.isInterface() || Modifier.isAbstract(modifiers)
+                || Modifier.isFinal(modifiers) || !Modifier.isPublic(modifiers)) {
             return;
         }
 
@@ -157,7 +150,7 @@ public class EJB3Desc {
             }
         }
 
-        detectTransactionAttribute();
+        detectTransactionManagementType();
         detectInterceptors();
         detectBusinessMethods();
         detectAroundInvokeMethods();
@@ -209,7 +202,7 @@ public class EJB3Desc {
         }
     }
 
-    protected void detectTransactionAttribute() {
+    protected void detectTransactionManagementType() {
         final TransactionManagement txManegement = beanClass
                 .getAnnotation(TransactionManagement.class);
         if (txManegement != null) {
@@ -219,13 +212,6 @@ public class EJB3Desc {
                 return;
             }
         }
-
-        final TransactionAttribute attribute = beanClass
-                .getAnnotation(TransactionAttribute.class);
-        if (attribute == null) {
-            return;
-        }
-        transactionAttributeType = attribute.value();
     }
 
     protected void detectInterceptors() {

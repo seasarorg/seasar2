@@ -23,13 +23,13 @@ import javax.ejb.TransactionManagement;
 
 @Stateless
 @TransactionManagement
-@TransactionAttribute
+@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 public class Hoge12 implements IHoge12 {
 
-    public void required() {
+    @TransactionAttribute(TransactionAttributeType.MANDATORY)
+    public void mandatory() {
     }
 
-    @TransactionAttribute(TransactionAttributeType.MANDATORY)
     public void notAnnotated() {
     }
 

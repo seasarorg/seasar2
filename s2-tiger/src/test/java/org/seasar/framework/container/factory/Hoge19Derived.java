@@ -15,50 +15,22 @@
  */
 package org.seasar.framework.container.factory;
 
-import javax.ejb.Local;
-import javax.ejb.PostConstruct;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 
 @Stateless
-@Local( { IHoge11A.class, IHoge11B.class })
-public class Hoge11 implements IHoge11A, IHoge11B {
-    String foo;
+public class Hoge19Derived extends Hoge19Base implements IHoge19 {
 
-    @TransactionAttribute(TransactionAttributeType.MANDATORY)
-    public void mandatory() {
+    public Hoge19Derived() {
     }
 
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public void required() {
+    @Override
+    public void aMethod() {
     }
 
+    @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public void requiresNew() {
-    }
-
-    @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-    public void supports() {
-    }
-
-    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
-    public void notSupported() {
-    }
-
-    @TransactionAttribute(TransactionAttributeType.NEVER)
-    public void never() {
-    }
-
-    @TransactionAttribute
-    public void defaultValue() {
-    }
-
-    public void notAnnotated() {
-    }
-
-    @PostConstruct
-    private void initialize() {
-        foo = "FOO";
+    public void cMethod() {
     }
 }

@@ -16,14 +16,12 @@
 package org.seasar.framework.container.factory;
 
 import javax.ejb.Stateful;
-import javax.ejb.TransactionAttribute;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.ExcludeClassInterceptors;
 import javax.interceptor.Interceptors;
 import javax.interceptor.InvocationContext;
 
 @Stateful
-@TransactionAttribute
 @Interceptors(Interceptor1.class)
 public class Hoge14 implements IHoge14 {
 

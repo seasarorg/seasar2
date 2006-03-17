@@ -17,7 +17,7 @@ package org.seasar.framework.container.factory;
 
 public interface IHoge12 {
 
-    public void required();
+    public void mandatory();
 
     public void notAnnotated();
 }

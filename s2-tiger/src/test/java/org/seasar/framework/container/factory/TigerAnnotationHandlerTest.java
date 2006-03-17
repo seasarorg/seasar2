@@ -82,8 +82,8 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
         assertEquals("13", "hoge99", cd6.getComponentName());
         assertEquals("14", InstanceDef.PROTOTYPE_NAME, cd6.getInstanceDef()
                 .getName());
-        assertEquals("15", AutoBindingDef.SEMIAUTO_NAME, cd6.getAutoBindingDef()
-                .getName());
+        assertEquals("15", AutoBindingDef.SEMIAUTO_NAME, cd6
+                .getAutoBindingDef().getName());
 
         ComponentDef cd7 = handler.createComponentDef(Hoge10.class, null);
         assertEquals("16", "hoge10x", cd7.getComponentName());
@@ -234,18 +234,7 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
         String[] methodNames = new String[] { "mandatory", "required",
                 "requiresNew", "notSupported", "never", "defaultValue",
                 "notAnnotated" };
-        Map<String, String> map = new HashMap<String, String>();
-        for (int i = 0; i < methodNames.length; ++i) {
-            Method method = cd.getComponentClass().getMethod(methodNames[i],
-                    null);
-            for (int j = 0; j < cd.getAspectDefSize(); ++j) {
-                AspectDef aspectDef = cd.getAspectDef(j);
-                if (aspectDef.getPointcut().isApplied(method)) {
-                    map.put(methodNames[i], ((OgnlExpression) aspectDef
-                            .getExpression()).getSource());
-                }
-            }
-        }
+        Map<String, String> map = gatherAspect(cd, methodNames);
         assertEquals("2", "ejb3tx.mandatoryTx", map.get("mandatory"));
         assertEquals("3", "ejb3tx.requiredTx", map.get("required"));
         assertEquals("4", "ejb3tx.requiresNewTx", map.get("requiresNew"));
@@ -259,27 +248,21 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
         ComponentDef cd = handler.createComponentDef(Hoge12.class, null);
         handler.appendAspect(cd);
         assertEquals("1", 2, cd.getAspectDefSize());
-        String[] methodNames = new String[] { "required", "notAnnotated" };
-        String[] interceptors = new String[2];
-        for (int i = 0; i < methodNames.length; ++i) {
-            Method method = cd.getComponentClass().getMethod(methodNames[i],
-                    null);
-            for (int j = 0; j < interceptors.length; ++j) {
-                AspectDef aspectDef = cd.getAspectDef(j);
-                if (aspectDef.getPointcut().isApplied(method)) {
-                    interceptors[i] = ((OgnlExpression) aspectDef
-                            .getExpression()).getSource();
-                }
-            }
-        }
-        assertEquals("2", "ejb3tx.requiredTx", interceptors[0]);
-        assertEquals("3", "ejb3tx.mandatoryTx", interceptors[1]);
+        String[] methodNames = new String[] { "mandatory", "notAnnotated" };
+        Map<String, String> map = gatherAspect(cd, methodNames);
+        assertEquals("2", "ejb3tx.mandatoryTx", map.get("mandatory"));
+        assertEquals("3", "ejb3tx.requiresNewTx", map.get("notAnnotated"));
     }
-    
+
     public void testAppendAspectForEJB3CMT3() throws Exception {
-        ComponentDef cd = handler.createComponentDef(Hoge7.class, null);
+        ComponentDef cd = handler.createComponentDef(Hoge19Derived.class, null);
         handler.appendAspect(cd);
-        assertEquals("1", 1, cd.getAspectDefSize());
+        assertEquals("1", 2, cd.getAspectDefSize());
+        String[] methodNames = new String[] { "aMethod", "bMethod", "cMethod" };
+        Map<String, String> map = gatherAspect(cd, methodNames);
+        assertEquals("2", "ejb3tx.requiredTx", map.get("aMethod"));
+        assertNull("3", map.get("bMethod"));
+        assertEquals("4", "ejb3tx.requiresNewTx", map.get("cMethod"));
     }
 
     public void testAppendAspectForEJB3BMT() throws Exception {
@@ -447,5 +430,22 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
         } catch (IllegalDestroyMethodAnnotationRuntimeException ex) {
             System.out.println(ex);
         }
+    }
+
+    private Map<String, String> gatherAspect(ComponentDef cd,
+            String[] methodNames) throws NoSuchMethodException {
+        Map<String, String> map = new HashMap<String, String>();
+        for (int i = 0; i < methodNames.length; ++i) {
+            Method method = cd.getComponentClass().getMethod(methodNames[i],
+                    null);
+            for (int j = 0; j < cd.getAspectDefSize(); ++j) {
+                AspectDef aspectDef = cd.getAspectDef(j);
+                if (aspectDef.getPointcut().isApplied(method)) {
+                    map.put(methodNames[i], ((OgnlExpression) aspectDef
+                            .getExpression()).getSource());
+                }
+            }
+        }
+        return map;
     }
 }

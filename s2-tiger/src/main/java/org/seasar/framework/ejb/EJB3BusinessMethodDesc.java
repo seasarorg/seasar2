@@ -60,11 +60,16 @@ public class EJB3BusinessMethodDesc {
         if (!ejb3desc.isCMT()) {
             return;
         }
-        final TransactionAttribute attribute = method
+        TransactionAttribute attribute = method
                 .getAnnotation(TransactionAttribute.class);
         if (attribute == null) {
-            transactionAttributeType = ejb3desc.getTransactionAttributeType();
-            return;
+            final Class<?> declaringClass = method.getDeclaringClass();
+            attribute = declaringClass
+                    .getAnnotation(TransactionAttribute.class);
+            if (attribute == null) {
+                transactionAttributeType = TransactionAttributeType.REQUIRED;
+                return;
+            }
         }
         transactionAttributeType = attribute.value();
     }
