@@ -2,6 +2,7 @@
 <!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN" 
 	"http://www.seasar.org/dtd/components24.dtd">
 <components>
+	<include path="ejb3tx.dicon"/>
     <component
       class="org.seasar.framework.container.autoregister.FileSystemComponentAutoRegister">
         <initMethod name="addClassPattern">

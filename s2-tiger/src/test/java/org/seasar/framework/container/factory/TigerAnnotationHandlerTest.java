@@ -279,7 +279,7 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
     public void testAppendAspectForEJB3CMT3() throws Exception {
         ComponentDef cd = handler.createComponentDef(Hoge7.class, null);
         handler.appendAspect(cd);
-        assertEquals("1", 0, cd.getAspectDefSize());
+        assertEquals("1", 1, cd.getAspectDefSize());
     }
 
     public void testAppendAspectForEJB3BMT() throws Exception {
