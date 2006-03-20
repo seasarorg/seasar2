@@ -34,8 +34,12 @@ public class MetaAutoRegister extends AbstractComponentTargetAutoRegister {
     }
 
     protected void register(final ComponentDef cd) {
-        for (int i = 0; i < componentDef.getMetaDefSize(); ++i) {
-            final MetaDef meta = componentDef.getMetaDef(i);
+        final MetaDef metaDef = componentDef.getMetaDef("autoRegister");
+        if (metaDef == null) {
+            return;
+        }
+        for (int i = 0; i < metaDef.getMetaDefSize(); ++i) {
+            final MetaDef meta = metaDef.getMetaDef(i);
             cd.addMetaDef(new MetaDefImpl(meta.getName(), meta.getValue()));
         }
     }
