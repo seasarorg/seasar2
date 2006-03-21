@@ -15,11 +15,9 @@
  */
 package org.seasar.framework.ejb.unit;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.seasar.extension.dataset.ColumnType;
@@ -104,8 +102,7 @@ public class EntityReader implements DataReader {
         }
         processedEntities.add(entity);
 
-        List<PersistentClassDesc> relationships = new ArrayList<PersistentClassDesc>();
-        Map<PersistentClassDesc, Object> relationshipValues = new HashMap<PersistentClassDesc, Object>();
+        Map<Object, PersistentClassDesc> relationshipValues = new LinkedHashMap<Object, PersistentClassDesc>();
 
         DataRow row = null;
         for (int i = 0; i < me.getPersistentStateDescSize(); ++i) {
@@ -122,72 +119,68 @@ public class EntityReader implements DataReader {
                     row = dataTable.addRow();
                 }
             }
-            Object stateValue = stateDesc.getValue(entity);
+
+            Object state = stateDesc.getValue(entity);
             if (stateDesc.isToOneRelationship()
                     || stateDesc.isToManyRelationship()) {
                 PersistentClassDesc you = stateDesc.getRelationshipClassDesc();
-                Class from = me.getPersistentClass();
-                Class to = you.getPersistentClass();
-                if (!paths.contains(new Path(to, from)) && !isEmpty(stateValue)) {
-                    paths.add(new Path(from, to));
-                    relationships.add(you);
-                    relationshipValues.put(you, stateValue);
+                if (!paths.contains(new Path(you, me)) && !isStateEmpty(state)) {
+                    paths.add(new Path(me, you));
+                    relationshipValues.put(state, you);
+                }
+                if (stateDesc.isToOneRelationship()) {
+                    setupForeignKeys(row, stateDesc, state);
                 }
             } else if (stateDesc.isEmbedded()) {
                 PersistentClassDesc embDesc = stateDesc.getEmbeddedClassDesc();
                 for (int j = 0; j < embDesc.getPersistentStateDescSize(); j++) {
                     PersistentStateDesc embeddedState = embDesc
                             .getPersistentStateDesc(j);
-                    Object embValue = embeddedState.getValue(stateValue);
+                    Object embValue = embeddedState.getValue(state);
                     setupRow(row, embeddedState, embValue);
                 }
+            } else {
+                setupRow(row, stateDesc, state);
             }
-            if (stateDesc.isEmbedded() || stateDesc.isToManyRelationship()) {
-                continue;
-            }
-            setupRow(row, stateDesc, stateValue);
         }
         row.setState(RowStates.UNCHANGED);
 
-        setupRelationshipRows(relationships, relationshipValues);
+        setupRelationshipRows(relationshipValues);
     }
 
     protected void setupRow(DataRow row, PersistentStateDesc stateDesc,
             Object value) {
-        if (stateDesc.isToOneRelationship()) {
-            for (int i = 0; i < stateDesc.getForeignKeyColumnSize(); i++) {
-                PersistentColumn fk = stateDesc.getForeignKeyColumn(i);
-                Object converted = null;
-                if (value != null) {
-                    PersistentClassDesc rel = stateDesc
-                            .getRelationshipClassDesc();
-                    if (rel
-                            .hasReferencedStateDesc(fk
-                                    .getReferencedColumnName())) {
-                        PersistentStateDesc refState = rel
-                                .getReferencedStateDesc(fk
-                                        .getReferencedColumnName());
-                        Class refStateType = refState.getPersistentStateType();
-                        ColumnType ct = ColumnTypes.getColumnType(refStateType);
-                        converted = ct.convert(refState.getValue(value), null);
-                    }
+        PersistentColumn column = stateDesc.getColumn();
+        Class stateType = stateDesc.getPersistentStateType();
+        ColumnType ct = ColumnTypes.getColumnType(stateType);
+        row.setValue(column.getName(), ct.convert(value, null));
+    }
+
+    protected void setupForeignKeys(DataRow row, PersistentStateDesc stateDesc,
+            Object value) {
+        for (int i = 0; i < stateDesc.getForeignKeyColumnSize(); i++) {
+            PersistentColumn fk = stateDesc.getForeignKeyColumn(i);
+            Object converted = null;
+            if (value != null) {
+                PersistentClassDesc rel = stateDesc.getRelationshipClassDesc();
+                if (rel.hasReferencedStateDesc(fk.getReferencedColumnName())) {
+                    PersistentStateDesc refState = rel
+                            .getReferencedStateDesc(fk
+                                    .getReferencedColumnName());
+                    Class refStateType = refState.getPersistentStateType();
+                    ColumnType ct = ColumnTypes.getColumnType(refStateType);
+                    converted = ct.convert(refState.getValue(value), null);
                 }
-                row.setValue(fk.getName(), converted);
             }
-        } else {
-            PersistentColumn column = stateDesc.getColumn();
-            Class stateType = stateDesc.getPersistentStateType();
-            ColumnType ct = ColumnTypes.getColumnType(stateType);
-            row.setValue(column.getName(), ct.convert(value, null));
+            row.setValue(fk.getName(), converted);
         }
     }
 
     protected void setupRelationshipRows(
-            List<PersistentClassDesc> relationships,
-            Map<PersistentClassDesc, Object> relationshipValues) {
+            Map<Object, PersistentClassDesc> relationshipValues) {
 
-        for (PersistentClassDesc classDesc : relationships) {
-            Object value = relationshipValues.get(classDesc);
+        for (Object value : relationshipValues.keySet()) {
+            PersistentClassDesc classDesc = relationshipValues.get(value);
             if (value instanceof Collection) {
                 for (Object element : (Collection) value) {
                     setupRow(classDesc, element);
@@ -198,11 +191,11 @@ public class EntityReader implements DataReader {
         }
     }
 
-    protected boolean isEmpty(Object value) {
-        if (value == null) {
+    protected boolean isStateEmpty(Object state) {
+        if (state == null) {
             return true;
         }
-        if (value instanceof Collection && ((Collection) value).isEmpty()) {
+        if (state instanceof Collection && ((Collection) state).isEmpty()) {
             return true;
         }
         return false;
@@ -217,11 +210,11 @@ public class EntityReader implements DataReader {
     }
 
     private static class Path {
-        private final Class from;
+        private final PersistentClassDesc from;
 
-        private final Class to;
+        private final PersistentClassDesc to;
 
-        Path(Class from, Class to) {
+        Path(PersistentClassDesc from, PersistentClassDesc to) {
             this.from = from;
             this.to = to;
         }
