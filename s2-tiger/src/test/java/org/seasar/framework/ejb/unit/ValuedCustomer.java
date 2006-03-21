@@ -15,23 +15,20 @@
  */
 package org.seasar.framework.ejb.unit;
 
-import java.util.List;
+import javax.persistence.Entity;
+import javax.persistence.PrimaryKeyJoinColumn;
 
-import org.seasar.framework.ejb.unit.impl.EntityClassDescFactory;
+@Entity
+@PrimaryKeyJoinColumn(name="CUST_ID")
+public class ValuedCustomer extends Customer {
 
-/**
- * @author taedium
- * 
- */
-public class EntityListReader extends EntityReader {
+    protected Integer rank;
 
-    public EntityListReader(List list) {
-        PersistentClassDesc pcd = EntityClassDescFactory
-                .getEntityClassDesc(list.get(0).getClass());
-        setupColumns(pcd);
-        for (int i = 0; i < list.size(); ++i) {
-            setupRow(pcd, list.get(i));
-            release(list.get(i));
-        }
+    public Integer getRank() {
+        return rank;
+    }
+
+    public void setRank(Integer rank) {
+        this.rank = rank;
     }
 }

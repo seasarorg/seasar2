@@ -13,25 +13,20 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.framework.ejb.unit;
+package org.seasar.framework.ejb.unit.impl;
 
-import java.util.List;
+import javax.persistence.Entity;
 
-import org.seasar.framework.ejb.unit.impl.EntityClassDescFactory;
+@Entity
+public class ValuedCustomer3 extends Customer3 {
 
-/**
- * @author taedium
- * 
- */
-public class EntityListReader extends EntityReader {
+    protected Integer rank;
 
-    public EntityListReader(List list) {
-        PersistentClassDesc pcd = EntityClassDescFactory
-                .getEntityClassDesc(list.get(0).getClass());
-        setupColumns(pcd);
-        for (int i = 0; i < list.size(); ++i) {
-            setupRow(pcd, list.get(i));
-            release(list.get(i));
-        }
+    public Integer getRank() {
+        return rank;
+    }
+
+    public void setRank(Integer rank) {
+        this.rank = rank;
     }
 }

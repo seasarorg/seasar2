@@ -15,23 +15,15 @@
  */
 package org.seasar.framework.ejb.unit;
 
-import java.util.List;
-
-import org.seasar.framework.ejb.unit.impl.EntityClassDescFactory;
-
 /**
  * @author taedium
- * 
+ *
  */
-public class EntityListReader extends EntityReader {
+public interface PersistentColumn {
 
-    public EntityListReader(List list) {
-        PersistentClassDesc pcd = EntityClassDescFactory
-                .getEntityClassDesc(list.get(0).getClass());
-        setupColumns(pcd);
-        for (int i = 0; i < list.size(); ++i) {
-            setupRow(pcd, list.get(i));
-            release(list.get(i));
-        }
-    }
+    String getName();
+    
+    String getTableName();
+    
+    String getReferencedColumnName();
 }

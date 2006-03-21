@@ -13,21 +13,26 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.framework.ejb.unit.impl;
+package org.seasar.framework.ejb.unit;
 
 import java.util.Collection;
 import java.util.HashSet;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
 import javax.persistence.OneToMany;
 
 @Entity
-public class Department {
+@IdClass(Department3PK.class)
+public class Department3 {
 
 	@Id
-	private Long id;
-	
+	private Long id1;
+
+    @Id
+    private Long id2;
+    
 	private long deptno;
 
 	private String name; 
@@ -35,11 +40,12 @@ public class Department {
 	@OneToMany(mappedBy = "department")
 	private Collection<Employee> employees = new HashSet<Employee>();
 
-	public Department() {
+	public Department3() {
 	}
 
-	public Department(Long id, long deptno, String name) {
-		this.id = id;
+	public Department3(Long id1, Long id2, long deptno, String name) {
+		this.id1 = id1;
+		this.id2 = id2;
 		this.deptno = deptno;
 		this.name = name;
 	}
@@ -52,15 +58,23 @@ public class Department {
 		this.employees = employees;
 	}
 
-	public Long getId() {
-		return id;
-	}
+	public Long getId1() {
+        return id1;
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public void setId1(Long id1) {
+        this.id1 = id1;
+    }
 
-	public long getDeptno() {
+    public Long getId2() {
+        return id2;
+    }
+
+    public void setId2(Long id2) {
+        this.id2 = id2;
+    }
+
+    public long getDeptno() {
 		return deptno;
 	}
 
@@ -78,8 +92,8 @@ public class Department {
 	
 	@Override
     public boolean equals(Object other) {
-        if ( !(other instanceof Department) ) return false;
-        Department castOther = (Department) other;
+        if ( !(other instanceof Department3) ) return false;
+        Department3 castOther = (Department3) other;
         return this.getDeptno() == castOther.getDeptno();
     }
 
@@ -87,4 +101,5 @@ public class Department {
     public int hashCode() {
         return (int) this.getDeptno();
     }
+
 }

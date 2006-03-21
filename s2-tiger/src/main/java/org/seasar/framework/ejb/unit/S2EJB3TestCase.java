@@ -1,3 +1,18 @@
+/*
+ * Copyright 2004-2006 the Seasar Foundation and the Others.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, 
+ * either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
 package org.seasar.framework.ejb.unit;
 
 import java.lang.reflect.Method;
@@ -6,6 +21,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 
 import org.seasar.extension.dataset.DataSet;
+import org.seasar.extension.dataset.DataTable;
 import org.seasar.extension.unit.S2TestCase;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.ejb.unit.annotation.Rollback;
@@ -35,10 +51,22 @@ public abstract class S2EJB3TestCase extends S2TestCase {
 
     @Override
     public DataSet reload(DataSet dataSet) {
-        entityManager.flush();
+        flush();
         return super.reload(dataSet);
     }
-    
+
+    @Override
+    public DataTable reload(DataTable table) {
+        flush();
+        return super.reload(table);
+    }
+
+    private void flush() {
+        if (entityManager != null) {
+            entityManager.flush();
+        }
+    }
+
     @Override
     protected void setUpAfterContainerInit() throws Throwable {
         super.setUpAfterContainerInit();

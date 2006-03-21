@@ -15,23 +15,37 @@
  */
 package org.seasar.framework.ejb.unit;
 
-import java.util.List;
+import static javax.persistence.InheritanceType.JOINED;
 
-import org.seasar.framework.ejb.unit.impl.EntityClassDescFactory;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.Table;
 
-/**
- * @author taedium
- * 
- */
-public class EntityListReader extends EntityReader {
+@Entity
+@Table(name="CUST")
+@Inheritance(strategy=JOINED)
+public class Customer {
 
-    public EntityListReader(List list) {
-        PersistentClassDesc pcd = EntityClassDescFactory
-                .getEntityClassDesc(list.get(0).getClass());
-        setupColumns(pcd);
-        for (int i = 0; i < list.size(); ++i) {
-            setupRow(pcd, list.get(i));
-            release(list.get(i));
-        }
+    @Id
+    protected Long id;
+    
+    protected String name;
+
+    public Long getId() {
+        return id;
     }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+    
 }

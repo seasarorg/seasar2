@@ -21,6 +21,7 @@ import static javax.persistence.InheritanceType.SINGLE_TABLE;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.Table;
 
@@ -31,6 +32,7 @@ import javax.persistence.Table;
 @DiscriminatorValue("CUSTOMER")
 public class Customer {
 
+    @Id
     protected Long id;
     
     protected String name;

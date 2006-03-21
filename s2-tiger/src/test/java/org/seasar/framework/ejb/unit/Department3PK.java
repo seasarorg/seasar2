@@ -15,23 +15,29 @@
  */
 package org.seasar.framework.ejb.unit;
 
-import java.util.List;
+public class Department3PK {
+    private Long id1;
 
-import org.seasar.framework.ejb.unit.impl.EntityClassDescFactory;
+    private Long id2;
 
-/**
- * @author taedium
- * 
- */
-public class EntityListReader extends EntityReader {
+    public Department3PK(Long id1, Long id2) {
+        this.id1 = id1;
+        this.id2 = id2;
+    }
+    
+    public Long getId1() {
+        return id1;
+    }
 
-    public EntityListReader(List list) {
-        PersistentClassDesc pcd = EntityClassDescFactory
-                .getEntityClassDesc(list.get(0).getClass());
-        setupColumns(pcd);
-        for (int i = 0; i < list.size(); ++i) {
-            setupRow(pcd, list.get(i));
-            release(list.get(i));
-        }
+    public void setId1(Long id1) {
+        this.id1 = id1;
+    }
+
+    public Long getId2() {
+        return id2;
+    }
+
+    public void setId2(Long id2) {
+        this.id2 = id2;
     }
 }

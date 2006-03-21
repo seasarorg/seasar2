@@ -15,38 +15,43 @@
  */
 package org.seasar.framework.ejb.unit;
 
+import java.util.Collection;
+import java.util.HashSet;
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 @Entity
-public class Employee3 {
+public class Department2 {
+
 	@Id
+    @Column(name="DEPT_ID")
 	private Long id;
 	
-	private long empno;
-	
-	private String name;
-	
-	@ManyToOne
-	private Employee3 boss;
+	private long deptno;
 
-	public Employee3() {
+	private String name; 
+	
+	@OneToMany(mappedBy = "department")
+	private Collection<Employee> employees = new HashSet<Employee>();
+
+	public Department2() {
 	}
 
-	public Employee3(Long id, long empno, String name, Employee3 boss) {
+	public Department2(Long id, long deptno, String name) {
 		this.id = id;
-		this.empno = empno;
+		this.deptno = deptno;
 		this.name = name;
-		this.boss = boss;
+	}
+	
+	public Collection<Employee> getEmployees() {
+		return employees;
 	}
 
-	public Employee3 getBoss() {
-		return boss;
-	}
-
-	public void setBoss(Employee3 boss) {
-		this.boss = boss;
+	public void setEmployees(Collection<Employee> employees) {
+		this.employees = employees;
 	}
 
 	public Long getId() {
@@ -57,6 +62,14 @@ public class Employee3 {
 		this.id = id;
 	}
 
+	public long getDeptno() {
+		return deptno;
+	}
+
+	public void setDeptno(long deptno) {
+		this.deptno = deptno;
+	}
+
 	public String getName() {
 		return name;
 	}
@@ -64,24 +77,16 @@ public class Employee3 {
 	public void setName(String name) {
 		this.name = name;
 	}
-
-	public long getEmpno() {
-		return empno;
-	}
-
-	public void setEmpno(long empno) {
-		this.empno = empno;
-	}
 	
 	@Override
     public boolean equals(Object other) {
-        if ( !(other instanceof Employee) ) return false;
-        Employee castOther = (Employee) other;
-        return this.getEmpno() == castOther.getEmpno();
+        if ( !(other instanceof Department2) ) return false;
+        Department2 castOther = (Department2) other;
+        return this.getDeptno() == castOther.getDeptno();
     }
 
 	@Override
     public int hashCode() {
-        return (int) this.getEmpno();
+        return (int) this.getDeptno();
     }
 }

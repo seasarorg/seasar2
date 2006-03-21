@@ -13,25 +13,19 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.framework.ejb.unit;
+package org.seasar.framework.ejb.unit.impl;
 
-import java.util.List;
+import junit.framework.TestCase;
 
-import org.seasar.framework.ejb.unit.impl.EntityClassDescFactory;
+import org.seasar.framework.ejb.unit.PersistentStateDesc;
 
-/**
- * @author taedium
- * 
- */
-public class EntityListReader extends EntityReader {
-
-    public EntityListReader(List list) {
-        PersistentClassDesc pcd = EntityClassDescFactory
-                .getEntityClassDesc(list.get(0).getClass());
-        setupColumns(pcd);
-        for (int i = 0; i < list.size(); ++i) {
-            setupRow(pcd, list.get(i));
-            release(list.get(i));
-        }
+public class EntityClassDescFactoryTest extends TestCase {
+    
+    public void test() {
+        EntityClassDesc entityDesc =  EntityClassDescFactory.getEntityClassDesc(Employee.class);
+        PersistentStateDesc stateDesc = entityDesc.getPersistentStateDesc("Employee.department");
+        assertNotNull("1", stateDesc.getRelationshipClassDesc());
+        assertTrue("2", stateDesc.getForeignKeyColumnSize() > 0);
     }
+
 }
