@@ -164,7 +164,9 @@ public abstract class S2FrameworkTestCase extends TestCase {
 
     protected void setUpContainer() throws Throwable {
         container = new S2ContainerImpl();
-        servletContext = new MockServletContextImpl("s2-example");
+        if (servletContext == null) {
+            servletContext = new MockServletContextImpl("s2-example");
+        }
         request = servletContext.createRequest("/hello.html");
         response = new MockHttpServletResponseImpl(request);
         servletConfig = new MockServletConfigImpl();
