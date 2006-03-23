@@ -15,6 +15,11 @@
  */
 package org.seasar.framework.container.assembler;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+
+import org.seasar.framework.beans.BeanDesc;
+import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.PropertyAssembler;
 
@@ -27,5 +32,29 @@ public abstract class AbstractPropertyAssembler extends AbstractAssembler
 
     public AbstractPropertyAssembler(ComponentDef componentDef) {
         super(componentDef);
+    }
+    
+    protected PropertyDesc getPropertyDesc(BeanDesc beanDesc, String propName, Field field) {
+        PropertyDesc propDesc = null;
+        if (field == null || beanDesc.hasPropertyDesc(propName)) {
+            propDesc = beanDesc.getPropertyDesc(propName);
+        }
+        return propDesc;
+    }
+    
+    protected Field getField(BeanDesc beanDesc, String propName) {
+        Field field = null;
+        if (beanDesc.hasField(propName)) {
+            field = beanDesc.getField(propName);
+            if (!isSettable(field)) {
+                field = null;
+            }
+        }
+        return field;
+    }
+    
+    protected boolean isSettable(Field field) {
+        int mod = field.getModifiers();
+        return !Modifier.isStatic(mod) && !Modifier.isFinal(mod); 
     }
 }

@@ -15,10 +15,16 @@
  */
 package org.seasar.framework.container.assembler;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import junit.framework.TestCase;
 
 import org.seasar.framework.container.ComponentDef;
+import org.seasar.framework.container.PropertyDef;
 import org.seasar.framework.container.S2Container;
+import org.seasar.framework.container.impl.ComponentDefImpl;
+import org.seasar.framework.container.impl.PropertyDefImpl;
 import org.seasar.framework.container.impl.S2ContainerImpl;
 
 public class AbstractBindingTypeDefTest extends TestCase {
@@ -37,6 +43,28 @@ public class AbstractBindingTypeDefTest extends TestCase {
         ComponentDefAware cdAware = (ComponentDefAware) cd.getComponent();
         assertSame("1", cd, cdAware.getComponentDef());
     }
+    
+    public void testBindAutoForField() throws Exception {
+        S2Container container = new S2ContainerImpl();
+        ComponentDefImpl cd = new ComponentDefImpl(Hoge.class);
+        container.register(cd);
+        container.register(new ArrayList());
+        container.register(new ArrayList());
+        Hoge hoge = (Hoge) container.getComponent(Hoge.class);
+        assertNull("1", hoge.aaa);
+    }
+    
+    public void testBindAutoForField2() throws Exception {
+        S2Container container = new S2ContainerImpl();
+        ComponentDefImpl cd = new ComponentDefImpl(Hoge2.class);
+        cd.setAutoBindingDef(AutoBindingDefFactory.SEMIAUTO);
+        PropertyDef propDef = new PropertyDefImpl("aaa");
+        cd.addPropertyDef(propDef);
+        container.register(cd);
+        container.register(new ArrayList());
+        Hoge2 hoge2 = (Hoge2) container.getComponent(Hoge2.class);
+        assertNotNull("1", hoge2.aaa);
+    }
 
     public static class ComponentDefAware {
         private ComponentDef componentDef;
@@ -48,5 +76,16 @@ public class AbstractBindingTypeDefTest extends TestCase {
         public void setComponentDef(ComponentDef componentDef) {
             this.componentDef = componentDef;
         }
+    }
+    
+    public static class Hoge {
+        private List aaa;
+        public List getAaa() {
+            return aaa;
+        }
+    }
+    
+    public static class Hoge2 {
+        private List aaa;
     }
 }

@@ -22,7 +22,6 @@ import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.beans.factory.BeanDescFactory;
 import org.seasar.framework.container.PropertyDef;
 import org.seasar.framework.container.S2Container;
-import org.seasar.framework.container.assembler.BindingTypeDefFactory;
 import org.seasar.framework.container.impl.ComponentDefImpl;
 import org.seasar.framework.container.impl.PropertyDefImpl;
 import org.seasar.framework.container.impl.S2ContainerImpl;
@@ -44,6 +43,8 @@ public class BindingTypeShouldDefTest extends TestCase {
         A a = new A();
         BindingTypeDefFactory.SHOULD.bind(cd, propDef, propDesc, null, a);
     }
+    
+    
 
     public interface Foo {
         public String getHogeName();

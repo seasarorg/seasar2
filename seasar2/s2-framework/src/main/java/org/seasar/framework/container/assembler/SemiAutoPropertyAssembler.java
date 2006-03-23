@@ -42,14 +42,8 @@ public class SemiAutoPropertyAssembler extends AbstractPropertyAssembler {
         for (int i = 0; i < size; ++i) {
             PropertyDef propDef = cd.getPropertyDef(i);
             String propName = propDef.getPropertyName();
-            Field field = null;
-            if (beanDesc.hasField(propName)) {
-                field = beanDesc.getField(propName);
-            }
-            PropertyDesc propDesc = null;
-            if (field == null || beanDesc.hasPropertyDesc(propName)) {
-                propDesc = beanDesc.getPropertyDesc(propName);
-            }
+            Field field = getField(beanDesc, propName);
+            PropertyDesc propDesc = getPropertyDesc(beanDesc, propName, field);
             BindingTypeDefFactory.SHOULD.bind(getComponentDef(), propDef,
                     propDesc, field, component);
         }

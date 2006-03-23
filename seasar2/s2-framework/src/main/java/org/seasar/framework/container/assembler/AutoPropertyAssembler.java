@@ -47,11 +47,8 @@ public class AutoPropertyAssembler extends AbstractPropertyAssembler {
             PropertyDef propDef = cd.getPropertyDef(i);
             BindingTypeDef bindingTypeDef = propDef.getBindingTypeDef();
             String propName = propDef.getPropertyName();
-            PropertyDesc propDesc = beanDesc.getPropertyDesc(propName);;
-            Field field = null;
-            if (beanDesc.hasField(propName)) {
-                field = beanDesc.getField(propName);
-            }
+            Field field = getField(beanDesc, propName);
+            PropertyDesc propDesc = getPropertyDesc(beanDesc, propName, field);
             bindingTypeDef.bind(cd, propDef, propDesc, field, component);
             names.add(propName);
         }
@@ -59,10 +56,7 @@ public class AutoPropertyAssembler extends AbstractPropertyAssembler {
 			PropertyDesc propDesc = beanDesc.getPropertyDesc(i);
 			String propName = propDesc.getPropertyName();
             if (!names.contains(propName)) {
-                Field field = null;
-                if (beanDesc.hasField(propName)) {
-                    field = beanDesc.getField(propName);
-                }
+                Field field = getField(beanDesc, propName);
                 BindingTypeDefFactory.SHOULD.bind(cd, null, propDesc, field, component);
             }
 		}
