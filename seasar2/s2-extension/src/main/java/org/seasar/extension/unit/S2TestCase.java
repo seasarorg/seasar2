@@ -75,7 +75,7 @@ public abstract class S2TestCase extends S2FrameworkTestCase {
 		super(name);
 	}
     
-    protected void runTest() throws Throwable {
+    protected void doRunTest() throws Throwable {
         TransactionManager tm = null;
         if (needTransaction()) {
             try {
@@ -86,7 +86,7 @@ public abstract class S2TestCase extends S2FrameworkTestCase {
             }
         }
         try {
-            super.runTest();
+            super.doRunTest();
         } finally {
             if (tm != null) {
                 tm.rollback();

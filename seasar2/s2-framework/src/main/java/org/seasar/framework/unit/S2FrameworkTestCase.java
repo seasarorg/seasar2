@@ -141,7 +141,7 @@ public abstract class S2FrameworkTestCase extends TestCase {
                         bindFields();
                         setUpAfterBindFields();
                         try {
-                            runTest();
+                            doRunTest();
                         } finally {
                             tearDownBeforeUnbindFields();
                             unbindFields();
@@ -219,6 +219,10 @@ public abstract class S2FrameworkTestCase extends TestCase {
         if (targetName.length() > 0) {
             invoke("tearDown" + getTargetName());
         }
+    }
+    
+    protected void doRunTest() throws Throwable {
+        runTest();
     }
 
     protected Servlet getServlet() {
