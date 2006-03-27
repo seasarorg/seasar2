@@ -20,6 +20,7 @@ import java.util.List;
 
 import javax.ejb.EJB;
 import javax.persistence.EntityManager;
+import javax.transaction.TransactionManager;
 
 import org.seasar.extension.dataset.DataRow;
 import org.seasar.extension.dataset.DataSet;
@@ -39,18 +40,18 @@ public class S2EJB3TestCaseTest extends S2EJB3TestCase {
     @EJB
     private IHoge hoge;
 
-//    @Override
-//    protected void setUp() throws Exception {
-//        super.setUp();
-//        register(Hoge.class);
-//        register(Foo.class);
-//    }
-//    
-//    public void testRegisterEJB() throws Exception {
-//        assertNotNull("1", hoge);
-//        BeanDesc beanDesc = BeanDescFactory.getBeanDesc(Hoge.class);
-//        assertNotNull("2", beanDesc.getFieldValue("foo", hoge));
-//    }
+    // @Override
+    // protected void setUp() throws Exception {
+    // super.setUp();
+    // register(Hoge.class);
+    // register(Foo.class);
+    // }
+    //    
+    // public void testRegisterEJB() throws Exception {
+    // assertNotNull("1", hoge);
+    // BeanDesc beanDesc = BeanDescFactory.getBeanDesc(Hoge.class);
+    // assertNotNull("2", beanDesc.getFieldValue("foo", hoge));
+    // }
 
     public void testAssertEntityEquals() {
         DataSet expected = new DataSetImpl();
@@ -111,6 +112,25 @@ public class S2EJB3TestCaseTest extends S2EJB3TestCase {
 
     public void testGetEntityManager() {
         assertNotNull("1", getEntityManager());
+    }
+
+    public void testIsTransactionActinveReturnTrue() throws Exception {
+        include("ejb3tx.dicon");
+        TransactionManager tm = null;
+        tm = (TransactionManager) getComponent(TransactionManager.class);
+        try {
+            tm.begin();
+            assertEquals(true, isTransactionActive());
+        } catch (Throwable t) {
+            System.out.println(t);
+            fail();
+        } finally {
+            tm.rollback();
+        }
+    }
+
+    public void testIsTransactionActinveReturnFalse() throws Exception {
+        assertEquals(false, isTransactionActive());
     }
 
     private static class RollbackAnnotationTest extends S2EJB3TestCase {

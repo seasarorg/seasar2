@@ -22,6 +22,9 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.transaction.Status;
+import javax.transaction.Transaction;
+import javax.transaction.TransactionManager;
 
 import org.seasar.extension.dataset.DataSet;
 import org.seasar.extension.dataset.DataTable;
@@ -36,6 +39,7 @@ import org.seasar.framework.ejb.unit.annotation.Rollback;
 import org.seasar.framework.exception.EmptyRuntimeException;
 import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.ResourceUtil;
+import org.seasar.framework.util.TransactionManagerUtil;
 
 /**
  * @author taedium
@@ -58,16 +62,16 @@ public abstract class S2EJB3TestCase extends S2TestCase {
         super(name);
     }
 
-//    @Override
-//    protected void setUp() throws Exception {
-//        super.setUp();
-//        if (ResourceUtil.isExist(EJB3TX_DICON)) {
-//            include(EJB3TX_DICON);
-//        }
-//        if (ResourceUtil.isExist(S2HIBERNATE_JPA_DICON)) {
-//            include(S2HIBERNATE_JPA_DICON);
-//        }
-//    }
+    // @Override
+    // protected void setUp() throws Exception {
+    // super.setUp();
+    // if (ResourceUtil.isExist(EJB3TX_DICON)) {
+    // include(EJB3TX_DICON);
+    // }
+    // if (ResourceUtil.isExist(S2HIBERNATE_JPA_DICON)) {
+    // include(S2HIBERNATE_JPA_DICON);
+    // }
+    // }
 
     @Override
     public void register(Class componentClass) {
@@ -113,10 +117,20 @@ public abstract class S2EJB3TestCase extends S2TestCase {
         return super.reload(table);
     }
 
-    private void flush() {
-        if (entityManager != null) {
+    protected void flush() {
+        if (entityManager != null && isTransactionActive()) {
             entityManager.flush();
         }
+    }
+
+    protected boolean isTransactionActive() {
+        try {
+            TransactionManager tm = (TransactionManager) getComponent(TransactionManager.class);
+            return tm != null && tm.getStatus() != Status.STATUS_NO_TRANSACTION;
+        } catch (Throwable t) {
+            System.err.println(t);
+        }
+        return false;
     }
 
     @Override
