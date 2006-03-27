@@ -22,7 +22,9 @@ package org.seasar.framework.ejb.unit;
  */
 public interface PersistentStateDesc {
     
-    String getTableName();
+    PersistentClassDesc getOwner();
+    
+    boolean hasColumn(String columnName);
     
     PersistentColumn getColumn();
  
@@ -58,8 +60,6 @@ public interface PersistentStateDesc {
     
     boolean isIdentifier();
 
-    boolean hasReferencedColumn(String columnName);
-
     void setupForeignKeyColumns();
 
     void addForeignKeyColumn(PersistentColumn column);
@@ -67,4 +67,10 @@ public interface PersistentStateDesc {
     int getForeignKeyColumnSize();
     
     PersistentColumn getForeignKeyColumn(int index); 
+    
+    PersistentStateAccessor getAccessor();
+    
+    boolean isDescriminator();
+    
+    boolean isOwningSide();
 }

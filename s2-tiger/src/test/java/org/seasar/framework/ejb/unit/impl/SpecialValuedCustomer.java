@@ -16,30 +16,17 @@
 package org.seasar.framework.ejb.unit.impl;
 
 import javax.persistence.Entity;
-import javax.persistence.Id;
 
 @Entity
-public class Hoge4 {
-	private Long aaa;
+public class SpecialValuedCustomer extends ValuedCustomer3 {
 
-	private java.util.Date ccc;
+    protected Integer specialRank;
 
-    public Hoge4(){
+    public Integer getSpecialRank() {
+        return specialRank;
     }
-    
-	@Id
-	public Long getAaa() {
-		return aaa;
-	}
 
-	public void setAaa(Long aaa) {
-		this.aaa = aaa;
-	}
-
-	public void getBbb() {
-	}
-
-	public java.util.Date getCcc() {
-		return ccc;
-	}
+    public void setSpecialRank(Integer specialRank) {
+        this.specialRank = specialRank;
+    }
 }

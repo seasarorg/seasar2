@@ -17,8 +17,6 @@ package org.seasar.framework.ejb.unit.impl;
 
 import java.util.Map;
 
-import javax.persistence.Column;
-
 import org.seasar.framework.ejb.unit.PersistentClassDesc;
 import org.seasar.framework.ejb.unit.PersistentColumn;
 import org.seasar.framework.ejb.unit.PersistentStateDesc;
@@ -31,11 +29,11 @@ import org.seasar.framework.util.StringUtil;
 class AttributeOverridableClassDesc extends AbstractPersistentClassDesc
         implements PersistentClassDesc {
 
-    private Map<String, Column> attribOverrides;
+    private final Map<String, PersistentColumn> attribOverrides;
 
     public AttributeOverridableClassDesc(Class persistentClass,
             String primaryTableName, boolean propertyAccessed,
-            Map<String, Column> attribOverrides) {
+            Map<String, PersistentColumn> attribOverrides) {
 
         super(persistentClass);
 
@@ -47,21 +45,21 @@ class AttributeOverridableClassDesc extends AbstractPersistentClassDesc
     }
 
     private void overrideAttributes() {
-        for (int i = 0; i < stateDescs.size(); i++) {
-            PersistentStateDesc psd = stateDescs.get(i);
+        for (int i = 0; i < getPersistentStateDescSize(); i++) {
+            PersistentStateDesc psd = getPersistentStateDesc(i);
             if (attribOverrides.containsKey(psd.getStateName())) {
                 override(psd, attribOverrides.get(psd.getStateName()));
             }
         }
     }
 
-    private void override(PersistentStateDesc psd, Column column) {
+    private void override(PersistentStateDesc psd, PersistentColumn column) {
         PersistentColumn old = psd.getColumn();
 
-        String columnName = StringUtil.isEmpty(column.name()) ? old.getName()
-                : column.name();
-        String tableName = StringUtil.isEmpty(column.table()) ? old
-                .getTableName() : column.table();
+        String columnName = StringUtil.isEmpty(column.getName()) ? old
+                .getName() : column.getName();
+        String tableName = StringUtil.isEmpty(column.getTableName()) ? old
+                .getTableName() : column.getTableName();
 
         PersistentColumn newColumn = new PersistentColumnImpl(tableName,
                 columnName);

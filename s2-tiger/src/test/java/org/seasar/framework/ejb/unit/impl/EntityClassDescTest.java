@@ -102,7 +102,7 @@ public class EntityClassDescTest extends TestCase {
         PersistentStateDesc disc2 = customer
                 .getPersistentStateDesc("Customer.$DISC");
         assertEquals("5", "CUSTOMER", disc2.getValue(null));
-        assertEquals("6", "CUST", disc2.getTableName());
+        assertEquals("6", "CUST", disc2.getColumn().getTableName());
     }
 
     public void testTablePerClassStrategy() {
@@ -142,6 +142,26 @@ public class EntityClassDescTest extends TestCase {
                 "Customer3.id").getColumn().getTableName());
         assertEquals("8", "CUST", customer.getPersistentStateDesc(
                 "Customer3.name").getColumn().getTableName());
+    }
+    
+    public void testJoineStrategy2() {
+        PersistentClassDesc svc = new EntityClassDesc(SpecialValuedCustomer.class);
+
+        assertEquals("1", 6, svc.getPersistentStateDescSize());
+        assertEquals("2", "CUST", svc.getPersistentStateDesc("Customer3.id")
+                .getColumn().getTableName());
+        assertEquals("3", "CUST", svc.getPersistentStateDesc("Customer3.name")
+                .getColumn().getTableName());
+        
+        assertEquals("4", "VALUEDCUSTOMER3", svc.getPersistentStateDesc(
+        "ValuedCustomer3.id").getColumn().getTableName());
+        assertEquals("5", "VALUEDCUSTOMER3", svc.getPersistentStateDesc(
+                "ValuedCustomer3.rank").getColumn().getTableName());
+        
+        assertEquals("6", "SPECIALVALUEDCUSTOMER", svc.getPersistentStateDesc(
+        "SpecialValuedCustomer.id").getColumn().getTableName());
+        assertEquals("7", "SPECIALVALUEDCUSTOMER", svc.getPersistentStateDesc(
+        "SpecialValuedCustomer.specialRank").getColumn().getTableName());
     }
 
 }

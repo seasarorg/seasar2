@@ -27,13 +27,7 @@ import org.seasar.framework.ejb.unit.PersistentStateDesc;
  * @author taedium
  * 
  */
-public class PersistentFieldDescTest extends TestCase {
-
-    public void testIsProperty() {
-        PersistentClassDesc pc = new EntityClassDesc(Hoge.class);
-        PersistentStateDesc aaa = pc.getPersistentStateDesc("Hoge.aaa");
-        assertFalse("1", aaa.isProperty());
-    }
+public class PersistentStateDescImplTest extends TestCase {
 
     public void testGetTableName() {
         PersistentClassDesc pc = new EntityClassDesc(Hoge.class);
@@ -67,22 +61,6 @@ public class PersistentFieldDescTest extends TestCase {
         assertEquals("1", "FOO2BBB", bbb.getColumn().getName());
     }
 
-    public void testGetValue() {
-        Hoge hoge = new Hoge();
-        hoge.setBbb(10);
-        PersistentClassDesc psh = new EntityClassDesc(Hoge.class);
-        PersistentStateDesc bbb = psh.getPersistentStateDesc("Hoge.bbb");
-        assertEquals("1", 10, bbb.getValue(hoge));
-    }
-
-    public void testSetValue() {
-        Hoge hoge = new Hoge();
-        PersistentClassDesc pc = new EntityClassDesc(Hoge.class);
-        PersistentStateDesc bbb = pc.getPersistentStateDesc("Hoge.bbb");
-        bbb.setValue(hoge, 10);
-        assertEquals("1", new Integer(10), hoge.getBbb());
-    }
-
     public void testToOneRelationship() {
         PersistentClassDesc pc = new EntityClassDesc(Employee.class);
         PersistentStateDesc dept = pc.getPersistentStateDesc("Employee.department");
@@ -110,7 +88,6 @@ public class PersistentFieldDescTest extends TestCase {
         PersistentClassDesc pc = new EntityClassDesc(Employee2.class);
         PersistentStateDesc period = pc.getPersistentStateDesc("Employee2.period");
 
-        assertEquals("1", "EMPLOYEE2", period.getTableName());
         assertEquals("2", EmployeePeriod.class, period.getPersistentStateType());
         assertTrue("3", period.isEmbedded());
         assertFalse("4", period.isToOneRelationship());

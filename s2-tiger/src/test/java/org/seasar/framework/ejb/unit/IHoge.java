@@ -13,33 +13,11 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.framework.ejb.unit.impl;
+package org.seasar.framework.ejb.unit;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.ejb.Local;
 
-@Entity
-public class Hoge4 {
-	private Long aaa;
-
-	private java.util.Date ccc;
-
-    public Hoge4(){
-    }
-    
-	@Id
-	public Long getAaa() {
-		return aaa;
-	}
-
-	public void setAaa(Long aaa) {
-		this.aaa = aaa;
-	}
-
-	public void getBbb() {
-	}
-
-	public java.util.Date getCcc() {
-		return ccc;
-	}
+@Local
+public interface IHoge {
+    void aaa();
 }

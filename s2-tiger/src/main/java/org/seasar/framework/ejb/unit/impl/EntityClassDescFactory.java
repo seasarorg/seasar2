@@ -91,7 +91,7 @@ public final class EntityClassDescFactory {
                 PersistentClassDesc relDesc = stateDesc
                         .getRelationshipClassDesc();
                 setupForeignKeyColumns(relDesc, processed);
-                if (stateDesc.isToOneRelationship()) {
+                if (stateDesc.isToOneRelationship() && stateDesc.isOwningSide()) {
                     stateDesc.setupForeignKeyColumns();
                 }
             }

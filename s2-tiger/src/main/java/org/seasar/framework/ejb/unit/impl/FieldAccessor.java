@@ -15,53 +15,56 @@
  */
 package org.seasar.framework.ejb.unit.impl;
 
+import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
-import java.util.Collection;
 
-import org.seasar.framework.ejb.unit.PersistentClassDesc;
-import org.seasar.framework.ejb.unit.PersistentStateDesc;
+import javax.persistence.Transient;
+
+import org.seasar.framework.ejb.unit.PersistentStateAccessor;
 import org.seasar.framework.exception.EmptyRuntimeException;
 import org.seasar.framework.util.FieldUtil;
 
-/**
- * @author taedium
- * 
- */
-public class PersistentFieldDesc extends AbstractPersistentStateDesc implements
-        PersistentStateDesc {
+public class FieldAccessor implements PersistentStateAccessor {
 
     private final Field field;
 
-    public PersistentFieldDesc(PersistentClassDesc persistentClassDesc, Field field, String primaryTableName) {
-        super(persistentClassDesc, field.getName(), field.getType(), primaryTableName);
+    public FieldAccessor(Field field) {
         if (field == null) {
             throw new EmptyRuntimeException("field");
         }
         this.field = field;
-        if (Collection.class.isAssignableFrom(field.getType())) {
-            Type type = field.getGenericType();
-            this.collectionType = extractCollectionType(type);
-        }
-        introspection(field);
     }
 
-    @Override
+    public String getName() {
+        return field.getName();
+    }
+
+    public Class<?> getPersistentStateType() {
+        return field.getType();
+    }
+
+    public Type getGenericType() {
+        return field.getGenericType();
+    }
+
     public Object getValue(Object target) {
         return FieldUtil.get(field, target);
     }
 
-    @Override
     public void setValue(Object target, Object value) {
         FieldUtil.set(field, target, value);
     }
 
-    @Override
-    public boolean isProperty() {
-        return false;
+    public boolean isPersistent() {
+        return !(field.isAnnotationPresent(Transient.class)
+                || field.isSynthetic()
+                || Modifier.isTransient(field.getModifiers()) || Modifier
+                .isStatic(field.getModifiers()));
     }
 
-    public Field getField() {
+    public AnnotatedElement getAnnotatedElement() {
         return field;
     }
 }

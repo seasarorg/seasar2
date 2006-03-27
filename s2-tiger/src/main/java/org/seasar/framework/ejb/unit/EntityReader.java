@@ -163,13 +163,13 @@ public class EntityReader implements DataReader {
             Object converted = null;
             if (value != null) {
                 PersistentClassDesc rel = stateDesc.getRelationshipClassDesc();
-                if (rel.hasReferencedStateDesc(fk.getReferencedColumnName())) {
-                    PersistentStateDesc refState = rel
-                            .getReferencedStateDesc(fk
-                                    .getReferencedColumnName());
-                    Class refStateType = refState.getPersistentStateType();
-                    ColumnType ct = ColumnTypes.getColumnType(refStateType);
-                    converted = ct.convert(refState.getValue(value), null);
+                for (int j = 0; j < rel.getPersistentStateDescSize(); j++) {
+                    PersistentStateDesc refState = rel.getPersistentStateDesc(j);
+                    if (refState.hasColumn(fk.getReferencedColumnName())) {
+                        Class refStateType = refState.getPersistentStateType();
+                        ColumnType ct = ColumnTypes.getColumnType(refStateType);
+                        converted = ct.convert(refState.getValue(value), null);
+                    }
                 }
             }
             row.setValue(fk.getName(), converted);

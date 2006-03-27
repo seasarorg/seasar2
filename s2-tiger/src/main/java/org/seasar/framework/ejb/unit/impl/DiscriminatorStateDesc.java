@@ -19,6 +19,7 @@ import javax.persistence.DiscriminatorType;
 
 import org.seasar.framework.ejb.unit.PersistentClassDesc;
 import org.seasar.framework.ejb.unit.PersistentColumn;
+import org.seasar.framework.ejb.unit.PersistentStateAccessor;
 import org.seasar.framework.ejb.unit.PersistentStateDesc;
 import org.seasar.framework.exception.EmptyRuntimeException;
 import org.seasar.framework.util.ClassUtil;
@@ -27,39 +28,29 @@ public class DiscriminatorStateDesc implements PersistentStateDesc {
 
     private final PersistentClassDesc persistentClassDesc;
 
-    private PersistentColumn column;
-    
-    private String tableName;
-
-    private final String columnName;
-
     private final DiscriminatorType discriminatorType;
 
     private final String value;
+    
+    private PersistentColumn column;
 
     public DiscriminatorStateDesc(PersistentClassDesc persistentClassDesc,
-            String tableName, String columnName,
+            PersistentColumn column,
             DiscriminatorType discriminatorType, String value) {
         if (persistentClassDesc == null) {
             throw new EmptyRuntimeException("persistentClassDesc");
         }
-        if (tableName == null) {
-            throw new EmptyRuntimeException("tableName");
-        }
-        if (columnName == null) {
-            throw new EmptyRuntimeException("columnName");
-        }
         if (discriminatorType == null) {
             throw new EmptyRuntimeException("discriminatorType");
         }
+        if (value == null) {
+            throw new EmptyRuntimeException("value");
+        }
         this.persistentClassDesc = persistentClassDesc;
-        this.tableName = tableName;
-        this.columnName = columnName;
-        this.column = new PersistentColumnImpl(tableName, columnName);
         this.discriminatorType = discriminatorType;
         this.value = value;
-
-        this.column = new PersistentColumnImpl(tableName, columnName);
+        
+        setColumn(column);
     }
 
     public Class<?> getCollectionType() {
@@ -71,11 +62,14 @@ public class DiscriminatorStateDesc implements PersistentStateDesc {
     }
     
     public void setColumn(PersistentColumn column) {
+        if (column == null) {
+            throw new EmptyRuntimeException("column");
+        }
         this.column = column;
     }
     
     public String getStateName() {
-        return "$" + columnName;
+        return "$" + column.getName();
     }
 
     public Class<?> getPersistentStateType() {
@@ -90,8 +84,8 @@ public class DiscriminatorStateDesc implements PersistentStateDesc {
         return null;
     }
 
-    public String getTableName() {
-        return tableName;
+    public PersistentClassDesc getOwner() {
+        return persistentClassDesc;
     }
 
     public Object getValue(Object target) {
@@ -146,7 +140,7 @@ public class DiscriminatorStateDesc implements PersistentStateDesc {
         throw new UnsupportedOperationException("addForeignKeyColumn");
     }
 
-    public boolean hasReferencedColumn(String columnName) {
+    public boolean hasColumn(String columnName) {
         return this.column.getName().equalsIgnoreCase(columnName);
     }
 
@@ -163,4 +157,15 @@ public class DiscriminatorStateDesc implements PersistentStateDesc {
         return ClassUtil.getShortClassName(clazz) + "." + getStateName();
     }
     
+    public PersistentStateAccessor getAccessor() {
+        throw new UnsupportedOperationException("getAccessor");
+    }
+    
+    public boolean isDescriminator() {
+        return true;
+    }
+    
+    public boolean isOwningSide() {
+        return false;
+    }
 }

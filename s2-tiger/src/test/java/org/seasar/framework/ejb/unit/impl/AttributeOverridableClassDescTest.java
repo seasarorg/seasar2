@@ -17,33 +17,41 @@ package org.seasar.framework.ejb.unit.impl;
 
 import java.util.HashMap;
 
-import javax.persistence.Column;
-
 import junit.framework.TestCase;
 
-import org.seasar.framework.ejb.unit.PersistentClassDesc;
+import org.seasar.framework.ejb.unit.PersistentColumn;
+import org.seasar.framework.ejb.unit.PersistentStateDesc;
 
 /**
  * @author taedium
- *
+ * 
  */
 public class AttributeOverridableClassDescTest extends TestCase {
 
-	public void testEmbeddableClass() {
-		PersistentClassDesc pc = new AttributeOverridableClassDesc(EmployeePeriod.class,
-				"EMPLOYEE2", true, new HashMap<String, Column>());
-		assertEquals("1", 2, pc.getPersistentStateDescSize());
-		assertNotNull("2", pc.getPersistentStateDesc("EmployeePeriod.startDate"));
-		assertNotNull("3", pc.getPersistentStateDesc("EmployeePeriod.endDate"));
-	}
+    public void testEmbeddableClass() {
+        HashMap<String, PersistentColumn> overrides = new HashMap<String, PersistentColumn>();
+        overrides.put("startDate", new PersistentColumnImpl("hoge", "foo"));
+        AttributeOverridableClassDesc ao = new AttributeOverridableClassDesc(
+                EmployeePeriod.class, "EMPLOYEE2", true, overrides);
+        PersistentStateDesc stateDesc = ao
+                .getPersistentStateDesc("EmployeePeriod.startDate");
+        PersistentColumn column = stateDesc.getColumn();
+
+        assertEquals("1", "HOGE", column.getTableName());
+        assertEquals("2", "FOO", column.getName());
+    }
 
     public void testMappedSuperClass() {
-        PersistentClassDesc pc = new AttributeOverridableClassDesc(Employee6.class,
-                "EMPLOYEE2", true, new HashMap<String, Column>());
-        assertEquals("1", 3, pc.getPersistentStateDescSize());
-        assertNotNull("2", pc.getPersistentStateDesc("Employee6.empid"));
-        assertNotNull("3", pc.getPersistentStateDesc("Employee6.version"));
-        assertNotNull("4", pc.getPersistentStateDesc("Employee6.address"));
+        HashMap<String, PersistentColumn> overrides = new HashMap<String, PersistentColumn>();
+        overrides.put("empid", new PersistentColumnImpl("hoge", "foo"));
+        AttributeOverridableClassDesc ao = new AttributeOverridableClassDesc(
+                Employee6.class, "EMPLOYEE2", true, overrides);
+        PersistentStateDesc stateDesc = ao
+                .getPersistentStateDesc("Employee6.empid");
+        PersistentColumn column = stateDesc.getColumn();
+
+        assertEquals("1", "HOGE", column.getTableName());
+        assertEquals("2", "FOO", column.getName());
     }
-    
+
 }

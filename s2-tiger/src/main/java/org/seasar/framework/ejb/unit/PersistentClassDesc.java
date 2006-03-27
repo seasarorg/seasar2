@@ -34,10 +34,6 @@ public interface PersistentClassDesc {
     PersistentStateDesc getPersistentStateDesc(String pathName)
             throws PersistentStateNotFoundException;
 
-    boolean hasReferencedStateDesc(String columnName);
-    
-    PersistentStateDesc getReferencedStateDesc(String columnName);
-
     boolean isPropertyAccessed();
 
     Class<?> getPersistentClass();

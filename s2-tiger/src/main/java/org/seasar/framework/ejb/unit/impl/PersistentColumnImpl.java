@@ -15,6 +15,10 @@
  */
 package org.seasar.framework.ejb.unit.impl;
 
+import javax.persistence.Column;
+import javax.persistence.JoinColumn;
+import javax.persistence.PrimaryKeyJoinColumn;
+
 import org.seasar.framework.ejb.unit.PersistentColumn;
 
 public class PersistentColumnImpl implements PersistentColumn {
@@ -24,6 +28,18 @@ public class PersistentColumnImpl implements PersistentColumn {
     private String name;
 
     private String referencedColumnName;
+
+    public PersistentColumnImpl(Column column) {
+        this(column.table(), column.name());
+    }
+
+    public PersistentColumnImpl(JoinColumn column) {
+        this(column.table(), column.name(), column.referencedColumnName());
+    }
+
+    public PersistentColumnImpl(PrimaryKeyJoinColumn column) {
+        this(null, column.name(), column.referencedColumnName());
+    }
 
     public PersistentColumnImpl(String tableName, String columnName) {
         this(tableName, columnName, null);

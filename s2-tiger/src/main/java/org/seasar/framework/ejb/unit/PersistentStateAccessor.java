@@ -13,33 +13,28 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.framework.ejb.unit.impl;
+package org.seasar.framework.ejb.unit;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Type;
 
-@Entity
-public class Hoge4 {
-	private Long aaa;
+/**
+ * @author taedium
+ *
+ */
+public interface PersistentStateAccessor {
 
-	private java.util.Date ccc;
-
-    public Hoge4(){
-    }
+    String getName();
     
-	@Id
-	public Long getAaa() {
-		return aaa;
-	}
+    Class<?> getPersistentStateType();
+    
+    Type getGenericType();
+    
+    AnnotatedElement getAnnotatedElement();
 
-	public void setAaa(Long aaa) {
-		this.aaa = aaa;
-	}
-
-	public void getBbb() {
-	}
-
-	public java.util.Date getCcc() {
-		return ccc;
-	}
+    Object getValue(Object target);
+    
+    void setValue(Object target, Object value);
+    
+    boolean isPersistent();
 }
