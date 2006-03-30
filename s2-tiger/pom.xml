@@ -98,6 +98,13 @@
       <version>2.4.0-beta-1</version>
       <type>test-jar</type>
     </dependency>
+    <dependency>
+      <groupId>hsqldb</groupId>
+      <artifactId>hsqldb</artifactId>
+      <version>1.8.0.1</version>
+      <type>jar</type>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
   <distributionManagement>
     <repository>
