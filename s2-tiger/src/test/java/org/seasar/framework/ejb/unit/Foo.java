@@ -19,6 +19,7 @@ import javax.ejb.Stateless;
 
 @Stateless
 public class Foo implements IFoo {
-    public void aaa() {
+    public String aaa() {
+        return "aaa";
     }
 }

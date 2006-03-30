@@ -19,5 +19,5 @@ import javax.ejb.Local;
 
 @Local
 public interface IHoge {
-    void aaa();
+    String aaa();
 }

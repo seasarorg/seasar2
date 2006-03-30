@@ -27,8 +27,6 @@ import org.seasar.extension.dataset.DataSet;
 import org.seasar.extension.dataset.DataTable;
 import org.seasar.extension.dataset.impl.DataSetImpl;
 import org.seasar.framework.aop.interceptors.MockInterceptor;
-import org.seasar.framework.beans.BeanDesc;
-import org.seasar.framework.beans.factory.BeanDescFactory;
 import org.seasar.framework.ejb.unit.annotation.Rollback;
 
 /**
@@ -40,18 +38,24 @@ public class S2EJB3TestCaseTest extends S2EJB3TestCase {
     @EJB
     private IHoge hoge;
 
-    // @Override
-    // protected void setUp() throws Exception {
-    // super.setUp();
-    // register(Hoge.class);
-    // register(Foo.class);
-    // }
-    //    
-    // public void testRegisterEJB() throws Exception {
-    // assertNotNull("1", hoge);
-    // BeanDesc beanDesc = BeanDescFactory.getBeanDesc(Hoge.class);
-    // assertNotNull("2", beanDesc.getFieldValue("foo", hoge));
-    // }
+    public void setUpRegisterEJB() throws Exception {
+        register(Hoge.class);
+        register(Foo.class);
+    }
+
+    public void testRegisterEJB() throws Exception {
+        assertNotNull("1", hoge);
+        assertNotNull("2", hoge.aaa());
+    }
+
+    public void setUpInclude() throws Exception {
+        include("S2EJB3TestCaseTest.dicon");
+    }
+
+    public void testInclude() throws Exception {
+        assertNotNull("1", hoge);
+        assertNotNull("2", hoge.aaa());
+    }
 
     public void testAssertEntityEquals() {
         DataSet expected = new DataSetImpl();

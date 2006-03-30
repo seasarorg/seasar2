@@ -24,7 +24,7 @@ public class Hoge implements IHoge {
     @EJB
     private IFoo foo;
     
-    public void aaa() {
-        foo.aaa();
+    public String aaa() {
+        return foo.aaa();
     }
 }

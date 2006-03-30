@@ -19,5 +19,5 @@ import javax.ejb.Local;
 
 @Local
 public interface IFoo {
-    void aaa();
+    String aaa();
 }

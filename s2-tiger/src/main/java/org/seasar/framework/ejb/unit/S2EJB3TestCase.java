@@ -15,31 +15,23 @@
  */
 package org.seasar.framework.ejb.unit;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.util.List;
 
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.transaction.Status;
-import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
 
 import org.seasar.extension.dataset.DataSet;
 import org.seasar.extension.dataset.DataTable;
 import org.seasar.extension.unit.S2TestCase;
-import org.seasar.framework.beans.BeanDesc;
-import org.seasar.framework.beans.factory.BeanDescFactory;
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.factory.TigerAnnotationHandler;
-import org.seasar.framework.container.impl.PropertyDefImpl;
 import org.seasar.framework.ejb.unit.annotation.Rollback;
 import org.seasar.framework.exception.EmptyRuntimeException;
 import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.ResourceUtil;
-import org.seasar.framework.util.TransactionManagerUtil;
 
 /**
  * @author taedium
@@ -62,16 +54,16 @@ public abstract class S2EJB3TestCase extends S2TestCase {
         super(name);
     }
 
-    // @Override
-    // protected void setUp() throws Exception {
-    // super.setUp();
-    // if (ResourceUtil.isExist(EJB3TX_DICON)) {
-    // include(EJB3TX_DICON);
-    // }
-    // if (ResourceUtil.isExist(S2HIBERNATE_JPA_DICON)) {
-    // include(S2HIBERNATE_JPA_DICON);
-    // }
-    // }
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        if (ResourceUtil.isExist(EJB3TX_DICON)) {
+            include(EJB3TX_DICON);
+        }
+        if (ResourceUtil.isExist(S2HIBERNATE_JPA_DICON)) {
+            include(S2HIBERNATE_JPA_DICON);
+        }
+    }
 
     @Override
     public void register(Class componentClass) {
@@ -80,23 +72,7 @@ public abstract class S2EJB3TestCase extends S2TestCase {
         handler.appendAspect(cd);
         handler.appendInterType(cd);
         handler.appendInitMethod(cd);
-        injectEntityManagerTemp(cd);
         register(cd);
-    }
-
-    protected void injectEntityManagerTemp(ComponentDef cd) {
-        // move to TigerAnnotationHandler
-        BeanDesc beanDesc = BeanDescFactory.getBeanDesc(cd.getComponentClass());
-        for (int i = 0; i < beanDesc.getFieldSize(); ++i) {
-            Field field = beanDesc.getField(i);
-            if (Modifier.isStatic(field.getModifiers())
-                    || Modifier.isFinal(field.getModifiers())) {
-                continue;
-            }
-            if (field.isAnnotationPresent(PersistenceContext.class)) {
-                cd.addPropertyDef(new PropertyDefImpl(field.getName()));
-            }
-        }
     }
 
     @Override
