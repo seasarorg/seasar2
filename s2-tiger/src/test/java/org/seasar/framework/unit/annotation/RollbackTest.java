@@ -13,7 +13,7 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.framework.unit;
+package org.seasar.framework.unit.annotation;
 
 import javax.transaction.Status;
 import javax.transaction.TransactionManager;
@@ -25,7 +25,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.RunWith;
-import org.seasar.framework.unit.annotation.Rollback;
+import org.seasar.framework.unit.S2FrameworkTestCase;
+import org.seasar.framework.unit.S2TestClassRunner;
 
 public class RollbackTest extends TestCase {
     static boolean run;

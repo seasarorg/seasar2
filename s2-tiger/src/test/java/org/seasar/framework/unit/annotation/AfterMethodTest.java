@@ -13,18 +13,20 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.framework.unit;
+package org.seasar.framework.unit.annotation;
 
 import junit.framework.TestCase;
 
-import org.junit.Before;
-import org.junit.BeforeClass;
+import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Test;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.RunWith;
-import org.seasar.framework.unit.annotation.BeforeMethod;
+import org.seasar.framework.unit.S2FrameworkTestCase;
+import org.seasar.framework.unit.S2TestClassRunner;
+import org.seasar.framework.unit.annotation.AfterMethod;
 
-public class BeforeMethodTest extends TestCase {
+public class AfterMethodTest extends TestCase {
  
     static boolean run;
     static String log;
@@ -35,15 +37,21 @@ public class BeforeMethodTest extends TestCase {
         log = "";
     }
 
-    public void testBeforeMethod() {
+    public void testAfterMethod() {
         JUnitCore runner = new JUnitCore();
         runner.run(Hoge.class);
         assertEquals("1", "one-two-three-four", log);
     }
 
-    public void testBeforeMethodNotExists() {
+    public void testAfterMethodNotExists() {
         JUnitCore runner = new JUnitCore();
         runner.run(Hoge2.class);
+        assertTrue("1", run);
+    }
+
+    public void testAfterMethodAfterFailure() {
+        JUnitCore runner = new JUnitCore();
+        runner.run(Hoge3.class);
         assertTrue("1", run);
     }
     
@@ -54,26 +62,25 @@ public class BeforeMethodTest extends TestCase {
         public void test() {
         }
 
-        @BeforeClass
-        public static void beforeClass() {
+        @Test
+        @AfterMethod("afterMethod")
+        public void aaa() throws Exception {
             log += "one";
         }
-        
-        @Before
-        public void before() {
+
+        public void afterMethod() throws Exception {
             log += "-two";
-        }
-        
-        public void beforeMethod() throws Exception {
-           log += "-three";
+         }
+
+        @After
+        public void after() {
+            log += "-three";
         }
 
-        @Test
-        @BeforeMethod("beforeMethod")
-        public void aaa() throws Exception {
+        @AfterClass
+        public static void afterClass() {
             log += "-four";
         }
-
     }
     
     @RunWith(S2TestClassRunner.class)
@@ -84,10 +91,27 @@ public class BeforeMethodTest extends TestCase {
         }
 
         @Test
-        @BeforeMethod("beforeMethod")
+        @AfterMethod("afterMethod")
         public void aaa() throws Exception {
-            run = true;
+           run = true;
         }
     }
+    
+    @RunWith(S2TestClassRunner.class)
+    public static class Hoge3 extends S2FrameworkTestCase {
 
+        // dummy
+        public void test() {
+        }
+
+        @Test
+        @AfterMethod("afterMethod")
+        public void aaa() throws Exception {
+            throw new Exception();
+        }
+        
+        public void afterMethod() throws Exception {
+            run = true;
+         }
+    }
 }
