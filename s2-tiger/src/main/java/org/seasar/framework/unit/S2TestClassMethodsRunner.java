@@ -34,13 +34,12 @@ public class S2TestClassMethodsRunner extends TestClassMethodsRunner {
     @Override
     protected TestMethodRunner createMethodRunner(Object test, Method method,
             RunNotifier notifier) {
-        
+
         if (test instanceof S2FrameworkTestCase) {
-            return new S2TestMethodRunner((S2FrameworkTestCase) test,
-                    method, notifier, methodDescription(method));
+            return new S2TestMethodRunner((S2FrameworkTestCase) test, method,
+                    notifier, methodDescription(method));
         }
-        
-        return new TestMethodRunner(test, method, notifier,
-                methodDescription(method));
+
+        return super.createMethodRunner(test, method, notifier);
     }
 }
