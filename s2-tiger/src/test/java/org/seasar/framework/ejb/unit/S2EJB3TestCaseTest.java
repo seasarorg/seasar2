@@ -27,7 +27,6 @@ import org.seasar.extension.dataset.DataSet;
 import org.seasar.extension.dataset.DataTable;
 import org.seasar.extension.dataset.impl.DataSetImpl;
 import org.seasar.framework.aop.interceptors.MockInterceptor;
-import org.seasar.framework.ejb.unit.annotation.Rollback;
 
 /**
  * @author taedium
@@ -97,18 +96,6 @@ public class S2EJB3TestCaseTest extends S2EJB3TestCase {
         assertEntityListEquals("1", expected, employees);
     }
 
-    public void testNeedTransactionReturnsTrue() throws Exception {
-        RollbackAnnotationTest test = new RollbackAnnotationTest();
-        test.setName("testRollbackAnnotated");
-        assertEquals(true, test.needTransaction());
-    }
-
-    public void testNeedTransactionReturnsFalse() throws Exception {
-        RollbackAnnotationTest test = new RollbackAnnotationTest();
-        test.setName("testNoRollbackAnnotated");
-        assertEquals(false, test.needTransaction());
-    }
-
     public void setUpGetEntityManager() {
         MockInterceptor mi = new MockInterceptor();
         register(mi.createProxy(EntityManager.class));
@@ -135,16 +122,6 @@ public class S2EJB3TestCaseTest extends S2EJB3TestCase {
 
     public void testIsTransactionActinveReturnFalse() throws Exception {
         assertEquals(false, isTransactionActive());
-    }
-
-    private static class RollbackAnnotationTest extends S2EJB3TestCase {
-
-        @Rollback
-        public void testRollbackAnnotated() throws Exception {
-        }
-
-        public void testNoRollbackAnnotated() throws Exception {
-        }
     }
 
 }

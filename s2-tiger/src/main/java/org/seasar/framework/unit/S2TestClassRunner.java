@@ -13,18 +13,18 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.framework.ejb.unit.annotation;
+package org.seasar.framework.unit;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import org.junit.internal.runners.InitializationError;
+import org.junit.internal.runners.TestClassRunner;
 
 /**
  * @author taedium
  *
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
-public @interface Rollback {
+public class S2TestClassRunner extends TestClassRunner {
+
+	public S2TestClassRunner(Class<?> clazz) throws InitializationError {
+		super(clazz, new S2TestClassMethodsRunner(clazz));
+	}
 }

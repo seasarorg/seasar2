@@ -15,22 +15,20 @@
  */
 package org.seasar.framework.ejb.unit;
 
-import java.lang.reflect.Method;
 import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.transaction.Status;
 import javax.transaction.TransactionManager;
 
+import org.junit.Before;
 import org.seasar.extension.dataset.DataSet;
 import org.seasar.extension.dataset.DataTable;
 import org.seasar.extension.unit.S2TestCase;
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.factory.TigerAnnotationHandler;
-import org.seasar.framework.ejb.unit.annotation.Rollback;
 import org.seasar.framework.exception.EmptyRuntimeException;
-import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.ResourceUtil;
 
 /**
@@ -55,8 +53,12 @@ public abstract class S2EJB3TestCase extends S2TestCase {
     }
 
     @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    public void setUp() throws Exception {
+        includeDicons();
+    }
+
+    @Before
+    public final void includeDicons() {
         if (ResourceUtil.isExist(EJB3TX_DICON)) {
             include(EJB3TX_DICON);
         }
@@ -64,7 +66,7 @@ public abstract class S2EJB3TestCase extends S2TestCase {
             include(S2HIBERNATE_JPA_DICON);
         }
     }
-
+    
     @Override
     public void register(Class componentClass) {
         ComponentDef cd = handler.createComponentDef(componentClass, null);
@@ -73,12 +75,6 @@ public abstract class S2EJB3TestCase extends S2TestCase {
         handler.appendInterType(cd);
         handler.appendInitMethod(cd);
         register(cd);
-    }
-
-    @Override
-    protected boolean needTransaction() {
-        Method m = ClassUtil.getMethod(getClass(), getName(), new Class[] {});
-        return m.isAnnotationPresent(Rollback.class) || super.needTransaction();
     }
 
     @Override
