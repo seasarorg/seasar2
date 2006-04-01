@@ -22,12 +22,9 @@ import javax.transaction.TransactionManager;
 import org.junit.internal.runners.TestMethodRunner;
 import org.junit.runner.Description;
 import org.junit.runner.notification.RunNotifier;
-import org.seasar.framework.exception.NoSuchMethodRuntimeException;
 import org.seasar.framework.unit.annotation.AfterMethod;
 import org.seasar.framework.unit.annotation.BeforeMethod;
 import org.seasar.framework.unit.annotation.Rollback;
-import org.seasar.framework.util.ClassUtil;
-import org.seasar.framework.util.MethodUtil;
 
 /**
  * @author taedium
@@ -35,29 +32,26 @@ import org.seasar.framework.util.MethodUtil;
  */
 public class S2TestMethodRunner extends TestMethodRunner {
 
-    private final Object testTarget;
+    private final S2FrameworkTestCase testClass;
 
     private final Method testMethod;
-
-    private final S2FrameworkTestCaseAdapter testCase;
 
     public S2TestMethodRunner(S2FrameworkTestCase test, Method method,
             RunNotifier notifier, Description description) {
 
         super(test, method, notifier, description);
-        this.testTarget = test;
+        this.testClass = test;
         this.testMethod = method;
-        this.testCase = new S2FrameworkTestCaseAdapter(test);
     }
 
     @Override
     public void runProtected() {
         try {
-            testCase.setUpContainer();
+            testClass.setUpContainer();
             try {
                 super.runProtected();
             } finally {
-                testCase.tearDownContainer();
+                testClass.tearDownContainer();
             }
         } catch (Throwable e) {
             addFailure(e);
@@ -69,22 +63,22 @@ public class S2TestMethodRunner extends TestMethodRunner {
         try {
             runBeforeEachMethod();
             try {
-                testCase.getContainer().init();
+                testClass.getContainer().init();
                 try {
-                    testCase.setUpAfterContainerInit();
+                    testClass.setUpAfterContainerInit();
                     try {
-                        testCase.bindFields();
-                        testCase.setUpAfterBindFields();
+                        testClass.bindFields();
+                        testClass.setUpAfterBindFields();
                         try {
                             runUnprotected0();
                         } finally {
-                            testCase.tearDownBeforeUnbindFields();
+                            testClass.tearDownBeforeUnbindFields();
                         }
                     } finally {
-                        testCase.tearDownBeforeContainerDestroy();
+                        testClass.tearDownBeforeContainerDestroy();
                     }
                 } finally {
-                    testCase.getContainer().destroy();
+                    testClass.getContainer().destroy();
                 }
             } finally {
                 runAfterEachMethod();
@@ -98,7 +92,7 @@ public class S2TestMethodRunner extends TestMethodRunner {
         TransactionManager tm = null;
         if (needTransaction()) {
             try {
-                tm = (TransactionManager) testCase
+                tm = (TransactionManager) testClass
                         .getComponent(TransactionManager.class);
                 tm.begin();
             } catch (Throwable t) {
@@ -113,31 +107,23 @@ public class S2TestMethodRunner extends TestMethodRunner {
             }
         }
     }
-    
+
     protected boolean needTransaction() {
         return testMethod.isAnnotationPresent(Rollback.class);
     }
-    
+
     protected void runBeforeEachMethod() throws Throwable {
         BeforeMethod before = testMethod.getAnnotation(BeforeMethod.class);
         if (before != null) {
-            invoke(before.value());
+            testClass.invoke(before.value());
         }
     }
 
     protected void runAfterEachMethod() throws Throwable {
         AfterMethod after = testMethod.getAnnotation(AfterMethod.class);
         if (after != null) {
-            invoke(after.value());
+            testClass.invoke(after.value());
         }
     }
 
-    protected void invoke(String methodName) throws Throwable {
-        try {
-            Method method = ClassUtil.getMethod(testTarget.getClass(),
-                    methodName, null);
-            MethodUtil.invoke(method, testTarget, null);
-        } catch (NoSuchMethodRuntimeException ignore) {
-        }
-    }
 }
