@@ -22,9 +22,8 @@ import javax.transaction.TransactionManager;
 import org.junit.internal.runners.TestMethodRunner;
 import org.junit.runner.Description;
 import org.junit.runner.notification.RunNotifier;
-import org.seasar.framework.unit.annotation.AfterMethod;
-import org.seasar.framework.unit.annotation.BeforeMethod;
 import org.seasar.framework.unit.annotation.Rollback;
+import org.seasar.framework.util.StringUtil;
 
 /**
  * @author taedium
@@ -32,7 +31,7 @@ import org.seasar.framework.unit.annotation.Rollback;
  */
 public class S2TestMethodRunner extends TestMethodRunner {
 
-    private final S2FrameworkTestCase testClass;
+    private final S2FrameworkTestCase test;
 
     private final Method testMethod;
 
@@ -40,18 +39,18 @@ public class S2TestMethodRunner extends TestMethodRunner {
             RunNotifier notifier, Description description) {
 
         super(test, method, notifier, description);
-        this.testClass = test;
+        this.test = test;
         this.testMethod = method;
     }
 
     @Override
     public void runProtected() {
         try {
-            testClass.setUpContainer();
+            test.setUpContainer();
             try {
                 super.runProtected();
             } finally {
-                testClass.tearDownContainer();
+                test.tearDownContainer();
             }
         } catch (Throwable e) {
             addFailure(e);
@@ -61,27 +60,27 @@ public class S2TestMethodRunner extends TestMethodRunner {
     @Override
     protected void runUnprotected() {
         try {
-            runBeforeEachMethod();
+            setUpForEachTestMethod();
             try {
-                testClass.getContainer().init();
+                test.getContainer().init();
                 try {
-                    testClass.setUpAfterContainerInit();
+                    test.setUpAfterContainerInit();
                     try {
-                        testClass.bindFields();
-                        testClass.setUpAfterBindFields();
+                        test.bindFields();
+                        test.setUpAfterBindFields();
                         try {
                             runUnprotected0();
                         } finally {
-                            testClass.tearDownBeforeUnbindFields();
+                            test.tearDownBeforeUnbindFields();
                         }
                     } finally {
-                        testClass.tearDownBeforeContainerDestroy();
+                        test.tearDownBeforeContainerDestroy();
                     }
                 } finally {
-                    testClass.getContainer().destroy();
+                    test.getContainer().destroy();
                 }
             } finally {
-                runAfterEachMethod();
+                tearDownForEachTestMethod();
             }
         } catch (Throwable e) {
             addFailure(e);
@@ -92,7 +91,7 @@ public class S2TestMethodRunner extends TestMethodRunner {
         TransactionManager tm = null;
         if (needTransaction()) {
             try {
-                tm = (TransactionManager) testClass
+                tm = (TransactionManager) test
                         .getComponent(TransactionManager.class);
                 tm.begin();
             } catch (Throwable t) {
@@ -109,21 +108,16 @@ public class S2TestMethodRunner extends TestMethodRunner {
     }
 
     protected boolean needTransaction() {
-        return testMethod.isAnnotationPresent(Rollback.class);
+        return testMethod.isAnnotationPresent(Rollback.class)
+                || testMethod.getName().endsWith("Tx");
     }
 
-    protected void runBeforeEachMethod() throws Throwable {
-        BeforeMethod before = testMethod.getAnnotation(BeforeMethod.class);
-        if (before != null) {
-            testClass.invoke(before.value());
-        }
+    protected void setUpForEachTestMethod() throws Throwable {
+        test.invoke("setUp" + StringUtil.capitalize(testMethod.getName()));
     }
 
-    protected void runAfterEachMethod() throws Throwable {
-        AfterMethod after = testMethod.getAnnotation(AfterMethod.class);
-        if (after != null) {
-            testClass.invoke(after.value());
-        }
+    protected void tearDownForEachTestMethod() throws Throwable {
+        test.invoke("tearDown" + StringUtil.capitalize(testMethod.getName()));
     }
 
 }
