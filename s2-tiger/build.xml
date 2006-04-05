@@ -12,6 +12,18 @@
 			<zipfileset prefix="s2-tiger/resources" dir="src/test/resources">
 				<include name="ejb3tx.dicon"/>
 			</zipfileset>
+			<zipfileset prefix="s2-tiger/resources" dir="src/examples/resources">
+				<include name="jndi.properties"/>
+			</zipfileset>
+			<zipfileset prefix="s2-tiger/resources" dir="src/test/resources">
+				<include name="j2ee.dicon"/>
+			</zipfileset>
+			<zipfileset prefix="s2-tiger/resources" dir="src/test/resources">
+				<include name="jdbc.dicon"/>
+			</zipfileset>
+			<zipfileset prefix="s2-tiger/resources" dir="src/test/resources">
+				<include name="jta.dicon"/>
+			</zipfileset>
 		</zip>
 	</target>
 
