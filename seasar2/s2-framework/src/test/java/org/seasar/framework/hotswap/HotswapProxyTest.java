@@ -65,5 +65,8 @@ public class HotswapProxyTest extends TestCase {
     public void testInherit() throws Exception {
         greeting = (Greeting) HotswapProxy.create(GreetingImpl2.class,
                 new SimpleHotswapTargetFactory(GreetingImpl2.class));
+
+        greeting = (Greeting) HotswapProxy.create(GreetingImpl3.class,
+                new SimpleHotswapTargetFactory(GreetingImpl3.class));
     }
 }
