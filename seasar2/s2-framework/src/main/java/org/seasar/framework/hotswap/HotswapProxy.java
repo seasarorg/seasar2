@@ -19,7 +19,6 @@ import java.io.Serializable;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -52,17 +51,22 @@ public class HotswapProxy extends Hotswap implements InvocationHandler,
         return Proxy.newProxyInstance(classLoader, getInterfaces(targetClass),
                 new HotswapProxy(targetClass, hotswapTargetFactory));
     }
-    
+
     static Class[] getInterfaces(Class targetClass) {
         final Set interfaces = new HashSet();
-        Collections.addAll(interfaces, targetClass.getInterfaces());
+        addAll(interfaces, targetClass.getInterfaces());
         if (targetClass.isInterface()) {
             interfaces.add(targetClass);
         } else if (!targetClass.equals(Object.class)) {
-            Collections.addAll(interfaces, getInterfaces(targetClass
-                    .getSuperclass()));
+            addAll(interfaces, getInterfaces(targetClass.getSuperclass()));
         }
         return (Class[]) interfaces.toArray(new Class[interfaces.size()]);
+    }
+
+    private static void addAll(Set set, Class[] classes) {
+        for (int i = 0; i < classes.length; i++) {
+            set.add(classes[i]);
+        }
     }
 
     public static HotswapProxy getProxy(Object o) {
