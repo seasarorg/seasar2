@@ -17,6 +17,8 @@ package org.seasar.framework.container.autoregister;
 
 import junit.framework.TestSuite;
 
+import org.seasar.framework.container.AutoBindingDef;
+import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.unit.S2FrameworkTestCase;
 
@@ -28,7 +30,7 @@ public class ComponentAutoRegisterTest extends S2FrameworkTestCase {
 
     private S2Container child;
 
-    protected void setUp() throws Exception {
+    public void setUpRegisterAll() throws Exception {
         include("ComponentAutoRegisterTest.dicon");
     }
 
@@ -43,5 +45,16 @@ public class ComponentAutoRegisterTest extends S2FrameworkTestCase {
         assertFalse("6", child.hasComponentDef(Foo4Impl.class));
         assertNotNull("7", child.getComponentDef(TestSuite.class));
         assertNotNull("8", child.getComponentDef("testSuite"));
+    }
+
+    public void setUpBindingMode() throws Exception {
+        include("ComponentAutoRegisterTest2.dicon");
+    }
+
+    public void testBindingMode() throws Exception {
+        ComponentDef cd = child.getComponentDef(Foo.class);
+        assertEquals("1", AutoBindingDef.PROPERTY_NAME, cd.getAutoBindingDef().getName());
+        cd = child.getComponentDef(Foo2.class);
+        assertEquals("2", AutoBindingDef.NONE_NAME, cd.getAutoBindingDef().getName());
     }
 }

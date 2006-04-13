@@ -15,6 +15,7 @@
  */
 package org.seasar.framework.container.autoregister;
 
+import org.seasar.framework.container.AutoBindingDef;
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.InstanceDef;
 import org.seasar.framework.container.factory.AnnotationHandler;
@@ -22,29 +23,31 @@ import org.seasar.framework.container.factory.AnnotationHandlerFactory;
 import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.ClassTraversal.ClassHandler;
 
-
 /**
  * @author higa
- *
+ * 
  */
-public abstract class AbstractComponentAutoRegister extends AbstractAutoRegister implements ClassHandler {
+public abstract class AbstractComponentAutoRegister extends
+        AbstractAutoRegister implements ClassHandler {
 
     protected static final String CLASS_SUFFIX = ".class";
-    
+
     private AutoNaming autoNaming = new DefaultAutoNaming();
-    
+
     private InstanceDef instanceDef;
-    
+
+    private AutoBindingDef autoBindingDef;
+
     public AutoNaming getAutoNaming() {
         return autoNaming;
     }
 
     public static final String autoNaming_BINDING = "bindingType=may";
-    
+
     public void setAutoNaming(AutoNaming autoNaming) {
         this.autoNaming = autoNaming;
     }
-    
+
     public InstanceDef getInstanceDef() {
         return instanceDef;
     }
@@ -55,26 +58,38 @@ public abstract class AbstractComponentAutoRegister extends AbstractAutoRegister
         this.instanceDef = instanceDef;
     }
 
-    public void processClass(final String packageName, final String shortClassName) {
+    public static final String autoBindingDef_BINDING = "bindingType=may";
+
+    public void setAutoBindingDef(AutoBindingDef autoBindingDef) {
+        this.autoBindingDef = autoBindingDef;
+    }
+
+    public void processClass(final String packageName,
+            final String shortClassName) {
         if (isIgnore(packageName, shortClassName)) {
             return;
         }
-    
+
         for (int i = 0; i < getClassPatternSize(); ++i) {
             final ClassPattern cp = getClassPattern(i);
-            if (cp.isAppliedPackageName(packageName) && cp.isAppliedShortClassName(shortClassName)) {
+            if (cp.isAppliedPackageName(packageName)
+                    && cp.isAppliedShortClassName(shortClassName)) {
                 register(packageName, shortClassName);
             }
         }
     }
 
-    protected void register(final String packageName, final String shortClassName) {
+    protected void register(final String packageName,
+            final String shortClassName) {
         final AnnotationHandler annoHandler = AnnotationHandlerFactory
                 .getAnnotationHandler();
-        final String className = ClassUtil.concatName(packageName, shortClassName);
-        final ComponentDef cd = annoHandler.createComponentDef(className, instanceDef);
+        final String className = ClassUtil.concatName(packageName,
+                shortClassName);
+        final ComponentDef cd = annoHandler.createComponentDef(className,
+                instanceDef, autoBindingDef);
         if (cd.getComponentName() == null && autoNaming != null) {
-            cd.setComponentName(autoNaming.defineName(packageName, shortClassName));
+            cd.setComponentName(autoNaming.defineName(packageName,
+                    shortClassName));
         }
         annoHandler.appendDI(cd);
         annoHandler.appendAspect(cd);

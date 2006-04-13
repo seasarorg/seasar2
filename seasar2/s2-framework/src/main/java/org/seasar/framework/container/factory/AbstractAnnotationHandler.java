@@ -70,6 +70,18 @@ public abstract class AbstractAnnotationHandler implements AnnotationHandler {
         return createComponentDef(ClassUtil.forName(className), instanceDef);
     }
 
+    public ComponentDef createComponentDef(String className,
+            InstanceDef instanceDef, AutoBindingDef autoBindingDef) {
+        return createComponentDef(ClassUtil.forName(className), instanceDef,
+                autoBindingDef);
+    }
+
+    public ComponentDef createComponentDef(Class componentClass,
+            InstanceDef instanceDef) {
+        return createComponentDef(componentClass, instanceDef,
+                null);
+    }
+
     public void appendDI(ComponentDef componentDef) {
         BeanDesc beanDesc = BeanDescFactory.getBeanDesc(componentDef
                 .getComponentClass());

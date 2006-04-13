@@ -36,6 +36,7 @@ import org.seasar.framework.container.InitMethodDef;
 import org.seasar.framework.container.InstanceDef;
 import org.seasar.framework.container.InterTypeDef;
 import org.seasar.framework.container.PropertyDef;
+import org.seasar.framework.container.assembler.AutoBindingDefFactory;
 import org.seasar.framework.container.deployer.InstanceDefFactory;
 import org.seasar.framework.container.ognl.OgnlExpression;
 import org.seasar.framework.ejb.SEJBException;
@@ -96,6 +97,21 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
                 InstanceDefFactory.REQUEST);
         assertEquals("19", InstanceDef.REQUEST_NAME, cd8.getInstanceDef()
                 .getName());
+
+        ComponentDef cd9 = handler.createComponentDef(Hoge.class,
+                InstanceDefFactory.REQUEST, AutoBindingDefFactory.NONE);
+        assertEquals("20", AutoBindingDef.NONE_NAME, cd9.getAutoBindingDef()
+                .getName());
+
+        ComponentDef cd10 = handler.createComponentDef(Hoge2.class,
+                InstanceDefFactory.REQUEST, AutoBindingDefFactory.NONE);
+        assertEquals("21", AutoBindingDef.PROPERTY_NAME, cd10
+                .getAutoBindingDef().getName());
+
+        ComponentDef cd11 = handler.createComponentDef(Hoge3.class,
+                InstanceDefFactory.REQUEST, AutoBindingDefFactory.NONE);
+        assertEquals("22", AutoBindingDef.PROPERTY_NAME, cd11
+                .getAutoBindingDef().getName());
     }
 
     public void testCreatePropertyDef() throws Exception {

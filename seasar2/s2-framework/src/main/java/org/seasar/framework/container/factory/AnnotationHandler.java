@@ -19,6 +19,7 @@ import java.lang.reflect.Field;
 
 import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.PropertyDesc;
+import org.seasar.framework.container.AutoBindingDef;
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.InstanceDef;
 import org.seasar.framework.container.PropertyDef;
@@ -27,7 +28,11 @@ public interface AnnotationHandler {
 
     public ComponentDef createComponentDef(String className, InstanceDef instanceDef);
 
+    public ComponentDef createComponentDef(String className, InstanceDef instanceDef, AutoBindingDef autoBindingDef);
+
     public ComponentDef createComponentDef(Class componentClass, InstanceDef instanceDef);
+
+    public ComponentDef createComponentDef(Class componentClass, InstanceDef instanceDef, AutoBindingDef autoBindingDef);
   
     public void appendDI(ComponentDef componentDef);
     

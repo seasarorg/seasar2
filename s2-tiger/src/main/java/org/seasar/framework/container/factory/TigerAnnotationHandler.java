@@ -76,7 +76,7 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
     }
 
     public ComponentDef createComponentDef(Class componentClass,
-            InstanceDef defaultInstanceDef) {
+            InstanceDef defaultInstanceDef, AutoBindingDef defaultAutoBindingDef) {
 
         String name = null;
         InstanceDef instanceDef = null;
@@ -87,14 +87,16 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
             name = stateless.name();
             instanceDef = defaultInstanceDef != null ? defaultInstanceDef
                     : InstanceDefFactory.PROTOTYPE;
-            autoBindingDef = AutoBindingDefFactory.SEMIAUTO;
+            autoBindingDef = defaultAutoBindingDef != null ? defaultAutoBindingDef
+                    : AutoBindingDefFactory.SEMIAUTO;
         }
         Stateful stateful = clazz.getAnnotation(Stateful.class);
         if (stateful != null) {
             name = stateful.name();
             instanceDef = defaultInstanceDef != null ? defaultInstanceDef
                     : InstanceDefFactory.PROTOTYPE;
-            autoBindingDef = AutoBindingDefFactory.SEMIAUTO;
+            autoBindingDef = defaultAutoBindingDef != null ? defaultAutoBindingDef
+                    : AutoBindingDefFactory.SEMIAUTO;
         }
         Component component = clazz.getAnnotation(Component.class);
         if (component != null) {
@@ -112,7 +114,7 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
             }
         }
         if (stateless == null && stateful == null && component == null) {
-            return super.createComponentDef(componentClass, defaultInstanceDef);
+            return super.createComponentDef(componentClass, defaultInstanceDef, defaultAutoBindingDef);
         }
         return createComponentDef(componentClass, name, instanceDef,
                 autoBindingDef);

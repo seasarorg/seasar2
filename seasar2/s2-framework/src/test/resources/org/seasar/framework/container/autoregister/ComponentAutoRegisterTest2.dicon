@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<!DOCTYPE components PUBLIC "-//SEASAR2.1//DTD S2Container//EN"
+	"http://www.seasar.org/dtd/components21.dtd">
+<components namespace="child" >
+	<component class="org.seasar.framework.container.autoregister.ComponentAutoRegister">
+		<property name="autoBindingDef">
+			@org.seasar.framework.container.assembler.AutoBindingDefFactory@NONE
+		</property>
+		<initMethod name="addReferenceClass">
+			<arg>@org.seasar.framework.container.autoregister.Foo@class</arg>
+		</initMethod>
+		<initMethod name="addClassPattern">
+			<arg>"org.seasar.framework.container.autoregister"</arg>
+			<arg>"Foo.*"</arg>
+		</initMethod>
+	</component>
+</components>

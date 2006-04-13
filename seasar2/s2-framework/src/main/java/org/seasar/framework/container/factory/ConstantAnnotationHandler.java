@@ -43,20 +43,20 @@ import org.seasar.framework.util.StringUtil;
 public class ConstantAnnotationHandler extends AbstractAnnotationHandler {
 
     public ComponentDef createComponentDef(Class componentClass,
-            InstanceDef defaultInstanceDef) {
+            InstanceDef defaultInstanceDef, AutoBindingDef defaultAutoBindingDef) {
 
         String name = null;
-        InstanceDef instanceDef = null;
-        AutoBindingDef autoBindingDef = null;
+        InstanceDef instanceDef = defaultInstanceDef;
+        AutoBindingDef autoBindingDef = defaultAutoBindingDef;
         BeanDesc beanDesc = BeanDescFactory.getBeanDesc(componentClass);
         if (!beanDesc.hasField(COMPONENT)) {
             return createComponentDef(componentClass, name, defaultInstanceDef,
-                    autoBindingDef);
+                    defaultAutoBindingDef);
         }
         Field field = beanDesc.getField(COMPONENT);
         if (!isConstantAnnotationField(field)) {
             return createComponentDef(componentClass, name, defaultInstanceDef,
-                    autoBindingDef);
+                    defaultAutoBindingDef);
         }
         String componentStr = (String) FieldUtil.get(field, null);
         String[] array = StringUtil.split(componentStr, "=, ");
