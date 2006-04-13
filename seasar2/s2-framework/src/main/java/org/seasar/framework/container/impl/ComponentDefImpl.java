@@ -295,6 +295,7 @@ public class ComponentDefImpl implements ComponentDef, ContainerConstants {
      * @see org.seasar.framework.container.ComponentDef#init()
      */
     public void init() {
+        getConcreteClass();
         if (hotswap == null && componentClass != null && container != null
                 && container.getRoot().isHotswapMode()) {
             
