@@ -15,8 +15,8 @@
  */
 package org.seasar.extension.jdbc.types;
 
+import java.io.Reader;
 import java.io.StringReader;
-import java.sql.Clob;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -32,16 +32,16 @@ import org.seasar.framework.util.StringConversionUtil;
 public class StringClobType implements ValueType {
 
     public Object getValue(ResultSet resultSet, int index) throws SQLException {
-        return convertToString(resultSet.getClob(index));
+        return convertToString(resultSet.getCharacterStream(index));
     }
 
     public Object getValue(ResultSet resultSet, String columnName)
             throws SQLException {
-        return convertToString(resultSet.getClob(columnName));
+        return convertToString(resultSet.getCharacterStream(columnName));
     }
 
-    private String convertToString(Clob clob) throws SQLException {
-        return ReaderUtil.readText(clob.getCharacterStream());
+    private String convertToString(Reader reader) throws SQLException {
+        return ReaderUtil.readText(reader);
     }
 
     public void bindValue(PreparedStatement ps, int index, Object value)
