@@ -47,7 +47,7 @@ public class PropertyAccessor implements PersistentStateAccessor {
         return propDesc.getPropertyName();
     }
 
-    public Class<?> getPersistentStateType() {
+    public Class<?> getPersistentStateClass() {
         return propDesc.getPropertyType();
     }
 

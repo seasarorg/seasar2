@@ -15,62 +15,46 @@
  */
 package org.seasar.framework.ejb.unit;
 
+import java.util.List;
 
 /**
  * @author taedium
- *
+ * 
  */
 public interface PersistentStateDesc {
+
+    String getName();
     
     PersistentClassDesc getOwner();
-    
+
     boolean hasColumn(String columnName);
-    
+
     PersistentColumn getColumn();
- 
+
     void setColumn(PersistentColumn column);
-    
-	String getStateName();
-    
-    String getPathName();
 
-	Class<?> getPersistentStateType();
+    Class<?> getPersistentStateClass();
 
-	boolean isCollection();
-	
-	Class<?> getCollectionType();
+    Class<?> getCollectionClass();
 
-	Object getValue(Object target);
+    Object getValue(Object target);
 
-	void setValue(Object target, Object value);
-
-	boolean isEmbedded();
+    void setValue(Object target, Object value);
 
     PersistentClassDesc getEmbeddedClassDesc();
-    
-    boolean isToOneRelationship();
-    
-    boolean isToManyRelationship();
 
-    void setRelationshipClassDesc(PersistentClassDesc persistentClassDesc);
-    
-    PersistentClassDesc getRelationshipClassDesc();
+    void setupForeignKeyColumns(PersistentClassDesc relationship);
 
-	boolean isProperty();
+    List<PersistentColumn> getForeignKeyColumns();
+
+    PersistentStateAccessor getAccessor();
+
+    PersistentStateType getPersistentStateType();
     
     boolean isIdentifier();
+    
+    boolean isCollection();
+    
+    boolean isRelationOwningSide();
 
-    void setupForeignKeyColumns();
-
-    void addForeignKeyColumn(PersistentColumn column);
-    
-    int getForeignKeyColumnSize();
-    
-    PersistentColumn getForeignKeyColumn(int index); 
-    
-    PersistentStateAccessor getAccessor();
-    
-    boolean isDescriminator();
-    
-    boolean isOwningSide();
 }

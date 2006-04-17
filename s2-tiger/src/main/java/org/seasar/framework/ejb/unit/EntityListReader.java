@@ -17,7 +17,8 @@ package org.seasar.framework.ejb.unit;
 
 import java.util.List;
 
-import org.seasar.framework.ejb.unit.impl.EntityClassDescFactory;
+import org.seasar.framework.ejb.unit.impl.EntityListIntrospector;
+
 
 /**
  * @author taedium
@@ -25,13 +26,23 @@ import org.seasar.framework.ejb.unit.impl.EntityClassDescFactory;
  */
 public class EntityListReader extends EntityReader {
 
-    public EntityListReader(List list) {
-        PersistentClassDesc pcd = EntityClassDescFactory
-                .getEntityClassDesc(list.get(0).getClass());
-        setupColumns(pcd);
-        for (int i = 0; i < list.size(); ++i) {
-            setupRow(pcd, list.get(i));
-            release(list.get(i));
+    public EntityListReader(List<?> entities) {
+        this(entities, null);
+    }
+    
+    public EntityListReader(List<?> entities, ProxiedObjectResolver resolver) {
+        super(new EntityListIntrospector(entities, resolver));
+
+        for (PersistentClassDesc classDesc : introspector.getAllPersistentClassDescs()) {
+            setupColumns(classDesc);
+        }
+        for (Object entity : entities) {
+            if (entity == null) {
+                continue;
+            }
+            PersistentClassDesc classDesc = introspector.getPersistentClassDesc(entity.getClass());
+            setupRows(classDesc, entity);
+            release(entity);
         }
     }
 }

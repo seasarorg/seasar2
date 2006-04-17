@@ -18,7 +18,9 @@ package org.seasar.framework.ejb.unit.impl;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.PropertyDesc;
@@ -28,7 +30,6 @@ import org.seasar.framework.ejb.unit.PersistentStateAccessor;
 import org.seasar.framework.ejb.unit.PersistentStateDesc;
 import org.seasar.framework.ejb.unit.PersistentStateNotFoundException;
 import org.seasar.framework.exception.EmptyRuntimeException;
-import org.seasar.framework.util.ArrayMap;
 
 /**
  * @author taedium
@@ -43,9 +44,11 @@ public abstract class AbstractPersistentClassDesc implements
 
     protected List<String> tableNames = new ArrayList<String>();
 
-    protected List<PersistentStateDesc> identifiers = new ArrayList<PersistentStateDesc>();
+    protected List<PersistentStateDesc> stateDescs = new ArrayList<PersistentStateDesc>();
 
-    protected ArrayMap stateDescs = new ArrayMap();
+    protected Map<Class<?>, List<PersistentStateDesc>> stateDescsByClass = new HashMap<Class<?>, List<PersistentStateDesc>>();
+
+    protected Map<String, List<PersistentStateDesc>> stateDescsByTableName = new HashMap<String, List<PersistentStateDesc>>();
 
     public AbstractPersistentClassDesc(Class<?> persistentClass) {
         if (persistentClass == null) {
@@ -58,38 +61,57 @@ public abstract class AbstractPersistentClassDesc implements
         return persistentClass;
     }
 
-    public PersistentStateDesc getPersistentStateDesc(int index) {
-        return (PersistentStateDesc)stateDescs.get(index);
+    public boolean isPropertyAccessed() {
+        return propertyAccessed;
     }
 
-    public boolean hasPersistentStateDesc(String pathName) {
-        return stateDescs.containsKey(pathName);
+    public List<PersistentStateDesc> getPersistentStateDescs() {
+        return stateDescs;
     }
 
-    public PersistentStateDesc getPersistentStateDesc(String pathName)
+    public PersistentStateDesc getPersistentStateDesc(String name)
             throws PersistentStateNotFoundException {
 
-        if (stateDescs.containsKey(pathName)) {
-            return (PersistentStateDesc) stateDescs.get(pathName);
+        return getPersistentStateDesc(persistentClass, name);
+    }
+
+    public PersistentStateDesc getPersistentStateDesc(Class owner,
+            String name) throws PersistentStateNotFoundException {
+
+        if (stateDescsByClass.containsKey(owner)) {
+            List<PersistentStateDesc> list = stateDescsByClass.get(owner);
+            for (PersistentStateDesc stateDesc : list) {
+                if (stateDesc.getName().equals(name)) {
+                    return stateDesc;
+                }
+            }
         }
-        throw new PersistentStateNotFoundException(persistentClass, pathName,
+        throw new PersistentStateNotFoundException(owner, name,
                 propertyAccessed);
     }
 
-    public int getPersistentStateDescSize() {
-        return stateDescs.size();
+    public List<PersistentStateDesc> getPersistentStateDescsByTableName(
+            String tableName) {
+        return (List<PersistentStateDesc>) stateDescsByTableName.get(tableName
+                .toLowerCase());
     }
 
-    public String getTableName(int index) {
-        return tableNames.get(index).toUpperCase();
+    public List<PersistentStateDesc> getIdentifiers() {
+        List<PersistentStateDesc> result = new ArrayList<PersistentStateDesc>();
+        for (PersistentStateDesc stateDesc : stateDescs) {
+            if (stateDesc.isIdentifier()) {
+                result.add(stateDesc);
+            }
+        }
+        return result;
     }
 
-    public int getTableSize() {
-        return tableNames.size();
+    public String getPrimaryTableName() {
+        return tableNames.get(0);
     }
-
-    public boolean isPropertyAccessed() {
-        return propertyAccessed;
+    
+    public List<String> getTableNames() {
+        return tableNames;
     }
 
     protected void setupPersistentStateDescs() {
@@ -106,8 +128,8 @@ public abstract class AbstractPersistentClassDesc implements
                             propDesc, readMethod);
                     if (accessor.isPersistent()) {
                         PersistentStateDesc ps = new PersistentStateDescImpl(
-                                this, tableNames.get(0), accessor);
-                        setupPersistentStateDescs(ps);
+                                this, getPrimaryTableName(), accessor);
+                        addPersistentStateDesc(ps);
                     }
                 }
             }
@@ -119,22 +141,43 @@ public abstract class AbstractPersistentClassDesc implements
                     if (accessor.isPersistent()) {
                         PersistentStateDesc ps = new PersistentStateDescImpl(
                                 this, tableNames.get(0), accessor);
-                        setupPersistentStateDescs(ps);
+                        addPersistentStateDesc(ps);
                     }
                 }
             }
         }
     }
 
-    protected void setupPersistentStateDescs(PersistentStateDesc ps) {
-        stateDescs.put(ps.getPathName(), ps);
-        if (ps.isIdentifier()) {
-            identifiers.add(ps);
+    protected void addPersistentStateDesc(PersistentStateDesc ps) {
+        stateDescs.add(ps);
+        addPersistentStateDescByClass(ps, ps.getOwner().getPersistentClass());
+        addPersistentStateDescByTableName(ps, ps.getColumn().getTable());
+    }
+
+    protected void addPersistentStateDescByTableName(PersistentStateDesc ps,
+            String tableName) {
+
+        String name = tableName.toLowerCase();
+        if (!stateDescsByTableName.containsKey(name)) {
+            stateDescsByTableName.put(name,
+                    new ArrayList<PersistentStateDesc>());
+        }
+        stateDescsByTableName.get(name).add(ps);
+        addTableName(name);
+    }
+
+    protected void addPersistentStateDescByClass(PersistentStateDesc ps,
+            Class clazz) {
+        if (!stateDescsByClass.containsKey(clazz)) {
+            stateDescsByClass.put(clazz, new ArrayList<PersistentStateDesc>());
+        }
+        stateDescsByClass.get(clazz).add(ps);
+    }
+    
+    protected void addTableName(String tableName) {
+        if (!tableNames.contains(tableName.toLowerCase())) {
+            tableNames.add(tableName.toLowerCase());
         }
     }
-
-    public List<PersistentStateDesc> getIdentifiers() {
-        return identifiers;
-    }
-
+    
 }

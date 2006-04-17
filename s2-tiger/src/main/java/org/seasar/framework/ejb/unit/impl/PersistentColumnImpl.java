@@ -23,34 +23,33 @@ import org.seasar.framework.ejb.unit.PersistentColumn;
 
 public class PersistentColumnImpl implements PersistentColumn {
 
-    private String tableName;
-
     private String name;
+
+    private String tableName;
 
     private String referencedColumnName;
 
     public PersistentColumnImpl(Column column) {
-        this(column.table(), column.name());
+        this(column.name(), column.table());
     }
 
     public PersistentColumnImpl(JoinColumn column) {
-        this(column.table(), column.name(), column.referencedColumnName());
+        this(column.name(), column.table(), column.referencedColumnName());
     }
 
     public PersistentColumnImpl(PrimaryKeyJoinColumn column) {
-        this(null, column.name(), column.referencedColumnName());
+        this(column.name(), null, column.referencedColumnName());
     }
 
-    public PersistentColumnImpl(String tableName, String columnName) {
-        this(tableName, columnName, null);
+    public PersistentColumnImpl(String columnName, String tableName) {
+        this(columnName, tableName, null);
     }
 
-    public PersistentColumnImpl(String tableName, String name,
+    public PersistentColumnImpl(String name, String tableName,
             String referencedColumnName) {
-        this.name = name != null ? name.toUpperCase() : null;
-        this.tableName = tableName != null ? tableName.toUpperCase() : null;
+        this.name = name != null ? name : null;
+        this.tableName = tableName != null ? tableName : null;
         this.referencedColumnName = referencedColumnName != null ? referencedColumnName
-                .toUpperCase()
                 : null;
     }
 
@@ -58,7 +57,7 @@ public class PersistentColumnImpl implements PersistentColumn {
         return name;
     }
 
-    public String getTableName() {
+    public String getTable() {
         return tableName;
     }
 
@@ -69,10 +68,10 @@ public class PersistentColumnImpl implements PersistentColumn {
     @Override
     public String toString() {
         StringBuilder buf = new StringBuilder();
-        buf.append("tableName=");
-        buf.append(tableName);
-        buf.append(",name=");
+        buf.append("name=");
         buf.append(name);
+        buf.append(",tableName=");
+        buf.append(tableName);
         buf.append(",referencedColumnName=");
         buf.append(referencedColumnName);
         return buf.toString();

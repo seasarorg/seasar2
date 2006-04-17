@@ -15,18 +15,30 @@
  */
 package org.seasar.framework.ejb.unit.impl;
 
-import javax.persistence.MappedSuperclass;
+import java.util.List;
 
-@MappedSuperclass
-public class Hoge6 extends Hoge5 {
+import org.seasar.framework.ejb.unit.ProxiedObjectResolver;
+import org.seasar.framework.exception.EmptyRuntimeException;
 
-    private String hoge6;
+/**
+ * @author taedium
+ *
+ */
+public class EntityListIntrospector extends EntityIntrospector {
 
-    public String getHoge6() {
-        return hoge6;
-    }
-
-    public void setHoge6(String hoge6) {
-        this.hoge6 = hoge6;
+    public EntityListIntrospector(List<?> entities, ProxiedObjectResolver resolver) {
+        super(resolver);
+        
+        if (entities == null) {
+            throw new EmptyRuntimeException("entities");
+        }
+        
+        for (Object entity : entities) {
+            if (entity == null) {
+                continue;
+            }
+            createClassDescs(entity);
+        }
+        setupRelationships();
     }
 }

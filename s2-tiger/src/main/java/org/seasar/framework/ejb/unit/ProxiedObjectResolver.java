@@ -13,32 +13,14 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.framework.ejb.unit.impl;
+package org.seasar.framework.ejb.unit;
 
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
-
-@MappedSuperclass
-public class Hoge5 {
-
-    @Id
-    private Long id;
+/**
+ * @author taedium
+ *
+ */
+public interface ProxiedObjectResolver {
     
-    private String hoge5;
+    Object unproxy(Object proxy);
 
-    public String getHoge5() {
-        return hoge5;
-    }
-
-    public void setHoge5(String hoge5) {
-        this.hoge5 = hoge5;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 }

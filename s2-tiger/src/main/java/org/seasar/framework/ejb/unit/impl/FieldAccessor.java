@@ -41,7 +41,7 @@ public class FieldAccessor implements PersistentStateAccessor {
         return field.getName();
     }
 
-    public Class<?> getPersistentStateType() {
+    public Class<?> getPersistentStateClass() {
         return field.getType();
     }
 

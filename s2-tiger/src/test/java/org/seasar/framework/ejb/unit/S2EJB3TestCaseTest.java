@@ -19,7 +19,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.EJB;
+import javax.ejb.Local;
+import javax.ejb.Stateless;
+import javax.persistence.Entity;
 import javax.persistence.EntityManager;
+import javax.persistence.Id;
 import javax.transaction.TransactionManager;
 
 import org.seasar.extension.dataset.DataRow;
@@ -67,7 +71,7 @@ public class S2EJB3TestCaseTest extends S2EJB3TestCase {
         row.setValue("EMPNO", 7782);
         row.setValue("NAME", "CLARK");
 
-        Employee clark = new Employee(new Long(1), 7782, "CLARK", null);
+        Employee clark = new Employee(new Long(1), 7782, "CLARK");
 
         assertEntityEquals("1", expected, clark);
     }
@@ -87,12 +91,12 @@ public class S2EJB3TestCaseTest extends S2EJB3TestCase {
         row2.setValue("EMPNO", 7839);
         row2.setValue("NAME", "KING");
 
-        Employee clark = new Employee(new Long(1), 7782, "CLARK", null);
-        Employee king = new Employee(new Long(2), 7839, "KING", null);
+        Employee clark = new Employee(new Long(1), 7782, "CLARK");
+        Employee king = new Employee(new Long(2), 7839, "KING");
         List<Employee> employees = new ArrayList<Employee>();
         employees.add(clark);
         employees.add(king);
-
+        
         assertEntityListEquals("1", expected, employees);
     }
 
@@ -124,4 +128,51 @@ public class S2EJB3TestCaseTest extends S2EJB3TestCase {
         assertEquals(false, isTransactionActive());
     }
 
+    @Entity(name = "Employee")
+    public static class Employee {
+
+        @Id
+        private Long id;
+
+        private long empno;
+
+        private String name;
+
+        public Employee() {
+        }
+
+        public Employee(Long id, long empno, String name) {
+            this.id = id;
+            this.empno = empno;
+            this.name = name;
+        }
+    }
+    
+    @Local
+    public static interface IHoge {
+        String aaa();
+    }
+
+    @Local
+    public static interface IFoo {
+        String aaa();
+    }
+    
+    @Stateless
+    public static class Hoge implements IHoge {
+
+        @EJB
+        private IFoo foo;
+        
+        public String aaa() {
+            return foo.aaa();
+        }
+    }
+
+    @Stateless
+    public static class Foo implements IFoo {
+        public String aaa() {
+            return "aaa";
+        }
+    }
 }

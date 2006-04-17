@@ -26,7 +26,7 @@ public class FieldAccessorTest extends TestCase {
 
     public void testGetValue() throws Exception {
         Hoge hoge = new Hoge();
-        hoge.setBbb(10);
+        hoge.bbb = 10;
         BeanDesc beanDesc = BeanDescFactory.getBeanDesc(hoge.getClass());
         Field field = beanDesc.getField("bbb");
         FieldAccessor accessor = new FieldAccessor(field);
@@ -39,7 +39,22 @@ public class FieldAccessorTest extends TestCase {
         Field field = beanDesc.getField("bbb");
         FieldAccessor accessor = new FieldAccessor(field);
         accessor.setValue(hoge, 10);
-        assertEquals("1", new Integer(10), hoge.getBbb());
+        assertEquals("1", 10, hoge.bbb);
     }
 
+    public void testSetIllegalValue() {
+        Hoge hoge = new Hoge();
+        BeanDesc beanDesc = BeanDescFactory.getBeanDesc(hoge.getClass());
+        Field field = beanDesc.getField("bbb");
+        FieldAccessor accessor = new FieldAccessor(field);
+        try {
+            accessor.setValue(hoge, "value");
+            fail();
+        } catch (Exception expected) {
+        }
+    }
+
+    public static class Hoge {
+        private int bbb;
+    }
 }

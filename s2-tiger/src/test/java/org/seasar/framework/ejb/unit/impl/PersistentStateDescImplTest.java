@@ -15,7 +15,32 @@
  */
 package org.seasar.framework.ejb.unit.impl;
 
+import static javax.persistence.InheritanceType.JOINED;
+import static org.seasar.framework.ejb.unit.PersistentStateType.BASIC;
+import static org.seasar.framework.ejb.unit.PersistentStateType.EMBEDDED;
+import static org.seasar.framework.ejb.unit.PersistentStateType.TO_MANY;
+import static org.seasar.framework.ejb.unit.PersistentStateType.TO_ONE;
+
 import java.util.Collection;
+import java.util.HashSet;
+
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.IdClass;
+import javax.persistence.Inheritance;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.SecondaryTable;
+import javax.persistence.Table;
 
 import junit.framework.TestCase;
 
@@ -29,84 +54,281 @@ import org.seasar.framework.ejb.unit.PersistentStateDesc;
  */
 public class PersistentStateDescImplTest extends TestCase {
 
-    public void testGetTableName() {
+    public void testGetColumn() {
         PersistentClassDesc pc = new EntityClassDesc(Hoge.class);
-        PersistentStateDesc aaa = pc.getPersistentStateDesc("Hoge.aaa");
-        assertEquals("1", "HOGE", aaa.getColumn().getTableName());
-        PersistentStateDesc bbb = pc.getPersistentStateDesc("Hoge.bbb");
-        assertEquals("2", "HOGE", bbb.getColumn().getTableName());
-        PersistentStateDesc ccc = pc.getPersistentStateDesc("Hoge.ccc");
-        assertEquals("3", "HOGE", ccc.getColumn().getTableName());
+        PersistentStateDesc stateDesc = pc.getPersistentStateDesc("aaa");
+        PersistentColumn column = stateDesc.getColumn();
+        assertEquals("1", "hoge", column.getTable().toLowerCase());
+        assertEquals("2", "aaa", column.getName().toLowerCase());
     }
 
-    public void testGetTableName2() {
-        PersistentClassDesc pc = new EntityClassDesc(Hoge3.class);
-        PersistentStateDesc aaa = pc.getPersistentStateDesc("Hoge3.aaa");
-        assertEquals("1", "FOO1", aaa.getColumn().getTableName());
-        PersistentStateDesc bbb = pc.getPersistentStateDesc("Hoge3.bbb");
-        assertEquals("2", "FOO2", bbb.getColumn().getTableName());
-        PersistentStateDesc ccc = pc.getPersistentStateDesc("Hoge3.ccc");
-        assertEquals("3", "FOO3", ccc.getColumn().getTableName());
+    public void testGetColumn2() {
+        PersistentClassDesc pc = new EntityClassDesc(Hoge2.class);
+        PersistentStateDesc stateDesc = pc.getPersistentStateDesc("aaa");
+        PersistentColumn column = stateDesc.getColumn();
+        assertEquals("1", "foo2", column.getTable().toLowerCase());
+        assertEquals("2", "foo1aaa", column.getName().toLowerCase());
     }
 
-    public void testGetColumnName() {
+    public void testHasColumnReturnsTrue() {
+        PersistentClassDesc pc = new EntityClassDesc(Hoge2.class);
+        PersistentStateDesc stateDesc = pc.getPersistentStateDesc("aaa");
+        assertEquals("1", true, stateDesc.hasColumn("foo1aaa"));
+        assertEquals("2", false, stateDesc.hasColumn("aaa"));
+    }
+
+    public void testHasColumnReturnsFalse() {
+        PersistentClassDesc pc = new EntityClassDesc(Hoge2.class);
+        PersistentStateDesc stateDesc = pc.getPersistentStateDesc("aaa");
+        assertEquals("1", false, stateDesc.hasColumn("aaa"));
+    }
+
+    public void testGetPersistentClass() {
         PersistentClassDesc pc = new EntityClassDesc(Hoge.class);
-        PersistentStateDesc bbb = pc.getPersistentStateDesc("Hoge.bbb");
-        assertEquals("1", "BBB", bbb.getColumn().getName());
+        PersistentStateDesc stateDesc = pc.getPersistentStateDesc("aaa");
+        assertEquals("1", Long.class, stateDesc.getPersistentStateClass());
     }
 
-    public void testGetColumnName2() {
-        PersistentClassDesc pc = new EntityClassDesc(Hoge3.class);
-        PersistentStateDesc bbb = pc.getPersistentStateDesc("Hoge3.bbb");
-        assertEquals("1", "FOO2BBB", bbb.getColumn().getName());
-    }
-
-    public void testToOneRelationship() {
-        PersistentClassDesc pc = new EntityClassDesc(Employee.class);
-        PersistentStateDesc dept = pc.getPersistentStateDesc("Employee.department");
-
-        assertEquals("1", "department", dept.getStateName());
-        assertEquals("2", Department.class, dept.getPersistentStateType());
-        assertFalse("3", dept.isEmbedded());
-        assertTrue("4", dept.isToOneRelationship());
-        assertFalse("5", dept.isToManyRelationship());
-    }
-
-    public void testToManyRelationship() {
+    public void testGetCollectionClass() {
         PersistentClassDesc pc = new EntityClassDesc(Department.class);
-        PersistentStateDesc employees = pc.getPersistentStateDesc("Department.employees");
-
-        assertEquals("1", "employees", employees.getStateName());
-        assertEquals("2", Collection.class, employees.getPersistentStateType());
-        assertEquals("3", Employee.class, employees.getCollectionType());
-        assertFalse("4", employees.isEmbedded());
-        assertFalse("5", employees.isToOneRelationship());
-        assertTrue("6", employees.isToManyRelationship());
+        PersistentStateDesc stateDesc = pc.getPersistentStateDesc("employees");
+        assertEquals("1", Employee.class, stateDesc.getCollectionClass());
+        assertEquals("2", Collection.class, stateDesc.getPersistentStateClass());
     }
 
-    public void testEmbeddedState() {
-        PersistentClassDesc pc = new EntityClassDesc(Employee2.class);
-        PersistentStateDesc period = pc.getPersistentStateDesc("Employee2.period");
-
-        assertEquals("2", EmployeePeriod.class, period.getPersistentStateType());
-        assertTrue("3", period.isEmbedded());
-        assertFalse("4", period.isToOneRelationship());
-        assertFalse("5", period.isToManyRelationship());
+    public void testGetEmbeddedClassDesc() {
+        PersistentClassDesc pc = new EntityClassDesc(Employee.class);
+        PersistentStateDesc stateDesc = pc.getPersistentStateDesc("period");
+        assertNotNull("1", stateDesc.getEmbeddedClassDesc());
     }
 
-    public void testEmbeddedStateWithAttributeOverride() {
-        PersistentClassDesc pc = new EntityClassDesc(Employee4.class);
-        PersistentStateDesc period = pc.getPersistentStateDesc("Employee4.period");
-        PersistentClassDesc embeddedClass = period.getEmbeddedClassDesc();
-
-        PersistentStateDesc begin = embeddedClass.getPersistentStateDesc("EmployeePeriod.startDate");
-        PersistentColumn beginColumn = begin.getColumn();
-        assertEquals("1", "BEGINDATE", beginColumn.getName());
-        assertEquals("2", "HOGE", beginColumn.getTableName());
-        PersistentStateDesc finish = embeddedClass.getPersistentStateDesc("EmployeePeriod.endDate");
-        PersistentColumn finishColumn = finish.getColumn();
-        assertEquals("3", "FINISHDATE", finishColumn.getName());
-        assertEquals("4", "EMPLOYEE4", finishColumn.getTableName());
+    public void testIsIdentifierReturnsTrue() {
+        PersistentClassDesc pc = new EntityClassDesc(Hoge.class);
+        PersistentStateDesc stateDesc = pc.getPersistentStateDesc("aaa");
+        assertEquals("1", true, stateDesc.isIdentifier());
     }
 
+    public void testIsIdentifierReturnsFalse() {
+        PersistentClassDesc pc = new EntityClassDesc(Hoge.class);
+        PersistentStateDesc stateDesc = pc.getPersistentStateDesc("bbb");
+        assertEquals("1", false, stateDesc.isIdentifier());
+    }
+
+    public void testIsRelationOwningSideReturnsTrue() {
+        PersistentClassDesc pc = new EntityClassDesc(Address.class);
+        PersistentStateDesc stateDesc = pc.getPersistentStateDesc("employee");
+        assertEquals("1", true, stateDesc.isRelationOwningSide());
+    }
+
+    public void testIsRelationOwningSideReturnsFalse() {
+        PersistentClassDesc pc = new EntityClassDesc(Employee.class);
+        PersistentStateDesc stateDesc = pc.getPersistentStateDesc("address");
+        assertEquals("1", false, stateDesc.isRelationOwningSide());
+    }
+
+    public void testGetPersistentStateType() {
+        PersistentClassDesc pc = new EntityClassDesc(Employee.class);
+        PersistentStateDesc stateDesc = pc.getPersistentStateDesc("department");
+        assertEquals("1", TO_ONE, stateDesc.getPersistentStateType());
+
+        stateDesc = pc.getPersistentStateDesc("period");
+        assertEquals("2", EMBEDDED, stateDesc.getPersistentStateType());
+
+        stateDesc = pc.getPersistentStateDesc("id");
+        assertEquals("3", BASIC, stateDesc.getPersistentStateType());
+
+        pc = new EntityClassDesc(Department.class);
+        stateDesc = pc.getPersistentStateDesc("employees");
+        assertEquals("4", TO_MANY, stateDesc.getPersistentStateType());
+    }
+
+    public void testSetupForeignKeyColumns() {
+        PersistentClassDesc pc1 = new EntityClassDesc(Employee.class);
+        PersistentStateDesc stateDesc = pc1
+                .getPersistentStateDesc("department");
+        PersistentClassDesc pc2 = new EntityClassDesc(Department.class);
+        stateDesc.setupForeignKeyColumns(pc2);
+        PersistentColumn fk = stateDesc.getForeignKeyColumns().get(0);
+
+        assertEquals("1", "department_id", fk.getName().toLowerCase());
+        assertEquals("2", "employee", fk.getTable().toLowerCase());
+        assertEquals("3", "id", fk.getReferencedColumnName().toLowerCase());
+    }
+
+    public void testSetupForeignKeyWithJoinColumn() {
+        PersistentClassDesc pc1 = new EntityClassDesc(Employee2.class);
+        PersistentStateDesc stateDesc = pc1
+                .getPersistentStateDesc("department");
+        PersistentClassDesc pc2 = new EntityClassDesc(Department2.class);
+        stateDesc.setupForeignKeyColumns(pc2);
+        PersistentColumn fk = stateDesc.getForeignKeyColumns().get(0);
+
+        assertEquals("1", "foo", fk.getName().toLowerCase());
+        assertEquals("2", "employee2", fk.getTable().toLowerCase());
+        assertEquals("3", "deptid", fk.getReferencedColumnName().toLowerCase());
+    }
+
+    public void testSetupForeignKeyWithJoinColumns() {
+        PersistentClassDesc pc1 = new EntityClassDesc(Employee3.class);
+        PersistentStateDesc stateDesc = pc1
+                .getPersistentStateDesc("department");
+        PersistentClassDesc pc2 = new EntityClassDesc(Department3.class);
+        stateDesc.setupForeignKeyColumns(pc2);
+
+        PersistentColumn fk = stateDesc.getForeignKeyColumns().get(0);
+        assertEquals("1", "deptid1", fk.getName().toLowerCase());
+        assertEquals("2", "employee3", fk.getTable().toLowerCase());
+        assertEquals("3", "id1", fk.getReferencedColumnName().toLowerCase());
+
+        fk = stateDesc.getForeignKeyColumns().get(1);
+        assertEquals("4", "deptid2", fk.getName().toLowerCase());
+        assertEquals("5", "employee3", fk.getTable().toLowerCase());
+        assertEquals("6", "id2", fk.getReferencedColumnName().toLowerCase());
+    }
+
+    public void testGetColumnWithPKJoinColumn() {
+        PersistentClassDesc pc1 = new EntityClassDesc(ValuedCustomer.class);
+        PersistentStateDesc stateDesc = pc1.getPersistentStateDesc("id");
+        PersistentColumn column = stateDesc.getColumn();
+        assertEquals("1", "cust_id", column.getName().toLowerCase());
+        assertEquals("2", "valuedcustomer", column.getTable().toLowerCase());
+        assertEquals("3", "id", column.getReferencedColumnName().toLowerCase());
+
+        // PersistentClassDesc pc1 = new EntityClassDesc(ValuedCustomer.class);
+        // PersistentStateDesc stateDesc = pc1.getPersistentStateDesc("id");
+        // PersistentClassDesc pc2 = new EntityClassDesc(Customer.class);
+        // stateDesc.setupForeignKeyColumns(pc2);
+        // PersistentColumn fk = stateDesc.getForeignKeyColumns().get(0);
+        //        
+        // assertEquals("1", "cust_id", fk.getName().toLowerCase());
+        // assertEquals("2", "valuedcustomer", fk.getTable().toLowerCase());
+        // assertEquals("3", "id", fk.getReferencedColumnName().toLowerCase());
+    }
+
+    @Entity(name = "Hoge")
+    public static class Hoge {
+        @Id
+        private Long aaa;
+
+        private String bbb;
+    }
+
+    @Entity
+    @Table(name = "Foo1")
+    @SecondaryTable(name = "Foo2")
+    public static class Hoge2 {
+        @Id
+        @Column(name = "Foo1aaa", table = "Foo2")
+        private Long aaa;
+    }
+
+    @Entity(name = "Department")
+    public static class Department {
+
+        @Id
+        private Long id;
+
+        @OneToMany(mappedBy = "department")
+        private Collection<Employee> employees = new HashSet<Employee>();
+    }
+
+    @Entity(name = "Department2")
+    public static class Department2 {
+
+        @Id
+        @Column(name = "DEPTID")
+        private Long id;
+
+        public Department2() {
+        }
+    }
+
+    @Entity(name = "Department3")
+    @IdClass(Department3PK.class)
+    public static class Department3 {
+
+        @Id
+        private Long id1;
+
+        @Id
+        private Long id2;
+    }
+
+    public static class Department3PK {
+        private Long id1;
+
+        private Long id2;
+    }
+
+    @Entity(name = "Employee")
+    public static class Employee {
+
+        @Id
+        private Long id;
+
+        @ManyToOne
+        private Department department;
+
+        @OneToOne(mappedBy = "employee")
+        private Address address;
+
+        @Embedded
+        @AttributeOverrides( {
+                @AttributeOverride(name = "startDate", column = @Column(name = "beginDate", table = "Hoge")),
+                @AttributeOverride(name = "endDate", column = @Column(name = "finishDate")) })
+        private EmployeePeriod period;
+
+    }
+
+    @Entity(name = "Employee2")
+    public static class Employee2 {
+
+        @Id
+        private Long id;
+
+        @ManyToOne
+        @JoinColumn(name = "FOO", referencedColumnName = "DEPTID")
+        private Department2 department;
+    }
+
+    @Entity(name = "Employee3")
+    public static class Employee3 {
+
+        @Id
+        private Long id;
+
+        @ManyToOne
+        @JoinColumns( {
+                @JoinColumn(name = "deptId1", referencedColumnName = "id1"),
+                @JoinColumn(name = "deptId2", referencedColumnName = "id2") })
+        private Department3 department;
+    }
+
+    @Embeddable
+    public static class EmployeePeriod {
+
+        private java.util.Date startDate;
+
+        private java.util.Date endDate;
+    }
+
+    @Entity
+    public static class Address {
+        @OneToOne
+        private Employee employee;
+    }
+
+    @Entity
+    @Table(name = "CUST")
+    @Inheritance(strategy = JOINED)
+    public static class Customer {
+        @Id
+        protected Long id;
+    }
+
+    @Entity(name = "ValuedCustomer")
+    @PrimaryKeyJoinColumn(name = "CUST_ID")
+    public static class ValuedCustomer extends Customer {
+        protected Integer rank;
+    }
 }

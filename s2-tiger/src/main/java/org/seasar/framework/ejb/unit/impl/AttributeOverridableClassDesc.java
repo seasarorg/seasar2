@@ -38,17 +38,17 @@ class AttributeOverridableClassDesc extends AbstractPersistentClassDesc
         super(persistentClass);
 
         this.propertyAccessed = propertyAccessed;
-        this.tableNames.add(primaryTableName);
         this.attribOverrides = attribOverrides;
+        addTableName(primaryTableName);
         setupPersistentStateDescs();
         overrideAttributes();
     }
 
     private void overrideAttributes() {
-        for (int i = 0; i < getPersistentStateDescSize(); i++) {
-            PersistentStateDesc psd = getPersistentStateDesc(i);
-            if (attribOverrides.containsKey(psd.getStateName())) {
-                override(psd, attribOverrides.get(psd.getStateName()));
+        for (PersistentStateDesc stateDesc : getPersistentStateDescs()) {
+            if (attribOverrides.containsKey(stateDesc.getName())) {
+                override(stateDesc, attribOverrides.get(stateDesc
+                        .getName()));
             }
         }
     }
@@ -58,11 +58,15 @@ class AttributeOverridableClassDesc extends AbstractPersistentClassDesc
 
         String columnName = StringUtil.isEmpty(column.getName()) ? old
                 .getName() : column.getName();
-        String tableName = StringUtil.isEmpty(column.getTableName()) ? old
-                .getTableName() : column.getTableName();
+        String tableName = StringUtil.isEmpty(column.getTable()) ? old
+                .getTable() : column.getTable();
 
-        PersistentColumn newColumn = new PersistentColumnImpl(tableName,
-                columnName);
+        PersistentColumn newColumn = new PersistentColumnImpl(columnName,
+                tableName);
         psd.setColumn(newColumn);
+    }
+
+    public PersistentClassDesc getRoot() {
+        return this;
     }
 }

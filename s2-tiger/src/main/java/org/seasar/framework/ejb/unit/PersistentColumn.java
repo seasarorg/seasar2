@@ -23,7 +23,7 @@ public interface PersistentColumn {
 
     String getName();
     
-    String getTableName();
+    String getTable();
     
     String getReferencedColumnName();
 }

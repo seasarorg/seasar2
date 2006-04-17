@@ -43,6 +43,8 @@ public abstract class S2EJB3TestCase extends S2TestCase {
 
     private TigerAnnotationHandler handler = new TigerAnnotationHandler();
 
+    private ProxiedObjectResolver resolver;
+    
     private EntityManager entityManager;
 
     public S2EJB3TestCase() {
@@ -143,14 +145,14 @@ public abstract class S2EJB3TestCase extends S2TestCase {
     protected void assertEntityEquals(String message, DataSet expected,
             Object entity) {
 
-        EntityReader reader = new EntityReader(entity);
+        EntityReader reader = new EntityReader(entity, resolver);
         assertEntityEquals(message, expected, reader.read());
     }
 
     protected void assertEntityListEquals(String message, DataSet expected,
             List<?> list) {
 
-        EntityListReader reader = new EntityListReader(list);
+        EntityListReader reader = new EntityListReader(list, resolver);
         assertEntityEquals(message, expected, reader.read());
     }
 

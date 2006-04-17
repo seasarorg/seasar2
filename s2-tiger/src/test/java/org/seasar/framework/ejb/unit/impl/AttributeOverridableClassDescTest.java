@@ -28,30 +28,23 @@ import org.seasar.framework.ejb.unit.PersistentStateDesc;
  */
 public class AttributeOverridableClassDescTest extends TestCase {
 
-    public void testEmbeddableClass() {
+    public void test() {
         HashMap<String, PersistentColumn> overrides = new HashMap<String, PersistentColumn>();
-        overrides.put("startDate", new PersistentColumnImpl("hoge", "foo"));
+        overrides.put("startDate", new PersistentColumnImpl("foo", "hoge"));
         AttributeOverridableClassDesc ao = new AttributeOverridableClassDesc(
-                EmployeePeriod.class, "EMPLOYEE2", true, overrides);
-        PersistentStateDesc stateDesc = ao
-                .getPersistentStateDesc("EmployeePeriod.startDate");
+                EmployeePeriod.class, "PrimaryTable", true, overrides);
+        PersistentStateDesc stateDesc = ao.getPersistentStateDesc("startDate");
         PersistentColumn column = stateDesc.getColumn();
 
-        assertEquals("1", "HOGE", column.getTableName());
-        assertEquals("2", "FOO", column.getName());
+        assertEquals("1", "hoge", column.getTable().toLowerCase());
+        assertEquals("2", "foo", column.getName().toLowerCase());
     }
 
-    public void testMappedSuperClass() {
-        HashMap<String, PersistentColumn> overrides = new HashMap<String, PersistentColumn>();
-        overrides.put("empid", new PersistentColumnImpl("hoge", "foo"));
-        AttributeOverridableClassDesc ao = new AttributeOverridableClassDesc(
-                Employee6.class, "EMPLOYEE2", true, overrides);
-        PersistentStateDesc stateDesc = ao
-                .getPersistentStateDesc("Employee6.empid");
-        PersistentColumn column = stateDesc.getColumn();
+    public static class EmployeePeriod {
+        private java.util.Date startDate;
 
-        assertEquals("1", "HOGE", column.getTableName());
-        assertEquals("2", "FOO", column.getName());
+        public java.util.Date getStartDate() {
+            return startDate;
+        }
     }
-
 }

@@ -26,7 +26,7 @@ public interface PersistentStateAccessor {
 
     String getName();
     
-    Class<?> getPersistentStateType();
+    Class<?> getPersistentStateClass();
     
     Type getGenericType();
     

@@ -23,22 +23,27 @@ import java.util.List;
  */
 public interface PersistentClassDesc {
 
-    List<PersistentStateDesc> getIdentifiers();
-
-    int getPersistentStateDescSize();
-
-    PersistentStateDesc getPersistentStateDesc(int index);
-
-    boolean hasPersistentStateDesc(String pathName);
-
-    PersistentStateDesc getPersistentStateDesc(String pathName)
-            throws PersistentStateNotFoundException;
-
+    Class<?> getPersistentClass();
+    
     boolean isPropertyAccessed();
 
-    Class<?> getPersistentClass();
+    PersistentClassDesc getRoot();
+    
+    PersistentStateDesc getPersistentStateDesc(String stateName)
+            throws PersistentStateNotFoundException;
 
-    int getTableSize();
+    PersistentStateDesc getPersistentStateDesc(Class clazz, String stateName)
+            throws PersistentStateNotFoundException;
 
-    String getTableName(int index);
+    List<PersistentStateDesc> getIdentifiers();
+
+    List<PersistentStateDesc> getPersistentStateDescs();
+
+    List<PersistentStateDesc> getPersistentStateDescsByTableName(
+            String tableName);
+    
+    String getPrimaryTableName();
+
+    List <String> getTableNames();
+
 }

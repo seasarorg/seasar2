@@ -15,14 +15,19 @@
  */
 package org.seasar.framework.ejb.unit.impl;
 
+import java.lang.reflect.Constructor;
+import java.util.List;
+
 import javax.persistence.DiscriminatorType;
 
 import org.seasar.framework.ejb.unit.PersistentClassDesc;
 import org.seasar.framework.ejb.unit.PersistentColumn;
 import org.seasar.framework.ejb.unit.PersistentStateAccessor;
 import org.seasar.framework.ejb.unit.PersistentStateDesc;
+import org.seasar.framework.ejb.unit.PersistentStateType;
 import org.seasar.framework.exception.EmptyRuntimeException;
 import org.seasar.framework.util.ClassUtil;
+import org.seasar.framework.util.ConstructorUtil;
 
 public class DiscriminatorStateDesc implements PersistentStateDesc {
 
@@ -31,12 +36,12 @@ public class DiscriminatorStateDesc implements PersistentStateDesc {
     private final DiscriminatorType discriminatorType;
 
     private final String value;
-    
+
     private PersistentColumn column;
 
     public DiscriminatorStateDesc(PersistentClassDesc persistentClassDesc,
-            PersistentColumn column,
-            DiscriminatorType discriminatorType, String value) {
+            PersistentColumn column, DiscriminatorType discriminatorType,
+            String value) {
         if (persistentClassDesc == null) {
             throw new EmptyRuntimeException("persistentClassDesc");
         }
@@ -49,30 +54,30 @@ public class DiscriminatorStateDesc implements PersistentStateDesc {
         this.persistentClassDesc = persistentClassDesc;
         this.discriminatorType = discriminatorType;
         this.value = value;
-        
+
         setColumn(column);
     }
 
-    public Class<?> getCollectionType() {
+    public Class<?> getCollectionClass() {
         throw new UnsupportedOperationException("getCollectionType");
     }
 
     public PersistentColumn getColumn() {
         return column;
     }
-    
+
     public void setColumn(PersistentColumn column) {
         if (column == null) {
             throw new EmptyRuntimeException("column");
         }
         this.column = column;
     }
-    
-    public String getStateName() {
+
+    public String getName() {
         return "$" + column.getName();
     }
 
-    public Class<?> getPersistentStateType() {
+    public Class<?> getPersistentStateClass() {
         switch (discriminatorType) {
         case STRING:
             return String.class;
@@ -89,14 +94,12 @@ public class DiscriminatorStateDesc implements PersistentStateDesc {
     }
 
     public Object getValue(Object target) {
-        return value;
+        Constructor constructor = ClassUtil.getConstructor(
+                getPersistentStateClass(), new Class[] { String.class });
+        return ConstructorUtil.newInstance(constructor, new Object[] { value });
     }
 
     public boolean isCollection() {
-        return false;
-    }
-
-    public boolean isEmbedded() {
         return false;
     }
 
@@ -104,28 +107,8 @@ public class DiscriminatorStateDesc implements PersistentStateDesc {
         throw new UnsupportedOperationException("getEmbeddedClassDesc");
     }
 
-    public void setRelationshipClassDesc(PersistentClassDesc persistentClassDesc) {
-        throw new UnsupportedOperationException("setRelationshipClassDesc");
-    }
-
-    public PersistentClassDesc getRelationshipClassDesc() {
-        throw new UnsupportedOperationException("getRelationshipClassDesc");
-    }
-
-    public void setupForeignKeyColumns() {
+    public void setupForeignKeyColumns(PersistentClassDesc relationship) {
         throw new UnsupportedOperationException("setupRelationshipColumns");
-    }
-
-    public boolean isProperty() {
-        return false;
-    }
-
-    public boolean isToOneRelationship() {
-        return false;
-    }
-
-    public boolean isToManyRelationship() {
-        return false;
     }
 
     public boolean isIdentifier() {
@@ -136,36 +119,23 @@ public class DiscriminatorStateDesc implements PersistentStateDesc {
         throw new UnsupportedOperationException("setValue");
     }
 
-    public void addForeignKeyColumn(PersistentColumn column) {
-        throw new UnsupportedOperationException("addForeignKeyColumn");
-    }
-
     public boolean hasColumn(String columnName) {
         return this.column.getName().equalsIgnoreCase(columnName);
     }
 
-    public int getForeignKeyColumnSize() {
-        return 0;
+    public List<PersistentColumn> getForeignKeyColumns() {
+        throw new UnsupportedOperationException("getForeignKeyColumns");
     }
 
-    public PersistentColumn getForeignKeyColumn(int index) {
-        throw new UnsupportedOperationException("getForeignKeyColumn");
-    }
-
-    public String getPathName() {
-        Class<?> clazz = persistentClassDesc.getPersistentClass();
-        return ClassUtil.getShortClassName(clazz) + "." + getStateName();
-    }
-    
     public PersistentStateAccessor getAccessor() {
         throw new UnsupportedOperationException("getAccessor");
     }
-    
-    public boolean isDescriminator() {
-        return true;
+
+    public PersistentStateType getPersistentStateType() {
+        return PersistentStateType.BASIC;
     }
-    
-    public boolean isOwningSide() {
+
+    public boolean isRelationOwningSide() {
         return false;
     }
 }
