@@ -37,6 +37,7 @@ public class ColumnTypes {
 	public static final ColumnType TIMESTAMP = new TimestampType();
 	public static final ColumnType BINARY = new BinaryType();
 	public static final ColumnType OBJECT = new ObjectType();
+	public static final ColumnType BOOLEAN = new BooleanType();
 	
 	private static Map types_ = new HashMap();
 	
@@ -52,6 +53,8 @@ public class ColumnTypes {
 		types_.put(Float.class, BIGDECIMAL);
 		types_.put(double.class, BIGDECIMAL);
 		types_.put(Double.class, BIGDECIMAL);
+		types_.put(boolean.class, BOOLEAN);
+		types_.put(Boolean.class, BOOLEAN);
 		types_.put(BigDecimal.class, BIGDECIMAL);
 		types_.put(Timestamp.class, TIMESTAMP);
 		types_.put(java.sql.Date.class, TIMESTAMP);
@@ -72,6 +75,8 @@ public class ColumnTypes {
 			case Types.DECIMAL :
 			case Types.NUMERIC :
 				return ValueTypes.BIGDECIMAL;
+            case Types.BOOLEAN :
+                return ValueTypes.BOOLEAN;
 			case Types.DATE :
 			case Types.TIME :
 			case Types.TIMESTAMP :
@@ -101,6 +106,8 @@ public class ColumnTypes {
 			case Types.DECIMAL :
 			case Types.NUMERIC :
 				return BIGDECIMAL;
+			case Types.BOOLEAN :
+			    return BOOLEAN;
 			case Types.DATE :
 			case Types.TIME :
 			case Types.TIMESTAMP :
