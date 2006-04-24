@@ -51,11 +51,13 @@ public class DiscriminatorStateDesc implements PersistentStateDesc {
         if (value == null) {
             throw new EmptyRuntimeException("value");
         }
+        if (column == null) {
+            throw new EmptyRuntimeException("column");
+        }
         this.persistentClassDesc = persistentClassDesc;
         this.discriminatorType = discriminatorType;
         this.value = value;
-
-        setColumn(column);
+        this.column = column;
     }
 
     public Class<?> getCollectionClass() {
@@ -72,7 +74,7 @@ public class DiscriminatorStateDesc implements PersistentStateDesc {
         }
         this.column = column;
     }
-
+    
     public String getName() {
         return "$" + column.getName();
     }
@@ -89,7 +91,7 @@ public class DiscriminatorStateDesc implements PersistentStateDesc {
         return null;
     }
 
-    public PersistentClassDesc getOwner() {
+    public PersistentClassDesc getPersistentClassDesc() {
         return persistentClassDesc;
     }
 
@@ -105,6 +107,10 @@ public class DiscriminatorStateDesc implements PersistentStateDesc {
 
     public PersistentClassDesc getEmbeddedClassDesc() {
         throw new UnsupportedOperationException("getEmbeddedClassDesc");
+    }
+    
+    public List<PersistentStateDesc> getEmbeddedStateDescs() {
+        throw new UnsupportedOperationException("getEmbeddedStateDescs");
     }
 
     public void setupForeignKeyColumns(PersistentClassDesc relationship) {

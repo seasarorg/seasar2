@@ -15,21 +15,37 @@
  */
 package org.seasar.framework.ejb.unit.impl;
 
+import static org.seasar.framework.ejb.unit.PersistentStateType.BASIC;
+import static org.seasar.framework.ejb.unit.PersistentStateType.EMBEDDED;
+import static org.seasar.framework.ejb.unit.PersistentStateType.NONE;
+import static org.seasar.framework.ejb.unit.PersistentStateType.TO_MANY;
+import static org.seasar.framework.ejb.unit.PersistentStateType.TO_ONE;
+
+import static javax.persistence.EnumType.ORDINAL;
+
+import java.io.Serializable;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.EmbeddedId;
+import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinColumns;
@@ -48,56 +64,80 @@ import org.seasar.framework.ejb.unit.PersistentStateType;
 import org.seasar.framework.exception.EmptyRuntimeException;
 import org.seasar.framework.util.StringUtil;
 
-import static org.seasar.framework.ejb.unit.PersistentStateType.BASIC;
-import static org.seasar.framework.ejb.unit.PersistentStateType.TO_ONE;
-import static org.seasar.framework.ejb.unit.PersistentStateType.TO_MANY;
-import static org.seasar.framework.ejb.unit.PersistentStateType.EMBEDDED;
-
 /**
  * @author taedium
  * 
  */
 public class PersistentStateDescImpl implements PersistentStateDesc {
 
-    protected final PersistentClassDesc persistentClassDesc;
+    private static final Set<Class<?>> BASICS = new HashSet<Class<?>>();
 
-    protected final String primaryTableName;
+    private final PersistentClassDesc persistentClassDesc;
 
-    protected final PersistentStateAccessor accessor;
+    private final String primaryTableName;
 
-    protected final String name;
+    private final PersistentStateAccessor accessor;
 
-    protected final Class persistentStateClass;
+    private final String name;
 
-    protected final AnnotatedElement element;
+    private final AnnotatedElement element;
 
-    protected boolean embedded;
+    private Class<?> persistentStateClass;
 
-    protected boolean identifier;
+    private boolean identifier;
 
-    protected boolean toOneRelationship;
+    private boolean oneToOne;
 
-    protected boolean toManyRelationship;
+    private boolean owningSide;
 
-    protected boolean owningSide;
+    private Class collectionClass;
 
-    protected Class collectionClass;
+    private PersistentClassDesc embeddedClassDesc;
 
-    protected PersistentColumn column;
+    private PersistentStateType stateType = NONE;
 
-    protected PersistentClassDesc embeddedClassDesc;
+    private Enumerated enumerated;
 
-    protected PersistentStateType stateType;
+    private Map<String, PersistentColumn> attribOverrides = new HashMap<String, PersistentColumn>();
 
-    protected Map<String, PersistentColumn> attribOverrides = new HashMap<String, PersistentColumn>();
+    private PersistentColumn persistentColumn;
 
-    protected List<PersistentColumn> fkColumns = new ArrayList<PersistentColumn>();
+    private List<PersistentColumn> fkColumns = new ArrayList<PersistentColumn>();
 
-    protected List<PersistentColumn> joinColumns = new ArrayList<PersistentColumn>();
+    private List<PersistentColumn> joinColumns = new ArrayList<PersistentColumn>();
 
-    protected List<PersistentColumn> pkJoinColumns = new ArrayList<PersistentColumn>();
+    private List<PersistentColumn> pkJoinColumns = new ArrayList<PersistentColumn>();
 
-    protected PersistentStateDescImpl(PersistentClassDesc persistentClassDesc,
+    static {
+        BASICS.add(byte.class);
+        BASICS.add(short.class);
+        BASICS.add(int.class);
+        BASICS.add(long.class);
+        BASICS.add(double.class);
+        BASICS.add(float.class);
+        BASICS.add(Byte.class);
+        BASICS.add(Short.class);
+        BASICS.add(Integer.class);
+        BASICS.add(Long.class);
+        BASICS.add(Double.class);
+        BASICS.add(Float.class);
+        BASICS.add(String.class);
+        BASICS.add(BigInteger.class);
+        BASICS.add(BigDecimal.class);
+        BASICS.add(java.util.Date.class);
+        BASICS.add(Calendar.class);
+        BASICS.add(java.sql.Date.class);
+        BASICS.add(java.sql.Time.class);
+        BASICS.add(Timestamp.class);
+        BASICS.add(byte[].class);
+        BASICS.add(Byte[].class);
+        BASICS.add(char[].class);
+        BASICS.add(Character[].class);
+        BASICS.add(Enum.class);
+        BASICS.add(Serializable.class);
+    }
+
+    public PersistentStateDescImpl(PersistentClassDesc persistentClassDesc,
             String primaryTableName, PersistentStateAccessor accessor) {
 
         if (persistentClassDesc == null) {
@@ -118,72 +158,97 @@ public class PersistentStateDescImpl implements PersistentStateDesc {
         introspection();
     }
 
-    protected void introspection() {
-
+    private void introspection() {
         identifier = element.isAnnotationPresent(Id.class)
                 || element.isAnnotationPresent(EmbeddedId.class);
 
-        embedded = element.isAnnotationPresent(Embedded.class)
-                || element.isAnnotationPresent(EmbeddedId.class);
-
-        setupRelationship();
-
-        if (toOneRelationship || toManyRelationship) {
-            setupJoinColumns();
-            setupPkJoinColumns();
+        if (isCollection()) {
+            collectionClass = extractCollectionType(accessor.getGenericType());
         }
-        if (embedded) {
-            setupAttributeOverrides();
-            setupEmbeddedClassDesc();
-        }
+        
         setupColumn();
+        setupJoinColumns();
+        setupPkJoinColumns();
+        setupAttributeOverrides();
+        setupEnumerated();
+        setupStateType();
+    }
 
-        if (embedded) {
-            stateType = EMBEDDED;
-        } else if (toOneRelationship) {
-            stateType = TO_ONE;
-        } else if (toManyRelationship) {
-            stateType = TO_MANY;
-        } else {
-            stateType = BASIC;
+    private void setupEnumerated() {
+        enumerated = element.getAnnotation(Enumerated.class);
+        if (Enum.class.isAssignableFrom(persistentStateClass)) {
+            if (enumerated == null || enumerated.value() == ORDINAL) {
+                persistentStateClass = int.class;
+            } else {
+                persistentStateClass = String.class;
+            }
         }
     }
 
-    protected void setupRelationship() {
-        OneToOne oneToOne = element.getAnnotation(OneToOne.class);
-        OneToMany oneToMany = element.getAnnotation(OneToMany.class);
-        ManyToOne manyToOne = element.getAnnotation(ManyToOne.class);
-        ManyToMany manyToMany = element.getAnnotation(ManyToMany.class);
+    private void setupStateType() {
+        OneToOne oneToOneAnn = element.getAnnotation(OneToOne.class);
+        OneToMany oneToManyAnn = element.getAnnotation(OneToMany.class);
+        ManyToOne manyToOneAnn = element.getAnnotation(ManyToOne.class);
+        ManyToMany manyToManayAnn = element.getAnnotation(ManyToMany.class);
 
-        toOneRelationship = oneToOne != null || manyToOne != null;
-        toManyRelationship = oneToMany != null || manyToMany != null;
+        oneToOne = oneToOneAnn != null;
 
-        if (oneToOne != null && StringUtil.isEmpty(oneToOne.mappedBy())
-                || oneToMany != null
-                && StringUtil.isEmpty(oneToMany.mappedBy())
-                || manyToOne != null || manyToMany != null
-                && StringUtil.isEmpty(manyToMany.mappedBy())) {
+        if (manyToOneAnn != null || oneToOneAnn != null
+                && StringUtil.isEmpty(oneToOneAnn.mappedBy())
+                || oneToManyAnn != null
+                && StringUtil.isEmpty(oneToManyAnn.mappedBy())
+                || manyToManayAnn != null
+                && StringUtil.isEmpty(manyToManayAnn.mappedBy())) {
             owningSide = true;
         }
-    }
 
-    protected void setupColumn() {
-        Column columnAnn = element.getAnnotation(Column.class);
-        String tableName;
-        String columnName;
-        if (columnAnn == null) {
-            tableName = primaryTableName;
-            columnName = name;
+        if (oneToOneAnn != null || manyToOneAnn != null) {
+            stateType = TO_ONE;
+        } else if (oneToManyAnn != null || manyToManayAnn != null) {
+            stateType = TO_MANY;
+        } else if (element.isAnnotationPresent(Embedded.class)
+                || element.isAnnotationPresent(EmbeddedId.class)) {
+            stateType = EMBEDDED;
+            setupEmbeddedClassDesc();
+        } else if (isBasic()) {
+            stateType = BASIC;
         } else {
-            tableName = StringUtil.isEmpty(columnAnn.table()) ? primaryTableName
-                    : columnAnn.table();
-            columnName = StringUtil.isEmpty(columnAnn.name()) ? name
-                    : columnAnn.name();
+            stateType = NONE;
         }
-        column = new PersistentColumnImpl(columnName, tableName);
     }
 
-    protected void setupAttributeOverrides() {
+    private boolean isBasic() {
+        if (BASICS.contains(persistentStateClass)) {
+            return true;
+        }
+        for (Class<?> basicClass : BASICS) {
+            if (basicClass.isAssignableFrom(persistentStateClass)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void setupColumn() {
+        if (isBasic()) {
+            Column columnAnn = element.getAnnotation(Column.class);
+            if (columnAnn != null) {
+                String tableName = StringUtil.isEmpty(columnAnn.table()) ? primaryTableName
+                        : columnAnn.table();
+                String columnName = StringUtil.isEmpty(columnAnn.name()) ? name
+                        : columnAnn.name();
+                persistentColumn = new PersistentColumnImpl(columnName,
+                        tableName);
+            } else {
+                persistentColumn = new PersistentColumnImpl(name,
+                        primaryTableName);
+            }
+        } else {
+            persistentColumn = new PersistentColumnImpl(null, primaryTableName);
+        }
+    }
+
+    private void setupAttributeOverrides() {
         AttributeOverride ao = element.getAnnotation(AttributeOverride.class);
         AttributeOverrides aos = element
                 .getAnnotation(AttributeOverrides.class);
@@ -198,7 +263,7 @@ public class PersistentStateDescImpl implements PersistentStateDesc {
         }
     }
 
-    protected void setupJoinColumns() {
+    private void setupJoinColumns() {
         JoinColumn jColumn = element.getAnnotation(JoinColumn.class);
         JoinColumns jColumns = element.getAnnotation(JoinColumns.class);
 
@@ -211,7 +276,7 @@ public class PersistentStateDescImpl implements PersistentStateDesc {
         }
     }
 
-    protected void setupPkJoinColumns() {
+    private void setupPkJoinColumns() {
         PrimaryKeyJoinColumn pkColumn = element
                 .getAnnotation(PrimaryKeyJoinColumn.class);
         PrimaryKeyJoinColumns pkColumns = element
@@ -226,7 +291,7 @@ public class PersistentStateDescImpl implements PersistentStateDesc {
         }
     }
 
-    protected Class extractCollectionType(Type t) {
+    private Class extractCollectionType(Type t) {
         if (t != null && t instanceof ParameterizedType) {
             ParameterizedType pt = (ParameterizedType) t;
             Type[] genTypes = pt.getActualTypeArguments();
@@ -237,25 +302,25 @@ public class PersistentStateDescImpl implements PersistentStateDesc {
         return null;
     }
 
-    protected void setupEmbeddedClassDesc() {
+    private void setupEmbeddedClassDesc() {
         embeddedClassDesc = new AttributeOverridableClassDesc(
                 persistentStateClass, primaryTableName, isPropertyAccessed(),
                 Collections.unmodifiableMap(attribOverrides));
     }
 
-    public PersistentClassDesc getOwner() {
+    public PersistentClassDesc getPersistentClassDesc() {
         return persistentClassDesc;
     }
 
     public PersistentColumn getColumn() {
-        return column;
+        return persistentColumn;
     }
 
     public void setColumn(PersistentColumn column) {
         if (column == null) {
             throw new EmptyRuntimeException("column");
         }
-        this.column = column;
+        this.persistentColumn = column;
     }
 
     public String getName() {
@@ -271,7 +336,7 @@ public class PersistentStateDescImpl implements PersistentStateDesc {
     }
 
     public Class<?> getCollectionClass() {
-        return extractCollectionType(accessor.getGenericType());
+        return collectionClass;
     }
 
     public boolean isIdentifier() {
@@ -283,86 +348,99 @@ public class PersistentStateDescImpl implements PersistentStateDesc {
     }
 
     public void setupForeignKeyColumns(PersistentClassDesc relationship) {
-        List<PersistentStateDesc> identifiers = relationship.getIdentifiers();
-        if (identifiers.size() == 1
-                && identifiers.get(0).getPersistentStateType() == EMBEDDED) {
-            PersistentClassDesc embedded = identifiers.get(0)
-                    .getEmbeddedClassDesc();
-            identifiers = embedded.getIdentifiers();
+        if (!owningSide || (!pkJoinColumns.isEmpty() && oneToOne)) {
+            return;
         }
 
-        if (!pkJoinColumns.isEmpty()) {
-            setupPKJoinForeignKeyColums(identifiers);
-        } else if (!joinColumns.isEmpty()) {
-            setupJoinForeignKeyColums(identifiers, relationship);
-        } else {
-            setupDefaultForeignKeyColumns(identifiers);
+        List<PersistentColumn> refIdColumns = new ArrayList<PersistentColumn>();
+        for (PersistentStateDesc stateDesc : relationship.getIdentifiers()) {
+            refIdColumns.add(stateDesc.getColumn());
         }
-    }
 
-    protected void setupPKJoinForeignKeyColums(
-            List<PersistentStateDesc> identifiers) {
-        // not yet supported
-    }
-
-    protected void setupJoinForeignKeyColums(
-            List<PersistentStateDesc> identifiers,
-            PersistentClassDesc relationshipClassDesc) {
-
-        if (joinColumns.size() == 1) {
-            PersistentColumn jc = joinColumns.get(0);
-            String column = null;
-            String table = StringUtil.isEmpty(jc.getTable()) ? primaryTableName
-                    : jc.getTable();
-            String referencedColumn = jc.getReferencedColumnName();
-
-            if (StringUtil.isEmpty(referencedColumn)) {
-                for (PersistentStateDesc idDesc : identifiers) {
-                    PersistentColumn id = idDesc.getColumn();
-                    column = StringUtil.isEmpty(jc.getName()) ? name + "_"
-                            + id.getName() : jc.getName();
-                    addForeignKeyColumn(new PersistentColumnImpl(column, table,
-                            id.getName()));
+        if (!joinColumns.isEmpty()) {
+            if (hasReferencedColumnName(joinColumns)) {
+                List<PersistentColumn> refAllColumns = new ArrayList<PersistentColumn>();
+                for (PersistentStateDesc stateDesc : relationship
+                        .getPersistentStateDescs()) {
+                    refAllColumns.add(stateDesc.getColumn());
                 }
+                setupFkColumsByReferencedColumnName(joinColumns, refAllColumns);
             } else {
-                column = StringUtil.isEmpty(jc.getName()) ? name + "_"
-                        + referencedColumn : jc.getName();
-                for (PersistentStateDesc stateDesc : relationshipClassDesc
-                        .getPersistentStateDescs()) {
-                    if (stateDesc.hasColumn(referencedColumn)) {
-                        addForeignKeyColumn(new PersistentColumnImpl(column,
-                                table, referencedColumn));
-                        break;
-                    }
+                setupFkColums(joinColumns, refIdColumns);
+            }
+
+        } else {
+            setupDefaultFkColumn(refIdColumns);
+        }
+    }
+
+    private boolean hasReferencedColumnName(List<PersistentColumn> columns) {
+        for (PersistentColumn column : columns) {
+            if (column.getReferencedColumnName() == null) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void setupFkColumsByReferencedColumnName(
+            List<PersistentColumn> columns, List<PersistentColumn> refColumns) {
+
+        for (PersistentColumn column : columns) {
+            PersistentColumn referencedColumn = null;
+
+            for (PersistentColumn refColumn : refColumns) {
+                if (column.getReferencedColumnName()
+                        .equals(refColumn.getName())) {
+                    referencedColumn = refColumn;
                 }
             }
-        } else {
-            for (PersistentColumn jc : joinColumns) {
-                String column = jc.getName();
-                String table = StringUtil.isEmpty(jc.getTable()) ? primaryTableName
-                        : jc.getTable();
-                String referencedColumn = jc.getReferencedColumnName();
 
-                for (PersistentStateDesc stateDesc : relationshipClassDesc
-                        .getPersistentStateDescs()) {
-
-                    if (stateDesc.hasColumn(referencedColumn)) {
-                        addForeignKeyColumn(new PersistentColumnImpl(column,
-                                table, referencedColumn));
-                        break;
-                    }
-                }
+            if (referencedColumn != null) {
+                PersistentColumn fk = createFkColumn(column, referencedColumn);
+                addForeignKeyColumn(fk);
             }
         }
     }
 
-    protected void setupDefaultForeignKeyColumns(
-            List<PersistentStateDesc> identifiers) {
-        for (PersistentStateDesc idDesc : identifiers) {
-            PersistentColumn id = idDesc.getColumn();
-            String columnName = name + "_" + id.getName();
-            addForeignKeyColumn(new PersistentColumnImpl(columnName,
-                    primaryTableName, id.getName()));
+    private void setupFkColums(List<PersistentColumn> columns,
+            List<PersistentColumn> refIdColumns) {
+
+        if (columns.size() != refIdColumns.size()) {
+            return;
+        }
+
+        for (int i = 0; i < columns.size(); i++) {
+            PersistentColumn column = columns.get(i);
+            PersistentColumn referencedColumn = refIdColumns.get(i);
+
+            if (referencedColumn != null) {
+                PersistentColumn fk = createFkColumn(column, referencedColumn);
+                addForeignKeyColumn(fk);
+            }
+        }
+    }
+
+    private PersistentColumn createFkColumn(PersistentColumn column,
+            PersistentColumn referencedColumn) {
+
+        PersistentColumn newColumn = new PersistentColumnImpl(column);
+        String referencedName = referencedColumn.getName();
+        newColumn.setNameIfNull(getFkColumnName(referencedName));
+        newColumn.setTableIfNull(primaryTableName);
+        newColumn.setReferencedColumnNameIfNull(referencedName);
+        return newColumn;
+    }
+
+    private void setupDefaultFkColumn(
+            List<PersistentColumn> referencedIdColumns) {
+
+        for (PersistentColumn referencedColumn : referencedIdColumns) {
+            String referencedName = referencedColumn.getName();
+            PersistentColumn fk = new PersistentColumnImpl(
+                    getFkColumnName(referencedName), primaryTableName,
+                    referencedName);
+            addForeignKeyColumn(fk);
         }
     }
 
@@ -370,15 +448,19 @@ public class PersistentStateDescImpl implements PersistentStateDesc {
         return embeddedClassDesc;
     }
 
-    protected void addForeignKeyColumn(PersistentColumn column) {
+    public List<PersistentStateDesc> getEmbeddedStateDescs() {
+        return embeddedClassDesc.getPersistentStateDescs();
+    }
+
+    private void addForeignKeyColumn(PersistentColumn column) {
         fkColumns.add(column);
     }
 
     public boolean hasColumn(String columnName) {
-        if (column.getName() == null) {
+        if (getColumn().getName() == null) {
             return false;
         }
-        return this.column.getName().equalsIgnoreCase(columnName);
+        return this.getColumn().getName().equalsIgnoreCase(columnName);
     }
 
     public List<PersistentColumn> getForeignKeyColumns() {
@@ -387,7 +469,7 @@ public class PersistentStateDescImpl implements PersistentStateDesc {
 
     public final String toString() {
         StringBuilder buf = new StringBuilder();
-        buf.append("stateName=");
+        buf.append("name=");
         buf.append(name);
         buf.append(",stateClass=");
         buf.append(persistentStateClass.getName());
@@ -395,7 +477,16 @@ public class PersistentStateDescImpl implements PersistentStateDesc {
     }
 
     public Object getValue(Object target) {
-        return accessor.getValue(target);
+        Object value = accessor.getValue(target);
+        if (value instanceof Enum) {
+            Enum enumValue = (Enum) value;
+            if (persistentStateClass == int.class) {
+                return enumValue.ordinal();
+            } else {
+                return enumValue.toString();
+            }
+        }
+        return value;
     }
 
     public void setValue(Object target, Object value) {
@@ -406,12 +497,16 @@ public class PersistentStateDescImpl implements PersistentStateDesc {
         return owningSide;
     }
 
-    protected boolean isPropertyAccessed() {
+    private boolean isPropertyAccessed() {
         return accessor instanceof PropertyAccessor;
     }
 
     public PersistentStateType getPersistentStateType() {
         return stateType;
+    }
+
+    private String getFkColumnName(String referencedColumnName) {
+        return name + "_" + referencedColumnName;
     }
 
 }

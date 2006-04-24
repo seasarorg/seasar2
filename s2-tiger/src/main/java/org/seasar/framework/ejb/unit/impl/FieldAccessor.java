@@ -57,7 +57,7 @@ public class FieldAccessor implements PersistentStateAccessor {
         FieldUtil.set(field, target, value);
     }
 
-    public boolean isPersistent() {
+    public boolean isPersisteceAccessor() {
         return !(field.isAnnotationPresent(Transient.class)
                 || field.isSynthetic()
                 || Modifier.isTransient(field.getModifiers()) || Modifier

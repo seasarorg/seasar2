@@ -29,14 +29,16 @@ public interface PersistentClassDesc {
 
     PersistentClassDesc getRoot();
     
-    PersistentStateDesc getPersistentStateDesc(String stateName)
+    boolean isRoot();
+    
+    PersistentStateDesc getPersistentStateDesc(String name)
             throws PersistentStateNotFoundException;
 
-    PersistentStateDesc getPersistentStateDesc(Class clazz, String stateName)
+    PersistentStateDesc getPersistentStateDesc(Class owner, String name)
             throws PersistentStateNotFoundException;
 
     List<PersistentStateDesc> getIdentifiers();
-
+    
     List<PersistentStateDesc> getPersistentStateDescs();
 
     List<PersistentStateDesc> getPersistentStateDescsByTableName(
@@ -45,5 +47,4 @@ public interface PersistentClassDesc {
     String getPrimaryTableName();
 
     List <String> getTableNames();
-
 }

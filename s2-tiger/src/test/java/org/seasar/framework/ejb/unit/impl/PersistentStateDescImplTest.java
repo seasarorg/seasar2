@@ -15,6 +15,7 @@
  */
 package org.seasar.framework.ejb.unit.impl;
 
+import static javax.persistence.EnumType.STRING;
 import static javax.persistence.InheritanceType.JOINED;
 import static org.seasar.framework.ejb.unit.PersistentStateType.BASIC;
 import static org.seasar.framework.ejb.unit.PersistentStateType.EMBEDDED;
@@ -23,6 +24,7 @@ import static org.seasar.framework.ejb.unit.PersistentStateType.TO_ONE;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
@@ -30,6 +32,7 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.Inheritance;
@@ -96,10 +99,11 @@ public class PersistentStateDescImplTest extends TestCase {
         assertEquals("2", Collection.class, stateDesc.getPersistentStateClass());
     }
 
-    public void testGetEmbeddedClassDesc() {
+    public void testGetEmbeddedStateDescs() {
         PersistentClassDesc pc = new EntityClassDesc(Employee.class);
         PersistentStateDesc stateDesc = pc.getPersistentStateDesc("period");
-        assertNotNull("1", stateDesc.getEmbeddedClassDesc());
+        List<PersistentStateDesc> embeddeds = stateDesc.getEmbeddedStateDescs();
+        assertEquals("1", 2, embeddeds.size());
     }
 
     public void testIsIdentifierReturnsTrue() {
@@ -168,6 +172,19 @@ public class PersistentStateDescImplTest extends TestCase {
         assertEquals("3", "deptid", fk.getReferencedColumnName().toLowerCase());
     }
 
+    public void testSetupForeignKeyWithJoinColumn2() {
+        PersistentClassDesc pc1 = new EntityClassDesc(Employee5.class);
+        PersistentStateDesc stateDesc = pc1
+                .getPersistentStateDesc("department");
+        PersistentClassDesc pc2 = new EntityClassDesc(Department5.class);
+        stateDesc.setupForeignKeyColumns(pc2);
+        PersistentColumn fk = stateDesc.getForeignKeyColumns().get(0);
+
+        assertEquals("1", "department_name", fk.getName().toLowerCase());
+        assertEquals("2", "employee5", fk.getTable().toLowerCase());
+        assertEquals("3", "name", fk.getReferencedColumnName().toLowerCase());
+    }
+    
     public void testSetupForeignKeyWithJoinColumns() {
         PersistentClassDesc pc1 = new EntityClassDesc(Employee3.class);
         PersistentStateDesc stateDesc = pc1
@@ -186,23 +203,39 @@ public class PersistentStateDescImplTest extends TestCase {
         assertEquals("6", "id2", fk.getReferencedColumnName().toLowerCase());
     }
 
-    public void testGetColumnWithPKJoinColumn() {
-        PersistentClassDesc pc1 = new EntityClassDesc(ValuedCustomer.class);
-        PersistentStateDesc stateDesc = pc1.getPersistentStateDesc("id");
-        PersistentColumn column = stateDesc.getColumn();
-        assertEquals("1", "cust_id", column.getName().toLowerCase());
-        assertEquals("2", "valuedcustomer", column.getTable().toLowerCase());
-        assertEquals("3", "id", column.getReferencedColumnName().toLowerCase());
+    public void testSetupForeignKeyWithJoinColumns2() {
+        PersistentClassDesc pc1 = new EntityClassDesc(Employee4.class);
+        PersistentStateDesc stateDesc = pc1
+                .getPersistentStateDesc("department");
+        PersistentClassDesc pc2 = new EntityClassDesc(Department4.class);
+        stateDesc.setupForeignKeyColumns(pc2);
 
-        // PersistentClassDesc pc1 = new EntityClassDesc(ValuedCustomer.class);
-        // PersistentStateDesc stateDesc = pc1.getPersistentStateDesc("id");
-        // PersistentClassDesc pc2 = new EntityClassDesc(Customer.class);
-        // stateDesc.setupForeignKeyColumns(pc2);
-        // PersistentColumn fk = stateDesc.getForeignKeyColumns().get(0);
-        //        
-        // assertEquals("1", "cust_id", fk.getName().toLowerCase());
-        // assertEquals("2", "valuedcustomer", fk.getTable().toLowerCase());
-        // assertEquals("3", "id", fk.getReferencedColumnName().toLowerCase());
+        PersistentColumn fk = stateDesc.getForeignKeyColumns().get(0);
+        assertEquals("1", "deptid1", fk.getName().toLowerCase());
+        assertEquals("2", "employee4", fk.getTable().toLowerCase());
+        assertEquals("3", "id1", fk.getReferencedColumnName().toLowerCase());
+
+        fk = stateDesc.getForeignKeyColumns().get(1);
+        assertEquals("4", "deptid2", fk.getName().toLowerCase());
+        assertEquals("5", "employee4", fk.getTable().toLowerCase());
+        assertEquals("6", "id2", fk.getReferencedColumnName().toLowerCase());
+    }
+    
+    public void testGetEnumByOrdinal() {
+        Hoge3 hoge3 = new Hoge3();
+        PersistentClassDesc pc = new EntityClassDesc(Hoge3.class);
+        PersistentStateDesc stateDesc = pc.getPersistentStateDesc("bbb");
+        assertEquals("1", 1, stateDesc.getValue(hoge3));
+        assertEquals("2", int.class, stateDesc.getPersistentStateClass());
+    }
+    
+    public void testGetEnumByString() {
+        Hoge3 hoge3 = new Hoge3();
+        PersistentClassDesc pc = new EntityClassDesc(Hoge3.class);
+        PersistentStateDesc stateDesc = pc.getPersistentStateDesc("ccc");
+        assertEquals("1", "BBB", stateDesc.getValue(hoge3));
+        assertEquals("2", String.class, stateDesc.getPersistentStateClass());
+
     }
 
     @Entity(name = "Hoge")
@@ -220,6 +253,21 @@ public class PersistentStateDescImplTest extends TestCase {
         @Id
         @Column(name = "Foo1aaa", table = "Foo2")
         private Long aaa;
+    }
+    
+    @Entity(name = "Hoge3")
+    public static class Hoge3 {
+        @Id
+        private Long aaa;
+
+        private HogeType bbb = HogeType.BBB;
+        
+        @Enumerated(STRING)
+        private HogeType ccc = HogeType.BBB;
+    }
+    
+    public static enum HogeType {
+        AAA, BBB
     }
 
     @Entity(name = "Department")
@@ -254,7 +302,33 @@ public class PersistentStateDescImplTest extends TestCase {
         private Long id2;
     }
 
+    @Entity(name = "Department4")
+    @IdClass(Department4PK.class)
+    public static class Department4 {
+
+        @Id
+        private Long id1;
+
+        @Id
+        private Long id2;
+    }
+
+    @Entity(name = "Department5")
+    public static class Department5 {
+
+        @Id
+        private Long id;
+
+        private String name;
+    }
+
     public static class Department3PK {
+        private Long id1;
+
+        private Long id2;
+    }
+
+    public static class Department4PK {
         private Long id1;
 
         private Long id2;
@@ -302,6 +376,32 @@ public class PersistentStateDescImplTest extends TestCase {
                 @JoinColumn(name = "deptId1", referencedColumnName = "id1"),
                 @JoinColumn(name = "deptId2", referencedColumnName = "id2") })
         private Department3 department;
+
+    }
+
+    @Entity(name = "Employee4")
+    public static class Employee4 {
+
+        @Id
+        private Long id;
+
+        @ManyToOne
+        @JoinColumns( {
+                @JoinColumn(name = "deptId1"),
+                @JoinColumn(name = "deptId2") })
+        private Department3 department;
+        
+    }
+    
+    @Entity(name = "Employee5")
+    public static class Employee5 {
+
+        @Id
+        private Long id;
+
+        @ManyToOne
+        @JoinColumn(referencedColumnName = "name")
+        private Department department;
     }
 
     @Embeddable
@@ -318,17 +418,6 @@ public class PersistentStateDescImplTest extends TestCase {
         private Employee employee;
     }
 
-    @Entity
-    @Table(name = "CUST")
-    @Inheritance(strategy = JOINED)
-    public static class Customer {
-        @Id
-        protected Long id;
-    }
 
-    @Entity(name = "ValuedCustomer")
-    @PrimaryKeyJoinColumn(name = "CUST_ID")
-    public static class ValuedCustomer extends Customer {
-        protected Integer rank;
-    }
+
 }

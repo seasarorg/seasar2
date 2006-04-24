@@ -63,7 +63,7 @@ public class PropertyAccessor implements PersistentStateAccessor {
         propDesc.setValue(target, value);
     }
 
-    public boolean isPersistent() {
+    public boolean isPersisteceAccessor() {
         return !(readMethod.isAnnotationPresent(Transient.class)
                 || readMethod.isSynthetic() || readMethod.isBridge() || Modifier
                 .isStatic(readMethod.getModifiers()));

@@ -20,7 +20,6 @@ import java.util.Map;
 import org.seasar.framework.ejb.unit.PersistentClassDesc;
 import org.seasar.framework.ejb.unit.PersistentColumn;
 import org.seasar.framework.ejb.unit.PersistentStateDesc;
-import org.seasar.framework.util.StringUtil;
 
 /**
  * @author taedium
@@ -53,20 +52,20 @@ class AttributeOverridableClassDesc extends AbstractPersistentClassDesc
         }
     }
 
-    private void override(PersistentStateDesc psd, PersistentColumn column) {
-        PersistentColumn old = psd.getColumn();
-
-        String columnName = StringUtil.isEmpty(column.getName()) ? old
-                .getName() : column.getName();
-        String tableName = StringUtil.isEmpty(column.getTable()) ? old
-                .getTable() : column.getTable();
-
-        PersistentColumn newColumn = new PersistentColumnImpl(columnName,
-                tableName);
-        psd.setColumn(newColumn);
+    private void override(PersistentStateDesc psd, PersistentColumn overridingColumn) {
+        if (overridingColumn.getName() != null) {
+            psd.getColumn().setName(overridingColumn.getName());
+        }
+        if (overridingColumn.getTable() != null) {
+            psd.getColumn().setTable(overridingColumn.getTable());
+        }
     }
 
     public PersistentClassDesc getRoot() {
-        return this;
+        return null;
+    }
+    
+    public boolean isRoot() {
+        return false;
     }
 }

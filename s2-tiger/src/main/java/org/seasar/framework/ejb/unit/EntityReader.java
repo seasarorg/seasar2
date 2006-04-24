@@ -55,7 +55,7 @@ public class EntityReader implements DataReader {
     public EntityReader(Object entity) {
         this(entity, null);
     }
-    
+
     public EntityReader(Object entity, ProxiedObjectResolver resolver) {
         this(new EntityIntrospector(entity, resolver));
 
@@ -69,26 +69,33 @@ public class EntityReader implements DataReader {
     }
 
     protected void setupColumns(PersistentClassDesc classDesc) {
-        for (PersistentStateDesc stateDesc : classDesc
-                .getPersistentStateDescs()) {
-            Class<?> stateClass = stateDesc.getPersistentStateClass();
+        for (String tableName : classDesc.getTableNames()) {
+            List<PersistentStateDesc> stateDescs = classDesc
+                    .getPersistentStateDescsByTableName(tableName);
+            for (PersistentStateDesc stateDesc : stateDescs) {
+                Class<?> stateClass = stateDesc.getPersistentStateClass();
 
-            switch (stateDesc.getPersistentStateType()) {
-            case NONE:
-            case TO_MANY:
-                continue;
-            case BASIC:
-                setupColumn(stateDesc.getColumn(), stateClass);
-                break;
-            case EMBEDDED:
-                setupColumns(stateDesc.getEmbeddedClassDesc());
-                break;
-            case TO_ONE:
-                for (PersistentColumn fkColumn : stateDesc
-                        .getForeignKeyColumns()) {
-                    setupColumn(fkColumn, stateClass);
+                switch (stateDesc.getPersistentStateType()) {
+                case NONE:
+                case TO_MANY:
+                    continue;
+                case BASIC:
+                    setupColumn(stateDesc.getColumn(), stateClass);
+                    break;
+                case EMBEDDED:
+                    for (PersistentStateDesc embedded : stateDesc
+                            .getEmbeddedStateDescs()) {
+                        setupColumn(embedded.getColumn(), embedded
+                                .getPersistentStateClass());
+                    }
+                    break;
+                case TO_ONE:
+                    for (PersistentColumn fkColumn : stateDesc
+                            .getForeignKeyColumns()) {
+                        setupColumn(fkColumn, stateClass);
+                    }
+                    break;
                 }
-                break;
             }
         }
     }
@@ -133,24 +140,24 @@ public class EntityReader implements DataReader {
                 case NONE:
                     continue;
                 case BASIC:
-                    setupRowValue(row, stateDesc, state);
+                    setupRowValue(row, stateDesc.getColumn(), stateDesc, state);
                     break;
                 case EMBEDDED:
                     for (PersistentStateDesc embeddedState : stateDesc
-                            .getEmbeddedClassDesc().getPersistentStateDescs()) {
+                            .getEmbeddedStateDescs()) {
                         Object embValue = embeddedState.getValue(state);
-                        setupRowValue(row, embeddedState, embValue);
+                        setupRowValue(row, embeddedState.getColumn(),
+                                embeddedState, embValue);
                     }
                     break;
                 case TO_ONE:
-                    relationships.put(state, stateDesc);
                     setupForeignKeys(row, stateDesc, state);
-                    break;
+                    relationships.put(state, stateDesc);
                 case TO_MANY:
                     relationships.put(state, stateDesc);
                     break;
                 }
-                
+
                 row.setState(RowStates.UNCHANGED);
             }
         }
@@ -164,30 +171,43 @@ public class EntityReader implements DataReader {
     }
 
     protected void setupForeignKeys(DataRow row, PersistentStateDesc stateDesc,
-            Object value) {
-        for (PersistentColumn fk : stateDesc.getForeignKeyColumns()) {
-            if (value == null) {
-                continue;
-            }
-            PersistentClassDesc rel = introspector.getPersistentClassDesc(value
-                    .getClass());
-            Object converted = null;
+            Object relEntity) {
+
+        if (relEntity == null) {
+            return;
+        }
+
+        outer: for (PersistentColumn fk : stateDesc.getForeignKeyColumns()) {
+
+            PersistentClassDesc rel = introspector
+                    .getPersistentClassDesc(relEntity.getClass());
+
             for (PersistentStateDesc refState : rel.getPersistentStateDescs()) {
-                if (!refState.hasColumn(fk.getReferencedColumnName())) {
-                    continue;
+                if (refState.getPersistentStateType() == PersistentStateType.EMBEDDED) {
+                    for (PersistentStateDesc embedded : refState
+                            .getEmbeddedStateDescs()) {
+                        if (embedded.hasColumn(fk.getReferencedColumnName())) {
+                            setupRowValue(row, fk, embedded, embedded
+                                    .getValue(relEntity));
+                            continue outer;
+                        }
+                    }
+                } else {
+                    if (refState.hasColumn(fk.getReferencedColumnName())) {
+                        setupRowValue(row, fk, refState, refState
+                                .getValue(relEntity));
+                        continue outer;
+                    }
                 }
-                Class refStateType = refState.getPersistentStateClass();
-                ColumnType ct = ColumnTypes.getColumnType(refStateType);
-                converted = ct.convert(refState.getValue(value), null);
-                break;
             }
-            row.setValue(fk.getName(), converted);
+
+            setupRowValue(row, fk, stateDesc, null);
         }
     }
 
-    protected void setupRowValue(DataRow row, PersistentStateDesc stateDesc,
-            Object value) {
-        PersistentColumn column = stateDesc.getColumn();
+    protected void setupRowValue(DataRow row, PersistentColumn column,
+            PersistentStateDesc stateDesc, Object value) {
+
         Class stateType = stateDesc.getPersistentStateClass();
         ColumnType ct = ColumnTypes.getColumnType(stateType);
         row.setValue(column.getName(), ct.convert(value, null));

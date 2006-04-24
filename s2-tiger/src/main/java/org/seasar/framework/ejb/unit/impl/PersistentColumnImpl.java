@@ -20,6 +20,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.PrimaryKeyJoinColumn;
 
 import org.seasar.framework.ejb.unit.PersistentColumn;
+import org.seasar.framework.util.StringUtil;
 
 public class PersistentColumnImpl implements PersistentColumn {
 
@@ -41,16 +42,20 @@ public class PersistentColumnImpl implements PersistentColumn {
         this(column.name(), null, column.referencedColumnName());
     }
 
+    public PersistentColumnImpl(PersistentColumn column) {
+        this(column.getName(), column.getTable(), column
+                .getReferencedColumnName());
+    }
+
     public PersistentColumnImpl(String columnName, String tableName) {
         this(columnName, tableName, null);
     }
 
     public PersistentColumnImpl(String name, String tableName,
             String referencedColumnName) {
-        this.name = name != null ? name : null;
-        this.tableName = tableName != null ? tableName : null;
-        this.referencedColumnName = referencedColumnName != null ? referencedColumnName
-                : null;
+        setName(name);
+        setTable(tableName);
+        setReferencedColumnName(referencedColumnName);
     }
 
     public String getName() {
@@ -63,6 +68,37 @@ public class PersistentColumnImpl implements PersistentColumn {
 
     public String getReferencedColumnName() {
         return referencedColumnName;
+    }
+
+    public void setName(String name) {
+        this.name = StringUtil.isEmpty(name) ? null : name;
+    }
+
+    public void setTable(String table) {
+        this.tableName = StringUtil.isEmpty(table) ? null : table;
+    }
+
+    public void setReferencedColumnName(String referencedColumnName) {
+        this.referencedColumnName = StringUtil.isEmpty(referencedColumnName) ? null
+                : referencedColumnName;
+    }
+    
+    public void setNameIfNull(String name) {
+        if (getName() == null) {
+            setName(name);
+        }
+    }
+
+    public void setTableIfNull(String table) {
+        if (getTable() == null) {
+            setTable(table);
+        }
+    }
+
+    public void setReferencedColumnNameIfNull(String referencedColumnName) {
+        if (getReferencedColumnName() == null) {
+            setReferencedColumnName(referencedColumnName);
+        }
     }
 
     @Override

@@ -26,4 +26,17 @@ public interface PersistentColumn {
     String getTable();
     
     String getReferencedColumnName();
+
+    void setName(String name);
+    
+    void setTable(String table);
+    
+    void setReferencedColumnName(String referencedColumnName);
+    
+    void setNameIfNull(String name);
+    
+    void setTableIfNull(String table);
+    
+    void setReferencedColumnNameIfNull(String referencedColumnName);
+    
 }

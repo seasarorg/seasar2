@@ -25,14 +25,14 @@ public interface PersistentStateDesc {
 
     String getName();
     
-    PersistentClassDesc getOwner();
+    PersistentClassDesc getPersistentClassDesc();
 
     boolean hasColumn(String columnName);
 
     PersistentColumn getColumn();
-
+    
     void setColumn(PersistentColumn column);
-
+    
     Class<?> getPersistentStateClass();
 
     Class<?> getCollectionClass();
@@ -42,6 +42,8 @@ public interface PersistentStateDesc {
     void setValue(Object target, Object value);
 
     PersistentClassDesc getEmbeddedClassDesc();
+    
+    List<PersistentStateDesc> getEmbeddedStateDescs();
 
     void setupForeignKeyColumns(PersistentClassDesc relationship);
 

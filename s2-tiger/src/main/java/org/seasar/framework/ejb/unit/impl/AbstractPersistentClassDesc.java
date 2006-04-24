@@ -75,8 +75,8 @@ public abstract class AbstractPersistentClassDesc implements
         return getPersistentStateDesc(persistentClass, name);
     }
 
-    public PersistentStateDesc getPersistentStateDesc(Class owner,
-            String name) throws PersistentStateNotFoundException {
+    public PersistentStateDesc getPersistentStateDesc(Class owner, String name)
+            throws PersistentStateNotFoundException {
 
         if (stateDescsByClass.containsKey(owner)) {
             List<PersistentStateDesc> list = stateDescsByClass.get(owner);
@@ -99,7 +99,8 @@ public abstract class AbstractPersistentClassDesc implements
     public List<PersistentStateDesc> getIdentifiers() {
         List<PersistentStateDesc> result = new ArrayList<PersistentStateDesc>();
         for (PersistentStateDesc stateDesc : stateDescs) {
-            if (stateDesc.isIdentifier()) {
+            if (stateDesc.isIdentifier()
+                    && stateDesc.getPersistentClassDesc() == this) {
                 result.add(stateDesc);
             }
         }
@@ -109,7 +110,7 @@ public abstract class AbstractPersistentClassDesc implements
     public String getPrimaryTableName() {
         return tableNames.get(0);
     }
-    
+
     public List<String> getTableNames() {
         return tableNames;
     }
@@ -126,7 +127,7 @@ public abstract class AbstractPersistentClassDesc implements
                 if (readMethod.getDeclaringClass() == persistentClass) {
                     PersistentStateAccessor accessor = new PropertyAccessor(
                             propDesc, readMethod);
-                    if (accessor.isPersistent()) {
+                    if (accessor.isPersisteceAccessor()) {
                         PersistentStateDesc ps = new PersistentStateDescImpl(
                                 this, getPrimaryTableName(), accessor);
                         addPersistentStateDesc(ps);
@@ -138,7 +139,7 @@ public abstract class AbstractPersistentClassDesc implements
                 Field field = beanDesc.getField(i);
                 if (field.getDeclaringClass() == persistentClass) {
                     PersistentStateAccessor accessor = new FieldAccessor(field);
-                    if (accessor.isPersistent()) {
+                    if (accessor.isPersisteceAccessor()) {
                         PersistentStateDesc ps = new PersistentStateDescImpl(
                                 this, tableNames.get(0), accessor);
                         addPersistentStateDesc(ps);
@@ -150,7 +151,8 @@ public abstract class AbstractPersistentClassDesc implements
 
     protected void addPersistentStateDesc(PersistentStateDesc ps) {
         stateDescs.add(ps);
-        addPersistentStateDescByClass(ps, ps.getOwner().getPersistentClass());
+        Class<?> clazz = ps.getPersistentClassDesc().getPersistentClass();
+        addPersistentStateDescByClass(ps, clazz);
         addPersistentStateDescByTableName(ps, ps.getColumn().getTable());
     }
 
@@ -173,11 +175,10 @@ public abstract class AbstractPersistentClassDesc implements
         }
         stateDescsByClass.get(clazz).add(ps);
     }
-    
+
     protected void addTableName(String tableName) {
         if (!tableNames.contains(tableName.toLowerCase())) {
             tableNames.add(tableName.toLowerCase());
         }
     }
-    
 }

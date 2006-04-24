@@ -19,6 +19,8 @@ import static javax.persistence.DiscriminatorType.STRING;
 import static javax.persistence.InheritanceType.JOINED;
 import static javax.persistence.InheritanceType.SINGLE_TABLE;
 
+import static org.seasar.framework.ejb.unit.PersistentStateType.EMBEDDED;
+
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -102,10 +104,11 @@ public class EntityClassDesc extends AbstractPersistentClassDesc implements
         setupTableNames();
         setupSuperclasses();
         setupAccessType();
+        setupJoinColumns();
+        setupPkJoinColumns();
         setupInheritanceStrategy();
         setupPersistentStateDescs();
-        setupJoinColumns();
-        setupPrimaryKeyJoinColumns();
+
     }
 
     private void setupTableNames() {
@@ -164,38 +167,17 @@ public class EntityClassDesc extends AbstractPersistentClassDesc implements
         }
     }
 
-    private void setupPrimaryKeyJoinColumns() {
+    private void setupPkJoinColumns() {
         PrimaryKeyJoinColumn pkColumn = persistentClass
                 .getAnnotation(PrimaryKeyJoinColumn.class);
         PrimaryKeyJoinColumns pkColumns = persistentClass
                 .getAnnotation(PrimaryKeyJoinColumns.class);
+
         if (pkColumn != null) {
             pkJoinColumns.add(new PersistentColumnImpl(pkColumn));
         } else if (pkColumns != null) {
             for (PrimaryKeyJoinColumn column : pkColumns.value()) {
                 pkJoinColumns.add(new PersistentColumnImpl(column));
-            }
-        }
-
-        if (inheritanceType == JOINED) {
-            // support only single primary key
-
-            PersistentStateDesc rootId = rootEntityDesc.getIdentifiers().get(0);
-            String rootIdName = rootId.getColumn().getName();
-            PersistentStateDesc id = getIdentifiers().get(0);
-            PersistentColumn idColumn = id.getColumn();
-
-            if (pkJoinColumns.isEmpty()) {
-            } else if (pkJoinColumns.size() == 1) {
-                PersistentColumn pk = pkJoinColumns.get(0);
-                String name = StringUtil.isEmpty(pk.getName()) ? rootIdName
-                        : pk.getName();
-                String referenced = StringUtil.isEmpty(pk
-                        .getReferencedColumnName()) ? rootIdName : pk
-                        .getReferencedColumnName();
-                id.setColumn(new PersistentColumnImpl(name,
-                        idColumn.getTable(), referenced));
-            } else {
             }
         }
     }
@@ -307,9 +289,99 @@ public class EntityClassDesc extends AbstractPersistentClassDesc implements
     @Override
     protected void setupPersistentStateDescs() {
         setupSuperclassStateDescs();
+        setupPrimaryKeyStateDescs();
         setupMappedSuperclassStateDescs();
         setupDiscriminator();
         super.setupPersistentStateDescs();
+    }
+
+    private void setupPrimaryKeyStateDescs() {
+        if (!isRoot() && inheritanceType == JOINED) {
+            if (!pkJoinColumns.isEmpty()) {
+                if (hasReferencedColumnName(pkJoinColumns)) {
+                    adjustPkColumnsByReferencedColumnName();
+                } else {
+                    adjustPkColumns();
+                }
+            }
+        }
+    }
+
+    private void adjustPkColumnsByReferencedColumnName() {
+        List<PersistentStateDesc> rootIds = null;
+        List<PersistentStateDesc> ids = null;
+
+        if (rootEntityDesc.hasEmbeddedId()) {
+            PersistentStateDesc rootEmbeddedId = rootEntityDesc.getEmbeddedId();
+            PersistentStateDesc embeddedId = getEmbeddedId();
+            rootIds = rootEmbeddedId.getEmbeddedStateDescs();
+            ids = embeddedId.getEmbeddedStateDescs();
+        } else {
+            rootIds = rootEntityDesc.getIdentifiers();
+            ids = getIdentifiers();
+        }
+
+        for (PersistentColumn pk : pkJoinColumns) {
+            for (int i = 0; i < rootIds.size(); i++) {
+                PersistentStateDesc rootId = rootIds.get(i);
+                if (rootId.hasColumn(pk.getReferencedColumnName())) {
+                    PersistentStateDesc id = ids.get(i);
+                    PersistentColumn originalColumn = id.getColumn();
+                    PersistentColumn newColumn = new PersistentColumnImpl(pk);
+                    newColumn.setNameIfNull(originalColumn.getName());
+                    newColumn.setTable(originalColumn.getTable());
+                    id.setColumn(newColumn);
+                    break;
+                }
+            }
+        }
+    }
+
+    private void adjustPkColumns() {
+        List<PersistentStateDesc> ids = null;
+
+        if (hasEmbeddedId()) {
+            PersistentStateDesc embeddedId = getEmbeddedId();
+            ids = embeddedId.getEmbeddedStateDescs();
+        } else {
+            ids = getIdentifiers();
+        }
+
+        if (pkJoinColumns.size() != ids.size()) {
+            return;
+        }
+
+        for (int i = 0; i < pkJoinColumns.size(); i++) {
+            PersistentColumn pk = pkJoinColumns.get(i);
+            PersistentColumn newColumn = new PersistentColumnImpl(pk);
+            PersistentStateDesc id = null;
+            if (newColumn.getName() != null) {
+                String pkColumnName = newColumn.getName();
+                for (PersistentStateDesc each : ids) {
+                    if (each.hasColumn(pkColumnName)) {
+                        id = each;
+                        break;
+                    }
+                }
+            }
+            id = id == null ? ids.get(i) : id;
+            PersistentColumn originalColumn = id.getColumn();
+            newColumn.setNameIfNull(originalColumn.getName());
+            newColumn.setTable(originalColumn.getTable());
+            newColumn.setReferencedColumnNameIfNull(originalColumn
+                    .getReferencedColumnName());
+            id.setColumn(newColumn);
+        }
+
+    }
+
+    private boolean hasReferencedColumnName(List<PersistentColumn> columns) {
+        for (PersistentColumn column : columns) {
+            if (column.getReferencedColumnName() == null) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public PersistentClassDesc getRoot() {
@@ -320,40 +392,33 @@ public class EntityClassDesc extends AbstractPersistentClassDesc implements
         if (parentEntityDesc == null) {
             return;
         }
+
         for (PersistentStateDesc stateDesc : parentEntityDesc
                 .getPersistentStateDescs()) {
-
-            switch (inheritanceType) {
+            switch (rootEntityDesc.inheritanceType) {
             case SINGLE_TABLE:
                 if (stateDesc instanceof DiscriminatorStateDesc) {
                     continue;
                 }
-                replaceTableName(stateDesc, rootEntityDesc
-                        .getPrimaryTableName());
+                stateDesc.getColumn().setTable(
+                        rootEntityDesc.getPrimaryTableName());
                 break;
             case TABLE_PER_CLASS:
-                replaceTableName(stateDesc, tableNames.get(0));
+                stateDesc.getColumn().setTable(getPrimaryTableName());
                 break;
             case JOINED:
-                if (stateDesc.isIdentifier()
-                        && stateDesc.getOwner().equals(rootEntityDesc)) {
-                    PersistentStateDescImpl subclassId = new PersistentStateDescImpl(
+                PersistentClassDesc classDesc = stateDesc
+                        .getPersistentClassDesc();
+                if (stateDesc.isIdentifier() && classDesc.isRoot()) {
+                    PersistentStateDesc inheritedId = new PersistentStateDescImpl(
                             this, getPrimaryTableName(), stateDesc
                                     .getAccessor());
-                    addPersistentStateDesc(subclassId);
+                    addPersistentStateDesc(inheritedId);
                 }
                 break;
             }
             addPersistentStateDesc(stateDesc);
         }
-    }
-
-    private void replaceTableName(PersistentStateDesc stateDesc,
-            String tableName) {
-        PersistentColumn old = stateDesc.getColumn();
-        PersistentColumn newColumn = new PersistentColumnImpl(old.getName(),
-                tableName);
-        stateDesc.setColumn(newColumn);
     }
 
     private void setupMappedSuperclassStateDescs() {
@@ -374,6 +439,23 @@ public class EntityClassDesc extends AbstractPersistentClassDesc implements
                     discriminatorType, discriminatorValue);
             addPersistentStateDesc(d);
         }
+    }
+
+    private boolean hasEmbeddedId() {
+        List<PersistentStateDesc> identifiers = getIdentifiers();
+        if (identifiers.size() != 1) {
+            return false;
+        }
+        PersistentStateDesc id = identifiers.get(0);
+        return id.getPersistentStateType() == EMBEDDED;
+    }
+
+    private PersistentStateDesc getEmbeddedId() {
+        return getIdentifiers().get(0);
+    }
+
+    public boolean isRoot() {
+        return this == rootEntityDesc;
     }
 
     @Override
