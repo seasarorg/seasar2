@@ -16,15 +16,16 @@
 package org.seasar.framework.ejb.unit.impl;
 
 import static javax.persistence.EnumType.STRING;
-import static javax.persistence.InheritanceType.JOINED;
 import static org.seasar.framework.ejb.unit.PersistentStateType.BASIC;
 import static org.seasar.framework.ejb.unit.PersistentStateType.EMBEDDED;
 import static org.seasar.framework.ejb.unit.PersistentStateType.TO_MANY;
 import static org.seasar.framework.ejb.unit.PersistentStateType.TO_ONE;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
@@ -35,13 +36,11 @@ import javax.persistence.Entity;
 import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
-import javax.persistence.Inheritance;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.SecondaryTable;
 import javax.persistence.Table;
 
@@ -77,7 +76,6 @@ public class PersistentStateDescImplTest extends TestCase {
         PersistentClassDesc pc = new EntityClassDesc(Hoge2.class);
         PersistentStateDesc stateDesc = pc.getPersistentStateDesc("aaa");
         assertEquals("1", true, stateDesc.hasColumn("foo1aaa"));
-        assertEquals("2", false, stateDesc.hasColumn("aaa"));
     }
 
     public void testHasColumnReturnsFalse() {
@@ -97,6 +95,13 @@ public class PersistentStateDescImplTest extends TestCase {
         PersistentStateDesc stateDesc = pc.getPersistentStateDesc("employees");
         assertEquals("1", Employee.class, stateDesc.getCollectionClass());
         assertEquals("2", Collection.class, stateDesc.getPersistentStateClass());
+    }
+    
+    public void testGetCollectionClass2() {
+        PersistentClassDesc pc = new EntityClassDesc(Department6.class);
+        PersistentStateDesc stateDesc = pc.getPersistentStateDesc("employees");
+        assertEquals("1", Employee6.class, stateDesc.getCollectionClass());
+        assertEquals("2", Map.class, stateDesc.getPersistentStateClass());
     }
 
     public void testGetEmbeddedStateDescs() {
@@ -235,9 +240,8 @@ public class PersistentStateDescImplTest extends TestCase {
         PersistentStateDesc stateDesc = pc.getPersistentStateDesc("ccc");
         assertEquals("1", "BBB", stateDesc.getValue(hoge3));
         assertEquals("2", String.class, stateDesc.getPersistentStateClass());
-
     }
-
+    
     @Entity(name = "Hoge")
     public static class Hoge {
         @Id
@@ -320,6 +324,16 @@ public class PersistentStateDescImplTest extends TestCase {
         private Long id;
 
         private String name;
+    }
+    
+    @Entity(name = "Department6")
+    public static class Department6 {
+
+        @Id
+        private Long id;
+
+        @OneToMany(mappedBy = "department")
+        private Map<Long, Employee6> employees = new HashMap<Long, Employee6>();
     }
 
     public static class Department3PK {
@@ -404,6 +418,15 @@ public class PersistentStateDescImplTest extends TestCase {
         private Department department;
     }
 
+    @Entity(name = "Employee6")
+    public static class Employee6 {
+        @Id
+        private Long id;
+
+        @ManyToOne
+        private Department department;
+    }
+    
     @Embeddable
     public static class EmployeePeriod {
 
@@ -417,7 +440,5 @@ public class PersistentStateDescImplTest extends TestCase {
         @OneToOne
         private Employee employee;
     }
-
-
 
 }

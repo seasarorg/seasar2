@@ -15,7 +15,6 @@
  */
 package org.seasar.framework.ejb.unit;
 
-import java.util.Collection;
 import java.util.IdentityHashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -217,8 +216,7 @@ public class EntityReader implements DataReader {
             PersistentStateDesc stateDesc, Object value) {
 
         if (stateDesc.isCollection()) {
-
-            for (Object element : (Collection) value) {
+            for (Object element : introspector.getElements(value)) {
                 if (element == null) {
                     continue;
                 }

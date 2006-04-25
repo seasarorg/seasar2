@@ -165,7 +165,7 @@ public class PersistentStateDescImpl implements PersistentStateDesc {
         if (isCollection()) {
             collectionClass = extractCollectionType(accessor.getGenericType());
         }
-        
+
         setupColumn();
         setupJoinColumns();
         setupPkJoinColumns();
@@ -297,6 +297,8 @@ public class PersistentStateDescImpl implements PersistentStateDesc {
             Type[] genTypes = pt.getActualTypeArguments();
             if (genTypes.length == 1 && genTypes[0] instanceof Class) {
                 return (Class) genTypes[0];
+            } else if (genTypes.length == 2 && genTypes[1] instanceof Class) {
+                return (Class) genTypes[1];
             }
         }
         return null;
@@ -332,7 +334,8 @@ public class PersistentStateDescImpl implements PersistentStateDesc {
     }
 
     public boolean isCollection() {
-        return Collection.class.isAssignableFrom(persistentStateClass);
+        return Collection.class.isAssignableFrom(persistentStateClass)
+                || Map.class.isAssignableFrom(persistentStateClass);
     }
 
     public Class<?> getCollectionClass() {
@@ -432,8 +435,7 @@ public class PersistentStateDescImpl implements PersistentStateDesc {
         return newColumn;
     }
 
-    private void setupDefaultFkColumn(
-            List<PersistentColumn> referencedIdColumns) {
+    private void setupDefaultFkColumn(List<PersistentColumn> referencedIdColumns) {
 
         for (PersistentColumn referencedColumn : referencedIdColumns) {
             String referencedName = referencedColumn.getName();

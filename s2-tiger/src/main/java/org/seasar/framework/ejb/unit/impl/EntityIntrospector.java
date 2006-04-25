@@ -20,6 +20,7 @@ import static org.seasar.framework.ejb.unit.PersistentStateType.TO_MANY;
 import static org.seasar.framework.ejb.unit.PersistentStateType.TO_ONE;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.List;
@@ -109,7 +110,7 @@ public class EntityIntrospector {
 
             PersistentStateType stateType = stateDesc.getPersistentStateType();
             if (stateType == TO_MANY && stateDesc.isCollection()) {
-                for (Object element : (Collection) state) {
+                for (Object element : getElements(state)) {
                     createClassDescsByInstance(unproxy(element));
                 }
             } else if (stateType == TO_ONE) {
@@ -143,5 +144,15 @@ public class EntityIntrospector {
             return value;
         }
         return resolver.unproxy(value);
+    }
+    
+    public Collection getElements(Object toManyRelationship) {
+        if (toManyRelationship instanceof Collection) {
+            return (Collection) toManyRelationship;
+        } else if (toManyRelationship instanceof Map) {
+            return ((Map)toManyRelationship).values() ;
+        } else {
+            return Collections.EMPTY_LIST;
+        }
     }
 }

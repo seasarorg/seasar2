@@ -18,7 +18,9 @@ package org.seasar.framework.ejb.unit;
 import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.SortedSet;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
 import javax.persistence.Embeddable;
@@ -27,6 +29,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.MapKey;
 import javax.persistence.OneToMany;
 
 import junit.framework.TestCase;
@@ -41,7 +44,7 @@ import org.seasar.extension.dataset.DataTable;
  */
 public class EntityReaderTest extends TestCase {
 
-    public void testOneToMany() {
+    public void testReadOneToMany() {
         Department accounting = new Department(new Long(1), 10, "ACCOUNTING");
         Employee king = new Employee(new Long(1), 7839, "KING", accounting);
         Employee clark = new Employee(new Long(2), 7782, "CLARK", accounting);
@@ -74,7 +77,41 @@ public class EntityReaderTest extends TestCase {
         assertEquals("14", new BigDecimal(1), empRow1.getValue("DEPARTMENT_ID"));
     }
 
-    public void testManyToOne() {
+    public void testReadOneToManyUsingMapKey() {
+        Department5 accounting = new Department5(new Long(1), 10, "ACCOUNTING");
+        Employee5 king = new Employee5(new Long(1), 7839, "KING", accounting);
+        Employee5 clark = new Employee5(new Long(2), 7782, "CLARK", accounting);
+
+        accounting.employees.put(king.id, king);
+        accounting.employees.put(clark.id, clark);
+
+        EntityReader reader = new EntityReader(accounting);
+        DataSet dataSet = reader.read();
+        assertEquals("1", 2, dataSet.getTableSize());
+        
+        DataTable deptTable = dataSet.getTable("Department5");
+        assertEquals("2", 1, deptTable.getRowSize());
+        DataRow deptRow = deptTable.getRow(0);
+        assertEquals("3", new BigDecimal(1), deptRow.getValue("ID"));
+        assertEquals("4", new BigDecimal(10), deptRow.getValue("DEPTNO"));
+        assertEquals("5", "ACCOUNTING", deptRow.getValue("NAME"));
+
+        DataTable empTable = dataSet.getTable("Employee5");
+        assertEquals("6", 2, empTable.getRowSize());
+        DataRow empRow1 = empTable.getRow(0);
+        assertEquals("7", new BigDecimal(1), empRow1.getValue("ID"));
+        assertEquals("8", new BigDecimal(7839), empRow1.getValue("EMPNO"));
+        assertEquals("9", "KING", empRow1.getValue("NAME"));
+        assertEquals("10", new BigDecimal(1), empRow1.getValue("DEPARTMENT_ID"));
+        
+        DataRow empRow2 = empTable.getRow(1);
+        assertEquals("11", new BigDecimal(2), empRow2.getValue("ID"));
+        assertEquals("12", new BigDecimal(7782), empRow2.getValue("EMPNO"));
+        assertEquals("13", "CLARK", empRow2.getValue("NAME"));
+        assertEquals("14", new BigDecimal(1), empRow2.getValue("DEPARTMENT_ID"));
+    }
+    
+    public void testReadManyToOne() {
         Department accounting = new Department(new Long(1), 10, "ACCOUNTING");
         Employee king = new Employee(new Long(1), 7839, "KING", accounting);
         Employee clark = new Employee(new Long(2), 7782, "CLARK", accounting);
@@ -101,7 +138,7 @@ public class EntityReaderTest extends TestCase {
         assertEquals("10", "ACCOUNTING", deptRow.getValue("NAME"));
     }
 
-    public void testManyToOneForSelf() {
+    public void testReadRecursiveManyToOne() {
         Employee3 clark = new Employee3(new Long(1), 7782, "CLARK", null);
         Employee3 king = new Employee3(new Long(2), 7839, "KING", clark);
 
@@ -123,7 +160,7 @@ public class EntityReaderTest extends TestCase {
         assertEquals("10", null, empRow2.getValue("BOSS_ID"));
     }
 
-    public void testEmbeddable() {
+    public void testReadEmbedded() {
         EmployeePeriod period = new EmployeePeriod("2000", "2010");
         Employee2 clark = new Employee2(new Long(1), 7782, "CLARK", period);
 
@@ -141,7 +178,7 @@ public class EntityReaderTest extends TestCase {
         assertEquals("7", "2010", empRow.getValue("ENDDATE"));
     }
 
-    public void testManyToMany() {
+    public void testReadManyToMany() {
         Project p1 = new Project(new Long(1));
         Project p2 = new Project(new Long(2));
         Employee4 e1 = new Employee4(new Long(1));
@@ -202,6 +239,30 @@ public class EntityReaderTest extends TestCase {
         }
     }
 
+    @Entity(name = "Department5")
+    public static class Department5 {
+
+        @Id
+        private Long id;
+
+        private long deptno;
+
+        private String name;
+
+        @OneToMany(mappedBy = "department")
+        @MapKey
+        private Map<Long, Employee5> employees = new TreeMap<Long, Employee5>();
+
+        public Department5() {
+        }
+
+        public Department5(Long id, long deptno, String name) {
+            this.id = id;
+            this.deptno = deptno;
+            this.name = name;
+        }
+    }
+    
     @Entity(name = "Employee")
     public static class Employee implements Comparable<Employee> {
 
@@ -313,6 +374,30 @@ public class EntityReaderTest extends TestCase {
         }
     }
 
+    @Entity(name = "Employee5")
+    public static class Employee5 {
+
+        @Id
+        private Long id;
+
+        private long empno;
+
+        private String name;
+
+        @ManyToOne
+        private Department5 department;
+
+        public Employee5() {
+        }
+
+        public Employee5(Long id, long empno, String name, Department5 department) {
+            this.id = id;
+            this.empno = empno;
+            this.name = name;
+            this.department = department;
+        }
+    }
+    
     @Entity(name = "Project")
     public static class Project {
 
@@ -329,7 +414,6 @@ public class EntityReaderTest extends TestCase {
             this.id = id;
         }
     }
-
 
     @Embeddable
     public static class EmployeePeriod {
