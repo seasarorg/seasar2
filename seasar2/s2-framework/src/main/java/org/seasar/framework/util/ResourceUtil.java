@@ -154,4 +154,16 @@ public final class ResourceUtil {
 	public static File getResourceAsFile(String path, String extension) {
 		return getFile(getResource(path, extension));
 	}
+
+    public static File getResourceAsFileNoException(String path) {
+        URL url = getResourceNoException(path);
+        if (url == null) {
+            return null;
+        }
+        File file = getFile(url);
+        if (file != null && file.exists()) {
+            return file;
+        }
+        return null;
+    }
 }
