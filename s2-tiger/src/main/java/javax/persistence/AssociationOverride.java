@@ -15,14 +15,18 @@
  */
 package javax.persistence;
 
-public class NoResultException extends PersistenceException {
+import static java.lang.annotation.ElementType.FIELD;
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
-    public NoResultException() {
-        super();
-    }
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
 
-    public NoResultException(String message) {
-        super(message);
-    }
+@Target( { TYPE, METHOD, FIELD })
+@Retention(RUNTIME)
+public @interface AssociationOverride {
+    String name();
 
+    JoinColumn[] joinColumns();
 }

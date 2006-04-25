@@ -15,14 +15,20 @@
  */
 package javax.persistence;
 
-public class NoResultException extends PersistenceException {
-
-    public NoResultException() {
+public class EntityExistsException extends PersistenceException {
+    public EntityExistsException() {
         super();
     }
 
-    public NoResultException(String message) {
+    public EntityExistsException(Throwable cause) {
+        super(cause);
+    }
+
+    public EntityExistsException(String message) {
         super(message);
     }
 
+    public EntityExistsException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

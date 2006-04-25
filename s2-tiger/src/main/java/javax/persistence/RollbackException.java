@@ -15,14 +15,21 @@
  */
 package javax.persistence;
 
-public class NoResultException extends PersistenceException {
+public class RollbackException extends PersistenceException {
 
-    public NoResultException() {
+    public RollbackException() {
         super();
     }
 
-    public NoResultException(String message) {
+    public RollbackException(String message) {
         super(message);
     }
 
+    public RollbackException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public RollbackException(Throwable cause) {
+        super(cause);
+    }
 }

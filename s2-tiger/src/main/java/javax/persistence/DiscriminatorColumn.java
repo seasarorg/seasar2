@@ -25,7 +25,7 @@ import java.lang.annotation.Target;
 @Target( { TYPE })
 @Retention(RUNTIME)
 public @interface DiscriminatorColumn {
-    String name() default "";
+    String name() default "DTYPE";
 
     DiscriminatorType discriminatorType() default STRING;
 

@@ -30,7 +30,7 @@ public @interface SequenceGenerator {
 
     String sequenceName() default "";
 
-    int initialValue() default 0;
+    int initialValue() default 1;
 
     int allocationSize() default 50;
 }

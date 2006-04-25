@@ -13,16 +13,17 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package javax.persistence;
+package javax.persistence.spi;
 
-public class NoResultException extends PersistenceException {
+import java.util.Map;
 
-    public NoResultException() {
-        super();
-    }
+import javax.persistence.EntityManagerFactory;
 
-    public NoResultException(String message) {
-        super(message);
-    }
+public interface PersistenceProvider {
+    public EntityManagerFactory createEntityManagerFactory(String emName,
+            Map map);
+
+    public EntityManagerFactory createContainerEntityManagerFactory(
+            PersistenceUnitInfo info, Map map);
 
 }

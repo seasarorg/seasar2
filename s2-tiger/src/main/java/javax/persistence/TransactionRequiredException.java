@@ -15,24 +15,13 @@
  */
 package javax.persistence;
 
-public class TransactionRequiredException extends RuntimeException {
+public class TransactionRequiredException extends PersistenceException {
 
-    private static final long serialVersionUID = 1L;
-    
     public TransactionRequiredException() {
         super();
-    }
-
-    public TransactionRequiredException(String message, Throwable cause) {
-        super(message, cause);
     }
 
     public TransactionRequiredException(String message) {
         super(message);
     }
-
-    public TransactionRequiredException(Throwable cause) {
-        super(cause);
-    }
-
 }
