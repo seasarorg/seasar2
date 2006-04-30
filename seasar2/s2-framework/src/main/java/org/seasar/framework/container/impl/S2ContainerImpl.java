@@ -15,15 +15,11 @@
  */
 package org.seasar.framework.container.impl;
 
-import java.io.Externalizable;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
 
 import ognl.OgnlRuntime;
@@ -39,6 +35,7 @@ import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.TooManyRegistrationComponentDef;
 import org.seasar.framework.container.ognl.S2ContainerPropertyAccessor;
 import org.seasar.framework.container.util.MetaDefSupport;
+import org.seasar.framework.container.util.S2ContainerUtil;
 import org.seasar.framework.util.CaseInsensitiveMap;
 import org.seasar.framework.util.StringUtil;
 
@@ -47,8 +44,6 @@ import org.seasar.framework.util.StringUtil;
  * 
  */
 public class S2ContainerImpl implements S2Container, ContainerConstants {
-
-    private static Set notAssignableClasses = new HashSet();
     
     private Map componentDefMap = new HashMap();
 
@@ -83,11 +78,6 @@ public class S2ContainerImpl implements S2Container, ContainerConstants {
     static {
         OgnlRuntime.setPropertyAccessor(S2Container.class,
                 new S2ContainerPropertyAccessor());
-        notAssignableClasses.add(Cloneable.class);
-        notAssignableClasses.add(Comparable.class);
-        notAssignableClasses.add(Serializable.class);
-        notAssignableClasses.add(Externalizable.class);
-        notAssignableClasses.add(ContainerConstants.class);
     }
 
     public S2ContainerImpl() {
@@ -215,7 +205,7 @@ public class S2ContainerImpl implements S2Container, ContainerConstants {
     }
 
     protected void registerByClass(ComponentDef componentDef) {
-        Class[] classes = getAssignableClasses(componentDef.getComponentClass());
+        Class[] classes = S2ContainerUtil.getAssignableClasses(componentDef.getComponentClass());
         for (int i = 0; i < classes.length; ++i) {
             registerMap(classes[i], componentDef);
         }
@@ -584,27 +574,6 @@ public class S2ContainerImpl implements S2Container, ContainerConstants {
 
     public ClassLoader getClassLoader() {
         return classLoader;
-    }
-
-    protected static Class[] getAssignableClasses(Class componentClass) {
-        Set classes = new HashSet();
-        for (Class clazz = componentClass; clazz != Object.class
-                && clazz != null; clazz = clazz.getSuperclass()) {
-
-            addAssignableClasses(classes, clazz);
-        }
-        return (Class[]) classes.toArray(new Class[classes.size()]);
-    }
-
-    protected static void addAssignableClasses(Set classes, Class clazz) {
-        if (notAssignableClasses.contains(clazz)) {
-            return;
-        }
-        classes.add(clazz);
-        Class[] interfaces = clazz.getInterfaces();
-        for (int i = 0; i < interfaces.length; ++i) {
-            addAssignableClasses(classes, interfaces[i]);
-        }
     }
 
     protected ComponentDef createTooManyRegistration(Object key,

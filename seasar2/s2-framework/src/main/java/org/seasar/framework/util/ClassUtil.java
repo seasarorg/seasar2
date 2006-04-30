@@ -234,7 +234,11 @@ public final class ClassUtil {
         return s1 != null ? s1 + '.' + s2 : s2;
     }
     
+    public static String getResourcePath(String className) {
+        return StringUtil.replace(className, ".", "/") + ".class";
+    }
+    
     public static String getResourcePath(Class clazz) {
-        return StringUtil.replace(clazz.getName(), ".", "/") + ".class";
+        return getResourcePath(clazz.getName());
     }
 }

@@ -30,19 +30,11 @@ public class BeanDescFactoryTest extends TestCase {
 		assertSame("1", beanDesc, BeanDescFactory.getBeanDesc(MyBean.class));
 	}
 
-	/*
-	 * @see TestCase#setUp()
-	 */
-	protected void setUp() throws Exception {
-		super.setUp();
-	}
-
-	/*
-	 * @see TestCase#tearDown()
-	 */
-	protected void tearDown() throws Exception {
-		super.tearDown();
-	}
+	public void testClear() throws Exception {
+        BeanDesc beanDesc = BeanDescFactory.getBeanDesc(MyBean.class);
+        BeanDescFactory.clear();
+        assertNotSame("1", beanDesc, BeanDescFactory.getBeanDesc(MyBean.class));
+    }
 
 	public static class MyBean {
 

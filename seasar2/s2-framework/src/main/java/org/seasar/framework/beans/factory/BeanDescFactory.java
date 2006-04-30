@@ -41,4 +41,8 @@ public final class BeanDescFactory {
 		}
 		return beanDesc;
 	}
+    
+    public static void clear() {
+        beanDescCache.clear();
+    }
 }

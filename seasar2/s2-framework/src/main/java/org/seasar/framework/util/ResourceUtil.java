@@ -155,6 +155,10 @@ public final class ResourceUtil {
 		return getFile(getResource(path, extension));
 	}
 
+    public static File getResourceAsFileNoException(Class clazz) {
+        return getResourceAsFileNoException(getResourcePath(clazz));
+    }
+
     public static File getResourceAsFileNoException(String path) {
         URL url = getResourceNoException(path);
         if (url == null) {

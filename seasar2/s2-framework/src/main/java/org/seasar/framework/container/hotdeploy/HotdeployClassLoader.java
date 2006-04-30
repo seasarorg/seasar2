@@ -16,14 +16,18 @@
 package org.seasar.framework.container.hotdeploy;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.FileUtil;
 import org.seasar.framework.util.ResourceUtil;
-import org.seasar.framework.util.StringUtil;
 
 public class HotdeployClassLoader extends ClassLoader {
     
     private String packageName;
+    
+    private List listeners = new ArrayList();
     
     public HotdeployClassLoader(ClassLoader classLoader) {
         super(classLoader);
@@ -36,6 +40,18 @@ public class HotdeployClassLoader extends ClassLoader {
     public void setPackageName(String packageName) {
         this.packageName = packageName;
     }
+    
+    public void addHotdeployListener(HotdeployListener listener) {
+        listeners.add(listener);
+    }
+    
+    public HotdeployListener getHotdeployListener(int index) {
+        return (HotdeployListener) listeners.get(index);
+    }
+    
+    public int getHotdeployListenerSize() {
+        return listeners.size();
+    }
 
     public Class loadClass(String className,
             boolean resolve) throws ClassNotFoundException {
@@ -45,11 +61,15 @@ public class HotdeployClassLoader extends ClassLoader {
             if (clazz != null) {
                 return clazz;
             }
-            String path = StringUtil.replace(className, ".", "/") + ".class";
+            String path = ClassUtil.getResourcePath(className);
             File file = ResourceUtil.getResourceAsFileNoException(path);
             if (file != null) {
                 clazz = defineClass(className, file);
-                return resolveClassIfNecessary(clazz, resolve);
+                definedClass(clazz);
+                if (resolve) {
+                    resolveClass(clazz);
+                }
+                return clazz;
             }
         }
         return super.loadClass(className, resolve);
@@ -66,11 +86,11 @@ public class HotdeployClassLoader extends ClassLoader {
     protected boolean isTargetClass(String className) {
         return className.startsWith(packageName);
     }
-
-    protected Class resolveClassIfNecessary(Class clazz, boolean resolve) {
-        if (resolve) {
-            resolveClass(clazz);
+    
+    protected void definedClass(Class clazz) {
+        for (int i = 0; i < getHotdeployListenerSize(); ++i) {
+            HotdeployListener listener = getHotdeployListener(i);
+            listener.definedClass(clazz);
         }
-        return clazz;
     }
 }
