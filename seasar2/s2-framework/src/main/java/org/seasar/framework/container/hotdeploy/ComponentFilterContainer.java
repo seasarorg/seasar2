@@ -15,7 +15,7 @@
  */
 package org.seasar.framework.container.hotdeploy;
 
-public interface HotdeployListener {
+public interface ComponentFilterContainer {
 
-    void definedClass(Class clazz);
+    String getRootPackageName();
 }

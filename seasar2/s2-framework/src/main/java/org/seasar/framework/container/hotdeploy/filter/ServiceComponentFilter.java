@@ -13,9 +13,15 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.framework.container.hotdeploy;
+package org.seasar.framework.container.hotdeploy.filter;
 
-public interface HotdeployListener {
+import org.seasar.framework.container.deployer.InstanceDefFactory;
 
-    void definedClass(Class clazz);
+public class ServiceComponentFilter extends InterfaceCentricSinglePackageComponentFilter {
+
+    public ServiceComponentFilter() {
+        setMiddlePackageName("web");
+        setNameSuffix("Service");
+        setInstanceDef(InstanceDefFactory.PROTOTYPE);
+    }
 }

@@ -20,8 +20,10 @@ import java.lang.reflect.Method;
 import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.factory.BeanDescFactory;
 import org.seasar.framework.container.ComponentDef;
+import org.seasar.framework.container.hotdeploy.filter.InterfaceCentricSinglePackageComponentFilter;
 import org.seasar.framework.container.impl.S2ContainerBehavior;
 import org.seasar.framework.unit.S2FrameworkTestCase;
+import org.seasar.framework.util.ClassUtil;
 
 /**
  * @author higa
@@ -36,8 +38,8 @@ public class OndemandBehaviorTest extends S2FrameworkTestCase {
     protected void setUp() {
         originalLoader = Thread.currentThread().getContextClassLoader();
         ondemand = new OndemandBehavior();
-        ondemand.setRootPackageName(getClass().getPackage().getName());
-        ondemand.addComponentFilter(new DefaultComponentFilter());
+        ondemand.setRootPackageName(ClassUtil.getPackageName(getClass()));
+        ondemand.addComponentFilter(new InterfaceCentricSinglePackageComponentFilter());
         S2ContainerBehavior.setProvider(ondemand);
     }
     
@@ -70,7 +72,7 @@ public class OndemandBehaviorTest extends S2FrameworkTestCase {
     
     public void testDefinedClass() throws Exception {
         ondemand.start();
-        Class clazz = Thread.currentThread().getContextClassLoader().loadClass(getClass().getPackage().getName() + ".Hoge");
+        Class clazz = ClassUtil.forName(ClassUtil.getPackageName(getClass()) + ".Hoge");
         Object o = getComponent(clazz);
         Method m = o.getClass().getMethod("greet", null);
         assertEquals("1", "Hello", m.invoke(o, null));
