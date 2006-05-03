@@ -80,7 +80,7 @@ public abstract class AbstractOndemandCreator implements OndemandCreator {
             return null;
         }
         ComponentDef cd = doCreateComponentDef(container, clazz);
-        cd.init();
+        //cd.init();
         return cd;
     }
     
