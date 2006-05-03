@@ -29,7 +29,7 @@ import org.seasar.framework.container.util.S2ContainerUtil;
 import org.seasar.framework.exception.EmptyRuntimeException;
 
 public class OndemandBehavior extends DefaultProvider implements
-        HotdeployListener, ComponentFilterContainer {
+        HotdeployListener, OndemandCreatorContainer {
 
     private ClassLoader originalClassLoader;
 
@@ -41,15 +41,15 @@ public class OndemandBehavior extends DefaultProvider implements
 
     private Map componentDefCache = new HashMap();
 
-    public ComponentFilter getComponentFilter(int index) {
-        return (ComponentFilter) componentFilters.get(index);
+    public OndemandCreator getComponentFilter(int index) {
+        return (OndemandCreator) componentFilters.get(index);
     }
 
     public int getComponentFilterSize() {
         return componentFilters.size();
     }
 
-    public void addComponentFilter(ComponentFilter componentFilter) {
+    public void addComponentFilter(OndemandCreator componentFilter) {
         componentFilters.add(componentFilter);
         componentFilter.setComponentFilterContainer(this);
     }
@@ -117,7 +117,7 @@ public class OndemandBehavior extends DefaultProvider implements
 
     protected ComponentDef createComponentDef(S2Container container, Class clazz) {
         for (int i = 0; i < getComponentFilterSize(); ++i) {
-            ComponentFilter filter = getComponentFilter(i);
+            OndemandCreator filter = getComponentFilter(i);
             ComponentDef cd = filter.createComponentDef(container, clazz);
             if (cd != null) {
                 return cd;
@@ -129,7 +129,7 @@ public class OndemandBehavior extends DefaultProvider implements
     protected ComponentDef createComponentDef(S2Container container,
             String componentName) {
         for (int i = 0; i < getComponentFilterSize(); ++i) {
-            ComponentFilter filter = getComponentFilter(i);
+            OndemandCreator filter = getComponentFilter(i);
             ComponentDef cd = filter.createComponentDef(container,
                     componentName);
             if (cd != null) {

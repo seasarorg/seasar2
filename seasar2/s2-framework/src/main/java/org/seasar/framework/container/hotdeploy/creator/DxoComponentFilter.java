@@ -13,17 +13,14 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.framework.container.hotdeploy.filter;
+package org.seasar.framework.container.hotdeploy.creator;
 
-import org.seasar.framework.container.assembler.AutoBindingDefFactory;
-import org.seasar.framework.container.deployer.InstanceDefFactory;
 
-public class PageComponentFilter extends SimpleSinglePackageComponentFilter {
+public class DxoComponentFilter extends InterfaceCentricMultiPackageComponentFilter {
 
-    public PageComponentFilter() {
-        setMiddlePackageName("web");
-        setNameSuffix("Page");
-        setInstanceDef(InstanceDefFactory.REQUEST);
-        setAutoBindingDef(AutoBindingDefFactory.NONE);
+    public DxoComponentFilter() {
+        addMiddlePackageName("web");
+        addMiddlePackageName("dxo");
+        setNameSuffix("Dxo");
     }
 }

@@ -13,14 +13,25 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.framework.container.hotdeploy.filter;
+package org.seasar.framework.container.autoregister;
 
+import org.seasar.framework.container.S2Container;
+import org.seasar.framework.unit.S2FrameworkTestCase;
 
-public class DxoComponentFilter extends InterfaceCentricMultiPackageComponentFilter {
+/**
+ * @author higa
+ */
+public class AspectCustomizerTest extends S2FrameworkTestCase {
 
-    public DxoComponentFilter() {
-        addMiddlePackageName("web");
-        addMiddlePackageName("dxo");
-        setNameSuffix("Dxo");
+    private S2Container child;
+  
+    public void setUp() throws Exception {
+        include("autoRegister4.dicon");
+    }
+    
+    public void testCustomize() throws Exception {
+        Greeting greeting = (Greeting) child.getComponent(Greeting.class);
+        assertNotNull("1", greeting);
+        assertEquals("2", "Hello", greeting.greet());
     }
 }

@@ -13,15 +13,16 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.framework.container.hotdeploy.filter;
+package org.seasar.framework.container.hotdeploy;
 
-import org.seasar.framework.container.deployer.InstanceDefFactory;
+import org.seasar.framework.container.ComponentDef;
+import org.seasar.framework.container.S2Container;
 
-public class ServiceComponentFilter extends InterfaceCentricSinglePackageComponentFilter {
+public interface OndemandCreator {
 
-    public ServiceComponentFilter() {
-        setMiddlePackageName("web");
-        setNameSuffix("Service");
-        setInstanceDef(InstanceDefFactory.PROTOTYPE);
-    }
+    void setComponentFilterContainer(OndemandCreatorContainer componentFilterContainer);
+    
+    ComponentDef createComponentDef(S2Container container, Class clazz);
+    
+    ComponentDef createComponentDef(S2Container container, String componentName);
 }

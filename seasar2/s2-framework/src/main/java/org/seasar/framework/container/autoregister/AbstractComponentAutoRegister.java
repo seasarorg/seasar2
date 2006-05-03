@@ -15,6 +15,9 @@
  */
 package org.seasar.framework.container.autoregister;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.seasar.framework.container.AutoBindingDef;
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.InstanceDef;
@@ -37,6 +40,8 @@ public abstract class AbstractComponentAutoRegister extends
     private InstanceDef instanceDef;
 
     private AutoBindingDef autoBindingDef;
+    
+    private List customizers = new ArrayList();
 
     public AutoNaming getAutoNaming() {
         return autoNaming;
@@ -62,6 +67,18 @@ public abstract class AbstractComponentAutoRegister extends
 
     public void setAutoBindingDef(AutoBindingDef autoBindingDef) {
         this.autoBindingDef = autoBindingDef;
+    }
+    
+    public int getCustomizerSize() {
+        return customizers.size();
+    }
+    
+    public ComponentDefCustomizer getCustomizer(int index) {
+        return (ComponentDefCustomizer) customizers.get(index);
+    }
+    
+    public void addCustomizer(ComponentDefCustomizer customizer) {
+        customizers.add(customizer);
     }
 
     public void processClass(final String packageName,
@@ -94,6 +111,14 @@ public abstract class AbstractComponentAutoRegister extends
         annoHandler.appendDI(cd);
         annoHandler.appendAspect(cd);
         annoHandler.appendInitMethod(cd);
+        customize(cd);
         getContainer().register(cd);
+    }
+    
+    protected void customize(ComponentDef componentDef) {
+        for (int i = 0; i < getCustomizerSize(); ++i) {
+            ComponentDefCustomizer customizer = getCustomizer(i);
+            customizer.customize(componentDef);
+        }
     }
 }

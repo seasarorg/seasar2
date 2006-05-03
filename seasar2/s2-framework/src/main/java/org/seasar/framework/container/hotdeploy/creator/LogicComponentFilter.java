@@ -13,18 +13,15 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.framework.container.hotdeploy.filter;
+package org.seasar.framework.container.hotdeploy.creator;
 
-import org.seasar.framework.util.ClassUtil;
+import org.seasar.framework.container.deployer.InstanceDefFactory;
 
-public class SimpleSinglePackageComponentFilter extends AbstractSinglePackageComponentFilter {
+public class LogicComponentFilter extends InterfaceCentricSinglePackageComponentFilter {
 
-    protected Class getTargetClass(Class clazz) {
-        return clazz;
-    }
-
-    protected Class getTargetClass(String componentName) {
-        String className = composeClassName(componentName);
-        return ClassUtil.forName(className);
+    public LogicComponentFilter() {
+        setMiddlePackageName("logic");
+        setNameSuffix("Logic");
+        setInstanceDef(InstanceDefFactory.PROTOTYPE);
     }
 }

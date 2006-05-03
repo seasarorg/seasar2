@@ -13,13 +13,14 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.framework.container.hotdeploy.filter;
+package org.seasar.framework.container.hotdeploy.creator;
 
+import org.seasar.framework.container.ComponentNotFoundRuntimeException;
 import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.ResourceUtil;
 
-public class InterfaceCentricSinglePackageComponentFilter extends AbstractSinglePackageComponentFilter {
-
+public class InterfaceCentricMultiPackageComponentFilter extends AbstractMultiPackageComponentFilter {
+        
     private String implementationPackageName = "impl";
     
     private String implementationSuffix = "Impl";
@@ -39,13 +40,13 @@ public class InterfaceCentricSinglePackageComponentFilter extends AbstractSingle
     public void setImplementationSuffix(String implementationSuffix) {
         this.implementationSuffix = implementationSuffix;
     }
-
+    
     protected Class getTargetClass(Class clazz) {
         if (!clazz.isInterface()) {
             return clazz;
         }
         String packageName = ClassUtil.getPackageName(clazz);
-        String targetClassName = packageName + "." + implementationPackageName + "." + ClassUtil.getShortClassName(clazz) + implementationSuffix;
+        String targetClassName = packageName + "." + getImplementationPackageName() + "." + ClassUtil.getShortClassName(clazz) + implementationSuffix;
         if (ResourceUtil.getResourceAsFileNoException(ClassUtil.getResourcePath(targetClassName)) != null) {
             return ClassUtil.forName(targetClassName);
         }
@@ -53,7 +54,14 @@ public class InterfaceCentricSinglePackageComponentFilter extends AbstractSingle
     }
 
     protected Class getTargetClass(String componentName) {
-        String className = composeClassName(componentName);
-        return getTargetClass(ClassUtil.forName(className));
+        String[] classNames = composeClassNames(componentName);
+        for (int i = 0; i < classNames.length; ++i) {
+            String className = classNames[i];
+            String path = ClassUtil.getResourcePath(className);
+            if (ResourceUtil.getResourceAsFileNoException(path) != null) {
+                return ClassUtil.forName(className);
+            }
+        }
+        throw new ComponentNotFoundRuntimeException(componentName);
     }
 }

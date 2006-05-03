@@ -13,13 +13,13 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.framework.container.hotdeploy.filter;
+package org.seasar.framework.container.hotdeploy.creator;
 
-import org.seasar.framework.container.hotdeploy.ComponentFilter;
+import org.seasar.framework.container.hotdeploy.OndemandCreator;
 import org.seasar.framework.util.StringUtil;
 
 public abstract class AbstractSinglePackageComponentFilter
-    extends AbstractComponentFilter implements ComponentFilter {
+    extends AbstractComponentFilter implements OndemandCreator {
     
     private String middlePackageName;
     

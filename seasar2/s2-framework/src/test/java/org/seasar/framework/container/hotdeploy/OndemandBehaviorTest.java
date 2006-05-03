@@ -20,7 +20,7 @@ import java.lang.reflect.Method;
 import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.factory.BeanDescFactory;
 import org.seasar.framework.container.ComponentDef;
-import org.seasar.framework.container.hotdeploy.filter.InterfaceCentricSinglePackageComponentFilter;
+import org.seasar.framework.container.hotdeploy.creator.InterfaceCentricSinglePackageComponentFilter;
 import org.seasar.framework.container.impl.S2ContainerBehavior;
 import org.seasar.framework.unit.S2FrameworkTestCase;
 import org.seasar.framework.util.ClassUtil;

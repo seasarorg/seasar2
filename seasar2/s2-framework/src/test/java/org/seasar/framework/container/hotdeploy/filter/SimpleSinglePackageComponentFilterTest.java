@@ -16,6 +16,7 @@
 package org.seasar.framework.container.hotdeploy.filter;
 
 import org.seasar.framework.container.hotdeploy.OndemandBehavior;
+import org.seasar.framework.container.hotdeploy.creator.SimpleSinglePackageComponentFilter;
 import org.seasar.framework.container.impl.S2ContainerBehavior;
 import org.seasar.framework.unit.S2FrameworkTestCase;
 import org.seasar.framework.util.ClassUtil;

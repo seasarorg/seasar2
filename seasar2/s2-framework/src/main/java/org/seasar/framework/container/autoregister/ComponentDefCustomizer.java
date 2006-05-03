@@ -13,16 +13,11 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.framework.container.hotdeploy;
+package org.seasar.framework.container.autoregister;
 
 import org.seasar.framework.container.ComponentDef;
-import org.seasar.framework.container.S2Container;
 
-public interface ComponentFilter {
+public interface ComponentDefCustomizer {
 
-    void setComponentFilterContainer(ComponentFilterContainer componentFilterContainer);
-    
-    ComponentDef createComponentDef(S2Container container, Class clazz);
-    
-    ComponentDef createComponentDef(S2Container container, String componentName);
+    void customize(ComponentDef componentDef);
 }
