@@ -20,7 +20,7 @@ import java.lang.reflect.Method;
 import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.factory.BeanDescFactory;
 import org.seasar.framework.container.ComponentDef;
-import org.seasar.framework.container.hotdeploy.creator.InterfaceCentricSinglePackageComponentFilter;
+import org.seasar.framework.container.hotdeploy.creator.InterfaceCentricSinglePackageCreator;
 import org.seasar.framework.container.impl.S2ContainerBehavior;
 import org.seasar.framework.unit.S2FrameworkTestCase;
 import org.seasar.framework.util.ClassUtil;
@@ -39,7 +39,7 @@ public class OndemandBehaviorTest extends S2FrameworkTestCase {
         originalLoader = Thread.currentThread().getContextClassLoader();
         ondemand = new OndemandBehavior();
         ondemand.setRootPackageName(ClassUtil.getPackageName(getClass()));
-        ondemand.addComponentFilter(new InterfaceCentricSinglePackageComponentFilter());
+        ondemand.addCreator(new InterfaceCentricSinglePackageCreator());
         S2ContainerBehavior.setProvider(ondemand);
     }
     

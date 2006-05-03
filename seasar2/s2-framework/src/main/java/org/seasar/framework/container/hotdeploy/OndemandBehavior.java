@@ -35,23 +35,23 @@ public class OndemandBehavior extends DefaultProvider implements
 
     private HotdeployClassLoader hotdeployClassLoader;
 
-    private List componentFilters = new ArrayList();
+    private List creators = new ArrayList();
 
     private String rootPackageName;
 
     private Map componentDefCache = new HashMap();
 
-    public OndemandCreator getComponentFilter(int index) {
-        return (OndemandCreator) componentFilters.get(index);
+    public OndemandCreator getCreator(int index) {
+        return (OndemandCreator) creators.get(index);
     }
 
-    public int getComponentFilterSize() {
-        return componentFilters.size();
+    public int getCreatorSize() {
+        return creators.size();
     }
 
-    public void addComponentFilter(OndemandCreator componentFilter) {
-        componentFilters.add(componentFilter);
-        componentFilter.setComponentFilterContainer(this);
+    public void addCreator(OndemandCreator creator) {
+        creators.add(creator);
+        creator.setOndemandCreatorContainer(this);
     }
 
     public String getRootPackageName() {
@@ -116,9 +116,9 @@ public class OndemandBehavior extends DefaultProvider implements
     }
 
     protected ComponentDef createComponentDef(S2Container container, Class clazz) {
-        for (int i = 0; i < getComponentFilterSize(); ++i) {
-            OndemandCreator filter = getComponentFilter(i);
-            ComponentDef cd = filter.createComponentDef(container, clazz);
+        for (int i = 0; i < getCreatorSize(); ++i) {
+            OndemandCreator creator = getCreator(i);
+            ComponentDef cd = creator.createComponentDef(container, clazz);
             if (cd != null) {
                 return cd;
             }
@@ -128,9 +128,9 @@ public class OndemandBehavior extends DefaultProvider implements
 
     protected ComponentDef createComponentDef(S2Container container,
             String componentName) {
-        for (int i = 0; i < getComponentFilterSize(); ++i) {
-            OndemandCreator filter = getComponentFilter(i);
-            ComponentDef cd = filter.createComponentDef(container,
+        for (int i = 0; i < getCreatorSize(); ++i) {
+            OndemandCreator creator = getCreator(i);
+            ComponentDef cd = creator.createComponentDef(container,
                     componentName);
             if (cd != null) {
                 return cd;

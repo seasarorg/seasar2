@@ -13,16 +13,15 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.framework.container.hotdeploy;
+package org.seasar.framework.container.hotdeploy.creator;
 
-import org.seasar.framework.container.ComponentDef;
-import org.seasar.framework.container.S2Container;
+import org.seasar.framework.container.deployer.InstanceDefFactory;
 
-public interface OndemandCreator {
+public class ActionCreator extends SimpleSinglePackageCreator {
 
-    void setOndemandCreatorContainer(OndemandCreatorContainer ondemandCreatorContainer);
-    
-    ComponentDef createComponentDef(S2Container container, Class clazz);
-    
-    ComponentDef createComponentDef(S2Container container, String componentName);
+    public ActionCreator() {
+        setMiddlePackageName("web");
+        setNameSuffix("Action");
+        setInstanceDef(InstanceDefFactory.REQUEST);
+    }
 }

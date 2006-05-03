@@ -13,16 +13,15 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.framework.container.hotdeploy;
+package org.seasar.framework.container.hotdeploy.creator;
 
-import org.seasar.framework.container.ComponentDef;
-import org.seasar.framework.container.S2Container;
+import org.seasar.framework.container.deployer.InstanceDefFactory;
 
-public interface OndemandCreator {
+public class DaoCreator extends InterfaceCentricSinglePackageCreator {
 
-    void setOndemandCreatorContainer(OndemandCreatorContainer ondemandCreatorContainer);
-    
-    ComponentDef createComponentDef(S2Container container, Class clazz);
-    
-    ComponentDef createComponentDef(S2Container container, String componentName);
+    public DaoCreator() {
+        setMiddlePackageName("dao");
+        setNameSuffix("Dao");
+        setInstanceDef(InstanceDefFactory.PROTOTYPE);
+    }
 }
