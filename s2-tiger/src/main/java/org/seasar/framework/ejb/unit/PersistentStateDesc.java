@@ -34,12 +34,10 @@ public interface PersistentStateDesc {
     void setColumn(PersistentColumn column);
     
     Class<?> getPersistentStateClass();
-
-    Class<?> getCollectionClass();
+    
+    Class<?> getPersistenceTargetClass();
 
     Object getValue(Object target);
-
-    void setValue(Object target, Object value);
 
     PersistentClassDesc getEmbeddedClassDesc();
     
@@ -55,8 +53,4 @@ public interface PersistentStateDesc {
     
     boolean isIdentifier();
     
-    boolean isCollection();
-    
-    boolean isRelationOwningSide();
-
 }

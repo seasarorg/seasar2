@@ -146,18 +146,12 @@ public class EntityReaderTest extends TestCase {
         DataSet dataSet = reader.read();
         assertEquals("1", 1, dataSet.getTableSize());
         DataTable empTable = dataSet.getTable("EMPLOYEE3");
-        assertEquals("2", 2, empTable.getRowSize());
+        assertEquals("2", 1, empTable.getRowSize());
         DataRow empRow1 = empTable.getRow(0);
         assertEquals("3", new BigDecimal(2), empRow1.getValue("ID"));
         assertEquals("4", new BigDecimal(7839), empRow1.getValue("EMPNO"));
         assertEquals("5", "KING", empRow1.getValue("NAME"));
         assertEquals("6", new BigDecimal(1), empRow1.getValue("BOSS_ID"));
-
-        DataRow empRow2 = empTable.getRow(1);
-        assertEquals("7", new BigDecimal(1), empRow2.getValue("ID"));
-        assertEquals("8", new BigDecimal(7782), empRow2.getValue("EMPNO"));
-        assertEquals("9", "CLARK", empRow2.getValue("NAME"));
-        assertEquals("10", null, empRow2.getValue("BOSS_ID"));
     }
 
     public void testReadEmbedded() {

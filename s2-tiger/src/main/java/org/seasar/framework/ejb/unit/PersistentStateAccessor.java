@@ -37,4 +37,6 @@ public interface PersistentStateAccessor {
     void setValue(Object target, Object value);
     
     boolean isPersisteceAccessor();
+    
+    boolean isPropertyAccessor();
 }

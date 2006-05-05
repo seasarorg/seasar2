@@ -72,4 +72,8 @@ public class PropertyAccessor implements PersistentStateAccessor {
     public AnnotatedElement getAnnotatedElement() {
         return readMethod;
     }
+    
+    public boolean isPropertyAccessor() {
+        return true;
+    }
 }

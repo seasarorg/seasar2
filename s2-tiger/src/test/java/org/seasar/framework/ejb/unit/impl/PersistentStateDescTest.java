@@ -54,7 +54,7 @@ import org.seasar.framework.ejb.unit.PersistentStateDesc;
  * @author taedium
  * 
  */
-public class PersistentStateDescImplTest extends TestCase {
+public class PersistentStateDescTest extends TestCase {
 
     public void testGetColumn() {
         PersistentClassDesc pc = new EntityClassDesc(Hoge.class);
@@ -87,21 +87,35 @@ public class PersistentStateDescImplTest extends TestCase {
     public void testGetPersistentClass() {
         PersistentClassDesc pc = new EntityClassDesc(Hoge.class);
         PersistentStateDesc stateDesc = pc.getPersistentStateDesc("aaa");
-        assertEquals("1", Long.class, stateDesc.getPersistentStateClass());
+        assertEquals("1", Long.class, stateDesc.getPersistenceTargetClass());
     }
 
-    public void testGetCollectionClass() {
+    public void testGetPersistenceTargetClassFromCollection() {
         PersistentClassDesc pc = new EntityClassDesc(Department.class);
         PersistentStateDesc stateDesc = pc.getPersistentStateDesc("employees");
-        assertEquals("1", Employee.class, stateDesc.getCollectionClass());
+        assertEquals("1", Employee.class, stateDesc.getPersistenceTargetClass());
         assertEquals("2", Collection.class, stateDesc.getPersistentStateClass());
     }
     
-    public void testGetCollectionClass2() {
+    public void testGetPersistenceTargetClassFromMap() {
         PersistentClassDesc pc = new EntityClassDesc(Department6.class);
         PersistentStateDesc stateDesc = pc.getPersistentStateDesc("employees");
-        assertEquals("1", Employee6.class, stateDesc.getCollectionClass());
+        assertEquals("1", Employee6.class, stateDesc.getPersistenceTargetClass());
         assertEquals("2", Map.class, stateDesc.getPersistentStateClass());
+    }
+    
+    public void testGetPersistenceTargetClassFromManyToOne() {
+        PersistentClassDesc pc = new EntityClassDesc(Department7.class);
+        PersistentStateDesc stateDesc = pc.getPersistentStateDesc("employees");
+        assertEquals("1", Employee7.class, stateDesc.getPersistenceTargetClass());
+        assertEquals("2", Collection.class, stateDesc.getPersistentStateClass());
+    }
+
+    public void testGetPersistenceTargetClassFromOneToMany() {
+        PersistentClassDesc pc = new EntityClassDesc(Employee7.class);
+        PersistentStateDesc stateDesc = pc.getPersistentStateDesc("department");
+        assertEquals("1", Department7.class, stateDesc.getPersistenceTargetClass());
+        assertEquals("2", Object.class, stateDesc.getPersistentStateClass());
     }
 
     public void testGetEmbeddedStateDescs() {
@@ -121,18 +135,6 @@ public class PersistentStateDescImplTest extends TestCase {
         PersistentClassDesc pc = new EntityClassDesc(Hoge.class);
         PersistentStateDesc stateDesc = pc.getPersistentStateDesc("bbb");
         assertEquals("1", false, stateDesc.isIdentifier());
-    }
-
-    public void testIsRelationOwningSideReturnsTrue() {
-        PersistentClassDesc pc = new EntityClassDesc(Address.class);
-        PersistentStateDesc stateDesc = pc.getPersistentStateDesc("employee");
-        assertEquals("1", true, stateDesc.isRelationOwningSide());
-    }
-
-    public void testIsRelationOwningSideReturnsFalse() {
-        PersistentClassDesc pc = new EntityClassDesc(Employee.class);
-        PersistentStateDesc stateDesc = pc.getPersistentStateDesc("address");
-        assertEquals("1", false, stateDesc.isRelationOwningSide());
     }
 
     public void testGetPersistentStateType() {
@@ -231,7 +233,7 @@ public class PersistentStateDescImplTest extends TestCase {
         PersistentClassDesc pc = new EntityClassDesc(Hoge3.class);
         PersistentStateDesc stateDesc = pc.getPersistentStateDesc("bbb");
         assertEquals("1", 1, stateDesc.getValue(hoge3));
-        assertEquals("2", int.class, stateDesc.getPersistentStateClass());
+        assertEquals("2", int.class, stateDesc.getPersistenceTargetClass());
     }
     
     public void testGetEnumByString() {
@@ -239,7 +241,7 @@ public class PersistentStateDescImplTest extends TestCase {
         PersistentClassDesc pc = new EntityClassDesc(Hoge3.class);
         PersistentStateDesc stateDesc = pc.getPersistentStateDesc("ccc");
         assertEquals("1", "BBB", stateDesc.getValue(hoge3));
-        assertEquals("2", String.class, stateDesc.getPersistentStateClass());
+        assertEquals("2", String.class, stateDesc.getPersistenceTargetClass());
     }
     
     @Entity(name = "Hoge")
@@ -336,6 +338,16 @@ public class PersistentStateDescImplTest extends TestCase {
         private Map<Long, Employee6> employees = new HashMap<Long, Employee6>();
     }
 
+    @Entity(name = "Department7")
+    public static class Department7 {
+
+        @Id
+        private Long id;
+
+        @OneToMany(targetEntity=Employee7.class, mappedBy = "department")
+        private Collection employees = new HashSet();
+    }
+    
     public static class Department3PK {
         private Long id1;
 
@@ -425,6 +437,15 @@ public class PersistentStateDescImplTest extends TestCase {
 
         @ManyToOne
         private Department department;
+    }
+    
+    @Entity(name = "Employee7")
+    public static class Employee7 {
+        @Id
+        private Long id;
+
+        @ManyToOne(targetEntity=Department7.class)
+        private Object department;
     }
     
     @Embeddable

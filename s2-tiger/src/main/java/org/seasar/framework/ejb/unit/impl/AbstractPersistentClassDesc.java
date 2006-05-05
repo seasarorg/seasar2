@@ -127,11 +127,7 @@ public abstract class AbstractPersistentClassDesc implements
                 if (readMethod.getDeclaringClass() == persistentClass) {
                     PersistentStateAccessor accessor = new PropertyAccessor(
                             propDesc, readMethod);
-                    if (accessor.isPersisteceAccessor()) {
-                        PersistentStateDesc ps = new PersistentStateDescImpl(
-                                this, getPrimaryTableName(), accessor);
-                        addPersistentStateDesc(ps);
-                    }
+                    setupPersistentStateDesc(accessor);
                 }
             }
         } else {
@@ -139,13 +135,17 @@ public abstract class AbstractPersistentClassDesc implements
                 Field field = beanDesc.getField(i);
                 if (field.getDeclaringClass() == persistentClass) {
                     PersistentStateAccessor accessor = new FieldAccessor(field);
-                    if (accessor.isPersisteceAccessor()) {
-                        PersistentStateDesc ps = new PersistentStateDescImpl(
-                                this, tableNames.get(0), accessor);
-                        addPersistentStateDesc(ps);
-                    }
+                    setupPersistentStateDesc(accessor);
                 }
             }
+        }
+    }
+
+    protected void setupPersistentStateDesc(PersistentStateAccessor accessor) {
+        PersistentStateDesc ps = PersistentStateDescFactory
+                .getPersistentStateDesc(this, getPrimaryTableName(), accessor);
+        if (ps != null) {
+            addPersistentStateDesc(ps);
         }
     }
 

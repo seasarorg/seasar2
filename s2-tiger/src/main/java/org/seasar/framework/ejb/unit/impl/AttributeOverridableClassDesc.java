@@ -19,6 +19,7 @@ import java.util.Map;
 
 import org.seasar.framework.ejb.unit.PersistentClassDesc;
 import org.seasar.framework.ejb.unit.PersistentColumn;
+import org.seasar.framework.ejb.unit.PersistentDiscriminatorColumn;
 import org.seasar.framework.ejb.unit.PersistentStateDesc;
 
 /**
@@ -67,5 +68,9 @@ class AttributeOverridableClassDesc extends AbstractPersistentClassDesc
     
     public boolean isRoot() {
         return false;
+    }
+    
+    public PersistentDiscriminatorColumn getDiscriminatorColumnByTableName(String tableName) {
+        return null;
     }
 }

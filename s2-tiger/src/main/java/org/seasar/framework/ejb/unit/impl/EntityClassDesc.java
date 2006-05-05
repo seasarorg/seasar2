@@ -15,10 +15,8 @@
  */
 package org.seasar.framework.ejb.unit.impl;
 
-import static javax.persistence.DiscriminatorType.STRING;
 import static javax.persistence.InheritanceType.JOINED;
 import static javax.persistence.InheritanceType.SINGLE_TABLE;
-
 import static org.seasar.framework.ejb.unit.PersistentStateType.EMBEDDED;
 
 import java.lang.reflect.Method;
@@ -54,6 +52,7 @@ import org.seasar.framework.beans.factory.BeanDescFactory;
 import org.seasar.framework.ejb.unit.AnnotationNotFoundException;
 import org.seasar.framework.ejb.unit.PersistentClassDesc;
 import org.seasar.framework.ejb.unit.PersistentColumn;
+import org.seasar.framework.ejb.unit.PersistentDiscriminatorColumn;
 import org.seasar.framework.ejb.unit.PersistentStateDesc;
 import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.StringUtil;
@@ -65,21 +64,15 @@ import org.seasar.framework.util.StringUtil;
 public class EntityClassDesc extends AbstractPersistentClassDesc implements
         PersistentClassDesc {
 
-    private static String DEFAULT_DISCRIMINATOR_COLUMN = "DTYPE";
-
     private String name;
-
-    private String discriminatorColumnName;
-
-    private DiscriminatorType discriminatorType;
-
-    private String discriminatorValue;
 
     private InheritanceType inheritanceType;
 
     private EntityClassDesc rootEntityDesc;
 
     private EntityClassDesc parentEntityDesc;
+
+    private PersistentDiscriminatorColumn discriminatorColumn = new PersistentDiscriminatorColumn();
 
     private Map<String, PersistentColumn> attribOverrides = new HashMap<String, PersistentColumn>();
 
@@ -158,10 +151,10 @@ public class EntityClassDesc extends AbstractPersistentClassDesc implements
 
         if (ao != null) {
             attribOverrides.put(ao.name(),
-                    new PersistentColumnImpl(ao.column()));
+                    new PersistentColumn(ao.column()));
         } else if (aos != null) {
             for (AttributeOverride each : aos.value()) {
-                attribOverrides.put(each.name(), new PersistentColumnImpl(each
+                attribOverrides.put(each.name(), new PersistentColumn(each
                         .column()));
             }
         }
@@ -174,10 +167,10 @@ public class EntityClassDesc extends AbstractPersistentClassDesc implements
                 .getAnnotation(PrimaryKeyJoinColumns.class);
 
         if (pkColumn != null) {
-            pkJoinColumns.add(new PersistentColumnImpl(pkColumn));
+            pkJoinColumns.add(new PersistentColumn(pkColumn));
         } else if (pkColumns != null) {
             for (PrimaryKeyJoinColumn column : pkColumns.value()) {
-                pkJoinColumns.add(new PersistentColumnImpl(column));
+                pkJoinColumns.add(new PersistentColumn(column));
             }
         }
     }
@@ -187,10 +180,10 @@ public class EntityClassDesc extends AbstractPersistentClassDesc implements
         JoinColumns jColumns = persistentClass.getAnnotation(JoinColumns.class);
 
         if (jColumn != null) {
-            joinColumns.add(new PersistentColumnImpl(jColumn));
+            joinColumns.add(new PersistentColumn(jColumn));
         } else if (jColumns != null) {
             for (JoinColumn column : jColumns.value()) {
-                joinColumns.add(new PersistentColumnImpl(column));
+                joinColumns.add(new PersistentColumn(column));
             }
         }
     }
@@ -255,6 +248,7 @@ public class EntityClassDesc extends AbstractPersistentClassDesc implements
 
     private void setupInheritanceStrategy() {
         if (rootEntityDesc == this) {
+            discriminatorColumn = new PersistentDiscriminatorColumn();
             Inheritance inheritance = persistentClass
                     .getAnnotation(Inheritance.class);
             if (inheritance != null) {
@@ -265,24 +259,22 @@ public class EntityClassDesc extends AbstractPersistentClassDesc implements
             DiscriminatorColumn dc = persistentClass
                     .getAnnotation(DiscriminatorColumn.class);
             if (dc != null) {
-                discriminatorColumnName = StringUtil.isEmpty(dc.name()) ? DEFAULT_DISCRIMINATOR_COLUMN
-                        : dc.name();
-                discriminatorType = dc.discriminatorType();
-            } else {
-                discriminatorColumnName = DEFAULT_DISCRIMINATOR_COLUMN;
-                discriminatorType = STRING;
+                discriminatorColumn.setName(dc.name());
+                discriminatorColumn.setType(dc.discriminatorType());
             }
+            discriminatorColumn.setTableName(getPrimaryTableName());
+
         } else {
             inheritanceType = rootEntityDesc.inheritanceType;
-            discriminatorColumnName = rootEntityDesc.discriminatorColumnName;
-            discriminatorType = rootEntityDesc.discriminatorType;
+            discriminatorColumn = rootEntityDesc.discriminatorColumn;
         }
+
         DiscriminatorValue dv = persistentClass
                 .getAnnotation(DiscriminatorValue.class);
         if (dv != null) {
-            discriminatorValue = dv.value();
-        } else if (discriminatorType == DiscriminatorType.STRING) {
-            discriminatorValue = persistentClass.getName();
+            discriminatorColumn.setValue(dv.value());
+        } else if (discriminatorColumn.getType() == DiscriminatorType.STRING) {
+            discriminatorColumn.setValue(name);
         }
     }
 
@@ -291,7 +283,6 @@ public class EntityClassDesc extends AbstractPersistentClassDesc implements
         setupSuperclassStateDescs();
         setupPrimaryKeyStateDescs();
         setupMappedSuperclassStateDescs();
-        setupDiscriminator();
         super.setupPersistentStateDescs();
     }
 
@@ -327,7 +318,7 @@ public class EntityClassDesc extends AbstractPersistentClassDesc implements
                 if (rootId.hasColumn(pk.getReferencedColumnName())) {
                     PersistentStateDesc id = ids.get(i);
                     PersistentColumn originalColumn = id.getColumn();
-                    PersistentColumn newColumn = new PersistentColumnImpl(pk);
+                    PersistentColumn newColumn = new PersistentColumn(pk);
                     newColumn.setNameIfNull(originalColumn.getName());
                     newColumn.setTable(originalColumn.getTable());
                     id.setColumn(newColumn);
@@ -353,7 +344,7 @@ public class EntityClassDesc extends AbstractPersistentClassDesc implements
 
         for (int i = 0; i < pkJoinColumns.size(); i++) {
             PersistentColumn pk = pkJoinColumns.get(i);
-            PersistentColumn newColumn = new PersistentColumnImpl(pk);
+            PersistentColumn newColumn = new PersistentColumn(pk);
             PersistentStateDesc id = null;
             if (newColumn.getName() != null) {
                 String pkColumnName = newColumn.getName();
@@ -397,9 +388,6 @@ public class EntityClassDesc extends AbstractPersistentClassDesc implements
                 .getPersistentStateDescs()) {
             switch (rootEntityDesc.inheritanceType) {
             case SINGLE_TABLE:
-                if (stateDesc instanceof DiscriminatorStateDesc) {
-                    continue;
-                }
                 stateDesc.getColumn().setTable(
                         rootEntityDesc.getPrimaryTableName());
                 break;
@@ -410,10 +398,7 @@ public class EntityClassDesc extends AbstractPersistentClassDesc implements
                 PersistentClassDesc classDesc = stateDesc
                         .getPersistentClassDesc();
                 if (stateDesc.isIdentifier() && classDesc.isRoot()) {
-                    PersistentStateDesc inheritedId = new PersistentStateDescImpl(
-                            this, getPrimaryTableName(), stateDesc
-                                    .getAccessor());
-                    addPersistentStateDesc(inheritedId);
+                    setupPersistentStateDesc(stateDesc.getAccessor());
                 }
                 break;
             }
@@ -430,15 +415,15 @@ public class EntityClassDesc extends AbstractPersistentClassDesc implements
         }
     }
 
-    private void setupDiscriminator() {
-        if (inheritanceType == SINGLE_TABLE) {
-            PersistentColumn column = new PersistentColumnImpl(
-                    discriminatorColumnName, rootEntityDesc
-                            .getPrimaryTableName());
-            DiscriminatorStateDesc d = new DiscriminatorStateDesc(this, column,
-                    discriminatorType, discriminatorValue);
-            addPersistentStateDesc(d);
+    public PersistentDiscriminatorColumn getDiscriminatorColumnByTableName(
+            String tableName) {
+        
+        if (discriminatorColumn != null) {
+            if (discriminatorColumn.getTableName().equalsIgnoreCase(tableName)) {
+                return discriminatorColumn;
+            }
         }
+        return null;
     }
 
     private boolean hasEmbeddedId() {

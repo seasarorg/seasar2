@@ -17,6 +17,7 @@ package org.seasar.framework.ejb.unit;
 
 import java.util.List;
 
+
 /**
  * @author taedium
  * 
@@ -24,13 +25,13 @@ import java.util.List;
 public interface PersistentClassDesc {
 
     Class<?> getPersistentClass();
-    
+
     boolean isPropertyAccessed();
 
     PersistentClassDesc getRoot();
-    
+
     boolean isRoot();
-    
+
     PersistentStateDesc getPersistentStateDesc(String name)
             throws PersistentStateNotFoundException;
 
@@ -38,13 +39,16 @@ public interface PersistentClassDesc {
             throws PersistentStateNotFoundException;
 
     List<PersistentStateDesc> getIdentifiers();
-    
+
     List<PersistentStateDesc> getPersistentStateDescs();
 
     List<PersistentStateDesc> getPersistentStateDescsByTableName(
             String tableName);
-    
+
     String getPrimaryTableName();
 
-    List <String> getTableNames();
+    List<String> getTableNames();
+
+    PersistentDiscriminatorColumn getDiscriminatorColumnByTableName(
+            String tableName);
 }

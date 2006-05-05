@@ -20,6 +20,7 @@ import java.util.HashMap;
 import junit.framework.TestCase;
 
 import org.seasar.framework.ejb.unit.PersistentColumn;
+import org.seasar.framework.ejb.unit.PersistentColumn;
 import org.seasar.framework.ejb.unit.PersistentStateDesc;
 
 /**
@@ -30,7 +31,7 @@ public class AttributeOverridableClassDescTest extends TestCase {
 
     public void test() {
         HashMap<String, PersistentColumn> overrides = new HashMap<String, PersistentColumn>();
-        overrides.put("startDate", new PersistentColumnImpl("foo", "hoge"));
+        overrides.put("startDate", new PersistentColumn("foo", "hoge"));
         AttributeOverridableClassDesc ao = new AttributeOverridableClassDesc(
                 EmployeePeriod.class, "PrimaryTable", true, overrides);
         PersistentStateDesc stateDesc = ao.getPersistentStateDesc("startDate");

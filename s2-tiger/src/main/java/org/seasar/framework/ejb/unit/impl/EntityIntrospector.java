@@ -83,12 +83,10 @@ public class EntityIntrospector {
 
         for (PersistentStateDesc stateDesc : entityDesc
                 .getPersistentStateDescs()) {
-            
+
             PersistentStateType stateType = stateDesc.getPersistentStateType();
-            if (stateType == TO_MANY && stateDesc.isCollection()) {
-                createClassDescsByClass(stateDesc.getCollectionClass());
-            } else if (stateType == TO_ONE) {
-                createClassDescsByClass(stateDesc.getPersistentStateClass());
+            if (stateType == TO_MANY || stateType == TO_ONE) {
+                createClassDescsByClass(stateDesc.getPersistenceTargetClass());
             }
         }
     }
@@ -109,7 +107,7 @@ public class EntityIntrospector {
             }
 
             PersistentStateType stateType = stateDesc.getPersistentStateType();
-            if (stateType == TO_MANY && stateDesc.isCollection()) {
+            if (stateType == TO_MANY) {
                 for (Object element : getElements(state)) {
                     createClassDescsByInstance(unproxy(element));
                 }
@@ -125,10 +123,11 @@ public class EntityIntrospector {
             for (PersistentStateDesc stateDesc : classDesc
                     .getPersistentStateDescs()) {
 
-                PersistentStateType stateType = stateDesc.getPersistentStateType();
-                if (stateType == TO_ONE && stateDesc.isRelationOwningSide()) {
+                PersistentStateType stateType = stateDesc
+                        .getPersistentStateType();
+                if (stateType == TO_ONE) {
                     PersistentClassDesc relationship = classDescs.get(stateDesc
-                            .getPersistentStateClass());
+                            .getPersistenceTargetClass());
                     stateDesc.setupForeignKeyColumns(relationship);
                 }
             }
@@ -145,12 +144,12 @@ public class EntityIntrospector {
         }
         return resolver.unproxy(value);
     }
-    
+
     public Collection getElements(Object toManyRelationship) {
         if (toManyRelationship instanceof Collection) {
             return (Collection) toManyRelationship;
         } else if (toManyRelationship instanceof Map) {
-            return ((Map)toManyRelationship).values() ;
+            return ((Map) toManyRelationship).values();
         } else {
             return Collections.EMPTY_LIST;
         }

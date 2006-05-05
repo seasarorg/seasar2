@@ -21,6 +21,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
+import static org.seasar.framework.ejb.unit.PersistentStateType.EMBEDDED;
+import static org.seasar.framework.ejb.unit.PersistentStateType.TO_MANY;
+
 import org.seasar.extension.dataset.ColumnType;
 import org.seasar.extension.dataset.DataReader;
 import org.seasar.extension.dataset.DataRow;
@@ -72,7 +75,7 @@ public class EntityReader implements DataReader {
             List<PersistentStateDesc> stateDescs = classDesc
                     .getPersistentStateDescsByTableName(tableName);
             for (PersistentStateDesc stateDesc : stateDescs) {
-                Class<?> stateClass = stateDesc.getPersistentStateClass();
+                Class<?> stateClass = stateDesc.getPersistenceTargetClass();
 
                 switch (stateDesc.getPersistentStateType()) {
                 case NONE:
@@ -85,7 +88,7 @@ public class EntityReader implements DataReader {
                     for (PersistentStateDesc embedded : stateDesc
                             .getEmbeddedStateDescs()) {
                         setupColumn(embedded.getColumn(), embedded
-                                .getPersistentStateClass());
+                                .getPersistenceTargetClass());
                     }
                     break;
                 case TO_ONE:
@@ -95,6 +98,11 @@ public class EntityReader implements DataReader {
                     }
                     break;
                 }
+            }
+            
+            PersistentDiscriminatorColumn dc = classDesc.getDiscriminatorColumnByTableName(tableName);
+            if (dc!= null) {
+                setupColumn(dc.getPersistentColumn(), dc.getPersistenceTargetClass());
             }
         }
     }
@@ -139,14 +147,14 @@ public class EntityReader implements DataReader {
                 case NONE:
                     continue;
                 case BASIC:
-                    setupRowValue(row, stateDesc.getColumn(), stateDesc, state);
+                    setupRowValue(row, stateDesc.getColumn(), stateDesc.getPersistenceTargetClass(), state);
                     break;
                 case EMBEDDED:
                     for (PersistentStateDesc embeddedState : stateDesc
                             .getEmbeddedStateDescs()) {
                         Object embValue = embeddedState.getValue(state);
                         setupRowValue(row, embeddedState.getColumn(),
-                                embeddedState, embValue);
+                                embeddedState.getPersistenceTargetClass(), embValue);
                     }
                     break;
                 case TO_ONE:
@@ -155,6 +163,11 @@ public class EntityReader implements DataReader {
                 case TO_MANY:
                     relationships.put(state, stateDesc);
                     break;
+                }
+                
+                PersistentDiscriminatorColumn dc = classDesc.getDiscriminatorColumnByTableName(tableName);
+                if (dc!= null) {
+                    setupRowValue(row, dc.getPersistentColumn(), dc.getPersistenceTargetClass(), dc.getValue());
                 }
 
                 row.setState(RowStates.UNCHANGED);
@@ -182,32 +195,31 @@ public class EntityReader implements DataReader {
                     .getPersistentClassDesc(relEntity.getClass());
 
             for (PersistentStateDesc refState : rel.getPersistentStateDescs()) {
-                if (refState.getPersistentStateType() == PersistentStateType.EMBEDDED) {
+                if (refState.getPersistentStateType() == EMBEDDED) {
                     for (PersistentStateDesc embedded : refState
                             .getEmbeddedStateDescs()) {
                         if (embedded.hasColumn(fk.getReferencedColumnName())) {
-                            setupRowValue(row, fk, embedded, embedded
+                            setupRowValue(row, fk, embedded.getPersistenceTargetClass(), embedded
                                     .getValue(relEntity));
                             continue outer;
                         }
                     }
                 } else {
                     if (refState.hasColumn(fk.getReferencedColumnName())) {
-                        setupRowValue(row, fk, refState, refState
+                        setupRowValue(row, fk, refState.getPersistenceTargetClass(), refState
                                 .getValue(relEntity));
                         continue outer;
                     }
                 }
             }
 
-            setupRowValue(row, fk, stateDesc, null);
+            setupRowValue(row, fk, stateDesc.getPersistenceTargetClass(), null);
         }
     }
 
     protected void setupRowValue(DataRow row, PersistentColumn column,
-            PersistentStateDesc stateDesc, Object value) {
+            Class stateType, Object value) {
 
-        Class stateType = stateDesc.getPersistentStateClass();
         ColumnType ct = ColumnTypes.getColumnType(stateType);
         row.setValue(column.getName(), ct.convert(value, null));
     }
@@ -215,7 +227,7 @@ public class EntityReader implements DataReader {
     protected void setupRelationshipRows(Class source,
             PersistentStateDesc stateDesc, Object value) {
 
-        if (stateDesc.isCollection()) {
+        if (stateDesc.getPersistentStateType() == TO_MANY) {
             for (Object element : introspector.getElements(value)) {
                 if (element == null) {
                     continue;
@@ -241,8 +253,7 @@ public class EntityReader implements DataReader {
     }
 
     protected boolean isValidRelationship(PersistentClassDesc relationship) {
-        return relationship.equals(stack.peek())
-                || !stack.contains(relationship);
+        return !stack.contains(relationship);
     }
 
     protected void release(Object entity) {

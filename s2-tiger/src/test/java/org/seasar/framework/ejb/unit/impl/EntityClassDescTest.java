@@ -67,13 +67,12 @@ public class EntityClassDescTest extends TestCase {
         assertEquals("1", Hoge.class, entityDesc.getPersistentClass());
     }
 
-    public void testGetPersistentState() throws Exception {
+    public void testGetPersistentStateDesc() throws Exception {
         EntityClassDesc entityDesc = new EntityClassDesc(Hoge.class);
-        assertEquals("1", 4, entityDesc.getPersistentStateDescs().size());
+        assertEquals("1", 3, entityDesc.getPersistentStateDescs().size());
         assertNotNull("2", entityDesc.getPersistentStateDesc("aaa"));
         assertNotNull("3", entityDesc.getPersistentStateDesc("bbb"));
         assertNotNull("4", entityDesc.getPersistentStateDesc("ccc"));
-        assertNotNull("5", entityDesc.getPersistentStateDesc("$DTYPE"));
     }
 
     public void testGetPersistentState2() throws Exception {
