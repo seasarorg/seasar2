@@ -13,18 +13,8 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.framework.container.hotdeploy;
+package org.seasar.framework.container.cooldeploy;
 
-import org.seasar.framework.container.ComponentDef;
-import org.seasar.framework.container.S2Container;
+public class CoolCreator {
 
-public interface OndemandCreator {
-
-    void setOndemandCreatorContainer(OndemandCreatorContainer ondemandCreatorContainer);
-    
-    boolean loadComponentDef(S2Container container, Class clazz);
-    
-    ComponentDef getComponentDef(S2Container container, Class clazz);
-    
-    ComponentDef getComponentDef(S2Container container, String componentName);
 }

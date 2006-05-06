@@ -15,10 +15,14 @@
  */
 package org.seasar.framework.container.hotdeploy.creator;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.seasar.framework.container.AutoBindingDef;
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.InstanceDef;
 import org.seasar.framework.container.S2Container;
+import org.seasar.framework.container.autoregister.ComponentDefCustomizer;
 import org.seasar.framework.container.factory.AnnotationHandler;
 import org.seasar.framework.container.factory.AnnotationHandlerFactory;
 import org.seasar.framework.container.hotdeploy.OndemandCreator;
@@ -37,6 +41,8 @@ public abstract class AbstractOndemandCreator implements OndemandCreator {
     private OndemandCreatorContainer ondemandCreatorContainer;
     
     private String nameSuffix;
+    
+    private List customizers = new ArrayList();
     
     public InstanceDef getInstanceDef() {
         return instanceDef;
@@ -74,14 +80,34 @@ public abstract class AbstractOndemandCreator implements OndemandCreator {
     public void setNameSuffix(String nameSuffix) {
         this.nameSuffix = nameSuffix;
     }
+    
+    public int getCustomizerSize() {
+        return customizers.size();
+    }
+    
+    public ComponentDefCustomizer getCustomizer(int index) {
+        return (ComponentDefCustomizer) customizers.get(index);
+    }
+    
+    public void addCustomizer(ComponentDefCustomizer customizer) {
+        customizers.add(customizer);
+    }
 
-    public ComponentDef createComponentDef(S2Container container, Class clazz) {
+    public boolean loadComponentDef(S2Container container, Class clazz) {
         if (!isTarget(clazz)) {
-            return null;
+            return false;
         }
-        ComponentDef cd = doCreateComponentDef(container, clazz);
-        //cd.init();
-        return cd;
+        Class targetClass = getTargetClass(clazz);
+        ComponentDef cd = ondemandCreatorContainer.getComponentDef(targetClass);
+        if (cd != null) {
+            return true;
+        }
+        AnnotationHandler handler = AnnotationHandlerFactory.getAnnotationHandler();
+        cd = handler.createComponentDef(targetClass, instanceDef, autoBindingDef);
+        customize(cd);
+        ondemandCreatorContainer.register(cd);
+        cd.init();
+        return true;
     }
     
     protected boolean isTarget(Class clazz) {
@@ -96,18 +122,21 @@ public abstract class AbstractOndemandCreator implements OndemandCreator {
     }
     
     protected abstract boolean isTargetMiddlePackage(String className);
-
-    protected ComponentDef doCreateComponentDef(S2Container container, Class clazz) {
+    
+    public ComponentDef getComponentDef(S2Container container, Class clazz) {
+        if (!isTarget(clazz)) {
+            return null;
+        }
         Class targetClass = getTargetClass(clazz);
-        AnnotationHandler handler = AnnotationHandlerFactory.getAnnotationHandler();
-        return handler.createComponentDef(targetClass, instanceDef, autoBindingDef);
+        return ondemandCreatorContainer.getComponentDef(targetClass);
     }
     
-    public ComponentDef createComponentDef(S2Container container, String componentName) {
+    public ComponentDef getComponentDef(S2Container container, String componentName) {
         if (!isTarget(componentName)) {
             return null;
         }
-        return doCreateComponentDef(container, componentName);
+        Class targetClass = getTargetClass(componentName);
+        return ondemandCreatorContainer.getComponentDef(targetClass);
     }
     
     protected boolean isTarget(String componentName) {
@@ -116,14 +145,17 @@ public abstract class AbstractOndemandCreator implements OndemandCreator {
         }
         return true;
     }
-
-    protected ComponentDef doCreateComponentDef(S2Container container, String componentName) {
-        return doCreateComponentDef(container, getTargetClass(componentName));
-    }
     
     protected abstract Class getTargetClass(Class clazz);
     
     protected abstract Class getTargetClass(String componentName);
+    
+    protected void customize(ComponentDef componentDef) {
+        for (int i = 0; i < getCustomizerSize(); ++i) {
+            ComponentDefCustomizer customizer = getCustomizer(i);
+            customizer.customize(componentDef);
+        }
+    }
     
     protected void concatName(StringBuffer sb, String name) {
         if (name != null) {

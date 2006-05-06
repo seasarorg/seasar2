@@ -15,10 +15,7 @@
  */
 package org.seasar.framework.container.hotdeploy.creator;
 
-import org.seasar.framework.aop.interceptors.TraceInterceptor;
-import org.seasar.framework.container.autoregister.AspectCustomizer;
 import org.seasar.framework.container.hotdeploy.OndemandBehavior;
-import org.seasar.framework.container.hotdeploy.creator.InterfaceCentricMultiPackageCreator;
 import org.seasar.framework.container.impl.S2ContainerBehavior;
 import org.seasar.framework.unit.S2FrameworkTestCase;
 import org.seasar.framework.util.ClassUtil;
@@ -27,7 +24,7 @@ import org.seasar.framework.util.ClassUtil;
  * @author higa
  * 
  */
-public class InterfaceCentricMultiPackageCreatorTest extends S2FrameworkTestCase {
+public class DtoCreatorTest extends S2FrameworkTestCase {
     
     private ClassLoader originalLoader;
     
@@ -37,14 +34,7 @@ public class InterfaceCentricMultiPackageCreatorTest extends S2FrameworkTestCase
         originalLoader = Thread.currentThread().getContextClassLoader();
         ondemand = new OndemandBehavior();
         ondemand.setRootPackageName(ClassUtil.getPackageName(getClass()));
-        InterfaceCentricMultiPackageCreator creator = new InterfaceCentricMultiPackageCreator();
-        creator.addMiddlePackageName("web");
-        creator.addMiddlePackageName("dxo");
-        creator.setNameSuffix("Dxo");
-        AspectCustomizer aspectCustomizer = new AspectCustomizer();
-        aspectCustomizer.setInterceptor(new TraceInterceptor());
-        creator.addCustomizer(aspectCustomizer);
-        ondemand.addCreator(creator);
+        ondemand.addCreator(new DtoCreator());
         S2ContainerBehavior.setProvider(ondemand);
         ondemand.start();
     }
@@ -54,18 +44,8 @@ public class InterfaceCentricMultiPackageCreatorTest extends S2FrameworkTestCase
         S2ContainerBehavior.setProvider(new S2ContainerBehavior.DefaultProvider());
         Thread.currentThread().setContextClassLoader(originalLoader);
     }
-    
-    public void testIsTargetByComponentName() throws Exception {
-        assertTrue("1", getContainer().hasComponentDef("aaa_hogeDxo"));
-        assertTrue("2", getContainer().hasComponentDef("bbbDtoDxo"));
-        assertNotNull("3", getComponent("bbbDtoDxo"));
-    }
-    
-    public void testIsTargetByClass() throws Exception {
-        String packageName = ClassUtil.getPackageName(getClass());
-        Class clazz = ClassUtil.forName(packageName + ".web.aaa.HogeDxo");
-        Class clazz2 = ClassUtil.forName(packageName + ".dxo.BbbDtoDxo");
-        assertTrue("1", getContainer().hasComponentDef(clazz));
-        assertTrue("2", getContainer().hasComponentDef(clazz2));
+
+    public void testAll() throws Exception {
+        assertNotNull("1", getComponent("bbbDto"));
     }
 }

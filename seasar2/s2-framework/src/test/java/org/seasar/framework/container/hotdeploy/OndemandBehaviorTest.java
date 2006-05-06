@@ -39,7 +39,8 @@ public class OndemandBehaviorTest extends S2FrameworkTestCase {
         originalLoader = Thread.currentThread().getContextClassLoader();
         ondemand = new OndemandBehavior();
         ondemand.setRootPackageName(ClassUtil.getPackageName(getClass()));
-        ondemand.addCreator(new InterfaceCentricSinglePackageCreator());
+        InterfaceCentricSinglePackageCreator creator = new InterfaceCentricSinglePackageCreator();
+        ondemand.addCreator(creator);
         S2ContainerBehavior.setProvider(ondemand);
     }
     
@@ -59,21 +60,22 @@ public class OndemandBehaviorTest extends S2FrameworkTestCase {
     
     public void testCreateComponentDef() throws Exception {
         ondemand.start();
-        assertNotNull("1", ondemand.acquireFromGetComponentDef(getContainer(), Hoge.class));
+        Class clazz = ClassUtil.forName(ClassUtil.getPackageName(getClass()) + ".Hoge");
+        assertNotNull("1", ondemand.acquireFromGetComponentDef(getContainer(), clazz));
         ondemand.stop();
     }
     
     public void testGetComponentDefFromCache() throws Exception {
         ondemand.start();
-        ComponentDef cd = ondemand.acquireFromGetComponentDef(getContainer(), Hoge.class);
-        assertSame("1", cd, ondemand.acquireFromGetComponentDef(getContainer(), Hoge.class));
+        Class clazz = ClassUtil.forName(ClassUtil.getPackageName(getClass()) + ".Hoge");
+        ComponentDef cd = ondemand.acquireFromGetComponentDef(getContainer(), clazz);
+        assertSame("1", cd, ondemand.acquireFromGetComponentDef(getContainer(), clazz));
         ondemand.stop();
     }
-    
+
     public void testDefinedClass() throws Exception {
         ondemand.start();
-        Class clazz = ClassUtil.forName(ClassUtil.getPackageName(getClass()) + ".Hoge");
-        Object o = getComponent(clazz);
+        Object o = getComponent("hoge");
         Method m = o.getClass().getMethod("greet", null);
         assertEquals("1", "Hello", m.invoke(o, null));
         ondemand.stop();

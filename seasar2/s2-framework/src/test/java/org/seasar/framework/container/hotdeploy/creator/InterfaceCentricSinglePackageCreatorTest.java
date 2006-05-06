@@ -15,8 +15,9 @@
  */
 package org.seasar.framework.container.hotdeploy.creator;
 
+import org.seasar.framework.container.autoregister.AspectCustomizer;
 import org.seasar.framework.container.hotdeploy.OndemandBehavior;
-import org.seasar.framework.container.hotdeploy.creator.InterfaceCentricSinglePackageCreator;
+import org.seasar.framework.container.hotdeploy.creator.interceptor.NullInterceptor;
 import org.seasar.framework.container.impl.S2ContainerBehavior;
 import org.seasar.framework.unit.S2FrameworkTestCase;
 import org.seasar.framework.util.ClassUtil;
@@ -35,10 +36,13 @@ public class InterfaceCentricSinglePackageCreatorTest extends S2FrameworkTestCas
         originalLoader = Thread.currentThread().getContextClassLoader();
         ondemand = new OndemandBehavior();
         ondemand.setRootPackageName(ClassUtil.getPackageName(getClass()));
-        InterfaceCentricSinglePackageCreator filter = new InterfaceCentricSinglePackageCreator();
-        filter.setMiddlePackageName("dao");
-        filter.setNameSuffix("Dao");
-        ondemand.addCreator(filter);
+        InterfaceCentricSinglePackageCreator creator = new InterfaceCentricSinglePackageCreator();
+        creator.setMiddlePackageName("dao");
+        creator.setNameSuffix("Dao");
+        AspectCustomizer aspectCustomizer = new AspectCustomizer();
+        aspectCustomizer.setInterceptor(new NullInterceptor());
+        creator.addCustomizer(aspectCustomizer);
+        ondemand.addCreator(creator);
         S2ContainerBehavior.setProvider(ondemand);
         ondemand.start();
     }

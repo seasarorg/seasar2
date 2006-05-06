@@ -575,6 +575,10 @@ public class S2ContainerImpl implements S2Container, ContainerConstants {
     public ClassLoader getClassLoader() {
         return classLoader;
     }
+    
+    public void setClassLoader(ClassLoader classLoader) {
+        this.classLoader = classLoader;
+    }
 
     protected ComponentDef createTooManyRegistration(Object key,
             ComponentDef currentComponentDef, ComponentDef newComponentDef) {

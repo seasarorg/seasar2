@@ -35,10 +35,10 @@ public class SimpleSinglePackageCreatorTest extends S2FrameworkTestCase {
         originalLoader = Thread.currentThread().getContextClassLoader();
         ondemand = new OndemandBehavior();
         ondemand.setRootPackageName(ClassUtil.getPackageName(getClass()));
-        SimpleSinglePackageCreator filter = new SimpleSinglePackageCreator();
-        filter.setMiddlePackageName("web");
-        filter.setNameSuffix("Page");
-        ondemand.addCreator(filter);
+        SimpleSinglePackageCreator creator = new SimpleSinglePackageCreator();
+        creator.setMiddlePackageName("web");
+        creator.setNameSuffix("Page");
+        ondemand.addCreator(creator);
         S2ContainerBehavior.setProvider(ondemand);
         ondemand.start();
     }

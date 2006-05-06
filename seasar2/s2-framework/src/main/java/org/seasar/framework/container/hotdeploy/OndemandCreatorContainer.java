@@ -15,7 +15,13 @@
  */
 package org.seasar.framework.container.hotdeploy;
 
+import org.seasar.framework.container.ComponentDef;
+
 public interface OndemandCreatorContainer {
 
     String getRootPackageName();
+
+    ComponentDef getComponentDef(Class targetClass);
+    
+    void register(ComponentDef componentDef);
 }

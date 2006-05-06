@@ -13,18 +13,17 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.framework.container.hotdeploy;
+package org.seasar.framework.container.hotdeploy.creator;
 
-import org.seasar.framework.container.ComponentDef;
-import org.seasar.framework.container.S2Container;
+import org.seasar.framework.container.assembler.AutoBindingDefFactory;
+import org.seasar.framework.container.deployer.InstanceDefFactory;
 
-public interface OndemandCreator {
+public class DtoCreator extends SimpleSinglePackageCreator {
 
-    void setOndemandCreatorContainer(OndemandCreatorContainer ondemandCreatorContainer);
-    
-    boolean loadComponentDef(S2Container container, Class clazz);
-    
-    ComponentDef getComponentDef(S2Container container, Class clazz);
-    
-    ComponentDef getComponentDef(S2Container container, String componentName);
+    public DtoCreator() {
+        setMiddlePackageName("dto");
+        setNameSuffix("Dto");
+        setInstanceDef(InstanceDefFactory.REQUEST);
+        setAutoBindingDef(AutoBindingDefFactory.NONE);
+    }
 }

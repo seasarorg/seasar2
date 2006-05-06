@@ -24,6 +24,7 @@ import org.seasar.framework.beans.factory.BeanDescFactory;
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
+import org.seasar.framework.container.impl.S2ContainerImpl;
 import org.seasar.framework.container.impl.S2ContainerBehavior.DefaultProvider;
 import org.seasar.framework.container.util.S2ContainerUtil;
 import org.seasar.framework.exception.EmptyRuntimeException;
@@ -71,6 +72,8 @@ public class OndemandBehavior extends DefaultProvider implements
         hotdeployClassLoader.setPackageName(rootPackageName);
         hotdeployClassLoader.addHotdeployListener(this);
         Thread.currentThread().setContextClassLoader(hotdeployClassLoader);
+        S2ContainerImpl container = (S2ContainerImpl) SingletonS2ContainerFactory.getContainer();
+        container.setClassLoader(hotdeployClassLoader);
     }
 
     public void stop() {
@@ -82,11 +85,14 @@ public class OndemandBehavior extends DefaultProvider implements
     }
 
     public void definedClass(Class clazz) {
-        ComponentDef cd = createComponentDef(SingletonS2ContainerFactory
+        loadComponentDef(SingletonS2ContainerFactory
                 .getContainer(), clazz);
-        if (cd != null) {
-            register(cd);
-        }
+    }
+    
+    
+
+    public ComponentDef getComponentDef(Class targetClass) {
+        return (ComponentDef) componentDefCache.get(targetClass);
     }
 
     protected ComponentDef getComponentDef(S2Container container, Object key) {
@@ -99,26 +105,31 @@ public class OndemandBehavior extends DefaultProvider implements
             return cd;
         }
         if (key instanceof Class) {
-            cd = createComponentDef(container, (Class) key);
+            return getComponentDef(container, (Class) key);
         } else if (key instanceof String) {
-            cd = createComponentDef(container, (String) key);
+            return getComponentDef(container, (String) key);
         } else {
             throw new IllegalArgumentException("key");
         }
-        if (cd != null) {
-            register(cd);
-        }
-        return cd;
     }
 
     protected ComponentDef getComponentDefFromCache(Object key) {
         return (ComponentDef) componentDefCache.get(key);
     }
-
-    protected ComponentDef createComponentDef(S2Container container, Class clazz) {
+    
+    protected void loadComponentDef(S2Container container, Class clazz) {
         for (int i = 0; i < getCreatorSize(); ++i) {
             OndemandCreator creator = getCreator(i);
-            ComponentDef cd = creator.createComponentDef(container, clazz);
+            if (creator.loadComponentDef(container, clazz)) {
+                break;
+            }
+        }
+    }
+
+    protected ComponentDef getComponentDef(S2Container container, Class clazz) {
+        for (int i = 0; i < getCreatorSize(); ++i) {
+            OndemandCreator creator = getCreator(i);
+            ComponentDef cd = creator.getComponentDef(container, clazz);
             if (cd != null) {
                 return cd;
             }
@@ -126,11 +137,11 @@ public class OndemandBehavior extends DefaultProvider implements
         return null;
     }
 
-    protected ComponentDef createComponentDef(S2Container container,
+    protected ComponentDef getComponentDef(S2Container container,
             String componentName) {
         for (int i = 0; i < getCreatorSize(); ++i) {
             OndemandCreator creator = getCreator(i);
-            ComponentDef cd = creator.createComponentDef(container,
+            ComponentDef cd = creator.getComponentDef(container,
                     componentName);
             if (cd != null) {
                 return cd;
@@ -139,7 +150,7 @@ public class OndemandBehavior extends DefaultProvider implements
         return null;
     }
 
-    protected void register(ComponentDef componentDef) {
+    public void register(ComponentDef componentDef) {
         componentDef.setContainer(SingletonS2ContainerFactory.getContainer());
         registerByClass(componentDef);
         registerByName(componentDef);
@@ -161,6 +172,8 @@ public class OndemandBehavior extends DefaultProvider implements
     }
 
     protected void registerMap(Object key, ComponentDef componentDef) {
-        componentDefCache.put(key, componentDef);
+        if (componentDefCache.put(key, componentDef) != null) {
+            throw new IllegalStateException(key.toString());
+        }
     }
 }

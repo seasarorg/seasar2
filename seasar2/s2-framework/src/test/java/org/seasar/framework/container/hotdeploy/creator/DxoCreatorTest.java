@@ -15,8 +15,9 @@
  */
 package org.seasar.framework.container.hotdeploy.creator;
 
+import org.seasar.framework.container.autoregister.AspectCustomizer;
 import org.seasar.framework.container.hotdeploy.OndemandBehavior;
-import org.seasar.framework.container.hotdeploy.creator.DxoCreator;
+import org.seasar.framework.container.hotdeploy.creator.interceptor.HelloInterceptor;
 import org.seasar.framework.container.impl.S2ContainerBehavior;
 import org.seasar.framework.unit.S2FrameworkTestCase;
 import org.seasar.framework.util.ClassUtil;
@@ -35,7 +36,11 @@ public class DxoCreatorTest extends S2FrameworkTestCase {
         originalLoader = Thread.currentThread().getContextClassLoader();
         ondemand = new OndemandBehavior();
         ondemand.setRootPackageName(ClassUtil.getPackageName(getClass()));
-        ondemand.addCreator(new DxoCreator());
+        DxoCreator creator = new DxoCreator();
+        AspectCustomizer aspectCustomizer = new AspectCustomizer();
+        aspectCustomizer.setInterceptor(new HelloInterceptor());
+        creator.addCustomizer(aspectCustomizer);
+        ondemand.addCreator(creator);
         S2ContainerBehavior.setProvider(ondemand);
         ondemand.start();
     }

@@ -15,8 +15,11 @@
  */
 package org.seasar.framework.container.hotdeploy.creator;
 
+import java.lang.reflect.Method;
+
+import org.seasar.framework.container.autoregister.AspectCustomizer;
 import org.seasar.framework.container.hotdeploy.OndemandBehavior;
-import org.seasar.framework.container.hotdeploy.creator.LogicCreator;
+import org.seasar.framework.container.hotdeploy.creator.interceptor.HelloInterceptor;
 import org.seasar.framework.container.impl.S2ContainerBehavior;
 import org.seasar.framework.unit.S2FrameworkTestCase;
 import org.seasar.framework.util.ClassUtil;
@@ -35,7 +38,11 @@ public class LogicCreatorTest extends S2FrameworkTestCase {
         originalLoader = Thread.currentThread().getContextClassLoader();
         ondemand = new OndemandBehavior();
         ondemand.setRootPackageName(ClassUtil.getPackageName(getClass()));
-        ondemand.addCreator(new LogicCreator());
+        LogicCreator creator = new LogicCreator();
+        AspectCustomizer aspectCustomizer = new AspectCustomizer();
+        aspectCustomizer.setInterceptor(new HelloInterceptor());
+        creator.addCustomizer(aspectCustomizer);
+        ondemand.addCreator(creator);
         S2ContainerBehavior.setProvider(ondemand);
         ondemand.start();
     }
@@ -53,5 +60,11 @@ public class LogicCreatorTest extends S2FrameworkTestCase {
     public void testIsTargetByClass() throws Exception {
         Class clazz = ClassUtil.forName(ClassUtil.getPackageName(getClass()) + ".logic.CccLogic");
         assertNotNull("1", getComponent(clazz));
+    }
+    
+    public void testAspect() throws Exception {
+        Object cccLogic = getComponent("cccLogic");
+        Method m = cccLogic.getClass().getMethod("greet", null);
+        assertEquals("1", "Hello", m.invoke(cccLogic, null));
     }
 }
