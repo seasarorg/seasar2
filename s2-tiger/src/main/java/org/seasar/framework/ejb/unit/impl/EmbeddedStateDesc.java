@@ -15,7 +15,6 @@
  */
 package org.seasar.framework.ejb.unit.impl;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +26,7 @@ import javax.persistence.Id;
 
 import org.seasar.framework.ejb.unit.PersistentClassDesc;
 import org.seasar.framework.ejb.unit.PersistentColumn;
+import org.seasar.framework.ejb.unit.PersistentJoinColumn;
 import org.seasar.framework.ejb.unit.PersistentStateAccessor;
 import org.seasar.framework.ejb.unit.PersistentStateDesc;
 import org.seasar.framework.ejb.unit.PersistentStateType;
@@ -37,41 +37,51 @@ import org.seasar.framework.ejb.unit.PersistentStateType;
  */
 public class EmbeddedStateDesc extends AbstractPersistentStateDesc {
 
-    private Map<String, PersistentColumn> attribOverrides = new HashMap<String, PersistentColumn>();
-    
-    private PersistentClassDesc embeddedClassDesc;
-    
+    private EmbeddableClassDesc embeddedClassDesc;
+
     public EmbeddedStateDesc(PersistentClassDesc persistentClassDesc,
             String primaryTableName, PersistentStateAccessor accessor) {
-        
+
         super(persistentClassDesc, primaryTableName, accessor);
-        persistentColumn = new PersistentColumn(null, primaryTableName);
+        setColumn(new PersistentColumn(null, primaryTableName));
         introspect();
     }
 
     private void introspect() {
-        identifier = annotatedElement.isAnnotationPresent(Id.class)
-                || annotatedElement.isAnnotationPresent(EmbeddedId.class);
+        if(annotatedElement.isAnnotationPresent(Id.class)
+                || annotatedElement.isAnnotationPresent(EmbeddedId.class)) {
+            setIdentifier(true);            
+        }
         detectAttributeOverrides();
         setupEmbeddedClassDesc();
     }
 
-    private void detectAttributeOverrides() {
-        AttributeOverride ao = annotatedElement.getAnnotation(AttributeOverride.class);
+    private void setupEmbeddedClassDesc() {
+        embeddedClassDesc = new EmbeddableClassDesc(persistentStateClass,
+                primaryTableName, accessor.isPropertyAccessor(), identifier);
+        embeddedClassDesc.overrideAttributes(detectAttributeOverrides());
+    }
+
+    private Map<String, PersistentColumn> detectAttributeOverrides() {
+        AttributeOverride ao = annotatedElement
+                .getAnnotation(AttributeOverride.class);
         AttributeOverrides aos = annotatedElement
                 .getAnnotation(AttributeOverrides.class);
+
+        Map<String, PersistentColumn> attribOverrides = new HashMap<String, PersistentColumn>();
+
         if (ao != null) {
-            attribOverrides.put(ao.name(),
-                    new PersistentColumn(ao.column()));
+            attribOverrides.put(ao.name(), new PersistentColumn(ao.column()));
         } else if (aos != null) {
             for (AttributeOverride each : aos.value()) {
                 attribOverrides.put(each.name(), new PersistentColumn(each
                         .column()));
             }
         }
+
+        return attribOverrides;
     }
-    
-    @Override
+
     public PersistentStateType getPersistentStateType() {
         return PersistentStateType.EMBEDDED;
     }
@@ -85,11 +95,38 @@ public class EmbeddedStateDesc extends AbstractPersistentStateDesc {
     public List<PersistentStateDesc> getEmbeddedStateDescs() {
         return embeddedClassDesc.getPersistentStateDescs();
     }
-    
-    private void setupEmbeddedClassDesc() {
-        embeddedClassDesc = new AttributeOverridableClassDesc(
-                persistentStateClass, primaryTableName, accessor.isPropertyAccessor(),
-                Collections.unmodifiableMap(attribOverrides));
+
+    @Override
+    protected void adjustPkColumnsByReferencedColumnName(
+            List<PersistentJoinColumn> pkJoinColumns) {
+        List<PersistentStateDesc> ids = getEmbeddedStateDescs();
+
+        for (PersistentStateDesc each : ids) {
+            for (PersistentJoinColumn pk : pkJoinColumns) {
+                if (each.hasColumn(pk.getReferencedColumnName())) {
+                    if (pk.getName() != null) {
+                        each.getColumn().setName(pk.getName());
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
+    protected void adjustPkColumnsByIndex(
+            List<PersistentJoinColumn> pkJoinColumns) {
+        List<PersistentStateDesc> ids = getEmbeddedStateDescs();
+
+        for (PersistentStateDesc each : ids) {
+            int index = getEmbeddedClassDesc().getIdentifiers().indexOf(each);
+            if (index < 0) {
+                return;
+            }
+            PersistentJoinColumn pk = pkJoinColumns.get(index);
+            if (pk.getName() != null) {
+                each.getColumn().setName(pk.getName());
+            }
+        }
     }
 
 }

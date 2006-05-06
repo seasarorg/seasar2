@@ -17,12 +17,14 @@ package org.seasar.framework.ejb.unit.impl;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.List;
 
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
 import org.seasar.framework.ejb.unit.PersistentClassDesc;
 import org.seasar.framework.ejb.unit.PersistentColumn;
+import org.seasar.framework.ejb.unit.PersistentJoinColumn;
 import org.seasar.framework.ejb.unit.PersistentStateAccessor;
 import org.seasar.framework.ejb.unit.PersistentStateType;
 
@@ -36,7 +38,7 @@ public class ToManyRelationshipStateDesc extends AbstractPersistentStateDesc {
             String primaryTableName, PersistentStateAccessor accessor) {
         
         super(persistentClassDesc, primaryTableName, accessor);
-        persistentColumn = new PersistentColumn(null, primaryTableName);
+        setColumn(new PersistentColumn(null, primaryTableName));
         introspect();
     }
 
@@ -51,11 +53,11 @@ public class ToManyRelationshipStateDesc extends AbstractPersistentStateDesc {
             targetEntity = manyToMany.targetEntity();
         }
 
-        if (targetEntity != null && targetEntity != void.class) {
-            persistenceTargetClass = targetEntity;
-        } else {
-            persistenceTargetClass = extractTargetEntityFromCollection(accessor.getGenericType());
+        if (targetEntity == null || targetEntity == void.class) {
+            targetEntity = extractTargetEntityFromCollection(accessor.getGenericType());
         }
+        setPersistenceTargetClass(targetEntity);
+
     }
 
     private Class extractTargetEntityFromCollection(Type t) {
@@ -73,8 +75,17 @@ public class ToManyRelationshipStateDesc extends AbstractPersistentStateDesc {
         return null;
     }
 
-    @Override
     public PersistentStateType getPersistentStateType() {
         return PersistentStateType.TO_MANY;
+    }
+    
+    @Override
+    protected void adjustPkColumnsByReferencedColumnName(
+            List<PersistentJoinColumn> pkJoinColumns) {
+    }
+
+    @Override
+    protected void adjustPkColumnsByIndex(
+            List<PersistentJoinColumn> pkJoinColumns) {
     }
 }

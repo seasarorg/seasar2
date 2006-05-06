@@ -75,12 +75,17 @@ public class EntityClassDescTest extends TestCase {
         assertNotNull("4", entityDesc.getPersistentStateDesc("ccc"));
     }
 
-    public void testGetPersistentState2() throws Exception {
+    public void testGetParentPersistentStateDesc() throws Exception {
         EntityClassDesc entityDesc = new EntityClassDesc(Hoge5.class);
         assertNotNull("2", entityDesc
                 .getPersistentStateDesc(Hoge4.class, "bbb"));
     }
-
+    
+    public void testGetPersistentStateDescExcludingNonEntity() throws Exception {
+        EntityClassDesc entityDesc = new EntityClassDesc(Hoge9.class);
+        assertEquals("1", 1, entityDesc.getPersistentStateDescs().size());
+    }
+    
     public void testGetPersistentStateForException() throws Exception {
         EntityClassDesc entityDesc = new EntityClassDesc(Hoge5.class);
         try {
@@ -275,6 +280,18 @@ public class EntityClassDescTest extends TestCase {
         private String bbb;
     }
 
+    public static class Hoge8 {
+        @Id
+        private String aaa;
+    }
+
+    @Entity
+    public static class Hoge9 extends Hoge8 {
+        @Id
+        private String bbb;
+    }
+
+    
     public static class PK {
 
         private String aaa;

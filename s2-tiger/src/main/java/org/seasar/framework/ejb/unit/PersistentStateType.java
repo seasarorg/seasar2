@@ -20,8 +20,6 @@ package org.seasar.framework.ejb.unit;
  *
  */
 public enum PersistentStateType {
-    NONE, 
-    
     BASIC, 
     
     EMBEDDED,

@@ -26,51 +26,49 @@ import org.seasar.framework.ejb.unit.PersistentStateDesc;
  * @author taedium
  * 
  */
-class AttributeOverridableClassDesc extends AbstractPersistentClassDesc
-        implements PersistentClassDesc {
+public class EmbeddableClassDesc extends AbstractPersistentClassDesc implements
+        PersistentClassDesc {
 
-    private final Map<String, PersistentColumn> attribOverrides;
+    private final boolean identifier;
 
-    public AttributeOverridableClassDesc(Class persistentClass,
-            String primaryTableName, boolean propertyAccessed,
-            Map<String, PersistentColumn> attribOverrides) {
+    public EmbeddableClassDesc(Class persistentClass, String primaryTableName,
+            boolean propertyAccessed, boolean identifier) {
 
-        super(persistentClass);
-
-        this.propertyAccessed = propertyAccessed;
-        this.attribOverrides = attribOverrides;
-        addTableName(primaryTableName);
+        super(persistentClass, primaryTableName, propertyAccessed);
+        this.identifier = identifier;
         setupPersistentStateDescs();
-        overrideAttributes();
     }
 
-    private void overrideAttributes() {
+    public void overrideAttributes(Map<String, PersistentColumn> attribOverrides) {
         for (PersistentStateDesc stateDesc : getPersistentStateDescs()) {
             if (attribOverrides.containsKey(stateDesc.getName())) {
-                override(stateDesc, attribOverrides.get(stateDesc
-                        .getName()));
+                PersistentColumn overriding = attribOverrides.get(stateDesc
+                        .getName());
+                PersistentColumn overridden = stateDesc.getColumn();
+                if (overriding.getName() != null) {
+                    overridden.setName(overriding.getName());
+                }
+                if (overriding.getTable() != null) {
+                    overridden.setTable(overriding.getTable());
+                }
             }
-        }
-    }
-
-    private void override(PersistentStateDesc psd, PersistentColumn overridingColumn) {
-        if (overridingColumn.getName() != null) {
-            psd.getColumn().setName(overridingColumn.getName());
-        }
-        if (overridingColumn.getTable() != null) {
-            psd.getColumn().setTable(overridingColumn.getTable());
         }
     }
 
     public PersistentClassDesc getRoot() {
         return null;
     }
-    
+
     public boolean isRoot() {
         return false;
     }
-    
-    public PersistentDiscriminatorColumn getDiscriminatorColumnByTableName(String tableName) {
+
+    public PersistentDiscriminatorColumn getDiscriminatorColumnByTableName(
+            String tableName) {
         return null;
+    }
+
+    public boolean isIdentifier() {
+        return identifier;
     }
 }

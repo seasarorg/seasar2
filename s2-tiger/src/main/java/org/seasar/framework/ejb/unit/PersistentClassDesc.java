@@ -51,4 +51,6 @@ public interface PersistentClassDesc {
 
     PersistentDiscriminatorColumn getDiscriminatorColumnByTableName(
             String tableName);
+    
+    boolean isIdentifier();
 }

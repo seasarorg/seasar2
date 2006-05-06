@@ -51,10 +51,18 @@ public abstract class AbstractPersistentClassDesc implements
     protected Map<String, List<PersistentStateDesc>> stateDescsByTableName = new HashMap<String, List<PersistentStateDesc>>();
 
     public AbstractPersistentClassDesc(Class<?> persistentClass) {
+        this(persistentClass, null, false);
+    }
+
+    public AbstractPersistentClassDesc(Class<?> persistentClass, String primayTableName, boolean propertyAccessed) {
         if (persistentClass == null) {
             throw new EmptyRuntimeException("persistentClass");
         }
         this.persistentClass = persistentClass;
+        this.propertyAccessed = propertyAccessed;
+        if (primayTableName != null) {
+            addTableName(primayTableName);
+        }
     }
 
     public Class<?> getPersistentClass() {
@@ -141,7 +149,8 @@ public abstract class AbstractPersistentClassDesc implements
         }
     }
 
-    protected void setupPersistentStateDesc(PersistentStateAccessor accessor) {
+    private void setupPersistentStateDesc(
+            PersistentStateAccessor accessor) {
         PersistentStateDesc ps = PersistentStateDescFactory
                 .getPersistentStateDesc(this, getPrimaryTableName(), accessor);
         if (ps != null) {
@@ -156,7 +165,7 @@ public abstract class AbstractPersistentClassDesc implements
         addPersistentStateDescByTableName(ps, ps.getColumn().getTable());
     }
 
-    protected void addPersistentStateDescByTableName(PersistentStateDesc ps,
+    private void addPersistentStateDescByTableName(PersistentStateDesc ps,
             String tableName) {
 
         String name = tableName.toLowerCase();
@@ -168,7 +177,7 @@ public abstract class AbstractPersistentClassDesc implements
         addTableName(name);
     }
 
-    protected void addPersistentStateDescByClass(PersistentStateDesc ps,
+    private void addPersistentStateDescByClass(PersistentStateDesc ps,
             Class clazz) {
         if (!stateDescsByClass.containsKey(clazz)) {
             stateDescsByClass.put(clazz, new ArrayList<PersistentStateDesc>());
@@ -181,4 +190,9 @@ public abstract class AbstractPersistentClassDesc implements
             tableNames.add(tableName.toLowerCase());
         }
     }
+
+    protected void setPropertyAccessed(boolean propertyAccessed) {
+        this.propertyAccessed = propertyAccessed;
+    }
+    
 }

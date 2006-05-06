@@ -18,7 +18,6 @@ package javax.persistence;
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
-import static javax.persistence.TemporalType.TIMESTAMP;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
@@ -26,5 +25,5 @@ import java.lang.annotation.Target;
 @Target( { METHOD, FIELD })
 @Retention(RUNTIME)
 public @interface Temporal {
-    TemporalType value() default TIMESTAMP;
+    TemporalType value();
 }

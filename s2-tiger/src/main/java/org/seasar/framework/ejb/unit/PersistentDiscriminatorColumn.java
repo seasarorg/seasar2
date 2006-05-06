@@ -22,34 +22,20 @@ import javax.persistence.DiscriminatorType;
  * @author nakamura
  * 
  */
-public class PersistentDiscriminatorColumn {
+public class PersistentDiscriminatorColumn extends PersistentColumn {
 
-    private String name = "DTYPE";
+    private final static String DEFAULT_NAME = "DTYPE";
 
     private DiscriminatorType type = DiscriminatorType.STRING;
-
-    private String tableName;
 
     private Object value;
 
     private Class<?> persistenceTargetClass;
 
-    public String getName() {
-        return name;
+    public PersistentDiscriminatorColumn() {
+        setName(DEFAULT_NAME);
     }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getTableName() {
-        return tableName;
-    }
-
-    public void setTableName(String tableName) {
-        this.tableName = tableName;
-    }
-
+    
     public DiscriminatorType getType() {
         return type;
     }
@@ -82,9 +68,5 @@ public class PersistentDiscriminatorColumn {
 
     public Class<?> getPersistenceTargetClass() {
         return persistenceTargetClass;
-    }
-
-    public PersistentColumn getPersistentColumn() {
-        return new PersistentColumn(name, tableName);
     }
 }

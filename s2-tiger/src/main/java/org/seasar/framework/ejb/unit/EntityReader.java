@@ -78,7 +78,6 @@ public class EntityReader implements DataReader {
                 Class<?> stateClass = stateDesc.getPersistenceTargetClass();
 
                 switch (stateDesc.getPersistentStateType()) {
-                case NONE:
                 case TO_MANY:
                     continue;
                 case BASIC:
@@ -102,7 +101,7 @@ public class EntityReader implements DataReader {
             
             PersistentDiscriminatorColumn dc = classDesc.getDiscriminatorColumnByTableName(tableName);
             if (dc!= null) {
-                setupColumn(dc.getPersistentColumn(), dc.getPersistenceTargetClass());
+                setupColumn(dc, dc.getPersistenceTargetClass());
             }
         }
     }
@@ -144,8 +143,6 @@ public class EntityReader implements DataReader {
                 }
 
                 switch (stateDesc.getPersistentStateType()) {
-                case NONE:
-                    continue;
                 case BASIC:
                     setupRowValue(row, stateDesc.getColumn(), stateDesc.getPersistenceTargetClass(), state);
                     break;
@@ -167,7 +164,7 @@ public class EntityReader implements DataReader {
                 
                 PersistentDiscriminatorColumn dc = classDesc.getDiscriminatorColumnByTableName(tableName);
                 if (dc!= null) {
-                    setupRowValue(row, dc.getPersistentColumn(), dc.getPersistenceTargetClass(), dc.getValue());
+                    setupRowValue(row, dc, dc.getPersistenceTargetClass(), dc.getValue());
                 }
 
                 row.setState(RowStates.UNCHANGED);
@@ -189,7 +186,7 @@ public class EntityReader implements DataReader {
             return;
         }
 
-        outer: for (PersistentColumn fk : stateDesc.getForeignKeyColumns()) {
+        outer: for (PersistentJoinColumn fk : stateDesc.getForeignKeyColumns()) {
 
             PersistentClassDesc rel = introspector
                     .getPersistentClassDesc(relEntity.getClass());

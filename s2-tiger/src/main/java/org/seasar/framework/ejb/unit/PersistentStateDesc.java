@@ -24,33 +24,39 @@ import java.util.List;
 public interface PersistentStateDesc {
 
     String getName();
-    
+
     PersistentClassDesc getPersistentClassDesc();
 
     boolean hasColumn(String columnName);
 
     PersistentColumn getColumn();
-    
+
     void setColumn(PersistentColumn column);
-    
+
     Class<?> getPersistentStateClass();
-    
+
     Class<?> getPersistenceTargetClass();
 
     Object getValue(Object target);
 
     PersistentClassDesc getEmbeddedClassDesc();
-    
+
     List<PersistentStateDesc> getEmbeddedStateDescs();
+
+    void setupPrimaryKeyColumns(List<PersistentJoinColumn> pkJoinColumns);
 
     void setupForeignKeyColumns(PersistentClassDesc relationship);
 
-    List<PersistentColumn> getForeignKeyColumns();
+    List<PersistentJoinColumn> getForeignKeyColumns();
+
+    List<PersistentJoinColumn> getJoinColumns();
+
+    void setJoinColumns(List<PersistentJoinColumn> joinColumns);
 
     PersistentStateAccessor getAccessor();
 
     PersistentStateType getPersistentStateType();
-    
+
     boolean isIdentifier();
-    
+
 }

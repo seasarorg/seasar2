@@ -21,9 +21,9 @@ import java.util.List;
 
 import org.seasar.framework.ejb.unit.PersistentClassDesc;
 import org.seasar.framework.ejb.unit.PersistentColumn;
+import org.seasar.framework.ejb.unit.PersistentJoinColumn;
 import org.seasar.framework.ejb.unit.PersistentStateAccessor;
 import org.seasar.framework.ejb.unit.PersistentStateDesc;
-import org.seasar.framework.ejb.unit.PersistentStateType;
 import org.seasar.framework.exception.EmptyRuntimeException;
 
 /**
@@ -99,8 +99,16 @@ public abstract class AbstractPersistentStateDesc implements
         return persistenceTargetClass;
     }
 
+    protected void setPersistenceTargetClass(Class<?> persistenceTargetClass) {
+        this.persistenceTargetClass = persistenceTargetClass;
+    }
+    
     public boolean isIdentifier() {
         return identifier;
+    }
+    
+    protected void setIdentifier(boolean identifier) {
+        this.identifier = identifier;
     }
 
     public PersistentStateAccessor getAccessor() {
@@ -122,7 +130,14 @@ public abstract class AbstractPersistentStateDesc implements
         return this.getColumn().getName().equalsIgnoreCase(columnName);
     }
 
-    public List<PersistentColumn> getForeignKeyColumns() {
+    public List<PersistentJoinColumn> getJoinColumns() {
+        return Collections.emptyList();
+    }
+    
+    public void setJoinColumns(List<PersistentJoinColumn> joinColumn) {
+    }
+    
+    public List<PersistentJoinColumn> getForeignKeyColumns() {
         return Collections.emptyList();
     }
 
@@ -133,8 +148,33 @@ public abstract class AbstractPersistentStateDesc implements
     public void setupForeignKeyColumns(PersistentClassDesc relationship) {
     }
 
-    public abstract PersistentStateType getPersistentStateType();
+    public void setupPrimaryKeyColumns(
+            List<PersistentJoinColumn> pkJoinColumns) {
+        
+        if (!pkJoinColumns.isEmpty()) {
+            if (hasReferencedColumnName(pkJoinColumns)) {
+                adjustPkColumnsByReferencedColumnName(pkJoinColumns);
+            } else {
+                adjustPkColumnsByIndex(pkJoinColumns);
+            }
+        }
+    }
 
+    protected boolean hasReferencedColumnName(List<PersistentJoinColumn> columns) {
+        for (PersistentJoinColumn column : columns) {
+            if (column.getReferencedColumnName() == null) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    protected abstract void adjustPkColumnsByReferencedColumnName(
+            List<PersistentJoinColumn> pkJoinColumns);
+
+    protected abstract void adjustPkColumnsByIndex(
+            List<PersistentJoinColumn> pkJoinColumns);
+    
     public final String toString() {
         StringBuilder buf = new StringBuilder();
         buf.append("name=");

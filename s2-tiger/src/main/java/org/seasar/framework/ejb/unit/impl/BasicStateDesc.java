@@ -17,12 +17,15 @@ package org.seasar.framework.ejb.unit.impl;
 
 import static javax.persistence.EnumType.ORDINAL;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Enumerated;
 import javax.persistence.Id;
 
 import org.seasar.framework.ejb.unit.PersistentClassDesc;
 import org.seasar.framework.ejb.unit.PersistentColumn;
+import org.seasar.framework.ejb.unit.PersistentJoinColumn;
 import org.seasar.framework.ejb.unit.PersistentStateAccessor;
 import org.seasar.framework.ejb.unit.PersistentStateType;
 import org.seasar.framework.util.StringUtil;
@@ -35,13 +38,16 @@ public class BasicStateDesc extends AbstractPersistentStateDesc {
 
     public BasicStateDesc(PersistentClassDesc persistentClassDesc,
             String primaryTableName, PersistentStateAccessor accessor) {
-        
+
         super(persistentClassDesc, primaryTableName, accessor);
         introspect();
     }
-    
+
     protected void introspect() {
-        identifier = annotatedElement.isAnnotationPresent(Id.class);
+        if(annotatedElement.isAnnotationPresent(Id.class)
+                || persistentClassDesc.isIdentifier()) {
+            setIdentifier(true);
+        }
         setupPersistentColumn();
         setupPersistenceTargetClass();
     }
@@ -53,23 +59,25 @@ public class BasicStateDesc extends AbstractPersistentStateDesc {
                     : column.table();
             String columnName = StringUtil.isEmpty(column.name()) ? persistentStateName
                     : column.name();
-            persistentColumn = new PersistentColumn(columnName, tableName);
+            setColumn(new PersistentColumn(columnName, tableName));
         } else {
-            persistentColumn = new PersistentColumn(persistentStateName, primaryTableName);
+            setColumn(new PersistentColumn(persistentStateName,
+                    primaryTableName));
         }
     }
-    
+
     private void setupPersistenceTargetClass() {
-        Enumerated enumerated = annotatedElement.getAnnotation(Enumerated.class);
+        Enumerated enumerated = annotatedElement
+                .getAnnotation(Enumerated.class);
         if (Enum.class.isAssignableFrom(persistentStateClass)) {
             if (enumerated == null || enumerated.value() == ORDINAL) {
-                persistenceTargetClass = int.class;
+                setPersistenceTargetClass(int.class);
             } else {
-                persistenceTargetClass = String.class;
+                setPersistenceTargetClass(String.class);
             }
         }
     }
-    
+
     @Override
     public Object getValue(Object target) {
         Object value = super.getValue(target);
@@ -84,9 +92,35 @@ public class BasicStateDesc extends AbstractPersistentStateDesc {
         return value;
     }
 
-    @Override
     public PersistentStateType getPersistentStateType() {
         return PersistentStateType.BASIC;
+    }
+
+    @Override
+    protected void adjustPkColumnsByReferencedColumnName(
+            List<PersistentJoinColumn> pkJoinColumns) {
+
+        for (PersistentJoinColumn pk : pkJoinColumns) {
+            if (hasColumn(pk.getReferencedColumnName())) {
+                if (pk.getName() != null) {
+                    getColumn().setName(pk.getName());
+                }
+            }
+        }
+    }
+
+    @Override
+    protected void adjustPkColumnsByIndex(
+            List<PersistentJoinColumn> pkJoinColumns) {
+
+        int index = getPersistentClassDesc().getIdentifiers().indexOf(this);
+        if (index < 0) {
+            return;
+        }
+        PersistentJoinColumn pk = pkJoinColumns.get(index);
+        if (pk.getName() != null) {
+            getColumn().setName(pk.getName());
+        }
     }
 
 }
