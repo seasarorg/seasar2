@@ -17,6 +17,7 @@ package org.seasar.framework.ejb.unit;
 
 import java.util.List;
 
+import org.seasar.framework.ejb.unit.impl.DefaultProxiedObjectResolver;
 import org.seasar.framework.ejb.unit.impl.EntityListIntrospector;
 
 
@@ -27,22 +28,22 @@ import org.seasar.framework.ejb.unit.impl.EntityListIntrospector;
 public class EntityListReader extends EntityReader {
 
     public EntityListReader(List<?> entities) {
-        this(entities, null);
+        this(entities, DefaultProxiedObjectResolver.INSTANCE);
     }
     
     public EntityListReader(List<?> entities, ProxiedObjectResolver resolver) {
-        super(new EntityListIntrospector(entities, resolver));
+        super(new EntityListIntrospector(entities, resolver), resolver); 
 
-        for (PersistentClassDesc classDesc : introspector.getAllPersistentClassDescs()) {
+        for (PersistentClassDesc classDesc : getEntityIntrospector().getAllPersistentClassDescs()) {
             setupColumns(classDesc);
         }
         for (Object entity : entities) {
             if (entity == null) {
                 continue;
             }
-            PersistentClassDesc classDesc = introspector.getPersistentClassDesc(entity.getClass());
-            setupRows(classDesc, entity);
-            release(entity);
+            PersistentClassDesc classDesc = getEntityIntrospector().getPersistentClassDesc(entity);
+            startSetupRows(classDesc, entity);
+            releaseProcessedEntity(entity);
         }
     }
 }

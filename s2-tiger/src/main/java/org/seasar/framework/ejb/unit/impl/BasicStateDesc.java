@@ -27,7 +27,9 @@ import org.seasar.framework.ejb.unit.PersistentClassDesc;
 import org.seasar.framework.ejb.unit.PersistentColumn;
 import org.seasar.framework.ejb.unit.PersistentJoinColumn;
 import org.seasar.framework.ejb.unit.PersistentStateAccessor;
+import org.seasar.framework.ejb.unit.PersistentStateDesc;
 import org.seasar.framework.ejb.unit.PersistentStateType;
+import org.seasar.framework.ejb.unit.ProxiedObjectResolver;
 import org.seasar.framework.util.StringUtil;
 
 /**
@@ -44,7 +46,7 @@ public class BasicStateDesc extends AbstractPersistentStateDesc {
     }
 
     protected void introspect() {
-        if(annotatedElement.isAnnotationPresent(Id.class)
+        if (annotatedElement.isAnnotationPresent(Id.class)
                 || persistentClassDesc.isIdentifier()) {
             setIdentifier(true);
         }
@@ -79,8 +81,8 @@ public class BasicStateDesc extends AbstractPersistentStateDesc {
     }
 
     @Override
-    public Object getValue(Object target) {
-        Object value = super.getValue(target);
+    public Object getValue(Object target, ProxiedObjectResolver resolver) {
+        Object value = super.getValue(target, resolver);
         if (value instanceof Enum) {
             Enum enumValue = (Enum) value;
             if (persistenceTargetClass == int.class) {
@@ -113,7 +115,16 @@ public class BasicStateDesc extends AbstractPersistentStateDesc {
     protected void adjustPkColumnsByIndex(
             List<PersistentJoinColumn> pkJoinColumns) {
 
-        int index = getPersistentClassDesc().getIdentifiers().indexOf(this);
+        int index = -1;
+        List<PersistentStateDesc> ids = getPersistentClassDesc()
+                .getIdentifiers();
+        for (int i = 0; i < ids.size(); i++) {
+            PersistentColumn pkColumn = ids.get(0).getColumn();
+            if (pkColumn.hasName(getColumn().getName())) {
+                index = i;
+                break;
+            }
+        }
         if (index < 0) {
             return;
         }
@@ -122,5 +133,4 @@ public class BasicStateDesc extends AbstractPersistentStateDesc {
             getColumn().setName(pk.getName());
         }
     }
-
 }

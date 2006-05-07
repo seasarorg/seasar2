@@ -13,20 +13,19 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.framework.ejb.unit;
+package org.seasar.framework.ejb.unit.impl;
 
-import org.seasar.framework.exception.SRuntimeException;
-import org.seasar.framework.message.MessageFormatter;
+import org.seasar.framework.ejb.unit.ProxiedObjectResolver;
 
 /**
- * @author taedium
+ * @author nakamura
  * 
  */
-public class PersistentStateNotFoundException extends SRuntimeException {
-    private static final long serialVersionUID = 1L;
+public class DefaultProxiedObjectResolver implements ProxiedObjectResolver {
 
-    public PersistentStateNotFoundException(String messageCode, final Object... args) {
-        super(MessageFormatter.getMessage(messageCode, args));
+    public static final DefaultProxiedObjectResolver INSTANCE = new DefaultProxiedObjectResolver();
+
+    public Object unproxy(Object proxy) {
+        return proxy;
     }
-
 }

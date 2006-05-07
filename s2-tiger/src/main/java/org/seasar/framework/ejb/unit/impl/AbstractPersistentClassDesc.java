@@ -54,7 +54,8 @@ public abstract class AbstractPersistentClassDesc implements
         this(persistentClass, null, false);
     }
 
-    public AbstractPersistentClassDesc(Class<?> persistentClass, String primayTableName, boolean propertyAccessed) {
+    public AbstractPersistentClassDesc(Class<?> persistentClass,
+            String primayTableName, boolean propertyAccessed) {
         if (persistentClass == null) {
             throw new EmptyRuntimeException("persistentClass");
         }
@@ -77,25 +78,42 @@ public abstract class AbstractPersistentClassDesc implements
         return stateDescs;
     }
 
-    public PersistentStateDesc getPersistentStateDesc(String name)
+    public PersistentStateDesc getPersistentStateDesc(String persistentStateName)
             throws PersistentStateNotFoundException {
 
-        return getPersistentStateDesc(persistentClass, name);
+        return getPersistentStateDesc(persistentClass, persistentStateName);
     }
 
-    public PersistentStateDesc getPersistentStateDesc(Class owner, String name)
-            throws PersistentStateNotFoundException {
+    public PersistentStateDesc getPersistentStateDesc(Class owner,
+            String persistentStateName) throws PersistentStateNotFoundException {
 
         if (stateDescsByClass.containsKey(owner)) {
             List<PersistentStateDesc> list = stateDescsByClass.get(owner);
             for (PersistentStateDesc stateDesc : list) {
-                if (stateDesc.getName().equals(name)) {
+                if (stateDesc.getName().equals(persistentStateName)) {
                     return stateDesc;
                 }
             }
         }
-        throw new PersistentStateNotFoundException(owner, name,
-                propertyAccessed);
+        throw new PersistentStateNotFoundException(
+                propertyAccessed ? "ESSR0503" : "ESSR0502", owner,
+                persistentStateName);
+    }
+
+    public PersistentStateDesc getPersistentStateDescByColumnName(
+            String columnName) {
+
+        List<PersistentStateDesc> states = stateDescsByTableName
+                .get(getPrimaryTableName());
+
+        for (PersistentStateDesc state : states) {
+            if (state.getColumn().hasName(columnName)) {
+                return state;
+            }
+        }
+        throw new PersistentStateNotFoundException(
+                propertyAccessed ? "ESSR0505" : "ESSR0504",
+                getPrimaryTableName(), columnName);
     }
 
     public List<PersistentStateDesc> getPersistentStateDescsByTableName(
@@ -149,8 +167,7 @@ public abstract class AbstractPersistentClassDesc implements
         }
     }
 
-    private void setupPersistentStateDesc(
-            PersistentStateAccessor accessor) {
+    private void setupPersistentStateDesc(PersistentStateAccessor accessor) {
         PersistentStateDesc ps = PersistentStateDescFactory
                 .getPersistentStateDesc(this, getPrimaryTableName(), accessor);
         if (ps != null) {
@@ -194,5 +211,5 @@ public abstract class AbstractPersistentClassDesc implements
     protected void setPropertyAccessed(boolean propertyAccessed) {
         this.propertyAccessed = propertyAccessed;
     }
-    
+
 }

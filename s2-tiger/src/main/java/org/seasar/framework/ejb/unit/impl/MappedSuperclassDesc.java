@@ -78,7 +78,7 @@ public class MappedSuperclassDesc extends AbstractPersistentClassDesc {
         return false;
     }
 
-    public PersistentDiscriminatorColumn getDiscriminatorColumnByTableName(
+    public PersistentDiscriminatorColumn getDiscriminatorColumn(
             String tableName) {
         return null;
     }

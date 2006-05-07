@@ -69,16 +69,18 @@ public class MappedSuperclassDescTest extends TestCase {
     }
 
     public void testOverrideAttributeForParent() {
-        EntityIntrospector i = new EntityIntrospector(new Foo2(), null);
-        PersistentClassDesc classDesc = i.getPersistentClassDesc(Foo2.class);
+        Foo2 entity = new Foo2();
+        EntityIntrospector i = new EntityIntrospector(entity, DefaultProxiedObjectResolver.INSTANCE);
+        PersistentClassDesc classDesc = i.getPersistentClassDesc(entity);
         PersistentStateDesc stateDesc = classDesc.getPersistentStateDesc(
                 Foo1.class, "aaa");
         assertEquals("1", "111", stateDesc.getColumn().getName());
     }
 
     public void testOverrideAsstociationForParent() {
-        EntityIntrospector i = new EntityIntrospector(new Foo2(), null);
-        PersistentClassDesc classDesc = i.getPersistentClassDesc(Foo2.class);
+        Foo2 entity = new Foo2();
+        EntityIntrospector i = new EntityIntrospector(entity, DefaultProxiedObjectResolver.INSTANCE);
+        PersistentClassDesc classDesc = i.getPersistentClassDesc(entity);
         PersistentStateDesc stateDesc = classDesc.getPersistentStateDesc(
                 Foo1.class, "bbb");
         List<PersistentJoinColumn> fkColumns = stateDesc.getForeignKeyColumns();
@@ -90,16 +92,18 @@ public class MappedSuperclassDescTest extends TestCase {
     }
 
     public void testOverrideAttributeForParentExcludingNonEntity() {
-        EntityIntrospector i = new EntityIntrospector(new Bar3(), null);
-        PersistentClassDesc classDesc = i.getPersistentClassDesc(Bar3.class);
+        Bar3 entity = new Bar3();
+        EntityIntrospector i = new EntityIntrospector(entity, DefaultProxiedObjectResolver.INSTANCE);
+        PersistentClassDesc classDesc = i.getPersistentClassDesc(entity);
         PersistentStateDesc stateDesc = classDesc.getPersistentStateDesc(
                 Bar1.class, "aaa");
         assertEquals("1", "111", stateDesc.getColumn().getName());
     }
 
     public void testOverrideAsstociationForParentExcludingNonEntity() {
-        EntityIntrospector i = new EntityIntrospector(new Bar3(), null);
-        PersistentClassDesc classDesc = i.getPersistentClassDesc(Bar3.class);
+        Bar3 entity = new Bar3();
+        EntityIntrospector i = new EntityIntrospector(entity, DefaultProxiedObjectResolver.INSTANCE);
+        PersistentClassDesc classDesc = i.getPersistentClassDesc(entity);
         PersistentStateDesc stateDesc = classDesc.getPersistentStateDesc(
                 Bar1.class, "bbb");
         List<PersistentJoinColumn> fkColumns = stateDesc.getForeignKeyColumns();
@@ -111,16 +115,18 @@ public class MappedSuperclassDescTest extends TestCase {
     }
 
     public void testOverrideAttributeForGrandParent() {
-        EntityIntrospector i = new EntityIntrospector(new Hoge3(), null);
-        PersistentClassDesc classDesc = i.getPersistentClassDesc(Hoge3.class);
+        Hoge3 entity = new Hoge3();
+        EntityIntrospector i = new EntityIntrospector(entity, DefaultProxiedObjectResolver.INSTANCE);
+        PersistentClassDesc classDesc = i.getPersistentClassDesc(entity);
         PersistentStateDesc stateDesc = classDesc.getPersistentStateDesc(
                 Hoge1.class, "aaa");
         assertEquals("1", "111", stateDesc.getColumn().getName());
     }
 
     public void testOverrideAsstociationForGrandParent() {
-        EntityIntrospector i = new EntityIntrospector(new Hoge3(), null);
-        PersistentClassDesc classDesc = i.getPersistentClassDesc(Hoge3.class);
+        Hoge3 entity = new Hoge3();
+        EntityIntrospector i = new EntityIntrospector(entity, DefaultProxiedObjectResolver.INSTANCE);
+        PersistentClassDesc classDesc = i.getPersistentClassDesc(entity);
         PersistentStateDesc stateDesc = classDesc.getPersistentStateDesc(
                 Hoge1.class, "bbb");
         List<PersistentJoinColumn> fkColumns = stateDesc.getForeignKeyColumns();
@@ -132,16 +138,18 @@ public class MappedSuperclassDescTest extends TestCase {
     }
 
     public void testOverrideAttributeInTheMiddleOfHierarchy() {
-        EntityIntrospector i = new EntityIntrospector(new Foo4(), null);
-        PersistentClassDesc classDesc = i.getPersistentClassDesc(Foo4.class);
+        Foo4 entity = new Foo4();
+        EntityIntrospector i = new EntityIntrospector(entity, DefaultProxiedObjectResolver.INSTANCE);
+        PersistentClassDesc classDesc = i.getPersistentClassDesc(entity);
         PersistentStateDesc stateDesc = classDesc.getPersistentStateDesc(
                 Foo3.class, "ddd");
         assertEquals("1", "333", stateDesc.getColumn().getName());
     }
 
     public void testOverrideAssociationInTheMiddleOfHierarchy() {
-        EntityIntrospector i = new EntityIntrospector(new Foo4(), null);
-        PersistentClassDesc classDesc = i.getPersistentClassDesc(Foo4.class);
+        Foo4 entity = new Foo4();
+        EntityIntrospector i = new EntityIntrospector(entity, DefaultProxiedObjectResolver.INSTANCE);
+        PersistentClassDesc classDesc = i.getPersistentClassDesc(entity);
         PersistentStateDesc stateDesc = classDesc.getPersistentStateDesc(
                 Foo3.class, "eee");
         List<PersistentJoinColumn> fkColumns = stateDesc.getForeignKeyColumns();

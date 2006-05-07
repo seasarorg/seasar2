@@ -15,7 +15,6 @@
  */
 package org.seasar.framework.unit;
 
-import javax.transaction.Status;
 import javax.transaction.TransactionManager;
 
 import junit.framework.TestCase;
@@ -26,6 +25,7 @@ import org.junit.Test;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.RunWith;
 import org.seasar.framework.unit.annotation.Rollback;
+import org.seasar.framework.util.TransactionManagerUtil;
 
 public class S2TestClassRunnerTest extends TestCase {
 
@@ -91,7 +91,7 @@ public class S2TestClassRunnerTest extends TestCase {
         
         protected boolean isTransactionActinve() throws Exception {
             TransactionManager tm = (TransactionManager) getComponent(TransactionManager.class);
-            return tm != null && tm.getStatus() != Status.STATUS_NO_TRANSACTION;
+            return TransactionManagerUtil.isActive(tm);
         }
     }
     

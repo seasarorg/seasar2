@@ -37,13 +37,13 @@ public interface PersistentStateDesc {
 
     Class<?> getPersistenceTargetClass();
 
-    Object getValue(Object target);
+    Object getValue(Object target, ProxiedObjectResolver resolver);
 
     PersistentClassDesc getEmbeddedClassDesc();
 
     List<PersistentStateDesc> getEmbeddedStateDescs();
 
-    void setupPrimaryKeyColumns(List<PersistentJoinColumn> pkJoinColumns);
+    void adjustPrimaryKeyColumns(List<PersistentJoinColumn> pkJoinColumns);
 
     void setupForeignKeyColumns(PersistentClassDesc relationship);
 

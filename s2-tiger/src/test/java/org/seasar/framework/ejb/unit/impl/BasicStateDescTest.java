@@ -16,7 +16,6 @@
 package org.seasar.framework.ejb.unit.impl;
 
 import static javax.persistence.EnumType.STRING;
-import static org.seasar.framework.ejb.unit.PersistentStateType.BASIC;
 
 import java.lang.reflect.Field;
 
@@ -26,7 +25,6 @@ import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.SecondaryTable;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
 
 import junit.framework.TestCase;
 
@@ -115,7 +113,7 @@ public class BasicStateDescTest extends TestCase {
         FieldAccessor accessor = new FieldAccessor(field);
         BasicStateDesc basicDesc = new BasicStateDesc(pc, "hoge", accessor);
         
-        assertEquals("1", 1, basicDesc.getValue(hoge3));
+        assertEquals("1", 1, basicDesc.getValue(hoge3, DefaultProxiedObjectResolver.INSTANCE));
         assertEquals("2", int.class, basicDesc.getPersistenceTargetClass());
     }
 
@@ -127,7 +125,7 @@ public class BasicStateDescTest extends TestCase {
         FieldAccessor accessor = new FieldAccessor(field);
         BasicStateDesc basicDesc = new BasicStateDesc(pc, "hoge", accessor);
         
-        assertEquals("1", "BBB", basicDesc.getValue(hoge3));
+        assertEquals("1", "BBB", basicDesc.getValue(hoge3, DefaultProxiedObjectResolver.INSTANCE));
         assertEquals("2", String.class, basicDesc.getPersistenceTargetClass());
     }
 

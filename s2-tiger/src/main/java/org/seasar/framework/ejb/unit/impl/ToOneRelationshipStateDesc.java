@@ -115,8 +115,7 @@ public class ToOneRelationshipStateDesc extends AbstractPersistentStateDesc {
             PersistentColumn referencedColumn = null;
 
             for (PersistentColumn refColumn : refColumns) {
-                if (column.getReferencedColumnName()
-                        .equals(refColumn.getName())) {
+                if (refColumn.hasName(column.getReferencedColumnName())) {
                     referencedColumn = refColumn;
                 }
             }
@@ -216,7 +215,7 @@ public class ToOneRelationshipStateDesc extends AbstractPersistentStateDesc {
         }
 
         if (!pkJoinColumns.isEmpty() && oneToOne) {
-            setupPrimaryKeyColumns(pkJoinColumns);
+            adjustPrimaryKeyColumns(pkJoinColumns);
 
         } else if (!joinColumns.isEmpty()) {
             if (hasReferencedColumnName(joinColumns)) {
@@ -240,7 +239,7 @@ public class ToOneRelationshipStateDesc extends AbstractPersistentStateDesc {
             List<PersistentJoinColumn> pkJoinColumns) {
 
         for (PersistentStateDesc id : getPersistentClassDesc().getIdentifiers()) {
-            id.setupPrimaryKeyColumns(pkJoinColumns);
+            id.adjustPrimaryKeyColumns(pkJoinColumns);
         }
     }
 
@@ -249,7 +248,7 @@ public class ToOneRelationshipStateDesc extends AbstractPersistentStateDesc {
             List<PersistentJoinColumn> pkJoinColumns) {
 
         for (PersistentStateDesc id : getPersistentClassDesc().getIdentifiers()) {
-            id.setupPrimaryKeyColumns(pkJoinColumns);
+            id.adjustPrimaryKeyColumns(pkJoinColumns);
         }
     }
 

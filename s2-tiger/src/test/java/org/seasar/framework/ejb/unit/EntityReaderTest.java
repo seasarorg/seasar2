@@ -188,7 +188,7 @@ public class EntityReaderTest extends TestCase {
         e1.projects.add(p2);
         e2.projects.add(p2);
 
-        EntityReader reader = new EntityReader(p1, null);
+        EntityReader reader = new EntityReader(p1);
         DataSet dataSet = reader.read();
         assertEquals("1", 2, dataSet.getTableSize());
         DataTable projectTable = dataSet.getTable("Project");

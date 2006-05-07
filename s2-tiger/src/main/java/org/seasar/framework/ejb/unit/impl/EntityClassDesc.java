@@ -80,6 +80,8 @@ public class EntityClassDesc extends AbstractPersistentClassDesc implements
 
     private List<PersistentJoinColumn> pkJoinColumns = new ArrayList<PersistentJoinColumn>();
 
+    private Map<String, List<PersistentJoinColumn>> secondaryTablePkJoinColumns = new HashMap<String, List<PersistentJoinColumn>>();
+
     private List<Class<?>> hierarchy = new ArrayList<Class<?>>();
 
     private List<MappedSuperclassDesc> mappedSuperclassDescs = new ArrayList<MappedSuperclassDesc>();
@@ -102,6 +104,7 @@ public class EntityClassDesc extends AbstractPersistentClassDesc implements
         detectPrimaryKeyJoinColumns();
         detectInheritanceStrategy();
         setupPersistentStateDescs();
+        setupSecondaryTableIdStateDescs();
     }
 
     private void detectTable() {
@@ -122,10 +125,25 @@ public class EntityClassDesc extends AbstractPersistentClassDesc implements
 
         if (secondary != null) {
             addTableName(secondary.name());
+            addSecondaryTablePkJoinColumns(secondary);
         } else if (secondaries != null) {
             for (SecondaryTable each : secondaries.value()) {
                 addTableName(each.name());
+                addSecondaryTablePkJoinColumns(each);
             }
+        }
+    }
+
+    private void addSecondaryTablePkJoinColumns(SecondaryTable secondary) {
+        List<PersistentJoinColumn> pkJoinColumns = null;
+        if (secondaryTablePkJoinColumns.containsKey(secondary.name())) {
+            pkJoinColumns = secondaryTablePkJoinColumns.get(secondary.name());
+        } else {
+            pkJoinColumns = new ArrayList<PersistentJoinColumn>();
+            secondaryTablePkJoinColumns.put(secondary.name(), pkJoinColumns);
+        }
+        for (PrimaryKeyJoinColumn each : secondary.pkJoinColumns()) {
+            pkJoinColumns.add(new PersistentJoinColumn(each));
         }
     }
 
@@ -320,6 +338,23 @@ public class EntityClassDesc extends AbstractPersistentClassDesc implements
         super.setupPersistentStateDescs();
     }
 
+    private void setupSecondaryTableIdStateDescs() {
+        if (secondaryTablePkJoinColumns.isEmpty()) {
+            return;
+        }
+        for (String tableName : secondaryTablePkJoinColumns.keySet()) {
+            for (PersistentStateDesc id : getIdentifiers()) {
+                PersistentStateDesc secondaryTableId = PersistentStateDescFactory
+                        .getPersistentStateDesc(this, tableName, id
+                                .getAccessor());
+                List<PersistentJoinColumn> columns = secondaryTablePkJoinColumns
+                        .get(tableName);
+                secondaryTableId.adjustPrimaryKeyColumns(columns);
+                addPersistentStateDesc(secondaryTableId);
+            }
+        }
+    }
+
     public PersistentClassDesc getRoot() {
         return rootEntityDesc;
     }
@@ -343,12 +378,7 @@ public class EntityClassDesc extends AbstractPersistentClassDesc implements
                 PersistentClassDesc classDesc = stateDesc
                         .getPersistentClassDesc();
                 if (stateDesc.isIdentifier() && classDesc.isRoot()) {
-                    PersistentStateAccessor accessor = stateDesc.getAccessor();
-                    PersistentStateDesc subclassId = PersistentStateDescFactory
-                            .getPersistentStateDesc(this,
-                                    getPrimaryTableName(), accessor);
-                    subclassId.setupPrimaryKeyColumns(pkJoinColumns);
-                    addPersistentStateDesc(subclassId);
+                    addPersistentStateDesc(createSubclassId(stateDesc));
                 }
                 break;
             }
@@ -356,6 +386,15 @@ public class EntityClassDesc extends AbstractPersistentClassDesc implements
         }
     }
 
+    private PersistentStateDesc createSubclassId(PersistentStateDesc rootId) {
+        PersistentStateAccessor accessor = rootId.getAccessor();
+        PersistentStateDesc subclassId = PersistentStateDescFactory
+                .getPersistentStateDesc(this,
+                        getPrimaryTableName(), accessor);
+        subclassId.adjustPrimaryKeyColumns(pkJoinColumns);
+        return subclassId;
+    }
+    
     private void setupMappedSuperclassStateDescs() {
         for (PersistentClassDesc mappedDesc : mappedSuperclassDescs) {
             for (PersistentStateDesc stateDesc : mappedDesc
@@ -365,7 +404,7 @@ public class EntityClassDesc extends AbstractPersistentClassDesc implements
         }
     }
 
-    public PersistentDiscriminatorColumn getDiscriminatorColumnByTableName(
+    public PersistentDiscriminatorColumn getDiscriminatorColumn(
             String tableName) {
 
         if (discriminatorColumn != null) {

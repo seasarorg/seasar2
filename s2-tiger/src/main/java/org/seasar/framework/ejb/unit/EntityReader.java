@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
-import static org.seasar.framework.ejb.unit.PersistentStateType.EMBEDDED;
 import static org.seasar.framework.ejb.unit.PersistentStateType.TO_MANY;
 
 import org.seasar.extension.dataset.ColumnType;
@@ -32,6 +31,7 @@ import org.seasar.extension.dataset.DataTable;
 import org.seasar.extension.dataset.impl.DataSetImpl;
 import org.seasar.extension.dataset.states.RowStates;
 import org.seasar.extension.dataset.types.ColumnTypes;
+import org.seasar.framework.ejb.unit.impl.DefaultProxiedObjectResolver;
 import org.seasar.framework.ejb.unit.impl.EntityIntrospector;
 
 /**
@@ -44,50 +44,52 @@ public class EntityReader implements DataReader {
 
     private final Map<Object, Object> processedEntities = new IdentityHashMap<Object, Object>();
 
-    private final Stack<PersistentClassDesc> stack = new Stack<PersistentClassDesc>();
+    private final Stack<PersistentClassDesc> processingClassDescs = new Stack<PersistentClassDesc>();
 
     private final DataSet dataSet = new DataSetImpl();
+    
+    private final ProxiedObjectResolver resolver;
 
-    protected EntityIntrospector introspector;
+    private final EntityIntrospector introspector;
 
-    protected EntityReader(EntityIntrospector introspector) {
+    protected EntityReader(EntityIntrospector introspector, ProxiedObjectResolver resolver) {
         this.introspector = introspector;
+        this.resolver = resolver;
     }
-
+    
     public EntityReader(Object entity) {
-        this(entity, null);
+        this(entity, DefaultProxiedObjectResolver.INSTANCE);
     }
 
     public EntityReader(Object entity, ProxiedObjectResolver resolver) {
-        this(new EntityIntrospector(entity, resolver));
-
+        this(new EntityIntrospector(entity, resolver), resolver);
+        
         for (PersistentClassDesc classDesc : introspector
                 .getAllPersistentClassDescs()) {
             setupColumns(classDesc);
         }
         PersistentClassDesc classDesc = introspector
-                .getPersistentClassDesc(entity.getClass());
-        setupRows(classDesc, entity);
+                .getPersistentClassDesc(entity);
+        startSetupRows(classDesc, entity);
     }
 
     protected void setupColumns(PersistentClassDesc classDesc) {
         for (String tableName : classDesc.getTableNames()) {
             List<PersistentStateDesc> stateDescs = classDesc
                     .getPersistentStateDescsByTableName(tableName);
+
             for (PersistentStateDesc stateDesc : stateDescs) {
                 Class<?> stateClass = stateDesc.getPersistenceTargetClass();
 
                 switch (stateDesc.getPersistentStateType()) {
-                case TO_MANY:
-                    continue;
                 case BASIC:
                     setupColumn(stateDesc.getColumn(), stateClass);
                     break;
                 case EMBEDDED:
                     for (PersistentStateDesc embedded : stateDesc
                             .getEmbeddedStateDescs()) {
-                        setupColumn(embedded.getColumn(), embedded
-                                .getPersistenceTargetClass());
+                        Class<?> type = embedded.getPersistenceTargetClass();
+                        setupColumn(embedded.getColumn(), type);
                     }
                     break;
                 case TO_ONE:
@@ -98,9 +100,10 @@ public class EntityReader implements DataReader {
                     break;
                 }
             }
-            
-            PersistentDiscriminatorColumn dc = classDesc.getDiscriminatorColumnByTableName(tableName);
-            if (dc!= null) {
+
+            PersistentDiscriminatorColumn dc = classDesc
+                    .getDiscriminatorColumn(tableName);
+            if (dc != null) {
                 setupColumn(dc, dc.getPersistenceTargetClass());
             }
         }
@@ -120,97 +123,89 @@ public class EntityReader implements DataReader {
         dataTable.addColumn(column.getName(), ct);
     }
 
-    protected void setupRows(PersistentClassDesc classDesc, Object entity) {
-        if (isProcessed(entity)) {
+    protected void startSetupRows(PersistentClassDesc classDesc, Object entity) {
+        if (isProcessing(classDesc) || isProcessed(entity)) {
             return;
         }
-        stack.push(classDesc.getRoot());
+        pushProcessingClassDesc(classDesc);
+        setupRows(classDesc, entity);
+        popProcessingClassDesc();
+        putProcessedEntity(entity);
+    }
 
+    protected void setupRows(PersistentClassDesc classDesc, Object entity) {
         Map<Object, PersistentStateDesc> relationships = new LinkedHashMap<Object, PersistentStateDesc>();
 
         for (String tableName : classDesc.getTableNames()) {
             List<PersistentStateDesc> descs = classDesc
                     .getPersistentStateDescsByTableName(tableName);
             DataRow row = null;
+
             for (PersistentStateDesc stateDesc : descs) {
-                Object state = introspector.unproxy(stateDesc.getValue(entity));
+                Object state = stateDesc.getValue(entity, resolver);
                 if (state == null) {
                     continue;
                 }
 
-                if (row == null) {
-                    row = dataSet.getTable(tableName).addRow();
-                }
+                row = row == null ? dataSet.getTable(tableName).addRow() : row;
 
                 switch (stateDesc.getPersistentStateType()) {
                 case BASIC:
-                    setupRowValue(row, stateDesc.getColumn(), stateDesc.getPersistenceTargetClass(), state);
+                    PersistentColumn column = stateDesc.getColumn();
+                    Class<?> type = stateDesc.getPersistenceTargetClass();
+                    setupRowValue(row, column, type, state);
                     break;
                 case EMBEDDED:
-                    for (PersistentStateDesc embeddedState : stateDesc
+                    for (PersistentStateDesc embState : stateDesc
                             .getEmbeddedStateDescs()) {
-                        Object embValue = embeddedState.getValue(state);
-                        setupRowValue(row, embeddedState.getColumn(),
-                                embeddedState.getPersistenceTargetClass(), embValue);
+                        PersistentColumn embcolumn = embState.getColumn();
+                        Class<?> embType = embState.getPersistenceTargetClass();
+                        Object value = embState.getValue(state, resolver);
+                        setupRowValue(row, embcolumn, embType, value);
                     }
                     break;
                 case TO_ONE:
                     setupForeignKeys(row, stateDesc, state);
                     relationships.put(state, stateDesc);
+                    break;
                 case TO_MANY:
                     relationships.put(state, stateDesc);
                     break;
                 }
-                
-                PersistentDiscriminatorColumn dc = classDesc.getDiscriminatorColumnByTableName(tableName);
-                if (dc!= null) {
-                    setupRowValue(row, dc, dc.getPersistenceTargetClass(), dc.getValue());
-                }
-
-                row.setState(RowStates.UNCHANGED);
             }
+
+            PersistentDiscriminatorColumn dc = classDesc
+                    .getDiscriminatorColumn(tableName);
+            if (row != null && dc != null) {
+                Class<?> type = dc.getPersistenceTargetClass();
+                setupRowValue(row, dc, type, dc.getValue());
+            }
+            row.setState(RowStates.UNCHANGED);
         }
 
         for (Object each : relationships.keySet()) {
             setupRelationshipRows(classDesc.getPersistentClass(), relationships
                     .get(each), each);
         }
-
-        stack.pop();
     }
 
     protected void setupForeignKeys(DataRow row, PersistentStateDesc stateDesc,
             Object relEntity) {
 
-        if (relEntity == null) {
-            return;
-        }
+        for (PersistentJoinColumn fk : stateDesc.getForeignKeyColumns()) {
+            Class<?> type = null;
+            Object value = null;
+            if (relEntity != null) {
+                PersistentClassDesc relationship = introspector
+                        .getPersistentClassDesc(relEntity);
+                PersistentStateDesc referenced = relationship
+                        .getPersistentStateDescByColumnName(fk
+                                .getReferencedColumnName());
 
-        outer: for (PersistentJoinColumn fk : stateDesc.getForeignKeyColumns()) {
-
-            PersistentClassDesc rel = introspector
-                    .getPersistentClassDesc(relEntity.getClass());
-
-            for (PersistentStateDesc refState : rel.getPersistentStateDescs()) {
-                if (refState.getPersistentStateType() == EMBEDDED) {
-                    for (PersistentStateDesc embedded : refState
-                            .getEmbeddedStateDescs()) {
-                        if (embedded.hasColumn(fk.getReferencedColumnName())) {
-                            setupRowValue(row, fk, embedded.getPersistenceTargetClass(), embedded
-                                    .getValue(relEntity));
-                            continue outer;
-                        }
-                    }
-                } else {
-                    if (refState.hasColumn(fk.getReferencedColumnName())) {
-                        setupRowValue(row, fk, refState.getPersistenceTargetClass(), refState
-                                .getValue(relEntity));
-                        continue outer;
-                    }
-                }
+                type = referenced.getPersistenceTargetClass();
+                value = referenced.getValue(relEntity, resolver);
             }
-
-            setupRowValue(row, fk, stateDesc.getPersistenceTargetClass(), null);
+            setupRowValue(row, fk, type, value);
         }
     }
 
@@ -229,32 +224,44 @@ public class EntityReader implements DataReader {
                 if (element == null) {
                     continue;
                 }
-                Object real = introspector.unproxy(element);
+                Object real = resolver.unproxy(element);
                 PersistentClassDesc relationship = introspector
-                        .getPersistentClassDesc(real.getClass());
-                if (isValidRelationship(relationship.getRoot())) {
-                    setupRows(relationship, real);
-                }
+                        .getPersistentClassDesc(real);
+                startSetupRows(relationship, real);
             }
         } else {
             PersistentClassDesc relationship = introspector
-                    .getPersistentClassDesc(value.getClass());
-            if (isValidRelationship(relationship.getRoot())) {
-                setupRows(relationship, value);
-            }
+                    .getPersistentClassDesc(value);
+            startSetupRows(relationship, value);
         }
     }
 
+    protected void putProcessedEntity(Object entity) {
+        processedEntities.put(entity, PRESENT);
+    }
+
     protected boolean isProcessed(Object entity) {
-        return processedEntities.put(entity, PRESENT) != null;
+        return processedEntities.containsKey(entity);
     }
 
-    protected boolean isValidRelationship(PersistentClassDesc relationship) {
-        return !stack.contains(relationship);
-    }
-
-    protected void release(Object entity) {
+    protected void releaseProcessedEntity(Object entity) {
         processedEntities.remove(entity);
+    }
+
+    protected void pushProcessingClassDesc(PersistentClassDesc classDesc) {
+        processingClassDescs.push(classDesc.getRoot());
+    }
+
+    protected boolean isProcessing(PersistentClassDesc classDesc) {
+        return processingClassDescs.contains(classDesc.getRoot());
+    }
+
+    protected void popProcessingClassDesc() {
+        processingClassDescs.pop();
+    }
+    
+    protected EntityIntrospector getEntityIntrospector() {
+        return introspector;
     }
 
     public DataSet read() {

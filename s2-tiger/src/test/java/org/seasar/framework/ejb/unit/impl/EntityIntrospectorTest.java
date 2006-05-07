@@ -44,7 +44,7 @@ public class EntityIntrospectorTest extends TestCase {
         department.employees.add(fulltimeEmployee);
         department.employees.add(parttimeEmployee);
 
-        EntityIntrospector i = new EntityIntrospector(department, null);
+        EntityIntrospector i = new EntityIntrospector(department, DefaultProxiedObjectResolver.INSTANCE);
 
         assertNotNull("1", i.getPersistentClassDesc(Department.class));
         assertNotNull("2", i.getPersistentClassDesc(Employee.class));

@@ -53,6 +53,13 @@ public class PersistentColumn {
         this.tableName = StringUtil.isEmpty(table) ? null : table;
     }
     
+    public boolean hasName(String name) {
+        if (name == null) {
+            return false;
+        }
+        return name.equalsIgnoreCase(getName());
+    }
+    
     @Override
     public String toString() {
         StringBuilder buf = new StringBuilder();

@@ -31,6 +31,7 @@ import org.seasar.extension.dataset.DataSet;
 import org.seasar.extension.dataset.DataTable;
 import org.seasar.extension.dataset.impl.DataSetImpl;
 import org.seasar.framework.aop.interceptors.MockInterceptor;
+import org.seasar.framework.unit.annotation.Rollback;
 
 /**
  * @author taedium
@@ -109,7 +110,7 @@ public class S2EJB3TestCaseTest extends S2EJB3TestCase {
         assertNotNull("1", getEntityManager());
     }
 
-    public void testIsTransactionActinveReturnTrue() throws Exception {
+    public void testIsTransactionActiveReturnTrue() throws Exception {
         include("ejb3tx.dicon");
         TransactionManager tm = null;
         tm = (TransactionManager) getComponent(TransactionManager.class);
@@ -124,8 +125,17 @@ public class S2EJB3TestCaseTest extends S2EJB3TestCase {
         }
     }
 
-    public void testIsTransactionActinveReturnFalse() throws Exception {
+    public void testIsTransactionActiveReturnFalse() throws Exception {
         assertEquals(false, isTransactionActive());
+    }
+
+    @Rollback
+    public void testNeedTransactionReturnTrue() throws Exception {
+        assertEquals(true, needTransaction());
+    }
+
+    public void testNeedTransactionReturnFalse() throws Exception {
+        assertEquals(false, needTransaction());
     }
 
     @Entity(name = "Employee")

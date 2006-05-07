@@ -52,13 +52,19 @@ public class EntityIntrospector {
 
     public EntityIntrospector(Object entity, ProxiedObjectResolver resolver) {
         this(resolver);
+        
         if (entity == null) {
             throw new EmptyRuntimeException("entity");
         }
+
         createClassDescs(entity);
         setupRelationships();
     }
-
+    
+    public PersistentClassDesc getPersistentClassDesc(Object entity) {
+        return getPersistentClassDesc(entity.getClass());
+    }
+    
     public PersistentClassDesc getPersistentClassDesc(Class<?> entityClass) {
         return classDescs.get(entityClass);
     }
@@ -68,7 +74,7 @@ public class EntityIntrospector {
     }
 
     protected void createClassDescs(Object entity) {
-        Object real = unproxy(entity);
+        Object real = resolver.unproxy(entity);
         createClassDescsByClass(real.getClass());
         createClassDescsByInstance(real);
     }
@@ -101,7 +107,7 @@ public class EntityIntrospector {
 
         for (PersistentStateDesc stateDesc : entityDesc
                 .getPersistentStateDescs()) {
-            Object state = unproxy(stateDesc.getValue(entity));
+            Object state = stateDesc.getValue(entity, resolver);
             if (state == null) {
                 continue;
             }
@@ -109,7 +115,7 @@ public class EntityIntrospector {
             PersistentStateType stateType = stateDesc.getPersistentStateType();
             if (stateType == TO_MANY) {
                 for (Object element : getElements(state)) {
-                    createClassDescsByInstance(unproxy(element));
+                    createClassDescsByInstance(resolver.unproxy(element));
                 }
             } else if (stateType == TO_ONE) {
                 createClassDescsByInstance(state);
@@ -138,13 +144,6 @@ public class EntityIntrospector {
         return entity == null || processed.put(entity, PRESENT) != null;
     }
 
-    public Object unproxy(Object value) {
-        if (resolver == null) {
-            return value;
-        }
-        return resolver.unproxy(value);
-    }
-
     public Collection getElements(Object toManyRelationship) {
         if (toManyRelationship instanceof Collection) {
             return (Collection) toManyRelationship;
@@ -154,4 +153,5 @@ public class EntityIntrospector {
             return Collections.EMPTY_LIST;
         }
     }
+
 }

@@ -15,13 +15,12 @@
  */
 package org.seasar.framework.ejb.unit;
 
+import java.lang.reflect.Method;
 import java.util.List;
 
 import javax.persistence.EntityManager;
-import javax.transaction.Status;
 import javax.transaction.TransactionManager;
 
-import org.junit.Before;
 import org.seasar.extension.dataset.DataSet;
 import org.seasar.extension.dataset.DataTable;
 import org.seasar.extension.unit.S2TestCase;
@@ -29,7 +28,10 @@ import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.factory.TigerAnnotationHandler;
 import org.seasar.framework.exception.EmptyRuntimeException;
+import org.seasar.framework.unit.annotation.Rollback;
+import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.ResourceUtil;
+import org.seasar.framework.util.TransactionManagerUtil;
 
 /**
  * @author taedium
@@ -44,7 +46,7 @@ public abstract class S2EJB3TestCase extends S2TestCase {
     private TigerAnnotationHandler handler = new TigerAnnotationHandler();
 
     private ProxiedObjectResolver resolver;
-    
+
     private EntityManager entityManager;
 
     public S2EJB3TestCase() {
@@ -56,10 +58,10 @@ public abstract class S2EJB3TestCase extends S2TestCase {
 
     @Override
     public void setUp() throws Exception {
+        super.setUp();
         includeDicons();
     }
 
-    @Before
     public final void includeDicons() {
         if (ResourceUtil.isExist(EJB3TX_DICON)) {
             include(EJB3TX_DICON);
@@ -68,7 +70,7 @@ public abstract class S2EJB3TestCase extends S2TestCase {
             include(S2HIBERNATE_JPA_DICON);
         }
     }
-    
+
     @Override
     public void register(Class componentClass) {
         ComponentDef cd = handler.createComponentDef(componentClass, null);
@@ -91,6 +93,12 @@ public abstract class S2EJB3TestCase extends S2TestCase {
         return super.reload(table);
     }
 
+    @Override
+    protected boolean needTransaction() {
+        Method method = ClassUtil.getMethod(getClass(), getName(), null);
+        return super.needTransaction() || method.isAnnotationPresent(Rollback.class);
+    }
+    
     protected void flush() {
         if (entityManager != null && isTransactionActive()) {
             entityManager.flush();
@@ -98,13 +106,8 @@ public abstract class S2EJB3TestCase extends S2TestCase {
     }
 
     protected boolean isTransactionActive() {
-        try {
-            TransactionManager tm = (TransactionManager) getComponent(TransactionManager.class);
-            return tm != null && tm.getStatus() != Status.STATUS_NO_TRANSACTION;
-        } catch (Throwable t) {
-            System.err.println(t);
-        }
-        return false;
+        TransactionManager tm = (TransactionManager) getComponent(TransactionManager.class);
+        return tm != null && TransactionManagerUtil.isActive(tm);
     }
 
     @Override
@@ -145,14 +148,24 @@ public abstract class S2EJB3TestCase extends S2TestCase {
     protected void assertEntityEquals(String message, DataSet expected,
             Object entity) {
 
-        EntityReader reader = new EntityReader(entity, resolver);
+        EntityReader reader;
+        if (resolver == null) {
+            reader = new EntityReader(entity);
+        } else {
+            reader = new EntityReader(entity, resolver);
+        }
         assertEntityEquals(message, expected, reader.read());
     }
 
     protected void assertEntityListEquals(String message, DataSet expected,
             List<?> list) {
-
-        EntityListReader reader = new EntityListReader(list, resolver);
+        
+        EntityListReader reader;
+        if (resolver == null) {
+            reader = new EntityListReader(list);
+        } else {
+            reader = new EntityListReader(list, resolver);
+        }
         assertEntityEquals(message, expected, reader.read());
     }
 

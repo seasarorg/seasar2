@@ -63,7 +63,7 @@ public class EmbeddableClassDesc extends AbstractPersistentClassDesc implements
         return false;
     }
 
-    public PersistentDiscriminatorColumn getDiscriminatorColumnByTableName(
+    public PersistentDiscriminatorColumn getDiscriminatorColumn(
             String tableName) {
         return null;
     }
