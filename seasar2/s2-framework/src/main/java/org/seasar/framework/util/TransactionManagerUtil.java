@@ -15,6 +15,7 @@
  */
 package org.seasar.framework.util;
 
+import javax.transaction.Status;
 import javax.transaction.SystemException;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
@@ -37,4 +38,12 @@ public final class TransactionManagerUtil {
 			throw new SystemRuntimeException(e);
 		}
 	}
+    
+    public static boolean isActive(TransactionManager tm) {
+        try {
+            return tm.getStatus() != Status.STATUS_NO_TRANSACTION;
+        } catch (SystemException e) {
+            throw new SystemRuntimeException(e);
+        }
+    }
 }
