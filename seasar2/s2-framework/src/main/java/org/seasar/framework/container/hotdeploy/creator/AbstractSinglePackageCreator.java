@@ -15,7 +15,9 @@
  */
 package org.seasar.framework.container.hotdeploy.creator;
 
+import org.seasar.framework.container.cooldeploy.ConventionNaming;
 import org.seasar.framework.container.hotdeploy.OndemandCreator;
+import org.seasar.framework.container.hotdeploy.OndemandCreatorContainer;
 import org.seasar.framework.util.StringUtil;
 
 public abstract class AbstractSinglePackageCreator
@@ -55,4 +57,23 @@ public abstract class AbstractSinglePackageCreator
         }
         return true;
     }
+
+    protected String composeComponentName(String className) {
+        OndemandCreatorContainer con = getOndemandCreatorContainer();
+        ConventionNaming naming = con.getConventionNaming();
+        return naming.defineName(getRootPackageName(), middlePackageName,
+                getNameSuffix(), className);
+    }
+
+    protected Class getTargetClass(Class clazz) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    protected Class getTargetClass(String componentName) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    
+    
 }

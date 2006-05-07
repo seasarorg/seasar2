@@ -23,6 +23,8 @@ import java.util.Map;
 import org.seasar.framework.beans.factory.BeanDescFactory;
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.S2Container;
+import org.seasar.framework.container.cooldeploy.ConventionNaming;
+import org.seasar.framework.container.cooldeploy.DefaultConventionNaming;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 import org.seasar.framework.container.impl.S2ContainerImpl;
 import org.seasar.framework.container.impl.S2ContainerBehavior.DefaultProvider;
@@ -41,6 +43,8 @@ public class OndemandBehavior extends DefaultProvider implements
     private String rootPackageName;
 
     private Map componentDefCache = new HashMap();
+    
+    private ConventionNaming conventionNaming = new DefaultConventionNaming();
 
     public OndemandCreator getCreator(int index) {
         return (OndemandCreator) creators.get(index);
@@ -61,6 +65,14 @@ public class OndemandBehavior extends DefaultProvider implements
 
     public void setRootPackageName(String rootPackageName) {
         this.rootPackageName = rootPackageName;
+    }
+
+    public ConventionNaming getConventionNaming() {
+        return conventionNaming;
+    }
+
+    public void setConventionNaming(ConventionNaming conventionNaming) {
+        this.conventionNaming = conventionNaming;
     }
 
     public void start() {

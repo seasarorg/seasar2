@@ -105,6 +105,9 @@ public abstract class AbstractOndemandCreator implements OndemandCreator {
         AnnotationHandler handler = AnnotationHandlerFactory.getAnnotationHandler();
         cd = handler.createComponentDef(targetClass, instanceDef, autoBindingDef);
         customize(cd);
+        if (cd.getComponentName() == null) {
+            cd.setComponentName(composeComponentName(clazz.getName()));
+        }
         ondemandCreatorContainer.register(cd);
         cd.init();
         return true;
@@ -122,6 +125,8 @@ public abstract class AbstractOndemandCreator implements OndemandCreator {
     }
     
     protected abstract boolean isTargetMiddlePackage(String className);
+    
+    protected abstract String composeComponentName(String className);
     
     public ComponentDef getComponentDef(S2Container container, Class clazz) {
         if (!isTarget(clazz)) {

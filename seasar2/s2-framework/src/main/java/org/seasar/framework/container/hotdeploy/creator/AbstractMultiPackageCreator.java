@@ -18,6 +18,8 @@ package org.seasar.framework.container.hotdeploy.creator;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.seasar.framework.container.cooldeploy.ConventionNaming;
+import org.seasar.framework.container.hotdeploy.OndemandCreatorContainer;
 import org.seasar.framework.util.StringUtil;
 
 public abstract class AbstractMultiPackageCreator extends AbstractOndemandCreator {
@@ -66,5 +68,12 @@ public abstract class AbstractMultiPackageCreator extends AbstractOndemandCreato
             }
         }
         return false;
+    }
+    
+    protected String composeComponentName(String className) {
+        OndemandCreatorContainer con = getOndemandCreatorContainer();
+        ConventionNaming naming = con.getConventionNaming();
+        return naming.defineName(getRootPackageName(), getMiddlePackageNames(),
+                getNameSuffix(), className);
     }
 }
