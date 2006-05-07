@@ -15,6 +15,7 @@
  */
 package org.seasar.framework.container.hotdeploy.creator;
 
+import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.hotdeploy.OndemandBehavior;
 import org.seasar.framework.container.hotdeploy.creator.DaoCreator;
 import org.seasar.framework.container.impl.S2ContainerBehavior;
@@ -47,8 +48,11 @@ public class DaoCreatorTest extends S2FrameworkTestCase {
     }
     
     public void testIsTargetByComponentName() throws Exception {
-        assertTrue("1", getContainer().hasComponentDef("fooDao"));
-        assertTrue("2", getContainer().hasComponentDef("barDao"));
+        String name = "fooDao";
+        ComponentDef cd = getComponentDef(name);
+        assertNotNull("1", cd);
+        assertEquals("2", name, cd.getComponentName());
+        assertTrue("3", getContainer().hasComponentDef("barDao"));
     }
     
     public void testIsTargetByClass() throws Exception {

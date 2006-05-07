@@ -17,6 +17,7 @@ package org.seasar.framework.container.hotdeploy.creator;
 
 import java.lang.reflect.Method;
 
+import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.autoregister.AspectCustomizer;
 import org.seasar.framework.container.hotdeploy.OndemandBehavior;
 import org.seasar.framework.container.hotdeploy.creator.interceptor.HelloInterceptor;
@@ -54,7 +55,10 @@ public class LogicCreatorTest extends S2FrameworkTestCase {
     }
 
     public void testIsTargetByName() throws Exception {
-        assertNotNull("1", getComponent("cccLogic"));
+        String name = "cccLogic";
+        ComponentDef cd = getComponentDef(name);
+        assertNotNull("1", cd);
+        assertEquals("2", name, cd.getComponentName());
     }
     
     public void testIsTargetByClass() throws Exception {

@@ -15,6 +15,7 @@
  */
 package org.seasar.framework.container.hotdeploy.creator;
 
+import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.hotdeploy.OndemandBehavior;
 import org.seasar.framework.container.hotdeploy.creator.ActionCreator;
 import org.seasar.framework.container.impl.S2ContainerBehavior;
@@ -47,6 +48,9 @@ public class ActionCreatorTest extends S2FrameworkTestCase {
     }
 
     public void testAll() throws Exception {
-        assertNotNull("1", getComponent("aaa_hogeAction"));
+        String name = "aaa_hogeAction";
+        ComponentDef cd = getComponentDef(name);
+        assertNotNull("1", cd);
+        assertEquals("2", name, cd.getComponentName());
     }
 }

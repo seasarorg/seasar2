@@ -15,6 +15,7 @@
  */
 package org.seasar.framework.container.hotdeploy.creator;
 
+import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.hotdeploy.OndemandBehavior;
 import org.seasar.framework.container.impl.S2ContainerBehavior;
 import org.seasar.framework.unit.S2FrameworkTestCase;
@@ -46,6 +47,9 @@ public class DtoCreatorTest extends S2FrameworkTestCase {
     }
 
     public void testAll() throws Exception {
-        assertNotNull("1", getComponent("bbbDto"));
+        String name = "bbbDto";
+        ComponentDef cd = getComponentDef(name);
+        assertNotNull("1", cd);
+        assertEquals("2", name, cd.getComponentName());
     }
 }

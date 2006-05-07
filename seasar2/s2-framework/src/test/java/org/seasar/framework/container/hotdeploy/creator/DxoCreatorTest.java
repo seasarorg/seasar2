@@ -15,6 +15,7 @@
  */
 package org.seasar.framework.container.hotdeploy.creator;
 
+import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.autoregister.AspectCustomizer;
 import org.seasar.framework.container.hotdeploy.OndemandBehavior;
 import org.seasar.framework.container.hotdeploy.creator.interceptor.HelloInterceptor;
@@ -52,8 +53,11 @@ public class DxoCreatorTest extends S2FrameworkTestCase {
     }
 
     public void testIsTargetByComponentName() throws Exception {
-        assertTrue("1", getContainer().hasComponentDef("aaa_hogeDxo"));
-        assertTrue("2", getContainer().hasComponentDef("bbbDtoDxo"));
+        String name = "aaa_hogeDxo";
+        ComponentDef cd = getComponentDef(name);
+        assertNotNull("1", cd);
+        assertEquals("2", name, cd.getComponentName());
+        assertTrue("3", getContainer().hasComponentDef("bbbDtoDxo"));
     }
     
     public void testIsTargetByClass() throws Exception {
