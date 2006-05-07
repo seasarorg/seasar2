@@ -148,28 +148,30 @@ public abstract class S2EJB3TestCase extends S2TestCase {
     protected void assertEntityEquals(String message, DataSet expected,
             Object entity) {
 
+        assertNotNull("entity is null.", entity);
         EntityReader reader;
         if (resolver == null) {
             reader = new EntityReader(entity);
         } else {
             reader = new EntityReader(entity, resolver);
         }
-        assertEntityEquals(message, expected, reader.read());
+        assertEqualsIgnoreOrder(message, expected, reader.read());
     }
 
     protected void assertEntityListEquals(String message, DataSet expected,
             List<?> list) {
         
+        assertNotNull("entity list is null.", list);
         EntityListReader reader;
         if (resolver == null) {
             reader = new EntityListReader(list);
         } else {
             reader = new EntityListReader(list, resolver);
         }
-        assertEntityEquals(message, expected, reader.read());
+        assertEqualsIgnoreOrder(message, expected, reader.read());
     }
 
-    protected void assertEntityEquals(String message, DataSet expected,
+    protected void assertEqualsIgnoreOrder(String message, DataSet expected,
             DataSet actual) {
 
         message = message == null ? "" : message;
