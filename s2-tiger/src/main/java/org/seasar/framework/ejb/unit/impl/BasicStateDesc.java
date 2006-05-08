@@ -47,11 +47,15 @@ public class BasicStateDesc extends AbstractPersistentStateDesc {
 
     protected void introspect() {
         if (annotatedElement.isAnnotationPresent(Id.class)
-                || persistentClassDesc.isIdentifier()) {
+                || isElementOfEmbeddedId()) {
             setIdentifier(true);
         }
         setupPersistentColumn();
         setupPersistenceTargetClass();
+    }
+
+    private boolean isElementOfEmbeddedId() {
+        return persistentClassDesc.isIdentifier();
     }
 
     private void setupPersistentColumn() {
@@ -99,6 +103,17 @@ public class BasicStateDesc extends AbstractPersistentStateDesc {
     }
 
     @Override
+    public void adjustPrimaryKeyColumns(List<PersistentJoinColumn> pkJoinColumns) {
+
+        if (!pkJoinColumns.isEmpty()) {
+            if (hasReferencedColumnName(pkJoinColumns)) {
+                adjustPkColumnsByReferencedColumnName(pkJoinColumns);
+            } else {
+                adjustPkColumnsByIndex(pkJoinColumns);
+            }
+        }
+    }
+
     protected void adjustPkColumnsByReferencedColumnName(
             List<PersistentJoinColumn> pkJoinColumns) {
 
@@ -111,7 +126,6 @@ public class BasicStateDesc extends AbstractPersistentStateDesc {
         }
     }
 
-    @Override
     protected void adjustPkColumnsByIndex(
             List<PersistentJoinColumn> pkJoinColumns) {
 
@@ -119,7 +133,7 @@ public class BasicStateDesc extends AbstractPersistentStateDesc {
         List<PersistentStateDesc> ids = getPersistentClassDesc()
                 .getIdentifiers();
         for (int i = 0; i < ids.size(); i++) {
-            PersistentColumn pkColumn = ids.get(0).getColumn();
+            PersistentColumn pkColumn = ids.get(i).getColumn();
             if (pkColumn.hasName(getColumn().getName())) {
                 index = i;
                 break;

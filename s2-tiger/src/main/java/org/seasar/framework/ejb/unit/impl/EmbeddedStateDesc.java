@@ -97,35 +97,11 @@ public class EmbeddedStateDesc extends AbstractPersistentStateDesc {
     }
 
     @Override
-    protected void adjustPkColumnsByReferencedColumnName(
+    public void adjustPrimaryKeyColumns(
             List<PersistentJoinColumn> pkJoinColumns) {
-        List<PersistentStateDesc> ids = getEmbeddedStateDescs();
-
-        for (PersistentStateDesc each : ids) {
-            for (PersistentJoinColumn pk : pkJoinColumns) {
-                if (each.hasColumn(pk.getReferencedColumnName())) {
-                    if (pk.getName() != null) {
-                        each.getColumn().setName(pk.getName());
-                    }
-                }
-            }
-        }
-    }
-
-    @Override
-    protected void adjustPkColumnsByIndex(
-            List<PersistentJoinColumn> pkJoinColumns) {
-        List<PersistentStateDesc> ids = getEmbeddedStateDescs();
-
-        for (PersistentStateDesc each : ids) {
-            int index = getEmbeddedClassDesc().getIdentifiers().indexOf(each);
-            if (index < 0) {
-                return;
-            }
-            PersistentJoinColumn pk = pkJoinColumns.get(index);
-            if (pk.getName() != null) {
-                each.getColumn().setName(pk.getName());
-            }
+        
+        for (PersistentStateDesc each : getEmbeddedStateDescs()) {
+            each.adjustPrimaryKeyColumns(pkJoinColumns);
         }
     }
 

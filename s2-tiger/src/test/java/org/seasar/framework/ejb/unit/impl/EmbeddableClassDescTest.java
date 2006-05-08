@@ -17,6 +17,8 @@ package org.seasar.framework.ejb.unit.impl;
 
 import java.util.HashMap;
 
+import javax.persistence.Embeddable;
+
 import junit.framework.TestCase;
 
 import org.seasar.framework.ejb.unit.PersistentColumn;
@@ -42,6 +44,7 @@ public class EmbeddableClassDescTest extends TestCase {
         assertEquals("2", "foo", column.getName().toLowerCase());
     }
 
+    @Embeddable
     public static class EmployeePeriod {
         private java.util.Date startDate;
 

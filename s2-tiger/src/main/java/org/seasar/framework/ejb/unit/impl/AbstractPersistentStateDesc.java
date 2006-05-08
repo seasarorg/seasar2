@@ -151,14 +151,6 @@ public abstract class AbstractPersistentStateDesc implements
     }
 
     public void adjustPrimaryKeyColumns(List<PersistentJoinColumn> pkJoinColumns) {
-
-        if (!pkJoinColumns.isEmpty()) {
-            if (hasReferencedColumnName(pkJoinColumns)) {
-                adjustPkColumnsByReferencedColumnName(pkJoinColumns);
-            } else {
-                adjustPkColumnsByIndex(pkJoinColumns);
-            }
-        }
     }
 
     protected boolean hasReferencedColumnName(List<PersistentJoinColumn> columns) {
@@ -169,12 +161,6 @@ public abstract class AbstractPersistentStateDesc implements
         }
         return true;
     }
-
-    protected abstract void adjustPkColumnsByReferencedColumnName(
-            List<PersistentJoinColumn> pkJoinColumns);
-
-    protected abstract void adjustPkColumnsByIndex(
-            List<PersistentJoinColumn> pkJoinColumns);
 
     public final String toString() {
         StringBuilder buf = new StringBuilder();

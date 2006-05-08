@@ -18,6 +18,9 @@ package org.seasar.framework.ejb.unit.impl;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.MappedSuperclass;
+
+import org.seasar.framework.ejb.unit.AnnotationNotFoundException;
 import org.seasar.framework.ejb.unit.PersistentClassDesc;
 import org.seasar.framework.ejb.unit.PersistentColumn;
 import org.seasar.framework.ejb.unit.PersistentDiscriminatorColumn;
@@ -30,10 +33,14 @@ import org.seasar.framework.ejb.unit.PersistentStateDesc;
  */
 public class MappedSuperclassDesc extends AbstractPersistentClassDesc {
 
-    public MappedSuperclassDesc(Class persistentClass, String primaryTableName,
-            boolean propertyAccessed) {
+    public MappedSuperclassDesc(Class<?> persistentClass,
+            String primaryTableName, boolean propertyAccessed) {
 
         super(persistentClass, primaryTableName, propertyAccessed);
+        if (!persistentClass.isAnnotationPresent(MappedSuperclass.class)) {
+            throw new AnnotationNotFoundException(persistentClass,
+                    MappedSuperclass.class);
+        }
         setupPersistentStateDescs();
     }
 
@@ -78,8 +85,7 @@ public class MappedSuperclassDesc extends AbstractPersistentClassDesc {
         return false;
     }
 
-    public PersistentDiscriminatorColumn getDiscriminatorColumn(
-            String tableName) {
+    public PersistentDiscriminatorColumn getDiscriminatorColumn(String tableName) {
         return null;
     }
 

@@ -17,14 +17,12 @@ package org.seasar.framework.ejb.unit.impl;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.List;
 
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
 import org.seasar.framework.ejb.unit.PersistentClassDesc;
 import org.seasar.framework.ejb.unit.PersistentColumn;
-import org.seasar.framework.ejb.unit.PersistentJoinColumn;
 import org.seasar.framework.ejb.unit.PersistentStateAccessor;
 import org.seasar.framework.ejb.unit.PersistentStateType;
 
@@ -79,13 +77,4 @@ public class ToManyRelationshipStateDesc extends AbstractPersistentStateDesc {
         return PersistentStateType.TO_MANY;
     }
     
-    @Override
-    protected void adjustPkColumnsByReferencedColumnName(
-            List<PersistentJoinColumn> pkJoinColumns) {
-    }
-
-    @Override
-    protected void adjustPkColumnsByIndex(
-            List<PersistentJoinColumn> pkJoinColumns) {
-    }
 }

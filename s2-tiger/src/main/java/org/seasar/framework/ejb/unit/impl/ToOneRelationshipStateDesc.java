@@ -215,7 +215,7 @@ public class ToOneRelationshipStateDesc extends AbstractPersistentStateDesc {
         }
 
         if (!pkJoinColumns.isEmpty() && oneToOne) {
-            adjustPrimaryKeyColumns(pkJoinColumns);
+            return;
 
         } else if (!joinColumns.isEmpty()) {
             if (hasReferencedColumnName(joinColumns)) {
@@ -231,24 +231,6 @@ public class ToOneRelationshipStateDesc extends AbstractPersistentStateDesc {
 
         } else {
             createDefaultFkColumns(refIdColumns);
-        }
-    }
-
-    @Override
-    protected void adjustPkColumnsByReferencedColumnName(
-            List<PersistentJoinColumn> pkJoinColumns) {
-
-        for (PersistentStateDesc id : getPersistentClassDesc().getIdentifiers()) {
-            id.adjustPrimaryKeyColumns(pkJoinColumns);
-        }
-    }
-
-    @Override
-    protected void adjustPkColumnsByIndex(
-            List<PersistentJoinColumn> pkJoinColumns) {
-
-        for (PersistentStateDesc id : getPersistentClassDesc().getIdentifiers()) {
-            id.adjustPrimaryKeyColumns(pkJoinColumns);
         }
     }
 
