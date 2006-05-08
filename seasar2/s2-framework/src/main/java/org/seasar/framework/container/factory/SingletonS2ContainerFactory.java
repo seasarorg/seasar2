@@ -58,6 +58,9 @@ public final class SingletonS2ContainerFactory {
     }
 
     public static void init() {
+        if (container != null) {
+            return;
+        }
         container = S2ContainerFactory.create(configPath);
         if (container.getExternalContext() == null) {
             if (externalContext != null) {
@@ -73,6 +76,9 @@ public final class SingletonS2ContainerFactory {
     }
 
     public static void destroy() {
+        if (container == null) {
+            return;
+        }
         container.destroy();
         container = null;
     }

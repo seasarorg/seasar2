@@ -44,6 +44,8 @@ public class OndemandBehavior extends DefaultProvider implements
 
     private Map componentDefCache = new HashMap();
     
+    public static final String conventionNaming_BINDING = "bindingType=may";
+    
     private ConventionNaming conventionNaming = new DefaultConventionNaming();
 
     public OndemandCreator getCreator(int index) {

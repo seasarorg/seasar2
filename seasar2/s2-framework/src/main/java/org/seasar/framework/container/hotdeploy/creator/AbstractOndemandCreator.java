@@ -30,11 +30,11 @@ import org.seasar.framework.container.hotdeploy.OndemandCreatorContainer;
 
 public abstract class AbstractOndemandCreator implements OndemandCreator {
 
-    public final String instanceDef_BINDING = "bindingType=may";
+    public static final String instanceDef_BINDING = "bindingType=may";
     
     private InstanceDef instanceDef;
     
-    public final String autoBindingDef_BINDING = "bindingType=may";
+    public static final String autoBindingDef_BINDING = "bindingType=may";
     
     private AutoBindingDef autoBindingDef;
     

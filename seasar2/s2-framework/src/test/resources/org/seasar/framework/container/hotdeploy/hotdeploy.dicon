@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<!DOCTYPE components PUBLIC "-//SEASAR2.1//DTD S2Container//EN"
+	"http://www.seasar.org/dtd/components21.dtd">
+<components>
+	<component class="org.seasar.framework.container.hotdeploy.OndemandBehavior">
+		<property name="rootPackageName">"org.seasar.framework.container.hotdeploy"</property>
+		<initMethod name="addCreator">
+			<arg>
+				<component class="org.seasar.framework.container.hotdeploy.creator.ActionCreator"/>
+			</arg>
+		</initMethod>
+		<initMethod name="addCreator">
+			<arg>
+				<component class="org.seasar.framework.container.hotdeploy.creator.DtoCreator"/>
+			</arg>
+		</initMethod>
+	</component>
+</components>
