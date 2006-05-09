@@ -1,5 +1,5 @@
 <project name="seasar2" default="dist" basedir=".">
-	<property name="ver" value="2.4.0-beta-1"/>
+	<property name="ver" value="2.4.0-beta-2"/>
 
 	<target name="dist">
 		<mkdir dir="target"/>
