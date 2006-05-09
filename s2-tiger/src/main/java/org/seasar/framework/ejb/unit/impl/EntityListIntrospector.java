@@ -26,8 +26,8 @@ import org.seasar.framework.exception.EmptyRuntimeException;
  */
 public class EntityListIntrospector extends EntityIntrospector {
 
-    public EntityListIntrospector(List<?> entities, ProxiedObjectResolver resolver) {
-        super(resolver);
+    public EntityListIntrospector(List<?> entities, boolean introspectsRelationships, ProxiedObjectResolver resolver) {
+        super(introspectsRelationships, resolver);
         
         if (entities == null) {
             throw new EmptyRuntimeException("entities");

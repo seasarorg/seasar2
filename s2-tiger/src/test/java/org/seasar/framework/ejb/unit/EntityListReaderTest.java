@@ -52,7 +52,7 @@ public class EntityListReaderTest extends TestCase {
         employees.add(king);
         employees.add(smith);
 
-        EntityListReader reader = new EntityListReader(employees);
+        EntityListReader reader = new EntityListReader(employees, true);
         DataSet dataSet = reader.read();
 
         assertEquals("1", 2, dataSet.getTableSize());
@@ -70,7 +70,7 @@ public class EntityListReaderTest extends TestCase {
         departments.add(accounting);
         departments.add(accounting);
 
-        EntityListReader reader = new EntityListReader(departments);
+        EntityListReader reader = new EntityListReader(departments, true);
         DataSet dataSet = reader.read();
 
         DataTable dataTable = dataSet.getTable("DEPARTMENT");
@@ -91,7 +91,7 @@ public class EntityListReaderTest extends TestCase {
         employees.add(smith);
         employees.add(ford);
 
-        EntityListReader reader = new EntityListReader(employees);
+        EntityListReader reader = new EntityListReader(employees, true);
         DataSet dataSet = reader.read();
 
         DataTable dataTable = dataSet.getTable("Employee2");

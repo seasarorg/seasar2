@@ -27,16 +27,24 @@ import org.seasar.framework.ejb.unit.impl.EntityListIntrospector;
  */
 public class EntityListReader extends EntityReader {
 
-    public EntityListReader(List<?> entities) {
-        this(entities, DefaultProxiedObjectResolver.INSTANCE);
+    public EntityListReader(List<?> entities, boolean readsRelationships) {
+        this(entities, readsRelationships, DefaultProxiedObjectResolver.INSTANCE);
     }
     
-    public EntityListReader(List<?> entities, ProxiedObjectResolver resolver) {
-        super(new EntityListIntrospector(entities, resolver), resolver); 
+    public EntityListReader(List<?> entities, boolean readsRelationships, ProxiedObjectResolver resolver) {
+        super(new EntityListIntrospector(entities, readsRelationships, resolver), readsRelationships, resolver); 
 
-        for (PersistentClassDesc classDesc : getEntityIntrospector().getAllPersistentClassDescs()) {
-            setupColumns(classDesc);
+        if (readsRelationships) {
+            for (PersistentClassDesc classDesc : getEntityIntrospector().getAllPersistentClassDescs()) {
+                setupColumns(classDesc);
+            }
+        } else {
+            for (Object entity : entities) {
+                PersistentClassDesc classDesc = getEntityIntrospector().getPersistentClassDesc(entity);
+                setupColumns(classDesc);
+            }
         }
+        
         for (Object entity : entities) {
             if (entity == null) {
                 continue;

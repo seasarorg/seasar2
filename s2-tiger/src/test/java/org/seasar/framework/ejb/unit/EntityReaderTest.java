@@ -52,7 +52,7 @@ public class EntityReaderTest extends TestCase {
         accounting.employees.add(king);
         accounting.employees.add(clark);
 
-        EntityReader reader = new EntityReader(accounting);
+        EntityReader reader = new EntityReader(accounting, true);
         DataSet dataSet = reader.read();
         assertEquals("1", 2, dataSet.getTableSize());
         DataTable deptTable = dataSet.getTable("DEPARTMENT");
@@ -85,7 +85,7 @@ public class EntityReaderTest extends TestCase {
         accounting.employees.put(king.id, king);
         accounting.employees.put(clark.id, clark);
 
-        EntityReader reader = new EntityReader(accounting);
+        EntityReader reader = new EntityReader(accounting, true);
         DataSet dataSet = reader.read();
         assertEquals("1", 2, dataSet.getTableSize());
         
@@ -119,7 +119,7 @@ public class EntityReaderTest extends TestCase {
         accounting.employees.add(king);
         accounting.employees.add(clark);
 
-        EntityReader reader = new EntityReader(clark);
+        EntityReader reader = new EntityReader(clark, true);
         DataSet dataSet = reader.read();
         assertEquals("1", 2, dataSet.getTableSize());
         DataTable empTable = dataSet.getTable("EMPLOYEE");
@@ -142,7 +142,7 @@ public class EntityReaderTest extends TestCase {
         Employee3 clark = new Employee3(new Long(1), 7782, "CLARK", null);
         Employee3 king = new Employee3(new Long(2), 7839, "KING", clark);
 
-        EntityReader reader = new EntityReader(king);
+        EntityReader reader = new EntityReader(king, true);
         DataSet dataSet = reader.read();
         assertEquals("1", 1, dataSet.getTableSize());
         DataTable empTable = dataSet.getTable("EMPLOYEE3");
@@ -158,7 +158,7 @@ public class EntityReaderTest extends TestCase {
         EmployeePeriod period = new EmployeePeriod("2000", "2010");
         Employee2 clark = new Employee2(new Long(1), 7782, "CLARK", period);
 
-        EntityReader reader = new EntityReader(clark);
+        EntityReader reader = new EntityReader(clark, true);
         DataSet dataSet = reader.read();
         assertEquals("1", 1, dataSet.getTableSize());
 
@@ -188,7 +188,7 @@ public class EntityReaderTest extends TestCase {
         e1.projects.add(p2);
         e2.projects.add(p2);
 
-        EntityReader reader = new EntityReader(p1);
+        EntityReader reader = new EntityReader(p1, true);
         DataSet dataSet = reader.read();
         assertEquals("1", 2, dataSet.getTableSize());
         DataTable projectTable = dataSet.getTable("Project");

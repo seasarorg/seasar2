@@ -46,13 +46,18 @@ public class EntityIntrospector {
 
     private final ProxiedObjectResolver resolver;
 
-    protected EntityIntrospector(ProxiedObjectResolver resolver) {
+    private final boolean introspectsRelationships;
+
+    protected EntityIntrospector(boolean introspectsRelationships,
+            ProxiedObjectResolver resolver) {
+        this.introspectsRelationships = introspectsRelationships;
         this.resolver = resolver;
     }
 
-    public EntityIntrospector(Object entity, ProxiedObjectResolver resolver) {
-        this(resolver);
-        
+    public EntityIntrospector(Object entity, boolean introspectsRelationships,
+            ProxiedObjectResolver resolver) {
+        this(introspectsRelationships, resolver);
+
         if (entity == null) {
             throw new EmptyRuntimeException("entity");
         }
@@ -60,11 +65,11 @@ public class EntityIntrospector {
         createClassDescs(entity);
         setupRelationships();
     }
-    
+
     public PersistentClassDesc getPersistentClassDesc(Object entity) {
         return getPersistentClassDesc(entity.getClass());
     }
-    
+
     public PersistentClassDesc getPersistentClassDesc(Class<?> entityClass) {
         return classDescs.get(entityClass);
     }
@@ -76,7 +81,9 @@ public class EntityIntrospector {
     protected void createClassDescs(Object entity) {
         Object real = resolver.unproxy(entity);
         createClassDescsByClass(real.getClass());
-        createClassDescsByInstance(real);
+        if (introspectsRelationships) {
+            createClassDescsByInstance(real);
+        }
     }
 
     protected void createClassDescsByClass(Class entityClass) {

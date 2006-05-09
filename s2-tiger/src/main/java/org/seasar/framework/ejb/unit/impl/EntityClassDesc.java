@@ -99,12 +99,12 @@ public class EntityClassDesc extends AbstractPersistentClassDesc implements
         detectTable();
         detectSecondaryTables();
         detectSuperclasses();
-        setupPropertyAccessed();
         detectJoinColumns();
         detectPrimaryKeyJoinColumns();
         detectInheritanceStrategy();
+        
+        setupPropertyAccessed();
         setupPersistentStateDescs();
-        setupSecondaryTableIdStateDescs();
     }
 
     private void detectTable() {
@@ -156,7 +156,7 @@ public class EntityClassDesc extends AbstractPersistentClassDesc implements
                     Method m = propertyDesc.getReadMethod();
                     if (m.isAnnotationPresent(Id.class)
                             || m.isAnnotationPresent(EmbeddedId.class)) {
-                        propertyAccessed = true;
+                        setPropertyAccessed(true);
                         return;
                     }
                 }
@@ -333,12 +333,13 @@ public class EntityClassDesc extends AbstractPersistentClassDesc implements
 
     @Override
     protected void setupPersistentStateDescs() {
-        setupSuperclassStateDescs();
-        setupMappedSuperclassStateDescs();
+        addParentStateDescsAndTableNames();
+        addMappedSuperclassStateDescs();
         super.setupPersistentStateDescs();
+        addSecondaryTableIdStateDescs();
     }
 
-    private void setupSecondaryTableIdStateDescs() {
+    private void addSecondaryTableIdStateDescs() {
         if (secondaryTablePkJoinColumns.isEmpty()) {
             return;
         }
@@ -359,9 +360,13 @@ public class EntityClassDesc extends AbstractPersistentClassDesc implements
         return rootEntityDesc;
     }
 
-    private void setupSuperclassStateDescs() {
+    private void addParentStateDescsAndTableNames() {
         if (parentEntityDesc == null) {
             return;
+        }
+        
+        for(String tableName : parentEntityDesc.getTableNames()) {
+            addTableName(tableName);
         }
 
         for (PersistentStateDesc stateDesc : parentEntityDesc
@@ -395,7 +400,7 @@ public class EntityClassDesc extends AbstractPersistentClassDesc implements
         return subclassId;
     }
     
-    private void setupMappedSuperclassStateDescs() {
+    private void addMappedSuperclassStateDescs() {
         for (PersistentClassDesc mappedDesc : mappedSuperclassDescs) {
             for (PersistentStateDesc stateDesc : mappedDesc
                     .getPersistentStateDescs()) {

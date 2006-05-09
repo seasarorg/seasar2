@@ -44,7 +44,7 @@ public class EntityIntrospectorTest extends TestCase {
         department.employees.add(fulltimeEmployee);
         department.employees.add(parttimeEmployee);
 
-        EntityIntrospector i = new EntityIntrospector(department, DefaultProxiedObjectResolver.INSTANCE);
+        EntityIntrospector i = new EntityIntrospector(department, true, DefaultProxiedObjectResolver.INSTANCE);
 
         assertNotNull("1", i.getPersistentClassDesc(Department.class));
         assertNotNull("2", i.getPersistentClassDesc(Employee.class));
@@ -58,7 +58,7 @@ public class EntityIntrospectorTest extends TestCase {
         employee.address = new AddressProxy(new Address());
         ProxiedObjectResolver resolver = new ProxiedObjectResolverTest();
         
-        EntityIntrospector i = new EntityIntrospector(employee, resolver);
+        EntityIntrospector i = new EntityIntrospector(employee, true, resolver);
         
         assertNotNull("1", i.getPersistentClassDesc(Address.class));
     }

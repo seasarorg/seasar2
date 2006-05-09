@@ -279,8 +279,7 @@ public class EntityClassDescTest extends TestCase {
 
     @Entity
     @Table(name = "Foo1")
-    @SecondaryTable(name = "Foo2")
-    @SecondaryTables( { @SecondaryTable(name = "Foo3") })
+    @SecondaryTables( { @SecondaryTable(name = "Foo2"), @SecondaryTable(name = "Foo3") })
     public static class Hoge3 {
 
         @Id

@@ -43,7 +43,7 @@ public class EntityListIntrospectorTest extends TestCase {
         departments.add(department1);
         departments.add(department2);
 
-        EntityListIntrospector i = new EntityListIntrospector(departments,
+        EntityListIntrospector i = new EntityListIntrospector(departments, true,
                 new DefaultProxiedObjectResolver());
 
         assertNotNull("1", i.getPersistentClassDesc(Department.class));

@@ -70,7 +70,7 @@ public class MappedSuperclassDescTest extends TestCase {
 
     public void testOverrideAttributeForParent() {
         Foo2 entity = new Foo2();
-        EntityIntrospector i = new EntityIntrospector(entity, DefaultProxiedObjectResolver.INSTANCE);
+        EntityIntrospector i = new EntityIntrospector(entity, true, DefaultProxiedObjectResolver.INSTANCE);
         PersistentClassDesc classDesc = i.getPersistentClassDesc(entity);
         PersistentStateDesc stateDesc = classDesc.getPersistentStateDesc(
                 Foo1.class, "aaa");
@@ -79,7 +79,7 @@ public class MappedSuperclassDescTest extends TestCase {
 
     public void testOverrideAsstociationForParent() {
         Foo2 entity = new Foo2();
-        EntityIntrospector i = new EntityIntrospector(entity, DefaultProxiedObjectResolver.INSTANCE);
+        EntityIntrospector i = new EntityIntrospector(entity, true, DefaultProxiedObjectResolver.INSTANCE);
         PersistentClassDesc classDesc = i.getPersistentClassDesc(entity);
         PersistentStateDesc stateDesc = classDesc.getPersistentStateDesc(
                 Foo1.class, "bbb");
@@ -93,7 +93,7 @@ public class MappedSuperclassDescTest extends TestCase {
 
     public void testOverrideAttributeForParentExcludingNonEntity() {
         Bar3 entity = new Bar3();
-        EntityIntrospector i = new EntityIntrospector(entity, DefaultProxiedObjectResolver.INSTANCE);
+        EntityIntrospector i = new EntityIntrospector(entity, true, DefaultProxiedObjectResolver.INSTANCE);
         PersistentClassDesc classDesc = i.getPersistentClassDesc(entity);
         PersistentStateDesc stateDesc = classDesc.getPersistentStateDesc(
                 Bar1.class, "aaa");
@@ -102,7 +102,7 @@ public class MappedSuperclassDescTest extends TestCase {
 
     public void testOverrideAsstociationForParentExcludingNonEntity() {
         Bar3 entity = new Bar3();
-        EntityIntrospector i = new EntityIntrospector(entity, DefaultProxiedObjectResolver.INSTANCE);
+        EntityIntrospector i = new EntityIntrospector(entity, true, DefaultProxiedObjectResolver.INSTANCE);
         PersistentClassDesc classDesc = i.getPersistentClassDesc(entity);
         PersistentStateDesc stateDesc = classDesc.getPersistentStateDesc(
                 Bar1.class, "bbb");
@@ -116,7 +116,7 @@ public class MappedSuperclassDescTest extends TestCase {
 
     public void testOverrideAttributeForGrandParent() {
         Hoge3 entity = new Hoge3();
-        EntityIntrospector i = new EntityIntrospector(entity, DefaultProxiedObjectResolver.INSTANCE);
+        EntityIntrospector i = new EntityIntrospector(entity, true, DefaultProxiedObjectResolver.INSTANCE);
         PersistentClassDesc classDesc = i.getPersistentClassDesc(entity);
         PersistentStateDesc stateDesc = classDesc.getPersistentStateDesc(
                 Hoge1.class, "aaa");
@@ -125,7 +125,7 @@ public class MappedSuperclassDescTest extends TestCase {
 
     public void testOverrideAsstociationForGrandParent() {
         Hoge3 entity = new Hoge3();
-        EntityIntrospector i = new EntityIntrospector(entity, DefaultProxiedObjectResolver.INSTANCE);
+        EntityIntrospector i = new EntityIntrospector(entity, true, DefaultProxiedObjectResolver.INSTANCE);
         PersistentClassDesc classDesc = i.getPersistentClassDesc(entity);
         PersistentStateDesc stateDesc = classDesc.getPersistentStateDesc(
                 Hoge1.class, "bbb");
@@ -139,7 +139,7 @@ public class MappedSuperclassDescTest extends TestCase {
 
     public void testOverrideAttributeInTheMiddleOfHierarchy() {
         Foo4 entity = new Foo4();
-        EntityIntrospector i = new EntityIntrospector(entity, DefaultProxiedObjectResolver.INSTANCE);
+        EntityIntrospector i = new EntityIntrospector(entity, true, DefaultProxiedObjectResolver.INSTANCE);
         PersistentClassDesc classDesc = i.getPersistentClassDesc(entity);
         PersistentStateDesc stateDesc = classDesc.getPersistentStateDesc(
                 Foo3.class, "ddd");
@@ -148,7 +148,7 @@ public class MappedSuperclassDescTest extends TestCase {
 
     public void testOverrideAssociationInTheMiddleOfHierarchy() {
         Foo4 entity = new Foo4();
-        EntityIntrospector i = new EntityIntrospector(entity, DefaultProxiedObjectResolver.INSTANCE);
+        EntityIntrospector i = new EntityIntrospector(entity, true, DefaultProxiedObjectResolver.INSTANCE);
         PersistentClassDesc classDesc = i.getPersistentClassDesc(entity);
         PersistentStateDesc stateDesc = classDesc.getPersistentStateDesc(
                 Foo3.class, "eee");
