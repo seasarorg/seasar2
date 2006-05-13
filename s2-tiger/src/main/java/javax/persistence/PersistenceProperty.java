@@ -15,16 +15,15 @@
  */
 package javax.persistence;
 
-import static java.lang.annotation.ElementType.FIELD;
-import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
-import static javax.persistence.FlushModeType.AUTO;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-@Target( { METHOD, FIELD })
+@Target( {})
 @Retention(RUNTIME)
-public @interface FlushMode {
-    FlushModeType value() default AUTO;
+public @interface PersistenceProperty {
+    String name();
+
+    String value();
 }

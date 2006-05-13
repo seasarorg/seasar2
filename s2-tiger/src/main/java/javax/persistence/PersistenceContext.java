@@ -32,4 +32,6 @@ public @interface PersistenceContext {
     String unitName() default "";
 
     PersistenceContextType type() default TRANSACTION;
+
+    PersistenceProperty[] properties() default {};
 }
