@@ -18,8 +18,8 @@ package examples.ejb3.impl;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 
-import examples.di.Greeting;
-import examples.di.GreetingClient;
+import examples.ejb3.Greeting;
+import examples.ejb3.GreetingClient;
 
 @Stateless
 public class GreetingClientImpl implements GreetingClient {

@@ -17,7 +17,7 @@ package examples.ejb3.impl;
 
 import javax.ejb.Stateless;
 
-import examples.di.Greeting;
+import examples.ejb3.Greeting;
 
 @Stateless
 public class GreetingImpl implements Greeting {
