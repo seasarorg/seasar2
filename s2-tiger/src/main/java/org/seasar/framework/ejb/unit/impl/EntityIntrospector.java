@@ -15,16 +15,17 @@
  */
 package org.seasar.framework.ejb.unit.impl;
 
-import java.util.ArrayList;
 import static org.seasar.framework.ejb.unit.PersistentStateType.TO_MANY;
 import static org.seasar.framework.ejb.unit.PersistentStateType.TO_ONE;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 
 import org.seasar.framework.ejb.unit.PersistentClassDesc;
 import org.seasar.framework.ejb.unit.PersistentStateDesc;
@@ -47,6 +48,8 @@ public class EntityIntrospector {
     private final ProxiedObjectResolver resolver;
 
     private final boolean introspectsRelationships;
+
+    private Stack<Object> stateDescStatck = new Stack<Object>();
 
     protected EntityIntrospector(boolean introspectsRelationships,
             ProxiedObjectResolver resolver) {
@@ -97,9 +100,15 @@ public class EntityIntrospector {
         for (PersistentStateDesc stateDesc : entityDesc
                 .getPersistentStateDescs()) {
 
-            PersistentStateType stateType = stateDesc.getPersistentStateType();
-            if (stateType == TO_MANY || stateType == TO_ONE) {
-                createClassDescsByClass(stateDesc.getPersistenceTargetClass());
+            if (introspectsRelationships || stateDescStatck.isEmpty()) {
+                stateDescStatck.push(stateDescStatck);
+                PersistentStateType stateType = stateDesc
+                        .getPersistentStateType();
+                if (stateType == TO_MANY || stateType == TO_ONE) {
+                    createClassDescsByClass(stateDesc
+                            .getPersistenceTargetClass());
+                }
+                stateDescStatck.pop();
             }
         }
     }
@@ -132,7 +141,6 @@ public class EntityIntrospector {
 
     protected void setupRelationships() {
         for (PersistentClassDesc classDesc : classDescs.values()) {
-
             for (PersistentStateDesc stateDesc : classDesc
                     .getPersistentStateDescs()) {
 

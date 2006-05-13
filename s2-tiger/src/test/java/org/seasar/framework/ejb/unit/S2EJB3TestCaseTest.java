@@ -19,8 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.EJB;
-import javax.ejb.Local;
-import javax.ejb.Stateless;
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.persistence.Id;
@@ -42,6 +40,12 @@ public class S2EJB3TestCaseTest extends S2EJB3TestCase {
     @EJB
     private IHoge hoge;
 
+    @EJB(beanName="xxx")
+    private IHoge yyy;
+    
+    @EJB
+    private IBar zzz;
+    
     public void setUpRegisterEJB() throws Exception {
         register(Hoge.class);
         register(Foo.class);
@@ -61,6 +65,30 @@ public class S2EJB3TestCaseTest extends S2EJB3TestCase {
         assertNotNull("2", hoge.aaa());
     }
 
+    public void setUpBindFieldByFieldName() {
+        register(Hoge.class);   
+    }
+
+    public void testBindFieldByFieldName() {
+        assertNotNull("1", hoge);
+    }
+
+    public void setUpBindFieldByBeanName() {
+        register(Hoge2.class);   
+    }
+
+    public void testBindFieldByBeanName() {
+        assertNotNull("1", yyy);
+    }
+
+    public void setUpBindFieldByType() {
+        register(Bar.class);   
+    }
+
+    public void testBindFieldByType() {
+        assertNotNull("1", zzz);
+    }
+    
     public void testAssertEntityEquals() {
         DataSet expected = new DataSetImpl();
         DataTable table = expected.addTable("EMPLOYEE");
@@ -155,34 +183,6 @@ public class S2EJB3TestCaseTest extends S2EJB3TestCase {
             this.id = id;
             this.empno = empno;
             this.name = name;
-        }
-    }
-    
-    @Local
-    public static interface IHoge {
-        String aaa();
-    }
-
-    @Local
-    public static interface IFoo {
-        String aaa();
-    }
-    
-    @Stateless
-    public static class Hoge implements IHoge {
-
-        @EJB
-        private IFoo foo;
-        
-        public String aaa() {
-            return foo.aaa();
-        }
-    }
-
-    @Stateless
-    public static class Foo implements IFoo {
-        public String aaa() {
-            return "aaa";
         }
     }
 }

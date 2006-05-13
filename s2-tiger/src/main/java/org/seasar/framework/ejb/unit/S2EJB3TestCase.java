@@ -15,22 +15,32 @@
  */
 package org.seasar.framework.ejb.unit;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.Hashtable;
 import java.util.List;
 
+import javax.ejb.EJB;
+import javax.naming.Context;
 import javax.persistence.EntityManager;
 import javax.transaction.TransactionManager;
 
 import org.seasar.extension.dataset.DataSet;
 import org.seasar.extension.dataset.DataTable;
+import org.seasar.extension.j2ee.JndiContextFactory;
+import org.seasar.extension.j2ee.JndiResourceLocator;
 import org.seasar.extension.unit.S2TestCase;
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.S2Container;
+import org.seasar.framework.container.autoregister.AutoNaming;
+import org.seasar.framework.container.autoregister.DefaultAutoNaming;
 import org.seasar.framework.container.factory.TigerAnnotationHandler;
 import org.seasar.framework.exception.EmptyRuntimeException;
 import org.seasar.framework.unit.annotation.Rollback;
 import org.seasar.framework.util.ClassUtil;
+import org.seasar.framework.util.FieldUtil;
 import org.seasar.framework.util.ResourceUtil;
+import org.seasar.framework.util.StringUtil;
 import org.seasar.framework.util.TransactionManagerUtil;
 
 /**
@@ -44,6 +54,8 @@ public abstract class S2EJB3TestCase extends S2TestCase {
     private static final String S2HIBERNATE_JPA_DICON = "s2hibernate-jpa.dicon";
 
     private TigerAnnotationHandler handler = new TigerAnnotationHandler();
+
+    private AutoNaming autoNaming = new DefaultAutoNaming();
 
     private ProxiedObjectResolver resolver;
 
@@ -62,7 +74,7 @@ public abstract class S2EJB3TestCase extends S2TestCase {
         includeDicons();
     }
 
-    public final void includeDicons() {
+    protected void includeDicons() {
         if (ResourceUtil.isExist(EJB3TX_DICON)) {
             include(EJB3TX_DICON);
         }
@@ -74,6 +86,12 @@ public abstract class S2EJB3TestCase extends S2TestCase {
     @Override
     public void register(Class componentClass) {
         ComponentDef cd = handler.createComponentDef(componentClass, null);
+        if (cd.getComponentName() == null) {
+            String packageName = ClassUtil.getPackageName(componentClass);
+            String shortClassName = ClassUtil.getShortClassName(componentClass);
+            cd.setComponentName(autoNaming.defineName(packageName,
+                    shortClassName));
+        }
         handler.appendDI(cd);
         handler.appendAspect(cd);
         handler.appendInterType(cd);
@@ -96,9 +114,56 @@ public abstract class S2EJB3TestCase extends S2TestCase {
     @Override
     protected boolean needTransaction() {
         Method method = ClassUtil.getMethod(getClass(), getName(), null);
-        return super.needTransaction() || method.isAnnotationPresent(Rollback.class);
+        return super.needTransaction()
+                || method.isAnnotationPresent(Rollback.class);
     }
-    
+
+    @Override
+    protected void bindField(Field field) {
+        EJB ejb = field.getAnnotation(EJB.class);
+        if (ejb == null) {
+            super.bindField(field);
+            return;
+        }
+        if (isAutoBindable(field)) {
+            field.setAccessible(true);
+            Object component = null;
+            String name = null;
+            if (!StringUtil.isEmpty(ejb.beanName())) {
+                name = ejb.beanName();
+            } else if (!StringUtil.isEmpty(ejb.name())) {
+                name = ejb.name();
+            }
+            Hashtable env = getEnv();
+            if (name != null) {
+                try {
+                    component = JndiResourceLocator.lookup(name, env);
+                } catch (Throwable ignore) {
+                }
+            } else {
+                try {
+                    component = JndiResourceLocator
+                            .lookup(field.getName(), env);
+                } catch (Throwable ignore) {
+                }
+                if (component == null
+                        && getContainer().hasComponentDef(field.getType())) {
+                    component = getComponent(field.getType());
+                }
+            }
+            if (component != null) {
+                FieldUtil.set(field, this, component);
+            }
+        }
+    }
+
+    protected Hashtable getEnv() {
+        Hashtable<String, String> env = new Hashtable<String, String>();
+        env.put(Context.INITIAL_CONTEXT_FACTORY, JndiContextFactory.class
+                .getName());
+        return env;
+    }
+
     protected void flush() {
         if (entityManager != null && isTransactionActive()) {
             entityManager.flush();
@@ -145,11 +210,19 @@ public abstract class S2EJB3TestCase extends S2TestCase {
         return entityManager;
     }
 
+    protected AutoNaming getAutoNaming() {
+        return autoNaming;
+    }
+    
+    protected void setAutoNaming(AutoNaming autoNaming) {
+        this.autoNaming = autoNaming;
+    }
+    
     protected void assertEntityEquals(String message, DataSet expected,
             Object entity) {
         assertEntityEquals(message, expected, entity, false);
     }
-    
+
     protected void assertEntityEquals(String message, DataSet expected,
             Object entity, boolean includesRelationships) {
 
@@ -170,7 +243,7 @@ public abstract class S2EJB3TestCase extends S2TestCase {
 
     protected void assertEntityListEquals(String message, DataSet expected,
             List<?> list, boolean includesRelationships) {
-        
+
         assertNotNull("entity list is null.", list);
         EntityListReader reader;
         if (resolver == null) {
@@ -180,7 +253,7 @@ public abstract class S2EJB3TestCase extends S2TestCase {
         }
         assertEqualsIgnoreOrder(message, expected, reader.read());
     }
-    
+
     protected void assertEqualsIgnoreOrder(String message, DataSet expected,
             DataSet actual) {
 
