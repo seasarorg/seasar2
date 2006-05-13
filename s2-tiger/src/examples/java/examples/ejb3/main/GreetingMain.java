@@ -20,7 +20,7 @@ import javax.naming.InitialContext;
 
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 
-import examples.di.GreetingClient;
+import examples.ejb3.GreetingClient;
 
 public class GreetingMain {
 
