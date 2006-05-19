@@ -33,6 +33,7 @@ import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 import org.seasar.framework.container.impl.HttpServletExternalContext;
 import org.seasar.framework.container.impl.HttpServletExternalContextComponentDefRegister;
 import org.seasar.framework.container.impl.S2ContainerImpl;
+import org.seasar.framework.container.servlet.S2ContainerServlet;
 import org.seasar.framework.exception.NoSuchMethodRuntimeException;
 import org.seasar.framework.mock.servlet.MockHttpServletRequest;
 import org.seasar.framework.mock.servlet.MockHttpServletResponse;
@@ -164,6 +165,7 @@ public abstract class S2FrameworkTestCase extends TestCase {
 
     protected void setUpContainer() throws Throwable {
         container = new S2ContainerImpl();
+        SingletonS2ContainerFactory.setContainer(container);
         if (servletContext == null) {
             servletContext = new MockServletContextImpl("s2-example");
         }
@@ -171,7 +173,7 @@ public abstract class S2FrameworkTestCase extends TestCase {
         response = new MockHttpServletResponseImpl(request);
         servletConfig = new MockServletConfigImpl();
         servletConfig.setServletContext(servletContext);
-        servlet = new MockServlet();
+        servlet = new S2ContainerServlet();
         servlet.init(servletConfig);
         ExternalContext externalContext = new HttpServletExternalContext();
         externalContext.setApplication(servletContext);
@@ -180,13 +182,13 @@ public abstract class S2FrameworkTestCase extends TestCase {
         container.setExternalContext(externalContext);
         container.setExternalContextComponentDefRegister(
                 new HttpServletExternalContextComponentDefRegister());
-        SingletonS2ContainerFactory.setContainer(container);
         ComponentDeployerFactory.setProvider(new HttpServletComponentDeployerProvider());
     }
 
     protected void tearDownContainer() throws Throwable {
         ComponentDeployerFactory.setProvider(new ComponentDeployerFactory.DefaultProvider());
         SingletonS2ContainerFactory.setContainer(null);
+        S2ContainerServlet.clearInstance();
         container = null;
         servletContext = null;
         request = null;

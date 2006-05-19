@@ -50,6 +50,10 @@ public class S2ContainerServlet extends HttpServlet {
     public static S2ContainerServlet getInstance() {
         return instance;
     }
+    
+    public static void clearInstance() {
+        instance = null;
+    }
 
     public void init() {
         String configPath = null;
