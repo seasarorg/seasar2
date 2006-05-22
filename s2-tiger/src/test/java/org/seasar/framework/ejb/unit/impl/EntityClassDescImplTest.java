@@ -26,6 +26,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.Inheritance;
+import javax.persistence.MappedSuperclass;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.PrimaryKeyJoinColumns;
 import javax.persistence.SecondaryTable;
@@ -35,7 +36,8 @@ import javax.persistence.Table;
 import junit.framework.TestCase;
 
 import org.seasar.framework.ejb.unit.AnnotationNotFoundException;
-import org.seasar.framework.ejb.unit.PersistentClassDesc;
+import org.seasar.framework.ejb.unit.EmbeddableClassDesc;
+import org.seasar.framework.ejb.unit.EmbeddedStateDesc;
 import org.seasar.framework.ejb.unit.PersistentColumn;
 import org.seasar.framework.ejb.unit.PersistentStateDesc;
 import org.seasar.framework.ejb.unit.PersistentStateNotFoundException;
@@ -44,11 +46,11 @@ import org.seasar.framework.ejb.unit.PersistentStateNotFoundException;
  * @author taedium
  * 
  */
-public class EntityClassDescTest extends TestCase {
+public class EntityClassDescImplTest extends TestCase {
 
     public void testConstructor() throws Exception {
         try {
-            new EntityClassDesc(String.class);
+            new EntityClassDescImpl(String.class);
             fail("1");
         } catch (AnnotationNotFoundException expected) {
             System.out.println(expected);
@@ -56,19 +58,19 @@ public class EntityClassDescTest extends TestCase {
     }
 
     public void testIsPropertyAccessed() throws Exception {
-        EntityClassDesc entityDesc = new EntityClassDesc(Hoge.class);
+        EntityClassDescImpl entityDesc = new EntityClassDescImpl(Hoge.class);
         assertEquals("1", false, entityDesc.isPropertyAccessed());
-        entityDesc = new EntityClassDesc(Hoge2.class);
+        entityDesc = new EntityClassDescImpl(Hoge2.class);
         assertEquals("2", true, entityDesc.isPropertyAccessed());
     }
 
     public void testGetPersistentClass() throws Exception {
-        EntityClassDesc entityDesc = new EntityClassDesc(Hoge.class);
+        EntityClassDescImpl entityDesc = new EntityClassDescImpl(Hoge.class);
         assertEquals("1", Hoge.class, entityDesc.getPersistentClass());
     }
 
     public void testGetPersistentStateDesc() throws Exception {
-        EntityClassDesc entityDesc = new EntityClassDesc(Hoge.class);
+        EntityClassDescImpl entityDesc = new EntityClassDescImpl(Hoge.class);
         assertEquals("1", 3, entityDesc.getPersistentStateDescs().size());
         assertNotNull("2", entityDesc.getPersistentStateDesc("aaa"));
         assertNotNull("3", entityDesc.getPersistentStateDesc("bbb"));
@@ -76,18 +78,18 @@ public class EntityClassDescTest extends TestCase {
     }
 
     public void testGetParentPersistentStateDesc() throws Exception {
-        EntityClassDesc entityDesc = new EntityClassDesc(Hoge5.class);
+        EntityClassDescImpl entityDesc = new EntityClassDescImpl(Hoge5.class);
         assertNotNull("2", entityDesc
                 .getPersistentStateDesc(Hoge4.class, "bbb"));
     }
 
     public void testGetPersistentStateDescExcludingNonEntity() throws Exception {
-        EntityClassDesc entityDesc = new EntityClassDesc(Hoge9.class);
+        EntityClassDescImpl entityDesc = new EntityClassDescImpl(Hoge9.class);
         assertEquals("1", 1, entityDesc.getPersistentStateDescs().size());
     }
 
     public void testGetPersistentStateForException() throws Exception {
-        EntityClassDesc entityDesc = new EntityClassDesc(Hoge5.class);
+        EntityClassDescImpl entityDesc = new EntityClassDescImpl(Hoge5.class);
         try {
             entityDesc.getPersistentStateDesc("bbb");
             fail("1");
@@ -97,7 +99,7 @@ public class EntityClassDescTest extends TestCase {
     }
 
     public void testGetTableName() throws Exception {
-        EntityClassDesc entityDescs = new EntityClassDesc(Hoge3.class);
+        EntityClassDescImpl entityDescs = new EntityClassDescImpl(Hoge3.class);
         List<String> tableNames = entityDescs.getTableNames();
         assertEquals("1", 3, tableNames.size());
         assertEquals("2", "foo1", tableNames.get(0).toLowerCase());
@@ -106,34 +108,34 @@ public class EntityClassDescTest extends TestCase {
     }
 
     public void testGetIdentifier() throws Exception {
-        EntityClassDesc entityDesc = new EntityClassDesc(Hoge.class);
+        EntityClassDescImpl entityDesc = new EntityClassDescImpl(Hoge.class);
         List<PersistentStateDesc> identifiers = entityDesc.getIdentifiers();
         assertEquals("1", 1, identifiers.size());
         assertEquals("2", "aaa", identifiers.get(0).getName());
     }
 
     public void testGetIdentifierForJoinedSubclass() throws Exception {
-        EntityClassDesc entityDesc = new EntityClassDesc(Hoge5.class);
+        EntityClassDescImpl entityDesc = new EntityClassDescImpl(Hoge5.class);
         List<PersistentStateDesc> identifiers = entityDesc.getIdentifiers();
         assertEquals("1", 1, identifiers.size());
         assertEquals("2", "aaa", identifiers.get(0).getName());
     }
 
     public void testGetIdentifierForEmbeddedId() throws Exception {
-        EntityClassDesc entityDesc = new EntityClassDesc(Hoge6.class);
+        EntityClassDescImpl entityDesc = new EntityClassDescImpl(Hoge6.class);
         List<PersistentStateDesc> identifiers = entityDesc.getIdentifiers();
         assertEquals("1", 1, identifiers.size());
         assertEquals("2", "pk", identifiers.get(0).getName());
     }
 
     public void testGetIdentifierForIdClass() throws Exception {
-        EntityClassDesc entityDesc = new EntityClassDesc(Hoge7.class);
+        EntityClassDescImpl entityDesc = new EntityClassDescImpl(Hoge7.class);
         List<PersistentStateDesc> identifiers = entityDesc.getIdentifiers();
         assertEquals("1", 2, identifiers.size());
     }
 
     public void testGetRoot() throws Exception {
-        EntityClassDesc entityDesc = new EntityClassDesc(Hoge5.class);
+        EntityClassDescImpl entityDesc = new EntityClassDescImpl(Hoge5.class);
         assertEquals("1", Hoge4.class, entityDesc.getRoot()
                 .getPersistentClass());
     }
@@ -142,7 +144,8 @@ public class EntityClassDescTest extends TestCase {
         List<PersistentStateDesc> list = null;
         PersistentStateDesc stateDesc = null;
 
-        EntityClassDesc ecd = new EntityClassDesc(SpecialValuedCustomer.class);
+        EntityClassDescImpl ecd = new EntityClassDescImpl(
+                SpecialValuedCustomer.class);
 
         assertEquals("1", 6, ecd.getPersistentStateDescs().size());
 
@@ -165,23 +168,16 @@ public class EntityClassDescTest extends TestCase {
         assertEquals("7", true, list.contains(stateDesc));
     }
 
-    public void testGetPersistentStateDescsByColumnName() {
-        EntityClassDesc entityDesc = new EntityClassDesc(
-                SpecialValuedCustomer.class);
-        PersistentStateDesc stateDesc = entityDesc
-                .getPersistentStateDescByColumnName("specialRank");
-        assertNotNull(stateDesc);
-    }
-
     public void testPrimaryKeyJoinColumn() {
-        EntityClassDesc ecd = new EntityClassDesc(ValuedCustomer2.class);
+        EntityClassDescImpl ecd = new EntityClassDescImpl(ValuedCustomer2.class);
         PersistentColumn column = ecd.getPersistentStateDesc("id").getColumn();
         assertEquals("1", "aaa", column.getName().toLowerCase());
         assertEquals("2", "valuedcustomer2", column.getTable().toLowerCase());
     }
 
     public void testPrimaryKeyJoinColumnWithReferencedColumnName() {
-        EntityClassDesc ecd = new EntityClassDesc(SpecialValuedCustomer2.class);
+        EntityClassDescImpl ecd = new EntityClassDescImpl(
+                SpecialValuedCustomer2.class);
         PersistentColumn column = ecd.getPersistentStateDesc("id").getColumn();
         assertEquals("1", "aaa", column.getName().toLowerCase());
         assertEquals("2", "specialvaluedcustomer2", column.getTable()
@@ -189,35 +185,38 @@ public class EntityClassDescTest extends TestCase {
     }
 
     public void testPrimaryKeyJoinColumns() {
-        EntityClassDesc ecd = new EntityClassDesc(ValuedCustomer3.class);
-        PersistentClassDesc embedded = ecd.getPersistentStateDesc("id")
-                .getEmbeddedClassDesc();
-        PersistentColumn column = embedded.getPersistentStateDesc("id1")
+        EntityClassDescImpl ecd = new EntityClassDescImpl(ValuedCustomer3.class);
+        EmbeddedStateDesc embeddedStateDesc = (EmbeddedStateDesc) ecd
+                .getPersistentStateDesc("id");
+        EmbeddableClassDesc embeddable = embeddedStateDesc.getEmbedddableClassDesc();
+        PersistentColumn column = embeddable.getPersistentStateDesc("id1")
                 .getColumn();
         assertEquals("1", "aaa", column.getName().toLowerCase());
         assertEquals("2", "valuedcustomer3", column.getTable().toLowerCase());
-        column = embedded.getPersistentStateDesc("id2").getColumn();
+        column = embeddable.getPersistentStateDesc("id2").getColumn();
         assertEquals("3", "bbb", column.getName().toLowerCase());
         assertEquals("4", "valuedcustomer3", column.getTable().toLowerCase());
     }
 
     public void testPrimaryKeyJoinColumnsWithReferencedColumnName() {
-        EntityClassDesc ecd = new EntityClassDesc(SpecialValuedCustomer3.class);
-        PersistentClassDesc embedded = ecd.getPersistentStateDesc("id")
-                .getEmbeddedClassDesc();
-        PersistentColumn column = embedded.getPersistentStateDesc("id1")
+        EntityClassDescImpl ecd = new EntityClassDescImpl(
+                SpecialValuedCustomer3.class);
+        EmbeddedStateDesc embeddedStateDesc = (EmbeddedStateDesc) ecd
+                .getPersistentStateDesc("id");
+        EmbeddableClassDesc embeddable = embeddedStateDesc.getEmbedddableClassDesc();
+        PersistentColumn column = embeddable.getPersistentStateDesc("id1")
                 .getColumn();
         assertEquals("1", "aaa", column.getName().toLowerCase());
         assertEquals("2", "specialvaluedcustomer3", column.getTable()
                 .toLowerCase());
-        column = embedded.getPersistentStateDesc("id2").getColumn();
+        column = embeddable.getPersistentStateDesc("id2").getColumn();
         assertEquals("3", "bbb", column.getName().toLowerCase());
         assertEquals("4", "specialvaluedcustomer3", column.getTable()
                 .toLowerCase());
     }
 
     public void testSeconaryTablePk() {
-        EntityClassDesc entityDesc = new EntityClassDesc(Employee.class);
+        EntityClassDescImpl entityDesc = new EntityClassDescImpl(Employee.class);
         List<PersistentStateDesc> stateDescs = entityDesc
                 .getPersistentStateDescsByTableName("Employee_Detail");
         PersistentStateDesc seconaryTableId = stateDescs.get(0);
@@ -226,7 +225,8 @@ public class EntityClassDescTest extends TestCase {
     }
 
     public void testSeconaryTablePkJoinColumns() {
-        EntityClassDesc entityDesc = new EntityClassDesc(Employee2.class);
+        EntityClassDescImpl entityDesc = new EntityClassDescImpl(
+                Employee2.class);
         List<PersistentStateDesc> stateDescs = entityDesc
                 .getPersistentStateDescsByTableName("Employee_Detail");
         PersistentStateDesc seconaryTableId = stateDescs.get(0);
@@ -235,7 +235,8 @@ public class EntityClassDescTest extends TestCase {
     }
 
     public void testSeconaryTablesPkJoinColumns() {
-        EntityClassDesc entityDesc = new EntityClassDesc(Employee3.class);
+        EntityClassDescImpl entityDesc = new EntityClassDescImpl(
+                Employee3.class);
         List<PersistentStateDesc> stateDescs = entityDesc
                 .getPersistentStateDescsByTableName("Employee_Detail");
         PersistentStateDesc seconaryTableId = stateDescs.get(0);
@@ -248,7 +249,19 @@ public class EntityClassDescTest extends TestCase {
         seconaryTablePkColumn = seconaryTableId.getColumn();
         assertEquals("1", "bbb", seconaryTablePkColumn.getName().toLowerCase());
     }
+    
+    public void testIdOnMappedSuperclass() {
+        EntityClassDescImpl entityDesc = new EntityClassDescImpl(
+                Employee4.class);
+        assertEquals("1", 1, entityDesc.getIdentifiers().size());
+    }
 
+    public void testEmbeddedIdOnMappedSuperclass() {
+        EntityClassDescImpl entityDesc = new EntityClassDescImpl(
+                Employee5.class);
+        assertEquals("1", 1, entityDesc.getIdentifiers().size());
+    }
+    
     @Entity
     public static class Hoge {
 
@@ -279,7 +292,8 @@ public class EntityClassDescTest extends TestCase {
 
     @Entity
     @Table(name = "Foo1")
-    @SecondaryTables( { @SecondaryTable(name = "Foo2"), @SecondaryTable(name = "Foo3") })
+    @SecondaryTables( { @SecondaryTable(name = "Foo2"),
+            @SecondaryTable(name = "Foo3") })
     public static class Hoge3 {
 
         @Id
@@ -435,5 +449,30 @@ public class EntityClassDescTest extends TestCase {
     public static class Employee3 {
         @Id
         private Long id;
+    }
+    
+    @Entity
+    public static class Employee4 extends EmployeeInfo4 {
+    }
+    
+    @MappedSuperclass
+    public static class EmployeeInfo4 {
+        @Id
+        private Long id;
+    }
+    
+    @Entity
+    public static class Employee5 extends EmployeeInfo5 {
+    }
+    
+    @MappedSuperclass
+    public static class EmployeeInfo5 {
+        @EmbeddedId
+        private Long id;
+    }
+    
+    public static class EmployeeInfo5Pk implements Serializable {
+        private Long id1;
+        private Long id2;
     }
 }

@@ -46,10 +46,10 @@ public class EntityListIntrospectorTest extends TestCase {
         EntityListIntrospector i = new EntityListIntrospector(departments, true,
                 new DefaultProxiedObjectResolver());
 
-        assertNotNull("1", i.getPersistentClassDesc(Department.class));
-        assertNotNull("2", i.getPersistentClassDesc(Employee.class));
-        assertNotNull("3", i.getPersistentClassDesc(FulltimeEmployee.class));
-        assertNotNull("4", i.getPersistentClassDesc(ParttimeEmployee.class));
+        assertNotNull("1", i.getEntityClassDesc(Department.class));
+        assertNotNull("2", i.getEntityClassDesc(Employee.class));
+        assertNotNull("3", i.getEntityClassDesc(FulltimeEmployee.class));
+        assertNotNull("4", i.getEntityClassDesc(ParttimeEmployee.class));
     }
 
     @Entity

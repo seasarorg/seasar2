@@ -23,12 +23,13 @@ import javax.persistence.Column;
 import javax.persistence.Enumerated;
 import javax.persistence.Id;
 
+import org.seasar.framework.ejb.unit.BasicStateDesc;
+import org.seasar.framework.ejb.unit.EmbeddableClassDesc;
 import org.seasar.framework.ejb.unit.PersistentClassDesc;
 import org.seasar.framework.ejb.unit.PersistentColumn;
 import org.seasar.framework.ejb.unit.PersistentJoinColumn;
 import org.seasar.framework.ejb.unit.PersistentStateAccessor;
 import org.seasar.framework.ejb.unit.PersistentStateDesc;
-import org.seasar.framework.ejb.unit.PersistentStateType;
 import org.seasar.framework.ejb.unit.ProxiedObjectResolver;
 import org.seasar.framework.util.StringUtil;
 
@@ -36,9 +37,10 @@ import org.seasar.framework.util.StringUtil;
  * @author taedium
  * 
  */
-public class BasicStateDesc extends AbstractPersistentStateDesc {
+public class BasicStateDescImpl extends AbstractPersistentStateDesc implements
+        BasicStateDesc {
 
-    public BasicStateDesc(PersistentClassDesc persistentClassDesc,
+    public BasicStateDescImpl(PersistentClassDesc persistentClassDesc,
             String primaryTableName, PersistentStateAccessor accessor) {
 
         super(persistentClassDesc, primaryTableName, accessor);
@@ -54,8 +56,11 @@ public class BasicStateDesc extends AbstractPersistentStateDesc {
         setupPersistenceTargetClass();
     }
 
-    private boolean isElementOfEmbeddedId() {
-        return persistentClassDesc.isIdentifier();
+    public boolean isElementOfEmbeddedId() {
+        if (persistentClassDesc instanceof EmbeddableClassDesc) {
+            return ((EmbeddableClassDesc) persistentClassDesc).isIdentifier();
+        }
+        return false;
     }
 
     private void setupPersistentColumn() {
@@ -98,11 +103,6 @@ public class BasicStateDesc extends AbstractPersistentStateDesc {
         return value;
     }
 
-    public PersistentStateType getPersistentStateType() {
-        return PersistentStateType.BASIC;
-    }
-
-    @Override
     public void adjustPrimaryKeyColumns(List<PersistentJoinColumn> pkJoinColumns) {
 
         if (!pkJoinColumns.isEmpty()) {

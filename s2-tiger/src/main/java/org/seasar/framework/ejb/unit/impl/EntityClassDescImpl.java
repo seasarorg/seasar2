@@ -15,8 +15,8 @@
  */
 package org.seasar.framework.ejb.unit.impl;
 
-import static javax.persistence.InheritanceType.SINGLE_TABLE;
 import static javax.persistence.InheritanceType.JOINED;
+import static javax.persistence.InheritanceType.SINGLE_TABLE;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -50,6 +50,7 @@ import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.beans.factory.BeanDescFactory;
 import org.seasar.framework.ejb.unit.AnnotationNotFoundException;
+import org.seasar.framework.ejb.unit.EntityClassDesc;
 import org.seasar.framework.ejb.unit.PersistentClassDesc;
 import org.seasar.framework.ejb.unit.PersistentColumn;
 import org.seasar.framework.ejb.unit.PersistentDiscriminatorColumn;
@@ -63,8 +64,8 @@ import org.seasar.framework.util.StringUtil;
  * @author taedium
  * 
  */
-public class EntityClassDesc extends AbstractPersistentClassDesc implements
-        PersistentClassDesc {
+public class EntityClassDescImpl extends AbstractPersistentClassDesc implements
+        EntityClassDesc {
 
     private String name;
 
@@ -72,7 +73,7 @@ public class EntityClassDesc extends AbstractPersistentClassDesc implements
 
     private EntityClassDesc rootEntityDesc;
 
-    private EntityClassDesc parentEntityDesc;
+    private EntityClassDescImpl parentEntityDesc;
 
     private PersistentDiscriminatorColumn discriminatorColumn;
 
@@ -84,9 +85,9 @@ public class EntityClassDesc extends AbstractPersistentClassDesc implements
 
     private List<Class<?>> hierarchy = new ArrayList<Class<?>>();
 
-    private List<MappedSuperclassDesc> mappedSuperclassDescs = new ArrayList<MappedSuperclassDesc>();
+    private List<MappedSuperclassDescImpl> mappedSuperclassDescs = new ArrayList<MappedSuperclassDescImpl>();
 
-    public EntityClassDesc(Class<?> entityClass) {
+    public EntityClassDescImpl(Class<?> entityClass) {
         super(entityClass);
 
         Entity entity = entityClass.getAnnotation(Entity.class);
@@ -102,7 +103,7 @@ public class EntityClassDesc extends AbstractPersistentClassDesc implements
         detectJoinColumns();
         detectPrimaryKeyJoinColumns();
         detectInheritanceStrategy();
-        
+
         setupPropertyAccessed();
         setupPersistentStateDescs();
     }
@@ -254,8 +255,8 @@ public class EntityClassDesc extends AbstractPersistentClassDesc implements
                 && clazz != Object.class; clazz = clazz.getSuperclass()) {
 
             if (clazz.isAnnotationPresent(MappedSuperclass.class)) {
-                MappedSuperclassDesc mapped = new MappedSuperclassDesc(clazz,
-                        getPrimaryTableName(), isPropertyAccessed());
+                MappedSuperclassDescImpl mapped = new MappedSuperclassDescImpl(
+                        clazz, getPrimaryTableName(), isPropertyAccessed());
                 mapped.overrideAttributes(attribOverrides);
                 mapped.overrideAssociations(associationOverrides);
                 mappedSuperclassDescs.add(mapped);
@@ -273,7 +274,7 @@ public class EntityClassDesc extends AbstractPersistentClassDesc implements
                 Class<?> clazz = hierarchyIterator.previous();
                 if (clazz.isAnnotationPresent(Entity.class)) {
                     rootEntityDesc = parentEntityDesc.getPersistentClass() == clazz ? parentEntityDesc
-                            : new EntityClassDesc(clazz);
+                            : new EntityClassDescImpl(clazz);
                     return;
                 }
             }
@@ -284,7 +285,7 @@ public class EntityClassDesc extends AbstractPersistentClassDesc implements
         for (Class<?> clazz = persistentClass.getSuperclass(); clazz != Object.class
                 && clazz != null; clazz = clazz.getSuperclass()) {
             if (clazz.isAnnotationPresent(Entity.class)) {
-                parentEntityDesc = new EntityClassDesc(clazz);
+                parentEntityDesc = new EntityClassDescImpl(clazz);
                 return;
             }
         }
@@ -316,9 +317,10 @@ public class EntityClassDesc extends AbstractPersistentClassDesc implements
             discriminatorColumn.setTable(getPrimaryTableName());
 
         } else {
-            inheritanceType = rootEntityDesc.inheritanceType;
+            inheritanceType = rootEntityDesc.getInheritanceType();
             if (inheritanceType == SINGLE_TABLE || inheritanceType == JOINED) {
-                discriminatorColumn = rootEntityDesc.discriminatorColumn;
+                discriminatorColumn = rootEntityDesc
+                        .getRootEntityDiscriminatorColumn();
             }
         }
 
@@ -356,7 +358,7 @@ public class EntityClassDesc extends AbstractPersistentClassDesc implements
         }
     }
 
-    public PersistentClassDesc getRoot() {
+    public EntityClassDesc getRoot() {
         return rootEntityDesc;
     }
 
@@ -364,14 +366,14 @@ public class EntityClassDesc extends AbstractPersistentClassDesc implements
         if (parentEntityDesc == null) {
             return;
         }
-        
-        for(String tableName : parentEntityDesc.getTableNames()) {
+
+        for (String tableName : parentEntityDesc.getTableNames()) {
             addTableName(tableName);
         }
 
         for (PersistentStateDesc stateDesc : parentEntityDesc
                 .getPersistentStateDescs()) {
-            switch (rootEntityDesc.inheritanceType) {
+            switch (rootEntityDesc.getInheritanceType()) {
             case SINGLE_TABLE:
                 stateDesc.getColumn().setTable(
                         rootEntityDesc.getPrimaryTableName());
@@ -380,10 +382,15 @@ public class EntityClassDesc extends AbstractPersistentClassDesc implements
                 stateDesc.getColumn().setTable(getPrimaryTableName());
                 break;
             case JOINED:
-                PersistentClassDesc classDesc = stateDesc
-                        .getPersistentClassDesc();
-                if (stateDesc.isIdentifier() && classDesc.isRoot()) {
-                    addPersistentStateDesc(createSubclassId(stateDesc));
+                if (stateDesc.isIdentifier()) {
+                    PersistentClassDesc classDesc = stateDesc
+                            .getPersistentClassDesc();
+                    if (classDesc instanceof EntityClassDesc) {
+                        EntityClassDesc entityDesc = (EntityClassDesc) classDesc;
+                        if (entityDesc.isRoot()) {
+                            addPersistentStateDesc(createSubclassId(stateDesc));
+                        }
+                    } 
                 }
                 break;
             }
@@ -394,12 +401,11 @@ public class EntityClassDesc extends AbstractPersistentClassDesc implements
     private PersistentStateDesc createSubclassId(PersistentStateDesc rootId) {
         PersistentStateAccessor accessor = rootId.getAccessor();
         PersistentStateDesc subclassId = PersistentStateDescFactory
-                .getPersistentStateDesc(this,
-                        getPrimaryTableName(), accessor);
+                .getPersistentStateDesc(this, getPrimaryTableName(), accessor);
         subclassId.adjustPrimaryKeyColumns(pkJoinColumns);
         return subclassId;
     }
-    
+
     private void addMappedSuperclassStateDescs() {
         for (PersistentClassDesc mappedDesc : mappedSuperclassDescs) {
             for (PersistentStateDesc stateDesc : mappedDesc
@@ -409,8 +415,7 @@ public class EntityClassDesc extends AbstractPersistentClassDesc implements
         }
     }
 
-    public PersistentDiscriminatorColumn getDiscriminatorColumn(
-            String tableName) {
+    public PersistentDiscriminatorColumn getDiscriminatorColumn(String tableName) {
 
         if (discriminatorColumn != null) {
             if (discriminatorColumn.getTable().equalsIgnoreCase(tableName)) {
@@ -424,15 +429,19 @@ public class EntityClassDesc extends AbstractPersistentClassDesc implements
         return this == rootEntityDesc;
     }
 
-    public boolean isIdentifier() {
-        return false;
+    public InheritanceType getInheritanceType() {
+        return inheritanceType;
+    }
+
+    public PersistentDiscriminatorColumn getRootEntityDiscriminatorColumn() {
+        return isRoot() ? discriminatorColumn : null;
     }
 
     @Override
     public boolean equals(Object other) {
-        if (!(other instanceof EntityClassDesc))
+        if (!(other instanceof EntityClassDescImpl))
             return false;
-        EntityClassDesc castOther = (EntityClassDesc) other;
+        EntityClassDescImpl castOther = (EntityClassDescImpl) other;
         return this.getPersistentClass() == castOther.getPersistentClass();
     }
 

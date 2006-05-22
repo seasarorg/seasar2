@@ -15,16 +15,19 @@
  */
 package org.seasar.framework.ejb.unit;
 
+import java.util.List;
+
 /**
  * @author taedium
- *
+ * 
  */
-public enum PersistentStateType {
-    BASIC, 
-    
-    EMBEDDED,
-    
-    TO_ONE, 
-    
-    TO_MANY, 
+public interface ToOneRelationshipStateDesc extends PersistentStateDesc {
+
+    List<ForeignKey> getForeignKeys();
+
+    void setupForeignKeys(PersistentClassDesc relationship);
+
+    List<PersistentJoinColumn> getJoinColumns();
+
+    void setJoinColumns(List<PersistentJoinColumn> joinColumns);
 }

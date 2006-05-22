@@ -28,12 +28,12 @@ import org.seasar.framework.ejb.unit.PersistentStateDesc;
  * @author taedium
  * 
  */
-public class EmbeddableClassDescTest extends TestCase {
+public class EmbeddableClassDescImplTest extends TestCase {
 
     public void test() {
         HashMap<String, PersistentColumn> overrides = new HashMap<String, PersistentColumn>();
         overrides.put("startDate", new PersistentColumn("foo", "hoge"));
-        EmbeddableClassDesc embeddable = new EmbeddableClassDesc(
+        EmbeddableClassDescImpl embeddable = new EmbeddableClassDescImpl(
                 EmployeePeriod.class, "PrimaryTable", true, false);
         embeddable.overrideAttributes(overrides);
         PersistentStateDesc stateDesc = embeddable

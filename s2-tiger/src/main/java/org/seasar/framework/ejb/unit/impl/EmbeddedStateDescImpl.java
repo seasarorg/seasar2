@@ -24,22 +24,23 @@ import javax.persistence.AttributeOverrides;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Id;
 
+import org.seasar.framework.ejb.unit.EmbeddableClassDesc;
+import org.seasar.framework.ejb.unit.EmbeddedStateDesc;
 import org.seasar.framework.ejb.unit.PersistentClassDesc;
 import org.seasar.framework.ejb.unit.PersistentColumn;
 import org.seasar.framework.ejb.unit.PersistentJoinColumn;
 import org.seasar.framework.ejb.unit.PersistentStateAccessor;
 import org.seasar.framework.ejb.unit.PersistentStateDesc;
-import org.seasar.framework.ejb.unit.PersistentStateType;
 
 /**
  * @author taedium
  * 
  */
-public class EmbeddedStateDesc extends AbstractPersistentStateDesc {
+public class EmbeddedStateDescImpl extends AbstractPersistentStateDesc implements EmbeddedStateDesc {
 
-    private EmbeddableClassDesc embeddedClassDesc;
+    private EmbeddableClassDescImpl embeddedClassDesc;
 
-    public EmbeddedStateDesc(PersistentClassDesc persistentClassDesc,
+    public EmbeddedStateDescImpl(PersistentClassDesc persistentClassDesc,
             String primaryTableName, PersistentStateAccessor accessor) {
 
         super(persistentClassDesc, primaryTableName, accessor);
@@ -57,7 +58,7 @@ public class EmbeddedStateDesc extends AbstractPersistentStateDesc {
     }
 
     private void setupEmbeddedClassDesc() {
-        embeddedClassDesc = new EmbeddableClassDesc(persistentStateClass,
+        embeddedClassDesc = new EmbeddableClassDescImpl(persistentStateClass,
                 primaryTableName, accessor.isPropertyAccessor(), identifier);
         embeddedClassDesc.overrideAttributes(detectAttributeOverrides());
     }
@@ -82,27 +83,23 @@ public class EmbeddedStateDesc extends AbstractPersistentStateDesc {
         return attribOverrides;
     }
 
-    public PersistentStateType getPersistentStateType() {
-        return PersistentStateType.EMBEDDED;
-    }
-
-    @Override
-    public PersistentClassDesc getEmbeddedClassDesc() {
+    public EmbeddableClassDesc getEmbedddableClassDesc() {
         return embeddedClassDesc;
     }
 
-    @Override
-    public List<PersistentStateDesc> getEmbeddedStateDescs() {
+    public List<PersistentStateDesc> getPersistentStateDesc() {
         return embeddedClassDesc.getPersistentStateDescs();
     }
 
-    @Override
     public void adjustPrimaryKeyColumns(
             List<PersistentJoinColumn> pkJoinColumns) {
         
-        for (PersistentStateDesc each : getEmbeddedStateDescs()) {
+        for (PersistentStateDesc each : getPersistentStateDesc()) {
             each.adjustPrimaryKeyColumns(pkJoinColumns);
         }
     }
 
+    public boolean contains(PersistentStateDesc stateDesc ) {
+        return getEmbedddableClassDesc().contains(stateDesc);
+    }
 }

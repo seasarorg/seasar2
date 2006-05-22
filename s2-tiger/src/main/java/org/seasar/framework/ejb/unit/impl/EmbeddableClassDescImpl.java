@@ -17,25 +17,24 @@ package org.seasar.framework.ejb.unit.impl;
 
 import java.util.Map;
 
-import org.seasar.framework.ejb.unit.PersistentClassDesc;
+import org.seasar.framework.ejb.unit.EmbeddableClassDesc;
 import org.seasar.framework.ejb.unit.PersistentColumn;
-import org.seasar.framework.ejb.unit.PersistentDiscriminatorColumn;
 import org.seasar.framework.ejb.unit.PersistentStateDesc;
 
 /**
  * @author taedium
  * 
  */
-public class EmbeddableClassDesc extends AbstractPersistentClassDesc implements
-        PersistentClassDesc {
+public class EmbeddableClassDescImpl extends AbstractPersistentClassDesc implements
+        EmbeddableClassDesc {
 
-    private final boolean identifier;
+    private final boolean isIdentifier;
 
-    public EmbeddableClassDesc(Class persistentClass, String primaryTableName,
-            boolean propertyAccessed, boolean identifier) {
+    public EmbeddableClassDescImpl(Class persistentClass, String primaryTableName,
+            boolean propertyAccessed, boolean isIdentifier) {
 
         super(persistentClass, primaryTableName, propertyAccessed);
-        this.identifier = identifier;
+        this.isIdentifier = isIdentifier;
         setupPersistentStateDescs();
     }
 
@@ -55,20 +54,16 @@ public class EmbeddableClassDesc extends AbstractPersistentClassDesc implements
         }
     }
 
-    public PersistentClassDesc getRoot() {
-        return null;
-    }
-
-    public boolean isRoot() {
-        return false;
-    }
-
-    public PersistentDiscriminatorColumn getDiscriminatorColumn(
-            String tableName) {
-        return null;
-    }
-
     public boolean isIdentifier() {
-        return identifier;
+        return isIdentifier;
+    }
+    
+    public boolean contains(PersistentStateDesc stateDesc) {
+        for(PersistentStateDesc each : getPersistentStateDescs()) {
+            if (each == stateDesc) {
+                return true;
+            }
+        }
+        return false;
     }
 }

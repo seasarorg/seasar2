@@ -16,31 +16,17 @@
 package org.seasar.framework.ejb.unit;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author taedium
- * 
+ *
  */
-public interface PersistentStateDesc {
+public interface MappedSuperclassDesc extends PersistentClassDesc {
 
-    String getName();
+    void overrideAttributes(Map<String, PersistentColumn> attribOverrides);
 
-    PersistentClassDesc getPersistentClassDesc();
-
-    boolean hasColumn(String columnName);
-
-    PersistentColumn getColumn();
-
-    void setColumn(PersistentColumn column);
-
-    Class<?> getPersistenceTargetClass();
-
-    Object getValue(Object target, ProxiedObjectResolver resolver);
-
-    void adjustPrimaryKeyColumns(List<PersistentJoinColumn> pkJoinColumns);
-
-    PersistentStateAccessor getAccessor();
-
-    boolean isIdentifier();
+    void overrideAssociations(
+            Map<String, List<PersistentJoinColumn>> associationOverrides);
 
 }

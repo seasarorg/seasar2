@@ -15,32 +15,17 @@
  */
 package org.seasar.framework.ejb.unit;
 
-import java.util.List;
+import java.util.Map;
 
 /**
  * @author taedium
- * 
+ *
  */
-public interface PersistentStateDesc {
-
-    String getName();
-
-    PersistentClassDesc getPersistentClassDesc();
-
-    boolean hasColumn(String columnName);
-
-    PersistentColumn getColumn();
-
-    void setColumn(PersistentColumn column);
-
-    Class<?> getPersistenceTargetClass();
-
-    Object getValue(Object target, ProxiedObjectResolver resolver);
-
-    void adjustPrimaryKeyColumns(List<PersistentJoinColumn> pkJoinColumns);
-
-    PersistentStateAccessor getAccessor();
+public interface EmbeddableClassDesc extends PersistentClassDesc {
 
     boolean isIdentifier();
-
+    
+    void overrideAttributes(Map<String, PersistentColumn> attribOverrides);
+    
+    boolean contains(PersistentStateDesc stateDesc);
 }

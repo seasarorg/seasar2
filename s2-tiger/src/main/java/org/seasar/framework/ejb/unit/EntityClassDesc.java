@@ -17,30 +17,23 @@ package org.seasar.framework.ejb.unit;
 
 import java.util.List;
 
+import javax.persistence.InheritanceType;
+
 /**
  * @author taedium
  * 
  */
-public interface PersistentStateDesc {
+public interface EntityClassDesc extends PersistentClassDesc {
 
-    String getName();
+    boolean isRoot();
+    
+    EntityClassDesc getRoot();
 
-    PersistentClassDesc getPersistentClassDesc();
+    List<String> getTableNames();
 
-    boolean hasColumn(String columnName);
-
-    PersistentColumn getColumn();
-
-    void setColumn(PersistentColumn column);
-
-    Class<?> getPersistenceTargetClass();
-
-    Object getValue(Object target, ProxiedObjectResolver resolver);
-
-    void adjustPrimaryKeyColumns(List<PersistentJoinColumn> pkJoinColumns);
-
-    PersistentStateAccessor getAccessor();
-
-    boolean isIdentifier();
-
+    PersistentDiscriminatorColumn getDiscriminatorColumn(String tableName);
+    
+    PersistentDiscriminatorColumn getRootEntityDiscriminatorColumn();
+    
+    InheritanceType getInheritanceType();
 }

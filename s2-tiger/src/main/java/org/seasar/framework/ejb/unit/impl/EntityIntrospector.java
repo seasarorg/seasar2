@@ -15,9 +15,6 @@
  */
 package org.seasar.framework.ejb.unit.impl;
 
-import static org.seasar.framework.ejb.unit.PersistentStateType.TO_MANY;
-import static org.seasar.framework.ejb.unit.PersistentStateType.TO_ONE;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -27,10 +24,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
-import org.seasar.framework.ejb.unit.PersistentClassDesc;
+import org.seasar.framework.ejb.unit.EntityClassDesc;
 import org.seasar.framework.ejb.unit.PersistentStateDesc;
-import org.seasar.framework.ejb.unit.PersistentStateType;
 import org.seasar.framework.ejb.unit.ProxiedObjectResolver;
+import org.seasar.framework.ejb.unit.ToManyRelationshipStateDesc;
+import org.seasar.framework.ejb.unit.ToOneRelationshipStateDesc;
 import org.seasar.framework.exception.EmptyRuntimeException;
 
 /**
@@ -43,7 +41,7 @@ public class EntityIntrospector {
 
     private final Map<Object, Object> processed = new IdentityHashMap<Object, Object>();
 
-    private final Map<Class, PersistentClassDesc> classDescs = new HashMap<Class, PersistentClassDesc>();
+    private final Map<Class, EntityClassDesc> classDescs = new HashMap<Class, EntityClassDesc>();
 
     private final ProxiedObjectResolver resolver;
 
@@ -69,16 +67,16 @@ public class EntityIntrospector {
         setupRelationships();
     }
 
-    public PersistentClassDesc getPersistentClassDesc(Object entity) {
-        return getPersistentClassDesc(entity.getClass());
+    public EntityClassDesc getEntityClassDesc(Object entity) {
+        return getEntityClassDesc(entity.getClass());
     }
 
-    public PersistentClassDesc getPersistentClassDesc(Class<?> entityClass) {
+    public EntityClassDesc getEntityClassDesc(Class<?> entityClass) {
         return classDescs.get(entityClass);
     }
 
-    public List<PersistentClassDesc> getAllPersistentClassDescs() {
-        return new ArrayList<PersistentClassDesc>(classDescs.values());
+    public List<EntityClassDesc> getAllEntityClassDescs() {
+        return new ArrayList<EntityClassDesc>(classDescs.values());
     }
 
     protected void createClassDescs(Object entity) {
@@ -94,7 +92,7 @@ public class EntityIntrospector {
             return;
         }
 
-        EntityClassDesc entityDesc = new EntityClassDesc(entityClass);
+        EntityClassDescImpl entityDesc = new EntityClassDescImpl(entityClass);
         classDescs.put(entityClass, entityDesc);
 
         for (PersistentStateDesc stateDesc : entityDesc
@@ -102,9 +100,8 @@ public class EntityIntrospector {
 
             if (introspectsRelationships || stateDescStatck.isEmpty()) {
                 stateDescStatck.push(stateDescStatck);
-                PersistentStateType stateType = stateDesc
-                        .getPersistentStateType();
-                if (stateType == TO_MANY || stateType == TO_ONE) {
+                if ((stateDesc instanceof ToOneRelationshipStateDesc)
+                        || (stateDesc instanceof ToManyRelationshipStateDesc)) {
                     createClassDescsByClass(stateDesc
                             .getPersistenceTargetClass());
                 }
@@ -118,7 +115,8 @@ public class EntityIntrospector {
             return;
         }
 
-        EntityClassDesc entityDesc = new EntityClassDesc(entity.getClass());
+        EntityClassDescImpl entityDesc = new EntityClassDescImpl(entity
+                .getClass());
         classDescs.put(entity.getClass(), entityDesc);
 
         for (PersistentStateDesc stateDesc : entityDesc
@@ -128,28 +126,26 @@ public class EntityIntrospector {
                 continue;
             }
 
-            PersistentStateType stateType = stateDesc.getPersistentStateType();
-            if (stateType == TO_MANY) {
+            if (stateDesc instanceof ToManyRelationshipStateDesc) {
                 for (Object element : getElements(state)) {
                     createClassDescsByInstance(resolver.unproxy(element));
                 }
-            } else if (stateType == TO_ONE) {
+            } else if (stateDesc instanceof ToOneRelationshipStateDesc) {
                 createClassDescsByInstance(state);
             }
         }
     }
 
     protected void setupRelationships() {
-        for (PersistentClassDesc classDesc : classDescs.values()) {
+        for (EntityClassDesc classDesc : classDescs.values()) {
             for (PersistentStateDesc stateDesc : classDesc
                     .getPersistentStateDescs()) {
 
-                PersistentStateType stateType = stateDesc
-                        .getPersistentStateType();
-                if (stateType == TO_ONE) {
-                    PersistentClassDesc relationship = classDescs.get(stateDesc
+                if (stateDesc instanceof ToOneRelationshipStateDesc) {
+                    ToOneRelationshipStateDesc toOne = (ToOneRelationshipStateDesc) stateDesc;
+                    EntityClassDesc relationship = classDescs.get(toOne
                             .getPersistenceTargetClass());
-                    stateDesc.setupForeignKeyColumns(relationship);
+                    toOne.setupForeignKeys(relationship);
                 }
             }
         }

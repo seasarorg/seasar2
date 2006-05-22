@@ -21,26 +21,11 @@ import java.util.List;
  * @author taedium
  * 
  */
-public interface PersistentStateDesc {
+public interface EmbeddedStateDesc extends PersistentStateDesc {
 
-    String getName();
+    public EmbeddableClassDesc getEmbedddableClassDesc();
 
-    PersistentClassDesc getPersistentClassDesc();
-
-    boolean hasColumn(String columnName);
-
-    PersistentColumn getColumn();
-
-    void setColumn(PersistentColumn column);
-
-    Class<?> getPersistenceTargetClass();
-
-    Object getValue(Object target, ProxiedObjectResolver resolver);
-
-    void adjustPrimaryKeyColumns(List<PersistentJoinColumn> pkJoinColumns);
-
-    PersistentStateAccessor getAccessor();
-
-    boolean isIdentifier();
-
+    public List<PersistentStateDesc> getPersistentStateDesc();
+    
+    boolean contains(PersistentStateDesc stateDesc);
 }

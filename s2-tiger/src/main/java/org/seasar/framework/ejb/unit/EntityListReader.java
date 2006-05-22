@@ -35,12 +35,12 @@ public class EntityListReader extends EntityReader {
         super(new EntityListIntrospector(entities, readsRelationships, resolver), readsRelationships, resolver); 
 
         if (readsRelationships) {
-            for (PersistentClassDesc classDesc : getEntityIntrospector().getAllPersistentClassDescs()) {
+            for (EntityClassDesc classDesc : getEntityIntrospector().getAllEntityClassDescs()) {
                 setupColumns(classDesc);
             }
         } else {
             for (Object entity : entities) {
-                PersistentClassDesc classDesc = getEntityIntrospector().getPersistentClassDesc(entity);
+                EntityClassDesc classDesc = getEntityIntrospector().getEntityClassDesc(entity);
                 setupColumns(classDesc);
             }
         }
@@ -49,7 +49,7 @@ public class EntityListReader extends EntityReader {
             if (entity == null) {
                 continue;
             }
-            PersistentClassDesc classDesc = getEntityIntrospector().getPersistentClassDesc(entity);
+            EntityClassDesc classDesc = getEntityIntrospector().getEntityClassDesc(entity);
             startSetupRows(classDesc, entity);
             releaseProcessedEntity(entity);
         }

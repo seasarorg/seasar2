@@ -15,8 +15,6 @@
  */
 package org.seasar.framework.ejb.unit.impl;
 
-import static org.seasar.framework.ejb.unit.PersistentStateType.TO_MANY;
-
 import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.HashMap;
@@ -37,36 +35,33 @@ import org.seasar.framework.util.ClassUtil;
  * @author taedium
  * 
  */
-public class ToManyRelationshipStateDescTest extends TestCase {
+public class ToManyRelationshipStateDescImplTest extends TestCase {
 
     public void testGetPersistenceTargetClassFromCollectionGenericType() {
-        PersistentClassDesc pc = new EntityClassDesc(Department.class);
+        PersistentClassDesc pc = new EntityClassDescImpl(Department.class);
         Field field = ClassUtil.getDeclaredField(Department.class, "employees");
         FieldAccessor accessor = new FieldAccessor(field);
-        ToManyRelationshipStateDesc toMany = new ToManyRelationshipStateDesc(pc, "employees", accessor);
+        ToManyRelationshipStateDescImpl toMany = new ToManyRelationshipStateDescImpl(pc, "employees", accessor);
 
         assertEquals("1", Employee.class, toMany.getPersistenceTargetClass());
-        assertEquals("2", Collection.class, toMany.getPersistentStateClass());
     }
     
     public void testGetPersistenceTargetClassFromMapGenericType() {
-        PersistentClassDesc pc = new EntityClassDesc(Department6.class);
+        PersistentClassDesc pc = new EntityClassDescImpl(Department6.class);
         Field field = ClassUtil.getDeclaredField(Department6.class, "employees");
         FieldAccessor accessor = new FieldAccessor(field);
-        ToManyRelationshipStateDesc toMany = new ToManyRelationshipStateDesc(pc, "employees", accessor);
+        ToManyRelationshipStateDescImpl toMany = new ToManyRelationshipStateDescImpl(pc, "employees", accessor);
         
         assertEquals("1", Employee6.class, toMany.getPersistenceTargetClass());
-        assertEquals("2", Map.class, toMany.getPersistentStateClass());
     }
 
     public void testGetPersistenceTargetClassFromOneToManyElement() {
-        PersistentClassDesc pc = new EntityClassDesc(Department7.class);
+        PersistentClassDesc pc = new EntityClassDescImpl(Department7.class);
         Field field = ClassUtil.getDeclaredField(Department7.class, "employees");
         FieldAccessor accessor = new FieldAccessor(field);
-        ToManyRelationshipStateDesc toMany = new ToManyRelationshipStateDesc(pc, "employees", accessor);
+        ToManyRelationshipStateDescImpl toMany = new ToManyRelationshipStateDescImpl(pc, "employees", accessor);
         
         assertEquals("1", Employee7.class, toMany.getPersistenceTargetClass());
-        assertEquals("2", Collection.class, toMany.getPersistentStateClass());
     }
 
     @Entity(name = "Department")

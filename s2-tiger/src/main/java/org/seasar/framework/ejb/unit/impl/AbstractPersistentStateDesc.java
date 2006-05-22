@@ -16,7 +16,6 @@
 package org.seasar.framework.ejb.unit.impl;
 
 import java.lang.reflect.AnnotatedElement;
-import java.util.Collections;
 import java.util.List;
 
 import org.seasar.framework.ejb.unit.PersistentClassDesc;
@@ -92,10 +91,6 @@ public abstract class AbstractPersistentStateDesc implements
         return persistentStateName;
     }
 
-    public Class<?> getPersistentStateClass() {
-        return persistentStateClass;
-    }
-
     public Class<?> getPersistenceTargetClass() {
         return persistenceTargetClass;
     }
@@ -116,14 +111,6 @@ public abstract class AbstractPersistentStateDesc implements
         return accessor;
     }
 
-    public PersistentClassDesc getEmbeddedClassDesc() {
-        return null;
-    }
-
-    public List<PersistentStateDesc> getEmbeddedStateDescs() {
-        return Collections.emptyList();
-    }
-
     public boolean hasColumn(String columnName) {
         if (getColumn().getName() == null) {
             return false;
@@ -131,26 +118,9 @@ public abstract class AbstractPersistentStateDesc implements
         return this.getColumn().getName().equalsIgnoreCase(columnName);
     }
 
-    public List<PersistentJoinColumn> getJoinColumns() {
-        return Collections.emptyList();
-    }
-
-    public void setJoinColumns(List<PersistentJoinColumn> joinColumn) {
-    }
-
-    public List<PersistentJoinColumn> getForeignKeyColumns() {
-        return Collections.emptyList();
-    }
-
     public Object getValue(Object target, ProxiedObjectResolver resolver) {
         Object maybeProxy = accessor.getValue(target);
         return resolver.unproxy(maybeProxy);
-    }
-
-    public void setupForeignKeyColumns(PersistentClassDesc relationship) {
-    }
-
-    public void adjustPrimaryKeyColumns(List<PersistentJoinColumn> pkJoinColumns) {
     }
 
     protected boolean hasReferencedColumnName(List<PersistentJoinColumn> columns) {

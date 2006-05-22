@@ -34,41 +34,41 @@ import org.seasar.framework.util.ClassUtil;
  * @author taedium
  * 
  */
-public class EmbeddedStateDescTest extends TestCase {
+public class EmbeddedStateDescImplTest extends TestCase {
 
     public void testGetEmbeddedStateDescs() {
-        PersistentClassDesc pc = new EntityClassDesc(Employee.class);
+        PersistentClassDesc pc = new EntityClassDescImpl(Employee.class);
         Field field = ClassUtil.getDeclaredField(Employee.class, "period");
         FieldAccessor accessor = new FieldAccessor(field);
-        EmbeddedStateDesc embeddedDesc = new EmbeddedStateDesc(pc, "hoge", accessor);
+        EmbeddedStateDescImpl embeddedDesc = new EmbeddedStateDescImpl(pc, "hoge", accessor);
         
-        List<PersistentStateDesc> embeddedStates = embeddedDesc.getEmbeddedStateDescs();
+        List<PersistentStateDesc> embeddedStates = embeddedDesc.getPersistentStateDesc();
         assertEquals("1", 2, embeddedStates.size());
     }
 
     public void testIsIdentifierReturnsTrueWithEmbeddedIdAnnotation() {
-        PersistentClassDesc pc = new EntityClassDesc(Employee2.class);
+        PersistentClassDesc pc = new EntityClassDescImpl(Employee2.class);
         Field field = ClassUtil.getDeclaredField(Employee2.class, "period");
         FieldAccessor accessor = new FieldAccessor(field);
-        EmbeddedStateDesc embeddedDesc = new EmbeddedStateDesc(pc, "hoge", accessor);
+        EmbeddedStateDescImpl embeddedDesc = new EmbeddedStateDescImpl(pc, "hoge", accessor);
         
         assertEquals("1", true, embeddedDesc.isIdentifier());
     }
 
     public void testIsIdentifierReturnsTrueWithIdAnnotation() {
-        PersistentClassDesc pc = new EntityClassDesc(Employee3.class);
+        PersistentClassDesc pc = new EntityClassDescImpl(Employee3.class);
         Field field = ClassUtil.getDeclaredField(Employee3.class, "period");
         FieldAccessor accessor = new FieldAccessor(field);
-        EmbeddedStateDesc embeddedDesc = new EmbeddedStateDesc(pc, "hoge", accessor);
+        EmbeddedStateDescImpl embeddedDesc = new EmbeddedStateDescImpl(pc, "hoge", accessor);
 
         assertEquals("1", true, embeddedDesc.isIdentifier());
     }
     
     public void testIsIdentifierReturnsFalse() {
-        PersistentClassDesc pc = new EntityClassDesc(Employee.class);
+        PersistentClassDesc pc = new EntityClassDescImpl(Employee.class);
         Field field = ClassUtil.getDeclaredField(Employee.class, "period");
         FieldAccessor accessor = new FieldAccessor(field);
-        EmbeddedStateDesc embeddedDesc = new EmbeddedStateDesc(pc, "hoge", accessor);
+        EmbeddedStateDescImpl embeddedDesc = new EmbeddedStateDescImpl(pc, "hoge", accessor);
 
         assertEquals("1", false, embeddedDesc.isIdentifier());
     }

@@ -88,30 +88,30 @@ public class PersistentStateDescFactory {
         AnnotatedElement element = accessor.getAnnotatedElement();
 
         if (isToManyRelationship(element)) {
-            return new ToManyRelationshipStateDesc(persistentClassDesc,
+            return new ToManyRelationshipStateDescImpl(persistentClassDesc,
                     primaryTableName, accessor);
         }
         if (isToOneRelationship(element)) {
-            return new ToOneRelationshipStateDesc(persistentClassDesc,
+            return new ToOneRelationshipStateDescImpl(persistentClassDesc,
                     primaryTableName, accessor);
         }
         if (isEmbedded(element)) {
-            return new EmbeddedStateDesc(persistentClassDesc, primaryTableName,
+            return new EmbeddedStateDescImpl(persistentClassDesc, primaryTableName,
                     accessor);
         }
         if (isBasic(element)) {
-            return new BasicStateDesc(persistentClassDesc, primaryTableName,
+            return new BasicStateDescImpl(persistentClassDesc, primaryTableName,
                     accessor);
         }
 
         Class<?> persistentStateClass = accessor.getPersistentStateClass();
 
         if (isEmbeddableClass(persistentStateClass)) {
-            return new EmbeddedStateDesc(persistentClassDesc, primaryTableName,
+            return new EmbeddedStateDescImpl(persistentClassDesc, primaryTableName,
                     accessor);
         }
         if (isBasicClass(persistentStateClass)) {
-            return new BasicStateDesc(persistentClassDesc, primaryTableName,
+            return new BasicStateDescImpl(persistentClassDesc, primaryTableName,
                     accessor);
         }
 

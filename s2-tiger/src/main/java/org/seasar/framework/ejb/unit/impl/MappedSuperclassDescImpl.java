@@ -21,19 +21,20 @@ import java.util.Map;
 import javax.persistence.MappedSuperclass;
 
 import org.seasar.framework.ejb.unit.AnnotationNotFoundException;
-import org.seasar.framework.ejb.unit.PersistentClassDesc;
+import org.seasar.framework.ejb.unit.MappedSuperclassDesc;
 import org.seasar.framework.ejb.unit.PersistentColumn;
-import org.seasar.framework.ejb.unit.PersistentDiscriminatorColumn;
 import org.seasar.framework.ejb.unit.PersistentJoinColumn;
 import org.seasar.framework.ejb.unit.PersistentStateDesc;
+import org.seasar.framework.ejb.unit.ToOneRelationshipStateDesc;
 
 /**
  * @author nakamura
  * 
  */
-public class MappedSuperclassDesc extends AbstractPersistentClassDesc {
+public class MappedSuperclassDescImpl extends AbstractPersistentClassDesc implements
+        MappedSuperclassDesc {
 
-    public MappedSuperclassDesc(Class<?> persistentClass,
+    public MappedSuperclassDescImpl(Class<?> persistentClass,
             String primaryTableName, boolean propertyAccessed) {
 
         super(persistentClass, primaryTableName, propertyAccessed);
@@ -63,33 +64,22 @@ public class MappedSuperclassDesc extends AbstractPersistentClassDesc {
     public void overrideAssociations(
             Map<String, List<PersistentJoinColumn>> associationOverrides) {
         for (PersistentStateDesc stateDesc : getPersistentStateDescs()) {
-            if (associationOverrides.containsKey(stateDesc.getName())) {
+            if (! (stateDesc instanceof ToOneRelationshipStateDesc)) {
+                continue;
+            }
+            ToOneRelationshipStateDesc toOne = (ToOneRelationshipStateDesc) stateDesc;
+            if (associationOverrides.containsKey(toOne.getName())) {
                 List<PersistentJoinColumn> overridings = associationOverrides
-                        .get(stateDesc.getName());
-                List<PersistentJoinColumn> overriddens = stateDesc
+                        .get(toOne.getName());
+                List<PersistentJoinColumn> overriddens = toOne
                         .getJoinColumns();
                 if (overriddens.size() != 0
                         && overriddens.size() != overridings.size()) {
                     return;
                 }
-                stateDesc.setJoinColumns(overridings);
+                toOne.setJoinColumns(overridings);
             }
         }
     }
 
-    public PersistentClassDesc getRoot() {
-        return null;
-    }
-
-    public boolean isRoot() {
-        return false;
-    }
-
-    public PersistentDiscriminatorColumn getDiscriminatorColumn(String tableName) {
-        return null;
-    }
-
-    public boolean isIdentifier() {
-        return false;
-    }
 }

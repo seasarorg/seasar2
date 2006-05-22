@@ -23,6 +23,8 @@ import java.util.List;
 import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.beans.factory.BeanDescFactory;
+import org.seasar.framework.ejb.unit.EmbeddedStateDesc;
+import org.seasar.framework.ejb.unit.MappedSuperclassDesc;
 import org.seasar.framework.ejb.unit.PersistentClassDesc;
 import org.seasar.framework.ejb.unit.PersistentStateAccessor;
 import org.seasar.framework.ejb.unit.PersistentStateDesc;
@@ -92,20 +94,6 @@ public abstract class AbstractPersistentClassDesc implements
                 persistentStateName);
     }
 
-    public PersistentStateDesc getPersistentStateDescByColumnName(
-            String columnName) {
-
-        String tableName = getPrimaryTableName();
-        for (PersistentStateDesc state : getPersistentStateDescsByTableName(tableName)) {
-            if (state.getColumn().hasName(columnName)) {
-                return state;
-            }
-        }
-        throw new PersistentStateNotFoundException(
-                propertyAccessed ? "ESSR0505" : "ESSR0504", tableName,
-                columnName);
-    }
-
     public List<PersistentStateDesc> getPersistentStateDescsByTableName(
             String tableName) {
 
@@ -122,9 +110,12 @@ public abstract class AbstractPersistentClassDesc implements
     public List<PersistentStateDesc> getIdentifiers() {
         List<PersistentStateDesc> result = new ArrayList<PersistentStateDesc>();
         for (PersistentStateDesc stateDesc : stateDescs) {
-            if (stateDesc.isIdentifier()
-                    && stateDesc.getPersistentClassDesc() == this) {
-                result.add(stateDesc);
+            if (stateDesc.isIdentifier()) {
+                PersistentClassDesc ownerClass = stateDesc.getPersistentClassDesc();
+                if ( ownerClass == this
+                        || ownerClass instanceof MappedSuperclassDesc) {
+                    result.add(stateDesc);
+                }
             }
         }
         return result;
@@ -136,6 +127,18 @@ public abstract class AbstractPersistentClassDesc implements
 
     public List<String> getTableNames() {
         return tableNames;
+    }
+
+    public boolean hasEmbeddedId() {
+        PersistentStateDesc id = getIdentifiers().get(0);
+        if (id instanceof EmbeddedStateDesc) {
+            return true;
+        }
+        return false;
+    }
+
+    public EmbeddedStateDesc getEmbeddedId() {
+        return (EmbeddedStateDesc) getIdentifiers().get(0);
     }
 
     protected void setupPersistentStateDescs() {

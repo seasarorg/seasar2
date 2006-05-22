@@ -27,18 +27,11 @@ public interface PersistentClassDesc {
 
     boolean isPropertyAccessed();
 
-    PersistentClassDesc getRoot();
-
-    boolean isRoot();
-
     PersistentStateDesc getPersistentStateDesc(String persistentStateName)
             throws PersistentStateNotFoundException;
 
     PersistentStateDesc getPersistentStateDesc(Class owner,
             String persistentStateName) throws PersistentStateNotFoundException;
-
-    PersistentStateDesc getPersistentStateDescByColumnName(String columnName)
-            throws PersistentStateNotFoundException;
 
     List<PersistentStateDesc> getIdentifiers();
 
@@ -48,10 +41,8 @@ public interface PersistentClassDesc {
             String tableName);
 
     String getPrimaryTableName();
-
-    List<String> getTableNames();
-
-    PersistentDiscriminatorColumn getDiscriminatorColumn(String tableName);
-
-    boolean isIdentifier();
+    
+    boolean hasEmbeddedId();
+    
+    EmbeddedStateDesc getEmbeddedId();
 }

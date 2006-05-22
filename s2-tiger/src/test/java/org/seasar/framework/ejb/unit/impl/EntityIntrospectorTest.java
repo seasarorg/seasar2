@@ -46,11 +46,11 @@ public class EntityIntrospectorTest extends TestCase {
 
         EntityIntrospector i = new EntityIntrospector(department, true, DefaultProxiedObjectResolver.INSTANCE);
 
-        assertNotNull("1", i.getPersistentClassDesc(Department.class));
-        assertNotNull("2", i.getPersistentClassDesc(Employee.class));
-        assertNotNull("3", i.getPersistentClassDesc(FulltimeEmployee.class));
-        assertNotNull("4", i.getPersistentClassDesc(ParttimeEmployee.class));
-        assertNotNull("5", i.getPersistentClassDesc(Address.class));
+        assertNotNull("1", i.getEntityClassDesc(Department.class));
+        assertNotNull("2", i.getEntityClassDesc(Employee.class));
+        assertNotNull("3", i.getEntityClassDesc(FulltimeEmployee.class));
+        assertNotNull("4", i.getEntityClassDesc(ParttimeEmployee.class));
+        assertNotNull("5", i.getEntityClassDesc(Address.class));
     }
     
     public void testUnproxy() throws Exception {
@@ -60,7 +60,7 @@ public class EntityIntrospectorTest extends TestCase {
         
         EntityIntrospector i = new EntityIntrospector(employee, true, resolver);
         
-        assertNotNull("1", i.getPersistentClassDesc(Address.class));
+        assertNotNull("1", i.getEntityClassDesc(Address.class));
     }
 
     @Entity

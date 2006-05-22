@@ -17,24 +17,28 @@ package org.seasar.framework.ejb.unit.impl;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.List;
 
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
 import org.seasar.framework.ejb.unit.PersistentClassDesc;
 import org.seasar.framework.ejb.unit.PersistentColumn;
+import org.seasar.framework.ejb.unit.PersistentJoinColumn;
 import org.seasar.framework.ejb.unit.PersistentStateAccessor;
-import org.seasar.framework.ejb.unit.PersistentStateType;
+import org.seasar.framework.ejb.unit.ToManyRelationshipStateDesc;
 
 /**
  * @author taedium
  * 
  */
-public class ToManyRelationshipStateDesc extends AbstractPersistentStateDesc {
+public class ToManyRelationshipStateDescImpl extends
+        AbstractPersistentStateDesc implements ToManyRelationshipStateDesc {
 
-    public ToManyRelationshipStateDesc(PersistentClassDesc persistentClassDesc,
-            String primaryTableName, PersistentStateAccessor accessor) {
-        
+    public ToManyRelationshipStateDescImpl(
+            PersistentClassDesc persistentClassDesc, String primaryTableName,
+            PersistentStateAccessor accessor) {
+
         super(persistentClassDesc, primaryTableName, accessor);
         setColumn(new PersistentColumn(null, primaryTableName));
         introspect();
@@ -42,7 +46,8 @@ public class ToManyRelationshipStateDesc extends AbstractPersistentStateDesc {
 
     protected void introspect() {
         OneToMany oneToMany = annotatedElement.getAnnotation(OneToMany.class);
-        ManyToMany manyToMany = annotatedElement.getAnnotation(ManyToMany.class);
+        ManyToMany manyToMany = annotatedElement
+                .getAnnotation(ManyToMany.class);
         Class<?> targetEntity = null;
 
         if (oneToMany != null) {
@@ -52,7 +57,8 @@ public class ToManyRelationshipStateDesc extends AbstractPersistentStateDesc {
         }
 
         if (targetEntity == null || targetEntity == void.class) {
-            targetEntity = extractTargetEntityFromCollection(accessor.getGenericType());
+            targetEntity = extractTargetEntityFromCollection(accessor
+                    .getGenericType());
         }
         setPersistenceTargetClass(targetEntity);
 
@@ -68,13 +74,13 @@ public class ToManyRelationshipStateDesc extends AbstractPersistentStateDesc {
                 return (Class) genTypes[1];
             }
         } else if (t instanceof Class) {
-            return (Class)t;
+            return (Class) t;
         }
         return null;
     }
 
-    public PersistentStateType getPersistentStateType() {
-        return PersistentStateType.TO_MANY;
+    public void adjustPrimaryKeyColumns(List<PersistentJoinColumn> pkJoinColumns) {
+        throw new UnsupportedOperationException("adjustPrimaryKeyColumns");
     }
-    
+
 }

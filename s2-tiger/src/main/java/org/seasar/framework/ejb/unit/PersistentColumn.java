@@ -32,11 +32,15 @@ public class PersistentColumn {
         this(column.name(), column.table());
     }
 
+    public PersistentColumn(PersistentColumn column) {
+        this(column.getName(), column.getTable());
+    }
+
     public PersistentColumn(String columnName, String tableName) {
         setName(columnName);
         setTable(tableName);
     }
-
+    
     public String getName() {
         return name;
     }

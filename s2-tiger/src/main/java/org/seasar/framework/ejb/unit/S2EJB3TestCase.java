@@ -19,16 +19,22 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 
 import javax.ejb.EJB;
 import javax.naming.Context;
 import javax.persistence.EntityManager;
 import javax.transaction.TransactionManager;
 
+import org.seasar.extension.dataset.DataColumn;
+import org.seasar.extension.dataset.DataRow;
 import org.seasar.extension.dataset.DataSet;
 import org.seasar.extension.dataset.DataTable;
+import org.seasar.extension.dataset.impl.DataSetImpl;
+import org.seasar.extension.dataset.states.RowStates;
 import org.seasar.extension.j2ee.JndiContextFactory;
 import org.seasar.extension.j2ee.JndiResourceLocator;
+import org.seasar.extension.jdbc.util.DatabaseMetaDataUtil;
 import org.seasar.extension.unit.S2TestCase;
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.S2Container;
@@ -109,6 +115,45 @@ public abstract class S2EJB3TestCase extends S2TestCase {
     public DataTable reload(DataTable table) {
         flush();
         return super.reload(table);
+    }
+
+    protected DataSet reloadAsDataSet(Object entity) {
+        return reloadAsDataSet(entity, false);
+    }
+
+    protected DataSet reloadAsDataSet(Object entity,
+            boolean includesRelationships) {
+
+        flush();
+        EntityReader reader = createEntityReader(entity, includesRelationships);
+        DataSet dataSet = reader.read();
+        DataSet newDataSet = new DataSetImpl();
+
+        for (int i = 0; i < dataSet.getTableSize(); i++) {
+            DataTable table = dataSet.getTable(i);
+            DataTable newTable = newDataSet.addTable(table.getTableName());
+            Map columnMap = DatabaseMetaDataUtil.getColumnMap(
+                    getDatabaseMetaData(), table.getTableName());
+            for (int j = 0; j < table.getColumnSize(); j++) {
+                DataColumn column = table.getColumn(j);
+                if(columnMap.containsKey(column.getColumnName())) {
+                    newTable.addColumn(column.getColumnName(), column.getColumnType());
+                }
+            }
+            for (int j = 0; j < table.getRowSize(); j++) {
+                DataRow row = table.getRow(j);
+                DataRow newRow = newTable.addRow();
+                for (int k = 0; k < table.getColumnSize(); k++) {
+                    DataColumn column = table.getColumn(k);
+                    String columnName = column.getColumnName();
+                    if (columnMap.containsKey(columnName)) {
+                        newRow.setValue(columnName, row.getValue(columnName));
+                    }
+                }
+                newRow.setState(RowStates.UNCHANGED);
+            }
+        }
+        return super.reload(newDataSet);
     }
 
     @Override
@@ -213,11 +258,11 @@ public abstract class S2EJB3TestCase extends S2TestCase {
     protected AutoNaming getAutoNaming() {
         return autoNaming;
     }
-    
+
     protected void setAutoNaming(AutoNaming autoNaming) {
         this.autoNaming = autoNaming;
     }
-    
+
     protected void assertEntityEquals(String message, DataSet expected,
             Object entity) {
         assertEntityEquals(message, expected, entity, false);
@@ -227,13 +272,17 @@ public abstract class S2EJB3TestCase extends S2TestCase {
             Object entity, boolean includesRelationships) {
 
         assertNotNull("entity is null.", entity);
-        EntityReader reader;
-        if (resolver == null) {
-            reader = new EntityReader(entity, includesRelationships);
-        } else {
-            reader = new EntityReader(entity, includesRelationships, resolver);
-        }
+        EntityReader reader = createEntityReader(entity, includesRelationships);
         assertEqualsIgnoreOrder(message, expected, reader.read());
+    }
+
+    protected EntityReader createEntityReader(Object entity,
+            boolean includesRelationships) {
+        if (resolver == null) {
+            return new EntityReader(entity, includesRelationships);
+        } else {
+            return new EntityReader(entity, includesRelationships, resolver);
+        }
     }
 
     protected void assertEntityListEquals(String message, DataSet expected,
@@ -245,13 +294,18 @@ public abstract class S2EJB3TestCase extends S2TestCase {
             List<?> list, boolean includesRelationships) {
 
         assertNotNull("entity list is null.", list);
-        EntityListReader reader;
-        if (resolver == null) {
-            reader = new EntityListReader(list, includesRelationships);
-        } else {
-            reader = new EntityListReader(list, includesRelationships, resolver);
-        }
+        EntityListReader reader = createEntityListReader(list,
+                includesRelationships);
         assertEqualsIgnoreOrder(message, expected, reader.read());
+    }
+
+    protected EntityListReader createEntityListReader(List<?> list,
+            boolean includesRelationships) {
+        if (resolver == null) {
+            return new EntityListReader(list, includesRelationships);
+        } else {
+            return new EntityListReader(list, includesRelationships, resolver);
+        }
     }
 
     protected void assertEqualsIgnoreOrder(String message, DataSet expected,

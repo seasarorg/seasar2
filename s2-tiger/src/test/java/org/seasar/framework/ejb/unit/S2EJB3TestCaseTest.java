@@ -21,7 +21,10 @@ import java.util.List;
 import javax.ejb.EJB;
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 import javax.transaction.TransactionManager;
 
 import org.seasar.extension.dataset.DataRow;
@@ -165,6 +168,16 @@ public class S2EJB3TestCaseTest extends S2EJB3TestCase {
     public void testNeedTransactionReturnFalse() throws Exception {
         assertEquals(false, needTransaction());
     }
+    
+    public void testReloadAsDataSet() throws Exception {
+        Dept dept = new Dept();
+        dept.deptno = new Long(1);
+        dept.dname = "CLARK";
+        DataSet dataSet = reloadAsDataSet(dept);
+        DataTable table = dataSet.getTable("DEPT");
+        assertEquals("1", true, table.hasColumn("DEPTNO"));
+        assertEquals("2", false, table.hasColumn("NONE"));
+    }
 
     @Entity(name = "Employee")
     public static class Employee {
@@ -184,5 +197,18 @@ public class S2EJB3TestCaseTest extends S2EJB3TestCase {
             this.empno = empno;
             this.name = name;
         }
+    }
+    
+    @Entity
+    @Table(name = "Dept")
+    public static class Dept {
+
+        @Id
+        private Long deptno;
+        
+        private String dname;
+        
+        private String none;
+
     }
 }

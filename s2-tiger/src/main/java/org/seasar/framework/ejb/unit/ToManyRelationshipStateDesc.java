@@ -15,32 +15,10 @@
  */
 package org.seasar.framework.ejb.unit;
 
-import java.util.List;
-
 /**
  * @author taedium
  * 
  */
-public interface PersistentStateDesc {
-
-    String getName();
-
-    PersistentClassDesc getPersistentClassDesc();
-
-    boolean hasColumn(String columnName);
-
-    PersistentColumn getColumn();
-
-    void setColumn(PersistentColumn column);
-
-    Class<?> getPersistenceTargetClass();
-
-    Object getValue(Object target, ProxiedObjectResolver resolver);
-
-    void adjustPrimaryKeyColumns(List<PersistentJoinColumn> pkJoinColumns);
-
-    PersistentStateAccessor getAccessor();
-
-    boolean isIdentifier();
+public interface ToManyRelationshipStateDesc extends PersistentStateDesc {
 
 }

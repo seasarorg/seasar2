@@ -20,8 +20,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
-import static org.seasar.framework.ejb.unit.PersistentStateType.TO_MANY;
-
 import org.seasar.extension.dataset.ColumnType;
 import org.seasar.extension.dataset.DataReader;
 import org.seasar.extension.dataset.DataRow;
@@ -43,7 +41,7 @@ public class EntityReader implements DataReader {
 
     private final Map<Object, Object> processedEntities = new IdentityHashMap<Object, Object>();
 
-    private final Stack<PersistentClassDesc> processingClassDescs = new Stack<PersistentClassDesc>();
+    private final Stack<EntityClassDesc> processingClassDescs = new Stack<EntityClassDesc>();
 
     private final DataSet dataSet = new DataSetImpl();
 
@@ -70,12 +68,10 @@ public class EntityReader implements DataReader {
         this(new EntityIntrospector(entity, readsRelationships, resolver),
                 readsRelationships, resolver);
 
-        PersistentClassDesc classDesc = introspector
-                .getPersistentClassDesc(entity);
+        EntityClassDesc classDesc = introspector.getEntityClassDesc(entity);
 
         if (readsRelationships) {
-            for (PersistentClassDesc each : introspector
-                    .getAllPersistentClassDescs()) {
+            for (EntityClassDesc each : introspector.getAllEntityClassDescs()) {
                 setupColumns(each);
             }
         } else {
@@ -85,7 +81,7 @@ public class EntityReader implements DataReader {
         startSetupRows(classDesc, entity);
     }
 
-    protected void setupColumns(PersistentClassDesc classDesc) {
+    protected void setupColumns(EntityClassDesc classDesc) {
         for (String tableName : classDesc.getTableNames()) {
             List<PersistentStateDesc> stateDescs = classDesc
                     .getPersistentStateDescsByTableName(tableName);
@@ -93,23 +89,22 @@ public class EntityReader implements DataReader {
             for (PersistentStateDesc stateDesc : stateDescs) {
                 Class<?> stateClass = stateDesc.getPersistenceTargetClass();
 
-                switch (stateDesc.getPersistentStateType()) {
-                case BASIC:
+                if (stateDesc instanceof BasicStateDesc) {
                     setupColumn(stateDesc.getColumn(), stateClass);
-                    break;
-                case EMBEDDED:
-                    for (PersistentStateDesc embedded : stateDesc
-                            .getEmbeddedStateDescs()) {
+
+                } else if (stateDesc instanceof EmbeddedStateDesc) {
+                    EmbeddedStateDesc embeddedStateDesc = (EmbeddedStateDesc) stateDesc;
+                    for (PersistentStateDesc embedded : embeddedStateDesc
+                            .getPersistentStateDesc()) {
                         Class<?> type = embedded.getPersistenceTargetClass();
                         setupColumn(embedded.getColumn(), type);
                     }
-                    break;
-                case TO_ONE:
-                    for (PersistentColumn fkColumn : stateDesc
-                            .getForeignKeyColumns()) {
-                        setupColumn(fkColumn, stateClass);
+
+                } else if (stateDesc instanceof ToOneRelationshipStateDesc) {
+                    ToOneRelationshipStateDesc toOne = (ToOneRelationshipStateDesc) stateDesc;
+                    for (ForeignKey fk : toOne.getForeignKeys()) {
+                        setupColumn(fk.getColumn(), stateClass);
                     }
-                    break;
                 }
             }
 
@@ -135,7 +130,7 @@ public class EntityReader implements DataReader {
         dataTable.addColumn(column.getName(), ct);
     }
 
-    protected void startSetupRows(PersistentClassDesc classDesc, Object entity) {
+    protected void startSetupRows(EntityClassDesc classDesc, Object entity) {
         if (isProcessing(classDesc) || isProcessed(entity)) {
             return;
         }
@@ -145,7 +140,7 @@ public class EntityReader implements DataReader {
         putProcessedEntity(entity);
     }
 
-    protected void setupRows(PersistentClassDesc classDesc, Object entity) {
+    protected void setupRows(EntityClassDesc classDesc, Object entity) {
         Map<Object, PersistentStateDesc> relationships = new IdentityHashMap<Object, PersistentStateDesc>();
 
         for (String tableName : classDesc.getTableNames()) {
@@ -159,33 +154,37 @@ public class EntityReader implements DataReader {
                     continue;
                 }
 
-                switch (stateDesc.getPersistentStateType()) {
-                case BASIC:
+                if (stateDesc instanceof BasicStateDesc) {
                     row = getRow(tableName, row);
-                    PersistentColumn column = stateDesc.getColumn();
                     Class<?> type = stateDesc.getPersistenceTargetClass();
-                    setupRowValue(row, column, type, state);
-                    break;
-                case EMBEDDED:
-                    for (PersistentStateDesc embState : stateDesc
-                            .getEmbeddedStateDescs()) {
+                    setupRowValue(row, stateDesc.getColumn(), type, state);
+
+                } else if (stateDesc instanceof EmbeddedStateDesc) {
+                    EmbeddedStateDesc embeddedStateDesc = (EmbeddedStateDesc) stateDesc;
+                    for (PersistentStateDesc each : embeddedStateDesc
+                            .getPersistentStateDesc()) {
                         row = getRow(tableName, row);
-                        PersistentColumn embcolumn = embState.getColumn();
-                        Class<?> embType = embState.getPersistenceTargetClass();
-                        Object value = embState.getValue(state, resolver);
-                        setupRowValue(row, embcolumn, embType, value);
+                        Class<?> type = each.getPersistenceTargetClass();
+                        Object value = each.getValue(state, resolver);
+                        setupRowValue(row, each.getColumn(), type, value);
                     }
-                    break;
-                case TO_ONE:
-                    if (!stateDesc.getForeignKeyColumns().isEmpty()) {
+
+                } else if (stateDesc instanceof ToOneRelationshipStateDesc) {
+                    ToOneRelationshipStateDesc toOne = (ToOneRelationshipStateDesc) stateDesc;
+                    for (ForeignKey fk : toOne.getForeignKeys()) {
                         row = getRow(tableName, row);
-                        setupForeignKeys(row, stateDesc, state);
+                        Class<?> type = fk.getPersistenceTargetClass();
+                        Object value = fk.getValue(state, resolver);
+                        setupRowValue(row, fk.getColumn(), type, value);
                     }
-                case TO_MANY:
-                    if (readsRelationships) {
+                    
+                }
+
+                if (readsRelationships) {
+                    if (stateDesc instanceof ToManyRelationshipStateDesc
+                            || stateDesc instanceof ToOneRelationshipStateDesc) {
                         relationships.put(state, stateDesc);
                     }
-                    break;
                 }
             }
 
@@ -206,26 +205,6 @@ public class EntityReader implements DataReader {
         }
     }
 
-    protected void setupForeignKeys(DataRow row, PersistentStateDesc stateDesc,
-            Object relEntity) {
-
-        for (PersistentJoinColumn fk : stateDesc.getForeignKeyColumns()) {
-            Class<?> type = null;
-            Object value = null;
-            if (relEntity != null) {
-                PersistentClassDesc relationship = introspector
-                        .getPersistentClassDesc(relEntity);
-                PersistentStateDesc referenced = relationship
-                        .getPersistentStateDescByColumnName(fk
-                                .getReferencedColumnName());
-
-                type = referenced.getPersistenceTargetClass();
-                value = referenced.getValue(relEntity, resolver);
-            }
-            setupRowValue(row, fk, type, value);
-        }
-    }
-
     protected void setupRowValue(DataRow row, PersistentColumn column,
             Class stateType, Object value) {
 
@@ -236,19 +215,19 @@ public class EntityReader implements DataReader {
     protected void setupRelationshipRows(Class source,
             PersistentStateDesc stateDesc, Object value) {
 
-        if (stateDesc.getPersistentStateType() == TO_MANY) {
+        if (stateDesc instanceof ToManyRelationshipStateDesc) {
             for (Object element : introspector.getElements(value)) {
                 if (element == null) {
                     continue;
                 }
                 Object real = resolver.unproxy(element);
-                PersistentClassDesc relationship = introspector
-                        .getPersistentClassDesc(real);
+                EntityClassDesc relationship = introspector
+                        .getEntityClassDesc(real);
                 startSetupRows(relationship, real);
             }
         } else {
-            PersistentClassDesc relationship = introspector
-                    .getPersistentClassDesc(value);
+            EntityClassDesc relationship = introspector
+                    .getEntityClassDesc(value);
             startSetupRows(relationship, value);
         }
     }
@@ -265,11 +244,11 @@ public class EntityReader implements DataReader {
         processedEntities.remove(entity);
     }
 
-    protected void pushProcessingClassDesc(PersistentClassDesc classDesc) {
+    protected void pushProcessingClassDesc(EntityClassDesc classDesc) {
         processingClassDescs.push(classDesc.getRoot());
     }
 
-    protected boolean isProcessing(PersistentClassDesc classDesc) {
+    protected boolean isProcessing(EntityClassDesc classDesc) {
         return processingClassDescs.contains(classDesc.getRoot());
     }
 

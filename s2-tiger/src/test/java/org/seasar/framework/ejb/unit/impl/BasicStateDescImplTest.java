@@ -36,13 +36,13 @@ import org.seasar.framework.util.ClassUtil;
  * @author taedium
  * 
  */
-public class BasicStateDescTest extends TestCase {
+public class BasicStateDescImplTest extends TestCase {
 
     public void testGetColumn() {
-        PersistentClassDesc pc = new EntityClassDesc(Hoge.class);
+        PersistentClassDesc pc = new EntityClassDescImpl(Hoge.class);
         Field field = ClassUtil.getDeclaredField(Hoge.class, "aaa");
         FieldAccessor accessor = new FieldAccessor(field);
-        BasicStateDesc basicDesc = new BasicStateDesc(pc, "hoge", accessor);
+        BasicStateDescImpl basicDesc = new BasicStateDescImpl(pc, "hoge", accessor);
         PersistentColumn column = basicDesc.getColumn();
 
         assertEquals("1", "hoge", column.getTable().toLowerCase());
@@ -50,10 +50,10 @@ public class BasicStateDescTest extends TestCase {
     }
 
     public void testGetColumn2() {
-        PersistentClassDesc pc = new EntityClassDesc(Hoge2.class);
+        PersistentClassDesc pc = new EntityClassDescImpl(Hoge2.class);
         Field field = ClassUtil.getDeclaredField(Hoge2.class, "aaa");
         FieldAccessor accessor = new FieldAccessor(field);
-        BasicStateDesc basicDesc = new BasicStateDesc(pc, "hoge", accessor);
+        BasicStateDescImpl basicDesc = new BasicStateDescImpl(pc, "hoge", accessor);
         PersistentColumn column = basicDesc.getColumn();
 
         assertEquals("1", "foo2", column.getTable().toLowerCase());
@@ -61,57 +61,57 @@ public class BasicStateDescTest extends TestCase {
     }
 
     public void testHasColumnReturnsTrue() {
-        PersistentClassDesc pc = new EntityClassDesc(Hoge2.class);
+        PersistentClassDesc pc = new EntityClassDescImpl(Hoge2.class);
         Field field = ClassUtil.getDeclaredField(Hoge2.class, "aaa");
         FieldAccessor accessor = new FieldAccessor(field);
-        BasicStateDesc basicDesc = new BasicStateDesc(pc, "hoge", accessor);
+        BasicStateDescImpl basicDesc = new BasicStateDescImpl(pc, "hoge", accessor);
 
         assertEquals("1", true, basicDesc.hasColumn("foo1aaa"));
     }
 
     public void testHasColumnReturnsFalse() {
-        PersistentClassDesc pc = new EntityClassDesc(Hoge2.class);
+        PersistentClassDesc pc = new EntityClassDescImpl(Hoge2.class);
         Field field = ClassUtil.getDeclaredField(Hoge2.class, "aaa");
         FieldAccessor accessor = new FieldAccessor(field);
-        BasicStateDesc basicDesc = new BasicStateDesc(pc, "hoge", accessor);
+        BasicStateDescImpl basicDesc = new BasicStateDescImpl(pc, "hoge", accessor);
 
         assertEquals("1", false, basicDesc.hasColumn("aaa"));
     }
 
     public void testGetPersistenceTargetClass() {
-        PersistentClassDesc pc = new EntityClassDesc(Hoge.class);
+        PersistentClassDesc pc = new EntityClassDescImpl(Hoge.class);
         Field field = ClassUtil.getDeclaredField(Hoge.class, "aaa");
         FieldAccessor accessor = new FieldAccessor(field);
-        BasicStateDesc basicDesc = new BasicStateDesc(pc, "hoge", accessor);
+        BasicStateDescImpl basicDesc = new BasicStateDescImpl(pc, "hoge", accessor);
         
         assertEquals("1", Long.class, basicDesc.getPersistenceTargetClass());
     }
 
     public void testIsIdentifierReturnsTrue() {
-        PersistentClassDesc pc = new EntityClassDesc(Hoge.class);
+        PersistentClassDesc pc = new EntityClassDescImpl(Hoge.class);
         Field field = ClassUtil.getDeclaredField(Hoge.class, "aaa");
         FieldAccessor accessor = new FieldAccessor(field);
-        BasicStateDesc basicDesc = new BasicStateDesc(pc, "hoge", accessor); 
+        BasicStateDescImpl basicDesc = new BasicStateDescImpl(pc, "hoge", accessor); 
         
         assertEquals("1", true, basicDesc.isIdentifier());
     }
 
     public void testIsIdentifierReturnsFalse() {
-        PersistentClassDesc pc = new EntityClassDesc(Hoge.class);
+        PersistentClassDesc pc = new EntityClassDescImpl(Hoge.class);
         Field field = ClassUtil.getDeclaredField(Hoge.class, "bbb");
         FieldAccessor accessor = new FieldAccessor(field);
-        BasicStateDesc basicDesc = new BasicStateDesc(pc, "hoge", accessor);         
+        BasicStateDescImpl basicDesc = new BasicStateDescImpl(pc, "hoge", accessor);         
         
         assertEquals("1", false, basicDesc.isIdentifier());
     }
 
     public void testGetEnumValueByOrdinal() {
         Hoge3 hoge3 = new Hoge3();
-        PersistentClassDesc pc = new EntityClassDesc(Hoge3.class);
+        PersistentClassDesc pc = new EntityClassDescImpl(Hoge3.class);
         Field field = ClassUtil.getDeclaredField(Hoge3.class, "bbb");
         field.setAccessible(true);
         FieldAccessor accessor = new FieldAccessor(field);
-        BasicStateDesc basicDesc = new BasicStateDesc(pc, "hoge", accessor);
+        BasicStateDescImpl basicDesc = new BasicStateDescImpl(pc, "hoge", accessor);
         
         assertEquals("1", 1, basicDesc.getValue(hoge3, DefaultProxiedObjectResolver.INSTANCE));
         assertEquals("2", int.class, basicDesc.getPersistenceTargetClass());
@@ -119,11 +119,11 @@ public class BasicStateDescTest extends TestCase {
 
     public void testGetEnumValueByString() {
         Hoge3 hoge3 = new Hoge3();
-        PersistentClassDesc pc = new EntityClassDesc(Hoge3.class);
+        PersistentClassDesc pc = new EntityClassDescImpl(Hoge3.class);
         Field field = ClassUtil.getDeclaredField(Hoge3.class, "ccc");
         field.setAccessible(true);
         FieldAccessor accessor = new FieldAccessor(field);
-        BasicStateDesc basicDesc = new BasicStateDesc(pc, "hoge", accessor);
+        BasicStateDescImpl basicDesc = new BasicStateDescImpl(pc, "hoge", accessor);
         
         assertEquals("1", "BBB", basicDesc.getValue(hoge3, DefaultProxiedObjectResolver.INSTANCE));
         assertEquals("2", String.class, basicDesc.getPersistenceTargetClass());
