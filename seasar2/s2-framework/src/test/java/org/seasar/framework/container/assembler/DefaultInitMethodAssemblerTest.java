@@ -155,6 +155,17 @@ public class DefaultInitMethodAssemblerTest extends TestCase {
 		MethodAssembler assembler = new DefaultInitMethodAssembler(cd);
 		assembler.assemble(new Integer(1));
 	}
+    
+    public void testAssembleWhenComponentNull() throws Exception {
+        S2Container container = new S2ContainerImpl();
+        ComponentDefImpl cd = new ComponentDefImpl(Integer.class);
+        InitMethodDef md = new InitMethodDefImpl();
+        md.setExpression(new OgnlExpression("#out.println(@Integer@MIN_VALUE)"));
+        cd.addInitMethodDef(md);
+        container.register(cd);
+        MethodAssembler assembler = new DefaultInitMethodAssembler(cd);
+        assembler.assemble(null);
+    }
 
 	public interface Foo {
 		public String getHogeName();

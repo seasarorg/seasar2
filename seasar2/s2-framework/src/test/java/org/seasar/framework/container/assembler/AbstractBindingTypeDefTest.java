@@ -65,6 +65,16 @@ public class AbstractBindingTypeDefTest extends TestCase {
         Hoge2 hoge2 = (Hoge2) container.getComponent(Hoge2.class);
         assertNotNull("1", hoge2.aaa);
     }
+    
+    public void testBindAutoForPackagePrefix() throws Exception {
+        S2Container container = new S2ContainerImpl();
+        ComponentDefImpl cd = new ComponentDefImpl(Hoge.class, "aaa_hoge");
+        ComponentDefImpl cd2 = new ComponentDefImpl(Foo.class);
+        container.register(cd);
+        container.register(cd2);
+        Foo foo = (Foo) container.getComponent(Foo.class);
+        assertNotNull("1", foo.getHoge());
+    }
 
     public static class ComponentDefAware {
         private ComponentDef componentDef;
@@ -87,5 +97,18 @@ public class AbstractBindingTypeDefTest extends TestCase {
     
     public static class Hoge2 {
         private List aaa;
+    }
+    
+    public static class Foo {
+        
+        private Hoge hoge;
+        
+        public Hoge getHoge() {
+            return hoge;
+        }
+        
+        public void setHoge(Hoge hoge) {
+            this.hoge = hoge;
+        }
     }
 }

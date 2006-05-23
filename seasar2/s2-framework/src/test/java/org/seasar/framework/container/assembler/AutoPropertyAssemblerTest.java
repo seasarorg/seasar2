@@ -64,6 +64,14 @@ public class AutoPropertyAssemblerTest extends TestCase {
 		Date d = new Date();
 		assembler.assemble(d);
 	}
+    
+    public void testAssembleWhenComponentNull() throws Exception {
+        S2Container container = new S2ContainerImpl();
+        ComponentDefImpl cd = new ComponentDefImpl(Date.class);
+        container.register(cd);
+        PropertyAssembler assembler = new AutoPropertyAssembler(cd);
+        assembler.assemble(null);
+    }
 	
 	public void testSkipIllegalProperty() throws Exception {
 		S2Container container = new S2ContainerImpl();

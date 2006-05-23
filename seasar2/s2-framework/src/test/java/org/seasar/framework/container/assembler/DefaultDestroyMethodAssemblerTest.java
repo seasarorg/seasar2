@@ -80,6 +80,17 @@ public class DefaultDestroyMethodAssemblerTest extends TestCase {
 			System.out.println(ex);
 		}
 	}
+    
+    public void testAssembleWhenComponentNull() throws Exception {
+        S2Container container = new S2ContainerImpl();
+        ComponentDefImpl cd = new ComponentDefImpl(HashMap.class);
+        DestroyMethodDef md = new DestroyMethodDefImpl();
+        md.setExpression(new OgnlExpression("#self.put('aaa', '111')"));
+        cd.addDestroyMethodDef(md);
+        container.register(cd);
+        MethodAssembler assembler = new DefaultDestroyMethodAssembler(cd);
+        assembler.assemble(null);
+    }
 
 	public interface Foo {
 		public String getHogeName();

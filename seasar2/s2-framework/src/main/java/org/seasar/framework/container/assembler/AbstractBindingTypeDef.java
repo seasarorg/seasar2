@@ -22,6 +22,7 @@ import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.container.BindingTypeDef;
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.ComponentNotFoundRuntimeException;
+import org.seasar.framework.container.ContainerConstants;
 import org.seasar.framework.container.PropertyDef;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.util.BindingUtil;
@@ -69,7 +70,7 @@ public abstract class AbstractBindingTypeDef implements BindingTypeDef {
                 doBind(componentDef, propertyDesc, component);
             } else if (propertyDef != null && field != null) {
                 doBind(componentDef, field, component);
-            } 
+            }
         }
     }
 
@@ -79,16 +80,16 @@ public abstract class AbstractBindingTypeDef implements BindingTypeDef {
         Object value = getValue(componentDef, propertyDef, component);
         setValue(componentDef, field, component, value);
     }
-    
+
     protected void bindManual(ComponentDef componentDef,
             PropertyDef propertyDef, PropertyDesc propertyDesc, Object component) {
 
         Object value = getValue(componentDef, propertyDef, component);
         setValue(componentDef, propertyDesc, component, value);
     }
-    
-    protected boolean bindAuto(ComponentDef componentDef,
-            Field field, Object component) {
+
+    protected boolean bindAuto(ComponentDef componentDef, Field field,
+            Object component) {
 
         S2Container container = componentDef.getContainer();
         String propName = field.getName();
@@ -111,9 +112,19 @@ public abstract class AbstractBindingTypeDef implements BindingTypeDef {
                 return true;
             }
         }
+        if (container.hasComponentDef(propType)) {
+            ComponentDef cd = container.getComponentDef(propType);
+            if (cd.getComponentName() != null
+                    && cd.getComponentName().endsWith(
+                            ContainerConstants.PACKAGE_SEP + propName)) {
+                Object value = container.getComponent(propType);
+                setValue(componentDef, field, component, value);
+                return true;
+            }
+        }
         return false;
     }
-    
+
     protected boolean bindAuto(ComponentDef componentDef,
             PropertyDesc propertyDesc, Object component) {
 
@@ -135,6 +146,16 @@ public abstract class AbstractBindingTypeDef implements BindingTypeDef {
             }
             if (propType.isAssignableFrom(ComponentDef.class)) {
                 setValue(componentDef, propertyDesc, component, componentDef);
+                return true;
+            }
+        }
+        if (container.hasComponentDef(propType)) {
+            ComponentDef cd = container.getComponentDef(propType);
+            if (cd.getComponentName() != null
+                    && cd.getComponentName().endsWith(
+                            ContainerConstants.PACKAGE_SEP + propName)) {
+                Object value = container.getComponent(propType);
+                setValue(componentDef, propertyDesc, component, value);
                 return true;
             }
         }
@@ -167,9 +188,9 @@ public abstract class AbstractBindingTypeDef implements BindingTypeDef {
                     .getComponentClass(), propertyDesc.getPropertyName(), ex);
         }
     }
-    
-    protected void setValue(ComponentDef componentDef,
-            Field field, Object component, Object value)
+
+    protected void setValue(ComponentDef componentDef, Field field,
+            Object component, Object value)
             throws IllegalPropertyRuntimeException {
 
         if (value == null) {
@@ -185,7 +206,7 @@ public abstract class AbstractBindingTypeDef implements BindingTypeDef {
 
     protected abstract void doBind(ComponentDef componentDef,
             PropertyDesc propertyDesc, Object component);
-    
-    protected abstract void doBind(ComponentDef componentDef,
-            Field field, Object component);
+
+    protected abstract void doBind(ComponentDef componentDef, Field field,
+            Object component);
 }

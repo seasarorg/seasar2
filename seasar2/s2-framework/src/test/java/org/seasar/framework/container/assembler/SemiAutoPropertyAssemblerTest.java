@@ -124,6 +124,18 @@ public class SemiAutoPropertyAssemblerTest extends TestCase {
 			System.out.println(ex);
 		}
 	}
+    
+    public void testAssembleWhenComponentNull() throws Exception {
+        S2Container container = new S2ContainerImpl();
+        ComponentDefImpl cd = new ComponentDefImpl(D.class);
+        ComponentDefImpl cd2 = new ComponentDefImpl(B.class, "hoge2");
+        PropertyDef pd = new PropertyDefImpl("hoge");
+        cd.addPropertyDef(pd);
+        container.register(cd);
+        container.register(cd2);
+        PropertyAssembler assembler = new SemiAutoPropertyAssembler(cd);
+        assembler.assemble(null);
+    }
 
 	public interface Foo {
 		public String getHogeName();

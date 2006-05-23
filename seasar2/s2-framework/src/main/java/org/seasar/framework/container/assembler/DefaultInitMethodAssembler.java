@@ -36,6 +36,9 @@ public class DefaultInitMethodAssembler extends AbstractMethodAssembler {
 	public void assemble(Object component)
 		throws IllegalMethodRuntimeException {
 
+        if (component == null) {
+            return;
+        }
 		BeanDesc beanDesc = getBeanDesc(component);
 		int size = getComponentDef().getInitMethodDefSize();
 		for (int i = 0; i < size; ++i) {

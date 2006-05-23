@@ -21,19 +21,21 @@ package org.seasar.framework.container;
  */
 public interface ContainerConstants {
 	
-	public char NS_SEP = '.';
+	char NS_SEP = '.';
     
-    public String NS_SEP_STR = Character.toString(NS_SEP);
+    char PACKAGE_SEP = '_';
+    
+    String NS_SEP_STR = Character.toString(NS_SEP);
 	
-	public String CONTAINER_NAME = "container";
+	String CONTAINER_NAME = "container";
 	
-	public String REQUEST_NAME = "request";
+	String REQUEST_NAME = "request";
 	
-	public String RESPONSE_NAME = "response";
+	String RESPONSE_NAME = "response";
 	
-	public String SESSION_NAME = "session";
+	String SESSION_NAME = "session";
 	
-	public String SERVLET_CONTEXT_NAME = "application";
+	String SERVLET_CONTEXT_NAME = "application";
 	
-	public String COMPONENT_DEF_NAME = "componentDef";
+	String COMPONENT_DEF_NAME = "componentDef";
 }

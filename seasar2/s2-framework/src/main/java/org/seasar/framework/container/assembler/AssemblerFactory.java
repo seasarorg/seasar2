@@ -35,78 +35,93 @@ public class AssemblerFactory {
         provider = p;
     }
 
-    public static MethodAssembler createInitMethodAssembler(final ComponentDef cd) {
+    public static MethodAssembler createInitMethodAssembler(
+            final ComponentDef cd) {
         return getProvider().createInitMethodAssembler(cd);
     }
 
-    public static MethodAssembler createDestroyMethodAssembler(final ComponentDef cd) {
+    public static MethodAssembler createDestroyMethodAssembler(
+            final ComponentDef cd) {
         return getProvider().createDestroyMethodAssembler(cd);
     }
 
-    public static ConstructorAssembler createAutoConstructorAssembler(final ComponentDef cd) {
+    public static ConstructorAssembler createAutoConstructorAssembler(
+            final ComponentDef cd) {
         return getProvider().createAutoConstructorAssembler(cd);
     }
 
-    public static ConstructorAssembler createDefaultConstructorConstructorAssembler(final ComponentDef cd) {
+    public static ConstructorAssembler createDefaultConstructorConstructorAssembler(
+            final ComponentDef cd) {
         return getProvider().createDefaultConstructorConstructorAssembler(cd);
     }
 
-    public static PropertyAssembler createAutoPropertyAssembler(final ComponentDef cd) {
+    public static PropertyAssembler createAutoPropertyAssembler(
+            final ComponentDef cd) {
         return getProvider().createAutoPropertyAssembler(cd);
     }
 
-    public static PropertyAssembler createManualOnlyPropertyAssembler(final ComponentDef cd) {
+    public static PropertyAssembler createManualOnlyPropertyAssembler(
+            final ComponentDef cd) {
         return getProvider().createManualOnlyPropertyAssembler(cd);
     }
-    
-    public static PropertyAssembler createSemiAutoPropertyAssembler(final ComponentDef cd) {
+
+    public static PropertyAssembler createSemiAutoPropertyAssembler(
+            final ComponentDef cd) {
         return getProvider().createSemiAutoPropertyAssembler(cd);
     }
 
     public interface Provider {
-        
+
         MethodAssembler createInitMethodAssembler(ComponentDef cd);
 
         MethodAssembler createDestroyMethodAssembler(ComponentDef cd);
 
         ConstructorAssembler createAutoConstructorAssembler(ComponentDef cd);
 
-        ConstructorAssembler createDefaultConstructorConstructorAssembler(ComponentDef cd);
-        
+        ConstructorAssembler createDefaultConstructorConstructorAssembler(
+                ComponentDef cd);
+
         PropertyAssembler createAutoPropertyAssembler(ComponentDef cd);
 
         PropertyAssembler createManualOnlyPropertyAssembler(ComponentDef cd);
-        
+
         PropertyAssembler createSemiAutoPropertyAssembler(ComponentDef cd);
     }
 
     public static class DefaultProvider implements Provider {
-        
+
         public MethodAssembler createInitMethodAssembler(final ComponentDef cd) {
             return new DefaultInitMethodAssembler(cd);
+
         }
 
-        public MethodAssembler createDestroyMethodAssembler(final ComponentDef cd) {
+        public MethodAssembler createDestroyMethodAssembler(
+                final ComponentDef cd) {
             return new DefaultDestroyMethodAssembler(cd);
         }
 
-        public ConstructorAssembler createAutoConstructorAssembler(final ComponentDef cd) {
+        public ConstructorAssembler createAutoConstructorAssembler(
+                final ComponentDef cd) {
             return new AutoConstructorAssembler(cd);
         }
 
-        public ConstructorAssembler createDefaultConstructorConstructorAssembler(final ComponentDef cd) {
+        public ConstructorAssembler createDefaultConstructorConstructorAssembler(
+                final ComponentDef cd) {
             return new DefaultConstructorConstructorAssembler(cd);
         }
 
-        public PropertyAssembler createAutoPropertyAssembler(final ComponentDef cd) {
+        public PropertyAssembler createAutoPropertyAssembler(
+                final ComponentDef cd) {
             return new AutoPropertyAssembler(cd);
         }
 
-        public PropertyAssembler createManualOnlyPropertyAssembler(final ComponentDef cd) {
+        public PropertyAssembler createManualOnlyPropertyAssembler(
+                final ComponentDef cd) {
             return new ManualOnlyPropertyAssembler(cd);
         }
-        
-        public PropertyAssembler createSemiAutoPropertyAssembler(final ComponentDef cd) {
+
+        public PropertyAssembler createSemiAutoPropertyAssembler(
+                final ComponentDef cd) {
             return new SemiAutoPropertyAssembler(cd);
         }
     }
