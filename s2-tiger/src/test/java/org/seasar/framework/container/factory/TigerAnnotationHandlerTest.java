@@ -38,8 +38,10 @@ import org.seasar.framework.container.InterTypeDef;
 import org.seasar.framework.container.PropertyDef;
 import org.seasar.framework.container.assembler.AutoBindingDefFactory;
 import org.seasar.framework.container.deployer.InstanceDefFactory;
+import org.seasar.framework.container.impl.PropertyDefImpl;
 import org.seasar.framework.container.ognl.OgnlExpression;
 import org.seasar.framework.ejb.SEJBException;
+import org.seasar.framework.jpa.TxScopedEntityManagerProxy;
 
 /**
  * @author higa
@@ -305,8 +307,8 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
     }
 
     public void testAppendAspectForEJB3InterceptorInvalid1() throws Exception {
-        ComponentDef cd = handler.createComponentDef(Hoge15.class, null);
         try {
+            ComponentDef cd = handler.createComponentDef(Hoge15.class, null);
             handler.appendAspect(cd);
             fail("1");
         } catch (EJBException ex) {
@@ -315,8 +317,8 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
     }
 
     public void testAppendAspectForEJB3InterceptorInvalid2() throws Exception {
-        ComponentDef cd = handler.createComponentDef(Hoge16.class, null);
         try {
+            ComponentDef cd = handler.createComponentDef(Hoge16.class, null);
             handler.appendAspect(cd);
             fail("1");
         } catch (EJBException ex) {
@@ -325,13 +327,63 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
     }
 
     public void testAppendAspectForEJB3InterceptorInvalid3() throws Exception {
-        ComponentDef cd = handler.createComponentDef(Hoge17.class, null);
         try {
+            ComponentDef cd = handler.createComponentDef(Hoge17.class, null);
             handler.appendAspect(cd);
             fail("1");
         } catch (EJBException ex) {
             System.out.println(ex);
         }
+    }
+
+    public void testPersistenceContextForEJB3ByField() throws Exception {
+        BeanDesc beanDesc = BeanDescFactory.getBeanDesc(PropertyDefImpl.class);
+
+        ComponentDef cd = handler.createComponentDef(Hoge11.class, null);
+        handler.appendDI(cd);
+        assertEquals(6, cd.getPropertyDefSize());
+
+        PropertyDef pd1 = cd.getPropertyDef("em1");
+        assertNull(pd1.getExpression());
+        assertEquals("field", pd1.getAccessTypeDef().getName());
+
+        PropertyDef pd2 = cd.getPropertyDef("em2");
+        assertEquals("em", ((OgnlExpression) pd2.getExpression()).getSource());
+        assertEquals("field", pd2.getAccessTypeDef().getName());
+
+        PropertyDef pd3 = cd.getPropertyDef("em3");
+        assertNull(pd3.getExpression());
+        assertEquals("field", pd3.getAccessTypeDef().getName());
+        ComponentDef cd3 = (ComponentDef) beanDesc
+                .getField("childComponentDef").get(pd3);
+        assertEquals(TxScopedEntityManagerProxy.class, cd3.getComponentClass());
+        PropertyDef pd4 = cd3.getPropertyDef("entityManagerFactory");
+        assertEquals("emf", ((OgnlExpression) pd4.getExpression()).getSource());
+    }
+
+    public void testPersistenceContextForEJB3ByProperty() throws Exception {
+        BeanDesc beanDesc = BeanDescFactory.getBeanDesc(PropertyDefImpl.class);
+
+        ComponentDef cd = handler.createComponentDef(Hoge11.class, null);
+        handler.appendDI(cd);
+        assertEquals(6, cd.getPropertyDefSize());
+
+        PropertyDef pd1 = cd.getPropertyDef("em4");
+        assertNull(pd1.getExpression());
+        assertEquals("property", pd1.getAccessTypeDef().getName());
+
+        PropertyDef pd2 = cd.getPropertyDef("em5");
+        assertEquals("em", ((OgnlExpression) pd2.getExpression()).getSource());
+        assertEquals("property", pd2.getAccessTypeDef().getName());
+
+        PropertyDef pd3 = cd.getPropertyDef("em6");
+        assertNull(pd3.getExpression());
+        assertEquals("property", pd3.getAccessTypeDef().getName());
+        ComponentDef cd3 = (ComponentDef) beanDesc
+                .getField("childComponentDef").get(pd3);
+        assertEquals(TxScopedEntityManagerProxy.class, cd3.getComponentClass());
+        PropertyDef pd4 = cd3.getPropertyDef("entityManagerFactory");
+        assertEquals("emf", ((OgnlExpression) pd4.getExpression()).getSource());
     }
 
     public void testInterType() throws Exception {
@@ -404,8 +456,8 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
     }
 
     public void testAppendInitMethodForEJB3Exception() throws Exception {
-        ComponentDef cd = handler.createComponentDef(Hoge18.class, null);
         try {
+            ComponentDef cd = handler.createComponentDef(Hoge18.class, null);
             handler.appendInitMethod(cd);
             fail("1");
         } catch (SEJBException ex) {

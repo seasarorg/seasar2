@@ -23,16 +23,17 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.ejb.EJB;
-import javax.ejb.Stateful;
-import javax.ejb.Stateless;
 import javax.ejb.TransactionAttributeType;
+import javax.persistence.PersistenceContext;
 
 import org.aopalliance.intercept.MethodInterceptor;
 import org.seasar.framework.aop.impl.PointcutImpl;
 import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.PropertyDesc;
+import org.seasar.framework.container.AccessTypeDef;
 import org.seasar.framework.container.AspectDef;
 import org.seasar.framework.container.AutoBindingDef;
+import org.seasar.framework.container.BindingTypeDef;
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.IllegalDestroyMethodAnnotationRuntimeException;
 import org.seasar.framework.container.IllegalInitMethodAnnotationRuntimeException;
@@ -46,8 +47,10 @@ import org.seasar.framework.container.annotation.tiger.DestroyMethod;
 import org.seasar.framework.container.annotation.tiger.InitMethod;
 import org.seasar.framework.container.annotation.tiger.InstanceType;
 import org.seasar.framework.container.annotation.tiger.InterType;
+import org.seasar.framework.container.assembler.AccessTypeDefFactory;
 import org.seasar.framework.container.assembler.AutoBindingDefFactory;
 import org.seasar.framework.container.deployer.InstanceDefFactory;
+import org.seasar.framework.container.impl.ComponentDefImpl;
 import org.seasar.framework.container.impl.InterTypeDefImpl;
 import org.seasar.framework.container.impl.PropertyDefImpl;
 import org.seasar.framework.ejb.AroundInvokeSupportInterceptor;
@@ -56,6 +59,7 @@ import org.seasar.framework.ejb.EJB3Desc;
 import org.seasar.framework.ejb.EJB3InterceptorDesc;
 import org.seasar.framework.ejb.EJB3InterceptorSupportInterType;
 import org.seasar.framework.ejb.EJB3InterceptorSupportInterceptor;
+import org.seasar.framework.jpa.TxScopedEntityManagerProxy;
 import org.seasar.framework.util.StringUtil;
 
 /**
@@ -82,17 +86,15 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
         InstanceDef instanceDef = null;
         AutoBindingDef autoBindingDef = null;
         Class<?> clazz = componentClass;
-        Stateless stateless = clazz.getAnnotation(Stateless.class);
-        if (stateless != null) {
-            name = stateless.name();
+        EJB3Desc ejb3Desc = EJB3Desc.getEJB3Desc(clazz);
+        if (ejb3Desc.isStateless()) {
+            name = ejb3Desc.getName();
             instanceDef = defaultInstanceDef != null ? defaultInstanceDef
                     : InstanceDefFactory.PROTOTYPE;
             autoBindingDef = defaultAutoBindingDef != null ? defaultAutoBindingDef
                     : AutoBindingDefFactory.SEMIAUTO;
-        }
-        Stateful stateful = clazz.getAnnotation(Stateful.class);
-        if (stateful != null) {
-            name = stateful.name();
+        } else if (ejb3Desc.isStateful()) {
+            name = ejb3Desc.getName();
             instanceDef = defaultInstanceDef != null ? defaultInstanceDef
                     : InstanceDefFactory.PROTOTYPE;
             autoBindingDef = defaultAutoBindingDef != null ? defaultAutoBindingDef
@@ -113,8 +115,9 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
                 autoBindingDef = getAutoBindingDef(autoBindingType.getName());
             }
         }
-        if (stateless == null && stateful == null && component == null) {
-            return super.createComponentDef(componentClass, defaultInstanceDef, defaultAutoBindingDef);
+        if (!ejb3Desc.isEJB3() && component == null) {
+            return super.createComponentDef(componentClass, defaultInstanceDef,
+                    defaultAutoBindingDef);
         }
         return createComponentDef(componentClass, name, instanceDef,
                 autoBindingDef);
@@ -132,9 +135,17 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
                 String expression = binding.value();
                 return createPropertyDef(propName, expression, bindingTypeName);
             }
+
             EJB ejb = method.getAnnotation(EJB.class);
             if (ejb != null) {
                 return createPropertyDef(propName, getExpression(ejb), null);
+            }
+
+            PersistenceContext persistenceContext = method
+                    .getAnnotation(PersistenceContext.class);
+            if (persistenceContext != null) {
+                return createPropertyDef(beanDesc, propName,
+                        AccessTypeDefFactory.PROPERTY, persistenceContext);
             }
         }
         return super.createPropertyDef(beanDesc, propertyDesc);
@@ -153,6 +164,14 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
         if (ejb != null) {
             return createPropertyDef(field.getName(), getExpression(ejb), null);
         }
+
+        PersistenceContext persistenceContext = field
+                .getAnnotation(PersistenceContext.class);
+        if (persistenceContext != null) {
+            return createPropertyDef(beanDesc, field.getName(),
+                    AccessTypeDefFactory.FIELD, persistenceContext);
+        }
+
         return super.createPropertyDef(beanDesc, field);
     }
 
@@ -350,5 +369,40 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
             }
             appendInitMethod(componentDef, method);
         }
+    }
+
+    protected PropertyDef createPropertyDef(final BeanDesc beanDesc,
+            final String propertyName, final AccessTypeDef accessTypeDef,
+            final PersistenceContext persistenceContext) {
+        final String name = persistenceContext.name();
+        if (!StringUtil.isEmpty(name)) {
+            return createPropertyDefForTxScopedEntityManager(propertyName,
+                    accessTypeDef, name);
+        }
+
+        final String unitName = persistenceContext.unitName();
+        if (StringUtil.isEmpty(unitName)) {
+            return createPropertyDefForTxScopedEntityManager(propertyName,
+                    accessTypeDef, null);
+        }
+
+        final ComponentDef componentDef = new ComponentDefImpl(
+                TxScopedEntityManagerProxy.class);
+        componentDef.setInstanceDef(InstanceDefFactory.PROTOTYPE);
+        componentDef.addPropertyDef(createPropertyDef("entityManagerFactory",
+                unitName, BindingTypeDef.MUST_NAME));
+        final PropertyDef propertyDef = new PropertyDefImpl(propertyName);
+        propertyDef.setAccessTypeDef(accessTypeDef);
+        propertyDef.setChildComponentDef(componentDef);
+        return propertyDef;
+    }
+
+    protected PropertyDef createPropertyDefForTxScopedEntityManager(
+            final String propertyName, final AccessTypeDef accessTypeDef,
+            final String expression) {
+        final PropertyDef pd = createPropertyDef(propertyName, expression,
+                BindingTypeDef.MUST_NAME);
+        pd.setAccessTypeDef(accessTypeDef);
+        return pd;
     }
 }

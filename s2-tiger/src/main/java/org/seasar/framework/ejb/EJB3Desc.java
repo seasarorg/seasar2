@@ -53,6 +53,8 @@ public class EJB3Desc {
 
     protected boolean stateful;
 
+    protected String name;
+
     protected List<Class<?>> businessInterfaces = new ArrayList<Class<?>>();
 
     protected boolean cmt = true;
@@ -92,6 +94,10 @@ public class EJB3Desc {
         return stateful;
     }
 
+    public String getName() {
+        return name;
+    }
+
     public Class<?> getBeanClass() {
         return beanClass;
     }
@@ -128,9 +134,15 @@ public class EJB3Desc {
         }
 
         final Stateless slsb = beanClass.getAnnotation(Stateless.class);
-        stateless = slsb != null;
+        if (slsb != null) {
+            stateless = true;
+            name = slsb.name();
+        }
         final Stateful sfsb = beanClass.getAnnotation(Stateful.class);
-        stateful = sfsb != null;
+        if (sfsb != null) {
+            stateful = true;
+            name = sfsb.name();
+        }
         if (!stateless && !stateful) {
             return;
         }
