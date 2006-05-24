@@ -133,12 +133,14 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
             if (binding != null) {
                 String bindingTypeName = binding.bindingType().getName();
                 String expression = binding.value();
-                return createPropertyDef(propName, expression, bindingTypeName);
+                return createPropertyDef(propName, expression, bindingTypeName,
+                        AccessTypeDef.PROPERTY_NAME);
             }
 
             EJB ejb = method.getAnnotation(EJB.class);
             if (ejb != null) {
-                return createPropertyDef(propName, getExpression(ejb), null);
+                return createPropertyDef(propName, getExpression(ejb), null,
+                        AccessTypeDef.PROPERTY_NAME);
             }
 
             PersistenceContext persistenceContext = method
@@ -162,7 +164,8 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
     public PropertyDef createPropertyDef(BeanDesc beanDesc, Field field) {
         EJB ejb = field.getAnnotation(EJB.class);
         if (ejb != null) {
-            return createPropertyDef(field.getName(), getExpression(ejb), null);
+            return createPropertyDef(field.getName(), getExpression(ejb), null,
+                    AccessTypeDef.FIELD_NAME);
         }
 
         PersistenceContext persistenceContext = field
@@ -376,33 +379,24 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
             final PersistenceContext persistenceContext) {
         final String name = persistenceContext.name();
         if (!StringUtil.isEmpty(name)) {
-            return createPropertyDefForTxScopedEntityManager(propertyName,
-                    accessTypeDef, name);
+            return createPropertyDef(propertyName, name,
+                    BindingTypeDef.MUST_NAME, accessTypeDef.getName());
         }
 
         final String unitName = persistenceContext.unitName();
         if (StringUtil.isEmpty(unitName)) {
-            return createPropertyDefForTxScopedEntityManager(propertyName,
-                    accessTypeDef, null);
+            return createPropertyDef(propertyName, null,
+                    BindingTypeDef.MUST_NAME, accessTypeDef.getName());
         }
 
         final ComponentDef componentDef = new ComponentDefImpl(
                 TxScopedEntityManagerProxy.class);
         componentDef.setInstanceDef(InstanceDefFactory.PROTOTYPE);
         componentDef.addPropertyDef(createPropertyDef("entityManagerFactory",
-                unitName, BindingTypeDef.MUST_NAME));
+                unitName, BindingTypeDef.MUST_NAME, AccessTypeDef.PROPERTY_NAME));
         final PropertyDef propertyDef = new PropertyDefImpl(propertyName);
         propertyDef.setAccessTypeDef(accessTypeDef);
         propertyDef.setChildComponentDef(componentDef);
         return propertyDef;
-    }
-
-    protected PropertyDef createPropertyDefForTxScopedEntityManager(
-            final String propertyName, final AccessTypeDef accessTypeDef,
-            final String expression) {
-        final PropertyDef pd = createPropertyDef(propertyName, expression,
-                BindingTypeDef.MUST_NAME);
-        pd.setAccessTypeDef(accessTypeDef);
-        return pd;
     }
 }
