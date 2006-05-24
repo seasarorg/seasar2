@@ -15,18 +15,15 @@
  */
 package org.seasar.framework.container.assembler;
 
-import java.lang.reflect.Field;
-
-import org.seasar.framework.beans.BeanDesc;
-import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.container.ComponentDef;
+import org.seasar.framework.container.PropertyAssembler;
 import org.seasar.framework.container.PropertyDef;
 
 /**
  * @author higa
  * 
  */
-public class ManualOnlyPropertyAssembler extends AbstractPropertyAssembler {
+public class ManualOnlyPropertyAssembler extends AbstractAssembler implements PropertyAssembler {
 
     /**
      * @param componentDef
@@ -39,22 +36,12 @@ public class ManualOnlyPropertyAssembler extends AbstractPropertyAssembler {
         if (component == null) {
             return;
         }
-        BeanDesc beanDesc = getBeanDesc(component);
         ComponentDef cd = getComponentDef();
         int size = cd.getPropertyDefSize();
         for (int i = 0; i < size; ++i) {
             PropertyDef propDef = cd.getPropertyDef(i);
-            String propName = propDef.getPropertyName();
-            Field field = null;
-            if (beanDesc.hasField(propName)) {
-                field = beanDesc.getField(propName);
-            }
-            PropertyDesc propDesc = null;
-            if (field == null || beanDesc.hasPropertyDesc(propName)) {
-                propDesc = beanDesc.getPropertyDesc(propName);
-            }
-            BindingTypeDefFactory.NONE.bind(getComponentDef(), propDef,
-                    propDesc, field, component);
+            propDef.getAccessTypeDef().bind(getComponentDef(), propDef,
+                    BindingTypeDefFactory.NONE, component);
         }
     }
 }

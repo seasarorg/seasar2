@@ -36,5 +36,8 @@ public interface BindingTypeDef {
     String getName();
 
     void bind(ComponentDef componentDef, PropertyDef propertyDef,
-            PropertyDesc propertyDesc, Field field, Object component);
+            PropertyDesc propertyDesc, Object component);
+
+    void bind(ComponentDef componentDef, PropertyDef propertyDef,
+            Field field, Object component);
 }

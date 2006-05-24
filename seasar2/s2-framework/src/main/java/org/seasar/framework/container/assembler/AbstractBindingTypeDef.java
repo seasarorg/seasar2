@@ -57,28 +57,29 @@ public abstract class AbstractBindingTypeDef implements BindingTypeDef {
     }
 
     public void bind(ComponentDef componentDef, PropertyDef propertyDef,
-            PropertyDesc propertyDesc, Field field, Object component) {
-
+            PropertyDesc propertyDesc, Object component) {
         if (propertyDef != null && propertyDef.isValueGettable()) {
             if (propertyDesc != null && propertyDesc.hasWriteMethod()) {
                 bindManual(componentDef, propertyDef, propertyDesc, component);
-            } else if (field != null) {
-                bindManual(componentDef, propertyDef, field, component);
             }
         } else {
             if (propertyDesc != null && propertyDesc.hasWriteMethod()) {
                 doBind(componentDef, propertyDesc, component);
-            } else if (propertyDef != null && field != null) {
-                doBind(componentDef, field, component);
             }
         }
     }
 
-    protected void bindManual(ComponentDef componentDef,
-            PropertyDef propertyDef, Field field, Object component) {
-
-        Object value = getValue(componentDef, propertyDef, component);
-        setValue(componentDef, field, component, value);
+    public void bind(ComponentDef componentDef, PropertyDef propertyDef,
+            Field field, Object component) {
+        if (propertyDef != null && propertyDef.isValueGettable()) {
+            if (field != null) {
+                bindManual(componentDef, propertyDef, field, component);
+            }
+        } else {
+            if (propertyDef != null && field != null) {
+                doBind(componentDef, field, component);
+            }
+        }
     }
 
     protected void bindManual(ComponentDef componentDef,
@@ -86,6 +87,13 @@ public abstract class AbstractBindingTypeDef implements BindingTypeDef {
 
         Object value = getValue(componentDef, propertyDef, component);
         setValue(componentDef, propertyDesc, component, value);
+    }
+
+    protected void bindManual(ComponentDef componentDef,
+            PropertyDef propertyDef, Field field, Object component) {
+
+        Object value = getValue(componentDef, propertyDef, component);
+        setValue(componentDef, field, component, value);
     }
 
     protected boolean bindAuto(ComponentDef componentDef, Field field,

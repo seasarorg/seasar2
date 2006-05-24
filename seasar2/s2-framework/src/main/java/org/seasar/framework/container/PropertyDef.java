@@ -17,7 +17,7 @@ package org.seasar.framework.container;
 
 /**
  * @author higa
- *
+ * 
  */
 public interface PropertyDef extends ArgDef {
 
@@ -26,4 +26,8 @@ public interface PropertyDef extends ArgDef {
     public BindingTypeDef getBindingTypeDef();
     
     public void setBindingTypeDef(BindingTypeDef bindingTypeDef);
+    
+    public AccessTypeDef getAccessTypeDef();
+    
+    public void setAccessTypeDef(AccessTypeDef accessTypeDef);
 }

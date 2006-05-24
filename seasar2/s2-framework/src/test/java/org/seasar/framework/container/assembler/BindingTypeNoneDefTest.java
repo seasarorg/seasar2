@@ -44,7 +44,7 @@ public class BindingTypeNoneDefTest extends TestCase {
         container.register(cd);
         container.register(B.class, "hoge");
         A a = new A();
-        BindingTypeDefFactory.NONE.bind(cd, propDef, propDesc, null, a);
+        BindingTypeDefFactory.NONE.bind(cd, propDef, propDesc, a);
         assertNotNull("1", a.getHoge());
     }
 
@@ -58,7 +58,7 @@ public class BindingTypeNoneDefTest extends TestCase {
         container.register(cd);
         container.register("aaa", "message");
         A a = new A();
-        BindingTypeDefFactory.NONE.bind(cd, propDef, propDesc, null, a);
+        BindingTypeDefFactory.NONE.bind(cd, propDef, propDesc, a);
         assertNull("1", a.getMessage());
     }
 

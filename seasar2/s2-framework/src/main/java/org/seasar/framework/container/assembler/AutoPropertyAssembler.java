@@ -15,53 +15,52 @@
  */
 package org.seasar.framework.container.assembler;
 
-import java.lang.reflect.Field;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.PropertyDesc;
-import org.seasar.framework.container.BindingTypeDef;
+import org.seasar.framework.container.AccessTypeDef;
 import org.seasar.framework.container.ComponentDef;
+import org.seasar.framework.container.PropertyAssembler;
 import org.seasar.framework.container.PropertyDef;
 
 /**
  * @author higa
- *  
+ * 
  */
-public class AutoPropertyAssembler extends AbstractPropertyAssembler {
+public class AutoPropertyAssembler extends AbstractAssembler implements PropertyAssembler {
 
-	/**
-	 * @param componentDef
-	 */
-	public AutoPropertyAssembler(ComponentDef componentDef) {
-		super(componentDef);
-	}
+    /**
+     * @param componentDef
+     */
+    public AutoPropertyAssembler(ComponentDef componentDef) {
+        super(componentDef);
+    }
 
-	public void assemble(Object component) {
+    public void assemble(Object component) {
         if (component == null) {
             return;
         }
-		BeanDesc beanDesc = getBeanDesc(component);
+        BeanDesc beanDesc = getBeanDesc(component);
         ComponentDef cd = getComponentDef();
         int size = cd.getPropertyDefSize();
         Set names = new HashSet();
         for (int i = 0; i < size; ++i) {
             PropertyDef propDef = cd.getPropertyDef(i);
-            BindingTypeDef bindingTypeDef = propDef.getBindingTypeDef();
+            AccessTypeDef accessTypeDef = propDef.getAccessTypeDef();
+            accessTypeDef.bind(cd, propDef, component);
             String propName = propDef.getPropertyName();
-            Field field = getField(beanDesc, propName);
-            PropertyDesc propDesc = getPropertyDesc(beanDesc, propName, field);
-            bindingTypeDef.bind(cd, propDef, propDesc, field, component);
             names.add(propName);
         }
-		for (int i = 0; i < beanDesc.getPropertyDescSize(); ++i) {
-			PropertyDesc propDesc = beanDesc.getPropertyDesc(i);
-			String propName = propDesc.getPropertyName();
+        size = beanDesc.getPropertyDescSize();
+        for (int i = 0; i < size; ++i) {
+            PropertyDesc propDesc = beanDesc.getPropertyDesc(i);
+            String propName = propDesc.getPropertyName();
             if (!names.contains(propName)) {
-                Field field = getField(beanDesc, propName);
-                BindingTypeDefFactory.SHOULD.bind(cd, null, propDesc, field, component);
+                BindingTypeDefFactory.SHOULD.bind(getComponentDef(), null,
+                        propDesc, component);
             }
-		}
-	}
+        }
+    }
 }

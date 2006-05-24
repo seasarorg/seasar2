@@ -47,7 +47,7 @@ public class BindingTypeMustDefTest extends TestCase {
 		container.register(cd);
 		container.register(B.class, "hoge");
 		A a = new A();
-        BindingTypeDefFactory.MUST.bind(cd, propDef, propDesc, null, a);
+        BindingTypeDefFactory.MUST.bind(cd, propDef, propDesc, a);
         assertNotNull("1", a.getHoge());
 	}
     
@@ -61,13 +61,12 @@ public class BindingTypeMustDefTest extends TestCase {
         container.register(cd);
         container.register("aaa", "message");
         A a = new A();
-        BindingTypeDefFactory.MUST.bind(cd, propDef, propDesc, null, a);
+        BindingTypeDefFactory.MUST.bind(cd, propDef, propDesc, a);
         assertEquals("1", "aaa", a.getMessage());
     }
     
     public void testBindByField() throws Exception {
         BeanDesc beanDesc = BeanDescFactory.getBeanDesc(A.class);
-        PropertyDesc propDesc = beanDesc.getPropertyDesc("message2");
         Field field = beanDesc.getField("message2");
         S2Container container = new S2ContainerImpl();
         ComponentDefImpl cd = new ComponentDefImpl(A.class);
@@ -76,7 +75,7 @@ public class BindingTypeMustDefTest extends TestCase {
         container.register(cd);
         container.register("aaa", "message2");
         A a = new A();
-        BindingTypeDefFactory.MUST.bind(cd, propDef, propDesc, field, a);
+        BindingTypeDefFactory.MUST.bind(cd, propDef, field, a);
         assertEquals("1", "aaa", a.getMessage2());
     }
     
@@ -90,7 +89,7 @@ public class BindingTypeMustDefTest extends TestCase {
         container.register(cd);
         container.register("aaa", "message3");
         A a = new A();
-        BindingTypeDefFactory.MUST.bind(cd, propDef, null, field, a);
+        BindingTypeDefFactory.MUST.bind(cd, propDef, field, a);
         assertEquals("1", "aaa", a.message3);
     }
     
@@ -105,7 +104,7 @@ public class BindingTypeMustDefTest extends TestCase {
         container.register(new Integer(1), "message");
         A a = new A();
         try {
-            BindingTypeDefFactory.MUST.bind(cd, propDef, propDesc, null, a);
+            BindingTypeDefFactory.MUST.bind(cd, propDef, propDesc, a);
         } catch (IllegalAutoBindingPropertyRuntimeException ex) {
             System.out.println(ex.getMessage());
         }
@@ -121,7 +120,7 @@ public class BindingTypeMustDefTest extends TestCase {
         container.register(cd);
         container.register(B.class);
         A a = new A();
-        BindingTypeDefFactory.MUST.bind(cd, propDef, propDesc, null, a);
+        BindingTypeDefFactory.MUST.bind(cd, propDef, propDesc, a);
         assertNotNull("1", a.getHoge());
     }
     
@@ -135,7 +134,7 @@ public class BindingTypeMustDefTest extends TestCase {
         container.register(cd);
         A a = new A();
         try {
-            BindingTypeDefFactory.MUST.bind(cd, propDef, propDesc, null, a);
+            BindingTypeDefFactory.MUST.bind(cd, propDef, propDesc, a);
             fail("1");
         } catch (IllegalAutoBindingPropertyRuntimeException ex) {
             System.out.println(ex.getMessage());

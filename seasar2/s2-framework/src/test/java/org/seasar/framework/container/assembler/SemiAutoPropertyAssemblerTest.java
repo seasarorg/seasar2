@@ -53,6 +53,7 @@ public class SemiAutoPropertyAssemblerTest extends TestCase {
         S2Container container = new S2ContainerImpl();
         ComponentDefImpl cd = new ComponentDefImpl(C.class);
         PropertyDef pd = new PropertyDefImpl("aaa");
+        pd.setAccessTypeDef(AccessTypeDefFactory.FIELD);
         cd.addPropertyDef(pd);
         container.register(cd);
         container.register("a", "aaa");
@@ -67,6 +68,7 @@ public class SemiAutoPropertyAssemblerTest extends TestCase {
         ComponentDefImpl cd = new ComponentDefImpl(D.class);
         ComponentDefImpl cd2 = new ComponentDefImpl(B.class, "hoge2");
         PropertyDef pd = new PropertyDefImpl("hoge");
+        pd.setAccessTypeDef(AccessTypeDefFactory.FIELD);
         cd.addPropertyDef(pd);
         container.register(cd);
         container.register(cd2);

@@ -59,6 +59,7 @@ public class AbstractBindingTypeDefTest extends TestCase {
         ComponentDefImpl cd = new ComponentDefImpl(Hoge2.class);
         cd.setAutoBindingDef(AutoBindingDefFactory.SEMIAUTO);
         PropertyDef propDef = new PropertyDefImpl("aaa");
+        propDef.setAccessTypeDef(AccessTypeDefFactory.FIELD);
         cd.addPropertyDef(propDef);
         container.register(cd);
         container.register(new ArrayList());

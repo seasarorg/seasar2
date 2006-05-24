@@ -15,18 +15,27 @@
  */
 package org.seasar.framework.container.assembler;
 
-import java.lang.reflect.Field;
-
-import org.seasar.framework.beans.BeanDesc;
-import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.container.ComponentDef;
+import org.seasar.framework.container.PropertyAssembler;
 import org.seasar.framework.container.PropertyDef;
 
 /**
- * @author higa
+ * セミオートでプロパティのバインディングを行うアセンブラです。
+ * <p>
+ * セミオートアセンブラは明示的に{@link org.seasar.framework.container.PropertyDef}の
+ * 設定されたプロパティまたはフィールドのみをバインディングの対象とします。<br>
+ * バインディングは{@link org.seasar.framework.container.BindingTypeShouldDef}
+ * によって行われます。
+ * </p>
+ * <p>
+ * バインディング対象となるプロパティは{@link org.seasar.framework.container.assembler.ManualOnlyPropertyAssembler}と
+ * 同じですが、バインディングの方法が異なります。
+ * </p>
  * 
+ * @author higa
  */
-public class SemiAutoPropertyAssembler extends AbstractPropertyAssembler {
+public class SemiAutoPropertyAssembler extends AbstractAssembler implements
+        PropertyAssembler {
 
     /**
      * @param componentDef
@@ -39,16 +48,12 @@ public class SemiAutoPropertyAssembler extends AbstractPropertyAssembler {
         if (component == null) {
             return;
         }
-        BeanDesc beanDesc = getBeanDesc(component);
         ComponentDef cd = getComponentDef();
         int size = cd.getPropertyDefSize();
         for (int i = 0; i < size; ++i) {
             PropertyDef propDef = cd.getPropertyDef(i);
-            String propName = propDef.getPropertyName();
-            Field field = getField(beanDesc, propName);
-            PropertyDesc propDesc = getPropertyDesc(beanDesc, propName, field);
-            BindingTypeDefFactory.SHOULD.bind(getComponentDef(), propDef,
-                    propDesc, field, component);
+            propDef.getAccessTypeDef().bind(getComponentDef(), propDef,
+                    BindingTypeDefFactory.SHOULD, component);
         }
     }
 }

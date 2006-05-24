@@ -53,6 +53,7 @@ public class ManualOnlyPropertyAssemblerTest extends TestCase {
         S2Container container = new S2ContainerImpl();
         ComponentDefImpl cd = new ComponentDefImpl(C.class);
         PropertyDef pd = new PropertyDefImpl("aaa");
+        pd.setAccessTypeDef(AccessTypeDefFactory.FIELD);
         pd.setExpression(new OgnlExpression("\"a\""));
         cd.addPropertyDef(pd);
         container.register(cd);
