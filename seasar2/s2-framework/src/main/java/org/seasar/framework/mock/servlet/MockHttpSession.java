@@ -29,16 +29,16 @@ public interface MockHttpSession extends HttpSession {
             .getName();
 
     /**
-     * {@link MockHttpSession#invalidate()}���Ă΂ꂽ���m�F���܂��B
+     * {@link MockHttpSession#invalidate()}が呼ばれたか確認します。
      * 
-     * @return �Ă΂ꂽ�ꍇ�Ftrue�A�Ă΂�Ă��Ȃ��ꍇ�Ffalse
+     * @return 呼ばれた場合：true、呼ばれていない場合：false
      */
     boolean isValid();
 
     /**
-     * {@link MockHttpSession#invalidate()}���Ă΂ꂽ�Ƃ��ɁA�����I�ɁA���̃��\�b�h���Ăт܂��B
+     * {@link MockHttpSession#invalidate()}が呼ばれたときに、内部的に、このメソッドを呼びます。
      * 
-     * @param valid {@link MockHttpSession#invalidate()}���Ă΂ꂽ�Ƃ��ɁAtrue
+     * @param valid {@link MockHttpSession#invalidate()}が呼ばれたときに、true
      */
     void setValid(boolean valid);
     
