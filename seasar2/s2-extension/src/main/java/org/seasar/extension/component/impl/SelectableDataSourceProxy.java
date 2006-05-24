@@ -32,7 +32,7 @@ import org.seasar.framework.exception.EmptyRuntimeException;
  * 委譲先のデータソースはスレッドコンテキスに設定された名前を使ってS2コンテナから取得されます。
  * </p>
  * <p>
- * S2AOPのインターセプタを利用してスレッドコンテキストにユーザが使用する実際のデータソース名を設定します。
+ * S2AOPのインターセプタを作成してスレッドコンテキストにユーザが使用する実際のデータソース名を設定します。
  * </p>
  * <pre>
  *     public Object invoke(MethodInvocation invocation) throws Throwable {
