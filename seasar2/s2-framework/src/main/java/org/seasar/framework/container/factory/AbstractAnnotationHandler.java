@@ -21,6 +21,7 @@ import java.lang.reflect.Modifier;
 import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.beans.factory.BeanDescFactory;
+import org.seasar.framework.container.AccessTypeDef;
 import org.seasar.framework.container.AutoBindingDef;
 import org.seasar.framework.container.BindingTypeDef;
 import org.seasar.framework.container.ComponentDef;
@@ -28,6 +29,7 @@ import org.seasar.framework.container.DestroyMethodDef;
 import org.seasar.framework.container.InitMethodDef;
 import org.seasar.framework.container.InstanceDef;
 import org.seasar.framework.container.PropertyDef;
+import org.seasar.framework.container.assembler.AccessTypeDefFactory;
 import org.seasar.framework.container.assembler.AutoBindingDefFactory;
 import org.seasar.framework.container.assembler.BindingTypeDefFactory;
 import org.seasar.framework.container.deployer.InstanceDefFactory;
@@ -148,12 +150,17 @@ public abstract class AbstractAnnotationHandler implements AnnotationHandler {
     }
 
     protected PropertyDef createPropertyDef(String propertyName,
-            String expression, String bindingTypeName) {
+            String expression, String bindingTypeName, String accessTypeName) {
         PropertyDef propertyDef = new PropertyDefImpl(propertyName);
         if (!StringUtil.isEmpty(bindingTypeName)) {
             BindingTypeDef bindingTypeDef = BindingTypeDefFactory
                     .getBindingTypeDef(bindingTypeName);
             propertyDef.setBindingTypeDef(bindingTypeDef);
+        }
+        if (!StringUtil.isEmpty(accessTypeName)) {
+            AccessTypeDef accessTypeDef = AccessTypeDefFactory
+                    .getAccessTypeDef(accessTypeName);
+            propertyDef.setAccessTypeDef(accessTypeDef);
         }
         if (!StringUtil.isEmpty(expression)) {
             propertyDef.setExpression(new OgnlExpression(expression));

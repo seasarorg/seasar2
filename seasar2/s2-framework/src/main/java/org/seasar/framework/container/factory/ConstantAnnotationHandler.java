@@ -22,6 +22,7 @@ import java.lang.reflect.Modifier;
 import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.beans.factory.BeanDescFactory;
+import org.seasar.framework.container.AccessTypeDef;
 import org.seasar.framework.container.AspectDef;
 import org.seasar.framework.container.AutoBindingDef;
 import org.seasar.framework.container.ComponentDef;
@@ -111,7 +112,8 @@ public class ConstantAnnotationHandler extends AbstractAnnotationHandler {
                 }
             }
         }
-        return createPropertyDef(propName, expression, bindingTypeName);
+        return createPropertyDef(propName, expression, bindingTypeName,
+                AccessTypeDef.PROPERTY_NAME);
     }
 
     public PropertyDef createPropertyDef(BeanDesc beanDesc, Field field) {
