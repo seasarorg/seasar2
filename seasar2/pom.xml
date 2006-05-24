@@ -153,9 +153,18 @@
           </execution>
         </executions>
       </plugin>
-      <!--
       <plugin>
         <artifactId>maven-javadoc-plugin</artifactId>
+        <configuration>
+          <encoding>UTF-8</encoding>
+          <docencoding>UTF-8</docencoding>
+          <charset>UTF-8</charset>
+          <links>
+          	<link>http://java.sun.com/j2se/1.5.0/ja/docs/ja/api/</link>
+            <link>http://java.sun.com/javaee/5/docs/api/</link>
+            <link>http://aopalliance.sourceforge.net/doc/</link>
+          </links>
+        </configuration>
         <executions>
           <execution>
             <id>javadoc-jar</id>
@@ -166,7 +175,6 @@
           </execution>
         </executions>
       </plugin>
-      -->
     </plugins>
   </build>
   <modules>
