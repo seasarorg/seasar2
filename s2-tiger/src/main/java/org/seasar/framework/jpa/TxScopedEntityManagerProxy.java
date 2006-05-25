@@ -15,7 +15,6 @@
  */
 package org.seasar.framework.jpa;
 
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 import javax.persistence.EntityManager;
@@ -54,11 +53,11 @@ public class TxScopedEntityManagerProxy implements EntityManager {
     private static final Logger logger = Logger
             .getLogger(TxScopedEntityManagerProxy.class);
 
-    private static final ConcurrentMap<EntityManagerFactory, ConcurrentMap<Transaction, EntityManager>> emfContexts = new ConcurrentHashMap<EntityManagerFactory, ConcurrentMap<Transaction, EntityManager>>();
-
     private TransactionManager tm;
 
     private EntityManagerFactory emf;
+
+    private PersistenceUnitManager pum;
 
     /**
      * インスタンスを構築します。
@@ -74,8 +73,11 @@ public class TxScopedEntityManagerProxy implements EntityManager {
     @Binding(bindingType = BindingType.MUST)
     public void setEntityManagerFactory(final EntityManagerFactory emf) {
         this.emf = emf;
-        emfContexts.putIfAbsent(emf,
-                new ConcurrentHashMap<Transaction, EntityManager>());
+    }
+
+    @Binding(bindingType = BindingType.MUST)
+    public void setPersistenceUnitManager(final PersistenceUnitManager pum) {
+        this.pum = pum;
     }
 
     protected boolean isTxActive() {
@@ -100,8 +102,8 @@ public class TxScopedEntityManagerProxy implements EntityManager {
     }
 
     protected EntityManager getTxBoundEntityManager() {
-        final ConcurrentMap<Transaction, EntityManager> context = emfContexts
-                .get(emf);
+        final ConcurrentMap<Transaction, EntityManager> context = pum
+                .getEmfContext(emf);
         if (context == null) {
             return null;
         }
@@ -114,7 +116,9 @@ public class TxScopedEntityManagerProxy implements EntityManager {
         final Transaction tx = TransactionManagerUtil.getTransaction(tm);
         TransactionUtil.registerSynchronization(tx, new Synchronization() {
             public void afterCompletion(int status) {
-                emfContexts.remove(tx);
+                final ConcurrentMap<Transaction, EntityManager> context = pum
+                        .getEmfContext(emf);
+                context.remove(tx);
                 try {
                     em.close();
                 } catch (final Throwable t) {
@@ -126,8 +130,8 @@ public class TxScopedEntityManagerProxy implements EntityManager {
             }
         });
 
-        final ConcurrentMap<Transaction, EntityManager> context = emfContexts
-                .get(emf);
+        final ConcurrentMap<Transaction, EntityManager> context = pum
+                .getEmfContext(emf);
         context.put(tx, em);
         return em;
     }

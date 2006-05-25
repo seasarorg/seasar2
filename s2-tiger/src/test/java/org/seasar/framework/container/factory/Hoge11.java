@@ -21,7 +21,9 @@ import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceUnit;
 
 @Stateless
 @Local( { IHoge11A.class, IHoge11B.class })
@@ -31,10 +33,10 @@ public class Hoge11 implements IHoge11A, IHoge11B {
     @PersistenceContext
     EntityManager em1;
 
-    @PersistenceContext(name = "em")
+    @PersistenceContext(name = "emf")
     EntityManager em2;
 
-    @PersistenceContext(unitName = "emf")
+    @PersistenceContext(unitName = "hibernate")
     EntityManager em3;
 
     EntityManager em4;
@@ -43,19 +45,61 @@ public class Hoge11 implements IHoge11A, IHoge11B {
 
     EntityManager em6;
 
+    @PersistenceUnit
+    EntityManagerFactory emf1;
+
+    @PersistenceUnit(name = "emf")
+    EntityManagerFactory emf2;
+
+    @PersistenceUnit(unitName = "hibernate")
+    EntityManagerFactory emf3;
+
+    EntityManagerFactory emf4;
+
+    EntityManagerFactory emf5;
+
+    EntityManagerFactory emf6;
+
     @PersistenceContext
     public void setEm4(EntityManager em) {
         em4 = em;
     }
 
-    @PersistenceContext(name = "em")
+    @PersistenceContext(name = "emf")
     public void setEm5(EntityManager em) {
         em5 = em;
     }
 
-    @PersistenceContext(unitName = "emf")
+    @PersistenceContext(unitName = "hibernate")
     public void setEm6(EntityManager em) {
         em6 = em;
+    }
+
+    public EntityManagerFactory getEmf4() {
+        return emf4;
+    }
+
+    @PersistenceUnit
+    public void setEmf4(EntityManagerFactory emf4) {
+        this.emf4 = emf4;
+    }
+
+    public EntityManagerFactory getEmf5() {
+        return emf5;
+    }
+
+    @PersistenceUnit(name = "emf")
+    public void setEmf5(EntityManagerFactory emf5) {
+        this.emf5 = emf5;
+    }
+
+    public EntityManagerFactory getEmf6() {
+        return emf6;
+    }
+
+    @PersistenceUnit(unitName = "hibernate")
+    public void setEmf6(EntityManagerFactory emf6) {
+        this.emf6 = emf6;
     }
 
     @TransactionAttribute(TransactionAttributeType.MANDATORY)
