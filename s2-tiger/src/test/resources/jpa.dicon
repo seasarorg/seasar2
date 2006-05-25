@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN"
 	"http://www.seasar.org/dtd/components24.dtd">
-<components>
-	<include path="j2ee.dicon"/>
-	<include path="jpa.dicon"/>
-	<include path="ejb3tx.dicon"/>
+<components namespace="jpa">
+	<component name="persistenceUnitManager"
+		class="org.seasar.framework.jpa.PersistenceUnitManager"
+	/>
 </components>
