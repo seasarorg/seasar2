@@ -80,8 +80,7 @@ public abstract class AbstractAnnotationHandler implements AnnotationHandler {
 
     public ComponentDef createComponentDef(Class componentClass,
             InstanceDef instanceDef) {
-        return createComponentDef(componentClass, instanceDef,
-                null);
+        return createComponentDef(componentClass, instanceDef, null);
     }
 
     public void appendDI(ComponentDef componentDef) {
@@ -100,6 +99,9 @@ public abstract class AbstractAnnotationHandler implements AnnotationHandler {
         }
         for (int i = 0; i < beanDesc.getFieldSize(); ++i) {
             Field field = beanDesc.getField(i);
+            if (componentDef.hasPropertyDef(field.getName())) {
+                continue;
+            }
             if (!isFieldInjectionTarget(field)) {
                 continue;
             }
