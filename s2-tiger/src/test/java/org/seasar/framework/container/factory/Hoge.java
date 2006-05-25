@@ -16,6 +16,7 @@
 package org.seasar.framework.container.factory;
 
 import org.seasar.framework.container.annotation.tiger.Aspect;
+import org.seasar.framework.container.annotation.tiger.Binding;
 import org.seasar.framework.container.annotation.tiger.DestroyMethod;
 import org.seasar.framework.container.annotation.tiger.InitMethod;
 import org.seasar.framework.container.annotation.tiger.InterType;
@@ -23,8 +24,32 @@ import org.seasar.framework.container.annotation.tiger.InterType;
 @Aspect(value = "aop.traceInterceptor", pointcut = "getAaa")
 @InterType("fieldInterType")
 public class Hoge {
+
     public String getAaa() {
         return null;
+    }
+
+    @Binding("hoge")
+    private String bbb;
+
+    public String getBbb() {
+        return bbb;
+    }
+
+    public void setBbb(String bbb) {
+        this.bbb = bbb;
+    }
+
+    @Binding("foo")
+    private String ccc;
+
+    public String getCcc() {
+        return ccc;
+    }
+
+    @Binding("bar")
+    public void setCcc(String ccc) {
+        this.ccc = ccc;
     }
 
     @InitMethod

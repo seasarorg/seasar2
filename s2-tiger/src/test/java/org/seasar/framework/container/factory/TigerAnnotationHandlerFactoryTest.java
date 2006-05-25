@@ -25,7 +25,7 @@ import org.seasar.framework.container.factory.TigerAnnotationHandler;
  * @author higa
  * 
  */
-public class AnnotationHandlerFactoryTest extends TestCase {
+public class TigerAnnotationHandlerFactoryTest extends TestCase {
 
     public void testGetAnnotationHandler() throws Exception {
         AnnotationHandler handler = AnnotationHandlerFactory

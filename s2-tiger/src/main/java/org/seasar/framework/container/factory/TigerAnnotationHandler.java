@@ -125,7 +125,6 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
 
     public PropertyDef createPropertyDef(BeanDesc beanDesc,
             PropertyDesc propertyDesc) {
-
         String propName = propertyDesc.getPropertyName();
         if (propertyDesc.hasWriteMethod()) {
             Method method = propertyDesc.getWriteMethod();
@@ -153,15 +152,15 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
         return super.createPropertyDef(beanDesc, propertyDesc);
     }
 
-    protected String getExpression(EJB ejb) {
-        String name = ejb.beanName();
-        if (StringUtil.isEmpty(name)) {
-            name = ejb.name();
-        }
-        return name.replace('/', '.');
-    }
-
     public PropertyDef createPropertyDef(BeanDesc beanDesc, Field field) {
+        Binding binding = field.getAnnotation(Binding.class);
+        if (binding != null) {
+            String bindingTypeName = binding.bindingType().getName();
+            String expression = binding.value();
+            return createPropertyDef(field.getName(), expression,
+                    bindingTypeName, AccessTypeDef.FIELD_NAME);
+        }
+
         EJB ejb = field.getAnnotation(EJB.class);
         if (ejb != null) {
             return createPropertyDef(field.getName(), getExpression(ejb), null,
@@ -176,6 +175,14 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
         }
 
         return super.createPropertyDef(beanDesc, field);
+    }
+
+    protected String getExpression(EJB ejb) {
+        String name = ejb.beanName();
+        if (StringUtil.isEmpty(name)) {
+            name = ejb.name();
+        }
+        return name.replace('/', '.');
     }
 
     public void appendAspect(ComponentDef componentDef) {
@@ -392,8 +399,10 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
         final ComponentDef componentDef = new ComponentDefImpl(
                 TxScopedEntityManagerProxy.class);
         componentDef.setInstanceDef(InstanceDefFactory.PROTOTYPE);
-        componentDef.addPropertyDef(createPropertyDef("entityManagerFactory",
-                unitName, BindingTypeDef.MUST_NAME, AccessTypeDef.PROPERTY_NAME));
+        componentDef
+                .addPropertyDef(createPropertyDef("entityManagerFactory",
+                        unitName, BindingTypeDef.MUST_NAME,
+                        AccessTypeDef.PROPERTY_NAME));
         final PropertyDef propertyDef = new PropertyDefImpl(propertyName);
         propertyDef.setAccessTypeDef(accessTypeDef);
         propertyDef.setChildComponentDef(componentDef);

@@ -22,13 +22,15 @@ import java.lang.annotation.Target;
 
 /**
  * @author higa
- *
+ * 
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
+@Target( { ElementType.METHOD, ElementType.FIELD })
 public @interface Binding {
-    
+
     String value() default "";
-    
+
     BindingType bindingType() default BindingType.SHOULD;
+
+    AccessType accessType() default AccessType.PROPERTY;
 }
