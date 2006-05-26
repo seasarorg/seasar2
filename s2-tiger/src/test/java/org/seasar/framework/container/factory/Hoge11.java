@@ -15,6 +15,7 @@
  */
 package org.seasar.framework.container.factory;
 
+import javax.annotation.Resource;
 import javax.ejb.Local;
 import javax.ejb.PostConstruct;
 import javax.ejb.Stateless;
@@ -24,6 +25,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceUnit;
+import javax.sql.DataSource;
 
 @Stateless
 @Local( { IHoge11A.class, IHoge11B.class })
@@ -59,6 +61,16 @@ public class Hoge11 implements IHoge11A, IHoge11B {
     EntityManagerFactory emf5;
 
     EntityManagerFactory emf6;
+
+    @Resource
+    DataSource ds1;
+
+    @Resource(name = "DataSource")
+    DataSource ds2;
+
+    DataSource ds3;
+
+    DataSource ds4;
 
     @PersistenceContext
     public void setEm4(EntityManager em) {
@@ -100,6 +112,16 @@ public class Hoge11 implements IHoge11A, IHoge11B {
     @PersistenceUnit(unitName = "hibernate")
     public void setEmf6(EntityManagerFactory emf6) {
         this.emf6 = emf6;
+    }
+
+    @Resource
+    public void setDs3(DataSource ds3) {
+        this.ds3 = ds3;
+    }
+
+    @Resource(name = "DataSource")
+    public void setDs4(DataSource ds4) {
+        this.ds4 = ds4;
     }
 
     @TransactionAttribute(TransactionAttributeType.MANDATORY)

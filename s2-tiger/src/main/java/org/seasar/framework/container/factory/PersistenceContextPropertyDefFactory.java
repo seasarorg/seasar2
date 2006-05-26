@@ -21,11 +21,13 @@ public class PersistenceContextPropertyDefFactory extends
         return PersistenceContext.class;
     }
 
+    @Override
     protected PropertyDef createPropertyDef(final String propertyName,
             final AccessTypeDef accessTypeDef,
             final PersistenceContext persistenceContext) {
         final String name = persistenceContext.name();
         if (!StringUtil.isEmpty(name)) {
+            // specified 'name' element (binding by name)
             final PropertyDef emfPropertyDef = createPropertyDef(
                     "entityManagerFactory", AccessTypeDefFactory.PROPERTY, name);
             final ComponentDef emComponentDef = new ComponentDefImpl(
@@ -37,9 +39,11 @@ public class PersistenceContextPropertyDefFactory extends
 
         final String unitName = persistenceContext.unitName();
         if (StringUtil.isEmpty(unitName)) {
+            // not specified element (binding by type)
             return createPropertyDef(propertyName, accessTypeDef);
         }
 
+        // specified 'unitName' element
         final ComponentDef emfComponentDef = PersistenceUnitPropertyDefFactory
                 .createPersistenceUnitCompoentDef(unitName);
         final PropertyDef emfPropertyDef = createPropertyDef(

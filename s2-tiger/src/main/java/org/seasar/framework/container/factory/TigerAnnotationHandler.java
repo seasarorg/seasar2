@@ -62,13 +62,14 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
     private static final List<PropertyDefFactory> propertyDefFactories = Collections
             .synchronizedList(new ArrayList<PropertyDefFactory>());
     static {
-        componentDefFactories.add(new PojoComponentDefFactory());
         componentDefFactories.add(new EJB3ComponentDefFactory());
+        componentDefFactories.add(new PojoComponentDefFactory());
 
         propertyDefFactories.add(new BindingPropertyDefFactory());
         propertyDefFactories.add(new EJBPropertyDefFactory());
         propertyDefFactories.add(new PersistenceContextPropertyDefFactory());
         propertyDefFactories.add(new PersistenceUnitPropertyDefFactory());
+        propertyDefFactories.add(new ResourcePropertyDefFactory());
     }
 
     private static final Map<TransactionAttributeType, String> TX_ATTRS = new HashMap<TransactionAttributeType, String>();

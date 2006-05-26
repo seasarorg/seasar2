@@ -70,10 +70,10 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
                 .getName());
 
         ComponentDef cd4 = handler.createComponentDef(Hoge8.class, null);
-        assertEquals("9", "hoge7x", cd4.getComponentName());
-        assertEquals("10", InstanceDef.SINGLETON_NAME, cd4.getInstanceDef()
+        assertEquals("9", "hoge7", cd4.getComponentName());
+        assertEquals("10", InstanceDef.PROTOTYPE_NAME, cd4.getInstanceDef()
                 .getName());
-        assertEquals("11", AutoBindingDef.PROPERTY_NAME, cd4
+        assertEquals("11", AutoBindingDef.SEMIAUTO_NAME, cd4
                 .getAutoBindingDef().getName());
 
         ComponentDef cd5 = handler.createComponentDef(Hoge7.class,
@@ -89,10 +89,10 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
                 .getAutoBindingDef().getName());
 
         ComponentDef cd7 = handler.createComponentDef(Hoge10.class, null);
-        assertEquals("16", "hoge10x", cd7.getComponentName());
-        assertEquals("17", InstanceDef.SINGLETON_NAME, cd7.getInstanceDef()
+        assertNull("16", cd7.getComponentName());
+        assertEquals("17", InstanceDef.PROTOTYPE_NAME, cd7.getInstanceDef()
                 .getName());
-        assertEquals("18", AutoBindingDef.PROPERTY_NAME, cd7
+        assertEquals("18", AutoBindingDef.SEMIAUTO_NAME, cd7
                 .getAutoBindingDef().getName());
 
         ComponentDef cd8 = handler.createComponentDef(Hoge9.class,
@@ -378,8 +378,9 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
         ComponentDef cd4 = (ComponentDef) beanDesc
                 .getField("childComponentDef").get(pd5);
         assertEquals(
-                "jpa.persistenceUnitManager.getEntityManagerFactory(\"hibernate\")",
-                ((OgnlExpression) cd4.getExpression()).getSource());
+                "hibernate",
+                ((PersistenceUnitPropertyDefFactory.PersistenceUnitExpression) cd4
+                        .getExpression()).unitName);
     }
 
     public void testPersistenceContextForEJB3ByProperty() throws Exception {
@@ -411,8 +412,9 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
         ComponentDef cd4 = (ComponentDef) beanDesc
                 .getField("childComponentDef").get(pd5);
         assertEquals(
-                "jpa.persistenceUnitManager.getEntityManagerFactory(\"hibernate\")",
-                ((OgnlExpression) cd4.getExpression()).getSource());
+                "hibernate",
+                ((PersistenceUnitPropertyDefFactory.PersistenceUnitExpression) cd4
+                        .getExpression()).unitName);
     }
 
     public void testPersistenceUnitForEJB3ByField() throws Exception {
@@ -435,8 +437,9 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
         ComponentDef cd3 = (ComponentDef) beanDesc
                 .getField("childComponentDef").get(pd3);
         assertEquals(
-                "jpa.persistenceUnitManager.getEntityManagerFactory(\"hibernate\")",
-                ((OgnlExpression) cd3.getExpression()).getSource());
+                "hibernate",
+                ((PersistenceUnitPropertyDefFactory.PersistenceUnitExpression) cd3
+                        .getExpression()).unitName);
     }
 
     public void testPersistenceUnitForEJB3ByProperty() throws Exception {
@@ -459,8 +462,37 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
         ComponentDef cd3 = (ComponentDef) beanDesc
                 .getField("childComponentDef").get(pd3);
         assertEquals(
-                "jpa.persistenceUnitManager.getEntityManagerFactory(\"hibernate\")",
-                ((OgnlExpression) cd3.getExpression()).getSource());
+                "hibernate",
+                ((PersistenceUnitPropertyDefFactory.PersistenceUnitExpression) cd3
+                        .getExpression()).unitName);
+    }
+
+    public void testResourceForEJB3ByField() throws Exception {
+        ComponentDef cd = handler.createComponentDef(Hoge11.class, null);
+        handler.appendDI(cd);
+
+        PropertyDef pd1 = cd.getPropertyDef("ds1");
+        assertNull(pd1.getExpression());
+        assertEquals("field", pd1.getAccessTypeDef().getName());
+
+        PropertyDef pd2 = cd.getPropertyDef("ds2");
+        assertEquals("DataSource", ((OgnlExpression) pd2.getExpression())
+                .getSource());
+        assertEquals("field", pd2.getAccessTypeDef().getName());
+    }
+
+    public void testResourceForEJB3ByProperty() throws Exception {
+        ComponentDef cd = handler.createComponentDef(Hoge11.class, null);
+        handler.appendDI(cd);
+
+        PropertyDef pd1 = cd.getPropertyDef("ds3");
+        assertNull(pd1.getExpression());
+        assertEquals("property", pd1.getAccessTypeDef().getName());
+
+        PropertyDef pd2 = cd.getPropertyDef("ds4");
+        assertEquals("DataSource", ((OgnlExpression) pd2.getExpression())
+                .getSource());
+        assertEquals("property", pd2.getAccessTypeDef().getName());
     }
 
     public void testInterType() throws Exception {

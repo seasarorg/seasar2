@@ -1,22 +1,22 @@
 package org.seasar.framework.container.factory;
 
-import java.util.Formatter;
+import java.util.Map;
 
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceUnit;
 
 import org.seasar.framework.container.AccessTypeDef;
 import org.seasar.framework.container.ComponentDef;
+import org.seasar.framework.container.Expression;
 import org.seasar.framework.container.PropertyDef;
+import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.impl.ComponentDefImpl;
 import org.seasar.framework.container.impl.DestroyMethodDefImpl;
-import org.seasar.framework.container.ognl.OgnlExpression;
+import org.seasar.framework.jpa.PersistenceUnitManager;
 import org.seasar.framework.util.StringUtil;
 
 public class PersistenceUnitPropertyDefFactory extends
         AbstractPropertyDefFactory<PersistenceUnit> {
-    public static final String CREATE_EMF = "jpa.persistenceUnitManager.getEntityManagerFactory(\"%s\")";
-
     public PersistenceUnitPropertyDefFactory() {
     }
 
@@ -25,6 +25,7 @@ public class PersistenceUnitPropertyDefFactory extends
         return PersistenceUnit.class;
     }
 
+    @Override
     protected PropertyDef createPropertyDef(final String propertyName,
             final AccessTypeDef accessTypeDef,
             final PersistenceUnit persistenceUnit) {
@@ -46,15 +47,26 @@ public class PersistenceUnitPropertyDefFactory extends
             final String unitName) {
         final ComponentDef componentDef = new ComponentDefImpl(
                 EntityManagerFactory.class);
-        componentDef.setExpression(new OgnlExpression(getExpression(unitName)));
+        componentDef.setExpression(getExpression(unitName));
         componentDef.addDestroyMethodDef(new DestroyMethodDefImpl("close"));
         return componentDef;
     }
 
-    protected static String getExpression(final String unitName) {
-        final StringBuilder buf = new StringBuilder(100);
-        final Formatter formatter = new Formatter(buf);
-        formatter.format(CREATE_EMF, unitName);
-        return new String(buf);
+    protected static Expression getExpression(final String unitName) {
+        return new PersistenceUnitExpression(unitName);
+    }
+
+    public static class PersistenceUnitExpression implements Expression {
+        String unitName;
+
+        public PersistenceUnitExpression(String unitName) {
+            this.unitName = unitName;
+        }
+
+        public Object evaluate(final S2Container container, final Map context) {
+            final PersistenceUnitManager pum = (PersistenceUnitManager) container
+                    .getComponent("jpa.persistenceUnitManager");
+            return pum.getEntityManagerFactory(unitName);
+        }
     }
 }
