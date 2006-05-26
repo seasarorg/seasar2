@@ -18,7 +18,6 @@ package org.seasar.extension.jdbc.util;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -29,145 +28,161 @@ import org.seasar.framework.util.CaseInsensitiveSet;
 
 /**
  * @author higa
- *  
+ * @author manhole
  */
 public final class DatabaseMetaDataUtil {
 
-	private DatabaseMetaDataUtil() {
-	}
+    private DatabaseMetaDataUtil() {
+    }
 
-	public static String[] getPrimaryKeys(DatabaseMetaData dbMetaData,
-			String tableName) {
+    public static String[] getPrimaryKeys(DatabaseMetaData dbMetaData,
+            String tableName) {
 
-		Set set = getPrimaryKeySet(dbMetaData, tableName);
-		return (String[]) set.toArray(new String[set.size()]);
-	}
+        Set set = getPrimaryKeySet(dbMetaData, tableName);
+        return (String[]) set.toArray(new String[set.size()]);
+    }
 
-	public static Set getPrimaryKeySet(DatabaseMetaData dbMetaData,
-			String tableName) {
+    public static Set getPrimaryKeySet(DatabaseMetaData dbMetaData,
+            String tableName) {
+        final String schema;
+        int index = tableName.indexOf('.');
+        if (index >= 0) {
+            schema = tableName.substring(0, index);
+            tableName = tableName.substring(index + 1);
+        } else {
+            schema = getUserName(dbMetaData);
+        }
+        final String convertedTableName = convertIdentifier(dbMetaData,
+                tableName);
+        Set set = new CaseInsensitiveSet();
+        addPrimaryKeys(dbMetaData, convertIdentifier(dbMetaData, schema),
+                convertedTableName, set);
+        if (set.size() == 0) {
+            addPrimaryKeys(dbMetaData, schema, tableName, set);
+        }
+        if (set.size() == 0 && schema != null) {
+            addPrimaryKeys(dbMetaData, null, convertedTableName, set);
+            if (set.size() == 0) {
+                addPrimaryKeys(dbMetaData, null, tableName, set);
+            }
+        }
+        return set;
+    }
 
-		String schema = null;
-		int index = tableName.indexOf('.');
-		if (index >= 0) {
-			schema = tableName.substring(0, index);
-			tableName = tableName.substring(index + 1);
-		}
-		String convertedTableName = convertIdentifier(dbMetaData, tableName); 
-		Set set = new CaseInsensitiveSet();
-		addPrimaryKeys(dbMetaData, convertIdentifier(dbMetaData, schema),
-				convertedTableName, set);
-		if (set.size() == 0) {
-			addPrimaryKeys(dbMetaData, schema, tableName, set);
-		}
-		if (set.size() == 0 && schema != null) {
-			addPrimaryKeys(dbMetaData, null, convertedTableName, set);
-			if (set.size() == 0) {
-				addPrimaryKeys(dbMetaData, null, tableName, set);
-			}
-		}
-		return set;
-	}
-	
-	private static void addPrimaryKeys(DatabaseMetaData dbMetaData, String schema, String tableName, Set set) {
-		try {
-			ResultSet rs = dbMetaData.getPrimaryKeys(null, schema, tableName);
-			while (rs.next()) {
-				set.add(rs.getString(4));
-			}
-			rs.close();
-		} catch (SQLException ex) {
-			throw new SQLRuntimeException(ex);
-		}
-	}
+    private static String getUserName(DatabaseMetaData dbMetaData) {
+        try {
+            return dbMetaData.getUserName();
+        } catch (SQLException e) {
+            throw new SQLRuntimeException(e);
+        }
+    }
 
-	public static String[] getColumns(DatabaseMetaData dbMetaData,
-			String tableName) {
+    private static void addPrimaryKeys(DatabaseMetaData dbMetaData,
+            String schema, String tableName, Set set) {
+        try {
+            ResultSet rs = dbMetaData.getPrimaryKeys(null, schema, tableName);
+            while (rs.next()) {
+                set.add(rs.getString(4));
+            }
+            rs.close();
+        } catch (SQLException ex) {
+            throw new SQLRuntimeException(ex);
+        }
+    }
 
-		Map map = getColumnMap(dbMetaData, tableName);
+    public static String[] getColumns(DatabaseMetaData dbMetaData,
+            String tableName) {
+
+        Map map = getColumnMap(dbMetaData, tableName);
         String[] ret = new String[map.size()];
         int index = 0;
-        for (Iterator i = map.values().iterator(); i.hasNext(); ) {
+        for (Iterator i = map.values().iterator(); i.hasNext();) {
             ColumnDesc cd = (ColumnDesc) i.next();
             ret[index++] = cd.getName();
         }
-		return ret;
-	}
+        return ret;
+    }
 
-	public static Map getColumnMap(DatabaseMetaData dbMetaData, String tableName) {
-		String schema = null;
-		int index = tableName.indexOf('.');
-		if (index >= 0) {
-			schema = tableName.substring(0, index);
-			tableName = tableName.substring(index + 1);
-		}
-		String convertedTableName = convertIdentifier(dbMetaData, tableName);
-		Map map = new CaseInsensitiveMap();
-		addColumns(dbMetaData, convertIdentifier(dbMetaData, schema), convertedTableName, map);
-		if (map.size() == 0) {
-			addColumns(dbMetaData, schema, tableName, map);
-		}
-		if (map.size() == 0 && schema != null) {
-			addColumns(dbMetaData, null, convertedTableName, map);
-			if (map.size() == 0) {
-				addColumns(dbMetaData, null, tableName, map);
-			}
-		}
-		return map;
-	}
-	
-	private static void addColumns(DatabaseMetaData dbMetaData, String schema, String tableName, Map map) {
-		try {
-			ResultSet rs = dbMetaData.getColumns(null, schema, tableName, null);
-			while (rs.next()) {
+    public static Map getColumnMap(DatabaseMetaData dbMetaData, String tableName) {
+        final String schema;
+        int index = tableName.indexOf('.');
+        if (index >= 0) {
+            schema = tableName.substring(0, index);
+            tableName = tableName.substring(index + 1);
+        } else {
+            schema = getUserName(dbMetaData);
+        }
+        final String convertedTableName = convertIdentifier(dbMetaData,
+                tableName);
+        Map map = new CaseInsensitiveMap();
+        addColumns(dbMetaData, convertIdentifier(dbMetaData, schema),
+                convertedTableName, map);
+        if (map.size() == 0) {
+            addColumns(dbMetaData, schema, tableName, map);
+        }
+        if (map.size() == 0 && schema != null) {
+            addColumns(dbMetaData, null, convertedTableName, map);
+            if (map.size() == 0) {
+                addColumns(dbMetaData, null, tableName, map);
+            }
+        }
+        return map;
+    }
+
+    private static void addColumns(DatabaseMetaData dbMetaData, String schema,
+            String tableName, Map map) {
+        try {
+            ResultSet rs = dbMetaData.getColumns(null, schema, tableName, null);
+            while (rs.next()) {
                 ColumnDesc cd = new ColumnDesc();
                 cd.setName(rs.getString(4));
                 cd.setSqlType(rs.getInt(5));
-				map.put(cd.getName(), cd);
-			}
-			rs.close();
-		} catch (SQLException ex) {
-			throw new SQLRuntimeException(ex);
-		}
-	}
+                map.put(cd.getName(), cd);
+            }
+            rs.close();
+        } catch (SQLException ex) {
+            throw new SQLRuntimeException(ex);
+        }
+    }
 
-	public static String convertIdentifier(DatabaseMetaData dbMetaData,
-			String identifier) {
+    public static String convertIdentifier(DatabaseMetaData dbMetaData,
+            String identifier) {
 
-		if (identifier == null) {
-			return null;
-		}
-		if (!supportsMixedCaseIdentifiers(dbMetaData)) {
-			if (storesUpperCaseIdentifiers(dbMetaData)) {
-				return identifier.toUpperCase();
-			}
-			return identifier.toLowerCase();
-		}
-		return identifier;
-	}
+        if (identifier == null) {
+            return null;
+        }
+        if (!supportsMixedCaseIdentifiers(dbMetaData)) {
+            if (storesUpperCaseIdentifiers(dbMetaData)) {
+                return identifier.toUpperCase();
+            }
+            return identifier.toLowerCase();
+        }
+        return identifier;
+    }
 
-	public static boolean supportsMixedCaseIdentifiers(
-			DatabaseMetaData dbMetaData) {
+    public static boolean supportsMixedCaseIdentifiers(
+            DatabaseMetaData dbMetaData) {
 
-		try {
-			return dbMetaData.supportsMixedCaseIdentifiers();
-		} catch (SQLException ex) {
-			throw new SQLRuntimeException(ex);
-		}
-	}
+        try {
+            return dbMetaData.supportsMixedCaseIdentifiers();
+        } catch (SQLException ex) {
+            throw new SQLRuntimeException(ex);
+        }
+    }
 
-	public static boolean storesUpperCaseIdentifiers(DatabaseMetaData dbMetaData) {
-		try {
-			return dbMetaData.storesUpperCaseIdentifiers();
-		} catch (SQLException ex) {
-			throw new SQLRuntimeException(ex);
-		}
-	}
+    public static boolean storesUpperCaseIdentifiers(DatabaseMetaData dbMetaData) {
+        try {
+            return dbMetaData.storesUpperCaseIdentifiers();
+        } catch (SQLException ex) {
+            throw new SQLRuntimeException(ex);
+        }
+    }
 
-	public static String getDatabaseProductName(DatabaseMetaData dbMetaData) {
-		try {
-			return dbMetaData.getDatabaseProductName();
-		} catch (SQLException ex) {
-			throw new SQLRuntimeException(ex);
-		}
-	}
+    public static String getDatabaseProductName(DatabaseMetaData dbMetaData) {
+        try {
+            return dbMetaData.getDatabaseProductName();
+        } catch (SQLException ex) {
+            throw new SQLRuntimeException(ex);
+        }
+    }
 }
