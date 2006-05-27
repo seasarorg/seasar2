@@ -38,6 +38,7 @@ import org.seasar.framework.container.InterTypeDef;
 import org.seasar.framework.container.PropertyDef;
 import org.seasar.framework.container.assembler.AutoBindingDefFactory;
 import org.seasar.framework.container.deployer.InstanceDefFactory;
+import org.seasar.framework.container.impl.ComponentDefImpl;
 import org.seasar.framework.container.impl.PropertyDefImpl;
 import org.seasar.framework.container.ognl.OgnlExpression;
 import org.seasar.framework.ejb.SEJBException;
@@ -609,6 +610,14 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
         }
     }
 
+    public void testAddComponentDefFactory() {
+        TigerAnnotationHandler
+                .addComponentDefFactory(new TestComponentDefFactory());
+        ComponentDef componentDef = handler.createComponentDef(getClass(),
+                null, null);
+        assertTrue("1", componentDef instanceof TestComponentDef);
+    }
+
     private Map<String, String> gatherAspect(ComponentDef cd,
             String[] methodNames) throws NoSuchMethodException {
         Map<String, String> map = new HashMap<String, String>();
@@ -624,5 +633,18 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
             }
         }
         return map;
+    }
+
+    public class TestComponentDefFactory implements ComponentDefFactory {
+
+        public ComponentDef createComponentDef(Class<?> componentClass,
+                InstanceDef defaultInstanceDef,
+                AutoBindingDef defaultAutoBindingDef) {
+            return new TestComponentDef();
+        }
+
+    }
+
+    public class TestComponentDef extends ComponentDefImpl {
     }
 }

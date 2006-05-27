@@ -203,6 +203,10 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
         super.appendDestroyMethod(componentDef);
     }
 
+    public static void addComponentDefFactory(final ComponentDefFactory factory) {
+        componentDefFactories.add(0, factory);
+    }
+
     protected void appendEJB3Aspect(final ComponentDef componentDef) {
         final EJB3Desc ejb3desc = EJB3Desc.getEJB3Desc(componentDef
                 .getComponentClass());
