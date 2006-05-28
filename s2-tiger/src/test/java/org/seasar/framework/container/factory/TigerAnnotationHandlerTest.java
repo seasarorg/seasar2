@@ -618,6 +618,15 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
         assertTrue("1", componentDef instanceof TestComponentDef);
     }
 
+    public void testAddPropertyDefFactory() throws Exception {
+        TigerAnnotationHandler
+                .addPropertyDefFactory(new TestPropertyDefFacotry());
+        PropertyDef propertyDef = handler.createPropertyDef(BeanDescFactory
+                .getBeanDesc(getClass()), getClass()
+                .getDeclaredField("handler"));
+        assertTrue("1", propertyDef instanceof TestPropertyDef);
+    }
+
     private Map<String, String> gatherAspect(ComponentDef cd,
             String[] methodNames) throws NoSuchMethodException {
         Map<String, String> map = new HashMap<String, String>();
@@ -635,8 +644,7 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
         return map;
     }
 
-    public class TestComponentDefFactory implements ComponentDefFactory {
-
+    public static class TestComponentDefFactory implements ComponentDefFactory {
         public ComponentDef createComponentDef(Class<?> componentClass,
                 InstanceDef defaultInstanceDef,
                 AutoBindingDef defaultAutoBindingDef) {
@@ -645,6 +653,23 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
 
     }
 
-    public class TestComponentDef extends ComponentDefImpl {
+    public static class TestComponentDef extends ComponentDefImpl {
+    }
+
+    public static class TestPropertyDefFacotry implements PropertyDefFactory {
+        public PropertyDef createPropertyDef(BeanDesc beanDesc, Field field) {
+            return new TestPropertyDef("foo");
+        }
+
+        public PropertyDef createPropertyDef(BeanDesc beanDesc,
+                PropertyDesc propertyDesc) {
+            return new TestPropertyDef("bar");
+        }
+    }
+
+    public static class TestPropertyDef extends PropertyDefImpl {
+        public TestPropertyDef(String propertyName) {
+            super(propertyName);
+        }
     }
 }
