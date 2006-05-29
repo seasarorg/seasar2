@@ -57,18 +57,26 @@ public abstract class AbstractBindingTypeDef implements BindingTypeDef {
     }
 
     public void bind(ComponentDef componentDef, PropertyDef propertyDef,
-            PropertyDesc propertyDesc, Field field, Object component) {
-
+            PropertyDesc propertyDesc, Object component) {
         if (propertyDef != null && propertyDef.isValueGettable()) {
             if (propertyDesc != null && propertyDesc.hasWriteMethod()) {
                 bindManual(componentDef, propertyDef, propertyDesc, component);
-            } else if (field != null) {
-                bindManual(componentDef, propertyDef, field, component);
             }
         } else {
             if (propertyDesc != null && propertyDesc.hasWriteMethod()) {
                 doBind(componentDef, propertyDesc, component);
-            } else if (propertyDef != null && field != null) {
+            }
+        }
+    }
+
+    public void bind(ComponentDef componentDef, PropertyDef propertyDef,
+            Field field, Object component) {
+        if (propertyDef != null && propertyDef.isValueGettable()) {
+            if (field != null) {
+                bindManual(componentDef, propertyDef, field, component);
+            }
+        } else {
+            if (propertyDef != null && field != null) {
                 doBind(componentDef, field, component);
             }
         }
