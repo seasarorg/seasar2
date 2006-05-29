@@ -29,6 +29,7 @@ import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 import org.seasar.framework.container.impl.S2ContainerImpl;
 import org.seasar.framework.container.impl.S2ContainerBehavior.DefaultProvider;
 import org.seasar.framework.container.util.S2ContainerUtil;
+import org.seasar.framework.exception.ClassNotFoundRuntimeException;
 import org.seasar.framework.exception.EmptyRuntimeException;
 
 public class OndemandBehavior extends DefaultProvider implements
@@ -153,9 +154,13 @@ public class OndemandBehavior extends DefaultProvider implements
             String componentName) {
         for (int i = 0; i < getCreatorSize(); ++i) {
             OndemandCreator creator = getCreator(i);
-            ComponentDef cd = creator.getComponentDef(container, componentName);
-            if (cd != null) {
-                return cd;
+            try {
+                ComponentDef cd = creator.getComponentDef(container,
+                        componentName);
+                if (cd != null) {
+                    return cd;
+                }
+            } catch (ClassNotFoundRuntimeException ignore) {
             }
         }
         return null;

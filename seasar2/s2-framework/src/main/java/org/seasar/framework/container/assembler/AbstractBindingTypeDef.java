@@ -57,36 +57,21 @@ public abstract class AbstractBindingTypeDef implements BindingTypeDef {
     }
 
     public void bind(ComponentDef componentDef, PropertyDef propertyDef,
-            PropertyDesc propertyDesc, Object component) {
+            PropertyDesc propertyDesc, Field field, Object component) {
+
         if (propertyDef != null && propertyDef.isValueGettable()) {
             if (propertyDesc != null && propertyDesc.hasWriteMethod()) {
                 bindManual(componentDef, propertyDef, propertyDesc, component);
+            } else if (field != null) {
+                bindManual(componentDef, propertyDef, field, component);
             }
         } else {
             if (propertyDesc != null && propertyDesc.hasWriteMethod()) {
                 doBind(componentDef, propertyDesc, component);
-            }
-        }
-    }
-
-    public void bind(ComponentDef componentDef, PropertyDef propertyDef,
-            Field field, Object component) {
-        if (propertyDef != null && propertyDef.isValueGettable()) {
-            if (field != null) {
-                bindManual(componentDef, propertyDef, field, component);
-            }
-        } else {
-            if (propertyDef != null && field != null) {
+            } else if (propertyDef != null && field != null) {
                 doBind(componentDef, field, component);
             }
         }
-    }
-
-    protected void bindManual(ComponentDef componentDef,
-            PropertyDef propertyDef, PropertyDesc propertyDesc, Object component) {
-
-        Object value = getValue(componentDef, propertyDef, component);
-        setValue(componentDef, propertyDesc, component, value);
     }
 
     protected void bindManual(ComponentDef componentDef,
@@ -96,12 +81,30 @@ public abstract class AbstractBindingTypeDef implements BindingTypeDef {
         setValue(componentDef, field, component, value);
     }
 
+    protected void bindManual(ComponentDef componentDef,
+            PropertyDef propertyDef, PropertyDesc propertyDesc, Object component) {
+
+        Object value = getValue(componentDef, propertyDef, component);
+        setValue(componentDef, propertyDesc, component, value);
+    }
+
     protected boolean bindAuto(ComponentDef componentDef, Field field,
             Object component) {
 
         S2Container container = componentDef.getContainer();
         String propName = field.getName();
         Class propType = field.getType();
+        if (container.hasComponentDef(propType)) {
+            ComponentDef cd = container.getComponentDef(propType);
+            if (cd.getComponentName() != null
+                    && (cd.getComponentName().equals(propName) || cd
+                            .getComponentName().endsWith(
+                                    ContainerConstants.PACKAGE_SEP + propName))) {
+                Object value = container.getComponent(propType);
+                setValue(componentDef, field, component, value);
+                return true;
+            }
+        }
         if (container.hasComponentDef(propName)) {
             Object value = container.getComponent(propName);
             if (propType.isInstance(value)) {
@@ -120,16 +123,6 @@ public abstract class AbstractBindingTypeDef implements BindingTypeDef {
                 return true;
             }
         }
-        if (container.hasComponentDef(propType)) {
-            ComponentDef cd = container.getComponentDef(propType);
-            if (cd.getComponentName() != null
-                    && cd.getComponentName().endsWith(
-                            ContainerConstants.PACKAGE_SEP + propName)) {
-                Object value = container.getComponent(propType);
-                setValue(componentDef, field, component, value);
-                return true;
-            }
-        }
         return false;
     }
 
@@ -139,6 +132,17 @@ public abstract class AbstractBindingTypeDef implements BindingTypeDef {
         S2Container container = componentDef.getContainer();
         String propName = propertyDesc.getPropertyName();
         Class propType = propertyDesc.getPropertyType();
+        if (container.hasComponentDef(propType)) {
+            ComponentDef cd = container.getComponentDef(propType);
+            if (cd.getComponentName() != null
+                    && (cd.getComponentName().equals(propName) || cd
+                            .getComponentName().endsWith(
+                                    ContainerConstants.PACKAGE_SEP + propName))) {
+                Object value = container.getComponent(propType);
+                setValue(componentDef, propertyDesc, component, value);
+                return true;
+            }
+        }
         if (container.hasComponentDef(propName)) {
             Object value = container.getComponent(propName);
             if (propType.isInstance(value)) {
@@ -154,16 +158,6 @@ public abstract class AbstractBindingTypeDef implements BindingTypeDef {
             }
             if (propType.isAssignableFrom(ComponentDef.class)) {
                 setValue(componentDef, propertyDesc, component, componentDef);
-                return true;
-            }
-        }
-        if (container.hasComponentDef(propType)) {
-            ComponentDef cd = container.getComponentDef(propType);
-            if (cd.getComponentName() != null
-                    && cd.getComponentName().endsWith(
-                            ContainerConstants.PACKAGE_SEP + propName)) {
-                Object value = container.getComponent(propType);
-                setValue(componentDef, propertyDesc, component, value);
                 return true;
             }
         }
