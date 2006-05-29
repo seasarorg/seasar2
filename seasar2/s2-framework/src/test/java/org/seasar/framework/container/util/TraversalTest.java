@@ -23,7 +23,6 @@ import junit.framework.TestCase;
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.factory.S2ContainerFactory;
-import org.seasar.framework.container.util.Traversal;
 
 /**
  * @author koichik
@@ -38,12 +37,13 @@ public class TraversalTest extends TestCase {
 
     public void testForEachContainer() throws Exception {
         final List l = new ArrayList();
-        Traversal.forEachContainer(container, new Traversal.S2ContainerHandler() {
-            public Object processContainer(S2Container container) {
-                l.add(container.getNamespace());
-                return null;
-            }
-        });
+        Traversal.forEachContainer(container,
+                new Traversal.S2ContainerHandler() {
+                    public Object processContainer(S2Container container) {
+                        l.add(container.getNamespace());
+                        return null;
+                    }
+                });
 
         assertEquals("1", 4, l.size());
         assertEquals("2", "root", l.get(0));
@@ -54,12 +54,13 @@ public class TraversalTest extends TestCase {
 
     public void testForEachContainerChildLast() throws Exception {
         final List l = new ArrayList();
-        Traversal.forEachContainer(container, new Traversal.S2ContainerHandler() {
-            public Object processContainer(S2Container container) {
-                l.add(container.getNamespace());
-                return null;
-            }
-        }, false);
+        Traversal.forEachContainer(container,
+                new Traversal.S2ContainerHandler() {
+                    public Object processContainer(S2Container container) {
+                        l.add(container.getNamespace());
+                        return null;
+                    }
+                }, false);
 
         assertEquals("1", 4, l.size());
         assertEquals("2", "1", l.get(0));
@@ -81,12 +82,13 @@ public class TraversalTest extends TestCase {
 
     public void testForEachComponent() throws Exception {
         final List l = new ArrayList();
-        Traversal.forEachComponent(container, new Traversal.ComponentDefHandler() {
-            public Object processComponent(ComponentDef componentDef) {
-                l.add(componentDef.getComponentName());
-                return null;
-            }
-        });
+        Traversal.forEachComponent(container,
+                new Traversal.ComponentDefHandler() {
+                    public Object processComponent(ComponentDef componentDef) {
+                        l.add(componentDef.getComponentName());
+                        return null;
+                    }
+                });
 
         assertEquals("1", 8, l.size());
         assertEquals("2", "1", l.get(0));
@@ -101,12 +103,13 @@ public class TraversalTest extends TestCase {
 
     public void testForEachComponentChildFirst() throws Exception {
         final List l = new ArrayList();
-        Traversal.forEachComponent(container, new Traversal.ComponentDefHandler() {
-            public Object processComponent(ComponentDef componentDef) {
-                l.add(componentDef.getComponentName());
-                return null;
-            }
-        }, false);
+        Traversal.forEachComponent(container,
+                new Traversal.ComponentDefHandler() {
+                    public Object processComponent(ComponentDef componentDef) {
+                        l.add(componentDef.getComponentName());
+                        return null;
+                    }
+                }, false);
 
         assertEquals("1", 8, l.size());
         assertEquals("2", "1-1", l.get(0));
@@ -120,13 +123,13 @@ public class TraversalTest extends TestCase {
     }
 
     public void testForEachComponentFinding() throws Exception {
-        String s = (String)
-        Traversal.forEachComponent(container, new Traversal.ComponentDefHandler() {
-            public Object processComponent(ComponentDef componentDef) {
-                return componentDef.getComponentName();
-            }
-        }, false);
-        
+        String s = (String) Traversal.forEachComponent(container,
+                new Traversal.ComponentDefHandler() {
+                    public Object processComponent(ComponentDef componentDef) {
+                        return componentDef.getComponentName();
+                    }
+                }, false);
+
         assertEquals("1", "1-1", s);
     }
 }

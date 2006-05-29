@@ -23,44 +23,43 @@ import org.seasar.framework.util.ConstructorUtil;
 
 /**
  * @author higa
- *
+ * 
  */
-public class AutoConstructorAssembler
-	extends AbstractConstructorAssembler {
+public class AutoConstructorAssembler extends AbstractConstructorAssembler {
 
-	/**
-	 * @param componentDef
-	 */
-	public AutoConstructorAssembler(ComponentDef componentDef) {
-		super(componentDef);
-	}
+    /**
+     * @param componentDef
+     */
+    public AutoConstructorAssembler(ComponentDef componentDef) {
+        super(componentDef);
+    }
 
-	protected Object doAssemble() {
-		Constructor constructor = getSuitableConstructor();
-		if (constructor == null) {
-			return assembleDefault();
-		}
-		Object[] args = getArgs(constructor.getParameterTypes());
-		return ConstructorUtil.newInstance(constructor, args);
-	}
+    protected Object doAssemble() {
+        Constructor constructor = getSuitableConstructor();
+        if (constructor == null) {
+            return assembleDefault();
+        }
+        Object[] args = getArgs(constructor.getParameterTypes());
+        return ConstructorUtil.newInstance(constructor, args);
+    }
 
-	protected Constructor getSuitableConstructor() {
-		int argSize = -1;
-		Constructor constructor = null;
-		Constructor[] constructors =
-			getComponentDef().getConcreteClass().getConstructors();
-		for (int i = 0; i < constructors.length; ++i) {
-			int tempArgSize = constructors[i].getParameterTypes().length;
-			if (tempArgSize == 0) {
-				return null;
-			}
-			if (tempArgSize > argSize
-				&& BindingUtil.isAutoBindable(
-					constructors[i].getParameterTypes())) {
-				constructor = constructors[i];
-				argSize = tempArgSize;
-			}
-		}
-		return constructor;
-	}
+    protected Constructor getSuitableConstructor() {
+        int argSize = -1;
+        Constructor constructor = null;
+        Constructor[] constructors = getComponentDef().getConcreteClass()
+                .getConstructors();
+        for (int i = 0; i < constructors.length; ++i) {
+            int tempArgSize = constructors[i].getParameterTypes().length;
+            if (tempArgSize == 0) {
+                return null;
+            }
+            if (tempArgSize > argSize
+                    && BindingUtil.isAutoBindable(constructors[i]
+                            .getParameterTypes())) {
+                constructor = constructors[i];
+                argSize = tempArgSize;
+            }
+        }
+        return constructor;
+    }
 }

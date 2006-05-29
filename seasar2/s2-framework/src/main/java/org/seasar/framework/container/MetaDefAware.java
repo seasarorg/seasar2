@@ -15,20 +15,19 @@
  */
 package org.seasar.framework.container;
 
-
 /**
  * @author higa
- *
+ * 
  */
 public interface MetaDefAware {
-	
-	public void addMetaDef(MetaDef metaDef);
-	
-	public int getMetaDefSize();
-	
-	public MetaDef getMetaDef(int index);
-	
-	public MetaDef getMetaDef(String name);
-	
-	public MetaDef[] getMetaDefs(String name);
+
+    public void addMetaDef(MetaDef metaDef);
+
+    public int getMetaDefSize();
+
+    public MetaDef getMetaDef(int index);
+
+    public MetaDef getMetaDef(String name);
+
+    public MetaDef[] getMetaDefs(String name);
 }

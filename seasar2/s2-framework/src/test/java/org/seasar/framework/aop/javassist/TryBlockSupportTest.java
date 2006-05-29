@@ -17,8 +17,6 @@ package org.seasar.framework.aop.javassist;
 
 import junit.framework.TestCase;
 
-import org.seasar.framework.aop.javassist.TryBlockSupport;
-
 /**
  * @author koichik
  */
@@ -35,16 +33,17 @@ public class TryBlockSupportTest extends TestCase {
         TryBlockSupport tryBlock = new TryBlockSupport("return null;");
         tryBlock.addCatchBlock(Exception.class, "e.printStackTrace();");
         tryBlock.addCatchBlock(Error.class, "");
-        assertEquals("1", "try {" + "return null;" + "}" + "catch (java.lang.Exception e) {"
-                + "e.printStackTrace();" + "}" + "catch (java.lang.Error e) {" + "}", tryBlock
+        assertEquals("1", "try {" + "return null;" + "}"
+                + "catch (java.lang.Exception e) {" + "e.printStackTrace();"
+                + "}" + "catch (java.lang.Error e) {" + "}", tryBlock
                 .getSourceCode());
     }
 
     public void testFinally() throws Exception {
         TryBlockSupport tryBlock = new TryBlockSupport("return null;");
         tryBlock.setFinallyBlock("System.out.println();");
-        assertEquals("1", "try {" + "return null;" + "}" + "finally {" + "System.out.println();"
-                + "}", tryBlock.getSourceCode());
+        assertEquals("1", "try {" + "return null;" + "}" + "finally {"
+                + "System.out.println();" + "}", tryBlock.getSourceCode());
     }
 
     public void testCatchFinally() throws Exception {
@@ -52,8 +51,9 @@ public class TryBlockSupportTest extends TestCase {
         tryBlock.addCatchBlock(Exception.class, "e.printStackTrace();");
         tryBlock.addCatchBlock(Error.class, "");
         tryBlock.setFinallyBlock("System.out.println();");
-        assertEquals("1", "try {" + "return null;" + "}" + "catch (java.lang.Exception e) {"
-                + "e.printStackTrace();" + "}" + "catch (java.lang.Error e) {" + "}" + "finally {"
+        assertEquals("1", "try {" + "return null;" + "}"
+                + "catch (java.lang.Exception e) {" + "e.printStackTrace();"
+                + "}" + "catch (java.lang.Error e) {" + "}" + "finally {"
                 + "System.out.println();" + "}", tryBlock.getSourceCode());
     }
 
@@ -62,8 +62,7 @@ public class TryBlockSupportTest extends TestCase {
         try {
             tryBlock.getSourceCode();
             fail("1");
-        }
-        catch (IllegalStateException expected) {
+        } catch (IllegalStateException expected) {
         }
 
         tryBlock.setFinallyBlock("");
@@ -71,25 +70,22 @@ public class TryBlockSupportTest extends TestCase {
         try {
             tryBlock.addCatchBlock(Exception.class, "");
             fail("1");
-        }
-        catch (IllegalStateException expected) {
+        } catch (IllegalStateException expected) {
         }
 
         try {
             tryBlock.setFinallyBlock("");
             fail("1");
-        }
-        catch (IllegalStateException expected) {
+        } catch (IllegalStateException expected) {
         }
     }
-    
+
     public void testNotThrowable() throws Exception {
         TryBlockSupport tryBlock = new TryBlockSupport("return null;");
         try {
             tryBlock.addCatchBlock(Object.class, "");
             fail("1");
-        }
-        catch (IllegalArgumentException expected) {
+        } catch (IllegalArgumentException expected) {
         }
     }
 }

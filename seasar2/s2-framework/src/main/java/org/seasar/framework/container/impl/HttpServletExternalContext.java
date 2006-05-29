@@ -22,14 +22,16 @@ import org.seasar.framework.exception.EmptyRuntimeException;
 
 /**
  * @author higa
- *
+ * 
  */
 public class HttpServletExternalContext implements ExternalContext {
 
     private ThreadLocal requests = new ThreadLocal();
+
     private ThreadLocal responses = new ThreadLocal();
+
     private Object application;
-    
+
     public Object getRequest() {
         return requests.get();
     }

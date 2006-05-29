@@ -33,10 +33,13 @@ import org.seasar.framework.util.StringUtil;
 public abstract class AbstractAutoNaming implements AutoNaming {
 
     protected static final String IMPL = "Impl";
+
     protected static final String BEAN = "Bean";
 
     protected boolean decapitalize = true;
+
     protected Map customizedNames = new HashMap();
+
     protected Map replaceRules = new LinkedHashMap();
 
     public AbstractAutoNaming() {
@@ -65,8 +68,10 @@ public abstract class AbstractAutoNaming implements AutoNaming {
         this.decapitalize = decapitalize;
     }
 
-    public String defineName(final String packageName, final String shortClassName) {
-        final String customizedName = getCustomizedName(packageName, shortClassName);
+    public String defineName(final String packageName,
+            final String shortClassName) {
+        final String customizedName = getCustomizedName(packageName,
+                shortClassName);
         if (customizedName != null) {
             return customizedName;
         }

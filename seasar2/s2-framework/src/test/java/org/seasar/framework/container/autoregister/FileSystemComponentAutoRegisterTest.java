@@ -27,11 +27,11 @@ import org.seasar.framework.unit.S2FrameworkTestCase;
 public class FileSystemComponentAutoRegisterTest extends S2FrameworkTestCase {
 
     private S2Container child;
-    
+
     public void setUpRegisterAll() throws Exception {
         include("autoRegister.dicon");
     }
-    
+
     public void testRegisterAll() throws Exception {
         Foo foo = (Foo) child.getComponent(Foo.class);
         assertNotNull("1", foo);
@@ -42,16 +42,18 @@ public class FileSystemComponentAutoRegisterTest extends S2FrameworkTestCase {
         assertNotNull("5", child.getComponent("foo3"));
         assertFalse("6", child.hasComponentDef(Foo4Impl.class));
     }
-    
+
     public void setUpRegisterAll2() throws Exception {
         include("autoRegister3.dicon");
     }
-    
+
     public void testRegisterAll2() throws Exception {
         ComponentDef cd = child.getComponentDef(Foo.class);
-        assertEquals("1", InstanceDef.PROTOTYPE_NAME, cd.getInstanceDef().getName());
+        assertEquals("1", InstanceDef.PROTOTYPE_NAME, cd.getInstanceDef()
+                .getName());
         ComponentDef cd2 = child.getComponentDef(Foo2.class);
-        assertEquals("2", InstanceDef.REQUEST_NAME, cd2.getInstanceDef().getName());
+        assertEquals("2", InstanceDef.REQUEST_NAME, cd2.getInstanceDef()
+                .getName());
         assertNotNull("3", child.getComponent(Foo5.class));
         try {
             child.getComponent("foo5");
@@ -60,11 +62,11 @@ public class FileSystemComponentAutoRegisterTest extends S2FrameworkTestCase {
             System.out.println(ex);
         }
     }
-    
+
     public void setUpGetComponentDefForRoot() throws Exception {
         include("autoRegister.dicon");
     }
-    
+
     public void testGetComponentDefForRoot() throws Exception {
         assertNotNull("1", getComponentDef(Foo.class));
     }

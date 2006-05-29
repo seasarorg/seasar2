@@ -24,25 +24,27 @@ import org.seasar.extension.jdbc.impl.BasicUpdateHandler;
 
 /**
  * @author higa
- *
+ * 
  */
 public abstract class AbstractRowState implements RowState {
-	
-	AbstractRowState() {
-	}
-	
-	/**
-	 * @see org.seasar.extension.dataset.RowState#update(javax.sql.DataSource, org.seasar.extension.dataset.DataRow)
-	 */
-	public void update(DataSource dataSource, DataRow row) {
-		SqlContext ctx = getSqlContext(row);
+
+    AbstractRowState() {
+    }
+
+    /**
+     * @see org.seasar.extension.dataset.RowState#update(javax.sql.DataSource,
+     *      org.seasar.extension.dataset.DataRow)
+     */
+    public void update(DataSource dataSource, DataRow row) {
+        SqlContext ctx = getSqlContext(row);
         UpdateHandler handler = new BasicUpdateHandler(dataSource, ctx.getSql());
-		execute(handler, ctx.getArgs(), ctx.getArgTypes());
-	}
+        execute(handler, ctx.getArgs(), ctx.getArgTypes());
+    }
 
-	protected abstract SqlContext getSqlContext(DataRow row);
+    protected abstract SqlContext getSqlContext(DataRow row);
 
-	protected void execute(UpdateHandler handler, Object[] args, Class[] argTypes) {
-		handler.execute(args, argTypes);
-	}
+    protected void execute(UpdateHandler handler, Object[] args,
+            Class[] argTypes) {
+        handler.execute(args, argTypes);
+    }
 }

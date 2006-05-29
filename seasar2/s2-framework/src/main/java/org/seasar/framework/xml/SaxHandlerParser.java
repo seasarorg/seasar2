@@ -26,33 +26,34 @@ import org.xml.sax.InputSource;
 
 public final class SaxHandlerParser {
 
-	private SaxHandler saxHandler;
-	private SAXParser saxParser;
+    private SaxHandler saxHandler;
 
-	public SaxHandlerParser(SaxHandler saxHandler) {
-		this(saxHandler, SAXParserFactoryUtil.newSAXParser());
-	}
+    private SAXParser saxParser;
 
-	public SaxHandlerParser(SaxHandler saxHandler, SAXParser saxParser) {
-		this.saxHandler = saxHandler;
-		this.saxParser = saxParser;
-	}
-	
-	public SaxHandler getSaxHandler() {
-		return saxHandler;
-	}
-	
-	public SAXParser getSAXParser() {
-		return saxParser;
-	}
+    public SaxHandlerParser(SaxHandler saxHandler) {
+        this(saxHandler, SAXParserFactoryUtil.newSAXParser());
+    }
 
-	public Object parse(String path) {
-		return parse(ResourceUtil.getResourceAsStream(path), path);
-	}
+    public SaxHandlerParser(SaxHandler saxHandler, SAXParser saxParser) {
+        this.saxHandler = saxHandler;
+        this.saxParser = saxParser;
+    }
 
-	public Object parse(InputStream inputStream) {
-		return parse(new InputSource(inputStream));
-	}
+    public SaxHandler getSaxHandler() {
+        return saxHandler;
+    }
+
+    public SAXParser getSAXParser() {
+        return saxParser;
+    }
+
+    public Object parse(String path) {
+        return parse(ResourceUtil.getResourceAsStream(path), path);
+    }
+
+    public Object parse(InputStream inputStream) {
+        return parse(new InputSource(inputStream));
+    }
 
     public Object parse(InputStream inputStream, String path) {
         InputSource is = new InputSource(inputStream);

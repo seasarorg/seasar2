@@ -32,9 +32,11 @@ import org.seasar.framework.util.ClassTraversal.ClassHandler;
  * 
  * @author koichik
  */
-public class ComponentAutoRegister extends AbstractComponentAutoRegister implements ClassHandler {
+public class ComponentAutoRegister extends AbstractComponentAutoRegister
+        implements ClassHandler {
 
     private List referenceClasses = new ArrayList();
+
     private Map strategies = new HashMap();
 
     public ComponentAutoRegister() {
@@ -49,9 +51,11 @@ public class ComponentAutoRegister extends AbstractComponentAutoRegister impleme
     public void registerAll() {
         for (int i = 0; i < referenceClasses.size(); ++i) {
             final Class referenceClass = (Class) referenceClasses.get(i);
-            final String baseClassPath = ResourceUtil.getResourcePath(referenceClass);
+            final String baseClassPath = ResourceUtil
+                    .getResourcePath(referenceClass);
             final URL url = ResourceUtil.getResource(baseClassPath);
-            final Strategy strategy = (Strategy) strategies.get(url.getProtocol());
+            final Strategy strategy = (Strategy) strategies.get(url
+                    .getProtocol());
             strategy.registerAll(referenceClass, url);
         }
     }
@@ -66,8 +70,8 @@ public class ComponentAutoRegister extends AbstractComponentAutoRegister impleme
         public void registerAll(final Class referenceClass, final URL url) {
             final File rootDir = getRootDir(referenceClass, url);
             for (int i = 0; i < getClassPatternSize(); ++i) {
-                ClassTraversal.forEach(rootDir, getClassPattern(i).getPackageName(),
-                        ComponentAutoRegister.this);
+                ClassTraversal.forEach(rootDir, getClassPattern(i)
+                        .getPackageName(), ComponentAutoRegister.this);
             }
         }
 

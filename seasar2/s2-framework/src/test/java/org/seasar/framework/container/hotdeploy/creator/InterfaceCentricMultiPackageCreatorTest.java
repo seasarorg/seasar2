@@ -18,7 +18,6 @@ package org.seasar.framework.container.hotdeploy.creator;
 import org.seasar.framework.aop.interceptors.TraceInterceptor;
 import org.seasar.framework.container.autoregister.AspectCustomizer;
 import org.seasar.framework.container.hotdeploy.OndemandBehavior;
-import org.seasar.framework.container.hotdeploy.creator.InterfaceCentricMultiPackageCreator;
 import org.seasar.framework.container.impl.S2ContainerBehavior;
 import org.seasar.framework.unit.S2FrameworkTestCase;
 import org.seasar.framework.util.ClassUtil;
@@ -27,10 +26,11 @@ import org.seasar.framework.util.ClassUtil;
  * @author higa
  * 
  */
-public class InterfaceCentricMultiPackageCreatorTest extends S2FrameworkTestCase {
-    
+public class InterfaceCentricMultiPackageCreatorTest extends
+        S2FrameworkTestCase {
+
     private ClassLoader originalLoader;
-    
+
     private OndemandBehavior ondemand;
 
     protected void setUp() {
@@ -48,19 +48,20 @@ public class InterfaceCentricMultiPackageCreatorTest extends S2FrameworkTestCase
         S2ContainerBehavior.setProvider(ondemand);
         ondemand.start();
     }
-    
+
     protected void tearDown() {
         ondemand.stop();
-        S2ContainerBehavior.setProvider(new S2ContainerBehavior.DefaultProvider());
+        S2ContainerBehavior
+                .setProvider(new S2ContainerBehavior.DefaultProvider());
         Thread.currentThread().setContextClassLoader(originalLoader);
     }
-    
+
     public void testIsTargetByComponentName() throws Exception {
         assertTrue("1", getContainer().hasComponentDef("aaa_hogeDxo"));
         assertTrue("2", getContainer().hasComponentDef("bbbDtoDxo"));
         assertNotNull("3", getComponent("bbbDtoDxo"));
     }
-    
+
     public void testIsTargetByClass() throws Exception {
         String packageName = ClassUtil.getPackageName(getClass());
         Class clazz = ClassUtil.forName(packageName + ".web.aaa.HogeDxo");

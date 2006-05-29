@@ -23,21 +23,22 @@ import org.seasar.framework.util.ArrayUtil;
 
 /**
  * @author higa
- *
+ * 
  */
 public class InterceptorChain extends AbstractInterceptor {
-    
+
     private static final long serialVersionUID = 1983914340945607081L;
 
-	private MethodInterceptor[] interceptors = new MethodInterceptor[0];
+    private MethodInterceptor[] interceptors = new MethodInterceptor[0];
 
     public void add(MethodInterceptor interceptor) {
-        interceptors = (MethodInterceptor[]) ArrayUtil.add(interceptors, interceptor);
+        interceptors = (MethodInterceptor[]) ArrayUtil.add(interceptors,
+                interceptor);
     }
 
     public Object invoke(MethodInvocation invocation) throws Throwable {
-        MethodInvocation nestInvocation = new NestedMethodInvocation((S2MethodInvocation) invocation,
-                interceptors);
+        MethodInvocation nestInvocation = new NestedMethodInvocation(
+                (S2MethodInvocation) invocation, interceptors);
         return nestInvocation.proceed();
     }
 }

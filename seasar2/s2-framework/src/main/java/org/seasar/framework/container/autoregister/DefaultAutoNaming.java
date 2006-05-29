@@ -17,7 +17,8 @@ package org.seasar.framework.container.autoregister;
 
 public class DefaultAutoNaming extends AbstractAutoNaming {
 
-    protected String makeDefineName(final String packageName, final String shortClassName) {
+    protected String makeDefineName(final String packageName,
+            final String shortClassName) {
         return applyRule(shortClassName);
     }
 }

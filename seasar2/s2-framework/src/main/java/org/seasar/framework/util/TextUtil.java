@@ -20,17 +20,17 @@ import java.io.Reader;
 
 /**
  * @author higa
- *
+ * 
  */
 public final class TextUtil {
 
-	private TextUtil() {
-	}
+    private TextUtil() {
+    }
 
-	public static String readText(String path) {
-		InputStream is = ResourceUtil.getResourceAsStream(path);
-		Reader reader = InputStreamReaderUtil.create(is);
-		return ReaderUtil.readText(reader);
-	}
+    public static String readText(String path) {
+        InputStream is = ResourceUtil.getResourceAsStream(path);
+        Reader reader = InputStreamReaderUtil.create(is);
+        return ReaderUtil.readText(reader);
+    }
 
 }

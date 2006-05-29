@@ -37,7 +37,7 @@ import org.seasar.framework.util.StringUtil;
 
 /**
  * @author higa
- *  
+ * 
  */
 public class MockServletContextImpl implements MockServletContext, Serializable {
 
@@ -302,7 +302,7 @@ public class MockServletContextImpl implements MockServletContext, Serializable 
             path = path.substring(0, question);
         }
         MockHttpServletRequestImpl request = new MockHttpServletRequestImpl(
-            this, path);
+                this, path);
         request.setQueryString(queryString);
         return request;
     }

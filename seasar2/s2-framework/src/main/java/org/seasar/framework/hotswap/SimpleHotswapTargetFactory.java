@@ -23,24 +23,24 @@ public class SimpleHotswapTargetFactory implements HotswapTargetFactory,
         Serializable {
 
     final static long serialVersionUID = 0L;
-    
+
     private Hotswap hotswap;
-    
+
     private Object target;
-    
+
     public SimpleHotswapTargetFactory(Class targetClass) {
         this(new Hotswap(targetClass));
     }
-    
+
     public SimpleHotswapTargetFactory(Hotswap hotswap) {
         this.hotswap = hotswap;
         target = ClassUtil.newInstance(hotswap.updateTargetClass());
     }
-    
+
     public Hotswap getHotswap() {
         return hotswap;
     }
-    
+
     public Object getTarget() {
         return target;
     }

@@ -38,14 +38,12 @@ public class S2ContainerBehaviorTest extends S2FrameworkTestCase {
         try {
             container.getComponent("not exists");
             fail("2");
-        }
-        catch (ComponentNotFoundRuntimeException expected) {
+        } catch (ComponentNotFoundRuntimeException expected) {
         }
         try {
             container.getComponent("bar");
             fail("3");
-        }
-        catch (TooManyRegistrationRuntimeException expected) {
+        } catch (TooManyRegistrationRuntimeException expected) {
             System.out.println(expected);
         }
     }
@@ -55,10 +53,11 @@ public class S2ContainerBehaviorTest extends S2FrameworkTestCase {
         try {
             container.getComponentDef("not exists");
             fail("2");
+        } catch (ComponentNotFoundRuntimeException expected) {
         }
-        catch (ComponentNotFoundRuntimeException expected) {
-        }
-        assertTrue("3", container.getComponentDef("bar") instanceof TooManyRegistrationComponentDef);
+        assertTrue(
+                "3",
+                container.getComponentDef("bar") instanceof TooManyRegistrationComponentDef);
     }
 
     public void testHasComponentDef() throws Exception {
@@ -74,14 +73,12 @@ public class S2ContainerBehaviorTest extends S2FrameworkTestCase {
         try {
             container.injectDependency(outer, "not exists");
             fail("2");
-        }
-        catch (ComponentNotFoundRuntimeException expected) {
+        } catch (ComponentNotFoundRuntimeException expected) {
         }
         try {
             container.injectDependency(outer, "outerBar");
             fail("3");
-        }
-        catch (UnsupportedOperationException expected) {
+        } catch (UnsupportedOperationException expected) {
             System.out.println(expected);
         }
     }

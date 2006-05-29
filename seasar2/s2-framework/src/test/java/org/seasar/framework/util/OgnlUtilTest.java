@@ -28,10 +28,9 @@ import org.seasar.framework.container.impl.S2ContainerImpl;
 /**
  * @author YOKOTA Takehiko
  */
-public class OgnlUtilTest extends TestCase
-{
+public class OgnlUtilTest extends TestCase {
     public void testAddClassResolverIfNecessary() {
-        S2Container container = new S2ContainerImpl(){
+        S2Container container = new S2ContainerImpl() {
             public ClassLoader getClassLoader() {
                 return null;
             }
@@ -43,7 +42,7 @@ public class OgnlUtilTest extends TestCase
         ctx = OgnlUtil.addClassResolverIfNecessary(origCtx, container);
         assertSame("2", origCtx, ctx);
 
-        container = new S2ContainerImpl(){
+        container = new S2ContainerImpl() {
             public ClassLoader getClassLoader() {
                 return getClass().getClassLoader();
             }
@@ -51,7 +50,7 @@ public class OgnlUtilTest extends TestCase
         ctx = OgnlUtil.addClassResolverIfNecessary(null, container);
         assertNotNull("3", ctx);
         assertTrue("4", ctx instanceof OgnlContext);
-        OgnlContext octx = (OgnlContext)ctx;
+        OgnlContext octx = (OgnlContext) ctx;
         assertNotNull("5", octx.getClassResolver());
 
         origCtx = new HashMap();
@@ -59,14 +58,16 @@ public class OgnlUtilTest extends TestCase
         ctx = OgnlUtil.addClassResolverIfNecessary(origCtx, container);
         assertNotNull("6", ctx);
         assertTrue("7", ctx instanceof OgnlContext);
-        octx = (OgnlContext)ctx;
+        octx = (OgnlContext) ctx;
         assertNotNull("8", octx.getClassResolver());
         assertEquals("9", "A", origCtx.get("a"));
     }
 
     public void testClassResolverImpl() throws Exception {
-        ClassResolver resolver = new OgnlUtil.ClassResolverImpl(getClass().getClassLoader());
-        Class clazz = resolver.classForName("org.seasar.framework.container.impl.S2ContainerImpl", null);
+        ClassResolver resolver = new OgnlUtil.ClassResolverImpl(getClass()
+                .getClassLoader());
+        Class clazz = resolver.classForName(
+                "org.seasar.framework.container.impl.S2ContainerImpl", null);
         assertSame("1", S2ContainerImpl.class, clazz);
         try {
             clazz = resolver.classForName("Integer", null);

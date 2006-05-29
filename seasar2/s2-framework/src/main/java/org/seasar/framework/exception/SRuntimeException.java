@@ -19,54 +19,54 @@ import org.seasar.framework.message.MessageFormatter;
 
 /**
  * @author higa
- *
+ * 
  */
 public class SRuntimeException extends RuntimeException {
 
     private static final long serialVersionUID = -4452607868694297329L;
 
-	private String messageCode;
-	private Object[] args;
-	private String message;
-	private String simpleMessage;
+    private String messageCode;
 
-	public SRuntimeException(String messageCode) {
-		this(messageCode, null, null);
-	}
+    private Object[] args;
 
-	public SRuntimeException(String messageCode, Object[] args) {
-		this(messageCode, args, null);
-	}
+    private String message;
 
-	public SRuntimeException(
-		String messageCode,
-		Object[] args,
-		Throwable cause) {
+    private String simpleMessage;
 
-		super(cause);
-		this.messageCode = messageCode;
-		this.args = args;
-		simpleMessage = MessageFormatter.getSimpleMessage(messageCode, args);
-		message = "[" + messageCode + "]" + simpleMessage;
-	}
+    public SRuntimeException(String messageCode) {
+        this(messageCode, null, null);
+    }
 
-	public final String getMessageCode() {
-		return messageCode;
-	}
+    public SRuntimeException(String messageCode, Object[] args) {
+        this(messageCode, args, null);
+    }
 
-	public final Object[] getArgs() {
-		return args;
-	}
+    public SRuntimeException(String messageCode, Object[] args, Throwable cause) {
 
-	public final String getMessage() {
-		return message;
-	}
-	
-	protected void setMessage(String message) {
-		this.message = message;
-	}
-	
-	public final String getSimpleMessage() {
-		return simpleMessage;
-	}
+        super(cause);
+        this.messageCode = messageCode;
+        this.args = args;
+        simpleMessage = MessageFormatter.getSimpleMessage(messageCode, args);
+        message = "[" + messageCode + "]" + simpleMessage;
+    }
+
+    public final String getMessageCode() {
+        return messageCode;
+    }
+
+    public final Object[] getArgs() {
+        return args;
+    }
+
+    public final String getMessage() {
+        return message;
+    }
+
+    protected void setMessage(String message) {
+        this.message = message;
+    }
+
+    public final String getSimpleMessage() {
+        return simpleMessage;
+    }
 }

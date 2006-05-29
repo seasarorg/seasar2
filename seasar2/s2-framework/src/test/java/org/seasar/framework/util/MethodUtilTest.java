@@ -19,9 +19,6 @@ import java.lang.reflect.Method;
 
 import junit.framework.TestCase;
 
-import org.seasar.framework.util.ClassUtil;
-import org.seasar.framework.util.MethodUtil;
-
 /**
  * @author higa
  * 
@@ -45,7 +42,7 @@ public class MethodUtilTest extends TestCase {
                 new Class[0]);
         assertTrue("2", MethodUtil.isHashCodeMethod(hashCodeMethod));
     }
-    
+
     public void testIsToStringMethod() {
         Method toStringMethod = ClassUtil.getMethod(getClass(), "toString",
                 new Class[0]);

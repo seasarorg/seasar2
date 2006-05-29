@@ -23,28 +23,28 @@ import org.seasar.extension.dataset.TableWriter;
 
 /**
  * @author higa
- *
+ * 
  */
 public class SqlWriter implements DataWriter {
 
-	private DataSource dataSource_;
-	
-	public SqlWriter(DataSource dataSource) {
-		dataSource_ = dataSource;
-	}
-	
-	public DataSource getDataSource() {
-		return dataSource_;
-	}
+    private DataSource dataSource_;
 
-	/**
-	 * @see org.seasar.extension.dataset.DataWriter#write(org.seasar.extension.dataset.DataSet)
-	 */
-	public void write(DataSet dataSet) {
-		TableWriter writer = new SqlTableWriter(getDataSource());
-		for (int i = 0; i < dataSet.getTableSize(); ++i) {
-			writer.write(dataSet.getTable(i));
-		}
-	}
+    public SqlWriter(DataSource dataSource) {
+        dataSource_ = dataSource;
+    }
+
+    public DataSource getDataSource() {
+        return dataSource_;
+    }
+
+    /**
+     * @see org.seasar.extension.dataset.DataWriter#write(org.seasar.extension.dataset.DataSet)
+     */
+    public void write(DataSet dataSet) {
+        TableWriter writer = new SqlTableWriter(getDataSource());
+        for (int i = 0; i < dataSet.getTableSize(); ++i) {
+            writer.write(dataSet.getTable(i));
+        }
+    }
 
 }

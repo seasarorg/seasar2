@@ -19,7 +19,6 @@ import java.util.Date;
 
 import junit.framework.TestCase;
 
-import org.seasar.framework.hotswap.Hotswap;
 import org.seasar.framework.util.SerializeUtil;
 
 /**
@@ -35,9 +34,8 @@ public class HotswapTest extends TestCase {
     }
 
     public void testPath() {
-        assertEquals("1",
-                "org/seasar/framework/hotswap/GreetingImpl.class", hotswap
-                        .getPath());
+        assertEquals("1", "org/seasar/framework/hotswap/GreetingImpl.class",
+                hotswap.getPath());
     }
 
     public void testFile() {
@@ -59,13 +57,13 @@ public class HotswapTest extends TestCase {
         assertNotSame("3", clazz, clazz2);
         assertFalse("4", hotswap.isModified());
     }
-    
+
     public void testInJar() throws Exception {
         Hotswap h = new Hotswap(String.class);
         assertEquals("1", 0, h.getLastModified());
         assertEquals("2", String.class, h.getTargetClass());
     }
-    
+
     public void testSerialize() throws Exception {
         Hotswap other = (Hotswap) SerializeUtil.serialize(hotswap);
         assertEquals("1", hotswap.getTargetClass(), other.getTargetClass());

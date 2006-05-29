@@ -17,7 +17,6 @@ package org.seasar.framework.container.hotdeploy.creator;
 
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.hotdeploy.OndemandBehavior;
-import org.seasar.framework.container.hotdeploy.creator.ServiceCreator;
 import org.seasar.framework.container.impl.S2ContainerBehavior;
 import org.seasar.framework.unit.S2FrameworkTestCase;
 import org.seasar.framework.util.ClassUtil;
@@ -27,9 +26,9 @@ import org.seasar.framework.util.ClassUtil;
  * 
  */
 public class ServiceCreatorTest extends S2FrameworkTestCase {
-    
+
     private ClassLoader originalLoader;
-    
+
     private OndemandBehavior ondemand;
 
     protected void setUp() {
@@ -40,10 +39,11 @@ public class ServiceCreatorTest extends S2FrameworkTestCase {
         S2ContainerBehavior.setProvider(ondemand);
         ondemand.start();
     }
-    
+
     protected void tearDown() {
         ondemand.stop();
-        S2ContainerBehavior.setProvider(new S2ContainerBehavior.DefaultProvider());
+        S2ContainerBehavior
+                .setProvider(new S2ContainerBehavior.DefaultProvider());
         Thread.currentThread().setContextClassLoader(originalLoader);
     }
 
@@ -53,9 +53,10 @@ public class ServiceCreatorTest extends S2FrameworkTestCase {
         assertNotNull("1", cd);
         assertEquals("2", name, cd.getComponentName());
     }
-    
+
     public void testIsTargetByClass() throws Exception {
-        Class clazz = ClassUtil.forName(ClassUtil.getPackageName(getClass()) + ".web.aaa.HogeService");
+        Class clazz = ClassUtil.forName(ClassUtil.getPackageName(getClass())
+                + ".web.aaa.HogeService");
         assertNotNull("1", getComponent(clazz));
     }
 }

@@ -24,31 +24,31 @@ import java.util.ResourceBundle;
 
 /**
  * @author higa
- *  
+ * 
  */
 public class ResourceBundleUtil {
 
-	private ResourceBundleUtil() {
-	}
+    private ResourceBundleUtil() {
+    }
 
-	public static final ResourceBundle getBundle(String name, Locale locale) {
-		if (locale == null) {
-			locale = Locale.getDefault();
-		}
-		try {
-			return ResourceBundle.getBundle(name, locale);
-		} catch (MissingResourceException ignore) {
-			return null;
-		}
-	}
-	
-	public static final Map convertMap(ResourceBundle bundle) {
-		Map ret = new HashMap();
-		for (Enumeration e = bundle.getKeys(); e.hasMoreElements(); ) {
-			String key = (String) e.nextElement();
-			String value = bundle.getString(key);
-			ret.put(key, value);
-		}
-		return ret;
-	}
+    public static final ResourceBundle getBundle(String name, Locale locale) {
+        if (locale == null) {
+            locale = Locale.getDefault();
+        }
+        try {
+            return ResourceBundle.getBundle(name, locale);
+        } catch (MissingResourceException ignore) {
+            return null;
+        }
+    }
+
+    public static final Map convertMap(ResourceBundle bundle) {
+        Map ret = new HashMap();
+        for (Enumeration e = bundle.getKeys(); e.hasMoreElements();) {
+            String key = (String) e.nextElement();
+            String value = bundle.getString(key);
+            ret.put(key, value);
+        }
+        return ret;
+    }
 }

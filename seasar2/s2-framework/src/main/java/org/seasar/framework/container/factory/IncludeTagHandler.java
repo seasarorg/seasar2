@@ -22,21 +22,22 @@ import org.xml.sax.Attributes;
 
 /**
  * @author higa
- *
+ * 
  */
 public class IncludeTagHandler extends TagHandler {
 
     private static final long serialVersionUID = 7770349626071675269L;
 
-	/**
-	 * @see org.seasar.framework.xml.sax.handler.TagHandler#start(org.seasar.framework.xml.sax.handler.TagHandlerContext, org.xml.sax.Attributes)
-	 */
-	public void start(TagHandlerContext context, Attributes attributes) {
-		String path = attributes.getValue("path");
-		if (path == null) {
-			throw new TagAttributeNotDefinedRuntimeException("include", "path");
-		}
-		S2Container container = (S2Container) context.peek();
-		S2ContainerFactory.include(container, path);
-	}
+    /**
+     * @see org.seasar.framework.xml.sax.handler.TagHandler#start(org.seasar.framework.xml.sax.handler.TagHandlerContext,
+     *      org.xml.sax.Attributes)
+     */
+    public void start(TagHandlerContext context, Attributes attributes) {
+        String path = attributes.getValue("path");
+        if (path == null) {
+            throw new TagAttributeNotDefinedRuntimeException("include", "path");
+        }
+        S2Container container = (S2Container) context.peek();
+        S2ContainerFactory.include(container, path);
+    }
 }

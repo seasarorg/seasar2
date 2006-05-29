@@ -21,211 +21,210 @@ import javax.transaction.xa.Xid;
 
 import org.seasar.framework.exception.SXAException;
 
-public abstract class AbstractXAResource
-	implements XAResource, XAResourceStatus {
+public abstract class AbstractXAResource implements XAResource,
+        XAResourceStatus {
 
-	private Xid currentXid_;
-	private int status_ = RS_NONE;
-	private int timeout_ = 0;
+    private Xid currentXid_;
 
-	public AbstractXAResource() {
-	}
+    private int status_ = RS_NONE;
 
-	public void start(Xid xid, int flags) throws XAException {
-		switch (flags) {
-			case TMNOFLAGS :
-				begin(xid);
-				break;
-			case TMRESUME :
-				resume(xid);
-				break;
-			default :
-				throw new SXAException(
-					"ESSR0032",
-					new Object[] { String.valueOf(flags)});
-		}
-	}
+    private int timeout_ = 0;
 
-	private void begin(Xid xid) throws XAException {
-		assertCurrentXidNull();
-		doBegin(xid);
-		currentXid_ = xid;
-		status_ = RS_ACTIVE;
-	}
+    public AbstractXAResource() {
+    }
 
-	private void assertCurrentXidNull() throws XAException {
-		if (currentXid_ != null) {
-			throw new SXAException("ESSR0316", null);
-		}
-	}
+    public void start(Xid xid, int flags) throws XAException {
+        switch (flags) {
+        case TMNOFLAGS:
+            begin(xid);
+            break;
+        case TMRESUME:
+            resume(xid);
+            break;
+        default:
+            throw new SXAException("ESSR0032", new Object[] { String
+                    .valueOf(flags) });
+        }
+    }
 
-	protected abstract void doBegin(Xid xid) throws XAException;
+    private void begin(Xid xid) throws XAException {
+        assertCurrentXidNull();
+        doBegin(xid);
+        currentXid_ = xid;
+        status_ = RS_ACTIVE;
+    }
 
-	private void resume(Xid xid) throws XAException {
-		assertCurrentXidSame(xid);
-		assertStatusSuspended();
-		doResume(xid);
-		status_ = RS_ACTIVE;
-	}
+    private void assertCurrentXidNull() throws XAException {
+        if (currentXid_ != null) {
+            throw new SXAException("ESSR0316", null);
+        }
+    }
 
-	private void assertCurrentXidSame(final Xid xid) throws XAException {
-		if (currentXid_ != xid) {
-			throw new SXAException(
-				"ESSR0319",
-				new Object[] { xid, currentXid_ });
-		}
-	}
+    protected abstract void doBegin(Xid xid) throws XAException;
 
-	private void assertStatusSuspended() throws XAException {
-		if (status_ != RS_SUSPENDED) {
-			throw new SXAException("ESSR0323", null);
-		}
-	}
+    private void resume(Xid xid) throws XAException {
+        assertCurrentXidSame(xid);
+        assertStatusSuspended();
+        doResume(xid);
+        status_ = RS_ACTIVE;
+    }
 
-	protected abstract void doResume(Xid xid) throws XAException;
+    private void assertCurrentXidSame(final Xid xid) throws XAException {
+        if (currentXid_ != xid) {
+            throw new SXAException("ESSR0319",
+                    new Object[] { xid, currentXid_ });
+        }
+    }
 
-	public void end(Xid xid, int flags) throws XAException {
-		assertCurrentXidSame(xid);
-		assertStatusActive();
-		switch (flags) {
-			case TMSUSPEND :
-				suspend(xid);
-				break;
-			case TMFAIL :
-				fail(xid);
-				break;
-			case TMSUCCESS :
-				success(xid);
-				break;
-			default :
-				throw new SXAException(
-					"ESSR0032",
-					new Object[] { String.valueOf(flags)});
-		}
-	}
+    private void assertStatusSuspended() throws XAException {
+        if (status_ != RS_SUSPENDED) {
+            throw new SXAException("ESSR0323", null);
+        }
+    }
 
-	private void assertStatusActive() throws XAException {
-		if (status_ != RS_ACTIVE) {
-			throw new SXAException("ESSR0324", null);
-		}
-	}
+    protected abstract void doResume(Xid xid) throws XAException;
 
-	private void suspend(Xid xid) throws XAException {
-		doSuspend(xid);
-		status_ = RS_SUSPENDED;
-	}
+    public void end(Xid xid, int flags) throws XAException {
+        assertCurrentXidSame(xid);
+        assertStatusActive();
+        switch (flags) {
+        case TMSUSPEND:
+            suspend(xid);
+            break;
+        case TMFAIL:
+            fail(xid);
+            break;
+        case TMSUCCESS:
+            success(xid);
+            break;
+        default:
+            throw new SXAException("ESSR0032", new Object[] { String
+                    .valueOf(flags) });
+        }
+    }
 
-	protected abstract void doSuspend(Xid xid) throws XAException;
+    private void assertStatusActive() throws XAException {
+        if (status_ != RS_ACTIVE) {
+            throw new SXAException("ESSR0324", null);
+        }
+    }
 
-	private void fail(Xid xid) throws XAException {
-		doFail(xid);
-		status_ = RS_FAIL;
-	}
+    private void suspend(Xid xid) throws XAException {
+        doSuspend(xid);
+        status_ = RS_SUSPENDED;
+    }
 
-	protected abstract void doFail(Xid xid) throws XAException;
+    protected abstract void doSuspend(Xid xid) throws XAException;
 
-	private void success(Xid xid) throws XAException {
-		doSuccess(xid);
-		status_ = RS_SUCCESS;
-	}
+    private void fail(Xid xid) throws XAException {
+        doFail(xid);
+        status_ = RS_FAIL;
+    }
 
-	protected abstract void doSuccess(Xid xid) throws XAException;
+    protected abstract void doFail(Xid xid) throws XAException;
 
-	public int prepare(Xid xid) throws XAException {
-		assertCurrentXidSame(xid);
-		assertStatusSuccess();
-		int ret = doPrepare(xid);
-		if (ret == XA_OK) {
-			status_ = RS_PREPARED;
-		} else {
-			status_ = RS_NONE;
-		}
-		return ret;
-	}
+    private void success(Xid xid) throws XAException {
+        doSuccess(xid);
+        status_ = RS_SUCCESS;
+    }
 
-	private void assertStatusSuccess() throws XAException {
-		if (status_ != RS_SUCCESS) {
-			throw new SXAException("ESSR0320", null);
-		}
-	}
+    protected abstract void doSuccess(Xid xid) throws XAException;
 
-	protected abstract int doPrepare(Xid xid) throws XAException;
+    public int prepare(Xid xid) throws XAException {
+        assertCurrentXidSame(xid);
+        assertStatusSuccess();
+        int ret = doPrepare(xid);
+        if (ret == XA_OK) {
+            status_ = RS_PREPARED;
+        } else {
+            status_ = RS_NONE;
+        }
+        return ret;
+    }
 
-	public void commit(Xid xid, boolean onePhase) throws XAException {
-		assertCurrentXidSame(xid);
-		if (onePhase) {
-			assertStatusSuccess();
-		} else {
-			assertStatusPrepared();
-		}
-		doCommit(xid, onePhase);
-		init();
-	}
+    private void assertStatusSuccess() throws XAException {
+        if (status_ != RS_SUCCESS) {
+            throw new SXAException("ESSR0320", null);
+        }
+    }
 
-	private void assertStatusPrepared() throws XAException {
-		if (status_ != RS_PREPARED) {
-			throw new SXAException("ESSR0321", null);
-		}
-	}
+    protected abstract int doPrepare(Xid xid) throws XAException;
 
-	protected abstract void doCommit(Xid xid, boolean onePhase)
-		throws XAException;
+    public void commit(Xid xid, boolean onePhase) throws XAException {
+        assertCurrentXidSame(xid);
+        if (onePhase) {
+            assertStatusSuccess();
+        } else {
+            assertStatusPrepared();
+        }
+        doCommit(xid, onePhase);
+        init();
+    }
 
-	private void init() {
-		currentXid_ = null;
-		status_ = RS_NONE;
-	}
+    private void assertStatusPrepared() throws XAException {
+        if (status_ != RS_PREPARED) {
+            throw new SXAException("ESSR0321", null);
+        }
+    }
 
-	public void forget(Xid xid) throws XAException {
-		assertCurrentXidSame(xid);
-		doForget(xid);
-		init();
-	}
+    protected abstract void doCommit(Xid xid, boolean onePhase)
+            throws XAException;
 
-	protected abstract void doForget(Xid xid) throws XAException;
+    private void init() {
+        currentXid_ = null;
+        status_ = RS_NONE;
+    }
 
-	public Xid[] recover(final int flag) throws XAException {
-		return null;
-	}
+    public void forget(Xid xid) throws XAException {
+        assertCurrentXidSame(xid);
+        doForget(xid);
+        init();
+    }
 
-	public void rollback(final Xid xid) throws XAException {
-		assertCurrentXidSame(xid);
-		assertStatusSuccessOrFailOrPrepared();
-		doRollback(xid);
-		init();
-	}
+    protected abstract void doForget(Xid xid) throws XAException;
 
-	private void assertStatusSuccessOrFailOrPrepared() throws XAException {
-		switch (status_) {
-			case RS_SUCCESS :
-			case RS_FAIL :
-			case RS_PREPARED :
-				break;
-			default :
-				throw new SXAException("ESSR0322", null);
-		}
-	}
+    public Xid[] recover(final int flag) throws XAException {
+        return null;
+    }
 
-	protected abstract void doRollback(Xid xid) throws XAException;
+    public void rollback(final Xid xid) throws XAException {
+        assertCurrentXidSame(xid);
+        assertStatusSuccessOrFailOrPrepared();
+        doRollback(xid);
+        init();
+    }
 
-	public boolean isSameRM(XAResource xar) throws XAException {
-		return false;
-	}
+    private void assertStatusSuccessOrFailOrPrepared() throws XAException {
+        switch (status_) {
+        case RS_SUCCESS:
+        case RS_FAIL:
+        case RS_PREPARED:
+            break;
+        default:
+            throw new SXAException("ESSR0322", null);
+        }
+    }
 
-	public int getTransactionTimeout() throws XAException {
-		return timeout_;
-	}
+    protected abstract void doRollback(Xid xid) throws XAException;
 
-	public boolean setTransactionTimeout(int timeout) throws XAException {
-		timeout_ = timeout;
-		return true;
-	}
+    public boolean isSameRM(XAResource xar) throws XAException {
+        return false;
+    }
 
-	public Xid getCurrentXid() {
-		return currentXid_;
-	}
+    public int getTransactionTimeout() throws XAException {
+        return timeout_;
+    }
 
-	public int getStatus() {
-		return status_;
-	}
+    public boolean setTransactionTimeout(int timeout) throws XAException {
+        timeout_ = timeout;
+        return true;
+    }
+
+    public Xid getCurrentXid() {
+        return currentXid_;
+    }
+
+    public int getStatus() {
+        return status_;
+    }
 }

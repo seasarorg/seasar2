@@ -47,7 +47,8 @@ public class DICapableClassLoaderTest extends TestCase {
     public void testAppliedClass() throws Exception {
         DICapableClassLoader loader = new DICapableClassLoader(getClass()
                 .getClassLoader());
-        loader.addClassPattern(getClass().getPackage().getName(), "DICapableClassLoaderTest.*");
+        loader.addClassPattern(getClass().getPackage().getName(),
+                "DICapableClassLoaderTest.*");
 
         S2Container container = S2ContainerFactory.create(getClass().getName()
                 .replace('.', '/')

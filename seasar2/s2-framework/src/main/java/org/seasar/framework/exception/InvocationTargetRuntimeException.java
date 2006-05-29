@@ -17,29 +17,25 @@ package org.seasar.framework.exception;
 
 import java.lang.reflect.InvocationTargetException;
 
-
 /**
  * @author higa
- *
+ * 
  */
 public class InvocationTargetRuntimeException extends SRuntimeException {
 
     private static final long serialVersionUID = 7760491787158046906L;
 
-	private Class targetClass;
+    private Class targetClass;
 
-	public InvocationTargetRuntimeException(
-		Class targetClass,
-		InvocationTargetException cause) {
+    public InvocationTargetRuntimeException(Class targetClass,
+            InvocationTargetException cause) {
 
-		super(
-			"ESSR0043",
-			new Object[] { targetClass.getName(), cause.getTargetException()},
-			cause.getTargetException());
-		this.targetClass = targetClass;
-	}
-	
-	public Class getTargetClass() {
-		return targetClass;
-	}
+        super("ESSR0043", new Object[] { targetClass.getName(),
+                cause.getTargetException() }, cause.getTargetException());
+        this.targetClass = targetClass;
+    }
+
+    public Class getTargetClass() {
+        return targetClass;
+    }
 }

@@ -27,26 +27,26 @@ public class Greeting2HotswapTargetFactory implements HotswapTargetFactory,
         MethodInterceptor, Serializable {
 
     final static long serialVersionUID = 0L;
-    
+
     private Hotswap hotswap;
-    
+
     private Object target;
-    
+
     public Greeting2HotswapTargetFactory() {
         this(new Hotswap(Greeting2.class));
     }
-    
+
     public Greeting2HotswapTargetFactory(Hotswap hotswap) {
         this.hotswap = hotswap;
         AopProxy proxy = new AopProxy(Greeting2.class,
-                new Aspect[]{new AspectImpl(this)});
+                new Aspect[] { new AspectImpl(this) });
         target = proxy.create();
     }
-    
+
     public Hotswap getHotswap() {
         return hotswap;
     }
-    
+
     public Object getTarget() {
         return target;
     }

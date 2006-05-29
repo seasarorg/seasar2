@@ -27,11 +27,11 @@ import org.seasar.framework.unit.S2FrameworkTestCase;
 public class AspectAutoRegisterTest extends S2FrameworkTestCase {
 
     private S2Container child;
-  
+
     public void setUpRegisterAll() throws Exception {
         include("autoRegister2.dicon");
     }
-    
+
     public void testRegisterAll() throws Exception {
         Bar bar = (Bar) child.getComponent("bar");
         assertNotNull("1", bar);

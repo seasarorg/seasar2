@@ -19,9 +19,9 @@ import javax.sql.DataSource;
 
 /**
  * @author higa
- *
+ * 
  */
 public interface RowState {
 
-	public void update(DataSource dataSource, DataRow row);
+    public void update(DataSource dataSource, DataRow row);
 }

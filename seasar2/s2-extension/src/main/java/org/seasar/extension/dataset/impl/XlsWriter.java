@@ -39,18 +39,21 @@ import org.seasar.framework.util.StringConversionUtil;
 
 /**
  * @author higa
- *
+ * 
  */
 public class XlsWriter implements DataWriter, DataSetConstants {
 
-	private OutputStream out_;
-	private HSSFWorkbook workbook_;
-	private HSSFCellStyle dateStyle_;
-	private HSSFCellStyle base64Style_;
-	
-	public XlsWriter(String path) {
-		this(new File(ResourceUtil.getResourceAsFile("."), path));
-	}
+    private OutputStream out_;
+
+    private HSSFWorkbook workbook_;
+
+    private HSSFCellStyle dateStyle_;
+
+    private HSSFCellStyle base64Style_;
+
+    public XlsWriter(String path) {
+        this(new File(ResourceUtil.getResourceAsFile("."), path));
+    }
 
     public XlsWriter(String dirName, String fileName) {
         this(ResourceUtil.getResourceAsFile(dirName), fileName);
@@ -63,69 +66,70 @@ public class XlsWriter implements DataWriter, DataSetConstants {
     public XlsWriter(File file) {
         this(FileOutputStreamUtil.create(file));
     }
-    
-	public XlsWriter(OutputStream out) {
-		setOutputStream(out);
-	}
-	
-	public void setOutputStream(OutputStream out) {
-		out_ = out;
-		workbook_ = new HSSFWorkbook();
-		HSSFDataFormat df = workbook_.createDataFormat();
-		dateStyle_ = workbook_.createCellStyle();
-		dateStyle_.setDataFormat(df.getFormat(DATE_FORMAT));
-		base64Style_ = workbook_.createCellStyle();
-		base64Style_.setDataFormat(df.getFormat(BASE64_FORMAT));
-	}
 
-	/**
-	 * @see org.seasar.extension.dataset.DataWriter#write(org.seasar.extension.dataset.DataSet)
-	 */
-	public void write(DataSet dataSet) {
-		for (int i = 0; i < dataSet.getTableSize(); ++i){
-			DataTable table = dataSet.getTable(i);
-			HSSFSheet sheet = workbook_.createSheet();
-			workbook_.setSheetName(i, table.getTableName(), HSSFWorkbook.ENCODING_UTF_16);
-			HSSFRow headerRow = sheet.createRow(0);
-			for (int j = 0; j < table.getColumnSize(); ++j) {
-				HSSFCell cell = headerRow.createCell((short) j);
-				cell.setCellValue(table.getColumnName(j));
-			}
-			for (int j = 0; j < table.getRowSize(); ++j) {
-				HSSFRow row = sheet.createRow(j + 1);
-				for (int k = 0; k < table.getColumnSize(); ++k) {
-					DataRow dataRow = table.getRow(j);
-					Object value = dataRow.getValue(k);
-					if (value != null) {
-						HSSFCell cell = row.createCell((short) k);
-						setValue(cell, value);
-					}
-				}
-			}
-		}
-		try {
-			workbook_.write(out_);
-			out_.flush();
-			out_.close();
-		} catch (IOException ex) {
-			throw new IORuntimeException(ex);
-		}
-	}
-	
-	private void setValue(HSSFCell cell, Object value) {
-		if (value instanceof Number) {
-			cell.setCellValue(value.toString());
-		} else if (value instanceof Date) {
-			cell.setCellValue((Date) value);
-			cell.setCellStyle(dateStyle_);
-		} else if (value instanceof byte[]) {
-			cell.setCellValue(Base64Util.encode((byte[]) value));
-			cell.setCellStyle(base64Style_);
-		} else if (value instanceof Boolean) {
-            cell.setCellValue(((Boolean)value).booleanValue());
-		} else {
-			cell.setEncoding(HSSFWorkbook.ENCODING_UTF_16);
-			cell.setCellValue(StringConversionUtil.toString(value, null));
-		}
-	}
+    public XlsWriter(OutputStream out) {
+        setOutputStream(out);
+    }
+
+    public void setOutputStream(OutputStream out) {
+        out_ = out;
+        workbook_ = new HSSFWorkbook();
+        HSSFDataFormat df = workbook_.createDataFormat();
+        dateStyle_ = workbook_.createCellStyle();
+        dateStyle_.setDataFormat(df.getFormat(DATE_FORMAT));
+        base64Style_ = workbook_.createCellStyle();
+        base64Style_.setDataFormat(df.getFormat(BASE64_FORMAT));
+    }
+
+    /**
+     * @see org.seasar.extension.dataset.DataWriter#write(org.seasar.extension.dataset.DataSet)
+     */
+    public void write(DataSet dataSet) {
+        for (int i = 0; i < dataSet.getTableSize(); ++i) {
+            DataTable table = dataSet.getTable(i);
+            HSSFSheet sheet = workbook_.createSheet();
+            workbook_.setSheetName(i, table.getTableName(),
+                    HSSFWorkbook.ENCODING_UTF_16);
+            HSSFRow headerRow = sheet.createRow(0);
+            for (int j = 0; j < table.getColumnSize(); ++j) {
+                HSSFCell cell = headerRow.createCell((short) j);
+                cell.setCellValue(table.getColumnName(j));
+            }
+            for (int j = 0; j < table.getRowSize(); ++j) {
+                HSSFRow row = sheet.createRow(j + 1);
+                for (int k = 0; k < table.getColumnSize(); ++k) {
+                    DataRow dataRow = table.getRow(j);
+                    Object value = dataRow.getValue(k);
+                    if (value != null) {
+                        HSSFCell cell = row.createCell((short) k);
+                        setValue(cell, value);
+                    }
+                }
+            }
+        }
+        try {
+            workbook_.write(out_);
+            out_.flush();
+            out_.close();
+        } catch (IOException ex) {
+            throw new IORuntimeException(ex);
+        }
+    }
+
+    private void setValue(HSSFCell cell, Object value) {
+        if (value instanceof Number) {
+            cell.setCellValue(value.toString());
+        } else if (value instanceof Date) {
+            cell.setCellValue((Date) value);
+            cell.setCellStyle(dateStyle_);
+        } else if (value instanceof byte[]) {
+            cell.setCellValue(Base64Util.encode((byte[]) value));
+            cell.setCellStyle(base64Style_);
+        } else if (value instanceof Boolean) {
+            cell.setCellValue(((Boolean) value).booleanValue());
+        } else {
+            cell.setEncoding(HSSFWorkbook.ENCODING_UTF_16);
+            cell.setCellValue(StringConversionUtil.toString(value, null));
+        }
+    }
 }

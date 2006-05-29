@@ -23,20 +23,26 @@ import org.seasar.framework.container.InstanceDef;
 
 public class InstanceDefFactory {
 
-    public static final InstanceDef SINGLETON = new InstanceSingletonDef(InstanceDef.SINGLETON_NAME);
-    
-    public static final InstanceDef PROTOTYPE = new InstancePrototypeDef(InstanceDef.PROTOTYPE_NAME);
-    
-    public static final InstanceDef APPLICATION = new InstanceApplicationDef(InstanceDef.APPLICATION_NAME);
-    
-    public static final InstanceDef SESSION = new InstanceSessionDef(InstanceDef.SESSION_NAME);
-    
-    public static final InstanceDef REQUEST = new InstanceRequestDef(InstanceDef.REQUEST_NAME);
-    
-    public static final InstanceDef OUTER = new InstanceOuterDef(InstanceDef.OUTER_NAME);
-    
+    public static final InstanceDef SINGLETON = new InstanceSingletonDef(
+            InstanceDef.SINGLETON_NAME);
+
+    public static final InstanceDef PROTOTYPE = new InstancePrototypeDef(
+            InstanceDef.PROTOTYPE_NAME);
+
+    public static final InstanceDef APPLICATION = new InstanceApplicationDef(
+            InstanceDef.APPLICATION_NAME);
+
+    public static final InstanceDef SESSION = new InstanceSessionDef(
+            InstanceDef.SESSION_NAME);
+
+    public static final InstanceDef REQUEST = new InstanceRequestDef(
+            InstanceDef.REQUEST_NAME);
+
+    public static final InstanceDef OUTER = new InstanceOuterDef(
+            InstanceDef.OUTER_NAME);
+
     private static Map instanceDefs = new HashMap();
-    
+
     static {
         addInstanceDef(SINGLETON);
         addInstanceDef(PROTOTYPE);
@@ -45,10 +51,10 @@ public class InstanceDefFactory {
         addInstanceDef(REQUEST);
         addInstanceDef(OUTER);
     }
-    
+
     protected InstanceDefFactory() {
     }
-    
+
     public static void addInstanceDef(InstanceDef instanceDef) {
         instanceDefs.put(instanceDef.getName(), instanceDef);
     }
@@ -56,7 +62,7 @@ public class InstanceDefFactory {
     public static boolean existInstanceDef(String name) {
         return instanceDefs.containsKey(name);
     }
-    
+
     public static InstanceDef getInstanceDef(String name) {
         if (!instanceDefs.containsKey(name)) {
             throw new IllegalInstanceDefRuntimeException(name);

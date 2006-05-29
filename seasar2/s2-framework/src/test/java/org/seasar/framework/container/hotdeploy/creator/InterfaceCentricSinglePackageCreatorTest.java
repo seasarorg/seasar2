@@ -26,10 +26,11 @@ import org.seasar.framework.util.ClassUtil;
  * @author higa
  * 
  */
-public class InterfaceCentricSinglePackageCreatorTest extends S2FrameworkTestCase {
-    
+public class InterfaceCentricSinglePackageCreatorTest extends
+        S2FrameworkTestCase {
+
     private ClassLoader originalLoader;
-    
+
     private OndemandBehavior ondemand;
 
     protected void setUp() {
@@ -46,18 +47,19 @@ public class InterfaceCentricSinglePackageCreatorTest extends S2FrameworkTestCas
         S2ContainerBehavior.setProvider(ondemand);
         ondemand.start();
     }
-    
+
     protected void tearDown() {
         ondemand.stop();
-        S2ContainerBehavior.setProvider(new S2ContainerBehavior.DefaultProvider());
+        S2ContainerBehavior
+                .setProvider(new S2ContainerBehavior.DefaultProvider());
         Thread.currentThread().setContextClassLoader(originalLoader);
     }
-    
+
     public void testIsTargetByComponentName() throws Exception {
         assertTrue("1", getContainer().hasComponentDef("fooDao"));
         assertTrue("1", getContainer().hasComponentDef("barDao"));
     }
-    
+
     public void testIsTargetByClass() throws Exception {
         String basePackage = ClassUtil.getPackageName(getClass()) + ".dao";
         Class clazz = ClassUtil.forName(basePackage + ".FooDao");

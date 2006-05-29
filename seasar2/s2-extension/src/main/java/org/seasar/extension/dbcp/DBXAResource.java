@@ -21,9 +21,9 @@ import javax.transaction.xa.XAResource;
 
 /**
  * @author higa
- *
+ * 
  */
 public interface DBXAResource extends XAResource {
 
-	public Connection getConnection();
+    public Connection getConnection();
 }

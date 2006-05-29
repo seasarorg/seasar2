@@ -20,25 +20,24 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-
 public final class LikeUtil {
 
-	private static Map patterns = Collections.synchronizedMap(new HashMap());
+    private static Map patterns = Collections.synchronizedMap(new HashMap());
 
-	private LikeUtil() {
-	}
+    private LikeUtil() {
+    }
 
-	public static final boolean match(String patternStr, String value) {
-		if (StringUtil.isEmpty(patternStr)) {
-			return false;
-		}
-		Pattern pattern = (Pattern) patterns.get(patternStr);
-		if (pattern == null) {
-			String regexp = StringUtil.replace(patternStr, "_", ".");
-			regexp = StringUtil.replace(regexp, "%", ".*");
-			pattern = Pattern.compile(regexp);
-			patterns.put(patternStr, pattern);
-		}
-		return pattern.matcher(value).matches();
-	}
+    public static final boolean match(String patternStr, String value) {
+        if (StringUtil.isEmpty(patternStr)) {
+            return false;
+        }
+        Pattern pattern = (Pattern) patterns.get(patternStr);
+        if (pattern == null) {
+            String regexp = StringUtil.replace(patternStr, "_", ".");
+            regexp = StringUtil.replace(regexp, "%", ".*");
+            pattern = Pattern.compile(regexp);
+            patterns.put(patternStr, pattern);
+        }
+        return pattern.matcher(value).matches();
+    }
 }

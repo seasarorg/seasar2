@@ -15,12 +15,12 @@
  */
 package org.seasar.framework.container;
 
-
 /**
  * 
  * @author koichik
  */
 public interface TooManyRegistrationComponentDef extends ComponentDef {
     void addComponentDef(ComponentDef cd);
+
     Class[] getComponentClasses();
 }

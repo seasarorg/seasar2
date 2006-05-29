@@ -23,42 +23,42 @@ import org.seasar.framework.exception.SQLRuntimeException;
 
 /**
  * @author higa
- *
+ * 
  */
 public final class PreparedStatementUtil {
 
-	private PreparedStatementUtil() {
-	}
+    private PreparedStatementUtil() {
+    }
 
-	public static ResultSet executeQuery(PreparedStatement ps) {
-		try {
-			return ps.executeQuery();
-		} catch (SQLException ex) {
-			throw new SQLRuntimeException(ex);
-		}
-	}
-	
-	public static int executeUpdate(PreparedStatement ps) {
-		try {
-			return ps.executeUpdate();
-		} catch (SQLException ex) {
-			throw new SQLRuntimeException(ex);
-		}
-	}
-	
-	public static int[] executeBatch(PreparedStatement ps) {
-		try {
-			return ps.executeBatch();
-		} catch (SQLException ex) {
-			throw new SQLRuntimeException(ex);
-		}
-	}
-	
-	public static void addBatch(PreparedStatement ps) {
-		try {
-			ps.addBatch();
-		} catch (SQLException ex) {
-			throw new SQLRuntimeException(ex);
-		}
-	}
+    public static ResultSet executeQuery(PreparedStatement ps) {
+        try {
+            return ps.executeQuery();
+        } catch (SQLException ex) {
+            throw new SQLRuntimeException(ex);
+        }
+    }
+
+    public static int executeUpdate(PreparedStatement ps) {
+        try {
+            return ps.executeUpdate();
+        } catch (SQLException ex) {
+            throw new SQLRuntimeException(ex);
+        }
+    }
+
+    public static int[] executeBatch(PreparedStatement ps) {
+        try {
+            return ps.executeBatch();
+        } catch (SQLException ex) {
+            throw new SQLRuntimeException(ex);
+        }
+    }
+
+    public static void addBatch(PreparedStatement ps) {
+        try {
+            ps.addBatch();
+        } catch (SQLException ex) {
+            throw new SQLRuntimeException(ex);
+        }
+    }
 }

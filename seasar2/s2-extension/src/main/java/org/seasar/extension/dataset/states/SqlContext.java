@@ -17,19 +17,19 @@ package org.seasar.extension.dataset.states;
 
 /**
  * @author higa
- *
+ * 
  */
 public class SqlContext {
 
     private String sql;
-    
+
     private Object[] args;
-    
+
     private Class[] argTypes;
-    
+
     public SqlContext() {
     }
-    
+
     public SqlContext(String sql, Object[] args, Class[] argTypes) {
         setSql(sql);
         setArgs(args);

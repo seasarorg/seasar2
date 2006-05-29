@@ -33,89 +33,92 @@ import org.seasar.extension.jdbc.util.DataSourceUtil;
 
 /**
  * @author higa
- *
+ * 
  */
 public class SqlReloadTableReader implements TableReader {
 
-	private DataSource dataSource_;
-	private DataTable table_;
-	private String sql_;
-	private String[] primaryKeys_;
-	
-	public SqlReloadTableReader(DataSource dataSource,
-			DataTable table) {
+    private DataSource dataSource_;
 
-		dataSource_ = dataSource;
-		table_ = table;
-		Connection con = DataSourceUtil.getConnection(dataSource);
-		try {
-			DatabaseMetaData dbMetaData = ConnectionUtil.getMetaData(con);
-			table_.setupMetaData(dbMetaData);
-		} finally {
-			ConnectionUtil.close(con);
-		}
-		setup();
-	}
-	
-	private void setup() {
-		StringBuffer buf = new StringBuffer(100);
-		buf.append("SELECT ");
-		StringBuffer whereBuf = new StringBuffer(100);
-		whereBuf.append(" WHERE");
-		List primaryKeyList = new ArrayList();
-		for (int i = 0; i < table_.getColumnSize(); ++i) {
-			DataColumn column = table_.getColumn(i);
-			buf.append(column.getColumnName());
-			buf.append(", ");
-			if (column.isPrimaryKey()) {
-				whereBuf.append(" ");
-				whereBuf.append(column.getColumnName());
-				whereBuf.append(" = ? AND");
-				primaryKeyList.add(column.getColumnName());
-			}
-		}
-		buf.setLength(buf.length() - 2);
-		whereBuf.setLength(whereBuf.length() - 4);
-		buf.append(" FROM ");
-		buf.append(table_.getTableName());
-		buf.append(whereBuf);
-		sql_ = buf.toString();
-		primaryKeys_ = (String[]) primaryKeyList.toArray(new String[primaryKeyList.size()]);
-	}
-	
-	public DataSource getDataSource() {
-		return dataSource_;
-	}
-	
-	public DataTable getTable() {
-		return table_;
-	}
+    private DataTable table_;
 
-	/**
-	 * @see org.seasar.extension.dataset.TableReader#read()
-	 */
-	public DataTable read() {
-		DataTable newTable = new DataTableImpl(table_.getTableName());
-		for (int i = 0; i < table_.getColumnSize(); ++i) {
-			DataColumn column = table_.getColumn(i);
-			newTable.addColumn(column.getColumnName(), column.getColumnType());
-		}
-		for (int i = 0; i < table_.getRowSize(); ++i) {
-			DataRow row = table_.getRow(i);
-			DataRow newRow = newTable.addRow();
-			reload(row, newRow);
-		}
-		return newTable;
-	}
-	
-	protected void reload(DataRow row, DataRow newRow) {
-		SelectHandler selectHandler = new BasicSelectHandler(
-				dataSource_, sql_, new DataRowReloadResultSetHandler(row, newRow));
-		Object[] args = new Object[primaryKeys_.length];
-		for (int i = 0; i < primaryKeys_.length; ++i) {
-			args[i] = row.getValue(primaryKeys_[i]);
-		}
-		selectHandler.execute(args);
-	}
+    private String sql_;
+
+    private String[] primaryKeys_;
+
+    public SqlReloadTableReader(DataSource dataSource, DataTable table) {
+
+        dataSource_ = dataSource;
+        table_ = table;
+        Connection con = DataSourceUtil.getConnection(dataSource);
+        try {
+            DatabaseMetaData dbMetaData = ConnectionUtil.getMetaData(con);
+            table_.setupMetaData(dbMetaData);
+        } finally {
+            ConnectionUtil.close(con);
+        }
+        setup();
+    }
+
+    private void setup() {
+        StringBuffer buf = new StringBuffer(100);
+        buf.append("SELECT ");
+        StringBuffer whereBuf = new StringBuffer(100);
+        whereBuf.append(" WHERE");
+        List primaryKeyList = new ArrayList();
+        for (int i = 0; i < table_.getColumnSize(); ++i) {
+            DataColumn column = table_.getColumn(i);
+            buf.append(column.getColumnName());
+            buf.append(", ");
+            if (column.isPrimaryKey()) {
+                whereBuf.append(" ");
+                whereBuf.append(column.getColumnName());
+                whereBuf.append(" = ? AND");
+                primaryKeyList.add(column.getColumnName());
+            }
+        }
+        buf.setLength(buf.length() - 2);
+        whereBuf.setLength(whereBuf.length() - 4);
+        buf.append(" FROM ");
+        buf.append(table_.getTableName());
+        buf.append(whereBuf);
+        sql_ = buf.toString();
+        primaryKeys_ = (String[]) primaryKeyList
+                .toArray(new String[primaryKeyList.size()]);
+    }
+
+    public DataSource getDataSource() {
+        return dataSource_;
+    }
+
+    public DataTable getTable() {
+        return table_;
+    }
+
+    /**
+     * @see org.seasar.extension.dataset.TableReader#read()
+     */
+    public DataTable read() {
+        DataTable newTable = new DataTableImpl(table_.getTableName());
+        for (int i = 0; i < table_.getColumnSize(); ++i) {
+            DataColumn column = table_.getColumn(i);
+            newTable.addColumn(column.getColumnName(), column.getColumnType());
+        }
+        for (int i = 0; i < table_.getRowSize(); ++i) {
+            DataRow row = table_.getRow(i);
+            DataRow newRow = newTable.addRow();
+            reload(row, newRow);
+        }
+        return newTable;
+    }
+
+    protected void reload(DataRow row, DataRow newRow) {
+        SelectHandler selectHandler = new BasicSelectHandler(dataSource_, sql_,
+                new DataRowReloadResultSetHandler(row, newRow));
+        Object[] args = new Object[primaryKeys_.length];
+        for (int i = 0; i < primaryKeys_.length; ++i) {
+            args[i] = row.getValue(primaryKeys_[i]);
+        }
+        selectHandler.execute(args);
+    }
 
 }

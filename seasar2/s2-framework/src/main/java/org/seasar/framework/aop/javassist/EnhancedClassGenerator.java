@@ -22,22 +22,24 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 
-import org.seasar.framework.aop.InterType;
-
 import javassist.ClassPool;
 import javassist.CtClass;
+
+import org.seasar.framework.aop.InterType;
 
 /**
  * @author koichik
  */
 public class EnhancedClassGenerator extends AbstractGenerator {
-    //instance fields
+    // instance fields
     protected final Class targetClass;
+
     protected final String enhancedClassName;
+
     protected CtClass enhancedClass;
 
-    public EnhancedClassGenerator(final ClassPool classPool, final Class targetClass,
-            final String enhancedClassName) {
+    public EnhancedClassGenerator(final ClassPool classPool,
+            final Class targetClass, final String enhancedClassName) {
         super(classPool);
         this.targetClass = targetClass;
         this.enhancedClassName = enhancedClassName;
@@ -47,14 +49,17 @@ public class EnhancedClassGenerator extends AbstractGenerator {
         setupConstructor();
     }
 
-    public void createTargetMethod(final Method method, final String methodInvocationClassName) {
+    public void createTargetMethod(final Method method,
+            final String methodInvocationClassName) {
         createMethod(enhancedClass, method, createTargetMethodSource(method,
                 methodInvocationClassName));
     }
 
-    public void createInvokeSuperMethod(final Method method, final String invokeSuperMethodName) {
-        createMethod(enhancedClass, method.getModifiers(), method.getReturnType(),
-                invokeSuperMethodName, method.getParameterTypes(), method.getExceptionTypes(),
+    public void createInvokeSuperMethod(final Method method,
+            final String invokeSuperMethodName) {
+        createMethod(enhancedClass, method.getModifiers(), method
+                .getReturnType(), invokeSuperMethodName, method
+                .getParameterTypes(), method.getExceptionTypes(),
                 createInvokeSuperMethodSource(method));
     }
 
@@ -70,7 +75,8 @@ public class EnhancedClassGenerator extends AbstractGenerator {
     }
 
     public void setupClass() {
-        final Class superClass = (targetClass.isInterface()) ? Object.class : targetClass;
+        final Class superClass = (targetClass.isInterface()) ? Object.class
+                : targetClass;
         enhancedClass = createCtClass(enhancedClassName, superClass);
     }
 
@@ -81,11 +87,11 @@ public class EnhancedClassGenerator extends AbstractGenerator {
     }
 
     public void setupConstructor() {
-        final Constructor[] constructors = targetClass.getDeclaredConstructors();
+        final Constructor[] constructors = targetClass
+                .getDeclaredConstructors();
         if (constructors.length == 0) {
             createDefaultConstructor(enhancedClass);
-        }
-        else {
+        } else {
             for (int i = 0; i < constructors.length; ++i) {
                 final int modifier = constructors[i].getModifiers();
                 final Package pkg = targetClass.getPackage();
@@ -103,29 +109,28 @@ public class EnhancedClassGenerator extends AbstractGenerator {
     public static String createTargetMethodSource(final Method method,
             final String methodInvocationClassName) {
         final StringBuffer buf = new StringBuffer(200);
-        buf.append("Object result = new ").append(methodInvocationClassName).append(
-                "(this, $args).proceed();");
+        buf.append("Object result = new ").append(methodInvocationClassName)
+                .append("(this, $args).proceed();");
         final Class returnType = method.getReturnType();
         if (returnType.equals(void.class)) {
             buf.append("return;");
-        }
-        else if (returnType.isPrimitive()) {
+        } else if (returnType.isPrimitive()) {
             buf.append("return ($r) ((result == null) ? ");
             if (returnType.equals(boolean.class)) {
                 buf.append("false : ");
-            }
-            else {
+            } else {
                 buf.append("0 : ");
             }
             buf.append(fromObject(returnType, "result")).append(");");
-        }
-        else {
+        } else {
             buf.append("return ($r) result;");
         }
         String code = new String(buf);
 
-        final Class[] exceptionTypes = normalizeExceptionTypes(method.getExceptionTypes());
-        if (exceptionTypes.length != 1 || !exceptionTypes[0].equals(Throwable.class)) {
+        final Class[] exceptionTypes = normalizeExceptionTypes(method
+                .getExceptionTypes());
+        if (exceptionTypes.length != 1
+                || !exceptionTypes[0].equals(Throwable.class)) {
             code = aroundTryCatchBlock(exceptionTypes, code);
         }
 
@@ -155,7 +160,8 @@ public class EnhancedClassGenerator extends AbstractGenerator {
         return (Class[]) list.toArray(new Class[list.size()]);
     }
 
-    public static String aroundTryCatchBlock(final Class[] exceptionTypes, final String code) {
+    public static String aroundTryCatchBlock(final Class[] exceptionTypes,
+            final String code) {
         final TryBlockSupport tryBlock = new TryBlockSupport(code);
 
         boolean needRuntimeException = true;

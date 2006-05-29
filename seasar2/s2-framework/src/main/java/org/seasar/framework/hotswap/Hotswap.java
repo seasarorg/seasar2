@@ -65,9 +65,9 @@ public class Hotswap implements Externalizable {
     public long getLastModified() {
         return lastModified;
     }
-    
+
     public boolean isModified() {
-        return lastModified > 0 && file.lastModified() > lastModified; 
+        return lastModified > 0 && file.lastModified() > lastModified;
     }
 
     public Class updateTargetClass() {

@@ -29,39 +29,45 @@ public class AspectDefFactory {
 
     protected AspectDefFactory() {
     }
-    
-    public static AspectDef createAspectDef(MethodInterceptor interceptor, Pointcut pointcut) {
+
+    public static AspectDef createAspectDef(MethodInterceptor interceptor,
+            Pointcut pointcut) {
         AspectDef aspectDef = new AspectDefImpl(pointcut);
         aspectDef.setValue(interceptor);
         return aspectDef;
     }
-    
-    public static AspectDef createAspectDef(String interceptorName, Pointcut pointcut) {
+
+    public static AspectDef createAspectDef(String interceptorName,
+            Pointcut pointcut) {
         AspectDef aspectDef = new AspectDefImpl(pointcut);
         aspectDef.setExpression(new OgnlExpression(interceptorName));
         return aspectDef;
     }
-    
-    public static AspectDef createAspectDef(String interceptorName, String pointcutStr) {
+
+    public static AspectDef createAspectDef(String interceptorName,
+            String pointcutStr) {
         Pointcut pointcut = createPointcut(pointcutStr);
         return createAspectDef(interceptorName, pointcut);
     }
-    
-    public static AspectDef createAspectDef(MethodInterceptor interceptor, String pointcutStr) {
+
+    public static AspectDef createAspectDef(MethodInterceptor interceptor,
+            String pointcutStr) {
         Pointcut pointcut = createPointcut(pointcutStr);
         return createAspectDef(interceptor, pointcut);
     }
-    
-    public static AspectDef createAspectDef(String interceptorName, Method method) {
+
+    public static AspectDef createAspectDef(String interceptorName,
+            Method method) {
         Pointcut pointcut = createPointcut(method);
         return createAspectDef(interceptorName, pointcut);
     }
-    
-    public static AspectDef createAspectDef(MethodInterceptor interceptor, Method method) {
+
+    public static AspectDef createAspectDef(MethodInterceptor interceptor,
+            Method method) {
         Pointcut pointcut = createPointcut(method);
         return createAspectDef(interceptor, pointcut);
     }
-    
+
     public static Pointcut createPointcut(String pointcutStr) {
         if (!StringUtil.isEmpty(pointcutStr)) {
             String[] methodNames = StringUtil.split(pointcutStr, ", \n");
@@ -69,11 +75,11 @@ public class AspectDefFactory {
         }
         return null;
     }
-    
+
     public static Pointcut createPointcut(Class clazz) {
         return new PointcutImpl(clazz);
     }
-    
+
     public static Pointcut createPointcut(Method method) {
         if (method != null) {
             return new PointcutImpl(method);

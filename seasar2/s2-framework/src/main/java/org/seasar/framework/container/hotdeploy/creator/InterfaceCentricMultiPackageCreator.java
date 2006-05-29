@@ -19,12 +19,13 @@ import org.seasar.framework.container.ComponentNotFoundRuntimeException;
 import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.ResourceUtil;
 
-public class InterfaceCentricMultiPackageCreator extends AbstractMultiPackageCreator {
-        
+public class InterfaceCentricMultiPackageCreator extends
+        AbstractMultiPackageCreator {
+
     private String implementationPackageName = "impl";
-    
+
     private String implementationSuffix = "Impl";
-    
+
     public String getImplementationPackageName() {
         return implementationPackageName;
     }
@@ -40,14 +41,17 @@ public class InterfaceCentricMultiPackageCreator extends AbstractMultiPackageCre
     public void setImplementationSuffix(String implementationSuffix) {
         this.implementationSuffix = implementationSuffix;
     }
-    
+
     protected Class getTargetClass(Class clazz) {
         if (!clazz.isInterface()) {
             return clazz;
         }
         String packageName = ClassUtil.getPackageName(clazz);
-        String targetClassName = packageName + "." + getImplementationPackageName() + "." + ClassUtil.getShortClassName(clazz) + implementationSuffix;
-        if (ResourceUtil.getResourceAsFileNoException(ClassUtil.getResourcePath(targetClassName)) != null) {
+        String targetClassName = packageName + "."
+                + getImplementationPackageName() + "."
+                + ClassUtil.getShortClassName(clazz) + implementationSuffix;
+        if (ResourceUtil.getResourceAsFileNoException(ClassUtil
+                .getResourcePath(targetClassName)) != null) {
             return ClassUtil.forName(targetClassName);
         }
         return clazz;

@@ -19,31 +19,27 @@ import org.seasar.framework.exception.SRuntimeException;
 
 /**
  * @author higa
- *
+ * 
  */
-public class FieldNotFoundRuntimeException
-	extends SRuntimeException {
+public class FieldNotFoundRuntimeException extends SRuntimeException {
 
     private static final long serialVersionUID = -2715036865146285893L;
 
-	private Class targetClass_;
-	private String fieldName_;
+    private Class targetClass_;
 
-	public FieldNotFoundRuntimeException(
-		Class componentClass,
-		String fieldName) {
-		super(
-			"ESSR0070",
-			new Object[] { componentClass.getName(), fieldName});
-		targetClass_ = componentClass;
-		fieldName_ = fieldName;
-	}
+    private String fieldName_;
 
-	public Class getTargetClass() {
-		return targetClass_;
-	}
-	
-	public String getFieldName() {
-		return fieldName_;
-	}
+    public FieldNotFoundRuntimeException(Class componentClass, String fieldName) {
+        super("ESSR0070", new Object[] { componentClass.getName(), fieldName });
+        targetClass_ = componentClass;
+        fieldName_ = fieldName;
+    }
+
+    public Class getTargetClass() {
+        return targetClass_;
+    }
+
+    public String getFieldName() {
+        return fieldName_;
+    }
 }

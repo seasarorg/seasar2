@@ -21,26 +21,27 @@ import org.seasar.framework.message.MessageFormatter;
 
 /**
  * @author higa
- *
+ * 
  */
 public class SRollbackException extends RollbackException {
 
     private static final long serialVersionUID = 2987454536669276359L;
 
-	private String messageCode;
-	private Object[] args;
-	
-	public SRollbackException(String messageCode, Object[] args) {
-		super(MessageFormatter.getMessage(messageCode, args));
-		this.messageCode = messageCode;
-		this.args = args;
-	}
+    private String messageCode;
 
-	public String getMessageCode() {
-		return messageCode;
-	}
-	
-	public Object[] getArgs() {
-		return args;
-	}
+    private Object[] args;
+
+    public SRollbackException(String messageCode, Object[] args) {
+        super(MessageFormatter.getMessage(messageCode, args));
+        this.messageCode = messageCode;
+        this.args = args;
+    }
+
+    public String getMessageCode() {
+        return messageCode;
+    }
+
+    public Object[] getArgs() {
+        return args;
+    }
 }

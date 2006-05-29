@@ -28,9 +28,9 @@ import org.seasar.framework.util.ClassUtil;
  * 
  */
 public class DxoCreatorTest extends S2FrameworkTestCase {
-    
+
     private ClassLoader originalLoader;
-    
+
     private OndemandBehavior ondemand;
 
     protected void setUp() {
@@ -45,10 +45,11 @@ public class DxoCreatorTest extends S2FrameworkTestCase {
         S2ContainerBehavior.setProvider(ondemand);
         ondemand.start();
     }
-    
+
     protected void tearDown() {
         ondemand.stop();
-        S2ContainerBehavior.setProvider(new S2ContainerBehavior.DefaultProvider());
+        S2ContainerBehavior
+                .setProvider(new S2ContainerBehavior.DefaultProvider());
         Thread.currentThread().setContextClassLoader(originalLoader);
     }
 
@@ -59,7 +60,7 @@ public class DxoCreatorTest extends S2FrameworkTestCase {
         assertEquals("2", name, cd.getComponentName());
         assertTrue("3", getContainer().hasComponentDef("bbbDtoDxo"));
     }
-    
+
     public void testIsTargetByClass() throws Exception {
         String packageName = ClassUtil.getPackageName(getClass());
         Class clazz = ClassUtil.forName(packageName + ".web.aaa.HogeDxo");

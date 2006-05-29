@@ -53,35 +53,38 @@ public final class ClassTraversal {
             final String entryName = entry.getName().replace('\\', '/');
             if (entryName.endsWith(CLASS_SUFFIX)) {
                 final String className = entryName.substring(0,
-                        entryName.length() - CLASS_SUFFIX.length()).replace('/', '.');
+                        entryName.length() - CLASS_SUFFIX.length()).replace(
+                        '/', '.');
                 final int pos = className.lastIndexOf('.');
-                final String packageName = (pos == -1) ? null : className.substring(0, pos);
-                final String shortClassName = (pos == -1) ? className : className
-                        .substring(pos + 1);
+                final String packageName = (pos == -1) ? null : className
+                        .substring(0, pos);
+                final String shortClassName = (pos == -1) ? className
+                        : className.substring(pos + 1);
                 handler.processClass(packageName, shortClassName);
             }
         }
     }
 
-    private static void traverseFileSystem(final File dir, final String packageName,
-            final ClassHandler handler) {
+    private static void traverseFileSystem(final File dir,
+            final String packageName, final ClassHandler handler) {
         final File[] files = dir.listFiles();
         for (int i = 0; i < files.length; ++i) {
             final File file = files[i];
             final String fileName = file.getName();
             if (file.isDirectory()) {
-                traverseFileSystem(file, ClassUtil.concatName(packageName, fileName),
-                        handler);
-            }
-            else if (fileName.endsWith(".class")) {
-                final String shortClassName = fileName.substring(0, fileName.length()
+                traverseFileSystem(file, ClassUtil.concatName(packageName,
+                        fileName), handler);
+            } else if (fileName.endsWith(".class")) {
+                final String shortClassName = fileName.substring(0, fileName
+                        .length()
                         - CLASS_SUFFIX.length());
                 handler.processClass(packageName, shortClassName);
             }
         }
     }
 
-    private static File getPackageDir(final File rootDir, final String rootPackage) {
+    private static File getPackageDir(final File rootDir,
+            final String rootPackage) {
         File packageDir = rootDir;
         if (rootPackage != null) {
             final String[] names = rootPackage.split("\\.");

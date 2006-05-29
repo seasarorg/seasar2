@@ -202,10 +202,14 @@ public class S2ContainerImplTest extends TestCase {
         assertEquals("4", new Date(1), root.getComponent("bbb.ccc.date"));
         assertEquals("5", new Date(1), root.getComponent("ccc.date"));
         assertEquals("6", new Date(0), root.getComponent("date"));
-        assertEquals("7", "bbb", ((S2Container) root.getComponent("aaa.bbb")).getNamespace());
-        assertEquals("8", "bbb", ((S2Container) root.getComponent("bbb")).getNamespace());
-        assertEquals("9", "ccc", ((S2Container) root.getComponent("bbb.ccc")).getNamespace());
-        assertEquals("10", "ccc", ((S2Container) root.getComponent("ccc")).getNamespace());
+        assertEquals("7", "bbb", ((S2Container) root.getComponent("aaa.bbb"))
+                .getNamespace());
+        assertEquals("8", "bbb", ((S2Container) root.getComponent("bbb"))
+                .getNamespace());
+        assertEquals("9", "ccc", ((S2Container) root.getComponent("bbb.ccc"))
+                .getNamespace());
+        assertEquals("10", "ccc", ((S2Container) root.getComponent("ccc"))
+                .getNamespace());
     }
 
     public void testRegisterAfterInclude() throws Exception {

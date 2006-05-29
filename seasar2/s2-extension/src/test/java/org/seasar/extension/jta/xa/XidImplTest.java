@@ -19,8 +19,6 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
-import org.seasar.extension.jta.xa.XidImpl;
-
 public class XidImplTest extends TestCase {
 
     public XidImplTest(String name) {
@@ -52,11 +50,12 @@ public class XidImplTest extends TestCase {
     protected void tearDown() throws Exception {
     }
 
-    public static Test suite ( ) {
+    public static Test suite() {
         return new TestSuite(XidImplTest.class);
     }
 
-    public static void main (String[] args) {
-        junit.textui.TestRunner.main(new String[]{XidImplTest.class.getName()});
+    public static void main(String[] args) {
+        junit.textui.TestRunner
+                .main(new String[] { XidImplTest.class.getName() });
     }
 }

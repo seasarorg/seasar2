@@ -24,18 +24,18 @@ import org.seasar.framework.exception.SQLRuntimeException;
 
 /**
  * @author higa
- *
+ * 
  */
 public final class DataSourceUtil {
 
-	private DataSourceUtil() {
-	}
+    private DataSourceUtil() {
+    }
 
-	public static Connection getConnection(DataSource dataSource) {
-		try {
-			return dataSource.getConnection();
-		} catch (SQLException ex) {
-			throw new SQLRuntimeException(ex);
-		}
-	}
+    public static Connection getConnection(DataSource dataSource) {
+        try {
+            return dataSource.getConnection();
+        } catch (SQLException ex) {
+            throw new SQLRuntimeException(ex);
+        }
+    }
 }

@@ -22,29 +22,28 @@ import org.seasar.framework.container.MethodDef;
 
 /**
  * @author higa
- *
+ * 
  */
 public class DefaultDestroyMethodAssembler extends AbstractMethodAssembler {
 
-	/**
-	 * @param componentDef
-	 */
-	public DefaultDestroyMethodAssembler(ComponentDef componentDef) {
-		super(componentDef);
-	}
+    /**
+     * @param componentDef
+     */
+    public DefaultDestroyMethodAssembler(ComponentDef componentDef) {
+        super(componentDef);
+    }
 
-	public void assemble(Object component)
-		throws IllegalMethodRuntimeException {
+    public void assemble(Object component) throws IllegalMethodRuntimeException {
 
         if (component == null) {
             return;
         }
-		BeanDesc beanDesc = getBeanDesc(component);
-		int size = getComponentDef().getDestroyMethodDefSize();
-		for (int i = 0; i < size; ++i) {
-			MethodDef methodDef = getComponentDef().getDestroyMethodDef(i);
-			invoke(beanDesc, component, methodDef);
-		}
-	}
+        BeanDesc beanDesc = getBeanDesc(component);
+        int size = getComponentDef().getDestroyMethodDefSize();
+        for (int i = 0; i < size; ++i) {
+            MethodDef methodDef = getComponentDef().getDestroyMethodDef(i);
+            invoke(beanDesc, component, methodDef);
+        }
+    }
 
 }

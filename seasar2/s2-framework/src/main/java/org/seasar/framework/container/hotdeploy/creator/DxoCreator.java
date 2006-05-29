@@ -15,7 +15,6 @@
  */
 package org.seasar.framework.container.hotdeploy.creator;
 
-
 public class DxoCreator extends InterfaceCentricMultiPackageCreator {
 
     public DxoCreator() {

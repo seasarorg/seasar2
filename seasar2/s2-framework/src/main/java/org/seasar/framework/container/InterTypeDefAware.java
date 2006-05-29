@@ -16,11 +16,11 @@
 package org.seasar.framework.container;
 
 public interface InterTypeDefAware {
-    
+
     public void addInterTypeDef(InterTypeDef interTypeDef);
-    
+
     public int getInterTypeDefSize();
-    
+
     public InterTypeDef getInterTypeDef(int index);
 
 }

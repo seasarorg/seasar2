@@ -24,6 +24,7 @@ import javax.servlet.ServletOutputStream;
  */
 public abstract class MockServletOutputStream extends ServletOutputStream {
     public abstract PrintWriter getPrintWriter();
+
     public abstract void setPrintWriter(PrintWriter writer);
 
 }

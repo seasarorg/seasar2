@@ -21,26 +21,26 @@ import org.seasar.framework.util.BinaryConversionUtil;
 
 /**
  * @author higa
- *
+ * 
  */
 public class BinaryType extends ObjectType {
 
     private static final Class TYPE = new byte[0].getClass();
 
-	BinaryType() {
-	}
+    BinaryType() {
+    }
 
-	public Object convert(Object value, String formatPattern) {
-		return BinaryConversionUtil.toBinary(value);
-	}
-	
-	protected boolean doEquals(Object arg1, Object arg2) {
-		if (arg1 instanceof byte[] && arg2 instanceof byte[]) {
-			return Arrays.equals((byte[]) arg1, (byte[]) arg2);
-		}
-		return false;
-	}
-    
+    public Object convert(Object value, String formatPattern) {
+        return BinaryConversionUtil.toBinary(value);
+    }
+
+    protected boolean doEquals(Object arg1, Object arg2) {
+        if (arg1 instanceof byte[] && arg2 instanceof byte[]) {
+            return Arrays.equals((byte[]) arg1, (byte[]) arg2);
+        }
+        return false;
+    }
+
     public Class getType() {
         return TYPE;
     }

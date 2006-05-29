@@ -30,25 +30,25 @@ import org.seasar.framework.exception.OgnlRuntimeException;
 
 /**
  * @author higa
- *
+ * 
  */
 public class ManualOnlyPropertyAssemblerTest extends TestCase {
 
-	public void testAssemble() throws Exception {
-		S2Container container = new S2ContainerImpl();
-		ComponentDefImpl cd = new ComponentDefImpl(A.class);
+    public void testAssemble() throws Exception {
+        S2Container container = new S2ContainerImpl();
+        ComponentDefImpl cd = new ComponentDefImpl(A.class);
         ComponentDefImpl cd2 = new ComponentDefImpl(B.class, "hoge");
-		PropertyDef pd = new PropertyDefImpl("hoge");
+        PropertyDef pd = new PropertyDefImpl("hoge");
         pd.setExpression(new OgnlExpression("hoge"));
-		cd.addPropertyDef(pd);
-		container.register(cd);
+        cd.addPropertyDef(pd);
+        container.register(cd);
         container.register(cd2);
-		PropertyAssembler assembler = new ManualOnlyPropertyAssembler(cd);
-		A a = new A();
-		assembler.assemble(a);
-		assertEquals("1", "B", a.getHogeName());
-	}
-    
+        PropertyAssembler assembler = new ManualOnlyPropertyAssembler(cd);
+        A a = new A();
+        assembler.assemble(a);
+        assertEquals("1", "B", a.getHogeName());
+    }
+
     public void testAssembleForField() throws Exception {
         S2Container container = new S2ContainerImpl();
         ComponentDefImpl cd = new ComponentDefImpl(C.class);
@@ -62,56 +62,56 @@ public class ManualOnlyPropertyAssemblerTest extends TestCase {
         assembler.assemble(c);
         assertEquals("1", "a", c.aaa);
     }
-	
-	public void testAssembleIllegalProperty() throws Exception {
-		S2Container container = new S2ContainerImpl();
-		ComponentDefImpl cd = new ComponentDefImpl(A.class);
-		PropertyDef pd = new PropertyDefImpl("hoge");
-		pd.setExpression(new OgnlExpression("b"));
-		cd.addPropertyDef(pd);
-		container.register(cd);
-		PropertyAssembler assembler = new ManualOnlyPropertyAssembler(cd);
-		A a = new A();
-		try {
-			assembler.assemble(a);
-			fail("1");
-		} catch (OgnlRuntimeException ex) {
-			System.out.println(ex);
-		}
-	}
-	
-	public void testAssembleIllegalProperty2() throws Exception {
-		S2Container container = new S2ContainerImpl();
-		ComponentDefImpl cd = new ComponentDefImpl(A.class);
-		PropertyDef pd = new PropertyDefImpl("abc", "111");
-		cd.addPropertyDef(pd);
-		container.register(cd);
-		PropertyAssembler assembler = new ManualOnlyPropertyAssembler(cd);
-		A a = new A();
-		try {
-			assembler.assemble(a);
-			fail("1");
-		} catch (PropertyNotFoundRuntimeException ex) {
-			System.out.println(ex);
-		}
-	}
-	
-	public void testAssembleIllegalProperty3() throws Exception {
-		S2Container container = new S2ContainerImpl();
-		ComponentDefImpl cd = new ComponentDefImpl(B.class);
-		PropertyDef pd = new PropertyDefImpl("aaa", "abc");
-		cd.addPropertyDef(pd);
-		container.register(cd);
-		PropertyAssembler assembler = new ManualOnlyPropertyAssembler(cd);
-		B b = new B();
-		try {
-			assembler.assemble(b);
-			fail("1");
-		} catch (IllegalPropertyRuntimeException ex) {
-			System.out.println(ex);
-		}
-	}
-    
+
+    public void testAssembleIllegalProperty() throws Exception {
+        S2Container container = new S2ContainerImpl();
+        ComponentDefImpl cd = new ComponentDefImpl(A.class);
+        PropertyDef pd = new PropertyDefImpl("hoge");
+        pd.setExpression(new OgnlExpression("b"));
+        cd.addPropertyDef(pd);
+        container.register(cd);
+        PropertyAssembler assembler = new ManualOnlyPropertyAssembler(cd);
+        A a = new A();
+        try {
+            assembler.assemble(a);
+            fail("1");
+        } catch (OgnlRuntimeException ex) {
+            System.out.println(ex);
+        }
+    }
+
+    public void testAssembleIllegalProperty2() throws Exception {
+        S2Container container = new S2ContainerImpl();
+        ComponentDefImpl cd = new ComponentDefImpl(A.class);
+        PropertyDef pd = new PropertyDefImpl("abc", "111");
+        cd.addPropertyDef(pd);
+        container.register(cd);
+        PropertyAssembler assembler = new ManualOnlyPropertyAssembler(cd);
+        A a = new A();
+        try {
+            assembler.assemble(a);
+            fail("1");
+        } catch (PropertyNotFoundRuntimeException ex) {
+            System.out.println(ex);
+        }
+    }
+
+    public void testAssembleIllegalProperty3() throws Exception {
+        S2Container container = new S2ContainerImpl();
+        ComponentDefImpl cd = new ComponentDefImpl(B.class);
+        PropertyDef pd = new PropertyDefImpl("aaa", "abc");
+        cd.addPropertyDef(pd);
+        container.register(cd);
+        PropertyAssembler assembler = new ManualOnlyPropertyAssembler(cd);
+        B b = new B();
+        try {
+            assembler.assemble(b);
+            fail("1");
+        } catch (IllegalPropertyRuntimeException ex) {
+            System.out.println(ex);
+        }
+    }
+
     public void testAssembleWhenComponentNull() throws Exception {
         S2Container container = new S2ContainerImpl();
         ComponentDefImpl cd = new ComponentDefImpl(C.class);
@@ -123,47 +123,47 @@ public class ManualOnlyPropertyAssemblerTest extends TestCase {
         assembler.assemble(null);
     }
 
-	public interface Foo {
-		public String getHogeName();
-	}
+    public interface Foo {
+        public String getHogeName();
+    }
 
-	public static class A implements Foo {
+    public static class A implements Foo {
 
-		private Hoge hoge_;
+        private Hoge hoge_;
 
-		public A() {
-		}
+        public A() {
+        }
 
-		public Hoge getHoge() {
-			return hoge_;
-		}
+        public Hoge getHoge() {
+            return hoge_;
+        }
 
-		public void setHoge(Hoge hoge) {
-			hoge_ = hoge;
-		}
+        public void setHoge(Hoge hoge) {
+            hoge_ = hoge;
+        }
 
-		public String getHogeName() {
-			return hoge_.getName();
-		}
-	}
+        public String getHogeName() {
+            return hoge_.getName();
+        }
+    }
 
-	public interface Hoge {
+    public interface Hoge {
 
-		public String getName();
-	}
+        public String getName();
+    }
 
-	public static class B implements Hoge {
-		
-		public String getName() {
-			return "B";
-		}
-		
-		public void setAaa(int aaa) {
-		}
-	}
-    
+    public static class B implements Hoge {
+
+        public String getName() {
+            return "B";
+        }
+
+        public void setAaa(int aaa) {
+        }
+    }
+
     public static class C {
-        
+
         private String aaa;
     }
 }

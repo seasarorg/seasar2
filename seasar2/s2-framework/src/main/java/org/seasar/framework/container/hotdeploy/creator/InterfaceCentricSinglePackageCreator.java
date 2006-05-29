@@ -18,12 +18,13 @@ package org.seasar.framework.container.hotdeploy.creator;
 import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.ResourceUtil;
 
-public class InterfaceCentricSinglePackageCreator extends AbstractSinglePackageCreator {
+public class InterfaceCentricSinglePackageCreator extends
+        AbstractSinglePackageCreator {
 
     private String implementationPackageName = "impl";
-    
+
     private String implementationSuffix = "Impl";
-    
+
     public String getImplementationPackageName() {
         return implementationPackageName;
     }
@@ -45,8 +46,11 @@ public class InterfaceCentricSinglePackageCreator extends AbstractSinglePackageC
             return clazz;
         }
         String packageName = ClassUtil.getPackageName(clazz);
-        String targetClassName = packageName + "." + implementationPackageName + "." + ClassUtil.getShortClassName(clazz) + implementationSuffix;
-        if (ResourceUtil.getResourceAsFileNoException(ClassUtil.getResourcePath(targetClassName)) != null) {
+        String targetClassName = packageName + "." + implementationPackageName
+                + "." + ClassUtil.getShortClassName(clazz)
+                + implementationSuffix;
+        if (ResourceUtil.getResourceAsFileNoException(ClassUtil
+                .getResourcePath(targetClassName)) != null) {
             return ClassUtil.forName(targetClassName);
         }
         return clazz;

@@ -28,52 +28,52 @@ public class MockServletConfigImpl implements MockServletConfig, Serializable {
 
     private static final long serialVersionUID = 5515573574823840162L;
 
-	private String servletName;
+    private String servletName;
 
-	private ServletContext servletContext;
+    private ServletContext servletContext;
 
-	private Map initParameters = new HashMap();
+    private Map initParameters = new HashMap();
 
-	public MockServletConfigImpl() {
-	}
+    public MockServletConfigImpl() {
+    }
 
-	/**
-	 * @see javax.servlet.ServletConfig#getServletName()
-	 */
-	public String getServletName() {
-		return servletName;
-	}
+    /**
+     * @see javax.servlet.ServletConfig#getServletName()
+     */
+    public String getServletName() {
+        return servletName;
+    }
 
-	public void setServletName(String servletName) {
-		this.servletName = servletName;
-	}
+    public void setServletName(String servletName) {
+        this.servletName = servletName;
+    }
 
-	/**
-	 * @see javax.servlet.ServletConfig#getServletContext()
-	 */
-	public ServletContext getServletContext() {
-		return servletContext;
-	}
+    /**
+     * @see javax.servlet.ServletConfig#getServletContext()
+     */
+    public ServletContext getServletContext() {
+        return servletContext;
+    }
 
-	public void setServletContext(ServletContext servletContext) {
-		this.servletContext = servletContext;
-	}
+    public void setServletContext(ServletContext servletContext) {
+        this.servletContext = servletContext;
+    }
 
-	/**
-	 * @see javax.servlet.ServletConfig#getInitParameter(java.lang.String)
-	 */
-	public String getInitParameter(String name) {
-		return (String) initParameters.get(name);
-	}
+    /**
+     * @see javax.servlet.ServletConfig#getInitParameter(java.lang.String)
+     */
+    public String getInitParameter(String name) {
+        return (String) initParameters.get(name);
+    }
 
-	public void setInitParameter(String name, final String value) {
-		initParameters.put(name, value);
-	}
+    public void setInitParameter(String name, final String value) {
+        initParameters.put(name, value);
+    }
 
-	/**
-	 * @see javax.servlet.ServletConfig#getInitParameterNames()
-	 */
-	public Enumeration getInitParameterNames() {
-		return new EnumerationAdapter(initParameters.keySet().iterator());
-	}
+    /**
+     * @see javax.servlet.ServletConfig#getInitParameterNames()
+     */
+    public Enumeration getInitParameterNames() {
+        return new EnumerationAdapter(initParameters.keySet().iterator());
+    }
 }

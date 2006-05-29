@@ -19,19 +19,19 @@ import org.seasar.framework.container.ComponentDef;
 
 /**
  * @author higa
- *
+ * 
  */
-public class DefaultConstructorConstructorAssembler
-	extends AbstractConstructorAssembler {
+public class DefaultConstructorConstructorAssembler extends
+        AbstractConstructorAssembler {
 
-	/**
-	 * @param componentDef
-	 */
-	public DefaultConstructorConstructorAssembler(ComponentDef componentDef) {
-		super(componentDef);
-	}
+    /**
+     * @param componentDef
+     */
+    public DefaultConstructorConstructorAssembler(ComponentDef componentDef) {
+        super(componentDef);
+    }
 
-	protected Object doAssemble() {
-		return assembleDefault();
-	}
+    protected Object doAssemble() {
+        return assembleDefault();
+    }
 }

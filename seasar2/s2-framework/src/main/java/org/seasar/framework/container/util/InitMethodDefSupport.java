@@ -24,35 +24,36 @@ import org.seasar.framework.container.S2Container;
 
 /**
  * @author higa
- *
+ * 
  */
 public final class InitMethodDefSupport {
 
-	private List methodDefs = Collections.synchronizedList(new ArrayList());
-	private S2Container container;
+    private List methodDefs = Collections.synchronizedList(new ArrayList());
 
-	public InitMethodDefSupport() {
-	}
+    private S2Container container;
 
-	public void addInitMethodDef(InitMethodDef methodDef) {
-		if (container != null) {
-			methodDef.setContainer(container);
-		}
-		methodDefs.add(methodDef);
-	}
+    public InitMethodDefSupport() {
+    }
 
-	public int getInitMethodDefSize() {
-		return methodDefs.size();
-	}
+    public void addInitMethodDef(InitMethodDef methodDef) {
+        if (container != null) {
+            methodDef.setContainer(container);
+        }
+        methodDefs.add(methodDef);
+    }
 
-	public InitMethodDef getInitMethodDef(int index) {
-		return (InitMethodDef) methodDefs.get(index);
-	}
+    public int getInitMethodDefSize() {
+        return methodDefs.size();
+    }
 
-	public void setContainer(S2Container container) {
-		this.container = container;
-		for (int i = 0; i < getInitMethodDefSize(); ++i) {
-			getInitMethodDef(i).setContainer(container);
-		}
-	}
+    public InitMethodDef getInitMethodDef(int index) {
+        return (InitMethodDef) methodDefs.get(index);
+    }
+
+    public void setContainer(S2Container container) {
+        this.container = container;
+        for (int i = 0; i < getInitMethodDefSize(); ++i) {
+            getInitMethodDef(i).setContainer(container);
+        }
+    }
 }

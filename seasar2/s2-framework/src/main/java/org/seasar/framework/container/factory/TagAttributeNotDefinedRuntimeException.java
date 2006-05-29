@@ -19,28 +19,30 @@ import org.seasar.framework.exception.SRuntimeException;
 
 /**
  * @author higa
- *
+ * 
  */
-public final class TagAttributeNotDefinedRuntimeException extends SRuntimeException {
+public final class TagAttributeNotDefinedRuntimeException extends
+        SRuntimeException {
 
     private static final long serialVersionUID = -1635401319074240988L;
 
-	private String tagName;
-	private String attributeName;
-	
-	public TagAttributeNotDefinedRuntimeException(String tagName,
-		String attributeName) {
-			
-		super("ESSR0056", new Object[]{tagName, attributeName});
-		this.tagName = tagName;
-		this.attributeName = attributeName;
-	}
-	
-	public String getTagName() {
-		return tagName;
-	}
-	
-	public String getAttributeName() {
-		return attributeName;
-	}
+    private String tagName;
+
+    private String attributeName;
+
+    public TagAttributeNotDefinedRuntimeException(String tagName,
+            String attributeName) {
+
+        super("ESSR0056", new Object[] { tagName, attributeName });
+        this.tagName = tagName;
+        this.attributeName = attributeName;
+    }
+
+    public String getTagName() {
+        return tagName;
+    }
+
+    public String getAttributeName() {
+        return attributeName;
+    }
 }

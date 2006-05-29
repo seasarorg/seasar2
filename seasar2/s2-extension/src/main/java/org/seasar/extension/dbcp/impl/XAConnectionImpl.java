@@ -27,7 +27,9 @@ import javax.transaction.xa.XAResource;
 public final class XAConnectionImpl implements XAConnection {
 
     private Connection connection_;
+
     private XAResource xaResource_;
+
     private List _listeners = new ArrayList();
 
     public XAConnectionImpl(Connection connection) {
@@ -48,16 +50,18 @@ public final class XAConnectionImpl implements XAConnection {
             return;
         }
         if (!connection_.isClosed()) {
-			connection_.close();
+            connection_.close();
         }
         connection_ = null;
     }
 
-    public synchronized void addConnectionEventListener(final ConnectionEventListener listener) {
+    public synchronized void addConnectionEventListener(
+            final ConnectionEventListener listener) {
         _listeners.add(listener);
     }
 
-    public synchronized void removeConnectionEventListener(final ConnectionEventListener listener) {
+    public synchronized void removeConnectionEventListener(
+            final ConnectionEventListener listener) {
         _listeners.remove(listener);
     }
 }

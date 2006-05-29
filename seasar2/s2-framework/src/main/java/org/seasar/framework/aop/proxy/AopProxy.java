@@ -44,7 +44,7 @@ public final class AopProxy implements Serializable {
     static final long serialVersionUID = 0L;
 
     private static Logger logger = Logger.getLogger(AopProxy.class);
-    
+
     private static final Method IS_BRIDGE_METHOD = getIsBridgeMethod();
 
     private final Class targetClass;
@@ -59,18 +59,20 @@ public final class AopProxy implements Serializable {
         this(targetClass, aspects, null, null);
     }
 
-    public AopProxy(final Class targetClass, final Aspect[] aspects, final InterType[] interTypes) {
+    public AopProxy(final Class targetClass, final Aspect[] aspects,
+            final InterType[] interTypes) {
         this(targetClass, aspects, interTypes, null);
     }
 
-    public AopProxy(final Class targetClass, final Aspect[] aspects, final Map parameters) {
+    public AopProxy(final Class targetClass, final Aspect[] aspects,
+            final Map parameters) {
         this(targetClass, aspects, null, parameters);
     }
 
     public AopProxy(final Class targetClass, final Aspect[] aspects,
             final InterType[] interTypes, final Map parameters) {
-        if ((aspects == null || aspects.length == 0) && (interTypes == null
-                || interTypes.length == 0)) {
+        if ((aspects == null || aspects.length == 0)
+                && (interTypes == null || interTypes.length == 0)) {
             throw new EmptyRuntimeException("aspects and interTypes");
         }
 
@@ -142,7 +144,7 @@ public final class AopProxy implements Serializable {
         int mod = method.getModifiers();
         return !Modifier.isFinal(mod) && !Modifier.isStatic(mod);
     }
-    
+
     private boolean isBridgeMethod(final Method method) {
         if (IS_BRIDGE_METHOD == null) {
             return false;

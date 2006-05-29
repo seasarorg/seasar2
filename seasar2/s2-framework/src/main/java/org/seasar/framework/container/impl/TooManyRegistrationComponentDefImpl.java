@@ -26,10 +26,11 @@ import org.seasar.framework.container.TooManyRegistrationRuntimeException;
  * @author higa
  * 
  */
-public class TooManyRegistrationComponentDefImpl extends SimpleComponentDef implements
-        TooManyRegistrationComponentDef {
-    
+public class TooManyRegistrationComponentDefImpl extends SimpleComponentDef
+        implements TooManyRegistrationComponentDef {
+
     private Object key;
+
     private List componentDefs = new ArrayList();
 
     public TooManyRegistrationComponentDefImpl(Object key) {
@@ -41,7 +42,8 @@ public class TooManyRegistrationComponentDefImpl extends SimpleComponentDef impl
     }
 
     public Object getComponent() throws TooManyRegistrationRuntimeException {
-        throw new TooManyRegistrationRuntimeException(key, getComponentClasses());
+        throw new TooManyRegistrationRuntimeException(key,
+                getComponentClasses());
     }
 
     public int getComponentDefSize() {
@@ -53,7 +55,8 @@ public class TooManyRegistrationComponentDefImpl extends SimpleComponentDef impl
     }
 
     public ComponentDef[] getComponentDefs() {
-        return (ComponentDef[]) componentDefs.toArray(new ComponentDef[getComponentDefSize()]);
+        return (ComponentDef[]) componentDefs
+                .toArray(new ComponentDef[getComponentDefSize()]);
     }
 
     public Class[] getComponentClasses() {

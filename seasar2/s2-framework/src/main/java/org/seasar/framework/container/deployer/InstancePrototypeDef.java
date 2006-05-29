@@ -20,15 +20,16 @@ import org.seasar.framework.container.ComponentDeployer;
 
 /**
  * @author higa
- *
+ * 
  */
 public class InstancePrototypeDef extends AbstractInstanceDef {
 
     protected InstancePrototypeDef(String name) {
         super(name);
     }
-    
+
     public ComponentDeployer createComponentDeployer(ComponentDef componentDef) {
-        return ComponentDeployerFactory.createPrototypeComponentDeployer(componentDef);
+        return ComponentDeployerFactory
+                .createPrototypeComponentDeployer(componentDef);
     }
 }

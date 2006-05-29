@@ -15,15 +15,18 @@
  */
 package org.seasar.extension.jta;
 
-import junit.framework.*;
-import javax.transaction.*;
+import javax.transaction.Status;
+import javax.transaction.Transaction;
+import javax.transaction.TransactionManager;
 
-import org.seasar.extension.jta.TransactionManagerImpl;
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
 
 public class TransactionManagerImplTest extends TestCase {
 
-	private TransactionManager tm_;
-	
+    private TransactionManager tm_;
+
     public TransactionManagerImplTest(String name) {
         super(name);
     }
@@ -40,29 +43,28 @@ public class TransactionManagerImplTest extends TestCase {
     public void testCommit() throws Exception {
         tm_.begin();
         tm_.commit();
-        assertEquals("1", Status.STATUS_NO_TRANSACTION,
-        	tm_.getStatus());
+        assertEquals("1", Status.STATUS_NO_TRANSACTION, tm_.getStatus());
     }
 
     public void testRollback() throws Exception {
-		tm_.begin();
-		tm_.rollback();
-		assertEquals("1", Status.STATUS_NO_TRANSACTION,
-			tm_.getStatus());
+        tm_.begin();
+        tm_.rollback();
+        assertEquals("1", Status.STATUS_NO_TRANSACTION, tm_.getStatus());
     }
 
     protected void setUp() throws Exception {
-		tm_ = new TransactionManagerImpl();
+        tm_ = new TransactionManagerImpl();
     }
 
     protected void tearDown() throws Exception {
     }
 
-    public static Test suite ( ) {
+    public static Test suite() {
         return new TestSuite(TransactionManagerImplTest.class);
     }
 
-    public static void main (String[] args) {
-        junit.textui.TestRunner.main(new String[]{TransactionManagerImplTest.class.getName()});
+    public static void main(String[] args) {
+        junit.textui.TestRunner
+                .main(new String[] { TransactionManagerImplTest.class.getName() });
     }
 }

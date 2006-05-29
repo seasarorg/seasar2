@@ -20,15 +20,15 @@ import org.seasar.framework.container.InstanceDef;
 public abstract class AbstractInstanceDef implements InstanceDef {
 
     private String name;
-    
+
     protected AbstractInstanceDef(String name) {
         this.name = name;
     }
-    
+
     public String getName() {
         return name;
     }
-    
+
     public boolean equals(Object o) {
         if (o == this) {
             return true;
@@ -37,9 +37,10 @@ public abstract class AbstractInstanceDef implements InstanceDef {
             return false;
         }
         InstanceDef other = (InstanceDef) o;
-        return name == null ? other.getName() == null : name.equals(other.getName());
+        return name == null ? other.getName() == null : name.equals(other
+                .getName());
     }
-    
+
     public int hashCode() {
         return name == null ? 0 : name.hashCode();
     }

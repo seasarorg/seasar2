@@ -23,26 +23,30 @@ import org.seasar.framework.container.IllegalBindingTypeDefRuntimeException;
 
 public class BindingTypeDefFactory {
 
-    public static final BindingTypeDef MUST = new BindingTypeMustDef(BindingTypeDef.MUST_NAME);
-    
-    public static final BindingTypeDef SHOULD = new BindingTypeShouldDef(BindingTypeDef.SHOULD_NAME);
-    
-    public static final BindingTypeDef MAY = new BindingTypeMayDef(BindingTypeDef.MAY_NAME);
-    
-    public static final BindingTypeDef NONE = new BindingTypeNoneDef(BindingTypeDef.NONE_NAME);
-    
+    public static final BindingTypeDef MUST = new BindingTypeMustDef(
+            BindingTypeDef.MUST_NAME);
+
+    public static final BindingTypeDef SHOULD = new BindingTypeShouldDef(
+            BindingTypeDef.SHOULD_NAME);
+
+    public static final BindingTypeDef MAY = new BindingTypeMayDef(
+            BindingTypeDef.MAY_NAME);
+
+    public static final BindingTypeDef NONE = new BindingTypeNoneDef(
+            BindingTypeDef.NONE_NAME);
+
     private static Map bindingTypeDefs = new HashMap();
-    
+
     static {
         addBindingTypeDef(MUST);
         addBindingTypeDef(SHOULD);
         addBindingTypeDef(MAY);
         addBindingTypeDef(NONE);
     }
-    
+
     protected BindingTypeDefFactory() {
     }
-    
+
     public static void addBindingTypeDef(BindingTypeDef bindingTypeDef) {
         bindingTypeDefs.put(bindingTypeDef.getName(), bindingTypeDef);
     }
@@ -50,7 +54,7 @@ public class BindingTypeDefFactory {
     public static boolean existBindingTypeDef(String name) {
         return bindingTypeDefs.containsKey(name);
     }
-    
+
     public static BindingTypeDef getBindingTypeDef(String name) {
         if (!existBindingTypeDef(name)) {
             throw new IllegalBindingTypeDefRuntimeException(name);

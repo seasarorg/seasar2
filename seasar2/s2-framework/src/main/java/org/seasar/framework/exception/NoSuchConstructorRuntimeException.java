@@ -20,34 +20,33 @@ import org.seasar.framework.util.MethodUtil;
 
 /**
  * @author higa
- *
+ * 
  */
 public class NoSuchConstructorRuntimeException extends SRuntimeException {
 
     private static final long serialVersionUID = 8688818589925114466L;
 
-	private Class targetClass;
-	private Class[] argTypes;
+    private Class targetClass;
 
-	public NoSuchConstructorRuntimeException(
-		Class targetClass,
-		Class[] argTypes,
-		NoSuchMethodException cause) {
+    private Class[] argTypes;
 
-		super(
-			"ESSR0064",
-			new Object[] { targetClass.getName(),
-				MethodUtil.getSignature(ClassUtil.getShortClassName(targetClass), argTypes), cause},
-			cause);
-		this.targetClass = targetClass;
-		this.argTypes = argTypes;
-	}
-	
-	public Class getTargetClass() {
-		return targetClass;
-	}
-	
-	public Class[] getArgTypes() {
-		return argTypes;
-	}
+    public NoSuchConstructorRuntimeException(Class targetClass,
+            Class[] argTypes, NoSuchMethodException cause) {
+
+        super("ESSR0064", new Object[] {
+                targetClass.getName(),
+                MethodUtil.getSignature(ClassUtil
+                        .getShortClassName(targetClass), argTypes), cause },
+                cause);
+        this.targetClass = targetClass;
+        this.argTypes = argTypes;
+    }
+
+    public Class getTargetClass() {
+        return targetClass;
+    }
+
+    public Class[] getArgTypes() {
+        return argTypes;
+    }
 }

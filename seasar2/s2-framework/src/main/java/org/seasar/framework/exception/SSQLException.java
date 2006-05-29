@@ -21,50 +21,55 @@ import org.seasar.framework.message.MessageFormatter;
 
 /**
  * @author higa
- *
+ * 
  */
 public class SSQLException extends SQLException {
 
     private static final long serialVersionUID = 4098267431221202677L;
 
-	private String messageCode;
-	private Object[] args;
-	
-	public SSQLException(String messageCode, Object[] args) {
-	    this(messageCode, args, null, 0, null);
-	}
+    private String messageCode;
 
-	public SSQLException(String messageCode, Object[] args, Throwable cause) {
-	    this(messageCode, args, null, 0, cause);
-	}
+    private Object[] args;
 
-	public SSQLException(String messageCode, Object[] args, String sqlState) {
-	    this(messageCode, args, sqlState, 0, null);
-	}
+    public SSQLException(String messageCode, Object[] args) {
+        this(messageCode, args, null, 0, null);
+    }
 
-	public SSQLException(String messageCode, Object[] args, String sqlState, Throwable cause) {
-	    this(messageCode, args, sqlState, 0, cause);
-	}
+    public SSQLException(String messageCode, Object[] args, Throwable cause) {
+        this(messageCode, args, null, 0, cause);
+    }
 
-	public SSQLException(String messageCode, Object[] args, String sqlState, int vendorCode) {
-	    this(messageCode, args, sqlState, vendorCode, null);
-	}
+    public SSQLException(String messageCode, Object[] args, String sqlState) {
+        this(messageCode, args, sqlState, 0, null);
+    }
 
-	public SSQLException(String messageCode, Object[] args, String sqlState, int vendorCode, Throwable cause) {
-		super(MessageFormatter.getMessage(messageCode, args), sqlState, vendorCode);
-		this.messageCode = messageCode;
-		this.args = args;
-		initCause(cause);
-		if (cause instanceof SQLException) {
-		    setNextException((SQLException) cause);
-		}
-	}
+    public SSQLException(String messageCode, Object[] args, String sqlState,
+            Throwable cause) {
+        this(messageCode, args, sqlState, 0, cause);
+    }
 
-	public String getMessageCode() {
-		return messageCode;
-	}
-	
-	public Object[] getArgs() {
-		return args;
-	}
+    public SSQLException(String messageCode, Object[] args, String sqlState,
+            int vendorCode) {
+        this(messageCode, args, sqlState, vendorCode, null);
+    }
+
+    public SSQLException(String messageCode, Object[] args, String sqlState,
+            int vendorCode, Throwable cause) {
+        super(MessageFormatter.getMessage(messageCode, args), sqlState,
+                vendorCode);
+        this.messageCode = messageCode;
+        this.args = args;
+        initCause(cause);
+        if (cause instanceof SQLException) {
+            setNextException((SQLException) cause);
+        }
+    }
+
+    public String getMessageCode() {
+        return messageCode;
+    }
+
+    public Object[] getArgs() {
+        return args;
+    }
 }

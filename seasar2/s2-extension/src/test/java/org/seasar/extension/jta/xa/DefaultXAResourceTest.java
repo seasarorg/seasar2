@@ -23,9 +23,6 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
-import org.seasar.extension.jta.xa.DefaultXAResource;
-import org.seasar.extension.jta.xa.XidImpl;
-
 public class DefaultXAResourceTest extends TestCase {
 
     public DefaultXAResourceTest(String name) {
@@ -64,7 +61,7 @@ public class DefaultXAResourceTest extends TestCase {
             xaRes3.start(xid, XAResource.TMJOIN);
             fail("7");
         } catch (XAException ex) {
-          System.out.println(ex);
+            System.out.println(ex);
         }
 
         DefaultXAResource xaRes4 = new DefaultXAResource();
@@ -250,11 +247,12 @@ public class DefaultXAResourceTest extends TestCase {
     protected void tearDown() throws Exception {
     }
 
-    public static Test suite ( ) {
+    public static Test suite() {
         return new TestSuite(DefaultXAResourceTest.class);
     }
 
-    public static void main (String[] args) {
-        junit.textui.TestRunner.main(new String[]{DefaultXAResourceTest.class.getName()});
+    public static void main(String[] args) {
+        junit.textui.TestRunner.main(new String[] { DefaultXAResourceTest.class
+                .getName() });
     }
 }

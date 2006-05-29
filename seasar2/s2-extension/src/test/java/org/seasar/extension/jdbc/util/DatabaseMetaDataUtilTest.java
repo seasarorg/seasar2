@@ -53,7 +53,7 @@ public class DatabaseMetaDataUtilTest extends S2TestCase {
     public void testGetPrimaryKeyList() throws Exception {
         DatabaseMetaData dbMetaData = getConnection().getMetaData();
         Set primaryKeySet = DatabaseMetaDataUtil.getPrimaryKeySet(dbMetaData,
-            "emp");
+                "emp");
         System.out.println(primaryKeySet);
         assertTrue("1", primaryKeySet.size() > 0);
         System.out.println(dbMetaData.getDatabaseProductName());
@@ -66,8 +66,11 @@ public class DatabaseMetaDataUtilTest extends S2TestCase {
     public static class SimpleDataSource implements DataSource {
 
         private String driverClassName_;
+
         private String url_;
+
         private String user_;
+
         private String password_;
 
         public Connection getConnection() throws SQLException {
@@ -80,7 +83,7 @@ public class DatabaseMetaDataUtilTest extends S2TestCase {
         }
 
         public Connection getConnection(String username, String password)
-            throws SQLException {
+                throws SQLException {
             return null;
         }
 

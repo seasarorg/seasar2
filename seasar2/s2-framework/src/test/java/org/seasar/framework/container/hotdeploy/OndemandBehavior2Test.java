@@ -27,18 +27,20 @@ import org.seasar.framework.util.ClassUtil;
  * 
  */
 public class OndemandBehavior2Test extends TestCase {
-    
+
     private OndemandBehavior ondemand;
 
     protected void setUp() {
-        String basePath = ClassUtil.getPackageName(getClass()).replace('.', '/') + "/"; 
+        String basePath = ClassUtil.getPackageName(getClass())
+                .replace('.', '/')
+                + "/";
         S2ContainerFactory.configure(basePath + "hotdeploy.dicon");
         SingletonS2ContainerFactory.setConfigPath(basePath + "app.dicon");
         SingletonS2ContainerFactory.init();
         ondemand = (OndemandBehavior) S2ContainerBehavior.getProvider();
         ondemand.start();
     }
-    
+
     protected void tearDown() {
         ondemand.stop();
         SingletonS2ContainerFactory.destroy();

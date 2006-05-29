@@ -15,26 +15,24 @@
  */
 package org.seasar.framework.exception;
 
-
 /**
  * @author higa
- *
+ * 
  */
 public final class IllegalAccessRuntimeException extends SRuntimeException {
 
     private static final long serialVersionUID = -3649900343028907465L;
 
-	private Class targetClass;
+    private Class targetClass;
 
-	public IllegalAccessRuntimeException(
-		Class targetClass,
-		IllegalAccessException cause) {
+    public IllegalAccessRuntimeException(Class targetClass,
+            IllegalAccessException cause) {
 
-		super("ESSR0042", new Object[] { targetClass.getName(), cause }, cause);
-		this.targetClass = targetClass;
-	}
+        super("ESSR0042", new Object[] { targetClass.getName(), cause }, cause);
+        this.targetClass = targetClass;
+    }
 
-	public Class getTargetClass() {
-		return targetClass;
-	}
+    public Class getTargetClass() {
+        return targetClass;
+    }
 }

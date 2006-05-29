@@ -24,7 +24,7 @@ public class GreetingImpl implements Greeting, Serializable {
     public String greet() {
         return "Hello2";
     }
-    
+
     public String toString() {
         return "hoge";
     }

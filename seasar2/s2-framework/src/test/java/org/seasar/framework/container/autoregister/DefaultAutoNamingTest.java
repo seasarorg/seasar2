@@ -17,8 +17,6 @@ package org.seasar.framework.container.autoregister;
 
 import junit.framework.TestCase;
 
-import org.seasar.framework.container.autoregister.DefaultAutoNaming;
-
 /**
  * @author higa
  */

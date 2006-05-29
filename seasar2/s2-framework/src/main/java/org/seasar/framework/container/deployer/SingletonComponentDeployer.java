@@ -26,12 +26,12 @@ import org.seasar.framework.hotswap.HotswapTargetFactory;
  * 
  */
 public class SingletonComponentDeployer extends AbstractComponentDeployer
-    implements HotswapTargetFactory {
+        implements HotswapTargetFactory {
 
     private Object component;
-    
+
     private Object hotswapTarget;
-    
+
     private Hotswap hotswap;
 
     private boolean instantiating = false;
@@ -69,7 +69,8 @@ public class SingletonComponentDeployer extends AbstractComponentDeployer
                 hotswapTarget = o;
                 if (component == null) {
                     component = HotswapProxy.create(getComponentDef()
-                            .getComponentClass(), this, Thread.currentThread().getContextClassLoader());
+                            .getComponentClass(), this, Thread.currentThread()
+                            .getContextClassLoader());
                 }
             } else {
                 component = o;
@@ -80,7 +81,7 @@ public class SingletonComponentDeployer extends AbstractComponentDeployer
         getPropertyAssembler().assemble(getTarget());
         getInitMethodAssembler().assemble(getTarget());
     }
-    
+
     protected Object getTarget() {
         return hotswapTarget != null ? hotswapTarget : component;
     }
@@ -95,7 +96,7 @@ public class SingletonComponentDeployer extends AbstractComponentDeployer
         }
         deploy();
     }
-    
+
     protected boolean isAppliedHotswap() {
         Class clazz = getComponentDef().getComponentClass();
         if (clazz == null) {
@@ -131,6 +132,5 @@ public class SingletonComponentDeployer extends AbstractComponentDeployer
         }
         return hotswapTarget;
     }
-    
-    
+
 }

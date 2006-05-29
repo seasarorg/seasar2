@@ -45,7 +45,8 @@ public class RequestComponentDeployer extends AbstractComponentDeployer {
     public Object deploy() {
         ComponentDef cd = getComponentDef();
         HttpServletRequest request = null;
-        ExternalContext extCtx = cd.getContainer().getRoot().getExternalContext();
+        ExternalContext extCtx = cd.getContainer().getRoot()
+                .getExternalContext();
         if (extCtx != null && extCtx.getRequest() instanceof HttpServletRequest) {
             request = (HttpServletRequest) extCtx.getRequest();
         }

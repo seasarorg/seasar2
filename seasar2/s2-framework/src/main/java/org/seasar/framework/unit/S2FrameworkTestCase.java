@@ -38,7 +38,6 @@ import org.seasar.framework.exception.NoSuchMethodRuntimeException;
 import org.seasar.framework.mock.servlet.MockHttpServletRequest;
 import org.seasar.framework.mock.servlet.MockHttpServletResponse;
 import org.seasar.framework.mock.servlet.MockHttpServletResponseImpl;
-import org.seasar.framework.mock.servlet.MockServlet;
 import org.seasar.framework.mock.servlet.MockServletConfig;
 import org.seasar.framework.mock.servlet.MockServletConfigImpl;
 import org.seasar.framework.mock.servlet.MockServletContext;
@@ -180,13 +179,15 @@ public abstract class S2FrameworkTestCase extends TestCase {
         externalContext.setRequest(request);
         externalContext.setResponse(response);
         container.setExternalContext(externalContext);
-        container.setExternalContextComponentDefRegister(
-                new HttpServletExternalContextComponentDefRegister());
-        ComponentDeployerFactory.setProvider(new HttpServletComponentDeployerProvider());
+        container
+                .setExternalContextComponentDefRegister(new HttpServletExternalContextComponentDefRegister());
+        ComponentDeployerFactory
+                .setProvider(new HttpServletComponentDeployerProvider());
     }
 
     protected void tearDownContainer() throws Throwable {
-        ComponentDeployerFactory.setProvider(new ComponentDeployerFactory.DefaultProvider());
+        ComponentDeployerFactory
+                .setProvider(new ComponentDeployerFactory.DefaultProvider());
         SingletonS2ContainerFactory.setContainer(null);
         S2ContainerServlet.clearInstance();
         container = null;
@@ -222,7 +223,7 @@ public abstract class S2FrameworkTestCase extends TestCase {
             invoke("tearDown" + getTargetName());
         }
     }
-    
+
     protected void doRunTest() throws Throwable {
         runTest();
     }

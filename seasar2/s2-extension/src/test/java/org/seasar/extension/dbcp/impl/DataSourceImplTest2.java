@@ -26,36 +26,37 @@ import org.seasar.extension.unit.S2TestCase;
 
 public class DataSourceImplTest2 extends S2TestCase {
 
-	private static final String PATH = "j2ee.dicon";
-	private DataSource ds_;
+    private static final String PATH = "j2ee.dicon";
 
-	public DataSourceImplTest2(String name) {
-		super(name);
-	}
+    private DataSource ds_;
 
-	public void testGetConnection() throws Exception {
-		Connection con = null;
-		try {
-			con = ds_.getConnection();
-			assertNotNull("1", con);
-		} finally {
-			con.close();
-		}
-	}
+    public DataSourceImplTest2(String name) {
+        super(name);
+    }
 
-	protected void setUp() throws Exception {
-		include(PATH);
-	}
+    public void testGetConnection() throws Exception {
+        Connection con = null;
+        try {
+            con = ds_.getConnection();
+            assertNotNull("1", con);
+        } finally {
+            con.close();
+        }
+    }
 
-	protected void tearDown() throws Exception {
-	}
+    protected void setUp() throws Exception {
+        include(PATH);
+    }
 
-	public static Test suite() {
-		return new TestSuite(DataSourceImplTest2.class);
-	}
+    protected void tearDown() throws Exception {
+    }
 
-	public static void main(String[] args) {
-		junit.textui.TestRunner.main(
-			new String[] { DataSourceImplTest2.class.getName()});
-	}
+    public static Test suite() {
+        return new TestSuite(DataSourceImplTest2.class);
+    }
+
+    public static void main(String[] args) {
+        junit.textui.TestRunner.main(new String[] { DataSourceImplTest2.class
+                .getName() });
+    }
 }

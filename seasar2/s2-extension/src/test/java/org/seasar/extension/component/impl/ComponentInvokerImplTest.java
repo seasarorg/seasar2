@@ -21,19 +21,21 @@ import org.seasar.framework.unit.S2FrameworkTestCase;
 public class ComponentInvokerImplTest extends S2FrameworkTestCase {
 
     private ComponentInvoker invoker;
-    
-	public void testInvoke() throws Throwable {
-		assertEquals("1", new Integer(4), invoker.invoke("aaa", "length", null));
+
+    public void testInvoke() throws Throwable {
+        assertEquals("1", new Integer(4), invoker.invoke("aaa", "length", null));
         try {
-            invoker.invoke("aaa", "substring", new Object[]{new Integer(-1)});
+            invoker
+                    .invoke("aaa", "substring",
+                            new Object[] { new Integer(-1) });
             fail("1");
         } catch (StringIndexOutOfBoundsException ex) {
             System.out.println(ex);
         }
-	}
-		
-	protected void setUp() throws Exception {
+    }
+
+    protected void setUp() throws Exception {
         register(ComponentInvokerImpl.class);
         register("Hoge", "aaa");
-	}
+    }
 }

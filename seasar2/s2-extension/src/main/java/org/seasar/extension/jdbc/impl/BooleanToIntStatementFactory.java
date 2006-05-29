@@ -24,17 +24,19 @@ import org.seasar.extension.jdbc.util.ConnectionUtil;
 
 /**
  * @author higa
- *
+ * 
  */
 public class BooleanToIntStatementFactory implements StatementFactory {
-	
-	public static final StatementFactory INSTANCE = new BooleanToIntStatementFactory();
-	
-	public PreparedStatement createPreparedStatement(Connection con, String sql) {
-		return new BooleanToIntPreparedStatement(ConnectionUtil.prepareStatement(con, sql));
-	}
-	
-	public CallableStatement createCallableStatement(Connection con, String sql) {
-		return new BooleanToIntCallableStatement(ConnectionUtil.prepareCall(con, sql));
-	}
+
+    public static final StatementFactory INSTANCE = new BooleanToIntStatementFactory();
+
+    public PreparedStatement createPreparedStatement(Connection con, String sql) {
+        return new BooleanToIntPreparedStatement(ConnectionUtil
+                .prepareStatement(con, sql));
+    }
+
+    public CallableStatement createCallableStatement(Connection con, String sql) {
+        return new BooleanToIntCallableStatement(ConnectionUtil.prepareCall(
+                con, sql));
+    }
 }

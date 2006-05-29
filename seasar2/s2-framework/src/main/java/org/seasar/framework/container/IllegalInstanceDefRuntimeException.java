@@ -19,23 +19,23 @@ import org.seasar.framework.exception.SRuntimeException;
 
 /**
  * @author higa
- *
+ * 
  */
 public class IllegalInstanceDefRuntimeException extends SRuntimeException {
 
     private static final long serialVersionUID = -3505265879782048528L;
 
-	private String instanceName;
-	
-	/**
-	 * @param instanceName
-	 */
-	public IllegalInstanceDefRuntimeException(String instanceName) {
-		super("ESSR0078", new Object[] { instanceName});
-		this.instanceName = instanceName;
-	}
-	
-	public String getInstanceName() {
-		return instanceName;
-	}
+    private String instanceName;
+
+    /**
+     * @param instanceName
+     */
+    public IllegalInstanceDefRuntimeException(String instanceName) {
+        super("ESSR0078", new Object[] { instanceName });
+        this.instanceName = instanceName;
+    }
+
+    public String getInstanceName() {
+        return instanceName;
+    }
 }

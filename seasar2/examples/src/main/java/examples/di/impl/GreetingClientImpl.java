@@ -25,7 +25,7 @@ public class GreetingClientImpl implements GreetingClient {
     public void setGreeting(Greeting greeting) {
         this.greeting = greeting;
     }
-    
+
     public void execute() {
         System.out.println(greeting.greet());
     }

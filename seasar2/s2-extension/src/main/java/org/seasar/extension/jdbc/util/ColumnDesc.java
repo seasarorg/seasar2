@@ -17,12 +17,12 @@ package org.seasar.extension.jdbc.util;
 
 /**
  * @author higa
- *
+ * 
  */
 public class ColumnDesc {
 
     private String name;
-    
+
     private int sqlType;
 
     public String getName() {
@@ -40,11 +40,11 @@ public class ColumnDesc {
     public void setSqlType(int sqlType) {
         this.sqlType = sqlType;
     }
-    
+
     public int hashCode() {
         return name.hashCode();
     }
-    
+
     public boolean equals(Object o) {
         if (o == this) {
             return true;
@@ -55,7 +55,7 @@ public class ColumnDesc {
         ColumnDesc other = (ColumnDesc) o;
         return name.equals(other.name);
     }
-    
+
     public String toString() {
         return "{name:" + name + ", type:" + sqlType + "}";
     }

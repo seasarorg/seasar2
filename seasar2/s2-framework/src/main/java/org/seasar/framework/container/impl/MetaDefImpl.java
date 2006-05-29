@@ -19,28 +19,28 @@ import org.seasar.framework.container.MetaDef;
 
 /**
  * @author higa
- *
+ * 
  */
 public class MetaDefImpl extends ArgDefImpl implements MetaDef {
 
-	private String name;
-	
-	public MetaDefImpl() {
-	}
-	
-	public MetaDefImpl(String name) {
-		this.name = name;
-	}
-		
-	public MetaDefImpl(String name, Object value) {
-		super(value);
-		this.name = name;
-	}
-	
-	/**
-	 * @see org.seasar.framework.container.MetaDef#getName()
-	 */
-	public String getName() {
-		return name;
-	}
+    private String name;
+
+    public MetaDefImpl() {
+    }
+
+    public MetaDefImpl(String name) {
+        this.name = name;
+    }
+
+    public MetaDefImpl(String name, Object value) {
+        super(value);
+        this.name = name;
+    }
+
+    /**
+     * @see org.seasar.framework.container.MetaDef#getName()
+     */
+    public String getName() {
+        return name;
+    }
 }

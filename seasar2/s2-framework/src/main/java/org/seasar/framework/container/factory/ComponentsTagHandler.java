@@ -25,41 +25,42 @@ import org.xml.sax.Attributes;
 
 /**
  * @author higa
- *
+ * 
  */
 public class ComponentsTagHandler extends TagHandler {
     private static final long serialVersionUID = 3182865184697069169L;
 
-	protected Class containerImplClass = S2ContainerImpl.class;
-	
-	public Class getContainerImplClass() {
-		return containerImplClass;
-	}
-	
-	public void setContainerImplClass(Class containerImplClass) {
-		this.containerImplClass = containerImplClass;
-	}
-	
-	/**
-	 * @see org.seasar.framework.xml.sax.handler.TagHandler#start(org.seasar.framework.xml.sax.handler.TagHandlerContext, org.xml.sax.Attributes)
-	 */
-	public void start(TagHandlerContext context, Attributes attributes) {
-		S2Container container = createContainer();
-		String path = (String) context.getParameter("path");
-		container.setPath(path);
-		String namespace = attributes.getValue("namespace");
-		if (!StringUtil.isEmpty(namespace)) {
-			container.setNamespace(namespace); 
-		}
+    protected Class containerImplClass = S2ContainerImpl.class;
 
-		S2Container parent = (S2Container) context.getParameter("parent");
-		if (parent != null) {
-			container.setRoot(parent.getRoot());
-		}
-		context.push(container);
-	}
+    public Class getContainerImplClass() {
+        return containerImplClass;
+    }
 
-	protected S2Container createContainer() {
-		return (S2Container) ClassUtil.newInstance(containerImplClass);
-	}
+    public void setContainerImplClass(Class containerImplClass) {
+        this.containerImplClass = containerImplClass;
+    }
+
+    /**
+     * @see org.seasar.framework.xml.sax.handler.TagHandler#start(org.seasar.framework.xml.sax.handler.TagHandlerContext,
+     *      org.xml.sax.Attributes)
+     */
+    public void start(TagHandlerContext context, Attributes attributes) {
+        S2Container container = createContainer();
+        String path = (String) context.getParameter("path");
+        container.setPath(path);
+        String namespace = attributes.getValue("namespace");
+        if (!StringUtil.isEmpty(namespace)) {
+            container.setNamespace(namespace);
+        }
+
+        S2Container parent = (S2Container) context.getParameter("parent");
+        if (parent != null) {
+            container.setRoot(parent.getRoot());
+        }
+        context.push(container);
+    }
+
+    protected S2Container createContainer() {
+        return (S2Container) ClassUtil.newInstance(containerImplClass);
+    }
 }

@@ -25,51 +25,49 @@ import org.seasar.framework.exception.SQLRuntimeException;
 
 /**
  * @author higa
- *
+ * 
  */
 public final class ConnectionUtil {
 
-	private ConnectionUtil() {
-	}
+    private ConnectionUtil() {
+    }
 
-	public static void close(Connection connection) {
-		if (connection == null) {
-			return;
-		}
-		try {
-			connection.close();
-		} catch (SQLException ex) {
-			throw new SQLRuntimeException(ex);
-		}
-	}
-	
-	public static PreparedStatement prepareStatement(
-		Connection connection,
-		String sql) {
+    public static void close(Connection connection) {
+        if (connection == null) {
+            return;
+        }
+        try {
+            connection.close();
+        } catch (SQLException ex) {
+            throw new SQLRuntimeException(ex);
+        }
+    }
 
-		try {
-			return connection.prepareStatement(sql);
-		} catch (SQLException ex) {
-			throw new SQLRuntimeException(ex);
-		}
-	}
-	
-	public static CallableStatement prepareCall(
-			Connection connection,
-			String sql) {
+    public static PreparedStatement prepareStatement(Connection connection,
+            String sql) {
 
-			try {
-				return connection.prepareCall(sql);
-			} catch (SQLException ex) {
-				throw new SQLRuntimeException(ex);
-			}
-		}
-	
-	public static DatabaseMetaData getMetaData(Connection connection) {
-		try {
-			return connection.getMetaData();
-		} catch (SQLException ex) {
-			throw new SQLRuntimeException(ex);
-		}
-	}
+        try {
+            return connection.prepareStatement(sql);
+        } catch (SQLException ex) {
+            throw new SQLRuntimeException(ex);
+        }
+    }
+
+    public static CallableStatement prepareCall(Connection connection,
+            String sql) {
+
+        try {
+            return connection.prepareCall(sql);
+        } catch (SQLException ex) {
+            throw new SQLRuntimeException(ex);
+        }
+    }
+
+    public static DatabaseMetaData getMetaData(Connection connection) {
+        try {
+            return connection.getMetaData();
+        } catch (SQLException ex) {
+            throw new SQLRuntimeException(ex);
+        }
+    }
 }

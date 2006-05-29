@@ -22,9 +22,6 @@ import java.util.Arrays;
 import junit.framework.TestCase;
 
 import org.aopalliance.intercept.MethodInvocation;
-import org.seasar.framework.aop.javassist.ClassPoolUtil;
-import org.seasar.framework.aop.javassist.EnhancedClassGenerator;
-import org.seasar.framework.aop.javassist.MethodInvocationClassGenerator;
 
 /**
  * @author koichik
@@ -39,22 +36,31 @@ public class EnhancedClassGeneratorTest extends TestCase {
     }
 
     public void testNormalizeExceptionTypes() throws Exception {
-        assertTrue("1", Arrays.equals(new Class[] { Throwable.class }, EnhancedClassGenerator
-                .normalizeExceptionTypes(new Class[] { Throwable.class })));
-        assertTrue("2", Arrays.equals(new Class[] { Throwable.class }, EnhancedClassGenerator
-                .normalizeExceptionTypes(new Class[] { Throwable.class, Exception.class })));
-        assertTrue("3", Arrays.equals(new Class[] { Throwable.class }, EnhancedClassGenerator
-                .normalizeExceptionTypes(new Class[] { Throwable.class, Exception.class,
-                        Error.class })));
-        assertTrue("4", Arrays.equals(new Class[] { Exception.class, Error.class },
-                EnhancedClassGenerator.normalizeExceptionTypes(new Class[] { Exception.class,
-                        Error.class })));
-        assertTrue("5", Arrays.equals(new Class[] { Exception.class, Error.class },
+        assertTrue(
+                "1",
+                Arrays
+                        .equals(
+                                new Class[] { Throwable.class },
+                                EnhancedClassGenerator
+                                        .normalizeExceptionTypes(new Class[] { Throwable.class })));
+        assertTrue("2", Arrays.equals(new Class[] { Throwable.class },
                 EnhancedClassGenerator.normalizeExceptionTypes(new Class[] {
-                        RuntimeException.class, Exception.class, Error.class })));
-        assertTrue("6", Arrays.equals(new Class[] { RuntimeException.class, IOException.class,
-                Error.class }, EnhancedClassGenerator.normalizeExceptionTypes(new Class[] {
-                RuntimeException.class, IOException.class, Error.class })));
+                        Throwable.class, Exception.class })));
+        assertTrue("3", Arrays.equals(new Class[] { Throwable.class },
+                EnhancedClassGenerator.normalizeExceptionTypes(new Class[] {
+                        Throwable.class, Exception.class, Error.class })));
+        assertTrue("4", Arrays.equals(new Class[] { Exception.class,
+                Error.class }, EnhancedClassGenerator
+                .normalizeExceptionTypes(new Class[] { Exception.class,
+                        Error.class })));
+        assertTrue("5", Arrays.equals(new Class[] { Exception.class,
+                Error.class }, EnhancedClassGenerator
+                .normalizeExceptionTypes(new Class[] { RuntimeException.class,
+                        Exception.class, Error.class })));
+        assertTrue("6", Arrays.equals(new Class[] { RuntimeException.class,
+                IOException.class, Error.class }, EnhancedClassGenerator
+                .normalizeExceptionTypes(new Class[] { RuntimeException.class,
+                        IOException.class, Error.class })));
     }
 
     public void testAroundTryCatchBlock() throws Exception {
@@ -65,8 +71,8 @@ public class EnhancedClassGeneratorTest extends TestCase {
                         + "catch (java.lang.RuntimeException e) {throw e;}"
                         + "catch (java.lang.Error e) {throw e;}"
                         + "catch (java.lang.Throwable e) {throw new java.lang.reflect.UndeclaredThrowableException(e);}",
-                EnhancedClassGenerator.aroundTryCatchBlock(new Class[] { Exception.class },
-                        "return;"));
+                EnhancedClassGenerator.aroundTryCatchBlock(
+                        new Class[] { Exception.class }, "return;"));
 
         assertEquals(
                 "2",
@@ -75,8 +81,8 @@ public class EnhancedClassGeneratorTest extends TestCase {
                         + "catch (java.io.IOException e) {throw e;}"
                         + "catch (java.lang.Error e) {throw e;}"
                         + "catch (java.lang.Throwable e) {throw new java.lang.reflect.UndeclaredThrowableException(e);}",
-                EnhancedClassGenerator.aroundTryCatchBlock(new Class[] { RuntimeException.class,
-                        IOException.class }, "return;"));
+                EnhancedClassGenerator.aroundTryCatchBlock(new Class[] {
+                        RuntimeException.class, IOException.class }, "return;"));
     }
 
     public void testCreateTargetMethodSource() throws Exception {
@@ -91,8 +97,8 @@ public class EnhancedClassGeneratorTest extends TestCase {
                         + "catch (java.lang.RuntimeException e) {throw e;}"
                         + "catch (java.lang.Error e) {throw e;}"
                         + "catch (java.lang.Throwable e) {throw new java.lang.reflect.UndeclaredThrowableException(e);}"
-                        + "}", EnhancedClassGenerator.createTargetMethodSource(method1,
-                        "MethodInvocation"));
+                        + "}", EnhancedClassGenerator.createTargetMethodSource(
+                        method1, "MethodInvocation"));
 
         Method method2 = Object.class.getMethod("wait", null);
         assertEquals(
@@ -106,32 +112,40 @@ public class EnhancedClassGeneratorTest extends TestCase {
                         + "catch (java.lang.RuntimeException e) {throw e;}"
                         + "catch (java.lang.Error e) {throw e;}"
                         + "catch (java.lang.Throwable e) {throw new java.lang.reflect.UndeclaredThrowableException(e);}"
-                        + "}", EnhancedClassGenerator.createTargetMethodSource(method2,
-                        "MethodInvocation"));
+                        + "}", EnhancedClassGenerator.createTargetMethodSource(
+                        method2, "MethodInvocation"));
 
         Method method3 = MethodInvocation.class.getMethod("proceed", null);
-        assertEquals("3", "{" + "Object result = new MethodInvocation(this, $args).proceed();"
-                + "return ($r) result;" + "}", EnhancedClassGenerator.createTargetMethodSource(
-                method3, "MethodInvocation"));
+        assertEquals(
+                "3",
+                "{"
+                        + "Object result = new MethodInvocation(this, $args).proceed();"
+                        + "return ($r) result;" + "}", EnhancedClassGenerator
+                        .createTargetMethodSource(method3, "MethodInvocation"));
     }
 
     public void testCreateInvokeSuperMethodSource() throws Exception {
         Method method = Object.class.getMethod("wait", null);
-        assertEquals("1", "{" + "return ($r) super.wait($$);" + "}", EnhancedClassGenerator
-                .createInvokeSuperMethodSource(method));
+        assertEquals("1", "{" + "return ($r) super.wait($$);" + "}",
+                EnhancedClassGenerator.createInvokeSuperMethodSource(method));
     }
 
     public void testGenerateFromInterface() throws Exception {
         Method[] methods = TargetInterface.class.getDeclaredMethods();
         for (int i = 0; i < methods.length; ++i) {
-            EnhancedClassGenerator generator = new EnhancedClassGenerator(ClassPoolUtil
-                    .getClassPool(TargetInterface.class), TargetInterface.class, TargetInterface.class.getName() + i);
-            generator.createTargetMethod(methods[i],
-                    MethodInvocationClassGenerator.MethodInvocationTemplate.class.getName());
+            EnhancedClassGenerator generator = new EnhancedClassGenerator(
+                    ClassPoolUtil.getClassPool(TargetInterface.class),
+                    TargetInterface.class, TargetInterface.class.getName() + i);
+            generator
+                    .createTargetMethod(
+                            methods[i],
+                            MethodInvocationClassGenerator.MethodInvocationTemplate.class
+                                    .getName());
             Class clazz = generator.toClass(getClass().getClassLoader());
-            assertEquals("1", TargetInterface.class.getName() + i, clazz.getName());
-            Method method = clazz.getDeclaredMethod(methods[i].getName(), methods[i]
-                    .getParameterTypes());
+            assertEquals("1", TargetInterface.class.getName() + i, clazz
+                    .getName());
+            Method method = clazz.getDeclaredMethod(methods[i].getName(),
+                    methods[i].getParameterTypes());
             assertEquals("2", methods[i].getName(), method.getName());
         }
     }
@@ -139,19 +153,26 @@ public class EnhancedClassGeneratorTest extends TestCase {
     public void testGenerateFromClass() throws Exception {
         Method[] methods = TargetClass.class.getDeclaredMethods();
         for (int i = 0; i < methods.length; ++i) {
-            EnhancedClassGenerator generator = new EnhancedClassGenerator(ClassPoolUtil
-                    .getClassPool(TargetClass.class), TargetClass.class, TargetClass.class.getName() + i);
-            generator.createInvokeSuperMethod(methods[i], methods[i].getName() + "__invokeSuper__");
-            generator.createTargetMethod(methods[i],
-                    MethodInvocationClassGenerator.MethodInvocationTemplate.class.getName());
+            EnhancedClassGenerator generator = new EnhancedClassGenerator(
+                    ClassPoolUtil.getClassPool(TargetClass.class),
+                    TargetClass.class, TargetClass.class.getName() + i);
+            generator.createInvokeSuperMethod(methods[i], methods[i].getName()
+                    + "__invokeSuper__");
+            generator
+                    .createTargetMethod(
+                            methods[i],
+                            MethodInvocationClassGenerator.MethodInvocationTemplate.class
+                                    .getName());
             Class clazz = generator.toClass(getClass().getClassLoader());
             assertEquals("1", TargetClass.class.getName() + i, clazz.getName());
-            Method method = clazz.getDeclaredMethod(methods[i].getName(), methods[i]
-                    .getParameterTypes());
+            Method method = clazz.getDeclaredMethod(methods[i].getName(),
+                    methods[i].getParameterTypes());
             assertEquals("2", methods[i].getName(), method.getName());
-            Method invokeSuperMethod = clazz.getDeclaredMethod(methods[i].getName()
+            Method invokeSuperMethod = clazz.getDeclaredMethod(methods[i]
+                    .getName()
                     + "__invokeSuper__", methods[i].getParameterTypes());
-            assertEquals("3", methods[i].getName() + "__invokeSuper__", invokeSuperMethod.getName());
+            assertEquals("3", methods[i].getName() + "__invokeSuper__",
+                    invokeSuperMethod.getName());
         }
     }
 
@@ -214,9 +235,9 @@ public class EnhancedClassGeneratorTest extends TestCase {
 
         public String[] f(String[] arg0);
 
-        public void f(boolean arg0, char arg1, byte arg2, short arg3, int arg4, long arg5,
-                float arg6, double arg7, int[] arg8, int[][] arg9, Object arg10, Object[] arg11,
-                String arg12, String[] arg13);
+        public void f(boolean arg0, char arg1, byte arg2, short arg3, int arg4,
+                long arg5, float arg6, double arg7, int[] arg8, int[][] arg9,
+                Object arg10, Object[] arg11, String arg12, String[] arg13);
     }
 
     public static class TargetClass {
@@ -335,9 +356,9 @@ public class EnhancedClassGeneratorTest extends TestCase {
             return arg0;
         }
 
-        public void f(boolean arg0, char arg1, byte arg2, short arg3, int arg4, long arg5,
-                float arg6, double arg7, int[] arg8, int[][] arg9, Object arg10, Object[] arg11,
-                String arg12, String[] arg13) {
+        public void f(boolean arg0, char arg1, byte arg2, short arg3, int arg4,
+                long arg5, float arg6, double arg7, int[] arg8, int[][] arg9,
+                Object arg10, Object[] arg11, String arg12, String[] arg13) {
         }
     }
 }

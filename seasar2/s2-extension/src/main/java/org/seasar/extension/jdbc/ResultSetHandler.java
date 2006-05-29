@@ -20,9 +20,9 @@ import java.sql.SQLException;
 
 /**
  * @author higa
- *
+ * 
  */
 public interface ResultSetHandler {
 
-	public Object handle(ResultSet resultSet) throws SQLException;
+    public Object handle(ResultSet resultSet) throws SQLException;
 }

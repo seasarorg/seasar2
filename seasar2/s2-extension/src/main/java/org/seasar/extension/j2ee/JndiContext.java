@@ -41,7 +41,7 @@ import org.seasar.framework.util.StringUtil;
 public class JndiContext implements Context {
     public static final String ENC_PREFIX = "java:comp/env/";
 
-    //public static final String ENC_NAMESPACE = "j2ee";
+    // public static final String ENC_NAMESPACE = "j2ee";
 
     protected static final Map MAGIC_COMPONENTS = new HashMap();
     static {
@@ -219,45 +219,30 @@ public class JndiContext implements Context {
             throw createNamingException(e.getMessage(), e);
         }
     }
-/*
-    protected Object lookup(final String[] names) throws NamingException {
-        //final StringBuffer buf = new StringBuffer(100);
-        try {
-            S2Container context = container;
-            for (int i = 0; i < names.length - 1; ++i) {
-                //buf.append(names[i]);
-                context = (S2Container) context.getComponent(names[i]);
-                //buf.append('/');
-            }
-            final String name = names[names.length - 1];
-            //buf.append(name);
-            return context.getComponent(name);
-        } catch (final ComponentNotFoundRuntimeException e) {
-            final StringBuffer buf = new StringBuffer(100);
-            for (int i = 0; i < names.length - 1; ++i) {
-                buf.append(names[i]);
-                buf.append('/');
-                buf.append(names[names.length - 1]);
-            }
-            throw createNamingException(new String(buf), e);
-        } catch (final SRuntimeException e) {
-            throw createNamingException(e.getMessage(), e);
-        }
-    }
-*/
+
+    /*
+     * protected Object lookup(final String[] names) throws NamingException {
+     * //final StringBuffer buf = new StringBuffer(100); try { S2Container
+     * context = container; for (int i = 0; i < names.length - 1; ++i) {
+     * //buf.append(names[i]); context = (S2Container)
+     * context.getComponent(names[i]); //buf.append('/'); } final String name =
+     * names[names.length - 1]; //buf.append(name); return
+     * context.getComponent(name); } catch (final
+     * ComponentNotFoundRuntimeException e) { final StringBuffer buf = new
+     * StringBuffer(100); for (int i = 0; i < names.length - 1; ++i) {
+     * buf.append(names[i]); buf.append('/'); buf.append(names[names.length -
+     * 1]); } throw createNamingException(new String(buf), e); } catch (final
+     * SRuntimeException e) { throw createNamingException(e.getMessage(), e); } }
+     */
     protected String resolveName(final Name name) {
         /*
-        StringBuffer buf = new StringBuffer(100);
-        for (int i = 0; i < name.size(); ++i) {
-            buf.append(name.get(i));
-            buf.append("/");
-        }
-        buf.setLength(buf.length() - 1);
-        return resolveName(buf.toString());
-        */
+         * StringBuffer buf = new StringBuffer(100); for (int i = 0; i <
+         * name.size(); ++i) { buf.append(name.get(i)); buf.append("/"); }
+         * buf.setLength(buf.length() - 1); return resolveName(buf.toString());
+         */
         return resolveName(name.toString());
     }
-    
+
     protected String resolveName(final String name) {
         String n = name;
         if (MAGIC_COMPONENTS.containsKey(name)) {
@@ -268,15 +253,12 @@ public class JndiContext implements Context {
         }
         return StringUtil.replace(n, "/", ContainerConstants.NS_SEP_STR);
     }
-/*
-    protected String toStringArray(final Name name) {
-        final String[] names = new String[name.size()];
-        for (int i = 0; i < name.size(); ++i) {
-            names[i] = name.get(i);
-        }
-        return names;
-    }
-*/
+
+    /*
+     * protected String toStringArray(final Name name) { final String[] names =
+     * new String[name.size()]; for (int i = 0; i < name.size(); ++i) { names[i] =
+     * name.get(i); } return names; }
+     */
     protected NamingException createNamingException(final String message,
             final Throwable cause) {
         final NamingException e = new NamingException(message);

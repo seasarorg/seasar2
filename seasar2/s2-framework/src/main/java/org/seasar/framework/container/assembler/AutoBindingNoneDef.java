@@ -19,21 +19,22 @@ import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.ConstructorAssembler;
 import org.seasar.framework.container.PropertyAssembler;
 
-
 /**
  * @author higa
- *
+ * 
  */
 public class AutoBindingNoneDef extends AbstractAutoBindingDef {
 
     protected AutoBindingNoneDef(String name) {
         super(name);
     }
-    
-    public ConstructorAssembler createConstructorAssembler(ComponentDef componentDef) {
-        return AssemblerFactory.createDefaultConstructorConstructorAssembler(componentDef);
+
+    public ConstructorAssembler createConstructorAssembler(
+            ComponentDef componentDef) {
+        return AssemblerFactory
+                .createDefaultConstructorConstructorAssembler(componentDef);
     }
-    
+
     public PropertyAssembler createPropertyAssembler(ComponentDef componentDef) {
         return AssemblerFactory.createManualOnlyPropertyAssembler(componentDef);
     }

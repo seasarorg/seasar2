@@ -21,18 +21,26 @@ import junit.framework.TestCase;
  * @author higa
  */
 public class DefaultConventionNamingTest extends TestCase {
-    
+
     public void testDefineName() throws Exception {
         DefaultConventionNaming naming = new DefaultConventionNaming();
-        assertEquals("1", "aaa_bbbPage", naming.defineName("xxx", "web", "Page", "xxx.web.aaa.BbbPage"));
-        assertEquals("2", "aaa_bbbService", naming.defineName("xxx", "web", "Service", "xxx.web.aaa.impl.BbbServiceImpl"));
-        assertEquals("3", "cccLogic", naming.defineName("xxx", "logic", "Logic", "xxx.logic.impl.CccLogicImpl"));
-        assertEquals("4", "dddDao", naming.defineName("xxx", "dao", "Dao", "xxx.dao.DddDao"));
-        
-        String[] packageNames = {"web", "dxo"};
-        assertEquals("5", "aaa_bbbDxo", naming.defineName("xxx", packageNames, "Dxo", "xxx.web.aaa.BbbDxo"));
-        assertEquals("6", "aaa_bbbDxo", naming.defineName("xxx", packageNames, "Dxo", "xxx.web.aaa.impl.BbbDxoImpl"));
-        assertEquals("7", "bbbDxo", naming.defineName("xxx", packageNames, "Dxo", "xxx.dxo.BbbDxo"));
-        assertEquals("8", "bbbDxo", naming.defineName("xxx", packageNames, "Dxo", "xxx.dxo.impl.BbbDxoImpl"));
+        assertEquals("1", "aaa_bbbPage", naming.defineName("xxx", "web",
+                "Page", "xxx.web.aaa.BbbPage"));
+        assertEquals("2", "aaa_bbbService", naming.defineName("xxx", "web",
+                "Service", "xxx.web.aaa.impl.BbbServiceImpl"));
+        assertEquals("3", "cccLogic", naming.defineName("xxx", "logic",
+                "Logic", "xxx.logic.impl.CccLogicImpl"));
+        assertEquals("4", "dddDao", naming.defineName("xxx", "dao", "Dao",
+                "xxx.dao.DddDao"));
+
+        String[] packageNames = { "web", "dxo" };
+        assertEquals("5", "aaa_bbbDxo", naming.defineName("xxx", packageNames,
+                "Dxo", "xxx.web.aaa.BbbDxo"));
+        assertEquals("6", "aaa_bbbDxo", naming.defineName("xxx", packageNames,
+                "Dxo", "xxx.web.aaa.impl.BbbDxoImpl"));
+        assertEquals("7", "bbbDxo", naming.defineName("xxx", packageNames,
+                "Dxo", "xxx.dxo.BbbDxo"));
+        assertEquals("8", "bbbDxo", naming.defineName("xxx", packageNames,
+                "Dxo", "xxx.dxo.impl.BbbDxoImpl"));
     }
 }

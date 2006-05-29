@@ -21,96 +21,98 @@ import javax.transaction.xa.Xid;
 
 public class XidImpl implements Xid, Serializable {
 
-	static final long serialVersionUID = 1L;
-	private static final int FORMAT_ID = 0x1108;
-	private static final byte[] INITIAL_BRANCH_ID = convert64bytes(new byte[0]);
-	private static final String GLOBAL_ID_BASE =
-		System.currentTimeMillis() + "/";
-	private static int nextId_ = 0;
+    static final long serialVersionUID = 1L;
 
-	private int hashCode_;
-	private byte[] globalId_;
-	private byte[] branchId_;
+    private static final int FORMAT_ID = 0x1108;
 
-	public XidImpl() {
-		hashCode_ = getNextId();
-		globalId_ = createGlobalId();
-		branchId_ = INITIAL_BRANCH_ID;
-	}
+    private static final byte[] INITIAL_BRANCH_ID = convert64bytes(new byte[0]);
 
-	public XidImpl(Xid xid, int branchId) {
-		hashCode_ = xid.hashCode();
-		globalId_ = xid.getGlobalTransactionId();
-		branchId_ = convert64bytes(Integer.toString(branchId).getBytes());
-	}
+    private static final String GLOBAL_ID_BASE = System.currentTimeMillis()
+            + "/";
 
-	private byte[] createGlobalId() {
-		return convert64bytes(
-			(GLOBAL_ID_BASE + Integer.toString(hashCode_)).getBytes());
-	}
+    private static int nextId_ = 0;
 
-	public byte[] getGlobalTransactionId() {
-		return (byte[]) globalId_.clone();
-	}
+    private int hashCode_;
 
-	public byte[] getBranchQualifier() {
-		return (byte[]) branchId_.clone();
-	}
+    private byte[] globalId_;
 
-	public int getFormatId() {
-		return FORMAT_ID;
-	}
+    private byte[] branchId_;
 
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null || !(obj instanceof XidImpl)) {
-			return false;
-		}
-		XidImpl other = (XidImpl) obj;
-		if (hashCode_ != other.hashCode_) {
-			return false;
-		}
-		if (globalId_.length != other.globalId_.length
-			|| branchId_.length != other.branchId_.length) {
+    public XidImpl() {
+        hashCode_ = getNextId();
+        globalId_ = createGlobalId();
+        branchId_ = INITIAL_BRANCH_ID;
+    }
 
-			return false;
-		}
-		for (int i = 0; i < globalId_.length; ++i) {
-			if (globalId_[i] != other.globalId_[i]) {
-				return false;
-			}
-		}
-		for (int i = 0; i < branchId_.length; ++i) {
-			if (branchId_[i] != other.branchId_[i]) {
-				return false;
-			}
-		}
-		return true;
-	}
+    public XidImpl(Xid xid, int branchId) {
+        hashCode_ = xid.hashCode();
+        globalId_ = xid.getGlobalTransactionId();
+        branchId_ = convert64bytes(Integer.toString(branchId).getBytes());
+    }
 
-	public int hashCode() {
-		return hashCode_;
-	}
+    private byte[] createGlobalId() {
+        return convert64bytes((GLOBAL_ID_BASE + Integer.toString(hashCode_))
+                .getBytes());
+    }
 
-	public String toString() {
-		return "[FormatId="
-			+ FORMAT_ID
-			+ ", GlobalId="
-			+ new String(globalId_).trim()
-			+ ", BranchId="
-			+ new String(branchId_).trim()
-			+ "]";
-	}
+    public byte[] getGlobalTransactionId() {
+        return (byte[]) globalId_.clone();
+    }
 
-	private static byte[] convert64bytes(byte[] bytes) {
-		byte[] new64bytes = new byte[64];
-		System.arraycopy(bytes, 0, new64bytes, 0, bytes.length);
-		return new64bytes;
-	}
+    public byte[] getBranchQualifier() {
+        return (byte[]) branchId_.clone();
+    }
 
-	private static synchronized int getNextId() {
-		return nextId_++;
-	}
+    public int getFormatId() {
+        return FORMAT_ID;
+    }
+
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || !(obj instanceof XidImpl)) {
+            return false;
+        }
+        XidImpl other = (XidImpl) obj;
+        if (hashCode_ != other.hashCode_) {
+            return false;
+        }
+        if (globalId_.length != other.globalId_.length
+                || branchId_.length != other.branchId_.length) {
+
+            return false;
+        }
+        for (int i = 0; i < globalId_.length; ++i) {
+            if (globalId_[i] != other.globalId_[i]) {
+                return false;
+            }
+        }
+        for (int i = 0; i < branchId_.length; ++i) {
+            if (branchId_[i] != other.branchId_[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public int hashCode() {
+        return hashCode_;
+    }
+
+    public String toString() {
+        return "[FormatId=" + FORMAT_ID + ", GlobalId="
+                + new String(globalId_).trim() + ", BranchId="
+                + new String(branchId_).trim() + "]";
+    }
+
+    private static byte[] convert64bytes(byte[] bytes) {
+        byte[] new64bytes = new byte[64];
+        System.arraycopy(bytes, 0, new64bytes, 0, bytes.length);
+        return new64bytes;
+    }
+
+    private static synchronized int getNextId() {
+        return nextId_++;
+    }
 }

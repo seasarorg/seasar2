@@ -24,7 +24,9 @@ import java.util.NoSuchElementException;
 public class SLinkedList implements Cloneable, Externalizable {
 
     static final long serialVersionUID = 1L;
+
     private transient Entry header = new Entry(null, null, null);
+
     private transient int size = 0;
 
     public SLinkedList() {
@@ -45,14 +47,14 @@ public class SLinkedList implements Cloneable, Externalizable {
         return getFirstEntry()._element;
     }
 
-    public Entry getLastEntry()  {
+    public Entry getLastEntry() {
         if (isEmpty()) {
             return null;
         }
         return header._previous;
     }
 
-    public Object getLast()  {
+    public Object getLast() {
         if (isEmpty()) {
             throw new NoSuchElementException();
         }
@@ -105,7 +107,7 @@ public class SLinkedList implements Cloneable, Externalizable {
         if (o == null) {
             for (Entry e = header._next; e != header; e = e._next) {
                 if (e._element == null) {
-                   e.remove();
+                    e.remove();
                     return true;
                 }
             }
@@ -133,8 +135,8 @@ public class SLinkedList implements Cloneable, Externalizable {
 
     public Entry getEntry(final int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException(
-                "Index: " + index + ", Size: " + size);
+            throw new IndexOutOfBoundsException("Index: " + index + ", Size: "
+                    + size);
         }
         Entry e = header;
         if (index < size / 2) {
@@ -187,8 +189,8 @@ public class SLinkedList implements Cloneable, Externalizable {
         }
     }
 
-    public void readExternal(ObjectInput s)
-            throws IOException, ClassNotFoundException {
+    public void readExternal(ObjectInput s) throws IOException,
+            ClassNotFoundException {
 
         int size = s.readInt();
         header = new Entry(null, null, null);
@@ -218,7 +220,9 @@ public class SLinkedList implements Cloneable, Externalizable {
     public final class Entry {
 
         private Object _element;
+
         private Entry _next;
+
         private Entry _previous;
 
         Entry(final Object element, final Entry next, final Entry previous) {

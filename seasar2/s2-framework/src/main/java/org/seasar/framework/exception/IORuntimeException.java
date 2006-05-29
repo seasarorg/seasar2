@@ -17,16 +17,15 @@ package org.seasar.framework.exception;
 
 import java.io.IOException;
 
-
 /**
  * @author higa
- *
+ * 
  */
 public class IORuntimeException extends SRuntimeException {
 
     private static final long serialVersionUID = 1533554330702215389L;
 
-	public IORuntimeException(IOException cause) {
-		super("ESSR0040", new Object[]{cause}, cause);
-	}
+    public IORuntimeException(IOException cause) {
+        super("ESSR0040", new Object[] { cause }, cause);
+    }
 }

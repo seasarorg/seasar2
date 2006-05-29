@@ -15,101 +15,100 @@
  */
 package org.seasar.framework.container;
 
-
 /**
- *
+ * 
  * @author higa
  */
 public interface S2Container extends MetaDefAware {
 
-	Object getComponent(Object componentKey)
-		throws
-			ComponentNotFoundRuntimeException,
-			TooManyRegistrationRuntimeException,
-			CyclicReferenceRuntimeException;
+    Object getComponent(Object componentKey)
+            throws ComponentNotFoundRuntimeException,
+            TooManyRegistrationRuntimeException,
+            CyclicReferenceRuntimeException;
 
-	Object[] findComponents(Object componentKey)
-		throws
-			CyclicReferenceRuntimeException;
+    Object[] findComponents(Object componentKey)
+            throws CyclicReferenceRuntimeException;
 
-	void injectDependency(Object outerComponent)
-		throws ClassUnmatchRuntimeException;
+    void injectDependency(Object outerComponent)
+            throws ClassUnmatchRuntimeException;
 
-	void injectDependency(Object outerComponent, Class componentClass)
-		throws ClassUnmatchRuntimeException;
+    void injectDependency(Object outerComponent, Class componentClass)
+            throws ClassUnmatchRuntimeException;
 
-	void injectDependency(Object outerComponent, String componentName)
-		throws ClassUnmatchRuntimeException;
+    void injectDependency(Object outerComponent, String componentName)
+            throws ClassUnmatchRuntimeException;
 
-	void register(Object component);
-	
-	void register(Object component, String componentName);
+    void register(Object component);
 
-	void register(Class componentClass);
+    void register(Object component, String componentName);
 
-	void register(Class componentClass, String componentName);
+    void register(Class componentClass);
 
-	void register(ComponentDef componentDef);
+    void register(Class componentClass, String componentName);
 
-	int getComponentDefSize();
+    void register(ComponentDef componentDef);
 
-	ComponentDef getComponentDef(int index);
+    int getComponentDefSize();
 
-	ComponentDef getComponentDef(Object componentKey)
-		throws ComponentNotFoundRuntimeException;
+    ComponentDef getComponentDef(int index);
 
-	ComponentDef[] findComponentDefs(Object componentKey);
+    ComponentDef getComponentDef(Object componentKey)
+            throws ComponentNotFoundRuntimeException;
 
-	boolean hasComponentDef(Object componentKey);
-	
-	boolean hasDescendant(String path);
-	
-	S2Container getDescendant(String path)
-		throws ContainerNotRegisteredRuntimeException;
-	
-	void registerDescendant(S2Container descendant);
+    ComponentDef[] findComponentDefs(Object componentKey);
 
-	void include(S2Container child);
-	
-	int getChildSize();
-	
-	S2Container getChild(int index);
-    
-	int getParentSize();
-    
+    boolean hasComponentDef(Object componentKey);
+
+    boolean hasDescendant(String path);
+
+    S2Container getDescendant(String path)
+            throws ContainerNotRegisteredRuntimeException;
+
+    void registerDescendant(S2Container descendant);
+
+    void include(S2Container child);
+
+    int getChildSize();
+
+    S2Container getChild(int index);
+
+    int getParentSize();
+
     S2Container getParent(int index);
-    
+
     void addParent(S2Container parent);
 
-	void init();
+    void init();
 
-	void destroy();
-	
-	String getNamespace();
-	
-	void setNamespace(String namespace);
-	
-	String getPath();
-	
-	void setPath(String path);
+    void destroy();
 
-	S2Container getRoot();
-	
-	void setRoot(S2Container root);
-	
-	ExternalContext getExternalContext();
-	
-	void setExternalContext(ExternalContext externalContext);
-    
-	ExternalContextComponentDefRegister getExternalContextComponentDefRegister();
-    
-    void setExternalContextComponentDefRegister(ExternalContextComponentDefRegister externalContextComponentDefRegister);
-    
+    String getNamespace();
+
+    void setNamespace(String namespace);
+
+    String getPath();
+
+    void setPath(String path);
+
+    S2Container getRoot();
+
+    void setRoot(S2Container root);
+
+    ExternalContext getExternalContext();
+
+    void setExternalContext(ExternalContext externalContext);
+
+    ExternalContextComponentDefRegister getExternalContextComponentDefRegister();
+
+    void setExternalContextComponentDefRegister(
+            ExternalContextComponentDefRegister externalContextComponentDefRegister);
+
     boolean isHotswapMode();
-    
+
     void setHotswapMode(boolean hotswapMode);
-    
+
     ClassLoader getClassLoader();
 
-    void registerMap(Object key, ComponentDef componentDef, S2Container container);
+    void registerMap(Object key, ComponentDef componentDef,
+            S2Container container);
 }

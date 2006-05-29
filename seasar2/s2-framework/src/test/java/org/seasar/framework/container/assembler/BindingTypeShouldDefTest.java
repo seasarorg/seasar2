@@ -43,8 +43,6 @@ public class BindingTypeShouldDefTest extends TestCase {
         A a = new A();
         BindingTypeDefFactory.SHOULD.bind(cd, propDef, propDesc, a);
     }
-    
-    
 
     public interface Foo {
         public String getHogeName();

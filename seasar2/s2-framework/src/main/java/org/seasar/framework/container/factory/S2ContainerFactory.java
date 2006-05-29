@@ -289,12 +289,16 @@ public final class S2ContainerFactory {
                     dp.setPathResolver((PathResolver) configurationContainer
                             .getComponent(PathResolver.class));
                 }
-                if (configurationContainer.hasComponentDef(ExternalContext.class)) {
-                    dp.setExternalContext((ExternalContext) configurationContainer
+                if (configurationContainer
+                        .hasComponentDef(ExternalContext.class)) {
+                    dp
+                            .setExternalContext((ExternalContext) configurationContainer
                                     .getComponent(ExternalContext.class));
                 }
-                if (configurationContainer.hasComponentDef(ExternalContextComponentDefRegister.class)) {
-                    dp.setExternalContextComponentDefRegister((ExternalContextComponentDefRegister) configurationContainer
+                if (configurationContainer
+                        .hasComponentDef(ExternalContextComponentDefRegister.class)) {
+                    dp
+                            .setExternalContextComponentDefRegister((ExternalContextComponentDefRegister) configurationContainer
                                     .getComponent(ExternalContextComponentDefRegister.class));
                 }
             }

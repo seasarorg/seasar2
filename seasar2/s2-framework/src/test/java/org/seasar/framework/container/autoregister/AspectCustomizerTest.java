@@ -24,11 +24,11 @@ import org.seasar.framework.unit.S2FrameworkTestCase;
 public class AspectCustomizerTest extends S2FrameworkTestCase {
 
     private S2Container child;
-  
+
     public void setUp() throws Exception {
         include("autoRegister4.dicon");
     }
-    
+
     public void testCustomize() throws Exception {
         Greeting greeting = (Greeting) child.getComponent(Greeting.class);
         assertNotNull("1", greeting);

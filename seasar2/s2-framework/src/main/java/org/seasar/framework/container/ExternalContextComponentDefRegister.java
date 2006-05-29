@@ -17,7 +17,7 @@ package org.seasar.framework.container;
 
 /**
  * @author higa
- *
+ * 
  */
 public interface ExternalContextComponentDefRegister {
 

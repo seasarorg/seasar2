@@ -23,30 +23,30 @@ import javax.servlet.ServletResponse;
 
 /**
  * @author higa
- *  
+ * 
  */
 public class MockRequestDispatcherImpl implements MockRequestDispatcher {
 
-	/**
-	 *  
-	 */
-	public MockRequestDispatcherImpl() {
-	}
+    /**
+     * 
+     */
+    public MockRequestDispatcherImpl() {
+    }
 
-	/**
-	 * @see javax.servlet.RequestDispatcher#forward(javax.servlet.ServletRequest,
-	 *      javax.servlet.ServletResponse)
-	 */
-	public void forward(ServletRequest request, ServletResponse response)
-			throws ServletException, IOException {
-	}
+    /**
+     * @see javax.servlet.RequestDispatcher#forward(javax.servlet.ServletRequest,
+     *      javax.servlet.ServletResponse)
+     */
+    public void forward(ServletRequest request, ServletResponse response)
+            throws ServletException, IOException {
+    }
 
-	/**
-	 * @see javax.servlet.RequestDispatcher#include(javax.servlet.ServletRequest,
-	 *      javax.servlet.ServletResponse)
-	 */
-	public void include(ServletRequest request, ServletResponse response)
-			throws ServletException, IOException {
-	}
+    /**
+     * @see javax.servlet.RequestDispatcher#include(javax.servlet.ServletRequest,
+     *      javax.servlet.ServletResponse)
+     */
+    public void include(ServletRequest request, ServletResponse response)
+            throws ServletException, IOException {
+    }
 
 }

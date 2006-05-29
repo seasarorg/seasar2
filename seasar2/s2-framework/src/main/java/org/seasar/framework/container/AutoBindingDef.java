@@ -17,23 +17,23 @@ package org.seasar.framework.container;
 
 /**
  * @author higa
- *
+ * 
  */
 public interface AutoBindingDef {
 
     String AUTO_NAME = "auto";
-    
+
     String SEMIAUTO_NAME = "semiauto";
-    
+
     String CONSTRUCTOR_NAME = "constructor";
-    
+
     String PROPERTY_NAME = "property";
-    
+
     String NONE_NAME = "none";
-    
+
     String getName();
-    
+
     ConstructorAssembler createConstructorAssembler(ComponentDef componentDef);
-    
+
     PropertyAssembler createPropertyAssembler(ComponentDef componentDef);
 }

@@ -19,27 +19,28 @@ import org.seasar.framework.message.MessageFormatter;
 
 /**
  * @author higa
- *
+ * 
  */
 public class SIllegalStateException extends IllegalStateException {
 
     private static final long serialVersionUID = 7321239007471022687L;
 
-	private String messageCode;
-	private Object[] args;
+    private String messageCode;
 
-	public SIllegalStateException(String messageCode, Object[] args) {
-		super(MessageFormatter.getMessage(messageCode, args));
-		
-		this.messageCode = messageCode;
-		this.args = args;
-	}
+    private Object[] args;
 
-	public String getMessageCode() {
-		return messageCode;
-	}
-	
-	public Object[] getArgs() {
-		return args;
-	}
+    public SIllegalStateException(String messageCode, Object[] args) {
+        super(MessageFormatter.getMessage(messageCode, args));
+
+        this.messageCode = messageCode;
+        this.args = args;
+    }
+
+    public String getMessageCode() {
+        return messageCode;
+    }
+
+    public Object[] getArgs() {
+        return args;
+    }
 }

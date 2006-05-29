@@ -25,11 +25,11 @@ import org.seasar.framework.unit.S2FrameworkTestCase;
 public class InterfaceAspectAutoRegisterTest extends S2FrameworkTestCase {
 
     private S2Container child;
-  
+
     public void setUpRegisterAll() throws Exception {
         include("InterfaceAspectAutoRegisterTest.dicon");
     }
-    
+
     public void testRegisterAll() throws Exception {
         ComponentDef cd = child.getComponentDef("foo");
         assertEquals("1", 1, cd.getAspectDefSize());

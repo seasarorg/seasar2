@@ -26,7 +26,6 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.aopalliance.intercept.MethodInvocation;
-import org.seasar.extension.tx.AbstractTxInterceptor;
 import org.seasar.extension.unit.S2TestCase;
 
 /**
@@ -34,8 +33,11 @@ import org.seasar.extension.unit.S2TestCase;
  */
 public class AbstractTxInterceptorTest extends S2TestCase {
     private static final String PATH = "AbstractTxInterceptorTest.dicon";
+
     private ExceptionBean exBean_;
+
     private TransactionManager tm_;
+
     private TestInterceptor testTx_;
 
     public AbstractTxInterceptorTest() {
@@ -53,8 +55,7 @@ public class AbstractTxInterceptorTest extends S2TestCase {
             testTx_.addCommitRule(RuntimeException.class);
             testTx_.addCommitRule(Object.class);
             fail("1");
-        }
-        catch (IllegalArgumentException expected) {
+        } catch (IllegalArgumentException expected) {
             System.out.println(expected);
         }
 
@@ -65,8 +66,7 @@ public class AbstractTxInterceptorTest extends S2TestCase {
             testTx_.addRollbackRule(RuntimeException.class);
             testTx_.addRollbackRule(String.class);
             fail("2");
-        }
-        catch (IllegalArgumentException expected) {
+        } catch (IllegalArgumentException expected) {
             System.out.println(expected);
         }
     }
@@ -75,8 +75,7 @@ public class AbstractTxInterceptorTest extends S2TestCase {
         try {
             exBean_.invoke();
             fail("1");
-        }
-        catch (Exception expected) {
+        } catch (Exception expected) {
             System.out.println(expected);
         }
         assertEquals("2", Status.STATUS_NO_TRANSACTION, tm_.getStatus());
@@ -90,8 +89,7 @@ public class AbstractTxInterceptorTest extends S2TestCase {
         try {
             exBean_.invoke(new SystemException());
             fail("1");
-        }
-        catch (Throwable expected) {
+        } catch (Throwable expected) {
             System.out.println(expected);
         }
         assertEquals("2", Status.STATUS_NO_TRANSACTION, tm_.getStatus());
@@ -105,8 +103,7 @@ public class AbstractTxInterceptorTest extends S2TestCase {
         try {
             exBean_.invoke(new UnsupportedOperationException());
             fail("1");
-        }
-        catch (Throwable expected) {
+        } catch (Throwable expected) {
             System.out.println(expected);
         }
         assertEquals("2", Status.STATUS_NO_TRANSACTION, tm_.getStatus());
@@ -120,8 +117,7 @@ public class AbstractTxInterceptorTest extends S2TestCase {
         try {
             exBean_.invoke(new AccessException(""));
             fail("1");
-        }
-        catch (Throwable expected) {
+        } catch (Throwable expected) {
             System.out.println(expected);
         }
         assertEquals("2", Status.STATUS_NO_TRANSACTION, tm_.getStatus());
@@ -135,8 +131,7 @@ public class AbstractTxInterceptorTest extends S2TestCase {
         try {
             exBean_.invoke(new Throwable());
             fail("1");
-        }
-        catch (Throwable expected) {
+        } catch (Throwable expected) {
             System.out.println(expected);
         }
         assertEquals("2", Status.STATUS_NO_TRANSACTION, tm_.getStatus());
@@ -150,8 +145,7 @@ public class AbstractTxInterceptorTest extends S2TestCase {
         try {
             exBean_.invoke(new OutOfMemoryError());
             fail("1");
-        }
-        catch (Throwable expected) {
+        } catch (Throwable expected) {
             System.out.println(expected);
         }
         assertEquals("2", Status.STATUS_NO_TRANSACTION, tm_.getStatus());
@@ -170,7 +164,8 @@ public class AbstractTxInterceptorTest extends S2TestCase {
     }
 
     public static void main(String[] args) {
-        junit.textui.TestRunner.main(new String[] { AbstractTxInterceptorTest.class.getName() });
+        junit.textui.TestRunner
+                .main(new String[] { AbstractTxInterceptorTest.class.getName() });
     }
 
     public static class TestInterceptor extends AbstractTxInterceptor {
@@ -193,8 +188,7 @@ public class AbstractTxInterceptorTest extends S2TestCase {
                     commit();
                 }
                 return ret;
-            }
-            catch (Throwable t) {
+            } catch (Throwable t) {
                 if (began) {
                     result = complete(t);
                 }

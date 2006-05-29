@@ -16,7 +16,6 @@
 package org.seasar.framework.container.hotdeploy.creator;
 
 import org.seasar.framework.container.hotdeploy.OndemandBehavior;
-import org.seasar.framework.container.hotdeploy.creator.SimpleSinglePackageCreator;
 import org.seasar.framework.container.impl.S2ContainerBehavior;
 import org.seasar.framework.unit.S2FrameworkTestCase;
 import org.seasar.framework.util.ClassUtil;
@@ -26,9 +25,9 @@ import org.seasar.framework.util.ClassUtil;
  * 
  */
 public class SimpleSinglePackageCreatorTest extends S2FrameworkTestCase {
-    
+
     private ClassLoader originalLoader;
-    
+
     private OndemandBehavior ondemand;
 
     protected void setUp() {
@@ -42,24 +41,26 @@ public class SimpleSinglePackageCreatorTest extends S2FrameworkTestCase {
         S2ContainerBehavior.setProvider(ondemand);
         ondemand.start();
     }
-    
+
     protected void tearDown() {
         ondemand.stop();
-        S2ContainerBehavior.setProvider(new S2ContainerBehavior.DefaultProvider());
+        S2ContainerBehavior
+                .setProvider(new S2ContainerBehavior.DefaultProvider());
         Thread.currentThread().setContextClassLoader(originalLoader);
     }
 
     public void testComposeComponentName() throws Exception {
         assertNotNull("1", getComponent("aaa_hogePage"));
     }
-    
+
     public void testIsTargetByComponentName() throws Exception {
         assertTrue("1", getContainer().hasComponentDef("aaa_hogePage"));
         assertFalse("2", getContainer().hasComponentDef("aaa_xxx"));
     }
-    
+
     public void testIsTargetByClass() throws Exception {
-        Class clazz = ClassUtil.forName(ClassUtil.getPackageName(getClass()) + ".web.aaa.HogePage");
+        Class clazz = ClassUtil.forName(ClassUtil.getPackageName(getClass())
+                + ".web.aaa.HogePage");
         assertTrue("1", getContainer().hasComponentDef(clazz));
         assertFalse("2", getContainer().hasComponentDef(getClass()));
     }

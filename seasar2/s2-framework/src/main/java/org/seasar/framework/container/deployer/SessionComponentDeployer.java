@@ -41,7 +41,8 @@ public class SessionComponentDeployer extends AbstractComponentDeployer {
     public Object deploy() {
         ComponentDef cd = getComponentDef();
         HttpSession session = null;
-        ExternalContext extCtx = cd.getContainer().getRoot().getExternalContext();
+        ExternalContext extCtx = cd.getContainer().getRoot()
+                .getExternalContext();
         if (extCtx != null && extCtx.getSession() instanceof HttpSession) {
             session = (HttpSession) extCtx.getSession();
         }

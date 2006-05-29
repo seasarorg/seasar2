@@ -19,42 +19,38 @@ import org.seasar.framework.util.MethodUtil;
 
 /**
  * @author higa
- *
+ * 
  */
 public class NoSuchMethodRuntimeException extends SRuntimeException {
 
     private static final long serialVersionUID = -5673845060079098617L;
 
-	private Class targetClass;
-	private String methodName;
-	private Class[] argTypes;
+    private Class targetClass;
 
-	public NoSuchMethodRuntimeException(
-		Class targetClass,
-		String methodName,
-		Class[] argTypes,
-		NoSuchMethodException cause) {
+    private String methodName;
 
-		super(
-			"ESSR0057",
-			new Object[] { targetClass.getName(),
-				MethodUtil.getSignature(methodName, argTypes), cause},
-			cause);
-		this.targetClass = targetClass;
-		this.methodName = methodName;
-		this.argTypes = argTypes;
-	}
-	
-	public Class getTargetClass() {
-		return targetClass;
-	}
-	
-	public String getMethodName() {
-		return methodName;
-	}
-	
-	public Class[] getArgTypes() {
-		return argTypes;
-	}
-	
+    private Class[] argTypes;
+
+    public NoSuchMethodRuntimeException(Class targetClass, String methodName,
+            Class[] argTypes, NoSuchMethodException cause) {
+
+        super("ESSR0057", new Object[] { targetClass.getName(),
+                MethodUtil.getSignature(methodName, argTypes), cause }, cause);
+        this.targetClass = targetClass;
+        this.methodName = methodName;
+        this.argTypes = argTypes;
+    }
+
+    public Class getTargetClass() {
+        return targetClass;
+    }
+
+    public String getMethodName() {
+        return methodName;
+    }
+
+    public Class[] getArgTypes() {
+        return argTypes;
+    }
+
 }

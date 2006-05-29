@@ -26,16 +26,16 @@ import org.seasar.framework.util.ResourceUtil;
  * @author koichik, higa
  */
 public class JarComponentAutoRegister extends AbstractJarComponentAutoRegister {
-    
+
     private Class referenceClass = MethodInterceptor.class;
 
     public JarComponentAutoRegister() {
     }
-    
+
     public Class getReferenceClass() {
         return referenceClass;
     }
-    
+
     public void setReferenceClass(Class referenceClass) {
         this.referenceClass = referenceClass;
     }

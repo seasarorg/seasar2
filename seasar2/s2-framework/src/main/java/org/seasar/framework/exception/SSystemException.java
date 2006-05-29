@@ -21,31 +21,32 @@ import org.seasar.framework.message.MessageFormatter;
 
 /**
  * @author higa
- *
+ * 
  */
 public class SSystemException extends SystemException {
 
     private static final long serialVersionUID = -404340896339687907L;
 
-	private String messageCode;
-	private Object[] args;
-	
-	public SSystemException(String messageCode, Object[] args) {
-		this(messageCode, args, null);
-	}
+    private String messageCode;
 
-	public SSystemException(String messageCode, Object[] args, Throwable cause) {
-		super(MessageFormatter.getMessage(messageCode, args));
-		this.messageCode = messageCode;
-		this.args = args;
-		initCause(cause);
-	}
+    private Object[] args;
 
-	public String getMessageCode() {
-		return messageCode;
-	}
-	
-	public Object[] getArgs() {
-		return args;
-	}
+    public SSystemException(String messageCode, Object[] args) {
+        this(messageCode, args, null);
+    }
+
+    public SSystemException(String messageCode, Object[] args, Throwable cause) {
+        super(MessageFormatter.getMessage(messageCode, args));
+        this.messageCode = messageCode;
+        this.args = args;
+        initCause(cause);
+    }
+
+    public String getMessageCode() {
+        return messageCode;
+    }
+
+    public Object[] getArgs() {
+        return args;
+    }
 }

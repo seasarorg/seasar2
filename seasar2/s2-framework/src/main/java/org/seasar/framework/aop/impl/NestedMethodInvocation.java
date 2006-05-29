@@ -25,9 +25,11 @@ import org.seasar.framework.aop.S2MethodInvocation;
  * @author koichik
  */
 public class NestedMethodInvocation implements S2MethodInvocation {
-    //instance fields
+    // instance fields
     private final S2MethodInvocation parent;
+
     private final MethodInterceptor[] interceptors;
+
     private int interceptorsIndex;
 
     public NestedMethodInvocation(final S2MethodInvocation parent,

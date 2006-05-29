@@ -25,27 +25,26 @@ import org.seasar.framework.exception.IORuntimeException;
 
 /**
  * @author higa
- *
+ * 
  */
 public class JarFileUtil {
 
-	private JarFileUtil() {
-	}
+    private JarFileUtil() {
+    }
 
     public static JarFile create(final File file) {
         try {
             return new JarFile(file);
-        }
-        catch (final IOException e) {
+        } catch (final IOException e) {
             throw new IORuntimeException(e);
         }
     }
 
     public static InputStream getInputStream(JarFile file, ZipEntry entry) {
-		try {
-			return file.getInputStream(entry);
-		} catch (IOException e) {
-			throw new IORuntimeException(e);
-		}
-	}
+        try {
+            return file.getInputStream(entry);
+        } catch (IOException e) {
+            throw new IORuntimeException(e);
+        }
+    }
 }

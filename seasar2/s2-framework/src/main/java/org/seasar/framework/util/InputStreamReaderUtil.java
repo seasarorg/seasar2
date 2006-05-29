@@ -23,22 +23,22 @@ import org.seasar.framework.exception.IORuntimeException;
 
 /**
  * @author higa
- *  
+ * 
  */
 public final class InputStreamReaderUtil {
 
-	private InputStreamReaderUtil() {
-	}
+    private InputStreamReaderUtil() {
+    }
 
-	public static InputStreamReader create(InputStream is) {
-		return create(is, "JISAutoDetect");
-	}
+    public static InputStreamReader create(InputStream is) {
+        return create(is, "JISAutoDetect");
+    }
 
-	public static InputStreamReader create(InputStream is, String encoding) {
-		try {
-			return new InputStreamReader(is, encoding);
-		} catch (IOException e) {
-			throw new IORuntimeException(e);
-		}
-	}
+    public static InputStreamReader create(InputStream is, String encoding) {
+        try {
+            return new InputStreamReader(is, encoding);
+        } catch (IOException e) {
+            throw new IORuntimeException(e);
+        }
+    }
 }

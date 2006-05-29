@@ -23,6 +23,8 @@ import javax.servlet.ServletContext;
  */
 public interface MockServletConfig extends ServletConfig {
     void setServletName(String servletName);
+
     void setServletContext(ServletContext servletContext);
+
     void setInitParameter(String name, final String value);
 }

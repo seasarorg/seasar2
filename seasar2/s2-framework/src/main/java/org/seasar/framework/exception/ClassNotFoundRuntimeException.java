@@ -15,19 +15,18 @@
  */
 package org.seasar.framework.exception;
 
-
 /**
  * @author higa
- *
+ * 
  */
 public class ClassNotFoundRuntimeException extends SRuntimeException {
 
     private static final long serialVersionUID = -9022468864937761059L;
 
-	/**
-	 * @param messageCode
-	 */
-	public ClassNotFoundRuntimeException(ClassNotFoundException cause) {
-		super("ESSR0044", new Object[]{cause}, cause);
-	}
+    /**
+     * @param messageCode
+     */
+    public ClassNotFoundRuntimeException(ClassNotFoundException cause) {
+        super("ESSR0044", new Object[] { cause }, cause);
+    }
 }

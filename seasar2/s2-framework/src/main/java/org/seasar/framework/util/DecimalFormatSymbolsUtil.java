@@ -23,25 +23,25 @@ import java.util.Map;
 
 /**
  * @author higa
- *
+ * 
  */
 public final class DecimalFormatSymbolsUtil {
 
-	private static Map cache = Collections.synchronizedMap(new HashMap());
-	
-	private DecimalFormatSymbolsUtil() {
-	}
+    private static Map cache = Collections.synchronizedMap(new HashMap());
 
-	public static DecimalFormatSymbols getDecimalFormatSymbols() {
-		return getDecimalFormatSymbols(Locale.getDefault());
-	}
+    private DecimalFormatSymbolsUtil() {
+    }
 
-	public static DecimalFormatSymbols getDecimalFormatSymbols(Locale locale) {
-		DecimalFormatSymbols symbols = (DecimalFormatSymbols) cache.get(locale);
-		if (symbols == null) {
-			symbols = new DecimalFormatSymbols(locale);
-			cache.put(locale, symbols);
-		}
-		return symbols;
-	}
+    public static DecimalFormatSymbols getDecimalFormatSymbols() {
+        return getDecimalFormatSymbols(Locale.getDefault());
+    }
+
+    public static DecimalFormatSymbols getDecimalFormatSymbols(Locale locale) {
+        DecimalFormatSymbols symbols = (DecimalFormatSymbols) cache.get(locale);
+        if (symbols == null) {
+            symbols = new DecimalFormatSymbols(locale);
+            cache.put(locale, symbols);
+        }
+        return symbols;
+    }
 }

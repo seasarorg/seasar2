@@ -19,17 +19,17 @@ import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.ConstructorAssembler;
 import org.seasar.framework.container.PropertyAssembler;
 
-
 public class AutoBindingAutoDef extends AbstractAutoBindingDef {
 
     protected AutoBindingAutoDef(String name) {
         super(name);
     }
-    
-    public ConstructorAssembler createConstructorAssembler(ComponentDef componentDef) {
+
+    public ConstructorAssembler createConstructorAssembler(
+            ComponentDef componentDef) {
         return AssemblerFactory.createAutoConstructorAssembler(componentDef);
     }
-    
+
     public PropertyAssembler createPropertyAssembler(ComponentDef componentDef) {
         return AssemblerFactory.createAutoPropertyAssembler(componentDef);
     }

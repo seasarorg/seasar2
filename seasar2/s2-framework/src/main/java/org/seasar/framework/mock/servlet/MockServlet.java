@@ -24,21 +24,21 @@ import javax.servlet.ServletResponse;
 
 /**
  * @author higa
- *
+ * 
  */
 public class MockServlet extends GenericServlet {
 
     private static final long serialVersionUID = -2690818043808621124L;
 
-	/**
-	 * @see javax.servlet.Servlet#service(javax.servlet.ServletRequest, javax.servlet.ServletResponse)
-	 */
-	public void service(ServletRequest request, ServletResponse response)
-			throws ServletException, IOException {
-	}
-	
-	public void log(String msg) {
-	}
+    /**
+     * @see javax.servlet.Servlet#service(javax.servlet.ServletRequest,
+     *      javax.servlet.ServletResponse)
+     */
+    public void service(ServletRequest request, ServletResponse response)
+            throws ServletException, IOException {
+    }
 
+    public void log(String msg) {
+    }
 
 }

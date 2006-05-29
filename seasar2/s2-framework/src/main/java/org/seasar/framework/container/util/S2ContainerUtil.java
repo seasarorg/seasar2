@@ -24,12 +24,12 @@ import org.seasar.framework.container.ContainerConstants;
 
 /**
  * @author higa
- *
+ * 
  */
 public final class S2ContainerUtil implements ContainerConstants {
 
     private static Set notAssignableClasses = new HashSet();
-    
+
     static {
         notAssignableClasses.add(Cloneable.class);
         notAssignableClasses.add(Comparable.class);
@@ -37,9 +37,9 @@ public final class S2ContainerUtil implements ContainerConstants {
         notAssignableClasses.add(Externalizable.class);
         notAssignableClasses.add(ContainerConstants.class);
     }
-    
-	protected S2ContainerUtil() {
-	}
+
+    protected S2ContainerUtil() {
+    }
 
     public static Class[] getAssignableClasses(Class componentClass) {
         Set classes = new HashSet();

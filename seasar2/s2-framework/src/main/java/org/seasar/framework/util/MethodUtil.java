@@ -109,7 +109,7 @@ public final class MethodUtil {
                 && method.getReturnType() == int.class
                 && method.getParameterTypes().length == 0;
     }
-    
+
     public static boolean isToStringMethod(Method method) {
         return method != null && method.getName().equals("toString")
                 && method.getReturnType() == String.class

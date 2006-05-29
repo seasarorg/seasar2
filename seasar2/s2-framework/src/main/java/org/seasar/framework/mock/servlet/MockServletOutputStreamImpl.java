@@ -20,28 +20,28 @@ import java.io.PrintWriter;
 
 public class MockServletOutputStreamImpl extends MockServletOutputStream {
 
-	private PrintWriter writer;
-	
-	public MockServletOutputStreamImpl(PrintWriter writer) {
-		setPrintWriter(writer);
-	}
+    private PrintWriter writer;
 
-	public PrintWriter getPrintWriter() {
-		return writer;
-	}
+    public MockServletOutputStreamImpl(PrintWriter writer) {
+        setPrintWriter(writer);
+    }
 
-	public void setPrintWriter(PrintWriter writer) {
-		this.writer = writer;
-	}
+    public PrintWriter getPrintWriter() {
+        return writer;
+    }
 
-	public void write(int b) throws IOException {
-		writer.write(b);
-	}
-	
-	public String toString() {
-		if (writer != null) {
-			return writer.toString();
-		}
-		return super.toString();
-	}
+    public void setPrintWriter(PrintWriter writer) {
+        this.writer = writer;
+    }
+
+    public void write(int b) throws IOException {
+        writer.write(b);
+    }
+
+    public String toString() {
+        if (writer != null) {
+            return writer.toString();
+        }
+        return super.toString();
+    }
 }

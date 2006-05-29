@@ -15,10 +15,9 @@
  */
 package org.seasar.framework.container;
 
-
 /**
  * @author higa
- *
+ * 
  */
 public interface DestroyMethodDef extends MethodDef {
 }

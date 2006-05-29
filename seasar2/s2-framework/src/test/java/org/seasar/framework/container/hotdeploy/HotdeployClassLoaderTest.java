@@ -23,10 +23,14 @@ import junit.framework.TestCase;
  */
 public class HotdeployClassLoaderTest extends TestCase {
 
-    private static String PACKAGE_NAME = HotdeployTestMain.class.getPackage().getName() + ".sub";
+    private static String PACKAGE_NAME = HotdeployTestMain.class.getPackage()
+            .getName()
+            + ".sub";
+
     private static String AAA_NAME = PACKAGE_NAME + ".Aaa";
-    
+
     private ClassLoader originalLoader;
+
     private HotdeployClassLoader hotLoader;
 
     protected void setUp() {
@@ -35,13 +39,14 @@ public class HotdeployClassLoaderTest extends TestCase {
         hotLoader.setPackageName(PACKAGE_NAME);
         Thread.currentThread().setContextClassLoader(hotLoader);
     }
-    
+
     protected void tearDown() {
         Thread.currentThread().setContextClassLoader(originalLoader);
     }
 
     public void testLoadClass() throws Exception {
-        assertSame("1", hotLoader.loadClass(AAA_NAME), hotLoader.loadClass(AAA_NAME));
+        assertSame("1", hotLoader.loadClass(AAA_NAME), hotLoader
+                .loadClass(AAA_NAME));
         try {
             hotLoader.loadClass(PACKAGE_NAME + ".xxx");
             fail("2");

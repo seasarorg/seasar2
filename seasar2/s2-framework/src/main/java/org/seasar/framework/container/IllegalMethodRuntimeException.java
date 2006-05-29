@@ -19,33 +19,29 @@ import org.seasar.framework.exception.SRuntimeException;
 
 /**
  * @author higa
- *
+ * 
  */
-public class IllegalMethodRuntimeException
-	extends SRuntimeException {
+public class IllegalMethodRuntimeException extends SRuntimeException {
 
     private static final long serialVersionUID = -9114586009590848186L;
 
-	private Class componentClass_;
-	private String methodName_;
+    private Class componentClass_;
 
-	public IllegalMethodRuntimeException(
-		Class componentClass,
-		String methodName,
-		Throwable cause) {
-		super(
-			"ESSR0060",
-			new Object[] { componentClass.getName(), methodName, cause },
-			cause);
-		componentClass_ = componentClass;
-		methodName_ = methodName;
-	}
+    private String methodName_;
 
-	public Class getComponentClass() {
-		return componentClass_;
-	}
-	
-	public String getMethodName() {
-		return methodName_;
-	}
+    public IllegalMethodRuntimeException(Class componentClass,
+            String methodName, Throwable cause) {
+        super("ESSR0060", new Object[] { componentClass.getName(), methodName,
+                cause }, cause);
+        componentClass_ = componentClass;
+        methodName_ = methodName;
+    }
+
+    public Class getComponentClass() {
+        return componentClass_;
+    }
+
+    public String getMethodName() {
+        return methodName_;
+    }
 }

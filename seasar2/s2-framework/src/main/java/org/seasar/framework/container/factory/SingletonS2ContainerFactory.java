@@ -25,7 +25,7 @@ public final class SingletonS2ContainerFactory {
     private static String configPath = "app.dicon";
 
     private static ExternalContext externalContext;
-    
+
     private static ExternalContextComponentDefRegister externalContextComponentDefRegister;
 
     private static S2Container container;
@@ -48,12 +48,13 @@ public final class SingletonS2ContainerFactory {
     public static void setExternalContext(ExternalContext extCtx) {
         externalContext = extCtx;
     }
-    
+
     public static ExternalContextComponentDefRegister getExternalContextComponentDefRegister() {
         return externalContextComponentDefRegister;
     }
 
-    public static void setExternalContextComponentDefRegister(ExternalContextComponentDefRegister extCtxComponentDefRegister) {
+    public static void setExternalContextComponentDefRegister(
+            ExternalContextComponentDefRegister extCtxComponentDefRegister) {
         externalContextComponentDefRegister = extCtxComponentDefRegister;
     }
 
@@ -66,11 +67,15 @@ public final class SingletonS2ContainerFactory {
             if (externalContext != null) {
                 container.setExternalContext(externalContext);
             }
-        } else if (container.getExternalContext().getApplication() == null && externalContext != null) {
-            container.getExternalContext().setApplication(externalContext.getApplication());
+        } else if (container.getExternalContext().getApplication() == null
+                && externalContext != null) {
+            container.getExternalContext().setApplication(
+                    externalContext.getApplication());
         }
-        if (container.getExternalContextComponentDefRegister() == null && externalContextComponentDefRegister != null) {
-            container.setExternalContextComponentDefRegister(externalContextComponentDefRegister);
+        if (container.getExternalContextComponentDefRegister() == null
+                && externalContextComponentDefRegister != null) {
+            container
+                    .setExternalContextComponentDefRegister(externalContextComponentDefRegister);
         }
         container.init();
     }

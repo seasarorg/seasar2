@@ -37,12 +37,14 @@ public class Employee implements Serializable {
     private Float comm;
 
     private short deptno;
-    
+
     private Date tstamp;
-    
+
     private Department department;
 
-    public Employee(long empno, java.lang.String ename, java.lang.String job, Short mgr, java.util.Date hiredate, Float sal, Float comm, short deptno, Date tstamp) {
+    public Employee(long empno, java.lang.String ename, java.lang.String job,
+            Short mgr, java.util.Date hiredate, Float sal, Float comm,
+            short deptno, Date tstamp) {
         this.empno = empno;
         this.ename = ename;
         this.job = job;
@@ -126,11 +128,11 @@ public class Employee implements Serializable {
     }
 
     public Department getDepartment() {
-    	return this.department;
+        return this.department;
     }
-    
+
     public void setDepartment(Department department) {
-    	this.department = department;
+        this.department = department;
     }
 
     public Date getTstamp() {
@@ -142,7 +144,8 @@ public class Employee implements Serializable {
     }
 
     public boolean equals(Object other) {
-        if ( !(other instanceof Employee) ) return false;
+        if (!(other instanceof Employee))
+            return false;
         Employee castOther = (Employee) other;
         return this.getEmpno() == castOther.getEmpno();
     }

@@ -19,26 +19,22 @@ import org.seasar.framework.exception.SRuntimeException;
 
 /**
  * @author higa
- *
+ * 
  */
-public class IllegalConstructorRuntimeException
-	extends SRuntimeException {
+public class IllegalConstructorRuntimeException extends SRuntimeException {
 
     private static final long serialVersionUID = 1454032979718620824L;
 
-	private Class componentClass_;
+    private Class componentClass_;
 
-	public IllegalConstructorRuntimeException(
-		Class componentClass,
-		Throwable cause) {
-		super(
-			"ESSR0058",
-			new Object[] { componentClass.getName(), cause },
-			cause);
-		componentClass_ = componentClass;
-	}
+    public IllegalConstructorRuntimeException(Class componentClass,
+            Throwable cause) {
+        super("ESSR0058", new Object[] { componentClass.getName(), cause },
+                cause);
+        componentClass_ = componentClass;
+    }
 
-	public Class getComponentClass() {
-		return componentClass_;
-	}
+    public Class getComponentClass() {
+        return componentClass_;
+    }
 }

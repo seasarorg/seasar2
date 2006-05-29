@@ -24,17 +24,19 @@ import org.seasar.framework.unit.S2FrameworkTestCase;
 public class JarComponentAutoRegisterTest extends S2FrameworkTestCase {
 
     private S2Container child;
+
     private JarComponentAutoRegister autoRegister;
-    
+
     protected void setUp() {
         include("JarComponentAutoRegisterTest.dicon");
     }
-    public void testGetBaseDir() throws Exception { 
+
+    public void testGetBaseDir() throws Exception {
         String file = autoRegister.getBaseDir();
         System.out.println(file);
         assertNotNull("1", file);
     }
-    
+
     public void testRegisterAll() throws Exception {
         assertTrue("1", child.hasComponentDef("testSuite"));
     }

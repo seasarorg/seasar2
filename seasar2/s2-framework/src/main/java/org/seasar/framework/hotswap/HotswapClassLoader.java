@@ -20,20 +20,20 @@ import java.io.File;
 import org.seasar.framework.util.FileUtil;
 
 public class HotswapClassLoader extends ClassLoader {
-    
-	public HotswapClassLoader() {
-		this(Thread.currentThread().getContextClassLoader());
-	}
-    
+
+    public HotswapClassLoader() {
+        this(Thread.currentThread().getContextClassLoader());
+    }
+
     public HotswapClassLoader(ClassLoader classLoader) {
         super(classLoader);
     }
 
-	public Class defineClass(String className, File classFile) {
-		return defineClass(className, FileUtil.getBytes(classFile));
-	}
+    public Class defineClass(String className, File classFile) {
+        return defineClass(className, FileUtil.getBytes(classFile));
+    }
 
-	public Class defineClass(String className, byte[] bytes) {
-		return defineClass(className, bytes, 0, bytes.length);
-	}
+    public Class defineClass(String className, byte[] bytes) {
+        return defineClass(className, bytes, 0, bytes.length);
+    }
 }

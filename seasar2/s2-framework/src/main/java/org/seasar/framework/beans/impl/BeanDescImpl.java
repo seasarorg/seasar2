@@ -139,7 +139,7 @@ public final class BeanDescImpl implements BeanDesc {
         }
         return field;
     }
-    
+
     /**
      * @see org.seasar.framework.beans.BeanDesc#getField(int)
      */
@@ -156,7 +156,7 @@ public final class BeanDescImpl implements BeanDesc {
         Field field = getField(fieldName);
         return FieldUtil.get(field, target);
     }
-    
+
     /**
      * @see org.seasar.framework.beans.BeanDesc#getFieldSize()
      */

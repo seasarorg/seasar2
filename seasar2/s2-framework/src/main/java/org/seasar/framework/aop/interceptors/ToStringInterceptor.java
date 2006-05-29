@@ -52,9 +52,11 @@ public class ToStringInterceptor extends AbstractInterceptor {
             .getLogger(ToStringInterceptor.class);
 
     public static final String includeConstant_BINDING = "bindingType=none";
+
     private boolean includeConstant;
 
     public static final String includeStatic_BINDING = "bindingType=none";
+
     private boolean includeStatic;
 
     private DateFormat dateFormat = new SimpleDateFormat();
@@ -105,10 +107,12 @@ public class ToStringInterceptor extends AbstractInterceptor {
                 field.setAccessible(true);
 
                 int modifiers = field.getModifiers();
-                if (Modifier.isStatic(modifiers) && Modifier.isFinal(modifiers) && !includeConstant) {
+                if (Modifier.isStatic(modifiers) && Modifier.isFinal(modifiers)
+                        && !includeConstant) {
                     continue;
                 }
-                if (Modifier.isStatic(modifiers) && !Modifier.isFinal(modifiers) && !includeStatic) {
+                if (Modifier.isStatic(modifiers)
+                        && !Modifier.isFinal(modifiers) && !includeStatic) {
                     continue;
                 }
 

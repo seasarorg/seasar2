@@ -16,23 +16,23 @@
 package org.seasar.framework.xml;
 
 import java.io.Serializable;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
 public class TagHandlerRule implements Serializable {
 
-	static final long serialVersionUID = 1L;
+    static final long serialVersionUID = 1L;
 
-	private Map tagHandlers = new HashMap();
+    private Map tagHandlers = new HashMap();
 
-	public TagHandlerRule() {
-	}
+    public TagHandlerRule() {
+    }
 
-	public final void addTagHandler(String path, TagHandler tagHandler) {
-		tagHandlers.put(path, tagHandler);
-	}
+    public final void addTagHandler(String path, TagHandler tagHandler) {
+        tagHandlers.put(path, tagHandler);
+    }
 
-	public final TagHandler getTagHandler(String path) {
-		return (TagHandler) tagHandlers.get(path);
-	}
+    public final TagHandler getTagHandler(String path) {
+        return (TagHandler) tagHandlers.get(path);
+    }
 }

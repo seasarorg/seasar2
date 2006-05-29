@@ -35,7 +35,7 @@ public class BindingTypeMayDef extends AbstractBindingTypeDef {
 
         bindAuto(componentDef, field, component);
     }
-    
+
     protected void doBind(ComponentDef componentDef, PropertyDesc propertyDesc,
             Object component) {
 

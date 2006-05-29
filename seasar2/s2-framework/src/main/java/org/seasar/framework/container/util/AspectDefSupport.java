@@ -24,35 +24,36 @@ import org.seasar.framework.container.S2Container;
 
 /**
  * @author higa
- *
+ * 
  */
 public final class AspectDefSupport {
 
-	private List aspectDefs = Collections.synchronizedList(new ArrayList());
-	private S2Container container;
+    private List aspectDefs = Collections.synchronizedList(new ArrayList());
 
-	public AspectDefSupport() {
-	}
+    private S2Container container;
 
-	public void addAspectDef(AspectDef aspectDef) {
-		if (container != null) {
-			aspectDef.setContainer(container);
-		}
-		aspectDefs.add(aspectDef);
-	}
+    public AspectDefSupport() {
+    }
 
-	public int getAspectDefSize() {
-		return aspectDefs.size();
-	}
+    public void addAspectDef(AspectDef aspectDef) {
+        if (container != null) {
+            aspectDef.setContainer(container);
+        }
+        aspectDefs.add(aspectDef);
+    }
 
-	public AspectDef getAspectDef(int index) {
-		return (AspectDef) aspectDefs.get(index);
-	}
+    public int getAspectDefSize() {
+        return aspectDefs.size();
+    }
 
-	public void setContainer(S2Container container) {
-		this.container = container;
-		for (int i = 0; i < getAspectDefSize(); ++i) {
-			getAspectDef(i).setContainer(container);
-		}
-	}
+    public AspectDef getAspectDef(int index) {
+        return (AspectDef) aspectDefs.get(index);
+    }
+
+    public void setContainer(S2Container container) {
+        this.container = container;
+        for (int i = 0; i < getAspectDefSize(); ++i) {
+            getAspectDef(i).setContainer(container);
+        }
+    }
 }

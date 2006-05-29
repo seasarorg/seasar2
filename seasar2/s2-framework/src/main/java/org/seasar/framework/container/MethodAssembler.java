@@ -15,13 +15,11 @@
  */
 package org.seasar.framework.container;
 
-
 /**
  * @author higa
- *
+ * 
  */
 public interface MethodAssembler {
 
-	public void assemble(Object component)
-		throws IllegalMethodRuntimeException;
+    public void assemble(Object component) throws IllegalMethodRuntimeException;
 }

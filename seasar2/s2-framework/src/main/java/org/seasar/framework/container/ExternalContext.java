@@ -17,21 +17,21 @@ package org.seasar.framework.container;
 
 /**
  * @author higa
- *
+ * 
  */
 public interface ExternalContext {
 
     Object getRequest();
-    
+
     void setRequest(Object request);
-    
+
     Object getResponse();
-    
+
     void setResponse(Object response);
-    
+
     Object getSession();
-    
+
     Object getApplication();
-    
+
     void setApplication(Object application);
 }

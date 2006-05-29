@@ -24,24 +24,25 @@ import org.seasar.framework.beans.impl.BeanDescImpl;
 
 /**
  * @author higa
- *
+ * 
  */
 public final class BeanDescFactory {
 
-	private static Map beanDescCache = Collections.synchronizedMap(new HashMap());
+    private static Map beanDescCache = Collections
+            .synchronizedMap(new HashMap());
 
-	private BeanDescFactory() {
-	}
+    private BeanDescFactory() {
+    }
 
-	public static BeanDesc getBeanDesc(Class clazz) {
-		BeanDesc beanDesc = (BeanDesc) beanDescCache.get(clazz);
-		if (beanDesc == null) {
-			beanDesc = new BeanDescImpl(clazz);
-			beanDescCache.put(clazz, beanDesc);
-		}
-		return beanDesc;
-	}
-    
+    public static BeanDesc getBeanDesc(Class clazz) {
+        BeanDesc beanDesc = (BeanDesc) beanDescCache.get(clazz);
+        if (beanDesc == null) {
+            beanDesc = new BeanDescImpl(clazz);
+            beanDescCache.put(clazz, beanDesc);
+        }
+        return beanDesc;
+    }
+
     public static void clear() {
         beanDescCache.clear();
     }

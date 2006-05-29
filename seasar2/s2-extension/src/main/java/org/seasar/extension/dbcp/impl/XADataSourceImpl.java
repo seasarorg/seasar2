@@ -28,11 +28,15 @@ import org.seasar.framework.util.ClassUtil;
 public final class XADataSourceImpl implements XADataSource {
 
     private String driverClassName_;
+
     private String url_;
+
     private String user_;
+
     private String password_;
 
-    public XADataSourceImpl() { }
+    public XADataSourceImpl() {
+    }
 
     public String getDriverClassName() {
         return driverClassName_;
@@ -41,7 +45,7 @@ public final class XADataSourceImpl implements XADataSource {
     public void setDriverClassName(String driverClassName) {
         driverClassName_ = driverClassName;
         if (driverClassName != null && driverClassName.length() > 0) {
-			ClassUtil.newInstance(driverClassName);
+            ClassUtil.newInstance(driverClassName);
         }
     }
 
@@ -74,7 +78,7 @@ public final class XADataSourceImpl implements XADataSource {
     }
 
     public XAConnection getXAConnection(String user, String password)
-             throws SQLException {
+            throws SQLException {
 
         Connection con = null;
         if (user == null || user.length() == 0) {

@@ -30,7 +30,7 @@ import org.seasar.framework.util.StringUtil;
  * 
  */
 public abstract class AbstractComponentDeployer implements ComponentDeployer {
-    
+
     private ComponentDef componentDef;
 
     private ConstructorAssembler constructorAssembler;

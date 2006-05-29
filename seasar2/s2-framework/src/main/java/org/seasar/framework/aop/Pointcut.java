@@ -19,9 +19,9 @@ import java.lang.reflect.Method;
 
 /**
  * @author higa
- *
+ * 
  */
 public interface Pointcut {
-	
-	public boolean isApplied(Method method);
+
+    public boolean isApplied(Method method);
 }

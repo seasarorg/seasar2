@@ -26,33 +26,32 @@ import org.seasar.framework.exception.SystemRuntimeException;
 
 /**
  * @author higa
- *
+ * 
  */
 public final class TransactionUtil {
 
-	private TransactionUtil() {
-	}
+    private TransactionUtil() {
+    }
 
-	public static void enlistResource(Transaction tx, XAResource xaResource) {
-		try {
-			tx.enlistResource(xaResource);
-		} catch (SystemException e) {
-			throw new SystemRuntimeException(e);
-		} catch (RollbackException e) {
-			throw new RollbackRuntimeException(e);
-		}
-	}
+    public static void enlistResource(Transaction tx, XAResource xaResource) {
+        try {
+            tx.enlistResource(xaResource);
+        } catch (SystemException e) {
+            throw new SystemRuntimeException(e);
+        } catch (RollbackException e) {
+            throw new RollbackRuntimeException(e);
+        }
+    }
 
-	public static void registerSynchronization(
-		Transaction tx,
-		Synchronization sync) {
+    public static void registerSynchronization(Transaction tx,
+            Synchronization sync) {
 
-		try {
-			tx.registerSynchronization(sync);
-		} catch (SystemException e) {
-			throw new SystemRuntimeException(e);
-		} catch (RollbackException e) {
-			throw new RollbackRuntimeException(e);
-		}
-	}
+        try {
+            tx.registerSynchronization(sync);
+        } catch (SystemException e) {
+            throw new SystemRuntimeException(e);
+        } catch (RollbackException e) {
+            throw new RollbackRuntimeException(e);
+        }
+    }
 }

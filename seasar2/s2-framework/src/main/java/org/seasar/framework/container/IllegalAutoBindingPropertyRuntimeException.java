@@ -19,29 +19,30 @@ import org.seasar.framework.exception.SRuntimeException;
 
 /**
  * @author higa
- *
+ * 
  */
-public class IllegalAutoBindingPropertyRuntimeException extends SRuntimeException {
+public class IllegalAutoBindingPropertyRuntimeException extends
+        SRuntimeException {
 
     private static final long serialVersionUID = -8464366695114050369L;
 
-	private Class componentClass;
-    
+    private Class componentClass;
+
     private String propertyName;
-	
-	public IllegalAutoBindingPropertyRuntimeException(
-            Class componentClass, String propertyName) {
-		super("ESSR0080", new Object[] {
-                componentClass.getName(), propertyName});
+
+    public IllegalAutoBindingPropertyRuntimeException(Class componentClass,
+            String propertyName) {
+        super("ESSR0080",
+                new Object[] { componentClass.getName(), propertyName });
         this.componentClass = componentClass;
-		this.propertyName = propertyName;
-	}
-	
+        this.propertyName = propertyName;
+    }
+
     public Class getComponentClass() {
         return componentClass;
     }
 
-	public String getPropertyName() {
-		return propertyName;
-	}
+    public String getPropertyName() {
+        return propertyName;
+    }
 }

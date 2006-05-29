@@ -25,17 +25,17 @@ import org.seasar.framework.util.CaseInsensitiveMap;
 
 public abstract class AbstractMapResultSetHandler implements ResultSetHandler {
 
-	public AbstractMapResultSetHandler() {
-	}
+    public AbstractMapResultSetHandler() {
+    }
 
-	protected Map createRow(ResultSet rs, PropertyType[] propertyTypes)
-			throws SQLException {
+    protected Map createRow(ResultSet rs, PropertyType[] propertyTypes)
+            throws SQLException {
 
-		Map row = new CaseInsensitiveMap();
-		for (int i = 0; i < propertyTypes.length; ++i) {
-			Object value = propertyTypes[i].getValueType().getValue(rs, i + 1);
-			row.put(propertyTypes[i].getPropertyName(), value);
-		}
-		return row;
-	}
+        Map row = new CaseInsensitiveMap();
+        for (int i = 0; i < propertyTypes.length; ++i) {
+            Object value = propertyTypes[i].getValueType().getValue(rs, i + 1);
+            row.put(propertyTypes[i].getPropertyName(), value);
+        }
+        return row;
+    }
 }

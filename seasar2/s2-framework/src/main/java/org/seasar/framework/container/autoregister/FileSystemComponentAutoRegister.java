@@ -23,9 +23,10 @@ import org.seasar.framework.util.StringUtil;
 
 /**
  * @author higa
- *
+ * 
  */
-public class FileSystemComponentAutoRegister extends AbstractComponentAutoRegister {
+public class FileSystemComponentAutoRegister extends
+        AbstractComponentAutoRegister {
 
     public void registerAll() {
         for (int i = 0; i < getClassPatternSize(); ++i) {
@@ -33,15 +34,15 @@ public class FileSystemComponentAutoRegister extends AbstractComponentAutoRegist
             register(cp);
         }
     }
-    
+
     protected void register(ClassPattern classPattern) {
         String packageName = classPattern.getPackageName();
         File packageDir = getRootDir();
         ClassTraversal.forEach(packageDir, packageName, this);
     }
-    
+
     protected File getRootDir() {
-        String path = getContainer().getPath(); 
+        String path = getContainer().getPath();
         File file = ResourceUtil.getResourceAsFile(path);
         String[] names = StringUtil.split(path, "/");
         for (int i = 0; i < names.length; ++i) {

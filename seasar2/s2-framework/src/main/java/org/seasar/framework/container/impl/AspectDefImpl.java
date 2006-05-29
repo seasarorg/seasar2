@@ -23,28 +23,28 @@ import org.seasar.framework.container.AspectDef;
 
 /**
  * @author higa
- *
+ * 
  */
 public class AspectDefImpl extends ArgDefImpl implements AspectDef {
 
-	private Pointcut pointcut;
+    private Pointcut pointcut;
 
-	public AspectDefImpl() {
-	}
+    public AspectDefImpl() {
+    }
 
-	public AspectDefImpl(Pointcut pointcut) {
-		setPointcut(pointcut);
-	}
-	
-	public AspectDefImpl(MethodInterceptor interceptor) {
-		setValue(interceptor);
-	}
+    public AspectDefImpl(Pointcut pointcut) {
+        setPointcut(pointcut);
+    }
 
-	public AspectDefImpl(MethodInterceptor interceptor, Pointcut pointcut) {
-		setValue(interceptor);
-		setPointcut(pointcut);
-	}
-    
+    public AspectDefImpl(MethodInterceptor interceptor) {
+        setValue(interceptor);
+    }
+
+    public AspectDefImpl(MethodInterceptor interceptor, Pointcut pointcut) {
+        setValue(interceptor);
+        setPointcut(pointcut);
+    }
+
     public Pointcut getPointcut() {
         return pointcut;
     }
@@ -53,11 +53,11 @@ public class AspectDefImpl extends ArgDefImpl implements AspectDef {
         this.pointcut = pointcut;
     }
 
-	/**
-	 * @see org.seasar.framework.container.AspectDef#getAspect()
-	 */
-	public Aspect getAspect() {
-		MethodInterceptor interceptor = (MethodInterceptor) getValue();
-		return new AspectImpl(interceptor, pointcut);
-	}
+    /**
+     * @see org.seasar.framework.container.AspectDef#getAspect()
+     */
+    public Aspect getAspect() {
+        MethodInterceptor interceptor = (MethodInterceptor) getValue();
+        return new AspectImpl(interceptor, pointcut);
+    }
 }

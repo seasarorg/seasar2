@@ -30,128 +30,130 @@ import org.seasar.extension.unit.S2TestCase;
 
 public class ConnectionWrapperImplTest extends S2TestCase {
 
-	private static final String PATH = "connection.dicon";
-	private ConnectionWrapper con_;
-	private DummyConnectionPool dummyPool_;
+    private static final String PATH = "connection.dicon";
 
-	public ConnectionWrapperImplTest(String name) {
-		super(name);
-	}
+    private ConnectionWrapper con_;
 
-	public void testCloseReally() throws Exception {
-		con_.closeReally();
-		assertEquals("1", true, con_.isClosed());
-	}
+    private DummyConnectionPool dummyPool_;
 
-	public void testClose() throws Exception {
-		try {
-			con_.close();
-			assertEquals("1", true, con_.isClosed());
-			assertEquals("2", true, dummyPool_.isCheckIned());
-		} finally {
-			con_.closeReally();
-		}
-	}
+    public ConnectionWrapperImplTest(String name) {
+        super(name);
+    }
 
-	public void testRelease() throws Exception {
-		try {
-			con_.setTransactionIsolation(100);
-			fail("1");
-		} catch (SQLException ex) {
-			System.out.println(ex);
-			assertEquals("2", true, dummyPool_.isReleased());
-		} finally {
-			con_.closeReally();
-		}
-	}
+    public void testCloseReally() throws Exception {
+        con_.closeReally();
+        assertEquals("1", true, con_.isClosed());
+    }
 
-	public void testInit() throws Exception {
-		TransactionManager tm = new TransactionManagerImpl();
-		try {
-			tm.begin();
-			Transaction tx = tm.getTransaction();
-			XAResource xares = con_.getXAConnection().getXAResource();
-			tx.enlistResource(xares);
-			tx.commit();
-			con_.close();
-			con_.init(true);
-		} finally {
-			con_.closeReally();
-		}
-	}
+    public void testClose() throws Exception {
+        try {
+            con_.close();
+            assertEquals("1", true, con_.isClosed());
+            assertEquals("2", true, dummyPool_.isCheckIned());
+        } finally {
+            con_.closeReally();
+        }
+    }
 
-	public void testCleanup() throws Exception {
-		TransactionManager tm = new TransactionManagerImpl();
-		try {
-			tm.begin();
-			Transaction tx = tm.getTransaction();
-			XAResource xares = con_.getXAConnection().getXAResource();
-			tx.enlistResource(xares);
-			tx.commit();
-			con_.cleanup();
-			assertTrue("1", con_.isClosed());
-			con_.init(true);
-		} finally {
-			con_.closeReally();
-		}
-	}
+    public void testRelease() throws Exception {
+        try {
+            con_.setTransactionIsolation(100);
+            fail("1");
+        } catch (SQLException ex) {
+            System.out.println(ex);
+            assertEquals("2", true, dummyPool_.isReleased());
+        } finally {
+            con_.closeReally();
+        }
+    }
 
-	public void testRestrictedOperations() throws Exception {
-		TransactionManager tm = new TransactionManagerImpl();
-		try {
-			tm.begin();
-			Transaction tx = tm.getTransaction();
-			con_.init(false);
-			XAResource xares = con_.getXAConnection().getXAResource();
-			tx.enlistResource(xares);
-			try {
-			    con_.setAutoCommit(true);
-			    fail("1");
-			} catch (SQLException expected) {
-			}
-			try {
-			    con_.commit();
-			    fail("2");
-			} catch (SQLException expected) {
-			}
-			try {
-			    con_.rollback();
-			    fail("3");
-			} catch (SQLException expected) {
-			}
-			try {
-			    con_.setSavepoint();
-			    fail("4");
-			} catch (SQLException expected) {
-			}
-			try {
-			    con_.setSavepoint(null);
-			    fail("5");
-			} catch (SQLException expected) {
-			}
-			assertFalse("6", con_.isClosed());
-			tx.commit();
-			con_.cleanup();
-			assertTrue("7", con_.isClosed());
-			con_.init(true);
-		} finally {
-			con_.closeReally();
-		}
-	}
+    public void testInit() throws Exception {
+        TransactionManager tm = new TransactionManagerImpl();
+        try {
+            tm.begin();
+            Transaction tx = tm.getTransaction();
+            XAResource xares = con_.getXAConnection().getXAResource();
+            tx.enlistResource(xares);
+            tx.commit();
+            con_.close();
+            con_.init(true);
+        } finally {
+            con_.closeReally();
+        }
+    }
 
-	protected void setUp() throws Exception {
-		include(PATH);
-	}
+    public void testCleanup() throws Exception {
+        TransactionManager tm = new TransactionManagerImpl();
+        try {
+            tm.begin();
+            Transaction tx = tm.getTransaction();
+            XAResource xares = con_.getXAConnection().getXAResource();
+            tx.enlistResource(xares);
+            tx.commit();
+            con_.cleanup();
+            assertTrue("1", con_.isClosed());
+            con_.init(true);
+        } finally {
+            con_.closeReally();
+        }
+    }
 
-	protected void tearDown() throws Exception {
-	}
+    public void testRestrictedOperations() throws Exception {
+        TransactionManager tm = new TransactionManagerImpl();
+        try {
+            tm.begin();
+            Transaction tx = tm.getTransaction();
+            con_.init(false);
+            XAResource xares = con_.getXAConnection().getXAResource();
+            tx.enlistResource(xares);
+            try {
+                con_.setAutoCommit(true);
+                fail("1");
+            } catch (SQLException expected) {
+            }
+            try {
+                con_.commit();
+                fail("2");
+            } catch (SQLException expected) {
+            }
+            try {
+                con_.rollback();
+                fail("3");
+            } catch (SQLException expected) {
+            }
+            try {
+                con_.setSavepoint();
+                fail("4");
+            } catch (SQLException expected) {
+            }
+            try {
+                con_.setSavepoint(null);
+                fail("5");
+            } catch (SQLException expected) {
+            }
+            assertFalse("6", con_.isClosed());
+            tx.commit();
+            con_.cleanup();
+            assertTrue("7", con_.isClosed());
+            con_.init(true);
+        } finally {
+            con_.closeReally();
+        }
+    }
 
-	public static Test suite() {
-		return new TestSuite(ConnectionWrapperImplTest.class);
-	}
+    protected void setUp() throws Exception {
+        include(PATH);
+    }
 
-	public static void main(String[] args) {
-		junit.textui.TestRunner.main(
-			new String[] { ConnectionWrapperImplTest.class.getName()});
-	}
+    protected void tearDown() throws Exception {
+    }
+
+    public static Test suite() {
+        return new TestSuite(ConnectionWrapperImplTest.class);
+    }
+
+    public static void main(String[] args) {
+        junit.textui.TestRunner
+                .main(new String[] { ConnectionWrapperImplTest.class.getName() });
+    }
 }

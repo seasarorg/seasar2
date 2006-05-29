@@ -24,28 +24,28 @@ import org.seasar.framework.container.factory.AspectDefFactory;
 
 /**
  * @author higa
- *
+ * 
  */
 public class InterfaceAspectAutoRegister {
 
     public static final String INIT_METHOD = "registerAll";
 
     private S2Container container;
-    
+
     private MethodInterceptor interceptor;
-    
+
     private Class targetInterface;
-    
+
     private Pointcut pointcut;
 
     public void setContainer(S2Container container) {
         this.container = container;
     }
-    
+
     public void setInterceptor(MethodInterceptor interceptor) {
         this.interceptor = interceptor;
     }
-    
+
     public void setTargetInterface(Class targetInterface) {
         if (!targetInterface.isInterface()) {
             throw new IllegalArgumentException(targetInterface.getName());
@@ -60,7 +60,7 @@ public class InterfaceAspectAutoRegister {
             register(cd);
         }
     }
-    
+
     protected void register(ComponentDef componentDef) {
         Class componentClass = componentDef.getComponentClass();
         if (componentClass == null) {
@@ -71,9 +71,10 @@ public class InterfaceAspectAutoRegister {
         }
         registerInterceptor(componentDef);
     }
-   
+
     protected void registerInterceptor(ComponentDef componentDef) {
-        AspectDef aspectDef = AspectDefFactory.createAspectDef(interceptor, pointcut);
+        AspectDef aspectDef = AspectDefFactory.createAspectDef(interceptor,
+                pointcut);
         componentDef.addAspectDef(aspectDef);
     }
 }

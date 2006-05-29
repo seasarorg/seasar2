@@ -34,8 +34,11 @@ public class PrototypeDelegateInterceptor extends AbstractInterceptor {
     private static final long serialVersionUID = -6138917007687873314L;
 
     private S2Container container;
+
     private String targetName;
+
     private BeanDesc beanDesc;
+
     private Map methodNameMap = new HashMap();
 
     public PrototypeDelegateInterceptor(final S2Container container) {
@@ -50,7 +53,8 @@ public class PrototypeDelegateInterceptor extends AbstractInterceptor {
         this.targetName = targetName;
     }
 
-    public void addMethodNameMap(final String methodName, final String targetMethodName) {
+    public void addMethodNameMap(final String methodName,
+            final String targetMethodName) {
         methodNameMap.put(methodName, targetMethodName);
     }
 
@@ -78,8 +82,9 @@ public class PrototypeDelegateInterceptor extends AbstractInterceptor {
         }
 
         if (!beanDesc.hasMethod(methodName)) {
-            throw new MethodNotFoundRuntimeException(getTargetClass(invocation), methodName,
-                    invocation.getArguments());
+            throw new MethodNotFoundRuntimeException(
+                    getTargetClass(invocation), methodName, invocation
+                            .getArguments());
         }
 
         return beanDesc.invoke(target, methodName, invocation.getArguments());

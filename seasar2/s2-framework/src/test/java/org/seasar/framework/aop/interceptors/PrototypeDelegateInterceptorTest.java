@@ -20,7 +20,6 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.seasar.framework.aop.interceptors.PrototypeDelegateInterceptor;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.deployer.InstanceDefFactory;
 import org.seasar.framework.container.impl.ComponentDefImpl;
@@ -31,16 +30,19 @@ import org.seasar.framework.container.impl.S2ContainerImpl;
  */
 public class PrototypeDelegateInterceptorTest extends TestCase {
     private static List list = new ArrayList();
+
     private S2Container container;
 
     public void setUp() {
         list.clear();
         S2ContainerImpl containerImpl = new S2ContainerImpl();
 
-        ComponentDefImpl singleton = new ComponentDefImpl(Target.class, "singleton");
+        ComponentDefImpl singleton = new ComponentDefImpl(Target.class,
+                "singleton");
         containerImpl.register(singleton);
 
-        ComponentDefImpl prototype = new ComponentDefImpl(Target.class, "prototype");
+        ComponentDefImpl prototype = new ComponentDefImpl(Target.class,
+                "prototype");
         prototype.setInstanceDef(InstanceDefFactory.PROTOTYPE);
         containerImpl.register(prototype);
 
@@ -49,7 +51,8 @@ public class PrototypeDelegateInterceptorTest extends TestCase {
     }
 
     public void testSingleton() throws Exception {
-        PrototypeDelegateInterceptor pdi = new PrototypeDelegateInterceptor(container);
+        PrototypeDelegateInterceptor pdi = new PrototypeDelegateInterceptor(
+                container);
         pdi.setTargetName("singleton");
         Hello proxy = (Hello) pdi.createProxy(Hello.class);
         proxy.foo();
@@ -59,7 +62,8 @@ public class PrototypeDelegateInterceptorTest extends TestCase {
     }
 
     public void testPrototype() throws Exception {
-        PrototypeDelegateInterceptor pdi = new PrototypeDelegateInterceptor(container);
+        PrototypeDelegateInterceptor pdi = new PrototypeDelegateInterceptor(
+                container);
         pdi.setTargetName("prototype");
         Hello proxy = (Hello) pdi.createProxy(Hello.class);
         proxy.foo();
@@ -69,7 +73,8 @@ public class PrototypeDelegateInterceptorTest extends TestCase {
     }
 
     public void testMethodName() throws Exception {
-        PrototypeDelegateInterceptor pdi = new PrototypeDelegateInterceptor(container);
+        PrototypeDelegateInterceptor pdi = new PrototypeDelegateInterceptor(
+                container);
         pdi.setTargetName("singleton");
         pdi.addMethodNameMap("bar", "foo");
         Hello proxy = (Hello) pdi.createProxy(Hello.class);

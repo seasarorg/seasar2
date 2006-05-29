@@ -22,21 +22,21 @@ import org.seasar.framework.exception.SQLRuntimeException;
 
 /**
  * @author higa
- *
+ * 
  */
 public final class ResultSetUtil {
 
-	private ResultSetUtil() {
-	}
+    private ResultSetUtil() {
+    }
 
-	public static void close(ResultSet resultSet) {
-		if (resultSet == null) {
-			return;
-		}
-		try {
-			resultSet.close();
-		} catch (SQLException ex) {
-			throw new SQLRuntimeException(ex);
-		}
-	}
+    public static void close(ResultSet resultSet) {
+        if (resultSet == null) {
+            return;
+        }
+        try {
+            resultSet.close();
+        } catch (SQLException ex) {
+            throw new SQLRuntimeException(ex);
+        }
+    }
 }

@@ -19,23 +19,23 @@ import org.seasar.framework.exception.SRuntimeException;
 
 /**
  * @author higa
- *
+ * 
  */
 public final class TableNotFoundRuntimeException extends SRuntimeException {
 
     private static final long serialVersionUID = -8455516906109819288L;
 
-	private String tableName_;
-	
-	/**
-	 * @param componentKey
-	 */
-	public TableNotFoundRuntimeException(String tableName) {
-		super("ESSR0067", new Object[] { tableName });
-		tableName_ = tableName;
-	}
-	
-	public String getTableName() {
-		return tableName_;
-	}
+    private String tableName_;
+
+    /**
+     * @param componentKey
+     */
+    public TableNotFoundRuntimeException(String tableName) {
+        super("ESSR0067", new Object[] { tableName });
+        tableName_ = tableName;
+    }
+
+    public String getTableName() {
+        return tableName_;
+    }
 }

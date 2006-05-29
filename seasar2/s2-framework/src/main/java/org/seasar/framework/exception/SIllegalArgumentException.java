@@ -24,6 +24,7 @@ public class SIllegalArgumentException extends IllegalArgumentException {
     private static final long serialVersionUID = -3701473506893554853L;
 
     private String messageCode;
+
     private Object[] args;
 
     public SIllegalArgumentException(String messageCode, Object[] args) {

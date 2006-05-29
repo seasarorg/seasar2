@@ -32,55 +32,55 @@ import org.seasar.framework.container.ognl.OgnlExpression;
 
 /**
  * @author higa
- *
+ * 
  */
 public class DefaultDestroyMethodAssemblerTest extends TestCase {
 
-	public void testAssemble() throws Exception {
-		S2Container container = new S2ContainerImpl();
-		ComponentDefImpl cd = new ComponentDefImpl(HashMap.class);
-		DestroyMethodDef md = new DestroyMethodDefImpl("put");
-		ArgDef argDef = new ArgDefImpl("aaa");
-		md.addArgDef(argDef);
-		ArgDef argDef2 = new ArgDefImpl("111");
-		md.addArgDef(argDef2);
-		cd.addDestroyMethodDef(md);
-		container.register(cd);
-		MethodAssembler assembler = new DefaultDestroyMethodAssembler(cd);
-		HashMap map = new HashMap();
-		assembler.assemble(map);
-		assertEquals("1", "111", map.get("aaa"));
-	}
-	
-	public void testAssembleForExpression() throws Exception {
-		S2Container container = new S2ContainerImpl();
-		ComponentDefImpl cd = new ComponentDefImpl(HashMap.class);
-		DestroyMethodDef md = new DestroyMethodDefImpl();
-		md.setExpression(new OgnlExpression("#self.put('aaa', '111')"));
-		cd.addDestroyMethodDef(md);
-		container.register(cd);
-		MethodAssembler assembler = new DefaultDestroyMethodAssembler(cd);
-		HashMap map = new HashMap();
-		assembler.assemble(map);
-		assertEquals("1", "111", map.get("aaa"));
-	}
+    public void testAssemble() throws Exception {
+        S2Container container = new S2ContainerImpl();
+        ComponentDefImpl cd = new ComponentDefImpl(HashMap.class);
+        DestroyMethodDef md = new DestroyMethodDefImpl("put");
+        ArgDef argDef = new ArgDefImpl("aaa");
+        md.addArgDef(argDef);
+        ArgDef argDef2 = new ArgDefImpl("111");
+        md.addArgDef(argDef2);
+        cd.addDestroyMethodDef(md);
+        container.register(cd);
+        MethodAssembler assembler = new DefaultDestroyMethodAssembler(cd);
+        HashMap map = new HashMap();
+        assembler.assemble(map);
+        assertEquals("1", "111", map.get("aaa"));
+    }
 
-	public void testAssembleIllegalArgument() throws Exception {
-		S2Container container = new S2ContainerImpl();
-		ComponentDefImpl cd = new ComponentDefImpl(HashMap.class);
-		DestroyMethodDef md = new DestroyMethodDefImpl("put");
-		cd.addDestroyMethodDef(md);
-		container.register(cd);
-		MethodAssembler assembler = new DefaultDestroyMethodAssembler(cd);
-		HashMap map = new HashMap();
-		try {
-			assembler.assemble(map);
-			fail("1");
-		} catch (MethodNotFoundRuntimeException ex) {
-			System.out.println(ex);
-		}
-	}
-    
+    public void testAssembleForExpression() throws Exception {
+        S2Container container = new S2ContainerImpl();
+        ComponentDefImpl cd = new ComponentDefImpl(HashMap.class);
+        DestroyMethodDef md = new DestroyMethodDefImpl();
+        md.setExpression(new OgnlExpression("#self.put('aaa', '111')"));
+        cd.addDestroyMethodDef(md);
+        container.register(cd);
+        MethodAssembler assembler = new DefaultDestroyMethodAssembler(cd);
+        HashMap map = new HashMap();
+        assembler.assemble(map);
+        assertEquals("1", "111", map.get("aaa"));
+    }
+
+    public void testAssembleIllegalArgument() throws Exception {
+        S2Container container = new S2ContainerImpl();
+        ComponentDefImpl cd = new ComponentDefImpl(HashMap.class);
+        DestroyMethodDef md = new DestroyMethodDefImpl("put");
+        cd.addDestroyMethodDef(md);
+        container.register(cd);
+        MethodAssembler assembler = new DefaultDestroyMethodAssembler(cd);
+        HashMap map = new HashMap();
+        try {
+            assembler.assemble(map);
+            fail("1");
+        } catch (MethodNotFoundRuntimeException ex) {
+            System.out.println(ex);
+        }
+    }
+
     public void testAssembleWhenComponentNull() throws Exception {
         S2Container container = new S2ContainerImpl();
         ComponentDefImpl cd = new ComponentDefImpl(HashMap.class);
@@ -92,39 +92,39 @@ public class DefaultDestroyMethodAssemblerTest extends TestCase {
         assembler.assemble(null);
     }
 
-	public interface Foo {
-		public String getHogeName();
-	}
+    public interface Foo {
+        public String getHogeName();
+    }
 
-	public static class A implements Foo {
+    public static class A implements Foo {
 
-		private Hoge hoge_;
+        private Hoge hoge_;
 
-		public A() {
-		}
+        public A() {
+        }
 
-		public Hoge getHoge() {
-			return hoge_;
-		}
+        public Hoge getHoge() {
+            return hoge_;
+        }
 
-		public void setHoge(Hoge hoge) {
-			hoge_ = hoge;
-		}
+        public void setHoge(Hoge hoge) {
+            hoge_ = hoge;
+        }
 
-		public String getHogeName() {
-			return hoge_.getName();
-		}
-	}
+        public String getHogeName() {
+            return hoge_.getName();
+        }
+    }
 
-	public interface Hoge {
+    public interface Hoge {
 
-		public String getName();
-	}
+        public String getName();
+    }
 
-	public static class B implements Hoge {
+    public static class B implements Hoge {
 
-		public String getName() {
-			return "B";
-		}
-	}
+        public String getName() {
+            return "B";
+        }
+    }
 }

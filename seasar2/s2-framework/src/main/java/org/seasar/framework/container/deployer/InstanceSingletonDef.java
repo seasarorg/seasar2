@@ -20,15 +20,16 @@ import org.seasar.framework.container.ComponentDeployer;
 
 /**
  * @author higa
- *
+ * 
  */
 public class InstanceSingletonDef extends AbstractInstanceDef {
 
     protected InstanceSingletonDef(String name) {
         super(name);
     }
-    
+
     public ComponentDeployer createComponentDeployer(ComponentDef componentDef) {
-        return ComponentDeployerFactory.createSingletonComponentDeployer(componentDef);
+        return ComponentDeployerFactory
+                .createSingletonComponentDeployer(componentDef);
     }
 }

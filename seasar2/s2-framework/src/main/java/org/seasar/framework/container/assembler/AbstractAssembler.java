@@ -23,44 +23,43 @@ import org.seasar.framework.log.Logger;
 
 /**
  * @author higa
- *
+ * 
  */
 public abstract class AbstractAssembler {
-	
-	private static Logger logger = Logger.getLogger(AbstractAssembler.class);
 
-	private ComponentDef componentDef;
+    private static Logger logger = Logger.getLogger(AbstractAssembler.class);
 
-	public AbstractAssembler(ComponentDef componentDef) {
-		this.componentDef = componentDef;
-	}
+    private ComponentDef componentDef;
 
-	protected final ComponentDef getComponentDef() {
-		return componentDef;
-	}
-	
-	protected BeanDesc getBeanDesc(Object component) {
-		return BindingUtil.getBeanDesc(getComponentDef(), component);
-	}
-	
-	protected Class getComponentClass(Object component) {
-		return BindingUtil.getComponentClass(getComponentDef(), component);
-	}
-	
-	protected Object[] getArgs(Class[] argTypes) {
-		Object[] args = new Object[argTypes.length];
-		for (int i = 0; i < argTypes.length; ++i) {
-			try {
-				args[i] =
-					getComponentDef().getContainer().getComponent(argTypes[i]);
-			} catch (ComponentNotFoundRuntimeException ex) {
-				logger.log("WSSR0007",
-						new Object[] {
-							getComponentDef().getComponentClass().getName(),
-							ex.getComponentKey()});
-				args[i] = null;
-			}
-		}
-		return args;
-	}
+    public AbstractAssembler(ComponentDef componentDef) {
+        this.componentDef = componentDef;
+    }
+
+    protected final ComponentDef getComponentDef() {
+        return componentDef;
+    }
+
+    protected BeanDesc getBeanDesc(Object component) {
+        return BindingUtil.getBeanDesc(getComponentDef(), component);
+    }
+
+    protected Class getComponentClass(Object component) {
+        return BindingUtil.getComponentClass(getComponentDef(), component);
+    }
+
+    protected Object[] getArgs(Class[] argTypes) {
+        Object[] args = new Object[argTypes.length];
+        for (int i = 0; i < argTypes.length; ++i) {
+            try {
+                args[i] = getComponentDef().getContainer().getComponent(
+                        argTypes[i]);
+            } catch (ComponentNotFoundRuntimeException ex) {
+                logger.log("WSSR0007", new Object[] {
+                        getComponentDef().getComponentClass().getName(),
+                        ex.getComponentKey() });
+                args[i] = null;
+            }
+        }
+        return args;
+    }
 }

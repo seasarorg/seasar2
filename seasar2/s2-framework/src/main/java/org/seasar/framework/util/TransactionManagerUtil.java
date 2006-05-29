@@ -24,21 +24,21 @@ import org.seasar.framework.exception.SystemRuntimeException;
 
 /**
  * @author higa
- *
+ * 
  */
 public final class TransactionManagerUtil {
 
-	private TransactionManagerUtil() {
-	}
+    private TransactionManagerUtil() {
+    }
 
-	public static Transaction getTransaction(TransactionManager tm) {
-		try {
-			return tm.getTransaction();
-		} catch (SystemException e) {
-			throw new SystemRuntimeException(e);
-		}
-	}
-    
+    public static Transaction getTransaction(TransactionManager tm) {
+        try {
+            return tm.getTransaction();
+        } catch (SystemException e) {
+            throw new SystemRuntimeException(e);
+        }
+    }
+
     public static boolean isActive(TransactionManager tm) {
         try {
             return tm.getStatus() != Status.STATUS_NO_TRANSACTION;

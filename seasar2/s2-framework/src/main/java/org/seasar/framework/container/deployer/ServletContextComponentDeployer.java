@@ -41,7 +41,8 @@ public class ServletContextComponentDeployer extends AbstractComponentDeployer {
     public Object deploy() {
         ComponentDef cd = getComponentDef();
         ServletContext servletContext = null;
-        ExternalContext extCtx = cd.getContainer().getRoot().getExternalContext();
+        ExternalContext extCtx = cd.getContainer().getRoot()
+                .getExternalContext();
         if (extCtx != null && extCtx.getApplication() instanceof ServletContext) {
             servletContext = (ServletContext) extCtx.getApplication();
         }

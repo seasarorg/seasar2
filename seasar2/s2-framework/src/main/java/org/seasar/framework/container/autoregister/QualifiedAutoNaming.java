@@ -32,7 +32,8 @@ public class QualifiedAutoNaming extends AbstractAutoNaming {
         addReplaceRule(regex, "");
     }
 
-    protected String makeDefineName(final String packageName, final String shortClassName) {
+    protected String makeDefineName(final String packageName,
+            final String shortClassName) {
         return applyRule(ClassUtil.concatName(packageName, shortClassName));
     }
 }

@@ -20,7 +20,7 @@ import org.seasar.framework.container.ComponentDeployer;
 
 /**
  * @author higa
- *
+ * 
  */
 public class InstanceOuterDef extends AbstractInstanceDef {
 
@@ -29,6 +29,7 @@ public class InstanceOuterDef extends AbstractInstanceDef {
     }
 
     public ComponentDeployer createComponentDeployer(ComponentDef componentDef) {
-        return ComponentDeployerFactory.createOuterComponentDeployer(componentDef);
+        return ComponentDeployerFactory
+                .createOuterComponentDeployer(componentDef);
     }
 }

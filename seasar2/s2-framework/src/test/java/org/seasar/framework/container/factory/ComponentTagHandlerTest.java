@@ -34,44 +34,38 @@ import org.seasar.framework.mock.servlet.MockServletContextImpl;
 
 /**
  * @author higa
- *
+ * 
  */
 public class ComponentTagHandlerTest extends TestCase {
 
-	private static final String PATH =
-		"org/seasar/framework/container/factory/ComponentTagHandlerTest.dicon";
+    private static final String PATH = "org/seasar/framework/container/factory/ComponentTagHandlerTest.dicon";
 
-	public void testComponent() throws Exception {
-		S2Container container = S2ContainerFactory.create(PATH);
-        ComponentDeployerFactory.setProvider(new HttpServletComponentDeployerProvider());
-		container.init();
-		assertNotNull("1", container.getComponent(List.class));
-		assertNotNull("2", container.getComponent("aaa"));
-		assertEquals("3", new Integer(1), container.getComponent("bbb"));
-		assertEquals(
-			"4",
-			true,
-			container.getComponent("ccc") != container.getComponent("ccc"));
-		ComponentDef cd =
-			container.getComponentDef("ddd");
-		assertEquals(
-			"5",
-            AutoBindingDefFactory.NONE,
-			cd.getAutoBindingDef());
-		Map map = new HashMap();
-		container.injectDependency(map, "eee");
-		assertEquals("6", "111", map.get("aaa"));
-		assertNotNull("7", container.getComponent("fff"));
-		assertNotNull("8", container.getComponent("ggg"));
-		MockServletContextImpl ctx = new MockServletContextImpl("s2jsf-example");
-		HttpServletRequest request = ctx.createRequest("/hello.html");
+    public void testComponent() throws Exception {
+        S2Container container = S2ContainerFactory.create(PATH);
+        ComponentDeployerFactory
+                .setProvider(new HttpServletComponentDeployerProvider());
+        container.init();
+        assertNotNull("1", container.getComponent(List.class));
+        assertNotNull("2", container.getComponent("aaa"));
+        assertEquals("3", new Integer(1), container.getComponent("bbb"));
+        assertEquals("4", true, container.getComponent("ccc") != container
+                .getComponent("ccc"));
+        ComponentDef cd = container.getComponentDef("ddd");
+        assertEquals("5", AutoBindingDefFactory.NONE, cd.getAutoBindingDef());
+        Map map = new HashMap();
+        container.injectDependency(map, "eee");
+        assertEquals("6", "111", map.get("aaa"));
+        assertNotNull("7", container.getComponent("fff"));
+        assertNotNull("8", container.getComponent("ggg"));
+        MockServletContextImpl ctx = new MockServletContextImpl("s2jsf-example");
+        HttpServletRequest request = ctx.createRequest("/hello.html");
         ExternalContext extCtx = new HttpServletExternalContext();
         extCtx.setRequest(request);
         extCtx.setApplication(ctx);
         container.setExternalContext(extCtx);
-		assertNotNull("9", container.getComponent("hhh"));
-		assertNotNull("10", container.getComponent("iii"));
+        assertNotNull("9", container.getComponent("hhh"));
+        assertNotNull("10", container.getComponent("iii"));
         assertEquals("11", "jjj", container.getComponent("jjj"));
         assertEquals("12", "jjj", ctx.getAttribute("jjj"));
-	}
+    }
 }

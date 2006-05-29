@@ -24,35 +24,36 @@ import org.seasar.framework.container.S2Container;
 
 /**
  * @author higa
- *
+ * 
  */
 public final class ArgDefSupport {
 
-	private List argDefs = Collections.synchronizedList(new ArrayList());
-	private S2Container container;
-	
-	public ArgDefSupport() {
-	}
+    private List argDefs = Collections.synchronizedList(new ArrayList());
 
-	public void addArgDef(ArgDef argDef) {
-		if (container != null) {
-			argDef.setContainer(container);
-		}
-		argDefs.add(argDef);
-	}
-	
-	public int getArgDefSize() {
-		return argDefs.size();
-	}
-	
-	public ArgDef getArgDef(int index) {
-		return (ArgDef) argDefs.get(index);
-	}
-	
-	public void setContainer(S2Container container) {
-		this.container = container;
-		for (int i = 0; i < getArgDefSize(); ++i) {
-			getArgDef(i).setContainer(container);
-		}
-	}
+    private S2Container container;
+
+    public ArgDefSupport() {
+    }
+
+    public void addArgDef(ArgDef argDef) {
+        if (container != null) {
+            argDef.setContainer(container);
+        }
+        argDefs.add(argDef);
+    }
+
+    public int getArgDefSize() {
+        return argDefs.size();
+    }
+
+    public ArgDef getArgDef(int index) {
+        return (ArgDef) argDefs.get(index);
+    }
+
+    public void setContainer(S2Container container) {
+        this.container = container;
+        for (int i = 0; i < getArgDefSize(); ++i) {
+            getArgDef(i).setContainer(container);
+        }
+    }
 }

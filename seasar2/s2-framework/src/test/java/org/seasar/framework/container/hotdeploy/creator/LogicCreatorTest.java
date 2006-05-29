@@ -30,9 +30,9 @@ import org.seasar.framework.util.ClassUtil;
  * 
  */
 public class LogicCreatorTest extends S2FrameworkTestCase {
-    
+
     private ClassLoader originalLoader;
-    
+
     private OndemandBehavior ondemand;
 
     protected void setUp() {
@@ -47,10 +47,11 @@ public class LogicCreatorTest extends S2FrameworkTestCase {
         S2ContainerBehavior.setProvider(ondemand);
         ondemand.start();
     }
-    
+
     protected void tearDown() {
         ondemand.stop();
-        S2ContainerBehavior.setProvider(new S2ContainerBehavior.DefaultProvider());
+        S2ContainerBehavior
+                .setProvider(new S2ContainerBehavior.DefaultProvider());
         Thread.currentThread().setContextClassLoader(originalLoader);
     }
 
@@ -60,12 +61,13 @@ public class LogicCreatorTest extends S2FrameworkTestCase {
         assertNotNull("1", cd);
         assertEquals("2", name, cd.getComponentName());
     }
-    
+
     public void testIsTargetByClass() throws Exception {
-        Class clazz = ClassUtil.forName(ClassUtil.getPackageName(getClass()) + ".logic.CccLogic");
+        Class clazz = ClassUtil.forName(ClassUtil.getPackageName(getClass())
+                + ".logic.CccLogic");
         assertNotNull("1", getComponent(clazz));
     }
-    
+
     public void testAspect() throws Exception {
         Object cccLogic = getComponent("cccLogic");
         Method m = cccLogic.getClass().getMethod("greet", null);

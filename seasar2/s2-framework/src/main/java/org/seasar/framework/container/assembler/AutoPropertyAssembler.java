@@ -29,7 +29,8 @@ import org.seasar.framework.container.PropertyDef;
  * @author higa
  * 
  */
-public class AutoPropertyAssembler extends AbstractAssembler implements PropertyAssembler {
+public class AutoPropertyAssembler extends AbstractAssembler implements
+        PropertyAssembler {
 
     /**
      * @param componentDef

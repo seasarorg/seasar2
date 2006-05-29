@@ -17,16 +17,15 @@ package org.seasar.framework.exception;
 
 import javax.transaction.RollbackException;
 
-
 /**
  * @author higa
- *
+ * 
  */
 public final class RollbackRuntimeException extends SRuntimeException {
 
     private static final long serialVersionUID = -889986104662559877L;
 
-	public RollbackRuntimeException(RollbackException cause) {
-		super("ESSR0063", new Object[]{cause}, cause);
-	}
+    public RollbackRuntimeException(RollbackException cause) {
+        super("ESSR0063", new Object[] { cause }, cause);
+    }
 }

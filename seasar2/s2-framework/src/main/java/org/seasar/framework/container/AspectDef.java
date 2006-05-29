@@ -20,13 +20,13 @@ import org.seasar.framework.aop.Pointcut;
 
 /**
  * @author higa
- *
+ * 
  */
 public interface AspectDef extends ArgDef {
 
     Pointcut getPointcut();
-    
+
     void setPointcut(Pointcut pointcut);
-    
-	Aspect getAspect();
+
+    Aspect getAspect();
 }

@@ -28,7 +28,8 @@ import org.seasar.framework.util.StringUtil;
  * 
  * @author koichik, higa
  */
-public abstract class AbstractJarComponentAutoRegister extends AbstractComponentAutoRegister {
+public abstract class AbstractJarComponentAutoRegister extends
+        AbstractComponentAutoRegister {
 
     private String baseDir;
 

@@ -19,23 +19,23 @@ import org.seasar.framework.exception.SRuntimeException;
 
 /**
  * @author higa
- *
+ * 
  */
 public class IllegalBindingTypeDefRuntimeException extends SRuntimeException {
 
     private static final long serialVersionUID = 9557906947127294L;
 
-	private String bindingTypeName;
-	
-	/**
-	 * @param bindingTypeName
-	 */
-	public IllegalBindingTypeDefRuntimeException(String bindingTypeName) {
-		super("ESSR0079", new Object[] { bindingTypeName});
-		this.bindingTypeName = bindingTypeName;
-	}
-	
-	public String getBindingTypeName() {
-		return bindingTypeName;
-	}
+    private String bindingTypeName;
+
+    /**
+     * @param bindingTypeName
+     */
+    public IllegalBindingTypeDefRuntimeException(String bindingTypeName) {
+        super("ESSR0079", new Object[] { bindingTypeName });
+        this.bindingTypeName = bindingTypeName;
+    }
+
+    public String getBindingTypeName() {
+        return bindingTypeName;
+    }
 }

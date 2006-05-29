@@ -19,65 +19,64 @@ import javax.transaction.xa.XAException;
 import javax.transaction.xa.XAResource;
 import javax.transaction.xa.Xid;
 
-
 class XAResourceWrapper {
 
-	private XAResource xaResource_;
-	private Xid xid_;
-	private boolean commitTarget_;
-	private boolean voteOk_ = true;
+    private XAResource xaResource_;
 
-	XAResourceWrapper(
-		XAResource xaResource,
-		Xid xid,
-		boolean commitTarget) {
+    private Xid xid_;
 
-		xaResource_ = xaResource;
-		xid_ = xid;
-		commitTarget_ = commitTarget;
-	}
-	
-	XAResource getXAResource() {
-		return xaResource_;
-	}
-	
-	Xid getXid() {
-		return xid_;
-	}
-	
-	boolean isCommitTarget() {
-		return commitTarget_;
-	}
-	
-	boolean isVoteOk() {
-		return voteOk_;
-	}
-	
-	void setVoteOk(boolean voteOk) {
-		voteOk_ = voteOk;
-	}
+    private boolean commitTarget_;
 
-	void start(int flag) throws XAException {
-		xaResource_.start(xid_, flag);
-	}
+    private boolean voteOk_ = true;
 
-	void end(int flag) throws XAException {
-		xaResource_.end(xid_, flag);
-	}
+    XAResourceWrapper(XAResource xaResource, Xid xid, boolean commitTarget) {
 
-	int prepare() throws XAException {
-		return xaResource_.prepare(xid_);
-	}
+        xaResource_ = xaResource;
+        xid_ = xid;
+        commitTarget_ = commitTarget;
+    }
 
-	void commit(boolean onePhase) throws XAException {
-		xaResource_.commit(xid_, onePhase);
-	}
+    XAResource getXAResource() {
+        return xaResource_;
+    }
 
-	void rollback() throws XAException {
-		xaResource_.rollback(xid_);
-	}
+    Xid getXid() {
+        return xid_;
+    }
 
-	void forget() throws XAException {
-		xaResource_.forget(xid_);
-	}
+    boolean isCommitTarget() {
+        return commitTarget_;
+    }
+
+    boolean isVoteOk() {
+        return voteOk_;
+    }
+
+    void setVoteOk(boolean voteOk) {
+        voteOk_ = voteOk;
+    }
+
+    void start(int flag) throws XAException {
+        xaResource_.start(xid_, flag);
+    }
+
+    void end(int flag) throws XAException {
+        xaResource_.end(xid_, flag);
+    }
+
+    int prepare() throws XAException {
+        return xaResource_.prepare(xid_);
+    }
+
+    void commit(boolean onePhase) throws XAException {
+        xaResource_.commit(xid_, onePhase);
+    }
+
+    void rollback() throws XAException {
+        xaResource_.rollback(xid_);
+    }
+
+    void forget() throws XAException {
+        xaResource_.forget(xid_);
+    }
 }

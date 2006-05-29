@@ -27,41 +27,44 @@ import org.seasar.framework.log.Logger;
 
 public final class DataSourceImpl implements DataSource, Serializable {
 
-	static final long serialVersionUID = 1L;
-	private static final Logger logger_ = Logger.getLogger(DataSourceImpl.class);
-	private ConnectionPool connectionPool_;
+    static final long serialVersionUID = 1L;
 
-	public DataSourceImpl(ConnectionPool connectionPool) {
-		connectionPool_ = connectionPool;
-	}
+    private static final Logger logger_ = Logger
+            .getLogger(DataSourceImpl.class);
 
-	public ConnectionPool getConnectionPool() {
-		return connectionPool_;
-	}
+    private ConnectionPool connectionPool_;
 
-	public Connection getConnection() throws SQLException {
-		Connection con = connectionPool_.checkOut();
-		logger_.log("DSSR0007", null);
-		return con;
-	}
+    public DataSourceImpl(ConnectionPool connectionPool) {
+        connectionPool_ = connectionPool;
+    }
 
-	public Connection getConnection(String user, String password)
-		throws SQLException {
+    public ConnectionPool getConnectionPool() {
+        return connectionPool_;
+    }
 
-		return getConnection();
-	}
+    public Connection getConnection() throws SQLException {
+        Connection con = connectionPool_.checkOut();
+        logger_.log("DSSR0007", null);
+        return con;
+    }
 
-	public void setLoginTimeout(int loginTimeout) throws SQLException {
-	}
+    public Connection getConnection(String user, String password)
+            throws SQLException {
 
-	public int getLoginTimeout() throws SQLException {
-		return 0;
-	}
+        return getConnection();
+    }
 
-	public void setLogWriter(PrintWriter logWriter) throws SQLException {
-	}
+    public void setLoginTimeout(int loginTimeout) throws SQLException {
+    }
 
-	public PrintWriter getLogWriter() throws SQLException {
-		return null;
-	}
+    public int getLoginTimeout() throws SQLException {
+        return 0;
+    }
+
+    public void setLogWriter(PrintWriter logWriter) throws SQLException {
+    }
+
+    public PrintWriter getLogWriter() throws SQLException {
+        return null;
+    }
 }

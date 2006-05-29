@@ -24,14 +24,12 @@ import java.util.List;
 import javassist.CannotCompileException;
 import javassist.CtClass;
 import javassist.CtField;
-
 import junit.framework.TestCase;
 
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.seasar.framework.aop.InterType;
 import org.seasar.framework.aop.interceptors.AbstractInterceptor;
-import org.seasar.framework.aop.javassist.AspectWeaver;
 
 /**
  * @author koichik

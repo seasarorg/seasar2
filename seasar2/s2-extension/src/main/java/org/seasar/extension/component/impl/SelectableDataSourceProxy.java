@@ -34,6 +34,7 @@ import org.seasar.framework.exception.EmptyRuntimeException;
  * <p>
  * S2AOPのインターセプタを作成してスレッドコンテキストにユーザが使用する実際のデータソース名を設定します。
  * </p>
+ * 
  * <pre>
  *     public Object invoke(MethodInvocation invocation) throws Throwable {
  *         String currentName = proxy.getDataSourceName();
@@ -46,6 +47,7 @@ import org.seasar.framework.exception.EmptyRuntimeException;
  *         }
  *     }
  * </pre>
+ * 
  * <p>
  * DAOはスレッドコンテキストに設定された名前を持つデータソースを使ってデータベースにアクセスできます。
  * </p>

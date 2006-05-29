@@ -19,14 +19,14 @@ import org.aopalliance.intercept.MethodInterceptor;
 
 /**
  * @author higa
- *
+ * 
  */
 public interface Aspect {
-	
-	public MethodInterceptor getMethodInterceptor();
-	
-	public Pointcut getPointcut();
-	
-	public void setPointcut(Pointcut pointcut);
+
+    public MethodInterceptor getMethodInterceptor();
+
+    public Pointcut getPointcut();
+
+    public void setPointcut(Pointcut pointcut);
 
 }

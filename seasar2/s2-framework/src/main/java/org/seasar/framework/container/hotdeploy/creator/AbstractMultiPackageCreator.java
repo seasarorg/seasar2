@@ -22,18 +22,20 @@ import org.seasar.framework.container.cooldeploy.ConventionNaming;
 import org.seasar.framework.container.hotdeploy.OndemandCreatorContainer;
 import org.seasar.framework.util.StringUtil;
 
-public abstract class AbstractMultiPackageCreator extends AbstractOndemandCreator {
-    
+public abstract class AbstractMultiPackageCreator extends
+        AbstractOndemandCreator {
+
     private List middlePackageNames = new ArrayList();
 
     public String[] getMiddlePackageNames() {
-        return (String[]) middlePackageNames.toArray(new String[middlePackageNames.size()]);
+        return (String[]) middlePackageNames
+                .toArray(new String[middlePackageNames.size()]);
     }
 
     public void addMiddlePackageName(String middlePackageName) {
         middlePackageNames.add(middlePackageName);
     }
-    
+
     protected String[] composeClassNames(String componentName) {
         String prePackageName = null;
         String shortClassName = componentName;
@@ -56,7 +58,7 @@ public abstract class AbstractMultiPackageCreator extends AbstractOndemandCreato
         }
         return classNames;
     }
-    
+
     protected boolean isTargetMiddlePackage(String className) {
         String[] mpNames = getMiddlePackageNames();
         if (mpNames.length == 0) {
@@ -69,7 +71,7 @@ public abstract class AbstractMultiPackageCreator extends AbstractOndemandCreato
         }
         return false;
     }
-    
+
     protected String composeComponentName(String className) {
         OndemandCreatorContainer con = getOndemandCreatorContainer();
         ConventionNaming naming = con.getConventionNaming();

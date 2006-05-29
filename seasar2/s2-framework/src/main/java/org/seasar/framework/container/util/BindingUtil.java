@@ -22,32 +22,34 @@ import org.seasar.framework.container.ContainerConstants;
 
 /**
  * @author higa
- *
+ * 
  */
 public final class BindingUtil implements ContainerConstants {
 
-	protected BindingUtil() {
-	}
-
-	public static final boolean isAutoBindable(Class clazz) {
-		return clazz.isInterface();
-	}
-
-	public static final boolean isAutoBindable(Class[] classes) {
-		for (int i = 0; i < classes.length; ++i) {
-			if (!isAutoBindable(classes[i])) {
-				return false;
-			}
-		}
-		return true;
-	}
-    
-    public static BeanDesc getBeanDesc(ComponentDef componentDef, Object component) {
-        return BeanDescFactory.getBeanDesc(
-            getComponentClass(componentDef, component));
+    protected BindingUtil() {
     }
-    
-    public static Class getComponentClass(ComponentDef componentDef, Object component) {
+
+    public static final boolean isAutoBindable(Class clazz) {
+        return clazz.isInterface();
+    }
+
+    public static final boolean isAutoBindable(Class[] classes) {
+        for (int i = 0; i < classes.length; ++i) {
+            if (!isAutoBindable(classes[i])) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static BeanDesc getBeanDesc(ComponentDef componentDef,
+            Object component) {
+        return BeanDescFactory.getBeanDesc(getComponentClass(componentDef,
+                component));
+    }
+
+    public static Class getComponentClass(ComponentDef componentDef,
+            Object component) {
         Class clazz = componentDef.getConcreteClass();
         if (clazz != null) {
             return clazz;

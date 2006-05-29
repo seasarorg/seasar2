@@ -34,7 +34,7 @@ public class BindingTypeNoneDef extends AbstractBindingTypeDef {
             Object component) {
 
     }
-    
+
     protected void doBind(ComponentDef componentDef, PropertyDesc propertyDesc,
             Object component) {
 

@@ -25,135 +25,134 @@ import java.util.Properties;
 
 import org.seasar.framework.exception.IORuntimeException;
 
-
 public final class ResourceUtil {
 
-	private ResourceUtil() {
-	}
+    private ResourceUtil() {
+    }
 
-	public static String getResourcePath(String path, String extension) {
-		if (extension == null) {
-			return path;
-		}
-		extension = "." + extension;
-		if (path.endsWith(extension)) {
-			return path;
-		}
-		return path.replace('.', '/') + extension;
-	}
-	
-	public static String getResourcePath(Class clazz) {
-		return clazz.getName().replace('.', '/') + ".class";
-	}
-	
-	public static ClassLoader getClassLoader() {
-		return Thread.currentThread().getContextClassLoader();
-	}
+    public static String getResourcePath(String path, String extension) {
+        if (extension == null) {
+            return path;
+        }
+        extension = "." + extension;
+        if (path.endsWith(extension)) {
+            return path;
+        }
+        return path.replace('.', '/') + extension;
+    }
 
-	public static URL getResource(String path) {
-		return getResource(path, null);
-	}
+    public static String getResourcePath(Class clazz) {
+        return clazz.getName().replace('.', '/') + ".class";
+    }
 
-	public static URL getResource(String path, String extension)
-		throws ResourceNotFoundRuntimeException {
+    public static ClassLoader getClassLoader() {
+        return Thread.currentThread().getContextClassLoader();
+    }
 
-		URL url = getResourceNoException(path, extension);
-		if (url != null) {
-			return url;
-		}
-		throw new ResourceNotFoundRuntimeException(
-			getResourcePath(path, extension));
-	}
-	
-	public static URL getResourceNoException(String path) {
-		return getResourceNoException(path, null);
-	}
+    public static URL getResource(String path) {
+        return getResource(path, null);
+    }
 
-	public static URL getResourceNoException(String path, String extension) {
-		path = getResourcePath(path, extension);
-		return getClassLoader().getResource(path);
-	}
-	
-	public static InputStream getResourceAsStream(String path) {
-		return getResourceAsStream(path, null);
-	}
-		
-	public static InputStream getResourceAsStream(String path, String extension) {
-		URL url = getResource(path, extension);
-		return URLUtil.openStream(url);
-	}
+    public static URL getResource(String path, String extension)
+            throws ResourceNotFoundRuntimeException {
 
-	public static boolean isExist(String path) {
-		return getResourceNoException(path) != null;
-	}
-	
-	public static Properties getProperties(String path) {
-		Properties props = new Properties();
-		InputStream is = getResourceAsStream(path);
-		try {
-			props.load(is);
-			return props;
-		} catch (IOException ex) {
-			throw new IORuntimeException(ex);
-		}
-	}
-	
-	public static String getExtension(String path) {
-		int extPos = path.lastIndexOf(".");
-		if (extPos >= 0) {
-			return path.substring(extPos + 1);
-		}
-		return null;
-	}
-	
-	public static String removeExtension(String path) {
-		int extPos = path.lastIndexOf(".");
-		if (extPos >= 0) {
-			return path.substring(0, extPos);
-		}
-		return path;
-	}
+        URL url = getResourceNoException(path, extension);
+        if (url != null) {
+            return url;
+        }
+        throw new ResourceNotFoundRuntimeException(getResourcePath(path,
+                extension));
+    }
 
-	public static File getBuildDir(Class clazz) {
-		URL url = getResource(getResourcePath(clazz));
-		int num = StringUtil.split(clazz.getName(), ".").length;
-		File file = new File(getFileName(url));
-		for (int i = 0; i < num; ++i, file = file.getParentFile()) {
-		}
-		return file;
-	}
-	
-	public static String toExternalForm(URL url) {
-		String s = url.toExternalForm();
-		try {
-			return URLDecoder.decode(s, "UTF8");
-		} catch (UnsupportedEncodingException ex) {
-			ex.printStackTrace();
-			throw new RuntimeException(ex);
-		}
-	}
-	
-	public static String getFileName(URL url) {
-		String s = url.getFile();
-		try {
-			return URLDecoder.decode(s, "UTF8");
-		} catch (UnsupportedEncodingException ex) {
-			ex.printStackTrace();
-			throw new RuntimeException(ex);
-		}
-	}
-	
-	public static File getFile(URL url) {
-		return new File(getFileName(url));
-	}
-	
-	public static File getResourceAsFile(String path) {
-		return getResourceAsFile(path, null);
-	}
-	
-	public static File getResourceAsFile(String path, String extension) {
-		return getFile(getResource(path, extension));
-	}
+    public static URL getResourceNoException(String path) {
+        return getResourceNoException(path, null);
+    }
+
+    public static URL getResourceNoException(String path, String extension) {
+        path = getResourcePath(path, extension);
+        return getClassLoader().getResource(path);
+    }
+
+    public static InputStream getResourceAsStream(String path) {
+        return getResourceAsStream(path, null);
+    }
+
+    public static InputStream getResourceAsStream(String path, String extension) {
+        URL url = getResource(path, extension);
+        return URLUtil.openStream(url);
+    }
+
+    public static boolean isExist(String path) {
+        return getResourceNoException(path) != null;
+    }
+
+    public static Properties getProperties(String path) {
+        Properties props = new Properties();
+        InputStream is = getResourceAsStream(path);
+        try {
+            props.load(is);
+            return props;
+        } catch (IOException ex) {
+            throw new IORuntimeException(ex);
+        }
+    }
+
+    public static String getExtension(String path) {
+        int extPos = path.lastIndexOf(".");
+        if (extPos >= 0) {
+            return path.substring(extPos + 1);
+        }
+        return null;
+    }
+
+    public static String removeExtension(String path) {
+        int extPos = path.lastIndexOf(".");
+        if (extPos >= 0) {
+            return path.substring(0, extPos);
+        }
+        return path;
+    }
+
+    public static File getBuildDir(Class clazz) {
+        URL url = getResource(getResourcePath(clazz));
+        int num = StringUtil.split(clazz.getName(), ".").length;
+        File file = new File(getFileName(url));
+        for (int i = 0; i < num; ++i, file = file.getParentFile()) {
+        }
+        return file;
+    }
+
+    public static String toExternalForm(URL url) {
+        String s = url.toExternalForm();
+        try {
+            return URLDecoder.decode(s, "UTF8");
+        } catch (UnsupportedEncodingException ex) {
+            ex.printStackTrace();
+            throw new RuntimeException(ex);
+        }
+    }
+
+    public static String getFileName(URL url) {
+        String s = url.getFile();
+        try {
+            return URLDecoder.decode(s, "UTF8");
+        } catch (UnsupportedEncodingException ex) {
+            ex.printStackTrace();
+            throw new RuntimeException(ex);
+        }
+    }
+
+    public static File getFile(URL url) {
+        return new File(getFileName(url));
+    }
+
+    public static File getResourceAsFile(String path) {
+        return getResourceAsFile(path, null);
+    }
+
+    public static File getResourceAsFile(String path, String extension) {
+        return getFile(getResource(path, extension));
+    }
 
     public static File getResourceAsFileNoException(Class clazz) {
         return getResourceAsFileNoException(getResourcePath(clazz));

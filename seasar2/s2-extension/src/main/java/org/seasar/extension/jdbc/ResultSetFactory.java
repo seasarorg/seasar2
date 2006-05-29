@@ -20,9 +20,9 @@ import java.sql.ResultSet;
 
 /**
  * @author higa
- *
+ * 
  */
 public interface ResultSetFactory {
 
-	public ResultSet createResultSet(PreparedStatement ps);
+    public ResultSet createResultSet(PreparedStatement ps);
 }

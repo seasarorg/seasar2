@@ -24,17 +24,17 @@ import org.seasar.extension.jdbc.util.ConnectionUtil;
 
 /**
  * @author higa
- *
+ * 
  */
 public class BasicStatementFactory implements StatementFactory {
-	
-	public static final StatementFactory INSTANCE = new BasicStatementFactory();
-	
-	public PreparedStatement createPreparedStatement(Connection con, String sql) {
-		return ConnectionUtil.prepareStatement(con, sql);
-	}
-	
-	public CallableStatement createCallableStatement(Connection con, String sql) {
-		return ConnectionUtil.prepareCall(con, sql);
-	}
+
+    public static final StatementFactory INSTANCE = new BasicStatementFactory();
+
+    public PreparedStatement createPreparedStatement(Connection con, String sql) {
+        return ConnectionUtil.prepareStatement(con, sql);
+    }
+
+    public CallableStatement createCallableStatement(Connection con, String sql) {
+        return ConnectionUtil.prepareCall(con, sql);
+    }
 }

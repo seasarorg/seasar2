@@ -19,5 +19,5 @@ import javax.transaction.SystemException;
 
 public interface TxBean {
 
-	public boolean hasTransaction() throws SystemException;
+    public boolean hasTransaction() throws SystemException;
 }

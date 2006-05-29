@@ -21,17 +21,17 @@ import org.seasar.framework.util.BigDecimalConversionUtil;
 
 /**
  * @author higa
- *
+ * 
  */
 public class BigDecimalType extends ObjectType {
 
-	BigDecimalType() {
-	}
+    BigDecimalType() {
+    }
 
-	public Object convert(Object value, String formatPattern) {
-		return BigDecimalConversionUtil.toBigDecimal(value, formatPattern);
-	}
-    
+    public Object convert(Object value, String formatPattern) {
+        return BigDecimalConversionUtil.toBigDecimal(value, formatPattern);
+    }
+
     public Class getType() {
         return BigDecimal.class;
     }

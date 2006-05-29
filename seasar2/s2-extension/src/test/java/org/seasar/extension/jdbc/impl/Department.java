@@ -18,19 +18,19 @@ package org.seasar.extension.jdbc.impl;
 import java.io.Serializable;
 
 public class Department implements Serializable {
-	
+
     private static final long serialVersionUID = -1031433105487668130L;
 
-	public static final String TABLE = "DEPT";
+    public static final String TABLE = "DEPT";
 
     private int deptno;
 
     private String dname;
 
     private String loc;
-    
+
     private int versionNo;
-    
+
     private boolean active;
 
     public Department() {
@@ -59,7 +59,7 @@ public class Department implements Serializable {
     public void setLoc(java.lang.String loc) {
         this.loc = loc;
     }
-    
+
     public int getVersionNo() {
         return this.versionNo;
     }
@@ -68,16 +68,17 @@ public class Department implements Serializable {
         this.versionNo = versionNo;
     }
 
-	public boolean isActive() {
-		return active;
-	}
+    public boolean isActive() {
+        return active;
+    }
 
-	public void setActive(boolean active) {
-		this.active = active;
-	}
+    public void setActive(boolean active) {
+        this.active = active;
+    }
 
     public boolean equals(Object other) {
-        if ( !(other instanceof Department) ) return false;
+        if (!(other instanceof Department))
+            return false;
         Department castOther = (Department) other;
         return this.getDeptno() == castOther.getDeptno();
     }

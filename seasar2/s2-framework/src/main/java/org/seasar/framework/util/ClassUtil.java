@@ -30,114 +30,114 @@ import org.seasar.framework.exception.NoSuchMethodRuntimeException;
 
 /**
  * @author higa
- *
+ * 
  */
 public final class ClassUtil {
 
-	private static Map wrapperToPrimitiveMap = new HashMap();
-	private static Map primitiveToWrapperMap = new HashMap();
+    private static Map wrapperToPrimitiveMap = new HashMap();
 
-	static {
-		wrapperToPrimitiveMap.put(Character.class, Character.TYPE);
-		wrapperToPrimitiveMap.put(Byte.class, Byte.TYPE);
-		wrapperToPrimitiveMap.put(Short.class, Short.TYPE);
-		wrapperToPrimitiveMap.put(Integer.class, Integer.TYPE);
-		wrapperToPrimitiveMap.put(Long.class, Long.TYPE);
-		wrapperToPrimitiveMap.put(Double.class, Double.TYPE);
-		wrapperToPrimitiveMap.put(Float.class, Float.TYPE);
-		wrapperToPrimitiveMap.put(Boolean.class, Boolean.TYPE);
+    private static Map primitiveToWrapperMap = new HashMap();
 
-		primitiveToWrapperMap.put(Character.TYPE, Character.class);
-		primitiveToWrapperMap.put(Byte.TYPE, Byte.class);
-		primitiveToWrapperMap.put(Short.TYPE, Short.class);
-		primitiveToWrapperMap.put(Integer.TYPE, Integer.class);
-		primitiveToWrapperMap.put(Long.TYPE, Long.class);
-		primitiveToWrapperMap.put(Double.TYPE, Double.class);
-		primitiveToWrapperMap.put(Float.TYPE, Float.class);
-		primitiveToWrapperMap.put(Boolean.TYPE, Boolean.class);
-	}
+    static {
+        wrapperToPrimitiveMap.put(Character.class, Character.TYPE);
+        wrapperToPrimitiveMap.put(Byte.class, Byte.TYPE);
+        wrapperToPrimitiveMap.put(Short.class, Short.TYPE);
+        wrapperToPrimitiveMap.put(Integer.class, Integer.TYPE);
+        wrapperToPrimitiveMap.put(Long.class, Long.TYPE);
+        wrapperToPrimitiveMap.put(Double.class, Double.TYPE);
+        wrapperToPrimitiveMap.put(Float.class, Float.TYPE);
+        wrapperToPrimitiveMap.put(Boolean.class, Boolean.TYPE);
 
-	/**
-	 * 
-	 */
-	private ClassUtil() {
-	}
+        primitiveToWrapperMap.put(Character.TYPE, Character.class);
+        primitiveToWrapperMap.put(Byte.TYPE, Byte.class);
+        primitiveToWrapperMap.put(Short.TYPE, Short.class);
+        primitiveToWrapperMap.put(Integer.TYPE, Integer.class);
+        primitiveToWrapperMap.put(Long.TYPE, Long.class);
+        primitiveToWrapperMap.put(Double.TYPE, Double.class);
+        primitiveToWrapperMap.put(Float.TYPE, Float.class);
+        primitiveToWrapperMap.put(Boolean.TYPE, Boolean.class);
+    }
 
-	public static Class forName(String className)
-		throws ClassNotFoundRuntimeException {
+    /**
+     * 
+     */
+    private ClassUtil() {
+    }
 
-		ClassLoader loader = Thread.currentThread().getContextClassLoader();
-		try {
-			return Class.forName(className, true, loader);
-		} catch (ClassNotFoundException ex) {
-			throw new ClassNotFoundRuntimeException(ex);
-		}
-	}
+    public static Class forName(String className)
+            throws ClassNotFoundRuntimeException {
 
-	public static Object newInstance(Class clazz)
-		throws InstantiationRuntimeException, IllegalAccessRuntimeException {
+        ClassLoader loader = Thread.currentThread().getContextClassLoader();
+        try {
+            return Class.forName(className, true, loader);
+        } catch (ClassNotFoundException ex) {
+            throw new ClassNotFoundRuntimeException(ex);
+        }
+    }
 
-		try {
-			return clazz.newInstance();
-		} catch (InstantiationException ex) {
-			throw new InstantiationRuntimeException(clazz, ex);
-		} catch (IllegalAccessException ex) {
-			throw new IllegalAccessRuntimeException(clazz, ex);
-		}
-	}
+    public static Object newInstance(Class clazz)
+            throws InstantiationRuntimeException, IllegalAccessRuntimeException {
 
-	public static Object newInstance(String className)
-		throws
-			ClassNotFoundRuntimeException,
-			InstantiationRuntimeException,
-			IllegalAccessRuntimeException {
+        try {
+            return clazz.newInstance();
+        } catch (InstantiationException ex) {
+            throw new InstantiationRuntimeException(clazz, ex);
+        } catch (IllegalAccessException ex) {
+            throw new IllegalAccessRuntimeException(clazz, ex);
+        }
+    }
 
-		return newInstance(forName(className));
-	}
+    public static Object newInstance(String className)
+            throws ClassNotFoundRuntimeException,
+            InstantiationRuntimeException, IllegalAccessRuntimeException {
 
-	public static boolean isAssignableFrom(Class toClass, Class fromClass) {
-		if (toClass == Object.class && !fromClass.isPrimitive()) {
-			return true;
-		}
-		if (toClass.isPrimitive()) {
-			fromClass = getPrimitiveClassIfWrapper(fromClass);
-		}
-		return toClass.isAssignableFrom(fromClass);
-	}
+        return newInstance(forName(className));
+    }
 
-	public static Class getPrimitiveClass(Class clazz) {
-		return (Class) wrapperToPrimitiveMap.get(clazz);
-	}
+    public static boolean isAssignableFrom(Class toClass, Class fromClass) {
+        if (toClass == Object.class && !fromClass.isPrimitive()) {
+            return true;
+        }
+        if (toClass.isPrimitive()) {
+            fromClass = getPrimitiveClassIfWrapper(fromClass);
+        }
+        return toClass.isAssignableFrom(fromClass);
+    }
 
-	public static Class getPrimitiveClassIfWrapper(Class clazz) {
-		Class ret = getPrimitiveClass(clazz);
-		if (ret != null) {
-			return ret;
-		}
-		return clazz;
-	}
+    public static Class getPrimitiveClass(Class clazz) {
+        return (Class) wrapperToPrimitiveMap.get(clazz);
+    }
 
-	public static Class getWrapperClass(Class clazz) {
-		return (Class) primitiveToWrapperMap.get(clazz);
-	}
+    public static Class getPrimitiveClassIfWrapper(Class clazz) {
+        Class ret = getPrimitiveClass(clazz);
+        if (ret != null) {
+            return ret;
+        }
+        return clazz;
+    }
 
-	public static Class getWrapperClassIfPrimitive(Class clazz) {
-		Class ret = getWrapperClass(clazz);
-		if (ret != null) {
-			return ret;
-		}
-		return clazz;
-	}
+    public static Class getWrapperClass(Class clazz) {
+        return (Class) primitiveToWrapperMap.get(clazz);
+    }
 
-	public static Constructor getConstructor(Class clazz, Class[] argTypes) {
-		try {
-			return clazz.getConstructor(argTypes);
-		} catch (NoSuchMethodException ex) {
-			throw new NoSuchConstructorRuntimeException(clazz, argTypes, ex);
-		}
-	}
+    public static Class getWrapperClassIfPrimitive(Class clazz) {
+        Class ret = getWrapperClass(clazz);
+        if (ret != null) {
+            return ret;
+        }
+        return clazz;
+    }
 
-    public static Constructor getDeclaredConstructor(Class clazz, Class[] argTypes) {
+    public static Constructor getConstructor(Class clazz, Class[] argTypes) {
+        try {
+            return clazz.getConstructor(argTypes);
+        } catch (NoSuchMethodException ex) {
+            throw new NoSuchConstructorRuntimeException(clazz, argTypes, ex);
+        }
+    }
+
+    public static Constructor getDeclaredConstructor(Class clazz,
+            Class[] argTypes) {
         try {
             return clazz.getDeclaredConstructor(argTypes);
         } catch (NoSuchMethodException ex) {
@@ -145,63 +145,43 @@ public final class ClassUtil {
         }
     }
 
-	public static Method getMethod(
-		Class clazz,
-		String methodName,
-		Class[] argTypes) {
+    public static Method getMethod(Class clazz, String methodName,
+            Class[] argTypes) {
 
-		try {
-			return clazz.getMethod(methodName, argTypes);
-		} catch (NoSuchMethodException ex) {
-			throw new NoSuchMethodRuntimeException(
-				clazz,
-				methodName,
-				argTypes,
-				ex);
-		}
-	}
+        try {
+            return clazz.getMethod(methodName, argTypes);
+        } catch (NoSuchMethodException ex) {
+            throw new NoSuchMethodRuntimeException(clazz, methodName, argTypes,
+                    ex);
+        }
+    }
 
-    public static Method getDeclaredMethod(
-        Class clazz,
-        String methodName,
-        Class[] argTypes) {
+    public static Method getDeclaredMethod(Class clazz, String methodName,
+            Class[] argTypes) {
 
         try {
             return clazz.getDeclaredMethod(methodName, argTypes);
         } catch (NoSuchMethodException ex) {
-            throw new NoSuchMethodRuntimeException(
-                clazz,
-                methodName,
-                argTypes,
-                ex);
+            throw new NoSuchMethodRuntimeException(clazz, methodName, argTypes,
+                    ex);
         }
     }
-	
-	public static Field getField(
-		Class clazz,
-		String fieldName) {
 
-		try {
-			return clazz.getField(fieldName);
-		} catch (NoSuchFieldException ex) {
-			throw new NoSuchFieldRuntimeException(
-				clazz,
-				fieldName,
-				ex);
-		}
-	}
-    
-    public static Field getDeclaredField(
-        Class clazz,
-        String fieldName) {
+    public static Field getField(Class clazz, String fieldName) {
+
+        try {
+            return clazz.getField(fieldName);
+        } catch (NoSuchFieldException ex) {
+            throw new NoSuchFieldRuntimeException(clazz, fieldName, ex);
+        }
+    }
+
+    public static Field getDeclaredField(Class clazz, String fieldName) {
 
         try {
             return clazz.getDeclaredField(fieldName);
         } catch (NoSuchFieldException ex) {
-            throw new NoSuchFieldRuntimeException(
-                clazz,
-                fieldName,
-                ex);
+            throw new NoSuchFieldRuntimeException(clazz, fieldName, ex);
         }
     }
 
@@ -215,13 +195,13 @@ public final class ClassUtil {
     }
 
     public static String getShortClassName(Class clazz) {
-		String s = clazz.getName();
-		int i = s.lastIndexOf('.');
-		if (i > 0) {
-			return s.substring(i + 1);
-		}
-		return s;
-	}
+        String s = clazz.getName();
+        int i = s.lastIndexOf('.');
+        if (i > 0) {
+            return s.substring(i + 1);
+        }
+        return s;
+    }
 
     public static String getSimpleClassName(final Class clazz) {
         if (clazz.isArray()) {
@@ -229,15 +209,15 @@ public final class ClassUtil {
         }
         return clazz.getName();
     }
-    
+
     public static String concatName(String s1, String s2) {
         return s1 != null ? s1 + '.' + s2 : s2;
     }
-    
+
     public static String getResourcePath(String className) {
         return StringUtil.replace(className, ".", "/") + ".class";
     }
-    
+
     public static String getResourcePath(Class clazz) {
         return getResourcePath(clazz.getName());
     }

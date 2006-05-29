@@ -17,33 +17,30 @@ package org.seasar.framework.exception;
 
 /**
  * @author higa
- *
+ * 
  */
 public class NoSuchFieldRuntimeException extends SRuntimeException {
 
     private static final long serialVersionUID = 6609175673610180338L;
 
-	private Class targetClass;
-	private String fieldName;
+    private Class targetClass;
 
-	public NoSuchFieldRuntimeException(
-		Class targetClass,
-		String fieldName,
-		NoSuchFieldException cause) {
+    private String fieldName;
 
-		super(
-			"ESSR0070",
-			new Object[] { targetClass.getName(), fieldName },
-			cause);
-		this.targetClass = targetClass;
-		this.fieldName = fieldName;
-	}
+    public NoSuchFieldRuntimeException(Class targetClass, String fieldName,
+            NoSuchFieldException cause) {
 
-	public Class getTargetClass() {
-		return targetClass;
-	}
+        super("ESSR0070", new Object[] { targetClass.getName(), fieldName },
+                cause);
+        this.targetClass = targetClass;
+        this.fieldName = fieldName;
+    }
 
-	public String getFieldName() {
-		return fieldName;
-	}
+    public Class getTargetClass() {
+        return targetClass;
+    }
+
+    public String getFieldName() {
+        return fieldName;
+    }
 }

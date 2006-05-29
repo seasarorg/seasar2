@@ -25,36 +25,37 @@ import org.seasar.extension.unit.S2TestCase;
 
 public class XADataSourceImplTest extends S2TestCase {
 
-	private static final String PATH = "connection.dicon";
-	private XADataSource xads2_;
+    private static final String PATH = "connection.dicon";
 
-	public XADataSourceImplTest(String name) {
-		super(name);
-	}
+    private XADataSource xads2_;
 
-	public void testGetXAConnection() throws Exception {
-		XAConnection xaCon = null;
-		try {
-			xaCon = xads2_.getXAConnection();
-			assertNotNull("1", xaCon);
-		} finally {
-			xaCon.close();
-		}
-	}
+    public XADataSourceImplTest(String name) {
+        super(name);
+    }
 
-	protected void setUp() throws Exception {
-		include(PATH);
-	}
+    public void testGetXAConnection() throws Exception {
+        XAConnection xaCon = null;
+        try {
+            xaCon = xads2_.getXAConnection();
+            assertNotNull("1", xaCon);
+        } finally {
+            xaCon.close();
+        }
+    }
 
-	protected void tearDown() throws Exception {
-	}
+    protected void setUp() throws Exception {
+        include(PATH);
+    }
 
-	public static Test suite() {
-		return new TestSuite(XADataSourceImplTest.class);
-	}
+    protected void tearDown() throws Exception {
+    }
 
-	public static void main(String[] args) {
-		junit.textui.TestRunner.main(
-			new String[] { XADataSourceImplTest.class.getName()});
-	}
+    public static Test suite() {
+        return new TestSuite(XADataSourceImplTest.class);
+    }
+
+    public static void main(String[] args) {
+        junit.textui.TestRunner.main(new String[] { XADataSourceImplTest.class
+                .getName() });
+    }
 }

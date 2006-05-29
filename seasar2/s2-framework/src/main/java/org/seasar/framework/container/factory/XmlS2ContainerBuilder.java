@@ -29,16 +29,23 @@ import org.seasar.framework.xml.TagHandlerContext;
 
 /**
  * @author higa
- *  
+ * 
  */
 public class XmlS2ContainerBuilder extends AbstractS2ContainerBuilder {
     public static final String PUBLIC_ID = "-//SEASAR//DTD S2Container//EN";
+
     public static final String PUBLIC_ID21 = "-//SEASAR2.1//DTD S2Container//EN";
+
     public static final String PUBLIC_ID23 = "-//SEASAR//DTD S2Container 2.3//EN";
+
     public static final String PUBLIC_ID24 = "-//SEASAR//DTD S2Container 2.4//EN";
+
     public static final String DTD_PATH = "org/seasar/framework/container/factory/components.dtd";
+
     public static final String DTD_PATH21 = "org/seasar/framework/container/factory/components21.dtd";
+
     public static final String DTD_PATH23 = "org/seasar/framework/container/factory/components23.dtd";
+
     public static final String DTD_PATH24 = "org/seasar/framework/container/factory/components24.dtd";
 
     protected S2ContainerTagHandlerRule rule = new S2ContainerTagHandlerRule();
@@ -66,13 +73,13 @@ public class XmlS2ContainerBuilder extends AbstractS2ContainerBuilder {
         final InputStream is = getInputStream(path);
         try {
             return (S2Container) parser.parse(is, path);
-        }
-        finally {
+        } finally {
             InputStreamUtil.close(is);
         }
     }
 
-    protected SaxHandlerParser createSaxHandlerParser(final S2Container parent, final String path) {
+    protected SaxHandlerParser createSaxHandlerParser(final S2Container parent,
+            final String path) {
         final SAXParserFactory factory = SAXParserFactoryUtil.newInstance();
         factory.setValidating(true);
 

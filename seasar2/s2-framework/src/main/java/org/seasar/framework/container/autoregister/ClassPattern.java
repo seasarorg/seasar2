@@ -21,30 +21,30 @@ import org.seasar.framework.util.StringUtil;
 
 /**
  * @author higa
- *
+ * 
  */
 public class ClassPattern {
 
     private String packageName;
-    
+
     private Pattern[] shortClassNamePatterns;
-    
+
     public ClassPattern() {
     }
-    
+
     public ClassPattern(String packageName, String shortClassNames) {
         setPackageName(packageName);
         setShortClassNames(shortClassNames);
     }
-    
+
     public String getPackageName() {
         return packageName;
     }
-    
+
     public void setPackageName(String packageName) {
         this.packageName = packageName;
     }
-    
+
     public void setShortClassNames(String shortClassNames) {
         String[] classNames = StringUtil.split(shortClassNames, ",");
         shortClassNamePatterns = new Pattern[classNames.length];
@@ -53,7 +53,7 @@ public class ClassPattern {
             shortClassNamePatterns[i] = Pattern.compile(s);
         }
     }
-    
+
     public boolean isAppliedShortClassName(String shortClassName) {
         if (shortClassNamePatterns == null) {
             return true;
@@ -65,9 +65,9 @@ public class ClassPattern {
         }
         return false;
     }
-    
+
     public boolean isAppliedPackageName(String pName) {
-        return pName == null ? packageName == null :
-            pName.startsWith(packageName);
+        return pName == null ? packageName == null : pName
+                .startsWith(packageName);
     }
 }

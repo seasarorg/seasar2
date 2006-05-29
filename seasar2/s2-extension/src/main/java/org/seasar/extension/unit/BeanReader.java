@@ -29,41 +29,41 @@ import org.seasar.framework.beans.factory.BeanDescFactory;
 
 public class BeanReader implements DataReader {
 
-	private DataSet dataSet_ = new DataSetImpl();
+    private DataSet dataSet_ = new DataSetImpl();
 
-	private DataTable table_ = dataSet_.addTable("Bean");
+    private DataTable table_ = dataSet_.addTable("Bean");
 
-	protected BeanReader() {
-	}
+    protected BeanReader() {
+    }
 
-	public BeanReader(Object bean) {
-		BeanDesc beanDesc = BeanDescFactory.getBeanDesc(bean.getClass());
-		setupColumns(beanDesc);
-		setupRow(beanDesc, bean);
-	}
+    public BeanReader(Object bean) {
+        BeanDesc beanDesc = BeanDescFactory.getBeanDesc(bean.getClass());
+        setupColumns(beanDesc);
+        setupRow(beanDesc, bean);
+    }
 
-	protected void setupColumns(BeanDesc beanDesc) {
-		for (int i = 0; i < beanDesc.getPropertyDescSize(); ++i) {
-			PropertyDesc pd = beanDesc.getPropertyDesc(i);
-			Class propertyType = pd.getPropertyType();
-			table_.addColumn(pd.getPropertyName(), ColumnTypes
-					.getColumnType(propertyType));
-		}
-	}
+    protected void setupColumns(BeanDesc beanDesc) {
+        for (int i = 0; i < beanDesc.getPropertyDescSize(); ++i) {
+            PropertyDesc pd = beanDesc.getPropertyDesc(i);
+            Class propertyType = pd.getPropertyType();
+            table_.addColumn(pd.getPropertyName(), ColumnTypes
+                    .getColumnType(propertyType));
+        }
+    }
 
-	protected void setupRow(BeanDesc beanDesc, Object bean) {
-		DataRow row = table_.addRow();
-		for (int i = 0; i < beanDesc.getPropertyDescSize(); ++i) {
-			PropertyDesc pd = beanDesc.getPropertyDesc(i);
-			Object value = pd.getValue(bean);
-			ColumnType ct = ColumnTypes.getColumnType(pd.getPropertyType());
-			row.setValue(pd.getPropertyName(), ct.convert(value, null));
-		}
-		row.setState(RowStates.UNCHANGED);
-	}
+    protected void setupRow(BeanDesc beanDesc, Object bean) {
+        DataRow row = table_.addRow();
+        for (int i = 0; i < beanDesc.getPropertyDescSize(); ++i) {
+            PropertyDesc pd = beanDesc.getPropertyDesc(i);
+            Object value = pd.getValue(bean);
+            ColumnType ct = ColumnTypes.getColumnType(pd.getPropertyType());
+            row.setValue(pd.getPropertyName(), ct.convert(value, null));
+        }
+        row.setState(RowStates.UNCHANGED);
+    }
 
-	public DataSet read() {
-		return dataSet_;
-	}
+    public DataSet read() {
+        return dataSet_;
+    }
 
 }

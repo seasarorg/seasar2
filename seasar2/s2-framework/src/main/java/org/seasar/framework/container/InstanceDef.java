@@ -15,26 +15,25 @@
  */
 package org.seasar.framework.container;
 
-
 /**
  * @author higa
- *
+ * 
  */
 public interface InstanceDef {
 
     String SINGLETON_NAME = "singleton";
-    
+
     String PROTOTYPE_NAME = "prototype";
-    
+
     String APPLICATION_NAME = "application";
-    
+
     String REQUEST_NAME = "request";
-    
+
     String SESSION_NAME = "session";
-    
+
     String OUTER_NAME = "outer";
-    
+
     String getName();
-    
+
     ComponentDeployer createComponentDeployer(ComponentDef componentDef);
 }

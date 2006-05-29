@@ -19,31 +19,29 @@ import org.seasar.framework.exception.SRuntimeException;
 
 /**
  * @author higa
- *
+ * 
  */
-public class PropertyNotFoundRuntimeException
-	extends SRuntimeException {
+public class PropertyNotFoundRuntimeException extends SRuntimeException {
 
     private static final long serialVersionUID = -5177019197796206774L;
 
-	private Class targetClass_;
-	private String propertyName_;
+    private Class targetClass_;
 
-	public PropertyNotFoundRuntimeException(
-		Class componentClass,
-		String propertyName) {
-		super(
-			"ESSR0065",
-			new Object[] { componentClass.getName(), propertyName});
-		targetClass_ = componentClass;
-		propertyName_ = propertyName;
-	}
+    private String propertyName_;
 
-	public Class getTargetClass() {
-		return targetClass_;
-	}
-	
-	public String getPropertyName() {
-		return propertyName_;
-	}
+    public PropertyNotFoundRuntimeException(Class componentClass,
+            String propertyName) {
+        super("ESSR0065",
+                new Object[] { componentClass.getName(), propertyName });
+        targetClass_ = componentClass;
+        propertyName_ = propertyName;
+    }
+
+    public Class getTargetClass() {
+        return targetClass_;
+    }
+
+    public String getPropertyName() {
+        return propertyName_;
+    }
 }

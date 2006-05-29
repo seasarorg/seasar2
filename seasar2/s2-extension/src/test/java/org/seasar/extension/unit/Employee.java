@@ -26,7 +26,7 @@ public class Employee implements Serializable {
     private String ename;
 
     private int deptno;
-    
+
     private String dname;
 
     public Employee() {
@@ -59,17 +59,18 @@ public class Employee implements Serializable {
     public void setDeptno(int deptno) {
         this.deptno = deptno;
     }
-    
-	public String getDname() {
-		return this.dname;
-	}
 
-	public void setDname(String dname) {
-		this.dname = dname;
-	}
+    public String getDname() {
+        return this.dname;
+    }
+
+    public void setDname(String dname) {
+        this.dname = dname;
+    }
 
     public boolean equals(Object other) {
-        if ( !(other instanceof Employee) ) return false;
+        if (!(other instanceof Employee))
+            return false;
         Employee castOther = (Employee) other;
         return this.getEmpno() == castOther.getEmpno();
     }
@@ -77,13 +78,13 @@ public class Employee implements Serializable {
     public int hashCode() {
         return (int) this.getEmpno();
     }
-    
+
     public String toString() {
-    	StringBuffer buf = new StringBuffer();
-    	buf.append(empno).append(", ");
-		buf.append(ename).append(", ");
-		buf.append(deptno).append(", ");
-		buf.append(dname);
-    	return buf.toString();
+        StringBuffer buf = new StringBuffer();
+        buf.append(empno).append(", ");
+        buf.append(ename).append(", ");
+        buf.append(deptno).append(", ");
+        buf.append(dname);
+        return buf.toString();
     }
 }

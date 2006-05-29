@@ -20,15 +20,16 @@ import org.seasar.framework.container.ComponentDeployer;
 
 /**
  * @author higa
- *
+ * 
  */
 public class InstanceSessionDef extends AbstractInstanceDef {
 
     protected InstanceSessionDef(String name) {
         super(name);
     }
-    
+
     public ComponentDeployer createComponentDeployer(ComponentDef componentDef) {
-        return ComponentDeployerFactory.createSessionComponentDeployer(componentDef);
+        return ComponentDeployerFactory
+                .createSessionComponentDeployer(componentDef);
     }
 }

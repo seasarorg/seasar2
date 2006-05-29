@@ -19,27 +19,23 @@ import org.seasar.framework.exception.SRuntimeException;
 
 /**
  * @author higa
- *
+ * 
  */
 public class CyclicReferenceRuntimeException extends SRuntimeException {
 
     private static final long serialVersionUID = -5993824919440261214L;
 
-	private Class componentClass_;
-	
-	/**
-	 * @param componentClasses
-	 */
-	public CyclicReferenceRuntimeException(
-		Class componentClass) {
-		super(
-			"ESSR0047",
-			new Object[] {
-				componentClass.getName()});
-		componentClass_ = componentClass;
-	}
-	
-	public Class getComponentClass() {
-		return componentClass_;
-	}
+    private Class componentClass_;
+
+    /**
+     * @param componentClasses
+     */
+    public CyclicReferenceRuntimeException(Class componentClass) {
+        super("ESSR0047", new Object[] { componentClass.getName() });
+        componentClass_ = componentClass;
+    }
+
+    public Class getComponentClass() {
+        return componentClass_;
+    }
 }

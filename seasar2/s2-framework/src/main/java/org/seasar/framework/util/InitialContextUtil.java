@@ -22,20 +22,20 @@ import org.seasar.framework.exception.NamingRuntimeException;
 
 /**
  * @author higa
- *
+ * 
  */
 public final class InitialContextUtil {
 
-	private InitialContextUtil() {
-	}
+    private InitialContextUtil() {
+    }
 
-	public static final Object lookup(InitialContext ctx, String jndiName)
-		throws NamingRuntimeException {
+    public static final Object lookup(InitialContext ctx, String jndiName)
+            throws NamingRuntimeException {
 
-		try {
-			return ctx.lookup(jndiName);
-		} catch (NamingException ex) {
-			throw new NamingRuntimeException(ex);
-		}
-	}
+        try {
+            return ctx.lookup(jndiName);
+        } catch (NamingException ex) {
+            throw new NamingRuntimeException(ex);
+        }
+    }
 }

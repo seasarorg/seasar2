@@ -19,32 +19,34 @@ import org.seasar.framework.exception.SRuntimeException;
 
 /**
  * @author higa
- *
+ * 
  */
 public class ClassUnmatchRuntimeException extends SRuntimeException {
 
     private static final long serialVersionUID = 1967770604202235241L;
 
-	private Class componentClass_;
-	private Class realComponentClass_;
-	
-	/**
-	 * @param componentKey
-	 */
-	public ClassUnmatchRuntimeException(
-		Class componentClass,
-		Class realComponentClass) {
-		super("ESSR0069", new Object[] { componentClass.getName(),
-			realComponentClass != null ? realComponentClass.getName() : "null"});
-		componentClass_ = componentClass;
-		realComponentClass_ = realComponentClass;
-	}
-	
-	public Class getComponentClass() {
-		return componentClass_;
-	}
-	
-	public Class getRealComponentClass() {
-		return realComponentClass_;
-	}
+    private Class componentClass_;
+
+    private Class realComponentClass_;
+
+    /**
+     * @param componentKey
+     */
+    public ClassUnmatchRuntimeException(Class componentClass,
+            Class realComponentClass) {
+        super("ESSR0069", new Object[] {
+                componentClass.getName(),
+                realComponentClass != null ? realComponentClass.getName()
+                        : "null" });
+        componentClass_ = componentClass;
+        realComponentClass_ = realComponentClass;
+    }
+
+    public Class getComponentClass() {
+        return componentClass_;
+    }
+
+    public Class getRealComponentClass() {
+        return realComponentClass_;
+    }
 }

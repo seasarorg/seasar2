@@ -23,7 +23,6 @@ import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.PropertyDef;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.assembler.BindingTypeDefFactory;
-import org.seasar.framework.container.factory.S2ContainerFactory;
 
 /**
  * @author higa
@@ -38,6 +37,7 @@ public class PropertyTagHandlerTest extends TestCase {
         assertEquals("1", new Date(0), container.getComponent("date"));
         ComponentDef cd = container.getComponentDef("date");
         PropertyDef pd = cd.getPropertyDef("time");
-        assertEquals("2", BindingTypeDefFactory.NONE.getName(), pd.getBindingTypeDef().getName());
+        assertEquals("2", BindingTypeDefFactory.NONE.getName(), pd
+                .getBindingTypeDef().getName());
     }
 }

@@ -38,6 +38,6 @@ public interface BindingTypeDef {
     void bind(ComponentDef componentDef, PropertyDef propertyDef,
             PropertyDesc propertyDesc, Object component);
 
-    void bind(ComponentDef componentDef, PropertyDef propertyDef,
-            Field field, Object component);
+    void bind(ComponentDef componentDef, PropertyDef propertyDef, Field field,
+            Object component);
 }

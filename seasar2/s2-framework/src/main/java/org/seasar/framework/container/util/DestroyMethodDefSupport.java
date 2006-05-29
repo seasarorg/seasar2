@@ -24,35 +24,36 @@ import org.seasar.framework.container.S2Container;
 
 /**
  * @author higa
- *
+ * 
  */
 public final class DestroyMethodDefSupport {
 
-	private List methodDefs = Collections.synchronizedList(new ArrayList());
-	private S2Container container;
+    private List methodDefs = Collections.synchronizedList(new ArrayList());
 
-	public DestroyMethodDefSupport() {
-	}
+    private S2Container container;
 
-	public void addDestroyMethodDef(DestroyMethodDef methodDef) {
-		if (container != null) {
-			methodDef.setContainer(container);
-		}
-		methodDefs.add(methodDef);
-	}
+    public DestroyMethodDefSupport() {
+    }
 
-	public int getDestroyMethodDefSize() {
-		return methodDefs.size();
-	}
+    public void addDestroyMethodDef(DestroyMethodDef methodDef) {
+        if (container != null) {
+            methodDef.setContainer(container);
+        }
+        methodDefs.add(methodDef);
+    }
 
-	public DestroyMethodDef getDestroyMethodDef(int index) {
-		return (DestroyMethodDef) methodDefs.get(index);
-	}
+    public int getDestroyMethodDefSize() {
+        return methodDefs.size();
+    }
 
-	public void setContainer(S2Container container) {
-		this.container = container;
-		for (int i = 0; i < getDestroyMethodDefSize(); ++i) {
-			getDestroyMethodDef(i).setContainer(container);
-		}
-	}
+    public DestroyMethodDef getDestroyMethodDef(int index) {
+        return (DestroyMethodDef) methodDefs.get(index);
+    }
+
+    public void setContainer(S2Container container) {
+        this.container = container;
+        for (int i = 0; i < getDestroyMethodDefSize(); ++i) {
+            getDestroyMethodDef(i).setContainer(container);
+        }
+    }
 }

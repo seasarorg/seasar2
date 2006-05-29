@@ -31,19 +31,19 @@ import org.seasar.framework.container.hotdeploy.OndemandCreatorContainer;
 public abstract class AbstractOndemandCreator implements OndemandCreator {
 
     public static final String instanceDef_BINDING = "bindingType=may";
-    
+
     private InstanceDef instanceDef;
-    
+
     public static final String autoBindingDef_BINDING = "bindingType=may";
-    
+
     private AutoBindingDef autoBindingDef;
-    
+
     private OndemandCreatorContainer ondemandCreatorContainer;
-    
+
     private String nameSuffix;
-    
+
     private List customizers = new ArrayList();
-    
+
     public InstanceDef getInstanceDef() {
         return instanceDef;
     }
@@ -68,11 +68,11 @@ public abstract class AbstractOndemandCreator implements OndemandCreator {
             OndemandCreatorContainer ondemandCreatorContainer) {
         this.ondemandCreatorContainer = ondemandCreatorContainer;
     }
-    
+
     public String getRootPackageName() {
         return ondemandCreatorContainer.getRootPackageName();
     }
-    
+
     public String getNameSuffix() {
         return nameSuffix;
     }
@@ -80,15 +80,15 @@ public abstract class AbstractOndemandCreator implements OndemandCreator {
     public void setNameSuffix(String nameSuffix) {
         this.nameSuffix = nameSuffix;
     }
-    
+
     public int getCustomizerSize() {
         return customizers.size();
     }
-    
+
     public ComponentDefCustomizer getCustomizer(int index) {
         return (ComponentDefCustomizer) customizers.get(index);
     }
-    
+
     public void addCustomizer(ComponentDefCustomizer customizer) {
         customizers.add(customizer);
     }
@@ -102,8 +102,10 @@ public abstract class AbstractOndemandCreator implements OndemandCreator {
         if (cd != null) {
             return true;
         }
-        AnnotationHandler handler = AnnotationHandlerFactory.getAnnotationHandler();
-        cd = handler.createComponentDef(targetClass, instanceDef, autoBindingDef);
+        AnnotationHandler handler = AnnotationHandlerFactory
+                .getAnnotationHandler();
+        cd = handler.createComponentDef(targetClass, instanceDef,
+                autoBindingDef);
         customize(cd);
         if (cd.getComponentName() == null) {
             cd.setComponentName(composeComponentName(clazz.getName()));
@@ -112,7 +114,7 @@ public abstract class AbstractOndemandCreator implements OndemandCreator {
         cd.init();
         return true;
     }
-    
+
     protected boolean isTarget(Class clazz) {
         String className = clazz.getName();
         if (!isTargetMiddlePackage(className)) {
@@ -123,11 +125,11 @@ public abstract class AbstractOndemandCreator implements OndemandCreator {
         }
         return true;
     }
-    
+
     protected abstract boolean isTargetMiddlePackage(String className);
-    
+
     protected abstract String composeComponentName(String className);
-    
+
     public ComponentDef getComponentDef(S2Container container, Class clazz) {
         if (!isTarget(clazz)) {
             return null;
@@ -135,33 +137,34 @@ public abstract class AbstractOndemandCreator implements OndemandCreator {
         Class targetClass = getTargetClass(clazz);
         return ondemandCreatorContainer.getComponentDef(targetClass);
     }
-    
-    public ComponentDef getComponentDef(S2Container container, String componentName) {
+
+    public ComponentDef getComponentDef(S2Container container,
+            String componentName) {
         if (!isTarget(componentName)) {
             return null;
         }
         Class targetClass = getTargetClass(componentName);
         return ondemandCreatorContainer.getComponentDef(targetClass);
     }
-    
+
     protected boolean isTarget(String componentName) {
         if (nameSuffix != null) {
             return componentName.endsWith(nameSuffix);
         }
         return true;
     }
-    
+
     protected abstract Class getTargetClass(Class clazz);
-    
+
     protected abstract Class getTargetClass(String componentName);
-    
+
     protected void customize(ComponentDef componentDef) {
         for (int i = 0; i < getCustomizerSize(); ++i) {
             ComponentDefCustomizer customizer = getCustomizer(i);
             customizer.customize(componentDef);
         }
     }
-    
+
     protected void concatName(StringBuffer sb, String name) {
         if (name != null) {
             if (sb.length() > 0) {

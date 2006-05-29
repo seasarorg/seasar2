@@ -17,8 +17,6 @@ package org.seasar.framework.container.autoregister;
 
 import junit.framework.TestCase;
 
-import org.seasar.framework.container.autoregister.QualifiedAutoNaming;
-
 /**
  * 
  * @author koichik
@@ -34,25 +32,25 @@ public class QualifiedAutoNamingTest extends TestCase {
         assertEquals("2", "fooHoge", naming.defineName("foo", "Hoge"));
         assertEquals("3", "hoge", naming.defineName("foo.bar", "Hoge"));
         assertEquals("4", "bazHoge", naming.defineName("foo.bar.baz", "Hoge"));
-        assertEquals("5", "hogeHoge", naming
-                .defineName("hoge.hoge", "Hoge"));
-        assertEquals("6", "bazHoge", naming.defineName("foo.bar.baz", "HogeActionImpl"));
+        assertEquals("5", "hogeHoge", naming.defineName("hoge.hoge", "Hoge"));
+        assertEquals("6", "bazHoge", naming.defineName("foo.bar.baz",
+                "HogeActionImpl"));
     }
-    
+
     public void testAddReplaceRule() throws Exception {
         QualifiedAutoNaming naming = new QualifiedAutoNaming();
         naming.addReplaceRule("(Ba[rz])+", "Hoge");
         assertEquals("1", "fooHoge", naming.defineName(null, "FooBarBaz"));
     }
-    
+
     public void testClearRule() throws Exception {
         QualifiedAutoNaming naming = new QualifiedAutoNaming();
         naming.clearReplaceRule();
         naming.addIgnorePackagePrefix("foo.bar");
-        assertEquals("1", "bazHogeFoo4Impl", naming
-                .defineName("foo.bar.baz.hoge", "Foo4Impl"));
+        assertEquals("1", "bazHogeFoo4Impl", naming.defineName(
+                "foo.bar.baz.hoge", "Foo4Impl"));
     }
-    
+
     public void testNotDecapitalize() throws Exception {
         QualifiedAutoNaming naming = new QualifiedAutoNaming();
         naming.setDecapitalize(false);

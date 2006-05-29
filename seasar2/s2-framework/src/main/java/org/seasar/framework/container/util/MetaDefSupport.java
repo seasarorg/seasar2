@@ -24,63 +24,63 @@ import org.seasar.framework.container.S2Container;
 
 /**
  * @author higa
- *
+ * 
  */
 public final class MetaDefSupport {
 
-	private List metaDefs = Collections.synchronizedList(new ArrayList());
+    private List metaDefs = Collections.synchronizedList(new ArrayList());
 
-	private S2Container container;
+    private S2Container container;
 
-	public MetaDefSupport() {
-	}
-	
-	public MetaDefSupport(S2Container container) {
-		setContainer(container);
-	}
+    public MetaDefSupport() {
+    }
 
-	public void addMetaDef(MetaDef metaDef) {
-		if (container != null) {
-			metaDef.setContainer(container);
-		}
-		metaDefs.add(metaDef);
-	}
+    public MetaDefSupport(S2Container container) {
+        setContainer(container);
+    }
 
-	public int getMetaDefSize() {
-		return metaDefs.size();
-	}
+    public void addMetaDef(MetaDef metaDef) {
+        if (container != null) {
+            metaDef.setContainer(container);
+        }
+        metaDefs.add(metaDef);
+    }
 
-	public MetaDef getMetaDef(int index) {
-		return (MetaDef) metaDefs.get(index);
-	}
+    public int getMetaDefSize() {
+        return metaDefs.size();
+    }
 
-	public MetaDef getMetaDef(String name) {
-		for (int i = 0; i < getMetaDefSize(); ++i) {
-			MetaDef metaDef = getMetaDef(i);
-			if (name == null && metaDef.getName() == null || name != null
-					&& name.equalsIgnoreCase(metaDef.getName())) {
-				return metaDef;
-			}
-		}
-		return null;
-	}
+    public MetaDef getMetaDef(int index) {
+        return (MetaDef) metaDefs.get(index);
+    }
 
-	public MetaDef[] getMetaDefs(String name) {
-		List defs = new ArrayList();
-		for (int i = 0; i < getMetaDefSize(); ++i) {
-			MetaDef metaDef = getMetaDef(i);
-			if (name == null && metaDef.getName() == null || name != null
-					&& name.equalsIgnoreCase(metaDef.getName())) {
-				defs.add(metaDef);
-			}
-		}
-		return (MetaDef[]) defs.toArray(new MetaDef[defs.size()]);
-	}
+    public MetaDef getMetaDef(String name) {
+        for (int i = 0; i < getMetaDefSize(); ++i) {
+            MetaDef metaDef = getMetaDef(i);
+            if (name == null && metaDef.getName() == null || name != null
+                    && name.equalsIgnoreCase(metaDef.getName())) {
+                return metaDef;
+            }
+        }
+        return null;
+    }
 
-	public void setContainer(S2Container container) {
-		this.container = container;
-		for (int i = 0; i < getMetaDefSize(); ++i) {
-			getMetaDef(i).setContainer(container);
-		}
-	}
+    public MetaDef[] getMetaDefs(String name) {
+        List defs = new ArrayList();
+        for (int i = 0; i < getMetaDefSize(); ++i) {
+            MetaDef metaDef = getMetaDef(i);
+            if (name == null && metaDef.getName() == null || name != null
+                    && name.equalsIgnoreCase(metaDef.getName())) {
+                defs.add(metaDef);
+            }
+        }
+        return (MetaDef[]) defs.toArray(new MetaDef[defs.size()]);
+    }
+
+    public void setContainer(S2Container container) {
+        this.container = container;
+        for (int i = 0; i < getMetaDefSize(); ++i) {
+            getMetaDef(i).setContainer(container);
+        }
+    }
 }

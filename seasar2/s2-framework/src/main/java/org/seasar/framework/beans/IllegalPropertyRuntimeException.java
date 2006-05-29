@@ -19,33 +19,29 @@ import org.seasar.framework.exception.SRuntimeException;
 
 /**
  * @author higa
- *
+ * 
  */
-public class IllegalPropertyRuntimeException
-	extends SRuntimeException {
+public class IllegalPropertyRuntimeException extends SRuntimeException {
 
     private static final long serialVersionUID = 3584516316082904020L;
 
-	private Class componentClass_;
-	private String propertyName_;
+    private Class componentClass_;
 
-	public IllegalPropertyRuntimeException(
-		Class componentClass,
-		String propertyName,
-		Throwable cause) {
-		super(
-			"ESSR0059",
-			new Object[] { componentClass.getName(), propertyName, cause },
-			cause);
-		componentClass_ = componentClass;
-		propertyName_ = propertyName;
-	}
+    private String propertyName_;
 
-	public Class getComponentClass() {
-		return componentClass_;
-	}
-	
-	public String getPropertyName() {
-		return propertyName_;
-	}
+    public IllegalPropertyRuntimeException(Class componentClass,
+            String propertyName, Throwable cause) {
+        super("ESSR0059", new Object[] { componentClass.getName(),
+                propertyName, cause }, cause);
+        componentClass_ = componentClass;
+        propertyName_ = propertyName;
+    }
+
+    public Class getComponentClass() {
+        return componentClass_;
+    }
+
+    public String getPropertyName() {
+        return propertyName_;
+    }
 }

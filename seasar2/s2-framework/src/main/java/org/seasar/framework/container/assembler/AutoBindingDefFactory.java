@@ -23,18 +23,23 @@ import org.seasar.framework.container.IllegalAutoBindingDefRuntimeException;
 
 public class AutoBindingDefFactory {
 
-    public static final AutoBindingDef AUTO = new AutoBindingAutoDef(AutoBindingDef.AUTO_NAME);
-    
-    public static final AutoBindingDef CONSTRUCTOR = new AutoBindingConstructorDef(AutoBindingDef.CONSTRUCTOR_NAME);
-    
-    public static final AutoBindingDef PROPERTY = new AutoBindingPropertyDef(AutoBindingDef.PROPERTY_NAME);
-    
-    public static final AutoBindingDef NONE = new AutoBindingNoneDef(AutoBindingDef.NONE_NAME);
-    
-    public static final AutoBindingDef SEMIAUTO = new AutoBindingSemiAutoDef(AutoBindingDef.SEMIAUTO_NAME);
-    
+    public static final AutoBindingDef AUTO = new AutoBindingAutoDef(
+            AutoBindingDef.AUTO_NAME);
+
+    public static final AutoBindingDef CONSTRUCTOR = new AutoBindingConstructorDef(
+            AutoBindingDef.CONSTRUCTOR_NAME);
+
+    public static final AutoBindingDef PROPERTY = new AutoBindingPropertyDef(
+            AutoBindingDef.PROPERTY_NAME);
+
+    public static final AutoBindingDef NONE = new AutoBindingNoneDef(
+            AutoBindingDef.NONE_NAME);
+
+    public static final AutoBindingDef SEMIAUTO = new AutoBindingSemiAutoDef(
+            AutoBindingDef.SEMIAUTO_NAME);
+
     private static Map autoBindingDefs = new HashMap();
-    
+
     static {
         addAutoBindingDef(AUTO);
         addAutoBindingDef(CONSTRUCTOR);
@@ -42,10 +47,10 @@ public class AutoBindingDefFactory {
         addAutoBindingDef(NONE);
         addAutoBindingDef(SEMIAUTO);
     }
-    
+
     protected AutoBindingDefFactory() {
     }
-    
+
     public static void addAutoBindingDef(AutoBindingDef autoBindingDef) {
         autoBindingDefs.put(autoBindingDef.getName(), autoBindingDef);
     }
@@ -53,7 +58,7 @@ public class AutoBindingDefFactory {
     public static boolean existAutoBindingDef(String name) {
         return autoBindingDefs.containsKey(name);
     }
-    
+
     public static AutoBindingDef getAutoBindingDef(String name) {
         if (!autoBindingDefs.containsKey(name)) {
             throw new IllegalAutoBindingDefRuntimeException(name);

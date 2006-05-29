@@ -29,7 +29,7 @@ import org.seasar.framework.util.URLUtil;
  * @author koichik
  */
 public class WebResourceResolver implements ResourceResolver {
-    
+
     protected ResourceResolver parent;
 
     public WebResourceResolver() {
@@ -56,7 +56,8 @@ public class WebResourceResolver implements ResourceResolver {
             if (!(externalContext.getApplication() instanceof ServletContext)) {
                 return null;
             }
-            ServletContext servletContext = (ServletContext) externalContext.getApplication(); 
+            ServletContext servletContext = (ServletContext) externalContext
+                    .getApplication();
             URL url = servletContext.getResource(path);
             if (url == null) {
                 final StringBuffer buf = new StringBuffer(path.length() + 10);
@@ -71,8 +72,7 @@ public class WebResourceResolver implements ResourceResolver {
                 return null;
             }
             return URLUtil.openStream(url);
-        }
-        catch (final MalformedURLException e) {
+        } catch (final MalformedURLException e) {
             return null;
         }
     }

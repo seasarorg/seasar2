@@ -27,24 +27,22 @@ import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * @author higa
- *
+ * 
  */
 public final class SAXParserUtil {
 
-	private SAXParserUtil() {
-	}
+    private SAXParserUtil() {
+    }
 
-	public static void parse(
-		SAXParser parser,
-		InputSource inputSource,
-		DefaultHandler handler) {
+    public static void parse(SAXParser parser, InputSource inputSource,
+            DefaultHandler handler) {
 
-		try {
-			parser.parse(inputSource, handler);
-		} catch (SAXException e) {
-			throw new SAXRuntimeException(e);
-		} catch (IOException e) {
-			throw new IORuntimeException(e);
-		}
-	}
+        try {
+            parser.parse(inputSource, handler);
+        } catch (SAXException e) {
+            throw new SAXRuntimeException(e);
+        } catch (IOException e) {
+            throw new IORuntimeException(e);
+        }
+    }
 }

@@ -21,18 +21,19 @@ import org.seasar.framework.util.ClassUtil;
 public class AnnotationHandlerFactory {
 
     private static final String TIGER_ANNOTATION_HANDLER_CLASS_NAME = "org.seasar.framework.container.factory.TigerAnnotationHandler";
-    
+
     private static final String BACKPORT175_ANNOTATION_HANDLER_CLASS_NAME = "org.seasar.framework.container.factory.Backport175AnnotationHandler";
 
     private static AnnotationHandler annotationHandler;
-    
+
     static {
         Class clazz = ConstantAnnotationHandler.class;
         try {
             clazz = ClassUtil.forName(TIGER_ANNOTATION_HANDLER_CLASS_NAME);
         } catch (ClassNotFoundRuntimeException ignore) {
             try {
-                clazz = ClassUtil.forName(BACKPORT175_ANNOTATION_HANDLER_CLASS_NAME);
+                clazz = ClassUtil
+                        .forName(BACKPORT175_ANNOTATION_HANDLER_CLASS_NAME);
             } catch (ClassNotFoundRuntimeException ignore2) {
             }
         }
@@ -41,11 +42,11 @@ public class AnnotationHandlerFactory {
 
     protected AnnotationHandlerFactory() {
     }
-    
+
     public static AnnotationHandler getAnnotationHandler() {
         return annotationHandler;
     }
-    
+
     public static void setAnnotationHandler(AnnotationHandler handler) {
         annotationHandler = handler;
     }

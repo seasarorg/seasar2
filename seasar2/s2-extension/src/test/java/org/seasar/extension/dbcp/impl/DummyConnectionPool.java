@@ -22,53 +22,55 @@ import org.seasar.extension.dbcp.ConnectionWrapper;
 
 public class DummyConnectionPool implements ConnectionPool {
 
-	private boolean checkIned_ = false;
-	private boolean released_ = false;
-	
-	public DummyConnectionPool() {
-	}
+    private boolean checkIned_ = false;
 
-	public ConnectionWrapper checkOut() throws SQLException {
-		return null;
-	}
-	public void checkIn(ConnectionWrapper connectionWrapper) {
-		checkIned_ = true;
-		connectionWrapper.cleanup();
-	}
-	
-	public boolean isCheckIned() {
-		return checkIned_;
-	}
+    private boolean released_ = false;
 
-	public void release(ConnectionWrapper connectionWrapper) {
-		released_ = true;
-	}
-	
-	public boolean isReleased() {
-		return released_;
-	}
+    public DummyConnectionPool() {
+    }
 
-	public int getActivePoolSize() {
-		return 0;
-	}
+    public ConnectionWrapper checkOut() throws SQLException {
+        return null;
+    }
 
-	public int getMaxPoolSize() {
-		return 0;
-	}
+    public void checkIn(ConnectionWrapper connectionWrapper) {
+        checkIned_ = true;
+        connectionWrapper.cleanup();
+    }
 
-	public int getMinPoolSize() {
-		return 0;
-	}
+    public boolean isCheckIned() {
+        return checkIned_;
+    }
 
-	public int getFreePoolSize() {
-		return 0;
-	}
+    public void release(ConnectionWrapper connectionWrapper) {
+        released_ = true;
+    }
 
-	public void close() {
-	}
+    public boolean isReleased() {
+        return released_;
+    }
 
-	public int getTxActivePoolSize() {
-		return 0;
-	}
+    public int getActivePoolSize() {
+        return 0;
+    }
+
+    public int getMaxPoolSize() {
+        return 0;
+    }
+
+    public int getMinPoolSize() {
+        return 0;
+    }
+
+    public int getFreePoolSize() {
+        return 0;
+    }
+
+    public void close() {
+    }
+
+    public int getTxActivePoolSize() {
+        return 0;
+    }
 
 }

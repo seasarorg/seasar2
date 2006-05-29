@@ -33,8 +33,7 @@ public final class JarInputStreamUtil {
     public static JarInputStream create(final InputStream is) {
         try {
             return new JarInputStream(is);
-        }
-        catch (final IOException e) {
+        } catch (final IOException e) {
             throw new IORuntimeException(e);
         }
     }
@@ -42,8 +41,7 @@ public final class JarInputStreamUtil {
     public static JarEntry getNextJarEntry(final JarInputStream is) {
         try {
             return is.getNextJarEntry();
-        }
-        catch (final IOException e) {
+        } catch (final IOException e) {
             throw new IORuntimeException(e);
         }
     }

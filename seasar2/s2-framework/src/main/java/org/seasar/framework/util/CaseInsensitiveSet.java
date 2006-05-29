@@ -22,52 +22,53 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-public class CaseInsensitiveSet
-	extends AbstractSet
-	implements Set, Serializable {
-	
-	static final long serialVersionUID = 0L;
-	private transient Map map;
-	private static final Object PRESENT = new Object();
+public class CaseInsensitiveSet extends AbstractSet implements Set,
+        Serializable {
 
-	public CaseInsensitiveSet() {
-		map = new CaseInsensitiveMap();
-	}
+    static final long serialVersionUID = 0L;
 
-	public CaseInsensitiveSet(Collection c) {
-		map = new CaseInsensitiveMap(Math.max((int) (c.size() / .75f) + 1, 16));
-		addAll(c);
-	}
+    private transient Map map;
 
-	public CaseInsensitiveSet(int initialCapacity) {
-		map = new CaseInsensitiveMap(initialCapacity);
-	}
+    private static final Object PRESENT = new Object();
 
-	public Iterator iterator() {
-		return map.keySet().iterator();
-	}
+    public CaseInsensitiveSet() {
+        map = new CaseInsensitiveMap();
+    }
 
-	public int size() {
-		return map.size();
-	}
+    public CaseInsensitiveSet(Collection c) {
+        map = new CaseInsensitiveMap(Math.max((int) (c.size() / .75f) + 1, 16));
+        addAll(c);
+    }
 
-	public boolean isEmpty() {
-		return map.isEmpty();
-	}
+    public CaseInsensitiveSet(int initialCapacity) {
+        map = new CaseInsensitiveMap(initialCapacity);
+    }
 
-	public boolean contains(Object o) {
-		return map.containsKey(o);
-	}
+    public Iterator iterator() {
+        return map.keySet().iterator();
+    }
 
-	public boolean add(Object o) {
-		return map.put(o, PRESENT) == null;
-	}
+    public int size() {
+        return map.size();
+    }
 
-	public boolean remove(Object o) {
-		return map.remove(o) == PRESENT;
-	}
+    public boolean isEmpty() {
+        return map.isEmpty();
+    }
 
-	public void clear() {
-		map.clear();
-	}
+    public boolean contains(Object o) {
+        return map.containsKey(o);
+    }
+
+    public boolean add(Object o) {
+        return map.put(o, PRESENT) == null;
+    }
+
+    public boolean remove(Object o) {
+        return map.remove(o) == PRESENT;
+    }
+
+    public void clear() {
+        map.clear();
+    }
 }

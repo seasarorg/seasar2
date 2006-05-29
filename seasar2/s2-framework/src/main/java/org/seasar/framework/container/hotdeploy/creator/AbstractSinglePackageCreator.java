@@ -20,11 +20,11 @@ import org.seasar.framework.container.hotdeploy.OndemandCreator;
 import org.seasar.framework.container.hotdeploy.OndemandCreatorContainer;
 import org.seasar.framework.util.StringUtil;
 
-public abstract class AbstractSinglePackageCreator
-    extends AbstractOndemandCreator implements OndemandCreator {
-    
+public abstract class AbstractSinglePackageCreator extends
+        AbstractOndemandCreator implements OndemandCreator {
+
     private String middlePackageName;
-    
+
     public String getMiddlePackageName() {
         return middlePackageName;
     }
@@ -32,7 +32,7 @@ public abstract class AbstractSinglePackageCreator
     public void setMiddlePackageName(String middlePackageName) {
         this.middlePackageName = middlePackageName;
     }
-    
+
     protected String composeClassName(String componentName) {
         String prePackageName = null;
         String shortClassName = componentName;
@@ -50,9 +50,10 @@ public abstract class AbstractSinglePackageCreator
         concatName(sb, shortClassName);
         return sb.toString();
     }
-    
+
     protected boolean isTargetMiddlePackage(String className) {
-        if (middlePackageName != null && className.indexOf(middlePackageName) < 0) {
+        if (middlePackageName != null
+                && className.indexOf(middlePackageName) < 0) {
             return false;
         }
         return true;
@@ -74,6 +75,5 @@ public abstract class AbstractSinglePackageCreator
         // TODO Auto-generated method stub
         return null;
     }
-    
-    
+
 }

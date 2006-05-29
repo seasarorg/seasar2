@@ -15,16 +15,15 @@
  */
 package org.seasar.framework.container;
 
-
 /**
  * @author higa
- *
+ * 
  */
 public interface InitMethodDefAware {
-	
-	public void addInitMethodDef(InitMethodDef methodDef);
-	
-	public int getInitMethodDefSize();
-	
-	public InitMethodDef getInitMethodDef(int index);
+
+    public void addInitMethodDef(InitMethodDef methodDef);
+
+    public int getInitMethodDefSize();
+
+    public InitMethodDef getInitMethodDef(int index);
 }

@@ -20,7 +20,7 @@ import org.seasar.framework.container.S2Container;
 
 /**
  * @author higa
- *
+ * 
  */
 public class HttpServletExternalContextComponentDefRegister implements
         ExternalContextComponentDefRegister {

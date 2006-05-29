@@ -32,22 +32,25 @@ import org.seasar.framework.util.MethodUtil;
  * @author koichik
  */
 public class MethodInvocationClassGenerator extends AbstractGenerator {
-    //instance fields
+    // instance fields
     protected final String enhancedClassName;
+
     protected CtClass methodInvocationClass;
 
     public MethodInvocationClassGenerator(final ClassPool classPool,
             final String invocationClassName, final String targetClassName) {
         super(classPool);
         this.enhancedClassName = targetClassName;
-        this.methodInvocationClass = getAndRenameCtClass(MethodInvocationTemplate.class,
-                invocationClassName);
+        this.methodInvocationClass = getAndRenameCtClass(
+                MethodInvocationTemplate.class, invocationClassName);
     }
 
-    public void createProceedMethod(final Method targetMethod, final String invokeSuperMethodName) {
-        final CtMethod method = getDeclaredMethod(methodInvocationClass, "proceed", null);
-        setMethodBody(method, createProceedMethodSource(targetMethod, enhancedClassName,
-                invokeSuperMethodName));
+    public void createProceedMethod(final Method targetMethod,
+            final String invokeSuperMethodName) {
+        final CtMethod method = getDeclaredMethod(methodInvocationClass,
+                "proceed", null);
+        setMethodBody(method, createProceedMethodSource(targetMethod,
+                enhancedClassName, invokeSuperMethodName));
     }
 
     public Class toClass(final ClassLoader classLoader) {
@@ -64,7 +67,8 @@ public class MethodInvocationClassGenerator extends AbstractGenerator {
         buf.append("if (interceptorsIndex < interceptors.length) {");
         buf.append("return interceptors[interceptorsIndex++].invoke(this);");
         buf.append("}");
-        buf.append(createReturnStatement(targetMethod, enhancedClassName, invokeSuperMethodName));
+        buf.append(createReturnStatement(targetMethod, enhancedClassName,
+                invokeSuperMethodName));
         buf.append("}");
         return new String(buf);
     }
@@ -75,8 +79,9 @@ public class MethodInvocationClassGenerator extends AbstractGenerator {
             return createThrowStatement(targetMethod, enhancedClassName);
         }
 
-        final String invokeSuper = "((" + enhancedClassName + ") target)." + invokeSuperMethodName
-                + "(" + createArgumentString(targetMethod.getParameterTypes()) + ")";
+        final String invokeSuper = "((" + enhancedClassName + ") target)."
+                + invokeSuperMethodName + "("
+                + createArgumentString(targetMethod.getParameterTypes()) + ")";
 
         final Class returnType = targetMethod.getReturnType();
         if (returnType.equals(void.class)) {
@@ -87,9 +92,10 @@ public class MethodInvocationClassGenerator extends AbstractGenerator {
 
     public static String createThrowStatement(final Method targetMethod,
             final String enhancedClassName) {
-        return "throw new java.lang.NoSuchMethodError(\"" + enhancedClassName + "."
-                + targetMethod.getName() + "("
-                + createArgumentTypeString(targetMethod.getParameterTypes()) + ")\");";
+        return "throw new java.lang.NoSuchMethodError(\"" + enhancedClassName
+                + "." + targetMethod.getName() + "("
+                + createArgumentTypeString(targetMethod.getParameterTypes())
+                + ")\");";
 
     }
 
@@ -100,7 +106,8 @@ public class MethodInvocationClassGenerator extends AbstractGenerator {
 
         final StringBuffer buf = new StringBuffer(1000);
         for (int i = 0; i < argTypes.length; ++i) {
-            buf.append(fromObject(argTypes[i], "arguments[" + i + "]")).append(", ");
+            buf.append(fromObject(argTypes[i], "arguments[" + i + "]")).append(
+                    ", ");
         }
         buf.setLength(buf.length() - 2);
         return new String(buf);
@@ -121,15 +128,21 @@ public class MethodInvocationClassGenerator extends AbstractGenerator {
 
     public static class MethodInvocationTemplate implements S2MethodInvocation {
         private static Class targetClass;
+
         private static Method method;
+
         private static MethodInterceptor[] interceptors;
+
         private static Map parameters;
 
         private Object target;
+
         private Object[] arguments;
+
         private int interceptorsIndex;
 
-        public MethodInvocationTemplate(final Object target, final Object[] arguments) {
+        public MethodInvocationTemplate(final Object target,
+                final Object[] arguments) {
             this.target = target;
             this.arguments = arguments;
         }

@@ -48,24 +48,28 @@ public class S2ContainerFactoryTest extends TestCase {
 
     protected void tearDown() throws Exception {
         S2ContainerFactory.configurationContainer = null;
-        S2ContainerFactory.setProvider(new S2ContainerFactory.DefaultProvider());
+        S2ContainerFactory
+                .setProvider(new S2ContainerFactory.DefaultProvider());
         S2ContainerFactory.setDefaultBuilder(new XmlS2ContainerBuilder());
-        S2ContainerBehavior.setProvider(new S2ContainerBehavior.DefaultProvider());
-        ComponentDeployerFactory.setProvider(new ComponentDeployerFactory.DefaultProvider());
+        S2ContainerBehavior
+                .setProvider(new S2ContainerBehavior.DefaultProvider());
+        ComponentDeployerFactory
+                .setProvider(new ComponentDeployerFactory.DefaultProvider());
         AssemblerFactory.setProvider(new AssemblerFactory.DefaultProvider());
     }
 
     public void testCircularInclude() throws Exception {
         try {
-            S2ContainerFactory.create(getClass().getName().replace('.', '/') + ".CircularA.dicon");
+            S2ContainerFactory.create(getClass().getName().replace('.', '/')
+                    + ".CircularA.dicon");
             fail("1");
-        }
-        catch (Throwable e) {
+        } catch (Throwable e) {
             while (e != null) {
                 if (e instanceof CircularIncludeRuntimeException) {
                     return;
                 }
-                e = (e instanceof SAXException) ? ((SAXException) e).getException() : e.getCause();
+                e = (e instanceof SAXException) ? ((SAXException) e)
+                        .getException() : e.getCause();
             }
             fail("2");
         }
@@ -85,7 +89,8 @@ public class S2ContainerFactoryTest extends TestCase {
 
     public void testCustomizeContainerBuilder() throws Exception {
         configure("ContainerBuilder.dicon");
-        S2Container container = S2ContainerFactory.create(getClass().getName().replace('.', '/')
+        S2Container container = S2ContainerFactory.create(getClass().getName()
+                .replace('.', '/')
                 + ".app.properties");
         container.init();
         assertNotNull("1", container.getComponent("list"));
@@ -102,7 +107,8 @@ public class S2ContainerFactoryTest extends TestCase {
 
     public void testCustomizeContainerBehavior() throws Exception {
         configure("ContainerBehavior.dicon");
-        S2Container container = S2ContainerFactory.create(getClass().getName().replace('.', '/')
+        S2Container container = S2ContainerFactory.create(getClass().getName()
+                .replace('.', '/')
                 + ".dicon");
         container.init();
         assertNull("1", container.getComponent("notFound"));
@@ -110,7 +116,8 @@ public class S2ContainerFactoryTest extends TestCase {
 
     public void testCustomizeComponentDeployerFactory() throws Exception {
         configure("ComponetDeployerFactory.dicon");
-        S2Container container = S2ContainerFactory.create(getClass().getName().replace('.', '/')
+        S2Container container = S2ContainerFactory.create(getClass().getName()
+                .replace('.', '/')
                 + ".foo.dicon");
         container.init();
         Bar bar = (Bar) container.getComponent("bar");
@@ -119,7 +126,8 @@ public class S2ContainerFactoryTest extends TestCase {
 
     public void testCustomizeAssemblerFactory() throws Exception {
         configure("AssemblerFactory.dicon");
-        S2Container container = S2ContainerFactory.create(getClass().getName().replace('.', '/')
+        S2Container container = S2ContainerFactory.create(getClass().getName()
+                .replace('.', '/')
                 + ".foo.dicon");
         container.init();
         Baz baz = (Baz) container.getComponent("baz");
@@ -128,18 +136,21 @@ public class S2ContainerFactoryTest extends TestCase {
 
     public void testCustomizeClassLoader() throws Exception {
         configure("ClassLoader.dicon");
-        S2Container container = S2ContainerFactory.create(getClass().getName().replace('.', '/')
+        S2Container container = S2ContainerFactory.create(getClass().getName()
+                .replace('.', '/')
                 + ".foo.dicon");
         container.init();
         Object baz = container.getComponent("baz");
         ClassLoader cl = baz.getClass().getClassLoader();
         assertTrue("1", cl instanceof ChildFirstClassLoader);
-        assertEquals("2", Thread.currentThread().getContextClassLoader(), cl.getParent());
+        assertEquals("2", Thread.currentThread().getContextClassLoader(), cl
+                .getParent());
     }
 
     public void testHotswapMode() throws Exception {
         configure("HotswapMode.dicon");
-        S2Container container = S2ContainerFactory.create(getClass().getName().replace('.', '/')
+        S2Container container = S2ContainerFactory.create(getClass().getName()
+                .replace('.', '/')
                 + ".foo.dicon");
         assertTrue("1", container.isHotswapMode());
     }
@@ -156,7 +167,8 @@ public class S2ContainerFactoryTest extends TestCase {
         S2ContainerFactory.configure(path);
     }
 
-    public static class EmptyContainerFactory extends S2ContainerFactory.DefaultProvider {
+    public static class EmptyContainerFactory extends
+            S2ContainerFactory.DefaultProvider {
         public S2Container create(String path) {
             return new S2ContainerImpl();
         }
@@ -164,7 +176,8 @@ public class S2ContainerFactoryTest extends TestCase {
 
     public static class FixedPathResolver extends SimplePathResolver {
         public String resolvePath(String context, String path) {
-            return S2ContainerFactoryTest.class.getName().replace('.', '/') + ".PathResolver.dicon";
+            return S2ContainerFactoryTest.class.getName().replace('.', '/')
+                    + ".PathResolver.dicon";
         }
     }
 
@@ -176,11 +189,11 @@ public class S2ContainerFactoryTest extends TestCase {
                 props.load(ResourceUtil.getResourceAsStream(path));
                 for (Iterator it = props.keySet().iterator(); it.hasNext();) {
                     String name = (String) it.next();
-                    container.register(ClassUtil.forName(props.getProperty(name)), name);
+                    container.register(ClassUtil.forName(props
+                            .getProperty(name)), name);
                 }
                 return container;
-            }
-            catch (IOException e) {
+            } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
@@ -206,20 +219,24 @@ public class S2ContainerFactoryTest extends TestCase {
         }
     }
 
-    public static class UnthrowExceptionBehavior extends S2ContainerBehavior.DefaultProvider {
-        public ComponentDef acquireFromGetComponentDef(S2Container container, Object key) {
+    public static class UnthrowExceptionBehavior extends
+            S2ContainerBehavior.DefaultProvider {
+        public ComponentDef acquireFromGetComponentDef(S2Container container,
+                Object key) {
             return getComponentDef(container, key);
         }
     }
 
     public static class PrototypeToSingletonDeployerFactory extends
             ComponentDeployerFactory.DefaultProvider {
-        public ComponentDeployer createPrototypeComponentDeployer(ComponentDef cd) {
+        public ComponentDeployer createPrototypeComponentDeployer(
+                ComponentDef cd) {
             return new SingletonComponentDeployer(cd);
         }
     }
 
-    public static class AutoToManualOnlyAssemblerFactory extends AssemblerFactory.DefaultProvider {
+    public static class AutoToManualOnlyAssemblerFactory extends
+            AssemblerFactory.DefaultProvider {
         public PropertyAssembler createAutoPropertyAssembler(ComponentDef cd) {
             return new ManualOnlyPropertyAssembler(cd);
         }

@@ -22,69 +22,74 @@ import org.seasar.framework.beans.PropertyDesc;
 
 public class PropertyTypeImpl implements PropertyType {
 
-	private PropertyDesc propertyDesc_;
-	private String propertyName_;
-	private String columnName_;
-	private ValueType valueType_;
-	private boolean primaryKey_ = false;
-	private boolean persistent_ = true;
+    private PropertyDesc propertyDesc_;
 
-	public PropertyTypeImpl(PropertyDesc propertyDesc) {
-		this(propertyDesc, ValueTypes.OBJECT, propertyDesc.getPropertyName());
-	}
-	
-	public PropertyTypeImpl(PropertyDesc propertyDesc, ValueType valueType) {
-		this(propertyDesc, valueType, propertyDesc.getPropertyName());
-	}
+    private String propertyName_;
 
-	public PropertyTypeImpl(PropertyDesc propertyDesc, ValueType valueType,
-			String columnName) {
+    private String columnName_;
 
-		propertyDesc_ = propertyDesc;
-		propertyName_ = propertyDesc.getPropertyName();
-		valueType_ = valueType;
-		columnName_ = columnName;	
-	}
-	
-	public PropertyTypeImpl(String propertyName, ValueType valueType) {
-		propertyName_ = propertyName;
-		valueType_ = valueType;
-		columnName_ = propertyName;
-	}
+    private ValueType valueType_;
 
-	public PropertyDesc getPropertyDesc() {
-		return propertyDesc_;
-	}
+    private boolean primaryKey_ = false;
 
-	public String getPropertyName() {
-		return propertyName_;
-	}
+    private boolean persistent_ = true;
 
-	public String getColumnName() {
-		return columnName_;
-	}
-	
-	public void setColumnName(String columnName) {
-		columnName_ = columnName;
-	}
+    public PropertyTypeImpl(PropertyDesc propertyDesc) {
+        this(propertyDesc, ValueTypes.OBJECT, propertyDesc.getPropertyName());
+    }
 
-	public ValueType getValueType() {
-		return valueType_;
-	}
+    public PropertyTypeImpl(PropertyDesc propertyDesc, ValueType valueType) {
+        this(propertyDesc, valueType, propertyDesc.getPropertyName());
+    }
 
-	public boolean isPrimaryKey() {
-		return primaryKey_;
-	}
+    public PropertyTypeImpl(PropertyDesc propertyDesc, ValueType valueType,
+            String columnName) {
 
-	public void setPrimaryKey(boolean primaryKey) {
-		primaryKey_ = primaryKey;
-	}
+        propertyDesc_ = propertyDesc;
+        propertyName_ = propertyDesc.getPropertyName();
+        valueType_ = valueType;
+        columnName_ = columnName;
+    }
 
-	public boolean isPersistent() {
-		return persistent_;
-	}
+    public PropertyTypeImpl(String propertyName, ValueType valueType) {
+        propertyName_ = propertyName;
+        valueType_ = valueType;
+        columnName_ = propertyName;
+    }
 
-	public void setPersistent(boolean persistent) {
-		persistent_ = persistent;
-	}
+    public PropertyDesc getPropertyDesc() {
+        return propertyDesc_;
+    }
+
+    public String getPropertyName() {
+        return propertyName_;
+    }
+
+    public String getColumnName() {
+        return columnName_;
+    }
+
+    public void setColumnName(String columnName) {
+        columnName_ = columnName;
+    }
+
+    public ValueType getValueType() {
+        return valueType_;
+    }
+
+    public boolean isPrimaryKey() {
+        return primaryKey_;
+    }
+
+    public void setPrimaryKey(boolean primaryKey) {
+        primaryKey_ = primaryKey;
+    }
+
+    public boolean isPersistent() {
+        return persistent_;
+    }
+
+    public void setPersistent(boolean persistent) {
+        persistent_ = persistent;
+    }
 }

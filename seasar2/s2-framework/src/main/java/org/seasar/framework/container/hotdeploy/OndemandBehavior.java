@@ -43,9 +43,9 @@ public class OndemandBehavior extends DefaultProvider implements
     private String rootPackageName;
 
     private Map componentDefCache = new HashMap();
-    
+
     public static final String conventionNaming_BINDING = "bindingType=may";
-    
+
     private ConventionNaming conventionNaming = new DefaultConventionNaming();
 
     public OndemandCreator getCreator(int index) {
@@ -86,7 +86,8 @@ public class OndemandBehavior extends DefaultProvider implements
         hotdeployClassLoader.setPackageName(rootPackageName);
         hotdeployClassLoader.addHotdeployListener(this);
         Thread.currentThread().setContextClassLoader(hotdeployClassLoader);
-        S2ContainerImpl container = (S2ContainerImpl) SingletonS2ContainerFactory.getContainer();
+        S2ContainerImpl container = (S2ContainerImpl) SingletonS2ContainerFactory
+                .getContainer();
         container.setClassLoader(hotdeployClassLoader);
     }
 
@@ -99,11 +100,8 @@ public class OndemandBehavior extends DefaultProvider implements
     }
 
     public void definedClass(Class clazz) {
-        loadComponentDef(SingletonS2ContainerFactory
-                .getContainer(), clazz);
+        loadComponentDef(SingletonS2ContainerFactory.getContainer(), clazz);
     }
-    
-    
 
     public ComponentDef getComponentDef(Class targetClass) {
         return (ComponentDef) componentDefCache.get(targetClass);
@@ -130,7 +128,7 @@ public class OndemandBehavior extends DefaultProvider implements
     protected ComponentDef getComponentDefFromCache(Object key) {
         return (ComponentDef) componentDefCache.get(key);
     }
-    
+
     protected void loadComponentDef(S2Container container, Class clazz) {
         for (int i = 0; i < getCreatorSize(); ++i) {
             OndemandCreator creator = getCreator(i);
@@ -155,8 +153,7 @@ public class OndemandBehavior extends DefaultProvider implements
             String componentName) {
         for (int i = 0; i < getCreatorSize(); ++i) {
             OndemandCreator creator = getCreator(i);
-            ComponentDef cd = creator.getComponentDef(container,
-                    componentName);
+            ComponentDef cd = creator.getComponentDef(container, componentName);
             if (cd != null) {
                 return cd;
             }

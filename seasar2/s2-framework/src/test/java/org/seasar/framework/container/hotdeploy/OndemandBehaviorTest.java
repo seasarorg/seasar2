@@ -30,9 +30,9 @@ import org.seasar.framework.util.ClassUtil;
  * 
  */
 public class OndemandBehaviorTest extends S2FrameworkTestCase {
-    
+
     private ClassLoader originalLoader;
-    
+
     private OndemandBehavior ondemand;
 
     protected void setUp() {
@@ -43,33 +43,41 @@ public class OndemandBehaviorTest extends S2FrameworkTestCase {
         ondemand.addCreator(creator);
         S2ContainerBehavior.setProvider(ondemand);
     }
-    
+
     protected void tearDown() {
-        S2ContainerBehavior.setProvider(new S2ContainerBehavior.DefaultProvider());
+        S2ContainerBehavior
+                .setProvider(new S2ContainerBehavior.DefaultProvider());
         Thread.currentThread().setContextClassLoader(originalLoader);
     }
 
     public void testStartStop() throws Exception {
         BeanDesc beanDesc = BeanDescFactory.getBeanDesc(getClass());
         ondemand.start();
-        assertEquals("1", HotdeployClassLoader.class, Thread.currentThread().getContextClassLoader().getClass());
+        assertEquals("1", HotdeployClassLoader.class, Thread.currentThread()
+                .getContextClassLoader().getClass());
         ondemand.stop();
-        assertSame("2", originalLoader, Thread.currentThread().getContextClassLoader());
+        assertSame("2", originalLoader, Thread.currentThread()
+                .getContextClassLoader());
         assertNotSame("3", beanDesc, BeanDescFactory.getBeanDesc(getClass()));
     }
-    
+
     public void testCreateComponentDef() throws Exception {
         ondemand.start();
-        Class clazz = ClassUtil.forName(ClassUtil.getPackageName(getClass()) + ".Hoge");
-        assertNotNull("1", ondemand.acquireFromGetComponentDef(getContainer(), clazz));
+        Class clazz = ClassUtil.forName(ClassUtil.getPackageName(getClass())
+                + ".Hoge");
+        assertNotNull("1", ondemand.acquireFromGetComponentDef(getContainer(),
+                clazz));
         ondemand.stop();
     }
-    
+
     public void testGetComponentDefFromCache() throws Exception {
         ondemand.start();
-        Class clazz = ClassUtil.forName(ClassUtil.getPackageName(getClass()) + ".Hoge");
-        ComponentDef cd = ondemand.acquireFromGetComponentDef(getContainer(), clazz);
-        assertSame("1", cd, ondemand.acquireFromGetComponentDef(getContainer(), clazz));
+        Class clazz = ClassUtil.forName(ClassUtil.getPackageName(getClass())
+                + ".Hoge");
+        ComponentDef cd = ondemand.acquireFromGetComponentDef(getContainer(),
+                clazz);
+        assertSame("1", cd, ondemand.acquireFromGetComponentDef(getContainer(),
+                clazz));
         ondemand.stop();
     }
 

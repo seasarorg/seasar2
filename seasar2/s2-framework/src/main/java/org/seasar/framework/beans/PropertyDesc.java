@@ -19,29 +19,29 @@ import java.lang.reflect.Method;
 
 /**
  * @author higa
- *
+ * 
  */
 public interface PropertyDesc {
 
-	public String getPropertyName();
+    public String getPropertyName();
 
-	public Class getPropertyType();
+    public Class getPropertyType();
 
-	public Method getReadMethod();
+    public Method getReadMethod();
 
-	public void setReadMethod(Method readMethod);
-	
-	public boolean hasReadMethod();
+    public void setReadMethod(Method readMethod);
 
-	public Method getWriteMethod();
+    public boolean hasReadMethod();
 
-	public void setWriteMethod(Method writeMethod);
-	
-	public boolean hasWriteMethod();
+    public Method getWriteMethod();
 
-	public Object getValue(Object target);
+    public void setWriteMethod(Method writeMethod);
 
-	public void setValue(Object target, Object value);
-	
-	public Object convertIfNeed(Object value);
+    public boolean hasWriteMethod();
+
+    public Object getValue(Object target);
+
+    public void setValue(Object target, Object value);
+
+    public Object convertIfNeed(Object value);
 }

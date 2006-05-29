@@ -21,27 +21,28 @@ import org.seasar.framework.message.MessageFormatter;
 
 /**
  * @author higa
- *
+ * 
  */
 public class SIOException extends IOException {
 
     private static final long serialVersionUID = -1337051265518112537L;
 
-	private String messageCode;
-	private Object[] args;
+    private String messageCode;
 
-	public SIOException(String messageCode, Object[] args) {
-		super(MessageFormatter.getMessage(messageCode, args));
-		
-		this.messageCode = messageCode;
-		this.args = args;
-	}
+    private Object[] args;
 
-	public String getMessageCode() {
-		return messageCode;
-	}
-	
-	public Object[] getArgs() {
-		return args;
-	}
+    public SIOException(String messageCode, Object[] args) {
+        super(MessageFormatter.getMessage(messageCode, args));
+
+        this.messageCode = messageCode;
+        this.args = args;
+    }
+
+    public String getMessageCode() {
+        return messageCode;
+    }
+
+    public Object[] getArgs() {
+        return args;
+    }
 }

@@ -27,20 +27,20 @@ import org.xml.sax.SAXException;
 
 /**
  * @author higa
- *  
+ * 
  */
 public final class DocumentBuilderUtil {
 
-	private DocumentBuilderUtil() {
-	}
+    private DocumentBuilderUtil() {
+    }
 
-	public static Document parse(DocumentBuilder builder, InputStream is) {
-		try {
-			return builder.parse(is);
-		} catch (SAXException e) {
-			throw new SAXRuntimeException(e);
-		} catch (IOException e) {
-			throw new IORuntimeException(e);
-		}
-	}
+    public static Document parse(DocumentBuilder builder, InputStream is) {
+        try {
+            return builder.parse(is);
+        } catch (SAXException e) {
+            throw new SAXRuntimeException(e);
+        } catch (IOException e) {
+            throw new IORuntimeException(e);
+        }
+    }
 }

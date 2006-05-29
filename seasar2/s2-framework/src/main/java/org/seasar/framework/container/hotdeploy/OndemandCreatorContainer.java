@@ -21,10 +21,10 @@ import org.seasar.framework.container.cooldeploy.ConventionNaming;
 public interface OndemandCreatorContainer {
 
     String getRootPackageName();
-    
+
     ConventionNaming getConventionNaming();
 
     ComponentDef getComponentDef(Class targetClass);
-    
+
     void register(ComponentDef componentDef);
 }

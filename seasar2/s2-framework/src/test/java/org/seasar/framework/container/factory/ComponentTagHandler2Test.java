@@ -24,11 +24,11 @@ import org.seasar.framework.unit.S2FrameworkTestCase;
 public class ComponentTagHandler2Test extends S2FrameworkTestCase {
 
     private S2Container child;
-    
+
     public void setUp() throws Exception {
         include("ComponentTagHandler2Test.dicon");
     }
-    
+
     public void testNormal() throws Exception {
         Foo foo = (Foo) child.getComponent("foo");
         assertNotNull("1", foo);
@@ -37,7 +37,7 @@ public class ComponentTagHandler2Test extends S2FrameworkTestCase {
         assertNotNull("3", foo);
         assertEquals("4", "222", foo2.getAaa());
     }
-    
+
     public void testInterfaceWithAspect() throws Exception {
         Greeting greeting = (Greeting) child.getComponent(Greeting.class);
         assertEquals("1", "Hello", greeting.greet());

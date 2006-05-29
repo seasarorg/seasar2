@@ -21,13 +21,13 @@ package org.seasar.framework.container;
  */
 public interface PropertyDef extends ArgDef {
 
-	public String getPropertyName();
-    
+    public String getPropertyName();
+
     public BindingTypeDef getBindingTypeDef();
-    
+
     public void setBindingTypeDef(BindingTypeDef bindingTypeDef);
-    
+
     public AccessTypeDef getAccessTypeDef();
-    
+
     public void setAccessTypeDef(AccessTypeDef accessTypeDef);
 }

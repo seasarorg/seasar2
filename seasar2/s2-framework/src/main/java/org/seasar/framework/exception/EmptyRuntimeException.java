@@ -15,26 +15,25 @@
  */
 package org.seasar.framework.exception;
 
-import org.seasar.framework.exception.SRuntimeException;
-
 /**
  * @author higa
- *
+ * 
  */
 public final class EmptyRuntimeException extends SRuntimeException {
 
     private static final long serialVersionUID = 4625805280526951642L;
 
-	private String targetName;
-	/**
-	 * @param targetName
-	 */
-	public EmptyRuntimeException(String targetName) {
-		super("ESSR0007", new Object[]{targetName});
-		this.targetName = targetName;
-	}
-	
-	public String getTargetName() {
-		return targetName;
-	}
+    private String targetName;
+
+    /**
+     * @param targetName
+     */
+    public EmptyRuntimeException(String targetName) {
+        super("ESSR0007", new Object[] { targetName });
+        this.targetName = targetName;
+    }
+
+    public String getTargetName() {
+        return targetName;
+    }
 }

@@ -54,27 +54,27 @@ import org.seasar.framework.unit.S2FrameworkTestCase;
 import org.seasar.framework.util.FileOutputStreamUtil;
 import org.seasar.framework.util.ResourceUtil;
 
-/** 
+/**
  * @author higa
  */
 public abstract class S2TestCase extends S2FrameworkTestCase {
 
     private static final String DATASOURCE_NAME = "j2ee"
-        + ContainerConstants.NS_SEP + "dataSource";
-    
+            + ContainerConstants.NS_SEP + "dataSource";
+
     private DataSource dataSource;
 
     private Connection connection;
 
     private DatabaseMetaData dbMetaData;
-    
-	public S2TestCase() {
-	}
 
-	public S2TestCase(String name) {
-		super(name);
-	}
-    
+    public S2TestCase() {
+    }
+
+    public S2TestCase(String name) {
+        super(name);
+    }
+
     protected void doRunTest() throws Throwable {
         TransactionManager tm = null;
         if (needTransaction()) {
@@ -97,7 +97,7 @@ public abstract class S2TestCase extends S2FrameworkTestCase {
     protected boolean needTransaction() {
         return getName().endsWith("Tx");
     }
-    
+
     protected void setUpAfterContainerInit() throws Throwable {
         super.setUpAfterContainerInit();
         setupDataSource();
@@ -107,7 +107,7 @@ public abstract class S2TestCase extends S2FrameworkTestCase {
         tearDownDataSource();
         super.tearDownBeforeContainerDestroy();
     }
-    
+
     protected void setupDataSource() {
         S2Container container = getContainer();
         try {
@@ -131,7 +131,7 @@ public abstract class S2TestCase extends S2FrameworkTestCase {
         }
         dataSource = null;
     }
-    
+
     public DataSource getDataSource() {
         if (dataSource == null) {
             throw new EmptyRuntimeException("dataSource");
@@ -155,179 +155,179 @@ public abstract class S2TestCase extends S2FrameworkTestCase {
         return dbMetaData;
     }
 
-	public DataSet readXls(String path) {
-		DataReader reader = new XlsReader(convertPath(path));
-		return reader.read();
-	}
+    public DataSet readXls(String path) {
+        DataReader reader = new XlsReader(convertPath(path));
+        return reader.read();
+    }
 
-	public void writeXls(String path, DataSet dataSet) {
-		File dir = ResourceUtil.getBuildDir(getClass());
-		File file = new File(dir, convertPath(path));
-		DataWriter writer = new XlsWriter(FileOutputStreamUtil.create(file));
-		writer.write(dataSet);
-	}
+    public void writeXls(String path, DataSet dataSet) {
+        File dir = ResourceUtil.getBuildDir(getClass());
+        File file = new File(dir, convertPath(path));
+        DataWriter writer = new XlsWriter(FileOutputStreamUtil.create(file));
+        writer.write(dataSet);
+    }
 
-	public void writeDb(DataSet dataSet) {
-		DataWriter writer = new SqlWriter(getDataSource());
-		writer.write(dataSet);
-	}
+    public void writeDb(DataSet dataSet) {
+        DataWriter writer = new SqlWriter(getDataSource());
+        writer.write(dataSet);
+    }
 
-	public DataTable readDbByTable(String table) {
-		return readDbByTable(table, null);
-	}
+    public DataTable readDbByTable(String table) {
+        return readDbByTable(table, null);
+    }
 
-	public DataTable readDbByTable(String table, String condition) {
-		SqlTableReader reader = new SqlTableReader(getDataSource());
-		reader.setTable(table, condition);
-		return reader.read();
-	}
+    public DataTable readDbByTable(String table, String condition) {
+        SqlTableReader reader = new SqlTableReader(getDataSource());
+        reader.setTable(table, condition);
+        return reader.read();
+    }
 
-	public DataTable readDbBySql(String sql, String tableName) {
-		SqlTableReader reader = new SqlTableReader(getDataSource());
-		reader.setSql(sql, tableName);
-		return reader.read();
-	}
+    public DataTable readDbBySql(String sql, String tableName) {
+        SqlTableReader reader = new SqlTableReader(getDataSource());
+        reader.setSql(sql, tableName);
+        return reader.read();
+    }
 
-	public void readXlsWriteDb(String path) {
-		writeDb(readXls(path));
-	}
+    public void readXlsWriteDb(String path) {
+        writeDb(readXls(path));
+    }
 
-	public void readXlsReplaceDb(String path) {
-		DataSet dataSet = readXls(path);
-		deleteDb(dataSet);
-		writeDb(dataSet);
-	}
+    public void readXlsReplaceDb(String path) {
+        DataSet dataSet = readXls(path);
+        deleteDb(dataSet);
+        writeDb(dataSet);
+    }
 
-	public void readXlsAllReplaceDb(String path) {
-		DataSet dataSet = readXls(path);
-		for (int i = dataSet.getTableSize() - 1; i >= 0; --i) {
-			deleteTable(dataSet.getTable(i).getTableName());
-		}
-		writeDb(dataSet);
-	}
+    public void readXlsAllReplaceDb(String path) {
+        DataSet dataSet = readXls(path);
+        for (int i = dataSet.getTableSize() - 1; i >= 0; --i) {
+            deleteTable(dataSet.getTable(i).getTableName());
+        }
+        writeDb(dataSet);
+    }
 
-	public DataSet reload(DataSet dataSet) {
-		return new SqlReloadReader(getDataSource(), dataSet).read();
-	}
+    public DataSet reload(DataSet dataSet) {
+        return new SqlReloadReader(getDataSource(), dataSet).read();
+    }
 
-	public DataTable reload(DataTable table) {
-		return new SqlReloadTableReader(getDataSource(), table).read();
-	}
+    public DataTable reload(DataTable table) {
+        return new SqlReloadTableReader(getDataSource(), table).read();
+    }
 
-	public void deleteDb(DataSet dataSet) {
-		SqlDeleteTableWriter writer = new SqlDeleteTableWriter(getDataSource());
-		for (int i = dataSet.getTableSize() - 1; i >= 0; --i) {
-			writer.write(dataSet.getTable(i));
-		}
-	}
+    public void deleteDb(DataSet dataSet) {
+        SqlDeleteTableWriter writer = new SqlDeleteTableWriter(getDataSource());
+        for (int i = dataSet.getTableSize() - 1; i >= 0; --i) {
+            writer.write(dataSet.getTable(i));
+        }
+    }
 
-	public void deleteTable(String tableName) {
-		UpdateHandler handler = new BasicUpdateHandler(getDataSource(),
-				"DELETE FROM " + tableName);
-		handler.execute(null);
-	}
+    public void deleteTable(String tableName) {
+        UpdateHandler handler = new BasicUpdateHandler(getDataSource(),
+                "DELETE FROM " + tableName);
+        handler.execute(null);
+    }
 
-	public void assertEquals(DataSet expected, DataSet actual) {
-		assertEquals(null, expected, actual);
-	}
+    public void assertEquals(DataSet expected, DataSet actual) {
+        assertEquals(null, expected, actual);
+    }
 
-	public void assertEquals(String message, DataSet expected, DataSet actual) {
-		message = message == null ? "" : message;
-		assertEquals(message + ":TableSize", expected.getTableSize(), actual
-				.getTableSize());
-		for (int i = 0; i < expected.getTableSize(); ++i) {
-			assertEquals(message, expected.getTable(i), actual.getTable(i));
-		}
-	}
+    public void assertEquals(String message, DataSet expected, DataSet actual) {
+        message = message == null ? "" : message;
+        assertEquals(message + ":TableSize", expected.getTableSize(), actual
+                .getTableSize());
+        for (int i = 0; i < expected.getTableSize(); ++i) {
+            assertEquals(message, expected.getTable(i), actual.getTable(i));
+        }
+    }
 
-	public void assertEquals(DataTable expected, DataTable actual) {
-		assertEquals(null, expected, actual);
-	}
+    public void assertEquals(DataTable expected, DataTable actual) {
+        assertEquals(null, expected, actual);
+    }
 
-	public void assertEquals(String message, DataTable expected,
-			DataTable actual) {
+    public void assertEquals(String message, DataTable expected,
+            DataTable actual) {
 
-		message = message == null ? "" : message;
-		message = message + ":TableName=" + expected.getTableName();
-		assertEquals(message + ":RowSize", expected.getRowSize(), actual
-				.getRowSize());
-		for (int i = 0; i < expected.getRowSize(); ++i) {
-			DataRow expectedRow = expected.getRow(i);
-			DataRow actualRow = actual.getRow(i);
-			List errorMessages = new ArrayList();
-			for (int j = 0; j < expected.getColumnSize(); ++j) {
-				try {
-					String columnName = expected.getColumnName(j);
-					Object expectedValue = expectedRow.getValue(columnName);
-					ColumnType ct = ColumnTypes.getColumnType(expectedValue);
-					Object actualValue = actualRow.getValue(columnName);
-					if (!ct.equals(expectedValue, actualValue)) {
-						assertEquals(message + ":Row=" + i + ":columnName="
-								+ columnName, expectedValue, actualValue);
-					}
-				} catch (AssertionFailedError e) {
-					errorMessages.add(e.getMessage());
-				}
-			}
-			if (!errorMessages.isEmpty()) {
-				fail(message + errorMessages);
-			}
-		}
-	}
+        message = message == null ? "" : message;
+        message = message + ":TableName=" + expected.getTableName();
+        assertEquals(message + ":RowSize", expected.getRowSize(), actual
+                .getRowSize());
+        for (int i = 0; i < expected.getRowSize(); ++i) {
+            DataRow expectedRow = expected.getRow(i);
+            DataRow actualRow = actual.getRow(i);
+            List errorMessages = new ArrayList();
+            for (int j = 0; j < expected.getColumnSize(); ++j) {
+                try {
+                    String columnName = expected.getColumnName(j);
+                    Object expectedValue = expectedRow.getValue(columnName);
+                    ColumnType ct = ColumnTypes.getColumnType(expectedValue);
+                    Object actualValue = actualRow.getValue(columnName);
+                    if (!ct.equals(expectedValue, actualValue)) {
+                        assertEquals(message + ":Row=" + i + ":columnName="
+                                + columnName, expectedValue, actualValue);
+                    }
+                } catch (AssertionFailedError e) {
+                    errorMessages.add(e.getMessage());
+                }
+            }
+            if (!errorMessages.isEmpty()) {
+                fail(message + errorMessages);
+            }
+        }
+    }
 
-	public void assertEquals(DataSet expected, Object actual) {
-		assertEquals(null, expected, actual);
-	}
+    public void assertEquals(DataSet expected, Object actual) {
+        assertEquals(null, expected, actual);
+    }
 
-	public void assertEquals(String message, DataSet expected, Object actual) {
-		if (expected == null || actual == null) {
-			Assert.assertEquals(message, expected, actual);
-			return;
-		}
-		if (actual instanceof List) {
-			List actualList = (List) actual;
-			Assert.assertFalse(actualList.isEmpty());
-			Object actualItem = actualList.get(0);
-			if (actualItem instanceof Map) {
-				assertMapListEquals(message, expected, actualList);
-			} else {
-				assertBeanListEquals(message, expected, actualList);
-			}
-		} else if (actual instanceof Object[]) {
-			assertEquals(message, expected, Arrays.asList((Object[]) actual));
-		} else {
-			if (actual instanceof Map) {
-				assertMapEquals(message, expected, (Map) actual);
-			} else {
-				assertBeanEquals(message, expected, actual);
-			}
-		}
-	}
+    public void assertEquals(String message, DataSet expected, Object actual) {
+        if (expected == null || actual == null) {
+            Assert.assertEquals(message, expected, actual);
+            return;
+        }
+        if (actual instanceof List) {
+            List actualList = (List) actual;
+            Assert.assertFalse(actualList.isEmpty());
+            Object actualItem = actualList.get(0);
+            if (actualItem instanceof Map) {
+                assertMapListEquals(message, expected, actualList);
+            } else {
+                assertBeanListEquals(message, expected, actualList);
+            }
+        } else if (actual instanceof Object[]) {
+            assertEquals(message, expected, Arrays.asList((Object[]) actual));
+        } else {
+            if (actual instanceof Map) {
+                assertMapEquals(message, expected, (Map) actual);
+            } else {
+                assertBeanEquals(message, expected, actual);
+            }
+        }
+    }
 
-	protected void assertMapEquals(String message, DataSet expected, Map map) {
+    protected void assertMapEquals(String message, DataSet expected, Map map) {
 
-		MapReader reader = new MapReader(map);
-		assertEquals(message, expected, reader.read());
-	}
+        MapReader reader = new MapReader(map);
+        assertEquals(message, expected, reader.read());
+    }
 
-	protected void assertMapListEquals(String message, DataSet expected,
-			List list) {
+    protected void assertMapListEquals(String message, DataSet expected,
+            List list) {
 
-		MapListReader reader = new MapListReader(list);
-		assertEquals(message, expected, reader.read());
-	}
+        MapListReader reader = new MapListReader(list);
+        assertEquals(message, expected, reader.read());
+    }
 
-	protected void assertBeanEquals(String message, DataSet expected,
-			Object bean) {
+    protected void assertBeanEquals(String message, DataSet expected,
+            Object bean) {
 
-		BeanReader reader = new BeanReader(bean);
-		assertEquals(message, expected, reader.read());
-	}
+        BeanReader reader = new BeanReader(bean);
+        assertEquals(message, expected, reader.read());
+    }
 
-	protected void assertBeanListEquals(String message, DataSet expected,
-			List list) {
+    protected void assertBeanListEquals(String message, DataSet expected,
+            List list) {
 
-		BeanListReader reader = new BeanListReader(list);
-		assertEquals(message, expected, reader.read());
-	}
+        BeanListReader reader = new BeanListReader(list);
+        assertEquals(message, expected, reader.read());
+    }
 }

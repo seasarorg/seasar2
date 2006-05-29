@@ -17,12 +17,16 @@ package org.seasar.framework.container.hotdeploy;
 
 import java.lang.reflect.Method;
 
-
 public class HotdeployTestMain {
 
-    private static String PACKAGE_NAME = HotdeployTestMain.class.getPackage().getName() + ".sub";
+    private static String PACKAGE_NAME = HotdeployTestMain.class.getPackage()
+            .getName()
+            + ".sub";
+
     private static String AAA_NAME = PACKAGE_NAME + ".Aaa";
+
     private static String EXECUTE_NAME = "execute";
+
     /**
      * @param args
      */

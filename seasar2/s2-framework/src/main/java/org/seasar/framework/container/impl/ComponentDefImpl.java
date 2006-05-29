@@ -67,7 +67,7 @@ public class ComponentDefImpl implements ComponentDef, ContainerConstants {
     private DestroyMethodDefSupport destroyMethodDefSupport = new DestroyMethodDefSupport();
 
     private AspectDefSupport aspectDefSupport = new AspectDefSupport();
-    
+
     private InterTypeDefSupport interTypeDefSupport = new InterTypeDefSupport();
 
     private MetaDefSupport metaDefSupport = new MetaDefSupport();
@@ -141,15 +141,16 @@ public class ComponentDefImpl implements ComponentDef, ContainerConstants {
     public synchronized final Class getConcreteClass() {
         updateComponentClass();
         if (concreteClass == null) {
-            ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+            ClassLoader oldLoader = Thread.currentThread()
+                    .getContextClassLoader();
             try {
-                ClassLoader loader = (container != null ? container.getClassLoader() : null);
+                ClassLoader loader = (container != null ? container
+                        .getClassLoader() : null);
                 if (loader != null) {
                     Thread.currentThread().setContextClassLoader(loader);
                 }
                 concreteClass = AopProxyUtil.getConcreteClass(this);
-            }
-            finally {
+            } finally {
                 Thread.currentThread().setContextClassLoader(oldLoader);
             }
         }
@@ -298,7 +299,7 @@ public class ComponentDefImpl implements ComponentDef, ContainerConstants {
         getConcreteClass();
         if (hotswap == null && componentClass != null && container != null
                 && container.getRoot().isHotswapMode()) {
-            
+
             hotswap = new Hotswap(componentClass);
         }
 
@@ -347,8 +348,7 @@ public class ComponentDefImpl implements ComponentDef, ContainerConstants {
         if (hasPropertyDef(propertyName)) {
             return propertyDefSupport.getPropertyDef(propertyName);
         }
-        throw new PropertyNotFoundRuntimeException(componentClass,
-                propertyName);
+        throw new PropertyNotFoundRuntimeException(componentClass, propertyName);
     }
 
     /**
@@ -420,7 +420,7 @@ public class ComponentDefImpl implements ComponentDef, ContainerConstants {
     public int getMetaDefSize() {
         return metaDefSupport.getMetaDefSize();
     }
-    
+
     public Hotswap getHotswap() {
         return hotswap;
     }

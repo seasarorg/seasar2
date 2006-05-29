@@ -21,24 +21,22 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.seasar.framework.container.S2Container;
-import org.seasar.framework.container.factory.S2ContainerFactory;
 
 /**
  * @author higa
- *
+ * 
  */
 public class AspectTagHandlerTest extends TestCase {
 
-	private static final String PATH =
-		"org/seasar/framework/container/factory/AspectTagHandlerTest.dicon";
+    private static final String PATH = "org/seasar/framework/container/factory/AspectTagHandlerTest.dicon";
 
-	public void testAspect() throws Exception {
-		S2Container container = S2ContainerFactory.create(PATH);
-		Date date = (Date) container.getComponent(Date.class);
-		date.getTime();
-		date.hashCode();
-		date.toString();
-		List list = (List) container.getComponent(List.class);
-		list.size();
-	}
+    public void testAspect() throws Exception {
+        S2Container container = S2ContainerFactory.create(PATH);
+        Date date = (Date) container.getComponent(Date.class);
+        date.getTime();
+        date.hashCode();
+        date.toString();
+        List list = (List) container.getComponent(List.class);
+        list.size();
+    }
 }

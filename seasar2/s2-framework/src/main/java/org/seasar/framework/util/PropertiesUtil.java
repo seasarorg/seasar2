@@ -23,18 +23,18 @@ import org.seasar.framework.exception.IORuntimeException;
 
 /**
  * @author higa
- *
+ * 
  */
 public final class PropertiesUtil {
 
-	private PropertiesUtil() {
-	}
+    private PropertiesUtil() {
+    }
 
-	public static void load(Properties props, InputStream in) {
-		try {
-			props.load(in);
-		} catch (IOException e) {
-			throw new IORuntimeException(e);
-		}
-	}
+    public static void load(Properties props, InputStream in) {
+        try {
+            props.load(in);
+        } catch (IOException e) {
+            throw new IORuntimeException(e);
+        }
+    }
 }

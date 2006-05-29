@@ -20,15 +20,16 @@ import org.seasar.framework.container.ComponentDeployer;
 
 /**
  * @author higa
- *
+ * 
  */
 public class InstanceRequestDef extends AbstractInstanceDef {
 
     protected InstanceRequestDef(String name) {
         super(name);
     }
-    
+
     public ComponentDeployer createComponentDeployer(ComponentDef componentDef) {
-        return ComponentDeployerFactory.createRequestComponentDeployer(componentDef);
+        return ComponentDeployerFactory
+                .createRequestComponentDeployer(componentDef);
     }
 }

@@ -21,37 +21,37 @@ import org.seasar.framework.message.MessageFormatter;
 
 /**
  * @author higa
- *
+ * 
  */
 public class SXAException extends XAException {
 
     private static final long serialVersionUID = 9069430381428399030L;
 
-	private String messageCode;
-	private Object[] messageArgs;
-	
-	public SXAException(Throwable t) {
-		this("ESSR0017", new Object[]{t}, t);
-	}
+    private String messageCode;
 
-	public SXAException(String messageCode, Object[] messageArgs) {
-		this(messageCode, messageArgs, null);
-	}
+    private Object[] messageArgs;
 
-	public SXAException(String messageCode, Object[] messageArgs,
-		Throwable t) {
+    public SXAException(Throwable t) {
+        this("ESSR0017", new Object[] { t }, t);
+    }
 
-		super(MessageFormatter.getMessage(messageCode, messageArgs));
-		this.messageCode = messageCode;
-		this.messageArgs = messageArgs;
-		initCause(t);
-	}
+    public SXAException(String messageCode, Object[] messageArgs) {
+        this(messageCode, messageArgs, null);
+    }
 
-	public String getMessageCode() {
-		return messageCode;
-	}
-	
-	public Object[] getMessageArgs() {
-		return messageArgs;
-	}
+    public SXAException(String messageCode, Object[] messageArgs, Throwable t) {
+
+        super(MessageFormatter.getMessage(messageCode, messageArgs));
+        this.messageCode = messageCode;
+        this.messageArgs = messageArgs;
+        initCause(t);
+    }
+
+    public String getMessageCode() {
+        return messageCode;
+    }
+
+    public Object[] getMessageArgs() {
+        return messageArgs;
+    }
 }

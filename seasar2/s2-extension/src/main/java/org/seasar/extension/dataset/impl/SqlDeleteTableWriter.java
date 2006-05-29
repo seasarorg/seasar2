@@ -23,18 +23,18 @@ import org.seasar.extension.dataset.states.RowStates;
 
 /**
  * @author higa
- *
+ * 
  */
 public class SqlDeleteTableWriter extends SqlTableWriter {
 
-	public SqlDeleteTableWriter(DataSource dataSource) {
-		super(dataSource);
-	}
+    public SqlDeleteTableWriter(DataSource dataSource) {
+        super(dataSource);
+    }
 
-	protected void doWrite(DataTable table) {
-		for (int i = 0; i < table.getRowSize(); ++i) {
-			DataRow row = table.getRow(i);
-			RowStates.REMOVED.update(getDataSource(), row);
-		}
-	}
+    protected void doWrite(DataTable table) {
+        for (int i = 0; i < table.getRowSize(); ++i) {
+            DataRow row = table.getRow(i);
+            RowStates.REMOVED.update(getDataSource(), row);
+        }
+    }
 }

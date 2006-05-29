@@ -19,23 +19,23 @@ import org.seasar.framework.exception.SRuntimeException;
 
 /**
  * @author higa
- *
+ * 
  */
 public class ComponentNotFoundRuntimeException extends SRuntimeException {
 
     private static final long serialVersionUID = 7584682915737273760L;
 
-	private Object componentKey_;
-	
-	/**
-	 * @param componentKey
-	 */
-	public ComponentNotFoundRuntimeException(Object componentKey) {
-		super("ESSR0046", new Object[] { componentKey});
-		componentKey_ = componentKey;
-	}
-	
-	public Object getComponentKey() {
-		return componentKey_;
-	}
+    private Object componentKey_;
+
+    /**
+     * @param componentKey
+     */
+    public ComponentNotFoundRuntimeException(Object componentKey) {
+        super("ESSR0046", new Object[] { componentKey });
+        componentKey_ = componentKey;
+    }
+
+    public Object getComponentKey() {
+        return componentKey_;
+    }
 }

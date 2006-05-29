@@ -23,21 +23,21 @@ import org.seasar.framework.exception.InvocationTargetRuntimeException;
 
 public class ComponentInvokerImpl implements ComponentInvoker {
 
-	private S2Container container;
+    private S2Container container;
 
-	public Object invoke(String componentName, String methodName, Object[] args)
-			throws Throwable {
+    public Object invoke(String componentName, String methodName, Object[] args)
+            throws Throwable {
 
-		Object component = container.getRoot().getComponent(componentName);
-		BeanDesc beanDesc = BeanDescFactory.getBeanDesc(component.getClass());
-		try {
-			return beanDesc.invoke(component, methodName, args);
-		} catch (InvocationTargetRuntimeException e) {
-			throw e.getCause();
-		}
-	}
+        Object component = container.getRoot().getComponent(componentName);
+        BeanDesc beanDesc = BeanDescFactory.getBeanDesc(component.getClass());
+        try {
+            return beanDesc.invoke(component, methodName, args);
+        } catch (InvocationTargetRuntimeException e) {
+            throw e.getCause();
+        }
+    }
 
-	public void setContainer(S2Container container) {
-		this.container = container;
-	}
+    public void setContainer(S2Container container) {
+        this.container = container;
+    }
 }

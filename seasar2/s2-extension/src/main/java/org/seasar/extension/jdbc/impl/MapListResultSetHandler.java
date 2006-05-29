@@ -24,19 +24,19 @@ import org.seasar.extension.jdbc.PropertyType;
 
 public class MapListResultSetHandler extends AbstractMapResultSetHandler {
 
-	public MapListResultSetHandler() {
-	}
+    public MapListResultSetHandler() {
+    }
 
-	/**
-	 * @see org.seasar.extension.jdbc.ResultSetHandler#handle(java.sql.ResultSet)
-	 */
-	public Object handle(ResultSet resultSet) throws SQLException {
-		PropertyType[] propertyTypes = PropertyTypeUtil
-				.createPropertyTypes(resultSet.getMetaData());
-		List list = new ArrayList();
-		while (resultSet.next()) {
-			list.add(createRow(resultSet, propertyTypes));
-		}
-		return list;
-	}
+    /**
+     * @see org.seasar.extension.jdbc.ResultSetHandler#handle(java.sql.ResultSet)
+     */
+    public Object handle(ResultSet resultSet) throws SQLException {
+        PropertyType[] propertyTypes = PropertyTypeUtil
+                .createPropertyTypes(resultSet.getMetaData());
+        List list = new ArrayList();
+        while (resultSet.next()) {
+            list.add(createRow(resultSet, propertyTypes));
+        }
+        return list;
+    }
 }

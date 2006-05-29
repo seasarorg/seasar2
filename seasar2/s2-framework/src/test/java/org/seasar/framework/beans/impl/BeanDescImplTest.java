@@ -18,12 +18,11 @@ package org.seasar.framework.beans.impl;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 
+import junit.framework.TestCase;
+
 import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.PropertyDesc;
-import org.seasar.framework.beans.impl.BeanDescImpl;
 import org.seasar.framework.util.MathUtil;
-
-import junit.framework.TestCase;
 
 /**
  * @author higa
@@ -145,16 +144,13 @@ public class BeanDescImplTest extends TestCase {
         Field eee = beanDesc.getField("eee");
         assertEquals("1", true, eee.isAccessible());
     }
-/*    
-    public void testPerformance() {
-        long start = System.currentTimeMillis();
-        for (int i = 0; i < 10000; ++i) {
-            BeanDesc beanDesc = new BeanDescImpl(MyBean.class);
-            beanDesc.getPropertyDesc("aaa");
-        }
-        System.out.println("time:" + (System.currentTimeMillis() - start));
-    }
-*/
+
+    /*
+     * public void testPerformance() { long start = System.currentTimeMillis();
+     * for (int i = 0; i < 10000; ++i) { BeanDesc beanDesc = new
+     * BeanDescImpl(MyBean.class); beanDesc.getPropertyDesc("aaa"); }
+     * System.out.println("time:" + (System.currentTimeMillis() - start)); }
+     */
     public static interface MyInterface {
         String HOGE = "hoge";
     }

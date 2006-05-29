@@ -19,19 +19,19 @@ import org.aopalliance.intercept.MethodInvocation;
 
 /**
  * @author higa
- *
+ * 
  */
 public class SyncInterceptor extends AbstractInterceptor {
 
     private static final long serialVersionUID = -6155192342720910279L;
 
-	/**
-	 * @see org.aopalliance.intercept.MethodInterceptor#invoke(org.aopalliance.intercept.MethodInvocation)
-	 */
-	public Object invoke(MethodInvocation invocation) throws Throwable {
-		synchronized (invocation.getThis()) {
-			return invocation.proceed();
-		}
-	}
+    /**
+     * @see org.aopalliance.intercept.MethodInterceptor#invoke(org.aopalliance.intercept.MethodInvocation)
+     */
+    public Object invoke(MethodInvocation invocation) throws Throwable {
+        synchronized (invocation.getThis()) {
+            return invocation.proceed();
+        }
+    }
 
 }

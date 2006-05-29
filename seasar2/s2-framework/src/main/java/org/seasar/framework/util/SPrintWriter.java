@@ -20,11 +20,11 @@ import java.io.StringWriter;
 
 public class SPrintWriter extends PrintWriter {
 
-	public SPrintWriter() {
-		super(new StringWriter());
-	}
+    public SPrintWriter() {
+        super(new StringWriter());
+    }
 
-	public String toString() {
-		return out.toString();
-	}
+    public String toString() {
+        return out.toString();
+    }
 }

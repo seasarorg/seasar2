@@ -23,22 +23,22 @@ import org.seasar.framework.exception.ParserConfigurationRuntimeException;
 
 /**
  * @author higa
- *  
+ * 
  */
 public final class DocumentBuilderFactoryUtil {
 
-	private DocumentBuilderFactoryUtil() {
-	}
+    private DocumentBuilderFactoryUtil() {
+    }
 
-	public static DocumentBuilderFactory newInstance() {
-		return DocumentBuilderFactory.newInstance();
-	}
+    public static DocumentBuilderFactory newInstance() {
+        return DocumentBuilderFactory.newInstance();
+    }
 
-	public static DocumentBuilder newDocumentBuilder() {
-		try {
-			return newInstance().newDocumentBuilder();
-		} catch (ParserConfigurationException e) {
-			throw new ParserConfigurationRuntimeException(e);
-		}
-	}
+    public static DocumentBuilder newDocumentBuilder() {
+        try {
+            return newInstance().newDocumentBuilder();
+        } catch (ParserConfigurationException e) {
+            throw new ParserConfigurationRuntimeException(e);
+        }
+    }
 }

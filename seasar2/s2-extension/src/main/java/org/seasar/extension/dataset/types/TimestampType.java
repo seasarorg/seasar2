@@ -21,17 +21,17 @@ import org.seasar.framework.util.TimestampConversionUtil;
 
 /**
  * @author higa
- *  
+ * 
  */
 public class TimestampType extends ObjectType {
 
-	TimestampType() {
-	}
+    TimestampType() {
+    }
 
-	public Object convert(Object value, String formatPattern) {
-		return TimestampConversionUtil.toTimestamp(value, formatPattern);
-	}
-    
+    public Object convert(Object value, String formatPattern) {
+        return TimestampConversionUtil.toTimestamp(value, formatPattern);
+    }
+
     public Class getType() {
         return Timestamp.class;
     }

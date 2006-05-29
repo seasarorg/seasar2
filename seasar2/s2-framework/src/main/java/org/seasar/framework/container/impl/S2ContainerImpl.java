@@ -44,7 +44,7 @@ import org.seasar.framework.util.StringUtil;
  * 
  */
 public class S2ContainerImpl implements S2Container, ContainerConstants {
-    
+
     private Map componentDefMap = new HashMap();
 
     private List componentDefList = new ArrayList();
@@ -205,7 +205,8 @@ public class S2ContainerImpl implements S2Container, ContainerConstants {
     }
 
     protected void registerByClass(ComponentDef componentDef) {
-        Class[] classes = S2ContainerUtil.getAssignableClasses(componentDef.getComponentClass());
+        Class[] classes = S2ContainerUtil.getAssignableClasses(componentDef
+                .getComponentClass());
         for (int i = 0; i < classes.length; ++i) {
             registerMap(classes[i], componentDef);
         }
@@ -250,7 +251,9 @@ public class S2ContainerImpl implements S2Container, ContainerConstants {
             S2Container parent = (S2Container) getParent(i);
             parent.registerMap(key, componentDef, this);
             if (isNeedNS(key, componentDef)) {
-                parent.registerMap(namespace + NS_SEP + key, componentDef, this);
+                parent
+                        .registerMap(namespace + NS_SEP + key, componentDef,
+                                this);
             }
         }
     }
@@ -381,21 +384,21 @@ public class S2ContainerImpl implements S2Container, ContainerConstants {
     public synchronized S2Container getChild(int index) {
         return (S2Container) children.get(index);
     }
-    
+
     /**
      * @see org.seasar.framework.container.S2Container#getParentSize()
      */
     public synchronized int getParentSize() {
         return parents.size();
     }
-    
+
     /**
      * @see org.seasar.framework.container.S2Container#getParent(int)
      */
     public synchronized S2Container getParent(int index) {
         return (S2Container) parents.get(index);
     }
-    
+
     /**
      * @see org.seasar.framework.container.S2Container#addParent(org.seasar.framework.container.S2Container)
      */
@@ -421,7 +424,8 @@ public class S2ContainerImpl implements S2Container, ContainerConstants {
         if (inited) {
             return;
         }
-        ExternalContextComponentDefRegister register = getRoot().getExternalContextComponentDefRegister();
+        ExternalContextComponentDefRegister register = getRoot()
+                .getExternalContextComponentDefRegister();
         if (register != null) {
             register.registerComponentDefs(this);
         }
@@ -575,7 +579,7 @@ public class S2ContainerImpl implements S2Container, ContainerConstants {
     public ClassLoader getClassLoader() {
         return classLoader;
     }
-    
+
     public void setClassLoader(ClassLoader classLoader) {
         this.classLoader = classLoader;
     }

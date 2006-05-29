@@ -21,18 +21,18 @@ import org.seasar.framework.container.ContainerConstants;
 
 /**
  * @author higa
- *  
+ * 
  */
 public class HttpSessionComponentDef extends SimpleComponentDef {
 
-	public HttpSessionComponentDef() {
-		super(HttpSession.class, ContainerConstants.SESSION_NAME);
-	}
+    public HttpSessionComponentDef() {
+        super(HttpSession.class, ContainerConstants.SESSION_NAME);
+    }
 
-	/**
-	 * @see org.seasar.framework.container.ComponentDef#getComponent()
-	 */
-	public Object getComponent() {
-		return getContainer().getRoot().getExternalContext().getSession();
-	}
+    /**
+     * @see org.seasar.framework.container.ComponentDef#getComponent()
+     */
+    public Object getComponent() {
+        return getContainer().getRoot().getExternalContext().getSession();
+    }
 }

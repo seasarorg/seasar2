@@ -21,18 +21,18 @@ import org.seasar.framework.container.ContainerConstants;
 
 /**
  * @author higa
- *
+ * 
  */
 public class HttpServletResponseComponentDef extends SimpleComponentDef {
-	
-	public HttpServletResponseComponentDef() {
-		super(HttpServletResponse.class, ContainerConstants.RESPONSE_NAME);
-	}
-	
-	/**
-	 * @see org.seasar.framework.container.ComponentDef#getComponent()
-	 */
-	public Object getComponent() {
-		return getContainer().getRoot().getExternalContext().getResponse();
-	}
+
+    public HttpServletResponseComponentDef() {
+        super(HttpServletResponse.class, ContainerConstants.RESPONSE_NAME);
+    }
+
+    /**
+     * @see org.seasar.framework.container.ComponentDef#getComponent()
+     */
+    public Object getComponent() {
+        return getContainer().getRoot().getExternalContext().getResponse();
+    }
 }

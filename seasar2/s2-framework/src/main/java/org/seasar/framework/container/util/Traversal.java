@@ -30,12 +30,13 @@ public class Traversal {
         Object processComponent(ComponentDef componentDef);
     }
 
-    public static Object forEachContainer(final S2Container container, final S2ContainerHandler handler) {
+    public static Object forEachContainer(final S2Container container,
+            final S2ContainerHandler handler) {
         return forEachContainer(container, handler, true);
     }
 
-    public static Object forEachContainer(final S2Container container, final S2ContainerHandler handler,
-            final boolean parentFirst) {
+    public static Object forEachContainer(final S2Container container,
+            final S2ContainerHandler handler, final boolean parentFirst) {
         if (parentFirst) {
             final Object result = handler.processContainer(container);
             if (result != null) {
@@ -43,7 +44,8 @@ public class Traversal {
             }
         }
         for (int i = 0; i < container.getChildSize(); ++i) {
-            final Object result = forEachContainer(container.getChild(i), handler, parentFirst);
+            final Object result = forEachContainer(container.getChild(i),
+                    handler, parentFirst);
             if (result != null) {
                 return result;
             }
@@ -54,16 +56,18 @@ public class Traversal {
         return null;
     }
 
-    public static Object forEachComponent(final S2Container container, final ComponentDefHandler handler) {
+    public static Object forEachComponent(final S2Container container,
+            final ComponentDefHandler handler) {
         return forEachComponent(container, handler, true);
     }
 
-    public static Object forEachComponent(final S2Container container, final ComponentDefHandler handler,
-            final boolean parentFirst) {
+    public static Object forEachComponent(final S2Container container,
+            final ComponentDefHandler handler, final boolean parentFirst) {
         return forEachContainer(container, new S2ContainerHandler() {
             public Object processContainer(final S2Container container) {
                 for (int i = 0; i < container.getComponentDefSize(); ++i) {
-                    final Object result = handler.processComponent(container.getComponentDef(i));
+                    final Object result = handler.processComponent(container
+                            .getComponentDef(i));
                     if (result != null) {
                         return result;
                     }

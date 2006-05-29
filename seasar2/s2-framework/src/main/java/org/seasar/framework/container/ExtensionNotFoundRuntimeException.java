@@ -19,20 +19,20 @@ import org.seasar.framework.exception.SRuntimeException;
 
 /**
  * @author higa
- *
+ * 
  */
 public class ExtensionNotFoundRuntimeException extends SRuntimeException {
 
     private static final long serialVersionUID = 4105296013672747434L;
 
-	private String path_;
-	
-	public ExtensionNotFoundRuntimeException(String path) {
-		super("ESSR0074", new Object[] { path});
-		path_ = path;
-	}
-	
-	public String getPath() {
-		return path_;
-	}
+    private String path_;
+
+    public ExtensionNotFoundRuntimeException(String path) {
+        super("ESSR0074", new Object[] { path });
+        path_ = path;
+    }
+
+    public String getPath() {
+        return path_;
+    }
 }

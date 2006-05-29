@@ -20,7 +20,7 @@ import org.aopalliance.intercept.MethodInvocation;
 
 /**
  * @author higa
- *
+ * 
  */
 public class GreetingInterceptor implements MethodInterceptor {
 

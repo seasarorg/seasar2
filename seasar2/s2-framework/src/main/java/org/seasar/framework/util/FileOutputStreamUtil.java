@@ -23,18 +23,18 @@ import org.seasar.framework.exception.IORuntimeException;
 
 /**
  * @author higa
- *
+ * 
  */
 public final class FileOutputStreamUtil {
 
-	private FileOutputStreamUtil() {
-	}
+    private FileOutputStreamUtil() {
+    }
 
-	public static FileOutputStream create(File file) {
-		try {
-			return new FileOutputStream(file);
-		} catch (IOException e) {
-			throw new IORuntimeException(e);
-		}
-	}
+    public static FileOutputStream create(File file) {
+        try {
+            return new FileOutputStream(file);
+        } catch (IOException e) {
+            throw new IORuntimeException(e);
+        }
+    }
 }

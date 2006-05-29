@@ -23,16 +23,16 @@ import org.seasar.framework.unit.S2FrameworkTestCase;
 
 public class InterceptorLifecycleAdapterTest extends S2FrameworkTestCase {
     protected List list;
-    
+
     protected void setUp() throws Exception {
         include("InterceptorLifecycleAdapterTest.dicon");
     }
-    
+
     public void test() throws Exception {
         Runnable runnable = (Runnable) getComponent(Runnable.class);
         runnable.run();
         runnable.run();
-        
+
         assertEquals("1", 2, list.size());
         assertNotSame("2", list.get(0), list.get(1));
     }

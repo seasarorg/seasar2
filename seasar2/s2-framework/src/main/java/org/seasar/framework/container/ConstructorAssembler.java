@@ -15,14 +15,11 @@
  */
 package org.seasar.framework.container;
 
-
 /**
  * @author higa
- *
+ * 
  */
 public interface ConstructorAssembler {
 
-	public Object assemble()
-		throws
-			IllegalConstructorRuntimeException;
+    public Object assemble() throws IllegalConstructorRuntimeException;
 }

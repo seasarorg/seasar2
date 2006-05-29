@@ -17,8 +17,6 @@ package org.seasar.framework.container.autoregister;
 
 import junit.framework.TestCase;
 
-import org.seasar.framework.container.autoregister.ClassPattern;
-
 /**
  * @author higa
  */
@@ -28,14 +26,14 @@ public class ClassPatternTest extends TestCase {
         ClassPattern cp = new ClassPattern();
         assertTrue("1", cp.isAppliedShortClassName("Hoge"));
     }
-    
+
     public void testAppliedForNormalPattern() throws Exception {
         ClassPattern cp = new ClassPattern();
         cp.setShortClassNames(".*Impl");
         assertTrue("1", cp.isAppliedShortClassName("HogeImpl"));
         assertFalse("2", cp.isAppliedShortClassName("Hoge"));
     }
-    
+
     public void testAppliedForMulti() throws Exception {
         ClassPattern cp = new ClassPattern();
         cp.setShortClassNames("Hoge, HogeImpl");
@@ -43,7 +41,7 @@ public class ClassPatternTest extends TestCase {
         assertTrue("2", cp.isAppliedShortClassName("Hoge"));
         assertFalse("3", cp.isAppliedShortClassName("Hoge2"));
     }
-    
+
     public void testAppliedPackageName() throws Exception {
         ClassPattern cp = new ClassPattern();
         cp.setPackageName("org.seasar");

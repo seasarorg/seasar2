@@ -24,38 +24,38 @@ import org.seasar.framework.util.FileUtil;
 import org.seasar.framework.util.ResourceUtil;
 
 public class HotdeployClassLoader extends ClassLoader {
-    
+
     private String packageName;
-    
+
     private List listeners = new ArrayList();
-    
+
     public HotdeployClassLoader(ClassLoader classLoader) {
         super(classLoader);
     }
-    
+
     public String getPackageName() {
         return packageName;
     }
-    
+
     public void setPackageName(String packageName) {
         this.packageName = packageName;
     }
-    
+
     public void addHotdeployListener(HotdeployListener listener) {
         listeners.add(listener);
     }
-    
+
     public HotdeployListener getHotdeployListener(int index) {
         return (HotdeployListener) listeners.get(index);
     }
-    
+
     public int getHotdeployListenerSize() {
         return listeners.size();
     }
 
-    public Class loadClass(String className,
-            boolean resolve) throws ClassNotFoundException {
-        
+    public Class loadClass(String className, boolean resolve)
+            throws ClassNotFoundException {
+
         if (isTargetClass(className)) {
             Class clazz = findLoadedClass(className);
             if (clazz != null) {
@@ -74,7 +74,7 @@ public class HotdeployClassLoader extends ClassLoader {
         }
         return super.loadClass(className, resolve);
     }
-    
+
     protected Class defineClass(String className, File classFile) {
         return defineClass(className, FileUtil.getBytes(classFile));
     }
@@ -86,7 +86,7 @@ public class HotdeployClassLoader extends ClassLoader {
     protected boolean isTargetClass(String className) {
         return className.startsWith(packageName);
     }
-    
+
     protected void definedClass(Class clazz) {
         for (int i = 0; i < getHotdeployListenerSize(); ++i) {
             HotdeployListener listener = getHotdeployListener(i);

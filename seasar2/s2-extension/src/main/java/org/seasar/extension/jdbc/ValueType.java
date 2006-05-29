@@ -21,15 +21,15 @@ import java.sql.SQLException;
 
 /**
  * @author higa
- *  
+ * 
  */
 public interface ValueType {
 
-	public Object getValue(ResultSet resultSet, int index) throws SQLException;
+    public Object getValue(ResultSet resultSet, int index) throws SQLException;
 
-	public Object getValue(ResultSet resultSet, String columnName)
-			throws SQLException;
+    public Object getValue(ResultSet resultSet, String columnName)
+            throws SQLException;
 
-	public void bindValue(PreparedStatement ps, int index, Object value)
-			throws SQLException;
+    public void bindValue(PreparedStatement ps, int index, Object value)
+            throws SQLException;
 }

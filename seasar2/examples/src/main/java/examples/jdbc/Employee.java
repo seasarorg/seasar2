@@ -37,7 +37,9 @@ public class Employee implements Serializable {
 
     private short deptno;
 
-    public Employee(long empno, java.lang.String ename, java.lang.String job, Short mgr, java.util.Date hiredate, Float sal, Float comm, short deptno) {
+    public Employee(long empno, java.lang.String ename, java.lang.String job,
+            Short mgr, java.util.Date hiredate, Float sal, Float comm,
+            short deptno) {
         this.empno = empno;
         this.ename = ename;
         this.job = job;
@@ -120,7 +122,8 @@ public class Employee implements Serializable {
     }
 
     public boolean equals(Object other) {
-        if ( !(other instanceof Employee) ) return false;
+        if (!(other instanceof Employee))
+            return false;
         Employee castOther = (Employee) other;
         return this.getEmpno() == castOther.getEmpno();
     }
@@ -128,17 +131,17 @@ public class Employee implements Serializable {
     public int hashCode() {
         return (int) this.getEmpno();
     }
-    
+
     public String toString() {
-    	StringBuffer buf = new StringBuffer();
-    	buf.append(empno).append(", ");
-		buf.append(ename).append(", ");
-		buf.append(job).append(", ");
-		buf.append(mgr).append(", ");
-		buf.append(hiredate).append(", ");
-		buf.append(sal).append(", ");
-		buf.append(comm).append(", ");
-		buf.append(deptno);
-    	return buf.toString();
+        StringBuffer buf = new StringBuffer();
+        buf.append(empno).append(", ");
+        buf.append(ename).append(", ");
+        buf.append(job).append(", ");
+        buf.append(mgr).append(", ");
+        buf.append(hiredate).append(", ");
+        buf.append(sal).append(", ");
+        buf.append(comm).append(", ");
+        buf.append(deptno);
+        return buf.toString();
     }
 }

@@ -43,32 +43,35 @@ import org.seasar.framework.util.ClassUtil;
  * @author koichik
  */
 public class AbstractGenerator {
-    //constants
+    // constants
     public static final String DEFINE_CLASS_METHOD_NAME = "defineClass";
 
-    //static fields
+    // static fields
     protected static final ProtectionDomain protectionDomain;
+
     protected static Method defineClassMethod;
 
-    //static initializer
+    // static initializer
     static {
-        protectionDomain = (ProtectionDomain) AccessController.doPrivileged(new PrivilegedAction() {
-            public Object run() {
-                return AspectWeaver.class.getProtectionDomain();
-            }
-        });
+        protectionDomain = (ProtectionDomain) AccessController
+                .doPrivileged(new PrivilegedAction() {
+                    public Object run() {
+                        return AspectWeaver.class.getProtectionDomain();
+                    }
+                });
 
         AccessController.doPrivileged(new PrivilegedAction() {
             public Object run() {
-                final Class[] paramTypes = new Class[] { String.class, byte[].class, int.class,
-                        int.class, ProtectionDomain.class };
+                final Class[] paramTypes = new Class[] { String.class,
+                        byte[].class, int.class, int.class,
+                        ProtectionDomain.class };
                 try {
-                    final Class loader = ClassUtil.forName(ClassLoader.class.getName());
-                    defineClassMethod = loader.getDeclaredMethod(DEFINE_CLASS_METHOD_NAME,
-                            paramTypes);
+                    final Class loader = ClassUtil.forName(ClassLoader.class
+                            .getName());
+                    defineClassMethod = loader.getDeclaredMethod(
+                            DEFINE_CLASS_METHOD_NAME, paramTypes);
                     defineClassMethod.setAccessible(true);
-                }
-                catch (final NoSuchMethodException e) {
+                } catch (final NoSuchMethodException e) {
                     throw new NoSuchMethodRuntimeException(ClassLoader.class,
                             DEFINE_CLASS_METHOD_NAME, paramTypes, e);
                 }
@@ -77,7 +80,7 @@ public class AbstractGenerator {
         });
     }
 
-    //instance fields
+    // instance fields
     protected final ClassPool classPool;
 
     public static String fromObject(final Class type, final String expr) {
@@ -86,10 +89,12 @@ public class AbstractGenerator {
         }
         if (type.equals(boolean.class) || type.equals(char.class)) {
             final Class wrapper = ClassUtil.getWrapperClass(type);
-            return "((" + wrapper.getName() + ") " + expr + ")." + type.getName() + "Value()";
+            return "((" + wrapper.getName() + ") " + expr + ")."
+                    + type.getName() + "Value()";
         }
         if (type.isPrimitive()) {
-            return "((java.lang.Number) " + expr + ")." + type.getName() + "Value()";
+            return "((java.lang.Number) " + expr + ")." + type.getName()
+                    + "Value()";
         }
         return "(" + ClassUtil.getSimpleClassName(type) + ") " + expr;
     }
@@ -134,15 +139,17 @@ public class AbstractGenerator {
         return ClassPoolUtil.createCtClass(classPool, name, superClass);
     }
 
-    protected CtClass getAndRenameCtClass(final Class orgClass, final String newName) {
-        return getAndRenameCtClass(ClassUtil.getSimpleClassName(orgClass), newName);
+    protected CtClass getAndRenameCtClass(final Class orgClass,
+            final String newName) {
+        return getAndRenameCtClass(ClassUtil.getSimpleClassName(orgClass),
+                newName);
     }
 
-    protected CtClass getAndRenameCtClass(final String orgName, final String newName) {
+    protected CtClass getAndRenameCtClass(final String orgName,
+            final String newName) {
         try {
             return classPool.getAndRename(orgName, newName);
-        }
-        catch (final NotFoundException e) {
+        } catch (final NotFoundException e) {
             throw new NotFoundRuntimeException(e);
         }
     }
@@ -150,19 +157,16 @@ public class AbstractGenerator {
     public Class toClass(final ClassLoader classLoader, final CtClass ctClass) {
         try {
             final byte[] bytecode = ctClass.toBytecode();
-            return (Class) defineClassMethod.invoke(classLoader, new Object[] { ctClass.getName(),
-                    bytecode, new Integer(0), new Integer(bytecode.length), protectionDomain });
-        }
-        catch (final CannotCompileException e) {
+            return (Class) defineClassMethod.invoke(classLoader, new Object[] {
+                    ctClass.getName(), bytecode, new Integer(0),
+                    new Integer(bytecode.length), protectionDomain });
+        } catch (final CannotCompileException e) {
             throw new CannotCompileRuntimeException(e);
-        }
-        catch (final IOException e) {
+        } catch (final IOException e) {
             throw new IORuntimeException(e);
-        }
-        catch (final IllegalAccessException e) {
+        } catch (final IllegalAccessException e) {
             throw new IllegalAccessRuntimeException(ClassLoader.class, e);
-        }
-        catch (final InvocationTargetException e) {
+        } catch (final InvocationTargetException e) {
             throw new InvocationTargetRuntimeException(ClassLoader.class, e);
         }
     }
@@ -181,39 +185,39 @@ public class AbstractGenerator {
 
     protected CtConstructor createDefaultConstructor(final CtClass clazz) {
         try {
-            final CtConstructor ctConstructor = CtNewConstructor.defaultConstructor(clazz);
+            final CtConstructor ctConstructor = CtNewConstructor
+                    .defaultConstructor(clazz);
             clazz.addConstructor(ctConstructor);
             return ctConstructor;
-        }
-        catch (final CannotCompileException e) {
+        } catch (final CannotCompileException e) {
             throw new CannotCompileRuntimeException(e);
         }
     }
 
-    protected CtConstructor createConstructor(final CtClass clazz, final Constructor constructor) {
-        return createConstructor(clazz, toCtClassArray(constructor.getParameterTypes()),
-                toCtClassArray(constructor.getExceptionTypes()));
+    protected CtConstructor createConstructor(final CtClass clazz,
+            final Constructor constructor) {
+        return createConstructor(clazz, toCtClassArray(constructor
+                .getParameterTypes()), toCtClassArray(constructor
+                .getExceptionTypes()));
     }
 
-    protected CtConstructor createConstructor(final CtClass clazz, final CtClass[] parameterTypes,
-            final CtClass[] exceptionTypes) {
+    protected CtConstructor createConstructor(final CtClass clazz,
+            final CtClass[] parameterTypes, final CtClass[] exceptionTypes) {
         try {
-            final CtConstructor ctConstructor = CtNewConstructor.make(parameterTypes,
-                    exceptionTypes, clazz);
+            final CtConstructor ctConstructor = CtNewConstructor.make(
+                    parameterTypes, exceptionTypes, clazz);
             clazz.addConstructor(ctConstructor);
             return ctConstructor;
-        }
-        catch (final CannotCompileException e) {
+        } catch (final CannotCompileException e) {
             throw new CannotCompileRuntimeException(e);
         }
     }
 
-    protected CtMethod getDeclaredMethod(final CtClass clazz, final String name,
-            final CtClass[] argTypes) {
+    protected CtMethod getDeclaredMethod(final CtClass clazz,
+            final String name, final CtClass[] argTypes) {
         try {
             return clazz.getDeclaredMethod(name, argTypes);
-        }
-        catch (final NotFoundException e) {
+        } catch (final NotFoundException e) {
             throw new NotFoundRuntimeException(e);
         }
     }
@@ -223,29 +227,32 @@ public class AbstractGenerator {
             final CtMethod ctMethod = CtNewMethod.make(src, clazz);
             clazz.addMethod(ctMethod);
             return ctMethod;
-        }
-        catch (final CannotCompileException e) {
+        } catch (final CannotCompileException e) {
             throw new CannotCompileRuntimeException(e);
         }
     }
 
-    protected CtMethod createMethod(final CtClass clazz, final Method method, final String body) {
-        return createMethod(clazz, method.getModifiers(), method.getReturnType(), method.getName(),
-                method.getParameterTypes(), method.getExceptionTypes(), body);
+    protected CtMethod createMethod(final CtClass clazz, final Method method,
+            final String body) {
+        return createMethod(clazz, method.getModifiers(), method
+                .getReturnType(), method.getName(), method.getParameterTypes(),
+                method.getExceptionTypes(), body);
     }
 
     protected CtMethod createMethod(final CtClass clazz, final int modifier,
-            final Class returnType, final String methodName, final Class[] parameterTypes,
-            final Class[] exceptionTypes, final String body) {
+            final Class returnType, final String methodName,
+            final Class[] parameterTypes, final Class[] exceptionTypes,
+            final String body) {
         try {
             final CtMethod ctMethod = CtNewMethod.make(modifier
-                    & ~(Modifier.ABSTRACT | Modifier.NATIVE), toCtClass(returnType), methodName,
-                    toCtClassArray(parameterTypes), toCtClassArray(exceptionTypes), body, clazz);
+                    & ~(Modifier.ABSTRACT | Modifier.NATIVE),
+                    toCtClass(returnType), methodName,
+                    toCtClassArray(parameterTypes),
+                    toCtClassArray(exceptionTypes), body, clazz);
             clazz.addMethod(ctMethod);
             ctMethod.setBody(body);
             return ctMethod;
-        }
-        catch (final CannotCompileException e) {
+        } catch (final CannotCompileException e) {
             throw new CannotCompileRuntimeException(e);
         }
     }
@@ -253,8 +260,7 @@ public class AbstractGenerator {
     protected void setMethodBody(final CtMethod method, final String src) {
         try {
             method.setBody(src);
-        }
-        catch (final CannotCompileException e) {
+        } catch (final CannotCompileException e) {
             throw new CannotCompileRuntimeException(e);
         }
     }

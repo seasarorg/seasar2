@@ -24,7 +24,7 @@ import org.seasar.framework.util.ResourceNotFoundRuntimeException;
  * @author koichik
  */
 public abstract class AbstractS2ContainerBuilder implements S2ContainerBuilder {
-    
+
     protected ResourceResolver resourceResolver = new ClassPathResourceResolver();
 
     public ResourceResolver getResourceResolver() {
@@ -36,14 +36,14 @@ public abstract class AbstractS2ContainerBuilder implements S2ContainerBuilder {
     }
 
     public S2Container build(final String path, final ClassLoader classLoader) {
-        final ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        final ClassLoader oldLoader = Thread.currentThread()
+                .getContextClassLoader();
         try {
             if (classLoader != null) {
                 Thread.currentThread().setContextClassLoader(classLoader);
             }
             return build(path);
-        }
-        finally {
+        } finally {
             Thread.currentThread().setContextClassLoader(oldLoader);
         }
     }

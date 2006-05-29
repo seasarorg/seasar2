@@ -20,9 +20,6 @@ import java.util.Collection;
 
 import junit.framework.TestCase;
 
-import org.seasar.framework.aop.javassist.ClassPoolUtil;
-import org.seasar.framework.aop.javassist.MethodInvocationClassGenerator;
-
 /**
  * @author koichik
  */
@@ -35,51 +32,72 @@ public class MethodInvocationClassGeneratorTest extends TestCase {
     }
 
     public void testCreateArgumentString() throws Exception {
-        assertEquals("1",
+        assertEquals(
+                "1",
                 "((java.lang.Number) arguments[0]).intValue(), (java.lang.String) arguments[1]",
-                MethodInvocationClassGenerator.createArgumentString(new Class[] { int.class,
-                        String.class }));
+                MethodInvocationClassGenerator
+                        .createArgumentString(new Class[] { int.class,
+                                String.class }));
     }
 
     public void testCreateProceedMethodSource() throws Exception {
         Method voidMethod = Object.class.getMethod("notify", null);
-        assertEquals("1", "{" + "if (interceptorsIndex < interceptors.length) {"
-                + "return interceptors[interceptorsIndex++].invoke(this);" + "}"
-                + "((EnhancedClass) target).invokeSuper();" + "return null;" + "}",
-                MethodInvocationClassGenerator.createProceedMethodSource(voidMethod,
-                        "EnhancedClass", "invokeSuper"));
+        assertEquals("1", "{"
+                + "if (interceptorsIndex < interceptors.length) {"
+                + "return interceptors[interceptorsIndex++].invoke(this);"
+                + "}" + "((EnhancedClass) target).invokeSuper();"
+                + "return null;" + "}", MethodInvocationClassGenerator
+                .createProceedMethodSource(voidMethod, "EnhancedClass",
+                        "invokeSuper"));
 
         Method intMethod = Object.class.getMethod("hashCode", null);
-        assertEquals("2", "{" + "if (interceptorsIndex < interceptors.length) {"
-                + "return interceptors[interceptorsIndex++].invoke(this);" + "}"
-                + "return new java.lang.Integer(((EnhancedClass) target).invokeSuper());" + "}",
-                MethodInvocationClassGenerator.createProceedMethodSource(intMethod,
-                        "EnhancedClass", "invokeSuper"));
+        assertEquals(
+                "2",
+                "{"
+                        + "if (interceptorsIndex < interceptors.length) {"
+                        + "return interceptors[interceptorsIndex++].invoke(this);"
+                        + "}"
+                        + "return new java.lang.Integer(((EnhancedClass) target).invokeSuper());"
+                        + "}", MethodInvocationClassGenerator
+                        .createProceedMethodSource(intMethod, "EnhancedClass",
+                                "invokeSuper"));
 
         Method stringMethod = Object.class.getMethod("toString", null);
-        assertEquals("2", "{" + "if (interceptorsIndex < interceptors.length) {"
-                + "return interceptors[interceptorsIndex++].invoke(this);" + "}"
-                + "return ((EnhancedClass) target).invokeSuper();" + "}",
-                MethodInvocationClassGenerator.createProceedMethodSource(stringMethod,
-                        "EnhancedClass", "invokeSuper"));
+        assertEquals("2", "{"
+                + "if (interceptorsIndex < interceptors.length) {"
+                + "return interceptors[interceptorsIndex++].invoke(this);"
+                + "}" + "return ((EnhancedClass) target).invokeSuper();" + "}",
+                MethodInvocationClassGenerator.createProceedMethodSource(
+                        stringMethod, "EnhancedClass", "invokeSuper"));
     }
 
     public void testCreateProceedMethodSource2() throws Exception {
         Method voidMethod = Runnable.class.getMethod("run", null);
-        assertEquals("1", "{" + "if (interceptorsIndex < interceptors.length) {"
-                + "return interceptors[interceptorsIndex++].invoke(this);" + "}"
-                + "throw new java.lang.NoSuchMethodError(\"EnhancedClass.run()\");" + "}",
-                MethodInvocationClassGenerator.createProceedMethodSource(voidMethod,
-                        "EnhancedClass", "invokeSuper"));
+        assertEquals(
+                "1",
+                "{"
+                        + "if (interceptorsIndex < interceptors.length) {"
+                        + "return interceptors[interceptorsIndex++].invoke(this);"
+                        + "}"
+                        + "throw new java.lang.NoSuchMethodError(\"EnhancedClass.run()\");"
+                        + "}", MethodInvocationClassGenerator
+                        .createProceedMethodSource(voidMethod, "EnhancedClass",
+                                "invokeSuper"));
 
         Method intMethod = Collection.class.getMethod("size", null);
-        assertEquals("2", "{" + "if (interceptorsIndex < interceptors.length) {"
-                + "return interceptors[interceptorsIndex++].invoke(this);" + "}"
-                + "throw new java.lang.NoSuchMethodError(\"EnhancedClass.size()\");" + "}",
-                MethodInvocationClassGenerator.createProceedMethodSource(intMethod,
-                        "EnhancedClass", "invokeSuper"));
+        assertEquals(
+                "2",
+                "{"
+                        + "if (interceptorsIndex < interceptors.length) {"
+                        + "return interceptors[interceptorsIndex++].invoke(this);"
+                        + "}"
+                        + "throw new java.lang.NoSuchMethodError(\"EnhancedClass.size()\");"
+                        + "}", MethodInvocationClassGenerator
+                        .createProceedMethodSource(intMethod, "EnhancedClass",
+                                "invokeSuper"));
 
-        Method arrayMethod = Collection.class.getMethod("toArray", new Class[] { Object[].class });
+        Method arrayMethod = Collection.class.getMethod("toArray",
+                new Class[] { Object[].class });
         assertEquals(
                 "2",
                 "{"
@@ -87,19 +105,22 @@ public class MethodInvocationClassGeneratorTest extends TestCase {
                         + "return interceptors[interceptorsIndex++].invoke(this);"
                         + "}"
                         + "throw new java.lang.NoSuchMethodError(\"EnhancedClass.toArray(java.lang.Object[])\");"
-                        + "}", MethodInvocationClassGenerator.createProceedMethodSource(
-                        arrayMethod, "EnhancedClass", "invokeSuper"));
+                        + "}", MethodInvocationClassGenerator
+                        .createProceedMethodSource(arrayMethod,
+                                "EnhancedClass", "invokeSuper"));
     }
 
     public void testGenerateFromInterface() throws Exception {
         Method[] methods = TargetInterface.class.getDeclaredMethods();
         for (int i = 0; i < methods.length; ++i) {
             MethodInvocationClassGenerator generator = new MethodInvocationClassGenerator(
-                    ClassPoolUtil.getClassPool(TargetInterface.class), TargetInterface.class.getName() + i,
-                    TargetClass.class.getName());
+                    ClassPoolUtil.getClassPool(TargetInterface.class),
+                    TargetInterface.class.getName() + i, TargetClass.class
+                            .getName());
             generator.createProceedMethod(methods[i], methods[i].getName());
             Class clazz = generator.toClass(getClass().getClassLoader());
-            assertEquals("1", TargetInterface.class.getName() + i, clazz.getName());
+            assertEquals("1", TargetInterface.class.getName() + i, clazz
+                    .getName());
             Method method = clazz.getDeclaredMethod("proceed", null);
             assertEquals("2", "proceed", method.getName());
         }
@@ -109,8 +130,9 @@ public class MethodInvocationClassGeneratorTest extends TestCase {
         Method[] methods = TargetClass.class.getDeclaredMethods();
         for (int i = 0; i < methods.length; ++i) {
             MethodInvocationClassGenerator generator = new MethodInvocationClassGenerator(
-                    ClassPoolUtil.getClassPool(TargetClass.class), TargetClass.class.getName() + i,
-                    TargetClass.class.getName());
+                    ClassPoolUtil.getClassPool(TargetClass.class),
+                    TargetClass.class.getName() + i, TargetClass.class
+                            .getName());
             generator.createProceedMethod(methods[i], methods[i].getName());
             Class clazz = generator.toClass(getClass().getClassLoader());
             assertEquals("1", TargetClass.class.getName() + i, clazz.getName());
@@ -178,9 +200,9 @@ public class MethodInvocationClassGeneratorTest extends TestCase {
 
         public String[] f(String[] arg0);
 
-        public void f(boolean arg0, char arg1, byte arg2, short arg3, int arg4, long arg5,
-                float arg6, double arg7, int[] arg8, int[][] arg9, Object arg10, Object[] arg11,
-                String arg12, String[] arg13);
+        public void f(boolean arg0, char arg1, byte arg2, short arg3, int arg4,
+                long arg5, float arg6, double arg7, int[] arg8, int[][] arg9,
+                Object arg10, Object[] arg11, String arg12, String[] arg13);
     }
 
     public static class TargetClass {
@@ -299,9 +321,9 @@ public class MethodInvocationClassGeneratorTest extends TestCase {
             return arg0;
         }
 
-        public void f(boolean arg0, char arg1, byte arg2, short arg3, int arg4, long arg5,
-                float arg6, double arg7, int[] arg8, int[][] arg9, Object arg10, Object[] arg11,
-                String arg12, String[] arg13) {
+        public void f(boolean arg0, char arg1, byte arg2, short arg3, int arg4,
+                long arg5, float arg6, double arg7, int[] arg8, int[][] arg9,
+                Object arg10, Object[] arg11, String arg12, String[] arg13) {
         }
     }
 }

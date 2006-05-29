@@ -15,26 +15,24 @@
  */
 package org.seasar.framework.exception;
 
-
 /**
  * @author higa
- *
+ * 
  */
 public class InstantiationRuntimeException extends SRuntimeException {
 
     private static final long serialVersionUID = 5220902071756706607L;
 
-	private Class targetClass;
+    private Class targetClass;
 
-	public InstantiationRuntimeException(
-		Class targetClass,
-		InstantiationException cause) {
+    public InstantiationRuntimeException(Class targetClass,
+            InstantiationException cause) {
 
-		super("ESSR0041", new Object[] { targetClass.getName(), cause }, cause);
-		this.targetClass = targetClass;
-	}
+        super("ESSR0041", new Object[] { targetClass.getName(), cause }, cause);
+        this.targetClass = targetClass;
+    }
 
-	public Class getTargetClass() {
-		return targetClass;
-	}
+    public Class getTargetClass() {
+        return targetClass;
+    }
 }

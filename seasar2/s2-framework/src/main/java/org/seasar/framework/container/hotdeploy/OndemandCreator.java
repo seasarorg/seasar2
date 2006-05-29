@@ -20,11 +20,12 @@ import org.seasar.framework.container.S2Container;
 
 public interface OndemandCreator {
 
-    void setOndemandCreatorContainer(OndemandCreatorContainer ondemandCreatorContainer);
-    
+    void setOndemandCreatorContainer(
+            OndemandCreatorContainer ondemandCreatorContainer);
+
     boolean loadComponentDef(S2Container container, Class clazz);
-    
+
     ComponentDef getComponentDef(S2Container container, Class clazz);
-    
+
     ComponentDef getComponentDef(S2Container container, String componentName);
 }

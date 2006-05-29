@@ -23,32 +23,32 @@ import org.seasar.framework.container.assembler.BindingTypeDefFactory;
 
 /**
  * @author higa
- *
+ * 
  */
 public class PropertyDefImpl extends ArgDefImpl implements PropertyDef {
 
-	private String propertyName;
-    
+    private String propertyName;
+
     private BindingTypeDef bindingTypeDef = BindingTypeDefFactory.SHOULD;
-	
+
     private AccessTypeDef accessTypeDef = AccessTypeDefFactory.PROPERTY;
 
-	public PropertyDefImpl(String propertyName) {
-		this(propertyName, null);
-	}
-		
-	public PropertyDefImpl(String propertyName, Object value) {
-		super(value);
-		this.propertyName = propertyName;
-	}
+    public PropertyDefImpl(String propertyName) {
+        this(propertyName, null);
+    }
 
-	/*
-	 * @see org.seasar.framework.container.PropertyDef#getPropertyName()
-	 */
-	public String getPropertyName() {
-		return propertyName;
-	}
-    
+    public PropertyDefImpl(String propertyName, Object value) {
+        super(value);
+        this.propertyName = propertyName;
+    }
+
+    /*
+     * @see org.seasar.framework.container.PropertyDef#getPropertyName()
+     */
+    public String getPropertyName() {
+        return propertyName;
+    }
+
     public AccessTypeDef getAccessTypeDef() {
         return accessTypeDef;
     }
@@ -63,7 +63,7 @@ public class PropertyDefImpl extends ArgDefImpl implements PropertyDef {
     public BindingTypeDef getBindingTypeDef() {
         return bindingTypeDef;
     }
-    
+
     public void setBindingTypeDef(BindingTypeDef bindingTypeDef) {
         this.bindingTypeDef = bindingTypeDef;
     }

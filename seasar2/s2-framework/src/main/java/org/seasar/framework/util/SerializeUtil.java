@@ -26,27 +26,24 @@ import org.seasar.framework.exception.IORuntimeException;
 
 public class SerializeUtil {
 
-    private SerializeUtil() { }
+    private SerializeUtil() {
+    }
 
-	public static Object serialize(final Object o)
-    	throws IORuntimeException, ClassNotFoundRuntimeException {
-    		
+    public static Object serialize(final Object o) throws IORuntimeException,
+            ClassNotFoundRuntimeException {
+
         try {
-            ByteArrayOutputStream baos =
-                    new ByteArrayOutputStream();
-            ObjectOutputStream oos =
-                    new ObjectOutputStream(baos);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ObjectOutputStream oos = new ObjectOutputStream(baos);
             oos.writeObject(o);
-            ByteArrayInputStream bais =
-                    new ByteArrayInputStream(
-                    baos.toByteArray());
-            ObjectInputStream ois =
-                    new ObjectInputStream(bais);
+            ByteArrayInputStream bais = new ByteArrayInputStream(baos
+                    .toByteArray());
+            ObjectInputStream ois = new ObjectInputStream(bais);
             return ois.readObject();
         } catch (IOException ex) {
             throw new IORuntimeException(ex);
         } catch (ClassNotFoundException ex) {
-			throw new ClassNotFoundRuntimeException(ex);
+            throw new ClassNotFoundRuntimeException(ex);
         }
     }
 }

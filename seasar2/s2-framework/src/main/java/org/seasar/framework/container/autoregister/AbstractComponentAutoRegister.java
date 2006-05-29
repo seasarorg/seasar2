@@ -40,7 +40,7 @@ public abstract class AbstractComponentAutoRegister extends
     private InstanceDef instanceDef;
 
     private AutoBindingDef autoBindingDef;
-    
+
     private List customizers = new ArrayList();
 
     public AutoNaming getAutoNaming() {
@@ -68,15 +68,15 @@ public abstract class AbstractComponentAutoRegister extends
     public void setAutoBindingDef(AutoBindingDef autoBindingDef) {
         this.autoBindingDef = autoBindingDef;
     }
-    
+
     public int getCustomizerSize() {
         return customizers.size();
     }
-    
+
     public ComponentDefCustomizer getCustomizer(int index) {
         return (ComponentDefCustomizer) customizers.get(index);
     }
-    
+
     public void addCustomizer(ComponentDefCustomizer customizer) {
         customizers.add(customizer);
     }
@@ -114,7 +114,7 @@ public abstract class AbstractComponentAutoRegister extends
         customize(cd);
         getContainer().register(cd);
     }
-    
+
     protected void customize(ComponentDef componentDef) {
         for (int i = 0; i < getCustomizerSize(); ++i) {
             ComponentDefCustomizer customizer = getCustomizer(i);

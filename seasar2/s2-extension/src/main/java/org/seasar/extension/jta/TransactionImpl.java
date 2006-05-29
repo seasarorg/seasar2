@@ -37,436 +37,437 @@ import org.seasar.framework.util.SLinkedList;
 
 public final class TransactionImpl implements Transaction {
 
-	private static final int VOTE_READONLY = 0;
-	private static final int VOTE_COMMIT = 1;
-	private static final int VOTE_ROLLBACK = 2;
-	private static Logger logger_ = Logger.getLogger(TransactionImpl.class);
-	private Xid xid_;
-	private int status_ = Status.STATUS_NO_TRANSACTION;
-	private List xaResourceWrappers_ = new ArrayList();
-	private List synchronizations_ = new ArrayList();
-	private boolean suspended_ = false;
-	private int branchId_ = 0;
+    private static final int VOTE_READONLY = 0;
 
-	public TransactionImpl() {
-	}
+    private static final int VOTE_COMMIT = 1;
 
-	public void begin() {
-		status_ = Status.STATUS_ACTIVE;
-		init();
-		if (logger_.isDebugEnabled()) {
-			logger_.log("DSSR0003", null);
-		}
-	}
+    private static final int VOTE_ROLLBACK = 2;
 
-	public void suspend() throws XAException {
-		assertNotSuspended();
-		assertActive();
-		for (int i = 0; i < getXAResourceWrapperSize(); ++i) {
-			XAResourceWrapper xarw = getXAResourceWrapper(i);
-			xarw.end(XAResource.TMSUSPEND);
-		}
-		suspended_ = true;
-	}
+    private static Logger logger_ = Logger.getLogger(TransactionImpl.class);
 
-	private void assertNotSuspended() throws IllegalStateException {
-		if (suspended_) {
-			throw new SIllegalStateException("ESSR0314", null);
-		}
-	}
+    private Xid xid_;
 
-	private void assertActive() throws IllegalStateException {
-		switch (status_) {
-			case Status.STATUS_ACTIVE :
-				break;
-			default :
-				throwIllegalStateException();
-		}
-	}
+    private int status_ = Status.STATUS_NO_TRANSACTION;
 
-	private void throwIllegalStateException() throws IllegalStateException {
-		switch (status_) {
-			case Status.STATUS_PREPARING :
-				throw new SIllegalStateException("ESSR0304", null);
-			case Status.STATUS_PREPARED :
-				throw new SIllegalStateException("ESSR0305", null);
-			case Status.STATUS_COMMITTING :
-				throw new SIllegalStateException("ESSR0306", null);
-			case Status.STATUS_COMMITTED :
-				throw new SIllegalStateException("ESSR0307", null);
-			case Status.STATUS_MARKED_ROLLBACK :
-				throw new SIllegalStateException("ESSR0308", null);
-			case Status.STATUS_ROLLING_BACK :
-				throw new SIllegalStateException("ESSR0309", null);
-			case Status.STATUS_ROLLEDBACK :
-				throw new SIllegalStateException("ESSR0310", null);
-			case Status.STATUS_NO_TRANSACTION :
-				throw new SIllegalStateException("ESSR0311", null);
-			case Status.STATUS_UNKNOWN :
-				throw new SIllegalStateException("ESSR0312", null);
-			default :
-				throw new SIllegalStateException(
-					"ESSR0032",
-					new Object[] { String.valueOf(status_)});
-		}
-	}
+    private List xaResourceWrappers_ = new ArrayList();
 
-	private int getXAResourceWrapperSize() {
-		return xaResourceWrappers_.size();
-	}
+    private List synchronizations_ = new ArrayList();
 
-	private XAResourceWrapper getXAResourceWrapper(int index) {
-		return (XAResourceWrapper) xaResourceWrappers_.get(index);
-	}
+    private boolean suspended_ = false;
 
-	public void resume() throws XAException {
-		assertSuspended();
-		for (int i = 0; i < getXAResourceWrapperSize(); ++i) {
-			XAResourceWrapper xarw = getXAResourceWrapper(i);
-			xarw.start(XAResource.TMRESUME);
-		}
-		suspended_ = false;
-	}
+    private int branchId_ = 0;
 
-	private void assertSuspended() throws IllegalStateException {
-		if (!suspended_) {
-			throw new SIllegalStateException("ESSR0315", null);
-		}
-	}
+    public TransactionImpl() {
+    }
 
-	public void commit()
-		throws
-			RollbackException,
-			HeuristicMixedException,
-			HeuristicRollbackException,
-			SecurityException,
-			IllegalStateException,
-			SystemException {
+    public void begin() {
+        status_ = Status.STATUS_ACTIVE;
+        init();
+        if (logger_.isDebugEnabled()) {
+            logger_.log("DSSR0003", null);
+        }
+    }
 
-		try {
-			assertNotSuspended();
-			assertActive();
-			beforeCompletion();
-			endResources(XAResource.TMSUCCESS);
-			if (status_ == Status.STATUS_ACTIVE) {
-				if (getXAResourceWrapperSize() == 0) {
-					status_ = Status.STATUS_COMMITTED;
-				} else if (getXAResourceWrapperSize() == 1) {
-					commitOnePhase();
-				} else {
-					switch (prepareResources()) {
-						case VOTE_READONLY :
-							status_ = Status.STATUS_COMMITTED;
-							break;
-						case VOTE_COMMIT :
-							commitTwoPhase();
-							break;
-						case VOTE_ROLLBACK :
-							rollbackForVoteOK();
-							afterCompletion();
-							throw new SRollbackException(
-								"ESSR0303",
-								new Object[] { toString()});
-					}
-				}
-			}
-			if (logger_.isDebugEnabled()) {
-				logger_.log("DSSR0004", null);
-			}
-			afterCompletion();
-		} finally {
-			destroy();
-		}
-	}
+    public void suspend() throws XAException {
+        assertNotSuspended();
+        assertActive();
+        for (int i = 0; i < getXAResourceWrapperSize(); ++i) {
+            XAResourceWrapper xarw = getXAResourceWrapper(i);
+            xarw.end(XAResource.TMSUSPEND);
+        }
+        suspended_ = true;
+    }
 
-	private void beforeCompletion() {
-		for (int i = 0; i < getSynchronizationSize(); ++i) {
-			Synchronization sync = getSynchronization(i);
-			try {
-				sync.beforeCompletion();
-			} catch (RuntimeException ex) {
-				status_ = Status.STATUS_MARKED_ROLLBACK;
-				endResources(XAResource.TMFAIL);
-				rollbackResources();
-				afterCompletion();
-				throw ex;
-			}
-		}
-	}
+    private void assertNotSuspended() throws IllegalStateException {
+        if (suspended_) {
+            throw new SIllegalStateException("ESSR0314", null);
+        }
+    }
 
-	private void endResources(int flag) {
-		for (int i = 0; i < getXAResourceWrapperSize(); ++i) {
-			XAResourceWrapper xarw = getXAResourceWrapper(i);
-			try {
-				xarw.end(flag);
-			} catch (Throwable t) {
-				logger_.log(t);
-				status_ = Status.STATUS_MARKED_ROLLBACK;
-			}
-		}
-	}
-	
-	private void commitOnePhase() {
-		status_ = Status.STATUS_COMMITTING;
-		XAResourceWrapper xari = getXAResourceWrapper(0);
-		try {
-			xari.commit(true);
-			status_ = Status.STATUS_COMMITTED;
-		} catch (XAException ex) {
-			logger_.log(ex);
-			status_ = Status.STATUS_UNKNOWN;
-		}
-	}
-	
-	private int prepareResources() {
-		status_ = Status.STATUS_PREPARING;
-		int vote = VOTE_READONLY;
-		SLinkedList xarwList = new SLinkedList();
-		for (int i = 0; i < getXAResourceWrapperSize(); ++i) {
-			XAResourceWrapper xarw = getXAResourceWrapper(i);
-			if (xarw.isCommitTarget()) {
-				xarwList.addFirst(xarw);
-			}
-		}
-		for (int i = 0; i < xarwList.size(); ++i) {
-			XAResourceWrapper xarw = (XAResourceWrapper) xarwList.get(i);
-			try {
-			    if (i == xarwList.size() - 1) {
-			        //last resource commit optimization
-					xarw.commit(true);
-					xarw.setVoteOk(false);
-					vote = VOTE_COMMIT;
-				} else if (xarw.prepare() == XAResource.XA_OK) {
-					vote = VOTE_COMMIT;
-				} else {
-					xarw.setVoteOk(false);
-				}
-			} catch (XAException ex) {
-				xarw.setVoteOk(false);
-				status_ = Status.STATUS_MARKED_ROLLBACK;
-				return VOTE_ROLLBACK;
-			}
-		}
-		if (status_ == Status.STATUS_PREPARING) {
-			status_ = Status.STATUS_PREPARED;
-		}
-		return vote;
-	}
-	
-	private void commitTwoPhase() {
-		status_ = Status.STATUS_COMMITTING;
-		for (int i = 0; i < getXAResourceWrapperSize(); ++i) {
-			XAResourceWrapper xarw = getXAResourceWrapper(i);
-			if (xarw.isCommitTarget() && xarw.isVoteOk()) {
-				try {
-					xarw.commit(false);
-				} catch (Throwable t) {
-					logger_.log(t);
-					status_ = Status.STATUS_UNKNOWN;
-				}
-			}
-		}
-		if (status_ == Status.STATUS_COMMITTING) {
-			status_ = Status.STATUS_COMMITTED;
-		}
-	}
-	
-	private void rollbackForVoteOK() {
-		status_ = Status.STATUS_ROLLING_BACK;
-		for (int i = 0; i < getXAResourceWrapperSize(); ++i) {
-			XAResourceWrapper xarw = getXAResourceWrapper(i);
-			if (xarw.isVoteOk()) {
-				try {
-					xarw.rollback();
-				} catch (Throwable t) {
-					logger_.log(t);
-					status_ = Status.STATUS_UNKNOWN;
-				}
-			}
-		}
-		if (status_ == Status.STATUS_ROLLING_BACK) {
-			status_ = Status.STATUS_ROLLEDBACK;
-		}
-	}
+    private void assertActive() throws IllegalStateException {
+        switch (status_) {
+        case Status.STATUS_ACTIVE:
+            break;
+        default:
+            throwIllegalStateException();
+        }
+    }
 
-	private void afterCompletion() {
-		for (int i = 0; i < getSynchronizationSize(); ++i) {
-			Synchronization sync = getSynchronization(i);
-			try {
-				sync.afterCompletion(status_);
-			} catch (Throwable t) {
-				logger_.log(t);
-			}
-		}
-	}
+    private void throwIllegalStateException() throws IllegalStateException {
+        switch (status_) {
+        case Status.STATUS_PREPARING:
+            throw new SIllegalStateException("ESSR0304", null);
+        case Status.STATUS_PREPARED:
+            throw new SIllegalStateException("ESSR0305", null);
+        case Status.STATUS_COMMITTING:
+            throw new SIllegalStateException("ESSR0306", null);
+        case Status.STATUS_COMMITTED:
+            throw new SIllegalStateException("ESSR0307", null);
+        case Status.STATUS_MARKED_ROLLBACK:
+            throw new SIllegalStateException("ESSR0308", null);
+        case Status.STATUS_ROLLING_BACK:
+            throw new SIllegalStateException("ESSR0309", null);
+        case Status.STATUS_ROLLEDBACK:
+            throw new SIllegalStateException("ESSR0310", null);
+        case Status.STATUS_NO_TRANSACTION:
+            throw new SIllegalStateException("ESSR0311", null);
+        case Status.STATUS_UNKNOWN:
+            throw new SIllegalStateException("ESSR0312", null);
+        default:
+            throw new SIllegalStateException("ESSR0032", new Object[] { String
+                    .valueOf(status_) });
+        }
+    }
 
-	private int getSynchronizationSize() {
-		return synchronizations_.size();
-	}
+    private int getXAResourceWrapperSize() {
+        return xaResourceWrappers_.size();
+    }
 
-	private Synchronization getSynchronization(int index) {
-		return (Synchronization) synchronizations_.get(index);
-	}
+    private XAResourceWrapper getXAResourceWrapper(int index) {
+        return (XAResourceWrapper) xaResourceWrappers_.get(index);
+    }
 
-	public void rollback()
-		throws IllegalStateException, SecurityException, SystemException {
+    public void resume() throws XAException {
+        assertSuspended();
+        for (int i = 0; i < getXAResourceWrapperSize(); ++i) {
+            XAResourceWrapper xarw = getXAResourceWrapper(i);
+            xarw.start(XAResource.TMRESUME);
+        }
+        suspended_ = false;
+    }
 
-		try {
-			assertNotSuspended();
-			assertActiveOrMarkedRollback();
-			endResources(XAResource.TMFAIL);
-			rollbackResources();
-			if (logger_.isDebugEnabled()) {
-				logger_.log("DSSR0005", null);
-			}
-			afterCompletion();
-		} finally {
-			destroy();
-		}
-	}
+    private void assertSuspended() throws IllegalStateException {
+        if (!suspended_) {
+            throw new SIllegalStateException("ESSR0315", null);
+        }
+    }
 
-	private void assertActiveOrMarkedRollback() throws IllegalStateException {
-		switch (status_) {
-			case Status.STATUS_ACTIVE :
-			case Status.STATUS_MARKED_ROLLBACK :
-				break;
-			default :
-				throwIllegalStateException();
-		}
-	}
+    public void commit() throws RollbackException, HeuristicMixedException,
+            HeuristicRollbackException, SecurityException,
+            IllegalStateException, SystemException {
 
-	private void rollbackResources() {
-		status_ = Status.STATUS_ROLLING_BACK;
-		for (int i = 0; i < getXAResourceWrapperSize(); ++i) {
-			XAResourceWrapper xarw = getXAResourceWrapper(i);
-			try {
-				if (xarw.isCommitTarget()) {
-					xarw.rollback();
-				}
-			} catch (Throwable t) {
-				logger_.log(t);
-				status_ = Status.STATUS_UNKNOWN;
-			}
-		}
-		if (status_ == Status.STATUS_ROLLING_BACK) {
-			status_ = Status.STATUS_ROLLEDBACK;
-		}
-	}
+        try {
+            assertNotSuspended();
+            assertActive();
+            beforeCompletion();
+            endResources(XAResource.TMSUCCESS);
+            if (status_ == Status.STATUS_ACTIVE) {
+                if (getXAResourceWrapperSize() == 0) {
+                    status_ = Status.STATUS_COMMITTED;
+                } else if (getXAResourceWrapperSize() == 1) {
+                    commitOnePhase();
+                } else {
+                    switch (prepareResources()) {
+                    case VOTE_READONLY:
+                        status_ = Status.STATUS_COMMITTED;
+                        break;
+                    case VOTE_COMMIT:
+                        commitTwoPhase();
+                        break;
+                    case VOTE_ROLLBACK:
+                        rollbackForVoteOK();
+                        afterCompletion();
+                        throw new SRollbackException("ESSR0303",
+                                new Object[] { toString() });
+                    }
+                }
+            }
+            if (logger_.isDebugEnabled()) {
+                logger_.log("DSSR0004", null);
+            }
+            afterCompletion();
+        } finally {
+            destroy();
+        }
+    }
 
-	public void setRollbackOnly()
-		throws IllegalStateException, SystemException {
+    private void beforeCompletion() {
+        for (int i = 0; i < getSynchronizationSize(); ++i) {
+            Synchronization sync = getSynchronization(i);
+            try {
+                sync.beforeCompletion();
+            } catch (RuntimeException ex) {
+                status_ = Status.STATUS_MARKED_ROLLBACK;
+                endResources(XAResource.TMFAIL);
+                rollbackResources();
+                afterCompletion();
+                throw ex;
+            }
+        }
+    }
 
-		assertNotSuspended();
-		assertActiveOrPreparingOrPrepared();
-		status_ = Status.STATUS_MARKED_ROLLBACK;
-	}
+    private void endResources(int flag) {
+        for (int i = 0; i < getXAResourceWrapperSize(); ++i) {
+            XAResourceWrapper xarw = getXAResourceWrapper(i);
+            try {
+                xarw.end(flag);
+            } catch (Throwable t) {
+                logger_.log(t);
+                status_ = Status.STATUS_MARKED_ROLLBACK;
+            }
+        }
+    }
 
-	private void assertActiveOrPreparingOrPrepared()
-		throws IllegalStateException {
-		switch (status_) {
-			case Status.STATUS_ACTIVE :
-			case Status.STATUS_PREPARING :
-			case Status.STATUS_PREPARED :
-				break;
-			default :
-				throwIllegalStateException();
-		}
-	}
+    private void commitOnePhase() {
+        status_ = Status.STATUS_COMMITTING;
+        XAResourceWrapper xari = getXAResourceWrapper(0);
+        try {
+            xari.commit(true);
+            status_ = Status.STATUS_COMMITTED;
+        } catch (XAException ex) {
+            logger_.log(ex);
+            status_ = Status.STATUS_UNKNOWN;
+        }
+    }
 
-	public boolean enlistResource(XAResource xaResource)
-		throws RollbackException, IllegalStateException, SystemException {
+    private int prepareResources() {
+        status_ = Status.STATUS_PREPARING;
+        int vote = VOTE_READONLY;
+        SLinkedList xarwList = new SLinkedList();
+        for (int i = 0; i < getXAResourceWrapperSize(); ++i) {
+            XAResourceWrapper xarw = getXAResourceWrapper(i);
+            if (xarw.isCommitTarget()) {
+                xarwList.addFirst(xarw);
+            }
+        }
+        for (int i = 0; i < xarwList.size(); ++i) {
+            XAResourceWrapper xarw = (XAResourceWrapper) xarwList.get(i);
+            try {
+                if (i == xarwList.size() - 1) {
+                    // last resource commit optimization
+                    xarw.commit(true);
+                    xarw.setVoteOk(false);
+                    vote = VOTE_COMMIT;
+                } else if (xarw.prepare() == XAResource.XA_OK) {
+                    vote = VOTE_COMMIT;
+                } else {
+                    xarw.setVoteOk(false);
+                }
+            } catch (XAException ex) {
+                xarw.setVoteOk(false);
+                status_ = Status.STATUS_MARKED_ROLLBACK;
+                return VOTE_ROLLBACK;
+            }
+        }
+        if (status_ == Status.STATUS_PREPARING) {
+            status_ = Status.STATUS_PREPARED;
+        }
+        return vote;
+    }
 
-		boolean oracled = xaResource.getClass().getName().startsWith("oracle"); 
-		assertNotSuspended();
-		assertActive();
-		Xid xid = null;
-		for (int i = 0; i < getXAResourceWrapperSize(); ++i) {
-			XAResourceWrapper xarw = getXAResourceWrapper(i);
-			if (xaResource.equals(xarw.getXAResource())) {
-				return false;
-			} else if (oracled) {
-				continue;
-			} else {
-				try {
-					if (xaResource.isSameRM(xarw.getXAResource())) {
-						xid = xarw.getXid();
-						break;
-					}
-				} catch (XAException ex) {
-					throw new IllegalStateException(ex.toString());
-				}
-			}
-		}
-		int flag = xid == null ? XAResource.TMNOFLAGS : XAResource.TMJOIN;
-		boolean commitTarget = xid == null ? true : false;
-		if (xid == null) {
-			xid = createXidBranch();
-		}
-		try {
-			xaResource.start(xid, flag);
-			xaResourceWrappers_.add(
-				new XAResourceWrapper(xaResource, xid, commitTarget));
-			return true;
-		} catch (XAException ex) {
-			IllegalStateException ise = new IllegalStateException(ex.toString());
-			ise.initCause(ex); 
-			throw ise;
-		}
-	}
+    private void commitTwoPhase() {
+        status_ = Status.STATUS_COMMITTING;
+        for (int i = 0; i < getXAResourceWrapperSize(); ++i) {
+            XAResourceWrapper xarw = getXAResourceWrapper(i);
+            if (xarw.isCommitTarget() && xarw.isVoteOk()) {
+                try {
+                    xarw.commit(false);
+                } catch (Throwable t) {
+                    logger_.log(t);
+                    status_ = Status.STATUS_UNKNOWN;
+                }
+            }
+        }
+        if (status_ == Status.STATUS_COMMITTING) {
+            status_ = Status.STATUS_COMMITTED;
+        }
+    }
 
-	private Xid createXidBranch() {
-		return new XidImpl(xid_, ++branchId_);
-	}
+    private void rollbackForVoteOK() {
+        status_ = Status.STATUS_ROLLING_BACK;
+        for (int i = 0; i < getXAResourceWrapperSize(); ++i) {
+            XAResourceWrapper xarw = getXAResourceWrapper(i);
+            if (xarw.isVoteOk()) {
+                try {
+                    xarw.rollback();
+                } catch (Throwable t) {
+                    logger_.log(t);
+                    status_ = Status.STATUS_UNKNOWN;
+                }
+            }
+        }
+        if (status_ == Status.STATUS_ROLLING_BACK) {
+            status_ = Status.STATUS_ROLLEDBACK;
+        }
+    }
 
-	public boolean delistResource(XAResource xaResource, int flag)
-		throws IllegalStateException, SystemException {
+    private void afterCompletion() {
+        for (int i = 0; i < getSynchronizationSize(); ++i) {
+            Synchronization sync = getSynchronization(i);
+            try {
+                sync.afterCompletion(status_);
+            } catch (Throwable t) {
+                logger_.log(t);
+            }
+        }
+    }
 
-		assertNotSuspended();
-		assertActiveOrMarkedRollback();
-		for (int i = 0; i < getXAResourceWrapperSize(); ++i) {
-			XAResourceWrapper xarw = getXAResourceWrapper(i);
-			if (xaResource.equals(xarw.getXAResource())) {
-				try {
-					xarw.end(flag);
-					return true;
-				} catch (XAException ex) {
-					logger_.log(ex);
-					status_ = Status.STATUS_MARKED_ROLLBACK;
-					return false;
-				}
-			}
-		}
-		throw new SIllegalStateException("ESSR0313", null);
-	}
+    private int getSynchronizationSize() {
+        return synchronizations_.size();
+    }
 
-	public int getStatus() {
-		return status_;
-	}
+    private Synchronization getSynchronization(int index) {
+        return (Synchronization) synchronizations_.get(index);
+    }
 
-	public void registerSynchronization(Synchronization sync)
-		throws RollbackException, IllegalStateException, SystemException {
+    public void rollback() throws IllegalStateException, SecurityException,
+            SystemException {
 
-		assertNotSuspended();
-		assertActive();
-		synchronizations_.add(sync);
-	}
+        try {
+            assertNotSuspended();
+            assertActiveOrMarkedRollback();
+            endResources(XAResource.TMFAIL);
+            rollbackResources();
+            if (logger_.isDebugEnabled()) {
+                logger_.log("DSSR0005", null);
+            }
+            afterCompletion();
+        } finally {
+            destroy();
+        }
+    }
 
-	public Xid getXid() {
-		return xid_;
-	}
+    private void assertActiveOrMarkedRollback() throws IllegalStateException {
+        switch (status_) {
+        case Status.STATUS_ACTIVE:
+        case Status.STATUS_MARKED_ROLLBACK:
+            break;
+        default:
+            throwIllegalStateException();
+        }
+    }
 
-	public boolean isSuspended() {
-		return suspended_;
-	}
+    private void rollbackResources() {
+        status_ = Status.STATUS_ROLLING_BACK;
+        for (int i = 0; i < getXAResourceWrapperSize(); ++i) {
+            XAResourceWrapper xarw = getXAResourceWrapper(i);
+            try {
+                if (xarw.isCommitTarget()) {
+                    xarw.rollback();
+                }
+            } catch (Throwable t) {
+                logger_.log(t);
+                status_ = Status.STATUS_UNKNOWN;
+            }
+        }
+        if (status_ == Status.STATUS_ROLLING_BACK) {
+            status_ = Status.STATUS_ROLLEDBACK;
+        }
+    }
 
-	private void init() {
-		xid_ = new XidImpl();
-	}
+    public void setRollbackOnly() throws IllegalStateException, SystemException {
 
-	private void destroy() {
-		status_ = Status.STATUS_NO_TRANSACTION;
-		xaResourceWrappers_.clear();
-		synchronizations_.clear();
-		suspended_ = false;
-	}
+        assertNotSuspended();
+        assertActiveOrPreparingOrPrepared();
+        status_ = Status.STATUS_MARKED_ROLLBACK;
+    }
+
+    private void assertActiveOrPreparingOrPrepared()
+            throws IllegalStateException {
+        switch (status_) {
+        case Status.STATUS_ACTIVE:
+        case Status.STATUS_PREPARING:
+        case Status.STATUS_PREPARED:
+            break;
+        default:
+            throwIllegalStateException();
+        }
+    }
+
+    public boolean enlistResource(XAResource xaResource)
+            throws RollbackException, IllegalStateException, SystemException {
+
+        boolean oracled = xaResource.getClass().getName().startsWith("oracle");
+        assertNotSuspended();
+        assertActive();
+        Xid xid = null;
+        for (int i = 0; i < getXAResourceWrapperSize(); ++i) {
+            XAResourceWrapper xarw = getXAResourceWrapper(i);
+            if (xaResource.equals(xarw.getXAResource())) {
+                return false;
+            } else if (oracled) {
+                continue;
+            } else {
+                try {
+                    if (xaResource.isSameRM(xarw.getXAResource())) {
+                        xid = xarw.getXid();
+                        break;
+                    }
+                } catch (XAException ex) {
+                    throw new IllegalStateException(ex.toString());
+                }
+            }
+        }
+        int flag = xid == null ? XAResource.TMNOFLAGS : XAResource.TMJOIN;
+        boolean commitTarget = xid == null ? true : false;
+        if (xid == null) {
+            xid = createXidBranch();
+        }
+        try {
+            xaResource.start(xid, flag);
+            xaResourceWrappers_.add(new XAResourceWrapper(xaResource, xid,
+                    commitTarget));
+            return true;
+        } catch (XAException ex) {
+            IllegalStateException ise = new IllegalStateException(ex.toString());
+            ise.initCause(ex);
+            throw ise;
+        }
+    }
+
+    private Xid createXidBranch() {
+        return new XidImpl(xid_, ++branchId_);
+    }
+
+    public boolean delistResource(XAResource xaResource, int flag)
+            throws IllegalStateException, SystemException {
+
+        assertNotSuspended();
+        assertActiveOrMarkedRollback();
+        for (int i = 0; i < getXAResourceWrapperSize(); ++i) {
+            XAResourceWrapper xarw = getXAResourceWrapper(i);
+            if (xaResource.equals(xarw.getXAResource())) {
+                try {
+                    xarw.end(flag);
+                    return true;
+                } catch (XAException ex) {
+                    logger_.log(ex);
+                    status_ = Status.STATUS_MARKED_ROLLBACK;
+                    return false;
+                }
+            }
+        }
+        throw new SIllegalStateException("ESSR0313", null);
+    }
+
+    public int getStatus() {
+        return status_;
+    }
+
+    public void registerSynchronization(Synchronization sync)
+            throws RollbackException, IllegalStateException, SystemException {
+
+        assertNotSuspended();
+        assertActive();
+        synchronizations_.add(sync);
+    }
+
+    public Xid getXid() {
+        return xid_;
+    }
+
+    public boolean isSuspended() {
+        return suspended_;
+    }
+
+    private void init() {
+        xid_ = new XidImpl();
+    }
+
+    private void destroy() {
+        status_ = Status.STATUS_NO_TRANSACTION;
+        xaResourceWrappers_.clear();
+        synchronizations_.clear();
+        suspended_ = false;
+    }
 }
