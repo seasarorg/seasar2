@@ -167,16 +167,6 @@ public class S2EJB3TestCaseTest extends S2EJB3TestCase {
         assertEquals(false, needTransaction());
     }
 
-    public void testReloadAsDataSet() throws Exception {
-        Dept dept = new Dept();
-        dept.deptno = new Long(1);
-        dept.dname = "CLARK";
-        DataSet dataSet = reloadAsDataSet(dept);
-        DataTable table = dataSet.getTable("DEPT");
-        assertEquals("1", true, table.hasColumn("DEPTNO"));
-        assertEquals("2", false, table.hasColumn("NONE"));
-    }
-
     @Entity(name = "Employee")
     public static class Employee {
 

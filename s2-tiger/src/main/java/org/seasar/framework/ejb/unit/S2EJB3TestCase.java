@@ -19,22 +19,16 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.Map;
 
 import javax.ejb.EJB;
 import javax.naming.Context;
 import javax.persistence.EntityManager;
 import javax.transaction.TransactionManager;
 
-import org.seasar.extension.dataset.DataColumn;
-import org.seasar.extension.dataset.DataRow;
 import org.seasar.extension.dataset.DataSet;
 import org.seasar.extension.dataset.DataTable;
-import org.seasar.extension.dataset.impl.DataSetImpl;
-import org.seasar.extension.dataset.states.RowStates;
 import org.seasar.extension.j2ee.JndiContextFactory;
 import org.seasar.extension.j2ee.JndiResourceLocator;
-import org.seasar.extension.jdbc.util.DatabaseMetaDataUtil;
 import org.seasar.extension.unit.S2TestCase;
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.S2Container;
@@ -157,46 +151,6 @@ public abstract class S2EJB3TestCase extends S2TestCase {
     public DataTable reload(DataTable table) {
         flush();
         return super.reload(table);
-    }
-
-    protected DataSet reloadAsDataSet(Object entity) {
-        return reloadAsDataSet(entity, false);
-    }
-
-    protected DataSet reloadAsDataSet(Object entity,
-            boolean includesRelationships) {
-
-        flush();
-        EntityReader reader = createEntityReader(entity, includesRelationships);
-        DataSet dataSet = reader.read();
-        DataSet newDataSet = new DataSetImpl();
-
-        for (int i = 0; i < dataSet.getTableSize(); i++) {
-            DataTable table = dataSet.getTable(i);
-            DataTable newTable = newDataSet.addTable(table.getTableName());
-            Map columnMap = DatabaseMetaDataUtil.getColumnMap(
-                    getDatabaseMetaData(), table.getTableName());
-            for (int j = 0; j < table.getColumnSize(); j++) {
-                DataColumn column = table.getColumn(j);
-                if (columnMap.containsKey(column.getColumnName())) {
-                    newTable.addColumn(column.getColumnName(), column
-                            .getColumnType());
-                }
-            }
-            for (int j = 0; j < table.getRowSize(); j++) {
-                DataRow row = table.getRow(j);
-                DataRow newRow = newTable.addRow();
-                for (int k = 0; k < table.getColumnSize(); k++) {
-                    DataColumn column = table.getColumn(k);
-                    String columnName = column.getColumnName();
-                    if (columnMap.containsKey(columnName)) {
-                        newRow.setValue(columnName, row.getValue(columnName));
-                    }
-                }
-                newRow.setState(RowStates.UNCHANGED);
-            }
-        }
-        return super.reload(newDataSet);
     }
 
     @Override
