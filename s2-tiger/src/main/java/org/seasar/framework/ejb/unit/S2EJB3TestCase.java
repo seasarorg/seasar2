@@ -106,6 +106,48 @@ public abstract class S2EJB3TestCase extends S2TestCase {
     }
 
     @Override
+    public void deleteDb(DataSet dataSet) {
+        flush();
+        super.deleteDb(dataSet);
+    }
+
+    @Override
+    public void deleteTable(String tableName) {
+        flush();
+        super.deleteTable(tableName);
+    }
+
+    @Override
+    public DataSet readDb(DataSet dataSet) {
+        flush();
+        return super.readDb(dataSet);
+    }
+
+    @Override
+    public DataTable readDbByTable(String table) {
+        flush();
+        return super.readDbByTable(table);
+    }
+
+    @Override
+    public DataTable readDbByTable(String table, String condition) {
+        flush();
+        return super.readDbByTable(table, condition);
+    }
+
+    @Override
+    public DataTable readDbBySql(String sql, String tableName) {
+        flush();
+        return super.readDbBySql(sql, tableName);
+    }
+
+    @Override
+    public void writeDb(DataSet dataSet) {
+        flush();
+        super.writeDb(dataSet);
+    }
+
+    @Override
     public DataSet reload(DataSet dataSet) {
         flush();
         return super.reload(dataSet);
