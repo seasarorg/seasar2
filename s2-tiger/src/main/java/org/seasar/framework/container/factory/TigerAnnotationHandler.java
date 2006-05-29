@@ -56,20 +56,14 @@ import org.seasar.framework.ejb.EJB3InterceptorSupportInterceptor;
  * 
  */
 public class TigerAnnotationHandler extends ConstantAnnotationHandler {
-    private static final List<ComponentDefFactory> componentDefFactories = Collections
+    protected static final List<ComponentDefFactory> componentDefFactories = Collections
             .synchronizedList(new ArrayList<ComponentDefFactory>());
 
-    private static final List<PropertyDefFactory> propertyDefFactories = Collections
+    protected static final List<PropertyDefFactory> propertyDefFactories = Collections
             .synchronizedList(new ArrayList<PropertyDefFactory>());
     static {
-        componentDefFactories.add(new EJB3ComponentDefFactory());
-        componentDefFactories.add(new PojoComponentDefFactory());
-
-        propertyDefFactories.add(new BindingPropertyDefFactory());
-        propertyDefFactories.add(new EJBPropertyDefFactory());
-        propertyDefFactories.add(new PersistenceContextPropertyDefFactory());
-        propertyDefFactories.add(new PersistenceUnitPropertyDefFactory());
-        propertyDefFactories.add(new ResourcePropertyDefFactory());
+        reloadComponentDefFactory();
+        reloadPropertyDefFactory();
     }
 
     private static final Map<TransactionAttributeType, String> TX_ATTRS = new HashMap<TransactionAttributeType, String>();
@@ -207,8 +201,31 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
         componentDefFactories.add(0, factory);
     }
 
+    public static void reloadComponentDefFactory() {
+        clearComponentDefFactory();
+        componentDefFactories.add(new EJB3ComponentDefFactory());
+        componentDefFactories.add(new PojoComponentDefFactory());
+    }
+
+    public static void clearComponentDefFactory() {
+        componentDefFactories.clear();
+    }
+
     public static void addPropertyDefFactory(final PropertyDefFactory factory) {
         propertyDefFactories.add(factory);
+    }
+
+    public static void reloadPropertyDefFactory() {
+        clearPropertyDefFactory();
+        propertyDefFactories.add(new BindingPropertyDefFactory());
+        propertyDefFactories.add(new EJBPropertyDefFactory());
+        propertyDefFactories.add(new PersistenceContextPropertyDefFactory());
+        propertyDefFactories.add(new PersistenceUnitPropertyDefFactory());
+        propertyDefFactories.add(new ResourcePropertyDefFactory());
+    }
+
+    public static void clearPropertyDefFactory() {
+        propertyDefFactories.clear();
     }
 
     protected void appendEJB3Aspect(final ComponentDef componentDef) {
