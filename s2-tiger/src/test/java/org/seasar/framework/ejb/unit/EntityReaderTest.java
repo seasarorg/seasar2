@@ -88,7 +88,7 @@ public class EntityReaderTest extends TestCase {
         EntityReader reader = new EntityReader(accounting, true);
         DataSet dataSet = reader.read();
         assertEquals("1", 2, dataSet.getTableSize());
-        
+
         DataTable deptTable = dataSet.getTable("Department5");
         assertEquals("2", 1, deptTable.getRowSize());
         DataRow deptRow = deptTable.getRow(0);
@@ -103,14 +103,14 @@ public class EntityReaderTest extends TestCase {
         assertEquals("8", new BigDecimal(7839), empRow1.getValue("EMPNO"));
         assertEquals("9", "KING", empRow1.getValue("NAME"));
         assertEquals("10", new BigDecimal(1), empRow1.getValue("DEPARTMENT_ID"));
-        
+
         DataRow empRow2 = empTable.getRow(1);
         assertEquals("11", new BigDecimal(2), empRow2.getValue("ID"));
         assertEquals("12", new BigDecimal(7782), empRow2.getValue("EMPNO"));
         assertEquals("13", "CLARK", empRow2.getValue("NAME"));
         assertEquals("14", new BigDecimal(1), empRow2.getValue("DEPARTMENT_ID"));
     }
-    
+
     public void testReadManyToOne() {
         Department accounting = new Department(new Long(1), 10, "ACCOUNTING");
         Employee king = new Employee(new Long(1), 7839, "KING", accounting);
@@ -256,7 +256,7 @@ public class EntityReaderTest extends TestCase {
             this.name = name;
         }
     }
-    
+
     @Entity(name = "Employee")
     public static class Employee implements Comparable<Employee> {
 
@@ -384,14 +384,15 @@ public class EntityReaderTest extends TestCase {
         public Employee5() {
         }
 
-        public Employee5(Long id, long empno, String name, Department5 department) {
+        public Employee5(Long id, long empno, String name,
+                Department5 department) {
             this.id = id;
             this.empno = empno;
             this.name = name;
             this.department = department;
         }
     }
-    
+
     @Entity(name = "Project")
     public static class Project {
 

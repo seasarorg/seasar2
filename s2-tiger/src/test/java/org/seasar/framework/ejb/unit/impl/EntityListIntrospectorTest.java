@@ -27,8 +27,6 @@ import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.OneToMany;
 
-import org.seasar.framework.ejb.unit.impl.EntityListIntrospector;
-
 import junit.framework.TestCase;
 
 public class EntityListIntrospectorTest extends TestCase {
@@ -43,8 +41,8 @@ public class EntityListIntrospectorTest extends TestCase {
         departments.add(department1);
         departments.add(department2);
 
-        EntityListIntrospector i = new EntityListIntrospector(departments, true,
-                new DefaultProxiedObjectResolver());
+        EntityListIntrospector i = new EntityListIntrospector(departments,
+                true, new DefaultProxiedObjectResolver());
 
         assertNotNull("1", i.getEntityClassDesc(Department.class));
         assertNotNull("2", i.getEntityClassDesc(Employee.class));

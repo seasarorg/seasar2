@@ -29,7 +29,6 @@ import javax.persistence.OneToMany;
 import junit.framework.TestCase;
 
 import org.seasar.framework.ejb.unit.ProxiedObjectResolver;
-import org.seasar.framework.ejb.unit.impl.EntityIntrospector;
 
 public class EntityIntrospectorTest extends TestCase {
 
@@ -44,7 +43,8 @@ public class EntityIntrospectorTest extends TestCase {
         department.employees.add(fulltimeEmployee);
         department.employees.add(parttimeEmployee);
 
-        EntityIntrospector i = new EntityIntrospector(department, true, DefaultProxiedObjectResolver.INSTANCE);
+        EntityIntrospector i = new EntityIntrospector(department, true,
+                DefaultProxiedObjectResolver.INSTANCE);
 
         assertNotNull("1", i.getEntityClassDesc(Department.class));
         assertNotNull("2", i.getEntityClassDesc(Employee.class));
@@ -52,14 +52,14 @@ public class EntityIntrospectorTest extends TestCase {
         assertNotNull("4", i.getEntityClassDesc(ParttimeEmployee.class));
         assertNotNull("5", i.getEntityClassDesc(Address.class));
     }
-    
+
     public void testUnproxy() throws Exception {
         Employee employee = new Employee();
         employee.address = new AddressProxy(new Address());
         ProxiedObjectResolver resolver = new ProxiedObjectResolverTest();
-        
+
         EntityIntrospector i = new EntityIntrospector(employee, true, resolver);
-        
+
         assertNotNull("1", i.getEntityClassDesc(Address.class));
     }
 
@@ -77,7 +77,7 @@ public class EntityIntrospectorTest extends TestCase {
     public static class Employee {
         @Id
         private Long id;
-        
+
         @ManyToOne
         private Department department;
 
@@ -102,14 +102,14 @@ public class EntityIntrospectorTest extends TestCase {
     public static interface Proxy {
         public Object getProxiedObject();
     }
-    
+
     public static class AddressProxy extends Address implements Proxy {
         private Object proxied;
 
         public AddressProxy(Object proxied) {
             this.proxied = proxied;
         }
-        
+
         public Object getProxiedObject() {
             return proxied;
         }
@@ -117,7 +117,7 @@ public class EntityIntrospectorTest extends TestCase {
 
     public static class ProxiedObjectResolverTest implements
             ProxiedObjectResolver {
-        
+
         public Object unproxy(Object proxy) {
             if (proxy instanceof Proxy) {
                 return ((Proxy) proxy).getProxiedObject();

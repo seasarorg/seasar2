@@ -31,8 +31,8 @@ import org.seasar.framework.ejb.unit.ToOneRelationshipStateDesc;
  * @author nakamura
  * 
  */
-public class MappedSuperclassDescImpl extends AbstractPersistentClassDesc implements
-        MappedSuperclassDesc {
+public class MappedSuperclassDescImpl extends AbstractPersistentClassDesc
+        implements MappedSuperclassDesc {
 
     public MappedSuperclassDescImpl(Class<?> persistentClass,
             String primaryTableName, boolean propertyAccessed) {
@@ -64,15 +64,14 @@ public class MappedSuperclassDescImpl extends AbstractPersistentClassDesc implem
     public void overrideAssociations(
             Map<String, List<PersistentJoinColumn>> associationOverrides) {
         for (PersistentStateDesc stateDesc : getPersistentStateDescs()) {
-            if (! (stateDesc instanceof ToOneRelationshipStateDesc)) {
+            if (!(stateDesc instanceof ToOneRelationshipStateDesc)) {
                 continue;
             }
             ToOneRelationshipStateDesc toOne = (ToOneRelationshipStateDesc) stateDesc;
             if (associationOverrides.containsKey(toOne.getName())) {
                 List<PersistentJoinColumn> overridings = associationOverrides
                         .get(toOne.getName());
-                List<PersistentJoinColumn> overriddens = toOne
-                        .getJoinColumns();
+                List<PersistentJoinColumn> overriddens = toOne.getJoinColumns();
                 if (overriddens.size() != 0
                         && overriddens.size() != overridings.size()) {
                     return;

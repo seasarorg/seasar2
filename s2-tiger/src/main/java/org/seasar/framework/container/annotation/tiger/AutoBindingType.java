@@ -17,15 +17,12 @@ package org.seasar.framework.container.annotation.tiger;
 
 /**
  * @author higa
- *
+ * 
  */
 public enum AutoBindingType {
 
-    AUTO,
-    CONSTRUCTOR,
-    PROPERTY,
-    NONE;
-    
+    AUTO, CONSTRUCTOR, PROPERTY, NONE;
+
     public String getName() {
         return toString().toLowerCase();
     }

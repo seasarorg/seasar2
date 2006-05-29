@@ -188,7 +188,8 @@ public class EntityClassDescImplTest extends TestCase {
         EntityClassDescImpl ecd = new EntityClassDescImpl(ValuedCustomer3.class);
         EmbeddedStateDesc embeddedStateDesc = (EmbeddedStateDesc) ecd
                 .getPersistentStateDesc("id");
-        EmbeddableClassDesc embeddable = embeddedStateDesc.getEmbedddableClassDesc();
+        EmbeddableClassDesc embeddable = embeddedStateDesc
+                .getEmbedddableClassDesc();
         PersistentColumn column = embeddable.getPersistentStateDesc("id1")
                 .getColumn();
         assertEquals("1", "aaa", column.getName().toLowerCase());
@@ -203,7 +204,8 @@ public class EntityClassDescImplTest extends TestCase {
                 SpecialValuedCustomer3.class);
         EmbeddedStateDesc embeddedStateDesc = (EmbeddedStateDesc) ecd
                 .getPersistentStateDesc("id");
-        EmbeddableClassDesc embeddable = embeddedStateDesc.getEmbedddableClassDesc();
+        EmbeddableClassDesc embeddable = embeddedStateDesc
+                .getEmbedddableClassDesc();
         PersistentColumn column = embeddable.getPersistentStateDesc("id1")
                 .getColumn();
         assertEquals("1", "aaa", column.getName().toLowerCase());
@@ -249,7 +251,7 @@ public class EntityClassDescImplTest extends TestCase {
         seconaryTablePkColumn = seconaryTableId.getColumn();
         assertEquals("1", "bbb", seconaryTablePkColumn.getName().toLowerCase());
     }
-    
+
     public void testIdOnMappedSuperclass() {
         EntityClassDescImpl entityDesc = new EntityClassDescImpl(
                 Employee4.class);
@@ -261,7 +263,7 @@ public class EntityClassDescImplTest extends TestCase {
                 Employee5.class);
         assertEquals("1", 1, entityDesc.getIdentifiers().size());
     }
-    
+
     @Entity
     public static class Hoge {
 
@@ -450,29 +452,30 @@ public class EntityClassDescImplTest extends TestCase {
         @Id
         private Long id;
     }
-    
+
     @Entity
     public static class Employee4 extends EmployeeInfo4 {
     }
-    
+
     @MappedSuperclass
     public static class EmployeeInfo4 {
         @Id
         private Long id;
     }
-    
+
     @Entity
     public static class Employee5 extends EmployeeInfo5 {
     }
-    
+
     @MappedSuperclass
     public static class EmployeeInfo5 {
         @EmbeddedId
         private Long id;
     }
-    
+
     public static class EmployeeInfo5Pk implements Serializable {
         private Long id1;
+
         private Long id2;
     }
 }

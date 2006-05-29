@@ -28,6 +28,7 @@ public class SEJBException extends EJBException {
     private static final long serialVersionUID = 1L;
 
     private String messageCode;
+
     private Object[] args;
 
     public SEJBException(final String messageCode, final Object... args) {

@@ -22,8 +22,7 @@ import org.seasar.framework.container.annotation.tiger.Component;
 import org.seasar.framework.container.annotation.tiger.InstanceType;
 
 @Stateful
-@Component(name="hoge10x", instance=InstanceType.SINGLETON,
-        autoBinding=AutoBindingType.PROPERTY)
+@Component(name = "hoge10x", instance = InstanceType.SINGLETON, autoBinding = AutoBindingType.PROPERTY)
 public class Hoge10 implements Runnable {
     public void run() {
     }

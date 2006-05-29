@@ -126,7 +126,7 @@ public class EntityListReaderTest extends TestCase {
     }
 
     @Entity(name = "Employee")
-    public static class Employee  {
+    public static class Employee {
 
         @Id
         private Long id;

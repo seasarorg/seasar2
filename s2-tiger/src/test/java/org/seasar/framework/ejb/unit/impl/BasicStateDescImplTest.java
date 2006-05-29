@@ -42,7 +42,8 @@ public class BasicStateDescImplTest extends TestCase {
         PersistentClassDesc pc = new EntityClassDescImpl(Hoge.class);
         Field field = ClassUtil.getDeclaredField(Hoge.class, "aaa");
         FieldAccessor accessor = new FieldAccessor(field);
-        BasicStateDescImpl basicDesc = new BasicStateDescImpl(pc, "hoge", accessor);
+        BasicStateDescImpl basicDesc = new BasicStateDescImpl(pc, "hoge",
+                accessor);
         PersistentColumn column = basicDesc.getColumn();
 
         assertEquals("1", "hoge", column.getTable().toLowerCase());
@@ -53,7 +54,8 @@ public class BasicStateDescImplTest extends TestCase {
         PersistentClassDesc pc = new EntityClassDescImpl(Hoge2.class);
         Field field = ClassUtil.getDeclaredField(Hoge2.class, "aaa");
         FieldAccessor accessor = new FieldAccessor(field);
-        BasicStateDescImpl basicDesc = new BasicStateDescImpl(pc, "hoge", accessor);
+        BasicStateDescImpl basicDesc = new BasicStateDescImpl(pc, "hoge",
+                accessor);
         PersistentColumn column = basicDesc.getColumn();
 
         assertEquals("1", "foo2", column.getTable().toLowerCase());
@@ -64,7 +66,8 @@ public class BasicStateDescImplTest extends TestCase {
         PersistentClassDesc pc = new EntityClassDescImpl(Hoge2.class);
         Field field = ClassUtil.getDeclaredField(Hoge2.class, "aaa");
         FieldAccessor accessor = new FieldAccessor(field);
-        BasicStateDescImpl basicDesc = new BasicStateDescImpl(pc, "hoge", accessor);
+        BasicStateDescImpl basicDesc = new BasicStateDescImpl(pc, "hoge",
+                accessor);
 
         assertEquals("1", true, basicDesc.hasColumn("foo1aaa"));
     }
@@ -73,7 +76,8 @@ public class BasicStateDescImplTest extends TestCase {
         PersistentClassDesc pc = new EntityClassDescImpl(Hoge2.class);
         Field field = ClassUtil.getDeclaredField(Hoge2.class, "aaa");
         FieldAccessor accessor = new FieldAccessor(field);
-        BasicStateDescImpl basicDesc = new BasicStateDescImpl(pc, "hoge", accessor);
+        BasicStateDescImpl basicDesc = new BasicStateDescImpl(pc, "hoge",
+                accessor);
 
         assertEquals("1", false, basicDesc.hasColumn("aaa"));
     }
@@ -82,8 +86,9 @@ public class BasicStateDescImplTest extends TestCase {
         PersistentClassDesc pc = new EntityClassDescImpl(Hoge.class);
         Field field = ClassUtil.getDeclaredField(Hoge.class, "aaa");
         FieldAccessor accessor = new FieldAccessor(field);
-        BasicStateDescImpl basicDesc = new BasicStateDescImpl(pc, "hoge", accessor);
-        
+        BasicStateDescImpl basicDesc = new BasicStateDescImpl(pc, "hoge",
+                accessor);
+
         assertEquals("1", Long.class, basicDesc.getPersistenceTargetClass());
     }
 
@@ -91,8 +96,9 @@ public class BasicStateDescImplTest extends TestCase {
         PersistentClassDesc pc = new EntityClassDescImpl(Hoge.class);
         Field field = ClassUtil.getDeclaredField(Hoge.class, "aaa");
         FieldAccessor accessor = new FieldAccessor(field);
-        BasicStateDescImpl basicDesc = new BasicStateDescImpl(pc, "hoge", accessor); 
-        
+        BasicStateDescImpl basicDesc = new BasicStateDescImpl(pc, "hoge",
+                accessor);
+
         assertEquals("1", true, basicDesc.isIdentifier());
     }
 
@@ -100,8 +106,9 @@ public class BasicStateDescImplTest extends TestCase {
         PersistentClassDesc pc = new EntityClassDescImpl(Hoge.class);
         Field field = ClassUtil.getDeclaredField(Hoge.class, "bbb");
         FieldAccessor accessor = new FieldAccessor(field);
-        BasicStateDescImpl basicDesc = new BasicStateDescImpl(pc, "hoge", accessor);         
-        
+        BasicStateDescImpl basicDesc = new BasicStateDescImpl(pc, "hoge",
+                accessor);
+
         assertEquals("1", false, basicDesc.isIdentifier());
     }
 
@@ -111,9 +118,11 @@ public class BasicStateDescImplTest extends TestCase {
         Field field = ClassUtil.getDeclaredField(Hoge3.class, "bbb");
         field.setAccessible(true);
         FieldAccessor accessor = new FieldAccessor(field);
-        BasicStateDescImpl basicDesc = new BasicStateDescImpl(pc, "hoge", accessor);
-        
-        assertEquals("1", 1, basicDesc.getValue(hoge3, DefaultProxiedObjectResolver.INSTANCE));
+        BasicStateDescImpl basicDesc = new BasicStateDescImpl(pc, "hoge",
+                accessor);
+
+        assertEquals("1", 1, basicDesc.getValue(hoge3,
+                DefaultProxiedObjectResolver.INSTANCE));
         assertEquals("2", int.class, basicDesc.getPersistenceTargetClass());
     }
 
@@ -123,9 +132,11 @@ public class BasicStateDescImplTest extends TestCase {
         Field field = ClassUtil.getDeclaredField(Hoge3.class, "ccc");
         field.setAccessible(true);
         FieldAccessor accessor = new FieldAccessor(field);
-        BasicStateDescImpl basicDesc = new BasicStateDescImpl(pc, "hoge", accessor);
-        
-        assertEquals("1", "BBB", basicDesc.getValue(hoge3, DefaultProxiedObjectResolver.INSTANCE));
+        BasicStateDescImpl basicDesc = new BasicStateDescImpl(pc, "hoge",
+                accessor);
+
+        assertEquals("1", "BBB", basicDesc.getValue(hoge3,
+                DefaultProxiedObjectResolver.INSTANCE));
         assertEquals("2", String.class, basicDesc.getPersistenceTargetClass());
     }
 
@@ -155,7 +166,7 @@ public class BasicStateDescImplTest extends TestCase {
 
         @Enumerated(STRING)
         private HogeType ccc = HogeType.BBB;
-        
+
         private java.util.Date d;
     }
 

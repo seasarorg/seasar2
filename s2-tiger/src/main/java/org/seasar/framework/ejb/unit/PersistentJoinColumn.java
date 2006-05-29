@@ -22,15 +22,15 @@ import org.seasar.framework.util.StringUtil;
 
 /**
  * @author nakamura
- *
+ * 
  */
 public class PersistentJoinColumn extends PersistentColumn {
 
     private String referencedColumnName;
-    
+
     public PersistentJoinColumn() {
     }
-    
+
     public PersistentJoinColumn(JoinColumn column) {
         this(column.name(), column.table(), column.referencedColumnName());
     }
@@ -38,7 +38,7 @@ public class PersistentJoinColumn extends PersistentColumn {
     public PersistentJoinColumn(PrimaryKeyJoinColumn column) {
         this(column.name(), null, column.referencedColumnName());
     }
-    
+
     public PersistentJoinColumn(PersistentJoinColumn column) {
         this(column.getName(), column.getTable(), column
                 .getReferencedColumnName());
@@ -49,14 +49,14 @@ public class PersistentJoinColumn extends PersistentColumn {
         super(name, tableName);
         setReferencedColumnName(referencedColumnName);
     }
-    
+
     public String getReferencedColumnName() {
         return referencedColumnName;
     }
-    
+
     public void setReferencedColumnName(String referencedColumnName) {
         this.referencedColumnName = StringUtil.isEmpty(referencedColumnName) ? null
                 : referencedColumnName;
     }
-    
+
 }

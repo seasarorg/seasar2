@@ -16,7 +16,7 @@
 package javax.persistence;
 
 public class OptimisticLockException extends PersistenceException {
-    
+
     Object entity;
 
     public OptimisticLockException() {
@@ -39,11 +39,12 @@ public class OptimisticLockException extends PersistenceException {
         this.entity = entity;
     }
 
-    public OptimisticLockException(String message, Throwable cause, Object entity) {
+    public OptimisticLockException(String message, Throwable cause,
+            Object entity) {
         super(message, cause);
         this.entity = entity;
     }
-    
+
     public Object getEntity() {
         return this.entity;
     }

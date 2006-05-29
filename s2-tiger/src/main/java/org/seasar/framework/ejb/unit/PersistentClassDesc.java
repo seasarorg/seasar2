@@ -41,8 +41,8 @@ public interface PersistentClassDesc {
             String tableName);
 
     String getPrimaryTableName();
-    
+
     boolean hasEmbeddedId();
-    
+
     EmbeddedStateDesc getEmbeddedId();
 }

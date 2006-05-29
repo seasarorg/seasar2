@@ -67,7 +67,7 @@ public class FieldAccessor implements PersistentStateAccessor {
     public AnnotatedElement getAnnotatedElement() {
         return field;
     }
-    
+
     public boolean isPropertyAccessor() {
         return false;
     }

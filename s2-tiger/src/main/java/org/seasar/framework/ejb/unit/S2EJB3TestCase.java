@@ -136,8 +136,9 @@ public abstract class S2EJB3TestCase extends S2TestCase {
                     getDatabaseMetaData(), table.getTableName());
             for (int j = 0; j < table.getColumnSize(); j++) {
                 DataColumn column = table.getColumn(j);
-                if(columnMap.containsKey(column.getColumnName())) {
-                    newTable.addColumn(column.getColumnName(), column.getColumnType());
+                if (columnMap.containsKey(column.getColumnName())) {
+                    newTable.addColumn(column.getColumnName(), column
+                            .getColumnType());
                 }
             }
             for (int j = 0; j < table.getRowSize(); j++) {

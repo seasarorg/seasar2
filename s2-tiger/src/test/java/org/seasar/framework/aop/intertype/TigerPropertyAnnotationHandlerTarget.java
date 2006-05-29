@@ -19,7 +19,8 @@ import org.seasar.framework.container.annotation.tiger.Property;
 import org.seasar.framework.container.annotation.tiger.PropertyType;
 
 @Property(PropertyType.NONE)
-public class TigerPropertyAnnotationHandlerTarget implements PropertyInterTypeTarget {
+public class TigerPropertyAnnotationHandlerTarget implements
+        PropertyInterTypeTarget {
     @Property(PropertyType.READ)
     int intReadField_ = 123;
 

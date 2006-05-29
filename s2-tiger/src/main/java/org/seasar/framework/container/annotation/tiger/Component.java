@@ -22,14 +22,14 @@ import java.lang.annotation.Target;
 
 /**
  * @author higa
- *
+ * 
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface Component {
     String name() default "";
-    
+
     InstanceType instance() default InstanceType.SINGLETON;
-    
+
     AutoBindingType autoBinding() default AutoBindingType.AUTO;
 }

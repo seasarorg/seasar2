@@ -17,7 +17,6 @@ package org.seasar.framework.ejb.unit;
 
 import javax.persistence.DiscriminatorType;
 
-
 /**
  * @author nakamura
  * 
@@ -35,7 +34,7 @@ public class PersistentDiscriminatorColumn extends PersistentColumn {
     public PersistentDiscriminatorColumn() {
         setName(DEFAULT_NAME);
     }
-    
+
     public DiscriminatorType getType() {
         return type;
     }

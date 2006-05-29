@@ -21,8 +21,6 @@ import java.util.List;
 import javax.ejb.EJB;
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.transaction.TransactionManager;
@@ -43,12 +41,12 @@ public class S2EJB3TestCaseTest extends S2EJB3TestCase {
     @EJB
     private IHoge hoge;
 
-    @EJB(beanName="xxx")
+    @EJB(beanName = "xxx")
     private IHoge yyy;
-    
+
     @EJB
     private IBar zzz;
-    
+
     public void setUpRegisterEJB() throws Exception {
         register(Hoge.class);
         register(Foo.class);
@@ -69,7 +67,7 @@ public class S2EJB3TestCaseTest extends S2EJB3TestCase {
     }
 
     public void setUpBindFieldByFieldName() {
-        register(Hoge.class);   
+        register(Hoge.class);
     }
 
     public void testBindFieldByFieldName() {
@@ -77,7 +75,7 @@ public class S2EJB3TestCaseTest extends S2EJB3TestCase {
     }
 
     public void setUpBindFieldByBeanName() {
-        register(Hoge2.class);   
+        register(Hoge2.class);
     }
 
     public void testBindFieldByBeanName() {
@@ -85,13 +83,13 @@ public class S2EJB3TestCaseTest extends S2EJB3TestCase {
     }
 
     public void setUpBindFieldByType() {
-        register(Bar.class);   
+        register(Bar.class);
     }
 
     public void testBindFieldByType() {
         assertNotNull("1", zzz);
     }
-    
+
     public void testAssertEntityEquals() {
         DataSet expected = new DataSetImpl();
         DataTable table = expected.addTable("EMPLOYEE");
@@ -128,7 +126,7 @@ public class S2EJB3TestCaseTest extends S2EJB3TestCase {
         List<Employee> employees = new ArrayList<Employee>();
         employees.add(clark);
         employees.add(king);
-        
+
         assertEntityListEquals("1", expected, employees);
     }
 
@@ -168,7 +166,7 @@ public class S2EJB3TestCaseTest extends S2EJB3TestCase {
     public void testNeedTransactionReturnFalse() throws Exception {
         assertEquals(false, needTransaction());
     }
-    
+
     public void testReloadAsDataSet() throws Exception {
         Dept dept = new Dept();
         dept.deptno = new Long(1);
@@ -198,16 +196,16 @@ public class S2EJB3TestCaseTest extends S2EJB3TestCase {
             this.name = name;
         }
     }
-    
+
     @Entity
     @Table(name = "Dept")
     public static class Dept {
 
         @Id
         private Long deptno;
-        
+
         private String dname;
-        
+
         private String none;
 
     }

@@ -111,8 +111,9 @@ public abstract class AbstractPersistentClassDesc implements
         List<PersistentStateDesc> result = new ArrayList<PersistentStateDesc>();
         for (PersistentStateDesc stateDesc : stateDescs) {
             if (stateDesc.isIdentifier()) {
-                PersistentClassDesc ownerClass = stateDesc.getPersistentClassDesc();
-                if ( ownerClass == this
+                PersistentClassDesc ownerClass = stateDesc
+                        .getPersistentClassDesc();
+                if (ownerClass == this
                         || ownerClass instanceof MappedSuperclassDesc) {
                     result.add(stateDesc);
                 }

@@ -177,7 +177,7 @@ public class EntityReader implements DataReader {
                         Object value = fk.getValue(state, resolver);
                         setupRowValue(row, fk.getColumn(), type, value);
                     }
-                    
+
                 }
 
                 if (readsRelationships) {

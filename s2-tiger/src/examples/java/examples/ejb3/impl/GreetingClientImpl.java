@@ -26,7 +26,7 @@ public class GreetingClientImpl implements GreetingClient {
 
     @EJB
     private Greeting greeting;
-    
+
     public void execute() {
         System.out.println(greeting.greet());
     }

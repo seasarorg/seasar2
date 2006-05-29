@@ -59,7 +59,7 @@ public class PropertyAccessorTest extends TestCase {
         } catch (Exception expected) {
         }
     }
-    
+
     public void testSetValueFails() {
         Hoge hoge = new Hoge();
         BeanDesc beanDesc = BeanDescFactory.getBeanDesc(hoge.getClass());
@@ -80,7 +80,7 @@ public class PropertyAccessorTest extends TestCase {
         private int bbb;
 
         private String ccc;
-        
+
         public Long getAaa() {
             return aaa;
         }

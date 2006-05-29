@@ -20,7 +20,6 @@ import java.lang.reflect.Method;
 import org.junit.internal.runners.TestClassMethodsRunner;
 import org.junit.internal.runners.TestMethodRunner;
 import org.junit.runner.notification.RunNotifier;
-import org.seasar.framework.unit.S2FrameworkTestCase;
 
 /**
  * @author taedium

@@ -41,26 +41,31 @@ public class ToManyRelationshipStateDescImplTest extends TestCase {
         PersistentClassDesc pc = new EntityClassDescImpl(Department.class);
         Field field = ClassUtil.getDeclaredField(Department.class, "employees");
         FieldAccessor accessor = new FieldAccessor(field);
-        ToManyRelationshipStateDescImpl toMany = new ToManyRelationshipStateDescImpl(pc, "employees", accessor);
+        ToManyRelationshipStateDescImpl toMany = new ToManyRelationshipStateDescImpl(
+                pc, "employees", accessor);
 
         assertEquals("1", Employee.class, toMany.getPersistenceTargetClass());
     }
-    
+
     public void testGetPersistenceTargetClassFromMapGenericType() {
         PersistentClassDesc pc = new EntityClassDescImpl(Department6.class);
-        Field field = ClassUtil.getDeclaredField(Department6.class, "employees");
+        Field field = ClassUtil
+                .getDeclaredField(Department6.class, "employees");
         FieldAccessor accessor = new FieldAccessor(field);
-        ToManyRelationshipStateDescImpl toMany = new ToManyRelationshipStateDescImpl(pc, "employees", accessor);
-        
+        ToManyRelationshipStateDescImpl toMany = new ToManyRelationshipStateDescImpl(
+                pc, "employees", accessor);
+
         assertEquals("1", Employee6.class, toMany.getPersistenceTargetClass());
     }
 
     public void testGetPersistenceTargetClassFromOneToManyElement() {
         PersistentClassDesc pc = new EntityClassDescImpl(Department7.class);
-        Field field = ClassUtil.getDeclaredField(Department7.class, "employees");
+        Field field = ClassUtil
+                .getDeclaredField(Department7.class, "employees");
         FieldAccessor accessor = new FieldAccessor(field);
-        ToManyRelationshipStateDescImpl toMany = new ToManyRelationshipStateDescImpl(pc, "employees", accessor);
-        
+        ToManyRelationshipStateDescImpl toMany = new ToManyRelationshipStateDescImpl(
+                pc, "employees", accessor);
+
         assertEquals("1", Employee7.class, toMany.getPersistenceTargetClass());
     }
 
@@ -90,7 +95,7 @@ public class ToManyRelationshipStateDescImplTest extends TestCase {
         @Id
         private Long id;
 
-        @OneToMany(targetEntity=Employee7.class, mappedBy = "department")
+        @OneToMany(targetEntity = Employee7.class, mappedBy = "department")
         private Collection employees = new HashSet();
     }
 
@@ -112,13 +117,13 @@ public class ToManyRelationshipStateDescImplTest extends TestCase {
         @ManyToOne
         private Department department;
     }
-    
+
     @Entity(name = "Employee7")
     public static class Employee7 {
         @Id
         private Long id;
 
-        @ManyToOne(targetEntity=Department7.class)
+        @ManyToOne(targetEntity = Department7.class)
         private Object department;
     }
 

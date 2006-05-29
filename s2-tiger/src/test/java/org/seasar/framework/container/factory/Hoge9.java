@@ -17,7 +17,7 @@ package org.seasar.framework.container.factory;
 
 import javax.ejb.Stateful;
 
-@Stateful(name="hoge99")
+@Stateful(name = "hoge99")
 public class Hoge9 implements Runnable {
     public void run() {
     }

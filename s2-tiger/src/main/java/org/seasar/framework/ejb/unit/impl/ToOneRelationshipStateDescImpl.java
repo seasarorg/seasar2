@@ -119,7 +119,7 @@ public class ToOneRelationshipStateDescImpl extends AbstractPersistentStateDesc
 
         for (PersistentStateDesc stateDesc : relationship
                 .getPersistentStateDescs()) {
-            
+
             if (stateDesc instanceof EmbeddedStateDesc) {
                 EmbeddedStateDesc embedded = (EmbeddedStateDesc) stateDesc;
                 embeddedStateDescs.add(embedded);
@@ -212,7 +212,7 @@ public class ToOneRelationshipStateDescImpl extends AbstractPersistentStateDesc
 
     private List<PersistentStateDesc> getReferencedIdentifiers(
             PersistentClassDesc relationship) {
-        
+
         if (relationship.hasEmbeddedId()) {
             return relationship.getEmbeddedId().getPersistentStateDesc();
         } else {
@@ -250,7 +250,8 @@ public class ToOneRelationshipStateDescImpl extends AbstractPersistentStateDesc
 
         } else if (!joinColumns.isEmpty()) {
             if (hasReferencedColumnName(joinColumns)) {
-                createForeignKeysByReferencedColumnName(joinColumns, relationship);
+                createForeignKeysByReferencedColumnName(joinColumns,
+                        relationship);
             } else {
                 createForeignKeysByIndex(joinColumns, relationship);
             }

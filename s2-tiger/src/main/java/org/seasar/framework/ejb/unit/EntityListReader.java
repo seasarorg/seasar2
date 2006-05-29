@@ -20,7 +20,6 @@ import java.util.List;
 import org.seasar.framework.ejb.unit.impl.DefaultProxiedObjectResolver;
 import org.seasar.framework.ejb.unit.impl.EntityListIntrospector;
 
-
 /**
  * @author taedium
  * 
@@ -28,28 +27,35 @@ import org.seasar.framework.ejb.unit.impl.EntityListIntrospector;
 public class EntityListReader extends EntityReader {
 
     public EntityListReader(List<?> entities, boolean readsRelationships) {
-        this(entities, readsRelationships, DefaultProxiedObjectResolver.INSTANCE);
+        this(entities, readsRelationships,
+                DefaultProxiedObjectResolver.INSTANCE);
     }
-    
-    public EntityListReader(List<?> entities, boolean readsRelationships, ProxiedObjectResolver resolver) {
-        super(new EntityListIntrospector(entities, readsRelationships, resolver), readsRelationships, resolver); 
+
+    public EntityListReader(List<?> entities, boolean readsRelationships,
+            ProxiedObjectResolver resolver) {
+        super(
+                new EntityListIntrospector(entities, readsRelationships,
+                        resolver), readsRelationships, resolver);
 
         if (readsRelationships) {
-            for (EntityClassDesc classDesc : getEntityIntrospector().getAllEntityClassDescs()) {
+            for (EntityClassDesc classDesc : getEntityIntrospector()
+                    .getAllEntityClassDescs()) {
                 setupColumns(classDesc);
             }
         } else {
             for (Object entity : entities) {
-                EntityClassDesc classDesc = getEntityIntrospector().getEntityClassDesc(entity);
+                EntityClassDesc classDesc = getEntityIntrospector()
+                        .getEntityClassDesc(entity);
                 setupColumns(classDesc);
             }
         }
-        
+
         for (Object entity : entities) {
             if (entity == null) {
                 continue;
             }
-            EntityClassDesc classDesc = getEntityIntrospector().getEntityClassDesc(entity);
+            EntityClassDesc classDesc = getEntityIntrospector()
+                    .getEntityClassDesc(entity);
             startSetupRows(classDesc, entity);
             releaseProcessedEntity(entity);
         }

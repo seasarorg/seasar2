@@ -40,9 +40,11 @@ public class EmbeddedStateDescImplTest extends TestCase {
         PersistentClassDesc pc = new EntityClassDescImpl(Employee.class);
         Field field = ClassUtil.getDeclaredField(Employee.class, "period");
         FieldAccessor accessor = new FieldAccessor(field);
-        EmbeddedStateDescImpl embeddedDesc = new EmbeddedStateDescImpl(pc, "hoge", accessor);
-        
-        List<PersistentStateDesc> embeddedStates = embeddedDesc.getPersistentStateDesc();
+        EmbeddedStateDescImpl embeddedDesc = new EmbeddedStateDescImpl(pc,
+                "hoge", accessor);
+
+        List<PersistentStateDesc> embeddedStates = embeddedDesc
+                .getPersistentStateDesc();
         assertEquals("1", 2, embeddedStates.size());
     }
 
@@ -50,8 +52,9 @@ public class EmbeddedStateDescImplTest extends TestCase {
         PersistentClassDesc pc = new EntityClassDescImpl(Employee2.class);
         Field field = ClassUtil.getDeclaredField(Employee2.class, "period");
         FieldAccessor accessor = new FieldAccessor(field);
-        EmbeddedStateDescImpl embeddedDesc = new EmbeddedStateDescImpl(pc, "hoge", accessor);
-        
+        EmbeddedStateDescImpl embeddedDesc = new EmbeddedStateDescImpl(pc,
+                "hoge", accessor);
+
         assertEquals("1", true, embeddedDesc.isIdentifier());
     }
 
@@ -59,16 +62,18 @@ public class EmbeddedStateDescImplTest extends TestCase {
         PersistentClassDesc pc = new EntityClassDescImpl(Employee3.class);
         Field field = ClassUtil.getDeclaredField(Employee3.class, "period");
         FieldAccessor accessor = new FieldAccessor(field);
-        EmbeddedStateDescImpl embeddedDesc = new EmbeddedStateDescImpl(pc, "hoge", accessor);
+        EmbeddedStateDescImpl embeddedDesc = new EmbeddedStateDescImpl(pc,
+                "hoge", accessor);
 
         assertEquals("1", true, embeddedDesc.isIdentifier());
     }
-    
+
     public void testIsIdentifierReturnsFalse() {
         PersistentClassDesc pc = new EntityClassDescImpl(Employee.class);
         Field field = ClassUtil.getDeclaredField(Employee.class, "period");
         FieldAccessor accessor = new FieldAccessor(field);
-        EmbeddedStateDescImpl embeddedDesc = new EmbeddedStateDescImpl(pc, "hoge", accessor);
+        EmbeddedStateDescImpl embeddedDesc = new EmbeddedStateDescImpl(pc,
+                "hoge", accessor);
 
         assertEquals("1", false, embeddedDesc.isIdentifier());
     }
@@ -107,14 +112,14 @@ public class EmbeddedStateDescImplTest extends TestCase {
 
         private java.util.Date endDate;
     }
-    
+
     public static class EmployeePeriod2 {
 
         private java.util.Date startDate;
 
         private java.util.Date endDate;
     }
-    
+
     @Embeddable
     public static class EmployeePeriod3 {
 

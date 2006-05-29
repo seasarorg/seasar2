@@ -36,7 +36,8 @@ import org.seasar.framework.ejb.unit.PersistentStateDesc;
  * @author taedium
  * 
  */
-public class EmbeddedStateDescImpl extends AbstractPersistentStateDesc implements EmbeddedStateDesc {
+public class EmbeddedStateDescImpl extends AbstractPersistentStateDesc
+        implements EmbeddedStateDesc {
 
     private EmbeddableClassDescImpl embeddedClassDesc;
 
@@ -49,9 +50,9 @@ public class EmbeddedStateDescImpl extends AbstractPersistentStateDesc implement
     }
 
     private void introspect() {
-        if(annotatedElement.isAnnotationPresent(Id.class)
+        if (annotatedElement.isAnnotationPresent(Id.class)
                 || annotatedElement.isAnnotationPresent(EmbeddedId.class)) {
-            setIdentifier(true);            
+            setIdentifier(true);
         }
         detectAttributeOverrides();
         setupEmbeddedClassDesc();
@@ -91,15 +92,14 @@ public class EmbeddedStateDescImpl extends AbstractPersistentStateDesc implement
         return embeddedClassDesc.getPersistentStateDescs();
     }
 
-    public void adjustPrimaryKeyColumns(
-            List<PersistentJoinColumn> pkJoinColumns) {
-        
+    public void adjustPrimaryKeyColumns(List<PersistentJoinColumn> pkJoinColumns) {
+
         for (PersistentStateDesc each : getPersistentStateDesc()) {
             each.adjustPrimaryKeyColumns(pkJoinColumns);
         }
     }
 
-    public boolean contains(PersistentStateDesc stateDesc ) {
+    public boolean contains(PersistentStateDesc stateDesc) {
         return getEmbedddableClassDesc().contains(stateDesc);
     }
 }

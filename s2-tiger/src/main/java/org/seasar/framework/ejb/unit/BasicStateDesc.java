@@ -15,7 +15,6 @@
  */
 package org.seasar.framework.ejb.unit;
 
-
 /**
  * @author taedium
  * 

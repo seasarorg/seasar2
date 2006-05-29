@@ -25,7 +25,8 @@ import org.seasar.framework.message.MessageFormatter;
 public class PersistentStateNotFoundException extends SRuntimeException {
     private static final long serialVersionUID = 1L;
 
-    public PersistentStateNotFoundException(String messageCode, final Object... args) {
+    public PersistentStateNotFoundException(String messageCode,
+            final Object... args) {
         super(MessageFormatter.getMessage(messageCode, args));
     }
 

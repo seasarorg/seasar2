@@ -20,23 +20,23 @@ import java.lang.reflect.Type;
 
 /**
  * @author taedium
- *
+ * 
  */
 public interface PersistentStateAccessor {
 
     String getName();
-    
+
     Class<?> getPersistentStateClass();
-    
+
     Type getGenericType();
-    
+
     AnnotatedElement getAnnotatedElement();
 
     Object getValue(Object target);
-    
+
     void setValue(Object target, Object value);
-    
+
     boolean isPersisteceAccessor();
-    
+
     boolean isPropertyAccessor();
 }

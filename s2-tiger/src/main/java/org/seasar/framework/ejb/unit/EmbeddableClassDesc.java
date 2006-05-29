@@ -19,13 +19,13 @@ import java.util.Map;
 
 /**
  * @author taedium
- *
+ * 
  */
 public interface EmbeddableClassDesc extends PersistentClassDesc {
 
     boolean isIdentifier();
-    
+
     void overrideAttributes(Map<String, PersistentColumn> attribOverrides);
-    
+
     boolean contains(PersistentStateDesc stateDesc);
 }

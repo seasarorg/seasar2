@@ -22,13 +22,13 @@ import java.lang.annotation.Target;
 
 /**
  * @author higa
- *
+ * 
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.TYPE, ElementType.METHOD})
+@Target( { ElementType.TYPE, ElementType.METHOD })
 public @interface Aspect {
 
     String value();
-    
+
     String pointcut() default "";
 }

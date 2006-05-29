@@ -17,15 +17,12 @@ package org.seasar.framework.container.annotation.tiger;
 
 /**
  * @author higa
- *
+ * 
  */
 public enum BindingType {
-    
-    MUST,
-    SHOULD,
-    MAY,
-    NONE;
-    
+
+    MUST, SHOULD, MAY, NONE;
+
     public String getName() {
         return toString().toLowerCase();
     }

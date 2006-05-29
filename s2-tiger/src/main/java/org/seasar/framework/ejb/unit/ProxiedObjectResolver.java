@@ -17,10 +17,10 @@ package org.seasar.framework.ejb.unit;
 
 /**
  * @author taedium
- *
+ * 
  */
 public interface ProxiedObjectResolver {
-    
+
     Object unproxy(Object proxy);
 
 }

@@ -390,7 +390,7 @@ public class EntityClassDescImpl extends AbstractPersistentClassDesc implements
                         if (entityDesc.isRoot()) {
                             addPersistentStateDesc(createSubclassId(stateDesc));
                         }
-                    } 
+                    }
                 }
                 break;
             }

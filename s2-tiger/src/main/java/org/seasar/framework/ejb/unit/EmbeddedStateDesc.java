@@ -26,6 +26,6 @@ public interface EmbeddedStateDesc extends PersistentStateDesc {
     public EmbeddableClassDesc getEmbedddableClassDesc();
 
     public List<PersistentStateDesc> getPersistentStateDesc();
-    
+
     boolean contains(PersistentStateDesc stateDesc);
 }

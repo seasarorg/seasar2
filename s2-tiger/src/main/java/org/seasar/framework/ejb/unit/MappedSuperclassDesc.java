@@ -20,7 +20,7 @@ import java.util.Map;
 
 /**
  * @author taedium
- *
+ * 
  */
 public interface MappedSuperclassDesc extends PersistentClassDesc {
 

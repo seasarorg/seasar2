@@ -38,8 +38,8 @@ public class GreetingMain {
 
     public static void doMain(String[] args) throws Exception {
         Context ctx = new InitialContext();
-        GreetingClient greetingClient = (GreetingClient)
-            ctx.lookup("greetingClient");
+        GreetingClient greetingClient = (GreetingClient) ctx
+                .lookup("greetingClient");
         greetingClient.execute();
     }
 }

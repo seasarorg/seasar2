@@ -25,13 +25,14 @@ import org.seasar.framework.ejb.unit.PersistentStateDesc;
  * @author taedium
  * 
  */
-public class EmbeddableClassDescImpl extends AbstractPersistentClassDesc implements
-        EmbeddableClassDesc {
+public class EmbeddableClassDescImpl extends AbstractPersistentClassDesc
+        implements EmbeddableClassDesc {
 
     private final boolean isIdentifier;
 
-    public EmbeddableClassDescImpl(Class persistentClass, String primaryTableName,
-            boolean propertyAccessed, boolean isIdentifier) {
+    public EmbeddableClassDescImpl(Class persistentClass,
+            String primaryTableName, boolean propertyAccessed,
+            boolean isIdentifier) {
 
         super(persistentClass, primaryTableName, propertyAccessed);
         this.isIdentifier = isIdentifier;
@@ -57,9 +58,9 @@ public class EmbeddableClassDescImpl extends AbstractPersistentClassDesc impleme
     public boolean isIdentifier() {
         return isIdentifier;
     }
-    
+
     public boolean contains(PersistentStateDesc stateDesc) {
-        for(PersistentStateDesc each : getPersistentStateDescs()) {
+        for (PersistentStateDesc each : getPersistentStateDescs()) {
             if (each == stateDesc) {
                 return true;
             }

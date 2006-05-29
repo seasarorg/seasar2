@@ -26,14 +26,14 @@ import javax.persistence.InheritanceType;
 public interface EntityClassDesc extends PersistentClassDesc {
 
     boolean isRoot();
-    
+
     EntityClassDesc getRoot();
 
     List<String> getTableNames();
 
     PersistentDiscriminatorColumn getDiscriminatorColumn(String tableName);
-    
+
     PersistentDiscriminatorColumn getRootEntityDiscriminatorColumn();
-    
+
     InheritanceType getInheritanceType();
 }

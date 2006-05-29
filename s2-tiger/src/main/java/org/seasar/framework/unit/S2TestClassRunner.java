@@ -20,11 +20,11 @@ import org.junit.internal.runners.TestClassRunner;
 
 /**
  * @author taedium
- *
+ * 
  */
 public class S2TestClassRunner extends TestClassRunner {
 
-	public S2TestClassRunner(Class<?> clazz) throws InitializationError {
-		super(clazz, new S2TestClassMethodsRunner(clazz));
-	}
+    public S2TestClassRunner(Class<?> clazz) throws InitializationError {
+        super(clazz, new S2TestClassMethodsRunner(clazz));
+    }
 }

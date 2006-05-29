@@ -32,9 +32,11 @@ import javax.persistence.spi.PersistenceProvider;
 public class Persistence {
 
     public static String PERSISTENCE_PROVIDER = "javax.persistence.spi.PeristenceProvider";
+
     protected static final Set<PersistenceProvider> providers = new HashSet<PersistenceProvider>();
-  
-    public static EntityManagerFactory createEntityManagerFactory(String persistenceUnitName) {
+
+    public static EntityManagerFactory createEntityManagerFactory(
+            String persistenceUnitName) {
         return createEntityManagerFactory(persistenceUnitName, null);
     }
 
@@ -42,49 +44,58 @@ public class Persistence {
             String persistenceUnitName, Map properties) {
         EntityManagerFactory emf = null;
         if (providers.size() == 0) {
-            try{
+            try {
                 findAllProviders();
-            } catch (IOException exc){};
+            } catch (IOException exc) {
+            }
+            ;
         }
         for (PersistenceProvider provider : providers) {
-            emf = provider.createEntityManagerFactory(persistenceUnitName, properties);
-            if (emf != null){
+            emf = provider.createEntityManagerFactory(persistenceUnitName,
+                    properties);
+            if (emf != null) {
                 break;
             }
         }
         if (emf == null) {
-            throw new PersistenceException("No Persistence provider for EntityManager named " + persistenceUnitName);
+            throw new PersistenceException(
+                    "No Persistence provider for EntityManager named "
+                            + persistenceUnitName);
         }
         return emf;
     }
-  
+
     private static void findAllProviders() throws IOException {
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
-        Enumeration<URL> resources = 
-            loader.getResources("META-INF/services/" + PersistenceProvider.class.getName());
+        Enumeration<URL> resources = loader.getResources("META-INF/services/"
+                + PersistenceProvider.class.getName());
         Set<String> names = new HashSet<String>();
         while (resources.hasMoreElements()) {
             URL url = resources.nextElement();
             InputStream is = url.openStream();
             try {
-                names.addAll(providerNamesFromReader(new BufferedReader(new InputStreamReader(is))));
+                names.addAll(providerNamesFromReader(new BufferedReader(
+                        new InputStreamReader(is))));
             } finally {
                 is.close();
             }
         }
         for (String s : names) {
-            try{
-                providers.add((PersistenceProvider)loader.loadClass(s).newInstance());
-            } catch (ClassNotFoundException exc){
-            } catch (InstantiationException exc){
-            } catch (IllegalAccessException exc){
+            try {
+                providers.add((PersistenceProvider) loader.loadClass(s)
+                        .newInstance());
+            } catch (ClassNotFoundException exc) {
+            } catch (InstantiationException exc) {
+            } catch (IllegalAccessException exc) {
             }
         }
     }
 
-    private static final Pattern nonCommentPattern = Pattern.compile("^([^#]+)");
+    private static final Pattern nonCommentPattern = Pattern
+            .compile("^([^#]+)");
 
-    private static Set<String> providerNamesFromReader(BufferedReader reader) throws IOException {
+    private static Set<String> providerNamesFromReader(BufferedReader reader)
+            throws IOException {
         Set<String> names = new HashSet<String>();
         String line;
         while ((line = reader.readLine()) != null) {

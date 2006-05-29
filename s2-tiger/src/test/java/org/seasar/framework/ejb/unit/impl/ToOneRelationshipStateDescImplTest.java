@@ -49,8 +49,8 @@ public class ToOneRelationshipStateDescImplTest extends TestCase {
         PersistentClassDesc pc = new EntityClassDescImpl(Employee7.class);
         Field field = ClassUtil.getDeclaredField(Employee7.class, "department");
         FieldAccessor accessor = new FieldAccessor(field);
-        ToOneRelationshipStateDescImpl toOne = new ToOneRelationshipStateDescImpl(pc,
-                "hoge", accessor);
+        ToOneRelationshipStateDescImpl toOne = new ToOneRelationshipStateDescImpl(
+                pc, "hoge", accessor);
 
         assertEquals("1", Department7.class, toOne.getPersistenceTargetClass());
     }
@@ -59,8 +59,8 @@ public class ToOneRelationshipStateDescImplTest extends TestCase {
         PersistentClassDesc pc = new EntityClassDescImpl(Employee.class);
         Field field = ClassUtil.getDeclaredField(Employee.class, "department");
         FieldAccessor accessor = new FieldAccessor(field);
-        ToOneRelationshipStateDescImpl toOne = new ToOneRelationshipStateDescImpl(pc,
-                "employee", accessor);
+        ToOneRelationshipStateDescImpl toOne = new ToOneRelationshipStateDescImpl(
+                pc, "employee", accessor);
         toOne.setupForeignKeys(new EntityClassDescImpl(Department.class));
         PersistentColumn fkColumn = toOne.getForeignKeys().get(0).getColumn();
 
@@ -72,21 +72,21 @@ public class ToOneRelationshipStateDescImplTest extends TestCase {
         PersistentClassDesc pc = new EntityClassDescImpl(Employee.class);
         Field field = ClassUtil.getDeclaredField(Employee.class, "address");
         FieldAccessor accessor = new FieldAccessor(field);
-        ToOneRelationshipStateDescImpl toOne = new ToOneRelationshipStateDescImpl(pc,
-                "employee", accessor);
+        ToOneRelationshipStateDescImpl toOne = new ToOneRelationshipStateDescImpl(
+                pc, "employee", accessor);
         toOne.setupForeignKeys(new EntityClassDescImpl(Address.class));
         PersistentColumn fkColumn = toOne.getForeignKeys().get(0).getColumn();
 
         assertEquals("1", "address_id", fkColumn.getName().toLowerCase());
         assertEquals("2", "employee", fkColumn.getTable().toLowerCase());
     }
-    
+
     public void testSetupForeignKeyWithJoinColumn() {
         PersistentClassDesc pc = new EntityClassDescImpl(Employee2.class);
         Field field = ClassUtil.getDeclaredField(Employee2.class, "department");
         FieldAccessor accessor = new FieldAccessor(field);
-        ToOneRelationshipStateDescImpl toOne = new ToOneRelationshipStateDescImpl(pc,
-                "employee2", accessor);
+        ToOneRelationshipStateDescImpl toOne = new ToOneRelationshipStateDescImpl(
+                pc, "employee2", accessor);
         toOne.setupForeignKeys(new EntityClassDescImpl(Department2.class));
         PersistentColumn fkColumn = toOne.getForeignKeys().get(0).getColumn();
 
@@ -98,8 +98,8 @@ public class ToOneRelationshipStateDescImplTest extends TestCase {
         PersistentClassDesc pc = new EntityClassDescImpl(Employee5.class);
         Field field = ClassUtil.getDeclaredField(Employee5.class, "department");
         FieldAccessor accessor = new FieldAccessor(field);
-        ToOneRelationshipStateDescImpl toOne = new ToOneRelationshipStateDescImpl(pc,
-                "employee5", accessor);
+        ToOneRelationshipStateDescImpl toOne = new ToOneRelationshipStateDescImpl(
+                pc, "employee5", accessor);
         toOne.setupForeignKeys(new EntityClassDescImpl(Department5.class));
         PersistentColumn fk = toOne.getForeignKeys().get(0).getColumn();
 
@@ -111,8 +111,8 @@ public class ToOneRelationshipStateDescImplTest extends TestCase {
         PersistentClassDesc pc = new EntityClassDescImpl(Employee3.class);
         Field field = ClassUtil.getDeclaredField(Employee3.class, "department");
         FieldAccessor accessor = new FieldAccessor(field);
-        ToOneRelationshipStateDescImpl toOne = new ToOneRelationshipStateDescImpl(pc,
-                "employee3", accessor);
+        ToOneRelationshipStateDescImpl toOne = new ToOneRelationshipStateDescImpl(
+                pc, "employee3", accessor);
         toOne.setupForeignKeys(new EntityClassDescImpl(Department3.class));
 
         PersistentColumn fk = toOne.getForeignKeys().get(0).getColumn();
@@ -128,8 +128,8 @@ public class ToOneRelationshipStateDescImplTest extends TestCase {
         PersistentClassDesc pc = new EntityClassDescImpl(Employee4.class);
         Field field = ClassUtil.getDeclaredField(Employee4.class, "department");
         FieldAccessor accessor = new FieldAccessor(field);
-        ToOneRelationshipStateDescImpl toOne = new ToOneRelationshipStateDescImpl(pc,
-                "employee4", accessor);
+        ToOneRelationshipStateDescImpl toOne = new ToOneRelationshipStateDescImpl(
+                pc, "employee4", accessor);
         toOne.setupForeignKeys(new EntityClassDescImpl(Department4.class));
 
         List<ForeignKey> fks = toOne.getForeignKeys();
@@ -220,7 +220,7 @@ public class ToOneRelationshipStateDescImplTest extends TestCase {
 
         @ManyToOne
         private Department department;
-        
+
         @OneToOne
         private Address address;
     }
@@ -258,8 +258,8 @@ public class ToOneRelationshipStateDescImplTest extends TestCase {
 
         @ManyToOne
         @JoinColumns( {
-            @JoinColumn(name = "deptId1", referencedColumnName = "id1"),
-            @JoinColumn(name = "deptId2", referencedColumnName = "id2") })
+                @JoinColumn(name = "deptId1", referencedColumnName = "id1"),
+                @JoinColumn(name = "deptId2", referencedColumnName = "id2") })
         private Department4 department;
 
     }
@@ -283,7 +283,7 @@ public class ToOneRelationshipStateDescImplTest extends TestCase {
         @ManyToOne(targetEntity = Department7.class)
         private Object department;
     }
-    
+
     @Entity(name = "Address")
     public static class Address {
         @Id

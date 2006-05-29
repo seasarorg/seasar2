@@ -23,54 +23,53 @@ import org.seasar.framework.container.annotation.tiger.BindingType;
 import org.seasar.framework.container.annotation.tiger.Component;
 import org.seasar.framework.container.annotation.tiger.InstanceType;
 
-@Component(name="aaa", instance=InstanceType.PROTOTYPE,
-        autoBinding=AutoBindingType.PROPERTY)
-public class Hoge2 {    
+@Component(name = "aaa", instance = InstanceType.PROTOTYPE, autoBinding = AutoBindingType.PROPERTY)
+public class Hoge2 {
 
-	@EJB
-	private String fff;
-	
-	@EJB(name="ggg2")
-	private String ggg;
-	
-	@EJB(name="ejb/hhh")
-	private String hhh;
-    
-    @EJB(beanName="lll2")
+    @EJB
+    private String fff;
+
+    @EJB(name = "ggg2")
+    private String ggg;
+
+    @EJB(name = "ejb/hhh")
+    private String hhh;
+
+    @EJB(beanName = "lll2")
     private String lll;
-    
-    @EJB(beanName="mmm2", name="ejb/mmm2")
+
+    @EJB(beanName = "mmm2", name = "ejb/mmm2")
     private String mmm;
-	
+
     @Binding("aaa2")
     public void setAaa(String aaa) {
     }
-    
-    @Binding(bindingType=BindingType.NONE)
+
+    @Binding(bindingType = BindingType.NONE)
     public void setBbb(String bbb) {
     }
-    
+
     @Binding
     public void setCcc(String ccc) {
     }
-    
+
     @EJB
     public void setDdd(String ddd) {
     }
-    
-    @EJB(name="eee2")
+
+    @EJB(name = "eee2")
     public void setEee(String eee) {
     }
-    
-    @EJB(name="ejb/iii")
+
+    @EJB(name = "ejb/iii")
     public void setIii(String iii) {
     }
-    
-    @EJB(beanName="jjj2")
+
+    @EJB(beanName = "jjj2")
     public void setJjj(String jjj) {
     }
-    
-    @EJB(beanName="kkk2", name="ejb/kkk2")
+
+    @EJB(beanName = "kkk2", name = "ejb/kkk2")
     public void setKkk(String kkk) {
     }
 }

@@ -17,16 +17,12 @@ package org.seasar.framework.container.annotation.tiger;
 
 /**
  * @author higa
- *
+ * 
  */
 public enum InstanceType {
-    
-    SINGLETON,
-    PROTOTYPE,
-    SESSION,
-    REQUEST,
-    OUTER;
-    
+
+    SINGLETON, PROTOTYPE, SESSION, REQUEST, OUTER;
+
     public String getName() {
         return toString().toLowerCase();
     }

@@ -96,23 +96,23 @@ public class PersistentStateDescFactory {
                     primaryTableName, accessor);
         }
         if (isEmbedded(element)) {
-            return new EmbeddedStateDescImpl(persistentClassDesc, primaryTableName,
-                    accessor);
+            return new EmbeddedStateDescImpl(persistentClassDesc,
+                    primaryTableName, accessor);
         }
         if (isBasic(element)) {
-            return new BasicStateDescImpl(persistentClassDesc, primaryTableName,
-                    accessor);
+            return new BasicStateDescImpl(persistentClassDesc,
+                    primaryTableName, accessor);
         }
 
         Class<?> persistentStateClass = accessor.getPersistentStateClass();
 
         if (isEmbeddableClass(persistentStateClass)) {
-            return new EmbeddedStateDescImpl(persistentClassDesc, primaryTableName,
-                    accessor);
+            return new EmbeddedStateDescImpl(persistentClassDesc,
+                    primaryTableName, accessor);
         }
         if (isBasicClass(persistentStateClass)) {
-            return new BasicStateDescImpl(persistentClassDesc, primaryTableName,
-                    accessor);
+            return new BasicStateDescImpl(persistentClassDesc,
+                    primaryTableName, accessor);
         }
 
         return null;

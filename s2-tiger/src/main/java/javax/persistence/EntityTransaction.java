@@ -26,6 +26,6 @@ public interface EntityTransaction {
     public void setRollbackOnly();
 
     public boolean getRollbackOnly();
-    
+
     public boolean isActive();
 }

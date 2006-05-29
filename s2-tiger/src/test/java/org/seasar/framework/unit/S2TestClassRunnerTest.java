@@ -60,7 +60,7 @@ public class S2TestClassRunnerTest extends TestCase {
         runner.run(NoTxSuffixTest.class);
         assertEquals("1", false, txStarted);
     }
-    
+
     public void testRollbackAnnotation() throws Exception {
         JUnitCore runner = new JUnitCore();
         runner.run(RollbackAnnotationTest.class);
@@ -88,16 +88,15 @@ public class S2TestClassRunnerTest extends TestCase {
         public void after() throws Exception {
             txEnded = !isTransactionActinve();
         }
-        
+
         protected boolean isTransactionActinve() throws Exception {
             TransactionManager tm = (TransactionManager) getComponent(TransactionManager.class);
             return TransactionManagerUtil.isActive(tm);
         }
     }
-    
+
     @RunWith(S2TestClassRunner.class)
-    public static class SetUpAndTearDownPrefixTest extends
-            S2FrameworkTestCase {
+    public static class SetUpAndTearDownPrefixTest extends S2FrameworkTestCase {
 
         public void test() {
         }
@@ -119,7 +118,7 @@ public class S2TestClassRunnerTest extends TestCase {
         public void tearDownAaa() throws Exception {
             log += "D";
         }
-        
+
         @After
         public void after() {
             log += "E";
@@ -142,7 +141,7 @@ public class S2TestClassRunnerTest extends TestCase {
             txStarted = isTransactionActinve();
         }
     }
-    
+
     @RunWith(S2TestClassRunner.class)
     public static class RollbackAnnotationTest extends TransactionTest {
         @Test

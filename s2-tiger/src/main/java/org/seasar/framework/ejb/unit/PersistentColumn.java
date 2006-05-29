@@ -27,7 +27,7 @@ public class PersistentColumn {
 
     public PersistentColumn() {
     }
-    
+
     public PersistentColumn(Column column) {
         this(column.name(), column.table());
     }
@@ -40,7 +40,7 @@ public class PersistentColumn {
         setName(columnName);
         setTable(tableName);
     }
-    
+
     public String getName() {
         return name;
     }
@@ -56,14 +56,14 @@ public class PersistentColumn {
     public void setTable(String table) {
         this.tableName = StringUtil.isEmpty(table) ? null : table;
     }
-    
+
     public boolean hasName(String name) {
         if (name == null) {
             return false;
         }
         return name.equalsIgnoreCase(getName());
     }
-    
+
     @Override
     public String toString() {
         StringBuilder buf = new StringBuilder();

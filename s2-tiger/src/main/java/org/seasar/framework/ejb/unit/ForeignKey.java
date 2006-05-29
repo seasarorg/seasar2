@@ -29,7 +29,8 @@ public class ForeignKey {
 
     private EmbeddedStateDesc embeddedStateDesc;
 
-    public ForeignKey(PersistentStateDesc stateDesc, PersistentColumn foreignKeyColumn) {
+    public ForeignKey(PersistentStateDesc stateDesc,
+            PersistentColumn foreignKeyColumn) {
         if (stateDesc == null) {
             throw new EmptyRuntimeException("stateDesc");
         }
