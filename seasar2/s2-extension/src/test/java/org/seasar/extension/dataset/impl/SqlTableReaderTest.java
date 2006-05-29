@@ -38,6 +38,15 @@ public class SqlTableReaderTest extends S2TestCase {
         assertEquals("2", RowStates.UNCHANGED, ret.getRow(0).getState());
     }
 
+    public void testRead4() throws Exception {
+        SqlTableReader reader = new SqlTableReader(ds_);
+        reader.setTable("emp", "", "ename");
+        DataTable ret = reader.read();
+        System.out.println(ret);
+        assertEquals("1", 14, ret.getRowSize());
+        assertEquals("2", "ADAMS", ret.getRow(0).getValue("ename"));
+    }
+
     public void testRead2() throws Exception {
         SqlTableReader reader = new SqlTableReader(ds_);
         reader.setTable("emp", "empno = 7788");

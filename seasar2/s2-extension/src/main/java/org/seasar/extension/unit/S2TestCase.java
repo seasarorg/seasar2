@@ -30,12 +30,15 @@ import junit.framework.Assert;
 import junit.framework.AssertionFailedError;
 
 import org.seasar.extension.dataset.ColumnType;
+import org.seasar.extension.dataset.DataColumn;
 import org.seasar.extension.dataset.DataReader;
 import org.seasar.extension.dataset.DataRow;
 import org.seasar.extension.dataset.DataSet;
 import org.seasar.extension.dataset.DataTable;
 import org.seasar.extension.dataset.DataWriter;
+import org.seasar.extension.dataset.impl.DataSetImpl;
 import org.seasar.extension.dataset.impl.SqlDeleteTableWriter;
+import org.seasar.extension.dataset.impl.SqlReader;
 import org.seasar.extension.dataset.impl.SqlReloadReader;
 import org.seasar.extension.dataset.impl.SqlReloadTableReader;
 import org.seasar.extension.dataset.impl.SqlTableReader;
@@ -172,6 +175,12 @@ public abstract class S2TestCase extends S2FrameworkTestCase {
         writer.write(dataSet);
     }
 
+    public DataSet readDb(DataSet dataSet) {
+        SqlReader reader = new SqlReader(getDataSource());
+        reader.addDataSet(dataSet);
+        return reader.read();
+    }
+
     public DataTable readDbByTable(String table) {
         return readDbByTable(table, null);
     }
@@ -212,6 +221,25 @@ public abstract class S2TestCase extends S2FrameworkTestCase {
 
     public DataTable reload(DataTable table) {
         return new SqlReloadTableReader(getDataSource(), table).read();
+    }
+
+    public DataSet reloadOrReadDb(DataSet dataSet) {
+        DataSet newDataSet = new DataSetImpl();
+        outer: for (int i = 0; i < dataSet.getTableSize(); i++) {
+            DataTable table = dataSet.getTable(i);
+            if (!table.hasMetaData()) {
+                table.setupMetaData(getDatabaseMetaData());
+            }
+            for (int j = 0; i < table.getColumnSize(); j++) {
+                DataColumn column = table.getColumn(j);
+                if (column.isPrimaryKey()) {
+                    newDataSet.addTable(reload(table));
+                    continue outer;
+                }
+            }
+            newDataSet.addTable(readDbByTable(table.getTableName()));
+        }
+        return newDataSet;
     }
 
     public void deleteDb(DataSet dataSet) {

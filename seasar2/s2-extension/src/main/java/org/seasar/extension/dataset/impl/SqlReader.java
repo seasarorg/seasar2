@@ -22,6 +22,7 @@ import javax.sql.DataSource;
 
 import org.seasar.extension.dataset.DataReader;
 import org.seasar.extension.dataset.DataSet;
+import org.seasar.extension.dataset.DataTable;
 import org.seasar.extension.dataset.TableReader;
 
 /**
@@ -42,6 +43,13 @@ public class SqlReader implements DataReader {
         return dataSource_;
     }
 
+    public void addDataSet(DataSet dataSet) {
+        for (int i = 0; i < dataSet.getTableSize(); i++) {
+            DataTable table = dataSet.getTable(i);
+            addTable(table.getTableName());
+        }
+    }
+
     public void addTable(String tableName) {
         addTable(tableName, null);
     }
@@ -49,6 +57,12 @@ public class SqlReader implements DataReader {
     public void addTable(String tableName, String condition) {
         SqlTableReader reader = new SqlTableReader(dataSource_);
         reader.setTable(tableName, condition);
+        tableReaders_.add(reader);
+    }
+
+    public void addTable(String tableName, String condition, String sort) {
+        SqlTableReader reader = new SqlTableReader(dataSource_);
+        reader.setTable(tableName, condition, sort);
         tableReaders_.add(reader);
     }
 

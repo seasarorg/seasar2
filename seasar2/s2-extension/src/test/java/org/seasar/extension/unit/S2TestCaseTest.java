@@ -60,6 +60,22 @@ public class S2TestCaseTest extends S2TestCase {
         writeDb(dataSet);
     }
 
+    public void setUpReadDb() {
+        include(J2EE_PATH);
+    }
+
+    public void testReadDb() throws Exception {
+        DataSet dataSet = new DataSetImpl();
+        dataSet.addTable("emp");
+        dataSet.addTable("dept");
+        DataSet ret = readDb(dataSet);
+        System.out.println(ret);
+        DataTable table1 = ret.getTable("emp");
+        DataTable table2 = ret.getTable("dept");
+        assertTrue("1", table1.getRowSize() > 0);
+        assertTrue("2", table2.getRowSize() > 0);
+    }
+
     public void setUpReadDbByTable() {
         include(J2EE_PATH);
     }
@@ -79,6 +95,30 @@ public class S2TestCaseTest extends S2TestCase {
                 "emp");
         System.out.println(table);
         assertEquals("1", 1, table.getRowSize());
+    }
+
+    public void setUpReloadOrReadDb() {
+        include(J2EE_PATH);
+    }
+
+    public void testReloadOrReadDb() {
+        DataSet dataSet = new DataSetImpl();
+        DataTable table = dataSet.addTable("emp");
+        table.addColumn("empno");
+        table.addColumn("ename");
+        DataRow row = table.addRow();
+        row.setValue("empno", 7788);
+        row.setValue("ename", "hoge");
+        dataSet.addTable("dept");
+        DataSet ret = reloadOrReadDb(dataSet);
+        DataTable table1 = ret.getTable("emp");
+        System.out.println(table1);
+        DataTable table2 = ret.getTable("dept");
+        System.out.println(table2);
+        DataRow row1 = table1.getRow(0);
+        assertTrue("1", table1.getRowSize() == 1);
+        assertTrue("2", table2.getRowSize() > 0);
+        assertEquals("3", false, "hoge".equals(row1.getValue("ename")));
     }
 
     public void testWriteXls() {

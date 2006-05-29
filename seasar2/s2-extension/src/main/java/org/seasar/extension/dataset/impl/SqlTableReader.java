@@ -15,12 +15,19 @@
  */
 package org.seasar.extension.dataset.impl;
 
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+
 import javax.sql.DataSource;
 
 import org.seasar.extension.dataset.DataTable;
 import org.seasar.extension.dataset.TableReader;
 import org.seasar.extension.jdbc.SelectHandler;
 import org.seasar.extension.jdbc.impl.BasicSelectHandler;
+import org.seasar.extension.jdbc.util.ConnectionUtil;
+import org.seasar.extension.jdbc.util.DataSourceUtil;
+import org.seasar.extension.jdbc.util.DatabaseMetaDataUtil;
+import org.seasar.framework.util.StringUtil;
 
 /**
  * @author higa
@@ -55,13 +62,38 @@ public class SqlTableReader implements TableReader {
     }
 
     public void setTable(String tableName, String condition) {
+        StringBuffer sortBuf = new StringBuffer(100);
+        String[] primaryKeys = null;
+        Connection con = DataSourceUtil.getConnection(dataSource_);
+        try {
+            DatabaseMetaData dbMetaData = ConnectionUtil.getMetaData(con);
+            primaryKeys = DatabaseMetaDataUtil.getPrimaryKeys(dbMetaData,
+                    tableName);
+        } finally {
+            ConnectionUtil.close(con);
+        }
+        if (primaryKeys.length > 0) {
+            for (int i = 0; i < primaryKeys.length; i++) {
+                sortBuf.append(primaryKeys[i]);
+                sortBuf.append(", ");
+            }
+            sortBuf.setLength(sortBuf.length() - 2);
+        }
+        setTable(tableName, condition, sortBuf.toString());
+    }
+
+    public void setTable(String tableName, String condition, String sort) {
         tableName_ = tableName;
         StringBuffer sqlBuf = new StringBuffer(100);
         sqlBuf.append("SELECT * FROM ");
         sqlBuf.append(tableName);
-        if (condition != null) {
+        if (!StringUtil.isEmpty(condition)) {
             sqlBuf.append(" WHERE ");
             sqlBuf.append(condition);
+        }
+        if (!StringUtil.isEmpty(sort)) {
+            sqlBuf.append(" ORDER BY ");
+            sqlBuf.append(sort);
         }
         sql_ = sqlBuf.toString();
     }
@@ -80,5 +112,4 @@ public class SqlTableReader implements TableReader {
                 new DataTableResultSetHandler(tableName_));
         return (DataTable) selectHandler.execute(null);
     }
-
 }
