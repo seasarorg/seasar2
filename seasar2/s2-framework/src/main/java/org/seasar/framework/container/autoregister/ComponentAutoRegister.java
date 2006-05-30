@@ -35,17 +35,22 @@ import org.seasar.framework.util.ClassTraversal.ClassHandler;
 public class ComponentAutoRegister extends AbstractComponentAutoRegister
         implements ClassHandler {
 
-    private List referenceClasses = new ArrayList();
+    protected List referenceClasses = new ArrayList();
 
-    private Map strategies = new HashMap();
+    protected Map strategies = new HashMap();
 
     public ComponentAutoRegister() {
         strategies.put("file", new FileSystemStrategy());
         strategies.put("jar", new JarFileStrategy());
+        strategies.put("zip", new ZipFileStrategy());
     }
 
     public void addReferenceClass(final Class referenceClass) {
         referenceClasses.add(referenceClass);
+    }
+
+    public void addStrategy(final String protocol, final Strategy strategy) {
+        strategies.put(protocol, strategy);
     }
 
     public void registerAll() {
@@ -60,12 +65,12 @@ public class ComponentAutoRegister extends AbstractComponentAutoRegister
         }
     }
 
-    private interface Strategy {
+    protected interface Strategy {
 
         void registerAll(Class referenceClass, URL url);
     }
 
-    private class FileSystemStrategy implements Strategy {
+    protected class FileSystemStrategy implements Strategy {
 
         public void registerAll(final Class referenceClass, final URL url) {
             final File rootDir = getRootDir(referenceClass, url);
@@ -85,17 +90,37 @@ public class ComponentAutoRegister extends AbstractComponentAutoRegister
         }
     }
 
-    private class JarFileStrategy implements Strategy {
+    protected class JarFileStrategy implements Strategy {
 
         public void registerAll(final Class referenceClass, final URL url) {
             final JarFile jarFile = createJarFile(url);
             ClassTraversal.forEach(jarFile, ComponentAutoRegister.this);
         }
 
-        private JarFile createJarFile(final URL url) {
+        protected JarFile createJarFile(final URL url) {
             final String urlString = ResourceUtil.toExternalForm(url);
             final int pos = urlString.lastIndexOf('!');
-            final String jarFileName = urlString.substring(9, pos);
+            final String jarFileName = urlString.substring(
+                    "jar:file:".length(), pos);
+            return JarFileUtil.create(new File(jarFileName));
+        }
+    }
+
+    /**
+     * WebLogic固有の<code>zip:</code>プロトコルで表現されるURLをサポートするストラテジです。
+     */
+    protected class ZipFileStrategy implements Strategy {
+
+        public void registerAll(final Class referenceClass, final URL url) {
+            final JarFile jarFile = createJarFile(url);
+            ClassTraversal.forEach(jarFile, ComponentAutoRegister.this);
+        }
+
+        protected JarFile createJarFile(final URL url) {
+            final String urlString = ResourceUtil.toExternalForm(url);
+            final int pos = urlString.lastIndexOf('!');
+            final String jarFileName = urlString
+                    .substring("zip:".length(), pos);
             return JarFileUtil.create(new File(jarFileName));
         }
     }

@@ -15,12 +15,21 @@
  */
 package org.seasar.framework.container.autoregister;
 
+import java.io.IOException;
+import java.net.JarURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLStreamHandler;
+import java.util.jar.JarFile;
+
+import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 import org.seasar.framework.container.AutoBindingDef;
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.unit.S2FrameworkTestCase;
+import org.seasar.framework.util.ResourceUtil;
 
 /**
  * 
@@ -58,5 +67,30 @@ public class ComponentAutoRegisterTest extends S2FrameworkTestCase {
         cd = child.getComponentDef(Foo2.class);
         assertEquals("2", AutoBindingDef.NONE_NAME, cd.getAutoBindingDef()
                 .getName());
+    }
+
+    public void setUpZipFileStrategy() throws Exception {
+        include("ComponentAutoRegisterTest.dicon");
+    }
+
+    public void testZipFileStrategy() throws Exception {
+        ComponentAutoRegister register = (ComponentAutoRegister) getComponent(ComponentAutoRegister.class);
+        ComponentAutoRegister.ZipFileStrategy strategy = (ComponentAutoRegister.ZipFileStrategy) register.strategies
+                .get("zip");
+        String classFilePath = TestCase.class.getName().replace('.', '/')
+                + ".class";
+        URL classURL = ResourceUtil.getResource(classFilePath);
+        JarURLConnection con = (JarURLConnection) classURL.openConnection();
+        JarFile expected = con.getJarFile();
+        URL jarURL = con.getJarFileURL();
+        String zipURL = "zip:" + jarURL.getPath() + "!" + classFilePath;
+        JarFile actual = strategy.createJarFile(new URL(null, zipURL,
+                new URLStreamHandler() {
+                    protected URLConnection openConnection(URL u)
+                            throws IOException {
+                        return null;
+                    }
+                }));
+        assertEquals(expected.getName(), actual.getName());
     }
 }
