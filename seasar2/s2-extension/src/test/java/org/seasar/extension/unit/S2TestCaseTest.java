@@ -107,7 +107,7 @@ public class S2TestCaseTest extends S2TestCase {
         table.addColumn("empno");
         table.addColumn("ename");
         DataRow row = table.addRow();
-        row.setValue("empno", 7788);
+        row.setValue("empno", new Integer(7788));
         row.setValue("ename", "hoge");
         dataSet.addTable("dept");
         DataSet ret = reloadOrReadDb(dataSet);
