@@ -83,9 +83,9 @@ public final class BeanDescImpl implements BeanDesc {
 
     private transient Set invalidPropertyNames = new HashSet();
 
-    private Map constructorParamNamesCache;
+    private Map constructorParameterNamesCache;
 
-    private Map methodParamNamesCache;
+    private Map methodParameterNamesCache;
 
     /**
      * 
@@ -274,61 +274,62 @@ public final class BeanDescImpl implements BeanDesc {
                 new String[methodsCache.size()]);
     }
 
-    public String[] getConstructorParamNames(final Class[] paramTypes) {
-        return getConstructorParamNames(getConstructor(paramTypes));
+    public String[] getConstructorParameterNames(final Class[] parameterTypes) {
+        return getConstructorParameterNames(getConstructor(parameterTypes));
     }
 
-    public String[] getConstructorParamNames(final Constructor constructor) {
+    public String[] getConstructorParameterNames(final Constructor constructor) {
         synchronized (this) {
-            if (constructorParamNamesCache == null) {
-                setUpConstructorParamNamesCache();
+            if (constructorParameterNamesCache == null) {
+                setUpConstructorParameterNamesCache();
             }
         }
 
-        if (!constructorParamNamesCache.containsKey(constructor)) {
+        if (!constructorParameterNamesCache.containsKey(constructor)) {
             throw new ConstructorNotFoundRuntimeException(beanClass,
                     constructor.getParameterTypes());
         }
-        return (String[]) constructorParamNamesCache.get(constructor);
+        return (String[]) constructorParameterNamesCache.get(constructor);
 
     }
 
-    public String[] getMethodParamNames(final String methodName,
-            final Class[] paramTypes) {
-        return getMethodParamNames(getMethod(methodName, paramTypes));
+    public String[] getMethodParameterNames(final String methodName,
+            final Class[] parameterTypes) {
+        return getMethodParameterNames(getMethod(methodName, parameterTypes));
     }
 
-    public String[] getMethodParamNames(final Method method) {
+    public String[] getMethodParameterNames(final Method method) {
         synchronized (this) {
-            if (methodParamNamesCache == null) {
-                setUpMethodParamNamesCache();
+            if (methodParameterNamesCache == null) {
+                setUpMethodParameterNamesCache();
             }
         }
 
-        if (!methodParamNamesCache.containsKey(method)) {
+        if (!methodParameterNamesCache.containsKey(method)) {
             throw new MethodNotFoundRuntimeException(beanClass, method
                     .getName(), method.getParameterTypes());
         }
-        return (String[]) methodParamNamesCache.get(method);
+        return (String[]) methodParameterNamesCache.get(method);
     }
 
-    protected void setUpConstructorParamNamesCache() {
-        constructorParamNamesCache = new HashMap();
+    protected void setUpConstructorParameterNamesCache() {
+        constructorParameterNamesCache = new HashMap();
         final ClassPool pool = ClassPoolUtil.getClassPool(beanClass);
         for (int i = 0; i < constructors.length; ++i) {
             final Constructor constructor = constructors[i];
             if (constructor.getParameterTypes().length == 0) {
-                constructorParamNamesCache.put(constructor, EMPTY_STRING_ARRAY);
+                constructorParameterNamesCache.put(constructor,
+                        EMPTY_STRING_ARRAY);
                 continue;
             }
             final CtClass clazz = ClassPoolUtil.toCtClass(pool, constructor
                     .getDeclaringClass());
-            final CtClass[] paramTypes = ClassPoolUtil.toCtClassArray(pool,
+            final CtClass[] parameterTypes = ClassPoolUtil.toCtClassArray(pool,
                     constructor.getParameterTypes());
             try {
-                final String[] names = getParamNames(clazz, clazz
-                        .getDeclaredConstructor(paramTypes));
-                constructorParamNamesCache.put(constructor, names);
+                final String[] names = getParameterNames(clazz, clazz
+                        .getDeclaredConstructor(parameterTypes));
+                constructorParameterNamesCache.put(constructor, names);
             } catch (final NotFoundException e) {
                 logger.log("WSSR0084", new Object[] { beanClass.getName(),
                         constructor });
@@ -336,25 +337,27 @@ public final class BeanDescImpl implements BeanDesc {
         }
     }
 
-    protected void setUpMethodParamNamesCache() {
-        methodParamNamesCache = new HashMap();
+    protected void setUpMethodParameterNamesCache() {
+        methodParameterNamesCache = new HashMap();
         final ClassPool pool = ClassPoolUtil.getClassPool(beanClass);
         for (final Iterator it = methodsCache.values().iterator(); it.hasNext();) {
             final Method[] methods = (Method[]) it.next();
             for (int i = 0; i < methods.length; ++i) {
                 final Method method = methods[i];
                 if (method.getParameterTypes().length == 0) {
-                    methodParamNamesCache.put(methods[i], EMPTY_STRING_ARRAY);
+                    methodParameterNamesCache.put(methods[i],
+                            EMPTY_STRING_ARRAY);
                     continue;
                 }
                 final CtClass clazz = ClassPoolUtil.toCtClass(pool, method
                         .getDeclaringClass());
-                final CtClass[] paramTypes = ClassPoolUtil.toCtClassArray(pool,
-                        method.getParameterTypes());
+                final CtClass[] parameterTypes = ClassPoolUtil.toCtClassArray(
+                        pool, method.getParameterTypes());
                 try {
-                    final String[] names = getParamNames(clazz, clazz
-                            .getDeclaredMethod(method.getName(), paramTypes));
-                    methodParamNamesCache.put(methods[i], names);
+                    final String[] names = getParameterNames(clazz,
+                            clazz.getDeclaredMethod(method.getName(),
+                                    parameterTypes));
+                    methodParameterNamesCache.put(methods[i], names);
                 } catch (final NotFoundException e) {
                     logger.log("WSSR0085", new Object[] { beanClass.getName(),
                             method });
@@ -363,7 +366,7 @@ public final class BeanDescImpl implements BeanDesc {
         }
     }
 
-    protected String[] getParamNames(final CtClass clazz,
+    protected String[] getParameterNames(final CtClass clazz,
             final CtBehavior behavior) throws NotFoundException {
         final MethodInfo methodInfo = behavior.getMethodInfo();
         final CodeAttribute codeAttribute = (CodeAttribute) methodInfo
