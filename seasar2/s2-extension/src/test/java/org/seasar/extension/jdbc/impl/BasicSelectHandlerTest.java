@@ -18,12 +18,9 @@ package org.seasar.extension.jdbc.impl;
 import java.util.Map;
 
 import org.seasar.extension.unit.S2TestCase;
+import org.seasar.framework.exception.SQLRuntimeException;
 
 public class BasicSelectHandlerTest extends S2TestCase {
-
-    public BasicSelectHandlerTest(String arg0) {
-        super(arg0);
-    }
 
     public void testExecute() throws Exception {
         String sql = "select * from emp where empno = ?";
@@ -34,12 +31,34 @@ public class BasicSelectHandlerTest extends S2TestCase {
         assertNotNull("1", ret);
     }
 
-    public void setUp() {
-        include("j2ee.dicon");
+    public void testException1() throws Exception {
+        final String sql = "selec * from emp";
+        BasicSelectHandler handler = new BasicSelectHandler(getDataSource(),
+                sql, new MapResultSetHandler());
+        try {
+            handler.execute(new Object[] {});
+            fail();
+        } catch (SQLRuntimeException e) {
+            e.printStackTrace();
+            assertTrue(e.getMessage(), e.getMessage().indexOf(sql) > -1);
+        }
     }
 
-    public static void main(String[] args) {
-        junit.textui.TestRunner.run(BasicSelectHandlerTest.class);
+    public void testException2() throws Exception {
+        final String sql = "select * from UNKNOWN";
+        BasicSelectHandler handler = new BasicSelectHandler(getDataSource(),
+                sql, new MapResultSetHandler());
+        try {
+            handler.execute(new Object[] {});
+            fail();
+        } catch (SQLRuntimeException e) {
+            e.printStackTrace();
+            assertTrue(e.getMessage(), e.getMessage().indexOf(sql) > -1);
+        }
+    }
+
+    public void setUp() {
+        include("j2ee.dicon");
     }
 
 }

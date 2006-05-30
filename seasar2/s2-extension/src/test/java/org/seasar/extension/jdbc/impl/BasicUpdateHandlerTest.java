@@ -15,13 +15,12 @@
  */
 package org.seasar.extension.jdbc.impl;
 
+import java.util.Date;
+
 import org.seasar.extension.unit.S2TestCase;
+import org.seasar.framework.exception.SQLRuntimeException;
 
 public class BasicUpdateHandlerTest extends S2TestCase {
-
-    public BasicUpdateHandlerTest(String arg0) {
-        super(arg0);
-    }
 
     public void testExecuteTx() throws Exception {
         String sql = "update emp set ename = ?, comm = ? where empno = ?";
@@ -32,12 +31,34 @@ public class BasicUpdateHandlerTest extends S2TestCase {
         assertEquals("1", 1, ret);
     }
 
-    public void setUp() {
-        include("j2ee.dicon");
+    public void testExceptionByBrokenSqlTx() throws Exception {
+        String sql = "pdate emp set ename = ?, comm = ? where empno = ?";
+        BasicUpdateHandler handler = new BasicUpdateHandler(getDataSource(),
+                sql);
+        try {
+            handler.execute(new Object[] { "SCOTT", null, new Integer(7788) });
+            fail();
+        } catch (SQLRuntimeException e) {
+            e.printStackTrace();
+            assertTrue(e.getMessage(), e.getMessage().indexOf(sql) > -1);
+        }
     }
 
-    public static void main(String[] args) {
-        junit.textui.TestRunner.run(BasicUpdateHandlerTest.class);
+    public void testExceptionByWrongDataTypeTx() throws Exception {
+        final String sql = "update emp set comm = ?";
+        BasicUpdateHandler handler = new BasicUpdateHandler(getDataSource(),
+                sql);
+        try {
+            handler.execute(new Object[] { new Date() });
+            fail();
+        } catch (SQLRuntimeException e) {
+            e.printStackTrace();
+            assertTrue(e.getMessage(), e.getMessage().indexOf(sql) > -1);
+        }
+    }
+
+    public void setUp() {
+        include("j2ee.dicon");
     }
 
 }

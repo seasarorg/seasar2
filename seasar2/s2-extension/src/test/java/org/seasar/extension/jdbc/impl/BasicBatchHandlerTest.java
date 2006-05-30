@@ -16,16 +16,14 @@
 package org.seasar.extension.jdbc.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import org.seasar.extension.unit.S2TestCase;
+import org.seasar.framework.exception.SQLRuntimeException;
 
 public class BasicBatchHandlerTest extends S2TestCase {
-
-    public BasicBatchHandlerTest(String arg0) {
-        super(arg0);
-    }
 
     public void testExecuteTx() throws Exception {
         String sql = "update emp set ename = ?, comm = ? where empno = ?";
@@ -49,12 +47,38 @@ public class BasicBatchHandlerTest extends S2TestCase {
         assertEquals("4", "ccc", rec.get("ename"));
     }
 
-    public void setUp() {
-        include("j2ee.dicon");
+    public void testExceptionByBrokenSqlTx() throws Exception {
+        final String sql = "updat emp set ename = ?, comm = ? where empno = ?";
+        BasicBatchHandler handler = new BasicBatchHandler(getDataSource(), sql,
+                2);
+        List list = new ArrayList();
+        list.add(new Object[] { "aaa", null, new Integer(7369) });
+        try {
+            handler.execute(list);
+            fail();
+        } catch (SQLRuntimeException e) {
+            e.printStackTrace();
+            assertTrue(e.getMessage(), e.getMessage().indexOf(sql) > -1);
+        }
     }
 
-    public static void main(String[] args) {
-        junit.textui.TestRunner.run(BasicBatchHandlerTest.class);
+    public void testExceptionByWrongDataTypeTx() throws Exception {
+        final String sql = "update emp set ename = ?, comm = ? where empno = ?";
+        BasicBatchHandler handler = new BasicBatchHandler(getDataSource(), sql,
+                2);
+        List list = new ArrayList();
+        list.add(new Object[] { "aaa", new Date(), new Integer(7369) });
+        try {
+            handler.execute(list);
+            fail();
+        } catch (SQLRuntimeException e) {
+            e.printStackTrace();
+            assertTrue(e.getMessage(), e.getMessage().indexOf(sql) > -1);
+        }
+    }
+
+    public void setUp() {
+        include("j2ee.dicon");
     }
 
 }
