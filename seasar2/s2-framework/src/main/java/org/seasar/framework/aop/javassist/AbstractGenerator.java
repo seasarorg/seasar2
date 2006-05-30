@@ -33,10 +33,13 @@ import javassist.CtNewConstructor;
 import javassist.CtNewMethod;
 import javassist.NotFoundException;
 
+import org.seasar.framework.exception.CannotCompileRuntimeException;
 import org.seasar.framework.exception.IORuntimeException;
 import org.seasar.framework.exception.IllegalAccessRuntimeException;
 import org.seasar.framework.exception.InvocationTargetRuntimeException;
 import org.seasar.framework.exception.NoSuchMethodRuntimeException;
+import org.seasar.framework.exception.NotFoundRuntimeException;
+import org.seasar.framework.util.ClassPoolUtil;
 import org.seasar.framework.util.ClassUtil;
 
 /**

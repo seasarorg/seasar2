@@ -54,8 +54,18 @@ public interface BeanDesc {
     public Constructor getSuitableConstructor(Object[] args)
             throws ConstructorNotFoundRuntimeException;
 
+    public Constructor getConstructor(Class[] paramTypes);
+
+    public String[] getConstructorParamNames(final Class[] paramTypes);
+
+    public String[] getConstructorParamNames(Constructor constructor);
+
     public Object invoke(Object target, String methodName, Object[] args)
             throws MethodNotFoundRuntimeException;
+
+    public Method getMethod(String methodName);
+
+    public Method getMethod(String methodName, Class[] paramTypes);
 
     public Method[] getMethods(String methodName)
             throws MethodNotFoundRuntimeException;
@@ -63,4 +73,9 @@ public interface BeanDesc {
     public boolean hasMethod(String methodName);
 
     public String[] getMethodNames();
+
+    public String[] getMethodParamNames(String methodName,
+            final Class[] paramTypes);
+
+    public String[] getMethodParamNames(Method method);
 }

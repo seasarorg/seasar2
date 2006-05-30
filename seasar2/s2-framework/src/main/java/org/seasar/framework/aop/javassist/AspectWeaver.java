@@ -29,6 +29,8 @@ import javassist.ClassPool;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.seasar.framework.aop.InterType;
 import org.seasar.framework.exception.NoSuchFieldRuntimeException;
+import org.seasar.framework.util.ClassLoaderUtil;
+import org.seasar.framework.util.ClassPoolUtil;
 import org.seasar.framework.util.FieldUtil;
 import org.seasar.framework.util.MethodUtil;
 

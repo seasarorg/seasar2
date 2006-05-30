@@ -25,9 +25,9 @@ import javassist.Modifier;
 import javassist.NotFoundException;
 
 import org.seasar.framework.aop.InterType;
-import org.seasar.framework.aop.javassist.CannotCompileRuntimeException;
-import org.seasar.framework.aop.javassist.ClassPoolUtil;
-import org.seasar.framework.aop.javassist.NotFoundRuntimeException;
+import org.seasar.framework.exception.CannotCompileRuntimeException;
+import org.seasar.framework.exception.NotFoundRuntimeException;
+import org.seasar.framework.util.ClassPoolUtil;
 
 public abstract class AbstractInterType implements InterType {
     public static final String COMPONENT = "instance = prototype";

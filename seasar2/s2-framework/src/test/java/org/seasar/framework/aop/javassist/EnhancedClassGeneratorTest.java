@@ -22,6 +22,7 @@ import java.util.Arrays;
 import junit.framework.TestCase;
 
 import org.aopalliance.intercept.MethodInvocation;
+import org.seasar.framework.util.ClassPoolUtil;
 
 /**
  * @author koichik

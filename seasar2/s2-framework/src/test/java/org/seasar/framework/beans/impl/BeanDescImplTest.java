@@ -145,6 +145,50 @@ public class BeanDescImplTest extends TestCase {
         assertEquals("1", true, eee.isAccessible());
     }
 
+    public void testGetConstructorParamNames() throws Exception {
+        BeanDesc beanDesc = new BeanDescImpl(MyBean3.class);
+        String[] names = beanDesc.getConstructorParamNames(new Class[0]);
+        assertNotNull(names);
+        assertEquals(0, names.length);
+
+        names = beanDesc.getConstructorParamNames(new Class[] { int.class,
+                String.class, MyBean.class, MyBean2.class });
+        assertNotNull(names);
+        assertEquals(4, names.length);
+        assertEquals("num", names[0]);
+        assertEquals("text", names[1]);
+        assertEquals("bean1", names[2]);
+        assertEquals("bean2", names[3]);
+    }
+
+    public void testGetMethodParamNames() throws Exception {
+        BeanDesc beanDesc = new BeanDescImpl(MyBean.class);
+        String[] names = beanDesc.getMethodParamNames("getAaa", new Class[0]);
+        assertNotNull(names);
+        assertEquals(0, names.length);
+
+        names = beanDesc.getMethodParamNames("getBbb",
+                new Class[] { Object.class });
+        assertNotNull(names);
+        assertEquals(1, names.length);
+        assertEquals("a", names[0]);
+
+        names = beanDesc.getMethodParamNames("add", new Class[] { Number.class,
+                Number.class });
+        assertNotNull(names);
+        assertEquals(2, names.length);
+        assertEquals("arg1", names[0]);
+        assertEquals("arg2", names[1]);
+
+        beanDesc = new BeanDescImpl(MyBean3.class);
+        names = beanDesc.getMethodParamNames("foo", new Class[] { MyBean.class,
+                MyBean2.class });
+        assertNotNull(names);
+        assertEquals(2, names.length);
+        assertEquals("foo$bar", names[0]);
+        assertEquals("hoge$hoge$hoge", names[1]);
+    }
+
     /*
      * public void testPerformance() { long start = System.currentTimeMillis();
      * for (int i = 0; i < 10000; ++i) { BeanDesc beanDesc = new
@@ -214,4 +258,14 @@ public class BeanDescImplTest extends TestCase {
         }
     }
 
+    public static class MyBean3 {
+        public MyBean3() {
+        }
+
+        public MyBean3(int num, String text, MyBean bean1, MyBean2 bean2) {
+        }
+
+        public static void foo(MyBean foo$bar, MyBean2 hoge$hoge$hoge) {
+        }
+    }
 }

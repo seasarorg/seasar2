@@ -18,6 +18,8 @@ package org.seasar.framework.aop.javassist;
 import java.lang.reflect.Method;
 import java.util.Collection;
 
+import org.seasar.framework.util.ClassPoolUtil;
+
 import junit.framework.TestCase;
 
 /**

@@ -13,7 +13,7 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.framework.aop.javassist;
+package org.seasar.framework.util;
 
 import java.util.Collections;
 import java.util.Map;
@@ -24,7 +24,7 @@ import javassist.CtClass;
 import javassist.LoaderClassPath;
 import javassist.NotFoundException;
 
-import org.seasar.framework.util.ClassUtil;
+import org.seasar.framework.exception.NotFoundRuntimeException;
 
 /**
  * @author koichik

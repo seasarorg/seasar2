@@ -13,10 +13,12 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.framework.aop.javassist;
+package org.seasar.framework.util;
 
 import java.net.URL;
 import java.net.URLClassLoader;
+
+import org.seasar.framework.util.ClassLoaderUtil;
 
 import junit.framework.TestCase;
 

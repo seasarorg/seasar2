@@ -24,9 +24,11 @@ public class ConstructorNotFoundRuntimeException extends SRuntimeException {
 
     private static final long serialVersionUID = 8584662068396978822L;
 
-    private Class targetClass_;
+    private Class targetClass;
 
-    private Object[] methodArgs_;
+    private Object[] methodArgs;
+
+    private Class[] paramTypes;
 
     /**
      * @param targetClass
@@ -36,16 +38,29 @@ public class ConstructorNotFoundRuntimeException extends SRuntimeException {
         super("ESSR0048", new Object[] { targetClass.getName(),
                 getSignature(methodArgs) });
 
-        targetClass_ = targetClass;
-        methodArgs_ = methodArgs;
+        this.targetClass = targetClass;
+        this.methodArgs = methodArgs;
+    }
+
+    public ConstructorNotFoundRuntimeException(Class targetClass,
+            Class[] paramTypes) {
+        super("ESSR0048", new Object[] { targetClass.getName(),
+                getSignature(paramTypes) });
+
+        this.targetClass = targetClass;
+        this.paramTypes = paramTypes;
     }
 
     public Class getTargetClass() {
-        return targetClass_;
+        return targetClass;
     }
 
     public Object[] getMethodArgs() {
-        return methodArgs_;
+        return methodArgs;
+    }
+
+    public Class[] getParamTypes() {
+        return paramTypes;
     }
 
     private static String getSignature(Object[] methodArgs) {
@@ -57,6 +72,23 @@ public class ConstructorNotFoundRuntimeException extends SRuntimeException {
                 }
                 if (methodArgs[i] != null) {
                     buf.append(methodArgs[i].getClass().getName());
+                } else {
+                    buf.append("null");
+                }
+            }
+        }
+        return buf.toString();
+    }
+
+    private static String getSignature(Class[] paramTypes) {
+        StringBuffer buf = new StringBuffer(100);
+        if (paramTypes != null) {
+            for (int i = 0; i < paramTypes.length; ++i) {
+                if (i > 0) {
+                    buf.append(", ");
+                }
+                if (paramTypes[i] != null) {
+                    buf.append(paramTypes[i].getName());
                 } else {
                     buf.append("null");
                 }

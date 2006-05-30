@@ -19,12 +19,22 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import javassist.ClassPool;
+import javassist.CtBehavior;
+import javassist.CtClass;
+import javassist.Modifier;
+import javassist.NotFoundException;
+import javassist.bytecode.CodeAttribute;
+import javassist.bytecode.LocalVariableAttribute;
+import javassist.bytecode.MethodInfo;
 
 import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.ConstructorNotFoundRuntimeException;
@@ -33,8 +43,10 @@ import org.seasar.framework.beans.MethodNotFoundRuntimeException;
 import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.beans.PropertyNotFoundRuntimeException;
 import org.seasar.framework.exception.EmptyRuntimeException;
+import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.ArrayMap;
 import org.seasar.framework.util.CaseInsensitiveMap;
+import org.seasar.framework.util.ClassPoolUtil;
 import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.ConstructorUtil;
 import org.seasar.framework.util.DoubleConversionUtil;
@@ -51,8 +63,13 @@ import org.seasar.framework.util.StringUtil;
  * 
  */
 public final class BeanDescImpl implements BeanDesc {
+    private static final Logger logger = Logger.getLogger(BeanDescImpl.class);
 
     private static final Object[] EMPTY_ARGS = new Object[0];
+
+    private static final Class[] EMPTY_PARAM_TYPES = new Class[0];
+
+    private static final String[] EMPTY_STRING_ARRAY = new String[0];
 
     private Class beanClass;
 
@@ -65,6 +82,10 @@ public final class BeanDescImpl implements BeanDesc {
     private ArrayMap fieldCache = new ArrayMap();
 
     private transient Set invalidPropertyNames = new HashSet();
+
+    private Map constructorParamNamesCache;
+
+    private Map methodParamNamesCache;
 
     /**
      * 
@@ -203,6 +224,30 @@ public final class BeanDescImpl implements BeanDesc {
         throw new ConstructorNotFoundRuntimeException(beanClass, args);
     }
 
+    public Constructor getConstructor(final Class[] paramTypes) {
+        for (int i = 0; i < constructors.length; ++i) {
+            if (Arrays.equals(paramTypes, constructors[i].getParameterTypes())) {
+                return constructors[i];
+            }
+        }
+        throw new ConstructorNotFoundRuntimeException(beanClass, paramTypes);
+    }
+
+    public Method getMethod(final String methodName) {
+        return getMethod(methodName, EMPTY_PARAM_TYPES);
+    }
+
+    public Method getMethod(final String methodName, final Class[] paramTypes) {
+        final Method[] methods = getMethods(methodName);
+        for (int i = 0; i < methods.length; ++i) {
+            if (Arrays.equals(paramTypes, methods[i].getParameterTypes())) {
+                return methods[i];
+            }
+        }
+        throw new MethodNotFoundRuntimeException(beanClass, methodName,
+                paramTypes);
+    }
+
     /**
      * @see org.seasar.framework.beans.BeanDesc#getMethods(java.lang.String)
      */
@@ -227,6 +272,121 @@ public final class BeanDescImpl implements BeanDesc {
     public String[] getMethodNames() {
         return (String[]) methodsCache.keySet().toArray(
                 new String[methodsCache.size()]);
+    }
+
+    public String[] getConstructorParamNames(final Class[] paramTypes) {
+        return getConstructorParamNames(getConstructor(paramTypes));
+    }
+
+    public String[] getConstructorParamNames(final Constructor constructor) {
+        synchronized (this) {
+            if (constructorParamNamesCache == null) {
+                setUpConstructorParamNamesCache();
+            }
+        }
+
+        if (!constructorParamNamesCache.containsKey(constructor)) {
+            throw new ConstructorNotFoundRuntimeException(beanClass,
+                    constructor.getParameterTypes());
+        }
+        return (String[]) constructorParamNamesCache.get(constructor);
+
+    }
+
+    public String[] getMethodParamNames(final String methodName,
+            final Class[] paramTypes) {
+        return getMethodParamNames(getMethod(methodName, paramTypes));
+    }
+
+    public String[] getMethodParamNames(final Method method) {
+        synchronized (this) {
+            if (methodParamNamesCache == null) {
+                setUpMethodParamNamesCache();
+            }
+        }
+
+        if (!methodParamNamesCache.containsKey(method)) {
+            throw new MethodNotFoundRuntimeException(beanClass, method
+                    .getName(), method.getParameterTypes());
+        }
+        return (String[]) methodParamNamesCache.get(method);
+    }
+
+    protected void setUpConstructorParamNamesCache() {
+        constructorParamNamesCache = new HashMap();
+        final ClassPool pool = ClassPoolUtil.getClassPool(beanClass);
+        for (int i = 0; i < constructors.length; ++i) {
+            final Constructor constructor = constructors[i];
+            if (constructor.getParameterTypes().length == 0) {
+                constructorParamNamesCache.put(constructor, EMPTY_STRING_ARRAY);
+                continue;
+            }
+            final CtClass clazz = ClassPoolUtil.toCtClass(pool, constructor
+                    .getDeclaringClass());
+            final CtClass[] paramTypes = ClassPoolUtil.toCtClassArray(pool,
+                    constructor.getParameterTypes());
+            try {
+                final String[] names = getParamNames(clazz, clazz
+                        .getDeclaredConstructor(paramTypes));
+                constructorParamNamesCache.put(constructor, names);
+            } catch (final NotFoundException e) {
+                logger.log("WSSR0084", new Object[] { beanClass.getName(),
+                        constructor });
+            }
+        }
+    }
+
+    protected void setUpMethodParamNamesCache() {
+        methodParamNamesCache = new HashMap();
+        final ClassPool pool = ClassPoolUtil.getClassPool(beanClass);
+        for (final Iterator it = methodsCache.values().iterator(); it.hasNext();) {
+            final Method[] methods = (Method[]) it.next();
+            for (int i = 0; i < methods.length; ++i) {
+                final Method method = methods[i];
+                if (method.getParameterTypes().length == 0) {
+                    methodParamNamesCache.put(methods[i], EMPTY_STRING_ARRAY);
+                    continue;
+                }
+                final CtClass clazz = ClassPoolUtil.toCtClass(pool, method
+                        .getDeclaringClass());
+                final CtClass[] paramTypes = ClassPoolUtil.toCtClassArray(pool,
+                        method.getParameterTypes());
+                try {
+                    final String[] names = getParamNames(clazz, clazz
+                            .getDeclaredMethod(method.getName(), paramTypes));
+                    methodParamNamesCache.put(methods[i], names);
+                } catch (final NotFoundException e) {
+                    logger.log("WSSR0085", new Object[] { beanClass.getName(),
+                            method });
+                }
+            }
+        }
+    }
+
+    protected String[] getParamNames(final CtClass clazz,
+            final CtBehavior behavior) throws NotFoundException {
+        final MethodInfo methodInfo = behavior.getMethodInfo();
+        final CodeAttribute codeAttribute = (CodeAttribute) methodInfo
+                .getAttribute("Code");
+        if (codeAttribute == null) {
+            return null;
+        }
+        final LocalVariableAttribute lva = (LocalVariableAttribute) codeAttribute
+                .getAttribute("LocalVariableTable");
+        if (lva == null) {
+            return null;
+        }
+        return toStringArray(behavior, lva);
+    }
+
+    protected String[] toStringArray(final CtBehavior behavior,
+            final LocalVariableAttribute lva) throws NotFoundException {
+        final String[] names = new String[behavior.getParameterTypes().length];
+        final int offset = Modifier.isStatic(behavior.getModifiers()) ? 0 : 1;
+        for (int i = 0; i < names.length; ++i) {
+            names[i] = lva.variableName(i + offset);
+        }
+        return names;
     }
 
     private Constructor findSuitableConstructor(Object[] args) {
