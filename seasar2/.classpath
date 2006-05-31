@@ -2,14 +2,14 @@
 <classpath>
 	<classpathentry kind="src" path="s2-framework/src/main/java"/>
 	<classpathentry kind="src" path="s2-framework/src/main/resources"/>
-	<classpathentry output="s2-framework/target/test-classes" kind="src" path="s2-framework/src/test/java"/>
-	<classpathentry output="s2-framework/target/test-classes" kind="src" path="s2-framework/src/test/resources"/>
-	<classpathentry output="s2-extension/target/classes" kind="src" path="s2-extension/src/main/java"/>
-	<classpathentry output="s2-extension/target/classes" kind="src" path="s2-extension/src/main/resources"/>
-	<classpathentry output="s2-extension/target/test-classes" kind="src" path="s2-extension/src/test/java"/>
-	<classpathentry output="s2-extension/target/test-classes" kind="src" path="s2-extension/src/test/resources"/>
-	<classpathentry output="examples/target/classes" kind="src" path="examples/src/main/java"/>
-	<classpathentry output="examples/target/classes" kind="src" path="examples/src/main/resources"/>
+	<classpathentry kind="src" path="s2-framework/src/test/java"/>
+	<classpathentry kind="src" path="s2-framework/src/test/resources"/>
+	<classpathentry kind="src" path="s2-extension/src/main/java"/>
+	<classpathentry kind="src" path="s2-extension/src/main/resources"/>
+	<classpathentry kind="src" path="s2-extension/src/test/java"/>
+	<classpathentry kind="src" path="s2-extension/src/test/resources"/>
+	<classpathentry kind="src" path="examples/src/main/java"/>
+	<classpathentry kind="src" path="examples/src/main/resources"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry exported="true" kind="lib" path="lib/aopalliance-1.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/javassist-3.0.jar"/>
@@ -20,5 +20,5 @@
 	<classpathentry exported="true" kind="lib" path="lib/junit-3.8.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/hsqldb-1.8.0.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/geronimo-j2ee_1.4_spec-1.0.jar"/>
-	<classpathentry kind="output" path="s2-framework/target/classes"/>
+	<classpathentry kind="output" path="build/classes"/>
 </classpath>
