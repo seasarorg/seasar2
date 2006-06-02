@@ -19,6 +19,7 @@ import java.util.Map;
 
 import org.seasar.extension.unit.S2TestCase;
 import org.seasar.framework.exception.SQLRuntimeException;
+import org.seasar.framework.exception.SSQLException;
 
 public class BasicSelectHandlerTest extends S2TestCase {
 
@@ -31,7 +32,7 @@ public class BasicSelectHandlerTest extends S2TestCase {
         assertNotNull("1", ret);
     }
 
-    public void testException1() throws Exception {
+    public void testExceptionByBrokenSql() throws Exception {
         final String sql = "selec * from emp";
         BasicSelectHandler handler = new BasicSelectHandler(getDataSource(),
                 sql, new MapResultSetHandler());
@@ -39,12 +40,13 @@ public class BasicSelectHandlerTest extends S2TestCase {
             handler.execute(new Object[] {});
             fail();
         } catch (SQLRuntimeException e) {
-            e.printStackTrace();
             assertTrue(e.getMessage(), e.getMessage().indexOf(sql) > -1);
+            final SSQLException cause = (SSQLException) e.getCause();
+            assertEquals(sql, cause.getSql());
         }
     }
 
-    public void testException2() throws Exception {
+    public void testExceptionByInvalidTableName() throws Exception {
         final String sql = "select * from UNKNOWN";
         BasicSelectHandler handler = new BasicSelectHandler(getDataSource(),
                 sql, new MapResultSetHandler());
@@ -52,8 +54,9 @@ public class BasicSelectHandlerTest extends S2TestCase {
             handler.execute(new Object[] {});
             fail();
         } catch (SQLRuntimeException e) {
-            e.printStackTrace();
             assertTrue(e.getMessage(), e.getMessage().indexOf(sql) > -1);
+            final SSQLException cause = (SSQLException) e.getCause();
+            assertEquals(sql, cause.getSql());
         }
     }
 

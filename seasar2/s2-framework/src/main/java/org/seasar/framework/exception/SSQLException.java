@@ -29,6 +29,8 @@ public class SSQLException extends SQLException {
 
     private String messageCode;
 
+    private String sql;
+
     private Object[] args;
 
     public SSQLException(String messageCode, Object[] args) {
@@ -55,10 +57,16 @@ public class SSQLException extends SQLException {
 
     public SSQLException(String messageCode, Object[] args, String sqlState,
             int vendorCode, Throwable cause) {
+        this(messageCode, args, sqlState, vendorCode, cause, null);
+    }
+
+    public SSQLException(String messageCode, Object[] args, String sqlState,
+            int vendorCode, Throwable cause, String sql) {
         super(MessageFormatter.getMessage(messageCode, args), sqlState,
                 vendorCode);
         this.messageCode = messageCode;
         this.args = args;
+        this.sql = sql;
         initCause(cause);
         if (cause instanceof SQLException) {
             setNextException((SQLException) cause);
@@ -71,5 +79,9 @@ public class SSQLException extends SQLException {
 
     public Object[] getArgs() {
         return args;
+    }
+
+    public String getSql() {
+        return sql;
     }
 }

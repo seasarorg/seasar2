@@ -22,6 +22,7 @@ import java.util.Map;
 
 import org.seasar.extension.unit.S2TestCase;
 import org.seasar.framework.exception.SQLRuntimeException;
+import org.seasar.framework.exception.SSQLException;
 
 public class BasicBatchHandlerTest extends S2TestCase {
 
@@ -57,8 +58,9 @@ public class BasicBatchHandlerTest extends S2TestCase {
             handler.execute(list);
             fail();
         } catch (SQLRuntimeException e) {
-            e.printStackTrace();
             assertTrue(e.getMessage(), e.getMessage().indexOf(sql) > -1);
+            final SSQLException cause = (SSQLException) e.getCause();
+            assertEquals(sql, cause.getSql());
         }
     }
 
@@ -72,8 +74,9 @@ public class BasicBatchHandlerTest extends S2TestCase {
             handler.execute(list);
             fail();
         } catch (SQLRuntimeException e) {
-            e.printStackTrace();
             assertTrue(e.getMessage(), e.getMessage().indexOf(sql) > -1);
+            final SSQLException cause = (SSQLException) e.getCause();
+            assertEquals(sql, cause.getSql());
         }
     }
 

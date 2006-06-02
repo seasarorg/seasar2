@@ -532,9 +532,9 @@ public final class ConnectionWrapperImpl implements ConnectionWrapper {
         }
     }
 
-    private SQLException wrapException(SQLException ex, String sql) {
-        return new SSQLException("ESSR0072", new Object[] { sql }, ex
-                .getSQLState(), ex.getErrorCode(), ex);
+    private SQLException wrapException(SQLException e, String sql) {
+        return new SSQLException("ESSR0072", new Object[] { sql }, e
+                .getSQLState(), e.getErrorCode(), e, sql);
     }
 
     private static class PreparedStatementWrapper implements PreparedStatement {
@@ -556,7 +556,7 @@ public final class ConnectionWrapperImpl implements ConnectionWrapper {
             if (sql != null) {
                 return new SSQLException("ESSR0072", new Object[] { sql,
                         String.valueOf(e.getErrorCode()), e.getSQLState() }, e
-                        .getSQLState(), e.getErrorCode(), e);
+                        .getSQLState(), e.getErrorCode(), e, sql);
             }
             return e;
         }

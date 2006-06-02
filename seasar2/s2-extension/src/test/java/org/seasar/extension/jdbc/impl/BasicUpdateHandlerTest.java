@@ -19,6 +19,7 @@ import java.util.Date;
 
 import org.seasar.extension.unit.S2TestCase;
 import org.seasar.framework.exception.SQLRuntimeException;
+import org.seasar.framework.exception.SSQLException;
 
 public class BasicUpdateHandlerTest extends S2TestCase {
 
@@ -39,8 +40,9 @@ public class BasicUpdateHandlerTest extends S2TestCase {
             handler.execute(new Object[] { "SCOTT", null, new Integer(7788) });
             fail();
         } catch (SQLRuntimeException e) {
-            e.printStackTrace();
             assertTrue(e.getMessage(), e.getMessage().indexOf(sql) > -1);
+            final SSQLException cause = (SSQLException) e.getCause();
+            assertEquals(sql, cause.getSql());
         }
     }
 
@@ -52,8 +54,9 @@ public class BasicUpdateHandlerTest extends S2TestCase {
             handler.execute(new Object[] { new Date() });
             fail();
         } catch (SQLRuntimeException e) {
-            e.printStackTrace();
             assertTrue(e.getMessage(), e.getMessage().indexOf(sql) > -1);
+            final SSQLException cause = (SSQLException) e.getCause();
+            assertEquals(sql, cause.getSql());
         }
     }
 
