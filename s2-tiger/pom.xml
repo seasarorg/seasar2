@@ -12,8 +12,8 @@
   <description></description>
   <url>http://s2container.seasar.org/</url>
   <issueManagement>
-    <system>sourceforge.jp</system>
-    <url><![CDATA[http://sourceforge.jp/tracker/?atid=6582&group_id=689&func=browse]]></url>
+    <system>JIRA</system>
+    <url><![CDATA[https://www.seasar.org/issues/browse/CONTAINER]]></url>
   </issueManagement>
   <inceptionYear>2005</inceptionYear>
   <mailingLists>
