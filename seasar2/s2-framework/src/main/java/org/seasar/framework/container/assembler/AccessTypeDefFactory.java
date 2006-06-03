@@ -8,7 +8,7 @@ import org.seasar.framework.container.IllegalAccessTypeDefRuntimeException;
 
 public class AccessTypeDefFactory {
 
-    public static final AccessTypeDef PROPERTY = new AccessTypeProperty();
+    public static final AccessTypeDef PROPERTY = new AccessTypePropertyDef();
 
     public static final AccessTypeDef FIELD = new AccessTypeFieldDef();
 

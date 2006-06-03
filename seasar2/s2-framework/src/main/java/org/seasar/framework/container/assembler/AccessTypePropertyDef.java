@@ -8,9 +8,9 @@ import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.PropertyDef;
 import org.seasar.framework.container.util.BindingUtil;
 
-public class AccessTypeProperty implements AccessTypeDef {
+public class AccessTypePropertyDef implements AccessTypeDef {
 
-    public AccessTypeProperty() {
+    public AccessTypePropertyDef() {
     }
 
     public String getName() {
