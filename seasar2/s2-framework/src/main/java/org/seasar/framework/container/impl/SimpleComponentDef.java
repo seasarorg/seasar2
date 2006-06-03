@@ -316,7 +316,7 @@ public class SimpleComponentDef implements ComponentDef {
     /*
      * @see org.seasar.framework.container.ComponentDef#setExpression(java.lang.String)
      */
-    public void setExpression(Expression str) {
+    public void setExpression(Expression expression) {
         throw new UnsupportedOperationException("setExpression");
     }
 

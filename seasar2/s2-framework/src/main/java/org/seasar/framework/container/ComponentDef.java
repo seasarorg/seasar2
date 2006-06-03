@@ -52,7 +52,7 @@ public interface ComponentDef extends ArgDefAware, InterTypeDefAware,
 
     public Expression getExpression();
 
-    public void setExpression(Expression Expression);
+    public void setExpression(Expression expression);
 
     public void init();
 
