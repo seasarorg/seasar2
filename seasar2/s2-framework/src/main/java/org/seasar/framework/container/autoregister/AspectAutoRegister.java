@@ -18,7 +18,6 @@ package org.seasar.framework.container.autoregister;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.seasar.framework.container.AspectDef;
 import org.seasar.framework.container.ComponentDef;
-import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.factory.AspectDefFactory;
 
 /**
@@ -37,14 +36,6 @@ public class AspectAutoRegister extends AbstractComponentTargetAutoRegister {
 
     public void setPointcut(String pointcut) {
         this.pointcut = pointcut;
-    }
-
-    public void registerAll() {
-        S2Container container = getContainer();
-        for (int i = 0; i < container.getComponentDefSize(); ++i) {
-            ComponentDef cd = container.getComponentDef(i);
-            register(cd);
-        }
     }
 
     protected void register(ComponentDef componentDef) {
