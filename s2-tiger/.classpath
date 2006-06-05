@@ -8,6 +8,7 @@
 	<classpathentry kind="src" path="src/examples/resources"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/seasar2"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="lib/junit-4.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/junit-4.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/easymock-2.2.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
