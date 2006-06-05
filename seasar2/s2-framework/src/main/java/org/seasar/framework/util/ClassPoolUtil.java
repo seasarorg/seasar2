@@ -35,9 +35,10 @@ public class ClassPoolUtil {
             .synchronizedMap(new WeakHashMap());
 
     public static ClassPool getClassPool(final Class targetClass) {
-        final ClassLoader classLoader = ClassLoaderUtil
-                .getClassLoader(targetClass);
+        return getClassPool(ClassLoaderUtil.getClassLoader(targetClass));
+    }
 
+    public static ClassPool getClassPool(final ClassLoader classLoader) {
         ClassPool classPool = (ClassPool) classPoolMap.get(classLoader);
         if (classPool == null) {
             if (classLoader == null) {

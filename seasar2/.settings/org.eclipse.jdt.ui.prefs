@@ -1,6 +1,7 @@
-#Wed Apr 19 22:35:11 JST 2006
+#Tue Jun 06 02:43:10 JST 2006
 eclipse.preferences.version=1
 formatter_settings_version=8
+internal.default.compliance=user
 org.eclipse.jdt.ui.exception.name=e
 org.eclipse.jdt.ui.gettersetter.use.is=true
 org.eclipse.jdt.ui.ignorelowercasenames=true

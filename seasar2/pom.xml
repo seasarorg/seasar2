@@ -129,6 +129,8 @@
         <plugin>
           <artifactId>maven-compiler-plugin</artifactId>
           <configuration>
+            <source>1.4</source>
+            <target>1.4</target>
             <encoding>UTF-8</encoding>
           </configuration>
         </plugin>
@@ -156,6 +158,7 @@
       <plugin>
         <artifactId>maven-javadoc-plugin</artifactId>
         <configuration>
+          <source>1.4</source>
           <encoding>UTF-8</encoding>
           <docencoding>UTF-8</docencoding>
           <charset>UTF-8</charset>

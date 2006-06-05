@@ -35,6 +35,9 @@ import javassist.NotFoundException;
 import javassist.bytecode.CodeAttribute;
 import javassist.bytecode.LocalVariableAttribute;
 import javassist.bytecode.MethodInfo;
+import javassist.bytecode.ParameterAnnotationsAttribute;
+import javassist.bytecode.annotation.Annotation;
+import javassist.bytecode.annotation.StringMemberValue;
 
 import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.ConstructorNotFoundRuntimeException;
@@ -70,6 +73,8 @@ public final class BeanDescImpl implements BeanDesc {
     private static final Class[] EMPTY_PARAM_TYPES = new Class[0];
 
     private static final String[] EMPTY_STRING_ARRAY = new String[0];
+
+    private static final String PARAMETER_NAME_ANNOTATION = "org.seasar.framework.beans.annotation.ParameterName";
 
     private Class beanClass;
 
@@ -367,6 +372,57 @@ public final class BeanDescImpl implements BeanDesc {
     }
 
     protected String[] getParameterNames(final CtClass clazz,
+            final CtBehavior behavior) throws NotFoundException {
+        final String[] parameterNames = getParameterNamesFronAnnotation(behavior);
+        if (parameterNames != null) {
+            return parameterNames;
+        }
+        return getParameterNamesFromCodeAttribute(behavior);
+    }
+
+    protected String[] getParameterNamesFronAnnotation(final CtBehavior behavior)
+            throws NotFoundException {
+        final MethodInfo methodInfo = behavior.getMethodInfo();
+        final ParameterAnnotationsAttribute attribute = (ParameterAnnotationsAttribute) methodInfo
+                .getAttribute(ParameterAnnotationsAttribute.visibleTag);
+        if (attribute == null) {
+            return null;
+        }
+        final int numParameters = behavior.getParameterTypes().length;
+        final String[] parameterNames = new String[numParameters];
+        final Annotation[][] annotationsArray = attribute.getAnnotations();
+        if (annotationsArray == null
+                || annotationsArray.length != numParameters) {
+            return null;
+        }
+        for (int i = 0; i < numParameters; ++i) {
+            final String parameterName = getParameterNameFromAnnotation(annotationsArray[i]);
+            if (parameterName == null) {
+                return null;
+            }
+            parameterNames[i] = parameterName;
+        }
+        return parameterNames;
+    }
+
+    protected String getParameterNameFromAnnotation(
+            final Annotation[] annotations) {
+        Annotation nameAnnotation = null;
+        for (int i = 0; i < annotations.length; ++i) {
+            final Annotation annotation = annotations[i];
+            if (PARAMETER_NAME_ANNOTATION.equals(annotation.getTypeName())) {
+                nameAnnotation = annotation;
+                break;
+            }
+        }
+        if (nameAnnotation == null) {
+            return null;
+        }
+        return ((StringMemberValue) nameAnnotation.getMemberValue("value"))
+                .getValue();
+    }
+
+    protected String[] getParameterNamesFromCodeAttribute(
             final CtBehavior behavior) throws NotFoundException {
         final MethodInfo methodInfo = behavior.getMethodInfo();
         final CodeAttribute codeAttribute = (CodeAttribute) methodInfo
