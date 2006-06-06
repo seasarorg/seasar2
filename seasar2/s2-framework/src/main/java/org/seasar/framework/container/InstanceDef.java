@@ -16,24 +16,101 @@
 package org.seasar.framework.container;
 
 /**
- * @author higa
+ * <p>
+ * コンポーネントのインスタンスをS2コンテナ上でどのように管理するのかを定義します。
+ * </p>
+ * <p>
+ * コンポーネントインスタンス定義の種類には、以下のものがあります。
+ * <dl>
+ * <dt><code>singleton</code>(default)</dt>
+ * <dd>S2コンテナ上で唯一のインスタンスになります。</dd>
+ * <dt><code>prototype</code></dt>
+ * <dd>コンポーネントが必要とされる度に異なるインスタンスになります。</dd>
+ * <dt><code>application</code></dt>
+ * <dd>アプリケーションコンテキスト毎に1つのインスタンスになります。</dd>
+ * <dt><code>request</code></dt>
+ * <dd>リクエストコンテキスト毎に1つのインスタンスになります。</dd>
+ * <dt><code>session</code></dt>
+ * <dd>セッションコンテキスト毎に1つのインスタンスになります。</dd>
+ * <dt><code>outer</code></dt>
+ * <dd>コンポーネントのインスタンスは{@link S2Container}の外で生成し、 インジェクションだけを行ないます。
+ * アスペクト、コンストラクタ・インジェクションは適用できません。</dd>
+ * </dl>
+ * それぞれ、 インスタンスが生成されるタイミングは、そのコンポーネントが必要とされる時になります。 また、
+ * その時点で存在する「コンテキスト」に属するコンポーネントのみインジェクションが可能です。
+ * </p>
+ * <p>
+ * インスタンス定義の指定方法には、以下のものがあります。
+ * <dl>
+ * <dt>diconファイル</dt>
+ * <dd><code>&lt;component&gt;</code>の<code>instance</code>属性で指定します。</dd>
+ * <dt>Tigerアノテーション</dt>
+ * <dd><code>&#064;</code>{@link org.seasar.framework.container.annotation.tiger.Component}の<code>instance</code>値で指定します。</dd>
+ * <dt>backport175アノテーション</dt>
+ * <dd><code>&#064;</code>{@link org.seasar.framework.container.annotation.backport175.Component}の<code>instance</code>値で指定します。</dd>
+ * </dl>
+ * コンポーネントインスタンス定義を省略した場合は<code>singleton</code>を指定したことになります。
+ * </p>
+ * <p>
+ * <code>application</code>、 <code>request</code>、 <code>session</code>を使う場合は、
+ * {@link S2Container#init()}を行なう前に{@link ExternalContext}をS2コンテナに設定する必要があります。
+ * </p>
+ * <p>
+ * Webコンテナ用には{@link org.seasar.framework.container.impl.HttpServletExternalContext}が用意されています。
+ * {@link org.seasar.framework.container.servlet.S2ContainerListener}、
+ * {@link org.seasar.framework.container.servlet.S2ContainerServlet}のいずれかと{@link org.seasar.framework.container.filter.S2ContainerFilter}をweb.xmlに設定すれば、
+ * {@link org.seasar.framework.container.impl.HttpServletExternalContext}がS2コンテナに設定され、
+ * <code>application</code>、 <code>request</code>、 <code>session</code>を使うことが出来るようになります。
+ * </p>
  * 
+ * @author higa
+ * @author goto(Javadoc)
  */
 public interface InstanceDef {
 
+    /**
+     * コンポーネントインスタンス定義「<code>singleton</code>」を表す定数です。
+     */
     String SINGLETON_NAME = "singleton";
 
+    /**
+     * コンポーネントインスタンス定義「<code>prototype</code>」を表す定数です。
+     */
     String PROTOTYPE_NAME = "prototype";
 
+    /**
+     * コンポーネントインスタンス定義「<code>application</code>」を表す定数です。
+     */
     String APPLICATION_NAME = "application";
 
+    /**
+     * コンポーネントインスタンス定義「<code>request</code>」を表す定数です。
+     */
     String REQUEST_NAME = "request";
 
+    /**
+     * コンポーネントインスタンス定義「<code>session</code>」を表す定数です。
+     */
     String SESSION_NAME = "session";
 
+    /**
+     * コンポーネントインスタンス定義「<code>outer</code>」を表す定数です。
+     */
     String OUTER_NAME = "outer";
 
+    /**
+     * コンポーネントインスタンス定義の文字列表現を返します。
+     * 
+     * @return コンポーネントインスタンス定義を表す文字列
+     */
     String getName();
 
+    /**
+     * コンポーネントインスタンス定義に基づいた、コンポーネント定義<code>componentDef</code>の{@link ComponentDeployer}を返します。
+     * 
+     * @param componentDef
+     *            コンポーネント定義
+     * @return {@link ComponentDeployer}オブジェクト
+     */
     ComponentDeployer createComponentDeployer(ComponentDef componentDef);
 }
