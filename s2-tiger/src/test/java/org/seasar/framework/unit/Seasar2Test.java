@@ -416,6 +416,7 @@ public class Seasar2Test extends S2TestCase {
 
     @RunWith(Seasar2.class)
     public static class AutoReadXlsWriteDbTest {
+
         static int aaa_size;
 
         static int bbb_size;
@@ -444,16 +445,9 @@ public class Seasar2Test extends S2TestCase {
         JUnitCore core = new JUnitCore();
         Result result = core.run(AutoReadXlsWriteDbTest.class);
         assertTrue(result.getFailures().toString(), result.wasSuccessful());
-        assertEquals(
-                false,
-                AutoReadXlsWriteDbTest.aaa_size == AutoReadXlsWriteDbTest.bbb_size);
-        assertEquals(
-                false,
-                AutoReadXlsWriteDbTest.aaa_size == AutoReadXlsWriteDbTest.ccc_size);
-        assertEquals(
-                true,
-                AutoReadXlsWriteDbTest.bbb_size == AutoReadXlsWriteDbTest.ccc_size);
-        assertEquals(true, AutoReadXlsWriteDbTest.bbb_size > 0);
+        assertEquals(15, AutoReadXlsWriteDbTest.aaa_size);
+        assertEquals(16, AutoReadXlsWriteDbTest.bbb_size);
+        assertEquals(16, AutoReadXlsWriteDbTest.ccc_size);
     }
 
     @RunWith(Seasar2.class)
