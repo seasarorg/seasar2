@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN"
+	"http://www.seasar.org/dtd/components24.dtd">
+<components>
+	<component class="org.seasar.framework.unit.S2TestIntrospector">
+		<property name="eachBeforeMethodPrefix">"setUp"</property>
+		<property name="eachAfterMethodPrefix">"tearDown"</property>
+		<initMethod name="addNonTestAnnotation">
+			<arg>@org.seasar.framework.unit.Seasar2Test$Disable@class</arg>
+		</initMethod>
+	</component>
+</components>

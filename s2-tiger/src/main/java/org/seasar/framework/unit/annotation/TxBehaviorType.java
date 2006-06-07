@@ -13,18 +13,12 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.framework.unit;
-
-import org.junit.internal.runners.InitializationError;
-import org.junit.internal.runners.TestClassRunner;
+package org.seasar.framework.unit.annotation;
 
 /**
  * @author taedium
  * 
  */
-public class S2TestClassRunner extends TestClassRunner {
-
-    public S2TestClassRunner(Class<?> clazz) throws InitializationError {
-        super(clazz, new S2TestClassMethodsRunner(clazz));
-    }
+public enum TxBehaviorType {
+    ROLLBACK, COMMIT, NONE
 }
