@@ -169,4 +169,13 @@ public final class ResourceUtil {
         }
         return null;
     }
+
+    public static String convertPath(String path, Class clazz) {
+        if (isExist(path)) {
+            return path;
+        }
+        String prefix = clazz.getName().replace('.', '/').replaceFirst(
+                "/[^/]+$", "");
+        return prefix + "/" + path;
+    }
 }
