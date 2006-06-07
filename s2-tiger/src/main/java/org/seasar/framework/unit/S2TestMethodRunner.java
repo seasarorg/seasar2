@@ -126,19 +126,19 @@ public class S2TestMethodRunner extends BeforeAndAfterRunner implements
     @Component
     public static class DefaultProvider implements Provider {
 
-        private static final String JAVAEE5_PATH = "javaee5.dicon";
+        protected static final String JAVAEE5_PATH = "javaee5.dicon";
 
-        private static final String J2EE_PATH = "j2ee.dicon";
+        protected static final String J2EE_PATH = "j2ee.dicon";
 
-        private boolean commitRequired;
+        protected boolean commitRequired;
 
-        private S2Container container;
+        protected S2Container container;
 
-        private DataSource dataSource;
+        protected DataSource dataSource;
 
-        private DataAccessor dataAccessor;
+        protected DataAccessor dataAccessor;
 
-        private TestIntrospector introspector;
+        protected TestIntrospector introspector;
 
         public TestIntrospector getTestIntrospector() {
             return introspector;
@@ -251,8 +251,7 @@ public class S2TestMethodRunner extends BeforeAndAfterRunner implements
             if (getContainer().hasComponentDef(DataSource.class)) {
                 dataSource = (DataSource) getContainer().getComponent(
                         DataSource.class);
-                dataAccessor = new DataAccessor(
-                        testMethod.getTest().getClass(), dataSource);
+                dataAccessor = new DataAccessor(testClass, dataSource);
             }
         }
 
@@ -291,8 +290,8 @@ public class S2TestMethodRunner extends BeforeAndAfterRunner implements
         protected void runEachBeforeMethod(Object test, Method method)
                 throws Throwable {
 
-            String methodName = introspector.getEachBeforeMethodName(test
-                    .getClass(), method);
+            String methodName = getTestIntrospector().getEachBeforeMethodName(
+                    test.getClass(), method);
             if (methodName != null) {
                 invoke(test, methodName);
             }
@@ -300,8 +299,9 @@ public class S2TestMethodRunner extends BeforeAndAfterRunner implements
 
         protected void runEachAfterMethod(Object test, Method method)
                 throws Throwable {
-            String methodName = introspector.getEachAfterMethodName(test
-                    .getClass(), method);
+
+            String methodName = getTestIntrospector().getEachAfterMethodName(
+                    test.getClass(), method);
             if (methodName != null) {
                 invoke(test, methodName);
             }
@@ -352,8 +352,8 @@ public class S2TestMethodRunner extends BeforeAndAfterRunner implements
                     FieldUtil.set(field, test, component);
                 } else {
                     if (field.getType().isAssignableFrom(DataAccessor.class)) {
-                        if (dataAccessor != null) {
-                            FieldUtil.set(field, test, dataAccessor);
+                        if (getDataAccessor() != null) {
+                            FieldUtil.set(field, test, getDataAccessor());
                             return;
                         }
                     }
@@ -429,14 +429,14 @@ public class S2TestMethodRunner extends BeforeAndAfterRunner implements
                     testClass);
 
             if (ResourceUtil.isExist(methodXlsPath)) {
-                dataAccessor.readXlsWriteDb(methodXlsPath);
+                getDataAccessor().readXlsWriteDb(methodXlsPath);
             } else {
                 String classXls = ClassUtil.getShortClassName(testClass)
                         + ".xls";
                 String classXlsPath = ResourceUtil.convertPath(classXls,
                         testClass);
                 if (ResourceUtil.isExist(classXlsPath)) {
-                    dataAccessor.readXlsWriteDb(classXlsPath);
+                    getDataAccessor().readXlsWriteDb(classXlsPath);
                 }
             }
         }
@@ -461,16 +461,17 @@ public class S2TestMethodRunner extends BeforeAndAfterRunner implements
         }
 
         protected boolean isIgnored(TestMethod testMethod) {
-            return introspector.isIgnored(testMethod.getMethod());
+            return getTestIntrospector().isIgnored(testMethod.getMethod());
         }
 
         protected Class<? extends Throwable> expectedException(
                 TestMethod testMethod) {
-            return introspector.expectedException(testMethod.getMethod());
+            return getTestIntrospector().expectedException(
+                    testMethod.getMethod());
         }
 
         protected long getTimeout(TestMethod testMethod) {
-            return introspector.getTimeout(testMethod.getMethod());
+            return getTestIntrospector().getTimeout(testMethod.getMethod());
         }
 
         protected boolean needsTransaction(Object test, Method method) {
@@ -508,6 +509,14 @@ public class S2TestMethodRunner extends BeforeAndAfterRunner implements
 
         protected void include(String path) {
             S2ContainerFactory.include(getContainer(), path);
+        }
+
+        protected DataSource getDataSource() {
+            return dataSource;
+        }
+
+        protected DataAccessor getDataAccessor() {
+            return dataAccessor;
         }
     }
 }
