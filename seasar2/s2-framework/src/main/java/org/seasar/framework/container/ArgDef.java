@@ -19,6 +19,7 @@ package org.seasar.framework.container;
  * コンポーネントのコンストラクタおよびメソッドに与えられる引数定義のためのインターフェースです。
  * 
  * @author higa
+ * @author vestige(Javadoc)
  */
 public interface ArgDef extends MetaDefAware {
 
