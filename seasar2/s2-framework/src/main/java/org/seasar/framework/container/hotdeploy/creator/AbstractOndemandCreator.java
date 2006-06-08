@@ -22,7 +22,7 @@ import org.seasar.framework.container.AutoBindingDef;
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.InstanceDef;
 import org.seasar.framework.container.S2Container;
-import org.seasar.framework.container.autoregister.ComponentDefCustomizer;
+import org.seasar.framework.container.autoregister.ComponentCustomizer;
 import org.seasar.framework.container.factory.AnnotationHandler;
 import org.seasar.framework.container.factory.AnnotationHandlerFactory;
 import org.seasar.framework.container.hotdeploy.OndemandCreator;
@@ -85,11 +85,11 @@ public abstract class AbstractOndemandCreator implements OndemandCreator {
         return customizers.size();
     }
 
-    public ComponentDefCustomizer getCustomizer(int index) {
-        return (ComponentDefCustomizer) customizers.get(index);
+    public ComponentCustomizer getCustomizer(int index) {
+        return (ComponentCustomizer) customizers.get(index);
     }
 
-    public void addCustomizer(ComponentDefCustomizer customizer) {
+    public void addCustomizer(ComponentCustomizer customizer) {
         customizers.add(customizer);
     }
 
@@ -160,7 +160,7 @@ public abstract class AbstractOndemandCreator implements OndemandCreator {
 
     protected void customize(ComponentDef componentDef) {
         for (int i = 0; i < getCustomizerSize(); ++i) {
-            ComponentDefCustomizer customizer = getCustomizer(i);
+            ComponentCustomizer customizer = getCustomizer(i);
             customizer.customize(componentDef);
         }
     }

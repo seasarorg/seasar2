@@ -24,7 +24,7 @@ import org.seasar.framework.container.factory.AspectDefFactory;
  * @author higa
  * 
  */
-public class AspectCustomizer implements ComponentDefCustomizer {
+public class AspectCustomizer implements ComponentCustomizer {
 
     private MethodInterceptor interceptor;
 

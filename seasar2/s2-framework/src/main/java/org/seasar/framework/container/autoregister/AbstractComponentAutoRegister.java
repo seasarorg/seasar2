@@ -73,11 +73,11 @@ public abstract class AbstractComponentAutoRegister extends
         return customizers.size();
     }
 
-    public ComponentDefCustomizer getCustomizer(int index) {
-        return (ComponentDefCustomizer) customizers.get(index);
+    public ComponentCustomizer getCustomizer(int index) {
+        return (ComponentCustomizer) customizers.get(index);
     }
 
-    public void addCustomizer(ComponentDefCustomizer customizer) {
+    public void addCustomizer(ComponentCustomizer customizer) {
         customizers.add(customizer);
     }
 
@@ -117,7 +117,7 @@ public abstract class AbstractComponentAutoRegister extends
 
     protected void customize(ComponentDef componentDef) {
         for (int i = 0; i < getCustomizerSize(); ++i) {
-            ComponentDefCustomizer customizer = getCustomizer(i);
+            ComponentCustomizer customizer = getCustomizer(i);
             customizer.customize(componentDef);
         }
     }

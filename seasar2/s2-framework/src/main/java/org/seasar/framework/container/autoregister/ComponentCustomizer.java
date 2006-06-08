@@ -17,7 +17,7 @@ package org.seasar.framework.container.autoregister;
 
 import org.seasar.framework.container.ComponentDef;
 
-public interface ComponentDefCustomizer {
+public interface ComponentCustomizer {
 
     void customize(ComponentDef componentDef);
 }
