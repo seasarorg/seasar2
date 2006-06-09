@@ -13,11 +13,12 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.framework.container.impl;
+package org.seasar.framework.container.impl.servlet;
 
 import javax.servlet.http.HttpSession;
 
 import org.seasar.framework.container.ContainerConstants;
+import org.seasar.framework.container.impl.SimpleComponentDef;
 
 /**
  * @author higa

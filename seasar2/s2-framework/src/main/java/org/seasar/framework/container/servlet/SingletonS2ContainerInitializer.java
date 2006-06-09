@@ -18,8 +18,8 @@ package org.seasar.framework.container.servlet;
 import org.seasar.framework.container.deployer.ComponentDeployerFactory;
 import org.seasar.framework.container.deployer.HttpServletComponentDeployerProvider;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
-import org.seasar.framework.container.impl.HttpServletExternalContext;
-import org.seasar.framework.container.impl.HttpServletExternalContextComponentDefRegister;
+import org.seasar.framework.container.impl.servlet.HttpServletExternalContext;
+import org.seasar.framework.container.impl.servlet.HttpServletExternalContextComponentDefRegister;
 import org.seasar.framework.util.StringUtil;
 
 /**

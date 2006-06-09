@@ -13,23 +13,27 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.framework.container.impl;
+package org.seasar.framework.container.impl.servlet;
 
-import org.seasar.framework.container.ExternalContextComponentDefRegister;
-import org.seasar.framework.container.S2Container;
+import javax.servlet.http.HttpServletRequest;
+
+import org.seasar.framework.container.ContainerConstants;
+import org.seasar.framework.container.impl.SimpleComponentDef;
 
 /**
  * @author higa
  * 
  */
-public class HttpServletExternalContextComponentDefRegister implements
-        ExternalContextComponentDefRegister {
+public class HttpServletRequestComponentDef extends SimpleComponentDef {
 
-    public void registerComponentDefs(S2Container container) {
-        S2ContainerImpl impl = (S2ContainerImpl) container;
-        impl.register0(new HttpServletRequestComponentDef());
-        impl.register0(new HttpServletResponseComponentDef());
-        impl.register0(new HttpSessionComponentDef());
-        impl.register0(new ServletContextComponentDef());
+    public HttpServletRequestComponentDef() {
+        super(HttpServletRequest.class, ContainerConstants.REQUEST_NAME);
+    }
+
+    /**
+     * @see org.seasar.framework.container.ComponentDef#getComponent()
+     */
+    public Object getComponent() {
+        return getContainer().getRoot().getExternalContext().getRequest();
     }
 }

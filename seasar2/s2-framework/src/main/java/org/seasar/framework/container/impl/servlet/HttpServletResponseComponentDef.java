@@ -13,45 +13,27 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.framework.container;
+package org.seasar.framework.container.impl.servlet;
 
-import java.util.Map;
+import javax.servlet.http.HttpServletResponse;
+
+import org.seasar.framework.container.ContainerConstants;
+import org.seasar.framework.container.impl.SimpleComponentDef;
 
 /**
  * @author higa
  * 
  */
-public interface ExternalContext {
+public class HttpServletResponseComponentDef extends SimpleComponentDef {
 
-    Object getRequest();
+    public HttpServletResponseComponentDef() {
+        super(HttpServletResponse.class, ContainerConstants.RESPONSE_NAME);
+    }
 
-    void setRequest(Object request);
-
-    Object getResponse();
-
-    void setResponse(Object response);
-
-    Object getSession();
-
-    Object getApplication();
-
-    void setApplication(Object application);
-    
-    Map getApplicationMap();
-    
-    Map getInitParameterMap();
-    
-    Map getSessionMap();
-    
-    Map getRequestCookieMap();
-
-    Map getRequestHeaderMap();
-
-    Map getRequestHeaderValuesMap();
-    
-    Map getRequestMap();
-
-    Map getRequestParameterMap();
-    
-    Map getRequestParameterValuesMap();
+    /**
+     * @see org.seasar.framework.container.ComponentDef#getComponent()
+     */
+    public Object getComponent() {
+        return getContainer().getRoot().getExternalContext().getResponse();
+    }
 }

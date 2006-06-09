@@ -13,26 +13,33 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.framework.container.impl;
+package org.seasar.framework.container.impl.servlet;
 
-import javax.servlet.http.HttpServletResponse;
+import java.util.Enumeration;
 
-import org.seasar.framework.container.ContainerConstants;
+import javax.servlet.ServletContext;
+
+import org.seasar.framework.container.impl.AbstractUnmodifiableExternalContextMap;
 
 /**
+ * @author Shinpei Ohtani
  * @author higa
- * 
  */
-public class HttpServletResponseComponentDef extends SimpleComponentDef {
+public class ServletInitParameterMap extends
+        AbstractUnmodifiableExternalContextMap {
 
-    public HttpServletResponseComponentDef() {
-        super(HttpServletResponse.class, ContainerConstants.RESPONSE_NAME);
+    private final ServletContext context;
+
+    public ServletInitParameterMap(final ServletContext context) {
+        this.context = context;
     }
 
-    /**
-     * @see org.seasar.framework.container.ComponentDef#getComponent()
-     */
-    public Object getComponent() {
-        return getContainer().getRoot().getExternalContext().getResponse();
+    protected Object getAttribute(String key) {
+        return context.getInitParameter(key);
     }
+
+    protected Enumeration getAttributeNames() {
+        return context.getInitParameterNames();
+    }
+
 }

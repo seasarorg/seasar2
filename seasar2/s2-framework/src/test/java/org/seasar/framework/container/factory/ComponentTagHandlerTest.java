@@ -29,7 +29,7 @@ import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.assembler.AutoBindingDefFactory;
 import org.seasar.framework.container.deployer.ComponentDeployerFactory;
 import org.seasar.framework.container.deployer.HttpServletComponentDeployerProvider;
-import org.seasar.framework.container.impl.HttpServletExternalContext;
+import org.seasar.framework.container.impl.servlet.HttpServletExternalContext;
 import org.seasar.framework.mock.servlet.MockServletContextImpl;
 
 /**

@@ -26,8 +26,8 @@ import org.seasar.framework.container.ComponentDeployer;
 import org.seasar.framework.container.ExternalContext;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.impl.ComponentDefImpl;
-import org.seasar.framework.container.impl.HttpServletExternalContext;
 import org.seasar.framework.container.impl.S2ContainerImpl;
+import org.seasar.framework.container.impl.servlet.HttpServletExternalContext;
 import org.seasar.framework.hotswap.Hotswap;
 import org.seasar.framework.mock.servlet.MockServletContextImpl;
 

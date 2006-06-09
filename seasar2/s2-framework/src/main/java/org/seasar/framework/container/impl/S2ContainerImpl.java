@@ -196,7 +196,7 @@ public class S2ContainerImpl implements S2Container, ContainerConstants {
         componentDefList.add(componentDef);
     }
 
-    protected void register0(ComponentDef componentDef) {
+    public void register0(ComponentDef componentDef) {
         if (componentDef.getContainer() == null) {
             componentDef.setContainer(this);
         }
