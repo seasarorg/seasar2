@@ -58,4 +58,7 @@ public interface ContainerConstants {
     
 
     String COMPONENT_DEF_NAME = "componentDef";
+
+    public String CONFIG_NAME = "config";
+
 }
