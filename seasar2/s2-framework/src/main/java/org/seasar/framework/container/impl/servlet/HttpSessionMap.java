@@ -25,7 +25,7 @@ import org.seasar.framework.util.AssertionUtil;
 import org.seasar.framework.util.EmptyEnumeration;
 
 /**
- * @author Shinpei Ohtani
+ * @author shot
  * @author higa
  */
 public class HttpSessionMap extends AbstractExternalContextMap {

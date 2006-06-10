@@ -22,7 +22,7 @@ import javax.servlet.ServletContext;
 import org.seasar.framework.container.impl.AbstractUnmodifiableExternalContextMap;
 
 /**
- * @author Shinpei Ohtani
+ * @author shot
  * @author higa
  */
 public class ServletInitParameterMap extends

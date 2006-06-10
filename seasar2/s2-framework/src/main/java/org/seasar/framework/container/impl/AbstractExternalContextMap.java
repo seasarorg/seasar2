@@ -29,7 +29,7 @@ import java.util.Set;
 import org.seasar.framework.util.EnumerationIterator;
 
 /**
- * @author Shinpei Ohtani
+ * @author shot
  * @author higa
  */
 public abstract class AbstractExternalContextMap extends AbstractMap {

@@ -24,7 +24,7 @@ import org.seasar.framework.container.impl.AbstractUnmodifiableExternalContextMa
 import org.seasar.framework.util.AssertionUtil;
 
 /**
- * @author Shinpei Ohtani
+ * @author shot
  * @author higa
  */
 public class CookieMap extends AbstractUnmodifiableExternalContextMap {

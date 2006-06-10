@@ -23,7 +23,7 @@ import org.seasar.framework.container.impl.AbstractExternalContextMap;
 import org.seasar.framework.util.AssertionUtil;
 
 /**
- * @author Shinpei Ohtani
+ * @author shot
  * @author higa
  */
 public class ServletApplicationMap extends AbstractExternalContextMap {

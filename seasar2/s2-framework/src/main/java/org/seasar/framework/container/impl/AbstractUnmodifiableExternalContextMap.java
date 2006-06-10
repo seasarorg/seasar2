@@ -21,7 +21,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * @author Shinpei Ohtani
+ * @author shot
  */
 public abstract class AbstractUnmodifiableExternalContextMap extends
         AbstractExternalContextMap {

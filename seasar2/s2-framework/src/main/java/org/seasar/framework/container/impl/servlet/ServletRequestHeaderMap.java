@@ -22,7 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.seasar.framework.container.impl.AbstractUnmodifiableExternalContextMap;
 
 /**
- * @author Shinpei Ohtani
+ * @author shot
  * @author higa
  */
 public class ServletRequestHeaderMap extends

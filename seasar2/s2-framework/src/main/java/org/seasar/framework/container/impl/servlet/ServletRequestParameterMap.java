@@ -22,7 +22,7 @@ import javax.servlet.ServletRequest;
 import org.seasar.framework.container.impl.AbstractUnmodifiableExternalContextMap;
 
 /**
- * @author Shinpei Ohtani
+ * @author shot
  * @author higa
  */
 public class ServletRequestParameterMap extends
