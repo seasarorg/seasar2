@@ -15,13 +15,13 @@
  */
 package org.seasar.framework.container.impl.servlet;
 
-import org.seasar.extension.unit.S2TestCase;
 import org.seasar.framework.mock.servlet.MockHttpServletRequest;
+import org.seasar.framework.unit.S2FrameworkTestCase;
 
 /**
  * @author shot
  */
-public class ServletRequestParameterValuesMapTest extends S2TestCase {
+public class ServletRequestParameterValuesMapTest extends S2FrameworkTestCase {
 
     public void testServletRequestParameterValuesMap() {
         MockHttpServletRequest request = getRequest();
