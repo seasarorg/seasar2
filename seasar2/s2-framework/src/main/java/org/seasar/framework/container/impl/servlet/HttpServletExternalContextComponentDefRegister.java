@@ -18,7 +18,6 @@ package org.seasar.framework.container.impl.servlet;
 import org.seasar.framework.container.ExternalContextComponentDefRegister;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.impl.S2ContainerImpl;
-import org.seasar.framework.container.impl.ServletContextComponentDef;
 
 /**
  * @author higa
@@ -33,5 +32,8 @@ public class HttpServletExternalContextComponentDefRegister implements
         impl.register0(new HttpServletResponseComponentDef());
         impl.register0(new HttpSessionComponentDef());
         impl.register0(new ServletContextComponentDef());
+        impl.register0(new ServletApplicationMapComponentDef());
+        impl.register0(new ServletInitParameterMapComponentDef());
+        impl.register0(new HttpSessionMapComponentDef());
     }
 }

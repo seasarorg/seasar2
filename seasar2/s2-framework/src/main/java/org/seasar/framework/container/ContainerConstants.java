@@ -34,8 +34,28 @@ public interface ContainerConstants {
     String RESPONSE_NAME = "response";
 
     String SESSION_NAME = "session";
-
+    
     String SERVLET_CONTEXT_NAME = "application";
+    
+    String APPLICATION_SCOPE = "applicationScope";
+    
+    String INIT_PARAM = "initParam";
+    
+    String SESSION_SCOPE = "sessionScope";
+
+    String COOKIE = "cookie";
+
+    String HEADER = "header";
+
+    String HEADER_VALUES = "headerValues";
+
+    String PARAM = "param";
+
+    String PARAM_VALUES = "paramValues";
+
+    String REQUEST_SCOPE = "requestScope";
+
+    
 
     String COMPONENT_DEF_NAME = "componentDef";
 }
