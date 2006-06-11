@@ -33,7 +33,8 @@ public class ServletRequestParameterValuesMapTest extends S2FrameworkTestCase {
         assertTrue(o instanceof String[]);
         String[] strs = (String[]) o;
         assertEquals(2, strs.length);
-
+        assertEquals("A", strs[0]);
+        assertEquals("B", strs[1]);
         assertEquals("a", map.getAttributeNames().nextElement());
     }
 }

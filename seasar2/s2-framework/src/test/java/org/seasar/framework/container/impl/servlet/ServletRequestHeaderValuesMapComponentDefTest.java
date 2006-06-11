@@ -15,28 +15,28 @@
  */
 package org.seasar.framework.container.impl.servlet;
 
+import java.util.Map;
+
+import org.seasar.framework.container.ContainerConstants;
 import org.seasar.framework.mock.servlet.MockHttpServletRequest;
 import org.seasar.framework.unit.S2FrameworkTestCase;
 
 /**
- * @author shot
+ * @author higa
  */
-public class ServletRequestHeaderValuesMapTest extends S2FrameworkTestCase {
+public class ServletRequestHeaderValuesMapComponentDefTest extends S2FrameworkTestCase {
 
     public void testServletRequestHeaderValuesMap() {
         MockHttpServletRequest request = getRequest();
         request.addHeader("a", "A");
         request.addHeader("a", "B");
-        ServletRequestHeaderValuesMap map = new ServletRequestHeaderValuesMap(
-                request);
-        Object o = map.getAttribute("a");
+        Map map = (Map) getComponent(ContainerConstants.HEADER_VALUES);
+        Object o = map.get("a");
         assertNotNull(o);
         assertTrue(o instanceof String[]);
         String[] strs = (String[]) o;
         assertEquals(2, strs.length);
         assertEquals("A", strs[0]);
         assertEquals("B", strs[1]);
-        assertEquals("a", map.getAttributeNames().nextElement());
     }
-
 }

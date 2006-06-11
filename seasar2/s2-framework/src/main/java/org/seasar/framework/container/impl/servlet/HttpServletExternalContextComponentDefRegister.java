@@ -35,5 +35,11 @@ public class HttpServletExternalContextComponentDefRegister implements
         impl.register0(new ServletApplicationMapComponentDef());
         impl.register0(new ServletInitParameterMapComponentDef());
         impl.register0(new HttpSessionMapComponentDef());
+        impl.register0(new ServletRequestMapComponentDef());
+        impl.register0(new CookieMapComponentDef());
+        impl.register0(new ServletRequestHeaderMapComponentDef());
+        impl.register0(new ServletRequestHeaderValuesMapComponentDef());
+        impl.register0(new ServletRequestParameterMapComponentDef());
+        impl.register0(new ServletRequestParameterValuesMapComponentDef());
     }
 }

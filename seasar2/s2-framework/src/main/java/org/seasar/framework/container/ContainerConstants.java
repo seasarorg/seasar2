@@ -42,6 +42,8 @@ public interface ContainerConstants {
     String INIT_PARAM = "initParam";
     
     String SESSION_SCOPE = "sessionScope";
+    
+    String REQUEST_SCOPE = "requestScope";
 
     String COOKIE = "cookie";
 
@@ -53,12 +55,7 @@ public interface ContainerConstants {
 
     String PARAM_VALUES = "paramValues";
 
-    String REQUEST_SCOPE = "requestScope";
-
-    
-
     String COMPONENT_DEF_NAME = "componentDef";
 
-    public String CONFIG_NAME = "config";
-
+    String CONFIG_NAME = "config";
 }
