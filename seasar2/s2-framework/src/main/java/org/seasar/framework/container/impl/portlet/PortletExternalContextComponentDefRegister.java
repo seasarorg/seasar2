@@ -17,7 +17,6 @@ package org.seasar.framework.container.impl.portlet;
 
 import org.seasar.framework.container.ExternalContextComponentDefRegister;
 import org.seasar.framework.container.S2Container;
-import org.seasar.framework.container.impl.PortletContextComponentDef;
 import org.seasar.framework.container.impl.S2ContainerImpl;
 
 /**
