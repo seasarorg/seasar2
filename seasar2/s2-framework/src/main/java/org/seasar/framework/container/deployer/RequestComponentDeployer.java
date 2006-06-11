@@ -15,12 +15,11 @@
  */
 package org.seasar.framework.container.deployer;
 
-import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.ExternalContext;
 import org.seasar.framework.exception.EmptyRuntimeException;
-import org.seasar.framework.hotswap.Hotswap;
 import org.seasar.framework.log.Logger;
 
 /**
@@ -44,28 +43,22 @@ public class RequestComponentDeployer extends AbstractComponentDeployer {
      */
     public Object deploy() {
         ComponentDef cd = getComponentDef();
-        HttpServletRequest request = null;
         ExternalContext extCtx = cd.getContainer().getRoot()
                 .getExternalContext();
-        if (extCtx != null && extCtx.getRequest() instanceof HttpServletRequest) {
-            request = (HttpServletRequest) extCtx.getRequest();
-        }
-        if (request == null) {
-            RuntimeException re = new EmptyRuntimeException("request");
+        if (extCtx == null) {
+            RuntimeException re = new EmptyRuntimeException("externalContext");
             logger.log(re);
             throw re;
         }
+        Map requestMap = extCtx.getRequestMap();
         String componentName = getComponentName();
         Object component = null;
-        Hotswap hotswap = cd.getHotswap();
-        if (hotswap == null || !hotswap.isModified()) {
-            component = request.getAttribute(componentName);
-            if (component != null) {
-                return component;
-            }
+        component = requestMap.get(componentName);
+        if (component != null) {
+            return component;
         }
         component = getConstructorAssembler().assemble();
-        request.setAttribute(componentName, component);
+        requestMap.put(componentName, component);
         getPropertyAssembler().assemble(component);
         getInitMethodAssembler().assemble(component);
         return component;

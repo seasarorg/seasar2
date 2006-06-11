@@ -16,7 +16,6 @@
 package org.seasar.framework.container.deployer;
 
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.HashMap;
 
 import junit.framework.TestCase;
@@ -236,22 +235,6 @@ public class SingletonComponentDeployerTest extends TestCase {
         } catch (UnsupportedOperationException ex) {
             System.out.println(ex);
         }
-    }
-
-    public void testDeployHotswap() throws Exception {
-        S2Container container = new S2ContainerImpl();
-        container.setHotswapMode(true);
-        ComponentDefImpl cd = new ComponentDefImpl(FooImpl.class);
-        container.register(cd);
-        container.init();
-        ComponentDeployer deployer = cd.getComponentDeployer();
-        Foo foo = (Foo) deployer.deploy();
-        Foo foo2 = (Foo) deployer.deploy();
-        assertSame("1", foo, foo2);
-        Thread.sleep(500);
-        cd.getHotswap().getFile().setLastModified(new Date().getTime());
-        foo2 = (Foo) deployer.deploy();
-        assertSame("2", foo, foo2);
     }
 
     public interface Foo {

@@ -15,12 +15,11 @@
  */
 package org.seasar.framework.container.deployer;
 
-import javax.servlet.http.HttpSession;
+import java.util.Map;
 
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.ExternalContext;
 import org.seasar.framework.exception.EmptyRuntimeException;
-import org.seasar.framework.hotswap.Hotswap;
 
 /**
  * @author higa
@@ -40,26 +39,20 @@ public class SessionComponentDeployer extends AbstractComponentDeployer {
      */
     public Object deploy() {
         ComponentDef cd = getComponentDef();
-        HttpSession session = null;
         ExternalContext extCtx = cd.getContainer().getRoot()
                 .getExternalContext();
-        if (extCtx != null && extCtx.getSession() instanceof HttpSession) {
-            session = (HttpSession) extCtx.getSession();
+        if (extCtx == null) {
+            throw new EmptyRuntimeException("externalContext");
         }
-        if (session == null) {
-            throw new EmptyRuntimeException("session");
-        }
+        Map sessionMap = extCtx.getSessionMap();
         String componentName = getComponentName();
         Object component = null;
-        Hotswap hotswap = cd.getHotswap();
-        if (hotswap == null || !hotswap.isModified()) {
-            component = session.getAttribute(componentName);
-            if (component != null) {
-                return component;
-            }
+        component = sessionMap.get(componentName);
+        if (component != null) {
+            return component;
         }
         component = getConstructorAssembler().assemble();
-        session.setAttribute(componentName, component);
+        sessionMap.put(componentName, component);
         getPropertyAssembler().assemble(component);
         getInitMethodAssembler().assemble(component);
         return component;

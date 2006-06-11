@@ -15,23 +15,22 @@
  */
 package org.seasar.framework.container.deployer;
 
-import javax.servlet.ServletContext;
+import java.util.Map;
 
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.ExternalContext;
 import org.seasar.framework.exception.EmptyRuntimeException;
-import org.seasar.framework.hotswap.Hotswap;
 
 /**
  * @author higa
  * 
  */
-public class ServletContextComponentDeployer extends AbstractComponentDeployer {
+public class ApplicationComponentDeployer extends AbstractComponentDeployer {
 
     /**
      * @param componentDef
      */
-    public ServletContextComponentDeployer(ComponentDef componentDef) {
+    public ApplicationComponentDeployer(ComponentDef componentDef) {
         super(componentDef);
     }
 
@@ -40,26 +39,20 @@ public class ServletContextComponentDeployer extends AbstractComponentDeployer {
      */
     public Object deploy() {
         ComponentDef cd = getComponentDef();
-        ServletContext servletContext = null;
         ExternalContext extCtx = cd.getContainer().getRoot()
                 .getExternalContext();
-        if (extCtx != null && extCtx.getApplication() instanceof ServletContext) {
-            servletContext = (ServletContext) extCtx.getApplication();
+        if (extCtx == null) {
+            throw new EmptyRuntimeException("externalContext");
         }
-        if (servletContext == null) {
-            throw new EmptyRuntimeException("servletContext");
-        }
+        Map applicationMap = extCtx.getApplicationMap();
         String componentName = getComponentName();
         Object component = null;
-        Hotswap hotswap = cd.getHotswap();
-        if (hotswap == null || !hotswap.isModified()) {
-            component = servletContext.getAttribute(componentName);
-            if (component != null) {
-                return component;
-            }
+        component = applicationMap.get(componentName);
+        if (component != null) {
+            return component;
         }
         component = getConstructorAssembler().assemble();
-        servletContext.setAttribute(componentName, component);
+        applicationMap.put(componentName, component);
         getPropertyAssembler().assemble(component);
         getInitMethodAssembler().assemble(component);
         return component;

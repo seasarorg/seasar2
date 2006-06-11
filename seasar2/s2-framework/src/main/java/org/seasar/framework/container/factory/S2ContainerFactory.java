@@ -160,14 +160,6 @@ public final class S2ContainerFactory {
             this.pathResolver = pathResolver;
         }
 
-        public boolean getHotswapMode() {
-            return hotswapMode;
-        }
-
-        public void setHotswapMode(final boolean hotswapMode) {
-            this.hotswapMode = hotswapMode;
-        }
-
         public ExternalContext getExternalContext() {
             return externalContext;
         }
@@ -244,7 +236,6 @@ public final class S2ContainerFactory {
                 final String ext = getExtension(realPath);
                 final S2Container container = getBuilder(ext).build(realPath,
                         classLoader);
-                container.setHotswapMode(hotswapMode);
                 container.setExternalContext(externalContext);
                 container
                         .setExternalContextComponentDefRegister(externalContextComponentDefRegister);

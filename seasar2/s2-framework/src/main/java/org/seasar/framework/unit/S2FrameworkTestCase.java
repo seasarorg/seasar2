@@ -27,7 +27,7 @@ import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.ExternalContext;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.deployer.ComponentDeployerFactory;
-import org.seasar.framework.container.deployer.HttpServletComponentDeployerProvider;
+import org.seasar.framework.container.deployer.ExternalComponentDeployerProvider;
 import org.seasar.framework.container.factory.S2ContainerFactory;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 import org.seasar.framework.container.impl.S2ContainerImpl;
@@ -182,7 +182,7 @@ public abstract class S2FrameworkTestCase extends TestCase {
         container
                 .setExternalContextComponentDefRegister(new HttpServletExternalContextComponentDefRegister());
         ComponentDeployerFactory
-                .setProvider(new HttpServletComponentDeployerProvider());
+                .setProvider(new ExternalComponentDeployerProvider());
     }
 
     protected void tearDownContainer() throws Throwable {

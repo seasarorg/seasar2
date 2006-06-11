@@ -15,8 +15,6 @@
  */
 package org.seasar.framework.container.deployer;
 
-import java.util.Date;
-
 import javax.servlet.http.HttpServletRequest;
 
 import junit.framework.TestCase;
@@ -28,7 +26,6 @@ import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.impl.ComponentDefImpl;
 import org.seasar.framework.container.impl.S2ContainerImpl;
 import org.seasar.framework.container.impl.servlet.HttpServletExternalContext;
-import org.seasar.framework.hotswap.Hotswap;
 import org.seasar.framework.mock.servlet.MockServletContextImpl;
 
 /**
@@ -50,25 +47,6 @@ public class RequestComponentDeployerTest extends TestCase {
         Foo foo = (Foo) deployer.deploy();
         assertSame("1", foo, request.getAttribute("foo"));
         assertSame("2", foo, deployer.deploy());
-    }
-
-    public void testDeployForHotswap() throws Exception {
-        MockServletContextImpl ctx = new MockServletContextImpl("s2jsf-example");
-        HttpServletRequest request = ctx.createRequest("/hello.html");
-        S2Container container = new S2ContainerImpl();
-        container.setHotswapMode(true);
-        ExternalContext extCtx = new HttpServletExternalContext();
-        extCtx.setRequest(request);
-        container.setExternalContext(extCtx);
-        ComponentDef cd = new ComponentDefImpl(Foo.class, "foo");
-        container.register(cd);
-        container.init();
-        ComponentDeployer deployer = new RequestComponentDeployer(cd);
-        Foo foo = (Foo) deployer.deploy();
-        Hotswap hotswap = cd.getHotswap();
-        Thread.sleep(500);
-        hotswap.getFile().setLastModified(new Date().getTime());
-        assertNotSame("1", foo.getClass(), deployer.deploy().getClass());
     }
 
     public static class Foo {

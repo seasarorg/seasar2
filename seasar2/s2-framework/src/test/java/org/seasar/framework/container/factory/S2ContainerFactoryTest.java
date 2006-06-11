@@ -147,14 +147,6 @@ public class S2ContainerFactoryTest extends TestCase {
                 .getParent());
     }
 
-    public void testHotswapMode() throws Exception {
-        configure("HotswapMode.dicon");
-        S2Container container = S2ContainerFactory.create(getClass().getName()
-                .replace('.', '/')
-                + ".foo.dicon");
-        assertTrue("1", container.isHotswapMode());
-    }
-
     public void testDestroy() throws Exception {
         configure("ContainerFactory.dicon");
         assertNotNull("1", S2ContainerFactory.configurationContainer);

@@ -28,7 +28,7 @@ import org.seasar.framework.container.ExternalContext;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.assembler.AutoBindingDefFactory;
 import org.seasar.framework.container.deployer.ComponentDeployerFactory;
-import org.seasar.framework.container.deployer.HttpServletComponentDeployerProvider;
+import org.seasar.framework.container.deployer.ExternalComponentDeployerProvider;
 import org.seasar.framework.container.impl.servlet.HttpServletExternalContext;
 import org.seasar.framework.mock.servlet.MockServletContextImpl;
 
@@ -43,7 +43,7 @@ public class ComponentTagHandlerTest extends TestCase {
     public void testComponent() throws Exception {
         S2Container container = S2ContainerFactory.create(PATH);
         ComponentDeployerFactory
-                .setProvider(new HttpServletComponentDeployerProvider());
+                .setProvider(new ExternalComponentDeployerProvider());
         container.init();
         assertNotNull("1", container.getComponent(List.class));
         assertNotNull("2", container.getComponent("aaa"));

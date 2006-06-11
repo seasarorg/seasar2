@@ -3,7 +3,7 @@ package org.seasar.framework.container.deployer;
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.ComponentDeployer;
 
-public class HttpServletComponentDeployerProvider extends
+public class ExternalComponentDeployerProvider extends
         ComponentDeployerFactory.DefaultProvider {
 
     public ComponentDeployer createRequestComponentDeployer(
@@ -18,6 +18,6 @@ public class HttpServletComponentDeployerProvider extends
 
     public ComponentDeployer createApplicationComponentDeployer(
             final ComponentDef cd) {
-        return new ServletContextComponentDeployer(cd);
+        return new ApplicationComponentDeployer(cd);
     }
 }

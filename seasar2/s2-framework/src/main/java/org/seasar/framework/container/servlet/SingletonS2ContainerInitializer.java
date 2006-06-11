@@ -16,7 +16,7 @@
 package org.seasar.framework.container.servlet;
 
 import org.seasar.framework.container.deployer.ComponentDeployerFactory;
-import org.seasar.framework.container.deployer.HttpServletComponentDeployerProvider;
+import org.seasar.framework.container.deployer.ExternalComponentDeployerProvider;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 import org.seasar.framework.container.impl.servlet.HttpServletExternalContext;
 import org.seasar.framework.container.impl.servlet.HttpServletExternalContextComponentDefRegister;
@@ -40,7 +40,7 @@ class SingletonS2ContainerInitializer {
         }
         if (ComponentDeployerFactory.getProvider() instanceof ComponentDeployerFactory.DefaultProvider) {
             ComponentDeployerFactory
-                    .setProvider(new HttpServletComponentDeployerProvider());
+                    .setProvider(new ExternalComponentDeployerProvider());
         }
         HttpServletExternalContext extCtx = new HttpServletExternalContext();
         extCtx.setApplication(application);

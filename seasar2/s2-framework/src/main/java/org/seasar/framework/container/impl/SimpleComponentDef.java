@@ -28,7 +28,6 @@ import org.seasar.framework.container.MetaDef;
 import org.seasar.framework.container.PropertyDef;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.TooManyRegistrationRuntimeException;
-import org.seasar.framework.hotswap.Hotswap;
 
 /**
  * @author higa
@@ -355,9 +354,5 @@ public class SimpleComponentDef implements ComponentDef {
      * @see org.seasar.framework.container.ComponentDef#destroy()
      */
     public void destroy() {
-    }
-
-    public Hotswap getHotswap() {
-        return null;
     }
 }

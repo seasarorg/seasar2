@@ -17,22 +17,14 @@ package org.seasar.framework.container.deployer;
 
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.CyclicReferenceRuntimeException;
-import org.seasar.framework.hotswap.Hotswap;
-import org.seasar.framework.hotswap.HotswapProxy;
-import org.seasar.framework.hotswap.HotswapTargetFactory;
 
 /**
  * @author higa
  * 
  */
-public class SingletonComponentDeployer extends AbstractComponentDeployer
-        implements HotswapTargetFactory {
+public class SingletonComponentDeployer extends AbstractComponentDeployer {
 
     private Object component;
-
-    private Object hotswapTarget;
-
-    private Hotswap hotswap;
 
     private boolean instantiating = false;
 
@@ -64,36 +56,18 @@ public class SingletonComponentDeployer extends AbstractComponentDeployer
         }
         instantiating = true;
         try {
-            Object o = getConstructorAssembler().assemble();
-            if (hotswap != null) {
-                hotswapTarget = o;
-                if (component == null) {
-                    component = HotswapProxy.create(getComponentDef()
-                            .getComponentClass(), this, Thread.currentThread()
-                            .getContextClassLoader());
-                }
-            } else {
-                component = o;
-            }
+            component = getConstructorAssembler().assemble();
         } finally {
             instantiating = false;
         }
-        getPropertyAssembler().assemble(getTarget());
-        getInitMethodAssembler().assemble(getTarget());
-    }
-
-    protected Object getTarget() {
-        return hotswapTarget != null ? hotswapTarget : component;
+        getPropertyAssembler().assemble(component);
+        getInitMethodAssembler().assemble(component);
     }
 
     /**
      * @see org.seasar.framework.container.ComponentDeployer#init()
      */
     public void init() {
-        hotswap = getComponentDef().getHotswap();
-        if (hotswap != null && !isAppliedHotswap()) {
-            hotswap = null;
-        }
         deploy();
     }
 
@@ -121,16 +95,7 @@ public class SingletonComponentDeployer extends AbstractComponentDeployer
         if (component == null) {
             return;
         }
-        getDestroyMethodAssembler().assemble(getTarget());
+        getDestroyMethodAssembler().assemble(component);
         component = null;
-        hotswapTarget = null;
     }
-
-    public synchronized Object updateTarget() {
-        if (hotswap.isModified()) {
-            assemble();
-        }
-        return hotswapTarget;
-    }
-
 }

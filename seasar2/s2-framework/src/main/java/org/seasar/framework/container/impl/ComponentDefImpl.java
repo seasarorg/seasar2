@@ -40,7 +40,6 @@ import org.seasar.framework.container.util.InitMethodDefSupport;
 import org.seasar.framework.container.util.InterTypeDefSupport;
 import org.seasar.framework.container.util.MetaDefSupport;
 import org.seasar.framework.container.util.PropertyDefSupport;
-import org.seasar.framework.hotswap.Hotswap;
 
 /**
  * @author higa
@@ -78,8 +77,6 @@ public class ComponentDefImpl implements ComponentDef, ContainerConstants {
 
     private ComponentDeployer componentDeployer;
 
-    private Hotswap hotswap;
-
     public ComponentDefImpl() {
     }
 
@@ -110,15 +107,7 @@ public class ComponentDefImpl implements ComponentDef, ContainerConstants {
      * @see org.seasar.framework.container.ComponentDef#getComponentClass()
      */
     public final Class getComponentClass() {
-        updateComponentClass();
         return componentClass;
-    }
-
-    protected synchronized void updateComponentClass() {
-        if (hotswap != null && hotswap.isModified()) {
-            componentClass = hotswap.updateTargetClass();
-            concreteClass = null;
-        }
     }
 
     /**
@@ -139,7 +128,6 @@ public class ComponentDefImpl implements ComponentDef, ContainerConstants {
      * @see org.seasar.framework.container.ComponentDef#getConcreteClass()
      */
     public synchronized final Class getConcreteClass() {
-        updateComponentClass();
         if (concreteClass == null) {
             ClassLoader oldLoader = Thread.currentThread()
                     .getContextClassLoader();
@@ -297,12 +285,6 @@ public class ComponentDefImpl implements ComponentDef, ContainerConstants {
      */
     public void init() {
         getConcreteClass();
-        if (hotswap == null && componentClass != null && container != null
-                && container.getRoot().isHotswapMode()) {
-
-            hotswap = new Hotswap(componentClass);
-        }
-
         getComponentDeployer().init();
     }
 
@@ -419,10 +401,6 @@ public class ComponentDefImpl implements ComponentDef, ContainerConstants {
      */
     public int getMetaDefSize() {
         return metaDefSupport.getMetaDefSize();
-    }
-
-    public Hotswap getHotswap() {
-        return hotswap;
     }
 
     public synchronized ComponentDeployer getComponentDeployer() {

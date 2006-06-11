@@ -28,7 +28,7 @@ public class ComponentDeployerFactoryTest extends TestCase {
 
     public void setUp() throws Exception {
         ComponentDeployerFactory
-                .setProvider(new HttpServletComponentDeployerProvider());
+                .setProvider(new ExternalComponentDeployerProvider());
     }
 
     public void tearDown() throws Exception {
@@ -66,7 +66,7 @@ public class ComponentDeployerFactoryTest extends TestCase {
         cd.setInstanceDef(InstanceDefFactory.APPLICATION);
         ComponentDeployer deployer = ComponentDeployerFactory
                 .createServletContextComponentDeployer(cd);
-        assertTrue("1", deployer instanceof ServletContextComponentDeployer);
+        assertTrue("1", deployer instanceof ApplicationComponentDeployer);
     }
 
     public void testSession() throws Exception {

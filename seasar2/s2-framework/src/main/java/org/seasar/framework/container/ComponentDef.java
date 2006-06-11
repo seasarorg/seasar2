@@ -15,8 +15,6 @@
  */
 package org.seasar.framework.container;
 
-import org.seasar.framework.hotswap.Hotswap;
-
 /**
  * @author higa
  * 
@@ -25,38 +23,36 @@ public interface ComponentDef extends ArgDefAware, InterTypeDefAware,
         PropertyDefAware, InitMethodDefAware, DestroyMethodDefAware,
         AspectDefAware, MetaDefAware {
 
-    public Object getComponent() throws TooManyRegistrationRuntimeException,
+    Object getComponent() throws TooManyRegistrationRuntimeException,
             CyclicReferenceRuntimeException;
 
-    public void injectDependency(Object outerComponent);
+    void injectDependency(Object outerComponent);
 
-    public S2Container getContainer();
+    S2Container getContainer();
 
-    public void setContainer(S2Container container);
+    void setContainer(S2Container container);
 
-    public Class getComponentClass();
+    Class getComponentClass();
 
-    public String getComponentName();
+    String getComponentName();
 
-    public void setComponentName(String componentName);
+    void setComponentName(String componentName);
 
-    public Class getConcreteClass();
+    Class getConcreteClass();
 
-    public AutoBindingDef getAutoBindingDef();
+    AutoBindingDef getAutoBindingDef();
 
-    public void setAutoBindingDef(AutoBindingDef autoBindingDef);
+    void setAutoBindingDef(AutoBindingDef autoBindingDef);
 
-    public InstanceDef getInstanceDef();
+    InstanceDef getInstanceDef();
 
-    public void setInstanceDef(InstanceDef instanceDef);
+    void setInstanceDef(InstanceDef instanceDef);
 
-    public Expression getExpression();
+    Expression getExpression();
 
-    public void setExpression(Expression expression);
+    void setExpression(Expression expression);
 
-    public void init();
+    void init();
 
-    public void destroy();
-
-    public Hotswap getHotswap();
+    void destroy();
 }

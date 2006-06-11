@@ -15,8 +15,6 @@
  */
 package org.seasar.framework.container.deployer;
 
-import java.util.Date;
-
 import junit.framework.TestCase;
 
 import org.seasar.framework.container.ComponentDef;
@@ -26,14 +24,13 @@ import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.impl.ComponentDefImpl;
 import org.seasar.framework.container.impl.S2ContainerImpl;
 import org.seasar.framework.container.impl.servlet.HttpServletExternalContext;
-import org.seasar.framework.hotswap.Hotswap;
 import org.seasar.framework.mock.servlet.MockServletContextImpl;
 
 /**
  * @author higa
  * 
  */
-public class ServletContextComponentDeployerTest extends TestCase {
+public class ApplicationComponentDeployerTest extends TestCase {
 
     public void testDeployAutoAutoConstructor() throws Exception {
         MockServletContextImpl ctx = new MockServletContextImpl("s2jsf-example");
@@ -43,28 +40,10 @@ public class ServletContextComponentDeployerTest extends TestCase {
         container.setExternalContext(extCtx);
         ComponentDef cd = new ComponentDefImpl(Foo.class, "foo");
         container.register(cd);
-        ComponentDeployer deployer = new ServletContextComponentDeployer(cd);
+        ComponentDeployer deployer = new ApplicationComponentDeployer(cd);
         Foo foo = (Foo) deployer.deploy();
         assertSame("1", foo, ctx.getAttribute("foo"));
         assertSame("2", foo, deployer.deploy());
-    }
-
-    public void testDeployForHotswap() throws Exception {
-        MockServletContextImpl ctx = new MockServletContextImpl("s2jsf-example");
-        S2Container container = new S2ContainerImpl();
-        container.setHotswapMode(true);
-        ExternalContext extCtx = new HttpServletExternalContext();
-        extCtx.setApplication(ctx);
-        container.setExternalContext(extCtx);
-        ComponentDef cd = new ComponentDefImpl(Foo.class, "foo");
-        container.register(cd);
-        container.init();
-        ComponentDeployer deployer = new ServletContextComponentDeployer(cd);
-        Foo foo = (Foo) deployer.deploy();
-        Hotswap hotswap = cd.getHotswap();
-        Thread.sleep(500);
-        hotswap.getFile().setLastModified(new Date().getTime());
-        assertNotSame("1", foo.getClass(), deployer.deploy().getClass());
     }
 
     public static class Foo {

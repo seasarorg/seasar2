@@ -18,7 +18,6 @@ package org.seasar.framework.container.impl;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.HashMap;
 
 import junit.framework.TestCase;
@@ -27,9 +26,7 @@ import org.seasar.framework.aop.interceptors.TraceInterceptor;
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.InitMethodDef;
 import org.seasar.framework.container.S2Container;
-import org.seasar.framework.container.deployer.InstanceDefFactory;
 import org.seasar.framework.container.ognl.OgnlExpression;
-import org.seasar.framework.hotswap.Hotswap;
 
 /**
  * @author higa
@@ -128,59 +125,6 @@ public class ComponentDefImplTest extends TestCase {
         D d = (D) cd.getComponent();
         cd.destroy();
         assertEquals("1", true, d.isDestroyed());
-    }
-
-    public void testInitForHotswap() throws Exception {
-        S2Container container = new S2ContainerImpl();
-        container.setHotswapMode(true);
-        ComponentDefImpl cd = new ComponentDefImpl(FooImpl.class);
-        container.register(cd);
-        container.init();
-        assertNotNull("1", cd.getHotswap());
-    }
-
-    public void testGetComponentClassForHotswap() throws Exception {
-        S2Container container = new S2ContainerImpl();
-        container.setHotswapMode(true);
-        ComponentDefImpl cd = new ComponentDefImpl(FooImpl.class);
-        container.register(cd);
-        container.init();
-        Hotswap hotswap = cd.getHotswap();
-        Thread.sleep(1000);
-        assertSame("1", FooImpl.class, cd.getComponentClass());
-        hotswap.getFile().setLastModified(new Date().getTime());
-        assertNotSame("2", FooImpl.class, cd.getComponentClass());
-    }
-
-    public void testGetConcreteClassForHotswap() throws Exception {
-        S2Container container = new S2ContainerImpl();
-        container.setHotswapMode(true);
-        ComponentDefImpl cd = new ComponentDefImpl(FooImpl.class);
-        cd.addAspectDef(new AspectDefImpl(new TraceInterceptor()));
-        container.register(cd);
-        container.init();
-        Class clazz = cd.getConcreteClass();
-        Hotswap hotswap = cd.getHotswap();
-        Thread.sleep(1000);
-        assertSame("1", clazz, cd.getConcreteClass());
-        hotswap.getFile().setLastModified(new Date().getTime());
-        assertNotSame("2", clazz, cd.getConcreteClass());
-    }
-
-    public void testGetComponentForHotswap() throws Exception {
-        S2Container container = new S2ContainerImpl();
-        container.setHotswapMode(true);
-        ComponentDefImpl cd = new ComponentDefImpl(FooImpl.class);
-        cd.setInstanceDef(InstanceDefFactory.PROTOTYPE);
-        container.register(cd);
-        container.init();
-        Hotswap hotswap = cd.getHotswap();
-        Thread.sleep(1000);
-        Foo foo = (Foo) container.getComponent(Foo.class);
-        hotswap.getFile().setLastModified(new Date().getTime());
-        Foo foo2 = (Foo) container.getComponent(Foo.class);
-        assertNotSame("1", foo.getClass(), foo2.getClass());
-        assertFalse("1", foo2 instanceof FooImpl);
     }
 
     public void testGetConcreteClass() throws Exception {
