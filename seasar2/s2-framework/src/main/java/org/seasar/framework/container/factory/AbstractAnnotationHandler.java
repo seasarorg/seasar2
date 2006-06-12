@@ -53,6 +53,8 @@ public abstract class AbstractAnnotationHandler implements AnnotationHandler {
 
     protected static final String BINDING_TYPE = "bindingType";
 
+    protected static final String EXTERNAL_BINDING = "externalBinding";
+
     protected static final String VALUE = "value";
 
     protected static final String ASPECT = "ASPECT";
@@ -81,6 +83,12 @@ public abstract class AbstractAnnotationHandler implements AnnotationHandler {
     public ComponentDef createComponentDef(Class componentClass,
             InstanceDef instanceDef) {
         return createComponentDef(componentClass, instanceDef, null);
+    }
+
+    public ComponentDef createComponentDef(Class componentClass,
+            InstanceDef instanceDef, AutoBindingDef autoBindingDef) {
+        return createComponentDef(componentClass, instanceDef, autoBindingDef,
+                false);
     }
 
     public void appendDI(ComponentDef componentDef) {
@@ -137,7 +145,8 @@ public abstract class AbstractAnnotationHandler implements AnnotationHandler {
     }
 
     protected ComponentDef createComponentDef(Class componentClass,
-            String name, InstanceDef instanceDef, AutoBindingDef autoBindingDef) {
+            String name, InstanceDef instanceDef,
+            AutoBindingDef autoBindingDef, boolean externalBinding) {
         ComponentDef componentDef = new ComponentDefImpl(componentClass);
         if (!StringUtil.isEmpty(name)) {
             componentDef.setComponentName(name);
@@ -148,6 +157,7 @@ public abstract class AbstractAnnotationHandler implements AnnotationHandler {
         if (autoBindingDef != null) {
             componentDef.setAutoBindingDef(autoBindingDef);
         }
+        componentDef.setExternalBinding(externalBinding);
         return componentDef;
     }
 

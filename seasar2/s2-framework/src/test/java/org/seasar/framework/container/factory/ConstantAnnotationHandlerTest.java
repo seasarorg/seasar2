@@ -41,18 +41,20 @@ public class ConstantAnnotationHandlerTest extends S2FrameworkTestCase {
     private ConstantAnnotationHandler handler = new ConstantAnnotationHandler();
 
     public void testCreateComponentDef() throws Exception {
-        assertNotNull("1", handler.createComponentDef(Hoge.class, null));
+        assertNotNull(handler.createComponentDef(Hoge.class, null));
         ComponentDef cd = handler.createComponentDef(Hoge2.class, null);
-        assertEquals("2", "aaa", cd.getComponentName());
-        assertEquals("3", InstanceDefFactory.PROTOTYPE, cd.getInstanceDef());
-        assertEquals("4", AutoBindingDefFactory.PROPERTY, cd
+        assertEquals("aaa", cd.getComponentName());
+        assertEquals(InstanceDefFactory.PROTOTYPE, cd.getInstanceDef());
+        assertEquals(AutoBindingDefFactory.PROPERTY, cd
                 .getAutoBindingDef());
+        assertTrue(cd.isExternalBinding());
         ComponentDef cd2 = handler.createComponentDef(Hoge.class,
                 InstanceDefFactory.REQUEST);
-        assertEquals("5", InstanceDefFactory.REQUEST, cd2.getInstanceDef());
+        assertEquals(InstanceDefFactory.REQUEST, cd2.getInstanceDef());
+        
         try {
             handler.createComponentDef(Hoge3.class, null);
-            fail("6");
+            fail();
         } catch (IllegalArgumentException ex) {
             System.out.println(ex.getMessage());
         }
@@ -226,7 +228,7 @@ public class ConstantAnnotationHandlerTest extends S2FrameworkTestCase {
 
         public static final String ASPECT = "aop.traceInterceptor";
 
-        public static final String COMPONENT = "name = aaa, instance = prototype, autoBinding = property";
+        public static final String COMPONENT = "name = aaa, instance = prototype, autoBinding = property, externalBinding = true";
 
         public static final String aaa_BINDING = "aaa2";
 

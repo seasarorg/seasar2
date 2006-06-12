@@ -37,6 +37,8 @@ public abstract class AbstractOndemandCreator implements OndemandCreator {
     public static final String autoBindingDef_BINDING = "bindingType=may";
 
     private AutoBindingDef autoBindingDef;
+    
+    private boolean externalBinding = false;
 
     private OndemandCreatorContainer ondemandCreatorContainer;
 
@@ -58,6 +60,14 @@ public abstract class AbstractOndemandCreator implements OndemandCreator {
 
     public void setAutoBindingDef(AutoBindingDef autoBindingDef) {
         this.autoBindingDef = autoBindingDef;
+    }
+
+    public boolean isExternalBinding() {
+        return externalBinding;
+    }
+
+    public void setExternalBinding(boolean externalBinding) {
+        this.externalBinding = externalBinding;
     }
 
     public OndemandCreatorContainer getOndemandCreatorContainer() {

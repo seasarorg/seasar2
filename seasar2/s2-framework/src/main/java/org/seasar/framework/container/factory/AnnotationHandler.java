@@ -26,30 +26,33 @@ import org.seasar.framework.container.PropertyDef;
 
 public interface AnnotationHandler {
 
-    public ComponentDef createComponentDef(String className,
+    ComponentDef createComponentDef(String className,
             InstanceDef instanceDef);
 
-    public ComponentDef createComponentDef(String className,
+    ComponentDef createComponentDef(String className,
             InstanceDef instanceDef, AutoBindingDef autoBindingDef);
 
-    public ComponentDef createComponentDef(Class componentClass,
+    ComponentDef createComponentDef(Class componentClass,
             InstanceDef instanceDef);
 
-    public ComponentDef createComponentDef(Class componentClass,
+    ComponentDef createComponentDef(Class componentClass,
             InstanceDef instanceDef, AutoBindingDef autoBindingDef);
+    
+    ComponentDef createComponentDef(Class componentClass,
+            InstanceDef instanceDef, AutoBindingDef autoBindingDef, boolean externalBinding);
 
-    public void appendDI(ComponentDef componentDef);
+    void appendDI(ComponentDef componentDef);
 
-    public void appendAspect(ComponentDef componentDef);
+    void appendAspect(ComponentDef componentDef);
 
-    public void appendInterType(ComponentDef componentDef);
+    void appendInterType(ComponentDef componentDef);
 
-    public void appendInitMethod(ComponentDef componentDef);
+    void appendInitMethod(ComponentDef componentDef);
 
-    public void appendDestroyMethod(ComponentDef componentDef);
+    void appendDestroyMethod(ComponentDef componentDef);
 
-    public PropertyDef createPropertyDef(BeanDesc beanDesc,
+    PropertyDef createPropertyDef(BeanDesc beanDesc,
             PropertyDesc propertyDesc);
 
-    public PropertyDef createPropertyDef(BeanDesc beanDesc, Field field);
+    PropertyDef createPropertyDef(BeanDesc beanDesc, Field field);
 }

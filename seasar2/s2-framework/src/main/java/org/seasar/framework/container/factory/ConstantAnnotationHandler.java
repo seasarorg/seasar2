@@ -44,20 +44,22 @@ import org.seasar.framework.util.StringUtil;
 public class ConstantAnnotationHandler extends AbstractAnnotationHandler {
 
     public ComponentDef createComponentDef(Class componentClass,
-            InstanceDef defaultInstanceDef, AutoBindingDef defaultAutoBindingDef) {
+            InstanceDef defaultInstanceDef,
+            AutoBindingDef defaultAutoBindingDef, boolean defaultExternalBinding) {
 
         String name = null;
         InstanceDef instanceDef = defaultInstanceDef;
         AutoBindingDef autoBindingDef = defaultAutoBindingDef;
+        boolean externalBinding = defaultExternalBinding;
         BeanDesc beanDesc = BeanDescFactory.getBeanDesc(componentClass);
         if (!beanDesc.hasField(COMPONENT)) {
-            return createComponentDef(componentClass, name, defaultInstanceDef,
-                    defaultAutoBindingDef);
+            return createComponentDef(componentClass, name, instanceDef,
+                    autoBindingDef, externalBinding);
         }
         Field field = beanDesc.getField(COMPONENT);
         if (!isConstantAnnotationField(field)) {
-            return createComponentDef(componentClass, name, defaultInstanceDef,
-                    defaultAutoBindingDef);
+            return createComponentDef(componentClass, name, instanceDef,
+                    autoBindingDef, externalBinding);
         }
         String componentStr = (String) FieldUtil.get(field, null);
         String[] array = StringUtil.split(componentStr, "=, ");
@@ -70,12 +72,14 @@ public class ConstantAnnotationHandler extends AbstractAnnotationHandler {
                 instanceDef = getInstanceDef(value, defaultInstanceDef);
             } else if (AUTO_BINDING.equalsIgnoreCase(key)) {
                 autoBindingDef = getAutoBindingDef(value);
+            } else if (EXTERNAL_BINDING.equalsIgnoreCase(key)) {
+                externalBinding = Boolean.valueOf(value).booleanValue();
             } else {
                 throw new IllegalArgumentException(componentStr);
             }
         }
         return createComponentDef(componentClass, name, instanceDef,
-                autoBindingDef);
+                autoBindingDef, externalBinding);
     }
 
     protected boolean isConstantAnnotationField(Field field) {
