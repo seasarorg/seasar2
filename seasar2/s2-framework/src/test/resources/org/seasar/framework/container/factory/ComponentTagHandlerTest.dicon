@@ -38,4 +38,6 @@
 	<component class="java.lang.String" name="jjj" instance="application">
 		<arg>"jjj"</arg>
 	</component>
+	<component class="org.seasar.framework.container.factory.ComponentTagHandlerTest$Kkk" name="kkk" externalBinding="true"
+		instance="prototype"/>
 </components>

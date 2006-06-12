@@ -68,6 +68,10 @@ public class ComponentTagHandler extends AbstractTagHandler {
             componentDef.setAutoBindingDef(AutoBindingDefFactory
                     .getAutoBindingDef(autoBindingName));
         }
+        String externalBindingStr = attributes.getValue("externalBinding");
+        if (externalBindingStr != null) {
+            componentDef.setExternalBinding(Boolean.valueOf(externalBindingStr).booleanValue());
+        }
         context.push(componentDef);
     }
 

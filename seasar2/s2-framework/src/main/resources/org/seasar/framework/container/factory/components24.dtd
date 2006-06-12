@@ -28,6 +28,7 @@
 <!ATTLIST component class CDATA #IMPLIED>
 <!ATTLIST component name CDATA #IMPLIED>
 <!ATTLIST component autoBinding (auto | constructor | property | semiauto | none) "auto">
+<!ATTLIST component externalBinding (true | false) "false">
 
 <!ELEMENT arg (
         #PCDATA | description | component | meta
