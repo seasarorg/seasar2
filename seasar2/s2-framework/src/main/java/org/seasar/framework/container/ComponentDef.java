@@ -51,6 +51,10 @@ public interface ComponentDef extends ArgDefAware, InterTypeDefAware,
     Expression getExpression();
 
     void setExpression(Expression expression);
+    
+    boolean isExternalBinding();
+    
+    void setExternalBinding(boolean externalBinding);
 
     void init();
 

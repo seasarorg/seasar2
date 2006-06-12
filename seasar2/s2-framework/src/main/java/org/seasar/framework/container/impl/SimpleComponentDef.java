@@ -343,6 +343,14 @@ public class SimpleComponentDef implements ComponentDef {
     public void setAutoBindingDef(AutoBindingDef autoBindingDef) {
         throw new UnsupportedOperationException("setAutoBindingDef");
     }
+    
+    public boolean isExternalBinding() {
+        return false;
+    }
+
+    public void setExternalBinding(boolean externalBinding) {
+        throw new UnsupportedOperationException("setExternalBinding");
+    }
 
     /*
      * @see org.seasar.framework.container.ComponentDef#init()

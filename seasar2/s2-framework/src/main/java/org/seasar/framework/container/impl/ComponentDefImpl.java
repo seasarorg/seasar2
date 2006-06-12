@@ -76,6 +76,8 @@ public class ComponentDefImpl implements ComponentDef, ContainerConstants {
     private AutoBindingDef autoBindingDef = AutoBindingDefFactory.AUTO;
 
     private ComponentDeployer componentDeployer;
+    
+    private boolean externalBinding = false;
 
     public ComponentDefImpl() {
     }
@@ -408,5 +410,13 @@ public class ComponentDefImpl implements ComponentDef, ContainerConstants {
             componentDeployer = instanceDef.createComponentDeployer(this);
         }
         return componentDeployer;
+    }
+
+    public boolean isExternalBinding() {
+        return externalBinding;
+    }
+
+    public void setExternalBinding(boolean externalBinding) {
+        this.externalBinding = externalBinding;
     }
 }
