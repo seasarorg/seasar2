@@ -105,6 +105,8 @@ public interface S2Container extends MetaDefAware {
 
     ClassLoader getClassLoader();
 
+    void setClassLoader(ClassLoader classLoader);
+
     void registerMap(Object key, ComponentDef componentDef,
             S2Container container);
 }
