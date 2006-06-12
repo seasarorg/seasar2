@@ -16,24 +16,73 @@
 package org.seasar.framework.container;
 
 /**
- * @author higa
+ * 自動バインディングを適用する範囲を表す自動バインディングタイプを定義するインタフェースです。 自動バインディングタイプには、 以下のものがあります。
  * 
+ * <dl>
+ * <dt><code>auto</code></dt>
+ * <dd>コンストラクタとプロパティの両方で、 自動バインディングを適用します。</dd>
+ * <dt><code>semiauto</code></dt>
+ * <dd>明示的に指定したプロパティに対してのみ自動バインディングを適用します。</dd>
+ * <dt><code>constructor</code></dt>
+ * <dd>コンストラクタの自動バインディングのみ適用します。</dd>
+ * <dt><code>property</code></dt>
+ * <dd>プロパティの自動バインディングのみ適用します。</dd>
+ * <dt><code>none</code></dt>
+ * <dd>すべての自動バインディングを適用しません。</dd>
+ * </dl>
+ * 
+ * @author higa
+ * @author jundu (Javadoc)
  */
 public interface AutoBindingDef {
 
+    /**
+     * 自動バインディングタイプ「<code>auto</code>」を表す定数です。
+     */
     String AUTO_NAME = "auto";
 
+    /**
+     * 自動バインディングタイプ「<code>semiauto</code>」を表す定数です。
+     */
     String SEMIAUTO_NAME = "semiauto";
 
+    /**
+     * 自動バインディングタイプ「<code>constructor</code>」を表す定数です。
+     */
     String CONSTRUCTOR_NAME = "constructor";
 
+    /**
+     * 自動バインディングタイプ「<code>property</code>」を表す定数です。
+     */
     String PROPERTY_NAME = "property";
 
+    /**
+     * 自動バインディングタイプ「<code>none</code>」を表す定数です。
+     */
     String NONE_NAME = "none";
 
+    /**
+     * 自動バインディングタイプを表す文字列表現を返します。
+     * 
+     * @return 自動バインディングタイプを表す文字列
+     */
     String getName();
 
+    /**
+     * 自動バインディングタイプに基づき、 <code>componentDef</code>に対する{@link ConstructorAssembler}を返します。
+     * 
+     * @param componentDef
+     *            コンポーネント定義
+     * @return 自動バインディングの範囲が設定された{@link ConstructorAssembler}
+     */
     ConstructorAssembler createConstructorAssembler(ComponentDef componentDef);
 
+    /**
+     * 自動バインディングタイプに基づき、 <code>componentDef</code>に対する{@link PropertyAssembler}を返します。
+     * 
+     * @param componentDef
+     *            コンポーネント定義
+     * @return 自動バインディングの範囲が設定された{@link PropertyAssembler}
+     */
     PropertyAssembler createPropertyAssembler(ComponentDef componentDef);
 }
