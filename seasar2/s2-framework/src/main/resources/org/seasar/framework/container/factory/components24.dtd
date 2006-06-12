@@ -27,7 +27,7 @@
   singleton | prototype | outer | request | session | application) "singleton">
 <!ATTLIST component class CDATA #IMPLIED>
 <!ATTLIST component name CDATA #IMPLIED>
-<!ATTLIST component autoBinding (auto | constructor | property | none) "auto">
+<!ATTLIST component autoBinding (auto | constructor | property | semiauto | none) "auto">
 
 <!ELEMENT arg (
         #PCDATA | description | component | meta

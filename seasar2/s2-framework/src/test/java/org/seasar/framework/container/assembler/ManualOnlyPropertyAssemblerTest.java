@@ -19,14 +19,19 @@ import junit.framework.TestCase;
 
 import org.seasar.framework.beans.IllegalPropertyRuntimeException;
 import org.seasar.framework.beans.PropertyNotFoundRuntimeException;
+import org.seasar.framework.container.ExternalContext;
 import org.seasar.framework.container.PropertyAssembler;
 import org.seasar.framework.container.PropertyDef;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.impl.ComponentDefImpl;
 import org.seasar.framework.container.impl.PropertyDefImpl;
 import org.seasar.framework.container.impl.S2ContainerImpl;
+import org.seasar.framework.container.impl.servlet.HttpServletExternalContext;
 import org.seasar.framework.container.ognl.OgnlExpression;
 import org.seasar.framework.exception.OgnlRuntimeException;
+import org.seasar.framework.mock.servlet.MockHttpServletRequest;
+import org.seasar.framework.mock.servlet.MockServletContext;
+import org.seasar.framework.mock.servlet.MockServletContextImpl;
 
 /**
  * @author higa
@@ -123,6 +128,26 @@ public class ManualOnlyPropertyAssemblerTest extends TestCase {
         assembler.assemble(null);
     }
 
+    public void testBindExternally() throws Exception {
+        S2Container container = new S2ContainerImpl();
+        ComponentDefImpl cd = new ComponentDefImpl(D.class);
+        cd.setAutoBindingDef(AutoBindingDefFactory.NONE);
+        cd.setExternalBinding(true);
+        container.register(cd);
+        ExternalContext extCtx = new HttpServletExternalContext();
+        MockServletContext servletContext = new MockServletContextImpl(
+                "s2-example");
+        MockHttpServletRequest request = servletContext
+                .createRequest("/hello.html");
+        request.setParameter("name", "aaa");
+        extCtx.setRequest(request);
+        container.setExternalContext(extCtx);
+        PropertyAssembler assembler = new AutoPropertyAssembler(cd);
+        D d = new D();
+        assembler.assemble(d);
+        assertEquals("1", "aaa", d.getName());
+    }
+
     public interface Foo {
         public String getHogeName();
     }
@@ -165,5 +190,18 @@ public class ManualOnlyPropertyAssemblerTest extends TestCase {
     public static class C {
 
         private String aaa;
+    }
+
+    public static class D {
+        private String name;
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
     }
 }

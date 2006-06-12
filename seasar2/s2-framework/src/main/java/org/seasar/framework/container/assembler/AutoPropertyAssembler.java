@@ -22,15 +22,13 @@ import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.container.AccessTypeDef;
 import org.seasar.framework.container.ComponentDef;
-import org.seasar.framework.container.PropertyAssembler;
 import org.seasar.framework.container.PropertyDef;
 
 /**
  * @author higa
  * 
  */
-public class AutoPropertyAssembler extends AbstractAssembler implements
-        PropertyAssembler {
+public class AutoPropertyAssembler extends AbstractPropertyAssembler {
 
     /**
      * @param componentDef
@@ -53,6 +51,9 @@ public class AutoPropertyAssembler extends AbstractAssembler implements
             accessTypeDef.bind(cd, propDef, component);
             String propName = propDef.getPropertyName();
             names.add(propName);
+        }
+        if (cd.isExternalBinding()) {
+            bindExternally(beanDesc, cd, component, names);
         }
         size = beanDesc.getPropertyDescSize();
         for (int i = 0; i < size; ++i) {

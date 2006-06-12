@@ -15,16 +15,17 @@
  */
 package org.seasar.framework.container.assembler;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.seasar.framework.container.ComponentDef;
-import org.seasar.framework.container.PropertyAssembler;
 import org.seasar.framework.container.PropertyDef;
 
 /**
  * @author higa
  * 
  */
-public class ManualOnlyPropertyAssembler extends AbstractAssembler implements
-        PropertyAssembler {
+public class ManualOnlyPropertyAssembler extends AbstractPropertyAssembler {
 
     /**
      * @param componentDef
@@ -38,11 +39,16 @@ public class ManualOnlyPropertyAssembler extends AbstractAssembler implements
             return;
         }
         ComponentDef cd = getComponentDef();
+        Set names = new HashSet();
         int size = cd.getPropertyDefSize();
         for (int i = 0; i < size; ++i) {
             PropertyDef propDef = cd.getPropertyDef(i);
             propDef.getAccessTypeDef().bind(getComponentDef(), propDef,
                     BindingTypeDefFactory.NONE, component);
+            names.add(propDef.getPropertyName());
+        }
+        if (cd.isExternalBinding()) {
+            bindExternally(getBeanDesc(component), cd, component, names);
         }
     }
 }
