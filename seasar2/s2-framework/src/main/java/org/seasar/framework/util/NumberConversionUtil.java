@@ -17,6 +17,9 @@ package org.seasar.framework.util;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.Locale;
 
 public final class NumberConversionUtil {
 
@@ -82,4 +85,43 @@ public final class NumberConversionUtil {
         }
         return o;
     }
+
+    public static String removeDelimeter(String value, Locale locale) {
+        String integerDelimeter = findIntegerDelimeter(locale);
+        if (integerDelimeter != null) {
+            value = StringUtil.replace(value, integerDelimeter, "");
+        }
+        return value;
+    }
+
+    public static String findFractionDelimeter(Locale locale) {
+        NumberFormat nf = NumberFormat.getInstance(locale);
+        if (nf instanceof DecimalFormat) {
+            String pattern = ((DecimalFormat) nf).toPattern();
+            int index = pattern.indexOf("0");
+            for (int i = index; i < pattern.length(); i++) {
+                char c = pattern.charAt(i);
+                if (c != '#' && c != '0') {
+                    return Character.toString(c);
+                }
+            }
+        }
+        return null;
+    }
+
+    public static String findIntegerDelimeter(Locale locale) {
+        NumberFormat nf = NumberFormat.getInstance(locale);
+        if (nf instanceof DecimalFormat) {
+            String pattern = ((DecimalFormat) nf).toPattern();
+            int index = pattern.indexOf("0");
+            for (int i = 0; i < index; i++) {
+                char c = pattern.charAt(i);
+                if (c != '#' && c != '0') {
+                    return Character.toString(c);
+                }
+            }
+        }
+        return null;
+    }
+
 }
