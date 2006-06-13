@@ -32,4 +32,6 @@ public @interface Component {
     InstanceType instance() default InstanceType.SINGLETON;
 
     AutoBindingType autoBinding() default AutoBindingType.AUTO;
+    
+    boolean externalBinding() default false;
 }

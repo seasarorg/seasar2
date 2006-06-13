@@ -52,69 +52,75 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
     private TigerAnnotationHandler handler = new TigerAnnotationHandler();
 
     public void testCreateComponentDef() throws Exception {
-        assertNotNull("1", handler.createComponentDef(Hoge.class, null));
+        assertNotNull(handler.createComponentDef(Hoge.class, null));
         ComponentDef cd = handler.createComponentDef(Hoge2.class, null);
-        assertEquals("2", "aaa", cd.getComponentName());
-        assertEquals("3", "prototype", cd.getInstanceDef().getName());
-        assertEquals("4", "property", cd.getAutoBindingDef().getName());
+        assertEquals("aaa", cd.getComponentName());
+        assertEquals("prototype", cd.getInstanceDef().getName());
+        assertEquals("property", cd.getAutoBindingDef().getName());
+        assertTrue(cd.isExternalBinding());
 
         ComponentDef cd2 = handler.createComponentDef(Hoge.class,
                 InstanceDefFactory.REQUEST);
-        assertEquals("5", InstanceDef.REQUEST_NAME, cd2.getInstanceDef()
+        assertEquals(InstanceDef.REQUEST_NAME, cd2.getInstanceDef()
                 .getName());
+        assertFalse(cd2.isExternalBinding());
 
         ComponentDef cd3 = handler.createComponentDef(Hoge7.class, null);
-        assertEquals("6", "hoge77", cd3.getComponentName());
-        assertEquals("7", InstanceDef.PROTOTYPE_NAME, cd3.getInstanceDef()
+        assertEquals("hoge77", cd3.getComponentName());
+        assertEquals(InstanceDef.PROTOTYPE_NAME, cd3.getInstanceDef()
                 .getName());
-        assertEquals("8", AutoBindingDef.SEMIAUTO_NAME, cd3.getAutoBindingDef()
+        assertEquals(AutoBindingDef.SEMIAUTO_NAME, cd3.getAutoBindingDef()
                 .getName());
 
         ComponentDef cd4 = handler.createComponentDef(Hoge8.class, null);
-        assertEquals("9", "hoge7", cd4.getComponentName());
-        assertEquals("10", InstanceDef.PROTOTYPE_NAME, cd4.getInstanceDef()
+        assertEquals("hoge7", cd4.getComponentName());
+        assertEquals(InstanceDef.PROTOTYPE_NAME, cd4.getInstanceDef()
                 .getName());
-        assertEquals("11", AutoBindingDef.SEMIAUTO_NAME, cd4
+        assertEquals(AutoBindingDef.SEMIAUTO_NAME, cd4
                 .getAutoBindingDef().getName());
 
         ComponentDef cd5 = handler.createComponentDef(Hoge7.class,
                 InstanceDefFactory.REQUEST);
-        assertEquals("12", InstanceDef.REQUEST_NAME, cd5.getInstanceDef()
+        assertEquals(InstanceDef.REQUEST_NAME, cd5.getInstanceDef()
                 .getName());
 
         ComponentDef cd6 = handler.createComponentDef(Hoge9.class, null);
-        assertEquals("13", "hoge99", cd6.getComponentName());
-        assertEquals("14", InstanceDef.PROTOTYPE_NAME, cd6.getInstanceDef()
+        assertEquals("hoge99", cd6.getComponentName());
+        assertEquals(InstanceDef.PROTOTYPE_NAME, cd6.getInstanceDef()
                 .getName());
-        assertEquals("15", AutoBindingDef.SEMIAUTO_NAME, cd6
+        assertEquals(AutoBindingDef.SEMIAUTO_NAME, cd6
                 .getAutoBindingDef().getName());
 
         ComponentDef cd7 = handler.createComponentDef(Hoge10.class, null);
-        assertNull("16", cd7.getComponentName());
-        assertEquals("17", InstanceDef.PROTOTYPE_NAME, cd7.getInstanceDef()
+        assertNull(cd7.getComponentName());
+        assertEquals(InstanceDef.PROTOTYPE_NAME, cd7.getInstanceDef()
                 .getName());
-        assertEquals("18", AutoBindingDef.SEMIAUTO_NAME, cd7
+        assertEquals(AutoBindingDef.SEMIAUTO_NAME, cd7
                 .getAutoBindingDef().getName());
 
         ComponentDef cd8 = handler.createComponentDef(Hoge9.class,
                 InstanceDefFactory.REQUEST);
-        assertEquals("19", InstanceDef.REQUEST_NAME, cd8.getInstanceDef()
+        assertEquals(InstanceDef.REQUEST_NAME, cd8.getInstanceDef()
                 .getName());
 
         ComponentDef cd9 = handler.createComponentDef(Hoge.class,
                 InstanceDefFactory.REQUEST, AutoBindingDefFactory.NONE);
-        assertEquals("20", AutoBindingDef.NONE_NAME, cd9.getAutoBindingDef()
+        assertEquals(AutoBindingDef.NONE_NAME, cd9.getAutoBindingDef()
                 .getName());
 
         ComponentDef cd10 = handler.createComponentDef(Hoge2.class,
                 InstanceDefFactory.REQUEST, AutoBindingDefFactory.NONE);
-        assertEquals("21", AutoBindingDef.PROPERTY_NAME, cd10
+        assertEquals(AutoBindingDef.PROPERTY_NAME, cd10
                 .getAutoBindingDef().getName());
 
         ComponentDef cd11 = handler.createComponentDef(Hoge3.class,
                 InstanceDefFactory.REQUEST, AutoBindingDefFactory.NONE);
-        assertEquals("22", AutoBindingDef.PROPERTY_NAME, cd11
+        assertEquals(AutoBindingDef.PROPERTY_NAME, cd11
                 .getAutoBindingDef().getName());
+
+        ComponentDef cd12 = handler.createComponentDef(Hoge7.class,
+                InstanceDefFactory.REQUEST, AutoBindingDefFactory.NONE, true);
+        assertTrue(cd12.isExternalBinding());
     }
 
     public void testCreatePropertyDef() throws Exception {
@@ -682,7 +688,8 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
     public static class TestComponentDefFactory implements ComponentDefFactory {
         public ComponentDef createComponentDef(Class<?> componentClass,
                 InstanceDef defaultInstanceDef,
-                AutoBindingDef defaultAutoBindingDef) {
+                AutoBindingDef defaultAutoBindingDef,
+                boolean defaultExternalBinding) {
             return new TestComponentDef();
         }
 

@@ -78,16 +78,18 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
     }
 
     public ComponentDef createComponentDef(Class componentClass,
-            InstanceDef defaultInstanceDef, AutoBindingDef defaultAutoBindingDef) {
+            InstanceDef defaultInstanceDef,
+            AutoBindingDef defaultAutoBindingDef, boolean defaultExternalBinding) {
         for (final ComponentDefFactory factory : componentDefFactories) {
             final ComponentDef componentDef = factory.createComponentDef(
-                    componentClass, defaultInstanceDef, defaultAutoBindingDef);
+                    componentClass, defaultInstanceDef, defaultAutoBindingDef,
+                    defaultExternalBinding);
             if (componentDef != null) {
                 return componentDef;
             }
         }
         return super.createComponentDef(componentClass, defaultInstanceDef,
-                defaultAutoBindingDef);
+                defaultAutoBindingDef, defaultExternalBinding);
     }
 
     public PropertyDef createPropertyDef(BeanDesc beanDesc,

@@ -18,7 +18,8 @@ public class PojoComponentDefFactory implements ComponentDefFactory {
 
     public ComponentDef createComponentDef(final Class<?> componentClass,
             final InstanceDef defaultInstanceDef,
-            final AutoBindingDef defaultAutoBindingDef) {
+            final AutoBindingDef defaultAutoBindingDef,
+            final boolean defaultExternalBinding) {
         final Component component = componentClass
                 .getAnnotation(Component.class);
         if (component == null) {
@@ -47,6 +48,7 @@ public class PojoComponentDefFactory implements ComponentDefFactory {
         } else {
             componentDef.setAutoBindingDef(defaultAutoBindingDef);
         }
+        componentDef.setExternalBinding(component.externalBinding());
         return componentDef;
     }
 }

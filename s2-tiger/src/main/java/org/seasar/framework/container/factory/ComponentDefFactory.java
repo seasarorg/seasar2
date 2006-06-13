@@ -6,5 +6,6 @@ import org.seasar.framework.container.InstanceDef;
 
 public interface ComponentDefFactory {
     ComponentDef createComponentDef(Class<?> componentClass,
-            InstanceDef defaultInstanceDef, AutoBindingDef defaultAutoBindingDef);
+            InstanceDef defaultInstanceDef, AutoBindingDef defaultAutoBindingDef,
+            boolean defaultExternalBinding);
 }

@@ -23,7 +23,7 @@ import org.seasar.framework.container.annotation.tiger.BindingType;
 import org.seasar.framework.container.annotation.tiger.Component;
 import org.seasar.framework.container.annotation.tiger.InstanceType;
 
-@Component(name = "aaa", instance = InstanceType.PROTOTYPE, autoBinding = AutoBindingType.PROPERTY)
+@Component(name = "aaa", instance = InstanceType.PROTOTYPE, autoBinding = AutoBindingType.PROPERTY, externalBinding=true)
 public class Hoge2 {
 
     @EJB

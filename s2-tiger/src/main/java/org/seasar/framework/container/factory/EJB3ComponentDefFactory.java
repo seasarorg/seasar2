@@ -13,9 +13,10 @@ public class EJB3ComponentDefFactory implements ComponentDefFactory {
 
     public EJB3ComponentDefFactory() {
     }
-
+    
     public ComponentDef createComponentDef(Class<?> componentClass,
-            InstanceDef defaultInstanceDef, AutoBindingDef defaultAutoBindingDef) {
+            InstanceDef defaultInstanceDef,
+            AutoBindingDef defaultAutoBindingDef, boolean defaultExternalBinding) {
         final EJB3Desc ejb3Desc = EJB3Desc.getEJB3Desc(componentClass);
         if (!ejb3Desc.isEJB3()) {
             return null;
@@ -33,7 +34,7 @@ public class EJB3ComponentDefFactory implements ComponentDefFactory {
         componentDef
                 .setAutoBindingDef(defaultAutoBindingDef != null ? defaultAutoBindingDef
                         : AutoBindingDefFactory.SEMIAUTO);
+        componentDef.setExternalBinding(defaultExternalBinding);
         return componentDef;
     }
-
 }
