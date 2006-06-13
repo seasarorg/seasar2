@@ -17,6 +17,9 @@ package org.seasar.framework.container.deployer;
 
 import java.util.Map;
 
+import org.seasar.framework.beans.BeanDesc;
+import org.seasar.framework.beans.PropertyDesc;
+import org.seasar.framework.beans.factory.BeanDescFactory;
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.ExternalContext;
 import org.seasar.framework.exception.EmptyRuntimeException;
@@ -46,16 +49,35 @@ public class SessionComponentDeployer extends AbstractComponentDeployer {
         }
         Map sessionMap = extCtx.getSessionMap();
         String componentName = getComponentName();
-        Object component = null;
-        component = sessionMap.get(componentName);
-        if (component != null) {
-            return component;
+        Object old = sessionMap.get(componentName);
+        if (old != null && old.getClass().equals(cd.getConcreteClass())) {
+            return old;
         }
-        component = getConstructorAssembler().assemble();
+        Object component = getConstructorAssembler().assemble();
+        if (old != null) {
+            copyProperties(old, component);
+        } else {
+            getPropertyAssembler().assemble(component);
+            getInitMethodAssembler().assemble(component);
+        }
         sessionMap.put(componentName, component);
-        getPropertyAssembler().assemble(component);
-        getInitMethodAssembler().assemble(component);
         return component;
+    }
+    
+    protected void copyProperties(Object old, Object component) {
+        BeanDesc oldBeanDesc = BeanDescFactory.getBeanDesc(old.getClass());
+        BeanDesc beanDesc = BeanDescFactory.getBeanDesc(component.getClass());
+        for (int i = 0; i < beanDesc.getPropertyDescSize(); ++i) {
+            PropertyDesc pd = beanDesc.getPropertyDesc(i);
+            if (!pd.hasWriteMethod()) {
+                continue;
+            }
+            PropertyDesc oldPd = oldBeanDesc.getPropertyDesc(pd.getPropertyName());
+            if (!pd.hasReadMethod()) {
+                continue;
+            }
+            pd.setValue(component, oldPd.getValue(old));
+        }
     }
 
     public void injectDependency(Object component) {
