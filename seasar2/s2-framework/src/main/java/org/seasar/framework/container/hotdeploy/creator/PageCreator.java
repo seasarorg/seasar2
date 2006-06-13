@@ -25,5 +25,6 @@ public class PageCreator extends SimpleSinglePackageCreator {
         setNameSuffix("Page");
         setInstanceDef(InstanceDefFactory.REQUEST);
         setAutoBindingDef(AutoBindingDefFactory.NONE);
+        setExternalBinding(true);
     }
 }

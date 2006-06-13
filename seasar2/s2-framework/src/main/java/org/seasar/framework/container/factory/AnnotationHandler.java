@@ -26,20 +26,23 @@ import org.seasar.framework.container.PropertyDef;
 
 public interface AnnotationHandler {
 
-    ComponentDef createComponentDef(String className,
-            InstanceDef instanceDef);
+    ComponentDef createComponentDef(String className, InstanceDef instanceDef);
 
-    ComponentDef createComponentDef(String className,
-            InstanceDef instanceDef, AutoBindingDef autoBindingDef);
+    ComponentDef createComponentDef(String className, InstanceDef instanceDef,
+            AutoBindingDef autoBindingDef);
+
+    ComponentDef createComponentDef(String className, InstanceDef instanceDef,
+            AutoBindingDef autoBindingDef, boolean externalBinding);
 
     ComponentDef createComponentDef(Class componentClass,
             InstanceDef instanceDef);
 
     ComponentDef createComponentDef(Class componentClass,
             InstanceDef instanceDef, AutoBindingDef autoBindingDef);
-    
+
     ComponentDef createComponentDef(Class componentClass,
-            InstanceDef instanceDef, AutoBindingDef autoBindingDef, boolean externalBinding);
+            InstanceDef instanceDef, AutoBindingDef autoBindingDef,
+            boolean externalBinding);
 
     void appendDI(ComponentDef componentDef);
 
@@ -51,8 +54,7 @@ public interface AnnotationHandler {
 
     void appendDestroyMethod(ComponentDef componentDef);
 
-    PropertyDef createPropertyDef(BeanDesc beanDesc,
-            PropertyDesc propertyDesc);
+    PropertyDef createPropertyDef(BeanDesc beanDesc, PropertyDesc propertyDesc);
 
     PropertyDef createPropertyDef(BeanDesc beanDesc, Field field);
 }

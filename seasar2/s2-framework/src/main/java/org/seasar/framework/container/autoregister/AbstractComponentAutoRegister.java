@@ -40,6 +40,8 @@ public abstract class AbstractComponentAutoRegister extends
     private InstanceDef instanceDef;
 
     private AutoBindingDef autoBindingDef;
+    
+    private boolean externalBinding = false;
 
     private List customizers = new ArrayList();
 
@@ -67,6 +69,14 @@ public abstract class AbstractComponentAutoRegister extends
 
     public void setAutoBindingDef(AutoBindingDef autoBindingDef) {
         this.autoBindingDef = autoBindingDef;
+    }
+
+    public boolean isExternalBinding() {
+        return externalBinding;
+    }
+
+    public void setExternalBinding(boolean externalBinding) {
+        this.externalBinding = externalBinding;
     }
 
     public int getCustomizerSize() {
@@ -103,7 +113,7 @@ public abstract class AbstractComponentAutoRegister extends
         final String className = ClassUtil.concatName(packageName,
                 shortClassName);
         final ComponentDef cd = annoHandler.createComponentDef(className,
-                instanceDef, autoBindingDef);
+                instanceDef, autoBindingDef, externalBinding);
         if (cd.getComponentName() == null && autoNaming != null) {
             cd.setComponentName(autoNaming.defineName(packageName,
                     shortClassName));

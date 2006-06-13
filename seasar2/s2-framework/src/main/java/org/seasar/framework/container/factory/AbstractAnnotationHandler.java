@@ -80,6 +80,13 @@ public abstract class AbstractAnnotationHandler implements AnnotationHandler {
                 autoBindingDef);
     }
 
+    public ComponentDef createComponentDef(String className,
+            InstanceDef instanceDef, AutoBindingDef autoBindingDef,
+            boolean externalBinding) {
+        return createComponentDef(ClassUtil.forName(className), instanceDef,
+                autoBindingDef, externalBinding);
+    }
+
     public ComponentDef createComponentDef(Class componentClass,
             InstanceDef instanceDef) {
         return createComponentDef(componentClass, instanceDef, null);

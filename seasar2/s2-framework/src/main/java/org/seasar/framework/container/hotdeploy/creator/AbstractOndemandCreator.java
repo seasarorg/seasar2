@@ -115,7 +115,7 @@ public abstract class AbstractOndemandCreator implements OndemandCreator {
         AnnotationHandler handler = AnnotationHandlerFactory
                 .getAnnotationHandler();
         cd = handler.createComponentDef(targetClass, instanceDef,
-                autoBindingDef);
+                autoBindingDef, externalBinding);
         customize(cd);
         if (cd.getComponentName() == null) {
             cd.setComponentName(composeComponentName(clazz.getName()));

@@ -6,6 +6,9 @@
 		<property name="autoBindingDef">
 			@org.seasar.framework.container.assembler.AutoBindingDefFactory@NONE
 		</property>
+		<property name="externalBinding">
+			true
+		</property>
 		<initMethod name="addReferenceClass">
 			<arg>@org.seasar.framework.container.autoregister.Foo@class</arg>
 		</initMethod>

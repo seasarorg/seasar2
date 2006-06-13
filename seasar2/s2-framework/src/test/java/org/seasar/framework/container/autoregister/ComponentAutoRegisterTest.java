@@ -68,6 +68,15 @@ public class ComponentAutoRegisterTest extends S2FrameworkTestCase {
         assertEquals("2", AutoBindingDef.NONE_NAME, cd.getAutoBindingDef()
                 .getName());
     }
+    
+    public void setUpExternalBinding() throws Exception {
+        include("ComponentAutoRegisterTest2.dicon");
+    }
+
+    public void testExternalBinding() throws Exception {
+        ComponentDef cd = child.getComponentDef(Foo.class);
+        assertTrue(cd.isExternalBinding());
+    }
 
     public void setUpZipFileStrategy() throws Exception {
         include("ComponentAutoRegisterTest.dicon");
