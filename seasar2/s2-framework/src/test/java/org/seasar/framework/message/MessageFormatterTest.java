@@ -48,4 +48,11 @@ public class MessageFormatterTest extends TestCase {
         System.out.println(s);
         assertNotNull("1", s);
     }
+
+    public void testGetMessageLongForm() throws Exception {
+        String s = MessageFormatter.getMessage("ES2Framework0001", null);
+        System.out.println(s);
+        assertNotNull(s);
+        assertEquals("[ES2Framework0001]Hoge Hoge", s);
+    }
 }
