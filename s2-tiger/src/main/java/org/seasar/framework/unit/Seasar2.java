@@ -35,7 +35,7 @@ import org.seasar.framework.util.ResourceUtil;
  */
 public class Seasar2 extends Runner {
 
-    public static final String S2JUNIT4_CONFIG_KEY = "org.seasar.junit4.config";
+    public static final String S2JUNIT4_CONFIG_KEY = "org.seasar.unit.s2junit4.config";
 
     public static final String S2JUNIT4_CONFIG_PATH = "s2junit4.dicon";
 
