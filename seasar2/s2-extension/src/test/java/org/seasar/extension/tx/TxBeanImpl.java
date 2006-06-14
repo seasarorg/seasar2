@@ -17,6 +17,7 @@ package org.seasar.extension.tx;
 
 import javax.transaction.Status;
 import javax.transaction.SystemException;
+import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
 
 public class TxBeanImpl implements TxBean {
@@ -30,6 +31,11 @@ public class TxBeanImpl implements TxBean {
     public boolean hasTransaction() throws SystemException {
         System.out.println(tm_.getTransaction());
         return tm_.getStatus() != Status.STATUS_NO_TRANSACTION;
+    }
+
+    public Transaction markRollback() throws SystemException {
+        tm_.setRollbackOnly();
+        return tm_.getTransaction();
     }
 
 }

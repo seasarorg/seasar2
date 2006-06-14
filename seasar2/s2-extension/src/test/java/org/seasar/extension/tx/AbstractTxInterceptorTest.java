@@ -185,7 +185,7 @@ public class AbstractTxInterceptorTest extends S2TestCase {
             try {
                 ret = invocation.proceed();
                 if (began) {
-                    commit();
+                    end();
                 }
                 return ret;
             } catch (Throwable t) {

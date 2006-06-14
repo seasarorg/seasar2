@@ -61,11 +61,15 @@ public abstract class AbstractTxInterceptor implements MethodInterceptor {
         transactionManager_.begin();
     }
 
-    public final void commit() throws SecurityException, IllegalStateException,
+    public final void end() throws SecurityException, IllegalStateException,
             RollbackException, HeuristicMixedException,
             HeuristicRollbackException, SystemException {
 
-        transactionManager_.commit();
+        if (transactionManager_.getStatus() == Status.STATUS_ACTIVE) {
+            transactionManager_.commit();
+        } else {
+            transactionManager_.rollback();
+        }
     }
 
     public final void rollback() throws IllegalStateException,
@@ -129,7 +133,7 @@ public abstract class AbstractTxInterceptor implements MethodInterceptor {
                 HeuristicMixedException, HeuristicRollbackException,
                 SystemException {
             if (commit_) {
-                commit();
+                end();
             } else {
                 rollback();
             }

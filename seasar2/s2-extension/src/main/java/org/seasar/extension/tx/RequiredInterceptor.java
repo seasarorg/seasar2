@@ -39,7 +39,7 @@ public class RequiredInterceptor extends AbstractTxInterceptor {
         try {
             ret = invocation.proceed();
             if (began) {
-                commit();
+                end();
             }
             return ret;
         } catch (Throwable t) {

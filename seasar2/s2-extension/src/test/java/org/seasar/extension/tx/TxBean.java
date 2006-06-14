@@ -16,8 +16,12 @@
 package org.seasar.extension.tx;
 
 import javax.transaction.SystemException;
+import javax.transaction.Transaction;
 
 public interface TxBean {
 
     public boolean hasTransaction() throws SystemException;
+
+    Transaction markRollback() throws SystemException;
+
 }

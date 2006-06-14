@@ -49,6 +49,10 @@ public class RequiredInterceptorTest extends S2TestCase {
         tm_.commit();
     }
 
+    public void testMarkRollback() throws Exception {
+        txBean_.markRollback();
+    }
+
     public void testInvokeException() throws Exception {
         try {
             exBean_.invoke();

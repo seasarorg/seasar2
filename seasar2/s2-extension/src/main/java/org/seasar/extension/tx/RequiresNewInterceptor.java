@@ -40,7 +40,7 @@ public class RequiresNewInterceptor extends AbstractTxInterceptor {
             begin();
             try {
                 ret = invocation.proceed();
-                commit();
+                end();
             } catch (Throwable t) {
                 complete(t);
                 throw t;

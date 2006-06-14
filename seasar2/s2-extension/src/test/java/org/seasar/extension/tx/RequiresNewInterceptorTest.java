@@ -53,6 +53,14 @@ public class RequiresNewInterceptorTest extends S2TestCase {
         tm_.commit();
     }
 
+    public void testMarkRollback() throws Exception {
+        tm_.begin();
+        Transaction tx = tm_.getTransaction();
+        System.out.println("preTx:" + tx);
+        Transaction newTx = txBean_.markRollback();
+        assertNotSame(tx, newTx);
+    }
+
     public void testInvokeException() throws Exception {
         try {
             exBean_.invoke();
