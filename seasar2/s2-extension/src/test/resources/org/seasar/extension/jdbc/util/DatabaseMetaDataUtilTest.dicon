@@ -9,7 +9,9 @@
 			"org.hsqldb.jdbcDriver"
 		</property>
 		<property name="URL">
-			"jdbc:hsqldb:file:" + @org.seasar.framework.util.EclipseUtil@getProjectRoot("seasar2").getAbsolutePath() + "/s2-extension/target/test-classes/data/demo"
+			"jdbc:hsqldb:file:"
+				+ @org.seasar.framework.util.ResourceUtil@getBuildDir(@org.seasar.extension.dbcp.impl.ConnectionPoolImplTest@class).getCanonicalPath()
+				+ "/data/demo"
 		</property>
 		<property name="user">"sa"</property>
 		<property name="password">""</property>
