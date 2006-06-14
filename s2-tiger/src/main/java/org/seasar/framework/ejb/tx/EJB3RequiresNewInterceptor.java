@@ -38,13 +38,13 @@ public class EJB3RequiresNewInterceptor extends AbstractEJB3TxInterceptor {
             begin();
             try {
                 final Object result = invocation.proceed();
-                commit();
+                end();
                 return result;
             } catch (final Throwable t) {
                 if (isRollingBack(t)) {
                     rollback();
                 } else {
-                    commit();
+                    end();
                 }
                 throw t;
             }

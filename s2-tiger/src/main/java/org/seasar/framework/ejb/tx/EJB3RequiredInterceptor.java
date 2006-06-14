@@ -36,7 +36,7 @@ public class EJB3RequiredInterceptor extends AbstractEJB3TxInterceptor {
         try {
             final Object result = invocation.proceed();
             if (began) {
-                commit();
+                end();
             }
             return result;
         } catch (final Throwable t) {
@@ -44,7 +44,7 @@ public class EJB3RequiredInterceptor extends AbstractEJB3TxInterceptor {
                 if (isRollingBack(t)) {
                     rollback();
                 } else {
-                    commit();
+                    end();
                 }
             }
             throw t;
