@@ -128,8 +128,6 @@ public class S2TestMethodRunner extends BeforeAndAfterRunner implements
 
         protected static final String JAVAEE5_PATH = "javaee5.dicon";
 
-        protected static final String J2EE_PATH = "j2ee.dicon";
-
         protected boolean commitRequired;
 
         protected S2Container container;
@@ -235,10 +233,6 @@ public class S2TestMethodRunner extends BeforeAndAfterRunner implements
 
             if (ResourceUtil.isExist(JAVAEE5_PATH)) {
                 include(JAVAEE5_PATH);
-            } else {
-                if (ResourceUtil.isExist(J2EE_PATH)) {
-                    include(J2EE_PATH);
-                }
             }
             String defaultDiconName = ClassUtil.getShortClassName(testClass)
                     + ".dicon";
