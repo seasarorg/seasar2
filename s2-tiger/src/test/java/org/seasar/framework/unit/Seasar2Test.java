@@ -114,34 +114,38 @@ public class Seasar2Test extends S2TestCase {
     @RunWith(Seasar2.class)
     public static class InvalidMethodsTest {
 
+        public void aaa() {
+            log += "a";
+        }
+
         public static void bbb() {
-            count++;
+            log += "b";
         }
 
         private void ccc() {
-            count++;
+            log += "c";
         }
 
         public String ddd() {
-            count++;
+            log += "d";
             return null;
         }
 
         public void eee(String a) {
-            count++;
+            log += "e";
         }
 
         @Ignore
         private void fff() {
-            count++;
+            log += "f";
         }
     }
 
     public void testInvalidMethodsTest() {
         JUnitCore core = new JUnitCore();
         Result result = core.run(InvalidMethodsTest.class);
-        assertFalse(result.wasSuccessful());
-        assertEquals(0, count);
+        assertTrue(result.getFailures().toString(), result.wasSuccessful());
+        assertEquals("a", log);
     }
 
     @RunWith(Seasar2.class)
