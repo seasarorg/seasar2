@@ -1,28 +1,22 @@
 <project name="s2-tiger" default="dist" basedir=".">
-	<property name="ver" value="2.4.0-beta-2"/>
+	<property name="ver" value="2.4.0-beta-3"/>
 
 	<target name="dist">
 		<zip zipfile="target/S2Tiger-${ver}.zip">
 			<zipfileset prefix="s2-tiger" dir=".">
 				<exclude name="**/target/**"/>
+				<exclude name="**/build**"/>
 			</zipfileset>
 			<zipfileset prefix="s2-tiger/lib" dir="target">
 				<include name="s2-tiger-${ver}.jar"/>
-			</zipfileset>
-			<zipfileset prefix="s2-tiger/resources" dir="src/test/resources">
-				<include name="ejb3tx.dicon"/>
+				<include name="s2-tiger-${ver}-sources.jar"/>
+				<include name="s2-tiger-${ver}-javadoc.jar"/>
 			</zipfileset>
 			<zipfileset prefix="s2-tiger/resources" dir="src/examples/resources">
 				<include name="jndi.properties"/>
 			</zipfileset>
 			<zipfileset prefix="s2-tiger/resources" dir="src/test/resources">
-				<include name="j2ee.dicon"/>
-			</zipfileset>
-			<zipfileset prefix="s2-tiger/resources" dir="src/test/resources">
 				<include name="jdbc.dicon"/>
-			</zipfileset>
-			<zipfileset prefix="s2-tiger/resources" dir="src/test/resources">
-				<include name="jta.dicon"/>
 			</zipfileset>
 		</zip>
 	</target>
