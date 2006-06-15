@@ -1,29 +1,29 @@
 <project name="seasar2" default="dist" basedir=".">
-	<property name="ver" value="2.4.0-beta-2"/>
+	<property name="ver" value="2.4.0-beta-3"/>
 
 	<target name="dist">
 		<mkdir dir="target"/>
 		<zip zipfile="target/S${ver}.zip">
 			<zipfileset prefix="seasar2" dir=".">
+				<exclude name="**/build**"/>
 				<exclude name="**/target/**"/>
 			</zipfileset>
 			<zipfileset prefix="seasar2/lib" dir="s2-framework/target">
 				<include name="s2-framework-${ver}.jar"/>
 				<include name="s2-framework-${ver}-sources.jar"/>
+				<include name="s2-framework-${ver}-javadoc.jar"/>
 			</zipfileset>
 			<zipfileset prefix="seasar2/lib" dir="s2-extension/target">
 				<include name="s2-extension-${ver}.jar"/>
 				<include name="s2-extension-${ver}-sources.jar"/>
+				<include name="s2-extension-${ver}-javadoc.jar"/>
 			</zipfileset>
 			<zipfileset prefix="seasar2/resources" dir="s2-framework/src/test/resources">
 				<include name="aop.dicon"/>
 				<include name="log4j.properties"/>
 			</zipfileset>
 			<zipfileset prefix="seasar2/resources" dir="s2-extension/src/test/resources">
-				<include name="ejbtx.dicon"/>
-				<include name="j2ee.dicon"/>
 				<include name="jdbc.dicon"/>
-				<include name="jta.dicon"/>
 			</zipfileset>
 			<zipfileset prefix="seasar2/doc" dir="../s2container-www">
 				<exclude name="**/download/**"/>
