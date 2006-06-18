@@ -6,7 +6,7 @@
   <parent>
     <groupId>org.seasar.container</groupId>
     <artifactId>s2-container-project</artifactId>
-    <version>2.4.0-beta-3</version>
+    <version>2.4.0-beta-4-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>s2-examples</artifactId>
