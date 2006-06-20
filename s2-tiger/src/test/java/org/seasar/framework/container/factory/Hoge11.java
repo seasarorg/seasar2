@@ -65,7 +65,7 @@ public class Hoge11 implements IHoge11A, IHoge11B {
     @Resource
     DataSource ds1;
 
-    @Resource(name = "DataSource")
+    @Resource(name = "java:comp/env/jdbc/DataSource")
     DataSource ds2;
 
     DataSource ds3;

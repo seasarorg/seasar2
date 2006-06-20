@@ -61,47 +61,40 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
 
         ComponentDef cd2 = handler.createComponentDef(Hoge.class,
                 InstanceDefFactory.REQUEST);
-        assertEquals(InstanceDef.REQUEST_NAME, cd2.getInstanceDef()
-                .getName());
+        assertEquals(InstanceDef.REQUEST_NAME, cd2.getInstanceDef().getName());
         assertFalse(cd2.isExternalBinding());
 
         ComponentDef cd3 = handler.createComponentDef(Hoge7.class, null);
         assertEquals("hoge77", cd3.getComponentName());
-        assertEquals(InstanceDef.PROTOTYPE_NAME, cd3.getInstanceDef()
-                .getName());
+        assertEquals(InstanceDef.PROTOTYPE_NAME, cd3.getInstanceDef().getName());
         assertEquals(AutoBindingDef.SEMIAUTO_NAME, cd3.getAutoBindingDef()
                 .getName());
 
         ComponentDef cd4 = handler.createComponentDef(Hoge8.class, null);
         assertEquals("hoge7", cd4.getComponentName());
-        assertEquals(InstanceDef.PROTOTYPE_NAME, cd4.getInstanceDef()
+        assertEquals(InstanceDef.PROTOTYPE_NAME, cd4.getInstanceDef().getName());
+        assertEquals(AutoBindingDef.SEMIAUTO_NAME, cd4.getAutoBindingDef()
                 .getName());
-        assertEquals(AutoBindingDef.SEMIAUTO_NAME, cd4
-                .getAutoBindingDef().getName());
 
         ComponentDef cd5 = handler.createComponentDef(Hoge7.class,
                 InstanceDefFactory.REQUEST);
-        assertEquals(InstanceDef.REQUEST_NAME, cd5.getInstanceDef()
-                .getName());
+        assertEquals(InstanceDef.REQUEST_NAME, cd5.getInstanceDef().getName());
 
         ComponentDef cd6 = handler.createComponentDef(Hoge9.class, null);
         assertEquals("hoge99", cd6.getComponentName());
-        assertEquals(InstanceDef.PROTOTYPE_NAME, cd6.getInstanceDef()
+        assertEquals(InstanceDef.PROTOTYPE_NAME, cd6.getInstanceDef().getName());
+        assertEquals(AutoBindingDef.SEMIAUTO_NAME, cd6.getAutoBindingDef()
                 .getName());
-        assertEquals(AutoBindingDef.SEMIAUTO_NAME, cd6
-                .getAutoBindingDef().getName());
 
         ComponentDef cd7 = handler.createComponentDef(Hoge10.class, null);
         assertNull(cd7.getComponentName());
-        assertEquals(InstanceDef.PROTOTYPE_NAME, cd7.getInstanceDef()
+        assertEquals(InstanceDef.PROTOTYPE_NAME, cd7.getInstanceDef().getName());
+        assertEquals(AutoBindingDef.SEMIAUTO_NAME, cd7.getAutoBindingDef()
                 .getName());
-        assertEquals(AutoBindingDef.SEMIAUTO_NAME, cd7
-                .getAutoBindingDef().getName());
 
         ComponentDef cd8 = handler.createComponentDef(Hoge9.class,
                 InstanceDefFactory.REQUEST);
-        assertEquals(InstanceDef.REQUEST_NAME, cd8.getInstanceDef()
-                .getName());
+        assertEquals(InstanceDef.REQUEST_NAME, cd8.getInstanceDef().getName());
 
         ComponentDef cd9 = handler.createComponentDef(Hoge.class,
                 InstanceDefFactory.REQUEST, AutoBindingDefFactory.NONE);
@@ -110,13 +103,13 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
 
         ComponentDef cd10 = handler.createComponentDef(Hoge2.class,
                 InstanceDefFactory.REQUEST, AutoBindingDefFactory.NONE);
-        assertEquals(AutoBindingDef.PROPERTY_NAME, cd10
-                .getAutoBindingDef().getName());
+        assertEquals(AutoBindingDef.PROPERTY_NAME, cd10.getAutoBindingDef()
+                .getName());
 
         ComponentDef cd11 = handler.createComponentDef(Hoge3.class,
                 InstanceDefFactory.REQUEST, AutoBindingDefFactory.NONE);
-        assertEquals(AutoBindingDef.PROPERTY_NAME, cd11
-                .getAutoBindingDef().getName());
+        assertEquals(AutoBindingDef.PROPERTY_NAME, cd11.getAutoBindingDef()
+                .getName());
 
         ComponentDef cd12 = handler.createComponentDef(Hoge7.class,
                 InstanceDefFactory.REQUEST, AutoBindingDefFactory.NONE, true);
@@ -483,7 +476,7 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
         assertEquals("field", pd1.getAccessTypeDef().getName());
 
         PropertyDef pd2 = cd.getPropertyDef("ds2");
-        assertEquals("DataSource", ((OgnlExpression) pd2.getExpression())
+        assertEquals("jdbc.DataSource", ((OgnlExpression) pd2.getExpression())
                 .getSource());
         assertEquals("field", pd2.getAccessTypeDef().getName());
     }
