@@ -44,4 +44,13 @@ public class JndiResourceLocatorTest extends S2TestCase {
                 "java:comp/UserTransaction", env);
         assertNotNull("1", userTransaction);
     }
+
+    public void testResolveName() throws Exception {
+        assertEquals("jdbc.DataSource", JndiResourceLocator
+                .resolveName("jdbc/DataSource"));
+        assertEquals("jdbc.DataSource", JndiResourceLocator
+                .resolveName("java:comp/env/jdbc/DataSource"));
+        assertEquals("jta.UserTransaction", JndiResourceLocator
+                .resolveName("java:comp/UserTransaction"));
+    }
 }

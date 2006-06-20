@@ -15,12 +15,26 @@
  */
 package org.seasar.extension.j2ee;
 
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Map;
 
 import javax.naming.InitialContext;
+import javax.naming.Name;
 import javax.naming.NamingException;
 
+import org.seasar.framework.container.ContainerConstants;
+import org.seasar.framework.util.StringUtil;
+
 public class JndiResourceLocator {
+    public static final String ENC_PREFIX = "java:comp/env/";
+
+    protected static final Map MAGIC_COMPONENTS = new HashMap();
+    static {
+        MAGIC_COMPONENTS
+                .put("java:comp/UserTransaction", "jta/UserTransaction");
+    }
+
     public static Object lookup(final String name) throws NamingException {
         return lookup(name, null);
     }
@@ -33,5 +47,20 @@ public class JndiResourceLocator {
         } finally {
             context.close();
         }
+    }
+
+    public static String resolveName(final Name name) {
+        return resolveName(name.toString());
+    }
+
+    public static String resolveName(final String name) {
+        String n = name;
+        if (MAGIC_COMPONENTS.containsKey(name)) {
+            n = (String) MAGIC_COMPONENTS.get(name);
+        }
+        if (name.startsWith(ENC_PREFIX)) {
+            n = name.substring(ENC_PREFIX.length());
+        }
+        return StringUtil.replace(n, "/", ContainerConstants.NS_SEP_STR);
     }
 }

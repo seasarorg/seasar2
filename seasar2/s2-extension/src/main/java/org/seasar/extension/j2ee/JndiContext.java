@@ -15,9 +15,7 @@
  */
 package org.seasar.extension.j2ee;
 
-import java.util.HashMap;
 import java.util.Hashtable;
-import java.util.Map;
 
 import javax.naming.Context;
 import javax.naming.Name;
@@ -28,7 +26,6 @@ import javax.naming.NamingException;
 import javax.naming.OperationNotSupportedException;
 
 import org.seasar.framework.container.ComponentNotFoundRuntimeException;
-import org.seasar.framework.container.ContainerConstants;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 import org.seasar.framework.exception.SRuntimeException;
@@ -39,16 +36,6 @@ import org.seasar.framework.util.StringUtil;
  * 
  */
 public class JndiContext implements Context {
-    public static final String ENC_PREFIX = "java:comp/env/";
-
-    // public static final String ENC_NAMESPACE = "j2ee";
-
-    protected static final Map MAGIC_COMPONENTS = new HashMap();
-    static {
-        MAGIC_COMPONENTS
-                .put("java:comp/UserTransaction", "jta/UserTransaction");
-    }
-
     protected final Hashtable env;
 
     protected final String path;
@@ -70,12 +57,12 @@ public class JndiContext implements Context {
         if (name.isEmpty()) {
             throw new NamingException("name is empty");
         }
-        bind(resolveName(name), obj);
+        bind(JndiResourceLocator.resolveName(name), obj);
     }
 
     public void bind(final String name, final Object obj)
             throws NamingException {
-        bind(resolveName(name).split("."), obj);
+        bind(JndiResourceLocator.resolveName(name).split("."), obj);
     }
 
     public void close() throws NamingException {
@@ -153,7 +140,7 @@ public class JndiContext implements Context {
         if (StringUtil.isEmpty(name)) {
             return new JndiContext(new Hashtable(env));
         }
-        return container.getComponent(resolveName(name));
+        return container.getComponent(JndiResourceLocator.resolveName(name));
     }
 
     public Object lookupLink(final Name name) throws NamingException {
@@ -220,45 +207,6 @@ public class JndiContext implements Context {
         }
     }
 
-    /*
-     * protected Object lookup(final String[] names) throws NamingException {
-     * //final StringBuffer buf = new StringBuffer(100); try { S2Container
-     * context = container; for (int i = 0; i < names.length - 1; ++i) {
-     * //buf.append(names[i]); context = (S2Container)
-     * context.getComponent(names[i]); //buf.append('/'); } final String name =
-     * names[names.length - 1]; //buf.append(name); return
-     * context.getComponent(name); } catch (final
-     * ComponentNotFoundRuntimeException e) { final StringBuffer buf = new
-     * StringBuffer(100); for (int i = 0; i < names.length - 1; ++i) {
-     * buf.append(names[i]); buf.append('/'); buf.append(names[names.length -
-     * 1]); } throw createNamingException(new String(buf), e); } catch (final
-     * SRuntimeException e) { throw createNamingException(e.getMessage(), e); } }
-     */
-    protected String resolveName(final Name name) {
-        /*
-         * StringBuffer buf = new StringBuffer(100); for (int i = 0; i <
-         * name.size(); ++i) { buf.append(name.get(i)); buf.append("/"); }
-         * buf.setLength(buf.length() - 1); return resolveName(buf.toString());
-         */
-        return resolveName(name.toString());
-    }
-
-    protected String resolveName(final String name) {
-        String n = name;
-        if (MAGIC_COMPONENTS.containsKey(name)) {
-            n = (String) MAGIC_COMPONENTS.get(name);
-        }
-        if (name.startsWith(ENC_PREFIX)) {
-            n = name.substring(ENC_PREFIX.length());
-        }
-        return StringUtil.replace(n, "/", ContainerConstants.NS_SEP_STR);
-    }
-
-    /*
-     * protected String toStringArray(final Name name) { final String[] names =
-     * new String[name.size()]; for (int i = 0; i < name.size(); ++i) { names[i] =
-     * name.get(i); } return names; }
-     */
     protected NamingException createNamingException(final String message,
             final Throwable cause) {
         final NamingException e = new NamingException(message);
