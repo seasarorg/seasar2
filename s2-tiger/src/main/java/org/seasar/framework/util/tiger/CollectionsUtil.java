@@ -37,6 +37,7 @@ import java.util.WeakHashMap;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.DelayQueue;
@@ -389,5 +390,14 @@ public abstract class CollectionsUtil {
     public static <K, V> WeakHashMap<K, V> newWeakHashMap(
             final Map<? extends K, ? extends V> m) {
         return new WeakHashMap<K, V>(m);
+    }
+
+    public static <K, V> V putIfAbsent(final ConcurrentMap<K, V> map,
+            final K key, final V value) {
+        V exists = map.putIfAbsent(key, value);
+        if (exists != null) {
+            return exists;
+        }
+        return value;
     }
 }
