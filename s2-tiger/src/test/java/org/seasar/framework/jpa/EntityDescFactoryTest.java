@@ -17,8 +17,6 @@ package org.seasar.framework.jpa;
 
 import static org.easymock.EasyMock.expect;
 
-import javax.persistence.EntityManager;
-
 import org.seasar.framework.unit.EasyMockTestCase;
 
 /**
@@ -26,10 +24,6 @@ import org.seasar.framework.unit.EasyMockTestCase;
  * 
  */
 public class EntityDescFactoryTest extends EasyMockTestCase {
-
-    private EntityManager em1;
-
-    private EntityManager em2;
 
     private EntityDesc entityDesc1;
 
@@ -43,77 +37,38 @@ public class EntityDescFactoryTest extends EasyMockTestCase {
     protected void setUp() throws Exception {
         super.setUp();
 
-        em1 = createStrictMock(EntityManager.class);
-        em2 = createStrictMock(EntityManager.class);
         entityDesc1 = createStrictMock(EntityDesc.class);
         entityDesc2 = createStrictMock(EntityDesc.class);
         provider1 = createStrictMock(EntityDescProvider.class);
         provider2 = createStrictMock(EntityDescProvider.class);
 
-        EntityDescFactory.addProvider(Foo.class, provider1);
-        EntityDescFactory.addProvider(Bar.class, provider2);
+        EntityDescFactory.addProvider(provider1);
+        EntityDescFactory.addProvider(provider2);
     }
 
-    public void testSingleProvider() throws Exception {
+    public void testGetProvider() throws Exception {
         new EasyMockTestCase.Subsequence() {
             @Override
             protected void replay() throws Exception {
-                EntityDesc fooDesc = EntityDescFactory.getEntityDesc(em1,
-                        Foo.class);
+                EntityDesc fooDesc = EntityDescFactory.getEntityDesc(Foo.class);
                 assertSame(entityDesc1, fooDesc);
 
-                EntityDesc fooDesc2 = EntityDescFactory.getEntityDesc(em1,
-                        Foo.class);
+                EntityDesc fooDesc2 = EntityDescFactory
+                        .getEntityDesc(Foo.class);
                 assertSame(entityDesc1, fooDesc2);
 
-                EntityDesc barDesc = EntityDescFactory.getEntityDesc(em1,
-                        Bar.class);
+                EntityDesc barDesc = EntityDescFactory.getEntityDesc(Bar.class);
                 assertSame(entityDesc2, barDesc);
             }
 
             @Override
             protected void record() throws Exception {
-                Object key1 = new Object();
-                expect(em1.getDelegate()).andReturn(new Foo());
-                expect(provider1.getContextKey(em1)).andReturn(key1);
-                expect(provider1.createEntityDesc(Foo.class, key1)).andReturn(
+                expect(provider1.createEntityDesc(Foo.class)).andReturn(
                         entityDesc1);
 
-                expect(em1.getDelegate()).andReturn(new Foo());
-                expect(provider1.getContextKey(em1)).andReturn(key1);
+                expect(provider1.createEntityDesc(Bar.class)).andReturn(null);
 
-                expect(em1.getDelegate()).andReturn(new Foo());
-                expect(provider1.getContextKey(em1)).andReturn(key1);
-                expect(provider1.createEntityDesc(Bar.class, key1)).andReturn(
-                        entityDesc2);
-            }
-        }.doTest();
-    }
-
-    public void testMultipleProvider() throws Exception {
-        new EasyMockTestCase.Subsequence() {
-            @Override
-            protected void replay() throws Exception {
-                EntityDesc fooDesc = EntityDescFactory.getEntityDesc(em1,
-                        Foo.class);
-                assertSame(entityDesc1, fooDesc);
-                EntityDesc fooDesc2 = EntityDescFactory.getEntityDesc(em2,
-                        Foo.class);
-                assertSame(entityDesc2, fooDesc2);
-            }
-
-            @Override
-            protected void record() throws Exception {
-                Object key1 = new Object();
-                Object key2 = new Object();
-                expect(em1.getDelegate()).andReturn(new Foo());
-                expect(provider1.getContextKey(em1)).andReturn(key1);
-                expect(provider1.createEntityDesc(Foo.class, key1)).andReturn(
-                        entityDesc1);
-
-                expect(em2.getDelegate()).andReturn(new Bar());
-                expect(provider2.getContextKey(em2)).andReturn(key2);
-                expect(provider2.createEntityDesc(Foo.class, key2)).andReturn(
+                expect(provider2.createEntityDesc(Bar.class)).andReturn(
                         entityDesc2);
             }
         }.doTest();

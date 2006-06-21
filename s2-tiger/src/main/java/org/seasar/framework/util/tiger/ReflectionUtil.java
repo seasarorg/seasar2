@@ -16,6 +16,7 @@
 package org.seasar.framework.util.tiger;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 
 import org.seasar.framework.exception.ClassNotFoundRuntimeException;
@@ -23,6 +24,7 @@ import org.seasar.framework.exception.IllegalAccessRuntimeException;
 import org.seasar.framework.exception.InstantiationRuntimeException;
 import org.seasar.framework.exception.InvocationTargetRuntimeException;
 import org.seasar.framework.exception.NoSuchConstructorRuntimeException;
+import org.seasar.framework.util.FieldUtil;
 
 /**
  * @author koichik
@@ -90,5 +92,9 @@ public abstract class ReflectionUtil {
             throw new InvocationTargetRuntimeException(constructor
                     .getDeclaringClass(), ex);
         }
+    }
+
+    public static <T> T getValue(final Field field, final Object target) {
+        return (T) FieldUtil.get(field, target);
     }
 }

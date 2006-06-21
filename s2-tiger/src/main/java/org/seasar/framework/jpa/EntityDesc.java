@@ -19,14 +19,22 @@ package org.seasar.framework.jpa;
  * @author koichik
  * 
  */
-public interface EntityDesc {
+public interface EntityDesc<ENTITY> {
 
     String getName();
-
-    boolean isFieldAccess();
 
     String getIdPropertyName();
 
     String[] getPropertyNames();
+
+    Class<?> getPropertyClass(String propertyName);
+
+    boolean isAssociationProperty(String propertyName);
+
+    boolean isCollectionProperty(String propertyName);
+
+    <T> T getPropertyValue(ENTITY entity, String propertyName);
+
+    void setPropertyValue(ENTITY entity, String propertyName, Object value);
 
 }

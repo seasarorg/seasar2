@@ -15,16 +15,12 @@
  */
 package org.seasar.framework.jpa;
 
-import javax.persistence.EntityManager;
-
 /**
  * @author koichik
  * 
  */
 public interface EntityDescProvider {
 
-    Object getContextKey(EntityManager em);
-
-    EntityDesc createEntityDesc(Class<?> entityClass, Object contextKey);
+    <ENTITY> EntityDesc<ENTITY> createEntityDesc(Class<ENTITY> entityClass);
 
 }
