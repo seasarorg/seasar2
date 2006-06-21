@@ -27,6 +27,8 @@
 			</zipfileset>
 			<zipfileset prefix="seasar2/doc" dir="../s2container-www">
 				<exclude name="**/download/**"/>
+				<exclude name="**/ja/benchmark**"/>
+				<exclude name="**/ja/hotdeploy-demo/**"/>
 				<exclude name=".project"/>
 			</zipfileset>
 		</zip>
