@@ -15,6 +15,8 @@
  */
 package org.seasar.framework.jpa;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ConcurrentMap;
 
@@ -26,14 +28,18 @@ import org.seasar.framework.util.tiger.CollectionsUtil;
  */
 public class EntityDescFactory {
 
-    protected static final List<EntityDescProvider> providers = CollectionsUtil
-            .newArrayList();
+    protected static final List<EntityDescProvider> providers = Collections
+            .synchronizedList(new ArrayList<EntityDescProvider>());
 
     protected static final ConcurrentMap<Class<?>, EntityDesc> entityDescs = CollectionsUtil
             .newConcurrentHashMap();
 
     public static void addProvider(final EntityDescProvider provider) {
         providers.add(provider);
+    }
+
+    public static void removeProvider(final EntityDescProvider provider) {
+        providers.remove(provider);
     }
 
     public static <T> EntityDesc<T> getEntityDesc(final Class<T> entityClass) {
