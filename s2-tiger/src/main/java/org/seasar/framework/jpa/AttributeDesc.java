@@ -15,22 +15,36 @@
  */
 package org.seasar.framework.jpa;
 
+import javax.persistence.TemporalType;
+
 /**
  * @author koichik
  * 
  */
-public interface EntityDesc<ENTITY> {
+public interface AttributeDesc {
 
-    Class<ENTITY> getEntityClass();
+    String getName();
 
-    String getEntityName();
+    Class<?> getType();
 
-    String[] getAttributeNames();
+    Class<?> getElementType();
 
-    AttributeDesc getIdAttributeDesc();
+    int getSqlType();
 
-    AttributeDesc getAttributeDesc(String attributeName);
+    TemporalType getTemporalType();
 
-    AttributeDesc[] getAttributeDescs();
+    boolean isId();
+
+    boolean isAssociation();
+
+    boolean isCollection();
+
+    boolean isComponent();
+
+    boolean isVersion();
+
+    Object getValue(Object entity);
+
+    void setValue(Object entity, Object value);
 
 }
