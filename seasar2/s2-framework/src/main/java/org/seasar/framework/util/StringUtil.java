@@ -141,4 +141,31 @@ public final class StringUtil {
                 && text.substring(0, fragment.length()).equalsIgnoreCase(
                         fragment);
     }
+
+    public static boolean isBlank(String str) {
+        if (str == null || str.length() == 0) {
+            return true;
+        }
+        for (int i = 0; i < str.length(); i++) {
+            if (!Character.isWhitespace(str.charAt(i))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static boolean isNotBlank(String str) {
+        return !isBlank(str);
+    }
+
+    public static boolean contains(String str, char ch) {
+        if (isEmpty(str)) {
+            return false;
+        }
+        return str.indexOf(ch) >= 0;
+    }
+
+    public static boolean equals(String target1, String target2) {
+        return (target1 == null) ? (target2 == null) : target1.equals(target2);
+    }
 }

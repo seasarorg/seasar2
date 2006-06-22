@@ -46,6 +46,12 @@ public class ArrayUtilTest extends TestCase {
         assertEquals("4", 1, ArrayUtil.indexOf(array, null));
     }
 
+    public void testIndexOf_character() throws Exception {
+        char[] array = new char[]{'a', 'b', 'c'};
+        assertEquals("1", 0, ArrayUtil.indexOf(array, 'a'));
+        assertEquals("2", -1, ArrayUtil.indexOf(array, 'd'));
+    }
+    
     public void testRemoveFirst() throws Exception {
         String[] array = new String[] { "111", "222", "333" };
         String[] newArray = (String[]) ArrayUtil.remove(array, "111");
@@ -90,6 +96,13 @@ public class ArrayUtilTest extends TestCase {
         assertEquals(false, ArrayUtil.contains((Object[]) null, "1"));
         assertEquals(false, ArrayUtil.contains((Object[]) null, null));
         assertEquals(true, ArrayUtil.contains(new Object[] { null }, null));
+    }
+
+    public void testContains_character() throws Exception {
+        assertEquals(true, ArrayUtil.contains(new char[] { '1', '2' }, '1'));
+        assertEquals(false, ArrayUtil.contains(new char[] { '1' }, '2'));
+        assertEquals(true, ArrayUtil.contains(new char[] { '2', '1' }, '1'));
+        assertEquals(false, ArrayUtil.contains((char[]) null, '1'));
     }
 
 }

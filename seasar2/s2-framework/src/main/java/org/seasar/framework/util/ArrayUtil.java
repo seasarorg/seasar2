@@ -76,6 +76,18 @@ public class ArrayUtil {
         return -1;
     }
 
+    public static int indexOf(char[] array, char ch) {
+        if (array != null) {
+            for (int i = 0; i < array.length; ++i) {
+                char c = array[i];
+                if(ch == c) {
+                    return i;
+                }
+            }
+        }
+        return -1;
+    }
+
     public static Object[] remove(Object[] array, Object obj) {
         int index = indexOf(array, obj);
         if (index < 0) {
@@ -101,4 +113,8 @@ public class ArrayUtil {
         return -1 < indexOf(array, obj);
     }
 
+    public static boolean contains(char[] array, char ch) {
+        return -1 < indexOf(array, ch);
+    }
+    
 }
