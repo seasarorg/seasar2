@@ -32,7 +32,7 @@ public class HttpSessionMapTest extends S2FrameworkTestCase {
         session.setAttribute("aaa", "bbb");
         HttpSessionMap map = new HttpSessionMap(request);
         assertEquals("bbb", map.getAttribute("aaa"));
-        assertEquals("aaa", map.getAttributeNames().nextElement());
+        assertEquals("aaa", map.getAttributeNames().next());
 
         map.removeAttribute("aaa");
         assertNull(map.getAttribute("aaa"));

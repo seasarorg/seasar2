@@ -15,7 +15,7 @@
  */
 package org.seasar.framework.container.impl.servlet;
 
-import java.util.Enumeration;
+import java.util.Iterator;
 
 import javax.servlet.http.Cookie;
 
@@ -37,8 +37,8 @@ public class CookieMapTest extends S2FrameworkTestCase {
         assertFalse(map.isEmpty());
         assertEquals(cookie, map.getAttribute("a"));
         assertEquals(1, map.size());
-        for (Enumeration e = map.getAttributeNames(); e.hasMoreElements();) {
-            assertEquals(cookie.getName(), e.nextElement());
+        for (Iterator it = map.getAttributeNames(); it.hasNext();) {
+            assertEquals(cookie.getName(), it.next());
         }
     }
 }

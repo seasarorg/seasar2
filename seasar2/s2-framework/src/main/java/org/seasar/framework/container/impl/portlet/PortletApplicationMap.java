@@ -15,12 +15,13 @@
  */
 package org.seasar.framework.container.impl.portlet;
 
-import java.util.Enumeration;
+import java.util.Iterator;
 
 import javax.portlet.PortletContext;
 
 import org.seasar.framework.container.impl.AbstractExternalContextMap;
 import org.seasar.framework.util.AssertionUtil;
+import org.seasar.framework.util.EnumerationIterator;
 
 /**
  * @author <a href="mailto:shinsuke@yahoo.co.jp">Shinsuke Sugaya</a>
@@ -38,8 +39,8 @@ public class PortletApplicationMap extends AbstractExternalContextMap {
         return context.getAttribute(key);
     }
 
-    protected Enumeration getAttributeNames() {
-        return context.getAttributeNames();
+    protected Iterator getAttributeNames() {
+        return new EnumerationIterator(context.getAttributeNames());
     }
 
     protected void removeAttribute(String key) {

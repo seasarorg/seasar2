@@ -20,13 +20,10 @@ import java.util.AbstractMap;
 import java.util.AbstractSet;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import org.seasar.framework.util.EnumerationIterator;
 
 /**
  * @author shot
@@ -44,10 +41,10 @@ public abstract class AbstractExternalContextMap extends AbstractMap {
     }
 
     public void clear() {
-        //avoid ConcurrentModificationException
+        // avoid ConcurrentModificationException
         List list = new ArrayList();
-        for (Enumeration e = getAttributeNames(); e.hasMoreElements();) {
-            String key = (String) e.nextElement();
+        for (Iterator it = getAttributeNames(); it.hasNext();) {
+            String key = (String) it.next();
             list.add(key);
         }
         clearReally(list);
@@ -66,8 +63,8 @@ public abstract class AbstractExternalContextMap extends AbstractMap {
 
     public boolean containsValue(Object value) {
         if (value != null) {
-            for (Enumeration e = getAttributeNames(); e.hasMoreElements();) {
-                String key = (String) e.nextElement();
+            for (Iterator it = getAttributeNames(); it.hasNext();) {
+                String key = (String) it.next();
                 Object attributeValue = getAttribute(key);
                 if (value.equals(attributeValue)) {
                     return true;
@@ -104,7 +101,7 @@ public abstract class AbstractExternalContextMap extends AbstractMap {
     }
 
     public boolean isEmpty() {
-        return !getAttributeNames().hasMoreElements();
+        return !getAttributeNames().hasNext();
     }
 
     public Set keySet() {
@@ -132,13 +129,15 @@ public abstract class AbstractExternalContextMap extends AbstractMap {
 
     protected abstract void setAttribute(String key, Object value);
 
-    protected abstract Enumeration getAttributeNames();
+    protected abstract Iterator getAttributeNames();
 
     protected abstract void removeAttribute(String key);
 
     abstract class AbstractExternalContextSet extends AbstractSet {
 
-        /* (non-Javadoc)
+        /*
+         * (non-Javadoc)
+         * 
          * @see java.util.AbstractCollection#size()
          */
         public int size() {
@@ -159,14 +158,18 @@ public abstract class AbstractExternalContextMap extends AbstractMap {
             this.contextMap = contextMap;
         }
 
-        /* (non-Javadoc)
+        /*
+         * (non-Javadoc)
+         * 
          * @see java.util.AbstractCollection#iterator()
          */
         public Iterator iterator() {
             return new EntryIterator(contextMap);
         }
 
-        /* (non-Javadoc)
+        /*
+         * (non-Javadoc)
+         * 
          * @see java.util.AbstractCollection#remove(java.lang.Object)
          */
         public boolean remove(Object o) {
@@ -187,14 +190,18 @@ public abstract class AbstractExternalContextMap extends AbstractMap {
             this.contextMap = contextMap;
         }
 
-        /* (non-Javadoc)
+        /*
+         * (non-Javadoc)
+         * 
          * @see java.util.AbstractCollection#iterator()
          */
         public Iterator iterator() {
             return new KeyIterator(contextMap);
         }
 
-        /* (non-Javadoc)
+        /*
+         * (non-Javadoc)
+         * 
          * @see java.util.AbstractCollection#remove(java.lang.Object)
          */
         public boolean remove(Object o) {
@@ -229,7 +236,9 @@ public abstract class AbstractExternalContextMap extends AbstractMap {
 
     }
 
-    abstract class AbstractExternalContextIterator extends EnumerationIterator {
+    abstract class AbstractExternalContextIterator implements Iterator {
+
+        private final Iterator iterator;
 
         private final AbstractExternalContextMap contextMap;
 
@@ -239,12 +248,16 @@ public abstract class AbstractExternalContextMap extends AbstractMap {
 
         public AbstractExternalContextIterator(
                 final AbstractExternalContextMap contextMap) {
-            super(contextMap.getAttributeNames());
+            iterator = contextMap.getAttributeNames();
             this.contextMap = contextMap;
         }
 
+        public boolean hasNext() {
+            return iterator.hasNext();
+        }
+
         public Object next() {
-            currentKey = (String) super.next();
+            currentKey = (String) iterator.next();
             try {
                 return doNext();
             } finally {
@@ -374,8 +387,7 @@ public abstract class AbstractExternalContextMap extends AbstractMap {
             Object v = entry.getValue();
 
             return (k == key || (k != null && k.equals(key)))
-                    && (v == value || (v != null && v
-                            .equals(value)));
+                    && (v == value || (v != null && v.equals(value)));
         }
 
         public int hashCode() {

@@ -15,11 +15,12 @@
  */
 package org.seasar.framework.container.impl.servlet;
 
-import java.util.Enumeration;
+import java.util.Iterator;
 
 import javax.servlet.ServletRequest;
 
 import org.seasar.framework.container.impl.AbstractExternalContextMap;
+import org.seasar.framework.util.EnumerationIterator;
 
 /**
  * @author shot
@@ -41,8 +42,8 @@ public class ServletRequestMap extends AbstractExternalContextMap {
         request.setAttribute(key, value);
     }
 
-    protected Enumeration getAttributeNames() {
-        return request.getAttributeNames();
+    protected Iterator getAttributeNames() {
+        return new EnumerationIterator(request.getAttributeNames());
     }
 
     protected void removeAttribute(String key) {

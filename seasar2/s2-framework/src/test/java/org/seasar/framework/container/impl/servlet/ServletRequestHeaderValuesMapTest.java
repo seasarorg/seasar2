@@ -36,7 +36,7 @@ public class ServletRequestHeaderValuesMapTest extends S2FrameworkTestCase {
         assertEquals(2, strs.length);
         assertEquals("A", strs[0]);
         assertEquals("B", strs[1]);
-        assertEquals("a", map.getAttributeNames().nextElement());
+        assertEquals("a", map.getAttributeNames().next());
     }
 
 }

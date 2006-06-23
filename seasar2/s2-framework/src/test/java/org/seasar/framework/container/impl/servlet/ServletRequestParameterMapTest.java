@@ -15,7 +15,7 @@
  */
 package org.seasar.framework.container.impl.servlet;
 
-import java.util.Enumeration;
+import java.util.Iterator;
 
 import org.seasar.framework.mock.servlet.MockHttpServletRequest;
 import org.seasar.framework.unit.S2FrameworkTestCase;
@@ -30,9 +30,9 @@ public class ServletRequestParameterMapTest extends S2FrameworkTestCase {
         request.setParameter("a", "A");
         ServletRequestParameterMap map = new ServletRequestParameterMap(request);
         assertEquals("A", map.getAttribute("a"));
-        Enumeration e = map.getAttributeNames();
-        assertNotNull(e);
-        assertEquals("a", e.nextElement());
+        Iterator it = map.getAttributeNames();
+        assertNotNull(it);
+        assertEquals("a", it.next());
     }
 
 }

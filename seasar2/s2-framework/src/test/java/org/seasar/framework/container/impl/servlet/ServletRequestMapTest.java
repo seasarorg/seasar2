@@ -28,7 +28,7 @@ public class ServletRequestMapTest extends S2FrameworkTestCase {
         request.setAttribute("hoge", "foo");
         ServletRequestMap map = new ServletRequestMap(request);
         assertEquals("foo", map.getAttribute("hoge"));
-        assertEquals("hoge", map.getAttributeNames().nextElement());
+        assertEquals("hoge", map.getAttributeNames().next());
 
         map.setAttribute("bar", "baz");
         assertEquals("baz", request.getAttribute("bar"));

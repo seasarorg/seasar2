@@ -15,11 +15,12 @@
  */
 package org.seasar.framework.container.impl.servlet;
 
-import java.util.Enumeration;
+import java.util.Iterator;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.seasar.framework.container.impl.AbstractUnmodifiableExternalContextMap;
+import org.seasar.framework.util.EnumerationIterator;
 
 /**
  * @author shot
@@ -38,8 +39,8 @@ public class ServletRequestHeaderMap extends
         return request.getHeader(key);
     }
 
-    protected Enumeration getAttributeNames() {
-        return request.getHeaderNames();
+    protected Iterator getAttributeNames() {
+        return new EnumerationIterator(request.getHeaderNames());
     }
 
 }

@@ -17,11 +17,13 @@ package org.seasar.framework.container.impl.servlet;
 
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.seasar.framework.container.impl.AbstractUnmodifiableExternalContextMap;
+import org.seasar.framework.util.EnumerationIterator;
 
 /**
  * @author shot
@@ -43,8 +45,8 @@ public class ServletRequestHeaderValuesMap extends
         return toStringArray(e);
     }
 
-    protected Enumeration getAttributeNames() {
-        return request.getHeaderNames();
+    protected Iterator getAttributeNames() {
+        return new EnumerationIterator(request.getHeaderNames());
     }
 
     private String[] toStringArray(Enumeration e) {

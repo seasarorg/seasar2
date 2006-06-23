@@ -15,14 +15,15 @@
  */
 package org.seasar.framework.container.impl.servlet;
 
-import java.util.Enumeration;
+import java.util.Iterator;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.seasar.framework.container.impl.AbstractExternalContextMap;
 import org.seasar.framework.util.AssertionUtil;
-import org.seasar.framework.util.EmptyEnumeration;
+import org.seasar.framework.util.EmptyIterator;
+import org.seasar.framework.util.EnumerationIterator;
 
 /**
  * @author shot
@@ -30,7 +31,7 @@ import org.seasar.framework.util.EmptyEnumeration;
  */
 public class HttpSessionMap extends AbstractExternalContextMap {
 
-    private static final Enumeration EMPTY_ENUMERATION = new EmptyEnumeration();
+    private static final Iterator EMPTY_ITERATOR = new EmptyIterator();
 
     private HttpServletRequest request;
 
@@ -48,10 +49,10 @@ public class HttpSessionMap extends AbstractExternalContextMap {
         request.getSession(true).setAttribute(key, value);
     }
 
-    protected Enumeration getAttributeNames() {
+    protected Iterator getAttributeNames() {
         HttpSession session = getSession();
-        return (session != null) ? session.getAttributeNames()
-                : EMPTY_ENUMERATION;
+        return (session != null) ? new EnumerationIterator(session
+                .getAttributeNames()) : EMPTY_ITERATOR;
     }
 
     protected void removeAttribute(String key) {

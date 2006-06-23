@@ -15,7 +15,7 @@
  */
 package org.seasar.framework.container.impl.servlet;
 
-import java.util.Enumeration;
+import java.util.Iterator;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -90,17 +90,21 @@ public class CookieMap extends AbstractUnmodifiableExternalContextMap {
         return null;
     }
 
-    protected Enumeration getAttributeNames() {
+    protected Iterator getAttributeNames() {
         final Cookie[] cookies = getCookies();
-        return new Enumeration() {
+        return new Iterator() {
             private int index = 0;
 
-            public boolean hasMoreElements() {
+            public boolean hasNext() {
                 return index < cookies.length;
             }
 
-            public Object nextElement() {
+            public Object next() {
                 return cookies[index++].getName();
+            }
+
+            public void remove() {
+                throw new UnsupportedOperationException("remove");
             }
 
         };

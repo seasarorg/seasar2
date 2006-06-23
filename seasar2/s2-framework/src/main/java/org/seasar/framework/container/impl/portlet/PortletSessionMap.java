@@ -15,21 +15,22 @@
  */
 package org.seasar.framework.container.impl.portlet;
 
-import java.util.Enumeration;
+import java.util.Iterator;
 
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletSession;
 
 import org.seasar.framework.container.impl.AbstractExternalContextMap;
 import org.seasar.framework.util.AssertionUtil;
-import org.seasar.framework.util.EmptyEnumeration;
+import org.seasar.framework.util.EmptyIterator;
+import org.seasar.framework.util.EnumerationIterator;
 
 /**
  * @author <a href="mailto:shinsuke@yahoo.co.jp">Shinsuke Sugaya</a>
  */
 public class PortletSessionMap extends AbstractExternalContextMap {
 
-    private static final Enumeration EMPTY_ENUMERATION = new EmptyEnumeration();
+    private static final Iterator EMPTY_ITERATOR = new EmptyIterator();
 
     private PortletRequest request;
 
@@ -47,10 +48,10 @@ public class PortletSessionMap extends AbstractExternalContextMap {
         request.getPortletSession(true).setAttribute(key, value);
     }
 
-    protected Enumeration getAttributeNames() {
+    protected Iterator getAttributeNames() {
         PortletSession session = getSession();
-        return (session != null) ? session.getAttributeNames()
-                : EMPTY_ENUMERATION;
+        return (session != null) ? new EnumerationIterator(session
+                .getAttributeNames()) : EMPTY_ITERATOR;
     }
 
     protected void removeAttribute(String key) {

@@ -15,11 +15,12 @@
  */
 package org.seasar.framework.container.impl.servlet;
 
-import java.util.Enumeration;
+import java.util.Iterator;
 
 import javax.servlet.ServletContext;
 
 import org.seasar.framework.container.impl.AbstractUnmodifiableExternalContextMap;
+import org.seasar.framework.util.EnumerationIterator;
 
 /**
  * @author shot
@@ -38,8 +39,8 @@ public class ServletInitParameterMap extends
         return context.getInitParameter(key);
     }
 
-    protected Enumeration getAttributeNames() {
-        return context.getInitParameterNames();
+    protected Iterator getAttributeNames() {
+        return new EnumerationIterator(context.getInitParameterNames());
     }
 
 }

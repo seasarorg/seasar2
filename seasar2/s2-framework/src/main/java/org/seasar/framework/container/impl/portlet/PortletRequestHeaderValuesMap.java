@@ -18,12 +18,14 @@ package org.seasar.framework.container.impl.portlet;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import javax.portlet.PortletRequest;
 
 import org.seasar.framework.container.impl.AbstractUnmodifiableExternalContextMap;
+import org.seasar.framework.util.EnumerationIterator;
 
 /**
  * @author <a href="mailto:shinsuke@yahoo.co.jp">Shinsuke Sugaya</a>
@@ -51,8 +53,8 @@ public class PortletRequestHeaderValuesMap extends
         return ret;
     }
 
-    protected Enumeration getAttributeNames() {
-        return request.getPropertyNames();
+    protected Iterator getAttributeNames() {
+        return new EnumerationIterator(request.getPropertyNames());
     }
 
     private String[] toStringArray(Enumeration e) {

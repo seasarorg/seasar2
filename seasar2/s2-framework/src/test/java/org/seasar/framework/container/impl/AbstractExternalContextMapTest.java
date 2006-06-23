@@ -16,7 +16,6 @@
 package org.seasar.framework.container.impl;
 
 import java.util.Collection;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -27,6 +26,7 @@ import junit.framework.TestCase;
 
 import org.seasar.framework.mock.servlet.MockServletContext;
 import org.seasar.framework.mock.servlet.MockServletContextImpl;
+import org.seasar.framework.util.EnumerationIterator;
 
 public class AbstractExternalContextMapTest extends TestCase {
 
@@ -154,8 +154,8 @@ public class AbstractExternalContextMapTest extends TestCase {
             context_.setAttribute(key, value);
         }
 
-        protected Enumeration getAttributeNames() {
-            return context_.getAttributeNames();
+        protected Iterator getAttributeNames() {
+            return new EnumerationIterator(context_.getAttributeNames());
         }
 
         protected void removeAttribute(String key) {
