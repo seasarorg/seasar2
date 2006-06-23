@@ -9,7 +9,7 @@
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, 
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
@@ -17,8 +17,7 @@ package org.seasar.framework.util;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 
 public final class NumberConversionUtil {
@@ -87,41 +86,21 @@ public final class NumberConversionUtil {
     }
 
     public static String removeDelimeter(String value, Locale locale) {
-        String integerDelimeter = findIntegerDelimeter(locale);
+        String integerDelimeter = findGroupingSeparator(locale);
         if (integerDelimeter != null) {
             value = StringUtil.replace(value, integerDelimeter, "");
         }
         return value;
     }
 
-    public static String findFractionDelimeter(Locale locale) {
-        NumberFormat nf = NumberFormat.getInstance(locale);
-        if (nf instanceof DecimalFormat) {
-            String pattern = ((DecimalFormat) nf).toPattern();
-            int index = pattern.indexOf("0");
-            for (int i = index; i < pattern.length(); i++) {
-                char c = pattern.charAt(i);
-                if (c != '#' && c != '0') {
-                    return Character.toString(c);
-                }
-            }
-        }
-        return null;
+    public static String findGroupingSeparator(Locale locale) {
+        DecimalFormatSymbols symbol = new DecimalFormatSymbols(locale);
+        return Character.toString(symbol.getGroupingSeparator());
     }
 
-    public static String findIntegerDelimeter(Locale locale) {
-        NumberFormat nf = NumberFormat.getInstance(locale);
-        if (nf instanceof DecimalFormat) {
-            String pattern = ((DecimalFormat) nf).toPattern();
-            int index = pattern.indexOf("0");
-            for (int i = 0; i < index; i++) {
-                char c = pattern.charAt(i);
-                if (c != '#' && c != '0') {
-                    return Character.toString(c);
-                }
-            }
-        }
-        return null;
+    public static String findDecimalSeparator(Locale locale) {
+        DecimalFormatSymbols symbol = new DecimalFormatSymbols(locale);
+        return Character.toString(symbol.getDecimalSeparator());
     }
 
 }
