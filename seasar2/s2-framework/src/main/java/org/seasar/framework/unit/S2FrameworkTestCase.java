@@ -64,6 +64,8 @@ public abstract class S2FrameworkTestCase extends TestCase {
     private MockHttpServletRequest request;
 
     private MockHttpServletResponse response;
+    
+    private ClassLoader originalClassLoader;
 
     public S2FrameworkTestCase() {
     }
@@ -163,6 +165,9 @@ public abstract class S2FrameworkTestCase extends TestCase {
     }
 
     protected void setUpContainer() throws Throwable {
+        originalClassLoader = Thread.currentThread().getContextClassLoader();
+        ClassLoader classLoader = new UnitClassLoader(originalClassLoader);
+        Thread.currentThread().setContextClassLoader(classLoader);
         container = new S2ContainerImpl();
         SingletonS2ContainerFactory.setContainer(container);
         if (servletContext == null) {
@@ -190,6 +195,8 @@ public abstract class S2FrameworkTestCase extends TestCase {
                 .setProvider(new ComponentDeployerFactory.DefaultProvider());
         SingletonS2ContainerFactory.setContainer(null);
         S2ContainerServlet.clearInstance();
+        Thread.currentThread().setContextClassLoader(originalClassLoader);
+        originalClassLoader = null;
         container = null;
         servletContext = null;
         request = null;
