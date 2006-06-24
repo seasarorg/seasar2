@@ -79,7 +79,7 @@ public abstract class S2EasyMockTestCase extends S2TestCase {
 
     protected abstract class Subsequence {
         public void doTest() throws Exception {
-            behave();
+            record();
             S2EasyMockTestCase.this.replay();
             replay();
             S2EasyMockTestCase.this.verify();
@@ -88,7 +88,7 @@ public abstract class S2EasyMockTestCase extends S2TestCase {
 
         protected abstract void replay() throws Exception;
 
-        protected void behave() throws Exception {
+        protected void record() throws Exception {
         }
     }
 }
