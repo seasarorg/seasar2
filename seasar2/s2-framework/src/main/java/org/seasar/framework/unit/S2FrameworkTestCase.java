@@ -23,6 +23,7 @@ import javax.servlet.Servlet;
 
 import junit.framework.TestCase;
 
+import org.seasar.framework.beans.factory.BeanDescFactory;
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.ExternalContext;
 import org.seasar.framework.container.S2Container;
@@ -64,7 +65,7 @@ public abstract class S2FrameworkTestCase extends TestCase {
     private MockHttpServletRequest request;
 
     private MockHttpServletResponse response;
-    
+
     private ClassLoader originalClassLoader;
 
     public S2FrameworkTestCase() {
@@ -196,6 +197,7 @@ public abstract class S2FrameworkTestCase extends TestCase {
         SingletonS2ContainerFactory.setContainer(null);
         S2ContainerServlet.clearInstance();
         Thread.currentThread().setContextClassLoader(originalClassLoader);
+        BeanDescFactory.clear();
         originalClassLoader = null;
         container = null;
         servletContext = null;
