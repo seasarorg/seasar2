@@ -71,8 +71,6 @@ public class S2ContainerImpl implements S2Container, ContainerConstants {
 
     private boolean inited = false;
 
-    private boolean hotswapMode = false;
-
     private ClassLoader classLoader = null;
 
     static {
@@ -566,14 +564,6 @@ public class S2ContainerImpl implements S2Container, ContainerConstants {
      */
     public int getMetaDefSize() {
         return metaDefSupport.getMetaDefSize();
-    }
-
-    public boolean isHotswapMode() {
-        return hotswapMode;
-    }
-
-    public void setHotswapMode(boolean hotswapMode) {
-        this.hotswapMode = hotswapMode;
     }
 
     public ClassLoader getClassLoader() {
