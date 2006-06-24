@@ -86,20 +86,22 @@ public final class NumberConversionUtil {
     }
 
     public static String removeDelimeter(String value, Locale locale) {
-        String integerDelimeter = findGroupingSeparator(locale);
-        if (integerDelimeter != null) {
-            value = StringUtil.replace(value, integerDelimeter, "");
+        String groupingSeparator = findGroupingSeparator(locale);
+        if (groupingSeparator != null) {
+            value = StringUtil.replace(value, groupingSeparator, "");
         }
         return value;
     }
 
     public static String findGroupingSeparator(Locale locale) {
-        DecimalFormatSymbols symbol = new DecimalFormatSymbols(locale);
+        DecimalFormatSymbols symbol = DecimalFormatSymbolsUtil
+                .getDecimalFormatSymbols(locale);
         return Character.toString(symbol.getGroupingSeparator());
     }
 
     public static String findDecimalSeparator(Locale locale) {
-        DecimalFormatSymbols symbol = new DecimalFormatSymbols(locale);
+        DecimalFormatSymbols symbol = DecimalFormatSymbolsUtil
+                .getDecimalFormatSymbols(locale);
         return Character.toString(symbol.getDecimalSeparator());
     }
 
