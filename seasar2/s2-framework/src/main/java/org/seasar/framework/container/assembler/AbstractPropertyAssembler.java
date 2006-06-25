@@ -49,16 +49,18 @@ public abstract class AbstractPropertyAssembler extends AbstractAssembler
         Map requestMap = extCtx.getRequestMap();
         for (int i = 0; i < beanDesc.getPropertyDescSize(); ++i) {
             PropertyDesc pd = beanDesc.getPropertyDesc(i);
+            if (!pd.hasWriteMethod()) {
+                continue;
+            }
             String varName = pd.getPropertyName();
-            if (!pd.hasWriteMethod() || names.contains(varName)) {
+            if (names.contains(varName)) {
                 continue;
             }
             Object var = getValue(varName, parameterMap, requestMap);
-            if ("".equals(var)) {
-                pd.setValue(component, null);
-            } else if (var != null) {
-                pd.setValue(component, var);
+            if (var == null) {
+                continue;
             }
+            pd.setValue(component, var);
             names.add(varName);
         }
     }
@@ -68,10 +70,10 @@ public abstract class AbstractPropertyAssembler extends AbstractAssembler
         if (value != null) {
             return value;
         }
-        String s = (String) parameterMap.get(name);
-        if (NULL.equals(s)) {
-            s = "";
+        value = parameterMap.get(name);
+        if (NULL.equals(value)) {
+            value = "";
         }
-        return s;
+        return value;
     }
 }
