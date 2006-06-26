@@ -76,7 +76,7 @@ public class ComponentDefImpl implements ComponentDef, ContainerConstants {
     private AutoBindingDef autoBindingDef = AutoBindingDefFactory.AUTO;
 
     private ComponentDeployer componentDeployer;
-    
+
     private boolean externalBinding = false;
 
     public ComponentDefImpl() {
@@ -295,6 +295,21 @@ public class ComponentDefImpl implements ComponentDef, ContainerConstants {
      */
     public void destroy() {
         getComponentDeployer().destroy();
+        componentClass = null;
+        componentName = null;
+        concreteClass = null;
+        container = null;
+        expression = null;
+        argDefSupport = null;
+        propertyDefSupport = null;
+        initMethodDefSupport = null;
+        destroyMethodDefSupport = null;
+        aspectDefSupport = null;
+        interTypeDefSupport = null;
+        metaDefSupport = null;
+        instanceDef = null;
+        autoBindingDef = null;
+        componentDeployer = null;
     }
 
     /**
@@ -419,4 +434,5 @@ public class ComponentDefImpl implements ComponentDef, ContainerConstants {
     public void setExternalBinding(boolean externalBinding) {
         this.externalBinding = externalBinding;
     }
+
 }

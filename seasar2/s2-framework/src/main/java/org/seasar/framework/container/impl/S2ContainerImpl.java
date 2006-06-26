@@ -36,6 +36,7 @@ import org.seasar.framework.container.TooManyRegistrationComponentDef;
 import org.seasar.framework.container.ognl.S2ContainerPropertyAccessor;
 import org.seasar.framework.container.util.MetaDefSupport;
 import org.seasar.framework.container.util.S2ContainerUtil;
+import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.CaseInsensitiveMap;
 import org.seasar.framework.util.StringUtil;
 
@@ -44,6 +45,9 @@ import org.seasar.framework.util.StringUtil;
  * 
  */
 public class S2ContainerImpl implements S2Container, ContainerConstants {
+
+    private static final Logger logger = Logger
+            .getLogger(S2ContainerImpl.class);
 
     private Map componentDefMap = new HashMap();
 
@@ -459,13 +463,26 @@ public class S2ContainerImpl implements S2Container, ContainerConstants {
                 try {
                     getComponentDef(i).destroy();
                 } catch (Throwable t) {
-                    t.printStackTrace();
+                    logger.error("ESSR0017", t);
                 }
-
             }
             for (int i = getChildSize() - 1; 0 <= i; --i) {
                 getChild(i).destroy();
             }
+
+            componentDefMap = null;
+            componentDefList = null;
+            namespace = null;
+            path = null;
+            children = null;
+            childPositions = null;
+            parents = null;
+            descendants = null;
+            root = null;
+            externalContext = null;
+            externalContextComponentDefRegister = null;
+            metaDefSupport = null;
+            classLoader = null;
             inited = false;
         } finally {
             Thread.currentThread().setContextClassLoader(currentLoader);
@@ -628,4 +645,5 @@ public class S2ContainerImpl implements S2Container, ContainerConstants {
             this.componentDef = componentDef;
         }
     }
+
 }

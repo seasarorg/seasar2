@@ -42,6 +42,15 @@ public final class Logger {
         return logger;
     }
 
+    public static final void release() {
+        release(Thread.currentThread().getContextClassLoader());
+    }
+
+    public static final void release(final ClassLoader loader) {
+        loggerMap_.clear();
+        LogFactory.release(loader);
+    }
+
     public final boolean isDebugEnabled() {
         return log.isDebugEnabled();
     }

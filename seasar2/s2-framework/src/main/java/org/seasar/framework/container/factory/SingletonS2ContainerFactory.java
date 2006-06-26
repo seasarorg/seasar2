@@ -15,10 +15,12 @@
  */
 package org.seasar.framework.container.factory;
 
+import org.seasar.framework.beans.factory.BeanDescFactory;
 import org.seasar.framework.container.ExternalContext;
 import org.seasar.framework.container.ExternalContextComponentDefRegister;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.exception.EmptyRuntimeException;
+import org.seasar.framework.log.Logger;
 
 public final class SingletonS2ContainerFactory {
 
@@ -84,8 +86,12 @@ public final class SingletonS2ContainerFactory {
         if (container == null) {
             return;
         }
+        final ClassLoader loader = container.getClassLoader();
         container.destroy();
         container = null;
+        S2ContainerFactory.destroy();
+        BeanDescFactory.clear();
+        Logger.release(loader);
     }
 
     public static S2Container getContainer() {

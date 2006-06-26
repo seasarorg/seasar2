@@ -31,6 +31,7 @@ import org.seasar.framework.container.impl.S2ContainerBehavior.DefaultProvider;
 import org.seasar.framework.container.util.S2ContainerUtil;
 import org.seasar.framework.exception.ClassNotFoundRuntimeException;
 import org.seasar.framework.exception.EmptyRuntimeException;
+import org.seasar.framework.log.Logger;
 
 public class OndemandBehavior extends DefaultProvider implements
         HotdeployListener, OndemandCreatorContainer {
@@ -94,10 +95,11 @@ public class OndemandBehavior extends DefaultProvider implements
 
     public void stop() {
         Thread.currentThread().setContextClassLoader(originalClassLoader);
+        Logger.release(hotdeployClassLoader);
         hotdeployClassLoader = null;
         originalClassLoader = null;
-        BeanDescFactory.clear();
         componentDefCache.clear();
+        BeanDescFactory.clear();
     }
 
     public void definedClass(Class clazz) {

@@ -39,14 +39,15 @@ public final class S2ContainerFactory {
 
     public static final String DEFAULT_BUILDER_NAME = "defaultBuilder";
 
+    protected static boolean initialized;
+
     protected static S2Container configurationContainer;
 
-    protected static Provider provider = new DefaultProvider();
+    protected static Provider provider;
 
-    protected static S2ContainerBuilder defaultBuilder = new XmlS2ContainerBuilder();
+    protected static S2ContainerBuilder defaultBuilder;
 
     protected static ThreadLocal processingPaths = new ThreadLocal() {
-
         protected Object initialValue() {
             return new LinkedHashSet();
         }
@@ -57,16 +58,25 @@ public final class S2ContainerFactory {
     }
 
     public static synchronized S2Container create(final String path) {
+        if (!initialized) {
+            configure();
+        }
         return getProvider().create(path);
     }
 
     public static synchronized S2Container create(final String path,
             final ClassLoader classLoader) {
+        if (!initialized) {
+            configure();
+        }
         return getProvider().create(path, classLoader);
     }
 
     public static S2Container include(final S2Container parent,
             final String path) {
+        if (!initialized) {
+            configure();
+        }
         return getProvider().include(parent, path);
     }
 
@@ -77,6 +87,12 @@ public final class S2ContainerFactory {
     }
 
     public static synchronized void configure(final String configFile) {
+        if (provider == null) {
+            provider = new DefaultProvider();
+        }
+        if (defaultBuilder == null) {
+            defaultBuilder = new XmlS2ContainerBuilder();
+        }
         if (ResourceUtil.isExist(configFile)) {
             final S2ContainerBuilder builder = new XmlS2ContainerBuilder();
             configurationContainer = builder.build(configFile);
@@ -89,13 +105,17 @@ public final class S2ContainerFactory {
             }
             configurator.configure(configurationContainer);
         }
+        initialized = true;
     }
 
     public static synchronized void destroy() {
         defaultBuilder = null;
         provider = null;
-        configurationContainer.destroy();
+        if (configurationContainer != null) {
+            configurationContainer.destroy();
+        }
         configurationContainer = null;
+        initialized = false;
     }
 
     protected static Provider getProvider() {

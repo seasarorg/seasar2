@@ -22,7 +22,8 @@ public class LoggerTest extends TestCase {
     private Logger _logger = Logger.getLogger(getClass());
 
     public void testGetLogger() throws Exception {
-        assertEquals("1", _logger, Logger.getLogger(getClass()));
+        assertSame("1", Logger.getLogger(getClass()), Logger
+                .getLogger(getClass()));
     }
 
     public void testDebug() throws Exception {
