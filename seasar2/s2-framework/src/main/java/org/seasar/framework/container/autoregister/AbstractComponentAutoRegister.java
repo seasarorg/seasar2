@@ -9,7 +9,7 @@
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, 
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
@@ -28,7 +28,7 @@ import org.seasar.framework.util.ClassTraversal.ClassHandler;
 
 /**
  * @author higa
- * 
+ *
  */
 public abstract class AbstractComponentAutoRegister extends
         AbstractAutoRegister implements ClassHandler {
@@ -40,7 +40,7 @@ public abstract class AbstractComponentAutoRegister extends
     private InstanceDef instanceDef;
 
     private AutoBindingDef autoBindingDef;
-    
+
     private boolean externalBinding = false;
 
     private List customizers = new ArrayList();
@@ -66,6 +66,10 @@ public abstract class AbstractComponentAutoRegister extends
     }
 
     public static final String autoBindingDef_BINDING = "bindingType=may";
+
+    public AutoBindingDef getAutoBindingDef() {
+        return autoBindingDef;
+    }
 
     public void setAutoBindingDef(AutoBindingDef autoBindingDef) {
         this.autoBindingDef = autoBindingDef;
@@ -131,4 +135,5 @@ public abstract class AbstractComponentAutoRegister extends
             customizer.customize(componentDef);
         }
     }
+
 }
