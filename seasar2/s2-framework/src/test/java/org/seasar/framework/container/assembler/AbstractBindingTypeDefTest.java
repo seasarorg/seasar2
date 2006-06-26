@@ -29,13 +29,6 @@ import org.seasar.framework.container.impl.S2ContainerImpl;
 
 public class AbstractBindingTypeDefTest extends TestCase {
 
-    public AbstractBindingTypeDefTest() {
-    }
-
-    public AbstractBindingTypeDefTest(String name) {
-        super(name);
-    }
-
     public void testBindingComponentDef() throws Exception {
         S2Container container = new S2ContainerImpl();
         container.register(ComponentDefAware.class);
@@ -77,6 +70,15 @@ public class AbstractBindingTypeDefTest extends TestCase {
         assertNotNull("1", foo.getHoge());
     }
 
+    public void testBindAutoForArray() throws Exception {
+        S2Container container = new S2ContainerImpl();
+        container.register(Foo2.class);
+        container.register(Hoge3.class);
+        container.register(Hoge4.class);
+        Foo2 foo2 = (Foo2) container.getComponent(Foo2.class);
+        assertNotNull(foo2.getHoges());
+    }
+
     public static class ComponentDefAware {
         private ComponentDef componentDef;
 
@@ -101,6 +103,15 @@ public class AbstractBindingTypeDefTest extends TestCase {
         private List aaa;
     }
 
+    public static interface IHoge {
+    }
+
+    public static class Hoge3 implements IHoge {
+    }
+
+    public static class Hoge4 implements IHoge {
+    }
+
     public static class Foo {
 
         private Hoge hoge;
@@ -111,6 +122,19 @@ public class AbstractBindingTypeDefTest extends TestCase {
 
         public void setHoge(Hoge hoge) {
             this.hoge = hoge;
+        }
+    }
+
+    public static class Foo2 {
+
+        private IHoge[] hoges;
+
+        public IHoge[] getHoges() {
+            return hoges;
+        }
+
+        public void setHoges(IHoge[] hoges) {
+            this.hoges = hoges;
         }
     }
 }

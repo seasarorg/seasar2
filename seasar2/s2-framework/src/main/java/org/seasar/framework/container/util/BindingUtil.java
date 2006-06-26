@@ -32,6 +32,10 @@ public final class BindingUtil implements ContainerConstants {
     public static final boolean isAutoBindable(Class clazz) {
         return clazz.isInterface();
     }
+    
+    public static final boolean isAutoBindableArray(Class clazz) {
+        return clazz.isArray() && clazz.getComponentType().isInterface();
+    }
 
     public static final boolean isAutoBindable(Class[] classes) {
         for (int i = 0; i < classes.length; ++i) {

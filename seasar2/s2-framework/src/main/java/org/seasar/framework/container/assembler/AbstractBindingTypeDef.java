@@ -15,6 +15,7 @@
  */
 package org.seasar.framework.container.assembler;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 
 import org.seasar.framework.beans.IllegalPropertyRuntimeException;
@@ -25,6 +26,7 @@ import org.seasar.framework.container.ComponentNotFoundRuntimeException;
 import org.seasar.framework.container.ContainerConstants;
 import org.seasar.framework.container.PropertyDef;
 import org.seasar.framework.container.S2Container;
+import org.seasar.framework.container.TooManyRegistrationComponentDef;
 import org.seasar.framework.container.util.BindingUtil;
 import org.seasar.framework.util.FieldUtil;
 
@@ -166,6 +168,27 @@ public abstract class AbstractBindingTypeDef implements BindingTypeDef {
             }
             if (propType.isAssignableFrom(ComponentDef.class)) {
                 setValue(componentDef, propertyDesc, component, componentDef);
+                return true;
+            }
+        }
+        if (BindingUtil.isAutoBindableArray(propType)) {
+            Class clazz = propType.getComponentType();
+            if (container.hasComponentDef(clazz)) {
+                ComponentDef cd = container.getComponentDef(clazz);
+                if (cd instanceof TooManyRegistrationComponentDef) {
+                    Class[] classes = ((TooManyRegistrationComponentDef) cd)
+                            .getComponentClasses();
+                    Object[] values = (Object[]) Array.newInstance(clazz,
+                            classes.length);
+                    for (int i = 0; i < classes.length; ++i) {
+                        values[i] = container.getComponent(classes[i]);
+                    }
+                    setValue(componentDef, propertyDesc, component, values);
+                } else {
+                    Object[] values = (Object[]) Array.newInstance(clazz, 1);
+                    values[0] = container.getComponent(propType);
+                    setValue(componentDef, propertyDesc, component, values);
+                }
                 return true;
             }
         }
