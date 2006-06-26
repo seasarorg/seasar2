@@ -94,15 +94,23 @@ public final class NumberConversionUtil {
     }
 
     public static String findGroupingSeparator(Locale locale) {
-        DecimalFormatSymbols symbol = DecimalFormatSymbolsUtil
-                .getDecimalFormatSymbols(locale);
+        DecimalFormatSymbols symbol = getDecimalFormatSymbols(locale);
         return Character.toString(symbol.getGroupingSeparator());
     }
 
     public static String findDecimalSeparator(Locale locale) {
-        DecimalFormatSymbols symbol = DecimalFormatSymbolsUtil
-                .getDecimalFormatSymbols(locale);
+        DecimalFormatSymbols symbol = getDecimalFormatSymbols(locale);
         return Character.toString(symbol.getDecimalSeparator());
+    }
+
+    private static DecimalFormatSymbols getDecimalFormatSymbols(Locale locale) {
+        DecimalFormatSymbols symbol;
+        if (locale != null) {
+            symbol = DecimalFormatSymbolsUtil.getDecimalFormatSymbols(locale);
+        } else {
+            symbol = DecimalFormatSymbolsUtil.getDecimalFormatSymbols();
+        }
+        return symbol;
     }
 
 }

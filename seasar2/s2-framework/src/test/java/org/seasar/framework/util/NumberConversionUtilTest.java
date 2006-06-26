@@ -15,6 +15,7 @@
  */
 package org.seasar.framework.util;
 
+import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 
 import junit.framework.TestCase;
@@ -35,17 +36,31 @@ public class NumberConversionUtilTest extends TestCase {
         assertEquals(",", delim);
     }
 
+    public void testFindFractionDelimeter3() throws Exception {
+        String delim = NumberConversionUtil.findDecimalSeparator(null);
+        char c = new DecimalFormatSymbols(Locale.getDefault()).getDecimalSeparator();
+        assertEquals(Character.toString(c), delim);
+    }
+
     public void testFindIntegerDelimeter() throws Exception {
         String delim = NumberConversionUtil.findGroupingSeparator(Locale.JAPAN);
         assertEquals(",", delim);
     }
 
     public void testFindIntegerDelimeter2() throws Exception {
-        String delim = NumberConversionUtil.findGroupingSeparator(Locale.GERMANY);
+        String delim = NumberConversionUtil
+                .findGroupingSeparator(Locale.GERMANY);
         assertEquals(".", delim);
     }
 
+    public void testFindIntegerDelimeter3() throws Exception {
+        String delim = NumberConversionUtil.findGroupingSeparator(null);
+        char c = new DecimalFormatSymbols(Locale.getDefault()).getGroupingSeparator();
+        assertEquals(Character.toString(c), delim);
+    }
+
     public void testRemoveDelimeter() throws Exception {
-        assertEquals("1000000.234", NumberConversionUtil.removeDelimeter("1,000,000.234", Locale.JAPAN));
+        assertEquals("1000000.234", NumberConversionUtil.removeDelimeter(
+                "1,000,000.234", Locale.JAPAN));
     }
 }
