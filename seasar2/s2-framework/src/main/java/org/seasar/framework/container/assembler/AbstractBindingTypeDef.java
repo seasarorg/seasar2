@@ -176,17 +176,17 @@ public abstract class AbstractBindingTypeDef implements BindingTypeDef {
             if (container.hasComponentDef(clazz)) {
                 ComponentDef cd = container.getComponentDef(clazz);
                 if (cd instanceof TooManyRegistrationComponentDef) {
-                    Class[] classes = ((TooManyRegistrationComponentDef) cd)
-                            .getComponentClasses();
+                    ComponentDef[] cds = ((TooManyRegistrationComponentDef) cd)
+                            .getComponentDefs();
                     Object[] values = (Object[]) Array.newInstance(clazz,
-                            classes.length);
-                    for (int i = 0; i < classes.length; ++i) {
-                        values[i] = container.getComponent(classes[i]);
+                            cds.length);
+                    for (int i = 0; i < cds.length; ++i) {
+                        values[i] = cds[i].getComponent();
                     }
                     setValue(componentDef, propertyDesc, component, values);
                 } else {
                     Object[] values = (Object[]) Array.newInstance(clazz, 1);
-                    values[0] = container.getComponent(propType);
+                    values[0] = cd.getComponent();
                     setValue(componentDef, propertyDesc, component, values);
                 }
                 return true;

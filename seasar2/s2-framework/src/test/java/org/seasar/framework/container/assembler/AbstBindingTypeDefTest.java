@@ -27,7 +27,7 @@ import org.seasar.framework.container.impl.ComponentDefImpl;
 import org.seasar.framework.container.impl.PropertyDefImpl;
 import org.seasar.framework.container.impl.S2ContainerImpl;
 
-public class AbstractBindingTypeDefTest extends TestCase {
+public class AbstBindingTypeDefTest extends TestCase {
 
     public void testBindingComponentDef() throws Exception {
         S2Container container = new S2ContainerImpl();
@@ -109,7 +109,7 @@ public class AbstractBindingTypeDefTest extends TestCase {
     public static class Hoge3 implements IHoge {
     }
 
-    public static class Hoge4 implements IHoge {
+    public static class Hoge4 extends Hoge3 {
     }
 
     public static class Foo {

@@ -23,4 +23,6 @@ public interface TooManyRegistrationComponentDef extends ComponentDef {
     void addComponentDef(ComponentDef cd);
 
     Class[] getComponentClasses();
+    
+    ComponentDef[] getComponentDefs();
 }
