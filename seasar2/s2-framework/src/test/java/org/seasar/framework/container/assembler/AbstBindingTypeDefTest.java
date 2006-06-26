@@ -55,7 +55,7 @@ public class AbstBindingTypeDefTest extends TestCase {
         propDef.setAccessTypeDef(AccessTypeDefFactory.FIELD);
         cd.addPropertyDef(propDef);
         container.register(cd);
-        container.register(new ArrayList());
+        container.register(new Hoge3());
         Hoge2 hoge2 = (Hoge2) container.getComponent(Hoge2.class);
         assertNotNull("1", hoge2.aaa);
     }
@@ -100,7 +100,7 @@ public class AbstBindingTypeDefTest extends TestCase {
     }
 
     public static class Hoge2 {
-        private List aaa;
+        private IHoge aaa;
     }
 
     public static interface IHoge {

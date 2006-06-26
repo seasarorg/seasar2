@@ -15,7 +15,6 @@
  */
 package org.seasar.framework.container.hotdeploy.creator;
 
-import org.seasar.framework.container.assembler.AutoBindingDefFactory;
 import org.seasar.framework.container.deployer.InstanceDefFactory;
 
 public class PageCreator extends SimpleSinglePackageCreator {
@@ -24,7 +23,6 @@ public class PageCreator extends SimpleSinglePackageCreator {
         setMiddlePackageName("web");
         setNameSuffix("Page");
         setInstanceDef(InstanceDefFactory.REQUEST);
-        setAutoBindingDef(AutoBindingDefFactory.NONE);
         setExternalBinding(true);
     }
 }

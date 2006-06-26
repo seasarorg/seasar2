@@ -6,7 +6,9 @@
 	<component name="bar">"BAR"</component>
 	<component name="bar">"BAR"</component>
 
-	<component name="outerFoo" instance="outer" class="org.seasar.framework.container.impl.S2ContainerBehaviorTest$Outer"/>
+	<component name="outerFoo" instance="outer" class="org.seasar.framework.container.impl.S2ContainerBehaviorTest$Outer">
+		<property name="map">baz</property>
+	</component>
 	<component name="outerBar" instance="outer" class="org.seasar.framework.container.impl.S2ContainerBehaviorTest$Outer"/>
 	<component name="outerBar" instance="outer" class="org.seasar.framework.container.impl.S2ContainerBehaviorTest$Outer"/>
 

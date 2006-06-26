@@ -15,6 +15,9 @@
  */
 package org.seasar.framework.container.util;
 
+import java.util.Collection;
+import java.util.Map;
+
 import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.factory.BeanDescFactory;
 import org.seasar.framework.container.ComponentDef;
@@ -30,9 +33,10 @@ public final class BindingUtil implements ContainerConstants {
     }
 
     public static final boolean isAutoBindable(Class clazz) {
-        return clazz.isInterface();
+        return clazz.isInterface() && !Collection.class.isAssignableFrom(clazz)
+                && !Map.class.isAssignableFrom(clazz);
     }
-    
+
     public static final boolean isAutoBindableArray(Class clazz) {
         return clazz.isArray() && clazz.getComponentType().isInterface();
     }

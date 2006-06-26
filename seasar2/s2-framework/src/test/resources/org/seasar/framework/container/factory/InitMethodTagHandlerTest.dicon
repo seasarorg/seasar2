@@ -8,10 +8,10 @@
 			<arg>111</arg>
 		</initMethod>
 	</component>
-	<component class="java.util.ArrayList"/>
+	<component name="list" class="java.util.ArrayList"/>
 	<component name="bbb" class="org.seasar.framework.container.factory.InitMethodTagHandlerTest$Bbb">
 
-		<initMethod name="value"/>
+		<initMethod name="value"><arg>list</arg></initMethod>
 		<initMethod>#out.println("Hello")</initMethod>
 	</component>
 	<component name="bbb2" class="org.seasar.framework.container.factory.InitMethodTagHandlerTest$Bbb">

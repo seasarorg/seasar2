@@ -4,7 +4,7 @@
 <components>
 	<include path="aop.dicon"/>
 
-	<component class="java.util.ArrayList"/>
+	<component name="list" class="java.util.ArrayList"/>
 
 	<component class="java.lang.Runnable">
 		<aspect>

@@ -93,7 +93,7 @@ public class DefaultInitMethodAssemblerTest extends TestCase {
         MethodAssembler assembler = new DefaultInitMethodAssembler(cd);
         B b = new B();
         assembler.assemble(b);
-        assertEquals("1", 0, b.getValueSize());
+        assertTrue("1", b.isEmpty());
     }
 
     public void testAssembleIllegalArgument() throws Exception {
@@ -204,7 +204,7 @@ public class DefaultInitMethodAssemblerTest extends TestCase {
 
     public static class B implements Hoge {
 
-        private List values_;
+        private Foo foo;
 
         public String getName() {
             return "B";
@@ -213,12 +213,12 @@ public class DefaultInitMethodAssemblerTest extends TestCase {
         public void setAaa(int aaa) {
         }
 
-        public void bbb(List values) {
-            values_ = values;
+        public void bbb(Foo foo) {
+            this.foo = foo;
         }
 
-        public int getValueSize() {
-            return values_.size();
+        public boolean isEmpty() {
+            return foo == null;
         }
     }
 }

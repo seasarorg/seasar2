@@ -15,6 +15,10 @@
  */
 package org.seasar.framework.container.util;
 
+import java.util.List;
+
+import javax.sql.DataSource;
+
 import junit.framework.TestCase;
 
 /**
@@ -23,6 +27,11 @@ import junit.framework.TestCase;
  */
 public class BindingUtilTest extends TestCase {
 
+    public void testIsAutoBindable() throws Exception {
+        assertFalse(BindingUtil.isAutoBindable(List.class));
+        assertTrue(BindingUtil.isAutoBindable(DataSource.class));
+    }
+    
     public void testIsAutoBindableArray() throws Exception {
         Class clazz = new Cloneable[0].getClass();
         assertTrue(BindingUtil.isAutoBindableArray(clazz));
