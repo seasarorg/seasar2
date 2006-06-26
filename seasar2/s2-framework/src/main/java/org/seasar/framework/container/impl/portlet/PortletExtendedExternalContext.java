@@ -6,24 +6,20 @@ import javax.portlet.PortletContext;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 
-import org.seasar.framework.container.ExternalContext;
-import org.seasar.framework.container.impl.portlet.PortletExternalContext;
 import org.seasar.framework.container.impl.servlet.HttpServletExternalContext;
 
 /**
  * @author shinsuke
  * 
  */
-public class PortletExtendedExternalContext implements ExternalContext {
+public class PortletExtendedExternalContext extends PortletExternalContext {
     private HttpServletExternalContext servletExternalContext;
-
-    private PortletExternalContext portletExternalContext;
 
     private ThreadLocal isPortlet = new ThreadLocal();
 
     public PortletExtendedExternalContext() {
+        super();
         servletExternalContext = new HttpServletExternalContext();
-        portletExternalContext = new PortletExternalContext();
         setPortlet(false);
     }
 
@@ -45,7 +41,7 @@ public class PortletExtendedExternalContext implements ExternalContext {
 
     public Object getRequest() {
         if (isPortlet()) {
-            return portletExternalContext.getRequest();
+            return super.getRequest();
         } else {
             return servletExternalContext.getRequest();
         }
@@ -53,11 +49,11 @@ public class PortletExtendedExternalContext implements ExternalContext {
 
     public void setRequest(Object request) {
         if (request == null) {
-            portletExternalContext.setRequest(null);
+            super.setRequest(null);
             servletExternalContext.setRequest(null);
             setPortlet(false);
         } else if (request instanceof PortletRequest) {
-            portletExternalContext.setRequest(request);
+            super.setRequest(request);
             setPortlet(true);
         } else {
             servletExternalContext.setRequest(request);
@@ -67,7 +63,7 @@ public class PortletExtendedExternalContext implements ExternalContext {
 
     public Object getResponse() {
         if (isPortlet()) {
-            return portletExternalContext.getResponse();
+            return super.getResponse();
         } else {
             return servletExternalContext.getResponse();
         }
@@ -75,11 +71,11 @@ public class PortletExtendedExternalContext implements ExternalContext {
 
     public void setResponse(Object response) {
         if (response == null) {
-            portletExternalContext.setResponse(null);
+            super.setResponse(null);
             servletExternalContext.setResponse(null);
             setPortlet(false);
         } else if (response instanceof PortletResponse) {
-            portletExternalContext.setResponse(response);
+            super.setResponse(response);
             setPortlet(true);
         } else {
             servletExternalContext.setResponse(response);
@@ -89,7 +85,7 @@ public class PortletExtendedExternalContext implements ExternalContext {
 
     public Object getSession() {
         if (isPortlet()) {
-            return portletExternalContext.getSession();
+            return super.getSession();
         } else {
             return servletExternalContext.getSession();
         }
@@ -97,7 +93,7 @@ public class PortletExtendedExternalContext implements ExternalContext {
 
     public Object getApplication() {
         if (isPortlet()) {
-            return portletExternalContext.getApplication();
+            return super.getApplication();
         } else {
             return servletExternalContext.getApplication();
         }
@@ -105,11 +101,11 @@ public class PortletExtendedExternalContext implements ExternalContext {
 
     public void setApplication(Object application) {
         if (application == null) {
-            portletExternalContext.setApplication(null);
+            super.setApplication(null);
             servletExternalContext.setApplication(null);
             setPortlet(false);
         } else if (application instanceof PortletContext) {
-            portletExternalContext.setApplication(application);
+            super.setApplication(application);
             setPortlet(true);
         } else {
             servletExternalContext.setApplication(application);
@@ -119,7 +115,7 @@ public class PortletExtendedExternalContext implements ExternalContext {
 
     public Map getApplicationMap() {
         if (isPortlet()) {
-            return portletExternalContext.getApplicationMap();
+            return super.getApplicationMap();
         } else {
             return servletExternalContext.getApplicationMap();
         }
@@ -127,7 +123,7 @@ public class PortletExtendedExternalContext implements ExternalContext {
 
     public Map getInitParameterMap() {
         if (isPortlet()) {
-            return portletExternalContext.getInitParameterMap();
+            return super.getInitParameterMap();
         } else {
             return servletExternalContext.getInitParameterMap();
         }
@@ -135,7 +131,7 @@ public class PortletExtendedExternalContext implements ExternalContext {
 
     public Map getSessionMap() {
         if (isPortlet()) {
-            return portletExternalContext.getSessionMap();
+            return super.getSessionMap();
         } else {
             return servletExternalContext.getSessionMap();
         }
@@ -143,7 +139,7 @@ public class PortletExtendedExternalContext implements ExternalContext {
 
     public Map getRequestCookieMap() {
         if (isPortlet()) {
-            return portletExternalContext.getRequestCookieMap();
+            return super.getRequestCookieMap();
         } else {
             return servletExternalContext.getRequestCookieMap();
         }
@@ -151,7 +147,7 @@ public class PortletExtendedExternalContext implements ExternalContext {
 
     public Map getRequestHeaderMap() {
         if (isPortlet()) {
-            return portletExternalContext.getRequestHeaderMap();
+            return super.getRequestHeaderMap();
         } else {
             return servletExternalContext.getRequestHeaderMap();
         }
@@ -159,7 +155,7 @@ public class PortletExtendedExternalContext implements ExternalContext {
 
     public Map getRequestHeaderValuesMap() {
         if (isPortlet()) {
-            return portletExternalContext.getRequestHeaderValuesMap();
+            return super.getRequestHeaderValuesMap();
         } else {
             return servletExternalContext.getRequestHeaderValuesMap();
         }
@@ -167,7 +163,7 @@ public class PortletExtendedExternalContext implements ExternalContext {
 
     public Map getRequestMap() {
         if (isPortlet()) {
-            return portletExternalContext.getRequestMap();
+            return super.getRequestMap();
         } else {
             return servletExternalContext.getRequestMap();
         }
@@ -175,7 +171,7 @@ public class PortletExtendedExternalContext implements ExternalContext {
 
     public Map getRequestParameterMap() {
         if (isPortlet()) {
-            return portletExternalContext.getRequestParameterMap();
+            return super.getRequestParameterMap();
         } else {
             return servletExternalContext.getRequestParameterMap();
         }
@@ -183,7 +179,7 @@ public class PortletExtendedExternalContext implements ExternalContext {
 
     public Map getRequestParameterValuesMap() {
         if (isPortlet()) {
-            return portletExternalContext.getRequestParameterValuesMap();
+            return super.getRequestParameterValuesMap();
         } else {
             return servletExternalContext.getRequestParameterValuesMap();
         }
