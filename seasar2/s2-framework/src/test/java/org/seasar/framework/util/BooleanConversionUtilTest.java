@@ -24,5 +24,8 @@ public class BooleanConversionUtilTest extends TestCase {
                 .toBoolean(new Integer(1)));
         assertEquals("2", Boolean.FALSE, BooleanConversionUtil
                 .toBoolean(new Integer(0)));
+        assertEquals("3", Boolean.FALSE, BooleanConversionUtil.toBoolean("0"));
+        assertEquals("4", Boolean.TRUE, BooleanConversionUtil.toBoolean("1"));
+        assertEquals("5", Boolean.TRUE, BooleanConversionUtil.toBoolean("2"));
     }
 }
