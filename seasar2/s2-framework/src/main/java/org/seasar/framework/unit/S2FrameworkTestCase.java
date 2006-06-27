@@ -36,6 +36,7 @@ import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 import org.seasar.framework.container.impl.S2ContainerImpl;
 import org.seasar.framework.container.servlet.S2ContainerServlet;
 import org.seasar.framework.exception.NoSuchMethodRuntimeException;
+import org.seasar.framework.log.Logger;
 import org.seasar.framework.mock.servlet.MockHttpServletRequest;
 import org.seasar.framework.mock.servlet.MockHttpServletResponse;
 import org.seasar.framework.mock.servlet.MockHttpServletResponseImpl;
@@ -67,6 +68,8 @@ public abstract class S2FrameworkTestCase extends TestCase {
     private MockHttpServletResponse response;
 
     private ClassLoader originalClassLoader;
+
+    private UnitClassLoader unitClassLoader;
 
     public S2FrameworkTestCase() {
     }
@@ -167,8 +170,8 @@ public abstract class S2FrameworkTestCase extends TestCase {
 
     protected void setUpContainer() throws Throwable {
         originalClassLoader = Thread.currentThread().getContextClassLoader();
-        ClassLoader classLoader = new UnitClassLoader(originalClassLoader);
-        Thread.currentThread().setContextClassLoader(classLoader);
+        unitClassLoader = new UnitClassLoader(originalClassLoader);
+        Thread.currentThread().setContextClassLoader(unitClassLoader);
         container = new S2ContainerImpl();
         SingletonS2ContainerFactory.setContainer(container);
         if (servletContext == null) {
@@ -196,8 +199,11 @@ public abstract class S2FrameworkTestCase extends TestCase {
                 .setProvider(new ComponentDeployerFactory.DefaultProvider());
         SingletonS2ContainerFactory.setContainer(null);
         S2ContainerServlet.clearInstance();
-        Thread.currentThread().setContextClassLoader(originalClassLoader);
+        S2ContainerFactory.destroy();
         BeanDescFactory.clear();
+        Logger.release(unitClassLoader);
+        Thread.currentThread().setContextClassLoader(originalClassLoader);
+        unitClassLoader = null;
         originalClassLoader = null;
         container = null;
         servletContext = null;
