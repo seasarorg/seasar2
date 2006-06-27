@@ -15,10 +15,12 @@
  */
 package org.seasar.framework.container.assembler;
 
-import java.util.Map;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 
 import org.seasar.framework.beans.BeanDesc;
+import org.seasar.framework.beans.IllegalPropertyRuntimeException;
 import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.ExternalContext;
@@ -32,48 +34,78 @@ import org.seasar.framework.exception.EmptyRuntimeException;
 public abstract class AbstractPropertyAssembler extends AbstractAssembler
         implements PropertyAssembler {
 
-    private static final String NULL = "null";
-
     public AbstractPropertyAssembler(ComponentDef componentDef) {
         super(componentDef);
     }
 
-    protected void bindExternally(BeanDesc beanDesc, ComponentDef componentDef,
-            Object component, Set names) {
-        ExternalContext extCtx = componentDef.getContainer().getRoot()
+    protected void bindExternally(final BeanDesc beanDesc,
+            final ComponentDef componentDef, final Object component,
+            final Set names) {
+        final ExternalContext extCtx = componentDef.getContainer().getRoot()
                 .getExternalContext();
         if (extCtx == null) {
             throw new EmptyRuntimeException("externalContext");
         }
-        Map parameterMap = extCtx.getRequestParameterMap();
-        Map requestMap = extCtx.getRequestMap();
+
         for (int i = 0; i < beanDesc.getPropertyDescSize(); ++i) {
-            PropertyDesc pd = beanDesc.getPropertyDesc(i);
+            final PropertyDesc pd = beanDesc.getPropertyDesc(i);
             if (!pd.hasWriteMethod()) {
                 continue;
             }
-            String varName = pd.getPropertyName();
-            if (names.contains(varName)) {
+            final String name = pd.getPropertyName();
+            if (names.contains(name)) {
                 continue;
             }
-            Object var = getValue(varName, parameterMap, requestMap);
-            if (var == null) {
+            final Object value = getValue(name, pd.getPropertyType(), extCtx);
+            if (value == null) {
                 continue;
             }
-            pd.setValue(component, var);
-            names.add(varName);
+            try {
+                pd.setValue(component, value);
+                names.add(name);
+            } catch (final IllegalPropertyRuntimeException ignore) {
+            }
         }
     }
 
-    protected Object getValue(String name, Map parameterMap, Map requestMap) {
-        Object value = requestMap.get(name);
+    protected Object getValue(final String name, final Class type,
+            final ExternalContext extCtx) {
+        if (type.isArray()) {
+            Object[] values = getValues(name, extCtx);
+            if (values != null) {
+                return values;
+            }
+        } else if (List.class.isAssignableFrom(type)) {
+            final Object[] values = getValues(name, extCtx);
+            if (values != null) {
+                return Arrays.asList(values);
+            }
+        }
+        return getValue(name, extCtx);
+    }
+
+    protected Object getValue(final String name, final ExternalContext extCtx) {
+        Object value = extCtx.getRequestParameterMap().get(name);
         if (value != null) {
             return value;
         }
-        value = parameterMap.get(name);
-        if (NULL.equals(value)) {
-            value = "";
+        value = extCtx.getRequestHeaderMap().get(name);
+        if (value != null) {
+            return value;
         }
-        return value;
+        return extCtx.getRequestMap().get(name);
+    }
+
+    protected Object[] getValues(final String name, final ExternalContext extCtx) {
+        Object[] values = (Object[]) extCtx.getRequestParameterValuesMap().get(
+                name);
+        if (values != null && values.length > 0) {
+            return values;
+        }
+        values = (Object[]) extCtx.getRequestHeaderValuesMap().get(name);
+        if (values != null && values.length > 0) {
+            return values;
+        }
+        return null;
     }
 }

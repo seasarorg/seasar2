@@ -17,13 +17,14 @@ package org.seasar.framework.container.external.servlet;
 
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.seasar.framework.container.external.AbstractUnmodifiableExternalContextMap;
-import org.seasar.framework.util.EnumerationIterator;
 
 /**
  * @author shot
@@ -36,24 +37,32 @@ public class ServletRequestHeaderValuesMap extends
 
     private final HttpServletRequest request;
 
+    private final Set headerNames = new HashSet();
+
     public ServletRequestHeaderValuesMap(final HttpServletRequest request) {
         this.request = request;
+        for (final Enumeration names = request.getHeaderNames(); names
+                .hasMoreElements();) {
+            headerNames.add(names.nextElement());
+        }
     }
 
-    protected Object getAttribute(String key) {
-        Enumeration e = request.getHeaders(key);
-        return toStringArray(e);
+    protected Object getAttribute(final String key) {
+        if (headerNames.contains(key)) {
+            return toStringArray(request.getHeaders(key));
+        }
+        return null;
     }
 
     protected Iterator getAttributeNames() {
-        return new EnumerationIterator(request.getHeaderNames());
+        return headerNames.iterator();
     }
 
-    private String[] toStringArray(Enumeration e) {
+    private String[] toStringArray(final Enumeration e) {
         if (e == null) {
             return EMPTY_STRING_ARRAY;
         }
-        List list = new ArrayList();
+        final List list = new ArrayList();
         while (e.hasMoreElements()) {
             list.add(e.nextElement());
         }

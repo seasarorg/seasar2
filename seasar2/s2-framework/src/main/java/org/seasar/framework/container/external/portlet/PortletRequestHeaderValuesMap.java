@@ -17,15 +17,14 @@ package org.seasar.framework.container.external.portlet;
 
 import java.util.ArrayList;
 import java.util.Enumeration;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 import javax.portlet.PortletRequest;
 
 import org.seasar.framework.container.external.AbstractUnmodifiableExternalContextMap;
-import org.seasar.framework.util.EnumerationIterator;
 
 /**
  * @author <a href="mailto:shinsuke@yahoo.co.jp">Shinsuke Sugaya</a>
@@ -37,24 +36,25 @@ public class PortletRequestHeaderValuesMap extends
 
     private final PortletRequest request;
 
-    private final Map valueCache_ = new HashMap();
+    private final Set propertyNames = new HashSet();
 
     public PortletRequestHeaderValuesMap(final PortletRequest request) {
         this.request = request;
+        for (final Enumeration names = request.getPropertyNames(); names
+                .hasMoreElements();) {
+            propertyNames.add(names.nextElement());
+        }
     }
 
     protected Object getAttribute(String key) {
-        Object ret = valueCache_.get(key);
-        if (ret == null) {
-            valueCache_.put(key,
-                    ret = toStringArray(request.getProperties(key)));
+        if (propertyNames.contains(key)) {
+            return toStringArray(request.getProperties(key));
         }
-
-        return ret;
+        return null;
     }
 
     protected Iterator getAttributeNames() {
-        return new EnumerationIterator(request.getPropertyNames());
+        return propertyNames.iterator();
     }
 
     private String[] toStringArray(Enumeration e) {

@@ -15,12 +15,14 @@
  */
 package org.seasar.framework.container.external.portlet;
 
+import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 import javax.portlet.PortletRequest;
 
 import org.seasar.framework.container.external.AbstractUnmodifiableExternalContextMap;
-import org.seasar.framework.util.EnumerationIterator;
 
 /**
  * @author <a href="mailto:shinsuke@yahoo.co.jp">Shinsuke Sugaya</a>
@@ -28,18 +30,33 @@ import org.seasar.framework.util.EnumerationIterator;
 public class PortletRequestParameterMap extends
         AbstractUnmodifiableExternalContextMap {
 
+    private static final String NULL = "null";
+
     private final PortletRequest request;
+
+    private final Set parameterNames = new HashSet();
 
     public PortletRequestParameterMap(final PortletRequest request) {
         this.request = request;
+        for (final Enumeration names = request.getParameterNames(); names
+                .hasMoreElements();) {
+            parameterNames.add(names.nextElement());
+        }
     }
 
     protected Object getAttribute(String key) {
-        return request.getParameter(key);
+        if (parameterNames.contains(key)) {
+            final String value = request.getParameter(key);
+            if (NULL.equals(value)) {
+                return "";
+            }
+            return value;
+        }
+        return null;
     }
 
     protected Iterator getAttributeNames() {
-        return new EnumerationIterator(request.getParameterNames());
+        return parameterNames.iterator();
     }
 
 }
