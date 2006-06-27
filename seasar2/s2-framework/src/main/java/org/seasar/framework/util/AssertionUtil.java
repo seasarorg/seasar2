@@ -23,21 +23,13 @@ public class AssertionUtil {
     private AssertionUtil() {
     }
 
-    public static void assertNotNull(Object obj) {
-        assertNotNull(null, obj);
-    }
-
     public static void assertNotNull(String message, Object obj) {
         if (obj == null) {
             throw new NullPointerException(message);
         }
     }
 
-    public static void assertIntegerNotNegative(int num) {
-        assertIntegerNotNegative(num, null);
-    }
-
-    public static void assertIntegerNotNegative(int num, String message) {
+    public static void assertIntegerNotNegative(String message, int num) {
         if (num < 0) {
             throw new IllegalArgumentException(message);
         }
