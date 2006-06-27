@@ -24,6 +24,7 @@ import javax.servlet.ServletContext;
 
 import junit.framework.TestCase;
 
+import org.seasar.framework.container.external.AbstractExternalContextMap;
 import org.seasar.framework.mock.servlet.MockServletContext;
 import org.seasar.framework.mock.servlet.MockServletContextImpl;
 import org.seasar.framework.util.EnumerationIterator;

@@ -56,10 +56,10 @@ package org.seasar.framework.container;
  * {@link S2Container#init()}を行なう前に{@link ExternalContext}をS2コンテナに設定する必要があります。
  * </p>
  * <p>
- * Webコンテナ用には{@link org.seasar.framework.container.impl.servlet.HttpServletExternalContext}が用意されています。
+ * Webコンテナ用には{@link org.seasar.framework.container.external.servlet.HttpServletExternalContext}が用意されています。
  * {@link org.seasar.framework.container.servlet.S2ContainerListener}、
  * {@link org.seasar.framework.container.servlet.S2ContainerServlet}のいずれかと{@link org.seasar.framework.container.filter.S2ContainerFilter}をweb.xmlに設定すれば、
- * {@link org.seasar.framework.container.impl.servlet.HttpServletExternalContext}がS2コンテナに設定され、
+ * {@link org.seasar.framework.container.external.servlet.HttpServletExternalContext}がS2コンテナに設定され、
  * <code>application</code>、 <code>request</code>、 <code>session</code>を使うことが出来るようになります。
  * </p>
  * 
