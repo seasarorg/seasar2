@@ -7,17 +7,18 @@ import org.seasar.framework.container.assembler.AutoBindingDefFactory;
 import org.seasar.framework.container.deployer.InstanceDefFactory;
 import org.seasar.framework.container.impl.ComponentDefImpl;
 import org.seasar.framework.ejb.EJB3Desc;
+import org.seasar.framework.ejb.EJB3DescFactory;
 import org.seasar.framework.util.StringUtil;
 
 public class EJB3ComponentDefFactory implements ComponentDefFactory {
 
     public EJB3ComponentDefFactory() {
     }
-    
+
     public ComponentDef createComponentDef(Class<?> componentClass,
             InstanceDef defaultInstanceDef,
             AutoBindingDef defaultAutoBindingDef, boolean defaultExternalBinding) {
-        final EJB3Desc ejb3Desc = EJB3Desc.getEJB3Desc(componentClass);
+        final EJB3Desc ejb3Desc = EJB3DescFactory.getEJB3Desc(componentClass);
         if (!ejb3Desc.isEJB3()) {
             return null;
         }
@@ -37,4 +38,5 @@ public class EJB3ComponentDefFactory implements ComponentDefFactory {
         componentDef.setExternalBinding(defaultExternalBinding);
         return componentDef;
     }
+
 }

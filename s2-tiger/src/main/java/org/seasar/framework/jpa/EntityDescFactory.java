@@ -20,6 +20,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ConcurrentMap;
 
+import org.seasar.framework.util.Disposable;
+import org.seasar.framework.util.DisposableUtil;
 import org.seasar.framework.util.tiger.CollectionsUtil;
 
 /**
@@ -28,13 +30,33 @@ import org.seasar.framework.util.tiger.CollectionsUtil;
  */
 public class EntityDescFactory {
 
+    private static volatile boolean initialized;
+
     protected static final List<EntityDescProvider> providers = Collections
             .synchronizedList(new ArrayList<EntityDescProvider>());
 
     protected static final ConcurrentMap<Class<?>, EntityDesc> entityDescs = CollectionsUtil
             .newConcurrentHashMap();
 
+    public static void initialize() {
+        DisposableUtil.add(new Disposable() {
+            public void dispose() {
+                clear();
+            }
+        });
+        initialized = true;
+    }
+
+    public static synchronized void clear() {
+        providers.clear();
+        entityDescs.clear();
+        initialized = false;
+    }
+
     public static void addProvider(final EntityDescProvider provider) {
+        if (!initialized) {
+            initialize();
+        }
         providers.add(provider);
     }
 
@@ -43,6 +65,9 @@ public class EntityDescFactory {
     }
 
     public static <T> EntityDesc<T> getEntityDesc(final Class<T> entityClass) {
+        if (!initialized) {
+            initialize();
+        }
         final EntityDesc<T> entityDesc = entityDescs.get(entityClass);
         if (entityDesc != null) {
             return entityDesc;

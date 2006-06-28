@@ -9,6 +9,7 @@ import junit.framework.TestCase;
 import org.seasar.framework.aop.Aspect;
 import org.seasar.framework.aop.impl.AspectImpl;
 import org.seasar.framework.aop.proxy.AopProxy;
+import org.seasar.framework.ejb.impl.AroundInvokeSupportInterceptor;
 
 public class AroundInvokeSupportInterceptorTest extends TestCase {
 

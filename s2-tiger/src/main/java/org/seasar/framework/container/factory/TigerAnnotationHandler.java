@@ -44,18 +44,20 @@ import org.seasar.framework.container.annotation.tiger.InitMethod;
 import org.seasar.framework.container.annotation.tiger.InterType;
 import org.seasar.framework.container.impl.InterTypeDefImpl;
 import org.seasar.framework.container.impl.PropertyDefImpl;
-import org.seasar.framework.ejb.AroundInvokeSupportInterceptor;
 import org.seasar.framework.ejb.EJB3BusinessMethodDesc;
 import org.seasar.framework.ejb.EJB3Desc;
+import org.seasar.framework.ejb.EJB3DescFactory;
 import org.seasar.framework.ejb.EJB3InterceptorDesc;
-import org.seasar.framework.ejb.EJB3InterceptorSupportInterType;
-import org.seasar.framework.ejb.EJB3InterceptorSupportInterceptor;
+import org.seasar.framework.ejb.impl.AroundInvokeSupportInterceptor;
+import org.seasar.framework.ejb.impl.EJB3InterceptorSupportInterType;
+import org.seasar.framework.ejb.impl.EJB3InterceptorSupportInterceptor;
 
 /**
  * @author higa
  * 
  */
 public class TigerAnnotationHandler extends ConstantAnnotationHandler {
+
     protected static final List<ComponentDefFactory> componentDefFactories = Collections
             .synchronizedList(new ArrayList<ComponentDefFactory>());
 
@@ -231,7 +233,7 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
     }
 
     protected void appendEJB3Aspect(final ComponentDef componentDef) {
-        final EJB3Desc ejb3desc = EJB3Desc.getEJB3Desc(componentDef
+        final EJB3Desc ejb3desc = EJB3DescFactory.getEJB3Desc(componentDef
                 .getComponentClass());
         if (!ejb3desc.isEJB3()) {
             return;
@@ -295,7 +297,7 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
 
     protected void appendEJB3InterType(final ComponentDef componentDef) {
         final Class<?> componentClass = componentDef.getComponentClass();
-        final EJB3Desc ejb3desc = EJB3Desc.getEJB3Desc(componentClass);
+        final EJB3Desc ejb3desc = EJB3DescFactory.getEJB3Desc(componentClass);
         if (!ejb3desc.isEJB3()) {
             return;
         }
@@ -331,7 +333,7 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
 
     protected void appendEJB3InitMethod(final ComponentDef componentDef) {
         final Class<?> componentClass = componentDef.getComponentClass();
-        final EJB3Desc ejb3desc = EJB3Desc.getEJB3Desc(componentClass);
+        final EJB3Desc ejb3desc = EJB3DescFactory.getEJB3Desc(componentClass);
         if (!ejb3desc.isEJB3()) {
             return;
         }
@@ -343,4 +345,5 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
             appendInitMethod(componentDef, method);
         }
     }
+
 }
