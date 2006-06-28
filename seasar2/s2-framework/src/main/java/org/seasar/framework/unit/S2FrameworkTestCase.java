@@ -23,7 +23,6 @@ import javax.servlet.Servlet;
 
 import junit.framework.TestCase;
 
-import org.seasar.framework.beans.factory.BeanDescFactory;
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.ExternalContext;
 import org.seasar.framework.container.S2Container;
@@ -36,7 +35,6 @@ import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 import org.seasar.framework.container.impl.S2ContainerImpl;
 import org.seasar.framework.container.servlet.S2ContainerServlet;
 import org.seasar.framework.exception.NoSuchMethodRuntimeException;
-import org.seasar.framework.log.Logger;
 import org.seasar.framework.mock.servlet.MockHttpServletRequest;
 import org.seasar.framework.mock.servlet.MockHttpServletResponse;
 import org.seasar.framework.mock.servlet.MockHttpServletResponseImpl;
@@ -45,6 +43,7 @@ import org.seasar.framework.mock.servlet.MockServletConfigImpl;
 import org.seasar.framework.mock.servlet.MockServletContext;
 import org.seasar.framework.mock.servlet.MockServletContextImpl;
 import org.seasar.framework.util.ClassUtil;
+import org.seasar.framework.util.DisposableUtil;
 import org.seasar.framework.util.FieldUtil;
 import org.seasar.framework.util.MethodUtil;
 import org.seasar.framework.util.ResourceUtil;
@@ -199,9 +198,7 @@ public abstract class S2FrameworkTestCase extends TestCase {
                 .setProvider(new ComponentDeployerFactory.DefaultProvider());
         SingletonS2ContainerFactory.setContainer(null);
         S2ContainerServlet.clearInstance();
-        S2ContainerFactory.destroy();
-        BeanDescFactory.clear();
-        Logger.release(unitClassLoader);
+        DisposableUtil.dispose();
         Thread.currentThread().setContextClassLoader(originalClassLoader);
         unitClassLoader = null;
         originalClassLoader = null;

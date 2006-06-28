@@ -26,7 +26,7 @@ import org.seasar.framework.unit.UnitClassLoader;
  */
 public class MemoryLeakTest extends TestCase {
 
-    private static int counter;
+    private static volatile int counter;
 
     public void testFinalize() throws Exception {
         ClassLoader origin = Thread.currentThread().getContextClassLoader();

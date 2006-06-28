@@ -15,40 +15,63 @@
  */
 package org.seasar.framework.log;
 
-import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.seasar.framework.message.MessageFormatter;
+import org.seasar.framework.util.Disposable;
+import org.seasar.framework.util.DisposableUtil;
 
 public final class Logger {
 
-    private static Map loggerMap_ = Collections.synchronizedMap(new HashMap());
+    private static final Map loggers = new HashMap();
 
-    private Log log;
+    private static final Set classLoaders = new HashSet();
 
-    private Logger(Class clazz) {
-        log = LogFactory.getLog(clazz);
-    }
+    private static boolean initialized;
 
-    public static final Logger getLogger(Class clazz) {
-        Logger logger = (Logger) loggerMap_.get(clazz);
+    private final Log log;
+
+    public static synchronized Logger getLogger(final Class clazz) {
+        if (!initialized) {
+            initialize();
+        }
+        Logger logger = (Logger) loggers.get(clazz);
         if (logger == null) {
             logger = new Logger(clazz);
-            loggerMap_.put(clazz, logger);
+            loggers.put(clazz, logger);
+            classLoaders.add(Thread.currentThread().getContextClassLoader());
         }
         return logger;
     }
 
-    public static final void release() {
-        release(Thread.currentThread().getContextClassLoader());
+    public static synchronized void initialize() {
+        DisposableUtil.add(new Disposable() {
+            public void dispose() {
+                Logger.dispose();
+            }
+        });
+        initialized = true;
     }
 
-    public static final void release(final ClassLoader loader) {
-        loggerMap_.clear();
-        LogFactory.release(loader);
+    public synchronized static void dispose() {
+        for (final Iterator it = classLoaders.iterator(); it.hasNext();) {
+            final ClassLoader loader = (ClassLoader) it.next();
+            LogFactory.release(loader);
+            System.out.println("*** " + loader);
+        }
+        loggers.clear();
+        classLoaders.clear();
+        initialized = false;
+    }
+
+    private Logger(final Class clazz) {
+        log = LogFactory.getLog(clazz);
     }
 
     public final boolean isDebugEnabled() {

@@ -20,7 +20,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.seasar.framework.beans.factory.BeanDescFactory;
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.cooldeploy.ConventionNaming;
@@ -31,7 +30,7 @@ import org.seasar.framework.container.impl.S2ContainerBehavior.DefaultProvider;
 import org.seasar.framework.container.util.S2ContainerUtil;
 import org.seasar.framework.exception.ClassNotFoundRuntimeException;
 import org.seasar.framework.exception.EmptyRuntimeException;
-import org.seasar.framework.log.Logger;
+import org.seasar.framework.util.DisposableUtil;
 
 public class OndemandBehavior extends DefaultProvider implements
         HotdeployListener, OndemandCreatorContainer {
@@ -94,12 +93,11 @@ public class OndemandBehavior extends DefaultProvider implements
     }
 
     public void stop() {
+        DisposableUtil.dispose();
         Thread.currentThread().setContextClassLoader(originalClassLoader);
-        Logger.release(hotdeployClassLoader);
         hotdeployClassLoader = null;
         originalClassLoader = null;
         componentDefCache.clear();
-        BeanDescFactory.clear();
     }
 
     public void definedClass(Class clazz) {

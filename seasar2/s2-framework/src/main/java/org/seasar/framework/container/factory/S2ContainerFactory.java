@@ -25,6 +25,8 @@ import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.assembler.AssemblerFactory;
 import org.seasar.framework.container.deployer.ComponentDeployerFactory;
 import org.seasar.framework.container.impl.S2ContainerBehavior;
+import org.seasar.framework.util.Disposable;
+import org.seasar.framework.util.DisposableUtil;
 import org.seasar.framework.util.ResourceUtil;
 
 /**
@@ -105,10 +107,15 @@ public final class S2ContainerFactory {
             }
             configurator.configure(configurationContainer);
         }
+        DisposableUtil.add(new Disposable() {
+            public void dispose() {
+                S2ContainerFactory.dispose();
+            }
+        });
         initialized = true;
     }
 
-    public static synchronized void destroy() {
+    public static synchronized void dispose() {
         defaultBuilder = null;
         provider = null;
         if (configurationContainer != null) {

@@ -21,12 +21,16 @@ import java.util.Map;
 
 import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.impl.BeanDescImpl;
+import org.seasar.framework.util.Disposable;
+import org.seasar.framework.util.DisposableUtil;
 
 /**
  * @author higa
  * 
  */
 public final class BeanDescFactory {
+
+    private static volatile boolean initialized;
 
     private static Map beanDescCache = Collections
             .synchronizedMap(new HashMap());
@@ -35,6 +39,9 @@ public final class BeanDescFactory {
     }
 
     public static BeanDesc getBeanDesc(Class clazz) {
+        if (!initialized) {
+            initialize();
+        }
         BeanDesc beanDesc = (BeanDesc) beanDescCache.get(clazz);
         if (beanDesc == null) {
             beanDesc = new BeanDescImpl(clazz);
@@ -43,7 +50,17 @@ public final class BeanDescFactory {
         return beanDesc;
     }
 
+    public static void initialize() {
+        DisposableUtil.add(new Disposable() {
+            public void dispose() {
+                clear();
+            }
+        });
+        initialized = true;
+    }
+
     public static void clear() {
         beanDescCache.clear();
+        initialized = false;
     }
 }
