@@ -63,7 +63,6 @@ public final class Logger {
         for (final Iterator it = classLoaders.iterator(); it.hasNext();) {
             final ClassLoader loader = (ClassLoader) it.next();
             LogFactory.release(loader);
-            System.out.println("*** " + loader);
         }
         loggers.clear();
         classLoaders.clear();
