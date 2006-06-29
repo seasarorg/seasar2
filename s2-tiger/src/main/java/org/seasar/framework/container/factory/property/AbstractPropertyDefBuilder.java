@@ -1,4 +1,4 @@
-package org.seasar.framework.container.factory;
+package org.seasar.framework.container.factory.property;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -11,17 +11,20 @@ import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.PropertyDef;
 import org.seasar.framework.container.assembler.AccessTypeDefFactory;
 import org.seasar.framework.container.assembler.BindingTypeDefFactory;
+import org.seasar.framework.container.factory.AnnotationHandler;
+import org.seasar.framework.container.factory.PropertyDefBuilder;
 import org.seasar.framework.container.impl.PropertyDefImpl;
 import org.seasar.framework.container.ognl.OgnlExpression;
 import org.seasar.framework.util.StringUtil;
 
-public abstract class AbstractPropertyDefFactory<T extends Annotation>
-        implements PropertyDefFactory {
+public abstract class AbstractPropertyDefBuilder<T extends Annotation>
+        implements PropertyDefBuilder {
 
-    public AbstractPropertyDefFactory() {
+    public AbstractPropertyDefBuilder() {
     }
 
-    public PropertyDef createPropertyDef(BeanDesc beanDesc,
+    public PropertyDef createPropertyDef(
+            final AnnotationHandler annotationHandler, BeanDesc beanDesc,
             PropertyDesc propertyDesc) {
         if (!propertyDesc.hasWriteMethod()) {
             return null;
@@ -35,7 +38,9 @@ public abstract class AbstractPropertyDefFactory<T extends Annotation>
                 AccessTypeDefFactory.PROPERTY, annotation);
     }
 
-    public PropertyDef createPropertyDef(BeanDesc beanDesc, Field field) {
+    public PropertyDef createPropertyDef(
+            final AnnotationHandler annotationHandler, BeanDesc beanDesc,
+            Field field) {
         final T annotation = field.getAnnotation(getAnnotationType());
         if (annotation == null) {
             return null;

@@ -19,6 +19,7 @@ import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -104,6 +105,21 @@ public class EJB3DescImpl implements EJB3Desc {
 
     public List<EJB3InterceptorDesc> getInterceptors() {
         return interceptors;
+    }
+
+    public EJB3BusinessMethodDesc getBusinessMethod(final Method method) {
+        for (final EJB3BusinessMethodDesc businessMethodDesc : businessMethods) {
+            final Method businessMethod = businessMethodDesc.getMethod();
+            if (!method.getName().equals(businessMethod.getName())) {
+                continue;
+            }
+            if (!Arrays.equals(method.getParameterTypes(), businessMethod
+                    .getParameterTypes())) {
+                continue;
+            }
+            return businessMethodDesc;
+        }
+        return null;
     }
 
     public List<EJB3BusinessMethodDesc> getBusinessMethods() {

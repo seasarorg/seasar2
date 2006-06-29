@@ -13,39 +13,25 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.framework.ejb;
+package org.seasar.framework.aop.annotation;
 
-import java.lang.reflect.Method;
-import java.util.List;
+import org.aopalliance.intercept.MethodInterceptor;
+import org.aopalliance.intercept.MethodInvocation;
 
 /**
  * @author koichik
  * 
  */
-public interface EJB3Desc {
+public class ReturnValueInterceptor implements MethodInterceptor {
 
-    boolean isEJB3();
+    protected String value;
 
-    boolean isStateless();
+    public void setValue(String value) {
+        this.value = value;
+    }
 
-    boolean isStateful();
-
-    String getName();
-
-    Class<?> getBeanClass();
-
-    List<Class<?>> getBusinessInterfaces();
-
-    boolean isCMT();
-
-    List<EJB3InterceptorDesc> getInterceptors();
-
-    EJB3BusinessMethodDesc getBusinessMethod(Method method);
-
-    List<EJB3BusinessMethodDesc> getBusinessMethods();
-
-    List<Method> getAroundInvokeMethods();
-
-    List<Method> getPostConstructMethods();
+    public Object invoke(MethodInvocation invocation) throws Throwable {
+        return value;
+    }
 
 }

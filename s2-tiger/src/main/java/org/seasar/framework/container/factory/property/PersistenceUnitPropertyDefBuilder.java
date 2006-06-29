@@ -1,4 +1,4 @@
-package org.seasar.framework.container.factory;
+package org.seasar.framework.container.factory.property;
 
 import java.util.Map;
 
@@ -15,9 +15,9 @@ import org.seasar.framework.container.impl.DestroyMethodDefImpl;
 import org.seasar.framework.jpa.PersistenceUnitManager;
 import org.seasar.framework.util.StringUtil;
 
-public class PersistenceUnitPropertyDefFactory extends
-        AbstractPropertyDefFactory<PersistenceUnit> {
-    public PersistenceUnitPropertyDefFactory() {
+public class PersistenceUnitPropertyDefBuilder extends
+        AbstractPropertyDefBuilder<PersistenceUnit> {
+    public PersistenceUnitPropertyDefBuilder() {
     }
 
     @Override
@@ -61,6 +61,10 @@ public class PersistenceUnitPropertyDefFactory extends
 
         public PersistenceUnitExpression(String unitName) {
             this.unitName = unitName;
+        }
+
+        public String getUnitName() {
+            return unitName;
         }
 
         public Object evaluate(final S2Container container, final Map context) {

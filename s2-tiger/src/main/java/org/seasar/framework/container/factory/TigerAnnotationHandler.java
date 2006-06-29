@@ -16,41 +16,33 @@
 package org.seasar.framework.container.factory;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
-import javax.ejb.TransactionAttributeType;
-
-import org.aopalliance.intercept.MethodInterceptor;
-import org.seasar.framework.aop.impl.PointcutImpl;
 import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.PropertyDesc;
-import org.seasar.framework.container.AspectDef;
 import org.seasar.framework.container.AutoBindingDef;
 import org.seasar.framework.container.ComponentDef;
-import org.seasar.framework.container.IllegalDestroyMethodAnnotationRuntimeException;
-import org.seasar.framework.container.IllegalInitMethodAnnotationRuntimeException;
 import org.seasar.framework.container.InstanceDef;
 import org.seasar.framework.container.PropertyDef;
-import org.seasar.framework.container.annotation.tiger.Aspect;
-import org.seasar.framework.container.annotation.tiger.DestroyMethod;
-import org.seasar.framework.container.annotation.tiger.InitMethod;
-import org.seasar.framework.container.annotation.tiger.InterType;
-import org.seasar.framework.container.impl.InterTypeDefImpl;
-import org.seasar.framework.container.impl.PropertyDefImpl;
-import org.seasar.framework.ejb.EJB3BusinessMethodDesc;
-import org.seasar.framework.ejb.EJB3Desc;
-import org.seasar.framework.ejb.EJB3DescFactory;
-import org.seasar.framework.ejb.EJB3InterceptorDesc;
-import org.seasar.framework.ejb.impl.AroundInvokeSupportInterceptor;
-import org.seasar.framework.ejb.impl.EJB3InterceptorSupportInterType;
-import org.seasar.framework.ejb.impl.EJB3InterceptorSupportInterceptor;
+import org.seasar.framework.container.factory.aspect.AspectAnnotationAspectDefBuilder;
+import org.seasar.framework.container.factory.aspect.EJB3AnnotationAspectDefBuilder;
+import org.seasar.framework.container.factory.aspect.InterceptorAnnotationAspectDefBuilder;
+import org.seasar.framework.container.factory.component.EJB3ComponentDefBuilder;
+import org.seasar.framework.container.factory.component.PojoComponentDefBuilder;
+import org.seasar.framework.container.factory.destroymethod.S2DestroyMethodDefBuilder;
+import org.seasar.framework.container.factory.initmethod.EJB3InitMethodDefBuilder;
+import org.seasar.framework.container.factory.initmethod.S2InitMethodDefBuilder;
+import org.seasar.framework.container.factory.intertype.EJB3IntertypeDefBuilder;
+import org.seasar.framework.container.factory.intertype.S2IntertypeDefBuilder;
+import org.seasar.framework.container.factory.property.BindingPropertyDefBuilder;
+import org.seasar.framework.container.factory.property.EJBPropertyDefBuilder;
+import org.seasar.framework.container.factory.property.PersistenceContextPropertyDefBuilder;
+import org.seasar.framework.container.factory.property.PersistenceUnitPropertyDefBuilder;
+import org.seasar.framework.container.factory.property.ResourcePropertyDefBuilder;
+import org.seasar.framework.util.Disposable;
+import org.seasar.framework.util.DisposableUtil;
 
 /**
  * @author higa
@@ -58,32 +50,180 @@ import org.seasar.framework.ejb.impl.EJB3InterceptorSupportInterceptor;
  */
 public class TigerAnnotationHandler extends ConstantAnnotationHandler {
 
-    protected static final List<ComponentDefFactory> componentDefFactories = Collections
-            .synchronizedList(new ArrayList<ComponentDefFactory>());
+    protected static boolean initialized;
 
-    protected static final List<PropertyDefFactory> propertyDefFactories = Collections
-            .synchronizedList(new ArrayList<PropertyDefFactory>());
-    static {
-        reloadComponentDefFactory();
-        reloadPropertyDefFactory();
+    protected static final List<ComponentDefBuilder> componentDefBuilders = Collections
+            .synchronizedList(new ArrayList());
+
+    protected static final List<PropertyDefBuilder> propertyDefBuilders = Collections
+            .synchronizedList(new ArrayList());
+
+    protected static final List<AspectDefBuilder> aspectDefBuilders = Collections
+            .synchronizedList(new ArrayList());
+
+    protected static final List<IntertypeDefBuilder> intertypeDefBuilders = Collections
+            .synchronizedList(new ArrayList());
+
+    protected static final List<InitMethodDefBuilder> initMethodDefBuilders = Collections
+            .synchronizedList(new ArrayList());
+
+    protected static final List<DestroyMethodDefBuilder> destroyMethodDefBuilders = Collections
+            .synchronizedList(new ArrayList());
+
+    public static synchronized void initialize() {
+        loadDefaultComponentDefBuilder();
+        loadDefaultPropertyDefBuilder();
+        loadDefaultAspectDefBuilder();
+        loadDefaultIntertypeDefBuilder();
+        loadDefaultInitMethodDefBuilder();
+        loadDefaultDestroyMethodDefBuilder();
+        DisposableUtil.add(new Disposable() {
+            public void dispose() {
+                TigerAnnotationHandler.dispose();
+            }
+        });
+        initialized = true;
     }
 
-    private static final Map<TransactionAttributeType, String> TX_ATTRS = new HashMap<TransactionAttributeType, String>();
-    static {
-        TX_ATTRS.put(TransactionAttributeType.MANDATORY, "ejb3tx.mandatoryTx");
-        TX_ATTRS.put(TransactionAttributeType.REQUIRED, "ejb3tx.requiredTx");
-        TX_ATTRS.put(TransactionAttributeType.REQUIRES_NEW,
-                "ejb3tx.requiresNewTx");
-        TX_ATTRS.put(TransactionAttributeType.NOT_SUPPORTED,
-                "ejb3tx.notSupportedTx");
-        TX_ATTRS.put(TransactionAttributeType.NEVER, "ejb3tx.neverTx");
+    public static synchronized void dispose() {
+        clearComponentDefBuilder();
+        clearPropertyDefBuilder();
+        clearAspectDefBuilder();
+        clearIntertypeDefBuilder();
+        initialized = false;
     }
 
-    public ComponentDef createComponentDef(Class componentClass,
-            InstanceDef defaultInstanceDef,
-            AutoBindingDef defaultAutoBindingDef, boolean defaultExternalBinding) {
-        for (final ComponentDefFactory factory : componentDefFactories) {
-            final ComponentDef componentDef = factory.createComponentDef(
+    public static synchronized void loadDefaultComponentDefBuilder() {
+        clearComponentDefBuilder();
+        componentDefBuilders.add(new EJB3ComponentDefBuilder());
+        componentDefBuilders.add(new PojoComponentDefBuilder());
+    }
+
+    public static synchronized void addComponentDefBuilder(
+            final ComponentDefBuilder builder) {
+        componentDefBuilders.add(builder);
+    }
+
+    public static synchronized void removeComponentDefBuilder(
+            final ComponentDefBuilder factory) {
+        componentDefBuilders.remove(factory);
+    }
+
+    public static synchronized void clearComponentDefBuilder() {
+        componentDefBuilders.clear();
+    }
+
+    public static synchronized void loadDefaultPropertyDefBuilder() {
+        clearPropertyDefBuilder();
+        propertyDefBuilders.add(new BindingPropertyDefBuilder());
+        propertyDefBuilders.add(new EJBPropertyDefBuilder());
+        propertyDefBuilders.add(new PersistenceContextPropertyDefBuilder());
+        propertyDefBuilders.add(new PersistenceUnitPropertyDefBuilder());
+        propertyDefBuilders.add(new ResourcePropertyDefBuilder());
+    }
+
+    public static synchronized void addPropertyDefBuilder(
+            final PropertyDefBuilder builder) {
+        propertyDefBuilders.add(builder);
+    }
+
+    public static synchronized void removePropertyDefBuilder(
+            final PropertyDefBuilder builder) {
+        propertyDefBuilders.remove(builder);
+    }
+
+    public static synchronized void clearPropertyDefBuilder() {
+        propertyDefBuilders.clear();
+    }
+
+    public static synchronized void loadDefaultAspectDefBuilder() {
+        aspectDefBuilders.add(new EJB3AnnotationAspectDefBuilder());
+        aspectDefBuilders.add(new AspectAnnotationAspectDefBuilder());
+        aspectDefBuilders.add(new InterceptorAnnotationAspectDefBuilder());
+    }
+
+    public static synchronized void addAspectDefBuilder(
+            final AspectDefBuilder builder) {
+        aspectDefBuilders.add(builder);
+    }
+
+    public static synchronized void removeAspectDefBuilder(
+            final AspectDefBuilder builder) {
+        aspectDefBuilders.remove(builder);
+    }
+
+    public static synchronized void clearAspectDefBuilder() {
+        aspectDefBuilders.clear();
+    }
+
+    public static synchronized void loadDefaultIntertypeDefBuilder() {
+        clearIntertypeDefBuilder();
+        intertypeDefBuilders.add(new EJB3IntertypeDefBuilder());
+        intertypeDefBuilders.add(new S2IntertypeDefBuilder());
+    }
+
+    public static synchronized void addIntertypeDefBuilder(
+            final IntertypeDefBuilder builder) {
+        intertypeDefBuilders.add(builder);
+    }
+
+    public static synchronized void removeIntertypeDefBuilder(
+            final IntertypeDefBuilder builder) {
+        intertypeDefBuilders.remove(builder);
+    }
+
+    public static synchronized void clearIntertypeDefBuilder() {
+        intertypeDefBuilders.clear();
+    }
+
+    public static synchronized void loadDefaultInitMethodDefBuilder() {
+        clearInitMethodDefBuilder();
+        initMethodDefBuilders.add(new EJB3InitMethodDefBuilder());
+        initMethodDefBuilders.add(new S2InitMethodDefBuilder());
+    }
+
+    public static synchronized void addInitMethodDefBuilder(
+            final InitMethodDefBuilder builder) {
+        initMethodDefBuilders.add(builder);
+    }
+
+    public static synchronized void removeInitMethodDefBuilder(
+            final InitMethodDefBuilder factory) {
+        initMethodDefBuilders.remove(factory);
+    }
+
+    public static synchronized void clearInitMethodDefBuilder() {
+        initMethodDefBuilders.clear();
+    }
+
+    public static synchronized void loadDefaultDestroyMethodDefBuilder() {
+        clearDestroyMethodDefBuilder();
+        destroyMethodDefBuilders.add(new S2DestroyMethodDefBuilder());
+    }
+
+    public static synchronized void addDestroyMethodDefBuilder(
+            final DestroyMethodDefBuilder builder) {
+        destroyMethodDefBuilders.add(builder);
+    }
+
+    public static synchronized void removeDestroyMethodDefBuilder(
+            final DestroyMethodDefBuilder factory) {
+        destroyMethodDefBuilders.remove(factory);
+    }
+
+    public static synchronized void clearDestroyMethodDefBuilder() {
+        destroyMethodDefBuilders.clear();
+    }
+
+    public ComponentDef createComponentDef(final Class componentClass,
+            final InstanceDef defaultInstanceDef,
+            final AutoBindingDef defaultAutoBindingDef,
+            final boolean defaultExternalBinding) {
+        if (!initialized) {
+            initialize();
+        }
+        for (final ComponentDefBuilder builder : componentDefBuilders) {
+            final ComponentDef componentDef = builder.createComponentDef(this,
                     componentClass, defaultInstanceDef, defaultAutoBindingDef,
                     defaultExternalBinding);
             if (componentDef != null) {
@@ -94,11 +234,11 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
                 defaultAutoBindingDef, defaultExternalBinding);
     }
 
-    public PropertyDef createPropertyDef(BeanDesc beanDesc,
+    public PropertyDef createPropertyDef(final BeanDesc beanDesc,
             PropertyDesc propertyDesc) {
         if (propertyDesc.hasWriteMethod()) {
-            for (final PropertyDefFactory factory : propertyDefFactories) {
-                final PropertyDef propertyDef = factory.createPropertyDef(
+            for (final PropertyDefBuilder builder : propertyDefBuilders) {
+                final PropertyDef propertyDef = builder.createPropertyDef(this,
                         beanDesc, propertyDesc);
                 if (propertyDef != null) {
                     return propertyDef;
@@ -108,10 +248,11 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
         return super.createPropertyDef(beanDesc, propertyDesc);
     }
 
-    public PropertyDef createPropertyDef(BeanDesc beanDesc, Field field) {
-        for (final PropertyDefFactory factory : propertyDefFactories) {
-            final PropertyDef propertyDef = factory.createPropertyDef(beanDesc,
-                    field);
+    public PropertyDef createPropertyDef(final BeanDesc beanDesc,
+            final Field field) {
+        for (final PropertyDefBuilder builder : propertyDefBuilders) {
+            final PropertyDef propertyDef = builder.createPropertyDef(this,
+                    beanDesc, field);
             if (propertyDef != null) {
                 return propertyDef;
             }
@@ -119,231 +260,40 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
         return super.createPropertyDef(beanDesc, field);
     }
 
-    public void appendAspect(ComponentDef componentDef) {
-        Class<?> clazz = componentDef.getComponentClass();
-        Aspect aspect = clazz.getAnnotation(Aspect.class);
-        if (aspect != null) {
-            String interceptor = aspect.value();
-            String pointcut = aspect.pointcut();
-            appendAspect(componentDef, interceptor, pointcut);
+    public void appendAspect(final ComponentDef componentDef) {
+        for (final AspectDefBuilder builder : aspectDefBuilders) {
+            builder.appendAspectDef(this, componentDef);
         }
-
-        Method[] methods = clazz.getMethods();
-        for (Method method : methods) {
-            Aspect mAspect = method.getAnnotation(Aspect.class);
-            if (mAspect != null) {
-                String interceptor = mAspect.value();
-                appendAspect(componentDef, interceptor, method);
-            }
-        }
-
-        appendEJB3Aspect(componentDef);
         super.appendAspect(componentDef);
     }
 
-    public void appendInterType(ComponentDef componentDef) {
-        Class<?> clazz = componentDef.getComponentClass();
-        InterType interType = clazz.getAnnotation(InterType.class);
-        if (interType != null) {
-            for (String interTypeName : interType.value()) {
-                appendInterType(componentDef, interTypeName);
-            }
+    public void appendInterType(final ComponentDef componentDef) {
+        for (final IntertypeDefBuilder builder : intertypeDefBuilders) {
+            builder.appendIntertypeDef(this, componentDef);
         }
-        appendEJB3InterType(componentDef);
         super.appendInterType(componentDef);
     }
 
-    public void appendInitMethod(ComponentDef componentDef) {
+    public void appendInitMethod(final ComponentDef componentDef) {
         Class componentClass = componentDef.getComponentClass();
         if (componentClass == null) {
             return;
         }
-        Method[] methods = componentClass.getMethods();
-        for (Method method : methods) {
-            InitMethod initMethod = method.getAnnotation(InitMethod.class);
-            if (initMethod == null) {
-                continue;
-            }
-            if (method.getParameterTypes().length != 0) {
-                throw new IllegalInitMethodAnnotationRuntimeException(
-                        componentClass, method.getName());
-            }
-            if (!isInitMethodRegisterable(componentDef, method.getName())) {
-                continue;
-            }
-            appendInitMethod(componentDef, method.getName());
+        for (final InitMethodDefBuilder builder : initMethodDefBuilders) {
+            builder.appendInitMethodDef(this, componentDef);
         }
-        appendEJB3InitMethod(componentDef);
         super.appendInitMethod(componentDef);
     }
 
-    public void appendDestroyMethod(ComponentDef componentDef) {
+    public void appendDestroyMethod(final ComponentDef componentDef) {
         Class componentClass = componentDef.getComponentClass();
         if (componentClass == null) {
             return;
         }
-        Method[] methods = componentClass.getMethods();
-        for (Method method : methods) {
-            DestroyMethod destroyMethod = method
-                    .getAnnotation(DestroyMethod.class);
-            if (destroyMethod == null) {
-                continue;
-            }
-            if (method.getParameterTypes().length != 0) {
-                throw new IllegalDestroyMethodAnnotationRuntimeException(
-                        componentClass, method.getName());
-            }
-            if (!isDestroyMethodRegisterable(componentDef, method.getName())) {
-                continue;
-            }
-            appendDestroyMethod(componentDef, method.getName());
+        for (final DestroyMethodDefBuilder builder : destroyMethodDefBuilders) {
+            builder.appendDestroyMethodDef(this, componentDef);
         }
         super.appendDestroyMethod(componentDef);
-    }
-
-    public static void addComponentDefFactory(final ComponentDefFactory factory) {
-        componentDefFactories.add(0, factory);
-    }
-
-    public static void reloadComponentDefFactory() {
-        clearComponentDefFactory();
-        componentDefFactories.add(new EJB3ComponentDefFactory());
-        componentDefFactories.add(new PojoComponentDefFactory());
-    }
-
-    public static void clearComponentDefFactory() {
-        componentDefFactories.clear();
-    }
-
-    public static void addPropertyDefFactory(final PropertyDefFactory factory) {
-        propertyDefFactories.add(factory);
-    }
-
-    public static void reloadPropertyDefFactory() {
-        clearPropertyDefFactory();
-        propertyDefFactories.add(new BindingPropertyDefFactory());
-        propertyDefFactories.add(new EJBPropertyDefFactory());
-        propertyDefFactories.add(new PersistenceContextPropertyDefFactory());
-        propertyDefFactories.add(new PersistenceUnitPropertyDefFactory());
-        propertyDefFactories.add(new ResourcePropertyDefFactory());
-    }
-
-    public static void clearPropertyDefFactory() {
-        propertyDefFactories.clear();
-    }
-
-    protected void appendEJB3Aspect(final ComponentDef componentDef) {
-        final EJB3Desc ejb3desc = EJB3DescFactory.getEJB3Desc(componentDef
-                .getComponentClass());
-        if (!ejb3desc.isEJB3()) {
-            return;
-        }
-        appendEJB3TxAspect(componentDef, ejb3desc);
-        appendEJB3InterceptorsAspect(componentDef, ejb3desc);
-        appendEJB3AroundInvokeAspect(componentDef, ejb3desc);
-    }
-
-    protected void appendEJB3TxAspect(final ComponentDef componentDef,
-            final EJB3Desc ejb3desc) {
-        if (!ejb3desc.isCMT()) {
-            return;
-        }
-
-        for (final EJB3BusinessMethodDesc methodDesc : ejb3desc
-                .getBusinessMethods()) {
-            final String txInterceptor = TX_ATTRS.get(methodDesc
-                    .getTransactionAttributeType());
-            if (txInterceptor == null) {
-                continue;
-            }
-            appendAspect(componentDef, txInterceptor, methodDesc.getMethod());
-        }
-    }
-
-    protected void appendEJB3InterceptorsAspect(
-            final ComponentDef componentDef, final EJB3Desc ejb3desc) {
-        for (final EJB3BusinessMethodDesc methodDesc : ejb3desc
-                .getBusinessMethods()) {
-            for (final EJB3InterceptorDesc interceptorDesc : methodDesc
-                    .getInterceptors()) {
-                for (final Method interceptorMethod : interceptorDesc
-                        .getInterceptorMethods()) {
-                    final EJB3InterceptorSupportInterceptor interceptor = new EJB3InterceptorSupportInterceptor(
-                            interceptorDesc.getInterceptorClass(),
-                            interceptorMethod);
-                    final AspectDef aspectDef = AspectDefFactory
-                            .createAspectDef(interceptor, new PointcutImpl(
-                                    methodDesc.getMethod()));
-                    componentDef.addAspectDef(aspectDef);
-                }
-            }
-        }
-    }
-
-    protected void appendEJB3AroundInvokeAspect(
-            final ComponentDef componentDef, final EJB3Desc ejb3desc) {
-        for (final Method aroundInvokeMethod : ejb3desc
-                .getAroundInvokeMethods()) {
-            final MethodInterceptor interceptor = new AroundInvokeSupportInterceptor(
-                    aroundInvokeMethod);
-            for (final EJB3BusinessMethodDesc methodDesc : ejb3desc
-                    .getBusinessMethods()) {
-                final AspectDef aspectDef = AspectDefFactory.createAspectDef(
-                        interceptor, new PointcutImpl(methodDesc.getMethod()));
-                componentDef.addAspectDef(aspectDef);
-            }
-        }
-    }
-
-    protected void appendEJB3InterType(final ComponentDef componentDef) {
-        final Class<?> componentClass = componentDef.getComponentClass();
-        final EJB3Desc ejb3desc = EJB3DescFactory.getEJB3Desc(componentClass);
-        if (!ejb3desc.isEJB3()) {
-            return;
-        }
-
-        final Set<Class<?>> interceptorClasses = new HashSet<Class<?>>();
-        for (final EJB3InterceptorDesc interceptorDesc : ejb3desc
-                .getInterceptors()) {
-            interceptorClasses.add(interceptorDesc.getInterceptorClass());
-        }
-        for (final EJB3BusinessMethodDesc methodDesc : ejb3desc
-                .getBusinessMethods()) {
-            for (final EJB3InterceptorDesc interceptorDesc : methodDesc
-                    .getInterceptors()) {
-                interceptorClasses.add(interceptorDesc.getInterceptorClass());
-            }
-        }
-        final EJB3InterceptorSupportInterType interType = new EJB3InterceptorSupportInterType();
-        for (final Class<?> interceptorClass : interceptorClasses) {
-            interType.addInterceptor(interceptorClass);
-            PropertyDefImpl propDef = new PropertyDefImpl(
-                    EJB3InterceptorSupportInterType
-                            .getFieldName(interceptorClass));
-            final ComponentDef interceptorCd = createComponentDef(
-                    interceptorClass, null);
-            appendDI(interceptorCd);
-            appendAspect(interceptorCd);
-            appendInterType(interceptorCd);
-            propDef.setChildComponentDef(interceptorCd);
-            componentDef.addPropertyDef(propDef);
-        }
-        componentDef.addInterTypeDef(new InterTypeDefImpl(interType));
-    }
-
-    protected void appendEJB3InitMethod(final ComponentDef componentDef) {
-        final Class<?> componentClass = componentDef.getComponentClass();
-        final EJB3Desc ejb3desc = EJB3DescFactory.getEJB3Desc(componentClass);
-        if (!ejb3desc.isEJB3()) {
-            return;
-        }
-
-        for (final Method method : ejb3desc.getPostConstructMethods()) {
-            if (!isInitMethodRegisterable(componentDef, method.getName())) {
-                continue;
-            }
-            appendInitMethod(componentDef, method);
-        }
     }
 
 }

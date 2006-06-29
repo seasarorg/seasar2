@@ -1,4 +1,4 @@
-package org.seasar.framework.container.factory;
+package org.seasar.framework.container.factory.property;
 
 import javax.persistence.PersistenceContext;
 
@@ -10,10 +10,10 @@ import org.seasar.framework.container.impl.ComponentDefImpl;
 import org.seasar.framework.jpa.TxScopedEntityManagerProxy;
 import org.seasar.framework.util.StringUtil;
 
-public class PersistenceContextPropertyDefFactory extends
-        AbstractPropertyDefFactory<PersistenceContext> {
+public class PersistenceContextPropertyDefBuilder extends
+        AbstractPropertyDefBuilder<PersistenceContext> {
 
-    public PersistenceContextPropertyDefFactory() {
+    public PersistenceContextPropertyDefBuilder() {
     }
 
     @Override
@@ -44,7 +44,7 @@ public class PersistenceContextPropertyDefFactory extends
         }
 
         // specified 'unitName' element
-        final ComponentDef emfComponentDef = PersistenceUnitPropertyDefFactory
+        final ComponentDef emfComponentDef = PersistenceUnitPropertyDefBuilder
                 .createPersistenceUnitCompoentDef(unitName);
         final PropertyDef emfPropertyDef = createPropertyDef(
                 "entityManagerFactory", AccessTypeDefFactory.PROPERTY,

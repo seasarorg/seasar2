@@ -1,14 +1,14 @@
-package org.seasar.framework.container.factory;
+package org.seasar.framework.container.factory.property;
 
 import org.seasar.framework.container.AccessTypeDef;
 import org.seasar.framework.container.PropertyDef;
 import org.seasar.framework.container.annotation.tiger.Binding;
 import org.seasar.framework.container.assembler.BindingTypeDefFactory;
 
-public class BindingPropertyDefFactory extends
-        AbstractPropertyDefFactory<Binding> {
+public class BindingPropertyDefBuilder extends
+        AbstractPropertyDefBuilder<Binding> {
 
-    public BindingPropertyDefFactory() {
+    public BindingPropertyDefBuilder() {
     }
 
     @Override

@@ -1,4 +1,4 @@
-package org.seasar.framework.container.factory;
+package org.seasar.framework.container.factory.property;
 
 import javax.ejb.EJB;
 
@@ -6,9 +6,9 @@ import org.seasar.framework.container.AccessTypeDef;
 import org.seasar.framework.container.PropertyDef;
 import org.seasar.framework.util.StringUtil;
 
-public class EJBPropertyDefFactory extends AbstractPropertyDefFactory<EJB> {
+public class EJBPropertyDefBuilder extends AbstractPropertyDefBuilder<EJB> {
 
-    public EJBPropertyDefFactory() {
+    public EJBPropertyDefBuilder() {
     }
 
     @Override

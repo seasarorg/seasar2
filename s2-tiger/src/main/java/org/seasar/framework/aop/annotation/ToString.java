@@ -13,39 +13,21 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.framework.ejb;
+package org.seasar.framework.aop.annotation;
 
-import java.lang.reflect.Method;
-import java.util.List;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
 
 /**
  * @author koichik
  * 
  */
-public interface EJB3Desc {
-
-    boolean isEJB3();
-
-    boolean isStateless();
-
-    boolean isStateful();
-
-    String getName();
-
-    Class<?> getBeanClass();
-
-    List<Class<?>> getBusinessInterfaces();
-
-    boolean isCMT();
-
-    List<EJB3InterceptorDesc> getInterceptors();
-
-    EJB3BusinessMethodDesc getBusinessMethod(Method method);
-
-    List<EJB3BusinessMethodDesc> getBusinessMethods();
-
-    List<Method> getAroundInvokeMethods();
-
-    List<Method> getPostConstructMethods();
-
+@Retention(RetentionPolicy.RUNTIME)
+@Target( { ElementType.TYPE, ElementType.METHOD })
+@Interceptor
+public @interface ToString {
+    String pointcut() default "";
 }

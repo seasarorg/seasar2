@@ -1,4 +1,4 @@
-package org.seasar.framework.container.factory;
+package org.seasar.framework.container.factory.property;
 
 import javax.annotation.Resource;
 
@@ -6,10 +6,10 @@ import org.seasar.extension.j2ee.JndiResourceLocator;
 import org.seasar.framework.container.AccessTypeDef;
 import org.seasar.framework.container.PropertyDef;
 
-public class ResourcePropertyDefFactory extends
-        AbstractPropertyDefFactory<Resource> {
+public class ResourcePropertyDefBuilder extends
+        AbstractPropertyDefBuilder<Resource> {
 
-    public ResourcePropertyDefFactory() {
+    public ResourcePropertyDefBuilder() {
     }
 
     @Override

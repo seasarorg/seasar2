@@ -13,16 +13,19 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.framework.container.factory;
+package org.seasar.framework.aop.annotation;
 
-import java.lang.reflect.Field;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-import org.seasar.framework.beans.BeanDesc;
-import org.seasar.framework.beans.PropertyDesc;
-import org.seasar.framework.container.PropertyDef;
-
-public interface PropertyDefFactory {
-    PropertyDef createPropertyDef(BeanDesc beanDesc, PropertyDesc propertyDesc);
-
-    PropertyDef createPropertyDef(BeanDesc beanDesc, Field field);
+/**
+ * @author koichik
+ * 
+ */
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.ANNOTATION_TYPE)
+public @interface Interceptor {
+    String value() default "";
 }

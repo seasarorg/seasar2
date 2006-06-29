@@ -13,39 +13,18 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.framework.ejb;
+package org.seasar.framework.container.factory;
 
-import java.lang.reflect.Method;
-import java.util.List;
+import java.lang.reflect.Field;
 
-/**
- * @author koichik
- * 
- */
-public interface EJB3Desc {
+import org.seasar.framework.beans.BeanDesc;
+import org.seasar.framework.beans.PropertyDesc;
+import org.seasar.framework.container.PropertyDef;
 
-    boolean isEJB3();
+public interface PropertyDefBuilder {
+    PropertyDef createPropertyDef(AnnotationHandler annotationHandler,
+            BeanDesc beanDesc, PropertyDesc propertyDesc);
 
-    boolean isStateless();
-
-    boolean isStateful();
-
-    String getName();
-
-    Class<?> getBeanClass();
-
-    List<Class<?>> getBusinessInterfaces();
-
-    boolean isCMT();
-
-    List<EJB3InterceptorDesc> getInterceptors();
-
-    EJB3BusinessMethodDesc getBusinessMethod(Method method);
-
-    List<EJB3BusinessMethodDesc> getBusinessMethods();
-
-    List<Method> getAroundInvokeMethods();
-
-    List<Method> getPostConstructMethods();
-
+    PropertyDef createPropertyDef(AnnotationHandler annotationHandler,
+            BeanDesc beanDesc, Field field);
 }

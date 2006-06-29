@@ -23,6 +23,7 @@ import java.util.Map;
 import javax.ejb.EJBException;
 
 import org.seasar.extension.unit.S2TestCase;
+import org.seasar.framework.aop.interceptors.TraceInterceptor;
 import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.beans.factory.BeanDescFactory;
@@ -36,10 +37,19 @@ import org.seasar.framework.container.InitMethodDef;
 import org.seasar.framework.container.InstanceDef;
 import org.seasar.framework.container.InterTypeDef;
 import org.seasar.framework.container.PropertyDef;
+import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.assembler.AutoBindingDefFactory;
 import org.seasar.framework.container.deployer.InstanceDefFactory;
+import org.seasar.framework.container.factory.component.EJB3ComponentDefBuilder;
+import org.seasar.framework.container.factory.component.PojoComponentDefBuilder;
+import org.seasar.framework.container.factory.property.BindingPropertyDefBuilder;
+import org.seasar.framework.container.factory.property.EJBPropertyDefBuilder;
+import org.seasar.framework.container.factory.property.PersistenceContextPropertyDefBuilder;
+import org.seasar.framework.container.factory.property.PersistenceUnitPropertyDefBuilder;
+import org.seasar.framework.container.factory.property.ResourcePropertyDefBuilder;
 import org.seasar.framework.container.impl.ComponentDefImpl;
 import org.seasar.framework.container.impl.PropertyDefImpl;
+import org.seasar.framework.container.impl.S2ContainerImpl;
 import org.seasar.framework.container.ognl.OgnlExpression;
 import org.seasar.framework.ejb.SEJBException;
 import org.seasar.framework.jpa.TxScopedEntityManagerProxy;
@@ -50,6 +60,12 @@ import org.seasar.framework.jpa.TxScopedEntityManagerProxy;
 public class TigerAnnotationHandlerTest extends S2TestCase {
 
     private TigerAnnotationHandler handler = new TigerAnnotationHandler();
+
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        TigerAnnotationHandler.initialize();
+    }
 
     public void testCreateComponentDef() throws Exception {
         assertNotNull(handler.createComponentDef(Hoge.class, null));
@@ -249,6 +265,36 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
                 Hoge4.class.getMethod("getAaa", new Class[] { String.class })));
     }
 
+    public void testAppendInterceptorForClass() throws Exception {
+        S2Container container = new S2ContainerImpl();
+        S2ContainerFactory.include(container, "aop.dicon");
+        ComponentDef cd = handler.createComponentDef(Hoge20.class, null);
+        container.register(cd);
+
+        handler.appendAspect(cd);
+        assertEquals(1, cd.getAspectDefSize());
+        AspectDef aspectDef = cd.getAspectDef(0);
+        assertNotNull(aspectDef.getValue());
+        assertTrue(aspectDef.getValue() instanceof TraceInterceptor);
+        assertNull(aspectDef.getPointcut());
+    }
+
+    public void testAppendInterceptorForMethod() throws Exception {
+        S2Container container = new S2ContainerImpl();
+        S2ContainerFactory.include(container, "aop.dicon");
+        ComponentDef cd = handler.createComponentDef(Hoge21.class, null);
+        container.register(cd);
+
+        handler.appendAspect(cd);
+        assertEquals(1, cd.getAspectDefSize());
+        AspectDef aspectDef = cd.getAspectDef(0);
+        assertTrue(aspectDef.getValue() instanceof TraceInterceptor);
+        assertTrue(aspectDef.getPointcut().isApplied(
+                Hoge21.class.getMethod("foo", null)));
+        assertFalse(aspectDef.getPointcut().isApplied(
+                Hoge21.class.getMethod("bar", null)));
+    }
+
     public void testAppendAspectForConstantAnnotation() throws Exception {
         ComponentDef cd = handler.createComponentDef(Hoge3.class, null);
         handler.appendAspect(cd);
@@ -379,8 +425,8 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
                 .getField("childComponentDef").get(pd5);
         assertEquals(
                 "hibernate",
-                ((PersistenceUnitPropertyDefFactory.PersistenceUnitExpression) cd4
-                        .getExpression()).unitName);
+                ((PersistenceUnitPropertyDefBuilder.PersistenceUnitExpression) cd4
+                        .getExpression()).getUnitName());
     }
 
     public void testPersistenceContextForEJB3ByProperty() throws Exception {
@@ -413,8 +459,8 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
                 .getField("childComponentDef").get(pd5);
         assertEquals(
                 "hibernate",
-                ((PersistenceUnitPropertyDefFactory.PersistenceUnitExpression) cd4
-                        .getExpression()).unitName);
+                ((PersistenceUnitPropertyDefBuilder.PersistenceUnitExpression) cd4
+                        .getExpression()).getUnitName());
     }
 
     public void testPersistenceUnitForEJB3ByField() throws Exception {
@@ -438,8 +484,8 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
                 .getField("childComponentDef").get(pd3);
         assertEquals(
                 "hibernate",
-                ((PersistenceUnitPropertyDefFactory.PersistenceUnitExpression) cd3
-                        .getExpression()).unitName);
+                ((PersistenceUnitPropertyDefBuilder.PersistenceUnitExpression) cd3
+                        .getExpression()).getUnitName());
     }
 
     public void testPersistenceUnitForEJB3ByProperty() throws Exception {
@@ -463,8 +509,8 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
                 .getField("childComponentDef").get(pd3);
         assertEquals(
                 "hibernate",
-                ((PersistenceUnitPropertyDefFactory.PersistenceUnitExpression) cd3
-                        .getExpression()).unitName);
+                ((PersistenceUnitPropertyDefBuilder.PersistenceUnitExpression) cd3
+                        .getExpression()).getUnitName());
     }
 
     public void testResourceForEJB3ByField() throws Exception {
@@ -518,7 +564,7 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
         handler.appendInitMethod(cd);
         assertEquals("1", 1, cd.getInitMethodDefSize());
         InitMethodDef initMethodDef = cd.getInitMethodDef(0);
-        assertEquals("2", "init", initMethodDef.getMethodName());
+        assertEquals("2", "init", initMethodDef.getMethod().getName());
     }
 
     public void testAppendInitMethodForConstantAnnotation() throws Exception {
@@ -579,7 +625,7 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
         handler.appendDestroyMethod(cd);
         assertEquals("1", 1, cd.getDestroyMethodDefSize());
         DestroyMethodDef destroyMethodDef = cd.getDestroyMethodDef(0);
-        assertEquals("2", "destroy", destroyMethodDef.getMethodName());
+        assertEquals("2", "destroy", destroyMethodDef.getMethod().getName());
     }
 
     public void testAppendDestroyMethodForConstantAnnotation() throws Exception {
@@ -611,31 +657,31 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
 
     public void testAddComponentDefFactory() {
         TigerAnnotationHandler
-                .addComponentDefFactory(new TestComponentDefFactory());
+                .addComponentDefBuilder(new TestComponentDefFactory());
         ComponentDef componentDef = handler.createComponentDef(getClass(),
                 null, null);
         assertTrue("1", componentDef instanceof TestComponentDef);
     }
 
     public void tearDownAddComponentDefFactory() {
-        TigerAnnotationHandler.reloadComponentDefFactory();
+        TigerAnnotationHandler.loadDefaultComponentDefBuilder();
     }
 
     public void testClearAndReloadComponentDefFactory() {
-        assertEquals(2, TigerAnnotationHandler.componentDefFactories.size());
-        TigerAnnotationHandler.clearComponentDefFactory();
-        assertEquals(0, TigerAnnotationHandler.componentDefFactories.size());
+        assertEquals(2, TigerAnnotationHandler.componentDefBuilders.size());
+        TigerAnnotationHandler.clearComponentDefBuilder();
+        assertEquals(0, TigerAnnotationHandler.componentDefBuilders.size());
         TigerAnnotationHandler
-                .addComponentDefFactory(new TestComponentDefFactory());
-        TigerAnnotationHandler.reloadComponentDefFactory();
-        assertEquals(2, TigerAnnotationHandler.componentDefFactories.size());
-        assertTrue(TigerAnnotationHandler.componentDefFactories.get(0) instanceof EJB3ComponentDefFactory);
-        assertTrue(TigerAnnotationHandler.componentDefFactories.get(1) instanceof PojoComponentDefFactory);
+                .addComponentDefBuilder(new TestComponentDefFactory());
+        TigerAnnotationHandler.loadDefaultComponentDefBuilder();
+        assertEquals(2, TigerAnnotationHandler.componentDefBuilders.size());
+        assertTrue(TigerAnnotationHandler.componentDefBuilders.get(0) instanceof EJB3ComponentDefBuilder);
+        assertTrue(TigerAnnotationHandler.componentDefBuilders.get(1) instanceof PojoComponentDefBuilder);
     }
 
     public void testAddPropertyDefFactory() throws Exception {
         TigerAnnotationHandler
-                .addPropertyDefFactory(new TestPropertyDefFactory());
+                .addPropertyDefBuilder(new TestPropertyDefFactory());
         PropertyDef propertyDef = handler.createPropertyDef(BeanDescFactory
                 .getBeanDesc(getClass()), getClass()
                 .getDeclaredField("handler"));
@@ -643,22 +689,22 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
     }
 
     public void testClearAndReloadPropertyDefFactory() {
-        assertEquals(5, TigerAnnotationHandler.propertyDefFactories.size());
-        TigerAnnotationHandler.clearPropertyDefFactory();
-        assertEquals(0, TigerAnnotationHandler.propertyDefFactories.size());
+        assertEquals(5, TigerAnnotationHandler.propertyDefBuilders.size());
+        TigerAnnotationHandler.clearPropertyDefBuilder();
+        assertEquals(0, TigerAnnotationHandler.propertyDefBuilders.size());
         TigerAnnotationHandler
-                .addPropertyDefFactory(new TestPropertyDefFactory());
-        TigerAnnotationHandler.reloadPropertyDefFactory();
-        assertEquals(5, TigerAnnotationHandler.propertyDefFactories.size());
-        assertTrue(TigerAnnotationHandler.propertyDefFactories.get(0) instanceof BindingPropertyDefFactory);
-        assertTrue(TigerAnnotationHandler.propertyDefFactories.get(1) instanceof EJBPropertyDefFactory);
-        assertTrue(TigerAnnotationHandler.propertyDefFactories.get(2) instanceof PersistenceContextPropertyDefFactory);
-        assertTrue(TigerAnnotationHandler.propertyDefFactories.get(3) instanceof PersistenceUnitPropertyDefFactory);
-        assertTrue(TigerAnnotationHandler.propertyDefFactories.get(4) instanceof ResourcePropertyDefFactory);
+                .addPropertyDefBuilder(new TestPropertyDefFactory());
+        TigerAnnotationHandler.loadDefaultPropertyDefBuilder();
+        assertEquals(5, TigerAnnotationHandler.propertyDefBuilders.size());
+        assertTrue(TigerAnnotationHandler.propertyDefBuilders.get(0) instanceof BindingPropertyDefBuilder);
+        assertTrue(TigerAnnotationHandler.propertyDefBuilders.get(1) instanceof EJBPropertyDefBuilder);
+        assertTrue(TigerAnnotationHandler.propertyDefBuilders.get(2) instanceof PersistenceContextPropertyDefBuilder);
+        assertTrue(TigerAnnotationHandler.propertyDefBuilders.get(3) instanceof PersistenceUnitPropertyDefBuilder);
+        assertTrue(TigerAnnotationHandler.propertyDefBuilders.get(4) instanceof ResourcePropertyDefBuilder);
     }
 
     public void tearDownAddPropertyDefFactory() throws Exception {
-        TigerAnnotationHandler.reloadPropertyDefFactory();
+        TigerAnnotationHandler.loadDefaultPropertyDefBuilder();
     }
 
     private Map<String, String> gatherAspect(ComponentDef cd,
@@ -678,9 +724,9 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
         return map;
     }
 
-    public static class TestComponentDefFactory implements ComponentDefFactory {
-        public ComponentDef createComponentDef(Class<?> componentClass,
-                InstanceDef defaultInstanceDef,
+    public static class TestComponentDefFactory implements ComponentDefBuilder {
+        public ComponentDef createComponentDef(AnnotationHandler handler,
+                Class<?> componentClass, InstanceDef defaultInstanceDef,
                 AutoBindingDef defaultAutoBindingDef,
                 boolean defaultExternalBinding) {
             return new TestComponentDef();
@@ -691,13 +737,14 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
     public static class TestComponentDef extends ComponentDefImpl {
     }
 
-    public static class TestPropertyDefFactory implements PropertyDefFactory {
-        public PropertyDef createPropertyDef(BeanDesc beanDesc, Field field) {
+    public static class TestPropertyDefFactory implements PropertyDefBuilder {
+        public PropertyDef createPropertyDef(AnnotationHandler handler,
+                BeanDesc beanDesc, Field field) {
             return new TestPropertyDef("foo");
         }
 
-        public PropertyDef createPropertyDef(BeanDesc beanDesc,
-                PropertyDesc propertyDesc) {
+        public PropertyDef createPropertyDef(AnnotationHandler handler,
+                BeanDesc beanDesc, PropertyDesc propertyDesc) {
             return new TestPropertyDef("bar");
         }
     }
