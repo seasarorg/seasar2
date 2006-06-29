@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.seasar.framework.aop.annotation.Interceptor;
 import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.container.AutoBindingDef;
@@ -28,7 +29,7 @@ import org.seasar.framework.container.InstanceDef;
 import org.seasar.framework.container.PropertyDef;
 import org.seasar.framework.container.factory.aspect.AspectAnnotationAspectDefBuilder;
 import org.seasar.framework.container.factory.aspect.EJB3AnnotationAspectDefBuilder;
-import org.seasar.framework.container.factory.aspect.InterceptorAnnotationAspectDefBuilder;
+import org.seasar.framework.container.factory.aspect.MetaAnnotationAspectDefBuilder;
 import org.seasar.framework.container.factory.component.EJB3ComponentDefBuilder;
 import org.seasar.framework.container.factory.component.PojoComponentDefBuilder;
 import org.seasar.framework.container.factory.destroymethod.S2DestroyMethodDefBuilder;
@@ -139,7 +140,8 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
     public static synchronized void loadDefaultAspectDefBuilder() {
         aspectDefBuilders.add(new EJB3AnnotationAspectDefBuilder());
         aspectDefBuilders.add(new AspectAnnotationAspectDefBuilder());
-        aspectDefBuilders.add(new InterceptorAnnotationAspectDefBuilder());
+        aspectDefBuilders.add(new MetaAnnotationAspectDefBuilder(
+                Interceptor.class, "aop", "Interceptor"));
     }
 
     public static synchronized void addAspectDefBuilder(

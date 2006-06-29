@@ -39,14 +39,49 @@ import org.seasar.framework.util.StringUtil;
  * @author koichik
  * 
  */
-public abstract class AbstractMetaAnnotationAspectDefBuilder extends
-        AbstractAspectDefBuilder {
+public class MetaAnnotationAspectDefBuilder extends AbstractAspectDefBuilder {
 
-    protected abstract Class<? extends Annotation> getMetaAnnotationType();
+    protected Class<? extends Annotation> metaAnnotationType;
 
-    protected abstract String getInterceptorNamespace();
+    protected String interceptorNamespace;
 
-    protected abstract String getInterceptorSuffix();
+    protected String interceptorSuffix;
+
+    public MetaAnnotationAspectDefBuilder() {
+    }
+
+    public MetaAnnotationAspectDefBuilder(
+            final Class<? extends Annotation> metaAnnotationType,
+            final String interceptorNamespace, final String interceptorSuffix) {
+        this.metaAnnotationType = metaAnnotationType;
+        this.interceptorNamespace = interceptorNamespace;
+        this.interceptorSuffix = interceptorSuffix;
+    }
+
+    public Class<? extends Annotation> getMetaAnnotationType() {
+        return metaAnnotationType;
+    }
+
+    public void setMetaAnnotationType(
+            final Class<? extends Annotation> metaAnnotationType) {
+        this.metaAnnotationType = metaAnnotationType;
+    }
+
+    public String getInterceptorNamespace() {
+        return interceptorNamespace;
+    }
+
+    public void setInterceptorNamespace(final String interceptorNamespace) {
+        this.interceptorNamespace = interceptorNamespace;
+    }
+
+    public String getInterceptorSuffix() {
+        return interceptorSuffix;
+    }
+
+    public void setInterceptorSuffix(final String interceptorSuffix) {
+        this.interceptorSuffix = interceptorSuffix;
+    }
 
     public void appendAspectDef(final AnnotationHandler annotationHandler,
             final ComponentDef componentDef) {
