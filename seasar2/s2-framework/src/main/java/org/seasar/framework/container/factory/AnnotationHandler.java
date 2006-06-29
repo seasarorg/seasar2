@@ -52,9 +52,14 @@ public interface AnnotationHandler {
 
     void appendInitMethod(ComponentDef componentDef);
 
+    boolean isInitMethodRegisterable(ComponentDef cd, String methodName);
+
     void appendDestroyMethod(ComponentDef componentDef);
+
+    boolean isDestroyMethodRegisterable(ComponentDef cd, String methodName);
 
     PropertyDef createPropertyDef(BeanDesc beanDesc, PropertyDesc propertyDesc);
 
     PropertyDef createPropertyDef(BeanDesc beanDesc, Field field);
+
 }

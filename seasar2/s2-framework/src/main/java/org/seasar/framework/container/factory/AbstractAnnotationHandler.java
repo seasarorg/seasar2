@@ -187,8 +187,7 @@ public abstract class AbstractAnnotationHandler implements AnnotationHandler {
         return propertyDef;
     }
 
-    protected boolean isInitMethodRegisterable(ComponentDef cd,
-            String methodName) {
+    public boolean isInitMethodRegisterable(ComponentDef cd, String methodName) {
         if (StringUtil.isEmpty(methodName)) {
             return false;
         }
@@ -202,7 +201,7 @@ public abstract class AbstractAnnotationHandler implements AnnotationHandler {
         return true;
     }
 
-    protected boolean isDestroyMethodRegisterable(ComponentDef cd,
+    public boolean isDestroyMethodRegisterable(ComponentDef cd,
             String methodName) {
         if (StringUtil.isEmpty(methodName)) {
             return false;
