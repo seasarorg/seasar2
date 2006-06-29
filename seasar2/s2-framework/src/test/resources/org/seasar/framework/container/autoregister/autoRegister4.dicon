@@ -10,7 +10,7 @@
 		<initMethod name="addCustomizer">
 			<arg>
 				<component class="org.seasar.framework.container.autoregister.AspectCustomizer">
-					<property name="interceptor">greetingInterceptor</property>
+					<property name="interceptorName">"greetingInterceptor"</property>
 				</component>
 			</arg>
 		</initMethod>

@@ -15,7 +15,6 @@
  */
 package org.seasar.framework.container.hotdeploy.creator;
 
-import org.seasar.framework.aop.interceptors.TraceInterceptor;
 import org.seasar.framework.container.autoregister.AspectCustomizer;
 import org.seasar.framework.container.hotdeploy.OndemandBehavior;
 import org.seasar.framework.container.impl.S2ContainerBehavior;
@@ -34,6 +33,7 @@ public class InterfaceCentricMultiPackageCreatorTest extends
     private OndemandBehavior ondemand;
 
     protected void setUp() {
+        include("aop.dicon");
         originalLoader = Thread.currentThread().getContextClassLoader();
         ondemand = new OndemandBehavior();
         ondemand.setRootPackageName(ClassUtil.getPackageName(getClass()));
@@ -42,7 +42,7 @@ public class InterfaceCentricMultiPackageCreatorTest extends
         creator.addMiddlePackageName("dxo");
         creator.setNameSuffix("Dxo");
         AspectCustomizer aspectCustomizer = new AspectCustomizer();
-        aspectCustomizer.setInterceptor(new TraceInterceptor());
+        aspectCustomizer.setInterceptorName("aop.traceInterceptor");
         creator.addCustomizer(aspectCustomizer);
         ondemand.addCreator(creator);
         S2ContainerBehavior.setProvider(ondemand);

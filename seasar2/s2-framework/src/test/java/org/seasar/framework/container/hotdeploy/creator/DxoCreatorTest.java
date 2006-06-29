@@ -39,7 +39,8 @@ public class DxoCreatorTest extends S2FrameworkTestCase {
         ondemand.setRootPackageName(ClassUtil.getPackageName(getClass()));
         DxoCreator creator = new DxoCreator();
         AspectCustomizer aspectCustomizer = new AspectCustomizer();
-        aspectCustomizer.setInterceptor(new HelloInterceptor());
+        aspectCustomizer.setInterceptorName("helloInterceptor");
+        register(HelloInterceptor.class, "helloInterceptor");
         creator.addCustomizer(aspectCustomizer);
         ondemand.addCreator(creator);
         S2ContainerBehavior.setProvider(ondemand);

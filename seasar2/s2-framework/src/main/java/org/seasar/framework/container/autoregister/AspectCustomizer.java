@@ -15,7 +15,6 @@
  */
 package org.seasar.framework.container.autoregister;
 
-import org.aopalliance.intercept.MethodInterceptor;
 import org.seasar.framework.container.AspectDef;
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.factory.AspectDefFactory;
@@ -26,20 +25,20 @@ import org.seasar.framework.container.factory.AspectDefFactory;
  */
 public class AspectCustomizer implements ComponentCustomizer {
 
-    private MethodInterceptor interceptor;
+    private String interceptorName;
 
     private String pointcut;
 
-    public void setInterceptor(MethodInterceptor interceptor) {
-        this.interceptor = interceptor;
+    public void setInterceptorName(final String interceptorName) {
+        this.interceptorName = interceptorName;
     }
 
-    public void setPointcut(String pointcut) {
+    public void setPointcut(final String pointcut) {
         this.pointcut = pointcut;
     }
 
-    public void customize(ComponentDef componentDef) {
-        AspectDef aspectDef = AspectDefFactory.createAspectDef(interceptor,
+    public void customize(final ComponentDef componentDef) {
+        AspectDef aspectDef = AspectDefFactory.createAspectDef(interceptorName,
                 pointcut);
         componentDef.addAspectDef(aspectDef);
     }

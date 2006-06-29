@@ -41,7 +41,8 @@ public class InterfaceCentricSinglePackageCreatorTest extends
         creator.setMiddlePackageName("dao");
         creator.setNameSuffix("Dao");
         AspectCustomizer aspectCustomizer = new AspectCustomizer();
-        aspectCustomizer.setInterceptor(new NullInterceptor());
+        aspectCustomizer.setInterceptorName("nullInterceptor");
+        register(NullInterceptor.class, "nullInterceptor");
         creator.addCustomizer(aspectCustomizer);
         ondemand.addCreator(creator);
         S2ContainerBehavior.setProvider(ondemand);
