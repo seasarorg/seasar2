@@ -19,6 +19,7 @@ import junit.framework.TestCase;
 
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 import org.seasar.framework.unit.UnitClassLoader;
+import org.seasar.framework.util.ClassUtil;
 
 /**
  * @author koichik
@@ -34,8 +35,8 @@ public class MemoryLeakTest extends TestCase {
             UnitClassLoader loader = new TestClassLoader(origin);
             Thread.currentThread().setContextClassLoader(loader);
 
-            SingletonS2ContainerFactory.setConfigPath(getClass().getPackage()
-                    .getName().replace('.', '/')
+            SingletonS2ContainerFactory.setConfigPath(ClassUtil.getPackageName(
+                    getClass()).replace('.', '/')
                     + "/MemoryLeakTest.dicon");
             SingletonS2ContainerFactory.init();
             SingletonS2ContainerFactory.destroy();
@@ -44,11 +45,13 @@ public class MemoryLeakTest extends TestCase {
             loader = null;
             for (int j = 0; j < 5; ++j) {
                 System.gc();
+                Thread.sleep(10);
             }
             System.out.println();
         }
         for (int j = 0; j < 5; ++j) {
             System.gc();
+            Thread.sleep(10);
         }
         assertEquals(0, counter);
     }
