@@ -22,69 +22,49 @@ import java.util.Map;
 
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.S2Container;
-import org.seasar.framework.container.cooldeploy.ConventionNaming;
-import org.seasar.framework.container.cooldeploy.DefaultConventionNaming;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 import org.seasar.framework.container.impl.S2ContainerImpl;
 import org.seasar.framework.container.impl.S2ContainerBehavior.DefaultProvider;
 import org.seasar.framework.container.util.S2ContainerUtil;
+import org.seasar.framework.convention.NamingConvention;
 import org.seasar.framework.exception.ClassNotFoundRuntimeException;
-import org.seasar.framework.exception.EmptyRuntimeException;
 import org.seasar.framework.util.DisposableUtil;
 
 public class OndemandBehavior extends DefaultProvider implements
-        HotdeployListener, OndemandCreatorContainer {
+        HotdeployListener, OndemandS2Container {
 
     private ClassLoader originalClassLoader;
 
     private HotdeployClassLoader hotdeployClassLoader;
 
-    private List creators = new ArrayList();
+    public static final String namingConvention_BINDING = "bindingType=must";
+    
+    private NamingConvention namingConvention;
 
-    private String rootPackageName;
+    private List subsystems = new ArrayList();
 
     private Map componentDefCache = new HashMap();
-
-    public static final String conventionNaming_BINDING = "bindingType=may";
-
-    private ConventionNaming conventionNaming = new DefaultConventionNaming();
-
-    public OndemandCreator getCreator(int index) {
-        return (OndemandCreator) creators.get(index);
+    
+    public void setNamingConvention(NamingConvention namingConvention) {
+        this.namingConvention = namingConvention;
     }
 
-    public int getCreatorSize() {
-        return creators.size();
+    public OndemandSubsystem getSubsystem(int index) {
+        return (OndemandSubsystem) subsystems.get(index);
     }
 
-    public void addCreator(OndemandCreator creator) {
-        creators.add(creator);
-        creator.setOndemandCreatorContainer(this);
+    public int getSubsystemSize() {
+        return subsystems.size();
     }
 
-    public String getRootPackageName() {
-        return rootPackageName;
-    }
-
-    public void setRootPackageName(String rootPackageName) {
-        this.rootPackageName = rootPackageName;
-    }
-
-    public ConventionNaming getConventionNaming() {
-        return conventionNaming;
-    }
-
-    public void setConventionNaming(ConventionNaming conventionNaming) {
-        this.conventionNaming = conventionNaming;
+    public void addSubsystem(OndemandSubsystem subsystem) {
+        subsystems.add(subsystem);
     }
 
     public void start() {
-        if (rootPackageName == null) {
-            throw new EmptyRuntimeException("rootPackageName");
-        }
         originalClassLoader = Thread.currentThread().getContextClassLoader();
         hotdeployClassLoader = new HotdeployClassLoader(originalClassLoader);
-        hotdeployClassLoader.setPackageName(rootPackageName);
+        hotdeployClassLoader.setPackageName(namingConvention.getRootPackageName());
         hotdeployClassLoader.addHotdeployListener(this);
         Thread.currentThread().setContextClassLoader(hotdeployClassLoader);
         S2ContainerImpl container = (S2ContainerImpl) SingletonS2ContainerFactory
@@ -131,18 +111,18 @@ public class OndemandBehavior extends DefaultProvider implements
     }
 
     protected void loadComponentDef(S2Container container, Class clazz) {
-        for (int i = 0; i < getCreatorSize(); ++i) {
-            OndemandCreator creator = getCreator(i);
-            if (creator.loadComponentDef(container, clazz)) {
+        for (int i = 0; i < getSubsystemSize(); ++i) {
+            OndemandSubsystem subsystem = getSubsystem(i);
+            if (subsystem.loadComponentDef(this, clazz)) {
                 break;
             }
         }
     }
 
     protected ComponentDef getComponentDef(S2Container container, Class clazz) {
-        for (int i = 0; i < getCreatorSize(); ++i) {
-            OndemandCreator creator = getCreator(i);
-            ComponentDef cd = creator.getComponentDef(container, clazz);
+        for (int i = 0; i < getSubsystemSize(); ++i) {
+            OndemandSubsystem subsystem = getSubsystem(i);
+            ComponentDef cd = subsystem.getComponentDef(this, clazz);
             if (cd != null) {
                 return cd;
             }
@@ -152,10 +132,10 @@ public class OndemandBehavior extends DefaultProvider implements
 
     protected ComponentDef getComponentDef(S2Container container,
             String componentName) {
-        for (int i = 0; i < getCreatorSize(); ++i) {
-            OndemandCreator creator = getCreator(i);
+        for (int i = 0; i < getSubsystemSize(); ++i) {
+            OndemandSubsystem subsystem = getSubsystem(i);
             try {
-                ComponentDef cd = creator.getComponentDef(container,
+                ComponentDef cd = subsystem.getComponentDef(this,
                         componentName);
                 if (cd != null) {
                     return cd;

@@ -105,8 +105,10 @@ public class ClassUtilTest extends TestCase {
     }
 
     public void testConcatName() {
-        assertEquals("1", "aaa.bbb", ClassUtil.concatName("aaa", "bbb"));
-        assertEquals("2", "bbb", ClassUtil.concatName(null, "bbb"));
+        assertEquals("aaa.bbb", ClassUtil.concatName("aaa", "bbb"));
+        assertEquals("aaa", ClassUtil.concatName("aaa", null));
+        assertEquals("bbb", ClassUtil.concatName(null, "bbb"));
+        assertNull(ClassUtil.concatName(null, null));
     }
 
     public void testGetResourcePath() {

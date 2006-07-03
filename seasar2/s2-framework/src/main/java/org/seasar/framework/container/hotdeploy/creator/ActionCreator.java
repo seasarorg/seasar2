@@ -16,12 +16,14 @@
 package org.seasar.framework.container.hotdeploy.creator;
 
 import org.seasar.framework.container.deployer.InstanceDefFactory;
+import org.seasar.framework.convention.NamingConvention;
 
-public class ActionCreator extends SimpleSinglePackageCreator {
+public class ActionCreator extends SinglePackageCreator {
 
-    public ActionCreator() {
-        setMiddlePackageName("web");
-        setNameSuffix("Action");
+    public ActionCreator(NamingConvention namingConvention) {
+        super(namingConvention);
+        setMiddlePackageName(namingConvention.getWebPackageName());
+        setNameSuffix(namingConvention.getActionSuffix());
         setInstanceDef(InstanceDefFactory.REQUEST);
     }
 }

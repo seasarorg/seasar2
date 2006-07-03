@@ -13,9 +13,17 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.framework.container.autoregister;
+package org.seasar.framework.container.hotdeploy.creator;
 
-public interface AutoNaming {
+import org.seasar.framework.container.deployer.InstanceDefFactory;
+import org.seasar.framework.convention.NamingConvention;
 
-    String defineName(String packageName, String shortClassName);
+public class InterceptorCreator extends SinglePackageCreator {
+
+    public InterceptorCreator(NamingConvention namingConvention) {
+        super(namingConvention);
+        setMiddlePackageName(namingConvention.getInterceptorPackageName());
+        setNameSuffix(namingConvention.getInterceptorSuffix());
+        setInstanceDef(InstanceDefFactory.PROTOTYPE);
+    }
 }

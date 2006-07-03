@@ -13,18 +13,15 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.framework.container.hotdeploy.creator;
+package org.seasar.framework.container.hotdeploy;
 
-import org.seasar.framework.util.ClassUtil;
+import org.seasar.framework.container.ComponentDef;
 
-public class SimpleSinglePackageCreator extends AbstractSinglePackageCreator {
+public interface OndemandSubsystem {
+    
+    boolean loadComponentDef(OndemandS2Container container, Class clazz);
 
-    protected Class getTargetClass(Class clazz) {
-        return clazz;
-    }
+    ComponentDef getComponentDef(OndemandS2Container container, Class clazz);
 
-    protected Class getTargetClass(String componentName) {
-        String className = composeClassName(componentName);
-        return ClassUtil.forName(className);
-    }
+    ComponentDef getComponentDef(OndemandS2Container container, String componentName);
 }

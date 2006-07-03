@@ -16,16 +16,15 @@
 package org.seasar.framework.container.hotdeploy;
 
 import org.seasar.framework.container.ComponentDef;
-import org.seasar.framework.container.S2Container;
 
 public interface OndemandCreator {
 
-    void setOndemandCreatorContainer(
-            OndemandCreatorContainer ondemandCreatorContainer);
+    boolean loadComponentDef(OndemandS2Container container,
+            String subsystemPackageName, Class clazz);
 
-    boolean loadComponentDef(S2Container container, Class clazz);
+    ComponentDef getComponentDef(OndemandS2Container container,
+            String subsystemPackageName, Class clazz);
 
-    ComponentDef getComponentDef(S2Container container, Class clazz);
-
-    ComponentDef getComponentDef(S2Container container, String componentName);
+    ComponentDef getComponentDef(OndemandS2Container container,
+            String subsystemPackageName, String componentName);
 }

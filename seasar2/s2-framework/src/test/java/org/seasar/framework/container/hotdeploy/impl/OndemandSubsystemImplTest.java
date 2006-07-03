@@ -13,12 +13,16 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.framework.container.hotdeploy.creator;
+package org.seasar.framework.container.hotdeploy.impl;
 
-import org.seasar.framework.container.autoregister.AspectCustomizer;
+import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.hotdeploy.OndemandBehavior;
-import org.seasar.framework.container.hotdeploy.creator.interceptor.NullInterceptor;
+import org.seasar.framework.container.hotdeploy.OndemandCreator;
+import org.seasar.framework.container.hotdeploy.creator.DtoCreator;
+import org.seasar.framework.container.hotdeploy.impl.OndemandSubsystemImpl;
+import org.seasar.framework.container.hotdeploy.impl.aaa.dto.FooDto;
 import org.seasar.framework.container.impl.S2ContainerBehavior;
+import org.seasar.framework.convention.impl.NamingConventionImpl;
 import org.seasar.framework.unit.S2FrameworkTestCase;
 import org.seasar.framework.util.ClassUtil;
 
@@ -26,8 +30,7 @@ import org.seasar.framework.util.ClassUtil;
  * @author higa
  * 
  */
-public class InterfaceCentricSinglePackageCreatorTest extends
-        S2FrameworkTestCase {
+public class OndemandSubsystemImplTest extends S2FrameworkTestCase {
 
     private ClassLoader originalLoader;
 
@@ -35,16 +38,14 @@ public class InterfaceCentricSinglePackageCreatorTest extends
 
     protected void setUp() {
         originalLoader = Thread.currentThread().getContextClassLoader();
+        NamingConventionImpl convention = new NamingConventionImpl();
+        convention.setRootPackageName(ClassUtil.getPackageName(getClass()));
         ondemand = new OndemandBehavior();
-        ondemand.setRootPackageName(ClassUtil.getPackageName(getClass()));
-        InterfaceCentricSinglePackageCreator creator = new InterfaceCentricSinglePackageCreator();
-        creator.setMiddlePackageName("dao");
-        creator.setNameSuffix("Dao");
-        AspectCustomizer aspectCustomizer = new AspectCustomizer();
-        aspectCustomizer.setInterceptorName("nullInterceptor");
-        register(NullInterceptor.class, "nullInterceptor");
-        creator.addCustomizer(aspectCustomizer);
-        ondemand.addCreator(creator);
+        ondemand.setNamingConvention(convention);
+        OndemandSubsystemImpl subsystem = new OndemandSubsystemImpl();
+        subsystem.setPackageName("aaa");
+        subsystem.setCreators(new OndemandCreator[]{new DtoCreator(convention)});
+        ondemand.addSubsystem(subsystem);
         S2ContainerBehavior.setProvider(ondemand);
         ondemand.start();
     }
@@ -56,16 +57,12 @@ public class InterfaceCentricSinglePackageCreatorTest extends
         Thread.currentThread().setContextClassLoader(originalLoader);
     }
 
-    public void testIsTargetByComponentName() throws Exception {
-        assertTrue("1", getContainer().hasComponentDef("fooDao"));
-        assertTrue("1", getContainer().hasComponentDef("barDao"));
-    }
-
-    public void testIsTargetByClass() throws Exception {
-        String basePackage = ClassUtil.getPackageName(getClass()) + ".dao";
-        Class clazz = ClassUtil.forName(basePackage + ".FooDao");
-        Class clazz2 = ClassUtil.forName(basePackage + ".BarDao");
-        assertTrue("1", getContainer().hasComponentDef(clazz));
-        assertTrue("2", getContainer().hasComponentDef(clazz2));
+    public void testAll() throws Exception {
+        String name = "fooDto";
+        ComponentDef cd = getComponentDef(name);
+        assertNotNull(cd);
+        assertEquals(name, cd.getComponentName());
+        assertEquals(FooDto.class.getName(), cd.getComponentClass().getName());
+        
     }
 }

@@ -15,15 +15,19 @@
  */
 package org.seasar.framework.container.hotdeploy.creator;
 
-import org.seasar.framework.container.cooldeploy.ConventionNaming;
 import org.seasar.framework.container.hotdeploy.OndemandCreator;
-import org.seasar.framework.container.hotdeploy.OndemandCreatorContainer;
+import org.seasar.framework.convention.NamingConvention;
+import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.StringUtil;
 
-public abstract class AbstractSinglePackageCreator extends
+public class SinglePackageCreator extends
         AbstractOndemandCreator implements OndemandCreator {
 
     private String middlePackageName;
+
+    public SinglePackageCreator(NamingConvention namingConvention) {
+        super(namingConvention);
+    }
 
     public String getMiddlePackageName() {
         return middlePackageName;
@@ -33,7 +37,7 @@ public abstract class AbstractSinglePackageCreator extends
         this.middlePackageName = middlePackageName;
     }
 
-    protected String composeClassName(String componentName) {
+    protected String composeClassName(String subsystemPackageName, String componentName) {
         String prePackageName = null;
         String shortClassName = componentName;
         int pos = componentName.indexOf('_');
@@ -42,38 +46,28 @@ public abstract class AbstractSinglePackageCreator extends
             shortClassName = componentName.substring(pos + 1);
         }
         shortClassName = StringUtil.capitalize(shortClassName);
-        String rootPackageName = getRootPackageName();
+        String rootPackageName = getNamingConvention().getRootPackageName();
         StringBuffer sb = new StringBuffer(100);
         concatName(sb, rootPackageName);
+        concatName(sb, subsystemPackageName);
         concatName(sb, middlePackageName);
         concatName(sb, prePackageName);
         concatName(sb, shortClassName);
         return sb.toString();
     }
 
-    protected boolean isTargetMiddlePackage(String className) {
-        if (middlePackageName != null
-                && className.indexOf(middlePackageName) < 0) {
+    protected boolean isTargetMiddlePackage(String subsystemPackageName,
+            String className) {
+        String s = ClassUtil
+                .concatName(subsystemPackageName, middlePackageName);
+        if (s != null && className.indexOf(s) < 0) {
             return false;
         }
         return true;
     }
-
-    protected String composeComponentName(String className) {
-        OndemandCreatorContainer con = getOndemandCreatorContainer();
-        ConventionNaming naming = con.getConventionNaming();
-        return naming.defineName(getRootPackageName(), middlePackageName,
-                getNameSuffix(), className);
+    
+    protected Class getTargetClass(String subsystemPackageName, String componentName) {
+        String className = composeClassName(subsystemPackageName, componentName);
+        return ClassUtil.forName(className);
     }
-
-    protected Class getTargetClass(Class clazz) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    protected Class getTargetClass(String componentName) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
 }

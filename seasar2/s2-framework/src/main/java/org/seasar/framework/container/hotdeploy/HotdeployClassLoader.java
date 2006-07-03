@@ -84,6 +84,9 @@ public class HotdeployClassLoader extends ClassLoader {
     }
 
     protected boolean isTargetClass(String className) {
+        if (packageName == null) {
+            return true;
+        }
         return className.startsWith(packageName);
     }
 

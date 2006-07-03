@@ -195,12 +195,15 @@ public final class ClassUtil {
     }
 
     public static String getShortClassName(Class clazz) {
-        String s = clazz.getName();
-        int i = s.lastIndexOf('.');
+        return getShortClassName(clazz.getName());
+    }
+    
+    public static String getShortClassName(String className) {
+        int i = className.lastIndexOf('.');
         if (i > 0) {
-            return s.substring(i + 1);
+            return className.substring(i + 1);
         }
-        return s;
+        return className;
     }
 
     public static String getSimpleClassName(final Class clazz) {
@@ -211,7 +214,16 @@ public final class ClassUtil {
     }
 
     public static String concatName(String s1, String s2) {
-        return s1 != null ? s1 + '.' + s2 : s2;
+        if (s1 == null && s2 == null) {
+            return null;
+        }
+        if (s1 != null && s2 == null) {
+            return s1;
+        }
+        if (s1 == null && s2 != null) {
+            return s2;
+        }
+        return s1 + '.' + s2;
     }
 
     public static String getResourcePath(String className) {

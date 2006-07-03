@@ -21,14 +21,19 @@ import java.util.List;
 import org.seasar.framework.container.AutoBindingDef;
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.InstanceDef;
-import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.autoregister.ComponentCustomizer;
 import org.seasar.framework.container.factory.AnnotationHandler;
 import org.seasar.framework.container.factory.AnnotationHandlerFactory;
 import org.seasar.framework.container.hotdeploy.OndemandCreator;
-import org.seasar.framework.container.hotdeploy.OndemandCreatorContainer;
+import org.seasar.framework.container.hotdeploy.OndemandS2Container;
+import org.seasar.framework.convention.NamingConvention;
+import org.seasar.framework.exception.EmptyRuntimeException;
+import org.seasar.framework.util.ClassUtil;
+import org.seasar.framework.util.ResourceUtil;
 
 public abstract class AbstractOndemandCreator implements OndemandCreator {
+
+    private NamingConvention namingConvention;
 
     public static final String instanceDef_BINDING = "bindingType=may";
 
@@ -37,14 +42,23 @@ public abstract class AbstractOndemandCreator implements OndemandCreator {
     public static final String autoBindingDef_BINDING = "bindingType=may";
 
     private AutoBindingDef autoBindingDef;
-    
-    private boolean externalBinding = false;
 
-    private OndemandCreatorContainer ondemandCreatorContainer;
+    private boolean externalBinding = false;
 
     private String nameSuffix;
 
     private List customizers = new ArrayList();
+
+    public AbstractOndemandCreator(NamingConvention namingConvention) {
+        if (namingConvention == null) {
+            throw new EmptyRuntimeException("namingConvetion");
+        }
+        this.namingConvention = namingConvention;
+    }
+
+    public NamingConvention getNamingConvention() {
+        return namingConvention;
+    }
 
     public InstanceDef getInstanceDef() {
         return instanceDef;
@@ -70,19 +84,6 @@ public abstract class AbstractOndemandCreator implements OndemandCreator {
         this.externalBinding = externalBinding;
     }
 
-    public OndemandCreatorContainer getOndemandCreatorContainer() {
-        return ondemandCreatorContainer;
-    }
-
-    public void setOndemandCreatorContainer(
-            OndemandCreatorContainer ondemandCreatorContainer) {
-        this.ondemandCreatorContainer = ondemandCreatorContainer;
-    }
-
-    public String getRootPackageName() {
-        return ondemandCreatorContainer.getRootPackageName();
-    }
-
     public String getNameSuffix() {
         return nameSuffix;
     }
@@ -103,12 +104,13 @@ public abstract class AbstractOndemandCreator implements OndemandCreator {
         customizers.add(customizer);
     }
 
-    public boolean loadComponentDef(S2Container container, Class clazz) {
-        if (!isTarget(clazz)) {
+    public boolean loadComponentDef(OndemandS2Container container,
+            String subsystemPackageName, Class clazz) {
+        if (!isTarget(subsystemPackageName, clazz)) {
             return false;
         }
         Class targetClass = getTargetClass(clazz);
-        ComponentDef cd = ondemandCreatorContainer.getComponentDef(targetClass);
+        ComponentDef cd = container.getComponentDef(targetClass);
         if (cd != null) {
             return true;
         }
@@ -120,41 +122,42 @@ public abstract class AbstractOndemandCreator implements OndemandCreator {
         if (cd.getComponentName() == null) {
             cd.setComponentName(composeComponentName(clazz.getName()));
         }
-        ondemandCreatorContainer.register(cd);
+        container.register(cd);
         cd.init();
         return true;
     }
 
-    protected boolean isTarget(Class clazz) {
+    protected boolean isTarget(String subsystemPackageName, Class clazz) {
         String className = clazz.getName();
-        if (!isTargetMiddlePackage(className)) {
+        if (!isTargetMiddlePackage(subsystemPackageName, className)) {
             return false;
         }
-        if (nameSuffix != null) {
-            return className.endsWith(nameSuffix);
-        }
-        return true;
+        return isTarget(className);
     }
 
-    protected abstract boolean isTargetMiddlePackage(String className);
+    protected abstract boolean isTargetMiddlePackage(
+            String subsystemPackageName, String className);
 
-    protected abstract String composeComponentName(String className);
+    protected String composeComponentName(String className) {
+        return getNamingConvention().fromClassNameToComponentName(className);
+    }
 
-    public ComponentDef getComponentDef(S2Container container, Class clazz) {
-        if (!isTarget(clazz)) {
+    public ComponentDef getComponentDef(OndemandS2Container container,
+            String subsystemPackageName, Class clazz) {
+        if (!isTarget(subsystemPackageName, clazz)) {
             return null;
         }
         Class targetClass = getTargetClass(clazz);
-        return ondemandCreatorContainer.getComponentDef(targetClass);
+        return container.getComponentDef(targetClass);
     }
 
-    public ComponentDef getComponentDef(S2Container container,
-            String componentName) {
+    public ComponentDef getComponentDef(OndemandS2Container container,
+            String subsystemPackageName, String componentName) {
         if (!isTarget(componentName)) {
             return null;
         }
-        Class targetClass = getTargetClass(componentName);
-        return ondemandCreatorContainer.getComponentDef(targetClass);
+        Class targetClass = getTargetClass(subsystemPackageName, componentName);
+        return container.getComponentDef(targetClass);
     }
 
     protected boolean isTarget(String componentName) {
@@ -164,9 +167,23 @@ public abstract class AbstractOndemandCreator implements OndemandCreator {
         return true;
     }
 
-    protected abstract Class getTargetClass(Class clazz);
+    protected Class getTargetClass(Class clazz) {
+        if (!clazz.isInterface()) {
+            return clazz;
+        }
+        String packageName = ClassUtil.getPackageName(clazz);
+        String targetClassName = packageName + "." + getNamingConvention().getImplementationPackageName()
+                + "." + ClassUtil.getShortClassName(clazz)
+                + getNamingConvention().getImplementationSuffix();
+        if (ResourceUtil.getResourceAsFileNoException(ClassUtil
+                .getResourcePath(targetClassName)) != null) {
+            return ClassUtil.forName(targetClassName);
+        }
+        return clazz;
+    }
 
-    protected abstract Class getTargetClass(String componentName);
+    protected abstract Class getTargetClass(String subsystemPackageName,
+            String componentName);
 
     protected void customize(ComponentDef componentDef) {
         for (int i = 0; i < getCustomizerSize(); ++i) {

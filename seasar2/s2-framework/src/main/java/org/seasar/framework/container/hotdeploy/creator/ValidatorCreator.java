@@ -13,8 +13,17 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.framework.container.cooldeploy;
+package org.seasar.framework.container.hotdeploy.creator;
 
-public class CoolCreator {
+import org.seasar.framework.container.deployer.InstanceDefFactory;
+import org.seasar.framework.convention.NamingConvention;
 
+public class ValidatorCreator extends SinglePackageCreator {
+
+    public ValidatorCreator(NamingConvention namingConvention) {
+        super(namingConvention);
+        setMiddlePackageName(namingConvention.getValidatorPackageName());
+        setNameSuffix(namingConvention.getValidatorSuffix());
+        setInstanceDef(InstanceDefFactory.PROTOTYPE);
+    }
 }

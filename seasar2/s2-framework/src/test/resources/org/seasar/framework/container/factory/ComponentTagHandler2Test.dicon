@@ -2,6 +2,7 @@
 <!DOCTYPE components PUBLIC "-//SEASAR2.1//DTD S2Container//EN"
 	"http://www.seasar.org/dtd/components21.dtd">
 <components namespace="child" >
+	<include path="convention.dicon"/>
 	<component name="greetingInterceptor" class="org.seasar.framework.container.factory.GreetingInterceptor"/>
 	<component class="org.seasar.framework.container.autoregister.FileSystemComponentAutoRegister">
 		<initMethod name="addClassPattern">

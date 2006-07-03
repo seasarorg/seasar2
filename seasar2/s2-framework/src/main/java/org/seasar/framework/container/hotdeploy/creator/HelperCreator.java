@@ -16,12 +16,14 @@
 package org.seasar.framework.container.hotdeploy.creator;
 
 import org.seasar.framework.container.deployer.InstanceDefFactory;
+import org.seasar.framework.convention.NamingConvention;
 
-public class HelperCreator extends InterfaceCentricSinglePackageCreator {
+public class HelperCreator extends SinglePackageCreator {
 
-    public HelperCreator() {
-        setMiddlePackageName("helper");
-        setNameSuffix("Helper");
+    public HelperCreator(NamingConvention namingConvention) {
+        super(namingConvention);
+        setMiddlePackageName(namingConvention.getHelperPackageName());
+        setNameSuffix(namingConvention.getHelperSuffix());
         setInstanceDef(InstanceDefFactory.PROTOTYPE);
     }
 }

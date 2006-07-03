@@ -34,6 +34,8 @@ import org.seasar.framework.container.factory.S2ContainerFactory;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 import org.seasar.framework.container.impl.S2ContainerImpl;
 import org.seasar.framework.container.servlet.S2ContainerServlet;
+import org.seasar.framework.convention.NamingConvention;
+import org.seasar.framework.convention.impl.NamingConventionImpl;
 import org.seasar.framework.exception.NoSuchMethodRuntimeException;
 import org.seasar.framework.mock.servlet.MockHttpServletRequest;
 import org.seasar.framework.mock.servlet.MockHttpServletResponse;
@@ -69,6 +71,8 @@ public abstract class S2FrameworkTestCase extends TestCase {
     private ClassLoader originalClassLoader;
 
     private UnitClassLoader unitClassLoader;
+    
+    private NamingConvention namingConvention;
 
     public S2FrameworkTestCase() {
     }
@@ -98,7 +102,7 @@ public abstract class S2FrameworkTestCase extends TestCase {
     }
 
     public void register(Class componentClass) {
-        container.register(componentClass);
+        container.register(componentClass, namingConvention.fromClassNameToComponentName(componentClass.getName()));
     }
 
     public void register(Class componentClass, String componentName) {
@@ -191,6 +195,8 @@ public abstract class S2FrameworkTestCase extends TestCase {
                 .setExternalContextComponentDefRegister(new HttpServletExternalContextComponentDefRegister());
         ComponentDeployerFactory
                 .setProvider(new ExternalComponentDeployerProvider());
+        namingConvention = new NamingConventionImpl();
+        container.register(namingConvention);
     }
 
     protected void tearDownContainer() throws Throwable {
@@ -208,6 +214,7 @@ public abstract class S2FrameworkTestCase extends TestCase {
         response = null;
         servletConfig = null;
         servlet = null;
+        namingConvention = null;
     }
 
     protected void setUpAfterContainerInit() throws Throwable {

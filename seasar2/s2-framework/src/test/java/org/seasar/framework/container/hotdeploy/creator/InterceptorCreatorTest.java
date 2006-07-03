@@ -28,7 +28,7 @@ import org.seasar.framework.util.ClassUtil;
  * @author higa
  * 
  */
-public class ServiceCreatorTest extends S2FrameworkTestCase {
+public class InterceptorCreatorTest extends S2FrameworkTestCase {
 
     private ClassLoader originalLoader;
 
@@ -41,7 +41,7 @@ public class ServiceCreatorTest extends S2FrameworkTestCase {
         ondemand = new OndemandBehavior();
         ondemand.setNamingConvention(convention);
         OndemandSubsystemImpl subsystem = new OndemandSubsystemImpl();
-        subsystem.setCreators(new OndemandCreator[]{new ServiceCreator(convention)});
+        subsystem.setCreators(new OndemandCreator[]{new InterceptorCreator(convention)});
         ondemand.addSubsystem(subsystem);
         S2ContainerBehavior.setProvider(ondemand);
         ondemand.start();
@@ -54,16 +54,10 @@ public class ServiceCreatorTest extends S2FrameworkTestCase {
         Thread.currentThread().setContextClassLoader(originalLoader);
     }
 
-    public void testIsTargetByName() throws Exception {
-        String name = "aaa_hogeService";
+    public void testAll() throws Exception {
+        String name = "helloInterceptor";
         ComponentDef cd = getComponentDef(name);
-        assertNotNull("1", cd);
-        assertEquals("2", name, cd.getComponentName());
-    }
-
-    public void testIsTargetByClass() throws Exception {
-        Class clazz = ClassUtil.forName(ClassUtil.getPackageName(getClass())
-                + ".web.aaa.HogeService");
-        assertNotNull("1", getComponent(clazz));
+        assertNotNull(cd);
+        assertEquals(name, cd.getComponentName());
     }
 }

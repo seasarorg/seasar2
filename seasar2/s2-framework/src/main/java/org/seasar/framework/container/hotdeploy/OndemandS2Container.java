@@ -16,13 +16,12 @@
 package org.seasar.framework.container.hotdeploy;
 
 import org.seasar.framework.container.ComponentDef;
-import org.seasar.framework.container.cooldeploy.ConventionNaming;
 
-public interface OndemandCreatorContainer {
-
-    String getRootPackageName();
-
-    ConventionNaming getConventionNaming();
+/**
+ * @author higa
+ *
+ */
+public interface OndemandS2Container {
 
     ComponentDef getComponentDef(Class targetClass);
 

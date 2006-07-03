@@ -2,10 +2,8 @@
 <!DOCTYPE components PUBLIC "-//SEASAR2.1//DTD S2Container//EN" 
 	"http://www.seasar.org/dtd/components21.dtd">
 <components namespace="child" >
+	<component class="org.seasar.framework.convention.impl.NamingConventionImpl"/>
 	<component class="org.seasar.framework.container.autoregister.JarComponentAutoRegister">
-		<property name="autoNaming">
-			<component class="org.seasar.framework.container.autoregister.DefaultAutoNaming"/>
-		</property>
 		<property name="referenceClass">
 			@junit.framework.TestSuite@class
 		</property>

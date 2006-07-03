@@ -17,7 +17,10 @@ package org.seasar.framework.container.hotdeploy.creator;
 
 import org.seasar.framework.container.autoregister.AspectCustomizer;
 import org.seasar.framework.container.hotdeploy.OndemandBehavior;
+import org.seasar.framework.container.hotdeploy.OndemandCreator;
+import org.seasar.framework.container.hotdeploy.impl.OndemandSubsystemImpl;
 import org.seasar.framework.container.impl.S2ContainerBehavior;
+import org.seasar.framework.convention.impl.NamingConventionImpl;
 import org.seasar.framework.unit.S2FrameworkTestCase;
 import org.seasar.framework.util.ClassUtil;
 
@@ -25,7 +28,7 @@ import org.seasar.framework.util.ClassUtil;
  * @author higa
  * 
  */
-public class InterfaceCentricMultiPackageCreatorTest extends
+public class MultiPackageCreatorTest extends
         S2FrameworkTestCase {
 
     private ClassLoader originalLoader;
@@ -35,16 +38,20 @@ public class InterfaceCentricMultiPackageCreatorTest extends
     protected void setUp() {
         include("aop.dicon");
         originalLoader = Thread.currentThread().getContextClassLoader();
+        NamingConventionImpl convention = new NamingConventionImpl();
+        convention.setRootPackageName(ClassUtil.getPackageName(getClass()));
         ondemand = new OndemandBehavior();
-        ondemand.setRootPackageName(ClassUtil.getPackageName(getClass()));
-        InterfaceCentricMultiPackageCreator creator = new InterfaceCentricMultiPackageCreator();
+        ondemand.setNamingConvention(convention);
+        MultiPackageCreator creator = new MultiPackageCreator(convention);
         creator.addMiddlePackageName("web");
         creator.addMiddlePackageName("dxo");
         creator.setNameSuffix("Dxo");
         AspectCustomizer aspectCustomizer = new AspectCustomizer();
         aspectCustomizer.setInterceptorName("aop.traceInterceptor");
         creator.addCustomizer(aspectCustomizer);
-        ondemand.addCreator(creator);
+        OndemandSubsystemImpl subsystem = new OndemandSubsystemImpl();
+        subsystem.setCreators(new OndemandCreator[]{creator});
+        ondemand.addSubsystem(subsystem);
         S2ContainerBehavior.setProvider(ondemand);
         ondemand.start();
     }

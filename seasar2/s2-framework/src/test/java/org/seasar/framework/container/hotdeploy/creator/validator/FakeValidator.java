@@ -13,8 +13,11 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.framework.container.cooldeploy;
+package org.seasar.framework.container.hotdeploy.creator.validator;
 
-public interface CoolRegister {
-
+/**
+ * @author higa
+ *
+ */
+public class FakeValidator {
 }

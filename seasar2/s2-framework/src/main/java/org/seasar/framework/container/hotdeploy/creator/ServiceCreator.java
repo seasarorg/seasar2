@@ -16,12 +16,14 @@
 package org.seasar.framework.container.hotdeploy.creator;
 
 import org.seasar.framework.container.deployer.InstanceDefFactory;
+import org.seasar.framework.convention.NamingConvention;
 
-public class ServiceCreator extends InterfaceCentricSinglePackageCreator {
+public class ServiceCreator extends SinglePackageCreator {
 
-    public ServiceCreator() {
-        setMiddlePackageName("web");
-        setNameSuffix("Service");
+    public ServiceCreator(NamingConvention namingConvention) {
+        super(namingConvention);
+        setMiddlePackageName(namingConvention.getWebPackageName());
+        setNameSuffix(namingConvention.getServiceSuffix());
         setInstanceDef(InstanceDefFactory.PROTOTYPE);
     }
 }

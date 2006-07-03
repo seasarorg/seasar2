@@ -16,12 +16,14 @@
 package org.seasar.framework.container.hotdeploy.creator;
 
 import org.seasar.framework.container.deployer.InstanceDefFactory;
+import org.seasar.framework.convention.NamingConvention;
 
-public class DaoCreator extends InterfaceCentricSinglePackageCreator {
+public class DaoCreator extends SinglePackageCreator {
 
-    public DaoCreator() {
-        setMiddlePackageName("dao");
-        setNameSuffix("Dao");
+    public DaoCreator(NamingConvention namingConvention) {
+        super(namingConvention);
+        setMiddlePackageName(namingConvention.getDaoPackageName());
+        setNameSuffix(namingConvention.getDaoSuffix());
         setInstanceDef(InstanceDefFactory.PROTOTYPE);
     }
 }

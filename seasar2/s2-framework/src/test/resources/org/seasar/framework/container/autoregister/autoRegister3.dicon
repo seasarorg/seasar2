@@ -2,6 +2,7 @@
 <!DOCTYPE components PUBLIC "-//SEASAR2.1//DTD S2Container//EN"
 	"http://www.seasar.org/dtd/components21.dtd">
 <components namespace="child" >
+	<component class="org.seasar.framework.convention.impl.NamingConventionImpl"/>
 	<component class="org.seasar.framework.container.autoregister.FileSystemComponentAutoRegister">
 		<property name="instanceDef">
 			@org.seasar.framework.container.deployer.InstanceDefFactory@REQUEST

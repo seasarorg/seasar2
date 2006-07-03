@@ -15,11 +15,14 @@
  */
 package org.seasar.framework.container.hotdeploy.creator;
 
-public class DxoCreator extends InterfaceCentricMultiPackageCreator {
+import org.seasar.framework.convention.NamingConvention;
 
-    public DxoCreator() {
-        addMiddlePackageName("web");
-        addMiddlePackageName("dxo");
-        setNameSuffix("Dxo");
+public class DxoCreator extends MultiPackageCreator {
+
+    public DxoCreator(NamingConvention namingConvention) {
+        super(namingConvention);
+        addMiddlePackageName(namingConvention.getWebPackageName());
+        addMiddlePackageName(namingConvention.getDxoPackageName());
+        setNameSuffix(namingConvention.getDxoSuffix());
     }
 }

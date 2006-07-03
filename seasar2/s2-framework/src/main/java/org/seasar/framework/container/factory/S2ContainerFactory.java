@@ -42,6 +42,8 @@ public final class S2ContainerFactory {
     public static final String DEFAULT_BUILDER_NAME = "defaultBuilder";
 
     protected static boolean initialized;
+    
+    protected static boolean configuring = false;
 
     protected static S2Container configurationContainer;
 
@@ -89,6 +91,10 @@ public final class S2ContainerFactory {
     }
 
     public static synchronized void configure(final String configFile) {
+        if (configuring) {
+            return;
+        }
+        configuring = true;
         if (provider == null) {
             provider = new DefaultProvider();
         }
@@ -112,6 +118,7 @@ public final class S2ContainerFactory {
                 S2ContainerFactory.dispose();
             }
         });
+        configuring = false;
         initialized = true;
     }
 

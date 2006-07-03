@@ -23,6 +23,7 @@ import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.InstanceDef;
 import org.seasar.framework.container.factory.AnnotationHandler;
 import org.seasar.framework.container.factory.AnnotationHandlerFactory;
+import org.seasar.framework.convention.NamingConvention;
 import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.ClassTraversal.ClassHandler;
 
@@ -35,7 +36,7 @@ public abstract class AbstractComponentAutoRegister extends
 
     protected static final String CLASS_SUFFIX = ".class";
 
-    private AutoNaming autoNaming = new DefaultAutoNaming();
+    private NamingConvention namingConvention;
 
     private InstanceDef instanceDef;
 
@@ -44,15 +45,15 @@ public abstract class AbstractComponentAutoRegister extends
     private boolean externalBinding = false;
 
     private List customizers = new ArrayList();
-
-    public AutoNaming getAutoNaming() {
-        return autoNaming;
+    
+    public NamingConvention getNamingConvention() {
+        return namingConvention;
     }
+    
+    public static final String namingConvention_BINDING = "bindingType=must";
 
-    public static final String autoNaming_BINDING = "bindingType=may";
-
-    public void setAutoNaming(AutoNaming autoNaming) {
-        this.autoNaming = autoNaming;
+    public void setNamingConvention(NamingConvention namingConvention) {
+        this.namingConvention = namingConvention;
     }
 
     public InstanceDef getInstanceDef() {
@@ -105,22 +106,18 @@ public abstract class AbstractComponentAutoRegister extends
             final ClassPattern cp = getClassPattern(i);
             if (cp.isAppliedPackageName(packageName)
                     && cp.isAppliedShortClassName(shortClassName)) {
-                register(packageName, shortClassName);
+                register(ClassUtil.concatName(packageName, shortClassName));
             }
         }
     }
 
-    protected void register(final String packageName,
-            final String shortClassName) {
+    protected void register(final String className) {
         final AnnotationHandler annoHandler = AnnotationHandlerFactory
                 .getAnnotationHandler();
-        final String className = ClassUtil.concatName(packageName,
-                shortClassName);
         final ComponentDef cd = annoHandler.createComponentDef(className,
                 instanceDef, autoBindingDef, externalBinding);
-        if (cd.getComponentName() == null && autoNaming != null) {
-            cd.setComponentName(autoNaming.defineName(packageName,
-                    shortClassName));
+        if (cd.getComponentName() == null) {
+            cd.setComponentName(namingConvention.fromClassNameToComponentName(className));
         }
         annoHandler.appendDI(cd);
         annoHandler.appendAspect(cd);

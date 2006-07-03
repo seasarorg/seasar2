@@ -15,8 +15,12 @@
  */
 package org.seasar.framework.container.hotdeploy.creator;
 
+import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.hotdeploy.OndemandBehavior;
+import org.seasar.framework.container.hotdeploy.OndemandCreator;
+import org.seasar.framework.container.hotdeploy.impl.OndemandSubsystemImpl;
 import org.seasar.framework.container.impl.S2ContainerBehavior;
+import org.seasar.framework.convention.impl.NamingConventionImpl;
 import org.seasar.framework.unit.S2FrameworkTestCase;
 import org.seasar.framework.util.ClassUtil;
 
@@ -24,7 +28,7 @@ import org.seasar.framework.util.ClassUtil;
  * @author higa
  * 
  */
-public class SimpleSinglePackageCreatorTest extends S2FrameworkTestCase {
+public class ValidatorCreatorTest extends S2FrameworkTestCase {
 
     private ClassLoader originalLoader;
 
@@ -32,12 +36,13 @@ public class SimpleSinglePackageCreatorTest extends S2FrameworkTestCase {
 
     protected void setUp() {
         originalLoader = Thread.currentThread().getContextClassLoader();
+        NamingConventionImpl convention = new NamingConventionImpl();
+        convention.setRootPackageName(ClassUtil.getPackageName(getClass()));
         ondemand = new OndemandBehavior();
-        ondemand.setRootPackageName(ClassUtil.getPackageName(getClass()));
-        SimpleSinglePackageCreator creator = new SimpleSinglePackageCreator();
-        creator.setMiddlePackageName("web");
-        creator.setNameSuffix("Page");
-        ondemand.addCreator(creator);
+        ondemand.setNamingConvention(convention);
+        OndemandSubsystemImpl subsystem = new OndemandSubsystemImpl();
+        subsystem.setCreators(new OndemandCreator[]{new ValidatorCreator(convention)});
+        ondemand.addSubsystem(subsystem);
         S2ContainerBehavior.setProvider(ondemand);
         ondemand.start();
     }
@@ -49,19 +54,10 @@ public class SimpleSinglePackageCreatorTest extends S2FrameworkTestCase {
         Thread.currentThread().setContextClassLoader(originalLoader);
     }
 
-    public void testComposeComponentName() throws Exception {
-        assertNotNull("1", getComponent("aaa_hogePage"));
-    }
-
-    public void testIsTargetByComponentName() throws Exception {
-        assertTrue("1", getContainer().hasComponentDef("aaa_hogePage"));
-        assertFalse("2", getContainer().hasComponentDef("aaa_xxx"));
-    }
-
-    public void testIsTargetByClass() throws Exception {
-        Class clazz = ClassUtil.forName(ClassUtil.getPackageName(getClass())
-                + ".web.aaa.HogePage");
-        assertTrue("1", getContainer().hasComponentDef(clazz));
-        assertFalse("2", getContainer().hasComponentDef(getClass()));
+    public void testAll() throws Exception {
+        String name = "fakeValidator";
+        ComponentDef cd = getComponentDef(name);
+        assertNotNull(cd);
+        assertEquals(name, cd.getComponentName());
     }
 }

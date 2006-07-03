@@ -18,8 +18,11 @@ package org.seasar.framework.container.hotdeploy.creator;
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.autoregister.AspectCustomizer;
 import org.seasar.framework.container.hotdeploy.OndemandBehavior;
+import org.seasar.framework.container.hotdeploy.OndemandCreator;
 import org.seasar.framework.container.hotdeploy.creator.interceptor.HelloInterceptor;
+import org.seasar.framework.container.hotdeploy.impl.OndemandSubsystemImpl;
 import org.seasar.framework.container.impl.S2ContainerBehavior;
+import org.seasar.framework.convention.impl.NamingConventionImpl;
 import org.seasar.framework.unit.S2FrameworkTestCase;
 import org.seasar.framework.util.ClassUtil;
 
@@ -35,14 +38,18 @@ public class DxoCreatorTest extends S2FrameworkTestCase {
 
     protected void setUp() {
         originalLoader = Thread.currentThread().getContextClassLoader();
+        NamingConventionImpl convention = new NamingConventionImpl();
+        convention.setRootPackageName(ClassUtil.getPackageName(getClass()));
         ondemand = new OndemandBehavior();
-        ondemand.setRootPackageName(ClassUtil.getPackageName(getClass()));
-        DxoCreator creator = new DxoCreator();
+        ondemand.setNamingConvention(convention);
+        DxoCreator creator = new DxoCreator(convention);
         AspectCustomizer aspectCustomizer = new AspectCustomizer();
         aspectCustomizer.setInterceptorName("helloInterceptor");
         register(HelloInterceptor.class, "helloInterceptor");
         creator.addCustomizer(aspectCustomizer);
-        ondemand.addCreator(creator);
+        OndemandSubsystemImpl subsystem = new OndemandSubsystemImpl();
+        subsystem.setCreators(new OndemandCreator[]{creator});
+        ondemand.addSubsystem(subsystem);
         S2ContainerBehavior.setProvider(ondemand);
         ondemand.start();
     }

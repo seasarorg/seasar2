@@ -16,12 +16,14 @@
 package org.seasar.framework.container.hotdeploy.creator;
 
 import org.seasar.framework.container.deployer.InstanceDefFactory;
+import org.seasar.framework.convention.NamingConvention;
 
-public class PageCreator extends SimpleSinglePackageCreator {
+public class PageCreator extends SinglePackageCreator {
 
-    public PageCreator() {
-        setMiddlePackageName("web");
-        setNameSuffix("Page");
+    public PageCreator(NamingConvention namingConvention) {
+        super(namingConvention);
+        setMiddlePackageName(namingConvention.getWebPackageName());
+        setNameSuffix(namingConvention.getPageSuffix());
         setInstanceDef(InstanceDefFactory.REQUEST);
         setExternalBinding(true);
     }

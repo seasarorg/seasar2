@@ -16,12 +16,14 @@
 package org.seasar.framework.container.hotdeploy.creator;
 
 import org.seasar.framework.container.deployer.InstanceDefFactory;
+import org.seasar.framework.convention.NamingConvention;
 
-public class LogicCreator extends InterfaceCentricSinglePackageCreator {
+public class LogicCreator extends SinglePackageCreator {
 
-    public LogicCreator() {
-        setMiddlePackageName("logic");
-        setNameSuffix("Logic");
+    public LogicCreator(NamingConvention namingConvention) {
+        super(namingConvention);
+        setMiddlePackageName(namingConvention.getLogicPackageName());
+        setNameSuffix(namingConvention.getLogicSuffix());
         setInstanceDef(InstanceDefFactory.PROTOTYPE);
     }
 }

@@ -15,9 +15,10 @@
  */
 package org.seasar.framework.container.hotdeploy.creator;
 
-import org.seasar.framework.container.ComponentDef;
+import org.seasar.framework.container.autoregister.AspectCustomizer;
 import org.seasar.framework.container.hotdeploy.OndemandBehavior;
 import org.seasar.framework.container.hotdeploy.OndemandCreator;
+import org.seasar.framework.container.hotdeploy.creator.interceptor.NullInterceptor;
 import org.seasar.framework.container.hotdeploy.impl.OndemandSubsystemImpl;
 import org.seasar.framework.container.impl.S2ContainerBehavior;
 import org.seasar.framework.convention.impl.NamingConventionImpl;
@@ -28,7 +29,8 @@ import org.seasar.framework.util.ClassUtil;
  * @author higa
  * 
  */
-public class ServiceCreatorTest extends S2FrameworkTestCase {
+public class SinglePackageCreatorTest extends
+        S2FrameworkTestCase {
 
     private ClassLoader originalLoader;
 
@@ -40,8 +42,15 @@ public class ServiceCreatorTest extends S2FrameworkTestCase {
         convention.setRootPackageName(ClassUtil.getPackageName(getClass()));
         ondemand = new OndemandBehavior();
         ondemand.setNamingConvention(convention);
+        SinglePackageCreator creator = new SinglePackageCreator(convention);
+        creator.setMiddlePackageName("dao");
+        creator.setNameSuffix("Dao");
+        AspectCustomizer aspectCustomizer = new AspectCustomizer();
+        aspectCustomizer.setInterceptorName("nullInterceptor");
+        register(NullInterceptor.class, "nullInterceptor");
+        creator.addCustomizer(aspectCustomizer);
         OndemandSubsystemImpl subsystem = new OndemandSubsystemImpl();
-        subsystem.setCreators(new OndemandCreator[]{new ServiceCreator(convention)});
+        subsystem.setCreators(new OndemandCreator[]{creator});
         ondemand.addSubsystem(subsystem);
         S2ContainerBehavior.setProvider(ondemand);
         ondemand.start();
@@ -54,16 +63,16 @@ public class ServiceCreatorTest extends S2FrameworkTestCase {
         Thread.currentThread().setContextClassLoader(originalLoader);
     }
 
-    public void testIsTargetByName() throws Exception {
-        String name = "aaa_hogeService";
-        ComponentDef cd = getComponentDef(name);
-        assertNotNull("1", cd);
-        assertEquals("2", name, cd.getComponentName());
+    public void testIsTargetByComponentName() throws Exception {
+        assertTrue("1", getContainer().hasComponentDef("fooDao"));
+        assertTrue("1", getContainer().hasComponentDef("barDao"));
     }
 
     public void testIsTargetByClass() throws Exception {
-        Class clazz = ClassUtil.forName(ClassUtil.getPackageName(getClass())
-                + ".web.aaa.HogeService");
-        assertNotNull("1", getComponent(clazz));
+        String basePackage = ClassUtil.getPackageName(getClass()) + ".dao";
+        Class clazz = ClassUtil.forName(basePackage + ".FooDao");
+        Class clazz2 = ClassUtil.forName(basePackage + ".BarDao");
+        assertTrue("1", getContainer().hasComponentDef(clazz));
+        assertTrue("2", getContainer().hasComponentDef(clazz2));
     }
 }

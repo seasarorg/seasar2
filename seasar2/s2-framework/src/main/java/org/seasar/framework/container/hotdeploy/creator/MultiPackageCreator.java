@@ -18,25 +18,34 @@ package org.seasar.framework.container.hotdeploy.creator;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.seasar.framework.container.cooldeploy.ConventionNaming;
-import org.seasar.framework.container.hotdeploy.OndemandCreatorContainer;
+import org.seasar.framework.container.ComponentNotFoundRuntimeException;
+import org.seasar.framework.convention.NamingConvention;
+import org.seasar.framework.util.ClassUtil;
+import org.seasar.framework.util.ResourceUtil;
 import org.seasar.framework.util.StringUtil;
 
-public abstract class AbstractMultiPackageCreator extends
+public class MultiPackageCreator extends
         AbstractOndemandCreator {
 
     private List middlePackageNames = new ArrayList();
 
-    public String[] getMiddlePackageNames() {
-        return (String[]) middlePackageNames
-                .toArray(new String[middlePackageNames.size()]);
+    public MultiPackageCreator(NamingConvention namingConvention) {
+        super(namingConvention);
+    }
+
+    public String[] getMiddlePackageNames(String subsystemPackageName) {
+        String[] names = new String[middlePackageNames.size()];
+        for (int i = 0; i < middlePackageNames.size(); ++i) {
+            names[i] = ClassUtil.concatName(subsystemPackageName, (String) middlePackageNames.get(i));
+        }
+        return names;
     }
 
     public void addMiddlePackageName(String middlePackageName) {
         middlePackageNames.add(middlePackageName);
     }
 
-    protected String[] composeClassNames(String componentName) {
+    protected String[] composeClassNames(String subsystemPackageName, String componentName) {
         String prePackageName = null;
         String shortClassName = componentName;
         int pos = componentName.indexOf('_');
@@ -45,8 +54,8 @@ public abstract class AbstractMultiPackageCreator extends
             shortClassName = componentName.substring(pos + 1);
         }
         shortClassName = StringUtil.capitalize(shortClassName);
-        String rootPackageName = getRootPackageName();
-        String[] mpNames = getMiddlePackageNames();
+        String rootPackageName = getNamingConvention().getRootPackageName();
+        String[] mpNames = getMiddlePackageNames(subsystemPackageName);
         String[] classNames = new String[mpNames.length];
         for (int i = 0; i < mpNames.length; ++i) {
             StringBuffer sb = new StringBuffer(100);
@@ -59,8 +68,8 @@ public abstract class AbstractMultiPackageCreator extends
         return classNames;
     }
 
-    protected boolean isTargetMiddlePackage(String className) {
-        String[] mpNames = getMiddlePackageNames();
+    protected boolean isTargetMiddlePackage(String subsystemPackageName, String className) {
+        String[] mpNames = getMiddlePackageNames(subsystemPackageName);
         if (mpNames.length == 0) {
             return true;
         }
@@ -71,11 +80,18 @@ public abstract class AbstractMultiPackageCreator extends
         }
         return false;
     }
-
-    protected String composeComponentName(String className) {
-        OndemandCreatorContainer con = getOndemandCreatorContainer();
-        ConventionNaming naming = con.getConventionNaming();
-        return naming.defineName(getRootPackageName(), getMiddlePackageNames(),
-                getNameSuffix(), className);
+    
+    protected Class getTargetClass(String subsystemPackageName,
+            String componentName) {
+        String[] classNames = composeClassNames(subsystemPackageName,
+                componentName);
+        for (int i = 0; i < classNames.length; ++i) {
+            String className = classNames[i];
+            String path = ClassUtil.getResourcePath(className);
+            if (ResourceUtil.getResourceAsFileNoException(path) != null) {
+                return ClassUtil.forName(className);
+            }
+        }
+        throw new ComponentNotFoundRuntimeException(componentName);
     }
 }
