@@ -32,8 +32,6 @@ import org.seasar.extension.j2ee.JndiResourceLocator;
 import org.seasar.extension.unit.S2TestCase;
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.S2Container;
-import org.seasar.framework.container.autoregister.AutoNaming;
-import org.seasar.framework.container.autoregister.DefaultAutoNaming;
 import org.seasar.framework.container.factory.TigerAnnotationHandler;
 import org.seasar.framework.exception.EmptyRuntimeException;
 import org.seasar.framework.unit.annotation.Rollback;
@@ -54,8 +52,6 @@ public abstract class S2EJB3TestCase extends S2TestCase {
     private static final String S2HIBERNATE_JPA_DICON = "s2hibernate-jpa.dicon";
 
     private TigerAnnotationHandler handler = new TigerAnnotationHandler();
-
-    private AutoNaming autoNaming = new DefaultAutoNaming();
 
     private ProxiedObjectResolver resolver;
 
@@ -87,10 +83,8 @@ public abstract class S2EJB3TestCase extends S2TestCase {
     public void register(Class componentClass) {
         ComponentDef cd = handler.createComponentDef(componentClass, null);
         if (cd.getComponentName() == null) {
-            String packageName = ClassUtil.getPackageName(componentClass);
-            String shortClassName = ClassUtil.getShortClassName(componentClass);
-            cd.setComponentName(autoNaming.defineName(packageName,
-                    shortClassName));
+            cd.setComponentName(getNamingConvention()
+                    .fromClassNameToComponentName(componentClass.getName()));
         }
         handler.appendDI(cd);
         handler.appendAspect(cd);
@@ -250,14 +244,6 @@ public abstract class S2EJB3TestCase extends S2TestCase {
             throw new EmptyRuntimeException("entityManager");
         }
         return entityManager;
-    }
-
-    protected AutoNaming getAutoNaming() {
-        return autoNaming;
-    }
-
-    protected void setAutoNaming(AutoNaming autoNaming) {
-        this.autoNaming = autoNaming;
     }
 
     protected void assertEntityEquals(String message, DataSet expected,
