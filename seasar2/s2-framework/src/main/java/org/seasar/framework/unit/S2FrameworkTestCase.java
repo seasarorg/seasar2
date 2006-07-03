@@ -71,7 +71,7 @@ public abstract class S2FrameworkTestCase extends TestCase {
     private ClassLoader originalClassLoader;
 
     private UnitClassLoader unitClassLoader;
-    
+
     private NamingConvention namingConvention;
 
     public S2FrameworkTestCase() {
@@ -102,7 +102,8 @@ public abstract class S2FrameworkTestCase extends TestCase {
     }
 
     public void register(Class componentClass) {
-        container.register(componentClass, namingConvention.fromClassNameToComponentName(componentClass.getName()));
+        container.register(componentClass, namingConvention
+                .fromClassNameToComponentName(componentClass.getName()));
     }
 
     public void register(Class componentClass, String componentName) {
@@ -285,6 +286,10 @@ public abstract class S2FrameworkTestCase extends TestCase {
 
     protected void setResponse(MockHttpServletResponse response) {
         this.response = response;
+    }
+
+    protected NamingConvention getNamingConvention() {
+        return namingConvention;
     }
 
     protected String getTargetName() {
