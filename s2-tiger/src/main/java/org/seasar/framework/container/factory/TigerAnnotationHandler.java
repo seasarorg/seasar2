@@ -141,7 +141,7 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
         aspectDefBuilders.add(new EJB3AnnotationAspectDefBuilder());
         aspectDefBuilders.add(new AspectAnnotationAspectDefBuilder());
         aspectDefBuilders.add(new MetaAnnotationAspectDefBuilder(
-                Interceptor.class, "aop", "Interceptor"));
+                Interceptor.class, "Interceptor"));
     }
 
     public static synchronized void addAspectDefBuilder(

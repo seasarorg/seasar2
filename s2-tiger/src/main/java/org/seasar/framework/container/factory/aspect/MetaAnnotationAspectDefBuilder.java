@@ -52,6 +52,14 @@ public class MetaAnnotationAspectDefBuilder extends AbstractAspectDefBuilder {
 
     public MetaAnnotationAspectDefBuilder(
             final Class<? extends Annotation> metaAnnotationType,
+            final String interceptorSuffix) {
+        this.metaAnnotationType = metaAnnotationType;
+        this.interceptorNamespace = null;
+        this.interceptorSuffix = interceptorSuffix;
+    }
+
+    public MetaAnnotationAspectDefBuilder(
+            final Class<? extends Annotation> metaAnnotationType,
             final String interceptorNamespace, final String interceptorSuffix) {
         this.metaAnnotationType = metaAnnotationType;
         this.interceptorNamespace = interceptorNamespace;
