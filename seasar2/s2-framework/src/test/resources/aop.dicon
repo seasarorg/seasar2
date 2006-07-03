@@ -12,6 +12,8 @@
 		class="org.seasar.framework.aop.interceptors.InterceptorLifecycleAdapter"/>
 	<component name="toStringInterceptor"
 		class="org.seasar.framework.aop.interceptors.ToStringInterceptor"/>
+	<component name="removeSessionInterceptor" instance="prototype"
+		class="org.seasar.framework.aop.interceptors.RemoveSessionInterceptor"/>
 
 	<component name="propertyInterType"
 		class="org.seasar.framework.aop.intertype.PropertyInterType">
