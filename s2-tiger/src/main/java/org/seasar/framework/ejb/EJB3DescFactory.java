@@ -30,7 +30,7 @@ public class EJB3DescFactory {
 
     private static volatile boolean initialized;
 
-    protected static final ConcurrentMap<Class<?>, EJB3Desc> ejb3Descs = CollectionsUtil
+    protected static final ConcurrentMap<Class<?>, EJB3DescImpl> ejb3Descs = CollectionsUtil
             .newConcurrentHashMap();
 
     public static void initialize() {
@@ -51,12 +51,12 @@ public class EJB3DescFactory {
         if (!initialized) {
             initialize();
         }
-        EJB3Desc ejb3Desc = ejb3Descs.get(beanClass);
+        EJB3DescImpl ejb3Desc = ejb3Descs.get(beanClass);
         if (ejb3Desc == null) {
             ejb3Desc = CollectionsUtil.putIfAbsent(ejb3Descs, beanClass,
                     new EJB3DescImpl(beanClass));
         }
-        return ejb3Desc;
+        return ejb3Desc.isEJB3() ? ejb3Desc : null;
     }
 
 }

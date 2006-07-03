@@ -62,7 +62,7 @@ public class EJB3AnnotationAspectDefBuilder extends AbstractAspectDefBuilder {
         }
 
         final EJB3Desc ejb3desc = EJB3DescFactory.getEJB3Desc(componentClass);
-        if (!ejb3desc.isEJB3()) {
+        if (ejb3desc == null) {
             return;
         }
 

@@ -22,7 +22,7 @@ public class EJB3ComponentDefBuilder implements ComponentDefBuilder {
             InstanceDef defaultInstanceDef,
             AutoBindingDef defaultAutoBindingDef, boolean defaultExternalBinding) {
         final EJB3Desc ejb3Desc = EJB3DescFactory.getEJB3Desc(componentClass);
-        if (!ejb3Desc.isEJB3()) {
+        if (ejb3Desc == null) {
             return null;
         }
 

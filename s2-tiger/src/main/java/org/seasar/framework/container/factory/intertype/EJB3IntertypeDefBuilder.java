@@ -43,13 +43,13 @@ public class EJB3IntertypeDefBuilder implements IntertypeDefBuilder {
             return;
         }
 
-        final EJB3Desc ejb3desc = EJB3DescFactory.getEJB3Desc(componentClass);
-        if (!ejb3desc.isEJB3()) {
+        final EJB3Desc ejb3Desc = EJB3DescFactory.getEJB3Desc(componentClass);
+        if (ejb3Desc == null) {
             return;
         }
 
         final EJB3InterceptorSupportInterType interType = new EJB3InterceptorSupportInterType();
-        for (final Class<?> interceptorClass : getInterceptorClasses(ejb3desc)) {
+        for (final Class<?> interceptorClass : getInterceptorClasses(ejb3Desc)) {
             interType.addInterceptor(interceptorClass);
             componentDef.addPropertyDef(createPropertyDef(annotationHandler,
                     interceptorClass));

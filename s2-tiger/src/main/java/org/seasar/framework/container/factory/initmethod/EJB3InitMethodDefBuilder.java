@@ -37,12 +37,12 @@ public class EJB3InitMethodDefBuilder implements InitMethodDefBuilder {
             return;
         }
 
-        final EJB3Desc ejb3desc = EJB3DescFactory.getEJB3Desc(componentClass);
-        if (!ejb3desc.isEJB3()) {
+        final EJB3Desc ejb3Desc = EJB3DescFactory.getEJB3Desc(componentClass);
+        if (ejb3Desc == null) {
             return;
         }
 
-        for (final Method method : ejb3desc.getPostConstructMethods()) {
+        for (final Method method : ejb3Desc.getPostConstructMethods()) {
             if (!annotationHandler.isInitMethodRegisterable(componentDef,
                     method.getName())) {
                 continue;

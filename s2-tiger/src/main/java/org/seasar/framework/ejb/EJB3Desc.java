@@ -24,8 +24,6 @@ import java.util.List;
  */
 public interface EJB3Desc {
 
-    boolean isEJB3();
-
     boolean isStateless();
 
     boolean isStateful();
