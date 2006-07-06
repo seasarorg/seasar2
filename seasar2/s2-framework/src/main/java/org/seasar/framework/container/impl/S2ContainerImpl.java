@@ -15,6 +15,7 @@
  */
 package org.seasar.framework.container.impl;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -115,8 +116,11 @@ public class S2ContainerImpl implements S2Container, ContainerConstants {
     public Object[] findComponents(Object componentKey) {
         assertParameterIsNotNull(componentKey, "componentKey");
         ComponentDef[] componentDefs = findComponentDefs(componentKey);
-        Object[] components = new Object[componentDefs.length];
-        for (int i = 0; i < componentDefs.length; ++i) {
+        int length = componentDefs.length;
+        Object[] components = (componentKey instanceof Class) ? (Object[]) Array
+                .newInstance((Class) componentKey, length)
+                : new Object[length];
+        for (int i = 0; i < length; ++i) {
             components[i] = componentDefs[i].getComponent();
         }
         return components;
