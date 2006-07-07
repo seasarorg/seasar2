@@ -412,7 +412,8 @@ public class S2ContainerImplTest extends TestCase {
         final Object[] found = container.findComponents(Hoge.class);
 
         // ## Assert ##
-        assertEquals(found.getClass().toString(), true, found instanceof Hoge[]);
+        assertSame(found.getClass().toString(), Hoge.class, found.getClass()
+                .getComponentType());
     }
 
     public void testRequest() throws Exception {
