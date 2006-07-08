@@ -18,8 +18,24 @@ package org.seasar.framework.container;
 import org.seasar.framework.exception.SRuntimeException;
 
 /**
- * @author higa
+ * コンポーネントのインスタンスを、 {@link ComponentDef コンポーネント定義}に指定されたクラスにキャスト出来ない場合にスローされます。
+ * <p>
+ * {@link  ComponentDef#setExpression(Expression)}でインスタンスの生成を定義している場合は、
+ * そのインスタンスをコンポーネント定義に指定されたクラスにキャスト出来ないことを表します。
+ * </p>
+ * <p>
+ * 外部コンポーネントを{@link S2Container#injectDependency(Object)}などでインジェクションする場合は、
+ * そのコンポーネントを、 コンポーネント定義に指定されたクラスにキャストできないことを表します。
+ * </p>
  * 
+ * @author higa
+ * @author belltree (Javadoc)
+ * 
+ * @see org.seasar.framework.container.ConstructorAssembler#assemble()
+ * @see org.seasar.framework.container.S2Container#injectDependency(Object,
+ *      Class)
+ * @see org.seasar.framework.container.S2Container#injectDependency(Object,
+ *      String)
  */
 public class ClassUnmatchRuntimeException extends SRuntimeException {
 
@@ -30,7 +46,12 @@ public class ClassUnmatchRuntimeException extends SRuntimeException {
     private Class realComponentClass_;
 
     /**
-     * @param componentKey
+     * <code>ClassUnmatchRuntimeException</code>を構築します。
+     * 
+     * @param componentClass
+     *            コンポーネント定義に指定されたクラス
+     * @param realComponentClass
+     *            コンポーネントの実際の型
      */
     public ClassUnmatchRuntimeException(Class componentClass,
             Class realComponentClass) {
@@ -42,10 +63,20 @@ public class ClassUnmatchRuntimeException extends SRuntimeException {
         realComponentClass_ = realComponentClass;
     }
 
+    /**
+     * コンポーネント定義に指定されたクラスを返します。
+     * 
+     * @return コンポーネント定義に指定されたクラス
+     */
     public Class getComponentClass() {
         return componentClass_;
     }
 
+    /**
+     * コンポーネントの実際の型を返します。
+     * 
+     * @return コンポーネントの実際の型
+     */
     public Class getRealComponentClass() {
         return realComponentClass_;
     }
