@@ -674,9 +674,10 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
         TigerAnnotationHandler
                 .addComponentDefBuilder(new TestComponentDefFactory());
         TigerAnnotationHandler.loadDefaultComponentDefBuilder();
-        assertEquals(2, TigerAnnotationHandler.componentDefBuilders.size());
-        assertTrue(TigerAnnotationHandler.componentDefBuilders.get(0) instanceof EJB3ComponentDefBuilder);
-        assertTrue(TigerAnnotationHandler.componentDefBuilders.get(1) instanceof PojoComponentDefBuilder);
+        assertEquals(3, TigerAnnotationHandler.componentDefBuilders.size());
+        assertTrue(TigerAnnotationHandler.componentDefBuilders.get(0) instanceof TestComponentDefFactory);
+        assertTrue(TigerAnnotationHandler.componentDefBuilders.get(1) instanceof EJB3ComponentDefBuilder);
+        assertTrue(TigerAnnotationHandler.componentDefBuilders.get(2) instanceof PojoComponentDefBuilder);
     }
 
     public void testAddPropertyDefFactory() throws Exception {

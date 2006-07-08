@@ -95,7 +95,6 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
     }
 
     public static synchronized void loadDefaultComponentDefBuilder() {
-        clearComponentDefBuilder();
         componentDefBuilders.add(new EJB3ComponentDefBuilder());
         componentDefBuilders.add(new PojoComponentDefBuilder());
     }
