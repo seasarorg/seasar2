@@ -16,8 +16,24 @@
 package org.seasar.framework.container;
 
 /**
- * @author higa
+ * コンポーネントに対してinitメソッド･インジェクションを定義するためのインターフェースです。
+ * <p>
+ * initメソッド･インジェクションとは、S2コンテナによってインスタンスが生成された直後に、
+ * 1個以上の任意のメソッド(初期化メソッド)を実行するという機能です。ただし、コンポーネントインスタンス定義が<code>outer</code>の場合には、
+ * 以下のメソッドが呼び出されたタイミングで実行されます。
  * 
+ * <dl>
+ * <dt>{@link S2Container#injectDependency(Object)}</dt>
+ * <dt>{@link S2Container#injectDependency(Object,Class)}</dt>
+ * <dt>{@link S2Container#injectDependency(Object,String)}</dt>
+ * </dl>
+ * 
+ * </p>
+ * 
+ * @author higa
+ * @author matsunobu(Javadoc)
+ * 
+ * @see S2Container
  */
 public interface InitMethodDef extends MethodDef {
 }
