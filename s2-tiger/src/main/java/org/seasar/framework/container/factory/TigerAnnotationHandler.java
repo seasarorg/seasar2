@@ -54,22 +54,22 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
     protected static boolean initialized;
 
     protected static final List<ComponentDefBuilder> componentDefBuilders = Collections
-            .synchronizedList(new ArrayList());
+            .synchronizedList(new ArrayList<ComponentDefBuilder>());
 
     protected static final List<PropertyDefBuilder> propertyDefBuilders = Collections
-            .synchronizedList(new ArrayList());
+            .synchronizedList(new ArrayList<PropertyDefBuilder>());
 
     protected static final List<AspectDefBuilder> aspectDefBuilders = Collections
-            .synchronizedList(new ArrayList());
+            .synchronizedList(new ArrayList<AspectDefBuilder>());
 
     protected static final List<IntertypeDefBuilder> intertypeDefBuilders = Collections
-            .synchronizedList(new ArrayList());
+            .synchronizedList(new ArrayList<IntertypeDefBuilder>());
 
     protected static final List<InitMethodDefBuilder> initMethodDefBuilders = Collections
-            .synchronizedList(new ArrayList());
+            .synchronizedList(new ArrayList<InitMethodDefBuilder>());
 
     protected static final List<DestroyMethodDefBuilder> destroyMethodDefBuilders = Collections
-            .synchronizedList(new ArrayList());
+            .synchronizedList(new ArrayList<DestroyMethodDefBuilder>());
 
     public static synchronized void initialize() {
         loadDefaultComponentDefBuilder();
@@ -91,6 +91,8 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
         clearPropertyDefBuilder();
         clearAspectDefBuilder();
         clearIntertypeDefBuilder();
+        clearInitMethodDefBuilder();
+        clearDestroyMethodDefBuilder();
         initialized = false;
     }
 
@@ -158,7 +160,6 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
     }
 
     public static synchronized void loadDefaultIntertypeDefBuilder() {
-        clearIntertypeDefBuilder();
         intertypeDefBuilders.add(new EJB3IntertypeDefBuilder());
         intertypeDefBuilders.add(new S2IntertypeDefBuilder());
     }
@@ -178,7 +179,6 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
     }
 
     public static synchronized void loadDefaultInitMethodDefBuilder() {
-        clearInitMethodDefBuilder();
         initMethodDefBuilders.add(new EJB3InitMethodDefBuilder());
         initMethodDefBuilders.add(new S2InitMethodDefBuilder());
     }
@@ -198,7 +198,6 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
     }
 
     public static synchronized void loadDefaultDestroyMethodDefBuilder() {
-        clearDestroyMethodDefBuilder();
         destroyMethodDefBuilders.add(new S2DestroyMethodDefBuilder());
     }
 
