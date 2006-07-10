@@ -19,7 +19,7 @@ import java.util.Map;
 
 /**
  * <p>
- * S2コンテナ上で、 WEBコンテナなどのコンテキストを扱うためのインターフェースです。
+ * S2コンテナ上で、 Webコンテナなどのコンテキストを扱うためのインターフェースです。
  * </p>
  * <p>
  * {@link InstanceDef コンポーネントインスタンス定義}で、 <code>application</code>、
