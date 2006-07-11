@@ -18,8 +18,13 @@ package org.seasar.framework.container;
 import org.seasar.framework.exception.SRuntimeException;
 
 /**
- * @author higa
+ * 不正な自動バインディング定義が指定された場合にスローされます。
  * 
+ * @author higa
+ * @author jundu (Javadoc)
+ * 
+ * @see AutoBindingDef
+ * @see org.seasar.framework.container.assembler.AutoBindingDefFactory#getAutoBindingDef(String)
  */
 public class IllegalAutoBindingDefRuntimeException extends SRuntimeException {
 
@@ -28,13 +33,21 @@ public class IllegalAutoBindingDefRuntimeException extends SRuntimeException {
     private String autoBindingName;
 
     /**
+     * <code>IllegalAutoBindingDefRuntimeException</code>を構築します。
+     * 
      * @param autoBindingName
+     *            指定された不正な自動バインディング定義名
      */
     public IllegalAutoBindingDefRuntimeException(String autoBindingName) {
         super("ESSR0077", new Object[] { autoBindingName });
         this.autoBindingName = autoBindingName;
     }
 
+    /**
+     * 例外の原因となった不正な自動バインディング定義名を返します。
+     * 
+     * @return 自動バインディング定義名
+     */
     public String getAutoBindingName() {
         return autoBindingName;
     }
