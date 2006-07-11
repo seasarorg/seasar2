@@ -18,7 +18,7 @@ package org.seasar.framework.container;
 import org.seasar.framework.exception.SRuntimeException;
 
 /**
- * 定義されていないバインディングタイプが指定された場合にスローされます。
+ * 不正なバインディングタイプ定義が指定された場合にスローされます。
  * 
  * @author higa
  * @author jundu (Javadoc)
@@ -36,7 +36,7 @@ public class IllegalBindingTypeDefRuntimeException extends SRuntimeException {
      * <code>IllegalBindingTypeDefRuntimeException</code>を構築します。
      * 
      * @param bindingTypeName
-     *            指定された不正なバインディングタイプ
+     *            指定された不正なバインディングタイプ定義名
      */
     public IllegalBindingTypeDefRuntimeException(String bindingTypeName) {
         super("ESSR0079", new Object[] { bindingTypeName });
@@ -44,9 +44,9 @@ public class IllegalBindingTypeDefRuntimeException extends SRuntimeException {
     }
 
     /**
-     * 例外の原因となった不正なバインディングタイプの文字列表現を返します。
+     * 例外の原因となった不正なバインディングタイプ定義名を返します。
      * 
-     * @return バインディングタイプの文字列表現
+     * @return バインディングタイプ定義名
      */
     public String getBindingTypeName() {
         return bindingTypeName;

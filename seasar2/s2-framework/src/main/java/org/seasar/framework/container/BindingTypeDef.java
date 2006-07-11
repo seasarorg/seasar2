@@ -20,7 +20,8 @@ import java.lang.reflect.Field;
 import org.seasar.framework.beans.PropertyDesc;
 
 /**
- * コンポーネントをインジェクションする時の動作を表すバインディングタイプを定義します。 バインディングタイプには、 以下のようなものがあります。
+ * コンポーネントをインジェクションする時の動作を表すバインディングタイプを定義するインターフェースです。 バインディングタイプ定義には、
+ * 以下のものがあります。
  * 
  * <dl>
  * <dt><code>must</code></dt>
@@ -39,34 +40,34 @@ import org.seasar.framework.beans.PropertyDesc;
 public interface BindingTypeDef {
 
     /**
-     * バインディングタイプ「<code>must</code>」を表す定数です。
+     * バインディングタイプ定義名「<code>must</code>」を表す定数です。
      */
     String MUST_NAME = "must";
 
     /**
-     * バインディングタイプ「<code>should</code>」を表す定数です。
+     * バインディングタイプ定義名「<code>should</code>」を表す定数です。
      */
     String SHOULD_NAME = "should";
 
     /**
-     * バインディングタイプ「<code>may</code>」を表す定数です。
+     * バインディングタイプ定義名「<code>may</code>」を表す定数です。
      */
     String MAY_NAME = "may";
 
     /**
-     * バインディングタイプ「<code>none</code>」を表す定数です。
+     * バインディングタイプ定義名「<code>none</code>」を表す定数です。
      */
     String NONE_NAME = "none";
 
     /**
-     * バインディングタイプの文字列表現を返します。
+     * バインディングタイプ定義名を返します。
      * 
-     * @return バインディングタイプを表す文字列
+     * @return バインディングタイプ定義名
      */
     String getName();
 
     /**
-     * バインディングタイプに基づいて、 <code>component</code>に対してS2コンテナ上のコンポーネントをプロパティ経由でインジェクションします。
+     * バインディングタイプ定義に基づいて、 <code>component</code>に対してS2コンテナ上のコンポーネントをプロパティ経由でインジェクションします。
      * 
      * @param componentDef
      *            コンポーネント定義
@@ -76,12 +77,15 @@ public interface BindingTypeDef {
      *            対象となるコンポーネントのプロパティ情報
      * @param component
      *            対象となるコンポーネントのインスタンス
+     * @throws org.seasar.framework.beans.IllegalPropertyRuntimeException
+     *             <code>propertyDef</code>に指定されたコンポーネントが取得できなかった場合、
+     *             または取得したコンポーネントがインジェクションできなかった場合
      */
     void bind(ComponentDef componentDef, PropertyDef propertyDef,
             PropertyDesc propertyDesc, Object component);
 
     /**
-     * バインディングタイプに基づいて、 <code>component</code>に対してS2コンテナ上のコンポーネントをフィールドに直接インジェクションします。
+     * バインディングタイプ定義に基づいて、 <code>component</code>に対してS2コンテナ上のコンポーネントをフィールドに直接インジェクションします。
      * 
      * @param componentDef
      *            コンポーネント定義
@@ -91,6 +95,10 @@ public interface BindingTypeDef {
      *            対象となるコンポーネントのフィールド情報
      * @param component
      *            対象となるコンポーネントのインスタンス
+     * @throws org.seasar.framework.beans.IllegalPropertyRuntimeException
+     *             <code>propertyDef</code>に指定されたコンポーネントが取得できなかった場合
+     * @throws org.seasar.framework.exception.IllegalAccessRuntimeException
+     *             対象となるコンポーネントのフィールドが<code>private</code>などでアクセスできなかった場合
      */
     void bind(ComponentDef componentDef, PropertyDef propertyDef, Field field,
             Object component);

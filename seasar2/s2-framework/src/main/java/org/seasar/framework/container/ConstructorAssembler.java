@@ -17,7 +17,7 @@ package org.seasar.framework.container;
 
 /**
  * コンストラクタ・インジェクションを実行してコンポーネントを組み立てます。 {@link ComponentDef コンポーネント定義}に対して明示的にコンストラクタの引数が指定されなかった時の動作は、
- * {@link AutoBindingDef 自動バインディングタイプ}に基づきます。
+ * {@link AutoBindingDef 自動バインディングタイプ定義}に基づきます。
  * 
  * @author higa
  * @author jundu (Javadoc)
