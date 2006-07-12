@@ -16,6 +16,7 @@
 package org.seasar.framework.container.factory;
 
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.seasar.framework.util.ResourceUtil;
@@ -23,17 +24,32 @@ import org.seasar.framework.util.URLUtil;
 
 /**
  * @author koichik
+ * @author skirnir
  */
 public class ClassPathResourceResolver implements ResourceResolver {
+
+    private static final char COLON = ':';
 
     public ClassPathResourceResolver() {
     }
 
     public InputStream getInputStream(final String path) {
-        final URL url = ResourceUtil.getResourceNoException(path);
+        final URL url = toURL(path);
         if (url == null) {
             return null;
         }
         return URLUtil.openStream(url);
+    }
+
+    URL toURL(final String path) {
+        if (path.indexOf(COLON) >= 0) {
+            try {
+                return new URL(path);
+            } catch (MalformedURLException ex) {
+                return null;
+            }
+        } else {
+            return ResourceUtil.getResourceNoException(path);
+        }
     }
 }
