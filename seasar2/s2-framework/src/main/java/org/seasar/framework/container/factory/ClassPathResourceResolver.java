@@ -45,11 +45,9 @@ public class ClassPathResourceResolver implements ResourceResolver {
         if (path.indexOf(COLON) >= 0) {
             try {
                 return new URL(path);
-            } catch (MalformedURLException ex) {
-                return null;
+            } catch (MalformedURLException ignore) {
             }
-        } else {
-            return ResourceUtil.getResourceNoException(path);
         }
+        return ResourceUtil.getResourceNoException(path);
     }
 }
