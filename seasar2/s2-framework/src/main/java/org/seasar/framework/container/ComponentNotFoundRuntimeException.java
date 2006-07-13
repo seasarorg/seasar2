@@ -18,8 +18,14 @@ package org.seasar.framework.container;
 import org.seasar.framework.exception.SRuntimeException;
 
 /**
- * @author higa
+ * 取得しようとしたコンポーネントがS2コンテナ上に見つからなかった場合にスローされます。
+ * <p>
+ * コンポーネントの検索には、 コンポーネントキー(キーオブジェクト)として、 クラス(インターフェース)またはコンポーネント名が使用できますが、
+ * どちらの場合でもコンポーネントが見つからなかった場合には、 この例外がスローされます。
+ * </p>
  * 
+ * @author higa
+ * @author belltree (Javadoc)
  */
 public class ComponentNotFoundRuntimeException extends SRuntimeException {
 
@@ -28,13 +34,22 @@ public class ComponentNotFoundRuntimeException extends SRuntimeException {
     private Object componentKey_;
 
     /**
+     * コンポーネントの検索に用いたコンポーネントキーを指定して、
+     * <code>ComponentNotFoundRuntimeException</code>を構築します。
+     * 
      * @param componentKey
+     *            コンポーネントキー
      */
     public ComponentNotFoundRuntimeException(Object componentKey) {
         super("ESSR0046", new Object[] { componentKey });
         componentKey_ = componentKey;
     }
 
+    /**
+     * コンポーネントの検索に用いたコンポーネントキーを返します。
+     * 
+     * @return コンポーネントキー
+     */
     public Object getComponentKey() {
         return componentKey_;
     }
