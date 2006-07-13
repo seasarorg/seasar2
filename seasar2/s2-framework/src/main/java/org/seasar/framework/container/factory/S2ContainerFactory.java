@@ -42,7 +42,7 @@ public final class S2ContainerFactory {
     public static final String DEFAULT_BUILDER_NAME = "defaultBuilder";
 
     protected static boolean initialized;
-    
+
     protected static boolean configuring = false;
 
     protected static S2Container configurationContainer;
@@ -104,6 +104,7 @@ public final class S2ContainerFactory {
         if (ResourceUtil.isExist(configFile)) {
             final S2ContainerBuilder builder = new XmlS2ContainerBuilder();
             configurationContainer = builder.build(configFile);
+            configurationContainer.init();
             Configurator configurator;
             if (configurationContainer.hasComponentDef(Configurator.class)) {
                 configurator = (Configurator) configurationContainer
