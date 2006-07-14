@@ -62,7 +62,8 @@ public class MemoryLeakTest extends TestCase {
 
     public void fixme_testFinalizeConfigurationContainer() throws Exception {
         for (int i = 0; i < 2; i++) {
-            S2ContainerFactory.configure(basePath + "MemoryLeakTest.dicon");
+            S2ContainerFactory.configure(basePath
+                    + "MemoryLeakTest_configure.dicon");
             SingletonS2ContainerFactory.setConfigPath(basePath
                     + "MemoryLeakTest_app.dicon");
             SingletonS2ContainerFactory.init();
