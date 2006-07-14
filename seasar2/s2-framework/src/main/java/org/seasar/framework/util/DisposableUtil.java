@@ -15,9 +15,9 @@
  */
 package org.seasar.framework.util;
 
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.LinkedList;
+
+import org.seasar.framework.log.Logger;
 
 /**
  * @author koichik
@@ -25,7 +25,7 @@ import java.util.Set;
  */
 public class DisposableUtil {
 
-    protected static final Set disposables = new LinkedHashSet();
+    protected static final LinkedList disposables = new LinkedList();
 
     public static synchronized void add(final Disposable disposable) {
         disposables.add(disposable);
@@ -36,8 +36,8 @@ public class DisposableUtil {
     }
 
     public static synchronized void dispose() {
-        for (final Iterator it = disposables.iterator(); it.hasNext();) {
-            final Disposable disposable = (Disposable) it.next();
+        while (!disposables.isEmpty()) {
+            final Disposable disposable = (Disposable) disposables.removeLast();
             try {
                 disposable.dispose();
             } catch (final Throwable t) {
@@ -45,5 +45,6 @@ public class DisposableUtil {
             }
         }
         disposables.clear();
+        Logger.dispose();
     }
 }

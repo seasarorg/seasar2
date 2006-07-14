@@ -60,7 +60,7 @@ public class MemoryLeakTest extends TestCase {
         assertEquals(0, counter);
     }
 
-    public void fixme_testFinalizeConfigurationContainer() throws Exception {
+    public void testFinalizeConfigurationContainer() throws Exception {
         for (int i = 0; i < 2; i++) {
             S2ContainerFactory.configure(basePath
                     + "MemoryLeakTest_configure.dicon");
@@ -68,6 +68,11 @@ public class MemoryLeakTest extends TestCase {
                     + "MemoryLeakTest_app.dicon");
             SingletonS2ContainerFactory.init();
             SingletonS2ContainerFactory.destroy();
+            for (int j = 0; j < 5; ++j) {
+                System.gc();
+                Thread.sleep(10);
+            }
+            System.out.println();
         }
         testFinalize();
     }
