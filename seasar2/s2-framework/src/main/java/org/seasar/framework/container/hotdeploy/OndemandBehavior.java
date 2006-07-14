@@ -38,13 +38,13 @@ public class OndemandBehavior extends DefaultProvider implements
     private HotdeployClassLoader hotdeployClassLoader;
 
     public static final String namingConvention_BINDING = "bindingType=must";
-    
+
     private NamingConvention namingConvention;
 
     private List subsystems = new ArrayList();
 
     private Map componentDefCache = new HashMap();
-    
+
     public void setNamingConvention(NamingConvention namingConvention) {
         this.namingConvention = namingConvention;
     }
@@ -64,7 +64,8 @@ public class OndemandBehavior extends DefaultProvider implements
     public void start() {
         originalClassLoader = Thread.currentThread().getContextClassLoader();
         hotdeployClassLoader = new HotdeployClassLoader(originalClassLoader);
-        hotdeployClassLoader.setPackageName(namingConvention.getRootPackageName());
+        hotdeployClassLoader.setPackageName(namingConvention
+                .getRootPackageName());
         hotdeployClassLoader.addHotdeployListener(this);
         Thread.currentThread().setContextClassLoader(hotdeployClassLoader);
         S2ContainerImpl container = (S2ContainerImpl) SingletonS2ContainerFactory
@@ -75,6 +76,8 @@ public class OndemandBehavior extends DefaultProvider implements
     public void stop() {
         DisposableUtil.dispose();
         Thread.currentThread().setContextClassLoader(originalClassLoader);
+        namingConvention = null;
+        subsystems.clear();
         hotdeployClassLoader = null;
         originalClassLoader = null;
         componentDefCache.clear();
@@ -135,8 +138,8 @@ public class OndemandBehavior extends DefaultProvider implements
         for (int i = 0; i < getSubsystemSize(); ++i) {
             OndemandSubsystem subsystem = getSubsystem(i);
             try {
-                ComponentDef cd = subsystem.getComponentDef(this,
-                        componentName);
+                ComponentDef cd = subsystem
+                        .getComponentDef(this, componentName);
                 if (cd != null) {
                     return cd;
                 }

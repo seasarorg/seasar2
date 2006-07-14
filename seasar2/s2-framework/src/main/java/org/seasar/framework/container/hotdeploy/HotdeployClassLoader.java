@@ -45,6 +45,10 @@ public class HotdeployClassLoader extends ClassLoader {
         listeners.add(listener);
     }
 
+    public void removeHotdeployListener(HotdeployListener listener) {
+        listeners.remove(listener);
+    }
+
     public HotdeployListener getHotdeployListener(int index) {
         return (HotdeployListener) listeners.get(index);
     }
