@@ -15,7 +15,6 @@
  */
 package org.seasar.framework.container.assembler;
 
-import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 
 import org.seasar.framework.beans.IllegalPropertyRuntimeException;
@@ -26,7 +25,6 @@ import org.seasar.framework.container.ComponentNotFoundRuntimeException;
 import org.seasar.framework.container.ContainerConstants;
 import org.seasar.framework.container.PropertyDef;
 import org.seasar.framework.container.S2Container;
-import org.seasar.framework.container.TooManyRegistrationComponentDef;
 import org.seasar.framework.container.util.BindingUtil;
 import org.seasar.framework.util.FieldUtil;
 
@@ -173,22 +171,9 @@ public abstract class AbstractBindingTypeDef implements BindingTypeDef {
         }
         if (BindingUtil.isAutoBindableArray(propType)) {
             Class clazz = propType.getComponentType();
-            if (container.hasComponentDef(clazz)) {
-                ComponentDef cd = container.getComponentDef(clazz);
-                if (cd instanceof TooManyRegistrationComponentDef) {
-                    ComponentDef[] cds = ((TooManyRegistrationComponentDef) cd)
-                            .getComponentDefs();
-                    Object[] values = (Object[]) Array.newInstance(clazz,
-                            cds.length);
-                    for (int i = 0; i < cds.length; ++i) {
-                        values[i] = cds[i].getComponent();
-                    }
-                    setValue(componentDef, propertyDesc, component, values);
-                } else {
-                    Object[] values = (Object[]) Array.newInstance(clazz, 1);
-                    values[0] = cd.getComponent();
-                    setValue(componentDef, propertyDesc, component, values);
-                }
+            Object[] values = container.findAllComponents(clazz);
+            if (values.length > 0) {
+                setValue(componentDef, propertyDesc, component, values);
                 return true;
             }
         }
