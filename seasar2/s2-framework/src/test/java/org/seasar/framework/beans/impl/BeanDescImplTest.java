@@ -146,8 +146,25 @@ public class BeanDescImplTest extends TestCase {
     }
 
     public void testGetConstructorParameterNames() throws Exception {
-        BeanDesc beanDesc = new BeanDescImpl(MyBean3.class);
-        String[] names = beanDesc.getConstructorParameterNames(new Class[0]);
+        BeanDesc beanDesc = new BeanDescImpl(MyBean2.class);
+        String[] names = beanDesc
+                .getConstructorParameterNames(new Class[] { getClass() });
+        assertNotNull(names);
+        assertEquals(1, names.length);
+        assertEquals("this", names[0]);
+
+        names = beanDesc.getConstructorParameterNames(new Class[] { getClass(),
+                int.class, String.class, MyBean.class, MyBean2.class });
+        assertNotNull(names);
+        assertEquals(5, names.length);
+        assertEquals("this", names[0]);
+        assertEquals("num", names[1]);
+        assertEquals("text", names[2]);
+        assertEquals("bean1", names[3]);
+        assertEquals("bean2", names[4]);
+
+        beanDesc = new BeanDescImpl(MyBean3.class);
+        names = beanDesc.getConstructorParameterNames(new Class[0]);
         assertNotNull(names);
         assertEquals(0, names.length);
 
@@ -180,6 +197,19 @@ public class BeanDescImplTest extends TestCase {
         assertEquals(2, names.length);
         assertEquals("arg1", names[0]);
         assertEquals("arg2", names[1]);
+
+        beanDesc = new BeanDescImpl(MyBean2.class);
+        names = beanDesc.getMethodParameterNames("setAaa",
+                new Class[] { int.class });
+        assertNotNull(names);
+        assertEquals(1, names.length);
+        assertEquals("i", names[0]);
+
+        names = beanDesc.getMethodParameterNames("setAaa",
+                new Class[] { String.class });
+        assertNotNull(names);
+        assertEquals(1, names.length);
+        assertEquals("s", names[0]);
 
         beanDesc = new BeanDescImpl(MyBean3.class);
         names = beanDesc.getMethodParameterNames("foo", new Class[] {
@@ -251,7 +281,13 @@ public class BeanDescImplTest extends TestCase {
         }
     }
 
-    public static class MyBean2 {
+    public class MyBean2 {
+        public MyBean2() {
+        }
+
+        public MyBean2(int num, String text, MyBean bean1, MyBean2 bean2) {
+        }
+
         public void setAaa(int i) {
         }
 

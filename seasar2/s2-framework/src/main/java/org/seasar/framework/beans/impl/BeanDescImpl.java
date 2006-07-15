@@ -30,6 +30,7 @@ import java.util.Set;
 import javassist.ClassPool;
 import javassist.CtBehavior;
 import javassist.CtClass;
+import javassist.CtMethod;
 import javassist.Modifier;
 import javassist.NotFoundException;
 import javassist.bytecode.CodeAttribute;
@@ -441,11 +442,29 @@ public final class BeanDescImpl implements BeanDesc {
     protected String[] toStringArray(final CtBehavior behavior,
             final LocalVariableAttribute lva) throws NotFoundException {
         final String[] names = new String[behavior.getParameterTypes().length];
-        final int offset = Modifier.isStatic(behavior.getModifiers()) ? 0 : 1;
+        final int offset = getOffset(behavior);
         for (int i = 0; i < names.length; ++i) {
             names[i] = lva.variableName(i + offset);
         }
         return names;
+    }
+
+    protected int getOffset(final CtBehavior behavior) {
+        if (behavior instanceof CtMethod) {
+            return Modifier.isStatic(behavior.getModifiers()) ? 0 : 1;
+        }
+        if (Modifier.isStatic(beanClass.getModifiers())) {
+            return 1;
+        }
+        try {
+            final CtClass outer = behavior.getDeclaringClass()
+                    .getEnclosingClass();
+            if (!outer.isInterface()) {
+                return 0;
+            }
+        } catch (final NotFoundException ignore) {
+        }
+        return 1;
     }
 
     private Constructor findSuitableConstructor(Object[] args) {
