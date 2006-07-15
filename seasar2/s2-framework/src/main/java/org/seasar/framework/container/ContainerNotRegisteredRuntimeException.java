@@ -18,8 +18,10 @@ package org.seasar.framework.container;
 import org.seasar.framework.exception.SRuntimeException;
 
 /**
- * @author higa
+ * diconファイルなどの設定情報に対応するS2コンテナが、 コンテナツリーに登録されていなかった場合にスローされます。
  * 
+ * @author higa
+ * @author belltree (Javadoc)
  */
 public class ContainerNotRegisteredRuntimeException extends SRuntimeException {
 
@@ -27,11 +29,23 @@ public class ContainerNotRegisteredRuntimeException extends SRuntimeException {
 
     private String path_;
 
+    /**
+     * 登録されていなかった設定情報のパスを指定して、
+     * <code>ContainerNotRegisteredRuntimeException</code>を構築します。
+     * 
+     * @param path
+     *            登録されていなかった設定情報のパス
+     */
     public ContainerNotRegisteredRuntimeException(String path) {
         super("ESSR0075", new Object[] { path });
         path_ = path;
     }
 
+    /**
+     * コンテナツリーに登録されていなかった設定情報のパスを返します。
+     * 
+     * @return path 登録されていなかった設定情報のパス
+     */
     public String getPath() {
         return path_;
     }
