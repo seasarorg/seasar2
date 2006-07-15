@@ -15,7 +15,9 @@
  */
 package org.seasar.framework.container.factory;
 
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.Set;
 
 import org.seasar.framework.container.ExtensionNotFoundRuntimeException;
@@ -162,6 +164,27 @@ public final class S2ContainerFactory {
         paths.remove(path);
     }
 
+    protected static void assertCircularInclude(final S2Container container,
+            final String path) {
+        assertCircularInclude(container, path, new LinkedList());
+    }
+
+    protected static void assertCircularInclude(final S2Container container,
+            final String path, LinkedList paths) {
+        paths.addFirst(container.getPath());
+        try {
+            if (path.equals(container.getPath())) {
+                throw new CircularIncludeRuntimeException(path, new ArrayList(
+                        paths));
+            }
+            for (int i = 0; i < container.getParentSize(); ++i) {
+                assertCircularInclude(container.getParent(i), path, paths);
+            }
+        } finally {
+            paths.removeFirst();
+        }
+    }
+
     public interface Provider {
 
         S2Container create(String path);
@@ -242,6 +265,7 @@ public final class S2ContainerFactory {
         public S2Container include(final S2Container parent, final String path) {
             final String realPath = pathResolver.resolvePath(parent.getPath(),
                     path);
+            assertCircularInclude(parent, realPath);
             enter(realPath);
             try {
                 final S2Container root = parent.getRoot();

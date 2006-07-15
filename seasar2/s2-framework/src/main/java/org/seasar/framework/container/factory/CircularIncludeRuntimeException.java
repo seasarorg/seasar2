@@ -15,8 +15,8 @@
  */
 package org.seasar.framework.container.factory;
 
+import java.util.Collection;
 import java.util.Iterator;
-import java.util.Set;
 
 import org.seasar.framework.exception.SRuntimeException;
 
@@ -28,12 +28,13 @@ public class CircularIncludeRuntimeException extends SRuntimeException {
 
     protected String path;
 
-    protected Set paths;
+    protected Collection paths;
 
     /**
      * @param componentClasses
      */
-    public CircularIncludeRuntimeException(final String path, final Set paths) {
+    public CircularIncludeRuntimeException(final String path,
+            final Collection paths) {
         super("ESSR0076", new Object[] { path, toString(path, paths) });
         this.path = path;
         this.paths = paths;
@@ -43,11 +44,11 @@ public class CircularIncludeRuntimeException extends SRuntimeException {
         return path;
     }
 
-    public Set getPaths() {
+    public Collection getPaths() {
         return paths;
     }
 
-    protected static String toString(final String path, final Set paths) {
+    protected static String toString(final String path, final Collection paths) {
         final StringBuffer buf = new StringBuffer(200);
         for (final Iterator it = paths.iterator(); it.hasNext();) {
             buf.append("\"").append(it.next()).append("\" includes ");

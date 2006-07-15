@@ -75,6 +75,50 @@ public class S2ContainerFactoryTest extends TestCase {
         }
     }
 
+    public void testCircularInclude2() throws Exception {
+        try {
+            String path = getClass().getName().replace('.', '/')
+                    + ".Circular.dicon";
+            S2ContainerFactory.include(S2ContainerFactory.create(path), path);
+            fail("1");
+        } catch (Throwable e) {
+            while (e != null) {
+                if (e instanceof CircularIncludeRuntimeException) {
+                    return;
+                }
+                e = (e instanceof SAXException) ? ((SAXException) e)
+                        .getException() : e.getCause();
+            }
+            fail("2");
+        }
+    }
+
+    public void testCircularInclude3() throws Exception {
+        try {
+            S2Container container1 = new S2ContainerImpl();
+            container1.setPath("foo");
+            S2Container container2 = new S2ContainerImpl();
+            container2.setPath("bar");
+            container1.include(container2);
+            S2Container container3 = new S2ContainerImpl();
+            container3.setPath("baz");
+            container2.include(container3);
+
+            S2ContainerFactory.include(container3, "foo");
+            fail("1");
+        } catch (Throwable e) {
+            System.out.println(e);
+            while (e != null) {
+                if (e instanceof CircularIncludeRuntimeException) {
+                    return;
+                }
+                e = (e instanceof SAXException) ? ((SAXException) e)
+                        .getException() : e.getCause();
+            }
+            fail("2");
+        }
+    }
+
     public void testCustomizeContainerFactory() throws Exception {
         configure("ContainerFactory.dicon");
         S2Container container = S2ContainerFactory.create("notExists.dicon");
