@@ -67,6 +67,8 @@ public class S2ContainerImplTest extends TestCase {
 
     S2Container container4;
 
+    S2Container container5;
+
     protected void setUp() throws Exception {
         super.setUp();
 
@@ -98,6 +100,15 @@ public class S2ContainerImplTest extends TestCase {
         container4.register(HashMap.class);
         container4.register(HashMap.class);
         container3.include(container4);
+
+        container5 = new S2ContainerImpl();
+        container5.setPath("5");
+        container5.register(HashMap.class);
+        container5.register(HashMap.class);
+        container5.register(HashMap.class);
+        container2.include(container5);
+        container5.setRoot(container5);
+
     }
 
     public void testRegister() throws Exception {
@@ -463,18 +474,35 @@ public class S2ContainerImplTest extends TestCase {
 
     public void testFindAllComponents() throws Exception {
         Map[] found = (Map[]) container0.findAllComponents(Map.class);
-        assertEquals(10, found.length);
+        assertEquals(13, found.length);
 
         found = (Map[]) container1.findAllComponents(Map.class);
-        assertEquals(10, found.length);
+        assertEquals(13, found.length);
 
         found = (Map[]) container2.findAllComponents(Map.class);
-        assertEquals(9, found.length);
+        assertEquals(12, found.length);
 
         found = (Map[]) container3.findAllComponents(Map.class);
         assertEquals(7, found.length);
 
         found = (Map[]) container4.findAllComponents(Map.class);
+        assertEquals(4, found.length);
+    }
+
+    public void testFindDescendantComponents() throws Exception {
+        Map[] found = (Map[]) container0.findDescendantComponents(Map.class);
+        assertEquals(10, found.length);
+
+        found = (Map[]) container1.findDescendantComponents(Map.class);
+        assertEquals(10, found.length);
+
+        found = (Map[]) container2.findDescendantComponents(Map.class);
+        assertEquals(9, found.length);
+
+        found = (Map[]) container3.findDescendantComponents(Map.class);
+        assertEquals(7, found.length);
+
+        found = (Map[]) container4.findDescendantComponents(Map.class);
         assertEquals(4, found.length);
     }
 
@@ -514,18 +542,36 @@ public class S2ContainerImplTest extends TestCase {
 
     public void testFindAllComponentDefs() throws Exception {
         ComponentDef[] found = container0.findAllComponentDefs(Map.class);
-        assertEquals(10, found.length);
+        assertEquals(13, found.length);
 
         found = container1.findAllComponentDefs(Map.class);
-        assertEquals(10, found.length);
+        assertEquals(13, found.length);
 
         found = container2.findAllComponentDefs(Map.class);
-        assertEquals(9, found.length);
+        assertEquals(12, found.length);
 
         found = container3.findAllComponentDefs(Map.class);
         assertEquals(7, found.length);
 
         found = container4.findAllComponentDefs(Map.class);
+        assertEquals(4, found.length);
+    }
+
+    public void testFindDescendantComponentDefs() throws Exception {
+        ComponentDef[] found = container0
+                .findDescendantComponentDefs(Map.class);
+        assertEquals(10, found.length);
+
+        found = container1.findDescendantComponentDefs(Map.class);
+        assertEquals(10, found.length);
+
+        found = container2.findDescendantComponentDefs(Map.class);
+        assertEquals(9, found.length);
+
+        found = container3.findDescendantComponentDefs(Map.class);
+        assertEquals(7, found.length);
+
+        found = container4.findDescendantComponentDefs(Map.class);
         assertEquals(4, found.length);
     }
 
