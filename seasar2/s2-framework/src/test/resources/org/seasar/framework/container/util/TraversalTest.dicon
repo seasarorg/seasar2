@@ -4,6 +4,7 @@
 <components namespace="root">
 	<include path="org/seasar/framework/container/util/TraversalTest1.dicon"/>
 	<include path="org/seasar/framework/container/util/TraversalTest2.dicon"/>
+	<include path="org/seasar/framework/container/util/TraversalTest3.dicon"/>
 
 	<component name="1">"1"</component>
 	<component name="2">"2"</component>

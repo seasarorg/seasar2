@@ -15,6 +15,9 @@
  */
 package org.seasar.framework.container.util;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.S2Container;
 
@@ -28,32 +31,6 @@ public class Traversal {
 
     public static interface ComponentDefHandler {
         Object processComponent(ComponentDef componentDef);
-    }
-
-    public static Object forEachContainer(final S2Container container,
-            final S2ContainerHandler handler) {
-        return forEachContainer(container, handler, true);
-    }
-
-    public static Object forEachContainer(final S2Container container,
-            final S2ContainerHandler handler, final boolean parentFirst) {
-        if (parentFirst) {
-            final Object result = handler.processContainer(container);
-            if (result != null) {
-                return result;
-            }
-        }
-        for (int i = 0; i < container.getChildSize(); ++i) {
-            final Object result = forEachContainer(container.getChild(i),
-                    handler, parentFirst);
-            if (result != null) {
-                return result;
-            }
-        }
-        if (!parentFirst) {
-            return handler.processContainer(container);
-        }
-        return null;
     }
 
     public static Object forEachComponent(final S2Container container,
@@ -75,5 +52,42 @@ public class Traversal {
                 return null;
             }
         }, parentFirst);
+    }
+
+    public static Object forEachContainer(final S2Container container,
+            final S2ContainerHandler handler) {
+        return forEachContainer(container, handler, true, new HashSet());
+    }
+
+    public static Object forEachContainer(final S2Container container,
+            final S2ContainerHandler handler, final boolean parentFirst) {
+        return forEachContainer(container, handler, parentFirst, new HashSet());
+    }
+
+    protected static Object forEachContainer(final S2Container container,
+            final S2ContainerHandler handler, final boolean parentFirst,
+            final Set processed) {
+        if (parentFirst) {
+            final Object result = handler.processContainer(container);
+            if (result != null) {
+                return result;
+            }
+        }
+        for (int i = 0; i < container.getChildSize(); ++i) {
+            final S2Container child = container.getChild(i);
+            if (processed.contains(child)) {
+                continue;
+            }
+            processed.add(child);
+            final Object result = forEachContainer(child, handler, parentFirst,
+                    processed);
+            if (result != null) {
+                return result;
+            }
+        }
+        if (!parentFirst) {
+            return handler.processContainer(container);
+        }
+        return null;
     }
 }
