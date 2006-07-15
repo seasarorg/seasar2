@@ -29,6 +29,12 @@ public interface S2Container extends MetaDefAware {
     Object[] findComponents(Object componentKey)
             throws CyclicReferenceRuntimeException;
 
+    Object[] findAllComponents(Object componentKey)
+            throws CyclicReferenceRuntimeException;
+
+    Object[] findLocalComponents(Object componentKey)
+            throws CyclicReferenceRuntimeException;
+
     void injectDependency(Object outerComponent)
             throws ClassUnmatchRuntimeException;
 
@@ -56,6 +62,10 @@ public interface S2Container extends MetaDefAware {
             throws ComponentNotFoundRuntimeException;
 
     ComponentDef[] findComponentDefs(Object componentKey);
+
+    ComponentDef[] findAllComponentDefs(Object componentKey);
+
+    ComponentDef[] findLocalComponentDefs(Object componentKey);
 
     boolean hasComponentDef(Object componentKey);
 

@@ -17,6 +17,7 @@ package org.seasar.framework.container.impl;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -29,6 +30,7 @@ import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.ComponentNotFoundRuntimeException;
 import org.seasar.framework.container.ContainerConstants;
 import org.seasar.framework.container.ContainerNotRegisteredRuntimeException;
+import org.seasar.framework.container.CyclicReferenceRuntimeException;
 import org.seasar.framework.container.ExternalContext;
 import org.seasar.framework.container.ExternalContextComponentDefRegister;
 import org.seasar.framework.container.MetaDef;
@@ -37,6 +39,7 @@ import org.seasar.framework.container.TooManyRegistrationComponentDef;
 import org.seasar.framework.container.ognl.S2ContainerPropertyAccessor;
 import org.seasar.framework.container.util.MetaDefSupport;
 import org.seasar.framework.container.util.S2ContainerUtil;
+import org.seasar.framework.container.util.Traversal;
 import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.CaseInsensitiveMap;
 import org.seasar.framework.util.StringUtil;
@@ -116,6 +119,33 @@ public class S2ContainerImpl implements S2Container, ContainerConstants {
     public Object[] findComponents(Object componentKey) {
         assertParameterIsNotNull(componentKey, "componentKey");
         ComponentDef[] componentDefs = findComponentDefs(componentKey);
+        return toComponentArray(componentKey, componentDefs);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.seasar.framework.container.S2Container#findAllComponents(java.lang.Object)
+     */
+    public Object[] findAllComponents(Object componentKey)
+            throws CyclicReferenceRuntimeException {
+        assertParameterIsNotNull(componentKey, "componentKey");
+        ComponentDef[] componentDefs = findAllComponentDefs(componentKey);
+        return toComponentArray(componentKey, componentDefs);
+    }
+
+    /**
+     * @see org.seasar.framework.container.S2Container#findLocalComponents(java.lang.Object)
+     */
+    public Object[] findLocalComponents(Object componentKey)
+            throws CyclicReferenceRuntimeException {
+        assertParameterIsNotNull(componentKey, "componentKey");
+        ComponentDef[] componentDefs = findLocalComponentDefs(componentKey);
+        return toComponentArray(componentKey, componentDefs);
+    }
+
+    protected Object[] toComponentArray(Object componentKey,
+            ComponentDef[] componentDefs) {
         int length = componentDefs.length;
         Object[] components = (componentKey instanceof Class) ? (Object[]) Array
                 .newInstance((Class) componentKey, length)
@@ -294,6 +324,41 @@ public class S2ContainerImpl implements S2Container, ContainerConstants {
             throws ComponentNotFoundRuntimeException {
         assertParameterIsNotNull(key, "key");
         ComponentDef cd = internalGetComponentDef(key);
+        return toComponentDefArray(cd);
+    }
+
+    /**
+     * @see org.seasar.framework.container.S2Container#findAllComponentDefs(java.lang.Object)
+     */
+    public synchronized ComponentDef[] findAllComponentDefs(
+            final Object componentKey) {
+        assertParameterIsNotNull(componentKey, "componentKey");
+        final List componentDefs = new ArrayList();
+        Traversal.forEachContainer(this, new Traversal.S2ContainerHandler() {
+            public Object processContainer(S2Container container) {
+                componentDefs.addAll(Arrays.asList(container
+                        .findLocalComponentDefs(componentKey)));
+                return null;
+            }
+        });
+        return (ComponentDef[]) componentDefs
+                .toArray(new ComponentDef[componentDefs.size()]);
+    }
+
+    /**
+     * @see org.seasar.framework.container.S2Container#findLocalComponentDefs(java.lang.Object)
+     */
+    public synchronized ComponentDef[] findLocalComponentDefs(
+            Object componentKey) {
+        ComponentDefHolder holder = (ComponentDefHolder) componentDefMap
+                .get(componentKey);
+        if (holder == null || holder.getPosition() > 0) {
+            return new ComponentDef[0];
+        }
+        return toComponentDefArray(holder.getComponentDef());
+    }
+
+    protected ComponentDef[] toComponentDefArray(ComponentDef cd) {
         if (cd == null) {
             return new ComponentDef[0];
         } else if (cd instanceof TooManyRegistrationComponentDefImpl) {

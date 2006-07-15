@@ -57,6 +57,49 @@ import org.seasar.framework.util.ResourceUtil;
  */
 public class S2ContainerImplTest extends TestCase {
 
+    S2Container container0;
+
+    S2Container container1;
+
+    S2Container container2;
+
+    S2Container container3;
+
+    S2Container container4;
+
+    protected void setUp() throws Exception {
+        super.setUp();
+
+        container0 = new S2ContainerImpl();
+        container0.setPath("0");
+
+        container1 = new S2ContainerImpl();
+        container1.setPath("1");
+        container1.register(HashMap.class);
+        container0.include(container1);
+
+        container2 = new S2ContainerImpl();
+        container2.setPath("2");
+        container2.register(HashMap.class);
+        container2.register(HashMap.class);
+        container1.include(container2);
+
+        container3 = new S2ContainerImpl();
+        container3.setPath("3");
+        container3.register(HashMap.class);
+        container3.register(HashMap.class);
+        container3.register(HashMap.class);
+        container2.include(container3);
+
+        container4 = new S2ContainerImpl();
+        container4.setPath("4");
+        container4.register(HashMap.class);
+        container4.register(HashMap.class);
+        container4.register(HashMap.class);
+        container4.register(HashMap.class);
+        container3.include(container4);
+    }
+
     public void testRegister() throws Exception {
         S2Container container = new S2ContainerImpl();
         container.register(A.class);
@@ -402,18 +445,105 @@ public class S2ContainerImplTest extends TestCase {
     }
 
     public void testFindComponents() throws Exception {
-        // ## Arrange ##
-        S2ContainerImpl container = new S2ContainerImpl();
-        container.register(B.class);
-        container.register(B2.class);
-        container.init();
+        Map[] found = (Map[]) container0.findComponents(Map.class);
+        assertEquals(1, found.length);
 
-        // ## Act ##
-        final Object[] found = container.findComponents(Hoge.class);
+        found = (Map[]) container1.findComponents(Map.class);
+        assertEquals(1, found.length);
 
-        // ## Assert ##
-        assertSame(found.getClass().toString(), Hoge.class, found.getClass()
-                .getComponentType());
+        found = (Map[]) container2.findComponents(Map.class);
+        assertEquals(2, found.length);
+
+        found = (Map[]) container3.findComponents(Map.class);
+        assertEquals(3, found.length);
+
+        found = (Map[]) container4.findComponents(Map.class);
+        assertEquals(4, found.length);
+    }
+
+    public void testFindAllComponents() throws Exception {
+        Map[] found = (Map[]) container0.findAllComponents(Map.class);
+        assertEquals(10, found.length);
+
+        found = (Map[]) container1.findAllComponents(Map.class);
+        assertEquals(10, found.length);
+
+        found = (Map[]) container2.findAllComponents(Map.class);
+        assertEquals(9, found.length);
+
+        found = (Map[]) container3.findAllComponents(Map.class);
+        assertEquals(7, found.length);
+
+        found = (Map[]) container4.findAllComponents(Map.class);
+        assertEquals(4, found.length);
+    }
+
+    public void testFindLocalComponents() throws Exception {
+        Map[] found = (Map[]) container0.findLocalComponents(Map.class);
+        assertEquals(0, found.length);
+
+        found = (Map[]) container1.findLocalComponents(Map.class);
+        assertEquals(1, found.length);
+
+        found = (Map[]) container2.findLocalComponents(Map.class);
+        assertEquals(2, found.length);
+
+        found = (Map[]) container3.findLocalComponents(Map.class);
+        assertEquals(3, found.length);
+
+        found = (Map[]) container4.findLocalComponents(Map.class);
+        assertEquals(4, found.length);
+    }
+
+    public void testFindComponentDefs() throws Exception {
+        ComponentDef[] found = container0.findComponentDefs(Map.class);
+        assertEquals(1, found.length);
+
+        found = container1.findComponentDefs(Map.class);
+        assertEquals(1, found.length);
+
+        found = container2.findComponentDefs(Map.class);
+        assertEquals(2, found.length);
+
+        found = container3.findComponentDefs(Map.class);
+        assertEquals(3, found.length);
+
+        found = container4.findComponentDefs(Map.class);
+        assertEquals(4, found.length);
+    }
+
+    public void testFindAllComponentDefs() throws Exception {
+        ComponentDef[] found = container0.findAllComponentDefs(Map.class);
+        assertEquals(10, found.length);
+
+        found = container1.findAllComponentDefs(Map.class);
+        assertEquals(10, found.length);
+
+        found = container2.findAllComponentDefs(Map.class);
+        assertEquals(9, found.length);
+
+        found = container3.findAllComponentDefs(Map.class);
+        assertEquals(7, found.length);
+
+        found = container4.findAllComponentDefs(Map.class);
+        assertEquals(4, found.length);
+    }
+
+    public void testFindLocalComponentDefs() throws Exception {
+        ComponentDef[] found = container0.findLocalComponentDefs(Map.class);
+        assertEquals(0, found.length);
+
+        found = container1.findLocalComponentDefs(Map.class);
+        assertEquals(1, found.length);
+
+        found = container2.findLocalComponentDefs(Map.class);
+        assertEquals(2, found.length);
+
+        found = container3.findLocalComponentDefs(Map.class);
+        assertEquals(3, found.length);
+
+        found = container4.findLocalComponentDefs(Map.class);
+        assertEquals(4, found.length);
     }
 
     public void testRequest() throws Exception {
@@ -691,4 +821,5 @@ public class S2ContainerImplTest extends TestCase {
             servletContext_ = servletContext;
         }
     }
+
 }
