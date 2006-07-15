@@ -16,18 +16,58 @@
 package org.seasar.framework.container;
 
 /**
+ * このインタフェースはプロパティ定義を登録および取得する方法を定義するオブジェクトを表します。
+ * <p>
+ * プロパティ定義は複数登録することが出来ます。 プロパティ定義の取得はインデックス番号を指定して行います。
+ * </p>
+ * 
  * @author higa
+ * @author Maeno(Javadoc)
+ * 
+ * @see PropertyDef
  * 
  */
 public interface PropertyDefAware {
 
+    /**
+     * {@link PropertyDef プロパティ定義}を登録(追加)します。
+     * 
+     * @param propertyDef
+     *            プロパティ定義
+     */
     public void addPropertyDef(PropertyDef propertyDef);
 
+    /**
+     * 登録されている{@link PropertyDef プロパティ定義}の数を返します。
+     * 
+     * @return 登録されているプロパティ定義の数
+     */
     public int getPropertyDefSize();
 
+    /**
+     * 指定されたインデックス番号<code>index</code>の{@link PropertyDef プロパティ定義}を返します。
+     * 
+     * @param index
+     *            プロパティ定義を指定するインデックス番号
+     * @return プロパティ定義
+     */
     public PropertyDef getPropertyDef(int index);
 
+    /**
+     * 指定したプロパティ名で登録されている{@link PropertyDef プロパティ定義}を返します。
+     * 
+     * @param propertyName
+     *            プロパティ名
+     * @return プロパティ定義
+     */
     public PropertyDef getPropertyDef(String propertyName);
 
+    /**
+     * 指定したプロパティ名にプロパティ定義があれば<code>true</code>を返します。
+     * 
+     * @param propertyName
+     *            プロパティ定義
+     * @return プロパティ定義が存在していれば<code>true</code>、存在していなければ<code>false</code>
+     */
     public boolean hasPropertyDef(String propertyName);
 }
