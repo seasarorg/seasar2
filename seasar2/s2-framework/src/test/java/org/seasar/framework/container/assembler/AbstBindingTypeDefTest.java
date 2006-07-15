@@ -16,7 +16,9 @@
 package org.seasar.framework.container.assembler;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import junit.framework.TestCase;
 
@@ -79,6 +81,60 @@ public class AbstBindingTypeDefTest extends TestCase {
         assertNotNull(foo2.getHoges());
     }
 
+    public void testBindAutoForArray2() throws Exception {
+        S2Container container0 = new S2ContainerImpl();
+        container0.setPath("0");
+        container0.register(MapArrayHolder.class);
+
+        S2Container container1 = new S2ContainerImpl();
+        container1.setPath("1");
+        container1.register(MapArrayHolder.class);
+        container1.register(HashMap.class);
+        container0.include(container1);
+
+        S2Container container2 = new S2ContainerImpl();
+        container2.setPath("2");
+        container2.register(MapArrayHolder.class);
+        container2.register(HashMap.class);
+        container2.register(HashMap.class);
+        container1.include(container2);
+
+        S2Container container3 = new S2ContainerImpl();
+        container3.setPath("3");
+        container3.register(MapArrayHolder.class);
+        container3.register(HashMap.class);
+        container3.register(HashMap.class);
+        container3.register(HashMap.class);
+        container2.include(container3);
+
+        S2Container container4 = new S2ContainerImpl();
+        container4.setPath("4");
+        container4.register(MapArrayHolder.class);
+        container4.register(HashMap.class);
+        container4.register(HashMap.class);
+        container4.register(HashMap.class);
+        container4.register(HashMap.class);
+        container3.include(container4);
+
+        container0.init();
+
+        MapArrayHolder holder = (MapArrayHolder) container0
+                .getComponent(MapArrayHolder.class);
+        assertEquals(10, holder.maps.length);
+
+        holder = (MapArrayHolder) container1.getComponent(MapArrayHolder.class);
+        assertEquals(10, holder.maps.length);
+
+        holder = (MapArrayHolder) container2.getComponent(MapArrayHolder.class);
+        assertEquals(9, holder.maps.length);
+
+        holder = (MapArrayHolder) container3.getComponent(MapArrayHolder.class);
+        assertEquals(7, holder.maps.length);
+
+        holder = (MapArrayHolder) container4.getComponent(MapArrayHolder.class);
+        assertEquals(4, holder.maps.length);
+    }
+
     public static class ComponentDefAware {
         private ComponentDef componentDef;
 
@@ -135,6 +191,14 @@ public class AbstBindingTypeDefTest extends TestCase {
 
         public void setHoges(IHoge[] hoges) {
             this.hoges = hoges;
+        }
+    }
+
+    public static class MapArrayHolder {
+        Map[] maps;
+
+        public void setMaps(Map[] maps) {
+            this.maps = maps;
         }
     }
 }
