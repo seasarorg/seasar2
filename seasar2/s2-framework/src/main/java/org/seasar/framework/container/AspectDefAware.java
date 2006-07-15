@@ -19,7 +19,7 @@ package org.seasar.framework.container;
  * このインターフェースは、 アスペクト定義を登録および取得することができるオブジェクトを表します。
  * <p>
  * アスペクト定義は複数登録することが出来ます。 アスペクト定義の取得はインデックス番号を指定して行います。
- * <p>
+ * </p>
  * 
  * @author higa
  * @author belltree (Javadoc)
