@@ -18,8 +18,16 @@ package org.seasar.framework.container;
 import org.seasar.framework.exception.SRuntimeException;
 
 /**
- * @author higa
+ * コンポーネントの循環参照が発生した場合にスローされます。
  * 
+ * <p>
+ * コンポーネントのコンストラクタ引数に、 同じコンポーネントを指定した場合などに発生します。
+ * </p>
+ * 
+ * @author higa
+ * @author belltree (Javadoc)
+ * 
+ * @see org.seasar.framework.container.deployer.SingletonComponentDeployer
  */
 public class CyclicReferenceRuntimeException extends SRuntimeException {
 
@@ -28,13 +36,21 @@ public class CyclicReferenceRuntimeException extends SRuntimeException {
     private Class componentClass_;
 
     /**
+     * 循環参照を引き起こしたコンポーネントのクラスを指定して、 <code>CyclicReferenceRuntimeException</code>を構築します。
+     * 
      * @param componentClasses
+     *            循環参照を引き起こしたコンポーネントのクラス
      */
     public CyclicReferenceRuntimeException(Class componentClass) {
         super("ESSR0047", new Object[] { componentClass.getName() });
         componentClass_ = componentClass;
     }
 
+    /**
+     * 循環参照を引き起こしたコンポーネントのクラスを返します。
+     * 
+     * @return 循環参照を引き起こしたコンポーネントのクラス
+     */
     public Class getComponentClass() {
         return componentClass_;
     }
