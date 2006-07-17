@@ -30,11 +30,7 @@ import java.util.Set;
 import javassist.ClassPool;
 import javassist.CtBehavior;
 import javassist.CtClass;
-import javassist.CtMethod;
-import javassist.Modifier;
 import javassist.NotFoundException;
-import javassist.bytecode.CodeAttribute;
-import javassist.bytecode.LocalVariableAttribute;
 import javassist.bytecode.MethodInfo;
 import javassist.bytecode.ParameterAnnotationsAttribute;
 import javassist.bytecode.annotation.Annotation;
@@ -333,7 +329,7 @@ public final class BeanDescImpl implements BeanDesc {
             final CtClass[] parameterTypes = ClassPoolUtil.toCtClassArray(pool,
                     constructor.getParameterTypes());
             try {
-                final String[] names = getParameterNames(clazz, clazz
+                final String[] names = getParameterNames(clazz
                         .getDeclaredConstructor(parameterTypes));
                 constructorParameterNamesCache.put(constructor, names);
             } catch (final NotFoundException e) {
@@ -360,9 +356,8 @@ public final class BeanDescImpl implements BeanDesc {
                 final CtClass[] parameterTypes = ClassPoolUtil.toCtClassArray(
                         pool, method.getParameterTypes());
                 try {
-                    final String[] names = getParameterNames(clazz,
-                            clazz.getDeclaredMethod(method.getName(),
-                                    parameterTypes));
+                    final String[] names = getParameterNames(clazz
+                            .getDeclaredMethod(method.getName(), parameterTypes));
                     methodParameterNamesCache.put(methods[i], names);
                 } catch (final NotFoundException e) {
                     logger.log("WSSR0085", new Object[] { beanClass.getName(),
@@ -372,16 +367,7 @@ public final class BeanDescImpl implements BeanDesc {
         }
     }
 
-    protected String[] getParameterNames(final CtClass clazz,
-            final CtBehavior behavior) throws NotFoundException {
-        final String[] parameterNames = getParameterNamesFronAnnotation(behavior);
-        if (parameterNames != null) {
-            return parameterNames;
-        }
-        return getParameterNamesFromCodeAttribute(behavior);
-    }
-
-    protected String[] getParameterNamesFronAnnotation(final CtBehavior behavior)
+    protected String[] getParameterNames(final CtBehavior behavior)
             throws NotFoundException {
         final MethodInfo methodInfo = behavior.getMethodInfo();
         final ParameterAnnotationsAttribute attribute = (ParameterAnnotationsAttribute) methodInfo
@@ -397,7 +383,7 @@ public final class BeanDescImpl implements BeanDesc {
             return null;
         }
         for (int i = 0; i < numParameters; ++i) {
-            final String parameterName = getParameterNameFromAnnotation(annotationsArray[i]);
+            final String parameterName = getParameterName(annotationsArray[i]);
             if (parameterName == null) {
                 return null;
             }
@@ -406,8 +392,7 @@ public final class BeanDescImpl implements BeanDesc {
         return parameterNames;
     }
 
-    protected String getParameterNameFromAnnotation(
-            final Annotation[] annotations) {
+    protected String getParameterName(final Annotation[] annotations) {
         Annotation nameAnnotation = null;
         for (int i = 0; i < annotations.length; ++i) {
             final Annotation annotation = annotations[i];
@@ -421,50 +406,6 @@ public final class BeanDescImpl implements BeanDesc {
         }
         return ((StringMemberValue) nameAnnotation.getMemberValue("value"))
                 .getValue();
-    }
-
-    protected String[] getParameterNamesFromCodeAttribute(
-            final CtBehavior behavior) throws NotFoundException {
-        final MethodInfo methodInfo = behavior.getMethodInfo();
-        final CodeAttribute codeAttribute = (CodeAttribute) methodInfo
-                .getAttribute("Code");
-        if (codeAttribute == null) {
-            return null;
-        }
-        final LocalVariableAttribute lva = (LocalVariableAttribute) codeAttribute
-                .getAttribute("LocalVariableTable");
-        if (lva == null) {
-            return null;
-        }
-        return toStringArray(behavior, lva);
-    }
-
-    protected String[] toStringArray(final CtBehavior behavior,
-            final LocalVariableAttribute lva) throws NotFoundException {
-        final String[] names = new String[behavior.getParameterTypes().length];
-        final int offset = getOffset(behavior);
-        for (int i = 0; i < names.length; ++i) {
-            names[i] = lva.variableName(i + offset);
-        }
-        return names;
-    }
-
-    protected int getOffset(final CtBehavior behavior) {
-        if (behavior instanceof CtMethod) {
-            return Modifier.isStatic(behavior.getModifiers()) ? 0 : 1;
-        }
-        if (Modifier.isStatic(beanClass.getModifiers())) {
-            return 1;
-        }
-        try {
-            final CtClass outer = behavior.getDeclaringClass()
-                    .getEnclosingClass();
-            if (!outer.isInterface()) {
-                return 0;
-            }
-        } catch (final NotFoundException ignore) {
-        }
-        return 1;
     }
 
     private Constructor findSuitableConstructor(Object[] args) {
