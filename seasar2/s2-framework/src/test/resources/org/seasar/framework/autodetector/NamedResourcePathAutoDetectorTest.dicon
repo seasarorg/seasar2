@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<!DOCTYPE components PUBLIC "-//SEASAR2.1//DTD S2Container//EN"
+	"http://www.seasar.org/dtd/components21.dtd">
+<components>
+	<component name="autoDetector" class="org.seasar.framework.autodetector.NamedResourcePathAutoDetector">
+		<initMethod name="addReferenceClass">
+			<arg>@org.seasar.framework.autodetector.Foo@class</arg>
+		</initMethod>
+		<initMethod name="addReferenceClass">
+			<arg>@junit.framework.TestSuite@class</arg>
+		</initMethod>
+		<initMethod name="addDirectoryName">
+			<arg>"org/seasar/framework/autodetector"</arg>
+		</initMethod>		
+		<initMethod name="addResourceNamePattern">
+			<arg>"org/seasar/framework/autodetector/foo.*"</arg>
+		</initMethod>
+		<initMethod name="addResourceNamePattern">
+			<arg>".*/TestSuite\\.class"</arg>
+		</initMethod>
+		<initMethod name="addIgnoreResourceNamePattern">
+			<arg>"org/seasar/framework/autodetector/hoge.*"</arg>
+		</initMethod>
+	</component>
+</components>
