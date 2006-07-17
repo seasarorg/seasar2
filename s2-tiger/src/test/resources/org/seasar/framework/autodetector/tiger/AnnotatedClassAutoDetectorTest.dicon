@@ -1,0 +1,18 @@
+<!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN"
+	"http://www.seasar.org/dtd/components24.dtd">
+<components>
+	<component name="autoDetector" class="org.seasar.framework.autodetector.tiger.AnnotatedClassAutoDetector">
+		<initMethod name="addReferenceClass">
+			<arg>@org.seasar.framework.autodetector.tiger.Foo@class</arg>
+		</initMethod>
+		<initMethod name="addPackageName">
+			<arg>"org.seasar.framework.autodetector.tiger"</arg>
+		</initMethod>		
+		<initMethod name="addAnnotation">
+			<arg>@javax.persistence.Entity@class</arg>
+		</initMethod>
+		<initMethod name="addAnnotation">
+			<arg>@javax.persistence.Embeddable@class</arg>
+		</initMethod>
+	</component>
+</components>
