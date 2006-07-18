@@ -27,8 +27,10 @@ import org.seasar.framework.container.impl.S2ContainerImpl;
 
 /**
  * @author YOKOTA Takehiko
+ * @author manhole
  */
 public class OgnlUtilTest extends TestCase {
+
     public void testAddClassResolverIfNecessary() {
         S2Container container = new S2ContainerImpl() {
             public ClassLoader getClassLoader() {
@@ -76,4 +78,136 @@ public class OgnlUtilTest extends TestCase {
         }
         assertNotNull("3", clazz);
     }
+
+    public void testGetValue() throws Exception {
+        {
+            final Object exp = OgnlUtil
+                    .parseExpression("new java.lang.String(\"abc\")");
+            final Object value = OgnlUtil.getValue(exp, null);
+            assertEquals("abc", value);
+        }
+        {
+            final Object exp = OgnlUtil.parseExpression("\"aaaa\"");
+            final Object value = OgnlUtil.getValue(exp, null);
+            assertEquals("aaaa", value);
+        }
+        {
+            // 12354 is Japanese Hiragana "a".
+            final Character a = new Character((char) 12354);
+            final Object exp = OgnlUtil.parseExpression("\"" + a + "\"");
+            final Object value = OgnlUtil.getValue(exp, null);
+            assertEquals(a.toString(), value);
+        }
+        {
+            final Object exp = OgnlUtil.parseExpression("a.get(\"b\")");
+            Map a = new HashMap();
+            a.put("b", new Integer(123));
+            Map root = new HashMap();
+            root.put("a", a);
+            final Object value = OgnlUtil.getValue(exp, root);
+            assertEquals(new Integer(123), value);
+        }
+        {
+            final Character a = new Character((char) 12354);
+            final Object exp = OgnlUtil.parseExpression(a + ".get(\"b\")");
+            Map aaa = new HashMap();
+            aaa.put("b", new Integer(123));
+            Map root = new HashMap();
+            root.put(a.toString(), aaa);
+            final Object value = OgnlUtil.getValue(exp, root);
+            assertEquals(new Integer(123), value);
+        }
+        {
+            final Object exp = OgnlUtil.parseExpression("\"aaa\" != null");
+            final Object value = OgnlUtil.getValue(exp, null);
+            assertEquals(Boolean.TRUE, value);
+        }
+        {
+            final Object exp = OgnlUtil.parseExpression("\"aaa\" == null");
+            final Object value = OgnlUtil.getValue(exp, null);
+            assertEquals(Boolean.FALSE, value);
+        }
+        {
+            final Object exp = OgnlUtil.parseExpression("a != null");
+            final Map root = new HashMap();
+            final Object value = OgnlUtil.getValue(exp, root);
+            assertEquals(Boolean.FALSE, value);
+        }
+        {
+            final Object exp = OgnlUtil.parseExpression("a$ == null");
+            final Map root = new HashMap();
+            final Object value = OgnlUtil.getValue(exp, root);
+            assertEquals(Boolean.TRUE, value);
+        }
+        {
+            final Object exp = OgnlUtil.parseExpression("a_ == null");
+            final Map root = new HashMap();
+            final Object value = OgnlUtil.getValue(exp, root);
+            assertEquals(Boolean.TRUE, value);
+        }
+    }
+
+    public void testHiragana() throws Exception {
+        final Character a = new Character((char) 12354);
+        System.out.println(a);
+        final Map root = new HashMap();
+        final Object exp = OgnlUtil.parseExpression(a + " != null");
+        final Object value = OgnlUtil.getValue(exp, root);
+        assertEquals(Boolean.FALSE, value);
+    }
+
+    public void testKatakana() throws Exception {
+        final Character a = new Character((char) 12450);
+        System.out.println(a);
+        final Map root = new HashMap();
+        final Object exp = OgnlUtil.parseExpression(a + " != null");
+        final Object value = OgnlUtil.getValue(exp, root);
+        assertEquals(Boolean.FALSE, value);
+    }
+
+    public void todo_testDigit() throws Exception {
+        final Character one = new Character((char) 65297);
+        System.out.println(one);
+        final Map root = new HashMap();
+        final Object exp = OgnlUtil.parseExpression("A" + one + " != null");
+        final Object value = OgnlUtil.getValue(exp, root);
+        assertEquals(Boolean.FALSE, value);
+    }
+
+    public void todo_testSmallLetter() throws Exception {
+        final Character smallA = new Character((char) 65345);
+        System.out.println(smallA);
+        final Map root = new HashMap();
+        final Object exp = OgnlUtil.parseExpression(smallA + " != null");
+        final Object value = OgnlUtil.getValue(exp, root);
+        assertEquals(Boolean.FALSE, value);
+    }
+
+    public void todo_testBigLetter() throws Exception {
+        final Character largeA = new Character((char) 65313);
+        System.out.println(largeA);
+        final Map root = new HashMap();
+        final Object exp = OgnlUtil.parseExpression(largeA + " != null");
+        final Object value = OgnlUtil.getValue(exp, root);
+        assertEquals(Boolean.FALSE, value);
+    }
+
+    public void todo_testUndescore() throws Exception {
+        final Character underscore = new Character((char) 65343);
+        System.out.println(underscore);
+        final Map root = new HashMap();
+        final Object exp = OgnlUtil.parseExpression(underscore + " != null");
+        final Object value = OgnlUtil.getValue(exp, root);
+        assertEquals(Boolean.FALSE, value);
+    }
+
+    public void todo_testDollor() throws Exception {
+        final Character dollor = new Character((char) 65284);
+        System.out.println(dollor);
+        final Map root = new HashMap();
+        final Object exp = OgnlUtil.parseExpression(dollor + " != null");
+        final Object value = OgnlUtil.getValue(exp, root);
+        assertEquals(Boolean.FALSE, value);
+    }
+
 }
