@@ -51,14 +51,14 @@ public class StringUtilTest extends TestCase {
         assertEquals("1", true, StringUtil.startsWith("abcdef", "ABC"));
         assertEquals("2", false, StringUtil.startsWith("ab", "ABC"));
     }
-    
+
     public void testIsBlank() throws Exception {
         assertEquals("1", true, StringUtil.isBlank(" "));
         assertEquals("2", true, StringUtil.isBlank(""));
         assertEquals("3", false, StringUtil.isBlank("a"));
         assertEquals("4", false, StringUtil.isBlank(" a "));
     }
-    
+
     public void testIsNotBlank() throws Exception {
         assertEquals("1", false, StringUtil.isNotBlank(" "));
         assertEquals("2", false, StringUtil.isNotBlank(""));
@@ -66,12 +66,18 @@ public class StringUtilTest extends TestCase {
         assertEquals("4", true, StringUtil.isNotBlank(" a "));
     }
 
-    public void testContains() throws Exception {
+    public void testContains1() throws Exception {
         assertEquals("1", true, StringUtil.contains("a", 'a'));
         assertEquals("2", true, StringUtil.contains("abc", 'b'));
         assertEquals("3", false, StringUtil.contains("abc", 'd'));
     }
-    
+
+    public void testContains2() throws Exception {
+        assertEquals("1", true, StringUtil.contains("a", "a"));
+        assertEquals("2", true, StringUtil.contains("abc", "b"));
+        assertEquals("3", false, StringUtil.contains("abc", "d"));
+    }
+
     public void testEquals() throws Exception {
         assertEquals("1", true, StringUtil.equals("a", "a"));
         assertEquals("2", true, StringUtil.equals(null, null));

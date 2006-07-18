@@ -165,6 +165,13 @@ public final class StringUtil {
         return str.indexOf(ch) >= 0;
     }
 
+    public static boolean contains(String s1, String s2) {
+        if (isEmpty(s1)) {
+            return false;
+        }
+        return s1.indexOf(s2) >= 0;
+    }
+
     public static boolean equals(String target1, String target2) {
         return (target1 == null) ? (target2 == null) : target1.equals(target2);
     }
