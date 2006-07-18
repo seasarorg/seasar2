@@ -32,9 +32,6 @@ public interface S2Container extends MetaDefAware {
     Object[] findAllComponents(Object componentKey)
             throws CyclicReferenceRuntimeException;
 
-    Object[] findDescendantComponents(Object componentKey)
-            throws CyclicReferenceRuntimeException;
-
     Object[] findLocalComponents(Object componentKey)
             throws CyclicReferenceRuntimeException;
 
@@ -67,8 +64,6 @@ public interface S2Container extends MetaDefAware {
     ComponentDef[] findComponentDefs(Object componentKey);
 
     ComponentDef[] findAllComponentDefs(Object componentKey);
-
-    ComponentDef[] findDescendantComponentDefs(Object componentKey);
 
     ComponentDef[] findLocalComponentDefs(Object componentKey);
 

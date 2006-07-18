@@ -134,18 +134,6 @@ public class S2ContainerImpl implements S2Container, ContainerConstants {
         return toComponentArray(componentKey, componentDefs);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.seasar.framework.container.S2Container#findDescendantComponents(java.lang.Object)
-     */
-    public Object[] findDescendantComponents(Object componentKey)
-            throws CyclicReferenceRuntimeException {
-        assertParameterIsNotNull(componentKey, "componentKey");
-        ComponentDef[] componentDefs = findDescendantComponentDefs(componentKey);
-        return toComponentArray(componentKey, componentDefs);
-    }
-
     /**
      * @see org.seasar.framework.container.S2Container#findLocalComponents(java.lang.Object)
      */
@@ -359,29 +347,6 @@ public class S2ContainerImpl implements S2Container, ContainerConstants {
                         public Object processContainer(S2Container container) {
                             componentDefs.addAll(Arrays.asList(container
                                     .findLocalComponentDefs(componentKey)));
-                            return null;
-                        }
-                    });
-            return (ComponentDef[]) componentDefs
-                    .toArray(new ComponentDef[componentDefs.size()]);
-        }
-    }
-
-    /**
-     * @see org.seasar.framework.container.S2Container#findDescendantComponentDefs(java.lang.Object)
-     */
-    public ComponentDef[] findDescendantComponentDefs(final Object componentKey) {
-        assertParameterIsNotNull(componentKey, "componentKey");
-        synchronized (root) {
-            final S2Container rootContainer = getRoot();
-            final List componentDefs = new ArrayList();
-            Traversal.forEachContainer(this,
-                    new Traversal.S2ContainerHandler() {
-                        public Object processContainer(S2Container container) {
-                            if (container.getRoot() == rootContainer) {
-                                componentDefs.addAll(Arrays.asList(container
-                                        .findLocalComponentDefs(componentKey)));
-                            }
                             return null;
                         }
                     });
