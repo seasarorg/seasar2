@@ -649,47 +649,55 @@ public class S2ContainerImplTest extends TestCase {
         byte[] buf = new byte[4096];
         InputStream is = null;
         OutputStream os = null;
+        File componentClassOutFile = null;
         try {
-            is = new FileInputStream(componentClassFile);
-            os = new FileOutputStream(new File(parentDir, "Component.class"));
-            int len;
-            while ((len = is.read(buf)) != -1) {
-                os.write(buf, 0, len);
-            }
-        } finally {
-            if (os != null) {
-                try {
-                    os.close();
-                } catch (Throwable t) {
-                    ;
+            try {
+                is = new FileInputStream(componentClassFile);
+                componentClassOutFile = new File(parentDir, "Component.class");
+                os = new FileOutputStream(componentClassOutFile);
+                int len;
+                while ((len = is.read(buf)) != -1) {
+                    os.write(buf, 0, len);
+                }
+            } finally {
+                if (os != null) {
+                    try {
+                        os.close();
+                    } catch (Throwable t) {
+                        ;
+                    }
+                }
+                if (is != null) {
+                    try {
+                        is.close();
+                    } catch (Throwable t) {
+                        ;
+                    }
                 }
             }
-            if (is != null) {
-                try {
-                    is.close();
-                } catch (Throwable t) {
-                    ;
-                }
-            }
-        }
-        File classesDir = parentDir.getParentFile();
+            File classesDir = parentDir.getParentFile();
 
-        ClassLoader customCl = new URLClassLoader(new URL[] { classesDir
-                .toURI().toURL() });
-        ClassLoader cl = Thread.currentThread().getContextClassLoader();
-        try {
-            Thread.currentThread().setContextClassLoader(customCl);
-            container = new S2ContainerImpl();
-            componentDef = new ComponentDefImpl();
-            componentDef.setComponentName("component");
-            componentDef.setExpression(new OgnlExpression(
-                    "@test.Component@class"));
-            container.register(componentDef);
-            obj = container.getComponent("component");
-            assertNotNull("3", obj);
-            assertSame("4", customCl, ((Class) obj).getClassLoader());
+            ClassLoader customCl = new URLClassLoader(new URL[] { classesDir
+                    .toURI().toURL() });
+            ClassLoader cl = Thread.currentThread().getContextClassLoader();
+            try {
+                Thread.currentThread().setContextClassLoader(customCl);
+                container = new S2ContainerImpl();
+                componentDef = new ComponentDefImpl();
+                componentDef.setComponentName("component");
+                componentDef.setExpression(new OgnlExpression(
+                        "@test.Component@class"));
+                container.register(componentDef);
+                obj = container.getComponent("component");
+                assertNotNull("3", obj);
+                assertSame("4", customCl, ((Class) obj).getClassLoader());
+            } finally {
+                Thread.currentThread().setContextClassLoader(cl);
+            }
         } finally {
-            Thread.currentThread().setContextClassLoader(cl);
+            if (componentClassOutFile != null && componentClassOutFile.exists()) {
+                componentClassOutFile.delete();
+            }
         }
     }
 
