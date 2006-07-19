@@ -132,4 +132,50 @@ public class TraversalTest extends TestCase {
 
         assertEquals("1", "1-1", s);
     }
+
+    public void testForEachParentContainer() throws Exception {
+        final List l = new ArrayList();
+        final S2Container container3 = container.getChild(2);
+        Traversal.forEachParentContainer(container3,
+                new Traversal.S2ContainerHandler() {
+                    public Object processContainer(S2Container container) {
+                        l.add(container.getNamespace());
+                        return null;
+                    }
+                });
+
+        assertEquals("1", 3, l.size());
+        assertEquals("2", "3", l.get(0));
+        assertEquals("3", "2", l.get(1));
+        assertEquals("4", "root", l.get(2));
+    }
+
+    public void testForEachParentContainerChildLast() throws Exception {
+        final List l = new ArrayList();
+        final S2Container container3 = container.getChild(2);
+        Traversal.forEachParentContainer(container3,
+                new Traversal.S2ContainerHandler() {
+                    public Object processContainer(S2Container container) {
+                        l.add(container.getNamespace());
+                        return null;
+                    }
+                }, false);
+
+        assertEquals("1", 3, l.size());
+        assertEquals("2", "root", l.get(0));
+        assertEquals("3", "2", l.get(1));
+        assertEquals("4", "3", l.get(2));
+    }
+
+    public void testForEachParentContainerFinding() throws Exception {
+        final S2Container container3 = container.getChild(2);
+        String s = (String) Traversal.forEachParentContainer(container3,
+                new Traversal.S2ContainerHandler() {
+                    public Object processContainer(S2Container container) {
+                        return container.getNamespace();
+                    }
+                }, false);
+
+        assertEquals("1", "root", s);
+    }
 }

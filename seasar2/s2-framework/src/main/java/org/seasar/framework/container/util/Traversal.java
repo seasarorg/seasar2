@@ -90,4 +90,42 @@ public class Traversal {
         }
         return null;
     }
+
+    public static Object forEachParentContainer(final S2Container container,
+            final S2ContainerHandler handler) {
+        return forEachParentContainer(container, handler, true, new HashSet());
+    }
+
+    public static Object forEachParentContainer(final S2Container container,
+            final S2ContainerHandler handler, final boolean childFirst) {
+        return forEachParentContainer(container, handler, childFirst,
+                new HashSet());
+    }
+
+    protected static Object forEachParentContainer(final S2Container container,
+            final S2ContainerHandler handler, final boolean childFirst,
+            final Set processed) {
+        if (childFirst) {
+            final Object result = handler.processContainer(container);
+            if (result != null) {
+                return result;
+            }
+        }
+        for (int i = 0; i < container.getParentSize(); ++i) {
+            final S2Container parent = container.getParent(i);
+            if (processed.contains(parent)) {
+                continue;
+            }
+            processed.add(parent);
+            final Object result = forEachParentContainer(parent, handler,
+                    childFirst, processed);
+            if (result != null) {
+                return result;
+            }
+        }
+        if (!childFirst) {
+            return handler.processContainer(container);
+        }
+        return null;
+    }
 }
