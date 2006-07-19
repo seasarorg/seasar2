@@ -1,0 +1,58 @@
+/*
+ * Copyright 2004-2006 the Seasar Foundation and the Others.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, 
+ * either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
+package org.seasar.framework.container.cooldeploy.creator;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.seasar.framework.convention.NamingConvention;
+import org.seasar.framework.util.ClassUtil;
+
+public class MultiPackageCoolCreator extends AbstractCoolCreator {
+
+    private List middlePackageNames = new ArrayList();
+
+    public MultiPackageCoolCreator(NamingConvention namingConvention) {
+        super(namingConvention);
+    }
+
+    public String[] getPackageNames(String rootPackageName) {
+        String[] names = new String[middlePackageNames.size()];
+        for (int i = 0; i < middlePackageNames.size(); ++i) {
+            names[i] = ClassUtil.concatName(rootPackageName,
+                    (String) middlePackageNames.get(i));
+        }
+        return names;
+    }
+
+    public void addMiddlePackageName(String middlePackageName) {
+        middlePackageNames.add(middlePackageName);
+    }
+
+    protected boolean isTargetMiddlePackage(String rootPackageName,
+            String className) {
+        String[] pNames = getPackageNames(rootPackageName);
+        if (pNames.length == 0) {
+            return true;
+        }
+        for (int i = 0; i < pNames.length; ++i) {
+            if (className.startsWith(pNames[i])) {
+                return true;
+            }
+        }
+        return false;
+    }
+}

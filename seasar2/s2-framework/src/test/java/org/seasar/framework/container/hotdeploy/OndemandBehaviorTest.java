@@ -20,8 +20,8 @@ import java.lang.reflect.Method;
 import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.factory.BeanDescFactory;
 import org.seasar.framework.container.ComponentDef;
-import org.seasar.framework.container.hotdeploy.creator.SinglePackageCreator;
-import org.seasar.framework.container.hotdeploy.impl.OndemandSubsystemImpl;
+import org.seasar.framework.container.hotdeploy.creator.SinglePackageOndemandCreator;
+import org.seasar.framework.container.hotdeploy.impl.OndemandProjectImpl;
 import org.seasar.framework.container.impl.S2ContainerBehavior;
 import org.seasar.framework.convention.impl.NamingConventionImpl;
 import org.seasar.framework.unit.S2FrameworkTestCase;
@@ -40,14 +40,12 @@ public class OndemandBehaviorTest extends S2FrameworkTestCase {
     protected void setUp() {
         originalLoader = Thread.currentThread().getContextClassLoader();
         NamingConventionImpl convention = new NamingConventionImpl();
-        convention.setRootPackageName(ClassUtil.getPackageName(getClass()));
         ondemand = new OndemandBehavior();
-        ondemand.setNamingConvention(convention);
-        SinglePackageCreator creator = new SinglePackageCreator(
-                convention);
-        OndemandSubsystemImpl subsystem = new OndemandSubsystemImpl();
-        subsystem.setCreators(new OndemandCreator[] { creator });
-        ondemand.addSubsystem(subsystem);
+        SinglePackageOndemandCreator creator = new SinglePackageOndemandCreator(convention);
+        OndemandProjectImpl project = new OndemandProjectImpl();
+        project.setRootPackageName(ClassUtil.getPackageName(getClass()));
+        project.setCreators(new OndemandCreator[] { creator });
+        ondemand.addProject(project);
         S2ContainerBehavior.setProvider(ondemand);
     }
 

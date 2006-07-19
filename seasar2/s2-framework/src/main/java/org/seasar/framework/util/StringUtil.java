@@ -120,6 +120,10 @@ public final class StringUtil {
             return name;
         }
         char chars[] = name.toCharArray();
+        if (chars.length >= 2 && Character.isUpperCase(chars[0])
+                && Character.isUpperCase(chars[1])) {
+            return name;
+        }
         chars[0] = Character.toLowerCase(chars[0]);
         return new String(chars);
     }

@@ -26,7 +26,6 @@ import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 import org.seasar.framework.container.impl.S2ContainerImpl;
 import org.seasar.framework.container.impl.S2ContainerBehavior.DefaultProvider;
 import org.seasar.framework.container.util.S2ContainerUtil;
-import org.seasar.framework.convention.NamingConvention;
 import org.seasar.framework.exception.ClassNotFoundRuntimeException;
 import org.seasar.framework.util.DisposableUtil;
 
@@ -37,35 +36,31 @@ public class OndemandBehavior extends DefaultProvider implements
 
     private HotdeployClassLoader hotdeployClassLoader;
 
-    public static final String namingConvention_BINDING = "bindingType=must";
-
-    private NamingConvention namingConvention;
-
-    private List subsystems = new ArrayList();
+    private List projects = new ArrayList();
 
     private Map componentDefCache = new HashMap();
 
-    public void setNamingConvention(NamingConvention namingConvention) {
-        this.namingConvention = namingConvention;
+    public OndemandProject getProject(int index) {
+        return (OndemandProject) projects.get(index);
     }
 
-    public OndemandSubsystem getSubsystem(int index) {
-        return (OndemandSubsystem) subsystems.get(index);
+    public OndemandProject[] getProjects() {
+        return (OndemandProject[]) projects
+                .toArray(new OndemandProject[projects.size()]);
     }
 
-    public int getSubsystemSize() {
-        return subsystems.size();
+    public int getProjectSize() {
+        return projects.size();
     }
 
-    public void addSubsystem(OndemandSubsystem subsystem) {
-        subsystems.add(subsystem);
+    public void addProject(OndemandProject project) {
+        projects.add(project);
     }
 
     public void start() {
         originalClassLoader = Thread.currentThread().getContextClassLoader();
         hotdeployClassLoader = new HotdeployClassLoader(originalClassLoader);
-        hotdeployClassLoader.setPackageName(namingConvention
-                .getRootPackageName());
+        hotdeployClassLoader.setProjects(getProjects());
         hotdeployClassLoader.addHotdeployListener(this);
         Thread.currentThread().setContextClassLoader(hotdeployClassLoader);
         S2ContainerImpl container = (S2ContainerImpl) SingletonS2ContainerFactory
@@ -76,8 +71,6 @@ public class OndemandBehavior extends DefaultProvider implements
     public void stop() {
         DisposableUtil.dispose();
         Thread.currentThread().setContextClassLoader(originalClassLoader);
-        namingConvention = null;
-        subsystems.clear();
         hotdeployClassLoader = null;
         originalClassLoader = null;
         componentDefCache.clear();
@@ -114,18 +107,18 @@ public class OndemandBehavior extends DefaultProvider implements
     }
 
     protected void loadComponentDef(S2Container container, Class clazz) {
-        for (int i = 0; i < getSubsystemSize(); ++i) {
-            OndemandSubsystem subsystem = getSubsystem(i);
-            if (subsystem.loadComponentDef(this, clazz)) {
+        for (int i = 0; i < getProjectSize(); ++i) {
+            OndemandProject project = getProject(i);
+            if (project.loadComponentDef(this, clazz)) {
                 break;
             }
         }
     }
 
     protected ComponentDef getComponentDef(S2Container container, Class clazz) {
-        for (int i = 0; i < getSubsystemSize(); ++i) {
-            OndemandSubsystem subsystem = getSubsystem(i);
-            ComponentDef cd = subsystem.getComponentDef(this, clazz);
+        for (int i = 0; i < getProjectSize(); ++i) {
+            OndemandProject project = getProject(i);
+            ComponentDef cd = project.getComponentDef(this, clazz);
             if (cd != null) {
                 return cd;
             }
@@ -135,11 +128,10 @@ public class OndemandBehavior extends DefaultProvider implements
 
     protected ComponentDef getComponentDef(S2Container container,
             String componentName) {
-        for (int i = 0; i < getSubsystemSize(); ++i) {
-            OndemandSubsystem subsystem = getSubsystem(i);
+        for (int i = 0; i < getProjectSize(); ++i) {
+            OndemandProject project = getProject(i);
             try {
-                ComponentDef cd = subsystem
-                        .getComponentDef(this, componentName);
+                ComponentDef cd = project.getComponentDef(this, componentName);
                 if (cd != null) {
                     return cd;
                 }

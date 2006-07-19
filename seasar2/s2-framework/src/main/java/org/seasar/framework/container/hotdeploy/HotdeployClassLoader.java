@@ -25,7 +25,7 @@ import org.seasar.framework.util.ResourceUtil;
 
 public class HotdeployClassLoader extends ClassLoader {
 
-    private String packageName;
+    private OndemandProject[] projects;
 
     private List listeners = new ArrayList();
 
@@ -33,20 +33,12 @@ public class HotdeployClassLoader extends ClassLoader {
         super(classLoader);
     }
 
-    public String getPackageName() {
-        return packageName;
-    }
-
-    public void setPackageName(String packageName) {
-        this.packageName = packageName;
+    public void setProjects(OndemandProject[] projects) {
+        this.projects = projects;
     }
 
     public void addHotdeployListener(HotdeployListener listener) {
         listeners.add(listener);
-    }
-
-    public void removeHotdeployListener(HotdeployListener listener) {
-        listeners.remove(listener);
     }
 
     public HotdeployListener getHotdeployListener(int index) {
@@ -55,6 +47,10 @@ public class HotdeployClassLoader extends ClassLoader {
 
     public int getHotdeployListenerSize() {
         return listeners.size();
+    }
+
+    public void removeHotdeployListener(HotdeployListener listener) {
+        listeners.remove(listener);
     }
 
     public Class loadClass(String className, boolean resolve)
@@ -88,10 +84,19 @@ public class HotdeployClassLoader extends ClassLoader {
     }
 
     protected boolean isTargetClass(String className) {
-        if (packageName == null) {
+        if (projects == null) {
             return true;
         }
-        return className.startsWith(packageName);
+        for (int i = 0; i < projects.length; ++i) {
+            OndemandProject project = projects[i];
+            int m = project.matchClassName(className);
+            if (m == OndemandProject.MATCH) {
+                return true;
+            } else if (m == OndemandProject.IGNORE) {
+                return false;
+            }
+        }
+        return false;
     }
 
     protected void definedClass(Class clazz) {

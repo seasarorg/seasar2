@@ -66,7 +66,7 @@ public class StringUtilTest extends TestCase {
         assertEquals("4", true, StringUtil.isNotBlank(" a "));
     }
 
-    public void testContains1() throws Exception {
+    public void testContains() throws Exception {
         assertEquals("1", true, StringUtil.contains("a", 'a'));
         assertEquals("2", true, StringUtil.contains("abc", 'b'));
         assertEquals("3", false, StringUtil.contains("abc", 'd'));
@@ -84,5 +84,11 @@ public class StringUtilTest extends TestCase {
         assertEquals("3", false, StringUtil.equals("a", null));
         assertEquals("4", false, StringUtil.equals(null, "a"));
         assertEquals("5", false, StringUtil.equals("a", "b"));
+    }
+
+    public void testDecapitalize() throws Exception {
+        assertEquals("abc", StringUtil.decapitalize("abc"));
+        assertEquals("abc", StringUtil.decapitalize("Abc"));
+        assertEquals("ABC", StringUtil.decapitalize("ABC"));
     }
 }

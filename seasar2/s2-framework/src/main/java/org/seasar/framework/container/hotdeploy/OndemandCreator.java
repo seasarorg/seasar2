@@ -20,11 +20,11 @@ import org.seasar.framework.container.ComponentDef;
 public interface OndemandCreator {
 
     boolean loadComponentDef(OndemandS2Container container,
-            String subsystemPackageName, Class clazz);
+            String rootPackageName, Class clazz);
 
     ComponentDef getComponentDef(OndemandS2Container container,
-            String subsystemPackageName, Class clazz);
+            String rootPackageName, Class clazz);
 
     ComponentDef getComponentDef(OndemandS2Container container,
-            String subsystemPackageName, String componentName);
+            String rootPackageName, String componentName);
 }

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<!DOCTYPE components PUBLIC "-//SEASAR2.1//DTD S2Container//EN"
+	"http://www.seasar.org/dtd/components21.dtd">
+<components namespace="child" >
+	<include path="aop.dicon"/>
+	<component class="org.seasar.framework.convention.impl.NamingConventionImpl"/>
+	<component name="aspectCustomizer" class="org.seasar.framework.container.autoregister.AspectCustomizer">
+		<property name="interceptorName">"aop.traceInterceptor"</property>
+	</component>
+	<component class="org.seasar.framework.container.cooldeploy.creator.DxoCoolCreator">
+		<initMethod name="addCustomizer">
+			<arg>aspectCustomizer</arg>
+		</initMethod>
+	</component>
+	<component name="project" class="org.seasar.framework.container.cooldeploy.impl.CoolProjectImpl">
+		<property name="rootPackageName">"org.seasar.framework.container.cooldeploy.creator"</property>
+	</component>
+	<component class="org.seasar.framework.container.cooldeploy.CoolComponentAutoRegister">
+		<initMethod name="addProject">
+			<arg>project</arg>
+		</initMethod>
+	</component>
+</components>

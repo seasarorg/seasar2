@@ -22,60 +22,60 @@ import org.seasar.framework.util.StringUtil;
 
 /**
  * @author higa
- *
+ * 
  */
 public class NamingConventionImpl implements NamingConvention {
 
     private static final char PACKAGE_SEPARATOR = '_';
 
-    private String rootPackageName;
-    
     private String viewRootPath = "/view";
-    
+
     private String viewExtension = ".html";
-    
+
     private String implementationPackageName = "impl";
-    
+
     private String implementationSuffix = "Impl";
-    
+
     private String pageSuffix = "Page";
-    
+
     private String actionSuffix = "Action";
-    
+
     private String serviceSuffix = "Service";
-    
+
     private String dxoSuffix = "Dxo";
-    
+
     private String logicSuffix = "Logic";
-    
+
     private String daoSuffix = "Dao";
-    
+
     private String helperSuffix = "Helper";
-    
+
     private String interceptorSuffix = "Interceptor";
-    
+
     private String validatorSuffix = "Validator";
-    
+
     private String dtoSuffix = "Dto";
-    
+
     private String webPackageName = "web";
-    
+
     private String dxoPackageName = "dxo";
-    
+
     private String logicPackageName = "logic";
-    
+
     private String daoPackageName = "dao";
-    
+
     private String entityPackageName = "entity";
-    
+
     private String dtoPackageName = "dto";
-    
+
+    private String servicePackageName = "service";
+
     private String interceptorPackageName = "interceptor";
-    
+
     private String validatorPackageName = "validator";
-    
+
     private String helperPackageName = "helper";
-        
+
     public String getActionSuffix() {
         return actionSuffix;
     }
@@ -212,12 +212,12 @@ public class NamingConventionImpl implements NamingConvention {
         this.pageSuffix = pageSuffix;
     }
 
-    public String getRootPackageName() {
-        return rootPackageName;
+    public String getServicePackageName() {
+        return servicePackageName;
     }
 
-    public void setRootPackageName(String rootPackageName) {
-        this.rootPackageName = rootPackageName;
+    public void setServicePackageName(String servicePackageName) {
+        this.servicePackageName = servicePackageName;
     }
 
     public String getServiceSuffix() {
@@ -285,19 +285,24 @@ public class NamingConventionImpl implements NamingConvention {
                 if (index < 0) {
                     throw new IllegalArgumentException(className);
                 }
-                String packageName = s.substring(0, index).replace('.', PACKAGE_SEPARATOR);
-                String name = StringUtil.decapitalize(s.substring(index + implkey.length(), s.length() - implementationSuffix.length()));
+                String packageName = s.substring(0, index).replace('.',
+                        PACKAGE_SEPARATOR);
+                String name = StringUtil.decapitalize(s.substring(index
+                        + implkey.length(), s.length()
+                        - implementationSuffix.length()));
                 return packageName + PACKAGE_SEPARATOR + name;
             }
             index = s.lastIndexOf('.');
             if (index < 0) {
                 throw new IllegalArgumentException(className);
             }
-            String packageName = s.substring(0, index).replace('.', PACKAGE_SEPARATOR);
+            String packageName = s.substring(0, index).replace('.',
+                    PACKAGE_SEPARATOR);
             String name = StringUtil.decapitalize(s.substring(index + 1));
             return packageName + PACKAGE_SEPARATOR + name;
         }
-        String s = StringUtil.decapitalize(ClassUtil.getShortClassName(className));
+        String s = StringUtil.decapitalize(ClassUtil
+                .getShortClassName(className));
         if (s.endsWith(implementationSuffix)) {
             return s.substring(0, s.length() - implementationSuffix.length());
         }
@@ -310,14 +315,14 @@ public class NamingConventionImpl implements NamingConvention {
     public String fromPathToPageName(String path) {
         return fromPathToComponentName(path, pageSuffix);
     }
-    
+
     protected String fromPathToComponentName(String path, String nameSuffix) {
-        if (!path.startsWith(viewRootPath)
-                || !path.endsWith(viewExtension)) {
+        if (!path.startsWith(viewRootPath) || !path.endsWith(viewExtension)) {
             throw new IllegalArgumentException(path);
         }
-        String componentName = path.substring(viewRootPath.length() + 1,
-                path.length() - viewExtension.length())
+        String componentName = path.substring(viewRootPath.length() + 1, path
+                .length()
+                - viewExtension.length())
                 + nameSuffix;
         return componentName.replace('/', '_');
     }
@@ -336,8 +341,10 @@ public class NamingConventionImpl implements NamingConvention {
         if (!pageName.endsWith(pageSuffix)) {
             throw new IllegalArgumentException(pageName);
         }
-        String name = pageName.substring(0, pageName.length() - pageSuffix.length());
-        return viewRootPath + "/" + name.replace(PACKAGE_SEPARATOR, '/') + viewExtension;
+        String name = pageName.substring(0, pageName.length()
+                - pageSuffix.length());
+        return viewRootPath + "/" + name.replace(PACKAGE_SEPARATOR, '/')
+                + viewExtension;
     }
 
     /*
@@ -347,7 +354,9 @@ public class NamingConventionImpl implements NamingConvention {
         if (!actionName.endsWith(actionSuffix)) {
             throw new IllegalArgumentException(actionName);
         }
-        String name = actionName.substring(0, actionName.length() - actionSuffix.length());
-        return viewRootPath + "/" + name.replace(PACKAGE_SEPARATOR, '/') + viewExtension;
+        String name = actionName.substring(0, actionName.length()
+                - actionSuffix.length());
+        return viewRootPath + "/" + name.replace(PACKAGE_SEPARATOR, '/')
+                + viewExtension;
     }
 }

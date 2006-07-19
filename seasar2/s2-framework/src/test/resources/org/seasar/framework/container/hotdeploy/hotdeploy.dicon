@@ -14,9 +14,11 @@
 	<component class="org.seasar.framework.container.hotdeploy.creator.InterceptorCreator"/>
 	<component class="org.seasar.framework.container.hotdeploy.creator.ValidatorCreator"/>
 	<component class="org.seasar.framework.container.hotdeploy.OndemandBehavior">
-		<initMethod name="addSubsystem">
+		<initMethod name="addProject">
 			<arg>
-				<component class="org.seasar.framework.container.hotdeploy.impl.OndemandSubsystemImpl"/>
+				<component class="org.seasar.framework.container.hotdeploy.impl.OndemandProjectImpl">
+					<property name="rootPackageName">"org.seasar.framework.container.hotdeploy"</property>
+				</component>
 			</arg>
 		</initMethod>
 	</component>

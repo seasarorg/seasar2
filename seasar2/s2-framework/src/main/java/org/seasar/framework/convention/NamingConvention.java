@@ -17,65 +17,65 @@ package org.seasar.framework.convention;
 
 /**
  * @author higa
- *
+ * 
  */
 public interface NamingConvention {
 
-    String getRootPackageName();
-    
     String getViewRootPath();
-    
+
     String getViewExtension();
-    
+
     String getImplementationSuffix();
-    
+
     String getImplementationPackageName();
-    
+
     String getPageSuffix();
-    
+
     String getActionSuffix();
-    
+
     String getServiceSuffix();
-    
+
     String getDxoSuffix();
-    
+
     String getLogicSuffix();
-    
+
     String getDaoSuffix();
-    
+
     String getHelperSuffix();
-    
+
     String getInterceptorSuffix();
-    
+
     String getValidatorSuffix();
-    
+
     String getDtoSuffix();
-    
+
     String getWebPackageName();
-    
+
     String getDxoPackageName();
-    
+
     String getLogicPackageName();
-    
+
     String getDaoPackageName();
-    
+
     String getEntityPackageName();
-    
+
     String getDtoPackageName();
-    
+
+    String getServicePackageName();
+
     String getInterceptorPackageName();
-    
+
     String getValidatorPackageName();
-    
+
     String getHelperPackageName();
-    
+
     String fromClassNameToComponentName(String className);
-    
+
     String fromPathToPageName(String path);
-    
+
     String fromPathToActionName(String path);
-    
+
     String fromPageNameToPath(String pageName);
-    
+
     String fromActionNameToPath(String actionName);
 }

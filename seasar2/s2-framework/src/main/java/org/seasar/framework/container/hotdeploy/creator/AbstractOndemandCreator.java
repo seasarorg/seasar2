@@ -105,8 +105,8 @@ public abstract class AbstractOndemandCreator implements OndemandCreator {
     }
 
     public boolean loadComponentDef(OndemandS2Container container,
-            String subsystemPackageName, Class clazz) {
-        if (!isTarget(subsystemPackageName, clazz)) {
+            String rootPackageName, Class clazz) {
+        if (!isTargetClassName(rootPackageName, clazz.getName())) {
             return false;
         }
         Class targetClass = getTargetClass(clazz);
@@ -118,33 +118,33 @@ public abstract class AbstractOndemandCreator implements OndemandCreator {
                 .getAnnotationHandler();
         cd = handler.createComponentDef(targetClass, instanceDef,
                 autoBindingDef, externalBinding);
-        customize(cd);
         if (cd.getComponentName() == null) {
             cd.setComponentName(composeComponentName(clazz.getName()));
         }
+        handler.appendDI(cd);
+        handler.appendAspect(cd);
+        handler.appendInitMethod(cd);
+        customize(cd);
         container.register(cd);
         cd.init();
         return true;
     }
 
-    protected boolean isTarget(String subsystemPackageName, Class clazz) {
-        String className = clazz.getName();
-        if (!isTargetMiddlePackage(subsystemPackageName, className)) {
-            return false;
-        }
-        return isTarget(className);
+    protected boolean isTargetClassName(String rootPackageName, String className) {
+        return isTargetMiddlePackage(rootPackageName, className)
+                && isAppliedSuffix(className);
     }
 
-    protected abstract boolean isTargetMiddlePackage(
-            String subsystemPackageName, String className);
+    protected abstract boolean isTargetMiddlePackage(String rootPackageName,
+            String className);
 
     protected String composeComponentName(String className) {
         return getNamingConvention().fromClassNameToComponentName(className);
     }
 
     public ComponentDef getComponentDef(OndemandS2Container container,
-            String subsystemPackageName, Class clazz) {
-        if (!isTarget(subsystemPackageName, clazz)) {
+            String rootPackageName, Class clazz) {
+        if (!isTargetClassName(rootPackageName, clazz.getName())) {
             return null;
         }
         Class targetClass = getTargetClass(clazz);
@@ -152,17 +152,17 @@ public abstract class AbstractOndemandCreator implements OndemandCreator {
     }
 
     public ComponentDef getComponentDef(OndemandS2Container container,
-            String subsystemPackageName, String componentName) {
-        if (!isTarget(componentName)) {
+            String rootPackageName, String componentName) {
+        if (!isAppliedSuffix(componentName)) {
             return null;
         }
-        Class targetClass = getTargetClass(subsystemPackageName, componentName);
+        Class targetClass = getTargetClass(rootPackageName, componentName);
         return container.getComponentDef(targetClass);
     }
 
-    protected boolean isTarget(String componentName) {
+    protected boolean isAppliedSuffix(String name) {
         if (nameSuffix != null) {
-            return componentName.endsWith(nameSuffix);
+            return name.endsWith(nameSuffix);
         }
         return true;
     }
@@ -172,8 +172,9 @@ public abstract class AbstractOndemandCreator implements OndemandCreator {
             return clazz;
         }
         String packageName = ClassUtil.getPackageName(clazz);
-        String targetClassName = packageName + "." + getNamingConvention().getImplementationPackageName()
-                + "." + ClassUtil.getShortClassName(clazz)
+        String targetClassName = packageName + "."
+                + getNamingConvention().getImplementationPackageName() + "."
+                + ClassUtil.getShortClassName(clazz)
                 + getNamingConvention().getImplementationSuffix();
         if (ResourceUtil.getResourceAsFileNoException(ClassUtil
                 .getResourcePath(targetClassName)) != null) {
@@ -182,7 +183,7 @@ public abstract class AbstractOndemandCreator implements OndemandCreator {
         return clazz;
     }
 
-    protected abstract Class getTargetClass(String subsystemPackageName,
+    protected abstract Class getTargetClass(String rootPackageName,
             String componentName);
 
     protected void customize(ComponentDef componentDef) {

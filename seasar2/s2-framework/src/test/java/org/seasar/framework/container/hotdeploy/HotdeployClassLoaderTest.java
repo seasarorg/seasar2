@@ -17,14 +17,17 @@ package org.seasar.framework.container.hotdeploy;
 
 import junit.framework.TestCase;
 
+import org.seasar.framework.container.hotdeploy.impl.OndemandProjectImpl;
+import org.seasar.framework.util.ClassUtil;
+
 /**
  * @author higa
  * 
  */
 public class HotdeployClassLoaderTest extends TestCase {
 
-    private static String PACKAGE_NAME = HotdeployTestMain.class.getPackage()
-            .getName()
+    private static String PACKAGE_NAME = ClassUtil
+            .getPackageName(HotdeployClassLoaderTest.class)
             + ".sub";
 
     private static String AAA_NAME = PACKAGE_NAME + ".Aaa";
@@ -36,7 +39,9 @@ public class HotdeployClassLoaderTest extends TestCase {
     protected void setUp() {
         originalLoader = Thread.currentThread().getContextClassLoader();
         hotLoader = new HotdeployClassLoader(originalLoader);
-        hotLoader.setPackageName(PACKAGE_NAME);
+        OndemandProjectImpl project = new OndemandProjectImpl();
+        project.setRootPackageName(PACKAGE_NAME);
+        hotLoader.setProjects(new OndemandProject[] { project });
         Thread.currentThread().setContextClassLoader(hotLoader);
     }
 
