@@ -24,6 +24,7 @@ import java.net.URLDecoder;
 import java.util.Properties;
 
 import org.seasar.framework.exception.IORuntimeException;
+import org.seasar.framework.exception.ResourceNotFoundRuntimeException;
 
 public final class ResourceUtil {
 

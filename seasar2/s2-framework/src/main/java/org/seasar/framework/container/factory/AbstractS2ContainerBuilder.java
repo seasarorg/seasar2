@@ -18,7 +18,7 @@ package org.seasar.framework.container.factory;
 import java.io.InputStream;
 
 import org.seasar.framework.container.S2Container;
-import org.seasar.framework.util.ResourceNotFoundRuntimeException;
+import org.seasar.framework.exception.ResourceNotFoundRuntimeException;
 
 /**
  * @author koichik
