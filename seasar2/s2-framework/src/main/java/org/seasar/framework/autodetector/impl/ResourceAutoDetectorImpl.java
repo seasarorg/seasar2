@@ -34,6 +34,10 @@ import org.seasar.framework.util.ResourceTraversal.ResourceHandler;
 public class ResourceAutoDetectorImpl extends AbstractAutoDetector implements
         ResourceAutoDetector {
 
+    public static final String INIT_METHOD = "initialize";
+
+    private static final String ROOT = "";
+
     private final List resourceNamePatterns = new ArrayList();
 
     private final List ignoreResourceNamePatterns = new ArrayList();
@@ -60,6 +64,12 @@ public class ResourceAutoDetectorImpl extends AbstractAutoDetector implements
 
     public int getIgnoreResourceNamePatternSize() {
         return ignoreResourceNamePatterns.size();
+    }
+
+    public void initialize() {
+        if (getDirectoryNameSize() == 0) {
+            addDirectoryName(ROOT);
+        }
     }
 
     public ResourceAutoDetector.Entry[] detect() {
