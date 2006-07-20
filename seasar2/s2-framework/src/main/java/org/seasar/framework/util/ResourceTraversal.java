@@ -16,6 +16,7 @@
 package org.seasar.framework.util;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -27,7 +28,7 @@ import java.util.jar.JarFile;
 public final class ResourceTraversal {
 
     public interface ResourceHandler {
-        void processResource(String path);
+        void processResource(String path, InputStream is);
     }
 
     private ResourceTraversal() {
@@ -51,8 +52,10 @@ public final class ResourceTraversal {
         while (enumeration.hasMoreElements()) {
             final JarEntry entry = (JarEntry) enumeration.nextElement();
             if (!entry.isDirectory()) {
+                final InputStream is = JarFileUtil.getInputStream(jarFile,
+                        entry);
                 final String entryName = entry.getName().replace('\\', '/');
-                handler.processResource(entryName);
+                handler.processResource(entryName, is);
             }
         }
     }
@@ -65,11 +68,12 @@ public final class ResourceTraversal {
             if (file.isDirectory()) {
                 traverseFileSystem(rootDir, file, handler);
             } else {
+                final InputStream is = FileInputStreamUtil.create(file);
                 final int pos = FileUtil.getCanonicalPath(rootDir).length();
                 final String filePath = FileUtil.getCanonicalPath(file);
                 final String resourcePath = filePath.substring(pos + 1)
                         .replace('\\', '/');
-                handler.processResource(resourcePath);
+                handler.processResource(resourcePath, is);
             }
         }
     }

@@ -13,12 +13,26 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.framework.autodetector;
+package org.seasar.framework.autodetector.impl;
+
+import org.seasar.framework.autodetector.ClassAutoDetector;
 
 /**
- * @author taedium
+ * @author nakamura
  * 
  */
-public class Foo {
+public abstract class AbstractClassAutoDetector extends AbstractAutoDetector
+        implements ClassAutoDetector {
 
+    public void addPackageName(String packageName) {
+        addDirectoryName(packageName);
+    }
+
+    public String getPackageName(int index) {
+        return getDirectoryName(index);
+    }
+
+    public int getPackageNameSize() {
+        return getDirectoryNameSize();
+    }
 }

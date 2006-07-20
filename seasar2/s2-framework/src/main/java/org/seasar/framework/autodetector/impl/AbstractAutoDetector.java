@@ -13,7 +13,7 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.framework.autodetector;
+package org.seasar.framework.autodetector.impl;
 
 import java.io.File;
 import java.net.URL;

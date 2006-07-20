@@ -13,15 +13,15 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.framework.autodetector;
+package org.seasar.framework.autodetector.impl;
 
+import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.regex.Pattern;
 
+import org.seasar.framework.autodetector.ResourceAutoDetector;
 import org.seasar.framework.traverser.ResourceTraverser;
 import org.seasar.framework.traverser.Traverser;
 import org.seasar.framework.util.ResourceUtil;
@@ -31,8 +31,8 @@ import org.seasar.framework.util.ResourceTraversal.ResourceHandler;
  * @author taedium
  * 
  */
-public class NamedResourcePathAutoDetector extends AbstractAutoDetector implements
-        ResourcePathAutoDetector {
+public class ResourceAutoDetectorImpl extends AbstractAutoDetector implements
+        ResourceAutoDetector {
 
     private final List resourceNamePatterns = new ArrayList();
 
@@ -62,8 +62,8 @@ public class NamedResourcePathAutoDetector extends AbstractAutoDetector implemen
         return ignoreResourceNamePatterns.size();
     }
 
-    public String[] detect() {
-        final Set result = new HashSet();
+    public ResourceAutoDetector.Entry[] detect() {
+        final List result = new ArrayList();
 
         for (int i = 0; i < getReferenceClassSize(); i++) {
             final Class referenceClass = getReferenceClass(i);
@@ -73,16 +73,18 @@ public class NamedResourcePathAutoDetector extends AbstractAutoDetector implemen
             final Strategy strategy = getStrategy(url.getProtocol());
             final Traverser traverser = new ResourceTraverser(
                     new ResourceHandler() {
-                        public void processResource(String path) {
+                        public void processResource(final String path,
+                                final InputStream is) {
                             if (isApplied(path) && !isIgnored(path)) {
-                                result.add(path);
+                                final Entry entry = new Entry(path, is);
+                                result.add(entry);
                             }
                         }
                     });
             strategy.detect(referenceClass, url, traverser);
         }
 
-        return (String[]) result.toArray(new String[] {});
+        return (Entry[]) result.toArray(new Entry[] {});
     }
 
     protected boolean isApplied(final String resourceName) {
@@ -107,4 +109,25 @@ public class NamedResourcePathAutoDetector extends AbstractAutoDetector implemen
         }
         return false;
     }
+
+    public static class Entry implements ResourceAutoDetector.Entry {
+
+        private String path;
+
+        private InputStream is;
+
+        Entry(String path, InputStream is) {
+            this.path = path;
+            this.is = is;
+        }
+
+        public String getPath() {
+            return path;
+        }
+
+        public InputStream getInputStream() {
+            return is;
+        }
+    }
+
 }

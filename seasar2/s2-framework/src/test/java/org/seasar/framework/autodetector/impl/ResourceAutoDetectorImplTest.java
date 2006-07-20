@@ -13,30 +13,37 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.framework.autodetector;
+package org.seasar.framework.autodetector.impl;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
+import org.seasar.framework.autodetector.ResourceAutoDetector;
+import org.seasar.framework.autodetector.ResourceAutoDetector.Entry;
 import org.seasar.framework.unit.S2FrameworkTestCase;
 
 /**
  * @author taedium
  * 
  */
-public class NamedResourcePathAutoDetectorTest extends S2FrameworkTestCase {
+public class ResourceAutoDetectorImplTest extends S2FrameworkTestCase {
 
-    private NamedResourcePathAutoDetector detector;
+    private ResourceAutoDetector detector;
 
     public void setUpDetect() throws Exception {
-        include("NamedResourcePathAutoDetectorTest.dicon");
+        include("ResourceAutoDetectorImplTest.dicon");
     }
 
     public void testDetect() throws Exception {
-        List pathes = Arrays.asList(detector.detect());
+        Entry[] entries = detector.detect();
+        List pathes = new ArrayList();
+        for (int i = 0; i < entries.length; i++) {
+            pathes.add(entries[i].getPath());
+        }
+
         assertEquals(2, pathes.size());
         assertTrue(pathes.contains("junit/framework/TestSuite.class"));
-        assertTrue(pathes.contains("org/seasar/framework/autodetector/foo.txt"));
+        assertTrue(pathes
+                .contains("org/seasar/framework/autodetector/impl/foo.txt"));
     }
-
 }

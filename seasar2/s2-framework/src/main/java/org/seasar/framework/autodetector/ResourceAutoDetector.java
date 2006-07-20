@@ -15,12 +15,19 @@
  */
 package org.seasar.framework.autodetector;
 
+import java.io.InputStream;
+
 /**
- * 
  * @author taedium
+ * 
  */
-public interface ResourcePathAutoDetector {
+public interface ResourceAutoDetector {
 
-    String[] detect();
+    Entry[] detect();
 
+    interface Entry {
+        String getPath();
+
+        InputStream getInputStream();
+    }
 }

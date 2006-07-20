@@ -16,6 +16,7 @@
 package org.seasar.framework.util;
 
 import java.io.File;
+import java.io.InputStream;
 import java.net.JarURLConnection;
 import java.net.URL;
 
@@ -42,13 +43,20 @@ public class ResourceTraversalTest extends TestCase {
         final String baseDirectory = path.substring(0, pos);
         ResourceTraversal.forEach(rootDir, baseDirectory,
                 new ResourceHandler() {
-                    public void processResource(String path) {
-                        if (count < 10) {
-                            System.out.println(path);
+                    public void processResource(String path, InputStream is) {
+                        try {
+                            if (count < 10) {
+                                System.out.println(path);
+                            }
+                            assertNotNull(path);
+                            assertNotNull(is);
                             count++;
+                        } finally {
+                            InputStreamUtil.close(is);
                         }
                     }
                 });
+        assertTrue(count > 0);
     }
 
     public void testForEachJarFile() throws Exception {
@@ -58,13 +66,20 @@ public class ResourceTraversalTest extends TestCase {
         final JarURLConnection con = (JarURLConnection) classURL
                 .openConnection();
         ResourceTraversal.forEach(con.getJarFile(), new ResourceHandler() {
-            public void processResource(String path) {
-                if (count < 10) {
-                    System.out.println(path);
+            public void processResource(String path, InputStream is) {
+                try {
+                    if (count < 10) {
+                        System.out.println(path);
+                    }
+                    assertNotNull(path);
+                    assertNotNull(is);
                     count++;
+                } finally {
+                    InputStreamUtil.close(is);
                 }
             }
         });
+        assertTrue(count > 0);
     }
 
 }
