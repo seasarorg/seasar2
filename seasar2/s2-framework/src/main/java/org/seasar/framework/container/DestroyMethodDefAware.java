@@ -16,14 +16,42 @@
 package org.seasar.framework.container;
 
 /**
- * @author higa
+ * このインターフェースは、 destroyメソッド定義を登録および取得することができるオブジェクトを表します。
+ * <p>
+ * destroyメソッド定義は複数登録することが出来ます。 destroyメソッド定義の取得はインデックス番号を指定して行います。
+ * </p>
  * 
+ * @author higa
+ * @author belltree (Javadoc)
+ * 
+ * @see DestroyMethodDef
  */
 public interface DestroyMethodDefAware {
 
+    /**
+     * destroyメソッド定義を登録(追加)します。
+     * 
+     * @param methodDef
+     *            destroyメソッド定義
+     */
     public void addDestroyMethodDef(DestroyMethodDef methodDef);
 
+    /**
+     * 登録されている{@link DestroyMethodDef destroyメソッド定義}の数を返します。
+     * 
+     * @return 登録されているdestroyメソッド定義の数
+     */
     public int getDestroyMethodDefSize();
 
+    /**
+     * 指定されたインデックス番号<code>index</code>のdestroyメソッド定義を返します。
+     * <p>
+     * インデックス番号は、 登録した順番に 0,1,2,… となります。
+     * </p>
+     * 
+     * @param index
+     *            destroyメソッド定義を指定するインデックス番号
+     * @return destroyメソッド定義
+     */
     public DestroyMethodDef getDestroyMethodDef(int index);
 }
