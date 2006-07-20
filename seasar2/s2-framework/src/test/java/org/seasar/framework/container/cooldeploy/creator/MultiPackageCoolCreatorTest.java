@@ -31,8 +31,8 @@ public class MultiPackageCoolCreatorTest extends S2FrameworkTestCase {
     }
 
     public void testAll() throws Exception {
-        assertTrue(child.hasComponentDef("ccc_eeeDxo"));
+        assertTrue(child.hasComponentDef("ccc_dddDxo"));
         assertTrue(child.hasComponentDef("fffDxo"));
-        assertTrue(child.hasComponentDef("ccc_eeeDxo"));
+        assertTrue(child.hasComponentDef("ccc_dddDxo"));
     }
 }

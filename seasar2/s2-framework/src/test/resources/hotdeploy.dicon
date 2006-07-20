@@ -3,20 +3,22 @@
 	"http://www.seasar.org/dtd/components21.dtd">
 <components>
 	<include path="convention.dicon"/>
-	<component class="org.seasar.framework.container.hotdeploy.creator.ActionCreator"/>
-	<component class="org.seasar.framework.container.hotdeploy.creator.DaoCreator"/>
-	<component class="org.seasar.framework.container.hotdeploy.creator.DtoCreator"/>
-	<component class="org.seasar.framework.container.hotdeploy.creator.DxoCreator"/>
-	<component class="org.seasar.framework.container.hotdeploy.creator.HelperCreator"/>
-	<component class="org.seasar.framework.container.hotdeploy.creator.LogicCreator"/>
-	<component class="org.seasar.framework.container.hotdeploy.creator.PageCreator"/>
-	<component class="org.seasar.framework.container.hotdeploy.creator.ServiceCreator"/>
-	<component class="org.seasar.framework.container.hotdeploy.creator.InterceptorCreator"/>
-	<component class="org.seasar.framework.container.hotdeploy.creator.ValidatorCreator"/>
+	<component class="org.seasar.framework.container.hotdeploy.creator.ActionOndemandCreator"/>
+	<component class="org.seasar.framework.container.hotdeploy.creator.DaoOndemandCreator"/>
+	<component class="org.seasar.framework.container.hotdeploy.creator.DtoOndemandCreator"/>
+	<component class="org.seasar.framework.container.hotdeploy.creator.DxoOndemandCreator"/>
+	<component class="org.seasar.framework.container.hotdeploy.creator.HelperOndemandCreator"/>
+	<component class="org.seasar.framework.container.hotdeploy.creator.LogicOndemandCreator"/>
+	<component class="org.seasar.framework.container.hotdeploy.creator.PageOndemandCreator"/>
+	<component class="org.seasar.framework.container.hotdeploy.creator.ServiceOndemandCreator"/>
+	<component class="org.seasar.framework.container.hotdeploy.creator.InterceptorOndemandCreator"/>
+	<component class="org.seasar.framework.container.hotdeploy.creator.ValidatorOndemandCreator"/>
 	<component class="org.seasar.framework.container.hotdeploy.OndemandBehavior">
-		<initMethod name="addSubsystem">
+		<initMethod name="addProject">
 			<arg>
-				<component class="org.seasar.framework.container.hotdeploy.impl.OndemandSubsystemImpl"/>
+				<component class="org.seasar.framework.container.hotdeploy.impl.OndemandProjectImpl">
+					<property name="rootPackageName"></property>
+				</component>
 			</arg>
 		</initMethod>
 	</component>

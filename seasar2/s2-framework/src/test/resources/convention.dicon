@@ -2,8 +2,5 @@
 <!DOCTYPE components PUBLIC "-//SEASAR2.1//DTD S2Container//EN"
 	"http://www.seasar.org/dtd/components21.dtd">
 <components>
-	<component class="org.seasar.framework.convention.impl.NamingConventionImpl">
-		<!-- change here -->
-		<property name="rootPackageName">"examples.hotdeploy"</property>
-	</component>
+	<component class="org.seasar.framework.convention.impl.NamingConventionImpl"/>
 </components>

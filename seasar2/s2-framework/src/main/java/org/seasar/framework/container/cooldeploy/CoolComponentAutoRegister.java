@@ -100,7 +100,6 @@ public class CoolComponentAutoRegister implements ClassHandler {
 
     public void processClass(String packageName, String shortClassName) {
         String className = ClassUtil.concatName(packageName, shortClassName);
-        Class clazz = ClassUtil.forName(className);
         for (int i = 0; i < getProjectSize(); ++i) {
             CoolProject project = getProject(i);
             int m = project.matchClassName(className);
@@ -109,7 +108,7 @@ public class CoolComponentAutoRegister implements ClassHandler {
             } else if (m == OndemandProject.UNMATCH) {
                 continue;
             }
-            if (project.loadComponentDef(clazz)) {
+            if (project.loadComponentDef(ClassUtil.forName(className))) {
                 break;
             }
         }
