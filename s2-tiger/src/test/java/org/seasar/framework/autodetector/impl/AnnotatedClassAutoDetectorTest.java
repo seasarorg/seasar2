@@ -13,15 +13,29 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.framework.autodetector.tiger;
+package org.seasar.framework.autodetector.impl;
 
-import javax.persistence.Embeddable;
+import java.util.Arrays;
+import java.util.List;
+
+import org.seasar.framework.unit.S2FrameworkTestCase;
 
 /**
  * @author taedium
  * 
  */
-@Embeddable
-public class Foo3 {
+public class AnnotatedClassAutoDetectorTest extends S2FrameworkTestCase {
 
+    private AnnotatedClassAutoDetector detector;
+
+    public void setUpDetect() throws Exception {
+        include("AnnotatedClassAutoDetectorTest.dicon");
+    }
+
+    public void testDetect() throws Exception {
+        List classes = Arrays.asList(detector.detect());
+        assertEquals(2, classes.size());
+        assertTrue(classes.contains(Foo2.class));
+        assertTrue(classes.contains(Foo3.class));
+    }
 }

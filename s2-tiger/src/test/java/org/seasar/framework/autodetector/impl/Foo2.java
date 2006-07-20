@@ -13,15 +13,15 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.framework.autodetector.tiger;
+package org.seasar.framework.autodetector.impl;
 
-import javax.persistence.MappedSuperclass;
+import javax.persistence.Entity;
 
 /**
  * @author taedium
  * 
  */
-@MappedSuperclass
-public class Foo4 {
+@Entity
+public class Foo2 {
 
 }

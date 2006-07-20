@@ -13,12 +13,15 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.framework.autodetector.tiger;
+package org.seasar.framework.autodetector.impl;
+
+import javax.persistence.Embeddable;
 
 /**
  * @author taedium
  * 
  */
-public class Foo {
+@Embeddable
+public class Foo3 {
 
 }
