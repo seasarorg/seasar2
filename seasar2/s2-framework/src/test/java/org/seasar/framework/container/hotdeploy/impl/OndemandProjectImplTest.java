@@ -17,7 +17,14 @@ package org.seasar.framework.container.hotdeploy.impl;
 
 import junit.framework.TestCase;
 
+import org.seasar.framework.container.hotdeploy.OndemandBehavior;
+import org.seasar.framework.container.hotdeploy.OndemandCreator;
 import org.seasar.framework.container.hotdeploy.OndemandProject;
+import org.seasar.framework.container.hotdeploy.OndemandS2Container;
+import org.seasar.framework.container.hotdeploy.creator.DtoOndemandCreator;
+import org.seasar.framework.container.hotdeploy.creator.PageOndemandCreator;
+import org.seasar.framework.convention.NamingConvention;
+import org.seasar.framework.convention.impl.NamingConventionImpl;
 
 /**
  * @author higa
@@ -43,5 +50,30 @@ public class OndemandProjectImplTest extends TestCase {
         assertEquals(OndemandProject.MATCH, project.matchClassName("bbb.Hoge"));
         assertEquals(OndemandProject.IGNORE, project
                 .matchClassName("entity.Hoge"));
+    }
+
+    public void testFromComponentNameToClassName() throws Exception {
+
+        // ## Arrange ##
+        OndemandProjectImpl project = new OndemandProjectImpl();
+        project.setRootPackageName("com.example");
+        NamingConvention namingConvention = new NamingConventionImpl();
+        project.setCreators(new OndemandCreator[] {
+                new DtoOndemandCreator(namingConvention),
+                new PageOndemandCreator(namingConvention) });
+        OndemandS2Container container = new OndemandBehavior();
+
+        // ## Act ##
+        // ## Assert ##
+        assertNull(project.fromComponentNameToClassName(container, null));
+
+        // ## Act ##
+        // ## Assert ##
+        assertNull(project.fromComponentNameToClassName(container, "hoehoe"));
+
+        // ## Act ##
+        // ## Assert ##
+        assertEquals("com.example.web.add.AddPage", project
+                .fromComponentNameToClassName(container, "add_addPage"));
     }
 }

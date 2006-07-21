@@ -23,10 +23,26 @@ public class ClassNotFoundRuntimeException extends SRuntimeException {
 
     private static final long serialVersionUID = -9022468864937761059L;
 
+    private String className;
+
     /**
      * @param messageCode
      */
     public ClassNotFoundRuntimeException(ClassNotFoundException cause) {
+        this(null, cause);
+    }
+
+    public ClassNotFoundRuntimeException(String className,
+            ClassNotFoundException cause) {
         super("ESSR0044", new Object[] { cause }, cause);
+        setClassName(className);
+    }
+
+    public String getClassName() {
+        return className;
+    }
+
+    public void setClassName(String className) {
+        this.className = className;
     }
 }

@@ -71,7 +71,7 @@ public final class ClassUtil {
         try {
             return Class.forName(className, true, loader);
         } catch (ClassNotFoundException ex) {
-            throw new ClassNotFoundRuntimeException(ex);
+            throw new ClassNotFoundRuntimeException(className, ex);
         }
     }
 

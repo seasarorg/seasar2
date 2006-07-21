@@ -33,4 +33,7 @@ public interface OndemandProject {
             String componentName);
 
     int matchClassName(String className);
+
+    String fromComponentNameToClassName(OndemandS2Container container,
+            String componentName);
 }

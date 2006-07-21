@@ -107,4 +107,25 @@ public class OndemandProjectImpl implements OndemandProject {
         }
         return MATCH;
     }
+
+    public String fromComponentNameToClassName(OndemandS2Container container,
+            String componentName) {
+
+        if (componentName == null) {
+            return null;
+        }
+        for (int i = 0; i < creators.length; ++i) {
+            OndemandCreator creator = creators[i];
+            try {
+                ComponentDef cd = creator.getComponentDef(container,
+                        rootPackageName, componentName);
+                if (cd != null) {
+                    return cd.getComponentClass().getName();
+                }
+            } catch (ClassNotFoundRuntimeException ex) {
+                return ex.getClassName();
+            }
+        }
+        return null;
+    }
 }
