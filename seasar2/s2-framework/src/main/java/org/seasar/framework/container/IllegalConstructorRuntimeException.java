@@ -18,8 +18,13 @@ package org.seasar.framework.container;
 import org.seasar.framework.exception.SRuntimeException;
 
 /**
- * @author higa
+ * コンポーネントの構築に失敗した場合にスローされます。
+ * <p>
+ * コンポーネントの構築は、 コンポーネント定義でコンストラクタの引数として指定されたコンポーネントの取得に失敗した場合などに発生します。
+ * </p>
  * 
+ * @author higa
+ * @author jundu (Javadoc)
  */
 public class IllegalConstructorRuntimeException extends SRuntimeException {
 
@@ -27,6 +32,14 @@ public class IllegalConstructorRuntimeException extends SRuntimeException {
 
     private Class componentClass_;
 
+    /**
+     * <code>IllegalConstructorRuntimeException</code>を構築します。
+     * 
+     * @param componentClass
+     *            構築に失敗したコンポーネントのクラス
+     * @param cause
+     *            コンポーネントの構築に失敗した原因を表すエラーまたは例外
+     */
     public IllegalConstructorRuntimeException(Class componentClass,
             Throwable cause) {
         super("ESSR0058", new Object[] { componentClass.getName(), cause },
@@ -34,6 +47,11 @@ public class IllegalConstructorRuntimeException extends SRuntimeException {
         componentClass_ = componentClass;
     }
 
+    /**
+     * 構築に失敗したコンポーネントのクラスを返します。
+     * 
+     * @return 構築に失敗したコンポーネントのクラス
+     */
     public Class getComponentClass() {
         return componentClass_;
     }

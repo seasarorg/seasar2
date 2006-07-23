@@ -18,8 +18,17 @@ package org.seasar.framework.container;
 import org.seasar.framework.exception.SRuntimeException;
 
 /**
- * @author higa
+ * 自動バインディングの対象となるコンポーネントが見つからなかった場合にスローされます。
  * 
+ * <p>
+ * この例外がスローされるのは、 {@link BindingTypeDef バインディングタイプ定義}が<code>must</code>で自動バインディングの対象が見つからなかった時です。
+ * </p>
+ * 
+ * @author higa
+ * @author jundu (Javadoc)
+ * 
+ * @see AutoBindingDef
+ * @see BindingTypeDef
  */
 public class IllegalAutoBindingPropertyRuntimeException extends
         SRuntimeException {
@@ -30,6 +39,14 @@ public class IllegalAutoBindingPropertyRuntimeException extends
 
     private String propertyName;
 
+    /**
+     * <code>IllegalAutoBindingPropertyRuntimeException</code>を構築します。
+     * 
+     * @param componentClass
+     *            自動バインディングに失敗したコンポーネント
+     * @param propertyName
+     *            自動バインディング対象が見つからなかったプロパティまたはフィールドの名称
+     */
     public IllegalAutoBindingPropertyRuntimeException(Class componentClass,
             String propertyName) {
         super("ESSR0080",
@@ -38,10 +55,20 @@ public class IllegalAutoBindingPropertyRuntimeException extends
         this.propertyName = propertyName;
     }
 
+    /**
+     * 自動バインディングに失敗したコンポーネントのクラスを返します。
+     * 
+     * @return 自動バインディングに失敗したコンポーネントのクラス
+     */
     public Class getComponentClass() {
         return componentClass;
     }
 
+    /**
+     * 自動バインディング対象が見つからなかったプロパティまたはフィールドの名称を返します。
+     * 
+     * @return 自動バインディングに失敗したプロパティまたはフィールドの名称
+     */
     public String getPropertyName() {
         return propertyName;
     }
