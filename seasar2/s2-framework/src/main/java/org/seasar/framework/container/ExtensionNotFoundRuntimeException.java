@@ -18,8 +18,15 @@ package org.seasar.framework.container;
 import org.seasar.framework.exception.SRuntimeException;
 
 /**
- * @author higa
+ * 指定されたパスのファイル名に、 拡張子が付いていなかった場合にスローされます。
+ * <p>
+ * {@link org.seasar.framework.container.factory.S2ContainerFactory S2コンテナファクトリ}は、
+ * S2コンテナを構築しようとした際に、 拡張子に応じて{@link org.seasar.framework.container.factory.S2ContainerBuilder S2コンテナビルダー}を切り替えます。
+ * このため、 指定された設定ファイル(diconファイルなど)のファイル名に拡張子が付いていない場合には、 この例外が発生します。
+ * </p>
  * 
+ * @author higa
+ * @author belltree (Javadoc)
  */
 public class ExtensionNotFoundRuntimeException extends SRuntimeException {
 
@@ -27,11 +34,22 @@ public class ExtensionNotFoundRuntimeException extends SRuntimeException {
 
     private String path_;
 
+    /**
+     * パスを指定して<code>ExtensionNotFoundRuntimeException</code>を構築します。
+     * 
+     * @param path
+     *            指定されたパス
+     */
     public ExtensionNotFoundRuntimeException(String path) {
         super("ESSR0074", new Object[] { path });
         path_ = path;
     }
 
+    /**
+     * 指定されたパスを返します。
+     * 
+     * @return 指定されたパス
+     */
     public String getPath() {
         return path_;
     }
