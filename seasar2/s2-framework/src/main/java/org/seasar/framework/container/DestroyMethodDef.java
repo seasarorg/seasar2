@@ -16,8 +16,25 @@
 package org.seasar.framework.container;
 
 /**
- * @author higa
+ * コンポーネントに対して<var>destroy</var>メソッド・インジェクションを定義するためのインターフェースです。
+ * <p>
+ * <var>destroy</var>メソッド・インジェクションとは、 S2コンテナによって管理されているコンポーネントが破棄される際に、
+ * 1個以上の任意のメソッド(終了処理メソッド)を実行するという機能です。
+ * </p>
+ * <p>
+ * コンポーネントの{@link InstanceDef コンポーネントインスタンス定義}が<code>singleton</code>の場合には、
+ * S2コンテナが終了する際に<var>destroy</var>メソッド・インジェクションが実行されます。
+ * </p>
  * 
+ * @author higa
+ * @author belltree (Javadoc)
+ * 
+ * @see ComponentDeployer#destroy()
+ * @see ComponentDef#destroy()
+ * @see S2Container#destroy()
+ * @see org.seasar.framework.container.factory.S2ContainerFactory#dispose()
+ * @see org.seasar.framework.container.factory.SingletonS2ContainerFactory#destroy()
  */
 public interface DestroyMethodDef extends MethodDef {
+
 }
