@@ -7,8 +7,9 @@ public class IllegalAccessTypeDefRuntimeException extends SRuntimeException {
 
     private String accessTypeName;
 
-    public IllegalAccessTypeDefRuntimeException(final String messageCode) {
-        super("ESSR0083", new Object[] { messageCode });
+    public IllegalAccessTypeDefRuntimeException(final String accessTypeName) {
+        super("ESSR0083", new Object[] { accessTypeName });
+        this.accessTypeName = accessTypeName;
     }
 
     public String getAccessTypeName() {
