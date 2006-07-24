@@ -25,6 +25,8 @@ public interface OndemandProject {
 
     int IGNORE = 2;
 
+    String getRootPackageName();
+
     boolean loadComponentDef(OndemandS2Container container, Class clazz);
 
     ComponentDef getComponentDef(OndemandS2Container container, Class clazz);
