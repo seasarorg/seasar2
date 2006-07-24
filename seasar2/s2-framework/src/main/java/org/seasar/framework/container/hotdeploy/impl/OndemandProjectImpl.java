@@ -16,7 +16,7 @@
 package org.seasar.framework.container.hotdeploy.impl;
 
 import org.seasar.framework.container.ComponentDef;
-import org.seasar.framework.container.autoregister.impl.AbstractAutoRegisterProject;
+import org.seasar.framework.container.autoregister.AbstractAutoRegisterProject;
 import org.seasar.framework.container.hotdeploy.OndemandCreator;
 import org.seasar.framework.container.hotdeploy.OndemandProject;
 import org.seasar.framework.container.hotdeploy.OndemandS2Container;

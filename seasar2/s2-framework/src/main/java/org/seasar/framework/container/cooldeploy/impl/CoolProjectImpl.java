@@ -15,7 +15,7 @@
  */
 package org.seasar.framework.container.cooldeploy.impl;
 
-import org.seasar.framework.container.autoregister.impl.AbstractAutoRegisterProject;
+import org.seasar.framework.container.autoregister.AbstractAutoRegisterProject;
 import org.seasar.framework.container.cooldeploy.CoolCreator;
 import org.seasar.framework.container.cooldeploy.CoolProject;
 

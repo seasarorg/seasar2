@@ -13,10 +13,11 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.framework.container.autoregister.impl;
+package org.seasar.framework.container.autoregister;
 
 import junit.framework.TestCase;
 
+import org.seasar.framework.container.autoregister.AbstractAutoRegisterProject;
 import org.seasar.framework.container.autoregister.AutoRegisterProject;
 
 /**
