@@ -17,11 +17,12 @@ package org.seasar.framework.container.cooldeploy.impl;
 
 import junit.framework.TestCase;
 
+import org.seasar.framework.container.cooldeploy.CoolProject;
 import org.seasar.framework.container.hotdeploy.OndemandProject;
 
 /**
  * @author higa
- * 
+ * @author taichi
  */
 public class CoolProjectImplTest extends TestCase {
 
@@ -29,19 +30,17 @@ public class CoolProjectImplTest extends TestCase {
         CoolProjectImpl project = new CoolProjectImpl();
         assertEquals(OndemandProject.MATCH, project.matchClassName("Hoge"));
         project.setRootPackageName("aaa");
-        assertEquals(OndemandProject.MATCH, project.matchClassName("aaa.Hoge"));
-        assertEquals(OndemandProject.UNMATCH, project
-                .matchClassName("bbb.Hoge"));
+        assertEquals(CoolProject.MATCH, project.matchClassName("aaa.Hoge"));
+        assertEquals(CoolProject.UNMATCH, project.matchClassName("bbb.Hoge"));
 
         project.addIgnorePackageName("entity");
-        assertEquals(OndemandProject.MATCH, project
-                .matchClassName("aaa.bbb.Hoge"));
-        assertEquals(OndemandProject.IGNORE, project
+        assertEquals(CoolProject.MATCH, project.matchClassName("aaa.bbb.Hoge"));
+        assertEquals(CoolProject.IGNORE, project
                 .matchClassName("aaa.entity.Hoge"));
 
         project.setRootPackageName(null);
-        assertEquals(OndemandProject.MATCH, project.matchClassName("bbb.Hoge"));
-        assertEquals(OndemandProject.IGNORE, project
-                .matchClassName("entity.Hoge"));
+        assertEquals(CoolProject.MATCH, project.matchClassName("bbb.Hoge"));
+        assertEquals(CoolProject.IGNORE, project.matchClassName("entity.Hoge"));
     }
+
 }

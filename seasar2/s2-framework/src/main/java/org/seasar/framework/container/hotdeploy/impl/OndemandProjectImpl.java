@@ -15,38 +15,17 @@
  */
 package org.seasar.framework.container.hotdeploy.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.seasar.framework.container.ComponentDef;
+import org.seasar.framework.container.autoregister.impl.AbstractAutoRegisterProject;
 import org.seasar.framework.container.hotdeploy.OndemandCreator;
 import org.seasar.framework.container.hotdeploy.OndemandProject;
 import org.seasar.framework.container.hotdeploy.OndemandS2Container;
 import org.seasar.framework.exception.ClassNotFoundRuntimeException;
 
-public class OndemandProjectImpl implements OndemandProject {
-
-    private String rootPackageName;
-
-    private List ignorePackageNames = new ArrayList();
+public class OndemandProjectImpl extends AbstractAutoRegisterProject implements
+        OndemandProject {
 
     private OndemandCreator[] creators = new OndemandCreator[0];
-
-    public String getRootPackageName() {
-        return rootPackageName;
-    }
-
-    public void setRootPackageName(String rootPackageName) {
-        this.rootPackageName = rootPackageName;
-    }
-
-    public List getIgnorePackageNames() {
-        return ignorePackageNames;
-    }
-
-    public void addIgnorePackageName(String packageName) {
-        ignorePackageNames.add(packageName);
-    }
 
     public OndemandCreator[] getCreators() {
         return creators;
@@ -59,7 +38,8 @@ public class OndemandProjectImpl implements OndemandProject {
     public boolean loadComponentDef(OndemandS2Container container, Class clazz) {
         for (int i = 0; i < creators.length; ++i) {
             OndemandCreator creator = creators[i];
-            if (creator.loadComponentDef(container, rootPackageName, clazz)) {
+            if (creator
+                    .loadComponentDef(container, getRootPackageName(), clazz)) {
                 return true;
             }
         }
@@ -71,7 +51,7 @@ public class OndemandProjectImpl implements OndemandProject {
         for (int i = 0; i < creators.length; ++i) {
             OndemandCreator creator = creators[i];
             ComponentDef cd = creator.getComponentDef(container,
-                    rootPackageName, clazz);
+                    getRootPackageName(), clazz);
             if (cd != null) {
                 return cd;
             }
@@ -85,7 +65,7 @@ public class OndemandProjectImpl implements OndemandProject {
             OndemandCreator creator = creators[i];
             try {
                 ComponentDef cd = creator.getComponentDef(container,
-                        rootPackageName, componentName);
+                        getRootPackageName(), componentName);
                 if (cd != null) {
                     return cd;
                 }
@@ -93,19 +73,6 @@ public class OndemandProjectImpl implements OndemandProject {
             }
         }
         return null;
-    }
-
-    public int matchClassName(String className) {
-        if (rootPackageName != null && !className.startsWith(rootPackageName)) {
-            return UNMATCH;
-        }
-        String base = rootPackageName == null ? "" : rootPackageName + ".";
-        for (int i = 0; i < ignorePackageNames.size(); ++i) {
-            if (className.startsWith(base + ignorePackageNames.get(i))) {
-                return IGNORE;
-            }
-        }
-        return MATCH;
     }
 
     public String fromComponentNameToClassName(OndemandS2Container container,
@@ -118,7 +85,7 @@ public class OndemandProjectImpl implements OndemandProject {
             OndemandCreator creator = creators[i];
             try {
                 ComponentDef cd = creator.getComponentDef(container,
-                        rootPackageName, componentName);
+                        getRootPackageName(), componentName);
                 if (cd != null) {
                     return cd.getComponentClass().getName();
                 }

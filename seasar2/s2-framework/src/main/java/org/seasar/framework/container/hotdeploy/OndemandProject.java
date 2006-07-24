@@ -16,16 +16,16 @@
 package org.seasar.framework.container.hotdeploy;
 
 import org.seasar.framework.container.ComponentDef;
+import org.seasar.framework.container.autoregister.AutoRegisterProject;
 
-public interface OndemandProject {
-
-    int MATCH = 0;
-
-    int UNMATCH = 1;
-
-    int IGNORE = 2;
-
-    String getRootPackageName();
+/**
+ * 
+ * @author higa
+ * @author skirnir
+ * @author taichi
+ * 
+ */
+public interface OndemandProject extends AutoRegisterProject {
 
     boolean loadComponentDef(OndemandS2Container container, Class clazz);
 
@@ -33,8 +33,6 @@ public interface OndemandProject {
 
     ComponentDef getComponentDef(OndemandS2Container container,
             String componentName);
-
-    int matchClassName(String className);
 
     String fromComponentNameToClassName(OndemandS2Container container,
             String componentName);

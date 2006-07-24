@@ -15,39 +15,18 @@
  */
 package org.seasar.framework.container.cooldeploy.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import org.seasar.framework.container.autoregister.impl.AbstractAutoRegisterProject;
 import org.seasar.framework.container.cooldeploy.CoolCreator;
 import org.seasar.framework.container.cooldeploy.CoolProject;
 
 /**
  * @author higa
- * 
+ * @author taichi
  */
-public class CoolProjectImpl implements CoolProject {
-
-    private String rootPackageName;
-
-    private List ignorePackageNames = new ArrayList();
+public class CoolProjectImpl extends AbstractAutoRegisterProject implements
+        CoolProject {
 
     private CoolCreator[] creators = new CoolCreator[0];
-
-    public String getRootPackageName() {
-        return rootPackageName;
-    }
-
-    public void setRootPackageName(String rootPackageName) {
-        this.rootPackageName = rootPackageName;
-    }
-
-    public List getIgnorePackageNames() {
-        return ignorePackageNames;
-    }
-
-    public void addIgnorePackageName(String packageName) {
-        ignorePackageNames.add(packageName);
-    }
 
     public CoolCreator[] getCreators() {
         return creators;
@@ -58,29 +37,17 @@ public class CoolProjectImpl implements CoolProject {
     }
 
     public boolean loadComponentDef(Class clazz) {
-        if (rootPackageName != null
-                && !clazz.getName().startsWith(rootPackageName)) {
+        if (getRootPackageName() != null
+                && !clazz.getName().startsWith(getRootPackageName())) {
             return false;
         }
         for (int i = 0; i < creators.length; ++i) {
             CoolCreator creator = creators[i];
-            if (creator.loadComponentDef(rootPackageName, clazz)) {
+            if (creator.loadComponentDef(getRootPackageName(), clazz)) {
                 return true;
             }
         }
         return false;
     }
 
-    public int matchClassName(String className) {
-        if (rootPackageName != null && !className.startsWith(rootPackageName)) {
-            return UNMATCH;
-        }
-        String base = rootPackageName == null ? "" : rootPackageName + ".";
-        for (int i = 0; i < ignorePackageNames.size(); ++i) {
-            if (className.startsWith(base + ignorePackageNames.get(i))) {
-                return IGNORE;
-            }
-        }
-        return MATCH;
-    }
 }

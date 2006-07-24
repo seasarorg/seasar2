@@ -13,15 +13,20 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.framework.container.cooldeploy;
-
-import org.seasar.framework.container.autoregister.AutoRegisterProject;
+package org.seasar.framework.container.autoregister;
 
 /**
- * @author higa
  * @author taichi
+ * 
  */
-public interface CoolProject extends AutoRegisterProject {
+public interface AutoRegisterProject {
+    int MATCH = 0;
 
-    boolean loadComponentDef(Class clazz);
+    int UNMATCH = 1;
+
+    int IGNORE = 2;
+
+    String getRootPackageName();
+
+    int matchClassName(String className);
 }
