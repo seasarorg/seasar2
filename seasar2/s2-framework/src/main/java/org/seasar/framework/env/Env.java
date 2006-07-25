@@ -99,7 +99,7 @@ public class Env {
     }
 
     protected static void calcValue() {
-        value = TextUtil.readText(file);
+        value = TextUtil.readUTF8(file);
         lastModified = file.lastModified();
     }
 

@@ -32,6 +32,10 @@ public class TextUtilTest extends TestCase {
                 .readText(getPath("hoge_crlf.txt")));
     }
 
+    public void testReadUTF8() throws Exception {
+        assertEquals("1", "あ", TextUtil.readUTF8(getPath("hoge_utf8.txt")));
+    }
+
     protected String getPath(String fileName) {
         return getClass().getName().replace('.', '/').replaceFirst(
                 "TextUtilTest", fileName);

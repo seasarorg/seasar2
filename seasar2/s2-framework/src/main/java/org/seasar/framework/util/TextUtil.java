@@ -25,6 +25,8 @@ import java.io.Reader;
  */
 public final class TextUtil {
 
+    private static final String UTF8 = "UTF-8";
+
     private TextUtil() {
     }
 
@@ -40,4 +42,15 @@ public final class TextUtil {
         return ReaderUtil.readText(reader);
     }
 
+    public static String readUTF8(String path) {
+        InputStream is = ResourceUtil.getResourceAsStream(path);
+        Reader reader = InputStreamReaderUtil.create(is, UTF8);
+        return ReaderUtil.readText(reader);
+    }
+
+    public static String readUTF8(File file) {
+        InputStream is = FileInputStreamUtil.create(file);
+        Reader reader = InputStreamReaderUtil.create(is, UTF8);
+        return ReaderUtil.readText(reader);
+    }
 }
