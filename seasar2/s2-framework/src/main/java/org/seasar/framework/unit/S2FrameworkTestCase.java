@@ -36,6 +36,7 @@ import org.seasar.framework.container.impl.S2ContainerImpl;
 import org.seasar.framework.container.servlet.S2ContainerServlet;
 import org.seasar.framework.convention.NamingConvention;
 import org.seasar.framework.convention.impl.NamingConventionImpl;
+import org.seasar.framework.env.Env;
 import org.seasar.framework.exception.NoSuchMethodRuntimeException;
 import org.seasar.framework.mock.servlet.MockHttpServletRequest;
 import org.seasar.framework.mock.servlet.MockHttpServletResponse;
@@ -216,6 +217,7 @@ public abstract class S2FrameworkTestCase extends TestCase {
         servletConfig = null;
         servlet = null;
         namingConvention = null;
+        Env.initialize();
     }
 
     protected void setUpAfterContainerInit() throws Throwable {

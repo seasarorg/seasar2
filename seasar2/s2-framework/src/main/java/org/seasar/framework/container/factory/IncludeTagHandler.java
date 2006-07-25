@@ -15,8 +15,12 @@
  */
 package org.seasar.framework.container.factory;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.seasar.framework.container.S2Container;
-import org.seasar.framework.xml.TagHandler;
+import org.seasar.framework.env.Env;
+import org.seasar.framework.util.StringUtil;
 import org.seasar.framework.xml.TagHandlerContext;
 import org.xml.sax.Attributes;
 
@@ -24,7 +28,7 @@ import org.xml.sax.Attributes;
  * @author higa
  * 
  */
-public class IncludeTagHandler extends TagHandler {
+public class IncludeTagHandler extends AbstractTagHandler {
 
     private static final long serialVersionUID = 7770349626071675269L;
 
@@ -38,6 +42,19 @@ public class IncludeTagHandler extends TagHandler {
             throw new TagAttributeNotDefinedRuntimeException("include", "path");
         }
         S2Container container = (S2Container) context.peek();
+        String condition = attributes.getValue("condition");
+        if (!StringUtil.isEmpty(condition)) {
+            Map map = new HashMap();
+            map.put("ENV", Env.getValue());
+            Object o = createExpression(context, condition).evaluate(container,
+                    map);
+            if (!(o instanceof Boolean)) {
+                throw new IllegalStateException("condition:" + condition);
+            }
+            if (!((Boolean) o).booleanValue()) {
+                return;
+            }
+        }
         S2ContainerFactory.include(container, path);
     }
 }

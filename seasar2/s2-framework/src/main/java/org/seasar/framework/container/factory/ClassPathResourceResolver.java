@@ -19,6 +19,7 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.seasar.framework.env.Env;
 import org.seasar.framework.util.ResourceUtil;
 import org.seasar.framework.util.URLUtil;
 
@@ -34,11 +35,20 @@ public class ClassPathResourceResolver implements ResourceResolver {
     }
 
     public InputStream getInputStream(final String path) {
-        final URL url = toURL(path);
+        URL url = getURL(path);
         if (url == null) {
             return null;
         }
         return URLUtil.openStream(url);
+    }
+
+    protected URL getURL(final String path) {
+        String extPath = Env.adjustPath(path);
+        URL url = toURL(extPath);
+        if (url == null && !extPath.equals(path)) {
+            url = toURL(path);
+        }
+        return url;
     }
 
     URL toURL(final String path) {

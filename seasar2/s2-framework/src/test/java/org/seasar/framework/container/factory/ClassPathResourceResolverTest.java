@@ -18,9 +18,10 @@ package org.seasar.framework.container.factory;
 import java.io.File;
 import java.net.URL;
 
-import org.seasar.framework.util.ResourceUtil;
-
 import junit.framework.TestCase;
+
+import org.seasar.framework.env.Env;
+import org.seasar.framework.util.ResourceUtil;
 
 /**
  * @author skirnir
@@ -29,7 +30,15 @@ public class ClassPathResourceResolverTest extends TestCase {
 
     private static final String PATH = "org/seasar/framework/container/factory/ClassPathResourceResolverTest.dicon";
 
+    private static final String PATH2 = "org/seasar/framework/container/factory/aaa.dicon";
+
+    private static final String ENV_PATH = "org/seasar/framework/container/factory/env.text";
+
     private ClassPathResourceResolver target = new ClassPathResourceResolver();
+
+    protected void tearDown() {
+        Env.initialize();
+    }
 
     public void testToURL1() throws Exception {
 
@@ -46,5 +55,15 @@ public class ClassPathResourceResolverTest extends TestCase {
         URL actual = target.toURL(expected.toExternalForm());
         assertNotNull(actual);
         assertEquals(expected, actual);
+    }
+
+    public void testGetURL() throws Exception {
+        URL url = target.getURL(PATH2);
+        System.out.println(url.getPath());
+        assertTrue(url.getPath().endsWith("aaa.dicon"));
+        Env.setFilePath(ENV_PATH);
+        url = target.getURL(PATH2);
+        System.out.println(url.getPath());
+        assertTrue(url.getPath().endsWith("aaa_ut.dicon"));
     }
 }

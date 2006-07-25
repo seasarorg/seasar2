@@ -23,6 +23,7 @@ import javax.servlet.ServletContext;
 
 import org.seasar.framework.container.ExternalContext;
 import org.seasar.framework.container.S2Container;
+import org.seasar.framework.env.Env;
 import org.seasar.framework.util.URLUtil;
 
 /**
@@ -48,26 +49,7 @@ public class WebResourceResolver implements ResourceResolver {
                     return is;
                 }
             }
-            S2Container container = SingletonS2ContainerFactory.getContainer();
-            ExternalContext externalContext = container.getExternalContext();
-            if (externalContext == null) {
-                return null;
-            }
-            if (!(externalContext.getApplication() instanceof ServletContext)) {
-                return null;
-            }
-            ServletContext servletContext = (ServletContext) externalContext
-                    .getApplication();
-            URL url = servletContext.getResource(path);
-            if (url == null) {
-                final StringBuffer buf = new StringBuffer(path.length() + 10);
-                buf.append("/WEB-INF");
-                if (!path.startsWith("/")) {
-                    buf.append("/");
-                }
-                buf.append(path);
-                url = servletContext.getResource(new String(buf));
-            }
+            URL url = getURL(path);
             if (url == null) {
                 return null;
             }
@@ -75,5 +57,40 @@ public class WebResourceResolver implements ResourceResolver {
         } catch (final MalformedURLException e) {
             return null;
         }
+    }
+
+    protected URL getURL(final String path) throws MalformedURLException {
+        S2Container container = SingletonS2ContainerFactory.getContainer();
+        ExternalContext externalContext = container.getExternalContext();
+        if (externalContext == null) {
+            return null;
+        }
+        if (!(externalContext.getApplication() instanceof ServletContext)) {
+            return null;
+        }
+        ServletContext servletContext = (ServletContext) externalContext
+                .getApplication();
+        URL url = getURL(servletContext, path);
+        if (url == null) {
+            final StringBuffer buf = new StringBuffer(path.length() + 10);
+            buf.append("/WEB-INF");
+            if (!path.startsWith("/")) {
+                buf.append("/");
+            }
+            buf.append(path);
+            String path2 = new String(buf);
+            url = getURL(servletContext, path2);
+        }
+        return url;
+    }
+
+    protected URL getURL(ServletContext servletContext, String path)
+            throws MalformedURLException {
+        String extPath = Env.adjustPath(path);
+        URL url = servletContext.getResource(extPath);
+        if (url == null && !extPath.equals(path)) {
+            url = servletContext.getResource(path);
+        }
+        return url;
     }
 }

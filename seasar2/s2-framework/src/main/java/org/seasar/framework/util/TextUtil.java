@@ -15,6 +15,7 @@
  */
 package org.seasar.framework.util;
 
+import java.io.File;
 import java.io.InputStream;
 import java.io.Reader;
 
@@ -29,6 +30,12 @@ public final class TextUtil {
 
     public static String readText(String path) {
         InputStream is = ResourceUtil.getResourceAsStream(path);
+        Reader reader = InputStreamReaderUtil.create(is);
+        return ReaderUtil.readText(reader);
+    }
+
+    public static String readText(File file) {
+        InputStream is = FileInputStreamUtil.create(file);
         Reader reader = InputStreamReaderUtil.create(is);
         return ReaderUtil.readText(reader);
     }

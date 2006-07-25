@@ -20,6 +20,7 @@ import java.util.Date;
 import junit.framework.TestCase;
 
 import org.seasar.framework.container.S2Container;
+import org.seasar.framework.env.Env;
 
 /**
  * @author higa
@@ -29,7 +30,19 @@ public class IncludeTagHandlerTest extends TestCase {
 
     private static final String PATH = "org/seasar/framework/container/factory/IncludeTagHandlerTest.dicon";
 
-    private static final String PATH2 = "org/seasar/framework/container/factory/aaa.dicon";
+    private static final String PATH2 = "org/seasar/framework/container/factory/IncludeTagHandlerTest2.dicon";
+
+    private static final String AAA_PATH = "org/seasar/framework/container/factory/aaa.dicon";
+
+    private static final String ENV_PATH = "org/seasar/framework/container/factory/env.text";
+
+    protected void setUp() {
+        Env.setFilePath(ENV_PATH);
+    }
+
+    protected void tearDown() {
+        Env.initialize();
+    }
 
     public void testInclude() throws Exception {
         S2Container container = S2ContainerFactory.create(PATH);
@@ -37,7 +50,7 @@ public class IncludeTagHandlerTest extends TestCase {
     }
 
     public void testInclude2() throws Exception {
-        S2Container container = S2ContainerFactory.create(PATH2);
+        S2Container container = S2ContainerFactory.create(AAA_PATH);
         assertSame("1", container.getComponent("aaa.cdate"), container
                 .getComponent("bbb.cdate"));
     }
@@ -51,5 +64,11 @@ public class IncludeTagHandlerTest extends TestCase {
                 .getComponent("grandChild");
 
         assertSame("1", grandChild, grandChild2);
+    }
+
+    public void testInclude_condition() throws Exception {
+        S2Container container = S2ContainerFactory.create(PATH2);
+        assertFalse(container.hasComponentDef("child"));
+        assertTrue(container.hasComponentDef("grandChild"));
     }
 }
