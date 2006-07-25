@@ -15,9 +15,6 @@
  */
 package org.seasar.framework.container.autoregister;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.seasar.framework.container.AutoBindingDef;
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.InstanceDef;
@@ -29,7 +26,7 @@ import org.seasar.framework.util.ClassTraversal.ClassHandler;
 
 /**
  * @author higa
- *
+ * 
  */
 public abstract class AbstractComponentAutoRegister extends
         AbstractAutoRegister implements ClassHandler {
@@ -44,12 +41,12 @@ public abstract class AbstractComponentAutoRegister extends
 
     private boolean externalBinding = false;
 
-    private List customizers = new ArrayList();
-    
+    private ComponentCustomizer customizer;
+
     public NamingConvention getNamingConvention() {
         return namingConvention;
     }
-    
+
     public static final String namingConvention_BINDING = "bindingType=must";
 
     public void setNamingConvention(NamingConvention namingConvention) {
@@ -84,16 +81,12 @@ public abstract class AbstractComponentAutoRegister extends
         this.externalBinding = externalBinding;
     }
 
-    public int getCustomizerSize() {
-        return customizers.size();
+    public ComponentCustomizer getCustomizer() {
+        return customizer;
     }
 
-    public ComponentCustomizer getCustomizer(int index) {
-        return (ComponentCustomizer) customizers.get(index);
-    }
-
-    public void addCustomizer(ComponentCustomizer customizer) {
-        customizers.add(customizer);
+    public void setCustomizer(ComponentCustomizer customizer) {
+        this.customizer = customizer;
     }
 
     public void processClass(final String packageName,
@@ -117,7 +110,8 @@ public abstract class AbstractComponentAutoRegister extends
         final ComponentDef cd = annoHandler.createComponentDef(className,
                 instanceDef, autoBindingDef, externalBinding);
         if (cd.getComponentName() == null) {
-            cd.setComponentName(namingConvention.fromClassNameToComponentName(className));
+            cd.setComponentName(namingConvention
+                    .fromClassNameToComponentName(className));
         }
         annoHandler.appendDI(cd);
         annoHandler.appendAspect(cd);
@@ -127,10 +121,8 @@ public abstract class AbstractComponentAutoRegister extends
     }
 
     protected void customize(ComponentDef componentDef) {
-        for (int i = 0; i < getCustomizerSize(); ++i) {
-            ComponentCustomizer customizer = getCustomizer(i);
+        if (customizer != null) {
             customizer.customize(componentDef);
         }
     }
-
 }

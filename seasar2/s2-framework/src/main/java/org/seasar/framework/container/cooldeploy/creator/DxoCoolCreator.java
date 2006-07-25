@@ -15,6 +15,7 @@
  */
 package org.seasar.framework.container.cooldeploy.creator;
 
+import org.seasar.framework.container.autoregister.ComponentCustomizer;
 import org.seasar.framework.convention.NamingConvention;
 
 public class DxoCoolCreator extends MultiPackageCoolCreator {
@@ -24,5 +25,13 @@ public class DxoCoolCreator extends MultiPackageCoolCreator {
         addMiddlePackageName(namingConvention.getWebPackageName());
         addMiddlePackageName(namingConvention.getDxoPackageName());
         setNameSuffix(namingConvention.getDxoSuffix());
+    }
+
+    public ComponentCustomizer getDxoCustomizer() {
+        return getCustomizer();
+    }
+
+    public void setDxoCustomizer(ComponentCustomizer customizer) {
+        setCustomizer(customizer);
     }
 }

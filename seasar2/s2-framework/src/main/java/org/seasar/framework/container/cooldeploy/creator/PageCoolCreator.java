@@ -15,6 +15,7 @@
  */
 package org.seasar.framework.container.cooldeploy.creator;
 
+import org.seasar.framework.container.autoregister.ComponentCustomizer;
 import org.seasar.framework.container.deployer.InstanceDefFactory;
 import org.seasar.framework.convention.NamingConvention;
 
@@ -26,5 +27,13 @@ public class PageCoolCreator extends SinglePackageCoolCreator {
         setNameSuffix(namingConvention.getPageSuffix());
         setInstanceDef(InstanceDefFactory.REQUEST);
         setExternalBinding(true);
+    }
+
+    public ComponentCustomizer getPageCustomizer() {
+        return getCustomizer();
+    }
+
+    public void setPageCustomizer(ComponentCustomizer customizer) {
+        setCustomizer(customizer);
     }
 }

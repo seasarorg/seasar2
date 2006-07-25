@@ -15,6 +15,7 @@
  */
 package org.seasar.framework.container.hotdeploy.creator;
 
+import org.seasar.framework.container.autoregister.ComponentCustomizer;
 import org.seasar.framework.convention.NamingConvention;
 
 public class DxoOndemandCreator extends MultiPackageOndemandCreator {
@@ -24,5 +25,13 @@ public class DxoOndemandCreator extends MultiPackageOndemandCreator {
         addMiddlePackageName(namingConvention.getWebPackageName());
         addMiddlePackageName(namingConvention.getDxoPackageName());
         setNameSuffix(namingConvention.getDxoSuffix());
+    }
+
+    public ComponentCustomizer getDxoCustomizer() {
+        return getCustomizer();
+    }
+
+    public void setDxoCustomizer(ComponentCustomizer customizer) {
+        setCustomizer(customizer);
     }
 }

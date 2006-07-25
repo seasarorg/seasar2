@@ -46,7 +46,7 @@ public class LogicOndemandCreatorTest extends S2FrameworkTestCase {
         AspectCustomizer aspectCustomizer = new AspectCustomizer();
         aspectCustomizer.setInterceptorName("helloInterceptor");
         register(HelloInterceptor.class, "helloInterceptor");
-        creator.addCustomizer(aspectCustomizer);
+        creator.setLogicCustomizer(aspectCustomizer);
         OndemandProjectImpl project = new OndemandProjectImpl();
         project.setRootPackageName(ClassUtil.getPackageName(getClass()));
         project.setCreators(new OndemandCreator[] { creator });

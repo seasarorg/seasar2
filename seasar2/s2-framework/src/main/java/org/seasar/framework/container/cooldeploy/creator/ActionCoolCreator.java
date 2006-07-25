@@ -15,6 +15,7 @@
  */
 package org.seasar.framework.container.cooldeploy.creator;
 
+import org.seasar.framework.container.autoregister.ComponentCustomizer;
 import org.seasar.framework.container.deployer.InstanceDefFactory;
 import org.seasar.framework.convention.NamingConvention;
 
@@ -25,5 +26,13 @@ public class ActionCoolCreator extends SinglePackageCoolCreator {
         setMiddlePackageName(namingConvention.getWebPackageName());
         setNameSuffix(namingConvention.getActionSuffix());
         setInstanceDef(InstanceDefFactory.REQUEST);
+    }
+
+    public ComponentCustomizer getActionCustomizer() {
+        return getCustomizer();
+    }
+
+    public void setActionCustomizer(ComponentCustomizer customizer) {
+        setCustomizer(customizer);
     }
 }

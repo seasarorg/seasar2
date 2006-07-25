@@ -15,9 +15,6 @@
  */
 package org.seasar.framework.container.hotdeploy.creator;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.seasar.framework.container.AutoBindingDef;
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.InstanceDef;
@@ -47,7 +44,7 @@ public abstract class AbstractOndemandCreator implements OndemandCreator {
 
     private String nameSuffix;
 
-    private List customizers = new ArrayList();
+    private ComponentCustomizer customizer;
 
     public AbstractOndemandCreator(NamingConvention namingConvention) {
         if (namingConvention == null) {
@@ -92,16 +89,12 @@ public abstract class AbstractOndemandCreator implements OndemandCreator {
         this.nameSuffix = nameSuffix;
     }
 
-    public int getCustomizerSize() {
-        return customizers.size();
+    protected ComponentCustomizer getCustomizer() {
+        return customizer;
     }
 
-    public ComponentCustomizer getCustomizer(int index) {
-        return (ComponentCustomizer) customizers.get(index);
-    }
-
-    public void addCustomizer(ComponentCustomizer customizer) {
-        customizers.add(customizer);
+    protected void setCustomizer(ComponentCustomizer customizer) {
+        this.customizer = customizer;
     }
 
     public boolean loadComponentDef(OndemandS2Container container,
@@ -187,8 +180,7 @@ public abstract class AbstractOndemandCreator implements OndemandCreator {
             String componentName);
 
     protected void customize(ComponentDef componentDef) {
-        for (int i = 0; i < getCustomizerSize(); ++i) {
-            ComponentCustomizer customizer = getCustomizer(i);
+        if (customizer != null) {
             customizer.customize(componentDef);
         }
     }

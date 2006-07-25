@@ -15,6 +15,7 @@
  */
 package org.seasar.framework.container.hotdeploy.creator;
 
+import org.seasar.framework.container.autoregister.ComponentCustomizer;
 import org.seasar.framework.container.deployer.InstanceDefFactory;
 import org.seasar.framework.convention.NamingConvention;
 
@@ -26,5 +27,13 @@ public class ServiceOndemandCreator extends MultiPackageOndemandCreator {
         addMiddlePackageName(namingConvention.getServicePackageName());
         setNameSuffix(namingConvention.getServiceSuffix());
         setInstanceDef(InstanceDefFactory.PROTOTYPE);
+    }
+
+    public ComponentCustomizer getServiceCustomizer() {
+        return getCustomizer();
+    }
+
+    public void setServiceCustomizer(ComponentCustomizer customizer) {
+        setCustomizer(customizer);
     }
 }

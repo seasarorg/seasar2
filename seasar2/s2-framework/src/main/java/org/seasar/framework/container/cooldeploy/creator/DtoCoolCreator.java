@@ -16,6 +16,7 @@
 package org.seasar.framework.container.cooldeploy.creator;
 
 import org.seasar.framework.container.assembler.AutoBindingDefFactory;
+import org.seasar.framework.container.autoregister.ComponentCustomizer;
 import org.seasar.framework.container.deployer.InstanceDefFactory;
 import org.seasar.framework.convention.NamingConvention;
 
@@ -27,5 +28,13 @@ public class DtoCoolCreator extends SinglePackageCoolCreator {
         setNameSuffix(namingConvention.getDtoSuffix());
         setInstanceDef(InstanceDefFactory.REQUEST);
         setAutoBindingDef(AutoBindingDefFactory.NONE);
+    }
+
+    public ComponentCustomizer getDtoCustomizer() {
+        return getCustomizer();
+    }
+
+    public void setDtoCustomizer(ComponentCustomizer customizer) {
+        setCustomizer(customizer);
     }
 }

@@ -15,6 +15,7 @@
  */
 package org.seasar.framework.container.hotdeploy.creator;
 
+import org.seasar.framework.container.autoregister.ComponentCustomizer;
 import org.seasar.framework.container.deployer.InstanceDefFactory;
 import org.seasar.framework.convention.NamingConvention;
 
@@ -26,5 +27,13 @@ public class PageOndemandCreator extends SinglePackageOndemandCreator {
         setNameSuffix(namingConvention.getPageSuffix());
         setInstanceDef(InstanceDefFactory.REQUEST);
         setExternalBinding(true);
+    }
+
+    public ComponentCustomizer getPageCustomizer() {
+        return getCustomizer();
+    }
+
+    public void setPageCustomizer(ComponentCustomizer customizer) {
+        setCustomizer(customizer);
     }
 }

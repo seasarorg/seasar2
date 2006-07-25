@@ -15,6 +15,7 @@
  */
 package org.seasar.framework.container.hotdeploy.creator;
 
+import org.seasar.framework.container.autoregister.ComponentCustomizer;
 import org.seasar.framework.container.deployer.InstanceDefFactory;
 import org.seasar.framework.convention.NamingConvention;
 
@@ -25,5 +26,13 @@ public class InterceptorOndemandCreator extends SinglePackageOndemandCreator {
         setMiddlePackageName(namingConvention.getInterceptorPackageName());
         setNameSuffix(namingConvention.getInterceptorSuffix());
         setInstanceDef(InstanceDefFactory.PROTOTYPE);
+    }
+
+    public ComponentCustomizer getInterceptorCustomizer() {
+        return getCustomizer();
+    }
+
+    public void setInterceptorCustomizer(ComponentCustomizer customizer) {
+        setCustomizer(customizer);
     }
 }

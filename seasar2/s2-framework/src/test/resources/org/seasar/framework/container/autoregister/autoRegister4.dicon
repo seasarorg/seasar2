@@ -4,16 +4,14 @@
 <components namespace="child" >
 	<component class="org.seasar.framework.convention.impl.NamingConventionImpl"/>
 	<component class="org.seasar.framework.container.autoregister.FileSystemComponentAutoRegister">
+		<property name="customizer">
+			<component class="org.seasar.framework.container.autoregister.AspectCustomizer">
+				<property name="interceptorName">"greetingInterceptor"</property>
+			</component>
+		</property>
 		<initMethod name="addClassPattern">
 			<arg>"org.seasar.framework.container.autoregister"</arg>
 			<arg>"Greeting"</arg>
-		</initMethod>
-		<initMethod name="addCustomizer">
-			<arg>
-				<component class="org.seasar.framework.container.autoregister.AspectCustomizer">
-					<property name="interceptorName">"greetingInterceptor"</property>
-				</component>
-			</arg>
 		</initMethod>
 	</component>
 	<component name="greetingInterceptor" class="org.seasar.framework.container.autoregister.GreetingInterceptor"/>
