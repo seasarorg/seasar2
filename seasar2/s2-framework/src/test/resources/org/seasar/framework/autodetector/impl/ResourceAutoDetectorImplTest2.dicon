@@ -3,14 +3,8 @@
 	"http://www.seasar.org/dtd/components21.dtd">
 <components namespace="child">
 	<component name="autoDetector" class="org.seasar.framework.autodetector.impl.ResourceAutoDetectorImpl">
-		<initMethod name="addDirectoryName">
-			<arg>"org/seasar/framework/autodetector"</arg>
-		</initMethod>		
 		<initMethod name="addResourceNamePattern">
-			<arg>"org/seasar/framework/autodetector/impl/foo.*"</arg>
-		</initMethod>
-		<initMethod name="addIgnoreResourceNamePattern">
-			<arg>"org/seasar/framework/autodetector/impl/hoge.*"</arg>
+			<arg>".*/TestSuite\\.class"</arg>
 		</initMethod>
 	</component>
 </components>

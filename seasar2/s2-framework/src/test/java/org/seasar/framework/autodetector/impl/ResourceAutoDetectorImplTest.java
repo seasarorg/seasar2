@@ -15,18 +15,25 @@
  */
 package org.seasar.framework.autodetector.impl;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import junit.framework.TestCase;
+
 import org.seasar.framework.autodetector.ResourceAutoDetector;
 import org.seasar.framework.autodetector.ResourceAutoDetector.Entry;
+import org.seasar.framework.container.S2Container;
 import org.seasar.framework.unit.S2FrameworkTestCase;
+import org.seasar.framework.util.ResourceUtil;
 
 /**
  * @author taedium
  * 
  */
 public class ResourceAutoDetectorImplTest extends S2FrameworkTestCase {
+
+    private S2Container child;
 
     private ResourceAutoDetector detector;
 
@@ -35,15 +42,34 @@ public class ResourceAutoDetectorImplTest extends S2FrameworkTestCase {
     }
 
     public void testDetect() throws Exception {
-        Entry[] entries = detector.detect();
-        List pathes = new ArrayList();
+        String path = child.getPath();
+        URL url = ResourceUtil.getResource(path);
+        Entry[] entries = detector.detect(path, url);
+        List paths = new ArrayList();
         for (int i = 0; i < entries.length; i++) {
-            pathes.add(entries[i].getPath());
+            paths.add(entries[i].getPath());
         }
 
-        assertEquals(2, pathes.size());
-        assertTrue(pathes.contains("junit/framework/TestSuite.class"));
-        assertTrue(pathes
+        assertEquals(2, paths.size());
+        assertTrue(paths
                 .contains("org/seasar/framework/autodetector/impl/foo.txt"));
+        assertTrue(paths
+                .contains("org/seasar/framework/autodetector/impl/foo2.txt"));
+    }
+
+    public void setUpDetect2() throws Exception {
+        include("ResourceAutoDetectorImplTest2.dicon");
+    }
+
+    public void testDetect2() throws Exception {
+        String path = ResourceUtil.getResourcePath(TestCase.class);
+        URL url = ResourceUtil.getResource(path);
+        Entry[] entries = detector.detect(path, url);
+        List paths = new ArrayList();
+        for (int i = 0; i < entries.length; i++) {
+            paths.add(entries[i].getPath());
+        }
+        assertEquals(1, paths.size());
+        assertTrue(paths.contains("junit/framework/TestSuite.class"));
     }
 }

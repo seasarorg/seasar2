@@ -26,6 +26,7 @@ import java.util.jar.JarFile;
 import org.seasar.framework.traverser.Traverser;
 import org.seasar.framework.util.JarFileUtil;
 import org.seasar.framework.util.ResourceUtil;
+import org.seasar.framework.util.StringUtil;
 import org.seasar.framework.util.URLUtil;
 
 /**
@@ -44,14 +45,8 @@ public abstract class AbstractAutoDetector {
 
     private List directoryNames = new ArrayList();
 
-    private List referenceClasses = new ArrayList();
-
     public void addDirectoryName(String directoryName) {
         directoryNames.add(directoryName);
-    }
-
-    public void addReferenceClass(Class referenceClass) {
-        referenceClasses.add(referenceClass);
     }
 
     public void addStrategy(final String protocol, final Strategy strategy) {
@@ -66,47 +61,39 @@ public abstract class AbstractAutoDetector {
         return directoryNames.size();
     }
 
-    public Class getReferenceClass(int index) {
-        return (Class) referenceClasses.get(index);
-    }
-
-    public int getReferenceClassSize() {
-        return referenceClasses.size();
-    }
-
     public Strategy getStrategy(String protocol) {
         return (Strategy) strategies.get(protocol);
     }
 
     protected interface Strategy {
 
-        void detect(Class referenceClass, URL url, Traverser traverser);
+        void detect(String path, URL url, Traverser traverser);
     }
 
     protected class FileSystemStrategy implements Strategy {
 
-        public void detect(final Class referenceClass, final URL url,
+        public void detect(final String path, final URL url,
                 final Traverser traverser) {
-            final File rootDir = getRootDir(referenceClass, url);
+            final File rootDir = getRootDir(path, url);
             for (int i = 0; i < getDirectoryNameSize(); i++) {
                 final String directoryName = getDirectoryName(i);
                 traverser.forEach(rootDir, directoryName);
             }
         }
 
-        protected File getRootDir(final Class referenceClass, final URL url) {
-            final String[] names = referenceClass.getName().split("\\.");
-            File path = ResourceUtil.getFile(url);
+        protected File getRootDir(final String path, final URL url) {
+            File file = ResourceUtil.getResourceAsFile(path);
+            String[] names = StringUtil.split(path, "/");
             for (int i = 0; i < names.length; ++i) {
-                path = path.getParentFile();
+                file = file.getParentFile();
             }
-            return path;
+            return file;
         }
     }
 
     protected class JarFileStrategy implements Strategy {
 
-        public void detect(final Class referenceClass, final URL url,
+        public void detect(final String path, final URL url,
                 final Traverser traverser) {
             final JarFile jarFile = createJarFile(url);
             traverser.forEach(jarFile);
@@ -123,7 +110,7 @@ public abstract class AbstractAutoDetector {
 
     protected class ZipFileStrategy implements Strategy {
 
-        public void detect(final Class referenceClass, final URL url,
+        public void detect(final String path, final URL url,
                 final Traverser traverser) {
             final JarFile jarFile = createJarFile(url);
             traverser.forEach(jarFile);

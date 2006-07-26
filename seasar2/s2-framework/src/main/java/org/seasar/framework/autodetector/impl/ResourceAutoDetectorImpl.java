@@ -24,7 +24,6 @@ import java.util.regex.Pattern;
 import org.seasar.framework.autodetector.ResourceAutoDetector;
 import org.seasar.framework.traverser.ResourceTraverser;
 import org.seasar.framework.traverser.Traverser;
-import org.seasar.framework.util.ResourceUtil;
 import org.seasar.framework.util.ResourceTraversal.ResourceHandler;
 
 /**
@@ -54,8 +53,8 @@ public class ResourceAutoDetectorImpl extends AbstractAutoDetector implements
         return (Pattern) resourceNamePatterns.get(index);
     }
 
-    public void getResourceNamePatternSize() {
-        resourceNamePatterns.size();
+    public int getResourceNamePatternSize() {
+        return resourceNamePatterns.size();
     }
 
     public Pattern getIgnoreResourceNamePattern(final int index) {
@@ -72,36 +71,26 @@ public class ResourceAutoDetectorImpl extends AbstractAutoDetector implements
         }
     }
 
-    public ResourceAutoDetector.Entry[] detect() {
+    public ResourceAutoDetector.Entry[] detect(String path, URL url) {
         final List result = new ArrayList();
-
-        for (int i = 0; i < getReferenceClassSize(); i++) {
-            final Class referenceClass = getReferenceClass(i);
-            final String baseClassPath = ResourceUtil
-                    .getResourcePath(referenceClass);
-            final URL url = ResourceUtil.getResource(baseClassPath);
-            final Strategy strategy = getStrategy(url.getProtocol());
-            final Traverser traverser = new ResourceTraverser(
-                    new ResourceHandler() {
-                        public void processResource(final String path,
-                                final InputStream is) {
-                            if (isApplied(path) && !isIgnored(path)) {
-                                final Entry entry = new Entry(path, is);
-                                result.add(entry);
-                            }
+        final Strategy strategy = getStrategy(url.getProtocol());
+        final Traverser traverser = new ResourceTraverser(
+                new ResourceHandler() {
+                    public void processResource(final String path,
+                            final InputStream is) {
+                        if (isApplied(path) && !isIgnored(path)) {
+                            final Entry entry = new Entry(path, is);
+                            result.add(entry);
                         }
-                    });
-            strategy.detect(referenceClass, url, traverser);
-        }
-
-        return (Entry[]) result.toArray(new Entry[] {});
+                    }
+                });
+        strategy.detect(path, url, traverser);
+        return (ResourceAutoDetector.Entry[]) result.toArray(new Entry[result
+                .size()]);
     }
 
     protected boolean isApplied(final String resourceName) {
-        if (getReferenceClassSize() == 0) {
-            return true;
-        }
-        for (int i = 0; i < getReferenceClassSize(); i++) {
+        for (int i = 0; i < getResourceNamePatternSize(); i++) {
             final Pattern pattern = getResourceNamePattern(i);
             if (pattern.matcher(resourceName).matches()) {
                 return true;
