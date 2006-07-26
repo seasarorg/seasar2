@@ -34,7 +34,7 @@ public class IncludeTagHandlerTest extends TestCase {
 
     private static final String AAA_PATH = "org/seasar/framework/container/factory/aaa.dicon";
 
-    private static final String ENV_PATH = "org/seasar/framework/container/factory/env.text";
+    private static final String ENV_PATH = "org/seasar/framework/container/factory/env.txt";
 
     protected void setUp() {
         Env.setFilePath(ENV_PATH);

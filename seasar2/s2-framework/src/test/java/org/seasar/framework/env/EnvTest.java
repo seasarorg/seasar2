@@ -28,7 +28,7 @@ public class EnvTest extends TestCase {
 
     private static final String UT_PATH = StringUtil.replace(ClassUtil
             .getPackageName(EnvTest.class), ".", "/")
-            + "/env.text";
+            + "/env.txt";
 
     protected void tearDown() {
         Env.initialize();

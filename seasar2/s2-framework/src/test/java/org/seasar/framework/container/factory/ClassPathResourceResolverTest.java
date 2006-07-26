@@ -32,7 +32,7 @@ public class ClassPathResourceResolverTest extends TestCase {
 
     private static final String PATH2 = "org/seasar/framework/container/factory/aaa.dicon";
 
-    private static final String ENV_PATH = "org/seasar/framework/container/factory/env.text";
+    private static final String ENV_PATH = "org/seasar/framework/container/factory/env.txt";
 
     private ClassPathResourceResolver target = new ClassPathResourceResolver();
 

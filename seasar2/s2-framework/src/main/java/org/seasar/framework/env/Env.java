@@ -36,7 +36,7 @@ public class Env {
 
     public static final String IT = "it";
 
-    public static final String DEFAULT_FILE_PATH = "env.text";
+    public static final String DEFAULT_FILE_PATH = "env.txt";
 
     private static String value;
 
