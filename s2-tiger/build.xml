@@ -10,7 +10,6 @@
 			<zipfileset prefix="s2-tiger/lib" dir="target">
 				<include name="s2-tiger-${ver}.jar"/>
 				<include name="s2-tiger-${ver}-sources.jar"/>
-				<include name="s2-tiger-${ver}-javadoc.jar"/>
 			</zipfileset>
 			<zipfileset prefix="s2-tiger/resources" dir="src/examples/resources">
 				<include name="jndi.properties"/>

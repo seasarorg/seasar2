@@ -95,6 +95,7 @@
             <link>http://aopalliance.sourceforge.net/doc/</link>
           </links>
         </configuration>
+        <!--
         <executions>
           <execution>
             <id>javadoc-jar</id>
@@ -104,6 +105,7 @@
             </goals>
           </execution>
         </executions>
+        -->
       </plugin>
     </plugins>
   </build>
