@@ -29,6 +29,8 @@ public final class ValueTypes {
 
     public final static ValueType STRING = new StringType();
 
+    public final static ValueType CHARACTER = new CharacterType();
+
     public final static ValueType SHORT = new ShortType();
 
     public final static ValueType INTEGER = new IntegerType();
@@ -61,6 +63,8 @@ public final class ValueTypes {
 
     static {
         registerValueType(String.class, STRING);
+        registerValueType(char.class, CHARACTER);
+        registerValueType(Character.class, CHARACTER);
         registerValueType(short.class, SHORT);
         registerValueType(Short.class, SHORT);
         registerValueType(int.class, INTEGER);
