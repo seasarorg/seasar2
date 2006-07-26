@@ -11,12 +11,10 @@
 			<zipfileset prefix="seasar2/lib" dir="s2-framework/target">
 				<include name="s2-framework-${ver}.jar"/>
 				<include name="s2-framework-${ver}-sources.jar"/>
-				<include name="s2-framework-${ver}-javadoc.jar"/>
 			</zipfileset>
 			<zipfileset prefix="seasar2/lib" dir="s2-extension/target">
 				<include name="s2-extension-${ver}.jar"/>
 				<include name="s2-extension-${ver}-sources.jar"/>
-				<include name="s2-extension-${ver}-javadoc.jar"/>
 			</zipfileset>
 			<zipfileset prefix="seasar2/resources" dir="s2-framework/src/test/resources">
 				<include name="aop.dicon"/>
@@ -30,6 +28,9 @@
 				<exclude name="**/ja/benchmark**"/>
 				<exclude name="**/ja/hotdeploy-demo/**"/>
 				<exclude name=".project"/>
+			</zipfileset>
+			<zipfileset prefix="seasar2/doc/ja" dir="s2-framework/target/site">
+				<include name="apidocs/**"/>
 			</zipfileset>
 		</zip>
 	</target>
