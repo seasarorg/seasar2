@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<!DOCTYPE components PUBLIC "-//SEASAR2.1//DTD S2Container//EN"
+	"http://www.seasar.org/dtd/components21.dtd">
+<components>
+	<include path="convention.dicon"/>
+	<include path="customizer.dicon"/>
+	<component class="org.seasar.framework.container.cooldeploy.creator.ActionCoolCreator"/>
+	<component class="org.seasar.framework.container.cooldeploy.creator.DaoCoolCreator"/>
+	<component class="org.seasar.framework.container.cooldeploy.creator.DtoCoolCreator"/>
+	<component class="org.seasar.framework.container.cooldeploy.creator.DxoCoolCreator"/>
+	<component class="org.seasar.framework.container.cooldeploy.creator.HelperCoolCreator"/>
+	<component class="org.seasar.framework.container.cooldeploy.creator.LogicCoolCreator"/>
+	<component class="org.seasar.framework.container.cooldeploy.creator.PageCoolCreator"/>
+	<component class="org.seasar.framework.container.cooldeploy.creator.ServiceCoolCreator"/>
+	<component class="org.seasar.framework.container.cooldeploy.creator.InterceptorCoolCreator"/>
+	<component class="org.seasar.framework.container.cooldeploy.creator.ValidatorCoolCreator"/>
+	<component name="project" class="org.seasar.framework.container.cooldeploy.impl.CoolProjectImpl">
+		<property name="rootPackageName"></property>
+	</component>
+	<component class="org.seasar.framework.container.cooldeploy.CoolComponentAutoRegister">
+		<initMethod name="addProject">
+			<arg>project</arg>
+		</initMethod>
+	</component>
+</components>

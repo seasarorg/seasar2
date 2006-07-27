@@ -33,21 +33,27 @@ public abstract class AbstractComponentAutoRegister extends
 
     protected static final String CLASS_SUFFIX = ".class";
 
+    public static final String namingConvention_BINDING = "bindingType=must";
+
     private NamingConvention namingConvention;
 
+    public static final String instanceDef_BINDING = "bindingType=may";
+
     private InstanceDef instanceDef;
+
+    public static final String autoBindingDef_BINDING = "bindingType=may";
 
     private AutoBindingDef autoBindingDef;
 
     private boolean externalBinding = false;
+
+    public static final String customizer_BINDING = "bindingType=may";
 
     private ComponentCustomizer customizer;
 
     public NamingConvention getNamingConvention() {
         return namingConvention;
     }
-
-    public static final String namingConvention_BINDING = "bindingType=must";
 
     public void setNamingConvention(NamingConvention namingConvention) {
         this.namingConvention = namingConvention;
@@ -57,13 +63,9 @@ public abstract class AbstractComponentAutoRegister extends
         return instanceDef;
     }
 
-    public static final String instanceDef_BINDING = "bindingType=may";
-
     public void setInstanceDef(InstanceDef instanceDef) {
         this.instanceDef = instanceDef;
     }
-
-    public static final String autoBindingDef_BINDING = "bindingType=may";
 
     public AutoBindingDef getAutoBindingDef() {
         return autoBindingDef;

@@ -48,13 +48,18 @@ public class HotdeployFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response,
             FilterChain chain) throws IOException, ServletException {
 
-        OndemandBehavior ondemand = (OndemandBehavior) S2ContainerBehavior
+        S2ContainerBehavior.Provider provider = S2ContainerBehavior
                 .getProvider();
-        ondemand.start();
-        try {
+        if (provider instanceof OndemandBehavior) {
+            OndemandBehavior ondemand = (OndemandBehavior) provider;
+            ondemand.start();
+            try {
+                chain.doFilter(request, response);
+            } finally {
+                ondemand.stop();
+            }
+        } else {
             chain.doFilter(request, response);
-        } finally {
-            ondemand.stop();
         }
     }
 }

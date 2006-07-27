@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<!DOCTYPE components PUBLIC "-//SEASAR2.1//DTD S2Container//EN"
+	"http://www.seasar.org/dtd/components21.dtd">
+<components>
+	<include path="aop.dicon"/>
+	<component name="defaultCustomizer" class="org.seasar.framework.container.autoregister.AspectCustomizer">
+		<property name="interceptorName">"aop.traceInterceptor"</property>
+	</component>
+	<component name="actionCustomizer" class="org.seasar.framework.container.autoregister.CustomizerChain">
+		<initMethod name="addCustomizer">
+			<arg>defaultCustomizer</arg>
+		</initMethod>
+	</component>
+	<component name="daoCustomizer" class="org.seasar.framework.container.autoregister.CustomizerChain">
+		<initMethod name="addCustomizer">
+			<arg>defaultCustomizer</arg>
+		</initMethod>
+	</component>
+	<component name="dtoCustomizer" class="org.seasar.framework.container.autoregister.CustomizerChain">
+	</component>
+	<component name="dxoCustomizer" class="org.seasar.framework.container.autoregister.CustomizerChain">
+		<initMethod name="addCustomizer">
+			<arg>defaultCustomizer</arg>
+		</initMethod>
+	</component>
+	<component name="helperCustomizer" class="org.seasar.framework.container.autoregister.CustomizerChain">
+		<initMethod name="addCustomizer">
+			<arg>defaultCustomizer</arg>
+		</initMethod>
+	</component>
+	<component name="logicCustomizer" class="org.seasar.framework.container.autoregister.CustomizerChain">
+		<initMethod name="addCustomizer">
+			<arg>defaultCustomizer</arg>
+		</initMethod>
+	</component>
+	<component name="pageCustomizer" class="org.seasar.framework.container.autoregister.CustomizerChain">
+		<initMethod name="addCustomizer">
+			<arg>defaultCustomizer</arg>
+		</initMethod>
+	</component>
+	<component name="serviceCustomizer" class="org.seasar.framework.container.autoregister.CustomizerChain">
+		<initMethod name="addCustomizer">
+			<arg>defaultCustomizer</arg>
+		</initMethod>
+	</component>
+	<component name="interceptorCustomizer" class="org.seasar.framework.container.autoregister.CustomizerChain">
+	</component>
+	<component name="validatorCustomizer" class="org.seasar.framework.container.autoregister.CustomizerChain">
+	</component>
+</components>

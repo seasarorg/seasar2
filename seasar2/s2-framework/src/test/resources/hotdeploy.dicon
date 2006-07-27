@@ -3,6 +3,7 @@
 	"http://www.seasar.org/dtd/components21.dtd">
 <components>
 	<include path="convention.dicon"/>
+	<include path="customizer.dicon"/>
 	<component class="org.seasar.framework.container.hotdeploy.creator.ActionOndemandCreator"/>
 	<component class="org.seasar.framework.container.hotdeploy.creator.DaoOndemandCreator"/>
 	<component class="org.seasar.framework.container.hotdeploy.creator.DtoOndemandCreator"/>
