@@ -41,7 +41,9 @@ public class HotdeployClassLoaderTest extends TestCase {
         hotLoader = new HotdeployClassLoader(originalLoader);
         OndemandProjectImpl project = new OndemandProjectImpl();
         project.setRootPackageName(PACKAGE_NAME);
-        hotLoader.setProjects(new OndemandProject[] { project });
+        OndemandProjectImpl project2 = new OndemandProjectImpl();
+        project2.setRootPackageName("junit.framework");
+        hotLoader.setProjects(new OndemandProject[] { project, project2 });
         Thread.currentThread().setContextClassLoader(hotLoader);
     }
 
@@ -52,6 +54,10 @@ public class HotdeployClassLoaderTest extends TestCase {
     public void testLoadClass() throws Exception {
         assertSame("1", hotLoader.loadClass(AAA_NAME), hotLoader
                 .loadClass(AAA_NAME));
+
+        Class clazz = hotLoader.loadClass("junit.framework.TestCase");
+        assertSame(hotLoader, clazz.getClassLoader());
+
         try {
             hotLoader.loadClass(PACKAGE_NAME + ".xxx");
             fail("2");

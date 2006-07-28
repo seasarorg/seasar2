@@ -17,9 +17,9 @@ package org.seasar.framework.util;
 
 import java.io.File;
 
-import org.seasar.framework.exception.ResourceNotFoundRuntimeException;
-
 import junit.framework.TestCase;
+
+import org.seasar.framework.exception.ResourceNotFoundRuntimeException;
 
 public class ResourceUtilTest extends TestCase {
 
@@ -43,6 +43,13 @@ public class ResourceUtilTest extends TestCase {
             assertEquals("3", "hoge.xml", e.getPath());
         }
         System.out.println(ResourceUtil.getResource("."));
+    }
+
+    public void testGetResourceAsStreamNoException() throws Exception {
+        assertNotNull(ResourceUtil.getResourceAsStreamNoException(
+                "java/lang/String.class", "class"));
+        assertNull(ResourceUtil.getResourceAsStreamNoException(
+                "java/lang/String2.class", "class"));
     }
 
     public void testGetBuildDir() throws Exception {

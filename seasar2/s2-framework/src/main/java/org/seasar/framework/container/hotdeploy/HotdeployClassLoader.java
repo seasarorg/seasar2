@@ -15,12 +15,12 @@
  */
 package org.seasar.framework.container.hotdeploy;
 
-import java.io.File;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.seasar.framework.util.ClassUtil;
-import org.seasar.framework.util.FileUtil;
+import org.seasar.framework.util.InputStreamUtil;
 import org.seasar.framework.util.ResourceUtil;
 
 public class HotdeployClassLoader extends ClassLoader {
@@ -62,9 +62,9 @@ public class HotdeployClassLoader extends ClassLoader {
                 return clazz;
             }
             String path = ClassUtil.getResourcePath(className);
-            File file = ResourceUtil.getResourceAsFileNoException(path);
-            if (file != null) {
-                clazz = defineClass(className, file);
+            InputStream is = ResourceUtil.getResourceAsStreamNoException(path);
+            if (is != null) {
+                clazz = defineClass(className, is);
                 definedClass(clazz);
                 if (resolve) {
                     resolveClass(clazz);
@@ -75,8 +75,8 @@ public class HotdeployClassLoader extends ClassLoader {
         return super.loadClass(className, resolve);
     }
 
-    protected Class defineClass(String className, File classFile) {
-        return defineClass(className, FileUtil.getBytes(classFile));
+    protected Class defineClass(String className, InputStream classFile) {
+        return defineClass(className, InputStreamUtil.getBytes(classFile));
     }
 
     protected Class defineClass(String className, byte[] bytes) {
