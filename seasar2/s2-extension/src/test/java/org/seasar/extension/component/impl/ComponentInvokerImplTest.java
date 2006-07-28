@@ -34,6 +34,17 @@ public class ComponentInvokerImplTest extends S2FrameworkTestCase {
         }
     }
 
+    public void testRedeserialize() throws Exception {
+        String s = "Hoge";
+        Integer i = new Integer(100);
+        Object[] args = new Object[] { s, i };
+        ((ComponentInvokerImpl) invoker).redeserialize(args);
+        assertNotSame(s, args[0]);
+        assertEquals(s, args[0]);
+        assertNotSame(i, args[1]);
+        assertEquals(i, args[1]);
+    }
+
     protected void setUp() throws Exception {
         register(ComponentInvokerImpl.class);
         register("Hoge", "aaa");
