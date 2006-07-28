@@ -100,7 +100,8 @@ public class HotdeployClassLoader extends ClassLoader {
     }
 
     protected void definedClass(Class clazz) {
-        for (int i = 0; i < getHotdeployListenerSize(); ++i) {
+        final int listenerSize = getHotdeployListenerSize();
+        for (int i = 0; i < listenerSize; ++i) {
             HotdeployListener listener = getHotdeployListener(i);
             listener.definedClass(clazz);
         }
