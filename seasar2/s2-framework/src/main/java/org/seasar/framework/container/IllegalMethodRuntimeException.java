@@ -18,8 +18,20 @@ package org.seasar.framework.container;
 import org.seasar.framework.exception.SRuntimeException;
 
 /**
- * @author higa
+ * 不正なメソッド・インジェクション定義が指定されていた場合にスローされます。
+ * <p>
+ * メソッド・インジェクションを実行した際に、 メソッドの引数として指定されたコンポーネントが見つからない場合や、
+ * 引数を適切な型にパース出来ない場合などに発生します。
+ * </p>
  * 
+ * @author higa
+ * @author belltree (Javadoc)
+ * 
+ * @see MethodDef
+ * @see InitMethodDef
+ * @see DestroyMethodDef
+ * @see MethodAssembler
+ * @see org.seasar.framework.container.assembler.AbstractMethodAssembler
  */
 public class IllegalMethodRuntimeException extends SRuntimeException {
 
@@ -29,6 +41,16 @@ public class IllegalMethodRuntimeException extends SRuntimeException {
 
     private String methodName_;
 
+    /**
+     * <code>IllegalMethodRuntimeException</code>を構築します。
+     * 
+     * @param componentClass
+     *            不正なメソッド・インジェクション定義を含むコンポーネントのクラス
+     * @param methodName
+     *            不正なメソッド・インジェクション定義のメソッド名
+     * @param cause
+     *            原因となった例外
+     */
     public IllegalMethodRuntimeException(Class componentClass,
             String methodName, Throwable cause) {
         super("ESSR0060", new Object[] { componentClass.getName(), methodName,
@@ -37,10 +59,20 @@ public class IllegalMethodRuntimeException extends SRuntimeException {
         methodName_ = methodName;
     }
 
+    /**
+     * 不正なメソッド・インジェクション定義を含むコンポーネントのクラスを返します。
+     * 
+     * @return コンポーネントのクラス
+     */
     public Class getComponentClass() {
         return componentClass_;
     }
 
+    /**
+     * 不正なメソッド・インジェクション定義のメソッド名を返します。
+     * 
+     * @return メソッド名
+     */
     public String getMethodName() {
         return methodName_;
     }
