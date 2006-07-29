@@ -29,7 +29,31 @@ public class BasicUpdateHandlerTest extends S2TestCase {
                 sql);
         int ret = handler.execute(new Object[] { "SCOTT", null,
                 new Integer(7788) });
-        assertEquals("1", 1, ret);
+        assertEquals(1, ret);
+    }
+
+    public void testExecuteWithQuestionTx() throws Exception {
+        String sql = "update emp set job = 'AA?A' where empno = ?";
+        BasicUpdateHandler handler = new BasicUpdateHandler(getDataSource(),
+                sql);
+        int ret = handler.execute(new Object[] { new Integer(7788) });
+        assertEquals(1, ret);
+    }
+
+    public void testExecuteWithQuestion2Tx() throws Exception {
+        String sql = "update emp set job = 'AA' where empno = ?";
+        BasicUpdateHandler handler = new BasicUpdateHandler(getDataSource(),
+                sql);
+        int ret = handler.execute(new Object[] { new Integer(7788) });
+        assertEquals(1, ret);
+    }
+
+    public void testExecuteWithQuestion3Tx() throws Exception {
+        String sql = "update emp set ename = ?, job = 'AA' where empno = ?";
+        BasicUpdateHandler handler = new BasicUpdateHandler(getDataSource(),
+                sql);
+        int ret = handler.execute(new Object[] { "SCOTT", new Integer(7788) });
+        assertEquals(1, ret);
     }
 
     public void testExceptionByBrokenSqlTx() throws Exception {
