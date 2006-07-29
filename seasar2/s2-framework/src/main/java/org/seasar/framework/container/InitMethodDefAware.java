@@ -16,14 +16,42 @@
 package org.seasar.framework.container;
 
 /**
- * @author higa
+ * このインターフェースは、 initメソッド定義を登録および取得することができるオブジェクトを表します。
+ * <p>
+ * initメソッド定義は複数登録することが出来ます。 initメソッド定義の取得はインデックス番号を指定して行います。
+ * </p>
  * 
+ * @author higa
+ * @author belltree (Javadoc)
+ * 
+ * @see InitMethodDef
  */
 public interface InitMethodDefAware {
 
+    /**
+     * initメソッド定義を登録(追加)します。
+     * 
+     * @param methodDef
+     *            initメソッド定義
+     */
     public void addInitMethodDef(InitMethodDef methodDef);
 
+    /**
+     * 登録されている{@link InitMethodDef initメソッド定義}の数を返します。
+     * 
+     * @return 登録されているinitメソッド定義の数
+     */
     public int getInitMethodDefSize();
 
+    /**
+     * 指定されたインデックス番号<code>index</code>のinitメソッド定義を返します。
+     * <p>
+     * インデックス番号は、 登録した順番に 0,1,2,… となります。
+     * </p>
+     * 
+     * @param index
+     *            initメソッド定義を指定するインデックス番号
+     * @return initメソッド定義
+     */
     public InitMethodDef getInitMethodDef(int index);
 }
