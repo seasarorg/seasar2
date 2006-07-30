@@ -16,10 +16,25 @@
 package org.seasar.framework.container;
 
 /**
- * @author higa
+ * 外部コンテキストが提供するコンポーネント定義を、 S2コンテナに登録します。
+ * <p>
+ * <code>ExternalContextComponentDefRegister</code>が外部コンテキストの{@link ComponentDef コンポーネント定義}を登録することにより、
+ * {@link ExternalContext}インターフェースを通して、 外部コンテキストのコンポーネントを取得できるようになります。
+ * </p>
+ * <p>
+ * コンポーネントを取得可能な外部コンテキストの種類については、 {@link ExternalContext}インターフェースを参照して下さい。
+ * </p>
  * 
+ * @author higa
+ * @author belltree (Javadoc)
  */
 public interface ExternalContextComponentDefRegister {
 
+    /**
+     * 指定されたS2コンテナに、 外部コンテキストのコンポーネント定義を登録します。
+     * 
+     * @param container
+     *            S2コンテナ
+     */
     void registerComponentDefs(S2Container container);
 }
