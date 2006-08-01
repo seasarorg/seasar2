@@ -18,8 +18,13 @@ package org.seasar.framework.container;
 import org.seasar.framework.exception.SRuntimeException;
 
 /**
- * @author higa
+ * 不正なコンポーネントインスタンス定義が指定された場合にスローされます。
  * 
+ * @author higa
+ * @author jundu (Javadoc)
+ * 
+ * @see InstanceDef
+ * @see org.seasar.framework.container.deployer.InstanceDefFactory
  */
 public class IllegalInstanceDefRuntimeException extends SRuntimeException {
 
@@ -28,13 +33,21 @@ public class IllegalInstanceDefRuntimeException extends SRuntimeException {
     private String instanceName;
 
     /**
+     * <code>IllegalInstanceDefRuntimeException</code>を構築します。
+     * 
      * @param instanceName
+     *            指定された不正なコンポーネントインスタンス定義名
      */
     public IllegalInstanceDefRuntimeException(String instanceName) {
         super("ESSR0078", new Object[] { instanceName });
         this.instanceName = instanceName;
     }
 
+    /**
+     * 例外の原因となったコンポーネントインスタンス定義名を返します。
+     * 
+     * @return コンポーネントインスタンス定義名
+     */
     public String getInstanceName() {
         return instanceName;
     }
