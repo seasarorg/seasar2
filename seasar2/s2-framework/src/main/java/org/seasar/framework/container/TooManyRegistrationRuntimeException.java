@@ -18,8 +18,16 @@ package org.seasar.framework.container;
 import org.seasar.framework.exception.SRuntimeException;
 
 /**
- * @author higa
+ * 1つのキーに複数のコンポーネントが登録されていた場合にスローされます。
+ * <p>
+ * S2コンテナからコンポーネントを取得しようとした際に、 指定したキー(コンポーネントのクラス、 インターフェース、
+ * あるいは名前)に該当するコンポーネント定義が複数存在した場合、 この例外が発生します。
+ * </p>
  * 
+ * @author higa
+ * @author belltree (Javadoc)
+ * 
+ * @see org.seasar.framework.container.impl.TooManyRegistrationComponentDefImpl#getComponent()
  */
 public final class TooManyRegistrationRuntimeException extends
         SRuntimeException {
@@ -31,7 +39,12 @@ public final class TooManyRegistrationRuntimeException extends
     private Class[] componentClasses_;
 
     /**
+     * <code>TooManyRegistrationRuntimeException</code>を構築します。
+     * 
+     * @param key
+     *            コンポーネントを取得しようとした際に使用したキー
      * @param componentClasses
+     *            1つのキーに登録された複数コンポーネントのクラスの配列
      */
     public TooManyRegistrationRuntimeException(Object key,
             Class[] componentClasses) {
@@ -40,10 +53,20 @@ public final class TooManyRegistrationRuntimeException extends
         componentClasses_ = componentClasses;
     }
 
+    /**
+     * コンポーネントを取得しようとした際に使用したキーを返します。
+     * 
+     * @return コンポーネントを取得するためのキー
+     */
     public Object getKey() {
         return key_;
     }
 
+    /**
+     * 1つのキーに登録された複数コンポーネントのクラスの配列を返します。
+     * 
+     * @return コンポーネントのクラスの配列
+     */
     public Class[] getComponentClasses() {
         return componentClasses_;
     }
