@@ -16,10 +16,20 @@
 package org.seasar.framework.container;
 
 /**
- * @author higa
+ * コンポーネントの付加情報を定義するためのインターフェースです。
  * 
+ * <code>&lt;components&gt;</code>、<code>&lt;component&gt;</code>、<code>&lt;arg&gt;</code>、<code>&lt;property&gt;</code>タグで
+ * 定義したコンポーネントやプロパティに対し、<code>&lt;meta&gt;</code>タグで定義したメタデータを保持します。
+ * 
+ * @author higa
+ * @author Tsuyoshi Yamamoto(Javadoc)
  */
 public interface MetaDef extends ArgDef {
 
+    /**
+     * メタデータの定義名を返します。
+     * 
+     * @return メタデータ定義名
+     */
     public String getName();
 }
