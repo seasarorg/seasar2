@@ -707,7 +707,7 @@ public class S2ContainerImpl implements S2Container, ContainerConstants {
         this.classLoader = classLoader;
     }
 
-    protected ComponentDef createTooManyRegistration(Object key,
+    public static ComponentDef createTooManyRegistration(Object key,
             ComponentDef currentComponentDef, ComponentDef newComponentDef) {
 
         if (currentComponentDef instanceof TooManyRegistrationComponentDef) {

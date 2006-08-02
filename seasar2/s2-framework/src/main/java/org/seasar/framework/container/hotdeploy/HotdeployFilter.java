@@ -28,6 +28,8 @@ import org.seasar.framework.container.impl.S2ContainerBehavior;
 
 public class HotdeployFilter implements Filter {
 
+    private static final String KEY = HotdeployFilter.class.getName();
+
     // private FilterConfig config = null;
 
     public HotdeployFilter() {
@@ -48,17 +50,25 @@ public class HotdeployFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response,
             FilterChain chain) throws IOException, ServletException {
 
-        S2ContainerBehavior.Provider provider = S2ContainerBehavior
-                .getProvider();
-        if (provider instanceof OndemandBehavior) {
-            OndemandBehavior ondemand = (OndemandBehavior) provider;
-            ondemand.start();
-            try {
+        if (request.getAttribute(KEY) == null) {
+            S2ContainerBehavior.Provider provider = S2ContainerBehavior
+                    .getProvider();
+            if (provider instanceof OndemandBehavior) {
+                request.setAttribute(KEY, Thread.currentThread()
+                        .getContextClassLoader());
+                OndemandBehavior ondemand = (OndemandBehavior) provider;
+                ondemand.start();
+                try {
+                    chain.doFilter(request, response);
+                } finally {
+                    ondemand.stop();
+                }
+            } else {
                 chain.doFilter(request, response);
-            } finally {
-                ondemand.stop();
             }
         } else {
+            ClassLoader cl = (ClassLoader) request.getAttribute(KEY);
+            Thread.currentThread().setContextClassLoader(cl);
             chain.doFilter(request, response);
         }
     }

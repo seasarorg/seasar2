@@ -163,8 +163,13 @@ public class OndemandBehavior extends DefaultProvider implements
     }
 
     protected void registerMap(Object key, ComponentDef componentDef) {
-        if (componentDefCache.put(key, componentDef) != null) {
-            throw new IllegalStateException(key.toString());
+        ComponentDef previousCd = (ComponentDef) componentDefCache.get(key);
+        if (previousCd == null) {
+            componentDefCache.put(key, componentDef);
+        } else {
+            ComponentDef tmrcd = S2ContainerImpl.createTooManyRegistration(key,
+                    previousCd, componentDef);
+            componentDefCache.put(key, tmrcd);
         }
     }
 }

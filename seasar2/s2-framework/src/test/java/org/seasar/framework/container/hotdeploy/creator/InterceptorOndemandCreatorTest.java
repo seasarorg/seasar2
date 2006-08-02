@@ -40,8 +40,9 @@ public class InterceptorOndemandCreatorTest extends S2FrameworkTestCase {
         OndemandProjectImpl project = new OndemandProjectImpl();
         project.setRootPackageName(ClassUtil.getPackageName(getClass()));
         ondemand = new OndemandBehavior();
-        project.setCreators(new OndemandCreator[] { new InterceptorOndemandCreator(
-                convention) });
+        project
+                .setCreators(new OndemandCreator[] { new InterceptorOndemandCreator(
+                        convention) });
         ondemand.addProject(project);
         S2ContainerBehavior.setProvider(ondemand);
         ondemand.start();
@@ -59,5 +60,9 @@ public class InterceptorOndemandCreatorTest extends S2FrameworkTestCase {
         ComponentDef cd = getComponentDef(name);
         assertNotNull(cd);
         assertEquals(name, cd.getComponentName());
+
+        String name2 = "nullInterceptor";
+        ComponentDef cd2 = getComponentDef(name2);
+        assertNotNull(cd2);
     }
 }
