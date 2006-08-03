@@ -16,42 +16,17 @@
 package org.seasar.framework.container.hotdeploy.creator;
 
 import org.seasar.framework.container.ComponentDef;
-import org.seasar.framework.container.hotdeploy.OndemandBehavior;
 import org.seasar.framework.container.hotdeploy.OndemandCreator;
-import org.seasar.framework.container.hotdeploy.impl.OndemandProjectImpl;
-import org.seasar.framework.container.impl.S2ContainerBehavior;
-import org.seasar.framework.convention.impl.NamingConventionImpl;
-import org.seasar.framework.unit.S2FrameworkTestCase;
-import org.seasar.framework.util.ClassUtil;
+import org.seasar.framework.convention.NamingConvention;
 
 /**
  * @author higa
  * 
  */
-public class DtoOndemandCreatorTest extends S2FrameworkTestCase {
+public class DtoOndemandCreatorTest extends OndemandCreatorTestCase {
 
-    private ClassLoader originalLoader;
-
-    private OndemandBehavior ondemand;
-
-    protected void setUp() {
-        originalLoader = Thread.currentThread().getContextClassLoader();
-        NamingConventionImpl convention = new NamingConventionImpl();
-        OndemandProjectImpl project = new OndemandProjectImpl();
-        project.setRootPackageName(ClassUtil.getPackageName(getClass()));
-        ondemand = new OndemandBehavior();
-        project
-                .setCreators(new OndemandCreator[] { new DtoOndemandCreator(convention) });
-        ondemand.addProject(project);
-        S2ContainerBehavior.setProvider(ondemand);
-        ondemand.start();
-    }
-
-    protected void tearDown() {
-        ondemand.stop();
-        S2ContainerBehavior
-                .setProvider(new S2ContainerBehavior.DefaultProvider());
-        Thread.currentThread().setContextClassLoader(originalLoader);
+    protected OndemandCreator newOndemandCreator(NamingConvention convention) {
+        return new DtoOndemandCreator(convention);
     }
 
     public void testAll() throws Exception {
@@ -59,5 +34,13 @@ public class DtoOndemandCreatorTest extends S2FrameworkTestCase {
         ComponentDef cd = getComponentDef(name);
         assertNotNull("1", cd);
         assertEquals("2", name, cd.getComponentName());
+    }
+
+    public void testGetComponentClassName() throws Exception {
+        String name = "bbbDto";
+        String className = creator.getComponentClassName(ondemand,
+                rootPackageName, name);
+        assertNotNull("1", className);
+        assertEquals("2", rootPackageName + ".dto.BbbDto", className);
     }
 }

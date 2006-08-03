@@ -193,4 +193,15 @@ public abstract class AbstractOndemandCreator implements OndemandCreator {
             sb.append(name);
         }
     }
+
+    public String getComponentClassName(OndemandS2Container container,
+            String rootPackageName, String componentName) {
+        if (!isAppliedSuffix(componentName)) {
+            return null;
+        }
+        return getTargetClassName(rootPackageName, componentName);
+    }
+
+    protected abstract String getTargetClassName(String rootPackageName,
+            String componentName);
 }

@@ -16,42 +16,18 @@
 package org.seasar.framework.container.hotdeploy.creator;
 
 import org.seasar.framework.container.ComponentDef;
-import org.seasar.framework.container.hotdeploy.OndemandBehavior;
 import org.seasar.framework.container.hotdeploy.OndemandCreator;
-import org.seasar.framework.container.hotdeploy.impl.OndemandProjectImpl;
-import org.seasar.framework.container.impl.S2ContainerBehavior;
-import org.seasar.framework.convention.impl.NamingConventionImpl;
-import org.seasar.framework.unit.S2FrameworkTestCase;
+import org.seasar.framework.convention.NamingConvention;
 import org.seasar.framework.util.ClassUtil;
 
 /**
  * @author higa
  * 
  */
-public class ServiceOndemandCreatorTest extends S2FrameworkTestCase {
+public class ServiceOndemandCreatorTest extends OndemandCreatorTestCase {
 
-    private ClassLoader originalLoader;
-
-    private OndemandBehavior ondemand;
-
-    protected void setUp() {
-        originalLoader = Thread.currentThread().getContextClassLoader();
-        NamingConventionImpl convention = new NamingConventionImpl();
-        ondemand = new OndemandBehavior();
-        OndemandProjectImpl project = new OndemandProjectImpl();
-        project.setRootPackageName(ClassUtil.getPackageName(getClass()));
-        project.setCreators(new OndemandCreator[] { new ServiceOndemandCreator(
-                convention) });
-        ondemand.addProject(project);
-        S2ContainerBehavior.setProvider(ondemand);
-        ondemand.start();
-    }
-
-    protected void tearDown() {
-        ondemand.stop();
-        S2ContainerBehavior
-                .setProvider(new S2ContainerBehavior.DefaultProvider());
-        Thread.currentThread().setContextClassLoader(originalLoader);
+    protected OndemandCreator newOndemandCreator(NamingConvention convention) {
+        return new ServiceOndemandCreator(convention);
     }
 
     public void testIsTargetByName() throws Exception {
@@ -72,5 +48,21 @@ public class ServiceOndemandCreatorTest extends S2FrameworkTestCase {
         Class clazz = ClassUtil.forName(ClassUtil.getPackageName(getClass())
                 + ".web.aaa.HogeService");
         assertNotNull("1", getComponent(clazz));
+    }
+
+    public void testGetComponentClassName() throws Exception {
+        String name = "aaa_hogeService";
+        String className = creator.getComponentClassName(ondemand,
+                rootPackageName, name);
+        assertNotNull("1", className);
+        assertEquals("2", rootPackageName + ".web.aaa.HogeService", className);
+    }
+
+    public void testGetComponentClassName2() throws Exception {
+        String name = "hogeService";
+        String className = creator.getComponentClassName(ondemand,
+                rootPackageName, name);
+        assertNotNull("1", className);
+        assertEquals("2", rootPackageName + ".service.HogeService", className);
     }
 }

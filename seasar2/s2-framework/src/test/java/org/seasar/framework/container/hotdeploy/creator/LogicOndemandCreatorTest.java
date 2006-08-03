@@ -19,47 +19,28 @@ import java.lang.reflect.Method;
 
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.autoregister.AspectCustomizer;
-import org.seasar.framework.container.hotdeploy.OndemandBehavior;
 import org.seasar.framework.container.hotdeploy.OndemandCreator;
 import org.seasar.framework.container.hotdeploy.creator.interceptor.HelloInterceptor;
-import org.seasar.framework.container.hotdeploy.impl.OndemandProjectImpl;
-import org.seasar.framework.container.impl.S2ContainerBehavior;
-import org.seasar.framework.convention.impl.NamingConventionImpl;
-import org.seasar.framework.unit.S2FrameworkTestCase;
+import org.seasar.framework.convention.NamingConvention;
 import org.seasar.framework.util.ClassUtil;
 
 /**
  * @author higa
  * 
  */
-public class LogicOndemandCreatorTest extends S2FrameworkTestCase {
+public class LogicOndemandCreatorTest extends OndemandCreatorTestCase {
 
-    private ClassLoader originalLoader;
-
-    private OndemandBehavior ondemand;
-
-    protected void setUp() {
-        originalLoader = Thread.currentThread().getContextClassLoader();
-        NamingConventionImpl convention = new NamingConventionImpl();
-        ondemand = new OndemandBehavior();
-        LogicOndemandCreator creator = new LogicOndemandCreator(convention);
+    protected OndemandCreator newOndemandCreator(NamingConvention convention) {
         AspectCustomizer aspectCustomizer = new AspectCustomizer();
         aspectCustomizer.setInterceptorName("helloInterceptor");
-        register(HelloInterceptor.class, "helloInterceptor");
+        LogicOndemandCreator creator = new LogicOndemandCreator(convention);
         creator.setLogicCustomizer(aspectCustomizer);
-        OndemandProjectImpl project = new OndemandProjectImpl();
-        project.setRootPackageName(ClassUtil.getPackageName(getClass()));
-        project.setCreators(new OndemandCreator[] { creator });
-        ondemand.addProject(project);
-        S2ContainerBehavior.setProvider(ondemand);
-        ondemand.start();
+        return creator;
     }
 
-    protected void tearDown() {
-        ondemand.stop();
-        S2ContainerBehavior
-                .setProvider(new S2ContainerBehavior.DefaultProvider());
-        Thread.currentThread().setContextClassLoader(originalLoader);
+    protected void setUp() {
+        register(HelloInterceptor.class, "helloInterceptor");
+        super.setUp();
     }
 
     public void testIsTargetByName() throws Exception {
@@ -79,5 +60,13 @@ public class LogicOndemandCreatorTest extends S2FrameworkTestCase {
         Object cccLogic = getComponent("cccLogic");
         Method m = cccLogic.getClass().getMethod("greet", null);
         assertEquals("1", "Hello", m.invoke(cccLogic, null));
+    }
+
+    public void testGetComponentClassName() throws Exception {
+        String name = "cccLogic";
+        String className = creator.getComponentClassName(ondemand,
+                rootPackageName, name);
+        assertNotNull("1", className);
+        assertEquals("2", rootPackageName + ".logic.CccLogic", className);
     }
 }

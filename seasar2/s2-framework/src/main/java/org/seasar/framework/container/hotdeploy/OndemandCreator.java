@@ -27,4 +27,7 @@ public interface OndemandCreator {
 
     ComponentDef getComponentDef(OndemandS2Container container,
             String rootPackageName, String componentName);
+
+    String getComponentClassName(OndemandS2Container container,
+            String rootPackageName, String componentName);
 }

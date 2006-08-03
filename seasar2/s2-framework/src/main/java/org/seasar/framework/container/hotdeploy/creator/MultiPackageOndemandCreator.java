@@ -24,8 +24,7 @@ import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.ResourceUtil;
 import org.seasar.framework.util.StringUtil;
 
-public class MultiPackageOndemandCreator extends
-        AbstractOndemandCreator {
+public class MultiPackageOndemandCreator extends AbstractOndemandCreator {
 
     private List middlePackageNames = new ArrayList();
 
@@ -36,7 +35,8 @@ public class MultiPackageOndemandCreator extends
     public String[] getPackageNames(String rootPackageName) {
         String[] names = new String[middlePackageNames.size()];
         for (int i = 0; i < middlePackageNames.size(); ++i) {
-            names[i] = ClassUtil.concatName(rootPackageName, (String) middlePackageNames.get(i));
+            names[i] = ClassUtil.concatName(rootPackageName,
+                    (String) middlePackageNames.get(i));
         }
         return names;
     }
@@ -45,7 +45,8 @@ public class MultiPackageOndemandCreator extends
         middlePackageNames.add(middlePackageName);
     }
 
-    protected String[] composeClassNames(String rootPackageName, String componentName) {
+    protected String[] composeClassNames(String rootPackageName,
+            String componentName) {
         String[] names = StringUtil.split(componentName, "_");
         String shortClassName = StringUtil.capitalize(names[names.length - 1]);
         String[] pNames = getPackageNames(rootPackageName);
@@ -62,7 +63,8 @@ public class MultiPackageOndemandCreator extends
         return classNames;
     }
 
-    protected boolean isTargetMiddlePackage(String rootPackageName, String className) {
+    protected boolean isTargetMiddlePackage(String rootPackageName,
+            String className) {
         String[] pNames = getPackageNames(rootPackageName);
         if (pNames.length == 0) {
             return true;
@@ -74,18 +76,26 @@ public class MultiPackageOndemandCreator extends
         }
         return false;
     }
-    
-    protected Class getTargetClass(String rootPackageName,
+
+    protected Class getTargetClass(String rootPackageName, String componentName) {
+        String className = getTargetClassName(rootPackageName, componentName);
+        if (className != null) {
+            return ClassUtil.forName(className);
+        } else {
+            throw new ComponentNotFoundRuntimeException(componentName);
+        }
+    }
+
+    protected String getTargetClassName(String rootPackageName,
             String componentName) {
-        String[] classNames = composeClassNames(rootPackageName,
-                componentName);
+        String[] classNames = composeClassNames(rootPackageName, componentName);
         for (int i = 0; i < classNames.length; ++i) {
             String className = classNames[i];
             String path = ClassUtil.getResourcePath(className);
             if (ResourceUtil.getResourceAsFileNoException(path) != null) {
-                return ClassUtil.forName(className);
+                return className;
             }
         }
-        throw new ComponentNotFoundRuntimeException(componentName);
+        return null;
     }
 }

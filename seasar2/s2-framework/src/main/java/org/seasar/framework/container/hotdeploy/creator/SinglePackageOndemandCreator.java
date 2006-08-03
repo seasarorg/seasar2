@@ -63,4 +63,9 @@ public class SinglePackageOndemandCreator extends AbstractOndemandCreator {
         String className = composeClassName(subsystemPackageName, componentName);
         return ClassUtil.forName(className);
     }
+
+    protected String getTargetClassName(String rootPackageName,
+            String componentName) {
+        return composeClassName(rootPackageName, componentName);
+    }
 }

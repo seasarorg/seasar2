@@ -17,47 +17,28 @@ package org.seasar.framework.container.hotdeploy.creator;
 
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.autoregister.AspectCustomizer;
-import org.seasar.framework.container.hotdeploy.OndemandBehavior;
 import org.seasar.framework.container.hotdeploy.OndemandCreator;
 import org.seasar.framework.container.hotdeploy.creator.interceptor.HelloInterceptor;
-import org.seasar.framework.container.hotdeploy.impl.OndemandProjectImpl;
-import org.seasar.framework.container.impl.S2ContainerBehavior;
-import org.seasar.framework.convention.impl.NamingConventionImpl;
-import org.seasar.framework.unit.S2FrameworkTestCase;
+import org.seasar.framework.convention.NamingConvention;
 import org.seasar.framework.util.ClassUtil;
 
 /**
  * @author higa
  * 
  */
-public class DxoOndemandCreatorTest extends S2FrameworkTestCase {
+public class DxoOndemandCreatorTest extends OndemandCreatorTestCase {
 
-    private ClassLoader originalLoader;
-
-    private OndemandBehavior ondemand;
-
-    protected void setUp() {
-        originalLoader = Thread.currentThread().getContextClassLoader();
-        NamingConventionImpl convention = new NamingConventionImpl();
-        OndemandProjectImpl project = new OndemandProjectImpl();
-        project.setRootPackageName(ClassUtil.getPackageName(getClass()));
-        ondemand = new OndemandBehavior();
-        DxoOndemandCreator creator = new DxoOndemandCreator(convention);
+    protected OndemandCreator newOndemandCreator(NamingConvention convention) {
         AspectCustomizer aspectCustomizer = new AspectCustomizer();
         aspectCustomizer.setInterceptorName("helloInterceptor");
-        register(HelloInterceptor.class, "helloInterceptor");
+        DxoOndemandCreator creator = new DxoOndemandCreator(convention);
         creator.setDxoCustomizer(aspectCustomizer);
-        project.setCreators(new OndemandCreator[] { creator });
-        ondemand.addProject(project);
-        S2ContainerBehavior.setProvider(ondemand);
-        ondemand.start();
+        return creator;
     }
 
-    protected void tearDown() {
-        ondemand.stop();
-        S2ContainerBehavior
-                .setProvider(new S2ContainerBehavior.DefaultProvider());
-        Thread.currentThread().setContextClassLoader(originalLoader);
+    protected void setUp() {
+        register(HelloInterceptor.class, "helloInterceptor");
+        super.setUp();
     }
 
     public void testIsTargetByComponentName() throws Exception {
@@ -74,5 +55,13 @@ public class DxoOndemandCreatorTest extends S2FrameworkTestCase {
         Class clazz2 = ClassUtil.forName(packageName + ".dxo.BbbDtoDxo");
         assertTrue("1", getContainer().hasComponentDef(clazz));
         assertTrue("2", getContainer().hasComponentDef(clazz2));
+    }
+
+    public void testGetComponentClassName() throws Exception {
+        String name = "aaa_hogeDxo";
+        String className = creator.getComponentClassName(ondemand,
+                rootPackageName, name);
+        assertNotNull("1", className);
+        assertEquals("2", rootPackageName + ".web.aaa.HogeDxo", className);
     }
 }

@@ -82,15 +82,10 @@ public class OndemandProjectImpl extends AbstractAutoRegisterProject implements
             return null;
         }
         for (int i = 0; i < creators.length; ++i) {
-            OndemandCreator creator = creators[i];
-            try {
-                ComponentDef cd = creator.getComponentDef(container,
-                        getRootPackageName(), componentName);
-                if (cd != null) {
-                    return cd.getComponentClass().getName();
-                }
-            } catch (ClassNotFoundRuntimeException ex) {
-                return ex.getClassName();
+            String className = creators[i].getComponentClassName(container,
+                    getRootPackageName(), componentName);
+            if (className != null) {
+                return className;
             }
         }
         return null;

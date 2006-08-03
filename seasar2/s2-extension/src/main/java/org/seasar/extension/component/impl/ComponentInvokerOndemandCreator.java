@@ -63,4 +63,11 @@ public class ComponentInvokerOndemandCreator implements OndemandCreator {
         return false;
     }
 
+    public String getComponentClassName(OndemandS2Container container,
+            String rootPackageName, String componentName) {
+        if (!componentName.equals(componentInvokerName)) {
+            return null;
+        }
+        return COMPONENT_INVOKER_CLASS_NAME;
+    }
 }
