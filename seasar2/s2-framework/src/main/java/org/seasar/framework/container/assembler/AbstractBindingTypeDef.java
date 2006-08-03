@@ -27,6 +27,7 @@ import org.seasar.framework.container.PropertyDef;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.util.BindingUtil;
 import org.seasar.framework.util.FieldUtil;
+import org.seasar.framework.util.StringUtil;
 
 public abstract class AbstractBindingTypeDef implements BindingTypeDef {
 
@@ -105,8 +106,8 @@ public abstract class AbstractBindingTypeDef implements BindingTypeDef {
         if (container.hasComponentDef(propType)) {
             ComponentDef cd = container.getComponentDef(propType);
             if (cd.getComponentName() != null
-                    && (cd.getComponentName().equals(propName) || cd
-                            .getComponentName().endsWith(
+                    && (cd.getComponentName().equals(propName) || StringUtil
+                            .endsWithIgnoreCase(cd.getComponentName(),
                                     ContainerConstants.PACKAGE_SEP + propName))) {
                 Object value = container.getComponent(propType);
                 setValue(componentDef, field, component, value);
@@ -143,8 +144,8 @@ public abstract class AbstractBindingTypeDef implements BindingTypeDef {
         if (container.hasComponentDef(propType)) {
             ComponentDef cd = container.getComponentDef(propType);
             if (cd.getComponentName() != null
-                    && (cd.getComponentName().equals(propName) || cd
-                            .getComponentName().endsWith(
+                    && (cd.getComponentName().equals(propName) || StringUtil
+                            .endsWithIgnoreCase(cd.getComponentName(),
                                     ContainerConstants.PACKAGE_SEP + propName))) {
                 Object value = container.getComponent(propType);
                 setValue(componentDef, propertyDesc, component, value);

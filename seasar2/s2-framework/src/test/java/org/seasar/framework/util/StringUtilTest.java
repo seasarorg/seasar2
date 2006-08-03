@@ -91,4 +91,12 @@ public class StringUtilTest extends TestCase {
         assertEquals("abc", StringUtil.decapitalize("Abc"));
         assertEquals("ABC", StringUtil.decapitalize("ABC"));
     }
+
+    public void testEndsWithIgnoreCase() throws Exception {
+        assertTrue(StringUtil.endsWithIgnoreCase("setHogeAaa", "Aaa"));
+        assertTrue(StringUtil.endsWithIgnoreCase("setHogeAaa", "aaa"));
+        assertTrue(StringUtil.endsWithIgnoreCase("aaa_hoge", "HOge"));
+        assertFalse(StringUtil.endsWithIgnoreCase("setHogeaa", "Aaa"));
+        assertFalse(StringUtil.endsWithIgnoreCase("aa", "Aaa"));
+    }
 }

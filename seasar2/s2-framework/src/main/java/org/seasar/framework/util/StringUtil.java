@@ -179,4 +179,17 @@ public final class StringUtil {
     public static boolean equals(String target1, String target2) {
         return (target1 == null) ? (target2 == null) : target1.equals(target2);
     }
+
+    public static boolean endsWithIgnoreCase(String target1, String target2) {
+        if (target1 == null || target2 == null) {
+            return false;
+        }
+        int length1 = target1.length();
+        int length2 = target2.length();
+        if (length1 < length2) {
+            return false;
+        }
+        String s1 = target1.substring(length1 - length2);
+        return s1.equalsIgnoreCase(target2);
+    }
 }

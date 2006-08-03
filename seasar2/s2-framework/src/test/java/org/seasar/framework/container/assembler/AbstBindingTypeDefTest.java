@@ -68,8 +68,11 @@ public class AbstBindingTypeDefTest extends TestCase {
         ComponentDefImpl cd2 = new ComponentDefImpl(Foo.class);
         container.register(cd);
         container.register(cd2);
+        container.register(Foo3.class);
         Foo foo = (Foo) container.getComponent(Foo.class);
-        assertNotNull("1", foo.getHoge());
+        assertNotNull(foo.getHoge());
+        Foo3 foo3 = (Foo3) container.getComponent(Foo3.class);
+        assertNotNull(foo3.getHoGe());
     }
 
     public void testBindAutoForArray() throws Exception {
@@ -191,6 +194,19 @@ public class AbstBindingTypeDefTest extends TestCase {
 
         public void setHoges(IHoge[] hoges) {
             this.hoges = hoges;
+        }
+    }
+
+    public static class Foo3 {
+
+        private Hoge hoGe;
+
+        public Hoge getHoGe() {
+            return hoGe;
+        }
+
+        public void setHoGe(Hoge hoGe) {
+            this.hoGe = hoGe;
         }
     }
 
