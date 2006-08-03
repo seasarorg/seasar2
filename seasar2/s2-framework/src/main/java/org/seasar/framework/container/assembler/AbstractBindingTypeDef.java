@@ -106,7 +106,7 @@ public abstract class AbstractBindingTypeDef implements BindingTypeDef {
         if (container.hasComponentDef(propType)) {
             ComponentDef cd = container.getComponentDef(propType);
             if (cd.getComponentName() != null
-                    && (cd.getComponentName().equals(propName) || StringUtil
+                    && (cd.getComponentName().equalsIgnoreCase(propName) || StringUtil
                             .endsWithIgnoreCase(cd.getComponentName(),
                                     ContainerConstants.PACKAGE_SEP + propName))) {
                 Object value = container.getComponent(propType);
@@ -144,7 +144,7 @@ public abstract class AbstractBindingTypeDef implements BindingTypeDef {
         if (container.hasComponentDef(propType)) {
             ComponentDef cd = container.getComponentDef(propType);
             if (cd.getComponentName() != null
-                    && (cd.getComponentName().equals(propName) || StringUtil
+                    && (cd.getComponentName().equalsIgnoreCase(propName) || StringUtil
                             .endsWithIgnoreCase(cd.getComponentName(),
                                     ContainerConstants.PACKAGE_SEP + propName))) {
                 Object value = container.getComponent(propType);
