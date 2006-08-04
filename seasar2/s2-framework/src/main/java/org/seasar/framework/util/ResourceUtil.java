@@ -132,8 +132,12 @@ public final class ResourceUtil {
     }
 
     public static File getBuildDir(Class clazz) {
-        URL url = getResource(getResourcePath(clazz));
-        int num = StringUtil.split(clazz.getName(), ".").length;
+        return getBuildDir(getResourcePath(clazz));
+    }
+
+    public static File getBuildDir(String path) {
+        URL url = getResource(path);
+        int num = StringUtil.split(path, "/").length;
         File file = new File(getFileName(url));
         for (int i = 0; i < num; ++i, file = file.getParentFile()) {
         }
