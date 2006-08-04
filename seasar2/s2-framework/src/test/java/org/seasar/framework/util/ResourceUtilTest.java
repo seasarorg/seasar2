@@ -55,7 +55,8 @@ public class ResourceUtilTest extends TestCase {
     public void testGetBuildDir() throws Exception {
         File file = ResourceUtil.getBuildDir(getClass());
         System.out.println(file);
-        File file2 = ResourceUtil.getBuildDir("org");
+        File file2 = ResourceUtil
+                .getBuildDir("org/seasar/framework/util/ResourceUtilTest.class");
         assertEquals(file, file2);
     }
 
