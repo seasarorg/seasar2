@@ -15,7 +15,6 @@
  */
 package org.seasar.framework.container.cooldeploy.creator;
 
-import org.seasar.framework.container.S2Container;
 import org.seasar.framework.unit.S2FrameworkTestCase;
 
 /**
@@ -24,13 +23,11 @@ import org.seasar.framework.unit.S2FrameworkTestCase;
  */
 public class PageCoolCreatorTest extends S2FrameworkTestCase {
 
-    private S2Container child;
-
     protected void setUp() {
         include("PageCoolCreatorTest.dicon");
     }
 
     public void testAll() throws Exception {
-        assertTrue(child.hasComponentDef("ccc_dddPage"));
+        assertTrue(getContainer().hasComponentDef("ccc_dddPage"));
     }
 }

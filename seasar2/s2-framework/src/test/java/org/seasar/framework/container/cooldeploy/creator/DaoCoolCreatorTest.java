@@ -15,7 +15,6 @@
  */
 package org.seasar.framework.container.cooldeploy.creator;
 
-import org.seasar.framework.container.S2Container;
 import org.seasar.framework.unit.S2FrameworkTestCase;
 
 /**
@@ -24,15 +23,13 @@ import org.seasar.framework.unit.S2FrameworkTestCase;
  */
 public class DaoCoolCreatorTest extends S2FrameworkTestCase {
 
-    private S2Container child;
-
     protected void setUp() {
         include("DaoCoolCreatorTest.dicon");
     }
 
     public void testGetTargetClass() throws Exception {
-        assertTrue(child.hasComponentDef("aaaDao"));
-        assertTrue(child.hasComponentDef("bbbDao"));
-        assertNotNull(child.getComponent("bbbDao"));
+        assertTrue(getContainer().hasComponentDef("aaaDao"));
+        assertTrue(getContainer().hasComponentDef("bbbDao"));
+        assertNotNull(getContainer().getComponent("bbbDao"));
     }
 }

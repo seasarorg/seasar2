@@ -16,7 +16,6 @@
 package org.seasar.framework.container.cooldeploy.creator;
 
 import org.seasar.framework.container.ComponentDef;
-import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.cooldeploy.creator.logic.EeeLogic;
 import org.seasar.framework.container.cooldeploy.creator.logic.impl.EeeLogicImpl;
 import org.seasar.framework.unit.S2FrameworkTestCase;
@@ -27,15 +26,13 @@ import org.seasar.framework.unit.S2FrameworkTestCase;
  */
 public class LogicCoolCreatorTest extends S2FrameworkTestCase {
 
-    private S2Container child;
-
     protected void setUp() {
         include("LogicCoolCreatorTest.dicon");
     }
 
     public void testAll() throws Exception {
-        assertTrue(child.hasComponentDef(EeeLogic.class));
-        ComponentDef cd = child.getComponentDef(EeeLogic.class);
+        assertTrue(getContainer().hasComponentDef(EeeLogic.class));
+        ComponentDef cd = getComponentDef(EeeLogic.class);
         assertEquals(EeeLogicImpl.class, cd.getComponentClass());
     }
 }

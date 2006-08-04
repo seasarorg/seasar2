@@ -15,7 +15,6 @@
  */
 package org.seasar.framework.container.cooldeploy.creator;
 
-import org.seasar.framework.container.S2Container;
 import org.seasar.framework.unit.S2FrameworkTestCase;
 
 /**
@@ -24,13 +23,11 @@ import org.seasar.framework.unit.S2FrameworkTestCase;
  */
 public class ActionCoolCreatorTest extends S2FrameworkTestCase {
 
-    private S2Container child;
-
     protected void setUp() {
         include("ActionCoolCreatorTest.dicon");
     }
 
     public void testAll() throws Exception {
-        assertTrue(child.hasComponentDef("ccc_dddAction"));
+        assertTrue(getContainer().hasComponentDef("ccc_dddAction"));
     }
 }
