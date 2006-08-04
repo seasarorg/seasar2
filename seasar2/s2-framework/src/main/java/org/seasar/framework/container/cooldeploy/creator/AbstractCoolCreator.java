@@ -143,10 +143,17 @@ public abstract class AbstractCoolCreator implements CoolCreator {
     }
 
     protected boolean isAppliedSuffix(String name) {
-        if (nameSuffix != null) {
-            return name.endsWith(nameSuffix);
+        if (nameSuffix == null) {
+            return true;
         }
-        return true;
+        if (name.endsWith(nameSuffix)) {
+            return true;
+        }
+        if (name.endsWith(nameSuffix
+                + getNamingConvention().getImplementationSuffix())) {
+            return true;
+        }
+        return false;
     }
 
     protected Class getTargetClass(Class clazz) {
@@ -160,7 +167,7 @@ public abstract class AbstractCoolCreator implements CoolCreator {
                 + getNamingConvention().getImplementationSuffix();
         if (ResourceUtil.getResourceNoException(ClassUtil
                 .getResourcePath(targetClassName)) != null) {
-            return ClassUtil.forName(targetClassName);
+            return null;
         }
         return clazz;
     }
