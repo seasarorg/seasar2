@@ -15,6 +15,9 @@
  */
 package org.seasar.framework.util;
 
+import org.seasar.framework.beans.BeanDesc;
+import org.seasar.framework.beans.factory.BeanDescFactory;
+import org.seasar.framework.exception.ClassNotFoundRuntimeException;
 import org.seasar.framework.message.MessageFormatter;
 
 /**
@@ -62,5 +65,27 @@ public class ClassLoaderUtil {
             cl = cl.getParent();
         }
         return false;
+    }
+
+    /**
+     * 以下のバグに対する対応です。 <br/>
+     * http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4167874
+     * 
+     * @param loader
+     */
+    public static void workaroundBugId4167874(ClassLoader loader) {
+        try {
+            Class url = loader.loadClass("java.net.URL");
+            BeanDesc urlBD = BeanDescFactory.getBeanDesc(url);
+            Object urlInstance = urlBD.newInstance(new String[] { "http://a" });
+            Object connection = urlBD.invoke(urlInstance, "openConnection",
+                    null);
+            BeanDesc connectionBD = BeanDescFactory.getBeanDesc(connection
+                    .getClass());
+            connectionBD.invoke(connection, "setDefaultUseCaches",
+                    new Object[] { Boolean.FALSE });
+        } catch (ClassNotFoundException e) {
+            throw new ClassNotFoundRuntimeException(e);
+        }
     }
 }

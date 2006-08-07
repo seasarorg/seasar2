@@ -15,10 +15,11 @@
  */
 package org.seasar.framework.util;
 
+import java.io.File;
+import java.io.InputStream;
 import java.net.URL;
 import java.net.URLClassLoader;
-
-import org.seasar.framework.util.ClassLoaderUtil;
+import java.net.URLConnection;
 
 import junit.framework.TestCase;
 
@@ -42,5 +43,28 @@ public class ClassLoaderUtilTest extends TestCase {
         } finally {
             Thread.currentThread().setContextClassLoader(context);
         }
+    }
+
+    public void testWorkaroundBugId4167874() throws Exception {
+        String root = ResourceUtil.getBuildDir(getClass()).getCanonicalPath();
+        String srcJar = root + "/org/seasar/framework/util/test.jar";
+        String destJar = root + "/org/seasar/framework/util/test2.jar";
+        File dest = new File(destJar);
+        if (dest.exists()) {
+            dest.delete();
+        }
+        dest.createNewFile();
+        FileUtil.copy(new File(srcJar), dest);
+        new URL("http://a").openConnection().setDefaultUseCaches(true);
+
+        URL url = new URL("jar:" + dest.toURI().toURL()
+                + "!/META-INF/MANIFEST.MF");
+        URLConnection connection = url.openConnection();
+        ClassLoaderUtil.workaroundBugId4167874(ClassLoaderUtil
+                .getClassLoader(connection.getClass()));
+        InputStream stream = connection.getInputStream();
+        stream.close();
+
+        assertTrue(dest.delete());
     }
 }

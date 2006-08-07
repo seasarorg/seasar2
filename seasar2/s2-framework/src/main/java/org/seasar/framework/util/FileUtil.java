@@ -15,6 +15,8 @@
  */
 package org.seasar.framework.util;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.IOException;
 
@@ -41,4 +43,28 @@ public final class FileUtil {
         }
     }
 
+    public static void copy(File src, File dest) {
+        if (dest.canWrite() == false
+                || (dest.exists() && dest.canWrite() == false)) {
+            return;
+        }
+        BufferedInputStream in = null;
+        BufferedOutputStream out = null;
+        try {
+            in = new BufferedInputStream(FileInputStreamUtil.create(src));
+            out = new BufferedOutputStream(FileOutputStreamUtil.create(dest));
+            byte[] buf = new byte[1024];
+            int length;
+            while (-1 < (length = in.read(buf))) {
+                out.write(buf, 0, length);
+                out.flush();
+            }
+        } catch (IOException e) {
+            throw new IORuntimeException(e);
+        } finally {
+            InputStreamUtil.close(in);
+            OutputStreamUtil.close(out);
+        }
+
+    }
 }
