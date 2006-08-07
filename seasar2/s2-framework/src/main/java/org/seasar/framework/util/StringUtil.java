@@ -9,7 +9,7 @@
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, 
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
@@ -190,6 +190,19 @@ public final class StringUtil {
             return false;
         }
         String s1 = target1.substring(length1 - length2);
+        return s1.equalsIgnoreCase(target2);
+    }
+
+    public static boolean startsWithIgnoreCase(String target1, String target2) {
+        if (target1 == null || target2 == null) {
+            return false;
+        }
+        int length1 = target1.length();
+        int length2 = target2.length();
+        if (length1 < length2) {
+            return false;
+        }
+        String s1 = target1.substring(0, target2.length());
         return s1.equalsIgnoreCase(target2);
     }
 }

@@ -9,7 +9,7 @@
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, 
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
@@ -99,4 +99,13 @@ public class StringUtilTest extends TestCase {
         assertFalse(StringUtil.endsWithIgnoreCase("setHogeaa", "Aaa"));
         assertFalse(StringUtil.endsWithIgnoreCase("aa", "Aaa"));
     }
+
+    public void testStartsWithIgnoreCase() throws Exception {
+        assertTrue(StringUtil.startsWithIgnoreCase("isHoge", "is"));
+        assertTrue(StringUtil.startsWithIgnoreCase("isHoge", "IS"));
+        assertTrue(StringUtil.startsWithIgnoreCase("ISHoge", "is"));
+        assertFalse(StringUtil.startsWithIgnoreCase("isHoge", "iss"));
+        assertFalse(StringUtil.startsWithIgnoreCase("is", "iss"));
+    }
+
 }
