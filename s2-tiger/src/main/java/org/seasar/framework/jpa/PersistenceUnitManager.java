@@ -23,11 +23,12 @@ public class PersistenceUnitManager {
     }
 
     @DestroyMethod
-    public void close() {
-        for (final Map.Entry<String, EntityManagerFactory> entry : persistenceUnits
-                .entrySet()) {
-            entry.getValue().close();
+    public synchronized void close() {
+        for (final EntityManagerFactory emf : persistenceUnits.values()) {
+            emf.close();
         }
+        persistenceUnits.clear();
+        emfContexts.clear();
     }
 
     public synchronized EntityManagerFactory getEntityManagerFactory(
