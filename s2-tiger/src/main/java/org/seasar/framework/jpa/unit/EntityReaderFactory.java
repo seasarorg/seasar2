@@ -16,6 +16,7 @@
 package org.seasar.framework.jpa.unit;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -71,4 +72,16 @@ public class EntityReaderFactory {
         return null;
     }
 
+    public static EntityReader getEntityReader(final Collection<?> entities) {
+        if (!initialized) {
+            initialize();
+        }
+        for (final EntityReaderProvider provider : providers) {
+            EntityReader reader = provider.createEntityReader(entities);
+            if (reader != null) {
+                return reader;
+            }
+        }
+        return null;
+    }
 }

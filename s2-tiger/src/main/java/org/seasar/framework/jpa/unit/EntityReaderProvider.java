@@ -15,6 +15,8 @@
  */
 package org.seasar.framework.jpa.unit;
 
+import java.util.Collection;
+
 /**
  * 
  * @author taedium
@@ -22,5 +24,7 @@ package org.seasar.framework.jpa.unit;
 public interface EntityReaderProvider {
 
     EntityReader createEntityReader(Object entity);
+
+    EntityReader createEntityReader(Collection<?> entities);
 
 }
