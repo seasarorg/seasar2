@@ -136,12 +136,20 @@ public final class ResourceUtil {
     }
 
     public static File getBuildDir(String path) {
+        File dir = null;
         URL url = getResource(path);
-        int num = StringUtil.split(path, "/").length;
-        File file = new File(getFileName(url));
-        for (int i = 0; i < num; ++i, file = file.getParentFile()) {
+        if ("file".equals(url.getProtocol())) {
+            int num = path.split("/").length;
+            dir = new File(getFileName(url));
+            for (int i = 0; i < num; ++i, dir = dir.getParentFile()) {
+            }
+        } else {
+            URL nestedUrl = URLUtil.create(url.getPath());
+            String s = nestedUrl.getPath();
+            int pos = s.lastIndexOf('!');
+            dir = new File(s.substring(0, pos));
         }
-        return file;
+        return dir;
     }
 
     public static String toExternalForm(URL url) {

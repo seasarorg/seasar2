@@ -16,6 +16,8 @@
 package org.seasar.framework.util;
 
 import java.io.File;
+import java.net.URL;
+import java.net.URLClassLoader;
 
 import junit.framework.TestCase;
 
@@ -55,9 +57,13 @@ public class ResourceUtilTest extends TestCase {
     public void testGetBuildDir() throws Exception {
         File file = ResourceUtil.getBuildDir(getClass());
         System.out.println(file);
-        File file2 = ResourceUtil
-                .getBuildDir("org/seasar/framework/util/ResourceUtilTest.class");
+        File file2 = ResourceUtil.getBuildDir("org/seasar/framework/util/");
         assertEquals(file, file2);
+        File junitJar = ResourceUtil.getBuildDir(TestCase.class);
+        assertTrue(junitJar.exists());
+        URL url = junitJar.toURL();
+        URLClassLoader loader = new URLClassLoader(new URL[] { url });
+        loader.loadClass(TestCase.class.getName());
     }
 
     public void testIsExist() throws Exception {
