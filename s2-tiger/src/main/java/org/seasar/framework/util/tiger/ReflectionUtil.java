@@ -25,8 +25,8 @@ import org.seasar.framework.exception.IllegalAccessRuntimeException;
 import org.seasar.framework.exception.InstantiationRuntimeException;
 import org.seasar.framework.exception.InvocationTargetRuntimeException;
 import org.seasar.framework.exception.NoSuchConstructorRuntimeException;
+import org.seasar.framework.exception.NoSuchFieldRuntimeException;
 import org.seasar.framework.exception.NoSuchMethodRuntimeException;
-import org.seasar.framework.util.FieldUtil;
 
 /**
  * @author koichik
@@ -35,16 +35,18 @@ public abstract class ReflectionUtil {
     private ReflectionUtil() {
     }
 
-    public static Class<?> forName(final String className)
+    @SuppressWarnings("unchecked")
+    public static <T> Class<T> forName(final String className)
             throws ClassNotFoundRuntimeException {
-        return forName(className, Thread.currentThread()
+        return (Class<T>) forName(className, Thread.currentThread()
                 .getContextClassLoader());
     }
 
-    public static Class<?> forName(final String className,
+    @SuppressWarnings("unchecked")
+    public static <T> Class<T> forName(final String className,
             final ClassLoader loader) throws ClassNotFoundRuntimeException {
         try {
-            return Class.forName(className, true, loader);
+            return (Class<T>) Class.forName(className, true, loader);
         } catch (final ClassNotFoundException e) {
             throw new ClassNotFoundRuntimeException(e);
         }
@@ -65,6 +67,22 @@ public abstract class ReflectionUtil {
             return clazz.getDeclaredConstructor(argTypes);
         } catch (final NoSuchMethodException e) {
             throw new NoSuchConstructorRuntimeException(clazz, argTypes, e);
+        }
+    }
+
+    public static Field getField(final Class<?> clazz, final String name) {
+        try {
+            return clazz.getField(name);
+        } catch (final NoSuchFieldException e) {
+            throw new NoSuchFieldRuntimeException(clazz, name, e);
+        }
+    }
+
+    public static Field getDeclaredField(final Class<?> clazz, final String name) {
+        try {
+            return clazz.getDeclaredField(name);
+        } catch (final NoSuchFieldException e) {
+            throw new NoSuchFieldRuntimeException(clazz, name, e);
         }
     }
 
@@ -116,12 +134,31 @@ public abstract class ReflectionUtil {
 
     @SuppressWarnings("unchecked")
     public static <T> T getValue(final Field field, final Object target) {
-        return (T) FieldUtil.get(field, target);
+        try {
+            return (T) field.get(target);
+        } catch (final IllegalAccessException e) {
+            throw new IllegalAccessRuntimeException(field.getDeclaringClass(),
+                    e);
+        }
     }
 
     @SuppressWarnings("unchecked")
     public static <T> T getStaticValue(final Field field) {
-        return (T) FieldUtil.get(field, null);
+        return (T) getValue(field, null);
+    }
+
+    public static void setValue(final Field field, final Object target,
+            final Object value) {
+        try {
+            field.set(target, value);
+        } catch (final IllegalAccessException e) {
+            throw new IllegalAccessRuntimeException(field.getDeclaringClass(),
+                    e);
+        }
+    }
+
+    public static void setStaticValue(final Field field, final Object value) {
+        setValue(field, null, value);
     }
 
     @SuppressWarnings("unchecked")
