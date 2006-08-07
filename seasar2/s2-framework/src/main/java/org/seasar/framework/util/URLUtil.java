@@ -20,6 +20,8 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 
+import org.seasar.framework.beans.BeanDesc;
+import org.seasar.framework.beans.factory.BeanDescFactory;
 import org.seasar.framework.exception.IORuntimeException;
 
 /**
@@ -53,5 +55,15 @@ public class URLUtil {
         } catch (IOException e) {
             throw new IORuntimeException(e);
         }
+    }
+
+    /**
+     * 以下のバグに対する対応です。 <br/>
+     * http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4167874
+     * 
+     */
+    public static void disableURLCaches() {
+        BeanDesc bd = BeanDescFactory.getBeanDesc(URLConnection.class);
+        FieldUtil.set(bd.getField("defaultUseCaches"), null, Boolean.FALSE);
     }
 }
