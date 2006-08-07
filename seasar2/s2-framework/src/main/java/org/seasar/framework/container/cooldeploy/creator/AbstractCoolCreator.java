@@ -126,7 +126,7 @@ public abstract class AbstractCoolCreator implements CoolCreator {
         handler.appendAspect(cd);
         handler.appendInitMethod(cd);
         customize(cd);
-        container.register(cd);
+        container.getRoot().register(cd);
         return true;
     }
 
