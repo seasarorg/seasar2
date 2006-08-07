@@ -18,12 +18,14 @@ package org.seasar.framework.util.tiger;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 import org.seasar.framework.exception.ClassNotFoundRuntimeException;
 import org.seasar.framework.exception.IllegalAccessRuntimeException;
 import org.seasar.framework.exception.InstantiationRuntimeException;
 import org.seasar.framework.exception.InvocationTargetRuntimeException;
 import org.seasar.framework.exception.NoSuchConstructorRuntimeException;
+import org.seasar.framework.exception.NoSuchMethodRuntimeException;
 import org.seasar.framework.util.FieldUtil;
 
 /**
@@ -43,8 +45,8 @@ public abstract class ReflectionUtil {
             final ClassLoader loader) throws ClassNotFoundRuntimeException {
         try {
             return Class.forName(className, true, loader);
-        } catch (final ClassNotFoundException ex) {
-            throw new ClassNotFoundRuntimeException(ex);
+        } catch (final ClassNotFoundException e) {
+            throw new ClassNotFoundRuntimeException(e);
         }
     }
 
@@ -52,8 +54,8 @@ public abstract class ReflectionUtil {
             final Class... argTypes) {
         try {
             return clazz.getConstructor(argTypes);
-        } catch (final NoSuchMethodException ex) {
-            throw new NoSuchConstructorRuntimeException(clazz, argTypes, ex);
+        } catch (final NoSuchMethodException e) {
+            throw new NoSuchConstructorRuntimeException(clazz, argTypes, e);
         }
     }
 
@@ -61,8 +63,26 @@ public abstract class ReflectionUtil {
             final Class<T> clazz, final Class... argTypes) {
         try {
             return clazz.getDeclaredConstructor(argTypes);
-        } catch (final NoSuchMethodException ex) {
-            throw new NoSuchConstructorRuntimeException(clazz, argTypes, ex);
+        } catch (final NoSuchMethodException e) {
+            throw new NoSuchConstructorRuntimeException(clazz, argTypes, e);
+        }
+    }
+
+    public static Method getMethod(final Class<?> clazz, final String name,
+            final Class... argTypes) {
+        try {
+            return clazz.getMethod(name, argTypes);
+        } catch (final NoSuchMethodException e) {
+            throw new NoSuchMethodRuntimeException(clazz, name, argTypes, e);
+        }
+    }
+
+    public static Method getDeclaredMethod(final Class<?> clazz,
+            final String name, final Class... argTypes) {
+        try {
+            return clazz.getDeclaredMethod(name, argTypes);
+        } catch (final NoSuchMethodException e) {
+            throw new NoSuchMethodRuntimeException(clazz, name, argTypes, e);
         }
     }
 
@@ -70,10 +90,10 @@ public abstract class ReflectionUtil {
             throws InstantiationRuntimeException, IllegalAccessRuntimeException {
         try {
             return clazz.newInstance();
-        } catch (final InstantiationException ex) {
-            throw new InstantiationRuntimeException(clazz, ex);
-        } catch (final IllegalAccessException ex) {
-            throw new IllegalAccessRuntimeException(clazz, ex);
+        } catch (final InstantiationException e) {
+            throw new InstantiationRuntimeException(clazz, e);
+        } catch (final IllegalAccessException e) {
+            throw new IllegalAccessRuntimeException(clazz, e);
         }
     }
 
@@ -82,19 +102,45 @@ public abstract class ReflectionUtil {
             IllegalAccessRuntimeException {
         try {
             return constructor.newInstance(args);
-        } catch (final InstantiationException ex) {
+        } catch (final InstantiationException e) {
             throw new InstantiationRuntimeException(constructor
-                    .getDeclaringClass(), ex);
-        } catch (final IllegalAccessException ex) {
+                    .getDeclaringClass(), e);
+        } catch (final IllegalAccessException e) {
             throw new IllegalAccessRuntimeException(constructor
-                    .getDeclaringClass(), ex);
-        } catch (final InvocationTargetException ex) {
+                    .getDeclaringClass(), e);
+        } catch (final InvocationTargetException e) {
             throw new InvocationTargetRuntimeException(constructor
-                    .getDeclaringClass(), ex);
+                    .getDeclaringClass(), e);
         }
     }
 
+    @SuppressWarnings("unchecked")
     public static <T> T getValue(final Field field, final Object target) {
         return (T) FieldUtil.get(field, target);
     }
+
+    @SuppressWarnings("unchecked")
+    public static <T> T getStaticValue(final Field field) {
+        return (T) FieldUtil.get(field, null);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T> T invoke(final Method method, final Object target,
+            final Object... args) {
+        try {
+            return (T) method.invoke(target, args);
+        } catch (final IllegalAccessException e) {
+            throw new IllegalAccessRuntimeException(method.getDeclaringClass(),
+                    e);
+        } catch (final InvocationTargetException e) {
+            throw new InvocationTargetRuntimeException(method
+                    .getDeclaringClass(), e);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T> T invokeStatic(final Method method, final Object... args) {
+        return (T) invoke(method, null, args);
+    }
+
 }

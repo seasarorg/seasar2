@@ -48,7 +48,6 @@ public class EntityDescFactory {
     }
 
     public static synchronized void clear() {
-        providers.clear();
         entityDescs.clear();
         initialized = false;
     }
