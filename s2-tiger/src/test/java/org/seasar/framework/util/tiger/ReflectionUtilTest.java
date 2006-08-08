@@ -88,7 +88,7 @@ public class ReflectionUtilTest extends TestCase {
 
         Field f = ReflectionUtil.getDeclaredField(Foo.class, "n");
         f.setAccessible(true);
-        int n = ReflectionUtil.getValue(f, foo);
+        int n = Integer.class.cast(ReflectionUtil.getValue(f, foo));
         assertEquals(10, n);
 
         f = ReflectionUtil.getDeclaredField(Foo.class, "s");
