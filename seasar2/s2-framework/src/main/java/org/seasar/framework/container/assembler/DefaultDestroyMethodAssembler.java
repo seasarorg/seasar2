@@ -21,6 +21,8 @@ import org.seasar.framework.container.IllegalMethodRuntimeException;
 import org.seasar.framework.container.MethodDef;
 
 /**
+ * デフォルトの終了メソッドアセンブラです。
+ * 
  * @author higa
  * 
  */

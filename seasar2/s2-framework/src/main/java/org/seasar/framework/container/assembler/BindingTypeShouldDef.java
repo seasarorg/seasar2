@@ -23,6 +23,8 @@ import org.seasar.framework.container.util.BindingUtil;
 import org.seasar.framework.log.Logger;
 
 /**
+ * バインディングタイプ定義のshould版です。
+ * 
  * @author higa
  * 
  */

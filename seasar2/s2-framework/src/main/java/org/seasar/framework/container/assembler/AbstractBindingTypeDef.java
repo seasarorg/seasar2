@@ -29,6 +29,12 @@ import org.seasar.framework.container.util.BindingUtil;
 import org.seasar.framework.util.FieldUtil;
 import org.seasar.framework.util.StringUtil;
 
+/**
+ * バインディングタイプ定義の抽象クラスです。
+ * 
+ * @author higa
+ *
+ */
 public abstract class AbstractBindingTypeDef implements BindingTypeDef {
 
     private String name;

@@ -21,6 +21,8 @@ import org.seasar.framework.container.IllegalMethodRuntimeException;
 import org.seasar.framework.container.MethodDef;
 
 /**
+ * デフォルトの初期化メソッドアセンブラです。
+ * 
  * @author higa
  * 
  */

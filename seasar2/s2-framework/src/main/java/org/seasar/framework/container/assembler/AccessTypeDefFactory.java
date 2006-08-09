@@ -6,6 +6,12 @@ import java.util.Map;
 import org.seasar.framework.container.AccessTypeDef;
 import org.seasar.framework.container.IllegalAccessTypeDefRuntimeException;
 
+/**
+ * アクセスタイプ定義のファクトリです。
+ * 
+ * @author higa
+ *
+ */
 public class AccessTypeDefFactory {
 
     public static final AccessTypeDef PROPERTY = new AccessTypePropertyDef();

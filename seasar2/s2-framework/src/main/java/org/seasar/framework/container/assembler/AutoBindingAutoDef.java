@@ -19,6 +19,12 @@ import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.ConstructorAssembler;
 import org.seasar.framework.container.PropertyAssembler;
 
+/**
+ * 自動バインディング定義の自動版です。
+ * 
+ * @author higa
+ *
+ */
 public class AutoBindingAutoDef extends AbstractAutoBindingDef {
 
     protected AutoBindingAutoDef(String name) {

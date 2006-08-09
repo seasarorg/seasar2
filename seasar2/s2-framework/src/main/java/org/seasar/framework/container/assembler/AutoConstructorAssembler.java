@@ -22,6 +22,8 @@ import org.seasar.framework.container.util.BindingUtil;
 import org.seasar.framework.util.ConstructorUtil;
 
 /**
+ * コンストラクタアセンブラの自動版です。
+ * 
  * @author higa
  * 
  */

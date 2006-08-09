@@ -17,6 +17,12 @@ package org.seasar.framework.container.assembler;
 
 import org.seasar.framework.container.AutoBindingDef;
 
+/**
+ * 自動バインディング定義の抽象クラスです。
+ * 
+ * @author higa
+ *
+ */
 public abstract class AbstractAutoBindingDef implements AutoBindingDef {
 
     private String name;

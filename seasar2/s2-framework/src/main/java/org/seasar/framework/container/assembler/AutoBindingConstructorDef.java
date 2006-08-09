@@ -20,6 +20,8 @@ import org.seasar.framework.container.ConstructorAssembler;
 import org.seasar.framework.container.PropertyAssembler;
 
 /**
+ * 自動バインディング定義のコンストラクタ版です。
+ * 
  * @author higa
  * 
  */

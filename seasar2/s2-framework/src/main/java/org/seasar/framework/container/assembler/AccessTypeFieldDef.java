@@ -9,6 +9,12 @@ import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.PropertyDef;
 import org.seasar.framework.container.util.BindingUtil;
 
+/**
+ * フィールドに対するアクセスタイプ定義です。
+ * 
+ * @author higa (Javadoc)
+ *
+ */
 public class AccessTypeFieldDef implements AccessTypeDef {
 
     public AccessTypeFieldDef() {

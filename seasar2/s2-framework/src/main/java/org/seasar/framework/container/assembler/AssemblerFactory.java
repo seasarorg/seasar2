@@ -21,6 +21,8 @@ import org.seasar.framework.container.MethodAssembler;
 import org.seasar.framework.container.PropertyAssembler;
 
 /**
+ * コンポーネントアセンブラのファクトリです。
+ * 
  * @author higa
  * @author koichik
  */

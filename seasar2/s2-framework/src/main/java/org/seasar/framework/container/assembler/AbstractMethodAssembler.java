@@ -31,6 +31,8 @@ import org.seasar.framework.container.util.BindingUtil;
 import org.seasar.framework.util.MethodUtil;
 
 /**
+ * メソッドアセンブラの抽象クラスです。
+ * 
  * @author higa
  * 
  */

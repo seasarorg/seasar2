@@ -21,6 +21,12 @@ import java.util.Map;
 import org.seasar.framework.container.AutoBindingDef;
 import org.seasar.framework.container.IllegalAutoBindingDefRuntimeException;
 
+/**
+ * 自動バンディング定義のファクトリです。
+ * 
+ * @author higa
+ *
+ */
 public class AutoBindingDefFactory {
 
     public static final AutoBindingDef AUTO = new AutoBindingAutoDef(

@@ -23,6 +23,8 @@ import org.seasar.framework.container.IllegalAutoBindingPropertyRuntimeException
 import org.seasar.framework.container.util.BindingUtil;
 
 /**
+ * バインディングタイプ定義のmust版です。
+ * 
  * @author higa
  * 
  */

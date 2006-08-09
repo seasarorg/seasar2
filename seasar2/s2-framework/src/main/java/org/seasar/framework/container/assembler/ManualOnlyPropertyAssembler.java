@@ -22,6 +22,8 @@ import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.PropertyDef;
 
 /**
+ * 手動で設定されたものだけを対象にするプロパティアセンブラです。
+ * 
  * @author higa
  * 
  */

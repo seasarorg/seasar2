@@ -30,6 +30,8 @@ import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.ConstructorUtil;
 
 /**
+ * コンストラクタアセンブラの抽象クラスです。
+ * 
  * @author higa
  * 
  */

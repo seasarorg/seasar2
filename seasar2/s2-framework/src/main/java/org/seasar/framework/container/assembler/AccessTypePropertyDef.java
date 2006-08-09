@@ -8,6 +8,12 @@ import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.PropertyDef;
 import org.seasar.framework.container.util.BindingUtil;
 
+/**
+ * プロパティに対するアクセスタイプ定義です。
+ * 
+ * @author higa (Javadoc)
+ *
+ */
 public class AccessTypePropertyDef implements AccessTypeDef {
 
     public AccessTypePropertyDef() {

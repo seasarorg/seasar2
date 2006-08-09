@@ -22,6 +22,8 @@ import org.seasar.framework.container.util.BindingUtil;
 import org.seasar.framework.log.Logger;
 
 /**
+ * コンポーネントアセンブラの抽象クラスです。
+ * 
  * @author higa
  * 
  */

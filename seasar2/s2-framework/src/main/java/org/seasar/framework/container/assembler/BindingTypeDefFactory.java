@@ -21,6 +21,12 @@ import java.util.Map;
 import org.seasar.framework.container.BindingTypeDef;
 import org.seasar.framework.container.IllegalBindingTypeDefRuntimeException;
 
+/**
+ * バインディングタイプ定義のファクトリです。
+ * 
+ * @author higa
+ *
+ */
 public class BindingTypeDefFactory {
 
     public static final BindingTypeDef MUST = new BindingTypeMustDef(

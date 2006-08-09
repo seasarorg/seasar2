@@ -18,6 +18,8 @@ package org.seasar.framework.container.assembler;
 import org.seasar.framework.container.ComponentDef;
 
 /**
+ * デフォルトコンストラクタ用のコンストラクタアセンブラです。
+ * 
  * @author higa
  * 
  */

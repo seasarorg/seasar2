@@ -28,6 +28,8 @@ import org.seasar.framework.container.PropertyAssembler;
 import org.seasar.framework.exception.EmptyRuntimeException;
 
 /**
+ * プロパティアセンブラの抽象クラスです。
+ * 
  * @author higa
  * 
  */

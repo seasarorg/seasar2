@@ -20,6 +20,8 @@ import org.seasar.framework.container.ConstructorAssembler;
 import org.seasar.framework.container.PropertyAssembler;
 
 /**
+ * 自動バンディング定義の何も行わない版です。
+ * 
  * @author higa
  * 
  */

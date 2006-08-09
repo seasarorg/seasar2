@@ -21,6 +21,8 @@ import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.container.ComponentDef;
 
 /**
+ * バインディングタイプ定義のnone版です。
+ * 
  * @author higa
  * 
  */
