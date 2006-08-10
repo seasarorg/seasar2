@@ -15,6 +15,10 @@
  */
 package org.seasar.framework.util;
 
+import java.sql.Driver;
+import java.sql.DriverManager;
+import java.util.Enumeration;
+
 import junit.framework.TestCase;
 
 /**
@@ -67,5 +71,22 @@ public class DisposableUtilTest extends TestCase {
             ++count;
             throw new RuntimeException();
         }
+    }
+
+    public void deregisterAllDriversTest() throws Exception {
+        Class clazz = Class.forName("org.hsqldb.jdbcDriver");
+        Driver d = (Driver) clazz.newInstance();
+        DriverManager.registerDriver(d);
+        int i = 0;
+        for (Enumeration e = DriverManager.getDrivers(); e.hasMoreElements(); i++) {
+            e.nextElement();
+        }
+        assertEquals(2, i);
+        DisposableUtil.deregisterAllDrivers();
+        int j = 0;
+        for (Enumeration e = DriverManager.getDrivers(); e.hasMoreElements(); j++) {
+            e.nextElement();
+        }
+        assertEquals(0, j);
     }
 }

@@ -15,8 +15,13 @@
  */
 package org.seasar.framework.util;
 
+import java.sql.Driver;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.Enumeration;
 import java.util.LinkedList;
 
+import org.seasar.framework.exception.SQLRuntimeException;
 import org.seasar.framework.log.Logger;
 
 /**
@@ -46,5 +51,16 @@ public class DisposableUtil {
         }
         disposables.clear();
         Logger.dispose();
+    }
+
+    public static synchronized void deregisterAllDrivers() {
+        try {
+            for (Enumeration e = DriverManager.getDrivers(); e
+                    .hasMoreElements();) {
+                DriverManager.deregisterDriver((Driver) e.nextElement());
+            }
+        } catch (SQLException e) {
+            throw new SQLRuntimeException(e);
+        }
     }
 }
