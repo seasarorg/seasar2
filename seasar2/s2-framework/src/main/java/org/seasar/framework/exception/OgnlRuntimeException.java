@@ -19,21 +19,22 @@ import org.seasar.framework.util.StringUtil;
 
 /**
  * @author higa
- * 
+ * @author manhole
  */
 public final class OgnlRuntimeException extends SRuntimeException {
-    private static final long serialVersionUID = 6780487105649327767L;
 
-    public OgnlRuntimeException(Exception cause) {
+    private static final long serialVersionUID = 2290558407298004909L;
+
+    public OgnlRuntimeException(Throwable cause) {
         this(cause, null, 0);
     }
 
-    public OgnlRuntimeException(Exception cause, String path, int lineNumber) {
+    public OgnlRuntimeException(Throwable cause, String path, int lineNumber) {
         super("ESSR0073",
                 new Object[] { createMessage(cause, path, lineNumber) }, cause);
     }
 
-    protected static String createMessage(Exception cause, String path,
+    protected static String createMessage(Throwable cause, String path,
             int lineNumber) {
         StringBuffer buf = new StringBuffer(100);
         buf.append(cause.getMessage());

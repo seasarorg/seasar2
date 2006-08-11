@@ -19,6 +19,7 @@ import java.util.Map;
 
 import ognl.ClassResolver;
 import ognl.Ognl;
+import ognl.OgnlException;
 
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.exception.OgnlRuntimeException;
@@ -54,6 +55,8 @@ public final class OgnlUtil {
             } else {
                 return Ognl.getValue(exp, root);
             }
+        } catch (OgnlException ex) {
+            throw new OgnlRuntimeException(ex.getReason(), path, lineNumber);
         } catch (Exception ex) {
             throw new OgnlRuntimeException(ex, path, lineNumber);
         }
@@ -90,21 +93,21 @@ public final class OgnlUtil {
     }
 
     public static class ClassResolverImpl implements ClassResolver {
-        private ClassLoader classLoader_;
+        final private ClassLoader classLoader;
 
         public ClassResolverImpl(ClassLoader classLoader) {
-            classLoader_ = classLoader;
+            this.classLoader = classLoader;
         }
 
         public Class classForName(String className, Map ctx)
                 throws ClassNotFoundException {
             try {
-                return Class.forName(className, true, classLoader_);
+                return Class.forName(className, true, classLoader);
             } catch (ClassNotFoundException ex) {
                 int dot = className.indexOf('.');
                 if (dot < 0) {
                     return Class.forName("java.lang." + className, true,
-                            classLoader_);
+                            classLoader);
                 } else {
                     throw ex;
                 }

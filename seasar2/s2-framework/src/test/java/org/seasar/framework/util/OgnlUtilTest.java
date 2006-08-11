@@ -24,6 +24,7 @@ import ognl.OgnlContext;
 
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.impl.S2ContainerImpl;
+import org.seasar.framework.exception.OgnlRuntimeException;
 
 /**
  * @author YOKOTA Takehiko
@@ -77,6 +78,30 @@ public class OgnlUtilTest extends TestCase {
             fail("2");
         }
         assertNotNull("3", clazz);
+    }
+
+    public void testGetValueException() throws Exception {
+        final RuntimeException runtimeException = new RuntimeException(
+                "test error message");
+        final Object exp = OgnlUtil.parseExpression("foo.getBar()");
+        final Map root = new HashMap();
+        root.put("foo", new Foo() {
+            public String getBar() {
+                throw runtimeException;
+            }
+        });
+        try {
+            OgnlUtil.getValue(exp, root);
+            fail();
+        } catch (OgnlRuntimeException e) {
+            e.printStackTrace();
+            final Throwable cause = e.getCause();
+            assertSame(runtimeException, cause);
+        }
+    }
+
+    private static interface Foo {
+        String getBar();
     }
 
     public void testGetValue() throws Exception {
