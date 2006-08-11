@@ -141,34 +141,36 @@ public abstract class S2FrameworkTestCase extends TestCase {
      */
     public void runBare() throws Throwable {
         setUpContainer();
-        setUp();
         try {
-            setUpForEachTestMethod();
+            setUp();
             try {
-                container.init();
+                setUpForEachTestMethod();
                 try {
-                    setUpAfterContainerInit();
+                    container.init();
                     try {
-                        bindFields();
-                        setUpAfterBindFields();
+                        setUpAfterContainerInit();
                         try {
-                            doRunTest();
+                            bindFields();
+                            setUpAfterBindFields();
+                            try {
+                                doRunTest();
+                            } finally {
+                                tearDownBeforeUnbindFields();
+                                unbindFields();
+                            }
                         } finally {
-                            tearDownBeforeUnbindFields();
-                            unbindFields();
+                            tearDownBeforeContainerDestroy();
                         }
                     } finally {
-                        tearDownBeforeContainerDestroy();
+                        container.destroy();
                     }
                 } finally {
-                    container.destroy();
+                    tearDownForEachTestMethod();
                 }
             } finally {
-                tearDownForEachTestMethod();
+                tearDown();
             }
-
         } finally {
-            tearDown();
             tearDownContainer();
         }
     }
