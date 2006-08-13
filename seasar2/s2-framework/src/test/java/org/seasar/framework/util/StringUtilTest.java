@@ -86,6 +86,16 @@ public class StringUtilTest extends TestCase {
         assertEquals("5", false, StringUtil.equals("a", "b"));
     }
 
+    public void testEqualsIgnoreCase() throws Exception {
+        assertEquals("1", true, StringUtil.equalsIgnoreCase("a", "a"));
+        assertEquals("2", true, StringUtil.equalsIgnoreCase("a", "A"));
+        assertEquals("3", true, StringUtil.equalsIgnoreCase("A", "a"));
+        assertEquals("4", true, StringUtil.equalsIgnoreCase(null, null));
+        assertEquals("5", false, StringUtil.equalsIgnoreCase("a", null));
+        assertEquals("6", false, StringUtil.equalsIgnoreCase(null, "a"));
+        assertEquals("7", false, StringUtil.equalsIgnoreCase("a", "b"));
+    }
+
     public void testDecapitalize() throws Exception {
         assertEquals("abc", StringUtil.decapitalize("abc"));
         assertEquals("abc", StringUtil.decapitalize("Abc"));

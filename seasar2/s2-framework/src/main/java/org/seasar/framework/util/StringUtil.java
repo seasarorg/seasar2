@@ -180,6 +180,11 @@ public final class StringUtil {
         return (target1 == null) ? (target2 == null) : target1.equals(target2);
     }
 
+    public static boolean equalsIgnoreCase(String target1, String target2) {
+        return (target1 == null) ? (target2 == null) : target1
+                .equalsIgnoreCase(target2);
+    }
+
     public static boolean endsWithIgnoreCase(String target1, String target2) {
         if (target1 == null || target2 == null) {
             return false;
