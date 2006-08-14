@@ -78,4 +78,6 @@ public interface NamingConvention {
     String fromPageNameToPath(String pageName);
 
     String fromActionNameToPath(String actionName);
+
+    String fromActionNameToPageName(String actionName);
 }

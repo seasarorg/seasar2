@@ -36,10 +36,11 @@ public class NamingConventionImplTest extends TestCase {
         assertEquals("add_addDxo", convention
                 .fromClassNameToComponentName("aaa.web.add.impl.AddDxoImpl"));
     }
-    
+
     public void testFromPathToPageName() throws Exception {
         NamingConventionImpl convention = new NamingConventionImpl();
-        assertEquals("hogePage", convention.fromPathToPageName("/view/hoge.html"));
+        assertEquals("hogePage", convention
+                .fromPathToPageName("/view/hoge.html"));
         assertEquals("hoge_fooPage", convention
                 .fromPathToPageName("/view/hoge/foo.html"));
         assertEquals("aaa_hoge_fooPage", convention
@@ -48,24 +49,41 @@ public class NamingConventionImplTest extends TestCase {
 
     public void testFromPathToActionName() throws Exception {
         NamingConventionImpl convention = new NamingConventionImpl();
-        assertEquals("hogeAction", convention.fromPathToActionName("/view/hoge.html"));
+        assertEquals("hogeAction", convention
+                .fromPathToActionName("/view/hoge.html"));
         assertEquals("hoge_fooAction", convention
                 .fromPathToActionName("/view/hoge/foo.html"));
         assertEquals("aaa_hoge_fooAction", convention
                 .fromPathToActionName("/view/aaa/hoge/foo.html"));
     }
-    
+
     public void testFromPageNameToPath() throws Exception {
         NamingConventionImpl convention = new NamingConventionImpl();
-        assertEquals("/view/hoge.html", convention.fromPageNameToPath("hogePage"));
-        assertEquals("/view/aaa/hoge.html", convention.fromPageNameToPath("aaa_hogePage"));
-        assertEquals("/view/aaa/bbb/hoge.html", convention.fromPageNameToPath("aaa_bbb_hogePage"));
+        assertEquals("/view/hoge.html", convention
+                .fromPageNameToPath("hogePage"));
+        assertEquals("/view/aaa/hoge.html", convention
+                .fromPageNameToPath("aaa_hogePage"));
+        assertEquals("/view/aaa/bbb/hoge.html", convention
+                .fromPageNameToPath("aaa_bbb_hogePage"));
     }
-    
+
     public void testFromActionNameToPath() throws Exception {
         NamingConventionImpl convention = new NamingConventionImpl();
-        assertEquals("/view/hoge.html", convention.fromActionNameToPath("hogeAction"));
-        assertEquals("/view/aaa/hoge.html", convention.fromActionNameToPath("aaa_hogeAction"));
-        assertEquals("/view/aaa/bbb/hoge.html", convention.fromActionNameToPath("aaa_bbb_hogeAction"));
+        assertEquals("/view/hoge.html", convention
+                .fromActionNameToPath("hogeAction"));
+        assertEquals("/view/aaa/hoge.html", convention
+                .fromActionNameToPath("aaa_hogeAction"));
+        assertEquals("/view/aaa/bbb/hoge.html", convention
+                .fromActionNameToPath("aaa_bbb_hogeAction"));
+    }
+
+    public void testFromActionNameToPageName() throws Exception {
+        NamingConventionImpl convention = new NamingConventionImpl();
+        assertEquals("hogePage", convention
+                .fromActionNameToPageName("hogeAction"));
+        assertEquals("aaa_hogePage", convention
+                .fromActionNameToPageName("aaa_hogeAction"));
+        assertEquals("aaa_bbb_hogePage", convention
+                .fromActionNameToPageName("aaa_bbb_hogeAction"));
     }
 }

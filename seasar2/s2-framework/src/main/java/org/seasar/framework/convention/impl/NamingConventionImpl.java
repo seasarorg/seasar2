@@ -268,9 +268,6 @@ public class NamingConventionImpl implements NamingConvention {
         this.webPackageName = webPackageName;
     }
 
-    /*
-     * @see org.seasar.framework.convention.NamingConvention#fromClassNameToComponentName(java.lang.String)
-     */
     public String fromClassNameToComponentName(String className) {
         if (className == null) {
             throw new EmptyRuntimeException("className");
@@ -309,9 +306,6 @@ public class NamingConventionImpl implements NamingConvention {
         return s;
     }
 
-    /*
-     * @see org.seasar.framework.convention.NamingConvention#fromPathToPageName(java.lang.String)
-     */
     public String fromPathToPageName(String path) {
         return fromPathToComponentName(path, pageSuffix);
     }
@@ -327,16 +321,10 @@ public class NamingConventionImpl implements NamingConvention {
         return componentName.replace('/', '_');
     }
 
-    /*
-     * @see org.seasar.framework.convention.NamingConvention#fromPathToActionName(java.lang.String)
-     */
     public String fromPathToActionName(String path) {
         return fromPathToComponentName(path, actionSuffix);
     }
 
-    /*
-     * @see org.seasar.framework.convention.NamingConvention#fromPageNameToPath(java.lang.String)
-     */
     public String fromPageNameToPath(String pageName) {
         if (!pageName.endsWith(pageSuffix)) {
             throw new IllegalArgumentException(pageName);
@@ -347,9 +335,6 @@ public class NamingConventionImpl implements NamingConvention {
                 + viewExtension;
     }
 
-    /*
-     * @see org.seasar.framework.convention.NamingConvention#fromActionNameToPath(java.lang.String)
-     */
     public String fromActionNameToPath(String actionName) {
         if (!actionName.endsWith(actionSuffix)) {
             throw new IllegalArgumentException(actionName);
@@ -358,5 +343,14 @@ public class NamingConventionImpl implements NamingConvention {
                 - actionSuffix.length());
         return viewRootPath + "/" + name.replace(PACKAGE_SEPARATOR, '/')
                 + viewExtension;
+    }
+
+    public String fromActionNameToPageName(String actionName) {
+        if (!actionName.endsWith(actionSuffix)) {
+            throw new IllegalArgumentException(actionName);
+        }
+        return actionName.substring(0, actionName.length()
+                - actionSuffix.length())
+                + pageSuffix;
     }
 }
