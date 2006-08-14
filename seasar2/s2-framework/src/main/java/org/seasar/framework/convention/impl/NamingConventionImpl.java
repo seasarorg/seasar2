@@ -268,6 +268,18 @@ public class NamingConventionImpl implements NamingConvention {
         this.webPackageName = webPackageName;
     }
 
+    public String fromClassNameToShortComponentName(String className) {
+        if (className == null) {
+            throw new EmptyRuntimeException("className");
+        }
+        String s = StringUtil.decapitalize(ClassUtil
+                .getShortClassName(className));
+        if (s.endsWith(implementationSuffix)) {
+            return s.substring(0, s.length() - implementationSuffix.length());
+        }
+        return s;
+    }
+
     public String fromClassNameToComponentName(String className) {
         if (className == null) {
             throw new EmptyRuntimeException("className");
@@ -298,12 +310,7 @@ public class NamingConventionImpl implements NamingConvention {
             String name = StringUtil.decapitalize(s.substring(index + 1));
             return packageName + PACKAGE_SEPARATOR + name;
         }
-        String s = StringUtil.decapitalize(ClassUtil
-                .getShortClassName(className));
-        if (s.endsWith(implementationSuffix)) {
-            return s.substring(0, s.length() - implementationSuffix.length());
-        }
-        return s;
+        return fromClassNameToShortComponentName(className);
     }
 
     public String fromPathToPageName(String path) {

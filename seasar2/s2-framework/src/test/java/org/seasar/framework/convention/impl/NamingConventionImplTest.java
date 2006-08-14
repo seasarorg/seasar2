@@ -37,6 +37,18 @@ public class NamingConventionImplTest extends TestCase {
                 .fromClassNameToComponentName("aaa.web.add.impl.AddDxoImpl"));
     }
 
+    public void testFromClassNameToShortComponentName() throws Exception {
+        NamingConventionImpl convention = new NamingConventionImpl();
+        assertEquals(
+                "abcLogic",
+                convention
+                        .fromClassNameToShortComponentName("aaa.logic.impl.AbcLogicImpl"));
+        assertEquals(
+                "abcInterceptor",
+                convention
+                        .fromClassNameToShortComponentName("aaa.interceptor.AbcInterceptor"));
+    }
+
     public void testFromPathToPageName() throws Exception {
         NamingConventionImpl convention = new NamingConventionImpl();
         assertEquals("hogePage", convention

@@ -69,6 +69,8 @@ public interface NamingConvention {
 
     String getHelperPackageName();
 
+    String fromClassNameToShortComponentName(String className);
+
     String fromClassNameToComponentName(String className);
 
     String fromPathToPageName(String path);
