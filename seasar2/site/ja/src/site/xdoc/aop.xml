@@ -1,0 +1,378 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+  <properties>
+    <title>aaaaa</title>
+    <author email="aaa@aaaaa">bbbbb</author>
+  </properties>
+  <body>
+    <section name="S2AOPの概要">
+      <p>
+        S2AOPでは、AOPの機能を提供しています。AOPとは、Aspect Oriented Programming (アスペクト指向プログラミング) の略です。
+        プログラム本来の目的とは異なる処理を内部に埋め込まず、外から織り込むように作ることです。
+      </p>
+      <subsection name="AOPを考える上でキーとなる概念">
+        <h4><a name="Advice">Advice(MethodInterceptor)</a></h4>
+        <p>プログラム中に挿入されるコードを表します。Interceptorと呼ばれることもあります。</p>
+        <h4><a name="Joinpoint">Joinpoint(MethodInvocation)</a></h4>
+        <p>対象となるクラスとAdviceを結合するポイントを表します。AdviceはJoinpointから引数やメソッドの情報を取得することができます。</p>
+        <h4><a name="Pointcut">Pointcut</a></h4>
+        <p>どこにJoinpointを設定するのかを定義します。</p>
+        <h4><a name="Aspect">Aspect</a></h4>
+        <p>AdviceとPointcutを関連付けます。</p>
+        <h4><a name="InterType">InterType</a></h4>
+        <p>フィールドやメソッドの追加、実装するインタフェースの追加など，クラスの静的な構造を変更します。</p>
+      </subsection>
+
+      <subsection name="AOPのメリット">
+        <ul>
+          <li>「Core Concern」と「Crosscutting Concern」を分離することでメンテナンス性が向上します。</li>
+          <li>業務ロジックからシステム的機能を「Crosscutting Concern」に排出した「Core Concern」は、シンプルなソースになります。本来のやりたかったことだけが記述されます。</li>
+          <li>トランザクションの自動化やリモートメソッド呼び出しなど、従来EJBを使用しなければ実現できなかった処理がPOJO(Plain Old Java Object：特定の環境に依存しない普通のjavaのオブジェクト)で可能になります。</li>
+        </ul>
+      </subsection>
+
+      <subsection name="S2AOPのメリット">
+        <ul>
+          <li>設定をシンプルに行えます。</li>
+          <li>実装しなければならないJavaインターフェースが１つです。</li>
+          <li>コンポーネントにどんなアスペクトが適用されるのかが明確です。</li>
+          <li>基本的なAspect実装オブジェクトパターンが用意されているため、すぐに使用することが可能です。(独自にインターフェースや抽象クラスを実装することも可能)</li>
+        </ul>
+      </subsection>
+
+      <subsection name="注意点">
+        <ul>
+          <li>finalなクラスにはアスペクトを適用できません。</li>
+          <li>finalまたはstaticまたは非publicなメソッドにはアスペクトを適用できません。</li>
+          <li>pointcut属性を指定しない場合、すべてのメソッドが対象になるわけではありません。実装しているインターフェースのすべてのメソッドが対象になります。すべてのメソッドを対象にするには、pointcut属性に".*"と指定します。</li>
+        </ul>
+      </subsection>
+    </section>
+
+    <section name="S2AOPリファレンス">
+      <subsection name="作成すべきファイル">
+        <p>S2AOPを使用するにはS2Container の設定ファイル(diconファイル)で行います。設定ファイルの配置場所は、とくに指定がありませんが、通常「Crosscutting Concern」と同じ場所に配置するか、設定を行うコンポーネントと同じ場所に配置します。</p>
+      </subsection>
+      <subsection name="設定ファイルの説明">
+        <h4><a name="aspecTtag">aspectタグ</a></h4>
+        <p>Advice(以下Interceptor)をコンポーネントに組み込みます。Interceptorの指定は、ボディでOGNL式を使うか、子タグでcomponentタグを使います。<br />
+        ※OGNLについては <a href="ognl.html">OGNLガイド</a>を参照してください。1つのコンポーネントに複数のアスペクトを組み込んだ場合はアスペクトの登録順に組み込まれ実行されます。詳しい説明は<a href="#OriginalInterceptor">独自実装のInterceptor</a>を参照してください。</p>
+    <h5>注意点</h5>
+    <p>aspectタグで指定されたコンポーネントは、コンテナの初期化時にコンテナから取得されます。そのため、aspectタグで指定されたコンポーネントのinstance属性がprototypeだったとしても、Interceptor
+    のメソッドが呼び出される度に新しいインスタンスが作成されるわけではありません。</p>
+    <h5>pointcut属性(任意)</h5>
+        <p>カンマ区切りで対象となるメソッド名を指定することができます。pointcutを指定しない場合は、コンポーネントが実装しているインターフェースのすべてのメソッドが対象になります。メソッド名には正規表現(JDK1.4のregex)も使えます。</p>
+        <h5>設定例</h5>
+        <p>pointcut属性を指定してjava.util.DateのgetTime()メソッドとhashCode()メソッドを対象とする場合以下のようになります。pointcut属性を指定しない場合はjava.util.Dateが実装しているインターフェースのメソッドが対象になります。</p>
+    
+    <pre>&lt;component class=&quot;java.util.Date&quot;&gt;
+    &lt;aspect pointcut=&quot;getTime,hashCode&quot;&gt;
+        &lt;component class=&quot;org.seasar.framework.aop.interceptors.TraceInterceptor&quot;/&gt;
+    &lt;/aspect&gt;
+&lt;/component&gt;</pre>
+         正規表現を使ってjava.util.Dateのpublicなメソッドすべてを対象としたい場合は、以下のように設定します。
+    <pre>&lt;component class=&quot;java.util.Date&quot;&gt;
+    &lt;aspect pointcut=&quot;.*&quot;&gt;
+        &lt;component class=&quot;org.seasar.framework.aop.interceptors.TraceInterceptor&quot;/&gt;
+    &lt;/aspect&gt;
+&lt;/component&gt;</pre>
+    
+        <h4><a name="interTypeTag">interTypeタグ</a></h4>
+        <p>InterTypeをコンポーネントに組み込みます。InterTypeの指定は、ボディでOGNL式を使うか、子タグでcomponentタグを使います。<br />
+        ※OGNLについては <a href="ognl.html">OGNLガイド</a>を参照してください。1つのコンポーネントに複数のInterTypeを組み込んだ場合はInterTypeの登録順に組み込まれます。詳しい説明は<a href="#OriginalInterType">独自実装のInterType</a>を参照してください。
+        </p>
+    
+        <h5>設定例</h5>
+    <pre>&lt;component class=&quot;java.util.Date&quot;&gt;
+    &lt;interType&gt;
+        &lt;component class=&quot;org.seasar.framework.aop.intertype.PropertyInterType&quot;/&gt;
+    &lt;/interType&gt;
+&lt;/component&gt;</pre>
+      </subsection>
+
+      <subsection name="S2AOPで用意されているInterceptor">
+        <p>S2AOPでは、以下のInterceptorを用意しています。また独自のInterceptorを簡単に作成できるようになっています。</p>
+    
+        <h4><a name="TraceInterceptor">(1) TraceInterceptor</a></h4>
+        <h5>クラス名</h5>
+        <p>org.seasar.framework.aop.interceptors.TraceInterceptor</p>
+        <h5>説明</h5>
+        <p>トレース処理を「Crosscutting Concern」として扱うためのInterceptorです。DateクラスにTraceInterceptorを適用したdiconファイルは、以下のようになります。対象とするメソッドはgetTime()とします。</p>
+        <pre>&lt;component class=&quot;java.util.Date&quot;&gt;
+    &lt;aspect pointcut=&quot;getTime&quot;&gt;
+        &lt;component class=&quot;org.seasar.framework.aop.interceptors.TraceInterceptor&quot;/&gt;
+    &lt;/aspect&gt;
+&lt;/component&gt;</pre>
+        <p>詳しい使用方法は<a href="#TraceInterceptorSample">TraceInterceptor</a>を参照してください。</p>
+    
+        <h4><a name="ThrowsInterceptor">(2) ThrowsInterceptor</a></h4>
+        <h5>クラス名</h5>
+        <p>org.seasar.framework.aop.interceptors.ThrowsInterceptor</p>
+        <h5>説明</h5>
+        <p>例外処理を「Crosscutting concern」として扱うためのInterceptorです。使用するにはThrowsInterceptorを継承し、Object handleThrowable(Throwable, MethodInvocation)を実装するだけです。ThrowableにはThrowableのサブクラスを指定することができます。例えばhandleThrowable(IOException, MethodInvocation)のようにメソッド定義すると、ThrowsInterceptorを適用したコンポーネント内で発生した例外がIOExceptionもしくはIOExceptionのサブクラスの場合に、呼び出されることになります。handleThrowable()はいくつでも定義することができます。詳しい使用方法は<a href="#ThrowsInterceptorSample">ThrowsInterceptor</a>を参照してください。</p>
+    
+        <h4><a name="ToStringInterceptor">(3) ToStringInterceptor</a></h4>
+        <h5>クラス名</h5>
+        <p>org.seasar.framework.aop.interceptors.ToStringInterceptor</p>
+        <h5>説明</h5>
+        <p>ToString()メソッドによる文字列化処理を「Crosscutting Concern」として扱うためのInterceptorです。</p>
+        <pre>&lt;component class=&quot;java.util.Date&quot;&gt;
+    &lt;aspect pointcut=&quot;toString&quot;&gt;
+        &lt;component class=&quot;org.seasar.framework.aop.interceptors.ToStringInterceptor&quot;/&gt;
+    &lt;/aspect&gt;
+&lt;/component&gt;</pre>
+        <p>詳しい使用方法は<a href="#ToStringInterceptorSample">ToStringInterceptor</a>を参照してください。</p>
+    
+        <h4><a name="MockInterceptor">(4) MockInterceptor</a></h4>
+        <h5>クラス名</h5>
+        <p>org.seasar.framework.aop.interceptors.MockInterceptor</p>
+        <h5>説明</h5>
+        <p>Mockを使ったテストを簡単に行うためのInterceptorです。詳しい説明はテスト技法の<a href="http://homepage3.nifty.com/seasar/testtech.html#MockMake">モックを作成するための設定</a>を参照してください。</p>
+    
+        <h4><a name="DelegateInterceptor">(5) DelegateInterceptor</a></h4>
+        <h5>クラス名</h5>
+        <p>org.seasar.framework.aop.interceptors.DelegateInterceptor</p>
+        <h5>説明</h5>
+        <p>メソッド呼び出しを別のコンポーネントに委譲するためのInterceptorです。使用方法はDelegateInterceptorのtargetプロパティに委譲したい相手を指定します。委譲するときのメソッド名が異なる場合には、DelegateInterceptor#addMethodNameMap(String
+          methodName, String targetMethodName)で指定します。例えば、bar()というメソッドをfoo.bar2()に委譲する場合、DelegateInterceptor#setTarget(foo)，DelegateInterceptor#addMethodNameMap(&quot;bar&quot;,
+          &quot;bar2&quot;)のように指定します。詳しい使用方法は<a href="#DelegateInterceptorSample">DelegateInterceptor</a>を参照してください。</p>
+        <h5>注意</h5>
+        <p>targetプロパティに指定されたコンポーネントは、コンテナの初期化時にコンテナから取得されます。このため、targetプロパティに指定されたコンポーネントのinstance属性がprototypeであっても、常に同じインスタンスが使われます。メソッド呼び出しの度に新しいインスタンスをコンテナから取得したい場合は次のPrototypeDelegateInterceptorを使用してください。</p>
+        <h4><a name="PrototypeDelegateInterceptor">(5) PrototypeDelegateInterceptor</a></h4>
+        <h5>クラス名</h5>
+        <p>org.seasar.framework.aop.interceptors.PrototypeDelegateInterceptor</p>
+        <h5>説明</h5>
+        <p>メソッド呼び出しを別のコンポーネントに委譲するためのInterceptorです。メソッド呼び出しの度にコンポーネントをコンテナから取得します。使用方法はPrototypeDelegateInterceptorのtargetNameプロパティに委譲したい相手の名前を指定します。委譲するときのメソッド名が異なる場合には、PrototypeDelegateInterceptor#addMethodNameMap(String
+          methodName, String targetMethodName)で指定します。例えば、bar()というメソッドをfoo.bar2()に委譲する場合、PrototypeDelegateInterceptor#setTarget(foo)，PrototypeDelegateInterceptor#addMethodNameMap(&quot;bar&quot;,
+          &quot;bar2&quot;)のように指定します。詳しい使用方法は<a href="#PrototypeDelegateInterceptorSample">PrototypeDelegateInterceptor</a>を参照してください。</p>
+    
+        <h4><a name="SyncInterceptor">(7) SyncInterceptor</a></h4>
+        <h5>クラス名</h5>
+        <p>org.seasar.framework.aop.interceptors.SyncInterceptor</p>
+        <h5>説明</h5>
+        <p>メソッド呼び出しをAspectを使って同期化するためのInterceptorです。ソースを変更することなく、メソッド呼び出しを同期化できます。詳しい使用方法は<a href="#SyncInterceptorSample">SyncInterceptor</a>を参照してください。</p>
+    
+        <h4><a name="InterceptorChain">(8) InterceptorChain</a></h4>
+        <h5>クラス名</h5>
+        <p>org.seasar.framework.aop.interceptors.InterceptorChain</p>
+        <h5>説明</h5>
+        <p>複数のInterceptorをグルーピング化し、再利用しやすくします。複数のInterceptorの組み合わせを複数コンポーネントに適用する場合は、InterceptorChainで複数のInterceptorを1つにまとめて、各コンポーネントにはInterceptorChainを指定するようにするといいでしょう。</p>
+        <pre>&lt;component name=&quot;interceptor1&quot; .../&gt;
+&lt;component name=&quot;interceptor2&quot; .../&gt;
+&lt;component name=&quot;interceptor3&quot; .../&gt;<br />&lt;component name=&quot;chain&quot; class=&quot;org.seasar.framework.aop.interceptors.InterceptorChain&quot;&gt;<br />    &lt;initMethod name=&quot;add&quot;&gt;&lt;arg&gt;interceptor1&lt;/arg&gt;&lt;/initMethod&gt;<br />    &lt;initMethod name=&quot;add&quot;&gt;&lt;arg&gt;interceptor2&lt;/arg&gt;&lt;/initMethod&gt;<br />    &lt;initMethod name=&quot;add&quot;&gt;&lt;arg&gt;interceptor3&lt;/arg&gt;&lt;/initMethod&gt;<br />&lt;/component&gt;
+&lt;component ...&gt;
+    &lt;aspect&gt;chain&lt;/aspect&gt;
+&lt;/component&gt;
+&lt;component ...&gt;
+    &lt;aspect&gt;chain&lt;/aspect&gt;
+&lt;/component&gt;</pre>
+
+        <h4><a name="InterceptorLifecycleAdapter">(9) InterceptorLifecycleAdapter</a></h4>
+        <h5>クラス名</h5>
+        <p>org.seasar.framework.aop.interceptors.InterceptorLifecycleAdapter</p>
+        <h5>説明</h5>
+        <p>Interceptorはアスペクトをクラスに組み込む際にインスタンス化されるため、singleton以外の場合は意図したとおりに動作しません。<br />
+        このような場合は、InterceptorLifecycleAdapterをMethodInterceptorのinvoke()メソッドに適用します．
+        </p>
+        <pre>&lt;component name=&quot;myInterceptor&quot; instance="prototype" .../&gt;
+    &lt;aspect pointcut="invoke"&gt;
+        &lt;component class=&quot;org.seasar.framework.aop.interceptors.InterceptorLifecycleAdapter&quot;&gt;
+    &lt;/aspect&gt;
+&lt;/component&gt;
+&lt;component ...&gt;
+    &lt;aspect&gt;myInterceptor&lt;/aspect&gt;
+&lt;/component&gt;</pre>
+      </subsection>
+
+      <subsection name="独自実装によるInterceptor">
+        <h4>説明</h4>
+        <p>独自にInterceptorを作成する場合は、次のインターフェースまたは、抽象クラスを実装します。</p>
+        <dl>
+          <dt style="text-indent:1em;">org.aopalliance.intercept.MethodInterceptor</dt>
+          <dt style="text-indent:1em;">org.seasar.framework.aop.interceptors.AbstractInterceptor</dt>
+        </dl>
+        <p>どちらの場合も実装するメソッドは、以下のinvoke()メソッドの１つだけです。</p>
+        <dl>
+          <dt style="text-indent:1em;">public Object invoke(MethodInvocation invocation) throws Throwable</dt>
+        </dl>
+        <p>AbstractInterceptorは、MethodInterceptorをimplementsした抽象クラスです。AbstractInterceptorには、Proxyオブジェクトを取得するcreateProxy()メソッドとアスペクトを適用するクラスを取得するgetTargetClass()メソッドがあります。アスペクトを適用したクラス名を必要とするInterceptor(例えば、ログ出力を行うInterceptor)を作成する場合は、AbstractInterceptorを使用することで簡単にクラス名を取得することができます。</p>
+        <dl>
+          <dt style="text-indent:1em;">public Object createProxy(Class proxyClass)</dt>
+          <dt style="text-indent:1em;">protected Class getTargetClass(MethodInvocation invocation)</dt>
+        </dl>
+        <p>MethodInvocationのgetThis()、getMethod()、getArguments()で対象となるオブジェクト、メソッド、引数を取得できます。getThis()でクラス名を取得するとバイトコードで組み込まれたクラス名が取得されます。proceed()を呼び出すと実際のメソッドが呼び出され実行結果を取得することができます。以下のような独自のInterceptorを作成したとします。</p>
+    
+        <h4>注意点</h4>
+        <p>
+        Interceptorのインスタンスは、コンテナの初期化時に作成されてクラスに組み込まれます。
+        そのため、Interceptorを定義した&lt;component&gt;要素のinstance属性がprototype等だったとしても、
+        Interceptorのメソッドが呼び出される度に新しいインスタンスが作成されるわけではありません。<br />
+        instance属性がsingleton以外でないと正しく動作しないInterceptorには<a href="#InterceptorLifecycleAdapter">InterceptorLifecycleAdapter</a>を適用してください。
+        </p>
+    
+        <h4>作成例</h4>
+        <img src="images/aop02.gif" width="515" height="263" border="0"/>
+        <p>MethodInvocation#proceed()を呼ぶ前と後で2分され、呼ぶ前は Beforeの個所を実行し、呼んだ後はAfterの個所を実行します。1つのコンポーネントに複数のアスペクトが定義されている場合は、以下のよう実行されます。</p>
+          <ol>
+            <li>Aspectの登録順にMethodInterceptorのbefore部分が実行されます。</li>
+            <li>最後のMethodInterceptorのbefore部分を実行した後にコンポーネント自身のメソッドが呼び出されます。</li>
+            <li>Aspectの登録の逆順にMethodInterceptorのafter部分が実行されます。</li>
+          </ol>
+        <p>詳しい使用方法は<a href="#OriginalInterceptorSample">独自実装によるInterceptor</a>を参照してください。</p>
+      </subsection>
+
+      <subsection name="S2AOPで用意されているInterType">
+        <p>S2AOPでは、以下のInterTypeを用意しています。また独自のInterTypeを作成できるようになっています。</p>
+        <h4><a name="PropertyInterType">(1) PropertyTraceInterType</a></h4>
+        <h5>クラス名</h5>
+        <p>org.seasar.framework.aop.intertype.PropertyInterType</p>
+        <h5>説明</h5>
+        <p>フィールドに対するsetter / getterメソッドを追加するInterTypeです。<br />
+          PropertyInterTypeを使うには、S2TigerまたはS2Backport175が必要です。</p>
+        <h5>注意点</h5>
+        <p>
+          privateのフィールドに対するgetter / setterは作成されません。<br />
+          フィールドはデフォルト(パッケージスコープ)またはprotectedにしてください。
+        </p>
+
+        <pre>&lt;component class=&quot;Hoge&quot;&gt;
+    &lt;interType&gt;
+        &lt;component class=&quot;org.seasar.framework.aop.interType.PropertyInterType&quot;/&gt;
+    &lt;/interType&gt;
+&lt;/component&gt;</pre>
+        <p>PropertyInterTypeを適用するクラスには、setter / getterを追加したいフィールドにPropertyアノテーションを指定します。<br />
+          Tigerアノテーションでは次のようになります。</p>
+        <pre>import org.seasar.framework.container.annotation.tiger.Property;
+import org.seasar.framework.container.annotation.tiger.PropertyType;
+
+public class Hoge {
+    @Property
+    int foo;
+
+    @Property(PropertyType.READ)
+    long bar;
+
+    @Property(PropertyType.WRITE)
+    String baz;
+}</pre>
+        <p>Backport175アノテーションでは次のようになります。</p>
+        <pre>public class Hoge {
+    /** @org.seasar.framework.container.annotation.backport175.Property */
+    int foo;
+
+    /** @org.seasar.framework.container.annotation.backport175.Property(&quot;read&quot;) */
+    long bar;
+
+    /** @org.seasar.framework.container.annotation.backport175.Property(&quot;write&quot;) */
+    String baz;
+}</pre>
+        <p>上の例では、フィールドfooにはgetterとsetterメソッドが、barにはgetterメソッドが、bazにはsetterメソッドが作成されます。</p>
+        <p>クラスにPropertyアノテーションを指定することもできます。その指定がPropertyアノテーションの指定されていないフィールドに適用されます。<br />
+          Tigerアノテーションでは次のようになります。</p>
+        <pre>import org.seasar.framework.container.annotation.tiger.Property;
+import org.seasar.framework.container.annotation.tiger.PropertyType;
+
+@Property
+public class Hoge {
+    int foo;
+
+    long bar;
+
+    @Property(PropertyType.NONE)
+    String baz;
+}</pre>
+        <p>Backport175アノテーションでは次のようになります。</p>
+        <pre>/** @org.seasar.framework.container.annotation.backport175.Property */
+public class Hoge {
+    int foo;
+
+    long bar;
+
+    /** @org.seasar.framework.container.annotation.backport175.Property(&quot;none&quot;) */
+    String baz;
+}</pre>
+        <p>上の例では、フィールドfooとbarにはgetterとsetterメソッドが作成されますが、bazにはメソッドが作成されません。</p>
+
+        <h4><a name="InterTypeChain">(2) InterTypeChain</a></h4>
+        <h5>クラス名</h5>
+        <p>org.seasar.framework.aop.intertye.InterTypeChain</p>
+        <h5>説明</h5>
+        <p>複数のInterTypeをグルーピング化し、再利用しやすくします。複数のInterTypeの組み合わせを複数コンポーネントに適用する場合は、InterTGypeChainで複数のInterTypeを1つにまとめて、各コンポーネントにはInterTypeChainを指定するようにするといいでしょう。</p>
+        <pre>&lt;component name=&quot;interType1&quot; .../&gt;
+&lt;component name=&quot;interType2&quot; .../&gt;
+&lt;component name=&quot;interType3&quot; .../&gt;<br />&lt;component name=&quot;chain&quot; class=&quot;org.seasar.framework.aop.interttype.InterTypeChain&quot;&gt;<br />    &lt;initMethod name=&quot;add&quot;&gt;&lt;arg&gt;interType1&lt;/arg&gt;&lt;/initMethod&gt;<br />    &lt;initMethod name=&quot;add&quot;&gt;&lt;arg&gt;interType2&lt;/arg&gt;&lt;/initMethod&gt;<br />    &lt;initMethod name=&quot;add&quot;&gt;&lt;arg&gt;interType3&lt;/arg&gt;&lt;/initMethod&gt;<br />&lt;/component&gt;
+&lt;component ...&gt;
+    &lt;interType&gt;chain&lt;/interType&gt;
+&lt;/component&gt;
+&lt;component ...&gt;
+    &lt;interType&gt;chain&lt;/interType&gt;
+&lt;/component&gt;</pre>
+
+      </subsection>
+
+      <subsection name="独自実装によるInterType">
+        <h4>説明</h4>
+        <p>独自にInterTypeを作成する場合は、次のインターフェースまたは、抽象クラスを実装します。</p>
+        <dl>
+          <dt style="text-indent:1em;">org.seasar.framework.aop.InterType</dt>
+          <dt style="text-indent:1em;">org.seasar.framework.aop.intertype.AbstractInterType</dt>
+        </dl>
+        <p>InterTypeを実装するクラスは、以下のメソッドを実装します。</p>
+        <dl>
+          <dt style="text-indent:1em;">public void introduce(Class targetClass, CtClass enhancedClass)</dt>
+        </dl>
+        <p>
+          targetClassはInterTypeが適用されるクラスです。enhancedClassはInterTypeを組み込むクラスで、先に登録されているInterceptorやInterTypeが適用済みの場合もあります。<br />
+          CtClassの詳細は<a href="http://jboss.com/products/javassist">Javassist</a>の<a href="http://www.smg.co.jp/seminar/techsquare/javassist01.html">チュートリアル</a>や<a href="http://www.csg.is.titech.ac.jp/~chiba/javassist/html/">JavaDoc</a>を参照してください。
+        </p>
+
+        <p>AbstractInterTypeは、InterTypeをimplementsした抽象クラスです。AbstractInterTyeのサブクラスは次のメソッドを実装します。</p>
+        <dl>
+          <dt style="text-indent:1em;">public void introduce() trhows CannotCompileException, NotFoundException</dt>
+        </dl>
+        <p>AbstractInterTypeのサブクラスは、次のメソッドで必要なオブジェクトを取得することができます。</p>
+        <dl>
+          <dt style="text-indent:1em;">protected Class getTargetClass()</dt>
+          <dt style="text-indent:1em;">protected CtClass getEnhancedClass()</dt>
+          <dt style="text-indent:1em;">protected ClassPool getClassPool()</dt>
+        </dl>
+        <p>AbstractInterTypeは、フィールドやメソッド，実装するインタフェースを追加するためのユーティリティメソッドを提供します。以下はその一部です。</p>
+        <dl>
+          <dt style="text-indent:1em;">protected void addField(Class type, String name)</dt>
+          <dt style="text-indent:1em;">protected void addField(Class type, String name, String init)</dt>
+          <dt style="text-indent:1em;">protected void addStaticField(Class type, String name)</dt>
+          <dt style="text-indent:1em;">protected void addStaticField(Class type, String name, String init)</dt>
+          <dt style="text-indent:1em;">protected void addMethod(String name, String src)</dt>
+          <dt style="text-indent:1em;">protected void addMethod(Class returnType, String name, String src)</dt>
+          <dt style="text-indent:1em;">protected void addMethod(String name, Class[] paramTypes, String src)</dt>
+          <dt style="text-indent:1em;">protected void addMethod(Class returnType, String name, Class[] paramTypes, String src)</dt>
+          <dt style="text-indent:1em;">protected void addStaticMethod(String name, String src)</dt>
+          <dt style="text-indent:1em;">protected void addStaticMethod(Class returnType, String name, String src)</dt>
+          <dt style="text-indent:1em;">protected void addStaticMethod(String name, Class[] paramTypes, String src)</dt>
+          <dt style="text-indent:1em;">protected void addStaticMethod(Class returnType, String name, Class[] paramTypes, String src)</dt>
+        </dl>
+      </subsection>
+
+      <subsection name="diconファイルを使用しないでアスペクトを組み込む方法">
+        <p>diconファイルの設定を行わずプログラム上でアスペクトを組み込むこともできます。作成方法は次のようになります。</p>
+        <ul>
+          <li>org.seasar.framework.aop.impl.PointcutImplのコンストラクタの引数で対象となるメソッド名を指定(複数可)します。java.util.HashMapのようにインターフェースを実装しているなら、new PointcutImpl(HashMap.class)のようにクラスを指定することで、そのクラスが実装しているインターフェースのメソッドをすべて自動的に適用させることもできます。</li>
+          <li>org.seasar.framework.aop.impl.AspectImplのコンストラクタの第1引数にInterceptorを指定して、第2引数にPointcutImplで作成したPointcutを指定します。</li>
+          <li>org.seasar.framework.aop.proxy.AopProxyのコンストラクタで、対象となるクラスとAspectImplで作成したAspectの配列を指定します。</li>
+          <li>org.seasar.framework.aop.proxy.AopProxy#create()でAspectが適用されたオブジェクトを取得できます。</li>
+        </ul>
+        <p>java.util.DateクラスにTraceInterceptorをプログラム上で適用する場合は、次のようになります。対象となるメソッドはgetTime()とします。</p>
+        <pre>Pointcut pointcut = new PointcutImpl(new String[]{"getTime"});
+Aspect aspect = new AspectImpl(new TraceInterceptor(), pointcut);
+AopProxy aopProxy = new AopProxy(Date.class, new Aspect[]{aspect});
+Date proxy = (Date) aopProxy.create();
+proxy.getTime();</pre>
+      </subsection>
+    </section>
+
+    <section name="Example">
+      TODO
+    </section>
+
+  </body>
+</document>

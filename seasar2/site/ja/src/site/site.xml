@@ -35,6 +35,8 @@
       <item name="Top" href="index.html"/>
       <item name="Setup" href="setup.html"/>
       <item name="DI Container" href="di_container.html"/>
+      <item name="EJB3.0 Simplified API" href="ejb3.html"/>
+      <item name="AOP" href="aop.html"/>
     </menu>
     ${reports}
   </body>
