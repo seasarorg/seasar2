@@ -154,6 +154,26 @@
       </roles>
       <timezone>+9</timezone>
     </developer>
+    <developer>
+      <id>maeno</id>
+      <name></name>
+      <email></email>
+      <url></url>
+      <roles>
+        <role>Javadoc</role>
+      </roles>
+      <timezone>+9</timezone>
+    </developer>
+    <developer>
+      <id>nomadmonad</id>
+      <name></name>
+      <email></email>
+      <url></url>
+      <roles>
+        <role>Javadoc</role>
+      </roles>
+      <timezone>+9</timezone>
+    </developer>
   </developers>
   <contributors>
     <contributor>
