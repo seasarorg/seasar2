@@ -208,14 +208,6 @@
             <updateReleaseInfo>true</updateReleaseInfo>
           </configuration>
         </plugin>
-        <plugin>
-          <artifactId>maven-site-plugin</artifactId>
-          <configuration>
-            <locales>en,ja</locales>
-            <inputEncoding>UTF-8</inputEncoding>
-            <outputEncoding>UTF-8</outputEncoding>
-          </configuration>
-        </plugin>
       </plugins>
     </pluginManagement>
     <plugins>
@@ -262,6 +254,8 @@
     <module>s2-framework</module>
     <module>s2-extension</module>
     <module>examples</module>
+    <module>site/en</module>
+    <module>site/ja</module>
   </modules>
   <repositories>
     <repository>
