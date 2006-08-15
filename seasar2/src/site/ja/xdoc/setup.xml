@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+  <properties>
+    <title>aaaaa</title>
+    <author email="aaa@aaaaa">bbbbb</author>
+  </properties>
+  <body>
+    <section name="REQUIREMENT">
+      <p>
+        日本語のsetup.htmlです。
+        
+S2 requires JDK1.4 or JDK1.5 to run.
+      </p>
+    </section>
+
+    <section name="SETUP">
+      <p>
+<ul>
+<li>Download S2xxx.zip, and Unzip it!</li>
+<li>Import seasar2 directory as an existing project to Eclipse.</li>
+<ul>
+<li>Select menu 'File -> Import... -> Existing Project into workspace'</li>
+</ul>
+</ul>
+      </p>
+    </section>
+
+    <section name="CLASSPATH">
+<p>For using the basic function of Seasar2(S2Container, S2AOP), you need to include the following files in CLASSPATH.</p>
+<ul>
+<li>lib/aopalliance-1.0.jar</li>
+<li>lib/commons-logging-1.0.4.jar</li>
+<li>lib/geronimo-j2ee_1.4_spec-1.0.jar (refer to below)</li>
+<li>lib/javassist-3.0.jar</li>
+<li>lib/ognl-2.6.5.jar</li>
+<li>lib/s2-framework-2.x.x.jar</li>
+<li>lib/log4j-1.2.8.jar (optional)</li>
+<li>resources/log4j.properties (optional)</li>
+<li>resources/aop.dicon (optional)</li>
+</ul>
+
+<p>For using the extended function of Seasar2(S2JTA, S2DBCP, S2JDBC, S2Unit, S2Tx, and S2DataSet), you need to include the following files in CLASSPATH.</p>
+<ul>
+<li>lib/junit-3.8.1.jar</li>
+<li>lib/poi-2.5-final-20040804.jar</li>
+<li>lib/s2-extension-2.x.x.jar</li>
+<li>lib/geronimo-jta_1.0.1B_spec-1.0.jar (refer to below)</li>
+<li>lib/geronimo-ejb_2.1_spec-1.0.jar (refer to below)</li>
+<li>resources/jdbc.dicon</li>
+</ul>
+
+<p>Selects geronimo-j2ee_1.4_spec-1.0.jar, geronimo-jta_1.0.1B_spec-1.0.jar or geronimo-ejb_2.1_spec-1.0.jar responding to the application evnironment.
+<table border="1">
+<tr><th>environment</th><th>geronimo-j2ee_1.4_spec-1.0.jar</th><th>geronimo-jta_1.0.1B_spec-1.0.jar</th><th>geronimo-ejb_2.1_spec-1.0.jar</th></tr>
+<tr align="center"><td>Servlet Container not implementing J2EE full spec<br />(Tomcat etc.)</td><td>unnecessary</td><td>necessary<br />(using S2JTA,S2Tx)</td><td>necessary<br />(using S2Tiger)</td></tr>
+<tr align="center"><td>Application Server implementing J2EE full spec<br />(JBoss, WebSphere, WebLogic etc)</td><td>unnecessary</td><td>unnecessary</td><td>unnecessary</td></tr>
+<tr align="center"><td>Standalone</td><td>necessary</td><td>unnecessary</td><td>unnecessary</td></tr>
+</table>
+<br />
+</p>
+
+<p>HSQLDB is included so that you can try the function of a database easily.
+You need to <a href="dbcp.html#Setup">configurate XADataSourceImpl</a> in jdbc.dicon in accordance with your environment.</p>
+
+<p>Let's try <a href="http://www.seasar.org/en/updates.html">Kijimuna Eclipse Plugin for S2Container</a>.</p>
+
+<p>Using EJB3 Annotation, the operations are as follows.</p>
+<ul>
+<li>Download S2Tigerxxx.zip, and Unzip it!</li>
+<li>Import s2-tiger directory as an existing project to Eclipse.</li>
+<ul>
+<li>Select menu 'File -> Import... -> Existing Project into workspace'</li>
+</ul>
+<li>Add following jar file to CLASSPATH.
+<ul>
+<li>lib/s2-tiger-x.x.x.jar</li>
+<li>src/examples/resources/jndi.properties</li>
+</ul>
+</li>
+</ul>
+
+<p>Using Tiger Annotation, the operations are as follows.</p>
+<ul>
+<li>Download S2Tigerxxx.zip, and Unzip it!</li>
+<li>Import s2-tiger directory as an existing project to Eclipse.</li>
+<ul>
+<li>Select menu 'File -> Import... -> Existing Project into workspace'</li>
+</ul>
+<li>Add following jar file to CLASSPATH.
+<ul>
+<li>lib/s2-tiger-x.x.x.jar</li>
+</ul>
+</li>
+</ul>
+
+<p>Using Backport175 Annotation, the operations are as follows.</p>
+<ul>
+<li>Download S2Backport175xxx.zip, and Unzip it!</li>
+<li>Import s2-backport175 directory as an existing project to Eclipse.</li>
+<ul>
+<li>Select menu 'File -> Import... -> Existing Project into workspace'</li>
+</ul>
+<li>Add following jar file to CLASSPATH.
+<ul>
+<li>lib/s2-backport175-x.x.x.jar</li>
+<li>lib/backport175-x.x.jar</li>
+</ul>
+</li>
+</ul>
+    </section>
+
+  </body>
+</document>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+  <properties>
+    <title>aaaaa</title>
+    <author email="aaa@aaaaa">bbbbb</author>
+  </properties>
+  <body>
+    <section name="Welcome to Seasar2">
+      <p>
+        日本語のindex.htmlです
+      </p>
+    </section>
+  </body>
+</document>
