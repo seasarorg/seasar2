@@ -65,10 +65,11 @@ public class ClassLoaderAwareTraceInterceptor extends AbstractInterceptor {
             cause = t;
         }
         logger.debug("END " + buf);
-        if (cause == null) {
-            return ret;
+        if (cause != null) {
+            throw cause;
+            
         }
-        throw cause;
+        return ret;
     }
 
 }
