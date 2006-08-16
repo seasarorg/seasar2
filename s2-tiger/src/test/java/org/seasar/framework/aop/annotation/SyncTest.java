@@ -28,7 +28,6 @@ import org.seasar.framework.container.impl.S2ContainerImpl;
 
 /**
  * @author koichik
- * 
  */
 public class SyncTest extends TestCase {
 
@@ -62,6 +61,7 @@ public class SyncTest extends TestCase {
         });
 
         t1.start();
+        Thread.yield();
         t2.start();
         t1.join();
         t2.join();
