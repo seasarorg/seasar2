@@ -274,7 +274,6 @@
     <module>s2-framework</module>
     <module>s2-extension</module>
     <module>examples</module>
-    <module>site/ja</module>
   </modules>
   <repositories>
     <repository>
