@@ -115,4 +115,13 @@ public class ClassUtilTest extends TestCase {
         assertEquals("1", "org/seasar/framework/util/ClassUtilTest.class",
                 ClassUtil.getResourcePath(getClass()));
     }
+
+    public void testSplitPackageAndShortClassName() {
+        String[] ret = ClassUtil.splitPackageAndShortClassName("aaa.Hoge");
+        assertEquals("aaa", ret[0]);
+        assertEquals("Hoge", ret[1]);
+        ret = ClassUtil.splitPackageAndShortClassName("Hoge");
+        assertNull(ret[0]);
+        assertEquals("Hoge", ret[1]);
+    }
 }

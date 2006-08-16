@@ -197,13 +197,25 @@ public final class ClassUtil {
     public static String getShortClassName(Class clazz) {
         return getShortClassName(clazz.getName());
     }
-    
+
     public static String getShortClassName(String className) {
         int i = className.lastIndexOf('.');
         if (i > 0) {
             return className.substring(i + 1);
         }
         return className;
+    }
+
+    public static String[] splitPackageAndShortClassName(String className) {
+        String[] ret = new String[2];
+        int i = className.lastIndexOf('.');
+        if (i > 0) {
+            ret[0] = className.substring(0, i);
+            ret[1] = className.substring(i + 1);
+        } else {
+            ret[1] = className;
+        }
+        return ret;
     }
 
     public static String getSimpleClassName(final Class clazz) {

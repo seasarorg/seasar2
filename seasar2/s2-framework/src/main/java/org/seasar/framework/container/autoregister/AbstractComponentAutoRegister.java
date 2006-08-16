@@ -20,7 +20,6 @@ import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.InstanceDef;
 import org.seasar.framework.container.factory.AnnotationHandler;
 import org.seasar.framework.container.factory.AnnotationHandlerFactory;
-import org.seasar.framework.convention.NamingConvention;
 import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.ClassTraversal.ClassHandler;
 
@@ -33,9 +32,7 @@ public abstract class AbstractComponentAutoRegister extends
 
     protected static final String CLASS_SUFFIX = ".class";
 
-    public static final String namingConvention_BINDING = "bindingType=must";
-
-    private NamingConvention namingConvention;
+    private AutoNaming autoNaming = new DefaultAutoNaming();
 
     public static final String instanceDef_BINDING = "bindingType=may";
 
@@ -51,12 +48,12 @@ public abstract class AbstractComponentAutoRegister extends
 
     private ComponentCustomizer customizer;
 
-    public NamingConvention getNamingConvention() {
-        return namingConvention;
+    public AutoNaming getAutoNaming() {
+        return autoNaming;
     }
 
-    public void setNamingConvention(NamingConvention namingConvention) {
-        this.namingConvention = namingConvention;
+    public void setAutoNaming(AutoNaming autoNaming) {
+        this.autoNaming = autoNaming;
     }
 
     public InstanceDef getInstanceDef() {
@@ -112,8 +109,8 @@ public abstract class AbstractComponentAutoRegister extends
         final ComponentDef cd = annoHandler.createComponentDef(className,
                 instanceDef, autoBindingDef, externalBinding);
         if (cd.getComponentName() == null) {
-            cd.setComponentName(namingConvention
-                    .fromClassNameToComponentName(className));
+            String[] names = ClassUtil.splitPackageAndShortClassName(className);
+            cd.setComponentName(autoNaming.defineName(names[0], names[1]));
         }
         annoHandler.appendDI(cd);
         annoHandler.appendAspect(cd);

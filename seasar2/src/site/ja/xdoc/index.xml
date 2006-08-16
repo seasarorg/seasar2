@@ -1,13 +1,12 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <document>
   <properties>
-    <title>aaaaa</title>
-    <author email="aaa@aaaaa">bbbbb</author>
+    <title>Seasar2</title>
   </properties>
   <body>
     <section name="Welcome to Seasar2">
       <p>
-        日本語のindex.htmlです
+        Seasar2へようこそ。
       </p>
     </section>
   </body>
