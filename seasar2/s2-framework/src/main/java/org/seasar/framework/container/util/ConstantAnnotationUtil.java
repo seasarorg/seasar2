@@ -9,15 +9,17 @@
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, 
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
 package org.seasar.framework.container.util;
 
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.seasar.framework.util.ModifierUtil;
 import org.seasar.framework.util.StringUtil;
 
 /**
@@ -52,6 +54,11 @@ public class ConstantAnnotationUtil {
             }
         }
         return ret;
+    }
+
+    public static boolean isConstantAnnotation(Field field) {
+        return ModifierUtil.isPublicStaticFinalField(field)
+                && field.getType().equals(String.class);
     }
 
     public static class Tokenizer {

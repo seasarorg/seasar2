@@ -1,9 +1,12 @@
 package org.seasar.framework.container.util;
 
+import java.lang.reflect.Field;
 import java.util.Map;
 
 import junit.framework.TestCase;
 
+import org.seasar.framework.beans.BeanDesc;
+import org.seasar.framework.beans.factory.BeanDescFactory;
 import org.seasar.framework.container.util.ConstantAnnotationUtil.Tokenizer;
 
 public class ConstantAnnotationUtilTest extends TestCase {
@@ -76,4 +79,35 @@ public class ConstantAnnotationUtilTest extends TestCase {
         assertEquals("bbb", tokenizer.getStringValue());
         assertEquals(Tokenizer.TT_EOF, tokenizer.nextToken());
     }
+
+    public void testIsConstantAnnotation() throws Exception {
+        BeanDesc beanDesc = BeanDescFactory.getBeanDesc(Hoge.class);
+        Field f1 = beanDesc.getField("A");
+        assertFalse(ConstantAnnotationUtil.isConstantAnnotation(f1));
+
+        Field f2 = beanDesc.getField("B");
+        assertFalse(ConstantAnnotationUtil.isConstantAnnotation(f2));
+
+        Field f3 = beanDesc.getField("C");
+        assertFalse(ConstantAnnotationUtil.isConstantAnnotation(f3));
+
+        Field f4 = beanDesc.getField("D");
+        assertFalse(ConstantAnnotationUtil.isConstantAnnotation(f4));
+
+        Field f5 = beanDesc.getField("F");
+        assertTrue(ConstantAnnotationUtil.isConstantAnnotation(f5));
+    }
+
+    public static class Hoge {
+        public static String A = "A";
+
+        protected static final String B = "B";
+
+        public String C = "C";
+
+        public static final int D = 1;
+
+        public static final String F = "F";
+    }
+
 }
