@@ -29,9 +29,11 @@
 				<exclude name="**/ja/hotdeploy-demo/**"/>
 				<exclude name=".project"/>
 			</zipfileset>
+			<!--
 			<zipfileset prefix="seasar2/doc/ja" dir="s2-framework/target/site">
 				<include name="apidocs/**"/>
 			</zipfileset>
+			-->
 		</zip>
 	</target>
 
