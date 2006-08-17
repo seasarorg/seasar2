@@ -9,7 +9,7 @@
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, 
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
@@ -22,7 +22,7 @@ import org.seasar.framework.util.StringUtil;
 
 /**
  * @author higa
- * 
+ * @author shot
  */
 public class NamingConventionImpl implements NamingConvention {
 
@@ -54,6 +54,8 @@ public class NamingConventionImpl implements NamingConvention {
 
     private String validatorSuffix = "Validator";
 
+    private String converterSuffix = "Converter";
+
     private String dtoSuffix = "Dto";
 
     private String webPackageName = "web";
@@ -73,6 +75,8 @@ public class NamingConventionImpl implements NamingConvention {
     private String interceptorPackageName = "interceptor";
 
     private String validatorPackageName = "validator";
+
+    private String converterPackageName = "converter";
 
     private String helperPackageName = "helper";
 
@@ -360,4 +364,21 @@ public class NamingConventionImpl implements NamingConvention {
                 - actionSuffix.length())
                 + pageSuffix;
     }
+
+    public String getConverterSuffix() {
+        return converterSuffix;
+    }
+
+    public void setConverterSuffix(String converterSuffix) {
+        this.converterSuffix = converterSuffix;
+    }
+
+    public String getConverterPackageName() {
+        return converterPackageName;
+    }
+
+    public void setConverterPackage(String converterPackage) {
+        this.converterPackageName = converterPackage;
+    }
+
 }

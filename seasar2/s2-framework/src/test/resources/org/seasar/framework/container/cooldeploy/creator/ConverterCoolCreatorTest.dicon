@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE components PUBLIC "-//SEASAR2.1//DTD S2Container//EN"
+	"http://www.seasar.org/dtd/components21.dtd">
+<components namespace="child">
+	<component class="org.seasar.framework.convention.impl.NamingConventionImpl"/>
+	<component class="org.seasar.framework.container.cooldeploy.creator.ConverterCoolCreator"/>
+	<component name="project" class="org.seasar.framework.container.cooldeploy.impl.CoolProjectImpl">
+		<property name="rootPackageName">"org.seasar.framework.container.cooldeploy.creator"</property>
+	</component>
+	<component class="org.seasar.framework.container.cooldeploy.CoolComponentAutoRegister">
+		<initMethod name="addProject">
+			<arg>project</arg>
+		</initMethod>
+	</component>
+</components>

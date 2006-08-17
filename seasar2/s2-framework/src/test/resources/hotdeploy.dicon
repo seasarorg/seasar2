@@ -14,6 +14,7 @@
 	<component class="org.seasar.framework.container.hotdeploy.creator.ServiceOndemandCreator"/>
 	<component class="org.seasar.framework.container.hotdeploy.creator.InterceptorOndemandCreator"/>
 	<component class="org.seasar.framework.container.hotdeploy.creator.ValidatorOndemandCreator"/>
+	<component class="org.seasar.framework.container.hotdeploy.creator.ConverterOndemandCreator"/>
 	<component class="org.seasar.framework.container.hotdeploy.OndemandBehavior">
 		<initMethod name="addProject">
 			<arg>
