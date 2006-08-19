@@ -4,6 +4,8 @@
 <components namespace="aop">
 	<component name="traceInterceptor"
 		class="org.seasar.framework.aop.interceptors.TraceInterceptor"/>
+	<component name="simpleTraceInterceptor"
+		class="org.seasar.framework.aop.interceptors.SimpleTraceInterceptor"/>
 	<component name="syncInterceptor"
 		class="org.seasar.framework.aop.interceptors.SyncInterceptor"/>
 	<component name="traceThrowsInterceptor"
