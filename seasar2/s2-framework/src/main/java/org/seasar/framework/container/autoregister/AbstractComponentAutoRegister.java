@@ -32,6 +32,8 @@ public abstract class AbstractComponentAutoRegister extends
 
     protected static final String CLASS_SUFFIX = ".class";
 
+    public static final String autoNaming_BINDING = "bindingType=may";
+
     private AutoNaming autoNaming = new DefaultAutoNaming();
 
     public static final String instanceDef_BINDING = "bindingType=may";
