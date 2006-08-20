@@ -53,6 +53,13 @@ public class TraceInterceptorTest extends TestCase {
         }
     }
 
+    public void testToString() throws Exception {
+        assertEquals("null", TraceInterceptor.toString(null));
+        assertEquals("[abc]", TraceInterceptor.toString(new Object[] { "abc" }));
+        assertEquals("[abc, [1]]", TraceInterceptor.toString(new Object[] {
+                "abc", new Object[] { "1" } }));
+    }
+
     public static class ThrowError {
         public void hoge() {
             throw new RuntimeException("hoge");

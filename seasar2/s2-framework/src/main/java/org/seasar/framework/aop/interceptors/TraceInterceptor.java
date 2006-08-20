@@ -15,6 +15,8 @@
  */
 package org.seasar.framework.aop.interceptors;
 
+import java.lang.reflect.Array;
+
 import org.aopalliance.intercept.MethodInvocation;
 import org.seasar.framework.log.Logger;
 
@@ -60,5 +62,25 @@ public class TraceInterceptor extends AbstractInterceptor {
             return ret;
         }
         throw cause;
+    }
+
+    protected static String toString(Object arg) {
+        if (arg == null) {
+            return "null";
+        }
+        if (arg.getClass().isArray()) {
+            StringBuffer buf = new StringBuffer(100);
+            buf.append("[");
+            int size = Array.getLength(arg);
+            for (int i = 0; i < size; ++i) {
+                buf.append(toString(Array.get(arg, i)));
+                buf.append(", ");
+            }
+            buf.setLength(buf.length() - 2);
+            buf.append("]");
+            return buf.toString();
+        } else {
+            return arg.toString();
+        }
     }
 }
