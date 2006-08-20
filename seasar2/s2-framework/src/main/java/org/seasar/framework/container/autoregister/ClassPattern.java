@@ -67,7 +67,12 @@ public class ClassPattern {
     }
 
     public boolean isAppliedPackageName(String pName) {
-        return pName == null ? packageName == null : pName
-                .startsWith(packageName);
+        if (!StringUtil.isEmpty(pName) && !StringUtil.isEmpty(packageName)) {
+            return pName.startsWith(packageName);
+        }
+        if (StringUtil.isEmpty(pName) && StringUtil.isEmpty(packageName)) {
+            return true;
+        }
+        return false;
     }
 }
