@@ -232,7 +232,7 @@ public final class ClassUtil {
         if (s1 != null && s2 == null) {
             return s1;
         }
-        if (s1 == null && s2 != null) {
+        if (StringUtil.isEmpty(s1) && s2 != null) {
             return s2;
         }
         return s1 + '.' + s2;

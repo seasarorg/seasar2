@@ -104,7 +104,7 @@ public class Env {
     }
 
     protected static void clearValue() {
-        value = null;
+        value = TextUtil.readUTF8(filePath);
         lastModified = 0;
     }
 }

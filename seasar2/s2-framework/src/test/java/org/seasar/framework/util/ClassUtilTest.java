@@ -108,6 +108,7 @@ public class ClassUtilTest extends TestCase {
         assertEquals("aaa.bbb", ClassUtil.concatName("aaa", "bbb"));
         assertEquals("aaa", ClassUtil.concatName("aaa", null));
         assertEquals("bbb", ClassUtil.concatName(null, "bbb"));
+        assertEquals("bbb", ClassUtil.concatName("", "bbb"));
         assertNull(ClassUtil.concatName(null, null));
     }
 
