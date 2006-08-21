@@ -51,8 +51,8 @@ public class MapConversionDxoCommand implements DxoCommand {
     protected Converter converter;
 
     static {
-        OgnlRuntime.setPropertyAccessor(EntityHolder.class,
-                new EntityPropertyAccessor());
+        OgnlRuntime.setPropertyAccessor(BeanContext.class,
+                new BeanPropertyAccessor());
     }
 
     public MapConversionDxoCommand(final String expression, final Method method) {
@@ -163,34 +163,33 @@ public class MapConversionDxoCommand implements DxoCommand {
         }
     }
 
-    public static class EntityHolder {
-        protected Object entity;
+    public static class BeanContext {
+        protected Object bean;
 
         protected BeanDesc beanDesc;
 
-        public EntityHolder(final Object entity) {
-            this.entity = entity;
-            this.beanDesc = BeanDescFactory.getBeanDesc(entity.getClass());
+        public BeanContext(final Object bean) {
+            this.bean = bean;
+            this.beanDesc = BeanDescFactory.getBeanDesc(bean.getClass());
         }
 
         public Object getValue(final String propertyName) {
             final PropertyDesc propertyDesc = beanDesc
                     .getPropertyDesc(propertyName);
             if (!propertyDesc.hasReadMethod()) {
-                throw new PropertyNotFoundRuntimeException(entity.getClass(),
+                throw new PropertyNotFoundRuntimeException(bean.getClass(),
                         propertyName);
             }
-            return propertyDesc.getValue(entity);
+            return propertyDesc.getValue(bean);
         }
     }
 
-    public static class EntityPropertyAccessor implements PropertyAccessor {
-
+    public static class BeanPropertyAccessor implements PropertyAccessor {
         public Object getProperty(final Map context, final Object target,
                 final Object name) throws OgnlException {
-            final EntityHolder entityHolder = (EntityHolder) target;
+            final BeanContext beanContext = (BeanContext) target;
             try {
-                return entityHolder.getValue(name.toString());
+                return beanContext.getValue(name.toString());
             } catch (final PropertyNotFoundRuntimeException e) {
                 throw new OgnlException(name.toString(), e);
             }
@@ -200,6 +199,6 @@ public class MapConversionDxoCommand implements DxoCommand {
                 final Object name, final Object value) throws OgnlException {
             throw new OgnlException(name.toString());
         }
-
     }
+
 }
