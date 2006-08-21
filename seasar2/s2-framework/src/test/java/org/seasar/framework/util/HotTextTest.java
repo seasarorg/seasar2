@@ -35,6 +35,13 @@ public class HotTextTest extends TestCase {
         assertEquals("あ", text.getValue());
     }
 
+    public void testSetValueAndGetValue() throws Exception {
+        HotText text = new HotText();
+        text.setValue("aaa");
+        assertEquals("aaa", text.getValue());
+        assertFalse(text.isModified());
+    }
+
     public void testIsModified() throws Exception {
         HotText text = new HotText(PATH);
         assertFalse(text.isModified());

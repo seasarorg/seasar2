@@ -33,6 +33,9 @@ public class HotText {
 
     private long lastModified;
 
+    public HotText() {
+    }
+
     public HotText(String path) {
         setPath(path);
     }
@@ -41,7 +44,7 @@ public class HotText {
         return path;
     }
 
-    protected void setPath(String path) {
+    public void setPath(String path) {
         if (path == null) {
             throw new EmptyRuntimeException("path");
         }
@@ -59,6 +62,10 @@ public class HotText {
             updateValueByFile();
         }
         return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
     }
 
     public boolean isModified() {
