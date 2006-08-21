@@ -53,6 +53,16 @@ public class TraceInterceptorTest extends TestCase {
         }
     }
 
+    public void testIntercept_array() throws Exception {
+        TraceInterceptor interceptor = new TraceInterceptor();
+        Pointcut pointcut = new PointcutImpl(new String[] { "hoge" });
+        Aspect aspect = new AspectImpl(interceptor, pointcut);
+        AopProxy aopProxy = new AopProxy(ArrayHoge.class,
+                new Aspect[] { aspect });
+        ArrayHoge proxy = (ArrayHoge) aopProxy.create();
+        proxy.hoge(new String[] { "111" });
+    }
+
     public void testToString() throws Exception {
         assertEquals("null", TraceInterceptor.toString(null));
         assertEquals("[abc]", TraceInterceptor.toString(new Object[] { "abc" }));
@@ -63,6 +73,12 @@ public class TraceInterceptorTest extends TestCase {
     public static class ThrowError {
         public void hoge() {
             throw new RuntimeException("hoge");
+        }
+    }
+
+    public static class ArrayHoge {
+        public String[] hoge(String[] arg) {
+            return new String[] { "aaa", "bbb" };
         }
     }
 }
