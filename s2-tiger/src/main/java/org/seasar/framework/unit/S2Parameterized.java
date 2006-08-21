@@ -26,14 +26,13 @@ import java.util.Collection;
 
 import org.junit.internal.runners.CompositeRunner;
 import org.junit.internal.runners.MethodValidator;
-import org.junit.internal.runners.TestClassRunner;
 import org.junit.runners.Parameterized.Parameters;
 
 /**
  * @author taedium
  * 
  */
-public class S2Parameterized extends TestClassRunner {
+public class S2Parameterized extends S2TestClassRunner {
 
     private static class TestClassRunnerForParameters extends
             S2TestClassMethodsRunner {
@@ -43,8 +42,8 @@ public class S2Parameterized extends TestClassRunner {
 
         private final Constructor constructor;
 
-        private TestClassRunnerForParameters(Class<?> klass,
-                Object[] parameters, int i) {
+        private TestClassRunnerForParameters(final Class<?> klass,
+                final Object[] parameters, int i) {
             super(klass);
             this.parameters = parameters;
             this.parameterSetNumber = i;
@@ -68,7 +67,7 @@ public class S2Parameterized extends TestClassRunner {
         }
 
         private Constructor getOnlyConstructor() {
-            Constructor[] constructors = getTestClass().getConstructors();
+            final Constructor[] constructors = getTestClass().getConstructors();
             assertEquals(1, constructors.length);
             return constructors[0];
         }
@@ -77,7 +76,7 @@ public class S2Parameterized extends TestClassRunner {
     public static class RunAllParameterMethods extends CompositeRunner {
         private final Class<?> klass;
 
-        public RunAllParameterMethods(Class<?> klass) throws Exception {
+        public RunAllParameterMethods(final Class<?> klass) throws Exception {
             super(klass.getName());
             this.klass = klass;
             int i = 0;
@@ -95,10 +94,10 @@ public class S2Parameterized extends TestClassRunner {
         }
 
         private Method getParametersMethod() throws Exception {
-            for (Method each : klass.getMethods()) {
+            for (final Method each : klass.getMethods()) {
                 if (Modifier.isStatic(each.getModifiers())) {
-                    Annotation[] annotations = each.getAnnotations();
-                    for (Annotation annotation : annotations) {
+                    final Annotation[] annotations = each.getAnnotations();
+                    for (final Annotation annotation : annotations) {
                         if (annotation.annotationType() == Parameters.class)
                             return each;
                     }
@@ -114,7 +113,7 @@ public class S2Parameterized extends TestClassRunner {
     }
 
     @Override
-    protected void validate(MethodValidator methodValidator) {
+    protected void validate(final MethodValidator methodValidator) {
         methodValidator.validateStaticMethods();
         methodValidator.validateInstanceMethods();
     }

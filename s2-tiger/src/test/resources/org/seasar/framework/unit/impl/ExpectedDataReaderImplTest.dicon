@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN"
+	"http://www.seasar.org/dtd/components24.dtd">
+<components>
+	<component class="org.seasar.framework.unit.impl.ExpectedDataReaderImplTest$SubExpectedDataReaderImpl">
+		<initMethod name="addExpectedDataXlsPath">
+			<arg>"notExist"</arg>
+		</initMethod>	
+		<initMethod name="addExpectedDataXlsPath">
+			<arg>context.testClassShortName + "_" + context.testMethodName + ".xls"</arg>
+		</initMethod>	
+    </component>
+	
+	<component name="context" class="org.seasar.framework.unit.TestContext">
+		<aspect>
+    		<component class="org.seasar.framework.aop.interceptors.MockInterceptor">
+        		<initMethod name="setReturnValue">
+        			<arg>"getTestClassPackagePath"</arg>
+        			<arg>"org/seasar/framework/unit/impl"</arg>
+        		</initMethod>
+        		<initMethod name="setReturnValue">
+        			<arg>"getTestClassShortName"</arg>
+        			<arg>"ExpectedDataReaderImplTest"</arg>
+        		</initMethod>
+        		<initMethod name="setReturnValue">
+        			<arg>"getTestMethodName"</arg>
+        			<arg>"foo"</arg>
+        		</initMethod>
+        	</component>
+    	</aspect>
+	</component>
+
+	<component class="org.seasar.framework.unit.DataAccessor">
+		<aspect>
+    		<component class="org.seasar.framework.aop.interceptors.MockInterceptor"/>
+    	</aspect>
+	</component>
+</components>

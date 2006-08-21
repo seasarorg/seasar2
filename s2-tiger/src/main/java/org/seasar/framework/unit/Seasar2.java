@@ -19,14 +19,14 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
-import org.junit.internal.runners.TestClassRunner;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.Parameterized.Parameters;
 import org.seasar.framework.container.S2Container;
-import org.seasar.framework.container.annotation.tiger.Component;
 import org.seasar.framework.container.factory.S2ContainerFactory;
+import org.seasar.framework.util.Disposable;
+import org.seasar.framework.util.DisposableUtil;
 import org.seasar.framework.util.ResourceUtil;
 
 /**
@@ -35,13 +35,13 @@ import org.seasar.framework.util.ResourceUtil;
  */
 public class Seasar2 extends Runner {
 
-    public static final String S2JUNIT4_CONFIG_KEY = "org.seasar.unit.s2junit4.config";
+    public static final String S2JUNIT4_CONFIG_KEY = "org.seasar.framework.unit.s2junit4.config";
 
-    public static final String S2JUNIT4_CONFIG_PATH = "s2junit4.dicon";
+    public static final String S2JUNIT4_CONFIG_PATH = "s2junit4config.dicon";
 
     protected static S2Container configurationContainer;
 
-    protected static Provider provider = new DefaultProvider();
+    protected static Provider provider;
 
     static {
         configure();
@@ -50,7 +50,11 @@ public class Seasar2 extends Runner {
     private final Runner delegate;
 
     public Seasar2(final Class<?> clazz) throws Exception {
-        delegate = getProvider().createTestClassRunner(clazz);
+        delegate = createTestClassRunner(clazz);
+    }
+
+    protected Runner createTestClassRunner(Class<?> clazz) throws Exception {
+        return getProvider().createTestClassRunner(clazz);
     }
 
     protected static Provider getProvider() {
@@ -68,6 +72,10 @@ public class Seasar2 extends Runner {
     }
 
     public static void configure(final String configFile) {
+        if (provider == null) {
+            provider = new DefaultProvider();
+        }
+
         if (ResourceUtil.isExist(configFile)) {
             configurationContainer = S2ContainerFactory.create(configFile);
             Configurator configurator;
@@ -78,9 +86,22 @@ public class Seasar2 extends Runner {
                 configurator = new DefaultConfigurator();
             }
             configurator.configure(configurationContainer);
-        } else {
-            new DefaultConfigurator().configure();
         }
+
+        DisposableUtil.add(new Disposable() {
+            public void dispose() {
+                Seasar2.dispose();
+                S2TestClassMethodsRunner.dispose();
+            }
+        });
+    }
+
+    public static void dispose() {
+        provider = null;
+        if (configurationContainer != null) {
+            configurationContainer.destroy();
+        }
+        configurationContainer = null;
     }
 
     public Description getDescription() {
@@ -97,19 +118,6 @@ public class Seasar2 extends Runner {
 
     public static class DefaultConfigurator implements Configurator {
 
-        public void configure() {
-            provider = new DefaultProvider();
-
-            final S2TestIntrospector introspector = new S2TestIntrospector();
-            introspector.init();
-            final S2TestClassMethodsRunner.DefaultProvider cmProvider = new S2TestClassMethodsRunner.DefaultProvider();
-            cmProvider.setTestIntrospector(introspector);
-            S2TestClassMethodsRunner.setProvider(cmProvider);
-            final S2TestMethodRunner.DefaultProvider mProvider = new S2TestMethodRunner.DefaultProvider();
-            mProvider.setTestIntrospector(introspector);
-            S2TestMethodRunner.setProvider(mProvider);
-        }
-
         public void configure(final S2Container configurationContainer) {
             if (configurationContainer.hasComponentDef(Provider.class)) {
                 provider = (Provider) configurationContainer
@@ -121,41 +129,13 @@ public class Seasar2 extends Runner {
                         .setProvider((S2TestClassMethodsRunner.Provider) configurationContainer
                                 .getComponent(S2TestClassMethodsRunner.Provider.class));
             }
-            if (configurationContainer
-                    .hasComponentDef(S2TestMethodRunner.Provider.class)) {
-                S2TestMethodRunner
-                        .setProvider((S2TestMethodRunner.Provider) configurationContainer
-                                .getComponent(S2TestMethodRunner.Provider.class));
-            }
-
-            TestIntrospector testIntrospector;
-            if (configurationContainer.hasComponentDef(TestIntrospector.class)) {
-                testIntrospector = (TestIntrospector) configurationContainer
-                        .getComponent(TestIntrospector.class);
-            } else {
-                final S2TestIntrospector s2TestIntrospector = new S2TestIntrospector();
-                s2TestIntrospector.init();
-                testIntrospector = s2TestIntrospector;
-            }
-
-            if (S2TestClassMethodsRunner.getProvider() instanceof S2TestClassMethodsRunner.DefaultProvider) {
-                final S2TestClassMethodsRunner.DefaultProvider dp = (S2TestClassMethodsRunner.DefaultProvider) S2TestClassMethodsRunner
-                        .getProvider();
-                dp.setTestIntrospector(testIntrospector);
-            }
-            if (S2TestMethodRunner.getProvider() instanceof S2TestMethodRunner.DefaultProvider) {
-                final S2TestMethodRunner.DefaultProvider dp = (S2TestMethodRunner.DefaultProvider) S2TestMethodRunner
-                        .getProvider();
-                dp.setTestIntrospector(testIntrospector);
-            }
         }
     }
 
     public interface Provider {
-        Runner createTestClassRunner(Class<?> clazzr) throws Exception;
+        Runner createTestClassRunner(Class<?> clazz) throws Exception;
     }
 
-    @Component
     public static class DefaultProvider implements Provider {
 
         public Runner createTestClassRunner(final Class<?> clazz)
@@ -164,7 +144,7 @@ public class Seasar2 extends Runner {
             if (hasParameterAnnotation(clazz)) {
                 return new S2Parameterized(clazz);
             }
-            return new TestClassRunner(clazz, new S2TestClassMethodsRunner(
+            return new S2TestClassRunner(clazz, new S2TestClassMethodsRunner(
                     clazz));
         }
 

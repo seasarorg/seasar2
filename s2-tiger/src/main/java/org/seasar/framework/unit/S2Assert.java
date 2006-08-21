@@ -15,23 +15,16 @@
  */
 package org.seasar.framework.unit;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import junit.framework.AssertionFailedError;
-
 import org.junit.Assert;
-import org.seasar.extension.dataset.ColumnType;
-import org.seasar.extension.dataset.DataRow;
 import org.seasar.extension.dataset.DataSet;
 import org.seasar.extension.dataset.DataTable;
-import org.seasar.extension.dataset.types.ColumnTypes;
-import org.seasar.extension.unit.BeanListReader;
-import org.seasar.extension.unit.BeanReader;
-import org.seasar.extension.unit.MapListReader;
-import org.seasar.extension.unit.MapReader;
+import org.seasar.extension.unit.S2TestCase;
+import org.seasar.framework.jpa.unit.EntityReader;
+import org.seasar.framework.jpa.unit.EntityReaderFactory;
 
 /**
  * @author taedium
@@ -39,113 +32,153 @@ import org.seasar.extension.unit.MapReader;
  */
 public class S2Assert extends Assert {
 
+    protected static S2TestCaseAdapter adapter = new S2TestCaseAdapter();
+
     protected S2Assert() {
     }
 
     public static void assertEquals(DataSet expected, DataSet actual) {
-        assertEquals(null, expected, actual);
+        adapter.assertEquals(null, expected, actual);
     }
 
     public static void assertEquals(String message, DataSet expected,
             DataSet actual) {
-        message = message == null ? "" : message;
-        assertEquals(message + ":TableSize", expected.getTableSize(), actual
-                .getTableSize());
-        for (int i = 0; i < expected.getTableSize(); ++i) {
-            assertEquals(message, expected.getTable(i), actual.getTable(i));
-        }
+
+        adapter.assertEquals(message, expected, actual);
     }
 
     public static void assertEquals(DataTable expected, DataTable actual) {
-        assertEquals(null, expected, actual);
+        adapter.assertEquals(null, expected, actual);
     }
 
     public static void assertEquals(String message, DataTable expected,
             DataTable actual) {
 
-        message = message == null ? "" : message;
-        message = message + ":TableName=" + expected.getTableName();
-        assertEquals(message + ":RowSize", expected.getRowSize(), actual
-                .getRowSize());
-        for (int i = 0; i < expected.getRowSize(); ++i) {
-            DataRow expectedRow = expected.getRow(i);
-            DataRow actualRow = actual.getRow(i);
-            List<String> errorMessages = new ArrayList<String>();
-            for (int j = 0; j < expected.getColumnSize(); ++j) {
-                try {
-                    String columnName = expected.getColumnName(j);
-                    Object expectedValue = expectedRow.getValue(columnName);
-                    ColumnType ct = ColumnTypes.getColumnType(expectedValue);
-                    Object actualValue = actualRow.getValue(columnName);
-                    if (!ct.equals(expectedValue, actualValue)) {
-                        assertEquals(message + ":Row=" + i + ":columnName="
-                                + columnName, expectedValue, actualValue);
-                    }
-                } catch (AssertionFailedError e) {
-                    errorMessages.add(e.getMessage());
-                }
-            }
-            if (!errorMessages.isEmpty()) {
-                fail(message + errorMessages);
-            }
-        }
+        adapter.assertEquals(message, expected, actual);
     }
 
     public static void assertEquals(DataSet expected, Object actual) {
-        assertEquals(null, expected, actual);
+        adapter.assertEquals(null, expected, actual);
     }
 
     public static void assertEquals(String message, DataSet expected,
             Object actual) {
-        if (expected == null || actual == null) {
-            Assert.assertEquals(message, expected, actual);
-            return;
-        }
-        if (actual instanceof List) {
-            List actualList = (List) actual;
-            Assert.assertFalse(actualList.isEmpty());
-            Object actualItem = actualList.get(0);
-            if (actualItem instanceof Map) {
-                assertMapListEquals(message, expected, actualList);
-            } else {
-                assertBeanListEquals(message, expected, actualList);
-            }
-        } else if (actual instanceof Object[]) {
-            assertEquals(message, expected, Arrays.asList((Object[]) actual));
-        } else {
-            if (actual instanceof Map) {
-                assertMapEquals(message, expected, (Map) actual);
-            } else {
-                assertBeanEquals(message, expected, actual);
-            }
-        }
+
+        adapter.assertEquals(message, expected, actual);
     }
 
-    public static void assertMapEquals(String message, DataSet expected, Map map) {
-
-        MapReader reader = new MapReader(map);
-        assertEquals(message, expected, reader.read());
+    public static void assertMapEquals(DataSet expected, Map<?, ?> map) {
+        adapter.assertMapEquals(null, expected, map);
     }
 
-    public static void assertMapListEquals(String message, DataSet expected,
-            List list) {
+    public static void assertMapEquals(String message, DataSet expected,
+            Map<?, ?> map) {
 
-        MapListReader reader = new MapListReader(list);
-        assertEquals(message, expected, reader.read());
+        adapter.assertMapEquals(message, expected, map);
+    }
+
+    public static void assertMapEquals(DataSet expected, List<Map<?, ?>> list) {
+        adapter.assertMapListEquals(null, expected, list);
+    }
+
+    public static void assertMapEquals(String message, DataSet expected,
+            List<Map<?, ?>> list) {
+
+        adapter.assertMapListEquals(message, expected, list);
+    }
+
+    public static void assertBeanEquals(DataSet expected, Object bean) {
+        adapter.assertBeanEquals(null, expected, bean);
     }
 
     public static void assertBeanEquals(String message, DataSet expected,
             Object bean) {
 
-        BeanReader reader = new BeanReader(bean);
-        assertEquals(message, expected, reader.read());
+        adapter.assertBeanEquals(message, expected, bean);
     }
 
-    public static void assertBeanListEquals(String message, DataSet expected,
-            List list) {
+    public static void assertBeanEquals(DataSet expected, List<?> list) {
 
-        BeanListReader reader = new BeanListReader(list);
-        assertEquals(message, expected, reader.read());
+        adapter.assertBeanListEquals(null, expected, list);
     }
+
+    public static void assertBeanEquals(String message, DataSet expected,
+            List<?> list) {
+
+        adapter.assertBeanListEquals(message, expected, list);
+    }
+
+    public static void assertEntityEquals(DataSet expected, Object entity) {
+        assertEntityEquals(null, expected, entity);
+    }
+
+    public static void assertEntityEquals(String message, DataSet expected,
+            Object entity) {
+
+        EntityReader reader = EntityReaderFactory.getEntityReader(entity);
+        assertEqualsIgnoreTableOrder(message, expected, reader.read());
+    }
+
+    public static void assertEntityEquals(DataSet expected,
+            Collection<?> entities) {
+
+        assertEntityEquals(null, expected, entities);
+    }
+
+    public static void assertEntityEquals(String message, DataSet expected,
+            Collection<?> entities) {
+
+        EntityReader reader = EntityReaderFactory.getEntityReader(entities);
+        assertEqualsIgnoreTableOrder(message, expected, reader.read());
+    }
+
+    public static void assertEqualsIgnoreTableOrder(DataSet expected,
+            DataSet actual) {
+
+        assertEqualsIgnoreTableOrder(null, expected, actual);
+    }
+
+    public static void assertEqualsIgnoreTableOrder(String message,
+            DataSet expected, DataSet actual) {
+
+        message = message == null ? "" : message;
+        for (int i = 0; i < expected.getTableSize(); ++i) {
+            final String tableName = expected.getTable(i).getTableName();
+            final String notFound = message + ":Table " + tableName
+                    + " was not found.";
+            assertTrue(notFound, actual.hasTable(tableName));
+            assertEquals(message, expected.getTable(i), actual
+                    .getTable(tableName));
+        }
+    }
+
+    protected static class S2TestCaseAdapter extends S2TestCase {
+
+        @Override
+        protected void assertMapEquals(String message, DataSet expected, Map map) {
+            super.assertMapEquals(message, expected, map);
+        }
+
+        @Override
+        protected void assertMapListEquals(String message, DataSet expected,
+                List list) {
+
+            super.assertMapListEquals(message, expected, list);
+        }
+
+        @Override
+        protected void assertBeanEquals(String message, DataSet expected,
+                Object bean) {
+
+            super.assertBeanEquals(message, expected, bean);
+        }
+
+        @Override
+        protected void assertBeanListEquals(String message, DataSet expected,
+                List list) {
+
+            super.assertBeanListEquals(message, expected, list);
+        }
+    };
 
 }

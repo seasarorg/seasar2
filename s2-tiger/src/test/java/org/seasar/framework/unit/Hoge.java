@@ -13,29 +13,18 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package examples.s2junit4;
+package org.seasar.framework.unit;
 
-import static org.seasar.framework.unit.S2Assert.assertEquals;
+import javax.ejb.EJB;
+import javax.ejb.Stateless;
 
-import org.junit.Ignore;
-import org.junit.runner.RunWith;
-import org.seasar.framework.unit.Seasar2;
-import org.seasar.framework.unit.TestContext;
+@Stateless
+public class Hoge implements IHoge {
 
-@RunWith(Seasar2.class)
-public class EmployeeDaoImplTest {
+    @EJB
+    private IFoo foo;
 
-    private TestContext ctx;
-
-    private EmployeeDao dao;
-
-    public void getEmployee() throws Exception {
-        Employee emp = dao.getEmployee(9900);
-        assertEquals("1", ctx.getExpected(), emp);
+    public String aaa() {
+        return foo.aaa();
     }
-
-    @Ignore("not implemented.")
-    public void getEmployeeByName() throws Exception {
-    }
-
 }

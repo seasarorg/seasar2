@@ -15,6 +15,8 @@
  */
 package org.seasar.framework.unit;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.Comparator;
@@ -32,7 +34,8 @@ import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
 import org.seasar.framework.container.annotation.tiger.Binding;
 import org.seasar.framework.container.annotation.tiger.BindingType;
-import org.seasar.framework.container.annotation.tiger.Component;
+import org.seasar.framework.unit.impl.ConventionTestIntrospector;
+import org.seasar.framework.util.tiger.ReflectionUtil;
 
 /**
  * @author taedium
@@ -41,37 +44,98 @@ import org.seasar.framework.container.annotation.tiger.Component;
 public class S2TestClassMethodsRunner extends Runner implements Filterable,
         Sortable {
 
-    protected static Provider provider = new DefaultProvider();
+    private static class FailedBefore extends Exception {
+        private static final long serialVersionUID = 1L;
+    }
+
+    protected static Provider provider;
 
     protected final List<Method> testMethods;
 
     protected final Class<?> testClass;
 
-    public S2TestClassMethodsRunner(Class<?> klass) {
-        testClass = klass;
-        testMethods = getProvider().getTestMethods(klass);
+    public S2TestClassMethodsRunner(final Class<?> clazz) {
+        testClass = clazz;
+        testMethods = getTestMethods();
+    }
+
+    public static void dispose() {
+        provider = null;
     }
 
     @Override
-    public void run(RunNotifier notifier) {
-        if (testMethods.isEmpty())
-            testAborted(notifier, getDescription());
-        for (Method method : testMethods) {
-            invokeTestMethod(method, notifier);
+    public void run(final RunNotifier notifier) {
+        try {
+            runBefores(notifier);
+            if (testMethods.isEmpty()) {
+                testAborted(notifier, getDescription());
+            }
+            for (final Method method : testMethods) {
+                invokeTestMethod(method, notifier);
+            }
+        } catch (final FailedBefore e) {
+        } finally {
+            runAfters(notifier);
         }
     }
 
-    protected void testAborted(RunNotifier notifier, Description description) {
+    protected void runBefores(final RunNotifier notifier) throws FailedBefore {
+        try {
+            final List<Method> befores = getBeforeClassMethods();
+            for (final Method before : befores)
+                before.invoke(null);
+        } catch (final InvocationTargetException e) {
+            addFailure(e.getTargetException(), notifier);
+            throw new FailedBefore();
+        } catch (final Throwable e) {
+            addFailure(e, notifier);
+            throw new FailedBefore();
+        }
+    }
+
+    protected void runAfters(final RunNotifier notifier) {
+        final List<Method> afters = getAfterClassMethods();
+        for (final Method after : afters)
+            try {
+                after.invoke(null);
+            } catch (final InvocationTargetException e) {
+                addFailure(e.getTargetException(), notifier);
+            } catch (final Throwable e) {
+                addFailure(e, notifier);
+            }
+    }
+
+    protected void addFailure(final Throwable targetException,
+            final RunNotifier notifier) {
+
+        final Failure failure = new Failure(getDescription(), targetException);
+        notifier.fireTestFailure(failure);
+    }
+
+    protected void testAborted(final RunNotifier notifier,
+            final Description description) {
         notifier.fireTestStarted(description);
         notifier.fireTestFailure(new Failure(description, new Exception(
                 "No runnable methods")));
         notifier.fireTestFinished(description);
     }
 
+    protected List<Method> getTestMethods() {
+        return getProvider().getTestMethods(testClass);
+    }
+
+    protected List<Method> getBeforeClassMethods() {
+        return getProvider().getBeforeClassMethods(testClass);
+    }
+
+    protected List<Method> getAfterClassMethods() {
+        return getProvider().getAfterClassMethods(testClass);
+    }
+
     @Override
     public Description getDescription() {
-        Description spec = Description.createSuiteDescription(getName());
-        for (Method method : testMethods)
+        final Description spec = Description.createSuiteDescription(getName());
+        for (final Method method : testMethods)
             spec.addChild(methodDescription(method));
         return spec;
     }
@@ -84,45 +148,49 @@ public class S2TestClassMethodsRunner extends Runner implements Filterable,
         return getTestClass().getConstructor().newInstance();
     }
 
-    protected void invokeTestMethod(Method method, RunNotifier notifier) {
+    protected void invokeTestMethod(final Method method,
+            final RunNotifier notifier) {
         Object test = null;
         try {
             test = createTest();
-        } catch (Exception e) {
+        } catch (final Exception e) {
             testAborted(notifier, methodDescription(method));
             return;
         }
         createMethodRunner(test, method, notifier).run();
     }
 
-    protected S2TestMethodRunner createMethodRunner(Object test, Method method,
-            RunNotifier notifier) {
-        return new S2TestMethodRunner(test, method, notifier,
+    protected S2TestMethodRunner createMethodRunner(final Object test,
+            final Method method, RunNotifier notifier) {
+
+        return getProvider().createMethodRunner(test, method, notifier,
                 methodDescription(method));
     }
 
-    protected String testName(Method method) {
+    protected String testName(final Method method) {
         return method.getName();
     }
 
-    protected Description methodDescription(Method method) {
+    protected Description methodDescription(final Method method) {
         return Description.createTestDescription(getTestClass(),
                 testName(method));
     }
 
-    public void filter(Filter filter) throws NoTestsRemainException {
-        for (Iterator iter = testMethods.iterator(); iter.hasNext();) {
-            Method method = (Method) iter.next();
-            if (!filter.shouldRun(methodDescription(method)))
+    public void filter(final Filter filter) throws NoTestsRemainException {
+        for (final Iterator iter = testMethods.iterator(); iter.hasNext();) {
+            final Method method = (Method) iter.next();
+            if (!filter.shouldRun(methodDescription(method))) {
                 iter.remove();
+            }
         }
-        if (testMethods.isEmpty())
+        if (testMethods.isEmpty()) {
             throw new NoTestsRemainException();
+        }
     }
 
     public void sort(final Sorter sorter) {
         Collections.sort(testMethods, new Comparator<Method>() {
-            public int compare(Method o1, Method o2) {
+            public int compare(final Method o1, final Method o2) {
                 return sorter.compare(methodDescription(o1),
                         methodDescription(o2));
             }
@@ -134,6 +202,9 @@ public class S2TestClassMethodsRunner extends Runner implements Filterable,
     }
 
     protected static Provider getProvider() {
+        if (provider == null) {
+            provider = new DefaultProvider();
+        }
         return provider;
     }
 
@@ -142,25 +213,65 @@ public class S2TestClassMethodsRunner extends Runner implements Filterable,
     }
 
     public interface Provider {
+
         List<Method> getTestMethods(Class<?> clazz);
+
+        List<Method> getBeforeClassMethods(Class<?> clazz);
+
+        List<Method> getAfterClassMethods(Class<?> clazz);
+
+        S2TestMethodRunner createMethodRunner(Object test, Method method,
+                RunNotifier notifier, Description description);
     }
 
-    @Component
     public static class DefaultProvider implements Provider {
 
-        private TestIntrospector testIntrospector;
+        protected S2TestIntrospector introspector;
 
-        public TestIntrospector getTestIntrospector() {
-            return testIntrospector;
+        protected Class<? extends S2TestMethodRunner> methodRunnerClass;
+
+        protected Constructor<? extends S2TestMethodRunner> constructor;
+
+        public DefaultProvider() {
+            final ConventionTestIntrospector conventionIntrospector = new ConventionTestIntrospector();
+            conventionIntrospector.init();
+            this.introspector = conventionIntrospector;
+            setTestMethodRunnerClass(S2TestMethodRunner.class);
         }
 
-        @Binding(bindingType = BindingType.MAY)
-        public void setTestIntrospector(TestIntrospector testIntrospector) {
-            this.testIntrospector = testIntrospector;
+        @Binding(bindingType = BindingType.MUST)
+        public void setTestIntrospector(final S2TestIntrospector introspector) {
+            this.introspector = introspector;
         }
 
-        public List<Method> getTestMethods(Class<?> clazz) {
-            return testIntrospector.getTestMethods(clazz);
+        @Binding(bindingType = BindingType.MUST)
+        public void setTestMethodRunnerClass(
+                final Class<? extends S2TestMethodRunner> methodRunnerClass) {
+
+            this.methodRunnerClass = methodRunnerClass;
+            this.constructor = ReflectionUtil.getConstructor(methodRunnerClass,
+                    Object.class, Method.class, RunNotifier.class,
+                    Description.class, S2TestIntrospector.class);
+        }
+
+        public List<Method> getTestMethods(final Class<?> clazz) {
+            return introspector.getTestMethods(clazz);
+        }
+
+        public List<Method> getBeforeClassMethods(final Class<?> clazz) {
+            return introspector.getBeforeClassMethods(clazz);
+        }
+
+        public List<Method> getAfterClassMethods(final Class<?> clazz) {
+            return introspector.getAfterClassMethods(clazz);
+        }
+
+        public S2TestMethodRunner createMethodRunner(final Object test,
+                final Method method, final RunNotifier notifier,
+                final Description description) {
+
+            return ReflectionUtil.newInstance(constructor, test, method,
+                    notifier, description, introspector);
         }
 
     }

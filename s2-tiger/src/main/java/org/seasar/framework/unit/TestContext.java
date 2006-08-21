@@ -15,33 +15,36 @@
  */
 package org.seasar.framework.unit;
 
-import java.lang.reflect.Method;
-import java.util.List;
+import org.seasar.extension.dataset.DataSet;
+import org.seasar.framework.container.ComponentDef;
 
 /**
  * @author taedium
  * 
  */
-public interface S2TestIntrospector {
+public interface TestContext {
 
-    List<Method> getTestMethods(Class<?> testClass);
+    void register(Class componentClass);
 
-    boolean isIgnored(Method method);
+    void register(Class componentClass, String componentName);
 
-    Class<? extends Throwable> expectedException(Method method);
+    void register(Object component);
 
-    long getTimeout(Method method);
+    void register(Object component, String componentName);
 
-    List<Method> getBeforeClassMethods(Class<?> testClass);
+    void register(ComponentDef componentDef);
 
-    List<Method> getAfterClassMethods(Class<?> testClass);
+    void include(String path);
 
-    List<Method> getBeforeMethods(Class<?> testClass);
+    void setAutoIncluding(boolean autoIncluding);
 
-    List<Method> getAfterMethods(Class<?> testClass);
+    void setAutoPreparing(boolean autoPreparing);
 
-    Method getEachBeforeMethod(Class<?> testClass, Method testMethod);
+    DataSet getExpected();
 
-    Method getEachAfterMethod(Class<?> testClass, Method testMethod);
+    String getTestClassPackagePath();
 
+    String getTestClassShortName();
+
+    String getTestMethodName();
 }

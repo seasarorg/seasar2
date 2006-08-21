@@ -13,29 +13,26 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package examples.s2junit4;
+package org.seasar.framework.unit;
 
-import static org.seasar.framework.unit.S2Assert.assertEquals;
+import org.junit.internal.runners.InitializationError;
+import org.junit.internal.runners.TestClassRunner;
+import org.junit.runner.Runner;
+import org.junit.runner.notification.RunNotifier;
 
-import org.junit.Ignore;
-import org.junit.runner.RunWith;
-import org.seasar.framework.unit.Seasar2;
-import org.seasar.framework.unit.TestContext;
+/**
+ * @author taedium
+ * 
+ */
+public class S2TestClassRunner extends TestClassRunner {
 
-@RunWith(Seasar2.class)
-public class EmployeeDaoImplTest {
-
-    private TestContext ctx;
-
-    private EmployeeDao dao;
-
-    public void getEmployee() throws Exception {
-        Employee emp = dao.getEmployee(9900);
-        assertEquals("1", ctx.getExpected(), emp);
+    public S2TestClassRunner(final Class<?> clazz, final Runner runner)
+            throws InitializationError {
+        super(clazz, runner);
     }
 
-    @Ignore("not implemented.")
-    public void getEmployeeByName() throws Exception {
+    @Override
+    public void run(final RunNotifier notifier) {
+        fEnclosedRunner.run(notifier);
     }
-
 }

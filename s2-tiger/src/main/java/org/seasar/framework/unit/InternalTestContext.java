@@ -17,20 +17,31 @@ package org.seasar.framework.unit;
 
 import java.lang.reflect.Method;
 
-import org.junit.runner.Description;
-import org.junit.runner.notification.RunNotifier;
+import org.seasar.framework.container.ComponentDef;
 
 /**
  * @author taedium
  * 
  */
-public interface TestMethod {
+public interface InternalTestContext extends TestContext {
 
-    Object getTest();
+    void setTestClass(Class<?> testClass);
 
-    Method getMethod();
+    void setTestMethod(Method testMethod);
 
-    RunNotifier getRunNotifier();
+    void initContainer();
 
-    Description getDescription();
+    void destroyContainer();
+
+    void prepareTestData();
+
+    <T> T getComponent(Class<T> componentKey);
+
+    Object getComponent(Object componentKey);
+
+    boolean hasComponentDef(Object componentKey);
+
+    ComponentDef getComponentDef(final int index);
+
+    ComponentDef getComponentDef(final Object componentKey);
 }

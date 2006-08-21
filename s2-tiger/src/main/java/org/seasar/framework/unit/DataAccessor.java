@@ -15,175 +15,43 @@
  */
 package org.seasar.framework.unit;
 
-import java.io.File;
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-
-import javax.sql.DataSource;
-
-import org.seasar.extension.dataset.DataColumn;
-import org.seasar.extension.dataset.DataReader;
 import org.seasar.extension.dataset.DataSet;
 import org.seasar.extension.dataset.DataTable;
-import org.seasar.extension.dataset.DataWriter;
-import org.seasar.extension.dataset.impl.DataSetImpl;
-import org.seasar.extension.dataset.impl.SqlDeleteTableWriter;
-import org.seasar.extension.dataset.impl.SqlReader;
-import org.seasar.extension.dataset.impl.SqlReloadReader;
-import org.seasar.extension.dataset.impl.SqlReloadTableReader;
-import org.seasar.extension.dataset.impl.SqlTableReader;
-import org.seasar.extension.dataset.impl.SqlWriter;
-import org.seasar.extension.dataset.impl.XlsReader;
-import org.seasar.extension.dataset.impl.XlsWriter;
-import org.seasar.extension.jdbc.UpdateHandler;
-import org.seasar.extension.jdbc.impl.BasicUpdateHandler;
-import org.seasar.extension.jdbc.util.ConnectionUtil;
-import org.seasar.extension.jdbc.util.DataSourceUtil;
-import org.seasar.framework.exception.EmptyRuntimeException;
-import org.seasar.framework.util.FileOutputStreamUtil;
-import org.seasar.framework.util.ResourceUtil;
 
 /**
  * @author taedium
  * 
  */
-public class DataAccessor {
+public interface DataAccessor {
 
-    private Class<?> testClass;
+    DataSet readXls(String path);
 
-    private DataSource dataSource;
+    void writeXls(String path, DataSet dataSet);
 
-    private Connection connection;
+    void writeDb(DataSet dataSet);
 
-    private DatabaseMetaData dbMetaData;
+    DataSet readDb(DataSet dataSet);
 
-    public DataAccessor(Class<?> testClass, DataSource dataSource) {
-        this.testClass = testClass;
-        this.dataSource = dataSource;
-    }
+    DataTable readDbByTable(String table);
 
-    public DataSource getDataSource() {
-        if (dataSource == null) {
-            throw new EmptyRuntimeException("dataSource");
-        }
-        return dataSource;
-    }
+    DataTable readDbByTable(String table, String condition);
 
-    public Connection getConnection() {
-        if (connection != null) {
-            return connection;
-        }
-        connection = DataSourceUtil.getConnection(getDataSource());
-        return connection;
-    }
+    DataTable readDbBySql(String sql, String tableName);
 
-    public DatabaseMetaData getDatabaseMetaData() {
-        if (dbMetaData != null) {
-            return dbMetaData;
-        }
-        dbMetaData = ConnectionUtil.getMetaData(getConnection());
-        return dbMetaData;
-    }
+    void readXlsWriteDb(String path);
 
-    public DataSet readXls(String path) {
-        DataReader reader = new XlsReader(convertPath(path));
-        return reader.read();
-    }
+    void readXlsReplaceDb(String path);
 
-    public void writeXls(String path, DataSet dataSet) {
-        File dir = ResourceUtil.getBuildDir(getClass());
-        File file = new File(dir, convertPath(path));
-        DataWriter writer = new XlsWriter(FileOutputStreamUtil.create(file));
-        writer.write(dataSet);
-    }
+    void readXlsAllReplaceDb(String path);
 
-    public void writeDb(DataSet dataSet) {
-        DataWriter writer = new SqlWriter(getDataSource());
-        writer.write(dataSet);
-    }
+    DataSet reload(DataSet dataSet);
 
-    public DataSet readDb(DataSet dataSet) {
-        SqlReader reader = new SqlReader(getDataSource());
-        reader.addDataSet(dataSet);
-        return reader.read();
-    }
+    DataTable reload(DataTable table);
 
-    public DataTable readDbByTable(String table) {
-        return readDbByTable(table, null);
-    }
+    DataSet reloadOrReadDb(DataSet dataSet);
 
-    public DataTable readDbByTable(String table, String condition) {
-        SqlTableReader reader = new SqlTableReader(getDataSource());
-        reader.setTable(table, condition);
-        return reader.read();
-    }
+    void deleteDb(DataSet dataSet);
 
-    public DataTable readDbBySql(String sql, String tableName) {
-        SqlTableReader reader = new SqlTableReader(getDataSource());
-        reader.setSql(sql, tableName);
-        return reader.read();
-    }
-
-    public void readXlsWriteDb(String path) {
-        writeDb(readXls(path));
-    }
-
-    public void readXlsReplaceDb(String path) {
-        DataSet dataSet = readXls(path);
-        deleteDb(dataSet);
-        writeDb(dataSet);
-    }
-
-    public void readXlsAllReplaceDb(String path) {
-        DataSet dataSet = readXls(path);
-        for (int i = dataSet.getTableSize() - 1; i >= 0; --i) {
-            deleteTable(dataSet.getTable(i).getTableName());
-        }
-        writeDb(dataSet);
-    }
-
-    public DataSet reload(DataSet dataSet) {
-        return new SqlReloadReader(getDataSource(), dataSet).read();
-    }
-
-    public DataTable reload(DataTable table) {
-        return new SqlReloadTableReader(getDataSource(), table).read();
-    }
-
-    public DataSet reloadOrReadDb(DataSet dataSet) {
-        DataSet newDataSet = new DataSetImpl();
-        outer: for (int i = 0; i < dataSet.getTableSize(); i++) {
-            DataTable table = dataSet.getTable(i);
-            if (!table.hasMetaData()) {
-                table.setupMetaData(getDatabaseMetaData());
-            }
-            for (int j = 0; i < table.getColumnSize(); j++) {
-                DataColumn column = table.getColumn(j);
-                if (column.isPrimaryKey()) {
-                    newDataSet.addTable(reload(table));
-                    continue outer;
-                }
-            }
-            newDataSet.addTable(readDbByTable(table.getTableName()));
-        }
-        return newDataSet;
-    }
-
-    public void deleteDb(DataSet dataSet) {
-        SqlDeleteTableWriter writer = new SqlDeleteTableWriter(getDataSource());
-        for (int i = dataSet.getTableSize() - 1; i >= 0; --i) {
-            writer.write(dataSet.getTable(i));
-        }
-    }
-
-    public void deleteTable(String tableName) {
-        UpdateHandler handler = new BasicUpdateHandler(getDataSource(),
-                "DELETE FROM " + tableName);
-        handler.execute(null);
-    }
-
-    protected String convertPath(String path) {
-        return ResourceUtil.convertPath(path, testClass);
-    }
+    void deleteTable(String tableName);
 
 }

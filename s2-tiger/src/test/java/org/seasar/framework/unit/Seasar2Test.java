@@ -15,17 +15,12 @@
  */
 package org.seasar.framework.unit;
 
-import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
-
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import javax.ejb.EJB;
 import javax.transaction.TransactionManager;
 
 import org.junit.After;
@@ -35,10 +30,13 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.internal.runners.TestClassRunner;
+import org.junit.runner.Description;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 import org.junit.runner.RunWith;
 import org.junit.runner.Runner;
+import org.junit.runner.notification.Failure;
+import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.Parameterized.Parameters;
 import org.seasar.extension.unit.S2TestCase;
 import org.seasar.framework.container.S2Container;
@@ -52,63 +50,93 @@ public class Seasar2Test extends S2TestCase {
 
     private static int count;
 
-    private static boolean active;
+    private static boolean txActive;
 
     public void setUp() {
         log = "";
         count = 0;
-        active = false;
-    }
-
-    public void tearDown() {
-        Seasar2.configurationContainer = null;
-        new Seasar2.DefaultConfigurator().configure();
+        txActive = false;
+        Seasar2.configure();
     }
 
     @RunWith(Seasar2.class)
-    public static class TestAnnotationTest {
+    public static class AnnotationTest {
+
+        @BeforeClass
+        public static void aaa() {
+            log += "a";
+        }
+
+        @AfterClass
+        public static void bbb() {
+            log += "b";
+        }
+
+        @Before
+        public void ccc() {
+            log += "c";
+        }
+
+        @After
+        public void ddd() {
+            log += "d";
+        }
+
         @Test
-        public void aaa() throws Exception {
-            log = "a";
-            count++;
+        public void eee() {
+            log += "e";
         }
 
         @Ignore
         @Test
-        public void bbb() throws Exception {
-            log = "b";
-            count++;
+        public void fff() {
+            log = "f";
         }
     }
 
-    public void testTestAnnotationTest() {
+    public void testAnnotationTest() {
         JUnitCore core = new JUnitCore();
-        Result result = core.run(TestAnnotationTest.class);
-        assertTrue(result.getFailures().toString(), result.wasSuccessful());
-        assertEquals(1, count);
-        assertTrue(log.contains("a"));
+        Result result = core.run(AnnotationTest.class);
+        printFailures(result.getFailures());
+        assertTrue(result.wasSuccessful());
+        assertEquals("acedb", log);
     }
 
     @RunWith(Seasar2.class)
-    public static class PublicNoArgNoReturnValueMethodTest {
+    public static class ConventionTest {
+
+        public static void beforeClass() {
+            log += "a";
+        }
+
+        public static void afterClass() {
+            log += "b";
+        }
+
+        public void before() {
+            log += "c";
+        }
+
+        public void after() {
+            log += "d";
+        }
+
         public void aaa() {
-            log = "a";
-            count++;
+            log += "e";
         }
 
         @Ignore
         public void bbb() {
-            log = "b";
-            count++;
+            log = "f";
         }
     }
 
-    public void testPublicNoArgNoReturnValueMethodTest() {
+    public void testConventionTest() {
         JUnitCore core = new JUnitCore();
-        Result result = core.run(PublicNoArgNoReturnValueMethodTest.class);
-        assertTrue(result.getFailures().toString(), result.wasSuccessful());
-        assertEquals(1, count);
-        assertTrue(log.contains("a"));
+        Result result = core.run(ConventionTest.class);
+        printFailures(result.getFailures());
+        assertTrue(result.wasSuccessful());
+        assertEquals("acedb", log);
     }
 
     @RunWith(Seasar2.class)
@@ -144,64 +172,9 @@ public class Seasar2Test extends S2TestCase {
     public void testInvalidMethodsTest() {
         JUnitCore core = new JUnitCore();
         Result result = core.run(InvalidMethodsTest.class);
-        assertTrue(result.getFailures().toString(), result.wasSuccessful());
+        printFailures(result.getFailures());
+        assertTrue(result.wasSuccessful());
         assertEquals("a", log);
-    }
-
-    @RunWith(Seasar2.class)
-    public static class BeforeAndAfterTest {
-
-        @Before
-        public void before() {
-            log += "a";
-        }
-
-        public void aaa() {
-            log += "b";
-        }
-
-        public void bbb() {
-            log += "b";
-        }
-
-        @After
-        public void after() {
-            log += "c";
-        }
-    }
-
-    public void testBeforeAndAfterTest() {
-        JUnitCore core = new JUnitCore();
-        Result result = core.run(BeforeAndAfterTest.class);
-        assertTrue(result.getFailures().toString(), result.wasSuccessful());
-        assertEquals("abcabc", log);
-    }
-
-    @RunWith(Seasar2.class)
-    public static class BeforeClassAndAfterClassTest {
-
-        @BeforeClass
-        public static void before() {
-            log += "a";
-        }
-
-        public void aaa() {
-        }
-
-        public void bbb() {
-        }
-
-        @AfterClass
-        public static void after() {
-            log += "b";
-        }
-    }
-
-    public void testBeforeClassAndAfterClassTest() {
-        JUnitCore core = new JUnitCore();
-        Result result = core.run(BeforeClassAndAfterClassTest.class);
-        assertTrue(result.getFailures().toString(), result.wasSuccessful());
-        assertEquals("ab", log);
     }
 
     @RunWith(Seasar2.class)
@@ -210,16 +183,17 @@ public class Seasar2Test extends S2TestCase {
 
         public void bbb() {
             count++;
-            active = TransactionManagerUtil.isActive(tm);
+            txActive = TransactionManagerUtil.isActive(tm);
         }
     }
 
     public void testTransactionBehaviorDefaultTest() {
         JUnitCore core = new JUnitCore();
         Result result = core.run(TransactionBehaviorDefaultTest.class);
-        assertTrue(result.getFailures().toString(), result.wasSuccessful());
+        printFailures(result.getFailures());
+        assertTrue(result.wasSuccessful());
         assertEquals(1, count);
-        assertEquals(true, active);
+        assertEquals(true, txActive);
     }
 
     @RunWith(Seasar2.class)
@@ -230,16 +204,17 @@ public class Seasar2Test extends S2TestCase {
         @TxBehavior(TxBehaviorType.NONE)
         public void bbb() {
             count++;
-            active = TransactionManagerUtil.isActive(tm);
+            txActive = TransactionManagerUtil.isActive(tm);
         }
     }
 
     public void testTransactionBehaviorNoneTest() {
         JUnitCore core = new JUnitCore();
         Result result = core.run(TransactionBehaviorNoneTest.class);
-        assertTrue(result.getFailures().toString(), result.wasSuccessful());
+        printFailures(result.getFailures());
+        assertTrue(result.wasSuccessful());
         assertEquals(1, count);
-        assertEquals(false, active);
+        assertEquals(false, txActive);
     }
 
     @RunWith(Seasar2.class)
@@ -249,16 +224,17 @@ public class Seasar2Test extends S2TestCase {
 
         public void bbb() {
             count++;
-            active = TransactionManagerUtil.isActive(tm);
+            txActive = TransactionManagerUtil.isActive(tm);
         }
     }
 
     public void testTransactionBehaviorNoneTest2() {
         JUnitCore core = new JUnitCore();
         Result result = core.run(TransactionBehaviorNoneTest2.class);
-        assertTrue(result.getFailures().toString(), result.wasSuccessful());
+        printFailures(result.getFailures());
+        assertTrue(result.wasSuccessful());
         assertEquals(1, count);
-        assertEquals(false, active);
+        assertEquals(false, txActive);
     }
 
     @RunWith(Seasar2.class)
@@ -269,16 +245,17 @@ public class Seasar2Test extends S2TestCase {
         @TxBehavior(TxBehaviorType.COMMIT)
         public void bbb() {
             count++;
-            active = TransactionManagerUtil.isActive(tm);
+            txActive = TransactionManagerUtil.isActive(tm);
         }
     }
 
     public void testTransactionBehaviorCommitTest() {
         JUnitCore core = new JUnitCore();
         Result result = core.run(TransactionBehaviorCommitTest.class);
-        assertTrue(result.getFailures().toString(), result.wasSuccessful());
+        printFailures(result.getFailures());
+        assertTrue(result.wasSuccessful());
         assertEquals(1, count);
-        assertEquals(true, active);
+        assertEquals(true, txActive);
     }
 
     @RunWith(Seasar2.class)
@@ -288,36 +265,40 @@ public class Seasar2Test extends S2TestCase {
 
         public void bbb() {
             count++;
-            active = TransactionManagerUtil.isActive(tm);
+            txActive = TransactionManagerUtil.isActive(tm);
         }
     }
 
     public void testTransactionBehaviorCommitTest2() {
         JUnitCore core = new JUnitCore();
         Result result = core.run(TransactionBehaviorCommitTest2.class);
-        assertTrue(result.getFailures().toString(), result.wasSuccessful());
+        printFailures(result.getFailures());
+        assertTrue(result.wasSuccessful());
         assertEquals(1, count);
-        assertEquals(true, active);
+        assertEquals(true, txActive);
     }
 
     @RunWith(Seasar2.class)
     @TxBehavior(TxBehaviorType.NONE)
     public static class TransactionBehaviorRollbackTest {
+
         TransactionManager tm;
 
         @TxBehavior(TxBehaviorType.ROLLBACK)
         public void bbb() {
             count++;
-            active = TransactionManagerUtil.isActive(tm);
+            txActive = TransactionManagerUtil.isActive(tm);
         }
+
     }
 
     public void testTransactionBehaviorRollbackTest() {
         JUnitCore core = new JUnitCore();
         Result result = core.run(TransactionBehaviorRollbackTest.class);
-        assertTrue(result.getFailures().toString(), result.wasSuccessful());
+        printFailures(result.getFailures());
+        assertTrue(result.wasSuccessful());
         assertEquals(1, count);
-        assertEquals(true, active);
+        assertEquals(true, txActive);
     }
 
     @RunWith(Seasar2.class)
@@ -327,16 +308,18 @@ public class Seasar2Test extends S2TestCase {
 
         public void bbb() {
             count++;
-            active = TransactionManagerUtil.isActive(tm);
+            txActive = TransactionManagerUtil.isActive(tm);
         }
+
     }
 
     public void testTransactionBehaviorRollbackTest2() {
         JUnitCore core = new JUnitCore();
         Result result = core.run(TransactionBehaviorRollbackTest2.class);
-        assertTrue(result.getFailures().toString(), result.wasSuccessful());
+        printFailures(result.getFailures());
+        assertTrue(result.wasSuccessful());
         assertEquals(1, count);
-        assertEquals(true, active);
+        assertEquals(true, txActive);
     }
 
     @RunWith(Seasar2.class)
@@ -367,7 +350,8 @@ public class Seasar2Test extends S2TestCase {
     public void testParametarizedTest() {
         JUnitCore core = new JUnitCore();
         Result result = core.run(ParametarizedTest.class);
-        assertTrue(result.getFailures().toString(), result.wasSuccessful());
+        printFailures(result.getFailures());
+        assertTrue(result.wasSuccessful());
         assertEquals(3, count);
         assertEquals("112439", log);
     }
@@ -391,7 +375,8 @@ public class Seasar2Test extends S2TestCase {
     public void testEachBeforeAndEachAfterTest() {
         JUnitCore core = new JUnitCore();
         Result result = core.run(EachBeforeAndEachAfterTest.class);
-        assertTrue(result.getFailures().toString(), result.wasSuccessful());
+        printFailures(result.getFailures());
+        assertTrue(result.wasSuccessful());
         assertEquals(1, result.getRunCount());
         assertEquals("abc", log);
     }
@@ -400,26 +385,39 @@ public class Seasar2Test extends S2TestCase {
     public static class FieldBindingTest {
         private S2Container container;
 
-        private DataAccessor dataAccessor;
+        private InternalTestContext internalContext;
+
+        private TestContext context;
+
+        public void before() {
+            log += (container != null);
+            log += "-";
+            log += (internalContext != null);
+            log += "-";
+            log += (context != null);
+            log += "-";
+        }
 
         public void aaa() {
             log += (container != null);
+            log += "-";
+            log += (internalContext != null);
+            log += "-";
+            log += (context != null);
         }
 
-        public void bbb() {
-            log += (dataAccessor != null);
-        }
     }
 
     public void testFieldBindingTest() {
         JUnitCore core = new JUnitCore();
         Result result = core.run(FieldBindingTest.class);
-        assertTrue(result.getFailures().toString(), result.wasSuccessful());
-        assertEquals(false, log.contains("false"));
+        printFailures(result.getFailures());
+        assertTrue(result.wasSuccessful());
+        assertEquals("false-false-true-true-true-true", log);
     }
 
     @RunWith(Seasar2.class)
-    public static class AutoReadXlsWriteDbTest {
+    public static class AutoPreparingTest {
 
         static int aaa_size;
 
@@ -442,33 +440,208 @@ public class Seasar2Test extends S2TestCase {
         }
     }
 
-    public void testAutoReadXlsWriteDbTest() {
-        AutoReadXlsWriteDbTest.aaa_size = 0;
-        AutoReadXlsWriteDbTest.bbb_size = 0;
-        AutoReadXlsWriteDbTest.ccc_size = 0;
+    public void testAutoPreparingTest() {
+        AutoPreparingTest.aaa_size = 0;
+        AutoPreparingTest.bbb_size = 0;
+        AutoPreparingTest.ccc_size = 0;
         JUnitCore core = new JUnitCore();
-        Result result = core.run(AutoReadXlsWriteDbTest.class);
-        assertTrue(result.getFailures().toString(), result.wasSuccessful());
-        assertEquals(15, AutoReadXlsWriteDbTest.aaa_size);
-        assertEquals(16, AutoReadXlsWriteDbTest.bbb_size);
-        assertEquals(16, AutoReadXlsWriteDbTest.ccc_size);
+        Result result = core.run(AutoPreparingTest.class);
+        printFailures(result.getFailures());
+        assertTrue(result.wasSuccessful());
+        assertEquals(15, AutoPreparingTest.aaa_size);
+        assertEquals(16, AutoPreparingTest.bbb_size);
+        assertEquals(16, AutoPreparingTest.ccc_size);
     }
 
     @RunWith(Seasar2.class)
-    public static class AutoIncludeDiconTest {
+    public static class NonAutoPreparingTest {
 
-        S2Container container;
+        static int aaa_size;
+
+        static int bbb_size;
+
+        static int ccc_size;
+
+        private TestContext ctx;
+
+        private DataAccessor da;
+
+        public void before() {
+            ctx.setAutoPreparing(false);
+        }
+
+        public void aaa() {
+            aaa_size = da.readDbByTable("EMP").getRowSize();
+        }
+
+        public void bbb() {
+            bbb_size = da.readDbByTable("EMP").getRowSize();
+        }
+
+        public void ccc() {
+            ccc_size = da.readDbByTable("EMP").getRowSize();
+        }
+    }
+
+    public void testNonAutoPreparingTest() {
+        NonAutoPreparingTest.aaa_size = 0;
+        NonAutoPreparingTest.bbb_size = 0;
+        NonAutoPreparingTest.ccc_size = 0;
+        JUnitCore core = new JUnitCore();
+        Result result = core.run(NonAutoPreparingTest.class);
+        printFailures(result.getFailures());
+        assertTrue(result.wasSuccessful());
+        assertEquals(14, NonAutoPreparingTest.aaa_size);
+        assertEquals(14, NonAutoPreparingTest.bbb_size);
+        assertEquals(14, NonAutoPreparingTest.ccc_size);
+    }
+
+    @RunWith(Seasar2.class)
+    public static class AutoIncludingTest {
+
+        private S2Container container;
 
         public void aaa() {
             log += container.getComponent("hoge").toString();
         }
     }
 
-    public void testAutoIncludeDiconTest() {
+    public void testAutoIncludingTest() {
         JUnitCore core = new JUnitCore();
-        Result result = core.run(AutoIncludeDiconTest.class);
-        assertTrue(result.getFailures().toString(), result.wasSuccessful());
+        Result result = core.run(AutoIncludingTest.class);
+        printFailures(result.getFailures());
+        assertTrue(result.wasSuccessful());
         assertEquals("aaa", log);
+    }
+
+    @RunWith(Seasar2.class)
+    @TxBehavior(TxBehaviorType.NONE)
+    public static class NonAutoIncludingTest {
+
+        private TestContext ctx;
+
+        private S2Container container;
+
+        public void before() {
+            ctx.setAutoIncluding(false);
+        }
+
+        public void aaa() {
+            log += container.hasComponentDef("hoge");
+            log += "-";
+            log += container.hasComponentDef(TransactionManager.class);
+        }
+    }
+
+    public void testNonAutoIncludingTest() {
+        JUnitCore core = new JUnitCore();
+        Result result = core.run(NonAutoIncludingTest.class);
+        printFailures(result.getFailures());
+        assertTrue(result.wasSuccessful());
+        assertEquals("false-false", log);
+    }
+
+    @RunWith(Seasar2.class)
+    public static class GetExpectedTest {
+        private TestContext ctx;
+
+        public void aaa() {
+            log += (ctx.getExpected() != null);
+            log += "-";
+        }
+
+        public void bbb() {
+            log += (ctx.getExpected() == null);
+            log += "-";
+        }
+    }
+
+    public void testGetExpected() throws Exception {
+        JUnitCore core = new JUnitCore();
+        Result result = core.run(GetExpectedTest.class);
+        printFailures(result.getFailures());
+        assertTrue(result.wasSuccessful());
+        assertEquals("true-true-", log);
+    }
+
+    @RunWith(Seasar2.class)
+    public static class RegisterEJB3ByFieldNameTest {
+
+        TestContext testContext;
+
+        @EJB
+        private IHoge hoge;
+
+        public void before() {
+            testContext.register(Hoge.class);
+            testContext.register(Foo.class);
+        }
+
+        public void aaa() {
+            log += (hoge != null) + "-";
+            log += (hoge.aaa() != null);
+        }
+    }
+
+    public void testRegisterEJBByFieldName() throws Exception {
+        JUnitCore core = new JUnitCore();
+        Result result = core.run(RegisterEJB3ByFieldNameTest.class);
+        printFailures(result.getFailures());
+        assertTrue(result.wasSuccessful());
+        assertEquals(1, result.getRunCount());
+        assertEquals("true-true", log);
+    }
+
+    @RunWith(Seasar2.class)
+    public static class RegisterEJB3ByBeanNameTest {
+
+        TestContext testContext;
+
+        @EJB(beanName = "xxx")
+        private IHoge yyy;
+
+        public void before() {
+            testContext.register(Hoge2.class);
+        }
+
+        public void aaa() {
+            log += (yyy != null);
+        }
+    }
+
+    public void testRegisterEJBByBeanName() throws Exception {
+        JUnitCore core = new JUnitCore();
+        Result result = core.run(RegisterEJB3ByBeanNameTest.class);
+        printFailures(result.getFailures());
+        assertTrue(result.wasSuccessful());
+        assertEquals(1, result.getRunCount());
+        assertEquals("true", log);
+    }
+
+    @RunWith(Seasar2.class)
+    public static class RegisterEJB3ByTypeTest {
+
+        TestContext testContext;
+
+        @EJB
+        private IBar zzz;
+
+        public void before() {
+            testContext.register(Bar.class);
+        }
+
+        public void aaa() {
+            log += (zzz != null);
+        }
+    }
+
+    public void testRegisterEJBByType() throws Exception {
+        JUnitCore core = new JUnitCore();
+        Result result = core.run(RegisterEJB3ByTypeTest.class);
+        printFailures(result.getFailures());
+        assertTrue(result.wasSuccessful());
+        assertEquals(1, result.getRunCount());
+        assertEquals("true", log);
     }
 
     @RunWith(Seasar2.class)
@@ -495,23 +668,34 @@ public class Seasar2Test extends S2TestCase {
         configure("Seasar2.dicon");
         JUnitCore core = new JUnitCore();
         Result result = core.run(CustomizeSeasar2Test.class);
-        assertTrue(result.getFailures().toString(), result.wasSuccessful());
+        printFailures(result.getFailures());
+        assertTrue(result.wasSuccessful());
         assertEquals(1, count);
         assertEquals("c", log);
     }
 
     @RunWith(Seasar2.class)
     public static class CustomizeS2TestClassMethodsRunnerTest {
+
+        private TransactionManager tm;
+
+        @Test
         public void aaa() {
             count++;
+            log = "aaa";
+            txActive = TransactionManagerUtil.isActive(tm);
         }
 
         public void bbb() {
             count++;
+            log += "bbb";
+            txActive = TransactionManagerUtil.isActive(tm);
         }
 
         public void ccc() {
             count++;
+            log += "ccc";
+            txActive = TransactionManagerUtil.isActive(tm);
         }
     }
 
@@ -519,90 +703,11 @@ public class Seasar2Test extends S2TestCase {
         configure("S2TestClassMethodsRunner.dicon");
         JUnitCore core = new JUnitCore();
         Result result = core.run(CustomizeS2TestClassMethodsRunnerTest.class);
-        assertFalse(result.wasSuccessful());
-        assertEquals(0, count);
-    }
-
-    @RunWith(Seasar2.class)
-    public static class CustomizeS2TestMethodRunnerTest {
-        @Ignore
-        public void aaa() {
-            count++;
-        }
-    }
-
-    public void testCustomizeS2TestMethodRunner() {
-        configure("S2TestMethodRunner.dicon");
-        JUnitCore core = new JUnitCore();
-        Result result = core.run(CustomizeS2TestMethodRunnerTest.class);
-        assertTrue(result.getFailures().toString(), result.wasSuccessful());
+        printFailures(result.getFailures());
+        assertTrue(result.wasSuccessful());
+        assertEquals("aaa", log);
         assertEquals(1, count);
-    }
-
-    @RunWith(Seasar2.class)
-    public static class CustomizeS2TestIntrospectorTest {
-
-        public void setUpAaa() {
-            log += "a";
-            count++;
-        }
-
-        public void aaa() {
-            log += "b";
-            count++;
-        }
-
-        public void tearDownAaa() {
-            log += "c";
-            count++;
-        }
-
-        @Disable
-        public void bbb() {
-            log += "d";
-            count++;
-        }
-    }
-
-    public void testCustomizeS2TestIntrospectorTest() {
-        configure("S2TestIntrospector.dicon");
-        JUnitCore core = new JUnitCore();
-        Result result = core.run(CustomizeS2TestIntrospectorTest.class);
-        assertTrue(result.getFailures().toString(), result.wasSuccessful());
-        assertEquals(1, result.getRunCount());
-        assertEquals(3, count);
-        assertEquals("abc", log);
-    }
-
-    @RunWith(Seasar2.class)
-    public static class CustomizeTestIntrospectorTest {
-        public void aaa() {
-            log += "a";
-            count++;
-        }
-
-        @Test
-        public void bbb() {
-            log += "b";
-            count++;
-        }
-    }
-
-    public void testCustomizeTestIntrospectorTest() {
-        configure("TestIntrospector.dicon");
-        JUnitCore core = new JUnitCore();
-        Result result = core.run(CustomizeTestIntrospectorTest.class);
-        assertTrue(result.getFailures().toString(), result.wasSuccessful());
-        assertEquals(1, count);
-        assertEquals("b", log);
-    }
-
-    @RunWith(Seasar2.class)
-    public static class HogeTest {
-        public void after() {
-            log += "a";
-            count++;
-        }
+        assertFalse(txActive);
     }
 
     public void configure(String name) {
@@ -616,32 +721,27 @@ public class Seasar2Test extends S2TestCase {
         }
     }
 
-    public static class EmptyMethodsRunner extends
-            S2TestClassMethodsRunner.DefaultProvider {
-        @Override
-        public List<Method> getTestMethods(Class<?> clazz) {
-            return new ArrayList<Method>();
-        }
-    }
+    public static class TxDisabledTestMethodRunner extends S2TestMethodRunner {
 
-    public static class IgnoreAnnotationDisabledRunner extends
-            S2TestMethodRunner.DefaultProvider {
+        public TxDisabledTestMethodRunner(Object test, Method method,
+                RunNotifier notifier, Description description,
+                S2TestIntrospector introspector) {
+            super(test, method, notifier, description, introspector);
+        }
+
         @Override
-        protected boolean isIgnored(TestMethod testMethod) {
+        protected boolean needsTransaction() {
             return false;
         }
     }
 
-    public static class NonAnnotatedMethodDisabledIntrospector extends
-            S2TestIntrospector {
-        @Override
-        protected boolean isTestMethod(Method method) {
-            return method.isAnnotationPresent(Test.class);
+    public void printFailures(List<Failure> failures) {
+        for (final Failure failure : failures) {
+            System.out.println("---");
+            System.out.println(failure.getTestHeader());
+            System.out.println(failure.getMessage());
+            System.out.println(failure.getTrace());
+            System.out.println("---");
         }
-    }
-
-    @Target( { METHOD })
-    @Retention(RUNTIME)
-    public static @interface Disable {
     }
 }

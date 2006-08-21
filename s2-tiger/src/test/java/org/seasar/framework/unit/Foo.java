@@ -15,24 +15,11 @@
  */
 package org.seasar.framework.unit;
 
-import java.lang.reflect.Method;
-import java.util.List;
+import javax.ejb.Stateless;
 
-/**
- * @author taedium
- * 
- */
-public interface TestIntrospector {
-
-    List<Method> getTestMethods(Class<?> testClass);
-
-    boolean isIgnored(Method method);
-
-    Class<? extends Throwable> expectedException(Method method);
-
-    long getTimeout(Method method);
-
-    String getEachBeforeMethodName(Class<?> testClass, Method method);
-
-    String getEachAfterMethodName(Class<?> testClass, Method method);
+@Stateless
+public class Foo implements IFoo {
+    public String aaa() {
+        return "aaa";
+    }
 }

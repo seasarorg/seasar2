@@ -13,29 +13,13 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package examples.s2junit4;
+package org.seasar.framework.unit;
 
-import static org.seasar.framework.unit.S2Assert.assertEquals;
+/**
+ * @author taedium
+ * 
+ */
+public interface ConfigFileIncluder {
 
-import org.junit.Ignore;
-import org.junit.runner.RunWith;
-import org.seasar.framework.unit.Seasar2;
-import org.seasar.framework.unit.TestContext;
-
-@RunWith(Seasar2.class)
-public class EmployeeDaoImplTest {
-
-    private TestContext ctx;
-
-    private EmployeeDao dao;
-
-    public void getEmployee() throws Exception {
-        Employee emp = dao.getEmployee(9900);
-        assertEquals("1", ctx.getExpected(), emp);
-    }
-
-    @Ignore("not implemented.")
-    public void getEmployeeByName() throws Exception {
-    }
-
+    void include(TestContext testContext);
 }
