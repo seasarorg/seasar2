@@ -39,7 +39,7 @@ public class TraceInterceptor extends AbstractInterceptor {
         Object[] args = invocation.getArguments();
         if (args != null && args.length > 0) {
             for (int i = 0; i < args.length; ++i) {
-                buf.append(args[i]);
+                buf.append(toString(args[i]));
                 buf.append(", ");
             }
             buf.setLength(buf.length() - 2);
@@ -51,7 +51,7 @@ public class TraceInterceptor extends AbstractInterceptor {
         try {
             ret = invocation.proceed();
             buf.append(" : ");
-            buf.append(ret);
+            buf.append(toString(ret));
         } catch (Throwable t) {
             buf.append(" Throwable:");
             buf.append(t);
