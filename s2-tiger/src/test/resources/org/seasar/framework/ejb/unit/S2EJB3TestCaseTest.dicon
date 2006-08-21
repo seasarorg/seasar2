@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="Shift_JIS"?>
-<!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container//EN"
-"http://www.seasar.org/dtd/components.dtd">
-<components>
-	<include path="ejb3tx.dicon"/>
-	<component name="hoge" class="org.seasar.framework.ejb.unit.Hoge"/>
-	<component name="foo" class="org.seasar.framework.ejb.unit.Foo"/>
-</components>
