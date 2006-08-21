@@ -125,8 +125,8 @@ public class BasicSelectHandler extends BasicHandler implements SelectHandler {
         }
     }
 
-    protected Object execute(Connection connection, Object[] args,
-            Class[] argTypes) throws SQLException {
+    public Object execute(Connection connection, Object[] args, Class[] argTypes)
+            throws SQLException {
 
         PreparedStatement ps = null;
         try {

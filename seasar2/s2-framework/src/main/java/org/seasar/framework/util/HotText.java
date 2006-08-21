@@ -55,10 +55,14 @@ public class HotText {
     }
 
     public String getValue() {
-        if (file != null && file.lastModified() > lastModified) {
+        if (isModified()) {
             updateValueByFile();
         }
         return value;
+    }
+
+    public boolean isModified() {
+        return file != null && file.lastModified() > lastModified;
     }
 
     protected void updateValueByFile() {

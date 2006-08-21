@@ -15,6 +15,9 @@
  */
 package org.seasar.framework.util;
 
+import java.io.File;
+import java.util.Date;
+
 import junit.framework.TestCase;
 
 /**
@@ -30,5 +33,14 @@ public class HotTextTest extends TestCase {
     public void testSetFileAndGetValue() throws Exception {
         HotText text = new HotText(PATH);
         assertEquals("あ", text.getValue());
+    }
+
+    public void testIsModified() throws Exception {
+        HotText text = new HotText(PATH);
+        assertFalse(text.isModified());
+        File file = ResourceUtil.getResourceAsFile(PATH);
+        Thread.sleep(500);
+        file.setLastModified(new Date().getTime());
+        assertTrue(text.isModified());
     }
 }
