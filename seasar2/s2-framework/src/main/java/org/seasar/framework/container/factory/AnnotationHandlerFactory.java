@@ -22,8 +22,6 @@ public class AnnotationHandlerFactory {
 
     private static final String TIGER_ANNOTATION_HANDLER_CLASS_NAME = "org.seasar.framework.container.factory.TigerAnnotationHandler";
 
-    private static final String BACKPORT175_ANNOTATION_HANDLER_CLASS_NAME = "org.seasar.framework.container.factory.Backport175AnnotationHandler";
-
     private static AnnotationHandler annotationHandler;
 
     static {
@@ -31,11 +29,6 @@ public class AnnotationHandlerFactory {
         try {
             clazz = ClassUtil.forName(TIGER_ANNOTATION_HANDLER_CLASS_NAME);
         } catch (ClassNotFoundRuntimeException ignore) {
-            try {
-                clazz = ClassUtil
-                        .forName(BACKPORT175_ANNOTATION_HANDLER_CLASS_NAME);
-            } catch (ClassNotFoundRuntimeException ignore2) {
-            }
         }
         annotationHandler = (AnnotationHandler) ClassUtil.newInstance(clazz);
     }
