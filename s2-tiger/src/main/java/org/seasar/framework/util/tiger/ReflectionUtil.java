@@ -19,6 +19,9 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.List;
 
 import org.seasar.framework.exception.ClassNotFoundRuntimeException;
 import org.seasar.framework.exception.IllegalAccessRuntimeException;
@@ -180,4 +183,32 @@ public abstract class ReflectionUtil {
         return (T) invoke(method, null, args);
     }
 
+    public static Class<?> getElementTypeOfList(final Type parameterizedList) {
+        if (!(parameterizedList instanceof ParameterizedType)) {
+            return null;
+        }
+
+        final ParameterizedType parameterizedType = ParameterizedType.class
+                .cast(parameterizedList);
+        final Type rawType = parameterizedType.getRawType();
+        if (!(rawType instanceof Class)) {
+            return null;
+        }
+
+        final Class<?> rawClass = Class.class.cast(rawType);
+        if (!rawClass.isAssignableFrom(List.class)) {
+            return null;
+        }
+
+        final Type[] actualTypeArgument = parameterizedType
+                .getActualTypeArguments();
+        if (actualTypeArgument == null || actualTypeArgument.length != 1) {
+            return null;
+        }
+        if (!(actualTypeArgument[0] instanceof Class)) {
+            return null;
+        }
+
+        return Class.class.cast(actualTypeArgument[0]);
+    }
 }

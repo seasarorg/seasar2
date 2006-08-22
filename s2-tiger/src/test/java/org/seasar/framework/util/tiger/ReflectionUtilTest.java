@@ -18,6 +18,8 @@ package org.seasar.framework.util.tiger;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
+import java.util.List;
 
 import junit.framework.TestCase;
 
@@ -123,8 +125,16 @@ public class ReflectionUtilTest extends TestCase {
         assertEquals("foo", foo.s);
     }
 
+    public void testGetElementTypeOfList() throws Exception {
+        Type clazz = ReflectionUtil.getField(Foo.class, "array")
+                .getGenericType();
+        assertEquals(String.class, ReflectionUtil.getElementTypeOfList(clazz));
+    }
+
     public static class Foo {
         private int n;
+
+        public List<String> array;
 
         public String s;
 
