@@ -51,4 +51,19 @@ public class MethodUtilTest extends TestCase {
                 new Class[0]);
         assertFalse("2", MethodUtil.isToStringMethod(hashCodeMethod));
     }
+
+    public void testIsBridgeMethod() throws Exception {
+        Method method = Foo.class.getMethod("foo", null);
+        assertFalse(MethodUtil.isBridgeMethod(method));
+    }
+
+    public void testIsSyntheticMethod() throws Exception {
+        Method method = Foo.class.getMethod("foo", null);
+        assertFalse(MethodUtil.isSyntheticMethod(method));
+    }
+
+    public static class Foo {
+        public void foo() {
+        }
+    }
 }

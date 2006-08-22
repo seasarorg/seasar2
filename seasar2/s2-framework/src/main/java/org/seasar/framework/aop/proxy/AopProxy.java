@@ -45,8 +45,6 @@ public final class AopProxy implements Serializable {
 
     private static Logger logger = Logger.getLogger(AopProxy.class);
 
-    private static final Method IS_BRIDGE_METHOD = getIsBridgeMethod();
-
     private final Class targetClass;
 
     private final Class enhancedClass;
@@ -100,7 +98,7 @@ public final class AopProxy implements Serializable {
         Method[] methods = targetClass.getMethods();
         for (int i = 0; i < methods.length; ++i) {
             Method method = methods[i];
-            if (isBridgeMethod(method)) {
+            if (MethodUtil.isBridgeMethod(method)) {
                 continue;
             }
 
@@ -145,19 +143,4 @@ public final class AopProxy implements Serializable {
         return !Modifier.isFinal(mod) && !Modifier.isStatic(mod);
     }
 
-    private boolean isBridgeMethod(final Method method) {
-        if (IS_BRIDGE_METHOD == null) {
-            return false;
-        }
-        return ((Boolean) MethodUtil.invoke(IS_BRIDGE_METHOD, method, null))
-                .booleanValue();
-    }
-
-    private static Method getIsBridgeMethod() {
-        try {
-            return Method.class.getMethod("isBridge", null);
-        } catch (NoSuchMethodException e) {
-            return null;
-        }
-    }
 }

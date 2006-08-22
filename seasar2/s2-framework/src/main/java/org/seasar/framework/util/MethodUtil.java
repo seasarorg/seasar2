@@ -29,9 +29,10 @@ import org.seasar.framework.exception.InvocationTargetRuntimeException;
  */
 public final class MethodUtil {
 
-    /**
-     * 
-     */
+    private static final Method IS_BRIDGE_METHOD = getIsBridgeMethod();
+
+    private static final Method IS_SYNTHETIC_METHOD = getIsSyntheticMethod();
+
     private MethodUtil() {
     }
 
@@ -115,4 +116,37 @@ public final class MethodUtil {
                 && method.getReturnType() == String.class
                 && method.getParameterTypes().length == 0;
     }
+
+    public static boolean isBridgeMethod(final Method method) {
+        if (IS_BRIDGE_METHOD == null) {
+            return false;
+        }
+        return ((Boolean) MethodUtil.invoke(IS_BRIDGE_METHOD, method, null))
+                .booleanValue();
+    }
+
+    public static boolean isSyntheticMethod(final Method method) {
+        if (IS_SYNTHETIC_METHOD == null) {
+            return false;
+        }
+        return ((Boolean) MethodUtil.invoke(IS_SYNTHETIC_METHOD, method, null))
+                .booleanValue();
+    }
+
+    private static Method getIsBridgeMethod() {
+        try {
+            return Method.class.getMethod("isBridge", null);
+        } catch (final NoSuchMethodException e) {
+            return null;
+        }
+    }
+
+    private static Method getIsSyntheticMethod() {
+        try {
+            return Method.class.getMethod("isSynthetic", null);
+        } catch (final NoSuchMethodException e) {
+            return null;
+        }
+    }
+
 }
