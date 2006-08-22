@@ -150,6 +150,9 @@ public abstract class AbstractOndemandCreator implements OndemandCreator {
             return null;
         }
         Class targetClass = getTargetClass(rootPackageName, componentName);
+        if (targetClass == null) {
+            return null;
+        }
         return container.getComponentDef(targetClass);
     }
 
@@ -204,4 +207,9 @@ public abstract class AbstractOndemandCreator implements OndemandCreator {
 
     protected abstract String getTargetClassName(String rootPackageName,
             String componentName);
+
+    protected boolean isExist(String className) {
+        String path = ClassUtil.getResourcePath(className);
+        return ResourceUtil.getResourceAsFileNoException(path) != null;
+    }
 }

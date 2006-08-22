@@ -41,7 +41,8 @@ public class OndemandBehaviorTest extends S2FrameworkTestCase {
         originalLoader = Thread.currentThread().getContextClassLoader();
         NamingConventionImpl convention = new NamingConventionImpl();
         ondemand = new OndemandBehavior();
-        SinglePackageOndemandCreator creator = new SinglePackageOndemandCreator(convention);
+        SinglePackageOndemandCreator creator = new SinglePackageOndemandCreator(
+                convention);
         OndemandProjectImpl project = new OndemandProjectImpl();
         project.setRootPackageName(ClassUtil.getPackageName(getClass()));
         project.setCreators(new OndemandCreator[] { creator });
@@ -72,6 +73,13 @@ public class OndemandBehaviorTest extends S2FrameworkTestCase {
                 + ".Hoge");
         assertNotNull("1", ondemand.acquireFromGetComponentDef(getContainer(),
                 clazz));
+        ondemand.stop();
+    }
+
+    public void testHasComponentDef() throws Exception {
+        ondemand.start();
+        assertTrue(getContainer().hasComponentDef("Hoge"));
+        assertFalse(getContainer().hasComponentDef("xxx"));
         ondemand.stop();
     }
 

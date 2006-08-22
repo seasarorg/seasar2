@@ -56,7 +56,8 @@ public class OndemandProjectImplTest extends TestCase {
 
         // ## Arrange ##
         OndemandProjectImpl project = new OndemandProjectImpl();
-        project.setRootPackageName("com.example");
+        project
+                .setRootPackageName("org.seasar.framework.container.hotdeploy.creator");
         NamingConvention namingConvention = new NamingConventionImpl();
         project.setCreators(new OndemandCreator[] {
                 new DtoOndemandCreator(namingConvention),
@@ -73,7 +74,8 @@ public class OndemandProjectImplTest extends TestCase {
 
         // ## Act ##
         // ## Assert ##
-        assertEquals("com.example.web.add.AddPage", project
-                .fromComponentNameToClassName(container, "add_addPage"));
+        assertEquals(
+                "org.seasar.framework.container.hotdeploy.creator.web.aaa.HogePage",
+                project.fromComponentNameToClassName(container, "aaa_hogePage"));
     }
 }

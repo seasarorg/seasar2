@@ -18,10 +18,8 @@ package org.seasar.framework.container.hotdeploy.creator;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.seasar.framework.container.ComponentNotFoundRuntimeException;
 import org.seasar.framework.convention.NamingConvention;
 import org.seasar.framework.util.ClassUtil;
-import org.seasar.framework.util.ResourceUtil;
 import org.seasar.framework.util.StringUtil;
 
 public class MultiPackageOndemandCreator extends AbstractOndemandCreator {
@@ -81,9 +79,8 @@ public class MultiPackageOndemandCreator extends AbstractOndemandCreator {
         String className = getTargetClassName(rootPackageName, componentName);
         if (className != null) {
             return ClassUtil.forName(className);
-        } else {
-            throw new ComponentNotFoundRuntimeException(componentName);
         }
+        return null;
     }
 
     protected String getTargetClassName(String rootPackageName,
@@ -91,8 +88,7 @@ public class MultiPackageOndemandCreator extends AbstractOndemandCreator {
         String[] classNames = composeClassNames(rootPackageName, componentName);
         for (int i = 0; i < classNames.length; ++i) {
             String className = classNames[i];
-            String path = ClassUtil.getResourcePath(className);
-            if (ResourceUtil.getResourceAsFileNoException(path) != null) {
+            if (isExist(className)) {
                 return className;
             }
         }

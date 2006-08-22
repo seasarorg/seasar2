@@ -118,21 +118,21 @@ public class BasicSelectHandler extends BasicHandler implements SelectHandler {
         Connection con = getConnection();
         try {
             return execute(con, args, argTypes);
-        } catch (SQLException ex) {
-            throw new SQLRuntimeException(ex);
         } finally {
             ConnectionUtil.close(con);
         }
     }
 
     public Object execute(Connection connection, Object[] args, Class[] argTypes)
-            throws SQLException {
+            throws SQLRuntimeException {
 
         PreparedStatement ps = null;
         try {
             ps = prepareStatement(connection);
             bindArgs(ps, args, argTypes);
             return execute(ps);
+        } catch (SQLException ex) {
+            throw new SQLRuntimeException(ex);
         } finally {
             StatementUtil.close(ps);
         }
