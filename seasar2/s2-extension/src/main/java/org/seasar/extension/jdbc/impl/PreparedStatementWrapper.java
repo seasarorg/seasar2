@@ -35,580 +35,659 @@ import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Calendar;
 
+import org.seasar.framework.exception.SSQLException;
+
 /**
  * @author higa
  * 
  */
 public class PreparedStatementWrapper implements PreparedStatement {
 
-    private PreparedStatement original_;
+    private final PreparedStatement original;
 
-    /**
-     * 
-     */
-    public PreparedStatementWrapper(PreparedStatement original) {
-        original_ = original;
+    private final String sql;
+
+    public PreparedStatementWrapper(final PreparedStatement original,
+            final String sql) {
+        this.original = original;
+        this.sql = sql;
     }
 
-    /**
-     * @see java.sql.PreparedStatement#executeUpdate()
-     */
-    public int executeUpdate() throws SQLException {
-        return original_.executeUpdate();
+    private SQLException wrapException(final SQLException e) {
+        return wrapException(e, sql);
     }
 
-    /**
-     * @see java.sql.PreparedStatement#addBatch()
-     */
-    public void addBatch() throws SQLException {
-        original_.addBatch();
+    private SQLException wrapException(final SQLException e, final String sql) {
+        if (sql != null) {
+            return new SSQLException("ESSR0072", new Object[] { sql,
+                    String.valueOf(e.getErrorCode()), e.getSQLState() }, e
+                    .getSQLState(), e.getErrorCode(), e, sql);
+        }
+        return e;
     }
 
-    /**
-     * @see java.sql.PreparedStatement#clearParameters()
-     */
-    public void clearParameters() throws SQLException {
-        original_.clearParameters();
-    }
-
-    /**
-     * @see java.sql.PreparedStatement#execute()
-     */
-    public boolean execute() throws SQLException {
-        return original_.execute();
-    }
-
-    /**
-     * @see java.sql.PreparedStatement#setByte(int, byte)
-     */
-    public void setByte(int parameterIndex, byte x) throws SQLException {
-        original_.setByte(parameterIndex, x);
-    }
-
-    /**
-     * @see java.sql.PreparedStatement#setDouble(int, double)
-     */
-    public void setDouble(int parameterIndex, double x) throws SQLException {
-        original_.setDouble(parameterIndex, x);
-    }
-
-    /**
-     * @see java.sql.PreparedStatement#setFloat(int, float)
-     */
-    public void setFloat(int parameterIndex, float x) throws SQLException {
-        original_.setFloat(parameterIndex, x);
-    }
-
-    /**
-     * @see java.sql.PreparedStatement#setInt(int, int)
-     */
-    public void setInt(int parameterIndex, int x) throws SQLException {
-        original_.setInt(parameterIndex, x);
-    }
-
-    /**
-     * @see java.sql.PreparedStatement#setNull(int, int)
-     */
-    public void setNull(int parameterIndex, int sqlType) throws SQLException {
-        original_.setNull(parameterIndex, sqlType);
-    }
-
-    /**
-     * @see java.sql.PreparedStatement#setLong(int, long)
-     */
-    public void setLong(int parameterIndex, long x) throws SQLException {
-        original_.setLong(parameterIndex, x);
-    }
-
-    /**
-     * @see java.sql.PreparedStatement#setShort(int, short)
-     */
-    public void setShort(int parameterIndex, short x) throws SQLException {
-        original_.setShort(parameterIndex, x);
-    }
-
-    /**
-     * @see java.sql.PreparedStatement#setBoolean(int, boolean)
-     */
-    public void setBoolean(int parameterIndex, boolean x) throws SQLException {
-        original_.setBoolean(parameterIndex, x);
-    }
-
-    /**
-     * @see java.sql.PreparedStatement#setBytes(int, byte[])
-     */
-    public void setBytes(int parameterIndex, byte[] x) throws SQLException {
-        original_.setBytes(parameterIndex, x);
-    }
-
-    /**
-     * @see java.sql.PreparedStatement#setAsciiStream(int, java.io.InputStream,
-     *      int)
-     */
-    public void setAsciiStream(int parameterIndex, InputStream x, int length)
-            throws SQLException {
-
-        original_.setAsciiStream(parameterIndex, x, length);
-    }
-
-    /**
-     * @see java.sql.PreparedStatement#setBinaryStream(int, java.io.InputStream,
-     *      int)
-     */
-    public void setBinaryStream(int parameterIndex, InputStream x, int length)
-            throws SQLException {
-
-        original_.setBinaryStream(parameterIndex, x, length);
-    }
-
-    /**
-     * @see java.sql.PreparedStatement#setUnicodeStream(int,
-     *      java.io.InputStream, int)
-     * @deprecated
-     */
-    public void setUnicodeStream(int parameterIndex, InputStream x, int length)
-            throws SQLException {
-
-        original_.setUnicodeStream(parameterIndex, x, length);
-    }
-
-    /**
-     * @see java.sql.PreparedStatement#setCharacterStream(int, java.io.Reader,
-     *      int)
-     */
-    public void setCharacterStream(int parameterIndex, Reader reader, int length)
-            throws SQLException {
-
-        original_.setCharacterStream(parameterIndex, reader, length);
-    }
-
-    /**
-     * @see java.sql.PreparedStatement#setObject(int, java.lang.Object)
-     */
-    public void setObject(int parameterIndex, Object x) throws SQLException {
-        original_.setObject(parameterIndex, x);
-    }
-
-    /**
-     * @see java.sql.PreparedStatement#setObject(int, java.lang.Object, int)
-     */
-    public void setObject(int parameterIndex, Object x, int targetSqlType)
-            throws SQLException {
-
-        original_.setObject(parameterIndex, x, targetSqlType);
-    }
-
-    /**
-     * @see java.sql.PreparedStatement#setObject(int, java.lang.Object, int,
-     *      int)
-     */
-    public void setObject(int parameterIndex, Object x, int targetSqlType,
-            int scale) throws SQLException {
-
-        original_.setObject(parameterIndex, x, targetSqlType, scale);
-    }
-
-    /**
-     * @see java.sql.PreparedStatement#setNull(int, int, java.lang.String)
-     */
-    public void setNull(int paramIndex, int sqlType, String typeName)
-            throws SQLException {
-
-        original_.setNull(paramIndex, sqlType, typeName);
-    }
-
-    /**
-     * @see java.sql.PreparedStatement#setString(int, java.lang.String)
-     */
-    public void setString(int parameterIndex, String x) throws SQLException {
-        original_.setString(parameterIndex, x);
-    }
-
-    /**
-     * @see java.sql.PreparedStatement#setBigDecimal(int, java.math.BigDecimal)
-     */
-    public void setBigDecimal(int parameterIndex, BigDecimal x)
-            throws SQLException {
-
-        original_.setBigDecimal(parameterIndex, x);
-    }
-
-    /**
-     * @see java.sql.PreparedStatement#setURL(int, java.net.URL)
-     */
-    public void setURL(int parameterIndex, URL x) throws SQLException {
-        original_.setURL(parameterIndex, x);
-    }
-
-    /**
-     * @see java.sql.PreparedStatement#setArray(int, java.sql.Array)
-     */
-    public void setArray(int i, Array x) throws SQLException {
-        original_.setArray(i, x);
-    }
-
-    /**
-     * @see java.sql.PreparedStatement#setBlob(int, java.sql.Blob)
-     */
-    public void setBlob(int i, Blob x) throws SQLException {
-        original_.setBlob(i, x);
-    }
-
-    /**
-     * @see java.sql.PreparedStatement#setClob(int, java.sql.Clob)
-     */
-    public void setClob(int i, Clob x) throws SQLException {
-        original_.setClob(i, x);
-    }
-
-    /**
-     * @see java.sql.PreparedStatement#setDate(int, java.sql.Date)
-     */
-    public void setDate(int parameterIndex, Date x) throws SQLException {
-        original_.setDate(parameterIndex, x);
-    }
-
-    /**
-     * @see java.sql.PreparedStatement#getParameterMetaData()
-     */
-    public ParameterMetaData getParameterMetaData() throws SQLException {
-        return original_.getParameterMetaData();
-    }
-
-    /**
-     * @see java.sql.PreparedStatement#setRef(int, java.sql.Ref)
-     */
-    public void setRef(int i, Ref x) throws SQLException {
-        original_.setRef(i, x);
-    }
-
-    /**
-     * @see java.sql.PreparedStatement#executeQuery()
-     */
     public ResultSet executeQuery() throws SQLException {
-        return original_.executeQuery();
+        try {
+            return original.executeQuery();
+        } catch (final SQLException e) {
+            throw wrapException(e);
+        }
     }
 
-    /**
-     * @see java.sql.PreparedStatement#getMetaData()
-     */
+    public int executeUpdate() throws SQLException {
+        try {
+            return original.executeUpdate();
+        } catch (final SQLException e) {
+            throw wrapException(e);
+        }
+    }
+
     public ResultSetMetaData getMetaData() throws SQLException {
-        return original_.getMetaData();
+        try {
+            return original.getMetaData();
+        } catch (final SQLException e) {
+            throw wrapException(e);
+        }
     }
 
-    /**
-     * @see java.sql.PreparedStatement#setTime(int, java.sql.Time)
-     */
-    public void setTime(int parameterIndex, Time x) throws SQLException {
-        original_.setTime(parameterIndex, x);
+    public ParameterMetaData getParameterMetaData() throws SQLException {
+        try {
+            return original.getParameterMetaData();
+        } catch (final SQLException e) {
+            throw wrapException(e);
+        }
     }
 
-    /**
-     * @see java.sql.PreparedStatement#setTimestamp(int, java.sql.Timestamp)
-     */
-    public void setTimestamp(int parameterIndex, Timestamp x)
-            throws SQLException {
-
-        original_.setTimestamp(parameterIndex, x);
-    }
-
-    /**
-     * @see java.sql.PreparedStatement#setDate(int, java.sql.Date,
-     *      java.util.Calendar)
-     */
-    public void setDate(int parameterIndex, Date x, Calendar cal)
-            throws SQLException {
-
-        original_.setDate(parameterIndex, x, cal);
-    }
-
-    /**
-     * @see java.sql.PreparedStatement#setTime(int, java.sql.Time,
-     *      java.util.Calendar)
-     */
-    public void setTime(int parameterIndex, Time x, Calendar cal)
-            throws SQLException {
-
-        original_.setTime(parameterIndex, x, cal);
-    }
-
-    /**
-     * @see java.sql.PreparedStatement#setTimestamp(int, java.sql.Timestamp,
-     *      java.util.Calendar)
-     */
-    public void setTimestamp(int parameterIndex, Timestamp x, Calendar cal)
-            throws SQLException {
-
-        original_.setTimestamp(parameterIndex, x, cal);
-    }
-
-    /**
-     * @see java.sql.Statement#getFetchDirection()
-     */
-    public int getFetchDirection() throws SQLException {
-        return original_.getFetchDirection();
-    }
-
-    /**
-     * @see java.sql.Statement#getFetchSize()
-     */
-    public int getFetchSize() throws SQLException {
-        return original_.getFetchSize();
-    }
-
-    /**
-     * @see java.sql.Statement#getMaxFieldSize()
-     */
-    public int getMaxFieldSize() throws SQLException {
-        return original_.getMaxFieldSize();
-    }
-
-    /**
-     * @see java.sql.Statement#getMaxRows()
-     */
     public int getMaxRows() throws SQLException {
-        return original_.getMaxRows();
+        try {
+            return original.getMaxRows();
+        } catch (final SQLException e) {
+            throw wrapException(e);
+        }
     }
 
-    /**
-     * @see java.sql.Statement#getQueryTimeout()
-     */
     public int getQueryTimeout() throws SQLException {
-        return original_.getQueryTimeout();
+        return original.getQueryTimeout();
     }
 
-    /**
-     * @see java.sql.Statement#getResultSetConcurrency()
-     */
-    public int getResultSetConcurrency() throws SQLException {
-        return original_.getResultSetConcurrency();
-    }
-
-    /**
-     * @see java.sql.Statement#getResultSetHoldability()
-     */
-    public int getResultSetHoldability() throws SQLException {
-        return original_.getResultSetHoldability();
-    }
-
-    /**
-     * @see java.sql.Statement#getResultSetType()
-     */
-    public int getResultSetType() throws SQLException {
-        return original_.getResultSetType();
-    }
-
-    /**
-     * @see java.sql.Statement#getUpdateCount()
-     */
-    public int getUpdateCount() throws SQLException {
-        return original_.getUpdateCount();
-    }
-
-    /**
-     * @see java.sql.Statement#cancel()
-     */
-    public void cancel() throws SQLException {
-        original_.cancel();
-    }
-
-    /**
-     * @see java.sql.Statement#clearBatch()
-     */
-    public void clearBatch() throws SQLException {
-        original_.clearBatch();
-    }
-
-    /**
-     * @see java.sql.Statement#clearWarnings()
-     */
-    public void clearWarnings() throws SQLException {
-        original_.clearWarnings();
-    }
-
-    /**
-     * @see java.sql.Statement#close()
-     */
-    public void close() throws SQLException {
-        original_.close();
-    }
-
-    /**
-     * @see java.sql.Statement#getMoreResults()
-     */
-    public boolean getMoreResults() throws SQLException {
-        return original_.getMoreResults();
-    }
-
-    /**
-     * @see java.sql.Statement#executeBatch()
-     */
-    public int[] executeBatch() throws SQLException {
-        return original_.executeBatch();
-    }
-
-    /**
-     * @see java.sql.Statement#setFetchDirection(int)
-     */
-    public void setFetchDirection(int direction) throws SQLException {
-        original_.setFetchDirection(direction);
-    }
-
-    /**
-     * @see java.sql.Statement#setFetchSize(int)
-     */
-    public void setFetchSize(int rows) throws SQLException {
-        original_.setFetchSize(rows);
-    }
-
-    /**
-     * @see java.sql.Statement#setMaxFieldSize(int)
-     */
-    public void setMaxFieldSize(int max) throws SQLException {
-        original_.setMaxFieldSize(max);
-    }
-
-    /**
-     * @see java.sql.Statement#setMaxRows(int)
-     */
-    public void setMaxRows(int max) throws SQLException {
-        original_.setMaxRows(max);
-    }
-
-    /**
-     * @see java.sql.Statement#setQueryTimeout(int)
-     */
-    public void setQueryTimeout(int seconds) throws SQLException {
-        original_.setQueryTimeout(seconds);
-    }
-
-    /**
-     * @see java.sql.Statement#getMoreResults(int)
-     */
-    public boolean getMoreResults(int current) throws SQLException {
-        return original_.getMoreResults(current);
-    }
-
-    /**
-     * @see java.sql.Statement#setEscapeProcessing(boolean)
-     */
-    public void setEscapeProcessing(boolean enable) throws SQLException {
-        original_.setEscapeProcessing(enable);
-    }
-
-    /**
-     * @see java.sql.Statement#executeUpdate(java.lang.String)
-     */
-    public int executeUpdate(String sql) throws SQLException {
-        return original_.executeUpdate(sql);
-    }
-
-    /**
-     * @see java.sql.Statement#addBatch(java.lang.String)
-     */
-    public void addBatch(String sql) throws SQLException {
-        original_.addBatch(sql);
-    }
-
-    /**
-     * @see java.sql.Statement#setCursorName(java.lang.String)
-     */
-    public void setCursorName(String name) throws SQLException {
-        original_.setCursorName(name);
-    }
-
-    /**
-     * @see java.sql.Statement#execute(java.lang.String)
-     */
-    public boolean execute(String sql) throws SQLException {
-        return original_.execute(sql);
-    }
-
-    /**
-     * @see java.sql.Statement#executeUpdate(java.lang.String, int)
-     */
-    public int executeUpdate(String sql, int autoGeneratedKeys)
-            throws SQLException {
-
-        return original_.executeUpdate(sql, autoGeneratedKeys);
-    }
-
-    /**
-     * @see java.sql.Statement#execute(java.lang.String, int)
-     */
-    public boolean execute(String sql, int autoGeneratedKeys)
-            throws SQLException {
-
-        return original_.execute(sql, autoGeneratedKeys);
-    }
-
-    /**
-     * @see java.sql.Statement#executeUpdate(java.lang.String, int[])
-     */
-    public int executeUpdate(String sql, int[] columnIndexes)
-            throws SQLException {
-
-        return original_.executeUpdate(sql, columnIndexes);
-    }
-
-    /**
-     * @see java.sql.Statement#execute(java.lang.String, int[])
-     */
-    public boolean execute(String sql, int[] columnIndexes) throws SQLException {
-        return original_.execute(sql, columnIndexes);
-    }
-
-    /**
-     * @see java.sql.Statement#getConnection()
-     */
-    public Connection getConnection() throws SQLException {
-        return original_.getConnection();
-    }
-
-    /**
-     * @see java.sql.Statement#getGeneratedKeys()
-     */
-    public ResultSet getGeneratedKeys() throws SQLException {
-        return original_.getGeneratedKeys();
-    }
-
-    /**
-     * @see java.sql.Statement#getResultSet()
-     */
-    public ResultSet getResultSet() throws SQLException {
-        return original_.getResultSet();
-    }
-
-    /**
-     * @see java.sql.Statement#getWarnings()
-     */
     public SQLWarning getWarnings() throws SQLException {
-        return original_.getWarnings();
+        try {
+            return original.getWarnings();
+        } catch (final SQLException e) {
+            throw wrapException(e);
+        }
     }
 
-    /**
-     * @see java.sql.Statement#executeUpdate(java.lang.String,
-     *      java.lang.String[])
-     */
-    public int executeUpdate(String sql, String[] columnNames)
+    public ResultSet getResultSet() throws SQLException {
+        try {
+            return original.getResultSet();
+        } catch (final SQLException e) {
+            throw wrapException(e);
+        }
+    }
+
+    public int getUpdateCount() throws SQLException {
+        try {
+            return original.getUpdateCount();
+        } catch (final SQLException e) {
+            throw wrapException(e);
+        }
+    }
+
+    public boolean getMoreResults() throws SQLException {
+        try {
+            return original.getMoreResults();
+        } catch (final SQLException e) {
+            throw wrapException(e);
+        }
+    }
+
+    public int getFetchDirection() throws SQLException {
+        try {
+            return original.getFetchDirection();
+        } catch (final SQLException e) {
+            throw wrapException(e);
+        }
+    }
+
+    public int getFetchSize() throws SQLException {
+        try {
+            return original.getFetchSize();
+        } catch (final SQLException e) {
+            throw wrapException(e);
+        }
+    }
+
+    public int getResultSetConcurrency() throws SQLException {
+        try {
+            return original.getResultSetConcurrency();
+        } catch (final SQLException e) {
+            throw wrapException(e);
+        }
+    }
+
+    public int getResultSetType() throws SQLException {
+        try {
+            return original.getResultSetType();
+        } catch (final SQLException e) {
+            throw wrapException(e);
+        }
+    }
+
+    public int[] executeBatch() throws SQLException {
+        try {
+            return original.executeBatch();
+        } catch (final SQLException e) {
+            throw wrapException(e);
+        }
+    }
+
+    public Connection getConnection() throws SQLException {
+        try {
+            return original.getConnection();
+        } catch (final SQLException e) {
+            throw wrapException(e);
+        }
+    }
+
+    public boolean getMoreResults(final int current) throws SQLException {
+        try {
+            return original.getMoreResults();
+        } catch (final SQLException e) {
+            throw wrapException(e);
+        }
+    }
+
+    public ResultSet getGeneratedKeys() throws SQLException {
+        try {
+            return original.getGeneratedKeys();
+        } catch (final SQLException e) {
+            throw wrapException(e);
+        }
+    }
+
+    public int executeUpdate(final String sql, final int autoGeneratedKeys)
             throws SQLException {
-
-        return original_.executeUpdate(sql, columnNames);
+        try {
+            return original.executeUpdate();
+        } catch (final SQLException e) {
+            throw wrapException(e, sql);
+        }
     }
 
-    /**
-     * @see java.sql.Statement#execute(java.lang.String, java.lang.String[])
-     */
-    public boolean execute(String sql, String[] columnNames)
+    public int getResultSetHoldability() throws SQLException {
+        try {
+            return original.getResultSetHoldability();
+        } catch (final SQLException e) {
+            throw wrapException(e);
+        }
+    }
+
+    public void addBatch() throws SQLException {
+        try {
+            original.addBatch();
+        } catch (final SQLException e) {
+            throw wrapException(e);
+        }
+    }
+
+    public void addBatch(final String sql) throws SQLException {
+        try {
+            original.addBatch(sql);
+        } catch (final SQLException e) {
+            throw wrapException(e, sql);
+        }
+    }
+
+    public void cancel() throws SQLException {
+        try {
+            original.cancel();
+        } catch (final SQLException e) {
+            throw wrapException(e);
+        }
+    }
+
+    public void clearBatch() throws SQLException {
+        try {
+            original.clearBatch();
+        } catch (final SQLException e) {
+            throw wrapException(e);
+        }
+    }
+
+    public void clearParameters() throws SQLException {
+        try {
+            original.clearParameters();
+        } catch (final SQLException e) {
+            throw wrapException(e);
+        }
+    }
+
+    public void clearWarnings() throws SQLException {
+        try {
+            original.clearWarnings();
+        } catch (final SQLException e) {
+            throw wrapException(e);
+        }
+    }
+
+    public void close() throws SQLException {
+        try {
+            original.close();
+        } catch (final SQLException e) {
+            throw wrapException(e);
+        }
+    }
+
+    public boolean execute() throws SQLException {
+        try {
+            return original.execute();
+        } catch (final SQLException e) {
+            throw wrapException(e);
+        }
+    }
+
+    public boolean execute(final String sql, final int autoGeneratedKeys)
             throws SQLException {
-
-        return original_.execute(sql, columnNames);
+        try {
+            return original.execute(sql, autoGeneratedKeys);
+        } catch (final SQLException e) {
+            throw wrapException(e, sql);
+        }
     }
 
-    /**
-     * @see java.sql.Statement#executeQuery(java.lang.String)
-     */
-    public ResultSet executeQuery(String sql) throws SQLException {
-        return original_.executeQuery(sql);
+    public boolean execute(final String sql, final int[] columnIndexes)
+            throws SQLException {
+        try {
+            return original.execute(sql, columnIndexes);
+        } catch (final SQLException e) {
+            throw wrapException(e, sql);
+        }
     }
+
+    public boolean execute(final String sql, final String[] columnNames)
+            throws SQLException {
+        try {
+            return original.execute(sql, columnNames);
+        } catch (final SQLException e) {
+            throw wrapException(e, sql);
+        }
+    }
+
+    public boolean execute(final String sql) throws SQLException {
+        try {
+            return original.execute(sql);
+        } catch (final SQLException e) {
+            throw wrapException(e, sql);
+        }
+    }
+
+    public ResultSet executeQuery(final String sql) throws SQLException {
+        try {
+            return original.executeQuery(sql);
+        } catch (final SQLException e) {
+            throw wrapException(e, sql);
+        }
+    }
+
+    public int executeUpdate(final String sql, final int[] columnIndexes)
+            throws SQLException {
+        try {
+            return original.executeUpdate(sql, columnIndexes);
+        } catch (final SQLException e) {
+            throw wrapException(e, sql);
+        }
+    }
+
+    public int executeUpdate(final String sql, final String[] columnNames)
+            throws SQLException {
+        try {
+            return original.executeUpdate(sql, columnNames);
+        } catch (final SQLException e) {
+            throw wrapException(e, sql);
+        }
+    }
+
+    public int executeUpdate(final String sql) throws SQLException {
+        try {
+            return original.executeUpdate(sql);
+        } catch (final SQLException e) {
+            throw wrapException(e, sql);
+        }
+    }
+
+    public int getMaxFieldSize() throws SQLException {
+        try {
+            return original.getMaxFieldSize();
+        } catch (final SQLException e) {
+            throw wrapException(e);
+        }
+    }
+
+    public void setArray(final int i, final Array x) throws SQLException {
+        try {
+            original.setArray(i, x);
+        } catch (final SQLException e) {
+            throw wrapException(e);
+        }
+    }
+
+    public void setAsciiStream(final int parameterIndex, final InputStream x,
+            final int length) throws SQLException {
+        try {
+            original.setAsciiStream(parameterIndex, x, length);
+        } catch (final SQLException e) {
+            throw wrapException(e);
+        }
+    }
+
+    public void setBigDecimal(final int parameterIndex, final BigDecimal x)
+            throws SQLException {
+        try {
+            original.setBigDecimal(parameterIndex, x);
+        } catch (final SQLException e) {
+            throw wrapException(e);
+        }
+    }
+
+    public void setBinaryStream(final int parameterIndex, final InputStream x,
+            final int length) throws SQLException {
+        try {
+            original.setBinaryStream(parameterIndex, x, length);
+        } catch (final SQLException e) {
+            throw wrapException(e);
+        }
+    }
+
+    public void setBlob(final int i, final Blob x) throws SQLException {
+        try {
+            original.setBlob(i, x);
+        } catch (final SQLException e) {
+            throw wrapException(e);
+        }
+    }
+
+    public void setBoolean(final int parameterIndex, final boolean x)
+            throws SQLException {
+        try {
+            original.setBoolean(parameterIndex, x);
+        } catch (final SQLException e) {
+            throw wrapException(e);
+        }
+    }
+
+    public void setByte(final int parameterIndex, final byte x)
+            throws SQLException {
+        try {
+            original.setByte(parameterIndex, x);
+        } catch (final SQLException e) {
+            throw wrapException(e);
+        }
+    }
+
+    public void setBytes(final int parameterIndex, final byte[] x)
+            throws SQLException {
+        try {
+            original.setBytes(parameterIndex, x);
+        } catch (final SQLException e) {
+            throw wrapException(e);
+        }
+    }
+
+    public void setCharacterStream(final int parameterIndex,
+            final Reader reader, final int length) throws SQLException {
+        try {
+            original.setCharacterStream(parameterIndex, reader, length);
+        } catch (final SQLException e) {
+            throw wrapException(e);
+        }
+    }
+
+    public void setClob(final int i, final Clob x) throws SQLException {
+        try {
+            original.setClob(i, x);
+        } catch (final SQLException e) {
+            throw wrapException(e);
+        }
+    }
+
+    public void setCursorName(final String name) throws SQLException {
+        try {
+            original.setCursorName(name);
+        } catch (final SQLException e) {
+            throw wrapException(e);
+        }
+    }
+
+    public void setDate(final int parameterIndex, final Date x,
+            final Calendar cal) throws SQLException {
+        try {
+            original.setDate(parameterIndex, x, cal);
+        } catch (final SQLException e) {
+            throw wrapException(e);
+        }
+    }
+
+    public void setDate(final int parameterIndex, final Date x)
+            throws SQLException {
+        try {
+            original.setDate(parameterIndex, x);
+        } catch (final SQLException e) {
+            throw wrapException(e);
+        }
+    }
+
+    public void setDouble(final int parameterIndex, final double x)
+            throws SQLException {
+        try {
+            original.setDouble(parameterIndex, x);
+        } catch (final SQLException e) {
+            throw wrapException(e);
+        }
+    }
+
+    public void setEscapeProcessing(final boolean enable) throws SQLException {
+        try {
+            original.setEscapeProcessing(enable);
+        } catch (final SQLException e) {
+            throw wrapException(e);
+        }
+    }
+
+    public void setFetchDirection(final int direction) throws SQLException {
+        try {
+            original.setFetchDirection(direction);
+        } catch (final SQLException e) {
+            throw wrapException(e);
+        }
+    }
+
+    public void setFetchSize(final int rows) throws SQLException {
+        try {
+            original.setFetchSize(rows);
+        } catch (final SQLException e) {
+            throw wrapException(e);
+        }
+    }
+
+    public void setFloat(final int parameterIndex, final float x)
+            throws SQLException {
+        try {
+            original.setFloat(parameterIndex, x);
+        } catch (final SQLException e) {
+            throw wrapException(e);
+        }
+    }
+
+    public void setInt(final int parameterIndex, final int x)
+            throws SQLException {
+        try {
+            original.setInt(parameterIndex, x);
+        } catch (final SQLException e) {
+            throw wrapException(e);
+        }
+    }
+
+    public void setLong(final int parameterIndex, final long x)
+            throws SQLException {
+        try {
+            original.setLong(parameterIndex, x);
+        } catch (final SQLException e) {
+            throw wrapException(e);
+        }
+    }
+
+    public void setMaxFieldSize(final int max) throws SQLException {
+        try {
+            original.setMaxFieldSize(max);
+        } catch (final SQLException e) {
+            throw wrapException(e);
+        }
+    }
+
+    public void setMaxRows(final int max) throws SQLException {
+        try {
+            original.setMaxRows(max);
+        } catch (final SQLException e) {
+            throw wrapException(e);
+        }
+    }
+
+    public void setNull(final int paramIndex, final int sqlType,
+            final String typeName) throws SQLException {
+        try {
+            original.setNull(paramIndex, sqlType, typeName);
+        } catch (final SQLException e) {
+            throw wrapException(e);
+        }
+    }
+
+    public void setNull(final int parameterIndex, final int sqlType)
+            throws SQLException {
+        try {
+            original.setNull(parameterIndex, sqlType);
+        } catch (final SQLException e) {
+            throw wrapException(e);
+        }
+    }
+
+    public void setObject(final int parameterIndex, final Object x,
+            final int targetSqlType, final int scale) throws SQLException {
+        try {
+            original.setObject(parameterIndex, x, targetSqlType, scale);
+        } catch (final SQLException e) {
+            throw wrapException(e);
+        }
+    }
+
+    public void setObject(final int parameterIndex, final Object x,
+            final int targetSqlType) throws SQLException {
+        try {
+            original.setObject(parameterIndex, x, targetSqlType);
+        } catch (final SQLException e) {
+            throw wrapException(e);
+        }
+    }
+
+    public void setObject(final int parameterIndex, final Object x)
+            throws SQLException {
+        try {
+            original.setObject(parameterIndex, x);
+        } catch (final SQLException e) {
+            throw wrapException(e);
+        }
+    }
+
+    public void setQueryTimeout(final int seconds) throws SQLException {
+        try {
+            original.setQueryTimeout(seconds);
+        } catch (final SQLException e) {
+            throw wrapException(e);
+        }
+    }
+
+    public void setRef(final int i, final Ref x) throws SQLException {
+        try {
+            original.setRef(i, x);
+        } catch (final SQLException e) {
+            throw wrapException(e);
+        }
+    }
+
+    public void setShort(final int parameterIndex, final short x)
+            throws SQLException {
+        try {
+            original.setShort(parameterIndex, x);
+        } catch (final SQLException e) {
+            throw wrapException(e);
+        }
+    }
+
+    public void setString(final int parameterIndex, final String x)
+            throws SQLException {
+        try {
+            original.setString(parameterIndex, x);
+        } catch (final SQLException e) {
+            throw wrapException(e);
+        }
+    }
+
+    public void setTime(final int parameterIndex, final Time x,
+            final Calendar cal) throws SQLException {
+        try {
+            original.setTime(parameterIndex, x, cal);
+        } catch (final SQLException e) {
+            throw wrapException(e);
+        }
+    }
+
+    public void setTime(final int parameterIndex, final Time x)
+            throws SQLException {
+        try {
+            original.setTime(parameterIndex, x);
+        } catch (final SQLException e) {
+            throw wrapException(e);
+        }
+    }
+
+    public void setTimestamp(final int parameterIndex, final Timestamp x,
+            final Calendar cal) throws SQLException {
+        try {
+            original.setTimestamp(parameterIndex, x, cal);
+        } catch (final SQLException e) {
+            throw wrapException(e);
+        }
+    }
+
+    public void setTimestamp(final int parameterIndex, final Timestamp x)
+            throws SQLException {
+        try {
+            original.setTimestamp(parameterIndex, x);
+        } catch (final SQLException e) {
+            throw wrapException(e);
+        }
+    }
+
+    public void setUnicodeStream(final int parameterIndex, final InputStream x,
+            final int length) throws SQLException {
+        try {
+            original.setUnicodeStream(parameterIndex, x, length);
+        } catch (final SQLException e) {
+            throw wrapException(e);
+        }
+    }
+
+    public void setURL(final int parameterIndex, final URL x)
+            throws SQLException {
+        try {
+            original.setURL(parameterIndex, x);
+        } catch (final SQLException e) {
+            throw wrapException(e);
+        }
+    }
+
+    public String toString() {
+        return original.toString();
+    }
+
 }

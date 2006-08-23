@@ -24,7 +24,7 @@ import org.seasar.extension.jdbc.util.ConnectionUtil;
 
 /**
  * @author higa
- * 
+ * @author manhole
  */
 public class BooleanToIntStatementFactory implements StatementFactory {
 
@@ -32,11 +32,12 @@ public class BooleanToIntStatementFactory implements StatementFactory {
 
     public PreparedStatement createPreparedStatement(Connection con, String sql) {
         return new BooleanToIntPreparedStatement(ConnectionUtil
-                .prepareStatement(con, sql));
+                .prepareStatement(con, sql), sql);
     }
 
     public CallableStatement createCallableStatement(Connection con, String sql) {
         return new BooleanToIntCallableStatement(ConnectionUtil.prepareCall(
                 con, sql));
     }
+
 }

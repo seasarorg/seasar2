@@ -21,15 +21,16 @@ import java.sql.Types;
 
 /**
  * @author higa
- * 
+ * @author manhole
  */
 public class BooleanToIntPreparedStatement extends PreparedStatementWrapper {
 
     /**
      * @param original
+     * @param sql
      */
-    public BooleanToIntPreparedStatement(PreparedStatement original) {
-        super(original);
+    public BooleanToIntPreparedStatement(PreparedStatement original, String sql) {
+        super(original, sql);
     }
 
     /**
