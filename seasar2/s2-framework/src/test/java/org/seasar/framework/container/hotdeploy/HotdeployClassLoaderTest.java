@@ -56,7 +56,7 @@ public class HotdeployClassLoaderTest extends TestCase {
                 .loadClass(AAA_NAME));
 
         Class clazz = hotLoader.loadClass("junit.framework.TestCase");
-        assertSame(hotLoader, clazz.getClassLoader());
+        assertSame(originalLoader, clazz.getClassLoader());
 
         try {
             hotLoader.loadClass(PACKAGE_NAME + ".xxx");

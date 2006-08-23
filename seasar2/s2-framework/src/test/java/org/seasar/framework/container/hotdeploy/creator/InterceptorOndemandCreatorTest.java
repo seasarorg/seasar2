@@ -30,14 +30,9 @@ public class InterceptorOndemandCreatorTest extends OndemandCreatorTestCase {
     }
 
     public void testAll() throws Exception {
-        String name = "helloInterceptor";
+        String name = "nullInterceptor";
         ComponentDef cd = getComponentDef(name);
         assertNotNull(cd);
-        assertEquals(name, cd.getComponentName());
-
-        String name2 = "nullInterceptor";
-        ComponentDef cd2 = getComponentDef(name2);
-        assertNotNull(cd2);
     }
 
     public void testGetComponentClassName() throws Exception {

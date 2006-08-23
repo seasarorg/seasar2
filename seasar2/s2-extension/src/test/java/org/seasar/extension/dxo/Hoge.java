@@ -24,6 +24,9 @@ public class Hoge {
 
     private BigDecimal baz;
 
+    public Hoge() {
+    }
+
     public Hoge(int foo, String bar, BigDecimal baz) {
         this.foo = foo;
         this.bar = bar;
