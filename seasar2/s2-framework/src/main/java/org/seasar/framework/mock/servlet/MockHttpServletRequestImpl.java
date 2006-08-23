@@ -91,7 +91,7 @@ public class MockHttpServletRequestImpl implements MockHttpServletRequest {
 
     private int localPort;
 
-    private Locale locale;
+    private List locales = new ArrayList();
 
     public MockHttpServletRequestImpl(ServletContext servletContext,
             String servletPath) {
@@ -631,11 +631,15 @@ public class MockHttpServletRequestImpl implements MockHttpServletRequest {
      * @see javax.servlet.ServletRequest#getLocale()
      */
     public Locale getLocale() {
-        return locale;
+        if (locales.isEmpty()) {
+            return null;
+        }
+        return (Locale) locales.get(0);
     }
 
     public void setLocale(Locale locale) {
-        this.locale = locale;
+        locales.clear();
+        locales.add(locale);
     }
 
     /**
@@ -643,7 +647,7 @@ public class MockHttpServletRequestImpl implements MockHttpServletRequest {
      * @see javax.servlet.ServletRequest#getLocales()
      */
     public Enumeration getLocales() {
-        throw new UnsupportedOperationException();
+        return new EnumerationAdapter(locales.iterator());
     }
 
     /**
