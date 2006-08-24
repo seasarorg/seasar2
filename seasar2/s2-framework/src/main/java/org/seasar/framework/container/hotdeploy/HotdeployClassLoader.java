@@ -16,28 +16,21 @@
 package org.seasar.framework.container.hotdeploy;
 
 import java.io.InputStream;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.InputStreamUtil;
-import org.seasar.framework.util.MethodUtil;
 import org.seasar.framework.util.ResourceUtil;
 
 public class HotdeployClassLoader extends ClassLoader {
 
     private OndemandProject[] projects;
 
-    private Method findLoadedClassMethod;
-
     private List listeners = new ArrayList();
 
     public HotdeployClassLoader(ClassLoader classLoader) {
         super(classLoader);
-        findLoadedClassMethod = ClassUtil.getDeclaredMethod(ClassLoader.class,
-                "findLoadedClass", new Class[] { String.class });
-        findLoadedClassMethod.setAccessible(true);
     }
 
     public void setProjects(OndemandProject[] projects) {
@@ -64,7 +57,7 @@ public class HotdeployClassLoader extends ClassLoader {
             throws ClassNotFoundException {
 
         if (isTargetClass(className)) {
-            Class clazz = findLoadedClassInternal(className);
+            Class clazz = findLoadedClass(className);
             if (clazz != null) {
                 return clazz;
             }
@@ -80,22 +73,6 @@ public class HotdeployClassLoader extends ClassLoader {
             }
         }
         return super.loadClass(className, resolve);
-    }
-
-    protected Class findLoadedClassInternal(String className) {
-        for (ClassLoader loader = this; loader != null; loader = loader
-                .getParent()) {
-            Class clazz = invokeFindLoadedClass(loader, className);
-            if (clazz != null) {
-                return clazz;
-            }
-        }
-        return null;
-    }
-
-    protected Class invokeFindLoadedClass(ClassLoader loader, String className) {
-        return (Class) MethodUtil.invoke(findLoadedClassMethod, loader,
-                new Object[] { className });
     }
 
     protected Class defineClass(String className, InputStream classFile) {
