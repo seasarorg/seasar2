@@ -565,7 +565,7 @@ public class Seasar2Test extends S2TestCase {
     }
 
     @RunWith(Seasar2.class)
-    public static class RegisterEJB3ByFieldNameTest {
+    public static class BindEJB3ByFieldNameTest {
 
         TestContext testContext;
 
@@ -583,9 +583,9 @@ public class Seasar2Test extends S2TestCase {
         }
     }
 
-    public void testRegisterEJBByFieldName() throws Exception {
+    public void testBindEJB3ByFieldName() throws Exception {
         JUnitCore core = new JUnitCore();
-        Result result = core.run(RegisterEJB3ByFieldNameTest.class);
+        Result result = core.run(BindEJB3ByFieldNameTest.class);
         printFailures(result.getFailures());
         assertTrue(result.wasSuccessful());
         assertEquals(1, result.getRunCount());
@@ -593,7 +593,7 @@ public class Seasar2Test extends S2TestCase {
     }
 
     @RunWith(Seasar2.class)
-    public static class RegisterEJB3ByBeanNameTest {
+    public static class BindEJB3ByBeanNameTest {
 
         TestContext testContext;
 
@@ -609,9 +609,9 @@ public class Seasar2Test extends S2TestCase {
         }
     }
 
-    public void testRegisterEJBByBeanName() throws Exception {
+    public void testBindEJB3ByBeanName() throws Exception {
         JUnitCore core = new JUnitCore();
-        Result result = core.run(RegisterEJB3ByBeanNameTest.class);
+        Result result = core.run(BindEJB3ByBeanNameTest.class);
         printFailures(result.getFailures());
         assertTrue(result.wasSuccessful());
         assertEquals(1, result.getRunCount());
@@ -619,7 +619,7 @@ public class Seasar2Test extends S2TestCase {
     }
 
     @RunWith(Seasar2.class)
-    public static class RegisterEJB3ByTypeTest {
+    public static class BindEJB3ByTypeTest {
 
         TestContext testContext;
 
@@ -635,9 +635,9 @@ public class Seasar2Test extends S2TestCase {
         }
     }
 
-    public void testRegisterEJBByType() throws Exception {
+    public void testBindEJB3ByType() throws Exception {
         JUnitCore core = new JUnitCore();
-        Result result = core.run(RegisterEJB3ByTypeTest.class);
+        Result result = core.run(BindEJB3ByTypeTest.class);
         printFailures(result.getFailures());
         assertTrue(result.wasSuccessful());
         assertEquals(1, result.getRunCount());
