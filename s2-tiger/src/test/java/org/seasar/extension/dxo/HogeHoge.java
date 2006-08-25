@@ -15,45 +15,49 @@
  */
 package org.seasar.extension.dxo;
 
-import java.math.BigDecimal;
+/**
+ * @author koichik
+ * 
+ */
+public class HogeHoge {
 
-public class Hoge {
-    private int foo;
+    private String foo;
 
-    private String bar;
+    private char[] bar;
 
-    private BigDecimal baz;
+    private int baz;
 
-    public Hoge() {
+    public HogeHoge() {
     }
 
-    public Hoge(int foo, String bar, BigDecimal baz) {
+    public HogeHoge(String foo, char[] bar, int baz) {
         this.foo = foo;
         this.bar = bar;
         this.baz = baz;
     }
 
-    public String getBar() {
-        return bar;
-    }
-
-    public void setBar(String bar) {
-        this.bar = bar;
-    }
-
-    public BigDecimal getBaz() {
-        return baz;
-    }
-
-    public void setBaz(BigDecimal baz) {
-        this.baz = baz;
-    }
-
-    public int getFoo() {
+    public String getFoo() {
         return foo;
     }
 
-    public void setFoo(int foo) {
+    public void setFoo(String foo) {
         this.foo = foo;
     }
+
+    public char[] getBar() {
+        return bar;
+    }
+
+    public void setBar(char[] bar) {
+        this.bar = bar;
+    }
+
+    public int getBaz() {
+        return baz;
+    }
+
+    public void setBaz(int baz) {
+        this.baz = baz;
+    }
+
 }

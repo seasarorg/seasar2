@@ -25,7 +25,6 @@ import junit.framework.TestCase;
 
 /**
  * @author koichik
- * 
  */
 public class ReflectionUtilTest extends TestCase {
 
@@ -131,6 +130,20 @@ public class ReflectionUtilTest extends TestCase {
         assertEquals(String.class, ReflectionUtil.getElementTypeOfList(clazz));
     }
 
+    public void testGetElementTypeOfListFromParameter() throws Exception {
+        Method m = Foo.class.getMethod("convert", List.class, List.class);
+        assertEquals(Object.class, ReflectionUtil
+                .getElementTypeOfListFromParameterType(m, 0));
+        assertEquals(Integer.class, ReflectionUtil
+                .getElementTypeOfListFromParameterType(m, 1));
+    }
+
+    public void testGetElementTypeOfListFromReturnType() throws Exception {
+        Method m = Foo.class.getMethod("convert", List.class, List.class);
+        assertEquals(String.class, ReflectionUtil
+                .getElementTypeOfListFromReturnType(m));
+    }
+
     public static class Foo {
         private int n;
 
@@ -160,6 +173,10 @@ public class ReflectionUtilTest extends TestCase {
 
         public void setS(String s) {
             this.s = s;
+        }
+
+        public List<String> convert(List<Object> o, List<Integer> i) {
+            return null;
         }
     }
 

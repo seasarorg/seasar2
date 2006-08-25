@@ -3,7 +3,11 @@
 	"http://www.seasar.org/dtd/components24.dtd">
 <components>
 	<include path="dxo.dicon"/>
-	
+
+	<component class="org.seasar.extension.dxo.DxoInterceptorTigerTest$BeanDxo">
+		<aspect>dxo.interceptor</aspect>
+	</component>	
+
 	<component class="org.seasar.extension.dxo.DxoInterceptorTigerTest$MapDxo">
 		<aspect>dxo.interceptor</aspect>
 	</component>	

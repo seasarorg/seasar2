@@ -211,4 +211,16 @@ public abstract class ReflectionUtil {
 
         return Class.class.cast(actualTypeArgument[0]);
     }
+
+    public static Class<?> getElementTypeOfListFromParameterType(
+            final Method method, final int parameterPosition) {
+        final Type[] parameterTypes = method.getGenericParameterTypes();
+        return getElementTypeOfList(parameterTypes[parameterPosition]);
+    }
+
+    public static Class<?> getElementTypeOfListFromReturnType(
+            final Method method) {
+        return getElementTypeOfList(method.getGenericReturnType());
+    }
+
 }
