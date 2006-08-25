@@ -13,20 +13,16 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.dxo;
+package org.seasar.extension.dxo.converter.impl;
 
 /**
- * @author Satsohi Kimura
+ * @author Satoshi Kimura
  * @author koichik
  */
-public interface DxoConstants {
+public class IntegerConverter extends NumberConverter {
 
-    String DATE_PATTERN = "DATE_PATTERN";
-
-    String TIME_PATTERN = "TIME_PATTERN";
-
-    String TIMESTAMP_PATTERN = "TIMESTAMP_PATTERN";
-
-    String MAP_CONVERSION = "MAP_CONVERSION";
+    protected Number convert(final Number number) {
+        return new Integer(number.intValue());
+    }
 
 }

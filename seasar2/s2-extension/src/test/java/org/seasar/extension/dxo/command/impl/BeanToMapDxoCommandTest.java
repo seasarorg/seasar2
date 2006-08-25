@@ -30,14 +30,14 @@ import org.seasar.framework.util.ClassUtil;
  * @author koichik
  * 
  */
-public class MapConversionDxoCommandTest extends TestCase {
+public class BeanToMapDxoCommandTest extends TestCase {
 
     private static final String MAP_CONVERSION = "'one' : foo, 'two' : bar, 'three' : baz, 'four' : foo+bar+baz";
 
-    public void testScalar1() {
-        MapConversionDxoCommand command = new MapConversionDxoCommand(
-                MAP_CONVERSION, ClassUtil.getMethod(ScalarDxo.class, "convert",
-                        new Class[] { Hoge.class }));
+    public void testScalar1() throws Exception {
+        BeanToMapDxoCommand command = new BeanToMapDxoCommand(ClassUtil
+                .getMethod(ScalarDxo.class, "convert",
+                        new Class[] { Hoge.class }), MAP_CONVERSION);
         Hoge src = new Hoge(100, "Hoge", new BigDecimal("1000"));
         Map dest = (Map) command.execute(new Object[] { src });
         assertNotNull(dest);
@@ -48,10 +48,10 @@ public class MapConversionDxoCommandTest extends TestCase {
         assertEquals("100Hoge1000", dest.get("four"));
     }
 
-    public void testScalar2() {
-        MapConversionDxoCommand command = new MapConversionDxoCommand(
-                MAP_CONVERSION, ClassUtil.getMethod(ScalarDxo.class, "convert",
-                        new Class[] { Hoge.class, Map.class }));
+    public void testScalar2() throws Exception {
+        BeanToMapDxoCommand command = new BeanToMapDxoCommand(ClassUtil
+                .getMethod(ScalarDxo.class, "convert", new Class[] {
+                        Hoge.class, Map.class }), MAP_CONVERSION);
         Hoge src = new Hoge(100, "Hoge", new BigDecimal("1000"));
         Map dest = new HashMap();
         command.execute(new Object[] { src, dest });
@@ -63,10 +63,10 @@ public class MapConversionDxoCommandTest extends TestCase {
         assertEquals("100Hoge1000", dest.get("four"));
     }
 
-    public void testArrayToArray1() {
-        MapConversionDxoCommand command = new MapConversionDxoCommand(
-                MAP_CONVERSION, ClassUtil.getMethod(ToArrayDxo.class,
-                        "convert", new Class[] { Hoge[].class }));
+    public void testArrayToArray1() throws Exception {
+        BeanToMapDxoCommand command = new BeanToMapDxoCommand(ClassUtil
+                .getMethod(ToArrayDxo.class, "convert",
+                        new Class[] { Hoge[].class }), MAP_CONVERSION);
         Hoge[] src = new Hoge[2];
         src[0] = new Hoge(100, "Hoge", new BigDecimal("1000"));
         src[1] = new Hoge(200, "HogeHoge", new BigDecimal("2000"));
@@ -87,10 +87,10 @@ public class MapConversionDxoCommandTest extends TestCase {
         assertEquals("200HogeHoge2000", dest[1].get("four"));
     }
 
-    public void testArrayToArray2() {
-        MapConversionDxoCommand command = new MapConversionDxoCommand(
-                MAP_CONVERSION, ClassUtil.getMethod(ToArrayDxo.class,
-                        "convert", new Class[] { Hoge[].class, Map[].class }));
+    public void testArrayToArray2() throws Exception {
+        BeanToMapDxoCommand command = new BeanToMapDxoCommand(ClassUtil
+                .getMethod(ToArrayDxo.class, "convert", new Class[] {
+                        Hoge[].class, Map[].class }), MAP_CONVERSION);
         Hoge[] src = new Hoge[2];
         src[0] = new Hoge(100, "Hoge", new BigDecimal("1000"));
         src[1] = new Hoge(200, "HogeHoge", new BigDecimal("2000"));
@@ -112,10 +112,10 @@ public class MapConversionDxoCommandTest extends TestCase {
         assertEquals("200HogeHoge2000", dest[1].get("four"));
     }
 
-    public void testListToArray1() {
-        MapConversionDxoCommand command = new MapConversionDxoCommand(
-                MAP_CONVERSION, ClassUtil.getMethod(ToArrayDxo.class,
-                        "convert", new Class[] { List.class }));
+    public void testListToArray1() throws Exception {
+        BeanToMapDxoCommand command = new BeanToMapDxoCommand(ClassUtil
+                .getMethod(ToArrayDxo.class, "convert",
+                        new Class[] { List.class }), MAP_CONVERSION);
         List src = new ArrayList();
         src.add(new Hoge(100, "Hoge", new BigDecimal("1000")));
         src.add(new Hoge(200, "HogeHoge", new BigDecimal("2000")));
@@ -136,10 +136,10 @@ public class MapConversionDxoCommandTest extends TestCase {
         assertEquals("200HogeHoge2000", dest[1].get("four"));
     }
 
-    public void testListToArray2() {
-        MapConversionDxoCommand command = new MapConversionDxoCommand(
-                MAP_CONVERSION, ClassUtil.getMethod(ToArrayDxo.class,
-                        "convert", new Class[] { List.class, Map[].class }));
+    public void testListToArray2() throws Exception {
+        BeanToMapDxoCommand command = new BeanToMapDxoCommand(ClassUtil
+                .getMethod(ToArrayDxo.class, "convert", new Class[] {
+                        List.class, Map[].class }), MAP_CONVERSION);
         List src = new ArrayList();
         src.add(new Hoge(100, "Hoge", new BigDecimal("1000")));
         src.add(new Hoge(200, "HogeHoge", new BigDecimal("2000")));
@@ -161,10 +161,10 @@ public class MapConversionDxoCommandTest extends TestCase {
         assertEquals("200HogeHoge2000", dest[1].get("four"));
     }
 
-    public void testArrayToList1() {
-        MapConversionDxoCommand command = new MapConversionDxoCommand(
-                MAP_CONVERSION, ClassUtil.getMethod(ToListDxo.class, "convert",
-                        new Class[] { Hoge[].class }));
+    public void testArrayToList1() throws Exception {
+        BeanToMapDxoCommand command = new BeanToMapDxoCommand(ClassUtil
+                .getMethod(ToListDxo.class, "convert",
+                        new Class[] { Hoge[].class }), MAP_CONVERSION);
         Hoge[] src = new Hoge[2];
         src[0] = new Hoge(100, "Hoge", new BigDecimal("1000"));
         src[1] = new Hoge(200, "HogeHoge", new BigDecimal("2000"));
@@ -187,10 +187,10 @@ public class MapConversionDxoCommandTest extends TestCase {
         assertEquals("200HogeHoge2000", map.get("four"));
     }
 
-    public void testArrayToList2() {
-        MapConversionDxoCommand command = new MapConversionDxoCommand(
-                MAP_CONVERSION, ClassUtil.getMethod(ToListDxo.class, "convert",
-                        new Class[] { Hoge[].class, List.class }));
+    public void testArrayToList2() throws Exception {
+        BeanToMapDxoCommand command = new BeanToMapDxoCommand(ClassUtil
+                .getMethod(ToListDxo.class, "convert", new Class[] {
+                        Hoge[].class, List.class }), MAP_CONVERSION);
         Hoge[] src = new Hoge[2];
         src[0] = new Hoge(100, "Hoge", new BigDecimal("1000"));
         src[1] = new Hoge(200, "HogeHoge", new BigDecimal("2000"));
@@ -214,10 +214,10 @@ public class MapConversionDxoCommandTest extends TestCase {
         assertEquals("200HogeHoge2000", map.get("four"));
     }
 
-    public void testListToList1() {
-        MapConversionDxoCommand command = new MapConversionDxoCommand(
-                MAP_CONVERSION, ClassUtil.getMethod(ToListDxo.class, "convert",
-                        new Class[] { List.class }));
+    public void testListToList1() throws Exception {
+        BeanToMapDxoCommand command = new BeanToMapDxoCommand(ClassUtil
+                .getMethod(ToListDxo.class, "convert",
+                        new Class[] { List.class }), MAP_CONVERSION);
         List src = new ArrayList();
         src.add(new Hoge(100, "Hoge", new BigDecimal("1000")));
         src.add(new Hoge(200, "HogeHoge", new BigDecimal("2000")));
@@ -240,10 +240,10 @@ public class MapConversionDxoCommandTest extends TestCase {
         assertEquals("200HogeHoge2000", map.get("four"));
     }
 
-    public void testListToList2() {
-        MapConversionDxoCommand command = new MapConversionDxoCommand(
-                MAP_CONVERSION, ClassUtil.getMethod(ToListDxo.class, "convert",
-                        new Class[] { List.class, List.class }));
+    public void testListToList2() throws Exception {
+        BeanToMapDxoCommand command = new BeanToMapDxoCommand(ClassUtil
+                .getMethod(ToListDxo.class, "convert", new Class[] {
+                        List.class, List.class }), MAP_CONVERSION);
         List src = new ArrayList();
         src.add(new Hoge(100, "Hoge", new BigDecimal("1000")));
         src.add(new Hoge(200, "HogeHoge", new BigDecimal("2000")));

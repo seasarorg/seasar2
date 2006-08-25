@@ -33,17 +33,29 @@ public class ConstantAnnotationReader implements AnnotationReader {
     }
 
     public String getDatePattern(final Class dxoClass, final Method method) {
+        return getDatePattern(dxoClass, method, DxoConstants.DATE_PATTERN);
+    }
+
+    public String getTimePattern(final Class dxoClass, final Method method) {
+        return getDatePattern(dxoClass, method, DxoConstants.TIME_PATTERN);
+    }
+
+    public String getTimestampPattern(final Class dxoClass, final Method method) {
+        return getDatePattern(dxoClass, method, DxoConstants.TIMESTAMP_PATTERN);
+    }
+
+    public String getDatePattern(final Class dxoClass, final Method method,
+            final String annotation) {
         final BeanDesc dxoBeanDesc = BeanDescFactory.getBeanDesc(dxoClass);
-        String fieldName = getConstantAnnotationName(method,
-                DxoConstants.DATE_PATTERN);
+        String fieldName = getConstantAnnotationName(method, annotation);
         if (dxoBeanDesc.hasField(fieldName)) {
             return (String) dxoBeanDesc.getFieldValue(fieldName, null);
         }
-        fieldName = method.getName() + "_" + DxoConstants.DATE_PATTERN;
+        fieldName = method.getName() + "_" + annotation;
         if (dxoBeanDesc.hasField(fieldName)) {
             return (String) dxoBeanDesc.getFieldValue(fieldName, null);
         }
-        fieldName = DxoConstants.DATE_PATTERN;
+        fieldName = annotation;
         if (dxoBeanDesc.hasField(fieldName)) {
             return (String) dxoBeanDesc.getFieldValue(fieldName, null);
         }

@@ -13,20 +13,28 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.dxo;
+package org.seasar.extension.dxo.converter.impl;
+
+import org.seasar.extension.dxo.converter.ConversionContext;
 
 /**
- * @author Satsohi Kimura
+ * @author Satoshi Kimura
  * @author koichik
  */
-public interface DxoConstants {
+public class CharArrayConverter extends AbstractConverter {
 
-    String DATE_PATTERN = "DATE_PATTERN";
-
-    String TIME_PATTERN = "TIME_PATTERN";
-
-    String TIMESTAMP_PATTERN = "TIMESTAMP_PATTERN";
-
-    String MAP_CONVERSION = "MAP_CONVERSION";
+    public Object convert(final Object source, final Class destClass,
+            final ConversionContext context) {
+        if (source == null) {
+            return null;
+        }
+        if (source instanceof char[]) {
+            return source;
+        }
+        if (source instanceof String) {
+            return ((String) source).toCharArray();
+        }
+        return source.toString().toCharArray();
+    }
 
 }

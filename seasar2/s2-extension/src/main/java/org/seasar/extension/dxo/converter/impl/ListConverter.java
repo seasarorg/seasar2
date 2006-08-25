@@ -13,31 +13,34 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.dxo.builder.impl;
+package org.seasar.extension.dxo.converter.impl;
 
-import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
-import org.seasar.extension.dxo.command.DxoCommand;
-import org.seasar.extension.dxo.command.impl.MapConversionDxoCommand;
+import org.seasar.extension.dxo.converter.ConversionContext;
 
 /**
+ * @author Satoshi Kimura
  * @author koichik
- * 
  */
-public class MapConversionDxoCommandBuilder extends AbstractDxoCommandBuilder {
+public class ListConverter extends AbstractConverter {
 
-    protected Class[] ACCEPTABLE_DEST_CLASSES = new Class[] { Map.class,
-            Map[].class, List.class };
-
-    public DxoCommand createDxoCommand(final Class dxoClass, final Method method) {
-        final String expression = getAnnotationReader().getMapConversion(
-                dxoClass, method);
-        if (expression == null) {
+    public Object convert(final Object source, final Class destClass,
+            final ConversionContext context) {
+        if (source == null) {
             return null;
         }
-        return new MapConversionDxoCommand(expression, method);
+        if (source instanceof List) {
+            return source;
+        }
+        if (source.getClass().isArray()) {
+            return Arrays.asList((Object[]) source);
+        }
+        final List list = new ArrayList();
+        list.add(source);
+        return list;
     }
 
 }

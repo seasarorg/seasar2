@@ -13,20 +13,20 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.dxo;
+package org.seasar.extension.dxo.exception;
+
+import org.seasar.framework.exception.SRuntimeException;
 
 /**
- * @author Satsohi Kimura
+ * @author Satoshi Kimura
  * @author koichik
  */
-public interface DxoConstants {
+public class ConversionRuntimeException extends SRuntimeException {
 
-    String DATE_PATTERN = "DATE_PATTERN";
+    private static final long serialVersionUID = 1L;
 
-    String TIME_PATTERN = "TIME_PATTERN";
-
-    String TIMESTAMP_PATTERN = "TIMESTAMP_PATTERN";
-
-    String MAP_CONVERSION = "MAP_CONVERSION";
+    public ConversionRuntimeException(final Class type) {
+        super("WSSR0000", new Object[] { type.getName() });// TODO
+    }
 
 }

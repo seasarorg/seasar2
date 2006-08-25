@@ -15,10 +15,13 @@
  */
 package org.seasar.extension.dxo.annotation.impl;
 
+import java.lang.reflect.Constructor;
+
 import org.seasar.extension.dxo.annotation.AnnotationReader;
 import org.seasar.extension.dxo.annotation.AnnotationReaderFactory;
 import org.seasar.framework.exception.ClassNotFoundRuntimeException;
 import org.seasar.framework.util.ClassUtil;
+import org.seasar.framework.util.ConstructorUtil;
 
 /**
  * @author Satoshi Kimura
@@ -31,13 +34,16 @@ public class AnnotationReaderFactoryImpl implements AnnotationReaderFactory {
     private AnnotationReader annotationHandler;
 
     public AnnotationReaderFactoryImpl() {
+        annotationHandler = new ConstantAnnotationReader();
         try {
-            annotationHandler = (AnnotationReader) ClassUtil
-                    .newInstance(TIGER_ANNOTATION_HANDLER_CLASS_NAME);
-            return;
+            final Class clazz = ClassUtil
+                    .forName(TIGER_ANNOTATION_HANDLER_CLASS_NAME);
+            final Constructor ctor = ClassUtil.getConstructor(clazz,
+                    new Class[] { AnnotationReader.class });
+            annotationHandler = (AnnotationReader) ConstructorUtil.newInstance(
+                    ctor, new Object[] { annotationHandler });
         } catch (final ClassNotFoundRuntimeException ignore) {
         }
-        annotationHandler = new ConstantAnnotationReader();
     }
 
     public AnnotationReader getAnnotationReader() {

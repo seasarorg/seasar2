@@ -16,17 +16,48 @@
 package org.seasar.extension.dxo;
 
 /**
- * @author Satsohi Kimura
  * @author koichik
+ * 
  */
-public interface DxoConstants {
+public class HogeHoge {
 
-    String DATE_PATTERN = "DATE_PATTERN";
+    private String foo;
 
-    String TIME_PATTERN = "TIME_PATTERN";
+    private char[] bar;
 
-    String TIMESTAMP_PATTERN = "TIMESTAMP_PATTERN";
+    private int baz;
 
-    String MAP_CONVERSION = "MAP_CONVERSION";
+    public HogeHoge() {
+    }
+
+    public HogeHoge(String foo, char[] bar, int baz) {
+        this.foo = foo;
+        this.bar = bar;
+        this.baz = baz;
+    }
+
+    public String getFoo() {
+        return foo;
+    }
+
+    public void setFoo(String foo) {
+        this.foo = foo;
+    }
+
+    public char[] getBar() {
+        return bar;
+    }
+
+    public void setBar(char[] bar) {
+        this.bar = bar;
+    }
+
+    public int getBaz() {
+        return baz;
+    }
+
+    public void setBaz(int baz) {
+        this.baz = baz;
+    }
 
 }

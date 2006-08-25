@@ -25,6 +25,10 @@ public interface AnnotationReader {
 
     String getDatePattern(Class dxoClass, Method method);
 
+    String getTimePattern(Class dxoClass, Method method);
+
+    String getTimestampPattern(Class dxoClass, Method method);
+
     String getMapConversion(Class dxoClass, Method method);
 
 }

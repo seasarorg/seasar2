@@ -13,20 +13,26 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.dxo;
+package org.seasar.extension.dxo.converter;
+
+import java.text.DateFormat;
 
 /**
- * @author Satsohi Kimura
  * @author koichik
+ * 
  */
-public interface DxoConstants {
+public interface ConversionContext {
 
-    String DATE_PATTERN = "DATE_PATTERN";
+    ConverterFactory getConverterFactory();
 
-    String TIME_PATTERN = "TIME_PATTERN";
+    void addConvertedObject(Object source, Object dest);
 
-    String TIMESTAMP_PATTERN = "TIMESTAMP_PATTERN";
+    Object getConvertedObject(Object source);
 
-    String MAP_CONVERSION = "MAP_CONVERSION";
+    DateFormat getDateFormat();
+
+    DateFormat getTimeFormat();
+
+    DateFormat getTimestampFormat();
 
 }

@@ -23,6 +23,7 @@ import java.util.Map;
 import org.seasar.extension.dxo.builder.DxoCommandBuilder;
 import org.seasar.extension.dxo.command.DxoCommand;
 import org.seasar.extension.dxo.meta.DxoMetadata;
+import org.seasar.framework.util.MethodUtil;
 
 /**
  * @author koichik
@@ -37,10 +38,16 @@ public class DxoMetadataImpl implements DxoMetadata {
         final Method[] methods = dxoClass.getMethods();
         for (int i = 0; i < methods.length; ++i) {
             final Method method = methods[i];
+            if (MethodUtil.isBridgeMethod(method)
+                    || MethodUtil.isSyntheticMethod(method)) {
+                continue;
+            }
+
             final int modifier = method.getModifiers();
             if (!Modifier.isPublic(modifier) || !Modifier.isAbstract(modifier)) {
                 continue;
             }
+
             for (int j = 0; j < builders.length; ++j) {
                 final DxoCommand command = builders[j].createDxoCommand(
                         dxoClass, method);

@@ -13,20 +13,19 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.dxo;
+package org.seasar.extension.dxo.converter.impl;
+
+import org.seasar.extension.dxo.converter.ConversionContext;
+import org.seasar.extension.dxo.converter.Converter;
 
 /**
- * @author Satsohi Kimura
  * @author koichik
+ * 
  */
-public interface DxoConstants {
+public abstract class AbstractConverter implements Converter {
 
-    String DATE_PATTERN = "DATE_PATTERN";
-
-    String TIME_PATTERN = "TIME_PATTERN";
-
-    String TIMESTAMP_PATTERN = "TIMESTAMP_PATTERN";
-
-    String MAP_CONVERSION = "MAP_CONVERSION";
+    public void convert(Object source, Object dest, ConversionContext context) {
+        throw new UnsupportedOperationException();
+    }
 
 }
