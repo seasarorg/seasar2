@@ -5,28 +5,19 @@
 
 	<component class="org.seasar.framework.convention.impl.NamingConventionImpl"/>
 
-	<component name="project" class="org.seasar.framework.container.cooldeploy.impl.CoolProjectImpl">
+	<component class="org.seasar.framework.container.cooldeploy.impl.CoolProjectImpl">
 		<property name="rootPackageName">"org.seasar.framework.jpa"</property>
 	</component>
 
-	<component name="project2" class="org.seasar.framework.container.cooldeploy.impl.CoolProjectImpl">
+	<component class="org.seasar.framework.container.cooldeploy.impl.CoolProjectImpl">
 		<property name="rootPackageName">"org.seasar.framework.jpa.sub"</property>
 	</component>
 	
-	<component name="project3" class="org.seasar.framework.container.cooldeploy.impl.CoolProjectImpl">
+	<component class="org.seasar.framework.container.cooldeploy.impl.CoolProjectImpl">
 		<property name="rootPackageName">"org.junit"</property>
 	</component>
 
 	<component class="org.seasar.framework.jpa.MappingFileAutoDetector">
-		<initMethod name="addProject">
-			<arg>project</arg>
-		</initMethod>
-		<initMethod name="addProject">
-			<arg>project2</arg>
-		</initMethod>	
-		<initMethod name="addProject">
-			<arg>project3</arg>
-		</initMethod>
 		<initMethod name="addTargetDirPath">
 			<arg>"org/junit/runner"</arg>
 		</initMethod>

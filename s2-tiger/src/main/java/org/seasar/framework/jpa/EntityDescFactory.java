@@ -63,6 +63,7 @@ public class EntityDescFactory {
         providers.remove(provider);
     }
 
+    @SuppressWarnings("unchecked")
     public static <T> EntityDesc<T> getEntityDesc(final Class<T> entityClass) {
         if (!initialized) {
             initialize();
@@ -74,10 +75,11 @@ public class EntityDescFactory {
         return createEntityDesc(entityClass);
     }
 
+    @SuppressWarnings("unchecked")
     protected static <T> EntityDesc<T> createEntityDesc(
             final Class<T> entityClass) {
         for (final EntityDescProvider provider : providers) {
-            final EntityDesc entityDesc = provider
+            final EntityDesc<T> entityDesc = provider
                     .createEntityDesc(entityClass);
             if (entityDesc != null) {
                 return CollectionsUtil.putIfAbsent(entityDescs, entityClass,

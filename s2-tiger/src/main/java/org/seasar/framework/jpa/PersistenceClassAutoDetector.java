@@ -17,6 +17,7 @@ package org.seasar.framework.jpa;
 
 import java.lang.annotation.Annotation;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -59,10 +60,15 @@ public class PersistenceClassAutoDetector extends AbstractClassAutoDetector
     @InitMethod
     public void init() {
         for (final AutoRegisterProject project : projects) {
-            final String packageName = project.getRootPackageName() + "."
-                    + namingConvention.getEntityPackageName();
+            final String packageName = ClassUtil.concatName(project
+                    .getRootPackageName(), namingConvention
+                    .getEntityPackageName());
             addTargetPackageName(packageName);
         }
+    }
+
+    public void setProjects(final AutoRegisterProject[] projects) {
+        this.projects.addAll(Arrays.asList(projects));
     }
 
     public void addProject(final AutoRegisterProject project) {

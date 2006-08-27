@@ -18,6 +18,7 @@ package org.seasar.framework.jpa;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Set;
@@ -27,6 +28,7 @@ import org.seasar.framework.autodetector.impl.AbstractResourceAutoDetector;
 import org.seasar.framework.container.annotation.tiger.InitMethod;
 import org.seasar.framework.container.autoregister.AutoRegisterProject;
 import org.seasar.framework.convention.NamingConvention;
+import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.ResourceUtil;
 import org.seasar.framework.util.ResourceTraversal.ResourceHandler;
 import org.seasar.framework.util.tiger.CollectionsUtil;
@@ -51,11 +53,16 @@ public class MappingFileAutoDetector extends AbstractResourceAutoDetector {
     @InitMethod
     public void init() {
         for (final AutoRegisterProject project : projects) {
-            final String packageName = project.getRootPackageName() + "."
-                    + namingConvention.getEntityPackageName();
+            final String packageName = ClassUtil.concatName(project
+                    .getRootPackageName(), namingConvention
+                    .getEntityPackageName());
             final String path = packageName.replace(".", "/");
             addTargetDirPath(path);
         }
+    }
+
+    public void setProjects(final AutoRegisterProject[] projects) {
+        this.projects.addAll(Arrays.asList(projects));
     }
 
     public void addProject(final AutoRegisterProject project) {
