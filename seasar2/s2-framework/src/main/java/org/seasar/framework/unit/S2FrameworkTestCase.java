@@ -18,6 +18,8 @@ package org.seasar.framework.unit;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.Servlet;
 
@@ -74,6 +76,8 @@ public abstract class S2FrameworkTestCase extends TestCase {
     private UnitClassLoader unitClassLoader;
 
     private NamingConvention namingConvention;
+
+    private List boundFields;
 
     public S2FrameworkTestCase() {
     }
@@ -151,11 +155,14 @@ public abstract class S2FrameworkTestCase extends TestCase {
                         setUpAfterContainerInit();
                         try {
                             bindFields();
-                            setUpAfterBindFields();
                             try {
-                                doRunTest();
+                                setUpAfterBindFields();
+                                try {
+                                    doRunTest();
+                                } finally {
+                                    tearDownBeforeUnbindFields();
+                                }
                             } finally {
-                                tearDownBeforeUnbindFields();
                                 unbindFields();
                             }
                         } finally {
@@ -309,6 +316,7 @@ public abstract class S2FrameworkTestCase extends TestCase {
     }
 
     protected void bindFields() throws Throwable {
+        boundFields = new ArrayList();
         for (Class clazz = getClass(); clazz != S2FrameworkTestCase.class
                 && clazz != null; clazz = clazz.getSuperclass()) {
 
@@ -351,6 +359,7 @@ public abstract class S2FrameworkTestCase extends TestCase {
             }
             if (component != null) {
                 FieldUtil.set(field, this, component);
+                boundFields.add(field);
             }
         }
     }
@@ -365,10 +374,17 @@ public abstract class S2FrameworkTestCase extends TestCase {
                 && !field.getType().isPrimitive();
     }
 
-    /**
-     * @deprecated
-     */
     protected void unbindFields() {
+        for (int i = 0; i < boundFields.size(); ++i) {
+            Field field = (Field) boundFields.get(i);
+            try {
+                field.set(this, null);
+            } catch (IllegalArgumentException e) {
+                System.err.println(e);
+            } catch (IllegalAccessException e) {
+                System.err.println(e);
+            }
+        }
     }
 
 }

@@ -66,6 +66,10 @@ public class S2FrameworkTestCaseTest extends S2FrameworkTestCase {
         assertNotNull("1", date_);
     }
 
+    public void tearDownBindField() {
+        assertNull(date_);
+    }
+
     public void setUpBindField2() {
         include("bbb.dicon");
     }
@@ -75,12 +79,21 @@ public class S2FrameworkTestCaseTest extends S2FrameworkTestCase {
         assertNotNull("2", ddd_);
     }
 
+    public void tearDownBindField2() {
+        assertNull(bbb_);
+        assertNull(ddd_);
+    }
+
     public void setUpBindField3() {
         include("ccc.dicon");
     }
 
     public void testBindField3() {
         assertNotNull("1", list1);
+    }
+
+    public void tearDownBindField3() {
+        assertNull(list1);
     }
 
     public void testInclude() {

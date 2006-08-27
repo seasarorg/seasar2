@@ -29,8 +29,6 @@ public final class Logger {
 
     private static final Map loggers = new HashMap();
 
-    private static final Set classLoaders = new HashSet();
-
     private static boolean initialized;
 
     private final Log log;
@@ -43,7 +41,6 @@ public final class Logger {
         if (logger == null) {
             logger = new Logger(clazz);
             loggers.put(clazz, logger);
-            classLoaders.add(Thread.currentThread().getContextClassLoader());
         }
         return logger;
     }
@@ -53,12 +50,8 @@ public final class Logger {
     }
 
     public synchronized static void dispose() {
-        for (final Iterator it = classLoaders.iterator(); it.hasNext();) {
-            final ClassLoader loader = (ClassLoader) it.next();
-            LogFactory.release(loader);
-        }
+        LogFactory.releaseAll();
         loggers.clear();
-        classLoaders.clear();
         initialized = false;
     }
 
