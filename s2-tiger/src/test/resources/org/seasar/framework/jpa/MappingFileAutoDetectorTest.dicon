@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN"
+	"http://www.seasar.org/dtd/components24.dtd">
+<components>
+
+	<component class="org.seasar.framework.convention.impl.NamingConventionImpl"/>
+
+	<component name="project" class="org.seasar.framework.container.cooldeploy.impl.CoolProjectImpl">
+		<property name="rootPackageName">"org.seasar.framework.jpa"</property>
+	</component>
+
+	<component name="project2" class="org.seasar.framework.container.cooldeploy.impl.CoolProjectImpl">
+		<property name="rootPackageName">"org.seasar.framework.jpa.sub"</property>
+	</component>
+	
+	<component name="project3" class="org.seasar.framework.container.cooldeploy.impl.CoolProjectImpl">
+		<property name="rootPackageName">"org.junit"</property>
+	</component>
+
+	<component class="org.seasar.framework.jpa.MappingFileAutoDetector">
+		<initMethod name="addProject">
+			<arg>project</arg>
+		</initMethod>
+		<initMethod name="addProject">
+			<arg>project2</arg>
+		</initMethod>	
+		<initMethod name="addProject">
+			<arg>project3</arg>
+		</initMethod>
+		<initMethod name="addTargetDirPath">
+			<arg>"org/junit/runner"</arg>
+		</initMethod>
+		<initMethod name="addResourceNamePattern">
+			<arg>".*/RunWith.class"</arg>
+		</initMethod>		
+	</component>
+
+</components>
