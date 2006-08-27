@@ -226,13 +226,13 @@ public final class ClassUtil {
     }
 
     public static String concatName(String s1, String s2) {
-        if (s1 == null && s2 == null) {
+        if (StringUtil.isEmpty(s1) && StringUtil.isEmpty(s2)) {
             return null;
         }
-        if (s1 != null && s2 == null) {
+        if (!StringUtil.isEmpty(s1) && StringUtil.isEmpty(s2)) {
             return s1;
         }
-        if (StringUtil.isEmpty(s1) && s2 != null) {
+        if (StringUtil.isEmpty(s1) && !StringUtil.isEmpty(s2)) {
             return s2;
         }
         return s1 + '.' + s2;
