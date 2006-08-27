@@ -16,7 +16,6 @@
 package org.seasar.framework.autodetector;
 
 import java.io.InputStream;
-import java.net.URL;
 
 /**
  * @author taedium
@@ -24,7 +23,7 @@ import java.net.URL;
  */
 public interface ResourceAutoDetector {
 
-    Entry[] detect(String path, URL url);
+    Entry[] detect();
 
     interface Entry {
         String getPath();

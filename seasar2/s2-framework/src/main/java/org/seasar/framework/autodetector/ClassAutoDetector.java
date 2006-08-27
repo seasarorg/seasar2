@@ -13,21 +13,14 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.framework.traverser;
-
-import java.io.File;
-import java.util.jar.JarFile;
+package org.seasar.framework.autodetector;
 
 /**
- * 
  * @author taedium
+ * 
  */
-public interface Traverser {
+public interface ClassAutoDetector {
 
-    void forEach(File rootDir);
-
-    void forEach(File rootDir, String baseDirectory);
-
-    void forEach(JarFile jarFile);
+    Class[] detect();
 
 }

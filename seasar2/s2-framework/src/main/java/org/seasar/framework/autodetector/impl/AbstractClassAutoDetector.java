@@ -23,67 +23,80 @@ import java.util.List;
 import java.util.Map;
 import java.util.jar.JarFile;
 
-import org.seasar.framework.traverser.Traverser;
+import org.seasar.framework.autodetector.ClassAutoDetector;
+import org.seasar.framework.exception.IORuntimeException;
+import org.seasar.framework.util.ClassTraversal;
+import org.seasar.framework.util.FileUtil;
 import org.seasar.framework.util.JarFileUtil;
 import org.seasar.framework.util.ResourceUtil;
 import org.seasar.framework.util.StringUtil;
 import org.seasar.framework.util.URLUtil;
 
 /**
- * 
  * @author taedium
+ * 
  */
-public abstract class AbstractAutoDetector {
-
-    public AbstractAutoDetector() {
-        strategies.put("file", new FileSystemStrategy());
-        strategies.put("jar", new JarFileStrategy());
-        strategies.put("zip", new ZipFileStrategy());
-    }
+public abstract class AbstractClassAutoDetector implements ClassAutoDetector {
 
     private Map strategies = new HashMap();
 
-    private List directoryNames = new ArrayList();
+    private List targetPackageNames = new ArrayList();;
 
-    public void addDirectoryName(String directoryName) {
-        directoryNames.add(directoryName);
+    public AbstractClassAutoDetector() {
+        strategies.put("file", new FileSystemStrategy());
+        strategies.put("jar", new JarFileStrategy());
+        strategies.put("zip", new ZipFileStrategy());
     }
 
     public void addStrategy(final String protocol, final Strategy strategy) {
         strategies.put(protocol, strategy);
     }
 
-    public String getDirectoryName(int index) {
-        return (String) directoryNames.get(index);
-    }
-
-    public int getDirectoryNameSize() {
-        return directoryNames.size();
+    public void addTargetPackageName(final String targetPackageName) {
+        targetPackageNames.add(targetPackageName);
     }
 
     public Strategy getStrategy(String protocol) {
         return (Strategy) strategies.get(protocol);
     }
 
+    public int getTargetPackageNameSize() {
+        return targetPackageNames.size();
+    }
+
+    public String getTargetPackageName(final int index) {
+        return (String) targetPackageNames.get(index);
+    }
+
     protected interface Strategy {
 
-        void detect(String path, URL url, Traverser traverser);
+        String getBaseName(String packageName, URL url);
+
+        void detect(String packageName, URL url,
+                ClassTraversal.ClassHandler handler);
     }
 
     protected class FileSystemStrategy implements Strategy {
 
-        public void detect(final String path, final URL url,
-                final Traverser traverser) {
-            final File rootDir = getRootDir(path, url);
-            for (int i = 0; i < getDirectoryNameSize(); i++) {
-                final String directoryName = getDirectoryName(i);
-                traverser.forEach(rootDir, directoryName);
+        public String getBaseName(final String packageName, final URL url) {
+            final File rootDir = getRootDir(packageName, url);
+            try {
+                return FileUtil.getCanonicalPath(rootDir);
+            } catch (IORuntimeException e) {
+                return null;
             }
         }
 
+        public void detect(final String packageName, final URL url,
+                final ClassTraversal.ClassHandler handler) {
+
+            final File rootDir = getRootDir(packageName, url);
+            ClassTraversal.forEach(rootDir, packageName, handler);
+        }
+
         protected File getRootDir(final String path, final URL url) {
-            File file = ResourceUtil.getResourceAsFile(path);
-            String[] names = StringUtil.split(path, "/");
+            File file = ResourceUtil.getFile(url);
+            final String[] names = StringUtil.split(path, ".");
             for (int i = 0; i < names.length; ++i) {
                 file = file.getParentFile();
             }
@@ -93,10 +106,19 @@ public abstract class AbstractAutoDetector {
 
     protected class JarFileStrategy implements Strategy {
 
-        public void detect(final String path, final URL url,
-                final Traverser traverser) {
+        public String getBaseName(final String packageName, final URL url) {
+            try {
+                return createJarFile(url).getName();
+            } catch (final IORuntimeException e) {
+                return null;
+            }
+        }
+
+        public void detect(final String packageName, final URL url,
+                final ClassTraversal.ClassHandler handler) {
+
             final JarFile jarFile = createJarFile(url);
-            traverser.forEach(jarFile);
+            ClassTraversal.forEach(jarFile, handler);
         }
 
         protected JarFile createJarFile(final URL url) {
@@ -110,10 +132,19 @@ public abstract class AbstractAutoDetector {
 
     protected class ZipFileStrategy implements Strategy {
 
-        public void detect(final String path, final URL url,
-                final Traverser traverser) {
+        public String getBaseName(final String packageName, final URL url) {
+            try {
+                return createJarFile(url).getName();
+            } catch (final IORuntimeException e) {
+                return null;
+            }
+        }
+
+        public void detect(final String packageName, final URL url,
+                final ClassTraversal.ClassHandler handler) {
+
             final JarFile jarFile = createJarFile(url);
-            traverser.forEach(jarFile);
+            ClassTraversal.forEach(jarFile, handler);
         }
 
         protected JarFile createJarFile(final URL url) {
@@ -124,5 +155,4 @@ public abstract class AbstractAutoDetector {
             return JarFileUtil.create(new File(jarFileName));
         }
     }
-
 }
