@@ -39,16 +39,35 @@ public final class FieldUtil {
         }
     }
 
+    public static int getInt(Field field) throws IllegalAccessRuntimeException {
+        return getInt(field, null);
+    }
+
     public static int getInt(Field field, Object target)
             throws IllegalAccessRuntimeException {
-
         try {
             return field.getInt(target);
         } catch (IllegalAccessException ex) {
             throw new IllegalAccessRuntimeException(field.getDeclaringClass(),
                     ex);
         }
+    }
 
+    public static String getString(Field field)
+            throws IllegalAccessRuntimeException {
+        return getString(field, null);
+    }
+
+    public static String getString(Field field, Object target)
+            throws IllegalAccessRuntimeException {
+
+        try {
+            Object value = field.get(target);
+            return (String) field.get(target);
+        } catch (IllegalAccessException ex) {
+            throw new IllegalAccessRuntimeException(field.getDeclaringClass(),
+                    ex);
+        }
     }
 
     public static void set(Field field, Object target, Object value)
