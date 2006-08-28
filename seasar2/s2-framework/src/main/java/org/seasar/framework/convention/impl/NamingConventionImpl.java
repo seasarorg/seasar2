@@ -15,9 +15,13 @@
  */
 package org.seasar.framework.convention.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.seasar.framework.convention.NamingConvention;
 import org.seasar.framework.exception.EmptyRuntimeException;
 import org.seasar.framework.util.ClassUtil;
+import org.seasar.framework.util.ResourceUtil;
 import org.seasar.framework.util.StringUtil;
 
 /**
@@ -31,8 +35,6 @@ public class NamingConventionImpl implements NamingConvention {
     private String viewRootPath = "/view";
 
     private String viewExtension = ".html";
-
-    private String implementationPackageName = "impl";
 
     private String implementationSuffix = "Impl";
 
@@ -58,27 +60,19 @@ public class NamingConventionImpl implements NamingConvention {
 
     private String dtoSuffix = "Dto";
 
-    private String webPackageName = "web";
-
-    private String dxoPackageName = "dxo";
-
-    private String logicPackageName = "logic";
-
-    private String daoPackageName = "dao";
+    private String subApplicationRootPackageName = "web";
 
     private String entityPackageName = "entity";
 
-    private String dtoPackageName = "dto";
+    private List rootPackageNameList = new ArrayList();
 
-    private String servicePackageName = "service";
+    public String getPageSuffix() {
+        return pageSuffix;
+    }
 
-    private String interceptorPackageName = "interceptor";
-
-    private String validatorPackageName = "validator";
-
-    private String converterPackageName = "converter";
-
-    private String helperPackageName = "helper";
+    public void setPageSuffix(String pageSuffix) {
+        this.pageSuffix = pageSuffix;
+    }
 
     public String getActionSuffix() {
         return actionSuffix;
@@ -86,14 +80,6 @@ public class NamingConventionImpl implements NamingConvention {
 
     public void setActionSuffix(String actionSuffix) {
         this.actionSuffix = actionSuffix;
-    }
-
-    public String getDaoPackageName() {
-        return daoPackageName;
-    }
-
-    public void setDaoPackage(String daoPackage) {
-        this.daoPackageName = daoPackage;
     }
 
     public String getDaoSuffix() {
@@ -104,28 +90,12 @@ public class NamingConventionImpl implements NamingConvention {
         this.daoSuffix = daoSuffix;
     }
 
-    public String getDtoPackageName() {
-        return dtoPackageName;
-    }
-
-    public void setDtoPackage(String dtoPackage) {
-        this.dtoPackageName = dtoPackage;
-    }
-
     public String getDtoSuffix() {
         return dtoSuffix;
     }
 
     public void setDtoSuffix(String dtoSuffix) {
         this.dtoSuffix = dtoSuffix;
-    }
-
-    public String getDxoPackageName() {
-        return dxoPackageName;
-    }
-
-    public void setDxoPackage(String dxoPackage) {
-        this.dxoPackageName = dxoPackage;
     }
 
     public String getDxoSuffix() {
@@ -136,52 +106,12 @@ public class NamingConventionImpl implements NamingConvention {
         this.dxoSuffix = dxoSuffix;
     }
 
-    public String getEntityPackageName() {
-        return entityPackageName;
-    }
-
-    public void setEntityPackage(String entityPackage) {
-        this.entityPackageName = entityPackage;
-    }
-
-    public String getHelperPackageName() {
-        return helperPackageName;
-    }
-
-    public void setHelperPackageName(String helperPackageName) {
-        this.helperPackageName = helperPackageName;
-    }
-
     public String getHelperSuffix() {
         return helperSuffix;
     }
 
     public void setHelperSuffix(String helperSuffix) {
         this.helperSuffix = helperSuffix;
-    }
-
-    public String getImplementationPackageName() {
-        return implementationPackageName;
-    }
-
-    public void setImplementationPackageName(String implementationPackageName) {
-        this.implementationPackageName = implementationPackageName;
-    }
-
-    public String getImplementationSuffix() {
-        return implementationSuffix;
-    }
-
-    public void setImplementationSuffix(String implementationSuffix) {
-        this.implementationSuffix = implementationSuffix;
-    }
-
-    public String getInterceptorPackageName() {
-        return interceptorPackageName;
-    }
-
-    public void setInterceptorPackage(String interceptorPackage) {
-        this.interceptorPackageName = interceptorPackage;
     }
 
     public String getInterceptorSuffix() {
@@ -192,36 +122,12 @@ public class NamingConventionImpl implements NamingConvention {
         this.interceptorSuffix = interceptorSuffix;
     }
 
-    public String getLogicPackageName() {
-        return logicPackageName;
-    }
-
-    public void setLogicPackage(String logicPackage) {
-        this.logicPackageName = logicPackage;
-    }
-
     public String getLogicSuffix() {
         return logicSuffix;
     }
 
     public void setLogicSuffix(String logicSuffix) {
         this.logicSuffix = logicSuffix;
-    }
-
-    public String getPageSuffix() {
-        return pageSuffix;
-    }
-
-    public void setPageSuffix(String pageSuffix) {
-        this.pageSuffix = pageSuffix;
-    }
-
-    public String getServicePackageName() {
-        return servicePackageName;
-    }
-
-    public void setServicePackageName(String servicePackageName) {
-        this.servicePackageName = servicePackageName;
     }
 
     public String getServiceSuffix() {
@@ -232,20 +138,76 @@ public class NamingConventionImpl implements NamingConvention {
         this.serviceSuffix = serviceSuffix;
     }
 
-    public String getValidatorPackageName() {
-        return validatorPackageName;
-    }
-
-    public void setValidatorPackage(String validatorPackage) {
-        this.validatorPackageName = validatorPackage;
-    }
-
     public String getValidatorSuffix() {
         return validatorSuffix;
     }
 
     public void setValidatorSuffix(String validatorSuffix) {
         this.validatorSuffix = validatorSuffix;
+    }
+
+    public String getConverterSuffix() {
+        return converterSuffix;
+    }
+
+    public void setConverterSuffix(String converterSuffix) {
+        this.converterSuffix = converterSuffix;
+    }
+
+    public String getImplementationSuffix() {
+        return implementationSuffix;
+    }
+
+    public void setImplementationSuffix(String implementationSuffix) {
+        this.implementationSuffix = implementationSuffix;
+    }
+
+    public String getDaoPackageName() {
+        return fromSuffixToPackageName(daoSuffix);
+    }
+
+    public String getDtoPackageName() {
+        return fromSuffixToPackageName(dtoSuffix);
+    }
+
+    public String getDxoPackageName() {
+        return fromSuffixToPackageName(dxoSuffix);
+    }
+
+    public String getHelperPackageName() {
+        return fromSuffixToPackageName(helperSuffix);
+    }
+
+    public String getInterceptorPackageName() {
+        return fromSuffixToPackageName(interceptorSuffix);
+    }
+
+    public String getLogicPackageName() {
+        return fromSuffixToPackageName(logicSuffix);
+    }
+
+    public String getServicePackageName() {
+        return fromSuffixToPackageName(serviceSuffix);
+    }
+
+    public String getValidatorPackageName() {
+        return fromSuffixToPackageName(validatorSuffix);
+    }
+
+    public String getConverterPackageName() {
+        return fromSuffixToPackageName(converterSuffix);
+    }
+
+    public String getImplementationPackageName() {
+        return fromSuffixToPackageName(implementationSuffix);
+    }
+
+    public String getEntityPackageName() {
+        return entityPackageName;
+    }
+
+    public void setEntityPackage(String entityPackage) {
+        this.entityPackageName = entityPackage;
     }
 
     public String getViewExtension() {
@@ -264,12 +226,29 @@ public class NamingConventionImpl implements NamingConvention {
         this.viewRootPath = viewRootPath;
     }
 
-    public String getWebPackageName() {
-        return webPackageName;
+    public String getSubApplicationRootPackageName() {
+        return subApplicationRootPackageName;
     }
 
-    public void setWebPackageName(String webPackageName) {
-        this.webPackageName = webPackageName;
+    public void setSubApplicationRootPackageName(
+            String subApplicationRootPackageName) {
+        this.subApplicationRootPackageName = subApplicationRootPackageName;
+    }
+
+    public String[] getRootPackageNames() {
+        return (String[]) rootPackageNameList
+                .toArray(new String[rootPackageNameList.size()]);
+    }
+
+    public void addRootPackageName(String rootPackageName) {
+        rootPackageNameList.add(rootPackageName);
+    }
+
+    public String fromSuffixToPackageName(String suffix) {
+        if (suffix == null) {
+            throw new EmptyRuntimeException("suffix");
+        }
+        return StringUtil.decapitalize(suffix);
     }
 
     public String fromClassNameToShortComponentName(String className) {
@@ -284,37 +263,151 @@ public class NamingConventionImpl implements NamingConvention {
         return s;
     }
 
-    public String fromClassNameToComponentName(String className) {
+    public String fromClassNameToComponentName(final String className) {
         if (className == null) {
             throw new EmptyRuntimeException("className");
         }
-        String wwwkey = "." + webPackageName + ".";
-        int index = className.lastIndexOf(wwwkey);
+        String cname = toInterfaceClassName(className);
+        String suffix = fromClassNameToSuffix(cname);
+        String middlePackageName = fromSuffixToPackageName(suffix);
+        String key = "." + middlePackageName + ".";
+        int index = cname.indexOf(key);
+        String name = null;
         if (index > 0) {
-            String s = className.substring(index + wwwkey.length());
-            if (s.endsWith(implementationSuffix)) {
-                String implkey = "." + implementationPackageName + ".";
-                index = s.lastIndexOf(implkey);
-                if (index < 0) {
-                    throw new IllegalArgumentException(className);
-                }
-                String packageName = s.substring(0, index).replace('.',
-                        PACKAGE_SEPARATOR);
-                String name = StringUtil.decapitalize(s.substring(index
-                        + implkey.length(), s.length()
-                        - implementationSuffix.length()));
-                return packageName + PACKAGE_SEPARATOR + name;
-            }
-            index = s.lastIndexOf('.');
+            name = cname.substring(index + key.length());
+        } else {
+            key = "." + subApplicationRootPackageName + ".";
+            index = cname.indexOf(key);
             if (index < 0) {
-                throw new IllegalArgumentException(className);
+                return fromClassNameToShortComponentName(className);
             }
-            String packageName = s.substring(0, index).replace('.',
-                    PACKAGE_SEPARATOR);
-            String name = StringUtil.decapitalize(s.substring(index + 1));
-            return packageName + PACKAGE_SEPARATOR + name;
+            name = cname.substring(index + key.length());
         }
-        return fromClassNameToShortComponentName(className);
+        String[] array = StringUtil.split(name, ".");
+        StringBuffer buf = new StringBuffer();
+        for (int i = 0; i < array.length; ++i) {
+            if (i == array.length - 1) {
+                buf.append(StringUtil.decapitalize(array[i]));
+            } else {
+                buf.append(array[i]);
+                buf.append('_');
+            }
+        }
+        return buf.toString();
+    }
+
+    public Class fromComponentNameToClass(String componentName) {
+        if (componentName == null) {
+            throw new EmptyRuntimeException("componentName");
+        }
+        String suffix = fromComponentNameToSuffix(componentName);
+        if (suffix == null) {
+            return null;
+        }
+        String middlePackageName = fromSuffixToPackageName(suffix);
+        String partOfClassName = fromComponentNameToPartOfClassName(componentName);
+        String[] rootPackageNames = getRootPackageNames();
+        for (int i = 0; i < rootPackageNames.length; ++i) {
+            String rootPackageName = rootPackageNames[i];
+            Class clazz = findClass(rootPackageName,
+                    subApplicationRootPackageName, partOfClassName);
+            if (clazz != null) {
+                return clazz;
+            }
+            clazz = findClass(rootPackageName, middlePackageName,
+                    partOfClassName);
+            if (clazz != null) {
+                return clazz;
+            }
+        }
+        return null;
+    }
+
+    protected Class findClass(String rootPackageName, String middlePackageName,
+            String partOfClassName) {
+        String className = ClassUtil.concatName(ClassUtil.concatName(
+                rootPackageName, middlePackageName), partOfClassName);
+        if (ResourceUtil.isExist(ClassUtil.getResourcePath(className))) {
+            Class clazz = ClassUtil.forName(className);
+            if (clazz.isInterface()) {
+                String implClassName = toImplementationClassName(className);
+                if (ResourceUtil.isExist(ClassUtil
+                        .getResourcePath(implClassName))) {
+                    return ClassUtil.forName(implClassName);
+                }
+            }
+            return clazz;
+        }
+        return null;
+    }
+
+    public String toImplementationClassName(String className) {
+        int index = className.lastIndexOf('.');
+        if (index < 0) {
+            return getImplementationPackageName() + "." + className
+                    + implementationSuffix;
+        }
+        return className.substring(0, index) + "."
+                + getImplementationPackageName() + "."
+                + className.substring(index + 1) + implementationSuffix;
+    }
+
+    public String toInterfaceClassName(String className) {
+        if (!className.endsWith(implementationSuffix)) {
+            return className;
+        }
+        String key = "." + getImplementationPackageName() + ".";
+        int index = className.lastIndexOf(key);
+        if (index < 0) {
+            throw new IllegalArgumentException(className);
+        }
+        return className.substring(0, index)
+                + "."
+                + className.substring(index + key.length(), className.length()
+                        - implementationSuffix.length());
+    }
+
+    public Class toCompleteClass(Class clazz) {
+        if (!clazz.isInterface()) {
+            return clazz;
+        }
+        String className = toImplementationClassName(clazz.getName());
+        if (ResourceUtil.isExist(ClassUtil.getResourcePath(className))) {
+            return ClassUtil.forName(className);
+        }
+        return clazz;
+    }
+
+    public String fromComponentNameToPartOfClassName(String componentName) {
+        if (componentName == null) {
+            throw new EmptyRuntimeException("componentName");
+        }
+        int index = componentName.indexOf(PACKAGE_SEPARATOR);
+        if (index < 0) {
+            return StringUtil.capitalize(componentName);
+        }
+        return componentName.substring(0, index) + "."
+                + StringUtil.capitalize(componentName.substring(index + 1));
+    }
+
+    public String fromComponentNameToSuffix(String componentName) {
+        return fromNameToSuffix(componentName);
+    }
+
+    public String fromClassNameToSuffix(String componentName) {
+        return fromNameToSuffix(componentName);
+    }
+
+    protected String fromNameToSuffix(String name) {
+        if (name == null) {
+            throw new EmptyRuntimeException("name");
+        }
+        for (int i = name.length() - 1; i >= 0; --i) {
+            if (Character.isUpperCase(name.charAt(i))) {
+                return name.substring(i);
+            }
+        }
+        return null;
     }
 
     public String fromPathToPageName(String path) {
@@ -365,20 +458,18 @@ public class NamingConventionImpl implements NamingConvention {
                 + pageSuffix;
     }
 
-    public String getConverterSuffix() {
-        return converterSuffix;
+    public boolean isTargetClassName(String className, String suffix) {
+        String name = StringUtil.trimSuffix(className, implementationSuffix);
+        return name.endsWith(suffix);
     }
 
-    public void setConverterSuffix(String converterSuffix) {
-        this.converterSuffix = converterSuffix;
+    public boolean isTargetClassName(String className) {
+        for (int i = 0; i < rootPackageNameList.size(); ++i) {
+            String root = (String) rootPackageNameList.get(i);
+            if (className.startsWith(root)) {
+                return true;
+            }
+        }
+        return false;
     }
-
-    public String getConverterPackageName() {
-        return converterPackageName;
-    }
-
-    public void setConverterPackage(String converterPackage) {
-        this.converterPackageName = converterPackage;
-    }
-
 }

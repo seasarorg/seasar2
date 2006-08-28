@@ -16,8 +16,6 @@
 package org.seasar.framework.container.hotdeploy;
 
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.InputStreamUtil;
@@ -25,32 +23,14 @@ import org.seasar.framework.util.ResourceUtil;
 
 public class HotdeployClassLoader extends ClassLoader {
 
-    private OndemandProject[] projects;
-
-    private List listeners = new ArrayList();
+    private String[] rootPackageNames;
 
     public HotdeployClassLoader(ClassLoader classLoader) {
         super(classLoader);
     }
 
-    public void setProjects(OndemandProject[] projects) {
-        this.projects = projects;
-    }
-
-    public void addHotdeployListener(HotdeployListener listener) {
-        listeners.add(listener);
-    }
-
-    public HotdeployListener getHotdeployListener(int index) {
-        return (HotdeployListener) listeners.get(index);
-    }
-
-    public int getHotdeployListenerSize() {
-        return listeners.size();
-    }
-
-    public void removeHotdeployListener(HotdeployListener listener) {
-        listeners.remove(listener);
+    public void setRootPackageNames(String[] rootPackageNames) {
+        this.rootPackageNames = rootPackageNames;
     }
 
     public Class loadClass(String className, boolean resolve)
@@ -65,7 +45,6 @@ public class HotdeployClassLoader extends ClassLoader {
             InputStream is = ResourceUtil.getResourceAsStreamNoException(path);
             if (is != null) {
                 clazz = defineClass(className, is);
-                definedClass(clazz);
                 if (resolve) {
                     resolveClass(clazz);
                 }
@@ -84,26 +63,14 @@ public class HotdeployClassLoader extends ClassLoader {
     }
 
     protected boolean isTargetClass(String className) {
-        if (projects == null) {
+        if (rootPackageNames == null) {
             return true;
         }
-        for (int i = 0; i < projects.length; ++i) {
-            OndemandProject project = projects[i];
-            int m = project.matchClassName(className);
-            if (m == OndemandProject.MATCH) {
+        for (int i = 0; i < rootPackageNames.length; ++i) {
+            if (className.startsWith(rootPackageNames[i])) {
                 return true;
-            } else if (m == OndemandProject.IGNORE) {
-                return false;
             }
         }
         return false;
-    }
-
-    protected void definedClass(Class clazz) {
-        final int listenerSize = getHotdeployListenerSize();
-        for (int i = 0; i < listenerSize; ++i) {
-            HotdeployListener listener = getHotdeployListener(i);
-            listener.definedClass(clazz);
-        }
     }
 }

@@ -18,8 +18,9 @@ package org.seasar.framework.container.hotdeploy.creator;
 import java.lang.reflect.Method;
 
 import org.seasar.framework.container.ComponentDef;
-import org.seasar.framework.container.autoregister.AspectCustomizer;
-import org.seasar.framework.container.hotdeploy.OndemandCreator;
+import org.seasar.framework.container.ComponentCreator;
+import org.seasar.framework.container.creator.LogicCreator;
+import org.seasar.framework.container.customizer.AspectCustomizer;
 import org.seasar.framework.container.hotdeploy.creator.interceptor.HelloInterceptor;
 import org.seasar.framework.convention.NamingConvention;
 import org.seasar.framework.util.ClassUtil;
@@ -30,10 +31,10 @@ import org.seasar.framework.util.ClassUtil;
  */
 public class LogicOndemandCreatorTest extends OndemandCreatorTestCase {
 
-    protected OndemandCreator newOndemandCreator(NamingConvention convention) {
+    protected ComponentCreator newOndemandCreator(NamingConvention convention) {
         AspectCustomizer aspectCustomizer = new AspectCustomizer();
         aspectCustomizer.setInterceptorName("helloInterceptor");
-        LogicOndemandCreator creator = new LogicOndemandCreator(convention);
+        LogicCreator creator = new LogicCreator(convention);
         creator.setLogicCustomizer(aspectCustomizer);
         return creator;
     }
@@ -60,13 +61,5 @@ public class LogicOndemandCreatorTest extends OndemandCreatorTestCase {
         Object cccLogic = getComponent("cccLogic");
         Method m = cccLogic.getClass().getMethod("greet", null);
         assertEquals("1", "Hello", m.invoke(cccLogic, null));
-    }
-
-    public void testGetComponentClassName() throws Exception {
-        String name = "cccLogic";
-        String className = creator.getComponentClassName(ondemand,
-                rootPackageName, name);
-        assertNotNull("1", className);
-        assertEquals("2", rootPackageName + ".logic.CccLogic", className);
     }
 }

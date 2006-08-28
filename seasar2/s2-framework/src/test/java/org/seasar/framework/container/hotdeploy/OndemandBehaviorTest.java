@@ -15,13 +15,11 @@
  */
 package org.seasar.framework.container.hotdeploy;
 
-import java.lang.reflect.Method;
-
 import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.factory.BeanDescFactory;
 import org.seasar.framework.container.ComponentDef;
-import org.seasar.framework.container.hotdeploy.creator.SinglePackageOndemandCreator;
-import org.seasar.framework.container.hotdeploy.impl.OndemandProjectImpl;
+import org.seasar.framework.container.ComponentCreator;
+import org.seasar.framework.container.creator.ComponentCreatorImpl;
 import org.seasar.framework.container.impl.S2ContainerBehavior;
 import org.seasar.framework.convention.impl.NamingConventionImpl;
 import org.seasar.framework.unit.S2FrameworkTestCase;
@@ -35,18 +33,20 @@ public class OndemandBehaviorTest extends S2FrameworkTestCase {
 
     private ClassLoader originalLoader;
 
-    private OndemandBehavior ondemand;
+    private HotdeployBehavior ondemand;
+
+    private String rootPackageName = ClassUtil.getPackageName(getClass())
+            + ".creator";
 
     protected void setUp() {
         originalLoader = Thread.currentThread().getContextClassLoader();
         NamingConventionImpl convention = new NamingConventionImpl();
-        ondemand = new OndemandBehavior();
-        SinglePackageOndemandCreator creator = new SinglePackageOndemandCreator(
-                convention);
-        OndemandProjectImpl project = new OndemandProjectImpl();
-        project.setRootPackageName(ClassUtil.getPackageName(getClass()));
-        project.setCreators(new OndemandCreator[] { creator });
-        ondemand.addProject(project);
+        convention.addRootPackageName(rootPackageName);
+        ondemand = new HotdeployBehavior();
+        ondemand.setNamingConvention(convention);
+        ComponentCreatorImpl creator = new ComponentCreatorImpl(convention);
+        creator.setNameSuffix("Dao");
+        ondemand.setCreators(new ComponentCreator[] { creator });
         S2ContainerBehavior.setProvider(ondemand);
     }
 
@@ -59,46 +59,36 @@ public class OndemandBehaviorTest extends S2FrameworkTestCase {
     public void testStartStop() throws Exception {
         BeanDesc beanDesc = BeanDescFactory.getBeanDesc(getClass());
         ondemand.start();
-        assertEquals("1", HotdeployClassLoader.class, Thread.currentThread()
+        assertEquals(HotdeployClassLoader.class, Thread.currentThread()
                 .getContextClassLoader().getClass());
         ondemand.stop();
-        assertSame("2", originalLoader, Thread.currentThread()
+        assertSame(originalLoader, Thread.currentThread()
                 .getContextClassLoader());
-        assertNotSame("3", beanDesc, BeanDescFactory.getBeanDesc(getClass()));
+        assertNotSame(beanDesc, BeanDescFactory.getBeanDesc(getClass()));
     }
 
     public void testCreateComponentDef() throws Exception {
         ondemand.start();
-        Class clazz = ClassUtil.forName(ClassUtil.getPackageName(getClass())
-                + ".Hoge");
-        assertNotNull("1", ondemand.acquireFromGetComponentDef(getContainer(),
-                clazz));
+        Class clazz = ClassUtil.forName(rootPackageName + ".dao.BarDao");
+        assertNotNull(ondemand
+                .acquireFromGetComponentDef(getContainer(), clazz));
         ondemand.stop();
     }
 
     public void testHasComponentDef() throws Exception {
         ondemand.start();
-        assertTrue(getContainer().hasComponentDef("Hoge"));
+        assertTrue(getContainer().hasComponentDef("barDao"));
         assertFalse(getContainer().hasComponentDef("xxx"));
         ondemand.stop();
     }
 
     public void testGetComponentDefFromCache() throws Exception {
         ondemand.start();
-        Class clazz = ClassUtil.forName(ClassUtil.getPackageName(getClass())
-                + ".Hoge");
+        Class clazz = ClassUtil.forName(rootPackageName + ".dao.BarDao");
         ComponentDef cd = ondemand.acquireFromGetComponentDef(getContainer(),
                 clazz);
-        assertSame("1", cd, ondemand.acquireFromGetComponentDef(getContainer(),
+        assertSame(cd, ondemand.acquireFromGetComponentDef(getContainer(),
                 clazz));
-        ondemand.stop();
-    }
-
-    public void testDefinedClass() throws Exception {
-        ondemand.start();
-        Object o = getComponent("hoge");
-        Method m = o.getClass().getMethod("greet", null);
-        assertEquals("1", "Hello", m.invoke(o, null));
         ondemand.stop();
     }
 }

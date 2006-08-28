@@ -115,6 +115,19 @@ public final class StringUtil {
         return text.substring(0, pos + 1);
     }
 
+    public static final String trimSuffix(final String text, String suffix) {
+        if (text == null) {
+            return null;
+        }
+        if (suffix == null) {
+            return text;
+        }
+        if (text.endsWith(suffix)) {
+            return text.substring(0, text.length() - suffix.length());
+        }
+        return text;
+    }
+
     public static String decapitalize(String name) {
         if (isEmpty(name)) {
             return name;

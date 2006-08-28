@@ -17,14 +17,14 @@ package org.seasar.framework.container.cooldeploy;
 
 import java.io.File;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.jar.JarFile;
 
+import org.seasar.framework.container.ComponentCreator;
+import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.S2Container;
-import org.seasar.framework.container.hotdeploy.OndemandProject;
+import org.seasar.framework.convention.NamingConvention;
 import org.seasar.framework.util.ClassTraversal;
 import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.JarFileUtil;
@@ -47,7 +47,9 @@ public class CoolComponentAutoRegister implements ClassHandler {
 
     private Map strategies = new HashMap();
 
-    private List projects = new ArrayList();
+    private ComponentCreator[] creators;
+
+    private NamingConvention namingConvention;
 
     public CoolComponentAutoRegister() {
         addStrategy("file", new FileSystemStrategy());
@@ -75,21 +77,20 @@ public class CoolComponentAutoRegister implements ClassHandler {
         strategies.put(protocol, strategy);
     }
 
-    public CoolProject getProject(int index) {
-        return (CoolProject) projects.get(index);
+    public ComponentCreator[] getCreators() {
+        return creators;
     }
 
-    public CoolProject[] getProjects() {
-        return (CoolProject[]) projects
-                .toArray(new CoolProject[projects.size()]);
+    public void setCreators(ComponentCreator[] creators) {
+        this.creators = creators;
     }
 
-    public int getProjectSize() {
-        return projects.size();
+    public NamingConvention getNamingConvention() {
+        return namingConvention;
     }
 
-    public void addProject(CoolProject project) {
-        projects.add(project);
+    public void setNamingConvention(NamingConvention namingConvention) {
+        this.namingConvention = namingConvention;
     }
 
     public void registerAll() {
@@ -101,18 +102,28 @@ public class CoolComponentAutoRegister implements ClassHandler {
 
     public void processClass(String packageName, String shortClassName) {
         String className = ClassUtil.concatName(packageName, shortClassName);
-        for (int i = 0; i < getProjectSize(); ++i) {
-            CoolProject project = getProject(i);
-            int m = project.matchClassName(className);
-            if (m == CoolProject.IGNORE) {
-                break;
-            } else if (m == OndemandProject.UNMATCH) {
-                continue;
-            }
-            if (project.loadComponentDef(ClassUtil.forName(className))) {
-                break;
+        if (!namingConvention.isTargetClassName(className)) {
+            return;
+        }
+        Class clazz = ClassUtil.forName(className);
+        if (container.getRoot().hasComponentDef(clazz)) {
+            return;
+        }
+        ComponentDef cd = createComponentDef(clazz);
+        if (cd != null) {
+            container.getRoot().register(cd);
+        }
+    }
+
+    protected ComponentDef createComponentDef(Class componentClass) {
+        for (int i = 0; i < creators.length; ++i) {
+            ComponentCreator creator = creators[i];
+            ComponentDef cd = creator.createComponentDef(componentClass);
+            if (cd != null) {
+                return cd;
             }
         }
+        return null;
     }
 
     protected interface Strategy {
@@ -124,7 +135,11 @@ public class CoolComponentAutoRegister implements ClassHandler {
 
         public void registerAll(String path, URL url) {
             File rootDir = getRootDir(path);
-            ClassTraversal.forEach(rootDir, CoolComponentAutoRegister.this);
+            String[] rootPackageNames = namingConvention.getRootPackageNames();
+            for (int i = 0; i < rootPackageNames.length; ++i) {
+                ClassTraversal.forEach(rootDir, rootPackageNames[i],
+                        CoolComponentAutoRegister.this);
+            }
         }
 
         protected File getRootDir(String path) {

@@ -16,7 +16,8 @@
 package org.seasar.framework.container.hotdeploy.creator;
 
 import org.seasar.framework.container.ComponentDef;
-import org.seasar.framework.container.hotdeploy.OndemandCreator;
+import org.seasar.framework.container.ComponentCreator;
+import org.seasar.framework.container.creator.DaoCreator;
 import org.seasar.framework.convention.NamingConvention;
 import org.seasar.framework.util.ClassUtil;
 
@@ -26,29 +27,21 @@ import org.seasar.framework.util.ClassUtil;
  */
 public class DaoOndemandCreatorTest extends OndemandCreatorTestCase {
 
-    protected OndemandCreator newOndemandCreator(NamingConvention convention) {
-        return new DaoOndemandCreator(convention);
+    protected ComponentCreator newOndemandCreator(NamingConvention convention) {
+        return new DaoCreator(convention);
     }
 
     public void testIsTargetByComponentName() throws Exception {
         String name = "fooDao";
         ComponentDef cd = getComponentDef(name);
-        assertNotNull("1", cd);
-        assertEquals("2", name, cd.getComponentName());
-        assertTrue("3", getContainer().hasComponentDef("barDao"));
+        assertNotNull(cd);
+        assertEquals(name, cd.getComponentName());
+        assertTrue(getContainer().hasComponentDef("barDao"));
     }
 
     public void testIsTargetByClass() throws Exception {
         Class clazz = ClassUtil.forName(ClassUtil.getPackageName(getClass())
                 + ".dao.FooDao");
-        assertTrue("1", getContainer().hasComponentDef(clazz));
-    }
-
-    public void testGetComponentClassName() throws Exception {
-        String name = "fooDao";
-        String className = creator.getComponentClassName(ondemand,
-                rootPackageName, name);
-        assertNotNull("1", className);
-        assertEquals("2", rootPackageName + ".dao.FooDao", className);
+        assertTrue(getContainer().hasComponentDef(clazz));
     }
 }

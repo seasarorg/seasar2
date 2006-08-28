@@ -16,7 +16,8 @@
 package org.seasar.framework.container.hotdeploy.creator;
 
 import org.seasar.framework.container.ComponentDef;
-import org.seasar.framework.container.hotdeploy.OndemandCreator;
+import org.seasar.framework.container.ComponentCreator;
+import org.seasar.framework.container.creator.ServiceCreator;
 import org.seasar.framework.convention.NamingConvention;
 import org.seasar.framework.util.ClassUtil;
 
@@ -26,8 +27,8 @@ import org.seasar.framework.util.ClassUtil;
  */
 public class ServiceOndemandCreatorTest extends OndemandCreatorTestCase {
 
-    protected OndemandCreator newOndemandCreator(NamingConvention convention) {
-        return new ServiceOndemandCreator(convention);
+    protected ComponentCreator newOndemandCreator(NamingConvention convention) {
+        return new ServiceCreator(convention);
     }
 
     public void testIsTargetByName() throws Exception {
@@ -48,21 +49,5 @@ public class ServiceOndemandCreatorTest extends OndemandCreatorTestCase {
         Class clazz = ClassUtil.forName(ClassUtil.getPackageName(getClass())
                 + ".web.aaa.HogeService");
         assertNotNull("1", getComponent(clazz));
-    }
-
-    public void testGetComponentClassName() throws Exception {
-        String name = "aaa_hogeService";
-        String className = creator.getComponentClassName(ondemand,
-                rootPackageName, name);
-        assertNotNull("1", className);
-        assertEquals("2", rootPackageName + ".web.aaa.HogeService", className);
-    }
-
-    public void testGetComponentClassName2() throws Exception {
-        String name = "hogeService";
-        String className = creator.getComponentClassName(ondemand,
-                rootPackageName, name);
-        assertNotNull("1", className);
-        assertEquals("2", rootPackageName + ".service.HogeService", className);
     }
 }

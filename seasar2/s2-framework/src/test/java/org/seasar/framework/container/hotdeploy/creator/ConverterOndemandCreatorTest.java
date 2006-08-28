@@ -16,7 +16,8 @@
 package org.seasar.framework.container.hotdeploy.creator;
 
 import org.seasar.framework.container.ComponentDef;
-import org.seasar.framework.container.hotdeploy.OndemandCreator;
+import org.seasar.framework.container.ComponentCreator;
+import org.seasar.framework.container.creator.ConverterCreator;
 import org.seasar.framework.convention.NamingConvention;
 
 /**
@@ -24,8 +25,8 @@ import org.seasar.framework.convention.NamingConvention;
  */
 public class ConverterOndemandCreatorTest extends OndemandCreatorTestCase {
 
-    protected OndemandCreator newOndemandCreator(NamingConvention convention) {
-        return new ConverterOndemandCreator(convention);
+    protected ComponentCreator newOndemandCreator(NamingConvention convention) {
+        return new ConverterCreator(convention);
     }
 
     public void testAll() throws Exception {
@@ -34,14 +35,4 @@ public class ConverterOndemandCreatorTest extends OndemandCreatorTestCase {
         assertNotNull(cd);
         assertEquals(name, cd.getComponentName());
     }
-
-    public void testGetComponentClassName() throws Exception {
-        String name = "fakeConverter";
-        String className = creator.getComponentClassName(ondemand,
-                rootPackageName, name);
-        assertNotNull("1", className);
-        assertEquals("2", rootPackageName + ".converter.FakeConverter",
-                className);
-    }
-
 }

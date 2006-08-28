@@ -16,7 +16,8 @@
 package org.seasar.framework.container.hotdeploy.creator;
 
 import org.seasar.framework.container.ComponentDef;
-import org.seasar.framework.container.hotdeploy.OndemandCreator;
+import org.seasar.framework.container.ComponentCreator;
+import org.seasar.framework.container.creator.PageCreator;
 import org.seasar.framework.convention.NamingConvention;
 
 /**
@@ -25,8 +26,8 @@ import org.seasar.framework.convention.NamingConvention;
  */
 public class PageOndemandCreatorTest extends OndemandCreatorTestCase {
 
-    protected OndemandCreator newOndemandCreator(NamingConvention convention) {
-        return new PageOndemandCreator(convention);
+    protected ComponentCreator newOndemandCreator(NamingConvention convention) {
+        return new PageCreator(convention);
     }
 
     public void testAll() throws Exception {
@@ -34,13 +35,5 @@ public class PageOndemandCreatorTest extends OndemandCreatorTestCase {
         ComponentDef cd = getComponentDef(name);
         assertNotNull("1", cd);
         assertEquals("2", name, cd.getComponentName());
-    }
-
-    public void testGetComponentClassName() throws Exception {
-        String name = "aaa_hogePage";
-        String className = creator.getComponentClassName(ondemand,
-                rootPackageName, name);
-        assertNotNull("1", className);
-        assertEquals("2", rootPackageName + ".web.aaa.HogePage", className);
     }
 }

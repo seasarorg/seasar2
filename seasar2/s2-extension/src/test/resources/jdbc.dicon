@@ -129,7 +129,7 @@
 		<destroyMethod name="close"/>
 	</component>
 
-	<component name="DataSource"
+	<component name="dataSource"
 		class="org.seasar.extension.dbcp.impl.DataSourceImpl"
 	/>
 

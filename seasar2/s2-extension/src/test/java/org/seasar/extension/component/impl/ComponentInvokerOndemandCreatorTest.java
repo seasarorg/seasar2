@@ -15,11 +15,11 @@
  */
 package org.seasar.extension.component.impl;
 
+import org.seasar.framework.container.ComponentCreator;
 import org.seasar.framework.container.ComponentDef;
-import org.seasar.framework.container.hotdeploy.OndemandBehavior;
-import org.seasar.framework.container.hotdeploy.OndemandCreator;
-import org.seasar.framework.container.hotdeploy.impl.OndemandProjectImpl;
+import org.seasar.framework.container.hotdeploy.HotdeployBehavior;
 import org.seasar.framework.container.impl.S2ContainerBehavior;
+import org.seasar.framework.convention.impl.NamingConventionImpl;
 import org.seasar.framework.unit.S2FrameworkTestCase;
 import org.seasar.framework.util.ClassUtil;
 
@@ -31,16 +31,16 @@ public class ComponentInvokerOndemandCreatorTest extends S2FrameworkTestCase {
 
     private ClassLoader originalLoader;
 
-    private OndemandBehavior ondemand;
+    private HotdeployBehavior ondemand;
 
     protected void setUp() {
         originalLoader = Thread.currentThread().getContextClassLoader();
-        OndemandProjectImpl project = new OndemandProjectImpl();
-        project.setRootPackageName(ClassUtil.getPackageName(getClass()));
-        ondemand = new OndemandBehavior();
-        project
-                .setCreators(new OndemandCreator[] { new ComponentInvokerOndemandCreator() });
-        ondemand.addProject(project);
+        NamingConventionImpl convention = new NamingConventionImpl();
+        convention.addRootPackageName(ClassUtil.getPackageName(getClass()));
+        ondemand = new HotdeployBehavior();
+        ondemand.setNamingConvention(convention);
+        ondemand
+                .setCreators(new ComponentCreator[] { new ComponentInvokerOndemandCreator() });
         S2ContainerBehavior.setProvider(ondemand);
         ondemand.start();
     }

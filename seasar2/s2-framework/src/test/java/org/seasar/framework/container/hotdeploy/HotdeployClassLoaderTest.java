@@ -17,7 +17,6 @@ package org.seasar.framework.container.hotdeploy;
 
 import junit.framework.TestCase;
 
-import org.seasar.framework.container.hotdeploy.impl.OndemandProjectImpl;
 import org.seasar.framework.util.ClassUtil;
 
 /**
@@ -39,11 +38,8 @@ public class HotdeployClassLoaderTest extends TestCase {
     protected void setUp() {
         originalLoader = Thread.currentThread().getContextClassLoader();
         hotLoader = new HotdeployClassLoader(originalLoader);
-        OndemandProjectImpl project = new OndemandProjectImpl();
-        project.setRootPackageName(PACKAGE_NAME);
-        OndemandProjectImpl project2 = new OndemandProjectImpl();
-        project2.setRootPackageName("junit.framework");
-        hotLoader.setProjects(new OndemandProject[] { project, project2 });
+        hotLoader.setRootPackageNames(new String[] { PACKAGE_NAME,
+                "junit.framework" });
         Thread.currentThread().setContextClassLoader(hotLoader);
     }
 
@@ -52,15 +48,14 @@ public class HotdeployClassLoaderTest extends TestCase {
     }
 
     public void testLoadClass() throws Exception {
-        assertSame("1", hotLoader.loadClass(AAA_NAME), hotLoader
-                .loadClass(AAA_NAME));
+        assertSame(hotLoader.loadClass(AAA_NAME), hotLoader.loadClass(AAA_NAME));
 
         Class clazz = hotLoader.loadClass("junit.framework.TestCase");
         assertSame(hotLoader, clazz.getClassLoader());
 
         try {
             hotLoader.loadClass(PACKAGE_NAME + ".xxx");
-            fail("2");
+            fail();
         } catch (ClassNotFoundException ex) {
             System.out.println(ex);
         }

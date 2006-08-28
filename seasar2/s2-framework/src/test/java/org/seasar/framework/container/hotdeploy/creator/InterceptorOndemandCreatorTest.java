@@ -16,7 +16,8 @@
 package org.seasar.framework.container.hotdeploy.creator;
 
 import org.seasar.framework.container.ComponentDef;
-import org.seasar.framework.container.hotdeploy.OndemandCreator;
+import org.seasar.framework.container.ComponentCreator;
+import org.seasar.framework.container.creator.InterceptorCreator;
 import org.seasar.framework.convention.NamingConvention;
 
 /**
@@ -25,22 +26,13 @@ import org.seasar.framework.convention.NamingConvention;
  */
 public class InterceptorOndemandCreatorTest extends OndemandCreatorTestCase {
 
-    protected OndemandCreator newOndemandCreator(NamingConvention convention) {
-        return new InterceptorOndemandCreator(convention);
+    protected ComponentCreator newOndemandCreator(NamingConvention convention) {
+        return new InterceptorCreator(convention);
     }
 
     public void testAll() throws Exception {
         String name = "nullInterceptor";
         ComponentDef cd = getComponentDef(name);
         assertNotNull(cd);
-    }
-
-    public void testGetComponentClassName() throws Exception {
-        String name = "helloInterceptor";
-        String className = creator.getComponentClassName(ondemand,
-                rootPackageName, name);
-        assertNotNull("1", className);
-        assertEquals("2", rootPackageName + ".interceptor.HelloInterceptor",
-                className);
     }
 }

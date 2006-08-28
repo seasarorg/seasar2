@@ -27,8 +27,6 @@ public interface NamingConvention {
 
     String getImplementationSuffix();
 
-    String getImplementationPackageName();
-
     String getPageSuffix();
 
     String getActionSuffix();
@@ -51,7 +49,9 @@ public interface NamingConvention {
 
     String getDtoSuffix();
 
-    String getWebPackageName();
+    String getSubApplicationRootPackageName();
+
+    String getImplementationPackageName();
 
     String getDxoPackageName();
 
@@ -73,9 +73,27 @@ public interface NamingConvention {
 
     String getHelperPackageName();
 
+    String[] getRootPackageNames();
+
+    String fromSuffixToPackageName(String suffix);
+
     String fromClassNameToShortComponentName(String className);
 
     String fromClassNameToComponentName(String className);
+
+    Class fromComponentNameToClass(String componentName);
+
+    String toImplementationClassName(String className);
+
+    String toInterfaceClassName(String className);
+
+    Class toCompleteClass(Class clazz);
+
+    String fromComponentNameToPartOfClassName(String componentName);
+
+    String fromComponentNameToSuffix(String componentName);
+
+    String fromClassNameToSuffix(String className);
 
     String fromPathToPageName(String path);
 
@@ -86,4 +104,8 @@ public interface NamingConvention {
     String fromActionNameToPath(String actionName);
 
     String fromActionNameToPageName(String actionName);
+
+    boolean isTargetClassName(String className, String suffix);
+
+    boolean isTargetClassName(String className);
 }

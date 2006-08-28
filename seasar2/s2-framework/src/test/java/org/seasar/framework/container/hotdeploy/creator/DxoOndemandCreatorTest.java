@@ -16,8 +16,9 @@
 package org.seasar.framework.container.hotdeploy.creator;
 
 import org.seasar.framework.container.ComponentDef;
-import org.seasar.framework.container.autoregister.AspectCustomizer;
-import org.seasar.framework.container.hotdeploy.OndemandCreator;
+import org.seasar.framework.container.ComponentCreator;
+import org.seasar.framework.container.creator.DxoCreator;
+import org.seasar.framework.container.customizer.AspectCustomizer;
 import org.seasar.framework.container.hotdeploy.creator.interceptor.HelloInterceptor;
 import org.seasar.framework.convention.NamingConvention;
 import org.seasar.framework.util.ClassUtil;
@@ -28,10 +29,10 @@ import org.seasar.framework.util.ClassUtil;
  */
 public class DxoOndemandCreatorTest extends OndemandCreatorTestCase {
 
-    protected OndemandCreator newOndemandCreator(NamingConvention convention) {
+    protected ComponentCreator newOndemandCreator(NamingConvention convention) {
         AspectCustomizer aspectCustomizer = new AspectCustomizer();
         aspectCustomizer.setInterceptorName("helloInterceptor");
-        DxoOndemandCreator creator = new DxoOndemandCreator(convention);
+        DxoCreator creator = new DxoCreator(convention);
         creator.setDxoCustomizer(aspectCustomizer);
         return creator;
     }
@@ -55,13 +56,5 @@ public class DxoOndemandCreatorTest extends OndemandCreatorTestCase {
         Class clazz2 = ClassUtil.forName(packageName + ".dxo.BbbDtoDxo");
         assertTrue("1", getContainer().hasComponentDef(clazz));
         assertTrue("2", getContainer().hasComponentDef(clazz2));
-    }
-
-    public void testGetComponentClassName() throws Exception {
-        String name = "aaa_hogeDxo";
-        String className = creator.getComponentClassName(ondemand,
-                rootPackageName, name);
-        assertNotNull("1", className);
-        assertEquals("2", rootPackageName + ".web.aaa.HogeDxo", className);
     }
 }

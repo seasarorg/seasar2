@@ -16,6 +16,7 @@
 package org.seasar.framework.container.autoregister;
 
 import org.seasar.framework.container.AutoBindingDef;
+import org.seasar.framework.container.ComponentCustomizer;
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.InstanceDef;
 import org.seasar.framework.container.factory.AnnotationHandler;

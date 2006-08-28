@@ -42,9 +42,13 @@ public class StringUtilTest extends TestCase {
     }
 
     public void testRtrim() throws Exception {
-        assertEquals("1", "trim", StringUtil.rtrim("trimxxxx", "x"));
-        assertEquals("2", "", StringUtil.rtrim("xyz", "xyz"));
-        assertEquals("1", "trimxxxx", StringUtil.rtrim("trimxxxx", "y"));
+        assertEquals("trim", StringUtil.rtrim("trimxxxx", "x"));
+        assertEquals("", StringUtil.rtrim("xyz", "xyz"));
+        assertEquals("trimxxxx", StringUtil.rtrim("trimxxxx", "y"));
+    }
+
+    public void testTrimSuffix() throws Exception {
+        assertEquals("aaa", StringUtil.trimSuffix("aaaLogic", "Logic"));
     }
 
     public void testStartsWith() throws Exception {

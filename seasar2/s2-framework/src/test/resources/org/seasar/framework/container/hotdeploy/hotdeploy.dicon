@@ -2,24 +2,20 @@
 <!DOCTYPE components PUBLIC "-//SEASAR2.1//DTD S2Container//EN"
 	"http://www.seasar.org/dtd/components21.dtd">
 <components>
-	<component class="org.seasar.framework.convention.impl.NamingConventionImpl"/>
-	<component class="org.seasar.framework.container.hotdeploy.creator.ActionOndemandCreator"/>
-	<component class="org.seasar.framework.container.hotdeploy.creator.DaoOndemandCreator"/>
-	<component class="org.seasar.framework.container.hotdeploy.creator.DtoOndemandCreator"/>
-	<component class="org.seasar.framework.container.hotdeploy.creator.DxoOndemandCreator"/>
-	<component class="org.seasar.framework.container.hotdeploy.creator.HelperOndemandCreator"/>
-	<component class="org.seasar.framework.container.hotdeploy.creator.LogicOndemandCreator"/>
-	<component class="org.seasar.framework.container.hotdeploy.creator.PageOndemandCreator"/>
-	<component class="org.seasar.framework.container.hotdeploy.creator.ServiceOndemandCreator"/>
-	<component class="org.seasar.framework.container.hotdeploy.creator.InterceptorOndemandCreator"/>
-	<component class="org.seasar.framework.container.hotdeploy.creator.ValidatorOndemandCreator"/>
-	<component class="org.seasar.framework.container.hotdeploy.OndemandBehavior">
-		<initMethod name="addProject">
-			<arg>
-				<component class="org.seasar.framework.container.hotdeploy.impl.OndemandProjectImpl">
-					<property name="rootPackageName">"org.seasar.framework.container.hotdeploy"</property>
-				</component>
-			</arg>
+	<component class="org.seasar.framework.convention.impl.NamingConventionImpl">
+		<initMethod name="addRootPackageName">
+			<arg>"org.seasar.framework.container.hotdeploy"</arg>
 		</initMethod>
 	</component>
+	<component class="org.seasar.framework.container.creator.ActionCreator"/>
+	<component class="org.seasar.framework.container.creator.DaoCreator"/>
+	<component class="org.seasar.framework.container.creator.DtoCreator"/>
+	<component class="org.seasar.framework.container.creator.DxoCreator"/>
+	<component class="org.seasar.framework.container.creator.HelperCreator"/>
+	<component class="org.seasar.framework.container.creator.LogicCreator"/>
+	<component class="org.seasar.framework.container.creator.PageCreator"/>
+	<component class="org.seasar.framework.container.creator.ServiceCreator"/>
+	<component class="org.seasar.framework.container.creator.InterceptorCreator"/>
+	<component class="org.seasar.framework.container.creator.ValidatorCreator"/>
+	<component class="org.seasar.framework.container.hotdeploy.HotdeployBehavior"/>
 </components>

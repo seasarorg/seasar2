@@ -16,7 +16,8 @@
 package org.seasar.framework.container.hotdeploy.creator;
 
 import org.seasar.framework.container.ComponentDef;
-import org.seasar.framework.container.hotdeploy.OndemandCreator;
+import org.seasar.framework.container.ComponentCreator;
+import org.seasar.framework.container.creator.ValidatorCreator;
 import org.seasar.framework.convention.NamingConvention;
 
 /**
@@ -25,8 +26,8 @@ import org.seasar.framework.convention.NamingConvention;
  */
 public class ValidatorOndemandCreatorTest extends OndemandCreatorTestCase {
 
-    protected OndemandCreator newOndemandCreator(NamingConvention convention) {
-        return new ValidatorOndemandCreator(convention);
+    protected ComponentCreator newOndemandCreator(NamingConvention convention) {
+        return new ValidatorCreator(convention);
     }
 
     public void testAll() throws Exception {
@@ -34,14 +35,5 @@ public class ValidatorOndemandCreatorTest extends OndemandCreatorTestCase {
         ComponentDef cd = getComponentDef(name);
         assertNotNull(cd);
         assertEquals(name, cd.getComponentName());
-    }
-
-    public void testGetComponentClassName() throws Exception {
-        String name = "fakeValidator";
-        String className = creator.getComponentClassName(ondemand,
-                rootPackageName, name);
-        assertNotNull("1", className);
-        assertEquals("2", rootPackageName + ".validator.FakeValidator",
-                className);
     }
 }

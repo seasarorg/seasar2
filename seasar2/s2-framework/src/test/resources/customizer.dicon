@@ -3,54 +3,54 @@
 	"http://www.seasar.org/dtd/components21.dtd">
 <components>
 	<include path="aop.dicon"/>
-	<component name="defaultCustomizer" class="org.seasar.framework.container.autoregister.AspectCustomizer">
+	<component name="defaultCustomizer" class="org.seasar.framework.container.customizer.AspectCustomizer">
 		<property name="interceptorName">"aop.traceInterceptor"</property>
 	</component>
-	<component name="commandAspectCustomizer" class="org.seasar.framework.container.autoregister.AspectCustomizer">
+	<component name="commandAspectCustomizer" class="org.seasar.framework.container.customizer.AspectCustomizer">
 		<property name="interceptorName">"aop.traceInterceptor"</property>
 		<property name="pointcut">"do.*, initialize"</property>
 	</component>
-	<component name="actionCustomizer" class="org.seasar.framework.container.autoregister.CustomizerChain">
+	<component name="actionCustomizer" class="org.seasar.framework.container.customizer.CustomizerChain">
 		<initMethod name="addCustomizer">
 			<arg>commandAspectCustomizer</arg>
 		</initMethod>
 	</component>
-	<component name="daoCustomizer" class="org.seasar.framework.container.autoregister.CustomizerChain">
+	<component name="daoCustomizer" class="org.seasar.framework.container.customizer.CustomizerChain">
 		<initMethod name="addCustomizer">
 			<arg>defaultCustomizer</arg>
 		</initMethod>
 	</component>
-	<component name="dtoCustomizer" class="org.seasar.framework.container.autoregister.CustomizerChain">
+	<component name="dtoCustomizer" class="org.seasar.framework.container.customizer.CustomizerChain">
 	</component>
-	<component name="dxoCustomizer" class="org.seasar.framework.container.autoregister.CustomizerChain">
+	<component name="dxoCustomizer" class="org.seasar.framework.container.customizer.CustomizerChain">
 		<initMethod name="addCustomizer">
 			<arg>defaultCustomizer</arg>
 		</initMethod>
 	</component>
-	<component name="helperCustomizer" class="org.seasar.framework.container.autoregister.CustomizerChain">
+	<component name="helperCustomizer" class="org.seasar.framework.container.customizer.CustomizerChain">
 		<initMethod name="addCustomizer">
 			<arg>defaultCustomizer</arg>
 		</initMethod>
 	</component>
-	<component name="logicCustomizer" class="org.seasar.framework.container.autoregister.CustomizerChain">
+	<component name="logicCustomizer" class="org.seasar.framework.container.customizer.CustomizerChain">
 		<initMethod name="addCustomizer">
 			<arg>defaultCustomizer</arg>
 		</initMethod>
 	</component>
-	<component name="pageCustomizer" class="org.seasar.framework.container.autoregister.CustomizerChain">
+	<component name="pageCustomizer" class="org.seasar.framework.container.customizer.CustomizerChain">
 		<initMethod name="addCustomizer">
 			<arg>commandAspectCustomizer</arg>
 		</initMethod>
 	</component>
-	<component name="serviceCustomizer" class="org.seasar.framework.container.autoregister.CustomizerChain">
+	<component name="serviceCustomizer" class="org.seasar.framework.container.customizer.CustomizerChain">
 		<initMethod name="addCustomizer">
 			<arg>defaultCustomizer</arg>
 		</initMethod>
 	</component>
-	<component name="interceptorCustomizer" class="org.seasar.framework.container.autoregister.CustomizerChain">
+	<component name="interceptorCustomizer" class="org.seasar.framework.container.customizer.CustomizerChain">
 	</component>
-	<component name="validatorCustomizer" class="org.seasar.framework.container.autoregister.CustomizerChain">
+	<component name="validatorCustomizer" class="org.seasar.framework.container.customizer.CustomizerChain">
 	</component>
-	<component name="converterCustomizer" class="org.seasar.framework.container.autoregister.CustomizerChain">
+	<component name="converterCustomizer" class="org.seasar.framework.container.customizer.CustomizerChain">
 	</component>
 </components>

@@ -53,10 +53,10 @@ public class HotdeployFilter implements Filter {
         if (request.getAttribute(KEY) == null) {
             S2ContainerBehavior.Provider provider = S2ContainerBehavior
                     .getProvider();
-            if (provider instanceof OndemandBehavior) {
+            if (provider instanceof HotdeployBehavior) {
                 request.setAttribute(KEY, Thread.currentThread()
                         .getContextClassLoader());
-                OndemandBehavior ondemand = (OndemandBehavior) provider;
+                HotdeployBehavior ondemand = (HotdeployBehavior) provider;
                 ondemand.start();
                 try {
                     chain.doFilter(request, response);

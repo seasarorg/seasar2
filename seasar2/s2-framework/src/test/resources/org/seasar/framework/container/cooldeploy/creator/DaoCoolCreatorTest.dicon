@@ -3,17 +3,14 @@
 	"http://www.seasar.org/dtd/components21.dtd">
 <components namespace="child" >
 	<include path="aop.dicon"/>
-	<component class="org.seasar.framework.convention.impl.NamingConventionImpl"/>
-	<component name="daoCustomizer" class="org.seasar.framework.container.autoregister.AspectCustomizer">
-		<property name="interceptorName">"aop.traceInterceptor"</property>
-	</component>
-	<component class="org.seasar.framework.container.cooldeploy.creator.DaoCoolCreator"/>
-	<component name="project" class="org.seasar.framework.container.cooldeploy.impl.CoolProjectImpl">
-		<property name="rootPackageName">"org.seasar.framework.container.cooldeploy.creator"</property>
-	</component>
-	<component class="org.seasar.framework.container.cooldeploy.CoolComponentAutoRegister">
-		<initMethod name="addProject">
-			<arg>project</arg>
+	<component class="org.seasar.framework.convention.impl.NamingConventionImpl">
+		<initMethod name="addRootPackageName">
+			<arg>"org.seasar.framework.container.cooldeploy.creator"</arg>
 		</initMethod>
 	</component>
+	<component class="org.seasar.framework.container.creator.DaoCreator"/>
+	<component name="daoCustomizer" class="org.seasar.framework.container.customizer.AspectCustomizer">
+		<property name="interceptorName">"aop.traceInterceptor"</property>
+	</component>
+	<component class="org.seasar.framework.container.cooldeploy.CoolComponentAutoRegister"/>
 </components>

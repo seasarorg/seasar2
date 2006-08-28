@@ -16,7 +16,8 @@
 package org.seasar.framework.container.hotdeploy.creator;
 
 import org.seasar.framework.container.ComponentDef;
-import org.seasar.framework.container.hotdeploy.OndemandCreator;
+import org.seasar.framework.container.ComponentCreator;
+import org.seasar.framework.container.creator.HelperCreator;
 import org.seasar.framework.convention.NamingConvention;
 import org.seasar.framework.util.ClassUtil;
 
@@ -26,8 +27,8 @@ import org.seasar.framework.util.ClassUtil;
  */
 public class HelperOndemandCreatorTest extends OndemandCreatorTestCase {
 
-    protected OndemandCreator newOndemandCreator(NamingConvention convention) {
-        return new HelperOndemandCreator(convention);
+    protected ComponentCreator newOndemandCreator(NamingConvention convention) {
+        return new HelperCreator(convention);
     }
 
     public void testIsTargetByName() throws Exception {
@@ -40,13 +41,5 @@ public class HelperOndemandCreatorTest extends OndemandCreatorTestCase {
     public void testIsTargetByClass() throws Exception {
         Class clazz = ClassUtil.forName(rootPackageName + ".helper.DddHelper");
         assertNotNull("1", getComponent(clazz));
-    }
-
-    public void testGetComponentClassName() throws Exception {
-        String name = "dddHelper";
-        String className = creator.getComponentClassName(ondemand,
-                rootPackageName, name);
-        assertNotNull("1", className);
-        assertEquals("2", rootPackageName + ".helper.DddHelper", className);
     }
 }

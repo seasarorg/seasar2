@@ -4,24 +4,6 @@
 <components>
 	<include path="convention.dicon"/>
 	<include path="customizer.dicon"/>
-	<component class="org.seasar.framework.container.hotdeploy.creator.ActionOndemandCreator"/>
-	<component class="org.seasar.framework.container.hotdeploy.creator.DaoOndemandCreator"/>
-	<component class="org.seasar.framework.container.hotdeploy.creator.DtoOndemandCreator"/>
-	<component class="org.seasar.framework.container.hotdeploy.creator.DxoOndemandCreator"/>
-	<component class="org.seasar.framework.container.hotdeploy.creator.HelperOndemandCreator"/>
-	<component class="org.seasar.framework.container.hotdeploy.creator.LogicOndemandCreator"/>
-	<component class="org.seasar.framework.container.hotdeploy.creator.PageOndemandCreator"/>
-	<component class="org.seasar.framework.container.hotdeploy.creator.ServiceOndemandCreator"/>
-	<component class="org.seasar.framework.container.hotdeploy.creator.InterceptorOndemandCreator"/>
-	<component class="org.seasar.framework.container.hotdeploy.creator.ValidatorOndemandCreator"/>
-	<component class="org.seasar.framework.container.hotdeploy.creator.ConverterOndemandCreator"/>
-	<component class="org.seasar.framework.container.hotdeploy.OndemandBehavior">
-		<initMethod name="addProject">
-			<arg>
-				<component class="org.seasar.framework.container.hotdeploy.impl.OndemandProjectImpl">
-					<property name="rootPackageName"></property>
-				</component>
-			</arg>
-		</initMethod>
-	</component>
+	<include path="creator.dicon"/>
+	<component class="org.seasar.framework.container.hotdeploy.HotdeployBehavior";>
 </components>

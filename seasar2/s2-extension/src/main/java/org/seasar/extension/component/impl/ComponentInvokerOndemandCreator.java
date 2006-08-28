@@ -15,10 +15,9 @@
  */
 package org.seasar.extension.component.impl;
 
+import org.seasar.framework.container.ComponentCreator;
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.PropertyDef;
-import org.seasar.framework.container.hotdeploy.OndemandCreator;
-import org.seasar.framework.container.hotdeploy.OndemandS2Container;
 import org.seasar.framework.container.impl.ComponentDefImpl;
 import org.seasar.framework.container.impl.PropertyDefImpl;
 import org.seasar.framework.container.ognl.OgnlExpression;
@@ -28,7 +27,7 @@ import org.seasar.framework.util.ClassUtil;
  * @author koichik
  * 
  */
-public class ComponentInvokerOndemandCreator implements OndemandCreator {
+public class ComponentInvokerOndemandCreator implements ComponentCreator {
 
     protected static final String COMPONENT_INVOKER_CLASS_NAME = "org.seasar.extension.component.impl.ComponentInvokerImpl";
 
@@ -38,13 +37,11 @@ public class ComponentInvokerOndemandCreator implements OndemandCreator {
         this.componentInvokerName = componentInvokerName;
     }
 
-    public ComponentDef getComponentDef(final OndemandS2Container container,
-            final String rootPackageName, final Class clazz) {
+    public ComponentDef createComponentDef(final Class clazz) {
         return null;
     }
 
-    public ComponentDef getComponentDef(final OndemandS2Container container,
-            final String rootPackageName, final String componentName) {
+    public ComponentDef createComponentDef(final String componentName) {
         if (!componentName.equals(componentInvokerName)) {
             return null;
         }
@@ -53,21 +50,8 @@ public class ComponentInvokerOndemandCreator implements OndemandCreator {
         final PropertyDef pd = new PropertyDefImpl("ondemand");
         pd.setExpression(new OgnlExpression("true"));
         cd.addPropertyDef(pd);
-        container.register(cd);
-        cd.init();
+        // container.register(cd);
+        // cd.init();
         return cd;
-    }
-
-    public boolean loadComponentDef(final OndemandS2Container container,
-            final String rootPackageName, final Class clazz) {
-        return false;
-    }
-
-    public String getComponentClassName(OndemandS2Container container,
-            String rootPackageName, String componentName) {
-        if (!componentName.equals(componentInvokerName)) {
-            return null;
-        }
-        return COMPONENT_INVOKER_CLASS_NAME;
     }
 }
