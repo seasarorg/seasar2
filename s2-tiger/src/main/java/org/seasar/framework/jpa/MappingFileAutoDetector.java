@@ -18,15 +18,16 @@ package org.seasar.framework.jpa;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Set;
 
 import org.seasar.framework.autodetector.ResourceAutoDetector;
 import org.seasar.framework.autodetector.impl.AbstractResourceAutoDetector;
+import org.seasar.framework.container.annotation.tiger.Binding;
+import org.seasar.framework.container.annotation.tiger.BindingType;
+import org.seasar.framework.container.annotation.tiger.Component;
 import org.seasar.framework.container.annotation.tiger.InitMethod;
-import org.seasar.framework.container.autoregister.AutoRegisterProject;
 import org.seasar.framework.convention.NamingConvention;
 import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.ResourceUtil;
@@ -37,10 +38,8 @@ import org.seasar.framework.util.tiger.CollectionsUtil;
  * @author taedium
  * 
  */
+@Component
 public class MappingFileAutoDetector extends AbstractResourceAutoDetector {
-
-    protected final List<AutoRegisterProject> projects = CollectionsUtil
-            .newArrayList();
 
     protected NamingConvention namingConvention;
 
@@ -52,23 +51,20 @@ public class MappingFileAutoDetector extends AbstractResourceAutoDetector {
 
     @InitMethod
     public void init() {
-        for (final AutoRegisterProject project : projects) {
-            final String packageName = ClassUtil.concatName(project
-                    .getRootPackageName(), namingConvention
-                    .getEntityPackageName());
-            final String path = packageName.replace(".", "/");
-            addTargetDirPath(path);
+        if (namingConvention != null) {
+            final String entityPackageName = namingConvention
+                    .getEntityPackageName();
+            for (final String rootPackageName : namingConvention
+                    .getRootPackageNames()) {
+                final String packageName = ClassUtil.concatName(
+                        rootPackageName, entityPackageName);
+                final String path = packageName.replace(".", "/");
+                addTargetDirPath(path);
+            }
         }
     }
 
-    public void setProjects(final AutoRegisterProject[] projects) {
-        this.projects.addAll(Arrays.asList(projects));
-    }
-
-    public void addProject(final AutoRegisterProject project) {
-        projects.add(project);
-    }
-
+    @Binding(bindingType = BindingType.MAY)
     public void setNamingConvention(final NamingConvention namingConvention) {
         this.namingConvention = namingConvention;
     }
@@ -98,13 +94,12 @@ public class MappingFileAutoDetector extends AbstractResourceAutoDetector {
 
     protected void detect(final List<ResourceAutoDetector.Entry> result,
             final String targetDirPath, final URL targetDirUrl) {
-
         final Set<ResourceAutoDetector.Entry> entries = CollectionsUtil
                 .newHashSet();
 
-        for (final AutoRegisterProject project : projects) {
-            final String projectPath = project.getRootPackageName().replace(
-                    ".", "/");
+        for (final String rootPackageName : namingConvention
+                .getRootPackageNames()) {
+            final String projectPath = rootPackageName.replace(".", "/");
             final URL projectUrl = ResourceUtil.getResource(projectPath);
             if (!projectUrl.getProtocol().equals(targetDirUrl.getProtocol())) {
                 continue;

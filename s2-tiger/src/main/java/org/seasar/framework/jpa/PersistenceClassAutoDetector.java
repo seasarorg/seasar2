@@ -17,7 +17,6 @@ package org.seasar.framework.jpa;
 
 import java.lang.annotation.Annotation;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -27,8 +26,10 @@ import javax.persistence.MappedSuperclass;
 
 import org.seasar.framework.autodetector.ClassAutoDetector;
 import org.seasar.framework.autodetector.impl.AbstractClassAutoDetector;
+import org.seasar.framework.container.annotation.tiger.Binding;
+import org.seasar.framework.container.annotation.tiger.BindingType;
+import org.seasar.framework.container.annotation.tiger.Component;
 import org.seasar.framework.container.annotation.tiger.InitMethod;
-import org.seasar.framework.container.autoregister.AutoRegisterProject;
 import org.seasar.framework.convention.NamingConvention;
 import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.ResourceUtil;
@@ -40,11 +41,9 @@ import org.seasar.framework.util.tiger.ReflectionUtil;
  * @author taedium
  * 
  */
+@Component
 public class PersistenceClassAutoDetector extends AbstractClassAutoDetector
         implements ClassAutoDetector {
-
-    protected final List<AutoRegisterProject> projects = CollectionsUtil
-            .newArrayList();
 
     protected final List<Class<? extends Annotation>> annotations = CollectionsUtil
             .newArrayList();
@@ -59,26 +58,23 @@ public class PersistenceClassAutoDetector extends AbstractClassAutoDetector
 
     @InitMethod
     public void init() {
-        for (final AutoRegisterProject project : projects) {
-            final String packageName = ClassUtil.concatName(project
-                    .getRootPackageName(), namingConvention
-                    .getEntityPackageName());
-            addTargetPackageName(packageName);
+        if (namingConvention != null) {
+            final String entityPackageName = namingConvention
+                    .getEntityPackageName();
+            for (final String rootPackageName : namingConvention
+                    .getRootPackageNames()) {
+                final String packageName = ClassUtil.concatName(
+                        rootPackageName, entityPackageName);
+                addTargetPackageName(packageName);
+            }
         }
-    }
-
-    public void setProjects(final AutoRegisterProject[] projects) {
-        this.projects.addAll(Arrays.asList(projects));
-    }
-
-    public void addProject(final AutoRegisterProject project) {
-        projects.add(project);
     }
 
     public void addAnnotation(Class<? extends Annotation> annotation) {
         this.annotations.add(annotation);
     }
 
+    @Binding(bindingType = BindingType.MAY)
     public void setNamingConvention(final NamingConvention namingConvention) {
         this.namingConvention = namingConvention;
     }
@@ -101,9 +97,8 @@ public class PersistenceClassAutoDetector extends AbstractClassAutoDetector
 
     protected void detect(final Set<Class<?>> result, final String packageName,
             final URL url) {
-
-        for (final AutoRegisterProject project : projects) {
-            final String rootPackageName = project.getRootPackageName();
+        for (final String rootPackageName : namingConvention
+                .getRootPackageNames()) {
             final URL rootUrl = ResourceUtil.getResource(rootPackageName
                     .replace(".", "/"));
             if (!rootUrl.getProtocol().equals(url.getProtocol())) {

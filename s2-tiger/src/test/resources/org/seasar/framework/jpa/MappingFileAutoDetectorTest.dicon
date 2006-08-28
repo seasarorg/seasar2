@@ -3,18 +3,16 @@
 	"http://www.seasar.org/dtd/components24.dtd">
 <components>
 
-	<component class="org.seasar.framework.convention.impl.NamingConventionImpl"/>
-
-	<component class="org.seasar.framework.container.cooldeploy.impl.CoolProjectImpl">
-		<property name="rootPackageName">"org.seasar.framework.jpa"</property>
-	</component>
-
-	<component class="org.seasar.framework.container.cooldeploy.impl.CoolProjectImpl">
-		<property name="rootPackageName">"org.seasar.framework.jpa.sub"</property>
-	</component>
-	
-	<component class="org.seasar.framework.container.cooldeploy.impl.CoolProjectImpl">
-		<property name="rootPackageName">"org.junit"</property>
+	<component class="org.seasar.framework.convention.impl.NamingConventionImpl">
+		<initMethod name="addRootPackageName">
+			<arg>"org.seasar.framework.jpa"</arg>
+		</initMethod>
+		<initMethod name="addRootPackageName">
+			<arg>"org.seasar.framework.jpa.sub"</arg>
+		</initMethod>
+		<initMethod name="addRootPackageName">
+			<arg>"org.junit"</arg>
+		</initMethod>
 	</component>
 
 	<component class="org.seasar.framework.jpa.MappingFileAutoDetector">
