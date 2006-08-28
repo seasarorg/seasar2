@@ -385,6 +385,7 @@ public abstract class S2FrameworkTestCase extends TestCase {
                 System.err.println(e);
             }
         }
+        boundFields = null;
     }
 
 }
