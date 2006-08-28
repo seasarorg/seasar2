@@ -13,20 +13,19 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.dxo.converter;
+package org.seasar.extension.dxo;
 
-/**
- * @author koichik
- * 
- */
-public interface ConversionContext {
+public class CircularReferenceDepartment extends Department {
+    private static final long serialVersionUID = 2842245523020553511L;
 
-    ConverterFactory getConverterFactory();
+    private CircularReferenceEmployee[] emps;
 
-    void addConvertedObject(Object source, Object dest);
+    public CircularReferenceEmployee[] getEmps() {
+        return emps;
+    }
 
-    Object getConvertedObject(Object source);
-
-    Object getContextInfo(String key);
+    public void setEmps(CircularReferenceEmployee[] emps) {
+        this.emps = emps;
+    }
 
 }

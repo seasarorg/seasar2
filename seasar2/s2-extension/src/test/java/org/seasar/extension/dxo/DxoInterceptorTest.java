@@ -111,6 +111,20 @@ public class DxoInterceptorTest extends S2TestCase {
         assertEquals(2000, dest[1].getBaz());
     }
 
+    public void testNestedProperty() throws Exception {
+        Employee emp = new Employee();
+        emp.setEname("Foo");
+        Department dept = new Department();
+        dept.setDname("Bar");
+        emp.setDepartment(dept);
+
+        EmpDto dest = beanDxo.convert(emp);
+
+        assertNotNull(dest);
+        assertEquals("Foo", dest.getEname());
+        assertEquals("Bar", dest.getDname());
+    }
+
     public void testMapScalar() throws Exception {
         Hoge src = new Hoge(100, "Hoge", new BigDecimal("1000"));
 
@@ -182,6 +196,8 @@ public class DxoInterceptorTest extends S2TestCase {
         HogeHoge convert4(HogeHoge src);
 
         HogeHoge[] convert(Hoge[] src);
+
+        EmpDto convert(Employee emp);
     }
 
     public interface MapDxo {

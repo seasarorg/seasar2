@@ -18,12 +18,17 @@ package org.seasar.extension.dxo.converter.impl;
 import java.lang.reflect.Method;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.Map;
 
+import org.seasar.extension.dxo.DxoConstants;
 import org.seasar.extension.dxo.annotation.AnnotationReader;
 import org.seasar.extension.dxo.converter.ConversionContext;
 import org.seasar.extension.dxo.converter.ConverterFactory;
+import org.seasar.framework.util.Disposable;
+import org.seasar.framework.util.DisposableUtil;
 import org.seasar.framework.util.StringUtil;
 
 /**
@@ -31,6 +36,11 @@ import org.seasar.framework.util.StringUtil;
  * 
  */
 public class ConversionContextImpl implements ConversionContext {
+
+    protected static boolean initialized;
+
+    protected static final Map contextCache = Collections
+            .synchronizedMap(new HashMap());
 
     protected Class dxoClass;
 
@@ -40,21 +50,41 @@ public class ConversionContextImpl implements ConversionContext {
 
     protected Map convertedObjects = new IdentityHashMap();
 
-    protected DateFormat dateFormat;
+    protected Map contextInfo;
 
-    protected DateFormat timeFormat;
+    public static synchronized void initialize() {
+        if (initialized) {
+            return;
+        }
+        DisposableUtil.add(new Disposable() {
+            public void dispose() {
 
-    protected DateFormat timestampFormat;
+            }
+        });
+    }
+
+    public static synchronized void dispose() {
+        contextCache.clear();
+    }
 
     public ConversionContextImpl(final Class dxoClass, final Method method,
             final ConverterFactory converterFactory,
             final AnnotationReader reader) {
+        initialize();
         this.dxoClass = dxoClass;
         this.method = method;
         this.converterFactory = converterFactory;
-        dateFormat = toDateFormat(reader.getDatePattern(dxoClass, method));
-        timeFormat = toDateFormat(reader.getDatePattern(dxoClass, method));
-        timestampFormat = toDateFormat(reader.getDatePattern(dxoClass, method));
+        this.contextInfo = (Map) contextCache.get(method);
+        if (contextInfo == null) {
+            this.contextInfo = new HashMap();
+            contextInfo.put(DxoConstants.DATE_PATTERN, toDateFormat(reader
+                    .getDatePattern(dxoClass, method)));
+            contextInfo.put(DxoConstants.DATE_PATTERN, toDateFormat(reader
+                    .getTimePattern(dxoClass, method)));
+            contextInfo.put(DxoConstants.DATE_PATTERN, toDateFormat(reader
+                    .getTimestampPattern(dxoClass, method)));
+            contextCache.put(method, contextInfo);
+        }
     }
 
     public ConverterFactory getConverterFactory() {
@@ -76,16 +106,8 @@ public class ConversionContextImpl implements ConversionContext {
         return new SimpleDateFormat(format);
     }
 
-    public DateFormat getDateFormat() {
-        return dateFormat;
-    }
-
-    public DateFormat getTimeFormat() {
-        return timeFormat;
-    }
-
-    public DateFormat getTimestampFormat() {
-        return timestampFormat;
+    public Object getContextInfo(String key) {
+        return contextInfo.get(key);
     }
 
 }

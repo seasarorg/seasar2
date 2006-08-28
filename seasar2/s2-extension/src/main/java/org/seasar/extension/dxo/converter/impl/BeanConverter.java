@@ -29,6 +29,10 @@ import org.seasar.framework.util.ClassUtil;
  */
 public class BeanConverter extends AbstractConverter {
 
+    protected static final String JAVA = "java.";
+
+    protected static final String JAVAX = "javax.";
+
     protected static final Object PROPERTY_NOT_FOUND = new Object();
 
     public Object convert(final Object source, final Class destClass,
@@ -69,34 +73,83 @@ public class BeanConverter extends AbstractConverter {
             if (!destPropertyDesc.hasWriteMethod()) {
                 continue;
             }
-            final String destPropertyName = destPropertyDesc.getPropertyName();
-            final Object sourcePropertyValue = getSourceValue(sourceBeanDesc,
-                    source, destPropertyName, context);
-            if (sourcePropertyValue == PROPERTY_NOT_FOUND) {
-                continue;
-            }
-            final Class destPropertyClass = destPropertyDesc.getPropertyType();
-            final Converter converter = context.getConverterFactory()
-                    .getConverter(sourcePropertyValue.getClass(),
-                            destPropertyClass);
-            destPropertyDesc.setValue(dest, converter.convert(
-                    sourcePropertyValue, destPropertyClass, context));
+            setValue(sourceBeanDesc, source, destBeanDesc, dest,
+                    destPropertyDesc, context);
         }
     }
 
+    protected void setValue(final BeanDesc sourceBeanDesc, final Object source,
+            final BeanDesc destBeanDesc, final Object dest,
+            final PropertyDesc destPropertyDesc, final ConversionContext context) {
+        final String destPropertyName = destPropertyDesc.getPropertyName();
+        final Object sourcePropertyValue = getSourceValue(sourceBeanDesc,
+                source, destPropertyName, context);
+        if (sourcePropertyValue == PROPERTY_NOT_FOUND) {
+            return;
+        }
+        if (sourcePropertyValue == null) {
+            destPropertyDesc.setValue(dest, null);
+            return;
+        }
+        final Class sourcePropertyClass = sourcePropertyValue.getClass();
+        final Class destPropertyClass = destPropertyDesc.getPropertyType();
+        final Converter converter = context.getConverterFactory().getConverter(
+                sourcePropertyClass, destPropertyClass);
+        final Object convertedValue = converter.convert(sourcePropertyValue,
+                destPropertyClass, context);
+        destPropertyDesc.setValue(dest, convertedValue);
+    }
+
     protected Object getSourceValue(final BeanDesc sourceBeanDesc,
-            final Object source, final String destPropertyName,
+            final Object source, final String propertyName,
             final ConversionContext context) {
         // TODO convert property name
-        if (!sourceBeanDesc.hasPropertyDesc(destPropertyName)) {
-            return PROPERTY_NOT_FOUND;
+        if (sourceBeanDesc.hasPropertyDesc(propertyName)) {
+            final PropertyDesc sourcePropertyDesc = sourceBeanDesc
+                    .getPropertyDesc(propertyName);
+            if (!sourcePropertyDesc.hasReadMethod()) {
+                return PROPERTY_NOT_FOUND;
+            }
+            return sourcePropertyDesc.getValue(source);
         }
-        final PropertyDesc sourcePropertyDesc = sourceBeanDesc
-                .getPropertyDesc(destPropertyName);
-        if (!sourcePropertyDesc.hasReadMethod()) {
-            return PROPERTY_NOT_FOUND;
+        return resolveNestedProperty(sourceBeanDesc, source, propertyName,
+                context);
+    }
+
+    protected Object resolveNestedProperty(final BeanDesc sourceBeanDesc,
+            final Object source, final String propertyName,
+            final ConversionContext context) {
+        for (int i = 0; i < sourceBeanDesc.getPropertyDescSize(); ++i) {
+            final PropertyDesc propertyDesc = sourceBeanDesc.getPropertyDesc(i);
+            final Class propertyType = propertyDesc.getPropertyType();
+            if (!propertyDesc.hasReadMethod() || isBasicType(propertyType)) {
+                continue;
+            }
+
+            final BeanDesc nestedBeanDesc = BeanDescFactory
+                    .getBeanDesc(propertyType);
+            if (nestedBeanDesc.hasPropertyDesc(propertyName)) {
+                final PropertyDesc nestedPropertyDesc = nestedBeanDesc
+                        .getPropertyDesc(propertyName);
+                if (nestedPropertyDesc.hasReadMethod()) {
+                    return nestedPropertyDesc.getValue(propertyDesc
+                            .getValue(source));
+                }
+            }
         }
-        return sourcePropertyDesc.getValue(source);
+        return PROPERTY_NOT_FOUND;
+    }
+
+    protected boolean isBasicType(final Object object) {
+        return isBasicType(object.getClass());
+    }
+
+    protected boolean isBasicType(final Class clazz) {
+        if (clazz.isPrimitive() || clazz.isArray()) {
+            return true;
+        }
+        final String className = clazz.getName();
+        return className.startsWith(JAVA) || className.startsWith(JAVAX);
     }
 
 }

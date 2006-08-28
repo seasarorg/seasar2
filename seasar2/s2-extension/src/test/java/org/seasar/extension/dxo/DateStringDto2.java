@@ -13,20 +13,20 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.dxo.converter;
+package org.seasar.extension.dxo;
 
 /**
- * @author koichik
- * 
+ * @author Satsohi Kimura
  */
-public interface ConversionContext {
+public class DateStringDto2 extends DateStringDto {
+    private String a = "2020/03/04";
 
-    ConverterFactory getConverterFactory();
+    public String getA() {
+        return a;
+    }
 
-    void addConvertedObject(Object source, Object dest);
-
-    Object getConvertedObject(Object source);
-
-    Object getContextInfo(String key);
+    public void setA(String a) {
+        this.a = a;
+    }
 
 }

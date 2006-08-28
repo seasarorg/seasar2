@@ -13,20 +13,30 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.dxo.converter;
+package org.seasar.extension.dxo;
 
 /**
- * @author koichik
- * 
+ * @author Satsohi Kimura
  */
-public interface ConversionContext {
+public class CircularReferenceDeptDto {
+    private String dname;
 
-    ConverterFactory getConverterFactory();
+    private CircularReferenceEmpDto[] emps;
 
-    void addConvertedObject(Object source, Object dest);
+    public String getDname() {
+        return dname;
+    }
 
-    Object getConvertedObject(Object source);
+    public void setDname(String dname) {
+        this.dname = dname;
+    }
 
-    Object getContextInfo(String key);
+    public CircularReferenceEmpDto[] getEmps() {
+        return emps;
+    }
+
+    public void setEmps(CircularReferenceEmpDto[] emps) {
+        this.emps = emps;
+    }
 
 }

@@ -20,6 +20,7 @@ import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.seasar.extension.dxo.DxoConstants;
 import org.seasar.extension.dxo.converter.ConversionContext;
 import org.seasar.framework.util.StringUtil;
 
@@ -44,7 +45,8 @@ public class CalendarConverter extends AbstractConverter {
             return toCalendar((Number) source);
         }
         if (source instanceof String) {
-            final DateFormat dateFormat = context.getDateFormat();
+            final DateFormat dateFormat = (DateFormat) context
+                    .getContextInfo(DxoConstants.DATE_PATTERN);
             if (dateFormat != null) {
                 return toCalendar((String) source, dateFormat);
             }

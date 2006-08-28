@@ -13,20 +13,24 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.dxo.converter;
+package org.seasar.extension.dxo;
+
+import java.util.Date;
+
 
 /**
- * @author koichik
- * 
+ * @author Satsohi Kimura
  */
-public interface ConversionContext {
+public class DateDto {
 
-    ConverterFactory getConverterFactory();
+    private Date a = DateUtil.newDate(2100, 6, 22);
 
-    void addConvertedObject(Object source, Object dest);
+    public Date getA() {
+        return a;
+    }
 
-    Object getConvertedObject(Object source);
-
-    Object getContextInfo(String key);
+    public void setA(Date a) {
+        this.a = a;
+    }
 
 }

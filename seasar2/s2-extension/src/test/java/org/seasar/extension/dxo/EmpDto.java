@@ -13,20 +13,42 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.dxo.converter;
+package org.seasar.extension.dxo;
 
 /**
  * @author koichik
  * 
  */
-public interface ConversionContext {
+public class EmpDto {
 
-    ConverterFactory getConverterFactory();
+    String ename;
 
-    void addConvertedObject(Object source, Object dest);
+    String job;
 
-    Object getConvertedObject(Object source);
+    String dname;
 
-    Object getContextInfo(String key);
+    public String getEname() {
+        return ename;
+    }
+
+    public void setEname(String ename) {
+        this.ename = ename;
+    }
+
+    public String getJob() {
+        return job;
+    }
+
+    public void setJob(String job) {
+        this.job = job;
+    }
+
+    public String getDname() {
+        return dname;
+    }
+
+    public void setDname(String dname) {
+        this.dname = dname;
+    }
 
 }

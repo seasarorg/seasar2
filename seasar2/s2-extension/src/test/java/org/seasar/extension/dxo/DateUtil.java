@@ -13,20 +13,21 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.dxo.converter;
+package org.seasar.extension.dxo;
+
+import java.util.Calendar;
+import java.util.Date;
 
 /**
- * @author koichik
- * 
+ * @author Satsohi Kimura
  */
-public interface ConversionContext {
-
-    ConverterFactory getConverterFactory();
-
-    void addConvertedObject(Object source, Object dest);
-
-    Object getConvertedObject(Object source);
-
-    Object getContextInfo(String key);
-
+public class DateUtil {
+    public static Date newDate(int year, int month, int dayOfMonth) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.clear();
+        calendar.set(Calendar.YEAR, year);
+        calendar.set(Calendar.MONTH, month - 1);
+        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+        return calendar.getTime();
+    }
 }
