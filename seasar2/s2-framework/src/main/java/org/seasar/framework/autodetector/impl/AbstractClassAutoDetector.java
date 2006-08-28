@@ -45,6 +45,7 @@ public abstract class AbstractClassAutoDetector implements ClassAutoDetector {
     public AbstractClassAutoDetector() {
         strategies.put("file", new FileSystemStrategy());
         strategies.put("jar", new JarFileStrategy());
+        strategies.put("wsjar", new JarFileStrategy());
         strategies.put("zip", new ZipFileStrategy());
     }
 

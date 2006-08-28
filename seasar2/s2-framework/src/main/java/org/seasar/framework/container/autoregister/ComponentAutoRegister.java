@@ -43,6 +43,7 @@ public class ComponentAutoRegister extends AbstractComponentAutoRegister
     public ComponentAutoRegister() {
         strategies.put("file", new FileSystemStrategy());
         strategies.put("jar", new JarFileStrategy());
+        strategies.put("wsjar", new JarFileStrategy());
         strategies.put("zip", new ZipFileStrategy());
     }
 

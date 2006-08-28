@@ -54,6 +54,7 @@ public class CoolComponentAutoRegister implements ClassHandler {
     public CoolComponentAutoRegister() {
         addStrategy("file", new FileSystemStrategy());
         addStrategy("jar", new JarFileStrategy());
+        addStrategy("wsjar", new JarFileStrategy());
         addStrategy("zip", new ZipFileStrategy());
     }
 
