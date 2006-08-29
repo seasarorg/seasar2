@@ -99,6 +99,16 @@ public class NamingConventionImplTest extends TestCase {
                 .fromClassNameToComponentName("aaa.dao.bbb.CccDao"));
     }
 
+    public void testFromClassNameToComponentName_performance() throws Exception {
+        int num = 10000;
+        long start = System.currentTimeMillis();
+        for (int i = 0; i < num; ++i) {
+            convention.fromClassNameToComponentName("aaa.web.add.AddPage");
+        }
+        long time = System.currentTimeMillis() - start;
+        System.out.println("fromClassNameToComponentName:" + num + "=" + time);
+    }
+
     public void testFromComponentNameToSuffix() throws Exception {
         assertEquals("Logic", convention.fromComponentNameToSuffix("aaaLogic"));
         assertNull(convention.fromComponentNameToSuffix("aaa"));
@@ -140,6 +150,16 @@ public class NamingConventionImplTest extends TestCase {
                 .fromComponentNameToClass("xxx_cccDao"));
         assertEquals(DddPage.class, convention
                 .fromComponentNameToClass("add_dddPage"));
+    }
+
+    public void testFromComponentNameToClass_performance() throws Exception {
+        int num = 1000;
+        long start = System.currentTimeMillis();
+        for (int i = 0; i < num; ++i) {
+            convention.fromComponentNameToClass("bbbDao");
+        }
+        long time = System.currentTimeMillis() - start;
+        // System.out.println("fromComponentNameToClass:" + num + "=" + time);
     }
 
     public void testFindClass() throws Exception {
