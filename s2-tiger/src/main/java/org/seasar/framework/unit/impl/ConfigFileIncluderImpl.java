@@ -17,6 +17,7 @@ package org.seasar.framework.unit.impl;
 
 import java.util.List;
 
+import org.seasar.framework.log.Logger;
 import org.seasar.framework.unit.ConfigFileIncluder;
 import org.seasar.framework.unit.TestContext;
 import org.seasar.framework.util.ResourceUtil;
@@ -28,6 +29,9 @@ import org.seasar.framework.util.tiger.CollectionsUtil;
  */
 public class ConfigFileIncluderImpl implements ConfigFileIncluder {
 
+    protected static final Logger logger = Logger
+            .getLogger(ConfigFileIncluderImpl.class);
+
     protected final List<String> configFiles = CollectionsUtil.newArrayList();
 
     public void addConfigFile(final String configFile) {
@@ -38,14 +42,21 @@ public class ConfigFileIncluderImpl implements ConfigFileIncluder {
         final String dirPath = testContext.getTestClassPackagePath();
         for (final String configFile : configFiles) {
             if (ResourceUtil.isExist(configFile)) {
-                testContext.include(configFile);
+                include(testContext, configFile);
             } else {
                 final String path = dirPath + "/" + configFile;
                 if (ResourceUtil.isExist(path)) {
-                    testContext.include(path);
+                    include(testContext, path);
                 }
             }
         }
+    }
+
+    protected void include(final TestContext testContext, final String path) {
+        if (logger.isDebugEnabled()) {
+            logger.log("DSSR0101", new Object[] { path });
+        }
+        testContext.include(path);
     }
 
 }

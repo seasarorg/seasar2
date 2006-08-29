@@ -19,6 +19,7 @@ import java.util.List;
 
 import org.seasar.framework.container.annotation.tiger.Binding;
 import org.seasar.framework.container.annotation.tiger.BindingType;
+import org.seasar.framework.log.Logger;
 import org.seasar.framework.unit.DataAccessor;
 import org.seasar.framework.unit.TestContext;
 import org.seasar.framework.unit.TestDataPreparer;
@@ -30,6 +31,9 @@ import org.seasar.framework.util.tiger.CollectionsUtil;
  * 
  */
 public class TestDataPreparerImpl implements TestDataPreparer {
+
+    protected static final Logger logger = Logger
+            .getLogger(TestDataPreparerImpl.class);
 
     protected final List<String> testDataXlsPaths = CollectionsUtil
             .newArrayList();
@@ -68,8 +72,14 @@ public class TestDataPreparerImpl implements TestDataPreparer {
 
     protected void readXlsWriteDb(final String path) {
         if (replaceDb) {
+            if (logger.isDebugEnabled()) {
+                logger.log("DSSR0102", new Object[] { path });
+            }
             dataAccessor.readXlsReplaceDb(path);
         } else {
+            if (logger.isDebugEnabled()) {
+                logger.log("DSSR0103", new Object[] { path });
+            }
             dataAccessor.readXlsWriteDb(path);
         }
     }

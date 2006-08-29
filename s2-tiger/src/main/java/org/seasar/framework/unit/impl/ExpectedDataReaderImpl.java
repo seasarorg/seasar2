@@ -20,6 +20,7 @@ import java.util.List;
 import org.seasar.extension.dataset.DataSet;
 import org.seasar.framework.container.annotation.tiger.Binding;
 import org.seasar.framework.container.annotation.tiger.BindingType;
+import org.seasar.framework.log.Logger;
 import org.seasar.framework.unit.DataAccessor;
 import org.seasar.framework.unit.ExpectedDataReader;
 import org.seasar.framework.unit.TestContext;
@@ -31,6 +32,9 @@ import org.seasar.framework.util.tiger.CollectionsUtil;
  * 
  */
 public class ExpectedDataReaderImpl implements ExpectedDataReader {
+
+    protected static final Logger logger = Logger
+            .getLogger(ExpectedDataReaderImpl.class);
 
     protected final List<String> expectedDataXlsPaths = CollectionsUtil
             .newArrayList();
@@ -61,6 +65,9 @@ public class ExpectedDataReaderImpl implements ExpectedDataReader {
     }
 
     protected DataSet readXls(final String path) {
+        if (logger.isDebugEnabled()) {
+            logger.log("DSSR0104", new Object[] { path });
+        }
         return dataAccessor.readXls(path);
     }
 }
