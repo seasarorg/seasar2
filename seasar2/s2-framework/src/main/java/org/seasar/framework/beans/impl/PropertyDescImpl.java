@@ -9,7 +9,7 @@
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, 
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
@@ -38,6 +38,8 @@ import org.seasar.framework.util.TimestampConversionUtil;
  * 
  */
 public final class PropertyDescImpl implements PropertyDesc {
+
+    private static final Object[] EMPTY_ARGS = new Object[0];
 
     private String propertyName;
 
@@ -113,7 +115,7 @@ public final class PropertyDescImpl implements PropertyDesc {
     }
 
     public final Object getValue(Object target) {
-        return MethodUtil.invoke(readMethod, target, null);
+        return MethodUtil.invoke(readMethod, target, EMPTY_ARGS);
     }
 
     public final void setValue(Object target, Object value) {

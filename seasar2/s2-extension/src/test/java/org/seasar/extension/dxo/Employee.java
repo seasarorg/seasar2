@@ -9,7 +9,7 @@
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, 
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
@@ -33,7 +33,7 @@ public class Employee {
 
     private Float comm;
 
-    private Department deptno;
+    private Integer deptno;
 
     private byte[] password;
 
@@ -104,11 +104,11 @@ public class Employee {
         this.comm = comm;
     }
 
-    public Department getDeptno() {
+    public Integer getDeptno() {
         return this.deptno;
     }
 
-    public void setDeptno(Department deptno) {
+    public void setDeptno(Integer deptno) {
         this.deptno = deptno;
     }
 
