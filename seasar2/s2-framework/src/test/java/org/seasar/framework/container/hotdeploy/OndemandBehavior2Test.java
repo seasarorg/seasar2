@@ -16,9 +16,13 @@
 package org.seasar.framework.container.hotdeploy;
 
 import org.seasar.framework.beans.BeanDesc;
+import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.beans.factory.BeanDescFactory;
 import org.seasar.framework.container.ComponentCreator;
-import org.seasar.framework.container.creator.ComponentCreatorImpl;
+import org.seasar.framework.container.ComponentDef;
+import org.seasar.framework.container.creator.ActionCreator;
+import org.seasar.framework.container.creator.PageCreator;
+import org.seasar.framework.container.hotdeploy.creator.web.aaa.HogePage;
 import org.seasar.framework.container.impl.S2ContainerBehavior;
 import org.seasar.framework.convention.impl.NamingConventionImpl;
 import org.seasar.framework.unit.S2FrameworkTestCase;
@@ -28,7 +32,7 @@ import org.seasar.framework.util.ClassUtil;
  * @author higa
  * 
  */
-public class OndemandBehaviorTest extends S2FrameworkTestCase {
+public class OndemandBehavior2Test extends S2FrameworkTestCase {
 
     private ClassLoader originalLoader;
 
@@ -38,34 +42,50 @@ public class OndemandBehaviorTest extends S2FrameworkTestCase {
             + ".creator";
 
     protected void setUp() {
+        register(HogePage.class);
         originalLoader = Thread.currentThread().getContextClassLoader();
         NamingConventionImpl convention = new NamingConventionImpl();
         convention.addRootPackageName(rootPackageName);
         ondemand = new HotdeployBehavior();
         ondemand.setNamingConvention(convention);
-        ComponentCreatorImpl creator = new ComponentCreatorImpl(convention);
-        creator.setNameSuffix("Dao");
-        ondemand.setCreators(new ComponentCreator[] { creator });
+        ondemand.setCreators(new ComponentCreator[] {
+                new ActionCreator(convention), new PageCreator(convention) });
         S2ContainerBehavior.setProvider(ondemand);
+        ondemand.start();
     }
 
     protected void tearDown() {
+        ondemand.stop();
         S2ContainerBehavior
                 .setProvider(new S2ContainerBehavior.DefaultProvider());
         Thread.currentThread().setContextClassLoader(originalLoader);
     }
 
-    public void testStartStop() throws Exception {
-        BeanDesc beanDesc = BeanDescFactory.getBeanDesc(getClass());
-        ondemand.start();
-        try {
-            assertEquals(HotdeployClassLoader.class, Thread.currentThread()
-                    .getContextClassLoader().getClass());
-        } finally {
-            ondemand.stop();
-        }
-        assertSame(originalLoader, Thread.currentThread()
-                .getContextClassLoader());
-        assertNotSame(beanDesc, BeanDescFactory.getBeanDesc(getClass()));
+    public void testCreateComponentDef() throws Exception {
+        Class clazz = ClassUtil
+                .forName(rootPackageName + ".web.aaa.HogeAction");
+        assertNotNull(ondemand
+                .acquireFromGetComponentDef(getContainer(), clazz));
+    }
+
+    public void testHasComponentDef() throws Exception {
+        assertTrue(getContainer().hasComponentDef("aaa_hogeAction"));
+        assertFalse(getContainer().hasComponentDef("xxx"));
+    }
+
+    public void testGetComponentDefFromCache() throws Exception {
+        Class clazz = ClassUtil
+                .forName(rootPackageName + ".web.aaa.HogeAction");
+        ComponentDef cd = ondemand.acquireFromGetComponentDef(getContainer(),
+                clazz);
+        assertSame(cd, ondemand.acquireFromGetComponentDef(getContainer(),
+                clazz));
+    }
+
+    public void testGetComponent() throws Exception {
+        Object o = getComponent("aaa_hogeAction");
+        BeanDesc beanDesc = BeanDescFactory.getBeanDesc(o.getClass());
+        PropertyDesc pd = beanDesc.getPropertyDesc("hogePage");
+        assertEquals(HogePage.class, pd.getPropertyType());
     }
 }

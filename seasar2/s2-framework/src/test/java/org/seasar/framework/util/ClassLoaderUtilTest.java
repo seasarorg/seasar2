@@ -42,4 +42,10 @@ public class ClassLoaderUtilTest extends TestCase {
         }
     }
 
+    public void testFindLoadedClass() throws Exception {
+        ClassLoader loader = Thread.currentThread().getContextClassLoader();
+        Class clazz = ClassLoaderUtil.findLoadedClass(loader, getClass()
+                .getName());
+        assertEquals(getClass(), clazz);
+    }
 }

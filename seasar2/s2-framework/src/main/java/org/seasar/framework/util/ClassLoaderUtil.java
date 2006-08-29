@@ -15,12 +15,23 @@
  */
 package org.seasar.framework.util;
 
+import java.lang.reflect.Method;
+
 import org.seasar.framework.message.MessageFormatter;
 
 /**
  * @author koichik
  */
 public class ClassLoaderUtil {
+
+    private static Method findLoadedClassMethod;
+
+    static {
+        findLoadedClassMethod = ClassUtil.getDeclaredMethod(ClassLoader.class,
+                "findLoadedClass", new Class[] { String.class });
+        findLoadedClassMethod.setAccessible(true);
+    }
+
     public static ClassLoader getClassLoader(final Class targetClass) {
         final ClassLoader contextClassLoader = Thread.currentThread()
                 .getContextClassLoader();
@@ -62,5 +73,18 @@ public class ClassLoaderUtil {
             cl = cl.getParent();
         }
         return false;
+    }
+
+    public static Class findLoadedClass(ClassLoader classLoader,
+            String className) throws ClassNotFoundException {
+        for (ClassLoader loader = classLoader; loader != null; loader = loader
+                .getParent()) {
+            Class clazz = (Class) MethodUtil.invoke(findLoadedClassMethod,
+                    loader, new Object[] { className });
+            if (clazz != null) {
+                return clazz;
+            }
+        }
+        return null;
     }
 }

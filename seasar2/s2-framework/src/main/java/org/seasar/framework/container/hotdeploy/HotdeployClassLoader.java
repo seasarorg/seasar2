@@ -17,6 +17,7 @@ package org.seasar.framework.container.hotdeploy;
 
 import java.io.InputStream;
 
+import org.seasar.framework.util.ClassLoaderUtil;
 import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.InputStreamUtil;
 import org.seasar.framework.util.ResourceUtil;
@@ -38,6 +39,10 @@ public class HotdeployClassLoader extends ClassLoader {
 
         if (isTargetClass(className)) {
             Class clazz = findLoadedClass(className);
+            if (clazz != null) {
+                return clazz;
+            }
+            clazz = ClassLoaderUtil.findLoadedClass(getParent(), className);
             if (clazz != null) {
                 return clazz;
             }
