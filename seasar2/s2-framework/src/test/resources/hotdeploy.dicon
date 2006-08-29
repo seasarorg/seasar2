@@ -5,5 +5,5 @@
 	<include path="convention.dicon"/>
 	<include path="customizer.dicon"/>
 	<include path="creator.dicon"/>
-	<component class="org.seasar.framework.container.hotdeploy.HotdeployBehavior";>
+	<component class="org.seasar.framework.container.hotdeploy.HotdeployBehavior"/>
 </components>
