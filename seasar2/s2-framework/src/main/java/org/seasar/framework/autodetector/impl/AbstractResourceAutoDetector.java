@@ -25,13 +25,11 @@ import java.util.jar.JarFile;
 import java.util.regex.Pattern;
 
 import org.seasar.framework.autodetector.ResourceAutoDetector;
-import org.seasar.framework.exception.IORuntimeException;
 import org.seasar.framework.util.FileUtil;
 import org.seasar.framework.util.JarFileUtil;
 import org.seasar.framework.util.ResourceTraversal;
 import org.seasar.framework.util.ResourceUtil;
 import org.seasar.framework.util.StringUtil;
-import org.seasar.framework.util.URLUtil;
 
 /**
  * @author taedium
@@ -131,11 +129,7 @@ public abstract class AbstractResourceAutoDetector implements
 
         public String getBaseName(final String path, final URL url) {
             final File rootDir = getRootDir(path, url);
-            try {
-                return FileUtil.getCanonicalPath(rootDir);
-            } catch (final IORuntimeException e) {
-                return null;
-            }
+            return FileUtil.getCanonicalPath(rootDir);
         }
 
         public void detect(final String path, final URL url,
@@ -158,11 +152,7 @@ public abstract class AbstractResourceAutoDetector implements
     protected class JarFileStrategy implements Strategy {
 
         public String getBaseName(final String path, final URL url) {
-            try {
-                return createJarFile(url).getName();
-            } catch (final IORuntimeException e) {
-                return null;
-            }
+            return createJarFile(url).getName();
         }
 
         public void detect(final String path, final URL url,
@@ -173,22 +163,14 @@ public abstract class AbstractResourceAutoDetector implements
         }
 
         protected JarFile createJarFile(final URL url) {
-            final URL nestedUrl = URLUtil.create(url.getPath());
-            String path = nestedUrl.getPath();
-            int pos = path.lastIndexOf('!');
-            String jarFileName = path.substring(0, pos);
-            return JarFileUtil.create(new File(jarFileName));
+            return JarFileUtil.toJarFile(url);
         }
     }
 
     protected class ZipFileStrategy implements Strategy {
 
         public String getBaseName(final String path, final URL url) {
-            try {
-                return createJarFile(url).getName();
-            } catch (final IORuntimeException e) {
-                return null;
-            }
+            return createJarFile(url).getName();
         }
 
         public void detect(final String path, final URL url,

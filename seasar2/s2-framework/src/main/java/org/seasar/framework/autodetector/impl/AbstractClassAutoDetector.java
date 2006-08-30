@@ -24,7 +24,6 @@ import java.util.Map;
 import java.util.jar.JarFile;
 
 import org.seasar.framework.autodetector.ClassAutoDetector;
-import org.seasar.framework.exception.IORuntimeException;
 import org.seasar.framework.util.ClassTraversal;
 import org.seasar.framework.util.FileUtil;
 import org.seasar.framework.util.JarFileUtil;
@@ -80,11 +79,7 @@ public abstract class AbstractClassAutoDetector implements ClassAutoDetector {
 
         public String getBaseName(final String packageName, final URL url) {
             final File rootDir = getRootDir(packageName, url);
-            try {
-                return FileUtil.getCanonicalPath(rootDir);
-            } catch (IORuntimeException e) {
-                return null;
-            }
+            return FileUtil.getCanonicalPath(rootDir);
         }
 
         public void detect(final String packageName, final URL url,
@@ -107,11 +102,7 @@ public abstract class AbstractClassAutoDetector implements ClassAutoDetector {
     protected class JarFileStrategy implements Strategy {
 
         public String getBaseName(final String packageName, final URL url) {
-            try {
-                return createJarFile(url).getName();
-            } catch (final IORuntimeException e) {
-                return null;
-            }
+            return createJarFile(url).getName();
         }
 
         public void detect(final String packageName, final URL url,
@@ -129,11 +120,7 @@ public abstract class AbstractClassAutoDetector implements ClassAutoDetector {
     protected class ZipFileStrategy implements Strategy {
 
         public String getBaseName(final String packageName, final URL url) {
-            try {
-                return createJarFile(url).getName();
-            } catch (final IORuntimeException e) {
-                return null;
-            }
+            return createJarFile(url).getName();
         }
 
         public void detect(final String packageName, final URL url,
