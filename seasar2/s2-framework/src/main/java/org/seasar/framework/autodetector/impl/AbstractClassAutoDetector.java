@@ -30,7 +30,6 @@ import org.seasar.framework.util.FileUtil;
 import org.seasar.framework.util.JarFileUtil;
 import org.seasar.framework.util.ResourceUtil;
 import org.seasar.framework.util.StringUtil;
-import org.seasar.framework.util.URLUtil;
 
 /**
  * @author taedium
@@ -123,11 +122,7 @@ public abstract class AbstractClassAutoDetector implements ClassAutoDetector {
         }
 
         protected JarFile createJarFile(final URL url) {
-            final URL nestedUrl = URLUtil.create(url.getPath());
-            String path = nestedUrl.getPath();
-            int pos = path.lastIndexOf('!');
-            String jarFileName = path.substring(0, pos);
-            return JarFileUtil.create(new File(jarFileName));
+            return JarFileUtil.toJarFile(url);
         }
     }
 

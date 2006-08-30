@@ -30,7 +30,6 @@ import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.JarFileUtil;
 import org.seasar.framework.util.ResourceUtil;
 import org.seasar.framework.util.StringUtil;
-import org.seasar.framework.util.URLUtil;
 import org.seasar.framework.util.ClassTraversal.ClassHandler;
 
 /**
@@ -161,11 +160,7 @@ public class CoolComponentAutoRegister implements ClassHandler {
         }
 
         protected JarFile createJarFile(URL url) {
-            final URL nestedUrl = URLUtil.create(url.getPath());
-            String path = nestedUrl.getPath();
-            int pos = path.lastIndexOf('!');
-            String jarFileName = path.substring(0, pos);
-            return JarFileUtil.create(new File(jarFileName));
+            return JarFileUtil.toJarFile(url);
         }
     }
 

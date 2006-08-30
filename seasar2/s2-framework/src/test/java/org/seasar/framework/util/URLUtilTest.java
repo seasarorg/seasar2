@@ -56,4 +56,11 @@ public class URLUtilTest extends TestCase {
 
     }
 
+    public void testEncode() throws Exception {
+        assertEquals("Program+Files", URLUtil.encode("Program Files", "UTF-8"));
+    }
+
+    public void testDecode() throws Exception {
+        assertEquals("Program Files", URLUtil.decode("Program+Files", "UTF-8"));
+    }
 }

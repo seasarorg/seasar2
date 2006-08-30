@@ -82,4 +82,15 @@ public class ResourceUtilTest extends TestCase {
                 .removeExtension("aaa/bbb.xml"));
         assertEquals("2", "aaa/bbb", ResourceUtil.removeExtension("aaa/bbb"));
     }
+
+    public void testToExternalForm() throws Exception {
+        URL url = new File("C:\\Program Files").toURL();
+        assertEquals("file:/C:/Program Files/", ResourceUtil
+                .toExternalForm(url));
+    }
+
+    public void testGetFileName() throws Exception {
+        URL url = new File("C:\\Program Files").toURL();
+        assertEquals("/C:/Program Files/", ResourceUtil.getFileName(url));
+    }
 }

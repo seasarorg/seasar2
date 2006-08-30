@@ -18,9 +18,7 @@ package org.seasar.framework.util;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.URL;
-import java.net.URLDecoder;
 import java.util.Properties;
 
 import org.seasar.framework.exception.IORuntimeException;
@@ -154,22 +152,12 @@ public final class ResourceUtil {
 
     public static String toExternalForm(URL url) {
         String s = url.toExternalForm();
-        try {
-            return URLDecoder.decode(s, "UTF8");
-        } catch (UnsupportedEncodingException ex) {
-            ex.printStackTrace();
-            throw new RuntimeException(ex);
-        }
+        return URLUtil.decode(s, "UTF8");
     }
 
     public static String getFileName(URL url) {
         String s = url.getFile();
-        try {
-            return URLDecoder.decode(s, "UTF8");
-        } catch (UnsupportedEncodingException ex) {
-            ex.printStackTrace();
-            throw new RuntimeException(ex);
-        }
+        return URLUtil.decode(s, "UTF8");
     }
 
     public static File getFile(URL url) {

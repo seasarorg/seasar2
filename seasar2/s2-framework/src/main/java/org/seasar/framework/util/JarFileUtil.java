@@ -18,6 +18,7 @@ package org.seasar.framework.util;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 
@@ -46,5 +47,18 @@ public class JarFileUtil {
         } catch (IOException e) {
             throw new IORuntimeException(e);
         }
+    }
+
+    public static JarFile toJarFile(final URL jarUrl) {
+        return create(new File(toJarFilePath(jarUrl)));
+    }
+
+    public static String toJarFilePath(final URL jarUrl) {
+        final URL nestedUrl = URLUtil.create(jarUrl.getPath());
+        final String nestedUrlPath = nestedUrl.getPath();
+        final int pos = nestedUrlPath.lastIndexOf('!');
+        final String jarFilePath = nestedUrlPath.substring(0, pos);
+        final File jarFile = new File(URLUtil.decode(jarFilePath, "UTF8"));
+        return FileUtil.getCanonicalPath(jarFile);
     }
 }

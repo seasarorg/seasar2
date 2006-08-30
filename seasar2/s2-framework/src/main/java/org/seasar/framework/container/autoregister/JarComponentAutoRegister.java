@@ -19,8 +19,9 @@ import java.io.File;
 import java.net.URL;
 
 import org.aopalliance.intercept.MethodInterceptor;
+import org.seasar.framework.util.FileUtil;
+import org.seasar.framework.util.JarFileUtil;
 import org.seasar.framework.util.ResourceUtil;
-import org.seasar.framework.util.URLUtil;
 
 /**
  * 
@@ -44,11 +45,8 @@ public class JarComponentAutoRegister extends AbstractJarComponentAutoRegister {
     protected void setupBaseDir() {
         String path = ResourceUtil.getResourcePath(referenceClass);
         URL url = ResourceUtil.getResource(path);
-        URL nestedUrl = URLUtil.create(url.getPath());
-        String s = nestedUrl.getPath();
-        int pos = s.lastIndexOf('!');
-        String s2 = s.substring(0, pos);
-        File f = new File(s2);
-        setBaseDir(f.getParentFile().getAbsolutePath());
+        File jarFile = new File(JarFileUtil.toJarFilePath(url));
+        File dir = jarFile.getParentFile();
+        setBaseDir(FileUtil.getCanonicalPath(dir));
     }
 }

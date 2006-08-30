@@ -26,7 +26,6 @@ import java.util.jar.JarFile;
 import org.seasar.framework.util.ClassTraversal;
 import org.seasar.framework.util.JarFileUtil;
 import org.seasar.framework.util.ResourceUtil;
-import org.seasar.framework.util.URLUtil;
 import org.seasar.framework.util.ClassTraversal.ClassHandler;
 
 /**
@@ -100,11 +99,7 @@ public class ComponentAutoRegister extends AbstractComponentAutoRegister
         }
 
         protected JarFile createJarFile(final URL url) {
-            final URL nestedUrl = URLUtil.create(url.getPath());
-            String path = nestedUrl.getPath();
-            int pos = path.lastIndexOf('!');
-            String jarFileName = path.substring(0, pos);
-            return JarFileUtil.create(new File(jarFileName));
+            return JarFileUtil.toJarFile(url);
         }
     }
 
