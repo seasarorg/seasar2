@@ -99,18 +99,17 @@ public class MappingFileAutoDetector extends AbstractResourceAutoDetector {
 
         for (final String rootPackageName : namingConvention
                 .getRootPackageNames()) {
-            final String projectPath = rootPackageName.replace(".", "/");
-            final URL projectUrl = ResourceUtil.getResource(projectPath);
-            if (!projectUrl.getProtocol().equals(targetDirUrl.getProtocol())) {
+            final String rootDirPath = rootPackageName.replace(".", "/");
+            final URL rootDirUrl = ResourceUtil.getResource(rootDirPath);
+            if (!rootDirUrl.getProtocol().equals(targetDirUrl.getProtocol())) {
                 continue;
             }
-            final Strategy strategy = getStrategy(projectUrl.getProtocol());
-            final String projectBaseName = strategy.getBaseName(projectPath,
-                    projectUrl);
+            final Strategy strategy = getStrategy(rootDirUrl.getProtocol());
+            final String rootDirBaseName = strategy.getBaseName(rootDirPath,
+                    rootDirUrl);
             final String targetDirBaseName = strategy.getBaseName(
                     targetDirPath, targetDirUrl);
-            if (projectBaseName != null
-                    && !projectBaseName.equals(targetDirBaseName)) {
+            if (!rootDirBaseName.equals(targetDirBaseName)) {
                 continue;
             }
 

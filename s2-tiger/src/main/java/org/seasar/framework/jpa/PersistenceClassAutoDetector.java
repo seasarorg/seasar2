@@ -24,7 +24,6 @@ import javax.persistence.Embeddable;
 import javax.persistence.Entity;
 import javax.persistence.MappedSuperclass;
 
-import org.seasar.framework.autodetector.ClassAutoDetector;
 import org.seasar.framework.autodetector.impl.AbstractClassAutoDetector;
 import org.seasar.framework.container.annotation.tiger.Binding;
 import org.seasar.framework.container.annotation.tiger.BindingType;
@@ -42,8 +41,7 @@ import org.seasar.framework.util.tiger.ReflectionUtil;
  * 
  */
 @Component
-public class PersistenceClassAutoDetector extends AbstractClassAutoDetector
-        implements ClassAutoDetector {
+public class PersistenceClassAutoDetector extends AbstractClassAutoDetector {
 
     protected final List<Class<? extends Annotation>> annotations = CollectionsUtil
             .newArrayList();
@@ -108,7 +106,7 @@ public class PersistenceClassAutoDetector extends AbstractClassAutoDetector
             final String rootBaseName = strategy.getBaseName(rootPackageName,
                     rootUrl);
             final String baseName = strategy.getBaseName(packageName, url);
-            if (rootBaseName != null && !rootBaseName.equals(baseName)) {
+            if (!rootBaseName.equals(baseName)) {
                 continue;
             }
 
