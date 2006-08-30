@@ -251,14 +251,14 @@ public class NamingConventionImpl implements NamingConvention {
     }
 
     public String fromSuffixToPackageName(String suffix) {
-        if (suffix == null) {
+        if (StringUtil.isEmpty(suffix)) {
             throw new EmptyRuntimeException("suffix");
         }
         return StringUtil.decapitalize(suffix);
     }
 
     public String fromClassNameToShortComponentName(String className) {
-        if (className == null) {
+        if (StringUtil.isEmpty(className)) {
             throw new EmptyRuntimeException("className");
         }
         String s = StringUtil.decapitalize(ClassUtil
@@ -270,7 +270,7 @@ public class NamingConventionImpl implements NamingConvention {
     }
 
     public String fromClassNameToComponentName(final String className) {
-        if (className == null) {
+        if (StringUtil.isEmpty(className)) {
             throw new EmptyRuntimeException("className");
         }
         String cname = toInterfaceClassName(className);
@@ -303,7 +303,7 @@ public class NamingConventionImpl implements NamingConvention {
     }
 
     public Class fromComponentNameToClass(String componentName) {
-        if (componentName == null) {
+        if (StringUtil.isEmpty(componentName)) {
             throw new EmptyRuntimeException("componentName");
         }
         String suffix = fromComponentNameToSuffix(componentName);
@@ -437,7 +437,7 @@ public class NamingConventionImpl implements NamingConvention {
     }
 
     protected String fromNameToSuffix(String name) {
-        if (name == null) {
+        if (StringUtil.isEmpty(name)) {
             throw new EmptyRuntimeException("name");
         }
         for (int i = name.length() - 1; i >= 0; --i) {
@@ -528,7 +528,7 @@ public class NamingConventionImpl implements NamingConvention {
     }
 
     protected ExistChecker createExistChecker(String rootPackageName) {
-        if (rootPackageName == null) {
+        if (StringUtil.isEmpty(rootPackageName)) {
             return null;
         }
         File file = ResourceUtil.getResourceAsFileNoException(rootPackageName
