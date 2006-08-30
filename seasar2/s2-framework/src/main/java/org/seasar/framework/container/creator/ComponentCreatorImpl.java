@@ -16,10 +16,10 @@
 package org.seasar.framework.container.creator;
 
 import org.seasar.framework.container.AutoBindingDef;
+import org.seasar.framework.container.ComponentCreator;
 import org.seasar.framework.container.ComponentCustomizer;
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.InstanceDef;
-import org.seasar.framework.container.ComponentCreator;
 import org.seasar.framework.container.factory.AnnotationHandler;
 import org.seasar.framework.container.factory.AnnotationHandlerFactory;
 import org.seasar.framework.convention.NamingConvention;
@@ -116,12 +116,19 @@ public class ComponentCreatorImpl implements ComponentCreator {
     }
 
     public ComponentDef createComponentDef(String componentName) {
+        if (!isTargetComponentName(nameSuffix)) {
+            return null;
+        }
         Class componentClass = namingConvention
                 .fromComponentNameToClass(componentName);
         if (componentClass == null) {
             return null;
         }
         return createComponentDef(componentClass);
+    }
+
+    public boolean isTargetComponentName(String componentName) {
+        return componentName.endsWith(nameSuffix);
     }
 
     protected void customize(ComponentDef componentDef) {

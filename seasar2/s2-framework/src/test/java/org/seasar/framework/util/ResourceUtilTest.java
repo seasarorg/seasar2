@@ -35,8 +35,9 @@ public class ResourceUtilTest extends TestCase {
     }
 
     public void testGetResource() throws Exception {
-        assertNotNull("1", ResourceUtil.getResource("java/lang/String.class",
+        assertNotNull(ResourceUtil.getResource("java/lang/String.class",
                 "class"));
+        assertNotNull(ResourceUtil.getResource("org/seasar"));
         try {
             ResourceUtil.getResource("hoge", "xml");
             fail("2");

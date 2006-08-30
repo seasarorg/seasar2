@@ -15,11 +15,14 @@
  */
 package org.seasar.framework.convention.impl;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.File;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.seasar.framework.convention.NamingConvention;
 import org.seasar.framework.exception.EmptyRuntimeException;
+import org.seasar.framework.util.ArrayUtil;
 import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.ResourceUtil;
 import org.seasar.framework.util.StringUtil;
@@ -64,7 +67,9 @@ public class NamingConventionImpl implements NamingConvention {
 
     private String entityPackageName = "entity";
 
-    private List rootPackageNameList = new ArrayList();
+    private String[] rootPackageNames = new String[0];
+
+    private Map existCheckers = new HashMap();
 
     public String getPageSuffix() {
         return pageSuffix;
@@ -236,12 +241,13 @@ public class NamingConventionImpl implements NamingConvention {
     }
 
     public String[] getRootPackageNames() {
-        return (String[]) rootPackageNameList
-                .toArray(new String[rootPackageNameList.size()]);
+        return rootPackageNames;
     }
 
     public void addRootPackageName(String rootPackageName) {
-        rootPackageNameList.add(rootPackageName);
+        rootPackageNames = (String[]) ArrayUtil.add(rootPackageNames,
+                rootPackageName);
+        addExistChecker(rootPackageName);
     }
 
     public String fromSuffixToPackageName(String suffix) {
@@ -306,34 +312,66 @@ public class NamingConventionImpl implements NamingConvention {
         }
         String middlePackageName = fromSuffixToPackageName(suffix);
         String partOfClassName = fromComponentNameToPartOfClassName(componentName);
-        String[] rootPackageNames = getRootPackageNames();
+        boolean subAppSuffix = isSubApplicationSuffix(suffix);
         for (int i = 0; i < rootPackageNames.length; ++i) {
             String rootPackageName = rootPackageNames[i];
-            Class clazz = findClass(rootPackageName,
-                    subApplicationRootPackageName, partOfClassName);
-            if (clazz != null) {
-                return clazz;
-            }
-            clazz = findClass(rootPackageName, middlePackageName,
-                    partOfClassName);
-            if (clazz != null) {
-                return clazz;
+            if (subAppSuffix) {
+                Class clazz = findClass(rootPackageName,
+                        subApplicationRootPackageName, partOfClassName);
+                if (clazz != null) {
+                    return clazz;
+                }
+                clazz = findClass(rootPackageName, middlePackageName,
+                        partOfClassName);
+                if (clazz != null) {
+                    return clazz;
+                }
+            } else {
+                Class clazz = findClass(rootPackageName, middlePackageName,
+                        partOfClassName);
+                if (clazz != null) {
+                    return clazz;
+                }
+                clazz = findClass(rootPackageName,
+                        subApplicationRootPackageName, partOfClassName);
+                if (clazz != null) {
+                    return clazz;
+                }
             }
         }
         return null;
     }
 
+    protected boolean isSubApplicationSuffix(String suffix) {
+        if (pageSuffix.equals(suffix)) {
+            return true;
+        }
+        if (dxoSuffix.equals(suffix)) {
+            return true;
+        }
+        if (actionSuffix.equals(suffix)) {
+            return true;
+        }
+        if (serviceSuffix.equals(suffix)) {
+            return true;
+        }
+        return false;
+    }
+
     protected Class findClass(String rootPackageName, String middlePackageName,
             String partOfClassName) {
-        String className = ClassUtil.concatName(ClassUtil.concatName(
-                rootPackageName, middlePackageName), partOfClassName);
-        if (ResourceUtil.isExist(ClassUtil.getResourcePath(className))) {
+        String lastClassName = ClassUtil.concatName(middlePackageName,
+                partOfClassName);
+        if (isExist(rootPackageName, lastClassName)) {
+            String className = ClassUtil.concatName(rootPackageName,
+                    lastClassName);
             Class clazz = ClassUtil.forName(className);
             if (clazz.isInterface()) {
-                String implClassName = toImplementationClassName(className);
-                if (ResourceUtil.isExist(ClassUtil
-                        .getResourcePath(implClassName))) {
-                    return ClassUtil.forName(implClassName);
+                String lastImplClassName = toImplementationClassName(lastClassName);
+                if (isExist(rootPackageName, lastImplClassName)) {
+                    className = ClassUtil.concatName(rootPackageName,
+                            lastImplClassName);
+                    return ClassUtil.forName(className);
                 }
             }
             return clazz;
@@ -464,12 +502,84 @@ public class NamingConventionImpl implements NamingConvention {
     }
 
     public boolean isTargetClassName(String className) {
-        for (int i = 0; i < rootPackageNameList.size(); ++i) {
-            String root = (String) rootPackageNameList.get(i);
-            if (className.startsWith(root)) {
+        for (int i = 0; i < rootPackageNames.length; ++i) {
+            if (className.startsWith(rootPackageNames[i])) {
                 return true;
             }
         }
         return false;
+    }
+
+    protected boolean isExist(String rootPackageName, String lastClassName) {
+        ExistChecker checker = getExistChecker(rootPackageName);
+        if (checker != null) {
+            return checker.isExist(lastClassName);
+        }
+        return false;
+    }
+
+    protected ExistChecker getExistChecker(String rootPackageName) {
+        return (ExistChecker) existCheckers.get(rootPackageName);
+    }
+
+    protected void addExistChecker(String rootPackageName) {
+        ExistChecker checker = createExistChecker(rootPackageName);
+        existCheckers.put(rootPackageName, checker);
+    }
+
+    protected ExistChecker createExistChecker(String rootPackageName) {
+        if (rootPackageName == null) {
+            return null;
+        }
+        File file = ResourceUtil.getResourceAsFileNoException(rootPackageName
+                .replace('.', '/'));
+        if (file != null) {
+            return new FileExistChecker(file);
+        }
+        return new JarExistChecker(rootPackageName);
+    }
+
+    protected static interface ExistChecker {
+
+        boolean isExist(String lastClassName);
+    }
+
+    protected static class FileExistChecker implements ExistChecker {
+
+        private File rootFile;
+
+        private Map cache = Collections.synchronizedMap(new HashMap());
+
+        protected FileExistChecker(File rootFile) {
+            this.rootFile = rootFile;
+        }
+
+        public boolean isExist(String lastClassName) {
+            File file = (File) cache.get(lastClassName);
+            if (file == null) {
+                file = createFile(lastClassName);
+                cache.put(lastClassName, file);
+            }
+            return file.exists();
+        }
+
+        protected File createFile(String lastClassName) {
+            return new File(rootFile, lastClassName.replace('.', '/')
+                    + ".class");
+        }
+    }
+
+    protected static class JarExistChecker implements ExistChecker {
+
+        private String rootPath;
+
+        protected JarExistChecker(String rootPackageName) {
+            this.rootPath = rootPackageName.replace('.', '/') + "/";
+        }
+
+        public boolean isExist(String lastClassName) {
+            return ResourceUtil.isExist(rootPath
+                    + lastClassName.replace('.', '/') + ".class");
+        }
     }
 }

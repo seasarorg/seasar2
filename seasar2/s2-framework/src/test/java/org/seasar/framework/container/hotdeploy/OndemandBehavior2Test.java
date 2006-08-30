@@ -21,7 +21,16 @@ import org.seasar.framework.beans.factory.BeanDescFactory;
 import org.seasar.framework.container.ComponentCreator;
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.creator.ActionCreator;
+import org.seasar.framework.container.creator.ConverterCreator;
+import org.seasar.framework.container.creator.DaoCreator;
+import org.seasar.framework.container.creator.DtoCreator;
+import org.seasar.framework.container.creator.DxoCreator;
+import org.seasar.framework.container.creator.HelperCreator;
+import org.seasar.framework.container.creator.InterceptorCreator;
+import org.seasar.framework.container.creator.LogicCreator;
 import org.seasar.framework.container.creator.PageCreator;
+import org.seasar.framework.container.creator.ServiceCreator;
+import org.seasar.framework.container.creator.ValidatorCreator;
 import org.seasar.framework.container.hotdeploy.creator.web.aaa.HogePage;
 import org.seasar.framework.container.impl.S2ContainerBehavior;
 import org.seasar.framework.convention.impl.NamingConventionImpl;
@@ -49,6 +58,13 @@ public class OndemandBehavior2Test extends S2FrameworkTestCase {
         ondemand = new HotdeployBehavior();
         ondemand.setNamingConvention(convention);
         ondemand.setCreators(new ComponentCreator[] {
+
+        new ConverterCreator(convention), new DaoCreator(convention),
+                new DtoCreator(convention), new DxoCreator(convention),
+                new HelperCreator(convention),
+                new InterceptorCreator(convention),
+                new LogicCreator(convention), new ServiceCreator(convention),
+                new ValidatorCreator(convention),
                 new ActionCreator(convention), new PageCreator(convention) });
         S2ContainerBehavior.setProvider(ondemand);
         ondemand.start();
