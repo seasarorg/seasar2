@@ -28,7 +28,6 @@ import org.seasar.framework.container.impl.ComponentDefImpl;
 import org.seasar.framework.container.impl.PropertyDefImpl;
 import org.seasar.framework.container.impl.S2ContainerImpl;
 import org.seasar.framework.container.ognl.OgnlExpression;
-import org.seasar.framework.exception.OgnlRuntimeException;
 import org.seasar.framework.mock.servlet.MockHttpServletRequest;
 import org.seasar.framework.mock.servlet.MockServletContext;
 import org.seasar.framework.mock.servlet.MockServletContextImpl;
@@ -95,7 +94,7 @@ public class SemiAutoPropertyAssemblerTest extends TestCase {
         try {
             assembler.assemble(a);
             fail("1");
-        } catch (OgnlRuntimeException ex) {
+        } catch (IllegalPropertyRuntimeException ex) {
             System.out.println(ex);
         }
     }

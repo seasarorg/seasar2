@@ -21,7 +21,6 @@ import org.seasar.framework.beans.IllegalPropertyRuntimeException;
 import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.container.BindingTypeDef;
 import org.seasar.framework.container.ComponentDef;
-import org.seasar.framework.container.ComponentNotFoundRuntimeException;
 import org.seasar.framework.container.ContainerConstants;
 import org.seasar.framework.container.PropertyDef;
 import org.seasar.framework.container.S2Container;
@@ -33,7 +32,7 @@ import org.seasar.framework.util.StringUtil;
  * バインディングタイプ定義の抽象クラスです。
  * 
  * @author higa
- *
+ * 
  */
 public abstract class AbstractBindingTypeDef implements BindingTypeDef {
 
@@ -115,13 +114,14 @@ public abstract class AbstractBindingTypeDef implements BindingTypeDef {
                     && (cd.getComponentName().equalsIgnoreCase(propName) || StringUtil
                             .endsWithIgnoreCase(cd.getComponentName(),
                                     ContainerConstants.PACKAGE_SEP + propName))) {
-                Object value = container.getComponent(propType);
+                Object value = getValue(componentDef, propType, component,
+                        propName);
                 setValue(componentDef, field, component, value);
                 return true;
             }
         }
         if (container.hasComponentDef(propName)) {
-            Object value = container.getComponent(propName);
+            Object value = getValue(componentDef, propName, component, propName);
             if (propType.isInstance(value)) {
                 setValue(componentDef, field, component, value);
                 return true;
@@ -129,7 +129,8 @@ public abstract class AbstractBindingTypeDef implements BindingTypeDef {
         }
         if (BindingUtil.isAutoBindable(propType)) {
             if (container.hasComponentDef(propType)) {
-                Object value = container.getComponent(propType);
+                Object value = getValue(componentDef, propType, component,
+                        propName);
                 setValue(componentDef, field, component, value);
                 return true;
             }
@@ -153,13 +154,14 @@ public abstract class AbstractBindingTypeDef implements BindingTypeDef {
                     && (cd.getComponentName().equalsIgnoreCase(propName) || StringUtil
                             .endsWithIgnoreCase(cd.getComponentName(),
                                     ContainerConstants.PACKAGE_SEP + propName))) {
-                Object value = container.getComponent(propType);
+                Object value = getValue(componentDef, propType, component,
+                        propName);
                 setValue(componentDef, propertyDesc, component, value);
                 return true;
             }
         }
         if (container.hasComponentDef(propName)) {
-            Object value = container.getComponent(propName);
+            Object value = getValue(componentDef, propName, component, propName);
             if (propType.isInstance(value)) {
                 setValue(componentDef, propertyDesc, component, value);
                 return true;
@@ -167,7 +169,8 @@ public abstract class AbstractBindingTypeDef implements BindingTypeDef {
         }
         if (BindingUtil.isAutoBindable(propType)) {
             if (container.hasComponentDef(propType)) {
-                Object value = container.getComponent(propType);
+                Object value = getValue(componentDef, propType, component,
+                        propName);
                 setValue(componentDef, propertyDesc, component, value);
                 return true;
             }
@@ -191,10 +194,22 @@ public abstract class AbstractBindingTypeDef implements BindingTypeDef {
             PropertyDef propertyDef, Object component) {
         try {
             return propertyDef.getValue();
-        } catch (ComponentNotFoundRuntimeException cause) {
+        } catch (RuntimeException cause) {
             throw new IllegalPropertyRuntimeException(BindingUtil
                     .getComponentClass(componentDef, component), propertyDef
                     .getPropertyName(), cause);
+        }
+
+    }
+
+    protected Object getValue(ComponentDef componentDef, Object key,
+            Object component, String propertyName) {
+        try {
+            return componentDef.getContainer().getComponent(key);
+        } catch (RuntimeException cause) {
+            throw new IllegalPropertyRuntimeException(BindingUtil
+                    .getComponentClass(componentDef, component), propertyName,
+                    cause);
         }
 
     }
