@@ -100,6 +100,9 @@ public class Env {
 
     protected static void calcValue() {
         value = TextUtil.readUTF8(file);
+        if (value != null) {
+            value = value.trim();
+        }
         lastModified = file.lastModified();
     }
 
