@@ -25,6 +25,11 @@ import org.seasar.framework.beans.factory.BeanDescFactory;
 public class BeanUtil {
 
     public static void copyProperties(final Object src, final Object dest) {
+        copyProperties(src, dest, true);
+    }
+
+    public static void copyProperties(final Object src, final Object dest,
+            final boolean includeNull) {
         final BeanDesc srcBeanDesc = BeanDescFactory
                 .getBeanDesc(src.getClass());
         final BeanDesc destBeanDesc = BeanDescFactory.getBeanDesc(dest
@@ -40,8 +45,11 @@ public class BeanUtil {
                         .getPropertyDesc(propertyName);
                 if (destPropertyDesc.hasWriteMethod()
                         && srcPropertyDesc.hasReadMethod()) {
-                    destPropertyDesc.setValue(dest, srcPropertyDesc
-                            .getValue(src));
+                    final Object value = srcPropertyDesc.getValue(src);
+                    if (includeNull || value != null) {
+                        destPropertyDesc.setValue(dest, srcPropertyDesc
+                                .getValue(src));
+                    }
                 }
             }
         }
