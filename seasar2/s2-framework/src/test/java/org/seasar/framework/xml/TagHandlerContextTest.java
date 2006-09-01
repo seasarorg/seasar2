@@ -58,4 +58,11 @@ public class TagHandlerContextTest extends TestCase {
         assertNull("2", ctx.peek(Integer.class));
         assertEquals("3", "bbb", ctx.peek(String.class));
     }
+
+    public void testIsEmpty() {
+        TagHandlerContext ctx = new TagHandlerContext();
+        assertTrue("1", ctx.isEmpty());
+        ctx.push("aaa");
+        assertFalse("2", ctx.isEmpty());
+    }
 }

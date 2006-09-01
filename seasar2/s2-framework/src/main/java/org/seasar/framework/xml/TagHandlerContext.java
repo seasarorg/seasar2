@@ -102,6 +102,10 @@ public final class TagHandlerContext {
         return stack.get(0);
     }
 
+    public boolean isEmpty() {
+        return stack.isEmpty();
+    }
+
     public Object getParameter(String name) {
         return parameters.get(name);
     }
