@@ -65,6 +65,21 @@ public class DaoHelperImpl implements DaoHelper {
         throw new DaoNotFoundRuntimeException(clazz);
     }
 
+    public String getDataSourceName(Class daoClass) {
+        Class intf = getDaoInterface(daoClass);
+        String className = intf.getName();
+        String key = "." + namingConvention.getDaoPackageName() + ".";
+        int index = className.lastIndexOf(key);
+        if (index < 0) {
+            throw new IllegalArgumentException(daoClass.getName());
+        }
+        int index2 = className.lastIndexOf('.');
+        if (index + key.length() - 1 == index2) {
+            return null;
+        }
+        return className.substring(index + key.length(), index2);
+    }
+
     public String getSqlBySqlFile(Class daoClass, Method method, String suffix) {
         String base = daoClass.getName().replace('.', '/') + "_"
                 + method.getName();

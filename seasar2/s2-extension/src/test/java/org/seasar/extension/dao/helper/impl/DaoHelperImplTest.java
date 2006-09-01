@@ -16,10 +16,12 @@
 package org.seasar.extension.dao.helper.impl;
 
 import java.lang.reflect.Method;
-import java.util.List;
 
 import junit.framework.TestCase;
 
+import org.seasar.extension.dao.helper.impl.dao.HogeDao;
+import org.seasar.extension.dao.helper.impl.dao.aaa.Hoge2Dao;
+import org.seasar.extension.dao.helper.impl.dao.impl.HogeDaoImpl;
 import org.seasar.framework.convention.impl.NamingConventionImpl;
 import org.seasar.framework.util.ClassUtil;
 
@@ -36,6 +38,13 @@ public class DaoHelperImplTest extends TestCase {
         assertEquals(HogeDao.class, helper.getDaoInterface(HogeDaoImpl.class));
     }
 
+    public void testGetDataSourceName() throws Exception {
+        DaoHelperImpl helper = new DaoHelperImpl();
+        helper.setNamingConvention(new NamingConventionImpl());
+        assertNull(helper.getDataSourceName(HogeDao.class));
+        assertEquals("aaa", helper.getDataSourceName(Hoge2Dao.class));
+    }
+
     public void testGetSqlBySqlFile() throws Exception {
         DaoHelperImpl helper = new DaoHelperImpl();
         helper.setNamingConvention(new NamingConventionImpl());
@@ -43,13 +52,5 @@ public class DaoHelperImplTest extends TestCase {
         assertEquals("standard", helper.getSqlBySqlFile(HogeDao.class, m, null));
         assertEquals("oracle", helper.getSqlBySqlFile(HogeDao.class, m,
                 "oracle"));
-    }
-
-    public static class HogeDaoImpl implements HogeDao {
-
-        public List find() {
-            return null;
-        }
-
     }
 }

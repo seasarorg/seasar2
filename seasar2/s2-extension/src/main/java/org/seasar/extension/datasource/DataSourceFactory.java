@@ -13,19 +13,21 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.dao.helper;
+package org.seasar.extension.datasource;
 
-import java.lang.reflect.Method;
+import javax.sql.DataSource;
 
 /**
  * @author higa
  * 
  */
-public interface DaoHelper {
+public interface DataSourceFactory {
 
-    Class getDaoInterface(Class daoClass);
+    String getSelectableDataSourceName();
 
-    String getDataSourceName(Class daoClass);
+    void setSelectableDataSourceName(String name);
 
-    String getSqlBySqlFile(Class daoClass, Method method, String suffix);
+    String getDataSourceName(String name);
+
+    DataSource getDataSource(String name);
 }

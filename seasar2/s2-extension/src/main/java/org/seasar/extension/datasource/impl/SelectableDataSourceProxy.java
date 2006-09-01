@@ -13,7 +13,7 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.component.impl;
+package org.seasar.extension.datasource.impl;
 
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -21,7 +21,7 @@ import java.sql.SQLException;
 
 import javax.sql.DataSource;
 
-import org.seasar.framework.container.S2Container;
+import org.seasar.extension.datasource.DataSourceFactory;
 import org.seasar.framework.exception.EmptyRuntimeException;
 
 /**
@@ -29,78 +29,39 @@ import org.seasar.framework.exception.EmptyRuntimeException;
  * <p>
  * このプロキシはWEBアプリケーション等でユーザごとに異なったデータソースを切り替えたい場合に使われることを想定しています。
  * データソースを利用するDAOはこのプロキシをデータソースとして使用します。
- * 委譲先のデータソースはスレッドコンテキスに設定された名前を使ってS2コンテナから取得されます。
- * </p>
- * <p>
- * S2AOPのインターセプタを作成してスレッドコンテキストにユーザが使用する実際のデータソース名を設定します。
- * </p>
- * 
- * <pre>
- *     public Object invoke(MethodInvocation invocation) throws Throwable {
- *         String currentName = proxy.getDataSourceName();
- *         try {
- *             String dataSourceName = ...
- *             proxy.setDataSourceName(dataSourceName); //スレッドコンテキストにデータソース名を設定
- *             return invocation.proceed();
- *         } finally {
- *             proxy.setDataSourceName(currentName);
- *         }
- *     }
- * </pre>
- * 
- * <p>
- * DAOはスレッドコンテキストに設定された名前を持つデータソースを使ってデータベースにアクセスできます。
  * </p>
  * 
  * @author koichik
+ * @author higa
  * 
  */
 public class SelectableDataSourceProxy implements DataSource {
-    private final S2Container container;
 
-    private final ThreadLocal context = new ThreadLocal();
+    protected DataSourceFactory dataSourceFactory;
 
     /**
-     * インスタンスを構築します。
+     * @param dataSourceFactory
+     *            The dataSourceFactory to set.
      */
-    public SelectableDataSourceProxy(final S2Container container) {
-        this.container = container;
+    public void setDataSourceFactory(DataSourceFactory dataSourceFactory) {
+        this.dataSourceFactory = dataSourceFactory;
     }
 
     /**
-     * データソース名を返します。
-     * 
-     * @return データソース名。設定されていない場合は<code>null</code>
-     */
-    public String getDataSourceName() {
-        return (String) context.get();
-    }
-
-    /**
-     * データソース名をスレッドコンテキストに設定します。
-     * 
-     * @param dataSourceName
-     *            データソース名
-     */
-    public void setDataSourceName(final String dataSourceName) {
-        context.set(dataSourceName);
-    }
-
-    /**
-     * スレッドコンテキストに設定された名前を持つデータソースをS2コンテナから取得して返します。
+     * <code>DataSourceFactory</code>からデータソースを取得します。
      * 
      * @return スレッドコンテキストに設定された名前を持つデータソース
      * @throws EmptyRuntimeException
      *             スレッドコンテキストにデータソース名が設定されていない場合にスローされます
      * @throws org.seasar.framework.container.ComponentNotFoundException
-     *             スレッドコンテキストに設定されたデータソース名を持つコンポーネントがS2コンテナに登録されていない場合にスローされます
+     *             <code>DataSourceFactory</code>に設定されたデータソース名を持つコンポーネントがS2コンテナに登録されていない場合にスローされます
      */
     public DataSource getDataSource() {
-        final String dataSourceName = getDataSourceName();
+        String dataSourceName = dataSourceFactory.getSelectableDataSourceName();
         if (dataSourceName == null) {
             throw new EmptyRuntimeException("dataSourceName");
         }
-        return (DataSource) container.getComponent(dataSourceName);
+        return dataSourceFactory.getDataSource(dataSourceName);
     }
 
     /**

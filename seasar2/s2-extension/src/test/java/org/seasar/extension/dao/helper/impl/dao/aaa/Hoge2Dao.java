@@ -13,19 +13,12 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.dao.helper;
-
-import java.lang.reflect.Method;
+package org.seasar.extension.dao.helper.impl.dao.aaa;
 
 /**
  * @author higa
  * 
  */
-public interface DaoHelper {
+public interface Hoge2Dao {
 
-    Class getDaoInterface(Class daoClass);
-
-    String getDataSourceName(Class daoClass);
-
-    String getSqlBySqlFile(Class daoClass, Method method, String suffix);
 }

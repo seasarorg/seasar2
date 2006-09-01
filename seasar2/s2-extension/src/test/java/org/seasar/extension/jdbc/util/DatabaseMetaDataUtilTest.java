@@ -31,27 +31,33 @@ import org.seasar.framework.exception.ClassNotFoundRuntimeException;
 public class DatabaseMetaDataUtilTest extends S2TestCase {
 
     public void testGetColumnList() throws Exception {
-        DatabaseMetaData dbMetaData = getConnection().getMetaData();
+        DatabaseMetaData dbMetaData = getDatabaseMetaData();
         Map columnMap = DatabaseMetaDataUtil.getColumnMap(dbMetaData, "emp");
         System.out.println(columnMap);
         assertTrue("1", columnMap.size() > 0);
     }
 
+    public void testSpike() throws Exception {
+        DatabaseMetaData dbMetaData = getDatabaseMetaData();
+        System.out.println(dbMetaData.getDatabaseProductName());
+        System.out.println(dbMetaData.getDatabaseProductVersion());
+    }
+
     public void testGetColumnListForNotExistTable() throws Exception {
-        DatabaseMetaData dbMetaData = getConnection().getMetaData();
+        DatabaseMetaData dbMetaData = getDatabaseMetaData();
         Map columnMap = DatabaseMetaDataUtil.getColumnMap(dbMetaData, "_emp_");
         assertEquals("1", 0, columnMap.size());
     }
 
     public void testGetColumnListForSchema() throws Exception {
-        DatabaseMetaData dbMetaData = getConnection().getMetaData();
+        DatabaseMetaData dbMetaData = getDatabaseMetaData();
         Map columnMap = DatabaseMetaDataUtil.getColumnMap(dbMetaData, "SA.emp");
         System.out.println(columnMap);
         assertTrue("1", columnMap.size() > 0);
     }
 
     public void testGetPrimaryKeyList() throws Exception {
-        DatabaseMetaData dbMetaData = getConnection().getMetaData();
+        DatabaseMetaData dbMetaData = getDatabaseMetaData();
         Set primaryKeySet = DatabaseMetaDataUtil.getPrimaryKeySet(dbMetaData,
                 "emp");
         System.out.println(primaryKeySet);

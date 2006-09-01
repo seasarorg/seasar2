@@ -1,4 +1,4 @@
-package org.seasar.extension.component.impl;
+package org.seasar.extension.datasource.impl;
 
 import java.io.PrintWriter;
 import java.lang.reflect.InvocationHandler;
@@ -9,47 +9,54 @@ import java.sql.SQLException;
 
 import javax.sql.DataSource;
 
+import org.seasar.extension.datasource.DataSourceFactory;
 import org.seasar.framework.unit.S2FrameworkTestCase;
 
 public class SelectableDataSourceProxyTest extends S2FrameworkTestCase {
-    private TestDataSource ds1;
 
-    private TestDataSource ds2;
+    private DataSourceFactory factory;
 
     private SelectableDataSourceProxy proxy;
 
+    private TestDataSource fooDataSource;
+
+    private TestDataSource barDataSource;
+
     protected void setUp() throws Exception {
-        include(getClass().getName().replace('.', '/') + ".dicon");
+        register(DataSourceFactoryImpl.class);
+        register(SelectableDataSourceProxy.class, "dataSource");
+        register(TestDataSource.class, "fooDataSource");
+        register(TestDataSource.class, "barDataSource");
     }
 
-    public void test() throws Exception {
-        proxy.setDataSourceName("ds1");
-        assertEquals(ds1.con, proxy.getConnection());
-        assertEquals("getConnection", ds1.text);
-        assertEquals(ds1.con, proxy.getConnection("scott", "tiger"));
-        assertEquals("getConnection:scott:tiger", ds1.text);
-        assertEquals(ds1.hashCode(), proxy.getLoginTimeout());
-        assertEquals("getLoginTimeout", ds1.text);
-        assertEquals(ds1.out, proxy.getLogWriter());
-        assertEquals("getLogWriter", ds1.text);
+    public void testAll() throws Exception {
+        factory.setSelectableDataSourceName("foo");
+        assertEquals(fooDataSource.con, proxy.getConnection());
+        assertEquals("getConnection", fooDataSource.text);
+        assertEquals(fooDataSource.con, proxy.getConnection("scott", "tiger"));
+        assertEquals("getConnection:scott:tiger", fooDataSource.text);
+        assertEquals(fooDataSource.hashCode(), proxy.getLoginTimeout());
+        assertEquals("getLoginTimeout", fooDataSource.text);
+        assertEquals(fooDataSource.out, proxy.getLogWriter());
+        assertEquals("getLogWriter", fooDataSource.text);
         proxy.setLoginTimeout(100);
-        assertEquals("setLoginTimeout:100", ds1.text);
-        proxy.setLogWriter(ds1.out);
-        assertEquals("setLogWriter:true", ds1.text);
+        assertEquals("setLoginTimeout:100", fooDataSource.text);
+        proxy.setLogWriter(fooDataSource.out);
+        assertEquals("setLogWriter:true", fooDataSource.text);
 
-        proxy.setDataSourceName("ds2");
-        assertEquals(ds2.con, proxy.getConnection());
-        assertEquals("getConnection", ds2.text);
-        assertEquals(ds2.con, proxy.getConnection("scott", "tiger"));
-        assertEquals("getConnection:scott:tiger", ds2.text);
-        assertEquals(ds2.hashCode(), proxy.getLoginTimeout());
-        assertEquals("getLoginTimeout", ds2.text);
-        assertEquals(ds2.out, proxy.getLogWriter());
-        assertEquals("getLogWriter", ds2.text);
+        factory.setSelectableDataSourceName("bar");
+        assertEquals(barDataSource.con, proxy.getConnection());
+        assertEquals("getConnection", barDataSource.text);
+        assertEquals(barDataSource.con, proxy.getConnection("scott", "tiger"));
+        assertEquals("getConnection:scott:tiger", barDataSource.text);
+        assertEquals(barDataSource.hashCode(), proxy.getLoginTimeout());
+        assertEquals("getLoginTimeout", barDataSource.text);
+        assertEquals(barDataSource.out, proxy.getLogWriter());
+        assertEquals("getLogWriter", barDataSource.text);
         proxy.setLoginTimeout(200);
-        assertEquals("setLoginTimeout:200", ds2.text);
-        proxy.setLogWriter(ds2.out);
-        assertEquals("setLogWriter:true", ds2.text);
+        assertEquals("setLoginTimeout:200", barDataSource.text);
+        proxy.setLogWriter(barDataSource.out);
+        assertEquals("setLogWriter:true", barDataSource.text);
     }
 
     public static class TestDataSource implements DataSource, InvocationHandler {
