@@ -18,6 +18,8 @@ package org.seasar.framework.beans.impl;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.sql.Timestamp;
+import java.util.Calendar;
+import java.util.Date;
 
 import junit.framework.TestCase;
 
@@ -68,6 +70,15 @@ public class PropertyDescImplTest extends TestCase {
         assertNotNull("1", myBean.getHhh());
     }
 
+    public void testSetCalendarValue() throws Exception {
+        MyBean myBean = new MyBean();
+        BeanDesc beanDesc = new BeanDescImpl(MyBean.class);
+        PropertyDesc propDesc = beanDesc.getPropertyDesc("cal");
+        Date date = new Date();
+        propDesc.setValue(myBean, date);
+        assertEquals(date, myBean.getCal().getTime());
+    }
+
     public void testConvertWithStringConstructor() throws Exception {
         MyBean myBean = new MyBean();
         BeanDesc beanDesc = new BeanDescImpl(MyBean.class);
@@ -85,6 +96,8 @@ public class PropertyDescImplTest extends TestCase {
         private Timestamp hhh_;
 
         private URL url_;
+
+        private Calendar cal;
 
         public String getAaa() {
             return null;
@@ -143,6 +156,21 @@ public class PropertyDescImplTest extends TestCase {
 
         public void setURL(URL url) {
             url_ = url;
+        }
+
+        /**
+         * @return Returns the cal.
+         */
+        public Calendar getCal() {
+            return cal;
+        }
+
+        /**
+         * @param cal
+         *            The cal to set.
+         */
+        public void setCal(Calendar cal) {
+            this.cal = cal;
         }
     }
 

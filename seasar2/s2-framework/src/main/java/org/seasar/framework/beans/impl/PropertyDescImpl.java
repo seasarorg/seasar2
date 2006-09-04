@@ -25,6 +25,7 @@ import org.seasar.framework.beans.IllegalPropertyRuntimeException;
 import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.exception.EmptyRuntimeException;
 import org.seasar.framework.util.BooleanConversionUtil;
+import org.seasar.framework.util.CalendarConversionUtil;
 import org.seasar.framework.util.ConstructorUtil;
 import org.seasar.framework.util.DateConversionUtil;
 import org.seasar.framework.util.MethodUtil;
@@ -156,6 +157,8 @@ public final class PropertyDescImpl implements PropertyDesc {
             return BooleanConversionUtil.toBoolean(arg);
         } else if (arg instanceof String && !String.class.equals(propertyType)) {
             return convertWithStringConstructor(arg);
+        } else if (java.util.Calendar.class.isAssignableFrom(propertyType)) {
+            return CalendarConversionUtil.toCalendar(arg);
         }
         return arg;
     }
