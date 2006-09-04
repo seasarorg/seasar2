@@ -534,7 +534,7 @@ public class NamingConventionImpl implements NamingConvention {
         File file = ResourceUtil.getResourceAsFileNoException(rootPackageName
                 .replace('.', '/'));
         if (file != null) {
-            return new FileExistChecker(file);
+            return new FileExistChecker(file, rootPackageName);
         }
         return new JarExistChecker(rootPackageName);
     }
@@ -548,24 +548,43 @@ public class NamingConventionImpl implements NamingConvention {
 
         private File rootFile;
 
+        private String rootPath;
+
         private Map cache = Collections.synchronizedMap(new HashMap());
 
-        protected FileExistChecker(File rootFile) {
+        private Map jarCache = Collections.synchronizedMap(new HashMap());
+
+        protected FileExistChecker(File rootFile, String rootPath) {
             this.rootFile = rootFile;
+            this.rootPath = rootPath;
         }
 
         public boolean isExist(String lastClassName) {
+            if (jarCache.containsKey(lastClassName)) {
+                Boolean b = (Boolean) jarCache.get(lastClassName);
+                return b.booleanValue();
+            }
+            String pathName = getPathName(lastClassName);
             File file = (File) cache.get(lastClassName);
             if (file == null) {
                 file = createFile(lastClassName);
+                if (!file.exists()) {
+                    boolean ret = ResourceUtil.isExist(rootPath + pathName);
+                    jarCache.put(lastClassName, new Boolean(ret));
+                    return ret;
+                }
                 cache.put(lastClassName, file);
             }
             return file.exists();
         }
 
         protected File createFile(String lastClassName) {
-            return new File(rootFile, lastClassName.replace('.', '/')
-                    + ".class");
+            String pathName = getPathName(lastClassName);
+            return new File(rootFile, pathName);
+        }
+
+        private static String getPathName(String lastClassName) {
+            return lastClassName.replace('.', '/') + ".class";
         }
     }
 
