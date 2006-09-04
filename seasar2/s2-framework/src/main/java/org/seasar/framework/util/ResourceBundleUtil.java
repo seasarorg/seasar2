@@ -63,4 +63,9 @@ public class ResourceBundleUtil {
         }
         return ret;
     }
+
+    public static final Map convertMap(String name, Locale locale) {
+        ResourceBundle bundle = getBundle(name, locale);
+        return convertMap(bundle);
+    }
 }
