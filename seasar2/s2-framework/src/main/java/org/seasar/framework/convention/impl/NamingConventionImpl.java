@@ -16,13 +16,18 @@
 package org.seasar.framework.convention.impl;
 
 import java.io.File;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.seasar.framework.convention.NamingConvention;
 import org.seasar.framework.exception.EmptyRuntimeException;
 import org.seasar.framework.util.ArrayUtil;
+import org.seasar.framework.util.ClassLoaderUtil;
 import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.ResourceUtil;
 import org.seasar.framework.util.StringUtil;
@@ -531,10 +536,17 @@ public class NamingConventionImpl implements NamingConvention {
         if (StringUtil.isEmpty(rootPackageName)) {
             return null;
         }
-        File file = ResourceUtil.getResourceAsFileNoException(rootPackageName
-                .replace('.', '/'));
-        if (file != null) {
-            return new FileExistChecker(file, rootPackageName);
+        String s = rootPackageName.replace('.', '/');
+        String[] rootFiles = new String[0];
+        List list = new ArrayList();
+        for (Iterator itr = ClassLoaderUtil.getResources(this.getClass(), s); itr
+                .hasNext();) {
+            URL url = (URL) itr.next();
+            list.add(url.getPath());
+        }
+        rootFiles = (String[]) list.toArray(new String[list.size()]);
+        if (rootFiles.length != 0) {
+            return new FileExistChecker(rootFiles, rootPackageName);
         }
         return new JarExistChecker(rootPackageName);
     }
@@ -546,7 +558,7 @@ public class NamingConventionImpl implements NamingConvention {
 
     protected static class FileExistChecker implements ExistChecker {
 
-        private File rootFile;
+        private String[] rootFiles;
 
         private String rootPath;
 
@@ -554,8 +566,8 @@ public class NamingConventionImpl implements NamingConvention {
 
         private Map jarCache = Collections.synchronizedMap(new HashMap());
 
-        protected FileExistChecker(File rootFile, String rootPath) {
-            this.rootFile = rootFile;
+        protected FileExistChecker(String[] rootFiles, String rootPath) {
+            this.rootFiles = rootFiles;
             this.rootPath = rootPath;
         }
 
@@ -567,20 +579,25 @@ public class NamingConventionImpl implements NamingConvention {
             String pathName = getPathName(lastClassName);
             File file = (File) cache.get(lastClassName);
             if (file == null) {
-                file = createFile(lastClassName);
-                if (!file.exists()) {
-                    boolean ret = ResourceUtil.isExist(rootPath + pathName);
-                    jarCache.put(lastClassName, new Boolean(ret));
-                    return ret;
+                for (int i = 0; i < rootFiles.length; i++) {
+                    file = createFile(rootFiles[i], lastClassName);
+                    if (file.exists()) {
+                        cache.put(lastClassName, file);
+                        return true;
+                    }
                 }
-                cache.put(lastClassName, file);
+                boolean ret = ResourceUtil.isExist(rootPath + "." + pathName);
+                jarCache.put(lastClassName, new Boolean(ret));
+                if (ret) {
+                    return true;
+                }
             }
             return file.exists();
         }
 
-        protected File createFile(String lastClassName) {
+        protected File createFile(String rootFileName, String lastClassName) {
             String pathName = getPathName(lastClassName);
-            return new File(rootFile, pathName);
+            return new File(rootFileName, pathName);
         }
 
         private static String getPathName(String lastClassName) {

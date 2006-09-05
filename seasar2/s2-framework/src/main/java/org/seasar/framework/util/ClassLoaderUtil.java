@@ -9,14 +9,18 @@
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, 
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
 package org.seasar.framework.util;
 
+import java.io.IOException;
 import java.lang.reflect.Method;
+import java.util.Enumeration;
+import java.util.Iterator;
 
+import org.seasar.framework.exception.IORuntimeException;
 import org.seasar.framework.message.MessageFormatter;
 
 /**
@@ -63,6 +67,15 @@ public class ClassLoaderUtil {
 
         throw new IllegalStateException(MessageFormatter.getMessage("ESSR0001",
                 new Object[] { "ClassLoader" }));
+    }
+
+    public static Iterator getResources(final Class targetClass, String name) {
+        try {
+            Enumeration e = getClassLoader(targetClass).getResources(name);
+            return new EnumerationIterator(e);
+        } catch (IOException e) {
+            throw new IORuntimeException(e);
+        }
     }
 
     protected static boolean isAncestor(ClassLoader cl, final ClassLoader other) {
