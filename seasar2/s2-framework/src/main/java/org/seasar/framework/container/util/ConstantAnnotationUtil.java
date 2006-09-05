@@ -122,6 +122,7 @@ public class ConstantAnnotationUtil {
             wordChars('"', '"');
             wordChars('~', '~');
             wordChars('*', '*');
+            wordChars('.', '.');
             ordinaryChar('=');
             ordinaryChar(',');
             whitespaceChars(0, ' ');
