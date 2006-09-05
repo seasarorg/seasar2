@@ -50,7 +50,7 @@ public class ConstantAnnotationUtilTest extends TestCase {
         assertEquals(Tokenizer.TT_EOF, tokenizer.nextToken());
     }
 
-    public void fixme_testDot() throws Exception {
+    public void pend_testDot() throws Exception {
         Tokenizer tokenizer = new Tokenizer(".hoge");
         assertEquals("1", '.', tokenizer.nextToken());
         assertEquals("2", '.', tokenizer.getTokenType());
