@@ -32,7 +32,7 @@ public class BeanToMapDxoCommandBuilder extends AbstractDxoCommandBuilder {
             Map[].class, List.class };
 
     public DxoCommand createDxoCommand(final Class dxoClass, final Method method) {
-        final String expression = getAnnotationReader().getMapConversion(
+        final String expression = getAnnotationReader().getConversionRule(
                 dxoClass, method);
         if (expression == null) {
             return null;

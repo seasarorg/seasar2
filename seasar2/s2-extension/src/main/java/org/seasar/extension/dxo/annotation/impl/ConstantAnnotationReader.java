@@ -62,14 +62,14 @@ public class ConstantAnnotationReader implements AnnotationReader {
         return null;
     }
 
-    public String getMapConversion(final Class dxoClass, final Method method) {
+    public String getConversionRule(Class dxoClass, Method method) {
         final BeanDesc dxoBeanDesc = BeanDescFactory.getBeanDesc(dxoClass);
         String fieldName = getConstantAnnotationName(method,
-                DxoConstants.MAP_CONVERSION);
+                DxoConstants.CONVERSION_RULE);
         if (dxoBeanDesc.hasField(fieldName)) {
             return (String) dxoBeanDesc.getFieldValue(fieldName, null);
         }
-        fieldName = method.getName() + "_" + DxoConstants.MAP_CONVERSION;
+        fieldName = method.getName() + "_" + DxoConstants.CONVERSION_RULE;
         if (dxoBeanDesc.hasField(fieldName)) {
             return (String) dxoBeanDesc.getFieldValue(fieldName, null);
         }

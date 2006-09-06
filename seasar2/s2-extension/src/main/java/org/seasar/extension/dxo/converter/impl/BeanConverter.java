@@ -103,7 +103,10 @@ public class BeanConverter extends AbstractConverter {
     protected Object getSourceValue(final BeanDesc sourceBeanDesc,
             final Object source, final String propertyName,
             final ConversionContext context) {
-        // TODO convert property name
+        if (context.hasEvalueatedValue(propertyName)) {
+            return context.getEvaluatedValue(propertyName);
+        }
+
         if (sourceBeanDesc.hasPropertyDesc(propertyName)) {
             final PropertyDesc sourcePropertyDesc = sourceBeanDesc
                     .getPropertyDesc(propertyName);

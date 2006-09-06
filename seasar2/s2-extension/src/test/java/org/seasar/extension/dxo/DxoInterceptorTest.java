@@ -201,11 +201,11 @@ public class DxoInterceptorTest extends S2TestCase {
     }
 
     public interface MapDxo {
-        String convert_Hoge_MAP_CONVERSION = "'one' : foo, 'two' : bar, 'three' : baz, 'four' : foo+bar+baz";
+        String convert_Hoge_CONVERSION_RULE = "'one' : foo, 'two' : bar, 'three' : baz, 'four' : foo+bar+baz";
 
-        String convert_Hoge$_MAP_CONVERSION = "'one' : foo, 'two' : bar, 'three' : baz, 'four' : foo+bar+baz";
+        String convert_Hoge$_CONVERSION_RULE = "'one' : foo, 'two' : bar, 'three' : baz, 'four' : foo+bar+baz";
 
-        String convert_List_MAP_CONVERSION = "'one' : foo, 'two' : bar, 'three' : baz, 'four' : foo+bar+baz";
+        String convert_List_CONVERSION_RULE = "'one' : foo, 'two' : bar, 'three' : baz, 'four' : foo+bar+baz";
 
         Map convert(Hoge src);
 

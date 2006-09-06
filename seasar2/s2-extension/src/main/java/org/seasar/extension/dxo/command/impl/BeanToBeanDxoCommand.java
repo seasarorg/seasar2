@@ -59,7 +59,7 @@ public class BeanToBeanDxoCommand extends AbstractDxoCommand {
     }
 
     protected Object convertScalar(final Object source) {
-        return converter.convert(source, destClass, createContext());
+        return converter.convert(source, destClass, createContext(source));
     }
 
     protected void copy(final Object src, final Object dest) {
@@ -70,9 +70,9 @@ public class BeanToBeanDxoCommand extends AbstractDxoCommand {
         return destClass;
     }
 
-    protected ConversionContext createContext() {
+    protected ConversionContext createContext(final Object source) {
         return new ConversionContextImpl(dxoClass, method, converterFactory,
-                annotationReader);
+                annotationReader, source);
     }
 
 }

@@ -18,14 +18,7 @@ package org.seasar.extension.dxo.command.impl;
 import java.lang.reflect.Method;
 import java.util.Map;
 
-import ognl.OgnlException;
-import ognl.OgnlRuntime;
-import ognl.PropertyAccessor;
-
-import org.seasar.framework.beans.BeanDesc;
-import org.seasar.framework.beans.PropertyDesc;
-import org.seasar.framework.beans.PropertyNotFoundRuntimeException;
-import org.seasar.framework.beans.factory.BeanDescFactory;
+import org.seasar.extension.dxo.util.DxoUtil;
 import org.seasar.framework.util.OgnlUtil;
 
 /**
@@ -34,25 +27,11 @@ import org.seasar.framework.util.OgnlUtil;
  */
 public class BeanToMapDxoCommand extends AbstractDxoCommand {
 
-    protected static final String PREFIX = "#@java.util.LinkedHashMap@{";
-
-    protected static final String SUFFIX = "}";
-
-    protected String expression;
-
     protected Object parsedExpression;
 
-    static {
-        OgnlRuntime.setPropertyAccessor(BeanContext.class,
-                new BeanPropertyAccessor());
-    }
-
-    public BeanToMapDxoCommand(final Method method,
-            final String expression) {
+    public BeanToMapDxoCommand(final Method method, final String expression) {
         super(method);
-        this.expression = expression;
-        parsedExpression = OgnlUtil.parseExpression(PREFIX + expression
-                + SUFFIX);
+        parsedExpression = DxoUtil.parseMap(expression);
     }
 
     protected Object convertScalar(final Object source) {
@@ -68,44 +47,6 @@ public class BeanToMapDxoCommand extends AbstractDxoCommand {
 
     protected Class getDestElementType() {
         return Map.class;
-    }
-
-    public static class BeanContext {
-        protected Object bean;
-
-        protected BeanDesc beanDesc;
-
-        public BeanContext(final Object bean) {
-            this.bean = bean;
-            beanDesc = BeanDescFactory.getBeanDesc(bean.getClass());
-        }
-
-        public Object getValue(final String propertyName) {
-            final PropertyDesc propertyDesc = beanDesc
-                    .getPropertyDesc(propertyName);
-            if (!propertyDesc.hasReadMethod()) {
-                throw new PropertyNotFoundRuntimeException(bean.getClass(),
-                        propertyName);
-            }
-            return propertyDesc.getValue(bean);
-        }
-    }
-
-    public static class BeanPropertyAccessor implements PropertyAccessor {
-        public Object getProperty(final Map context, final Object target,
-                final Object name) throws OgnlException {
-            final BeanContext beanContext = (BeanContext) target;
-            try {
-                return beanContext.getValue(name.toString());
-            } catch (final PropertyNotFoundRuntimeException e) {
-                throw new OgnlException(name.toString(), e);
-            }
-        }
-
-        public void setProperty(final Map context, final Object target,
-                final Object name, final Object value) throws OgnlException {
-            throw new OgnlException(name.toString());
-        }
     }
 
 }

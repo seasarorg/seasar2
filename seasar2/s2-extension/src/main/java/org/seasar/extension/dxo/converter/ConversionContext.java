@@ -29,4 +29,8 @@ public interface ConversionContext {
 
     Object getContextInfo(String key);
 
+    boolean hasEvalueatedValue(String name);
+
+    Object getEvaluatedValue(String name);
+
 }

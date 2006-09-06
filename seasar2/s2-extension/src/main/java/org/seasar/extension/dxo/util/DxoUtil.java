@@ -13,24 +13,24 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.dxo;
+package org.seasar.extension.dxo.util;
+
+import org.seasar.extension.dxo.DxoConstants;
+import org.seasar.framework.util.OgnlUtil;
+import org.seasar.framework.util.StringUtil;
 
 /**
- * @author Satsohi Kimura
  * @author koichik
+ * 
  */
-public interface DxoConstants {
+public class DxoUtil {
 
-    String DATE_PATTERN = "DATE_PATTERN";
-
-    String TIME_PATTERN = "TIME_PATTERN";
-
-    String TIMESTAMP_PATTERN = "TIMESTAMP_PATTERN";
-
-    String CONVERSION_RULE = "CONVERSION_RULE";
-
-    String OGNL_MAP_PREFIX = "#@java.util.LinkedHashMap@{";
-
-    String OGNL_MAP_SUFFIX = "}";
+    public static Object parseMap(final String expression) {
+        if (StringUtil.isEmpty(expression)) {
+            return null;
+        }
+        return OgnlUtil.parseExpression(DxoConstants.OGNL_MAP_PREFIX
+                + expression + DxoConstants.OGNL_MAP_SUFFIX);
+    }
 
 }

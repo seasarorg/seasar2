@@ -78,9 +78,9 @@ public class BeanToMapDxoCommandBuilderTest extends TestCase {
     }
 
     public interface ToScalarDxo {
-        String convert_String_MAP_CONVERSION = "";
+        String convert_String_CONVERSION_RULE = "";
 
-        String convert2_MAP_CONVERSION = "";
+        String convert2_CONVERSION_RULE = "";
 
         Map convert(String src); // applicable
 
@@ -94,7 +94,7 @@ public class BeanToMapDxoCommandBuilderTest extends TestCase {
     }
 
     public interface ToArrayDxo {
-        String convert_MAP_CONVERSION = "";
+        String convert_CONVERSION_RULE = "";
 
         Map[] convert(Object[] src); // applicable
 
@@ -104,7 +104,7 @@ public class BeanToMapDxoCommandBuilderTest extends TestCase {
     }
 
     public interface ToListDxo {
-        String convert_MAP_CONVERSION = "";
+        String convert_CONVERSION_RULE = "";
 
         List convert(Object[] src); // not applicable
 

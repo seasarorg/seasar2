@@ -51,13 +51,13 @@ public class ConstantAnnotationReaderTest extends TestCase {
                 "convert", new Class[] { Object.class })));
     }
 
-    public void testGetMapConversion() throws Exception {
-        assertEquals("map1", reader.getMapConversion(Dxo.class, Dxo.class
+    public void testGetConversionRule() throws Exception {
+        assertEquals("map1", reader.getConversionRule(Dxo.class, Dxo.class
                 .getMethod("convert", new Class[] { Integer.class })));
         assertEquals("map2", reader
-                .getMapConversion(Dxo.class, Dxo.class.getMethod("convert",
+                .getConversionRule(Dxo.class, Dxo.class.getMethod("convert",
                         new Class[] { Integer.class, Map.class })));
-        assertNull(reader.getMapConversion(Dxo.class, Dxo.class.getMethod(
+        assertNull(reader.getConversionRule(Dxo.class, Dxo.class.getMethod(
                 "convert", new Class[] { Integer[].class })));
     }
 
@@ -82,11 +82,11 @@ public class ConstantAnnotationReaderTest extends TestCase {
 
         Object[] convert(Object[] src);
 
-        String convert_Integer_MAP_CONVERSION = "map1";
+        String convert_Integer_CONVERSION_RULE = "map1";
 
         Map convert(Integer src);
 
-        String convert_Integer_Map_MAP_CONVERSION = "map2";
+        String convert_Integer_Map_CONVERSION_RULE = "map2";
 
         void convert(Integer src, Map dest);
 

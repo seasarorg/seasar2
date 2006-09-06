@@ -77,6 +77,24 @@ public class BeanToBeanDxoCommandTest extends TestCase {
         assertEquals(1000, dest.getBaz());
     }
 
+    public void testWithRule() throws Exception {
+        DxoCommand command = builder.createDxoCommand(ToScalarDxo.class,
+                ToScalarDxo.class.getMethod("convertWithRule",
+                        new Class[] { Hoge.class }));
+        Hoge src = new Hoge(100, "Hoge", new BigDecimal("1000"));
+
+        HogeHoge dest = (HogeHoge) command.execute(new Object[] { src });
+
+        assertNotNull(dest);
+        assertEquals("1000", dest.getFoo());
+        assertEquals(4, dest.getBar().length);
+        assertEquals('H', dest.getBar()[0]);
+        assertEquals('o', dest.getBar()[1]);
+        assertEquals('g', dest.getBar()[2]);
+        assertEquals('e', dest.getBar()[3]);
+        assertEquals(100, dest.getBaz());
+    }
+
     public void testArrayToArray1() throws Exception {
         DxoCommand command = builder.createDxoCommand(ToScalarDxo.class,
                 ToArrayDxo.class.getMethod("convert",
@@ -158,6 +176,10 @@ public class BeanToBeanDxoCommandTest extends TestCase {
         HogeHoge convert(Hoge src);
 
         void convert(Hoge src, HogeHoge dest);
+
+        public static final String convertWithRule_CONVERSION_RULE = "'foo' : baz, 'baz' : foo";
+
+        HogeHoge convertWithRule(Hoge src);
     }
 
     public interface ToArrayDxo {

@@ -29,6 +29,6 @@ public interface AnnotationReader {
 
     String getTimestampPattern(Class dxoClass, Method method);
 
-    String getMapConversion(Class dxoClass, Method method);
+    String getConversionRule(Class dxoClass, Method method);
 
 }
