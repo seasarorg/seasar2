@@ -128,6 +128,7 @@
       <artifactId>s2-framework</artifactId>
       <version>2.4.0-rc-2-SNAPSHOT</version>
       <type>test-jar</type>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.geronimo.specs</groupId>
