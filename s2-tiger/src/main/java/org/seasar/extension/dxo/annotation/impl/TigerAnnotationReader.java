@@ -19,8 +19,8 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
 import org.seasar.extension.dxo.annotation.AnnotationReader;
+import org.seasar.extension.dxo.annotation.ConversionRule;
 import org.seasar.extension.dxo.annotation.DatePattern;
-import org.seasar.extension.dxo.annotation.MapConversion;
 import org.seasar.extension.dxo.annotation.TimePattern;
 import org.seasar.extension.dxo.annotation.TimestampPattern;
 
@@ -80,14 +80,14 @@ public class TigerAnnotationReader implements AnnotationReader {
         return dxoClass.getAnnotation(annotationType);
     }
 
-    public String getMapConversion(final Class dxoClass, final Method method) {
-        final MapConversion mapConversion = method
-                .getAnnotation(MapConversion.class);
+    public String getConversionRule(final Class dxoClass, final Method method) {
+        final ConversionRule mapConversion = method
+                .getAnnotation(ConversionRule.class);
         if (mapConversion != null) {
             return mapConversion.value();
         }
         if (next != null) {
-            return next.getMapConversion(dxoClass, method);
+            return next.getConversionRule(dxoClass, method);
         }
         return null;
     }

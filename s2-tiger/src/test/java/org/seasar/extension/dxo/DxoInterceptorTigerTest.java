@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.seasar.extension.dxo.annotation.MapConversion;
+import org.seasar.extension.dxo.annotation.ConversionRule;
 import org.seasar.extension.unit.S2TestCase;
 
 /**
@@ -194,13 +194,13 @@ public class DxoInterceptorTigerTest extends S2TestCase {
     }
 
     public interface MapDxo {
-        @MapConversion("'one' : foo, 'two' : bar, 'three' : baz, 'four' : foo+bar+baz")
+        @ConversionRule("'one' : foo, 'two' : bar, 'three' : baz, 'four' : foo+bar+baz")
         Map convert(Hoge src);
 
-        @MapConversion("'one' : foo, 'two' : bar, 'three' : baz, 'four' : foo+bar+baz")
+        @ConversionRule("'one' : foo, 'two' : bar, 'three' : baz, 'four' : foo+bar+baz")
         Map[] convert(Hoge[] src);
 
-        @MapConversion("'one' : foo, 'two' : bar, 'three' : baz, 'four' : foo+bar+baz")
+        @ConversionRule("'one' : foo, 'two' : bar, 'three' : baz, 'four' : foo+bar+baz")
         List<Map> convert(List<Hoge> src);
     }
 

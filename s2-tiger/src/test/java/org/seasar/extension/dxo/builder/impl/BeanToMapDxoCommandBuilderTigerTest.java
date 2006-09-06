@@ -47,7 +47,7 @@ public class BeanToMapDxoCommandBuilderTigerTest extends TestCase {
     }
 
     public interface ToListDxo {
-        String convert_MAP_CONVERSION = "";
+        String convert_CONVERSION_RULE = "";
 
         List<Map> convert(Object[] src);
 

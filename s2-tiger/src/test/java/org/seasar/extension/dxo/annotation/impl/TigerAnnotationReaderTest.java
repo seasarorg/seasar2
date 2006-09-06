@@ -21,17 +21,17 @@ import java.util.Map;
 import junit.framework.TestCase;
 
 import org.seasar.extension.dxo.annotation.AnnotationReader;
+import org.seasar.extension.dxo.annotation.ConversionRule;
 import org.seasar.extension.dxo.annotation.DatePattern;
-import org.seasar.extension.dxo.annotation.MapConversion;
 
 /**
  * @author koichik
- * 
  */
 public class TigerAnnotationReaderTest extends TestCase {
 
     AnnotationReader reader;
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         reader = new AnnotationReaderFactoryImpl().getAnnotationReader();
@@ -52,12 +52,12 @@ public class TigerAnnotationReaderTest extends TestCase {
     }
 
     public void testGetMapConversion() throws Exception {
-        assertEquals("map1", reader.getMapConversion(Dxo.class, Dxo.class
+        assertEquals("map1", reader.getConversionRule(Dxo.class, Dxo.class
                 .getMethod("convert", new Class[] { Integer.class })));
         assertEquals("map2", reader
-                .getMapConversion(Dxo.class, Dxo.class.getMethod("convert",
+                .getConversionRule(Dxo.class, Dxo.class.getMethod("convert",
                         new Class[] { Integer.class, Map.class })));
-        assertNull(reader.getMapConversion(Dxo.class, Dxo.class.getMethod(
+        assertNull(reader.getConversionRule(Dxo.class, Dxo.class.getMethod(
                 "convert", new Class[] { Integer[].class })));
     }
 
@@ -75,10 +75,10 @@ public class TigerAnnotationReaderTest extends TestCase {
         @DatePattern("baz")
         Object[] convert(Object[] src);
 
-        @MapConversion("map1")
+        @ConversionRule("map1")
         Map convert(Integer src);
 
-        @MapConversion("map2")
+        @ConversionRule("map2")
         void convert(Integer src, Map dest);
 
         Map[] convert(Integer[] src);
