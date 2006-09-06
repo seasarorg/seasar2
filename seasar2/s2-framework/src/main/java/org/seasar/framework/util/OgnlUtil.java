@@ -56,7 +56,8 @@ public final class OgnlUtil {
                 return Ognl.getValue(exp, root);
             }
         } catch (OgnlException ex) {
-            throw new OgnlRuntimeException(ex.getReason(), path, lineNumber);
+            throw new OgnlRuntimeException(ex.getReason() == null ? ex : ex
+                    .getReason(), path, lineNumber);
         } catch (Exception ex) {
             throw new OgnlRuntimeException(ex, path, lineNumber);
         }

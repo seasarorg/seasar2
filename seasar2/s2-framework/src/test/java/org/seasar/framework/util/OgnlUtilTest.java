@@ -100,6 +100,18 @@ public class OgnlUtilTest extends TestCase {
         }
     }
 
+    public void testGetValueException2() throws Exception {
+        final Object exp = OgnlUtil.parseExpression("hoge");
+        try {
+            OgnlUtil.getValue(exp, new Object());
+            fail();
+        } catch (OgnlRuntimeException e) {
+            e.printStackTrace();
+            final Throwable cause = e.getCause();
+            assertNotNull(cause);
+        }
+    }
+
     private static interface Foo {
         String getBar();
     }
