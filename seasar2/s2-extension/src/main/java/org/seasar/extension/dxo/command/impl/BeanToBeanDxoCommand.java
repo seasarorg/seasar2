@@ -22,7 +22,7 @@ import org.seasar.extension.dxo.converter.ConversionContext;
 import org.seasar.extension.dxo.converter.Converter;
 import org.seasar.extension.dxo.converter.ConverterFactory;
 import org.seasar.extension.dxo.converter.impl.ConversionContextImpl;
-import org.seasar.extension.dxo.util.BeanUtil;
+import org.seasar.framework.beans.util.BeanUtil;
 
 /**
  * @author koichik

@@ -13,16 +13,41 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.dxo.util;
+package org.seasar.framework.beans.util;
+
+import java.util.Iterator;
+import java.util.Map;
 
 import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.beans.factory.BeanDescFactory;
 
 /**
- * @author Satoshi Kimura
+ * @author Kimura Satoshi
+ * @author higa
+ * 
  */
 public class BeanUtil {
+
+    protected BeanUtil() {
+    }
+
+    public static void copyProperties(Map src, Object dest) {
+        if (src == null || dest == null) {
+            return;
+        }
+        BeanDesc beanDesc = BeanDescFactory.getBeanDesc(dest.getClass());
+        for (Iterator i = src.keySet().iterator(); i.hasNext();) {
+            String key = (String) i.next();
+            if (!beanDesc.hasPropertyDesc(key)) {
+                continue;
+            }
+            PropertyDesc pd = beanDesc.getPropertyDesc(key);
+            if (pd.hasWriteMethod()) {
+                pd.setValue(dest, src.get(key));
+            }
+        }
+    }
 
     public static void copyProperties(final Object src, final Object dest) {
         copyProperties(src, dest, true);
@@ -54,5 +79,4 @@ public class BeanUtil {
             }
         }
     }
-
 }

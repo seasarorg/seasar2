@@ -67,6 +67,10 @@ public interface BeanDesc {
 
     public Method getMethod(String methodName, Class[] paramTypes);
 
+    public Method getMethodNoException(String methodName);
+
+    public Method getMethodNoException(String methodName, Class[] paramTypes);
+
     public Method[] getMethods(String methodName)
             throws MethodNotFoundRuntimeException;
 
