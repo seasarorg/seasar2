@@ -40,6 +40,7 @@ import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.Parameterized.Parameters;
 import org.seasar.extension.unit.S2TestCase;
 import org.seasar.framework.container.S2Container;
+import org.seasar.framework.unit.annotation.Prerequisite;
 import org.seasar.framework.unit.annotation.TxBehavior;
 import org.seasar.framework.unit.annotation.TxBehaviorType;
 import org.seasar.framework.util.TransactionManagerUtil;
@@ -642,6 +643,101 @@ public class Seasar2Test extends S2TestCase {
         assertTrue(result.wasSuccessful());
         assertEquals(1, result.getRunCount());
         assertEquals("true", log);
+    }
+
+    @RunWith(Seasar2.class)
+    public static class PrerequisiteTest {
+
+        @Prerequisite("true")
+        public void aaa() {
+            count++;
+            log += "aaa";
+        }
+
+        @Prerequisite("isTrue()")
+        public void bbb() {
+            count++;
+            log += "bbb";
+        }
+
+        @Prerequisite("isFalse()")
+        public void ccc() {
+            count++;
+            log += "ccc";
+        }
+
+        @Prerequisite("#ENV != null")
+        public void ddd() {
+            count++;
+            log += "ddd";
+        }
+
+        public boolean isTrue() {
+            return true;
+        }
+
+        public boolean isFalse() {
+            return false;
+        }
+    }
+
+    public void testPrerequisite() throws Exception {
+        JUnitCore core = new JUnitCore();
+        Result result = core.run(PrerequisiteTest.class);
+        printFailures(result.getFailures());
+        assertTrue(result.wasSuccessful());
+        assertEquals(3, count);
+        assertTrue(log.contains("aaa"));
+        assertTrue(log.contains("bbb"));
+        assertTrue(log.contains("ddd"));
+    }
+
+    @RunWith(Seasar2.class)
+    @Prerequisite("true")
+    public static class PrerequisiteTest2 {
+        @Prerequisite("true")
+        public void aaa() {
+            count++;
+            log += "aaa";
+        }
+
+        @Prerequisite("false")
+        public void bbb() {
+            count++;
+            log += "bbb";
+        }
+    }
+
+    public void testPrerequisite2() throws Exception {
+        JUnitCore core = new JUnitCore();
+        Result result = core.run(PrerequisiteTest2.class);
+        printFailures(result.getFailures());
+        assertTrue(result.wasSuccessful());
+        assertEquals(1, count);
+        assertTrue(log.contains("aaa"));
+    }
+
+    @RunWith(Seasar2.class)
+    @Prerequisite("false")
+    public static class PrerequisiteTest3 {
+        @Prerequisite("true")
+        public void aaa() {
+            count++;
+            log += "aaa";
+        }
+
+        public void bbb() {
+            count++;
+            log += "bbb";
+        }
+    }
+
+    public void testPrerequisite3() throws Exception {
+        JUnitCore core = new JUnitCore();
+        Result result = core.run(PrerequisiteTest3.class);
+        printFailures(result.getFailures());
+        assertTrue(result.wasSuccessful());
+        assertEquals(0, count);
     }
 
     @RunWith(Seasar2.class)
