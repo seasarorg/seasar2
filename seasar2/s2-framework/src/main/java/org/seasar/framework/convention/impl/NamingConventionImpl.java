@@ -536,16 +536,16 @@ public class NamingConventionImpl implements NamingConvention {
         if (StringUtil.isEmpty(rootPackageName)) {
             return null;
         }
-        String s = rootPackageName.replace('.', '/');
-        String[] rootFiles = new String[0];
-        List list = new ArrayList();
+        final String s = rootPackageName.replace('.', '/');
+        final List list = new ArrayList();
         for (Iterator itr = ClassLoaderUtil.getResources(this.getClass(), s); itr
                 .hasNext();) {
             URL url = (URL) itr.next();
             list.add(url.getPath());
         }
-        rootFiles = (String[]) list.toArray(new String[list.size()]);
-        if (rootFiles.length != 0) {
+        if (list.size() != 0) {
+            final String[] rootFiles = (String[]) list.toArray(new String[list
+                    .size()]);
             return new FileExistChecker(rootFiles, rootPackageName);
         }
         return new JarExistChecker(rootPackageName);
