@@ -15,20 +15,16 @@
  */
 package org.seasar.framework.convention.impl;
 
-import java.io.File;
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import org.seasar.framework.convention.NamingConvention;
 import org.seasar.framework.exception.EmptyRuntimeException;
 import org.seasar.framework.util.ArrayUtil;
-import org.seasar.framework.util.ClassLoaderUtil;
 import org.seasar.framework.util.ClassUtil;
+import org.seasar.framework.util.Disposable;
+import org.seasar.framework.util.DisposableUtil;
 import org.seasar.framework.util.ResourceUtil;
 import org.seasar.framework.util.StringUtil;
 
@@ -36,9 +32,11 @@ import org.seasar.framework.util.StringUtil;
  * @author higa
  * @author shot
  */
-public class NamingConventionImpl implements NamingConvention {
+public class NamingConventionImpl implements NamingConvention, Disposable {
 
     private static final char PACKAGE_SEPARATOR = '_';
+
+    private boolean initialized;
 
     private String viewRootPath = "/view";
 
@@ -68,13 +66,27 @@ public class NamingConventionImpl implements NamingConvention {
 
     private String dtoSuffix = "Dto";
 
+    private String connectorSuffix = "Connector";
+
     private String subApplicationRootPackageName = "web";
 
     private String entityPackageName = "entity";
 
     private String[] rootPackageNames = new String[0];
 
-    private Map existCheckers = new HashMap();
+    private Map cache = Collections.synchronizedMap(new HashMap());
+
+    public synchronized void initialize() {
+        if (!initialized) {
+            DisposableUtil.add(this);
+            initialized = true;
+        }
+    }
+
+    public void dispose() {
+        cache.clear();
+        initialized = false;
+    }
 
     public String getPageSuffix() {
         return pageSuffix;
@@ -90,6 +102,14 @@ public class NamingConventionImpl implements NamingConvention {
 
     public void setActionSuffix(String actionSuffix) {
         this.actionSuffix = actionSuffix;
+    }
+
+    public String getConnectorSuffix() {
+        return connectorSuffix;
+    }
+
+    public void setConnectorSuffix(String connectorSuffix) {
+        this.connectorSuffix = connectorSuffix;
     }
 
     public String getDaoSuffix() {
@@ -208,6 +228,10 @@ public class NamingConventionImpl implements NamingConvention {
         return fromSuffixToPackageName(converterSuffix);
     }
 
+    public String getConnectorPackageName() {
+        return fromSuffixToPackageName(connectorSuffix);
+    }
+
     public String getImplementationPackageName() {
         return fromSuffixToPackageName(implementationSuffix);
     }
@@ -252,7 +276,6 @@ public class NamingConventionImpl implements NamingConvention {
     public void addRootPackageName(String rootPackageName) {
         rootPackageNames = (String[]) ArrayUtil.add(rootPackageNames,
                 rootPackageName);
-        addExistChecker(rootPackageName);
     }
 
     public String fromSuffixToPackageName(String suffix) {
@@ -367,20 +390,26 @@ public class NamingConventionImpl implements NamingConvention {
             String partOfClassName) {
         String lastClassName = ClassUtil.concatName(middlePackageName,
                 partOfClassName);
-        if (isExist(rootPackageName, lastClassName)) {
-            String className = ClassUtil.concatName(rootPackageName,
-                    lastClassName);
-            Class clazz = ClassUtil.forName(className);
-            if (clazz.isInterface()) {
-                String lastImplClassName = toImplementationClassName(lastClassName);
-                if (isExist(rootPackageName, lastImplClassName)) {
-                    className = ClassUtil.concatName(rootPackageName,
-                            lastImplClassName);
-                    return ClassUtil.forName(className);
-                }
-            }
+        String className = ClassUtil.concatName(rootPackageName, lastClassName);
+        Class clazz = (Class) cache.get(className);
+        if (clazz != null && clazz != NamingConventionImpl.class) {
             return clazz;
         }
+        if (ResourceUtil.isExist(ClassUtil.getResourcePath(className))) {
+            clazz = ClassUtil.forName(className);
+            if (clazz.isInterface()) {
+                String lastImplClassName = toImplementationClassName(lastClassName);
+                String implClassName = ClassUtil.concatName(rootPackageName,
+                        lastImplClassName);
+                if (ResourceUtil.isExist(ClassUtil
+                        .getResourcePath(implClassName))) {
+                    clazz = ClassUtil.forName(implClassName);
+                }
+            }
+            cache.put(className, clazz);
+            return clazz;
+        }
+        cache.put(className, NamingConventionImpl.class);
         return null;
     }
 
@@ -515,107 +544,4 @@ public class NamingConventionImpl implements NamingConvention {
         return false;
     }
 
-    protected boolean isExist(String rootPackageName, String lastClassName) {
-        ExistChecker checker = getExistChecker(rootPackageName);
-        if (checker != null) {
-            return checker.isExist(lastClassName);
-        }
-        return false;
-    }
-
-    protected ExistChecker getExistChecker(String rootPackageName) {
-        return (ExistChecker) existCheckers.get(rootPackageName);
-    }
-
-    protected void addExistChecker(String rootPackageName) {
-        ExistChecker checker = createExistChecker(rootPackageName);
-        existCheckers.put(rootPackageName, checker);
-    }
-
-    protected ExistChecker createExistChecker(String rootPackageName) {
-        if (StringUtil.isEmpty(rootPackageName)) {
-            return null;
-        }
-        final String s = rootPackageName.replace('.', '/');
-        final List list = new ArrayList();
-        for (Iterator itr = ClassLoaderUtil.getResources(this.getClass(), s); itr
-                .hasNext();) {
-            URL url = (URL) itr.next();
-            list.add(url.getPath());
-        }
-        if (list.size() != 0) {
-            final String[] rootFiles = (String[]) list.toArray(new String[list
-                    .size()]);
-            return new FileExistChecker(rootFiles, rootPackageName);
-        }
-        return new JarExistChecker(rootPackageName);
-    }
-
-    protected static interface ExistChecker {
-
-        boolean isExist(String lastClassName);
-    }
-
-    protected static class FileExistChecker implements ExistChecker {
-
-        private String[] rootFiles;
-
-        private String rootPath;
-
-        private Map cache = Collections.synchronizedMap(new HashMap());
-
-        private Map jarCache = Collections.synchronizedMap(new HashMap());
-
-        protected FileExistChecker(String[] rootFiles, String rootPath) {
-            this.rootFiles = rootFiles;
-            this.rootPath = rootPath;
-        }
-
-        public boolean isExist(String lastClassName) {
-            if (jarCache.containsKey(lastClassName)) {
-                Boolean b = (Boolean) jarCache.get(lastClassName);
-                return b.booleanValue();
-            }
-            String pathName = getPathName(lastClassName);
-            File file = (File) cache.get(lastClassName);
-            if (file == null) {
-                for (int i = 0; i < rootFiles.length; i++) {
-                    file = createFile(rootFiles[i], lastClassName);
-                    if (file.exists()) {
-                        cache.put(lastClassName, file);
-                        return true;
-                    }
-                }
-                boolean ret = ResourceUtil.isExist(rootPath + "." + pathName);
-                jarCache.put(lastClassName, new Boolean(ret));
-                if (ret) {
-                    return true;
-                }
-            }
-            return file.exists();
-        }
-
-        protected File createFile(String rootFileName, String lastClassName) {
-            String pathName = getPathName(lastClassName);
-            return new File(rootFileName, pathName);
-        }
-
-        private static String getPathName(String lastClassName) {
-            return lastClassName.replace('.', '/') + ".class";
-        }
-    }
-
-    protected static class JarExistChecker implements ExistChecker {
-
-        private String rootPath;
-
-        protected JarExistChecker(String rootPackageName) {
-            this.rootPath = rootPackageName.replace('.', '/') + "/";
-        }
-
-        public boolean isExist(String lastClassName) {
-            return ResourceUtil.isExist(rootPath
-                    + lastClassName.replace('.', '/') + ".class");
-        }
-    }
 }

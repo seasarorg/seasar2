@@ -49,6 +49,8 @@ public interface NamingConvention {
 
     String getDtoSuffix();
 
+    String getConnectorSuffix();
+
     String getSubApplicationRootPackageName();
 
     String getImplementationPackageName();
@@ -72,6 +74,8 @@ public interface NamingConvention {
     String getConverterPackageName();
 
     String getHelperPackageName();
+
+    String getConnectorPackageName();
 
     String[] getRootPackageNames();
 

@@ -17,8 +17,6 @@ package org.seasar.framework.convention.impl;
 
 import junit.framework.TestCase;
 
-import org.seasar.framework.convention.impl.NamingConventionImpl.ExistChecker;
-import org.seasar.framework.convention.impl.NamingConventionImpl.FileExistChecker;
 import org.seasar.framework.convention.impl.dao.AaaDao;
 import org.seasar.framework.convention.impl.dao.BbbDao;
 import org.seasar.framework.convention.impl.dao.impl.BbbDaoImpl;
@@ -40,12 +38,6 @@ public class NamingConventionImplTest extends TestCase {
         convention = new NamingConventionImpl();
         rootPackageName = ClassUtil.getPackageName(getClass());
         convention.addRootPackageName(rootPackageName);
-    }
-
-    public void testAddAndGetRootPackageName() throws Exception {
-        ExistChecker checker = convention.getExistChecker(rootPackageName);
-        assertNotNull(checker);
-        assertEquals(FileExistChecker.class, checker.getClass());
     }
 
     public void testFromSuffixToPackageName() throws Exception {
@@ -90,6 +82,10 @@ public class NamingConventionImplTest extends TestCase {
 
     public void testGetHelperPackageName() throws Exception {
         assertEquals("helper", convention.getHelperPackageName());
+    }
+
+    public void testGetConnectorPackageName() throws Exception {
+        assertEquals("connector", convention.getConnectorPackageName());
     }
 
     public void testFromClassNameToComponentName() throws Exception {
@@ -250,24 +246,18 @@ public class NamingConventionImplTest extends TestCase {
     }
 
     public void testIsExist() throws Exception {
-        assertTrue(convention.isExist(rootPackageName, "dao.AaaDao"));
-        assertFalse(convention.isExist(rootPackageName, "dao.xxx"));
-    }
-
-    public void testIsExist_performance() throws Exception {
-        int num = 10000;
-        long start = System.currentTimeMillis();
-        for (int i = 0; i < num; ++i) {
-            convention.isExist(rootPackageName, "dao.AaaDao");
-        }
-        long time = System.currentTimeMillis() - start;
-        System.out.println("isExist:" + num + "=" + time);
+        assertEquals(AaaDao.class, convention.findClass(rootPackageName, "dao",
+                "AaaDao"));
+        assertEquals(BbbDaoImpl.class, convention.findClass(rootPackageName,
+                "dao", "BbbDao"));
+        assertNull(convention.findClass(rootPackageName, "dao", "xxxDao"));
     }
 
     public void testIsExist_jar() throws Exception {
         NamingConventionImpl nc = new NamingConventionImpl();
         nc.addRootPackageName("java.lang");
-        assertTrue(nc.isExist("java.lang", "String"));
-        assertFalse(nc.isExist("java.lang", "xxx"));
+        assertEquals(String.class, nc.findClass("java.lang", "", "String"));
+        assertNull(nc.findClass("java.lang", "", "xxx"));
     }
+
 }
