@@ -62,7 +62,7 @@ public class ConversionContextImpl implements ConversionContext {
         }
         DisposableUtil.add(new Disposable() {
             public void dispose() {
-                dispose();
+                ConversionContextImpl.dispose();
             }
         });
         initialized = true;
