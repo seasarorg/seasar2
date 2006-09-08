@@ -37,7 +37,13 @@ public class ComponentCreatorImpl implements ComponentCreator {
 
     private AutoBindingDef autoBindingDef;
 
+    public static final String externalBinding_BINDING = "bindingType=may";
+
     private boolean externalBinding = false;
+
+    public static final String enableInterface_BINDING = "bindingType=may";
+
+    private boolean enableInterface = true;
 
     private String nameSuffix;
 
@@ -78,6 +84,14 @@ public class ComponentCreatorImpl implements ComponentCreator {
         this.externalBinding = externalBinding;
     }
 
+    public boolean isEnableInterface() {
+        return enableInterface;
+    }
+
+    public void setEnableInterface(boolean enableInterface) {
+        this.enableInterface = enableInterface;
+    }
+
     public String getNameSuffix() {
         return nameSuffix;
     }
@@ -100,6 +114,9 @@ public class ComponentCreatorImpl implements ComponentCreator {
             return null;
         }
         Class targetClass = namingConvention.toCompleteClass(componentClass);
+        if (targetClass.isInterface() && !isEnableInterface()) {
+            return null;
+        }
         AnnotationHandler handler = AnnotationHandlerFactory
                 .getAnnotationHandler();
         ComponentDef cd = handler.createComponentDef(targetClass, instanceDef,

@@ -9,26 +9,14 @@
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, 
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.framework.container.cooldeploy.creator;
-
-import org.seasar.framework.unit.S2FrameworkTestCase;
+package org.seasar.framework.container.hotdeploy.creator.connector;
 
 /**
- * @author shot
+ * @author koichik
  */
-public class ConnectorCoolCreatorTest extends S2FrameworkTestCase {
-
-    protected void setUp() {
-        include("ConnectorCoolCreatorTest.dicon");
-    }
-
-    public void testAll() throws Exception {
-        assertTrue(getContainer().hasComponentDef("rpcConnector"));
-        assertFalse(getContainer().hasComponentDef("connector"));
-    }
-
+public interface OrbConnector {
 }

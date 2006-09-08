@@ -23,6 +23,7 @@ public class ConnectorCreator extends ComponentCreatorImpl {
     public ConnectorCreator(NamingConvention namingConvention) {
         super(namingConvention);
         setNameSuffix(namingConvention.getConnectorSuffix());
+        setEnableInterface(false);
     }
 
     public ComponentCustomizer getConnectorCustomizer() {

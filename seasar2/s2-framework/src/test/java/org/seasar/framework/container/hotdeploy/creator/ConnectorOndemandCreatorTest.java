@@ -34,5 +34,7 @@ public class ConnectorOndemandCreatorTest extends OndemandCreatorTestCase {
         ComponentDef cd = getComponentDef(name);
         assertNotNull(cd);
         assertEquals(name, cd.getComponentName());
+
+        assertFalse(getContainer().hasComponentDef("orbConnector"));
     }
 }
