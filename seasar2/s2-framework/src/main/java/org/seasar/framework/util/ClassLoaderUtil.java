@@ -69,11 +69,22 @@ public class ClassLoaderUtil {
                 new Object[] { "ClassLoader" }));
     }
 
-    public static Iterator getResources(final Class targetClass, String name) {
+    public static Iterator getResources(final String name) {
+        return getResources(Thread.currentThread().getContextClassLoader(),
+                name);
+    }
+
+    public static Iterator getResources(final Class targetClass,
+            final String name) {
+        return getResources(getClassLoader(targetClass), name);
+    }
+
+    public static Iterator getResources(final ClassLoader loader,
+            final String name) {
         try {
-            Enumeration e = getClassLoader(targetClass).getResources(name);
+            final Enumeration e = loader.getResources(name);
             return new EnumerationIterator(e);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new IORuntimeException(e);
         }
     }
@@ -88,12 +99,12 @@ public class ClassLoaderUtil {
         return false;
     }
 
-    public static Class findLoadedClass(ClassLoader classLoader,
-            String className) throws ClassNotFoundException {
+    public static Class findLoadedClass(final ClassLoader classLoader,
+            final String className) throws ClassNotFoundException {
         for (ClassLoader loader = classLoader; loader != null; loader = loader
                 .getParent()) {
-            Class clazz = (Class) MethodUtil.invoke(findLoadedClassMethod,
-                    loader, new Object[] { className });
+            final Class clazz = (Class) MethodUtil.invoke(
+                    findLoadedClassMethod, loader, new Object[] { className });
             if (clazz != null) {
                 return clazz;
             }

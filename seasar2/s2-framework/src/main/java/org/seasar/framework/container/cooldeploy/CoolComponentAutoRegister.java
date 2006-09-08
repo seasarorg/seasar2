@@ -18,6 +18,7 @@ package org.seasar.framework.container.cooldeploy;
 import java.io.File;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.jar.JarFile;
 
@@ -25,6 +26,7 @@ import org.seasar.framework.container.ComponentCreator;
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.convention.NamingConvention;
+import org.seasar.framework.util.ClassLoaderUtil;
 import org.seasar.framework.util.ClassTraversal;
 import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.JarFileUtil;
@@ -94,10 +96,19 @@ public class CoolComponentAutoRegister implements ClassHandler {
     }
 
     public void registerAll() {
-        String path = container.getPath();
-        URL url = ResourceUtil.getResource(path);
-        Strategy strategy = getStrategy(url.getProtocol());
-        strategy.registerAll(path, url);
+        final String[] rootPackageNames = namingConvention
+                .getRootPackageNames();
+        if (rootPackageNames != null) {
+            for (int i = 0; i < rootPackageNames.length; ++i) {
+                final String rootDir = rootPackageNames[i].replace('.', '/');
+                for (final Iterator it = ClassLoaderUtil.getResources(rootDir); it
+                        .hasNext();) {
+                    final URL url = (URL) it.next();
+                    final Strategy strategy = getStrategy(url.getProtocol());
+                    strategy.registerAll(rootDir, url);
+                }
+            }
+        }
     }
 
     public void processClass(String packageName, String shortClassName) {
