@@ -83,7 +83,7 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
         }
     }
 
-    public void dispose() {
+    public synchronized void dispose() {
         cache.clear();
         initialized = false;
     }
@@ -388,6 +388,7 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
 
     protected Class findClass(String rootPackageName, String middlePackageName,
             String partOfClassName) {
+        initialize();
         String lastClassName = ClassUtil.concatName(middlePackageName,
                 partOfClassName);
         String className = ClassUtil.concatName(rootPackageName, lastClassName);
