@@ -220,26 +220,6 @@ public class Seasar2Test extends S2TestCase {
 
     @RunWith(Seasar2.class)
     @TxBehavior(TxBehaviorType.NONE)
-    public static class TransactionBehaviorNoneTest2 {
-        TransactionManager tm;
-
-        public void bbb() {
-            count++;
-            txActive = TransactionManagerUtil.isActive(tm);
-        }
-    }
-
-    public void testTransactionBehaviorNoneTest2() {
-        JUnitCore core = new JUnitCore();
-        Result result = core.run(TransactionBehaviorNoneTest2.class);
-        printFailures(result.getFailures());
-        assertTrue(result.wasSuccessful());
-        assertEquals(1, count);
-        assertEquals(false, txActive);
-    }
-
-    @RunWith(Seasar2.class)
-    @TxBehavior(TxBehaviorType.NONE)
     public static class TransactionBehaviorCommitTest {
         TransactionManager tm;
 
@@ -253,26 +233,6 @@ public class Seasar2Test extends S2TestCase {
     public void testTransactionBehaviorCommitTest() {
         JUnitCore core = new JUnitCore();
         Result result = core.run(TransactionBehaviorCommitTest.class);
-        printFailures(result.getFailures());
-        assertTrue(result.wasSuccessful());
-        assertEquals(1, count);
-        assertEquals(true, txActive);
-    }
-
-    @RunWith(Seasar2.class)
-    @TxBehavior(TxBehaviorType.COMMIT)
-    public static class TransactionBehaviorCommitTest2 {
-        TransactionManager tm;
-
-        public void bbb() {
-            count++;
-            txActive = TransactionManagerUtil.isActive(tm);
-        }
-    }
-
-    public void testTransactionBehaviorCommitTest2() {
-        JUnitCore core = new JUnitCore();
-        Result result = core.run(TransactionBehaviorCommitTest2.class);
         printFailures(result.getFailures());
         assertTrue(result.wasSuccessful());
         assertEquals(1, count);
@@ -296,27 +256,6 @@ public class Seasar2Test extends S2TestCase {
     public void testTransactionBehaviorRollbackTest() {
         JUnitCore core = new JUnitCore();
         Result result = core.run(TransactionBehaviorRollbackTest.class);
-        printFailures(result.getFailures());
-        assertTrue(result.wasSuccessful());
-        assertEquals(1, count);
-        assertEquals(true, txActive);
-    }
-
-    @RunWith(Seasar2.class)
-    @TxBehavior(TxBehaviorType.ROLLBACK)
-    public static class TransactionBehaviorRollbackTest2 {
-        TransactionManager tm;
-
-        public void bbb() {
-            count++;
-            txActive = TransactionManagerUtil.isActive(tm);
-        }
-
-    }
-
-    public void testTransactionBehaviorRollbackTest2() {
-        JUnitCore core = new JUnitCore();
-        Result result = core.run(TransactionBehaviorRollbackTest2.class);
         printFailures(result.getFailures());
         assertTrue(result.wasSuccessful());
         assertEquals(1, count);
@@ -773,25 +712,17 @@ public class Seasar2Test extends S2TestCase {
     @RunWith(Seasar2.class)
     public static class CustomizeS2TestClassMethodsRunnerTest {
 
-        private TransactionManager tm;
-
         @Test
         public void aaa() {
             count++;
-            log = "aaa";
-            txActive = TransactionManagerUtil.isActive(tm);
         }
 
         public void bbb() {
             count++;
-            log += "bbb";
-            txActive = TransactionManagerUtil.isActive(tm);
         }
 
         public void ccc() {
             count++;
-            log += "ccc";
-            txActive = TransactionManagerUtil.isActive(tm);
         }
     }
 
@@ -801,9 +732,7 @@ public class Seasar2Test extends S2TestCase {
         Result result = core.run(CustomizeS2TestClassMethodsRunnerTest.class);
         printFailures(result.getFailures());
         assertTrue(result.wasSuccessful());
-        assertEquals("aaa", log);
-        assertEquals(1, count);
-        assertFalse(txActive);
+        assertEquals(0, count);
     }
 
     public void configure(String name) {
@@ -817,16 +746,16 @@ public class Seasar2Test extends S2TestCase {
         }
     }
 
-    public static class TxDisabledTestMethodRunner extends S2TestMethodRunner {
+    public static class UnfulfilledTestMethodRunner extends S2TestMethodRunner {
 
-        public TxDisabledTestMethodRunner(Object test, Method method,
+        public UnfulfilledTestMethodRunner(Object test, Method method,
                 RunNotifier notifier, Description description,
                 S2TestIntrospector introspector) {
             super(test, method, notifier, description, introspector);
         }
 
         @Override
-        protected boolean needsTransaction() {
+        protected boolean isFulfilled() {
             return false;
         }
     }

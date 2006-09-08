@@ -25,6 +25,9 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.seasar.framework.unit.annotation.Prerequisite;
+import org.seasar.framework.unit.annotation.TxBehavior;
+import org.seasar.framework.unit.annotation.TxBehaviorType;
 import org.seasar.framework.util.tiger.ReflectionUtil;
 
 /**
@@ -80,6 +83,65 @@ public class AnnotationTestIntrospectorTest extends TestCase {
         assertTrue(methods.contains(method));
     }
 
+    public void testNeedsTransaction() {
+        Class<?> clazz = MethodTxBehavior.class;
+        Method method = ReflectionUtil.getDeclaredMethod(clazz, "aaa");
+        assertTrue(introspector.needsTransaction(clazz, method));
+        method = ReflectionUtil.getDeclaredMethod(clazz, "bbb");
+        assertTrue(introspector.needsTransaction(clazz, method));
+        method = ReflectionUtil.getDeclaredMethod(clazz, "ccc");
+        assertTrue(introspector.needsTransaction(clazz, method));
+        method = ReflectionUtil.getDeclaredMethod(clazz, "ddd");
+        assertFalse(introspector.needsTransaction(clazz, method));
+
+        clazz = NoneClassTxBehavior.class;
+        method = ReflectionUtil.getDeclaredMethod(clazz, "aaa");
+        assertFalse(introspector.needsTransaction(clazz, method));
+        method = ReflectionUtil.getDeclaredMethod(clazz, "bbb");
+        assertTrue(introspector.needsTransaction(clazz, method));
+        method = ReflectionUtil.getDeclaredMethod(clazz, "ccc");
+        assertTrue(introspector.needsTransaction(clazz, method));
+        method = ReflectionUtil.getDeclaredMethod(clazz, "ddd");
+        assertFalse(introspector.needsTransaction(clazz, method));
+    }
+
+    public void testRequiresTransactionCommitment() {
+        Class<?> clazz = MethodTxBehavior.class;
+        Method method = ReflectionUtil.getDeclaredMethod(clazz, "aaa");
+        assertFalse(introspector.requiresTransactionCommitment(clazz, method));
+        method = ReflectionUtil.getDeclaredMethod(clazz, "bbb");
+        assertTrue(introspector.requiresTransactionCommitment(clazz, method));
+        method = ReflectionUtil.getDeclaredMethod(clazz, "ccc");
+        assertFalse(introspector.requiresTransactionCommitment(clazz, method));
+        method = ReflectionUtil.getDeclaredMethod(clazz, "ddd");
+        assertFalse(introspector.requiresTransactionCommitment(clazz, method));
+
+        clazz = CommitClassTxBehavior.class;
+        method = ReflectionUtil.getDeclaredMethod(clazz, "aaa");
+        assertTrue(introspector.requiresTransactionCommitment(clazz, method));
+        method = ReflectionUtil.getDeclaredMethod(clazz, "bbb");
+        assertTrue(introspector.requiresTransactionCommitment(clazz, method));
+        method = ReflectionUtil.getDeclaredMethod(clazz, "ccc");
+        assertFalse(introspector.requiresTransactionCommitment(clazz, method));
+        method = ReflectionUtil.getDeclaredMethod(clazz, "ddd");
+        assertFalse(introspector.requiresTransactionCommitment(clazz, method));
+    }
+
+    public void testGetPrerequisiteExpressions() {
+        Class<?> clazz = Aaa.class;
+        Method method = ReflectionUtil.getDeclaredMethod(clazz, "aaa");
+        List<String> expressions = introspector.getPrerequisiteExpressions(
+                clazz, method);
+        assertTrue(expressions.isEmpty());
+
+        clazz = Bbb.class;
+        method = ReflectionUtil.getDeclaredMethod(clazz, "aaa");
+        expressions = introspector.getPrerequisiteExpressions(clazz, method);
+        assertEquals(2, expressions.size());
+        assertEquals("true", expressions.get(0));
+        assertEquals("false", expressions.get(1));
+    }
+
     public static class Hoge {
         @BeforeClass
         public static void aaa() {
@@ -130,4 +192,70 @@ public class AnnotationTestIntrospectorTest extends TestCase {
         public void after() {
         }
     }
+
+    public static class MethodTxBehavior {
+        public void aaa() {
+        }
+
+        @TxBehavior(TxBehaviorType.COMMIT)
+        public void bbb() {
+        }
+
+        @TxBehavior(TxBehaviorType.ROLLBACK)
+        public void ccc() {
+        }
+
+        @TxBehavior(TxBehaviorType.NONE)
+        public void ddd() {
+        }
+    }
+
+    @TxBehavior(TxBehaviorType.NONE)
+    public static class NoneClassTxBehavior {
+        public void aaa() {
+        }
+
+        @TxBehavior(TxBehaviorType.COMMIT)
+        public void bbb() {
+        }
+
+        @TxBehavior(TxBehaviorType.ROLLBACK)
+        public void ccc() {
+        }
+
+        @TxBehavior(TxBehaviorType.NONE)
+        public void ddd() {
+        }
+    }
+
+    @TxBehavior(TxBehaviorType.COMMIT)
+    public static class CommitClassTxBehavior {
+        public void aaa() {
+        }
+
+        @TxBehavior(TxBehaviorType.COMMIT)
+        public void bbb() {
+        }
+
+        @TxBehavior(TxBehaviorType.ROLLBACK)
+        public void ccc() {
+        }
+
+        @TxBehavior(TxBehaviorType.NONE)
+        public void ddd() {
+        }
+    }
+
+    public static class Aaa {
+        public void aaa() {
+        }
+    }
+
+    @Prerequisite("true")
+    public static class Bbb {
+        @Prerequisite("false")
+        public void aaa() {
+        }
+    }
+
 }

@@ -40,8 +40,6 @@ import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 import org.seasar.framework.container.impl.S2ContainerImpl;
 import org.seasar.framework.env.Env;
 import org.seasar.framework.exception.NoSuchMethodRuntimeException;
-import org.seasar.framework.unit.annotation.Prerequisite;
-import org.seasar.framework.unit.annotation.TxBehavior;
 import org.seasar.framework.util.DisposableUtil;
 import org.seasar.framework.util.OgnlUtil;
 import org.seasar.framework.util.ResourceUtil;
@@ -79,8 +77,6 @@ public class S2TestMethodRunner {
 
     protected InternalTestContext testContext;
 
-    protected boolean commitRequired;
-
     public S2TestMethodRunner(final Object test, final Method method,
             final RunNotifier notifier, final Description description,
             final S2TestIntrospector introspector) {
@@ -116,26 +112,21 @@ public class S2TestMethodRunner {
     }
 
     protected boolean isFulfilled() {
-        final Prerequisite classReq = testClass
-                .getAnnotation(Prerequisite.class);
-        final boolean classFulfilled = classReq == null ? true
-                : isFulfilled(classReq.value());
-        if (!classFulfilled) {
-            return false;
+        final List<String> expressions = introspector
+                .getPrerequisiteExpressions(testClass, method);
+        for (final String expression : expressions) {
+            final Object exp = OgnlUtil.parseExpression(expression);
+            final Map<String, Object> ctx = CollectionsUtil.newHashMap();
+            ctx.put("ENV", Env.getValue());
+            Object result = OgnlUtil.getValue(exp, ctx, test);
+            if (!(result instanceof Boolean)) {
+                return false;
+            }
+            if (!Boolean.class.cast(result)) {
+                return false;
+            }
         }
-        final Prerequisite methodReq = method.getAnnotation(Prerequisite.class);
-        return methodReq == null ? true : isFulfilled(methodReq.value());
-    }
-
-    protected boolean isFulfilled(final String expression) {
-        final Object exp = OgnlUtil.parseExpression(expression);
-        final Map<String, Object> ctx = CollectionsUtil.newHashMap();
-        ctx.put("ENV", Env.getValue());
-        Object result = OgnlUtil.getValue(exp, ctx, test);
-        if (result instanceof Boolean) {
-            return Boolean.class.cast(result);
-        }
-        return false;
+        return true;
     }
 
     protected void runWithTimeout(final long timeout) {
@@ -271,28 +262,28 @@ public class S2TestMethodRunner {
         }
     }
 
-    protected void runEachBefore() throws Throwable {
+    protected void runEachBefore() throws FailedBefore {
         try {
             final Method eachBefore = introspector.getEachBeforeMethod(
                     testClass, method);
             if (eachBefore == null) {
                 return;
             }
-            invokeNoException(eachBefore);
+            invokeMethod(eachBefore);
         } catch (final Throwable e) {
             addFailure(e);
             throw new FailedBefore();
         }
     }
 
-    protected void runEachAfter() throws Throwable {
+    protected void runEachAfter() {
         try {
             final Method eachAfter = introspector.getEachAfterMethod(testClass,
                     method);
             if (eachAfter == null) {
                 return;
             }
-            invokeNoException(eachAfter);
+            invokeMethod(eachAfter);
         } catch (final Throwable e) {
             addFailure(e);
         }
@@ -367,12 +358,13 @@ public class S2TestMethodRunner {
         return StringUtil.replace(name, "_", "");
     }
 
-    protected void executeTestMethod() {
+    protected void executeTestMethod() throws Throwable {
         try {
             executeMethodBody();
-            if (expectsException())
+            if (expectsException()) {
                 addFailure(new AssertionError("Expected exception: "
                         + expectedException().getName()));
+            }
         } catch (final InvocationTargetException e) {
             final Throwable actual = e.getTargetException();
             if (!expectsException()) {
@@ -383,14 +375,12 @@ public class S2TestMethodRunner {
                         + actual.getClass().getName() + ">";
                 addFailure(new Exception(message, actual));
             }
-        } catch (final Throwable e) {
-            addFailure(e);
         }
     }
 
     protected void executeMethodBody() throws Throwable {
         TransactionManager tm = null;
-        if (needsTransaction()) {
+        if (introspector.needsTransaction(testClass, method)) {
             try {
                 tm = testContext.getComponent(TransactionManager.class);
                 tm.begin();
@@ -403,35 +393,14 @@ public class S2TestMethodRunner {
             method.invoke(test);
         } finally {
             if (tm != null) {
-                if (commitRequired) {
-                    commitRequired = false;
+                if (introspector.requiresTransactionCommitment(testClass,
+                        method)) {
                     tm.commit();
                 } else {
                     tm.rollback();
                 }
             }
         }
-    }
-
-    protected boolean needsTransaction() {
-        final TxBehavior methodTxBehavior = method
-                .getAnnotation(TxBehavior.class);
-        final TxBehavior classTxBehavior = test.getClass().getAnnotation(
-                TxBehavior.class);
-        final TxBehavior txBehavior = methodTxBehavior != null ? methodTxBehavior
-                : classTxBehavior;
-        if (txBehavior != null) {
-            switch (txBehavior.value()) {
-            case COMMIT:
-                commitRequired = true;
-                return true;
-            case ROLLBACK:
-                return true;
-            case NONE:
-                return false;
-            }
-        }
-        return true;
     }
 
     protected boolean expectsException() {
@@ -446,7 +415,7 @@ public class S2TestMethodRunner {
         return introspector.expectedException(method);
     }
 
-    protected void invokeNoException(final Method method) throws Throwable {
+    protected void invokeMethod(final Method method) throws Throwable {
         try {
             ReflectionUtil.invoke(method, test);
         } catch (NoSuchMethodRuntimeException ignore) {

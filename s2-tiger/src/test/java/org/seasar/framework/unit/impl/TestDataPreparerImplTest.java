@@ -51,7 +51,7 @@ public class TestDataPreparerImplTest extends S2TestCase {
 
         @Override
         protected void readXlsWriteDb(String path) {
-            this.path = path;
+            SubTestDataPreparerImpl.path = path;
         }
     }
 }

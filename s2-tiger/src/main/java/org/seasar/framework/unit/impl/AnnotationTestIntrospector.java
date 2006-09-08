@@ -28,6 +28,10 @@ import org.junit.Test;
 import org.junit.Test.None;
 import org.junit.internal.runners.TestIntrospector;
 import org.seasar.framework.unit.S2TestIntrospector;
+import org.seasar.framework.unit.annotation.Prerequisite;
+import org.seasar.framework.unit.annotation.TxBehavior;
+import org.seasar.framework.unit.annotation.TxBehaviorType;
+import org.seasar.framework.util.tiger.CollectionsUtil;
 
 /**
  * @author taedium
@@ -108,4 +112,47 @@ public class AnnotationTestIntrospector implements S2TestIntrospector {
     public boolean isIgnored(final Method method) {
         return method.isAnnotationPresent(Ignore.class);
     }
+
+    public List<String> getPrerequisiteExpressions(Class<?> testClass,
+            Method testMethod) {
+
+        final List<String> expressions = CollectionsUtil.newArrayList();
+        final Prerequisite classPrereq = testClass
+                .getAnnotation(Prerequisite.class);
+        if (classPrereq != null) {
+            expressions.add(classPrereq.value());
+        }
+        final Prerequisite methodPrereq = testMethod
+                .getAnnotation(Prerequisite.class);
+        if (methodPrereq != null) {
+            expressions.add(methodPrereq.value());
+        }
+        return expressions;
+    }
+
+    public boolean needsTransaction(Class<?> testClass, Method testMethod) {
+        final TxBehaviorType type = getTxBehaviorType(testClass, testMethod);
+        return type == null || type != TxBehaviorType.NONE;
+    }
+
+    public boolean requiresTransactionCommitment(Class<?> testClass, Method testMethod) {
+        final TxBehaviorType type = getTxBehaviorType(testClass, testMethod);
+        return type != null && type == TxBehaviorType.COMMIT;
+    }
+
+    public TxBehaviorType getTxBehaviorType(Class<?> testClass,
+            Method testMethod) {
+
+        final TxBehavior methodTxBehavior = testMethod
+                .getAnnotation(TxBehavior.class);
+        final TxBehavior classTxBehavior = testClass
+                .getAnnotation(TxBehavior.class);
+        final TxBehavior behavior = methodTxBehavior != null ? methodTxBehavior
+                : classTxBehavior;
+        if (behavior == null) {
+            return null;
+        }
+        return behavior.value();
+    }
+
 }

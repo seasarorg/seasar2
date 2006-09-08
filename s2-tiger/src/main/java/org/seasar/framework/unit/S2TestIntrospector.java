@@ -32,6 +32,13 @@ public interface S2TestIntrospector {
 
     long getTimeout(Method method);
 
+    List<String> getPrerequisiteExpressions(Class<?> testClass,
+            Method testMethod);
+
+    boolean needsTransaction(Class<?> testClass, Method testMethod);
+
+    boolean requiresTransactionCommitment(Class<?> testClass, Method testMethod);
+
     List<Method> getBeforeClassMethods(Class<?> testClass);
 
     List<Method> getAfterClassMethods(Class<?> testClass);

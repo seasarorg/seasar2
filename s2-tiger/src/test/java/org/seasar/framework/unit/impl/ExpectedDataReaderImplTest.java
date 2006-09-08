@@ -53,7 +53,7 @@ public class ExpectedDataReaderImplTest extends S2TestCase {
 
         @Override
         protected DataSet readXls(final String path) {
-            this.path = path;
+            SubExpectedDataReaderImpl.path = path;
             return null;
         }
     }
