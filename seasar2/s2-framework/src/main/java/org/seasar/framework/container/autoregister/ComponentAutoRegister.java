@@ -26,6 +26,7 @@ import java.util.jar.JarFile;
 import org.seasar.framework.util.ClassTraversal;
 import org.seasar.framework.util.JarFileUtil;
 import org.seasar.framework.util.ResourceUtil;
+import org.seasar.framework.util.URLUtil;
 import org.seasar.framework.util.ClassTraversal.ClassHandler;
 
 /**
@@ -42,7 +43,6 @@ public class ComponentAutoRegister extends AbstractComponentAutoRegister
     public ComponentAutoRegister() {
         strategies.put("file", new FileSystemStrategy());
         strategies.put("jar", new JarFileStrategy());
-        strategies.put("wsjar", new JarFileStrategy());
         strategies.put("zip", new ZipFileStrategy());
     }
 
@@ -54,14 +54,17 @@ public class ComponentAutoRegister extends AbstractComponentAutoRegister
         strategies.put(protocol, strategy);
     }
 
+    public Strategy getStrategy(final String protocol) {
+        return (Strategy) strategies.get(URLUtil.toCanonicalProtocol(protocol));
+    }
+
     public void registerAll() {
         for (int i = 0; i < referenceClasses.size(); ++i) {
             final Class referenceClass = (Class) referenceClasses.get(i);
             final String baseClassPath = ResourceUtil
                     .getResourcePath(referenceClass);
             final URL url = ResourceUtil.getResource(baseClassPath);
-            final Strategy strategy = (Strategy) strategies.get(url
-                    .getProtocol());
+            final Strategy strategy = getStrategy(url.getProtocol());
             strategy.registerAll(referenceClass, url);
         }
     }

@@ -22,6 +22,8 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.factory.BeanDescFactory;
@@ -32,6 +34,11 @@ import org.seasar.framework.exception.IORuntimeException;
  * 
  */
 public class URLUtil {
+
+    protected static final Map CANONICAL_PROTOCOLS = new HashMap();
+    static {
+        CANONICAL_PROTOCOLS.put("wsjar", "jar");
+    }
 
     private URLUtil() {
     }
@@ -74,6 +81,14 @@ public class URLUtil {
         } catch (final UnsupportedEncodingException e) {
             throw new IORuntimeException(e);
         }
+    }
+
+    public static String toCanonicalProtocol(final String protocol) {
+        final String canonicalProtocol = (String) CANONICAL_PROTOCOLS.get(protocol);
+        if (canonicalProtocol != null) {
+            return canonicalProtocol;
+        }
+        return protocol;
     }
 
     /**

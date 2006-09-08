@@ -63,4 +63,12 @@ public class URLUtilTest extends TestCase {
     public void testDecode() throws Exception {
         assertEquals("Program Files", URLUtil.decode("Program+Files", "UTF-8"));
     }
+
+    public void testToCanonicalProtocol() throws Exception {
+        assertEquals("jar", URLUtil.toCanonicalProtocol("wsjar"));
+        assertEquals("jar", URLUtil.toCanonicalProtocol("jar"));
+        assertEquals("zip", URLUtil.toCanonicalProtocol("zip"));
+        assertEquals("file", URLUtil.toCanonicalProtocol("file"));
+    }
+
 }

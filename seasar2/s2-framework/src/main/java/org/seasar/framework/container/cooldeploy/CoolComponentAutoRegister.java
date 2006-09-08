@@ -30,6 +30,7 @@ import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.JarFileUtil;
 import org.seasar.framework.util.ResourceUtil;
 import org.seasar.framework.util.StringUtil;
+import org.seasar.framework.util.URLUtil;
 import org.seasar.framework.util.ClassTraversal.ClassHandler;
 
 /**
@@ -53,7 +54,6 @@ public class CoolComponentAutoRegister implements ClassHandler {
     public CoolComponentAutoRegister() {
         addStrategy("file", new FileSystemStrategy());
         addStrategy("jar", new JarFileStrategy());
-        addStrategy("wsjar", new JarFileStrategy());
         addStrategy("zip", new ZipFileStrategy());
     }
 
@@ -70,7 +70,7 @@ public class CoolComponentAutoRegister implements ClassHandler {
     }
 
     protected Strategy getStrategy(String protocol) {
-        return (Strategy) strategies.get(protocol);
+        return (Strategy) strategies.get(URLUtil.toCanonicalProtocol(protocol));
     }
 
     protected void addStrategy(String protocol, Strategy strategy) {
