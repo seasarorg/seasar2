@@ -13,23 +13,10 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.framework.container.creator;
+package org.seasar.framework.container.cooldeploy.creator.connector;
 
-import org.seasar.framework.container.ComponentCustomizer;
-import org.seasar.framework.convention.NamingConvention;
-
-public class ConnectorCreator extends ComponentCreatorImpl {
-
-    public ConnectorCreator(NamingConvention namingConvention) {
-        super(namingConvention);
-        setNameSuffix(namingConvention.getConnectorSuffix());
-    }
-
-    public ComponentCustomizer getConnectorCustomizer() {
-        return getCustomizer();
-    }
-
-    public void setConnectorCustomizer(ComponentCustomizer customizer) {
-        setCustomizer(customizer);
-    }
+/**
+ * @author koichik
+ */
+public class RpcConnector {
 }
