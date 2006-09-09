@@ -191,10 +191,10 @@ public class S2ContainerFactoryTest extends TestCase {
                 .getParent());
     }
 
-    public void testDispose() throws Exception {
+    public void testDestroy() throws Exception {
         configure("ContainerFactory.dicon");
         assertNotNull("1", S2ContainerFactory.configurationContainer);
-        S2ContainerFactory.dispose();
+        S2ContainerFactory.destroy();
         assertNull("2", S2ContainerFactory.configurationContainer);
     }
 
