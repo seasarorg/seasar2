@@ -118,14 +118,14 @@ public final class S2ContainerFactory {
         }
         DisposableUtil.add(new Disposable() {
             public void dispose() {
-                S2ContainerFactory.dispose();
+                S2ContainerFactory.destroy();
             }
         });
         configuring = false;
         initialized = true;
     }
 
-    public static synchronized void dispose() {
+    public static synchronized void destroy() {
         defaultBuilder = null;
         provider = null;
         if (configurationContainer != null) {

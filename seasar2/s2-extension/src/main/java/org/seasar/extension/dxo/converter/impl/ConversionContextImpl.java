@@ -62,13 +62,13 @@ public class ConversionContextImpl implements ConversionContext {
         }
         DisposableUtil.add(new Disposable() {
             public void dispose() {
-                ConversionContextImpl.dispose();
+                destroy();
             }
         });
         initialized = true;
     }
 
-    public static synchronized void dispose() {
+    public static synchronized void destroy() {
         contextCache.clear();
         initialized = false;
     }
