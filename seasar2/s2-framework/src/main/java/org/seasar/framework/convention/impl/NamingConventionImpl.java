@@ -31,7 +31,6 @@ import org.seasar.framework.util.ArrayUtil;
 import org.seasar.framework.util.ClassLoaderUtil;
 import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.Disposable;
-import org.seasar.framework.util.DisposableUtil;
 import org.seasar.framework.util.JarFileUtil;
 import org.seasar.framework.util.ResourceUtil;
 import org.seasar.framework.util.StringUtil;
@@ -89,7 +88,9 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
 
     public synchronized void initialize() {
         if (!initialized) {
-            DisposableUtil.add(this);
+             for (int i = 0; i < rootPackageNames.length; ++i) {
+                addExistChecker(rootPackageNames[i]);
+            }
             initialized = true;
         }
     }

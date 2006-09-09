@@ -181,6 +181,10 @@ public class NamingConventionImplTest extends TestCase {
                 "AaaDao"));
         assertEquals(BbbDaoImpl.class, convention.findClass(rootPackageName,
                 "dao", "BbbDao"));
+
+        convention.dispose();
+        assertEquals(AaaDao.class, convention.findClass(rootPackageName, "dao",
+                "AaaDao"));
     }
 
     public void testFindClass_performance() throws Exception {
