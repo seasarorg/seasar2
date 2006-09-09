@@ -30,6 +30,7 @@ import org.seasar.framework.util.JarFileUtil;
 import org.seasar.framework.util.ResourceTraversal;
 import org.seasar.framework.util.ResourceUtil;
 import org.seasar.framework.util.StringUtil;
+import org.seasar.framework.util.URLUtil;
 
 /**
  * @author taedium
@@ -49,7 +50,6 @@ public abstract class AbstractResourceAutoDetector implements
     public AbstractResourceAutoDetector() {
         strategies.put("file", new FileSystemStrategy());
         strategies.put("jar", new JarFileStrategy());
-        strategies.put("wsjar", new JarFileStrategy());
         strategies.put("zip", new ZipFileStrategy());
     }
 
@@ -58,7 +58,7 @@ public abstract class AbstractResourceAutoDetector implements
     }
 
     public Strategy getStrategy(final String protocol) {
-        return (Strategy) strategies.get(protocol);
+        return (Strategy) strategies.get(URLUtil.toCanonicalProtocol(protocol));
     }
 
     public void addTargetDirPath(final String targetDirPath) {
