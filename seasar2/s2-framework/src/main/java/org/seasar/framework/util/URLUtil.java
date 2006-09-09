@@ -15,9 +15,12 @@
  */
 package org.seasar.framework.util;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLDecoder;
@@ -28,6 +31,7 @@ import java.util.Map;
 import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.factory.BeanDescFactory;
 import org.seasar.framework.exception.IORuntimeException;
+import org.seasar.framework.exception.SRuntimeException;
 
 /**
  * @author higa
@@ -84,11 +88,21 @@ public class URLUtil {
     }
 
     public static String toCanonicalProtocol(final String protocol) {
-        final String canonicalProtocol = (String) CANONICAL_PROTOCOLS.get(protocol);
+        final String canonicalProtocol = (String) CANONICAL_PROTOCOLS
+                .get(protocol);
         if (canonicalProtocol != null) {
             return canonicalProtocol;
         }
         return protocol;
+    }
+
+    public static File toFile(final URL fileUrl) {
+        try {
+            final URI uri = new URI(fileUrl.toExternalForm());
+            return new File(uri);
+        } catch (final URISyntaxException e) {
+            throw new SRuntimeException("ESSR0017", new Object[] { e }, e);
+        }
     }
 
     /**

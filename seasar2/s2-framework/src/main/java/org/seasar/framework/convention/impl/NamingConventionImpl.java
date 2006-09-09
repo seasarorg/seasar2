@@ -15,18 +15,27 @@
  */
 package org.seasar.framework.convention.impl;
 
+import java.io.File;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.jar.JarFile;
 
 import org.seasar.framework.convention.NamingConvention;
 import org.seasar.framework.exception.EmptyRuntimeException;
 import org.seasar.framework.util.ArrayUtil;
+import org.seasar.framework.util.ClassLoaderUtil;
 import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.Disposable;
 import org.seasar.framework.util.DisposableUtil;
+import org.seasar.framework.util.JarFileUtil;
 import org.seasar.framework.util.ResourceUtil;
 import org.seasar.framework.util.StringUtil;
+import org.seasar.framework.util.URLUtil;
 
 /**
  * @author higa
@@ -74,7 +83,9 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
 
     private String[] rootPackageNames = new String[0];
 
-    private Map cache = Collections.synchronizedMap(new HashMap());
+    private Map existCheckerArrays = Collections.synchronizedMap(new HashMap());
+
+    private Map classCache = Collections.synchronizedMap(new HashMap());
 
     public synchronized void initialize() {
         if (!initialized) {
@@ -84,7 +95,8 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
     }
 
     public synchronized void dispose() {
-        cache.clear();
+        existCheckerArrays.clear();
+        classCache.clear();
         initialized = false;
     }
 
@@ -276,6 +288,7 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
     public void addRootPackageName(String rootPackageName) {
         rootPackageNames = (String[]) ArrayUtil.add(rootPackageNames,
                 rootPackageName);
+        addExistChecker(rootPackageName);
     }
 
     public String fromSuffixToPackageName(String suffix) {
@@ -392,25 +405,24 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
         String lastClassName = ClassUtil.concatName(middlePackageName,
                 partOfClassName);
         String className = ClassUtil.concatName(rootPackageName, lastClassName);
-        Class clazz = (Class) cache.get(className);
+        Class clazz = (Class) classCache.get(className);
         if (clazz != null && clazz != NamingConventionImpl.class) {
             return clazz;
         }
-        if (ResourceUtil.isExist(ClassUtil.getResourcePath(className))) {
+        if (isExist(rootPackageName, lastClassName)) {
             clazz = ClassUtil.forName(className);
             if (clazz.isInterface()) {
                 String lastImplClassName = toImplementationClassName(lastClassName);
-                String implClassName = ClassUtil.concatName(rootPackageName,
-                        lastImplClassName);
-                if (ResourceUtil.isExist(ClassUtil
-                        .getResourcePath(implClassName))) {
+                if (isExist(rootPackageName, lastImplClassName)) {
+                    String implClassName = ClassUtil.concatName(
+                            rootPackageName, lastImplClassName);
                     clazz = ClassUtil.forName(implClassName);
                 }
             }
-            cache.put(className, clazz);
+            classCache.put(className, clazz);
             return clazz;
         }
-        cache.put(className, NamingConventionImpl.class);
+        classCache.put(className, NamingConventionImpl.class);
         return null;
     }
 
@@ -543,6 +555,81 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
             }
         }
         return false;
+    }
+
+    protected boolean isExist(final String rootPackageName,
+            final String lastClassName) {
+        final ExistChecker[] checkerArray = getExistCheckerArray(rootPackageName);
+        for (int i = 0; i < checkerArray.length; ++i) {
+            if (checkerArray[i].isExist(lastClassName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    protected ExistChecker[] getExistCheckerArray(final String rootPackageName) {
+        return (ExistChecker[]) existCheckerArrays.get(rootPackageName);
+    }
+
+    protected void addExistChecker(final String rootPackageName) {
+        ExistChecker[] checkerArray = createExistCheckerArray(rootPackageName);
+        existCheckerArrays.put(rootPackageName, checkerArray);
+    }
+
+    protected ExistChecker[] createExistCheckerArray(
+            final String rootPackageName) {
+        if (StringUtil.isEmpty(rootPackageName)) {
+            return new ExistChecker[0];
+        }
+        final String s = rootPackageName.replace('.', '/');
+        final List list = new ArrayList();
+        for (final Iterator it = ClassLoaderUtil.getResources(this.getClass(),
+                s); it.hasNext();) {
+            final URL url = (URL) it.next();
+            if (url.getProtocol().equals("file")) {
+                list.add(new FileExistChecker(url));
+            } else {
+                list.add(new JarExistChecker(url, rootPackageName));
+            }
+        }
+        return (ExistChecker[]) list.toArray(new ExistChecker[list.size()]);
+    }
+
+    protected static String getPathName(final String lastClassName) {
+        return lastClassName.replace('.', '/') + ".class";
+    }
+
+    protected static interface ExistChecker {
+        boolean isExist(String lastClassName);
+    }
+
+    protected static class FileExistChecker implements ExistChecker {
+        private File rootFile;
+
+        protected FileExistChecker(final URL rootUrl) {
+            rootFile = URLUtil.toFile(rootUrl);
+        }
+
+        public boolean isExist(final String lastClassName) {
+            final File file = new File(rootFile, getPathName(lastClassName));
+            return file.exists();
+        }
+    }
+
+    protected static class JarExistChecker implements ExistChecker {
+        private JarFile jarFile;
+
+        private String rootPath;
+
+        protected JarExistChecker(final URL jarUrl, final String rootPackageName) {
+            jarFile = JarFileUtil.create(JarFileUtil.toJarFilePath(jarUrl));
+            this.rootPath = rootPackageName.replace('.', '/') + "/";
+        }
+
+        public boolean isExist(final String lastClassName) {
+            return jarFile.getEntry(rootPath + getPathName(lastClassName)) != null;
+        }
     }
 
 }

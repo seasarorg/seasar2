@@ -15,8 +15,11 @@
  */
 package org.seasar.framework.convention.impl;
 
+import junit.framework.Test;
 import junit.framework.TestCase;
 
+import org.seasar.framework.convention.impl.NamingConventionImpl.ExistChecker;
+import org.seasar.framework.convention.impl.NamingConventionImpl.FileExistChecker;
 import org.seasar.framework.convention.impl.dao.AaaDao;
 import org.seasar.framework.convention.impl.dao.BbbDao;
 import org.seasar.framework.convention.impl.dao.impl.BbbDaoImpl;
@@ -38,6 +41,13 @@ public class NamingConventionImplTest extends TestCase {
         convention = new NamingConventionImpl();
         rootPackageName = ClassUtil.getPackageName(getClass());
         convention.addRootPackageName(rootPackageName);
+    }
+
+    public void testAddAndGetRootPackageName() throws Exception {
+        ExistChecker[] checkers = convention
+                .getExistCheckerArray(rootPackageName);
+        assertNotNull(checkers);
+        assertEquals(FileExistChecker.class, checkers[0].getClass());
     }
 
     public void testFromSuffixToPackageName() throws Exception {
@@ -255,9 +265,9 @@ public class NamingConventionImplTest extends TestCase {
 
     public void testIsExist_jar() throws Exception {
         NamingConventionImpl nc = new NamingConventionImpl();
-        nc.addRootPackageName("java.lang");
-        assertEquals(String.class, nc.findClass("java.lang", "", "String"));
-        assertNull(nc.findClass("java.lang", "", "xxx"));
+        nc.addRootPackageName("junit.framework");
+        assertEquals(Test.class, nc.findClass("junit.framework", "", "Test"));
+        assertNull(nc.findClass("junit.framework", "", "xxx"));
     }
 
 }
