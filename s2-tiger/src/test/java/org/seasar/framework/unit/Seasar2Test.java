@@ -735,6 +735,56 @@ public class Seasar2Test extends S2TestCase {
         assertEquals(0, count);
     }
 
+    @RunWith(Seasar2.class)
+    public static class CustomizeS2TestIntrospectorTest {
+
+        public static void setUpClass() {
+            log += "a";
+        }
+
+        public static void tearDownClass() {
+            log += "b";
+        }
+
+        public void setUp() {
+            log += "c";
+        }
+
+        public void tearDown() {
+            log += "d";
+        }
+
+        public void setUpAaa() {
+            log += "e";
+        }
+
+        public void aaa() {
+            log += "f";
+        }
+
+        public void tearDownAaa() {
+            log += "g";
+        }
+
+        public void bbb() {
+            log += "h";
+        }
+
+    }
+
+    public void testCustomizeS2TestIntrospectorTest() {
+        configure("S2TestIntrospector.dicon");
+        JUnitCore core = new JUnitCore();
+        Result result = core.run(CustomizeS2TestIntrospectorTest.class);
+        printFailures(result.getFailures());
+        assertTrue(result.wasSuccessful());
+        assertEquals(10, log.length());
+        assertTrue(log.startsWith("a"));
+        assertTrue(log.endsWith("b"));
+        assertTrue(log.contains("cefgd"));
+        assertTrue(log.contains("chd"));
+    }
+
     public void configure(String name) {
         String path = getClass().getName().replace('.', '/') + "." + name;
         Seasar2.configure(path);

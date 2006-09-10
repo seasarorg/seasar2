@@ -239,12 +239,12 @@ public class S2TestClassMethodsRunner extends Runner implements Filterable,
             setTestMethodRunnerClass(S2TestMethodRunner.class);
         }
 
-        @Binding(bindingType = BindingType.MUST)
+        @Binding(bindingType = BindingType.MAY)
         public void setTestIntrospector(final S2TestIntrospector introspector) {
             this.introspector = introspector;
         }
 
-        @Binding(bindingType = BindingType.MUST)
+        @Binding(bindingType = BindingType.MAY)
         public void setTestMethodRunnerClass(
                 final Class<? extends S2TestMethodRunner> methodRunnerClass) {
 

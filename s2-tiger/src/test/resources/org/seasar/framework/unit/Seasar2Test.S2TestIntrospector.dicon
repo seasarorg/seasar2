@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN"
+	"http://www.seasar.org/dtd/components24.dtd">
+<components>
+	<component class="org.seasar.framework.unit.S2TestClassMethodsRunner$DefaultProvider"/>
+	<component class="org.seasar.framework.unit.impl.ConventionTestIntrospector">
+		<property name="beforeClassMethodName">"setUpClass"</property>
+		<property name="afterClassMethodName">"tearDownClass"</property>
+		<property name="beforeMethodName">"setUp"</property>
+		<property name="afterMethodName">"tearDown"</property>
+	</component>
+</components>

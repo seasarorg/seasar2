@@ -25,8 +25,6 @@ import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.Parameterized.Parameters;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.factory.S2ContainerFactory;
-import org.seasar.framework.util.Disposable;
-import org.seasar.framework.util.DisposableUtil;
 import org.seasar.framework.util.ResourceUtil;
 
 /**
@@ -87,16 +85,10 @@ public class Seasar2 extends Runner {
             }
             configurator.configure(configurationContainer);
         }
-
-        DisposableUtil.add(new Disposable() {
-            public void dispose() {
-                Seasar2.dispose();
-                S2TestClassMethodsRunner.dispose();
-            }
-        });
     }
 
     public static void dispose() {
+        S2TestClassMethodsRunner.dispose();
         provider = null;
         if (configurationContainer != null) {
             configurationContainer.destroy();
@@ -109,7 +101,11 @@ public class Seasar2 extends Runner {
     }
 
     public void run(RunNotifier notifier) {
-        delegate.run(notifier);
+        try {
+            delegate.run(notifier);
+        } finally {
+            dispose();
+        }
     }
 
     public interface Configurator {

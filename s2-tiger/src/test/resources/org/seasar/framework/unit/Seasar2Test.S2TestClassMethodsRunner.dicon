@@ -5,5 +5,4 @@
 	<component class="org.seasar.framework.unit.S2TestClassMethodsRunner$DefaultProvider">
 		<property name="testMethodRunnerClass">@org.seasar.framework.unit.Seasar2Test$UnfulfilledTestMethodRunner@class</property>
 	</component>
-	<component class="org.seasar.framework.unit.impl.ConventionTestIntrospector"/>
 </components>

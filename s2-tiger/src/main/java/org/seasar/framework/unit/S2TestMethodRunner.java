@@ -234,8 +234,8 @@ public class S2TestMethodRunner {
 
     protected void runBefores() throws FailedBefore {
         try {
-            final List<Method> befores = introspector.getBeforeMethods(test
-                    .getClass());
+            final List<Method> befores = introspector
+                    .getBeforeMethods(testClass);
             for (final Method before : befores) {
                 before.invoke(test);
             }
@@ -249,8 +249,7 @@ public class S2TestMethodRunner {
     }
 
     protected void runAfters() {
-        final List<Method> afters = introspector.getAfterMethods(test
-                .getClass());
+        final List<Method> afters = introspector.getAfterMethods(testClass);
         for (Method after : afters) {
             try {
                 after.invoke(test);
