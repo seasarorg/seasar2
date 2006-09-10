@@ -50,7 +50,7 @@ public class SqlTimestampConverter extends AbstractConverter {
         if (source instanceof String) {
             final DateFormat dateFormat = (DateFormat) context
                     .getContextInfo(DxoConstants.TIMESTAMP_PATTERN);
-            if (dateFormat == null) {
+            if (dateFormat != null) {
                 return toTimestamp((String) source, dateFormat);
             }
         }

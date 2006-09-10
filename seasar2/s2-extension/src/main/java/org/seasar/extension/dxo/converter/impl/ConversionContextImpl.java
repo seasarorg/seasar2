@@ -130,9 +130,9 @@ public class ConversionContextImpl implements ConversionContext {
         final Map contextInfo = new HashMap();
         contextInfo.put(DxoConstants.DATE_PATTERN, toDateFormat(reader
                 .getDatePattern(dxoClass, method)));
-        contextInfo.put(DxoConstants.DATE_PATTERN, toDateFormat(reader
+        contextInfo.put(DxoConstants.TIME_PATTERN, toDateFormat(reader
                 .getTimePattern(dxoClass, method)));
-        contextInfo.put(DxoConstants.DATE_PATTERN, toDateFormat(reader
+        contextInfo.put(DxoConstants.TIMESTAMP_PATTERN, toDateFormat(reader
                 .getTimestampPattern(dxoClass, method)));
         final String conversionRule = reader
                 .getConversionRule(dxoClass, method);

@@ -43,19 +43,21 @@ public class ConverterFactoryImpl implements ConverterFactory {
             { BigDecimal.class, BigDecimalConverter.class },
             { BigInteger.class, BigIntegerConverter.class },
             { Character.class, CharacterConverter.class },
-            { char[].class, CharArrayConverter.class },
             { String.class, StringConverter.class },
+            { Date.class, DateConverter.class },
             { java.sql.Date.class, SqlDateConverter.class },
             { java.sql.Time.class, SqlTimeConverter.class },
             { java.sql.Timestamp.class, SqlTimestampConverter.class },
-            { Date.class, DateConverter.class },
             { Calendar.class, CalendarConverter.class },
             { Object[].class, ArrayConverter.class },
+            { char[].class, CharArrayConverter.class },
             { List.class, ListConverter.class },
             { Set.class, SetConverter.class }, };
 
     public Converter getConverter(final Class sourceClass, final Class destClass) {
-        final Class keyClass = ClassUtil.getWrapperClassIfPrimitive(destClass);
+        final Class keyClass = ClassUtil
+                .getWrapperClassIfPrimitive(destClass == Object.class ? sourceClass
+                        : destClass);
         for (int i = 0; i < CONVERTERS.length; ++i) {
             if (keyClass.isAssignableFrom(CONVERTERS[i][0])) {
                 return (Converter) ClassUtil.newInstance(CONVERTERS[i][1]);

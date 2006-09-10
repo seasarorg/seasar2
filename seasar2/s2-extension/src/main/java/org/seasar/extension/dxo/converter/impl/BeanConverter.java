@@ -15,6 +15,12 @@
  */
 package org.seasar.extension.dxo.converter.impl;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 import org.seasar.extension.dxo.converter.ConversionContext;
 import org.seasar.extension.dxo.converter.Converter;
 import org.seasar.framework.beans.BeanDesc;
@@ -85,6 +91,11 @@ public class BeanConverter extends AbstractConverter {
         final Object sourcePropertyValue = getSourceValue(sourceBeanDesc,
                 source, destPropertyName, context);
         if (sourcePropertyValue == PROPERTY_NOT_FOUND) {
+            final Object dateValue = getDateValue(sourceBeanDesc, source,
+                    destPropertyDesc);
+            if (dateValue != null) {
+                destPropertyDesc.setValue(dest, dateValue);
+            }
             return;
         }
         if (sourcePropertyValue == null) {
@@ -153,6 +164,108 @@ public class BeanConverter extends AbstractConverter {
         }
         final String className = clazz.getName();
         return className.startsWith(JAVA) || className.startsWith(JAVAX);
+    }
+
+    protected Object getDateValue(final BeanDesc sourceBeanDesc,
+            final Object source, final PropertyDesc destPropertyDesc) {
+        final String destPropertyName = destPropertyDesc.getPropertyName();
+        final Class destPropertyType = destPropertyDesc.getPropertyType();
+        if (destPropertyType == String.class) {
+            return getDateValueAsString(sourceBeanDesc, source,
+                    destPropertyName);
+        }
+        if (destPropertyType.isAssignableFrom(Date.class)) {
+            return getDateValueAsDate(sourceBeanDesc, source, destPropertyName);
+        }
+        if (destPropertyType.isAssignableFrom(java.sql.Date.class)) {
+            final Date dateValue = getDateValueAsDate(sourceBeanDesc, source,
+                    destPropertyName);
+            return new java.sql.Date(dateValue.getTime());
+        }
+        if (destPropertyType.isAssignableFrom(java.sql.Time.class)) {
+            final Date dateValue = getDateValueAsDate(sourceBeanDesc, source,
+                    destPropertyName);
+            return new java.sql.Time(dateValue.getTime());
+        }
+        if (destPropertyType.isAssignableFrom(java.sql.Timestamp.class)) {
+            final Date dateValue = getDateValueAsDate(sourceBeanDesc, source,
+                    destPropertyName);
+            return new java.sql.Timestamp(dateValue.getTime());
+        }
+        if (destPropertyType.isAssignableFrom(Calendar.class)) {
+            final Date dateValue = getDateValueAsDate(sourceBeanDesc, source,
+                    destPropertyName);
+            final Calendar calendar = Calendar.getInstance();
+            calendar.setTime(dateValue);
+            return calendar;
+        }
+        return null;
+    }
+
+    protected String getDateValueAsString(final BeanDesc sourceBeanDesc,
+            final Object source, final String destPropertyName) {
+        final int pos = destPropertyName.lastIndexOf('_');
+        if (pos == -1 || pos >= destPropertyName.length() - 1) {
+            return null;
+        }
+
+        final String sourcePropertyName = destPropertyName.substring(0, pos);
+        if (!sourceBeanDesc.hasPropertyDesc(sourcePropertyName)) {
+            return null;
+        }
+
+        final PropertyDesc sourcePropertyDesc = sourceBeanDesc
+                .getPropertyDesc(sourcePropertyName);
+        final Class sourcePropertyType = sourcePropertyDesc.getPropertyType();
+        if (!Date.class.isAssignableFrom(sourcePropertyType)
+                && !Calendar.class.isAssignableFrom(sourcePropertyType)) {
+            return null;
+        }
+
+        final Object sourceValue = sourcePropertyDesc.getValue(source);
+        if (sourceValue == null) {
+            return null;
+        }
+
+        final String format = destPropertyName.substring(pos + 1);
+        final DateFormat formatter = new SimpleDateFormat(format);
+        if (sourceValue instanceof Date) {
+            return formatter.format((Date) sourceValue);
+        } else if (sourceValue instanceof Calendar) {
+            final Calendar calendar = (Calendar) sourceValue;
+            return formatter.format(new Date(calendar.getTimeInMillis()));
+        }
+        return null;
+    }
+
+    protected Date getDateValueAsDate(final BeanDesc sourceBeanDesc,
+            final Object source, final String destPropertyName) {
+        final String prefix = destPropertyName + "_";
+        final int starts = prefix.length();
+        final StringBuffer formatBuffer = new StringBuffer();
+        final StringBuffer valueBuffer = new StringBuffer();
+        for (int i = 0; i < sourceBeanDesc.getPropertyDescSize(); ++i) {
+            final PropertyDesc sourcePropertyDesc = sourceBeanDesc
+                    .getPropertyDesc(i);
+            if (sourcePropertyDesc.getPropertyType() != String.class) {
+                continue;
+            }
+            final String sourcePropertyName = sourcePropertyDesc
+                    .getPropertyName();
+            if (!sourcePropertyName.startsWith(prefix)) {
+                continue;
+            }
+            formatBuffer.append(sourcePropertyName.substring(starts));
+            valueBuffer.append(sourcePropertyDesc.getValue(source));
+        }
+        final String format = new String(formatBuffer);
+        final String stringValue = new String(valueBuffer);
+        final DateFormat formatter = new SimpleDateFormat(format);
+        try {
+            return formatter.parse(stringValue);
+        } catch (final ParseException ignore) {
+        }
+        return null;
     }
 
 }

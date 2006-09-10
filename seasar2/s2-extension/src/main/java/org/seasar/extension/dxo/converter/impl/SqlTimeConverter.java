@@ -50,7 +50,7 @@ public class SqlTimeConverter extends AbstractConverter {
         if (source instanceof String) {
             final DateFormat dateFormat = (DateFormat) context
                     .getContextInfo(DxoConstants.TIME_PATTERN);
-            if (dateFormat == null) {
+            if (dateFormat != null) {
                 return toTime((String) source, dateFormat);
             }
         }

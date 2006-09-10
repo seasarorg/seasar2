@@ -50,7 +50,7 @@ public class SqlDateConverter extends AbstractConverter {
         if (source instanceof String) {
             final DateFormat dateFormat = (DateFormat) context
                     .getContextInfo(DxoConstants.DATE_PATTERN);
-            if (dateFormat == null) {
+            if (dateFormat != null) {
                 return toDate((String) source, dateFormat);
             }
         }

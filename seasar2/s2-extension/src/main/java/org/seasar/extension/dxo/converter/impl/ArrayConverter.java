@@ -21,6 +21,7 @@ import java.util.Iterator;
 
 import org.seasar.extension.dxo.converter.ConversionContext;
 import org.seasar.extension.dxo.converter.Converter;
+import org.seasar.extension.dxo.converter.ConverterFactory;
 
 /**
  * @author Satoshi Kimura
@@ -60,10 +61,13 @@ public class ArrayConverter extends AbstractConverter {
             return result;
         }
 
-        final Converter converter = context.getConverterFactory().getConverter(
-                source.getClass().getComponentType(), componentType);
+        final ConverterFactory converterFactory = context.getConverterFactory();
         for (int i = 0; i < length; i++) {
-            result[i] = converter.convert(source[i], componentType, context);
+            final Object sourceElement = source[i];
+            final Converter converter = converterFactory.getConverter(
+                    sourceElement.getClass(), componentType);
+            result[i] = converter
+                    .convert(sourceElement, componentType, context);
         }
         return result;
     }
@@ -77,13 +81,14 @@ public class ArrayConverter extends AbstractConverter {
             return result;
         }
 
+        final ConverterFactory converterFactory = context.getConverterFactory();
         int i = 0;
         for (final Iterator it = source.iterator(); it.hasNext(); ++i) {
-            final Object sourceComponent = it.next();
-            final Converter converter = context.getConverterFactory()
-                    .getConverter(sourceComponent.getClass(), componentType);
-            result[i] = converter.convert(sourceComponent, componentType,
-                    context);
+            final Object sourceElement = it.next();
+            final Converter converter = converterFactory.getConverter(
+                    sourceElement.getClass(), componentType);
+            result[i] = converter
+                    .convert(sourceElement, componentType, context);
         }
         return result;
     }

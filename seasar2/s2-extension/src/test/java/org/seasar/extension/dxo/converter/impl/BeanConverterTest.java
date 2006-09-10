@@ -26,37 +26,29 @@ import org.seasar.extension.dxo.DateDto;
 import org.seasar.extension.dxo.DateStringDto;
 import org.seasar.extension.dxo.DateStringDto2;
 import org.seasar.extension.dxo.DateStringDto3;
-import org.seasar.extension.dxo.annotation.AnnotationReaderFactory;
-import org.seasar.extension.dxo.converter.ConversionContext;
-import org.seasar.extension.dxo.converter.ConverterFactory;
-import org.seasar.extension.unit.S2TestCase;
 
 /**
  * @author Satsohi Kimura
  * @author koichik
  */
-public abstract class BeanConverterTest extends S2TestCase {
+public class BeanConverterTest extends AbstractConverterTest {
 
-    private BeanConverter beanConverter;
+    private BeanConverter converter;
 
-    private ConverterFactory converterFactory;
-
-    private AnnotationReaderFactory annotationReaderFactory;
-
-    protected void setUp() {
-        include("dxo.dicon");
-        beanConverter = new BeanConverter();
+    protected void setUp() throws Exception {
+        super.setUp();
+        converter = new BeanConverter();
     }
 
     public void testConvert1() throws Exception {
-        DateDto dateDto = (DateDto) beanConverter.convert(new DateStringDto(),
+        DateDto dateDto = (DateDto) converter.convert(new DateStringDto(),
                 DateDto.class, createContext("testConvert1", null));
         assertEquals(10 - 1, getMonth(dateDto.getA()));
         assertEquals(30, getDate(dateDto.getA()));
     }
 
     public void testConvert2() throws Exception {
-        DateStringDto dateStringDto = (DateStringDto) beanConverter.convert(
+        DateStringDto dateStringDto = (DateStringDto) converter.convert(
                 new DateDto(), DateStringDto.class, createContext(
                         "testConvert2", null));
         assertEquals("2100", dateStringDto.getA_yyyy());
@@ -67,7 +59,7 @@ public abstract class BeanConverterTest extends S2TestCase {
     public static final String testConvert3_DATE_PATTERN = "yyyy/MM/dd";
 
     public void testConvert3() throws Exception {
-        DateStringDto2 dateStringDto = (DateStringDto2) beanConverter.convert(
+        DateStringDto2 dateStringDto = (DateStringDto2) converter.convert(
                 new DateDto(), DateStringDto2.class, createContext(
                         "testConvert3", null));
         assertEquals("2100/06/22", dateStringDto.getA());
@@ -79,7 +71,7 @@ public abstract class BeanConverterTest extends S2TestCase {
     public static final String testConvert4_DATE_PATTERN = "yyyy/MM/dd";
 
     public void testConvert4() throws Exception {
-        DateDto dateDto = (DateDto) beanConverter.convert(new DateStringDto2(),
+        DateDto dateDto = (DateDto) converter.convert(new DateStringDto2(),
                 DateDto.class, createContext("testConvert4", null));
         assertEquals(2020, getYear(dateDto.getA()));
         assertEquals(3 - 1, getMonth(dateDto.getA()));
@@ -89,7 +81,7 @@ public abstract class BeanConverterTest extends S2TestCase {
     public static final String testConvert5_DATE_PATTERN = "yyyy/MM/dd";
 
     public void testConvert5() throws Exception {
-        DateStringDto3 dateStringDto = (DateStringDto3) beanConverter.convert(
+        DateStringDto3 dateStringDto = (DateStringDto3) converter.convert(
                 new DateDto(), DateStringDto3.class, createContext(
                         "testConvert5", null));
         assertEquals("21000622", dateStringDto.getA_yyyyMMdd());
@@ -98,7 +90,7 @@ public abstract class BeanConverterTest extends S2TestCase {
     public static final String testConvert6_DATE_PATTERN = "yyyy/MM/dd";
 
     public void testConvert6() throws Exception {
-        DateDto dateDto = (DateDto) beanConverter.convert(new DateStringDto3(),
+        DateDto dateDto = (DateDto) converter.convert(new DateStringDto3(),
                 DateDto.class, createContext("testConvert6", null));
         assertEquals(2020, getYear(dateDto.getA()));
         assertEquals(3 - 1, getMonth(dateDto.getA()));
@@ -106,7 +98,7 @@ public abstract class BeanConverterTest extends S2TestCase {
     }
 
     public void testConvert7() throws Exception {
-        CalendarDto calendarDto = (CalendarDto) beanConverter.convert(
+        CalendarDto calendarDto = (CalendarDto) converter.convert(
                 new DateStringDto(), CalendarDto.class, createContext(
                         "testConvert7", null));
         assertEquals(2000, calendarDto.getA().get(Calendar.YEAR));
@@ -115,7 +107,7 @@ public abstract class BeanConverterTest extends S2TestCase {
     }
 
     public void testConvert8() throws Exception {
-        DateStringDto dateStringDto = (DateStringDto) beanConverter.convert(
+        DateStringDto dateStringDto = (DateStringDto) converter.convert(
                 new CalendarDto(), DateStringDto.class, createContext(
                         "testConvert8", null));
         assertEquals("2100", dateStringDto.getA_yyyy());
@@ -134,18 +126,10 @@ public abstract class BeanConverterTest extends S2TestCase {
         employee2.setDept(department);
         department.setEmps(new CircularReferenceEmployee[] { employee,
                 employee2 });
-        CircularReferenceDeptDto crDeptDto = (CircularReferenceDeptDto) beanConverter
+        CircularReferenceDeptDto crDeptDto = (CircularReferenceDeptDto) converter
                 .convert(department, CircularReferenceDeptDto.class,
                         createContext("testConvert9", null));
         System.out.println(crDeptDto);
-    }
-
-    private ConversionContext createContext(String methodName, Object source)
-            throws Exception {
-        return new ConversionContextImpl(BeanConverterTest.class,
-                BeanConverterTest.class.getMethod(methodName, null),
-                converterFactory,
-                annotationReaderFactory.getAnnotationReader(), source);
     }
 
     private int getDate(Date d) {
