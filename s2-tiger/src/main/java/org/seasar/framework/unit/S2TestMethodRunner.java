@@ -77,6 +77,8 @@ public class S2TestMethodRunner {
 
     protected InternalTestContext testContext;
 
+    private List<Field> boundFields = CollectionsUtil.newArrayList();
+
     public S2TestMethodRunner(final Object test, final Method method,
             final RunNotifier notifier, final Description description,
             final S2TestIntrospector introspector) {
@@ -118,7 +120,7 @@ public class S2TestMethodRunner {
             final Object exp = OgnlUtil.parseExpression(expression);
             final Map<String, Object> ctx = CollectionsUtil.newHashMap();
             ctx.put("ENV", Env.getValue());
-            Object result = OgnlUtil.getValue(exp, ctx, test);
+            final Object result = OgnlUtil.getValue(exp, ctx, test);
             if (!(result instanceof Boolean)) {
                 return false;
             }
@@ -164,7 +166,11 @@ public class S2TestMethodRunner {
                     testContext.initContainer();
                     try {
                         bindFields();
-                        executeTestMethod();
+                        try {
+                            executeTestMethod();
+                        } finally {
+                            unbindFields();
+                        }
                     } finally {
                         testContext.destroyContainer();
                     }
@@ -217,7 +223,7 @@ public class S2TestMethodRunner {
                     if (ReflectionUtil.getValue(field, test) != null) {
                         continue;
                     }
-                    ReflectionUtil.setValue(field, test, testContext);
+                    bindField(field, testContext);
                 }
             }
         }
@@ -330,9 +336,14 @@ public class S2TestMethodRunner {
                 component = testContext.getComponent(field.getType());
             }
             if (component != null) {
-                ReflectionUtil.setValue(field, test, component);
+                bindField(field, component);
             }
         }
+    }
+
+    protected void bindField(final Field field, final Object object) {
+        ReflectionUtil.setValue(field, test, object);
+        boundFields.add(field);
     }
 
     protected boolean isAutoBindable(final Field field) {
@@ -419,6 +430,19 @@ public class S2TestMethodRunner {
             ReflectionUtil.invoke(method, test);
         } catch (NoSuchMethodRuntimeException ignore) {
         }
+    }
+
+    protected void unbindFields() {
+        for (final Field field : boundFields) {
+            try {
+                field.set(test, null);
+            } catch (IllegalArgumentException e) {
+                System.err.println(e);
+            } catch (IllegalAccessException e) {
+                System.err.println(e);
+            }
+        }
+        boundFields = null;
     }
 
 }

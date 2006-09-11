@@ -16,6 +16,7 @@
 package org.seasar.framework.unit;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -323,37 +324,51 @@ public class Seasar2Test extends S2TestCase {
 
     @RunWith(Seasar2.class)
     public static class FieldBindingTest {
+
+        private static List<Object> values;
+
         private S2Container container;
 
         private InternalTestContext internalContext;
 
         private TestContext context;
 
-        public void before() {
-            log += (container != null);
-            log += "-";
-            log += (internalContext != null);
-            log += "-";
-            log += (context != null);
-            log += "-";
+        public void beforeAaa() {
+            set();
         }
 
         public void aaa() {
-            log += (container != null);
-            log += "-";
-            log += (internalContext != null);
-            log += "-";
-            log += (context != null);
+            set();
         }
 
+        public void afterAaa() {
+            set();
+        }
+
+        private void set() {
+            values.add(container);
+            values.add(internalContext);
+            values.add(context);
+        }
     }
 
     public void testFieldBindingTest() {
+        FieldBindingTest.values = new ArrayList<Object>();
         JUnitCore core = new JUnitCore();
         Result result = core.run(FieldBindingTest.class);
         printFailures(result.getFailures());
         assertTrue(result.wasSuccessful());
-        assertEquals("false-false-true-true-true-true", log);
+        List<Object> values = FieldBindingTest.values;
+        assertEquals(9, values.size());
+        assertNull(values.get(0));
+        assertNull(values.get(1));
+        assertNotNull(values.get(2));
+        assertNotNull(values.get(3));
+        assertNotNull(values.get(4));
+        assertNotNull(values.get(5));
+        assertNull(values.get(6));
+        assertNull(values.get(7));
+        assertNull(values.get(8));
     }
 
     @RunWith(Seasar2.class)
