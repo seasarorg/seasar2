@@ -85,8 +85,6 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
 
     private Map existCheckerArrays = Collections.synchronizedMap(new HashMap());
 
-    private Map classCache = Collections.synchronizedMap(new HashMap());
-
     public synchronized void initialize() {
         if (!initialized) {
             for (int i = 0; i < rootPackageNames.length; ++i) {
@@ -99,7 +97,6 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
 
     public synchronized void dispose() {
         existCheckerArrays.clear();
-        classCache.clear();
         initialized = false;
     }
 
@@ -408,12 +405,8 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
         String lastClassName = ClassUtil.concatName(middlePackageName,
                 partOfClassName);
         String className = ClassUtil.concatName(rootPackageName, lastClassName);
-        Class clazz = (Class) classCache.get(className);
-        if (clazz != null && clazz != NamingConventionImpl.class) {
-            return clazz;
-        }
         if (isExist(rootPackageName, lastClassName)) {
-            clazz = ClassUtil.forName(className);
+            Class clazz = ClassUtil.forName(className);
             if (clazz.isInterface()) {
                 String lastImplClassName = toImplementationClassName(lastClassName);
                 if (isExist(rootPackageName, lastImplClassName)) {
@@ -422,10 +415,8 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
                     clazz = ClassUtil.forName(implClassName);
                 }
             }
-            classCache.put(className, clazz);
             return clazz;
         }
-        classCache.put(className, NamingConventionImpl.class);
         return null;
     }
 
