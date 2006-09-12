@@ -17,7 +17,7 @@ package org.seasar.framework.container.hotdeploy.creator;
 
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.ComponentCreator;
-import org.seasar.framework.container.creator.ServiceCreator;
+import org.seasar.framework.container.creator.DaoCreator;
 import org.seasar.framework.convention.NamingConvention;
 import org.seasar.framework.util.ClassUtil;
 
@@ -25,29 +25,23 @@ import org.seasar.framework.util.ClassUtil;
  * @author higa
  * 
  */
-public class ServiceOndemandCreatorTest extends OndemandCreatorTestCase {
+public class DaoHotdeployCreatorTest extends HotdeployCreatorTestCase {
 
     protected ComponentCreator newOndemandCreator(NamingConvention convention) {
-        return new ServiceCreator(convention);
+        return new DaoCreator(convention);
     }
 
-    public void testIsTargetByName() throws Exception {
-        String name = "aaa_hogeService";
+    public void testIsTargetByComponentName() throws Exception {
+        String name = "fooDao";
         ComponentDef cd = getComponentDef(name);
-        assertNotNull("1", cd);
-        assertEquals("2", name, cd.getComponentName());
-    }
-
-    public void testIsTargetByName2() throws Exception {
-        String name = "hogeService";
-        ComponentDef cd = getComponentDef(name);
-        assertNotNull("1", cd);
-        assertEquals("2", name, cd.getComponentName());
+        assertNotNull(cd);
+        assertEquals(name, cd.getComponentName());
+        assertTrue(getContainer().hasComponentDef("barDao"));
     }
 
     public void testIsTargetByClass() throws Exception {
         Class clazz = ClassUtil.forName(ClassUtil.getPackageName(getClass())
-                + ".web.aaa.HogeService");
-        assertNotNull("1", getComponent(clazz));
+                + ".dao.FooDao");
+        assertTrue(getContainer().hasComponentDef(clazz));
     }
 }

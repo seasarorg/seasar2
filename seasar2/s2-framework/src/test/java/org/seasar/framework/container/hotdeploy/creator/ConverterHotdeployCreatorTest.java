@@ -13,22 +13,26 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.framework.container.cooldeploy.creator;
+package org.seasar.framework.container.hotdeploy.creator;
 
-import org.seasar.framework.unit.S2FrameworkTestCase;
+import org.seasar.framework.container.ComponentDef;
+import org.seasar.framework.container.ComponentCreator;
+import org.seasar.framework.container.creator.ConverterCreator;
+import org.seasar.framework.convention.NamingConvention;
 
 /**
  * @author shot
  */
-public class ConnectorCoolCreatorTest extends S2FrameworkTestCase {
+public class ConverterHotdeployCreatorTest extends HotdeployCreatorTestCase {
 
-    protected void setUp() {
-        include("ConnectorCoolCreatorTest.dicon");
+    protected ComponentCreator newOndemandCreator(NamingConvention convention) {
+        return new ConverterCreator(convention);
     }
 
     public void testAll() throws Exception {
-        assertTrue(getContainer().hasComponentDef("rpcConnector"));
-        assertFalse(getContainer().hasComponentDef("connector"));
+        String name = "fakeConverter";
+        ComponentDef cd = getComponentDef(name);
+        assertNotNull(cd);
+        assertEquals(name, cd.getComponentName());
     }
-
 }

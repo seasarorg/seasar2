@@ -17,31 +17,23 @@ package org.seasar.framework.container.hotdeploy.creator;
 
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.ComponentCreator;
-import org.seasar.framework.container.creator.DaoCreator;
+import org.seasar.framework.container.creator.ActionCreator;
 import org.seasar.framework.convention.NamingConvention;
-import org.seasar.framework.util.ClassUtil;
 
 /**
  * @author higa
  * 
  */
-public class DaoOndemandCreatorTest extends OndemandCreatorTestCase {
+public class ActionHotdeployCreatorTest extends HotdeployCreatorTestCase {
 
     protected ComponentCreator newOndemandCreator(NamingConvention convention) {
-        return new DaoCreator(convention);
+        return new ActionCreator(convention);
     }
 
-    public void testIsTargetByComponentName() throws Exception {
-        String name = "fooDao";
+    public void testAll() throws Exception {
+        String name = "aaa_hogeAction";
         ComponentDef cd = getComponentDef(name);
         assertNotNull(cd);
         assertEquals(name, cd.getComponentName());
-        assertTrue(getContainer().hasComponentDef("barDao"));
-    }
-
-    public void testIsTargetByClass() throws Exception {
-        Class clazz = ClassUtil.forName(ClassUtil.getPackageName(getClass())
-                + ".dao.FooDao");
-        assertTrue(getContainer().hasComponentDef(clazz));
     }
 }

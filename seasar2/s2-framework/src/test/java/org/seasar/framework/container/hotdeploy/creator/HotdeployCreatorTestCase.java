@@ -27,7 +27,7 @@ import org.seasar.framework.util.ClassUtil;
  * @author Skirnir
  * 
  */
-public abstract class OndemandCreatorTestCase extends S2FrameworkTestCase {
+public abstract class HotdeployCreatorTestCase extends S2FrameworkTestCase {
 
     protected ClassLoader originalLoader;
 

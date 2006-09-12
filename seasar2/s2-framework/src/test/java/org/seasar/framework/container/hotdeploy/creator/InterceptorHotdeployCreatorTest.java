@@ -17,23 +17,22 @@ package org.seasar.framework.container.hotdeploy.creator;
 
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.ComponentCreator;
-import org.seasar.framework.container.creator.DtoCreator;
+import org.seasar.framework.container.creator.InterceptorCreator;
 import org.seasar.framework.convention.NamingConvention;
 
 /**
  * @author higa
  * 
  */
-public class DtoOndemandCreatorTest extends OndemandCreatorTestCase {
+public class InterceptorHotdeployCreatorTest extends HotdeployCreatorTestCase {
 
     protected ComponentCreator newOndemandCreator(NamingConvention convention) {
-        return new DtoCreator(convention);
+        return new InterceptorCreator(convention);
     }
 
     public void testAll() throws Exception {
-        String name = "bbbDto";
+        String name = "nullInterceptor";
         ComponentDef cd = getComponentDef(name);
         assertNotNull(cd);
-        assertEquals(name, cd.getComponentName());
     }
 }

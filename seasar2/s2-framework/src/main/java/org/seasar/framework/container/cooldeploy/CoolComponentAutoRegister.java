@@ -138,14 +138,13 @@ public class CoolComponentAutoRegister implements ClassHandler {
     }
 
     protected interface Strategy {
-
         void registerAll(String path, URL url);
     }
 
     protected class FileSystemStrategy implements Strategy {
 
         public void registerAll(String path, URL url) {
-            File rootDir = getRootDir(path);
+            File rootDir = getRootDir(path, url);
             String[] rootPackageNames = namingConvention.getRootPackageNames();
             for (int i = 0; i < rootPackageNames.length; ++i) {
                 ClassTraversal.forEach(rootDir, rootPackageNames[i],
@@ -153,8 +152,8 @@ public class CoolComponentAutoRegister implements ClassHandler {
             }
         }
 
-        protected File getRootDir(String path) {
-            File file = ResourceUtil.getResourceAsFile(path);
+        protected File getRootDir(String path, URL url) {
+            File file = URLUtil.toFile(url);
             String[] names = StringUtil.split(path, "/");
             for (int i = 0; i < names.length; ++i) {
                 file = file.getParentFile();

@@ -35,6 +35,10 @@ public class ComponentInvokerImpl implements ComponentInvoker {
 
     private boolean ondemand;
 
+    public ComponentInvokerImpl() {
+        super();
+    }
+
     public Object invoke(String componentName, String methodName, Object[] args)
             throws Throwable {
 

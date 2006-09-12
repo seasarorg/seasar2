@@ -15,6 +15,7 @@
  */
 package org.seasar.extension.component.impl;
 
+import org.seasar.extension.component.ComponentInvoker;
 import org.seasar.framework.container.ComponentCreator;
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.hotdeploy.HotdeployBehavior;
@@ -27,35 +28,52 @@ import org.seasar.framework.util.ClassUtil;
  * @author higa
  * 
  */
-public class ComponentInvokerOndemandCreatorTest extends S2FrameworkTestCase {
+public class ComponentInvokerCreatorTest extends S2FrameworkTestCase {
 
     private ClassLoader originalLoader;
 
     private HotdeployBehavior ondemand;
 
-    protected void setUp() {
+    public void testCoolDeploy() throws Exception {
+        ComponentInvokerCreator creator = new ComponentInvokerCreator();
+        ComponentDef cd = creator.createComponentDef(ComponentInvoker.class);
+        assertNotNull(cd);
+        assertEquals(ComponentInvokerImpl.class, cd.getComponentClass());
+        assertEquals("componentInvoker", cd.getComponentName());
+
+        cd = creator.createComponentDef(ComponentInvokerImpl.class);
+        assertNotNull(cd);
+        assertEquals(ComponentInvokerImpl.class, cd.getComponentClass());
+        assertEquals("componentInvoker", cd.getComponentName());
+
+        cd = creator.createComponentDef(getClass());
+        assertNull(cd);
+    }
+
+    public void setUpHotDeploy() throws Exception {
         originalLoader = Thread.currentThread().getContextClassLoader();
         NamingConventionImpl convention = new NamingConventionImpl();
         convention.addRootPackageName(ClassUtil.getPackageName(getClass()));
         ondemand = new HotdeployBehavior();
         ondemand.setNamingConvention(convention);
         ondemand
-                .setCreators(new ComponentCreator[] { new ComponentInvokerOndemandCreator() });
+                .setCreators(new ComponentCreator[] { new ComponentInvokerCreator() });
         S2ContainerBehavior.setProvider(ondemand);
         ondemand.start();
     }
 
-    protected void tearDown() {
+    public void testHotDeploy() throws Exception {
+        String name = "componentInvoker";
+        ComponentDef cd = getComponentDef(name);
+        assertNotNull("1", cd);
+        assertEquals("2", name, cd.getComponentName());
+    }
+
+    public void tearDownHotDeploy() throws Exception {
         ondemand.stop();
         S2ContainerBehavior
                 .setProvider(new S2ContainerBehavior.DefaultProvider());
         Thread.currentThread().setContextClassLoader(originalLoader);
     }
 
-    public void testAll() throws Exception {
-        String name = "componentInvoker";
-        ComponentDef cd = getComponentDef(name);
-        assertNotNull("1", cd);
-        assertEquals("2", name, cd.getComponentName());
-    }
 }

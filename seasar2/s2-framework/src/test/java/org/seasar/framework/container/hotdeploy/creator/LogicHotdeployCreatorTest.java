@@ -29,7 +29,7 @@ import org.seasar.framework.util.ClassUtil;
  * @author higa
  * 
  */
-public class LogicOndemandCreatorTest extends OndemandCreatorTestCase {
+public class LogicHotdeployCreatorTest extends HotdeployCreatorTestCase {
 
     protected ComponentCreator newOndemandCreator(NamingConvention convention) {
         AspectCustomizer aspectCustomizer = new AspectCustomizer();

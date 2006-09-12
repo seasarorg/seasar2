@@ -17,23 +17,23 @@ package org.seasar.framework.container.hotdeploy.creator;
 
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.ComponentCreator;
-import org.seasar.framework.container.creator.ActionCreator;
+import org.seasar.framework.container.creator.PageCreator;
 import org.seasar.framework.convention.NamingConvention;
 
 /**
  * @author higa
  * 
  */
-public class ActionOndemandCreatorTest extends OndemandCreatorTestCase {
+public class PageHotdeployCreatorTest extends HotdeployCreatorTestCase {
 
     protected ComponentCreator newOndemandCreator(NamingConvention convention) {
-        return new ActionCreator(convention);
+        return new PageCreator(convention);
     }
 
     public void testAll() throws Exception {
-        String name = "aaa_hogeAction";
+        String name = "aaa_hogePage";
         ComponentDef cd = getComponentDef(name);
-        assertNotNull(cd);
-        assertEquals(name, cd.getComponentName());
+        assertNotNull("1", cd);
+        assertEquals("2", name, cd.getComponentName());
     }
 }

@@ -28,7 +28,7 @@ import org.seasar.framework.util.ClassUtil;
  * @author higa
  * 
  */
-public class OndemandBehaviorTest extends S2FrameworkTestCase {
+public class HotdeployBehaviorTest extends S2FrameworkTestCase {
 
     private ClassLoader originalLoader;
 

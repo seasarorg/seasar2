@@ -17,9 +17,7 @@ package org.seasar.framework.container.hotdeploy.creator;
 
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.ComponentCreator;
-import org.seasar.framework.container.creator.DxoCreator;
-import org.seasar.framework.container.customizer.AspectCustomizer;
-import org.seasar.framework.container.hotdeploy.creator.interceptor.HelloInterceptor;
+import org.seasar.framework.container.creator.ServiceCreator;
 import org.seasar.framework.convention.NamingConvention;
 import org.seasar.framework.util.ClassUtil;
 
@@ -27,34 +25,29 @@ import org.seasar.framework.util.ClassUtil;
  * @author higa
  * 
  */
-public class DxoOndemandCreatorTest extends OndemandCreatorTestCase {
+public class ServiceHotdeployCreatorTest extends HotdeployCreatorTestCase {
 
     protected ComponentCreator newOndemandCreator(NamingConvention convention) {
-        AspectCustomizer aspectCustomizer = new AspectCustomizer();
-        aspectCustomizer.setInterceptorName("helloInterceptor");
-        DxoCreator creator = new DxoCreator(convention);
-        creator.setDxoCustomizer(aspectCustomizer);
-        return creator;
+        return new ServiceCreator(convention);
     }
 
-    protected void setUp() {
-        register(HelloInterceptor.class, "helloInterceptor");
-        super.setUp();
-    }
-
-    public void testIsTargetByComponentName() throws Exception {
-        String name = "aaa_hogeDxo";
+    public void testIsTargetByName() throws Exception {
+        String name = "aaa_hogeService";
         ComponentDef cd = getComponentDef(name);
         assertNotNull("1", cd);
         assertEquals("2", name, cd.getComponentName());
-        assertTrue("3", getContainer().hasComponentDef("bbbDtoDxo"));
+    }
+
+    public void testIsTargetByName2() throws Exception {
+        String name = "hogeService";
+        ComponentDef cd = getComponentDef(name);
+        assertNotNull("1", cd);
+        assertEquals("2", name, cd.getComponentName());
     }
 
     public void testIsTargetByClass() throws Exception {
-        String packageName = ClassUtil.getPackageName(getClass());
-        Class clazz = ClassUtil.forName(packageName + ".web.aaa.HogeDxo");
-        Class clazz2 = ClassUtil.forName(packageName + ".dxo.BbbDtoDxo");
-        assertTrue("1", getContainer().hasComponentDef(clazz));
-        assertTrue("2", getContainer().hasComponentDef(clazz2));
+        Class clazz = ClassUtil.forName(ClassUtil.getPackageName(getClass())
+                + ".web.aaa.HogeService");
+        assertNotNull("1", getComponent(clazz));
     }
 }

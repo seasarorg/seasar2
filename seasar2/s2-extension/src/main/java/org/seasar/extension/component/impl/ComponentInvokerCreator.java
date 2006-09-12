@@ -20,14 +20,15 @@ import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.PropertyDef;
 import org.seasar.framework.container.impl.ComponentDefImpl;
 import org.seasar.framework.container.impl.PropertyDefImpl;
-import org.seasar.framework.container.ognl.OgnlExpression;
 import org.seasar.framework.util.ClassUtil;
 
 /**
  * @author koichik
  * 
  */
-public class ComponentInvokerOndemandCreator implements ComponentCreator {
+public class ComponentInvokerCreator implements ComponentCreator {
+
+    protected static final String COMPONENT_INVOKER_INTERFACE_NAME = "org.seasar.extension.component.ComponentInvoker";
 
     protected static final String COMPONENT_INVOKER_CLASS_NAME = "org.seasar.extension.component.impl.ComponentInvokerImpl";
 
@@ -38,7 +39,13 @@ public class ComponentInvokerOndemandCreator implements ComponentCreator {
     }
 
     public ComponentDef createComponentDef(final Class clazz) {
-        return null;
+        if (!clazz.getName().equals(COMPONENT_INVOKER_INTERFACE_NAME)
+                && !clazz.getName().equals(COMPONENT_INVOKER_CLASS_NAME)) {
+            return null;
+        }
+        final ComponentDef cd = new ComponentDefImpl(ClassUtil
+                .forName(COMPONENT_INVOKER_CLASS_NAME), componentInvokerName);
+        return cd;
     }
 
     public ComponentDef createComponentDef(final String componentName) {
@@ -47,11 +54,9 @@ public class ComponentInvokerOndemandCreator implements ComponentCreator {
         }
         final ComponentDef cd = new ComponentDefImpl(ClassUtil
                 .forName(COMPONENT_INVOKER_CLASS_NAME), componentInvokerName);
-        final PropertyDef pd = new PropertyDefImpl("ondemand");
-        pd.setExpression(new OgnlExpression("true"));
+        final PropertyDef pd = new PropertyDefImpl("ondemand", Boolean.TRUE);
         cd.addPropertyDef(pd);
-        // container.register(cd);
-        // cd.init();
         return cd;
     }
+
 }

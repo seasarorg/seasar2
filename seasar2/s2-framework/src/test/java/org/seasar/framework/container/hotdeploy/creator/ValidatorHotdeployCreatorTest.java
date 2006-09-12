@@ -17,29 +17,23 @@ package org.seasar.framework.container.hotdeploy.creator;
 
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.ComponentCreator;
-import org.seasar.framework.container.creator.HelperCreator;
+import org.seasar.framework.container.creator.ValidatorCreator;
 import org.seasar.framework.convention.NamingConvention;
-import org.seasar.framework.util.ClassUtil;
 
 /**
  * @author higa
  * 
  */
-public class HelperOndemandCreatorTest extends OndemandCreatorTestCase {
+public class ValidatorHotdeployCreatorTest extends HotdeployCreatorTestCase {
 
     protected ComponentCreator newOndemandCreator(NamingConvention convention) {
-        return new HelperCreator(convention);
+        return new ValidatorCreator(convention);
     }
 
-    public void testIsTargetByName() throws Exception {
-        String name = "dddHelper";
+    public void testAll() throws Exception {
+        String name = "fakeValidator";
         ComponentDef cd = getComponentDef(name);
-        assertNotNull("1", cd);
-        assertEquals("2", name, cd.getComponentName());
-    }
-
-    public void testIsTargetByClass() throws Exception {
-        Class clazz = ClassUtil.forName(rootPackageName + ".helper.DddHelper");
-        assertNotNull("1", getComponent(clazz));
+        assertNotNull(cd);
+        assertEquals(name, cd.getComponentName());
     }
 }

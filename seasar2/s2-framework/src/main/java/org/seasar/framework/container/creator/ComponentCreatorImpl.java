@@ -15,6 +15,8 @@
  */
 package org.seasar.framework.container.creator;
 
+import java.lang.reflect.Modifier;
+
 import org.seasar.framework.container.AutoBindingDef;
 import org.seasar.framework.container.ComponentCreator;
 import org.seasar.framework.container.ComponentCustomizer;
@@ -44,6 +46,10 @@ public class ComponentCreatorImpl implements ComponentCreator {
     public static final String enableInterface_BINDING = "bindingType=may";
 
     private boolean enableInterface = true;
+
+    public static final String enableAbstract_BINDING = "bindingType=may";
+
+    private boolean enableAbstract = true;
 
     private String nameSuffix;
 
@@ -92,6 +98,14 @@ public class ComponentCreatorImpl implements ComponentCreator {
         this.enableInterface = enableInterface;
     }
 
+    public boolean isEnableAbstract() {
+        return enableAbstract;
+    }
+
+    public void setEnableAbstract(boolean enableAbstract) {
+        this.enableAbstract = enableAbstract;
+    }
+
     public String getNameSuffix() {
         return nameSuffix;
     }
@@ -114,8 +128,14 @@ public class ComponentCreatorImpl implements ComponentCreator {
             return null;
         }
         Class targetClass = namingConvention.toCompleteClass(componentClass);
-        if (targetClass.isInterface() && !isEnableInterface()) {
-            return null;
+        if (targetClass.isInterface()) {
+            if (!isEnableInterface()) {
+                return null;
+            }
+        } else if (Modifier.isAbstract(targetClass.getModifiers())) {
+            if (!isEnableAbstract()) {
+                return null;
+            }
         }
         AnnotationHandler handler = AnnotationHandlerFactory
                 .getAnnotationHandler();
