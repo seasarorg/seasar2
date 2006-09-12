@@ -31,13 +31,16 @@ public class ClassLoaderAwareTraceInterceptor extends AbstractInterceptor {
         Object[] args = invocation.getArguments();
         if (args != null && args.length > 0) {
             for (int i = 0; i < args.length; ++i) {
-                buf.append(args[i]);
-                ClassLoader argsClassLoader = args[i].getClass()
-                        .getClassLoader();
-                if (argsClassLoader != null) {
-                    buf.append("<");
-                    buf.append(argsClassLoader.toString());
-                    buf.append(">");
+                Object arg = args[i];
+                buf.append(arg);
+                if (arg != null) {
+                    ClassLoader argsClassLoader = arg.getClass()
+                            .getClassLoader();
+                    if (argsClassLoader != null) {
+                        buf.append("<");
+                        buf.append(argsClassLoader.toString());
+                        buf.append(">");
+                    }
                 }
                 buf.append(", ");
             }
@@ -67,7 +70,7 @@ public class ClassLoaderAwareTraceInterceptor extends AbstractInterceptor {
         logger.debug("END " + buf);
         if (cause != null) {
             throw cause;
-            
+
         }
         return ret;
     }
