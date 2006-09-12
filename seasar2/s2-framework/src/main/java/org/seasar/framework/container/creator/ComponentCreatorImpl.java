@@ -153,7 +153,7 @@ public class ComponentCreatorImpl implements ComponentCreator {
     }
 
     public ComponentDef createComponentDef(String componentName) {
-        if (!isTargetComponentName(nameSuffix)) {
+        if (!isTargetComponentName(componentName)) {
             return null;
         }
         Class componentClass = namingConvention
