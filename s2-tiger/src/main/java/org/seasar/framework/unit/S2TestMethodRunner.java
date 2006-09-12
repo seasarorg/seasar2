@@ -37,12 +37,10 @@ import org.junit.runner.notification.RunNotifier;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.factory.S2ContainerFactory;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
-import org.seasar.framework.container.impl.S2ContainerImpl;
 import org.seasar.framework.env.Env;
 import org.seasar.framework.exception.NoSuchMethodRuntimeException;
 import org.seasar.framework.util.DisposableUtil;
 import org.seasar.framework.util.OgnlUtil;
-import org.seasar.framework.util.ResourceUtil;
 import org.seasar.framework.util.StringUtil;
 import org.seasar.framework.util.tiger.CollectionsUtil;
 import org.seasar.framework.util.tiger.ReflectionUtil;
@@ -194,22 +192,12 @@ public class S2TestMethodRunner {
         originalClassLoader = Thread.currentThread().getContextClassLoader();
         unitClassLoader = new UnitClassLoader(originalClassLoader);
         Thread.currentThread().setContextClassLoader(unitClassLoader);
-        S2Container container;
-        if (ResourceUtil.isExist(S2JUNIT4_PATH)) {
-            container = S2ContainerFactory.create(S2JUNIT4_PATH);
-        } else {
-            container = new S2ContainerImpl();
-        }
+        S2Container container = S2ContainerFactory.create(S2JUNIT4_PATH);
         SingletonS2ContainerFactory.setContainer(container);
-
-        if (container.hasComponentDef(InternalTestContext.class)) {
-            testContext = InternalTestContext.class.cast(container
-                    .getComponent(InternalTestContext.class));
-            testContext.setTestClass(testClass);
-            testContext.setTestMethod(method);
-        } else {
-            return;
-        }
+        testContext = InternalTestContext.class.cast(container
+                .getComponent(InternalTestContext.class));
+        testContext.setTestClass(testClass);
+        testContext.setTestMethod(method);
 
         for (Class clazz = testClass; clazz != Object.class; clazz = clazz
                 .getSuperclass()) {

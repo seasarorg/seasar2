@@ -16,6 +16,7 @@
 			</zipfileset>
 			<zipfileset prefix="s2-tiger/resources" dir="src/test/resources">
 				<include name="jdbc.dicon"/>
+				<include name="s2junit4.dicon"/>
 			</zipfileset>
 		</zip>
 	</target>
