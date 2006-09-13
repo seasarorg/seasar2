@@ -45,6 +45,8 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
 
     private static final char PACKAGE_SEPARATOR = '_';
 
+    private static final String PACKAGE_SEPARATOR_STR = "_";
+
     private boolean initialized;
 
     private String viewRootPath = "/view";
@@ -461,12 +463,16 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
         if (componentName == null) {
             throw new EmptyRuntimeException("componentName");
         }
-        int index = componentName.indexOf(PACKAGE_SEPARATOR);
-        if (index < 0) {
-            return StringUtil.capitalize(componentName);
+        String[] names = StringUtil.split(componentName, PACKAGE_SEPARATOR_STR);
+        StringBuffer buf = new StringBuffer(50);
+        for (int i = 0; i < names.length; ++i) {
+            if (i == names.length - 1) {
+                buf.append(StringUtil.capitalize(names[i]));
+            } else {
+                buf.append(names[i]).append(".");
+            }
         }
-        return componentName.substring(0, index) + "."
-                + StringUtil.capitalize(componentName.substring(index + 1));
+        return buf.toString();
     }
 
     public String fromComponentNameToSuffix(String componentName) {

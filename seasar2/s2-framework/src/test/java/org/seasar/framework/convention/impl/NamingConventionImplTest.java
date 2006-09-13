@@ -25,6 +25,7 @@ import org.seasar.framework.convention.impl.dao.BbbDao;
 import org.seasar.framework.convention.impl.dao.impl.BbbDaoImpl;
 import org.seasar.framework.convention.impl.dao.xxx.CccDao;
 import org.seasar.framework.convention.impl.web.add.DddPage;
+import org.seasar.framework.convention.impl.web.add.xxx.AddXxxPage;
 import org.seasar.framework.util.ClassUtil;
 
 /**
@@ -133,6 +134,8 @@ public class NamingConventionImplTest extends TestCase {
                 .fromComponentNameToPartOfClassName("aaaLogic"));
         assertEquals("xxx.AaaLogic", convention
                 .fromComponentNameToPartOfClassName("xxx_aaaLogic"));
+        assertEquals("xxx.yyy.AaaLogic", convention
+                .fromComponentNameToPartOfClassName("xxx_yyy_aaaLogic"));
     }
 
     public void testToImplementationClassName() throws Exception {
@@ -164,6 +167,8 @@ public class NamingConventionImplTest extends TestCase {
                 .fromComponentNameToClass("xxx_cccDao"));
         assertEquals(DddPage.class, convention
                 .fromComponentNameToClass("add_dddPage"));
+        assertEquals(AddXxxPage.class, convention
+                .fromComponentNameToClass("add_xxx_addXxxPage"));
     }
 
     public void testFromComponentNameToClass_performance() throws Exception {
