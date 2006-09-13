@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.3//EN"
+	"http://www.seasar.org/dtd/components23.dtd">
+<components>
+	<include path="aop.dicon"/>
+
+	<component name="list" class="java.util.ArrayList"/>
+
+	<component class="java.lang.Runnable">
+		<aspect>
+			<component
+				class="org.seasar.framework.aop.interceptors.InterceptorAdapter">
+				<initMethod name="add"><arg>"prototypeInterceptor"</arg></initMethod>
+			</component>
+		</aspect>
+	</component>
+	<component name="prototypeInterceptor" instance="prototype"
+		class="org.seasar.framework.aop.interceptors.InterceptorAdapterTest$PrototypeInterceptor">
+	</component>
+</components>
