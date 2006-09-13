@@ -15,7 +15,9 @@
  */
 package org.seasar.framework.aop.interceptors;
 
+import java.util.Arrays;
 import java.util.Date;
+import java.util.LinkedHashSet;
 
 import junit.framework.TestCase;
 
@@ -53,6 +55,16 @@ public class TraceInterceptorTest extends TestCase {
         }
     }
 
+    public void testIntercept3() throws Exception {
+        TraceInterceptor interceptor = new TraceInterceptor();
+        Pointcut pointcut = new PointcutImpl(new String[] { "geho" });
+        Aspect aspect = new AspectImpl(interceptor, pointcut);
+        AopProxy aopProxy = new AopProxy(ThrowError.class,
+                new Aspect[] { aspect });
+        ThrowError proxy = (ThrowError) aopProxy.create();
+        proxy.geho(new String[0]);
+    }
+
     public void testIntercept_array() throws Exception {
         TraceInterceptor interceptor = new TraceInterceptor();
         Pointcut pointcut = new PointcutImpl(new String[] { "hoge" });
@@ -63,16 +75,52 @@ public class TraceInterceptorTest extends TestCase {
         proxy.hoge(new String[] { "111" });
     }
 
-    public void testToString() throws Exception {
-        assertEquals("null", TraceInterceptor.toString(null));
-        assertEquals("[abc]", TraceInterceptor.toString(new Object[] { "abc" }));
-        assertEquals("[abc, [1]]", TraceInterceptor.toString(new Object[] {
-                "abc", new Object[] { "1" } }));
+    public void testAppendObject() throws Exception {
+        TraceInterceptor interceptor = new TraceInterceptor();
+        assertEquals("null", interceptor.appendObject(new StringBuffer(), null)
+                .toString());
+        assertEquals("[abc]", interceptor.appendObject(new StringBuffer(),
+                new Object[] { "abc" }).toString());
+        assertEquals("[abc, [1], [a, b], [A, B, C]]", interceptor.appendObject(
+                new StringBuffer(),
+                new Object[] {
+                        "abc",
+                        new Object[] { "1" },
+                        Arrays.asList(new Object[] { "a", "b" }),
+                        new LinkedHashSet(Arrays.asList(new Object[] { "A",
+                                "B", "C" })) }).toString());
+    }
+
+    public void testAppendArray() throws Exception {
+        TraceInterceptor interceptor = new TraceInterceptor();
+        assertEquals("[[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]]", interceptor
+                .appendObject(
+                        new StringBuffer(),
+                        new Object[] { new Object[] { "1", "2", "3", "4", "5",
+                                "6", "7", "8", "9", "10", "11", "12" } })
+                .toString());
+        interceptor.setMaxLengthOfCollection(11);
+        assertEquals("[[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]]", interceptor
+                .appendObject(
+                        new StringBuffer(),
+                        new Object[] { new Object[] { "1", "2", "3", "4", "5",
+                                "6", "7", "8", "9", "10", "11", "12" } })
+                .toString());
+        interceptor.setMaxLengthOfCollection(20);
+        assertEquals("[[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]]", interceptor
+                .appendObject(
+                        new StringBuffer(),
+                        new Object[] { new Object[] { "1", "2", "3", "4", "5",
+                                "6", "7", "8", "9", "10", "11", "12" } })
+                .toString());
     }
 
     public static class ThrowError {
         public void hoge() {
             throw new RuntimeException("hoge");
+        }
+
+        public void geho(String[] array) {
         }
     }
 

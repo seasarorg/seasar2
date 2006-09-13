@@ -15,7 +15,9 @@
  */
 package org.seasar.framework.aop.interceptors;
 
-import java.lang.reflect.Array;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Iterator;
 
 import org.aopalliance.intercept.MethodInvocation;
 import org.seasar.framework.log.Logger;
@@ -28,19 +30,23 @@ public class TraceInterceptor extends AbstractInterceptor {
 
     private static final long serialVersionUID = -8142348754572405060L;
 
-    private static Logger logger = Logger.getLogger(TraceInterceptor.class);
+    private static final Logger logger = Logger
+            .getLogger(TraceInterceptor.class);
 
-    public Object invoke(MethodInvocation invocation) throws Throwable {
-        StringBuffer buf = new StringBuffer(100);
+    protected int maxLengthOfCollection = 10;
+
+    public void setMaxLengthOfCollection(final int maxLengthOfCollection) {
+        this.maxLengthOfCollection = maxLengthOfCollection;
+    }
+
+    public Object invoke(final MethodInvocation invocation) throws Throwable {
+        final StringBuffer buf = new StringBuffer(100);
         buf.append(getTargetClass(invocation).getName());
-        buf.append("#");
-        buf.append(invocation.getMethod().getName());
-        buf.append("(");
-        Object[] args = invocation.getArguments();
+        buf.append("#").append(invocation.getMethod().getName()).append("(");
+        final Object[] args = invocation.getArguments();
         if (args != null && args.length > 0) {
             for (int i = 0; i < args.length; ++i) {
-                buf.append(toString(args[i]));
-                buf.append(", ");
+                appendObject(buf, args[i]).append(", ");
             }
             buf.setLength(buf.length() - 2);
         }
@@ -51,10 +57,9 @@ public class TraceInterceptor extends AbstractInterceptor {
         try {
             ret = invocation.proceed();
             buf.append(" : ");
-            buf.append(toString(ret));
-        } catch (Throwable t) {
-            buf.append(" Throwable:");
-            buf.append(t);
+            appendObject(buf, ret);
+        } catch (final Throwable t) {
+            buf.append(" Throwable:").append(t);
             cause = t;
         }
         logger.debug("END " + buf);
@@ -64,23 +69,31 @@ public class TraceInterceptor extends AbstractInterceptor {
         throw cause;
     }
 
-    protected static String toString(Object arg) {
+    protected StringBuffer appendObject(final StringBuffer buf, final Object arg) {
         if (arg == null) {
-            return "null";
-        }
-        if (arg.getClass().isArray()) {
-            StringBuffer buf = new StringBuffer(100);
-            buf.append("[");
-            int size = Array.getLength(arg);
-            for (int i = 0; i < size; ++i) {
-                buf.append(toString(Array.get(arg, i)));
-                buf.append(", ");
-            }
-            buf.setLength(buf.length() - 2);
-            buf.append("]");
-            return buf.toString();
+            buf.append("null");
+        } else if (arg.getClass().isArray()) {
+            appendList(buf, Arrays.asList((Object[]) arg));
+        } else if (arg instanceof Collection) {
+            appendList(buf, (Collection) arg);
         } else {
-            return arg.toString();
+            buf.append(arg);
         }
+        return buf;
+    }
+
+    protected StringBuffer appendList(final StringBuffer buf,
+            final Collection collection) {
+        buf.append("[");
+        int count = 0;
+        for (final Iterator it = collection.iterator(); it.hasNext()
+                && count < maxLengthOfCollection; ++count) {
+            appendObject(buf, it.next()).append(", ");
+        }
+        if (count > 0) {
+            buf.setLength(buf.length() - 2);
+        }
+        buf.append("]");
+        return buf;
     }
 }

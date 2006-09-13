@@ -9,39 +9,26 @@ import org.seasar.framework.log.Logger;
 /**
  * @author shot
  */
-public class ClassLoaderAwareTraceInterceptor extends AbstractInterceptor {
+public class ClassLoaderAwareTraceInterceptor extends TraceInterceptor {
 
     private static final long serialVersionUID = 1L;
 
-    private static Logger logger = Logger.getLogger(TraceInterceptor.class);
+    private static final Logger logger = Logger.getLogger(TraceInterceptor.class);
 
-    public Object invoke(MethodInvocation invocation) throws Throwable {
-        StringBuffer buf = new StringBuffer(256);
-        Class targetClass = getTargetClass(invocation);
-        ClassLoader targetClassLoader = targetClass.getClassLoader();
-        if (targetClassLoader != null) {
-            buf.append("<");
-            buf.append(targetClassLoader.toString());
-            buf.append(">");
-        }
+    public Object invoke(final MethodInvocation invocation) throws Throwable {
+        final StringBuffer buf = new StringBuffer(256);
+        appendClassLoader(buf, invocation.getThis());
+        final Class targetClass = getTargetClass(invocation);
         buf.append(targetClass.getName());
         buf.append("#");
         buf.append(invocation.getMethod().getName());
         buf.append("(");
-        Object[] args = invocation.getArguments();
+        final Object[] args = invocation.getArguments();
         if (args != null && args.length > 0) {
             for (int i = 0; i < args.length; ++i) {
-                Object arg = args[i];
-                buf.append(arg);
-                if (arg != null) {
-                    ClassLoader argsClassLoader = arg.getClass()
-                            .getClassLoader();
-                    if (argsClassLoader != null) {
-                        buf.append("<");
-                        buf.append(argsClassLoader.toString());
-                        buf.append(">");
-                    }
-                }
+                final Object arg = args[i];
+                appendObject(buf, arg);
+                appendClassLoader(buf, arg);
                 buf.append(", ");
             }
             buf.setLength(buf.length() - 2);
@@ -53,18 +40,10 @@ public class ClassLoaderAwareTraceInterceptor extends AbstractInterceptor {
         try {
             ret = invocation.proceed();
             buf.append(" : ");
-            buf.append(ret);
-            if (ret != null) {
-                ClassLoader retClassLoader = ret.getClass().getClassLoader();
-                if (retClassLoader != null) {
-                    buf.append("<");
-                    buf.append(retClassLoader.toString());
-                    buf.append(">");
-                }
-            }
-        } catch (Throwable t) {
-            buf.append(" Throwable:");
-            buf.append(t);
+            appendObject(buf, ret);
+            appendClassLoader(buf, ret);
+        } catch (final Throwable t) {
+            buf.append(" Throwable:").append(t);
             cause = t;
         }
         logger.debug("END " + buf);
@@ -75,4 +54,14 @@ public class ClassLoaderAwareTraceInterceptor extends AbstractInterceptor {
         return ret;
     }
 
+    protected StringBuffer appendClassLoader(final StringBuffer buf,
+            final Object obj) {
+        if (obj != null) {
+            final ClassLoader classLoader = obj.getClass().getClassLoader();
+            if (classLoader != null) {
+                buf.append("<").append(classLoader.toString()).append(">");
+            }
+        }
+        return buf;
+    }
 }
