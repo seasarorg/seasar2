@@ -3,6 +3,6 @@
 	"http://www.seasar.org/dtd/components24.dtd">
 <components namespace="jpa">
 	<component name="persistenceUnitManager"
-		class="org.seasar.framework.jpa.PersistenceUnitManager"
+		class="org.seasar.framework.jpa.impl.PersistenceUnitManagerImpl"
 	/>
 </components>
