@@ -25,6 +25,8 @@ public class DateStringDto {
 
     private String a_dd = "30";
 
+    private String b_$$$$;
+
     public String getA_dd() {
         return a_dd;
     }
@@ -47,6 +49,14 @@ public class DateStringDto {
 
     public void setA_yyyy(String a_yyyy) {
         this.a_yyyy = a_yyyy;
+    }
+
+    public String getB_$$$$() {
+        return b_$$$$;
+    }
+
+    public void setB_$$$$(String b_$$$$) {
+        this.b_$$$$ = b_$$$$;
     }
 
 }

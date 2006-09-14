@@ -174,30 +174,32 @@ public class BeanConverter extends AbstractConverter {
             return getDateValueAsString(sourceBeanDesc, source,
                     destPropertyName);
         }
-        if (destPropertyType.isAssignableFrom(Date.class)) {
-            return getDateValueAsDate(sourceBeanDesc, source, destPropertyName);
-        }
-        if (destPropertyType.isAssignableFrom(java.sql.Date.class)) {
+        if (Date.class.isAssignableFrom(destPropertyType)) {
             final Date dateValue = getDateValueAsDate(sourceBeanDesc, source,
                     destPropertyName);
-            return new java.sql.Date(dateValue.getTime());
-        }
-        if (destPropertyType.isAssignableFrom(java.sql.Time.class)) {
-            final Date dateValue = getDateValueAsDate(sourceBeanDesc, source,
-                    destPropertyName);
-            return new java.sql.Time(dateValue.getTime());
-        }
-        if (destPropertyType.isAssignableFrom(java.sql.Timestamp.class)) {
-            final Date dateValue = getDateValueAsDate(sourceBeanDesc, source,
-                    destPropertyName);
-            return new java.sql.Timestamp(dateValue.getTime());
+            if (dateValue != null) {
+                if (destPropertyType.isAssignableFrom(Date.class)) {
+                    return dateValue;
+                }
+                if (destPropertyType.isAssignableFrom(java.sql.Date.class)) {
+                    return new java.sql.Date(dateValue.getTime());
+                }
+                if (destPropertyType.isAssignableFrom(java.sql.Time.class)) {
+                    return new java.sql.Time(dateValue.getTime());
+                }
+                if (destPropertyType.isAssignableFrom(java.sql.Timestamp.class)) {
+                    return new java.sql.Timestamp(dateValue.getTime());
+                }
+            }
         }
         if (destPropertyType.isAssignableFrom(Calendar.class)) {
             final Date dateValue = getDateValueAsDate(sourceBeanDesc, source,
                     destPropertyName);
-            final Calendar calendar = Calendar.getInstance();
-            calendar.setTime(dateValue);
-            return calendar;
+            if (dateValue != null) {
+                final Calendar calendar = Calendar.getInstance();
+                calendar.setTime(dateValue);
+                return calendar;
+            }
         }
         return null;
     }

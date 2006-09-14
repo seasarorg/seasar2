@@ -15,8 +15,8 @@
  */
 package org.seasar.extension.dxo;
 
+import java.sql.Time;
 import java.util.Date;
-
 
 /**
  * @author Satsohi Kimura
@@ -25,12 +25,22 @@ public class DateDto {
 
     private Date a = DateUtil.newDate(2100, 6, 22);
 
+    private Time b;
+
     public Date getA() {
         return a;
     }
 
     public void setA(Date a) {
         this.a = a;
+    }
+
+    public Time getB() {
+        return b;
+    }
+
+    public void setB(Time b) {
+        this.b = b;
     }
 
 }
