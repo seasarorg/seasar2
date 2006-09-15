@@ -15,7 +15,10 @@
  */
 package org.seasar.framework.util;
 
+import java.lang.reflect.Array;
+
 import junit.framework.TestCase;
+import junitx.framework.ArrayAssert;
 
 public class ArrayUtilTest extends TestCase {
 
@@ -47,11 +50,11 @@ public class ArrayUtilTest extends TestCase {
     }
 
     public void testIndexOf_character() throws Exception {
-        char[] array = new char[]{'a', 'b', 'c'};
+        char[] array = new char[] { 'a', 'b', 'c' };
         assertEquals("1", 0, ArrayUtil.indexOf(array, 'a'));
         assertEquals("2", -1, ArrayUtil.indexOf(array, 'd'));
     }
-    
+
     public void testRemoveFirst() throws Exception {
         String[] array = new String[] { "111", "222", "333" };
         String[] newArray = (String[]) ArrayUtil.remove(array, "111");
@@ -105,4 +108,43 @@ public class ArrayUtilTest extends TestCase {
         assertEquals(false, ArrayUtil.contains((char[]) null, '1'));
     }
 
+    public void testEqualsIgnoreSequence() throws Exception {
+        assertEquals(true, ArrayUtil.equalsIgnoreSequence(new Object[] { "1" },
+                new Object[] { "1" }));
+        assertEquals(true, ArrayUtil.equalsIgnoreSequence(new Object[] { "1",
+                "2", "3" }, new Object[] { "2", "3", "1" }));
+        assertEquals(false, ArrayUtil.equalsIgnoreSequence(
+                new Object[] { "1" }, new Object[] { "2" }));
+        assertEquals(false, ArrayUtil.equalsIgnoreSequence(
+                new Object[] { "1" }, new Object[] {}));
+        assertEquals(false, ArrayUtil.equalsIgnoreSequence(
+                new Object[] { new Integer("1") }, new Object[] { "1" }));
+
+        assertEquals(true, ArrayUtil.equalsIgnoreSequence(null, null));
+        assertEquals(false, ArrayUtil.equalsIgnoreSequence(null,
+                new Object[] {}));
+    }
+
+    public void testSetArrayValue() throws Exception {
+        Object o = Array.newInstance(int.class, 3);
+        ArrayUtil.setArrayValue(o, int.class, new Integer(1), 0);
+        ArrayUtil.setArrayValue(o, int.class, new Integer(2), 1);
+        ArrayUtil.setArrayValue(o, int.class, new Integer(3), 2);
+        int[] num = (int[]) o;
+        ArrayAssert.assertEquals(new int[] { 1, 2, 3 }, num);
+    }
+
+    public void testToObjectArray() throws Exception {
+        final Object[] a = ArrayUtil.toObjectArray(new int[] { 1, 5, 2 });
+        ArrayAssert.assertEquals(new Integer[] { new Integer(1),
+                new Integer(5), new Integer(2) }, a);
+    }
+
+    public void testToObjectArray_NoArray() throws Exception {
+        try {
+            ArrayUtil.toObjectArray("a");
+            fail();
+        } catch (IllegalArgumentException e) {
+        }
+    }
 }

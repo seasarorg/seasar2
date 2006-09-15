@@ -16,6 +16,8 @@
 package org.seasar.framework.util;
 
 import java.lang.reflect.Array;
+import java.util.Arrays;
+import java.util.List;
 
 import org.seasar.framework.exception.EmptyRuntimeException;
 
@@ -80,7 +82,7 @@ public class ArrayUtil {
         if (array != null) {
             for (int i = 0; i < array.length; ++i) {
                 char c = array[i];
-                if(ch == c) {
+                if (ch == c) {
                     return i;
                 }
             }
@@ -116,5 +118,81 @@ public class ArrayUtil {
     public static boolean contains(char[] array, char ch) {
         return -1 < indexOf(array, ch);
     }
-    
+
+    public static boolean equalsIgnoreSequence(Object[] array1, Object[] array2) {
+        if (array1 == null && array2 == null) {
+            return true;
+        } else if (array1 == null || array2 == null) {
+            return false;
+        }
+        if (array1.length != array2.length) {
+            return false;
+        }
+        List list = Arrays.asList(array2);
+        for (int i = 0; i < array1.length; i++) {
+            Object o1 = array1[i];
+            if (!list.contains(o1)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static String toString(Object[] array) {
+        if (array == null) {
+            return "null";
+        }
+        if (array.length == 0) {
+            return "[]";
+        }
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < array.length; i++) {
+            if (i == 0) {
+                sb.append('[');
+            } else {
+                sb.append(", ");
+            }
+            sb.append(String.valueOf(array[i]));
+        }
+        sb.append("]");
+        return sb.toString();
+    }
+
+    public static void setArrayValue(Object array, Class valueType,
+            Object value, int index) {
+        if (value == null) {
+            return;
+        }
+        if (valueType == int.class) {
+            Array.setInt(array, index, IntegerConversionUtil
+                    .toPrimitiveInt(value));
+        } else if (valueType == double.class) {
+            Array.setDouble(array, index, DoubleConversionUtil
+                    .toPrimitiveDouble(value));
+        } else if (valueType == long.class) {
+            Array.setLong(array, index, LongConversionUtil
+                    .toPrimitiveLong(value));
+        } else if (valueType == float.class) {
+            Array.setFloat(array, index, FloatConversionUtil
+                    .toPrimitiveFloat(value));
+        } else if (valueType == short.class) {
+            Array.setShort(array, index, ShortConversionUtil
+                    .toPrimitiveShort(value));
+        } else if (valueType == boolean.class) {
+            Array.setBoolean(array, index, BooleanConversionUtil
+                    .toPrimitiveBoolean(value));
+        } else if (valueType == char.class) {
+            Array.setChar(array, index, ((Character) value).charValue());
+        }
+        Array.set(array, index, value);
+    }
+
+    public static Object[] toObjectArray(Object obj) {
+        int length = Array.getLength(obj);
+        Object[] array = new Object[length];
+        for (int i = 0; i < length; i++) {
+            array[i] = Array.get(obj, i);
+        }
+        return array;
+    }
 }

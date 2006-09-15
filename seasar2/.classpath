@@ -21,5 +21,6 @@
 	<classpathentry exported="true" kind="lib" path="lib/geronimo-j2ee_1.4_spec-1.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/portlet-api-1.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/junit-3.8.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/junit-addons-1.4.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
