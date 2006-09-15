@@ -14,14 +14,14 @@ import org.seasar.framework.container.annotation.tiger.Component;
 import org.seasar.framework.jpa.PersistenceUnitManager;
 
 @Component
-public class SingletonPersistenceUnitManagerImpl implements
+public class StaticPersistenceUnitManagerImpl implements
         PersistenceUnitManager {
 
     protected static final Map<String, EntityManagerFactory> persistenceUnits = new HashMap<String, EntityManagerFactory>();
 
     protected static final Map<EntityManagerFactory, ConcurrentMap<Transaction, EntityManager>> emfContexts = new HashMap<EntityManagerFactory, ConcurrentMap<Transaction, EntityManager>>();
 
-    public SingletonPersistenceUnitManagerImpl() {
+    public StaticPersistenceUnitManagerImpl() {
     }
 
     public void close() {
