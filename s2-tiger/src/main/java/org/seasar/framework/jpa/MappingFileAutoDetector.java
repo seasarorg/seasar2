@@ -15,10 +15,9 @@
  */
 package org.seasar.framework.jpa;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -29,6 +28,7 @@ import org.seasar.framework.container.annotation.tiger.BindingType;
 import org.seasar.framework.container.annotation.tiger.Component;
 import org.seasar.framework.container.annotation.tiger.InitMethod;
 import org.seasar.framework.convention.NamingConvention;
+import org.seasar.framework.util.ClassLoaderUtil;
 import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.ResourceUtil;
 import org.seasar.framework.util.ResourceTraversal.ResourceHandler;
@@ -36,7 +36,6 @@ import org.seasar.framework.util.tiger.CollectionsUtil;
 
 /**
  * @author taedium
- * 
  */
 @Component
 public class MappingFileAutoDetector extends AbstractResourceAutoDetector {
@@ -69,21 +68,16 @@ public class MappingFileAutoDetector extends AbstractResourceAutoDetector {
         this.namingConvention = namingConvention;
     }
 
+    @SuppressWarnings("unchecked")
     public ResourceAutoDetector.Entry[] detect() {
         final List<ResourceAutoDetector.Entry> result = CollectionsUtil
                 .newArrayList();
 
         for (int i = 0; i < getTargetDirPathSize(); i++) {
             final String targetDirPath = getTargetDirPath(i);
-            Enumeration<URL> urls = null;
-            try {
-                final ClassLoader loader = Thread.currentThread()
-                        .getContextClassLoader();
-                urls = loader.getResources(targetDirPath);
-            } catch (IOException ignore) {
-            }
-            while (urls != null && urls.hasMoreElements()) {
-                final URL targetDirUrl = urls.nextElement();
+            for (final Iterator<URL> it = ClassLoaderUtil
+                    .getResources(targetDirPath); it.hasNext();) {
+                final URL targetDirUrl = it.next();
                 detect(result, targetDirPath, targetDirUrl);
             }
         }
@@ -161,6 +155,7 @@ public class MappingFileAutoDetector extends AbstractResourceAutoDetector {
             return path.hashCode();
         }
 
+        @Override
         public String toString() {
             return path;
         }

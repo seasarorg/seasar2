@@ -17,6 +17,7 @@ package org.seasar.framework.jpa;
 
 import java.lang.annotation.Annotation;
 import java.net.URL;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -30,15 +31,14 @@ import org.seasar.framework.container.annotation.tiger.BindingType;
 import org.seasar.framework.container.annotation.tiger.Component;
 import org.seasar.framework.container.annotation.tiger.InitMethod;
 import org.seasar.framework.convention.NamingConvention;
+import org.seasar.framework.util.ClassLoaderUtil;
 import org.seasar.framework.util.ClassUtil;
-import org.seasar.framework.util.ResourceUtil;
 import org.seasar.framework.util.ClassTraversal.ClassHandler;
 import org.seasar.framework.util.tiger.CollectionsUtil;
 import org.seasar.framework.util.tiger.ReflectionUtil;
 
 /**
  * @author taedium
- * 
  */
 @Component
 public class PersistenceClassAutoDetector extends AbstractClassAutoDetector {
@@ -77,45 +77,32 @@ public class PersistenceClassAutoDetector extends AbstractClassAutoDetector {
         this.namingConvention = namingConvention;
     }
 
+    @SuppressWarnings("unchecked")
     public Class[] detect() {
-        final Set<Class<?>> result = CollectionsUtil.newHashSet();
+        final Set<Class<?>> result = CollectionsUtil.newLinkedHashSet();
 
         for (int i = 0; i < getTargetPackageNameSize(); i++) {
             final String packageName = getTargetPackageName(i);
-            final URL url = ResourceUtil.getResourceNoException(packageName
-                    .replace(".", "/"));
-
-            if (url != null) {
-                detect(result, packageName, url);
+            for (final Iterator<URL> it = ClassLoaderUtil
+                    .getResources(packageName.replace('.', '/')); it.hasNext();) {
+                detect(result, packageName, it.next());
             }
         }
 
         return result.toArray(new Class<?>[result.size()]);
     }
 
-    protected void detect(final Set<Class<?>> result, final String packageName,
-            final URL url) {
-        for (final String rootPackageName : namingConvention
-                .getRootPackageNames()) {
-            final URL rootUrl = ResourceUtil.getResource(rootPackageName
-                    .replace(".", "/"));
-            if (!rootUrl.getProtocol().equals(url.getProtocol())) {
-                continue;
-            }
-            final Strategy strategy = getStrategy(url.getProtocol());
-            final String rootBaseName = strategy.getBaseName(rootPackageName,
-                    rootUrl);
-            final String baseName = strategy.getBaseName(packageName, url);
-            if (!rootBaseName.equals(baseName)) {
-                continue;
-            }
-
-            strategy.detect(packageName, url, new ClassHandler() {
-                public void processClass(final String packageName,
-                        final String shortClassName) {
+    protected void detect(final Set<Class<?>> result,
+            final String entityPackageName, final URL url) {
+        final Strategy strategy = getStrategy(url.getProtocol());
+        strategy.detect(entityPackageName, url, new ClassHandler() {
+            public void processClass(final String packageName,
+                    final String shortClassName) {
+                if (packageName.startsWith(entityPackageName)) {
                     final String name = ClassUtil.concatName(packageName,
                             shortClassName);
-                    final Class<?> clazz = ReflectionUtil.forName(name);
+                    final Class<?> clazz = ReflectionUtil
+                            .forNameNoException(name);
                     for (final Annotation ann : clazz.getAnnotations()) {
                         if (annotations.contains(ann.annotationType())) {
                             result.add(clazz);
@@ -123,7 +110,7 @@ public class PersistenceClassAutoDetector extends AbstractClassAutoDetector {
                         }
                     }
                 }
-            });
-        }
+            }
+        });
     }
 }

@@ -38,10 +38,9 @@ public abstract class ReflectionUtil {
     private ReflectionUtil() {
     }
 
-    @SuppressWarnings("unchecked")
     public static <T> Class<T> forName(final String className)
             throws ClassNotFoundRuntimeException {
-        return (Class<T>) forName(className, Thread.currentThread()
+        return forName(className, Thread.currentThread()
                 .getContextClassLoader());
     }
 
@@ -52,6 +51,22 @@ public abstract class ReflectionUtil {
             return (Class<T>) Class.forName(className, true, loader);
         } catch (final ClassNotFoundException e) {
             throw new ClassNotFoundRuntimeException(e);
+        }
+    }
+
+    public static <T> Class<T> forNameNoException(final String className)
+            throws ClassNotFoundRuntimeException {
+        return forNameNoException(className, Thread.currentThread()
+                .getContextClassLoader());
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T> Class<T> forNameNoException(final String className,
+            final ClassLoader loader) throws ClassNotFoundRuntimeException {
+        try {
+            return (Class<T>) Class.forName(className, true, loader);
+        } catch (final Throwable ignore) {
+            return null;
         }
     }
 
