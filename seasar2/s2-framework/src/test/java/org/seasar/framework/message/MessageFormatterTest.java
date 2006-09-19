@@ -20,37 +20,37 @@ import junit.framework.TestCase;
 public class MessageFormatterTest extends TestCase {
 
     public void testGetMessage() throws Exception {
-        String s = MessageFormatter.getFormattedMessage("ESSR0304", null);
+        String s = MessageFormatter.getMessage("ESSR0304", null);
         System.out.println(s);
         assertNotNull("1", s);
     }
 
     public void testGetMessageIllegalSystem() throws Exception {
-        String s = MessageFormatter.getFormattedMessage("EXXX0304", null);
+        String s = MessageFormatter.getMessage("EXXX0304", null);
         System.out.println(s);
         assertNotNull("1", s);
     }
 
     public void testGetMessageIllegalMessageCode() throws Exception {
-        String s = MessageFormatter.getFormattedMessage("ESSRxxxx", null);
+        String s = MessageFormatter.getMessage("ESSRxxxx", null);
         System.out.println(s);
         assertNotNull("1", s);
     }
 
     public void testGetMessageIllegalMessageCode2() throws Exception {
-        String s = MessageFormatter.getFormattedMessage(null, null);
+        String s = MessageFormatter.getMessage(null, null);
         System.out.println(s);
         assertNotNull("1", s);
     }
 
     public void testGetMessageIllegalArgs() throws Exception {
-        String s = MessageFormatter.getFormattedMessage("ESSR0007", null);
+        String s = MessageFormatter.getMessage("ESSR0007", null);
         System.out.println(s);
         assertNotNull("1", s);
     }
 
     public void testGetMessageLongForm() throws Exception {
-        String s = MessageFormatter.getMessage("ES2Framework0001", new String[]{"Hoge Hoge"});
+        String s = MessageFormatter.getMessage("ES2Framework0001", null);
         System.out.println(s);
         assertNotNull(s);
         assertEquals("[ES2Framework0001]Hoge Hoge", s);
