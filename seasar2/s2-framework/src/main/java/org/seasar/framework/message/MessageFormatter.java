@@ -35,7 +35,13 @@ public final class MessageFormatter {
         if (messageCode == null) {
             messageCode = "";
         }
-        return "[" + messageCode + "]" + getSimpleMessage(messageCode, args);
+        return getFormattedMessage(messageCode, getSimpleMessage(messageCode,
+                args));
+    }
+
+    public static String getFormattedMessage(String messageCode,
+            String simpleMessage) {
+        return "[" + messageCode + "]" + simpleMessage;
     }
 
     public static String getSimpleMessage(String messageCode, Object[] arguments) {
