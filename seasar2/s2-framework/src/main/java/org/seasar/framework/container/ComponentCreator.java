@@ -15,10 +15,39 @@
  */
 package org.seasar.framework.container;
 
-
+/**
+ * Smart deployにおいて、 自動登録されるコンポーネントの{@link ComponentDef コンポーネント定義}を作成するためのインターフェースです。
+ * <p>
+ * コンポーネント定義は{@link org.seasar.framework.convention.NamingConvention 命名規約}に基づいて作成され、
+ * {@link ComponentCustomizer コンポーネント定義カスタマイザ}によってアスペクト定義の追加などのカスタマイズを施してから返却されます。
+ * </p>
+ * 
+ * @author higa
+ * @author jundu (Javadoc)
+ */
 public interface ComponentCreator {
 
+    /**
+     * 指定されたクラスから、 {@link org.seasar.framework.convention.NamingConvention 命名規約}に従ってコンポーネント定義を作成します。
+     * 
+     * @param componentClass
+     *            コンポーネント定義を作成する対象のクラス
+     * @return 作成されたコンポーネント定義。 指定されたクラスがこのCreatorの対象でなかった場合は、 <code>null</code>を返す
+     */
     ComponentDef createComponentDef(Class componentClass);
 
+    /**
+     * 指定されたコンポーネント名から、
+     * {@link org.seasar.framework.convention.NamingConvention 命名規約}に従ってコンポーネント定義を作成します。
+     * 
+     * @param componentName
+     *            コンポーネント定義を作成する対象のコンポーネント名
+     * @return 作成されたコンポーネント定義。 指定されたクラスがこのCreatorの対象でなかった場合、
+     *         またはコンポーネント名に対応するクラスが存在しなかった場合は、 <code>null</code>を返す
+     * @throws org.seasar.framework.exception.EmptyRuntimeException
+     *             コンポーネント名に<code>null</code>または空文字列を指定した場合
+     * 
+     * @see org.seasar.framework.convention.NamingConvention#fromComponentNameToClass(String)
+     */
     ComponentDef createComponentDef(String componentName);
 }
