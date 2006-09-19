@@ -32,24 +32,28 @@ public class BeanDescImplTest extends TestCase {
 
     public void testPropertyDesc() throws Exception {
         BeanDesc beanDesc = new BeanDescImpl(MyBean.class);
-        assertEquals("1", 3, beanDesc.getPropertyDescSize());
+        assertEquals(4, beanDesc.getPropertyDescSize());
         PropertyDesc propDesc = beanDesc.getPropertyDesc("aaa");
-        assertEquals("2", "aaa", propDesc.getPropertyName());
-        assertEquals("3", String.class, propDesc.getPropertyType());
-        assertNotNull("4", propDesc.getReadMethod());
-        assertNull("5", propDesc.getWriteMethod());
+        assertEquals("aaa", propDesc.getPropertyName());
+        assertEquals(String.class, propDesc.getPropertyType());
+        assertNotNull(propDesc.getReadMethod());
+        assertNull(propDesc.getWriteMethod());
 
         propDesc = beanDesc.getPropertyDesc("CCC");
-        assertEquals("6", "CCC", propDesc.getPropertyName());
-        assertEquals("7", boolean.class, propDesc.getPropertyType());
-        assertNotNull("8", propDesc.getReadMethod());
-        assertNull("9", propDesc.getWriteMethod());
+        assertEquals("CCC", propDesc.getPropertyName());
+        assertEquals(boolean.class, propDesc.getPropertyType());
+        assertNotNull(propDesc.getReadMethod());
+        assertNull(propDesc.getWriteMethod());
 
         propDesc = beanDesc.getPropertyDesc("eee");
-        assertEquals("10", "eee", propDesc.getPropertyName());
-        assertEquals("11", String.class, propDesc.getPropertyType());
-        assertNotNull("12", propDesc.getReadMethod());
-        assertNotNull("13", propDesc.getWriteMethod());
+        assertEquals("eee", propDesc.getPropertyName());
+        assertEquals(String.class, propDesc.getPropertyType());
+        assertNotNull(propDesc.getReadMethod());
+        assertNotNull(propDesc.getWriteMethod());
+
+        propDesc = beanDesc.getPropertyDesc("fff");
+        assertEquals("fff", propDesc.getPropertyName());
+        assertEquals(Boolean.class, propDesc.getPropertyType());
     }
 
     public void testInvoke() throws Exception {
@@ -187,6 +191,10 @@ public class BeanDescImplTest extends TestCase {
 
         public void setEee(String eee) {
             this.eee = eee;
+        }
+
+        public Boolean isFff() {
+            return null;
         }
 
         public Number add(Number arg1, Number arg2) {

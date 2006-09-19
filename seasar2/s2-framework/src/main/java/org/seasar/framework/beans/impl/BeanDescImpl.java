@@ -513,7 +513,8 @@ public final class BeanDescImpl implements BeanDesc {
                 setupReadMethod(m, propertyName);
             } else if (methodName.startsWith("is")) {
                 if (m.getParameterTypes().length != 0
-                        || !m.getReturnType().equals(Boolean.TYPE)) {
+                        || !m.getReturnType().equals(Boolean.TYPE)
+                        && !m.getReturnType().equals(Boolean.class)) {
                     continue;
                 }
                 String propertyName = decapitalizePropertyName(methodName
