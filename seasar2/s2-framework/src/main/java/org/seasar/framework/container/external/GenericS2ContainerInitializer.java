@@ -54,7 +54,7 @@ public class GenericS2ContainerInitializer {
             return SingletonS2ContainerFactory.getContainer();
         }
         if (!StringUtil.isEmpty(containerConfigPath)) {
-            S2ContainerFactory.configure(configPath);
+            S2ContainerFactory.configure(containerConfigPath);
         }
         if (!StringUtil.isEmpty(configPath)) {
             SingletonS2ContainerFactory.setConfigPath(configPath);
