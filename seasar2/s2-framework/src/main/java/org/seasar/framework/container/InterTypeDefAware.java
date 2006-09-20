@@ -15,12 +15,39 @@
  */
 package org.seasar.framework.container;
 
+/**
+ * このインタフェースはインタータイプ定義を登録および取得する方法を定義するオブジェクトを表します。
+ * <p>
+ * インタータイプ定義は複数登録することが出来ます。 インタータイプ定義の取得はインデックス番号を指定して行います。
+ * </p>
+ * 
+ * @author 
+ * @author Maneno(Javadoc)
+ *
+ * @see InterTypeDef
+ */
 public interface InterTypeDefAware {
 
+    /**
+     * {@link InterTypeDef インタータイプ定義}を登録(追加)します。
+     * 
+     * @param interTypeDef インタータイプ定義
+     */
     public void addInterTypeDef(InterTypeDef interTypeDef);
 
+    /**
+     * 登録されている{@link InterTypeDef インタータイプ定義}の数を返します。
+     * 
+     * @return 登録されているインタータイプ定義の数
+     */
     public int getInterTypeDefSize();
 
+    /**
+     * 指定されたインデックス番号<code>index</code>の{@link InterTypeDef インタータイプ定義}を返します。
+     * 
+     * @param index インタータイプ定義を指定するインデックス番号
+     * @return インタータイプ定義
+     */
     public InterTypeDef getInterTypeDef(int index);
 
 }
