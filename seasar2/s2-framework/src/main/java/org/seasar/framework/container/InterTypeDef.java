@@ -17,6 +17,36 @@ package org.seasar.framework.container;
 
 import org.seasar.framework.aop.InterType;
 
+/**
+ * コンポーネントに組み込むインタータイプを定義するインタフェースです。
+ * <p>
+ * インタータイプ定義は、diconファイルにおける<code>&lt;interType&gt;</code>要素で指定されます。
+ * <code>&lt;interType&gt;</code>要素にはclass属性が含まれています。
+ * </p>
+ * <p>
+ * class属性には{@link org.seasar.framework.aop.InterType インタータイプ}を実装したクラスを指定します。
+ * </p>
+ * <p>
+ * InterTypeは「静的な構造の変更」を実現します。 「静的な構造の変更」は下記のものを含みます。
+ * </p>
+ * <ul>
+ * <li>スーパークラスの変更</li>
+ * <li>実装インタフェースの追加</li>
+ * <li>フィールドの追加</li>
+ * <li>コンストラクタの追加</li>
+ * <li>メソッドの追加</li>
+ * </ul>
+ * 
+ * @author
+ * @author Maeno(Javadoc)
+ */
 public interface InterTypeDef extends ArgDef {
+
+    /**
+     * インタータイプを返します。
+     * 
+     * @return インタータイプ
+     */
     InterType getInterType();
+
 }
