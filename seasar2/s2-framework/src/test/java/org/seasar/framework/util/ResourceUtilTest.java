@@ -92,5 +92,7 @@ public class ResourceUtilTest extends TestCase {
     public void testGetFileName() throws Exception {
         URL url = new File("C:\\Program Files").toURL();
         assertEquals("/C:/Program Files/", ResourceUtil.getFileName(url));
+        url = ResourceUtil.getResource("java/lang/String.class");
+        assertNull(ResourceUtil.getFile(url));
     }
 }

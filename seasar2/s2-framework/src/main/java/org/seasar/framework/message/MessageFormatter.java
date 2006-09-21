@@ -16,8 +16,6 @@
 package org.seasar.framework.message;
 
 import java.text.MessageFormat;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
 
 /**
  * @author higa
@@ -57,7 +55,7 @@ public final class MessageFormatter {
     }
 
     private static String getPattern(String messageCode) {
-        ResourceBundle resourceBundle = getMessages(getSystemName(messageCode));
+        MessageResourceBundle resourceBundle = getMessages(getSystemName(messageCode));
         if (resourceBundle == null) {
             return null;
         }
@@ -66,20 +64,20 @@ public final class MessageFormatter {
         if (length > 8) {
             String key = messageCode.charAt(0)
                     + messageCode.substring(length - 4);
-            try {
-                return resourceBundle.getString(key);
-            } catch (MissingResourceException ignore) {
+            String pattern = resourceBundle.get(key);
+            if (pattern != null) {
+                return pattern;
             }
         }
-        return resourceBundle.getString(messageCode);
+        return resourceBundle.get(messageCode);
     }
 
     private static String getSystemName(String messageCode) {
         return messageCode.substring(1, Math.max(1, messageCode.length() - 4));
     }
 
-    private static ResourceBundle getMessages(String systemName) {
-        return ResourceBundle.getBundle(systemName + MESSAGES);
+    private static MessageResourceBundle getMessages(String systemName) {
+        return MessageResourceBundleFactory.getBundle(systemName + MESSAGES);
     }
 
     private static String getNoPatternMessage(Object[] args) {

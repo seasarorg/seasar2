@@ -161,7 +161,11 @@ public final class ResourceUtil {
     }
 
     public static File getFile(URL url) {
-        return new File(getFileName(url));
+        File file = new File(getFileName(url));
+        if (file != null && file.exists()) {
+            return file;
+        }
+        return null;
     }
 
     public static File getResourceAsFile(String path) {
@@ -181,11 +185,7 @@ public final class ResourceUtil {
         if (url == null) {
             return null;
         }
-        File file = getFile(url);
-        if (file != null && file.exists()) {
-            return file;
-        }
-        return null;
+        return getFile(url);
     }
 
     public static String convertPath(String path, Class clazz) {
