@@ -228,10 +228,8 @@ public class S2ContainerImpl implements S2Container, ContainerConstants {
      */
     public void register(ComponentDef componentDef) {
         assertParameterIsNotNull(componentDef, "componentDef");
-        synchronized (root) {
-            register0(componentDef);
-            componentDefList.add(componentDef);
-        }
+        register0(componentDef);
+        componentDefList.add(componentDef);
     }
 
     public void register0(ComponentDef componentDef) {
@@ -263,27 +261,25 @@ public class S2ContainerImpl implements S2Container, ContainerConstants {
 
     public void registerMap(Object key, ComponentDef componentDef,
             S2Container container) {
-        synchronized (root) {
-            int position = getContainerPosition(container);
-            ComponentDefHolder holder = (ComponentDefHolder) componentDefMap
-                    .get(key);
-            if (holder == null) {
-                holder = new ComponentDefHolder(position, componentDef);
-                componentDefMap.put(key, holder);
-            } else if (position > holder.getPosition()) {
-                return;
-            } else if (position < holder.getPosition()) {
-                holder.setPosition(position);
-                holder.setComponentDef(componentDef);
-            } else if (container != this) {
-                holder.setComponentDef(componentDef);
-            } else {
-                holder.setComponentDef(createTooManyRegistration(key, holder
-                        .getComponentDef(), componentDef));
-            }
-
-            registerParent(key, holder.getComponentDef());
+        int position = getContainerPosition(container);
+        ComponentDefHolder holder = (ComponentDefHolder) componentDefMap
+                .get(key);
+        if (holder == null) {
+            holder = new ComponentDefHolder(position, componentDef);
+            componentDefMap.put(key, holder);
+        } else if (position > holder.getPosition()) {
+            return;
+        } else if (position < holder.getPosition()) {
+            holder.setPosition(position);
+            holder.setComponentDef(componentDef);
+        } else if (container != this) {
+            holder.setComponentDef(componentDef);
+        } else {
+            holder.setComponentDef(createTooManyRegistration(key, holder
+                    .getComponentDef(), componentDef));
         }
+
+        registerParent(key, holder.getComponentDef());
     }
 
     protected void registerParent(Object key, ComponentDef componentDef) {
@@ -302,18 +298,14 @@ public class S2ContainerImpl implements S2Container, ContainerConstants {
      * @see org.seasar.framework.container.S2Container#getComponentDefSize()
      */
     public int getComponentDefSize() {
-        synchronized (root) {
-            return componentDefList.size();
-        }
+        return componentDefList.size();
     }
 
     /**
      * @see org.seasar.framework.container.S2Container#getComponentDef(int)
      */
     public ComponentDef getComponentDef(int index) {
-        synchronized (root) {
-            return (ComponentDef) componentDefList.get(index);
-        }
+        return (ComponentDef) componentDefList.get(index);
     }
 
     /**
@@ -340,33 +332,28 @@ public class S2ContainerImpl implements S2Container, ContainerConstants {
      */
     public ComponentDef[] findAllComponentDefs(final Object componentKey) {
         assertParameterIsNotNull(componentKey, "componentKey");
-        synchronized (root) {
-            final List componentDefs = new ArrayList();
-            Traversal.forEachContainer(this,
-                    new Traversal.S2ContainerHandler() {
-                        public Object processContainer(S2Container container) {
-                            componentDefs.addAll(Arrays.asList(container
-                                    .findLocalComponentDefs(componentKey)));
-                            return null;
-                        }
-                    });
-            return (ComponentDef[]) componentDefs
-                    .toArray(new ComponentDef[componentDefs.size()]);
-        }
+        final List componentDefs = new ArrayList();
+        Traversal.forEachContainer(this, new Traversal.S2ContainerHandler() {
+            public Object processContainer(S2Container container) {
+                componentDefs.addAll(Arrays.asList(container
+                        .findLocalComponentDefs(componentKey)));
+                return null;
+            }
+        });
+        return (ComponentDef[]) componentDefs
+                .toArray(new ComponentDef[componentDefs.size()]);
     }
 
     /**
      * @see org.seasar.framework.container.S2Container#findLocalComponentDefs(java.lang.Object)
      */
     public ComponentDef[] findLocalComponentDefs(Object componentKey) {
-        synchronized (root) {
-            ComponentDefHolder holder = (ComponentDefHolder) componentDefMap
-                    .get(componentKey);
-            if (holder == null || holder.getPosition() > 0) {
-                return new ComponentDef[0];
-            }
-            return toComponentDefArray(holder.getComponentDef());
+        ComponentDefHolder holder = (ComponentDefHolder) componentDefMap
+                .get(componentKey);
+        if (holder == null || holder.getPosition() > 0) {
+            return new ComponentDef[0];
         }
+        return toComponentDefArray(holder.getComponentDef());
     }
 
     protected ComponentDef[] toComponentDefArray(ComponentDef cd) {
@@ -380,25 +367,23 @@ public class S2ContainerImpl implements S2Container, ContainerConstants {
     }
 
     protected ComponentDef internalGetComponentDef(Object key) {
-        synchronized (root) {
-            ComponentDefHolder holder = (ComponentDefHolder) componentDefMap
-                    .get(key);
-            if (holder != null) {
-                return holder.getComponentDef();
-            }
-            if (key instanceof String) {
-                String name = (String) key;
-                int index = name.indexOf(NS_SEP);
-                if (index > 0) {
-                    String ns = name.substring(0, index);
-                    name = name.substring(index + 1);
-                    if (ns.equals(namespace)) {
-                        return internalGetComponentDef(name);
-                    }
+        ComponentDefHolder holder = (ComponentDefHolder) componentDefMap
+                .get(key);
+        if (holder != null) {
+            return holder.getComponentDef();
+        }
+        if (key instanceof String) {
+            String name = (String) key;
+            int index = name.indexOf(NS_SEP);
+            if (index > 0) {
+                String ns = name.substring(0, index);
+                name = name.substring(index + 1);
+                if (ns.equals(namespace)) {
+                    return internalGetComponentDef(name);
                 }
             }
-            return null;
         }
+        return null;
     }
 
     /**
@@ -415,288 +400,190 @@ public class S2ContainerImpl implements S2Container, ContainerConstants {
      */
     public boolean hasDescendant(String path) {
         assertParameterIsNotEmpty(path, "path");
-        synchronized (root) {
-            return descendants.containsKey(path);
-        }
+        return descendants.containsKey(path);
     }
 
     public S2Container getDescendant(String path) {
-        synchronized (root) {
-            S2Container descendant = (S2Container) descendants.get(path);
-            if (descendant != null) {
-                return descendant;
-            }
-            throw new ContainerNotRegisteredRuntimeException(path);
+        S2Container descendant = (S2Container) descendants.get(path);
+        if (descendant != null) {
+            return descendant;
         }
+        throw new ContainerNotRegisteredRuntimeException(path);
     }
 
     public void registerDescendant(S2Container descendant) {
         assertParameterIsNotNull(descendant, "descendant");
-        synchronized (root) {
-            descendants.put(descendant.getPath(), descendant);
-        }
+        descendants.put(descendant.getPath(), descendant);
     }
 
     /**
      * @see org.seasar.framework.container.S2Container#include(org.seasar.framework.container.S2Container)
      */
     public void include(S2Container child) {
-        synchronized (root) {
-            assertParameterIsNotNull(child, "child");
-            children.add(child);
-            childPositions.put(child, new Integer(children.size()));
-            child.setRoot(getRoot());
-            child.addParent(this);
-        }
+        assertParameterIsNotNull(child, "child");
+        children.add(child);
+        childPositions.put(child, new Integer(children.size()));
+        child.setRoot(getRoot());
+        child.addParent(this);
     }
 
     protected int getContainerPosition(S2Container container) {
         if (container == this) {
             return 0;
         }
-        synchronized (root) {
-            return ((Integer) childPositions.get(container)).intValue();
-        }
+        return ((Integer) childPositions.get(container)).intValue();
     }
 
     protected boolean isNeedNS(Object key, ComponentDef cd) {
         return key instanceof String && namespace != null;
     }
 
-    /**
-     * @see org.seasar.framework.container.S2Container#getChildSize()
-     */
     public int getChildSize() {
-        synchronized (root) {
-            return children.size();
-        }
+        return children.size();
     }
 
-    /**
-     * @see org.seasar.framework.container.S2Container#getChild(int)
-     */
     public S2Container getChild(int index) {
-        synchronized (root) {
-            return (S2Container) children.get(index);
-        }
+        return (S2Container) children.get(index);
     }
 
-    /**
-     * @see org.seasar.framework.container.S2Container#getParentSize()
-     */
     public int getParentSize() {
-        synchronized (root) {
-            return parents.size();
-        }
+        return parents.size();
     }
 
-    /**
-     * @see org.seasar.framework.container.S2Container#getParent(int)
-     */
     public S2Container getParent(int index) {
-        synchronized (root) {
-            return (S2Container) parents.get(index);
-        }
+        return (S2Container) parents.get(index);
     }
 
-    /**
-     * @see org.seasar.framework.container.S2Container#addParent(org.seasar.framework.container.S2Container)
-     */
     public void addParent(S2Container parent) {
-        synchronized (root) {
-            parents.add(parent);
-            for (Iterator it = componentDefMap.entrySet().iterator(); it
-                    .hasNext();) {
-                Entry entry = (Entry) it.next();
-                Object key = entry.getKey();
-                ComponentDefHolder holder = (ComponentDefHolder) entry
-                        .getValue();
-                ComponentDef cd = holder.getComponentDef();
-                parent.registerMap(key, cd, this);
-                if (isNeedNS(key, cd)) {
-                    parent.registerMap(namespace + NS_SEP + key, cd, this);
-                }
+        parents.add(parent);
+        for (Iterator it = componentDefMap.entrySet().iterator(); it.hasNext();) {
+            Entry entry = (Entry) it.next();
+            Object key = entry.getKey();
+            ComponentDefHolder holder = (ComponentDefHolder) entry.getValue();
+            ComponentDef cd = holder.getComponentDef();
+            parent.registerMap(key, cd, this);
+            if (isNeedNS(key, cd)) {
+                parent.registerMap(namespace + NS_SEP + key, cd, this);
             }
         }
     }
 
-    /**
-     * @see org.seasar.framework.container.S2Container#init()
-     */
     public void init() {
-        synchronized (root) {
-            if (inited) {
-                return;
+        if (inited) {
+            return;
+        }
+        final ExternalContextComponentDefRegister register = getRoot()
+                .getExternalContextComponentDefRegister();
+        if (register != null) {
+            register.registerComponentDefs(this);
+        }
+        final ClassLoader currentLoader = Thread.currentThread()
+                .getContextClassLoader();
+        Thread.currentThread().setContextClassLoader(classLoader);
+        try {
+            for (int i = 0; i < getChildSize(); ++i) {
+                getChild(i).init();
             }
-            final ExternalContextComponentDefRegister register = getRoot()
-                    .getExternalContextComponentDefRegister();
-            if (register != null) {
-                register.registerComponentDefs(this);
+            for (int i = 0; i < getComponentDefSize(); ++i) {
+                getComponentDef(i).init();
             }
-            final ClassLoader currentLoader = Thread.currentThread()
-                    .getContextClassLoader();
-            Thread.currentThread().setContextClassLoader(classLoader);
-            try {
-                for (int i = 0; i < getChildSize(); ++i) {
-                    getChild(i).init();
-                }
-                for (int i = 0; i < getComponentDefSize(); ++i) {
-                    getComponentDef(i).init();
-                }
-                inited = true;
-            } finally {
-                Thread.currentThread().setContextClassLoader(currentLoader);
-            }
+            inited = true;
+        } finally {
+            Thread.currentThread().setContextClassLoader(currentLoader);
         }
     }
 
-    /**
-     * @see org.seasar.framework.container.S2Container#destroy()
-     */
     public void destroy() {
-        synchronized (root) {
-            if (!inited) {
-                return;
+        if (!inited) {
+            return;
+        }
+        final ClassLoader currentLoader = Thread.currentThread()
+                .getContextClassLoader();
+        Thread.currentThread().setContextClassLoader(classLoader);
+        try {
+            for (int i = getComponentDefSize() - 1; 0 <= i; --i) {
+                try {
+                    getComponentDef(i).destroy();
+                } catch (Throwable t) {
+                    logger.error("ESSR0017", t);
+                }
             }
-            final ClassLoader currentLoader = Thread.currentThread()
-                    .getContextClassLoader();
-            Thread.currentThread().setContextClassLoader(classLoader);
-            try {
-                for (int i = getComponentDefSize() - 1; 0 <= i; --i) {
-                    try {
-                        getComponentDef(i).destroy();
-                    } catch (Throwable t) {
-                        logger.error("ESSR0017", t);
-                    }
-                }
-                for (int i = getChildSize() - 1; 0 <= i; --i) {
-                    getChild(i).destroy();
-                }
+            for (int i = getChildSize() - 1; 0 <= i; --i) {
+                getChild(i).destroy();
+            }
 
-                componentDefMap = null;
-                componentDefList = null;
-                namespace = null;
-                path = null;
-                children = null;
-                childPositions = null;
-                parents = null;
-                descendants = null;
-                externalContext = null;
-                externalContextComponentDefRegister = null;
-                metaDefSupport = null;
-                classLoader = null;
-                root = this;
-                inited = false;
-            } finally {
-                Thread.currentThread().setContextClassLoader(currentLoader);
-            }
+            componentDefMap = null;
+            componentDefList = null;
+            namespace = null;
+            path = null;
+            children = null;
+            childPositions = null;
+            parents = null;
+            descendants = null;
+            externalContext = null;
+            externalContextComponentDefRegister = null;
+            metaDefSupport = null;
+            classLoader = null;
+            root = this;
+            inited = false;
+        } finally {
+            Thread.currentThread().setContextClassLoader(currentLoader);
         }
     }
 
-    /**
-     * @see org.seasar.framework.container.S2Container#getNamespace()
-     */
     public String getNamespace() {
         return namespace;
     }
 
-    /**
-     * @see org.seasar.framework.container.S2Container#setNamespace(java.lang.String)
-     */
     public void setNamespace(String namespace) {
-        synchronized (root) {
-            componentDefMap.remove(namespace);
-            this.namespace = namespace;
-            registerMap(namespace, new S2ContainerComponentDef(this, namespace));
-        }
+        componentDefMap.remove(namespace);
+        this.namespace = namespace;
+        registerMap(namespace, new S2ContainerComponentDef(this, namespace));
     }
 
-    /**
-     * @see org.seasar.framework.container.S2Container#getPath()
-     */
     public String getPath() {
         return path;
     }
 
-    /**
-     * @see org.seasar.framework.container.S2Container#setPath(java.lang.String)
-     */
     public void setPath(String path) {
         this.path = path;
     }
 
-    /**
-     * @see org.seasar.framework.container.S2Container#getExternalContext()
-     */
     public ExternalContext getExternalContext() {
         return externalContext;
     }
 
-    /**
-     * @see org.seasar.framework.container.S2Container#setExternalContext(org.seasar.framework.container.ExternalContext)
-     */
     public void setExternalContext(ExternalContext externalContext) {
         this.externalContext = externalContext;
     }
 
-    /**
-     * @see org.seasar.framework.container.S2Container#getExternalContextComponentDefRegister()
-     */
     public ExternalContextComponentDefRegister getExternalContextComponentDefRegister() {
         return externalContextComponentDefRegister;
     }
 
-    /**
-     * @see org.seasar.framework.container.S2Container#setExternalContextComponentDefRegister(org.seasar.framework.container.ExternalContextComponentDefRegister)
-     */
     public void setExternalContextComponentDefRegister(
             ExternalContextComponentDefRegister register) {
         this.externalContextComponentDefRegister = register;
     }
 
-    /**
-     * @see org.seasar.framework.container.MetaDefAware#addMetaDef(org.seasar.framework.container.MetaDef)
-     */
     public void addMetaDef(MetaDef metaDef) {
-        synchronized (root) {
-            metaDefSupport.addMetaDef(metaDef);
-        }
+        metaDefSupport.addMetaDef(metaDef);
     }
 
-    /**
-     * @see org.seasar.framework.container.MetaDefAware#getMetaDef(int)
-     */
     public MetaDef getMetaDef(int index) {
-        synchronized (root) {
-            return metaDefSupport.getMetaDef(index);
-        }
+        return metaDefSupport.getMetaDef(index);
     }
 
-    /**
-     * @see org.seasar.framework.container.MetaDefAware#getMetaDef(java.lang.String)
-     */
     public MetaDef getMetaDef(String name) {
-        synchronized (root) {
-            return metaDefSupport.getMetaDef(name);
-        }
+        return metaDefSupport.getMetaDef(name);
     }
 
-    /**
-     * @see org.seasar.framework.container.MetaDefAware#getMetaDefs(java.lang.String)
-     */
     public MetaDef[] getMetaDefs(String name) {
-        synchronized (root) {
-            return metaDefSupport.getMetaDefs(name);
-        }
+        return metaDefSupport.getMetaDefs(name);
     }
 
-    /**
-     * @see org.seasar.framework.container.MetaDefAware#getMetaDefSize()
-     */
     public int getMetaDefSize() {
-        synchronized (root) {
-            return metaDefSupport.getMetaDefSize();
-        }
+        return metaDefSupport.getMetaDefSize();
     }
 
     public ClassLoader getClassLoader() {
