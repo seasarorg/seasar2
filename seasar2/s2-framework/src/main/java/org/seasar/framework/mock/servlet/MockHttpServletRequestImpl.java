@@ -200,6 +200,10 @@ public class MockHttpServletRequestImpl implements MockHttpServletRequest {
         return method;
     }
 
+    public void setMethod(String method) {
+        this.method = method;
+    }
+
     /**
      * @see javax.servlet.http.HttpServletRequest#getPathInfo()
      */

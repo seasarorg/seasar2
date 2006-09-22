@@ -65,4 +65,7 @@ public interface MockHttpServletRequest extends HttpServletRequest {
     void setRemoteHost(String remoteHost);
 
     void setLocale(Locale locale);
+
+    void setMethod(String method);
+
 }
