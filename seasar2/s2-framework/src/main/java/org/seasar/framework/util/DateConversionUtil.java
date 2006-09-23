@@ -137,6 +137,18 @@ public final class DateConversionUtil {
         return null;
     }
 
+    public static String findDelimiterFromPattern(String pattern) {
+        String ret = null;
+        for (int i = 0; i < pattern.length(); ++i) {
+            char c = pattern.charAt(i);
+            if (c != 'y' && c != 'M' && c != 'd') {
+                ret = String.valueOf(c);
+                break;
+            }
+        }
+        return ret;
+    }
+
     public static String removeDelimiter(String pattern) {
         StringBuffer buf = new StringBuffer();
         for (int i = 0; i < pattern.length(); ++i) {

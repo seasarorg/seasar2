@@ -51,6 +51,18 @@ public class DateConversionUtilTest extends TestCase {
         assertEquals("1", "yyMMdd", sdf.toPattern());
     }
 
+    public void testFindDelimeterFromPattern1() throws Exception {
+        String delim = DateConversionUtil
+                .findDelimiterFromPattern("yyyy/MM/dd");
+        assertEquals("/", delim);
+    }
+
+    public void testFindDelimeterFromPattern2() throws Exception {
+        String delim = DateConversionUtil
+                .findDelimiterFromPattern("yyyy/MM-dd");
+        assertEquals("/", delim);
+    }
+
     public void testGetPattern() throws Exception {
         System.out.println(DateConversionUtil.getPattern(Locale.JAPAN));
     }
