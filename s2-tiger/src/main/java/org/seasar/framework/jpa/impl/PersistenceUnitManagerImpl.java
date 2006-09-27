@@ -1,60 +1,124 @@
 package org.seasar.framework.jpa.impl;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
-import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-import javax.transaction.Transaction;
 
+import org.seasar.framework.container.annotation.tiger.Binding;
+import org.seasar.framework.container.annotation.tiger.BindingType;
 import org.seasar.framework.container.annotation.tiger.Component;
 import org.seasar.framework.container.annotation.tiger.DestroyMethod;
+import org.seasar.framework.container.annotation.tiger.InitMethod;
+import org.seasar.framework.jpa.PersistenceUnitContext;
 import org.seasar.framework.jpa.PersistenceUnitManager;
+import org.seasar.framework.jpa.PersistenceUnitProvider;
+import org.seasar.framework.util.tiger.CollectionsUtil;
 
 @Component
 public class PersistenceUnitManagerImpl implements PersistenceUnitManager {
 
-    protected final Map<String, EntityManagerFactory> persistenceUnits = new HashMap<String, EntityManagerFactory>();
+    protected static final Context staticContext = new Context();
 
-    protected final Map<EntityManagerFactory, ConcurrentMap<Transaction, EntityManager>> emfContexts = new HashMap<EntityManagerFactory, ConcurrentMap<Transaction, EntityManager>>();
+    protected Context context;
+
+    protected boolean useStaticContext;
+
+    protected List<PersistenceUnitProvider> providers = CollectionsUtil
+            .newArrayList();
 
     public PersistenceUnitManagerImpl() {
     }
 
-    @DestroyMethod
-    public synchronized void close() {
-        for (final EntityManagerFactory emf : persistenceUnits.values()) {
-            emf.close();
-        }
-        persistenceUnits.clear();
-        emfContexts.clear();
+    @Binding(bindingType = BindingType.MAY)
+    public void setUseStaticContext(final boolean useStaticContext) {
+        this.useStaticContext = useStaticContext;
     }
 
-    public synchronized EntityManagerFactory getEntityManagerFactory(
-            final String unitName) {
-        final EntityManagerFactory emf = persistenceUnits.get(unitName);
-        if (emf != null) {
-            return emf;
+    @InitMethod
+    public void open() {
+        context = useStaticContext ? staticContext : new Context();
+    }
+
+    @DestroyMethod
+    public void close() {
+        synchronized (context) {
+            if (!useStaticContext) {
+                context.close();
+            }
         }
-        return createEntityManagerFactory(unitName);
+    }
+
+    public void addProvider(final PersistenceUnitProvider provider) {
+        providers.add(provider);
+    }
+
+    public void removeProvider(final PersistenceUnitProvider provider) {
+        providers.remove(provider);
+    }
+
+    public EntityManagerFactory getEntityManagerFactory(final String unitName) {
+        synchronized (context) {
+            final EntityManagerFactory emf = context
+                    .getEntityManagerFactory(unitName);
+            if (emf != null) {
+                return emf;
+            }
+            return createEntityManagerFactory(unitName);
+        }
     }
 
     protected EntityManagerFactory createEntityManagerFactory(
             final String unitName) {
-        final EntityManagerFactory emf = Persistence
-                .createEntityManagerFactory(unitName);
-        persistenceUnits.put(unitName, emf);
-        emfContexts.put(emf,
-                new ConcurrentHashMap<Transaction, EntityManager>());
-        return emf;
+        for (final PersistenceUnitProvider provider : providers) {
+            final EntityManagerFactory emf = provider
+                    .createEntityManagerFactory(unitName);
+            if (emf != null) {
+                context.addEntityManagerFactory(unitName, emf);
+                return emf;
+            }
+        }
+        return null;
     }
 
-    public ConcurrentMap<Transaction, EntityManager> getEmfContext(
+    public PersistenceUnitContext getPersistenceUnitContext(
             final EntityManagerFactory emf) {
-        return emfContexts.get(emf);
+        synchronized (context) {
+            return context.getPersistenceUnitContext(emf);
+        }
+    }
+
+    public static class Context {
+
+        protected final Map<String, EntityManagerFactory> persistenceUnits = new HashMap<String, EntityManagerFactory>();
+
+        protected final Map<EntityManagerFactory, PersistenceUnitContext> persistenceUnitContexts = new HashMap<EntityManagerFactory, PersistenceUnitContext>();
+
+        public EntityManagerFactory getEntityManagerFactory(
+                final String unitName) {
+            return persistenceUnits.get(unitName);
+        }
+
+        public void addEntityManagerFactory(final String unitName,
+                final EntityManagerFactory emf) {
+            persistenceUnits.put(unitName, emf);
+            persistenceUnitContexts.put(emf, new PersistenceUnitContextImpl());
+        }
+
+        public PersistenceUnitContext getPersistenceUnitContext(
+                final EntityManagerFactory emf) {
+            return persistenceUnitContexts.get(emf);
+        }
+
+        public void close() {
+            for (final EntityManagerFactory emf : persistenceUnits.values()) {
+                emf.close();
+            }
+            persistenceUnits.clear();
+            persistenceUnitContexts.clear();
+        }
+
     }
 
 }

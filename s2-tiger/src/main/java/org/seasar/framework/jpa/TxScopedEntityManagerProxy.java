@@ -15,8 +15,6 @@
  */
 package org.seasar.framework.jpa;
 
-import java.util.concurrent.ConcurrentMap;
-
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
@@ -59,9 +57,6 @@ public class TxScopedEntityManagerProxy implements EntityManager {
 
     private PersistenceUnitManager pum;
 
-    /**
-     * インスタンスを構築します。
-     */
     public TxScopedEntityManagerProxy() {
     }
 
@@ -102,13 +97,13 @@ public class TxScopedEntityManagerProxy implements EntityManager {
     }
 
     protected EntityManager getTxBoundEntityManager() {
-        final ConcurrentMap<Transaction, EntityManager> context = pum
-                .getEmfContext(emf);
+        final PersistenceUnitContext context = pum
+                .getPersistenceUnitContext(emf);
         if (context == null) {
             return null;
         }
         final Transaction tx = TransactionManagerUtil.getTransaction(tm);
-        return context.get(tx);
+        return context.getEntityManager(tx);
     }
 
     protected EntityManager createEntityManager() {
@@ -116,9 +111,9 @@ public class TxScopedEntityManagerProxy implements EntityManager {
         final Transaction tx = TransactionManagerUtil.getTransaction(tm);
         TransactionUtil.registerSynchronization(tx, new Synchronization() {
             public void afterCompletion(int status) {
-                final ConcurrentMap<Transaction, EntityManager> context = pum
-                        .getEmfContext(emf);
-                context.remove(tx);
+                final PersistenceUnitContext context = pum
+                        .getPersistenceUnitContext(emf);
+                context.unregisterEntityManager(tx);
                 try {
                     em.close();
                 } catch (final Throwable t) {
@@ -130,17 +125,12 @@ public class TxScopedEntityManagerProxy implements EntityManager {
             }
         });
 
-        final ConcurrentMap<Transaction, EntityManager> context = pum
-                .getEmfContext(emf);
-        context.put(tx, em);
+        final PersistenceUnitContext context = pum
+                .getPersistenceUnitContext(emf);
+        context.registerEntityManager(tx, em);
         return em;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.persistence.EntityManager#clear()
-     */
     public void clear() {
         if (isTxActive()) {
             final EntityManager em = getEntityManager();
@@ -148,20 +138,10 @@ public class TxScopedEntityManagerProxy implements EntityManager {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.persistence.EntityManager#close()
-     */
     public void close() {
         throw new IllegalStateException();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.persistence.EntityManager#contains(java.lang.Object)
-     */
     public boolean contains(final Object entity) {
         final boolean mustClose = !isTxActive();
         final EntityManager em = getEntityManager();
@@ -174,11 +154,6 @@ public class TxScopedEntityManagerProxy implements EntityManager {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.persistence.EntityManager#createNamedQuery(java.lang.String)
-     */
     public Query createNamedQuery(final String name) {
         final boolean mustClose = !isTxActive();
         final EntityManager em = getEntityManager();
@@ -191,11 +166,6 @@ public class TxScopedEntityManagerProxy implements EntityManager {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.persistence.EntityManager#createNativeQuery(java.lang.String)
-     */
     public Query createNativeQuery(final String sqlString) {
         final boolean mustClose = !isTxActive();
         final EntityManager em = getEntityManager();
@@ -208,12 +178,6 @@ public class TxScopedEntityManagerProxy implements EntityManager {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.persistence.EntityManager#createNativeQuery(java.lang.String,
-     *      java.lang.Class)
-     */
     public Query createNativeQuery(final String sqlString,
             final Class resultClass) {
         final boolean mustClose = !isTxActive();
@@ -227,12 +191,6 @@ public class TxScopedEntityManagerProxy implements EntityManager {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.persistence.EntityManager#createNativeQuery(java.lang.String,
-     *      java.lang.String)
-     */
     public Query createNativeQuery(final String sqlString,
             final String resultSetMapping) {
         final boolean mustClose = !isTxActive();
@@ -246,11 +204,6 @@ public class TxScopedEntityManagerProxy implements EntityManager {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.persistence.EntityManager#createQuery(java.lang.String)
-     */
     public Query createQuery(final String qlString) {
         final boolean mustClose = !isTxActive();
         final EntityManager em = getEntityManager();
@@ -263,12 +216,6 @@ public class TxScopedEntityManagerProxy implements EntityManager {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.persistence.EntityManager#find(java.lang.Class,
-     *      java.lang.Object)
-     */
     public <T> T find(final Class<T> entityClass, final Object primaryKey) {
         final boolean mustClose = !isTxActive();
         final EntityManager em = getEntityManager();
@@ -281,11 +228,6 @@ public class TxScopedEntityManagerProxy implements EntityManager {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.persistence.EntityManager#flush()
-     */
     public void flush() {
         if (isTxActive()) {
             final EntityManager em = getEntityManager();
@@ -293,11 +235,6 @@ public class TxScopedEntityManagerProxy implements EntityManager {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.persistence.EntityManager#getDelegate()
-     */
     public Object getDelegate() {
         final boolean mustClose = !isTxActive();
         final EntityManager em = getEntityManager();
@@ -310,11 +247,6 @@ public class TxScopedEntityManagerProxy implements EntityManager {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.persistence.EntityManager#getFlushMode()
-     */
     public FlushModeType getFlushMode() {
         final boolean mustClose = !isTxActive();
         final EntityManager em = getEntityManager();
@@ -327,12 +259,6 @@ public class TxScopedEntityManagerProxy implements EntityManager {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.persistence.EntityManager#getReference(java.lang.Class,
-     *      java.lang.Object)
-     */
     public <T> T getReference(final Class<T> entityClass,
             final Object primaryKey) {
         final boolean mustClose = !isTxActive();
@@ -346,20 +272,10 @@ public class TxScopedEntityManagerProxy implements EntityManager {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.persistence.EntityManager#getTransaction()
-     */
     public EntityTransaction getTransaction() {
         throw new IllegalStateException();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.persistence.EntityManager#isOpen()
-     */
     public boolean isOpen() {
         final boolean mustClose = !isTxActive();
         final EntityManager em = getEntityManager();
@@ -372,80 +288,45 @@ public class TxScopedEntityManagerProxy implements EntityManager {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.persistence.EntityManager#joinTransaction()
-     */
     public void joinTransaction() {
         assertTxActive();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.persistence.EntityManager#lock(java.lang.Object,
-     *      javax.persistence.LockModeType)
-     */
     public void lock(Object entity, LockModeType lockMode) {
         assertTxActive();
         final EntityManager em = getEntityManager();
         em.lock(entity, lockMode);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.persistence.EntityManager#merge(T)
-     */
     public <T> T merge(T entity) {
         assertTxActive();
         final EntityManager em = getEntityManager();
         return em.merge(entity);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.persistence.EntityManager#persist(java.lang.Object)
-     */
     public void persist(Object entity) {
         assertTxActive();
         final EntityManager em = getEntityManager();
         em.persist(entity);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.persistence.EntityManager#refresh(java.lang.Object)
-     */
     public void refresh(Object entity) {
         assertTxActive();
         final EntityManager em = getEntityManager();
         em.refresh(entity);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.persistence.EntityManager#remove(java.lang.Object)
-     */
     public void remove(Object entity) {
         assertTxActive();
         final EntityManager em = getEntityManager();
         em.remove(entity);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.persistence.EntityManager#setFlushMode(javax.persistence.FlushModeType)
-     */
     public void setFlushMode(FlushModeType flushMode) {
         if (isTxActive()) {
             final EntityManager em = getEntityManager();
             em.setFlushMode(flushMode);
         }
     }
+
 }

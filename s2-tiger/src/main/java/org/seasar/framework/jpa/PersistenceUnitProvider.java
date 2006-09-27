@@ -20,15 +20,8 @@ import javax.persistence.EntityManagerFactory;
 /**
  * @author koichik
  */
-public interface PersistenceUnitManager {
+public interface PersistenceUnitProvider {
 
-    void addProvider(PersistenceUnitProvider provider);
-
-    void removeProvider(PersistenceUnitProvider provider);
-
-    EntityManagerFactory getEntityManagerFactory(final String unitName);
-
-    PersistenceUnitContext getPersistenceUnitContext(
-            final EntityManagerFactory emf);
+    EntityManagerFactory createEntityManagerFactory(final String unitName);
 
 }

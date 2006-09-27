@@ -15,13 +15,13 @@
 		</initMethod>
 	</component>
 
-	<component class="org.seasar.framework.jpa.PersistenceClassAutoDetector">
-		<initMethod name="addAnnotation">
-			<arg>@java.lang.annotation.Target@class</arg>
+	<component class="org.seasar.framework.jpa.autodetector.MappingFileAutoDetector">
+		<initMethod name="addTargetDirPath">
+			<arg>"org/junit/runner"</arg>
 		</initMethod>
-		<initMethod name="addTargetPackageName">
-			<arg>"org.junit.runner"</arg>
+		<initMethod name="addResourceNamePattern">
+			<arg>".*/RunWith.class"</arg>
 		</initMethod>		
 	</component>
-		
+
 </components>

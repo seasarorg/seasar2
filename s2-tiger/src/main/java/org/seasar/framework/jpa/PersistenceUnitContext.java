@@ -15,20 +15,18 @@
  */
 package org.seasar.framework.jpa;
 
-import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityManager;
+import javax.transaction.Transaction;
 
 /**
  * @author koichik
  */
-public interface PersistenceUnitManager {
+public interface PersistenceUnitContext {
 
-    void addProvider(PersistenceUnitProvider provider);
+    EntityManager getEntityManager(Transaction tx);
 
-    void removeProvider(PersistenceUnitProvider provider);
+    void registerEntityManager(Transaction tx, EntityManager em);
 
-    EntityManagerFactory getEntityManagerFactory(final String unitName);
-
-    PersistenceUnitContext getPersistenceUnitContext(
-            final EntityManagerFactory emf);
+    void unregisterEntityManager(Transaction tx);
 
 }
