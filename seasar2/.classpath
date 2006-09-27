@@ -12,7 +12,7 @@
 	<classpathentry kind="src" path="examples/src/main/resources"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry exported="true" kind="lib" path="lib/aopalliance-1.0.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/javassist-3.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/javassist-3.3.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-logging-1.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/log4j-1.2.13.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/ognl-2.6.7.jar"/>
