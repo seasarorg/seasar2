@@ -19,6 +19,7 @@ import javax.sql.DataSource;
 
 import org.seasar.extension.datasource.DataSourceFactory;
 import org.seasar.framework.container.S2Container;
+import org.seasar.framework.util.StringUtil;
 
 /**
  * @author higa
@@ -67,7 +68,7 @@ public class DataSourceFactoryImpl implements DataSourceFactory {
 
     protected String getDataSourceComponentName(String name) {
         String dsName = getDataSourceName(name);
-        if (dsName == null) {
+        if (StringUtil.isEmpty(dsName)) {
             return "dataSource";
         }
         return dsName + "DataSource";

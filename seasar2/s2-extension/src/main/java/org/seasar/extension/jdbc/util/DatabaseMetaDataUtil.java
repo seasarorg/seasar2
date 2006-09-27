@@ -69,7 +69,7 @@ public final class DatabaseMetaDataUtil {
         return set;
     }
 
-    private static String getUserName(DatabaseMetaData dbMetaData) {
+    public static String getUserName(DatabaseMetaData dbMetaData) {
         try {
             return dbMetaData.getUserName();
         } catch (SQLException e) {
@@ -103,7 +103,8 @@ public final class DatabaseMetaDataUtil {
         return ret;
     }
 
-    public static Map getColumnMap(DatabaseMetaData dbMetaData, String tableName) {
+    public static CaseInsensitiveMap getColumnMap(DatabaseMetaData dbMetaData,
+            String tableName) {
         final String schema;
         int index = tableName.indexOf('.');
         if (index >= 0) {
@@ -114,7 +115,7 @@ public final class DatabaseMetaDataUtil {
         }
         final String convertedTableName = convertIdentifier(dbMetaData,
                 tableName);
-        Map map = new CaseInsensitiveMap();
+        CaseInsensitiveMap map = new CaseInsensitiveMap();
         addColumns(dbMetaData, convertIdentifier(dbMetaData, schema),
                 convertedTableName, map);
         if (map.size() == 0) {
@@ -126,6 +127,13 @@ public final class DatabaseMetaDataUtil {
                 addColumns(dbMetaData, null, tableName, map);
             }
         }
+        return map;
+    }
+
+    public static CaseInsensitiveMap getColumnMap(DatabaseMetaData dbMetaData,
+            String schema, String tableName) {
+        CaseInsensitiveMap map = new CaseInsensitiveMap();
+        addColumns(dbMetaData, schema, tableName, map);
         return map;
     }
 
@@ -173,6 +181,23 @@ public final class DatabaseMetaDataUtil {
     public static boolean storesUpperCaseIdentifiers(DatabaseMetaData dbMetaData) {
         try {
             return dbMetaData.storesUpperCaseIdentifiers();
+        } catch (SQLException ex) {
+            throw new SQLRuntimeException(ex);
+        }
+    }
+
+    public static boolean storesLowerCaseIdentifiers(DatabaseMetaData dbMetaData) {
+        try {
+            return dbMetaData.storesLowerCaseIdentifiers();
+        } catch (SQLException ex) {
+            throw new SQLRuntimeException(ex);
+        }
+    }
+
+    public static boolean supportsSchemasInTableDefinitions(
+            DatabaseMetaData dbMetaData) {
+        try {
+            return dbMetaData.supportsSchemasInTableDefinitions();
         } catch (SQLException ex) {
             throw new SQLRuntimeException(ex);
         }
