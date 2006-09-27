@@ -40,12 +40,9 @@ public class JndiContext implements Context {
 
     protected final String path;
 
-    protected S2Container container;
-
     public JndiContext(final Hashtable env) throws NamingException {
         this.env = env;
         this.path = (String) env.get(PROVIDER_URL);
-        this.container = SingletonS2ContainerFactory.getContainer();
     }
 
     public Object addToEnvironment(final String propName, final Object propVal)
@@ -66,7 +63,6 @@ public class JndiContext implements Context {
     }
 
     public void close() throws NamingException {
-        container = null;
     }
 
     public Name composeName(final Name name, final Name prefix)
@@ -140,7 +136,8 @@ public class JndiContext implements Context {
         if (StringUtil.isEmpty(name)) {
             return new JndiContext(new Hashtable(env));
         }
-        return container.getComponent(JndiResourceLocator.resolveName(name));
+        return SingletonS2ContainerFactory.getContainer().getComponent(
+                JndiResourceLocator.resolveName(name));
     }
 
     public Object lookupLink(final Name name) throws NamingException {
@@ -188,7 +185,7 @@ public class JndiContext implements Context {
             throws NamingException {
         final StringBuffer buf = new StringBuffer(100);
         try {
-            S2Container context = container;
+            S2Container context = SingletonS2ContainerFactory.getContainer();
             for (int i = 0; i < names.length - 1; ++i) {
                 buf.append(names[i]);
                 context = (S2Container) context.getComponent(names[i]);

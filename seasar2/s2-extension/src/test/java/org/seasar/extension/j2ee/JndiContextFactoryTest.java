@@ -20,9 +20,6 @@ import java.util.Hashtable;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.seasar.extension.unit.S2TestCase;
 
 public class JndiContextFactoryTest extends S2TestCase {
@@ -46,12 +43,4 @@ public class JndiContextFactoryTest extends S2TestCase {
         ctx_.close();
     }
 
-    public static Test suite() {
-        return new TestSuite(JndiContextFactoryTest.class);
-    }
-
-    public static void main(String[] args) {
-        junit.textui.TestRunner
-                .main(new String[] { JndiContextFactoryTest.class.getName() });
-    }
 }
