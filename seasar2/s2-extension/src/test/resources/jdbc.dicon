@@ -135,7 +135,7 @@
 
 	<!-- from JNDI -->
 	<!--
-	<component name="DataSource"
+	<component name="dataSource"
 		class="javax.sql.DataSource">
 		@org.seasar.extension.j2ee.JndiResourceLocator@lookup("java:comp/env/jdbc/DataSource")
 	</component>
