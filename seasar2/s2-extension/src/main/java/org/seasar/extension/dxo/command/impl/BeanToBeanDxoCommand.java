@@ -38,32 +38,27 @@ public class BeanToBeanDxoCommand extends AbstractDxoCommand {
 
     protected Method method;
 
-    protected Class sourceClass;
-
     protected Class destClass;
-
-    protected Converter converter;
 
     public BeanToBeanDxoCommand(final Class dxoClass, final Method method,
             final ConverterFactory converterFactory,
-            final AnnotationReader annotationReader, final Class sourceClass,
-            final Class destClass) {
+            final AnnotationReader annotationReader, final Class destClass) {
         super(method);
         this.dxoClass = dxoClass;
         this.method = method;
         this.converterFactory = converterFactory;
         this.annotationReader = annotationReader;
-        this.sourceClass = sourceClass;
         this.destClass = destClass;
-        converter = converterFactory.getConverter(sourceClass, destClass);
     }
 
     protected Object convertScalar(final Object source) {
+        final Converter converter = converterFactory.getConverter(source
+                .getClass(), destClass);
         return converter.convert(source, destClass, createContext(source));
     }
 
-    protected void copy(final Object src, final Object dest) {
-        BeanUtil.copyProperties(src, dest);
+    protected void copy(final Object source, final Object dest) {
+        BeanUtil.copyProperties(source, dest);
     }
 
     protected Class getDestElementType() {

@@ -37,15 +37,14 @@ public class BeanToMapDxoCommandTest extends TestCase {
     public void testScalar1() throws Exception {
         BeanToMapDxoCommand command = new BeanToMapDxoCommand(ClassUtil
                 .getMethod(ScalarDxo.class, "convert",
-                        new Class[] { Hoge.class }), MAP_CONVERSION);
+                        new Class[] { Hoge.class }));
         Hoge src = new Hoge(100, "Hoge", new BigDecimal("1000"));
         Map dest = (Map) command.execute(new Object[] { src });
         assertNotNull(dest);
-        assertEquals(4, dest.size());
-        assertEquals(new Integer(100), dest.get("one"));
-        assertEquals("Hoge", dest.get("two"));
-        assertEquals(new BigDecimal("1000"), dest.get("three"));
-        assertEquals("100Hoge1000", dest.get("four"));
+        assertEquals(3, dest.size());
+        assertEquals(new Integer(100), dest.get("foo"));
+        assertEquals("Hoge", dest.get("bar"));
+        assertEquals(new BigDecimal("1000"), dest.get("baz"));
     }
 
     public void testScalar2() throws Exception {

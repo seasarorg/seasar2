@@ -20,56 +20,49 @@ import java.util.Map;
 
 import junit.framework.TestCase;
 
+import org.seasar.extension.dxo.Hoge;
 import org.seasar.extension.dxo.annotation.impl.AnnotationReaderFactoryImpl;
+import org.seasar.extension.dxo.converter.impl.ConverterFactoryImpl;
 
 /**
  * @author koichik
  * 
  */
-public class BeanToMapDxoCommandBuilderTest extends TestCase {
+public class MapToBeanDxoCommandBuilderTest extends TestCase {
 
-    private BeanToMapDxoCommandBuilder builder;
+    private MapToBeanDxoCommandBuilder builder;
 
     protected void setUp() throws Exception {
         super.setUp();
-        builder = new BeanToMapDxoCommandBuilder();
+        builder = new MapToBeanDxoCommandBuilder();
+        builder.setConverterFactory(new ConverterFactoryImpl());
         builder.setAnnotationReaderFactory(new AnnotationReaderFactoryImpl());
     }
 
     public void testToScalar() throws Exception {
         assertNotNull(builder.createDxoCommand(ToScalarDxo.class,
                 ToScalarDxo.class.getMethod("convert",
-                        new Class[] { String.class })));
-        assertNotNull(builder.createDxoCommand(ToScalarDxo.class,
-                ToScalarDxo.class.getMethod("convert2",
-                        new Class[] { String.class })));
-        assertNotNull(builder.createDxoCommand(ToScalarDxo.class,
-                ToScalarDxo.class.getMethod("convert3",
-                        new Class[] { String.class })));
+                        new Class[] { Map.class })));
 
         assertNull(builder.createDxoCommand(ToScalarDxo.class,
                 ToScalarDxo.class.getMethod("convert",
-                        new Class[] { Object[].class })));
-        assertNull(builder.createDxoCommand(ToScalarDxo.class,
-                ToScalarDxo.class.getMethod("convert",
-                        new Class[] { List.class })));
+                        new Class[] { Object.class })));
     }
 
     public void testToArray() throws Exception {
         assertNotNull(builder.createDxoCommand(ToArrayDxo.class,
                 ToArrayDxo.class.getMethod("convert",
-                        new Class[] { Object[].class })));
-        assertNotNull(builder.createDxoCommand(ToArrayDxo.class,
-                ToArrayDxo.class.getMethod("convert",
-                        new Class[] { List.class })));
+                        new Class[] { Map[].class })));
 
         assertNull(builder.createDxoCommand(ToArrayDxo.class, ToArrayDxo.class
-                .getMethod("convert", new Class[] { Object.class })));
+                .getMethod("convert", new Class[] { List.class })));
+        assertNull(builder.createDxoCommand(ToArrayDxo.class, ToArrayDxo.class
+                .getMethod("convert", new Class[] { Object[].class })));
     }
 
     public void testToList() throws Exception {
         assertNull(builder.createDxoCommand(ToListDxo.class, ToListDxo.class
-                .getMethod("convert", new Class[] { Object[].class })));
+                .getMethod("convert", new Class[] { Map[].class })));
         assertNull(builder.createDxoCommand(ToListDxo.class, ToListDxo.class
                 .getMethod("convert", new Class[] { List.class })));
         assertNull(builder.createDxoCommand(ToListDxo.class, ToListDxo.class
@@ -77,39 +70,24 @@ public class BeanToMapDxoCommandBuilderTest extends TestCase {
     }
 
     public interface ToScalarDxo {
-        String convert_String_CONVERSION_RULE = "";
+        Hoge convert(Map src); // applicable
 
-        String convert2_CONVERSION_RULE = "";
-
-        Map convert(String src); // applicable
-
-        Map convert2(String src); // applicable
-
-        Map convert3(String src); // applicabel
-
-        Map convert(Object[] src); // not applicable
-
-        Map convert(List src); // not applicable
+        Hoge convert(Object src); // not applicable
     }
 
     public interface ToArrayDxo {
-        String convert_CONVERSION_RULE = "";
+        Hoge[] convert(Map[] src); // applicable
 
-        Map[] convert(Object[] src); // applicable
+        Hoge[] convert(List src); // not applicable
 
-        Map[] convert(List src); // not applicable
-
-        Map[] convert(Object src); // not applicable
+        Hoge[] convert(Object[] src); // not applicable
     }
 
     public interface ToListDxo {
-        String convert_CONVERSION_RULE = "";
-
-        List convert(Object[] src); // not applicable
+        List convert(Map[] src); // not applicable
 
         List convert(List src); // not applicable
 
         List convert(Object src); // not applicable
     }
-
 }

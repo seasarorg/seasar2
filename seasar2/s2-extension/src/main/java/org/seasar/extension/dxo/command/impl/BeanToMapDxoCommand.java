@@ -19,6 +19,9 @@ import java.lang.reflect.Method;
 import java.util.Map;
 
 import org.seasar.extension.dxo.util.DxoUtil;
+import org.seasar.framework.beans.BeanDesc;
+import org.seasar.framework.beans.PropertyDesc;
+import org.seasar.framework.beans.factory.BeanDescFactory;
 import org.seasar.framework.util.OgnlUtil;
 
 /**
@@ -29,13 +32,23 @@ public class BeanToMapDxoCommand extends AbstractDxoCommand {
 
     protected Object parsedExpression;
 
+    public BeanToMapDxoCommand(final Method method) {
+        this(method, null);
+    }
+
     public BeanToMapDxoCommand(final Method method, final String expression) {
         super(method);
-        parsedExpression = DxoUtil.parseMap(expression);
+        if (expression != null) {
+            parsedExpression = DxoUtil.parseMap(expression);
+        }
     }
 
     protected Object convertScalar(final Object source) {
-        return OgnlUtil.getValue(parsedExpression, source);
+        if (parsedExpression != null) {
+            return OgnlUtil.getValue(parsedExpression, source);
+        }
+        final String expression = createConversionRule(source.getClass());
+        return OgnlUtil.getValue(DxoUtil.parseMap(expression), source);
     }
 
     protected void copy(final Object src, final Object dest) {
@@ -47,6 +60,24 @@ public class BeanToMapDxoCommand extends AbstractDxoCommand {
 
     protected Class getDestElementType() {
         return Map.class;
+    }
+
+    protected String createConversionRule(final Class sourceType) {
+        final StringBuffer buf = new StringBuffer(100);
+        final BeanDesc beanDesc = BeanDescFactory.getBeanDesc(sourceType);
+        final int propertySize = beanDesc.getPropertyDescSize();
+        for (int i = 0; i < propertySize; ++i) {
+            final PropertyDesc propertyDesc = beanDesc.getPropertyDesc(i);
+            if (propertyDesc.hasReadMethod()) {
+                final String propertyName = propertyDesc.getPropertyName();
+                buf.append("'").append(propertyName).append("': ").append(
+                        propertyName).append(", ");
+            }
+        }
+        if (propertySize > 0) {
+            buf.setLength(buf.length() - 2);
+        }
+        return new String(buf);
     }
 
 }

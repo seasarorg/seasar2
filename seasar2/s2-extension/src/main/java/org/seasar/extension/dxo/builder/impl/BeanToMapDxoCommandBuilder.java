@@ -32,12 +32,6 @@ public class BeanToMapDxoCommandBuilder extends AbstractDxoCommandBuilder {
             Map[].class, List.class };
 
     public DxoCommand createDxoCommand(final Class dxoClass, final Method method) {
-        final String expression = getAnnotationReader().getConversionRule(
-                dxoClass, method);
-        if (expression == null) {
-            return null;
-        }
-
         final Class[] parameterTypes = method.getParameterTypes();
         final int parameterSize = parameterTypes.length;
         if (parameterSize != 1 && parameterSize != 2) {
@@ -47,9 +41,12 @@ public class BeanToMapDxoCommandBuilder extends AbstractDxoCommandBuilder {
         final Class sourceType = parameterTypes[0];
         final Class destType = parameterSize == 1 ? method.getReturnType()
                 : parameterTypes[1];
+        final String expression = getAnnotationReader().getConversionRule(
+                dxoClass, method);
+
         if (destType.isArray()) {
             final Class elementType = destType.getComponentType();
-            if (!elementType.isAssignableFrom(Map.class)) {
+            if (!Map.class.isAssignableFrom(elementType)) {
                 return null;
             }
             if (!sourceType.isArray()
@@ -58,14 +55,18 @@ public class BeanToMapDxoCommandBuilder extends AbstractDxoCommandBuilder {
             }
         } else if (List.class.isAssignableFrom(destType)) {
             final Class elementType = getElementTypeOfListFromDestination(method);
-            if (elementType != null && !elementType.isAssignableFrom(Map.class)) {
+            if (elementType == null || !Map.class.isAssignableFrom(elementType)) {
                 return null;
             }
             if (!sourceType.isArray()
                     && !List.class.isAssignableFrom(sourceType)) {
                 return null;
             }
-        } else if (!destType.isAssignableFrom(Map.class)) {
+        } else if (Map.class.isAssignableFrom(destType)) {
+            if (sourceType.isArray() || List.class.isAssignableFrom(sourceType)) {
+                return null;
+            }
+        } else {
             return null;
         }
 

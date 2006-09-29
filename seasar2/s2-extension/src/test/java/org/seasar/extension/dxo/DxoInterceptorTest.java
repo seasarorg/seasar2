@@ -16,8 +16,7 @@
 package org.seasar.extension.dxo;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.seasar.extension.unit.S2TestCase;
@@ -27,9 +26,12 @@ import org.seasar.extension.unit.S2TestCase;
  * 
  */
 public class DxoInterceptorTest extends S2TestCase {
+
     private BeanDxo beanDxo;
 
-    private MapDxo mapDxo;
+    private FromMapDxo fromMapDxo;
+
+    private ToMapDxo toMapDxo;
 
     protected void setUp() throws Exception {
         super.setUp();
@@ -58,6 +60,7 @@ public class DxoInterceptorTest extends S2TestCase {
         assertEquals('g', dest.getBar()[2]);
         assertEquals('e', dest.getBar()[3]);
         assertEquals(1000, dest.getBaz());
+        assertEquals("hoge", dest.getHoge());
     }
 
     public void testBeanScalar3() throws Exception {
@@ -125,10 +128,51 @@ public class DxoInterceptorTest extends S2TestCase {
         assertEquals("Bar", dest.getDname());
     }
 
-    public void testMapScalar() throws Exception {
+    public void testFromMap_Scalar() throws Exception {
+        Map src = new HashMap();
+        src.put("foo", new Integer(100));
+        src.put("bar", "Hoge");
+        src.put("baz", new BigDecimal("1000"));
+
+        Hoge dest = fromMapDxo.convert(src);
+
+        assertNotNull(dest);
+        assertEquals(100, dest.getFoo());
+        assertEquals("Hoge", dest.getBar());
+        assertEquals(new BigDecimal("1000"), dest.getBaz());
+    }
+
+    public void testFromMap_ArrayToArray() {
+        Map[] src = new Map[2];
+        src[0] = new HashMap();
+        src[0].put("foo", new Integer(100));
+        src[0].put("bar", "Hoge");
+        src[0].put("baz", new BigDecimal("1000"));
+        src[1] = new HashMap();
+        src[1].put("foo", new Integer(200));
+        src[1].put("bar", "HogeHoge");
+        src[1].put("baz", new BigDecimal("2000"));
+
+        Hoge[] dest = fromMapDxo.convert(src);
+
+        assertNotNull(dest);
+        assertEquals(2, dest.length);
+
+        assertNotNull(dest[0]);
+        assertEquals(100, dest[0].getFoo());
+        assertEquals("Hoge", dest[0].getBar());
+        assertEquals(new BigDecimal("1000"), dest[0].getBaz());
+
+        assertNotNull(dest[1]);
+        assertEquals(200, dest[1].getFoo());
+        assertEquals("HogeHoge", dest[1].getBar());
+        assertEquals(new BigDecimal("2000"), dest[1].getBaz());
+    }
+
+    public void testToMap_Scalar() throws Exception {
         Hoge src = new Hoge(100, "Hoge", new BigDecimal("1000"));
 
-        Map dest = mapDxo.convert(src);
+        Map dest = toMapDxo.convert(src);
 
         assertNotNull(dest);
         assertEquals(4, dest.size());
@@ -138,12 +182,12 @@ public class DxoInterceptorTest extends S2TestCase {
         assertEquals("100Hoge1000", dest.get("four"));
     }
 
-    public void testMapArrayToArray() {
+    public void testToMap_ArrayToArray() {
         Hoge[] src = new Hoge[2];
         src[0] = new Hoge(100, "Hoge", new BigDecimal("1000"));
         src[1] = new Hoge(200, "HogeHoge", new BigDecimal("2000"));
 
-        Map[] dest = mapDxo.convert(src);
+        Map[] dest = toMapDxo.convert(src);
 
         assertNotNull(dest);
         assertEquals(2, dest.length);
@@ -161,31 +205,6 @@ public class DxoInterceptorTest extends S2TestCase {
         assertEquals("200HogeHoge2000", dest[1].get("four"));
     }
 
-    public void testMapListToList() {
-        List src = new ArrayList();
-        src.add(new Hoge(100, "Hoge", new BigDecimal("1000")));
-        src.add(new Hoge(200, "HogeHoge", new BigDecimal("2000")));
-
-        List dest = mapDxo.convert(src);
-
-        assertNotNull(dest);
-        assertEquals(2, dest.size());
-
-        Map map = (Map) dest.get(0);
-        assertEquals(4, map.size());
-        assertEquals(new Integer(100), map.get("one"));
-        assertEquals("Hoge", map.get("two"));
-        assertEquals(new BigDecimal("1000"), map.get("three"));
-        assertEquals("100Hoge1000", map.get("four"));
-
-        map = (Map) dest.get(1);
-        assertEquals(4, map.size());
-        assertEquals(new Integer(200), map.get("one"));
-        assertEquals("HogeHoge", map.get("two"));
-        assertEquals(new BigDecimal("2000"), map.get("three"));
-        assertEquals("200HogeHoge2000", map.get("four"));
-    }
-
     public interface BeanDxo {
         Hoge convert1(Hoge src);
 
@@ -200,18 +219,20 @@ public class DxoInterceptorTest extends S2TestCase {
         EmpDto convert(Employee emp);
     }
 
-    public interface MapDxo {
+    public interface FromMapDxo {
+        Hoge convert(Map src);
+
+        Hoge[] convert(Map[] src);
+    }
+
+    public interface ToMapDxo {
         String convert_Hoge_CONVERSION_RULE = "'one' : foo, 'two' : bar, 'three' : baz, 'four' : foo+bar+baz";
 
         String convert_Hoge$_CONVERSION_RULE = "'one' : foo, 'two' : bar, 'three' : baz, 'four' : foo+bar+baz";
 
-        String convert_List_CONVERSION_RULE = "'one' : foo, 'two' : bar, 'three' : baz, 'four' : foo+bar+baz";
-
         Map convert(Hoge src);
 
         Map[] convert(Hoge[] src);
-
-        List convert(List src);
     }
 
 }

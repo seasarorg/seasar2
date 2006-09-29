@@ -44,7 +44,7 @@ public abstract class AbstractDxoCommand implements DxoCommand {
 
     protected abstract Class getDestElementType();
 
-    protected abstract void copy(Object src, Object dest);
+    protected abstract void copy(Object source, Object dest);
 
     protected Object[] createArray(final int length) {
         return (Object[]) Array.newInstance(getDestElementType(), length);
@@ -136,11 +136,11 @@ public abstract class AbstractDxoCommand implements DxoCommand {
 
     public class ListToListConvertsionHelper implements ConversionHelper {
         public Object convert(final Object[] args) {
-            final List src = (List) args[0];
+            final List source = (List) args[0];
             final List dest = args.length == 1 ? new ArrayList()
                     : (List) args[1];
             dest.clear();
-            for (final Iterator it = src.iterator(); it.hasNext();) {
+            for (final Iterator it = source.iterator(); it.hasNext();) {
                 dest.add(convertScalar(it.next()));
             }
             return dest;

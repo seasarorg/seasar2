@@ -8,6 +8,7 @@
 	<component class="org.seasar.extension.dxo.converter.impl.ConverterFactoryImpl"/>
 	<component class="org.seasar.extension.dxo.annotation.impl.AnnotationReaderFactoryImpl"/>
 
+	<component class="org.seasar.extension.dxo.builder.impl.MapToBeanDxoCommandBuilder"/>
 	<component class="org.seasar.extension.dxo.builder.impl.BeanToMapDxoCommandBuilder"/>
 	<component class="org.seasar.extension.dxo.builder.impl.BeanToBeanDxoCommandBuilder"/>
 </components>

@@ -51,9 +51,10 @@ public class BeanToBeanDxoCommandBuilderTest extends TestCase {
         assertNotNull(builder.createDxoCommand(ToArrayDxo.class,
                 ToArrayDxo.class.getMethod("convert",
                         new Class[] { Object[].class })));
+        assertNotNull(builder.createDxoCommand(ToArrayDxo.class,
+                ToArrayDxo.class.getMethod("convert",
+                        new Class[] { List.class })));
 
-        assertNull(builder.createDxoCommand(ToArrayDxo.class, ToArrayDxo.class
-                .getMethod("convert", new Class[] { List.class })));
         assertNull(builder.createDxoCommand(ToArrayDxo.class, ToArrayDxo.class
                 .getMethod("convert", new Class[] { Object.class })));
     }
@@ -76,7 +77,7 @@ public class BeanToBeanDxoCommandBuilderTest extends TestCase {
     public interface ToArrayDxo {
         String[] convert(Object[] src); // applicable
 
-        String[] convert(List src); // not applicable
+        String[] convert(List src); // applicable
 
         String[] convert(Object src); // not applicable
     }

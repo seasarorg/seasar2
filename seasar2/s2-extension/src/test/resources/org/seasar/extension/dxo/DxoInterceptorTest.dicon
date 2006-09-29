@@ -8,7 +8,11 @@
 		<aspect>dxo.interceptor</aspect>
 	</component>	
 
-	<component class="org.seasar.extension.dxo.DxoInterceptorTest$MapDxo">
+	<component class="org.seasar.extension.dxo.DxoInterceptorTest$ToMapDxo">
+		<aspect>dxo.interceptor</aspect>
+	</component>	
+
+	<component class="org.seasar.extension.dxo.DxoInterceptorTest$FromMapDxo">
 		<aspect>dxo.interceptor</aspect>
 	</component>	
 </components>

@@ -27,6 +27,16 @@ public class HogeHoge {
 
     private int baz;
 
+    private String hoge = "hoge";
+
+    public String getHoge() {
+        return hoge;
+    }
+
+    public void setHoge(String hoge) {
+        this.hoge = hoge;
+    }
+
     public HogeHoge() {
     }
 

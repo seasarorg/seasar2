@@ -54,7 +54,7 @@ public class ConversionContextImpl implements ConversionContext {
 
     protected Map contextInfo;
 
-    protected Map evaluatedValues;
+    protected Map evaluatedValues = new HashMap();
 
     public static synchronized void initialize() {
         if (initialized) {
@@ -105,17 +105,15 @@ public class ConversionContextImpl implements ConversionContext {
     }
 
     public boolean hasEvalueatedValue(final String name) {
-        if (evaluatedValues == null) {
-            return false;
-        }
         return evaluatedValues.containsKey(name);
     }
 
     public Object getEvaluatedValue(final String name) {
-        if (evaluatedValues == null) {
-            return null;
-        }
         return evaluatedValues.get(name);
+    }
+
+    public void addEvaluatedValue(final String name, final Object value) {
+        evaluatedValues.put(name, value);
     }
 
     protected Map getContextInfo(final AnnotationReader reader) {

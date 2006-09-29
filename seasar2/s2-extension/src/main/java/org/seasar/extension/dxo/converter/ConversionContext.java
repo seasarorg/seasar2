@@ -33,4 +33,6 @@ public interface ConversionContext {
 
     Object getEvaluatedValue(String name);
 
+    void addEvaluatedValue(String name, Object value);
+
 }

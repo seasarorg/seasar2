@@ -17,16 +17,17 @@ package org.seasar.extension.dxo.builder.impl;
 
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.Map;
 
 import org.seasar.extension.dxo.command.DxoCommand;
-import org.seasar.extension.dxo.command.impl.BeanToBeanDxoCommand;
+import org.seasar.extension.dxo.command.impl.MapToBeanDxoCommand;
 import org.seasar.extension.dxo.converter.ConverterFactory;
 
 /**
  * @author koichik
  * 
  */
-public class BeanToBeanDxoCommandBuilder extends AbstractDxoCommandBuilder {
+public class MapToBeanDxoCommandBuilder extends AbstractDxoCommandBuilder {
 
     protected ConverterFactory converterFactory;
 
@@ -42,35 +43,42 @@ public class BeanToBeanDxoCommandBuilder extends AbstractDxoCommandBuilder {
         }
 
         final Class sourceType = parameterTypes[0];
+        final Class sourceElementClass = getElementTypeOfListFromParameterType(
+                method, 0);
         final Class destType = parameterSize == 1 ? method.getReturnType()
                 : parameterTypes[1];
         final Class destElementClass = getElementTypeOfListFromDestination(method);
 
         if (sourceType.isArray()) {
-            if (destType.isArray()) {
-                return new BeanToBeanDxoCommand(dxoClass, method,
-                        converterFactory, getAnnotationReader(), destType
-                                .getComponentType());
-            } else if (List.class.isAssignableFrom(destType)
-                    && destElementClass != null) {
-                return new BeanToBeanDxoCommand(dxoClass, method,
-                        converterFactory, getAnnotationReader(),
-                        destElementClass);
+            final Class elementType = sourceType.getComponentType();
+            if (Map.class.isAssignableFrom(elementType)) {
+                if (destType.isArray()) {
+                    return new MapToBeanDxoCommand(dxoClass, method,
+                            converterFactory, getAnnotationReader(), destType
+                                    .getComponentType());
+                } else if (List.class.isAssignableFrom(destType)
+                        && destElementClass != null) {
+                    return new MapToBeanDxoCommand(dxoClass, method,
+                            converterFactory, getAnnotationReader(),
+                            destElementClass);
+                }
             }
         } else if (List.class.isAssignableFrom(sourceType)) {
-            if (destType.isArray()) {
-                return new BeanToBeanDxoCommand(dxoClass, method,
-                        converterFactory, getAnnotationReader(), destType
-                                .getComponentType());
-            } else if (List.class.isAssignableFrom(destType)
-                    && destElementClass != null) {
-                return new BeanToBeanDxoCommand(dxoClass, method,
-                        converterFactory, getAnnotationReader(),
-                        destElementClass);
+            if (sourceElementClass != null
+                    && Map.class.isAssignableFrom(sourceElementClass)) {
+                if (destType.isArray()) {
+                    return new MapToBeanDxoCommand(dxoClass, method,
+                            converterFactory, getAnnotationReader(), destType
+                                    .getComponentType());
+                } else if (List.class.isAssignableFrom(destType)) {
+                    return new MapToBeanDxoCommand(dxoClass, method,
+                            converterFactory, getAnnotationReader(),
+                            destElementClass);
+                }
             }
-        } else {
+        } else if (Map.class.isAssignableFrom(sourceType)) {
             if (!destType.isArray() && !List.class.isAssignableFrom(destType)) {
-                return new BeanToBeanDxoCommand(dxoClass, method,
+                return new MapToBeanDxoCommand(dxoClass, method,
                         converterFactory, getAnnotationReader(), destType);
             }
         }

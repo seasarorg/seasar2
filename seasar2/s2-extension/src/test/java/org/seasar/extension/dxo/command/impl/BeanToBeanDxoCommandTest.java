@@ -57,6 +57,7 @@ public class BeanToBeanDxoCommandTest extends TestCase {
         assertEquals('g', dest.getBar()[2]);
         assertEquals('e', dest.getBar()[3]);
         assertEquals(1000, dest.getBaz());
+        assertEquals("hoge", dest.getHoge());
     }
 
     public void testScalar2() throws Exception {
