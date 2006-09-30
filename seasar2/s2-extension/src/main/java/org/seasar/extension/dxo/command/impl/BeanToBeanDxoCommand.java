@@ -22,7 +22,6 @@ import org.seasar.extension.dxo.converter.ConversionContext;
 import org.seasar.extension.dxo.converter.Converter;
 import org.seasar.extension.dxo.converter.ConverterFactory;
 import org.seasar.extension.dxo.converter.impl.ConversionContextImpl;
-import org.seasar.framework.beans.util.BeanUtil;
 
 /**
  * @author koichik
@@ -57,8 +56,10 @@ public class BeanToBeanDxoCommand extends AbstractDxoCommand {
         return converter.convert(source, destClass, createContext(source));
     }
 
-    protected void copy(final Object source, final Object dest) {
-        BeanUtil.copyProperties(source, dest);
+    protected void convertScalar(final Object source, final Object dest) {
+        final Converter converter = converterFactory.getConverter(source
+                .getClass(), destClass);
+        converter.convert(source, dest, createContext(source));
     }
 
     protected Class getDestElementType() {

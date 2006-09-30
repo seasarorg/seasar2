@@ -42,9 +42,9 @@ public abstract class AbstractDxoCommand implements DxoCommand {
 
     protected abstract Object convertScalar(Object source);
 
-    protected abstract Class getDestElementType();
+    protected abstract void convertScalar(Object source, Object dest);
 
-    protected abstract void copy(Object source, Object dest);
+    protected abstract Class getDestElementType();
 
     protected Object[] createArray(final int length) {
         return (Object[]) Array.newInstance(getDestElementType(), length);
@@ -87,10 +87,11 @@ public abstract class AbstractDxoCommand implements DxoCommand {
 
     public class ScalarConversionHelper implements ConversionHelper {
         public Object convert(final Object[] args) {
-            final Object dest = convertScalar(args[0]);
-            if (args.length > 1) {
-                copy(dest, args[1]);
+            if (args.length == 1) {
+                return convertScalar(args[0]);
             }
+            final Object dest = args[1];
+            convertScalar(args[0], dest);
             return dest;
         }
     }

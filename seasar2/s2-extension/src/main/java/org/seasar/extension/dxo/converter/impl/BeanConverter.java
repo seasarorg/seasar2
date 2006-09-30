@@ -59,12 +59,17 @@ public class BeanConverter extends AbstractConverter {
 
         try {
             final Object dest = ClassUtil.newInstance(destClass);
-            context.addConvertedObject(source, dest);
-            setValues(source, dest, context);
+            convert(source, dest, context);
             return dest;
         } catch (final InstantiationRuntimeException ignore) {
         }
         return null;
+    }
+
+    public void convert(final Object source, final Object dest,
+            final ConversionContext context) {
+        context.addConvertedObject(source, dest);
+        setValues(source, dest, context);
     }
 
     protected void setValues(final Object source, final Object dest,

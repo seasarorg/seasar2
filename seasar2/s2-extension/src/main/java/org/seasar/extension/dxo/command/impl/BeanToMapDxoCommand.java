@@ -51,8 +51,8 @@ public class BeanToMapDxoCommand extends AbstractDxoCommand {
         return OgnlUtil.getValue(DxoUtil.parseMap(expression), source);
     }
 
-    protected void copy(final Object src, final Object dest) {
-        final Map srcMap = (Map) src;
+    protected void convertScalar(final Object source, final Object dest) {
+        final Map srcMap = (Map) convertScalar(source);
         final Map destMap = (Map) dest;
         destMap.clear();
         destMap.putAll(srcMap);
