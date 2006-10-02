@@ -17,24 +17,19 @@ package org.seasar.extension.dxo.builder.impl;
 
 import java.util.List;
 
-import junit.framework.TestCase;
-
-import org.seasar.extension.dxo.annotation.impl.AnnotationReaderFactoryImpl;
-import org.seasar.extension.dxo.converter.impl.ConverterFactoryImpl;
+import org.seasar.framework.unit.S2FrameworkTestCase;
 
 /**
  * @author koichik
  */
-public class BeanToBeanDxoCommandBuilderTigerTest extends TestCase {
+public class BeanToBeanDxoCommandBuilderTigerTest extends S2FrameworkTestCase {
 
     private BeanToBeanDxoCommandBuilder builder;
 
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        builder = new BeanToBeanDxoCommandBuilder();
-        builder.setConverterFactory(new ConverterFactoryImpl());
-        builder.setAnnotationReaderFactory(new AnnotationReaderFactoryImpl());
+        include("dxo.dicon");
     }
 
     public void testToArray() throws Exception {

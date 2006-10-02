@@ -19,28 +19,23 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import junit.framework.TestCase;
-
 import org.seasar.extension.dxo.Hoge;
 import org.seasar.extension.dxo.HogeHoge;
-import org.seasar.extension.dxo.annotation.impl.AnnotationReaderFactoryImpl;
 import org.seasar.extension.dxo.builder.impl.BeanToBeanDxoCommandBuilder;
 import org.seasar.extension.dxo.command.DxoCommand;
-import org.seasar.extension.dxo.converter.impl.ConverterFactoryImpl;
+import org.seasar.framework.unit.S2FrameworkTestCase;
 
 /**
  * @author koichik
  */
-public class BeanToBeanDxoCommandTigerTest extends TestCase {
+public class BeanToBeanDxoCommandTigerTest extends S2FrameworkTestCase {
 
     private BeanToBeanDxoCommandBuilder builder;
 
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        builder = new BeanToBeanDxoCommandBuilder();
-        builder.setConverterFactory(new ConverterFactoryImpl());
-        builder.setAnnotationReaderFactory(new AnnotationReaderFactoryImpl());
+        include("dxo.dicon");
     }
 
     @SuppressWarnings("unchecked")

@@ -17,21 +17,42 @@ package org.seasar.extension.dxo.annotation.impl;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.seasar.extension.dxo.annotation.AnnotationReader;
 import org.seasar.extension.dxo.annotation.ConversionRule;
 import org.seasar.extension.dxo.annotation.DatePattern;
+import org.seasar.extension.dxo.annotation.DxoConverter;
 import org.seasar.extension.dxo.annotation.TimePattern;
 import org.seasar.extension.dxo.annotation.TimestampPattern;
+import org.seasar.extension.dxo.converter.Converter;
+import org.seasar.framework.beans.BeanDesc;
+import org.seasar.framework.beans.PropertyDesc;
+import org.seasar.framework.beans.factory.BeanDescFactory;
+import org.seasar.framework.beans.util.BeanUtil;
+import org.seasar.framework.container.S2Container;
+import org.seasar.framework.util.tiger.AnnotationUtil;
 
 /**
  * @author koichik
  */
 public class TigerAnnotationReader implements AnnotationReader {
 
+    protected S2Container container;
+
     protected AnnotationReader next;
 
-    public TigerAnnotationReader(final AnnotationReader next) {
+    protected Map convertersCache = Collections.synchronizedMap(new HashMap());
+
+    public TigerAnnotationReader(final S2Container container) {
+        this(container, null);
+    }
+
+    public TigerAnnotationReader(final S2Container container,
+            final AnnotationReader next) {
+        this.container = container.getRoot();
         this.next = next;
     }
 
@@ -71,6 +92,14 @@ public class TigerAnnotationReader implements AnnotationReader {
         return null;
     }
 
+    public Map getConverters(final Class destClass) {
+        final Map converters = (Map) convertersCache.get(destClass);
+        if (converters != null) {
+            return converters;
+        }
+        return createConverters(destClass);
+    }
+
     protected <T extends Annotation> T getAnnotation(final Class<?> dxoClass,
             final Method method, final Class<T> annotationType) {
         final T annotation = method.getAnnotation(annotationType);
@@ -90,6 +119,38 @@ public class TigerAnnotationReader implements AnnotationReader {
             return next.getConversionRule(dxoClass, method);
         }
         return null;
+    }
+
+    protected Map createConverters(final Class destClass) {
+        final Map converters = new HashMap();
+        final BeanDesc beanDesc = BeanDescFactory.getBeanDesc(destClass);
+        for (int i = 0; i < beanDesc.getPropertyDescSize(); ++i) {
+            final PropertyDesc propertyDesc = beanDesc.getPropertyDesc(i);
+            if (!propertyDesc.hasWriteMethod()) {
+                continue;
+            }
+            final Method method = propertyDesc.getWriteMethod();
+            for (final Annotation annotation : method.getDeclaredAnnotations()) {
+                final Class<? extends Annotation> annotationType = annotation
+                        .annotationType();
+                final Annotation metaAnnotation = annotationType
+                        .getAnnotation(DxoConverter.class);
+                if (metaAnnotation == null) {
+                    continue;
+                }
+                final DxoConverter dxoConverterAnnotation = DxoConverter.class
+                        .cast(metaAnnotation);
+                final String converterName = dxoConverterAnnotation.value();
+                final Converter converter = Converter.class.cast(container
+                        .getComponent(converterName));
+                final Map props = AnnotationUtil.getProperties(annotation);
+                BeanUtil.copyProperties(props, converter);
+                converters.put(propertyDesc.getPropertyName(), converter);
+                break;
+            }
+        }
+        convertersCache.put(destClass, converters);
+        return converters;
     }
 
 }
