@@ -26,6 +26,7 @@ import org.seasar.extension.dxo.DateDto;
 import org.seasar.extension.dxo.DateStringDto;
 import org.seasar.extension.dxo.DateStringDto2;
 import org.seasar.extension.dxo.DateStringDto3;
+import org.seasar.extension.dxo.converter.Converter;
 
 /**
  * @author Satsohi Kimura
@@ -38,6 +39,7 @@ public class BeanConverterTest extends AbstractConverterTest {
     protected void setUp() throws Exception {
         super.setUp();
         converter = new BeanConverter();
+        register(SqlDateConverter.class, "sqlDateDxoConverter");
     }
 
     public void testConvert1() throws Exception {
@@ -132,6 +134,20 @@ public class BeanConverterTest extends AbstractConverterTest {
         System.out.println(crDeptDto);
     }
 
+    public void testGetConverter() throws Exception {
+        Converter fooConverter = converter.getConverter(String.class,
+                Hoge.class, Date.class, "foo", createContext(
+                        "testGetConverter", null));
+        assertNotNull(fooConverter);
+        assertTrue(fooConverter instanceof SqlDateConverter);
+
+        Converter barConverter = converter.getConverter(String.class,
+                Hoge.class, Date.class, "bar", createContext(
+                        "testGetConverter", null));
+        assertNotNull(barConverter);
+        assertTrue(barConverter instanceof DateConverter);
+    }
+
     private int getDate(Date d) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(d);
@@ -148,6 +164,30 @@ public class BeanConverterTest extends AbstractConverterTest {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(d);
         return calendar.get(Calendar.YEAR);
+    }
+
+    public static class Hoge {
+        public static final String foo_sqlDateDxoConverter = null;
+
+        protected Date foo;
+
+        protected Date bar;
+
+        public Date getFoo() {
+            return foo;
+        }
+
+        public void setFoo(Date foo) {
+            this.foo = foo;
+        }
+
+        public Date getBar() {
+            return bar;
+        }
+
+        public void setBar(Date bar) {
+            this.bar = bar;
+        }
     }
 
 }

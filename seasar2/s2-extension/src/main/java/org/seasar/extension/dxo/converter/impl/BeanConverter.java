@@ -109,8 +109,8 @@ public class BeanConverter extends AbstractConverter {
         }
         final Class sourcePropertyClass = sourcePropertyValue.getClass();
         final Class destPropertyClass = destPropertyDesc.getPropertyType();
-        final Converter converter = context.getConverterFactory().getConverter(
-                sourcePropertyClass, destPropertyClass);
+        final Converter converter = getConverter(sourcePropertyClass, dest
+                .getClass(), destPropertyClass, destPropertyName, context);
         final Object convertedValue = converter.convert(sourcePropertyValue,
                 destPropertyClass, context);
         destPropertyDesc.setValue(dest, convertedValue);
@@ -275,4 +275,15 @@ public class BeanConverter extends AbstractConverter {
         return null;
     }
 
+    protected Converter getConverter(final Class sourcePropertyClass,
+            final Class destClass, final Class destPropertyClass,
+            final String destPropertyName, final ConversionContext context) {
+        final Converter converter = context.getConverter(destClass,
+                destPropertyName);
+        if (converter != null) {
+            return converter;
+        }
+        return context.getConverterFactory().getConverter(sourcePropertyClass,
+                destPropertyClass);
+    }
 }

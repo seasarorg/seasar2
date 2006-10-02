@@ -19,6 +19,7 @@ import java.lang.reflect.Constructor;
 
 import org.seasar.extension.dxo.annotation.AnnotationReader;
 import org.seasar.extension.dxo.annotation.AnnotationReaderFactory;
+import org.seasar.framework.container.S2Container;
 import org.seasar.framework.exception.ClassNotFoundRuntimeException;
 import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.ConstructorUtil;
@@ -31,22 +32,25 @@ public class AnnotationReaderFactoryImpl implements AnnotationReaderFactory {
 
     private static final String TIGER_ANNOTATION_HANDLER_CLASS_NAME = "org.seasar.extension.dxo.annotation.impl.TigerAnnotationReader";
 
-    private AnnotationReader annotationHandler;
+    protected S2Container container;
 
-    public AnnotationReaderFactoryImpl() {
-        annotationHandler = new ConstantAnnotationReader();
+    protected AnnotationReader annotationReader;
+
+    public AnnotationReaderFactoryImpl(final S2Container container) {
+        this.container = container;
+        annotationReader = new ConstantAnnotationReader(container);
         try {
             final Class clazz = ClassUtil
                     .forName(TIGER_ANNOTATION_HANDLER_CLASS_NAME);
             final Constructor ctor = ClassUtil.getConstructor(clazz,
-                    new Class[] { AnnotationReader.class });
-            annotationHandler = (AnnotationReader) ConstructorUtil.newInstance(
-                    ctor, new Object[] { annotationHandler });
+                    new Class[] { S2Container.class, AnnotationReader.class });
+            annotationReader = (AnnotationReader) ConstructorUtil.newInstance(
+                    ctor, new Object[] { container, annotationReader });
         } catch (final ClassNotFoundRuntimeException ignore) {
         }
     }
 
     public AnnotationReader getAnnotationReader() {
-        return annotationHandler;
+        return annotationReader;
     }
 }

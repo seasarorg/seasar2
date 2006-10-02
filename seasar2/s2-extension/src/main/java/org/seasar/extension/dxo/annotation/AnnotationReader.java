@@ -16,6 +16,7 @@
 package org.seasar.extension.dxo.annotation;
 
 import java.lang.reflect.Method;
+import java.util.Map;
 
 /**
  * @author Satsohi Kimura
@@ -30,5 +31,7 @@ public interface AnnotationReader {
     String getTimestampPattern(Class dxoClass, Method method);
 
     String getConversionRule(Class dxoClass, Method method);
+
+    Map getConverters(Class destClass);
 
 }

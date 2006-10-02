@@ -35,4 +35,6 @@ public interface ConversionContext {
 
     void addEvaluatedValue(String name, Object value);
 
+    Converter getConverter(Class clazz, String name);
+
 }

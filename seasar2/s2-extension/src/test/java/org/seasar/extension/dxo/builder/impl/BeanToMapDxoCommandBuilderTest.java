@@ -18,22 +18,19 @@ package org.seasar.extension.dxo.builder.impl;
 import java.util.List;
 import java.util.Map;
 
-import junit.framework.TestCase;
-
-import org.seasar.extension.dxo.annotation.impl.AnnotationReaderFactoryImpl;
+import org.seasar.framework.unit.S2FrameworkTestCase;
 
 /**
  * @author koichik
  * 
  */
-public class BeanToMapDxoCommandBuilderTest extends TestCase {
+public class BeanToMapDxoCommandBuilderTest extends S2FrameworkTestCase {
 
     private BeanToMapDxoCommandBuilder builder;
 
     protected void setUp() throws Exception {
         super.setUp();
-        builder = new BeanToMapDxoCommandBuilder();
-        builder.setAnnotationReaderFactory(new AnnotationReaderFactoryImpl());
+        include("dxo.dicon");
     }
 
     public void testToScalar() throws Exception {

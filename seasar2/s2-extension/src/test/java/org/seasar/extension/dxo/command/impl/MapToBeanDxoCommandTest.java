@@ -19,28 +19,23 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
-import junit.framework.TestCase;
-
 import org.seasar.extension.dxo.Hoge;
 import org.seasar.extension.dxo.HogeHoge;
-import org.seasar.extension.dxo.annotation.impl.AnnotationReaderFactoryImpl;
 import org.seasar.extension.dxo.builder.impl.MapToBeanDxoCommandBuilder;
 import org.seasar.extension.dxo.command.DxoCommand;
-import org.seasar.extension.dxo.converter.impl.ConverterFactoryImpl;
+import org.seasar.framework.unit.S2FrameworkTestCase;
 
 /**
  * @author koichik
  * 
  */
-public class MapToBeanDxoCommandTest extends TestCase {
+public class MapToBeanDxoCommandTest extends S2FrameworkTestCase {
 
     private MapToBeanDxoCommandBuilder builder;
 
     protected void setUp() throws Exception {
         super.setUp();
-        builder = new MapToBeanDxoCommandBuilder();
-        builder.setConverterFactory(new ConverterFactoryImpl());
-        builder.setAnnotationReaderFactory(new AnnotationReaderFactoryImpl());
+        include("dxo.dicon");
     }
 
     public void testScalar1() throws Exception {

@@ -26,6 +26,7 @@ import java.util.Map;
 import org.seasar.extension.dxo.DxoConstants;
 import org.seasar.extension.dxo.annotation.AnnotationReader;
 import org.seasar.extension.dxo.converter.ConversionContext;
+import org.seasar.extension.dxo.converter.Converter;
 import org.seasar.extension.dxo.converter.ConverterFactory;
 import org.seasar.extension.dxo.util.DxoUtil;
 import org.seasar.framework.util.Disposable;
@@ -49,6 +50,8 @@ public class ConversionContextImpl implements ConversionContext {
     protected Method method;
 
     protected ConverterFactory converterFactory;
+
+    protected AnnotationReader annotationReader;
 
     protected Map convertedObjects = new IdentityHashMap();
 
@@ -75,13 +78,14 @@ public class ConversionContextImpl implements ConversionContext {
 
     public ConversionContextImpl(final Class dxoClass, final Method method,
             final ConverterFactory converterFactory,
-            final AnnotationReader reader, final Object source) {
+            final AnnotationReader annotationReader, final Object source) {
         initialize();
         this.dxoClass = dxoClass;
         this.method = method;
         this.converterFactory = converterFactory;
-        contextInfo = getContextInfo(reader);
+        this.annotationReader = annotationReader;
 
+        contextInfo = getContextInfo(annotationReader);
         final Object conversionRule = getContextInfo(DxoConstants.CONVERSION_RULE);
         if (conversionRule != null) {
             evaluatedValues = (Map) OgnlUtil.getValue(conversionRule, source);
@@ -114,6 +118,11 @@ public class ConversionContextImpl implements ConversionContext {
 
     public void addEvaluatedValue(final String name, final Object value) {
         evaluatedValues.put(name, value);
+    }
+
+    public Converter getConverter(final Class clazz, final String name) {
+        final Map map = annotationReader.getConverters(clazz);
+        return (Converter) map.get(name);
     }
 
     protected Map getContextInfo(final AnnotationReader reader) {

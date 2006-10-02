@@ -15,13 +15,22 @@
  */
 package org.seasar.extension.dxo.annotation.impl;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.seasar.extension.dxo.DxoConstants;
 import org.seasar.extension.dxo.annotation.AnnotationReader;
+import org.seasar.extension.dxo.converter.Converter;
 import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.factory.BeanDescFactory;
+import org.seasar.framework.beans.util.BeanUtil;
+import org.seasar.framework.container.S2Container;
+import org.seasar.framework.container.util.ConstantAnnotationUtil;
 import org.seasar.framework.util.ClassUtil;
+import org.seasar.framework.util.FieldUtil;
 
 /**
  * @author Satoshi Kimura
@@ -29,7 +38,12 @@ import org.seasar.framework.util.ClassUtil;
  */
 public class ConstantAnnotationReader implements AnnotationReader {
 
-    public ConstantAnnotationReader() {
+    protected S2Container container;
+
+    protected Map convertersCache = Collections.synchronizedMap(new HashMap());
+
+    public ConstantAnnotationReader(final S2Container container) {
+        this.container = container.getRoot();
     }
 
     public String getDatePattern(final Class dxoClass, final Method method) {
@@ -62,7 +76,7 @@ public class ConstantAnnotationReader implements AnnotationReader {
         return null;
     }
 
-    public String getConversionRule(Class dxoClass, Method method) {
+    public String getConversionRule(final Class dxoClass, final Method method) {
         final BeanDesc dxoBeanDesc = BeanDescFactory.getBeanDesc(dxoClass);
         String fieldName = getConstantAnnotationName(method,
                 DxoConstants.CONVERSION_RULE);
@@ -74,6 +88,46 @@ public class ConstantAnnotationReader implements AnnotationReader {
             return (String) dxoBeanDesc.getFieldValue(fieldName, null);
         }
         return null;
+    }
+
+    public Map getConverters(final Class destClass) {
+        final Map converters = (Map) convertersCache.get(destClass);
+        if (converters != null) {
+            return converters;
+        }
+        return createConverters(destClass);
+    }
+
+    protected Map createConverters(final Class destClass) {
+        final Map converters = new HashMap();
+        final BeanDesc beanDesc = BeanDescFactory.getBeanDesc(destClass);
+        for (int i = 0; i < beanDesc.getFieldSize(); ++i) {
+            final Field field = beanDesc.getField(i);
+            if (!ConstantAnnotationUtil.isConstantAnnotation(field)) {
+                continue;
+            }
+            if (!field.getName().endsWith("DxoConverter")) {
+                continue;
+            }
+            final String fieldName = field.getName();
+            final int index = fieldName.lastIndexOf("_");
+            final String propertyName = fieldName.substring(0, index);
+            if (!beanDesc.hasPropertyDesc(propertyName)) {
+                continue;
+            }
+            final String converterName = fieldName.substring(index + 1);
+            if (!container.hasComponentDef(converterName)) {
+                continue;
+            }
+            final Converter converter = (Converter) container
+                    .getComponent(converterName);
+            final String s = (String) FieldUtil.get(field, null);
+            final Map props = ConstantAnnotationUtil.convertExpressionToMap(s);
+            BeanUtil.copyProperties(props, converter);
+            converters.put(propertyName, converter);
+        }
+        convertersCache.put(destClass, converters);
+        return converters;
     }
 
     protected String getConstantAnnotationName(final Method method,
