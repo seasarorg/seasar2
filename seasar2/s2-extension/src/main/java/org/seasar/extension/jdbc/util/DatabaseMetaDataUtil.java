@@ -69,6 +69,13 @@ public final class DatabaseMetaDataUtil {
         return set;
     }
 
+    public static Set getPrimaryKeySet(DatabaseMetaData dbMetaData,
+            String schema, String tableName) {
+        Set set = new CaseInsensitiveSet();
+        addPrimaryKeys(dbMetaData, schema, tableName, set);
+        return set;
+    }
+
     public static String getUserName(DatabaseMetaData dbMetaData) {
         try {
             return dbMetaData.getUserName();
