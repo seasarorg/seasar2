@@ -177,8 +177,9 @@ public class S2TestClassMethodsRunner extends Runner implements Filterable,
     }
 
     public void filter(final Filter filter) throws NoTestsRemainException {
-        for (final Iterator iter = testMethods.iterator(); iter.hasNext();) {
-            final Method method = (Method) iter.next();
+        for (final Iterator<Method> iter = testMethods.iterator(); iter
+                .hasNext();) {
+            final Method method = iter.next();
             if (!filter.shouldRun(methodDescription(method))) {
                 iter.remove();
             }

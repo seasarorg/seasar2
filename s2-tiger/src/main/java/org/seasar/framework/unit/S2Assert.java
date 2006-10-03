@@ -154,11 +154,13 @@ public class S2Assert extends Assert {
 
     protected static class S2TestCaseAdapter extends S2TestCase {
 
+        @SuppressWarnings("unchecked")
         @Override
         protected void assertMapEquals(String message, DataSet expected, Map map) {
             super.assertMapEquals(message, expected, map);
         }
 
+        @SuppressWarnings("unchecked")
         @Override
         protected void assertMapListEquals(String message, DataSet expected,
                 List list) {
@@ -173,12 +175,13 @@ public class S2Assert extends Assert {
             super.assertBeanEquals(message, expected, bean);
         }
 
+        @SuppressWarnings("unchecked")
         @Override
         protected void assertBeanListEquals(String message, DataSet expected,
                 List list) {
 
             super.assertBeanListEquals(message, expected, list);
         }
-    };
+    }
 
 }

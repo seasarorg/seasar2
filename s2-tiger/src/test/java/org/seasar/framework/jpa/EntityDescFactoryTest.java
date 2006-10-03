@@ -25,14 +25,15 @@ import org.seasar.framework.unit.EasyMockTestCase;
  */
 public class EntityDescFactoryTest extends EasyMockTestCase {
 
-    private EntityDesc entityDesc1;
+    private EntityDesc<Foo> entityDesc1;
 
-    private EntityDesc entityDesc2;
+    private EntityDesc<Bar> entityDesc2;
 
     private EntityDescProvider provider1;
 
     private EntityDescProvider provider2;
 
+    @SuppressWarnings("unchecked")
     @Override
     protected void setUp() throws Exception {
         super.setUp();
@@ -50,14 +51,16 @@ public class EntityDescFactoryTest extends EasyMockTestCase {
         new EasyMockTestCase.Subsequence() {
             @Override
             protected void replay() throws Exception {
-                EntityDesc fooDesc = EntityDescFactory.getEntityDesc(Foo.class);
+                EntityDesc<Foo> fooDesc = EntityDescFactory
+                        .getEntityDesc(Foo.class);
                 assertSame(entityDesc1, fooDesc);
 
-                EntityDesc fooDesc2 = EntityDescFactory
+                EntityDesc<Foo> fooDesc2 = EntityDescFactory
                         .getEntityDesc(Foo.class);
                 assertSame(entityDesc1, fooDesc2);
 
-                EntityDesc barDesc = EntityDescFactory.getEntityDesc(Bar.class);
+                EntityDesc<Bar> barDesc = EntityDescFactory
+                        .getEntityDesc(Bar.class);
                 assertSame(entityDesc2, barDesc);
             }
 

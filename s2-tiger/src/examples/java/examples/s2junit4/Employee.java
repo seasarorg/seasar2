@@ -75,6 +75,7 @@ public class Employee implements Serializable {
         this.dname = dname;
     }
 
+    @Override
     public boolean equals(Object other) {
         if (!(other instanceof Employee))
             return false;
@@ -82,10 +83,12 @@ public class Employee implements Serializable {
         return this.getEmpno() == castOther.getEmpno();
     }
 
+    @Override
     public int hashCode() {
         return (int) this.getEmpno();
     }
 
+    @Override
     public String toString() {
         StringBuffer buf = new StringBuffer();
         buf.append(empno).append(", ");

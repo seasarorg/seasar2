@@ -44,6 +44,7 @@ public class Hoge14 implements IHoge14 {
         return param + "-hoge";
     }
 
+    @SuppressWarnings("unused")
     @AroundInvoke
     private Object interceptor(InvocationContext context) throws Exception {
         String param = (String) context.getParameters()[0];

@@ -40,7 +40,7 @@ public class S2Parameterized extends S2TestClassRunner {
 
         private final int parameterSetNumber;
 
-        private final Constructor constructor;
+        private final Constructor<?> constructor;
 
         private TestClassRunnerForParameters(final Class<?> klass,
                 final Object[] parameters, int i) {
@@ -66,8 +66,9 @@ public class S2Parameterized extends S2TestClassRunner {
                     .format("%s[%s]", method.getName(), parameterSetNumber);
         }
 
-        private Constructor getOnlyConstructor() {
-            final Constructor[] constructors = getTestClass().getConstructors();
+        private Constructor<?> getOnlyConstructor() {
+            final Constructor<?>[] constructors = getTestClass()
+                    .getConstructors();
             assertEquals(1, constructors.length);
             return constructors[0];
         }

@@ -124,6 +124,7 @@ public class DxoInterceptorTigerTest extends S2TestCase {
         assertEquals(new BigDecimal("2000"), hoge.getBaz());
     }
 
+    @SuppressWarnings("unchecked")
     public void testFromMap_Scalar() throws Exception {
         Map src = new HashMap();
         src.put("foo", new Integer(100));
@@ -138,6 +139,7 @@ public class DxoInterceptorTigerTest extends S2TestCase {
         assertEquals(new BigDecimal("1000"), dest.getBaz());
     }
 
+    @SuppressWarnings("unchecked")
     public void testFromMap_ArrayToList() {
         Map[] src = new Map[2];
         src[0] = new HashMap();
@@ -167,6 +169,7 @@ public class DxoInterceptorTigerTest extends S2TestCase {
         assertEquals(new BigDecimal("2000"), hoge.getBaz());
     }
 
+    @SuppressWarnings("unchecked")
     public void testFromMap_ListToArray() {
         List<Map> src = new ArrayList<Map>();
         Map map = new HashMap();
@@ -197,6 +200,7 @@ public class DxoInterceptorTigerTest extends S2TestCase {
         assertEquals(new BigDecimal("2000"), dest[1].getBaz());
     }
 
+    @SuppressWarnings("unchecked")
     public void testToMap_Scalar() throws Exception {
         Hoge src = new Hoge(100, "Hoge", new BigDecimal("1000"));
 
@@ -230,6 +234,7 @@ public class DxoInterceptorTigerTest extends S2TestCase {
         assertEquals(new BigDecimal("2000"), dest[1].get("baz"));
     }
 
+    @SuppressWarnings("unchecked")
     public void testToMap_ListToList() throws Exception {
         List<Hoge> src = new ArrayList<Hoge>();
         src.add(new Hoge(100, "Hoge", new BigDecimal("1000")));
@@ -263,6 +268,7 @@ public class DxoInterceptorTigerTest extends S2TestCase {
         List<Hoge> convertListToList(List<HogeHoge> src);
     }
 
+    @SuppressWarnings("unchecked")
     public interface FromMapDxo {
         Hoge convert(Map src);
 
@@ -271,6 +277,7 @@ public class DxoInterceptorTigerTest extends S2TestCase {
         Hoge[] convert(List<Map> src);
     }
 
+    @SuppressWarnings("unchecked")
     public interface ToMapDxo {
         Map convert(Hoge src);
 

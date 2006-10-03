@@ -35,6 +35,7 @@ public class EntityDescFactory {
     protected static final List<EntityDescProvider> providers = Collections
             .synchronizedList(new ArrayList<EntityDescProvider>());
 
+    @SuppressWarnings("unchecked")
     protected static final ConcurrentMap<Class<?>, EntityDesc> entityDescs = CollectionsUtil
             .newConcurrentHashMap();
 

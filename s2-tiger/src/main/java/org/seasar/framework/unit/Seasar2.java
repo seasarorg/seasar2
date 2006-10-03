@@ -96,10 +96,12 @@ public class Seasar2 extends Runner {
         configurationContainer = null;
     }
 
+    @Override
     public Description getDescription() {
         return delegate.getDescription();
     }
 
+    @Override
     public void run(RunNotifier notifier) {
         try {
             delegate.run(notifier);

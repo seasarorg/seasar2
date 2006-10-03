@@ -175,6 +175,7 @@ public class ReflectionUtilTest extends TestCase {
             this.s = s;
         }
 
+        @SuppressWarnings("unused")
         public List<String> convert(List<Object> o, List<Integer> i) {
             return null;
         }

@@ -29,6 +29,7 @@ public @interface EJB {
 
     String name() default "";
 
+    @SuppressWarnings("unchecked")
     Class beanInterface() default Object.class;
 
     String beanName() default "";

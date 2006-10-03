@@ -181,6 +181,7 @@ public class MetaAnnotationAspectDefBuilder extends AbstractAspectDefBuilder {
             this.annotation = annotation;
         }
 
+        @SuppressWarnings("unchecked")
         public Object evaluate(final S2Container container, final Map context) {
             final MethodInterceptor interceptor = MethodInterceptor.class
                     .cast(container

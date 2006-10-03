@@ -54,6 +54,7 @@ public class Seasar2Test extends S2TestCase {
 
     private static boolean txActive;
 
+    @Override
     public void setUp() {
         log = "";
         count = 0;
@@ -152,6 +153,7 @@ public class Seasar2Test extends S2TestCase {
             log += "b";
         }
 
+        @SuppressWarnings("unused")
         private void ccc() {
             log += "c";
         }
@@ -161,10 +163,12 @@ public class Seasar2Test extends S2TestCase {
             return null;
         }
 
-        public void eee(String a) {
+        public void eee(@SuppressWarnings("unused")
+        String a) {
             log += "e";
         }
 
+        @SuppressWarnings("unused")
         @Ignore
         private void fff() {
             log += "f";
@@ -267,7 +271,7 @@ public class Seasar2Test extends S2TestCase {
     public static class ParametarizedTest {
 
         @Parameters
-        public static Collection parameters() {
+        public static Collection<?> parameters() {
             return Arrays
                     .asList(new Object[][] { { 1, 1 }, { 2, 4 }, { 3, 9 } });
         }

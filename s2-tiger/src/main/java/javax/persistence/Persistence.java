@@ -40,6 +40,7 @@ public class Persistence {
         return createEntityManagerFactory(persistenceUnitName, null);
     }
 
+    @SuppressWarnings("unchecked")
     public static EntityManagerFactory createEntityManagerFactory(
             String persistenceUnitName, Map properties) {
         EntityManagerFactory emf = null;
@@ -48,7 +49,6 @@ public class Persistence {
                 findAllProviders();
             } catch (IOException exc) {
             }
-            ;
         }
         for (PersistenceProvider provider : providers) {
             emf = provider.createEntityManagerFactory(persistenceUnitName,

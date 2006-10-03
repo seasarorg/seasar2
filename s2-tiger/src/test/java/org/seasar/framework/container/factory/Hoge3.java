@@ -31,9 +31,11 @@ public class Hoge3 {
 
     public static final String DESTROY_METHOD = "destroy";
 
+    @SuppressWarnings("unused")
     public void setAaa(String aaa) {
     }
 
+    @SuppressWarnings("unused")
     public void setBbb(String bbb) {
     }
 

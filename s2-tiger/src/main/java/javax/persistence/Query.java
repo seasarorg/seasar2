@@ -24,6 +24,7 @@ import java.util.List;
  */
 public interface Query {
 
+    @SuppressWarnings("unchecked")
     public List getResultList();
 
     public Object getSingleResult();

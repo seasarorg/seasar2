@@ -61,7 +61,7 @@ public class InternalTestContextImpl implements InternalTestContext {
 
     protected S2Container container;
 
-    protected MockServletContext servletContext;;
+    protected MockServletContext servletContext;
 
     protected Servlet servlet;
 
@@ -153,7 +153,8 @@ public class InternalTestContextImpl implements InternalTestContext {
         S2ContainerFactory.include(container, convertedPath);
     }
 
-    public void register(final Class componentClass, final String componentName) {
+    public void register(final Class<?> componentClass,
+            final String componentName) {
         final ComponentDef cd = handler
                 .createComponentDef(componentClass, null);
         if (componentName != null) {
@@ -166,7 +167,7 @@ public class InternalTestContextImpl implements InternalTestContext {
         container.register(cd);
     }
 
-    public void register(final Class componentClass) {
+    public void register(final Class<?> componentClass) {
         final ComponentDef cd = handler
                 .createComponentDef(componentClass, null);
         if (cd.getComponentName() == null) {

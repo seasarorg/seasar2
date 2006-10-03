@@ -155,6 +155,7 @@ public class Hoge11 implements IHoge11A, IHoge11B {
     public void notAnnotated() {
     }
 
+    @SuppressWarnings("unused")
     @PostConstruct
     private void initialize() {
         foo = "FOO";

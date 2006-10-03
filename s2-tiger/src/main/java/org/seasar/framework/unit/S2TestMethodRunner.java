@@ -199,7 +199,7 @@ public class S2TestMethodRunner {
         testContext.setTestClass(testClass);
         testContext.setTestMethod(method);
 
-        for (Class clazz = testClass; clazz != Object.class; clazz = clazz
+        for (Class<?> clazz = testClass; clazz != Object.class; clazz = clazz
                 .getSuperclass()) {
 
             final Field[] fields = clazz.getDeclaredFields();
@@ -283,7 +283,7 @@ public class S2TestMethodRunner {
     }
 
     protected void bindFields() throws Throwable {
-        for (Class clazz = testClass; clazz != Object.class; clazz = clazz
+        for (Class<?> clazz = testClass; clazz != Object.class; clazz = clazz
                 .getSuperclass()) {
 
             final Field[] fields = clazz.getDeclaredFields();
@@ -302,7 +302,7 @@ public class S2TestMethodRunner {
             final String name = resolveComponentName(field);
             Object component = null;
             if (testContext.hasComponentDef(name)) {
-                Class componentClass = testContext.getComponentDef(name)
+                Class<?> componentClass = testContext.getComponentDef(name)
                         .getComponentClass();
                 if (componentClass == null) {
                     component = testContext.getComponent(name);

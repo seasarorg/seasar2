@@ -27,6 +27,7 @@ public @interface MessageDriven {
 
     String name() default "";
 
+    @SuppressWarnings("unchecked")
     Class messageListenerInterface() default Object.class;
 
     ActivationConfigProperty[] activationConfig() default {};

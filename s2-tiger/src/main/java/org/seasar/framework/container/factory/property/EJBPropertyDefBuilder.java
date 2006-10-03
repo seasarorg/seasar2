@@ -16,6 +16,7 @@ public class EJBPropertyDefBuilder extends AbstractPropertyDefBuilder<EJB> {
         return EJB.class;
     }
 
+    @Override
     protected PropertyDef createPropertyDef(final String propertyName,
             final AccessTypeDef accessTypeDef, final EJB ejb) {
         return createPropertyDef(propertyName, accessTypeDef,

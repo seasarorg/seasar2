@@ -24,9 +24,9 @@ import org.seasar.framework.container.ComponentDef;
  */
 public interface TestContext {
 
-    void register(Class componentClass);
+    void register(Class<?> componentClass);
 
-    void register(Class componentClass, String componentName);
+    void register(Class<?> componentClass, String componentName);
 
     void register(Object component);
 

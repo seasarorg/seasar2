@@ -27,6 +27,7 @@ public class TigerPropertyAnnotationHandlerTest extends
         super(name);
     }
 
+    @Override
     protected String getPath() {
         return PATH;
     }

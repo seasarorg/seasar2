@@ -36,7 +36,8 @@ public class GreetingMain {
         }
     }
 
-    public static void doMain(String[] args) throws Exception {
+    public static void doMain(@SuppressWarnings("unused")
+    String[] args) throws Exception {
         Context ctx = new InitialContext();
         GreetingClient greetingClient = (GreetingClient) ctx
                 .lookup("greetingClient");

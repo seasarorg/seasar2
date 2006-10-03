@@ -32,7 +32,7 @@ public class AnnotationUtilTest extends TestCase {
     public void testGetProperties() throws Exception {
         Method m = ClassUtil.getMethod(getClass(), "testGetProperties", null);
         Annotation anno = m.getAnnotation(Hoge.class);
-        Map props = AnnotationUtil.getProperties(anno);
+        Map<String, Object> props = AnnotationUtil.getProperties(anno);
         assertEquals("123", props.get("aaa"));
         assertEquals("3", props.get("bbb"));
     }

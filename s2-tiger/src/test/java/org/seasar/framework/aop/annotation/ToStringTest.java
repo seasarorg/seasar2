@@ -36,6 +36,7 @@ public class ToStringTest extends TestCase {
 
     AnnotationHandler handler;
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         container = new S2ContainerImpl();
@@ -57,6 +58,7 @@ public class ToStringTest extends TestCase {
     public static class Hoge {
         String name = "Hoge";
 
+        @Override
         @ToString
         public String toString() {
             return super.toString();

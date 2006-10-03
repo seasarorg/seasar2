@@ -35,6 +35,7 @@ public class SyncTest extends TestCase {
 
     AnnotationHandler handler;
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         container = new S2ContainerImpl();

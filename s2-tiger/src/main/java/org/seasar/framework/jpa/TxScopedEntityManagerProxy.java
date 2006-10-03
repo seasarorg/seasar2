@@ -178,6 +178,7 @@ public class TxScopedEntityManagerProxy implements EntityManager {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public Query createNativeQuery(final String sqlString,
             final Class resultClass) {
         final boolean mustClose = !isTxActive();

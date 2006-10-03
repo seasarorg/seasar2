@@ -46,8 +46,10 @@ public class BeanToMapDxoCommandBuilderTigerTest extends S2FrameworkTestCase {
     public interface ToListDxo {
         String convert_CONVERSION_RULE = "";
 
+        @SuppressWarnings("unchecked")
         List<Map> convert(Object[] src);
 
+        @SuppressWarnings("unchecked")
         List<Map> convert(List<Object> src);
 
         List<Integer> convert(String[] src);

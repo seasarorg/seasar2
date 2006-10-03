@@ -21,6 +21,7 @@ public interface EntityManagerFactory {
 
     EntityManager createEntityManager();
 
+    @SuppressWarnings("unchecked")
     EntityManager createEntityManager(Map map);
 
     void close();

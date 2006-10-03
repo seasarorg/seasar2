@@ -215,6 +215,8 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
         destroyMethodDefBuilders.clear();
     }
 
+    @SuppressWarnings("unchecked")
+    @Override
     public ComponentDef createComponentDef(final Class componentClass,
             final InstanceDef defaultInstanceDef,
             final AutoBindingDef defaultAutoBindingDef,
@@ -234,6 +236,7 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
                 defaultAutoBindingDef, defaultExternalBinding);
     }
 
+    @Override
     public PropertyDef createPropertyDef(final BeanDesc beanDesc,
             PropertyDesc propertyDesc) {
         if (propertyDesc.hasWriteMethod()) {
@@ -248,6 +251,7 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
         return super.createPropertyDef(beanDesc, propertyDesc);
     }
 
+    @Override
     public PropertyDef createPropertyDef(final BeanDesc beanDesc,
             final Field field) {
         for (final PropertyDefBuilder builder : propertyDefBuilders) {
@@ -260,6 +264,7 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
         return super.createPropertyDef(beanDesc, field);
     }
 
+    @Override
     public void appendAspect(final ComponentDef componentDef) {
         for (final AspectDefBuilder builder : aspectDefBuilders) {
             builder.appendAspectDef(this, componentDef);
@@ -267,6 +272,7 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
         super.appendAspect(componentDef);
     }
 
+    @Override
     public void appendInterType(final ComponentDef componentDef) {
         for (final IntertypeDefBuilder builder : intertypeDefBuilders) {
             builder.appendIntertypeDef(this, componentDef);
@@ -274,8 +280,9 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
         super.appendInterType(componentDef);
     }
 
+    @Override
     public void appendInitMethod(final ComponentDef componentDef) {
-        Class componentClass = componentDef.getComponentClass();
+        Class<?> componentClass = componentDef.getComponentClass();
         if (componentClass == null) {
             return;
         }
@@ -285,8 +292,9 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
         super.appendInitMethod(componentDef);
     }
 
+    @Override
     public void appendDestroyMethod(final ComponentDef componentDef) {
-        Class componentClass = componentDef.getComponentClass();
+        Class<?> componentClass = componentDef.getComponentClass();
         if (componentClass == null) {
             return;
         }

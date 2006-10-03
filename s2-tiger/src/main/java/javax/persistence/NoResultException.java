@@ -16,6 +16,7 @@
 package javax.persistence;
 
 public class NoResultException extends PersistenceException {
+    private static final long serialVersionUID = 1L;
 
     public NoResultException() {
         super();

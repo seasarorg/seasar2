@@ -67,6 +67,7 @@ public class PersistenceUnitPropertyDefBuilder extends
             return unitName;
         }
 
+        @SuppressWarnings("unchecked")
         public Object evaluate(final S2Container container, final Map context) {
             final PersistenceUnitManager pum = (PersistenceUnitManager) container
                     .getComponent("jpa.persistenceUnitManager");

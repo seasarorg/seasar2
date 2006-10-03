@@ -46,6 +46,7 @@ public interface EntityManager {
 
     public Query createNativeQuery(String sqlString);
 
+    @SuppressWarnings("unchecked")
     public Query createNativeQuery(String sqlString, Class resultClass);
 
     public Query createNativeQuery(String sqlString, String resultSetMapping);

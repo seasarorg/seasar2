@@ -16,6 +16,7 @@
 package javax.persistence;
 
 public class OptimisticLockException extends PersistenceException {
+    private static final long serialVersionUID = 1L;
 
     Object entity;
 

@@ -16,6 +16,7 @@
 package javax.persistence;
 
 public class TransactionRequiredException extends PersistenceException {
+    private static final long serialVersionUID = 1L;
 
     public TransactionRequiredException() {
         super();

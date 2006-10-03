@@ -28,6 +28,7 @@ import org.seasar.framework.container.annotation.tiger.PropertyType;
  */
 public class TigerPropertyAnnotationHandler implements
         PropertyAnnotationHandler {
+    @SuppressWarnings("unchecked")
     public int getPropertyType(Class clazz, int defaultValue) {
         return getPropertyTypeInternal(clazz, defaultValue);
     }

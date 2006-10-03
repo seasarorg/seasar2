@@ -20,10 +20,12 @@ import org.seasar.framework.container.annotation.tiger.InitMethod;
 
 public class Hoge6 {
 
+    @SuppressWarnings("unused")
     @InitMethod
     public void init(String s) {
     }
 
+    @SuppressWarnings("unused")
     @DestroyMethod
     public void destroy(String s) {
     }

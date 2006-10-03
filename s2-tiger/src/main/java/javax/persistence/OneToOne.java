@@ -26,6 +26,7 @@ import java.lang.annotation.Target;
 @Target( { METHOD, FIELD })
 @Retention(RUNTIME)
 public @interface OneToOne {
+    @SuppressWarnings("unchecked")
     Class targetEntity() default void.class;
 
     CascadeType[] cascade() default {};

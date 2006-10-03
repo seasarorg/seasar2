@@ -26,6 +26,7 @@ import org.seasar.framework.unit.S2FrameworkTestCase;
  */
 public class RemoveSessionTest extends S2FrameworkTestCase {
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         include(RemoveSessionTest.class.getName().replace('.', '/') + ".dicon");

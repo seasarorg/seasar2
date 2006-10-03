@@ -20,9 +20,11 @@ import java.util.Map;
 import javax.persistence.EntityManagerFactory;
 
 public interface PersistenceProvider {
+    @SuppressWarnings("unchecked")
     public EntityManagerFactory createEntityManagerFactory(String emName,
             Map map);
 
+    @SuppressWarnings("unchecked")
     public EntityManagerFactory createContainerEntityManagerFactory(
             PersistenceUnitInfo info, Map map);
 

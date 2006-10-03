@@ -39,6 +39,7 @@ public class TigerPropertyAnnotationHandlerTarget implements
     @Property(PropertyType.READWRITE)
     protected int protectedField_;
 
+    @SuppressWarnings("unused")
     @Property(PropertyType.READWRITE)
     private int privateField_;
 

@@ -244,6 +244,7 @@ public class ConventionTestIntrospectorTest extends S2TestCase {
         public void afterDdd() {
         }
 
+        @SuppressWarnings("unused")
         private void eee() {
         }
 
@@ -254,6 +255,7 @@ public class ConventionTestIntrospectorTest extends S2TestCase {
             return null;
         }
 
+        @SuppressWarnings("unused")
         public void hhh(String s) {
         }
 

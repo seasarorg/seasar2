@@ -7,6 +7,7 @@ public class Interceptor2 {
     public Interceptor2() {
     }
 
+    @SuppressWarnings("unused")
     @AroundInvoke
     private Object invoke(InvocationContext context) throws Exception {
         String param = (String) context.getParameters()[0];

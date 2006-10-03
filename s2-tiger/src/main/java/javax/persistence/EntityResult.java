@@ -23,6 +23,7 @@ import java.lang.annotation.Target;
 @Target( {})
 @Retention(RUNTIME)
 public @interface EntityResult {
+    @SuppressWarnings("unchecked")
     Class entityClass();
 
     FieldResult[] fields() default {};

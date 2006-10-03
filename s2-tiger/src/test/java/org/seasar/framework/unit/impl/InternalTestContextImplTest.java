@@ -30,6 +30,7 @@ public class InternalTestContextImplTest extends S2TestCase {
 
     private InternalTestContext testCtx;
 
+    @Override
     protected void setUp() throws Exception {
         include("TestContextImplTest.dicon");
     }

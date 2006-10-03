@@ -160,7 +160,7 @@ public class ConventionTestIntrospector extends AnnotationTestIntrospector {
     @Override
     public List<Method> getTestMethods(final Class<?> testClass) {
         final List<Method> results = new ArrayList<Method>();
-        for (Class eachClass : getSuperClasses(testClass)) {
+        for (Class<?> eachClass : getSuperClasses(testClass)) {
             final Method[] methods = eachClass.getDeclaredMethods();
             for (final Method eachMethod : methods) {
                 if (isTestMethod(eachMethod)
@@ -172,8 +172,8 @@ public class ConventionTestIntrospector extends AnnotationTestIntrospector {
         return results;
     }
 
-    protected List<Class> getSuperClasses(final Class<?> testClass) {
-        final ArrayList<Class> results = new ArrayList<Class>();
+    protected List<Class<?>> getSuperClasses(final Class<?> testClass) {
+        final ArrayList<Class<?>> results = new ArrayList<Class<?>>();
         Class<?> current = testClass;
         while (current != null && current != Object.class) {
             results.add(current);
@@ -264,7 +264,7 @@ public class ConventionTestIntrospector extends AnnotationTestIntrospector {
 
     protected Method getMethod(final Class<?> testClass, final String methodName) {
 
-        for (Class eachClass : getSuperClasses(testClass)) {
+        for (Class<?> eachClass : getSuperClasses(testClass)) {
             final Method[] methods = eachClass.getDeclaredMethods();
             for (final Method eachMethod : methods) {
                 if (eachMethod.getName().equals(methodName)) {

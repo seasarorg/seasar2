@@ -82,8 +82,7 @@ public class MappingFileAutoDetector extends AbstractResourceAutoDetector {
             }
         }
 
-        return (ResourceAutoDetector.Entry[]) result.toArray(new Entry[result
-                .size()]);
+        return result.toArray(new Entry[result.size()]);
     }
 
     protected void detect(final List<ResourceAutoDetector.Entry> result,

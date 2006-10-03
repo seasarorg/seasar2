@@ -33,6 +33,7 @@ public @interface Resource {
 
     String name() default "";
 
+    @SuppressWarnings("unchecked")
     Class type() default Object.class;
 
     AuthenticationType authenticationType() default AuthenticationType.CONTAINER;

@@ -16,6 +16,8 @@
 package javax.persistence;
 
 public class EntityExistsException extends PersistenceException {
+    private static final long serialVersionUID = 1L;
+
     public EntityExistsException() {
         super();
     }

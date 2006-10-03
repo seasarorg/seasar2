@@ -37,6 +37,7 @@ public class PersistenceClassAutoDetectorTest extends S2TestCase {
         include("PersistenceClassAutoDetectorTest.dicon");
     }
 
+    @SuppressWarnings("unchecked")
     public void testDetect() throws Exception {
         List<Class> classes = Arrays.asList(detector.detect());
         assertTrue(classes.size() >= 3);

@@ -13,7 +13,7 @@ public class ResourcePropertyDefBuilder extends
     }
 
     @Override
-    protected Class getAnnotationType() {
+    protected Class<Resource> getAnnotationType() {
         return Resource.class;
     }
 

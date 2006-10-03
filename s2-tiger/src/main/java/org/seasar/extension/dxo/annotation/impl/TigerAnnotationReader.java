@@ -34,6 +34,7 @@ import org.seasar.framework.beans.factory.BeanDescFactory;
 import org.seasar.framework.beans.util.BeanUtil;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.util.tiger.AnnotationUtil;
+import org.seasar.framework.util.tiger.CollectionsUtil;
 
 /**
  * @author koichik
@@ -44,7 +45,8 @@ public class TigerAnnotationReader implements AnnotationReader {
 
     protected AnnotationReader next;
 
-    protected Map convertersCache = Collections.synchronizedMap(new HashMap());
+    protected Map<Class<?>, Map<String, Converter>> convertersCache = Collections
+            .synchronizedMap(new HashMap<Class<?>, Map<String, Converter>>());
 
     public TigerAnnotationReader(final S2Container container) {
         this(container, null);
@@ -56,6 +58,7 @@ public class TigerAnnotationReader implements AnnotationReader {
         this.next = next;
     }
 
+    @SuppressWarnings("unchecked")
     public String getDatePattern(final Class dxoClass, final Method method) {
         final DatePattern datePattern = getAnnotation(dxoClass, method,
                 DatePattern.class);
@@ -68,6 +71,7 @@ public class TigerAnnotationReader implements AnnotationReader {
         return null;
     }
 
+    @SuppressWarnings("unchecked")
     public String getTimePattern(final Class dxoClass, final Method method) {
         final TimePattern timePattern = getAnnotation(dxoClass, method,
                 TimePattern.class);
@@ -80,6 +84,7 @@ public class TigerAnnotationReader implements AnnotationReader {
         return null;
     }
 
+    @SuppressWarnings("unchecked")
     public String getTimestampPattern(final Class dxoClass, final Method method) {
         final TimestampPattern timestampPattern = getAnnotation(dxoClass,
                 method, TimestampPattern.class);
@@ -92,23 +97,17 @@ public class TigerAnnotationReader implements AnnotationReader {
         return null;
     }
 
+    @SuppressWarnings("unchecked")
     public Map getConverters(final Class destClass) {
-        final Map converters = (Map) convertersCache.get(destClass);
+        final Map<String, Converter> converters = convertersCache
+                .get(destClass);
         if (converters != null) {
             return converters;
         }
         return createConverters(destClass);
     }
 
-    protected <T extends Annotation> T getAnnotation(final Class<?> dxoClass,
-            final Method method, final Class<T> annotationType) {
-        final T annotation = method.getAnnotation(annotationType);
-        if (annotation != null) {
-            return annotation;
-        }
-        return dxoClass.getAnnotation(annotationType);
-    }
-
+    @SuppressWarnings("unchecked")
     public String getConversionRule(final Class dxoClass, final Method method) {
         final ConversionRule mapConversion = method
                 .getAnnotation(ConversionRule.class);
@@ -121,8 +120,17 @@ public class TigerAnnotationReader implements AnnotationReader {
         return null;
     }
 
-    protected Map createConverters(final Class destClass) {
-        final Map converters = new HashMap();
+    protected <T extends Annotation> T getAnnotation(final Class<?> dxoClass,
+            final Method method, final Class<T> annotationType) {
+        final T annotation = method.getAnnotation(annotationType);
+        if (annotation != null) {
+            return annotation;
+        }
+        return dxoClass.getAnnotation(annotationType);
+    }
+
+    protected Map<String, Converter> createConverters(final Class<?> destClass) {
+        final Map<String, Converter> converters = CollectionsUtil.newHashMap();
         final BeanDesc beanDesc = BeanDescFactory.getBeanDesc(destClass);
         for (int i = 0; i < beanDesc.getPropertyDescSize(); ++i) {
             final PropertyDesc propertyDesc = beanDesc.getPropertyDesc(i);
@@ -143,7 +151,8 @@ public class TigerAnnotationReader implements AnnotationReader {
                 final String converterName = dxoConverterAnnotation.value();
                 final Converter converter = Converter.class.cast(container
                         .getComponent(converterName));
-                final Map props = AnnotationUtil.getProperties(annotation);
+                final Map<?, ?> props = AnnotationUtil
+                        .getProperties(annotation);
                 BeanUtil.copyProperties(props, converter);
                 converters.put(propertyDesc.getPropertyName(), converter);
                 break;

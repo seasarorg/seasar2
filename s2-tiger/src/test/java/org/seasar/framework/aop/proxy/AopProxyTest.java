@@ -51,6 +51,7 @@ public class AopProxyTest extends TestCase {
     }
 
     public static class Bar extends Foo<String> {
+        @Override
         public String get() {
             return "Hoge";
         }

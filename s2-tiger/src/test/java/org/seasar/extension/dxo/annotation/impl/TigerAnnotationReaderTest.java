@@ -79,17 +79,18 @@ public class TigerAnnotationReaderTest extends S2FrameworkTestCase {
                                 new Class[] { Integer[].class })));
     }
 
+    @SuppressWarnings("unchecked")
     public void testGetConverters() throws Exception {
-        Map converters = factory.getAnnotationReader()
+        Map<String, Converter> converters = factory.getAnnotationReader()
                 .getConverters(Hoge.class);
         assertNotNull(converters);
         assertEquals(2, converters.size());
 
-        Converter converter = (Converter) converters.get("foo");
+        Converter converter = converters.get("foo");
         assertNotNull(converter);
         assertEquals("foo", converter.convert("foo", String.class, null));
 
-        converter = (Converter) converters.get("bar");
+        converter = converters.get("bar");
         assertNotNull(converter);
         assertEquals("a_bar_b", converter.convert("bar", String.class, null));
     }
@@ -97,7 +98,7 @@ public class TigerAnnotationReaderTest extends S2FrameworkTestCase {
     @DatePattern("class default")
     public interface Dxo {
 
-        List converted(List src);
+        List<?> converted(List<?> src);
 
         @DatePattern("foo")
         Object convert(Object src);
@@ -109,10 +110,10 @@ public class TigerAnnotationReaderTest extends S2FrameworkTestCase {
         Object[] convert(Object[] src);
 
         @ConversionRule("map1")
-        Map convert(Integer src);
+        Map<?, ?> convert(Integer src);
 
         @ConversionRule("map2")
-        void convert(Integer src, Map dest);
+        void convert(Integer src, Map<?, ?> dest);
 
         Map[] convert(Integer[] src);
     }
@@ -167,6 +168,7 @@ public class TigerAnnotationReaderTest extends S2FrameworkTestCase {
             this.suffix = suffix;
         }
 
+        @SuppressWarnings("unchecked")
         public Object convert(Object source, Class destClass,
                 ConversionContext context) {
             return prefix + source + suffix;

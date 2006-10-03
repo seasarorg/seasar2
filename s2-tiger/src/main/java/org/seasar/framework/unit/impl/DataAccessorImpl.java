@@ -222,9 +222,8 @@ public class DataAccessorImpl implements DataAccessor {
     protected String convertPath(String path) {
         if (ResourceUtil.isExist(path)) {
             return path;
-        } else {
-            return testContext.getTestClassPackagePath() + "/" + path;
         }
+        return testContext.getTestClassPackagePath() + "/" + path;
     }
 
     protected void flushIfNecessary() {
