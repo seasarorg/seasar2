@@ -18,9 +18,11 @@ package org.seasar.extension.dxo.util;
 import org.seasar.extension.dxo.DxoConstants;
 import org.seasar.framework.util.OgnlUtil;
 import org.seasar.framework.util.StringUtil;
+import org.seasar.framework.util.Tokenizer;
 
 /**
  * @author koichik
+ * @author higa
  * 
  */
 public class DxoUtil {
@@ -29,8 +31,70 @@ public class DxoUtil {
         if (StringUtil.isEmpty(expression)) {
             return null;
         }
-        return OgnlUtil.parseExpression(DxoConstants.OGNL_MAP_PREFIX
-                + expression + DxoConstants.OGNL_MAP_SUFFIX);
+        String s = expression;
+        if (!expression.startsWith("'")) {
+            s = addQuote(expression);
+        }
+        return OgnlUtil.parseExpression(DxoConstants.OGNL_MAP_PREFIX + s
+                + DxoConstants.OGNL_MAP_SUFFIX);
     }
 
+    protected static String addQuote(String expr) {
+        MyTokenizer tokenizer = new MyTokenizer(expr);
+        StringBuffer buf = new StringBuffer(expr.length() + 10);
+        for (int token = tokenizer.nextToken(); token != MyTokenizer.TT_EOF;) {
+            if (token == MyTokenizer.TT_QUOTE || token == MyTokenizer.TT_WORD) {
+                buf.append('\'').append(tokenizer.getStringValue())
+                        .append('\'');
+            } else {
+                throw new IllegalArgumentException(expr + "(" + token + ")");
+            }
+            token = tokenizer.nextToken();
+            if (token == MyTokenizer.TT_COLON) {
+                buf.append((char) token);
+            } else {
+                throw new IllegalArgumentException(expr + "(" + token + ")");
+            }
+            token = tokenizer.nextToken();
+            if (token == MyTokenizer.TT_QUOTE) {
+                buf.append('\'').append(tokenizer.getStringValue())
+                        .append('\'');
+            } else if (token == MyTokenizer.TT_WORD) {
+                buf.append(tokenizer.getStringValue());
+            } else {
+                throw new IllegalArgumentException(expr + "(" + token + ")");
+            }
+            token = tokenizer.nextToken();
+            if (token == MyTokenizer.TT_COMMA) {
+                buf.append((char) token);
+                token = tokenizer.nextToken();
+            } else if (token == MyTokenizer.TT_EOF) {
+                break;
+            } else {
+                throw new IllegalArgumentException(expr + "(" + token + ")");
+            }
+        }
+        return buf.toString();
+    }
+
+    private static class MyTokenizer extends Tokenizer {
+
+        public static final int TT_COLON = ':';
+
+        public static final int TT_COMMA = ',';
+
+        static {
+            setup();
+        }
+
+        public MyTokenizer(String str) {
+            super(str);
+        }
+
+        protected static void setup() {
+            Tokenizer.setup();
+            ordinaryChar(TT_COLON);
+            ordinaryChar(TT_COMMA);
+        }
+    }
 }

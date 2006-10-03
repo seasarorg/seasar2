@@ -24,7 +24,7 @@ import org.seasar.framework.unit.S2FrameworkTestCase;
  * @author koichik
  * 
  */
-public abstract class AbstractConverterTest extends S2FrameworkTestCase {
+public abstract class AbsConverterTest extends S2FrameworkTestCase {
 
     private ConverterFactory converterFactory;
 

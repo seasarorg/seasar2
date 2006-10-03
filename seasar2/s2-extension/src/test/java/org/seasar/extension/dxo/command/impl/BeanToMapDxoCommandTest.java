@@ -62,6 +62,21 @@ public class BeanToMapDxoCommandTest extends TestCase {
         assertEquals("100Hoge1000", dest.get("four"));
     }
 
+    public void testScalar3() throws Exception {
+        BeanToMapDxoCommand command = new BeanToMapDxoCommand(ClassUtil
+                .getMethod(ScalarDxo.class, "convert", new Class[] {
+                        Hoge.class, Map.class }), "one : foo");
+        Hoge src = new Hoge(100, "Hoge", new BigDecimal("1000"));
+        Map dest = new HashMap();
+        command.execute(new Object[] { src, dest });
+        assertNotNull(dest);
+        assertEquals(1, dest.size());
+        assertEquals(new Integer(100), dest.get("one"));
+        assertNull(dest.get("two"));
+        assertNull(dest.get("three"));
+        assertNull(dest.get("four"));
+    }
+
     public void testArrayToArray1() throws Exception {
         BeanToMapDxoCommand command = new BeanToMapDxoCommand(ClassUtil
                 .getMethod(ToArrayDxo.class, "convert",

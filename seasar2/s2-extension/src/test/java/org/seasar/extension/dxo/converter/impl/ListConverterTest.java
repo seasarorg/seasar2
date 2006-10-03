@@ -22,7 +22,7 @@ import java.util.List;
  * @author Satoshi Kimura
  * @author koichik
  */
-public class ListConverterTest extends AbstractConverterTest {
+public class ListConverterTest extends AbsConverterTest {
 
     private ListConverter converter;
 

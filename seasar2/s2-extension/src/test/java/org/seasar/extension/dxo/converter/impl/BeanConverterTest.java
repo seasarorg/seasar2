@@ -32,7 +32,7 @@ import org.seasar.extension.dxo.converter.Converter;
  * @author Satsohi Kimura
  * @author koichik
  */
-public class BeanConverterTest extends AbstractConverterTest {
+public class BeanConverterTest extends AbsConverterTest {
 
     private BeanConverter converter;
 

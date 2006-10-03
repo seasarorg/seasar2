@@ -23,7 +23,7 @@ import java.util.List;
  * @author Satoshi Kimura
  * @author koichik
  */
-public class ArrayConverterTest extends AbstractConverterTest {
+public class ArrayConverterTest extends AbsConverterTest {
 
     private ArrayConverter converter;
 

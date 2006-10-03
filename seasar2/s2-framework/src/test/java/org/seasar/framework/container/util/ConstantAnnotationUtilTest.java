@@ -7,7 +7,7 @@ import junit.framework.TestCase;
 
 import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.factory.BeanDescFactory;
-import org.seasar.framework.container.util.ConstantAnnotationUtil.Tokenizer;
+import org.seasar.framework.container.util.ConstantAnnotationUtil.MyTokenizer;
 
 public class ConstantAnnotationUtilTest extends TestCase {
 
@@ -34,64 +34,63 @@ public class ConstantAnnotationUtilTest extends TestCase {
     }
 
     public void testEOF() throws Exception {
-        Tokenizer tokenizer = new Tokenizer("");
-        assertEquals(Tokenizer.TT_EOF, tokenizer.nextToken());
-        assertEquals(Tokenizer.TT_EOF, tokenizer.nextToken());
+        MyTokenizer tokenizer = new MyTokenizer("");
+        assertEquals(MyTokenizer.TT_EOF, tokenizer.nextToken());
+        assertEquals(MyTokenizer.TT_EOF, tokenizer.nextToken());
     }
 
     public void testWhitespace() throws Exception {
-        Tokenizer tokenizer = new Tokenizer("\t       \n");
-        assertEquals(Tokenizer.TT_EOF, tokenizer.nextToken());
+        MyTokenizer tokenizer = new MyTokenizer("\t       \n");
+        assertEquals(MyTokenizer.TT_EOF, tokenizer.nextToken());
     }
 
     public void testHyphen() throws Exception {
-        Tokenizer tokenizer = new Tokenizer("       - ");
+        MyTokenizer tokenizer = new MyTokenizer("       - ");
         assertEquals('-', tokenizer.nextToken());
-        assertEquals(Tokenizer.TT_EOF, tokenizer.nextToken());
+        assertEquals(MyTokenizer.TT_EOF, tokenizer.nextToken());
     }
 
     public void pend_testDot() throws Exception {
-        Tokenizer tokenizer = new Tokenizer(".hoge");
-        assertEquals("1", '.', tokenizer.nextToken());
-        assertEquals("2", '.', tokenizer.getTokenType());
-        assertEquals("3", Tokenizer.TT_WORD, tokenizer.nextToken());
-        assertEquals("4", "hoge", tokenizer.getStringValue());
+        MyTokenizer tokenizer = new MyTokenizer(".hoge");
+        assertEquals('.', tokenizer.nextToken());
+        assertEquals(MyTokenizer.TT_WORD, tokenizer.nextToken());
+        assertEquals("hoge", tokenizer.getStringValue());
     }
 
     public void testOrdinary() throws Exception {
-        Tokenizer tokenizer = new Tokenizer(" hoge= 123");
-        assertEquals(Tokenizer.TT_WORD, tokenizer.nextToken());
+        MyTokenizer tokenizer = new MyTokenizer(" hoge= 123");
+        assertEquals(MyTokenizer.TT_WORD, tokenizer.nextToken());
         assertEquals("hoge", tokenizer.getStringValue());
-        assertEquals(Tokenizer.TT_EQUAL, tokenizer.nextToken());
-        assertEquals(Tokenizer.TT_WORD, tokenizer.nextToken());
+        assertEquals(MyTokenizer.TT_EQUAL, tokenizer.nextToken());
+        assertEquals(MyTokenizer.TT_WORD, tokenizer.nextToken());
         assertEquals("123", tokenizer.getStringValue());
-        assertEquals(Tokenizer.TT_EOF, tokenizer.nextToken());
+        assertEquals(MyTokenizer.TT_EOF, tokenizer.nextToken());
     }
 
     public void testOrdinaryDouble() throws Exception {
-        Tokenizer tokenizer = new Tokenizer(" hoge= 9999.99");
-        assertEquals(Tokenizer.TT_WORD, tokenizer.nextToken());
+        MyTokenizer tokenizer = new MyTokenizer(" hoge= 9999.99");
+        assertEquals(MyTokenizer.TT_WORD, tokenizer.nextToken());
         assertEquals("hoge", tokenizer.getStringValue());
-        assertEquals(Tokenizer.TT_EQUAL, tokenizer.nextToken());
-        assertEquals(Tokenizer.TT_WORD, tokenizer.nextToken());
+        assertEquals(MyTokenizer.TT_EQUAL, tokenizer.nextToken());
+        assertEquals(MyTokenizer.TT_WORD, tokenizer.nextToken());
         assertEquals("9999.99", tokenizer.getStringValue());
-        assertEquals(Tokenizer.TT_EOF, tokenizer.nextToken());
+        assertEquals(MyTokenizer.TT_EOF, tokenizer.nextToken());
     }
 
     public void testQuote() throws Exception {
-        Tokenizer tokenizer = new Tokenizer("hoge=',=abc', aaa=bbb");
-        assertEquals(Tokenizer.TT_WORD, tokenizer.nextToken());
+        MyTokenizer tokenizer = new MyTokenizer("hoge=',=abc', aaa=bbb");
+        assertEquals(MyTokenizer.TT_WORD, tokenizer.nextToken());
         assertEquals("hoge", tokenizer.getStringValue());
-        assertEquals(Tokenizer.TT_EQUAL, tokenizer.nextToken());
-        assertEquals(Tokenizer.TT_QUOTE, tokenizer.nextToken());
+        assertEquals(MyTokenizer.TT_EQUAL, tokenizer.nextToken());
+        assertEquals(MyTokenizer.TT_QUOTE, tokenizer.nextToken());
         assertEquals(",=abc", tokenizer.getStringValue());
-        assertEquals(Tokenizer.TT_COMMA, tokenizer.nextToken());
-        assertEquals(Tokenizer.TT_WORD, tokenizer.nextToken());
+        assertEquals(MyTokenizer.TT_COMMA, tokenizer.nextToken());
+        assertEquals(MyTokenizer.TT_WORD, tokenizer.nextToken());
         assertEquals("aaa", tokenizer.getStringValue());
-        assertEquals(Tokenizer.TT_EQUAL, tokenizer.nextToken());
-        assertEquals(Tokenizer.TT_WORD, tokenizer.nextToken());
+        assertEquals(MyTokenizer.TT_EQUAL, tokenizer.nextToken());
+        assertEquals(MyTokenizer.TT_WORD, tokenizer.nextToken());
         assertEquals("bbb", tokenizer.getStringValue());
-        assertEquals(Tokenizer.TT_EOF, tokenizer.nextToken());
+        assertEquals(MyTokenizer.TT_EOF, tokenizer.nextToken());
     }
 
     public void testIsConstantAnnotation() throws Exception {
