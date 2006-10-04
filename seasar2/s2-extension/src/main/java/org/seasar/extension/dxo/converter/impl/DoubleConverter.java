@@ -21,6 +21,10 @@ package org.seasar.extension.dxo.converter.impl;
  */
 public class DoubleConverter extends NumberConverter {
 
+    public Class getDestClass() {
+        return Double.class;
+    }
+
     protected Number convert(final Number number) {
         if (number instanceof Double) {
             return number;

@@ -16,6 +16,7 @@
 package org.seasar.extension.dxo.converter.impl;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -26,6 +27,14 @@ import org.seasar.extension.dxo.converter.ConversionContext;
  * @author koichik
  */
 public class SetConverter extends AbstractConverter {
+
+    public Class[] getSourceClasses() {
+        return new Class[] { Object.class };
+    }
+
+    public Class getDestClass() {
+        return Set.class;
+    }
 
     public Object convert(final Object source, final Class destClass,
             final ConversionContext context) {
@@ -38,9 +47,13 @@ public class SetConverter extends AbstractConverter {
         if (source.getClass().isArray()) {
             return new HashSet(Arrays.asList((Object[]) source));
         }
-        final Set result = new HashSet();
-        result.add(source);
-        return result;
+        final Set set = new HashSet();
+        if (source instanceof Collection) {
+            set.addAll((Collection) source);
+        } else {
+            set.add(source);
+        }
+        return set;
     }
 
 }

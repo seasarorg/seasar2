@@ -23,6 +23,10 @@ import java.math.BigDecimal;
  */
 public class BigDecimalConverter extends NumberConverter {
 
+    public Class getDestClass() {
+        return BigDecimal.class;
+    }
+
     protected Number convert(final Number number) {
         if (number instanceof BigDecimal) {
             return number;

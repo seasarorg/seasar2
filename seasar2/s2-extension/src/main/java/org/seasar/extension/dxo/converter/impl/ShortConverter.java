@@ -21,6 +21,10 @@ package org.seasar.extension.dxo.converter.impl;
  */
 public class ShortConverter extends NumberConverter {
 
+    public Class getDestClass() {
+        return Short.class;
+    }
+
     protected Number convert(final Number number) {
         if (number instanceof Short) {
             return number;

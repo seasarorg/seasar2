@@ -21,6 +21,10 @@ package org.seasar.extension.dxo.converter.impl;
  */
 public class FloatConverter extends NumberConverter {
 
+    public Class getDestClass() {
+        return Float.class;
+    }
+
     protected Number convert(final Number number) {
         if (number instanceof Float) {
             return number;

@@ -21,6 +21,10 @@ package org.seasar.extension.dxo.converter.impl;
  */
 public class ByteConverter extends NumberConverter {
 
+    public Class getDestClass() {
+        return Byte.class;
+    }
+
     protected Number convert(final Number number) {
         if (number instanceof Byte) {
             return number;

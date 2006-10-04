@@ -17,6 +17,7 @@ package org.seasar.extension.dxo.converter.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import org.seasar.extension.dxo.converter.ConversionContext;
@@ -26,6 +27,14 @@ import org.seasar.extension.dxo.converter.ConversionContext;
  * @author koichik
  */
 public class ListConverter extends AbstractConverter {
+
+    public Class[] getSourceClasses() {
+        return new Class[] { Object.class };
+    }
+
+    public Class getDestClass() {
+        return List.class;
+    }
 
     public Object convert(final Object source, final Class destClass,
             final ConversionContext context) {
@@ -39,7 +48,11 @@ public class ListConverter extends AbstractConverter {
             return Arrays.asList((Object[]) source);
         }
         final List list = new ArrayList();
-        list.add(source);
+        if (source instanceof Collection) {
+            list.addAll((Collection) source);
+        } else {
+            list.add(source);
+        }
         return list;
     }
 

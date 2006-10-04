@@ -30,6 +30,14 @@ import org.seasar.framework.util.StringUtil;
  */
 public class CalendarConverter extends AbstractConverter {
 
+    public Class[] getSourceClasses() {
+        return new Class[] { Object.class };
+    }
+
+    public Class getDestClass() {
+        return Calendar.class;
+    }
+
     public Object convert(final Object source, final Class destClass,
             final ConversionContext context) {
         if (source == null) {

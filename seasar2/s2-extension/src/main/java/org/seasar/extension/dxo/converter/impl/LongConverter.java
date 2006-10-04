@@ -21,6 +21,10 @@ package org.seasar.extension.dxo.converter.impl;
  */
 public class LongConverter extends NumberConverter {
 
+    public Class getDestClass() {
+        return Long.class;
+    }
+
     protected Number convert(final Number number) {
         if (number instanceof Long) {
             return number;

@@ -30,6 +30,14 @@ public class BooleanConverter extends AbstractConverter {
 
     protected static final BigDecimal ZERO = new BigDecimal("0");
 
+    public Class[] getSourceClasses() {
+        return new Class[] { Object.class };
+    }
+
+    public Class getDestClass() {
+        return Boolean.class;
+    }
+
     public Object convert(final Object source, final Class destClass,
             final ConversionContext context) {
         if (source == null) {

@@ -30,6 +30,11 @@ public abstract class NumberConverter extends AbstractConverter {
 
     protected static final Integer FALSE = new Integer(0);
 
+    public Class[] getSourceClasses() {
+        return new Class[] { Number.class, CharSequence.class, Boolean.class,
+                Object.class };
+    }
+
     public Object convert(final Object source, final Class destClass,
             final ConversionContext context) {
         if (source == null) {

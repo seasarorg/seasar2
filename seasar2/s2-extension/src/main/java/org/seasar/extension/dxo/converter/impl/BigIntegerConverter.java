@@ -23,6 +23,10 @@ import java.math.BigInteger;
  */
 public class BigIntegerConverter extends NumberConverter {
 
+    public Class getDestClass() {
+        return BigInteger.class;
+    }
+
     protected Number convert(final Number number) {
         if (number instanceof BigInteger) {
             return number;

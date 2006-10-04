@@ -167,6 +167,14 @@ public class ConstantAnnotationReaderTest extends S2FrameworkTestCase {
             this.suffix = suffix;
         }
 
+        public Class[] getSourceClasses() {
+            return new Class[] { String.class };
+        }
+
+        public Class getDestClass() {
+            return String.class;
+        }
+
         public Object convert(Object source, Class destClass,
                 ConversionContext context) {
             return prefix + source + suffix;

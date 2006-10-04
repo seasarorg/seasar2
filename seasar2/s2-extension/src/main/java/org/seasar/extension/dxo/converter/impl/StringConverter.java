@@ -29,6 +29,14 @@ import org.seasar.extension.dxo.converter.ConversionContext;
  */
 public class StringConverter extends AbstractConverter {
 
+    public Class[] getSourceClasses() {
+        return new Class[] { Object.class };
+    }
+
+    public Class getDestClass() {
+        return String.class;
+    }
+
     public Object convert(final Object source, final Class destClass,
             final ConversionContext context) {
         if (source == null) {

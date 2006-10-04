@@ -21,6 +21,10 @@ package org.seasar.extension.dxo.converter.impl;
  */
 public class IntegerConverter extends NumberConverter {
 
+    public Class getDestClass() {
+        return Integer.class;
+    }
+
     protected Number convert(final Number number) {
         return new Integer(number.intValue());
     }

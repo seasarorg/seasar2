@@ -21,6 +21,10 @@ package org.seasar.extension.dxo.converter;
  */
 public interface Converter {
 
+    Class[] getSourceClasses();
+
+    Class getDestClass();
+
     void convert(Object source, Object dest, ConversionContext context);
 
     Object convert(Object source, Class destClass, ConversionContext context);
