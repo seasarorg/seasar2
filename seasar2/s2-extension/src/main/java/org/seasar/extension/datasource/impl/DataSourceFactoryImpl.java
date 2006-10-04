@@ -40,7 +40,7 @@ public class DataSourceFactoryImpl implements DataSourceFactory {
     }
 
     public String getDataSourceName(String name) {
-        if (name != null) {
+        if (!StringUtil.isEmpty(name)) {
             return name;
         }
         return getSelectableDataSourceName();
