@@ -61,6 +61,7 @@ public class BeanToBeanDxoCommandTest extends S2FrameworkTestCase {
                         Hoge.class, HogeHoge.class }));
         Hoge src = new Hoge(100, "Hoge", new BigDecimal("1000"));
         HogeHoge dest = new HogeHoge();
+        dest.setHoge("HogeHoge");
 
         command.execute(new Object[] { src, dest });
 
@@ -71,7 +72,7 @@ public class BeanToBeanDxoCommandTest extends S2FrameworkTestCase {
         assertEquals('g', dest.getBar()[2]);
         assertEquals('e', dest.getBar()[3]);
         assertEquals(1000, dest.getBaz());
-        assertEquals("hoge", dest.getHoge());
+        assertEquals("HogeHoge", dest.getHoge());
     }
 
     public void testWithRule() throws Exception {

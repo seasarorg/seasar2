@@ -29,14 +29,6 @@ public class HogeHoge {
 
     private String hoge = "hoge";
 
-    public String getHoge() {
-        return hoge;
-    }
-
-    public void setHoge(String hoge) {
-        this.hoge = hoge;
-    }
-
     public HogeHoge() {
     }
 
@@ -68,6 +60,14 @@ public class HogeHoge {
 
     public void setBaz(int baz) {
         this.baz = baz;
+    }
+
+    public String getHoge() {
+        return hoge;
+    }
+
+    public void setHoge(String hoge) {
+        this.hoge = hoge;
     }
 
 }
