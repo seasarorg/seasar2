@@ -139,6 +139,14 @@ public abstract class AbstractBindingTypeDef implements BindingTypeDef {
                 return true;
             }
         }
+        if (BindingUtil.isAutoBindableArray(propType)) {
+            Class clazz = propType.getComponentType();
+            Object[] values = container.findAllComponents(clazz);
+            if (values.length > 0) {
+                setValue(componentDef, field, component, values);
+                return true;
+            }
+        }
         return false;
     }
 

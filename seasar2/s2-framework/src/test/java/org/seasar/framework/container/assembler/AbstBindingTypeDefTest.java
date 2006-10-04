@@ -138,6 +138,29 @@ public class AbstBindingTypeDefTest extends TestCase {
         assertEquals(4, holder.maps.length);
     }
 
+    public void testBindAutoForArrayField() throws Exception {
+        S2Container container = new S2ContainerImpl();
+        container.register(Foo4.class);
+        container.register(Hoge3.class);
+        container.register(Hoge4.class);
+        Foo4 foo4 = (Foo4) container.getComponent(Foo4.class);
+        assertNull(foo4.hoges);
+    }
+
+    public void testBindAutoForArrayField2() throws Exception {
+        S2Container container = new S2ContainerImpl();
+        ComponentDefImpl cd = new ComponentDefImpl(Foo4.class);
+        cd.setAutoBindingDef(AutoBindingDefFactory.SEMIAUTO);
+        PropertyDef propDef = new PropertyDefImpl("hoges");
+        propDef.setAccessTypeDef(AccessTypeDefFactory.FIELD);
+        cd.addPropertyDef(propDef);
+        container.register(cd);
+        container.register(Hoge3.class);
+        container.register(Hoge4.class);
+        Foo4 foo4 = (Foo4) container.getComponent(Foo4.class);
+        assertNotNull(foo4.hoges);
+    }
+
     public static class ComponentDefAware {
         private ComponentDef componentDef;
 
@@ -208,6 +231,12 @@ public class AbstBindingTypeDefTest extends TestCase {
         public void setHoGe(Hoge hoGe) {
             this.hoGe = hoGe;
         }
+    }
+
+    public static class Foo4 {
+
+        IHoge[] hoges;
+
     }
 
     public static class MapArrayHolder {
