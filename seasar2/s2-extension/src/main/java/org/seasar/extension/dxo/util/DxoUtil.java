@@ -77,24 +77,30 @@ public class DxoUtil {
         return buf.toString();
     }
 
-    private static class MyTokenizer extends Tokenizer {
+    protected static class MyTokenizer extends Tokenizer {
 
         public static final int TT_COLON = ':';
 
         public static final int TT_COMMA = ',';
 
+        private static byte[] defaultCtype = new byte[256];
+
         static {
-            setup();
+            setup(defaultCtype);
         }
 
         public MyTokenizer(String str) {
-            super(str);
+            this(str, defaultCtype);
         }
 
-        protected static void setup() {
-            Tokenizer.setup();
-            ordinaryChar(TT_COLON);
-            ordinaryChar(TT_COMMA);
+        public MyTokenizer(String str, byte[] ctype) {
+            super(str, ctype);
+        }
+
+        protected static void setup(byte[] ctype2) {
+            Tokenizer.setup(ctype2);
+            ordinaryChar(ctype2, TT_COLON);
+            ordinaryChar(ctype2, TT_COMMA);
         }
     }
 }

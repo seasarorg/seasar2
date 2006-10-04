@@ -62,24 +62,30 @@ public class ConstantAnnotationUtil {
                 && field.getType().equals(String.class);
     }
 
-    public static class MyTokenizer extends Tokenizer {
+    protected static class MyTokenizer extends Tokenizer {
 
         public static final int TT_EQUAL = '=';
 
         public static final int TT_COMMA = ',';
 
+        private static byte[] defaultCtype = new byte[256];
+
         static {
-            setup();
+            setup(defaultCtype);
         }
 
         public MyTokenizer(String str) {
-            super(str);
+            super(str, defaultCtype);
         }
 
-        protected static void setup() {
-            Tokenizer.setup();
-            ordinaryChar('=');
-            ordinaryChar(',');
+        public MyTokenizer(String str, byte[] ctype) {
+            super(str, ctype);
+        }
+
+        protected static void setup(byte[] ctype2) {
+            Tokenizer.setup(ctype2);
+            ordinaryChar(ctype2, '=');
+            ordinaryChar(ctype2, ',');
         }
     }
 }

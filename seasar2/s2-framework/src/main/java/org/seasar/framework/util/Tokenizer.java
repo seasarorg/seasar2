@@ -37,7 +37,9 @@ public class Tokenizer {
 
     private static final byte CT_ALPHA = 4;
 
-    private static byte[] ctype = new byte[256];
+    private byte[] ctype;
+
+    private static byte[] defaultCtype = new byte[256];
 
     private String str;
 
@@ -54,65 +56,70 @@ public class Tokenizer {
     private byte peekct = 0;
 
     static {
-        setup();
+        setup(defaultCtype);
     }
 
     public Tokenizer(String str) {
+        this(str, defaultCtype);
+    }
+
+    public Tokenizer(String str, byte[] ctype) {
         this.str = str;
+        this.ctype = ctype;
     }
 
-    protected static void setup() {
-        wordChars('a', 'z');
-        wordChars('A', 'Z');
-        wordChars('0', '9');
-        wordChar('@');
-        wordChar('|');
-        wordChar('_');
-        wordChar('?');
-        wordChar('>');
-        wordChar('=');
-        wordChar('!');
-        wordChar('<');
-        wordChar('"');
-        wordChar('~');
-        wordChar('*');
-        wordChar('.');
-        // ordinaryChar('=');
-        // ordinaryChar(',');
-        whitespaceChars(0, ' ');
+    protected static void setup(byte[] ctype2) {
+        wordChars(ctype2, 'a', 'z');
+        wordChars(ctype2, 'A', 'Z');
+        wordChars(ctype2, '0', '9');
+        wordChar(ctype2, '@');
+        wordChar(ctype2, '|');
+        wordChar(ctype2, '_');
+        wordChar(ctype2, '?');
+        wordChar(ctype2, '>');
+        wordChar(ctype2, '=');
+        wordChar(ctype2, '!');
+        wordChar(ctype2, '<');
+        wordChar(ctype2, '"');
+        wordChar(ctype2, '~');
+        wordChar(ctype2, '*');
+        wordChar(ctype2, '.');
+        // ordinaryChar(ctype2, '=');
+        // ordinaryChar(ctype2, ',');
+        whitespaceChars(ctype2, 0, ' ');
     }
 
-    protected static void wordChars(int low, int hi) {
+    protected static void wordChars(byte[] ctype2, int low, int hi) {
         if (low < 0) {
             low = 0;
         }
-        if (hi >= ctype.length) {
-            hi = ctype.length - 1;
+        if (hi >= ctype2.length) {
+            hi = ctype2.length - 1;
         }
         while (low <= hi) {
-            ctype[low++] |= CT_ALPHA;
+            ctype2[low++] |= CT_ALPHA;
         }
     }
 
-    protected static void wordChar(int val) {
-        ctype[val] |= CT_ALPHA;
+    protected static void wordChar(byte[] ctype2, int val) {
+        ctype2[val] |= CT_ALPHA;
     }
 
-    protected static void whitespaceChars(int low, int hi) {
+    protected static void whitespaceChars(byte[] ctype2, int low, int hi) {
         if (low < 0) {
             low = 0;
         }
-        if (hi >= ctype.length) {
-            hi = ctype.length - 1;
+        if (hi >= ctype2.length) {
+            hi = ctype2.length - 1;
         }
         while (low <= hi) {
-            ctype[low++] = CT_WHITESPACE;
+            ctype2[low++] = CT_WHITESPACE;
         }
     }
 
-    protected static void ordinaryChar(int ch) {
-        if (ch >= 0 && ch < ctype.length) {
-            ctype[ch] = 0;
+    protected static void ordinaryChar(byte[] ctype2, int ch) {
+        if (ch >= 0 && ch < ctype2.length) {
+            ctype2[ch] = 0;
         }
     }
 
