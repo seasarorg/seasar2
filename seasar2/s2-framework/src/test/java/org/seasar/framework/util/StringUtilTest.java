@@ -122,4 +122,12 @@ public class StringUtilTest extends TestCase {
         assertFalse(StringUtil.startsWithIgnoreCase("is", "iss"));
     }
 
+    public void testSubstringFromLast() throws Exception {
+        assertEquals("ab", StringUtil.substringFromLast("abc", "c"));
+        assertEquals("abcab", StringUtil.substringFromLast("abcabc", "c"));
+        assertEquals("abc", StringUtil.substringFromLast("abc", ""));
+        assertEquals("abc", StringUtil.substringFromLast("abc", null));
+        assertEquals("abc", StringUtil.substringFromLast("abc", "dddd"));
+    }
+
 }

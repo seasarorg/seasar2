@@ -223,4 +223,16 @@ public final class StringUtil {
         String s1 = target1.substring(0, target2.length());
         return s1.equalsIgnoreCase(target2);
     }
+
+    public static String substringFromLast(String str, String separator) {
+        if (isEmpty(str) || isEmpty(separator)) {
+            return str;
+        }
+        int pos = str.lastIndexOf(separator);
+        if (pos == -1) {
+            return str;
+        }
+        return str.substring(0, pos);
+    }
+
 }
