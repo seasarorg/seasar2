@@ -168,6 +168,14 @@ public class TigerAnnotationReaderTest extends S2FrameworkTestCase {
             this.suffix = suffix;
         }
 
+        public Class<?> getDestClass() {
+            return Hoge.class;
+        }
+
+        public Class<?>[] getSourceClasses() {
+            return new Class[] { Hoge.class };
+        }
+
         @SuppressWarnings("unchecked")
         public Object convert(Object source, Class destClass,
                 ConversionContext context) {
