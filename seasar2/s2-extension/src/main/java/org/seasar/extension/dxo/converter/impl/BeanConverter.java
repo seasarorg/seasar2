@@ -152,6 +152,10 @@ public class BeanConverter extends AbstractConverter {
             if (!propertyDesc.hasReadMethod() || isBasicType(propertyType)) {
                 continue;
             }
+            final Object sourcePropertyValue = propertyDesc.getValue(source);
+            if (sourcePropertyValue == null) {
+                continue;
+            }
 
             final BeanDesc nestedBeanDesc = BeanDescFactory
                     .getBeanDesc(propertyType);
@@ -159,8 +163,7 @@ public class BeanConverter extends AbstractConverter {
                 final PropertyDesc nestedPropertyDesc = nestedBeanDesc
                         .getPropertyDesc(propertyName);
                 if (nestedPropertyDesc.hasReadMethod()) {
-                    return nestedPropertyDesc.getValue(propertyDesc
-                            .getValue(source));
+                    return nestedPropertyDesc.getValue(sourcePropertyValue);
                 }
             }
         }

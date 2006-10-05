@@ -26,6 +26,7 @@ import org.seasar.extension.dxo.DateDto;
 import org.seasar.extension.dxo.DateStringDto;
 import org.seasar.extension.dxo.DateStringDto2;
 import org.seasar.extension.dxo.DateStringDto3;
+import org.seasar.extension.dxo.DateUtil;
 import org.seasar.extension.dxo.converter.Converter;
 
 /**
@@ -134,6 +135,26 @@ public class BeanConverterTest extends AbsConverterTest {
         System.out.println(crDeptDto);
     }
 
+    public void testNestedProperty() throws Exception {
+        HogeHoge hogehoge = new HogeHoge();
+        Hoge hoge = (Hoge) converter.convert(hogehoge, Hoge.class,
+                createContext("testNestedProperty", null));
+        assertNotNull(hoge);
+        assertNull(hoge.foo);
+        assertNull(hoge.bar);
+
+        Hoge hoge2 = new Hoge();
+        hoge2.setFoo(DateUtil.newDate(1966, 8, 18));
+        hoge2.setBar(DateUtil.newDate(1972, 2, 28));
+        hogehoge.setHoge(hoge2);
+
+        hoge = (Hoge) converter.convert(hogehoge, Hoge.class, createContext(
+                "testNestedProperty", null));
+        assertNotNull(hoge);
+        assertEquals(DateUtil.newDate(1966, 8, 18), hoge.foo);
+        assertEquals(DateUtil.newDate(1972, 2, 28), hoge.bar);
+    }
+
     public void testGetConverter() throws Exception {
         Converter fooConverter = converter.getConverter(String.class,
                 Hoge.class, Date.class, "foo", createContext(
@@ -187,6 +208,18 @@ public class BeanConverterTest extends AbsConverterTest {
 
         public void setBar(Date bar) {
             this.bar = bar;
+        }
+    }
+
+    public static class HogeHoge {
+        protected Hoge hoge;
+
+        public Hoge getHoge() {
+            return hoge;
+        }
+
+        public void setHoge(Hoge hoge) {
+            this.hoge = hoge;
         }
     }
 
