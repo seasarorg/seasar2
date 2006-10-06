@@ -82,6 +82,8 @@ public class XmlS2ContainerBuilder extends AbstractS2ContainerBuilder {
             final String path) {
         final SAXParserFactory factory = SAXParserFactoryUtil.newInstance();
         factory.setValidating(true);
+        factory.setNamespaceAware(true);
+        SAXParserFactoryUtil.setXIncludeAware(factory, true);
 
         final SAXParser saxParser = SAXParserFactoryUtil.newSAXParser(factory);
 

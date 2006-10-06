@@ -15,10 +15,13 @@
  */
 package org.seasar.framework.xml;
 
+import java.io.InputStream;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.seasar.framework.util.ResourceUtil;
+import org.seasar.framework.util.URLUtil;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.Locator;
@@ -85,14 +88,29 @@ public final class SaxHandler extends DefaultHandler {
     public InputSource resolveEntity(String publicId, String systemId)
             throws SAXException {
 
-        String dtdPath = null;
         if (publicId != null) {
-            dtdPath = (String) dtdPaths.get(publicId);
+            String dtdPath = (String) dtdPaths.get(publicId);
+            if (dtdPath != null) {
+                return createInputSource(ResourceUtil
+                        .getResourceAsStream(dtdPath), systemId);
+            }
         }
-        if (dtdPath == null) {
+
+        if (systemId == null) {
             return null;
         }
-        return new InputSource(ResourceUtil.getResourceAsStream(dtdPath));
+
+        if (systemId.startsWith("file:")) {
+            URL url = URLUtil.create(systemId);
+            String path = url.getFile();
+            if (path.startsWith("/")) {
+                path = path.substring(1);
+            }
+            return createInputSource(ResourceUtil.getResourceAsStream(path),
+                    systemId);
+        }
+
+        return new InputSource(ResourceUtil.getResourceAsStream(systemId));
     }
 
     public void error(SAXParseException e) throws SAXException {
@@ -109,6 +127,12 @@ public final class SaxHandler extends DefaultHandler {
 
     public Object getResult() {
         return context.getResult();
+    }
+
+    private InputSource createInputSource(InputStream stream, String systemId) {
+        InputSource is = new InputSource(stream);
+        is.setSystemId(systemId);
+        return is;
     }
 
     private TagHandler getTagHandlerByPath() {
