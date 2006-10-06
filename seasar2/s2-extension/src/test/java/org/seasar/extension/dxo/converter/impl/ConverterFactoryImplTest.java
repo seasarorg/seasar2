@@ -22,6 +22,7 @@ import java.util.Set;
 
 import org.seasar.extension.dxo.converter.Converter;
 import org.seasar.extension.unit.S2TestCase;
+import org.seasar.framework.util.DisposableUtil;
 
 /**
  * @author Satsohi Kimura
@@ -139,6 +140,18 @@ public class ConverterFactoryImplTest extends S2TestCase {
 
         converter = factory.getConverter(Object.class, Set.class);
         assertEquals(SetConverter.class.getName(), converter.getClass()
+                .getName());
+    }
+
+    public void testDispose() {
+        Converter converter = factory.getConverter(Object.class, String.class);
+        assertEquals(StringConverter.class.getName(), converter.getClass()
+                .getName());
+
+        DisposableUtil.dispose();
+
+        converter = factory.getConverter(Object.class, String.class);
+        assertEquals(StringConverter.class.getName(), converter.getClass()
                 .getName());
     }
 

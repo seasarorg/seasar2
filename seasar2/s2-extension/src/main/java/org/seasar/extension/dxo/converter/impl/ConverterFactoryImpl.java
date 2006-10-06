@@ -33,8 +33,6 @@ import org.seasar.framework.util.DisposableUtil;
  */
 public class ConverterFactoryImpl implements ConverterFactory, Disposable {
 
-    public static final String INIT_METHOD = "initialize";
-
     protected static final Converter[] BUILDTIN_CONVERTERS = new Converter[] {
             new ArrayConverter(), new BeanConverter(),
             new BigDecimalConverter(), new BigIntegerConverter(),
@@ -59,6 +57,8 @@ public class ConverterFactoryImpl implements ConverterFactory, Disposable {
         PRIMITIVE_ARRAY_TO_WRAPPER_ARRAY.put(double[].class, Double[].class);
     }
 
+    protected boolean initialized;
+
     protected S2Container container;
 
     protected Converter[] converters;
@@ -70,17 +70,22 @@ public class ConverterFactoryImpl implements ConverterFactory, Disposable {
     }
 
     public void initialize() {
-        converters = (Converter[]) ArrayUtil.add(BUILDTIN_CONVERTERS, container
-                .findAllComponents(Converter.class));
-        DisposableUtil.add(this);
+        if (!initialized) {
+            converters = (Converter[]) ArrayUtil.add(BUILDTIN_CONVERTERS,
+                    container.findAllComponents(Converter.class));
+            DisposableUtil.add(this);
+            initialized = true;
+        }
     }
 
     public void dispose() {
         converters = null;
         converterCache.clear();
+        initialized = false;
     }
 
     public Converter getConverter(final Class sourceClass, final Class destClass) {
+        initialize();
         final Class destType = ClassUtil.getWrapperClassIfPrimitive(destClass);
         final String cacheKey = sourceClass.getName() + destType.getName();
         final Converter converter = (Converter) converterCache.get(cacheKey);
