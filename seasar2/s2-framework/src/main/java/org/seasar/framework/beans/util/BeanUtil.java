@@ -9,7 +9,7 @@
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, 
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
@@ -45,6 +45,21 @@ public class BeanUtil {
             PropertyDesc pd = beanDesc.getPropertyDesc(key);
             if (pd.hasWriteMethod()) {
                 pd.setValue(dest, src.get(key));
+            }
+        }
+    }
+
+    public static void copyProperties(Object src, Map dest) {
+        if (src == null || dest == null) {
+            return;
+        }
+        final BeanDesc beanDesc = BeanDescFactory.getBeanDesc(src.getClass());
+        final int size = beanDesc.getPropertyDescSize();
+        for (int i = 0; i < size; ++i) {
+            final PropertyDesc pd = beanDesc.getPropertyDesc(i);
+            if (pd.hasReadMethod() && pd.hasWriteMethod()) {
+                final Object value = pd.getValue(src);
+                dest.put(pd.getPropertyName(), value);
             }
         }
     }
