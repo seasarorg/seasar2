@@ -15,11 +15,7 @@
  */
 package org.seasar.framework.container.cooldeploy;
 
-import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.S2Container;
-import org.seasar.framework.container.deployer.InstanceDefFactory;
-import org.seasar.framework.container.factory.AnnotationHandler;
-import org.seasar.framework.container.factory.AnnotationHandlerFactory;
 import org.seasar.framework.container.factory.S2ContainerFactory.DefaultProvider;
 
 /**
@@ -28,24 +24,11 @@ import org.seasar.framework.container.factory.S2ContainerFactory.DefaultProvider
  */
 public class S2ContainerFactoryCoolProvider extends DefaultProvider {
 
-    protected static final String[] INCLUDE_PATHS = new String[] {
-            "convention.dicon", "customizer.dicon", "creator.dicon" };
-
-    protected AnnotationHandler handler = AnnotationHandlerFactory
-            .getAnnotationHandler();
+    protected static final String DICON_PATH = "cooldeploy-autoregister.dicon";
 
     public S2Container create(final String path) {
         final S2Container container = super.create(path);
-        for (int i = 0; i < INCLUDE_PATHS.length; ++i) {
-            if (!container.hasDescendant(INCLUDE_PATHS[i])) {
-                include(container, INCLUDE_PATHS[i]);
-            }
-        }
-
-        final ComponentDef cd = handler.createComponentDef(
-                CoolComponentAutoRegister.class, InstanceDefFactory.SINGLETON);
-        container.register(cd);
-
+        include(container, DICON_PATH);
         return container;
     }
 

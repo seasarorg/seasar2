@@ -38,10 +38,7 @@ public class S2ContainerFactoryCoolProviderTest extends TestCase {
     }
 
     public void test() throws Exception {
-        assertTrue(container.hasComponentDef(CoolComponentAutoRegister.class));
-        assertTrue(container.hasDescendant("convention.dicon"));
-        assertTrue(container.hasDescendant("customizer.dicon"));
-        assertTrue(container.hasDescendant("creator.dicon"));
+        assertTrue(container.hasDescendant("cooldeploy-autoregister.dicon"));
     }
 
 }
