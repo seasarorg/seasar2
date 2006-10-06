@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN"
+	"http://www.seasar.org/dtd/components24.dtd">
+<components
+	xmlns:xi="http://www.w3.org/2001/XInclude"
+>
+	<component name="date1" class="java.util.Date">
+		<property name="time" bindingType="none">0</property>
+	</component>
+
+	<xi:include href="/org/seasar/framework/container/factory/XmlS2ContainerBuilderXIncludeTest_included.dicon"
+	/>
+
+	<component name="date4" class="java.util.Date">
+		<property name="time" bindingType="none">0</property>
+	</component>
+</components>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN"
+	"http://www.seasar.org/dtd/components24.dtd">
+<components>
+	<component name="date2" class="java.util.Date">
+		<property name="time" bindingType="none">0</property>
+	</component>
+	<component name="date3" class="java.util.Date">
+		<property name="time" bindingType="none">0</property>
+	</component>
+</components>
