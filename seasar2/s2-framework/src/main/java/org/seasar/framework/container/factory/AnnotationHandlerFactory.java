@@ -25,6 +25,13 @@ public class AnnotationHandlerFactory {
     private static AnnotationHandler annotationHandler;
 
     static {
+        initialize();
+    }
+
+    protected static void initialize() {
+        if (annotationHandler != null) {
+            return;
+        }
         Class clazz = ConstantAnnotationHandler.class;
         try {
             clazz = ClassUtil.forName(TIGER_ANNOTATION_HANDLER_CLASS_NAME);
@@ -33,10 +40,8 @@ public class AnnotationHandlerFactory {
         annotationHandler = (AnnotationHandler) ClassUtil.newInstance(clazz);
     }
 
-    protected AnnotationHandlerFactory() {
-    }
-
     public static AnnotationHandler getAnnotationHandler() {
+        initialize();
         return annotationHandler;
     }
 
