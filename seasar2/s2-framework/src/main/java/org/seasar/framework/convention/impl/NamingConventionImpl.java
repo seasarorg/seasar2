@@ -87,7 +87,11 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
 
     private Map existCheckerArrays = Collections.synchronizedMap(new HashMap());
 
-    public synchronized void initialize() {
+    public NamingConventionImpl() {
+        initialize();
+    }
+
+    public void initialize() {
         if (!initialized) {
             for (int i = 0; i < rootPackageNames.length; ++i) {
                 addExistChecker(rootPackageNames[i]);
@@ -97,7 +101,7 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
         }
     }
 
-    public synchronized void dispose() {
+    public void dispose() {
         existCheckerArrays.clear();
         initialized = false;
     }

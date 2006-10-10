@@ -36,11 +36,15 @@ public class DxoMetadataFactoryImpl implements DxoMetadataFactory, Disposable {
 
     protected final Map metadataCache = new HashMap();
 
+    public DxoMetadataFactoryImpl() {
+        initialize();
+    }
+
     public void setBuilders(final DxoCommandBuilder[] builders) {
         this.builders = builders;
     }
 
-    public synchronized void initialize() {
+    public void initialize() {
         if (initialized) {
             return;
         }
@@ -48,12 +52,12 @@ public class DxoMetadataFactoryImpl implements DxoMetadataFactory, Disposable {
         initialized = true;
     }
 
-    public synchronized void dispose() {
+    public void dispose() {
         metadataCache.clear();
         initialized = false;
     }
 
-    public synchronized DxoMetadata getMetadata(final Class dxoClass) {
+    public DxoMetadata getMetadata(final Class dxoClass) {
         initialize();
         final DxoMetadata metadata = (DxoMetadata) metadataCache.get(dxoClass);
         if (metadata != null) {

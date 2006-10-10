@@ -65,17 +65,21 @@ public class ConverterFactoryImpl implements ConverterFactory, Disposable {
 
     protected Map converterCache = new HashMap();
 
+    public ConverterFactoryImpl() {
+    }
+
     public void setContainer(final S2Container container) {
         this.container = container;
     }
 
     public void initialize() {
-        if (!initialized) {
-            converters = (Converter[]) ArrayUtil.add(BUILDTIN_CONVERTERS,
-                    container.findAllComponents(Converter.class));
-            DisposableUtil.add(this);
-            initialized = true;
+        if (initialized) {
+            return;
         }
+        converters = (Converter[]) ArrayUtil.add(BUILDTIN_CONVERTERS, container
+                .findAllComponents(Converter.class));
+        DisposableUtil.add(this);
+        initialized = true;
     }
 
     public void dispose() {

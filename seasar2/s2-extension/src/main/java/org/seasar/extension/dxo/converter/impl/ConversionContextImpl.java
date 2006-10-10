@@ -59,7 +59,11 @@ public class ConversionContextImpl implements ConversionContext {
 
     protected Map evaluatedValues = new HashMap();
 
-    public static synchronized void initialize() {
+    static {
+        initialize();
+    }
+
+    public static void initialize() {
         if (initialized) {
             return;
         }
@@ -71,7 +75,7 @@ public class ConversionContextImpl implements ConversionContext {
         initialized = true;
     }
 
-    public static synchronized void destroy() {
+    public static void destroy() {
         contextCache.clear();
         initialized = false;
     }

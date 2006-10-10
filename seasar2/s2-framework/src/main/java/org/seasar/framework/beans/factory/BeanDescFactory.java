@@ -35,6 +35,10 @@ public final class BeanDescFactory {
     private static Map beanDescCache = Collections
             .synchronizedMap(new HashMap());
 
+    static {
+        initialize();
+    }
+
     private BeanDescFactory() {
     }
 
