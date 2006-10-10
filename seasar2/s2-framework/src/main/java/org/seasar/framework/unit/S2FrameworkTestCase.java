@@ -30,8 +30,11 @@ import org.seasar.framework.container.ExternalContext;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.deployer.ComponentDeployerFactory;
 import org.seasar.framework.container.deployer.ExternalComponentDeployerProvider;
+import org.seasar.framework.container.deployer.InstanceDefFactory;
 import org.seasar.framework.container.external.servlet.HttpServletExternalContext;
 import org.seasar.framework.container.external.servlet.HttpServletExternalContextComponentDefRegister;
+import org.seasar.framework.container.factory.AnnotationHandler;
+import org.seasar.framework.container.factory.AnnotationHandlerFactory;
 import org.seasar.framework.container.factory.S2ContainerFactory;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 import org.seasar.framework.container.impl.S2ContainerImpl;
@@ -80,6 +83,9 @@ public abstract class S2FrameworkTestCase extends TestCase {
 
     private List boundFields;
 
+    private AnnotationHandler annotationHandler = AnnotationHandlerFactory
+            .getAnnotationHandler();
+
     public S2FrameworkTestCase() {
     }
 
@@ -108,12 +114,20 @@ public abstract class S2FrameworkTestCase extends TestCase {
     }
 
     public void register(Class componentClass) {
-        container.register(componentClass, namingConvention
+        register(componentClass, namingConvention
                 .fromClassNameToComponentName(componentClass.getName()));
     }
 
     public void register(Class componentClass, String componentName) {
-        container.register(componentClass, componentName);
+        ComponentDef cd = annotationHandler.createComponentDef(componentClass,
+                InstanceDefFactory.SINGLETON);
+        cd.setComponentName(componentName);
+        annotationHandler.appendDI(cd);
+        annotationHandler.appendAspect(cd);
+        annotationHandler.appendInterType(cd);
+        annotationHandler.appendInitMethod(cd);
+        annotationHandler.appendDestroyMethod(cd);
+        container.register(cd);
     }
 
     public void register(Object component) {
