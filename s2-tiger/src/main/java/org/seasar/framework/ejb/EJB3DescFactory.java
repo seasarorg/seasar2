@@ -28,12 +28,19 @@ import org.seasar.framework.util.tiger.CollectionsUtil;
  */
 public class EJB3DescFactory {
 
-    private static volatile boolean initialized;
+    private static boolean initialized;
 
     protected static final ConcurrentMap<Class<?>, EJB3DescImpl> ejb3Descs = CollectionsUtil
             .newConcurrentHashMap();
 
+    static {
+        initialize();
+    }
+
     public static void initialize() {
+        if (initialized) {
+            return;
+        }
         DisposableUtil.add(new Disposable() {
             public void dispose() {
                 EJB3DescFactory.dispose();
@@ -42,15 +49,13 @@ public class EJB3DescFactory {
         initialized = true;
     }
 
-    public static synchronized void dispose() {
+    public static void dispose() {
         ejb3Descs.clear();
         initialized = false;
     }
 
     public static EJB3Desc getEJB3Desc(final Class<?> beanClass) {
-        if (!initialized) {
-            initialize();
-        }
+        initialize();
         EJB3DescImpl ejb3Desc = ejb3Descs.get(beanClass);
         if (ejb3Desc == null) {
             ejb3Desc = CollectionsUtil.putIfAbsent(ejb3Descs, beanClass,

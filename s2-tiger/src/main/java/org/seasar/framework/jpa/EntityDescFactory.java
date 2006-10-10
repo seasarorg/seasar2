@@ -30,7 +30,7 @@ import org.seasar.framework.util.tiger.CollectionsUtil;
  */
 public class EntityDescFactory {
 
-    private static volatile boolean initialized;
+    private static boolean initialized;
 
     protected static final List<EntityDescProvider> providers = Collections
             .synchronizedList(new ArrayList<EntityDescProvider>());
@@ -39,7 +39,14 @@ public class EntityDescFactory {
     protected static final ConcurrentMap<Class<?>, EntityDesc> entityDescs = CollectionsUtil
             .newConcurrentHashMap();
 
+    static {
+        initialize();
+    }
+
     public static void initialize() {
+        if (initialized) {
+            return;
+        }
         DisposableUtil.add(new Disposable() {
             public void dispose() {
                 clear();
@@ -48,27 +55,24 @@ public class EntityDescFactory {
         initialized = true;
     }
 
-    public static synchronized void clear() {
+    public static void clear() {
         entityDescs.clear();
         initialized = false;
     }
 
     public static void addProvider(final EntityDescProvider provider) {
-        if (!initialized) {
-            initialize();
-        }
+        initialize();
         providers.add(provider);
     }
 
     public static void removeProvider(final EntityDescProvider provider) {
+        initialize();
         providers.remove(provider);
     }
 
     @SuppressWarnings("unchecked")
     public static <T> EntityDesc<T> getEntityDesc(final Class<T> entityClass) {
-        if (!initialized) {
-            initialize();
-        }
+        initialize();
         final EntityDesc<T> entityDesc = entityDescs.get(entityClass);
         if (entityDesc != null) {
             return entityDesc;

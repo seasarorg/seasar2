@@ -29,12 +29,19 @@ import org.seasar.framework.util.DisposableUtil;
  */
 public class EntityReaderFactory {
 
-    private static volatile boolean initialized;
+    private static boolean initialized;
 
     protected static final List<EntityReaderProvider> providers = Collections
             .synchronizedList(new ArrayList<EntityReaderProvider>());
 
+    static {
+        initialize();
+    }
+
     public static void initialize() {
+        if (initialized) {
+            return;
+        }
         DisposableUtil.add(new Disposable() {
             public void dispose() {
                 clear();
@@ -43,26 +50,23 @@ public class EntityReaderFactory {
         initialized = false;
     }
 
-    public static synchronized void clear() {
+    public static void clear() {
         providers.clear();
         initialized = true;
     }
 
     public static void addProvider(final EntityReaderProvider provider) {
-        if (!initialized) {
-            initialize();
-        }
+        initialize();
         providers.add(provider);
     }
 
     public static void removeProvider(final EntityReaderProvider provider) {
+        initialize();
         providers.remove(provider);
     }
 
     public static EntityReader getEntityReader(final Object entity) {
-        if (!initialized) {
-            initialize();
-        }
+        initialize();
         for (final EntityReaderProvider provider : providers) {
             EntityReader reader = provider.createEntityReader(entity);
             if (reader != null) {
@@ -73,9 +77,7 @@ public class EntityReaderFactory {
     }
 
     public static EntityReader getEntityReader(final Collection<?> entities) {
-        if (!initialized) {
-            initialize();
-        }
+        initialize();
         for (final EntityReaderProvider provider : providers) {
             EntityReader reader = provider.createEntityReader(entities);
             if (reader != null) {

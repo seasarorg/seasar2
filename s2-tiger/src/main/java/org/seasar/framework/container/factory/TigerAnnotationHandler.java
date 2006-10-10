@@ -71,7 +71,14 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
     protected static final List<DestroyMethodDefBuilder> destroyMethodDefBuilders = Collections
             .synchronizedList(new ArrayList<DestroyMethodDefBuilder>());
 
-    public static synchronized void initialize() {
+    static {
+        initialize();
+    }
+
+    public static void initialize() {
+        if (initialized) {
+            return;
+        }
         loadDefaultComponentDefBuilder();
         loadDefaultPropertyDefBuilder();
         loadDefaultAspectDefBuilder();
@@ -86,7 +93,7 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
         initialized = true;
     }
 
-    public static synchronized void dispose() {
+    public static void dispose() {
         clearComponentDefBuilder();
         clearPropertyDefBuilder();
         clearAspectDefBuilder();
@@ -96,26 +103,25 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
         initialized = false;
     }
 
-    public static synchronized void loadDefaultComponentDefBuilder() {
+    public static void loadDefaultComponentDefBuilder() {
         componentDefBuilders.add(new EJB3ComponentDefBuilder());
         componentDefBuilders.add(new PojoComponentDefBuilder());
     }
 
-    public static synchronized void addComponentDefBuilder(
-            final ComponentDefBuilder builder) {
+    public static void addComponentDefBuilder(final ComponentDefBuilder builder) {
         componentDefBuilders.add(builder);
     }
 
-    public static synchronized void removeComponentDefBuilder(
+    public static void removeComponentDefBuilder(
             final ComponentDefBuilder factory) {
         componentDefBuilders.remove(factory);
     }
 
-    public static synchronized void clearComponentDefBuilder() {
+    public static void clearComponentDefBuilder() {
         componentDefBuilders.clear();
     }
 
-    public static synchronized void loadDefaultPropertyDefBuilder() {
+    public static void loadDefaultPropertyDefBuilder() {
         clearPropertyDefBuilder();
         propertyDefBuilders.add(new BindingPropertyDefBuilder());
         propertyDefBuilders.add(new EJBPropertyDefBuilder());
@@ -124,94 +130,89 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
         propertyDefBuilders.add(new ResourcePropertyDefBuilder());
     }
 
-    public static synchronized void addPropertyDefBuilder(
-            final PropertyDefBuilder builder) {
+    public static void addPropertyDefBuilder(final PropertyDefBuilder builder) {
         propertyDefBuilders.add(builder);
     }
 
-    public static synchronized void removePropertyDefBuilder(
-            final PropertyDefBuilder builder) {
+    public static void removePropertyDefBuilder(final PropertyDefBuilder builder) {
         propertyDefBuilders.remove(builder);
     }
 
-    public static synchronized void clearPropertyDefBuilder() {
+    public static void clearPropertyDefBuilder() {
         propertyDefBuilders.clear();
     }
 
-    public static synchronized void loadDefaultAspectDefBuilder() {
+    public static void loadDefaultAspectDefBuilder() {
         aspectDefBuilders.add(new EJB3AnnotationAspectDefBuilder());
         aspectDefBuilders.add(new AspectAnnotationAspectDefBuilder());
         aspectDefBuilders.add(new MetaAnnotationAspectDefBuilder(
                 Interceptor.class, "Interceptor"));
     }
 
-    public static synchronized void addAspectDefBuilder(
-            final AspectDefBuilder builder) {
+    public static void addAspectDefBuilder(final AspectDefBuilder builder) {
         aspectDefBuilders.add(builder);
     }
 
-    public static synchronized void removeAspectDefBuilder(
-            final AspectDefBuilder builder) {
+    public static void removeAspectDefBuilder(final AspectDefBuilder builder) {
         aspectDefBuilders.remove(builder);
     }
 
-    public static synchronized void clearAspectDefBuilder() {
+    public static void clearAspectDefBuilder() {
         aspectDefBuilders.clear();
     }
 
-    public static synchronized void loadDefaultIntertypeDefBuilder() {
+    public static void loadDefaultIntertypeDefBuilder() {
         intertypeDefBuilders.add(new EJB3IntertypeDefBuilder());
         intertypeDefBuilders.add(new S2IntertypeDefBuilder());
     }
 
-    public static synchronized void addIntertypeDefBuilder(
-            final IntertypeDefBuilder builder) {
+    public static void addIntertypeDefBuilder(final IntertypeDefBuilder builder) {
         intertypeDefBuilders.add(builder);
     }
 
-    public static synchronized void removeIntertypeDefBuilder(
+    public static void removeIntertypeDefBuilder(
             final IntertypeDefBuilder builder) {
         intertypeDefBuilders.remove(builder);
     }
 
-    public static synchronized void clearIntertypeDefBuilder() {
+    public static void clearIntertypeDefBuilder() {
         intertypeDefBuilders.clear();
     }
 
-    public static synchronized void loadDefaultInitMethodDefBuilder() {
+    public static void loadDefaultInitMethodDefBuilder() {
         initMethodDefBuilders.add(new EJB3InitMethodDefBuilder());
         initMethodDefBuilders.add(new S2InitMethodDefBuilder());
     }
 
-    public static synchronized void addInitMethodDefBuilder(
+    public static void addInitMethodDefBuilder(
             final InitMethodDefBuilder builder) {
         initMethodDefBuilders.add(builder);
     }
 
-    public static synchronized void removeInitMethodDefBuilder(
+    public static void removeInitMethodDefBuilder(
             final InitMethodDefBuilder factory) {
         initMethodDefBuilders.remove(factory);
     }
 
-    public static synchronized void clearInitMethodDefBuilder() {
+    public static void clearInitMethodDefBuilder() {
         initMethodDefBuilders.clear();
     }
 
-    public static synchronized void loadDefaultDestroyMethodDefBuilder() {
+    public static void loadDefaultDestroyMethodDefBuilder() {
         destroyMethodDefBuilders.add(new S2DestroyMethodDefBuilder());
     }
 
-    public static synchronized void addDestroyMethodDefBuilder(
+    public static void addDestroyMethodDefBuilder(
             final DestroyMethodDefBuilder builder) {
         destroyMethodDefBuilders.add(builder);
     }
 
-    public static synchronized void removeDestroyMethodDefBuilder(
+    public static void removeDestroyMethodDefBuilder(
             final DestroyMethodDefBuilder factory) {
         destroyMethodDefBuilders.remove(factory);
     }
 
-    public static synchronized void clearDestroyMethodDefBuilder() {
+    public static void clearDestroyMethodDefBuilder() {
         destroyMethodDefBuilders.clear();
     }
 
@@ -221,9 +222,7 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
             final InstanceDef defaultInstanceDef,
             final AutoBindingDef defaultAutoBindingDef,
             final boolean defaultExternalBinding) {
-        if (!initialized) {
-            initialize();
-        }
+        initialize();
         for (final ComponentDefBuilder builder : componentDefBuilders) {
             final ComponentDef componentDef = builder.createComponentDef(this,
                     componentClass, defaultInstanceDef, defaultAutoBindingDef,
