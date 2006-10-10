@@ -16,6 +16,7 @@
 package org.seasar.framework.container.customizer;
 
 import org.seasar.framework.aop.interceptors.SimpleTraceInterceptor;
+import org.seasar.framework.aop.interceptors.TraceInterceptor;
 import org.seasar.framework.container.AspectDef;
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.S2Container;
@@ -36,11 +37,14 @@ public class AspectCustomizerTest extends S2FrameworkTestCase {
 
     public void testCustomize() throws Exception {
         ComponentDef cd = child.getComponentDef(Greeting.class);
-        assertEquals(2, cd.getAspectDefSize());
+        assertEquals(3, cd.getAspectDefSize());
         AspectDef ad = cd.getAspectDef(0);
         assertEquals(GreetingInterceptor.class, ad.getAspect()
                 .getMethodInterceptor().getClass());
         ad = cd.getAspectDef(1);
+        assertEquals(TraceInterceptor.class, ad.getAspect()
+                .getMethodInterceptor().getClass());
+        ad = cd.getAspectDef(2);
         assertEquals(SimpleTraceInterceptor.class, ad.getAspect()
                 .getMethodInterceptor().getClass());
 

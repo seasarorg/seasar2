@@ -15,6 +15,9 @@
  */
 package org.seasar.framework.container.customizer;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.seasar.framework.container.AspectDef;
 import org.seasar.framework.container.ComponentCustomizer;
 import org.seasar.framework.container.ComponentDef;
@@ -26,12 +29,17 @@ import org.seasar.framework.container.factory.AspectDefFactory;
  */
 public class AspectCustomizer implements ComponentCustomizer {
 
-    private String interceptorName;
+    private List interceptorNames = new ArrayList();
 
     private String pointcut;
 
     public void setInterceptorName(final String interceptorName) {
-        this.interceptorName = interceptorName;
+        interceptorNames.clear();
+        interceptorNames.add(interceptorName);
+    }
+
+    public void addInterceptorName(final String interceptorName) {
+        interceptorNames.add(interceptorName);
     }
 
     public void setPointcut(final String pointcut) {
@@ -39,8 +47,10 @@ public class AspectCustomizer implements ComponentCustomizer {
     }
 
     public void customize(final ComponentDef componentDef) {
-        AspectDef aspectDef = AspectDefFactory.createAspectDef(interceptorName,
-                pointcut);
-        componentDef.addAspectDef(0, aspectDef);
+        for (int i = 0; i < interceptorNames.size(); ++i) {
+            AspectDef aspectDef = AspectDefFactory.createAspectDef(
+                    (String) interceptorNames.get(i), pointcut);
+            componentDef.addAspectDef(i, aspectDef);
+        }
     }
 }
