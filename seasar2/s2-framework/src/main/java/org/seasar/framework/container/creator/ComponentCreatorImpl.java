@@ -147,7 +147,9 @@ public class ComponentCreatorImpl implements ComponentCreator {
         }
         handler.appendDI(cd);
         handler.appendAspect(cd);
+        handler.appendInterType(cd);
         handler.appendInitMethod(cd);
+        handler.appendDestroyMethod(cd);
         customize(cd);
         return cd;
     }

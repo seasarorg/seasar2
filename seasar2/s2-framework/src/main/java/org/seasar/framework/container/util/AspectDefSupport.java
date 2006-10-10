@@ -42,6 +42,13 @@ public final class AspectDefSupport {
         aspectDefs.add(aspectDef);
     }
 
+    public void addAspectDef(int index, AspectDef aspectDef) {
+        if (container != null) {
+            aspectDef.setContainer(container);
+        }
+        aspectDefs.add(index, aspectDef);
+    }
+
     public int getAspectDefSize() {
         return aspectDefs.size();
     }

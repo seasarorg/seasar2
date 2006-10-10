@@ -18,7 +18,7 @@ package org.seasar.framework.container;
 /**
  * このインターフェースは、 アスペクト定義を登録および取得することができるオブジェクトを表します。
  * <p>
- * アスペクト定義は複数登録することが出来ます。 アスペクト定義の取得はインデックス番号を指定して行います。
+ * アスペクト定義は複数登録することが出来ます。 アスペクト定義の取得はインデックス番号を指定して行います。 アスペクト定義は登録されている順に適用されます。
  * </p>
  * 
  * @author higa
@@ -35,6 +35,16 @@ public interface AspectDefAware {
      *            アスペクト定義
      */
     public void addAspectDef(AspectDef aspectDef);
+
+    /**
+     * アスペクト定義を指定の位置に登録(追加)します。
+     * 
+     * @param index
+     *            アスペクト定義を追加する位置
+     * @param aspectDef
+     *            アスペクト定義
+     */
+    public void addAspectDef(int index, AspectDef aspectDef);
 
     /**
      * 登録されている{@link AspectDef アスペクト定義}の数を返します。

@@ -205,6 +205,15 @@ public class ComponentDefImpl implements ComponentDef, ContainerConstants {
     }
 
     /**
+     * @see org.seasar.framework.container.ComponentDef#addAspectDef(int,
+     *      org.seasar.framework.container.AspectDef)
+     */
+    public synchronized void addAspectDef(int index, AspectDef aspectDef) {
+        aspectDefSupport.addAspectDef(index, aspectDef);
+        concreteClass = null;
+    }
+
+    /**
      * @see org.seasar.framework.container.ComponentDef#addInterTypeDef(org.seasar.framework.container.InterTypeDef)
      */
     public void addInterTypeDef(InterTypeDef interTypeDef) {

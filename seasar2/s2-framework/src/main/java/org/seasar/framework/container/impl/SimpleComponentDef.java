@@ -166,6 +166,13 @@ public class SimpleComponentDef implements ComponentDef {
     }
 
     /*
+     * @see org.seasar.framework.container.ComponentDef#addAspectDef(int,org.seasar.framework.container.AspectDef)
+     */
+    public void addAspectDef(int index, AspectDef aspectDef) {
+        throw new UnsupportedOperationException("addAspectDef");
+    }
+
+    /*
      * @see org.seasar.framework.container.ComponentDef#addInterTypeDef(org.seasar.framework.container.InterTypeDef)
      */
     public void addInterTypeDef(InterTypeDef interTypeDef) {
@@ -343,7 +350,7 @@ public class SimpleComponentDef implements ComponentDef {
     public void setAutoBindingDef(AutoBindingDef autoBindingDef) {
         throw new UnsupportedOperationException("setAutoBindingDef");
     }
-    
+
     public boolean isExternalBinding() {
         return false;
     }

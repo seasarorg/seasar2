@@ -19,8 +19,9 @@ package org.seasar.framework.container.autoregister;
  * @author higa
  */
 public class Foo implements Greeting {
-
     public static final String COMPONENT = "name=foo, instance=prototype, autoBinding=property";
+
+    public static final String ASPECT = "value=aop.simpleTraceInterceptor";
 
     public static final String foo2_BINDING = null;
 

@@ -32,7 +32,7 @@ public class InterfaceAspectAutoRegisterTest extends S2FrameworkTestCase {
 
     public void testRegisterAll() throws Exception {
         ComponentDef cd = child.getComponentDef("foo");
-        assertEquals("1", 1, cd.getAspectDefSize());
+        assertEquals("1", 2, cd.getAspectDefSize());
         Foo foo = (Foo) cd.getComponent();
         assertEquals("2", "Hello", foo.greet());
         ComponentDef cd2 = child.getComponentDef("foo2");

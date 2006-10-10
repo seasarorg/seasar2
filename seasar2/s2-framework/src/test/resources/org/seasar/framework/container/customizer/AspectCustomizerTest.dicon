@@ -2,6 +2,8 @@
 <!DOCTYPE components PUBLIC "-//SEASAR2.1//DTD S2Container//EN"
 	"http://www.seasar.org/dtd/components21.dtd">
 <components namespace="child" >
+	<include path="aop.dicon"/>
+
 	<component class="org.seasar.framework.convention.impl.NamingConventionImpl"/>
 	<component class="org.seasar.framework.container.autoregister.FileSystemComponentAutoRegister">
 		<property name="customizer">
@@ -11,7 +13,7 @@
 		</property>
 		<initMethod name="addClassPattern">
 			<arg>"org.seasar.framework.container.autoregister"</arg>
-			<arg>"Greeting"</arg>
+			<arg>"Foo"</arg>
 		</initMethod>
 	</component>
 	<component name="greetingInterceptor" class="org.seasar.framework.container.autoregister.GreetingInterceptor"/>

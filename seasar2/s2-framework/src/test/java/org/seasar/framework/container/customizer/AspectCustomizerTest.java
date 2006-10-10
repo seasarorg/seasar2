@@ -15,8 +15,12 @@
  */
 package org.seasar.framework.container.customizer;
 
+import org.seasar.framework.aop.interceptors.SimpleTraceInterceptor;
+import org.seasar.framework.container.AspectDef;
+import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.autoregister.Greeting;
+import org.seasar.framework.container.autoregister.GreetingInterceptor;
 import org.seasar.framework.unit.S2FrameworkTestCase;
 
 /**
@@ -31,7 +35,16 @@ public class AspectCustomizerTest extends S2FrameworkTestCase {
     }
 
     public void testCustomize() throws Exception {
-        Greeting greeting = (Greeting) child.getComponent(Greeting.class);
+        ComponentDef cd = child.getComponentDef(Greeting.class);
+        assertEquals(2, cd.getAspectDefSize());
+        AspectDef ad = cd.getAspectDef(0);
+        assertEquals(GreetingInterceptor.class, ad.getAspect()
+                .getMethodInterceptor().getClass());
+        ad = cd.getAspectDef(1);
+        assertEquals(SimpleTraceInterceptor.class, ad.getAspect()
+                .getMethodInterceptor().getClass());
+
+        Greeting greeting = (Greeting) cd.getComponent();
         assertNotNull("1", greeting);
         assertEquals("2", "Hello", greeting.greet());
     }
