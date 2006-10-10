@@ -13,15 +13,15 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.framework.jpa;
+package org.seasar.framework.jpa.metadata;
 
 /**
  * @author koichik
  * 
  */
-public interface EntityDesc<ENTITY> {
+public interface EntityDesc {
 
-    Class<ENTITY> getEntityClass();
+    Class<?> getEntityClass();
 
     String getEntityName();
 

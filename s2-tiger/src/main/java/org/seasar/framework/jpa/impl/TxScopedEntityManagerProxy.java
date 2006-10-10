@@ -13,7 +13,7 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.framework.jpa;
+package org.seasar.framework.jpa.impl;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -29,6 +29,8 @@ import javax.transaction.TransactionManager;
 import org.seasar.framework.container.annotation.tiger.Binding;
 import org.seasar.framework.container.annotation.tiger.BindingType;
 import org.seasar.framework.container.annotation.tiger.Component;
+import org.seasar.framework.jpa.PersistenceUnitContext;
+import org.seasar.framework.jpa.PersistenceUnitManager;
 import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.TransactionManagerUtil;
 import org.seasar.framework.util.TransactionUtil;
@@ -48,31 +50,20 @@ import org.seasar.framework.util.TransactionUtil;
  */
 @Component
 public class TxScopedEntityManagerProxy implements EntityManager {
+
     private static final Logger logger = Logger
             .getLogger(TxScopedEntityManagerProxy.class);
 
-    private TransactionManager tm;
+    @Binding(bindingType = BindingType.MUST)
+    protected TransactionManager tm;
 
-    private EntityManagerFactory emf;
+    @Binding(bindingType = BindingType.MUST)
+    protected EntityManagerFactory emf;
 
-    private PersistenceUnitManager pum;
+    @Binding(bindingType = BindingType.MUST)
+    protected PersistenceUnitManager pum;
 
     public TxScopedEntityManagerProxy() {
-    }
-
-    @Binding(bindingType = BindingType.MUST)
-    public void setTransactionManager(final TransactionManager tm) {
-        this.tm = tm;
-    }
-
-    @Binding(bindingType = BindingType.MUST)
-    public void setEntityManagerFactory(final EntityManagerFactory emf) {
-        this.emf = emf;
-    }
-
-    @Binding(bindingType = BindingType.MUST)
-    public void setPersistenceUnitManager(final PersistenceUnitManager pum) {
-        this.pum = pum;
     }
 
     protected boolean isTxActive() {
@@ -110,7 +101,7 @@ public class TxScopedEntityManagerProxy implements EntityManager {
         final EntityManager em = emf.createEntityManager();
         final Transaction tx = TransactionManagerUtil.getTransaction(tm);
         TransactionUtil.registerSynchronization(tx, new Synchronization() {
-            public void afterCompletion(int status) {
+            public void afterCompletion(final int status) {
                 final PersistenceUnitContext context = pum
                         .getPersistenceUnitContext(emf);
                 context.unregisterEntityManager(tx);
@@ -293,37 +284,37 @@ public class TxScopedEntityManagerProxy implements EntityManager {
         assertTxActive();
     }
 
-    public void lock(Object entity, LockModeType lockMode) {
+    public void lock(final Object entity, final LockModeType lockMode) {
         assertTxActive();
         final EntityManager em = getEntityManager();
         em.lock(entity, lockMode);
     }
 
-    public <T> T merge(T entity) {
+    public <T> T merge(final T entity) {
         assertTxActive();
         final EntityManager em = getEntityManager();
         return em.merge(entity);
     }
 
-    public void persist(Object entity) {
+    public void persist(final Object entity) {
         assertTxActive();
         final EntityManager em = getEntityManager();
         em.persist(entity);
     }
 
-    public void refresh(Object entity) {
+    public void refresh(final Object entity) {
         assertTxActive();
         final EntityManager em = getEntityManager();
         em.refresh(entity);
     }
 
-    public void remove(Object entity) {
+    public void remove(final Object entity) {
         assertTxActive();
         final EntityManager em = getEntityManager();
         em.remove(entity);
     }
 
-    public void setFlushMode(FlushModeType flushMode) {
+    public void setFlushMode(final FlushModeType flushMode) {
         if (isTxActive()) {
             final EntityManager em = getEntityManager();
             em.setFlushMode(flushMode);

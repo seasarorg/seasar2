@@ -13,7 +13,7 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.framework.jpa;
+package org.seasar.framework.jpa.metadata;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,7 +35,6 @@ public class EntityDescFactory {
     protected static final List<EntityDescProvider> providers = Collections
             .synchronizedList(new ArrayList<EntityDescProvider>());
 
-    @SuppressWarnings("unchecked")
     protected static final ConcurrentMap<Class<?>, EntityDesc> entityDescs = CollectionsUtil
             .newConcurrentHashMap();
 
@@ -70,21 +69,18 @@ public class EntityDescFactory {
         providers.remove(provider);
     }
 
-    @SuppressWarnings("unchecked")
-    public static <T> EntityDesc<T> getEntityDesc(final Class<T> entityClass) {
+    public static EntityDesc getEntityDesc(final Class<?> entityClass) {
         initialize();
-        final EntityDesc<T> entityDesc = entityDescs.get(entityClass);
+        final EntityDesc entityDesc = entityDescs.get(entityClass);
         if (entityDesc != null) {
             return entityDesc;
         }
         return createEntityDesc(entityClass);
     }
 
-    @SuppressWarnings("unchecked")
-    protected static <T> EntityDesc<T> createEntityDesc(
-            final Class<T> entityClass) {
+    protected static EntityDesc createEntityDesc(final Class<?> entityClass) {
         for (final EntityDescProvider provider : providers) {
-            final EntityDesc<T> entityDesc = provider
+            final EntityDesc entityDesc = provider
                     .createEntityDesc(entityClass);
             if (entityDesc != null) {
                 return CollectionsUtil.putIfAbsent(entityDescs, entityClass,

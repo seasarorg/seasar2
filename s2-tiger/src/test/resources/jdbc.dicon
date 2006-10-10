@@ -5,7 +5,15 @@
 	<include path="jta.dicon"/>
 
 	<component class="org.seasar.extension.jdbc.impl.BasicResultSetFactory"/>
-	<component class="org.seasar.extension.jdbc.impl.BasicStatementFactory"/>
+	<component class="org.seasar.extension.jdbc.impl.ConfigurableStatementFactory">
+		<arg>
+			<component class="org.seasar.extension.jdbc.impl.BasicStatementFactory"/>
+		</arg>
+		<property name="fetchSize">100</property>
+		<!--
+		<property name="maxRows">100</property>
+		-->
+	</component>
 	<!--
 	<component class="org.seasar.extension.jdbc.impl.OracleResultSetFactory"/>
 	<component class="org.seasar.extension.jdbc.impl.BooleanToIntStatementFactory"/>
@@ -132,4 +140,12 @@
 		@org.seasar.extension.j2ee.JndiResourceLocator@lookup("java:comp/env/jdbc/DataSource")
 	</component>
 	-->
+
+	<!--
+	<component name="dataSource"
+		class="org.seasar.extension.datasource.impl.SelectableDataSourceProxy"/>
+	-->
+
+	<component class="org.seasar.extension.dao.helper.impl.DaoHelperImpl"/>
+	<component class="org.seasar.extension.datasource.impl.DataSourceFactoryImpl"/>
 </components>

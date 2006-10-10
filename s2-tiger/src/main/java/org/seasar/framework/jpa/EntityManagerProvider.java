@@ -15,12 +15,18 @@
  */
 package org.seasar.framework.jpa;
 
+import javax.persistence.EntityManager;
+
 /**
  * @author koichik
  * 
  */
-public interface EntityDescProvider {
+public interface EntityManagerProvider {
 
-    <ENTITY> EntityDesc<ENTITY> createEntityDesc(Class<ENTITY> entityClass);
+    String getSelectableEntityManagerName();
+
+    String getEntityManagerName(String name);
+
+    EntityManager getEntityManger(String name);
 
 }

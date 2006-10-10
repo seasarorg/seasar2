@@ -13,10 +13,13 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.framework.jpa;
+package org.seasar.framework.jpa.metadata;
 
 import static org.easymock.EasyMock.expect;
 
+import org.seasar.framework.jpa.metadata.EntityDesc;
+import org.seasar.framework.jpa.metadata.EntityDescFactory;
+import org.seasar.framework.jpa.metadata.EntityDescProvider;
 import org.seasar.framework.unit.EasyMockTestCase;
 
 /**
@@ -25,9 +28,9 @@ import org.seasar.framework.unit.EasyMockTestCase;
  */
 public class EntityDescFactoryTest extends EasyMockTestCase {
 
-    private EntityDesc<Foo> entityDesc1;
+    private EntityDesc entityDesc1;
 
-    private EntityDesc<Bar> entityDesc2;
+    private EntityDesc entityDesc2;
 
     private EntityDescProvider provider1;
 
@@ -51,16 +54,14 @@ public class EntityDescFactoryTest extends EasyMockTestCase {
         new EasyMockTestCase.Subsequence() {
             @Override
             protected void replay() throws Exception {
-                EntityDesc<Foo> fooDesc = EntityDescFactory
-                        .getEntityDesc(Foo.class);
+                EntityDesc fooDesc = EntityDescFactory.getEntityDesc(Foo.class);
                 assertSame(entityDesc1, fooDesc);
 
-                EntityDesc<Foo> fooDesc2 = EntityDescFactory
+                EntityDesc fooDesc2 = EntityDescFactory
                         .getEntityDesc(Foo.class);
                 assertSame(entityDesc1, fooDesc2);
 
-                EntityDesc<Bar> barDesc = EntityDescFactory
-                        .getEntityDesc(Bar.class);
+                EntityDesc barDesc = EntityDescFactory.getEntityDesc(Bar.class);
                 assertSame(entityDesc2, barDesc);
             }
 

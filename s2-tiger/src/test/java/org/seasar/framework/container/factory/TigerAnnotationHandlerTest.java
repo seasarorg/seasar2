@@ -52,7 +52,7 @@ import org.seasar.framework.container.impl.PropertyDefImpl;
 import org.seasar.framework.container.impl.S2ContainerImpl;
 import org.seasar.framework.container.ognl.OgnlExpression;
 import org.seasar.framework.ejb.SEJBException;
-import org.seasar.framework.jpa.TxScopedEntityManagerProxy;
+import org.seasar.framework.jpa.impl.TxScopedEntityManagerProxy;
 
 /**
  * @author higa
@@ -411,7 +411,7 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
         ComponentDef cd2 = (ComponentDef) beanDesc
                 .getField("childComponentDef").get(pd2);
         assertEquals(TxScopedEntityManagerProxy.class, cd2.getComponentClass());
-        PropertyDef pd3 = cd2.getPropertyDef("entityManagerFactory");
+        PropertyDef pd3 = cd2.getPropertyDef("emf");
         assertEquals("emf", ((OgnlExpression) pd3.getExpression()).getSource());
 
         PropertyDef pd4 = cd.getPropertyDef("em3");
@@ -420,7 +420,7 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
         ComponentDef cd3 = (ComponentDef) beanDesc
                 .getField("childComponentDef").get(pd4);
         assertEquals(TxScopedEntityManagerProxy.class, cd3.getComponentClass());
-        PropertyDef pd5 = cd3.getPropertyDef("entityManagerFactory");
+        PropertyDef pd5 = cd3.getPropertyDef("emf");
         ComponentDef cd4 = (ComponentDef) beanDesc
                 .getField("childComponentDef").get(pd5);
         assertEquals(
@@ -445,7 +445,7 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
         ComponentDef cd2 = (ComponentDef) beanDesc
                 .getField("childComponentDef").get(pd2);
         assertEquals(TxScopedEntityManagerProxy.class, cd2.getComponentClass());
-        PropertyDef pd3 = cd2.getPropertyDef("entityManagerFactory");
+        PropertyDef pd3 = cd2.getPropertyDef("emf");
         assertEquals("emf", ((OgnlExpression) pd3.getExpression()).getSource());
 
         PropertyDef pd4 = cd.getPropertyDef("em6");
@@ -454,7 +454,7 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
         ComponentDef cd3 = (ComponentDef) beanDesc
                 .getField("childComponentDef").get(pd4);
         assertEquals(TxScopedEntityManagerProxy.class, cd3.getComponentClass());
-        PropertyDef pd5 = cd3.getPropertyDef("entityManagerFactory");
+        PropertyDef pd5 = cd3.getPropertyDef("emf");
         ComponentDef cd4 = (ComponentDef) beanDesc
                 .getField("childComponentDef").get(pd5);
         assertEquals(

@@ -13,38 +13,22 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.framework.jpa;
+package org.seasar.framework.jpa.exception;
 
-import javax.persistence.TemporalType;
+import javax.persistence.EntityManager;
+
+import org.seasar.framework.exception.SRuntimeException;
 
 /**
  * @author koichik
  * 
  */
-public interface AttributeDesc {
+public class DialectNotFoundException extends SRuntimeException {
 
-    String getName();
+    private static final long serialVersionUID = 1L;
 
-    Class<?> getType();
-
-    Class<?> getElementType();
-
-    int getSqlType();
-
-    TemporalType getTemporalType();
-
-    boolean isId();
-
-    boolean isAssociation();
-
-    boolean isCollection();
-
-    boolean isComponent();
-
-    boolean isVersion();
-
-    Object getValue(Object entity);
-
-    void setValue(Object entity, Object value);
+    public DialectNotFoundException(final EntityManager em) {
+        super("ESSR0089", new Object[] { em });
+    }
 
 }

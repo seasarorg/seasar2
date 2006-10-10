@@ -8,10 +8,13 @@ import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.container.AccessTypeDef;
 import org.seasar.framework.container.ComponentDef;
+import org.seasar.framework.container.InstanceDef;
 import org.seasar.framework.container.PropertyDef;
 import org.seasar.framework.container.assembler.AccessTypeDefFactory;
 import org.seasar.framework.container.assembler.BindingTypeDefFactory;
+import org.seasar.framework.container.deployer.InstanceDefFactory;
 import org.seasar.framework.container.factory.AnnotationHandler;
+import org.seasar.framework.container.factory.AnnotationHandlerFactory;
 import org.seasar.framework.container.factory.PropertyDefBuilder;
 import org.seasar.framework.container.impl.PropertyDefImpl;
 import org.seasar.framework.container.ognl.OgnlExpression;
@@ -19,6 +22,9 @@ import org.seasar.framework.util.StringUtil;
 
 public abstract class AbstractPropertyDefBuilder<T extends Annotation>
         implements PropertyDefBuilder {
+
+    protected AnnotationHandler handler = AnnotationHandlerFactory
+            .getAnnotationHandler();
 
     public AbstractPropertyDefBuilder() {
     }
@@ -53,6 +59,22 @@ public abstract class AbstractPropertyDefBuilder<T extends Annotation>
 
     protected abstract PropertyDef createPropertyDef(String name,
             AccessTypeDef accessTypeDef, T annotation);
+
+    protected ComponentDef createComponentDef(final Class<?> componentClass) {
+        return createComponentDef(componentClass, InstanceDefFactory.SINGLETON);
+    }
+
+    protected ComponentDef createComponentDef(final Class<?> componentClass,
+            final InstanceDef instanceDef) {
+        final ComponentDef componentDef = handler.createComponentDef(
+                componentClass, instanceDef);
+        handler.appendDI(componentDef);
+        handler.appendAspect(componentDef);
+        handler.appendInterType(componentDef);
+        handler.appendInitMethod(componentDef);
+        handler.appendDestroyMethod(componentDef);
+        return componentDef;
+    }
 
     protected PropertyDef createPropertyDef(final String propertyName,
             final AccessTypeDef accessTypeDef) {
