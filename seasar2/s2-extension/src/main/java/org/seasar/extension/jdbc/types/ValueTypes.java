@@ -85,6 +85,7 @@ public final class ValueTypes {
         registerValueType(InputStream.class, BINARY_STREAM);
         registerValueType(boolean.class, BOOLEAN);
         registerValueType(Boolean.class, BOOLEAN);
+        registerValueType(Object.class, OBJECT);
     }
 
     private ValueTypes() {
@@ -119,41 +120,45 @@ public final class ValueTypes {
         }
     }
 
-    public static ValueType getValueType(int type) {
-        switch (type) {
+    public static Class getType(int sqltype) {
+        switch (sqltype) {
         case Types.TINYINT:
         case Types.SMALLINT:
-            return getValueType(Short.class);
+            return Short.class;
         case Types.INTEGER:
-            return getValueType(Integer.class);
+            return Integer.class;
         case Types.BIGINT:
-            return getValueType(Long.class);
+            return Long.class;
         case Types.REAL:
         case Types.FLOAT:
-            return getValueType(Float.class);
+            return Float.class;
         case Types.DOUBLE:
-            return getValueType(Double.class);
+            return Double.class;
         case Types.DECIMAL:
         case Types.NUMERIC:
-            return getValueType(BigDecimal.class);
+            return BigDecimal.class;
         case Types.DATE:
-            return getValueType(Timestamp.class);
+            return Timestamp.class;
         case Types.TIME:
-            return getValueType(java.sql.Time.class);
+            return java.sql.Time.class;
         case Types.TIMESTAMP:
-            return getValueType(Timestamp.class);
+            return Timestamp.class;
         case Types.BINARY:
         case Types.VARBINARY:
         case Types.LONGVARBINARY:
-            return getValueType(BYTE_ARRAY_CLASS);
+            return BYTE_ARRAY_CLASS;
         case Types.CHAR:
         case Types.LONGVARCHAR:
         case Types.VARCHAR:
-            return getValueType(String.class);
+            return String.class;
         case Types.BOOLEAN:
-            return getValueType(Boolean.class);
+            return Boolean.class;
         default:
-            return OBJECT;
+            return Object.class;
         }
+    }
+
+    public static ValueType getValueType(int sqltype) {
+        return getValueType(getType(sqltype));
     }
 }
