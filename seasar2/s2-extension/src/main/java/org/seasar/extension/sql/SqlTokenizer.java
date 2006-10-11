@@ -33,6 +33,8 @@ public interface SqlTokenizer {
 
     String getToken();
 
+    String getSql();
+
     String getBefore();
 
     String getAfter();

@@ -142,7 +142,7 @@ public class SqlParserImpl implements SqlParser {
             }
             parseToken();
         }
-        throw new EndCommentNotFoundRuntimeException();
+        throw new EndCommentNotFoundRuntimeException(tokenizer.getSql());
     }
 
     protected void parseElse() {

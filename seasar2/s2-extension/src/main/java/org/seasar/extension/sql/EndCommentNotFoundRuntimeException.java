@@ -25,7 +25,14 @@ public class EndCommentNotFoundRuntimeException extends SRuntimeException {
 
     private static final long serialVersionUID = 1L;
 
-    public EndCommentNotFoundRuntimeException() {
-        super("ESSR0085");
+    private String sql;
+
+    public EndCommentNotFoundRuntimeException(String sql) {
+        super("ESSR0085", new Object[] { sql });
+        this.sql = sql;
+    }
+
+    public String getSql() {
+        return sql;
     }
 }

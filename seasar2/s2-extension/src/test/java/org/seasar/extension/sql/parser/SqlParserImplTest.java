@@ -204,6 +204,20 @@ public class SqlParserImplTest extends TestCase {
         assertEquals("4", "aaa", ctx2.getSql());
     }
 
+    public void testParseIf3() throws Exception {
+        String sql = "/*IF aaa != null*/aaa,/*END*/";
+        SqlParser parser = new SqlParserImpl(sql);
+        SqlContext ctx = new SqlContextImpl();
+        Node root = parser.parse();
+        root.accept(ctx);
+        System.out.println("[" + ctx.getSql() + "]");
+        assertEquals("", ctx.getSql());
+        ctx.addArg("aaa", "hoge", String.class);
+        root.accept(ctx);
+        System.out.println("[" + ctx.getSql() + "]");
+        assertEquals("aaa,", ctx.getSql());
+    }
+
     public void testParseElse() throws Exception {
         String sql = "SELECT * FROM emp WHERE /*IF job != null*/job = /*job*/'CLERK'-- ELSE job is null/*END*/";
         String sql2 = "SELECT * FROM emp WHERE job = ?";

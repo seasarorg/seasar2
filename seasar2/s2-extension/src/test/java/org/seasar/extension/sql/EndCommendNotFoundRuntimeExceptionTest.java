@@ -24,7 +24,8 @@ import junit.framework.TestCase;
 public class EndCommendNotFoundRuntimeExceptionTest extends TestCase {
 
     public void testGetMessage() throws Exception {
-        EndCommentNotFoundRuntimeException ex = new EndCommentNotFoundRuntimeException();
+        EndCommentNotFoundRuntimeException ex = new EndCommentNotFoundRuntimeException(
+                "hoge");
         System.out.println(ex.getMessage());
     }
 }

@@ -40,6 +40,10 @@ public class SqlTokenizerImpl implements SqlTokenizer {
         this.sql = sql;
     }
 
+    public String getSql() {
+        return sql;
+    }
+
     public int getPosition() {
         return position;
     }
