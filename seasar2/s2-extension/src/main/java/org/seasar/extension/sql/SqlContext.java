@@ -38,6 +38,16 @@ public interface SqlContext {
     Object getArg(String name);
 
     /**
+     * 引数が存在するかどうかを返します。
+     * 
+     * @param name
+     *            引数名
+     * @return 引数が存在するか
+     */
+
+    boolean hasArg(String name);
+
+    /**
      * 名前に応じた引数のクラスを返します。 <code>getArg()</code>が<code>null</code>を返す場合があるので、
      * このメソッドが用意されています。
      * 
@@ -96,8 +106,7 @@ public interface SqlContext {
      * @param bindVariableType
      * @return
      */
-    SqlContext addSql(String sql, Object bindVariable,
-            Class bindVariableType);
+    SqlContext addSql(String sql, Object bindVariable, Class bindVariableType);
 
     /**
      * <code>SQL</code>とバインド変数の配列を追加します。

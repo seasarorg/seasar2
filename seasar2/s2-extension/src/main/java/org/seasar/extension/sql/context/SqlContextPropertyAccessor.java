@@ -28,11 +28,17 @@ import org.seasar.extension.sql.SqlContext;
  */
 public class SqlContextPropertyAccessor extends ObjectPropertyAccessor {
 
+    private static final String HAS_PREFIX = "has_";
+
     public Object getProperty(Map cx, Object target, Object name)
             throws OgnlException {
 
         SqlContext ctx = (SqlContext) target;
         String argName = name.toString();
+        if (argName.startsWith(HAS_PREFIX)) {
+            return Boolean.valueOf(ctx.hasArg(argName.substring(HAS_PREFIX
+                    .length())));
+        }
         return ctx.getArg(argName);
     }
 
