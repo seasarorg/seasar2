@@ -320,7 +320,17 @@ public class SqlParserImplTest extends TestCase {
         ctx.addArg("ccc", "222", String.class);
         root.accept(ctx);
         System.out.println("[" + ctx.getSql() + "]");
-        assertEquals("1", sql2, ctx.getSql());
+        assertEquals(sql2, ctx.getSql());
+    }
+
+    public void testPrefixSql_comma() throws Exception {
+        String sql = "/*BEGIN*//*IF false*/aaa/*END*//*IF true*/,bbb/*END*//*END*/";
+        SqlParser parser = new SqlParserImpl(sql);
+        Node root = parser.parse();
+        SqlContext ctx = new SqlContextImpl();
+        root.accept(ctx);
+        System.out.println("[" + ctx.getSql() + "]");
+        assertEquals("bbb", ctx.getSql());
     }
 
     public void testIn() throws Exception {
