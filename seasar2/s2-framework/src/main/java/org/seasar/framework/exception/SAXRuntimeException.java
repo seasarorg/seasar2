@@ -26,7 +26,11 @@ public final class SAXRuntimeException extends SRuntimeException {
     private static final long serialVersionUID = -4933312103385038765L;
 
     public SAXRuntimeException(SAXException cause) {
-        super("ESSR0054", new Object[] { createMessage(cause) }, cause);
+        super("ESSR0054", createArgs(cause), cause);
+    }
+
+    protected static Object[] createArgs(SAXException cause) {
+        return new Object[] { createMessage(cause) };
     }
 
     protected static String createMessage(final SAXException cause) {
@@ -35,9 +39,12 @@ public final class SAXRuntimeException extends SRuntimeException {
         if (cause instanceof SAXParseException) {
             SAXParseException e = (SAXParseException) cause;
             if (e.getSystemId() != null) {
-                buf.append(" at ").append(e.getSystemId()).append("(").append(
-                        e.getLineNumber()).append(")");
+                buf.append(" at ").append(e.getSystemId());
             }
+            final int lineNumber = e.getLineNumber();
+            final int columnNumber = e.getColumnNumber();
+            buf.append("( lineNumber = ").append(lineNumber).append(
+                    ", columnNumber = ").append(columnNumber).append(")");
         }
         return new String(buf);
     }
