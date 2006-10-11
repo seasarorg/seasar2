@@ -31,6 +31,7 @@ public class SqlContextPropertyAccessorTest extends TestCase {
         ctx.addArg("aaa", "111", String.class);
         assertEquals("111", Ognl.getValue("aaa", ctx));
         assertEquals(Boolean.TRUE, Ognl.getValue("has_aaa", ctx));
+        assertEquals(Boolean.TRUE, Ognl.getValue("has_aaa == true", ctx));
         assertEquals(Boolean.FALSE, Ognl.getValue("has_bbb", ctx));
     }
 }

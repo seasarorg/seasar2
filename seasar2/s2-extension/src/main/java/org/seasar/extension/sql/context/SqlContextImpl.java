@@ -74,7 +74,12 @@ public class SqlContextImpl implements SqlContext {
     }
 
     public boolean hasArg(String name) {
-        return args.containsKey(name);
+        if (args.containsKey(name)) {
+            return true;
+        } else if (parent != null) {
+            return parent.hasArg(name);
+        }
+        return false;
     }
 
     public Class getArgType(String name) {

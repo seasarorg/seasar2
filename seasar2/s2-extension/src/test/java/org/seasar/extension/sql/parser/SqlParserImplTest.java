@@ -218,6 +218,34 @@ public class SqlParserImplTest extends TestCase {
         assertEquals("aaa,", ctx.getSql());
     }
 
+    public void testParseIf4() throws Exception {
+        String sql = "/*IF has_aaa*/aaa,/*END*/";
+        SqlParser parser = new SqlParserImpl(sql);
+        SqlContext ctx = new SqlContextImpl();
+        Node root = parser.parse();
+        root.accept(ctx);
+        System.out.println("[" + ctx.getSql() + "]");
+        assertEquals("", ctx.getSql());
+        ctx.addArg("aaa", null, String.class);
+        root.accept(ctx);
+        System.out.println("[" + ctx.getSql() + "]");
+        assertEquals("aaa,", ctx.getSql());
+    }
+
+    public void testParseIf5() throws Exception {
+        String sql = "/*BEGIN*//*IF has_aaa*/,aaa/*END*//*END*/";
+        SqlParser parser = new SqlParserImpl(sql);
+        SqlContext ctx = new SqlContextImpl();
+        Node root = parser.parse();
+        root.accept(ctx);
+        System.out.println("[" + ctx.getSql() + "]");
+        assertEquals("", ctx.getSql());
+        ctx.addArg("aaa", null, String.class);
+        root.accept(ctx);
+        System.out.println("[" + ctx.getSql() + "]");
+        assertEquals("aaa", ctx.getSql());
+    }
+
     public void testParseElse() throws Exception {
         String sql = "SELECT * FROM emp WHERE /*IF job != null*/job = /*job*/'CLERK'-- ELSE job is null/*END*/";
         String sql2 = "SELECT * FROM emp WHERE job = ?";
