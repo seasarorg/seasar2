@@ -39,6 +39,7 @@ import javassist.bytecode.annotation.StringMemberValue;
 import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.ConstructorNotFoundRuntimeException;
 import org.seasar.framework.beans.FieldNotFoundRuntimeException;
+import org.seasar.framework.beans.IllegalDiiguRuntimeException;
 import org.seasar.framework.beans.MethodNotFoundRuntimeException;
 import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.beans.PropertyNotFoundRuntimeException;
@@ -305,12 +306,26 @@ public final class BeanDescImpl implements BeanDesc {
 
     }
 
+    public String[] getMethodParameterNamesNoException(final String methodName,
+            final Class[] parameterTypes) {
+        return getMethodParameterNamesNoException(getMethod(methodName,
+                parameterTypes));
+    }
+
     public String[] getMethodParameterNames(final String methodName,
             final Class[] parameterTypes) {
         return getMethodParameterNames(getMethod(methodName, parameterTypes));
     }
 
     public String[] getMethodParameterNames(final Method method) {
+        String[] names = getMethodParameterNames(method);
+        if (names.length != method.getParameterTypes().length) {
+            throw new IllegalDiiguRuntimeException();
+        }
+        return names;
+    }
+
+    public String[] getMethodParameterNamesNoException(final Method method) {
         synchronized (this) {
             if (methodParameterNamesCache == null) {
                 setUpMethodParameterNamesCache();
