@@ -3,7 +3,7 @@
 	"http://www.seasar.org/dtd/components21.dtd">
 <components namespace="jdbc">
 	<include path="jta.dicon"/>
-	<include path="convention.dicon"/>
+	<include path="jdbc-extension.dicon"/>
 
 	<component class="org.seasar.extension.jdbc.impl.BasicResultSetFactory"/>
 	<component class="org.seasar.extension.jdbc.impl.ConfigurableStatementFactory">
@@ -146,7 +146,4 @@
 	<component name="dataSource"
 		class="org.seasar.extension.datasource.impl.SelectableDataSourceProxy"/>
 	-->
-
-	<component class="org.seasar.extension.dao.helper.impl.DaoHelperImpl"/>
-	<component class="org.seasar.extension.datasource.impl.DataSourceFactoryImpl"/>
 </components>
