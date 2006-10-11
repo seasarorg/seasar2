@@ -210,6 +210,14 @@ public final class DatabaseMetaDataUtil {
         }
     }
 
+    public static boolean supportsGetGeneratedKeys(DatabaseMetaData dbMetaData) {
+        try {
+            return dbMetaData.supportsGetGeneratedKeys();
+        } catch (SQLException ex) {
+            throw new SQLRuntimeException(ex);
+        }
+    }
+
     public static String getDatabaseProductName(DatabaseMetaData dbMetaData) {
         try {
             return dbMetaData.getDatabaseProductName();

@@ -65,6 +65,11 @@ public class DatabaseMetaDataUtilTest extends S2TestCase {
         System.out.println(dbMetaData.getDatabaseProductName());
     }
 
+    public void testSupportsGetGeneratedKeys() throws Exception {
+        DatabaseMetaData dbMetaData = getDatabaseMetaData();
+        assertFalse(DatabaseMetaDataUtil.supportsGetGeneratedKeys(dbMetaData));
+    }
+
     public void setUp() {
         include("DatabaseMetaDataUtilTest.dicon");
     }
