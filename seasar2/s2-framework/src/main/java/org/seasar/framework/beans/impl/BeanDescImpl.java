@@ -319,7 +319,7 @@ public final class BeanDescImpl implements BeanDesc {
 
     public String[] getMethodParameterNames(final Method method) {
         String[] names = getMethodParameterNamesNoException(method);
-        if (names.length != method.getParameterTypes().length) {
+        if (names == null || names.length != method.getParameterTypes().length) {
             throw new IllegalDiiguRuntimeException();
         }
         return names;

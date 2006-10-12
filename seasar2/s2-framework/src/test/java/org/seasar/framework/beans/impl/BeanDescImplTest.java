@@ -16,11 +16,13 @@
 package org.seasar.framework.beans.impl;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.math.BigDecimal;
 
 import junit.framework.TestCase;
 
 import org.seasar.framework.beans.BeanDesc;
+import org.seasar.framework.beans.IllegalDiiguRuntimeException;
 import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.util.MathUtil;
 
@@ -147,6 +149,17 @@ public class BeanDescImplTest extends TestCase {
         BeanDesc beanDesc = new BeanDescImpl(MyBean.class);
         Field eee = beanDesc.getField("eee");
         assertEquals("1", true, eee.isAccessible());
+    }
+
+    public void testGetMethodParameterNames() throws Exception {
+        BeanDesc beanDesc = new BeanDescImpl(MyBean.class);
+        Method m = beanDesc.getMethod("echo", new Class[] { Integer.class });
+        try {
+            beanDesc.getMethodParameterNames(m);
+            fail();
+        } catch (IllegalDiiguRuntimeException e) {
+            assertTrue(true);
+        }
     }
 
     /*
