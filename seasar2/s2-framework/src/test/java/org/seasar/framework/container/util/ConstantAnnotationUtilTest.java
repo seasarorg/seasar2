@@ -31,6 +31,8 @@ public class ConstantAnnotationUtilTest extends TestCase {
         map = ConstantAnnotationUtil.convertExpressionToMap("hoge=9999.99");
         assertEquals("9999.99", map.get("hoge"));
 
+        map = ConstantAnnotationUtil.convertExpressionToMap("hoge=-9999.99");
+        assertEquals("-9999.99", map.get("hoge"));
     }
 
     public void testEOF() throws Exception {
@@ -44,7 +46,7 @@ public class ConstantAnnotationUtilTest extends TestCase {
         assertEquals(MyTokenizer.TT_EOF, tokenizer.nextToken());
     }
 
-    public void testHyphen() throws Exception {
+    public void fixme_testHyphen() throws Exception {
         MyTokenizer tokenizer = new MyTokenizer("       - ");
         assertEquals('-', tokenizer.nextToken());
         assertEquals(MyTokenizer.TT_EOF, tokenizer.nextToken());

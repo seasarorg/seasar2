@@ -86,6 +86,7 @@ public class ConstantAnnotationUtil {
             Tokenizer.setup(ctype2);
             ordinaryChar(ctype2, '=');
             ordinaryChar(ctype2, ',');
+            wordChar(ctype2, '-');
         }
     }
 }
