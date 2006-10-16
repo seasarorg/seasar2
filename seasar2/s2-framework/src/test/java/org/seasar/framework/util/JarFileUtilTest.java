@@ -26,10 +26,11 @@ import junit.framework.TestCase;
 public class JarFileUtilTest extends TestCase {
 
     public void testToJarFilePath() throws Exception {
-        File f = new File("C:\\Program Files\\foo.jar");
+        File f = new File("/Program Files/foo.jar");
         URL url = new URL("jar:" + f.toURL() + "!/");
-        assertEquals("C:\\Program Files\\foo.jar", JarFileUtil
-                .toJarFilePath(url));
+        String root = new File("/").getCanonicalPath();
+        assertEquals(root + "Program Files" + File.separator + "foo.jar",
+                JarFileUtil.toJarFilePath(url));
     }
 
 }
