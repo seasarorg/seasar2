@@ -31,4 +31,17 @@ public class HotdeployUtil {
         Provider provider = S2ContainerBehavior.getProvider();
         return provider instanceof HotdeployBehavior;
     }
+
+    public static void start() {
+        if (isHotdeploy()) {
+            ((HotdeployBehavior) S2ContainerBehavior.getProvider()).start();
+        }
+    }
+
+    public static void stop() {
+        if (isHotdeploy()) {
+            ((HotdeployBehavior) S2ContainerBehavior.getProvider()).stop();
+        }
+    }
+
 }
