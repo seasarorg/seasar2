@@ -85,15 +85,14 @@ public class ResourceUtilTest extends TestCase {
     }
 
     public void testToExternalForm() throws Exception {
-        URL url = new File("/Program Files").toURL();
-        assertEquals("file:" + getRoot() + "Program Files/", ResourceUtil
+        URL url = new File("/Program File").toURL();
+        assertEquals("file:" + getRoot() + "Program File", ResourceUtil
                 .toExternalForm(url));
     }
 
     public void testGetFileName() throws Exception {
-        URL url = new File("/Program Files").toURL();
-        assertEquals(getRoot() + "Program Files/", ResourceUtil
-                .getFileName(url));
+        URL url = new File("/Program File").toURL();
+        assertEquals(getRoot() + "Program File", ResourceUtil.getFileName(url));
         url = ResourceUtil.getResource("java/lang/String.class");
         assertNull(ResourceUtil.getFile(url));
     }
@@ -105,4 +104,5 @@ public class ResourceUtilTest extends TestCase {
         }
         return "/" + root;
     }
+
 }
