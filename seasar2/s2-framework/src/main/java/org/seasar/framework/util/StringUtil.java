@@ -64,7 +64,7 @@ public final class StringUtil {
     }
 
     public static String[] split(String str, String delim) {
-        if (str == null) {
+        if (isEmpty(str)) {
             return EMPTY_STRINGS;
         }
         List list = new ArrayList();
