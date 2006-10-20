@@ -16,6 +16,8 @@
 package org.seasar.framework.util;
 
 import java.lang.reflect.Method;
+import java.math.BigDecimal;
+import java.util.List;
 
 import junit.framework.TestCase;
 
@@ -36,6 +38,33 @@ public class MethodUtilTigerTest extends TestCase {
         assertEquals(1, bridge);
     }
 
+    public void testGetElementTypeOfListFromParameterType() throws Exception {
+        assertEquals(Integer.class, MethodUtil
+                .getElementTypeOfListFromParameterType(Baz.class.getMethod(
+                        "hoge", new Class[] { List.class }), 0));
+        assertEquals(Double.class, MethodUtil
+                .getElementTypeOfListFromParameterType(Baz.class.getMethod(
+                        "hoge", new Class[] { List.class, List.class }), 0));
+        assertEquals(BigDecimal.class, MethodUtil
+                .getElementTypeOfListFromParameterType(Baz.class.getMethod(
+                        "hoge", new Class[] { List.class, List.class }), 1));
+    }
+
+    public void testGetElementTypeOfListFromReturnType() throws Exception {
+        assertEquals(String.class, MethodUtil
+                .getElementTypeOfListFromReturnType(Baz.class.getMethod("hoge",
+                        new Class[] { List.class })));
+    }
+
+    public void testGetElementTypeOfListFromDestination() throws Exception {
+        assertEquals(String.class, MethodUtil
+                .getElementTypeOfListFromDestination(Baz.class.getMethod(
+                        "hoge", new Class[] { List.class })));
+        assertEquals(BigDecimal.class, MethodUtil
+                .getElementTypeOfListFromDestination(Baz.class.getMethod(
+                        "hoge", new Class[] { List.class, List.class })));
+    }
+
     public class Foo {
         public Foo foo() {
             return null;
@@ -48,4 +77,11 @@ public class MethodUtilTigerTest extends TestCase {
             return null;
         }
     }
+
+    public interface Baz {
+        List<String> hoge(List<Integer> src);
+
+        void hoge(List<Double> src, List<BigDecimal> dest);
+    }
+
 }
