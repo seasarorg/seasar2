@@ -21,6 +21,7 @@ import java.util.List;
 import org.seasar.extension.dxo.command.DxoCommand;
 import org.seasar.extension.dxo.command.impl.BeanToBeanDxoCommand;
 import org.seasar.extension.dxo.converter.ConverterFactory;
+import org.seasar.framework.util.MethodUtil;
 
 /**
  * @author koichik
@@ -44,7 +45,8 @@ public class BeanToBeanDxoCommandBuilder extends AbstractDxoCommandBuilder {
         final Class sourceType = parameterTypes[0];
         final Class destType = parameterSize == 1 ? method.getReturnType()
                 : parameterTypes[1];
-        final Class destElementClass = getElementTypeOfListFromDestination(method);
+        final Class destElementClass = MethodUtil
+                .getElementTypeOfListFromDestination(method);
 
         if (sourceType.isArray()) {
             if (destType.isArray()) {

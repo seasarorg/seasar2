@@ -16,6 +16,7 @@
 package org.seasar.framework.util;
 
 import java.lang.reflect.Method;
+import java.util.List;
 
 import junit.framework.TestCase;
 
@@ -62,8 +63,36 @@ public class MethodUtilTest extends TestCase {
         assertFalse(MethodUtil.isSyntheticMethod(method));
     }
 
+    public void testGetElementTypeOfListFromParameterType() throws Exception {
+        assertNull(MethodUtil.getElementTypeOfListFromParameterType(Baz.class
+                .getMethod("hoge", new Class[] { List.class }), 0));
+        assertNull(MethodUtil.getElementTypeOfListFromParameterType(Baz.class
+                .getMethod("hoge", new Class[] { List.class, List.class }), 0));
+        assertNull(MethodUtil.getElementTypeOfListFromParameterType(Baz.class
+                .getMethod("hoge", new Class[] { List.class, List.class }), 1));
+    }
+
+    public void testGetElementTypeOfListFromReturnType() throws Exception {
+        assertNull(MethodUtil.getElementTypeOfListFromReturnType(Baz.class
+                .getMethod("hoge", new Class[] { List.class })));
+    }
+
+    public void testGetElementTypeOfListFromDestination() throws Exception {
+        assertNull(MethodUtil.getElementTypeOfListFromDestination(Baz.class
+                .getMethod("hoge", new Class[] { List.class })));
+        assertNull(MethodUtil.getElementTypeOfListFromDestination(Baz.class
+                .getMethod("hoge", new Class[] { List.class, List.class })));
+    }
+
     public static class Foo {
         public void foo() {
         }
     }
+
+    public interface Baz {
+        List hoge(List src);
+
+        void hoge(List src, List dest);
+    }
+
 }

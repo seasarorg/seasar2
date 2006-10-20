@@ -22,6 +22,7 @@ import java.util.Map;
 import org.seasar.extension.dxo.command.DxoCommand;
 import org.seasar.extension.dxo.command.impl.MapToBeanDxoCommand;
 import org.seasar.extension.dxo.converter.ConverterFactory;
+import org.seasar.framework.util.MethodUtil;
 
 /**
  * @author koichik
@@ -43,11 +44,12 @@ public class MapToBeanDxoCommandBuilder extends AbstractDxoCommandBuilder {
         }
 
         final Class sourceType = parameterTypes[0];
-        final Class sourceElementClass = getElementTypeOfListFromParameterType(
-                method, 0);
+        final Class sourceElementClass = MethodUtil
+                .getElementTypeOfListFromParameterType(method, 0);
         final Class destType = parameterSize == 1 ? method.getReturnType()
                 : parameterTypes[1];
-        final Class destElementClass = getElementTypeOfListFromDestination(method);
+        final Class destElementClass = MethodUtil
+                .getElementTypeOfListFromDestination(method);
 
         if (sourceType.isArray()) {
             final Class elementType = sourceType.getComponentType();
