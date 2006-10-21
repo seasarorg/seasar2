@@ -20,6 +20,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.seasar.framework.container.TooManyRegistrationRuntimeException;
+import org.seasar.framework.container.impl.S2ContainerBehavior;
+import org.seasar.framework.container.warmdeploy.WarmdeployBehavior;
 
 public class S2FrameworkTestCaseTest extends S2FrameworkTestCase {
 
@@ -36,6 +38,16 @@ public class S2FrameworkTestCaseTest extends S2FrameworkTestCase {
     private Date ddd_;
 
     private List list1;
+
+    public S2FrameworkTestCaseTest() {
+    }
+
+    public S2FrameworkTestCaseTest(String name) {
+        super(name);
+        if (name.equals("testNotWarmdeploy")) {
+            setWarmDeploy(false);
+        }
+    }
 
     public void setUpAaa() {
         testAaaSetUpInvoked_ = true;
@@ -116,6 +128,19 @@ public class S2FrameworkTestCaseTest extends S2FrameworkTestCase {
 
     public void testEmptyComponent() {
         include("empty.dicon");
+    }
+
+    public void setUpWarmdeploy() throws Exception {
+        include("aop.dicon");
+    }
+
+    public void testWarmdeploy() throws Exception {
+        assertTrue(S2ContainerBehavior.getProvider() instanceof WarmdeployBehavior);
+        assertNotNull(getComponent("fooDao"));
+    }
+
+    public void testNotWarmdeploy() throws Exception {
+        assertFalse(S2ContainerBehavior.getProvider() instanceof WarmdeployBehavior);
     }
 
     public static class Hoge {

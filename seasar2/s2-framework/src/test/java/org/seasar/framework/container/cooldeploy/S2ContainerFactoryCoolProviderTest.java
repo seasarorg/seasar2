@@ -34,6 +34,7 @@ public class S2ContainerFactoryCoolProviderTest extends TestCase {
         container = S2ContainerFactory.create(getClass().getName().replace('.',
                 '/')
                 + ".dicon");
+        S2ContainerFactory.include(container, "aop.dicon");
         container.init();
     }
 

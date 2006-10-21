@@ -23,6 +23,10 @@ import org.seasar.framework.unit.S2FrameworkTestCase;
  */
 public class HelperCoolCreatorTest extends S2FrameworkTestCase {
 
+    public HelperCoolCreatorTest() {
+        setWarmDeploy(false);
+    }
+
     protected void setUp() {
         include("HelperCoolCreatorTest.dicon");
     }

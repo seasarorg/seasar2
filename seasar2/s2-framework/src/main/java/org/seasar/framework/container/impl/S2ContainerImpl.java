@@ -97,7 +97,7 @@ public class S2ContainerImpl implements S2Container, ContainerConstants {
     }
 
     public void setRoot(S2Container root) {
-        this.root = root;
+        this.root = root != null ? root : this;
     }
 
     /**

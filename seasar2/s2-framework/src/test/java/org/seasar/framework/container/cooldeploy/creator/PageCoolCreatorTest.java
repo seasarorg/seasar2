@@ -23,6 +23,10 @@ import org.seasar.framework.unit.S2FrameworkTestCase;
  */
 public class PageCoolCreatorTest extends S2FrameworkTestCase {
 
+    public PageCoolCreatorTest() {
+        setWarmDeploy(false);
+    }
+
     protected void setUp() {
         include("PageCoolCreatorTest.dicon");
     }

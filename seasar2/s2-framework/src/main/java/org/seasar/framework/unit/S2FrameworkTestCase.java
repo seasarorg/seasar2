@@ -37,6 +37,7 @@ import org.seasar.framework.container.factory.AnnotationHandler;
 import org.seasar.framework.container.factory.AnnotationHandlerFactory;
 import org.seasar.framework.container.factory.S2ContainerFactory;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
+import org.seasar.framework.container.impl.S2ContainerBehavior;
 import org.seasar.framework.container.impl.S2ContainerImpl;
 import org.seasar.framework.container.servlet.S2ContainerServlet;
 import org.seasar.framework.convention.NamingConvention;
@@ -83,6 +84,8 @@ public abstract class S2FrameworkTestCase extends TestCase {
 
     private List boundFields;
 
+    private boolean warmDeploy = true;
+
     private AnnotationHandler annotationHandler = AnnotationHandlerFactory
             .getAnnotationHandler();
 
@@ -91,6 +94,16 @@ public abstract class S2FrameworkTestCase extends TestCase {
 
     public S2FrameworkTestCase(String name) {
         super(name);
+    }
+
+    public boolean isWarmDeploy() {
+        return warmDeploy && ResourceUtil.isExist("convention.dicon")
+                && ResourceUtil.isExist("creator.dicon")
+                && ResourceUtil.isExist("customizer.dicon");
+    }
+
+    public void setWarmDeploy(boolean warmDeploy) {
+        this.warmDeploy = warmDeploy;
     }
 
     public S2Container getContainer() {
@@ -201,6 +214,9 @@ public abstract class S2FrameworkTestCase extends TestCase {
         originalClassLoader = Thread.currentThread().getContextClassLoader();
         unitClassLoader = new UnitClassLoader(originalClassLoader);
         Thread.currentThread().setContextClassLoader(unitClassLoader);
+        if (isWarmDeploy()) {
+            S2ContainerFactory.configure("warmdeploy.dicon");
+        }
         container = new S2ContainerImpl();
         SingletonS2ContainerFactory.setContainer(container);
         if (servletContext == null) {
@@ -232,6 +248,8 @@ public abstract class S2FrameworkTestCase extends TestCase {
         S2ContainerServlet.clearInstance();
         MessageResourceBundleFactory.clear();
         DisposableUtil.dispose();
+        S2ContainerBehavior
+                .setProvider(new S2ContainerBehavior.DefaultProvider());
         Thread.currentThread().setContextClassLoader(originalClassLoader);
         unitClassLoader = null;
         originalClassLoader = null;

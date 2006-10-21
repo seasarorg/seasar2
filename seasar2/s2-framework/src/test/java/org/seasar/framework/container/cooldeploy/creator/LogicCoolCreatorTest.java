@@ -26,6 +26,10 @@ import org.seasar.framework.unit.S2FrameworkTestCase;
  */
 public class LogicCoolCreatorTest extends S2FrameworkTestCase {
 
+    public LogicCoolCreatorTest() {
+        setWarmDeploy(false);
+    }
+
     protected void setUp() {
         include("LogicCoolCreatorTest.dicon");
     }
