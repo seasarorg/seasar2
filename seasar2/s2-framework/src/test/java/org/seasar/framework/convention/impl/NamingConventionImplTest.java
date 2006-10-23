@@ -9,7 +9,7 @@
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, 
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
@@ -277,6 +277,28 @@ public class NamingConventionImplTest extends TestCase {
         nc.addRootPackageName("junit.framework");
         assertEquals(Test.class, nc.findClass("junit.framework", "", "Test"));
         assertNull(nc.findClass("junit.framework", "", "xxx"));
+    }
+
+    public void testIsValidViewRootPath() throws Exception {
+        NamingConventionImpl nc = new NamingConventionImpl();
+        nc.setViewRootPath("/view");
+        nc.setViewExtension(".html");
+        assertTrue(nc.isValidViewRootPath("/view/hoge.html"));
+    }
+
+    public void testIsValidViewRootPath_viewExtIsNotSuitable() throws Exception {
+        NamingConventionImpl nc = new NamingConventionImpl();
+        nc.setViewRootPath("/view");
+        nc.setViewExtension(".jsp");
+        assertFalse(nc.isValidViewRootPath("/view/hoge.html"));
+    }
+
+    public void testIsValidViewRootPath_viewRootPathIsNotSuitable()
+            throws Exception {
+        NamingConventionImpl nc = new NamingConventionImpl();
+        nc.setViewRootPath("/pages");
+        nc.setViewExtension(".html");
+        assertFalse(nc.isValidViewRootPath("/view/hoge.html"));
     }
 
 }

@@ -499,6 +499,13 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
         return null;
     }
 
+    public boolean isValidViewRootPath(String path) {
+        if (!path.startsWith(viewRootPath) || !path.endsWith(viewExtension)) {
+            return false;
+        }
+        return true;
+    }
+
     public String fromPathToPageName(String path) {
         return fromPathToComponentName(path, pageSuffix);
     }

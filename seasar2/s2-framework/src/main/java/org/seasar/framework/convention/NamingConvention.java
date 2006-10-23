@@ -112,4 +112,6 @@ public interface NamingConvention {
     boolean isTargetClassName(String className, String suffix);
 
     boolean isTargetClassName(String className);
+
+    boolean isValidViewRootPath(String path);
 }
