@@ -3,10 +3,14 @@
 	"http://www.seasar.org/dtd/components24.dtd">
 <components>
 	<component name="defaultCustomizer" class="org.seasar.framework.container.customizer.AspectCustomizer">
+		<!--
 		<property name="interceptorName">"aop.traceInterceptor"</property>
+		-->
 	</component>
 	<component name="commandAspectCustomizer" class="org.seasar.framework.container.customizer.AspectCustomizer">
+		<!--
 		<property name="interceptorName">"aop.traceInterceptor"</property>
+		-->
 		<property name="pointcut">"do.*, initialize"</property>
 	</component>
 
