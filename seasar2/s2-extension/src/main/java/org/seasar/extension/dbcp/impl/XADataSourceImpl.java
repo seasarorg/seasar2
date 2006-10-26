@@ -25,7 +25,7 @@ import javax.sql.XADataSource;
 
 import org.seasar.framework.util.ClassUtil;
 
-public final class XADataSourceImpl implements XADataSource {
+public class XADataSourceImpl implements XADataSource {
 
     private String driverClassName_;
 

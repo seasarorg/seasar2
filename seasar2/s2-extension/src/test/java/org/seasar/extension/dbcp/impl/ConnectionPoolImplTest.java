@@ -15,6 +15,7 @@
  */
 package org.seasar.extension.dbcp.impl;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 
 import javax.transaction.TransactionManager;
@@ -241,6 +242,16 @@ public class ConnectionPoolImplTest extends S2TestCase {
             con = pool_.checkOut();
             con.close();
         }
+    }
+
+    public void testConnectionStatus() throws Exception {
+        ((ConnectionPoolImpl) pool_).setReadOnly(true);
+        ((ConnectionPoolImpl) pool_)
+                .setTransactionIsolationLevel(Connection.TRANSACTION_READ_UNCOMMITTED);
+        ConnectionWrapper con = pool_.checkOut();
+        assertTrue(con.isReadOnly());
+        assertEquals(Connection.TRANSACTION_READ_UNCOMMITTED, con
+                .getTransactionIsolation());
     }
 
     protected void setUp() throws Exception {

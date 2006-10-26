@@ -25,7 +25,7 @@ import javax.sql.DataSource;
 import org.seasar.extension.dbcp.ConnectionPool;
 import org.seasar.framework.log.Logger;
 
-public final class DataSourceImpl implements DataSource, Serializable {
+public class DataSourceImpl implements DataSource, Serializable {
 
     static final long serialVersionUID = 1L;
 

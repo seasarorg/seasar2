@@ -34,7 +34,7 @@ import org.seasar.extension.jdbc.impl.PreparedStatementWrapper;
 import org.seasar.framework.exception.SSQLException;
 import org.seasar.framework.log.Logger;
 
-public final class ConnectionWrapperImpl implements ConnectionWrapper {
+public class ConnectionWrapperImpl implements ConnectionWrapper {
 
     private static final Logger logger_ = Logger
             .getLogger(ConnectionWrapperImpl.class);

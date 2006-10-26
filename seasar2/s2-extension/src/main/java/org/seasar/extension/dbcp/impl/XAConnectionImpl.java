@@ -24,7 +24,7 @@ import javax.sql.ConnectionEventListener;
 import javax.sql.XAConnection;
 import javax.transaction.xa.XAResource;
 
-public final class XAConnectionImpl implements XAConnection {
+public class XAConnectionImpl implements XAConnection {
 
     private Connection connection_;
 
