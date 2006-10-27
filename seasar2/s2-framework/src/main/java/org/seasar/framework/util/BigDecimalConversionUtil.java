@@ -32,10 +32,6 @@ public final class BigDecimalConversionUtil {
             return null;
         } else if (o instanceof BigDecimal) {
             return (BigDecimal) o;
-        } else if (o instanceof String) {
-            return new BigDecimal((String) o);
-        } else if (o instanceof Double) {
-            return new BigDecimal(((Double) o).doubleValue());
         } else if (o instanceof java.util.Date) {
             if (pattern != null) {
                 return new BigDecimal(new SimpleDateFormat(pattern).format(o));

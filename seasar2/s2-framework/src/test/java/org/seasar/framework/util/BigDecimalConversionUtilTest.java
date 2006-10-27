@@ -37,11 +37,74 @@ public class BigDecimalConversionUtilTest extends TestCase {
                 .toBigDecimal(new Integer(100)));
         assertEquals(new BigDecimal("1000"), BigDecimalConversionUtil
                 .toBigDecimal(new Long(1000L)));
-        assertEquals(new BigDecimal("0.5"), BigDecimalConversionUtil
-                .toBigDecimal(new Float(0.5F)));
-        assertEquals(new BigDecimal("0.25"), BigDecimalConversionUtil
-                .toBigDecimal(new Double(0.25D)));
-        assertEquals(new BigDecimal("100.00"), BigDecimalConversionUtil
-                .toBigDecimal("100.00"));
+
+        assertEquals(0, new BigDecimal("0.1")
+                .compareTo(BigDecimalConversionUtil
+                        .toBigDecimal(new Float(0.1F))));
+
+        assertEquals(0, new BigDecimal("0.1")
+                .compareTo(BigDecimalConversionUtil.toBigDecimal(new Double(
+                        0.1D))));
+        assertEquals(0, new BigDecimal("0.01")
+                .compareTo(BigDecimalConversionUtil.toBigDecimal(new Double(
+                        0.01D))));
+        assertEquals(0, new BigDecimal("0.001")
+                .compareTo(BigDecimalConversionUtil.toBigDecimal(new Double(
+                        0.001D))));
+        assertEquals(0, new BigDecimal("0.0001")
+                .compareTo(BigDecimalConversionUtil.toBigDecimal(new Double(
+                        0.0001D))));
+        assertEquals(0, new BigDecimal("0.00001")
+                .compareTo(BigDecimalConversionUtil.toBigDecimal(new Double(
+                        0.00001D))));
+        assertEquals(0, new BigDecimal("0.0000001")
+                .compareTo(BigDecimalConversionUtil.toBigDecimal(new Double(
+                        0.0000001D))));
+
+        assertEquals(0, new BigDecimal("0.123")
+                .compareTo(BigDecimalConversionUtil.toBigDecimal(new Double(
+                        0.123D))));
+        assertEquals(0, new BigDecimal("0.0123")
+                .compareTo(BigDecimalConversionUtil.toBigDecimal(new Double(
+                        0.0123D))));
+        assertEquals(0, new BigDecimal("0.00123")
+                .compareTo(BigDecimalConversionUtil.toBigDecimal(new Double(
+                        0.00123D))));
+        assertEquals(0, new BigDecimal("0.000123")
+                .compareTo(BigDecimalConversionUtil.toBigDecimal(new Double(
+                        0.000123D))));
+        assertEquals(0, new BigDecimal("0.0000123")
+                .compareTo(BigDecimalConversionUtil.toBigDecimal(new Double(
+                        0.0000123D))));
+        assertEquals(0, new BigDecimal("0.00000123")
+                .compareTo(BigDecimalConversionUtil.toBigDecimal(new Double(
+                        0.00000123D))));
+        assertEquals(0, new BigDecimal("0.000000123")
+                .compareTo(BigDecimalConversionUtil.toBigDecimal(new Double(
+                        0.000000123D))));
+        assertEquals(0, new BigDecimal("0.0000000123")
+                .compareTo(BigDecimalConversionUtil.toBigDecimal(new Double(
+                        0.0000000123D))));
+        assertEquals(0, new BigDecimal("0.00000000123")
+                .compareTo(BigDecimalConversionUtil.toBigDecimal(new Double(
+                        0.00000000123D))));
+
+        assertEquals(0, new BigDecimal("0.000000123")
+                .compareTo(BigDecimalConversionUtil.toBigDecimal(new Double(
+                        1.23E-7))));
+        assertEquals(0, new BigDecimal("1.23E-7")
+                .compareTo(BigDecimalConversionUtil.toBigDecimal(new Double(
+                        0.000000123))));
+        assertEquals(0, new BigDecimal("1.23E-10")
+                .compareTo(BigDecimalConversionUtil.toBigDecimal(new Double(
+                        0.000000000123))));
+
+        assertEquals(0, new BigDecimal("100.00")
+                .compareTo(BigDecimalConversionUtil.toBigDecimal("100.00")));
+        assertEquals(0, new BigDecimal("0.000000123")
+                .compareTo(BigDecimalConversionUtil.toBigDecimal("1.23E-7")));
+        assertEquals(0,
+                new BigDecimal("1.23E-7").compareTo(BigDecimalConversionUtil
+                        .toBigDecimal("0.000000123")));
     }
 }
