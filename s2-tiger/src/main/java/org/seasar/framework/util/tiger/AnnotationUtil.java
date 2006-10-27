@@ -45,7 +45,7 @@ public class AnnotationUtil {
                 continue;
             }
             Object v = MethodUtil.invoke(m, annotation, null);
-            if (v != null) {
+            if (v != null && !"".equals(v)) {
                 map.put(name, v);
             }
         }

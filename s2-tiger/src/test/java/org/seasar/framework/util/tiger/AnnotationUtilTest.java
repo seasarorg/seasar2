@@ -35,5 +35,6 @@ public class AnnotationUtilTest extends TestCase {
         Map<String, Object> props = AnnotationUtil.getProperties(anno);
         assertEquals("123", props.get("aaa"));
         assertEquals("3", props.get("bbb"));
+        assertNull(props.get("ccc"));
     }
 }

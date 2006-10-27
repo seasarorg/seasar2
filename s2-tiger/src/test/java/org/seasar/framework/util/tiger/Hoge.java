@@ -31,4 +31,6 @@ public @interface Hoge {
     String aaa() default "123";
 
     String bbb();
+
+    String ccc() default "";
 }
