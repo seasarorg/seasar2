@@ -40,15 +40,24 @@ public class AnnotationUtil {
         String[] names = beanDesc.getMethodNames();
         for (int i = 0; i < names.length; i++) {
             String name = names[i];
-            Method m = beanDesc.getMethodNoException(name);
-            if (m == null) {
-                continue;
-            }
-            Object v = MethodUtil.invoke(m, annotation, null);
-            if (v != null && !"".equals(v)) {
+            Object v = getProperty(beanDesc, annotation, name);
+            if (v != null) {
                 map.put(name, v);
             }
         }
         return map;
+    }
+
+    public static Object getProperty(BeanDesc beanDesc, Annotation annotation,
+            String name) {
+        Method m = beanDesc.getMethodNoException(name);
+        if (m == null) {
+            return null;
+        }
+        Object v = MethodUtil.invoke(m, annotation, null);
+        if (v != null && !"".equals(v)) {
+            return v;
+        }
+        return null;
     }
 }
