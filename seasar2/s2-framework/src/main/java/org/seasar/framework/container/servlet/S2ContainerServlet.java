@@ -37,6 +37,8 @@ import org.seasar.framework.container.PropertyDef;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 import org.seasar.framework.container.impl.ArgDefImpl;
+import org.seasar.framework.env.Env;
+import org.seasar.framework.util.SmartDeployUtil;
 import org.seasar.framework.util.StringUtil;
 
 public class S2ContainerServlet extends HttpServlet {
@@ -120,8 +122,7 @@ public class S2ContainerServlet extends HttpServlet {
         if (container == null) {
             out.write("S2Container[" + container.getPath() + "] is not found.");
             return;
-        }
-
+        }        
         out.write("<html><head><title>S2 Components</title></head><body>");
         try {
             out.write("<h1>S2Container</h1>");
@@ -136,6 +137,24 @@ public class S2ContainerServlet extends HttpServlet {
                 }
             } finally {
                 out.write("</ul>");
+            }
+            final String envValue = Env.getValue();
+            if(SmartDeployUtil.isHotdeployMode(container)) {
+                out.write("<p>");
+                out.write("S2 is working under <strong><font color=\"#DC143C\">hotdeploy</font></strong> mode.[env = " + envValue + "]");
+                out.write("</p>");
+            } else if(SmartDeployUtil.isWarmdeployMode(container)) {
+                out.write("<p>");
+                out.write("S2 is working under <strong><font color=\"#FF8C00\">warmdeploy</font></strong> mode.[env = " + envValue + "]");
+                out.write("</p>");
+            } else if(SmartDeployUtil.isCooldeployMode(container)) {
+                out.write("<p>");
+                out.write("S2 is working under <strong><font color=\"#00008B\">cooldeploy</font></strong> mode.[env = " + envValue + "]");
+                out.write("</p>");
+            } else {
+                out.write("<p>");
+                out.write("S2 is working under normal mode.[env = " + envValue + "]");
+                out.write("</p>");
             }
             listInclude(container, request, out);
             listComponent(container, out);
