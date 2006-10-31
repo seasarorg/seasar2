@@ -17,6 +17,7 @@ package org.seasar.extension.jdbc.types;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.sql.Blob;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -44,8 +45,19 @@ public class BinaryType implements ValueType {
      */
     public Object getValue(ResultSet resultSet, String columnName)
             throws SQLException {
-
-        return resultSet.getBytes(columnName);
+        try {
+            Blob blob = resultSet.getBlob(columnName);
+            if (blob == null) {
+                return null;
+            }
+            long l = blob.length();
+            if (Integer.MAX_VALUE < l) {
+                throw new ArrayIndexOutOfBoundsException();
+            }
+            return blob.getBytes(1, (int) l);
+        } catch (SQLException e) {
+            return resultSet.getBytes(columnName);
+        }
     }
 
     /**
