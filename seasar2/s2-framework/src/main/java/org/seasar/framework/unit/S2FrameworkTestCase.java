@@ -97,7 +97,8 @@ public abstract class S2FrameworkTestCase extends TestCase {
     }
 
     public boolean isWarmDeploy() {
-        return warmDeploy && ResourceUtil.isExist("convention.dicon")
+        return warmDeploy && !ResourceUtil.isExist("s2container.dicon")
+                && ResourceUtil.isExist("convention.dicon")
                 && ResourceUtil.isExist("creator.dicon")
                 && ResourceUtil.isExist("customizer.dicon");
     }
