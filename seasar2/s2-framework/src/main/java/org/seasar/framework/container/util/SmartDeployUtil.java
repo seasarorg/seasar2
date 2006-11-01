@@ -13,7 +13,7 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.framework.util;
+package org.seasar.framework.container.util;
 
 import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.factory.BeanDescFactory;
@@ -24,6 +24,7 @@ import org.seasar.framework.container.factory.S2ContainerFactory.Provider;
 import org.seasar.framework.container.hotdeploy.HotdeployUtil;
 import org.seasar.framework.container.impl.S2ContainerBehavior;
 import org.seasar.framework.container.warmdeploy.WarmdeployBehavior;
+import org.seasar.framework.util.FieldUtil;
 
 /**
  * @author shot

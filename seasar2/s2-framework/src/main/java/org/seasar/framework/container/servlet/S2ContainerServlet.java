@@ -37,8 +37,8 @@ import org.seasar.framework.container.PropertyDef;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 import org.seasar.framework.container.impl.ArgDefImpl;
+import org.seasar.framework.container.util.SmartDeployUtil;
 import org.seasar.framework.env.Env;
-import org.seasar.framework.util.SmartDeployUtil;
 import org.seasar.framework.util.StringUtil;
 
 public class S2ContainerServlet extends HttpServlet {

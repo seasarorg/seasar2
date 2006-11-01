@@ -13,7 +13,7 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.framework.util;
+package org.seasar.framework.container.util;
 
 import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.factory.BeanDescFactory;
@@ -24,10 +24,11 @@ import org.seasar.framework.container.hotdeploy.HotdeployBehavior;
 import org.seasar.framework.container.impl.S2ContainerBehavior;
 import org.seasar.framework.container.warmdeploy.WarmdeployBehavior;
 import org.seasar.framework.unit.S2FrameworkTestCase;
+import org.seasar.framework.util.FieldUtil;
 
 /**
  * @author shot
- *
+ * 
  */
 public class SmartDeployUtilTest extends S2FrameworkTestCase {
 
@@ -51,13 +52,15 @@ public class SmartDeployUtilTest extends S2FrameworkTestCase {
         S2Container container = getContainer();
         assertFalse(SmartDeployUtil.isCooldeployMode(container));
         BeanDesc bd = BeanDescFactory.getBeanDesc(S2ContainerFactory.class);
-        FieldUtil.set(bd.getField("provider"), null, new S2ContainerFactoryCoolProvider());
+        FieldUtil.set(bd.getField("provider"), null,
+                new S2ContainerFactoryCoolProvider());
         assertTrue(SmartDeployUtil.isCooldeployMode(container));
     }
 
     protected void tearDownCooldeployMode() {
         BeanDesc bd = BeanDescFactory.getBeanDesc(S2ContainerFactory.class);
-        FieldUtil.set(bd.getField("provider"), null, new S2ContainerFactory.DefaultProvider());
+        FieldUtil.set(bd.getField("provider"), null,
+                new S2ContainerFactory.DefaultProvider());
     }
 
     public void testWarmdeployMode() throws Exception {
