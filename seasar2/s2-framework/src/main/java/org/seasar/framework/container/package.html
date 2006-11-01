@@ -1,0 +1,122 @@
+<html>
+<body>
+S2コンテナとその構成要素を定義するインターフェースおよび、S2コンテナの振舞いに関連した例外クラスを提供します。
+<p>
+このパッケージを構成する主な要素は、以下のとおりです。
+<dl>
+<dt>コンテナ本体（<a href="S2Container.html">S2Container</a>）</dt>
+<dd>
+S2コンテナ本体は、各コンポーネントの定義情報を保持し、必要に応じてコンポーネントの生成・提供を行います。
+S2コンテナは階層構造を持つことができます。階層関係はdiconファイルの&lt;include&gt;要素で指定します。
+</dd>
+<dt>定義情報（～Def）</dt>
+<dd>
+diconファイルやアノテーションで指定されたコンポーネントの定義情報は、S2コンテナ上では
+<a href="ComponentDef.html">ComponentDef</a>、<a href="PropertyDef.html">PropertyDef</a>
+などの定義情報として保持されます。
+</dd>
+<dt>定義情報の所有（～DefAware）</dt>
+<dd>
+定義情報を所有可能であることを表すインターフェースです。
+定義情報の追加、定義情報の数の取得、定義情報の取得の3種類のメソッドを提供します。
+diconファイルにおける定義情報の所有関係の例としては、
+&lt;component&gt;要素(PropertyDefAware)と&lt;property&gt;要素(PropertyDef)
+の関係などが挙げられます。
+</dd>
+<dt>式（<a href="Expression.html">Expression</a>）</dt>
+<dd>
+S2コンテナでは、コンポーネントの定義や値の定義に、式を利用することが出来ます。標準ではOGNL式をサポートしています。
+</dd>
+<dt>外部コンテキスト（<a href="ExternalContext.html">ExternalContext</a>）</dt>
+<dd>
+Webコンテナやポートレットコンテナで管理されるコンポーネントへのアクセス手段を提供します。
+例えば、Webコンテナのrequestスコープコンポーネント(HttpServletRequest)の取得や設定を行うことが出来ます。
+</dd>
+<dt>コンポーネントの構築（～Assembler）</dt>
+<dd>
+S2コンテナでは、コンストラクタ、プロパティ設定、初期化メソッドを順に実行してコンポーネントを組み立てます。
+それぞれの処理を<a href="ConstructorAssembler.html">ConstructorAssembler</a>、
+<a href="PropertyAssembler.html">PropertyAssembler</a>、
+<a href="MethodAssembler.html">MethodAssembler</a>が担当します。
+（MethodAssemblerは、S2コンテナによって管理されているコンポーネントが破棄される際の
+<a href="DestroyMethodDef.html">destroyメソッド</a>としても用いられます）
+</dd>
+<dt>Smart deploy (HOT / WARM / COOL deploy)</dt>
+<dd>
+規約に従って作成されたクラスを、S2コンテナが管理するコンポーネントとして自動的に登録する機能を提供します。
+この機能に関連するインターフェースとして<a href="ComponentCreator.html">ComponentCreator</a>、
+<a href="ComponentCustomizer.html">ComponentCustomizer</a>、
+<a href="ComponentDeployer.html">ComponentDeployer</a>があります。
+</dd>
+</dl>
+</p>
+<br/>
+<p>
+<h4>diconファイルタグと定義情報インターフェース</h4>
+この表は、diconファイルのタグ(及びTigarアノテーション)と定義情報を表すインターフェース(及び定義情報の所有を表すインターフェース)の関係を示しています。
+<h4>diconファイルタグと定義情報インターフェースの関係
+<table border="1">
+<tr>
+	<th>diconファイルタグ</th>
+	<th>Tigerアノテーション</th>
+	<th>定義情報インタフェース(～Def)</th>
+	<th>定義情報の所有インターフェース(～DefAware)</th>
+</tr>
+</tr>
+	<td>&lt;components&gt;</td>
+	<td style="text-align:center;">-</td>
+	<td><a href="S2Container.html">S2Container</a></td>
+	<td style="text-align:center;">-</td>
+</tr>
+<tr>
+	<td>&lt;component&gt;</td>
+	<td>@Component</td>
+	<td><a href="ComponentDef.html">ComponentDef</a></td>
+	<td style="text-align:center;">-</td>
+</tr>
+<tr>
+	<td>&lt;arg&gt;</td>
+	<td style="text-align:center;">-</td>
+	<td><a href="ArgDef.html">ArgDef</a></td>
+	<td><a href="ArgDefAware.html">ArgDefAware</a></td>
+</tr>
+<tr>
+	<td>&lt;property&gt;</td>
+	<td>@Binding</td>
+	<td><a href="PropertyDef.html">PropertyDef</a></td>
+	<td><a href="PropertyDefAware.html">PropertyDefAware</a></td>
+</tr>
+<tr>
+	<td>&lt;initMethod&gt;</td>
+	<td>@InitMethod</td>
+	<td><a href="InitMethodDef.html">InitMethodDef</a></td>
+	<td><a href="InitMethodDefAware.html">InitMethodDefAware</a></td>
+</tr>
+<tr>
+	<td>&lt;destroyMethod&gt;</td>
+	<td>@DestroyMethod</td>
+	<td><a href="DestroyMethodDef.html">DestroyMethodDef</a></td>
+	<td><a href="DestroyMethodDefAware.html">DestroyMethodDefAware</a></td>
+</tr>
+<tr>
+	<td>&lt;aspect&gt;</td>
+	<td>@Aspect</td>
+	<td><a href="AspectDef.html">AspectDef</a></td>
+	<td><a href="AspectDefAware.html">AspectDefAware</a></td>
+</tr>
+<tr>
+	<td>&lt;interType&gt;</td>
+	<td>@InterType</td>
+	<td><a href="InterTypeDef.html">InterTypeDef</a></td>
+	<td><a href="InterTypeDefAware.html">InterTypeDefAware</a></td>
+</tr>
+<tr>
+	<td>&lt;meta&gt;</td>
+	<td style="text-align:center;">-</td>
+	<td><a href="MetaDef.html">MetaDef</a></td>
+	<td><a href="MetaDefAware.html">MetaDefAware</a></td>
+</tr>
+</table>
+</h4>
+</body>
+</html>
