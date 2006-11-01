@@ -43,6 +43,17 @@ public class XADataSourceImplTest extends S2TestCase {
         }
     }
 
+    public void testGetXAConnectionWithProperties() throws Exception {
+        ((XADataSourceImpl) xads2_).addProperty("name", "value");
+        XAConnection xaCon = null;
+        try {
+            xaCon = xads2_.getXAConnection();
+            assertNotNull("1", xaCon);
+        } finally {
+            xaCon.close();
+        }
+    }
+
     protected void setUp() throws Exception {
         include(PATH);
     }

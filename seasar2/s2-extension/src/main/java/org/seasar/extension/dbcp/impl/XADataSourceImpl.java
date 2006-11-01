@@ -19,11 +19,13 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Properties;
 
 import javax.sql.XAConnection;
 import javax.sql.XADataSource;
 
 import org.seasar.framework.util.ClassUtil;
+import org.seasar.framework.util.StringUtil;
 
 public class XADataSourceImpl implements XADataSource {
 
@@ -34,6 +36,8 @@ public class XADataSourceImpl implements XADataSource {
     private String user_;
 
     private String password_;
+
+    private Properties properties_ = new Properties();
 
     public XADataSourceImpl() {
     }
@@ -73,6 +77,10 @@ public class XADataSourceImpl implements XADataSource {
         password_ = password;
     }
 
+    public void addProperty(String name, String value) {
+        properties_.put(name, value);
+    }
+
     public XAConnection getXAConnection() throws SQLException {
         return getXAConnection(user_, password_);
     }
@@ -81,10 +89,16 @@ public class XADataSourceImpl implements XADataSource {
             throws SQLException {
 
         Connection con = null;
-        if (user == null || user.length() == 0) {
+        if (StringUtil.isEmpty(user)) {
             con = DriverManager.getConnection(url_);
-        } else {
+        } else if (properties_.isEmpty()) {
             con = DriverManager.getConnection(url_, user, password);
+        } else {
+            Properties info = new Properties();
+            info.putAll(properties_);
+            info.put("user", user);
+            info.put("password", password);
+            con = DriverManager.getConnection(url_, info);
         }
         return new XAConnectionImpl(con);
     }
