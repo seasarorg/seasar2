@@ -43,7 +43,7 @@ public class SmartDeployUtilTest extends S2FrameworkTestCase {
         assertTrue(SmartDeployUtil.isHotdeployMode(container));
     }
 
-    protected void tearDownHotdeployMode() {
+    public void tearDownHotdeployMode() {
         S2ContainerBehavior
                 .setProvider(new S2ContainerBehavior.DefaultProvider());
     }
@@ -57,7 +57,7 @@ public class SmartDeployUtilTest extends S2FrameworkTestCase {
         assertTrue(SmartDeployUtil.isCooldeployMode(container));
     }
 
-    protected void tearDownCooldeployMode() {
+    public void tearDownCooldeployMode() {
         BeanDesc bd = BeanDescFactory.getBeanDesc(S2ContainerFactory.class);
         FieldUtil.set(bd.getField("provider"), null,
                 new S2ContainerFactory.DefaultProvider());
@@ -70,7 +70,7 @@ public class SmartDeployUtilTest extends S2FrameworkTestCase {
         assertTrue(SmartDeployUtil.isWarmdeployMode(container));
     }
 
-    protected void tearDownWarmdeployMode() {
+    public void tearDownWarmdeployMode() {
         S2ContainerBehavior
                 .setProvider(new S2ContainerBehavior.DefaultProvider());
     }
