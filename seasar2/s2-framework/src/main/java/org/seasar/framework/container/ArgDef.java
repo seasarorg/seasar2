@@ -19,16 +19,16 @@ package org.seasar.framework.container;
  * コンポーネントのコンストラクタおよびメソッドに与えられる引数定義のためのインターフェースです。
  * 
  * @author higa
- * @author vestige(Javadoc)
+ * @author vestige
  */
 public interface ArgDef extends MetaDefAware {
 
     /**
      * 引数定義の値を返します。
-     * <P>
+     * <p>
      * 引数定義の値とは、diconファイルに記述した<code>&lt;arg&gt;</code>要素の内容です。
      * インジェクションする際に、コンストラクタや初期化メソッド等の引数値になります。
-     * </P>
+     * </p>
      * 
      * @return 引数定義の値
      */
@@ -73,9 +73,9 @@ public interface ArgDef extends MetaDefAware {
     public void setExpression(Expression expression);
 
     /**
-     * 引数定義の値となる式、引数定義の値、引数定義の値となるコンポーネント定義のいずれかが存在する場合、<code>true</code>を返します。
+     * 引数定義の値となる式、引数定義の値、引数定義の値となるコンポーネント定義のいずれかが存在し、値の取得が可能かどうかを返します。
      * 
-     * @return 引数定義の値となる式、引数定義の値、引数定義の値となるコンポーネント定義のいずれかが存在する場合、<code>true</code>、そうでない場合は<code>false</code>
+     * @return 値の取得が可能な場合、<code>true</code>、そうでない場合は<code>false</code>
      */
     public boolean isValueGettable();
 
