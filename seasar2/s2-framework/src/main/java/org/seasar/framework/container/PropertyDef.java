@@ -41,7 +41,7 @@ package org.seasar.framework.container;
  * 
  * 
  * @author higa
- * @author Maeno(Javadoc)
+ * @author Maeno
  * 
  */
 public interface PropertyDef extends ArgDef {

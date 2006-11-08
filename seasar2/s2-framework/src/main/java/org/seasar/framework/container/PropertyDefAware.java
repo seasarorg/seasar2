@@ -22,7 +22,7 @@ package org.seasar.framework.container;
  * </p>
  * 
  * @author higa
- * @author Maeno(Javadoc)
+ * @author Maeno
  * 
  * @see PropertyDef
  * 
