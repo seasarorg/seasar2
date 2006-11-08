@@ -25,7 +25,7 @@ import org.seasar.framework.exception.SRuntimeException;
  * </p>
  * 
  * @author higa
- * @author jundu (Javadoc)
+ * @author jundu
  * 
  * @see AutoBindingDef
  * @see BindingTypeDef
