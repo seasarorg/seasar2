@@ -21,7 +21,7 @@ import org.seasar.framework.exception.SRuntimeException;
  * diconファイルなどの設定情報に対応するS2コンテナが、 コンテナツリーに登録されていなかった場合にスローされます。
  * 
  * @author higa
- * @author belltree (Javadoc)
+ * @author belltree
  */
 public class ContainerNotRegisteredRuntimeException extends SRuntimeException {
 
