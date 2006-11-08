@@ -16,8 +16,10 @@
 package org.seasar.framework.container;
 
 /**
- * コンポーネントの状態に対するアクセスタイプを定義するインターフェースです。 与えられたコンポーネントに対し、 アクセスタイプに基づいて、
- * S2コンテナ上のコンポーネントをインジェクションする機能も提供します。
+ * コンポーネントの状態に対するアクセスタイプを定義するインターフェースです。
+ * <p>
+ * 与えられたコンポーネントに対し、 アクセスタイプに基づいて、 S2コンテナ上のコンポーネントをインジェクションする機能も提供します。
+ * </p>
  * <p>
  * アクセスタイプには、 以下のものがあります。
  * <dl>
@@ -32,7 +34,7 @@ package org.seasar.framework.container;
  * </p>
  * 
  * @author koichik
- * @author belltree (Javadoc)
+ * @author belltree
  * 
  * @see PropertyDef
  */
