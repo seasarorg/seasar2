@@ -29,7 +29,7 @@ import org.seasar.framework.exception.SRuntimeException;
  * </p>
  * 
  * @author higa
- * @author belltree (Javadoc)
+ * @author belltree
  * 
  * @see org.seasar.framework.container.ConstructorAssembler#assemble()
  * @see org.seasar.framework.container.S2Container#injectDependency(Object,
