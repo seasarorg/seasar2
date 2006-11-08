@@ -25,7 +25,7 @@ import org.seasar.framework.exception.SRuntimeException;
  * </p>
  * 
  * @author higa
- * @author belltree (Javadoc)
+ * @author belltree
  */
 public class ComponentNotFoundRuntimeException extends SRuntimeException {
 
