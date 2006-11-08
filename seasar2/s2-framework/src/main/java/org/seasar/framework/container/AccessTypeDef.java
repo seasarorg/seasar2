@@ -51,9 +51,9 @@ public interface AccessTypeDef {
     String FIELD_NAME = "field";
 
     /**
-     * アクセスタイプ定義の文字列表現を返します。
+     * アクセスタイプ定義名を返します。
      * 
-     * @return アクセスタイプ定義の文字列表現
+     * @return アクセスタイプ定義名
      * 
      * @see #PROPERTY_NAME
      * @see #FIELD_NAME
