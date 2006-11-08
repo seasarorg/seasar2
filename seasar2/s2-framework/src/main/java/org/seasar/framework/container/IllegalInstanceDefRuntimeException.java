@@ -21,7 +21,7 @@ import org.seasar.framework.exception.SRuntimeException;
  * 不正なコンポーネントインスタンス定義が指定された場合にスローされます。
  * 
  * @author higa
- * @author jundu (Javadoc)
+ * @author jundu
  * 
  * @see InstanceDef
  * @see org.seasar.framework.container.deployer.InstanceDefFactory
