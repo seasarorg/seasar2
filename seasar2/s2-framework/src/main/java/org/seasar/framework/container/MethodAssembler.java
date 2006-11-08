@@ -25,7 +25,7 @@ import org.seasar.framework.exception.InvocationTargetRuntimeException;
  * </p>
  * 
  * @author higa
- * @author azusa (JavaDoc)
+ * @author azusa
  */
 public interface MethodAssembler {
 
