@@ -37,9 +37,9 @@ public interface DestroyMethodDefAware {
     public void addDestroyMethodDef(DestroyMethodDef methodDef);
 
     /**
-     * 追加されている{@link DestroyMethodDef destroyメソッド定義}の数を返します。
+     * {@link DestroyMethodDef destroyメソッド定義}の数を返します。
      * 
-     * @return 追加されているdestroyメソッド定義の数
+     * @return destroyメソッド定義の数
      */
     public int getDestroyMethodDefSize();
 
