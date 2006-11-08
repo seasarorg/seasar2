@@ -19,7 +19,6 @@ import java.lang.annotation.Annotation;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import javax.persistence.Embeddable;
 import javax.persistence.Entity;
@@ -32,8 +31,8 @@ import org.seasar.framework.container.annotation.tiger.Component;
 import org.seasar.framework.container.annotation.tiger.InitMethod;
 import org.seasar.framework.convention.NamingConvention;
 import org.seasar.framework.util.ClassLoaderUtil;
+import org.seasar.framework.util.ClassTraversal;
 import org.seasar.framework.util.ClassUtil;
-import org.seasar.framework.util.ClassTraversal.ClassHandler;
 import org.seasar.framework.util.tiger.CollectionsUtil;
 import org.seasar.framework.util.tiger.ReflectionUtil;
 
@@ -54,6 +53,11 @@ public class PersistenceClassAutoDetector extends AbstractClassAutoDetector {
         annotations.add(Embeddable.class);
     }
 
+    @Binding(bindingType = BindingType.MAY)
+    public void setNamingConvention(final NamingConvention namingConvention) {
+        this.namingConvention = namingConvention;
+    }
+
     @InitMethod
     public void init() {
         if (namingConvention != null) {
@@ -72,45 +76,38 @@ public class PersistenceClassAutoDetector extends AbstractClassAutoDetector {
         this.annotations.add(annotation);
     }
 
-    @Binding(bindingType = BindingType.MAY)
-    public void setNamingConvention(final NamingConvention namingConvention) {
-        this.namingConvention = namingConvention;
-    }
-
     @SuppressWarnings("unchecked")
-    public Class[] detect() {
-        final Set<Class<?>> result = CollectionsUtil.newLinkedHashSet();
-
+    public void detect(final ClassHandler visitor) {
         for (int i = 0; i < getTargetPackageNameSize(); i++) {
             final String packageName = getTargetPackageName(i);
             for (final Iterator<URL> it = ClassLoaderUtil
                     .getResources(packageName.replace('.', '/')); it.hasNext();) {
-                detect(result, packageName, it.next());
+                detect(visitor, packageName, it.next());
             }
         }
-
-        return result.toArray(new Class<?>[result.size()]);
     }
 
-    protected void detect(final Set<Class<?>> result,
+    protected void detect(final ClassHandler visitor,
             final String entityPackageName, final URL url) {
         final Strategy strategy = getStrategy(url.getProtocol());
-        strategy.detect(entityPackageName, url, new ClassHandler() {
-            public void processClass(final String packageName,
-                    final String shortClassName) {
-                if (packageName.startsWith(entityPackageName)) {
-                    final String name = ClassUtil.concatName(packageName,
-                            shortClassName);
-                    final Class<?> clazz = ReflectionUtil
-                            .forNameNoException(name);
-                    for (final Annotation ann : clazz.getAnnotations()) {
-                        if (annotations.contains(ann.annotationType())) {
-                            result.add(clazz);
-                            return;
+        strategy.detect(entityPackageName, url,
+                new ClassTraversal.ClassHandler() {
+                    public void processClass(final String packageName,
+                            final String shortClassName) {
+                        if (packageName.startsWith(entityPackageName)) {
+                            final String name = ClassUtil.concatName(
+                                    packageName, shortClassName);
+                            final Class<?> clazz = ReflectionUtil
+                                    .forNameNoException(name);
+                            for (final Annotation ann : clazz.getAnnotations()) {
+                                if (annotations.contains(ann.annotationType())) {
+                                    visitor.processClass(clazz);
+                                    return;
+                                }
+                            }
                         }
                     }
-                }
-            }
-        });
+                });
     }
+
 }

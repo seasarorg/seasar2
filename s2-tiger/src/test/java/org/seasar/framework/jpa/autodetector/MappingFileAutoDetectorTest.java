@@ -15,6 +15,7 @@
  */
 package org.seasar.framework.jpa.autodetector;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,10 +36,12 @@ public class MappingFileAutoDetectorTest extends S2TestCase {
     }
 
     public void testDetect() throws Exception {
-        List<String> paths = new ArrayList<String>();
-        for (ResourceAutoDetector.Entry entry : detector.detect()) {
-            paths.add(entry.getPath());
-        }
+        final List<String> paths = new ArrayList<String>();
+        detector.detect(new ResourceAutoDetector.ResourceHandler() {
+            public void processResource(String path, InputStream is) {
+                paths.add(path);
+            }
+        });
         assertEquals(5, paths.size());
         assertTrue(paths.contains("META-INF/orm.xml"));
         assertTrue(paths.contains("META-INF/fooOrm.xml"));

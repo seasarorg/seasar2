@@ -15,7 +15,7 @@
  */
 package org.seasar.framework.jpa.autodetector;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.runner.RunWith;
@@ -39,7 +39,12 @@ public class PersistenceClassAutoDetectorTest extends S2TestCase {
 
     @SuppressWarnings("unchecked")
     public void testDetect() throws Exception {
-        List<Class> classes = Arrays.asList(detector.detect());
+        final List<Class> classes = new ArrayList<Class>();
+        detector.detect(new ClassAutoDetector.ClassHandler() {
+            public void processClass(Class clazz) {
+                classes.add(clazz);
+            }
+        });
         assertTrue(classes.size() >= 3);
         assertTrue(classes.contains(Hoge.class));
         assertTrue(classes.contains(Foo.class));
