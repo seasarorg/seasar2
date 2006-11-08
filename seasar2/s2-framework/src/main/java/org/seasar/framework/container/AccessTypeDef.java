@@ -16,12 +16,12 @@
 package org.seasar.framework.container;
 
 /**
- * コンポーネントの状態に対するアクセスタイプを定義するインターフェースです。
+ * このインターフェースは、 コンポーネントの状態に対するアクセスタイプ定義を表します。
  * <p>
- * 与えられたコンポーネントに対し、 アクセスタイプに基づいて、 S2コンテナ上のコンポーネントをインジェクションする機能も提供します。
+ * 与えられたコンポーネントに対し、 アクセスタイプ定義に基づいて、 S2コンテナ上のコンポーネントをインジェクションする機能も提供します。
  * </p>
  * <p>
- * アクセスタイプには、 以下のものがあります。
+ * アクセスタイプ定義には、 以下のものがあります。
  * <dl>
  * <dt>{@link org.seasar.framework.container.assembler.AccessTypePropertyDef property}</dt>
  * <dd><var>getter</var>/<var>setter</var>メソッドによるアクセスを表します。</dd>
@@ -41,19 +41,19 @@ package org.seasar.framework.container;
 public interface AccessTypeDef {
 
     /**
-     * アクセスタイプ{@link org.seasar.framework.container.assembler.AccessTypePropertyDef property}を表す定数です。
+     * アクセスタイプ定義{@link org.seasar.framework.container.assembler.AccessTypePropertyDef property}を表す定数です。
      */
     String PROPERTY_NAME = "property";
 
     /**
-     * アクセスタイプ{@link org.seasar.framework.container.assembler.AccessTypeFieldDef field}を表す定数です。
+     * アクセスタイプ定義{@link org.seasar.framework.container.assembler.AccessTypeFieldDef field}を表す定数です。
      */
     String FIELD_NAME = "field";
 
     /**
-     * アクセスタイプの文字列表現を返します。
+     * アクセスタイプ定義の文字列表現を返します。
      * 
-     * @return アクセスタイプの文字列表現
+     * @return アクセスタイプ定義の文字列表現
      * 
      * @see #PROPERTY_NAME
      * @see #FIELD_NAME
@@ -61,7 +61,7 @@ public interface AccessTypeDef {
     String getName();
 
     /**
-     * アクセスタイプに基づいて、 <code>component</code>のプロパティまたはフィールドにS2コンテナ上のコンポーネントをインジェクションします。
+     * アクセスタイプ定義に基づいて、 <code>component</code>のプロパティまたはフィールドにS2コンテナ上のコンポーネントをインジェクションします。
      * 
      * @param componentDef
      *            コンポーネント定義
@@ -74,7 +74,7 @@ public interface AccessTypeDef {
             Object component);
 
     /**
-     * アクセスタイプに基づいて、 <code>component</code>のプロパティまたはフィールドにS2コンテナ上のコンポーネントをインジェクションします。
+     * アクセスタイプ定義に基づいて、 <code>component</code>のプロパティまたはフィールドにS2コンテナ上のコンポーネントをインジェクションします。
      * 
      * @param componentDef
      *            コンポーネント定義
