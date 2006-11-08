@@ -21,7 +21,7 @@ import org.seasar.framework.exception.SRuntimeException;
  * 不正なバインディングタイプ定義が指定された場合にスローされます。
  * 
  * @author higa
- * @author jundu (Javadoc)
+ * @author jundu
  * 
  * @see BindingTypeDef
  * @see org.seasar.framework.container.assembler.BindingTypeDefFactory
