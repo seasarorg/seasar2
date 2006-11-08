@@ -112,7 +112,7 @@ package org.seasar.framework.container;
  * </p>
  * 
  * @author higa
- * @author belltree (Javacoc)
+ * @author belltree
  */
 public interface ComponentDeployer {
 
