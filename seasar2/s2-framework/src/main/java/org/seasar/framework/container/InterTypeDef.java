@@ -18,7 +18,7 @@ package org.seasar.framework.container;
 import org.seasar.framework.aop.InterType;
 
 /**
- * コンポーネントに組み込むインタータイプを定義するインタフェースです。
+ * コンポーネントに組み込むインタータイプを定義するインターフェースです。
  * <p>
  * インタータイプ定義は、diconファイルにおける<code>&lt;interType&gt;</code>要素で指定されます。
  * <code>&lt;interType&gt;</code>要素にはclass属性が含まれています。
@@ -31,7 +31,7 @@ import org.seasar.framework.aop.InterType;
  * </p>
  * <ul>
  * <li>スーパークラスの変更</li>
- * <li>実装インタフェースの追加</li>
+ * <li>実装インターフェースの追加</li>
  * <li>フィールドの追加</li>
  * <li>コンストラクタの追加</li>
  * <li>メソッドの追加</li>
