@@ -31,7 +31,7 @@ package org.seasar.framework.container;
  * </p>
  * 
  * @author higa
- * @author matsunobu(Javadoc)
+ * @author matsunobu
  * 
  * @see S2Container
  */
