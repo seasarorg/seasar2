@@ -31,6 +31,10 @@ public interface ContainerConstants {
      */
     char NS_SEP = '.';
 
+    /**
+     * パッケージ名(Javaのパッケージとは異なる)付きコンポーネント名における、
+     * パッケージ名と自動バインディング用コンポーネント名の区切り(char)を表す定数です。
+     */
     char PACKAGE_SEP = '_';
 
     /**
