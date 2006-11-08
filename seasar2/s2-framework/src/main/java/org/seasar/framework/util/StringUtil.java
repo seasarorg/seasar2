@@ -235,4 +235,15 @@ public final class StringUtil {
         return str.substring(0, pos);
     }
 
+    public static String toHex(byte[] bytes) {
+        if (bytes == null) {
+            return "";
+        }
+        StringBuffer sb = new StringBuffer(bytes.length * 2);
+        for (int i = 0; i < bytes.length; ++i) {
+            sb.append(Character.forDigit((bytes[i] & 0xf0) >> 4, 16));
+            sb.append(Character.forDigit((bytes[i] & 0x0f), 16));
+        }
+        return sb.toString();
+    }
 }

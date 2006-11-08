@@ -130,4 +130,7 @@ public class StringUtilTest extends TestCase {
         assertEquals("abc", StringUtil.substringFromLast("abc", "dddd"));
     }
 
+    public void testToHex() throws Exception {
+        assertEquals("010203", StringUtil.toHex(new byte[] { 1, 2, 3 }));
+    }
 }
