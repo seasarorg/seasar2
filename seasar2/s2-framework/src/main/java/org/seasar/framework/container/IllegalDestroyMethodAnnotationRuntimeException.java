@@ -24,7 +24,7 @@ import org.seasar.framework.exception.SRuntimeException;
  * </p>
  * 
  * @author koichik
- * @author jundu (Javadoc)
+ * @author jundu
  * 
  * @see org.seasar.framework.container.factory.ConstantAnnotationHandler
  */
