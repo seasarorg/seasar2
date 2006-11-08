@@ -20,7 +20,7 @@ package org.seasar.framework.container;
  * コンポーネントのインスタンスをS2コンテナ上でどのように管理するのかを定義します。
  * </p>
  * <p>
- * コンポーネントインスタンス定義の種類には、以下のものがあります。
+ * インスタンス定義の種類には、以下のものがあります。
  * <dl>
  * <dt><code>singleton</code>(default)</dt>
  * <dd>S2コンテナ上で唯一のインスタンスになります。</dd>
@@ -46,10 +46,8 @@ package org.seasar.framework.container;
  * <dd><code>&lt;component&gt;</code>の<code>instance</code>属性で指定します。</dd>
  * <dt>Tigerアノテーション</dt>
  * <dd><code>&#064;</code>{@link org.seasar.framework.container.annotation.tiger.Component}の<code>instance</code>値で指定します。</dd>
- * <dt>backport175アノテーション</dt>
- * <dd><code>&#064;</code>{@link org.seasar.framework.container.annotation.backport175.Component}の<code>instance</code>値で指定します。</dd>
  * </dl>
- * コンポーネントインスタンス定義を省略した場合は<code>singleton</code>を指定したことになります。
+ * インスタンス定義を省略した場合は<code>singleton</code>を指定したことになります。
  * </p>
  * <p>
  * <code>application</code>、 <code>request</code>、 <code>session</code>を使う場合は、
@@ -64,49 +62,49 @@ package org.seasar.framework.container;
  * </p>
  * 
  * @author higa
- * @author goto(Javadoc)
+ * @author goto
  */
 public interface InstanceDef {
 
     /**
-     * コンポーネントインスタンス定義「<code>singleton</code>」を表す定数です。
+     * インスタンス定義「<code>singleton</code>」を表す定数です。
      */
     String SINGLETON_NAME = "singleton";
 
     /**
-     * コンポーネントインスタンス定義「<code>prototype</code>」を表す定数です。
+     * インスタンス定義「<code>prototype</code>」を表す定数です。
      */
     String PROTOTYPE_NAME = "prototype";
 
     /**
-     * コンポーネントインスタンス定義「<code>application</code>」を表す定数です。
+     * インスタンス定義「<code>application</code>」を表す定数です。
      */
     String APPLICATION_NAME = "application";
 
     /**
-     * コンポーネントインスタンス定義「<code>request</code>」を表す定数です。
+     * インスタンス定義「<code>request</code>」を表す定数です。
      */
     String REQUEST_NAME = "request";
 
     /**
-     * コンポーネントインスタンス定義「<code>session</code>」を表す定数です。
+     * インスタンス定義「<code>session</code>」を表す定数です。
      */
     String SESSION_NAME = "session";
 
     /**
-     * コンポーネントインスタンス定義「<code>outer</code>」を表す定数です。
+     * インスタンス定義「<code>outer</code>」を表す定数です。
      */
     String OUTER_NAME = "outer";
 
     /**
-     * コンポーネントインスタンス定義の文字列表現を返します。
+     * インスタンス定義の文字列表現を返します。
      * 
-     * @return コンポーネントインスタンス定義を表す文字列
+     * @return インスタンス定義を表す文字列
      */
     String getName();
 
     /**
-     * コンポーネントインスタンス定義に基づいた、コンポーネント定義<code>componentDef</code>の{@link ComponentDeployer}を返します。
+     * インスタンス定義に基づいた、コンポーネント定義<code>componentDef</code>の{@link ComponentDeployer}を返します。
      * 
      * @param componentDef
      *            コンポーネント定義
