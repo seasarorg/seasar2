@@ -19,7 +19,7 @@ import java.util.Map;
 
 /**
  * <p>
- * S2コンテナ上で、 Webコンテナなどのコンテキストを扱うためのインターフェースです。
+ * S2コンテナ上で、 Webコンテナなどの外部コンテキストを扱うためのインターフェースです。
  * </p>
  * <p>
  * {@link InstanceDef コンポーネントインスタンス定義}で、 <code>application</code>、
@@ -28,7 +28,7 @@ import java.util.Map;
  * </p>
  * 
  * @author higa
- * @author goto(Javadoc)
+ * @author goto
  */
 public interface ExternalContext {
 
@@ -104,9 +104,9 @@ public interface ExternalContext {
     Map getApplicationMap();
 
     /**
-     * 初期化設定値を{@link java.util.Map}インターフェースで返します。
+     * 初期設定値を{@link java.util.Map}インターフェースで返します。
      * 
-     * @return 初期化設定値
+     * @return 初期設定値
      */
     Map getInitParameterMap();
 
