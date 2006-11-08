@@ -16,7 +16,7 @@
 package org.seasar.framework.container;
 
 /**
- * このインタフェースはプロパティ定義を登録および取得する方法を定義するオブジェクトを表します。
+ * このインターフェースはプロパティ定義を登録および取得する方法を定義するオブジェクトを表します。
  * <p>
  * プロパティ定義は複数登録することが出来ます。 プロパティ定義の取得はインデックス番号を指定して行います。
  * </p>
@@ -30,7 +30,7 @@ package org.seasar.framework.container;
 public interface PropertyDefAware {
 
     /**
-     * {@link PropertyDef プロパティ定義}を登録(追加)します。
+     * {@link PropertyDef プロパティ定義}を追加します。
      * 
      * @param propertyDef
      *            プロパティ定義
