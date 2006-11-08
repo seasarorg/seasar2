@@ -22,12 +22,12 @@ package org.seasar.framework.container;
  * 1個以上の任意のメソッド(終了処理メソッド)を実行するという機能です。
  * </p>
  * <p>
- * コンポーネントの{@link InstanceDef コンポーネントインスタンス定義}が<code>singleton</code>の場合には、
+ * コンポーネントの{@link InstanceDef インスタンス定義}が<code>singleton</code>の場合には、
  * S2コンテナが終了する際に<var>destroy</var>メソッド・インジェクションが実行されます。
  * </p>
  * 
  * @author higa
- * @author belltree (Javadoc)
+ * @author belltree
  * 
  * @see ComponentDeployer#destroy()
  * @see ComponentDef#destroy()
