@@ -18,12 +18,12 @@ package org.seasar.framework.container;
 /**
  * コンポーネント定義をカスタマイズします。
  * <p>
- * Smart deployを使用すると、 規約に基づいて{@link ComponentDef コンポーネント定義}が作成されます。
+ * SMART deployを使用すると、 規約に基づいて{@link ComponentDef コンポーネント定義}が作成されます。
  * これらのコンポーネント定義をカスタマイズしたい場合に、 このインターフェースを実装したクラスを使用します。
  * </p>
  * 
  * @author higa
- * @author belltree (Javadoc)
+ * @author belltree
  * 
  * @see ComponentCreator
  * @see org.seasar.framework.container.customizer.AspectCustomizer
