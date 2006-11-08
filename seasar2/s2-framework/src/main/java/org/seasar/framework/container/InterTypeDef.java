@@ -37,8 +37,8 @@ import org.seasar.framework.aop.InterType;
  * <li>メソッドの追加</li>
  * </ul>
  * 
- * @author
- * @author Maeno(Javadoc)
+ * @author koichik
+ * @author Maeno
  */
 public interface InterTypeDef extends ArgDef {
 

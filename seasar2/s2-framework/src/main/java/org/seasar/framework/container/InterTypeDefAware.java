@@ -21,8 +21,8 @@ package org.seasar.framework.container;
  * インタータイプ定義は複数登録することが出来ます。 インタータイプ定義の取得はインデックス番号を指定して行います。
  * </p>
  * 
- * @author 
- * @author Maneno(Javadoc)
+ * @author koichik
+ * @author Maneno
  *
  * @see InterTypeDef
  */
