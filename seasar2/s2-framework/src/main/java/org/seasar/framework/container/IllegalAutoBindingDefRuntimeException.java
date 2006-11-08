@@ -21,7 +21,7 @@ import org.seasar.framework.exception.SRuntimeException;
  * 不正な自動バインディング定義が指定された場合にスローされます。
  * 
  * @author higa
- * @author jundu (Javadoc)
+ * @author jundu
  * 
  * @see AutoBindingDef
  * @see org.seasar.framework.container.assembler.AutoBindingDefFactory#getAutoBindingDef(String)
