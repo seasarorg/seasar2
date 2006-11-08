@@ -87,6 +87,12 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
 
     private Map existCheckerArrays = Collections.synchronizedMap(new HashMap());
 
+    private Map interfaceToImplementationMap = Collections
+            .synchronizedMap(new HashMap());
+
+    private Map implementationToInterfaceMap = Collections
+            .synchronizedMap(new HashMap());
+
     public NamingConventionImpl() {
         initialize();
     }
@@ -297,6 +303,14 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
         addExistChecker(rootPackageName);
     }
 
+    public void addInterfaceToImplementationClassName(
+            final String interfaceName, final String implementationClassName) {
+        interfaceToImplementationMap
+                .put(interfaceName, implementationClassName);
+        implementationToInterfaceMap
+                .put(implementationClassName, interfaceName);
+    }
+
     public String fromSuffixToPackageName(String suffix) {
         if (StringUtil.isEmpty(suffix)) {
             throw new EmptyRuntimeException("suffix");
@@ -427,6 +441,11 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
     }
 
     public String toImplementationClassName(String className) {
+        String implementationClassName = (String) interfaceToImplementationMap
+                .get(className);
+        if (implementationClassName != null) {
+            return implementationClassName;
+        }
         int index = className.lastIndexOf('.');
         if (index < 0) {
             return getImplementationPackageName() + "." + className
@@ -438,6 +457,11 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
     }
 
     public String toInterfaceClassName(String className) {
+        String interfaceClassName = (String) implementationToInterfaceMap
+                .get(className);
+        if (interfaceClassName != null) {
+            return interfaceClassName;
+        }
         if (!className.endsWith(implementationSuffix)) {
             return className;
         }

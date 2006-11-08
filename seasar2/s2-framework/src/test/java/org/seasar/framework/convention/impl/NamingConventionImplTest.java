@@ -139,17 +139,37 @@ public class NamingConventionImplTest extends TestCase {
     }
 
     public void testToImplementationClassName() throws Exception {
+        convention.addInterfaceToImplementationClassName("BbbLogic",
+                "mock.BbbLogicMock");
+        convention.addInterfaceToImplementationClassName("abc.logic.CccLogic",
+                "abc.logic.mock.CccLogicMock");
+
         assertEquals("impl.AaaLogicImpl", convention
                 .toImplementationClassName("AaaLogic"));
         assertEquals("abc.logic.impl.AaaLogicImpl", convention
                 .toImplementationClassName("abc.logic.AaaLogic"));
+
+        assertEquals("mock.BbbLogicMock", convention
+                .toImplementationClassName("BbbLogic"));
+        assertEquals("abc.logic.mock.CccLogicMock", convention
+                .toImplementationClassName("abc.logic.CccLogic"));
     }
 
     public void testToInterfaceClassName() throws Exception {
+        convention.addInterfaceToImplementationClassName("AaaDao",
+                "mock.AaaDaoMock");
+        convention.addInterfaceToImplementationClassName("abc.dao.CccDao",
+                "abc.dao.mock.CccDaoMock");
+
         assertEquals("aaa.dao.BbbDao", convention
                 .toInterfaceClassName("aaa.dao.BbbDao"));
         assertEquals("aaa.dao.BbbDao", convention
                 .toInterfaceClassName("aaa.dao.impl.BbbDaoImpl"));
+
+        assertEquals("AaaDao", convention
+                .toInterfaceClassName("mock.AaaDaoMock"));
+        assertEquals("abc.dao.CccDao", convention
+                .toInterfaceClassName("abc.dao.mock.CccDaoMock"));
     }
 
     public void testToCompleteClass() throws Exception {
