@@ -16,14 +16,14 @@
 package org.seasar.framework.container;
 
 /**
- * Smart deployにおいて、 自動登録されるコンポーネントの{@link ComponentDef コンポーネント定義}を作成するためのインターフェースです。
+ * SMART deployにおいて、 自動登録されるコンポーネントの{@link ComponentDef コンポーネント定義}を作成するためのインターフェースです。
  * <p>
  * コンポーネント定義は{@link org.seasar.framework.convention.NamingConvention 命名規約}に基づいて作成され、
  * {@link ComponentCustomizer コンポーネント定義カスタマイザ}によってアスペクト定義の追加などのカスタマイズを施してから返却されます。
  * </p>
  * 
  * @author higa
- * @author jundu (Javadoc)
+ * @author jundu
  */
 public interface ComponentCreator {
 
