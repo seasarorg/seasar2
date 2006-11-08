@@ -29,7 +29,7 @@ import org.seasar.framework.beans.IllegalPropertyRuntimeException;
  * </p>
  * 
  * @author higa
- * @author jundu (Javadoc)
+ * @author jundu
  * 
  * @see PropertyDef
  * @see AutoBindingDef
@@ -41,7 +41,7 @@ public interface PropertyAssembler {
      * 指定された<code>component</code>に対して、 プロパティ・インジェクションやフィールド・インジェクションを実行します。
      * コンポーネント定義の<code>externalBinding</code>属性が<code>true</code>にも関わらず、
      * {@link ExternalContext}がS2コンテナに設定されていない場合には、
-     * EmptyRuntimeExceptionが投げられます。
+     * EmptyRuntimeExceptionをスローします。
      * 
      * @param component
      *            S2コンテナ上のコンポーネントがセットされる対象

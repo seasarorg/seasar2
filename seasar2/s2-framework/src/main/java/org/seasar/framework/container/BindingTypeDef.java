@@ -20,9 +20,10 @@ import java.lang.reflect.Field;
 import org.seasar.framework.beans.PropertyDesc;
 
 /**
- * コンポーネントをインジェクションする時の動作を表すバインディングタイプを定義するインターフェースです。 バインディングタイプ定義には、
- * 以下のものがあります。
- * 
+ * コンポーネントをインジェクションする時の動作を表すバインディングタイプを定義するインターフェースです。
+ * <p>
+ * バインディングタイプ定義には、 以下のものがあります。
+ * </p>
  * <dl>
  * <dt><code>must</code></dt>
  * <dd>自動バインディングが適用できなかった場合、 例外が発生します。</dd>
@@ -35,7 +36,7 @@ import org.seasar.framework.beans.PropertyDesc;
  * </dl>
  * 
  * @author higa
- * @author jundu (Javadoc)
+ * @author jundu
  */
 public interface BindingTypeDef {
 

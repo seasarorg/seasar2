@@ -16,8 +16,10 @@
 package org.seasar.framework.container;
 
 /**
- * 自動バインディングを適用する範囲を表す自動バインディング定義のインターフェースです。 自動バインディング定義には、 以下のものがあります。
- * 
+ * 自動バインディングを適用する範囲を表す自動バインディング定義のインターフェースです。
+ * <p>
+ * 自動バインディング定義には、 以下のものがあります。
+ * </p>
  * <dl>
  * <dt><code>auto</code></dt>
  * <dd>コンストラクタとプロパティの両方で、 自動バインディングを適用します。</dd>
@@ -32,7 +34,7 @@ package org.seasar.framework.container;
  * </dl>
  * 
  * @author higa
- * @author jundu (Javadoc)
+ * @author jundu
  */
 public interface AutoBindingDef {
 

@@ -22,12 +22,12 @@ package org.seasar.framework.container;
  * </p>
  * 
  * @author higa
- * @author jundu (Javadoc)
+ * @author jundu
  */
 public interface ArgDefAware {
 
     /**
-     * 引数定義を登録(追加)します。
+     * 引数定義を追加します。
      * 
      * @param argDef
      *            引数定義
@@ -50,8 +50,6 @@ public interface ArgDefAware {
      * @param index
      *            引数定義を指定するインデックス番号
      * @return 引数定義
-     * @throws java.lang.IndexOutOfBoundsException
-     *             インデックス番号が範囲外の場合 (index < 0 || index >= getArgDefSize())
      */
     public ArgDef getArgDef(int index);
 }

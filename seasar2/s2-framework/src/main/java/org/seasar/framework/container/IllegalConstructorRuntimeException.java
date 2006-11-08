@@ -20,11 +20,11 @@ import org.seasar.framework.exception.SRuntimeException;
 /**
  * コンポーネントの構築に失敗した場合にスローされます。
  * <p>
- * コンポーネントの構築は、 コンポーネント定義でコンストラクタの引数として指定されたコンポーネントの取得に失敗した場合などに発生します。
+ * この例外は、 コンポーネント定義でコンストラクタの引数として指定されたコンポーネントの取得に失敗した場合などに発生します。
  * </p>
  * 
  * @author higa
- * @author jundu (Javadoc)
+ * @author jundu
  */
 public class IllegalConstructorRuntimeException extends SRuntimeException {
 

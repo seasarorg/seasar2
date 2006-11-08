@@ -16,11 +16,14 @@
 package org.seasar.framework.container;
 
 /**
- * コンストラクタ・インジェクションを実行してコンポーネントを組み立てます。 {@link ComponentDef コンポーネント定義}に対して明示的にコンストラクタの引数が指定されなかった時の動作は、
+ * コンストラクタ・インジェクションを実行してコンポーネントを組み立てます。
+ * <p>
+ * {@link ComponentDef コンポーネント定義}に対して明示的にコンストラクタの引数が指定されなかった時の動作は、
  * {@link AutoBindingDef 自動バインディングタイプ定義}に基づきます。
+ * </p>
  * 
  * @author higa
- * @author jundu (Javadoc)
+ * @author jundu
  * 
  * @see org.seasar.framework.container.assembler.AbstractConstructorAssembler
  * @see org.seasar.framework.container.assembler.AutoConstructorAssembler
@@ -29,9 +32,11 @@ package org.seasar.framework.container;
 public interface ConstructorAssembler {
 
     /**
-     * コンストラクタ・インジェクションを実行して、 組み立てたコンポーネントを返します。 また、
-     * {@link ComponentDef コンポーネント定義}に{@link Expression 式}が指定されていた場合、
+     * コンストラクタ・インジェクションを実行して、 組み立てたコンポーネントを返します。
+     * <p>
+     * また、 {@link ComponentDef コンポーネント定義}に{@link Expression 式}が指定されていた場合、
      * 式の評価結果をコンポーネントとして返します。
+     * </p>
      * 
      * @return コンストラクタ・インジェクション済みのコンポーネントのインスタンス
      * @throws org.seasar.framework.beans.ConstructorNotFoundRuntimeException
