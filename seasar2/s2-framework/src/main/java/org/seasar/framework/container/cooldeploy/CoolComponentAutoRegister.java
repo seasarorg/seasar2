@@ -26,6 +26,7 @@ import org.seasar.framework.container.ComponentCreator;
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.convention.NamingConvention;
+import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.ClassLoaderUtil;
 import org.seasar.framework.util.ClassTraversal;
 import org.seasar.framework.util.ClassUtil;
@@ -40,6 +41,9 @@ import org.seasar.framework.util.ClassTraversal.ClassHandler;
  * 
  */
 public class CoolComponentAutoRegister implements ClassHandler {
+
+    private static final Logger logger = Logger
+            .getLogger(CoolComponentAutoRegister.class);
 
     public static final String INIT_METHOD = "registerAll";
 
@@ -112,6 +116,9 @@ public class CoolComponentAutoRegister implements ClassHandler {
     }
 
     public void processClass(String packageName, String shortClassName) {
+        if (shortClassName.indexOf('$') != -1) {
+            return;
+        }
         String className = ClassUtil.concatName(packageName, shortClassName);
         if (!namingConvention.isTargetClassName(className)) {
             return;
@@ -122,6 +129,9 @@ public class CoolComponentAutoRegister implements ClassHandler {
         }
         ComponentDef cd = createComponentDef(clazz);
         if (cd != null) {
+            if (logger.isDebugEnabled()) {
+                logger.log("DSSR0105", new Object[] { clazz.getName() });
+            }
             container.getRoot().register(cd);
         }
     }

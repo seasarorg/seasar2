@@ -15,6 +15,7 @@
  */
 package org.seasar.framework.container.cooldeploy.creator;
 
+import org.seasar.framework.container.cooldeploy.creator.service.impl.GggServiceImpl;
 import org.seasar.framework.unit.S2FrameworkTestCase;
 
 /**
@@ -34,5 +35,7 @@ public class ServiceCoolCreatorTest extends S2FrameworkTestCase {
     public void testAll() throws Exception {
         assertTrue(getContainer().hasComponentDef("ccc_dddService"));
         assertTrue(getContainer().hasComponentDef("gggService"));
+        assertFalse(getContainer().hasComponentDef(
+                GggServiceImpl.InnerServiceImpl.class));
     }
 }
