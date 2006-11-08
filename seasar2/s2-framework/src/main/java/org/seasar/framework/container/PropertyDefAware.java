@@ -63,10 +63,10 @@ public interface PropertyDefAware {
     public PropertyDef getPropertyDef(String propertyName);
 
     /**
-     * 指定したプロパティ名にプロパティ定義があれば<code>true</code>を返します。
+     * 指定したプロパティ名のプロパティ定義があれば<code>true</code>を返します。
      * 
      * @param propertyName
-     *            プロパティ定義
+     *            プロパティ名
      * @return プロパティ定義が存在していれば<code>true</code>、存在していなければ<code>false</code>
      */
     public boolean hasPropertyDef(String propertyName);
