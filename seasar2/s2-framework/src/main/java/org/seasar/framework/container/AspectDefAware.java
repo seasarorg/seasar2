@@ -16,20 +16,22 @@
 package org.seasar.framework.container;
 
 /**
+ * <p>
  * このインターフェースは、 アスペクト定義を登録および取得することができるオブジェクトを表します。
+ * </p>
  * <p>
  * アスペクト定義は複数登録することが出来ます。 アスペクト定義の取得はインデックス番号を指定して行います。 アスペクト定義は登録されている順に適用されます。
  * </p>
  * 
  * @author higa
- * @author belltree (Javadoc)
+ * @author belltree
  * 
  * @see AspectDef
  */
 public interface AspectDefAware {
 
     /**
-     * アスペクト定義を登録(追加)します。
+     * アスペクト定義を追加します。
      * 
      * @param aspectDef
      *            アスペクト定義
@@ -37,7 +39,7 @@ public interface AspectDefAware {
     public void addAspectDef(AspectDef aspectDef);
 
     /**
-     * アスペクト定義を指定の位置に登録(追加)します。
+     * アスペクト定義を指定の位置に追加します。
      * 
      * @param index
      *            アスペクト定義を追加する位置
