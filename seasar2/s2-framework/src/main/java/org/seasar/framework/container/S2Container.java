@@ -96,16 +96,16 @@ package org.seasar.framework.container;
  * </p>
  * 
  * @author higa
- * @author vestige &amp; SeasarJavaDoc Committers(Javadoc)
+ * @author vestige &amp; SeasarJavaDoc Committers
  */
 public interface S2Container extends MetaDefAware {
 
     /**
      * 指定されたキーに対応するコンポーネントを返します。
-     * <P>
+     * <p>
      * キーが文字列の場合、名前が一致するコンポーネントを返します。
      * キーがクラスまたはインターフェースの場合、キーの型に代入可能なコンポーネントを返します。
-     * </P>
+     * </p>
      * 
      * @param componentKey
      *            コンポーネントを取得するためのキー
@@ -124,12 +124,12 @@ public interface S2Container extends MetaDefAware {
 
     /**
      * 指定されたキーに対応する複数のコンポーネントを検索して返します。
-     * <P>
+     * <p>
      * 検索の範囲は現在のS2コンテナおよび、インクルードしているS2コンテナの階層全体です。
      * キーに対応するコンポーネントが最初に見つかったS2コンテナを対象とします。
      * このS2コンテナから，キーに対応する全てのコンポーネントを配列で返します。
      * 返される配列に含まれるコンポーネントは全て同一のS2コンテナに登録されたものです。
-     * </P>
+     * </p>
      * 
      * @param componentKey
      *            コンポーネントを取得するためのキー
@@ -144,11 +144,11 @@ public interface S2Container extends MetaDefAware {
 
     /**
      * 指定されたキーに対応する複数のコンポーネントを検索して返します。
-     * <P>
+     * <p>
      * 検索の範囲は現在のS2コンテナおよび、インクルードしているS2コンテナの階層全体です。
      * キーに対応するコンポーネントが最初に見つかったS2コンテナとその子孫コンテナの全てを対象とします。
      * 対象になるS2コンテナ全体から、キーに対応する全てのコンポーネントを配列で返します。
-     * </P>
+     * </p>
      * 
      * @param componentKey
      *            コンポーネントを取得するためのキー
@@ -163,9 +163,9 @@ public interface S2Container extends MetaDefAware {
 
     /**
      * 指定されたキーに対応する複数のコンポーネントを検索して返します。
-     * <P>
+     * <p>
      * 検索の範囲は現在のS2コンテナのみです。 現在のS2コンテナから、キーに対応する全てのコンポーネントを配列で返します。
-     * </P>
+     * </p>
      * 
      * @param componentKey
      *            コンポーネントを取得するためのキー
@@ -182,10 +182,10 @@ public interface S2Container extends MetaDefAware {
      * <code>outerComponent</code>のクラスをキーとして登録された
      * {@link ComponentDef コンポーネント定義}に従って、必要なコンポーネントのインジェクションを実行します。
      * アスペクト、コンストラクタ・インジェクションは適用できません。
-     * <P>
+     * <p>
      * {@link ComponentDef コンポーネント定義}の{@link InstanceDef インスタンス定義}は
      * {@link InstanceDef#OUTER_NAME outer}でなくてはなりません。
-     * </P>
+     * </p>
      * 
      * @param outerComponent
      *            外部コンポーネント
@@ -198,10 +198,10 @@ public interface S2Container extends MetaDefAware {
     /**
      * <code>componentClass</code>をキーとして登録された {@link ComponentDef コンポーネント定義}に従って、必要なコンポーネントのインジェクションを実行します。
      * アスペクト、コンストラクタ・インジェクションは適用できません。
-     * <P>
+     * <p>
      * {@link ComponentDef コンポーネント定義}の{@link InstanceDef インスタンス定義}は
      * {@link InstanceDef#OUTER_NAME outer}でなくてはなりません。
-     * </P>
+     * </p>
      * 
      * @param outerComponent
      *            外部コンポーネント
@@ -216,10 +216,10 @@ public interface S2Container extends MetaDefAware {
     /**
      * <code>componentName</code>をキーとして登録された {@link ComponentDef コンポーネント定義}に従って、インジェクションを実行します。
      * アスペクト、コンストラクタ・インジェクションは適用できません。
-     * <P>
+     * <p>
      * {@link ComponentDef コンポーネント定義}の{@link InstanceDef インスタンス定義}は
      * {@link InstanceDef#OUTER_NAME outer}でなくてはなりません。
-     * </P>
+     * </p>
      * 
      * @param outerComponent
      *            外部コンポーネント
@@ -232,10 +232,10 @@ public interface S2Container extends MetaDefAware {
 
     /**
      * コンポーネントを登録します。
-     * <P>
+     * <p>
      * S2コンテナに無名のコンポーネントとして登録します。 登録されたコンポーネントはインジェクションやアスペクトの適用などは出来ません。
      * 他のコンポーネント構築時に依存オブジェクトとして利用することが可能です。
-     * </P>
+     * </p>
      * 
      * @param component
      *            コンポーネント
@@ -254,7 +254,7 @@ public interface S2Container extends MetaDefAware {
 
     /**
      * クラスをコンポーネント定義として登録します。
-     * <P>
+     * <p>
      * 登録するコンポーネントは以下のものになります。
      * <dl>
      * <dt>{@link InstanceDef インスタンス定義}</dt>
@@ -262,7 +262,7 @@ public interface S2Container extends MetaDefAware {
      * <dt>{@link AutoBindingDef 自動バインディング定義}</dt>
      * <dd><code>auto</code></dd>
      * </dl>
-     * </P>
+     * </p>
      * 
      * @param componentClass
      *            コンポーネントのクラス
@@ -271,7 +271,7 @@ public interface S2Container extends MetaDefAware {
 
     /**
      * 指定された名前でクラスをコンポーネント定義として登録します。
-     * <P>
+     * <p>
      * 登録するコンポーネントは以下のものになります。
      * <dl>
      * <dt>{@link InstanceDef インスタンス定義}</dt>
@@ -279,7 +279,7 @@ public interface S2Container extends MetaDefAware {
      * <dt>{@link AutoBindingDef 自動バインディング定義}</dt>
      * <dd><code>auto</code></dd>
      * </dl>
-     * </P>
+     * </p>
      * 
      * @param componentClass
      *            コンポーネントのクラス
@@ -326,12 +326,12 @@ public interface S2Container extends MetaDefAware {
 
     /**
      * 指定されたキーに対応する複数のコンポーネント定義を検索して返します。
-     * <P>
+     * <p>
      * 検索の範囲は現在のS2コンテナおよび、インクルードしているS2コンテナの階層全体です。
      * キーに対応するコンポーネントが最初に見つかったS2コンテナを対象とします。
      * このS2コンテナから，キーに対応する全てのコンポーネント定義を配列で返します。
      * 返される配列に含まれるコンポーネント定義は全て同一のS2コンテナに登録されたものです。
-     * </P>
+     * </p>
      * 
      * @param componentKey
      *            コンポーネント定義を取得するためのキー
@@ -343,11 +343,11 @@ public interface S2Container extends MetaDefAware {
 
     /**
      * 指定されたキーに対応する複数のコンポーネント定義を検索して返します。
-     * <P>
+     * <p>
      * 検索の範囲は現在のS2コンテナおよび、インクルードしているS2コンテナの階層全体です。
      * キーに対応するコンポーネントが最初に見つかったS2コンテナとその子孫コンテナの全てを対象とします。
      * 対象になるS2コンテナ全体から、キーに対応する全てのコンポーネント定義を配列で返します。
-     * </P>
+     * </p>
      * 
      * @param componentKey
      *            コンポーネント定義を取得するためのキー
@@ -359,9 +359,9 @@ public interface S2Container extends MetaDefAware {
 
     /**
      * 指定されたキーに対応する複数のコンポーネント定義を検索して返します。
-     * <P>
+     * <p>
      * 検索の範囲は現在のS2コンテナのみです。 現在のS2コンテナから、キーに対応する全てのコンポーネント定義を配列で返します。
-     * </P>
+     * </p>
      * 
      * @param componentKey
      *            コンポーネント定義を取得するためのキー
