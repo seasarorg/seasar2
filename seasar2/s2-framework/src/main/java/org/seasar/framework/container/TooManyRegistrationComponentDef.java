@@ -27,7 +27,7 @@ package org.seasar.framework.container;
  * </p>
  * 
  * @author koichik
- * @author azusa(JavaDoc)
+ * @author azusa
  * 
  * @see TooManyRegistrationRuntimeException
  */
