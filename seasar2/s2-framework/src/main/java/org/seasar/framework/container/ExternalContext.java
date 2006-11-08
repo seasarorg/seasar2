@@ -22,7 +22,7 @@ import java.util.Map;
  * S2コンテナ上で、 Webコンテナなどの外部コンテキストを扱うためのインターフェースです。
  * </p>
  * <p>
- * {@link InstanceDef コンポーネントインスタンス定義}で、 <code>application</code>、
+ * {@link InstanceDef インスタンス定義}で、 <code>application</code>、
  * <code>request</code>、 <code>session</code>を使う場合、
  * {@link S2Container#init()}を行なう前に<code>ExternalContext</code>をS2コンテナに設定する必要があります。
  * </p>
