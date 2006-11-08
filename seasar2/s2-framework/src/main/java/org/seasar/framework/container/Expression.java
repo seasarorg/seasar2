@@ -48,7 +48,7 @@ import java.util.Map;
  * </p>
  * 
  * @author koichik
- * @author goto(Javadoc)
+ * @author goto
  */
 public interface Expression {
 
