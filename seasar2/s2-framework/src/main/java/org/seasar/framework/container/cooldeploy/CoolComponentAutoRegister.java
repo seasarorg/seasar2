@@ -16,6 +16,7 @@
 package org.seasar.framework.container.cooldeploy;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -108,9 +109,38 @@ public class CoolComponentAutoRegister implements ClassHandler {
                 for (final Iterator it = ClassLoaderUtil.getResources(rootDir); it
                         .hasNext();) {
                     final URL url = (URL) it.next();
-                    final Strategy strategy = getStrategy(url.getProtocol());
+                    final Strategy strategy = getStrategy(URLUtil
+                            .toCanonicalProtocol(url.getProtocol()));
                     strategy.registerAll(rootDir, url);
                 }
+            }
+            webSphereClassLoaderFix();
+        }
+    }
+
+    /**
+     * Jarファイルからコンポーネントの登録を行う。
+     * <p>
+     * WebSphere のクラスローダーはJarファイル中のディレクトリエントリを<code>ClassLoader#getResource()</code>で
+     * 返してくれないので、 S2のJarと同じ場所にあるJarファイルからコンポーネントの登録を行う。
+     * </p>
+     */
+    protected void webSphereClassLoaderFix() {
+        final URL url = ResourceUtil.getResourceNoException(getClass()
+                .getName().replace('.', '/')
+                + ".class");
+        if ("wsjar".equals(url.getProtocol())) {
+            final File s2JarFile = new File(JarFileUtil.toJarFile(url)
+                    .getName());
+            final File libDir = s2JarFile.getParentFile();
+            final File[] jarFiles = libDir.listFiles(new FilenameFilter() {
+                public boolean accept(File dir, String name) {
+                    return name.endsWith(".jar");
+                }
+            });
+            for (int i = 0; i < jarFiles.length; ++i) {
+                final JarFile jarFile = JarFileUtil.create(jarFiles[i]);
+                ClassTraversal.forEach(jarFile, this);
             }
         }
     }
