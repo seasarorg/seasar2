@@ -26,7 +26,7 @@ package org.seasar.framework.container;
  * </p>
  * 
  * @author higa
- * @author belltree (Javadoc)
+ * @author belltree
  */
 public interface ExternalContextComponentDefRegister {
 
