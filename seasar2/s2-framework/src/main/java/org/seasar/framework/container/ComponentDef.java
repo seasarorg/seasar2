@@ -40,7 +40,7 @@ import org.seasar.framework.beans.BeanDesc;
  * </p>
  * 
  * @author higa
- * @author belltree (Javadoc)
+ * @author belltree
  * 
  * @see ArgDef
  * @see InterTypeDef
