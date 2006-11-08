@@ -33,7 +33,7 @@ import java.lang.reflect.Method;
  * </p>
  * 
  * @author higa
- * @author azusa (JavaDoc)
+ * @author azusa
  * 
  */
 public interface MethodDef extends ArgDefAware {
