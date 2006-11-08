@@ -18,14 +18,17 @@ package org.seasar.framework.container;
 import org.seasar.framework.exception.SRuntimeException;
 
 /**
+ * <p>
  * 不正なアクセスタイプ定義が指定された場合にスローされます。
+ * </p>
  * <p>
  * 有効な{@link AccessTypeDef アクセスタイプ定義}としては、
  * {@link org.seasar.framework.container.assembler.AccessTypePropertyDef PROPERTY}と
  * {@link org.seasar.framework.container.assembler.AccessTypeFieldDef FIELD}があります。
  * </p>
  * 
- * @author belltree (Javadoc)
+ * @author koichik
+ * @author belltree
  * 
  * @see org.seasar.framework.container.assembler.AccessTypeDefFactory#getAccessTypeDef(String)
  */
@@ -36,10 +39,10 @@ public class IllegalAccessTypeDefRuntimeException extends SRuntimeException {
     private String accessTypeName;
 
     /**
-     * 不正なアクセスタイプ名を指定して、 <code>IllegalAccessTypeDefRuntimeException</code>を構築します。
+     * 不正なアクセスタイプ定義名を指定して、 <code>IllegalAccessTypeDefRuntimeException</code>を構築します。
      * 
      * @param accessTypeName
-     *            不正なアクセスタイプ名
+     *            不正なアクセスタイプ定義名
      */
     public IllegalAccessTypeDefRuntimeException(final String accessTypeName) {
         super("ESSR0083", new Object[] { accessTypeName });
@@ -47,9 +50,9 @@ public class IllegalAccessTypeDefRuntimeException extends SRuntimeException {
     }
 
     /**
-     * 不正なアクセスタイプ名を返します。
+     * 不正なアクセスタイプ定義名を返します。
      * 
-     * @return 不正なアクセスタイプ名
+     * @return 不正なアクセスタイプ定義名
      * 
      * @see AccessTypeDef#PROPERTY_NAME
      * @see AccessTypeDef#FIELD_NAME
