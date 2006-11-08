@@ -20,7 +20,7 @@ import java.util.Set;
 import org.seasar.framework.beans.BeanDesc;
 
 /**
- * S2コンテナが管理するコンポーネントの定義を表すインタフェースです。
+ * S2コンテナが管理するコンポーネントの定義を表すインターフェースです。
  * <p>
  * コンポーネント定義は、 コンポーネントの管理に必要な以下の情報を保持します。
  * <dl>
@@ -28,7 +28,7 @@ import org.seasar.framework.beans.BeanDesc;
  * <dd>コンポーネントのスコープや、生成と消滅については、 このコンポーネントの{@link InstanceDef インスタンス定義}で設定します。
  * 生成については、 {@link Expression コンポーネント生成式}により指定することも可能です。</dd>
  * <dt>依存性注入(Dependency Injection)</dt>
- * <dd>このコンポーネントが依存する他のコンポーネントやパラメータは、 {@link ArgDef コンストラクタ引数定義}、
+ * <dd>このコンポーネントが依存する他のコンポーネントやパラメータは、 {@link ArgDef 引数定義}、
  * {@link InitMethodDef 初期化メソッド定義}、 {@link PropertyDef プロパティ定義}などにより設定します。
  * </dd>
  * <dt>アスペクト</dt>
@@ -93,9 +93,11 @@ public interface ComponentDef extends ArgDefAware, InterTypeDefAware,
     void setContainer(S2Container container);
 
     /**
-     * 定義上のクラスを返します。 diconファイルの<code>&lt;component/&gt;</code>タグにおける、
-     * <code>class</code>属性で指定されたクラスを表します。 自動バインディングされる際には、
-     * このクラス(インターフェース)が使用されます。
+     * 定義上のクラスを返します。
+     * <p>
+     * diconファイルの<code>&lt;component&gt;</code>タグにおける、 <code>class</code>属性で指定されたクラスを表します。
+     * 自動バインディングされる際には、 このクラス(インターフェース)が使用されます。
+     * </p>
      * 
      * @return 定義上のクラス
      */
