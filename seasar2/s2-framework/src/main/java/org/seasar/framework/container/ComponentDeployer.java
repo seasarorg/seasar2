@@ -16,9 +16,9 @@
 package org.seasar.framework.container;
 
 /**
- * コンポーネントデプロイヤは、 コンポーネントを利用可能な状態にして提供するためのインタフェースです。
+ * コンポーネントデプロイヤは、 コンポーネントを利用可能な状態にして提供するためのインターフェースです。
  * <p>
- * このインターフェースは、 {@link InstanceDef コンポーネントインスタンス定義}に応じて以下の機能を提供します。
+ * このインターフェースは、 {@link InstanceDef インスタンス定義}に応じて以下の機能を提供します。
  * <dl>
  * <dt> シングルトン({@link org.seasar.framework.container.InstanceDef#SINGLETON_NAME singleton})の場合</dt>
  * <dd>
@@ -51,13 +51,12 @@ package org.seasar.framework.container;
  * </dl>
  * </p>
  * <p>
- * コンポーネントインスタンス定義と有効なメソッドの対応表を以下に示します。 <table border="1"
- * style="text-align:center;">
+ * インスタンス定義と有効なメソッドの対応表を以下に示します。 <table border="1" style="text-align:center;">
  * <tr>
- * <th colspan="8">コンポーネントインスタンス定義と有効なメソッドとの関係</th>
+ * <th colspan="8">インスタンス定義と有効なメソッドとの関係</th>
  * </tr>
  * <tr>
- * <th colspan="2" rowspan="2">{@link InstanceDef コンポーネントインスタンス定義}</th>
+ * <th colspan="2" rowspan="2">{@link InstanceDef インスタンス定義}</th>
  * <th>シングルトン</td>
  * <th>プロトタイプ</td>
  * <th colspan="3">外部コンテキスト</td>
@@ -117,7 +116,7 @@ package org.seasar.framework.container;
 public interface ComponentDeployer {
 
     /**
-     * コンポーネントインスタンス定義に応じてインスタンス生成や外部コンテキストへの配備などを行った後に、 そのコンポーネントのインスタンスを返します。
+     * インスタンス定義に応じてインスタンス生成や外部コンテキストへの配備などを行った後に、 そのコンポーネントのインスタンスを返します。
      * 
      * @return コンポーネントのインスタンス
      * 
@@ -143,7 +142,7 @@ public interface ComponentDeployer {
     /**
      * コンポーネントデプロイヤを初期化します。
      * <p>
-     * デプロイするコンポーネントの{@link InstanceDef コンポーネントインスタンス定義}が<code>singleton</code>の場合には、
+     * デプロイするコンポーネントの{@link InstanceDef インスタンス定義}が<code>singleton</code>の場合には、
      * {@link AspectDef アスペクト}を適用したインスタンスの生成、 配備、 プロパティ設定の後に、
      * {@link InitMethodDef initMethod}が呼ばれます。
      * </p>
@@ -156,7 +155,7 @@ public interface ComponentDeployer {
     /**
      * コンポーネントデプロイヤを破棄します。
      * <p>
-     * デプロイするコンポーネントの{@link InstanceDef コンポーネントインスタンス定義}が<code>singleton</code>の場合には、
+     * デプロイするコンポーネントの{@link InstanceDef インスタンス定義}が<code>singleton</code>の場合には、
      * {@link DestroyMethodDef destoryMethod}が呼ばれます。
      * </p>
      * 
