@@ -52,10 +52,14 @@ public final class ResourceTraversal {
         while (enumeration.hasMoreElements()) {
             final JarEntry entry = (JarEntry) enumeration.nextElement();
             if (!entry.isDirectory()) {
+                final String entryName = entry.getName().replace('\\', '/');
                 final InputStream is = JarFileUtil.getInputStream(jarFile,
                         entry);
-                final String entryName = entry.getName().replace('\\', '/');
-                handler.processResource(entryName, is);
+                try {
+                    handler.processResource(entryName, is);
+                } finally {
+                    InputStreamUtil.close(is);
+                }
             }
         }
     }
@@ -68,12 +72,16 @@ public final class ResourceTraversal {
             if (file.isDirectory()) {
                 traverseFileSystem(rootDir, file, handler);
             } else {
-                final InputStream is = FileInputStreamUtil.create(file);
                 final int pos = FileUtil.getCanonicalPath(rootDir).length();
                 final String filePath = FileUtil.getCanonicalPath(file);
                 final String resourcePath = filePath.substring(pos + 1)
                         .replace('\\', '/');
-                handler.processResource(resourcePath, is);
+                final InputStream is = FileInputStreamUtil.create(file);
+                try {
+                    handler.processResource(resourcePath, is);
+                } finally {
+                    InputStreamUtil.close(is);
+                }
             }
         }
     }

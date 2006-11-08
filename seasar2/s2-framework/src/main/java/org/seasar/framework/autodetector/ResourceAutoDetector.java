@@ -23,11 +23,10 @@ import java.io.InputStream;
  */
 public interface ResourceAutoDetector {
 
-    Entry[] detect();
+    void detect(ResourceHandler visitor);
 
-    interface Entry {
-        String getPath();
-
-        InputStream getInputStream();
+    public interface ResourceHandler {
+        void processResource(String path, InputStream is);
     }
+
 }

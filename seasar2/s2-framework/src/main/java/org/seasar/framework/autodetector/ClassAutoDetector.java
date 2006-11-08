@@ -21,6 +21,10 @@ package org.seasar.framework.autodetector;
  */
 public interface ClassAutoDetector {
 
-    Class[] detect();
+    void detect(ClassHandler visitor);
+
+    public interface ClassHandler {
+        void processClass(Class clazz);
+    }
 
 }
