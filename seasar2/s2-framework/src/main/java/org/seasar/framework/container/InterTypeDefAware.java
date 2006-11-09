@@ -23,15 +23,16 @@ package org.seasar.framework.container;
  * 
  * @author koichik
  * @author Maneno
- *
+ * 
  * @see InterTypeDef
  */
 public interface InterTypeDefAware {
 
     /**
-     * {@link InterTypeDef インタータイプ定義}を登録(追加)します。
+     * {@link InterTypeDef インタータイプ定義}を追加します。
      * 
-     * @param interTypeDef インタータイプ定義
+     * @param interTypeDef
+     *            インタータイプ定義
      */
     public void addInterTypeDef(InterTypeDef interTypeDef);
 
@@ -45,7 +46,8 @@ public interface InterTypeDefAware {
     /**
      * 指定されたインデックス番号<code>index</code>の{@link InterTypeDef インタータイプ定義}を返します。
      * 
-     * @param index インタータイプ定義を指定するインデックス番号
+     * @param index
+     *            インタータイプ定義を指定するインデックス番号
      * @return インタータイプ定義
      */
     public InterTypeDef getInterTypeDef(int index);
