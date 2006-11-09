@@ -29,7 +29,7 @@ package org.seasar.framework.container;
 public interface InitMethodDefAware {
 
     /**
-     * initメソッド定義を登録(追加)します。
+     * initメソッド定義を追加します。
      * 
      * @param methodDef
      *            initメソッド定義
