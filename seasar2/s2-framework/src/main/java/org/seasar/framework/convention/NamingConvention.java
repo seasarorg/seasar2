@@ -79,6 +79,8 @@ public interface NamingConvention {
 
     String[] getRootPackageNames();
 
+    String[] getIgnorePackageNames();
+
     String fromSuffixToPackageName(String suffix);
 
     String fromClassNameToShortComponentName(String className);
@@ -112,6 +114,8 @@ public interface NamingConvention {
     boolean isTargetClassName(String className, String suffix);
 
     boolean isTargetClassName(String className);
+
+    boolean isIgnoreClassName(String className);
 
     boolean isValidViewRootPath(String path);
 }

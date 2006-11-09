@@ -42,6 +42,7 @@ public class NamingConventionImplTest extends TestCase {
         convention = new NamingConventionImpl();
         rootPackageName = ClassUtil.getPackageName(getClass());
         convention.addRootPackageName(rootPackageName);
+        convention.addIgnorePackageName(rootPackageName + ".web.ignore");
     }
 
     public void testAddAndGetRootPackageName() throws Exception {
@@ -49,6 +50,14 @@ public class NamingConventionImplTest extends TestCase {
                 .getExistCheckerArray(rootPackageName);
         assertNotNull(checkers);
         assertEquals(FileExistChecker.class, checkers[0].getClass());
+    }
+
+    public void testAddAndGetIgnorePackageName() throws Exception {
+        String[] ignorePackageNames = convention.getIgnorePackageNames();
+        ignorePackageNames = convention.getIgnorePackageNames();
+        assertEquals(1, ignorePackageNames.length);
+        assertEquals("org.seasar.framework.convention.impl.web.ignore",
+                ignorePackageNames[0]);
     }
 
     public void testFromSuffixToPackageName() throws Exception {
@@ -206,6 +215,10 @@ public class NamingConventionImplTest extends TestCase {
                 "AaaDao"));
         assertEquals(BbbDaoImpl.class, convention.findClass(rootPackageName,
                 "dao", "BbbDao"));
+        assertEquals(DddPage.class, convention.findClass(rootPackageName,
+                "web.add", "DddPage"));
+        assertNull(convention.findClass(rootPackageName, "web.ignore",
+                "EeePage"));
 
         convention.dispose();
         assertEquals(AaaDao.class, convention.findClass(rootPackageName, "dao",
@@ -236,7 +249,16 @@ public class NamingConventionImplTest extends TestCase {
     public void testIsTargetClassName() throws Exception {
         assertTrue(convention
                 .isTargetClassName(rootPackageName + ".dao.AaaDao"));
+        assertFalse(convention.isTargetClassName(rootPackageName
+                + ".web.ignore.EeePage"));
         assertFalse(convention.isTargetClassName("hoge.dao.AaaDao"));
+    }
+
+    public void testIsIgnoreClassName() throws Exception {
+        assertTrue(convention.isIgnoreClassName(rootPackageName
+                + ".web.ignore.EeePage"));
+        assertFalse(convention.isIgnoreClassName(rootPackageName
+                + ".web.add.DddPage"));
     }
 
     public void testFromPathToPageName() throws Exception {
@@ -285,11 +307,11 @@ public class NamingConventionImplTest extends TestCase {
     }
 
     public void testIsExist() throws Exception {
-        assertEquals(AaaDao.class, convention.findClass(rootPackageName, "dao",
-                "AaaDao"));
-        assertEquals(BbbDaoImpl.class, convention.findClass(rootPackageName,
-                "dao", "BbbDao"));
-        assertNull(convention.findClass(rootPackageName, "dao", "xxxDao"));
+        assertTrue(convention.isExist(rootPackageName, "dao.AaaDao"));
+        assertTrue(convention.isExist(rootPackageName, "dao.BbbDao"));
+        assertTrue(convention.isExist(rootPackageName, "web.add.DddPage"));
+        assertTrue(convention.isExist(rootPackageName, "web.ignore.EeePage"));
+        assertFalse(convention.isExist(rootPackageName, "dao.xxxDao"));
     }
 
     public void testIsExist_jar() throws Exception {

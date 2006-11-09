@@ -85,13 +85,13 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
 
     private String[] rootPackageNames = new String[0];
 
+    private String[] ignorePackageNames = new String[0];
+
     private Map existCheckerArrays = Collections.synchronizedMap(new HashMap());
 
-    private Map interfaceToImplementationMap = Collections
-            .synchronizedMap(new HashMap());
+    private Map interfaceToImplementationMap = new HashMap();
 
-    private Map implementationToInterfaceMap = Collections
-            .synchronizedMap(new HashMap());
+    private Map implementationToInterfaceMap = new HashMap();
 
     public NamingConventionImpl() {
         initialize();
@@ -303,6 +303,15 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
         addExistChecker(rootPackageName);
     }
 
+    public String[] getIgnorePackageNames() {
+        return ignorePackageNames;
+    }
+
+    public void addIgnorePackageName(String ignorePackageName) {
+        ignorePackageNames = (String[]) ArrayUtil.add(ignorePackageNames,
+                ignorePackageName);
+    }
+
     public void addInterfaceToImplementationClassName(
             final String interfaceName, final String implementationClassName) {
         interfaceToImplementationMap
@@ -425,7 +434,8 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
         String lastClassName = ClassUtil.concatName(middlePackageName,
                 partOfClassName);
         String className = ClassUtil.concatName(rootPackageName, lastClassName);
-        if (isExist(rootPackageName, lastClassName)) {
+        if (!isIgnoreClassName(className)
+                && isExist(rootPackageName, lastClassName)) {
             Class clazz = ClassUtil.forName(className);
             if (clazz.isInterface()) {
                 String lastImplClassName = toImplementationClassName(lastClassName);
@@ -585,7 +595,17 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
 
     public boolean isTargetClassName(String className) {
         for (int i = 0; i < rootPackageNames.length; ++i) {
-            if (className.startsWith(rootPackageNames[i])) {
+            if (className.startsWith(rootPackageNames[i])
+                    && !isIgnoreClassName(className)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isIgnoreClassName(String className) {
+        for (int i = 0; i < ignorePackageNames.length; ++i) {
+            if (className.startsWith(ignorePackageNames[i])) {
                 return true;
             }
         }
