@@ -53,4 +53,19 @@ public class DaoHelperImplTest extends TestCase {
         assertEquals("oracle", helper.getSqlBySqlFile(HogeDao.class, m,
                 "oracle"));
     }
+
+    public void testFromRdbmsToJavaName() throws Exception {
+        DaoHelperImpl helper = new DaoHelperImpl();
+        helper.setNamingConvention(new NamingConventionImpl());
+        assertEquals("emp", helper.fromRdbmsToJavaName("Emp"));
+        assertEquals("aaaBbb", helper.fromRdbmsToJavaName("AAA_BBB"));
+    }
+
+    public void testFromJavaToRdbmsName() throws Exception {
+        DaoHelperImpl helper = new DaoHelperImpl();
+        helper.setNamingConvention(new NamingConventionImpl());
+        assertEquals("EMP", helper.fromJavaToRdbmsName("Emp"));
+        assertEquals("AAA_BBB", helper.fromJavaToRdbmsName("aaaBbb"));
+        assertEquals("AAA_BBB_C", helper.fromJavaToRdbmsName("aaaBbbC"));
+    }
 }

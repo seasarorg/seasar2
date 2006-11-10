@@ -28,4 +28,8 @@ public interface DaoHelper {
     String getDataSourceName(Class daoClass);
 
     String getSqlBySqlFile(Class daoClass, Method method, String suffix);
+
+    String fromJavaToRdbmsName(String name);
+
+    String fromRdbmsToJavaName(String name);
 }

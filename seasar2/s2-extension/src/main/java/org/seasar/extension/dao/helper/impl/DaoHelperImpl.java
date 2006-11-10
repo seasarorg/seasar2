@@ -21,6 +21,7 @@ import org.seasar.extension.dao.DaoConstants;
 import org.seasar.extension.dao.DaoNotFoundRuntimeException;
 import org.seasar.extension.dao.helper.DaoHelper;
 import org.seasar.framework.convention.NamingConvention;
+import org.seasar.framework.exception.EmptyRuntimeException;
 import org.seasar.framework.util.ResourceUtil;
 import org.seasar.framework.util.StringUtil;
 import org.seasar.framework.util.TextUtil;
@@ -95,4 +96,45 @@ public class DaoHelperImpl implements DaoHelper {
         return null;
     }
 
+    public String fromRdbmsToJavaName(String name) {
+        if (name == null) {
+            throw new EmptyRuntimeException("name");
+        }
+        name = name.toLowerCase();
+        String[] array = StringUtil.split(name, "_");
+        if (array.length == 1) {
+            return name;
+        }
+        StringBuffer buf = new StringBuffer(30);
+        buf.append(array[0]);
+        for (int i = 1; i < array.length; ++i) {
+            buf.append(StringUtil.capitalize(array[i]));
+        }
+        return buf.toString();
+    }
+
+    public String fromJavaToRdbmsName(String name) {
+        if (name == null) {
+            throw new EmptyRuntimeException("name");
+        }
+        if (name.length() == 1) {
+            return name.toUpperCase();
+        }
+        StringBuffer buf = new StringBuffer(30);
+        int pos = 0;
+        for (int i = 1; i < name.length(); ++i) {
+            if (Character.isUpperCase(name.charAt(i))) {
+                if (buf.length() != 0) {
+                    buf.append('_');
+                }
+                buf.append(name.substring(pos, i).toUpperCase());
+                pos = i;
+            }
+        }
+        if (buf.length() != 0) {
+            buf.append('_');
+        }
+        buf.append(name.substring(pos, name.length()).toUpperCase());
+        return buf.toString();
+    }
 }
