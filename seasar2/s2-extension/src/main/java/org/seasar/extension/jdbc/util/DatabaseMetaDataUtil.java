@@ -110,8 +110,12 @@ public final class DatabaseMetaDataUtil {
         return ret;
     }
 
-    public static CaseInsensitiveMap getColumnMap(DatabaseMetaData dbMetaData,
-            String tableName) {
+    public static Map getColumnMap(DatabaseMetaData dbMetaData, String tableName) {
+        return getColumnCaseInsensitiveMap(dbMetaData, tableName);
+    }
+
+    public static CaseInsensitiveMap getColumnCaseInsensitiveMap(
+            DatabaseMetaData dbMetaData, String tableName) {
         final String schema;
         int index = tableName.indexOf('.');
         if (index >= 0) {

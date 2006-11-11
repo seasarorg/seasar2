@@ -72,7 +72,7 @@ public class DaoHelperImpl implements DaoHelper {
         String key = "." + namingConvention.getDaoPackageName() + ".";
         int index = className.lastIndexOf(key);
         if (index < 0) {
-            throw new IllegalArgumentException(daoClass.getName());
+            return null;
         }
         int index2 = className.lastIndexOf('.');
         if (index + key.length() - 1 == index2) {
