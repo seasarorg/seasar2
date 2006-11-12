@@ -31,6 +31,7 @@ import javax.servlet.Servlet;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
+import org.seasar.framework.exception.ResourceNotFoundRuntimeException;
 import org.seasar.framework.util.EnumerationAdapter;
 import org.seasar.framework.util.ResourceUtil;
 import org.seasar.framework.util.StringUtil;
@@ -230,7 +231,12 @@ public class MockServletContextImpl implements MockServletContext, Serializable 
      * @see javax.servlet.ServletContext#getRealPath(java.lang.String)
      */
     public String getRealPath(String path) {
-        return ResourceUtil.getResource(adjustPath(path)).getFile();
+        // Servlet APIによると、リソースが無い場合はnullを返す。
+        try {
+            return ResourceUtil.getResource(adjustPath(path)).getFile();
+        } catch (final ResourceNotFoundRuntimeException e) {
+            return null;
+        }
     }
 
     /**
