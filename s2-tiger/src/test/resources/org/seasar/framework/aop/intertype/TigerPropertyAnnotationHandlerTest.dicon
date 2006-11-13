@@ -12,4 +12,7 @@
 	<component name="target2"
 		class="org.seasar.framework.aop.intertype.TigerPropertyAnnotationHandlerTarget2"
 	/>
+	
+	<component name="testObject" class="java.lang.Object" />
+	
 </components>

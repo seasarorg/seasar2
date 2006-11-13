@@ -15,6 +15,8 @@
  */
 package org.seasar.framework.aop.intertype;
 
+import org.seasar.framework.container.annotation.tiger.Binding;
+import org.seasar.framework.container.annotation.tiger.BindingType;
 import org.seasar.framework.container.annotation.tiger.Property;
 import org.seasar.framework.container.annotation.tiger.PropertyType;
 
@@ -53,6 +55,10 @@ public class TigerPropertyAnnotationHandlerTarget implements
 
     @Property(PropertyType.READWRITE)
     long[][] longArrayField_;
+
+    @Property(PropertyType.READWRITE)
+    @Binding(bindingType = BindingType.MUST)
+    Object testObject;
 
     public int getIntWriteField() {
         return intWriteField_;
