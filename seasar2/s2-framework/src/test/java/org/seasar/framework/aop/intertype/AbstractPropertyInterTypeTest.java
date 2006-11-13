@@ -19,6 +19,9 @@ import java.lang.reflect.Method;
 
 import junit.framework.TestCase;
 
+import org.seasar.framework.beans.BeanDesc;
+import org.seasar.framework.beans.PropertyDesc;
+import org.seasar.framework.beans.factory.BeanDescFactory;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.factory.S2ContainerFactory;
 import org.seasar.framework.exception.NoSuchMethodRuntimeException;
@@ -39,6 +42,8 @@ public abstract class AbstractPropertyInterTypeTest extends TestCase {
 
     private Class targetClass2;
 
+    private Object testObject;
+
     abstract protected String getPath();
 
     public AbstractPropertyInterTypeTest() {
@@ -58,6 +63,8 @@ public abstract class AbstractPropertyInterTypeTest extends TestCase {
 
         target2 = container.getComponent("target2");
         targetClass2 = target2.getClass();
+
+        testObject = container.getComponent("testObject");
     }
 
     public void testSetterGetter() throws Exception {
@@ -162,6 +169,12 @@ public abstract class AbstractPropertyInterTypeTest extends TestCase {
 
         assertMethodNotExists(targetClass2, "getHasGetterSetter");
         assertMethodNotExists(targetClass2, "setHasGetterSetter", Integer.TYPE);
+    }
+
+    public void testInjection() {
+        BeanDesc desc = BeanDescFactory.getBeanDesc(targetClass);
+        PropertyDesc pd = desc.getPropertyDesc("testObject");
+        assertEquals(testObject, pd.getValue(target));
     }
 
     private void setIntField(String methodName, int param) {
