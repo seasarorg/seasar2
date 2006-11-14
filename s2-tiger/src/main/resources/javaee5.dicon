@@ -3,6 +3,6 @@
 	"http://www.seasar.org/dtd/components24.dtd">
 <components>
 	<include path="j2ee.dicon"/>
-	<include path="jpa.dicon"/>
+	<include path="jpa-support.dicon"/>
 	<include path="ejb3tx.dicon"/>
 </components>
