@@ -146,11 +146,11 @@ public class ComponentCreatorImpl implements ComponentCreator {
                     .fromClassNameToComponentName(targetClass.getName()));
         }
         handler.appendDI(cd);
-        handler.appendAspect(cd);
-        handler.appendInterType(cd);
+        customize(cd);
         handler.appendInitMethod(cd);
         handler.appendDestroyMethod(cd);
-        customize(cd);
+        handler.appendAspect(cd);
+        handler.appendInterType(cd);
         return cd;
     }
 

@@ -116,9 +116,11 @@ public abstract class AbstractComponentAutoRegister extends
             cd.setComponentName(autoNaming.defineName(names[0], names[1]));
         }
         annoHandler.appendDI(cd);
-        annoHandler.appendAspect(cd);
-        annoHandler.appendInitMethod(cd);
         customize(cd);
+        annoHandler.appendInitMethod(cd);
+        annoHandler.appendDestroyMethod(cd);
+        annoHandler.appendAspect(cd);
+        annoHandler.appendInterType(cd);
         getContainer().register(cd);
     }
 

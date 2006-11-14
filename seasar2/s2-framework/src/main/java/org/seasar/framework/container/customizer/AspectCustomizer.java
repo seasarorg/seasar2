@@ -50,7 +50,7 @@ public class AspectCustomizer implements ComponentCustomizer {
         for (int i = 0; i < interceptorNames.size(); ++i) {
             AspectDef aspectDef = AspectDefFactory.createAspectDef(
                     (String) interceptorNames.get(i), pointcut);
-            componentDef.addAspectDef(i, aspectDef);
+            componentDef.addAspectDef(aspectDef);
         }
     }
 }

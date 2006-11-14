@@ -53,8 +53,6 @@ public class ComponentTagHandler extends AbstractTagHandler {
                 componentDef.setComponentName(name);
             }
             annoHandler.appendDI(componentDef);
-            annoHandler.appendAspect(componentDef);
-            annoHandler.appendInterType(componentDef);
         } else {
             componentDef = createComponentDef(componentClass, name);
         }
@@ -70,7 +68,8 @@ public class ComponentTagHandler extends AbstractTagHandler {
         }
         String externalBindingStr = attributes.getValue("externalBinding");
         if (externalBindingStr != null) {
-            componentDef.setExternalBinding(Boolean.valueOf(externalBindingStr).booleanValue());
+            componentDef.setExternalBinding(Boolean.valueOf(externalBindingStr)
+                    .booleanValue());
         }
         context.push(componentDef);
     }
@@ -85,6 +84,8 @@ public class ComponentTagHandler extends AbstractTagHandler {
                 .getAnnotationHandler();
         annoHandler.appendInitMethod(componentDef);
         annoHandler.appendDestroyMethod(componentDef);
+        annoHandler.appendAspect(componentDef);
+        annoHandler.appendInterType(componentDef);
         String expression = null;
         if (body != null) {
             expression = body.trim();
