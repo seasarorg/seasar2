@@ -89,6 +89,8 @@ public class EJB3IntertypeDefBuilder implements IntertypeDefBuilder {
         final ComponentDef interceptorCd = annotationHandler
                 .createComponentDef(interceptorClass, null);
         annotationHandler.appendDI(interceptorCd);
+        annotationHandler.appendInitMethod(interceptorCd);
+        annotationHandler.appendDestroyMethod(interceptorCd);
         annotationHandler.appendAspect(interceptorCd);
         annotationHandler.appendInterType(interceptorCd);
         return interceptorCd;
