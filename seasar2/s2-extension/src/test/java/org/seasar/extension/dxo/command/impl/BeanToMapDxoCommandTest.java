@@ -41,7 +41,7 @@ public class BeanToMapDxoCommandTest extends TestCase {
         Hoge src = new Hoge(100, "Hoge", new BigDecimal("1000"));
         Map dest = (Map) command.execute(new Object[] { src });
         assertNotNull(dest);
-        assertEquals(3, dest.size());
+        assertEquals(4, dest.size());
         assertEquals(new Integer(100), dest.get("foo"));
         assertEquals("Hoge", dest.get("bar"));
         assertEquals(new BigDecimal("1000"), dest.get("baz"));

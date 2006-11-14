@@ -22,6 +22,8 @@ public class Hoge {
 
     private String bar;
 
+    private String barBar;
+
     private BigDecimal baz;
 
     public Hoge() {
@@ -55,5 +57,20 @@ public class Hoge {
 
     public void setFoo(int foo) {
         this.foo = foo;
+    }
+
+    /**
+     * @return Returns the barBar.
+     */
+    public String getBarBar() {
+        return barBar;
+    }
+
+    /**
+     * @param barBar
+     *            The barBar to set.
+     */
+    public void setBarBar(String barBar) {
+        this.barBar = barBar;
     }
 }

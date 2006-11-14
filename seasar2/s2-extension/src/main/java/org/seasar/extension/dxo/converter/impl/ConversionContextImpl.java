@@ -29,6 +29,7 @@ import org.seasar.extension.dxo.converter.ConversionContext;
 import org.seasar.extension.dxo.converter.Converter;
 import org.seasar.extension.dxo.converter.ConverterFactory;
 import org.seasar.extension.dxo.util.DxoUtil;
+import org.seasar.framework.util.CaseInsensitiveMap;
 import org.seasar.framework.util.Disposable;
 import org.seasar.framework.util.DisposableUtil;
 import org.seasar.framework.util.OgnlUtil;
@@ -57,7 +58,7 @@ public class ConversionContextImpl implements ConversionContext {
 
     protected Map contextInfo;
 
-    protected Map evaluatedValues = new HashMap();
+    protected Map evaluatedValues = new CaseInsensitiveMap();
 
     static {
         initialize();

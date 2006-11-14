@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.seasar.extension.unit.S2TestCase;
+import org.seasar.framework.util.CaseInsensitiveMap;
 
 /**
  * @author koichik
@@ -140,6 +141,16 @@ public class DxoInterceptorTest extends S2TestCase {
         assertEquals(100, dest.getFoo());
         assertEquals("Hoge", dest.getBar());
         assertEquals(new BigDecimal("1000"), dest.getBaz());
+    }
+
+    public void testFromMap_Scalar2() throws Exception {
+        Map src = new CaseInsensitiveMap();
+        src.put("barbar", "Hoge");
+
+        Hoge dest = fromMapDxo.convert(src);
+
+        assertNotNull(dest);
+        assertEquals("Hoge", dest.getBarBar());
     }
 
     public void testFromMap_ArrayToArray() {
