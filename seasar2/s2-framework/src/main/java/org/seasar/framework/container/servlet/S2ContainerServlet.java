@@ -84,6 +84,10 @@ public class S2ContainerServlet extends HttpServlet {
         if (!StringUtil.isEmpty(debugStr)) {
             debug = Boolean.valueOf(debugStr).booleanValue();
         }
+        initializeContainer(configPath);
+    }
+
+    protected void initializeContainer(String configPath) {
         SingletonS2ContainerInitializer initializer = new SingletonS2ContainerInitializer();
         initializer.setConfigPath(configPath);
         initializer.setApplication(getServletContext());
@@ -122,7 +126,7 @@ public class S2ContainerServlet extends HttpServlet {
         if (container == null) {
             out.write("S2Container[" + container.getPath() + "] is not found.");
             return;
-        }        
+        }
         out.write("<html><head><title>S2 Components</title></head><body>");
         try {
             out.write("<h1>S2Container</h1>");
@@ -139,21 +143,28 @@ public class S2ContainerServlet extends HttpServlet {
                 out.write("</ul>");
             }
             final String envValue = Env.getValue();
-            if(SmartDeployUtil.isHotdeployMode(container)) {
+            if (SmartDeployUtil.isHotdeployMode(container)) {
                 out.write("<p>");
-                out.write("S2 is working under <strong><font color=\"#DC143C\">hotdeploy</font></strong> mode.[env = " + envValue + "]");
+                out
+                        .write("S2 is working under <strong><font color=\"#DC143C\">hotdeploy</font></strong> mode.[env = "
+                                + envValue + "]");
                 out.write("</p>");
-            } else if(SmartDeployUtil.isWarmdeployMode(container)) {
+            } else if (SmartDeployUtil.isWarmdeployMode(container)) {
                 out.write("<p>");
-                out.write("S2 is working under <strong><font color=\"#FF8C00\">warmdeploy</font></strong> mode.[env = " + envValue + "]");
+                out
+                        .write("S2 is working under <strong><font color=\"#FF8C00\">warmdeploy</font></strong> mode.[env = "
+                                + envValue + "]");
                 out.write("</p>");
-            } else if(SmartDeployUtil.isCooldeployMode(container)) {
+            } else if (SmartDeployUtil.isCooldeployMode(container)) {
                 out.write("<p>");
-                out.write("S2 is working under <strong><font color=\"#00008B\">cooldeploy</font></strong> mode.[env = " + envValue + "]");
+                out
+                        .write("S2 is working under <strong><font color=\"#00008B\">cooldeploy</font></strong> mode.[env = "
+                                + envValue + "]");
                 out.write("</p>");
             } else {
                 out.write("<p>");
-                out.write("S2 is working under normal mode.[env = " + envValue + "]");
+                out.write("S2 is working under normal mode.[env = " + envValue
+                        + "]");
                 out.write("</p>");
             }
             listInclude(container, request, out);

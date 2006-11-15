@@ -13,46 +13,24 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-//package org.seasar.framework.container.servlet;
 package org.seasar.framework.container.servlet;
 
-import java.io.IOException;
-
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.seasar.framework.container.S2Container;
-import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
-import org.seasar.framework.util.StringUtil;
 
 /**
  * @author shinsuke
  * 
  */
-public class PortletExtendedS2ContainerServlet extends HttpServlet {
+public class PortletExtendedS2ContainerServlet extends S2ContainerServlet {
 
     private static final long serialVersionUID = -7099205379599391521L;
 
-    public static final String CONFIG_PATH_KEY = "configPath";
-
-    public static final String DEBUG_KEY = "debug";
-
-    public static final String COMMAND = "command";
-
-    public static final String RESTART = "restart";
-
     private static PortletExtendedS2ContainerServlet instance;
-
-    private boolean debug;
 
     public PortletExtendedS2ContainerServlet() {
         instance = this;
     }
 
-    public static PortletExtendedS2ContainerServlet getInstance() {
+    public static S2ContainerServlet getInstance() {
         return instance;
     }
 
@@ -60,44 +38,11 @@ public class PortletExtendedS2ContainerServlet extends HttpServlet {
         instance = null;
     }
 
-    public void init() {
-        String configPath = null;
-        String debugStr = null;
-        ServletConfig servletConfig = getServletConfig();
-        if (servletConfig != null) {
-            configPath = servletConfig.getInitParameter(CONFIG_PATH_KEY);
-            debugStr = servletConfig.getInitParameter(DEBUG_KEY);
-        }
-        if (!StringUtil.isEmpty(debugStr)) {
-            debug = Boolean.valueOf(debugStr).booleanValue();
-        }
+    protected void initializeContainer(String configPath) {
         PortletExtendedSingletonS2ContainerInitializer initializer = new PortletExtendedSingletonS2ContainerInitializer();
         initializer.setConfigPath(configPath);
         initializer.setApplication(getServletContext());
         initializer.initialize();
-    }
-
-    public void destroy() {
-        SingletonS2ContainerFactory.destroy();
-    }
-
-    public static S2Container getContainer() {
-        return SingletonS2ContainerFactory.getContainer();
-    }
-
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws IOException, ServletException {
-
-        String command = request.getParameter(COMMAND);
-        if (debug && command != null && RESTART.equalsIgnoreCase(command)) {
-            destroy();
-            init();
-            response.getWriter().write(
-                    "PortletExtendedS2ContainerServlet is restarted.");
-        } else {
-            response.getWriter().write(
-                    "PortletExtendedS2ContainerServlet is running.");
-        }
     }
 
 }

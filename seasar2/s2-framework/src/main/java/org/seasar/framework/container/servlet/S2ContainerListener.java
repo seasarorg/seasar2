@@ -31,7 +31,7 @@ public class S2ContainerListener implements ServletContextListener {
 
     private static Logger logger = Logger.getLogger(S2ContainerListener.class);
 
-    private void initializeContainer(ServletContext servletContext) {
+    protected void initializeContainer(ServletContext servletContext) {
         String configPath = servletContext.getInitParameter(CONFIG_PATH_KEY);
         SingletonS2ContainerInitializer initializer = new SingletonS2ContainerInitializer();
         initializer.setConfigPath(configPath);

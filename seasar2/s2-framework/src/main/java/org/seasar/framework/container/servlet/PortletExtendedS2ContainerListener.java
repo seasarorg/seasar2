@@ -13,50 +13,27 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-//package org.seasar.framework.container.servlet;
 package org.seasar.framework.container.servlet;
 
 import javax.servlet.ServletContext;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
 
-import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 import org.seasar.framework.log.Logger;
 
 /**
  * @author manhole
  * @author shinsuke
  */
-public class PortletExtendedS2ContainerListener implements
-        ServletContextListener {
-
-    public static final String CONFIG_PATH_KEY = "org.seasar.framework.container.configPath";
+public class PortletExtendedS2ContainerListener extends S2ContainerListener {
 
     private static Logger logger = Logger
             .getLogger(PortletExtendedS2ContainerListener.class);
 
-    private void initializeContainer(ServletContext servletContext) {
+    protected void initializeContainer(ServletContext servletContext) {
         String configPath = servletContext.getInitParameter(CONFIG_PATH_KEY);
         PortletExtendedSingletonS2ContainerInitializer initializer = new PortletExtendedSingletonS2ContainerInitializer();
         initializer.setConfigPath(configPath);
         initializer.setApplication(servletContext);
         initializer.initialize();
-    }
-
-    public void contextInitialized(ServletContextEvent event) {
-        logger.debug("S2Container initialize start");
-        ServletContext servletContext = event.getServletContext();
-        try {
-            initializeContainer(servletContext);
-        } catch (RuntimeException e) {
-            logger.log(e);
-            throw e;
-        }
-        logger.debug("S2Container initialize end");
-    }
-
-    public void contextDestroyed(ServletContextEvent event) {
-        SingletonS2ContainerFactory.destroy();
     }
 
 }
