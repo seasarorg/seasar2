@@ -15,7 +15,6 @@
  */
 package org.seasar.framework.container.servlet;
 
-
 /**
  * @author shinsuke
  * 
@@ -24,18 +23,8 @@ public class PortletExtendedS2ContainerServlet extends S2ContainerServlet {
 
     private static final long serialVersionUID = -7099205379599391521L;
 
-    private static PortletExtendedS2ContainerServlet instance;
-
     public PortletExtendedS2ContainerServlet() {
-        instance = this;
-    }
-
-    public static S2ContainerServlet getInstance() {
-        return instance;
-    }
-
-    public static void clearInstance() {
-        instance = null;
+        super();
     }
 
     protected void initializeContainer(String configPath) {
