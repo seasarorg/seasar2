@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javassist.runtime.Desc;
 import ognl.OgnlRuntime;
 
 import org.seasar.framework.container.ComponentDef;
@@ -84,6 +85,7 @@ public class S2ContainerImpl implements S2Container, ContainerConstants {
     static {
         OgnlRuntime.setPropertyAccessor(S2Container.class,
                 new S2ContainerPropertyAccessor());
+        Desc.useContextClassLoader = true;
     }
 
     public S2ContainerImpl() {
