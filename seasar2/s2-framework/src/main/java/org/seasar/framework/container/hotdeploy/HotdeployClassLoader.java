@@ -17,6 +17,7 @@ package org.seasar.framework.container.hotdeploy;
 
 import java.io.InputStream;
 
+import org.seasar.framework.convention.NamingConvention;
 import org.seasar.framework.util.ClassLoaderUtil;
 import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.InputStreamUtil;
@@ -24,14 +25,12 @@ import org.seasar.framework.util.ResourceUtil;
 
 public class HotdeployClassLoader extends ClassLoader {
 
-    private String[] rootPackageNames;
+    private NamingConvention namingConvention;
 
-    public HotdeployClassLoader(ClassLoader classLoader) {
+    public HotdeployClassLoader(ClassLoader classLoader,
+            NamingConvention namingConvention) {
         super(classLoader);
-    }
-
-    public void setRootPackageNames(String[] rootPackageNames) {
-        this.rootPackageNames = rootPackageNames;
+        this.namingConvention = namingConvention;
     }
 
     public Class loadClass(String className, boolean resolve)
@@ -68,14 +67,6 @@ public class HotdeployClassLoader extends ClassLoader {
     }
 
     protected boolean isTargetClass(String className) {
-        if (rootPackageNames == null) {
-            return true;
-        }
-        for (int i = 0; i < rootPackageNames.length; ++i) {
-            if (className.startsWith(rootPackageNames[i])) {
-                return true;
-            }
-        }
-        return false;
+        return namingConvention.isTargetClassName(className);
     }
 }

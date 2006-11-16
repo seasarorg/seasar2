@@ -17,6 +17,7 @@ package org.seasar.framework.container.hotdeploy;
 
 import junit.framework.TestCase;
 
+import org.seasar.framework.convention.impl.NamingConventionImpl;
 import org.seasar.framework.util.ClassUtil;
 
 /**
@@ -37,9 +38,10 @@ public class HotdeployClassLoaderTest extends TestCase {
 
     protected void setUp() {
         originalLoader = Thread.currentThread().getContextClassLoader();
-        hotLoader = new HotdeployClassLoader(originalLoader);
-        hotLoader.setRootPackageNames(new String[] { PACKAGE_NAME,
-                "junit.framework" });
+        NamingConventionImpl convention = new NamingConventionImpl();
+        convention.addRootPackageName(PACKAGE_NAME);
+        convention.addRootPackageName("junit.framework");
+        hotLoader = new HotdeployClassLoader(originalLoader, convention);
         Thread.currentThread().setContextClassLoader(hotLoader);
     }
 

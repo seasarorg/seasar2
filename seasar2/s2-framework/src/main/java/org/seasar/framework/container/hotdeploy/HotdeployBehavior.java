@@ -58,9 +58,8 @@ public class HotdeployBehavior extends DefaultProvider {
 
     public void start() {
         originalClassLoader = Thread.currentThread().getContextClassLoader();
-        hotdeployClassLoader = new HotdeployClassLoader(originalClassLoader);
-        hotdeployClassLoader.setRootPackageNames(namingConvention
-                .getRootPackageNames());
+        hotdeployClassLoader = new HotdeployClassLoader(originalClassLoader,
+                namingConvention);
         Thread.currentThread().setContextClassLoader(hotdeployClassLoader);
         S2ContainerImpl container = (S2ContainerImpl) SingletonS2ContainerFactory
                 .getContainer();
