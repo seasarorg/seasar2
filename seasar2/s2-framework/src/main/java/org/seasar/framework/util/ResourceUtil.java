@@ -142,10 +142,7 @@ public final class ResourceUtil {
             for (int i = 0; i < num; ++i, dir = dir.getParentFile()) {
             }
         } else {
-            URL nestedUrl = URLUtil.create(url.getPath());
-            String s = nestedUrl.getPath();
-            int pos = s.lastIndexOf('!');
-            dir = new File(s.substring(0, pos));
+            dir = new File(JarFileUtil.toJarFilePath(url));
         }
         return dir;
     }
