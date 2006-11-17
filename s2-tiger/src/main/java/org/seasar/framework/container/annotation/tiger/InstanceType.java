@@ -21,7 +21,7 @@ package org.seasar.framework.container.annotation.tiger;
  */
 public enum InstanceType {
 
-    SINGLETON, PROTOTYPE, SESSION, REQUEST, OUTER;
+    SINGLETON, PROTOTYPE, APPLICATION, SESSION, REQUEST, OUTER;
 
     public String getName() {
         return toString().toLowerCase();
