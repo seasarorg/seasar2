@@ -50,11 +50,11 @@ public class HotdeployFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response,
             FilterChain chain) throws IOException, ServletException {
 
-        synchronized (HotdeployFilter.class) {
-            if (request.getAttribute(KEY) == null) {
-                S2ContainerBehavior.Provider provider = S2ContainerBehavior
-                        .getProvider();
-                if (provider instanceof HotdeployBehavior) {
+        if (request.getAttribute(KEY) == null) {
+            S2ContainerBehavior.Provider provider = S2ContainerBehavior
+                    .getProvider();
+            if (provider instanceof HotdeployBehavior) {
+                synchronized (HotdeployFilter.class) {
                     HotdeployBehavior ondemand = (HotdeployBehavior) provider;
                     ondemand.start();
                     try {
@@ -64,14 +64,14 @@ public class HotdeployFilter implements Filter {
                     } finally {
                         ondemand.stop();
                     }
-                } else {
-                    chain.doFilter(request, response);
                 }
             } else {
-                ClassLoader cl = (ClassLoader) request.getAttribute(KEY);
-                Thread.currentThread().setContextClassLoader(cl);
                 chain.doFilter(request, response);
             }
+        } else {
+            ClassLoader cl = (ClassLoader) request.getAttribute(KEY);
+            Thread.currentThread().setContextClassLoader(cl);
+            chain.doFilter(request, response);
         }
     }
 }
