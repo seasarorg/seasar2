@@ -46,9 +46,48 @@ public class ApplicationComponentDeployerTest extends TestCase {
         assertSame("2", foo, deployer.deploy());
     }
 
+    public void testCopyProperties() throws Exception {
+        MockServletContextImpl ctx = new MockServletContextImpl("s2jsf-example");
+        S2Container container = new S2ContainerImpl();
+        ExternalContext extCtx = new HttpServletExternalContext();
+        extCtx.setApplication(ctx);
+        container.setExternalContext(extCtx);
+        ComponentDef cd = new ComponentDefImpl(Foo.class, "foo");
+        container.register(cd);
+        Foo2 foo2 = new Foo2();
+        foo2.setHoge("xxx");
+        ctx.setAttribute("foo", foo2);
+        ComponentDeployer deployer = new ApplicationComponentDeployer(cd);
+        Foo foo = (Foo) deployer.deploy();
+        assertEquals("xxx", foo.getHoge());
+    }
+
     public static class Foo {
 
+        private String hoge;
+
         public void aaa() {
+        }
+
+        public String getHoge() {
+            return hoge;
+        }
+
+        public void setHoge(String hoge) {
+            this.hoge = hoge;
+        }
+    }
+
+    public static class Foo2 {
+
+        private String hoge;
+
+        public String getHoge() {
+            return hoge;
+        }
+
+        public void setHoge(String hoge) {
+            this.hoge = hoge;
         }
     }
 }

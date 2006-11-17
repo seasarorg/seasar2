@@ -17,9 +17,6 @@ package org.seasar.framework.container.deployer;
 
 import java.util.Map;
 
-import org.seasar.framework.beans.BeanDesc;
-import org.seasar.framework.beans.PropertyDesc;
-import org.seasar.framework.beans.factory.BeanDescFactory;
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.ExternalContext;
 import org.seasar.framework.exception.EmptyRuntimeException;
@@ -64,22 +61,6 @@ public class SessionComponentDeployer extends AbstractComponentDeployer {
         return component;
     }
     
-    protected void copyProperties(Object old, Object component) {
-        BeanDesc oldBeanDesc = BeanDescFactory.getBeanDesc(old.getClass());
-        BeanDesc beanDesc = BeanDescFactory.getBeanDesc(component.getClass());
-        for (int i = 0; i < beanDesc.getPropertyDescSize(); ++i) {
-            PropertyDesc pd = beanDesc.getPropertyDesc(i);
-            if (!pd.hasWriteMethod()) {
-                continue;
-            }
-            PropertyDesc oldPd = oldBeanDesc.getPropertyDesc(pd.getPropertyName());
-            if (!pd.hasReadMethod()) {
-                continue;
-            }
-            pd.setValue(component, oldPd.getValue(old));
-        }
-    }
-
     public void injectDependency(Object component) {
         throw new UnsupportedOperationException("injectDependency");
     }
