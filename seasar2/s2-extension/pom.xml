@@ -30,8 +30,8 @@
     </dependency>
     <dependency>
       <groupId>poi</groupId>
-      <artifactId>poi-2.5.1-final</artifactId>
-      <version>20040804</version>
+      <artifactId>poi</artifactId>
+      <version>2.5.1-final-20040804</version>
       <type>jar</type>
     </dependency>
   </dependencies>
