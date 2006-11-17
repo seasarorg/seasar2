@@ -71,4 +71,12 @@ public class URLUtilTest extends TestCase {
         assertEquals("file", URLUtil.toCanonicalProtocol("file"));
     }
 
+    public void testToFile() throws Exception {
+        File file = new File("Program Files/hoge.txt");
+        URL url = file.toURL();
+        assertEquals(file.getAbsoluteFile(), URLUtil.toFile(url));
+        assertEquals(file.getAbsoluteFile(), URLUtil.toFile(new URL(
+                "file:Program%20Files/hoge.txt")));
+    }
+
 }

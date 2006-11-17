@@ -19,8 +19,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLDecoder;
@@ -98,10 +96,10 @@ public class URLUtil {
 
     public static File toFile(final URL fileUrl) {
         try {
-            final URI uri = new URI(fileUrl.toExternalForm());
-            return new File(uri);
-        } catch (final URISyntaxException e) {
-            throw new SRuntimeException("ESSR0017", new Object[] { e }, e);
+            final String path = URLDecoder.decode(fileUrl.getPath(), "UTF-8");
+            return new File(path).getAbsoluteFile();
+        } catch (final Exception e) {
+            throw new SRuntimeException("ESSR0091", new Object[] { fileUrl }, e);
         }
     }
 
