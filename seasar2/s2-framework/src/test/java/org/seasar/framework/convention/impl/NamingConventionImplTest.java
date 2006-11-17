@@ -23,6 +23,8 @@ import org.seasar.framework.convention.impl.NamingConventionImpl.FileExistChecke
 import org.seasar.framework.convention.impl.dao.AaaDao;
 import org.seasar.framework.convention.impl.dao.BbbDao;
 import org.seasar.framework.convention.impl.dao.impl.BbbDaoImpl;
+import org.seasar.framework.convention.impl.dao.impl.Ddd1DaoImpl;
+import org.seasar.framework.convention.impl.dao.impl.Ddd2DaoImpl;
 import org.seasar.framework.convention.impl.dao.xxx.CccDao;
 import org.seasar.framework.convention.impl.web.add.DddPage;
 import org.seasar.framework.convention.impl.web.add.xxx.AddXxxPage;
@@ -194,6 +196,12 @@ public class NamingConventionImplTest extends TestCase {
                 .fromComponentNameToClass("bbbDao"));
         assertEquals(CccDao.class, convention
                 .fromComponentNameToClass("xxx_cccDao"));
+
+        assertEquals(Ddd1DaoImpl.class, convention
+                .fromComponentNameToClass("ddd1Dao"));
+        assertEquals(Ddd2DaoImpl.class, convention
+                .fromComponentNameToClass("ddd2Dao"));
+
         assertEquals(DddPage.class, convention
                 .fromComponentNameToClass("add_dddPage"));
         assertEquals(AddXxxPage.class, convention

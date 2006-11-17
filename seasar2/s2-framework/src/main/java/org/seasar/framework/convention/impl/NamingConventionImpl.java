@@ -428,24 +428,26 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
         return false;
     }
 
-    protected Class findClass(String rootPackageName, String middlePackageName,
-            String partOfClassName) {
+    protected Class findClass(final String rootPackageName,
+            final String middlePackageName, final String partOfClassName) {
         initialize();
-        String lastClassName = ClassUtil.concatName(middlePackageName,
-                partOfClassName);
-        String className = ClassUtil.concatName(rootPackageName, lastClassName);
+
+        final String backPartOfClassName = ClassUtil.concatName(
+                middlePackageName, partOfClassName);
+        final String className = ClassUtil.concatName(rootPackageName,
+                backPartOfClassName);
+        final String backPartOfImplClassName = toImplementationClassName(backPartOfClassName);
+        final String implClassName = ClassUtil.concatName(rootPackageName,
+                backPartOfImplClassName);
+
+        if (!isIgnoreClassName(implClassName)
+                && isExist(rootPackageName, backPartOfImplClassName)) {
+            return ClassUtil.forName(implClassName);
+        }
+
         if (!isIgnoreClassName(className)
-                && isExist(rootPackageName, lastClassName)) {
-            Class clazz = ClassUtil.forName(className);
-            if (clazz.isInterface()) {
-                String lastImplClassName = toImplementationClassName(lastClassName);
-                if (isExist(rootPackageName, lastImplClassName)) {
-                    String implClassName = ClassUtil.concatName(
-                            rootPackageName, lastImplClassName);
-                    clazz = ClassUtil.forName(implClassName);
-                }
-            }
-            return clazz;
+                && isExist(rootPackageName, backPartOfClassName)) {
+            return ClassUtil.forName(className);
         }
         return null;
     }
