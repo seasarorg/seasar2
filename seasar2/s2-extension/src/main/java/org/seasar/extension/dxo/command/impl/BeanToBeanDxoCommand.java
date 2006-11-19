@@ -58,7 +58,7 @@ public class BeanToBeanDxoCommand extends AbstractDxoCommand {
 
     protected void convertScalar(final Object source, final Object dest) {
         final Converter converter = converterFactory.getConverter(source
-                .getClass(), destClass);
+                .getClass(), dest.getClass());
         converter.convert(source, dest, createContext(source));
     }
 
