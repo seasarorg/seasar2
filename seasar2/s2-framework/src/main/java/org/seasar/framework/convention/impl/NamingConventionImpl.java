@@ -591,6 +591,9 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
     }
 
     public boolean isTargetClassName(String className, String suffix) {
+        if (!isTargetClassName(className)) {
+            return false;
+        }
         String name = StringUtil.trimSuffix(className, implementationSuffix);
         return name.endsWith(suffix);
     }

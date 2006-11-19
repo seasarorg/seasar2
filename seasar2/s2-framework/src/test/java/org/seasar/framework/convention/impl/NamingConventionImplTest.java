@@ -260,6 +260,12 @@ public class NamingConventionImplTest extends TestCase {
         assertFalse(convention.isTargetClassName(rootPackageName
                 + ".web.ignore.EeePage"));
         assertFalse(convention.isTargetClassName("hoge.dao.AaaDao"));
+
+        assertTrue(convention.isTargetClassName(
+                rootPackageName + ".dao.AaaDao", "Dao"));
+        assertFalse(convention.isTargetClassName(rootPackageName
+                + ".dao.AaaDao", "Service"));
+        assertFalse(convention.isTargetClassName("foo.bar.dao.AaaDao", "Dao"));
     }
 
     public void testIsIgnoreClassName() throws Exception {
