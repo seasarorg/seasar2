@@ -102,6 +102,13 @@
       <organizationUrl/>
       <timezone>+9</timezone>
     </developer>
+    <developer>
+      <id>taedium</id>
+      <name>NAKAMURA Toshihiro</name>
+      <email></email>
+      <url>http://d.hatena.ne.jp/taedium/</url>
+      <timezone>+9</timezone>
+    </developer>
 
     <!-- Javadoc Project -->
     <developer>
