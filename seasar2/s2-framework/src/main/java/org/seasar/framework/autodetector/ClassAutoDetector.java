@@ -15,16 +15,14 @@
  */
 package org.seasar.framework.autodetector;
 
+import org.seasar.framework.util.ClassTraversal.ClassHandler;
+
 /**
  * @author taedium
  * 
  */
 public interface ClassAutoDetector {
 
-    void detect(ClassHandler visitor);
-
-    public interface ClassHandler {
-        void processClass(Class clazz);
-    }
+    void detect(ClassHandler handler);
 
 }

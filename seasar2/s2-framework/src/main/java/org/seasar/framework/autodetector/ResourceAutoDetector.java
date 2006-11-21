@@ -15,7 +15,7 @@
  */
 package org.seasar.framework.autodetector;
 
-import java.io.InputStream;
+import org.seasar.framework.util.ResourceTraversal.ResourceHandler;
 
 /**
  * @author taedium
@@ -23,10 +23,6 @@ import java.io.InputStream;
  */
 public interface ResourceAutoDetector {
 
-    void detect(ResourceHandler visitor);
-
-    public interface ResourceHandler {
-        void processResource(String path, InputStream is);
-    }
+    void detect(ResourceHandler handler);
 
 }

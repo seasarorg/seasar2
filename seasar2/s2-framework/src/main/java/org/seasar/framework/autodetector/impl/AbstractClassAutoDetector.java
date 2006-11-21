@@ -30,6 +30,7 @@ import org.seasar.framework.util.JarFileUtil;
 import org.seasar.framework.util.ResourceUtil;
 import org.seasar.framework.util.StringUtil;
 import org.seasar.framework.util.URLUtil;
+import org.seasar.framework.util.ClassTraversal.ClassHandler;
 
 /**
  * @author taedium
@@ -71,8 +72,7 @@ public abstract class AbstractClassAutoDetector implements ClassAutoDetector {
 
         String getBaseName(String packageName, URL url);
 
-        void detect(String packageName, URL url,
-                ClassTraversal.ClassHandler handler);
+        void detect(String packageName, URL url, ClassHandler handler);
     }
 
     protected class FileSystemStrategy implements Strategy {
@@ -83,7 +83,7 @@ public abstract class AbstractClassAutoDetector implements ClassAutoDetector {
         }
 
         public void detect(final String packageName, final URL url,
-                final ClassTraversal.ClassHandler handler) {
+                final ClassHandler handler) {
 
             final File rootDir = getRootDir(packageName, url);
             ClassTraversal.forEach(rootDir, packageName, handler);
@@ -106,7 +106,7 @@ public abstract class AbstractClassAutoDetector implements ClassAutoDetector {
         }
 
         public void detect(final String packageName, final URL url,
-                final ClassTraversal.ClassHandler handler) {
+                final ClassHandler handler) {
 
             final JarFile jarFile = createJarFile(url);
             ClassTraversal.forEach(jarFile, handler);
@@ -124,7 +124,7 @@ public abstract class AbstractClassAutoDetector implements ClassAutoDetector {
         }
 
         public void detect(final String packageName, final URL url,
-                final ClassTraversal.ClassHandler handler) {
+                final ClassHandler handler) {
 
             final JarFile jarFile = createJarFile(url);
             ClassTraversal.forEach(jarFile, handler);
