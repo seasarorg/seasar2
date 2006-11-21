@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.seasar.extension.unit.S2TestCase;
 import org.seasar.framework.autodetector.ResourceAutoDetector;
+import org.seasar.framework.util.ResourceTraversal.ResourceHandler;
 
 /**
  * @author taedium
@@ -37,7 +38,7 @@ public class MappingFileAutoDetectorTest extends S2TestCase {
 
     public void testDetect() throws Exception {
         final List<String> paths = new ArrayList<String>();
-        detector.detect(new ResourceAutoDetector.ResourceHandler() {
+        detector.detect(new ResourceHandler() {
             public void processResource(String path, InputStream is) {
                 paths.add(path);
             }
@@ -51,4 +52,5 @@ public class MappingFileAutoDetectorTest extends S2TestCase {
                 .contains("org/seasar/framework/jpa/sub/entity/barOrm.xml"));
         assertTrue(paths.contains("org/junit/runner/RunWith.class"));
     }
+
 }

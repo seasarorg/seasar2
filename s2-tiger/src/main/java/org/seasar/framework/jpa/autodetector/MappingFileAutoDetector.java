@@ -27,7 +27,7 @@ import org.seasar.framework.container.annotation.tiger.InitMethod;
 import org.seasar.framework.convention.NamingConvention;
 import org.seasar.framework.util.ClassLoaderUtil;
 import org.seasar.framework.util.ClassUtil;
-import org.seasar.framework.util.ResourceTraversal;
+import org.seasar.framework.util.ResourceTraversal.ResourceHandler;
 
 /**
  * @author taedium
@@ -64,30 +64,28 @@ public class MappingFileAutoDetector extends AbstractResourceAutoDetector {
     }
 
     @SuppressWarnings("unchecked")
-    public void detect(final ResourceHandler visitor) {
+    public void detect(final ResourceHandler handler) {
         for (int i = 0; i < getTargetDirPathSize(); i++) {
             final String targetDirPath = getTargetDirPath(i);
             for (final Iterator<URL> it = ClassLoaderUtil
                     .getResources(targetDirPath); it.hasNext();) {
                 final URL targetDirUrl = it.next();
-                detect(visitor, targetDirPath, targetDirUrl);
+                detect(handler, targetDirPath, targetDirUrl);
             }
         }
     }
 
-    protected void detect(final ResourceHandler visitor,
+    protected void detect(final ResourceHandler handler,
             final String targetDirPath, final URL targetDirUrl) {
         final Strategy strategy = getStrategy(targetDirUrl.getProtocol());
-        strategy.detect(targetDirPath, targetDirUrl,
-                new ResourceTraversal.ResourceHandler() {
-                    public void processResource(final String path,
-                            final InputStream is) {
-                        if (path.startsWith(targetDirPath) && isApplied(path)
-                                && !isIgnored(path)) {
-                            visitor.processResource(path, is);
-                        }
-                    }
-                });
+        strategy.detect(targetDirPath, targetDirUrl, new ResourceHandler() {
+            public void processResource(final String path, final InputStream is) {
+                if (path.startsWith(targetDirPath) && isApplied(path)
+                        && !isIgnored(path)) {
+                    handler.processResource(path, is);
+                }
+            }
+        });
     }
 
 }

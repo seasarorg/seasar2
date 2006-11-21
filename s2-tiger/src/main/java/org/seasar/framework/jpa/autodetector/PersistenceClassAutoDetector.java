@@ -31,8 +31,8 @@ import org.seasar.framework.container.annotation.tiger.Component;
 import org.seasar.framework.container.annotation.tiger.InitMethod;
 import org.seasar.framework.convention.NamingConvention;
 import org.seasar.framework.util.ClassLoaderUtil;
-import org.seasar.framework.util.ClassTraversal;
 import org.seasar.framework.util.ClassUtil;
+import org.seasar.framework.util.ClassTraversal.ClassHandler;
 import org.seasar.framework.util.tiger.CollectionsUtil;
 import org.seasar.framework.util.tiger.ReflectionUtil;
 
@@ -47,6 +47,8 @@ public class PersistenceClassAutoDetector extends AbstractClassAutoDetector {
 
     protected NamingConvention namingConvention;
 
+    protected ClassLoader classLoader;
+
     public PersistenceClassAutoDetector() {
         annotations.add(Entity.class);
         annotations.add(MappedSuperclass.class);
@@ -56,6 +58,11 @@ public class PersistenceClassAutoDetector extends AbstractClassAutoDetector {
     @Binding(bindingType = BindingType.MAY)
     public void setNamingConvention(final NamingConvention namingConvention) {
         this.namingConvention = namingConvention;
+    }
+
+    @Binding(bindingType = BindingType.MAY)
+    public void setClassLoader(final ClassLoader classLoader) {
+        this.classLoader = classLoader;
     }
 
     @InitMethod
@@ -72,42 +79,52 @@ public class PersistenceClassAutoDetector extends AbstractClassAutoDetector {
         }
     }
 
-    public void addAnnotation(Class<? extends Annotation> annotation) {
-        this.annotations.add(annotation);
+    public void addAnnotation(final Class<? extends Annotation> annotation) {
+        annotations.add(annotation);
     }
 
     @SuppressWarnings("unchecked")
-    public void detect(final ClassHandler visitor) {
+    public void detect(final ClassHandler handler) {
         for (int i = 0; i < getTargetPackageNameSize(); i++) {
             final String packageName = getTargetPackageName(i);
             for (final Iterator<URL> it = ClassLoaderUtil
                     .getResources(packageName.replace('.', '/')); it.hasNext();) {
-                detect(visitor, packageName, it.next());
+                detect(handler, packageName, it.next());
             }
         }
     }
 
-    protected void detect(final ClassHandler visitor,
+    protected void detect(final ClassHandler handler,
             final String entityPackageName, final URL url) {
         final Strategy strategy = getStrategy(url.getProtocol());
-        strategy.detect(entityPackageName, url,
-                new ClassTraversal.ClassHandler() {
-                    public void processClass(final String packageName,
-                            final String shortClassName) {
-                        if (packageName.startsWith(entityPackageName)) {
-                            final String name = ClassUtil.concatName(
-                                    packageName, shortClassName);
-                            final Class<?> clazz = ReflectionUtil
-                                    .forNameNoException(name);
-                            for (final Annotation ann : clazz.getAnnotations()) {
-                                if (annotations.contains(ann.annotationType())) {
-                                    visitor.processClass(clazz);
-                                    return;
-                                }
-                            }
-                        }
-                    }
-                });
+        strategy.detect(entityPackageName, url, new ClassHandler() {
+            public void processClass(final String packageName,
+                    final String shortClassName) {
+                if (packageName.startsWith(entityPackageName)
+                        && isEntity(packageName, shortClassName)) {
+                    handler.processClass(packageName, shortClassName);
+                }
+            }
+        });
+    }
+
+    protected boolean isEntity(final String packageName,
+            final String shortClassName) {
+        final String name = ClassUtil.concatName(packageName, shortClassName);
+        final Class<?> clazz = getClass(name);
+        for (final Annotation ann : clazz.getAnnotations()) {
+            if (annotations.contains(ann.annotationType())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    protected Class<?> getClass(final String className) {
+        if (classLoader != null) {
+            return ReflectionUtil.forName(className, classLoader);
+        }
+        return ReflectionUtil.forNameNoException(className);
     }
 
 }

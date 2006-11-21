@@ -23,6 +23,9 @@ import org.seasar.extension.unit.S2TestCase;
 import org.seasar.framework.autodetector.ClassAutoDetector;
 import org.seasar.framework.jpa.entity.Hoge;
 import org.seasar.framework.jpa.sub.entity.Foo;
+import org.seasar.framework.util.ClassTraversal;
+import org.seasar.framework.util.ClassUtil;
+import org.seasar.framework.util.tiger.ReflectionUtil;
 
 /**
  * @author taedium
@@ -40,8 +43,10 @@ public class PersistenceClassAutoDetectorTest extends S2TestCase {
     @SuppressWarnings("unchecked")
     public void testDetect() throws Exception {
         final List<Class> classes = new ArrayList<Class>();
-        detector.detect(new ClassAutoDetector.ClassHandler() {
-            public void processClass(Class clazz) {
+        detector.detect(new ClassTraversal.ClassHandler() {
+            public void processClass(String packageName, String shortClassName) {
+                String name = ClassUtil.concatName(packageName, shortClassName);
+                Class clazz = ReflectionUtil.forNameNoException(name);
                 classes.add(clazz);
             }
         });
