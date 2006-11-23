@@ -15,9 +15,12 @@
  */
 package org.seasar.framework.container.factory;
 
+import java.lang.reflect.Field;
+
 import junit.framework.TestCase;
 
 import org.seasar.framework.container.S2Container;
+import org.seasar.framework.container.impl.S2ContainerImpl;
 
 /**
  * @author higa
@@ -27,11 +30,31 @@ public class ComponentsTagHandlerTest extends TestCase {
 
     private static final String PATH = "org/seasar/framework/container/factory/ComponentsTagHandlerTest.dicon";
 
+    private static final String PATH2 = "org/seasar/framework/container/factory/ComponentsTagHandlerTest2.dicon";
+
     public void testComponent() throws Exception {
         S2Container container = S2ContainerFactory.create(PATH);
-        assertEquals("1", "aaa", container.getNamespace());
-        assertEquals("2", "", container.getComponent("aaa.bbb"));
-        assertEquals("3", "", container.getComponent("bbb"));
-        assertEquals("4", PATH, container.getPath());
+        assertEquals("aaa", container.getNamespace());
+        assertEquals("", container.getComponent("aaa.bbb"));
+        assertEquals("", container.getComponent("bbb"));
+        assertEquals(PATH, container.getPath());
+        assertFalse(container.isInitializeOnCreate());
+        assertFalse(isInited(container));
+    }
+
+    public void testComponentInitializeOnCreate() throws Exception {
+        S2Container container = S2ContainerFactory.create(PATH2);
+        assertEquals("aaa", container.getNamespace());
+        assertEquals("", container.getComponent("aaa.bbb"));
+        assertEquals("", container.getComponent("bbb"));
+        assertEquals(PATH2, container.getPath());
+        assertTrue(container.isInitializeOnCreate());
+        assertTrue(isInited(container));
+    }
+
+    private boolean isInited(S2Container container) throws Exception {
+        Field f = S2ContainerImpl.class.getDeclaredField("inited");
+        f.setAccessible(true);
+        return f.getBoolean(container);
     }
 }

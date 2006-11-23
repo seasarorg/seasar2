@@ -10,6 +10,7 @@
 )>
 
 <!ATTLIST components namespace CDATA #IMPLIED>
+<!ATTLIST components initializeOnCreate (true | false) "false">
 <!ATTLIST components xmlns:xi  CDATA #FIXED "http://www.w3.org/2001/XInclude">
 
 <!ELEMENT description (

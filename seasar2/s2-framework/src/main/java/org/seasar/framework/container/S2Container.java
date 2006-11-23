@@ -486,6 +486,21 @@ public interface S2Container extends MetaDefAware {
     void setNamespace(String namespace);
 
     /**
+     * コンテナ作成時に初期化する場合<code>true</code>を返します。
+     * 
+     * @return コンテナ作成時に初期化する場合<code>true</code>
+     */
+    boolean isInitializeOnCreate();
+
+    /**
+     * コンテナ作成時に初期化する場合<code>true</code>を設定します。
+     * 
+     * @param initializeOnCreate
+     *            コンテナ作成時に初期化する場合<code>true</code>
+     */
+    void setInitializeOnCreate(boolean initializeOnCreate);
+
+    /**
      * 設定ファイルの<code>path</code>を返します。
      * 
      * @return 設定ファイルの<code>path</code>

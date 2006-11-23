@@ -52,12 +52,24 @@ public class ComponentsTagHandler extends TagHandler {
         if (!StringUtil.isEmpty(namespace)) {
             container.setNamespace(namespace);
         }
+        String initializeOnCreate = attributes.getValue("initializeOnCreate");
+        if (!StringUtil.isEmpty(initializeOnCreate)) {
+            container.setInitializeOnCreate(Boolean.valueOf(initializeOnCreate)
+                    .booleanValue());
+        }
 
         S2Container parent = (S2Container) context.getParameter("parent");
         if (parent != null) {
             container.setRoot(parent.getRoot());
         }
         context.push(container);
+    }
+
+    public void end(TagHandlerContext context, String body) {
+        S2Container container = (S2Container) context.pop();
+        if (container.isInitializeOnCreate()) {
+            container.init();
+        }
     }
 
     protected S2Container createContainer() {

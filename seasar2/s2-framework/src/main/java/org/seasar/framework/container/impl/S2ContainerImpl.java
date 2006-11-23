@@ -62,6 +62,8 @@ public class S2ContainerImpl implements S2Container, ContainerConstants {
 
     private String path;
 
+    private boolean initializeOnCreate;
+
     private List children = new ArrayList();
 
     private Map childPositions = new HashMap();
@@ -541,6 +543,14 @@ public class S2ContainerImpl implements S2Container, ContainerConstants {
         componentDefMap.remove(namespace);
         this.namespace = namespace;
         registerMap(namespace, new S2ContainerComponentDef(this, namespace));
+    }
+
+    public boolean isInitializeOnCreate() {
+        return initializeOnCreate;
+    }
+
+    public void setInitializeOnCreate(boolean initializeOnCreate) {
+        this.initializeOnCreate = initializeOnCreate;
     }
 
     public String getPath() {
