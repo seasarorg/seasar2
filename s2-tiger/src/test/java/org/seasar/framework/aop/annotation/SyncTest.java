@@ -62,7 +62,7 @@ public class SyncTest extends TestCase {
         });
 
         t1.start();
-        Thread.yield();
+        Thread.sleep(10);
         t2.start();
         t1.join();
         t2.join();
