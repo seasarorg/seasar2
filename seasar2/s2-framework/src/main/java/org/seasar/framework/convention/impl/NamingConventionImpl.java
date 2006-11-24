@@ -24,6 +24,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.jar.JarFile;
+import java.util.zip.ZipFile;
 
 import org.seasar.framework.convention.NamingConvention;
 import org.seasar.framework.exception.EmptyRuntimeException;
@@ -36,6 +37,7 @@ import org.seasar.framework.util.JarFileUtil;
 import org.seasar.framework.util.ResourceUtil;
 import org.seasar.framework.util.StringUtil;
 import org.seasar.framework.util.URLUtil;
+import org.seasar.framework.util.ZipFileUtil;
 
 /**
  * @author higa
@@ -647,10 +649,14 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
         for (final Iterator it = ClassLoaderUtil.getResources(this.getClass(),
                 s); it.hasNext();) {
             final URL url = (URL) it.next();
-            if (url.getProtocol().equals("file")) {
+            final String protocol = URLUtil.toCanonicalProtocol(url
+                    .getProtocol());
+            if ("file".equals(protocol)) {
                 list.add(new FileExistChecker(url));
-            } else {
+            } else if ("jar".equals(protocol)) {
                 list.add(new JarExistChecker(url, rootPackageName));
+            } else if ("zip".equals(protocol)) {
+                list.add(new ZipExistChecker(url, rootPackageName));
             }
         }
         return (ExistChecker[]) list.toArray(new ExistChecker[list.size()]);
@@ -689,6 +695,21 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
 
         public boolean isExist(final String lastClassName) {
             return jarFile.getEntry(rootPath + getPathName(lastClassName)) != null;
+        }
+    }
+
+    protected static class ZipExistChecker implements ExistChecker {
+        private ZipFile zipFile;
+
+        private String rootPath;
+
+        protected ZipExistChecker(final URL zipUrl, final String rootPackageName) {
+            zipFile = ZipFileUtil.create(ZipFileUtil.toZipFilePath(zipUrl));
+            this.rootPath = rootPackageName.replace('.', '/') + "/";
+        }
+
+        public boolean isExist(final String lastClassName) {
+            return zipFile.getEntry(rootPath + getPathName(lastClassName)) != null;
         }
     }
 
