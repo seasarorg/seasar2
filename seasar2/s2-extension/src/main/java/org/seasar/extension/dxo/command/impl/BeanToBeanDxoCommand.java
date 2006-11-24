@@ -18,10 +18,8 @@ package org.seasar.extension.dxo.command.impl;
 import java.lang.reflect.Method;
 
 import org.seasar.extension.dxo.annotation.AnnotationReader;
-import org.seasar.extension.dxo.converter.ConversionContext;
 import org.seasar.extension.dxo.converter.Converter;
 import org.seasar.extension.dxo.converter.ConverterFactory;
-import org.seasar.extension.dxo.converter.impl.ConversionContextImpl;
 
 /**
  * @author koichik
@@ -29,24 +27,12 @@ import org.seasar.extension.dxo.converter.impl.ConversionContextImpl;
  */
 public class BeanToBeanDxoCommand extends AbstractDxoCommand {
 
-    protected ConverterFactory converterFactory;
-
-    protected AnnotationReader annotationReader;
-
-    protected Class dxoClass;
-
-    protected Method method;
-
     protected Class destClass;
 
     public BeanToBeanDxoCommand(final Class dxoClass, final Method method,
             final ConverterFactory converterFactory,
             final AnnotationReader annotationReader, final Class destClass) {
-        super(method);
-        this.dxoClass = dxoClass;
-        this.method = method;
-        this.converterFactory = converterFactory;
-        this.annotationReader = annotationReader;
+        super(dxoClass, method, converterFactory, annotationReader);
         this.destClass = destClass;
     }
 
@@ -64,11 +50,6 @@ public class BeanToBeanDxoCommand extends AbstractDxoCommand {
 
     protected Class getDestElementType() {
         return destClass;
-    }
-
-    protected ConversionContext createContext(final Object source) {
-        return new ConversionContextImpl(dxoClass, method, converterFactory,
-                annotationReader, source);
     }
 
 }

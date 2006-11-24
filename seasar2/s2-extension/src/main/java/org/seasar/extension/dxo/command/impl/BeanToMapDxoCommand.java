@@ -16,8 +16,15 @@
 package org.seasar.extension.dxo.command.impl;
 
 import java.lang.reflect.Method;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
+import org.seasar.extension.dxo.annotation.AnnotationReader;
+import org.seasar.extension.dxo.converter.ConversionContext;
+import org.seasar.extension.dxo.converter.Converter;
+import org.seasar.extension.dxo.converter.ConverterFactory;
 import org.seasar.extension.dxo.util.DxoUtil;
 import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.PropertyDesc;
@@ -32,30 +39,62 @@ public class BeanToMapDxoCommand extends AbstractDxoCommand {
 
     protected Object parsedExpression;
 
-    public BeanToMapDxoCommand(final Method method) {
-        this(method, null);
+    protected Class valueType;
+
+    public BeanToMapDxoCommand(final Class dxoClass, final Method method,
+            final ConverterFactory converterFactory,
+            final AnnotationReader annotationReader) {
+        this(dxoClass, method, converterFactory, annotationReader, null);
     }
 
-    public BeanToMapDxoCommand(final Method method, final String expression) {
-        super(method);
+    public BeanToMapDxoCommand(final Class dxoClass, final Method method,
+            final ConverterFactory converterFactory,
+            final AnnotationReader annotationReader, final String expression) {
+        super(dxoClass, method, converterFactory, annotationReader);
         if (expression != null) {
             parsedExpression = DxoUtil.parseMap(expression);
+        }
+        valueType = DxoUtil.getValueTypeOfTargetMap(method);
+        if (valueType == Object.class) {
+            valueType = null;
         }
     }
 
     protected Object convertScalar(final Object source) {
+        final Map dest;
         if (parsedExpression != null) {
-            return OgnlUtil.getValue(parsedExpression, source);
+            dest = (Map) OgnlUtil.getValue(parsedExpression, source);
+        } else {
+            final String expression = createConversionRule(source.getClass());
+            dest = (Map) OgnlUtil
+                    .getValue(DxoUtil.parseMap(expression), source);
         }
-        final String expression = createConversionRule(source.getClass());
-        return OgnlUtil.getValue(DxoUtil.parseMap(expression), source);
+        if (valueType == null) {
+            return dest;
+        }
+        return convertValueType(dest, createContext(source));
     }
 
     protected void convertScalar(final Object source, final Object dest) {
-        final Map srcMap = (Map) convertScalar(source);
-        final Map destMap = (Map) dest;
-        destMap.clear();
-        destMap.putAll(srcMap);
+        ((Map) dest).putAll((Map) convertScalar(source));
+    }
+
+    protected Map convertValueType(final Map from,
+            final ConversionContext context) {
+        final Map to = new LinkedHashMap();
+        for (final Iterator it = from.entrySet().iterator(); it.hasNext();) {
+            final Entry entry = (Entry) it.next();
+            final Object key = entry.getKey();
+            final Object value = entry.getValue();
+            if (valueType.isInstance(value)) {
+                to.put(key, value);
+            } else {
+                final Converter converter = converterFactory.getConverter(value
+                        .getClass(), valueType);
+                to.put(key, converter.convert(value, valueType, context));
+            }
+        }
+        return to;
     }
 
     protected Class getDestElementType() {

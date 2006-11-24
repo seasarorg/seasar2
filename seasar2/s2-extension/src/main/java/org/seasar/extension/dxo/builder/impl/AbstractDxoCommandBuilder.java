@@ -18,6 +18,7 @@ package org.seasar.extension.dxo.builder.impl;
 import org.seasar.extension.dxo.annotation.AnnotationReader;
 import org.seasar.extension.dxo.annotation.AnnotationReaderFactory;
 import org.seasar.extension.dxo.builder.DxoCommandBuilder;
+import org.seasar.extension.dxo.converter.ConverterFactory;
 
 /**
  * @author koichik
@@ -25,9 +26,13 @@ import org.seasar.extension.dxo.builder.DxoCommandBuilder;
  */
 public abstract class AbstractDxoCommandBuilder implements DxoCommandBuilder {
 
-    protected static final String REFLECTION_UTIL_CLASS_NAME = "org.seasar.framework.util.tiger.ReflectionUtil";
+    protected ConverterFactory converterFactory;
 
     protected AnnotationReaderFactory annotationReaderFactory;
+
+    public void setConverterFactory(final ConverterFactory converterFactory) {
+        this.converterFactory = converterFactory;
+    }
 
     public void setAnnotationReaderFactory(
             final AnnotationReaderFactory annotationReaderFactory) {

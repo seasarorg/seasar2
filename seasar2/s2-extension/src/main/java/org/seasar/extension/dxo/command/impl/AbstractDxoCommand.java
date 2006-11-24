@@ -22,7 +22,11 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.seasar.extension.dxo.IllegalSignatureRuntimeException;
+import org.seasar.extension.dxo.annotation.AnnotationReader;
 import org.seasar.extension.dxo.command.DxoCommand;
+import org.seasar.extension.dxo.converter.ConversionContext;
+import org.seasar.extension.dxo.converter.ConverterFactory;
+import org.seasar.extension.dxo.converter.impl.ConversionContextImpl;
 
 /**
  * @author koichik
@@ -30,9 +34,23 @@ import org.seasar.extension.dxo.command.DxoCommand;
  */
 public abstract class AbstractDxoCommand implements DxoCommand {
 
+    protected Class dxoClass;
+
+    protected Method method;
+
+    protected ConverterFactory converterFactory;
+
+    protected AnnotationReader annotationReader;
+
     protected ConversionHelper conversionHelper;
 
-    public AbstractDxoCommand(final Method method) {
+    public AbstractDxoCommand(final Class dxoClass, final Method method,
+            final ConverterFactory converterFactory,
+            final AnnotationReader annotationReader) {
+        this.dxoClass = dxoClass;
+        this.method = method;
+        this.converterFactory = converterFactory;
+        this.annotationReader = annotationReader;
         this.conversionHelper = getConversionHelper(method);
     }
 
@@ -48,6 +66,11 @@ public abstract class AbstractDxoCommand implements DxoCommand {
 
     protected Object[] createArray(final int length) {
         return (Object[]) Array.newInstance(getDestElementType(), length);
+    }
+
+    protected ConversionContext createContext(final Object source) {
+        return new ConversionContextImpl(dxoClass, method, converterFactory,
+                annotationReader, source);
     }
 
     protected ConversionHelper getConversionHelper(final Method method) {

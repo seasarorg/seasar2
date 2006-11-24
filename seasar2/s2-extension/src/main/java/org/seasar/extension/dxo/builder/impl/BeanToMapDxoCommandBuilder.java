@@ -71,7 +71,8 @@ public class BeanToMapDxoCommandBuilder extends AbstractDxoCommandBuilder {
             return null;
         }
 
-        return new BeanToMapDxoCommand(method, expression);
+        return new BeanToMapDxoCommand(dxoClass, method, converterFactory,
+                getAnnotationReader(), expression);
     }
 
 }

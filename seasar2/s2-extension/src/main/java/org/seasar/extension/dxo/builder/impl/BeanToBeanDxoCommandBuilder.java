@@ -20,7 +20,6 @@ import java.util.List;
 
 import org.seasar.extension.dxo.command.DxoCommand;
 import org.seasar.extension.dxo.command.impl.BeanToBeanDxoCommand;
-import org.seasar.extension.dxo.converter.ConverterFactory;
 import org.seasar.extension.dxo.util.DxoUtil;
 
 /**
@@ -28,12 +27,6 @@ import org.seasar.extension.dxo.util.DxoUtil;
  * 
  */
 public class BeanToBeanDxoCommandBuilder extends AbstractDxoCommandBuilder {
-
-    protected ConverterFactory converterFactory;
-
-    public void setConverterFactory(final ConverterFactory converterFactory) {
-        this.converterFactory = converterFactory;
-    }
 
     public DxoCommand createDxoCommand(final Class dxoClass, final Method method) {
         final Class[] parameterTypes = method.getParameterTypes();
