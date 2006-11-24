@@ -21,6 +21,7 @@ import java.util.Iterator;
 
 import org.aopalliance.intercept.MethodInvocation;
 import org.seasar.framework.log.Logger;
+import org.seasar.framework.util.ArrayUtil;
 
 /**
  * @author higa
@@ -73,7 +74,11 @@ public class TraceInterceptor extends AbstractInterceptor {
         if (arg == null) {
             buf.append("null");
         } else if (arg.getClass().isArray()) {
-            appendList(buf, Arrays.asList((Object[]) arg));
+            if (arg.getClass().getComponentType().isPrimitive()) {
+                appendList(buf, Arrays.asList(ArrayUtil.toObjectArray(arg)));
+            } else {
+                appendList(buf, Arrays.asList((Object[]) arg));
+            }
         } else if (arg instanceof Collection) {
             appendList(buf, (Collection) arg);
         } else {

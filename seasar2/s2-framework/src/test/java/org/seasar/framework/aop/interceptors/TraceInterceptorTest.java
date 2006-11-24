@@ -65,7 +65,7 @@ public class TraceInterceptorTest extends TestCase {
         proxy.geho(new String[0]);
     }
 
-    public void testIntercept_array() throws Exception {
+    public void testInterceptArray() throws Exception {
         TraceInterceptor interceptor = new TraceInterceptor();
         Pointcut pointcut = new PointcutImpl(new String[] { "hoge" });
         Aspect aspect = new AspectImpl(interceptor, pointcut);
@@ -73,6 +73,16 @@ public class TraceInterceptorTest extends TestCase {
                 new Aspect[] { aspect });
         ArrayHoge proxy = (ArrayHoge) aopProxy.create();
         proxy.hoge(new String[] { "111" });
+    }
+
+    public void testInterceptPrimitiveArray() throws Exception {
+        TraceInterceptor interceptor = new TraceInterceptor();
+        Pointcut pointcut = new PointcutImpl(new String[] { "hoge" });
+        Aspect aspect = new AspectImpl(interceptor, pointcut);
+        AopProxy aopProxy = new AopProxy(ArrayHoge.class,
+                new Aspect[] { aspect });
+        ArrayHoge proxy = (ArrayHoge) aopProxy.create();
+        proxy.hoge(new int[] { 1, 2 });
     }
 
     public void testAppendObject() throws Exception {
@@ -127,6 +137,10 @@ public class TraceInterceptorTest extends TestCase {
     public static class ArrayHoge {
         public String[] hoge(String[] arg) {
             return new String[] { "aaa", "bbb" };
+        }
+
+        public int[] hoge(int[] arg) {
+            return new int[] { 10, 20 };
         }
     }
 }
