@@ -56,15 +56,6 @@ public class MethodUtilTigerTest extends TestCase {
                         new Class[] { List.class })));
     }
 
-    public void testGetElementTypeOfListFromDestination() throws Exception {
-        assertEquals(String.class, MethodUtil
-                .getElementTypeOfListFromDestination(Baz.class.getMethod(
-                        "hoge", new Class[] { List.class })));
-        assertEquals(BigDecimal.class, MethodUtil
-                .getElementTypeOfListFromDestination(Baz.class.getMethod(
-                        "hoge", new Class[] { List.class, List.class })));
-    }
-
     public class Foo {
         public Foo foo() {
             return null;
