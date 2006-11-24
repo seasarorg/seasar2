@@ -165,12 +165,6 @@ public final class MethodUtil {
                         method, new Integer(position) });
     }
 
-    public static Class getElementTypeOfListFromDestination(final Method method) {
-        final Class[] parameterTypes = method.getParameterTypes();
-        return parameterTypes.length == 1 ? getElementTypeOfListFromReturnType(method)
-                : getElementTypeOfListFromParameterType(method, 1);
-    }
-
     public static Class getElementTypeOfListFromReturnType(final Method method) {
         if (GET_ELEMENT_TYPE_FROM_RETURN_METHOD == null) {
             return null;

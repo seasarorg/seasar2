@@ -77,13 +77,6 @@ public class MethodUtilTest extends TestCase {
                 .getMethod("hoge", new Class[] { List.class })));
     }
 
-    public void testGetElementTypeOfListFromDestination() throws Exception {
-        assertNull(MethodUtil.getElementTypeOfListFromDestination(Baz.class
-                .getMethod("hoge", new Class[] { List.class })));
-        assertNull(MethodUtil.getElementTypeOfListFromDestination(Baz.class
-                .getMethod("hoge", new Class[] { List.class, List.class })));
-    }
-
     public static class Foo {
         public void foo() {
         }

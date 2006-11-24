@@ -15,7 +15,10 @@
  */
 package org.seasar.extension.dxo.util;
 
+import java.lang.reflect.Method;
+
 import org.seasar.extension.dxo.DxoConstants;
+import org.seasar.framework.util.MethodUtil;
 import org.seasar.framework.util.OgnlUtil;
 import org.seasar.framework.util.StringUtil;
 import org.seasar.framework.util.Tokenizer;
@@ -26,6 +29,13 @@ import org.seasar.framework.util.Tokenizer;
  * 
  */
 public class DxoUtil {
+
+    public static Class getElementTypeOfList(final Method method) {
+        final Class[] parameterTypes = method.getParameterTypes();
+        return parameterTypes.length == 1 ? MethodUtil
+                .getElementTypeOfListFromReturnType(method) : MethodUtil
+                .getElementTypeOfListFromParameterType(method, 1);
+    }
 
     public static Object parseMap(final String expression) {
         if (StringUtil.isEmpty(expression)) {

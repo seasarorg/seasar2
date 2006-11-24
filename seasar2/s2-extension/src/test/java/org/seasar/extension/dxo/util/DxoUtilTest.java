@@ -15,6 +15,8 @@
  */
 package org.seasar.extension.dxo.util;
 
+import java.util.List;
+
 import junit.framework.TestCase;
 
 /**
@@ -23,8 +25,22 @@ import junit.framework.TestCase;
  */
 public class DxoUtilTest extends TestCase {
 
+    public void testGetElementTypeOfListFromDestination() throws Exception {
+        assertNull(DxoUtil.getElementTypeOfList(Dxo.class.getMethod("hoge",
+                new Class[] { List.class })));
+        assertNull(DxoUtil.getElementTypeOfList(Dxo.class.getMethod("hoge",
+                new Class[] { List.class, List.class })));
+    }
+
     public void testAddQuote() throws Exception {
         assertEquals("'aaa':bbb,'ccc':ddd", DxoUtil
                 .addQuote("aaa : bbb , ccc : ddd"));
     }
+
+    public interface Dxo {
+        List hoge(List src);
+
+        void hoge(List src, List dest);
+    }
+
 }

@@ -21,7 +21,7 @@ import java.util.Map;
 
 import org.seasar.extension.dxo.command.DxoCommand;
 import org.seasar.extension.dxo.command.impl.BeanToMapDxoCommand;
-import org.seasar.framework.util.MethodUtil;
+import org.seasar.extension.dxo.util.DxoUtil;
 
 /**
  * @author koichik
@@ -55,8 +55,7 @@ public class BeanToMapDxoCommandBuilder extends AbstractDxoCommandBuilder {
                 return null;
             }
         } else if (List.class.isAssignableFrom(destType)) {
-            final Class elementType = MethodUtil
-                    .getElementTypeOfListFromDestination(method);
+            final Class elementType = DxoUtil.getElementTypeOfList(method);
             if (elementType == null || !Map.class.isAssignableFrom(elementType)) {
                 return null;
             }
