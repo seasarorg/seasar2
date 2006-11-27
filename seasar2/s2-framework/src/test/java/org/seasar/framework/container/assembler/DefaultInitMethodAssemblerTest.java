@@ -17,7 +17,6 @@ package org.seasar.framework.container.assembler;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import junit.framework.TestCase;
 

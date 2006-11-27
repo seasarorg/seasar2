@@ -17,16 +17,11 @@ package org.seasar.framework.container.servlet;
 
 import javax.servlet.ServletContext;
 
-import org.seasar.framework.log.Logger;
-
 /**
  * @author manhole
  * @author shinsuke
  */
 public class PortletExtendedS2ContainerListener extends S2ContainerListener {
-
-    private static Logger logger = Logger
-            .getLogger(PortletExtendedS2ContainerListener.class);
 
     protected void initializeContainer(ServletContext servletContext) {
         String configPath = servletContext.getInitParameter(CONFIG_PATH_KEY);

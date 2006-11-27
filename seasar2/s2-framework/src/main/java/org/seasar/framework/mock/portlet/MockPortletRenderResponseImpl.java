@@ -44,7 +44,7 @@ public class MockPortletRenderResponseImpl implements MockPortletRenderResponse 
     private int size;
 
     private boolean commited;
-    
+
     private Map valueMap = new HashMap();
 
     private Map onlyValueMap = new HashMap();
@@ -80,6 +80,10 @@ public class MockPortletRenderResponseImpl implements MockPortletRenderResponse 
         this.namespace = namespace;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
     public void setTitle(String title) {
         this.title = title;
     }
@@ -103,7 +107,7 @@ public class MockPortletRenderResponseImpl implements MockPortletRenderResponse 
     public void setLocale(Locale locale) {
         this.locale = locale;
     }
-    
+
     public void setBufferSize(int size) {
         this.size = size;
     }

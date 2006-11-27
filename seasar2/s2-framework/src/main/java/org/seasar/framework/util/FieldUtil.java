@@ -62,7 +62,6 @@ public final class FieldUtil {
             throws IllegalAccessRuntimeException {
 
         try {
-            Object value = field.get(target);
             return (String) field.get(target);
         } catch (IllegalAccessException ex) {
             throw new IllegalAccessRuntimeException(field.getDeclaringClass(),

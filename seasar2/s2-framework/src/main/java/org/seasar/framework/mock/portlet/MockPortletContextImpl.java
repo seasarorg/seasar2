@@ -27,7 +27,6 @@ import java.util.Set;
 
 import javax.portlet.PortletRequestDispatcher;
 
-import org.seasar.framework.mock.servlet.MockHttpServletRequestImpl;
 import org.seasar.framework.util.EnumerationAdapter;
 import org.seasar.framework.util.ResourceUtil;
 import org.seasar.framework.util.StringUtil;
