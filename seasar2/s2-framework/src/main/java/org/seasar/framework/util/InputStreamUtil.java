@@ -18,6 +18,7 @@ package org.seasar.framework.util;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 
 import org.seasar.framework.exception.IORuntimeException;
 
@@ -59,6 +60,18 @@ public final class InputStreamUtil {
             }
         }
         return bytes;
+    }
+
+    public static final void copy(InputStream is, OutputStream os) {
+        byte[] buf = new byte[8192];
+        try {
+            int n = 0;
+            while ((n = is.read(buf, 0, buf.length)) != -1) {
+                os.write(buf, 0, n);
+            }
+        } catch (IOException e) {
+            throw new IORuntimeException(e);
+        }
     }
 
     public static int available(InputStream is) {
