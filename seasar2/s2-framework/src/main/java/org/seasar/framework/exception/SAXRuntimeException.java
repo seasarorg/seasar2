@@ -25,20 +25,33 @@ import org.xml.sax.SAXParseException;
 public final class SAXRuntimeException extends SRuntimeException {
     private static final long serialVersionUID = -4933312103385038765L;
 
+    private String path;
+
     public SAXRuntimeException(SAXException cause) {
-        super("ESSR0054", createArgs(cause), cause);
+        this(cause, null);
     }
 
-    protected static Object[] createArgs(SAXException cause) {
-        return new Object[] { createMessage(cause) };
+    public SAXRuntimeException(SAXException cause, String path) {
+        super("ESSR0054", createArgs(cause, path), cause);
+        this.path = path;
     }
 
-    protected static String createMessage(final SAXException cause) {
+    public String getPath() {
+        return path;
+    }
+
+    protected static Object[] createArgs(SAXException cause, String path) {
+        return new Object[] { createMessage(cause, path) };
+    }
+
+    protected static String createMessage(final SAXException cause, String path) {
         StringBuffer buf = new StringBuffer(100);
         buf.append(cause);
         if (cause instanceof SAXParseException) {
             SAXParseException e = (SAXParseException) cause;
-            if (e.getSystemId() != null) {
+            if (path != null) {
+                buf.append(" at ").append(path);
+            } else if (e.getSystemId() != null) {
                 buf.append(" at ").append(e.getSystemId());
             }
             final int lineNumber = e.getLineNumber();
