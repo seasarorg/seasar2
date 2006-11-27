@@ -40,7 +40,7 @@ public final class SAXParserUtil {
         try {
             parser.parse(inputSource, handler);
         } catch (SAXException e) {
-            throw new SAXRuntimeException(e, inputSource.getSystemId());
+            throw new SAXRuntimeException(e);
         } catch (IOException e) {
             throw new IORuntimeException(e);
         }
