@@ -81,17 +81,23 @@ public class S2Parameterized extends S2TestClassRunner {
             super(klass.getName());
             this.klass = klass;
             int i = 0;
-            for (final Object[] parameters : getParametersList()) {
-                super.add(new TestClassRunnerForParameters(klass, parameters,
-                        i++));
+            for (final Object each : getParametersList()) {
+                if (each instanceof Object[]) {
+                    super.add(new TestClassRunnerForParameters(klass,
+                            Object[].class.cast(each), i++));
+                } else {
+                    throw new Exception(String.format(
+                            "%s.%s() must return a Collection of arrays.",
+                            this.klass.getName(), getParametersMethod()
+                                    .getName()));
+                }
             }
         }
 
-        @SuppressWarnings("unchecked")
-        private Collection<Object[]> getParametersList()
+        private Collection<?> getParametersList()
                 throws IllegalAccessException, InvocationTargetException,
                 Exception {
-            return (Collection) getParametersMethod().invoke(null);
+            return Collection.class.cast(getParametersMethod().invoke(null));
         }
 
         private Method getParametersMethod() throws Exception {
