@@ -135,14 +135,15 @@ public class InternalTestContextImpl implements InternalTestContext {
     }
 
     public void initContainer() {
-        containerInitialized = true;
         if (autoIncluding) {
-            if (hasComponentDef(ConfigFileIncluder.class)) {
-                final ConfigFileIncluder includer = getComponent(ConfigFileIncluder.class);
+            if (container.hasComponentDef(ConfigFileIncluder.class)) {
+                final ConfigFileIncluder includer = (ConfigFileIncluder) container
+                        .getComponent(ConfigFileIncluder.class);
                 includer.include(this);
             }
         }
         container.init();
+        containerInitialized = true;
     }
 
     public void destroyContainer() {
@@ -158,7 +159,7 @@ public class InternalTestContextImpl implements InternalTestContext {
 
     public void register(final Class<?> componentClass,
             final String componentName) {
-        ComponentDef cd = handler.createComponentDef(componentClass,
+        final ComponentDef cd = handler.createComponentDef(componentClass,
                 InstanceDefFactory.SINGLETON);
         cd.setComponentName(componentName);
         handler.appendDI(cd);
@@ -237,38 +238,35 @@ public class InternalTestContextImpl implements InternalTestContext {
 
     @SuppressWarnings("unchecked")
     public <T> T getComponent(final Class<T> componentKey) {
-        if (!containerInitialized) {
-            throw new IllegalStateException();
-        }
+        assertContainerInitialized();
         return (T) container.getComponent(componentKey);
     }
 
     public Object getComponent(final Object componentKey) {
-        if (!containerInitialized) {
-            throw new IllegalStateException();
-        }
+        assertContainerInitialized();
         return container.getComponent(componentKey);
     }
 
     public boolean hasComponentDef(final Object componentKey) {
-        if (!containerInitialized) {
-            throw new IllegalStateException();
-        }
+        assertContainerInitialized();
         return container.hasComponentDef(componentKey);
     }
 
     public ComponentDef getComponentDef(final int index) {
-        if (!containerInitialized) {
-            throw new IllegalStateException();
-        }
+        assertContainerInitialized();
         return container.getComponentDef(index);
     }
 
     public ComponentDef getComponentDef(final Object componentKey) {
-        if (!containerInitialized) {
-            throw new IllegalStateException();
-        }
+        assertContainerInitialized();
         return container.getComponentDef(componentKey);
+    }
+
+    protected void assertContainerInitialized() {
+        if (containerInitialized) {
+            return;
+        }
+        throw new IllegalStateException();
     }
 
 }

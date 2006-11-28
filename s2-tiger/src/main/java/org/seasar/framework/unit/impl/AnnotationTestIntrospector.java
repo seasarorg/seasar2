@@ -48,15 +48,23 @@ public class AnnotationTestIntrospector implements S2TestIntrospector {
 
     protected Class<? extends Annotation> afterAnnotation = After.class;
 
+    public void setBeforeClassAnnotation(
+            final Class<? extends Annotation> beforeClassAnnotation) {
+        this.beforeClassAnnotation = beforeClassAnnotation;
+    }
+
+    public void setAfterClassAnnotation(
+            final Class<? extends Annotation> afterClassAnnotation) {
+        this.afterClassAnnotation = afterClassAnnotation;
+    }
+
     public void setBeforeAnnotation(
             final Class<? extends Annotation> beforeAnnotation) {
-
         this.beforeAnnotation = beforeAnnotation;
     }
 
     public void setAfterAnnotation(
             final Class<? extends Annotation> afterAnnotation) {
-
         this.afterAnnotation = afterAnnotation;
     }
 
@@ -84,13 +92,11 @@ public class AnnotationTestIntrospector implements S2TestIntrospector {
 
     public Method getEachBeforeMethod(final Class<?> testClass,
             final Method testMethod) {
-
         return null;
     }
 
     public Method getEachAfterMethod(final Class<?> testClass,
             final Method testMethod) {
-
         return null;
     }
 
@@ -114,58 +120,52 @@ public class AnnotationTestIntrospector implements S2TestIntrospector {
         return method.isAnnotationPresent(Ignore.class);
     }
 
-    public List<String> getPrerequisiteExpressions(Class<?> testClass,
-            Method testMethod) {
-
+    public List<String> getPrerequisiteExpressions(final Class<?> testClass,
+            final Method testMethod) {
         final List<String> expressions = CollectionsUtil.newArrayList();
-        final Prerequisite classPrereq = testClass
-                .getAnnotation(Prerequisite.class);
-        if (classPrereq != null) {
-            expressions.add(classPrereq.value());
+        if (testClass.isAnnotationPresent(Prerequisite.class)) {
+            expressions
+                    .add(testClass.getAnnotation(Prerequisite.class).value());
         }
-        final Prerequisite methodPrereq = testMethod
-                .getAnnotation(Prerequisite.class);
-        if (methodPrereq != null) {
-            expressions.add(methodPrereq.value());
+        if (testMethod.isAnnotationPresent(Prerequisite.class)) {
+            expressions.add(testMethod.getAnnotation(Prerequisite.class)
+                    .value());
         }
         return expressions;
     }
 
-    public boolean needsTransaction(Class<?> testClass, Method testMethod) {
+    public boolean needsTransaction(final Class<?> testClass,
+            final Method testMethod) {
         final TxBehaviorType type = getTxBehaviorType(testClass, testMethod);
         return type == null || type != TxBehaviorType.NONE;
     }
 
-    public boolean requiresTransactionCommitment(Class<?> testClass,
-            Method testMethod) {
+    public boolean requiresTransactionCommitment(final Class<?> testClass,
+            final Method testMethod) {
         final TxBehaviorType type = getTxBehaviorType(testClass, testMethod);
         return type != null && type == TxBehaviorType.COMMIT;
     }
 
-    public TxBehaviorType getTxBehaviorType(Class<?> testClass,
-            Method testMethod) {
-
-        final TxBehavior methodTxBehavior = testMethod
-                .getAnnotation(TxBehavior.class);
-        final TxBehavior classTxBehavior = testClass
-                .getAnnotation(TxBehavior.class);
-        final TxBehavior behavior = methodTxBehavior != null ? methodTxBehavior
-                : classTxBehavior;
-        if (behavior == null) {
-            return null;
+    protected TxBehaviorType getTxBehaviorType(final Class<?> testClass,
+            final Method testMethod) {
+        if (testMethod.isAnnotationPresent(TxBehavior.class)) {
+            return testMethod.getAnnotation(TxBehavior.class).value();
         }
-        return behavior.value();
+        if (testClass.isAnnotationPresent(TxBehavior.class)) {
+            return testClass.getAnnotation(TxBehavior.class).value();
+        }
+        return null;
     }
 
     public boolean needsWarmDeploy(final Class<?> testClass,
             final Method testMethod) {
-        final WarmDeploy methodDeploy = testMethod
-                .getAnnotation(WarmDeploy.class);
-        final WarmDeploy classDeploy = testClass
-                .getAnnotation(WarmDeploy.class);
-        final WarmDeploy warmDeploy = methodDeploy != null ? methodDeploy
-                : classDeploy;
-        return warmDeploy == null ? true : warmDeploy.value();
+        if (testMethod.isAnnotationPresent(WarmDeploy.class)) {
+            return testMethod.getAnnotation(WarmDeploy.class).value();
+        }
+        if (testClass.isAnnotationPresent(WarmDeploy.class)) {
+            return testClass.getAnnotation(WarmDeploy.class).value();
+        }
+        return true;
     }
 
 }

@@ -137,7 +137,6 @@ public class ConventionTestIntrospector extends AnnotationTestIntrospector {
     @Override
     public Method getEachBeforeMethod(final Class<?> testClass,
             Method testMethod) {
-
         if (beforeMethodName == null) {
             return null;
         }
@@ -148,7 +147,6 @@ public class ConventionTestIntrospector extends AnnotationTestIntrospector {
 
     @Override
     public Method getEachAfterMethod(final Class<?> testClass, Method testMethod) {
-
         if (afterMethodName == null) {
             return null;
         }
@@ -263,7 +261,6 @@ public class ConventionTestIntrospector extends AnnotationTestIntrospector {
     }
 
     protected Method getMethod(final Class<?> testClass, final String methodName) {
-
         for (Class<?> eachClass : getSuperClasses(testClass)) {
             final Method[] methods = eachClass.getDeclaredMethods();
             for (final Method eachMethod : methods) {
