@@ -29,6 +29,7 @@ import org.seasar.framework.container.annotation.tiger.DestroyMethod;
 import org.seasar.framework.container.annotation.tiger.InitMethod;
 import org.seasar.framework.container.deployer.ComponentDeployerFactory;
 import org.seasar.framework.container.deployer.ExternalComponentDeployerProvider;
+import org.seasar.framework.container.deployer.InstanceDefFactory;
 import org.seasar.framework.container.external.servlet.HttpServletExternalContext;
 import org.seasar.framework.container.external.servlet.HttpServletExternalContextComponentDefRegister;
 import org.seasar.framework.container.factory.S2ContainerFactory;
@@ -37,6 +38,7 @@ import org.seasar.framework.container.factory.TigerAnnotationHandler;
 import org.seasar.framework.container.servlet.S2ContainerServlet;
 import org.seasar.framework.convention.NamingConvention;
 import org.seasar.framework.convention.impl.NamingConventionImpl;
+import org.seasar.framework.message.MessageResourceBundleFactory;
 import org.seasar.framework.mock.servlet.MockHttpServletRequest;
 import org.seasar.framework.mock.servlet.MockHttpServletResponse;
 import org.seasar.framework.mock.servlet.MockHttpServletResponseImpl;
@@ -123,6 +125,7 @@ public class InternalTestContextImpl implements InternalTestContext {
                 .setProvider(new ComponentDeployerFactory.DefaultProvider());
         SingletonS2ContainerFactory.setContainer(null);
         S2ContainerServlet.clearInstance();
+        MessageResourceBundleFactory.clear();
         servletContext = null;
         request = null;
         response = null;
@@ -155,30 +158,20 @@ public class InternalTestContextImpl implements InternalTestContext {
 
     public void register(final Class<?> componentClass,
             final String componentName) {
-        final ComponentDef cd = handler
-                .createComponentDef(componentClass, null);
-        if (componentName != null) {
-            cd.setComponentName(componentName);
-        }
+        ComponentDef cd = handler.createComponentDef(componentClass,
+                InstanceDefFactory.SINGLETON);
+        cd.setComponentName(componentName);
         handler.appendDI(cd);
         handler.appendAspect(cd);
         handler.appendInterType(cd);
         handler.appendInitMethod(cd);
+        handler.appendDestroyMethod(cd);
         container.register(cd);
     }
 
     public void register(final Class<?> componentClass) {
-        final ComponentDef cd = handler
-                .createComponentDef(componentClass, null);
-        if (cd.getComponentName() == null) {
-            cd.setComponentName(namingConvention
-                    .fromClassNameToComponentName(componentClass.getName()));
-        }
-        handler.appendDI(cd);
-        handler.appendAspect(cd);
-        handler.appendInterType(cd);
-        handler.appendInitMethod(cd);
-        container.register(cd);
+        register(componentClass, namingConvention
+                .fromClassNameToComponentName(componentClass.getName()));
     }
 
     public void register(final ComponentDef componentDef) {

@@ -31,6 +31,7 @@ import org.seasar.framework.unit.S2TestIntrospector;
 import org.seasar.framework.unit.annotation.Prerequisite;
 import org.seasar.framework.unit.annotation.TxBehavior;
 import org.seasar.framework.unit.annotation.TxBehaviorType;
+import org.seasar.framework.unit.annotation.WarmDeploy;
 import org.seasar.framework.util.tiger.CollectionsUtil;
 
 /**
@@ -135,7 +136,8 @@ public class AnnotationTestIntrospector implements S2TestIntrospector {
         return type == null || type != TxBehaviorType.NONE;
     }
 
-    public boolean requiresTransactionCommitment(Class<?> testClass, Method testMethod) {
+    public boolean requiresTransactionCommitment(Class<?> testClass,
+            Method testMethod) {
         final TxBehaviorType type = getTxBehaviorType(testClass, testMethod);
         return type != null && type == TxBehaviorType.COMMIT;
     }
@@ -153,6 +155,17 @@ public class AnnotationTestIntrospector implements S2TestIntrospector {
             return null;
         }
         return behavior.value();
+    }
+
+    public boolean needsWarmDeploy(final Class<?> testClass,
+            final Method testMethod) {
+        final WarmDeploy methodDeploy = testMethod
+                .getAnnotation(WarmDeploy.class);
+        final WarmDeploy classDeploy = testClass
+                .getAnnotation(WarmDeploy.class);
+        final WarmDeploy warmDeploy = methodDeploy != null ? methodDeploy
+                : classDeploy;
+        return warmDeploy == null ? true : warmDeploy.value();
     }
 
 }

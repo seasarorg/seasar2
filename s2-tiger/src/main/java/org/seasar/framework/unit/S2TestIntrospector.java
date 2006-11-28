@@ -39,6 +39,8 @@ public interface S2TestIntrospector {
 
     boolean requiresTransactionCommitment(Class<?> testClass, Method testMethod);
 
+    boolean needsWarmDeploy(Class<?> testClass, Method method);
+
     List<Method> getBeforeClassMethods(Class<?> testClass);
 
     List<Method> getAfterClassMethods(Class<?> testClass);

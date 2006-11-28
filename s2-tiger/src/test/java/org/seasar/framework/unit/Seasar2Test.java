@@ -24,6 +24,8 @@ import java.util.List;
 import javax.ejb.EJB;
 import javax.transaction.TransactionManager;
 
+import junit.framework.TestCase;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -39,14 +41,16 @@ import org.junit.runner.Runner;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.Parameterized.Parameters;
-import org.seasar.extension.unit.S2TestCase;
 import org.seasar.framework.container.S2Container;
+import org.seasar.framework.container.impl.S2ContainerBehavior;
+import org.seasar.framework.container.warmdeploy.WarmdeployBehavior;
 import org.seasar.framework.unit.annotation.Prerequisite;
 import org.seasar.framework.unit.annotation.TxBehavior;
 import org.seasar.framework.unit.annotation.TxBehaviorType;
+import org.seasar.framework.unit.annotation.WarmDeploy;
 import org.seasar.framework.util.TransactionManagerUtil;
 
-public class Seasar2Test extends S2TestCase {
+public class Seasar2Test extends TestCase {
 
     private static String log;
 
@@ -696,6 +700,68 @@ public class Seasar2Test extends S2TestCase {
         printFailures(result.getFailures());
         assertTrue(result.wasSuccessful());
         assertEquals(0, count);
+    }
+
+    @RunWith(Seasar2.class)
+    public static class WarmDeployTest {
+
+        private S2Container container;
+
+        public void warmDeploy() {
+            log += (S2ContainerBehavior.getProvider() instanceof WarmdeployBehavior);
+            log += container.getComponent("fooDao") != null;
+        }
+    }
+
+    public void testWarmdeploy() throws Exception {
+        JUnitCore core = new JUnitCore();
+        Result result = core.run(WarmDeployTest.class);
+        printFailures(result.getFailures());
+        assertTrue(result.wasSuccessful());
+        assertFalse(log.contains("false"));
+    }
+
+    @RunWith(Seasar2.class)
+    public static class WarmDeployTest2 {
+
+        public void warmDeploy() {
+            log += (S2ContainerBehavior.getProvider() instanceof WarmdeployBehavior);
+        }
+
+        @WarmDeploy(false)
+        public void notWarmDeploy() {
+            log += !(S2ContainerBehavior.getProvider() instanceof WarmdeployBehavior);
+        }
+    }
+
+    public void testWarmdeploy2() throws Exception {
+        JUnitCore core = new JUnitCore();
+        Result result = core.run(WarmDeployTest2.class);
+        printFailures(result.getFailures());
+        assertTrue(result.wasSuccessful());
+        assertFalse(log.contains("false"));
+    }
+
+    @RunWith(Seasar2.class)
+    @WarmDeploy(false)
+    public static class WarmDeployTest3 {
+
+        @WarmDeploy(true)
+        public void warmDeploy() {
+            log += (S2ContainerBehavior.getProvider() instanceof WarmdeployBehavior);
+        }
+
+        public void notWarmDeploy() {
+            log += !(S2ContainerBehavior.getProvider() instanceof WarmdeployBehavior);
+        }
+    }
+
+    public void testWarmdeploy3() throws Exception {
+        JUnitCore core = new JUnitCore();
+        Result result = core.run(WarmDeployTest3.class);
+        printFailures(result.getFailures());
+        assertTrue(result.wasSuccessful());
+        assertFalse(log.contains("false"));
     }
 
     @RunWith(Seasar2.class)
