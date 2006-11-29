@@ -16,6 +16,10 @@
 package org.seasar.framework.container.factory;
 
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -50,12 +54,29 @@ public class XmlS2ContainerBuilder extends AbstractS2ContainerBuilder {
 
     protected S2ContainerTagHandlerRule rule = new S2ContainerTagHandlerRule();
 
+    protected Map dtdMap = new HashMap();
+
+    public XmlS2ContainerBuilder() {
+        dtdMap.put(PUBLIC_ID, DTD_PATH);
+        dtdMap.put(PUBLIC_ID21, DTD_PATH21);
+        dtdMap.put(PUBLIC_ID23, DTD_PATH23);
+        dtdMap.put(PUBLIC_ID24, DTD_PATH24);
+    }
+
     public S2ContainerTagHandlerRule getRule() {
         return rule;
     }
 
     public void setRule(final S2ContainerTagHandlerRule rule) {
         this.rule = rule;
+    }
+
+    public void addDtd(final String publicId, final String systemId) {
+        dtdMap.put(publicId, systemId);
+    }
+
+    public void clearDtd() {
+        dtdMap.clear();
     }
 
     public S2Container build(final String path) {
@@ -88,10 +109,12 @@ public class XmlS2ContainerBuilder extends AbstractS2ContainerBuilder {
         final SAXParser saxParser = SAXParserFactoryUtil.newSAXParser(factory);
 
         final SaxHandler handler = new SaxHandler(rule);
-        handler.registerDtdPath(PUBLIC_ID, DTD_PATH);
-        handler.registerDtdPath(PUBLIC_ID21, DTD_PATH21);
-        handler.registerDtdPath(PUBLIC_ID23, DTD_PATH23);
-        handler.registerDtdPath(PUBLIC_ID24, DTD_PATH24);
+        for (final Iterator it = dtdMap.entrySet().iterator(); it.hasNext();) {
+            final Entry entry = (Entry) it.next();
+            final String publicId = (String) entry.getKey();
+            final String systemId = (String) entry.getValue();
+            handler.registerDtdPath(publicId, systemId);
+        }
 
         final TagHandlerContext ctx = handler.getTagHandlerContext();
         ctx.addParameter("parent", parent);
