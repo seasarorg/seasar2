@@ -17,9 +17,7 @@ package org.seasar.extension.component.impl;
 
 import org.seasar.framework.container.ComponentCreator;
 import org.seasar.framework.container.ComponentDef;
-import org.seasar.framework.container.PropertyDef;
 import org.seasar.framework.container.impl.ComponentDefImpl;
-import org.seasar.framework.container.impl.PropertyDefImpl;
 import org.seasar.framework.util.ClassUtil;
 
 /**
@@ -54,8 +52,6 @@ public class ComponentInvokerCreator implements ComponentCreator {
         }
         final ComponentDef cd = new ComponentDefImpl(ClassUtil
                 .forName(COMPONENT_INVOKER_CLASS_NAME), componentInvokerName);
-        final PropertyDef pd = new PropertyDefImpl("ondemand", Boolean.TRUE);
-        cd.addPropertyDef(pd);
         return cd;
     }
 
