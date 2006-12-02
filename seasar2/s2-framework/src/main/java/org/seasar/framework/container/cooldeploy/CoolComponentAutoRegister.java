@@ -160,7 +160,10 @@ public class CoolComponentAutoRegister implements ClassHandler {
         ComponentDef cd = createComponentDef(clazz);
         if (cd != null) {
             if (logger.isDebugEnabled()) {
-                logger.log("DSSR0105", new Object[] { clazz.getName() });
+                final String componentName = (cd.getComponentClass() != null) ? cd
+                        .getComponentClass().getName()
+                        : "";
+                logger.log("DSSR0105", new Object[] { componentName });
             }
             container.getRoot().register(cd);
         }
