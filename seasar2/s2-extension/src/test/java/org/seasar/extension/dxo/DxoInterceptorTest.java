@@ -127,6 +127,18 @@ public class DxoInterceptorTest extends S2TestCase {
         assertNotNull(dest);
         assertEquals("Foo", dest.getEname());
         assertEquals("Bar", dest.getDname());
+        assertNull(dest.getMname());
+
+        Employee mgr = new Employee();
+        mgr.setEname("Baz");
+        emp.setMgr(mgr);
+
+        dest = beanDxo.convert(emp);
+
+        assertNotNull(dest);
+        assertEquals("Foo", dest.getEname());
+        assertEquals("Bar", dest.getDname());
+        assertEquals("Baz", dest.getMname());
     }
 
     public void testFromMap_Scalar() throws Exception {
@@ -226,6 +238,8 @@ public class DxoInterceptorTest extends S2TestCase {
         HogeHoge convert4(HogeHoge src);
 
         HogeHoge[] convert(Hoge[] src);
+
+        String convert_Employee_CONVERSION_RULE = "'mname' : mgr != null ? mgr.ename : null";
 
         EmpDto convert(Employee emp);
     }

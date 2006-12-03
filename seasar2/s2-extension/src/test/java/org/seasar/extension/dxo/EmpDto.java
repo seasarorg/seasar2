@@ -27,6 +27,8 @@ public class EmpDto {
 
     String dname;
 
+    String mname;
+
     public String getEname() {
         return ename;
     }
@@ -49,6 +51,14 @@ public class EmpDto {
 
     public void setDname(String dname) {
         this.dname = dname;
+    }
+
+    public String getMname() {
+        return mname;
+    }
+
+    public void setMname(String mname) {
+        this.mname = mname;
     }
 
 }
