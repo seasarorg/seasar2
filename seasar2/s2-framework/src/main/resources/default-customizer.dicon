@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN" 
+	"http://www.seasar.org/dtd/components24.dtd">
+<components>
+	<include path="std-customizer.dicon"/>
+
+	<component name="actionCustomizer" class="org.seasar.framework.container.customizer.CustomizerChain">
+	</component>
+	<component name="daoCustomizer" class="org.seasar.framework.container.customizer.CustomizerChain">
+	</component>
+	<component name="dtoCustomizer" class="org.seasar.framework.container.customizer.CustomizerChain">
+	</component>
+	<component name="dxoCustomizer" class="org.seasar.framework.container.customizer.CustomizerChain">
+	</component>
+	<component name="helperCustomizer" class="org.seasar.framework.container.customizer.CustomizerChain">
+	</component>
+	<component name="logicCustomizer" class="org.seasar.framework.container.customizer.CustomizerChain">
+	</component>
+	<component name="pageCustomizer" class="org.seasar.framework.container.customizer.CustomizerChain">
+	</component>
+	<component name="serviceCustomizer" class="org.seasar.framework.container.customizer.CustomizerChain">
+	</component>
+	<component name="interceptorCustomizer" class="org.seasar.framework.container.customizer.CustomizerChain">
+	</component>
+	<component name="validatorCustomizer" class="org.seasar.framework.container.customizer.CustomizerChain">
+	</component>
+	<component name="converterCustomizer" class="org.seasar.framework.container.customizer.CustomizerChain">
+	</component>
+</components>

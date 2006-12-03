@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN" 
+	"http://www.seasar.org/dtd/components24.dtd">
+<components>
+	<component name="traceCustomizer" class="org.seasar.framework.container.customizer.AspectCustomizer">
+		<property name="interceptorName">"aop.traceInterceptor"</property>
+	</component>
+	<component name="simpleTraceCustomizer" class="org.seasar.framework.container.customizer.AspectCustomizer">
+		<property name="interceptorName">"aop.simpleTraceInterceptor"</property>
+	</component>
+	<component name="classLoaderAwareTraceCustomizer" class="org.seasar.framework.container.customizer.AspectCustomizer">
+		<property name="interceptorName">"aop.classLoaderAwareTraceInterceptor"</property>
+	</component>
+	<component name="syncCustomizer" class="org.seasar.framework.container.customizer.AspectCustomizer">
+		<property name="interceptorName">"aop.syncInterceptor"</property>
+	</component>
+	<component name="traceThrowsCustomizer" class="org.seasar.framework.container.customizer.AspectCustomizer">
+		<property name="interceptorName">"aop.traceThrowsInterceptor"</property>
+	</component>
+	<component name="toStringCustomizer" class="org.seasar.framework.container.customizer.AspectCustomizer">
+		<property name="interceptorName">"aop.toStringInterceptor"</property>
+	</component>
+	<component name="removeSessionCustomizer" class="org.seasar.framework.container.customizer.AspectCustomizer">
+		<property name="interceptorName">"aop.removeSessionInterceptor"</property>
+	</component>
+
+	<component name="commandTraceCustomizer" class="org.seasar.framework.container.customizer.AspectCustomizer">
+		<property name="pointcut">"do.*, initialize"</property>
+		<property name="interceptorName">"aop.traceInterceptor"</property>
+	</component>
+
+	<component name="dxoCustomizer" class="org.seasar.framework.container.customizer.AspectCustomizer">
+		<property name="interceptorName">"dxo.interceptor"</property>
+	</component>
+
+	<component name="s2DaoCustomizer" class="org.seasar.framework.container.customizer.AspectCustomizer">
+		<property name="interceptorName">"dao.interceptor"</property>
+	</component>
+	<component name="uujiCustomizer" class="org.seasar.framework.container.customizer.AspectCustomizer">
+		<property name="interceptorName">"uujiInterceptor"</property>
+	</component>
+	<component name="kuinaDaoCustomizer" class="org.seasar.framework.container.customizer.AspectCustomizer">
+		<property name="interceptorName">"kuinaDao.interceptor"</property>
+	</component>
+</components>
