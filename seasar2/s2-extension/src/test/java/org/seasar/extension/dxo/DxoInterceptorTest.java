@@ -141,6 +141,18 @@ public class DxoInterceptorTest extends S2TestCase {
         assertEquals("Baz", dest.getMname());
     }
 
+    public void testEmptyString() throws Exception {
+        EmpDto dto = new EmpDto();
+        dto.setSal(null);
+        dto.setComm("");
+
+        Employee dest = beanDxo.convert(dto);
+
+        assertNotNull(dest);
+        assertNull(dest.getSal());
+        assertNull(dest.getComm());
+    }
+
     public void testFromMap_Scalar() throws Exception {
         Map src = new HashMap();
         src.put("foo", new Integer(100));
@@ -242,6 +254,8 @@ public class DxoInterceptorTest extends S2TestCase {
         String convert_Employee_CONVERSION_RULE = "'mname' : mgr != null ? mgr.ename : null";
 
         EmpDto convert(Employee emp);
+
+        Employee convert(EmpDto empDto);
     }
 
     public interface FromMapDxo {

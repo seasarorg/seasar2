@@ -29,6 +29,10 @@ public class EmpDto {
 
     String mname;
 
+    String sal;
+
+    String comm;
+
     public String getEname() {
         return ename;
     }
@@ -59,6 +63,22 @@ public class EmpDto {
 
     public void setMname(String mname) {
         this.mname = mname;
+    }
+
+    public String getSal() {
+        return sal;
+    }
+
+    public void setSal(String sal) {
+        this.sal = sal;
+    }
+
+    public String getComm() {
+        return comm;
+    }
+
+    public void setComm(String comm) {
+        this.comm = comm;
     }
 
 }

@@ -19,6 +19,7 @@ import java.math.BigDecimal;
 
 import org.seasar.extension.dxo.converter.ConversionContext;
 import org.seasar.extension.dxo.exception.ConversionRuntimeException;
+import org.seasar.framework.util.StringUtil;
 
 /**
  * @author Satoshi Kimura
@@ -59,6 +60,9 @@ public abstract class NumberConverter extends AbstractConverter {
     protected abstract Number convert(Number number);
 
     protected Number convert(final String number) {
+        if (StringUtil.isEmpty(number)) {
+            return null;
+        }
         final BigDecimal decimal = new BigDecimal(number);
         return convert(decimal);
     }
