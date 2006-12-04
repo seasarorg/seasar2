@@ -552,11 +552,15 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
         if (!path.startsWith(viewRootPath) || !path.endsWith(viewExtension)) {
             throw new IllegalArgumentException(path);
         }
-        String componentName = path.substring(viewRootPath.length() + 1, path
+        String componentName = (path.substring(viewRootPath.length() + 1, path
                 .length()
-                - viewExtension.length())
-                + nameSuffix;
-        return componentName.replace('/', '_');
+                - viewExtension.length()) + nameSuffix).replace('/', '_');
+        int pos = componentName.lastIndexOf('_');
+        if (pos == -1) {
+            return StringUtil.decapitalize(componentName);
+        }
+        return componentName.substring(0, pos + 1)
+                + StringUtil.decapitalize(componentName.substring(pos + 1));
     }
 
     public String fromPathToActionName(String path) {

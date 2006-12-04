@@ -278,10 +278,16 @@ public class NamingConventionImplTest extends TestCase {
     public void testFromPathToPageName() throws Exception {
         assertEquals("hogePage", convention
                 .fromPathToPageName("/view/hoge.html"));
+        assertEquals("hogePage", convention
+                .fromPathToPageName("/view/Hoge.html"));
         assertEquals("hoge_fooPage", convention
                 .fromPathToPageName("/view/hoge/foo.html"));
+        assertEquals("hoge_fooPage", convention
+                .fromPathToPageName("/view/hoge/Foo.html"));
         assertEquals("aaa_hoge_fooPage", convention
                 .fromPathToPageName("/view/aaa/hoge/foo.html"));
+        assertEquals("aaa_hoge_fooPage", convention
+                .fromPathToPageName("/view/aaa/hoge/Foo.html"));
     }
 
     public void testFromPathToActionName() throws Exception {
