@@ -19,15 +19,17 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 import java.util.jar.JarFile;
 
 import org.seasar.framework.container.ComponentCreator;
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.S2Container;
+import org.seasar.framework.container.util.S2ContainerUtil;
 import org.seasar.framework.convention.NamingConvention;
-import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.ClassLoaderUtil;
 import org.seasar.framework.util.ClassTraversal;
 import org.seasar.framework.util.ClassUtil;
@@ -43,9 +45,6 @@ import org.seasar.framework.util.ClassTraversal.ClassHandler;
  */
 public class CoolComponentAutoRegister implements ClassHandler {
 
-    private static final Logger logger = Logger
-            .getLogger(CoolComponentAutoRegister.class);
-
     public static final String INIT_METHOD = "registerAll";
 
     public static final String container_BINDING = "bindingType=must";
@@ -57,6 +56,8 @@ public class CoolComponentAutoRegister implements ClassHandler {
     private ComponentCreator[] creators;
 
     private NamingConvention namingConvention;
+
+    private Set registerdClasses = new HashSet();
 
     public CoolComponentAutoRegister() {
         addStrategy("file", new FileSystemStrategy());
@@ -101,20 +102,25 @@ public class CoolComponentAutoRegister implements ClassHandler {
     }
 
     public void registerAll() {
-        final String[] rootPackageNames = namingConvention
-                .getRootPackageNames();
-        if (rootPackageNames != null) {
-            for (int i = 0; i < rootPackageNames.length; ++i) {
-                final String rootDir = rootPackageNames[i].replace('.', '/');
-                for (final Iterator it = ClassLoaderUtil.getResources(rootDir); it
-                        .hasNext();) {
-                    final URL url = (URL) it.next();
-                    final Strategy strategy = getStrategy(URLUtil
-                            .toCanonicalProtocol(url.getProtocol()));
-                    strategy.registerAll(rootDir, url);
+        try {
+            final String[] rootPackageNames = namingConvention
+                    .getRootPackageNames();
+            if (rootPackageNames != null) {
+                for (int i = 0; i < rootPackageNames.length; ++i) {
+                    final String rootDir = rootPackageNames[i]
+                            .replace('.', '/');
+                    for (final Iterator it = ClassLoaderUtil
+                            .getResources(rootDir); it.hasNext();) {
+                        final URL url = (URL) it.next();
+                        final Strategy strategy = getStrategy(URLUtil
+                                .toCanonicalProtocol(url.getProtocol()));
+                        strategy.registerAll(rootDir, url);
+                    }
                 }
+                webSphereClassLoaderFix();
             }
-            webSphereClassLoaderFix();
+        } finally {
+            registerdClasses.clear();
         }
     }
 
@@ -158,15 +164,15 @@ public class CoolComponentAutoRegister implements ClassHandler {
             return;
         }
         ComponentDef cd = createComponentDef(clazz);
-        if (cd != null) {
-            if (logger.isDebugEnabled()) {
-                final String componentName = (cd.getComponentClass() != null) ? cd
-                        .getComponentClass().getName()
-                        : "";
-                logger.log("DSSR0105", new Object[] { componentName });
-            }
-            container.getRoot().register(cd);
+        if (cd == null) {
+            return;
         }
+        if (registerdClasses.contains(cd.getComponentClass())) {
+            return;
+        }
+        container.getRoot().register(cd);
+        registerdClasses.add(cd.getComponentClass());
+        S2ContainerUtil.putRegisterLog(cd);
     }
 
     protected ComponentDef createComponentDef(Class componentClass) {

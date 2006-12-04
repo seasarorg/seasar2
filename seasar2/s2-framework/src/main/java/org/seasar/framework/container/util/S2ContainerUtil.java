@@ -20,13 +20,19 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.ContainerConstants;
+import org.seasar.framework.log.Logger;
+import org.seasar.framework.util.StringUtil;
 
 /**
  * @author higa
  * 
  */
 public final class S2ContainerUtil implements ContainerConstants {
+
+    private static final Logger logger = Logger
+            .getLogger(S2ContainerUtil.class);
 
     private static Set notAssignableClasses = new HashSet();
 
@@ -60,5 +66,21 @@ public final class S2ContainerUtil implements ContainerConstants {
         for (int i = 0; i < interfaces.length; ++i) {
             addAssignableClasses(classes, interfaces[i]);
         }
+    }
+
+    public static void putRegisterLog(final ComponentDef cd) {
+        if (logger.isDebugEnabled()) {
+            final StringBuffer buf = new StringBuffer(100);
+            final Class componentClass = cd.getComponentClass();
+            if (componentClass != null) {
+                buf.append(componentClass.getName());
+            }
+            final String componentName = cd.getComponentName();
+            if (!StringUtil.isEmpty(componentName)) {
+                buf.append("[").append(componentName).append("]");
+            }
+            logger.log("DSSR0105", new Object[] { new String(buf) });
+        }
+
     }
 }

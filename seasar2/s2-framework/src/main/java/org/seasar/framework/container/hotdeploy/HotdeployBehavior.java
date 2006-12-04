@@ -92,6 +92,7 @@ public class HotdeployBehavior extends DefaultProvider {
         }
         if (cd != null) {
             register(cd);
+            S2ContainerUtil.putRegisterLog(cd);
             cd.init();
         }
         return cd;
