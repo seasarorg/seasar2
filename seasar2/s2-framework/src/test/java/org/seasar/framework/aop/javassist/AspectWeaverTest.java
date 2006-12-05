@@ -95,7 +95,7 @@ public class AspectWeaverTest extends TestCase {
         Class clazz = weaver.generateClass();
 
         clazz.getDeclaredMethod("size", null);
-        clazz.getDeclaredMethod("size"
+        clazz.getDeclaredMethod(AspectWeaver.PREFIX_ENHANCED_CLASS + "size"
                 + AspectWeaver.SUFFIX_INVOKE_SUPER_METHOD, null);
     }
 
@@ -108,7 +108,7 @@ public class AspectWeaverTest extends TestCase {
         Class clazz = weaver.generateClass();
 
         clazz.getDeclaredMethod("clear", null);
-        clazz.getDeclaredMethod("clear"
+        clazz.getDeclaredMethod(AspectWeaver.PREFIX_ENHANCED_CLASS + "clear"
                 + AspectWeaver.SUFFIX_INVOKE_SUPER_METHOD, null);
 
         clazz.getDeclaredMethod("size", null);

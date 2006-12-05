@@ -150,8 +150,8 @@ public class AspectWeaver {
     }
 
     public String createInvokeSuperMethod(final Method method) {
-        final String invokeSuperMethodName = method.getName()
-                + SUFFIX_INVOKE_SUPER_METHOD;
+        final String invokeSuperMethodName = PREFIX_ENHANCED_CLASS
+                + method.getName() + SUFFIX_INVOKE_SUPER_METHOD;
         if (!MethodUtil.isAbstract(method)) {
             enhancedClassGenerator.createInvokeSuperMethod(method,
                     invokeSuperMethodName);
