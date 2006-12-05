@@ -2,59 +2,68 @@
 <!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN" 
 	"http://www.seasar.org/dtd/components24.dtd">
 <components>
-	<component name="defaultCustomizer" class="org.seasar.framework.container.customizer.AspectCustomizer">
-		<!--
-		<property name="interceptorName">"aop.traceInterceptor"</property>
-		-->
-	</component>
-	<component name="commandAspectCustomizer" class="org.seasar.framework.container.customizer.AspectCustomizer">
-		<!--
-		<property name="interceptorName">"aop.traceInterceptor"</property>
-		-->
-		<property name="pointcut">"do.*, initialize"</property>
-	</component>
+	<include path="default-customizer.dicon"/>
 
-	<component name="actionCustomizer" class="org.seasar.framework.container.customizer.CustomizerChain">
-		<initMethod name="addCustomizer">
-			<arg>commandAspectCustomizer</arg>
-		</initMethod>
-	</component>
-	<component name="daoCustomizer" class="org.seasar.framework.container.customizer.CustomizerChain">
-		<initMethod name="addCustomizer">
-			<arg>defaultCustomizer</arg>
-		</initMethod>
-	</component>
-	<component name="dtoCustomizer" class="org.seasar.framework.container.customizer.CustomizerChain">
-	</component>
-	<component name="dxoCustomizer" class="org.seasar.framework.container.customizer.CustomizerChain">
-		<initMethod name="addCustomizer">
-			<arg>defaultCustomizer</arg>
-		</initMethod>
-	</component>
-	<component name="helperCustomizer" class="org.seasar.framework.container.customizer.CustomizerChain">
-		<initMethod name="addCustomizer">
-			<arg>defaultCustomizer</arg>
-		</initMethod>
-	</component>
-	<component name="logicCustomizer" class="org.seasar.framework.container.customizer.CustomizerChain">
-		<initMethod name="addCustomizer">
-			<arg>defaultCustomizer</arg>
-		</initMethod>
-	</component>
+	<!--
+		Teeda-Extension の Page・Action のカスタマイズは以下のコメントを参考にしてください．
+		アスペクトを設定する場合はポイントカットの指定を忘れないようにしてください．
+		app.dicon で aop.dicon 等必要な dicon をインクルードしてください．
+	-->
+	<!--
 	<component name="pageCustomizer" class="org.seasar.framework.container.customizer.CustomizerChain">
 		<initMethod name="addCustomizer">
-			<arg>commandAspectCustomizer</arg>
+			<arg>commandTraceCustomizer</arg>
 		</initMethod>
 	</component>
-	<component name="serviceCustomizer" class="org.seasar.framework.container.customizer.CustomizerChain">
+	-->
+
+	<!--
+		Dao のカスタマイズは以下のコメントを参考にしてください．
+		追加するカスタマイザ名は使用する Dao に合わせて変更してください．
+			S2Dao     : s2DaoCustomizer
+			Uuji      : uujiCustomizer
+			Kuina-Dao : kuinaDaoCustomizer
+		app.dicon で各 Dao で必要な dicon をインクルードしてください．
+			S2Dao     : dao.dicon
+			Uuji      : uuji.dicon
+			Kuina-Dao : kuina-dao.dicon
+	-->
+	<!--
+	<component name="daoCustomizer" class="org.seasar.framework.container.customizer.CustomizerChain">
 		<initMethod name="addCustomizer">
-			<arg>defaultCustomizer</arg>
+			<arg>traceCustomizer</arg>
+		</initMethod>
+		<initMethod name="addCustomizer">
+			<arg>s2DaoCustomizer</arg>
 		</initMethod>
 	</component>
-	<component name="interceptorCustomizer" class="org.seasar.framework.container.customizer.CustomizerChain">
+	-->
+
+	<!--
+		Dxo のカスタマイズは以下のコメントを参考にしてください．
+		app.dicon で dxo.dicon をインクルードしてください．
+	-->
+	<!--
+	<component name="dxoCustomizer" class="org.seasar.framework.container.customizer.CustomizerChain">
+		<initMethod name="addCustomizer">
+			<arg>traceCustomizer</arg>
+		</initMethod>
+		<initMethod name="addCustomizer">
+			<arg>dxoCustomizer</arg>
+		</initMethod>
 	</component>
-	<component name="validatorCustomizer" class="org.seasar.framework.container.customizer.CustomizerChain">
+	-->
+
+	<!--
+		その他のカスタマイズは以下のコメントを参考にしてください．
+		コンポーネント名はカスタマイズ対象に合わせて変更してください．
+		app.dicon で aop.dicon 等必要な dicon をインクルードしてください．
+	-->
+	<!--
+	<component name="xxxCustomizer" class="org.seasar.framework.container.customizer.CustomizerChain">
+		<initMethod name="addCustomizer">
+			<arg>traceCustomizer</arg>
+		</initMethod>
 	</component>
-	<component name="converterCustomizer" class="org.seasar.framework.container.customizer.CustomizerChain">
-	</component>
+	-->
 </components>
