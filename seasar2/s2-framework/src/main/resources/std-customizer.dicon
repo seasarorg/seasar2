@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN" 
 	"http://www.seasar.org/dtd/components24.dtd">
-<components>
+<components
 	<component name="traceCustomizer" class="org.seasar.framework.container.customizer.AspectCustomizer">
 		<property name="interceptorName">"aop.traceInterceptor"</property>
 	</component>
@@ -25,7 +25,7 @@
 	</component>
 
 	<component name="commandTraceCustomizer" class="org.seasar.framework.container.customizer.AspectCustomizer">
-		<property name="pointcut">"do.*, initialize"</property>
+		<property name="pointcut">"do.*, initialize, prerender"</property>
 		<property name="interceptorName">"aop.traceInterceptor"</property>
 	</component>
 
