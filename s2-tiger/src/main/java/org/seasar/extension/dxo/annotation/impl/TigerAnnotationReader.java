@@ -25,6 +25,7 @@ import org.seasar.extension.dxo.annotation.AnnotationReader;
 import org.seasar.extension.dxo.annotation.ConversionRule;
 import org.seasar.extension.dxo.annotation.DatePattern;
 import org.seasar.extension.dxo.annotation.DxoConverter;
+import org.seasar.extension.dxo.annotation.ExcludeNull;
 import org.seasar.extension.dxo.annotation.TimePattern;
 import org.seasar.extension.dxo.annotation.TimestampPattern;
 import org.seasar.extension.dxo.converter.Converter;
@@ -98,16 +99,6 @@ public class TigerAnnotationReader implements AnnotationReader {
     }
 
     @SuppressWarnings("unchecked")
-    public Map getConverters(final Class destClass) {
-        final Map<String, Converter> converters = convertersCache
-                .get(destClass);
-        if (converters != null) {
-            return converters;
-        }
-        return createConverters(destClass);
-    }
-
-    @SuppressWarnings("unchecked")
     public String getConversionRule(final Class dxoClass, final Method method) {
         final ConversionRule mapConversion = method
                 .getAnnotation(ConversionRule.class);
@@ -118,6 +109,29 @@ public class TigerAnnotationReader implements AnnotationReader {
             return next.getConversionRule(dxoClass, method);
         }
         return null;
+    }
+
+    @SuppressWarnings("unchecked")
+    public boolean isExcludeNull(final Class dxoClass, final Method method) {
+        final ExcludeNull excludeNull = getAnnotation(dxoClass, method,
+                ExcludeNull.class);
+        if (excludeNull != null) {
+            return true;
+        }
+        if (next != null) {
+            return next.isExcludeNull(dxoClass, method);
+        }
+        return false;
+    }
+
+    @SuppressWarnings("unchecked")
+    public Map getConverters(final Class destClass) {
+        final Map<String, Converter> converters = convertersCache
+                .get(destClass);
+        if (converters != null) {
+            return converters;
+        }
+        return createConverters(destClass);
     }
 
     protected <T extends Annotation> T getAnnotation(final Class<?> dxoClass,

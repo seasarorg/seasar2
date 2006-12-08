@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.seasar.extension.dxo.annotation.ExcludeNull;
 import org.seasar.extension.unit.S2TestCase;
 
 /**
@@ -258,6 +259,29 @@ public class DxoInterceptorTigerTest extends S2TestCase {
         assertEquals(new BigDecimal("2000"), map.get("baz"));
     }
 
+    public void testExcludeNull() throws Exception {
+        Employee emp = new Employee();
+        Department dept = new Department();
+        emp.setDepartment(dept);
+
+        EmpDto dest = new EmpDto();
+        dest.setEname("foo");
+        dest.setDname("bar");
+        beanDxo.convertExcludeNull(emp, dest);
+        assertEquals("foo", dest.getEname());
+        assertEquals("bar", dest.getDname());
+
+        emp.setEname("hoge");
+        beanDxo.convertExcludeNull(emp, dest);
+        assertEquals("hoge", dest.getEname());
+        assertEquals("bar", dest.getDname());
+
+        dept.setDname("hogehoge");
+        beanDxo.convertExcludeNull(emp, dest);
+        assertEquals("hoge", dest.getEname());
+        assertEquals("hogehoge", dest.getDname());
+    }
+
     public interface BeanDxo {
         Hoge[] convertArrayToArray(HogeHoge[] src);
 
@@ -266,6 +290,9 @@ public class DxoInterceptorTigerTest extends S2TestCase {
         Hoge[] convertListToArray(List<HogeHoge> src);
 
         List<Hoge> convertListToList(List<HogeHoge> src);
+
+        @ExcludeNull
+        void convertExcludeNull(Employee employee, EmpDto empDto);
     }
 
     @SuppressWarnings("unchecked")
