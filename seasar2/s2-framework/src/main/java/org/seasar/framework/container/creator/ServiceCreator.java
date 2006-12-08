@@ -25,6 +25,8 @@ public class ServiceCreator extends ComponentCreatorImpl {
         super(namingConvention);
         setNameSuffix(namingConvention.getServiceSuffix());
         setInstanceDef(InstanceDefFactory.PROTOTYPE);
+        setEnableInterface(true);
+        setEnableAbstract(true);
     }
 
     public ComponentCustomizer getServiceCustomizer() {

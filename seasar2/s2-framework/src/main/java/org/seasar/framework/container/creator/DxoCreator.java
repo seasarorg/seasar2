@@ -23,6 +23,8 @@ public class DxoCreator extends ComponentCreatorImpl {
     public DxoCreator(NamingConvention namingConvention) {
         super(namingConvention);
         setNameSuffix(namingConvention.getDxoSuffix());
+        setEnableInterface(true);
+        setEnableAbstract(true);
     }
 
     public ComponentCustomizer getDxoCustomizer() {

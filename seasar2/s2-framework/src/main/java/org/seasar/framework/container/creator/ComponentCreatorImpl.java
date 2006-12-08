@@ -45,11 +45,11 @@ public class ComponentCreatorImpl implements ComponentCreator {
 
     public static final String enableInterface_BINDING = "bindingType=may";
 
-    private boolean enableInterface = true;
+    private boolean enableInterface = false;
 
     public static final String enableAbstract_BINDING = "bindingType=may";
 
-    private boolean enableAbstract = true;
+    private boolean enableAbstract = false;
 
     private String nameSuffix;
 

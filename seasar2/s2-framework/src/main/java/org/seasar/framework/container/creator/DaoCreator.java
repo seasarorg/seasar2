@@ -25,6 +25,8 @@ public class DaoCreator extends ComponentCreatorImpl {
         super(namingConvention);
         setNameSuffix(namingConvention.getDaoSuffix());
         setInstanceDef(InstanceDefFactory.PROTOTYPE);
+        setEnableInterface(true);
+        setEnableAbstract(true);
     }
 
     public ComponentCustomizer getDaoCustomizer() {
