@@ -49,7 +49,7 @@
 			<arg>traceCustomizer</arg>
 		</initMethod>
 		<initMethod name="addCustomizer">
-			<arg>dxoCustomizer</arg>
+			<arg>s2DxoCustomizer</arg>
 		</initMethod>
 	</component>
 	-->

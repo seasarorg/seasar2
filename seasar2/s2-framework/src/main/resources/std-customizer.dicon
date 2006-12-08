@@ -29,7 +29,7 @@
 		<property name="interceptorName">"aop.traceInterceptor"</property>
 	</component>
 
-	<component name="dxoCustomizer" class="org.seasar.framework.container.customizer.AspectCustomizer">
+	<component name="s2DxoCustomizer" class="org.seasar.framework.container.customizer.AspectCustomizer">
 		<property name="interceptorName">"dxo.interceptor"</property>
 	</component>
 
