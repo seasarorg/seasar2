@@ -39,6 +39,8 @@ public class ComponentCreatorImplTest extends TestCase {
         convention.addRootPackageName(rootPackageName);
         creator = new ComponentCreatorImpl(convention);
         creator.setNameSuffix("Dao");
+        creator.setEnableInterface(true);
+        creator.setEnableAbstract(true);
     }
 
     public void testCreateComponentDef() throws Exception {
