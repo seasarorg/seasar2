@@ -112,7 +112,9 @@ public class BeanConverter extends AbstractConverter {
             return;
         }
         if (sourcePropertyValue == null) {
-            destPropertyDesc.setValue(dest, null);
+            if (context.isIncludeNull()) {
+                destPropertyDesc.setValue(dest, null);
+            }
             return;
         }
         final Class sourcePropertyClass = sourcePropertyValue.getClass();

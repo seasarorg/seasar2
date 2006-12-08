@@ -60,6 +60,8 @@ public class ConversionContextImpl implements ConversionContext {
 
     protected Map evaluatedValues = new CaseInsensitiveMap();
 
+    protected boolean excludeNull;
+
     static {
         initialize();
     }
@@ -95,18 +97,24 @@ public class ConversionContextImpl implements ConversionContext {
         if (conversionRule != null) {
             evaluatedValues = (Map) OgnlUtil.getValue(conversionRule, source);
         }
+        excludeNull = annotationReader.isExcludeNull(dxoClass, method);
     }
 
     public ConverterFactory getConverterFactory() {
         return converterFactory;
     }
 
-    public void addConvertedObject(final Object source, final Object dest) {
-        convertedObjects.put(source, dest);
+    public Converter getConverter(final Class clazz, final String name) {
+        final Map map = annotationReader.getConverters(clazz);
+        return (Converter) map.get(name);
     }
 
     public Object getConvertedObject(final Object source) {
         return convertedObjects.get(source);
+    }
+
+    public void addConvertedObject(final Object source, final Object dest) {
+        convertedObjects.put(source, dest);
     }
 
     public Object getContextInfo(final String key) {
@@ -125,9 +133,12 @@ public class ConversionContextImpl implements ConversionContext {
         evaluatedValues.put(name, value);
     }
 
-    public Converter getConverter(final Class clazz, final String name) {
-        final Map map = annotationReader.getConverters(clazz);
-        return (Converter) map.get(name);
+    public boolean isIncludeNull() {
+        return !excludeNull;
+    }
+
+    public boolean isExcludeNull() {
+        return excludeNull;
     }
 
     protected Map getContextInfo(final AnnotationReader reader) {

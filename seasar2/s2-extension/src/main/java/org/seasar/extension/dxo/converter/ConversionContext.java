@@ -23,9 +23,11 @@ public interface ConversionContext {
 
     ConverterFactory getConverterFactory();
 
-    void addConvertedObject(Object source, Object dest);
+    Converter getConverter(Class clazz, String name);
 
     Object getConvertedObject(Object source);
+
+    void addConvertedObject(Object source, Object dest);
 
     Object getContextInfo(String key);
 
@@ -35,6 +37,8 @@ public interface ConversionContext {
 
     void addEvaluatedValue(String name, Object value);
 
-    Converter getConverter(Class clazz, String name);
+    boolean isIncludeNull();
+
+    boolean isExcludeNull();
 
 }

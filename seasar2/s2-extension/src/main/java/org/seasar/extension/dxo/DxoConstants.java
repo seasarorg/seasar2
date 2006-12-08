@@ -29,6 +29,8 @@ public interface DxoConstants {
 
     String CONVERSION_RULE = "CONVERSION_RULE";
 
+    String EXCLUDE_NULL = "EXCLUDE_NULL";
+
     String OGNL_MAP_PREFIX = "#@java.util.LinkedHashMap@{";
 
     String OGNL_MAP_SUFFIX = "}";

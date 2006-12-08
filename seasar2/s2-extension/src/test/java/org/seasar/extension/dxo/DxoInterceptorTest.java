@@ -153,6 +153,29 @@ public class DxoInterceptorTest extends S2TestCase {
         assertNull(dest.getComm());
     }
 
+    public void testExcludeNull() throws Exception {
+        Employee emp = new Employee();
+        Department dept = new Department();
+        emp.setDepartment(dept);
+
+        EmpDto dest = new EmpDto();
+        dest.setEname("foo");
+        dest.setDname("bar");
+        beanDxo.convertExcludeNull(emp, dest);
+        assertEquals("foo", dest.getEname());
+        assertEquals("bar", dest.getDname());
+
+        emp.setEname("hoge");
+        beanDxo.convertExcludeNull(emp, dest);
+        assertEquals("hoge", dest.getEname());
+        assertEquals("bar", dest.getDname());
+
+        dept.setDname("hogehoge");
+        beanDxo.convertExcludeNull(emp, dest);
+        assertEquals("hoge", dest.getEname());
+        assertEquals("hogehoge", dest.getDname());
+    }
+
     public void testFromMap_Scalar() throws Exception {
         Map src = new HashMap();
         src.put("foo", new Integer(100));
@@ -256,6 +279,10 @@ public class DxoInterceptorTest extends S2TestCase {
         EmpDto convert(Employee emp);
 
         Employee convert(EmpDto empDto);
+
+        String convertExcludeNull_EXCLUDE_NULL = null;
+
+        void convertExcludeNull(Employee employee, EmpDto empDto);
     }
 
     public interface FromMapDxo {

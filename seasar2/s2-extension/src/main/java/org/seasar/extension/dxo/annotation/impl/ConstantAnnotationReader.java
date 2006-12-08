@@ -90,6 +90,20 @@ public class ConstantAnnotationReader implements AnnotationReader {
         return null;
     }
 
+    public boolean isExcludeNull(final Class dxoClass, final Method method) {
+        final BeanDesc dxoBeanDesc = BeanDescFactory.getBeanDesc(dxoClass);
+        String fieldName = getConstantAnnotationName(method,
+                DxoConstants.EXCLUDE_NULL);
+        if (dxoBeanDesc.hasField(fieldName)) {
+            return true;
+        }
+        fieldName = method.getName() + "_" + DxoConstants.EXCLUDE_NULL;
+        if (dxoBeanDesc.hasField(fieldName)) {
+            return true;
+        }
+        return false;
+    }
+
     public Map getConverters(final Class destClass) {
         final Map converters = (Map) convertersCache.get(destClass);
         if (converters != null) {

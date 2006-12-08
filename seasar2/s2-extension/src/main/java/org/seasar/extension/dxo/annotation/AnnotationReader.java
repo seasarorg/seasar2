@@ -32,6 +32,8 @@ public interface AnnotationReader {
 
     String getConversionRule(Class dxoClass, Method method);
 
+    boolean isExcludeNull(Class dxoClass, Method method);
+
     Map getConverters(Class destClass);
 
 }
