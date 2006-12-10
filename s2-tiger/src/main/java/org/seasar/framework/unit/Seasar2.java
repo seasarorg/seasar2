@@ -103,11 +103,7 @@ public class Seasar2 extends Runner {
 
     @Override
     public void run(RunNotifier notifier) {
-        try {
-            delegate.run(notifier);
-        } finally {
-            dispose();
-        }
+        delegate.run(notifier);
     }
 
     public interface Configurator {

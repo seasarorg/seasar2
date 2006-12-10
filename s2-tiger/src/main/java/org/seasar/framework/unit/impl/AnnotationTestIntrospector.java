@@ -48,6 +48,10 @@ public class AnnotationTestIntrospector implements S2TestIntrospector {
 
     protected Class<? extends Annotation> afterAnnotation = After.class;
 
+    protected boolean enableIgnore = true;
+
+    protected boolean enablePrerequisite = true;
+
     public void setBeforeClassAnnotation(
             final Class<? extends Annotation> beforeClassAnnotation) {
         this.beforeClassAnnotation = beforeClassAnnotation;
@@ -66,6 +70,14 @@ public class AnnotationTestIntrospector implements S2TestIntrospector {
     public void setAfterAnnotation(
             final Class<? extends Annotation> afterAnnotation) {
         this.afterAnnotation = afterAnnotation;
+    }
+
+    public void setEnableIgnore(boolean enableIgnore) {
+        this.enableIgnore = enableIgnore;
+    }
+
+    public void setEnablePrerequisite(boolean enablePrerequisite) {
+        this.enablePrerequisite = enablePrerequisite;
     }
 
     public List<Method> getBeforeClassMethods(final Class<?> testClass) {
@@ -117,19 +129,26 @@ public class AnnotationTestIntrospector implements S2TestIntrospector {
     }
 
     public boolean isIgnored(final Method method) {
-        return method.isAnnotationPresent(Ignore.class);
+        if (enableIgnore) {
+            return method.isAnnotationPresent(Ignore.class);
+        }
+        return false;
     }
 
     public List<String> getPrerequisiteExpressions(final Class<?> testClass,
             final Method testMethod) {
         final List<String> expressions = CollectionsUtil.newArrayList();
-        if (testClass.isAnnotationPresent(Prerequisite.class)) {
-            expressions
-                    .add(testClass.getAnnotation(Prerequisite.class).value());
-        }
-        if (testMethod.isAnnotationPresent(Prerequisite.class)) {
-            expressions.add(testMethod.getAnnotation(Prerequisite.class)
-                    .value());
+        if (enablePrerequisite) {
+            if (testClass.isAnnotationPresent(Prerequisite.class)) {
+                expressions.add(testClass.getAnnotation(Prerequisite.class)
+                        .value());
+            }
+            if (testMethod.isAnnotationPresent(Prerequisite.class)) {
+                expressions.add(testMethod.getAnnotation(Prerequisite.class)
+                        .value());
+            }
+        } else {
+            expressions.add(Boolean.toString(true));
         }
         return expressions;
     }

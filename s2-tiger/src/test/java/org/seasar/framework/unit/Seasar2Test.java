@@ -66,6 +66,11 @@ public class Seasar2Test extends TestCase {
         Seasar2.configure();
     }
 
+    @Override
+    public void tearDown() {
+        Seasar2.dispose();
+    }
+
     @RunWith(Seasar2.class)
     public static class AnnotationTest {
 
@@ -868,6 +873,31 @@ public class Seasar2Test extends TestCase {
         assertTrue(log.endsWith("b"));
         assertTrue(log.contains("cefgd"));
         assertTrue(log.contains("chd"));
+    }
+
+    @RunWith(Seasar2.class)
+    public static class CustomizeS2TestIntrospector2Test {
+
+        @Ignore
+        public void aaa() {
+            log += "a";
+        }
+
+        @Prerequisite("false")
+        public void bbb() {
+            log += "b";
+        }
+
+    }
+
+    public void testCustomizeS2TestIntrospector2Test() {
+        configure("S2TestIntrospector2.dicon");
+        JUnitCore core = new JUnitCore();
+        Result result = core.run(CustomizeS2TestIntrospector2Test.class);
+        printFailures(result.getFailures());
+        assertTrue(result.wasSuccessful());
+        assertTrue(log.contains("a"));
+        assertTrue(log.contains("b"));
     }
 
     public void configure(String name) {

@@ -24,6 +24,7 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.seasar.framework.unit.annotation.Prerequisite;
 import org.seasar.framework.unit.annotation.TxBehavior;
@@ -142,6 +143,27 @@ public class AnnotationTestIntrospectorTest extends TestCase {
         assertEquals("false", expressions.get(1));
     }
 
+    public void testGetPrerequisiteExpressions2() {
+        introspector.setEnablePrerequisite(false);
+        Class<?> clazz = Bbb.class;
+        Method method = ReflectionUtil.getDeclaredMethod(Ccc.class, "aaa");
+        List<String> expressions = introspector.getPrerequisiteExpressions(
+                clazz, method);
+        assertEquals(1, expressions.size());
+        assertEquals("true", expressions.get(0));
+    }
+
+    public void testIsIgnored() {
+        Method method = ReflectionUtil.getDeclaredMethod(Ccc.class, "aaa");
+        assertTrue(introspector.isIgnored(method));
+    }
+
+    public void testIsIgnored2() {
+        introspector.setEnableIgnore(false);
+        Method method = ReflectionUtil.getDeclaredMethod(Ccc.class, "aaa");
+        assertFalse(introspector.isIgnored(method));
+    }
+
     public static class Hoge {
         @BeforeClass
         public static void aaa() {
@@ -258,4 +280,9 @@ public class AnnotationTestIntrospectorTest extends TestCase {
         }
     }
 
+    public static class Ccc {
+        @Ignore
+        public void aaa() {
+        }
+    }
 }
