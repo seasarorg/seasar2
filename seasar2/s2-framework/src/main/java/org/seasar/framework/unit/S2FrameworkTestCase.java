@@ -212,7 +212,7 @@ public abstract class S2FrameworkTestCase extends TestCase {
     }
 
     protected void setUpContainer() throws Throwable {
-        originalClassLoader = Thread.currentThread().getContextClassLoader();
+        originalClassLoader = getOriginalClassLoader();
         unitClassLoader = new UnitClassLoader(originalClassLoader);
         Thread.currentThread().setContextClassLoader(unitClassLoader);
         if (isWarmDeploy()) {
@@ -240,6 +240,17 @@ public abstract class S2FrameworkTestCase extends TestCase {
                 .setProvider(new ExternalComponentDeployerProvider());
         namingConvention = new NamingConventionImpl();
         container.register(namingConvention);
+    }
+
+    protected ClassLoader getOriginalClassLoader() {
+        S2Container configurationContainer = S2ContainerFactory
+                .getConfigurationContainer();
+        if (configurationContainer != null
+                && configurationContainer.hasComponentDef(ClassLoader.class)) {
+            return (ClassLoader) configurationContainer
+                    .getComponent(ClassLoader.class);
+        }
+        return Thread.currentThread().getContextClassLoader();
     }
 
     protected void tearDownContainer() throws Throwable {

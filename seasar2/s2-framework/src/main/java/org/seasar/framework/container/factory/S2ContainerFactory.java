@@ -135,6 +135,10 @@ public final class S2ContainerFactory {
         initialized = false;
     }
 
+    public static synchronized S2Container getConfigurationContainer() {
+        return configurationContainer;
+    }
+
     protected static Provider getProvider() {
         return provider;
     }
