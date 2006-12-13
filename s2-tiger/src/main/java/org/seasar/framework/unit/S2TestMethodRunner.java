@@ -207,7 +207,7 @@ public class S2TestMethodRunner {
     }
 
     protected void setUpTestContext() throws Throwable {
-        originalClassLoader = Thread.currentThread().getContextClassLoader();
+        originalClassLoader = getOriginalClassLoader();
         unitClassLoader = new UnitClassLoader(originalClassLoader);
         Thread.currentThread().setContextClassLoader(unitClassLoader);
         if (needsWarmDeploy()) {
@@ -236,6 +236,17 @@ public class S2TestMethodRunner {
                 }
             }
         }
+    }
+
+    protected ClassLoader getOriginalClassLoader() {
+        S2Container configurationContainer = S2ContainerFactory
+                .getConfigurationContainer();
+        if (configurationContainer != null
+                && configurationContainer.hasComponentDef(ClassLoader.class)) {
+            return ClassLoader.class.cast(configurationContainer
+                    .getComponent(ClassLoader.class));
+        }
+        return Thread.currentThread().getContextClassLoader();
     }
 
     protected void tearDownTestContext() throws Throwable {
