@@ -51,11 +51,16 @@ public abstract class EasyMockTestCase extends TestCase {
     @Override
     public void runBare() throws Throwable {
         mocks.clear();
-        bindFields();
+        setUp();
         try {
-            doRunTest();
+            bindFields();
+            try {
+                doRunTest();
+            } finally {
+                unbindFields();
+            }
         } finally {
-            unbindFields();
+            tearDown();
         }
     }
 
