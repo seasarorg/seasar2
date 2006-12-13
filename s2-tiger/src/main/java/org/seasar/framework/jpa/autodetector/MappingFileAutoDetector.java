@@ -39,7 +39,6 @@ public class MappingFileAutoDetector extends AbstractResourceAutoDetector {
 
     public MappingFileAutoDetector() {
         addTargetDirPath("META-INF");
-        addResourceNamePattern("META-INF/orm.xml");
         addResourceNamePattern(".*Orm.xml");
     }
 

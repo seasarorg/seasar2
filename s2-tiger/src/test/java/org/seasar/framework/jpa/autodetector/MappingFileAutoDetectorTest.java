@@ -43,8 +43,7 @@ public class MappingFileAutoDetectorTest extends S2TestCase {
                 paths.add(path);
             }
         });
-        assertEquals(5, paths.size());
-        assertTrue(paths.contains("META-INF/orm.xml"));
+        assertEquals(4, paths.size());
         assertTrue(paths.contains("META-INF/fooOrm.xml"));
         assertTrue(paths
                 .contains("org/seasar/framework/jpa/entity/hogeOrm.xml"));
