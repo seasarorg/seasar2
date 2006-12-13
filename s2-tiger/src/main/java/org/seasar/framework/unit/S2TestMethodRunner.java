@@ -31,6 +31,10 @@ import java.util.concurrent.TimeoutException;
 import javax.ejb.EJB;
 import javax.transaction.TransactionManager;
 
+import ognl.MethodFailedException;
+import ognl.Ognl;
+import ognl.OgnlException;
+
 import org.junit.runner.Description;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
@@ -40,6 +44,7 @@ import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 import org.seasar.framework.container.impl.S2ContainerBehavior;
 import org.seasar.framework.env.Env;
 import org.seasar.framework.exception.NoSuchMethodRuntimeException;
+import org.seasar.framework.exception.OgnlRuntimeException;
 import org.seasar.framework.util.DisposableUtil;
 import org.seasar.framework.util.OgnlUtil;
 import org.seasar.framework.util.ResourceUtil;
@@ -120,7 +125,18 @@ public class S2TestMethodRunner {
             final Object exp = OgnlUtil.parseExpression(expression);
             final Map<String, Object> ctx = CollectionsUtil.newHashMap();
             ctx.put("ENV", Env.getValue());
-            final Object result = OgnlUtil.getValue(exp, ctx, test);
+            ctx.put("method", method);
+            Object result = null;
+            try {
+                result = Ognl.getValue(exp, ctx, test);
+            } catch (OgnlException e) {
+                if (e instanceof MethodFailedException) {
+                    System.err.println(e);
+                    return false;
+                }
+                throw new OgnlRuntimeException(e.getReason() == null ? e : e
+                        .getReason());
+            }
             if (!(result instanceof Boolean)) {
                 return false;
             }

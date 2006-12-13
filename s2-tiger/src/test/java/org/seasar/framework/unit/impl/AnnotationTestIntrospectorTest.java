@@ -146,7 +146,7 @@ public class AnnotationTestIntrospectorTest extends TestCase {
     public void testGetPrerequisiteExpressions2() {
         introspector.setEnablePrerequisite(false);
         Class<?> clazz = Bbb.class;
-        Method method = ReflectionUtil.getDeclaredMethod(Ccc.class, "aaa");
+        Method method = ReflectionUtil.getDeclaredMethod(clazz, "aaa");
         List<String> expressions = introspector.getPrerequisiteExpressions(
                 clazz, method);
         assertEquals(1, expressions.size());

@@ -49,6 +49,7 @@ import org.seasar.framework.unit.annotation.TxBehavior;
 import org.seasar.framework.unit.annotation.TxBehaviorType;
 import org.seasar.framework.unit.annotation.WarmDeploy;
 import org.seasar.framework.util.TransactionManagerUtil;
+import org.seasar.framework.util.tiger.ReflectionUtil;
 
 public class Seasar2Test extends TestCase {
 
@@ -705,6 +706,52 @@ public class Seasar2Test extends TestCase {
         printFailures(result.getFailures());
         assertTrue(result.wasSuccessful());
         assertEquals(0, count);
+    }
+
+    @RunWith(Seasar2.class)
+    public static class PrerequisiteTest4 {
+
+        @Prerequisite("throwException()")
+        public void aaa() {
+            count++;
+        }
+
+        @SuppressWarnings("unused")
+        private void throwException() {
+            throw new IllegalStateException();
+        }
+    }
+
+    public void testPrerequisite4() throws Exception {
+        JUnitCore core = new JUnitCore();
+        Result result = core.run(PrerequisiteTest4.class);
+        printFailures(result.getFailures());
+        assertTrue(result.wasSuccessful());
+        assertEquals(0, count);
+    }
+
+    @RunWith(Seasar2.class)
+    public static class PrerequisiteTest5 {
+
+        @Prerequisite("bbb(#method)")
+        public void aaa() {
+        }
+
+        @SuppressWarnings("unused")
+        public boolean bbb(Method m) {
+            Method m2 = ReflectionUtil
+                    .getMethod(PrerequisiteTest5.class, "aaa");
+            log += m.equals(m2);
+            return false;
+        }
+    }
+
+    public void testPrerequisite5() throws Exception {
+        JUnitCore core = new JUnitCore();
+        Result result = core.run(PrerequisiteTest5.class);
+        printFailures(result.getFailures());
+        assertTrue(result.wasSuccessful());
+        assertEquals("true", log);
     }
 
     @RunWith(Seasar2.class)
