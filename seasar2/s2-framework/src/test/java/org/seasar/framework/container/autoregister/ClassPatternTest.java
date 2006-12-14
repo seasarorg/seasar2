@@ -48,6 +48,8 @@ public class ClassPatternTest extends TestCase {
         assertTrue(cp.isAppliedPackageName("org.seasar"));
         assertTrue(cp.isAppliedPackageName("org.seasar.framework"));
         assertFalse(cp.isAppliedPackageName("org"));
+        assertFalse(cp.isAppliedPackageName("org.seasar2"));
+        assertFalse(cp.isAppliedPackageName(null));
 
         cp.setPackageName(null);
         assertTrue(cp.isAppliedPackageName(null));

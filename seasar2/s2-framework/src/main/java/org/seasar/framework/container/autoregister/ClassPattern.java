@@ -68,11 +68,16 @@ public class ClassPattern {
 
     public boolean isAppliedPackageName(String pName) {
         if (!StringUtil.isEmpty(pName) && !StringUtil.isEmpty(packageName)) {
-            return pName.startsWith(packageName);
+            return appendDelimiter(pName).startsWith(
+                    appendDelimiter(packageName));
         }
         if (StringUtil.isEmpty(pName) && StringUtil.isEmpty(packageName)) {
             return true;
         }
         return false;
+    }
+
+    protected static String appendDelimiter(final String name) {
+        return name.endsWith(".") ? name : name + ".";
     }
 }
