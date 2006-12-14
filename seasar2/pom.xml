@@ -211,7 +211,7 @@
   <scm>
     <connection>scm:svn:https://www.seasar.org/svn/s2container/trunk/seasar2/</connection>
     <developerConnection>scm:svn:https://www.seasar.org/svn/s2container/trunk/seasar2/</developerConnection>
-    <url>http://www.seasar.org/websvn/listing.php?repname=s2container</url>
+    <url>http://svn.seasar.org/browse/?root=s2container</url>
   </scm>
   <organization>
     <name>The Seasar Foundation</name>
@@ -339,7 +339,7 @@
       <uniqueVersion>false</uniqueVersion>
       <id>maven.seasar.org</id>
       <name>The Seasar Foundation Maven2 Repository</name>
-      <url>scp://www.seasar.org/home/groups/s2container/maven/maven2</url>
+      <url>scp://maven.seasar.org/home/groups/s2container/maven/maven2</url>
     </repository>
   </distributionManagement>
 </project>

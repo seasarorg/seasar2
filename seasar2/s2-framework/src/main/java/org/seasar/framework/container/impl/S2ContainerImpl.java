@@ -25,6 +25,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import javassist.runtime.Desc;
+import javassist.util.proxy.ProxyFactory;
+import javassist.util.proxy.ProxyFactory.ClassLoaderProvider;
 import ognl.OgnlRuntime;
 
 import org.seasar.framework.container.ComponentDef;
@@ -88,6 +90,11 @@ public class S2ContainerImpl implements S2Container, ContainerConstants {
         OgnlRuntime.setPropertyAccessor(S2Container.class,
                 new S2ContainerPropertyAccessor());
         Desc.useContextClassLoader = true;
+        ProxyFactory.classLoaderProvider = new ClassLoaderProvider() {
+            public ClassLoader get(ProxyFactory proxyFactory) {
+                return Thread.currentThread().getContextClassLoader();
+            }
+        };
     }
 
     public S2ContainerImpl() {
