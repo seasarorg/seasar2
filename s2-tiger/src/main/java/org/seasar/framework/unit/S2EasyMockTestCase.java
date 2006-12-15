@@ -55,9 +55,9 @@ public abstract class S2EasyMockTestCase extends S2TestCase {
     }
 
     @Override
-    protected void bindFields() throws Throwable {
+    protected void setUpForEachTestMethod() throws Throwable {
+        super.setUpForEachTestMethod();
         bindMockFields();
-        super.bindFields();
     }
 
     protected void bindMockFields() throws Throwable {
@@ -92,6 +92,9 @@ public abstract class S2EasyMockTestCase extends S2TestCase {
         }
         FieldUtil.set(field, this, mock);
         mockFields.add(field);
+        if (annotation.register()) {
+            register(mock, field.getName());
+        }
     }
 
     @Override
@@ -122,9 +125,9 @@ public abstract class S2EasyMockTestCase extends S2TestCase {
     }
 
     @Override
-    protected void unbindFields() {
-        super.unbindFields();
+    protected void tearDownForEachTestMethod() throws Throwable {
         unbindMockFields();
+        super.tearDownForEachTestMethod();
     }
 
     protected void unbindMockFields() {

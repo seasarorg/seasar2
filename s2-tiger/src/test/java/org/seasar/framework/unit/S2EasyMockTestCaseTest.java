@@ -19,6 +19,8 @@ import static org.easymock.EasyMock.expect;
 
 import java.util.Map;
 
+import javax.sql.DataSource;
+
 import org.seasar.framework.unit.annotation.EasyMock;
 import org.seasar.framework.unit.annotation.EasyMockType;
 
@@ -32,6 +34,9 @@ public class S2EasyMockTestCaseTest extends S2EasyMockTestCase {
 
     @EasyMock(EasyMockType.STRICT)
     private Map<String, String> map;
+
+    @EasyMock(register = true)
+    private DataSource dataSource;
 
     public void testRunnable() {
         runnable.run();
@@ -51,6 +56,13 @@ public class S2EasyMockTestCaseTest extends S2EasyMockTestCase {
         expect(map.put("a", "A")).andReturn(null);
         expect(map.put("b", "B")).andReturn(null);
         expect(map.size()).andReturn(2);
+    }
+
+    public void testRegister() throws Exception {
+        assertSame(dataSource, getComponent("dataSource"));
+        assertSame(dataSource, getComponent(DataSource.class));
+        assertFalse(getContainer().hasComponentDef(Runnable.class));
+        assertFalse(getContainer().hasComponentDef(Map.class));
     }
 
     public void testOldStyle() throws Exception {

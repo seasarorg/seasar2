@@ -31,4 +31,6 @@ public @interface EasyMock {
 
     EasyMockType value() default EasyMockType.DEFAULT;
 
+    boolean register() default false;
+
 }
