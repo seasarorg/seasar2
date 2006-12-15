@@ -69,7 +69,7 @@ public class BasicUpdateHandler extends BasicHandler implements UpdateHandler {
         }
     }
 
-    protected int execute(Connection connection, Object[] args, Class[] argTypes) {
+    public int execute(Connection connection, Object[] args, Class[] argTypes) {
         PreparedStatement ps = prepareStatement(connection);
         try {
             bindArgs(ps, args, argTypes);
