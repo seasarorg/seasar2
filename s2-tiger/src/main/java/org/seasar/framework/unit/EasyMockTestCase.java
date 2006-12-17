@@ -15,31 +15,21 @@
  */
 package org.seasar.framework.unit;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
 
 import junit.framework.TestCase;
 
-import org.easymock.EasyMock;
 import org.seasar.framework.exception.NoSuchMethodRuntimeException;
-import org.seasar.framework.unit.annotation.EasyMockType;
 import org.seasar.framework.util.ClassUtil;
-import org.seasar.framework.util.FieldUtil;
 import org.seasar.framework.util.MethodUtil;
 import org.seasar.framework.util.StringUtil;
-import org.seasar.framework.util.tiger.CollectionsUtil;
 
 /**
  * @author koichik
  */
 public abstract class EasyMockTestCase extends TestCase {
     // instance fields
-    List<Object> mocks = new ArrayList<Object>();
-
-    Set<Field> mockFields = CollectionsUtil.newLinkedHashSet();
+    protected EasyMockSupport easyMockSupport = new EasyMockSupport();
 
     public EasyMockTestCase() {
     }
@@ -50,7 +40,7 @@ public abstract class EasyMockTestCase extends TestCase {
 
     @Override
     public void runBare() throws Throwable {
-        mocks.clear();
+        easyMockSupport.clear();
         setUp();
         try {
             bindFields();
@@ -65,52 +55,18 @@ public abstract class EasyMockTestCase extends TestCase {
     }
 
     protected void bindFields() throws Throwable {
-        bindMockFields();
-    }
-
-    protected void bindMockFields() throws Throwable {
-        mockFields.clear();
-        for (Class<?> clazz = getClass(); clazz != S2EasyMockTestCase.class
-                && clazz != null; clazz = clazz.getSuperclass()) {
-            for (final Field field : clazz.getDeclaredFields()) {
-                bindMockField(field);
-            }
-        }
-    }
-
-    protected void bindMockField(final Field field) throws Throwable {
-        final org.seasar.framework.unit.annotation.EasyMock annotation = field
-                .getAnnotation(org.seasar.framework.unit.annotation.EasyMock.class);
-        if (annotation == null) {
-            return;
-        }
-        field.setAccessible(true);
-        if (FieldUtil.get(field, this) != null) {
-            return;
-        }
-        final Class<?> clazz = field.getType();
-        final EasyMockType mockType = annotation.value();
-        final Object mock;
-        if (mockType == EasyMockType.STRICT) {
-            mock = createStrictMock(clazz);
-        } else if (mockType == EasyMockType.NICE) {
-            mock = createNiceMock(clazz);
-        } else {
-            mock = createMock(clazz);
-        }
-        FieldUtil.set(field, this, mock);
-        mockFields.add(field);
+        easyMockSupport.bindMockFields(this, null);
     }
 
     protected void doRunTest() throws Throwable {
         final boolean recorded = doRecord();
         if (recorded) {
-            replay();
+            easyMockSupport.replay();
         }
         runTest();
         if (recorded) {
-            verify();
-            reset();
+            easyMockSupport.verify();
+            easyMockSupport.reset();
         }
     }
 
@@ -133,65 +89,28 @@ public abstract class EasyMockTestCase extends TestCase {
     }
 
     protected void unbindFields() {
-        unbindMockFields();
-    }
-
-    protected void unbindMockFields() {
-        for (final Field field : mockFields) {
-            try {
-                field.set(this, null);
-            } catch (final IllegalArgumentException e) {
-                System.err.println(e);
-            } catch (final IllegalAccessException e) {
-                System.err.println(e);
-            }
-        }
-        mockFields.clear();
+        easyMockSupport.unbindMockFields(this);
     }
 
     protected <T> T createMock(final Class<T> clazz) {
-        final T mock = EasyMock.createMock(clazz);
-        mocks.add(mock);
-        return mock;
+        return easyMockSupport.createMock(clazz);
     }
 
     protected <T> T createNiceMock(final Class<T> clazz) {
-        final T mock = EasyMock.createNiceMock(clazz);
-        mocks.add(mock);
-        return mock;
+        return easyMockSupport.createNiceMock(clazz);
     }
 
     protected <T> T createStrictMock(final Class<T> clazz) {
-        final T mock = EasyMock.createStrictMock(clazz);
-        mocks.add(mock);
-        return mock;
-    }
-
-    protected void replay() {
-        for (final Object mock : mocks) {
-            EasyMock.replay(mock);
-        }
-    }
-
-    protected void verify() {
-        for (final Object mock : mocks) {
-            EasyMock.verify(mock);
-        }
-    }
-
-    protected void reset() {
-        for (final Object mock : mocks) {
-            EasyMock.reset(mock);
-        }
+        return easyMockSupport.createStrictMock(clazz);
     }
 
     protected abstract class Subsequence {
         public void doTest() throws Exception {
             record();
-            EasyMockTestCase.this.replay();
+            EasyMockTestCase.this.easyMockSupport.replay();
             replay();
-            EasyMockTestCase.this.verify();
-            EasyMockTestCase.this.reset();
+            EasyMockTestCase.this.easyMockSupport.verify();
+            EasyMockTestCase.this.easyMockSupport.reset();
         }
 
         protected void record() throws Exception {
