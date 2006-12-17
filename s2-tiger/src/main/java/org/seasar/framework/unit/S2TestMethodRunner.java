@@ -82,6 +82,8 @@ public class S2TestMethodRunner {
 
     protected InternalTestContext testContext;
 
+    protected Map<String, Object> expressionContext;
+
     private List<Field> boundFields = CollectionsUtil.newArrayList();
 
     public S2TestMethodRunner(final Object test, final Method method,
@@ -93,6 +95,9 @@ public class S2TestMethodRunner {
         this.notifier = notifier;
         this.description = description;
         this.introspector = introspector;
+        this.expressionContext = CollectionsUtil.newHashMap();
+        this.expressionContext.put("ENV", Env.getValue());
+        this.expressionContext.put("method", method);
     }
 
     protected void addFailure(final Throwable e) {
@@ -123,12 +128,9 @@ public class S2TestMethodRunner {
                 .getPrerequisiteExpressions(testClass, method);
         for (final String expression : expressions) {
             final Object exp = OgnlUtil.parseExpression(expression);
-            final Map<String, Object> ctx = CollectionsUtil.newHashMap();
-            ctx.put("ENV", Env.getValue());
-            ctx.put("method", method);
             Object result = null;
             try {
-                result = Ognl.getValue(exp, ctx, test);
+                result = Ognl.getValue(exp, expressionContext, test);
             } catch (OgnlException e) {
                 if (e instanceof MethodFailedException) {
                     System.err.println(e);
@@ -217,6 +219,7 @@ public class S2TestMethodRunner {
         SingletonS2ContainerFactory.setContainer(container);
         testContext = InternalTestContext.class.cast(container
                 .getComponent(InternalTestContext.class));
+        testContext.setTest(test);
         testContext.setTestClass(testClass);
         testContext.setTestMethod(method);
 

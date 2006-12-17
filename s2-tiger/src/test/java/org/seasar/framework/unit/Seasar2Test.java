@@ -26,6 +26,7 @@ import javax.transaction.TransactionManager;
 
 import junit.framework.TestCase;
 
+import org.aopalliance.intercept.MethodInvocation;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -41,9 +42,12 @@ import org.junit.runner.Runner;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.Parameterized.Parameters;
+import org.seasar.framework.aop.interceptors.AbstractInterceptor;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.impl.S2ContainerBehavior;
 import org.seasar.framework.container.warmdeploy.WarmdeployBehavior;
+import org.seasar.framework.unit.annotation.Mock;
+import org.seasar.framework.unit.annotation.Mocks;
 import org.seasar.framework.unit.annotation.Prerequisite;
 import org.seasar.framework.unit.annotation.TxBehavior;
 import org.seasar.framework.unit.annotation.TxBehaviorType;
@@ -817,6 +821,85 @@ public class Seasar2Test extends TestCase {
     }
 
     @RunWith(Seasar2.class)
+    public static class MockTest {
+
+        Hello hello;
+
+        Hello2 hello2;
+
+        @Mock(target = Hello.class, returnValue = "'aa'")
+        public void targetIsInterface() {
+            log += hello.greeting();
+        }
+
+        @Mock(target = HelloImpl.class, returnValue = "'bb'")
+        public void targetIsClass() {
+            log += hello.greeting();
+        }
+
+        @Mock(target = Hello.class, targetName = "hoge", returnValue = "'cc'")
+        public void usesTargetName() {
+            log += hello.greeting();
+        }
+
+        @Mock(target = Hello.class, pointcut = "e.*", returnValue = "'dd'")
+        public void usesPointcut() {
+            log += hello.greeting() + "-";
+            log += hello.echo("hoge");
+        }
+
+        @Mock(target = Hello2.class, targetName = "foo", returnValue = "'ee'")
+        public void overridesOtherInterceptor() {
+            log += hello2.greeting();
+        }
+
+        @Mocks( {
+                @Mock(target = Hello.class, pointcut = "greeting", returnValue = "'ff'"),
+                @Mock(target = Hello.class, pointcut = "echo", returnValue = "'gg'"),
+                @Mock(target = Hello2.class, returnValue = "'hh'") })
+        public void usesMultiMocks() {
+            log += hello.greeting();
+            log += hello.echo("hoge");
+            log += hello2.greeting();
+        }
+
+        @Mock(target = Hello.class, returnValue = "getValue()")
+        public void invokesMethod() {
+            log += hello.greeting();
+        }
+
+        public String getValue() {
+            return "ii";
+        }
+
+        @Mock(target = Hello.class, throwable = "new IllegalArgumentException()")
+        public void usesThrowable() {
+            try {
+                hello.echo("hoge");
+            } catch (IllegalArgumentException e) {
+                log += "jj";
+            }
+        }
+    }
+
+    public void testMock() throws Exception {
+        JUnitCore core = new JUnitCore();
+        Result result = core.run(MockTest.class);
+        printFailures(result.getFailures());
+        assertTrue(result.wasSuccessful());
+        assertTrue(log, log.contains("aa"));
+        assertTrue(log, log.contains("bb"));
+        assertTrue(log, log.contains("cc"));
+        assertTrue(log, log.contains("hello-dd"));
+        assertTrue(log, log.contains("ee"));
+        assertTrue(log, log.contains("ff"));
+        assertTrue(log, log.contains("gg"));
+        assertTrue(log, log.contains("hh"));
+        assertTrue(log, log.contains("ii"));
+        assertTrue(log, log.contains("jj"));
+    }
+
+    @RunWith(Seasar2.class)
     public static class CustomizeSeasar2Test {
 
         public void aaa() {
@@ -969,6 +1052,41 @@ public class Seasar2Test extends TestCase {
         @Override
         protected boolean isFulfilled() {
             return false;
+        }
+    }
+
+    public interface Hello {
+        public String greeting();
+
+        public String echo(String str);
+    }
+
+    public static class HelloImpl implements Hello {
+        public String greeting() {
+            return "hello";
+        }
+
+        public String echo(String str) {
+            return str;
+        }
+    }
+
+    public interface Hello2 {
+        public String greeting();
+    }
+
+    public static class Hello2Impl implements Hello2 {
+        public String greeting() {
+            return "hello";
+        }
+    }
+
+    public static class DummyInteceptor extends AbstractInterceptor {
+
+        static final long serialVersionUID = 0L;
+
+        public Object invoke(MethodInvocation arg0) throws Throwable {
+            throw new RuntimeException();
         }
     }
 
