@@ -16,14 +16,11 @@
 package org.seasar.framework.unit.impl;
 
 import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.Servlet;
 
 import org.seasar.extension.dataset.DataSet;
-import org.seasar.framework.aop.Pointcut;
 import org.seasar.framework.aop.interceptors.MockInterceptor;
 import org.seasar.framework.container.AspectDef;
 import org.seasar.framework.container.ComponentDef;
@@ -38,7 +35,6 @@ import org.seasar.framework.container.deployer.ExternalComponentDeployerProvider
 import org.seasar.framework.container.deployer.InstanceDefFactory;
 import org.seasar.framework.container.external.servlet.HttpServletExternalContext;
 import org.seasar.framework.container.external.servlet.HttpServletExternalContextComponentDefRegister;
-import org.seasar.framework.container.factory.AspectDefFactory;
 import org.seasar.framework.container.factory.S2ContainerFactory;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 import org.seasar.framework.container.factory.TigerAnnotationHandler;
@@ -55,14 +51,12 @@ import org.seasar.framework.mock.servlet.MockServletContext;
 import org.seasar.framework.mock.servlet.MockServletContextImpl;
 import org.seasar.framework.unit.ConfigFileIncluder;
 import org.seasar.framework.unit.ExpectedDataReader;
+import org.seasar.framework.unit.Expression;
 import org.seasar.framework.unit.InternalTestContext;
+import org.seasar.framework.unit.S2TestIntrospector;
 import org.seasar.framework.unit.TestDataPreparer;
-import org.seasar.framework.unit.annotation.Mock;
-import org.seasar.framework.unit.annotation.Mocks;
 import org.seasar.framework.util.ClassUtil;
-import org.seasar.framework.util.OgnlUtil;
 import org.seasar.framework.util.ResourceUtil;
-import org.seasar.framework.util.StringUtil;
 import org.seasar.framework.util.tiger.CollectionsUtil;
 
 /**
@@ -72,6 +66,9 @@ import org.seasar.framework.util.tiger.CollectionsUtil;
 public class InternalTestContextImpl implements InternalTestContext {
 
     protected final TigerAnnotationHandler handler = new TigerAnnotationHandler();
+
+    protected final List<MockInterceptor> mockInterceptors = CollectionsUtil
+            .newArrayList();
 
     protected S2Container container;
 
@@ -87,13 +84,13 @@ public class InternalTestContextImpl implements InternalTestContext {
 
     protected NamingConvention namingConvention;
 
-    protected Object test;
-
     protected Class<?> testClass;
 
     protected Method testMethod;
 
-    protected Map<String, Object> expressionContext;
+    protected Expression expression;
+
+    protected S2TestIntrospector introspector;
 
     protected boolean autoIncluding = true;
 
@@ -109,6 +106,32 @@ public class InternalTestContextImpl implements InternalTestContext {
     @Binding(bindingType = BindingType.MAY)
     public void setServletContext(MockServletContext servletContext) {
         this.servletContext = servletContext;
+    }
+
+    public void setAutoIncluding(final boolean autoIncluding) {
+        this.autoIncluding = autoIncluding;
+    }
+
+    public void setAutoPreparing(final boolean autoPreparing) {
+        this.autoPreparing = autoPreparing;
+    }
+
+    @Binding(bindingType = BindingType.NONE)
+    public void setExpression(final Expression expression) {
+        this.expression = expression;
+    }
+
+    @Binding(bindingType = BindingType.NONE)
+    public void setTestIntrospector(final S2TestIntrospector introspector) {
+        this.introspector = introspector;
+    }
+
+    public void setTestClass(final Class<?> testClass) {
+        this.testClass = testClass;
+    }
+
+    public void setTestMethod(final Method testMethod) {
+        this.testMethod = testMethod;
     }
 
     @InitMethod
@@ -160,8 +183,15 @@ public class InternalTestContextImpl implements InternalTestContext {
         }
         beforeContainerInit();
         container.init();
-        afterContainerInit();
         containerInitialized = true;
+        afterContainerInit();
+    }
+
+    protected void beforeContainerInit() {
+        introspector.createMockInterceptor(testMethod, expression, this);
+    }
+
+    protected void afterContainerInit() {
     }
 
     public void destroyContainer() {
@@ -205,14 +235,6 @@ public class InternalTestContextImpl implements InternalTestContext {
         container.register(component);
     }
 
-    public void setAutoIncluding(final boolean autoIncluding) {
-        this.autoIncluding = autoIncluding;
-    }
-
-    public void setAutoPreparing(final boolean autoPreparing) {
-        this.autoPreparing = autoPreparing;
-    }
-
     public String getTestClassPackagePath() {
         return testClass.getName().replace('.', '/')
                 .replaceFirst("/[^/]+$", "");
@@ -224,22 +246,6 @@ public class InternalTestContextImpl implements InternalTestContext {
 
     public String getTestMethodName() {
         return testMethod.getName();
-    }
-
-    public void setTest(final Object test) {
-        this.test = test;
-    }
-
-    public void setTestClass(final Class<?> testClass) {
-        this.testClass = testClass;
-    }
-
-    public void setTestMethod(final Method testMethod) {
-        this.testMethod = testMethod;
-    }
-
-    public void setExpressionContext(final Map<String, Object> expressionContext) {
-        this.expressionContext = expressionContext;
     }
 
     public void prepareTestData() {
@@ -260,6 +266,10 @@ public class InternalTestContextImpl implements InternalTestContext {
             }
         }
         return null;
+    }
+
+    public MockInterceptor getMockInterceptor(int index) {
+        return mockInterceptors.get(index);
     }
 
     @SuppressWarnings("unchecked")
@@ -288,57 +298,29 @@ public class InternalTestContextImpl implements InternalTestContext {
         return container.getComponentDef(componentKey);
     }
 
+    public void addMockInterceptor(final MockInterceptor mockInterceptor) {
+        mockInterceptors.add(mockInterceptor);
+    }
+
+    public int getMockInterceptorSize() {
+        return mockInterceptors.size();
+    }
+
+    public void addAspecDef(final Object componentKey, final AspectDef aspectDef) {
+        assertContainerNotInitialized();
+        container.getComponentDef(componentKey).addAspectDef(0, aspectDef);
+    }
+
     protected void assertContainerInitialized() {
+        if (!containerInitialized) {
+            throw new IllegalStateException();
+        }
+    }
+
+    protected void assertContainerNotInitialized() {
         if (containerInitialized) {
-            return;
+            throw new IllegalStateException();
         }
-        throw new IllegalStateException();
-    }
-
-    protected void beforeContainerInit() {
-        for (final Mock mock : getMocks()) {
-            final MockInterceptor mi = new MockInterceptor();
-            if (!StringUtil.isEmpty(mock.returnValue())) {
-                final Object exp = OgnlUtil.parseExpression(mock.returnValue());
-                final Object returnValue = OgnlUtil.getValue(exp,
-                        expressionContext, test);
-                mi.setReturnValue(returnValue);
-            }
-            if (!StringUtil.isEmpty(mock.throwable())) {
-                final Object exp = OgnlUtil.parseExpression(mock.throwable());
-                final Object throwable = OgnlUtil.getValue(exp,
-                        expressionContext, test);
-                mi.setThrowable(Throwable.class.cast(throwable));
-            }
-            Pointcut pc = null;
-            if (StringUtil.isEmpty(mock.pointcut())) {
-                pc = AspectDefFactory.createPointcut(mock.target());
-            } else {
-                pc = AspectDefFactory.createPointcut(mock.pointcut());
-            }
-            final AspectDef aspectDef = AspectDefFactory
-                    .createAspectDef(mi, pc);
-            ComponentDef componentDef = null;
-            if (!StringUtil.isEmpty(mock.targetName())) {
-                componentDef = container.getComponentDef(mock.targetName());
-            }
-            componentDef = container.getComponentDef(mock.target());
-            componentDef.addAspectDef(0, aspectDef);
-        }
-    }
-
-    protected void afterContainerInit() {
-    }
-
-    protected List<Mock> getMocks() {
-        final List<Mock> mocks = CollectionsUtil.newArrayList();
-        if (testMethod.isAnnotationPresent(Mock.class)) {
-            mocks.add(testMethod.getAnnotation(Mock.class));
-        } else if (testMethod.isAnnotationPresent(Mocks.class)) {
-            mocks.addAll(Arrays.asList(testMethod.getAnnotation(Mocks.class)
-                    .value()));
-        }
-        return mocks;
     }
 
 }

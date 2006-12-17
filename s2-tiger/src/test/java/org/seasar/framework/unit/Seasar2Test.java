@@ -43,6 +43,7 @@ import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.Parameterized.Parameters;
 import org.seasar.framework.aop.interceptors.AbstractInterceptor;
+import org.seasar.framework.aop.interceptors.MockInterceptor;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.impl.S2ContainerBehavior;
 import org.seasar.framework.container.warmdeploy.WarmdeployBehavior;
@@ -823,6 +824,8 @@ public class Seasar2Test extends TestCase {
     @RunWith(Seasar2.class)
     public static class MockTest {
 
+        TestContext ctx;
+
         Hello hello;
 
         Hello2 hello2;
@@ -880,6 +883,21 @@ public class Seasar2Test extends TestCase {
                 log += "jj";
             }
         }
+
+        @Mocks( { @Mock(target = Hello.class, pointcut = "echo"),
+                @Mock(target = Hello.class, pointcut = "geeting") })
+        public void getMockInterceptor() {
+            hello.echo("hoge");
+            MockInterceptor mi = ctx.getMockInterceptor(0);
+            log += mi.getArgs("echo")[0] + "-";
+            if (mi.isInvoked("echo")) {
+                log += "kk";
+            }
+            mi = ctx.getMockInterceptor(1);
+            if (mi.isInvoked("geeting")) {
+                log += "ll";
+            }
+        }
     }
 
     public void testMock() throws Exception {
@@ -897,6 +915,8 @@ public class Seasar2Test extends TestCase {
         assertTrue(log, log.contains("hh"));
         assertTrue(log, log.contains("ii"));
         assertTrue(log, log.contains("jj"));
+        assertTrue(log, log.contains("hoge-kk"));
+        assertTrue(log, log.contains("ll"));
     }
 
     @RunWith(Seasar2.class)

@@ -16,6 +16,7 @@
 package org.seasar.framework.unit;
 
 import org.seasar.extension.dataset.DataSet;
+import org.seasar.framework.aop.interceptors.MockInterceptor;
 import org.seasar.framework.container.ComponentDef;
 
 /**
@@ -47,4 +48,8 @@ public interface TestContext {
     String getTestClassShortName();
 
     String getTestMethodName();
+
+    MockInterceptor getMockInterceptor(int index);
+    
+    int getMockInterceptorSize();
 }

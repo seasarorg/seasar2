@@ -41,6 +41,9 @@ public interface S2TestIntrospector {
 
     boolean needsWarmDeploy(Class<?> testClass, Method method);
 
+    void createMockInterceptor(Method testMethod, Expression expression,
+            InternalTestContext context);
+
     List<Method> getBeforeClassMethods(Class<?> testClass);
 
     List<Method> getAfterClassMethods(Class<?> testClass);

@@ -31,10 +31,6 @@ import java.util.concurrent.TimeoutException;
 import javax.ejb.EJB;
 import javax.transaction.TransactionManager;
 
-import ognl.MethodFailedException;
-import ognl.Ognl;
-import ognl.OgnlException;
-
 import org.junit.runner.Description;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
@@ -44,9 +40,8 @@ import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 import org.seasar.framework.container.impl.S2ContainerBehavior;
 import org.seasar.framework.env.Env;
 import org.seasar.framework.exception.NoSuchMethodRuntimeException;
-import org.seasar.framework.exception.OgnlRuntimeException;
+import org.seasar.framework.unit.impl.OgnlExpression;
 import org.seasar.framework.util.DisposableUtil;
-import org.seasar.framework.util.OgnlUtil;
 import org.seasar.framework.util.ResourceUtil;
 import org.seasar.framework.util.StringUtil;
 import org.seasar.framework.util.tiger.CollectionsUtil;
@@ -82,7 +77,7 @@ public class S2TestMethodRunner {
 
     protected InternalTestContext testContext;
 
-    protected Map<String, Object> expressionContext;
+    protected Expression expression;
 
     private List<Field> boundFields = CollectionsUtil.newArrayList();
 
@@ -95,9 +90,10 @@ public class S2TestMethodRunner {
         this.notifier = notifier;
         this.description = description;
         this.introspector = introspector;
-        this.expressionContext = CollectionsUtil.newHashMap();
-        this.expressionContext.put("ENV", Env.getValue());
-        this.expressionContext.put("method", method);
+        final Map<String, Object> ctx = CollectionsUtil.newHashMap();
+        ctx.put("ENV", Env.getValue());
+        ctx.put("method", method);
+        this.expression = new OgnlExpression(test, ctx);
     }
 
     protected void addFailure(final Throwable e) {
@@ -126,18 +122,14 @@ public class S2TestMethodRunner {
     protected boolean isFulfilled() {
         final List<String> expressions = introspector
                 .getPrerequisiteExpressions(testClass, method);
-        for (final String expression : expressions) {
-            final Object exp = OgnlUtil.parseExpression(expression);
-            Object result = null;
-            try {
-                result = Ognl.getValue(exp, expressionContext, test);
-            } catch (OgnlException e) {
-                if (e instanceof MethodFailedException) {
-                    System.err.println(e);
-                    return false;
-                }
-                throw new OgnlRuntimeException(e.getReason() == null ? e : e
-                        .getReason());
+        for (final String exp : expressions) {
+            final Object result = expression.evaluateSuppressException(exp);
+            if (expression.isMethodFailed()) {
+                System.err.println(expression.getException());
+                return false;
+            }
+            if (expression.hasException()) {
+                expression.throwExceptionIfNecessary();
             }
             if (!(result instanceof Boolean)) {
                 return false;
@@ -219,9 +211,10 @@ public class S2TestMethodRunner {
         SingletonS2ContainerFactory.setContainer(container);
         testContext = InternalTestContext.class.cast(container
                 .getComponent(InternalTestContext.class));
-        testContext.setTest(test);
         testContext.setTestClass(testClass);
         testContext.setTestMethod(method);
+        testContext.setExpression(expression);
+        testContext.setTestIntrospector(introspector);
 
         for (Class<?> clazz = testClass; clazz != Object.class; clazz = clazz
                 .getSuperclass()) {

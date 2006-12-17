@@ -16,8 +16,9 @@
 package org.seasar.framework.unit;
 
 import java.lang.reflect.Method;
-import java.util.Map;
 
+import org.seasar.framework.aop.interceptors.MockInterceptor;
+import org.seasar.framework.container.AspectDef;
 import org.seasar.framework.container.ComponentDef;
 
 /**
@@ -26,13 +27,13 @@ import org.seasar.framework.container.ComponentDef;
  */
 public interface InternalTestContext extends TestContext {
 
-    void setTest(Object test);
-
     void setTestClass(Class<?> testClass);
 
     void setTestMethod(Method testMethod);
 
-    void setExpressionContext(Map<String, Object> expressionContext);
+    void setExpression(Expression expressionContext);
+
+    void setTestIntrospector(S2TestIntrospector introspector);
 
     void initContainer();
 
@@ -50,4 +51,7 @@ public interface InternalTestContext extends TestContext {
 
     ComponentDef getComponentDef(final Object componentKey);
 
+    void addMockInterceptor(MockInterceptor mockInterceptor);
+
+    void addAspecDef(Object componentKey, AspectDef aspectDef);
 }
