@@ -15,8 +15,20 @@
  */
 package org.seasar.framework.container.hotdeploy;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.Map;
+
+import org.seasar.framework.beans.BeanDesc;
+import org.seasar.framework.beans.PropertyDesc;
+import org.seasar.framework.beans.factory.BeanDescFactory;
 import org.seasar.framework.container.impl.S2ContainerBehavior;
 import org.seasar.framework.container.impl.S2ContainerBehavior.Provider;
+import org.seasar.framework.util.ClassUtil;
 
 /**
  * @author higa
@@ -44,4 +56,102 @@ public class HotdeployUtil {
         }
     }
 
+    public static Object rebuildValue(Object value) {
+        if (isHotdeploy()) {
+            return rebuildValueInternal(value);
+        }
+        return value;
+    }
+
+    protected static Object rebuildValueInternal(Object value) {
+        if (value == null) {
+            return null;
+        }
+        Class valueClass = value.getClass();
+        if (isSimpleValueType(valueClass)) {
+            return value;
+        }
+        if (valueClass.isArray()) {
+            return rebuildArray((Object[]) value);
+        }
+        if (valueClass == ArrayList.class) {
+            return rebuildArrayList((ArrayList) value);
+        }
+        if (Collection.class.isAssignableFrom(valueClass)) {
+            return rebuildCollection((Collection) value);
+        }
+        if (Map.class.isAssignableFrom(valueClass)) {
+            return rebuildMap((Map) value);
+        }
+        return rebuildBean(value);
+    }
+
+    protected static Object[] rebuildArray(Object[] value) {
+        Object[] array = (Object[]) Array.newInstance(ClassUtil.forName(value
+                .getClass().getComponentType().getName()), value.length);
+        for (int i = 0; i < value.length; ++i) {
+            array[i] = rebuildValueInternal(value[i]);
+        }
+        return array;
+    }
+
+    protected static ArrayList rebuildArrayList(ArrayList value) {
+        ArrayList arrayList = new ArrayList(value.size());
+        for (int i = 0; i < value.size(); ++i) {
+            arrayList.add(rebuildValueInternal(value.get(i)));
+        }
+        return arrayList;
+    }
+
+    protected static Collection rebuildCollection(Collection value) {
+        Collection collection = (Collection) ClassUtil.newInstance(value
+                .getClass());
+        for (Iterator i = value.iterator(); i.hasNext();) {
+            collection.add(rebuildValueInternal(i.next()));
+        }
+        return collection;
+    }
+
+    protected static Map rebuildMap(Map value) {
+        Map map = (Map) ClassUtil.newInstance(value.getClass());
+        for (Iterator i = value.entrySet().iterator(); i.hasNext();) {
+            Map.Entry entry = (Map.Entry) i.next();
+            map.put(rebuildValueInternal(entry.getKey()),
+                    rebuildValueInternal(entry.getValue()));
+        }
+        return map;
+    }
+
+    protected static Object rebuildBean(Object value) {
+        Object bean = ClassUtil.newInstance(value.getClass().getName());
+        BeanDesc srcBeanDesc = BeanDescFactory.getBeanDesc(value.getClass());
+        BeanDesc destBeanDesc = BeanDescFactory.getBeanDesc(bean.getClass());
+
+        int propertyDescSize = srcBeanDesc.getPropertyDescSize();
+        for (int i = 0; i < propertyDescSize; i++) {
+            PropertyDesc srcPropertyDesc = srcBeanDesc.getPropertyDesc(i);
+            if (!srcPropertyDesc.hasReadMethod()) {
+                continue;
+            }
+            String propertyName = srcPropertyDesc.getPropertyName();
+            if (!destBeanDesc.hasPropertyDesc(propertyName)) {
+                continue;
+            }
+            PropertyDesc destPropertyDesc = destBeanDesc
+                    .getPropertyDesc(propertyName);
+            if (!destPropertyDesc.hasWriteMethod()) {
+                continue;
+            }
+            destPropertyDesc.setValue(bean,
+                    rebuildValueInternal(srcPropertyDesc.getValue(value)));
+        }
+        return bean;
+    }
+
+    public static boolean isSimpleValueType(Class type) {
+        return type == String.class || type == Boolean.class
+                || Number.class.isAssignableFrom(type)
+                || Date.class.isAssignableFrom(type)
+                || Calendar.class.isAssignableFrom(type);
+    }
 }

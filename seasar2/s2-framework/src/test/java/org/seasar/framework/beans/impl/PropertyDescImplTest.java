@@ -39,7 +39,15 @@ public class PropertyDescImplTest extends TestCase {
         BeanDesc beanDesc = new BeanDescImpl(MyBean.class);
         PropertyDesc propDesc = beanDesc.getPropertyDesc("fff");
         propDesc.setValue(myBean, new BigDecimal(2));
-        assertEquals("1", 2, myBean.getFff());
+        assertEquals(2, myBean.getFff());
+    }
+
+    public void testSetValue_null() throws Exception {
+        MyBean myBean = new MyBean();
+        BeanDesc beanDesc = new BeanDescImpl(MyBean.class);
+        PropertyDesc propDesc = beanDesc.getPropertyDesc("fff");
+        propDesc.setValue(myBean, null);
+        assertEquals(0, myBean.getFff());
     }
 
     public void testSetIllegalValue() throws Exception {
