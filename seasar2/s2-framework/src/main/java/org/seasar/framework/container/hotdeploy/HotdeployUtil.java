@@ -72,7 +72,7 @@ public class HotdeployUtil {
             return value;
         }
         if (valueClass.isArray()) {
-            return rebuildArray((Object[]) value);
+            return rebuildArray(value);
         }
         if (valueClass == ArrayList.class) {
             return rebuildArrayList((ArrayList) value);
@@ -86,11 +86,15 @@ public class HotdeployUtil {
         return rebuildBean(value);
     }
 
-    protected static Object[] rebuildArray(Object[] value) {
-        Object[] array = (Object[]) Array.newInstance(ClassUtil.forName(value
-                .getClass().getComponentType().getName()), value.length);
-        for (int i = 0; i < value.length; ++i) {
-            array[i] = rebuildValueInternal(value[i]);
+    protected static Object rebuildArray(Object value) {
+        Class clazz = value.getClass().getComponentType();
+        if (!clazz.isPrimitive()) {
+            clazz = ClassUtil.forName(clazz.getName());
+        }
+        int size = Array.getLength(value);
+        Object array = Array.newInstance(clazz, size);
+        for (int i = 0; i < size; ++i) {
+            Array.set(array, i, rebuildValueInternal(Array.get(value, i)));
         }
         return array;
     }

@@ -51,6 +51,14 @@ public class HotdeployUtilTest extends S2FrameworkTestCase {
         assertEquals("bbb", array[1]);
     }
 
+    public void testRebuildValue_array_primitive() throws Exception {
+        int[] array = (int[]) HotdeployUtil.rebuildValueInternal(new int[] { 1,
+                2 });
+        assertEquals(2, array.length);
+        assertEquals(1, array[0]);
+        assertEquals(2, array[1]);
+    }
+
     public void testRebuildValue_arrayList() throws Exception {
         ArrayList src = new ArrayList();
         src.add("aaa");
