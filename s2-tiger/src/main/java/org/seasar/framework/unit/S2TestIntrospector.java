@@ -24,7 +24,7 @@ import java.util.List;
  */
 public interface S2TestIntrospector {
 
-    List<Method> getTestMethods(Class<?> testClass);
+    List<Method> getTestMethods(Class<?> clazz);
 
     boolean isIgnored(Method method);
 
@@ -32,29 +32,27 @@ public interface S2TestIntrospector {
 
     long getTimeout(Method method);
 
-    List<String> getPrerequisiteExpressions(Class<?> testClass,
-            Method testMethod);
+    boolean isFulfilled(Class<?> clazz, Method method, Object test);
 
-    boolean needsTransaction(Class<?> testClass, Method testMethod);
+    boolean needsTransaction(Class<?> clazz, Method method);
 
-    boolean requiresTransactionCommitment(Class<?> testClass, Method testMethod);
+    boolean requiresTransactionCommitment(Class<?> clazz, Method method);
 
-    boolean needsWarmDeploy(Class<?> testClass, Method method);
+    boolean needsWarmDeploy(Class<?> clazz, Method method);
 
-    void createMockInterceptor(Method testMethod, Expression expression,
-            InternalTestContext context);
+    void createMock(Method method, Object test, InternalTestContext context);
 
-    List<Method> getBeforeClassMethods(Class<?> testClass);
+    List<Method> getBeforeClassMethods(Class<?> clazz);
 
-    List<Method> getAfterClassMethods(Class<?> testClass);
+    List<Method> getAfterClassMethods(Class<?> clazz);
 
-    List<Method> getBeforeMethods(Class<?> testClass);
+    List<Method> getBeforeMethods(Class<?> clazz);
 
-    List<Method> getAfterMethods(Class<?> testClass);
+    List<Method> getAfterMethods(Class<?> clazz);
 
-    Method getEachBeforeMethod(Class<?> testClass, Method testMethod);
+    Method getEachBeforeMethod(Class<?> clazz, Method method);
 
-    Method getEachAfterMethod(Class<?> testClass, Method testMethod);
+    Method getEachAfterMethod(Class<?> clazz, Method method);
 
-    Method getEachRecordMethod(Class<?> testClass, Method testMethod);
+    Method getEachRecordMethod(Class<?> clazz, Method method);
 }

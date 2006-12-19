@@ -21,13 +21,11 @@ package org.seasar.framework.unit;
  */
 public interface Expression {
 
-    Object evaluate(String expression);
+    Object evaluate();
 
-    Object evaluateSuppressException(String expression);
+    Object evaluateNoException();
 
     boolean isMethodFailed();
-
-    boolean hasException();
 
     Exception getException();
 

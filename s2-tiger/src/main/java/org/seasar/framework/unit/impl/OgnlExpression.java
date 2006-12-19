@@ -31,25 +31,29 @@ import org.seasar.framework.util.OgnlUtil;
  */
 public class OgnlExpression implements Expression {
 
+    private final String source;
+
     private final Object test;
 
     private final Map<String, Object> context;
 
     private Exception exception;
 
-    public OgnlExpression(final Object test, final Map<String, Object> context) {
+    public OgnlExpression(final String source, final Object test,
+            final Map<String, Object> context) {
+        this.source = source;
         this.test = test;
         this.context = context;
     }
 
-    public Object evaluate(String expression) {
-        Object exp = OgnlUtil.parseExpression(expression);
+    public Object evaluate() {
+        Object exp = OgnlUtil.parseExpression(source);
         return OgnlUtil.getValue(exp, context, test);
     }
 
-    public Object evaluateSuppressException(String expression) {
+    public Object evaluateNoException() {
         try {
-            return Ognl.getValue(expression, context, test);
+            return Ognl.getValue(source, context, test);
         } catch (OgnlException e) {
             exception = e;
         }
@@ -64,10 +68,6 @@ public class OgnlExpression implements Expression {
         return exception;
     }
 
-    public boolean hasException() {
-        return exception != null;
-    }
-
     public void throwExceptionIfNecessary() {
         if (hasException()) {
             throw new OgnlRuntimeException(
@@ -76,4 +76,7 @@ public class OgnlExpression implements Expression {
         }
     }
 
+    protected boolean hasException() {
+        return exception != null;
+    }
 }

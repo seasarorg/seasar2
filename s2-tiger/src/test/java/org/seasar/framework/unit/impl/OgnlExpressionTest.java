@@ -31,25 +31,27 @@ public class OgnlExpressionTest extends S2TestCase {
         Map<String, Object> context = CollectionsUtil.newHashMap();
         context.put("method", ReflectionUtil.getMethod(this.getClass(),
                 getName()));
-        OgnlExpression expression = new OgnlExpression(this, context);
-        assertEquals("testContext", expression.evaluate("#method.name"));
+        OgnlExpression expression = new OgnlExpression("#method.name", this,
+                context);
+        assertEquals("testContext", expression.evaluate());
     }
 
     public void testEvaluate() throws Exception {
         Map<String, Object> context = CollectionsUtil.newHashMap();
         context.put("method", ReflectionUtil.getMethod(this.getClass(),
                 getName()));
-        OgnlExpression expression = new OgnlExpression(this, context);
-        assertEquals("hoge", expression.evaluate("hoge()"));
+        OgnlExpression expression = new OgnlExpression("hoge()", this, context);
+        expression.throwExceptionIfNecessary();
+        assertEquals("hoge", expression.evaluate());
     }
 
-    public void testEvaluateSuppressException() throws Exception {
+    public void testEvaluateNoException() throws Exception {
         Map<String, Object> context = CollectionsUtil.newHashMap();
         context.put("method", ReflectionUtil.getMethod(this.getClass(),
                 getName()));
-        OgnlExpression expression = new OgnlExpression(this, context);
-        expression.evaluateSuppressException("absentMethod()");
-        assertTrue(expression.hasException());
+        OgnlExpression expression = new OgnlExpression("absentMethod()", this,
+                context);
+        expression.evaluateNoException();
         try {
             expression.throwExceptionIfNecessary();
             fail();
@@ -61,9 +63,8 @@ public class OgnlExpressionTest extends S2TestCase {
         Map<String, Object> context = CollectionsUtil.newHashMap();
         context.put("method", ReflectionUtil.getMethod(this.getClass(),
                 getName()));
-        OgnlExpression expression = new OgnlExpression(this, context);
-        expression.evaluateSuppressException("foo()");
-        assertTrue(expression.hasException());
+        OgnlExpression expression = new OgnlExpression("foo()", this, context);
+        expression.evaluateNoException();
         assertTrue(expression.isMethodFailed());
     }
 

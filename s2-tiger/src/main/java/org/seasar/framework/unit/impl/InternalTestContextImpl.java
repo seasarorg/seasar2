@@ -41,6 +41,7 @@ import org.seasar.framework.container.factory.TigerAnnotationHandler;
 import org.seasar.framework.container.servlet.S2ContainerServlet;
 import org.seasar.framework.convention.NamingConvention;
 import org.seasar.framework.convention.impl.NamingConventionImpl;
+import org.seasar.framework.exception.EmptyRuntimeException;
 import org.seasar.framework.message.MessageResourceBundleFactory;
 import org.seasar.framework.mock.servlet.MockHttpServletRequest;
 import org.seasar.framework.mock.servlet.MockHttpServletResponse;
@@ -51,7 +52,6 @@ import org.seasar.framework.mock.servlet.MockServletContext;
 import org.seasar.framework.mock.servlet.MockServletContextImpl;
 import org.seasar.framework.unit.ConfigFileIncluder;
 import org.seasar.framework.unit.ExpectedDataReader;
-import org.seasar.framework.unit.Expression;
 import org.seasar.framework.unit.InternalTestContext;
 import org.seasar.framework.unit.S2TestIntrospector;
 import org.seasar.framework.unit.TestDataPreparer;
@@ -84,11 +84,11 @@ public class InternalTestContextImpl implements InternalTestContext {
 
     protected NamingConvention namingConvention;
 
+    protected Object test;
+
     protected Class<?> testClass;
 
     protected Method testMethod;
-
-    protected Expression expression;
 
     protected S2TestIntrospector introspector;
 
@@ -117,13 +117,12 @@ public class InternalTestContextImpl implements InternalTestContext {
     }
 
     @Binding(bindingType = BindingType.NONE)
-    public void setExpression(final Expression expression) {
-        this.expression = expression;
-    }
-
-    @Binding(bindingType = BindingType.NONE)
     public void setTestIntrospector(final S2TestIntrospector introspector) {
         this.introspector = introspector;
+    }
+
+    public void setTest(final Object test) {
+        this.test = test;
     }
 
     public void setTestClass(final Class<?> testClass) {
@@ -174,6 +173,18 @@ public class InternalTestContextImpl implements InternalTestContext {
     }
 
     public void initContainer() {
+        if (test == null) {
+            throw new EmptyRuntimeException("test");
+        }
+        if (testClass == null) {
+            throw new EmptyRuntimeException("testClass");
+        }
+        if (testMethod == null) {
+            throw new EmptyRuntimeException("testMethod");
+        }
+        if (introspector == null) {
+            throw new EmptyRuntimeException("introspector");
+        }
         if (autoIncluding) {
             if (container.hasComponentDef(ConfigFileIncluder.class)) {
                 final ConfigFileIncluder includer = (ConfigFileIncluder) container
@@ -188,7 +199,7 @@ public class InternalTestContextImpl implements InternalTestContext {
     }
 
     protected void beforeContainerInit() {
-        introspector.createMockInterceptor(testMethod, expression, this);
+        introspector.createMock(testMethod, test, this);
     }
 
     protected void afterContainerInit() {
@@ -268,7 +279,7 @@ public class InternalTestContextImpl implements InternalTestContext {
         return null;
     }
 
-    public MockInterceptor getMockInterceptor(int index) {
+    public MockInterceptor getMockInterceptor(final int index) {
         return mockInterceptors.get(index);
     }
 

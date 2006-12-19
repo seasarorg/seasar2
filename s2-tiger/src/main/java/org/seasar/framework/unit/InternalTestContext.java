@@ -28,11 +28,11 @@ import org.seasar.framework.container.S2Container;
  */
 public interface InternalTestContext extends TestContext {
 
+    void setTest(Object test);
+
     void setTestClass(Class<?> testClass);
 
     void setTestMethod(Method testMethod);
-
-    void setExpression(Expression expressionContext);
 
     void setTestIntrospector(S2TestIntrospector introspector);
 
@@ -50,9 +50,9 @@ public interface InternalTestContext extends TestContext {
 
     boolean hasComponentDef(Object componentKey);
 
-    ComponentDef getComponentDef(final int index);
+    ComponentDef getComponentDef(int index);
 
-    ComponentDef getComponentDef(final Object componentKey);
+    ComponentDef getComponentDef(Object componentKey);
 
     void addMockInterceptor(MockInterceptor mockInterceptor);
 

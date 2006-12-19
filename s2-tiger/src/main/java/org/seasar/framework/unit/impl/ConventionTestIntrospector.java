@@ -96,9 +96,9 @@ public class ConventionTestIntrospector extends AnnotationTestIntrospector {
     }
 
     @Override
-    public List<Method> getBeforeClassMethods(final Class<?> testClass) {
-        final List<Method> methods = super.getBeforeClassMethods(testClass);
-        final Method method = getMethod(testClass, beforeClassMethodName);
+    public List<Method> getBeforeClassMethods(final Class<?> clazz) {
+        final List<Method> methods = super.getBeforeClassMethods(clazz);
+        final Method method = getMethod(clazz, beforeClassMethodName);
         if (method != null) {
             if (hasValidStaticSignature(method) && !methods.contains(method)) {
                 methods.add(method);
@@ -108,9 +108,9 @@ public class ConventionTestIntrospector extends AnnotationTestIntrospector {
     }
 
     @Override
-    public List<Method> getAfterClassMethods(final Class<?> testClass) {
-        final List<Method> methods = super.getAfterClassMethods(testClass);
-        final Method method = getMethod(testClass, afterClassMethodName);
+    public List<Method> getAfterClassMethods(final Class<?> clazz) {
+        final List<Method> methods = super.getAfterClassMethods(clazz);
+        final Method method = getMethod(clazz, afterClassMethodName);
         if (method != null) {
             if (hasValidStaticSignature(method) && !methods.contains(method)) {
                 methods.add(method);
@@ -120,9 +120,9 @@ public class ConventionTestIntrospector extends AnnotationTestIntrospector {
     }
 
     @Override
-    public List<Method> getBeforeMethods(final Class<?> testClass) {
-        final List<Method> methods = super.getBeforeMethods(testClass);
-        final Method method = getMethod(testClass, beforeMethodName);
+    public List<Method> getBeforeMethods(final Class<?> clazz) {
+        final List<Method> methods = super.getBeforeMethods(clazz);
+        final Method method = getMethod(clazz, beforeMethodName);
         if (method != null) {
             if (hasValidNonStaticSignature(method) && !methods.contains(method)) {
                 methods.add(method);
@@ -132,9 +132,9 @@ public class ConventionTestIntrospector extends AnnotationTestIntrospector {
     }
 
     @Override
-    public List<Method> getAfterMethods(final Class<?> testClass) {
-        final List<Method> methods = super.getAfterMethods(testClass);
-        final Method method = getMethod(testClass, afterMethodName);
+    public List<Method> getAfterMethods(final Class<?> clazz) {
+        final List<Method> methods = super.getAfterMethods(clazz);
+        final Method method = getMethod(clazz, afterMethodName);
         if (method != null) {
             if (hasValidNonStaticSignature(method) && !methods.contains(method)) {
                 methods.add(method);
@@ -144,42 +144,39 @@ public class ConventionTestIntrospector extends AnnotationTestIntrospector {
     }
 
     @Override
-    public Method getEachBeforeMethod(final Class<?> testClass,
-            final Method testMethod) {
+    public Method getEachBeforeMethod(final Class<?> clazz, final Method method) {
         if (beforeMethodName == null) {
             return null;
         }
         final String methodName = beforeMethodName
-                + StringUtil.capitalize(testMethod.getName());
-        return getMethod(testClass, methodName);
+                + StringUtil.capitalize(method.getName());
+        return getMethod(clazz, methodName);
     }
 
     @Override
-    public Method getEachAfterMethod(final Class<?> testClass,
-            final Method testMethod) {
+    public Method getEachAfterMethod(final Class<?> clazz, final Method method) {
         if (afterMethodName == null) {
             return null;
         }
         final String methodName = afterMethodName
-                + StringUtil.capitalize(testMethod.getName());
-        return getMethod(testClass, methodName);
+                + StringUtil.capitalize(method.getName());
+        return getMethod(clazz, methodName);
     }
 
     @Override
-    public Method getEachRecordMethod(final Class<?> testClass,
-            final Method testMethod) {
+    public Method getEachRecordMethod(final Class<?> clazz, final Method method) {
         if (recordMethodName == null) {
             return null;
         }
         final String methodName = recordMethodName
-                + StringUtil.capitalize(testMethod.getName());
-        return getMethod(testClass, methodName);
+                + StringUtil.capitalize(method.getName());
+        return getMethod(clazz, methodName);
     }
 
     @Override
-    public List<Method> getTestMethods(final Class<?> testClass) {
+    public List<Method> getTestMethods(final Class<?> clazz) {
         final List<Method> results = new ArrayList<Method>();
-        for (Class<?> eachClass : getSuperClasses(testClass)) {
+        for (Class<?> eachClass : getSuperClasses(clazz)) {
             final Method[] methods = eachClass.getDeclaredMethods();
             for (final Method eachMethod : methods) {
                 if (isTestMethod(eachMethod)
@@ -191,9 +188,9 @@ public class ConventionTestIntrospector extends AnnotationTestIntrospector {
         return results;
     }
 
-    protected List<Class<?>> getSuperClasses(final Class<?> testClass) {
+    protected List<Class<?>> getSuperClasses(final Class<?> clazz) {
         final ArrayList<Class<?>> results = new ArrayList<Class<?>>();
-        Class<?> current = testClass;
+        Class<?> current = clazz;
         while (current != null && current != Object.class) {
             results.add(current);
             current = current.getSuperclass();
@@ -281,8 +278,8 @@ public class ConventionTestIntrospector extends AnnotationTestIntrospector {
         return true;
     }
 
-    protected Method getMethod(final Class<?> testClass, final String methodName) {
-        for (Class<?> eachClass : getSuperClasses(testClass)) {
+    protected Method getMethod(final Class<?> clazz, final String methodName) {
+        for (Class<?> eachClass : getSuperClasses(clazz)) {
             final Method[] methods = eachClass.getDeclaredMethods();
             for (final Method eachMethod : methods) {
                 if (eachMethod.getName().equals(methodName)) {

@@ -139,35 +139,35 @@ public class ConventionTestIntrospectorTest extends S2TestCase {
         assertNull(actual);
     }
 
-    public void testSuperclassTestMethod() throws Exception {
+    public void testSuperclassTestMethods() throws Exception {
         introspector = new ConventionTestIntrospector();
         introspector.init();
         List<Method> methods = introspector.getTestMethods(Bar.class);
         assertEquals(2, methods.size());
     }
 
-    public void testSuperclassBeforeClassMethod() throws Exception {
+    public void testSuperclassBeforeClassMethods() throws Exception {
         introspector = new ConventionTestIntrospector();
         introspector.init();
         List<Method> methods = introspector.getBeforeClassMethods(Bar.class);
         assertEquals(1, methods.size());
     }
 
-    public void testSuperclassAfterClassMethod() throws Exception {
+    public void testSuperclassAfterClassMethods() throws Exception {
         introspector = new ConventionTestIntrospector();
         introspector.init();
         List<Method> methods = introspector.getAfterClassMethods(Bar.class);
         assertEquals(1, methods.size());
     }
 
-    public void testSuperclassBeforeMethod() throws Exception {
+    public void testSuperclassBeforeMethods() throws Exception {
         introspector = new ConventionTestIntrospector();
         introspector.init();
         List<Method> methods = introspector.getBeforeMethods(Bar.class);
         assertEquals(1, methods.size());
     }
 
-    public void testSuperclassAfterMethod() throws Exception {
+    public void testSuperclassAfterMethods() throws Exception {
         introspector = new ConventionTestIntrospector();
         introspector.init();
         List<Method> methods = introspector.getAfterMethods(Bar.class);

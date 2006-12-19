@@ -18,6 +18,7 @@ package org.seasar.framework.unit.impl;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -31,6 +32,7 @@ import org.seasar.framework.aop.Pointcut;
 import org.seasar.framework.aop.interceptors.MockInterceptor;
 import org.seasar.framework.container.AspectDef;
 import org.seasar.framework.container.factory.AspectDefFactory;
+import org.seasar.framework.env.Env;
 import org.seasar.framework.unit.Expression;
 import org.seasar.framework.unit.InternalTestContext;
 import org.seasar.framework.unit.S2TestIntrospector;
@@ -89,40 +91,36 @@ public class AnnotationTestIntrospector implements S2TestIntrospector {
         this.enablePrerequisite = enablePrerequisite;
     }
 
-    public List<Method> getBeforeClassMethods(final Class<?> testClass) {
-        return new TestIntrospector(testClass)
+    public List<Method> getBeforeClassMethods(final Class<?> clazz) {
+        return new TestIntrospector(clazz)
                 .getTestMethods(beforeClassAnnotation);
     }
 
-    public List<Method> getAfterClassMethods(final Class<?> testClass) {
-        return new TestIntrospector(testClass)
-                .getTestMethods(afterClassAnnotation);
+    public List<Method> getAfterClassMethods(final Class<?> clazz) {
+        return new TestIntrospector(clazz).getTestMethods(afterClassAnnotation);
     }
 
-    public List<Method> getBeforeMethods(final Class<?> testClass) {
-        return new TestIntrospector(testClass).getTestMethods(beforeAnnotation);
+    public List<Method> getBeforeMethods(final Class<?> clazz) {
+        return new TestIntrospector(clazz).getTestMethods(beforeAnnotation);
     }
 
-    public List<Method> getAfterMethods(final Class<?> testClass) {
-        return new TestIntrospector(testClass).getTestMethods(afterAnnotation);
+    public List<Method> getAfterMethods(final Class<?> clazz) {
+        return new TestIntrospector(clazz).getTestMethods(afterAnnotation);
     }
 
-    public List<Method> getTestMethods(final Class<?> testClass) {
-        return new TestIntrospector(testClass).getTestMethods(Test.class);
+    public List<Method> getTestMethods(final Class<?> clazz) {
+        return new TestIntrospector(clazz).getTestMethods(Test.class);
     }
 
-    public Method getEachBeforeMethod(final Class<?> testClass,
-            final Method testMethod) {
+    public Method getEachBeforeMethod(final Class<?> clazz, final Method method) {
         return null;
     }
 
-    public Method getEachAfterMethod(final Class<?> testClass,
-            final Method testMethod) {
+    public Method getEachAfterMethod(final Class<?> clazz, final Method method) {
         return null;
     }
 
-    public Method getEachRecordMethod(final Class<?> testClass,
-            final Method testMethod) {
+    public Method getEachRecordMethod(final Class<?> clazz, final Method method) {
         return null;
     }
 
@@ -149,81 +147,104 @@ public class AnnotationTestIntrospector implements S2TestIntrospector {
         return false;
     }
 
-    public List<String> getPrerequisiteExpressions(final Class<?> testClass,
-            final Method testMethod) {
-        final List<String> expressions = CollectionsUtil.newArrayList();
-        if (enablePrerequisite) {
-            if (testClass.isAnnotationPresent(Prerequisite.class)) {
-                expressions.add(testClass.getAnnotation(Prerequisite.class)
-                        .value());
+    public boolean isFulfilled(final Class<?> clazz, final Method method,
+            final Object test) {
+        if (!enablePrerequisite) {
+            return true;
+        }
+        if (clazz.isAnnotationPresent(Prerequisite.class)) {
+            final String source = clazz.getAnnotation(Prerequisite.class)
+                    .value();
+            final Expression exp = createExpression(source, method, test);
+            if (!isFulfilled(exp)) {
+                return false;
             }
-            if (testMethod.isAnnotationPresent(Prerequisite.class)) {
-                expressions.add(testMethod.getAnnotation(Prerequisite.class)
-                        .value());
+        }
+        if (method.isAnnotationPresent(Prerequisite.class)) {
+            final String source = method.getAnnotation(Prerequisite.class)
+                    .value();
+            final Expression exp = createExpression(source, method, test);
+            if (!isFulfilled(exp)) {
+                return false;
             }
-        } else {
-            expressions.add(Boolean.toString(true));
-        }
-        return expressions;
-    }
-
-    public boolean needsTransaction(final Class<?> testClass,
-            final Method testMethod) {
-        final TxBehaviorType type = getTxBehaviorType(testClass, testMethod);
-        return type == null || type != TxBehaviorType.NONE;
-    }
-
-    public boolean requiresTransactionCommitment(final Class<?> testClass,
-            final Method testMethod) {
-        final TxBehaviorType type = getTxBehaviorType(testClass, testMethod);
-        return type != null && type == TxBehaviorType.COMMIT;
-    }
-
-    protected TxBehaviorType getTxBehaviorType(final Class<?> testClass,
-            final Method testMethod) {
-        if (testMethod.isAnnotationPresent(TxBehavior.class)) {
-            return testMethod.getAnnotation(TxBehavior.class).value();
-        }
-        if (testClass.isAnnotationPresent(TxBehavior.class)) {
-            return testClass.getAnnotation(TxBehavior.class).value();
-        }
-        return null;
-    }
-
-    public boolean needsWarmDeploy(final Class<?> testClass,
-            final Method testMethod) {
-        if (testMethod.isAnnotationPresent(WarmDeploy.class)) {
-            return testMethod.getAnnotation(WarmDeploy.class).value();
-        }
-        if (testClass.isAnnotationPresent(WarmDeploy.class)) {
-            return testClass.getAnnotation(WarmDeploy.class).value();
         }
         return true;
     }
 
-    public void createMockInterceptor(final Method testMethod,
-            final Expression expression, final InternalTestContext context) {
-        final Mock mock = testMethod.getAnnotation(Mock.class);
+    protected boolean isFulfilled(final Expression expression) {
+        final Object result = expression.evaluateNoException();
+        if (expression.isMethodFailed()) {
+            System.err.println(expression.getException());
+            return false;
+        }
+        expression.throwExceptionIfNecessary();
+        if (result instanceof Boolean && Boolean.class.cast(result)) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean needsTransaction(final Class<?> clazz,
+            final Method method) {
+        final TxBehaviorType type = getTxBehaviorType(clazz, method);
+        return type == null || type != TxBehaviorType.NONE;
+    }
+
+    public boolean requiresTransactionCommitment(final Class<?> clazz,
+            final Method method) {
+        final TxBehaviorType type = getTxBehaviorType(clazz, method);
+        return type != null && type == TxBehaviorType.COMMIT;
+    }
+
+    protected TxBehaviorType getTxBehaviorType(final Class<?> clazz,
+            final Method method) {
+        if (method.isAnnotationPresent(TxBehavior.class)) {
+            return method.getAnnotation(TxBehavior.class).value();
+        }
+        if (clazz.isAnnotationPresent(TxBehavior.class)) {
+            return clazz.getAnnotation(TxBehavior.class).value();
+        }
+        return null;
+    }
+
+    public boolean needsWarmDeploy(final Class<?> clazz,
+            final Method method) {
+        if (method.isAnnotationPresent(WarmDeploy.class)) {
+            return method.getAnnotation(WarmDeploy.class).value();
+        }
+        if (clazz.isAnnotationPresent(WarmDeploy.class)) {
+            return clazz.getAnnotation(WarmDeploy.class).value();
+        }
+        return true;
+    }
+
+    public void createMock(final Method method, final Object test,
+            final InternalTestContext context) {
+        final Mock mock = method.getAnnotation(Mock.class);
         if (mock != null) {
-            createMockInterceptor(mock, expression, context);
+            createMock(mock, method, test, context);
         } else {
-            final Mocks mocks = testMethod.getAnnotation(Mocks.class);
+            final Mocks mocks = method.getAnnotation(Mocks.class);
             if (mocks != null) {
                 for (final Mock each : mocks.value()) {
-                    createMockInterceptor(each, expression, context);
+                    createMock(each, method, test, context);
                 }
             }
         }
     }
 
-    protected void createMockInterceptor(final Mock mock,
-            final Expression expression, final InternalTestContext context) {
+    protected void createMock(final Mock mock, final Method method,
+            final Object test, final InternalTestContext context) {
         final MockInterceptor mi = new MockInterceptor();
         if (!StringUtil.isEmpty(mock.returnValue())) {
-            mi.setReturnValue(expression.evaluate(mock.returnValue()));
+            final Expression exp = createExpression(mock.returnValue(), method,
+                    test);
+            mi.setReturnValue(exp.evaluate());
         }
         if (!StringUtil.isEmpty(mock.throwable())) {
-            final Object result = expression.evaluate(mock.throwable());
+            final Expression exp = createExpression(mock.throwable(), method,
+                    test);
+            final Object result = exp.evaluate();
             mi.setThrowable(Throwable.class.cast(result));
         }
         Pointcut pc = null;
@@ -239,4 +260,13 @@ public class AnnotationTestIntrospector implements S2TestIntrospector {
         context.addAspecDef(componentKey, aspectDef);
         context.addMockInterceptor(mi);
     }
+
+    protected Expression createExpression(final String source,
+            final Method method, final Object test) {
+        final Map<String, Object> ctx = CollectionsUtil.newHashMap();
+        ctx.put("ENV", Env.getValue());
+        ctx.put("method", method);
+        return new OgnlExpression(source, test, ctx);
+    }
+
 }

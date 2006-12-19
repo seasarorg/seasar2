@@ -26,6 +26,9 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.seasar.framework.aop.interceptors.MockInterceptor;
+import org.seasar.framework.unit.InternalTestContext;
+import org.seasar.framework.unit.annotation.Mock;
 import org.seasar.framework.unit.annotation.Prerequisite;
 import org.seasar.framework.unit.annotation.TxBehavior;
 import org.seasar.framework.unit.annotation.TxBehaviorType;
@@ -37,7 +40,7 @@ import org.seasar.framework.util.tiger.ReflectionUtil;
  */
 public class AnnotationTestIntrospectorTest extends TestCase {
 
-    public AnnotationTestIntrospector introspector = new AnnotationTestIntrospector();
+    private AnnotationTestIntrospector introspector = new AnnotationTestIntrospector();
 
     public void testBeforeClassMethods() throws Exception {
         List<Method> methods = introspector.getBeforeClassMethods(Hoge.class);
@@ -128,29 +131,24 @@ public class AnnotationTestIntrospectorTest extends TestCase {
         assertFalse(introspector.requiresTransactionCommitment(clazz, method));
     }
 
-    public void testGetPrerequisiteExpressions() {
-        Class<?> clazz = Aaa.class;
-        Method method = ReflectionUtil.getDeclaredMethod(clazz, "aaa");
-        List<String> expressions = introspector.getPrerequisiteExpressions(
-                clazz, method);
-        assertTrue(expressions.isEmpty());
+    public void testIsFulfilled() {
+        Aaa aaa = new Aaa();
+        Method method = ReflectionUtil.getDeclaredMethod(aaa.getClass(), "aaa");
+        boolean result = introspector.isFulfilled(aaa.getClass(), method, aaa);
+        assertTrue(result);
 
-        clazz = Bbb.class;
-        method = ReflectionUtil.getDeclaredMethod(clazz, "aaa");
-        expressions = introspector.getPrerequisiteExpressions(clazz, method);
-        assertEquals(2, expressions.size());
-        assertEquals("true", expressions.get(0));
-        assertEquals("false", expressions.get(1));
+        Bbb bbb = new Bbb();
+        method = ReflectionUtil.getDeclaredMethod(bbb.getClass(), "aaa");
+        result = introspector.isFulfilled(bbb.getClass(), method, bbb);
+        assertFalse(result);
     }
 
-    public void testGetPrerequisiteExpressions2() {
+    public void testIsFulfilled_disabled() {
         introspector.setEnablePrerequisite(false);
-        Class<?> clazz = Bbb.class;
-        Method method = ReflectionUtil.getDeclaredMethod(clazz, "aaa");
-        List<String> expressions = introspector.getPrerequisiteExpressions(
-                clazz, method);
-        assertEquals(1, expressions.size());
-        assertEquals("true", expressions.get(0));
+        Bbb bbb = new Bbb();
+        Method method = ReflectionUtil.getDeclaredMethod(bbb.getClass(), "aaa");
+        boolean result = introspector.isFulfilled(bbb.getClass(), method, bbb);
+        assertTrue(result);
     }
 
     public void testIsIgnored() {
@@ -158,10 +156,21 @@ public class AnnotationTestIntrospectorTest extends TestCase {
         assertTrue(introspector.isIgnored(method));
     }
 
-    public void testIsIgnored2() {
+    public void testIsIgnored_disabled() {
         introspector.setEnableIgnore(false);
         Method method = ReflectionUtil.getDeclaredMethod(Ccc.class, "aaa");
         assertFalse(introspector.isIgnored(method));
+    }
+
+    public void testCreateMock() {
+        MockInterceptor mi = new MockInterceptor();
+        InternalTestContext context = (InternalTestContext) mi
+                .createProxy(InternalTestContext.class);
+        Ddd ddd = new Ddd();
+        Method method = ReflectionUtil.getMethod(ddd.getClass(), "aaa");
+        introspector.createMock(method, ddd, context);
+        assertTrue(mi.isInvoked("addAspecDef"));
+        assertTrue(mi.isInvoked("addMockInterceptor"));
     }
 
     public static class Hoge {
@@ -284,5 +293,15 @@ public class AnnotationTestIntrospectorTest extends TestCase {
         @Ignore
         public void aaa() {
         }
+    }
+
+    public static class Ddd {
+        @Mock(target = Hello.class, pointcut = "greeting")
+        public void aaa() {
+        }
+    }
+
+    public interface Hello {
+        String greeting();
     }
 }
