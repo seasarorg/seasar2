@@ -81,6 +81,8 @@ public class S2TestMethodRunner {
 
     private List<Field> boundFields = CollectionsUtil.newArrayList();
 
+    protected EasyMockSupport easyMockSupport = new EasyMockSupport();
+
     public S2TestMethodRunner(final Object test, final Method method,
             final RunNotifier notifier, final Description description,
             final S2TestIntrospector introspector) {
@@ -167,6 +169,7 @@ public class S2TestMethodRunner {
     }
 
     protected void runMethod() {
+        easyMockSupport.clear();
         try {
             setUpTestContext();
             try {
@@ -177,7 +180,7 @@ public class S2TestMethodRunner {
                     try {
                         bindFields();
                         try {
-                            executeTestMethod();
+                            runTestMethod();
                         } finally {
                             unbindFields();
                         }
@@ -289,24 +292,24 @@ public class S2TestMethodRunner {
         try {
             final Method eachBefore = introspector.getEachBeforeMethod(
                     testClass, method);
-            if (eachBefore == null) {
-                return;
+            if (eachBefore != null) {
+                invokeMethod(eachBefore);
             }
-            invokeMethod(eachBefore);
         } catch (final Throwable e) {
             addFailure(e);
             throw new FailedBefore();
         }
+        easyMockSupport.bindMockFields(test, testContext.getContainer());
     }
 
     protected void runEachAfter() {
+        easyMockSupport.unbindMockFields(test);
         try {
             final Method eachAfter = introspector.getEachAfterMethod(testClass,
                     method);
-            if (eachAfter == null) {
-                return;
+            if (eachAfter != null) {
+                invokeMethod(eachAfter);
             }
-            invokeMethod(eachAfter);
         } catch (final Throwable e) {
             addFailure(e);
         }
@@ -386,7 +389,54 @@ public class S2TestMethodRunner {
         return StringUtil.replace(name, "_", "");
     }
 
-    protected void executeTestMethod() throws Throwable {
+    protected void runTestMethod() throws Throwable {
+        final boolean recorded = runEachRecord();
+        if (recorded) {
+            easyMockSupport.replay();
+        }
+        runTest();
+        if (recorded) {
+            easyMockSupport.verify();
+            easyMockSupport.reset();
+        }
+    }
+
+    protected boolean runEachRecord() throws Throwable {
+        final Method recordMethod = introspector.getEachRecordMethod(testClass,
+                method);
+        if (recordMethod != null) {
+            invokeMethod(recordMethod);
+            return true;
+        }
+        return false;
+    }
+
+    protected void runTest() throws Throwable {
+        TransactionManager tm = null;
+        if (introspector.needsTransaction(testClass, method)) {
+            try {
+                tm = testContext.getComponent(TransactionManager.class);
+                tm.begin();
+            } catch (Throwable t) {
+                System.err.println(t);
+            }
+        }
+        try {
+            testContext.prepareTestData();
+            executeMethod();
+        } finally {
+            if (tm != null) {
+                if (introspector.requiresTransactionCommitment(testClass,
+                        method)) {
+                    tm.commit();
+                } else {
+                    tm.rollback();
+                }
+            }
+        }
+    }
+
+    protected void executeMethod() throws Throwable {
         try {
             executeMethodBody();
             if (expectsException()) {
@@ -407,28 +457,7 @@ public class S2TestMethodRunner {
     }
 
     protected void executeMethodBody() throws Throwable {
-        TransactionManager tm = null;
-        if (introspector.needsTransaction(testClass, method)) {
-            try {
-                tm = testContext.getComponent(TransactionManager.class);
-                tm.begin();
-            } catch (Throwable t) {
-                System.err.println(t);
-            }
-        }
-        try {
-            testContext.prepareTestData();
-            method.invoke(test);
-        } finally {
-            if (tm != null) {
-                if (introspector.requiresTransactionCommitment(testClass,
-                        method)) {
-                    tm.commit();
-                } else {
-                    tm.rollback();
-                }
-            }
-        }
+        method.invoke(test);
     }
 
     protected boolean expectsException() {

@@ -272,6 +272,10 @@ public class InternalTestContextImpl implements InternalTestContext {
         return mockInterceptors.get(index);
     }
 
+    public S2Container getContainer() {
+        return container;
+    }
+
     @SuppressWarnings("unchecked")
     public <T> T getComponent(final Class<T> componentKey) {
         assertContainerInitialized();

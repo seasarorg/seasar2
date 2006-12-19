@@ -121,6 +121,11 @@ public class AnnotationTestIntrospector implements S2TestIntrospector {
         return null;
     }
 
+    public Method getEachRecordMethod(final Class<?> testClass,
+            final Method testMethod) {
+        return null;
+    }
+
     public Class<? extends Throwable> expectedException(final Method method) {
         final Test annotation = method.getAnnotation(Test.class);
         if (annotation == null || annotation.expected() == None.class) {

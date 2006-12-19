@@ -56,4 +56,5 @@ public interface S2TestIntrospector {
 
     Method getEachAfterMethod(Class<?> testClass, Method testMethod);
 
+    Method getEachRecordMethod(Class<?> testClass, Method testMethod);
 }

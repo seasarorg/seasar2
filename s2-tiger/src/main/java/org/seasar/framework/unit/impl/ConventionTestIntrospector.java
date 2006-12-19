@@ -48,6 +48,8 @@ public class ConventionTestIntrospector extends AnnotationTestIntrospector {
 
     protected String afterMethodName = "after";
 
+    protected String recordMethodName = "record";
+
     @InitMethod
     public void init() {
         addNonTestAnnotation(beforeAnnotation);
@@ -57,6 +59,9 @@ public class ConventionTestIntrospector extends AnnotationTestIntrospector {
         }
         if (afterMethodName != null) {
             addNonTestMethodNamePattern(afterMethodName + ".*");
+        }
+        if (recordMethodName != null) {
+            addNonTestMethodNamePattern(recordMethodName + ".+");
         }
     }
 
@@ -74,6 +79,10 @@ public class ConventionTestIntrospector extends AnnotationTestIntrospector {
 
     public void setAfterMethodName(final String afterMethodName) {
         this.afterMethodName = afterMethodName;
+    }
+
+    public void setRecordMethodName(final String recordMethodName) {
+        this.recordMethodName = recordMethodName;
     }
 
     public void addNonTestAnnotation(
@@ -136,7 +145,7 @@ public class ConventionTestIntrospector extends AnnotationTestIntrospector {
 
     @Override
     public Method getEachBeforeMethod(final Class<?> testClass,
-            Method testMethod) {
+            final Method testMethod) {
         if (beforeMethodName == null) {
             return null;
         }
@@ -146,11 +155,23 @@ public class ConventionTestIntrospector extends AnnotationTestIntrospector {
     }
 
     @Override
-    public Method getEachAfterMethod(final Class<?> testClass, Method testMethod) {
+    public Method getEachAfterMethod(final Class<?> testClass,
+            final Method testMethod) {
         if (afterMethodName == null) {
             return null;
         }
         final String methodName = afterMethodName
+                + StringUtil.capitalize(testMethod.getName());
+        return getMethod(testClass, methodName);
+    }
+
+    @Override
+    public Method getEachRecordMethod(final Class<?> testClass,
+            final Method testMethod) {
+        if (recordMethodName == null) {
+            return null;
+        }
+        final String methodName = recordMethodName
                 + StringUtil.capitalize(testMethod.getName());
         return getMethod(testClass, methodName);
     }

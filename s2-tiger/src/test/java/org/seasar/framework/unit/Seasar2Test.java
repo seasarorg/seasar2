@@ -15,13 +15,17 @@
  */
 package org.seasar.framework.unit;
 
+import static org.easymock.EasyMock.*;
+
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import javax.ejb.EJB;
+import javax.sql.DataSource;
 import javax.transaction.TransactionManager;
 
 import junit.framework.TestCase;
@@ -47,6 +51,8 @@ import org.seasar.framework.aop.interceptors.MockInterceptor;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.impl.S2ContainerBehavior;
 import org.seasar.framework.container.warmdeploy.WarmdeployBehavior;
+import org.seasar.framework.unit.annotation.EasyMock;
+import org.seasar.framework.unit.annotation.EasyMockType;
 import org.seasar.framework.unit.annotation.Mock;
 import org.seasar.framework.unit.annotation.Mocks;
 import org.seasar.framework.unit.annotation.Prerequisite;
@@ -917,6 +923,61 @@ public class Seasar2Test extends TestCase {
         assertTrue(log, log.contains("jj"));
         assertTrue(log, log.contains("hoge-kk"));
         assertTrue(log, log.contains("ll"));
+    }
+
+    @RunWith(Seasar2.class)
+    public static class EasyMockTest {
+
+        private S2Container container;
+
+        @EasyMock
+        private Runnable runnable;
+
+        @EasyMock(EasyMockType.STRICT)
+        private Map<String, String> map;
+
+        @EasyMock(register = true)
+        private DataSource dataSource;
+
+        public void runnable() {
+            runnable.run();
+            log += "a";
+        }
+
+        public void recordRunnable() {
+            runnable.run();
+        }
+
+        public void map() throws Exception {
+            map.put("a", "A");
+            map.put("b", "B");
+            assertEquals(2, map.size());
+            log += "b";
+        }
+
+        public void recordMap() throws Exception {
+            expect(map.put("a", "A")).andReturn(null);
+            expect(map.put("b", "B")).andReturn(null);
+            expect(map.size()).andReturn(2);
+        }
+
+        public void register() throws Exception {
+            assertSame(dataSource, container.getComponent("dataSource"));
+            assertSame(dataSource, container.getComponent(DataSource.class));
+            assertFalse(container.hasComponentDef(Runnable.class));
+            assertFalse(container.hasComponentDef(Map.class));
+            log += "c";
+        }
+    }
+
+    public void testEasyMock() throws Exception {
+        JUnitCore core = new JUnitCore();
+        Result result = core.run(EasyMockTest.class);
+        printFailures(result.getFailures());
+        assertTrue(result.wasSuccessful());
+        assertTrue(log, log.contains("a"));
+        assertTrue(log, log.contains("b"));
+        assertTrue(log, log.contains("c"));
     }
 
     @RunWith(Seasar2.class)

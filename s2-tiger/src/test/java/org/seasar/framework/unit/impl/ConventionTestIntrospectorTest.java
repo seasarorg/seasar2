@@ -38,10 +38,12 @@ public class ConventionTestIntrospectorTest extends S2TestCase {
         introspector = new ConventionTestIntrospector();
         introspector.init();
         List<Method> methods = introspector.getTestMethods(Hoge.class);
-        assertEquals(2, methods.size());
+        assertEquals(3, methods.size());
         Method method = ReflectionUtil.getDeclaredMethod(Hoge.class, "ccc");
         assertTrue(methods.contains(method));
         method = ReflectionUtil.getDeclaredMethod(Hoge.class, "ddd");
+        assertTrue(methods.contains(method));
+        method = ReflectionUtil.getDeclaredMethod(Hoge.class, "record");
         assertTrue(methods.contains(method));
     }
 
@@ -121,6 +123,22 @@ public class ConventionTestIntrospectorTest extends S2TestCase {
         assertNull(actual);
     }
 
+    public void testEachRecordMethod() throws Exception {
+        introspector = new ConventionTestIntrospector();
+        introspector.init();
+        Method method = ReflectionUtil.getDeclaredMethod(Hoge.class, "ddd");
+        Method actual = introspector.getEachRecordMethod(Hoge.class, method);
+        assertEquals("recordDdd", actual.getName());
+    }
+
+    public void testNonExistEachRecordMethod() throws Exception {
+        introspector = new ConventionTestIntrospector();
+        introspector.init();
+        Method method = ReflectionUtil.getDeclaredMethod(Hoge.class, "ccc");
+        Method actual = introspector.getEachRecordMethod(Hoge.class, method);
+        assertNull(actual);
+    }
+
     public void testSuperclassTestMethod() throws Exception {
         introspector = new ConventionTestIntrospector();
         introspector.init();
@@ -178,6 +196,18 @@ public class ConventionTestIntrospectorTest extends S2TestCase {
         method = ReflectionUtil.getDeclaredMethod(Bar.class, "bbb");
         actual = introspector.getEachAfterMethod(Bar.class, method);
         assertEquals("afterBbb", actual.getName());
+    }
+
+    public void testSuperclassEachRecordMethod() throws Exception {
+        introspector = new ConventionTestIntrospector();
+        introspector.init();
+        Method method = ReflectionUtil.getDeclaredMethod(Foo.class, "aaa");
+        Method actual = introspector.getEachRecordMethod(Bar.class, method);
+        assertEquals("recordAaa", actual.getName());
+
+        method = ReflectionUtil.getDeclaredMethod(Bar.class, "bbb");
+        actual = introspector.getEachRecordMethod(Bar.class, method);
+        assertEquals("recordBbb", actual.getName());
     }
 
     public void setUpCustomize() throws Exception {
@@ -241,7 +271,13 @@ public class ConventionTestIntrospectorTest extends S2TestCase {
         public void ddd() {
         }
 
+        public void recordDdd() {
+        }
+
         public void afterDdd() {
+        }
+
+        public void record() {
         }
 
         @SuppressWarnings("unused")
@@ -291,11 +327,18 @@ public class ConventionTestIntrospectorTest extends S2TestCase {
         public void afterAaa() {
         }
 
+        public void recordAaa() {
+        }
+
         public void beforeBbb() {
         }
 
         public void afterBbb() {
         }
+
+        public void recordBbb() {
+        }
+
     }
 
     public static class Bar extends Foo {

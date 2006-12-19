@@ -20,6 +20,7 @@ import java.lang.reflect.Method;
 import org.seasar.framework.aop.interceptors.MockInterceptor;
 import org.seasar.framework.container.AspectDef;
 import org.seasar.framework.container.ComponentDef;
+import org.seasar.framework.container.S2Container;
 
 /**
  * @author taedium
@@ -40,6 +41,8 @@ public interface InternalTestContext extends TestContext {
     void destroyContainer();
 
     void prepareTestData();
+
+    S2Container getContainer();
 
     <T> T getComponent(Class<T> componentKey);
 
