@@ -28,17 +28,15 @@ import org.seasar.framework.container.S2Container;
  */
 public interface InternalTestContext extends TestContext {
 
-    void setTest(Object test);
-
     void setTestClass(Class<?> testClass);
 
     void setTestMethod(Method testMethod);
 
-    void setTestIntrospector(S2TestIntrospector introspector);
-
     void initContainer();
 
     void destroyContainer();
+
+    void include();
 
     void prepareTestData();
 

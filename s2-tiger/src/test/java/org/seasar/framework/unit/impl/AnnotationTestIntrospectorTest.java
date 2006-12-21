@@ -15,10 +15,10 @@
  */
 package org.seasar.framework.unit.impl;
 
+import static org.easymock.EasyMock.*;
+
 import java.lang.reflect.Method;
 import java.util.List;
-
-import junit.framework.TestCase;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -27,8 +27,13 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.seasar.framework.aop.interceptors.MockInterceptor;
+import org.seasar.framework.container.AspectDef;
+import org.seasar.framework.unit.EasyMockTestCase;
 import org.seasar.framework.unit.InternalTestContext;
+import org.seasar.framework.unit.annotation.EasyMock;
+import org.seasar.framework.unit.annotation.EasyMockType;
 import org.seasar.framework.unit.annotation.Mock;
+import org.seasar.framework.unit.annotation.Mocks;
 import org.seasar.framework.unit.annotation.Prerequisite;
 import org.seasar.framework.unit.annotation.TxBehavior;
 import org.seasar.framework.unit.annotation.TxBehaviorType;
@@ -38,9 +43,12 @@ import org.seasar.framework.util.tiger.ReflectionUtil;
  * @author taedium
  * 
  */
-public class AnnotationTestIntrospectorTest extends TestCase {
+public class AnnotationTestIntrospectorTest extends EasyMockTestCase {
 
     private AnnotationTestIntrospector introspector = new AnnotationTestIntrospector();
+
+    @EasyMock(EasyMockType.STRICT)
+    private InternalTestContext context;
 
     public void testBeforeClassMethods() throws Exception {
         List<Method> methods = introspector.getBeforeClassMethods(Hoge.class);
@@ -163,14 +171,27 @@ public class AnnotationTestIntrospectorTest extends TestCase {
     }
 
     public void testCreateMock() {
-        MockInterceptor mi = new MockInterceptor();
-        InternalTestContext context = (InternalTestContext) mi
-                .createProxy(InternalTestContext.class);
         Ddd ddd = new Ddd();
         Method method = ReflectionUtil.getMethod(ddd.getClass(), "aaa");
         introspector.createMock(method, ddd, context);
-        assertTrue(mi.isInvoked("addAspecDef"));
-        assertTrue(mi.isInvoked("addMockInterceptor"));
+    }
+
+    public void recordCreateMock() {
+        context.addAspecDef(same(Hello.class), isA(AspectDef.class));
+        context.addMockInterceptor(isA(MockInterceptor.class));
+    }
+
+    public void testCreateMultiMocks() {
+        Ddd ddd = new Ddd();
+        Method method = ReflectionUtil.getMethod(ddd.getClass(), "bbb");
+        introspector.createMock(method, ddd, context);
+    }
+
+    public void recordCreateMultiMocks() {
+        context.addAspecDef(same(Hello.class), isA(AspectDef.class));
+        context.addMockInterceptor(isA(MockInterceptor.class));
+        context.addAspecDef(eq("hello"), isA(AspectDef.class));
+        context.addMockInterceptor(isA(MockInterceptor.class));
     }
 
     public static class Hoge {
@@ -299,9 +320,18 @@ public class AnnotationTestIntrospectorTest extends TestCase {
         @Mock(target = Hello.class, pointcut = "greeting")
         public void aaa() {
         }
+
+        @Mocks( {
+                @Mock(target = Hello.class, pointcut = "greeting"),
+                @Mock(target = Hello.class, targetName = "hello", pointcut = "echo") })
+        public void bbb() {
+        }
+
     }
 
     public interface Hello {
         String greeting();
+
+        String echo(String aaa);
     }
 }

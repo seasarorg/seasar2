@@ -154,7 +154,7 @@ public class S2TestMethodRunner {
                 runBefores();
                 try {
                     runEachBefore();
-                    testContext.initContainer();
+                    initContainer();
                     try {
                         bindFields();
                         try {
@@ -192,10 +192,8 @@ public class S2TestMethodRunner {
         SingletonS2ContainerFactory.setContainer(container);
         testContext = InternalTestContext.class.cast(container
                 .getComponent(InternalTestContext.class));
-        testContext.setTest(test);
         testContext.setTestClass(testClass);
         testContext.setTestMethod(method);
-        testContext.setTestIntrospector(introspector);
 
         for (Class<?> clazz = testClass; clazz != Object.class; clazz = clazz
                 .getSuperclass()) {
@@ -255,7 +253,7 @@ public class S2TestMethodRunner {
 
     protected void runAfters() {
         final List<Method> afters = introspector.getAfterMethods(testClass);
-        for (Method after : afters) {
+        for (final Method after : afters) {
             try {
                 after.invoke(test);
             } catch (final InvocationTargetException e) {
@@ -291,6 +289,12 @@ public class S2TestMethodRunner {
         } catch (final Throwable e) {
             addFailure(e);
         }
+    }
+
+    protected void initContainer() {
+        testContext.include();
+        introspector.createMock(method, test, testContext);
+        testContext.initContainer();
     }
 
     protected void bindFields() throws Throwable {
