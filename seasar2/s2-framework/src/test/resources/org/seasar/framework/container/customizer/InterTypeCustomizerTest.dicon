@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<!DOCTYPE components PUBLIC "-//SEASAR2.1//DTD S2Container//EN"
+	"http://www.seasar.org/dtd/components21.dtd">
+<components namespace="child" >
+	<include path="aop.dicon"/>
+
+	<component class="org.seasar.framework.convention.impl.NamingConventionImpl"/>
+	<component class="org.seasar.framework.container.autoregister.FileSystemComponentAutoRegister">
+		<property name="customizer">
+			<component class="org.seasar.framework.container.customizer.InterTypeCustomizer">
+				<property name="interTypeName">"aop.propertyInterType"</property>
+			</component>
+		</property>
+		<initMethod name="addClassPattern">
+			<arg>"org.seasar.framework.container.autoregister"</arg>
+			<arg>"Foo"</arg>
+		</initMethod>
+	</component>
+</components>

@@ -15,9 +15,12 @@
  */
 package org.seasar.framework.container.hotdeploy.creator;
 
-import org.seasar.framework.container.ComponentDef;
+import java.lang.reflect.Method;
+
 import org.seasar.framework.container.ComponentCreator;
+import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.creator.DtoCreator;
+import org.seasar.framework.container.customizer.InterTypeCustomizer;
 import org.seasar.framework.convention.NamingConvention;
 
 /**
@@ -27,7 +30,12 @@ import org.seasar.framework.convention.NamingConvention;
 public class DtoHotdeployCreatorTest extends HotdeployCreatorTestCase {
 
     protected ComponentCreator newOndemandCreator(NamingConvention convention) {
-        return new DtoCreator(convention);
+        include("aop.dicon");
+        DtoCreator creator = new DtoCreator(convention);
+        InterTypeCustomizer customizer = new InterTypeCustomizer();
+        customizer.addInterTypeName("aop.propertyInterType");
+        creator.setDtoCustomizer(customizer);
+        return creator;
     }
 
     public void testAll() throws Exception {
@@ -35,5 +43,9 @@ public class DtoHotdeployCreatorTest extends HotdeployCreatorTestCase {
         ComponentDef cd = getComponentDef(name);
         assertNotNull(cd);
         assertEquals(name, cd.getComponentName());
+        Object o = cd.getComponent();
+        Method m = o.getClass().getMethod("getName", null);
+        assertEquals("Hoge", m.invoke(o, null));
     }
+
 }
