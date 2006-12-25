@@ -708,7 +708,7 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
         private String rootPath;
 
         protected ZipExistChecker(final URL zipUrl, final String rootPackageName) {
-            zipFile = ZipFileUtil.create(ZipFileUtil.toZipFilePath(zipUrl));
+            zipFile = ZipFileUtil.toZipFile(zipUrl);
             this.rootPath = rootPackageName.replace('.', '/') + "/";
         }
 

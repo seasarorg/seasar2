@@ -37,6 +37,7 @@ import org.seasar.framework.util.JarFileUtil;
 import org.seasar.framework.util.ResourceUtil;
 import org.seasar.framework.util.StringUtil;
 import org.seasar.framework.util.URLUtil;
+import org.seasar.framework.util.ZipFileUtil;
 import org.seasar.framework.util.ClassTraversal.ClassHandler;
 
 /**
@@ -234,10 +235,7 @@ public class CoolComponentAutoRegister implements ClassHandler {
         }
 
         protected JarFile createJarFile(URL url) {
-            final String urlString = ResourceUtil.toExternalForm(url);
-            final int pos = urlString.lastIndexOf('!');
-            final String jarFileName = urlString
-                    .substring("zip:".length(), pos);
+            final String jarFileName = ZipFileUtil.toZipFilePath(url);
             return JarFileUtil.create(new File(jarFileName));
         }
     }

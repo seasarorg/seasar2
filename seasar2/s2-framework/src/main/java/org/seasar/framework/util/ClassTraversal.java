@@ -27,6 +27,10 @@ import java.util.jar.JarFile;
 public final class ClassTraversal {
     private static final String CLASS_SUFFIX = ".class";
 
+    private static final String WAR_FILE_EXTENSION = ".war";
+
+    private static final String WEB_INF_CLASSES_PATH = "WEB-INF/classes/";
+
     public interface ClassHandler {
         void processClass(String packageName, String shortClassName);
     }
@@ -47,12 +51,18 @@ public final class ClassTraversal {
     }
 
     public static void forEach(final JarFile jarFile, final ClassHandler handler) {
+        final boolean hasWarExtension = jarFile.getName().endsWith(
+                WAR_FILE_EXTENSION);
         final Enumeration enumeration = jarFile.entries();
         while (enumeration.hasMoreElements()) {
             final JarEntry entry = (JarEntry) enumeration.nextElement();
             final String entryName = entry.getName().replace('\\', '/');
             if (entryName.endsWith(CLASS_SUFFIX)) {
-                final String className = entryName.substring(0,
+                final int startPos = hasWarExtension
+                        && entryName.startsWith(WEB_INF_CLASSES_PATH) ? WEB_INF_CLASSES_PATH
+                        .length()
+                        : 0;
+                final String className = entryName.substring(startPos,
                         entryName.length() - CLASS_SUFFIX.length()).replace(
                         '/', '.');
                 final int pos = className.lastIndexOf('.');

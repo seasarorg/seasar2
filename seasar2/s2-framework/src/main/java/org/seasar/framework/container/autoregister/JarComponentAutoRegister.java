@@ -22,6 +22,7 @@ import org.aopalliance.intercept.MethodInterceptor;
 import org.seasar.framework.util.FileUtil;
 import org.seasar.framework.util.JarFileUtil;
 import org.seasar.framework.util.ResourceUtil;
+import org.seasar.framework.util.ZipFileUtil;
 
 /**
  * 
@@ -45,8 +46,15 @@ public class JarComponentAutoRegister extends AbstractJarComponentAutoRegister {
     protected void setupBaseDir() {
         String path = ResourceUtil.getResourcePath(referenceClass);
         URL url = ResourceUtil.getResource(path);
-        File jarFile = new File(JarFileUtil.toJarFilePath(url));
+        String fileName = null;
+        if ("zip".equals(url.getProtocol())) {
+            fileName = ZipFileUtil.toZipFilePath(url);
+        } else {
+            fileName = JarFileUtil.toJarFilePath(url);
+        }
+        File jarFile = new File(fileName);
         File dir = jarFile.getParentFile();
         setBaseDir(FileUtil.getCanonicalPath(dir));
     }
+
 }
