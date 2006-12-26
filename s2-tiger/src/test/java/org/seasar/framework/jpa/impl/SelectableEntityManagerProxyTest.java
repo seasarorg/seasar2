@@ -29,13 +29,13 @@ import org.seasar.extension.datasource.DataSourceFactory;
 import org.seasar.extension.datasource.impl.DataSourceFactoryImpl;
 import org.seasar.framework.exception.EmptyRuntimeException;
 import org.seasar.framework.jpa.EntityManagerProvider;
-import org.seasar.framework.unit.S2EasyMockTestCase;
+import org.seasar.framework.unit.S2TigerTestCase;
 
 /**
  * @author koichik
  * 
  */
-public class SelectableEntityManagerProxyTest extends S2EasyMockTestCase {
+public class SelectableEntityManagerProxyTest extends S2TigerTestCase {
 
     DataSourceFactory dataSourceFactory;
 

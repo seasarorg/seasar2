@@ -79,8 +79,8 @@ public class EasyMockSupport {
 
     public void bindMockFields(final Object test, final S2Container container) {
         boundFields.clear();
-        for (Class<?> clazz = test.getClass(); clazz != S2EasyMockTestCase.class
-                && clazz != null; clazz = clazz.getSuperclass()) {
+        for (Class<?> clazz = test.getClass(); clazz != Object.class; clazz = clazz
+                .getSuperclass()) {
             for (final Field field : clazz.getDeclaredFields()) {
                 bindMockField(field, test, container);
             }
