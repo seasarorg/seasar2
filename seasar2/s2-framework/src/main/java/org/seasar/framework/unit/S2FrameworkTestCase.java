@@ -353,6 +353,10 @@ public abstract class S2FrameworkTestCase extends TestCase {
         return getName().substring(4);
     }
 
+    protected Method getTargetMethod() {
+        return ClassUtil.getMethod(getClass(), getName(), null);
+    }
+
     protected void invoke(String methodName) throws Throwable {
         try {
             Method method = ClassUtil.getMethod(getClass(), methodName, null);
