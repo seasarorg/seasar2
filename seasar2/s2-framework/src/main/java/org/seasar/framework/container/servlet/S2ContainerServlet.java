@@ -109,10 +109,13 @@ public class S2ContainerServlet extends HttpServlet {
         if (debug && command != null && RESTART.equalsIgnoreCase(command)) {
             destroy();
             init();
+            response.setContentType("text/plain; charset=UTF-8");
             response.getWriter().write("S2ContainerServlet is restarted.");
         } else if (debug && LIST.equalsIgnoreCase(command)) {
+            response.setContentType("text/html; charset=UTF-8");
             list(request, response);
         } else {
+            response.setContentType("text/plain; charset=UTF-8");
             response.getWriter().write("S2ContainerServlet is running.");
         }
     }
