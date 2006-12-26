@@ -45,6 +45,9 @@ public abstract class AbstractEJB3TxInterceptor extends AbstractTxInterceptor {
         if (throwable instanceof RuntimeException) {
             return true;
         }
-        return false;
+        if (throwable instanceof Exception) {
+            return false;
+        }
+        return true;
     }
 }
