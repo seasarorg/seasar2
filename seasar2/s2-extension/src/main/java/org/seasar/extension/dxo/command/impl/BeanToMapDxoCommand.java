@@ -39,6 +39,8 @@ public class BeanToMapDxoCommand extends AbstractDxoCommand {
 
     protected Object parsedExpression;
 
+    protected boolean excludeNull;
+
     protected Class valueType;
 
     public BeanToMapDxoCommand(final Class dxoClass, final Method method,
@@ -54,6 +56,7 @@ public class BeanToMapDxoCommand extends AbstractDxoCommand {
         if (expression != null) {
             parsedExpression = DxoUtil.parseMap(expression);
         }
+        excludeNull = annotationReader.isExcludeNull(dxoClass, method);
         valueType = DxoUtil.getValueTypeOfTargetMap(method);
         if (valueType == Object.class) {
             valueType = null;
@@ -69,6 +72,9 @@ public class BeanToMapDxoCommand extends AbstractDxoCommand {
             dest = (Map) OgnlUtil
                     .getValue(DxoUtil.parseMap(expression), source);
         }
+        if (excludeNull) {
+            removeNullEntry(dest);
+        }
         if (valueType == null) {
             return dest;
         }
@@ -79,6 +85,15 @@ public class BeanToMapDxoCommand extends AbstractDxoCommand {
         ((Map) dest).putAll((Map) convertScalar(source));
     }
 
+    protected void removeNullEntry(final Map map) {
+        for (final Iterator it = map.entrySet().iterator(); it.hasNext();) {
+            final Entry entry = (Entry) it.next();
+            if (entry.getValue() == null) {
+                it.remove();
+            }
+        }
+    }
+
     protected Map convertValueType(final Map from,
             final ConversionContext context) {
         final Map to = new LinkedHashMap();
@@ -86,7 +101,7 @@ public class BeanToMapDxoCommand extends AbstractDxoCommand {
             final Entry entry = (Entry) it.next();
             final Object key = entry.getKey();
             final Object value = entry.getValue();
-            if (valueType.isInstance(value)) {
+            if (value == null || valueType.isInstance(value)) {
                 to.put(key, value);
             } else {
                 final Converter converter = converterFactory.getConverter(value

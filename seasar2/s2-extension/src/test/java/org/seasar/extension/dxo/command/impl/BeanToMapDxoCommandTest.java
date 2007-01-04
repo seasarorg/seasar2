@@ -47,25 +47,41 @@ public class BeanToMapDxoCommandTest extends S2FrameworkTestCase {
         Hoge src = new Hoge(100, "Hoge", new BigDecimal("1000"));
         Map dest = (Map) command.execute(new Object[] { src });
         assertNotNull(dest);
-        assertEquals(4, dest.size());
+        assertEquals(3, dest.size());
         assertEquals(new Integer(100), dest.get("foo"));
         assertEquals("Hoge", dest.get("bar"));
         assertEquals(new BigDecimal("1000"), dest.get("baz"));
+
+        src = new Hoge(0, null, null);
+        dest = (Map) command.execute(new Object[] { src });
+        assertNotNull(dest);
+        assertEquals(1, dest.size());
+        assertEquals(new Integer(0), dest.get("foo"));
     }
 
     public void testScalar2() throws Exception {
         DxoCommand command = builder.createDxoCommand(ScalarDxo.class,
-                ClassUtil.getMethod(ScalarDxo.class, "convert2", new Class[] {
+                ClassUtil.getMethod(ScalarDxo.class, "convert", new Class[] {
                         Hoge.class, Map.class }));
         Hoge src = new Hoge(100, "Hoge", new BigDecimal("1000"));
         Map dest = new HashMap();
         command.execute(new Object[] { src, dest });
         assertNotNull(dest);
         assertEquals(4, dest.size());
-        assertEquals(new Integer(100), dest.get("one"));
-        assertEquals("Hoge", dest.get("two"));
-        assertEquals(new BigDecimal("1000"), dest.get("three"));
-        assertEquals("100Hoge1000", dest.get("four"));
+        assertEquals(new Integer(100), dest.get("foo"));
+        assertEquals("Hoge", dest.get("bar"));
+        assertEquals(new BigDecimal("1000"), dest.get("baz"));
+        assertNull(dest.get("barBar"));
+
+        src = new Hoge(0, null, null);
+        dest = new HashMap();
+        command.execute(new Object[] { src, dest });
+        assertNotNull(dest);
+        assertEquals(4, dest.size());
+        assertEquals(new Integer(0), dest.get("foo"));
+        assertNull(dest.get("bar"));
+        assertNull(dest.get("baz"));
+        assertNull(dest.get("barBar"));
     }
 
     public void testScalar3() throws Exception {
@@ -76,8 +92,43 @@ public class BeanToMapDxoCommandTest extends S2FrameworkTestCase {
         Map dest = new HashMap();
         command.execute(new Object[] { src, dest });
         assertNotNull(dest);
-        assertEquals(1, dest.size());
+        assertEquals(4, dest.size());
         assertEquals(new Integer(100), dest.get("one"));
+        assertEquals("Hoge", dest.get("two"));
+        assertEquals(new BigDecimal("1000"), dest.get("three"));
+        assertEquals("100Hoge1000", dest.get("four"));
+
+        src = new Hoge(0, null, null);
+        dest = new HashMap();
+        command.execute(new Object[] { src, dest });
+        assertNotNull(dest);
+        assertEquals(4, dest.size());
+        assertEquals(new Integer(0), dest.get("one"));
+        assertNull(dest.get("two"));
+        assertNull(dest.get("three"));
+        assertEquals("0nullnull", dest.get("four"));
+    }
+
+    public void testScalar4() throws Exception {
+        DxoCommand command = builder.createDxoCommand(ScalarDxo.class,
+                ClassUtil.getMethod(ScalarDxo.class, "convert4", new Class[] {
+                        Hoge.class, Map.class }));
+        Hoge src = new Hoge(100, "Hoge", new BigDecimal("1000"));
+        Map dest = new HashMap();
+        command.execute(new Object[] { src, dest });
+        assertNotNull(dest);
+        assertEquals(1, dest.size());
+        assertEquals("Hoge", dest.get("one"));
+        assertNull(dest.get("two"));
+        assertNull(dest.get("three"));
+        assertNull(dest.get("four"));
+
+        src = new Hoge(0, null, null);
+        dest = new HashMap();
+        command.execute(new Object[] { src, dest });
+        assertNotNull(dest);
+        assertEquals(1, dest.size());
+        assertNull(dest.get("one"));
         assertNull(dest.get("two"));
         assertNull(dest.get("three"));
         assertNull(dest.get("four"));
@@ -182,15 +233,19 @@ public class BeanToMapDxoCommandTest extends S2FrameworkTestCase {
     }
 
     public interface ScalarDxo {
+        public static final String convert_EXCLUDE_NULL = "";
+
         Map convert(Hoge src);
 
-        public static final String convert2_CONVERSION_RULE = "'one' : foo, 'two' : bar, 'three' : baz, 'four' : foo+bar+baz";
+        void convert(Hoge src, Map dest);
 
-        void convert2(Hoge src, Map dest);
-
-        public static final String convert3_CONVERSION_RULE = "one : foo";
+        public static final String convert3_CONVERSION_RULE = "'one' : foo, 'two' : bar, 'three' : baz, 'four' : ''+foo+bar+baz";
 
         void convert3(Hoge src, Map dest);
+
+        public static final String convert4_CONVERSION_RULE = "one : bar";
+
+        void convert4(Hoge src, Map dest);
     }
 
     public interface ToArrayDxo {
