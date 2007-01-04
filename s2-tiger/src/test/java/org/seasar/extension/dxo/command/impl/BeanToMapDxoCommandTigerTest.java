@@ -39,6 +39,28 @@ public class BeanToMapDxoCommandTigerTest extends S2FrameworkTestCase {
         include("dxo.dicon");
     }
 
+    @SuppressWarnings("unchecked")
+    public void testScalar1() throws Exception {
+        DxoCommand command = builder.createDxoCommand(ToScalarDxo.class,
+                ClassUtil.getMethod(ToScalarDxo.class, "convert",
+                        new Class[] { Hoge.class }));
+        Hoge src = new Hoge(100, "Hoge", new BigDecimal("1000"));
+        Map<String, String> dest = (Map) command.execute(new Object[] { src });
+        assertNotNull(dest);
+        assertEquals(3, dest.size());
+        assertEquals("100", dest.get("foo"));
+        assertEquals("Hoge", dest.get("bar"));
+        assertEquals("1000", dest.get("baz"));
+
+        src = new Hoge(0, null, null);
+        dest = (Map) command.execute(new Object[] { src });
+        assertNotNull(dest);
+        assertEquals(3, dest.size());
+        assertEquals("0", dest.get("foo"));
+        assertNull(dest.get("bar"));
+        assertNull(dest.get("baz"));
+    }
+
     public void testListToArray1() {
         DxoCommand command = builder.createDxoCommand(ToArrayDxo.class,
                 ClassUtil.getMethod(ToArrayDxo.class, "convert",
@@ -208,6 +230,10 @@ public class BeanToMapDxoCommandTigerTest extends S2FrameworkTestCase {
         assertEquals("HogeHoge", map.get("two"));
         assertEquals("2000", map.get("three"));
         assertEquals("200HogeHoge2000", map.get("four"));
+    }
+
+    public interface ToScalarDxo {
+        Map<String, String> convert(Hoge src);
     }
 
     public interface ToArrayDxo {
