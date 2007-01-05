@@ -67,21 +67,17 @@ public class BeanToMapDxoCommandTest extends S2FrameworkTestCase {
         Map dest = new HashMap();
         command.execute(new Object[] { src, dest });
         assertNotNull(dest);
-        assertEquals(4, dest.size());
+        assertEquals(3, dest.size());
         assertEquals(new Integer(100), dest.get("foo"));
         assertEquals("Hoge", dest.get("bar"));
         assertEquals(new BigDecimal("1000"), dest.get("baz"));
-        assertNull(dest.get("barBar"));
 
         src = new Hoge(0, null, null);
         dest = new HashMap();
         command.execute(new Object[] { src, dest });
         assertNotNull(dest);
-        assertEquals(4, dest.size());
+        assertEquals(1, dest.size());
         assertEquals(new Integer(0), dest.get("foo"));
-        assertNull(dest.get("bar"));
-        assertNull(dest.get("baz"));
-        assertNull(dest.get("barBar"));
     }
 
     public void testScalar3() throws Exception {
