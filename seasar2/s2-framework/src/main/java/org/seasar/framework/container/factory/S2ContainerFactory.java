@@ -208,8 +208,6 @@ public final class S2ContainerFactory {
 
         protected PathResolver pathResolver = new SimplePathResolver();
 
-        protected boolean hotswapMode;
-
         protected ExternalContext externalContext;
 
         protected ExternalContextComponentDefRegister externalContextComponentDefRegister;
