@@ -16,7 +16,6 @@
 package org.seasar.extension.dxo.converter.impl;
 
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -77,10 +76,9 @@ public class StringConverter extends AbstractConverter {
             }
         }
         if (source instanceof Calendar) {
-            final String format = (String) context
+            final DateFormat formatter = (DateFormat) context
                     .getContextInfo(DxoConstants.DATE_PATTERN);
-            if (format != null) {
-                final DateFormat formatter = new SimpleDateFormat(format);
+            if (formatter != null) {
                 return formatter.format(new Date(((Calendar) source)
                         .getTimeInMillis()));
             }

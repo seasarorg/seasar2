@@ -16,6 +16,8 @@
 package org.seasar.extension.dxo;
 
 import java.math.BigDecimal;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -113,6 +115,20 @@ public class DxoInterceptorTest extends S2TestCase {
         assertEquals('g', dest[1].getBar()[6]);
         assertEquals('e', dest[1].getBar()[7]);
         assertEquals(2000, dest[1].getBaz());
+    }
+
+    public void testDateFormat() throws Exception {
+        Employee emp = new Employee();
+        emp.setHiredate(new Date(0));
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(24 * 60 * 60 * 1000);
+        emp.setCal(cal);
+
+        EmpDto dest = beanDxo.convert(emp);
+
+        assertNotNull(dest);
+        assertEquals("1970/01/01", dest.getHiredate());
+        assertEquals("1970/01/02", dest.getCal());
     }
 
     public void testNestedProperty() throws Exception {
@@ -264,6 +280,8 @@ public class DxoInterceptorTest extends S2TestCase {
     }
 
     public interface BeanDxo {
+        String DATE_PATTERN = "yyyy/MM/dd";
+
         Hoge convert1(Hoge src);
 
         HogeHoge convert2(Hoge src);

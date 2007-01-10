@@ -15,6 +15,9 @@
  */
 package org.seasar.extension.dxo;
 
+import java.util.Calendar;
+import java.util.Date;
+
 public class Employee {
 
     private static final long serialVersionUID = -8378271087258215629L;
@@ -27,7 +30,9 @@ public class Employee {
 
     private Employee mgr;
 
-    private java.util.Date hiredate;
+    private Date hiredate;
+
+    private Calendar cal;
 
     private Float sal;
 
@@ -80,12 +85,20 @@ public class Employee {
         this.mgr = mgr;
     }
 
-    public java.util.Date getHiredate() {
+    public Date getHiredate() {
         return this.hiredate;
     }
 
-    public void setHiredate(java.util.Date hiredate) {
+    public void setHiredate(Date hiredate) {
         this.hiredate = hiredate;
+    }
+
+    public Calendar getCal() {
+        return cal;
+    }
+
+    public void setCal(Calendar cal) {
+        this.cal = cal;
     }
 
     public Float getSal() {
@@ -150,6 +163,7 @@ public class Employee {
         buf.append(job).append(", ");
         buf.append(mgr).append(", ");
         buf.append(hiredate).append(", ");
+        buf.append(cal).append(", ");
         buf.append(sal).append(", ");
         buf.append(comm).append(", ");
         buf.append(deptno).append(" {");

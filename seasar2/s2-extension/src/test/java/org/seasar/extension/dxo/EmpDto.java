@@ -29,6 +29,10 @@ public class EmpDto {
 
     String mname;
 
+    String hiredate;
+
+    String cal;
+
     String sal;
 
     String comm;
@@ -63,6 +67,22 @@ public class EmpDto {
 
     public void setMname(String mname) {
         this.mname = mname;
+    }
+
+    public String getHiredate() {
+        return hiredate;
+    }
+
+    public void setHiredate(String hiredate) {
+        this.hiredate = hiredate;
+    }
+
+    public String getCal() {
+        return cal;
+    }
+
+    public void setCal(String cal) {
+        this.cal = cal;
     }
 
     public String getSal() {
