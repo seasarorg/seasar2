@@ -10,7 +10,4 @@
 			</component>
 		</aspect>
 	</component>
-
-	<component name="hello2"
-		class="org.seasar.framework.aop.interceptors.HotAwareDelegateInterceptorTest$HelloImpl"/>
 </components>

@@ -28,6 +28,7 @@ public class HotAwareDelegateInterceptorTest extends S2FrameworkTestCase {
     protected void setUp() throws Exception {
         super.setUp();
         include("HotAwareDelegateInterceptorTest.dicon");
+        register(HelloImpl.class, "hello2");
     }
 
     public void testInvoke() throws Exception {

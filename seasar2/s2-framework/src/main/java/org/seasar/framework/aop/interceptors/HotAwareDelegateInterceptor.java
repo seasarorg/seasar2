@@ -39,7 +39,7 @@ public class HotAwareDelegateInterceptor implements MethodInterceptor {
     }
 
     public void setContainer(S2Container container) {
-        this.container = container;
+        this.container = container.getRoot();
     }
 
     public void setTargetName(String targetName) {
