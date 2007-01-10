@@ -21,17 +21,38 @@ import java.util.Iterator;
 import org.seasar.framework.exception.SRuntimeException;
 
 /**
+ * 循環インクルードが発見された時にスローされます。
+ * <p>
+ * 例えば、 以下のような場合に循環インクルードとなります。 （この例では、 aaa.diconが循環インクルードされています）
+ * </p>
+ * 
+ * <pre>
+ * aaa.dicon --include--&gt; bbb.dicon --include--&gt; ccc.dicon --include--&gt; aaa.dicon
+ * </pre>
+ * 
  * @author koichik
+ * @author jundu
  */
 public class CircularIncludeRuntimeException extends SRuntimeException {
     private static final long serialVersionUID = -8674493688526055877L;
 
+    /**
+     * 循環インクルードされた設定ファイルのパス
+     */
     protected String path;
 
+    /**
+     * 循環インクルードしているパスまでの経路を表すコレクション
+     */
     protected Collection paths;
 
     /**
-     * @param componentClasses
+     * <code>CircularIncludeRuntimeException</code>を構築します。
+     * 
+     * @param path
+     *            循環インクルードされた設定ファイルのパス
+     * @param paths
+     *            循環インクルードしているパスまでの経路を表すコレクション
      */
     public CircularIncludeRuntimeException(final String path,
             final Collection paths) {
@@ -40,14 +61,33 @@ public class CircularIncludeRuntimeException extends SRuntimeException {
         this.paths = paths;
     }
 
+    /**
+     * 循環インクルードされた設定ファイルのパスを返します。
+     * 
+     * @return 設定ファイルのパス
+     */
     public String getPath() {
         return path;
     }
 
+    /**
+     * 循環インクルードしているパスまでの経路を表すコレクションを返します。
+     * 
+     * @return 循環インクルードしているパスまでの経路を表すコレクション
+     */
     public Collection getPaths() {
         return paths;
     }
 
+    /**
+     * 循環インクルードが発生した設定ファイルまでのインクルード経路を表す文字列を返します。
+     * 
+     * @param path
+     *            循環インクルードが発生した設定ファイルのパス
+     * @param paths
+     *            循環インクルードしているパスまでの経路を表すコレクション
+     * @return インクルード経路を表す文字列
+     */
     protected static String toString(final String path, final Collection paths) {
         final StringBuffer buf = new StringBuffer(200);
         for (final Iterator it = paths.iterator(); it.hasNext();) {
