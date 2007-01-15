@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<document>
+	<properties>
+		<title>Kuina-Daoユーザ・ガイド - Diigu</title>
+	</properties>
+	<body>
+		<section name="Diigu">
+			<p>
+				Kuina-Dao は，DAO インタフェースのメソッドの引数名を条件に含めて問い合わせを行うことができます．
+				引数の名前は Java のリフレクション API で取得することができないため，Kuina-Dao は Diiguを使用します．
+				Diigu は Seasar Project で開発しているツールで，ソースファイルから取得した引数の名前を
+				Java5 のアノテーションとして .class ファイルに埋め込みます．
+				このため，実行時に Kuina-Dao などのフレームワークからメソッドの引数名を利用することが可能になります．
+			</p>
+			<p>
+				Diigu は Ant や Maven から利用することも可能な他，Eclipe Plugin も提供されています．
+				Diigu Eclipse Plugin は以下の更新サイトからインストールすることができます．
+				<ul>
+					<li><a href="http://eclipse.seasar.org/updates/3.1beta/">http://eclipse.seasar.org/updates/3.1/</a></li>
+				</ul>
+				インストール後，Kuina-Dao を利用するプロジェクトを右クリックして「プロパティ」を選択し，左のペインで「Diigu」を選択，
+				右のペインにある「Use Diigu Builder」をチェックしてください．
+			</p>
+		</section>
+	</body>
+</document>

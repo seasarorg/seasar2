@@ -1,0 +1,158 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<document>
+	<properties>
+		<title>Kuina-Daoユーザ・ガイド - DAOインタフェース</title>
+	</properties>
+	<body>
+		<section name="DAOインタフェース">
+			<p>
+				Kuina-Daoを利用するにはDAO (Data Access Object) のインタフェースを作成します．
+				特殊な場合を除いてDAOの実装を作成する必要はありません．
+			</p>
+			<p>
+				DAOはエンティティ毎に作成することが推奨されます．
+			</p>
+
+			<subsection name="パッケージ">
+				<p>
+					DAOインタフェースはSeasar2.4が提供するSMART deployの規約に従ったパッケージに配置することを推奨します．
+					SMART deployの規約では，DAOのパッケージは次のようになります．
+				</p>
+				<ul>
+					<li><p><var>ルートパッケージ</var><code>.dao</code></p></li>
+				</ul>
+			</subsection>
+
+			<subsection name="インタフェース">
+				<p>
+					DAOのインタフェース名はSeasar2.4が提供するSMART deployの規約に従うことを推奨します．
+					SMART deployの規約では，DAOのインタフェース名は次のようになります．
+				</p>
+				<ul>
+					<li><p><var>エンティティ名</var><code>Dao</code></p></li>
+				</ul>
+			</subsection>
+
+			<subsection name="メソッド">
+				<p>
+					DAOインタフェースにはエンティティを操作するためのメソッドを定義します．
+					Kuina-Daoはメソッドの名前や引数・戻り値から実行すべき操作を判断します．
+				</p>
+				<table>
+					<thead>
+						<tr>
+							<th>操作</th>
+							<th>メソッド名 (正規表現)</th>
+							<th>引数</th>
+							<th>戻り値</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>全件取得</td>
+							<td><code>(get|find)All</code></td>
+							<td>なし</td>
+							<td>エンティティの<code>List</code></td>
+						</tr>
+						<tr>
+							<td>主キーによる検索</td>
+							<td><code>get|find</code></td>
+							<td>エンティティの主キー</td>
+							<td>エンティティ</td>
+						</tr>
+						<tr>
+							<td>主キーによる検索 (リファレンスのみ)</td>
+							<td><code>(get|find)Reference</code></td>
+							<td>エンティティの主キー</td>
+							<td>エンティティ</td>
+						</tr>
+						<tr>
+							<td>引数を条件とする検索</td>
+							<td><code>(get|find).+</code></td>
+							<td>問い合わせ条件に含めるエンティティのプロパティの並び</td>
+							<td>エンティティまたはエンティティの<code>List</code></td>
+						</tr>
+						<tr>
+							<td>エンティティのプロパティを条件とする検索</td>
+							<td><code>(get|find).+</code></td>
+							<td>エンティティ</td>
+							<td>エンティティまたはエンティティの<code>List</code></td>
+						</tr>
+						<tr>
+							<td>DTOのプロパティを条件とする検索</td>
+							<td><code>(get|find).+</code></td>
+							<td>DTO</td>
+							<td>エンティティまたはエンティティの<code>List</code></td>
+						</tr>
+						<tr>
+							<td>条件式による検索</td>
+							<td><code>(get|find).+</code></td>
+							<td>条件式の並び</td>
+							<td>エンティティまたはエンティティの<code>List</code></td>
+						</tr>
+						<tr>
+							<td>JPQLによる検索</td>
+							<td><code>(get|find).+</code></td>
+							<td>JPQLに含まれるパラメータの並び</td>
+							<td>エンティティまたはエンティティの<code>List</code></td>
+						</tr>
+						<tr>
+							<td>SQLによる検索</td>
+							<td><code>(get|find).+</code></td>
+							<td>SQLに含まれるパラメータの並び</td>
+							<td>DTOまたはDTOの<code>List</code></td>
+						</tr>
+						<tr>
+							<td>エンティティの永続化</td>
+							<td><code>persist</code></td>
+							<td>エンティティ</td>
+							<td><code>void</code></td>
+						</tr>
+						<tr>
+							<td>エンティティの削除</td>
+							<td><code>remove</code></td>
+							<td>エンティティ</td>
+							<td><code>void</code></td>
+						</tr>
+						<tr>
+							<td>JPQLによる更新・削除</td>
+							<td><code>(update|delete|remove).+</code></td>
+							<td>JPQLに含まれるパラメータの並び</td>
+							<td><code>void</code>または<code>int</code> (更新または削除された行数)</td>
+						</tr>
+						<tr>
+							<td>SQLによる挿入・更新・削除</td>
+							<td><code>(insert|update|delete|remove).+</code></td>
+							<td>SQLに含まれるパラメータの並び</td>
+							<td><code>void</code>または<code>int</code> (更新または削除された行数)</td>
+						</tr>
+						<tr>
+							<td>エンティティのマージ</td>
+							<td><code>merge</code></td>
+							<td>エンティティ</td>
+							<td>エンティティ</td>
+						</tr>
+						<tr>
+							<td>エンティティのリフレッシュ</td>
+							<td><code>refresh</code></td>
+							<td>エンティティ</td>
+							<td><code>void</code></td>
+						</tr>
+						<tr>
+							<td>エンティティのリードロック</td>
+							<td><code>readLock</code></td>
+							<td>エンティティ</td>
+							<td><code>void</code></td>
+						</tr>
+						<tr>
+							<td>エンティティのライトロック</td>
+							<td><code>writeLock</code></td>
+							<td>エンティティ</td>
+							<td><code>void</code></td>
+						</tr>
+					</tbody>
+				</table>
+			</subsection>
+		</section>
+	</body>
+</document>

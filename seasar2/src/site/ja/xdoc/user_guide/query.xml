@@ -1,0 +1,459 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<document>
+	<properties>
+		<title>Kuina-Daoユーザ・ガイド - 問い合わせメソッド</title>
+	</properties>
+	<body>
+		<section name="問い合わせメソッド">
+			<p>
+				DAO (Data Access Object) インタフェースには様々な問い合わせメソッドを持たせることができます．
+			</p>
+			<ul>
+				<li><p><a href="#全件取得">全件取得</a></p></li>
+				<li><p><a href="#主キーによる検索">主キーによる検索</a></p></li>
+				<li><p><a href="#主キーによる検索 (リファレンスのみ)">主キーによる検索 (リファレンスのみ)</a></p></li>
+				<li><p><a href="#引数を条件とする検索">引数を条件とする検索</a></p></li>
+				<li><p><a href="#エンティティのプロパティを条件とする検索">エンティティのプロパティを条件とする検索</a></p></li>
+				<li><p><a href="#DTOのプロパティを条件とする検索">DTOのプロパティを条件とする検索</a></p></li>
+				<li><p><a href="#条件式による検索">条件式による検索</a></p></li>
+				<li><p><a href="#JPQLによる検索">JPQLによる検索</a></p></li>
+				<li><p><a href="#SQLによる検索">SQLによる検索</a></p></li>
+			</ul>
+
+			<subsection name="全件取得">
+				<p>
+					エンティティを全件取得するメソッドです．
+				</p>
+				<dl>
+					<dt>メソッド名 (正規表現)</dt>
+					<dd>
+<source><![CDATA[
+(get|find)All
+]]></source>
+					</dd>
+					<dt>引数</dt>
+					<dd>なし</dd>
+					<dt>戻り値</dt>
+					<dd>エンティティの<code>List</code></dd>
+					<dt>例</dt>
+					<dd>
+<source><![CDATA[
+public interface EmployeeDao {
+    List<Employee> findAll();
+}
+]]></source>
+					</dd>
+					<dt>実行されるJPQL</dt>
+					<dd>
+<source><![CDATA[
+SELECT employee FROM Employee AS employee
+]]></source>
+					</dd>
+				</dl>
+			</subsection>
+
+			<subsection name="主キーによる検索">
+				<p>
+					主キーを指定してエンティティを取得するメソッドです．
+				</p>
+				<dl>
+					<dt>メソッド名 (正規表現)</dt>
+					<dd>
+<source><![CDATA[
+get|find
+]]></source>
+					</dd>
+					<dt>引数</dt>
+					<dd>エンティティの主キー</dd>
+					<dt>戻り値</dt>
+					<dd>エンティティ</dd>
+					<dt>例</dt>
+					<dd>
+<source><![CDATA[
+public interface EmployeeDao {
+    Employee find(int id);
+}
+]]></source>
+					</dd>
+					<dt>実行されるJPQL</dt>
+					<dd>
+<source><![CDATA[
+SELECT employee FROM Employee AS employee WHERE employee.id = :id
+]]></source>
+					</dd>
+				</dl>
+			</subsection>
+
+			<subsection name="主キーによる検索 (リファレンスのみ)">
+				<p>
+					主キーを指定してエンティティのリファレンスを取得するメソッドです．
+				</p>
+				<dl>
+					<dt>メソッド名 (正規表現)</dt>
+					<dd>
+<source><![CDATA[
+(get|find)Reference
+]]></source>
+					</dd>
+					<dt>引数</dt>
+					<dd>エンティティの主キー</dd>
+					<dt>戻り値</dt>
+					<dd>エンティティ</dd>
+					<dt>例</dt>
+					<dd>
+<source><![CDATA[
+public interface EmployeeDao {
+    Employee getReference(int id);
+}
+]]></source>
+					</dd>
+				</dl>
+			</subsection>
+
+			<subsection name="引数を条件とする検索">
+				<p>
+					引数にマッチするエンティティを取得するメソッドです．<br/>
+					引数は問い合わせ条件に含めるエンティティのプロパティと引数の名前を一致させます．
+					メソッドが呼び出された際に，<code>null</code>でない引数が問い合わせ条件に含まれます．
+					<code>null</code>でない引数が複数ある場合は<code>AND</code>で連結されます．<br/>
+					引数名には演算子をサフィックスで指定することができます．
+					指定可能なサフィックスは<a href="引数およびDTOのプロパティ">「引数およびDTOのプロパティ」</a>を
+					参照してください．
+					サフィックスを省略すると <code>=</code> 演算子が使用されます．
+				</p>
+				<dl>
+					<dt>メソッド名 (正規表現)</dt>
+					<dd>
+<source><![CDATA[
+(get|find).+
+]]></source>
+					</dd>
+					<dt>引数</dt>
+					<dd>問い合わせ条件に含めるエンティティのプロパティの並び</dd>
+					<dt>戻り値</dt>
+					<dd>エンティティまたはエンティティの<code>List</code></dd>
+					<dt>例</dt>
+					<dd>
+<source><![CDATA[
+public interface EmployeeDao {
+    List<Employee> findByParameter(String name);
+}
+]]></source>
+					</dd>
+					<dt>実行されるJPQL</dt>
+					<dd>
+<source><![CDATA[
+SELECT employee FROM Employee AS employee WHERE employee.name = :name
+]]></source>
+					</dd>
+				</dl>
+			</subsection>
+
+			<subsection name="エンティティのプロパティを条件とする検索">
+				<p>
+					引数で指定したエンティティのプロパティにマッチするエンティティを取得するメソッドです．<br/>
+					メソッドが呼び出された際に，引数で渡されたエンティティの<code>null</code>でないプロパティが
+					問い合わせ条件に含まれます．
+					<code>null</code>でないプロパティが複数ある場合は<code>AND</code>で連結されます．
+				</p>
+				<dl>
+					<dt>メソッド名 (正規表現)</dt>
+					<dd>
+<source><![CDATA[
+(get|find).+
+]]></source>
+					</dd>
+					<dt>引数</dt>
+					<dd>問い合わせ条件に含めるエンティティ</dd>
+					<dt>戻り値</dt>
+					<dd>エンティティまたはエンティティの<code>List</code></dd>
+					<dt>例</dt>
+					<dd>
+<source><![CDATA[
+public interface EmployeeDao {
+    List<Employee> findByExample(Employee emp);
+}
+]]></source>
+					</dd>
+					<dt>実行されるJPQL</dt>
+					<dd>
+<source><![CDATA[
+SELECT employee FROM Employee AS employee WHERE employee.name = :name AND employee.hereDate = :hereDate
+]]></source>
+					</dd>
+				</dl>
+			</subsection>
+
+			<subsection name="DTOのプロパティを条件とする検索">
+				<p>
+					引数で指定したDTOのプロパティにマッチするエンティティを取得するメソッドです．<br/>
+					メソッドが呼び出された際に，引数で渡されたDTOの<code>null</code>でないプロパティが
+					問い合わせ条件に含まれます．
+					<code>null</code>でないプロパティが複数ある場合は<code>AND</code>で連結されます．<br/>
+					DTOのプロパティ名には演算子をサフィックスで指定することができます．
+					指定可能なサフィックスは<a href="引数およびDTOのプロパティ">「引数およびDTOのプロパティ」</a>を
+					参照してください．
+					サフィックスを省略すると <code>=</code> 演算子が使用されます．
+				</p>
+				<dl>
+					<dt>メソッド名 (正規表現)</dt>
+					<dd>
+<source><![CDATA[
+(get|find).+
+]]></source>
+					</dd>
+					<dt>引数</dt>
+					<dd>問い合わせ条件に含めるDTO</dd>
+					<dt>戻り値</dt>
+					<dd>エンティティまたはエンティティの<code>List</code></dd>
+					<dt>例</dt>
+					<dd>
+<source><![CDATA[
+public interface EmployeeDao {
+    List<Employee> findByDto(EmployeeDto dto);
+}
+]]></source>
+					</dd>
+					<dt>実行されるJPQL</dt>
+					<dd>
+<source><![CDATA[
+SELECT employee FROM Employee AS employee WHERE employee.name LIKE :name
+]]></source>
+					</dd>
+				</dl>
+			</subsection>
+
+			<subsection name="条件式による検索">
+				<p>
+					引数で指定した条件式にマッチするエンティティを取得するメソッドです．<br/>
+					条件式はKuina-DaoのCriteria APIが提供するもので，ORや副問い合わせなどJPQLのWHERE句で
+					可能な任意の条件を指定することができます．
+				</p>
+				<dl>
+					<dt>メソッド名 (正規表現)</dt>
+					<dd>
+<source><![CDATA[
+(get|find).+
+]]></source>
+					</dd>
+					<dt>引数</dt>
+					<dd>条件式の並び</dd>
+					<dt>戻り値</dt>
+					<dd>エンティティまたはエンティティの<code>List</code></dd>
+					<dt>例</dt>
+					<dd>
+<source><![CDATA[
+public interface EmployeeDao {
+    List<Employee> findCondition(ConditionalExpession cond);
+}
+]]></source>
+					</dd>
+				</dl>
+			</subsection>
+
+			<subsection name="JPQLによる検索">
+				<p>
+					Named Queryを使用して問い合わせを行うメソッドです．<br/>
+					使用するNamed Queryの名前は問い合わせ対象のエンティティ名とメソッド名をピリオドで
+					連結したものになります．
+					メソッドに<code>@QueryName</code>を付けることにより，使用するNamed Queryの名前を
+					変更することができます．<br/>
+					JPQLは@NamedQueryアノテーションまたはマッピングファイルで定義します．
+				</p>
+				<dl>
+					<dt>メソッド名 (正規表現)</dt>
+					<dd>
+<source><![CDATA[
+(get|find).+
+]]></source>
+					</dd>
+					<dt>引数</dt>
+					<dd>JPQLに含まれるパラメータの並び</dd>
+					<dt>戻り値</dt>
+					<dd>エンティティまたはエンティティの<code>List</code></dd>
+					<dt>例</dt>
+					<dd>
+<source><![CDATA[
+public interface EmployeeDao {
+    List<Employee> findByName();
+}
+]]></source>
+					</dd>
+					<dt>実行されるNamed Queryの例</dt>
+					<dd>
+<source><![CDATA[
+<named-query name="Employee.findByName">
+  <query>
+    SELECT
+      employee
+    FROM
+      Employee employee
+    WHERE
+      employee.name = :name
+  </query>
+</named-query>
+]]></source>
+					</dd>
+				</dl>
+			</subsection>
+
+			<subsection name="SQLによる検索">
+				<p>
+					S2Dao相当の2WAY-SQLファイルを使用して問い合わせを行うメソッドです．<br/>
+					問い合わせの結果は任意のDTOにマップすることができます．
+					問い合わせの結果セットと名前の一致するDTOのプロパティに値が設定されます．<br/>
+					使用するSQLファイルの名前は，Daoのインタフェース名 (先頭小文字) とメソッド名をアンダースコアで連結し，
+					拡張子 <code>.sql</code> を付加したものになります．
+					SQLファイルはDaoインタフェースのパッケージと同じ階層のディレクトリに配置します．<br/>
+					SQLによる検索は，JPA (<code>EntityManager</code>) を使用せず，JDBC APIを直接使用します．
+				</p>
+				<dl>
+					<dt>メソッド名 (正規表現)</dt>
+					<dd>
+<source><![CDATA[
+(get|find).+
+]]></source>
+					</dd>
+					<dt>引数</dt>
+					<dd>SQLに含まれるパラメータの並び</dd>
+					<dt>戻り値</dt>
+					<dd>DTOまたはDTOの<code>List</code></dd>
+					<dt>例</dt>
+					<dd>
+<source><![CDATA[
+public interface EmployeeDao {
+    List<EmployeeDto> findByDepartmentName(String departmentName);
+}
+]]></source>
+					</dd>
+					<dt>DTO</dt>
+					<dd>
+<source><![CDATA[
+public class EmployeeDto {
+    private int eid;
+    private String ename;
+    private String dname;
+
+    //setters and getters
+}
+]]></source>
+					</dd>
+					<dt>実行されるSQLファイルの名前の例</dt>
+					<dd>
+<source><![CDATA[
+employeeDao_findByDepartmentName.sql
+]]></source>
+					</dd>
+					<dt>実行されるSQLファイルの例</dt>
+					<dd>
+<source><![CDATA[
+SELECT
+  e.id eid,
+  e.name ename,
+  d.name dname
+FROM
+  Employee e INNER JOIN Department d ON (e.department_id = d.id)
+WHERE 
+  d.name = /*departmentName*/'foo'
+]]></source>
+					</dd>
+				</dl>
+			</subsection>
+
+			<subsection name="引数およびDTOのプロパティ">
+				<p>
+					引数を条件とする検索およびDTOのプロパティを条件とする検索では，問い合わせ条件に使用する演算子を
+					引数名またはプロパティ名のサフィックスで指定することができます．
+					サフィックスが指定されていない場合は <code>=</code> 演算子が適用されます．
+				</p>
+				<table>
+					<thead>
+						<tr>
+							<th>サフィックス</th>
+							<th>演算子</th>
+							<th>説明</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td><code>_EQ</code></td>
+							<td><code>=</code></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td><code>_NE</code></td>
+							<td><code>&lt;&gt;</code></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td><code>_LT</code></td>
+							<td><code>&lt;</code></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td><code>_LE</code></td>
+							<td><code>&lt;=</code></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td><code>_GT</code></td>
+							<td><code>&gt;</code></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td><code>_GE</code></td>
+							<td><code>&gt;=</code></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td><code>_IN</code></td>
+							<td><code>IN</code></td>
+							<td>引数またはプロパティの型は配列にします．</td>
+						</tr>
+						<tr>
+							<td><code>_NOT_IN</code></td>
+							<td><code>NOT IN</code></td>
+							<td>引数またはプロパティの型は配列にします．</td>
+						</tr>
+						<tr>
+							<td><code>_LIKE</code></td>
+							<td><code>LIKE</code></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td><code>_STARTS</code></td>
+							<td><code>LIKE</code></td>
+							<td>引数またはプロパティの値 (文字列) の末尾に'%'が付加されます．</td>
+						</tr>
+						<tr>
+							<td><code>_ENDS</code></td>
+							<td><code>LIKE</code></td>
+							<td>引数またはプロパティの値 (文字列) の先頭に'%'が付加されます．</td>
+						</tr>
+						<tr>
+							<td><code>_CONTAINS</code></td>
+							<td><code>LIKE</code></td>
+							<td>引数またはプロパティの値 (文字列) の先頭と末尾に'%'が付加されます．</td>
+						</tr>
+						<tr>
+							<td><code>_IS_NULL</code></td>
+							<td><code>IS NULL</code></td>
+							<td>
+								引数またはプロパティの値は<code>boolean</code>または<code>Boolean</code>としてください．
+								値が真の場合，問い合わせ条件に含まれます．
+							</td>
+						</tr>
+						<tr>
+							<td><code>_IS_NOT_NULL</code></td>
+							<td><code>IS NOT NULL</code></td>
+							<td>
+								引数またはプロパティの値は<code>boolean</code>または<code>Boolean</code>としてください．
+								値が真の場合，問い合わせ条件に含まれます．
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</subsection>
+		</section>
+	</body>
+</document>

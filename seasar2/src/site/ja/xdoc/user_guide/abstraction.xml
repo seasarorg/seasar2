@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<document>
+	<properties>
+		<title>Kuina-Daoユーザ・ガイド - 概要</title>
+	</properties>
+	<body>
+		<section name="概要">
+			<p>
+				Kuina-Daoは，JavaEEのO/R Mapping標準であるJava Persistence API (JPA) を利用した
+				データベースアクセスを簡略化するDAO (Data Access Object) フレームワークです．
+			</p>
+			<p>
+				Kuina-Daoを利用するにはDAO (Data Access Object) のJavaインタフェースを作成します．
+				DAOインタフェースにはKuina-Daoのルールに従った名称を持つメソッドを定義します．
+				メソッドの実装はKuina-DaoがAOPにより提供します．
+			</p>
+		</section>
+	</body>
+</document>

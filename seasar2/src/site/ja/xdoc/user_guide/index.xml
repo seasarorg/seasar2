@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<document>
+	<properties>
+		<title>Kuina-Daoユーザ・ガイド</title>
+	</properties>
+	<body>
+		<section name="目次">
+			<ul>
+				<li><p><a href="abstraction.html">概要</a></p></li>
+				<li><p><a href="diigu.html">Diigu</a></p></li>
+				<li><p><a href="dao.html">DAOインタフェース</a></p>
+					<ul>
+						<li><p><a href="dao.html#パッケージ">パッケージ</a></p></li>
+						<li><p><a href="dao.html#インタフェース">インタフェース</a></p></li>
+						<li><p><a href="dao.html#メソッド">メソッド</a></p></li>
+					</ul>
+				</li>
+				<li><p><a href="query.html">問い合わせメソッド</a></p>
+					<ul>
+						<li><p><a href="query.html#全件取得">全件取得</a></p></li>
+						<li><p><a href="query.html#主キーによる検索">主キーによる検索</a></p></li>
+						<li><p><a href="query.html#主キーによる検索 (リファレンスのみ)">主キーによる検索 (リファレンスのみ)</a></p></li>
+						<li><p><a href="query.html#引数を条件とする検索">引数を条件とする検索</a></p></li>
+						<li><p><a href="query.html#エンティティのプロパティを条件とする検索">エンティティのプロパティを条件とする検索</a></p></li>
+						<li><p><a href="query.html#DTOのプロパティを条件とする検索">DTOのプロパティを条件とする検索</a></p></li>
+						<li><p><a href="query.html#条件式による検索">条件式による検索</a></p></li>
+						<li><p><a href="query.html#JPQLによる検索">JPQLによる検索</a></p></li>
+						<li><p><a href="query.html#SQLによる検索">SQLによる検索</a></p></li>
+					</ul>
+				</li>
+			</ul>
+		</section>
+	</body>
+</document>
