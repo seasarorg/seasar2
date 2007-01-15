@@ -128,6 +128,19 @@ public final class StringUtil {
         return text;
     }
 
+    public static final String trimPrefix(final String text, String prefix) {
+        if (text == null) {
+            return null;
+        }
+        if (prefix == null) {
+            return text;
+        }
+        if (text.startsWith(prefix)) {
+            return text.substring(prefix.length());
+        }
+        return text;
+    }
+
     public static String decapitalize(String name) {
         if (isEmpty(name)) {
             return name;
@@ -245,5 +258,46 @@ public final class StringUtil {
             sb.append(Character.forDigit((bytes[i] & 0x0f), 16));
         }
         return sb.toString();
+    }
+
+    public static String camelize(String s) {
+        if (s == null) {
+            return null;
+        }
+        s = s.toLowerCase();
+        String[] array = StringUtil.split(s, "_");
+        if (array.length == 1) {
+            return StringUtil.capitalize(s);
+        }
+        StringBuffer buf = new StringBuffer(40);
+        for (int i = 0; i < array.length; ++i) {
+            buf.append(StringUtil.capitalize(array[i]));
+        }
+        return buf.toString();
+    }
+
+    public static String decamelize(String s) {
+        if (s == null) {
+            return null;
+        }
+        if (s.length() == 1) {
+            return s.toUpperCase();
+        }
+        StringBuffer buf = new StringBuffer(40);
+        int pos = 0;
+        for (int i = 1; i < s.length(); ++i) {
+            if (Character.isUpperCase(s.charAt(i))) {
+                if (buf.length() != 0) {
+                    buf.append('_');
+                }
+                buf.append(s.substring(pos, i).toUpperCase());
+                pos = i;
+            }
+        }
+        if (buf.length() != 0) {
+            buf.append('_');
+        }
+        buf.append(s.substring(pos, s.length()).toUpperCase());
+        return buf.toString();
     }
 }

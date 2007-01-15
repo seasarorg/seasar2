@@ -7,4 +7,5 @@
 			<arg>"org.seasar.framework.container.warmdeploy"</arg>
 		</initMethod>
 	</component>
+	<component class="org.seasar.framework.convention.impl.PersistenceConventionImpl"/>
 </components>

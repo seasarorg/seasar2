@@ -15,6 +15,8 @@
  */
 package org.seasar.framework.util;
 
+import org.seasar.framework.exception.EmptyRuntimeException;
+
 /**
  * @author shot
  */
@@ -26,6 +28,12 @@ public class AssertionUtil {
     public static void assertNotNull(String message, Object obj) {
         if (obj == null) {
             throw new NullPointerException(message);
+        }
+    }
+
+    public static void assertNotEmpty(String message, String s) {
+        if (StringUtil.isEmpty(s)) {
+            throw new EmptyRuntimeException(message);
         }
     }
 

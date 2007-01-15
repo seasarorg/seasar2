@@ -51,6 +51,10 @@ public class StringUtilTest extends TestCase {
         assertEquals("aaa", StringUtil.trimSuffix("aaaLogic", "Logic"));
     }
 
+    public void testTrimPrefix() throws Exception {
+        assertEquals("AAA", StringUtil.trimPrefix("T_AAA", "T_"));
+    }
+
     public void testStartsWith() throws Exception {
         assertEquals("1", true, StringUtil.startsWith("abcdef", "ABC"));
         assertEquals("2", false, StringUtil.startsWith("ab", "ABC"));
@@ -132,5 +136,19 @@ public class StringUtilTest extends TestCase {
 
     public void testToHex() throws Exception {
         assertEquals("010203", StringUtil.toHex(new byte[] { 1, 2, 3 }));
+    }
+
+    public void testCamelize() throws Exception {
+        assertNull(StringUtil.camelize(null));
+        assertEquals("Emp", StringUtil.camelize("EMP"));
+        assertEquals("AaaBbb", StringUtil.camelize("AAA_BBB"));
+    }
+
+    public void testDecamelize() throws Exception {
+        assertNull(StringUtil.decamelize(null));
+        assertEquals("EMP", StringUtil.decamelize("Emp"));
+        assertEquals("AAA_BBB", StringUtil.decamelize("aaaBbb"));
+        assertEquals("AAA_BBB", StringUtil.decamelize("AaaBbb"));
+        assertEquals("AAA_BBB_C", StringUtil.decamelize("aaaBbbC"));
     }
 }

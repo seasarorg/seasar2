@@ -13,19 +13,29 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.dao.helper;
-
-import java.lang.reflect.Method;
+package org.seasar.framework.convention;
 
 /**
  * @author higa
  * 
  */
-public interface DaoHelper {
+public interface PersistenceConvention {
 
-    Class getDaoInterface(Class daoClass);
+    String fromTableNameToEntityName(String tableName);
 
-    String getDataSourceName(Class daoClass);
+    String fromEntityNameToTableName(String entityName);
 
-    String getSqlBySqlFile(Class daoClass, Method method, String suffix);
+    String fromColumnNameToPropertyName(String columnName);
+
+    String fromPropertyNameToColumnName(String propertyName);
+
+    boolean isId(String entityName, String propertyName);
+
+    boolean isVersion(String entityName, String propertyName);
+
+    boolean isInserted(String entityName, String propertyName);
+
+    boolean isUpdated(String entityName, String propertyName);
+
+    boolean isDeleted(String entityName, String propertyName);
 }
