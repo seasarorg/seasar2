@@ -1,7 +1,22 @@
 <project name="seasar2" default="dist" basedir=".">
 	<property name="ver" value="2.4.8"/>
 
-	<target name="dist">
+	<target name="fix-site">
+		<mkdir dir="target/site/en"/>
+		<move todir="target/site/en">
+			<fileset dir="target/site">
+				<exclude name="apidocs/**"/>
+				<exclude name="en/**"/>
+				<exclude name="ja/**"/>
+				<exclude name="index.html.en"/>
+				<exclude name="index.html.ja"/>
+			</fileset>
+		</move>
+		<delete file="target/site/ja/index.html.en"/>
+		<delete file="target/site/ja/index.html.ja"/>
+	</target>
+
+	<target name="dist" depends="fix-site">
 		<mkdir dir="target"/>
 		<zip zipfile="target/S${ver}.zip">
 			<zipfileset prefix="seasar2" dir=".">
