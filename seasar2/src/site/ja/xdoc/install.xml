@@ -1,0 +1,196 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<document>
+	<properties>
+		<title>Install</title>
+	</properties>
+	<body>
+		<section name="目次">
+			<ul>
+				<li>
+					<p><a href="#ダウンロード">ダウンロード</a></p>
+				</li>
+				<li>
+					<p><a href="#配布ファイルの内容">配布ファイルの内容</a></p>
+				</li>
+				<li>
+					<p><a href="#JDKでの利用">JDKでの利用</a></p>
+				</li>
+				<li>
+					<p><a href="#Eclipseでの利用">Eclipseでの利用</a></p>
+				</li>
+				<li>
+					<p><a href="#Maven2での利用">Maven2での利用</a></p>
+				</li>
+			</ul>
+		</section>
+		<section name="ダウンロード">
+			<p>
+				<a href="downloads.html">こちら</a>からKuina-Daoをダウンロードしてください．
+			</p>
+		</section>
+		<section name="配布ファイルの内容">
+			<p>
+				Kuina-Daoの配布ファイルには以下の内容が含まれています
+			</p>
+			<dl>
+				<dt>
+					<code>kuina-dao</code>
+				</dt>
+				<dd>
+					Kuina-Dao本体です．
+				</dd>
+				<dt>
+					<code>kuina-dao-it</code>
+				</dt>
+				<dd>
+					Kuina-DaoをJPA実装と組み合わせてテストするためのEclipseプロジェクトです．<br/>
+					以下のJPA実装を使用します．
+					<ul>
+						<li><p>Hibernate-Core + Hibernate-Annotations + Hibernate-EntityManager</p></li>
+						<li><p>TopLink Essentials</p></li>
+					</ul>
+					以下のRDBMSを使用します．
+					<ul>
+						<li><p>HSQLDB</p></li>
+						<li><p>Apache Derby</p></li>
+					</ul>
+					使用するJPA実装とRDBMSの組み合わせは<code>src/test/resource/env.txt</code>で指定できます．
+				</dd>
+			</dl>
+		</section>
+		<section name="JDKでの利用">
+			<subsection name="事前条件">
+				<p>
+					事前に以下のプロダクトを利用できるようにしてください．
+				</p>
+				<ul>
+					<li><p><a href="http://s2container.seasar.org">Seasar2</a></p></li>
+					<li><p><a href="http://s2container.seasar.org">S2-Tiger</a></p></li>
+				</ul>
+				<p>
+					以下のプロダクトのいずれかを利用できるようにしてください．
+				</p>
+				<ul>
+					<li><p><a href="http://s2hibernate.seasar.org">S2Hibernate-JPA</a></p></li>
+					<li><p><a href="http://s2toplink.sandbox.seasar.org">S2TopLink-JPA</a></p></li>
+				</ul>
+				<p>
+					依存するバージョンについては「<a href="dependencies.html">プロジェクトの依存関係</a>」を参照してください．
+				</p>
+			</subsection>
+			<subsection name="クラスパスの設定">
+				<p>
+					ダウンロードしたKuina-Daoの配布ファイルを適当なディレクトリに解凍してください．
+					解凍したディレクトリ以下の次のJarファイルをクラスパスに設定してください．
+				</p>
+				<ul>
+					<li>
+						<p><code>kuina-dao/lib/kuina-dao-<var>x.x.x</var>.jar</code></p>
+					</li>
+				</ul>
+			</subsection>
+		</section>
+		<section name="Eclipseでの利用">
+			<p>
+				Kuina-Daoの配布ファイルは，他のSeasar2関連プロダクトの多くと同様，
+				Eclipseプロジェクトをアーカイブしたものになっています．
+			</p>
+			<subsection name="事前条件">
+				<p>
+					事前に以下のプロダクトをワークスペースにインポートしてください．
+				</p>
+				<ul>
+					<li><p><a href="http://s2container.seasar.org">Seasar2</a></p></li>
+					<li><p><a href="http://s2container.seasar.org">S2-Tiger</a></p></li>
+				</ul>
+				<p>
+					以下のプロダクトのいずれかをワークスペースにインポートしてください．
+				</p>
+				<ul>
+					<li><p><a href="http://s2hibernate.seasar.org">S2Hibernate-JPA</a></p></li>
+					<li><p><a href="http://s2toplink.sandbox.seasar.org">S2TopLink-JPA</a></p></li>
+				</ul>
+				<p>
+					依存するバージョンについては「<a href="dependencies.html">プロジェクトの依存関係</a>」を参照してください．
+				</p>
+			</subsection>
+			<subsection name="インポート">
+				<p>
+					以下の手順でKuina-DaoをEclipseワークスペースにインポートしてください．
+				</p>
+				<ul>
+					<li>
+						<p>
+							ダウンロードしたKuina-Daoの配布ファイルをEclipseのワークスペースまたは適当なディレクトリに解凍してください．
+						</p>
+					</li>
+					<li>
+						<p>
+							Eclipseの「File」－「Import」メニューで「Import Wizard」を開きます．
+						</p>
+					</li>
+					<li>
+						<p>
+							「Select a import source」で「General」－「Existing Project into Workspace」を選択し，
+							「Next」ボタンを押下します．
+						</p>
+					</li>
+					<li>
+						<p>
+							「Select a root directory」でKuina-Daoの配布ファイルを解凍したディレクトリを指定します．
+						</p>
+					</li>
+					<li>
+						<p>
+							「Projects」で "kuina-dao"および"kuina-dao-it"がチェックされていることを確認して
+							「Finish」ボタンを押下します．
+						</p>
+					</li>
+				</ul>
+			</subsection>
+			<subsection name="Kuina-Daoプロジェクトの参照">
+				<p>
+					以下の手順でKuina-Daoを利用するJavaプロジェクトからKuina-Daoを参照してください．
+				</p>
+				<ul>
+					<li>
+						<p>Kuina-Daoを利用するJavaプロジェクトを右クリックして「Properties」メニューを選択します．</p>
+					</li>
+					<li>
+						<p>左のペインで「Java Build Path」を，右のペインで「Projects」を選択します．</p>
+					</li>
+					<li>
+						<p>「Add」ボタンを押下し，「Select projects to add:」から "kuina-dao" をチェックして「OK」ボタンを押下します．</p>
+					</li>
+					<li>
+						<p>「OK」ボタンを押下します．</p>
+					</li>
+				</ul>
+			</subsection>
+		</section>
+		<section name="Maven2での利用">
+			<p>
+				Kuina-DaoはMaven2に対応しており，SeasarプロジェクトのMaven2リポジトリにデプロイされています．
+			</p>
+			<subsection name="Maven2リポジトリ">
+				<p>
+					SeasarプロジェクトのMaven2リポジトリの利用方法については
+					「<a href="http://www.seasar.org/wiki/index.php?Maven2RepoRemote">Maven2RepoRemote</a>」を
+					参照してください．
+				</p>
+			</subsection>
+			<subsection name="グループID・成果物ID">
+				<p>
+					Kuina-DaoのグループID・成果物IDについては「<a href="project-summary.html">プロジェクトサマリ</a>」を
+					参照してください．
+				</p>
+			</subsection>
+			<subsection name="依存関係">
+				<p>
+					Kuina-Daoの依存関係については「<a href="dependencies.html">プロジェクトの依存関係</a>」を
+					参照してください．
+				</p>
+			</subsection>
+		</section>
+	</body>
+</document>
