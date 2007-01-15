@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<document>
+	<properties>
+		<title>Top</title>
+	</properties>
+	<body>
+		<section name="Welcome">
+			<p>
+				Kuina-Dao は，JavaEE 5 の O/R マッピング標準，Java Persistence API (JPA) 上で利用可能な Data Access Object (DAO) フレームワークです．
+				Kuina-Dao を利用することにより，Java インタフェースを定義するだけで動的な問い合わせを作成したり，名前付き問い合わせを容易に呼び出したりすることが可能になります．
+			</p>
+		</section>
+		<section name="News">
+			<dl>
+				<dt>2007/01/14</dt>
+				<dd>
+					Kuina-Dao 1.0.0-rc1 をリリースしました． (<a href="downloads.html">ダウンロード</a>)
+				</dd>
+			</dl>
+		</section>
+	</body>
+</document>
