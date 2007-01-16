@@ -20,6 +20,17 @@ import java.text.SimpleDateFormat;
 
 public final class BigDecimalConversionUtil {
 
+    protected static final String TIGER_NORMALIZER_CLASS_NAME = "org.seasar.framework.util.TigerBigDecimalConversion";
+
+    protected static BigDecimalNormalizer normalizer = new DefaultNormalizer();
+    static {
+        try {
+            final Class clazz = Class.forName(TIGER_NORMALIZER_CLASS_NAME);
+            normalizer = (BigDecimalNormalizer) clazz.newInstance();
+        } catch (Exception ignore) {
+        }
+    }
+
     private BigDecimalConversionUtil() {
     }
 
@@ -38,7 +49,17 @@ public final class BigDecimalConversionUtil {
             }
             return new BigDecimal(Long.toString(((java.util.Date) o).getTime()));
         } else {
-            return new BigDecimal(o.toString());
+            return normalizer.normalize(new BigDecimal(o.toString()));
+        }
+    }
+
+    public interface BigDecimalNormalizer {
+        BigDecimal normalize(BigDecimal dec);
+    }
+
+    public static class DefaultNormalizer implements BigDecimalNormalizer {
+        public BigDecimal normalize(final BigDecimal dec) {
+            return dec;
         }
     }
 }
