@@ -38,6 +38,36 @@
 		<property name="password">""</property>
 	</component>
 
+	<!-- for H2 -->
+	<!--
+	<component name="xaDataSource"
+		class="org.seasar.extension.dbcp.impl.XADataSourceImpl">
+		<property name="driverClassName">
+			"org.h2.Driver"
+		</property>
+		<property name="URL">
+			"jdbc:h2:tcp://localhost:9092/demo"
+		</property>
+		<property name="user">"sa"</property>
+		<property name="password">""</property>
+	</component>
+	-->
+
+	<!-- for Derby -->
+	<!--
+	<component name="xaDataSource"
+		class="org.seasar.extension.dbcp.impl.XADataSourceImpl">
+		<property name="driverClassName">
+			"org.apache.derby.jdbc.EmbeddedDriver"
+		</property>
+		<property name="URL">
+			"jdbc:derby:demo"
+		</property>
+		<property name="user">""</property>
+		<property name="password">""</property>
+	</component>
+	-->
+
 	<!-- for Oracle -->
 	<!--
 	<component name="xaDataSource"
@@ -98,6 +128,8 @@
 	- 上記以外の場合は，my.cnfでdefault-character-setの設定を適切に
 		(cp932やutf8など．デフォルトのlatin1は不可)行なっていれば，
 		文字化けは防げます．
+	-->
+	<!--
 	<component name="xaDataSource"
 		class="org.seasar.extension.dbcp.impl.XADataSourceImpl">
 		<property name="driverClassName">
