@@ -23,87 +23,102 @@ import org.seasar.framework.util.SLinkedList;
 
 public class TimeoutManager implements Runnable {
 
-    private static TimeoutManager _instance = new TimeoutManager();
+    protected static final TimeoutManager instance = new TimeoutManager();
 
-    private Thread thread_;
+    protected Thread thread;
 
-    private SLinkedList timeoutTaskList_ = new SLinkedList();
+    protected final SLinkedList timeoutTaskList = new SLinkedList();
 
     private TimeoutManager() {
-        start();
     }
 
     public static TimeoutManager getInstance() {
-        return _instance;
+        return instance;
     }
 
-    public void start() {
-        thread_ = new Thread(this);
-        thread_.setDaemon(true);
-        thread_.start();
-    }
-
-    public void stop() {
-        thread_.interrupt();
-        thread_ = null;
-    }
-
-    public synchronized void clear() {
-        timeoutTaskList_.clear();
-    }
-
-    public void run() {
-        List expiredTask = new ArrayList();
-        while (thread_ != null) {
-            try {
-                synchronized (timeoutTaskList_) {
-                    while (timeoutTaskList_.isEmpty()) {
-                        timeoutTaskList_.wait();
-                    }
-                    for (SLinkedList.Entry e = timeoutTaskList_.getFirstEntry(); e != null; e = e
-                            .getNext()) {
-                        TimeoutTask task = (TimeoutTask) e.getElement();
-                        if (task.isCanceled()) {
-                            e.remove();
-                            continue;
-                        }
-                        if (task.isStopped()) {
-                            continue;
-                        }
-                        if (task.isExpired()) {
-                            expiredTask.add(task);
-                            if (!task.isPermanent()) {
-                                e.remove();
-                            }
-                        }
-                    }
-                }
-                for (Iterator it = expiredTask.iterator(); it.hasNext();) {
-                    TimeoutTask task = (TimeoutTask) it.next();
-                    task.expired();
-                    if (task.isPermanent()) {
-                        task.restart();
-                    }
-                }
-                expiredTask.clear();
-                Thread.sleep(1000);
-            } catch (InterruptedException ignore) {
-            }
+    public synchronized void start() {
+        if (thread == null) {
+            thread = new Thread(this, "Seasar2-TimeoutManager");
+            thread.setDaemon(true);
+            thread.start();
         }
     }
 
-    public TimeoutTask addTimeoutTarget(TimeoutTarget timeoutTarget,
-            int timeout, boolean permanent) {
+    public synchronized void stop() {
+        if (thread != null) {
+            thread.interrupt();
+            thread = null;
+        }
+    }
 
-        TimeoutTask task = new TimeoutTask(timeoutTarget, timeout, permanent);
-        synchronized (timeoutTaskList_) {
-            timeoutTaskList_.addLast(task);
-            timeoutTaskList_.notify();
+    public synchronized void clear() {
+        timeoutTaskList.clear();
+    }
+
+    public synchronized TimeoutTask addTimeoutTarget(
+            final TimeoutTarget timeoutTarget, final int timeout,
+            final boolean permanent) {
+        final TimeoutTask task = new TimeoutTask(timeoutTarget, timeout,
+                permanent);
+        timeoutTaskList.addLast(task);
+        if (timeoutTaskList.size() == 1) {
+            start();
         }
         return task;
     }
 
-    public int getTimeoutTaskCount() {
-        return timeoutTaskList_.size();
+    public synchronized int getTimeoutTaskCount() {
+        return timeoutTaskList.size();
     }
+
+    public void run() {
+        for (;;) {
+            final List expiredTask = getExpiredTask();
+            for (final Iterator it = expiredTask.iterator(); it.hasNext();) {
+                final TimeoutTask task = (TimeoutTask) it.next();
+                task.expired();
+                if (task.isPermanent()) {
+                    task.restart();
+                }
+            }
+            if (stopIfLeisure()) {
+                return;
+            }
+            try {
+                Thread.sleep(1000);
+            } catch (final InterruptedException ignore) {
+            }
+        }
+    }
+
+    protected synchronized List getExpiredTask() {
+        final List expiredTask = new ArrayList();
+        for (SLinkedList.Entry e = timeoutTaskList.getFirstEntry(); e != null; e = e
+                .getNext()) {
+            final TimeoutTask task = (TimeoutTask) e.getElement();
+            if (task.isCanceled()) {
+                e.remove();
+                continue;
+            }
+            if (task.isStopped()) {
+                continue;
+            }
+            if (task.isExpired()) {
+                expiredTask.add(task);
+                if (!task.isPermanent()) {
+                    e.remove();
+                }
+            }
+        }
+        return expiredTask;
+    }
+
+    protected synchronized boolean stopIfLeisure() {
+        if (timeoutTaskList.isEmpty()) {
+            thread = null;
+            return true;
+        }
+        return false;
+    }
+
 }

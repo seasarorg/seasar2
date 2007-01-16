@@ -69,7 +69,14 @@ public class ConnectionPoolImpl implements ConnectionPool, Synchronization {
 
     private SLinkedList freePool_ = new SLinkedList();
 
+    private TimeoutTask timeoutTask_;
+
     public ConnectionPoolImpl() {
+        timeoutTask_ = TimeoutManager.getInstance().addTimeoutTarget(
+                new TimeoutTarget() {
+                    public void expired() {
+                    }
+                }, Integer.MAX_VALUE, true);
     }
 
     public XADataSource getXADataSource() {
@@ -272,6 +279,7 @@ public class ConnectionPoolImpl implements ConnectionPool, Synchronization {
                 .getNext()) {
             FreeItem item = (FreeItem) e.getElement();
             item.getConnection().closeReally();
+            item.destroy();
         }
         freePool_.clear();
         for (Iterator i = txActivePool_.values().iterator(); i.hasNext();) {
@@ -284,6 +292,7 @@ public class ConnectionPoolImpl implements ConnectionPool, Synchronization {
             con.closeReally();
         }
         activePool_.clear();
+        timeoutTask_.cancel();
     }
 
     private class FreeItem implements TimeoutTarget {

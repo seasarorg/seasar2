@@ -25,6 +25,7 @@ import junit.framework.TestSuite;
 
 import org.seasar.extension.dbcp.ConnectionPool;
 import org.seasar.extension.dbcp.ConnectionWrapper;
+import org.seasar.extension.timer.TimeoutManager;
 import org.seasar.extension.unit.S2TestCase;
 
 public class ConnectionPoolImplTest extends S2TestCase {
@@ -85,10 +86,17 @@ public class ConnectionPoolImplTest extends S2TestCase {
     }
 
     public void testClose() throws Exception {
-        pool_.checkOut();
+        Thread.sleep(1500);
+        assertEquals(2, TimeoutManager.getInstance().getTimeoutTaskCount());
+        ConnectionWrapper wrapper = pool_.checkOut();
+        pool_.checkIn(wrapper);
+        assertEquals(3, TimeoutManager.getInstance().getTimeoutTaskCount());
         pool_.close();
-        assertEquals("1", 0, pool_.getActivePoolSize());
-        assertEquals("2", 0, pool_.getFreePoolSize());
+        assertEquals(0, pool_.getActivePoolSize());
+        assertEquals(0, pool_.getFreePoolSize());
+        pool2_.close();
+        Thread.sleep(1500);
+        assertEquals(0, TimeoutManager.getInstance().getTimeoutTaskCount());
     }
 
     public void testTransaction() throws Exception {
