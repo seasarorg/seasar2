@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<faqs title="Frequently Asked Questions">
+	<part id="general">
+		<title>General</title>
+
+		<faq id="general-kuina">
+			<question>
+				Kuina ってなんですか？
+			</question>
+			<answer>
+				Kuina とは，JavaEE 5 の O/R マッピング標準である Java Persistence API (JPA) の関連プロダクトを開発する，Seasar プロジェクトのサブプロジェクトです．
+			</answer>
+		</faq>
+		<faq id="general-kuinadao">
+			<question>
+				Kuina-Dao ってなんですか？
+			</question>
+			<answer>
+				Kuina-Dao とは，Java Persistence API (JPA) 上で利用可能な Data Access Object (DAO) フレームワークです．
+			</answer>
+		</faq>
+		<faq id="general-naming">
+			<question>
+				Kuina という名前はどういう意味ですか？
+			</question>
+			<answer>
+				Kuina (クイナ) とは，ツル目クイナ科の鳥の総称です．
+				沖縄本島の固有種であるヤンバルクイナにちなんで名付けられました．
+				Seasar プロジェクトで開発されているプロダクトは，Seasar 開発者であるひがやすを氏の出身地である沖縄にゆかりのある言葉をプロダクト名に採用することが多々あります．
+				<ul>
+					<li>ウィキペディアの「<a href="http://ja.wikipedia.org/wiki/クイナ">クイナ</a>」</li>
+					<li>ウィキペディアの「<a href="http://ja.wikipedia.org/wiki/ヤンバルクイナ">ヤンバルクイナ</a>」</li>
+				</ul>
+			</answer>
+		</faq>
+		<faq id="general-advantage">
+			<question>
+				Kuina-Dao を利用するメリットはなんですか？
+			</question>
+			<answer>
+				Kuina-Dao を利用することで，JPA で規定されている EntityManager のメソッドを呼び出す退屈なコードを繰り返し記述する必要がなくなります．
+				特に問い合わせ条件に応じて実行時に Java Persistence Query Language (JPQL) 文字列を動的に組み立てる手間を削減することが可能になります．
+				通常，Kuina-Dao を利用するには Dao の Java インタフェースと問い合わせを記述した orm.xml ファイルまたは .sql ファイルを用意するだけで，Java の実行文を記述する必要がないため，テストの手間を大きく削減することもできます．
+			</answer>
+		</faq>
+		<!--
+		<faq id="general-">
+			<question>
+			</question>
+			<answer>
+			</answer>
+		</faq>
+		-->
+	</part>
+
+	<part id="diigu">
+		<title>Diigu</title>
+	
+		<faq id="diigu-waht">
+			<question>
+				Diigu ってなんですか？
+			</question>
+			<answer>
+				Diigu とは Java クラスまたはインタフェースのメソッドが持つ引数の名前を実行時に利用可能にするためのプロダクトです．
+				Diigu はソースファイルから取得した引数の名前を Java5 のアノテーションとして .class ファイルに埋め込みます．
+				このため，実行時に Kuina-Dao などのフレームワークからメソッドの引数名を利用することが可能になります．
+			</answer>
+		</faq>
+		<faq id="diigu-naming">
+			<question>
+				Diigu という名前はどういう意味ですか？
+			</question>
+			<answer>
+				Diigu (ディーグ) とは，マメ科の落葉高木「デイゴ」を表す沖縄の方言です．
+				デイゴは沖縄の県花であることにちなんで名付けられました．
+				Seasar プロジェクトで開発されているプロダクトは，Seasar 開発者であるひがやすを氏の出身地である沖縄にゆかりのある言葉をプロダクト名に採用することが多々あります．
+				<ul>
+					<li>ウィキペディアの「<a href="http://ja.wikipedia.org/wiki/デイゴ">デイゴ</a>」</li>
+				</ul>
+			</answer>
+		</faq>
+		<faq id="diigu-why">
+			<question>
+				なぜ Diigu が必要になるのですか？
+			</question>
+			<answer>
+				Kuina-Dao は Dao のメソッドが持つ引数を JPQL の中の名前付きパラメータにバインドしたり，問い合わせ条件に埋め込んだりします．
+				そのためには引数の名前を実行時に取得できる必要がありますが，Java のリフレクションでは引数名を取得することができませんし，アノテーション等で指定するのは面倒です．
+				そこで Diigu が開発され，Kuina-Dao でも利用しています．
+			</answer>
+		</faq>
+		<faq id="diigu-eclipse">
+			<question>
+				Diigu を Eclipse で使うにはどうすればいいですか？
+			</question>
+			<answer>
+				Diigu を利用するための Eclipse plugin が用意されています．
+				以下の更新サイトからインストールすることができます．
+				<ul>
+					<li><a href="http://eclipse.seasar.org/updates/3.1beta/">http://eclipse.seasar.org/updates/3.1/</a></li>
+				</ul>
+				インストール後，Kuina-Dao を利用するプロジェクトを右クリックして「プロパティ」を選択し，左のペインで「Diigu」を選択，右のペインにある「Use Diigu Builder」をチェックしてください．
+			</answer>
+		</faq>
+		<faq id="diigu-ant">
+			<question>
+				Diigu を Eclipse 以外の環境で使うことはできますか？
+			</question>
+			<answer>
+				はい．
+				Diigu を Ant から利用することもできます．
+				以下のサイトから Diigu-Core をダウンロードして解凍してください．
+				<ul>
+					<li><a href="http://s2container.seasar.org/ja/">http://s2container.seasar.org/ja/</a></li>
+				</ul>
+				展開されたディレクトリの中に含まれる以下の Ant ビルドファイルを参考にしてください．
+				<dl>
+					<dt>builder/args.xml</dt>
+					<dd>src/main/java ディレクトリ以下をエンハンスするためのビルドファイルです．</dd>
+					<dt>builder/args-text.xml</dt>
+					<dd>src/test/java ディレクトリ以下をエンハンスするためのビルドファイルです．</dd>
+				</dl>
+			</answer>
+		</faq>
+		<faq id="diigu-maven">
+			<question>
+				Diigu を Maven から使うことはできますか？
+			</question>
+			<answer>
+				はい．
+				Diigu Maven plugin が用意されています．
+				Diigu Maven plugin の利用方法は，Seasar-Wikiの「<a href="http://www.seasar.org/wiki/index.php?Diigu%2Fdiigu-maven-plugin">Diigu/diigu-maven-plugin</a>」を参考にしてください．
+			</answer>
+		</faq>
+		<!--
+		<faq id="">
+			<question>
+			</question>
+			<answer>
+			</answer>
+		</faq>
+		-->
+	</part>
+</faqs>

@@ -1,34 +1,53 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <document>
-	<properties>
-		<title>Kuina-Daoユーザ・ガイド</title>
-	</properties>
-	<body>
-		<section name="目次">
-			<ul>
-				<li><p><a href="abstraction.html">概要</a></p></li>
-				<li><p><a href="diigu.html">Diigu</a></p></li>
-				<li><p><a href="dao.html">DAOインタフェース</a></p>
-					<ul>
-						<li><p><a href="dao.html#パッケージ">パッケージ</a></p></li>
-						<li><p><a href="dao.html#インタフェース">インタフェース</a></p></li>
-						<li><p><a href="dao.html#メソッド">メソッド</a></p></li>
-					</ul>
-				</li>
-				<li><p><a href="query.html">問い合わせメソッド</a></p>
-					<ul>
-						<li><p><a href="query.html#全件取得">全件取得</a></p></li>
-						<li><p><a href="query.html#主キーによる検索">主キーによる検索</a></p></li>
-						<li><p><a href="query.html#主キーによる検索 (リファレンスのみ)">主キーによる検索 (リファレンスのみ)</a></p></li>
-						<li><p><a href="query.html#引数を条件とする検索">引数を条件とする検索</a></p></li>
-						<li><p><a href="query.html#エンティティのプロパティを条件とする検索">エンティティのプロパティを条件とする検索</a></p></li>
-						<li><p><a href="query.html#DTOのプロパティを条件とする検索">DTOのプロパティを条件とする検索</a></p></li>
-						<li><p><a href="query.html#条件式による検索">条件式による検索</a></p></li>
-						<li><p><a href="query.html#JPQLによる検索">JPQLによる検索</a></p></li>
-						<li><p><a href="query.html#SQLによる検索">SQLによる検索</a></p></li>
-					</ul>
-				</li>
-			</ul>
-		</section>
-	</body>
+<properties>
+	<title>Seasar2ユーザ・ガイド</title>
+</properties>
+<body>
+  <section name="目次">
+    <ul>
+      <li><p><a href="abstraction.html">概要</a></p></li>
+      <li><p><a href="di.html">Dependency Injection</a></p>
+        <ul>
+          <li><p><a href="">コンポーネントの定義の基本</a></p>
+            <ul>
+              <li><p><a href="">セッターインジェクション</a></p></li>
+              <li><p><a href="">コンストラクタインジェクション</a></p></li>
+              <li><p><a href="">メソッドインジェクション</a></p></li>
+            </ul>
+          </li>
+          <li><p><a href="">コンテナの生成</a></p></li>
+          <li><p><a href="">コンポーネントの取得</a></p></li>
+          <li><p><a href="">インスタンス管理</a></p></li>
+          <li><p><a href="">自動バインディング</a></p></li>
+          <li><p><a href="">外部バインディング</a></p></li>
+          <li><p><a href="">コンポーネントの自動登録</a></p></li>
+          <li><p><a href="">アスペクトの定義</a></p></li>
+          <li><p><a href="">アスペクトの自動登録</a></p></li>
+          <li><p><a href="">メタデータの定義</a></p></li>
+          <li><p><a href="">メタデータの自動登録</a></p></li>
+          <li><p><a href="">コンポーネント定義の分割・インクルード</a></p></li>
+          <li><p><a href="">Webでの利用</a></p></li>
+        </ul>
+      </li>
+      <li><p><a href="aop.html">Aspect Oriented Programming</a></p></li>
+      <li><p><a href="transaction.html">トランザクション管理</a></p></li>
+      <li><p><a href="transaction.html">データベース設定</a></p></li>
+      <li><p><a href="s2dxo.html">Data eXchange Object</a></p></li>
+      <li><p><a href="test.html">テストの仕方</a></p></li>
+      <li><p><a href="web.html">Web Framework</a></p>
+        <ul>
+          <li><p><a href="dao.html">S2Struts</a></p></li>
+          <li><p><a href="s2jdbc.html">Teeda</a></p></li>
+        </ul>
+      </li>
+      <li><p><a href="dataacess.html">DataAccess Framework</a></p>
+        <ul>
+          <li><p><a href="dao.html">S2Dao</a></p></li>
+          <li><p><a href="s2jdbc.html">S2JDBC</a></p></li>
+        </ul>
+      </li>
+    </ul>
+  </section>
+</body>
 </document>
