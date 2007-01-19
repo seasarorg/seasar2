@@ -16,32 +16,21 @@
 package org.seasar.framework.mock.servlet;
 
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.OutputStream;
 
+/**
+ * @author manhole
+ */
 public class MockServletOutputStreamImpl extends MockServletOutputStream {
 
-    private PrintWriter writer;
+    private OutputStream outputStream;
 
-    public MockServletOutputStreamImpl(PrintWriter writer) {
-        setPrintWriter(writer);
+    public MockServletOutputStreamImpl(final OutputStream outputStream) {
+        this.outputStream = outputStream;
     }
 
-    public PrintWriter getPrintWriter() {
-        return writer;
+    public void write(final int b) throws IOException {
+        outputStream.write(b);
     }
 
-    public void setPrintWriter(PrintWriter writer) {
-        this.writer = writer;
-    }
-
-    public void write(int b) throws IOException {
-        writer.write(b);
-    }
-
-    public String toString() {
-        if (writer != null) {
-            return writer.toString();
-        }
-        return super.toString();
-    }
 }

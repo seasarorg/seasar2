@@ -15,16 +15,12 @@
  */
 package org.seasar.framework.mock.servlet;
 
-import java.io.PrintWriter;
-
 import javax.servlet.ServletOutputStream;
 
 /**
  * @author Satoshi Kimura
+ * @author manhole
  */
 public abstract class MockServletOutputStream extends ServletOutputStream {
-    public abstract PrintWriter getPrintWriter();
-
-    public abstract void setPrintWriter(PrintWriter writer);
 
 }

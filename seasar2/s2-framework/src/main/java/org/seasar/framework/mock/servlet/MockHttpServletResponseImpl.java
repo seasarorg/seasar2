@@ -15,6 +15,7 @@
  */
 package org.seasar.framework.mock.servlet;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -58,8 +59,14 @@ public class MockHttpServletResponseImpl implements MockHttpServletResponse {
 
     private PrintWriter writer = new SPrintWriter();
 
+    private ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+
     private ServletOutputStream outputStream = new MockServletOutputStreamImpl(
-            writer);
+            byteArrayOutputStream);
+
+    private boolean getWriterCalled;
+
+    private boolean getOutputStreamCalled;
 
     /**
      * 
@@ -379,6 +386,12 @@ public class MockHttpServletResponseImpl implements MockHttpServletResponse {
      * @see javax.servlet.ServletResponse#getOutputStream()
      */
     public ServletOutputStream getOutputStream() throws IOException {
+        if (getWriterCalled) {
+            throw new IllegalStateException();
+        }
+        if (!getOutputStreamCalled) {
+            getOutputStreamCalled = true;
+        }
         return outputStream;
     }
 
@@ -387,6 +400,12 @@ public class MockHttpServletResponseImpl implements MockHttpServletResponse {
      * @see javax.servlet.ServletResponse#getWriter()
      */
     public PrintWriter getWriter() throws IOException {
+        if (getOutputStreamCalled) {
+            throw new IllegalStateException();
+        }
+        if (!getWriterCalled) {
+            getWriterCalled = true;
+        }
         return writer;
     }
 
@@ -473,6 +492,14 @@ public class MockHttpServletResponseImpl implements MockHttpServletResponse {
      */
     public Locale getLocale() {
         return locale;
+    }
+
+    public byte[] getResponseBytes() {
+        return byteArrayOutputStream.toByteArray();
+    }
+
+    public String getResponseString() {
+        return writer.toString();
     }
 
 }

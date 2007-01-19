@@ -15,13 +15,19 @@
  */
 package org.seasar.framework.unit;
 
+import java.io.PrintWriter;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.servlet.ServletOutputStream;
+
+import junitx.framework.ArrayAssert;
+
 import org.seasar.framework.container.TooManyRegistrationRuntimeException;
 import org.seasar.framework.container.impl.S2ContainerBehavior;
 import org.seasar.framework.container.warmdeploy.WarmdeployBehavior;
+import org.seasar.framework.mock.servlet.MockHttpServletResponse;
 
 public class S2FrameworkTestCaseTest extends S2FrameworkTestCase {
 
@@ -141,6 +147,26 @@ public class S2FrameworkTestCaseTest extends S2FrameworkTestCase {
 
     public void testNotWarmdeploy() throws Exception {
         assertFalse(S2ContainerBehavior.getProvider() instanceof WarmdeployBehavior);
+    }
+
+    public void testGetResponseString() throws Exception {
+        final MockHttpServletResponse res = getResponse();
+        final PrintWriter writer = res.getWriter();
+        writer.write("ZXCV");
+        writer.write("abc");
+
+        assertEquals("ZXCVabc", res.getResponseString());
+    }
+
+    public void testGetResponseBytes() throws Exception {
+        final MockHttpServletResponse res = getResponse();
+        final ServletOutputStream os = res.getOutputStream();
+        os.write(new byte[] { 3, 2, 1 });
+        os.write(new byte[] { 9, 8, 7, 6 });
+
+        final byte[] bytes = res.getResponseBytes();
+        assertEquals(7, bytes.length);
+        ArrayAssert.assertEquals(new byte[] { 3, 2, 1, 9, 8, 7, 6 }, bytes);
     }
 
     public static class Hoge {

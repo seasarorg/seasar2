@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author Satoshi Kimura
  */
 public interface MockHttpServletResponse extends HttpServletResponse {
+
     Cookie[] getCookies();
 
     int getStatus();
@@ -43,4 +44,9 @@ public interface MockHttpServletResponse extends HttpServletResponse {
     int getContentLength();
 
     String getContentType();
+
+    String getResponseString();
+
+    byte[] getResponseBytes();
+
 }
