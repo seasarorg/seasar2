@@ -34,12 +34,25 @@ import org.seasar.framework.util.ClassUtil;
  * @author higa
  * 
  */
-public class HotdeployUtil {
+public abstract class HotdeployUtil {
+
+    private static Boolean hotdeploy;
 
     protected HotdeployUtil() {
     }
 
+    public static void setHotdeploy(boolean hotdeploy) {
+        HotdeployUtil.hotdeploy = Boolean.valueOf(hotdeploy);
+    }
+
+    public static void clearHotdeploy() {
+        hotdeploy = null;
+    }
+
     public static boolean isHotdeploy() {
+        if (hotdeploy != null) {
+            return hotdeploy.booleanValue();
+        }
         Provider provider = S2ContainerBehavior.getProvider();
         return provider instanceof HotdeployBehavior;
     }
