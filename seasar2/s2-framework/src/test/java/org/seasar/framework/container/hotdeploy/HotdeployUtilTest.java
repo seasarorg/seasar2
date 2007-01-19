@@ -9,7 +9,7 @@
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, 
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
@@ -18,6 +18,7 @@ package org.seasar.framework.container.hotdeploy;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 
 import org.seasar.framework.container.impl.S2ContainerBehavior;
 import org.seasar.framework.unit.S2FrameworkTestCase;
@@ -100,10 +101,103 @@ public class HotdeployUtilTest extends S2FrameworkTestCase {
         assertEquals("222", dest.getHoge().getAaa());
     }
 
+    public void testRebuildValue_arrayListWithPrimitiveA() throws Exception {
+        boolean defaultDeployMode = isWarmDeploy();
+        setWarmDeploy(true);
+        try {
+            ArrayList list = new ArrayList();
+            list.add("aaa");
+            list.add("bbb");
+            list.add("ccc");
+            List value = (List) HotdeployUtil.rebuildValue(list);
+            assertTrue(value.size() == 3);
+        } finally {
+            setWarmDeploy(defaultDeployMode);
+        }
+    }
+
+    public void testRebuildValue_arrayListWithDto() throws Exception {
+        boolean defaultDeployMode = isWarmDeploy();
+        setWarmDeploy(true);
+        try {
+            ArrayList list = new ArrayList();
+            {
+                Hoge hoge = new Hoge();
+                hoge.setAaa("A");
+                list.add(hoge);
+            }
+            {
+                Hoge hoge = new Hoge();
+                hoge.setAaa("B");
+                list.add(hoge);
+            }
+            {
+                Hoge hoge = new Hoge();
+                hoge.setAaa("C");
+                list.add(hoge);
+            }
+            List value = (List) HotdeployUtil.rebuildValue(list);
+            assertTrue(value.size() == 3);
+            Hoge h = (Hoge) value.get(0);
+            assertEquals("A", h.getAaa());
+        } finally {
+            setWarmDeploy(defaultDeployMode);
+        }
+    }
+
+    public void testRebuildValue_arrayListWithDto2() throws Exception {
+        boolean defaultDeployMode = isWarmDeploy();
+        setWarmDeploy(true);
+        try {
+            ArrayList list = new ArrayList();
+            {
+                Hoge hoge = new Hoge();
+                hoge.setAaa("A");
+                Foo f = new Foo();
+                f.setNum(1);
+                hoge.setFoo(f);
+                list.add(hoge);
+            }
+            {
+                Hoge hoge = new Hoge();
+                hoge.setAaa("B");
+                Foo f = new Foo();
+                f.setNum(2);
+                hoge.setFoo(f);
+                list.add(hoge);
+            }
+            {
+                Hoge hoge = new Hoge();
+                hoge.setAaa("C");
+                Foo f = new Foo();
+                f.setNum(3);
+                hoge.setFoo(f);
+                list.add(hoge);
+            }
+            List value = (List) HotdeployUtil.rebuildValue(list);
+            assertTrue(value.size() == 3);
+            Hoge h = (Hoge) value.get(0);
+            assertEquals("A", h.getAaa());
+            assertTrue(h.getFoo().getNum() == 1);
+        } finally {
+            setWarmDeploy(defaultDeployMode);
+        }
+    }
+
     public static class Hoge {
         private String aaa;
 
         private Hoge hoge;
+
+        private Foo foo;
+
+        public Foo getFoo() {
+            return foo;
+        }
+
+        public void setFoo(Foo foo) {
+            this.foo = foo;
+        }
 
         /**
          * @return Returns the aaa.
@@ -134,5 +228,19 @@ public class HotdeployUtilTest extends S2FrameworkTestCase {
         public void setHoge(Hoge hoge) {
             this.hoge = hoge;
         }
+    }
+
+    public static class Foo {
+
+        private int num;
+
+        public int getNum() {
+            return num;
+        }
+
+        public void setNum(int num) {
+            this.num = num;
+        }
+
     }
 }
