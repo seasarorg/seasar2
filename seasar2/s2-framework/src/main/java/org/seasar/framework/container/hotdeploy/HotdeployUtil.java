@@ -73,10 +73,6 @@ public abstract class HotdeployUtil {
         if (isHotdeploy()) {
             return rebuildValueInternal(value);
         }
-        if (value instanceof ArrayList) {
-            ArrayList list = (ArrayList) value;
-            value = list.clone();
-        }
         return value;
     }
 
