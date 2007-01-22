@@ -9,7 +9,7 @@
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, 
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
@@ -53,5 +53,17 @@ public class SmartDeployUtil {
         S2ContainerBehavior.Provider provider = S2ContainerBehavior
                 .getProvider();
         return provider instanceof WarmdeployBehavior;
+    }
+
+    public static String getDeployMode(S2Container container) {
+        if (isHotdeployMode(container)) {
+            return "Hot Deploy";
+        } else if (isCooldeployMode(container)) {
+            return "Cool Deploy";
+        } else if (isWarmdeployMode(container)) {
+            return "Warm Deploy";
+        } else {
+            return "Normal Mode";
+        }
     }
 }
