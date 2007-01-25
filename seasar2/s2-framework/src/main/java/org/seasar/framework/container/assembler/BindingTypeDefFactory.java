@@ -25,7 +25,7 @@ import org.seasar.framework.container.IllegalBindingTypeDefRuntimeException;
  * バインディングタイプ定義のファクトリです。
  * 
  * @author higa
- *
+ * 
  */
 public class BindingTypeDefFactory {
 
@@ -53,14 +53,31 @@ public class BindingTypeDefFactory {
     protected BindingTypeDefFactory() {
     }
 
+    /**
+     * バインディングタイプ定義を追加します。
+     * 
+     * @param bindingTypeDef
+     */
     public static void addBindingTypeDef(BindingTypeDef bindingTypeDef) {
         bindingTypeDefs.put(bindingTypeDef.getName(), bindingTypeDef);
     }
 
+    /**
+     * バインディングタイプ定義が存在するかどうかを返します。
+     * 
+     * @param name
+     * @return
+     */
     public static boolean existBindingTypeDef(String name) {
         return bindingTypeDefs.containsKey(name);
     }
 
+    /**
+     * バインディングタイプ定義を返します。
+     * 
+     * @param name
+     * @return
+     */
     public static BindingTypeDef getBindingTypeDef(String name) {
         if (!existBindingTypeDef(name)) {
             throw new IllegalBindingTypeDefRuntimeException(name);

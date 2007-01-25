@@ -25,7 +25,7 @@ import org.seasar.framework.container.IllegalAutoBindingDefRuntimeException;
  * 自動バンディング定義のファクトリです。
  * 
  * @author higa
- *
+ * 
  */
 public class AutoBindingDefFactory {
 
@@ -57,14 +57,31 @@ public class AutoBindingDefFactory {
     protected AutoBindingDefFactory() {
     }
 
+    /**
+     * 自動バインディング定義を追加します。
+     * 
+     * @param autoBindingDef
+     */
     public static void addAutoBindingDef(AutoBindingDef autoBindingDef) {
         autoBindingDefs.put(autoBindingDef.getName(), autoBindingDef);
     }
 
+    /**
+     * 自動バインディング定義が存在するかどうかを返します。
+     * 
+     * @param name
+     * @return
+     */
     public static boolean existAutoBindingDef(String name) {
         return autoBindingDefs.containsKey(name);
     }
 
+    /**
+     * 自動バインディング定義を返します。
+     * 
+     * @param name
+     * @return
+     */
     public static AutoBindingDef getAutoBindingDef(String name) {
         if (!autoBindingDefs.containsKey(name)) {
             throw new IllegalAutoBindingDefRuntimeException(name);

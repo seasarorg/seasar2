@@ -27,8 +27,8 @@ import org.seasar.framework.container.util.BindingUtil;
 /**
  * フィールドに対するアクセスタイプ定義です。
  * 
- * @author higa (Javadoc)
- *
+ * @author higa
+ * 
  */
 public class AccessTypeFieldDef implements AccessTypeDef {
 

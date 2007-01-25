@@ -25,7 +25,7 @@ import org.seasar.framework.container.IllegalAccessTypeDefRuntimeException;
  * アクセスタイプ定義のファクトリです。
  * 
  * @author higa
- *
+ * 
  */
 public class AccessTypeDefFactory {
 
@@ -43,14 +43,31 @@ public class AccessTypeDefFactory {
         addAccessTypeDef(FIELD);
     }
 
+    /**
+     * アクセスタイプ定義を追加します。
+     * 
+     * @param accessTypeDef
+     */
     public static void addAccessTypeDef(final AccessTypeDef accessTypeDef) {
         accessTypeDefs.put(accessTypeDef.getName(), accessTypeDef);
     }
 
+    /**
+     * アクセスタイプ定義が存在するかどうかを返します。
+     * 
+     * @param name
+     * @return
+     */
     public static boolean existAccessTypeDef(String name) {
         return accessTypeDefs.containsKey(name);
     }
 
+    /**
+     * アクセスタイプ定義を返します。
+     * 
+     * @param name
+     * @return
+     */
     public static AccessTypeDef getAccessTypeDef(String name) {
         if (!existAccessTypeDef(name)) {
             throw new IllegalAccessTypeDefRuntimeException(name);
