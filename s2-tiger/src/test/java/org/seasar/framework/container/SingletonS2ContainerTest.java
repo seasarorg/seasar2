@@ -13,8 +13,9 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.framework.container.impl;
+package org.seasar.framework.container;
 
+import org.seasar.framework.container.SingletonS2Container;
 import org.seasar.framework.unit.S2FrameworkTestCase;
 
 public class SingletonS2ContainerTest extends S2FrameworkTestCase {

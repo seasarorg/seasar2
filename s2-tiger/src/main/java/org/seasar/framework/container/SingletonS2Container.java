@@ -13,7 +13,7 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.framework.container.impl;
+package org.seasar.framework.container;
 
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 
