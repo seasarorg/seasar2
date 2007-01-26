@@ -27,26 +27,47 @@ import org.seasar.framework.container.factory.AnnotationHandlerFactory;
 import org.seasar.framework.convention.NamingConvention;
 import org.seasar.framework.exception.EmptyRuntimeException;
 
+/**
+ * ComponentCreatorの実装です。
+ * 
+ * @author higa
+ * 
+ */
 public class ComponentCreatorImpl implements ComponentCreator {
 
     private NamingConvention namingConvention;
 
+    /**
+     * BINDINGアノテーションの定義です。
+     */
     public static final String instanceDef_BINDING = "bindingType=may";
 
     private InstanceDef instanceDef;
 
+    /**
+     * BINDINGアノテーションの定義です。
+     */
     public static final String autoBindingDef_BINDING = "bindingType=may";
 
     private AutoBindingDef autoBindingDef;
 
+    /**
+     * BINDINGアノテーションの定義です。
+     */
     public static final String externalBinding_BINDING = "bindingType=may";
 
     private boolean externalBinding = false;
 
+    /**
+     * BINDINGアノテーションの定義です。
+     */
     public static final String enableInterface_BINDING = "bindingType=may";
 
     private boolean enableInterface = false;
 
+    /**
+     * BINDINGアノテーションの定義です。
+     */
     public static final String enableAbstract_BINDING = "bindingType=may";
 
     private boolean enableAbstract = false;
@@ -55,6 +76,11 @@ public class ComponentCreatorImpl implements ComponentCreator {
 
     private ComponentCustomizer customizer;
 
+    /**
+     * コンストラクタです。
+     * 
+     * @param namingConvention
+     */
     public ComponentCreatorImpl(NamingConvention namingConvention) {
         if (namingConvention == null) {
             throw new EmptyRuntimeException("namingConvetion");
@@ -62,30 +88,65 @@ public class ComponentCreatorImpl implements ComponentCreator {
         this.namingConvention = namingConvention;
     }
 
+    /**
+     * NamingConventionを返します。
+     * 
+     * @return
+     */
     public NamingConvention getNamingConvention() {
         return namingConvention;
     }
 
+    /**
+     * インスタンス定義を返します。
+     * 
+     * @return
+     */
     public InstanceDef getInstanceDef() {
         return instanceDef;
     }
 
+    /**
+     * インスタンス定義を設定します。
+     * 
+     * @param instanceDef
+     */
     public void setInstanceDef(InstanceDef instanceDef) {
         this.instanceDef = instanceDef;
     }
 
+    /**
+     * 自動バインディング定義を返します。
+     * 
+     * @return
+     */
     public AutoBindingDef getAutoBindingDef() {
         return autoBindingDef;
     }
 
+    /**
+     * 自動バインディング定義を設定します。
+     * 
+     * @param autoBindingDef
+     */
     public void setAutoBindingDef(AutoBindingDef autoBindingDef) {
         this.autoBindingDef = autoBindingDef;
     }
 
+    /**
+     * デフォルトで外部バインディングをするかどうかを返します。
+     * 
+     * @return
+     */
     public boolean isExternalBinding() {
         return externalBinding;
     }
 
+    /**
+     * デフォルトで外部バインディングをするかどうかを設定します。
+     * 
+     * @param externalBinding
+     */
     public void setExternalBinding(boolean externalBinding) {
         this.externalBinding = externalBinding;
     }

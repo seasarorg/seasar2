@@ -41,13 +41,21 @@ import org.seasar.framework.util.ZipFileUtil;
 import org.seasar.framework.util.ClassTraversal.ClassHandler;
 
 /**
+ * NamingConventionに一致するコンポーネントを自動登録するクラスです。
+ * 
  * @author higa
  * 
  */
 public class CoolComponentAutoRegister implements ClassHandler {
 
+    /**
+     * INIT_METHODアノテーションの定義です。
+     */
     public static final String INIT_METHOD = "registerAll";
 
+    /**
+     * BINDINGアノテーションの定義です。
+     */
     public static final String container_BINDING = "bindingType=must";
 
     private S2Container container;
@@ -60,20 +68,38 @@ public class CoolComponentAutoRegister implements ClassHandler {
 
     private Set registerdClasses = new HashSet();
 
+    /**
+     * デフォルトのコンストラクタです。
+     */
     public CoolComponentAutoRegister() {
         addStrategy("file", new FileSystemStrategy());
         addStrategy("jar", new JarFileStrategy());
         addStrategy("zip", new ZipFileStrategy());
     }
 
+    /**
+     * コンテナを返します。
+     * 
+     * @return
+     */
     public S2Container getContainer() {
         return container;
     }
 
+    /**
+     * コンテナを設定します。
+     * 
+     * @param container
+     */
     public void setContainer(S2Container container) {
         this.container = container;
     }
 
+    /**
+     * 登録されているストラテジを返します。
+     * 
+     * @return
+     */
     public Map getStrategies() {
         return strategies;
     }
@@ -86,22 +112,45 @@ public class CoolComponentAutoRegister implements ClassHandler {
         strategies.put(protocol, strategy);
     }
 
+    /**
+     * クリエータを返します。
+     * 
+     * @return
+     */
     public ComponentCreator[] getCreators() {
         return creators;
     }
 
+    /**
+     * クリエータを設定します。
+     * 
+     * @param creators
+     */
     public void setCreators(ComponentCreator[] creators) {
         this.creators = creators;
     }
 
+    /**
+     * NamingConventionを返します。
+     * 
+     * @return
+     */
     public NamingConvention getNamingConvention() {
         return namingConvention;
     }
 
+    /**
+     * NamingConventionを設定します。
+     * 
+     * @param namingConvention
+     */
     public void setNamingConvention(NamingConvention namingConvention) {
         this.namingConvention = namingConvention;
     }
 
+    /**
+     * 自動登録を行います。
+     */
     public void registerAll() {
         try {
             final String[] rootPackageNames = namingConvention
@@ -188,6 +237,12 @@ public class CoolComponentAutoRegister implements ClassHandler {
     }
 
     protected interface Strategy {
+        /**
+         * 自動登録を行います。
+         * 
+         * @param path
+         * @param url
+         */
         void registerAll(String path, URL url);
     }
 

@@ -19,18 +19,39 @@ import org.seasar.framework.container.ComponentCustomizer;
 import org.seasar.framework.container.deployer.InstanceDefFactory;
 import org.seasar.framework.convention.NamingConvention;
 
+/**
+ * Action用のクリエータです。
+ * 
+ * @author higa
+ * 
+ */
 public class ActionCreator extends ComponentCreatorImpl {
 
+    /**
+     * コンストラクタです。
+     * 
+     * @param namingConvention
+     */
     public ActionCreator(NamingConvention namingConvention) {
         super(namingConvention);
         setNameSuffix(namingConvention.getActionSuffix());
         setInstanceDef(InstanceDefFactory.REQUEST);
     }
 
+    /**
+     * Action用のカスタマイザを返します。
+     * 
+     * @return
+     */
     public ComponentCustomizer getActionCustomizer() {
         return getCustomizer();
     }
 
+    /**
+     * Action用のカスタマイザを設定します。
+     * 
+     * @param customizer
+     */
     public void setActionCustomizer(ComponentCustomizer customizer) {
         setCustomizer(customizer);
     }
