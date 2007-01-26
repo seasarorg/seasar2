@@ -22,6 +22,8 @@ import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.S2Container;
 
 /**
+ * 自動登録用の抽象クラスです。
+ * 
  * @author higa
  * 
  */
@@ -35,40 +37,86 @@ public abstract class AbstractAutoRegister {
 
     private List ignoreClassPatterns = new ArrayList();
 
+    /**
+     * コンテナを返します。
+     * 
+     * @return
+     */
     public S2Container getContainer() {
         return container;
     }
 
+    /**
+     * コンテナを設定します。
+     * 
+     * @param container
+     */
     public void setContainer(S2Container container) {
         this.container = container;
     }
 
+    /**
+     * 追加されているClassPatternの数を返します。
+     * 
+     * @return
+     */
     public int getClassPatternSize() {
         return classPatterns.size();
     }
 
+    /**
+     * ClassPatternを返します。
+     * 
+     * @param index
+     * @return
+     */
     public ClassPattern getClassPattern(int index) {
         return (ClassPattern) classPatterns.get(index);
     }
 
+    /**
+     * 自動登録で適用されるClassPatternを追加します。
+     * 
+     * @param packageName
+     * @param shortClassNames
+     */
     public void addClassPattern(String packageName, String shortClassNames) {
 
         addClassPattern(new ClassPattern(packageName, shortClassNames));
     }
 
+    /**
+     * 自動登録で適用されるClassPatternを追加します。
+     * 
+     * @param classPattern
+     */
     public void addClassPattern(ClassPattern classPattern) {
         classPatterns.add(classPattern);
     }
 
+    /**
+     * 自動登録されないClassPatternを追加します。
+     * 
+     * @param packageName
+     * @param shortClassNames
+     */
     public void addIgnoreClassPattern(String packageName, String shortClassNames) {
 
         addIgnoreClassPattern(new ClassPattern(packageName, shortClassNames));
     }
 
+    /**
+     * 自動登録されないClassPatternを追加します。
+     * 
+     * @param classPattern
+     */
     public void addIgnoreClassPattern(ClassPattern classPattern) {
         ignoreClassPatterns.add(classPattern);
     }
 
+    /**
+     * 自動登録を行います。
+     */
     public abstract void registerAll();
 
     protected boolean hasComponentDef(String name) {

@@ -15,7 +15,20 @@
  */
 package org.seasar.framework.container.autoregister;
 
+/**
+ * 名前が明示的につけられていないコンポーネントに自動的に名前をつけるためのインターフェースです。
+ * 
+ * @author higa
+ * 
+ */
 public interface AutoNaming {
 
+    /**
+     * コンポーネント名を定義します。
+     * 
+     * @param packageName
+     * @param shortClassName
+     * @return
+     */
     String defineName(String packageName, String shortClassName);
 }

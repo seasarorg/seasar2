@@ -27,6 +27,7 @@ import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.StringUtil;
 
 /**
+ * AutoNamingの抽象クラスです。
  * 
  * @author koichik
  */
@@ -47,23 +48,48 @@ public abstract class AbstractAutoNaming implements AutoNaming {
         addIgnoreClassSuffix(BEAN);
     }
 
+    /**
+     * AutoNamingのルールにあわない場合に、FQCNに対するコンポーネント名を設定します。
+     * 
+     * @param fqcn
+     * @param name
+     */
     public void setCustomizedName(final String fqcn, final String name) {
         customizedNames.put(fqcn, name);
     }
 
+    /**
+     * コンポーネント名から取り除くサフィックスを追加します。 例えば、Implを追加した場合、hogeImplは、hogeという名前になります。
+     * 
+     * @param classSuffix
+     */
     public void addIgnoreClassSuffix(final String classSuffix) {
         addReplaceRule(classSuffix + "$", "");
     }
 
+    /**
+     * コンポーネント名を置き換えるためのルールを追加します。 reqexの正規表現に一致した部分をreplacementで置き換えます。
+     * 
+     * @param regex
+     * @param replacement
+     */
     public void addReplaceRule(final String regex, final String replacement) {
         replaceRules.put(Pattern.compile(regex), replacement);
     }
 
+    /**
+     * コンポーネント名を置き換えるためのルールをクリアします。
+     */
     public void clearReplaceRule() {
         customizedNames.clear();
         replaceRules.clear();
     }
 
+    /**
+     * コンポーネント名をデキャピタライズするかどうかを設定します。デフォルトはtrueです。
+     * 
+     * @param decapitalize
+     */
     public void setDecapitalize(final boolean decapitalize) {
         this.decapitalize = decapitalize;
     }

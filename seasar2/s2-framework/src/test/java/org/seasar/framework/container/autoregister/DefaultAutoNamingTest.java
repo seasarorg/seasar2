@@ -30,4 +30,10 @@ public class DefaultAutoNamingTest extends TestCase {
         assertEquals("3", "aaaFoo", naming.defineName("aaa", "Foo"));
         assertEquals("3", "foo", naming.defineName("bbb", "FooBean"));
     }
+
+    public void testApplyRule() throws Exception {
+        DefaultAutoNaming naming = new DefaultAutoNaming();
+        naming.addReplaceRule("aaa", "bbb");
+        assertEquals("bbbccc", naming.applyRule("aaaccc"));
+    }
 }

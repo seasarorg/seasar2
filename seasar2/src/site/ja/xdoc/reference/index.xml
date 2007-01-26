@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<document>
+<properties>
+	<title>Seasar2リファレンス</title>
+</properties>
+<body>
+  <section name="目次">
+    <ul>
+      <li><p><a href="#">DIContainer</a></p>
+        <ul>
+          <li><p><a href="#">コンポーネント定義の基本構成</a></p></li>
+          <li><p><a href="#">セッターインジェクション</a></p></li>
+          <li><p><a href="#">コンストラクタインジェクション</a></p></li>
+          <li><p><a href="#">メソッドインジェクション</a></p></li>
+          <li><p><a href="#">コンテナの生成</a></p></li>
+          <li><p><a href="#">コンポーネントの取得</a></p></li>
+          <li><p><a href="#">インスタンス管理</a></p></li>
+          <li><p><a href="#">アスペクトの定義</a></p></li>
+          <li><p><a href="#">メタデータの定義</a></p></li>
+          <li><p><a href="#">コンポーネント定義の分割・インクルード</a></p></li>
+          <li><p><a href="#">Webでの利用</a></p></li>
+          <li><p><a href="">iRule(intelligent Rule)</a></p>
+            <ul>
+              <li><p><a href="#">自動バインディング</a></p></li>
+              <li><p><a href="#">コンポーネントの自動登録</a></p></li>
+              <li><p><a href="#">アスペクトの自動登録</a></p></li>
+              <li><p><a href="#">メタデータの自動登録</a></p></li>
+              <li><p><a href="#">SMART deploy</a></p></li>
+            </ul>
+          </li>
+          <li><p><a href="#">タグリファレンス</a></p></li>
+          <li><p><a href="#">アノテーションリファレンス</a></p></li>
+        </ul>
+      </li>
+      <li><p><a href="#">トランザクション管理</a></p></li>
+      <li><p><a href="#">データベース設定</a></p></li>
+      <li><p><a href="#">Data eXchange Object</a></p></li>
+      <li><p><a href="#">テストサポート</a></p>
+        <ul>
+          <li><p><a href="#">S2FrameworkTestCase</a></p></li>
+          <li><p><a href="#">S2TestCase</a></p></li>
+          <li><p><a href="#">EasyMockTestCase</a></p></li>
+          <li><p><a href="#">S2JUnit4</a></p></li>
+        </ul>
+      </li>
+      <li><p><a href="#">Logger</a></p></li>
+      <li><p><a href="#">OGNLガイド</a></p></li>
+    </ul>
+  </section>
+</body>
+</document>

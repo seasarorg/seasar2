@@ -19,6 +19,12 @@ import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.util.ClassUtil;
 
+/**
+ * コンポーネントを対象にした自動登録を行うための抽象クラスです。
+ * 
+ * @author higa
+ * 
+ */
 public abstract class AbstractComponentTargetAutoRegister extends
         AbstractAutoRegister {
 

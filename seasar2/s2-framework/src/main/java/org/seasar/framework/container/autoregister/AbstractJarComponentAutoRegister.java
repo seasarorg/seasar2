@@ -27,7 +27,8 @@ import org.seasar.framework.util.StringUtil;
 
 /**
  * 
- * @author koichik, higa
+ * @author koichik
+ * @author higa
  */
 public abstract class AbstractJarComponentAutoRegister extends
         AbstractComponentAutoRegister {

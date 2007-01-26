@@ -25,6 +25,8 @@ import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.ClassTraversal.ClassHandler;
 
 /**
+ * コンポーネントを自動登録するための抽象クラスです。
+ * 
  * @author higa
  * 
  */
@@ -51,42 +53,92 @@ public abstract class AbstractComponentAutoRegister extends
 
     private ComponentCustomizer customizer;
 
+    /**
+     * AutoNamingを返します。
+     * 
+     * @return
+     */
     public AutoNaming getAutoNaming() {
         return autoNaming;
     }
 
+    /**
+     * AutoNamingを設定します。
+     * 
+     * @param autoNaming
+     */
     public void setAutoNaming(AutoNaming autoNaming) {
         this.autoNaming = autoNaming;
     }
 
+    /**
+     * インスタンス定義を返します。
+     * 
+     * @return
+     */
     public InstanceDef getInstanceDef() {
         return instanceDef;
     }
 
+    /**
+     * インスタンス定義を設定します。
+     * 
+     * @param instanceDef
+     */
     public void setInstanceDef(InstanceDef instanceDef) {
         this.instanceDef = instanceDef;
     }
 
+    /**
+     * 自動バインディング定義を返します。
+     * 
+     * @return
+     */
     public AutoBindingDef getAutoBindingDef() {
         return autoBindingDef;
     }
 
+    /**
+     * 自動バインディング定義を設定します。
+     * 
+     * @param autoBindingDef
+     */
     public void setAutoBindingDef(AutoBindingDef autoBindingDef) {
         this.autoBindingDef = autoBindingDef;
     }
 
+    /**
+     * 外部バインディングのデフォルト値を返します。
+     * 
+     * @return
+     */
     public boolean isExternalBinding() {
         return externalBinding;
     }
 
+    /**
+     * 外部バインディングのデフォルト値を設定します。
+     * 
+     * @param externalBinding
+     */
     public void setExternalBinding(boolean externalBinding) {
         this.externalBinding = externalBinding;
     }
 
+    /**
+     * コンポーネントカスタマイザを返します。
+     * 
+     * @return
+     */
     public ComponentCustomizer getCustomizer() {
         return customizer;
     }
 
+    /**
+     * コンポーネントカスタマイザを設定します。
+     * 
+     * @param customizer
+     */
     public void setCustomizer(ComponentCustomizer customizer) {
         this.customizer = customizer;
     }

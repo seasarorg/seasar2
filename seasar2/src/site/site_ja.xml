@@ -39,7 +39,7 @@
     <menu name="Documentation">
       <item name="FAQ" href="faq.html"/>
       <item name="Install" href="install.html"/>
-      <item name="User Guide" href="user_guide/index.html"/>
+      <item name="Reference" href="reference/index.html"/>
     </menu>
     ${reports}
   </body>

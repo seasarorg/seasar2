@@ -31,6 +31,10 @@ public final class ClassTraversal {
 
     private static final String WEB_INF_CLASSES_PATH = "WEB-INF/classes/";
 
+    /**
+     * クラスを横断して処理するためのハンドラです。
+     * 
+     */
     public interface ClassHandler {
         void processClass(String packageName, String shortClassName);
     }
