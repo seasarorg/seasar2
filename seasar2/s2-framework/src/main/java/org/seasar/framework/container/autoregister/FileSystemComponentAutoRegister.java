@@ -22,6 +22,8 @@ import org.seasar.framework.util.ResourceUtil;
 import org.seasar.framework.util.StringUtil;
 
 /**
+ * ファイルシステム上(例えばWEBINF/classes)のコンポーネントを自動登録するクラスです。
+ * 
  * @author higa
  * 
  */

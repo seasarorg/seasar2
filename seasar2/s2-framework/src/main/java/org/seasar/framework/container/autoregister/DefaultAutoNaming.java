@@ -15,6 +15,12 @@
  */
 package org.seasar.framework.container.autoregister;
 
+/**
+ * AutoNamingのデフォルト実装です。
+ * 
+ * @author higa
+ * 
+ */
 public class DefaultAutoNaming extends AbstractAutoNaming {
 
     protected String makeDefineName(final String packageName,

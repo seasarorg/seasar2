@@ -43,6 +43,9 @@ public abstract class AbstractAutoNaming implements AutoNaming {
 
     protected Map replaceRules = new LinkedHashMap();
 
+    /**
+     * デフォルトのコンストラクタです。
+     */
     public AbstractAutoNaming() {
         addIgnoreClassSuffix(IMPL);
         addIgnoreClassSuffix(BEAN);

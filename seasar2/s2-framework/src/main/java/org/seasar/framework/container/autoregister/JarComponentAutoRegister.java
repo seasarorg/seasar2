@@ -25,20 +25,30 @@ import org.seasar.framework.util.ResourceUtil;
 import org.seasar.framework.util.ZipFileUtil;
 
 /**
+ * jarファイルの中にあるコンポーネントを自動登録するクラスです。
  * 
- * @author koichik, higa
+ * @author koichik
+ * @author higa
  */
 public class JarComponentAutoRegister extends AbstractJarComponentAutoRegister {
 
     private Class referenceClass = MethodInterceptor.class;
 
-    public JarComponentAutoRegister() {
-    }
-
+    /**
+     * 参照クラスを返します。
+     * 
+     * @return
+     */
     public Class getReferenceClass() {
         return referenceClass;
     }
 
+    /**
+     * jarファイルに含まれているクラスを設定します。jarファイルに含まれているならどのクラスでもOKです。
+     * このクラスを参照してjarファイルの物理的な位置を特定します。
+     * 
+     * @param referenceClass
+     */
     public void setReferenceClass(Class referenceClass) {
         this.referenceClass = referenceClass;
     }

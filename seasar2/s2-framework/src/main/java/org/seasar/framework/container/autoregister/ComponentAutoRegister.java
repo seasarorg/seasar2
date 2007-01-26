@@ -31,6 +31,7 @@ import org.seasar.framework.util.ZipFileUtil;
 import org.seasar.framework.util.ClassTraversal.ClassHandler;
 
 /**
+ * jarファイルに含まれているあるいはファイルシステム上(WEBINF/classesとか)にあるコンポーネントを自動登録するためのクラスです。
  * 
  * @author koichik
  */
@@ -41,20 +42,41 @@ public class ComponentAutoRegister extends AbstractComponentAutoRegister
 
     protected Map strategies = new HashMap();
 
+    /**
+     * デフォルトのコンストラクタです。
+     */
     public ComponentAutoRegister() {
         strategies.put("file", new FileSystemStrategy());
         strategies.put("jar", new JarFileStrategy());
         strategies.put("zip", new ZipFileStrategy());
     }
 
+    /**
+     * jarファイルに含まれているクラスを追加します。jarファイルに含まれているならどのクラスでもOKです。
+     * このクラスを参照してjarファイルの物理的な位置を特定します。
+     * 
+     * @param referenceClass
+     */
     public void addReferenceClass(final Class referenceClass) {
         referenceClasses.add(referenceClass);
     }
 
+    /**
+     * file, jarなどのプロトコルに応じたストラテジを追加します。
+     * 
+     * @param protocol
+     * @param strategy
+     */
     public void addStrategy(final String protocol, final Strategy strategy) {
         strategies.put(protocol, strategy);
     }
 
+    /**
+     * ストラテジを返します。
+     * 
+     * @param protocol
+     * @return
+     */
     public Strategy getStrategy(final String protocol) {
         return (Strategy) strategies.get(URLUtil.toCanonicalProtocol(protocol));
     }
@@ -72,6 +94,12 @@ public class ComponentAutoRegister extends AbstractComponentAutoRegister
 
     protected interface Strategy {
 
+        /**
+         * コンポーネントを自動登録します。
+         * 
+         * @param referenceClass
+         * @param url
+         */
         void registerAll(Class referenceClass, URL url);
     }
 

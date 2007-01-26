@@ -35,20 +35,32 @@ public abstract class AbstractComponentAutoRegister extends
 
     protected static final String CLASS_SUFFIX = ".class";
 
+    /**
+     * BINDINGアノテーションの定義です。
+     */
     public static final String autoNaming_BINDING = "bindingType=may";
 
     private AutoNaming autoNaming = new DefaultAutoNaming();
 
+    /**
+     * BINDINGアノテーションの定義です。
+     */
     public static final String instanceDef_BINDING = "bindingType=may";
 
     private InstanceDef instanceDef;
 
+    /**
+     * BINDINGアノテーションの定義です。
+     */
     public static final String autoBindingDef_BINDING = "bindingType=may";
 
     private AutoBindingDef autoBindingDef;
 
     private boolean externalBinding = false;
 
+    /**
+     * BINDINGアノテーションの定義です。
+     */
     public static final String customizer_BINDING = "bindingType=may";
 
     private ComponentCustomizer customizer;

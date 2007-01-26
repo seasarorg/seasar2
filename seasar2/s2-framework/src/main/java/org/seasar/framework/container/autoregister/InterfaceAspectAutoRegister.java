@@ -23,11 +23,16 @@ import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.factory.AspectDefFactory;
 
 /**
+ * 特定のインターフェースを実装しているクラスに対してアスペクトを自動登録するクラスです。
+ * 
  * @author higa
  * 
  */
 public class InterfaceAspectAutoRegister {
 
+    /**
+     * INIT_METHODアノテーションの定義です。
+     */
     public static final String INIT_METHOD = "registerAll";
 
     private S2Container container;
@@ -38,14 +43,29 @@ public class InterfaceAspectAutoRegister {
 
     private Pointcut pointcut;
 
+    /**
+     * コンテナを設定します。
+     * 
+     * @param container
+     */
     public void setContainer(S2Container container) {
         this.container = container;
     }
 
+    /**
+     * インタセプタを設定します。
+     * 
+     * @param interceptor
+     */
     public void setInterceptor(MethodInterceptor interceptor) {
         this.interceptor = interceptor;
     }
 
+    /**
+     * ターゲットインターフェースを設定します。このインターフェースを実装したクラスにアスペクトが設定されます。
+     * 
+     * @param targetInterface
+     */
     public void setTargetInterface(Class targetInterface) {
         if (!targetInterface.isInterface()) {
             throw new IllegalArgumentException(targetInterface.getName());
@@ -54,6 +74,9 @@ public class InterfaceAspectAutoRegister {
         this.pointcut = AspectDefFactory.createPointcut(targetInterface);
     }
 
+    /**
+     * 自動登録を行います。
+     */
     public void registerAll() {
         for (int i = 0; i < container.getComponentDefSize(); ++i) {
             ComponentDef cd = container.getComponentDef(i);

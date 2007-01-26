@@ -19,11 +19,17 @@ import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.StringUtil;
 
 /**
+ * 拡張されたAutoNamingです。
  * 
  * @author koichik
  */
 public class QualifiedAutoNaming extends AbstractAutoNaming {
 
+    /**
+     * 無視するパッケージプレフィックスを追加します。
+     * 
+     * @param packagePrefix
+     */
     public void addIgnorePackagePrefix(final String packagePrefix) {
         String regex = "^" + StringUtil.replace(packagePrefix, ".", "\\.");
         if (!regex.endsWith(".")) {

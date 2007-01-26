@@ -20,6 +20,8 @@ import java.util.regex.Pattern;
 import org.seasar.framework.util.StringUtil;
 
 /**
+ * 自動登録の対象、非対象となるクラス名のパターンを保持します。
+ * 
  * @author higa
  * 
  */
@@ -29,22 +31,46 @@ public class ClassPattern {
 
     private Pattern[] shortClassNamePatterns;
 
+    /**
+     * デフォルトのコンストラクタです。
+     */
     public ClassPattern() {
     }
 
+    /**
+     * パッケージ名とクラス名のパターンを受け取るコンストラクタです。
+     * 
+     * @param packageName
+     * @param shortClassNames
+     */
     public ClassPattern(String packageName, String shortClassNames) {
         setPackageName(packageName);
         setShortClassNames(shortClassNames);
     }
 
+    /**
+     * パッケージ名を返します。
+     * 
+     * @return
+     */
     public String getPackageName() {
         return packageName;
     }
 
+    /**
+     * パッケージ名を設定します。
+     * 
+     * @param packageName
+     */
     public void setPackageName(String packageName) {
         this.packageName = packageName;
     }
 
+    /**
+     * (パッケージを含まない)クラス名のパターンを設定します。複数のパターンを設定する場合、','で区切ります。
+     * 
+     * @param shortClassNames
+     */
     public void setShortClassNames(String shortClassNames) {
         String[] classNames = StringUtil.split(shortClassNames, ",");
         shortClassNamePatterns = new Pattern[classNames.length];
@@ -54,6 +80,12 @@ public class ClassPattern {
         }
     }
 
+    /**
+     * (パッケージを含まない)クラス名がパターンに一致しているかどうかを返します。
+     * 
+     * @param shortClassName
+     * @return
+     */
     public boolean isAppliedShortClassName(String shortClassName) {
         if (shortClassNamePatterns == null) {
             return true;
@@ -66,6 +98,12 @@ public class ClassPattern {
         return false;
     }
 
+    /**
+     * パッケージ名がパターンに一致しているかどうかを返します。
+     * 
+     * @param pName
+     * @return
+     */
     public boolean isAppliedPackageName(String pName) {
         if (!StringUtil.isEmpty(pName) && !StringUtil.isEmpty(packageName)) {
             return appendDelimiter(pName).startsWith(

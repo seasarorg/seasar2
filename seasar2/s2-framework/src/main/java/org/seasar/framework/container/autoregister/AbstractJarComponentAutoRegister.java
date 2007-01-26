@@ -26,6 +26,7 @@ import org.seasar.framework.util.ResourceUtil;
 import org.seasar.framework.util.StringUtil;
 
 /**
+ * jarファイルの中にあるコンポーネントを自動登録するための抽象クラスです。
  * 
  * @author koichik
  * @author higa
@@ -37,13 +38,20 @@ public abstract class AbstractJarComponentAutoRegister extends
 
     private Pattern[] jarFileNamePatterns;
 
-    public AbstractJarComponentAutoRegister() {
-    }
-
+    /**
+     * ベースとなるディレクトリを返します。
+     * 
+     * @return
+     */
     public String getBaseDir() {
         return baseDir;
     }
 
+    /**
+     * ベースとなるディレクトリを設定します。
+     * 
+     * @param baseDir
+     */
     public void setBaseDir(String baseDir) {
         this.baseDir = baseDir;
     }
@@ -89,6 +97,11 @@ public abstract class AbstractJarComponentAutoRegister extends
         return new File(baseDir, jarFileName);
     }
 
+    /**
+     * jarファイル名を設定します。複数設定する場合は、','で区切ります。
+     * 
+     * @param jarFileNames
+     */
     public void setJarFileNames(String jarFileNames) {
         String[] array = StringUtil.split(jarFileNames, ",");
         jarFileNamePatterns = new Pattern[array.length];

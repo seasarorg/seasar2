@@ -29,6 +29,9 @@ import org.seasar.framework.container.S2Container;
  */
 public abstract class AbstractAutoRegister {
 
+    /**
+     * initメソッドアノテーションの定義です。
+     */
     public static final String INIT_METHOD = "registerAll";
 
     private S2Container container;

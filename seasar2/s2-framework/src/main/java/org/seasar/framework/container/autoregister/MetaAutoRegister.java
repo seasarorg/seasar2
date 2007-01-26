@@ -19,16 +19,30 @@ import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.MetaDef;
 import org.seasar.framework.container.impl.MetaDefImpl;
 
+/**
+ * メタ定義を自動登録するためのクラスです。
+ * 
+ * @author koichik
+ * 
+ */
 public class MetaAutoRegister extends AbstractComponentTargetAutoRegister {
+
     protected ComponentDef componentDef;
 
-    public MetaAutoRegister() {
-    }
-
+    /**
+     * コンポーネント定義を返します。
+     * 
+     * @return
+     */
     public ComponentDef getComponentDef() {
         return componentDef;
     }
 
+    /**
+     * コンポーネント定義を設定します。
+     * 
+     * @param componentDef
+     */
     public void setComponentDef(final ComponentDef componentDef) {
         this.componentDef = componentDef;
     }

@@ -19,10 +19,21 @@ import org.seasar.framework.aop.InterType;
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.impl.InterTypeDefImpl;
 
+/**
+ * インタータイプの自動登録を行うクラスです。
+ * 
+ * @author higa
+ * 
+ */
 public class InterTypeAutoRegister extends AbstractComponentTargetAutoRegister {
 
     protected InterType interType;
 
+    /**
+     * インタータイプを設定します。
+     * 
+     * @param interType
+     */
     public void setInterType(final InterType interType) {
         this.interType = interType;
     }

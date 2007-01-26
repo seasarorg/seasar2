@@ -21,6 +21,8 @@ import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.factory.AspectDefFactory;
 
 /**
+ * アスペクトを自動登録するためのクラスです。
+ * 
  * @author higa
  * 
  */
@@ -30,10 +32,20 @@ public class AspectAutoRegister extends AbstractComponentTargetAutoRegister {
 
     private String pointcut;
 
+    /**
+     * インターセプタを設定します。
+     * 
+     * @param interceptor
+     */
     public void setInterceptor(MethodInterceptor interceptor) {
         this.interceptor = interceptor;
     }
 
+    /**
+     * ポイントカットを設定します。
+     * 
+     * @param pointcut
+     */
     public void setPointcut(String pointcut) {
         this.pointcut = pointcut;
     }
