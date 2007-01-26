@@ -39,6 +39,9 @@ import org.seasar.framework.util.MethodUtil;
 public abstract class AbstractMethodAssembler extends AbstractAssembler
         implements MethodAssembler {
 
+    /**
+     * @param componentDef
+     */
     public AbstractMethodAssembler(ComponentDef componentDef) {
         super(componentDef);
     }

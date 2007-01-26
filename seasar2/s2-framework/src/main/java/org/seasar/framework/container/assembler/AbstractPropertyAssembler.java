@@ -36,6 +36,9 @@ import org.seasar.framework.exception.EmptyRuntimeException;
 public abstract class AbstractPropertyAssembler extends AbstractAssembler
         implements PropertyAssembler {
 
+    /**
+     * @param componentDef
+     */
     public AbstractPropertyAssembler(ComponentDef componentDef) {
         super(componentDef);
     }

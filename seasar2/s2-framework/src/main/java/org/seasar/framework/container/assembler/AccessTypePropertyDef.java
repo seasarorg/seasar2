@@ -31,9 +31,6 @@ import org.seasar.framework.container.util.BindingUtil;
  */
 public class AccessTypePropertyDef implements AccessTypeDef {
 
-    public AccessTypePropertyDef() {
-    }
-
     public String getName() {
         return PROPERTY_NAME;
     }

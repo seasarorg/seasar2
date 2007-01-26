@@ -48,6 +48,8 @@ public interface AspectDef extends ArgDef {
 
     /**
      * ポイントカットを設定します。
+     * 
+     * @param pointcut
      */
     void setPointcut(Pointcut pointcut);
 

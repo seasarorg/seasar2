@@ -33,6 +33,9 @@ public abstract class AbstractAssembler {
 
     private ComponentDef componentDef;
 
+    /**
+     * @param componentDef
+     */
     public AbstractAssembler(ComponentDef componentDef) {
         this.componentDef = componentDef;
     }

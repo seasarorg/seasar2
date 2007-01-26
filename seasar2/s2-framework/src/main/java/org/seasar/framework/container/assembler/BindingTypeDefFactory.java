@@ -29,15 +29,27 @@ import org.seasar.framework.container.IllegalBindingTypeDefRuntimeException;
  */
 public class BindingTypeDefFactory {
 
+    /**
+     * バインディングタイプ定義MUSTのフィールドです。
+     */
     public static final BindingTypeDef MUST = new BindingTypeMustDef(
             BindingTypeDef.MUST_NAME);
 
+    /**
+     * バインディングタイプ定義SHOULDのフィールドです。
+     */
     public static final BindingTypeDef SHOULD = new BindingTypeShouldDef(
             BindingTypeDef.SHOULD_NAME);
 
+    /**
+     * バインディングタイプ定義MAYのフィールドです。
+     */
     public static final BindingTypeDef MAY = new BindingTypeMayDef(
             BindingTypeDef.MAY_NAME);
 
+    /**
+     * バインディングタイプ定義NONEのフィールドです。
+     */
     public static final BindingTypeDef NONE = new BindingTypeNoneDef(
             BindingTypeDef.NONE_NAME);
 

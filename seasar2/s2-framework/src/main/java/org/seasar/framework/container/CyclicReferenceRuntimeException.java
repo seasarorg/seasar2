@@ -38,7 +38,7 @@ public class CyclicReferenceRuntimeException extends SRuntimeException {
     /**
      * 循環参照を引き起こしたコンポーネントのクラスを指定して、 <code>CyclicReferenceRuntimeException</code>を構築します。
      * 
-     * @param componentClasses
+     * @param componentClass
      *            循環参照を引き起こしたコンポーネントのクラス
      */
     public CyclicReferenceRuntimeException(Class componentClass) {

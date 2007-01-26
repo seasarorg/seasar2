@@ -32,9 +32,6 @@ import org.seasar.framework.container.util.BindingUtil;
  */
 public class AccessTypeFieldDef implements AccessTypeDef {
 
-    public AccessTypeFieldDef() {
-    }
-
     public String getName() {
         return FIELD_NAME;
     }

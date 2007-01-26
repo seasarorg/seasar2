@@ -38,6 +38,9 @@ import org.seasar.framework.util.ConstructorUtil;
 public abstract class AbstractConstructorAssembler extends AbstractAssembler
         implements ConstructorAssembler {
 
+    /**
+     * @param componentDef
+     */
     public AbstractConstructorAssembler(ComponentDef componentDef) {
         super(componentDef);
     }

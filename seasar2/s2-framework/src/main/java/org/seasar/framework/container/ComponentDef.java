@@ -165,7 +165,7 @@ public interface ComponentDef extends ArgDefAware, InterTypeDefAware,
     /**
      * コンポーネントを生成する式を設定します。
      * 
-     * @param Expression
+     * @param expression
      *            コンポーネント生成式
      */
     void setExpression(Expression expression);

@@ -29,8 +29,14 @@ import org.seasar.framework.container.IllegalAccessTypeDefRuntimeException;
  */
 public class AccessTypeDefFactory {
 
+    /**
+     * アクセスタイプ定義がPROPERTYのフィールドです。
+     */
     public static final AccessTypeDef PROPERTY = new AccessTypePropertyDef();
 
+    /**
+     * アクセスタイプ定義がFIELDのフィールドです。
+     */
     public static final AccessTypeDef FIELD = new AccessTypeFieldDef();
 
     private AccessTypeDefFactory() {

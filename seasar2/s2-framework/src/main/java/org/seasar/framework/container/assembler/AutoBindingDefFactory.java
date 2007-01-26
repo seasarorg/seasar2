@@ -29,18 +29,33 @@ import org.seasar.framework.container.IllegalAutoBindingDefRuntimeException;
  */
 public class AutoBindingDefFactory {
 
+    /**
+     * 自動バインディング定義AUTOのフィールドです。
+     */
     public static final AutoBindingDef AUTO = new AutoBindingAutoDef(
             AutoBindingDef.AUTO_NAME);
 
+    /**
+     * 自動バインディング定義CONSTRUCTORのフィールドです。
+     */
     public static final AutoBindingDef CONSTRUCTOR = new AutoBindingConstructorDef(
             AutoBindingDef.CONSTRUCTOR_NAME);
 
+    /**
+     * 自動バインディング定義PROPERTYのフィールドです。
+     */
     public static final AutoBindingDef PROPERTY = new AutoBindingPropertyDef(
             AutoBindingDef.PROPERTY_NAME);
 
+    /**
+     * 自動バインディング定義NONEのフィールドです。
+     */
     public static final AutoBindingDef NONE = new AutoBindingNoneDef(
             AutoBindingDef.NONE_NAME);
 
+    /**
+     * 自動バインディング定義SEMIAUTOのフィールドです。
+     */
     public static final AutoBindingDef SEMIAUTO = new AutoBindingSemiAutoDef(
             AutoBindingDef.SEMIAUTO_NAME);
 
