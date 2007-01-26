@@ -13,25 +13,21 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.persistence;
+package org.seasar.framework.container.impl;
 
-import org.seasar.framework.container.annotation.tiger.Binding;
-import org.seasar.framework.container.annotation.tiger.BindingType;
+import org.seasar.framework.unit.S2FrameworkTestCase;
 
-/**
- * @author higa
- * 
- */
-public class PersistenceConfiguration {
+public class SingletonS2ContainerTest extends S2FrameworkTestCase {
 
-	private DbmsDialect dialect;
+    public void test() throws Exception {
+        register(Hoge.class, "hoge");
+        Hoge hoge = SingletonS2Container.getComponent(Hoge.class);
+        Hoge hoge2 = SingletonS2Container.getComponent("hoge");
+        assertNotNull(hoge);
+        assertNotNull(hoge2);
+    }
 
-	public DbmsDialect getDialect() {
-		return dialect;
-	}
+    public static class Hoge {
 
-	@Binding(bindingType = BindingType.MUST)
-	public void setDialect(DbmsDialect dialect) {
-		this.dialect = dialect;
-	}
+    }
 }

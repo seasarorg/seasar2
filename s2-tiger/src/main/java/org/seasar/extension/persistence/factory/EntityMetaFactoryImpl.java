@@ -16,6 +16,10 @@
 package org.seasar.extension.persistence.factory;
 
 import java.io.File;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.seasar.extension.persistence.EntityMeta;
@@ -24,6 +28,7 @@ import org.seasar.extension.persistence.TableMeta;
 import org.seasar.extension.persistence.TableMetaFactory;
 import org.seasar.framework.container.annotation.tiger.Binding;
 import org.seasar.framework.container.annotation.tiger.BindingType;
+import org.seasar.framework.container.hotdeploy.HotdeployUtil;
 import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.ResourceUtil;
 
@@ -32,6 +37,8 @@ import org.seasar.framework.util.ResourceUtil;
  * 
  */
 public class EntityMetaFactoryImpl implements EntityMetaFactory {
+
+    private static final Class BYTE_ARRAY_CLASS = new Byte[0].getClass();
 
     private ConcurrentHashMap<String, EntityMetaCache> entityMetaCacheMap = new ConcurrentHashMap<String, EntityMetaCache>(
             200);
@@ -58,7 +65,8 @@ public class EntityMetaFactoryImpl implements EntityMetaFactory {
         EntityMetaCache cache = entityMetaCacheMap.get(entityClass.getName());
         if (cache == null) {
             cache = createEntityMetaCache(entityClass);
-            entityMetaCacheMap.putIfAbsent(entityClass.getName(), cache);
+            cache = entityMetaCacheMap
+                    .putIfAbsent(entityClass.getName(), cache);
             return cache.getEntityMeta();
         }
         if (cache.isModified()) {
@@ -71,7 +79,10 @@ public class EntityMetaFactoryImpl implements EntityMetaFactory {
     }
 
     protected EntityMetaCache createEntityMetaCache(Class entityClass) {
-        File file = ResourceUtil.getResourceAsFileNoException(entityClass);
+        File file = null;
+        if (HotdeployUtil.isHotdeploy()) {
+            file = ResourceUtil.getResourceAsFileNoException(entityClass);
+        }
         EntityMeta entityMeta = createEntityMeta(entityClass);
         return new EntityMetaCache(file, entityMeta);
     }
@@ -83,10 +94,29 @@ public class EntityMetaFactoryImpl implements EntityMetaFactory {
         TableMeta tableMeta = tableMetaFactory.createTableMeta(entityClass,
                 entityName);
         entityMeta.setTableMeta(tableMeta);
+        Field[] fields = entityClass.getDeclaredFields();
+        for (Field f : fields) {
+            if (!isInstanceField(f)) {
+                continue;
+            }
+        }
         return entityMeta;
     }
 
     protected String fromClassToEntityName(Class entityClass) {
         return ClassUtil.getShortClassName(entityClass);
+    }
+
+    protected boolean isInstanceField(Field field) {
+        int m = field.getModifiers();
+        return !Modifier.isStatic(m) && !Modifier.isFinal(m);
+    }
+
+    protected boolean isSimpleValueType(Class type) {
+        return type == String.class || type == Boolean.class
+                || Number.class.isAssignableFrom(type)
+                || Date.class.isAssignableFrom(type)
+                || Calendar.class.isAssignableFrom(type)
+                || type == BYTE_ARRAY_CLASS;
     }
 }

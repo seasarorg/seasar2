@@ -21,37 +21,47 @@ package org.seasar.extension.persistence;
  */
 public class PropertyMeta {
 
-	private String name;
+    private String name;
 
-	private ColumnMeta columnMeta;
+    private boolean aTransient = false;
 
-	/**
-	 * @return Returns the name.
-	 */
-	public String getName() {
-		return name;
-	}
+    private ColumnMeta columnMeta;
 
-	/**
-	 * @param name
-	 *            The name to set.
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
+    /**
+     * @return Returns the name.
+     */
+    public String getName() {
+        return name;
+    }
 
-	/**
-	 * @return Returns the columnMeta.
-	 */
-	public ColumnMeta getColumnMeta() {
-		return columnMeta;
-	}
+    /**
+     * @param name
+     *            The name to set.
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	/**
-	 * @param columnMeta
-	 *            The columnMeta to set.
-	 */
-	public void setColumnMeta(ColumnMeta columnMeta) {
-		this.columnMeta = columnMeta;
-	}
+    public boolean isTransient() {
+        return aTransient;
+    }
+
+    public void setTransient(boolean aTransient) {
+        this.aTransient = aTransient;
+    }
+
+    /**
+     * @return Returns the columnMeta.
+     */
+    public ColumnMeta getColumnMeta() {
+        return columnMeta;
+    }
+
+    /**
+     * @param columnMeta
+     *            The columnMeta to set.
+     */
+    public void setColumnMeta(ColumnMeta columnMeta) {
+        this.columnMeta = columnMeta;
+    }
 }

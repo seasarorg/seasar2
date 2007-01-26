@@ -13,26 +13,17 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.persistence.entity;
+package org.seasar.extension.persistence.annotation;
 
-import java.sql.Timestamp;
-import java.util.List;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * @author higa
- * 
  */
-public class Department {
-
-    private Long departmentId;
-
-    private String departmentName;
-
-    private Integer departmentVersion;
-
-    private Timestamp departmentInserted;
-
-    private Timestamp departmentUpdated;
-
-    private List<Employee> employees;
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.FIELD)
+public @interface Transient {
 }

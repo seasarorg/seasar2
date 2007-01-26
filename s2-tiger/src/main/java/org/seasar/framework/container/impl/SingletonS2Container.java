@@ -13,26 +13,28 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.persistence.entity;
+package org.seasar.framework.container.impl;
 
-import java.sql.Timestamp;
-import java.util.List;
+import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 
 /**
  * @author higa
  * 
  */
-public class Department {
+public abstract class SingletonS2Container {
 
-    private Long departmentId;
+    protected SingletonS2Container() {
+    }
 
-    private String departmentName;
+    @SuppressWarnings("unchecked")
+    public static <T> T getComponent(Class<? extends T> componentClass) {
+        return (T) SingletonS2ContainerFactory.getContainer().getComponent(
+                componentClass);
+    }
 
-    private Integer departmentVersion;
-
-    private Timestamp departmentInserted;
-
-    private Timestamp departmentUpdated;
-
-    private List<Employee> employees;
+    @SuppressWarnings("unchecked")
+    public static <T> T getComponent(String componentName) {
+        return (T) SingletonS2ContainerFactory.getContainer().getComponent(
+                componentName);
+    }
 }

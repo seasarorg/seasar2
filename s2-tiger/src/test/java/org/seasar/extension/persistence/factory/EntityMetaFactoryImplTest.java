@@ -16,12 +16,14 @@
 package org.seasar.extension.persistence.factory;
 
 import java.io.File;
+import java.lang.reflect.Field;
 import java.util.Date;
 
 import junit.framework.TestCase;
 
 import org.seasar.extension.persistence.EntityMeta;
 import org.seasar.extension.persistence.entity.Employee;
+import org.seasar.framework.container.hotdeploy.HotdeployUtil;
 import org.seasar.framework.convention.impl.PersistenceConventionImpl;
 import org.seasar.framework.util.ResourceUtil;
 
@@ -30,6 +32,10 @@ import org.seasar.framework.util.ResourceUtil;
  * 
  */
 public class EntityMetaFactoryImplTest extends TestCase {
+
+    private static final String FOO = "";
+
+    private final String aaa = "";
 
     private EntityMetaFactoryImpl factory;
 
@@ -40,6 +46,12 @@ public class EntityMetaFactoryImplTest extends TestCase {
         tableMetaFactory
                 .setPersistenceConvention(new PersistenceConventionImpl());
         factory.setTableMetaFactory(tableMetaFactory);
+        HotdeployUtil.setHotdeploy(true);
+    }
+
+    @Override
+    protected void tearDown() throws Exception {
+        HotdeployUtil.clearHotdeploy();
     }
 
     public void testGetEntityMeta() throws Exception {
@@ -59,5 +71,21 @@ public class EntityMetaFactoryImplTest extends TestCase {
     public void testCreateEntityMeta_tableMeta() throws Exception {
         EntityMeta entityMeta = factory.createEntityMeta(Employee.class);
         assertNotNull(entityMeta.getTableMeta());
+    }
+
+    public void testIsSimpleType() throws Exception {
+        assertTrue(factory.isSimpleValueType(String.class));
+        assertTrue(factory.isSimpleValueType(Byte.class));
+        assertTrue(factory.isSimpleValueType(new Byte[0].getClass()));
+        assertFalse(factory.isSimpleValueType(getClass()));
+    }
+
+    public void testIsInstanceField() throws Exception {
+        Field f = getClass().getDeclaredField("FOO");
+        assertFalse(factory.isInstanceField(f));
+        f = getClass().getDeclaredField("aaa");
+        assertFalse(factory.isInstanceField(f));
+        f = getClass().getDeclaredField("factory");
+        assertTrue(factory.isInstanceField(f));
     }
 }
