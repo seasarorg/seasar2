@@ -29,6 +29,22 @@
 		<property name="interceptorName">"aop.traceInterceptor"</property>
 	</component>
 
+	<component name="requiredTxCustomizer" class="org.seasar.framework.container.customizer.AspectCustomizer">
+		<property name="interceptorName">"j2ee.requiredTx"</property>
+	</component>
+	<component name="requiresNewTxCustomizer" class="org.seasar.framework.container.customizer.AspectCustomizer">
+		<property name="interceptorName">"j2ee.requiresNewTx"</property>
+	</component>
+	<component name="mandatoryTxCustomizer" class="org.seasar.framework.container.customizer.AspectCustomizer">
+		<property name="interceptorName">"j2ee.mandatoryTx"</property>
+	</component>
+	<component name="notSupportedTxCustomizer" class="org.seasar.framework.container.customizer.AspectCustomizer">
+		<property name="interceptorName">"j2ee.notSupportedTx"</property>
+	</component>
+	<component name="neverTxCustomizer" class="org.seasar.framework.container.customizer.AspectCustomizer">
+		<property name="interceptorName">"j2ee.neverTx"</property>
+	</component>
+
 	<component name="s2DxoCustomizer" class="org.seasar.framework.container.customizer.AspectCustomizer">
 		<property name="interceptorName">"dxo.interceptor"</property>
 	</component>
