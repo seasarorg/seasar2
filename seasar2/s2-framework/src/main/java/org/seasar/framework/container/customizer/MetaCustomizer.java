@@ -15,24 +15,62 @@
  */
 package org.seasar.framework.container.customizer;
 
-import org.seasar.framework.container.ComponentCustomizer;
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.MetaDef;
 import org.seasar.framework.container.impl.MetaDefImpl;
 
 /**
- * @author koichik
+ * {@link org.seasar.framework.container.ComponentDef コンポーネント定義}に
+ * {@link org.seasar.framework.container.MetaDef メタデータ定義}を 登録するコンポーネントカスタマイザです。
+ * <p>
+ * コンポーネント定義に登録するメタデータ定義は、カスタマイザ自身のコンポーネント定義に <code>autoRegister</code>という名前で定義されたメタデータ定義に設定されたメタデータ定義となります。
+ * diconファイルでは次のように記述します。
+ * </p>
  * 
+ * <pre>
+ * &lt;component class=&quot;org.seasar.framework.container.customizer.MetaCustomizer&quot;&gt;
+ *   &lt;meta name=&quot;autoRegister&quot;&gt;
+ *     &lt;meta name=&quot;remoting&quot;/&gt;
+ *   &lt;/meta&gt;
+ * &lt;/component&gt;
+ * </pre>
+ * 
+ * </p>
+ * この例では、<code>remoting</code>という名前を持つメタデータ定義がコンポーネント定義に 設定されます。
+ * <code>autoRegister</code>という名前で定義されたメタデータ定義には、複数のメタデータ定義を
+ * 設定することができます。その場合、すべてのメタデータ定義がそのままの順番でコンポーネント定義に 設定されます。
+ * </p>
+ * 
+ * @author koichik
  */
-public class MetaCustomizer implements ComponentCustomizer {
+public class MetaCustomizer extends AbstractCustomizer {
 
     protected ComponentDef componentDef;
 
+    /**
+     * コンポーネント定義を設定します。
+     * <p>
+     * このメソッドは、このコンポーネント自身のコンポーネント定義を引数として、S2コンテナから呼び出されることを意図しています。
+     * </p>
+     * 
+     * @param componentDef
+     *            コンポーネント定義
+     */
     public void setComponentDef(final ComponentDef componentDef) {
         this.componentDef = componentDef;
     }
 
-    public void customize(final ComponentDef cd) {
+    /**
+     * カスタマイズ対象のコンポーネント定義をカスタマイズをします。
+     * <p>
+     * このカスタマイザ自身のコンポーネント定義に <code>autoRegister</code>という名前で定義されたメタデータ定義に設定されたメタデータ定義を
+     * コンポーネント定義に登録します。
+     * </p>
+     * 
+     * @param componentDef
+     *            コンポーネント定義
+     */
+    protected void doCustomize(final ComponentDef cd) {
         final MetaDef metaDef = componentDef.getMetaDef("autoRegister");
         if (metaDef == null) {
             return;

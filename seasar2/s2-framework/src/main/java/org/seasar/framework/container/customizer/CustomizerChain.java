@@ -21,31 +21,57 @@ import java.util.List;
 import org.seasar.framework.container.ComponentCustomizer;
 import org.seasar.framework.container.ComponentDef;
 
-
 /**
- * @author higa
+ * 複数のコンポーネントカスタマイザをチェーンとして連結するカスタマイザです。
  * 
+ * @author higa
  */
-public class CustomizerChain implements ComponentCustomizer {
+public class CustomizerChain extends AbstractCustomizer {
 
     private List customizers = new ArrayList();
 
+    /**
+     * このカスタマイザチェーンに連結されているカスタマイザの数を返します。
+     * 
+     * @return 連結されているカスタマイザの数
+     */
     public int getCustomizerSize() {
         return customizers.size();
     }
 
+    /**
+     * 指定された位置のコンポーネントカスタマイザを返します。
+     * 
+     * @param index
+     *            取得するコンポーネントカスタマイザの位置
+     * @return 指定された位置のコンポーネントカスタマイザ
+     * @throws ArrayIndexOutOfBoundsException
+     *             指定された位置が設定されているカスタマイザの範囲外の場合にスローされます
+     */
     public ComponentCustomizer getCustomizer(int index) {
         return (ComponentCustomizer) customizers.get(index);
     }
 
+    /**
+     * チェーンの最後にコンポーネントカスタマイザを追加します。
+     * 
+     * @param customizer
+     *            コンポーネントカスタマイザ
+     */
     public void addCustomizer(ComponentCustomizer customizer) {
         customizers.add(customizer);
     }
 
-    /*
-     * @see org.seasar.framework.container.autoregister.ComponentCustomizer#customize(org.seasar.framework.container.ComponentDef)
+    /**
+     * カスタマイズ対象のコンポーネント定義をカスタマイズをします。
+     * <p>
+     * コンポーネント定義を、このカスタマイザチェーンに設定されているコンポーネントカスタマイザに、 設定されている順に適用します。
+     * </p>
+     * 
+     * @param componentDef
+     *            コンポーネント定義
      */
-    public void customize(ComponentDef componentDef) {
+    public void doCustomize(ComponentDef componentDef) {
         for (int i = 0; i < getCustomizerSize(); ++i) {
             ComponentCustomizer customizer = getCustomizer(i);
             customizer.customize(componentDef);
