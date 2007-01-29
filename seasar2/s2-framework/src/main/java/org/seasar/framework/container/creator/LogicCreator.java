@@ -19,18 +19,39 @@ import org.seasar.framework.container.ComponentCustomizer;
 import org.seasar.framework.container.deployer.InstanceDefFactory;
 import org.seasar.framework.convention.NamingConvention;
 
+/**
+ * Logic用のクリエータです。
+ * 
+ * @author higa
+ * 
+ */
 public class LogicCreator extends ComponentCreatorImpl {
 
+    /**
+     * Logic用のクリエータを返します。
+     * 
+     * @param namingConvention
+     */
     public LogicCreator(NamingConvention namingConvention) {
         super(namingConvention);
         setNameSuffix(namingConvention.getLogicSuffix());
         setInstanceDef(InstanceDefFactory.PROTOTYPE);
     }
 
+    /**
+     * Logic用のカスタマイザを返します。
+     * 
+     * @return
+     */
     public ComponentCustomizer getLogicCustomizer() {
         return getCustomizer();
     }
 
+    /**
+     * Logic用のカスタマイザを設定します。
+     * 
+     * @param customizer
+     */
     public void setLogicCustomizer(ComponentCustomizer customizer) {
         setCustomizer(customizer);
     }

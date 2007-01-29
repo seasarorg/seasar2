@@ -20,8 +20,19 @@ import org.seasar.framework.container.assembler.AutoBindingDefFactory;
 import org.seasar.framework.container.deployer.InstanceDefFactory;
 import org.seasar.framework.convention.NamingConvention;
 
+/**
+ * Dto用のクリエータです。
+ * 
+ * @author higa
+ * 
+ */
 public class DtoCreator extends ComponentCreatorImpl {
 
+    /**
+     * Dto用のクリエータを返します。
+     * 
+     * @param namingConvention
+     */
     public DtoCreator(NamingConvention namingConvention) {
         super(namingConvention);
         setNameSuffix(namingConvention.getDtoSuffix());
@@ -29,10 +40,20 @@ public class DtoCreator extends ComponentCreatorImpl {
         setAutoBindingDef(AutoBindingDefFactory.NONE);
     }
 
+    /**
+     * Dto用のカスタマイザを返します。
+     * 
+     * @return
+     */
     public ComponentCustomizer getDtoCustomizer() {
         return getCustomizer();
     }
 
+    /**
+     * Dto用のカスタマイザを設定します。
+     * 
+     * @param customizer
+     */
     public void setDtoCustomizer(ComponentCustomizer customizer) {
         setCustomizer(customizer);
     }

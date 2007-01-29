@@ -20,20 +20,37 @@ import org.seasar.framework.container.deployer.InstanceDefFactory;
 import org.seasar.framework.convention.NamingConvention;
 
 /**
+ * コンバータ用のクリエータです。
+ * 
  * @author shot
  */
 public class ConverterCreator extends ComponentCreatorImpl {
 
+    /**
+     * コンバータ用のクリエータを返します。
+     * 
+     * @param namingConvention
+     */
     public ConverterCreator(NamingConvention namingConvention) {
         super(namingConvention);
         setNameSuffix(namingConvention.getConverterSuffix());
         setInstanceDef(InstanceDefFactory.PROTOTYPE);
     }
 
+    /**
+     * コンバータ用のカスタマイザを返します。
+     * 
+     * @return
+     */
     public ComponentCustomizer getConverterCustomizer() {
         return getCustomizer();
     }
 
+    /**
+     * コンバータ用のカスタマイザを設定します。
+     * 
+     * @param customizer
+     */
     public void setConverterCustomizer(ComponentCustomizer customizer) {
         setCustomizer(customizer);
     }

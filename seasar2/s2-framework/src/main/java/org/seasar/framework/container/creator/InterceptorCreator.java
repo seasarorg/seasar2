@@ -19,18 +19,39 @@ import org.seasar.framework.container.ComponentCustomizer;
 import org.seasar.framework.container.deployer.InstanceDefFactory;
 import org.seasar.framework.convention.NamingConvention;
 
+/**
+ * Interceptor用のクリエータです。
+ * 
+ * @author higa
+ * 
+ */
 public class InterceptorCreator extends ComponentCreatorImpl {
 
+    /**
+     * Interceptor用のクリエータを返します。
+     * 
+     * @param namingConvention
+     */
     public InterceptorCreator(NamingConvention namingConvention) {
         super(namingConvention);
         setNameSuffix(namingConvention.getInterceptorSuffix());
         setInstanceDef(InstanceDefFactory.PROTOTYPE);
     }
 
+    /**
+     * Interceptor用のカスタマイザを返します。
+     * 
+     * @return
+     */
     public ComponentCustomizer getInterceptorCustomizer() {
         return getCustomizer();
     }
 
+    /**
+     * Interceptor用のカスタマイザを設定します。
+     * 
+     * @param customizer
+     */
     public void setInterceptorCustomizer(ComponentCustomizer customizer) {
         setCustomizer(customizer);
     }

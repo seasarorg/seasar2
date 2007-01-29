@@ -18,17 +18,38 @@ package org.seasar.framework.container.creator;
 import org.seasar.framework.container.ComponentCustomizer;
 import org.seasar.framework.convention.NamingConvention;
 
+/**
+ * コネクタ用のクリエータです。
+ * 
+ * @author higa
+ * 
+ */
 public class ConnectorCreator extends ComponentCreatorImpl {
 
+    /**
+     * コネクタ用のクリエータを返します。
+     * 
+     * @param namingConvention
+     */
     public ConnectorCreator(NamingConvention namingConvention) {
         super(namingConvention);
         setNameSuffix(namingConvention.getConnectorSuffix());
     }
 
+    /**
+     * コネクタ用のカスタマイザを返します。
+     * 
+     * @return
+     */
     public ComponentCustomizer getConnectorCustomizer() {
         return getCustomizer();
     }
 
+    /**
+     * コネクタ用のカスタマイザを設定します。
+     * 
+     * @param customizer
+     */
     public void setConnectorCustomizer(ComponentCustomizer customizer) {
         setCustomizer(customizer);
     }

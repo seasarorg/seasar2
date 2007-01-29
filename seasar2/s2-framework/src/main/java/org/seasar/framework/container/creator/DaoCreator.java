@@ -19,8 +19,19 @@ import org.seasar.framework.container.ComponentCustomizer;
 import org.seasar.framework.container.deployer.InstanceDefFactory;
 import org.seasar.framework.convention.NamingConvention;
 
+/**
+ * Dao用のクリエータです。
+ * 
+ * @author higa
+ * 
+ */
 public class DaoCreator extends ComponentCreatorImpl {
 
+    /**
+     * Dao用のクリエータを返します。
+     * 
+     * @param namingConvention
+     */
     public DaoCreator(NamingConvention namingConvention) {
         super(namingConvention);
         setNameSuffix(namingConvention.getDaoSuffix());
@@ -29,10 +40,20 @@ public class DaoCreator extends ComponentCreatorImpl {
         setEnableAbstract(true);
     }
 
+    /**
+     * Dao用のカスタマイザを返します。
+     * 
+     * @return
+     */
     public ComponentCustomizer getDaoCustomizer() {
         return getCustomizer();
     }
 
+    /**
+     * Dao用のカスタマイザを設定します。
+     * 
+     * @param customizer
+     */
     public void setDaoCustomizer(ComponentCustomizer customizer) {
         setCustomizer(customizer);
     }

@@ -19,8 +19,19 @@ import org.seasar.framework.container.ComponentCustomizer;
 import org.seasar.framework.container.deployer.InstanceDefFactory;
 import org.seasar.framework.convention.NamingConvention;
 
+/**
+ * Service用のクリエータです。
+ * 
+ * @author higa
+ * 
+ */
 public class ServiceCreator extends ComponentCreatorImpl {
 
+    /**
+     * Service用のクリエータを返します。
+     * 
+     * @param namingConvention
+     */
     public ServiceCreator(NamingConvention namingConvention) {
         super(namingConvention);
         setNameSuffix(namingConvention.getServiceSuffix());
@@ -29,10 +40,20 @@ public class ServiceCreator extends ComponentCreatorImpl {
         setEnableAbstract(true);
     }
 
+    /**
+     * Service用のカスタマイザを返します。
+     * 
+     * @return
+     */
     public ComponentCustomizer getServiceCustomizer() {
         return getCustomizer();
     }
 
+    /**
+     * Service用のカスタマイザを設定します。
+     * 
+     * @param customizer
+     */
     public void setServiceCustomizer(ComponentCustomizer customizer) {
         setCustomizer(customizer);
     }

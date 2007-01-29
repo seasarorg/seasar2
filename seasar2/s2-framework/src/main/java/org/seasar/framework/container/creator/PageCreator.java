@@ -19,8 +19,19 @@ import org.seasar.framework.container.ComponentCustomizer;
 import org.seasar.framework.container.deployer.InstanceDefFactory;
 import org.seasar.framework.convention.NamingConvention;
 
+/**
+ * Page用のクリエータです。
+ * 
+ * @author higa
+ * 
+ */
 public class PageCreator extends ComponentCreatorImpl {
 
+    /**
+     * Page用のクリエータを返します。
+     * 
+     * @param namingConvention
+     */
     public PageCreator(NamingConvention namingConvention) {
         super(namingConvention);
         setNameSuffix(namingConvention.getPageSuffix());
@@ -28,10 +39,20 @@ public class PageCreator extends ComponentCreatorImpl {
         setExternalBinding(true);
     }
 
+    /**
+     * Page用のカスタマイザを返します。
+     * 
+     * @return
+     */
     public ComponentCustomizer getPageCustomizer() {
         return getCustomizer();
     }
 
+    /**
+     * Page用のカスタマイザを設定します。
+     * 
+     * @param customizer
+     */
     public void setPageCustomizer(ComponentCustomizer customizer) {
         setCustomizer(customizer);
     }

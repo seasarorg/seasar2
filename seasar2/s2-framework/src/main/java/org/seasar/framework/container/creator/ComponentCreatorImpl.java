@@ -151,26 +151,56 @@ public class ComponentCreatorImpl implements ComponentCreator {
         this.externalBinding = externalBinding;
     }
 
+    /**
+     * インターフェースだけしかないクラスを可能にするかどうかを返します。インターフェースだけしかない場合は、AOP(AspectCustomzier)で実装クラスが作られるでしょう。
+     * 
+     * @return
+     */
     public boolean isEnableInterface() {
         return enableInterface;
     }
 
+    /**
+     * インターフェースしかないクラスを可能にするかどうかを設定します。
+     * 
+     * @param enableInterface
+     */
     public void setEnableInterface(boolean enableInterface) {
         this.enableInterface = enableInterface;
     }
 
+    /**
+     * 抽象クラスを可能にするかどうかを返します。抽象クラスの場合、AOP(AspectCustomzier)で実装クラスが作られるでしょう。
+     * 
+     * @return
+     */
     public boolean isEnableAbstract() {
         return enableAbstract;
     }
 
+    /**
+     * 抽象クラスを可能にするかどうかを設定します。
+     * 
+     * @param enableAbstract
+     */
     public void setEnableAbstract(boolean enableAbstract) {
         this.enableAbstract = enableAbstract;
     }
 
+    /**
+     * 名前のサフィックスを返します。
+     * 
+     * @return
+     */
     public String getNameSuffix() {
         return nameSuffix;
     }
 
+    /**
+     * 名前のサフィックスを設定します。
+     * 
+     * @param nameSuffix
+     */
     public void setNameSuffix(String nameSuffix) {
         this.nameSuffix = nameSuffix;
     }
@@ -227,6 +257,12 @@ public class ComponentCreatorImpl implements ComponentCreator {
         return createComponentDef(componentClass);
     }
 
+    /**
+     * 対象となるコンポーネント名かどうかを返します。
+     * 
+     * @param componentName
+     * @return
+     */
     public boolean isTargetComponentName(String componentName) {
         return componentName.endsWith(nameSuffix);
     }

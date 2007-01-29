@@ -18,8 +18,19 @@ package org.seasar.framework.container.creator;
 import org.seasar.framework.container.ComponentCustomizer;
 import org.seasar.framework.convention.NamingConvention;
 
+/**
+ * Dxo用のクリエータです。
+ * 
+ * @author higa
+ * 
+ */
 public class DxoCreator extends ComponentCreatorImpl {
 
+    /**
+     * Dxo用のクリエータを返します。
+     * 
+     * @param namingConvention
+     */
     public DxoCreator(NamingConvention namingConvention) {
         super(namingConvention);
         setNameSuffix(namingConvention.getDxoSuffix());
@@ -27,10 +38,20 @@ public class DxoCreator extends ComponentCreatorImpl {
         setEnableAbstract(true);
     }
 
+    /**
+     * Dxo用のカスタマイザを返します。
+     * 
+     * @return
+     */
     public ComponentCustomizer getDxoCustomizer() {
         return getCustomizer();
     }
 
+    /**
+     * Dxo用のカスタマイザを設定します。
+     * 
+     * @param customizer
+     */
     public void setDxoCustomizer(ComponentCustomizer customizer) {
         setCustomizer(customizer);
     }

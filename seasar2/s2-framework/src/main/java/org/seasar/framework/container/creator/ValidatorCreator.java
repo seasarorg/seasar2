@@ -19,18 +19,39 @@ import org.seasar.framework.container.ComponentCustomizer;
 import org.seasar.framework.container.deployer.InstanceDefFactory;
 import org.seasar.framework.convention.NamingConvention;
 
+/**
+ * Validator用のクリエータです。
+ * 
+ * @author higa
+ * 
+ */
 public class ValidatorCreator extends ComponentCreatorImpl {
 
+    /**
+     * Validator用のクリエータを返します。
+     * 
+     * @param namingConvention
+     */
     public ValidatorCreator(NamingConvention namingConvention) {
         super(namingConvention);
         setNameSuffix(namingConvention.getValidatorSuffix());
         setInstanceDef(InstanceDefFactory.PROTOTYPE);
     }
 
+    /**
+     * Validator用のカスタマイザを返します。
+     * 
+     * @return
+     */
     public ComponentCustomizer getValidatorCustomizer() {
         return getCustomizer();
     }
 
+    /**
+     * Validator用のカスタマイザを設定します。
+     * 
+     * @param customizer
+     */
     public void setValidatorCustomizer(ComponentCustomizer customizer) {
         setCustomizer(customizer);
     }

@@ -19,18 +19,39 @@ import org.seasar.framework.container.ComponentCustomizer;
 import org.seasar.framework.container.deployer.InstanceDefFactory;
 import org.seasar.framework.convention.NamingConvention;
 
+/**
+ * Helper用のクリエータです。
+ * 
+ * @author higa
+ * 
+ */
 public class HelperCreator extends ComponentCreatorImpl {
 
+    /**
+     * Helper用のクリエータを返します。
+     * 
+     * @param namingConvention
+     */
     public HelperCreator(NamingConvention namingConvention) {
         super(namingConvention);
         setNameSuffix(namingConvention.getHelperSuffix());
         setInstanceDef(InstanceDefFactory.PROTOTYPE);
     }
 
+    /**
+     * Helper用のカスタマイザを返します。
+     * 
+     * @return
+     */
     public ComponentCustomizer getHelperCustomizer() {
         return getCustomizer();
     }
 
+    /**
+     * Helper用のカスタマイザを設定します。
+     * 
+     * @param customizer
+     */
     public void setHelperCustomizer(ComponentCustomizer customizer) {
         setCustomizer(customizer);
     }
