@@ -27,13 +27,35 @@ import junit.framework.TestCase;
 public class BeanUtilTest extends TestCase {
 
     public void testCopyProperties() throws Exception {
-        Map src = new HashMap();
-        src.put("aaa", "111");
-        src.put("ccc", "333");
-        MyClass dest = new MyClass();
+        MyClass src = new MyClass();
+        src.setAaa("111");
+        src.setCcc("333");
+
+        MyClass2 dest = new MyClass2();
+        dest.setAaa("aaa");
+        dest.setBbb("bbb");
+        dest.setDdd("ddd");
+
         BeanUtil.copyProperties(src, dest);
         assertEquals("111", dest.getAaa());
         assertNull(dest.getBbb());
+        assertEquals("ddd", dest.getDdd());
+    }
+
+    public void testCopyPropertiesWithoutNull() throws Exception {
+        MyClass src = new MyClass();
+        src.setAaa("111");
+        src.setCcc("333");
+
+        MyClass2 dest = new MyClass2();
+        dest.setAaa("aaa");
+        dest.setBbb("bbb");
+        dest.setDdd("ddd");
+
+        BeanUtil.copyProperties(src, dest, false);
+        assertEquals("111", dest.getAaa());
+        assertEquals("bbb", dest.getBbb());
+        assertEquals("ddd", dest.getDdd());
     }
 
     public void testCopyToMap() throws Exception {
@@ -99,6 +121,8 @@ public class BeanUtilTest extends TestCase {
 
         private String bbb;
 
+        private String ccc;
+
         /**
          * @return Returns the aaa.
          */
@@ -127,6 +151,74 @@ public class BeanUtilTest extends TestCase {
          */
         public void setBbb(String bbb) {
             this.bbb = bbb;
+        }
+
+        /**
+         * @return Returns the ccc.
+         */
+        public String getCcc() {
+            return ccc;
+        }
+
+        /**
+         * @param ccc
+         *            The ccc to set.
+         */
+        public void setCcc(String ccc) {
+            this.ccc = ccc;
+        }
+    }
+
+    public static class MyClass2 {
+        private String aaa;
+
+        private String bbb;
+
+        private String ddd;
+
+        /**
+         * @return Returns the aaa.
+         */
+        public String getAaa() {
+            return aaa;
+        }
+
+        /**
+         * @param aaa
+         *            The aaa to set.
+         */
+        public void setAaa(String aaa) {
+            this.aaa = aaa;
+        }
+
+        /**
+         * @return Returns the bbb.
+         */
+        public String getBbb() {
+            return bbb;
+        }
+
+        /**
+         * @param bbb
+         *            The bbb to set.
+         */
+        public void setBbb(String bbb) {
+            this.bbb = bbb;
+        }
+
+        /**
+         * @return Returns the ddd.
+         */
+        public String getDdd() {
+            return ddd;
+        }
+
+        /**
+         * @param ddd
+         *            The ddd to set.
+         */
+        public void setDdd(String ddd) {
+            this.ddd = ddd;
         }
     }
 }

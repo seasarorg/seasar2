@@ -77,7 +77,7 @@ public class BeanUtil {
 
         final int propertyDescSize = destBeanDesc.getPropertyDescSize();
         for (int i = 0; i < propertyDescSize; i++) {
-            final PropertyDesc destPropertyDesc = srcBeanDesc
+            final PropertyDesc destPropertyDesc = destBeanDesc
                     .getPropertyDesc(i);
             final String propertyName = destPropertyDesc.getPropertyName();
             if (srcBeanDesc.hasPropertyDesc(propertyName)) {
