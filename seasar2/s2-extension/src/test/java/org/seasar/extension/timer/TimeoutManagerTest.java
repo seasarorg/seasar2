@@ -40,7 +40,7 @@ public class TimeoutManagerTest extends TestCase {
                 }, 1, true);
 
         assertNotNull(TimeoutManager.getInstance().thread);
-        Thread.sleep(1500);
+        Thread.sleep(2000);
         assertTrue(expiredCount > 0);
         assertEquals(1, TimeoutManager.getInstance().getTimeoutTaskCount());
         TimeoutManager.getInstance().stop();
@@ -50,11 +50,11 @@ public class TimeoutManagerTest extends TestCase {
         task.stop();
         TimeoutManager.getInstance().start();
         assertNotNull(TimeoutManager.getInstance().thread);
-        Thread.sleep(1500);
+        Thread.sleep(2000);
         assertEquals(count, expiredCount);
         assertEquals(1, TimeoutManager.getInstance().getTimeoutTaskCount());
         task.cancel();
-        Thread.sleep(1500);
+        Thread.sleep(2000);
         assertEquals(0, TimeoutManager.getInstance().getTimeoutTaskCount());
         assertNull(TimeoutManager.getInstance().thread);
     }
