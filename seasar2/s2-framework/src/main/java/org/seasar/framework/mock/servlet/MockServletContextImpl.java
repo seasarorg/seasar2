@@ -50,7 +50,7 @@ public class MockServletContextImpl implements MockServletContext, Serializable 
 
     public static final String SERVER_INFO = "seasar/2.0";
 
-    private String path;
+    private String servletContextName;
 
     private Map mimeTypes = new HashMap();
 
@@ -62,7 +62,7 @@ public class MockServletContextImpl implements MockServletContext, Serializable 
         if (path == null || path.charAt(0) != '/') {
             path = "/";
         }
-        this.path = path;
+        this.servletContextName = path;
     }
 
     /**
@@ -297,7 +297,11 @@ public class MockServletContextImpl implements MockServletContext, Serializable 
      * @see javax.servlet.ServletContext#getServletContextName()
      */
     public String getServletContextName() {
-        return path;
+        return servletContextName;
+    }
+
+    public void setServletContextName(final String servletContextName) {
+        this.servletContextName = servletContextName;
     }
 
     public MockHttpServletRequestImpl createRequest(String path) {

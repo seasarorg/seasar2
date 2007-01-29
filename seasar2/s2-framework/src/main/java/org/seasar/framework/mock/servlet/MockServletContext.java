@@ -19,11 +19,16 @@ import javax.servlet.ServletContext;
 
 /**
  * @author Satoshi Kimura
+ * @author manhole
  */
 public interface MockServletContext extends ServletContext {
+
     void addMimeType(String file, String type);
 
     void setInitParameter(String name, String value);
 
     MockHttpServletRequestImpl createRequest(String path);
+
+    void setServletContextName(final String servletContextName);
+
 }
