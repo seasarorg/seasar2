@@ -24,8 +24,7 @@ public class MockServletContextImplTest extends TestCase {
     private MockServletContextImpl context_;
 
     public void testCreateRequest() throws Exception {
-        MockHttpServletRequestImpl request = context_
-                .createRequest("/hello.html");
+        MockHttpServletRequest request = context_.createRequest("/hello.html");
         assertEquals("1", "/s2jsf-example", request.getContextPath());
         assertEquals("2", "/hello.html", request.getServletPath());
 
@@ -42,4 +41,5 @@ public class MockServletContextImplTest extends TestCase {
     protected void setUp() throws Exception {
         context_ = new MockServletContextImpl("/s2jsf-example");
     }
+
 }

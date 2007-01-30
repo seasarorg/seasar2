@@ -38,7 +38,7 @@ import org.seasar.framework.util.StringUtil;
 
 /**
  * @author higa
- * 
+ * @author manhole
  */
 public class MockServletContextImpl implements MockServletContext, Serializable {
 
@@ -52,11 +52,11 @@ public class MockServletContextImpl implements MockServletContext, Serializable 
 
     private String servletContextName;
 
-    private Map mimeTypes = new HashMap();
+    private final Map mimeTypes = new HashMap();
 
-    private Map initParameters = new HashMap();
+    private final Map initParameters = new HashMap();
 
-    private Map attributes = new HashMap();
+    private final Map attributes = new HashMap();
 
     public MockServletContextImpl(String path) {
         if (path == null || path.charAt(0) != '/') {
@@ -304,7 +304,7 @@ public class MockServletContextImpl implements MockServletContext, Serializable 
         this.servletContextName = servletContextName;
     }
 
-    public MockHttpServletRequestImpl createRequest(String path) {
+    public MockHttpServletRequest createRequest(String path) {
         String queryString = null;
         int question = path.indexOf('?');
         if (question >= 0) {
@@ -315,6 +315,10 @@ public class MockServletContextImpl implements MockServletContext, Serializable 
                 this, path);
         request.setQueryString(queryString);
         return request;
+    }
+
+    public Map getInitParameterMap() {
+        return initParameters;
     }
 
 }

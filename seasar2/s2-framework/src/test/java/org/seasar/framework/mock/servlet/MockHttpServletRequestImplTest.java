@@ -44,6 +44,8 @@ public class MockHttpServletRequestImplTest extends TestCase {
 
     protected void setUp() throws Exception {
         context_ = new MockServletContextImpl("/s2jsf-example");
-        request_ = context_.createRequest("/hello.html");
+        request_ = (MockHttpServletRequestImpl) context_
+                .createRequest("/hello.html");
     }
+
 }

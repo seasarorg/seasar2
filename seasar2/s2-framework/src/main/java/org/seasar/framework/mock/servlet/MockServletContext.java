@@ -15,6 +15,8 @@
  */
 package org.seasar.framework.mock.servlet;
 
+import java.util.Map;
+
 import javax.servlet.ServletContext;
 
 /**
@@ -27,8 +29,10 @@ public interface MockServletContext extends ServletContext {
 
     void setInitParameter(String name, String value);
 
-    MockHttpServletRequestImpl createRequest(String path);
+    MockHttpServletRequest createRequest(String path);
 
-    void setServletContextName(final String servletContextName);
+    void setServletContextName(String servletContextName);
+
+    Map getInitParameterMap();
 
 }
