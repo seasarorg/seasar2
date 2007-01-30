@@ -65,8 +65,7 @@ public class EntityMetaFactoryImpl implements EntityMetaFactory {
         EntityMetaCache cache = entityMetaCacheMap.get(entityClass.getName());
         if (cache == null) {
             cache = createEntityMetaCache(entityClass);
-            cache = entityMetaCacheMap
-                    .putIfAbsent(entityClass.getName(), cache);
+            entityMetaCacheMap.put(entityClass.getName(), cache);
             return cache.getEntityMeta();
         }
         if (cache.isModified()) {
