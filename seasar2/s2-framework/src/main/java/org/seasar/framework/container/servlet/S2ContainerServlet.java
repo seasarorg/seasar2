@@ -127,7 +127,7 @@ public class S2ContainerServlet extends HttpServlet {
         final String path = request.getParameter(PATH);
         final S2Container container = getContainer(path);
         if (container == null) {
-            out.write("S2Container[" + container.getPath() + "] is not found.");
+            out.write("S2Container[" + path + "] is not found.");
             return;
         }
         out.write("<html><head><title>S2 Components</title></head><body>");
