@@ -41,8 +41,8 @@ import org.seasar.framework.util.ClassUtil;
  * </ul>
  * </p>
  * <p>
- * {@link #customize()}メソッドの引数で渡されたコンポーネントがカスタマイズ対象の場合は、 {@link #doCustomize()}メソッドを呼び出します。
- * サブクラスは{@link #doCustomize()}メソッドを実装してください。
+ * {@link #customize(ComponentDef)}メソッドの引数で渡されたコンポーネントがカスタマイズ対象の場合は、 抽象メソッド{@link #doCustomize(ComponentDef)}メソッドを呼び出します。
+ * サブクラスは{@link #doCustomize(ComponentDef)}メソッドを実装してコンポーネント定義をカスタマイズしてください。
  * </p>
  * 
  * @author koichik
