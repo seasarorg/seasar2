@@ -25,6 +25,7 @@ import javax.sql.XAConnection;
 import javax.sql.XADataSource;
 
 import org.seasar.framework.util.ClassUtil;
+import org.seasar.framework.util.DriverManagerUtil;
 import org.seasar.framework.util.StringUtil;
 
 public class XADataSourceImpl implements XADataSource {
@@ -49,7 +50,7 @@ public class XADataSourceImpl implements XADataSource {
     public void setDriverClassName(String driverClassName) {
         driverClassName_ = driverClassName;
         if (driverClassName != null && driverClassName.length() > 0) {
-            ClassUtil.newInstance(driverClassName);
+            DriverManagerUtil.registerDriver(driverClassName);
         }
     }
 

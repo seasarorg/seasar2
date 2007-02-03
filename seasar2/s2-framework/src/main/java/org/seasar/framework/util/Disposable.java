@@ -16,9 +16,20 @@
 package org.seasar.framework.util;
 
 /**
- * @author koichik
+ * 破棄可能なリソースを表現します。
+ * <p>
+ * S2コンテナの終了時に破棄しなければならないリソースがある場合は、 このインタフェースを実装したクラスを作成し、
+ * {@link DisposableUtil}に登録します。
+ * </p>
  * 
+ * @author koichik
  */
 public interface Disposable {
+
+    /**
+     * このオブジェクトが保持しているリソースを破棄します。
+     * 
+     */
     void dispose();
+
 }

@@ -15,31 +15,56 @@
  */
 package org.seasar.framework.util;
 
-import java.sql.Driver;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.util.Enumeration;
 import java.util.LinkedList;
 
-import org.seasar.framework.exception.SQLRuntimeException;
 import org.seasar.framework.log.Logger;
 
 /**
- * @author koichik
+ * {@link org.seasar.framework.container.S2Container S2コンテナ}の終了時にリソースを破棄するためのユーティリティクラスです。
+ * <p>
+ * S2コンテナの終了時に破棄しなければならないリソースがある場合は、 {@link Disposable}を実装したクラスを作成し、
+ * このクラスに登録します。 通常、
+ * {@link org.seasar.framework.container.factory.SingletonS2ContainerFactory#destroy()}が実行される際に、
+ * {@link dispose()}メソッドが呼び出され、 登録されている{@link Disposable}の{@link Disposable#dispose()}メソッドが呼び出されます。
+ * {@link org.seasar.framework.unit.S2FrameworkTestCase}のサブクラスであるテストケースでは、
+ * テストメソッドを実行する毎に{@link #dispose()}メソッドが呼び出されます．
+ * </p>
  * 
+ * @author koichik
  */
 public class DisposableUtil {
 
+    /** 登録済みの{@link Disposable} */
     protected static final LinkedList disposables = new LinkedList();
 
+    /**
+     * 破棄可能なリソースを登録します。
+     * 
+     * @param disposable
+     *            破棄可能なリソース
+     */
     public static synchronized void add(final Disposable disposable) {
         disposables.add(disposable);
     }
 
+    /**
+     * 破棄可能なリソースを登録解除します。
+     * 
+     * @param disposable
+     *            破棄可能なリソース
+     */
     public static synchronized void remove(final Disposable disposable) {
         disposables.remove(disposable);
     }
 
+    /**
+     * 登録済みのリソースを全て破棄します。
+     * <p>
+     * 登録済みのリソースを全て破棄した後，{@link org.seasar.framework.log.Logger#dispose()}を呼び出します。
+     * commons loggingがクラスローダへの参照を保持するため、この呼び出しが必要となります。
+     * リソースの破棄中にログが出力される場合を考慮して、 リソースを破棄した後に{@link org.seasar.framework.log.Logger#dispose()}を呼び出します。
+     * </p>
+     */
     public static synchronized void dispose() {
         while (!disposables.isEmpty()) {
             final Disposable disposable = (Disposable) disposables.removeLast();
@@ -53,14 +78,14 @@ public class DisposableUtil {
         Logger.dispose();
     }
 
-    public static synchronized void deregisterAllDrivers() {
-        try {
-            for (Enumeration e = DriverManager.getDrivers(); e
-                    .hasMoreElements();) {
-                DriverManager.deregisterDriver((Driver) e.nextElement());
-            }
-        } catch (SQLException e) {
-            throw new SQLRuntimeException(e);
-        }
+    /**
+     * {@link java.sql.DriverManager}に登録されている{@link java.sql.Driver}を 解除します。
+     * <p>
+     * このメソッドは互換性のために残されています。 バージョン2.4.10以降では、
+     * {@DriverManagerUtil#deregisterAllDrivers()}を使用してください。
+     * </p>
+     */
+    public static void deregisterAllDrivers() {
+        DriverManagerUtil.deregisterAllDrivers();
     }
 }
