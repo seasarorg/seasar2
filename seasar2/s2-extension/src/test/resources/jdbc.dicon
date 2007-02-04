@@ -50,9 +50,6 @@
 		</property>
 		<property name="user">"sa"</property>
 		<property name="password">""</property>
-		<destroyMethod>
-			@org.seasar.framework.util.DriverManagerUtil@deregisterAllDrivers()
-		</destroyMethod>
 	</component>
 	-->
 
