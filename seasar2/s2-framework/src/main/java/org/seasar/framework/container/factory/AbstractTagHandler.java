@@ -21,12 +21,35 @@ import org.seasar.framework.xml.TagHandler;
 import org.seasar.framework.xml.TagHandlerContext;
 import org.xml.sax.Locator;
 
+/**
+ * diconファイル解析中、タグに遭遇したときにコールバックされます。
+ * <p>
+ * {@link org.seasar.framework.container.factory.XmlS2ContainerBuilder}で共通に必要になる機能を、サブクラスに対し提供します。
+ * </p>
+ * 
+ * @author yatsu
+ */
 public class AbstractTagHandler extends TagHandler {
     private static final long serialVersionUID = 1L;
 
+    /**
+     * {@link org.seasar.framework.container.factory.AbstractTagHandler}を構築します。
+     */
     public AbstractTagHandler() {
     }
 
+    /**
+     * {@link org.seasar.framework.container.ognl.OgnlExpression OGNL式}を生成します。
+     * 
+     * @param context
+     *            {@link org.seasar.framework.xml.TagHandler}のコンテキスト情報
+     * @param body
+     *            解析対象の文字列
+     * @return 生成された{@link org.seasar.framework.container.ognl.OgnlExpression OGNL式}
+     * 
+     * @throws org.seasar.framework.exception.OgnlRuntimeException
+     *             <code>body</code>が、{@link org.seasar.framework.container.ognl.OgnlExpression OGNL式}として不正だった場合
+     */
     protected Expression createExpression(final TagHandlerContext context,
             final String body) {
         Locator locator = context.getLocator();
