@@ -27,6 +27,7 @@ import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.assembler.AssemblerFactory;
 import org.seasar.framework.container.deployer.ComponentDeployerFactory;
 import org.seasar.framework.container.impl.S2ContainerBehavior;
+import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.Disposable;
 import org.seasar.framework.util.DisposableUtil;
 import org.seasar.framework.util.ResourceUtil;
@@ -108,6 +109,9 @@ public final class S2ContainerFactory {
             return new LinkedHashSet();
         }
     };
+
+    private static final Logger logger = Logger
+            .getLogger(S2ContainerFactory.class);
 
     static {
         configure();
@@ -517,7 +521,14 @@ public final class S2ContainerFactory {
             } else {
                 classLoader = Thread.currentThread().getContextClassLoader();
             }
-            return build(path, classLoader);
+            if (logger.isDebugEnabled()) {
+                logger.log("DSSR0106", new Object[] { path });
+            }
+            S2Container container = build(path, classLoader);
+            if (logger.isDebugEnabled()) {
+                logger.log("DSSR0107", new Object[] { path });
+            }
+            return container;
         }
 
         public S2Container create(final String path,
@@ -547,10 +558,16 @@ public final class S2ContainerFactory {
                         child = root.getDescendant(realPath);
                         parent.include(child);
                     } else {
+                        if (logger.isDebugEnabled()) {
+                            logger.log("DSSR0106", new Object[] { path });
+                        }
                         final String ext = getExtension(realPath);
                         final S2ContainerBuilder builder = getBuilder(ext);
                         child = builder.include(parent, realPath);
                         root.registerDescendant(child);
+                        if (logger.isDebugEnabled()) {
+                            logger.log("DSSR0107", new Object[] { path });
+                        }
                     }
                 }
                 return child;

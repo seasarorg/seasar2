@@ -26,9 +26,13 @@ import org.seasar.framework.container.impl.S2ContainerImpl;
 import org.seasar.framework.container.impl.S2ContainerBehavior.DefaultProvider;
 import org.seasar.framework.container.util.S2ContainerUtil;
 import org.seasar.framework.convention.NamingConvention;
+import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.DisposableUtil;
 
 public class HotdeployBehavior extends DefaultProvider {
+
+    private static final Logger logger = Logger
+            .getLogger(HotdeployBehavior.class);
 
     private ClassLoader originalClassLoader;
 
@@ -57,6 +61,9 @@ public class HotdeployBehavior extends DefaultProvider {
     }
 
     public void start() {
+        if (logger.isDebugEnabled()) {
+            logger.log("DSSR0108", null);
+        }
         originalClassLoader = Thread.currentThread().getContextClassLoader();
         hotdeployClassLoader = new HotdeployClassLoader(originalClassLoader,
                 namingConvention);
@@ -72,6 +79,9 @@ public class HotdeployBehavior extends DefaultProvider {
         hotdeployClassLoader = null;
         originalClassLoader = null;
         componentDefCache.clear();
+        if (logger.isDebugEnabled()) {
+            logger.log("DSSR0109", null);
+        }
     }
 
     protected ComponentDef getComponentDef(S2Container container, Object key) {
