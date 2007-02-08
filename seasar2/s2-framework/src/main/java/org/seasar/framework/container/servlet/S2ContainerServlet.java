@@ -40,6 +40,7 @@ import org.seasar.framework.container.impl.ArgDefImpl;
 import org.seasar.framework.container.util.SmartDeployUtil;
 import org.seasar.framework.env.Env;
 import org.seasar.framework.util.StringUtil;
+import org.seasar.framework.util.URLUtil;
 
 public class S2ContainerServlet extends HttpServlet {
 
@@ -56,6 +57,10 @@ public class S2ContainerServlet extends HttpServlet {
     public static final String LIST = "list";
 
     public static final String PATH = "path";
+
+    public static final String MODE_BEGIN = "<strong><font color='#DC143C'>";
+
+    public static final String MODE_END = "</font></strong>";
 
     private static S2ContainerServlet instance;
 
@@ -127,48 +132,30 @@ public class S2ContainerServlet extends HttpServlet {
         final String path = request.getParameter(PATH);
         final S2Container container = getContainer(path);
         if (container == null) {
-            out.write("S2Container[" + path + "] is not found.");
+            out.write("S2Container[" + escape(path) + "] is not found.");
             return;
         }
-        out.write("<html><head><title>S2 Components</title></head><body>");
+        out
+                .write("<html><head><title>Seasar2 Component List</title></head><body>");
         try {
             out.write("<h1>S2Container</h1>");
+            printSmartDeploy(container, out);
             out.write("<ul>");
             try {
-                out.write("<li>path : <code>" + container.getPath()
+                out.write("<li>path : <code>" + escape(container.getPath())
                         + "</code></li>");
                 final String nameSpace = container.getNamespace();
                 if (!StringUtil.isEmpty(nameSpace)) {
-                    out.write("<li>namespace : <code>" + nameSpace
+                    out.write("<li>namespace : <code>" + escape(nameSpace)
+                            + "</code></li>");
+                }
+                final String envValue = Env.getValue();
+                if (!StringUtil.isEmpty(envValue)) {
+                    out.write("<li>env : <code>" + escape(envValue)
                             + "</code></li>");
                 }
             } finally {
                 out.write("</ul>");
-            }
-            final String envValue = Env.getValue();
-            if (SmartDeployUtil.isHotdeployMode(container)) {
-                out.write("<p>");
-                out
-                        .write("S2 is working under <strong><font color=\"#DC143C\">hotdeploy</font></strong> mode.[env = "
-                                + envValue + "]");
-                out.write("</p>");
-            } else if (SmartDeployUtil.isWarmdeployMode(container)) {
-                out.write("<p>");
-                out
-                        .write("S2 is working under <strong><font color=\"#FF8C00\">warmdeploy</font></strong> mode.[env = "
-                                + envValue + "]");
-                out.write("</p>");
-            } else if (SmartDeployUtil.isCooldeployMode(container)) {
-                out.write("<p>");
-                out
-                        .write("S2 is working under <strong><font color=\"#00008B\">cooldeploy</font></strong> mode.[env = "
-                                + envValue + "]");
-                out.write("</p>");
-            } else {
-                out.write("<p>");
-                out.write("S2 is working under normal mode.[env = " + envValue
-                        + "]");
-                out.write("</p>");
             }
             listInclude(container, request, out);
             listComponent(container, out);
@@ -183,6 +170,24 @@ public class S2ContainerServlet extends HttpServlet {
             return StringUtil.isEmpty(path) ? root : root.getDescendant(path);
         } catch (final ContainerNotRegisteredRuntimeException e) {
             return null;
+        }
+    }
+
+    private void printSmartDeploy(final S2Container container,
+            final PrintWriter out) {
+        out.write("<p>S2Container is working under ");
+        try {
+            if (SmartDeployUtil.isHotdeployMode(container)) {
+                out.write(MODE_BEGIN + "HOT deploy" + MODE_END);
+            } else if (SmartDeployUtil.isWarmdeployMode(container)) {
+                out.write(MODE_BEGIN + "WARM deploy" + MODE_END);
+            } else if (SmartDeployUtil.isCooldeployMode(container)) {
+                out.write(MODE_BEGIN + "COOL deploy" + MODE_END);
+            } else {
+                out.write("normal");
+            }
+        } finally {
+            out.write(" mode.</p>");
         }
     }
 
@@ -201,8 +206,9 @@ public class S2ContainerServlet extends HttpServlet {
             for (int i = 0; i < container.getChildSize(); ++i) {
                 final S2Container child = container.getChild(i);
                 final String path = child.getPath();
-                out.write("<li><a href='" + requestUri + queryString + path
-                        + "'><code>" + path + "</code></a></li>");
+                out.write("<li><a href='" + requestUri + queryString
+                        + URLUtil.encode(path, "UTF-8") + "'><code>" + path
+                        + "</code></a></li>");
             }
         } finally {
             out.write("</ul></p>");
@@ -230,22 +236,21 @@ public class S2ContainerServlet extends HttpServlet {
             throws IOException {
         final String name = cd.getComponentName();
         final Class clazz = cd.getComponentClass();
-        out
-                .write("<li style='list-style-type: square'><code><strong>"
-                        + (name != null ? name : "-") + " ["
-                        + (clazz != null ? clazz.getName() : "-")
-                        + "]</strong></code>");
+        out.write("<li style='list-style-type: square'><code><strong>"
+                + (name != null ? escape(name) : "-") + " ["
+                + (clazz != null ? escape(clazz.getName()) : "-")
+                + "]</strong></code>");
         out.write("<ul>");
         out.write("<li style='list-style-type: circle'>instance : <code>"
-                + cd.getInstanceDef().getName() + "</code></li>");
+                + escape(cd.getInstanceDef().getName()) + "</code></li>");
         out.write("<li style='list-style-type: circle'>autoBinding : <code>"
-                + cd.getAutoBindingDef().getName() + "</code></li>");
+                + escape(cd.getAutoBindingDef().getName()) + "</code></li>");
 
         Expression expression = cd.getExpression();
         final String expr = (expression != null) ? expression.toString() : "";
         if (!StringUtil.isEmpty(expr)) {
             out.write("<li style='list-style-type: circle'>ognl : <code>"
-                    + expr + "</code></li>");
+                    + escape(expr) + "</code></li>");
         }
 
         printArg(cd, out);
@@ -258,7 +263,7 @@ public class S2ContainerServlet extends HttpServlet {
             final Object component = cd.getComponent();
             out
                     .write("<li style='list-style-type: circle'>toString : <pre style='border-style: solid; border-width: 1'>"
-                            + component + "</pre></li>");
+                            + escape(component.toString()) + "</pre></li>");
         } catch (final Exception ignore) {
         }
         out.write("</ul>");
@@ -275,7 +280,7 @@ public class S2ContainerServlet extends HttpServlet {
                     : "";
             if (!StringUtil.isEmpty(expr)) {
                 out.write("<li style='list-style-type: circle'>ognl : <code>"
-                        + expr + "</code></li>");
+                        + escape(expr) + "</code></li>");
             }
 
             final ComponentDef child = getChildComponentDef(ad);
@@ -300,7 +305,7 @@ public class S2ContainerServlet extends HttpServlet {
                             .write("<li style='list-style-type: circle'>pointcut<ul>");
                     for (int j = 0; j < pointCuts.length; ++j) {
                         out.write("<li style='list-style-type: circle'><code>"
-                                + pointCuts[j] + "</code></li>");
+                                + escape(pointCuts[j]) + "</code></li>");
                     }
                     out.write("</ul></li>");
                 }
@@ -311,7 +316,7 @@ public class S2ContainerServlet extends HttpServlet {
                     : "";
             if (!StringUtil.isEmpty(expr)) {
                 out.write("<li style='list-style-type: circle'>ognl : <code>"
-                        + expr + "</code></li>");
+                        + escape(expr) + "</code></li>");
             }
 
             final ComponentDef child = getChildComponentDef(ad);
@@ -329,14 +334,14 @@ public class S2ContainerServlet extends HttpServlet {
             out.write("<li style='list-style-type: circle'>property<ul>");
             final PropertyDef pd = cd.getPropertyDef(i);
             out.write("<li style='list-style-type: circle'>name : <code>"
-                    + pd.getPropertyName() + "</code></li>");
+                    + escape(pd.getPropertyName()) + "</code></li>");
 
             Expression expression = pd.getExpression();
             final String expr = (expression != null) ? expression.toString()
                     : "";
             if (!StringUtil.isEmpty(expr)) {
                 out.write("<li style='list-style-type: circle'>ognl : <code>"
-                        + expr + "</code></li>");
+                        + escape(expr) + "</code></li>");
             }
 
             final ComponentDef child = getChildComponentDef(pd);
@@ -369,13 +374,13 @@ public class S2ContainerServlet extends HttpServlet {
     protected void printMethod(final MethodDef md, final PrintWriter out)
             throws IOException {
         out.write("<li style='list-style-type: circle'>name : <code>"
-                + md.getMethodName() + "</code></li>");
+                + escape(md.getMethodName()) + "</code></li>");
 
         Expression expression = md.getExpression();
         final String expr = (expression != null) ? expression.toString() : "";
         if (!StringUtil.isEmpty(expr)) {
             out.write("<li style='list-style-type: circle'>ognl : <code>"
-                    + expr + "</code></li>");
+                    + escape(expr) + "</code></li>");
         }
 
         final ComponentDef child = getChildComponentDef(md);
@@ -393,6 +398,34 @@ public class S2ContainerServlet extends HttpServlet {
         } catch (final Exception e) {
             return null;
         }
+    }
+
+    protected String escape(final String text) {
+        if (text == null) {
+            return "null";
+        }
+        final StringBuffer buf = new StringBuffer(text.length() * 4);
+        for (int i = 0; i < text.length(); ++i) {
+            final char ch = text.charAt(i);
+            switch (ch) {
+            case '<':
+                buf.append("&lt;");
+                break;
+            case '>':
+                buf.append("&gt;");
+                break;
+            case '&':
+                buf.append("&amp;");
+                break;
+            case '"':
+                buf.append("&quot;");
+                break;
+            default:
+                buf.append(ch);
+                break;
+            }
+        }
+        return new String(buf);
     }
 
 }
