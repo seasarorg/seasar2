@@ -16,11 +16,25 @@
 package org.seasar.extension.dxo.converter;
 
 /**
+ * {@link org.seasar.extension.dxo.converter.Converter コンバータ}のファクトリクラスです。
+ * 
  * @author Satoshi Kimura
  * @author koichik
  */
 public interface ConverterFactory {
 
+    /**
+     * <code>sourceClass</code>から<code>destClass</code>への変換が可能なコンバータを返します。
+     * <p>
+     * 該当するコンバータが複数ある場合は、最も適合するコンバータが選択されます。
+     * </p>
+     * 
+     * @param sourceClass
+     *            変換元のクラス
+     * @param destClass
+     *            変換先のクラス
+     * @return コンバータ
+     */
     Converter getConverter(Class sourceClass, Class destClass);
 
 }

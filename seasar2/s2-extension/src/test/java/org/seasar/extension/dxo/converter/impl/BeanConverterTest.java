@@ -157,13 +157,13 @@ public class BeanConverterTest extends AbsConverterTest {
 
     public void testGetConverter() throws Exception {
         Converter fooConverter = converter.getConverter(String.class,
-                Hoge.class, Date.class, "foo", createContext(
+                Hoge.class, "foo", Date.class, createContext(
                         "testGetConverter", null));
         assertNotNull(fooConverter);
         assertTrue(fooConverter instanceof SqlDateConverter);
 
         Converter barConverter = converter.getConverter(String.class,
-                Hoge.class, Date.class, "bar", createContext(
+                Hoge.class, "bar", Date.class, createContext(
                         "testGetConverter", null));
         assertNotNull(barConverter);
         assertTrue(barConverter instanceof DateConverter);

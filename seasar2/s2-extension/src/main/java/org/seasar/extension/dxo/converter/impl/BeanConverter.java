@@ -16,13 +16,14 @@
 package org.seasar.extension.dxo.converter.impl;
 
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
 import org.seasar.extension.dxo.converter.ConversionContext;
 import org.seasar.extension.dxo.converter.Converter;
+import org.seasar.extension.dxo.converter.DatePropertyInfo;
+import org.seasar.extension.dxo.converter.NestedPropertyInfo;
 import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.beans.factory.BeanDescFactory;
@@ -30,15 +31,14 @@ import org.seasar.framework.exception.InstantiationRuntimeException;
 import org.seasar.framework.util.ClassUtil;
 
 /**
+ * JavaBeansからJavaBeansへの変換を行うコンバータです。
+ * 
  * @author Satoshi Kimura
  * @author koichik
  */
 public class BeanConverter extends AbstractConverter {
 
-    protected static final String JAVA = "java.";
-
-    protected static final String JAVAX = "javax.";
-
+    /** 変換元にプロパティが存在しないことを示すオブジェクトです。 */
     protected static final Object PROPERTY_NOT_FOUND = new Object();
 
     public Class[] getSourceClasses() {
@@ -80,13 +80,24 @@ public class BeanConverter extends AbstractConverter {
         setValues(source, dest, context);
     }
 
+    /**
+     * 変換先オブジェクトのプロパティに値を設定します。
+     * 
+     * @param source
+     *            変換元オブジェクト
+     * @param dest
+     *            変換先オブジェクト
+     * @param context
+     *            変換コンテキスト
+     */
     protected void setValues(final Object source, final Object dest,
             final ConversionContext context) {
         final BeanDesc sourceBeanDesc = BeanDescFactory.getBeanDesc(source
                 .getClass());
         final BeanDesc destBeanDesc = BeanDescFactory.getBeanDesc(dest
                 .getClass());
-        for (int i = 0; i < destBeanDesc.getPropertyDescSize(); i++) {
+        final int size = destBeanDesc.getPropertyDescSize();
+        for (int i = 0; i < size; i++) {
             final PropertyDesc destPropertyDesc = destBeanDesc
                     .getPropertyDesc(i);
             if (!destPropertyDesc.hasWriteMethod()) {
@@ -97,15 +108,32 @@ public class BeanConverter extends AbstractConverter {
         }
     }
 
+    /**
+     * <code>destPropertyDesc</code>で示される変換先オブジェクトのプロパティに値を設定します。
+     * 
+     * @param sourceBeanDesc
+     *            変換元のBean記述子
+     * @param source
+     *            変換元のオブジェクト
+     * @param destBeanDesc
+     *            変換先のBean記述子
+     * @param dest
+     *            変換先のオブジェクト
+     * @param destPropertyDesc
+     *            変換先のプロパティ記述子
+     * @param context
+     *            変換コンテキスト
+     */
     protected void setValue(final BeanDesc sourceBeanDesc, final Object source,
             final BeanDesc destBeanDesc, final Object dest,
             final PropertyDesc destPropertyDesc, final ConversionContext context) {
         final String destPropertyName = destPropertyDesc.getPropertyName();
+        final Class destPropertyClass = destPropertyDesc.getPropertyType();
         final Object sourcePropertyValue = getSourceValue(sourceBeanDesc,
                 source, destPropertyName, context);
         if (sourcePropertyValue == PROPERTY_NOT_FOUND) {
             final Object dateValue = getDateValue(sourceBeanDesc, source,
-                    destPropertyDesc);
+                    destPropertyName, destPropertyClass, context);
             if (dateValue != null) {
                 destPropertyDesc.setValue(dest, dateValue);
             }
@@ -118,14 +146,33 @@ public class BeanConverter extends AbstractConverter {
             return;
         }
         final Class sourcePropertyClass = sourcePropertyValue.getClass();
-        final Class destPropertyClass = destPropertyDesc.getPropertyType();
+        if (sourcePropertyClass == destPropertyClass) {
+            destPropertyDesc.setValue(dest, sourcePropertyValue);
+            return;
+        }
         final Converter converter = getConverter(sourcePropertyClass, dest
-                .getClass(), destPropertyClass, destPropertyName, context);
+                .getClass(), destPropertyName, destPropertyClass, context);
         final Object convertedValue = converter.convert(sourcePropertyValue,
                 destPropertyClass, context);
         destPropertyDesc.setValue(dest, convertedValue);
     }
 
+    /**
+     * 変換元オブジェクトからプロパティの値を取得して返します。
+     * <p>
+     * 変換元オブジェクトに該当するプロパティが存在しない場合は{@link #PROPERTY_NOT_FOUND}を返します。
+     * </p>
+     * 
+     * @param sourceBeanDesc
+     *            変換元のBean記述子
+     * @param source
+     *            変換元のオブジェクト
+     * @param propertyName
+     *            変換対象のプロパティ名
+     * @param context
+     *            変換コンテキスト
+     * @return 変換元オブジェクトのプロパティの値
+     */
     protected Object getSourceValue(final BeanDesc sourceBeanDesc,
             final Object source, final String propertyName,
             final ConversionContext context) {
@@ -145,56 +192,61 @@ public class BeanConverter extends AbstractConverter {
                 context);
     }
 
+    /**
+     * 変換元オブジェクトからネストしたプロパティの値を取得して返します。
+     * <p>
+     * 変換元オブジェクトに該当するプロパティが存在しない場合は{@link #PROPERTY_NOT_FOUND}を返します。
+     * </p>
+     * 
+     * @param sourceBeanDesc
+     *            変換元のBean記述子
+     * @param source
+     *            変換元のオブジェクト
+     * @param propertyName
+     *            変換対象のプロパティ名
+     * @param context
+     *            変換コンテキスト
+     * @return ネストしたプロパティの値
+     */
     protected Object resolveNestedProperty(final BeanDesc sourceBeanDesc,
             final Object source, final String propertyName,
             final ConversionContext context) {
-        for (int i = 0; i < sourceBeanDesc.getPropertyDescSize(); ++i) {
-            final PropertyDesc propertyDesc = sourceBeanDesc.getPropertyDesc(i);
-            final Class propertyType = propertyDesc.getPropertyType();
-            if (!propertyDesc.hasReadMethod() || isBasicType(propertyType)) {
-                continue;
-            }
-            final Object sourcePropertyValue = propertyDesc.getValue(source);
-            if (sourcePropertyValue == null) {
-                continue;
-            }
-
-            final BeanDesc nestedBeanDesc = BeanDescFactory
-                    .getBeanDesc(propertyType);
-            if (nestedBeanDesc.hasPropertyDesc(propertyName)) {
-                final PropertyDesc nestedPropertyDesc = nestedBeanDesc
-                        .getPropertyDesc(propertyName);
-                if (nestedPropertyDesc.hasReadMethod()) {
-                    return nestedPropertyDesc.getValue(sourcePropertyValue);
-                }
-            }
+        final NestedPropertyInfo info = context.getNestedProertyInfo(
+                sourceBeanDesc.getBeanClass(), propertyName);
+        if (info == null) {
+            return PROPERTY_NOT_FOUND;
         }
-        return PROPERTY_NOT_FOUND;
+        return info.getValue(source);
     }
 
-    protected boolean isBasicType(final Object object) {
-        return isBasicType(object.getClass());
-    }
-
-    protected boolean isBasicType(final Class clazz) {
-        if (clazz.isPrimitive() || clazz.isArray()) {
-            return true;
-        }
-        final String className = clazz.getName();
-        return className.startsWith(JAVA) || className.startsWith(JAVAX);
-    }
-
+    /**
+     * 変換元オブジェクトから日時プロパティの値を取得して返します。
+     * <p>
+     * 変換元オブジェクトに該当するプロパティが存在しない場合は<code>null</code>を返します。
+     * </p>
+     * 
+     * @param sourceBeanDesc
+     *            変換元のBean記述子
+     * @param source
+     *            変換元のオブジェクト
+     * @param destPropertyName
+     *            変換先のプロパティ名
+     * @param destPropertyType
+     *            変換先のプロパティ型
+     * @param context
+     *            変換コンテキスト
+     * @return 日時プロパティの値
+     */
     protected Object getDateValue(final BeanDesc sourceBeanDesc,
-            final Object source, final PropertyDesc destPropertyDesc) {
-        final String destPropertyName = destPropertyDesc.getPropertyName();
-        final Class destPropertyType = destPropertyDesc.getPropertyType();
+            final Object source, final String destPropertyName,
+            final Class destPropertyType, final ConversionContext context) {
         if (destPropertyType == String.class) {
             return getDateValueAsString(sourceBeanDesc, source,
                     destPropertyName);
         }
         if (Date.class.isAssignableFrom(destPropertyType)) {
-            final Date dateValue = getDateValueAsDate(sourceBeanDesc, source,
-                    destPropertyName);
+            final Date dateValue = getDateValueAsDate(sourceBeanDesc
+                    .getBeanClass(), source, destPropertyName, context);
             if (dateValue != null) {
                 if (destPropertyType.isAssignableFrom(Date.class)) {
                     return dateValue;
@@ -211,8 +263,8 @@ public class BeanConverter extends AbstractConverter {
             }
         }
         if (destPropertyType.isAssignableFrom(Calendar.class)) {
-            final Date dateValue = getDateValueAsDate(sourceBeanDesc, source,
-                    destPropertyName);
+            final Date dateValue = getDateValueAsDate(sourceBeanDesc
+                    .getBeanClass(), source, destPropertyName, context);
             if (dateValue != null) {
                 final Calendar calendar = Calendar.getInstance();
                 calendar.setTime(dateValue);
@@ -222,6 +274,20 @@ public class BeanConverter extends AbstractConverter {
         return null;
     }
 
+    /**
+     * 変換元オブジェクトから日時プロパティの値を文字列として取得し、返します。
+     * <p>
+     * 変換元オブジェクトに該当するプロパティが存在しない場合は<code>null</code>を返します。
+     * </p>
+     * 
+     * @param sourceBeanDesc
+     *            変換元のBean記述子
+     * @param source
+     *            変換元のオブジェクト
+     * @param destPropertyName
+     *            変換先のプロパティ名
+     * @return 日時プロパティの値
+     */
     protected String getDateValueAsString(final BeanDesc sourceBeanDesc,
             final Object source, final String destPropertyName) {
         final int pos = destPropertyName.lastIndexOf('_');
@@ -236,6 +302,10 @@ public class BeanConverter extends AbstractConverter {
 
         final PropertyDesc sourcePropertyDesc = sourceBeanDesc
                 .getPropertyDesc(sourcePropertyName);
+        if (!sourcePropertyDesc.hasReadMethod()) {
+            return null;
+        }
+
         final Class sourcePropertyType = sourcePropertyDesc.getPropertyType();
         if (!Date.class.isAssignableFrom(sourcePropertyType)
                 && !Calendar.class.isAssignableFrom(sourcePropertyType)) {
@@ -258,39 +328,51 @@ public class BeanConverter extends AbstractConverter {
         return null;
     }
 
-    protected Date getDateValueAsDate(final BeanDesc sourceBeanDesc,
-            final Object source, final String destPropertyName) {
-        final String prefix = destPropertyName + "_";
-        final int starts = prefix.length();
-        final StringBuffer formatBuffer = new StringBuffer();
-        final StringBuffer valueBuffer = new StringBuffer();
-        for (int i = 0; i < sourceBeanDesc.getPropertyDescSize(); ++i) {
-            final PropertyDesc sourcePropertyDesc = sourceBeanDesc
-                    .getPropertyDesc(i);
-            if (sourcePropertyDesc.getPropertyType() != String.class) {
-                continue;
-            }
-            final String sourcePropertyName = sourcePropertyDesc
-                    .getPropertyName();
-            if (!sourcePropertyName.startsWith(prefix)) {
-                continue;
-            }
-            formatBuffer.append(sourcePropertyName.substring(starts));
-            valueBuffer.append(sourcePropertyDesc.getValue(source));
+    /**
+     * 変換元オブジェクトから日時プロパティの値を{@link java.util.Date}として取得し、返します。
+     * <p>
+     * 変換元オブジェクトに該当するプロパティが存在しない場合は<code>null</code>を返します。
+     * </p>
+     * 
+     * @param sourceBeanDesc
+     *            変換元のBean記述子
+     * @param source
+     *            変換元のオブジェクト
+     * @param destPropertyName
+     *            変換先のプロパティ名
+     * @param context
+     *            変換コンテキスト
+     * @return 日時プロパティの値
+     */
+    protected Date getDateValueAsDate(final Class sourceClass,
+            final Object source, final String destPropertyName,
+            final ConversionContext context) {
+        final DatePropertyInfo info = context.getDatePropertyInfo(sourceClass,
+                destPropertyName);
+        if (info == null) {
+            return null;
         }
-        final String format = new String(formatBuffer);
-        final String stringValue = new String(valueBuffer);
-        final DateFormat formatter = new SimpleDateFormat(format);
-        try {
-            return formatter.parse(stringValue);
-        } catch (final ParseException ignore) {
-        }
-        return null;
+        return info.getValue(source);
     }
 
+    /**
+     * コンバータを取得して返します。
+     * 
+     * @param sourcePropertyClass
+     *            変換元プロパティの型
+     * @param destClass
+     *            変換先のクラス
+     * @param destPropertyName
+     *            変換先のプロパティ名
+     * @param destPropertyClass
+     *            変換先のプロパティ型
+     * @param context
+     *            変換コンテキスト
+     * @return コンバータ
+     */
     protected Converter getConverter(final Class sourcePropertyClass,
-            final Class destClass, final Class destPropertyClass,
-            final String destPropertyName, final ConversionContext context) {
+            final Class destClass, final String destPropertyName,
+            final Class destPropertyClass, final ConversionContext context) {
         final Converter converter = context.getConverter(destClass,
                 destPropertyName);
         if (converter != null) {
@@ -299,4 +381,5 @@ public class BeanConverter extends AbstractConverter {
         return context.getConverterFactory().getConverter(sourcePropertyClass,
                 destPropertyClass);
     }
+
 }

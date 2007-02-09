@@ -16,17 +16,60 @@
 package org.seasar.extension.dxo.converter;
 
 /**
+ * 変換元クラスのインスタンスを変換先クラスのインスタンスに変換するコンバータを表します。
+ * 
  * @author Satoshi Kimura
  * @author koichik
  */
 public interface Converter {
 
+    /**
+     * このコンバータがサポートしている変換元のクラスを配列で返します。
+     * <p>
+     * 最低でも1以上の長さを持つ配列を返します。
+     * </p>
+     * 
+     * @return このコンバータがサポートしている変換元のクラスの配列
+     */
     Class[] getSourceClasses();
 
+    /**
+     * このコンバータがサポートしている変換先のクラスを返します。
+     * 
+     * @return このコンバータがサポートしている変換先のクラス
+     */
     Class getDestClass();
 
+    /**
+     * <code>source</code>を<code>dest</code>に変換します。
+     * <p>
+     * このメソッドはJavaBeansや配列，{@link java.util.List}など、
+     * 可変なオブジェクトへの変換を行うコンバータでサポートされます。 不変なオブジェクトへの変換を行うコンバータはこのメソッドを実装できないため、
+     * このメソッドが呼び出されると{@link UnsupportedOperationException}がスローされます。
+     * </p>
+     * 
+     * @param source
+     *            変換元のオブジェクト
+     * @param dest
+     *            変換先のオブジェクト
+     * @param context
+     *            変換コンテキスト
+     * @throws UnsupportedOperationException
+     *             この変換がサポートされていない場合にスローします
+     */
     void convert(Object source, Object dest, ConversionContext context);
 
+    /**
+     * <code>source</code>を<code>destClass</code>に変換したオブジェクトを返します。
+     * 
+     * @param source
+     *            変換元のオブジェクト
+     * @param destClass
+     *            変換先のクラス
+     * @param context
+     *            変換コンテキスト
+     * @return 変換先のオブジェクト。これは<code>destClass</code>のインスタンスです。
+     */
     Object convert(Object source, Class destClass, ConversionContext context);
 
 }

@@ -28,11 +28,14 @@ import org.seasar.framework.util.Disposable;
 import org.seasar.framework.util.DisposableUtil;
 
 /**
- * @author koichik
+ * コンバータファクトリの実装クラスです。
  * 
+ * @author Satoshi Kimura
+ * @author koichik
  */
 public class ConverterFactoryImpl implements ConverterFactory, Disposable {
 
+    /** 組み込みのコンバータ */
     protected static final Converter[] BUILDTIN_CONVERTERS = new Converter[] {
             new ArrayConverter(), new BeanConverter(),
             new BigDecimalConverter(), new BigIntegerConverter(),
@@ -45,6 +48,7 @@ public class ConverterFactoryImpl implements ConverterFactory, Disposable {
             new SqlTimeConverter(), new SqlTimestampConverter(),
             new StringConverter(), };
 
+    /** プリミティブ型の配列クラスとラッパー型の配列クラスのマッピング */
     protected static Map PRIMITIVE_ARRAY_TO_WRAPPER_ARRAY = new HashMap();
     static {
         PRIMITIVE_ARRAY_TO_WRAPPER_ARRAY.put(boolean[].class, Boolean[].class);
@@ -57,21 +61,39 @@ public class ConverterFactoryImpl implements ConverterFactory, Disposable {
         PRIMITIVE_ARRAY_TO_WRAPPER_ARRAY.put(double[].class, Double[].class);
     }
 
+    /** インスタンスが初期化済みであることを示します。 */
     protected boolean initialized;
 
+    /** このファクトリを管理しているS2コンテナです。 */
     protected S2Container container;
 
+    /** S2コンテナに登録されているコンバータの配列です。 */
     protected Converter[] converters;
 
+    /** コンバータのキャッシュです。 */
     protected Map converterCache = new HashMap();
 
+    /**
+     * <code>ConverterFactoryImpl</code>のインスタンスを構築します。
+     * 
+     */
     public ConverterFactoryImpl() {
     }
 
+    /**
+     * S2コンテナを設定します。
+     * 
+     * @param container
+     *            S2コンテナ
+     */
     public void setContainer(final S2Container container) {
         this.container = container;
     }
 
+    /**
+     * インスタンスを初期化します。
+     * 
+     */
     public void initialize() {
         if (initialized) {
             return;
@@ -82,6 +104,10 @@ public class ConverterFactoryImpl implements ConverterFactory, Disposable {
         initialized = true;
     }
 
+    /**
+     * キャッシュ情報等を破棄し、インスタンスを未初期化状態に戻します。
+     * 
+     */
     public void dispose() {
         converters = null;
         converterCache.clear();
@@ -99,7 +125,7 @@ public class ConverterFactoryImpl implements ConverterFactory, Disposable {
         return detectConverter(sourceClass, destType);
     }
 
-    protected Converter detectConverter(final Class sourceClass,
+    private Converter detectConverter(final Class sourceClass,
             final Class destClass) {
         final Converter converter = getDistanceTable(sourceClass, destClass);
         final String cacheKey = sourceClass.getName() + destClass.getName();
