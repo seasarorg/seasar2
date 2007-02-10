@@ -18,13 +18,25 @@ package org.seasar.framework.container.factory;
 import org.seasar.framework.xml.TagHandlerRule;
 
 /**
- * @author higa
+ * diconファイルに記述されるタグと{@link org.seasar.framework.xml.TagHandler}のマッピング情報を定義します。
+ * <p>
+ * マッピング情報は、{@link org.seasar.framework.container.factory.XmlS2ContainerBuilder}で利用されます。
+ * </p>
  * 
+ * @author higa
+ * @author yatsu
  */
 public class S2ContainerTagHandlerRule extends TagHandlerRule {
 
     private static final long serialVersionUID = -7794896627632923326L;
 
+    /**
+     * {@link org.seasar.framework.container.factory.S2ContainerTagHandlerRule}
+     * を構築します。
+     * <p>
+     * タグとタグに対応する{@link org.seasar.framework.xml.TagHandler}のマッピング情報をセットします。
+     * </p>
+     */
     public S2ContainerTagHandlerRule() {
         addTagHandler("/components", new ComponentsTagHandler());
         addTagHandler("component", new ComponentTagHandler());
