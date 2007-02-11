@@ -35,6 +35,11 @@ public class SmartDeployUtil {
     private SmartDeployUtil() {
     }
 
+    public static boolean isSmartdeployMode(S2Container container) {
+        return isHotdeployMode(container) || isCooldeployMode(container)
+                || isWarmdeployMode(container);
+    }
+
     public static boolean isHotdeployMode(S2Container container) {
         return HotdeployUtil.isHotdeploy();
     }
