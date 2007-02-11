@@ -13,26 +13,12 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.framework.jpa;
-
-import javax.persistence.EntityManagerFactory;
+package org.seasar.framework.jpa.impl.entity;
 
 /**
  * @author koichik
+ * 
  */
-public interface PersistenceUnitManager {
-
-    void addProvider(PersistenceUnitProvider provider);
-
-    void removeProvider(PersistenceUnitProvider provider);
-
-    EntityManagerFactory getEntityManagerFactory(final String unitName);
-
-    PersistenceUnitContext getPersistenceUnitContext(
-            final EntityManagerFactory emf);
-
-    String getPersistenceUnitName(Class<?> entityClass);
-
-    String getPersistenceUnitName(String mappingFile);
+public class Foo {
 
 }

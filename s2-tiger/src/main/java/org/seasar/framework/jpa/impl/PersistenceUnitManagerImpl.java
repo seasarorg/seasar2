@@ -21,11 +21,13 @@ import java.util.Map;
 
 import javax.persistence.EntityManagerFactory;
 
+import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.annotation.tiger.Binding;
 import org.seasar.framework.container.annotation.tiger.BindingType;
 import org.seasar.framework.container.annotation.tiger.Component;
 import org.seasar.framework.container.annotation.tiger.DestroyMethod;
 import org.seasar.framework.container.annotation.tiger.InitMethod;
+import org.seasar.framework.convention.NamingConvention;
 import org.seasar.framework.jpa.PersistenceUnitContext;
 import org.seasar.framework.jpa.PersistenceUnitManager;
 import org.seasar.framework.jpa.PersistenceUnitProvider;
@@ -34,11 +36,21 @@ import org.seasar.framework.util.tiger.CollectionsUtil;
 @Component
 public class PersistenceUnitManagerImpl implements PersistenceUnitManager {
 
+    public static final String DEFAULT_PERSISTENCE_UNIT_NAME = "persistenceUnit";
+
+    public static final String PERSISTENCE_UNIT_NAME_SUFFIX = "PersistenceUnit";
+
     protected static final Context staticContext = new Context();
 
     protected Context context;
 
     protected boolean useStaticContext;
+
+    protected String defaultPersistenceUnitName = DEFAULT_PERSISTENCE_UNIT_NAME;
+
+    protected String persistenceUnitNameSuffix = PERSISTENCE_UNIT_NAME_SUFFIX;
+
+    protected S2Container container;
 
     protected List<PersistenceUnitProvider> providers = CollectionsUtil
             .newArrayList();
@@ -49,6 +61,23 @@ public class PersistenceUnitManagerImpl implements PersistenceUnitManager {
     @Binding(bindingType = BindingType.MAY)
     public void setUseStaticContext(final boolean useStaticContext) {
         this.useStaticContext = useStaticContext;
+    }
+
+    @Binding(bindingType = BindingType.MAY)
+    public void setDefaultPersistenceUnitName(
+            final String defaultPersistenceUnitName) {
+        this.defaultPersistenceUnitName = defaultPersistenceUnitName;
+    }
+
+    @Binding(bindingType = BindingType.MAY)
+    public void setPersistenceUnitNameSuffix(
+            final String persistenceUnitNameSuffix) {
+        this.persistenceUnitNameSuffix = persistenceUnitNameSuffix;
+    }
+
+    @Binding(bindingType = BindingType.MUST)
+    public void setContainer(final S2Container container) {
+        this.container = container.getRoot();
     }
 
     @InitMethod
@@ -102,6 +131,30 @@ public class PersistenceUnitManagerImpl implements PersistenceUnitManager {
         synchronized (context) {
             return context.getPersistenceUnitContext(emf);
         }
+    }
+
+    public String getPersistenceUnitName(final Class<?> entityClass) {
+        return getPersistenceUnitName(entityClass.getName().replace('.', '/'));
+    }
+
+    public String getPersistenceUnitName(final String mappingFile) {
+        final NamingConvention convention = NamingConvention.class
+                .cast(container.getComponent(NamingConvention.class));
+        if (convention == null) {
+            return defaultPersistenceUnitName;
+        }
+        final String entityPackageName = convention.getEntityPackageName();
+        final String key = "/" + entityPackageName + "/";
+        final int pos = mappingFile.lastIndexOf(key);
+        if (pos < 0) {
+            return defaultPersistenceUnitName;
+        }
+        final int pos2 = mappingFile.lastIndexOf('/');
+        if (pos + key.length() - 1 == pos2) {
+            return defaultPersistenceUnitName;
+        }
+        return mappingFile.substring(pos + key.length(), pos2)
+                + persistenceUnitNameSuffix;
     }
 
     public static class Context {
