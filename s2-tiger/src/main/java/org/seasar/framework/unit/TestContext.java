@@ -41,6 +41,16 @@ public interface TestContext {
 
     void setAutoPreparing(boolean autoPreparing);
 
+    <T> T getComponent(Class<? extends T> componentKey);
+
+    Object getComponent(Object componentKey);
+
+    boolean hasComponentDef(Object componentKey);
+
+    ComponentDef getComponentDef(int index);
+
+    ComponentDef getComponentDef(Object componentKey);
+
     DataSet getExpected();
 
     String getTestClassPackagePath();
@@ -50,6 +60,6 @@ public interface TestContext {
     String getTestMethodName();
 
     MockInterceptor getMockInterceptor(int index);
-    
+
     int getMockInterceptorSize();
 }

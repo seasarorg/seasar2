@@ -19,7 +19,6 @@ import java.lang.reflect.Method;
 
 import org.seasar.framework.aop.interceptors.MockInterceptor;
 import org.seasar.framework.container.AspectDef;
-import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.S2Container;
 
 /**
@@ -41,16 +40,6 @@ public interface InternalTestContext extends TestContext {
     void prepareTestData();
 
     S2Container getContainer();
-
-    <T> T getComponent(Class<T> componentKey);
-
-    Object getComponent(Object componentKey);
-
-    boolean hasComponentDef(Object componentKey);
-
-    ComponentDef getComponentDef(int index);
-
-    ComponentDef getComponentDef(Object componentKey);
 
     void addMockInterceptor(MockInterceptor mockInterceptor);
 

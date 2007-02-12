@@ -254,29 +254,23 @@ public class InternalTestContextImpl implements InternalTestContext {
         return container;
     }
 
-    @SuppressWarnings("unchecked")
-    public <T> T getComponent(final Class<T> componentKey) {
-        assertContainerInitialized();
-        return (T) container.getComponent(componentKey);
+    public <T> T getComponent(final Class<? extends T> componentKey) {
+        return componentKey.cast(container.getComponent(componentKey));
     }
 
     public Object getComponent(final Object componentKey) {
-        assertContainerInitialized();
         return container.getComponent(componentKey);
     }
 
     public boolean hasComponentDef(final Object componentKey) {
-        assertContainerInitialized();
         return container.hasComponentDef(componentKey);
     }
 
     public ComponentDef getComponentDef(final int index) {
-        assertContainerInitialized();
         return container.getComponentDef(index);
     }
 
     public ComponentDef getComponentDef(final Object componentKey) {
-        assertContainerInitialized();
         return container.getComponentDef(componentKey);
     }
 
@@ -291,12 +285,6 @@ public class InternalTestContextImpl implements InternalTestContext {
     public void addAspecDef(final Object componentKey, final AspectDef aspectDef) {
         assertContainerNotInitialized();
         container.getComponentDef(componentKey).addAspectDef(0, aspectDef);
-    }
-
-    protected void assertContainerInitialized() {
-        if (!containerInitialized) {
-            throw new IllegalStateException();
-        }
     }
 
     protected void assertContainerNotInitialized() {
