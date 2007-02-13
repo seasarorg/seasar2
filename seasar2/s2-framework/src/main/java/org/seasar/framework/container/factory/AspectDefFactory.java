@@ -21,6 +21,7 @@ import org.aopalliance.intercept.MethodInterceptor;
 import org.seasar.framework.aop.Pointcut;
 import org.seasar.framework.aop.impl.PointcutImpl;
 import org.seasar.framework.container.AspectDef;
+import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.impl.AspectDefImpl;
 import org.seasar.framework.container.ognl.OgnlExpression;
 import org.seasar.framework.util.StringUtil;
@@ -73,6 +74,22 @@ public class AspectDefFactory {
     }
 
     /**
+     * 指定された{@link org.seasar.framework.container.ComponentDef コンポーネント定義}と{@link org.seasar.framework.aop.Pointcut ポイントカット}から、
+     * {@link org.seasar.framework.container.AspectDef アスペクト定義}を構築して返します。
+     * 
+     * @param cd
+     *            インターセプタのコンポーネント定義
+     * @param pointcut
+     *            ポイントカット
+     * @return アスペクト定義
+     */
+    public static AspectDef createAspectDef(ComponentDef cd, Pointcut pointcut) {
+        AspectDef aspectDef = new AspectDefImpl(pointcut);
+        aspectDef.setChildComponentDef(cd);
+        return aspectDef;
+    }
+
+    /**
      * 指定されたインターセプタ名とポイントカットを表す文字列から、
      * {@link org.seasar.framework.container.AspectDef アスペクト定義}を構築して返します。
      * 
@@ -105,6 +122,21 @@ public class AspectDefFactory {
     }
 
     /**
+     * 指定された{@link org.seasar.framework.container.ComponentDef コンポーネント定義}とポイントカットを表す文字列から、
+     * {@link org.seasar.framework.container.AspectDef アスペクト定義}を構築して返します。
+     * 
+     * @param cd
+     *            インターセプタのコンポーネント定義
+     * @param pointcutStr
+     *            ポイントカットを表す文字列
+     * @return アスペクト定義
+     */
+    public static AspectDef createAspectDef(ComponentDef cd, String pointcutStr) {
+        Pointcut pointcut = createPointcut(pointcutStr);
+        return createAspectDef(cd, pointcut);
+    }
+
+    /**
      * 指定されたインターセプタ名と{@link java.lang.reflect.Method メソッド}から、
      * {@link org.seasar.framework.container.AspectDef アスペクト定義}を構築して返します。
      * 
@@ -134,6 +166,21 @@ public class AspectDefFactory {
             Method method) {
         Pointcut pointcut = createPointcut(method);
         return createAspectDef(interceptor, pointcut);
+    }
+
+    /**
+     * 指定された{@link org.seasar.framework.container.ComponentDef コンポーネント定義}と{@link java.lang.reflect.Method メソッド}から、
+     * {@link org.seasar.framework.container.AspectDef アスペクト定義}を構築して返します。
+     * 
+     * @param cd
+     *            インターセプタのコンポーネント定義
+     * @param method
+     *            メソッド
+     * @return アスペクト定義
+     */
+    public static AspectDef createAspectDef(ComponentDef cd, Method method) {
+        Pointcut pointcut = createPointcut(method);
+        return createAspectDef(cd, pointcut);
     }
 
     /**

@@ -22,6 +22,7 @@ import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.autoregister.Greeting;
 import org.seasar.framework.container.autoregister.GreetingInterceptor;
+import org.seasar.framework.container.customizer.AspectCustomizer.LookupAdaptorInterceptor;
 import org.seasar.framework.unit.S2FrameworkTestCase;
 
 /**
@@ -31,7 +32,7 @@ public class AspectCustomizerTest extends S2FrameworkTestCase {
 
     private S2Container child;
 
-    public void setUp() throws Exception {
+    public void setUpCustomize() throws Exception {
         include("AspectCustomizerTest.dicon");
     }
 
@@ -39,10 +40,10 @@ public class AspectCustomizerTest extends S2FrameworkTestCase {
         ComponentDef cd = child.getComponentDef(Greeting.class);
         assertEquals(3, cd.getAspectDefSize());
         AspectDef ad = cd.getAspectDef(0);
-        assertEquals(GreetingInterceptor.class, ad.getAspect()
+        assertEquals(TraceInterceptor.class, ad.getAspect()
                 .getMethodInterceptor().getClass());
         ad = cd.getAspectDef(1);
-        assertEquals(TraceInterceptor.class, ad.getAspect()
+        assertEquals(GreetingInterceptor.class, ad.getAspect()
                 .getMethodInterceptor().getClass());
         ad = cd.getAspectDef(2);
         assertEquals(SimpleTraceInterceptor.class, ad.getAspect()
@@ -52,4 +53,25 @@ public class AspectCustomizerTest extends S2FrameworkTestCase {
         assertNotNull("1", greeting);
         assertEquals("2", "Hello", greeting.greet());
     }
+
+    public void setUpDelegate() throws Exception {
+        include("AspectCustomizerTest2.dicon");
+    }
+
+    public void testDelegate() throws Exception {
+        ComponentDef cd = child.getComponentDef(Greeting.class);
+        assertEquals(2, cd.getAspectDefSize());
+        AspectDef ad = cd.getAspectDef(0);
+        assertEquals(LookupAdaptorInterceptor.class, ad.getAspect()
+                .getMethodInterceptor().getClass());
+
+        Greeting greeting = (Greeting) cd.getComponent();
+        assertNotNull("1", greeting);
+        String result1 = greeting.greet();
+        assertNotNull(result1);
+        String result2 = greeting.greet();
+        assertNotNull(result2);
+        assertNotSame(result1, result2);
+    }
+
 }

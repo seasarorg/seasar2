@@ -10,6 +10,7 @@
 			<component class="org.seasar.framework.container.customizer.AspectCustomizer">
 				<property name="interceptorName">"traceInterceptor"</property>
 				<initMethod name="addInterceptorName"><arg>"greetingInterceptor"</arg></initMethod>
+				<property name="useLookupAdapter">true</property>
 			</component>
 		</property>
 		<initMethod name="addClassPattern">
@@ -17,5 +18,6 @@
 			<arg>"Foo"</arg>
 		</initMethod>
 	</component>
-	<component name="greetingInterceptor" class="org.seasar.framework.container.autoregister.GreetingInterceptor"/>
+	<component name="greetingInterceptor" instance="prototype"
+		class="org.seasar.framework.container.autoregister.Greeting2Interceptor"/>
 </components>

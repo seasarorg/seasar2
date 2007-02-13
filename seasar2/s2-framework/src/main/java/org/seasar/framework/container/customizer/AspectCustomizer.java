@@ -18,9 +18,16 @@ package org.seasar.framework.container.customizer;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.aopalliance.intercept.MethodInterceptor;
+import org.aopalliance.intercept.MethodInvocation;
+import org.seasar.framework.aop.S2MethodInvocation;
+import org.seasar.framework.aop.impl.NestedMethodInvocation;
+import org.seasar.framework.aop.interceptors.AbstractInterceptor;
 import org.seasar.framework.container.AspectDef;
 import org.seasar.framework.container.ComponentDef;
+import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.factory.AspectDefFactory;
+import org.seasar.framework.container.impl.SimpleComponentDef;
 
 /**
  * {@link org.seasar.framework.container.ComponentDef コンポーネント定義}に
@@ -31,14 +38,30 @@ import org.seasar.framework.container.factory.AspectDefFactory;
  * インターセプタ名が複数設定された場合は、設定された順にアスペクト定義をコンポーネント定義に登録します。
  * 最初に設定された名前を持つインターセプタが、後に設定された名前を持つインターセプタよりも先に呼び出されることになります。
  * </p>
+ * <p>
+ * コンポーネントに適用するインターセプタのインスタンス属性が<code>singleton</code>以外の場合は、
+ * {@link #setUseLookupAdapter(boolean) useLookupAdapter}プロパティを<code>true</code>に設定します。
+ * これにより、コンポーネントのメソッドが呼び出される度に、コンテナからインターセプタのインスタンスをルックアップするようになります。
+ * </p>
  * 
  * @author higa
  */
 public class AspectCustomizer extends AbstractCustomizer {
 
-    private List interceptorNames = new ArrayList();
+    /** <coce>interceptorName</code>プロパティのバインディング定義です。 */
+    public static final String interceptorName_BINDING = "bindingType=must";
+
+    /** <coce>pointcut</code>プロパティのバインディング定義です。 */
+    public static final String pointcut_BINDING = "bindingType=may";
+
+    /** <coce>useLookupAdapter</code>プロパティのバインディング定義です。 */
+    public static final String useLookupAdapter_BINDING = "bindingType=may";
+
+    private final List interceptorNames = new ArrayList();
 
     private String pointcut;
+
+    private boolean useLookupAdapter;
 
     /**
      * コンポーネント定義に登録するインターセプタのコンポーネント名を設定します。
@@ -75,6 +98,17 @@ public class AspectCustomizer extends AbstractCustomizer {
     }
 
     /**
+     * インスタンス属性が<code>singleton</code>以外のインターセプタを適用する場合は<code>true</code>を、
+     * そうでない場合は<code>false</code>を指定します。
+     * 
+     * @param useLookupAdapter
+     *            インスタンス属性が<code>singleton</code>以外のインターセプタを適用する場合は<code>true</code>
+     */
+    public void setUseLookupAdapter(final boolean useLookupAdapter) {
+        this.useLookupAdapter = useLookupAdapter;
+    }
+
+    /**
      * カスタマイズ対象のコンポーネント定義をカスタマイズをします。
      * <p>
      * 設定されたインターセプタ名を持つアスペクト定義をコンポーネント定義に登録します。
@@ -85,10 +119,57 @@ public class AspectCustomizer extends AbstractCustomizer {
      *            コンポーネント定義
      */
     protected void doCustomize(final ComponentDef componentDef) {
-        for (int i = 0; i < interceptorNames.size(); ++i) {
-            AspectDef aspectDef = AspectDefFactory.createAspectDef(
-                    (String) interceptorNames.get(i), pointcut);
+        if (useLookupAdapter) {
+            final MethodInterceptor adaptor = new LookupAdaptorInterceptor(
+                    (String[]) interceptorNames
+                            .toArray(new String[interceptorNames.size()]));
+            final AspectDef aspectDef = AspectDefFactory.createAspectDef(
+                    new SimpleComponentDef(adaptor), pointcut);
             componentDef.addAspectDef(aspectDef);
+        } else {
+            for (int i = 0; i < interceptorNames.size(); ++i) {
+                final AspectDef aspectDef = AspectDefFactory.createAspectDef(
+                        (String) interceptorNames.get(i), pointcut);
+                componentDef.addAspectDef(aspectDef);
+            }
         }
     }
+
+    /**
+     * インスタンス属性が<code>singleton</code>以外のインターセプタを呼び出すためのアダプタとなるインターセプタです。
+     * 
+     * @author koichik
+     */
+    public static class LookupAdaptorInterceptor extends AbstractInterceptor {
+
+        private static final long serialVersionUID = 1L;
+
+        protected String[] interceptorNames;
+
+        /**
+         * インスタンスを構築します。
+         * 
+         * @param interceptorNames
+         *            インターセプタ名の配列
+         */
+        public LookupAdaptorInterceptor(final String[] interceptorNames) {
+            this.interceptorNames = interceptorNames;
+        }
+
+        public Object invoke(final MethodInvocation invocation)
+                throws Throwable {
+            final S2Container container = getComponentDef(invocation)
+                    .getContainer().getRoot();
+            final MethodInterceptor[] interceptors = new MethodInterceptor[interceptorNames.length];
+            for (int i = 0; i < interceptors.length; ++i) {
+                interceptors[i] = (MethodInterceptor) container
+                        .getComponent(interceptorNames[i]);
+            }
+            final MethodInvocation nestInvocation = new NestedMethodInvocation(
+                    (S2MethodInvocation) invocation, interceptors);
+            return nestInvocation.proceed();
+        }
+
+    }
+
 }
