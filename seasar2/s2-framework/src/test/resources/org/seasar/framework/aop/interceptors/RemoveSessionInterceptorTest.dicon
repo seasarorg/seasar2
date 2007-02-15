@@ -7,7 +7,7 @@
 		<aspect pointcut="end">
 			<component name="removeSessionInterceptor" instance="prototype"
 				class="org.seasar.framework.aop.interceptors.RemoveSessionInterceptor">
-				<property name="name">"bar"</property>
+				<property name="name">new String[] {"bar"}</property>
 			</component>
 		</aspect>
 	</component>

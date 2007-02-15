@@ -21,12 +21,18 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * @author koichik
+ * メソッドが実行された後、HTTPセッションから{@link #name() name}要素で指定された属性が削除されることを示します。
  * 
+ * @author koichik
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 @Interceptor
 public @interface RemoveSession {
-    String name();
+
+    /**
+     * 注釈を付けられたメソッドが実行された後にHTTPセッションから削除される属性のセットです。
+     */
+    String[] name();
+
 }

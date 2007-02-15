@@ -23,26 +23,46 @@ import org.seasar.framework.container.ExternalContext;
 import org.seasar.framework.container.S2Container;
 
 /**
- * @author koichik
+ * メソッドの実行後にHTTPセッションから属性を削除するインターセプタです。
  * 
+ * @author koichik
  */
 public class RemoveSessionInterceptor extends AbstractInterceptor {
 
     private static final long serialVersionUID = 1L;
 
+    /** このコンポーネントを管理しているS2コンテナです。 */
     protected S2Container container;
 
-    protected String name;
+    /** HTTPセッションから削除する属性の名前の配列です */
+    protected String[] name;
 
+    /**
+     * <code>RemoveSessionInterceptor</code>のインスタンスを構築します。
+     * 
+     * @param container
+     *            このコンポーネントを管理しているS2コンテナ
+     */
     public RemoveSessionInterceptor(final S2Container container) {
         this.container = container;
     }
 
-    public String getName() {
+    /**
+     * HTTPセッションから削除する属性の名前の配列を返します。
+     * 
+     * @return HTTPセッションから削除する属性の名前の配列
+     */
+    public String[] getName() {
         return name;
     }
 
-    public void setName(final String name) {
+    /**
+     * HTTPセッションから削除する属性の名前の配列を設定します。
+     * 
+     * @param name
+     *            HTTPセッションから削除する属性の名前の配列
+     */
+    public void setName(final String[] name) {
         this.name = name;
     }
 
@@ -54,7 +74,14 @@ public class RemoveSessionInterceptor extends AbstractInterceptor {
         }
     }
 
+    /**
+     * HTTPセッションから属性を削除します。
+     * 
+     */
     protected void removeSession() {
+        if (name == null || name.length == 0) {
+            return;
+        }
         final ExternalContext context = container.getRoot()
                 .getExternalContext();
         if (context == null) {
@@ -69,7 +96,9 @@ public class RemoveSessionInterceptor extends AbstractInterceptor {
         if (session == null) {
             return;
         }
-        session.removeAttribute(name);
+        for (int i = 0; i < name.length; ++i) {
+            session.removeAttribute(name[i]);
+        }
     }
 
 }
