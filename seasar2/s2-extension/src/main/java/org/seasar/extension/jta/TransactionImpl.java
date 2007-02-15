@@ -35,6 +35,11 @@ import org.seasar.framework.exception.SRollbackException;
 import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.SLinkedList;
 
+/**
+ * {@link javax.transaction.Transaction}の実装クラスです。
+ * 
+ * @author higa
+ */
 public final class TransactionImpl implements Transaction {
 
     private static final int VOTE_READONLY = 0;
@@ -57,9 +62,17 @@ public final class TransactionImpl implements Transaction {
 
     private int branchId_ = 0;
 
+    /**
+     * <code>TransactionImpl</code>のインスタンスを構築します。
+     * 
+     */
     public TransactionImpl() {
     }
 
+    /**
+     * トランザクションを開始します。
+     * 
+     */
     public void begin() {
         status_ = Status.STATUS_ACTIVE;
         init();
@@ -68,6 +81,12 @@ public final class TransactionImpl implements Transaction {
         }
     }
 
+    /**
+     * トランザクションを中断します。
+     * 
+     * @throws XAException
+     *             <code>XAResource</code>を中断できなかった場合にスローされます
+     */
     public void suspend() throws XAException {
         assertNotSuspended();
         assertActive();
@@ -127,6 +146,12 @@ public final class TransactionImpl implements Transaction {
         return (XAResourceWrapper) xaResourceWrappers_.get(index);
     }
 
+    /**
+     * トランザクションを再開します。
+     * 
+     * @throws XAException
+     *             <code>XAResource</code>を再開できなかった場合にスローされます
+     */
     public void resume() throws XAException {
         assertSuspended();
         for (int i = 0; i < getXAResourceWrapperSize(); ++i) {
@@ -166,16 +191,18 @@ public final class TransactionImpl implements Transaction {
                         break;
                     case VOTE_ROLLBACK:
                         rollbackForVoteOK();
-                        afterCompletion();
-                        throw new SRollbackException("ESSR0303",
-                                new Object[] { toString() });
                     }
                 }
             }
-            if (logger_.isDebugEnabled()) {
+            final boolean committed = status_ == Status.STATUS_COMMITTED;
+            if (committed && logger_.isDebugEnabled()) {
                 logger_.log("DSSR0004", null);
             }
             afterCompletion();
+            if (!committed) {
+                throw new SRollbackException("ESSR0303",
+                        new Object[] { toString() });
+            }
         } finally {
             destroy();
         }
@@ -452,10 +479,20 @@ public final class TransactionImpl implements Transaction {
         synchronizations_.add(sync);
     }
 
+    /**
+     * トランザクションIDを返します。
+     * 
+     * @return トランザクションID
+     */
     public Xid getXid() {
         return xid_;
     }
 
+    /**
+     * トランザクションが中断されている場合は<code>true</code>を、それ以外の場合は<code>false</code>を返します。
+     * 
+     * @return トランザクションが中断されている場合は<code>true</code>
+     */
     public boolean isSuspended() {
         return suspended_;
     }
@@ -469,5 +506,9 @@ public final class TransactionImpl implements Transaction {
         xaResourceWrappers_.clear();
         synchronizations_.clear();
         suspended_ = false;
+    }
+
+    public String toString() {
+        return xid_.toString();
     }
 }

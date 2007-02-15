@@ -22,9 +22,7 @@ import javax.transaction.xa.XAException;
 import javax.transaction.xa.XAResource;
 import javax.transaction.xa.Xid;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 import org.seasar.extension.jta.xa.DefaultXAResource;
 
@@ -32,8 +30,11 @@ public class TransactionImplTest extends TestCase {
 
     private TransactionImpl tx_;
 
-    public TransactionImplTest(String name) {
-        super(name);
+    protected void setUp() throws Exception {
+        tx_ = new TransactionImpl();
+    }
+
+    protected void tearDown() throws Exception {
     }
 
     public void testEquals() throws Exception {
@@ -153,6 +154,28 @@ public class TransactionImplTest extends TestCase {
             fail("2");
         } catch (IllegalStateException ex) {
             System.out.println(ex);
+        }
+    }
+
+    public void testOnePhaseCommitFail() throws Exception {
+        DefaultXAResource xaRes = new DefaultXAResource() {
+            protected int doPrepare(Xid xid) throws XAException {
+                TransactionImplTest.fail("0");
+                return XAResource.XA_OK;
+            }
+
+            protected void doCommit(Xid xid, boolean onePhase)
+                    throws XAException {
+                throw new XAException();
+            }
+        };
+        tx_.begin();
+        tx_.enlistResource(xaRes);
+        try {
+            tx_.commit();
+            fail("1");
+        } catch (RollbackException expected) {
+            System.out.println(expected);
         }
     }
 
@@ -321,21 +344,6 @@ public class TransactionImplTest extends TestCase {
         }
     }
 
-    protected void setUp() throws Exception {
-        tx_ = new TransactionImpl();
-    }
-
-    protected void tearDown() throws Exception {
-    }
-
-    public static Test suite() {
-        return new TestSuite(TransactionImplTest.class);
-    }
-
-    public static void main(String[] args) {
-        junit.textui.TestRunner.run(TransactionImplTest.class);
-    }
-
     private class Sync implements Synchronization {
 
         private boolean beforeCompleted_ = false;
@@ -363,4 +371,45 @@ public class TransactionImplTest extends TestCase {
         public void afterCompletion(int status) {
         }
     }
+
+    private class FailResource implements XAResource {
+
+        public void commit(Xid xid, boolean onePhase) throws XAException {
+            throw new XAException();
+        }
+
+        public void end(Xid xid, int flags) throws XAException {
+        }
+
+        public void forget(Xid xid) throws XAException {
+        }
+
+        public int getTransactionTimeout() throws XAException {
+            return 0;
+        }
+
+        public boolean isSameRM(XAResource xares) throws XAException {
+            return false;
+        }
+
+        public int prepare(Xid xid) throws XAException {
+            return XAResource.XA_OK;
+        }
+
+        public Xid[] recover(int flag) throws XAException {
+            return null;
+        }
+
+        public void rollback(Xid xid) throws XAException {
+        }
+
+        public boolean setTransactionTimeout(int seconds) throws XAException {
+            return false;
+        }
+
+        public void start(Xid xid, int flags) throws XAException {
+        }
+
+    }
+
 }
