@@ -51,7 +51,7 @@ import org.seasar.framework.util.StringUtil;
 public class AspectCustomizer extends AbstractCustomizer {
 
     /** <coce>interceptorName</code>プロパティのバインディング定義です。 */
-    public static final String interceptorName_BINDING = "bindingType=must";
+    public static final String interceptorName_BINDING = "bindingType=may";
 
     /** <coce>pointcut</code>プロパティのバインディング定義です。 */
     public static final String pointcut_BINDING = "bindingType=may";
