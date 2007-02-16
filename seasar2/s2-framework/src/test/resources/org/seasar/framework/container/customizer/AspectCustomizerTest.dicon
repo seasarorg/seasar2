@@ -9,6 +9,7 @@
 		<property name="customizer">
 			<component class="org.seasar.framework.container.customizer.AspectCustomizer">
 				<property name="interceptorName">"traceInterceptor"</property>
+				<property name="targetInterface">@org.seasar.framework.container.autoregister.Greeting@class</property>
 				<initMethod name="addInterceptorName"><arg>"greetingInterceptor"</arg></initMethod>
 			</component>
 		</property>

@@ -41,6 +41,9 @@ import org.seasar.framework.util.ClassUtil;
  * </ul>
  * </p>
  * <p>
+ * カスタマイズ対象のコンポーネントが実装していなくてはならないインターフェースを{@link #setTargetInterface(Class) targetInterface}プロパティで指定することもできます。
+ * </p>
+ * <p>
  * {@link #customize(ComponentDef)}メソッドの引数で渡されたコンポーネントがカスタマイズ対象の場合は、 抽象メソッド{@link #doCustomize(ComponentDef)}メソッドを呼び出します。
  * サブクラスは{@link #doCustomize(ComponentDef)}メソッドを実装してコンポーネント定義をカスタマイズしてください。
  * </p>
@@ -49,11 +52,17 @@ import org.seasar.framework.util.ClassUtil;
  */
 public abstract class AbstractCustomizer implements ComponentCustomizer {
 
+    /** <coce>targetInterface</code>プロパティのバインディング定義です。 */
+    public static final String targetInterface_BINDING = "bindingType=may";
+
     /** カスタマイズ対象のクラスパターン */
     protected final List classPatterns = new ArrayList();
 
     /** カスタマイズ非対象のクラスパターン */
     protected final List ignoreClassPatterns = new ArrayList();
+
+    /** カスタマイズ対象のコンポーネントが実装していなくてはならないインターフェース */
+    protected Class targetInterface;
 
     /**
      * カスタマイズ対象のクラスパターンを追加します。
@@ -104,6 +113,19 @@ public abstract class AbstractCustomizer implements ComponentCustomizer {
     }
 
     /**
+     * カスタマイズ対象のコンポーネントが実装していなくてはならないインターフェースを設定します。
+     * 
+     * @param targetInterface
+     *            カスタマイズ対象のコンポーネントが実装していなくてはならないインターフェース
+     */
+    public void setTargetInterface(Class targetInterface) {
+        if (!targetInterface.isInterface()) {
+            throw new IllegalArgumentException(targetInterface.getName());
+        }
+        this.targetInterface = targetInterface;
+    }
+
+    /**
      * コンポーネント定義をカスタマイズをします。
      * <p>
      * componentDefがカスタマイズ対象の場合は、{@link #doCustomize()}メソッドを呼び出します。
@@ -112,23 +134,30 @@ public abstract class AbstractCustomizer implements ComponentCustomizer {
      *            コンポーネント定義
      */
     public void customize(final ComponentDef componentDef) {
-        if (isMatch(componentDef)) {
-            doCustomize(componentDef);
+        if (!isMatchClassPattern(componentDef)) {
+            return;
         }
+        if (!isMatchTargetInterface(componentDef)) {
+            return;
+        }
+        doCustomize(componentDef);
     }
 
     /**
-     * コンポーネント定義がカスタマイズ対象かどうかを判定します。
+     * コンポーネント定義のクラスがクラスパターンとマッチするかどうかを判定します。
      * 
      * @param componentDef
      *            コンポーネント定義
-     * @return コンポーネント定義がカスタマイズ対象なら<code>true</code>、そうでない場合は<code>false</code>
+     * @return コンポーネント定義がクラスパターンとマッチした場合は<code>true</code>、そうでない場合は<code>false</code>
      */
-    protected boolean isMatch(final ComponentDef componentDef) {
+    protected boolean isMatchClassPattern(final ComponentDef componentDef) {
         if (classPatterns.isEmpty() && ignoreClassPatterns.isEmpty()) {
             return true;
         }
         final Class clazz = componentDef.getComponentClass();
+        if (clazz == null) {
+            return false;
+        }
         final String packageName = ClassUtil.getPackageName(clazz);
         final String shortClassName = ClassUtil.getShortClassName(clazz);
         for (int i = 0; i < ignoreClassPatterns.size(); ++i) {
@@ -149,6 +178,24 @@ public abstract class AbstractCustomizer implements ComponentCustomizer {
             }
         }
         return false;
+    }
+
+    /**
+     * コンポーネント定義のクラスがターゲットインタフェースとマッチするかどうかを判定します。
+     * 
+     * @param componentDef
+     *            コンポーネント定義
+     * @return コンポーネント定義のクラスがターゲットインタフェースとマッチした場合は<code>true</code>、そうでない場合は<code>false</code>
+     */
+    protected boolean isMatchTargetInterface(final ComponentDef componentDef) {
+        if (targetInterface == null) {
+            return true;
+        }
+        final Class clazz = componentDef.getComponentClass();
+        if (clazz == null) {
+            return false;
+        }
+        return targetInterface.isAssignableFrom(clazz);
     }
 
     /**

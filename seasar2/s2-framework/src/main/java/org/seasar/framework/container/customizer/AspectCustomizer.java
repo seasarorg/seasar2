@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
+import org.seasar.framework.aop.Pointcut;
 import org.seasar.framework.aop.S2MethodInvocation;
 import org.seasar.framework.aop.impl.NestedMethodInvocation;
 import org.seasar.framework.aop.interceptors.AbstractInterceptor;
@@ -28,6 +29,7 @@ import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.factory.AspectDefFactory;
 import org.seasar.framework.container.impl.SimpleComponentDef;
+import org.seasar.framework.util.StringUtil;
 
 /**
  * {@link org.seasar.framework.container.ComponentDef コンポーネント定義}に
@@ -124,15 +126,35 @@ public class AspectCustomizer extends AbstractCustomizer {
                     (String[]) interceptorNames
                             .toArray(new String[interceptorNames.size()]));
             final AspectDef aspectDef = AspectDefFactory.createAspectDef(
-                    new SimpleComponentDef(adaptor), pointcut);
+                    new SimpleComponentDef(adaptor), createPointcut());
             componentDef.addAspectDef(aspectDef);
         } else {
             for (int i = 0; i < interceptorNames.size(); ++i) {
                 final AspectDef aspectDef = AspectDefFactory.createAspectDef(
-                        (String) interceptorNames.get(i), pointcut);
+                        (String) interceptorNames.get(i), createPointcut());
                 componentDef.addAspectDef(aspectDef);
             }
         }
+    }
+
+    /**
+     * ポイントカットを作成して返します。
+     * <p>
+     * <code>pointcut</code>プロパティが指定されている場合は、その文字列からポイントカットを作成します。
+     * <code>targetInterface</code>プロパティが指定されている場合は、そのインターフェースからポイントカットを作成します。
+     * それ以外の場合は<code>null</code>を返します。
+     * </p>
+     * 
+     * @return ポイントカット
+     */
+    protected Pointcut createPointcut() {
+        if (!StringUtil.isEmpty(pointcut)) {
+            return AspectDefFactory.createPointcut(pointcut);
+        }
+        if (targetInterface != null) {
+            return AspectDefFactory.createPointcut(targetInterface);
+        }
+        return null;
     }
 
     /**

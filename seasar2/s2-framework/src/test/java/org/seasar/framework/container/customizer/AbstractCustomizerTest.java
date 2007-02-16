@@ -89,6 +89,20 @@ public class AbstractCustomizerTest extends TestCase {
         assertFalse(matched);
     }
 
+    public void testTargetInterface() throws Exception {
+        TestCustomizer customizer = new TestCustomizer();
+        customizer.setTargetInterface(Super.class);
+        matched = false;
+        customizer.customize(new ComponentDefImpl(Foo.class));
+        assertTrue(matched);
+        matched = false;
+        customizer.customize(new ComponentDefImpl(Bar.class));
+        assertTrue(matched);
+        matched = false;
+        customizer.customize(new ComponentDefImpl(Baz.class));
+        assertFalse(matched);
+    }
+
     public class TestCustomizer extends AbstractCustomizer {
         protected void doCustomize(ComponentDef componentDef) {
             System.out.println(componentDef.getComponentClass().getName());
@@ -96,10 +110,16 @@ public class AbstractCustomizerTest extends TestCase {
         }
     }
 
-    public static class Foo {
+    public interface Super {
     }
 
-    public static class Bar {
+    public interface Sub extends Super {
+    }
+
+    public static class Foo implements Super {
+    }
+
+    public static class Bar implements Sub {
     }
 
     public static class Baz {
