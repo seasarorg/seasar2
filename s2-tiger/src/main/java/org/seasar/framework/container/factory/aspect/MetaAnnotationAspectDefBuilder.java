@@ -31,6 +31,7 @@ import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.Expression;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.factory.AnnotationHandler;
+import org.seasar.framework.container.factory.AspectDefFactory;
 import org.seasar.framework.container.impl.AspectDefImpl;
 import org.seasar.framework.util.MethodUtil;
 import org.seasar.framework.util.StringUtil;
@@ -112,9 +113,11 @@ public class MetaAnnotationAspectDefBuilder extends AbstractAspectDefBuilder {
                 continue;
             }
             final String pointcut = getPointcut(annotation);
-            final AspectDef aspectDef = StringUtil.isEmpty(pointcut) ? new AspectDefImpl()
-                    : new AspectDefImpl(new PointcutImpl(StringUtil.split(
-                            pointcut, ", ")));
+            final AspectDef aspectDef = new AspectDefImpl();
+            if (!StringUtil.isEmpty(pointcut)) {
+                aspectDef
+                        .setPointcut(AspectDefFactory.createPointcut(pointcut));
+            }
             aspectDef.setExpression(new ExpressionImpl(annotation));
             componentDef.addAspectDef(aspectDef);
         }
@@ -175,6 +178,7 @@ public class MetaAnnotationAspectDefBuilder extends AbstractAspectDefBuilder {
     }
 
     public class ExpressionImpl implements Expression {
+
         protected Annotation annotation;
 
         public ExpressionImpl(final Annotation annotation) {
