@@ -23,6 +23,8 @@ public interface NamingConvention {
 
     String getViewRootPath();
 
+    String adjustViewRootPath();
+
     String getViewExtension();
 
     String getImplementationSuffix();
@@ -106,6 +108,8 @@ public interface NamingConvention {
     String fromPathToActionName(String path);
 
     String fromPageNameToPath(String pageName);
+
+    String fromPageClassToPath(Class pageClass);
 
     String fromActionNameToPath(String actionName);
 

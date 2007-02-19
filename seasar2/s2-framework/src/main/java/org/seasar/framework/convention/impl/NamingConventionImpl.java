@@ -286,6 +286,10 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
         this.viewRootPath = viewRootPath;
     }
 
+    public String adjustViewRootPath() {
+        return viewRootPath == "/" ? "" : viewRootPath;
+    }
+
     public String getSubApplicationRootPackageName() {
         return subApplicationRootPackageName;
     }
@@ -573,8 +577,13 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
         }
         String name = pageName.substring(0, pageName.length()
                 - pageSuffix.length());
-        return viewRootPath + "/" + name.replace(PACKAGE_SEPARATOR, '/')
-                + viewExtension;
+        return adjustViewRootPath() + "/"
+                + name.replace(PACKAGE_SEPARATOR, '/') + viewExtension;
+    }
+
+    public String fromPageClassToPath(Class pageClass) {
+        String componentName = fromClassNameToComponentName(pageClass.getName());
+        return fromPageNameToPath(componentName);
     }
 
     public String fromActionNameToPath(String actionName) {
@@ -583,8 +592,8 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
         }
         String name = actionName.substring(0, actionName.length()
                 - actionSuffix.length());
-        return viewRootPath + "/" + name.replace(PACKAGE_SEPARATOR, '/')
-                + viewExtension;
+        return adjustViewRootPath() + "/"
+                + name.replace(PACKAGE_SEPARATOR, '/') + viewExtension;
     }
 
     public String fromActionNameToPageName(String actionName) {
