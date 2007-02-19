@@ -16,7 +16,10 @@
 package org.seasar.framework.container.factory;
 
 /**
+ * 論理パスをそのまま物理パスとする{@link PathResolver}の実装クラスです。
+ * 
  * @author koichik
+ * @author jundu
  */
 public class SimplePathResolver implements PathResolver {
 
