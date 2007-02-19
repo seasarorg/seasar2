@@ -9,7 +9,7 @@
   <artifactId>s2-container-project</artifactId>
   <packaging>pom</packaging>
   <name>Seasar2</name>
-  <version>2.4.10-SNAPSHOT</version>
+  <version>2.4.10</version>
   <description>DI Container with AOP</description>
   <url>http://s2container.seasar.org/</url>
   <issueManagement>
@@ -276,8 +276,8 @@
           <docencoding>UTF-8</docencoding>
           <charset>UTF-8</charset>
           <links>
+            <link>http://java.sun.com/javaee/5/docs/api/</link>
           	<link>http://java.sun.com/j2se/1.5.0/ja/docs/ja/api/</link>
-            <link>http://java.sun.com/j2ee/1.4/docs/api/</link>
             <link>http://aopalliance.sourceforge.net/doc/</link>
           </links>
         </configuration>
