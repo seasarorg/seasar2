@@ -33,6 +33,10 @@ public interface AttributeDesc {
 
     TemporalType getTemporalType();
 
+    AttributeDesc[] getChildAttributeDescs();
+
+    AttributeDesc getChildAttributeDesc(String name);
+
     boolean isId();
 
     boolean isAssociation();
