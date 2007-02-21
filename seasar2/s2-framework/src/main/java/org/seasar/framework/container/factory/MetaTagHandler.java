@@ -29,19 +29,11 @@ import org.xml.sax.Attributes;
 public class MetaTagHandler extends AbstractTagHandler {
     private static final long serialVersionUID = -3372861766134433725L;
 
-    /**
-     * @see org.seasar.framework.xml.sax.handler.TagHandler#start(org.seasar.framework.xml.sax.handler.TagHandlerContext,
-     *      org.xml.sax.Attributes)
-     */
     public void start(TagHandlerContext context, Attributes attributes) {
         String name = attributes.getValue("name");
         context.push(createMetaDef(name));
     }
 
-    /**
-     * @see org.seasar.framework.xml.sax.handler.TagHandler#end(org.seasar.framework.xml.sax.handler.TagHandlerContext,
-     *      java.lang.String)
-     */
     public void end(TagHandlerContext context, String body) {
         MetaDef metaDef = (MetaDef) context.pop();
         if (!StringUtil.isEmpty(body)) {

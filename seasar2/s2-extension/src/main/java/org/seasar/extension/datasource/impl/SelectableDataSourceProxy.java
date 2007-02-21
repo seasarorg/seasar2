@@ -148,7 +148,7 @@ public class SelectableDataSourceProxy implements DataSource {
     /**
      * スレッドコンテキストに設定された名前を持つデータソースにログインタイムアウト時間(秒）を設定します。
      * 
-     * @param out
+     * @param seconds
      *            スレッドコンテキストに設定された名前を持つデータソースに設定するログインタイムアウト時間(秒）
      * @throws EmptyRuntimeException
      *             スレッドコンテキストにデータソース名が設定されていない場合にスローされます

@@ -50,7 +50,7 @@ public interface ConversionContext {
      * 変換元オブジェクトから変換済みのオブジェクトがあればそれを返します。 変換済みのオブジェクトがない場合は<code>null</code>を返します。
      * <p>
      * このメソッドは、 循環を含むオブジェクトグラフの変換で無限ループになることを防ぐために使用されます。 このメソッドが<code>null</code>を返した場合は変換元の変換を行い、
-     * 変換したオブジェクトを{@link addConvertedObject(Object, Object}</code>によりコンテキストに登録します。
+     * 変換したオブジェクトを{@link #addConvertedObject(Object, Object)}</code>によりコンテキストに登録します。
      * 次に同じソースオブジェクトでこのメソッドが呼び出された場合は変換済みのオブジェクトが返されます。
      * </p>
      * 

@@ -359,8 +359,8 @@ public class ConversionContextImpl implements ConversionContext {
      * 
      * @param srcClass
      *            変換元のクラス
-     * @param propertyName
-     *            プロパティ名
+     * @param prefix
+     *            プロパティ名の接頭辞
      * @param key
      *            日時プロパティ情報のキャッシュのキー
      * @return 日時プロパティ情報

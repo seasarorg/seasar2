@@ -128,7 +128,7 @@ public abstract class AbstractCustomizer implements ComponentCustomizer {
     /**
      * コンポーネント定義をカスタマイズをします。
      * <p>
-     * componentDefがカスタマイズ対象の場合は、{@link #doCustomize()}メソッドを呼び出します。
+     * componentDefがカスタマイズ対象の場合は、{@link #doCustomize(ComponentDef)}メソッドを呼び出します。
      * 
      * @param componentDef
      *            コンポーネント定義

@@ -334,8 +334,8 @@ public class BeanConverter extends AbstractConverter {
      * 変換元オブジェクトに該当するプロパティが存在しない場合は<code>null</code>を返します。
      * </p>
      * 
-     * @param sourceBeanDesc
-     *            変換元のBean記述子
+     * @param sourceClass
+     *            変換元のクラス
      * @param source
      *            変換元のオブジェクト
      * @param destPropertyName

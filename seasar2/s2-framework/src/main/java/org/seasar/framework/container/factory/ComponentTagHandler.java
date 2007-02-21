@@ -33,10 +33,6 @@ import org.xml.sax.Attributes;
 public class ComponentTagHandler extends AbstractTagHandler {
     private static final long serialVersionUID = -8182227769800177833L;
 
-    /**
-     * @see org.seasar.framework.xml.sax.handler.TagHandler#start(org.seasar.framework.xml.sax.handler.TagHandlerContext,
-     *      org.xml.sax.Attributes)
-     */
     public void start(TagHandlerContext context, Attributes attributes) {
         AnnotationHandler annoHandler = AnnotationHandlerFactory
                 .getAnnotationHandler();
@@ -74,10 +70,6 @@ public class ComponentTagHandler extends AbstractTagHandler {
         context.push(componentDef);
     }
 
-    /**
-     * @see org.seasar.framework.xml.sax.handler.TagHandler#end(org.seasar.framework.xml.sax.handler.TagHandlerContext,
-     *      java.lang.String)
-     */
     public void end(TagHandlerContext context, String body) {
         ComponentDef componentDef = (ComponentDef) context.pop();
         AnnotationHandler annoHandler = AnnotationHandlerFactory

@@ -26,9 +26,6 @@ import org.seasar.framework.beans.factory.BeanDescFactory;
  */
 public class BeanListReader extends BeanReader {
 
-    /**
-     * @param map
-     */
     public BeanListReader(List list) {
         BeanDesc beanDesc = BeanDescFactory.getBeanDesc(list.get(0).getClass());
         setupColumns(beanDesc);

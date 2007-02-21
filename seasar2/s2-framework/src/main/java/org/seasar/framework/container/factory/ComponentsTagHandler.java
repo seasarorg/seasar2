@@ -40,10 +40,6 @@ public class ComponentsTagHandler extends TagHandler {
         this.containerImplClass = containerImplClass;
     }
 
-    /**
-     * @see org.seasar.framework.xml.sax.handler.TagHandler#start(org.seasar.framework.xml.sax.handler.TagHandlerContext,
-     *      org.xml.sax.Attributes)
-     */
     public void start(TagHandlerContext context, Attributes attributes) {
         S2Container container = createContainer();
         String path = (String) context.getParameter("path");

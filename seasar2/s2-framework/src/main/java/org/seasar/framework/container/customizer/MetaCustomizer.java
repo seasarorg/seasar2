@@ -63,22 +63,32 @@ public class MetaCustomizer extends AbstractCustomizer {
     /**
      * カスタマイズ対象のコンポーネント定義をカスタマイズをします。
      * <p>
-     * このカスタマイザ自身のコンポーネント定義に <code>autoRegister</code>という名前で定義されたメタデータ定義に設定されたメタデータ定義を
+     * このカスタマイザ自身のコンポーネント定義に<code>autoRegister</code>という名前で定義されたメタデータ定義に設定されたメタデータ定義を
      * コンポーネント定義に登録します。
      * </p>
      * 
      * @param componentDef
      *            コンポーネント定義
      */
-    protected void doCustomize(final ComponentDef cd) {
-        final MetaDef metaDef = componentDef.getMetaDef("autoRegister");
+    protected void doCustomize(final ComponentDef componentDef) {
+        final MetaDef metaDef = getMetaDef();
         if (metaDef == null) {
             return;
         }
         for (int i = 0; i < metaDef.getMetaDefSize(); ++i) {
             final MetaDef meta = metaDef.getMetaDef(i);
-            cd.addMetaDef(new MetaDefImpl(meta.getName(), meta.getValue()));
+            componentDef.addMetaDef(new MetaDefImpl(meta.getName(), meta
+                    .getValue()));
         }
+    }
+
+    /**
+     * このカスタマイザ自身のコンポーネント定義に<code>autoRegister</code>という名前で定義されたメタデータ定義を返します。
+     * 
+     * @return このカスタマイザ自身のコンポーネント定義に<code>autoRegister</code>という名前で定義されたメタデータ定義
+     */
+    protected MetaDef getMetaDef() {
+        return componentDef.getMetaDef("autoRegister");
     }
 
 }

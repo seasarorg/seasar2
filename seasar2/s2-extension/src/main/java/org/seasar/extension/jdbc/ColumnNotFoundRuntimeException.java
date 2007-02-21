@@ -29,9 +29,6 @@ public final class ColumnNotFoundRuntimeException extends SRuntimeException {
 
     private String columnName_;
 
-    /**
-     * @param componentKey
-     */
     public ColumnNotFoundRuntimeException(String tableName, String columnName) {
         super("ESSR0068", new Object[] { tableName, columnName });
         tableName_ = tableName;

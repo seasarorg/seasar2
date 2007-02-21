@@ -27,9 +27,6 @@ public final class TableNotFoundRuntimeException extends SRuntimeException {
 
     private String tableName_;
 
-    /**
-     * @param componentKey
-     */
     public TableNotFoundRuntimeException(String tableName) {
         super("ESSR0067", new Object[] { tableName });
         tableName_ = tableName;

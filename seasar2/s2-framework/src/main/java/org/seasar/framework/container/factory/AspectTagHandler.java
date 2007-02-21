@@ -31,10 +31,6 @@ import org.xml.sax.Attributes;
 public class AspectTagHandler extends AbstractTagHandler {
     private static final long serialVersionUID = 5619707344253136193L;
 
-    /**
-     * @see org.seasar.framework.xml.sax.handler.TagHandler#start(org.seasar.framework.xml.sax.handler.TagHandlerContext,
-     *      org.xml.sax.Attributes)
-     */
     public void start(TagHandlerContext context, Attributes attributes) {
         AspectDef aspectDef = null;
         String pointcutStr = attributes.getValue("pointcut");
@@ -47,10 +43,6 @@ public class AspectTagHandler extends AbstractTagHandler {
         context.push(aspectDef);
     }
 
-    /**
-     * @see org.seasar.framework.xml.sax.handler.TagHandler#end(org.seasar.framework.xml.sax.handler.TagHandlerContext,
-     *      java.lang.String)
-     */
     public void end(TagHandlerContext context, String body) {
         AspectDef aspectDef = (AspectDef) context.pop();
         if (!StringUtil.isEmpty(body)) {

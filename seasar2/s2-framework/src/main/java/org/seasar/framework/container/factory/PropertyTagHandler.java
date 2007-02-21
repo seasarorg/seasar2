@@ -31,10 +31,6 @@ import org.xml.sax.Attributes;
 public class PropertyTagHandler extends AbstractTagHandler {
     private static final long serialVersionUID = -8153752681379626269L;
 
-    /**
-     * @see org.seasar.framework.xml.sax.handler.TagHandler#start(org.seasar.framework.xml.sax.handler.TagHandlerContext,
-     *      org.xml.sax.Attributes)
-     */
     public void start(TagHandlerContext context, Attributes attributes) {
         String name = attributes.getValue("name");
         if (name == null) {
@@ -50,10 +46,6 @@ public class PropertyTagHandler extends AbstractTagHandler {
         context.push(pd);
     }
 
-    /**
-     * @see org.seasar.framework.xml.sax.handler.TagHandler#end(org.seasar.framework.xml.sax.handler.TagHandlerContext,
-     *      java.lang.String)
-     */
     public void end(TagHandlerContext context, String body) {
         PropertyDef propertyDef = (PropertyDef) context.pop();
         if (!StringUtil.isEmpty(body)) {
