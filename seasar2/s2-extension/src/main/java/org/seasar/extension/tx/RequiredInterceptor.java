@@ -15,21 +15,29 @@
  */
 package org.seasar.extension.tx;
 
-import javax.transaction.TransactionManager;
-
 import org.aopalliance.intercept.MethodInvocation;
 
 /**
+ * トランザクションを要求するメソッドのためのインターセプタです。
+ * <p>
+ * このインターセプタが適用されたメソッドが呼び出された際にトランザクションが開始されていない場合は、トランザクションが開始されます。 メソッドが終了
+ * (例外をスローした場合も) した後、開始したトランザクションは完了 (コミットまたはロールバック) されます。<br>
+ * メソッドが呼び出された際に、既にトランザクションが開始されていた場合は何もしません。
+ * </p>
+ * 
  * @author higa
  * 
  */
 public class RequiredInterceptor extends AbstractTxInterceptor {
 
-    public RequiredInterceptor(TransactionManager transactionManager) {
-        super(transactionManager);
+    /**
+     * インスタンスを構築します。
+     * 
+     */
+    public RequiredInterceptor() {
     }
 
-    public Object invoke(MethodInvocation invocation) throws Throwable {
+    public Object invoke(final MethodInvocation invocation) throws Throwable {
         boolean began = false;
         if (!hasTransaction()) {
             begin();
@@ -42,11 +50,12 @@ public class RequiredInterceptor extends AbstractTxInterceptor {
                 end();
             }
             return ret;
-        } catch (Throwable t) {
+        } catch (final Throwable t) {
             if (began) {
                 complete(t);
             }
             throw t;
         }
     }
+
 }

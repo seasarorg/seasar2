@@ -16,32 +16,41 @@
 package org.seasar.extension.tx;
 
 import javax.transaction.Transaction;
-import javax.transaction.TransactionManager;
 
 import org.aopalliance.intercept.MethodInvocation;
 
 /**
- * @author higa
+ * 新しいトランザクションを要求するメソッドのためのインターセプタです。
+ * <p>
+ * このインターセプタが適用されたメソッドが呼び出された際に、新しいトランザクションが開始されます。 メソッドが終了 (例外をスローした場合も)
+ * した後、開始したトランザクションは完了 (コミットまたはロールバック) されます。<br>
+ * メソッドが呼び出された際に、既にトランザクションが開始されていた場合、そのトランザクションは中断されます。
+ * 中断されたトランザクションは、メソッドが終了した後に再開されます。
+ * </p>
  * 
+ * @author higa
  */
 public class RequiresNewInterceptor extends AbstractTxInterceptor {
 
-    public RequiresNewInterceptor(TransactionManager transactionManager) {
-        super(transactionManager);
+    /** <coce>transactionManager</code>プロパティのバインディング定義です。 */
+    public static final String transactionManager_BINDING = "bindingType=must";
+
+    /**
+     * インスタンスを構築します。
+     * 
+     */
+    public RequiresNewInterceptor() {
     }
 
-    public Object invoke(MethodInvocation invocation) throws Throwable {
-        Transaction tx = null;
-        if (hasTransaction()) {
-            tx = suspend();
-        }
-        Object ret = null;
+    public Object invoke(final MethodInvocation invocation) throws Throwable {
+        final Transaction tx = hasTransaction() ? suspend() : null;
         try {
             begin();
             try {
-                ret = invocation.proceed();
+                final Object ret = invocation.proceed();
                 end();
-            } catch (Throwable t) {
+                return ret;
+            } catch (final Throwable t) {
                 complete(t);
                 throw t;
             }
@@ -50,7 +59,6 @@ public class RequiresNewInterceptor extends AbstractTxInterceptor {
                 resume(tx);
             }
         }
-        return ret;
-
     }
+
 }

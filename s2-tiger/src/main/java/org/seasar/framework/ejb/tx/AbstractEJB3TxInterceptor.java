@@ -18,20 +18,31 @@ package org.seasar.framework.ejb.tx;
 import java.rmi.RemoteException;
 
 import javax.ejb.ApplicationException;
-import javax.transaction.TransactionManager;
 
 import org.seasar.extension.tx.AbstractTxInterceptor;
 
 /**
- * @author koichik
+ * EJB3準拠の宣言的トランザクションをサポートするインターセプタの抽象クラスです。
  * 
+ * @author koichik
  */
 public abstract class AbstractEJB3TxInterceptor extends AbstractTxInterceptor {
 
-    public AbstractEJB3TxInterceptor(final TransactionManager transactionManager) {
-        super(transactionManager);
+    /**
+     * インスタンスを構築します。
+     * 
+     */
+    public AbstractEJB3TxInterceptor() {
     }
 
+    /**
+     * EJB3仕様に従い、 発生した例外によってトランザクションをロールバックしなくてはならない場合は<code>true</code>を、
+     * それ以外の場合は<code>false</code>を返します。
+     * 
+     * @param throwable
+     *            発生した例外
+     * @return 発生した例外によってトランザクションをロールバックしなくてはならない場合は<code>true</code>
+     */
     protected static boolean isRollingBack(final Throwable throwable) {
         final Class<? extends Throwable> exceptionClass = throwable.getClass();
         final ApplicationException annotation = exceptionClass
@@ -50,4 +61,5 @@ public abstract class AbstractEJB3TxInterceptor extends AbstractTxInterceptor {
         }
         return true;
     }
+
 }

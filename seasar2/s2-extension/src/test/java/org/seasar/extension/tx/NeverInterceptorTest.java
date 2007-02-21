@@ -28,13 +28,6 @@ public class NeverInterceptorTest extends S2TestCase {
 
     private TransactionManager tm_;
 
-    public NeverInterceptorTest() {
-    }
-
-    public NeverInterceptorTest(String name) {
-        super(name);
-    }
-
     protected void setUp() throws Exception {
         include(PATH);
     }
@@ -55,4 +48,5 @@ public class NeverInterceptorTest extends S2TestCase {
         }
         tm_.commit();
     }
+
 }

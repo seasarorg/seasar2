@@ -15,18 +15,27 @@
  */
 package org.seasar.extension.tx;
 
-import javax.transaction.TransactionManager;
-
 import org.aopalliance.intercept.MethodInvocation;
 import org.seasar.framework.exception.SIllegalStateException;
 
+/**
+ * トランザクションを許容しないメソッドのためのインターセプタです。
+ * <p>
+ * このインターセプタが適用されたメソッドが呼び出された際にトランザクションが開始されている場合は、 例外{@link java.lang.IllegalStateException}がスローされます。
+ * </p>
+ * 
+ * @author higa
+ */
 public class NeverInterceptor extends AbstractTxInterceptor {
 
-    public NeverInterceptor(TransactionManager transactionManager) {
-        super(transactionManager);
+    /**
+     * インスタンスを構築します。
+     * 
+     */
+    public NeverInterceptor() {
     }
 
-    public Object invoke(MethodInvocation invocation) throws Throwable {
+    public Object invoke(final MethodInvocation invocation) throws Throwable {
         if (hasTransaction()) {
             throw new SIllegalStateException("ESSR0317", null);
         }

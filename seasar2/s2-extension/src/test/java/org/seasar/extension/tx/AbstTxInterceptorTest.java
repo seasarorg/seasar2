@@ -22,16 +22,13 @@ import javax.transaction.Status;
 import javax.transaction.SystemException;
 import javax.transaction.TransactionManager;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.aopalliance.intercept.MethodInvocation;
 import org.seasar.extension.unit.S2TestCase;
 
 /**
  * @author koichik
  */
-public class AbstractTxInterceptorTest extends S2TestCase {
+public class AbstTxInterceptorTest extends S2TestCase {
     private static final String PATH = "AbstractTxInterceptorTest.dicon";
 
     private ExceptionBean exBean_;
@@ -40,11 +37,8 @@ public class AbstractTxInterceptorTest extends S2TestCase {
 
     private TestInterceptor testTx_;
 
-    public AbstractTxInterceptorTest() {
-    }
-
-    public AbstractTxInterceptorTest(String name) {
-        super(name);
+    protected void setUp() throws Exception {
+        include(PATH);
     }
 
     public void testType() throws Exception {
@@ -152,27 +146,10 @@ public class AbstractTxInterceptorTest extends S2TestCase {
         assertFalse("3", testTx_.result);
     }
 
-    protected void setUp() throws Exception {
-        include(PATH);
-    }
-
-    protected void tearDown() throws Exception {
-    }
-
-    public static Test suite() {
-        return new TestSuite(AbstractTxInterceptorTest.class);
-    }
-
-    public static void main(String[] args) {
-        junit.textui.TestRunner
-                .main(new String[] { AbstractTxInterceptorTest.class.getName() });
-    }
-
     public static class TestInterceptor extends AbstractTxInterceptor {
         boolean result;
 
-        public TestInterceptor(TransactionManager transactionManager) {
-            super(transactionManager);
+        public TestInterceptor() {
         }
 
         public Object invoke(MethodInvocation invocation) throws Throwable {

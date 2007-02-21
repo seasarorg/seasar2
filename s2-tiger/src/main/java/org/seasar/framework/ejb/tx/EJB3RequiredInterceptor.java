@@ -17,18 +17,26 @@ package org.seasar.framework.ejb.tx;
 
 import javax.transaction.NotSupportedException;
 import javax.transaction.SystemException;
-import javax.transaction.TransactionManager;
 
 import org.aopalliance.intercept.MethodInvocation;
 
 /**
- * @author koichik
+ * トランザクションを要求するメソッドのためのインターセプタです。
+ * <p>
+ * このインターセプタが適用されたメソッドが呼び出された際にトランザクションが開始されていない場合は、トランザクションが開始されます。 メソッドが終了
+ * (例外をスローした場合も) した後、開始したトランザクションは完了 (コミットまたはロールバック) されます。<br>
+ * メソッドが呼び出された際に、既にトランザクションが開始されていた場合は何もしません。
+ * </p>
  * 
+ * @author koichik
  */
 public class EJB3RequiredInterceptor extends AbstractEJB3TxInterceptor {
 
-    public EJB3RequiredInterceptor(final TransactionManager transactionManager) {
-        super(transactionManager);
+    /**
+     * インスタンスを構築します。
+     * 
+     */
+    public EJB3RequiredInterceptor() {
     }
 
     public Object invoke(final MethodInvocation invocation) throws Throwable {
@@ -59,4 +67,5 @@ public class EJB3RequiredInterceptor extends AbstractEJB3TxInterceptor {
         begin();
         return true;
     }
+
 }

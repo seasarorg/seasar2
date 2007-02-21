@@ -2,7 +2,8 @@
 <!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container//EN"
 "http://www.seasar.org/dtd/components.dtd">
 <components>
-	<component class="org.seasar.extension.jta.TransactionManagerImpl"/>
+	<include path="jta.dicon"/>
+
 	<component name="requiredTx"
 		class="org.seasar.extension.tx.RequiredInterceptor"/>
 	<component class="org.seasar.extension.tx.TxBeanImpl">

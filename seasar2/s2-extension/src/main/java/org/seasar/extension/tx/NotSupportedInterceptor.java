@@ -16,24 +16,32 @@
 package org.seasar.extension.tx;
 
 import javax.transaction.Transaction;
-import javax.transaction.TransactionManager;
 
 import org.aopalliance.intercept.MethodInvocation;
 
 /**
+ * トランザクションをサポートしないメソッドのためのインターセプタです。
+ * <p>
+ * このインターセプタが適用されたメソッドが呼び出された際にトランザクションが開始されている場合は、トランザクションが中断されます。 メソッドが終了
+ * (例外をスローした場合も) した後、中断したトランザクションは再開されます。
+ * </p>
+ * 
  * @author taichi S.
  */
 public class NotSupportedInterceptor extends AbstractTxInterceptor {
 
-    public NotSupportedInterceptor(TransactionManager transactionManager) {
-        super(transactionManager);
+    /** <coce>transactionManager</code>プロパティのバインディング定義です。 */
+    public static final String transactionManager_BINDING = "bindingType=must";
+
+    /**
+     * インスタンスを構築します。
+     * 
+     */
+    public NotSupportedInterceptor() {
     }
 
-    public Object invoke(MethodInvocation invocation) throws Throwable {
-        Transaction tx = null;
-        if (hasTransaction()) {
-            tx = suspend();
-        }
+    public Object invoke(final MethodInvocation invocation) throws Throwable {
+        final Transaction tx = hasTransaction() ? suspend() : null;
         try {
             return invocation.proceed();
         } finally {
@@ -42,4 +50,5 @@ public class NotSupportedInterceptor extends AbstractTxInterceptor {
             }
         }
     }
+
 }

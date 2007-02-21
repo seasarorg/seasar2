@@ -15,25 +15,31 @@
  */
 package org.seasar.extension.tx;
 
-import javax.transaction.TransactionManager;
-
 import org.aopalliance.intercept.MethodInvocation;
 import org.seasar.framework.exception.SIllegalStateException;
 
 /**
- * @author higa
+ * トランザクションが必須なメソッドのためのインターセプタです。
+ * <p>
+ * このインターセプタが適用されたメソッドが呼び出された際にトランザクションが開始されていない場合は、 例外{@link java.lang.IllegalStateException}がスローされます。
+ * </p>
  * 
+ * @author higa
  */
 public class MandatoryInterceptor extends AbstractTxInterceptor {
 
-    public MandatoryInterceptor(TransactionManager transactionManager) {
-        super(transactionManager);
+    /**
+     * インスタンスを構築します。
+     * 
+     */
+    public MandatoryInterceptor() {
     }
 
-    public Object invoke(MethodInvocation invocation) throws Throwable {
+    public Object invoke(final MethodInvocation invocation) throws Throwable {
         if (!hasTransaction()) {
             throw new SIllegalStateException("ESSR0311", null);
         }
         return invocation.proceed();
     }
+
 }

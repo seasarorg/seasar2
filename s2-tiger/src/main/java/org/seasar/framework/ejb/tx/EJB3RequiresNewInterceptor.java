@@ -17,19 +17,27 @@ package org.seasar.framework.ejb.tx;
 
 import javax.transaction.SystemException;
 import javax.transaction.Transaction;
-import javax.transaction.TransactionManager;
 
 import org.aopalliance.intercept.MethodInvocation;
 
 /**
- * @author koichik
+ * 新しいトランザクションを要求するメソッドのためのインターセプタです。
+ * <p>
+ * このインターセプタが適用されたメソッドが呼び出された際に、新しいトランザクションが開始されます。 メソッドが終了 (例外をスローした場合も)
+ * した後、開始したトランザクションは完了 (コミットまたはロールバック) されます。<br>
+ * メソッドが呼び出された際に、既にトランザクションが開始されていた場合、そのトランザクションは中断されます。
+ * 中断されたトランザクションは、メソッドが終了した後に再開されます。
+ * </p>
  * 
+ * @author koichik
  */
 public class EJB3RequiresNewInterceptor extends AbstractEJB3TxInterceptor {
 
-    public EJB3RequiresNewInterceptor(
-            final TransactionManager transactionManager) {
-        super(transactionManager);
+    /**
+     * インスタンスを構築します。
+     * 
+     */
+    public EJB3RequiresNewInterceptor() {
     }
 
     public Object invoke(final MethodInvocation invocation) throws Throwable {
@@ -55,10 +63,18 @@ public class EJB3RequiresNewInterceptor extends AbstractEJB3TxInterceptor {
         }
     }
 
+    /**
+     * トランザクションが開始されていれば中断します。
+     * 
+     * @return 中断されたトランザクション
+     * @throws SystemException
+     *             トランザクションマネージャで例外が発生した場合にスローされます
+     */
     protected Transaction suspendIfNecessary() throws SystemException {
         if (!hasTransaction()) {
             return null;
         }
         return suspend();
     }
+
 }

@@ -18,9 +18,6 @@ package org.seasar.extension.tx;
 import javax.transaction.Status;
 import javax.transaction.TransactionManager;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.seasar.extension.unit.S2TestCase;
 
 /**
@@ -37,24 +34,9 @@ public class NotSupportedInterceptorTest extends S2TestCase {
 
     private TransactionManager tm;
 
-    public static void main(String[] args) {
-        junit.textui.TestRunner.run(NotSupportedInterceptorTest.class);
-    }
-
-    public static Test suite() {
-        return new TestSuite(NotSupportedInterceptorTest.class);
-    }
-
-    /*
-     * @see TestCase#setUp()
-     */
     protected void setUp() throws Exception {
         super.setUp();
         include(PATH);
-    }
-
-    public NotSupportedInterceptorTest(String arg0) {
-        super(arg0);
     }
 
     public void testInvoke() throws Exception {

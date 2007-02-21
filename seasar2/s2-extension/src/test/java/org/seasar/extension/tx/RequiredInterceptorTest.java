@@ -18,9 +18,6 @@ package org.seasar.extension.tx;
 import javax.transaction.Status;
 import javax.transaction.TransactionManager;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.seasar.extension.unit.S2TestCase;
 
 public class RequiredInterceptorTest extends S2TestCase {
@@ -33,8 +30,8 @@ public class RequiredInterceptorTest extends S2TestCase {
 
     private TransactionManager tm_;
 
-    public RequiredInterceptorTest(String name) {
-        super(name);
+    protected void setUp() throws Exception {
+        include(PATH);
     }
 
     public void testInvoke() throws Exception {
@@ -63,19 +60,4 @@ public class RequiredInterceptorTest extends S2TestCase {
         assertEquals("2", Status.STATUS_NO_TRANSACTION, tm_.getStatus());
     }
 
-    protected void setUp() throws Exception {
-        include(PATH);
-    }
-
-    protected void tearDown() throws Exception {
-    }
-
-    public static Test suite() {
-        return new TestSuite(RequiredInterceptorTest.class);
-    }
-
-    public static void main(String[] args) {
-        junit.textui.TestRunner
-                .main(new String[] { RequiredInterceptorTest.class.getName() });
-    }
 }

@@ -2,9 +2,10 @@
 <!DOCTYPE components PUBLIC "-//SEASAR2.1//DTD S2Container//EN"
 	"http://www.seasar.org/dtd/components21.dtd">
 <components>
-	<component class="org.seasar.extension.jta.TransactionManagerImpl"/>
+	<include path="jta.dicon"/>
+
 	<component name="testTx"
-		class="org.seasar.extension.tx.AbstractTxInterceptorTest$TestInterceptor"/>
+		class="org.seasar.extension.tx.AbstTxInterceptorTest$TestInterceptor"/>
 	<component class="org.seasar.extension.tx.ExceptionBeanImpl">
 		<aspect>testTx</aspect>
 	</component>
