@@ -580,6 +580,7 @@ public final class TransactionImpl implements Transaction {
         xaResourceWrappers_.clear();
         synchronizations_.clear();
         interposedSynchronizations_.clear();
+        resourceMap_.clear();
         suspended_ = false;
     }
 
