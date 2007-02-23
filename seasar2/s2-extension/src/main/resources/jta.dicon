@@ -8,6 +8,9 @@
 	<component name="UserTransaction"
 		class="org.seasar.extension.jta.UserTransactionImpl"
 	/>
+	<component name="TransactionSynchronizationRegistry" 
+		class="org.seasar.extension.jta.TransactionSynchronizationRegistryImpl"
+	/>
 
 	<!-- WebLogic -->
 	<!--
@@ -62,6 +65,14 @@
 	<component name="UserTransaction"
 			class="javax.transaction.UserTransaction">
 		@org.seasar.extension.j2ee.JndiResourceLocator@lookup("java:comp/UserTransaction")
+	</component>
+	-->
+	
+	<!-- TransactionSynchronizationRegistry from JNDI -->
+	<!--
+	<component name="TransactionSynchronizationRegistry"
+			class="javax.transaction.TransactionSynchronizationRegistry">
+		@org.seasar.extension.j2ee.JndiResourceLocator@lookup("java:comp/TransactionSynchronizationRegistry")
 	</component>
 	-->
 </components>

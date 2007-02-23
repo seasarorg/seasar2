@@ -16,7 +16,9 @@
 package org.seasar.extension.jta;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.transaction.HeuristicMixedException;
 import javax.transaction.HeuristicRollbackException;
@@ -57,6 +59,10 @@ public final class TransactionImpl implements Transaction {
     private List xaResourceWrappers_ = new ArrayList();
 
     private List synchronizations_ = new ArrayList();
+
+    private List interposedSynchronizations_ = new ArrayList();
+
+    private Map resourceMap_ = new HashMap();
 
     private boolean suspended_ = false;
 
@@ -210,16 +216,22 @@ public final class TransactionImpl implements Transaction {
 
     private void beforeCompletion() {
         for (int i = 0; i < getSynchronizationSize(); ++i) {
-            Synchronization sync = getSynchronization(i);
-            try {
-                sync.beforeCompletion();
-            } catch (RuntimeException ex) {
-                status_ = Status.STATUS_MARKED_ROLLBACK;
-                endResources(XAResource.TMFAIL);
-                rollbackResources();
-                afterCompletion();
-                throw ex;
-            }
+            beforeCompletion(getSynchronization(i));
+        }
+        for (int i = 0; i < getInterposedSynchronizationSize(); ++i) {
+            beforeCompletion(getInterposedSynchronization(i));
+        }
+    }
+
+    private void beforeCompletion(Synchronization sync) {
+        try {
+            sync.beforeCompletion();
+        } catch (RuntimeException ex) {
+            status_ = Status.STATUS_MARKED_ROLLBACK;
+            endResources(XAResource.TMFAIL);
+            rollbackResources();
+            afterCompletion();
+            throw ex;
         }
     }
 
@@ -319,13 +331,19 @@ public final class TransactionImpl implements Transaction {
     }
 
     private void afterCompletion() {
+        for (int i = 0; i < getInterposedSynchronizationSize(); ++i) {
+            afterCompletion(getInterposedSynchronization(i));
+        }
         for (int i = 0; i < getSynchronizationSize(); ++i) {
-            Synchronization sync = getSynchronization(i);
-            try {
-                sync.afterCompletion(status_);
-            } catch (Throwable t) {
-                logger_.log(t);
-            }
+            afterCompletion(getSynchronization(i));
+        }
+    }
+
+    private void afterCompletion(Synchronization sync) {
+        try {
+            sync.afterCompletion(status_);
+        } catch (Throwable t) {
+            logger_.log(t);
         }
     }
 
@@ -335,6 +353,14 @@ public final class TransactionImpl implements Transaction {
 
     private Synchronization getSynchronization(int index) {
         return (Synchronization) synchronizations_.get(index);
+    }
+
+    private int getInterposedSynchronizationSize() {
+        return interposedSynchronizations_.size();
+    }
+
+    private Synchronization getInterposedSynchronization(int index) {
+        return (Synchronization) interposedSynchronizations_.get(index);
     }
 
     public void rollback() throws IllegalStateException, SecurityException,
@@ -480,6 +506,54 @@ public final class TransactionImpl implements Transaction {
     }
 
     /**
+     * 特定の順序で呼び出される<code>Synchronization</code>インスタンスを登録します。
+     * 
+     * @param sync
+     *            <code>Synchronization</code>インスタンス
+     * @throws IllegalStateException
+     *             トランザクションが一停止状態または非活動中の場合
+     */
+    public void registerInterposedSynchronization(Synchronization sync)
+            throws IllegalStateException {
+
+        assertNotSuspended();
+        assertActive();
+        interposedSynchronizations_.add(sync);
+    }
+
+    /**
+     * 指定されたキーで指定された値をトランザクションに関連付けます。
+     * 
+     * @param key
+     *            キー
+     * @param value
+     *            値
+     * @throws IllegalStateException
+     *             トランザクションが一停止状態または非活動中の場合
+     */
+    public void putResource(Object key, Object value)
+            throws IllegalStateException {
+        assertNotSuspended();
+        assertActive();
+        resourceMap_.put(key, value);
+    }
+
+    /**
+     * 指定されたキーでトランザクションに関連付けられた値を返します。
+     * 
+     * @param key
+     *            キー
+     * @return トランザクションに関連付けられた値
+     * @throws IllegalStateException
+     *             トランザクションが一停止状態または非活動中の場合
+     */
+    public Object getResource(Object key) throws IllegalStateException {
+        assertNotSuspended();
+        assertActive();
+        return resourceMap_.get(key);
+    }
+
+    /**
      * トランザクションIDを返します。
      * 
      * @return トランザクションID
@@ -505,6 +579,7 @@ public final class TransactionImpl implements Transaction {
         status_ = Status.STATUS_NO_TRANSACTION;
         xaResourceWrappers_.clear();
         synchronizations_.clear();
+        interposedSynchronizations_.clear();
         suspended_ = false;
     }
 

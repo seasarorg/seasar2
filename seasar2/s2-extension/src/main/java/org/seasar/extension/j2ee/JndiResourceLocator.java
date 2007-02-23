@@ -33,6 +33,8 @@ public class JndiResourceLocator {
     static {
         MAGIC_COMPONENTS
                 .put("java:comp/UserTransaction", "jta/UserTransaction");
+        MAGIC_COMPONENTS.put("java:comp/TransactionSynchronizationRegistry",
+                "jta/TransactionSynchronizationRegistry");
     }
 
     public static Object lookup(final String name) throws NamingException {

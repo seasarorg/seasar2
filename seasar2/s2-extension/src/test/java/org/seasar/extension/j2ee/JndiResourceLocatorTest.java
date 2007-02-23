@@ -42,7 +42,10 @@ public class JndiResourceLocatorTest extends S2TestCase {
     public void testLookup() throws Exception {
         Object userTransaction = JndiResourceLocator.lookup(
                 "java:comp/UserTransaction", env);
-        assertNotNull("1", userTransaction);
+        assertNotNull(userTransaction);
+        Object rransactionSynchronizationRegistry = JndiResourceLocator.lookup(
+                "java:comp/TransactionSynchronizationRegistry", env);
+        assertNotNull(rransactionSynchronizationRegistry);
     }
 
     public void testResolveName() throws Exception {
@@ -52,5 +55,9 @@ public class JndiResourceLocatorTest extends S2TestCase {
                 .resolveName("java:comp/env/jdbc/DataSource"));
         assertEquals("jta.UserTransaction", JndiResourceLocator
                 .resolveName("java:comp/UserTransaction"));
+        assertEquals(
+                "jta.TransactionSynchronizationRegistry",
+                JndiResourceLocator
+                        .resolveName("java:comp/TransactionSynchronizationRegistry"));
     }
 }

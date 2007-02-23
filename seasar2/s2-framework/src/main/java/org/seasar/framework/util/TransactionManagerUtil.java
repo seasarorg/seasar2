@@ -40,8 +40,20 @@ public final class TransactionManagerUtil {
     }
 
     public static boolean isActive(TransactionManager tm) {
+        return getStatus(tm) != Status.STATUS_NO_TRANSACTION;
+    }
+
+    public static int getStatus(TransactionManager tm) {
         try {
-            return tm.getStatus() != Status.STATUS_NO_TRANSACTION;
+            return tm.getStatus();
+        } catch (SystemException e) {
+            throw new SystemRuntimeException(e);
+        }
+    }
+
+    public static void setRollbackOnly(TransactionManager tm) {
+        try {
+            tm.setRollbackOnly();
         } catch (SystemException e) {
             throw new SystemRuntimeException(e);
         }
