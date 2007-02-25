@@ -47,8 +47,8 @@ public interface AttributeDesc {
 
     boolean isVersion();
 
-    Object getValue(Object entity);
+    Object getValue(Object owner);
 
-    void setValue(Object entity, Object value);
+    void setValue(Object owner, Object value);
 
 }
