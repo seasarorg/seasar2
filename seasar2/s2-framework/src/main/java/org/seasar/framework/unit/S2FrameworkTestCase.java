@@ -64,6 +64,10 @@ import org.seasar.framework.util.StringUtil;
  */
 public abstract class S2FrameworkTestCase extends TestCase {
 
+    protected static final String ENV_PATH = "env_ut.txt";
+
+    protected static final String ENV_VALUE = "ut";
+
     private S2Container container;
 
     private Servlet servlet;
@@ -215,6 +219,8 @@ public abstract class S2FrameworkTestCase extends TestCase {
         originalClassLoader = getOriginalClassLoader();
         unitClassLoader = new UnitClassLoader(originalClassLoader);
         Thread.currentThread().setContextClassLoader(unitClassLoader);
+        Env.setFilePath(ENV_PATH);
+        Env.setValueIfAbsent(ENV_VALUE);
         if (isWarmDeploy()) {
             S2ContainerFactory.configure("warmdeploy.dicon");
         }
