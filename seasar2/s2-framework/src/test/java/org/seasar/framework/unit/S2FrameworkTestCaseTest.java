@@ -27,6 +27,7 @@ import junitx.framework.ArrayAssert;
 import org.seasar.framework.container.TooManyRegistrationRuntimeException;
 import org.seasar.framework.container.impl.S2ContainerBehavior;
 import org.seasar.framework.container.warmdeploy.WarmdeployBehavior;
+import org.seasar.framework.env.Env;
 import org.seasar.framework.mock.servlet.MockHttpServletResponse;
 
 public class S2FrameworkTestCaseTest extends S2FrameworkTestCase {
@@ -134,6 +135,11 @@ public class S2FrameworkTestCaseTest extends S2FrameworkTestCase {
 
     public void testEmptyComponent() {
         include("empty.dicon");
+    }
+
+    public void testEnv() throws Exception {
+        assertEquals("env_ut.txt", Env.getFilePath());
+        assertEquals("ut", Env.getValue());
     }
 
     public void setUpWarmdeploy() throws Exception {
