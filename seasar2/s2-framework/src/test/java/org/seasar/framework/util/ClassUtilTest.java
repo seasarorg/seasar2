@@ -130,4 +130,9 @@ public class ClassUtilTest extends TestCase {
         assertNull(ret[0]);
         assertEquals("Hoge", ret[1]);
     }
+
+    public void testConvertClass() {
+        assertEquals(int.class, ClassUtil.convertClass("int"));
+        assertEquals(String.class, ClassUtil.convertClass("java.lang.String"));
+    }
 }

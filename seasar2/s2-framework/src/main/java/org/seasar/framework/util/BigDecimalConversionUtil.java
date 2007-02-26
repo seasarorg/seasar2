@@ -53,13 +53,23 @@ public final class BigDecimalConversionUtil {
         }
     }
 
+    public static String toString(BigDecimal dec) {
+        return normalizer.toString(dec);
+    }
+
     public interface BigDecimalNormalizer {
         BigDecimal normalize(BigDecimal dec);
+
+        String toString(BigDecimal dec);
     }
 
     public static class DefaultNormalizer implements BigDecimalNormalizer {
         public BigDecimal normalize(final BigDecimal dec) {
             return dec;
+        }
+
+        public String toString(final BigDecimal dec) {
+            return dec.toString();
         }
     }
 }

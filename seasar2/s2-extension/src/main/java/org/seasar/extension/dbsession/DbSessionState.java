@@ -13,24 +13,38 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.framework.util;
+package org.seasar.extension.dbsession;
 
-import junit.framework.TestCase;
+import java.util.Enumeration;
 
 /**
+ * HttpSessionの状態をあらわすインターフェースです。
+ * 
  * @author higa
  * 
  */
-public class SerializeUtilTest extends TestCase {
+public interface DbSessionState {
 
     /**
-     * @throws Exception
+     * 指定された名前に対する値を返します。
+     * 
+     * @param name
+     * @return
      */
-    public void testSerialize() throws Exception {
-        String[] a = new String[] { "1", "2" };
-        String[] b = (String[]) SerializeUtil.serialize(a);
-        assertEquals("1", b.length, a.length);
-        assertEquals("2", "1", b[0]);
-        assertEquals("3", "2", b[1]);
-    }
+    Object getAttribute(String name);
+
+    /**
+     * セッションで管理されているすべての名前を返します。
+     * 
+     * @return
+     */
+    Enumeration getAttributeNames();
+
+    /**
+     * 名前に対する値を設定します。
+     * 
+     * @param name
+     * @param value
+     */
+    void setAttribute(String name, Object value);
 }

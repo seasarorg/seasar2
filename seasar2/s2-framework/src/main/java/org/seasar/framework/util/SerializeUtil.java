@@ -29,6 +29,14 @@ public class SerializeUtil {
     private SerializeUtil() {
     }
 
+    /**
+     * オブジェクトがシリアライズできるかどうかテストします。
+     * 
+     * @param o
+     * @return
+     * @throws IORuntimeException
+     * @throws ClassNotFoundRuntimeException
+     */
     public static Object serialize(final Object o) throws IORuntimeException,
             ClassNotFoundRuntimeException {
 

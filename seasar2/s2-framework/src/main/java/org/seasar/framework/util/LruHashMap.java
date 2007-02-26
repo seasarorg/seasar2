@@ -42,6 +42,10 @@ public class LruHashMap extends LinkedHashMap {
         this.limitSize = limitSize;
     }
 
+    public int getLimitSize() {
+        return limitSize;
+    }
+
     protected boolean removeEldestEntry(final Map.Entry entry) {
         return size() > limitSize;
     }
