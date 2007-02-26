@@ -118,7 +118,7 @@ public class TransactionSynchronizationRegistryImplTest extends S2TestCase {
     }
 
     public void testRegisterInterposedSynchronization() throws Exception {
-        Sync.result = new StringBuilder();
+        Sync.result = new StringBuffer();
         tm.begin();
         tsr.registerInterposedSynchronization(new Sync('a', 'b'));
         tsr.registerInterposedSynchronization(new Sync('c', 'd'));
@@ -129,7 +129,7 @@ public class TransactionSynchronizationRegistryImplTest extends S2TestCase {
 
     private static class Sync implements Synchronization {
 
-        private static StringBuilder result;
+        private static StringBuffer result;
 
         private char before;
 
