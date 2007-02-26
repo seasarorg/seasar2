@@ -52,10 +52,15 @@ import org.seasar.framework.util.tiger.ReflectionUtil;
 public class S2TestMethodRunner {
 
     private static class FailedBefore extends Exception {
+
         private static final long serialVersionUID = 1L;
     }
 
     protected static final String S2JUNIT4_PATH = "s2junit4.dicon";
+
+    protected static final String ENV_PATH = "env_ut.txt";
+
+    protected static final String ENV_VALUE = "ut";
 
     protected final Object test;
 
@@ -124,6 +129,7 @@ public class S2TestMethodRunner {
     protected void runWithTimeout(final long timeout) {
         final ExecutorService service = Executors.newSingleThreadExecutor();
         final Callable<Object> callable = new Callable<Object>() {
+
             public Object call() throws Exception {
                 runMethod();
                 return null;
@@ -185,6 +191,8 @@ public class S2TestMethodRunner {
         originalClassLoader = getOriginalClassLoader();
         unitClassLoader = new UnitClassLoader(originalClassLoader);
         Thread.currentThread().setContextClassLoader(unitClassLoader);
+        Env.setFilePath(ENV_PATH);
+        Env.setValueIfAbsent(ENV_VALUE);
         if (needsWarmDeploy()) {
             S2ContainerFactory.configure("warmdeploy.dicon");
         }

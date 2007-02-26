@@ -15,8 +15,6 @@
  */
 package org.seasar.framework.unit;
 
-import static org.easymock.EasyMock.*;
-
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -51,6 +49,7 @@ import org.seasar.framework.aop.interceptors.MockInterceptor;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.impl.S2ContainerBehavior;
 import org.seasar.framework.container.warmdeploy.WarmdeployBehavior;
+import org.seasar.framework.env.Env;
 import org.seasar.framework.unit.annotation.EasyMock;
 import org.seasar.framework.unit.annotation.EasyMockType;
 import org.seasar.framework.unit.annotation.Mock;
@@ -61,6 +60,8 @@ import org.seasar.framework.unit.annotation.TxBehaviorType;
 import org.seasar.framework.unit.annotation.WarmDeploy;
 import org.seasar.framework.util.TransactionManagerUtil;
 import org.seasar.framework.util.tiger.ReflectionUtil;
+
+import static org.easymock.EasyMock.*;
 
 public class Seasar2Test extends TestCase {
 
@@ -206,6 +207,7 @@ public class Seasar2Test extends TestCase {
 
     @RunWith(Seasar2.class)
     public static class TransactionBehaviorDefaultTest {
+
         TransactionManager tm;
 
         public void bbb() {
@@ -226,6 +228,7 @@ public class Seasar2Test extends TestCase {
     @RunWith(Seasar2.class)
     @TxBehavior(TxBehaviorType.COMMIT)
     public static class TransactionBehaviorNoneTest {
+
         TransactionManager tm;
 
         @TxBehavior(TxBehaviorType.NONE)
@@ -247,6 +250,7 @@ public class Seasar2Test extends TestCase {
     @RunWith(Seasar2.class)
     @TxBehavior(TxBehaviorType.NONE)
     public static class TransactionBehaviorCommitTest {
+
         TransactionManager tm;
 
         @TxBehavior(TxBehaviorType.COMMIT)
@@ -523,6 +527,7 @@ public class Seasar2Test extends TestCase {
 
     @RunWith(Seasar2.class)
     public static class GetExpectedTest {
+
         private TestContext ctx;
 
         public void aaa() {
@@ -674,6 +679,7 @@ public class Seasar2Test extends TestCase {
     @RunWith(Seasar2.class)
     @Prerequisite("true")
     public static class PrerequisiteTest2 {
+
         @Prerequisite("true")
         public void aaa() {
             count++;
@@ -699,6 +705,7 @@ public class Seasar2Test extends TestCase {
     @RunWith(Seasar2.class)
     @Prerequisite("false")
     public static class PrerequisiteTest3 {
+
         @Prerequisite("true")
         public void aaa() {
             count++;
@@ -763,6 +770,23 @@ public class Seasar2Test extends TestCase {
         printFailures(result.getFailures());
         assertTrue(result.wasSuccessful());
         assertEquals("true", log);
+    }
+
+    @RunWith(Seasar2.class)
+    public static class EnvTest {
+
+        public void env() {
+            log += Env.getFilePath();
+            log += Env.getValue();
+        }
+    }
+
+    public void testEnv() throws Exception {
+        JUnitCore core = new JUnitCore();
+        Result result = core.run(EnvTest.class);
+        printFailures(result.getFailures());
+        assertTrue(result.wasSuccessful());
+        assertEquals("env_ut.txtut", log);
     }
 
     @RunWith(Seasar2.class)
@@ -1117,6 +1141,7 @@ public class Seasar2Test extends TestCase {
     }
 
     public static class NormalJunit4 implements Seasar2.Provider {
+
         public Runner createTestClassRunner(Class<?> clazz) throws Exception {
             return new TestClassRunner(clazz);
         }
@@ -1137,12 +1162,14 @@ public class Seasar2Test extends TestCase {
     }
 
     public interface Hello {
+
         public String greeting();
 
         public String echo(String str);
     }
 
     public static class HelloImpl implements Hello {
+
         public String greeting() {
             return "hello";
         }
@@ -1153,10 +1180,12 @@ public class Seasar2Test extends TestCase {
     }
 
     public interface Hello2 {
+
         public String greeting();
     }
 
     public static class Hello2Impl implements Hello2 {
+
         public String greeting() {
             return "hello";
         }
