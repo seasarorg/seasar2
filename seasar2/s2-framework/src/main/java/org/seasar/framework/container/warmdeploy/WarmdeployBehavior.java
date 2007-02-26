@@ -22,8 +22,12 @@ import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 import org.seasar.framework.container.impl.S2ContainerBehavior.DefaultProvider;
 import org.seasar.framework.container.util.S2ContainerUtil;
 import org.seasar.framework.convention.NamingConvention;
+import org.seasar.framework.log.Logger;
 
 public class WarmdeployBehavior extends DefaultProvider {
+
+    private static final Logger logger = Logger
+            .getLogger(WarmdeployBehavior.class);
 
     private NamingConvention namingConvention;
 
@@ -54,6 +58,12 @@ public class WarmdeployBehavior extends DefaultProvider {
             cd = createComponentDef((Class) key);
         } else if (key instanceof String) {
             cd = createComponentDef((String) key);
+            if (cd != null && !key.equals(cd.getComponentName())) {
+                logger.log("WSSR0011",
+                        new Object[] { key, cd.getComponentClass().getName(),
+                                cd.getComponentName() });
+                cd = null;
+            }
         } else {
             throw new IllegalArgumentException("key");
         }

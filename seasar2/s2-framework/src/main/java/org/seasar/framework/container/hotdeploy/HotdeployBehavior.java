@@ -97,6 +97,12 @@ public class HotdeployBehavior extends DefaultProvider {
             cd = createComponentDef((Class) key);
         } else if (key instanceof String) {
             cd = createComponentDef((String) key);
+            if (cd != null && !key.equals(cd.getComponentName())) {
+                logger.log("WSSR0011",
+                        new Object[] { key, cd.getComponentClass().getName(),
+                                cd.getComponentName() });
+                cd = null;
+            }
         } else {
             throw new IllegalArgumentException("key");
         }

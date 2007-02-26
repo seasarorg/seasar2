@@ -15,8 +15,9 @@
  */
 package org.seasar.framework.container.hotdeploy.creator;
 
-import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.ComponentCreator;
+import org.seasar.framework.container.ComponentDef;
+import org.seasar.framework.container.ComponentNotFoundRuntimeException;
 import org.seasar.framework.container.creator.ActionCreator;
 import org.seasar.framework.convention.NamingConvention;
 
@@ -35,5 +36,14 @@ public class ActionHotdeployCreatorTest extends HotdeployCreatorTestCase {
         ComponentDef cd = getComponentDef(name);
         assertNotNull(cd);
         assertEquals(name, cd.getComponentName());
+    }
+
+    public void testIllegalCase() throws Exception {
+        try {
+            String name = "aaa_HogeAction";
+            ComponentDef cd = getComponentDef(name);
+            fail();
+        } catch (ComponentNotFoundRuntimeException expected) {
+        }
     }
 }
