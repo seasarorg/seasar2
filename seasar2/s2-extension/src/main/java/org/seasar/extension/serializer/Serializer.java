@@ -554,23 +554,23 @@ public abstract class Serializer {
     }
 
     protected static Object readLong(DataInputStream in) throws IOException {
-        return Long.valueOf(in.readLong());
+        return new Long(in.readLong());
     }
 
     protected static Object readShort(DataInputStream in) throws IOException {
-        return Short.valueOf(in.readShort());
+        return new Short(in.readShort());
     }
 
     protected static Object readByte(DataInputStream in) throws IOException {
-        return Byte.valueOf(in.readByte());
+        return new Byte(in.readByte());
     }
 
     protected static Object readFloat(DataInputStream in) throws IOException {
-        return Float.valueOf(in.readFloat());
+        return new Float(in.readFloat());
     }
 
     protected static Object readDouble(DataInputStream in) throws IOException {
-        return Double.valueOf(in.readDouble());
+        return new Double(in.readDouble());
     }
 
     protected static Object readBigInteger(DataInputStream in)
@@ -580,7 +580,7 @@ public abstract class Serializer {
 
     protected static Object readCharacter(DataInputStream in)
             throws IOException {
-        return Character.valueOf(in.readChar());
+        return new Character(in.readChar());
     }
 
     protected static Object readCalendar(DataInputStream in) throws IOException {
