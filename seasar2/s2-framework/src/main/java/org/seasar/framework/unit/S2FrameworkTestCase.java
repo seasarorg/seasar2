@@ -216,11 +216,11 @@ public abstract class S2FrameworkTestCase extends TestCase {
     }
 
     protected void setUpContainer() throws Throwable {
+        Env.setFilePath(ENV_PATH);
+        Env.setValueIfAbsent(ENV_VALUE);
         originalClassLoader = getOriginalClassLoader();
         unitClassLoader = new UnitClassLoader(originalClassLoader);
         Thread.currentThread().setContextClassLoader(unitClassLoader);
-        Env.setFilePath(ENV_PATH);
-        Env.setValueIfAbsent(ENV_VALUE);
         if (isWarmDeploy()) {
             S2ContainerFactory.configure("warmdeploy.dicon");
         }
