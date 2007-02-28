@@ -101,20 +101,26 @@ public class S2TestMethodRunner {
     }
 
     public void run() {
-        if (isIgnored() || !isFulfilled()) {
-            notifier.fireTestIgnored(description);
-            return;
-        }
-        notifier.fireTestStarted(description);
         try {
-            final long timeout = introspector.getTimeout(method);
-            if (timeout > 0) {
-                runWithTimeout(timeout);
-            } else {
-                runMethod();
+            Env.setFilePath(ENV_PATH);
+            Env.setValueIfAbsent(ENV_VALUE);
+            if (isIgnored() || !isFulfilled()) {
+                notifier.fireTestIgnored(description);
+                return;
+            }
+            notifier.fireTestStarted(description);
+            try {
+                final long timeout = introspector.getTimeout(method);
+                if (timeout > 0) {
+                    runWithTimeout(timeout);
+                } else {
+                    runMethod();
+                }
+            } finally {
+                notifier.fireTestFinished(description);
             }
         } finally {
-            notifier.fireTestFinished(description);
+            Env.initialize();
         }
     }
 
@@ -191,8 +197,6 @@ public class S2TestMethodRunner {
         originalClassLoader = getOriginalClassLoader();
         unitClassLoader = new UnitClassLoader(originalClassLoader);
         Thread.currentThread().setContextClassLoader(unitClassLoader);
-        Env.setFilePath(ENV_PATH);
-        Env.setValueIfAbsent(ENV_VALUE);
         if (needsWarmDeploy()) {
             S2ContainerFactory.configure("warmdeploy.dicon");
         }
@@ -240,7 +244,6 @@ public class S2TestMethodRunner {
         Thread.currentThread().setContextClassLoader(originalClassLoader);
         unitClassLoader = null;
         originalClassLoader = null;
-        Env.initialize();
     }
 
     protected void runBefores() throws FailedBefore {
