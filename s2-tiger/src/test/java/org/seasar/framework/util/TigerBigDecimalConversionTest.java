@@ -15,6 +15,9 @@
  */
 package org.seasar.framework.util;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+
 import junit.framework.TestCase;
 
 /**
@@ -28,4 +31,8 @@ public class TigerBigDecimalConversionTest extends TestCase {
                 12500000D).toString());
     }
 
+    public void testToString() throws Exception {
+        BigDecimal d = new BigDecimal(new BigInteger("125"), -1);
+        assertEquals("1250", BigDecimalConversionUtil.toString(d));
+    }
 }

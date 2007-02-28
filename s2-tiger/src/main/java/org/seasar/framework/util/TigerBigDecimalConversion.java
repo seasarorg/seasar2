@@ -29,4 +29,8 @@ public class TigerBigDecimalConversion implements BigDecimalNormalizer {
         return new BigDecimal(dec.toPlainString());
     }
 
+    public String toString(BigDecimal dec) {
+        return dec.toPlainString();
+    }
+
 }
