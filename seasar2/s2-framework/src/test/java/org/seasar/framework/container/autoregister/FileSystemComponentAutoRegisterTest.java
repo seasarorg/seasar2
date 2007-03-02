@@ -19,6 +19,7 @@ import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.InstanceDef;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.TooManyRegistrationRuntimeException;
+import org.seasar.framework.container.autoregister.sub.Bar2;
 import org.seasar.framework.unit.S2FrameworkTestCase;
 
 /**
@@ -34,13 +35,14 @@ public class FileSystemComponentAutoRegisterTest extends S2FrameworkTestCase {
 
     public void testRegisterAll() throws Exception {
         Foo foo = (Foo) child.getComponent(Foo.class);
-        assertNotNull("1", foo);
+        assertNotNull(foo);
         Foo2 foo2 = (Foo2) child.getComponent(Foo2.class);
-        assertNotNull("2", foo2);
-        assertNotNull("3", child.getComponent(Foo3.class));
-        assertSame("4", foo2, foo.getFoo2());
-        assertNotNull("5", child.getComponent("foo3"));
-        assertFalse("6", child.hasComponentDef(Foo4Impl.class));
+        assertNotNull(foo2);
+        assertNotNull(child.getComponent(Foo3.class));
+        assertSame(foo2, foo.getFoo2());
+        assertNotNull(child.getComponent("foo3"));
+        assertNotNull(child.getComponent(Bar2.class));
+        assertFalse(child.hasComponentDef(Foo4Impl.class));
     }
 
     public void setUpRegisterAll2() throws Exception {

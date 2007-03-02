@@ -18,8 +18,10 @@ package org.seasar.framework.container.autoregister;
 import java.io.File;
 
 import org.seasar.framework.util.ClassTraversal;
+import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.ResourceUtil;
 import org.seasar.framework.util.StringUtil;
+import org.seasar.framework.util.ClassTraversal.ClassHandler;
 
 /**
  * ファイルシステム上(例えばWEBINF/classes)のコンポーネントを自動登録するクラスです。
@@ -37,10 +39,21 @@ public class FileSystemComponentAutoRegister extends
         }
     }
 
-    protected void register(ClassPattern classPattern) {
+    protected void register(final ClassPattern classPattern) {
         String packageName = classPattern.getPackageName();
         File packageDir = getRootDir();
-        ClassTraversal.forEach(packageDir, packageName, this);
+        ClassTraversal.forEach(packageDir, packageName, new ClassHandler() {
+            public void processClass(final String packageName,
+                    final String shortClassName) {
+                if (isIgnore(packageName, shortClassName)) {
+                    return;
+                }
+                if (classPattern.isAppliedPackageName(packageName)
+                        && classPattern.isAppliedShortClassName(shortClassName)) {
+                    register(ClassUtil.concatName(packageName, shortClassName));
+                }
+            }
+        });
     }
 
     protected File getRootDir() {

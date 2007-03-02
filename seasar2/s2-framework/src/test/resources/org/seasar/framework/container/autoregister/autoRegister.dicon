@@ -10,6 +10,10 @@
 			<arg>"org.seasar.framework.container.autoregister"</arg>
 			<arg>"Foo.*"</arg>
 		</initMethod>
+		<initMethod name="addClassPattern">
+			<arg>"org.seasar.framework.container.autoregister.sub"</arg>
+			<arg>"Bar.*"</arg>
+		</initMethod>
 		<initMethod name="addIgnoreClassPattern">
 			<arg>"org.seasar.framework.container.autoregister"</arg>
 			<arg>"Foo4Impl"</arg>
