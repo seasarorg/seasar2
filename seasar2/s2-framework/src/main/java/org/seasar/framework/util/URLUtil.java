@@ -47,7 +47,9 @@ public class URLUtil {
 
     public static InputStream openStream(URL url) {
         try {
-            return url.openStream();
+            URLConnection connection = url.openConnection();
+            connection.setUseCaches(false);
+            return connection.getInputStream();
         } catch (IOException e) {
             throw new IORuntimeException(e);
         }
@@ -55,7 +57,9 @@ public class URLUtil {
 
     public static URLConnection openConnection(URL url) {
         try {
-            return url.openConnection();
+            URLConnection connection = url.openConnection();
+            connection.setUseCaches(false);
+            return connection;
         } catch (IOException e) {
             throw new IORuntimeException(e);
         }
