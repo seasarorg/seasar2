@@ -1,0 +1,57 @@
+<html xmlns:m="http://www.seasar.org/maya">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=Windows-31j" />
+<title>S2JSF + TeedaAjax</title>
+<script language="JavaScript" src="ajax.js"></script>
+<script language="JavaScript">
+<!--
+function ajaxBean_test(response){
+    var opt = document.frm["frm:item2"];
+	var listcnt = opt.length;
+    for(var i = listcnt - 1; i >= 0; i--){
+        opt.options[i] = null;
+    }
+	if(!response) return;
+	var json = eval('(' + response + ')');
+	var items = json.xxx;
+	var count = items.length;
+	for(var i = 0; i < count; i++){
+	    var item = items[i];
+	    opt.options[i] = new Option(item["label"], item["value"]);
+	}	
+}
+function go(value, testFlg) {
+    Kumu.Ajax.DEBUG = true;
+    Kumu.Ajax.executeTeedaAjax(ajaxBean_test, ["xxx", value, testFlg]);
+}
+//-->
+</script>
+</head>
+<body>
+<form id="frm">
+    <b>Seasar-user:3911</b><br/>
+	<br/>NG
+	<select m:value="#{ajaxBean.select1}"
+		m:label="select1"
+		m:items="#{select1}"
+		m:size="3" 
+		m:onchange="javascript:go(this.value, 0);">
+	</select>
+	<select 
+		m:label="select2"
+		m:items="#{xxx}"
+		m:size="3" 
+		m:id="item2">
+	</select>
+	<hr/>Test
+	<select m:value="#{ajaxBean.select1}"
+		m:label="select1"
+		m:items="#{select1}"
+		m:size="3" 
+		m:onchange="javascript:go(this.value, 1);">
+	</select>
+	<br/>
+	<input type="submit" value="goAction" m:action="#{test.action}"/>
+</form>
+</body>
+</html>

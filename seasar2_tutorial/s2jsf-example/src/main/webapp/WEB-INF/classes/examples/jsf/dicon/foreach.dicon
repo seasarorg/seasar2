@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<!DOCTYPE components PUBLIC "-//SEASAR2.1//DTD S2Container//EN"
+	"http://www.seasar.org/dtd/components21.dtd">
+<components>
+	<component name="forEachDtoList" class="java.util.ArrayList" instance="session">
+		<initMethod name="add" >
+			<arg>
+				<component class="examples.jsf.dto.ForEachDto" >
+					<property name="key">"111"</property>
+					<property name="name">"aaa"</property>
+				</component>
+			</arg>
+		</initMethod>
+		<initMethod name="add" >
+			<arg>
+				<component class="examples.jsf.dto.ForEachDto" >
+					<property name="key">"222"</property>
+					<property name="name">"bbb"</property>
+				</component>
+			</arg>
+		</initMethod>
+	</component>
+
+	<component name="forEach2DtoList" class="java.util.ArrayList" instance="session">
+		<initMethod name="add" >
+			<arg>
+				<component class="examples.jsf.dto.ForEach2Dto" instance="prototype">
+					<property name="input">"aaa"</property>
+				</component>
+			</arg>
+		</initMethod>
+		<initMethod name="add">
+			<arg>
+				<component class="examples.jsf.dto.ForEach2Dto" instance="prototype">
+					<property name="input">"bbb"</property>
+				</component>
+			</arg>
+		</initMethod>
+		<initMethod name="add" >
+			<arg>
+				<component class="examples.jsf.dto.ForEach2Dto" instance="prototype">
+					<property name="input">"ccc"</property>
+				</component>
+			</arg>
+		</initMethod>
+		<initMethod name="add" >
+			<arg>
+				<component class="examples.jsf.dto.ForEach2Dto" instance="prototype">
+					<property name="input">"ddd"</property>
+				</component>
+			</arg>
+		</initMethod>
+		<initMethod name="add" >
+			<arg>
+				<component class="examples.jsf.dto.ForEach2Dto" instance="prototype">
+					<property name="input">"eee"</property>
+				</component>
+			</arg>
+		</initMethod>
+	</component>
+	
+	<component name="forEach3DtoList" class="java.util.ArrayList" instance="session">
+		<initMethod name="add" >
+			<arg>
+				<component class="java.util.ArrayList" instance="prototype">
+					<initMethod name="add">
+						<arg>
+							new examples.jsf.dto.ForEach3Dto("11")
+						</arg>
+					</initMethod>
+					<initMethod name="add">
+						<arg>
+							new examples.jsf.dto.ForEach3Dto("12")
+						</arg>
+					</initMethod>
+				</component>
+			</arg>
+		</initMethod>
+		<initMethod name="add" >
+			<arg>
+				<component class="java.util.ArrayList" instance="prototype">
+					<initMethod name="add">
+						<arg>
+							new examples.jsf.dto.ForEach3Dto("21")
+						</arg>
+					</initMethod>
+					<initMethod name="add">
+						<arg>
+							new examples.jsf.dto.ForEach3Dto("22")
+						</arg>
+					</initMethod>
+				</component>
+			</arg>
+		</initMethod>
+	</component>
+</components>

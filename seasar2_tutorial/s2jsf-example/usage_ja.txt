@@ -1,0 +1,22 @@
+* Eclipse上で動かすには
+
+s2jsf-exampleプロジェクトは、「Sysdeo Eclipse Tomcat
+Launcher plugin」へ対応した形式になっています。
+
+pluginが入っていない場合はEclipseへインストールしてください。
+http://www.sysdeo.com/eclipse/tomcatplugin
+
+* warファイルを作るには
+
+Eclipseをお使いで無い場合やTomcat以外のコンテナ上で動作させ
+るには、warへパッケージングすると良いでしょう。
+
+Maven2の標準機能でwarファイルを作成できます。
+
+  mvn package
+
+を実行すると、targetディレクトリ内にwarファイルが作成されます。
+これをコンテナへデプロイしてください。
+
+実行にはMaven2が必要です。
+http://maven.apache.org/

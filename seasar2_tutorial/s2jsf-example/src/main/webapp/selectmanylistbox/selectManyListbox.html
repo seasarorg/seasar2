@@ -1,0 +1,47 @@
+<html xmlns:m="http://www.seasar.org/maya"
+	m:extends="/WEB-INF/layout/layout.html">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=Windows-31j" />
+<title>SelectManyListbox</title>
+</head>
+<body>
+
+<span m:inject="f:param" m:name="layoutTitle" m:value="SelectManyListbox"/>
+<span m:inject="s:insert" m:name="body">
+<span m:inject="h:messages" m:globalOnly="false" m:showDetail="true"/>
+
+<form>
+	Aaa:<br />
+	<select m:value="#{selectManyListboxDto.aaa}"
+		m:label="Aaa" multiple="multiple">
+		<option value="1">One</option>
+		<option value="2">Two</option>
+		<option value="3">Three</option>
+	</select><br />
+
+	Bbb:<br />
+	<select m:value="#{selectManyListboxDto.bbb}"
+		m:label="Bbb"
+		m:items="#{selectManyListboxBbbItems}"
+		multiple="multiple">
+		<option value="1">One</option>
+		<option value="2">Two</option>
+	</select><br />
+
+	Ccc:<br />
+	<select m:value="#{selectManyListboxDto.ccc}"
+		m:label="Ccc"
+		m:required="true"
+  		m:items="#{selectManyListboxCccItems}"
+  		m:itemValue="deptno"
+  		m:itemLabel="dname"
+		multiple="multiple">
+		<option value="10">ACOUNTING</option>
+	</select><br />
+
+	<input type="submit" value="submit"/>
+</form>
+
+</span>
+</body>
+</html>

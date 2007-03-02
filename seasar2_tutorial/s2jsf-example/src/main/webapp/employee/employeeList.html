@@ -1,0 +1,91 @@
+<html xmlns:m="http://www.seasar.org/maya"
+	m:action="#{employeeListInitAction.initialize}"
+	m:extends="/WEB-INF/layout/layout.html">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=Windows-31j"/>
+<link rel="stylesheet" type="text/css" href="../css/global.css"/>
+<title>Employee Management</title>
+</head>
+
+<body>
+<span m:inject="f:param" m:name="layoutTitle" m:value="Employee Management"/>
+<span m:inject="s:insert" m:name="body">
+
+<span m:inject="h:messages" globalOnly="true" m:class="error"/>
+<form>
+<table class="tablebg">
+    <tr class="label">
+        <th>EmployeeNo</th>
+        <th>EmployeeName</th>
+        <th>Job</th>
+        <th>Manager</th>
+        <th>HireDate</th>
+        <th>Salary</th>
+        <th>Commission</th>
+        <th>DepartmentName</th>
+        <th>Detail</th>
+    </tr>
+    <span m:inject="s:forEach"
+    	m:items="#{employeeDtoList}"
+    	m:var="e"
+    	m:varIndex="i">
+	<tr class="evenRow" m:class="#{i % 2 == 0 ? 'evenRow' : 'oddRow'}">
+		<td class="right"><span m:value="#{e.empno}">7369</span></td>
+        <td><span m:value="#{e.ename}">SMITH</span></td>
+        <td><span m:value="#{e.job}">CLERK</span></td>
+        <td class="right"><span m:value="#{e.mgr}">7902</span></td>
+        <td><span m:value="#{e.hiredate}">1980/12/07</span></td>
+        <td class="right"><span m:value="#{e.sal}">800</span></td>
+        <td class="right"><span m:value="#{e.comm}"/></td>
+        <td><span m:value="#{e.dname}">RESEARCH</span></td>
+        <td><a href="employeeEdit.html" m:action="#{employeeListAction.goNext}">Edit
+        		<span m:inject="f:param" m:name="empno" m:value="#{e.empno}"/>
+        		<span m:inject="f:param" m:name="processMode" m:value="2"/>
+            </a>
+            <a href="employeeConfirm.html" m:action="#{employeeListAction.goNext}">Delete
+            	<span m:inject="f:param" m:name="empno" m:value="#{e.empno}"/>
+        		<span m:inject="f:param" m:name="processMode" m:value="3"/>
+            </a>
+            <a href="employeeConfirm.html" m:action="#{employeeListAction.goNext}">Inquire
+            	<span m:inject="f:param" m:name="empno" m:value="#{e.empno}"/>
+        		<span m:inject="f:param" m:name="processMode" m:value="4"/>
+            </a>
+        </td>
+	</tr>
+	</span>
+	<span m:rendered="false">
+	<tr class="oddRow">
+		<td class="right">7499</td>
+        <td>ALLEN</td>
+        <td>SALESMAN</td>
+        <td class="right">7698</td>
+        <td>1981/02/20</td>
+        <td class="right">1,600</td>
+        <td class="right">300</td>
+        <td>SALES</td>
+        <td><a href="employeeEdit.html">Edit</a>
+        	<a href="employeeEdit.html">Delete</a>
+        	<a href="employeeEdit.html">Inquire</a>
+        </td>
+	</tr>
+	<tr class="evenRow">
+		<td><div class="right">7521</div></td>
+        <td>WARD</td>
+        <td>SALESMAN</td>
+        <td class="right">7698</td>
+        <td>1981/02/22</td>
+        <td class="right">1,250</td>
+        <td class="right">500</td>
+        <td>RESEARCH</td>
+        <td><a href="employeeEdit.html">Edit</a>
+        	<a href="employeeEdit.html">Delete</a>
+        	<a href="employeeEdit.html">Inquire</a>
+        </td>
+	</tr>
+	</span>
+</table>
+<a href="employeeSearch.html">previous</a>
+</form>
+</span>
+</body>
+</html>

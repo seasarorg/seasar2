@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<!DOCTYPE components PUBLIC "-//SEASAR2.1//DTD S2Container//EN"
+	"http://www.seasar.org/dtd/components21.dtd">
+<components>
+	<include path="aop.dicon"/>
+	<include path="dao.dicon"/>
+	<include path="j2ee.dicon"/>
+
+	<component
+		name="actionThrowsInterceptor"
+		class="examples.jsf.interceptor.ActionThrowsInterceptor"
+	/>
+
+	<component
+		name="actionInterceptorChain"
+		class="org.seasar.framework.aop.interceptors.InterceptorChain"
+	>
+		<initMethod name="add"><arg>aop.traceInterceptor</arg></initMethod>
+		<initMethod name="add"><arg>actionThrowsInterceptor</arg></initMethod>
+	</component>
+
+	<component
+		name="logicInterceptorChain"
+		class="org.seasar.framework.aop.interceptors.InterceptorChain"
+	>
+		<initMethod name="add"><arg>aop.traceThrowsInterceptor</arg></initMethod>
+		<initMethod name="add"><arg>aop.traceInterceptor</arg></initMethod>
+		<initMethod name="add"><arg>j2ee.requiredTx</arg></initMethod>
+	</component>
+
+	<component
+		name="daoInterceptorChain"
+		class="org.seasar.framework.aop.interceptors.InterceptorChain"
+	>
+		<initMethod name="add"><arg>aop.traceInterceptor</arg></initMethod>
+		<initMethod name="add"><arg>dao.interceptor</arg></initMethod>
+	</component>
+
+</components>

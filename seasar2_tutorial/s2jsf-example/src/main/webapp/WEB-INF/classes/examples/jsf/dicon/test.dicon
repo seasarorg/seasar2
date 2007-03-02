@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<!DOCTYPE components PUBLIC "-//SEASAR2.1//DTD S2Container//EN"
+	"http://www.seasar.org/dtd/components21.dtd">
+<components>
+	<component name="test" class="examples.jsf.action.impl.Test">
+	</component>
+	<component name="ajaxBean" class="examples.jsf.dto.AjaxDto" instance="request">
+	    <meta name="teeda-ajax"/>
+	</component>
+	<component name="xxx" class="java.util.ArrayList" instance="session">
+	</component>
+	
+	<component name="select1" class="java.util.ArrayList">
+		<initMethod name="add" >
+			<arg>
+				<component class="javax.faces.model.SelectItem">
+					<property name="value">1</property>
+					<property name="label">"aaa"</property>
+				</component>
+			</arg>
+		</initMethod>
+		<initMethod name="add" >
+			<arg>
+				<component class="javax.faces.model.SelectItem">
+					<property name="value">2</property>
+					<property name="label">"bbb"</property>
+				</component>
+			</arg>
+		</initMethod>
+		<initMethod name="add" >
+			<arg>
+				<component class="javax.faces.model.SelectItem">
+					<property name="value">3</property>
+					<property name="label">"ccc"</property>
+				</component>
+			</arg>
+		</initMethod>
+	</component>
+	
+	
+</components>

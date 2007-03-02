@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<!DOCTYPE components PUBLIC "-//SEASAR2.1//DTD S2Container//EN"
+	"http://www.seasar.org/dtd/components21.dtd">
+<components namespace="jsfErrorPage" >
+	
+	<component class="org.seasar.jsf.runtime.ErrorPageManagerImpl">
+		<!--
+		<initMethod name="addErrorPage">
+			<arg>@java.lang.Throwable@class</arg>
+			<arg>"/aaa/bbb.html"</arg>
+		</initMethod>
+		-->
+	</component>
+</components>

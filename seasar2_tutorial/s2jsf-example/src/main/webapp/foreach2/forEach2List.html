@@ -1,0 +1,31 @@
+<html xmlns:m="http://www.seasar.org/maya"
+	m:extends="/WEB-INF/layout/layout.html">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=Windows-31j" />
+<title>ForEach2</title>
+</head>
+<body>
+<span m:inject="f:param" m:name="layoutTitle" m:value="ForEach2"/>
+<span m:inject="s:insert" m:name="body">
+<form>
+<table border="1">
+    <tr bgcolor="#7777FF">
+        <th>delete3</th>
+        <th>input4</th>
+    </tr>
+    <span m:inject="s:forEach" m:items="#{forEach2DtoList}" m:var="e"
+    	m:varindex="i">
+    <tr>
+    	<td><input type="checkbox" m:value="#{e.delete}"/></td>
+    	<td><input id="input1" type="text" 
+    		tabindex="#{i}" m:value="#{e.input}" m:required="true"/>
+    		<span m:inject="h:message" m:for="input1"/></td>
+    </tr>
+    </span>
+</table>
+<input type="submit" value="update" m:action="#{forEach2ListAction.update}"/>
+<input type="submit" value="add row" m:action="#{forEach2ListAction.addRow}"/>
+</form>
+</span>
+</body>
+</html>

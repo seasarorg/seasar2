@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE components PUBLIC
+    "-//SEASAR//DTD S2Container 2.3//EN"
+    "http://www.seasar.org/dtd/components23.dtd">
+<components>
+	<component name="bindingSample"
+			   class="examples.di.impl.BindingSampleImpl" autoBinding="none" />		   
+	<component name="nameSample"
+			   class="examples.di.impl.NameSampleImpl">
+	<property name="name">"bbb"</property>
+	</component>
+</components>

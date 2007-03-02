@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<!DOCTYPE components PUBLIC "-//SEASAR2.1//DTD S2Container//EN"
+	"http://www.seasar.org/dtd/components21.dtd">
+<components>
+	<component name="userNameLengthValidator" class="org.seasar.jsf.validator.S2LengthValidator">
+		<property name="minimum">2</property>
+	</component>
+
+	<component name="empnoRangeValidator" class="org.seasar.jsf.validator.S2LongRangeValidator">
+		<property name="maximum">10000</property>
+	</component>
+
+	<component name="greaterEqualValidator" class="org.seasar.jsf.validator.S2GreaterEqualValidator"
+		instance="prototype"
+	/>
+
+	<component name="ageValidator" class="org.seasar.jsf.validator.ValidatorChain">
+		<initMethod name="add"><arg>ageLengthValidator</arg></initMethod>
+		<initMethod name="add"><arg>ageDoubleRangeValidator</arg></initMethod>
+	</component>
+
+	<component name="ageLengthValidator" class="org.seasar.jsf.validator.S2LengthValidator">
+		<property name="minimum">1</property>
+		<property name="maximum">3</property>
+	</component>
+
+	<component name="ageDoubleRangeValidator" class="org.seasar.jsf.validator.S2DoubleRangeValidator">
+		<property name="minimum">0</property>
+		<property name="maximum">150</property>
+	</component>
+
+	<component name="tuserNameLengthValidator" class="org.seasar.teeda.extension.validator.TLengthValidator">
+		<property name="minimum">2</property>
+		<property name="for">"aaa"</property>
+	</component>
+
+</components>

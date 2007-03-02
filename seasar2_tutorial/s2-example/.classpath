@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src/java"/>
+	<classpathentry excluding="ejb3/dicon/" kind="src" path="src/resources"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="lib/aopalliance-1.0.jar"/>
+	<classpathentry kind="lib" path="lib/commons-logging-1.1.jar"/>
+	<classpathentry kind="lib" path="lib/geronimo-j2ee_1.4_spec-1.0.jar"/>
+	<classpathentry kind="lib" path="lib/hsqldb-1.8.0.1.jar"/>
+	<classpathentry kind="lib" path="lib/javassist-3.4.ga.jar"/>
+	<classpathentry kind="lib" path="lib/junit-3.8.2.jar"/>
+	<classpathentry kind="lib" path="lib/junit-addons-1.4.jar"/>
+	<classpathentry kind="lib" path="lib/log4j-1.2.13.jar"/>
+	<classpathentry kind="lib" path="lib/ognl-2.6.7.jar"/>
+	<classpathentry kind="lib" path="lib/poi-2.5.1-final-20040804.jar"/>
+	<classpathentry kind="lib" path="lib/portlet-api-1.0.jar"/>
+	<classpathentry sourcepath="lib/s2-extension-2.4.9-sources.jar" kind="lib" path="lib/s2-extension-2.4.9.jar"/>
+	<classpathentry sourcepath="lib/s2-framework-2.4.9-sources.jar" kind="lib" path="lib/s2-framework-2.4.9.jar"/>
+	<classpathentry sourcepath="lib/s2-tiger-2.4.9-sources.jar" kind="lib" path="lib/s2-tiger-2.4.9.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

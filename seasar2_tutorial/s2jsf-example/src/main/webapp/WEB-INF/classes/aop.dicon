@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<!DOCTYPE components PUBLIC "-//SEASAR2.1//DTD S2Container//EN"
+	"http://www.seasar.org/dtd/components21.dtd">
+<components namespace="aop">
+	<component name="traceInterceptor"
+		class="org.seasar.framework.aop.interceptors.TraceInterceptor"/>
+	<component name="traceThrowsInterceptor"
+		class="org.seasar.framework.aop.interceptors.TraceThrowsInterceptor"/>
+</components>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<!DOCTYPE components PUBLIC "-//SEASAR2.1//DTD S2Container//EN"
+	"http://www.seasar.org/dtd/components21.dtd">
+<components>
+	<component name="inputDateTimeConverter" class="org.seasar.jsf.convert.S2DateTimeConverter">
+		<property name="pattern">"yyyyMMdd"</property>
+	</component>
+
+	<component name="outputDateTimeConverter" class="org.seasar.jsf.convert.S2DateTimeConverter">
+		<property name="pattern">"yyyy/MM/dd"</property>
+	</component>
+	
+	<component name="nullConverter" class="org.seasar.jsf.convert.NullConverter"/>
+</components>

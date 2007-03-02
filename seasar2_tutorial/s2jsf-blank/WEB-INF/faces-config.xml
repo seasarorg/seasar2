@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE faces-config PUBLIC
+  "-//Sun Microsystems, Inc.//DTD JavaServer Faces Config 1.0//EN"
+  "http://java.sun.com/dtd/web-facesconfig_1_0.dtd">
+
+<!-- =========== FULL CONFIGURATION FILE ================================== -->
+
+<faces-config>
+	
+    <application>
+    	<message-bundle>appMessages</message-bundle>
+    	<locale-config>
+        	<default-locale>en</default-locale>
+        	<supported-locale>ja</supported-locale>
+    	</locale-config>
+	</application>
+
+	<converter>
+		<converter-for-class>java.util.Date</converter-for-class>
+		<converter-class>org.seasar.jsf.convert.S2DateTimeConverter</converter-class>
+	</converter>
+	
+	<lifecycle>
+		<phase-listener>org.seasar.teeda.core.event.PhaseChangeTracer</phase-listener>
+	</lifecycle>
+	
+</faces-config>

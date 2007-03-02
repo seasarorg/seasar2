@@ -1,0 +1,39 @@
+<html xmlns:m="http://www.seasar.org/maya"
+	m:extends="/WEB-INF/layout/layout.html">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=Windows-31j" />
+<title>ForEach</title>
+</head>
+<body>
+<span m:inject="f:param" m:name="layoutTitle" m:value="ForEach"/>
+<span m:inject="s:insert" m:name="body">
+
+<form>
+<table border="1">
+    <tr bgcolor="#7777FF">
+        <th>Key</th>
+        <th>Name</th>
+        <th colspan="2">to ResultPage</th>
+    </tr>
+    <span m:inject="s:forEach" m:items="#{forEachDtoList}"
+    	m:var="e" m:varIndex="i">
+    	<tr>
+    		<td><span m:value="#{e.key}">111</span></td>
+    		<td><span m:value="#{e.name}">aaa</span></td>
+    		<td><a href="forEachResult.html" m:action="forEachResult">to ResultPage
+    				<span m:inject="f:param" m:name="index" m:value="#{i}"/>
+    			</a>
+    		</td>
+    		<td>
+    			<input type="button" m:action="forEachResult" value="to ResultPage"
+    				onclick="location.href='forEachResult.html'">
+    				<span m:inject="f:param" m:name="index" m:value="#{i}"/>
+    			</input>
+    		</td>
+    	</tr>
+    </span>
+</table>
+</form>
+</span>
+</body>
+</html>

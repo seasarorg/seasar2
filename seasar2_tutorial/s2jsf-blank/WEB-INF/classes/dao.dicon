@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<!DOCTYPE components PUBLIC "-//SEASAR2.1//DTD S2Container//EN"
+	"http://www.seasar.org/dtd/components21.dtd">
+<components namespace="dao">
+	<include path="j2ee.dicon"/>
+	<component
+		class="org.seasar.dao.impl.FieldAnnotationReaderFactory"/>
+	<component
+		class="org.seasar.dao.impl.DaoMetaDataFactoryImpl"/>
+	<component name="interceptor"
+		class="org.seasar.dao.interceptors.S2DaoInterceptor"/>
+</components>

@@ -1,0 +1,18 @@
+<html xmlns:m="http://www.seasar.org/maya" m:extends="/WEB-INF/layout/layout.html">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=Windows-31j" />
+<title>Add</title>
+</head>
+<body>
+<span m:inject="f:param" m:name="layoutTitle" m:value="Add"/>
+<span m:inject="s:insert" m:name="body">
+<form>
+<span m:inject="h:messages" m:globalOnly="false" m:showDetail="true"/>
+<input type="text" m:value="#{addDto.arg1}"/> + 
+<input type="text" m:value="#{addDto.arg2}"/> = 
+<span m:value="#{addDto.result}"/>
+<input type="submit" value="calculate" m:action="#{addAction.calculate}"/>
+</form>
+</span>
+</body>
+</html>

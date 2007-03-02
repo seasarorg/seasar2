@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<!DOCTYPE components PUBLIC "-//SEASAR2.1//DTD S2Container//EN"
+	"http://www.seasar.org/dtd/components21.dtd">
+<components>
+	<component name="selectOneMenuBbbItems" class="java.util.ArrayList">
+		<initMethod name="add" >
+			<arg>
+				<component class="javax.faces.model.SelectItem">
+					<property name="label">"Please select"</property>
+				</component>
+			</arg>
+		</initMethod>
+		<initMethod name="add" >
+			<arg>
+				<component class="javax.faces.model.SelectItem">
+					<property name="value">1</property>
+					<property name="label">"One"</property>
+				</component>
+			</arg>
+		</initMethod>
+		<initMethod name="add" >
+			<arg>
+				<component class="javax.faces.model.SelectItem">
+					<property name="value">2</property>
+					<property name="label">"Two"</property>
+				</component>
+			</arg>
+		</initMethod>
+		<initMethod name="add" >
+			<arg>
+				<component class="javax.faces.model.SelectItem">
+					<property name="value">3</property>
+					<property name="label">"Three"</property>
+				</component>
+			</arg>
+		</initMethod>
+		<initMethod name="add" >
+			<arg>
+				<component class="javax.faces.model.SelectItem">
+					<property name="value">4</property>
+					<property name="label">"Four"</property>
+				</component>
+			</arg>
+		</initMethod>
+	</component>
+	
+	<component name="selectOneMenuCccItems" class="java.util.ArrayList">
+		<initMethod name="add" >
+			<arg>
+				<component class="examples.jsf.entity.Department">
+					<property name="deptno">10</property>
+					<property name="dname">"ACOUNTING"</property>
+				</component>
+			</arg>
+		</initMethod>
+		<initMethod name="add" >
+			<arg>
+				<component class="examples.jsf.entity.Department">
+					<property name="deptno">20</property>
+					<property name="dname">"RESEARCH"</property>
+				</component>
+			</arg>
+		</initMethod>
+		<initMethod name="add" >
+			<arg>
+				<component class="examples.jsf.entity.Department">
+					<property name="deptno">30</property>
+					<property name="dname">"SALES"</property>
+				</component>
+			</arg>
+		</initMethod>
+		<initMethod name="add" >
+			<arg>
+				<component class="examples.jsf.entity.Department">
+					<property name="deptno">40</property>
+					<property name="dname">"OPERATIONS"</property>
+				</component>
+			</arg>
+		</initMethod>
+	</component>
+</components>

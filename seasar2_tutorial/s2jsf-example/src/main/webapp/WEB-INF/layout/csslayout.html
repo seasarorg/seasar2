@@ -1,0 +1,22 @@
+<html xmlns:m="http://www.seasar.org/maya">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=Windows-31j" />
+<link rel="stylesheet" type="text/css" href="css/global.css"/>
+<title m:value="#{layoutTitle}">S2JSF Example</title>
+</head>
+<body>
+<div class="menu">
+	<span m:inject="s:insert" m:src="/WEB-INF/layout/menu.html"/>
+</div>
+<div class="level0">
+	<div class="level1">
+		<div class="header">
+			<span m:inject="s:insert" m:src="/WEB-INF/layout/header.html"/>
+		</div>
+		<div class="body">
+			<span m:inject="s:insert" m:name="body"/>
+		</div>
+	</div>
+</div>
+</body>
+</html>

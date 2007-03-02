@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN"
+	"http://www.seasar.org/dtd/components24.dtd">
+<components>
+	<component name="greeting"
+		class="examples.di.impl.GreetingImpl"/>
+	<component name="greetingClientSingleton"
+		class="examples.di.impl.GreetingClientSingletonImpl"
+		instance="singleton" >
+		<property name="date">new java.util.Date()</property>
+	</component>
+</components>

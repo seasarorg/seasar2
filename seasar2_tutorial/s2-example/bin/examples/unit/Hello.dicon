@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN"
+	"http://www.seasar.org/dtd/components24.dtd">
+<components>
+
+<component name="mockInterceptor"
+           class="org.seasar.framework.aop.interceptors.MockInterceptor">
+        <initMethod name="setReturnValue">
+            <arg>"greeting"</arg>
+            <arg>"Hello"</arg>
+        </initMethod>
+        <initMethod name="setReturnValue">
+            <arg>"echo"</arg>
+            <arg>"Hoge"</arg>
+        </initMethod>
+    </component>
+    <component class="examples.unit.Hello">
+        <aspect>mockInterceptor</aspect>
+    </component>
+	
+</components>

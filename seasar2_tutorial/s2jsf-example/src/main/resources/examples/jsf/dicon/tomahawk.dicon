@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<!DOCTYPE components PUBLIC "-//SEASAR2.1//DTD S2Container//EN"
+	"http://www.seasar.org/dtd/components21.dtd">
+<components>
+	<component name="tomahawk" class="examples.jsf.TomahawkBean" instance="request">
+	</component>
+</components>

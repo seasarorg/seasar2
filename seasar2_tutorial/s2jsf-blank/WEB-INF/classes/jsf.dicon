@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<!DOCTYPE components PUBLIC "-//SEASAR2.1//DTD S2Container//EN"
+	"http://www.seasar.org/dtd/components21.dtd">
+<components namespace="jsf">
+
+	<include path="jsfErrorPage.dicon"/>
+
+	<component class="org.seasar.jsf.runtime.ServletContextTaglibManagerImpl">
+		<initMethod name="init"/>
+		<destroyMethod name="destroy"/>
+	</component>
+	<!--
+	<component class="org.seasar.jsf.runtime.CompositeTaglibManager">
+		<initMethod name="addTaglibManager">
+			<arg>
+				<component class="org.seasar.jsf.runtime.WebappConfigTaglibManagerImpl">
+					<initMethod name="init"/>
+					<destroyMethod name="destroy"/>
+				</component>
+			</arg>
+		</initMethod>
+		<initMethod name="addTaglibManager">
+			<arg>
+				<component class="org.seasar.jsf.runtime.FileSystemTaglibManagerImpl">
+					<initMethod name="init"/>
+					<destroyMethod name="destroy"/>
+				</component>
+			</arg>
+		</initMethod>
+		<initMethod name="addTaglibManager">
+			<arg>
+				<component class="org.seasar.jsf.runtime.ServletContextTaglibManagerImpl">
+					<initMethod name="init"/>
+					<destroyMethod name="destroy"/>
+				</component>
+			</arg>
+		</initMethod>
+	</component>
+	-->
+
+	<component class="org.seasar.jsf.runtime.JsfConfigImpl">
+		<initMethod name="addTaglibUri">
+			<arg>"h"</arg>
+			<arg>"http://java.sun.com/jsf/html"</arg>
+		</initMethod>
+		<initMethod name="addTaglibUri">
+			<arg>"f"</arg>
+			<arg>"http://java.sun.com/jsf/core"</arg>
+		</initMethod>
+		<initMethod name="addTaglibUri">
+			<arg>"s"</arg>
+			<arg>"http://www.seasar.org/jsf"</arg>
+		</initMethod>
+	</component>
+	
+	<component class="org.seasar.jsf.runtime.TagPoolImpl"/>
+	
+	<component class="org.seasar.jsf.runtime.TagProcessorTreeFactoryImpl">
+		<initMethod name="addTagSelector">
+			<arg>
+				<component class="org.seasar.jsf.selector.PassThroughElementSelector"/>
+			</arg>
+		</initMethod>
+		<initMethod name="addTagSelector">
+			<arg>
+				<component class="org.seasar.jsf.selector.SelectManyCheckboxSelector"/>
+			</arg>
+		</initMethod>
+		<initMethod name="addTagSelector">
+			<arg>
+				<component class="org.seasar.jsf.selector.SelectOneRadioSelector"/>
+			</arg>
+		</initMethod>
+		<initMethod name="addTagSelector">
+			<arg>
+				<component class="org.seasar.jsf.selector.SelectItemSelector"/>
+			</arg>
+		</initMethod>
+		<initMethod name="addTagSelector">
+			<arg>
+				<component class="org.seasar.jsf.selector.InsertSelector"/>
+			</arg>
+		</initMethod>
+		<initMethod name="addTagSelector">
+			<arg>
+				<component class="org.seasar.jsf.selector.ValidatorSelector"/>
+			</arg>
+		</initMethod>
+		<initMethod name="addTagSelector">
+			<arg>
+				<component class="org.seasar.jsf.selector.InjectSelector"/>
+			</arg>
+		</initMethod>
+		<initMethod name="addTagSelector">
+			<arg>
+				<component class="org.seasar.jsf.selector.MetaContentTypeSelector"/>
+			</arg>
+		</initMethod>
+		<initMethod name="addTagSelector">
+			<arg>
+				<component class="org.seasar.jsf.selector.HtmlSelector"/>
+			</arg>
+		</initMethod>
+		<initMethod name="addTagSelector">
+			<arg>
+				<component class="org.seasar.jsf.selector.OutputTextSelector"/>
+			</arg>
+		</initMethod>
+		<initMethod name="addTagSelector">
+			<arg>
+				<component class="org.seasar.jsf.selector.TitleSelector"/>
+			</arg>
+		</initMethod>
+		<initMethod name="addTagSelector">
+			<arg>
+				<component class="org.seasar.jsf.selector.OutputLinkSelector"/>
+			</arg>
+		</initMethod>
+		<initMethod name="addTagSelector">
+			<arg>
+				<component class="org.seasar.jsf.selector.CommandButtonSelector"/>
+			</arg>
+		</initMethod>
+		<initMethod name="addTagSelector">
+			<arg>
+				<component class="org.seasar.jsf.selector.CommandLinkSelector"/>
+			</arg>
+		</initMethod>
+		<initMethod name="addTagSelector">
+			<arg>
+				<component class="org.seasar.jsf.selector.FormSelector"/>
+			</arg>
+		</initMethod>
+		<initMethod name="addTagSelector">
+			<arg>
+				<component class="org.seasar.jsf.selector.BaseSelector"/>
+			</arg>
+		</initMethod>
+		<initMethod name="addTagSelector">
+			<arg>
+				<component class="org.seasar.jsf.selector.InputTextSelector"/>
+			</arg>
+		</initMethod>
+		<initMethod name="addTagSelector">
+			<arg>
+				<component class="org.seasar.jsf.selector.InputHiddenSelector"/>
+			</arg>
+		</initMethod>
+		<initMethod name="addTagSelector">
+			<arg>
+				<component class="org.seasar.jsf.selector.InputSecretSelector"/>
+			</arg>
+		</initMethod>
+		<initMethod name="addTagSelector">
+			<arg>
+				<component class="org.seasar.jsf.selector.InputTextareaSelector"/>
+			</arg>
+		</initMethod>
+		<initMethod name="addTagSelector">
+			<arg>
+				<component class="org.seasar.jsf.selector.SelectBooleanCheckboxSelector"/>
+			</arg>
+		</initMethod>
+		<initMethod name="addTagSelector">
+			<arg>
+				<component class="org.seasar.jsf.selector.SelectOneMenuSelector"/>
+			</arg>
+		</initMethod>
+		<initMethod name="addTagSelector">
+			<arg>
+				<component class="org.seasar.jsf.selector.InputRadioSelector"/>
+			</arg>
+		</initMethod>
+		<initMethod name="addTagSelector">
+			<arg>
+				<component class="org.seasar.jsf.selector.SelectManyListboxSelector"/>
+			</arg>
+		</initMethod>
+		<initMethod name="addTagSelector">
+			<arg>
+				<component class="org.seasar.jsf.selector.ElementSelector"/>
+			</arg>
+		</initMethod>
+	</component>
+
+	<component class="org.seasar.jsf.runtime.ViewTemplateFactoryImpl"/>
+
+	<component class="org.seasar.jsf.runtime.ViewRendererImpl"/>
+
+	<component
+		name="webappConfigManager"
+		class="org.seasar.jsf.webapp.ServletContextWebappConfigManagerImpl">
+		<initMethod name="init"/>
+	</component>
+
+</components>

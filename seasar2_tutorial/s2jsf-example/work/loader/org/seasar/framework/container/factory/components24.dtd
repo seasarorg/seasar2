@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+<!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN" 
+	"http://www.seasar.org/dtd/components24.dtd">
+-->
+<!ELEMENT components (
+        description?,
+        include*,
+        (component | meta)*
+)>
+
+<!ATTLIST components namespace CDATA #IMPLIED>
+
+<!ELEMENT description (
+        #PCDATA
+)>
+
+<!ELEMENT include EMPTY>
+<!ATTLIST include path CDATA #REQUIRED>
+<!ATTLIST include condition CDATA #IMPLIED>
+
+
+<!ELEMENT component (
+  #PCDATA | description | arg | property | meta |
+            initMethod | destroyMethod | aspect | interType)*>
+<!ATTLIST component instance (
+  singleton | prototype | outer | request | session | application) "singleton">
+<!ATTLIST component class CDATA #IMPLIED>
+<!ATTLIST component name CDATA #IMPLIED>
+<!ATTLIST component autoBinding (auto | constructor | property | semiauto | none) "auto">
+<!ATTLIST component externalBinding (true | false) "false">
+
+<!ELEMENT arg (
+        #PCDATA | description | component | meta
+)*>
+
+<!ELEMENT property (
+        #PCDATA | description | component | meta
+)*>
+
+<!ATTLIST property name CDATA #REQUIRED>
+
+<!ATTLIST property bindingType (must | should | may | none) "should">
+
+<!ELEMENT aspect (
+        #PCDATA | description | component)*>
+<!ATTLIST aspect pointcut CDATA #IMPLIED>
+
+<!ELEMENT interType (
+		#PCDATA | description | component)*>
+
+<!ELEMENT initMethod (
+        #PCDATA | description | arg
+)*>
+<!ATTLIST initMethod name CDATA #IMPLIED>
+
+<!ELEMENT destroyMethod (
+        #PCDATA | description | arg
+)*>
+<!ATTLIST destroyMethod name CDATA #IMPLIED>
+
+<!ELEMENT meta (
+        #PCDATA | description | component | meta
+)*>
+
+<!ATTLIST meta name CDATA #IMPLIED>

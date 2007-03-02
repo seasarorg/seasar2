@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<!DOCTYPE components PUBLIC "-//SEASAR2.1//DTD S2Container//EN"
+	"http://www.seasar.org/dtd/components21.dtd">
+<components>
+	
+	<component name="selectOneRadioCccItems" class="java.util.ArrayList">
+		<initMethod name="add" >
+			<arg>
+				<component class="examples.jsf.entity.Department">
+					<property name="deptno">10</property>
+					<property name="dname">"ACOUNTING"</property>
+				</component>
+			</arg>
+		</initMethod>
+		<initMethod name="add" >
+			<arg>
+				<component class="examples.jsf.entity.Department">
+					<property name="deptno">20</property>
+					<property name="dname">"RESEARCH"</property>
+				</component>
+			</arg>
+		</initMethod>
+		<initMethod name="add" >
+			<arg>
+				<component class="examples.jsf.entity.Department">
+					<property name="deptno">30</property>
+					<property name="dname">"SALES"</property>
+				</component>
+			</arg>
+		</initMethod>
+		<initMethod name="add" >
+			<arg>
+				<component class="examples.jsf.entity.Department">
+					<property name="deptno">40</property>
+					<property name="dname">"OPERATIONS"</property>
+				</component>
+			</arg>
+		</initMethod>
+	</component>
+</components>
