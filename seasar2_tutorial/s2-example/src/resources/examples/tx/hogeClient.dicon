@@ -2,8 +2,8 @@
 <!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN"
 	"http://www.seasar.org/dtd/components24.dtd">
 <components>
-<include path="j2ee.dicon"/>
-<component class="examples.tx.HogeImpl">
-<aspect>j2ee.requiredTx</aspect>
-</component>
+	<include path="j2ee.dicon"/>
+	<component class="examples.tx.HogeImpl">
+		<aspect>j2ee.requiredTx</aspect>
+	</component>
 </components>
