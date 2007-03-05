@@ -9,7 +9,7 @@
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, 
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
@@ -86,11 +86,11 @@ public class MessageResourceBundleFacade {
     }
 
     protected static MessageResourceBundle createBundle(File file) {
-        return new MessageResourceBundle(createProperties(file));
+        return new MessageResourceBundleImpl(createProperties(file));
     }
 
     protected static MessageResourceBundle createBundle(URL url) {
-        return new MessageResourceBundle(createProperties(url));
+        return new MessageResourceBundleImpl(createProperties(url));
     }
 
     protected static Properties createProperties(File file) {

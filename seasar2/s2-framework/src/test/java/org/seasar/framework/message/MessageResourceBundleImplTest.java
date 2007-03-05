@@ -23,16 +23,16 @@ import junit.framework.TestCase;
  * @author shot
  * @author higa
  */
-public class MessageResourceBundleTest extends TestCase {
+public class MessageResourceBundleImplTest extends TestCase {
 
     public void testAll() throws Exception {
         Properties parentProp = new Properties();
         parentProp.setProperty("b", "B");
-        MessageResourceBundle parent = new MessageResourceBundle(parentProp);
+        MessageResourceBundleImpl parent = new MessageResourceBundleImpl(parentProp);
 
         Properties prop = new Properties();
         prop.setProperty("a", "A");
-        MessageResourceBundle bundle = new MessageResourceBundle(prop, parent);
+        MessageResourceBundleImpl bundle = new MessageResourceBundleImpl(prop, parent);
 
         assertEquals("A", bundle.get("a"));
         assertEquals("B", bundle.get("b"));
