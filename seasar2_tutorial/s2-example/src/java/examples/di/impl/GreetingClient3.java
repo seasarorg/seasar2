@@ -1,5 +1,5 @@
 package examples.di.impl;
 
-public interface GreetingClientSingleton {
+public interface GreetingClient3 {
 	void execute();
 }

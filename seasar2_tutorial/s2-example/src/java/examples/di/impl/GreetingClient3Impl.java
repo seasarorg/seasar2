@@ -1,10 +1,8 @@
 package examples.di.impl;
 
-//import java.util.Date;
-
 import java.util.Date;
 
-public class GreetingClientSingletonImpl implements GreetingClientSingleton {
+public class GreetingClient3Impl implements GreetingClient3 {
 
 	private Greeting greeting;
 
