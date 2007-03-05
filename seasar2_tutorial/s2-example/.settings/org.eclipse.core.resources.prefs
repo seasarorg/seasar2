@@ -1,11 +1,11 @@
-#Tue Feb 20 14:46:30 JST 2007
+#Mon Mar 05 17:15:23 JST 2007
 eclipse.preferences.version=1
 encoding//src/java/examples/aop/main/GreetingMain5.java=UTF-8
 encoding//src/resources/examples/aop/dicon/GreetingMain5.dicon=UTF-8
-encoding//src/resources/examples/di/dicon/ConstructorSample.dicon=UTF-8
-encoding//src/resources/examples/di/dicon/GreetingMain2.dicon=UTF-8
-encoding//src/resources/examples/di/dicon/GreetingMain3.dicon=UTF-8
-encoding//src/resources/examples/di/dicon/GreetingMain4.dicon=UTF-8
+encoding//src/resources/examples/di/main/ConstructorSampleMain.dicon=UTF-8
+encoding//src/resources/examples/di/main/GreetingMain2.dicon=UTF-8
+encoding//src/resources/examples/di/main/GreetingMain3.dicon=UTF-8
+encoding//src/resources/examples/di/main/GreetingMain4.dicon=UTF-8
 encoding//src/resources/examples/tx/hogeClient.dicon=UTF-8
 encoding//src/resources/examples/unit/Hello.dicon=UTF-8
 encoding//src/resources/examples/unit/HelloMock.dicon=UTF-8

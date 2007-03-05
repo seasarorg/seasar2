@@ -3,7 +3,7 @@
 	"http://www.seasar.org/dtd/components24.dtd">
 <components>
 	<component name="bindingSample"
-			   class="examples.di.impl.BindingSampleImpl" autoBinding="none" />		   
+			   class="examples.di.impl.BindingSampleImpl" autoBinding="auto" />		   
 	<component name="nameSample"
 			   class="examples.di.impl.NameSampleImpl">
 	<property name="name">"bbb"</property>

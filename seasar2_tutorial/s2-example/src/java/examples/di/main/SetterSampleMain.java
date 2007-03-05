@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2006 the Seasar Foundation and the Others.
+ * Copyright 2004-2007 the Seasar Foundation and the Others.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,11 +18,11 @@ package examples.di.main;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.factory.S2ContainerFactory;
 
-import examples.di.impl.SetterSample;
+import examples.di.SetterSample;
 
 public class SetterSampleMain {
 
-	private static final String PATH = "examples/di/dicon/SetterSample.dicon";
+	private static final String PATH = "examples/di/main/SetterSampleMain.dicon";
 
 	public static void main(String[] args) {
 		S2Container container = S2ContainerFactory.create(PATH);
