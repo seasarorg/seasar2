@@ -19,5 +19,5 @@ import java.sql.SQLException;
 
 public interface EmployeeDao {
 
-    public String getEmployeeName(int empno) throws SQLException;
+	public String getEmployeeName(int empno) throws SQLException;
 }

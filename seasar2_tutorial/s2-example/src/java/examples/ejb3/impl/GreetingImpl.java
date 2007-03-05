@@ -22,7 +22,7 @@ import examples.ejb3.Greeting;
 @Stateless
 public class GreetingImpl implements Greeting {
 
-    public String greet() {
-        return "Hello World!";
-    }
+	public String greet() {
+		return "Hello World!";
+	}
 }

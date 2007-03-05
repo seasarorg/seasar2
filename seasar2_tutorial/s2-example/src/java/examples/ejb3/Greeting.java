@@ -17,5 +17,5 @@ package examples.ejb3;
 
 public interface Greeting {
 
-    String greet();
+	String greet();
 }

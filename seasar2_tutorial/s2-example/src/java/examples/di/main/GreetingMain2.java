@@ -22,12 +22,12 @@ import examples.di.impl.GreetingClient;
 
 public class GreetingMain2 {
 
-    private static final String PATH = "examples/di/dicon/GreetingMain2.dicon";
+	private static final String PATH = "examples/di/dicon/GreetingMain2.dicon";
 
-    public static void main(String[] args) {
-        S2Container container = S2ContainerFactory.create(PATH);
-        GreetingClient greetingClient = (GreetingClient) container
-                .getComponent("greetingClient");
-        greetingClient.execute();
-    }
+	public static void main(String[] args) {
+		S2Container container = S2ContainerFactory.create(PATH);
+		GreetingClient greetingClient = (GreetingClient) container
+				.getComponent("greetingClient");
+		greetingClient.execute();
+	}
 }

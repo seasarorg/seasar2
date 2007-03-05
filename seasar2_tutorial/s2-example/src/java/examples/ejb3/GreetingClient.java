@@ -17,5 +17,5 @@ package examples.ejb3;
 
 public interface GreetingClient {
 
-    void execute();
+	void execute();
 }

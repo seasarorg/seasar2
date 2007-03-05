@@ -15,22 +15,20 @@
  */
 package examples.di.impl;
 
-import examples.di.impl.SetterSample;
 
 public class SetterSampleImpl implements SetterSample {
 
-	 private String name;
-	 
-	 public void setName(String name) {
-	  this.name = name;
-	 }
+	private String name;
 
-	 public String getName() {
-	  return name;
-	 }
-	
-	 public String greet() {
-		 return this.getName();
-	 }
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public String greet() {
+		return this.getName();
+	}
 }
-	 

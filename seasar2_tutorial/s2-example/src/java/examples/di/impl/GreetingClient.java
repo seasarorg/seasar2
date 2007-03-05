@@ -17,5 +17,5 @@ package examples.di.impl;
 
 public interface GreetingClient {
 
-    void execute();
+	void execute();
 }

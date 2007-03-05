@@ -15,18 +15,16 @@
  */
 package examples.di.impl;
 
-import examples.di.impl.Greeting;
-import examples.di.impl.GreetingClient;
 
 public class GreetingClientImpl implements GreetingClient {
 
-    private Greeting greeting;
-    
-    public void setGreeting(Greeting greeting) {
-    	this.greeting = greeting;
-    }
+	private Greeting greeting;
 
-    public void execute() {
-        System.out.println(greeting.greet());
-    }
+	public void setGreeting(Greeting greeting) {
+		this.greeting = greeting;
+	}
+
+	public void execute() {
+		System.out.println(greeting.greet());
+	}
 }

@@ -24,10 +24,10 @@ import examples.ejb3.GreetingClient;
 @Stateless
 public class GreetingClientImpl implements GreetingClient {
 
-    @EJB
-    private Greeting greeting;
+	@EJB
+	private Greeting greeting;
 
-    public void execute() {
-        System.out.println(greeting.greet());
-    }
+	public void execute() {
+		System.out.println(greeting.greet());
+	}
 }

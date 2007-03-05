@@ -20,17 +20,14 @@ import org.seasar.framework.container.factory.S2ContainerFactory;
 
 import examples.di.impl.MethodSample;
 
-
-
-
 public class MethodSampleMain {
 
 	private static final String PATH = "examples/di/dicon/MethodSample.dicon";
-	
-    public static void main(String[] args) {
-    	S2Container container = S2ContainerFactory.create(PATH);
-    	MethodSample methodSample = (MethodSample) container
-                .getComponent("methodSample");
-    	System.out.println(methodSample.greet());
-    }
+
+	public static void main(String[] args) {
+		S2Container container = S2ContainerFactory.create(PATH);
+		MethodSample methodSample = (MethodSample) container
+				.getComponent("methodSample");
+		System.out.println(methodSample.greet());
+	}
 }

@@ -17,5 +17,5 @@ package examples.di.impl;
 
 public interface Greeting {
 
-    String greet();
+	String greet();
 }

@@ -24,23 +24,23 @@ import examples.ejb3.GreetingClient;
 
 public class GreetingMain {
 
-    private static final String PATH = "examples/ejb3/dicon/GreetingMain.dicon";
+	private static final String PATH = "examples/ejb3/dicon/GreetingMain.dicon";
 
-    public static void main(String[] args) throws Exception {
-        SingletonS2ContainerFactory.setConfigPath(PATH);
-        SingletonS2ContainerFactory.init();
-        try {
-            doMain(args);
-        } finally {
-            SingletonS2ContainerFactory.destroy();
-        }
-    }
+	public static void main(String[] args) throws Exception {
+		SingletonS2ContainerFactory.setConfigPath(PATH);
+		SingletonS2ContainerFactory.init();
+		try {
+			doMain(args);
+		} finally {
+			SingletonS2ContainerFactory.destroy();
+		}
+	}
 
-    public static void doMain(@SuppressWarnings("unused")
-    String[] args) throws Exception {
-        Context ctx = new InitialContext();
-        GreetingClient greetingClient = (GreetingClient) ctx
-                .lookup("greetingClient");
-        greetingClient.execute();
-    }
+	public static void doMain(@SuppressWarnings("unused")
+	String[] args) throws Exception {
+		Context ctx = new InitialContext();
+		GreetingClient greetingClient = (GreetingClient) ctx
+				.lookup("greetingClient");
+		greetingClient.execute();
+	}
 }

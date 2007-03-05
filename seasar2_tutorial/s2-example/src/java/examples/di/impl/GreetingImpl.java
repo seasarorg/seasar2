@@ -15,11 +15,10 @@
  */
 package examples.di.impl;
 
-import examples.di.impl.Greeting;
 
 public class GreetingImpl implements Greeting {
 
-    public String greet() {
-        return "Hello World!";
-    }
+	public String greet() {
+		return "Hello World!";
+	}
 }
