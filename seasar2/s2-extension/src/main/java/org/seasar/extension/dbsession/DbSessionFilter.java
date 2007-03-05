@@ -60,7 +60,7 @@ public class DbSessionFilter implements Filter {
             }
             DbSessionState sessionState = sessionWrapper.getSessionState();
             if (sessionState != null) {
-                ssm.updateState(sessionState);
+                ssm.updateState(sessionWrapper.getId(), sessionState);
             }
         }
     }

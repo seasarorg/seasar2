@@ -348,6 +348,24 @@ public class SerializerTest extends TestCase {
         assertSame(o, o.hogeBean);
     }
 
+    /**
+     * @throws Exception
+     */
+    public void testFromBinaryToObject() throws Exception {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        DataOutputStream out = new DataOutputStream(baos);
+        Serializer.writeObject(out, "hoge");
+        assertEquals("hoge", Serializer.fromBinaryToObject(baos.toByteArray()));
+    }
+    
+    /**
+     * @throws Exception
+     */
+    public void testFromObjectToBinary() throws Exception {
+        byte[] binary = Serializer.fromObjectToBinary("hoge");
+        assertEquals("hoge", Serializer.fromBinaryToObject(binary));
+    }
+
     protected void executeTest(Object obj) throws Exception {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         DataOutputStream out = new DataOutputStream(baos);

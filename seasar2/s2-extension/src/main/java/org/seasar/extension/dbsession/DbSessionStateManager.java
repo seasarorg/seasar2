@@ -34,9 +34,10 @@ public interface DbSessionStateManager {
     /**
      * セッションの状態をデータベースに格納します。
      * 
+     * @param sessionId
      * @param sessionState
      */
-    void updateState(DbSessionState sessionState);
+    void updateState(String sessionId, DbSessionState sessionState);
 
     /**
      * データベースに格納されたセッションの状態を削除します。

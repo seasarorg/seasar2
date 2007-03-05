@@ -15,6 +15,8 @@
  */
 package org.seasar.extension.serializer;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -106,6 +108,8 @@ public abstract class Serializer {
     private static final byte SET_TYPE = 26;
 
     private static final byte BEAN_TYPE = 27;
+
+    private static final int ARRAY_SIZE = 8 * 1024;
 
     protected Serializer() {
     }
@@ -740,5 +744,30 @@ public abstract class Serializer {
             }
         }
         return bean;
+    }
+
+    /**
+     * byteの配列をオブジェクトに変換します。
+     * 
+     * @param binary
+     * @return
+     */
+    public static Object fromBinaryToObject(byte[] binary) {
+        ByteArrayInputStream bais = new ByteArrayInputStream(binary);
+        DataInputStream in = new DataInputStream(bais);
+        return readObject(in);
+    }
+
+    /**
+     * byteの配列をオブジェクトに変換します。
+     * 
+     * @param value
+     * @return
+     */
+    public static byte[] fromObjectToBinary(Object value) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(ARRAY_SIZE);
+        DataOutputStream out = new DataOutputStream(baos);
+        writeObject(out, value);
+        return baos.toByteArray();
     }
 }

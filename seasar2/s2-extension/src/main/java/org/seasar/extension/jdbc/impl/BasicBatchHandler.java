@@ -42,6 +42,10 @@ public class BasicBatchHandler extends BasicHandler implements BatchHandler {
     public BasicBatchHandler() {
     }
 
+    public BasicBatchHandler(DataSource dataSource, String sql) {
+        this(dataSource, sql, -1);
+    }
+
     public BasicBatchHandler(DataSource dataSource, String sql, int batchSize) {
         this(dataSource, sql, batchSize, BasicStatementFactory.INSTANCE);
     }

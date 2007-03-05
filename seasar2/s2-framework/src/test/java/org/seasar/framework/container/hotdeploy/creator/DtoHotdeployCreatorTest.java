@@ -38,10 +38,11 @@ public class DtoHotdeployCreatorTest extends HotdeployCreatorTestCase {
         return creator;
     }
 
-    public void testAll() throws Exception {
+    public void testNormal() throws Exception {
         String name = "bbbDto";
         ComponentDef cd = getComponentDef(name);
         assertNotNull(cd);
+        assertSame(cd, getComponentDef(name));
         assertEquals(name, cd.getComponentName());
         Object o = cd.getComponent();
         Method m = o.getClass().getMethod("getName", null);

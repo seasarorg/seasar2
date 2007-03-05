@@ -134,17 +134,27 @@ public class MockServletContextImpl implements MockServletContext, Serializable 
      * @see javax.servlet.ServletContext#getResource(java.lang.String)
      */
     public URL getResource(String path) throws MalformedURLException {
+        if (path == null) {
+            return null;
+        }
         path = adjustPath(path);
         if (ResourceUtil.isExist(path)) {
             return ResourceUtil.getResource(path);
         }
-        return new URL(path);
+        if (path.startsWith("WEB-INF")) {
+            path = path.substring("WEB-INF".length());
+            return getResource(path);
+        }
+        return null;
     }
 
     /**
      * @see javax.servlet.ServletContext#getResourceAsStream(java.lang.String)
      */
     public InputStream getResourceAsStream(String path) {
+        if (path == null) {
+            return null;
+        }
         path = adjustPath(path);
         if (ResourceUtil.isExist(path)) {
             return ResourceUtil.getResourceAsStream(path);

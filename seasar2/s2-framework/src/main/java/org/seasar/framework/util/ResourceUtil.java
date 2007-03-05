@@ -68,6 +68,9 @@ public final class ResourceUtil {
     }
 
     public static URL getResourceNoException(String path, String extension) {
+        if (path == null) {
+            return null;
+        }
         path = getResourcePath(path, extension);
         return getClassLoader().getResource(path);
     }

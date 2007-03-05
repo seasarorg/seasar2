@@ -15,6 +15,8 @@
  */
 package org.seasar.extension.dbsession;
 
+import java.util.HashMap;
+
 import javax.servlet.http.HttpSession;
 
 import junit.framework.TestCase;
@@ -26,32 +28,35 @@ import org.seasar.framework.mock.servlet.MockServletContextImpl;
  * @author higa
  * 
  */
-public class DbHttpServletRequestWrapperTest extends TestCase {
+public class DbHttpSessionWrapperTest extends TestCase {
 
     /**
-     * @throws Exception
+     * Test method for
+     * {@link org.seasar.extension.dbsession.DbHttpSessionWrapper#getSessionState()}.
      */
-    public void testGetSession() throws Exception {
+    public void testGetSessionState() {
         MockServletContextImpl servletContext = new MockServletContextImpl(
                 "hoge");
         MockHttpServletRequestImpl request = new MockHttpServletRequestImpl(
                 servletContext, "foo");
         DbSessionStateManager sessionStateManager = new DbSessionStateManager() {
             public DbSessionState loadState(String sessionId) {
-                return null;
+                return new DbSessionState(new HashMap());
             }
 
-            public void updateState(String sessionId, DbSessionState sessionState) {
+            public void updateState(String sessionId,
+                    DbSessionState sessionState) {
             }
 
             public void removeState(String sessionId) {
             }
         };
-        DbHttpServletRequestWrapper requestWrapper = new DbHttpServletRequestWrapper(
-                request, sessionStateManager);
-        HttpSession session = requestWrapper.getSession();
-        assertNotNull(session);
-        assertTrue(session instanceof DbHttpSessionWrapper);
-        assertSame(session, requestWrapper.getSession());
+        HttpSession session = request.getSession();
+        DbHttpSessionWrapper sessionWrapper = new DbHttpSessionWrapper(session,
+                sessionStateManager);
+        assertNull(sessionWrapper.getSessionState());
+        sessionWrapper.getAttribute("hoge");
+        assertNotNull(sessionWrapper.getSessionState());
     }
+
 }

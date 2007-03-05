@@ -20,6 +20,7 @@ import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.beans.factory.BeanDescFactory;
 import org.seasar.framework.container.ComponentCreator;
 import org.seasar.framework.container.ComponentDef;
+import org.seasar.framework.container.ComponentNotFoundRuntimeException;
 import org.seasar.framework.container.creator.ActionCreator;
 import org.seasar.framework.container.creator.ConverterCreator;
 import org.seasar.framework.container.creator.DaoCreator;
@@ -103,5 +104,17 @@ public class HotdeployBehavior2Test extends S2FrameworkTestCase {
         BeanDesc beanDesc = BeanDescFactory.getBeanDesc(o.getClass());
         PropertyDesc pd = beanDesc.getPropertyDesc("hogePage");
         assertEquals(HogePage.class, pd.getPropertyType());
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testGetComponent2() throws Exception {
+        try {
+            getComponent("aaa_HogeAction");
+            fail();
+        } catch (ComponentNotFoundRuntimeException e) {
+            assertEquals("aaa_HogeAction", e.getComponentKey());
+        }
     }
 }
