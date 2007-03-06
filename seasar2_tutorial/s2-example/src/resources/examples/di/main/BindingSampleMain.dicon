@@ -2,10 +2,12 @@
 <!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN"
 	"http://www.seasar.org/dtd/components24.dtd">
 <components>
-	<component name="bindingSample"
-			   class="examples.di.impl.BindingSampleImpl" autoBinding="auto" />		   
+	<component name="autoBindingSample"
+			   class="examples.di.impl.BindingSampleImpl"/>
+	<component name="noneBindingSample"
+			   class="examples.di.impl.BindingSampleImpl" autoBinding="none"/>	   
 	<component name="nameSample"
 			   class="examples.di.impl.NameSampleImpl">
-	<property name="name">"bbb"</property>
+		<property name="name">"Hello"</property>
 	</component>
 </components>

@@ -27,6 +27,9 @@ public class BindingSampleImpl implements BindingSample {
 	}
 
 	public String greet() {
+		if (name == null) {
+			return null;
+		}
 		return name.getName();
 	}
 }

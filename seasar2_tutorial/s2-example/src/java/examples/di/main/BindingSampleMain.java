@@ -26,7 +26,10 @@ public class BindingSampleMain {
 	public static void main(String[] args) {
 		S2Container container = S2ContainerFactory.create(PATH);
 		BindingSample bindingSample = (BindingSample) container
-				.getComponent("bindingSample");
-		System.out.println(bindingSample.greet());
+				.getComponent("autoBindingSample");
+		System.out.println("autoBindingSample : " + bindingSample.greet());
+		bindingSample = (BindingSample) container
+				.getComponent("noneBindingSample");
+		System.out.println("noneBindingSample : " + bindingSample.greet());
 	}
 }

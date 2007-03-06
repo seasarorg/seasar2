@@ -19,6 +19,7 @@ public class Main {
 					.getComponent("printService");
 			printer.print();
 			HotdeployUtil.stop();
+			Thread.sleep(15000);
 		}
 	}
 

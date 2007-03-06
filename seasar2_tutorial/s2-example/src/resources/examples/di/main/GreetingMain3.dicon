@@ -4,7 +4,7 @@
 <components>
 	<component name="greeting" class="examples.di.impl.GreetingImpl"/>
 	<component name="singletonClient"
-		class="examples.di.impl.GreetingClient3Impl" instance="singleton" >
+		class="examples.di.impl.GreetingClient3Impl">
 		<property name="date">new java.util.Date()</property>
 	</component>
 	<component name="prototypeClient"
