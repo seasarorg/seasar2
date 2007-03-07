@@ -33,4 +33,13 @@ public class SerializeUtilTest extends TestCase {
         assertEquals("2", "1", b[0]);
         assertEquals("3", "2", b[1]);
     }
+
+    /**
+     * @throws Exception
+     */
+    public void testObjectAndBinary() throws Exception {
+        String o = "hoge";
+        byte[] binary = SerializeUtil.fromObjectToBinary(o);
+        assertEquals(o, SerializeUtil.fromBinaryToObject(binary));
+    }
 }

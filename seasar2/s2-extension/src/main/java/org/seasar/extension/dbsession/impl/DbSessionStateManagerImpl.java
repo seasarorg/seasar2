@@ -31,7 +31,7 @@ import org.seasar.extension.jdbc.impl.BasicBatchHandler;
 import org.seasar.extension.jdbc.impl.BasicSelectHandler;
 import org.seasar.extension.jdbc.impl.BasicUpdateHandler;
 import org.seasar.extension.jdbc.impl.MapListResultSetHandler;
-import org.seasar.extension.serializer.Serializer;
+import org.seasar.framework.util.SerializeUtil;
 
 /**
  * @author higa
@@ -101,12 +101,12 @@ public class DbSessionStateManagerImpl implements DbSessionStateManager {
         while (e.hasMoreElements()) {
             String name = (String) e.nextElement();
             if (sessionState.needInsert(name)) {
-                byte[] value = Serializer.fromObjectToBinary(sessionState
+                byte[] value = SerializeUtil.fromObjectToBinary(sessionState
                         .getAttribute(name));
                 insertedData.add(new Object[] { sessionId, name, value,
                         lastAccess });
             } else if (sessionState.needUpdate(name)) {
-                byte[] value = Serializer.fromObjectToBinary(sessionState
+                byte[] value = SerializeUtil.fromObjectToBinary(sessionState
                         .getAttribute(name));
                 updatedData.add(new Object[] { value, lastAccess, sessionId,
                         name });

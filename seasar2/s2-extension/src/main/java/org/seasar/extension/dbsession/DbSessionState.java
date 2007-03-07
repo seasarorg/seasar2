@@ -22,8 +22,8 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.seasar.extension.serializer.Serializer;
 import org.seasar.framework.util.EnumerationAdapter;
+import org.seasar.framework.util.SerializeUtil;
 
 /**
  * HttpSessionの状態をあらわすクラスです。
@@ -57,7 +57,7 @@ public class DbSessionState {
         }
         if (binaryData.containsKey(name)) {
             byte[] binary = (byte[]) binaryData.get(name);
-            Object value = Serializer.fromBinaryToObject(binary);
+            Object value = SerializeUtil.fromBinaryToObject(binary);
             accessedData.put(name, value);
             return value;
         }

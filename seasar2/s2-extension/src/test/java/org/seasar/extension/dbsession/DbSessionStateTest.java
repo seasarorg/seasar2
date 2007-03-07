@@ -15,15 +15,13 @@
  */
 package org.seasar.extension.dbsession;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
 import junit.framework.TestCase;
 
-import org.seasar.extension.serializer.Serializer;
+import org.seasar.framework.util.SerializeUtil;
 
 /**
  * @author higa
@@ -35,11 +33,9 @@ public class DbSessionStateTest extends TestCase {
      * @throws Exception
      */
     public void testGetAttribute() throws Exception {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        DataOutputStream out = new DataOutputStream(baos);
-        Serializer.writeObject(out, "hoge");
+        byte[] binary = SerializeUtil.fromObjectToBinary("hoge");
         Map binaryData = new HashMap();
-        binaryData.put("aaa", baos.toByteArray());
+        binaryData.put("aaa", binary);
         DbSessionState state = new DbSessionState(binaryData);
         assertEquals("hoge", state.getAttribute("aaa"));
         Enumeration e = state.getAccessedAttributeNames();
@@ -64,11 +60,9 @@ public class DbSessionStateTest extends TestCase {
      * @throws Exception
      */
     public void testGetAttributeNames() throws Exception {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        DataOutputStream out = new DataOutputStream(baos);
-        Serializer.writeObject(out, "hoge");
+        byte[] binary = SerializeUtil.fromObjectToBinary("hoge");
         Map binaryData = new HashMap();
-        binaryData.put("aaa", baos.toByteArray());
+        binaryData.put("aaa", binary);
         DbSessionState state = new DbSessionState(binaryData);
         state.setAttribute("bbb", "111");
         Enumeration e = state.getAttributeNames();
@@ -81,11 +75,9 @@ public class DbSessionStateTest extends TestCase {
      * @throws Exception
      */
     public void testNeedInsert() throws Exception {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        DataOutputStream out = new DataOutputStream(baos);
-        Serializer.writeObject(out, "hoge");
+        byte[] binary = SerializeUtil.fromObjectToBinary("hoge");
         Map binaryData = new HashMap();
-        binaryData.put("aaa", baos.toByteArray());
+        binaryData.put("aaa", binary);
         DbSessionState state = new DbSessionState(binaryData);
         state.setAttribute("bbb", "111");
         assertTrue(state.needInsert("bbb"));
@@ -96,11 +88,9 @@ public class DbSessionStateTest extends TestCase {
      * @throws Exception
      */
     public void testNeedUpdate() throws Exception {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        DataOutputStream out = new DataOutputStream(baos);
-        Serializer.writeObject(out, "hoge");
+        byte[] binary = SerializeUtil.fromObjectToBinary("hoge");
         Map binaryData = new HashMap();
-        binaryData.put("aaa", baos.toByteArray());
+        binaryData.put("aaa", binary);
         DbSessionState state = new DbSessionState(binaryData);
         state.setAttribute("bbb", "111");
         assertFalse(state.needUpdate("bbb"));
@@ -113,11 +103,9 @@ public class DbSessionStateTest extends TestCase {
      * @throws Exception
      */
     public void testNeedDelete() throws Exception {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        DataOutputStream out = new DataOutputStream(baos);
-        Serializer.writeObject(out, "hoge");
+        byte[] binary = SerializeUtil.fromObjectToBinary("hoge");
         Map binaryData = new HashMap();
-        binaryData.put("aaa", baos.toByteArray());
+        binaryData.put("aaa", binary);
         DbSessionState state = new DbSessionState(binaryData);
         state.setAttribute("bbb", null);
         assertFalse(state.needDelete("bbb"));
