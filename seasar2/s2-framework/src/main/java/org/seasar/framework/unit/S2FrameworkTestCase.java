@@ -165,12 +165,7 @@ public abstract class S2FrameworkTestCase extends TestCase {
     }
 
     protected String convertPath(String path) {
-        if (ResourceUtil.getResourceNoException(path) != null) {
-            return path;
-        }
-        String prefix = getClass().getName().replace('.', '/').replaceFirst(
-                "/[^/]+$", "");
-        return prefix + "/" + path;
+        return ResourceUtil.convertPath(path, getClass());
     }
 
     /**

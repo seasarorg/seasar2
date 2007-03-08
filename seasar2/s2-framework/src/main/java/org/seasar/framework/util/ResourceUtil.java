@@ -194,6 +194,11 @@ public final class ResourceUtil {
         }
         String prefix = clazz.getName().replace('.', '/').replaceFirst(
                 "/[^/]+$", "");
-        return prefix + "/" + path;
+        String extendedPath = prefix + "/" + path;
+        if (ResourceUtil.getResourceNoException(extendedPath) != null) {
+            return extendedPath;
+        }
+        return path;
     }
+
 }

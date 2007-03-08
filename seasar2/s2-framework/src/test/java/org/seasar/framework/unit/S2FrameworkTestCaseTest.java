@@ -125,6 +125,13 @@ public class S2FrameworkTestCaseTest extends S2FrameworkTestCase {
         }
     }
 
+    public void testConvertPath() {
+        assertEquals("org/seasar/framework/unit/aaa.dicon",
+                convertPath("aaa.dicon"));
+        assertEquals("j2ee.dicon", convertPath("j2ee.dicon"));
+        assertEquals("notfound.dicon", convertPath("notfound.dicon"));
+    }
+
     public void setUpIsAssignableFrom() {
         include("bbb.dicon");
     }
