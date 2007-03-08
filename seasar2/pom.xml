@@ -9,7 +9,7 @@
   <artifactId>s2-container-project</artifactId>
   <packaging>pom</packaging>
   <name>Seasar2</name>
-  <version>2.4.11-SNAPSHOT</version>
+  <version>2.4.11</version>
   <description>DI Container with AOP</description>
   <url>http://s2container.seasar.org/</url>
   <issueManagement>
@@ -198,10 +198,6 @@
       <url>http://www.kakutani.com/</url>
     </contributor>
     <contributor>
-      <name>NAKAMURA Toshihiro</name>
-      <url>http://d.hatena.ne.jp/taedium/</url>
-    </contributor>
-    <contributor>
       <name>FUKUZAWA Susumu</name>
     </contributor>
     <contributor>
@@ -209,6 +205,12 @@
     </contributor>
     <contributor>
       <name>ERIGUCHI On</name>
+    </contributor>
+    <contributor>
+    	<name>UESHIN Takuya</name>
+    </contributor>
+    <contributor>
+    	<name>BABA,Yasuyuki</name>
     </contributor>
   </contributors>
   <licenses>
@@ -279,6 +281,10 @@
             <link>http://java.sun.com/javaee/5/docs/api/</link>
           	<link>http://java.sun.com/j2se/1.5.0/ja/docs/ja/api/</link>
             <link>http://aopalliance.sourceforge.net/doc/</link>
+            <link>http://jakarta.apache.org/commons/logging/apidocs/</link>
+            <link>http://www.csg.is.titech.ac.jp/~chiba/javassist/html/</link>
+            <link>http://www.ognl.org/2.6.9/Documentation/javadoc/</link>
+            <link>http://www.junit.org/junit/javadoc/3.8.1/</link>
           </links>
         </configuration>
         <!--
