@@ -681,6 +681,8 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
 
     protected static interface ExistChecker {
         boolean isExist(String lastClassName);
+
+        void close();
     }
 
     protected static class FileExistChecker implements ExistChecker {
@@ -694,6 +696,9 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
             final File file = new File(rootFile, getPathName(lastClassName));
             return file.exists();
         }
+
+        public void close() {
+        }
     }
 
     protected static class JarExistChecker implements ExistChecker {
@@ -702,12 +707,16 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
         private String rootPath;
 
         protected JarExistChecker(final URL jarUrl, final String rootPackageName) {
-            jarFile = JarFileUtil.create(JarFileUtil.toJarFilePath(jarUrl));
+            jarFile = JarFileUtil.toJarFile(jarUrl);
             this.rootPath = rootPackageName.replace('.', '/') + "/";
         }
 
         public boolean isExist(final String lastClassName) {
             return jarFile.getEntry(rootPath + getPathName(lastClassName)) != null;
+        }
+
+        public void close() {
+            JarFileUtil.close(jarFile);
         }
     }
 
@@ -723,6 +732,10 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
 
         public boolean isExist(final String lastClassName) {
             return zipFile.getEntry(rootPath + getPathName(lastClassName)) != null;
+        }
+
+        public void close() {
+            ZipFileUtil.close(zipFile);
         }
     }
 
