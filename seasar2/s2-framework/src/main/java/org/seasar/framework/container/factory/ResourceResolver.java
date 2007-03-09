@@ -18,8 +18,17 @@ package org.seasar.framework.container.factory;
 import java.io.InputStream;
 
 /**
+ * リソースを取得する方法を定義するインターフェースです。
+ * 
  * @author koichik
+ * @author Maeno
  */
 public interface ResourceResolver {
+    /**
+     * 読み込み対象となるリソースから入力ストリームを返します。
+     * 
+     * @param path 読み込み対象となるリソースのパス
+     * @return 入力ストリーム
+     */
     InputStream getInputStream(String path);
 }
