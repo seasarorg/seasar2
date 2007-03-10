@@ -18,8 +18,10 @@ package org.seasar.framework.container.factory;
 import org.seasar.framework.exception.SRuntimeException;
 
 /**
- * @author higa
+ * 特定のタグにおいて、必要な属性が定義されていない場合にスローされます。
  * 
+ * @author higa
+ * @author yatsu
  */
 public final class TagAttributeNotDefinedRuntimeException extends
         SRuntimeException {
@@ -30,6 +32,14 @@ public final class TagAttributeNotDefinedRuntimeException extends
 
     private String attributeName;
 
+    /**
+     * <code>TagAttributeNotDefinedRuntimeException</code>を構築します。
+     * 
+     * @param tagName
+     *            タグ名
+     * @param attributeName
+     *            属性名
+     */
     public TagAttributeNotDefinedRuntimeException(String tagName,
             String attributeName) {
 
@@ -38,10 +48,20 @@ public final class TagAttributeNotDefinedRuntimeException extends
         this.attributeName = attributeName;
     }
 
+    /**
+     * タグ名を返します。
+     * 
+     * @return タグ名
+     */
     public String getTagName() {
         return tagName;
     }
 
+    /**
+     * 属性名を返します。
+     * 
+     * @return 属性名
+     */
     public String getAttributeName() {
         return attributeName;
     }
