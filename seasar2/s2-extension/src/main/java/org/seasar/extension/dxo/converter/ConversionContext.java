@@ -15,6 +15,8 @@
  */
 package org.seasar.extension.dxo.converter;
 
+import java.text.DateFormat;
+
 /**
  * 変換中のコンテキストを表すインターフェースです。
  * <p>
@@ -75,10 +77,34 @@ public interface ConversionContext {
      * 
      * @param key
      *            キー
-     * @return 値
+     * @return 値。キーにマッピングされている値がない場合は<code>null</code>
      * @see org.seasar.extension.dxo.DxoConstants
      */
     Object getContextInfo(String key);
+
+    /**
+     * コンテキスト情報から日付用の<code>DateFormat</code>を返します。
+     * 
+     * @return 日付用の<code>DateFormat</code>。コンテキスト情報に日付用のフォーマットが指定されていない場合は<code>null</code>
+     * @see org.seasar.extension.dxo.DxoConstants
+     */
+    DateFormat getDateFormat();
+
+    /**
+     * コンテキスト情報から時刻用の<code>DateFormat</code>を返します。
+     * 
+     * @return 時刻用の<code>DateFormat</code>。コンテキスト情報に時刻用のフォーマットが指定されていない場合は<code>null</code>
+     * @see org.seasar.extension.dxo.DxoConstants
+     */
+    DateFormat getTimeFormat();
+
+    /**
+     * コンテキスト情報から日時用の<code>DateFormat</code>を返します。
+     * 
+     * @return 日時用の<code>DateFormat</code>。コンテキスト情報に日時用のフォーマットが指定されていない場合は<code>null</code>
+     * @see org.seasar.extension.dxo.DxoConstants
+     */
+    DateFormat getTimestampFormat();
 
     /**
      * 名前に対応する評価済みのオブジェクトがあれば<code>true</code>を返します。

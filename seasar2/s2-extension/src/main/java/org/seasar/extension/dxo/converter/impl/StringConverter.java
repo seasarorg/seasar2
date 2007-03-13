@@ -19,7 +19,6 @@ import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import org.seasar.extension.dxo.DxoConstants;
 import org.seasar.extension.dxo.converter.ConversionContext;
 
 /**
@@ -48,36 +47,31 @@ public class StringConverter extends AbstractConverter {
             return new String((char[]) source);
         }
         if (source instanceof java.sql.Date) {
-            final DateFormat formatter = (DateFormat) context
-                    .getContextInfo(DxoConstants.DATE_PATTERN);
+            final DateFormat formatter = context.getDateFormat();
             if (formatter != null) {
                 return formatter.format((java.sql.Date) source);
             }
         }
         if (source instanceof java.sql.Time) {
-            final DateFormat formatter = (DateFormat) context
-                    .getContextInfo(DxoConstants.TIME_PATTERN);
+            final DateFormat formatter = context.getTimeFormat();
             if (formatter != null) {
                 return formatter.format((java.sql.Time) source);
             }
         }
         if (source instanceof java.sql.Timestamp) {
-            final DateFormat formatter = (DateFormat) context
-                    .getContextInfo(DxoConstants.TIMESTAMP_PATTERN);
+            final DateFormat formatter = context.getTimestampFormat();
             if (formatter != null) {
                 return formatter.format((java.sql.Timestamp) source);
             }
         }
         if (source instanceof Date) {
-            final DateFormat formatter = (DateFormat) context
-                    .getContextInfo(DxoConstants.DATE_PATTERN);
+            final DateFormat formatter = context.getDateFormat();
             if (formatter != null) {
                 return formatter.format((Date) source);
             }
         }
         if (source instanceof Calendar) {
-            final DateFormat formatter = (DateFormat) context
-                    .getContextInfo(DxoConstants.DATE_PATTERN);
+            final DateFormat formatter = context.getDateFormat();
             if (formatter != null) {
                 return formatter.format(new Date(((Calendar) source)
                         .getTimeInMillis()));

@@ -17,6 +17,7 @@ package org.seasar.extension.dxo.converter;
 
 import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.seasar.framework.beans.PropertyDesc;
@@ -32,8 +33,15 @@ import org.seasar.framework.beans.PropertyDesc;
  */
 public class DatePropertyInfo {
 
+    /** フォーマットオブジェクトを保持するスレッドローカル */
+    protected ThreadLocal threadLocal = new ThreadLocal() {
+        protected Object initialValue() {
+            return new SimpleDateFormat(format);
+        }
+    };
+
     /** 日時のフォーマット */
-    protected DateFormat formatter;
+    protected String format;
 
     /** 変換元となるプロパティの配列 */
     protected PropertyDesc[] propertyDescs;
@@ -46,9 +54,9 @@ public class DatePropertyInfo {
      * @param propertyDescs
      *            プロパティ記述子の配列
      */
-    public DatePropertyInfo(final DateFormat formatter,
+    public DatePropertyInfo(final String format,
             final PropertyDesc[] propertyDescs) {
-        this.formatter = formatter;
+        this.format = format;
         this.propertyDescs = propertyDescs;
     }
 
@@ -67,10 +75,18 @@ public class DatePropertyInfo {
         }
         final String stringValue = new String(buf);
         try {
-            return formatter.parse(stringValue);
+            return getDateFormat().parse(stringValue);
         } catch (final ParseException ignore) {
         }
         return null;
     }
 
+    /**
+     * 日付フォーマットを返します。
+     * 
+     * @return 日付フォーマット
+     */
+    protected DateFormat getDateFormat() {
+        return (DateFormat) threadLocal.get();
+    }
 }

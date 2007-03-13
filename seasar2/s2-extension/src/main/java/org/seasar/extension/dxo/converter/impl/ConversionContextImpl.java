@@ -194,6 +194,33 @@ public class ConversionContextImpl implements ConversionContext {
         return contextInfo.get(key);
     }
 
+    public DateFormat getDateFormat() {
+        final ThreadLocal threadLocal = (ThreadLocal) contextInfo
+                .get(DxoConstants.DATE_PATTERN);
+        if (threadLocal == null) {
+            return null;
+        }
+        return (DateFormat) threadLocal.get();
+    }
+
+    public DateFormat getTimeFormat() {
+        final ThreadLocal threadLocal = (ThreadLocal) contextInfo
+                .get(DxoConstants.TIME_PATTERN);
+        if (threadLocal == null) {
+            return null;
+        }
+        return (DateFormat) threadLocal.get();
+    }
+
+    public DateFormat getTimestampFormat() {
+        final ThreadLocal threadLocal = (ThreadLocal) contextInfo
+                .get(DxoConstants.TIMESTAMP_PATTERN);
+        if (threadLocal == null) {
+            return null;
+        }
+        return (DateFormat) threadLocal.get();
+    }
+
     public boolean hasEvalueatedValue(final String name) {
         return evaluatedValues.containsKey(name);
     }
@@ -260,12 +287,31 @@ public class ConversionContextImpl implements ConversionContext {
      */
     protected Map createContextInfo(final AnnotationReader reader) {
         final Map contextInfo = new HashMap();
-        contextInfo.put(DxoConstants.DATE_PATTERN, toDateFormat(reader
-                .getDatePattern(dxoClass, method)));
-        contextInfo.put(DxoConstants.TIME_PATTERN, toDateFormat(reader
-                .getTimePattern(dxoClass, method)));
-        contextInfo.put(DxoConstants.TIMESTAMP_PATTERN, toDateFormat(reader
-                .getTimestampPattern(dxoClass, method)));
+        final String datePattern = reader.getDatePattern(dxoClass, method);
+        if (!StringUtil.isEmpty(datePattern)) {
+            contextInfo.put(DxoConstants.DATE_PATTERN, new ThreadLocal() {
+                protected Object initialValue() {
+                    return new SimpleDateFormat(datePattern);
+                }
+            });
+        }
+        final String timePattern = reader.getTimePattern(dxoClass, method);
+        if (!StringUtil.isEmpty(timePattern)) {
+            contextInfo.put(DxoConstants.TIME_PATTERN, new ThreadLocal() {
+                protected Object initialValue() {
+                    return new SimpleDateFormat(timePattern);
+                }
+            });
+        }
+        final String timestampPattern = reader.getTimestampPattern(dxoClass,
+                method);
+        if (!StringUtil.isEmpty(timestampPattern)) {
+            contextInfo.put(DxoConstants.TIMESTAMP_PATTERN, new ThreadLocal() {
+                protected Object initialValue() {
+                    return new SimpleDateFormat(timestampPattern);
+                }
+            });
+        }
         final String conversionRule = reader
                 .getConversionRule(dxoClass, method);
         if (!StringUtil.isEmpty(conversionRule)) {
@@ -391,8 +437,7 @@ public class ConversionContextImpl implements ConversionContext {
         final String format = new String(formatBuffer);
         final PropertyDesc[] array = (PropertyDesc[]) propertyDescs
                 .toArray(new PropertyDesc[propertyDescs.size()]);
-        final DatePropertyInfo info = new DatePropertyInfo(
-                toDateFormat(format), array);
+        final DatePropertyInfo info = new DatePropertyInfo(format, array);
         datePropertyInfoCache.put(key, info);
         return info;
     }
