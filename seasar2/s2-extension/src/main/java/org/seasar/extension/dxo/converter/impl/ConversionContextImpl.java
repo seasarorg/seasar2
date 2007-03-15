@@ -56,7 +56,7 @@ public class ConversionContextImpl implements ConversionContext {
     /** javaxで始まるパッケージのプレフィクスです。 */
     protected static final String JAVAX = "javax.";
 
-    /** キーに対応する値場存在しなことを示すオブジェクトです。 */
+    /** キーに対応する値が存在しないことを示すオブジェクトです。 */
     protected static final Object NOT_FOUND = new Object();
 
     // static fields
@@ -78,6 +78,13 @@ public class ConversionContextImpl implements ConversionContext {
     /** 日時プロパティ情報のキャッシュです。 */
     protected static final Map datePropertyInfoCache = Collections
             .synchronizedMap(new HashMap(1024));
+
+    /** {@link DateFormat}のキャッシュです。 */
+    protected static final ThreadLocal dateFormatCache = new ThreadLocal() {
+        protected Object initialValue() {
+            return new HashMap();
+        }
+    };
 
     // instance fields
     /** このコンテキストを実行しているインターフェースまたはクラスです。 */
@@ -195,30 +202,21 @@ public class ConversionContextImpl implements ConversionContext {
     }
 
     public DateFormat getDateFormat() {
-        final ThreadLocal threadLocal = (ThreadLocal) contextInfo
+        final String format = (String) contextInfo
                 .get(DxoConstants.DATE_PATTERN);
-        if (threadLocal == null) {
-            return null;
-        }
-        return (DateFormat) threadLocal.get();
+        return getDateFormat(format);
     }
 
     public DateFormat getTimeFormat() {
-        final ThreadLocal threadLocal = (ThreadLocal) contextInfo
+        final String format = (String) contextInfo
                 .get(DxoConstants.TIME_PATTERN);
-        if (threadLocal == null) {
-            return null;
-        }
-        return (DateFormat) threadLocal.get();
+        return getDateFormat(format);
     }
 
     public DateFormat getTimestampFormat() {
-        final ThreadLocal threadLocal = (ThreadLocal) contextInfo
+        final String format = (String) contextInfo
                 .get(DxoConstants.TIMESTAMP_PATTERN);
-        if (threadLocal == null) {
-            return null;
-        }
-        return (DateFormat) threadLocal.get();
+        return getDateFormat(format);
     }
 
     public boolean hasEvalueatedValue(final String name) {
@@ -261,6 +259,16 @@ public class ConversionContextImpl implements ConversionContext {
         return createDatePropertyInfo(srcClass, propertyName + "_", key);
     }
 
+    public DateFormat getDateFormat(final String format) {
+        final Map formatters = (Map) dateFormatCache.get();
+        DateFormat formatter = (DateFormat) formatters.get(format);
+        if (formatter == null) {
+            formatter = new SimpleDateFormat(format);
+            formatters.put(format, formatter);
+        }
+        return formatter;
+    }
+
     /**
      * コンテキスト情報を返します。
      * <p>
@@ -289,28 +297,16 @@ public class ConversionContextImpl implements ConversionContext {
         final Map contextInfo = new HashMap();
         final String datePattern = reader.getDatePattern(dxoClass, method);
         if (!StringUtil.isEmpty(datePattern)) {
-            contextInfo.put(DxoConstants.DATE_PATTERN, new ThreadLocal() {
-                protected Object initialValue() {
-                    return new SimpleDateFormat(datePattern);
-                }
-            });
+            contextInfo.put(DxoConstants.DATE_PATTERN, datePattern);
         }
         final String timePattern = reader.getTimePattern(dxoClass, method);
         if (!StringUtil.isEmpty(timePattern)) {
-            contextInfo.put(DxoConstants.TIME_PATTERN, new ThreadLocal() {
-                protected Object initialValue() {
-                    return new SimpleDateFormat(timePattern);
-                }
-            });
+            contextInfo.put(DxoConstants.TIME_PATTERN, timePattern);
         }
         final String timestampPattern = reader.getTimestampPattern(dxoClass,
                 method);
         if (!StringUtil.isEmpty(timestampPattern)) {
-            contextInfo.put(DxoConstants.TIMESTAMP_PATTERN, new ThreadLocal() {
-                protected Object initialValue() {
-                    return new SimpleDateFormat(timestampPattern);
-                }
-            });
+            contextInfo.put(DxoConstants.TIMESTAMP_PATTERN, timestampPattern);
         }
         final String conversionRule = reader
                 .getConversionRule(dxoClass, method);
@@ -322,20 +318,6 @@ public class ConversionContextImpl implements ConversionContext {
                 .valueOf(annotationReader.isExcludeNull(dxoClass, method)));
         contextInfoCache.put(method, contextInfo);
         return contextInfo;
-    }
-
-    /**
-     * フォーマット文字列から{@link java.text.DateFormat}を作成して返します。
-     * 
-     * @param format
-     *            フォーマット文字列
-     * @return フォーマット文字列を持つ{@link java.text.DateFormat}
-     */
-    protected DateFormat toDateFormat(final String format) {
-        if (StringUtil.isEmpty(format)) {
-            return null;
-        }
-        return new SimpleDateFormat(format);
     }
 
     /**
@@ -437,7 +419,7 @@ public class ConversionContextImpl implements ConversionContext {
         final String format = new String(formatBuffer);
         final PropertyDesc[] array = (PropertyDesc[]) propertyDescs
                 .toArray(new PropertyDesc[propertyDescs.size()]);
-        final DatePropertyInfo info = new DatePropertyInfo(format, array);
+        final DatePropertyInfo info = new DatePropertyInfo(this, format, array);
         datePropertyInfoCache.put(key, info);
         return info;
     }

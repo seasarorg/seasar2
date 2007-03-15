@@ -15,9 +15,7 @@
  */
 package org.seasar.extension.dxo.converter;
 
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.seasar.framework.beans.PropertyDesc;
@@ -33,12 +31,8 @@ import org.seasar.framework.beans.PropertyDesc;
  */
 public class DatePropertyInfo {
 
-    /** フォーマットオブジェクトを保持するスレッドローカル */
-    protected ThreadLocal threadLocal = new ThreadLocal() {
-        protected Object initialValue() {
-            return new SimpleDateFormat(format);
-        }
-    };
+    /** 変換コンテキスト * */
+    ConversionContext context;
 
     /** 日時のフォーマット */
     protected String format;
@@ -49,13 +43,16 @@ public class DatePropertyInfo {
     /**
      * <code>DatePropertyInfo</code>のインスタンスを構築します。
      * 
-     * @param formatter
-     *            フォーマッタ
+     * @param context
+     *            変換コンテキスト
+     * @param format
+     *            フォーマット
      * @param propertyDescs
      *            プロパティ記述子の配列
      */
-    public DatePropertyInfo(final String format,
-            final PropertyDesc[] propertyDescs) {
+    public DatePropertyInfo(final ConversionContext context,
+            final String format, final PropertyDesc[] propertyDescs) {
+        this.context = context;
         this.format = format;
         this.propertyDescs = propertyDescs;
     }
@@ -75,18 +72,10 @@ public class DatePropertyInfo {
         }
         final String stringValue = new String(buf);
         try {
-            return getDateFormat().parse(stringValue);
+            return context.getDateFormat(format).parse(stringValue);
         } catch (final ParseException ignore) {
         }
         return null;
     }
 
-    /**
-     * 日付フォーマットを返します。
-     * 
-     * @return 日付フォーマット
-     */
-    protected DateFormat getDateFormat() {
-        return (DateFormat) threadLocal.get();
-    }
 }

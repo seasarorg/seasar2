@@ -178,4 +178,13 @@ public interface ConversionContext {
      */
     DatePropertyInfo getDatePropertyInfo(Class srcClass, String propertyName);
 
+    /**
+     * 現在のスレッドでフォーマット文字列を扱う{@link java.text.DateFormat}を返します。
+     * 
+     * @param format
+     *            フォーマット文字列
+     * @return フォーマット文字列を持つ{@link java.text.DateFormat}
+     */
+    DateFormat getDateFormat(String format);
+
 }
