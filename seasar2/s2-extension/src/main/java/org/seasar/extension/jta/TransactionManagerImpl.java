@@ -30,10 +30,18 @@ import org.seasar.framework.exception.SIllegalStateException;
 import org.seasar.framework.exception.SNotSupportedException;
 import org.seasar.framework.exception.SSystemException;
 
-public final class TransactionManagerImpl implements TransactionManager {
+/**
+ * {@link javax.transaction.TransactionManager}の実装クラスです。
+ * 
+ * @author higa
+ */
+public class TransactionManagerImpl implements TransactionManager {
 
-    private ThreadLocal threadAttachTx_ = new ThreadLocal();
+    private final ThreadLocal threadAttachTx = new ThreadLocal();
 
+    /**
+     * <code>TransactionManagerImpl</code>のインスタンスを構築します。
+     */
     public TransactionManagerImpl() {
     }
 
@@ -50,57 +58,65 @@ public final class TransactionManagerImpl implements TransactionManager {
             HeuristicRollbackException, SecurityException,
             IllegalStateException, SystemException {
 
-        TransactionImpl tx = getCurrent();
+        final TransactionImpl tx = getCurrent();
         if (tx == null) {
             throw new SIllegalStateException("ESSR0311", null);
         }
-        tx.commit();
+        try {
+            tx.commit();
+        } finally {
+            setCurrent(null);
+        }
     }
 
     public Transaction suspend() throws SystemException {
-        TransactionImpl tx = getCurrent();
+        final TransactionImpl tx = getCurrent();
         if (tx == null) {
             throw new SIllegalStateException("ESSR0311", null);
         }
         try {
             tx.suspend();
-        } catch (XAException ex) {
+        } catch (final XAException ex) {
             throw new SSystemException("ESSR0363", new Object[] { ex }, ex);
+        } finally {
+            setCurrent(null);
         }
-
-        setCurrent(null);
         return tx;
     }
 
-    public void resume(Transaction resumeTx)
+    public void resume(final Transaction resumeTx)
             throws InvalidTransactionException, IllegalStateException,
             SystemException {
 
-        TransactionImpl tx = getCurrent();
+        final TransactionImpl tx = getCurrent();
         if (tx != null) {
             throw new SIllegalStateException("ESSR0317", null);
         }
-        setCurrent((TransactionImpl) resumeTx);
         try {
             ((TransactionImpl) resumeTx).resume();
-        } catch (XAException ex) {
+        } catch (final XAException ex) {
             throw new SSystemException("ESSR0364", new Object[] { ex }, ex);
         }
+        setCurrent((TransactionImpl) resumeTx);
     }
 
     public void rollback() throws IllegalStateException, SecurityException,
             SystemException {
 
-        TransactionImpl tx = getCurrent();
+        final TransactionImpl tx = getCurrent();
         if (tx == null) {
             throw new SIllegalStateException("ESSR0311", null);
         }
-        tx.rollback();
+        try {
+            tx.rollback();
+        } finally {
+            setCurrent(null);
+        }
     }
 
     public void setRollbackOnly() throws IllegalStateException, SystemException {
 
-        Transaction tx = getTransaction();
+        final Transaction tx = getTransaction();
         if (tx == null) {
             throw new SIllegalStateException("ESSR0311", null);
         }
@@ -111,7 +127,7 @@ public final class TransactionManagerImpl implements TransactionManager {
     }
 
     public int getStatus() {
-        TransactionImpl tx = getCurrent();
+        final TransactionImpl tx = getCurrent();
         if (tx != null) {
             return tx.getStatus();
         }
@@ -123,19 +139,20 @@ public final class TransactionManagerImpl implements TransactionManager {
     }
 
     private TransactionImpl getCurrent() {
-        TransactionImpl tx = (TransactionImpl) threadAttachTx_.get();
+        final TransactionImpl tx = (TransactionImpl) threadAttachTx.get();
         if (tx != null && tx.getStatus() == Status.STATUS_NO_TRANSACTION) {
+            setCurrent(null);
             return null;
         }
         return tx;
     }
 
-    private void setCurrent(TransactionImpl current) {
-        threadAttachTx_.set(current);
+    private void setCurrent(final TransactionImpl current) {
+        threadAttachTx.set(current);
     }
 
     private TransactionImpl attachTransaction() {
-        TransactionImpl tx = (TransactionImpl) threadAttachTx_.get();
+        TransactionImpl tx = (TransactionImpl) threadAttachTx.get();
         if (tx == null) {
             tx = new TransactionImpl();
             setCurrent(tx);
