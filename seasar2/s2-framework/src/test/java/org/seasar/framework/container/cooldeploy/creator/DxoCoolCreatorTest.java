@@ -15,6 +15,8 @@
  */
 package org.seasar.framework.container.cooldeploy.creator;
 
+import org.seasar.framework.container.cooldeploy.creator.dxo.GggDxo;
+import org.seasar.framework.container.cooldeploy.creator.dxo.impl.HhhDxoImpl;
 import org.seasar.framework.unit.S2FrameworkTestCase;
 
 /**
@@ -35,5 +37,7 @@ public class DxoCoolCreatorTest extends S2FrameworkTestCase {
         assertTrue(getContainer().hasComponentDef("ccc_dddDxo"));
         assertTrue(getContainer().hasComponentDef("fffDxo"));
         assertTrue(getContainer().hasComponentDef("ccc_dddDxo"));
+        assertEquals(HhhDxoImpl.class, getContainer().getComponentDef(
+                GggDxo.class).getComponentClass());
     }
 }

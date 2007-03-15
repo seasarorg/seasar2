@@ -7,6 +7,10 @@
 		<initMethod name="addRootPackageName">
 			<arg>"org.seasar.framework.container.cooldeploy.creator"</arg>
 		</initMethod>
+		<initMethod name="addInterfaceToImplementationClassName">
+			<arg>"org.seasar.framework.container.cooldeploy.creator.dxo.GggDxo"</arg>
+			<arg>"org.seasar.framework.container.cooldeploy.creator.dxo.impl.HhhDxoImpl"</arg>
+		</initMethod>
 	</component>
 	<component class="org.seasar.framework.container.creator.DxoCreator"/>
 	<component name="dxoCustomizer" class="org.seasar.framework.container.customizer.AspectCustomizer">

@@ -210,6 +210,9 @@ public class CoolComponentAutoRegister implements ClassHandler {
             return;
         }
         Class clazz = ClassUtil.forName(className);
+        if (namingConvention.isSkipClass(clazz)) {
+            return;
+        }
         if (container.getRoot().hasComponentDef(clazz)) {
             return;
         }

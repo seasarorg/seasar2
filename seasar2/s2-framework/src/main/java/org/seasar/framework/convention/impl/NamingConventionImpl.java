@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.jar.JarFile;
 import java.util.zip.ZipFile;
 
@@ -492,6 +493,22 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
                 + "."
                 + className.substring(index + key.length(), className.length()
                         - implementationSuffix.length());
+    }
+
+    public boolean isSkipClass(final Class clazz) {
+        if (clazz.isInterface()) {
+            return false;
+        }
+        for (final Iterator it = interfaceToImplementationMap.entrySet()
+                .iterator(); it.hasNext();) {
+            final Entry entry = (Entry) it.next();
+            final Class interfaceClass = ClassUtil.forName((String) entry
+                    .getKey());
+            if (interfaceClass.isAssignableFrom(clazz)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public Class toCompleteClass(Class clazz) {

@@ -95,6 +95,8 @@ public interface NamingConvention {
 
     String toInterfaceClassName(String className);
 
+    boolean isSkipClass(Class clazz);
+
     Class toCompleteClass(Class clazz);
 
     String fromComponentNameToPartOfClassName(String componentName);
