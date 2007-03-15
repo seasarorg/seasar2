@@ -15,7 +15,7 @@
  */
 package org.seasar.framework.container.factory;
 
-import javax.ejb.PostConstruct;
+import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 
 @Stateless

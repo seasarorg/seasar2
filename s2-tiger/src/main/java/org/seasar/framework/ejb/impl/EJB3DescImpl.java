@@ -25,8 +25,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import javax.annotation.PostConstruct;
 import javax.ejb.Local;
-import javax.ejb.PostConstruct;
 import javax.ejb.Remote;
 import javax.ejb.Stateful;
 import javax.ejb.Stateless;

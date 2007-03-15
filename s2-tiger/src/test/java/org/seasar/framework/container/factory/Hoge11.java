@@ -15,9 +15,9 @@
  */
 package org.seasar.framework.container.factory;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.ejb.Local;
-import javax.ejb.PostConstruct;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -30,6 +30,7 @@ import javax.sql.DataSource;
 @Stateless
 @Local( { IHoge11A.class, IHoge11B.class })
 public class Hoge11 implements IHoge11A, IHoge11B {
+
     String foo;
 
     @PersistenceContext
