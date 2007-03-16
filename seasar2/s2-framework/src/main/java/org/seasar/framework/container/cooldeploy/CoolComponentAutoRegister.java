@@ -75,6 +75,7 @@ public class CoolComponentAutoRegister implements ClassHandler {
         addStrategy("file", new FileSystemStrategy());
         addStrategy("jar", new JarFileStrategy());
         addStrategy("zip", new ZipFileStrategy());
+        addStrategy("code-source", new CodeSourceFileStrategy());
     }
 
     /**
@@ -295,6 +296,22 @@ public class CoolComponentAutoRegister implements ClassHandler {
         protected JarFile createJarFile(URL url) {
             final String jarFileName = ZipFileUtil.toZipFilePath(url);
             return JarFileUtil.create(new File(jarFileName));
+        }
+    }
+
+    /**
+     * OC4J固有の<code>code-source:</code>プロトコルで表現されるURLをサポートするストラテジです。
+     */
+    protected class CodeSourceFileStrategy implements Strategy {
+
+        public void registerAll(String path, URL url) {
+            final JarFile jarFile = createJarFile(url);
+            ClassTraversal.forEach(jarFile, CoolComponentAutoRegister.this);
+        }
+
+        protected JarFile createJarFile(final URL url) {
+            final URL jarUrl = URLUtil.create("jar:file:" + url.getPath());
+            return JarFileUtil.toJarFile(jarUrl);
         }
     }
 }

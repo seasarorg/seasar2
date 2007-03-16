@@ -49,6 +49,7 @@ public class ComponentAutoRegister extends AbstractComponentAutoRegister
         strategies.put("file", new FileSystemStrategy());
         strategies.put("jar", new JarFileStrategy());
         strategies.put("zip", new ZipFileStrategy());
+        strategies.put("code-source", new CodeSourceFileStrategy());
     }
 
     /**
@@ -148,6 +149,22 @@ public class ComponentAutoRegister extends AbstractComponentAutoRegister
         protected JarFile createJarFile(final URL url) {
             final String jarFileName = ZipFileUtil.toZipFilePath(url);
             return JarFileUtil.create(new File(jarFileName));
+        }
+    }
+
+    /**
+     * OC4J固有の<code>code-source:</code>プロトコルで表現されるURLをサポートするストラテジです。
+     */
+    protected class CodeSourceFileStrategy implements Strategy {
+
+        public void registerAll(final Class referenceClass, final URL url) {
+            final JarFile jarFile = createJarFile(url);
+            ClassTraversal.forEach(jarFile, ComponentAutoRegister.this);
+        }
+
+        protected JarFile createJarFile(final URL url) {
+            final URL jarUrl = URLUtil.create("jar:file:" + url.getPath());
+            return JarFileUtil.toJarFile(jarUrl);
         }
     }
 }

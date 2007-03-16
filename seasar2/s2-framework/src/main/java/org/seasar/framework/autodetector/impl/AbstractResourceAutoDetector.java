@@ -25,7 +25,6 @@ import java.util.jar.JarFile;
 import java.util.regex.Pattern;
 
 import org.seasar.framework.autodetector.ResourceAutoDetector;
-import org.seasar.framework.util.FileUtil;
 import org.seasar.framework.util.JarFileUtil;
 import org.seasar.framework.util.ResourceTraversal;
 import org.seasar.framework.util.ResourceUtil;
@@ -53,6 +52,7 @@ public abstract class AbstractResourceAutoDetector implements
         strategies.put("file", new FileSystemStrategy());
         strategies.put("jar", new JarFileStrategy());
         strategies.put("zip", new ZipFileStrategy());
+        strategies.put("code-source", new CodeSourceFileStrategy());
     }
 
     public void addStrategy(final String protocol, final Strategy strategy) {
@@ -121,17 +121,10 @@ public abstract class AbstractResourceAutoDetector implements
 
     protected interface Strategy {
 
-        String getBaseName(String path, URL url);
-
         void detect(String path, URL url, ResourceHandler handler);
     }
 
-    protected class FileSystemStrategy implements Strategy {
-
-        public String getBaseName(final String path, final URL url) {
-            final File rootDir = getRootDir(path, url);
-            return FileUtil.getCanonicalPath(rootDir);
-        }
+    protected static class FileSystemStrategy implements Strategy {
 
         public void detect(final String path, final URL url,
                 final ResourceHandler handler) {
@@ -150,11 +143,7 @@ public abstract class AbstractResourceAutoDetector implements
         }
     }
 
-    protected class JarFileStrategy implements Strategy {
-
-        public String getBaseName(final String path, final URL url) {
-            return createJarFile(url).getName();
-        }
+    protected static class JarFileStrategy implements Strategy {
 
         public void detect(final String path, final URL url,
                 final ResourceHandler handler) {
@@ -168,11 +157,7 @@ public abstract class AbstractResourceAutoDetector implements
         }
     }
 
-    protected class ZipFileStrategy implements Strategy {
-
-        public String getBaseName(final String path, final URL url) {
-            return createJarFile(url).getName();
-        }
+    protected static class ZipFileStrategy implements Strategy {
 
         public void detect(final String path, final URL url,
                 final ResourceHandler handler) {
@@ -184,6 +169,21 @@ public abstract class AbstractResourceAutoDetector implements
         protected JarFile createJarFile(final URL url) {
             final String jarFileName = ZipFileUtil.toZipFilePath(url);
             return JarFileUtil.create(new File(jarFileName));
+        }
+    }
+
+    protected static class CodeSourceFileStrategy implements Strategy {
+
+        public void detect(final String path, final URL url,
+                final ResourceHandler handler) {
+
+            final JarFile jarFile = createJarFile(url);
+            ResourceTraversal.forEach(jarFile, handler);
+        }
+
+        protected JarFile createJarFile(final URL url) {
+            final URL jarUrl = URLUtil.create("jar:file:" + url.getPath());
+            return JarFileUtil.toJarFile(jarUrl);
         }
     }
 }

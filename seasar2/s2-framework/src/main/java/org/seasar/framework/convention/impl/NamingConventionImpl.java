@@ -687,6 +687,8 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
                 list.add(new JarExistChecker(url, rootPackageName));
             } else if ("zip".equals(protocol)) {
                 list.add(new ZipExistChecker(url, rootPackageName));
+            } else if ("code-source".equals(protocol)) {
+                list.add(new CodeSourceExistChecker(url, rootPackageName));
             }
         }
         return (ExistChecker[]) list.toArray(new ExistChecker[list.size()]);
@@ -753,6 +755,27 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
 
         public void close() {
             ZipFileUtil.close(zipFile);
+        }
+    }
+
+    protected static class CodeSourceExistChecker implements ExistChecker {
+        private JarFile jarFile;
+
+        private String rootPath;
+
+        protected CodeSourceExistChecker(final URL url,
+                final String rootPackageName) {
+            final URL jarUrl = URLUtil.create("jar:file:" + url.getPath());
+            jarFile = JarFileUtil.toJarFile(jarUrl);
+            this.rootPath = rootPackageName.replace('.', '/') + "/";
+        }
+
+        public boolean isExist(final String lastClassName) {
+            return jarFile.getEntry(rootPath + getPathName(lastClassName)) != null;
+        }
+
+        public void close() {
+            JarFileUtil.close(jarFile);
         }
     }
 

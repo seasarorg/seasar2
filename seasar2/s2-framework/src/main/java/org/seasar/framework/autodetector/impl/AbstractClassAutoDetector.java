@@ -25,7 +25,6 @@ import java.util.jar.JarFile;
 
 import org.seasar.framework.autodetector.ClassAutoDetector;
 import org.seasar.framework.util.ClassTraversal;
-import org.seasar.framework.util.FileUtil;
 import org.seasar.framework.util.JarFileUtil;
 import org.seasar.framework.util.ResourceUtil;
 import org.seasar.framework.util.StringUtil;
@@ -47,6 +46,7 @@ public abstract class AbstractClassAutoDetector implements ClassAutoDetector {
         strategies.put("file", new FileSystemStrategy());
         strategies.put("jar", new JarFileStrategy());
         strategies.put("zip", new ZipFileStrategy());
+        strategies.put("code-source", new CodeSourceFileStrategy());
     }
 
     public void addStrategy(final String protocol, final Strategy strategy) {
@@ -71,17 +71,10 @@ public abstract class AbstractClassAutoDetector implements ClassAutoDetector {
 
     protected interface Strategy {
 
-        String getBaseName(String packageName, URL url);
-
         void detect(String packageName, URL url, ClassHandler handler);
     }
 
-    protected class FileSystemStrategy implements Strategy {
-
-        public String getBaseName(final String packageName, final URL url) {
-            final File rootDir = getRootDir(packageName, url);
-            return FileUtil.getCanonicalPath(rootDir);
-        }
+    protected static class FileSystemStrategy implements Strategy {
 
         public void detect(final String packageName, final URL url,
                 final ClassHandler handler) {
@@ -100,11 +93,7 @@ public abstract class AbstractClassAutoDetector implements ClassAutoDetector {
         }
     }
 
-    protected class JarFileStrategy implements Strategy {
-
-        public String getBaseName(final String packageName, final URL url) {
-            return createJarFile(url).getName();
-        }
+    protected static class JarFileStrategy implements Strategy {
 
         public void detect(final String packageName, final URL url,
                 final ClassHandler handler) {
@@ -118,11 +107,7 @@ public abstract class AbstractClassAutoDetector implements ClassAutoDetector {
         }
     }
 
-    protected class ZipFileStrategy implements Strategy {
-
-        public String getBaseName(final String packageName, final URL url) {
-            return createJarFile(url).getName();
-        }
+    protected static class ZipFileStrategy implements Strategy {
 
         public void detect(final String packageName, final URL url,
                 final ClassHandler handler) {
@@ -134,6 +119,21 @@ public abstract class AbstractClassAutoDetector implements ClassAutoDetector {
         protected JarFile createJarFile(final URL url) {
             final String jarFileName = ZipFileUtil.toZipFilePath(url);
             return JarFileUtil.create(new File(jarFileName));
+        }
+    }
+
+    protected static class CodeSourceFileStrategy implements Strategy {
+
+        public void detect(final String packageName, final URL url,
+                final ClassHandler handler) {
+
+            final JarFile jarFile = createJarFile(url);
+            ClassTraversal.forEach(jarFile, handler);
+        }
+
+        protected JarFile createJarFile(final URL url) {
+            final URL jarUrl = URLUtil.create("jar:file:" + url.getPath());
+            return JarFileUtil.toJarFile(jarUrl);
         }
     }
 }
