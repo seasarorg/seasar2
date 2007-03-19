@@ -68,6 +68,8 @@ public class DataAccessorImpl implements DataAccessor {
 
     private DatabaseMetaData dbMetaData;
 
+    private SqlWriter sqlWriter;
+
     @Binding(bindingType = BindingType.MUST)
     public void setTestContext(final TestContext testContext) {
         this.testContext = testContext;
@@ -84,6 +86,11 @@ public class DataAccessorImpl implements DataAccessor {
     @Binding(bindingType = BindingType.MAY)
     public void setEntityManager(final EntityManager em) {
         this.em = em;
+    }
+
+    @Binding(bindingType = BindingType.MAY)
+    public void setDataWriter(final SqlWriter sqlWriter) {
+        this.sqlWriter = sqlWriter;
     }
 
     public DataSource getDataSource() {
@@ -109,6 +116,10 @@ public class DataAccessorImpl implements DataAccessor {
         return dbMetaData;
     }
 
+    protected SqlWriter getSqlWriter() {
+        return sqlWriter != null ? sqlWriter : new SqlWriter(getDataSource());
+    }
+
     public DataSet readXls(String path) {
         DataReader reader = new XlsReader(convertPath(path));
         return reader.read();
@@ -123,7 +134,7 @@ public class DataAccessorImpl implements DataAccessor {
 
     public void writeDb(DataSet dataSet) {
         flushIfNecessary();
-        DataWriter writer = new SqlWriter(getDataSource());
+        DataWriter writer = getSqlWriter();
         writer.write(dataSet);
     }
 
