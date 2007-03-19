@@ -171,8 +171,16 @@ public abstract class S2TestCase extends S2FrameworkTestCase {
     }
 
     public void writeDb(DataSet dataSet) {
-        DataWriter writer = new SqlWriter(getDataSource());
+        SqlWriter writer = getSqlWriter();
         writer.write(dataSet);
+    }
+
+    protected SqlWriter getSqlWriter() {
+        S2Container container = getContainer();
+        if (container.hasComponentDef(SqlWriter.class)) {
+            return (SqlWriter) container.getComponent(SqlWriter.class);
+        }
+        return new SqlWriter(getDataSource());
     }
 
     public DataSet readDb(DataSet dataSet) {
