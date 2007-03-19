@@ -29,6 +29,14 @@ public final class StatementUtil {
     private StatementUtil() {
     }
 
+    public static boolean execute(Statement statement, String sql) {
+        try {
+            return statement.execute(sql);
+        } catch (SQLException ex) {
+            throw new SQLRuntimeException(ex);
+        }
+    }
+
     public static void setFetchSize(Statement statement, int fetchSize) {
         try {
             statement.setFetchSize(fetchSize);

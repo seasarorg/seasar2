@@ -89,7 +89,7 @@ public class DataAccessorImpl implements DataAccessor {
     }
 
     @Binding(bindingType = BindingType.MAY)
-    public void setDataWriter(final SqlWriter sqlWriter) {
+    public void setSqlWriter(final SqlWriter sqlWriter) {
         this.sqlWriter = sqlWriter;
     }
 

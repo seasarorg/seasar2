@@ -16,21 +16,16 @@
 package org.seasar.extension.dataset.impl;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.sql.DataSource;
 
 import org.seasar.extension.dataset.DataTable;
+import org.seasar.extension.jdbc.impl.BasicSelectHandler;
+import org.seasar.extension.jdbc.impl.ObjectResultSetHandler;
 import org.seasar.extension.jdbc.util.ConnectionUtil;
 import org.seasar.extension.jdbc.util.DataSourceUtil;
-import org.seasar.framework.exception.SQLRuntimeException;
 import org.seasar.framework.log.Logger;
-import org.seasar.framework.util.ResultSetUtil;
 import org.seasar.framework.util.StatementUtil;
 
 /**
@@ -40,84 +35,59 @@ import org.seasar.framework.util.StatementUtil;
 
 public class SqlServerSqlTableWriter extends SqlTableWriter {
 
-    private static final Logger LOGGER = Logger.getLogger(SqlTableWriter.class);
-
-    private final Map hasIdentityColumn = new HashMap();
+    private static final Logger logger = Logger.getLogger(SqlTableWriter.class);
 
     public SqlServerSqlTableWriter(final DataSource dataSource) {
         super(dataSource);
     }
 
     protected void doWrite(final DataTable dataTable) {
-        turnIdentityInsert(dataTable, true);
+        boolean hasIdentity = hasIdentityColumn(dataTable);
+        if (hasIdentity) {
+            turnOnIdentityInsert(dataTable);
+        }
         super.doWrite(dataTable);
-        turnIdentityInsert(dataTable, false);
+        if (hasIdentity) {
+            turnOffIdentityInsert(dataTable);
+        }
     }
 
-    private void turnIdentityInsert(final DataTable dataTable,
-            final boolean identityInsert) {
+    private void turnOnIdentityInsert(final DataTable dataTable) {
+        setIdentityInsert(dataTable, "ON");
+    }
+
+    private void turnOffIdentityInsert(final DataTable dataTable) {
+        setIdentityInsert(dataTable, "OFF");
+    }
+
+    private void setIdentityInsert(final DataTable dataTable,
+            final String command) {
+        final String sql = "SET IDENTITY_INSERT " + dataTable.getTableName()
+                + " " + command;
+        if (logger.isDebugEnabled()) {
+            logger.debug(sql);
+        }
         final Connection connection = DataSourceUtil
                 .getConnection(getDataSource());
         try {
-            if (hasIdentityColumn(connection, dataTable)) {
-                final String sql = "SET IDENTITY_INSERT "
-                        + dataTable.getTableName() + " "
-                        + (identityInsert ? "ON" : "OFF");
-                if (LOGGER.isDebugEnabled()) {
-                    LOGGER.debug(sql);
-                }
-                execute(connection, sql);
+            final Statement statement = ConnectionUtil
+                    .createStatement(connection);
+            try {
+                StatementUtil.execute(statement, sql);
+            } finally {
+                StatementUtil.close(statement);
             }
         } finally {
             ConnectionUtil.close(connection);
         }
     }
 
-    private boolean hasIdentityColumn(final Connection connection,
-            final DataTable dataTable) {
-        final String tableName = dataTable.getTableName();
-        if (!hasIdentityColumn.containsKey(tableName)) {
-            final String sql = "SELECT IDENT_CURRENT ('"
-                    + dataTable.getTableName() + "') AS IDENT_CURRENT";
-            if (LOGGER.isDebugEnabled()) {
-                LOGGER.debug(sql);
-            }
-            Object identCurrent = queryToOneColumn(connection, sql);
-            hasIdentityColumn.put(tableName, Boolean
-                    .valueOf(identCurrent != null));
-        }
-        return ((Boolean) hasIdentityColumn.get(tableName)).booleanValue();
+    private boolean hasIdentityColumn(final DataTable dataTable) {
+        final String sql = "SELECT IDENT_CURRENT ('" + dataTable.getTableName()
+                + "') AS IDENT_CURRENT";
+        final BasicSelectHandler handler = new BasicSelectHandler(
+                getDataSource(), sql, new ObjectResultSetHandler());
+        return handler.execute(null) != null;
     }
 
-    private boolean execute(final Connection connection, final String sql) {
-        Statement statement = null;
-        try {
-            statement = connection.createStatement();
-            return statement.execute(sql);
-        } catch (final SQLException e) {
-            throw new SQLRuntimeException(e);
-        } finally {
-            StatementUtil.close(statement);
-        }
-    }
-
-    private Object queryToOneColumn(final Connection connection,
-            final String sql) {
-        final PreparedStatement statement = ConnectionUtil.prepareStatement(
-                connection, sql);
-        ResultSet resultSet = null;
-        try {
-            resultSet = statement.executeQuery();
-            Object column = null;
-            while (resultSet.next()) {
-                column = resultSet.getObject(1);
-            }
-            return column;
-        } catch (final SQLException e) {
-            throw new SQLRuntimeException(e);
-        } finally {
-            ResultSetUtil.close(resultSet);
-            StatementUtil.close(statement);
-        }
-    }
 }

@@ -25,10 +25,13 @@ import org.seasar.extension.dataset.DataRow;
 import org.seasar.extension.dataset.DataSet;
 import org.seasar.extension.dataset.DataTable;
 import org.seasar.extension.dataset.impl.DataSetImpl;
+import org.seasar.extension.dataset.impl.SqlWriter;
 
 public class S2TestCaseTest extends S2TestCase {
 
     private static final String J2EE_PATH = "j2ee.dicon";
+
+    private SqlWriter sqlWriter;
 
     public void setUpGetDataSource() {
         include(J2EE_PATH);
@@ -190,6 +193,16 @@ public class S2TestCaseTest extends S2TestCase {
         List list = new ArrayList();
         list.add(bean);
         assertEquals("1", expected, list);
+    }
+
+    public void setUpGetSqlWriter() throws Exception {
+        include(J2EE_PATH);
+        sqlWriter = new SqlWriter(null);
+        register(sqlWriter);
+    }
+
+    public void testGetSqlWriter() throws Exception {
+        assertSame(sqlWriter, getSqlWriter());
     }
 
     public static class Hoge {

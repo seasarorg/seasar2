@@ -20,6 +20,7 @@ import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import org.seasar.framework.exception.SQLRuntimeException;
 
@@ -38,6 +39,14 @@ public final class ConnectionUtil {
         }
         try {
             connection.close();
+        } catch (SQLException ex) {
+            throw new SQLRuntimeException(ex);
+        }
+    }
+
+    public static Statement createStatement(Connection connection) {
+        try {
+            return connection.createStatement();
         } catch (SQLException ex) {
             throw new SQLRuntimeException(ex);
         }
