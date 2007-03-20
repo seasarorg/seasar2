@@ -24,6 +24,25 @@ import org.seasar.framework.exception.EmptyRuntimeException;
 import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.DisposableUtil;
 
+/**
+ * 唯一の{@link org.seasar.framework.container.S2Container S2コンテナ}を提供するためのファクトリクラスです。
+ * <p>
+ * シングルトンS2コンテナファクトリは、設定ファイルに基づいてS2コンテナを生成・初期化し、それを保持します。
+ * 保持されるS2コンテナは、このクラスをロードしたクラスローダで一意になります。
+ * </p>
+ * <p>
+ * デフォルトの設定ファイル名は<code>app.dicon</code>となります。
+ * </p>
+ * <p>
+ * シングルトンS2コンテナファクトリの標準的な利用方法としては、 アプリケーション開始時に{@link #init()}を呼び出して、
+ * {@link #getContainer()}でS2コンテナを取得し、 アプリケーション終了時に{@link #destroy()}を呼び出します。
+ * Webアプリケーションであれば{@link javax.servlet.Servlet#init(javax.servlet.ServletConfig)}で{@link #init()}を、
+ * {@link javax.servlet.Servlet#destroy()}で{@link #destroy()}を呼び出します。
+ * </p>
+ * 
+ * @author koichik
+ * @author goto
+ */
 public final class SingletonS2ContainerFactory {
 
     private static final Logger logger = Logger
@@ -40,31 +59,75 @@ public final class SingletonS2ContainerFactory {
     private SingletonS2ContainerFactory() {
     }
 
+    /**
+     * 設定ファイルのファイルパスを返します。
+     * 
+     * @return 設定ファイルのファイルパス
+     */
     public static String getConfigPath() {
         return configPath;
     }
 
+    /**
+     * 設定ファイルのファイルパスを設定します。
+     * 
+     * @param path
+     *            設定ファイルのファイルパス
+     */
     public static void setConfigPath(String path) {
         configPath = path;
     }
 
+    /**
+     * {@link org.seasar.framework.container.ExternalContext 外部コンテキスト}を返します。
+     * 
+     * @return 外部コンテキスト
+     */
     public static ExternalContext getExternalContext() {
         return externalContext;
     }
 
+    /**
+     * {@link org.seasar.framework.container.ExternalContext 外部コンテキスト}を設定します。
+     * 
+     * @param extCtx
+     *            外部コンテキスト
+     */
     public static void setExternalContext(ExternalContext extCtx) {
         externalContext = extCtx;
     }
 
+    /**
+     * {@link org.seasar.framework.container.ExternalContextComponentDefRegister 外部コンテキストコンポーネント定義レジスタ}を返します。
+     * 
+     * @return 外部コンテキストコンポーネント定義レジスタ
+     */
     public static ExternalContextComponentDefRegister getExternalContextComponentDefRegister() {
         return externalContextComponentDefRegister;
     }
 
+    /**
+     * {@link org.seasar.framework.container.ExternalContextComponentDefRegister 外部コンテキストコンポーネント定義レジスタ}を設定します。
+     * 
+     * @param extCtxComponentDefRegister
+     *            外部コンテキストコンポーネント定義レジスタ
+     */
     public static void setExternalContextComponentDefRegister(
             ExternalContextComponentDefRegister extCtxComponentDefRegister) {
         externalContextComponentDefRegister = extCtxComponentDefRegister;
     }
 
+    /**
+     * 設定ファイルに基づいてS2コンテナを生成・初期化し、それを保持します。 既にS2コンテナが保持されている場合は何もしません。
+     * <p>
+     * S2コンテナを生成した後、 初期化を行なう前に必要に応じて、
+     * 外部コンテキストおよび外部コンテキストコンポーネント定義レジスタをS2コンテナに設定します。
+     * </p>
+     * 
+     * @see S2ContainerFactory#create(String)
+     * @see org.seasar.framework.container.ExternalContext
+     * @see org.seasar.framework.container.ExternalContextComponentDefRegister
+     */
     public static void init() {
         if (container != null) {
             return;
@@ -89,6 +152,9 @@ public final class SingletonS2ContainerFactory {
                 + SmartDeployUtil.getDeployMode(container));
     }
 
+    /**
+     * S2コンテナやその他の終了処理を行ないます。
+     */
     public static void destroy() {
         if (container == null) {
             return;
@@ -98,6 +164,12 @@ public final class SingletonS2ContainerFactory {
         DisposableUtil.dispose();
     }
 
+    /**
+     * 唯一のS2コンテナを返します。 S2コンテナが保持されていない場合、
+     * {@link org.seasar.framework.exception.EmptyRuntimeException}をスローします。
+     * 
+     * @return S2コンテナ
+     */
     public static S2Container getContainer() {
         if (container == null) {
             throw new EmptyRuntimeException("S2Container");
@@ -105,10 +177,21 @@ public final class SingletonS2ContainerFactory {
         return container;
     }
 
+    /**
+     * 保持するS2コンテナを設定します。
+     * 
+     * @param c
+     *            S2コンテナ
+     */
     public static void setContainer(S2Container c) {
         container = c;
     }
 
+    /**
+     * S2コンテナを保持しているかどうかを返します。
+     * 
+     * @return S2コンテナを保持している場合は<code>true</code>、そうでない場合は<code>false</code>
+     */
     public static boolean hasContainer() {
         return container != null;
     }
