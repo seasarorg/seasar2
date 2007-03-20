@@ -15,14 +15,13 @@
  */
 package org.seasar.framework.beans.factory;
 
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 
 import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.impl.BeanDescImpl;
 import org.seasar.framework.util.Disposable;
 import org.seasar.framework.util.DisposableUtil;
+import org.seasar.framework.util.MapUtil;
 
 /**
  * @author higa
@@ -32,8 +31,7 @@ public final class BeanDescFactory {
 
     private static volatile boolean initialized;
 
-    private static Map beanDescCache = Collections
-            .synchronizedMap(new HashMap());
+    private static Map beanDescCache = MapUtil.createHashMap(1024);
 
     static {
         initialize();

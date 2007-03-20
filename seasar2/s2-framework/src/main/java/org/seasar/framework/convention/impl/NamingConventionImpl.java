@@ -18,7 +18,6 @@ package org.seasar.framework.convention.impl;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -35,6 +34,7 @@ import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.Disposable;
 import org.seasar.framework.util.DisposableUtil;
 import org.seasar.framework.util.JarFileUtil;
+import org.seasar.framework.util.MapUtil;
 import org.seasar.framework.util.ResourceUtil;
 import org.seasar.framework.util.StringUtil;
 import org.seasar.framework.util.URLUtil;
@@ -90,7 +90,7 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
 
     private String[] ignorePackageNames = new String[0];
 
-    private Map existCheckerArrays = Collections.synchronizedMap(new HashMap());
+    private Map existCheckerArrays = MapUtil.createHashMap();
 
     private Map interfaceToImplementationMap = new HashMap();
 

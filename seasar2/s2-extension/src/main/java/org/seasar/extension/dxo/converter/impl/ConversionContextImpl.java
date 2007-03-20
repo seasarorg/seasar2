@@ -19,7 +19,6 @@ import java.lang.reflect.Method;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.List;
@@ -39,6 +38,7 @@ import org.seasar.framework.beans.factory.BeanDescFactory;
 import org.seasar.framework.util.CaseInsensitiveMap;
 import org.seasar.framework.util.Disposable;
 import org.seasar.framework.util.DisposableUtil;
+import org.seasar.framework.util.MapUtil;
 import org.seasar.framework.util.OgnlUtil;
 import org.seasar.framework.util.StringUtil;
 
@@ -64,20 +64,18 @@ public class ConversionContextImpl implements ConversionContext {
     protected static boolean initialized;
 
     /** コンテキスト情報のキャッシュです。 */
-    protected static final Map contextInfoCache = Collections
-            .synchronizedMap(new HashMap(1024));
+    protected static final Map contextInfoCache = MapUtil.createHashMap(1024);
 
     /** コンバータのキャッシュです。 */
-    protected static Map convertersCache = Collections
-            .synchronizedMap(new IdentityHashMap(1024));
+    protected static Map convertersCache = MapUtil.createHashMap(1024);
 
     /** ネストしたプロパティ情報のキャッシュです。 */
-    protected static final Map nestedPropertyInfoCache = Collections
-            .synchronizedMap(new HashMap(1024));
+    protected static final Map nestedPropertyInfoCache = MapUtil
+            .createHashMap(1024);
 
     /** 日時プロパティ情報のキャッシュです。 */
-    protected static final Map datePropertyInfoCache = Collections
-            .synchronizedMap(new HashMap(1024));
+    protected static final Map datePropertyInfoCache = MapUtil
+            .createHashMap(1024);
 
     /** {@link DateFormat}のキャッシュです。 */
     protected static final ThreadLocal dateFormatCache = new ThreadLocal() {

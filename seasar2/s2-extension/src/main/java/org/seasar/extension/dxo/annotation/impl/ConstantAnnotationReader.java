@@ -17,7 +17,6 @@ package org.seasar.extension.dxo.annotation.impl;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,6 +30,7 @@ import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.util.ConstantAnnotationUtil;
 import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.FieldUtil;
+import org.seasar.framework.util.MapUtil;
 
 /**
  * @author Satoshi Kimura
@@ -40,7 +40,7 @@ public class ConstantAnnotationReader implements AnnotationReader {
 
     protected S2Container container;
 
-    protected Map convertersCache = Collections.synchronizedMap(new HashMap());
+    protected Map convertersCache = MapUtil.createHashMap();
 
     public ConstantAnnotationReader(final S2Container container) {
         this.container = container.getRoot();

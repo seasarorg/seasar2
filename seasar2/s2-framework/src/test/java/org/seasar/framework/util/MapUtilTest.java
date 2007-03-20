@@ -16,26 +16,18 @@
 package org.seasar.framework.util;
 
 import java.util.Map;
-import java.util.regex.Pattern;
 
-public final class LikeUtil {
+import junit.framework.TestCase;
 
-    private static Map patterns = MapUtil.createHashMap();
+/**
+ * @author koichik
+ * 
+ */
+public class MapUtilTest extends TestCase {
 
-    private LikeUtil() {
+    public void testCreate() {
+        Map map = MapUtil.createHashMap();
+        assertTrue(map instanceof Map);
     }
 
-    public static final boolean match(String patternStr, String value) {
-        if (StringUtil.isEmpty(patternStr)) {
-            return false;
-        }
-        Pattern pattern = (Pattern) patterns.get(patternStr);
-        if (pattern == null) {
-            String regexp = StringUtil.replace(patternStr, "_", ".");
-            regexp = StringUtil.replace(regexp, "%", ".*");
-            pattern = Pattern.compile(regexp);
-            patterns.put(patternStr, pattern);
-        }
-        return pattern.matcher(value).matches();
-    }
 }

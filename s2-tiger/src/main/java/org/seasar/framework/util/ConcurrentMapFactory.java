@@ -16,26 +16,29 @@
 package org.seasar.framework.util;
 
 import java.util.Map;
-import java.util.regex.Pattern;
+import java.util.concurrent.ConcurrentHashMap;
 
-public final class LikeUtil {
+import org.seasar.framework.util.MapUtil.MapFactory;
 
-    private static Map patterns = MapUtil.createHashMap();
+/**
+ * {@link java.util.concurrent.ConcurrentHashMap}を作成するファクトリの実装です。
+ * 
+ * @author koichik
+ */
+@SuppressWarnings("unchecked")
+public class ConcurrentMapFactory implements MapFactory {
 
-    private LikeUtil() {
+    public Map create() {
+        return new ConcurrentHashMap();
     }
 
-    public static final boolean match(String patternStr, String value) {
-        if (StringUtil.isEmpty(patternStr)) {
-            return false;
-        }
-        Pattern pattern = (Pattern) patterns.get(patternStr);
-        if (pattern == null) {
-            String regexp = StringUtil.replace(patternStr, "_", ".");
-            regexp = StringUtil.replace(regexp, "%", ".*");
-            pattern = Pattern.compile(regexp);
-            patterns.put(patternStr, pattern);
-        }
-        return pattern.matcher(value).matches();
+    public Map create(final int initialCapacity) {
+        return new ConcurrentHashMap(initialCapacity);
     }
+
+    public Map create(final int initialCapacity, final float loadFactor) {
+        return new ConcurrentHashMap(initialCapacity, loadFactor,
+                initialCapacity);
+    }
+
 }

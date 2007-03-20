@@ -16,8 +16,6 @@
 package org.seasar.framework.util;
 
 import java.text.DecimalFormatSymbols;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
@@ -27,7 +25,7 @@ import java.util.Map;
  */
 public final class DecimalFormatSymbolsUtil {
 
-    private static Map cache = Collections.synchronizedMap(new HashMap());
+    private static Map cache = MapUtil.createHashMap();
 
     private DecimalFormatSymbolsUtil() {
     }

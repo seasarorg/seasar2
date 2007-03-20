@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.seasar.framework.container.ExternalContext;
+import org.seasar.framework.util.MapUtil;
 
 /**
  * @author koichik
@@ -29,7 +30,7 @@ public class GenericExternalContext implements ExternalContext {
     protected static final Map EMPTY_MAP = Collections
             .unmodifiableMap(new HashMap());
 
-    protected Map application = Collections.synchronizedMap(new HashMap());
+    protected Map application = MapUtil.createHashMap();
 
     protected ThreadLocal requests = new ThreadLocal();
 

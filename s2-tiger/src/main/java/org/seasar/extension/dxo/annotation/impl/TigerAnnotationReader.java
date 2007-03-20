@@ -17,8 +17,6 @@ package org.seasar.extension.dxo.annotation.impl;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 
 import org.seasar.extension.dxo.annotation.AnnotationReader;
@@ -46,8 +44,8 @@ public class TigerAnnotationReader implements AnnotationReader {
 
     protected AnnotationReader next;
 
-    protected Map<Class<?>, Map<String, Converter>> convertersCache = Collections
-            .synchronizedMap(new HashMap<Class<?>, Map<String, Converter>>());
+    protected Map<Class<?>, Map<String, Converter>> convertersCache = CollectionsUtil
+            .newConcurrentHashMap();
 
     public TigerAnnotationReader(final S2Container container) {
         this(container, null);
