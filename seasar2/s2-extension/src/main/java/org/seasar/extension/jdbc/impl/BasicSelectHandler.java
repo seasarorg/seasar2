@@ -112,9 +112,6 @@ public class BasicSelectHandler extends BasicHandler implements SelectHandler {
 
     public Object execute(Object[] args, Class[] argTypes)
             throws SQLRuntimeException {
-        if (logger_.isDebugEnabled()) {
-            logger_.debug(getCompleteSql(args));
-        }
         Connection con = getConnection();
         try {
             return execute(con, args, argTypes);
@@ -125,7 +122,9 @@ public class BasicSelectHandler extends BasicHandler implements SelectHandler {
 
     public Object execute(Connection connection, Object[] args, Class[] argTypes)
             throws SQLRuntimeException {
-
+        if (logger_.isDebugEnabled()) {
+            logger_.debug(getCompleteSql(args));
+        }
         PreparedStatement ps = null;
         try {
             ps = prepareStatement(connection);

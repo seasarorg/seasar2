@@ -58,9 +58,6 @@ public class BasicUpdateHandler extends BasicHandler implements UpdateHandler {
 
     public int execute(Object[] args, Class[] argTypes)
             throws SQLRuntimeException {
-        if (logger_.isDebugEnabled()) {
-            logger_.debug(getCompleteSql(args));
-        }
         Connection connection = getConnection();
         try {
             return execute(connection, args, argTypes);
@@ -70,6 +67,9 @@ public class BasicUpdateHandler extends BasicHandler implements UpdateHandler {
     }
 
     public int execute(Connection connection, Object[] args, Class[] argTypes) {
+        if (logger_.isDebugEnabled()) {
+            logger_.debug(getCompleteSql(args));
+        }
         PreparedStatement ps = prepareStatement(connection);
         try {
             bindArgs(ps, args, argTypes);
