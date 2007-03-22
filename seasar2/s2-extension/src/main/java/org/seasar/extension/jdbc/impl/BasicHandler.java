@@ -134,15 +134,22 @@ public class BasicHandler {
         int pos2 = 0;
         int pos3 = 0;
         int pos4 = 0;
+        int pos5 = 0;
+        int pos6 = 0;
         int index = 0;
         while (true) {
             pos = sql_.indexOf('?', pos2);
             pos3 = sql_.indexOf('\'', pos2);
             pos4 = sql_.indexOf('\'', pos3 + 1);
+            pos5 = sql_.indexOf("/*", pos2);
+            pos6 = sql_.indexOf("*/", pos5 + 1);
             if (pos > 0) {
                 if (pos3 >= 0 && pos3 < pos && pos < pos4) {
                     buf.append(sql_.substring(pos2, pos4 + 1));
                     pos2 = pos4 + 1;
+                } else if (pos5 >= 0 && pos5 < pos && pos < pos6) {
+                    buf.append(sql_.substring(pos2, pos6 + 1));
+                    pos2 = pos6 + 1;
                 } else {
                     buf.append(sql_.substring(pos2, pos));
                     buf.append(getBindVariableText(args[index++]));
