@@ -25,6 +25,7 @@ import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.Expression;
 import org.seasar.framework.container.PropertyDef;
 import org.seasar.framework.container.S2Container;
+import org.seasar.framework.container.impl.AbstractExpression;
 import org.seasar.framework.container.impl.ComponentDefImpl;
 import org.seasar.framework.container.impl.DestroyMethodDefImpl;
 import org.seasar.framework.jpa.PersistenceUnitManager;
@@ -32,6 +33,7 @@ import org.seasar.framework.util.StringUtil;
 
 public class PersistenceUnitPropertyDefBuilder extends
         AbstractPropertyDefBuilder<PersistenceUnit> {
+
     public PersistenceUnitPropertyDefBuilder() {
     }
 
@@ -71,10 +73,12 @@ public class PersistenceUnitPropertyDefBuilder extends
         return new PersistenceUnitExpression(unitName);
     }
 
-    public static class PersistenceUnitExpression implements Expression {
+    public static class PersistenceUnitExpression extends AbstractExpression {
+
         String unitName;
 
         public PersistenceUnitExpression(String unitName) {
+            super(unitName);
             this.unitName = unitName;
         }
 

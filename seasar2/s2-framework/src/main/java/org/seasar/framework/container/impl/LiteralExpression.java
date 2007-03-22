@@ -13,35 +13,36 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.framework.container.ognl;
+package org.seasar.framework.container.impl;
 
 import java.util.Map;
 
 import org.seasar.framework.container.S2Container;
-import org.seasar.framework.container.impl.AbstractExpression;
-import org.seasar.framework.util.OgnlUtil;
 
 /**
- * ソースをOGNLとして評価する{@link org.seasar.framework.container.Expression 式}の実装クラスです。
+ * ソースがリテラルを表す{@link org.seasar.framework.container.Expression}の実装クラスです。
  * 
  * @author koichik
  */
-public class OgnlExpression extends AbstractExpression {
+public class LiteralExpression extends AbstractExpression {
 
-    protected Object parsedExpression;
+    protected Object value;
 
     /**
-     * <code>OgnlExpression</code>のインスタンスを構築します。
+     * <code>LiteralExpression</code>のインスタンスを構築します。
      * 
      * @param source
      *            式のソース
+     * @param value
+     *            値
      */
-    public OgnlExpression(final String source) {
-        this(null, 0, source);
+    public LiteralExpression(final String source, final Object value) {
+        super(source);
+        this.value = value;
     }
 
     /**
-     * <code>OgnlExpression</code>のインスタンスを構築します。
+     * <code>LiteralExpression</code>のインスタンスを構築します。
      * 
      * @param sourceName
      *            ソースファイル名
@@ -49,17 +50,17 @@ public class OgnlExpression extends AbstractExpression {
      *            ソースファイル中の行番号
      * @param source
      *            式のソース
+     * @param value
+     *            値
      */
-    public OgnlExpression(final String sourceName, int lineNumber,
-            final String source) {
+    public LiteralExpression(final String sourceName, final int lineNumber,
+            final String source, final Object value) {
         super(sourceName, lineNumber, source);
-        this.parsedExpression = OgnlUtil.parseExpression(source, sourceName,
-                lineNumber);
+        this.value = value;
     }
 
     public Object evaluate(final S2Container container, final Map context) {
-        return OgnlUtil.getValue(parsedExpression, context, container,
-                sourceName, lineNumber);
+        return value;
     }
 
 }

@@ -18,7 +18,7 @@ package org.seasar.framework.container.autoregister;
 import org.seasar.framework.container.AspectDef;
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.S2Container;
-import org.seasar.framework.container.ognl.OgnlExpression;
+import org.seasar.framework.container.impl.AbstractExpression;
 import org.seasar.framework.unit.S2FrameworkTestCase;
 
 /**
@@ -39,8 +39,8 @@ public class AspectAutoRegisterTest extends S2FrameworkTestCase {
         ComponentDef cd = child.getComponentDef("bar2");
         assertEquals("3", 2, cd.getAspectDefSize());
         AspectDef aspectDef = cd.getAspectDef(0);
-        assertEquals("4", "greetingInterceptor2", ((OgnlExpression) aspectDef
-                .getExpression()).getSource());
+        assertEquals("4", "greetingInterceptor2",
+                ((AbstractExpression) aspectDef.getExpression()).getSource());
         bar = (Bar) child.getComponent("bar2");
         assertEquals("5", "Hello", bar.greet());
         AspectDef aspectDef2 = cd.getAspectDef(1);

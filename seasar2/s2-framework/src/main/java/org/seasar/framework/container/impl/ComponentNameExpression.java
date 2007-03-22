@@ -13,35 +13,31 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.framework.container.ognl;
+package org.seasar.framework.container.impl;
 
 import java.util.Map;
 
 import org.seasar.framework.container.S2Container;
-import org.seasar.framework.container.impl.AbstractExpression;
-import org.seasar.framework.util.OgnlUtil;
 
 /**
- * ソースをOGNLとして評価する{@link org.seasar.framework.container.Expression 式}の実装クラスです。
+ * ソースがコンポーネント名を表す{@link org.seasar.framework.container.Expression}の実装クラスです。
  * 
  * @author koichik
  */
-public class OgnlExpression extends AbstractExpression {
-
-    protected Object parsedExpression;
+public class ComponentNameExpression extends AbstractExpression {
 
     /**
-     * <code>OgnlExpression</code>のインスタンスを構築します。
+     * <code>ComponentNameExpression</code>のインスタンスを構築します。
      * 
      * @param source
      *            式のソース
      */
-    public OgnlExpression(final String source) {
-        this(null, 0, source);
+    public ComponentNameExpression(final String source) {
+        super(source);
     }
 
     /**
-     * <code>OgnlExpression</code>のインスタンスを構築します。
+     * <code>ComponentNameExpression</code>のインスタンスを構築します。
      * 
      * @param sourceName
      *            ソースファイル名
@@ -50,16 +46,17 @@ public class OgnlExpression extends AbstractExpression {
      * @param source
      *            式のソース
      */
-    public OgnlExpression(final String sourceName, int lineNumber,
-            final String source) {
+    public ComponentNameExpression(final String sourceName,
+            final int lineNumber, final String source) {
         super(sourceName, lineNumber, source);
-        this.parsedExpression = OgnlUtil.parseExpression(source, sourceName,
-                lineNumber);
     }
 
     public Object evaluate(final S2Container container, final Map context) {
-        return OgnlUtil.getValue(parsedExpression, context, container,
-                sourceName, lineNumber);
+        Object result = container.getComponent(source);
+        if (result == null && context != null) {
+            result = context.get(source);
+        }
+        return result;
     }
 
 }
