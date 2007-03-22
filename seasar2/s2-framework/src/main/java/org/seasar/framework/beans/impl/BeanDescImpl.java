@@ -292,10 +292,8 @@ public final class BeanDescImpl implements BeanDesc {
     }
 
     public String[] getConstructorParameterNames(final Constructor constructor) {
-        synchronized (this) {
-            if (constructorParameterNamesCache == null) {
-                setUpConstructorParameterNamesCache();
-            }
+        if (constructorParameterNamesCache == null) {
+            constructorParameterNamesCache = createConstructorParameterNamesCache();
         }
 
         if (!constructorParameterNamesCache.containsKey(constructor)) {
@@ -326,10 +324,8 @@ public final class BeanDescImpl implements BeanDesc {
     }
 
     public String[] getMethodParameterNamesNoException(final Method method) {
-        synchronized (this) {
-            if (methodParameterNamesCache == null) {
-                setUpMethodParameterNamesCache();
-            }
+        if (methodParameterNamesCache == null) {
+            methodParameterNamesCache = createMethodParameterNamesCache();
         }
 
         if (!methodParameterNamesCache.containsKey(method)) {
@@ -339,14 +335,13 @@ public final class BeanDescImpl implements BeanDesc {
         return (String[]) methodParameterNamesCache.get(method);
     }
 
-    protected void setUpConstructorParameterNamesCache() {
-        constructorParameterNamesCache = new HashMap();
+    protected Map createConstructorParameterNamesCache() {
+        final Map map = new HashMap();
         final ClassPool pool = ClassPoolUtil.getClassPool(beanClass);
         for (int i = 0; i < constructors.length; ++i) {
             final Constructor constructor = constructors[i];
             if (constructor.getParameterTypes().length == 0) {
-                constructorParameterNamesCache.put(constructor,
-                        EMPTY_STRING_ARRAY);
+                map.put(constructor, EMPTY_STRING_ARRAY);
                 continue;
             }
             final CtClass clazz = ClassPoolUtil.toCtClass(pool, constructor
@@ -356,24 +351,24 @@ public final class BeanDescImpl implements BeanDesc {
             try {
                 final String[] names = getParameterNames(clazz
                         .getDeclaredConstructor(parameterTypes));
-                constructorParameterNamesCache.put(constructor, names);
+                map.put(constructor, names);
             } catch (final NotFoundException e) {
                 logger.log("WSSR0084", new Object[] { beanClass.getName(),
                         constructor });
             }
         }
+        return map;
     }
 
-    protected void setUpMethodParameterNamesCache() {
-        methodParameterNamesCache = new HashMap();
+    protected Map createMethodParameterNamesCache() {
+        final Map map = new HashMap();
         final ClassPool pool = ClassPoolUtil.getClassPool(beanClass);
         for (final Iterator it = methodsCache.values().iterator(); it.hasNext();) {
             final Method[] methods = (Method[]) it.next();
             for (int i = 0; i < methods.length; ++i) {
                 final Method method = methods[i];
                 if (method.getParameterTypes().length == 0) {
-                    methodParameterNamesCache.put(methods[i],
-                            EMPTY_STRING_ARRAY);
+                    map.put(methods[i], EMPTY_STRING_ARRAY);
                     continue;
                 }
                 final CtClass clazz = ClassPoolUtil.toCtClass(pool, method
@@ -383,13 +378,14 @@ public final class BeanDescImpl implements BeanDesc {
                 try {
                     final String[] names = getParameterNames(clazz
                             .getDeclaredMethod(method.getName(), parameterTypes));
-                    methodParameterNamesCache.put(methods[i], names);
+                    map.put(methods[i], names);
                 } catch (final NotFoundException e) {
                     logger.log("WSSR0085", new Object[] { beanClass.getName(),
                             method });
                 }
             }
         }
+        return map;
     }
 
     protected String[] getParameterNames(final CtBehavior behavior)

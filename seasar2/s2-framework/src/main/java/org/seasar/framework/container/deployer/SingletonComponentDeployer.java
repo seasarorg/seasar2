@@ -38,7 +38,7 @@ public class SingletonComponentDeployer extends AbstractComponentDeployer {
     /**
      * @see org.seasar.framework.container.ComponentDeployer#deploy()
      */
-    public synchronized Object deploy() {
+    public Object deploy() {
         if (component == null) {
             assemble();
         }

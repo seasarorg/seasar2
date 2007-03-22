@@ -108,14 +108,14 @@ public class ComponentDefImpl implements ComponentDef, ContainerConstants {
     /**
      * @see org.seasar.framework.container.ComponentDef#getComponentClass()
      */
-    public final Class getComponentClass() {
+    public Class getComponentClass() {
         return componentClass;
     }
 
     /**
      * @see org.seasar.framework.container.ComponentDef#getComponentName()
      */
-    public final String getComponentName() {
+    public String getComponentName() {
         return componentName;
     }
 
@@ -129,7 +129,7 @@ public class ComponentDefImpl implements ComponentDef, ContainerConstants {
     /**
      * @see org.seasar.framework.container.ComponentDef#getConcreteClass()
      */
-    public synchronized final Class getConcreteClass() {
+    public Class getConcreteClass() {
         if (concreteClass == null) {
             ClassLoader oldLoader = Thread.currentThread()
                     .getContextClassLoader();
@@ -150,14 +150,14 @@ public class ComponentDefImpl implements ComponentDef, ContainerConstants {
     /**
      * @see org.seasar.framework.container.ComponentDef#getContainer()
      */
-    public final S2Container getContainer() {
+    public S2Container getContainer() {
         return container;
     }
 
     /**
      * @see org.seasar.framework.container.ComponentDef#setContainer(org.seasar.framework.container.S2Container)
      */
-    public final void setContainer(S2Container container) {
+    public void setContainer(S2Container container) {
         this.container = container;
         argDefSupport.setContainer(container);
         metaDefSupport.setContainer(container);
@@ -199,7 +199,7 @@ public class ComponentDefImpl implements ComponentDef, ContainerConstants {
     /**
      * @see org.seasar.framework.container.ComponentDef#addAspectDef(org.seasar.framework.container.AspectDef)
      */
-    public synchronized void addAspectDef(AspectDef aspectDef) {
+    public void addAspectDef(AspectDef aspectDef) {
         aspectDefSupport.addAspectDef(aspectDef);
         concreteClass = null;
     }
@@ -208,7 +208,7 @@ public class ComponentDefImpl implements ComponentDef, ContainerConstants {
      * @see org.seasar.framework.container.ComponentDef#addAspectDef(int,
      *      org.seasar.framework.container.AspectDef)
      */
-    public synchronized void addAspectDef(int index, AspectDef aspectDef) {
+    public void addAspectDef(int index, AspectDef aspectDef) {
         aspectDefSupport.addAspectDef(index, aspectDef);
         concreteClass = null;
     }
@@ -429,7 +429,7 @@ public class ComponentDefImpl implements ComponentDef, ContainerConstants {
         return metaDefSupport.getMetaDefSize();
     }
 
-    public synchronized ComponentDeployer getComponentDeployer() {
+    public ComponentDeployer getComponentDeployer() {
         if (componentDeployer == null) {
             componentDeployer = instanceDef.createComponentDeployer(this);
         }
