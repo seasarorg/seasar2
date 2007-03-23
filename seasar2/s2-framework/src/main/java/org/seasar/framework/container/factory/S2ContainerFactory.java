@@ -521,13 +521,7 @@ public final class S2ContainerFactory {
             } else {
                 classLoader = Thread.currentThread().getContextClassLoader();
             }
-            if (logger.isDebugEnabled()) {
-                logger.log("DSSR0106", new Object[] { path });
-            }
             S2Container container = build(path, classLoader);
-            if (logger.isDebugEnabled()) {
-                logger.log("DSSR0107", new Object[] { path });
-            }
             return container;
         }
 
@@ -558,16 +552,12 @@ public final class S2ContainerFactory {
                         child = root.getDescendant(realPath);
                         parent.include(child);
                     } else {
-                        if (logger.isDebugEnabled()) {
-                            logger.log("DSSR0106", new Object[] { path });
-                        }
+                        putCreationStartLog(path, realPath);
                         final String ext = getExtension(realPath);
                         final S2ContainerBuilder builder = getBuilder(ext);
                         child = builder.include(parent, realPath);
                         root.registerDescendant(child);
-                        if (logger.isDebugEnabled()) {
-                            logger.log("DSSR0107", new Object[] { path });
-                        }
+                        putCreationEndLog(path, realPath);
                     }
                 }
                 return child;
@@ -592,6 +582,7 @@ public final class S2ContainerFactory {
         protected S2Container build(final String path,
                 final ClassLoader classLoader) {
             final String realPath = pathResolver.resolvePath(null, path);
+            putCreationStartLog(path, realPath);
             enter(realPath);
             try {
                 final String ext = getExtension(realPath);
@@ -600,6 +591,7 @@ public final class S2ContainerFactory {
                 container.setExternalContext(externalContext);
                 container
                         .setExternalContextComponentDefRegister(externalContextComponentDefRegister);
+                putCreationEndLog(path, realPath);
                 return container;
             } finally {
                 leave(realPath);
@@ -640,6 +632,45 @@ public final class S2ContainerFactory {
             }
             return defaultBuilder;
         }
+
+        /**
+         * S2コンテナの作成開始を示すログを出力します。
+         * 
+         * @param path
+         *            設定ファイルの論理パス
+         * @param realPath
+         *            設定ファイルの物理パス
+         */
+        protected void putCreationStartLog(final String path,
+                final String realPath) {
+            if (logger.isDebugEnabled()) {
+                if (path.equals(realPath)) {
+                    logger.log("DSSR0106", new Object[] { path });
+                } else {
+                    logger.log("DSSR0110", new Object[] { path, realPath });
+                }
+            }
+        }
+
+        /**
+         * S2コンテナの作成終了を示すログを出力します。
+         * 
+         * @param path
+         *            設定ファイルの論理パス
+         * @param realPath
+         *            設定ファイルの物理パス
+         */
+        protected void putCreationEndLog(final String path,
+                final String realPath) {
+            if (logger.isDebugEnabled()) {
+                if (path.equals(realPath)) {
+                    logger.log("DSSR0107", new Object[] { path });
+                } else {
+                    logger.log("DSSR0111", new Object[] { path, realPath });
+                }
+            }
+        }
+
     }
 
     /**
