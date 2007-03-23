@@ -202,19 +202,19 @@ public class ConversionContextImpl implements ConversionContext {
     public DateFormat getDateFormat() {
         final String format = (String) contextInfo
                 .get(DxoConstants.DATE_PATTERN);
-        return getDateFormat(format);
+        return format == null ? null : getDateFormat(format);
     }
 
     public DateFormat getTimeFormat() {
         final String format = (String) contextInfo
                 .get(DxoConstants.TIME_PATTERN);
-        return getDateFormat(format);
+        return format == null ? null : getDateFormat(format);
     }
 
     public DateFormat getTimestampFormat() {
         final String format = (String) contextInfo
                 .get(DxoConstants.TIMESTAMP_PATTERN);
-        return getDateFormat(format);
+        return format == null ? null : getDateFormat(format);
     }
 
     public boolean hasEvalueatedValue(final String name) {
