@@ -33,12 +33,4 @@ public class AbstTagHandlerTest extends TestCase {
         assertFalse(AbstractTagHandler.isComponentName("abc.def"));
     }
 
-    public void testIsStringLiteral() throws Exception {
-        assertTrue(AbstractTagHandler.isStringLiteral("\"hoge\""));
-        assertTrue(AbstractTagHandler.isStringLiteral("\"\""));
-        assertFalse(AbstractTagHandler.isStringLiteral("\"hoge"));
-        assertFalse(AbstractTagHandler.isStringLiteral("hoge\""));
-        assertFalse(AbstractTagHandler.isStringLiteral("\"hoge\"+\"hoge\""));
-    }
-
 }
