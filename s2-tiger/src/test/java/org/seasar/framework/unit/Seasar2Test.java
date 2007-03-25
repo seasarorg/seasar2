@@ -128,6 +128,25 @@ public class Seasar2Test extends TestCase {
     }
 
     @RunWith(Seasar2.class)
+    @Ignore
+    public static class IgnoreAnnotationForClassTest {
+
+        @Test
+        public void aaa() {
+            log += "a";
+        }
+    }
+
+    public void testIgnoreAnnotationForClassTest() {
+        JUnitCore core = new JUnitCore();
+        Result result = core.run(IgnoreAnnotationForClassTest.class);
+        printFailures(result.getFailures());
+        assertTrue(result.wasSuccessful());
+        assertEquals(1, result.getIgnoreCount());
+        assertEquals(0, log.length());
+    }
+
+    @RunWith(Seasar2.class)
     public static class ConventionTest {
 
         public static void beforeClass() {

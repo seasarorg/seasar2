@@ -45,6 +45,7 @@ public class S2TestClassMethodsRunner extends Runner implements Filterable,
         Sortable {
 
     private static class FailedBefore extends Exception {
+
         private static final long serialVersionUID = 1L;
     }
 
@@ -68,7 +69,7 @@ public class S2TestClassMethodsRunner extends Runner implements Filterable,
         try {
             runBefores(notifier);
             if (testMethods.isEmpty()) {
-                testAborted(notifier, getDescription(), new Exception(
+                notifier.testAborted(getDescription(), new Exception(
                         "No runnable methods"));
             }
             for (final Method method : testMethods) {
@@ -113,13 +114,6 @@ public class S2TestClassMethodsRunner extends Runner implements Filterable,
         notifier.fireTestFailure(failure);
     }
 
-    protected void testAborted(final RunNotifier notifier,
-            final Description description, final Throwable cause) {
-        notifier.fireTestStarted(description);
-        notifier.fireTestFailure(new Failure(description, cause));
-        notifier.fireTestFinished(description);
-    }
-
     protected List<Method> getTestMethods() {
         return getProvider().getTestMethods(testClass);
     }
@@ -154,10 +148,10 @@ public class S2TestClassMethodsRunner extends Runner implements Filterable,
         try {
             test = createTest();
         } catch (final InvocationTargetException e) {
-            testAborted(notifier, methodDescription(method), e.getCause());
+            notifier.testAborted(methodDescription(method), e.getCause());
             return;
         } catch (final Exception e) {
-            testAborted(notifier, methodDescription(method), e);
+            notifier.testAborted(methodDescription(method), e);
             return;
         }
         createMethodRunner(test, method, notifier).run();
@@ -194,6 +188,7 @@ public class S2TestClassMethodsRunner extends Runner implements Filterable,
 
     public void sort(final Sorter sorter) {
         Collections.sort(testMethods, new Comparator<Method>() {
+
             public int compare(final Method o1, final Method o2) {
                 return sorter.compare(methodDescription(o1),
                         methodDescription(o2));

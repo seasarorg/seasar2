@@ -13,6 +13,6 @@
 	<classpathentry exported="true" kind="lib" path="lib/geronimo-interceptor_3.0_spec-1.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/geronimo-jpa_3.0_spec-1.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/easymock-2.2.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/junit-4.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/junit-4.3.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

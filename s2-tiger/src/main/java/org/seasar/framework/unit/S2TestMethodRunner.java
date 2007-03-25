@@ -149,7 +149,7 @@ public class S2TestMethodRunner {
             if (!terminated) {
                 service.shutdownNow();
             }
-            result.get(timeout, TimeUnit.MILLISECONDS);
+            result.get(0, TimeUnit.MILLISECONDS);
         } catch (TimeoutException e) {
             addFailure(new Exception(String.format(
                     "test timed out after %d milliseconds", timeout)));
