@@ -22,7 +22,7 @@ import org.junit.runner.RunWith;
 import org.seasar.extension.unit.S2TestCase;
 import org.seasar.framework.autodetector.ClassAutoDetector;
 import org.seasar.framework.jpa.entity.Hoge;
-import org.seasar.framework.jpa.sub.entity.Foo;
+import org.seasar.framework.jpa.entity.sub.Foo;
 import org.seasar.framework.util.ClassTraversal;
 import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.tiger.ReflectionUtil;

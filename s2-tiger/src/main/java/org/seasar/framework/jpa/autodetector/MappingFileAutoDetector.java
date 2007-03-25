@@ -52,13 +52,18 @@ public class MappingFileAutoDetector extends AbstractResourceAutoDetector {
         if (namingConvention != null) {
             final String entityPackageName = namingConvention
                     .getEntityPackageName();
-            for (final String rootPackageName : namingConvention
-                    .getRootPackageNames()) {
-                final String packageName = ClassUtil.concatName(
-                        rootPackageName, entityPackageName);
-                final String path = packageName.replace(".", "/");
-                addTargetDirPath(path);
-            }
+            final String daoPackageName = namingConvention.getDaoPackageName();
+            addTargetPackageName(entityPackageName);
+            addTargetPackageName(daoPackageName);
+        }
+    }
+
+    protected void addTargetPackageName(final String packageName) {
+        for (final String rootPackageName : namingConvention
+                .getRootPackageNames()) {
+            final String concatedPackageName = ClassUtil.concatName(
+                    rootPackageName, packageName);
+            addTargetDirPath(concatedPackageName.replace(".", "/"));
         }
     }
 
@@ -78,6 +83,7 @@ public class MappingFileAutoDetector extends AbstractResourceAutoDetector {
             final String targetDirPath, final URL targetDirUrl) {
         final Strategy strategy = getStrategy(targetDirUrl.getProtocol());
         strategy.detect(targetDirPath, targetDirUrl, new ResourceHandler() {
+
             public void processResource(final String path, final InputStream is) {
                 if (path.startsWith(targetDirPath) && isApplied(path)
                         && !isIgnored(path)) {

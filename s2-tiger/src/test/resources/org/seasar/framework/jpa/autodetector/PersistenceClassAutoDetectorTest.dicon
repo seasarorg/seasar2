@@ -8,9 +8,6 @@
 			<arg>"org.seasar.framework.jpa"</arg>
 		</initMethod>
 		<initMethod name="addRootPackageName">
-			<arg>"org.seasar.framework.jpa.sub"</arg>
-		</initMethod>
-		<initMethod name="addRootPackageName">
 			<arg>"org.junit"</arg>
 		</initMethod>
 	</component>

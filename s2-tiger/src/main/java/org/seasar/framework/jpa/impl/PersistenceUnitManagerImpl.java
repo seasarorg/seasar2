@@ -31,6 +31,7 @@ import org.seasar.framework.convention.NamingConvention;
 import org.seasar.framework.jpa.PersistenceUnitContext;
 import org.seasar.framework.jpa.PersistenceUnitManager;
 import org.seasar.framework.jpa.PersistenceUnitProvider;
+import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.tiger.CollectionsUtil;
 
 @Component
@@ -134,7 +135,15 @@ public class PersistenceUnitManagerImpl implements PersistenceUnitManager {
     }
 
     public String getPersistenceUnitName(final Class<?> entityClass) {
-        return getPersistenceUnitName(entityClass.getName().replace('.', '/'));
+        final NamingConvention convention = NamingConvention.class
+                .cast(container.getComponent(NamingConvention.class));
+        if (convention == null) {
+            return defaultPersistenceUnitName;
+        }
+        final String entityPackageName = convention.getEntityPackageName();
+        final String resourcePath = ClassUtil.getResourcePath(entityClass);
+        return getPersistenceUnitNameFromPackage(entityPackageName,
+                resourcePath);
     }
 
     public String getPersistenceUnitName(final String mappingFile) {
@@ -144,16 +153,26 @@ public class PersistenceUnitManagerImpl implements PersistenceUnitManager {
             return defaultPersistenceUnitName;
         }
         final String entityPackageName = convention.getEntityPackageName();
-        final String key = "/" + entityPackageName + "/";
-        final int pos = mappingFile.lastIndexOf(key);
+        if (mappingFile.lastIndexOf("/" + entityPackageName + "/") > -1) {
+            return getPersistenceUnitNameFromPackage(entityPackageName,
+                    mappingFile);
+        }
+        final String daoPackageName = convention.getDaoPackageName();
+        return getPersistenceUnitNameFromPackage(daoPackageName, mappingFile);
+    }
+
+    protected String getPersistenceUnitNameFromPackage(
+            final String packageName, final String path) {
+        final String key = "/" + packageName + "/";
+        final int pos = path.lastIndexOf(key);
         if (pos < 0) {
             return defaultPersistenceUnitName;
         }
-        final int pos2 = mappingFile.lastIndexOf('/');
+        final int pos2 = path.lastIndexOf('/');
         if (pos + key.length() - 1 == pos2) {
             return defaultPersistenceUnitName;
         }
-        return mappingFile.substring(pos + key.length(), pos2)
+        return path.substring(pos + key.length(), pos2)
                 + persistenceUnitNameSuffix;
     }
 

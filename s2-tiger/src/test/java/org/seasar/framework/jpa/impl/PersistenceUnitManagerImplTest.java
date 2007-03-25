@@ -49,6 +49,14 @@ public class PersistenceUnitManagerImplTest extends S2TigerTestCase {
                 "aaaPersistenceUnit",
                 pum
                         .getPersistenceUnitName("org/seasar/framework/jpa/impl/entity/aaa/FooOrm.xml"));
+        assertEquals(
+                "persistenceUnit",
+                pum
+                        .getPersistenceUnitName("org/seasar/framework/jpa/impl/dao/FooOrm.xml"));
+        assertEquals(
+                "aaaPersistenceUnit",
+                pum
+                        .getPersistenceUnitName("org/seasar/framework/jpa/impl/dao/aaa/FooOrm.xml"));
     }
 
 }

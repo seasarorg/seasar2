@@ -39,16 +39,20 @@ public class MappingFileAutoDetectorTest extends S2TestCase {
     public void testDetect() throws Exception {
         final List<String> paths = new ArrayList<String>();
         detector.detect(new ResourceHandler() {
+
             public void processResource(String path, InputStream is) {
                 paths.add(path);
             }
         });
-        assertEquals(4, paths.size());
+        assertEquals(6, paths.size());
         assertTrue(paths.contains("META-INF/fooOrm.xml"));
         assertTrue(paths
                 .contains("org/seasar/framework/jpa/entity/hogeOrm.xml"));
         assertTrue(paths
-                .contains("org/seasar/framework/jpa/sub/entity/barOrm.xml"));
+                .contains("org/seasar/framework/jpa/entity/sub/barOrm.xml"));
+        assertTrue(paths.contains("org/seasar/framework/jpa/dao/hogeOrm.xml"));
+        assertTrue(paths
+                .contains("org/seasar/framework/jpa/dao/sub/barOrm.xml"));
         assertTrue(paths.contains("org/junit/runner/RunWith.class"));
     }
 
