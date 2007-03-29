@@ -181,8 +181,8 @@ public final class TransactionImpl implements Transaction {
             assertNotSuspended();
             assertActive();
             beforeCompletion();
-            endResources(XAResource.TMSUCCESS);
             if (status_ == Status.STATUS_ACTIVE) {
+                endResources(XAResource.TMSUCCESS);
                 if (getXAResourceWrapperSize() == 0) {
                     status_ = Status.STATUS_COMMITTED;
                 } else if (getXAResourceWrapperSize() == 1) {
@@ -200,12 +200,12 @@ public final class TransactionImpl implements Transaction {
                     }
                 }
             }
-            final boolean committed = status_ == Status.STATUS_COMMITTED;
-            if (committed && logger_.isDebugEnabled()) {
-                logger_.log("DSSR0004", null);
-            }
-            afterCompletion();
-            if (!committed) {
+            if (status_ == Status.STATUS_COMMITTED) {
+                if (logger_.isDebugEnabled()) {
+                    logger_.log("DSSR0004", null);
+                }
+                afterCompletion();
+            } else {
                 throw new SRollbackException("ESSR0303",
                         new Object[] { toString() });
             }
@@ -215,10 +215,12 @@ public final class TransactionImpl implements Transaction {
     }
 
     private void beforeCompletion() {
-        for (int i = 0; i < getSynchronizationSize(); ++i) {
+        for (int i = 0; i < getSynchronizationSize()
+                && status_ == Status.STATUS_ACTIVE; ++i) {
             beforeCompletion(getSynchronization(i));
         }
-        for (int i = 0; i < getInterposedSynchronizationSize(); ++i) {
+        for (int i = 0; i < getInterposedSynchronizationSize()
+                && status_ == Status.STATUS_ACTIVE; ++i) {
             beforeCompletion(getInterposedSynchronization(i));
         }
     }
@@ -226,12 +228,11 @@ public final class TransactionImpl implements Transaction {
     private void beforeCompletion(Synchronization sync) {
         try {
             sync.beforeCompletion();
-        } catch (RuntimeException ex) {
+        } catch (Throwable t) {
+            logger_.log(t);
             status_ = Status.STATUS_MARKED_ROLLBACK;
             endResources(XAResource.TMFAIL);
             rollbackResources();
-            afterCompletion();
-            throw ex;
         }
     }
 

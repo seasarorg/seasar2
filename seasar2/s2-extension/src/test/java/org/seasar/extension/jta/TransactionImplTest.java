@@ -339,7 +339,7 @@ public class TransactionImplTest extends TestCase {
         try {
             tx_.commit();
             fail("1");
-        } catch (RuntimeException ex) {
+        } catch (RollbackException ex) {
             System.out.println(ex);
         }
     }
