@@ -23,16 +23,20 @@ import org.seasar.framework.container.S2Container;
  * @author taedium
  * 
  */
-public class SwapPathResolverTest extends TestCase {
+public class SimplePathResolverTest extends TestCase {
+
+    protected void setUp() throws Exception {
+        String path = getClass().getName().replace('.', '/') + ".dicon";
+        S2ContainerFactory.configure(path);
+    }
 
     protected void tearDown() throws Exception {
         S2ContainerFactory.destroy();
     }
 
     public void test() throws Exception {
-        String path = getClass().getName().replace('.', '/') + ".dicon";
-        S2ContainerFactory.configure(path);
         S2Container container = S2ContainerFactory.create("noExists.dicon");
         assertNotNull(container);
     }
+
 }

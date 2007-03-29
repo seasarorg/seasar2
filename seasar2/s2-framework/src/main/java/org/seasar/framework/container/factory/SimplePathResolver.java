@@ -15,15 +15,38 @@
  */
 package org.seasar.framework.container.factory;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
- * 論理パスをそのまま物理パスとする{@link PathResolver}の実装クラスです。
+ * 指定された論理パスを指定された物理パスに置換する{@link PathResolver}の実装クラスです。
+ * <p>
+ * 指定されていない場合、論理パスはそのまま物理パスとなります。
+ * </p>
  * 
  * @author koichik
  * @author jundu
  */
 public class SimplePathResolver implements PathResolver {
 
+    private Map realPaths = new HashMap();
+
+    /**
+     * 置換対象の論理パスと置換後の物理パスを関連付けます。
+     * 
+     * @param targetPath
+     *            置換対象の論理パス
+     * @param realPath
+     *            置換後の物理パス
+     */
+    public void addRealPath(String targetPath, String realPath) {
+        realPaths.put(targetPath, realPath);
+    }
+
     public String resolvePath(String context, String path) {
+        if (realPaths.containsKey(path)) {
+            return (String) realPaths.get(path);
+        }
         return path;
     }
 }
