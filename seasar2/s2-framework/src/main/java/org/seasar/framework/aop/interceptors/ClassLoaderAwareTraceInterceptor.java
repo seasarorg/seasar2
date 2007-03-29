@@ -25,9 +25,13 @@ public class ClassLoaderAwareTraceInterceptor extends TraceInterceptor {
 
     private static final long serialVersionUID = 1L;
 
-    private static final Logger logger = Logger.getLogger(TraceInterceptor.class);
+    private static final Logger logger = Logger
+            .getLogger(TraceInterceptor.class);
 
     public Object invoke(final MethodInvocation invocation) throws Throwable {
+        if (!logger.isDebugEnabled()) {
+            return invocation.proceed();
+        }
         final StringBuffer buf = new StringBuffer(256);
         appendClassLoader(buf, invocation.getThis());
         final Class targetClass = getTargetClass(invocation);

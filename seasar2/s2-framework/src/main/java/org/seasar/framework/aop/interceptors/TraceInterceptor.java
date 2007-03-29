@@ -41,6 +41,9 @@ public class TraceInterceptor extends AbstractInterceptor {
     }
 
     public Object invoke(final MethodInvocation invocation) throws Throwable {
+        if (!logger.isDebugEnabled()) {
+            return invocation.proceed();
+        }
         final StringBuffer buf = new StringBuffer(100);
         buf.append(getTargetClass(invocation).getName());
         buf.append("#").append(invocation.getMethod().getName()).append("(");
