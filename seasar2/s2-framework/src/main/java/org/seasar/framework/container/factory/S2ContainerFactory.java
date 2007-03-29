@@ -746,8 +746,17 @@ public final class S2ContainerFactory {
     public static class DefaultConfigurator implements Configurator {
 
         public void configure(final S2Container configurationContainer) {
+            provider = createProvider(configurationContainer);
+            defaultBuilder = createDefaultBuilder(configurationContainer);
+            setupBehavior(configurationContainer);
+            setupDeployer(configurationContainer);
+            setupAssembler(configurationContainer);
+        }
+
+        protected Provider createProvider(
+                final S2Container configurationContainer) {
             if (configurationContainer.hasComponentDef(Provider.class)) {
-                provider = (Provider) configurationContainer
+                return (Provider) configurationContainer
                         .getComponent(Provider.class);
             } else if (provider instanceof DefaultProvider) {
                 DefaultProvider dp = (DefaultProvider) provider;
@@ -768,9 +777,13 @@ public final class S2ContainerFactory {
                                     .getComponent(ExternalContextComponentDefRegister.class));
                 }
             }
+            return provider;
+        }
 
+        protected S2ContainerBuilder createDefaultBuilder(
+                final S2Container configurationContainer) {
             if (configurationContainer.hasComponentDef(DEFAULT_BUILDER_NAME)) {
-                defaultBuilder = (S2ContainerBuilder) configurationContainer
+                return (S2ContainerBuilder) configurationContainer
                         .getComponent(DEFAULT_BUILDER_NAME);
             } else if (configurationContainer
                     .hasComponentDef(ResourceResolver.class)
@@ -779,21 +792,28 @@ public final class S2ContainerFactory {
                         .setResourceResolver((ResourceResolver) configurationContainer
                                 .getComponent(ResourceResolver.class));
             }
+            return defaultBuilder;
+        }
 
+        protected void setupBehavior(final S2Container configurationContainer) {
             if (configurationContainer
                     .hasComponentDef(S2ContainerBehavior.Provider.class)) {
                 S2ContainerBehavior
                         .setProvider((S2ContainerBehavior.Provider) configurationContainer
                                 .getComponent(S2ContainerBehavior.Provider.class));
             }
+        }
 
+        protected void setupDeployer(final S2Container configurationContainer) {
             if (configurationContainer
                     .hasComponentDef(ComponentDeployerFactory.Provider.class)) {
                 ComponentDeployerFactory
                         .setProvider((ComponentDeployerFactory.Provider) configurationContainer
                                 .getComponent(ComponentDeployerFactory.Provider.class));
             }
+        }
 
+        protected void setupAssembler(final S2Container configurationContainer) {
             if (configurationContainer
                     .hasComponentDef(AssemblerFactory.Provider.class)) {
                 AssemblerFactory
