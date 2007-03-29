@@ -253,7 +253,6 @@ public class AbstractGenerator {
                     toCtClassArray(parameterTypes),
                     toCtClassArray(exceptionTypes), body, clazz);
             clazz.addMethod(ctMethod);
-            ctMethod.setBody(body);
             return ctMethod;
         } catch (final CannotCompileException e) {
             throw new CannotCompileRuntimeException(e);
