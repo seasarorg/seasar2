@@ -37,81 +37,226 @@ public class S2Assert extends Assert {
     protected S2Assert() {
     }
 
+    /**
+     * 2つのデータセットが等しいことをアサートします。
+     * 
+     * @param expected
+     *            期待値
+     * @param actual
+     *            実際値
+     */
     public static void assertEquals(DataSet expected, DataSet actual) {
         adapter.assertEquals(null, expected, actual);
     }
 
+    /**
+     * 2つのデータセットが等しいことをアサートします。もし等しくない場合、エラー情報に指定したメッセージが含まれます。
+     * 
+     * @param message
+     *            メッセージ
+     * @param expected
+     *            期待値
+     * @param actual
+     *            実際値
+     */
     public static void assertEquals(String message, DataSet expected,
             DataSet actual) {
 
         adapter.assertEquals(message, expected, actual);
     }
 
+    /**
+     * 2つのデータテーブルが等しいことをアサートします。
+     * 
+     * @param expected
+     *            期待値
+     * @param actual
+     *            実際値
+     */
     public static void assertEquals(DataTable expected, DataTable actual) {
         adapter.assertEquals(null, expected, actual);
     }
 
+    /**
+     * 2つのデータテーブルが等しいことをアサートします。もし等しくない場合、エラー情報に指定したメッセージが含まれます。
+     * 
+     * @param message
+     *            メッセージ
+     * @param expected
+     *            期待値
+     * @param actual
+     *            実際値
+     */
     public static void assertEquals(String message, DataTable expected,
             DataTable actual) {
 
         adapter.assertEquals(message, expected, actual);
     }
 
+    /**
+     * データセットとオブジェクトが等しいことをアサートします。
+     * 
+     * @param expected
+     *            期待値
+     * @param actual
+     *            実際値
+     */
     public static void assertEquals(DataSet expected, Object actual) {
         adapter.assertEquals(null, expected, actual);
     }
 
+    /**
+     * データセットとオブジェクトが等しいことをアサートします。 もし等しくない場合、エラー情報に指定したメッセージが含まれます。
+     * 
+     * @param message
+     *            メッセージ
+     * @param expected
+     *            期待値
+     * @param actual
+     *            実際値
+     */
     public static void assertEquals(String message, DataSet expected,
             Object actual) {
 
         adapter.assertEquals(message, expected, actual);
     }
 
+    /**
+     * データセットとマップが等しいことをアサートします。
+     * 
+     * @param expected
+     *            期待値
+     * @param map
+     *            実際値
+     */
     public static void assertMapEquals(DataSet expected, Map<?, ?> map) {
         adapter.assertMapEquals(null, expected, map);
     }
 
+    /**
+     * データセットとマップが等しいことをアサートします。もし等しくない場合、エラー情報に指定したメッセージが含まれます。
+     * 
+     * @param message
+     *            メッセージ
+     * @param expected
+     *            期待値
+     * @param map
+     *            実際値
+     */
     public static void assertMapEquals(String message, DataSet expected,
             Map<?, ?> map) {
 
         adapter.assertMapEquals(message, expected, map);
     }
 
+    /**
+     * データセットとマップのリストが等しいことをアサートします。
+     * 
+     * @param expected
+     *            期待値
+     * @param list
+     *            実際値
+     */
     public static void assertMapEquals(DataSet expected, List<Map<?, ?>> list) {
         adapter.assertMapListEquals(null, expected, list);
     }
 
+    /**
+     * データセットとマップのリストが等しいことをアサートします。もし等しくない場合、エラー情報に指定したメッセージが含まれます。
+     * 
+     * @param message
+     *            メッセージ
+     * @param expected
+     *            期待値
+     * @param list
+     *            実際値
+     */
     public static void assertMapEquals(String message, DataSet expected,
             List<Map<?, ?>> list) {
 
         adapter.assertMapListEquals(message, expected, list);
     }
 
+    /**
+     * データセットとビーンが等しいことをアサートします。
+     * 
+     * @param expected
+     *            期待値
+     * @param bean
+     *            実際値
+     */
     public static void assertBeanEquals(DataSet expected, Object bean) {
         adapter.assertBeanEquals(null, expected, bean);
     }
 
+    /**
+     * データセットとビーンが等しいことをアサートします。もし等しくない場合、エラー情報に指定したメッセージが含まれます。
+     * 
+     * @param message
+     *            メッセージ
+     * @param expected
+     *            期待値
+     * @param bean
+     *            実際値
+     */
     public static void assertBeanEquals(String message, DataSet expected,
             Object bean) {
 
         adapter.assertBeanEquals(message, expected, bean);
     }
 
+    /**
+     * データセットとビーンのリストが等しいことをアサートします。
+     * 
+     * @param expected
+     *            期待値
+     * @param list
+     *            実際値
+     */
     public static void assertBeanEquals(DataSet expected, List<?> list) {
 
         adapter.assertBeanListEquals(null, expected, list);
     }
 
+    /**
+     * データセットとビーンのリストが等しいことをアサートします。もし等しくない場合、エラー情報に指定したメッセージが含まれます。
+     * 
+     * @param message
+     *            メッセージ
+     * @param expected
+     *            期待値
+     * @param list
+     *            実際値
+     */
     public static void assertBeanEquals(String message, DataSet expected,
             List<?> list) {
 
         adapter.assertBeanListEquals(message, expected, list);
     }
 
+    /**
+     * データセットとJava Persistence APIのエンティティが等しいことをアサートします。
+     * 
+     * @param expected
+     *            期待値
+     * @param entity
+     *            実際値
+     */
     public static void assertEntityEquals(DataSet expected, Object entity) {
         assertEntityEquals(null, expected, entity);
     }
 
+    /**
+     * データセットとJava Persistence
+     * APIのエンティティが等しいことをアサートします。もし等しくない場合、エラー情報に指定したメッセージが含まれます。
+     * 
+     * @param message
+     *            メッセージ
+     * @param expected
+     *            期待値
+     * @param entity
+     *            実際値
+     */
     public static void assertEntityEquals(String message, DataSet expected,
             Object entity) {
 
@@ -119,12 +264,31 @@ public class S2Assert extends Assert {
         assertEqualsIgnoreTableOrder(message, expected, reader.read());
     }
 
+    /**
+     * データセットとJava Persistence APIのエンティティのコレクションが等しいことをアサートします。
+     * 
+     * @param expected
+     *            期待値
+     * @param entities
+     *            実際値
+     */
     public static void assertEntityEquals(DataSet expected,
             Collection<?> entities) {
 
         assertEntityEquals(null, expected, entities);
     }
 
+    /**
+     * データセットとJava Persistence
+     * APIのエンティティのコレクションが等しいことをアサートします。もし等しくない場合、エラー情報に指定したメッセージが含まれます。
+     * 
+     * @param message
+     *            メッセージ
+     * @param expected
+     *            期待値
+     * @param entities
+     *            実際値
+     */
     public static void assertEntityEquals(String message, DataSet expected,
             Collection<?> entities) {
 
@@ -132,12 +296,30 @@ public class S2Assert extends Assert {
         assertEqualsIgnoreTableOrder(message, expected, reader.read());
     }
 
+    /**
+     * 2つのデータセットがデータテーブルの順番を無視して等しいことをアサートします。
+     * 
+     * @param expected
+     *            期待値
+     * @param actual
+     *            実際値
+     */
     public static void assertEqualsIgnoreTableOrder(DataSet expected,
             DataSet actual) {
 
         assertEqualsIgnoreTableOrder(null, expected, actual);
     }
 
+    /**
+     * 2つのデータセットがデータテーブルの順番を無視して等しいことをアサートします。もし等しくない場合、エラー情報に指定したメッセージが含まれます。
+     * 
+     * @param message
+     *            メッセージ
+     * @param expected
+     *            期待値
+     * @param actual
+     *            実際値
+     */
     public static void assertEqualsIgnoreTableOrder(String message,
             DataSet expected, DataSet actual) {
 

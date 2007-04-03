@@ -16,10 +16,21 @@
 package org.seasar.framework.unit;
 
 /**
+ * コンポーネント定義の設定ファイルをテスト時のルートのS2コンテナにインクルードします。
+ * <p>
+ * 通常、このインターフェースの実装クラスは<code>s2junit4.dicon</code>に定義されます。
+ * </p>
+ * 
  * @author taedium
  * 
  */
 public interface ConfigFileIncluder {
 
+    /**
+     * コンポーネント定義の設定ファイルをテスト時のルートのS2コンテナにインクルードします。
+     * 
+     * @param testContext
+     *            テストの実行コンテキスト
+     */
     void include(TestContext testContext);
 }

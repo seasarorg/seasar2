@@ -18,10 +18,19 @@ package org.seasar.framework.unit;
 import org.seasar.extension.dataset.DataSet;
 
 /**
+ * 期待値を読み込みます。
+ * 
  * @author taedium
  * 
  */
 public interface ExpectedDataReader {
 
+    /**
+     * 期待値を読み込みます。
+     * 
+     * @param testContext
+     *            テストの実行コンテキスト
+     * @return 期待値
+     */
     DataSet read(TestContext testContext);
 }

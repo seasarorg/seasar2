@@ -16,10 +16,21 @@
 package org.seasar.framework.unit;
 
 /**
+ * テストデータを準備します。
+ * <p>
+ * 通常、このインターフェースの実装クラスは<code>s2junit4.dicon</code>に定義されます。
+ * </p>
+ * 
  * @author taedium
  * 
  */
 public interface TestDataPreparer {
 
+    /**
+     * テストデータを準備します。
+     * 
+     * @param testContext
+     *            テストの実行コンテキスト
+     */
     void prepare(TestContext testContext);
 }
