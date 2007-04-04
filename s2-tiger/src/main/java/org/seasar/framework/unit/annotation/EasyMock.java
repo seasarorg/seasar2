@@ -15,22 +15,34 @@
  */
 package org.seasar.framework.unit.annotation;
 
-import static java.lang.annotation.ElementType.FIELD;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
-
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
+import static java.lang.annotation.ElementType.*;
+import static java.lang.annotation.RetentionPolicy.*;
+
 /**
- * @author koichik
+ * EasyMockを利用してモックを作成することを示します。
+ * <p>
+ * EasyMockの詳細は<a href
+ * ="http://www.easymock.org/index.html">http://www.easymock.org/index.html</a>を参照してください。
+ * </p>
  * 
+ * @author koichik
+ * @author taedium
  */
 @Target(FIELD)
 @Retention(RUNTIME)
 public @interface EasyMock {
 
+    /**
+     * モックの種類
+     */
     EasyMockType value() default EasyMockType.DEFAULT;
 
+    /**
+     * S2コンテナに登録する場合<code>true</code>、登録しない場合<code>false</code>
+     */
     boolean register() default false;
 
 }

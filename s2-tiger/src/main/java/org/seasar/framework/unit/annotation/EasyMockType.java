@@ -16,9 +16,34 @@
 package org.seasar.framework.unit.annotation;
 
 /**
- * @author koichik
+ * モックの種類です。
  * 
+ * @author koichik
+ * @author taedium
  */
 public enum EasyMockType {
-    DEFAULT, STRICT, NICE
+    /**
+     * デフォルトモードのモックです。
+     * <p>
+     * デフォルトモードのモックは指定されていないメソッドが呼び出されると例外をスローしますが，メソッドの呼び出し順は無視します。
+     * </p>
+     */
+    DEFAULT,
+
+    /**
+     * Strictモードのモックです。
+     * <p>
+     * Strictモードのモックは指定されていないメソッドが呼び出されると例外をスローします。
+     * 指定されたメソッドであっても，指定された通りの順でメソッドが呼び出されないと例外をスローします。
+     * </p>
+     */
+    STRICT,
+
+    /**
+     * Niceモードのモックです。
+     * <p>
+     * Niceモードのモックは指定されていないメソッド呼び出しが行われても例外をスローしません。
+     * </p>
+     */
+    NICE
 }
