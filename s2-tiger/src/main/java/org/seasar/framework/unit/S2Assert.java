@@ -27,6 +27,18 @@ import org.seasar.framework.jpa.unit.EntityReader;
 import org.seasar.framework.jpa.unit.EntityReaderFactory;
 
 /**
+ * テストで使用するアサートメソッドの集合です。
+ * <p>
+ * static importを宣言して利用してください。
+ * 
+ * <pre>
+ * import org.seasar.framework.unit.S2Assert.*;
+ *   ...
+ *   assertEquals(...);
+ * </pre>
+ * 
+ * </p>
+ * 
  * @author taedium
  * 
  */

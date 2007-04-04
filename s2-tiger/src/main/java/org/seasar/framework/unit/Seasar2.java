@@ -28,6 +28,19 @@ import org.seasar.framework.container.factory.S2ContainerFactory;
 import org.seasar.framework.util.ResourceUtil;
 
 /**
+ * S2JUnit4を実行するための{@link org.junit.runner.Runner}です。
+ * <p>
+ * {@link org.junit.runner.RunWith}に指定して次のように利用します。
+ * 
+ * <pre>
+ * &#064;RunWith(Seasar2.class)
+ * public class HogeTest {
+ *   ...
+ * }
+ * </pre>
+ * 
+ * </p>
+ * 
  * @author taedium
  * 
  */
@@ -107,6 +120,7 @@ public class Seasar2 extends Runner {
     }
 
     public interface Configurator {
+
         void configure(S2Container configurationContainer);
     }
 
@@ -127,6 +141,7 @@ public class Seasar2 extends Runner {
     }
 
     public interface Provider {
+
         Runner createTestClassRunner(Class<?> clazz) throws Exception;
     }
 

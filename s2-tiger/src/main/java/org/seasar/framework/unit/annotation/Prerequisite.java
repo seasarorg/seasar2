@@ -15,15 +15,16 @@
  */
 package org.seasar.framework.unit.annotation;
 
-import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.ElementType.TYPE;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
-
 import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
+import static java.lang.annotation.ElementType.*;
+import static java.lang.annotation.RetentionPolicy.*;
+
 /**
+ * テストの実行の事前条件を示します。
+ * 
  * @author taedium
  * 
  */
@@ -31,5 +32,9 @@ import java.lang.annotation.Target;
 @Retention(RUNTIME)
 @Inherited
 public @interface Prerequisite {
+
+    /**
+     * 事前条件を表す式です。
+     */
     String value();
 }

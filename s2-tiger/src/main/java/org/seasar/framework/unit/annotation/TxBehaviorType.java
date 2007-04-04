@@ -16,9 +16,24 @@
 package org.seasar.framework.unit.annotation;
 
 /**
+ * トランザクションの振る舞いです。
+ * 
  * @author taedium
  * 
  */
 public enum TxBehaviorType {
-    ROLLBACK, COMMIT, NONE
+    /**
+     * トランザクションを開始し終了時はロールバックすることを表します。
+     */
+    ROLLBACK,
+
+    /**
+     * トランザクションを開始し終了時はコミットすることを表します。
+     */
+    COMMIT,
+
+    /**
+     * トランザクションを開始しないことを表します。
+     */
+    NONE
 }

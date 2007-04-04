@@ -28,7 +28,9 @@ import org.seasar.framework.container.ComponentDef;
  * <pre>
  * &#064;RunWith(Seasar2.class)
  * public class HogeTest {
+ *   ...
  *   private TestContext testContext;
+ *   ...
  * }
  * </pre>
  * 
@@ -186,7 +188,7 @@ public interface TestContext {
      * 番号で指定された位置のモックインターセプタを返します。
      * <p>
      * モックインターセプタは{@link org.seasar.framework.unit.annotation.Mock}により登録されます。
-     * 最初に登録されるモックインターセプタのは番号は<code>0</code>です。
+     * 番号は<code>0</code>から始まります。
      * </p>
      * 
      * @param index

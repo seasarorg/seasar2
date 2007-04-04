@@ -15,13 +15,15 @@
  */
 package org.seasar.framework.unit.annotation;
 
-import static java.lang.annotation.ElementType.*;
-import static java.lang.annotation.RetentionPolicy.*;
-
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
+import static java.lang.annotation.ElementType.*;
+import static java.lang.annotation.RetentionPolicy.*;
+
 /**
+ * コンポーネントに{@link org.seasar.framework.aop.interceptors.MockInterceptor}を適用することを示します。
+ * 
  * @author nakamura
  * 
  */
@@ -29,14 +31,29 @@ import java.lang.annotation.Target;
 @Retention(RUNTIME)
 public @interface Mock {
 
+    /**
+     * インターセプタ適用対象のコンポーネントクラスです。
+     */
     Class<?> target();
 
+    /**
+     * インターセプタ適用対象のコンポーネント名です。
+     */
     String targetName() default "";
 
+    /**
+     * ポイントカットを表す正規表現です。
+     */
     String pointcut() default "";
 
+    /**
+     * 戻り値を表す式です。
+     */
     String returnValue() default "";
 
+    /**
+     * {@link Throwable}を表す式です。
+     */
     String throwable() default "";
 
 }

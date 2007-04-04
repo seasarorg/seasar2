@@ -15,15 +15,16 @@
  */
 package org.seasar.framework.unit.annotation;
 
-import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.ElementType.TYPE;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
-
 import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
+import static java.lang.annotation.ElementType.*;
+import static java.lang.annotation.RetentionPolicy.*;
+
 /**
+ * テスト実行時のデプロイ方法が<code>WARM deploy</code>であるか否かを示します。
+ * 
  * @author nakamura
  * 
  */
@@ -31,5 +32,9 @@ import java.lang.annotation.Target;
 @Retention(RUNTIME)
 @Inherited
 public @interface WarmDeploy {
+
+    /**
+     * <code>WARM deploy</code>であるならば<code>true</code>、そうでないならば<code>false</code>を指定します。
+     */
     boolean value() default true;
 }

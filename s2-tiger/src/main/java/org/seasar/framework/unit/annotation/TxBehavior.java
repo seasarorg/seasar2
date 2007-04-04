@@ -15,15 +15,16 @@
  */
 package org.seasar.framework.unit.annotation;
 
-import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.ElementType.TYPE;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
-
 import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
+import static java.lang.annotation.ElementType.*;
+import static java.lang.annotation.RetentionPolicy.*;
+
 /**
+ * トランザクションの振る舞いを示します。
+ * 
  * @author taedium
  * 
  */
@@ -31,5 +32,9 @@ import java.lang.annotation.Target;
 @Retention(RUNTIME)
 @Inherited
 public @interface TxBehavior {
+
+    /**
+     * トランザクションの振る舞いです。
+     */
     TxBehaviorType value() default TxBehaviorType.ROLLBACK;
 }

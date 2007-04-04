@@ -15,18 +15,21 @@
  */
 package org.seasar.framework.unit.annotation;
 
-import static java.lang.annotation.ElementType.*;
-import static java.lang.annotation.RetentionPolicy.*;
-
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
+import static java.lang.annotation.ElementType.*;
+import static java.lang.annotation.RetentionPolicy.*;
+
 /**
+ * 複数の{@link Mock}をグループ化します。
+ * 
  * @author nakamura
  * 
  */
 @Target(METHOD)
 @Retention(RUNTIME)
 public @interface Mocks {
+
     Mock[] value();
 }

@@ -93,6 +93,9 @@
             <link>http://java.sun.com/javaee/5/docs/api/</link>
           	<link>http://java.sun.com/j2se/1.5.0/ja/docs/ja/api/</link>
             <link>http://aopalliance.sourceforge.net/doc/</link>
+            <link>http://www.junit.org/junit/javadoc/4.3/</link>
+            <link>http://s2container.seasar.org/ja/s2-framework/apidocs/</link>
+            <link>http://s2container.seasar.org/ja/s2-extension/apidocs/</link>
           </links>
         </configuration>
         <!--
