@@ -18,10 +18,35 @@ package org.seasar.framework.jpa;
 import javax.persistence.EntityManagerFactory;
 
 /**
+ * 永続ユニットを提供するインターフェースです。
+ * 
  * @author koichik
  */
 public interface PersistenceUnitProvider {
 
-    EntityManagerFactory createEntityManagerFactory(final String unitName);
+    /**
+     * エンティティマネジャーファクトリを作成します。
+     * 
+     * @param unitName
+     *            永続ユニット名
+     * @return エンティティマネジャーファクトリ
+     */
+    EntityManagerFactory createEntityManagerFactory(String unitName);
+
+    /**
+     * 抽象永続ユニット名と具象永続ユニット名からエンティティマネジャーファクトリを作成します。
+     * <p>
+     * 単一の抽象永続ユニットで複数の具象永続ユニットをグループ化して扱いたい場合に使用します。
+     * {@link org.seasar.framework.jpa.impl.SelectableEntityManagerProxy }との併用が想定されています。
+     * </p>
+     * 
+     * @param abstractUnitName
+     *            抽象永続ユニット名
+     * @param concreteUnitName
+     *            具象永続ユニット名
+     * @return エンティティマネジャーファクトリ
+     */
+    EntityManagerFactory createEntityManagerFactory(String abstractUnitName,
+            String concreteUnitName);
 
 }

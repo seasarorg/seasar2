@@ -42,7 +42,7 @@ public class JndiPersistenceUnitProvider implements PersistenceUnitProvider {
 
     @Binding(bindingType = BindingType.MUST)
     public void setPersistenceUnitManager(
-            PersistenceUnitManager persistenceUnitManager) {
+            final PersistenceUnitManager persistenceUnitManager) {
         this.persistenceUnitManager = persistenceUnitManager;
     }
 
@@ -56,16 +56,21 @@ public class JndiPersistenceUnitProvider implements PersistenceUnitProvider {
         persistenceUnitManager.removeProvider(this);
     }
 
-    public void addJndiName(String unitName, String jndiName) {
+    public void addJndiName(final String unitName, final String jndiName) {
         JndiNames.put(unitName, jndiName);
     }
 
-    public EntityManagerFactory createEntityManagerFactory(String unitName) {
-        final String name = JndiNames.get(unitName);
+    public EntityManagerFactory createEntityManagerFactory(final String unitName) {
+        return createEntityManagerFactory(null, unitName);
+    }
+
+    public EntityManagerFactory createEntityManagerFactory(
+            final String abstractUnitName, final String concreteUnitName) {
+        final String name = JndiNames.get(concreteUnitName);
         try {
             return EntityManagerFactory.class.cast(JndiResourceLocator
                     .lookup(name));
-        } catch (NamingException e) {
+        } catch (final NamingException e) {
             throw new NamingRuntimeException(e);
         }
     }

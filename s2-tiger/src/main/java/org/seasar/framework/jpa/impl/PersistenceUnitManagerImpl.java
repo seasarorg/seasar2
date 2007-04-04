@@ -104,23 +104,30 @@ public class PersistenceUnitManagerImpl implements PersistenceUnitManager {
     }
 
     public EntityManagerFactory getEntityManagerFactory(final String unitName) {
+        return getEntityManagerFactory(null, unitName);
+    }
+
+    public EntityManagerFactory getEntityManagerFactory(
+            final String abstractUnitName, final String concreteUnitName) {
         synchronized (context) {
             final EntityManagerFactory emf = context
-                    .getEntityManagerFactory(unitName);
+                    .getEntityManagerFactory(concreteUnitName);
             if (emf != null) {
                 return emf;
             }
-            return createEntityManagerFactory(unitName);
+            return createEntityManagerFactory(abstractUnitName,
+                    concreteUnitName);
         }
     }
 
     protected EntityManagerFactory createEntityManagerFactory(
-            final String unitName) {
+            final String abstractUnitName, final String concreteUnitName) {
         for (final PersistenceUnitProvider provider : providers) {
             final EntityManagerFactory emf = provider
-                    .createEntityManagerFactory(unitName);
+                    .createEntityManagerFactory(abstractUnitName,
+                            concreteUnitName);
             if (emf != null) {
-                context.addEntityManagerFactory(unitName, emf);
+                context.addEntityManagerFactory(concreteUnitName, emf);
                 return emf;
             }
         }

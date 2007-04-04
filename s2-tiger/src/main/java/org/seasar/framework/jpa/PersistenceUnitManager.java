@@ -26,7 +26,10 @@ public interface PersistenceUnitManager {
 
     void removeProvider(PersistenceUnitProvider provider);
 
-    EntityManagerFactory getEntityManagerFactory(final String unitName);
+    EntityManagerFactory getEntityManagerFactory(String unitName);
+
+    EntityManagerFactory getEntityManagerFactory(String abstractUnitName,
+            String concreteUnitName);
 
     PersistenceUnitContext getPersistenceUnitContext(
             final EntityManagerFactory emf);

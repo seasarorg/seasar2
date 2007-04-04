@@ -26,7 +26,12 @@ import org.seasar.framework.jpa.PersistenceUnitProvider;
 public class DefaultPersistenceUnitProvider implements PersistenceUnitProvider {
 
     public EntityManagerFactory createEntityManagerFactory(final String unitName) {
-        return Persistence.createEntityManagerFactory(unitName);
+        return createEntityManagerFactory(null, unitName);
+    }
+
+    public EntityManagerFactory createEntityManagerFactory(
+            final String abstractUnitName, final String concreteUnitName) {
+        return Persistence.createEntityManagerFactory(concreteUnitName);
     }
 
 }
