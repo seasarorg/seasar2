@@ -61,7 +61,7 @@ public class JndiPersistenceUnitProvider implements PersistenceUnitProvider {
     }
 
     public EntityManagerFactory createEntityManagerFactory(final String unitName) {
-        return createEntityManagerFactory(null, unitName);
+        return createEntityManagerFactory(unitName, unitName);
     }
 
     public EntityManagerFactory createEntityManagerFactory(

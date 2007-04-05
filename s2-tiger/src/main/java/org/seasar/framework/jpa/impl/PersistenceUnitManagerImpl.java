@@ -104,7 +104,7 @@ public class PersistenceUnitManagerImpl implements PersistenceUnitManager {
     }
 
     public EntityManagerFactory getEntityManagerFactory(final String unitName) {
-        return getEntityManagerFactory(null, unitName);
+        return getEntityManagerFactory(unitName, unitName);
     }
 
     public EntityManagerFactory getEntityManagerFactory(
