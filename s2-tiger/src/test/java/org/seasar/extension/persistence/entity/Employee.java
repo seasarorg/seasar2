@@ -16,34 +16,34 @@
 package org.seasar.extension.persistence.entity;
 
 import java.math.BigDecimal;
-import java.sql.Timestamp;
 import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Version;
 
 /**
  * @author higa
  * 
  */
+@Entity
 public class Employee {
 
-	private Long employeeId;
+    @Column(name = "EMP_ID")
+    @Id
+    private Long id;
 
-	private String employeeName;
+    private String employeeName;
 
-	private BigDecimal salary;
+    private BigDecimal salary;
 
-	private Long managerId;
+    private Employee manager;
 
-	private Long departmentId;
+    private List<Employee> assistants;
 
-	private Integer employeeVersion;
+    private Department department;
 
-	private Timestamp employeeInserted;
-
-	private Timestamp employeeUpdated;
-
-	private Employee manager;
-
-	private List<Employee> assistants;
-
-	private Department department;
+    @Version
+    private Integer version;
 }

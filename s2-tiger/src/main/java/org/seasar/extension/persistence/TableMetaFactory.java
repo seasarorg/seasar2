@@ -16,10 +16,19 @@
 package org.seasar.extension.persistence;
 
 /**
+ * <code>TableMeta</code>のファクトリです。
+ * 
  * @author higa
  * 
  */
 public interface TableMetaFactory {
 
-	TableMeta createTableMeta(Class<?> entityClass, String entityName);
+    /**
+     * <code>TableMeta</code>を作成します。
+     * 
+     * @param entityClass
+     * @param entityName
+     * @return <code>TableMeta</code>
+     */
+    TableMeta createTableMeta(Class<?> entityClass, String entityName);
 }

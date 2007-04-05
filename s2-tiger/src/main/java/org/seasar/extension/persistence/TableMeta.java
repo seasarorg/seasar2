@@ -15,26 +15,93 @@
  */
 package org.seasar.extension.persistence;
 
+import javax.persistence.UniqueConstraint;
+
 /**
+ * Tableのメタデータです。
+ * 
  * @author higa
  * 
  */
 public class TableMeta {
 
-	private String name;
+    private String name;
 
-	/**
-	 * @return Returns the name.
-	 */
-	public String getName() {
-		return name;
-	}
+    private String catalog;
 
-	/**
-	 * @param name
-	 *            The name to set.
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
+    private String schema;
+
+    private UniqueConstraint[] uniqueConstraints;
+
+    /**
+     * 名前を返します。
+     * 
+     * @return name
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * 名前を設定します。
+     * 
+     * @param name
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    /**
+     * カタログを返します。
+     * 
+     * @return catalog.
+     */
+    public String getCatalog() {
+        return catalog;
+    }
+
+    /**
+     * カタログを設定します。
+     * 
+     * @param catalog
+     */
+    public void setCatalog(String catalog) {
+        this.catalog = catalog;
+    }
+
+    /**
+     * スキーマを返します。
+     * 
+     * @return schema.
+     */
+    public String getSchema() {
+        return schema;
+    }
+
+    /**
+     * スキーマを設定します。
+     * 
+     * @param schema
+     */
+    public void setSchema(String schema) {
+        this.schema = schema;
+    }
+
+    /**
+     * <code>UniqueConstraint</code>を返します。
+     * 
+     * @return uniqueConstraints.
+     */
+    public UniqueConstraint[] getUniqueConstraints() {
+        return uniqueConstraints;
+    }
+
+    /**
+     * <code>UniqueConstraint</code>を設定します。
+     * 
+     * @param uniqueConstraints
+     */
+    public void setUniqueConstraints(UniqueConstraint[] uniqueConstraints) {
+        this.uniqueConstraints = uniqueConstraints;
+    }
 }

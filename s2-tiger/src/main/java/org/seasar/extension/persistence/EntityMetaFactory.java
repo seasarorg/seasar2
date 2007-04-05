@@ -16,10 +16,18 @@
 package org.seasar.extension.persistence;
 
 /**
+ * <code>EntityMeta</code>のファクトリです。
+ * 
  * @author higa
  * 
  */
 public interface EntityMetaFactory {
 
-	EntityMeta getEntityMeta(Class entityClass);
+    /**
+     * <code>EntityMeta</code>を返します。
+     * 
+     * @param entityClass
+     * @return <code>EntityMeta</code>
+     */
+    EntityMeta getEntityMeta(Class<?> entityClass);
 }

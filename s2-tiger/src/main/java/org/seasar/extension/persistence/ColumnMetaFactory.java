@@ -13,19 +13,23 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.persistence.annotation;
+package org.seasar.extension.persistence;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.reflect.Field;
 
 /**
+ * <code>ColumnMeta</code>のファクトリです。
+ * 
  * @author higa
+ * 
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-public @interface Table {
+public interface ColumnMetaFactory {
 
-	String name();
+    /**
+     * <code>ColumnMeta</code>を作成します。
+     * 
+     * @param field
+     * @return <code>ColumnMeta</code>
+     */
+    ColumnMeta createColumnMeta(Field field);
 }

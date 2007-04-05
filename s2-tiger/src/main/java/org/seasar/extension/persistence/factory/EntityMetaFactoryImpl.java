@@ -18,9 +18,9 @@ package org.seasar.extension.persistence.factory;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.concurrent.ConcurrentHashMap;
+
+import javax.persistence.Entity;
 
 import org.seasar.extension.persistence.EntityMeta;
 import org.seasar.extension.persistence.EntityMetaFactory;
@@ -38,30 +38,31 @@ import org.seasar.framework.util.ResourceUtil;
  */
 public class EntityMetaFactoryImpl implements EntityMetaFactory {
 
-    private static final Class BYTE_ARRAY_CLASS = new Byte[0].getClass();
-
     private ConcurrentHashMap<String, EntityMetaCache> entityMetaCacheMap = new ConcurrentHashMap<String, EntityMetaCache>(
             200);
 
     private TableMetaFactory tableMetaFactory;
 
     /**
-     * @return Returns the tableMetaFactory.
+     * <code>TableMetaFactory</code>を返します。
+     * 
+     * @return tableMetaFactory.
      */
     public TableMetaFactory getTableMetaFactory() {
         return tableMetaFactory;
     }
 
     /**
+     * <code>TableMetaFactory</code>を設定します。
+     * 
      * @param tableMetaFactory
-     *            The tableMetaFactory to set.
      */
     @Binding(bindingType = BindingType.MUST)
     public void setTableMetaFactory(TableMetaFactory tableMetaFactory) {
         this.tableMetaFactory = tableMetaFactory;
     }
 
-    public EntityMeta getEntityMeta(Class entityClass) {
+    public EntityMeta getEntityMeta(Class<?> entityClass) {
         EntityMetaCache cache = entityMetaCacheMap.get(entityClass.getName());
         if (cache == null) {
             cache = createEntityMetaCache(entityClass);
@@ -77,7 +78,7 @@ public class EntityMetaFactoryImpl implements EntityMetaFactory {
         return cache.getEntityMeta();
     }
 
-    protected EntityMetaCache createEntityMetaCache(Class entityClass) {
+    protected EntityMetaCache createEntityMetaCache(Class<?> entityClass) {
         File file = null;
         if (HotdeployUtil.isHotdeploy()) {
             file = ResourceUtil.getResourceAsFileNoException(entityClass);
@@ -86,7 +87,10 @@ public class EntityMetaFactoryImpl implements EntityMetaFactory {
         return new EntityMetaCache(file, entityMeta);
     }
 
-    protected EntityMeta createEntityMeta(Class entityClass) {
+    protected EntityMeta createEntityMeta(Class<?> entityClass) {
+        if (entityClass.getAnnotation(Entity.class) == null) {
+            return null;
+        }
         EntityMeta entityMeta = new EntityMeta();
         String entityName = fromClassToEntityName(entityClass);
         entityMeta.setName(entityName);
@@ -102,20 +106,12 @@ public class EntityMetaFactoryImpl implements EntityMetaFactory {
         return entityMeta;
     }
 
-    protected String fromClassToEntityName(Class entityClass) {
+    protected String fromClassToEntityName(Class<?> entityClass) {
         return ClassUtil.getShortClassName(entityClass);
     }
 
     protected boolean isInstanceField(Field field) {
         int m = field.getModifiers();
         return !Modifier.isStatic(m) && !Modifier.isFinal(m);
-    }
-
-    protected boolean isSimpleValueType(Class type) {
-        return type == String.class || type == Boolean.class
-                || Number.class.isAssignableFrom(type)
-                || Date.class.isAssignableFrom(type)
-                || Calendar.class.isAssignableFrom(type)
-                || type == BYTE_ARRAY_CLASS;
     }
 }

@@ -16,195 +16,210 @@
 package org.seasar.extension.persistence;
 
 /**
+ * Columnのメタデータです。
+ * 
  * @author higa
  * 
  */
 public class ColumnMeta {
 
-	private String name;
+    private String name;
 
-	private ColumnType type;
+    private boolean unique;
 
-	private boolean primary;
+    private boolean nullable;
 
-	private boolean unique;
+    private boolean insertable;
 
-	private boolean nullable;
+    private boolean updatable;
 
-	private boolean selectable;
+    private String columnDefinition;
 
-	private boolean insertable;
+    private String table;
 
-	private boolean updatable;
+    private int length;
 
-	private int length;
+    private int precision;
 
-	private int precision;
+    private int scale;
 
-	private int scale;
+    /**
+     * インサート可能かどうか返します。
+     * 
+     * @return insertable
+     */
+    public boolean isInsertable() {
+        return insertable;
+    }
 
-	/**
-	 * @return Returns the insertable.
-	 */
-	public boolean isInsertable() {
-		return insertable;
-	}
+    /**
+     * インサート可能かどうか設定します。
+     * 
+     * @param insertable
+     */
+    public void setInsertable(boolean insertable) {
+        this.insertable = insertable;
+    }
 
-	/**
-	 * @param insertable
-	 *            The insertable to set.
-	 */
-	public void setInsertable(boolean insertable) {
-		this.insertable = insertable;
-	}
+    /**
+     * 長さを返します。
+     * 
+     * @return length.
+     */
+    public int getLength() {
+        return length;
+    }
 
-	/**
-	 * @return Returns the length.
-	 */
-	public int getLength() {
-		return length;
-	}
+    /**
+     * 長さを設定します。
+     * 
+     * @param length
+     */
+    public void setLength(int length) {
+        this.length = length;
+    }
 
-	/**
-	 * @param length
-	 *            The length to set.
-	 */
-	public void setLength(int length) {
-		this.length = length;
-	}
+    /**
+     * 名前を返します。
+     * 
+     * @return name
+     */
+    public String getName() {
+        return name;
+    }
 
-	/**
-	 * @return Returns the name.
-	 */
-	public String getName() {
-		return name;
-	}
+    /**
+     * 名前を設定します。
+     * 
+     * @param name
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	/**
-	 * @param name
-	 *            The name to set.
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
+    /**
+     * null可能かどうか返します。
+     * 
+     * @return nullable
+     */
+    public boolean isNullable() {
+        return nullable;
+    }
 
-	/**
-	 * @return Returns the nullable.
-	 */
-	public boolean isNullable() {
-		return nullable;
-	}
+    /**
+     * null可能かどうか設定します。
+     * 
+     * @param nullable
+     */
+    public void setNullable(boolean nullable) {
+        this.nullable = nullable;
+    }
 
-	/**
-	 * @param nullable
-	 *            The nullable to set.
-	 */
-	public void setNullable(boolean nullable) {
-		this.nullable = nullable;
-	}
+    /**
+     * 精度を返します。
+     * 
+     * @return precision
+     */
+    public int getPrecision() {
+        return precision;
+    }
 
-	/**
-	 * @return Returns the precision.
-	 */
-	public int getPrecision() {
-		return precision;
-	}
+    /**
+     * 精度を設定します。
+     * 
+     * @param precision
+     */
+    public void setPrecision(int precision) {
+        this.precision = precision;
+    }
 
-	/**
-	 * @param precision
-	 *            The precision to set.
-	 */
-	public void setPrecision(int precision) {
-		this.precision = precision;
-	}
+    /**
+     * スケールを返します。
+     * 
+     * @return scale
+     */
+    public int getScale() {
+        return scale;
+    }
 
-	/**
-	 * @return Returns the primary.
-	 */
-	public boolean isPrimary() {
-		return primary;
-	}
+    /**
+     * スケールを設定します。
+     * 
+     * @param scale
+     */
+    public void setScale(int scale) {
+        this.scale = scale;
+    }
 
-	/**
-	 * @param primary
-	 *            The primary to set.
-	 */
-	public void setPrimary(boolean primary) {
-		this.primary = primary;
-	}
+    /**
+     * ユニークかどうか返します。
+     * 
+     * @return unique.
+     */
+    public boolean isUnique() {
+        return unique;
+    }
 
-	/**
-	 * @return Returns the scale.
-	 */
-	public int getScale() {
-		return scale;
-	}
+    /**
+     * ユニークかどうか設定します。
+     * 
+     * @param unique
+     */
+    public void setUnique(boolean unique) {
+        this.unique = unique;
+    }
 
-	/**
-	 * @param scale
-	 *            The scale to set.
-	 */
-	public void setScale(int scale) {
-		this.scale = scale;
-	}
+    /**
+     * 更新可能かどうか返します。
+     * 
+     * @return updatable
+     */
+    public boolean isUpdatable() {
+        return updatable;
+    }
 
-	/**
-	 * @return Returns the selectable.
-	 */
-	public boolean isSelectable() {
-		return selectable;
-	}
+    /**
+     * 更新可能かどうか設定します。
+     * 
+     * @param updatable
+     */
+    public void setUpdatable(boolean updatable) {
+        this.updatable = updatable;
+    }
 
-	/**
-	 * @param selectable
-	 *            The selectable to set.
-	 */
-	public void setSelectable(boolean selectable) {
-		this.selectable = selectable;
-	}
+    /**
+     * カラム定義を返します。
+     * 
+     * @return columnDefinition
+     */
+    public String getColumnDefinition() {
+        return columnDefinition;
+    }
 
-	/**
-	 * @return Returns the type.
-	 */
-	public ColumnType getType() {
-		return type;
-	}
+    /**
+     * カラム定義を設定します。
+     * 
+     * @param columnDefinition
+     */
+    public void setColumnDefinition(String columnDefinition) {
+        this.columnDefinition = columnDefinition;
+    }
 
-	/**
-	 * @param type
-	 *            The type to set.
-	 */
-	public void setType(ColumnType type) {
-		this.type = type;
-	}
+    /**
+     * セカンダリテーブル名を返します。
+     * 
+     * @return table.
+     */
+    public String getTable() {
+        return table;
+    }
 
-	/**
-	 * @return Returns the unique.
-	 */
-	public boolean isUnique() {
-		return unique;
-	}
-
-	/**
-	 * @param unique
-	 *            The unique to set.
-	 */
-	public void setUnique(boolean unique) {
-		this.unique = unique;
-	}
-
-	/**
-	 * @return Returns the updatable.
-	 */
-	public boolean isUpdatable() {
-		return updatable;
-	}
-
-	/**
-	 * @param updatable
-	 *            The updatable to set.
-	 */
-	public void setUpdatable(boolean updatable) {
-		this.updatable = updatable;
-	}
+    /**
+     * セカンダリテーブル名を設定します。
+     * 
+     * @param table
+     */
+    public void setTable(String table) {
+        this.table = table;
+    }
 }

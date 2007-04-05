@@ -13,17 +13,24 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.persistence.annotation;
+package org.seasar.extension.persistence;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import junit.framework.TestCase;
 
 /**
  * @author higa
+ * 
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
-public @interface Transient {
+public class PropertyMetaTest extends TestCase {
+
+    private PropertyMeta propertyMeta = new PropertyMeta();
+
+    /**
+     * 
+     */
+    public void testAddGetAdditionalInfo() {
+        String value = "111";
+        propertyMeta.addAdditionalInfo("hoge", value);
+        assertSame(value, propertyMeta.getAdditionalInfo("hoge"));
+    }
 }

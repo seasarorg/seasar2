@@ -30,6 +30,9 @@ import org.seasar.framework.util.ResourceUtil;
  */
 public class EntityMetaCacheTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testIsModified() throws Exception {
         File file = ResourceUtil.getResourceAsFileNoException(Employee.class);
         EntityMeta entityMeta = new EntityMeta();

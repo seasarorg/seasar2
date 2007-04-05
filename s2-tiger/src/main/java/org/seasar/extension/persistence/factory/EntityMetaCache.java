@@ -18,7 +18,6 @@ package org.seasar.extension.persistence.factory;
 import java.io.File;
 
 import org.seasar.extension.persistence.EntityMeta;
-import org.seasar.framework.util.AssertionUtil;
 
 /**
  * @author higa
@@ -32,6 +31,12 @@ public class EntityMetaCache {
 
     private EntityMeta entityMeta;
 
+    /**
+     * <code>EntityMetaCache</code>を作成します。
+     * 
+     * @param file
+     * @param entityMeta
+     */
     public EntityMetaCache(File file, EntityMeta entityMeta) {
         setFile(file);
         setEntityMeta(entityMeta);
@@ -45,6 +50,11 @@ public class EntityMetaCache {
         lastModified = file.lastModified();
     }
 
+    /**
+     * キャッシュしている<code>EntityMeta</code>が更新されているかどうかを返します。
+     * 
+     * @return
+     */
     public boolean isModified() {
         if (file == null) {
             return false;
@@ -53,29 +63,35 @@ public class EntityMetaCache {
     }
 
     /**
-     * @return Returns the entityMeta.
+     * <code>EntityMeta</code>を返します。
+     * 
+     * @return entityMeta.
      */
     public EntityMeta getEntityMeta() {
         return entityMeta;
     }
 
     /**
+     * <code>EntityMeta</code>を設定します。
+     * 
      * @param entityMeta
-     *            The entityMeta to set.
      */
     public void setEntityMeta(EntityMeta entityMeta) {
-        AssertionUtil.assertNotNull("entityMeta", entityMeta);
         this.entityMeta = entityMeta;
     }
 
     /**
-     * @return Returns the file.
+     * キャッシュしている.classの<code>File</code>を返します。
+     * 
+     * @return file.
      */
     public File getFile() {
         return file;
     }
 
     /**
+     * キャッシュしている.classが最後に更新された時間を返します。
+     * 
      * @return Returns the lastModified.
      */
     public long getLastModified() {

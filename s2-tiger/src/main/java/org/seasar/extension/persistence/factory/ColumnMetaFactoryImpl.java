@@ -15,10 +15,12 @@
  */
 package org.seasar.extension.persistence.factory;
 
-import javax.persistence.Table;
+import java.lang.reflect.Field;
 
-import org.seasar.extension.persistence.TableMeta;
-import org.seasar.extension.persistence.TableMetaFactory;
+import javax.persistence.Column;
+
+import org.seasar.extension.persistence.ColumnMeta;
+import org.seasar.extension.persistence.ColumnMetaFactory;
 import org.seasar.framework.container.annotation.tiger.Binding;
 import org.seasar.framework.container.annotation.tiger.BindingType;
 import org.seasar.framework.convention.PersistenceConvention;
@@ -28,7 +30,7 @@ import org.seasar.framework.util.StringUtil;
  * @author higa
  * 
  */
-public class TableMetaFactoryImpl implements TableMetaFactory {
+public class ColumnMetaFactoryImpl implements ColumnMetaFactory {
 
     private PersistenceConvention persistenceConvention;
 
@@ -49,29 +51,35 @@ public class TableMetaFactoryImpl implements TableMetaFactory {
         this.persistenceConvention = persistenceConvention;
     }
 
-    public TableMeta createTableMeta(Class<?> entityClass, String entityName) {
-        TableMeta tableMeta = new TableMeta();
+    public ColumnMeta createColumnMeta(Field field) {
+        ColumnMeta columnMeta = new ColumnMeta();
         String defaultName = persistenceConvention
-                .fromEntityNameToTableName(entityName);
-        Table table = entityClass.getAnnotation(Table.class);
-        if (table != null) {
-            String name = table.name();
+                .fromPropertyNameToColumnName(field.getName());
+        Column column = field.getAnnotation(Column.class);
+        if (column != null) {
+            String name = column.name();
             if (StringUtil.isEmpty(name)) {
                 name = defaultName;
             }
-            tableMeta.setName(name);
-            String catalog = table.catalog();
-            if (!StringUtil.isEmpty(catalog)) {
-                tableMeta.setCatalog(catalog);
+            columnMeta.setName(name);
+            columnMeta.setUnique(column.unique());
+            columnMeta.setNullable(column.nullable());
+            columnMeta.setInsertable(column.insertable());
+            columnMeta.setUpdatable(column.updatable());
+            String columnDefinition = column.columnDefinition();
+            if (!StringUtil.isEmpty(columnDefinition)) {
+                columnMeta.setColumnDefinition(columnDefinition);
             }
-            String schema = table.schema();
-            if (!StringUtil.isEmpty(schema)) {
-                tableMeta.setSchema(schema);
+            String table = column.table();
+            if (!StringUtil.isEmpty(table)) {
+                columnMeta.setTable(table);
             }
-            tableMeta.setUniqueConstraints(table.uniqueConstraints());
+            columnMeta.setLength(column.length());
+            columnMeta.setPrecision(column.precision());
+            columnMeta.setScale(column.scale());
         } else {
-            tableMeta.setName(defaultName);
+            columnMeta.setName(defaultName);
         }
-        return tableMeta;
+        return columnMeta;
     }
 }

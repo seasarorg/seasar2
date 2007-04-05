@@ -13,17 +13,31 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.persistence;
+package org.seasar.extension.persistence.dto;
+
+import org.seasar.extension.persistence.entity.Employee;
 
 /**
  * @author higa
  * 
  */
-public enum ColumnType {
+public class EmployeeDto extends Employee {
 
-	BID, TINYINT, SMALLINT, INTEGER, BIGINT, FLOAT, REAL, DOUBLE, NUMERIC, DECIMAL, CHAR, VARCHAR, LONGVARCHAR, DATE, TIME, TIMESTAMP, BINARY, VARBINARY, LONGVARBINARY, BLOB, CLOB, BOOLEAN;
+    private String departmentName;
 
-	public String getName() {
-		return toString().toLowerCase();
-	}
+    
+    /**
+     * @return Returns the departmentName.
+     */
+    public String getDepartmentName() {
+        return departmentName;
+    }
+
+    
+    /**
+     * @param departmentName The departmentName to set.
+     */
+    public void setDepartmentName(String departmentName) {
+        this.departmentName = departmentName;
+    }
 }

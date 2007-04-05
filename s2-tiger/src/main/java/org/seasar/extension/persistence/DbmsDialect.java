@@ -16,10 +16,17 @@
 package org.seasar.extension.persistence;
 
 /**
+ * DBMSごとの方言を扱うインターフェースです。
+ * 
  * @author higa
  * 
  */
 public interface DbmsDialect {
 
-	String getName();
+    /**
+     * 名前を返します。
+     * 
+     * @return
+     */
+    String getName();
 }

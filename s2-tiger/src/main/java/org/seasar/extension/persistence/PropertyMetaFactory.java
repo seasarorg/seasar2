@@ -15,32 +15,21 @@
  */
 package org.seasar.extension.persistence;
 
-import junit.framework.TestCase;
+import java.lang.reflect.Field;
 
 /**
+ * <code>PropertyMeta</code>のファクトリです。
+ * 
  * @author higa
  * 
  */
-public class EntityMetaTest extends TestCase {
-
-    private EntityMeta entityMeta = new EntityMeta();
+public interface PropertyMetaFactory {
 
     /**
+     * <code>PropertyMeta</code>を作成します。
      * 
+     * @param field
+     * @return <code>PropertyMeta</code>
      */
-    public void testAddGetPropertyMeta() {
-        PropertyMeta propertyMeta = new PropertyMeta();
-        propertyMeta.setName("aaa");
-        entityMeta.addPropertyMeta(propertyMeta);
-        assertSame(propertyMeta, entityMeta.getPropertyMeta("aaa"));
-    }
-
-    /**
-     * 
-     */
-    public void testAddGetAdditionalInfo() {
-        String value = "111";
-        entityMeta.addAdditionalInfo("hoge", value);
-        assertSame(value, entityMeta.getAdditionalInfo("hoge"));
-    }
+    PropertyMeta createPropertyMeta(Field field);
 }

@@ -22,6 +22,7 @@ import java.util.Date;
 import junit.framework.TestCase;
 
 import org.seasar.extension.persistence.EntityMeta;
+import org.seasar.extension.persistence.dto.EmployeeDto;
 import org.seasar.extension.persistence.entity.Employee;
 import org.seasar.framework.container.hotdeploy.HotdeployUtil;
 import org.seasar.framework.convention.impl.PersistenceConventionImpl;
@@ -33,8 +34,10 @@ import org.seasar.framework.util.ResourceUtil;
  */
 public class EntityMetaFactoryImplTest extends TestCase {
 
+    @SuppressWarnings("unused")
     private static final String FOO = "";
 
+    @SuppressWarnings("unused")
     private final String aaa = "";
 
     private EntityMetaFactoryImpl factory;
@@ -54,6 +57,9 @@ public class EntityMetaFactoryImplTest extends TestCase {
         HotdeployUtil.clearHotdeploy();
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetEntityMeta() throws Exception {
         EntityMeta entityMeta = factory.getEntityMeta(Employee.class);
         assertSame(entityMeta, factory.getEntityMeta(Employee.class));
@@ -63,23 +69,32 @@ public class EntityMetaFactoryImplTest extends TestCase {
         assertNotSame(entityMeta, factory.getEntityMeta(Employee.class));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testCreateEntityMeta_name() throws Exception {
         EntityMeta entityMeta = factory.createEntityMeta(Employee.class);
         assertEquals("Employee", entityMeta.getName());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testCreateEntityMeta_tableMeta() throws Exception {
         EntityMeta entityMeta = factory.createEntityMeta(Employee.class);
         assertNotNull(entityMeta.getTableMeta());
     }
 
-    public void testIsSimpleType() throws Exception {
-        assertTrue(factory.isSimpleValueType(String.class));
-        assertTrue(factory.isSimpleValueType(Byte.class));
-        assertTrue(factory.isSimpleValueType(new Byte[0].getClass()));
-        assertFalse(factory.isSimpleValueType(getClass()));
+    /**
+     * @throws Exception
+     */
+    public void testGetEntityMeta_noentity() throws Exception {
+        assertNull(factory.getEntityMeta(EmployeeDto.class));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testIsInstanceField() throws Exception {
         Field f = getClass().getDeclaredField("FOO");
         assertFalse(factory.isInstanceField(f));

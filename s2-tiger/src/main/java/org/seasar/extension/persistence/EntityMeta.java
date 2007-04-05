@@ -19,6 +19,8 @@ import org.seasar.extension.persistence.exception.PropertyMetaNotFoundRuntimeExc
 import org.seasar.framework.util.ArrayMap;
 
 /**
+ * Entityのメタデータです。
+ * 
  * @author higa
  * 
  */
@@ -30,36 +32,50 @@ public class EntityMeta {
 
     private ArrayMap propertyMetaMap = new ArrayMap();
 
+    private ArrayMap additionalInfoMap = new ArrayMap();
+
     /**
-     * @return Returns the name.
+     * 名前を返します。
+     * 
+     * @return name
      */
     public String getName() {
         return name;
     }
 
     /**
+     * 名前を設定します。
+     * 
      * @param name
-     *            The name to set.
      */
     public void setName(String name) {
         this.name = name;
     }
 
     /**
-     * @return Returns the tableMeta.
+     * <code>TableMeta</code>を返します。
+     * 
+     * @return tableMeta
      */
     public TableMeta getTableMeta() {
         return tableMeta;
     }
 
     /**
+     * <code>TableMeta</code>を設定します。
+     * 
      * @param tableMeta
-     *            The tableMeta to set.
      */
     public void setTableMeta(TableMeta tableMeta) {
         this.tableMeta = tableMeta;
     }
 
+    /**
+     * 名前に対応した<code>PropertyMeta</code>を返します。
+     * 
+     * @param propertyName
+     * @return <code>PropertyMeta</code>
+     */
     public PropertyMeta getPropertyMeta(String propertyName) {
         PropertyMeta meta = (PropertyMeta) propertyMetaMap.get(propertyName);
         if (meta == null) {
@@ -68,15 +84,70 @@ public class EntityMeta {
         return meta;
     }
 
+    /**
+     * インデックスに対応した<code>PropertyMeta</code>を返します。
+     * 
+     * @param index
+     * @return <code>PropertyMeta</code>
+     */
     public PropertyMeta getPropertyMeta(int index) {
         return (PropertyMeta) propertyMetaMap.get(index);
     }
 
+    /**
+     * <code>PropertyMeta</code>のサイズを返します。
+     * 
+     * @return size
+     */
     public int getPropertyMetaSize() {
         return propertyMetaMap.size();
     }
 
+    /**
+     * <code>PropertyMeta</code>を追加します。
+     * 
+     * @param propertyMeta
+     */
     public void addPropertyMeta(PropertyMeta propertyMeta) {
         propertyMetaMap.put(propertyMeta.getName(), propertyMeta);
+    }
+
+    /**
+     * 名前に対応した追加情報を返します。
+     * 
+     * @param propertyName
+     * @return additionalInfo
+     */
+    public Object getAdditionalInfo(String propertyName) {
+        return additionalInfoMap.get(propertyName);
+    }
+
+    /**
+     * インデックスに対応した追加情報を返します。
+     * 
+     * @param index
+     * @return additionalInfo
+     */
+    public Object getAdditionalInfo(int index) {
+        return additionalInfoMap.get(index);
+    }
+
+    /**
+     * 追加情報のサイズを返します。
+     * 
+     * @return size
+     */
+    public int getAdditionalInfoSize() {
+        return additionalInfoMap.size();
+    }
+
+    /**
+     * 追加情報を追加します。
+     * 
+     * @param name
+     * @param additionalInfo
+     */
+    public void addAdditionalInfo(String name, Object additionalInfo) {
+        additionalInfoMap.put(name, additionalInfo);
     }
 }
