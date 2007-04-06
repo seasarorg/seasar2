@@ -28,12 +28,16 @@ public class ChildFirstClassLoaderTest extends TestCase {
     public void testLoadClass() throws Exception {
         ChildFirstClassLoader loader = new ChildFirstClassLoader(Thread
                 .currentThread().getContextClassLoader());
+
         Class clazz = loader.loadClass(className);
         assertSame(loader, clazz.getClassLoader());
         assertSame(clazz, loader.loadClass(className));
 
         clazz = loader.loadClass("java.lang.Integer");
         assertNotSame(loader, clazz.getClassLoader());
+
+        clazz = loader.loadClass("junit.framework.TestCase");
+        assertSame(TestCase.class, clazz);
 
         try {
             loader.loadClass(getClass().getPackage().getName() + ".xxx");

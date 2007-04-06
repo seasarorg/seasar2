@@ -27,24 +27,29 @@ public class ChildFirstClassLoader extends ClassLoader {
         super(parent);
     }
 
-    protected Class loadClass(final String name, final boolean resolve)
+    protected Class loadClass(final String className, final boolean resolve)
             throws ClassNotFoundException {
-        if (isStystemClass(name)) {
-            return super.loadClass(name, resolve);
+        if (isStystemClass(className)) {
+            return super.loadClass(className, resolve);
         }
-        Class clazz = findLoadedClass(name);
-        if (clazz == null) {
-            clazz = findClass(name);
+        Class clazz = findLoadedClass(className);
+        if (clazz != null) {
+            return clazz;
         }
+        clazz = ClassLoaderUtil.findLoadedClass(getParent(), className);
+        if (clazz != null) {
+            return clazz;
+        }
+        clazz = findClass(className);
         if (resolve) {
             resolveClass(clazz);
         }
         return clazz;
     }
 
-    protected boolean isStystemClass(final String name) {
+    protected boolean isStystemClass(final String className) {
         try {
-            Class.forName(name, false, null);
+            Class.forName(className, true, null);
         } catch (final ClassNotFoundException e) {
             return false;
         }
