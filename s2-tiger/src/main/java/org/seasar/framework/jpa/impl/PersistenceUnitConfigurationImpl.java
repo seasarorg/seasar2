@@ -23,7 +23,7 @@ import java.util.Map;
 
 import org.seasar.framework.autodetector.ClassAutoDetector;
 import org.seasar.framework.autodetector.ResourceAutoDetector;
-import org.seasar.framework.jpa.PersistenceConfiguration;
+import org.seasar.framework.jpa.PersistenceUnitConfiguration;
 import org.seasar.framework.jpa.PersistenceUnitManager;
 import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.ClassTraversal.ClassHandler;
@@ -35,7 +35,8 @@ import org.seasar.framework.util.tiger.ReflectionUtil;
  * @author taedium
  * 
  */
-public class PersistenceConfigurationImpl implements PersistenceConfiguration {
+public class PersistenceUnitConfigurationImpl implements
+        PersistenceUnitConfiguration {
 
     protected PersistenceUnitManager persistenceUnitManager;
 
@@ -54,6 +55,20 @@ public class PersistenceConfigurationImpl implements PersistenceConfiguration {
     public void setPersistenceUnitManager(
             final PersistenceUnitManager persistenceUnitManager) {
         this.persistenceUnitManager = persistenceUnitManager;
+    }
+
+    public void setMappingFileAutoDetector(
+            final ResourceAutoDetector[] resourceAutoDetectors) {
+        for (final ResourceAutoDetector detector : resourceAutoDetectors) {
+            addMappingFileAutoDetector(detector);
+        }
+    }
+
+    public void setPersistenceClassAutoDetector(
+            final ClassAutoDetector[] detectors) {
+        for (final ClassAutoDetector detector : detectors) {
+            addPersistenceClassAutoDetector(detector);
+        }
     }
 
     public void addMappingFile(final String fileName) {
@@ -78,13 +93,6 @@ public class PersistenceConfigurationImpl implements PersistenceConfiguration {
         persistenceClasses.get(unitName).add(clazz);
     }
 
-    public void setMappingFileAutoDetector(
-            final ResourceAutoDetector[] resourceAutoDetectors) {
-        for (final ResourceAutoDetector detector : resourceAutoDetectors) {
-            addMappingFileAutoDetector(detector);
-        }
-    }
-
     public void addMappingFileAutoDetector(final ResourceAutoDetector detector) {
         addMappingFileAutoDetector(null, detector);
     }
@@ -96,13 +104,6 @@ public class PersistenceConfigurationImpl implements PersistenceConfiguration {
                     new ArrayList<ResourceAutoDetector>());
         }
         mappingFileAutoDetectors.get(unitName).add(detector);
-    }
-
-    public void setPersistenceClassAutoDetector(
-            final ClassAutoDetector[] detectors) {
-        for (final ClassAutoDetector detector : detectors) {
-            addPersistenceClassAutoDetector(detector);
-        }
     }
 
     public void addPersistenceClassAutoDetector(final ClassAutoDetector detector) {
