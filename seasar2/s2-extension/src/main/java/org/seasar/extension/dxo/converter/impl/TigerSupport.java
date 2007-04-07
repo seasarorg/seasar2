@@ -15,19 +15,15 @@
  */
 package org.seasar.extension.dxo.converter.impl;
 
-import org.seasar.extension.dxo.converter.ConversionContext;
-import org.seasar.extension.dxo.converter.Converter;
-
 /**
- * {Converter}の抽象クラスです。
+ * Tiger(Java5)固有の機能を利用するためのヘルパ・クラスです。
  * 
  * @author koichik
  */
-public abstract class AbstractConverter implements Converter {
+public interface TigerSupport {
 
-    public void convert(Object source, Object dest, ConversionContext context) {
-        throw new UnsupportedOperationException();
-    }
+    /** <code>TigerSupport</code>のインスタンス */
+    TigerSupport instance = TigerSupportFactory.createTigerSupport();
 
     /**
      * <code>clazz</code>が列挙である場合に<code>true</code>を返します。
@@ -36,10 +32,7 @@ public abstract class AbstractConverter implements Converter {
      *            クラス
      * @return <code>clazz</code>が列挙である場合に<code>true</code>
      */
-    protected boolean isEnum(Class clazz) {
-        return TigerSupport.instance != null
-                && TigerSupport.instance.isEnum(clazz);
-    }
+    boolean isEnum(Class clazz);
 
     /**
      * 列挙<code>o</code>の列挙定数の序数を返します。
@@ -51,8 +44,31 @@ public abstract class AbstractConverter implements Converter {
      *             <code>o</code>が列挙でない場合にスローされます
      * @see Enum#ordinal()
      */
-    protected int getOrdinal(Object o) {
-        return TigerSupport.instance.getOrdinal(o);
+    int getOrdinal(Object o);
+
+    /**
+     * <code>TigerSupport</code>オブジェクトのファクトリクラスです。
+     * 
+     * @author koichik
+     */
+    public class TigerSupportFactory {
+
+        /**
+         * <code>TigerSupport</code>のインスタンスを作成します。
+         * 
+         * @return <code>TigerSupport</code>のインスタンス
+         */
+        protected static TigerSupport createTigerSupport() {
+            try {
+                return (TigerSupport) Class
+                        .forName(
+                                "org.seasar.extension.dxo.converter.impl.TigerSupportImpl")
+                        .newInstance();
+            } catch (final Exception ignore) {
+                return null;
+            }
+        }
+
     }
 
 }

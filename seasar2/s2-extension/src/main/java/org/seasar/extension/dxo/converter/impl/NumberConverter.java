@@ -54,6 +54,9 @@ public abstract class NumberConverter extends AbstractConverter {
             }
             return convert(FALSE);
         }
+        if (isEnum(source.getClass())) {
+            return convert(new Integer(getOrdinal(source)));
+        }
         throw new ConversionRuntimeException(source.getClass());
     }
 

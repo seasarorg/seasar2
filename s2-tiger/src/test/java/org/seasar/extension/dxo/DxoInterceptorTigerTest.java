@@ -282,7 +282,19 @@ public class DxoInterceptorTigerTest extends S2TestCase {
         assertEquals("hogehoge", dest.getDname());
     }
 
+    public void testEnum() throws Exception {
+        Foo foo = new Foo(Color.RED.ordinal(), Color.GREEN.name());
+        Bar bar = beanDxo.convert(foo);
+        assertEquals(Color.RED, bar.getOrdinal());
+        assertEquals(Color.GREEN, bar.getName());
+        
+        foo = beanDxo.convert(bar);
+        assertEquals(Color.RED.ordinal(), foo.getOrdinal());
+        assertEquals(Color.GREEN.name(), foo.getName());
+    }
+
     public interface BeanDxo {
+
         Hoge[] convertArrayToArray(HogeHoge[] src);
 
         List<Hoge> convertArrayToList(HogeHoge[] src);
@@ -293,10 +305,15 @@ public class DxoInterceptorTigerTest extends S2TestCase {
 
         @ExcludeNull
         void convertExcludeNull(Employee employee, EmpDto empDto);
+
+        Foo convert(Bar bar);
+
+        Bar convert(Foo foo);
     }
 
     @SuppressWarnings("unchecked")
     public interface FromMapDxo {
+
         Hoge convert(Map src);
 
         List<Hoge> convert(Map[] src);
@@ -306,6 +323,7 @@ public class DxoInterceptorTigerTest extends S2TestCase {
 
     @SuppressWarnings("unchecked")
     public interface ToMapDxo {
+
         Map convert(Hoge src);
 
         Map[] convert(Hoge[] src);

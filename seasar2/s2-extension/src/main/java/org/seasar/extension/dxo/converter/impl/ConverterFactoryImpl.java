@@ -15,14 +15,16 @@
  */
 package org.seasar.extension.dxo.converter.impl;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
 import org.seasar.extension.dxo.converter.Converter;
 import org.seasar.extension.dxo.converter.ConverterFactory;
 import org.seasar.framework.container.S2Container;
-import org.seasar.framework.util.ArrayUtil;
 import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.Disposable;
 import org.seasar.framework.util.DisposableUtil;
@@ -36,7 +38,7 @@ import org.seasar.framework.util.DisposableUtil;
 public class ConverterFactoryImpl implements ConverterFactory, Disposable {
 
     /** 組み込みのコンバータ */
-    protected static final Converter[] BUILDTIN_CONVERTERS = new Converter[] {
+    protected static final Converter[] BUILTIN_CONVERTERS = new Converter[] {
             new ArrayConverter(), new BeanConverter(),
             new BigDecimalConverter(), new BigIntegerConverter(),
             new BooleanConverter(), new ByteConverter(),
@@ -47,6 +49,8 @@ public class ConverterFactoryImpl implements ConverterFactory, Disposable {
             new SetConverter(), new ShortConverter(), new SqlDateConverter(),
             new SqlTimeConverter(), new SqlTimestampConverter(),
             new StringConverter(), };
+
+    protected static final String[] BUILTIN_TIGER_CONVERTERS = new String[] { "org.seasar.extension.dxo.converter.impl.EnumConverter", };
 
     /** プリミティブ型の配列クラスとラッパー型の配列クラスのマッピング */
     protected static Map PRIMITIVE_ARRAY_TO_WRAPPER_ARRAY = new HashMap();
@@ -98,8 +102,19 @@ public class ConverterFactoryImpl implements ConverterFactory, Disposable {
         if (initialized) {
             return;
         }
-        converters = (Converter[]) ArrayUtil.add(BUILDTIN_CONVERTERS, container
-                .findAllComponents(Converter.class));
+        final List list = new ArrayList(100);
+        list.addAll(Arrays.asList(BUILTIN_CONVERTERS));
+        for (int i = 0; i < BUILTIN_TIGER_CONVERTERS.length; ++i) {
+            try {
+                list.add(Class.forName(BUILTIN_TIGER_CONVERTERS[i])
+                        .newInstance());
+            } catch (final Throwable ignore) {
+            }
+        }
+        list
+                .addAll(Arrays.asList(container
+                        .findAllComponents(Converter.class)));
+        converters = (Converter[]) list.toArray(new Converter[list.size()]);
         DisposableUtil.add(this);
         initialized = true;
     }
@@ -187,6 +202,10 @@ public class ConverterFactoryImpl implements ConverterFactory, Disposable {
             final double distance) {
         if (assignee.equals(assigner)) {
             return distance;
+        }
+        if (assigner.getName().equals("java.lang.Enum")
+                && TigerSupport.instance.isEnum(assignee)) {
+            return distance + 0.5;
         }
         if (isImplements(assigner, assignee)) {
             return distance + 0.5;
