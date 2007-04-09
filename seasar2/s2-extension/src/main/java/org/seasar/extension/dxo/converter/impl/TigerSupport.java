@@ -44,7 +44,19 @@ public interface TigerSupport {
      *             <code>o</code>が列挙でない場合にスローされます
      * @see Enum#ordinal()
      */
-    int getOrdinal(Object o);
+    int getEnumOrdinal(Object o);
+
+    /**
+     * 列挙<code>o</code>の列挙定数の名前を返します。
+     * 
+     * @param o
+     *            列挙
+     * @return 列挙定数の名前
+     * @throws ClassCastException
+     *             <code>o</code>が列挙でない場合にスローされます
+     * @see Enum#name()
+     */
+    String getEnumName(Object o);
 
     /**
      * <code>TigerSupport</code>オブジェクトのファクトリクラスです。

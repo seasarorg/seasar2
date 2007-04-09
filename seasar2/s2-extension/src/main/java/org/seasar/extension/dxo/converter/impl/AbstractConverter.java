@@ -51,8 +51,22 @@ public abstract class AbstractConverter implements Converter {
      *             <code>o</code>が列挙でない場合にスローされます
      * @see Enum#ordinal()
      */
-    protected int getOrdinal(Object o) {
-        return TigerSupport.instance.getOrdinal(o);
+    protected int getEnumOrdinal(Object o) {
+        return TigerSupport.instance.getEnumOrdinal(o);
+    }
+
+    /**
+     * 列挙<code>o</code>の列挙定数の名前を返します。
+     * 
+     * @param o
+     *            列挙
+     * @return 列挙定数の名前
+     * @throws ClassCastException
+     *             <code>o</code>が列挙でない場合にスローされます
+     * @see Enum#name()
+     */
+    protected String getEnumName(Object o) {
+        return TigerSupport.instance.getEnumName(o);
     }
 
 }

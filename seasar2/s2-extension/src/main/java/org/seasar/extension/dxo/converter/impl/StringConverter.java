@@ -46,6 +46,9 @@ public class StringConverter extends AbstractConverter {
         if (source instanceof char[]) {
             return new String((char[]) source);
         }
+        if (isEnum(source.getClass())) {
+            return getEnumName(source);
+        }
         if (source instanceof java.sql.Date) {
             final DateFormat formatter = context.getDateFormat();
             if (formatter != null) {

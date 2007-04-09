@@ -27,8 +27,12 @@ public class TigerSupportImpl implements TigerSupport {
         return clazz.isEnum();
     }
 
-    public int getOrdinal(Object o) {
+    public int getEnumOrdinal(Object o) {
         return Enum.class.cast(o).ordinal();
+    }
+
+    public String getEnumName(Object o) {
+        return Enum.class.cast(o).name();
     }
 
 }
