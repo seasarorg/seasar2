@@ -16,20 +16,19 @@
 package org.seasar.extension.persistence;
 
 /**
- * <code>EntityMeta</code>のファクトリです。
+ * select文を作成するインターフェースです。
  * 
  * @author higa
  * 
  */
-public interface EntityMetaFactory {
+public interface SelectGenerator {
 
     /**
-     * <code>EntityMeta</code>を返します。
+     * select文を作成します。
      * 
-     * @param entityClass
-     * @return <code>EntityMeta</code>
-     * @throws NullPointerException
-     *             entityClassがnullの場合。
+     * @param entityMeta
+     * @param criteria
+     * @return <code>SqlExecution</code>
      */
-    EntityMeta getEntityMeta(Class<?> entityClass) throws NullPointerException;
+    SqlStatement generate(EntityMeta entityMeta, Object criteria);
 }

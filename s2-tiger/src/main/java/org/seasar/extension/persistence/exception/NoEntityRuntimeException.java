@@ -21,39 +21,28 @@ import org.seasar.framework.exception.SRuntimeException;
  * @author higa
  * 
  */
-public class PropertyMetaNotFoundRuntimeException extends SRuntimeException {
+public class NoEntityRuntimeException extends SRuntimeException {
 
     private static final long serialVersionUID = 1L;
 
-    private String entityName;
-
-    private String propertyName;
+    private Class<?> targetClass;
 
     /**
-     * <code>PropertyMetaNotFoundRuntimeException</code>を作成します。
+     * <code>NoEntityRuntimeException</code>を作成します。
      * 
-     * @param entityName
-     * @param propertyName
+     * @param targetClass
      */
-    public PropertyMetaNotFoundRuntimeException(String entityName,
-            String propertyName) {
-        super("ESSR0700", new Object[] { entityName, propertyName });
-        this.entityName = entityName;
-        this.propertyName = propertyName;
+    public NoEntityRuntimeException(Class<?> targetClass) {
+        super("ESSR0701", new Object[] { targetClass.getName() });
+        this.targetClass = targetClass;
     }
 
     /**
-     * @return Returns the entityName.
+     * ターゲットクラスを返します。
+     * 
+     * @return ターゲットクラス
      */
-    public String getEntityName() {
-        return entityName;
+    public Class<?> getTargetClass() {
+        return targetClass;
     }
-
-    /**
-     * @return Returns the propertyName.
-     */
-    public String getPropertyName() {
-        return propertyName;
-    }
-
 }

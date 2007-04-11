@@ -13,23 +13,24 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.persistence;
+package org.seasar.extension.persistence.exception;
+
+import junit.framework.TestCase;
 
 /**
- * <code>EntityMeta</code>のファクトリです。
- * 
  * @author higa
  * 
  */
-public interface EntityMetaFactory {
+public class NoEntityRuntimeExceptionTest extends TestCase {
 
     /**
-     * <code>EntityMeta</code>を返します。
      * 
-     * @param entityClass
-     * @return <code>EntityMeta</code>
-     * @throws NullPointerException
-     *             entityClassがnullの場合。
      */
-    EntityMeta getEntityMeta(Class<?> entityClass) throws NullPointerException;
+    public void testGetMessage() {
+        PropertyMetaNotFoundRuntimeException ex = new PropertyMetaNotFoundRuntimeException(
+                "hoge", "aaa");
+        assertEquals("hoge", ex.getEntityName());
+        assertEquals("aaa", ex.getPropertyName());
+        System.out.println(ex.getMessage());
+    }
 }

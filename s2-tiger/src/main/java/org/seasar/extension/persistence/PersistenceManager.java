@@ -15,21 +15,31 @@
  */
 package org.seasar.extension.persistence;
 
+import java.util.List;
+
+import org.seasar.extension.persistence.exception.NoEntityRuntimeException;
+
 /**
- * <code>EntityMeta</code>のファクトリです。
+ * 永続マネージャーのインターフェースです。
  * 
  * @author higa
  * 
  */
-public interface EntityMetaFactory {
+public interface PersistenceManager {
 
     /**
-     * <code>EntityMeta</code>を返します。
+     * criteriaに対応するEntityのリストを返します。 対応するEntityが無い場合、sizeが0のリストを返します。
+     * criteriaがnullの場合、全件検索になります。
      * 
+     * @param <T>
      * @param entityClass
-     * @return <code>EntityMeta</code>
+     * @param criteria
+     * @return <T>のリスト
      * @throws NullPointerException
      *             entityClassがnullの場合。
+     * @throws NoEntityRuntimeException
+     *             entityClassがEntityでない場合。
      */
-    EntityMeta getEntityMeta(Class<?> entityClass) throws NullPointerException;
+    <T> List<T> findAll(Class<? extends T> entityClass, Object criteria)
+            throws NullPointerException, NoEntityRuntimeException;
 }

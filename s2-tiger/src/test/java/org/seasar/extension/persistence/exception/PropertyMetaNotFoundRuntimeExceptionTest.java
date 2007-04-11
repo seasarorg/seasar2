@@ -17,17 +17,21 @@ package org.seasar.extension.persistence.exception;
 
 import junit.framework.TestCase;
 
+import org.seasar.extension.persistence.dto.EmployeeDto;
+
 /**
  * @author higa
  * 
  */
 public class PropertyMetaNotFoundRuntimeExceptionTest extends TestCase {
 
+    /**
+     * 
+     */
     public void testGetMessage() {
-        PropertyMetaNotFoundRuntimeException ex = new PropertyMetaNotFoundRuntimeException(
-                "hoge", "aaa");
-        assertEquals("hoge", ex.getEntityName());
-        assertEquals("aaa", ex.getPropertyName());
+        NoEntityRuntimeException ex = new NoEntityRuntimeException(
+                EmployeeDto.class);
+        assertEquals(EmployeeDto.class, ex.getTargetClass());
         System.out.println(ex.getMessage());
     }
 }

@@ -85,6 +85,9 @@ public class EntityMetaFactoryImpl implements EntityMetaFactory {
     }
 
     public EntityMeta getEntityMeta(Class<?> entityClass) {
+        if (entityClass == null) {
+            throw new NullPointerException("entityClass");
+        }
         EntityMetaCache cache = entityMetaCacheMap.get(entityClass.getName());
         if (cache == null) {
             cache = createEntityMetaCache(entityClass);
