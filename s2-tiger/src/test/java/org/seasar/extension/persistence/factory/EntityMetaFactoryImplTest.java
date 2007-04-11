@@ -44,11 +44,16 @@ public class EntityMetaFactoryImplTest extends TestCase {
 
     @Override
     protected void setUp() {
+        PersistenceConventionImpl convention = new PersistenceConventionImpl();
         factory = new EntityMetaFactoryImpl();
         TableMetaFactoryImpl tableMetaFactory = new TableMetaFactoryImpl();
-        tableMetaFactory
-                .setPersistenceConvention(new PersistenceConventionImpl());
+        tableMetaFactory.setPersistenceConvention(convention);
         factory.setTableMetaFactory(tableMetaFactory);
+        PropertyMetaFactoryImpl propertyMetaFactory = new PropertyMetaFactoryImpl();
+        ColumnMetaFactoryImpl cmFactory = new ColumnMetaFactoryImpl();
+        cmFactory.setPersistenceConvention(convention);
+        propertyMetaFactory.setColumnMetaFactory(cmFactory);
+        factory.setPropertyMetaFactory(propertyMetaFactory);
         HotdeployUtil.setHotdeploy(true);
     }
 
@@ -83,6 +88,14 @@ public class EntityMetaFactoryImplTest extends TestCase {
     public void testCreateEntityMeta_tableMeta() throws Exception {
         EntityMeta entityMeta = factory.createEntityMeta(Employee.class);
         assertNotNull(entityMeta.getTableMeta());
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testCreateEntityMeta_propertyMeta() throws Exception {
+        EntityMeta entityMeta = factory.createEntityMeta(Employee.class);
+        assertTrue(entityMeta.getPropertyMetaSize() > 0);
     }
 
     /**

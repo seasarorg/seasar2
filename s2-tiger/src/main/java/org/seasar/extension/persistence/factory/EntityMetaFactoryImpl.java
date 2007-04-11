@@ -24,6 +24,7 @@ import javax.persistence.Entity;
 
 import org.seasar.extension.persistence.EntityMeta;
 import org.seasar.extension.persistence.EntityMetaFactory;
+import org.seasar.extension.persistence.PropertyMetaFactory;
 import org.seasar.extension.persistence.TableMeta;
 import org.seasar.extension.persistence.TableMetaFactory;
 import org.seasar.framework.container.annotation.tiger.Binding;
@@ -43,6 +44,8 @@ public class EntityMetaFactoryImpl implements EntityMetaFactory {
 
     private TableMetaFactory tableMetaFactory;
 
+    private PropertyMetaFactory propertyMetaFactory;
+
     /**
      * <code>TableMetaFactory</code>を返します。
      * 
@@ -60,6 +63,25 @@ public class EntityMetaFactoryImpl implements EntityMetaFactory {
     @Binding(bindingType = BindingType.MUST)
     public void setTableMetaFactory(TableMetaFactory tableMetaFactory) {
         this.tableMetaFactory = tableMetaFactory;
+    }
+
+    /**
+     * <code>PropertyMetaFactory</code>を返します。
+     * 
+     * @return propertyMetaFactory.
+     */
+    public PropertyMetaFactory getPropertyMetaFactory() {
+        return propertyMetaFactory;
+    }
+
+    /**
+     * <code>PropertyMetaFactory</code>を設定します。
+     * 
+     * @param propertyMetaFactory
+     */
+    @Binding(bindingType = BindingType.MUST)
+    public void setPropertyMetaFactory(PropertyMetaFactory propertyMetaFactory) {
+        this.propertyMetaFactory = propertyMetaFactory;
     }
 
     public EntityMeta getEntityMeta(Class<?> entityClass) {
@@ -92,26 +114,45 @@ public class EntityMetaFactoryImpl implements EntityMetaFactory {
             return null;
         }
         EntityMeta entityMeta = new EntityMeta();
+        doName(entityMeta, entityClass);
+        doTableMeta(entityMeta, entityClass);
+        doPropertyMeta(entityMeta, entityClass);
+        doCustomize(entityMeta, entityClass);
+        return entityMeta;
+    }
+
+    protected void doName(EntityMeta entityMeta, Class<?> entityClass) {
         String entityName = fromClassToEntityName(entityClass);
         entityMeta.setName(entityName);
-        TableMeta tableMeta = tableMetaFactory.createTableMeta(entityClass,
-                entityName);
-        entityMeta.setTableMeta(tableMeta);
-        Field[] fields = entityClass.getDeclaredFields();
-        for (Field f : fields) {
-            if (!isInstanceField(f)) {
-                continue;
-            }
-        }
-        return entityMeta;
     }
 
     protected String fromClassToEntityName(Class<?> entityClass) {
         return ClassUtil.getShortClassName(entityClass);
     }
 
+    protected void doTableMeta(EntityMeta entityMeta, Class<?> entityClass) {
+        TableMeta tableMeta = tableMetaFactory.createTableMeta(entityClass,
+                entityMeta.getName());
+        entityMeta.setTableMeta(tableMeta);
+    }
+
+    protected void doPropertyMeta(EntityMeta entityMeta, Class<?> entityClass) {
+        Field[] fields = entityClass.getDeclaredFields();
+        for (Field f : fields) {
+            if (!isInstanceField(f)) {
+                continue;
+            }
+            entityMeta.addPropertyMeta(propertyMetaFactory
+                    .createPropertyMeta(f));
+        }
+    }
+
     protected boolean isInstanceField(Field field) {
         int m = field.getModifiers();
         return !Modifier.isStatic(m) && !Modifier.isFinal(m);
+    }
+
+    @SuppressWarnings("unused")
+    protected void doCustomize(EntityMeta entityMeta, Class<?> entityClass) {
     }
 }
