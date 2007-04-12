@@ -38,12 +38,118 @@ public class Employee {
 
     private BigDecimal salary;
 
+    @Version
+    private Integer version;
+
     private Employee manager;
 
     private List<Employee> assistants;
 
     private Department department;
 
-    @Version
-    private Integer version;
+    /**
+     * @return Returns the assistants.
+     */
+    public List<Employee> getAssistants() {
+        return assistants;
+    }
+
+    /**
+     * @param assistants
+     *            The assistants to set.
+     */
+    public void setAssistants(List<Employee> assistants) {
+        this.assistants = assistants;
+    }
+
+    /**
+     * @return Returns the department.
+     */
+    public Department getDepartment() {
+        return department;
+    }
+
+    /**
+     * @param department
+     *            The department to set.
+     */
+    public void setDepartment(Department department) {
+        this.department = department;
+    }
+
+    /**
+     * @return Returns the employeeName.
+     */
+    public String getEmployeeName() {
+        return employeeName;
+    }
+
+    /**
+     * @param employeeName
+     *            The employeeName to set.
+     */
+    public void setEmployeeName(String employeeName) {
+        this.employeeName = employeeName;
+    }
+
+    /**
+     * @return Returns the id.
+     */
+    public Long getId() {
+        return id;
+    }
+
+    /**
+     * @param id
+     *            The id to set.
+     */
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    /**
+     * @return Returns the manager.
+     */
+    public Employee getManager() {
+        return manager;
+    }
+
+    /**
+     * @param manager
+     *            The manager to set.
+     */
+    public void setManager(Employee manager) {
+        this.manager = manager;
+    }
+
+    /**
+     * @return Returns the salary.
+     */
+    public BigDecimal getSalary() {
+        return salary;
+    }
+
+    /**
+     * @param salary
+     *            The salary to set.
+     */
+    public void setSalary(BigDecimal salary) {
+        this.salary = salary;
+    }
+
+    /**
+     * @return Returns the version.
+     */
+    public Integer getVersion() {
+        return version;
+    }
+
+    /**
+     * @param version
+     *            The version to set.
+     */
+    public void setVersion(Integer version) {
+        this.version = version;
+    }
+
 }
