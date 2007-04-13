@@ -138,6 +138,16 @@ public class StringUtilTest extends TestCase {
         assertEquals("010203", StringUtil.toHex(new byte[] { 1, 2, 3 }));
     }
 
+    public void testToHex2() throws Exception {
+        assertEquals("01", StringUtil.toHex(1));
+    }
+
+    public void testAppendHex() throws Exception {
+        StringBuffer buf = new StringBuffer();
+        StringUtil.appendHex(buf, (byte) 1);
+        assertEquals("01", buf.toString());
+    }
+
     public void testCamelize() throws Exception {
         assertNull(StringUtil.camelize(null));
         assertEquals("Emp", StringUtil.camelize("EMP"));

@@ -254,10 +254,43 @@ public final class StringUtil {
         }
         StringBuffer sb = new StringBuffer(bytes.length * 2);
         for (int i = 0; i < bytes.length; ++i) {
-            sb.append(Character.forDigit((bytes[i] & 0xf0) >> 4, 16));
-            sb.append(Character.forDigit((bytes[i] & 0x0f), 16));
+            appendHex(sb, bytes[i]);
         }
         return sb.toString();
+    }
+
+    public static String toHex(final int i) {
+        StringBuffer buf = new StringBuffer();
+        appendHex(buf, i);
+        return buf.toString();
+    }
+
+    /**
+     * 文字列に、数値を16進数に変換した文字列を追加します。
+     * 
+     * @param buf
+     *            追加先の文字列
+     * @param i
+     *            数値
+     */
+    public static void appendHex(final StringBuffer buf, final byte i) {
+        buf.append(Character.forDigit((i & 0xf0) >> 4, 16));
+        buf.append(Character.forDigit((i & 0x0f), 16));
+    }
+
+    /**
+     * 文字列に、数値を16進数に変換した文字列を追加します。
+     * 
+     * @param buf
+     *            追加先の文字列
+     * @param i
+     *            数値
+     */
+    public static void appendHex(final StringBuffer buf, final int i) {
+        buf.append(Integer.toHexString((i >> 24) & 0xff));
+        buf.append(Integer.toHexString((i >> 16) & 0xff));
+        buf.append(Integer.toHexString((i >> 8) & 0xff));
+        buf.append(Integer.toHexString(i & 0xff));
     }
 
     public static String camelize(String s) {
