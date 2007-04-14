@@ -108,9 +108,10 @@ public class ComponentAutoRegister extends AbstractComponentAutoRegister
 
         public void registerAll(final Class referenceClass, final URL url) {
             final File rootDir = getRootDir(referenceClass, url);
-            for (int i = 0; i < getClassPatternSize(); ++i) {
-                ClassTraversal.forEach(rootDir, getClassPattern(i)
-                        .getPackageName(), ComponentAutoRegister.this);
+            final String[] referencePackages = getTargetPackages();
+            for (int i = 0; i < referencePackages.length; ++i) {
+                ClassTraversal.forEach(rootDir, referencePackages[i],
+                        ComponentAutoRegister.this);
             }
         }
 

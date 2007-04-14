@@ -45,15 +45,17 @@ public class ComponentAutoRegisterTest extends S2FrameworkTestCase {
 
     public void testRegisterAll() throws Exception {
         Foo foo = (Foo) child.getComponent(Foo.class);
-        assertNotNull("1", foo);
+        assertNotNull(foo);
         Foo2 foo2 = (Foo2) child.getComponent(Foo2.class);
-        assertNotNull("2", foo2);
-        assertSame("3", foo2, foo.getFoo2());
-        assertNotNull("4", child.getComponent(Foo3.class));
-        assertNotNull("5", child.getComponent("foo3"));
-        assertFalse("6", child.hasComponentDef(Foo4Impl.class));
-        assertNotNull("7", child.getComponentDef(TestSuite.class));
-        assertNotNull("8", child.getComponentDef("testSuite"));
+        assertNotNull(foo2);
+        assertSame(foo2, foo.getFoo2());
+        assertNotNull(child.getComponent(Foo3.class));
+        assertNotNull(child.getComponent("foo3"));
+        assertFalse(child.hasComponentDef(Foo4Impl.class));
+        assertNotNull(child
+                .getComponent(org.seasar.framework.container.autoregister.sub.Foo5.class));
+        assertNotNull(child.getComponentDef(TestSuite.class));
+        assertNotNull(child.getComponentDef("testSuite"));
     }
 
     public void setUpBindingMode() throws Exception {
@@ -68,7 +70,7 @@ public class ComponentAutoRegisterTest extends S2FrameworkTestCase {
         assertEquals("2", AutoBindingDef.NONE_NAME, cd.getAutoBindingDef()
                 .getName());
     }
-    
+
     public void setUpExternalBinding() throws Exception {
         include("ComponentAutoRegisterTest2.dicon");
     }

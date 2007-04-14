@@ -15,6 +15,9 @@
  */
 package org.seasar.framework.container.autoregister;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.seasar.framework.container.AutoBindingDef;
 import org.seasar.framework.container.ComponentCustomizer;
 import org.seasar.framework.container.ComponentDef;
@@ -28,11 +31,11 @@ import org.seasar.framework.util.ClassTraversal.ClassHandler;
  * コンポーネントを自動登録するための抽象クラスです。
  * 
  * @author higa
- * 
  */
 public abstract class AbstractComponentAutoRegister extends
         AbstractAutoRegister implements ClassHandler {
 
+    /** クラスファイルの拡張子 */
     protected static final String CLASS_SUFFIX = ".class";
 
     /**
@@ -68,7 +71,7 @@ public abstract class AbstractComponentAutoRegister extends
     /**
      * AutoNamingを返します。
      * 
-     * @return
+     * @return AutoNaming
      */
     public AutoNaming getAutoNaming() {
         return autoNaming;
@@ -78,6 +81,7 @@ public abstract class AbstractComponentAutoRegister extends
      * AutoNamingを設定します。
      * 
      * @param autoNaming
+     *            AutoNaming
      */
     public void setAutoNaming(AutoNaming autoNaming) {
         this.autoNaming = autoNaming;
@@ -86,7 +90,7 @@ public abstract class AbstractComponentAutoRegister extends
     /**
      * インスタンス定義を返します。
      * 
-     * @return
+     * @return インスタンス定義
      */
     public InstanceDef getInstanceDef() {
         return instanceDef;
@@ -96,6 +100,7 @@ public abstract class AbstractComponentAutoRegister extends
      * インスタンス定義を設定します。
      * 
      * @param instanceDef
+     *            インスタンス定義
      */
     public void setInstanceDef(InstanceDef instanceDef) {
         this.instanceDef = instanceDef;
@@ -104,7 +109,7 @@ public abstract class AbstractComponentAutoRegister extends
     /**
      * 自動バインディング定義を返します。
      * 
-     * @return
+     * @return 自動バインディング定義
      */
     public AutoBindingDef getAutoBindingDef() {
         return autoBindingDef;
@@ -114,6 +119,7 @@ public abstract class AbstractComponentAutoRegister extends
      * 自動バインディング定義を設定します。
      * 
      * @param autoBindingDef
+     *            自動バインディング定義
      */
     public void setAutoBindingDef(AutoBindingDef autoBindingDef) {
         this.autoBindingDef = autoBindingDef;
@@ -122,7 +128,7 @@ public abstract class AbstractComponentAutoRegister extends
     /**
      * 外部バインディングのデフォルト値を返します。
      * 
-     * @return
+     * @return 外部バインディングのデフォルト値
      */
     public boolean isExternalBinding() {
         return externalBinding;
@@ -132,6 +138,7 @@ public abstract class AbstractComponentAutoRegister extends
      * 外部バインディングのデフォルト値を設定します。
      * 
      * @param externalBinding
+     *            外部バインディングのデフォルト値
      */
     public void setExternalBinding(boolean externalBinding) {
         this.externalBinding = externalBinding;
@@ -140,7 +147,7 @@ public abstract class AbstractComponentAutoRegister extends
     /**
      * コンポーネントカスタマイザを返します。
      * 
-     * @return
+     * @return コンポーネントカスタマイザ
      */
     public ComponentCustomizer getCustomizer() {
         return customizer;
@@ -150,6 +157,7 @@ public abstract class AbstractComponentAutoRegister extends
      * コンポーネントカスタマイザを設定します。
      * 
      * @param customizer
+     *            コンポーネントカスタマイザ
      */
     public void setCustomizer(ComponentCustomizer customizer) {
         this.customizer = customizer;
@@ -166,10 +174,17 @@ public abstract class AbstractComponentAutoRegister extends
             if (cp.isAppliedPackageName(packageName)
                     && cp.isAppliedShortClassName(shortClassName)) {
                 register(ClassUtil.concatName(packageName, shortClassName));
+                return;
             }
         }
     }
 
+    /**
+     * コンポーネント定義を作成してコンテナに登録します。
+     * 
+     * @param className
+     *            コンポーネントのクラス
+     */
     protected void register(final String className) {
         final AnnotationHandler annoHandler = AnnotationHandlerFactory
                 .getAnnotationHandler();
@@ -188,9 +203,53 @@ public abstract class AbstractComponentAutoRegister extends
         getContainer().register(cd);
     }
 
+    /**
+     * コンポーネント定義をカスタマイズします。
+     * 
+     * @param componentDef
+     *            コンポーネント定義
+     */
     protected void customize(ComponentDef componentDef) {
         if (customizer != null) {
             customizer.customize(componentDef);
         }
     }
+
+    /**
+     * コンポーネントを検索する対象となるパッケージの配列を返します。
+     * <p>
+     * コンポーネントを検索する対象のパッケージは<code>ClassPattern</code>に設定されたパッケージ名から
+     * 重複やサブパッケージを除いたものになります。 例えば<code>ClassPattern</code>に<code>aaa, aaa.bbb, bbb</code>が指定された場合、
+     * <code>aaa.bbb</code>は<code>aaa</code>のサブパッケージなので取り除かれ、
+     * <code>aaa, bbb</code>が検索対象のパッケージとなります。
+     * </p>
+     * 
+     * @return コンポーネントを検索する対象となるパッケージの配列
+     */
+    protected String[] getTargetPackages() {
+        final List result = new ArrayList();
+        for (int i = 0; i < getClassPatternSize(); ++i) {
+            final String packageName = getClassPattern(i).getPackageName();
+            boolean append = true;
+            for (int j = 0; j < result.size(); ++j) {
+                final String root = (String) result.get(j);
+                if (packageName.equals(root)) {
+                    append = false;
+                    break;
+                } else if (packageName.startsWith(root)) {
+                    append = false;
+                    break;
+                } else if (root.startsWith(packageName)) {
+                    result.set(j, packageName);
+                    append = false;
+                    break;
+                }
+            }
+            if (append) {
+                result.add(packageName);
+            }
+        }
+        return (String[]) result.toArray(new String[result.size()]);
+    }
+
 }

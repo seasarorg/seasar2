@@ -18,51 +18,43 @@ package org.seasar.framework.container.autoregister;
 import java.io.File;
 
 import org.seasar.framework.util.ClassTraversal;
-import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.ResourceUtil;
 import org.seasar.framework.util.StringUtil;
-import org.seasar.framework.util.ClassTraversal.ClassHandler;
 
 /**
  * ファイルシステム上(例えばWEBINF/classes)のコンポーネントを自動登録するクラスです。
  * 
  * @author higa
- * 
  */
 public class FileSystemComponentAutoRegister extends
         AbstractComponentAutoRegister {
 
     public void registerAll() {
-        for (int i = 0; i < getClassPatternSize(); ++i) {
-            ClassPattern cp = getClassPattern(i);
-            register(cp);
+        final File packageDir = getRootDir();
+        final String[] referencePackages = getTargetPackages();
+        for (int i = 0; i < referencePackages.length; ++i) {
+            ClassTraversal.forEach(packageDir, referencePackages[i], this);
         }
     }
 
-    protected void register(final ClassPattern classPattern) {
-        String packageName = classPattern.getPackageName();
-        File packageDir = getRootDir();
-        ClassTraversal.forEach(packageDir, packageName, new ClassHandler() {
-            public void processClass(final String packageName,
-                    final String shortClassName) {
-                if (isIgnore(packageName, shortClassName)) {
-                    return;
-                }
-                if (classPattern.isAppliedPackageName(packageName)
-                        && classPattern.isAppliedShortClassName(shortClassName)) {
-                    register(ClassUtil.concatName(packageName, shortClassName));
-                }
-            }
-        });
-    }
-
+    /**
+     * コンポーネントを検索する基点となるディレクトリを返します。
+     * <p>
+     * 基点となるディレクトリはこのコンポーネント自身を定義したdiconファイルのパスが見つかったディレクトリになります。
+     * 例えばdiconファイルのパスが<code>"foo/bar.dicon"</code>で、このdiconファイルの絶対パスが
+     * <code>/aaa/bbb/foo/bar.dicon</code>であれば、基点となるディレクトリは<code>/aaa/bbb</code>となります。
+     * </p>
+     * 
+     * @return コンポーネントを検索する基点となるディレクトリ
+     */
     protected File getRootDir() {
-        String path = getContainer().getPath();
+        final String path = getContainer().getPath();
+        final String[] names = StringUtil.split(path, "/");
         File file = ResourceUtil.getResourceAsFile(path);
-        String[] names = StringUtil.split(path, "/");
         for (int i = 0; i < names.length; ++i) {
             file = file.getParentFile();
         }
         return file;
     }
+
 }
