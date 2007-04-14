@@ -139,7 +139,7 @@ public class StringUtilTest extends TestCase {
     }
 
     public void testToHex2() throws Exception {
-        assertEquals("01", StringUtil.toHex(1));
+        assertEquals("0001", StringUtil.toHex(1));
     }
 
     public void testAppendHex() throws Exception {
