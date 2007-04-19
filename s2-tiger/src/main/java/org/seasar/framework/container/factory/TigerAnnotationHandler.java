@@ -53,6 +53,8 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
 
     protected static boolean initialized;
 
+    protected static final boolean enableEJB3 = enableEJB3();
+
     protected static final List<ComponentDefBuilder> componentDefBuilders = Collections
             .synchronizedList(new ArrayList<ComponentDefBuilder>());
 
@@ -75,6 +77,18 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
         initialize();
     }
 
+    protected static boolean enableEJB3() {
+        try {
+            Class.forName("javax.annotation.Resource"); // geronimo-annotation_1.0_spec-1.0.jar
+            Class.forName("javax.ejb.Stateless"); // geronimo-ejb_3.0_spec-1.0.jar
+            Class.forName("javax.interceptor.Interceptors"); // geronimo-interceptor_3.0_spec-1.0.jar
+            Class.forName("javax.persistence.PersistenceContext"); // geronimo-jpa_3.0_spec-1.0.jar
+            return true;
+        } catch (final Throwable ignore) {
+            return false;
+        }
+    }
+
     public static void initialize() {
         if (initialized) {
             return;
@@ -86,6 +100,7 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
         loadDefaultInitMethodDefBuilder();
         loadDefaultDestroyMethodDefBuilder();
         DisposableUtil.add(new Disposable() {
+
             public void dispose() {
                 TigerAnnotationHandler.dispose();
             }
@@ -104,7 +119,9 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
     }
 
     public static void loadDefaultComponentDefBuilder() {
-        componentDefBuilders.add(new EJB3ComponentDefBuilder());
+        if (enableEJB3) {
+            componentDefBuilders.add(new EJB3ComponentDefBuilder());
+        }
         componentDefBuilders.add(new PojoComponentDefBuilder());
     }
 
@@ -124,10 +141,12 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
     public static void loadDefaultPropertyDefBuilder() {
         clearPropertyDefBuilder();
         propertyDefBuilders.add(new BindingPropertyDefBuilder());
-        propertyDefBuilders.add(new EJBPropertyDefBuilder());
-        propertyDefBuilders.add(new PersistenceContextPropertyDefBuilder());
-        propertyDefBuilders.add(new PersistenceUnitPropertyDefBuilder());
-        propertyDefBuilders.add(new ResourcePropertyDefBuilder());
+        if (enableEJB3) {
+            propertyDefBuilders.add(new EJBPropertyDefBuilder());
+            propertyDefBuilders.add(new PersistenceContextPropertyDefBuilder());
+            propertyDefBuilders.add(new PersistenceUnitPropertyDefBuilder());
+            propertyDefBuilders.add(new ResourcePropertyDefBuilder());
+        }
     }
 
     public static void addPropertyDefBuilder(final PropertyDefBuilder builder) {
@@ -143,7 +162,9 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
     }
 
     public static void loadDefaultAspectDefBuilder() {
-        aspectDefBuilders.add(new EJB3AnnotationAspectDefBuilder());
+        if (enableEJB3) {
+            aspectDefBuilders.add(new EJB3AnnotationAspectDefBuilder());
+        }
         aspectDefBuilders.add(new AspectAnnotationAspectDefBuilder());
         aspectDefBuilders.add(new MetaAnnotationAspectDefBuilder(
                 Interceptor.class, "Interceptor"));
@@ -162,7 +183,9 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
     }
 
     public static void loadDefaultIntertypeDefBuilder() {
-        intertypeDefBuilders.add(new EJB3IntertypeDefBuilder());
+        if (enableEJB3) {
+            intertypeDefBuilders.add(new EJB3IntertypeDefBuilder());
+        }
         intertypeDefBuilders.add(new S2IntertypeDefBuilder());
     }
 
@@ -180,7 +203,9 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
     }
 
     public static void loadDefaultInitMethodDefBuilder() {
-        initMethodDefBuilders.add(new EJB3InitMethodDefBuilder());
+        if (enableEJB3) {
+            initMethodDefBuilders.add(new EJB3InitMethodDefBuilder());
+        }
         initMethodDefBuilders.add(new S2InitMethodDefBuilder());
     }
 
