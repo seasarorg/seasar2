@@ -53,17 +53,19 @@ public class DbSessionFilter implements Filter {
                 (HttpServletRequest) request, ssm);
         DbHttpServletResponseWrapper responseWrapper = new DbHttpServletResponseWrapper(
                 (HttpServletResponse) response, requestWrapper);
+        SessionIdUtil.writeCookie(requestWrapper, responseWrapper,
+                requestWrapper.getSessionId());
         try {
             chain.doFilter(requestWrapper, responseWrapper);
         } finally {
-            DbHttpSessionWrapper sessionWrapper = requestWrapper
-                    .getSessionWrapper();
-            if (sessionWrapper == null) {
+            DbHttpSession session = requestWrapper.getDbHttpSession();
+            if (session == null) {
                 return;
             }
-            DbSessionState sessionState = sessionWrapper.getSessionState();
+
+            DbSessionState sessionState = session.getSessionState();
             if (sessionState != null) {
-                ssm.updateState(sessionWrapper.getId(), sessionState);
+                ssm.updateState(session.getId(), sessionState);
             }
         }
     }

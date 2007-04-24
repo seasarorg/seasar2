@@ -17,6 +17,7 @@ package org.seasar.extension.dbsession;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 /**
@@ -30,7 +31,7 @@ public final class SessionIdUtil {
     /**
      * Session Idのキーをあらわします。
      */
-    public static final String SESSION_ID_KEY = "s2sessionid";
+    public static final String SESSION_ID_KEY = "S2SESSIONID";
 
     private static final String PART_OF_URI = ";" + SESSION_ID_KEY + "=";
 
@@ -66,7 +67,12 @@ public final class SessionIdUtil {
         if (index < 0) {
             return null;
         }
-        return uri.substring(index + PART_OF_URI.length());
+        uri = uri.substring(index + PART_OF_URI.length());
+        int index2 = uri.indexOf('?');
+        if (index2 < 0) {
+            return uri;
+        }
+        return uri.substring(0, index2);
     }
 
     /**
@@ -84,6 +90,29 @@ public final class SessionIdUtil {
         if (session == null) {
             return url;
         }
-        return url + PART_OF_URI + session.getId();
+        int index = url.indexOf('?');
+        if (index < 0) {
+            return url + PART_OF_URI + session.getId();
+        } else {
+            return url.substring(0, index) + PART_OF_URI + session.getId()
+                    + url.substring(index);
+        }
+    }
+
+    /**
+     * Session Id用のCookieを書き込みます。
+     * 
+     * @param request
+     * @param response
+     * @param sessionId
+     */
+    public static void writeCookie(HttpServletRequest request,
+            HttpServletResponse response, String sessionId) {
+        if (request.isRequestedSessionIdFromCookie()) {
+            return;
+        }
+        Cookie cookie = new Cookie(SESSION_ID_KEY, sessionId);
+        cookie.setPath(request.getContextPath());
+        response.addCookie(cookie);
     }
 }

@@ -16,6 +16,7 @@
 package org.seasar.extension.dbsession;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
 
@@ -27,26 +28,35 @@ import javax.servlet.http.HttpSessionContext;
  * @author higa
  * 
  */
-public class DbHttpSessionWrapper implements HttpSession {
+public class DbHttpSession implements HttpSession {
 
     private String id;
 
-    private HttpSession session;
-
     private DbSessionStateManager sessionStateManager;
+
+    private ServletContext servletContext;
+
+    private boolean isNew = false;
 
     private DbSessionState sessionState;
 
+    private long creationTime = new Date().getTime();
+
+    private long lastAccessedTime = creationTime;
+
+    private int maxInactiveInterval = Integer.MAX_VALUE;
+
     /**
      * @param id
-     * @param session
      * @param sessionStateManager
+     * @param servletContext
+     * @param isNew
      */
-    public DbHttpSessionWrapper(String id, HttpSession session,
-            DbSessionStateManager sessionStateManager) {
+    public DbHttpSession(String id, DbSessionStateManager sessionStateManager,
+            ServletContext servletContext, boolean isNew) {
         this.id = id;
-        this.session = session;
         this.sessionStateManager = sessionStateManager;
+        this.isNew = isNew;
     }
 
     /**
@@ -65,7 +75,7 @@ public class DbHttpSessionWrapper implements HttpSession {
 
     protected synchronized void setupSessionState() {
         if (sessionState == null) {
-            sessionState = sessionStateManager.loadState(session.getId());
+            sessionState = sessionStateManager.loadState(id);
         }
     }
 
@@ -75,7 +85,7 @@ public class DbHttpSessionWrapper implements HttpSession {
     }
 
     public long getCreationTime() {
-        return session.getCreationTime();
+        return creationTime;
     }
 
     public String getId() {
@@ -83,22 +93,22 @@ public class DbHttpSessionWrapper implements HttpSession {
     }
 
     public long getLastAccessedTime() {
-        return session.getLastAccessedTime();
+        return lastAccessedTime;
     }
 
     public int getMaxInactiveInterval() {
-        return session.getMaxInactiveInterval();
+        return maxInactiveInterval;
     }
 
     public ServletContext getServletContext() {
-        return session.getServletContext();
+        return servletContext;
     }
 
     /**
      * @deprecated
      */
     public HttpSessionContext getSessionContext() {
-        return session.getSessionContext();
+        return null;
     }
 
     public Object getValue(String name) {
@@ -114,11 +124,10 @@ public class DbHttpSessionWrapper implements HttpSession {
     }
 
     public void invalidate() {
-        session.invalidate();
     }
 
     public boolean isNew() {
-        return session.isNew();
+        return isNew;
     }
 
     public void putValue(String name, Object value) {
@@ -136,9 +145,10 @@ public class DbHttpSessionWrapper implements HttpSession {
     public void setAttribute(String name, Object value) {
         setupSessionState();
         sessionState.setAttribute(name, value);
+        lastAccessedTime = new Date().getTime();
     }
 
     public void setMaxInactiveInterval(int interval) {
-        session.setMaxInactiveInterval(interval);
+        maxInactiveInterval = interval;
     }
 }

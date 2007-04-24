@@ -17,16 +17,15 @@ package org.seasar.extension.dbsession;
 
 import javax.servlet.http.HttpSession;
 
-import junit.framework.TestCase;
-
 import org.seasar.framework.mock.servlet.MockHttpServletRequestImpl;
 import org.seasar.framework.mock.servlet.MockServletContextImpl;
+import org.seasar.framework.unit.S2FrameworkTestCase;
 
 /**
  * @author higa
  * 
  */
-public class DbHttpServletRequestWrapperTest extends TestCase {
+public class DbHttpServletRequestWrapperTest extends S2FrameworkTestCase {
 
     /**
      * @throws Exception
@@ -52,7 +51,7 @@ public class DbHttpServletRequestWrapperTest extends TestCase {
                 request, sessionStateManager);
         HttpSession session = requestWrapper.getSession();
         assertNotNull(session);
-        assertTrue(session instanceof DbHttpSessionWrapper);
+        assertTrue(session instanceof DbHttpSession);
         assertSame(session, requestWrapper.getSession());
         System.out.println(session.getId());
         assertNotNull(session.getId());

@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpSession;
 
+import org.seasar.framework.container.servlet.S2ContainerServlet;
 import org.seasar.framework.util.UUID;
 
 /**
@@ -33,11 +34,13 @@ public class DbHttpServletRequestWrapper extends HttpServletRequestWrapper {
 
     private DbSessionStateManager sessionStateManager;
 
-    private DbHttpSessionWrapper sessionWrapper;
+    private DbHttpSession session;
 
     private String requestedSessionIdFromCookie;
 
     private String requestedSessionIdFromURL;
+
+    private String createdSessionId;
 
     /**
      * @param request
@@ -58,6 +61,9 @@ public class DbHttpServletRequestWrapper extends HttpServletRequestWrapper {
             requestedSessionIdFromURL = SessionIdUtil
                     .getSessionIdFromURL(request);
         }
+        if (requestedSessionIdFromURL == null) {
+            createdSessionId = UUID.create();
+        }
     }
 
     public HttpSession getSession() {
@@ -65,29 +71,30 @@ public class DbHttpServletRequestWrapper extends HttpServletRequestWrapper {
     }
 
     public HttpSession getSession(boolean create) {
-        if (sessionWrapper != null) {
-            return sessionWrapper;
+        if (session != null) {
+            return session;
         }
-        HttpSession session = request.getSession(create);
-        if (session == null) {
+        if (!create) {
             return null;
         }
+        boolean isNew = false;
         String sessionId = getRequestedSessionId();
         if (sessionId == null) {
-            sessionId = UUID.create();
+            sessionId = createdSessionId;
+            isNew = true;
         }
-        sessionWrapper = new DbHttpSessionWrapper(sessionId, session,
-                sessionStateManager);
-        return sessionWrapper;
+        session = new DbHttpSession(sessionId, sessionStateManager,
+                S2ContainerServlet.getInstance().getServletContext(), isNew);
+        return session;
     }
 
     /**
-     * DbHttpSessionWrapperを返します。
+     * DbHttpSessionを返します。
      * 
      * @return
      */
-    public DbHttpSessionWrapper getSessionWrapper() {
-        return sessionWrapper;
+    public DbHttpSession getDbHttpSession() {
+        return session;
     }
 
     public String getRequestedSessionId() {
@@ -95,6 +102,28 @@ public class DbHttpServletRequestWrapper extends HttpServletRequestWrapper {
             return requestedSessionIdFromCookie;
         }
         return requestedSessionIdFromURL;
+    }
+
+    /**
+     * 作成されたSession Idを返します。
+     * 
+     * @return
+     */
+    public String getCreatedSessionId() {
+        return createdSessionId;
+    }
+
+    /**
+     * Session Idを返します。
+     * 
+     * @return
+     */
+    public String getSessionId() {
+        String sessionId = getRequestedSessionId();
+        if (sessionId == null) {
+            sessionId = createdSessionId;
+        }
+        return sessionId;
     }
 
     public boolean isRequestedSessionIdFromCookie() {

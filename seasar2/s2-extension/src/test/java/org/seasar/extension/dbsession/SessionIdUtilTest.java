@@ -50,6 +50,9 @@ public class SessionIdUtilTest extends TestCase {
         MockHttpServletRequestImpl request = new MockHttpServletRequestImpl(
                 context, "hello.html;s2sessionid=123");
         assertEquals("123", SessionIdUtil.getSessionIdFromURL(request));
+        request = new MockHttpServletRequestImpl(context,
+                "hello.html;s2sessionid=123?aaa=111");
+        assertEquals("123", SessionIdUtil.getSessionIdFromURL(request));
     }
 
     /**
@@ -75,5 +78,8 @@ public class SessionIdUtilTest extends TestCase {
         String url = SessionIdUtil.rewriteURL("/example/hello.html", request);
         System.out.println(url);
         assertTrue(url.indexOf(SessionIdUtil.SESSION_ID_KEY) >= 0);
+        url = SessionIdUtil.rewriteURL("/example/hello.html?aaa=111", request);
+        System.out.println(url);
+        assertTrue(url.indexOf(SessionIdUtil.SESSION_ID_KEY) < url.indexOf('?'));
     }
 }

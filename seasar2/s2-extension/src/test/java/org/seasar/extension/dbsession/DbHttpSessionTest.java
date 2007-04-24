@@ -17,28 +17,23 @@ package org.seasar.extension.dbsession;
 
 import java.util.HashMap;
 
-import javax.servlet.http.HttpSession;
-
 import junit.framework.TestCase;
 
-import org.seasar.framework.mock.servlet.MockHttpServletRequestImpl;
 import org.seasar.framework.mock.servlet.MockServletContextImpl;
 
 /**
  * @author higa
  * 
  */
-public class DbHttpSessionWrapperTest extends TestCase {
+public class DbHttpSessionTest extends TestCase {
 
     /**
      * Test method for
-     * {@link org.seasar.extension.dbsession.DbHttpSessionWrapper#getSessionState()}.
+     * {@link org.seasar.extension.dbsession.DbHttpSession#getSessionState()}.
      */
     public void testGetSessionState() {
         MockServletContextImpl servletContext = new MockServletContextImpl(
                 "hoge");
-        MockHttpServletRequestImpl request = new MockHttpServletRequestImpl(
-                servletContext, "foo");
         DbSessionStateManager sessionStateManager = new DbSessionStateManager() {
             public DbSessionState loadState(String sessionId) {
                 return new DbSessionState(new HashMap());
@@ -51,9 +46,8 @@ public class DbHttpSessionWrapperTest extends TestCase {
             public void removeState(String sessionId) {
             }
         };
-        HttpSession session = request.getSession();
-        DbHttpSessionWrapper sessionWrapper = new DbHttpSessionWrapper("myid",
-                session, sessionStateManager);
+        DbHttpSession sessionWrapper = new DbHttpSession("myid",
+                sessionStateManager, servletContext, true);
         assertNull(sessionWrapper.getSessionState());
         sessionWrapper.getAttribute("hoge");
         assertNotNull(sessionWrapper.getSessionState());
