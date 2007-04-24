@@ -37,7 +37,7 @@ public class SessionIdUtilTest extends TestCase {
         MockHttpServletRequestImpl request = new MockHttpServletRequestImpl(
                 context, "hello.html");
         assertNull(SessionIdUtil.getSessionIdFromCookie(request));
-        request.addCookie(new Cookie("s2sessionid", "123"));
+        request.addCookie(new Cookie("S2SESSIONID", "123"));
         assertEquals("123", SessionIdUtil.getSessionIdFromCookie(request));
     }
 
@@ -48,10 +48,10 @@ public class SessionIdUtilTest extends TestCase {
     public void testGetSessionIdFromURI() {
         MockServletContextImpl context = new MockServletContextImpl("/example");
         MockHttpServletRequestImpl request = new MockHttpServletRequestImpl(
-                context, "hello.html;s2sessionid=123");
+                context, "hello.html;S2SESSIONID=123");
         assertEquals("123", SessionIdUtil.getSessionIdFromURL(request));
         request = new MockHttpServletRequestImpl(context,
-                "hello.html;s2sessionid=123?aaa=111");
+                "hello.html;S2SESSIONID=123?aaa=111");
         assertEquals("123", SessionIdUtil.getSessionIdFromURL(request));
     }
 

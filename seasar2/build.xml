@@ -1,5 +1,5 @@
 <project name="seasar2" default="dist" basedir=".">
-	<property name="ver" value="2.4.12"/>
+	<property name="ver" value="2.4.13-rc1"/>
 
 	<target name="fix-site">
 		<mkdir dir="target/site/en"/>
@@ -39,6 +39,7 @@
 			</zipfileset>
 			<zipfileset prefix="seasar2/resources" dir="s2-extension/src/test/resources">
 				<include name="jdbc.dicon"/>
+				<include name="dbsession.dicon"/>
 			</zipfileset>
 			<zipfileset prefix="seasar2/doc" dir="../s2container-www">
 				<exclude name="**/download/**"/>
