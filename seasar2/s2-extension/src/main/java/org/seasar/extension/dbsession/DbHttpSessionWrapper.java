@@ -29,6 +29,8 @@ import javax.servlet.http.HttpSessionContext;
  */
 public class DbHttpSessionWrapper implements HttpSession {
 
+    private String id;
+
     private HttpSession session;
 
     private DbSessionStateManager sessionStateManager;
@@ -36,11 +38,13 @@ public class DbHttpSessionWrapper implements HttpSession {
     private DbSessionState sessionState;
 
     /**
+     * @param id
      * @param session
-     * @param sessionState
+     * @param sessionStateManager
      */
-    public DbHttpSessionWrapper(HttpSession session,
+    public DbHttpSessionWrapper(String id, HttpSession session,
             DbSessionStateManager sessionStateManager) {
+        this.id = id;
         this.session = session;
         this.sessionStateManager = sessionStateManager;
     }
@@ -75,7 +79,7 @@ public class DbHttpSessionWrapper implements HttpSession {
     }
 
     public String getId() {
-        return session.getId();
+        return id;
     }
 
     public long getLastAccessedTime() {

@@ -23,6 +23,7 @@ import java.util.Map;
 import javax.servlet.ServletContext;
 
 import org.seasar.framework.util.EnumerationAdapter;
+import org.seasar.framework.util.UUID;
 
 public class MockHttpSessionImpl implements MockHttpSession, Serializable {
 
@@ -46,7 +47,7 @@ public class MockHttpSessionImpl implements MockHttpSession, Serializable {
 
     public MockHttpSessionImpl(ServletContext servletContext) {
         this.servletContext = servletContext;
-        this.id = "id/" + hashCode();
+        this.id = UUID.create();
     }
 
     /**

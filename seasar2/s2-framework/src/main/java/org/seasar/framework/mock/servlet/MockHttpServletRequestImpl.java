@@ -269,10 +269,34 @@ public class MockHttpServletRequestImpl implements MockHttpServletRequest {
      * @see javax.servlet.http.HttpServletRequest#getRequestedSessionId()
      */
     public String getRequestedSessionId() {
-        if (session != null) {
-            return session.getId();
+        String sessionId = getRequestedSessionIdFromCookie();
+        if (sessionId != null) {
+            return sessionId;
+        }
+        return getRequestedSessionIdFromURL();
+    }
+
+    protected String getRequestedSessionIdFromCookie() {
+        Cookie[] cookies = getCookies();
+        if (cookies == null) {
+            return null;
+        }
+        for (int i = 0; i < cookies.length; i++) {
+            Cookie cookie = cookies[i];
+            if (cookie.getName().endsWith("sessionid")) {
+                return cookie.getValue();
+            }
         }
         return null;
+    }
+
+    protected String getRequestedSessionIdFromURL() {
+        String uri = getRequestURI();
+        int index = uri.lastIndexOf("sessionid");
+        if (index < 0) {
+            return null;
+        }
+        return uri.substring(index + "sessionid".length());
     }
 
     /**
@@ -348,14 +372,14 @@ public class MockHttpServletRequestImpl implements MockHttpServletRequest {
      * @see javax.servlet.http.HttpServletRequest#isRequestedSessionIdFromCookie()
      */
     public boolean isRequestedSessionIdFromCookie() {
-        return session != null;
+        return getRequestedSessionIdFromCookie() != null;
     }
 
     /**
      * @see javax.servlet.http.HttpServletRequest#isRequestedSessionIdFromURL()
      */
     public boolean isRequestedSessionIdFromURL() {
-        return false;
+        return getRequestedSessionIdFromURL() != null;
     }
 
     /**

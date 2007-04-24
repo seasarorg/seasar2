@@ -41,7 +41,8 @@ public class DbHttpServletRequestWrapperTest extends TestCase {
                 return null;
             }
 
-            public void updateState(String sessionId, DbSessionState sessionState) {
+            public void updateState(String sessionId,
+                    DbSessionState sessionState) {
             }
 
             public void removeState(String sessionId) {
@@ -53,5 +54,7 @@ public class DbHttpServletRequestWrapperTest extends TestCase {
         assertNotNull(session);
         assertTrue(session instanceof DbHttpSessionWrapper);
         assertSame(session, requestWrapper.getSession());
+        System.out.println(session.getId());
+        assertNotNull(session.getId());
     }
 }

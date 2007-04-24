@@ -52,8 +52,8 @@ public class DbHttpSessionWrapperTest extends TestCase {
             }
         };
         HttpSession session = request.getSession();
-        DbHttpSessionWrapper sessionWrapper = new DbHttpSessionWrapper(session,
-                sessionStateManager);
+        DbHttpSessionWrapper sessionWrapper = new DbHttpSessionWrapper("myid",
+                session, sessionStateManager);
         assertNull(sessionWrapper.getSessionState());
         sessionWrapper.getAttribute("hoge");
         assertNotNull(sessionWrapper.getSessionState());

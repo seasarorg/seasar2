@@ -24,6 +24,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
@@ -50,8 +51,10 @@ public class DbSessionFilter implements Filter {
         DbSessionStateManager ssm = getSessionStateManager();
         DbHttpServletRequestWrapper requestWrapper = new DbHttpServletRequestWrapper(
                 (HttpServletRequest) request, ssm);
+        DbHttpServletResponseWrapper responseWrapper = new DbHttpServletResponseWrapper(
+                (HttpServletResponse) response, requestWrapper);
         try {
-            chain.doFilter(requestWrapper, response);
+            chain.doFilter(requestWrapper, responseWrapper);
         } finally {
             DbHttpSessionWrapper sessionWrapper = requestWrapper
                     .getSessionWrapper();

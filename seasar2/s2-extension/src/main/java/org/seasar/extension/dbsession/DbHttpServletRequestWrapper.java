@@ -19,8 +19,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpSession;
 
+import org.seasar.framework.util.UUID;
+
 /**
- * getSession()メソッドでDbHttpSessionWrapperを返すクラスです。
+ * セッション情報をデータベースで管理するためのHttpServletRequestWrapperです。
  * 
  * @author higa
  * 
@@ -33,6 +35,10 @@ public class DbHttpServletRequestWrapper extends HttpServletRequestWrapper {
 
     private DbHttpSessionWrapper sessionWrapper;
 
+    private String requestedSessionIdFromCookie;
+
+    private String requestedSessionIdFromURL;
+
     /**
      * @param request
      * @param sessionStateManager
@@ -42,6 +48,16 @@ public class DbHttpServletRequestWrapper extends HttpServletRequestWrapper {
         super(request);
         this.request = request;
         this.sessionStateManager = sessionStateManager;
+        setupSessionId();
+    }
+
+    protected void setupSessionId() {
+        requestedSessionIdFromCookie = SessionIdUtil
+                .getSessionIdFromCookie(request);
+        if (requestedSessionIdFromCookie == null) {
+            requestedSessionIdFromURL = SessionIdUtil
+                    .getSessionIdFromURL(request);
+        }
     }
 
     public HttpSession getSession() {
@@ -56,7 +72,12 @@ public class DbHttpServletRequestWrapper extends HttpServletRequestWrapper {
         if (session == null) {
             return null;
         }
-        sessionWrapper = new DbHttpSessionWrapper(session, sessionStateManager);
+        String sessionId = getRequestedSessionId();
+        if (sessionId == null) {
+            sessionId = UUID.create();
+        }
+        sessionWrapper = new DbHttpSessionWrapper(sessionId, session,
+                sessionStateManager);
         return sessionWrapper;
     }
 
@@ -67,5 +88,24 @@ public class DbHttpServletRequestWrapper extends HttpServletRequestWrapper {
      */
     public DbHttpSessionWrapper getSessionWrapper() {
         return sessionWrapper;
+    }
+
+    public String getRequestedSessionId() {
+        if (requestedSessionIdFromCookie != null) {
+            return requestedSessionIdFromCookie;
+        }
+        return requestedSessionIdFromURL;
+    }
+
+    public boolean isRequestedSessionIdFromCookie() {
+        return requestedSessionIdFromCookie != null;
+    }
+
+    public boolean isRequestedSessionIdFromUrl() {
+        return isRequestedSessionIdFromURL();
+    }
+
+    public boolean isRequestedSessionIdFromURL() {
+        return requestedSessionIdFromURL != null;
     }
 }
