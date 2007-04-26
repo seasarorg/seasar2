@@ -13,7 +13,7 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.dbsession;
+package org.seasar.extension.httpsession;
 
 import java.io.IOException;
 
@@ -35,9 +35,9 @@ import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
  * @author higa
  * 
  */
-public class DbSessionFilter implements Filter {
+public class SessionFilter implements Filter {
 
-    private DbSessionStateManager sessionStateManager;
+    private SessionStateManager sessionStateManager;
 
     public void init(FilterConfig config) throws ServletException {
     }
@@ -48,33 +48,33 @@ public class DbSessionFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response,
             FilterChain chain) throws IOException, ServletException {
 
-        DbSessionStateManager ssm = getSessionStateManager();
-        DbHttpServletRequestWrapper requestWrapper = new DbHttpServletRequestWrapper(
+        SessionStateManager ssm = getSessionStateManager();
+        S2HttpServletRequestWrapper requestWrapper = new S2HttpServletRequestWrapper(
                 (HttpServletRequest) request, ssm);
-        DbHttpServletResponseWrapper responseWrapper = new DbHttpServletResponseWrapper(
+        S2HttpServletResponseWrapper responseWrapper = new S2HttpServletResponseWrapper(
                 (HttpServletResponse) response, requestWrapper);
         SessionIdUtil.writeCookie(requestWrapper, responseWrapper,
                 requestWrapper.getSessionId());
         try {
             chain.doFilter(requestWrapper, responseWrapper);
         } finally {
-            DbHttpSession session = requestWrapper.getDbHttpSession();
+            S2HttpSession session = requestWrapper.getDbHttpSession();
             if (session == null) {
                 return;
             }
 
-            DbSessionState sessionState = session.getSessionState();
+            SessionState sessionState = session.getSessionState();
             if (sessionState != null) {
                 ssm.updateState(session.getId(), sessionState);
             }
         }
     }
 
-    protected DbSessionStateManager getSessionStateManager() {
+    protected SessionStateManager getSessionStateManager() {
         if (sessionStateManager == null) {
             S2Container container = SingletonS2ContainerFactory.getContainer();
-            sessionStateManager = (DbSessionStateManager) container
-                    .getComponent(DbSessionStateManager.class);
+            sessionStateManager = (SessionStateManager) container
+                    .getComponent(SessionStateManager.class);
         }
         return sessionStateManager;
     }

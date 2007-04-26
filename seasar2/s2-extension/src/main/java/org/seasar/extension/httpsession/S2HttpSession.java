@@ -13,7 +13,7 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.dbsession;
+package org.seasar.extension.httpsession;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -25,20 +25,22 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionContext;
 
 /**
+ * セッション情報をS2で管理するためのHttpSessionです。
+ * 
  * @author higa
  * 
  */
-public class DbHttpSession implements HttpSession {
+public class S2HttpSession implements HttpSession {
 
     private String id;
 
-    private DbSessionStateManager sessionStateManager;
+    private SessionStateManager sessionStateManager;
 
     private ServletContext servletContext;
 
     private boolean isNew = false;
 
-    private DbSessionState sessionState;
+    private SessionState sessionState;
 
     private long creationTime = new Date().getTime();
 
@@ -52,7 +54,7 @@ public class DbHttpSession implements HttpSession {
      * @param servletContext
      * @param isNew
      */
-    public DbHttpSession(String id, DbSessionStateManager sessionStateManager,
+    public S2HttpSession(String id, SessionStateManager sessionStateManager,
             ServletContext servletContext, boolean isNew) {
         this.id = id;
         this.sessionStateManager = sessionStateManager;
@@ -60,11 +62,11 @@ public class DbHttpSession implements HttpSession {
     }
 
     /**
-     * DbSessionStateを返します。
+     * SessionStateを返します。
      * 
      * @return
      */
-    public DbSessionState getSessionState() {
+    public SessionState getSessionState() {
         return sessionState;
     }
 

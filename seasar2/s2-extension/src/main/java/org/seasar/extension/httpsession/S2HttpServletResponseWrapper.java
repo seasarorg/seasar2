@@ -13,29 +13,29 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.dbsession;
+package org.seasar.extension.httpsession;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 
 /**
- * セッション情報をデータベースで管理するためのHttpServletResponseWrapperです。
+ * セッション情報をS2で管理するためのHttpServletResponseWrapperです。
  * 
  * @author higa
  * 
  */
-public class DbHttpServletResponseWrapper extends HttpServletResponseWrapper {
+public class S2HttpServletResponseWrapper extends HttpServletResponseWrapper {
 
     private HttpServletRequest request;
 
     /**
-     * <code>DbHttpServletResponseWrapper</code>を返します。
+     * <code>S2HttpServletResponseWrapper</code>のインスタンスを構築します。
      * 
      * @param response
      * @param request
      */
-    public DbHttpServletResponseWrapper(HttpServletResponse response,
+    public S2HttpServletResponseWrapper(HttpServletResponse response,
             HttpServletRequest request) {
         super(response);
         this.request = request;

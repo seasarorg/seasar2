@@ -13,40 +13,43 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.dbsession;
+package org.seasar.extension.httpsession;
 
 import java.util.HashMap;
 
 import junit.framework.TestCase;
 
+import org.seasar.extension.httpsession.S2HttpSession;
+import org.seasar.extension.httpsession.SessionState;
+import org.seasar.extension.httpsession.SessionStateManager;
 import org.seasar.framework.mock.servlet.MockServletContextImpl;
 
 /**
  * @author higa
  * 
  */
-public class DbHttpSessionTest extends TestCase {
+public class S2HttpSessionTest extends TestCase {
 
     /**
      * Test method for
-     * {@link org.seasar.extension.dbsession.DbHttpSession#getSessionState()}.
+     * {@link org.seasar.extension.httpsession.S2HttpSession#getSessionState()}.
      */
     public void testGetSessionState() {
         MockServletContextImpl servletContext = new MockServletContextImpl(
                 "hoge");
-        DbSessionStateManager sessionStateManager = new DbSessionStateManager() {
-            public DbSessionState loadState(String sessionId) {
-                return new DbSessionState(new HashMap());
+        SessionStateManager sessionStateManager = new SessionStateManager() {
+            public SessionState loadState(String sessionId) {
+                return new SessionState(new HashMap());
             }
 
             public void updateState(String sessionId,
-                    DbSessionState sessionState) {
+                    SessionState sessionState) {
             }
 
             public void removeState(String sessionId) {
             }
         };
-        DbHttpSession sessionWrapper = new DbHttpSession("myid",
+        S2HttpSession sessionWrapper = new S2HttpSession("myid",
                 sessionStateManager, servletContext, true);
         assertNull(sessionWrapper.getSessionState());
         sessionWrapper.getAttribute("hoge");

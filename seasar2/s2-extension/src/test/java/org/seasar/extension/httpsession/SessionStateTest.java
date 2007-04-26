@@ -13,7 +13,7 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.dbsession;
+package org.seasar.extension.httpsession;
 
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -21,13 +21,14 @@ import java.util.Map;
 
 import junit.framework.TestCase;
 
+import org.seasar.extension.httpsession.SessionState;
 import org.seasar.framework.util.SerializeUtil;
 
 /**
  * @author higa
  * 
  */
-public class DbSessionStateTest extends TestCase {
+public class SessionStateTest extends TestCase {
 
     /**
      * @throws Exception
@@ -36,7 +37,7 @@ public class DbSessionStateTest extends TestCase {
         byte[] binary = SerializeUtil.fromObjectToBinary("hoge");
         Map binaryData = new HashMap();
         binaryData.put("aaa", binary);
-        DbSessionState state = new DbSessionState(binaryData);
+        SessionState state = new SessionState(binaryData);
         assertEquals("hoge", state.getAttribute("aaa"));
         Enumeration e = state.getAccessedAttributeNames();
         assertEquals("aaa", e.nextElement());
@@ -48,7 +49,7 @@ public class DbSessionStateTest extends TestCase {
      */
     public void testSetAttribute() throws Exception {
         Map binaryData = new HashMap();
-        DbSessionState state = new DbSessionState(binaryData);
+        SessionState state = new SessionState(binaryData);
         state.setAttribute("aaa", "hoge");
         assertEquals("hoge", state.getAttribute("aaa"));
         Enumeration e = state.getAccessedAttributeNames();
@@ -63,7 +64,7 @@ public class DbSessionStateTest extends TestCase {
         byte[] binary = SerializeUtil.fromObjectToBinary("hoge");
         Map binaryData = new HashMap();
         binaryData.put("aaa", binary);
-        DbSessionState state = new DbSessionState(binaryData);
+        SessionState state = new SessionState(binaryData);
         state.setAttribute("bbb", "111");
         Enumeration e = state.getAttributeNames();
         assertEquals("bbb", e.nextElement());
@@ -78,7 +79,7 @@ public class DbSessionStateTest extends TestCase {
         byte[] binary = SerializeUtil.fromObjectToBinary("hoge");
         Map binaryData = new HashMap();
         binaryData.put("aaa", binary);
-        DbSessionState state = new DbSessionState(binaryData);
+        SessionState state = new SessionState(binaryData);
         state.setAttribute("bbb", "111");
         assertTrue(state.needInsert("bbb"));
         assertFalse(state.needInsert("aaa"));
@@ -91,7 +92,7 @@ public class DbSessionStateTest extends TestCase {
         byte[] binary = SerializeUtil.fromObjectToBinary("hoge");
         Map binaryData = new HashMap();
         binaryData.put("aaa", binary);
-        DbSessionState state = new DbSessionState(binaryData);
+        SessionState state = new SessionState(binaryData);
         state.setAttribute("bbb", "111");
         assertFalse(state.needUpdate("bbb"));
         assertFalse(state.needUpdate("aaa"));
@@ -106,7 +107,7 @@ public class DbSessionStateTest extends TestCase {
         byte[] binary = SerializeUtil.fromObjectToBinary("hoge");
         Map binaryData = new HashMap();
         binaryData.put("aaa", binary);
-        DbSessionState state = new DbSessionState(binaryData);
+        SessionState state = new SessionState(binaryData);
         state.setAttribute("bbb", null);
         assertFalse(state.needDelete("bbb"));
         assertFalse(state.needDelete("aaa"));

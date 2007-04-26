@@ -13,7 +13,7 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.dbsession;
+package org.seasar.extension.httpsession;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
@@ -23,18 +23,18 @@ import org.seasar.framework.container.servlet.S2ContainerServlet;
 import org.seasar.framework.util.UUID;
 
 /**
- * セッション情報をデータベースで管理するためのHttpServletRequestWrapperです。
+ * セッション情報をS2で管理するためのHttpServletRequestWrapperです。
  * 
  * @author higa
  * 
  */
-public class DbHttpServletRequestWrapper extends HttpServletRequestWrapper {
+public class S2HttpServletRequestWrapper extends HttpServletRequestWrapper {
 
     private HttpServletRequest request;
 
-    private DbSessionStateManager sessionStateManager;
+    private SessionStateManager sessionStateManager;
 
-    private DbHttpSession session;
+    private S2HttpSession session;
 
     private String requestedSessionIdFromCookie;
 
@@ -43,11 +43,13 @@ public class DbHttpServletRequestWrapper extends HttpServletRequestWrapper {
     private String createdSessionId;
 
     /**
+     * <code>S2HttpServletRequestWrapper</code>のインスタンスを構築します。
+     * 
      * @param request
      * @param sessionStateManager
      */
-    public DbHttpServletRequestWrapper(HttpServletRequest request,
-            DbSessionStateManager sessionStateManager) {
+    public S2HttpServletRequestWrapper(HttpServletRequest request,
+            SessionStateManager sessionStateManager) {
         super(request);
         this.request = request;
         this.sessionStateManager = sessionStateManager;
@@ -83,17 +85,17 @@ public class DbHttpServletRequestWrapper extends HttpServletRequestWrapper {
             sessionId = createdSessionId;
             isNew = true;
         }
-        session = new DbHttpSession(sessionId, sessionStateManager,
+        session = new S2HttpSession(sessionId, sessionStateManager,
                 S2ContainerServlet.getInstance().getServletContext(), isNew);
         return session;
     }
 
     /**
-     * DbHttpSessionを返します。
+     * S2HttpSessionを返します。
      * 
      * @return
      */
-    public DbHttpSession getDbHttpSession() {
+    public S2HttpSession getDbHttpSession() {
         return session;
     }
 

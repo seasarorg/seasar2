@@ -13,10 +13,14 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.dbsession;
+package org.seasar.extension.httpsession;
 
 import javax.servlet.http.HttpSession;
 
+import org.seasar.extension.httpsession.S2HttpServletRequestWrapper;
+import org.seasar.extension.httpsession.S2HttpSession;
+import org.seasar.extension.httpsession.SessionState;
+import org.seasar.extension.httpsession.SessionStateManager;
 import org.seasar.framework.mock.servlet.MockHttpServletRequestImpl;
 import org.seasar.framework.mock.servlet.MockServletContextImpl;
 import org.seasar.framework.unit.S2FrameworkTestCase;
@@ -25,7 +29,7 @@ import org.seasar.framework.unit.S2FrameworkTestCase;
  * @author higa
  * 
  */
-public class DbHttpServletRequestWrapperTest extends S2FrameworkTestCase {
+public class S2HttpServletRequestWrapperTest extends S2FrameworkTestCase {
 
     /**
      * @throws Exception
@@ -35,23 +39,23 @@ public class DbHttpServletRequestWrapperTest extends S2FrameworkTestCase {
                 "hoge");
         MockHttpServletRequestImpl request = new MockHttpServletRequestImpl(
                 servletContext, "foo");
-        DbSessionStateManager sessionStateManager = new DbSessionStateManager() {
-            public DbSessionState loadState(String sessionId) {
+        SessionStateManager sessionStateManager = new SessionStateManager() {
+            public SessionState loadState(String sessionId) {
                 return null;
             }
 
             public void updateState(String sessionId,
-                    DbSessionState sessionState) {
+                    SessionState sessionState) {
             }
 
             public void removeState(String sessionId) {
             }
         };
-        DbHttpServletRequestWrapper requestWrapper = new DbHttpServletRequestWrapper(
+        S2HttpServletRequestWrapper requestWrapper = new S2HttpServletRequestWrapper(
                 request, sessionStateManager);
         HttpSession session = requestWrapper.getSession();
         assertNotNull(session);
-        assertTrue(session instanceof DbHttpSession);
+        assertTrue(session instanceof S2HttpSession);
         assertSame(session, requestWrapper.getSession());
         System.out.println(session.getId());
         assertNotNull(session.getId());

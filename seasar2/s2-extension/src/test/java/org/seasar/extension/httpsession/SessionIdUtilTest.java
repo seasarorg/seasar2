@@ -13,12 +13,13 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.dbsession;
+package org.seasar.extension.httpsession;
 
 import javax.servlet.http.Cookie;
 
 import junit.framework.TestCase;
 
+import org.seasar.extension.httpsession.SessionIdUtil;
 import org.seasar.framework.mock.servlet.MockHttpServletRequestImpl;
 import org.seasar.framework.mock.servlet.MockServletContextImpl;
 
@@ -30,7 +31,7 @@ public class SessionIdUtilTest extends TestCase {
 
     /**
      * Test method for
-     * {@link org.seasar.extension.dbsession.SessionIdUtil#getSessionIdFromCookie(javax.servlet.http.HttpServletRequest)}.
+     * {@link org.seasar.extension.httpsession.SessionIdUtil#getSessionIdFromCookie(javax.servlet.http.HttpServletRequest)}.
      */
     public void testGetSessionIdFromCookie() {
         MockServletContextImpl context = new MockServletContextImpl("/example");
@@ -43,7 +44,7 @@ public class SessionIdUtilTest extends TestCase {
 
     /**
      * Test method for
-     * {@link org.seasar.extension.dbsession.SessionIdUtil#getSessionIdFromURL(javax.servlet.http.HttpServletRequest)}.
+     * {@link org.seasar.extension.httpsession.SessionIdUtil#getSessionIdFromURL(javax.servlet.http.HttpServletRequest)}.
      */
     public void testGetSessionIdFromURI() {
         MockServletContextImpl context = new MockServletContextImpl("/example");
@@ -57,7 +58,7 @@ public class SessionIdUtilTest extends TestCase {
 
     /**
      * Test method for
-     * {@link org.seasar.extension.dbsession.SessionIdUtil#getSessionIdFromURL(javax.servlet.http.HttpServletRequest)}.
+     * {@link org.seasar.extension.httpsession.SessionIdUtil#getSessionIdFromURL(javax.servlet.http.HttpServletRequest)}.
      */
     public void testGetSessionIdFromURI2() {
         MockServletContextImpl context = new MockServletContextImpl("/example");
@@ -68,7 +69,7 @@ public class SessionIdUtilTest extends TestCase {
 
     /**
      * Test method for
-     * {@link org.seasar.extension.dbsession.SessionIdUtil#rewriteURL(String, javax.servlet.http.HttpServletRequest)}.
+     * {@link org.seasar.extension.httpsession.SessionIdUtil#rewriteURL(String, javax.servlet.http.HttpServletRequest)}.
      */
     public void testRewriteURL() {
         MockServletContextImpl context = new MockServletContextImpl("/example");

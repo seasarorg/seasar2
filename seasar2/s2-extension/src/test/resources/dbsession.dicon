@@ -4,7 +4,7 @@
 <components>
 	<include path="j2ee.dicon"/>
 
-	<component class="org.seasar.extension.dbsession.impl.DbSessionStateManagerImpl">
+	<component class="org.seasar.extension.httpsession.impl.DbSessionStateManagerImpl">
 		<property name="dataSource">dataSource</property>
 		<aspect>j2ee.requiresNewTx</aspect>
 	</component>

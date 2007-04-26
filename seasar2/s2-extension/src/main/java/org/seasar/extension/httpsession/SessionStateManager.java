@@ -13,34 +13,34 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.dbsession;
+package org.seasar.extension.httpsession;
 
 /**
- * データベースに格納されたセッションの状態を管理するインターフェースです。
+ * セッションの状態を管理するインターフェースです。
  * 
  * @author higa
  * 
  */
-public interface DbSessionStateManager {
+public interface SessionStateManager {
 
     /**
-     * セッションの状態をデータベースからロードします。
+     * セッションの状態をロードします。
      * 
      * @param sessionId
      * @return
      */
-    DbSessionState loadState(String sessionId);
+    SessionState loadState(String sessionId);
 
     /**
-     * セッションの状態をデータベースに格納します。
+     * セッションの状態を格納します。
      * 
      * @param sessionId
      * @param sessionState
      */
-    void updateState(String sessionId, DbSessionState sessionState);
+    void updateState(String sessionId, SessionState sessionState);
 
     /**
-     * データベースに格納されたセッションの状態を削除します。
+     * セッションの状態を削除します。
      * 
      * @param sessionId
      */

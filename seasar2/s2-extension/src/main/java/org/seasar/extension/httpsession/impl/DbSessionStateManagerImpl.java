@@ -13,7 +13,7 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.dbsession.impl;
+package org.seasar.extension.httpsession.impl;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -25,8 +25,8 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
-import org.seasar.extension.dbsession.DbSessionState;
-import org.seasar.extension.dbsession.DbSessionStateManager;
+import org.seasar.extension.httpsession.SessionState;
+import org.seasar.extension.httpsession.SessionStateManager;
 import org.seasar.extension.jdbc.impl.BasicBatchHandler;
 import org.seasar.extension.jdbc.impl.BasicSelectHandler;
 import org.seasar.extension.jdbc.impl.BasicUpdateHandler;
@@ -37,7 +37,7 @@ import org.seasar.framework.util.SerializeUtil;
  * @author higa
  * 
  */
-public class DbSessionStateManagerImpl implements DbSessionStateManager {
+public class DbSessionStateManagerImpl implements SessionStateManager {
 
     private static final String SELECT_SQL = "select name, value from s2session where session_id = ?";
 
@@ -73,7 +73,7 @@ public class DbSessionStateManagerImpl implements DbSessionStateManager {
         this.dataSource = dataSource;
     }
 
-    public DbSessionState loadState(String sessionId) {
+    public SessionState loadState(String sessionId) {
         BasicSelectHandler handler = new BasicSelectHandler(dataSource,
                 SELECT_SQL, new MapListResultSetHandler());
         List result = (List) handler.execute(new String[] { sessionId });
@@ -82,7 +82,7 @@ public class DbSessionStateManagerImpl implements DbSessionStateManager {
             Map m = (Map) result.get(i);
             binaryData.put(m.get("name"), m.get("value"));
         }
-        return new DbSessionState(binaryData);
+        return new SessionState(binaryData);
     }
 
     public void removeState(String sessionId) {
@@ -92,7 +92,7 @@ public class DbSessionStateManagerImpl implements DbSessionStateManager {
 
     }
 
-    public void updateState(String sessionId, DbSessionState sessionState) {
+    public void updateState(String sessionId, SessionState sessionState) {
         List insertedData = new ArrayList();
         List updatedData = new ArrayList();
         List deletedData = new ArrayList();
