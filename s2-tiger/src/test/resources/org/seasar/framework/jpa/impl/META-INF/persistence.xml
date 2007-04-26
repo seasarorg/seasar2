@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence
+	http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd"
+	version="1.0"
+>
+	<persistence-unit name="foo" transaction-type="RESOURCE_LOCAL">
+		<provider>hoge</provider>
+		<jta-data-source>java:comp/env/jdbc/dataSource</jta-data-source>
+		<non-jta-data-source>java:comp/env/jdbc/dataSource</non-jta-data-source>
+		<mapping-file>orm.xml</mapping-file>
+		<jar-file>geronimo-ejb_3.0_spec-1.0.jar</jar-file>
+		<jar-file>geronimo-jpa_3.0_spec-1.0.jar</jar-file>
+		<class>hoge.Foo</class>
+		<class>hoge.Bar</class>
+		<class>hoge.Baz</class>
+		<exclude-unlisted-classes>true</exclude-unlisted-classes>
+		<properties>
+			<property name="aaa" value="xxx"/>
+			<property name="bbb" value="yyy"/>
+			<property name="ccc" value="zzz"/>
+		</properties>
+	</persistence-unit>
+
+	<persistence-unit name="bar"/>
+</persistence>

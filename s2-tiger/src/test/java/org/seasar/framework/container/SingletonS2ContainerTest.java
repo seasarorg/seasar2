@@ -15,17 +15,29 @@
  */
 package org.seasar.framework.container;
 
-import org.seasar.framework.container.SingletonS2Container;
 import org.seasar.framework.unit.S2FrameworkTestCase;
 
 public class SingletonS2ContainerTest extends S2FrameworkTestCase {
 
     public void test() throws Exception {
+        register(Bar.class);
         register(Hoge.class, "hoge");
+        Foo foo = SingletonS2Container.getComponent(Foo.class);
+        assertNotNull(foo);
+        Foo foo2 = SingletonS2Container.getComponent(Bar.class);
+        assertNotNull(foo2);
+        Bar bar = SingletonS2Container.getComponent(Bar.class);
+        assertNotNull(bar);
         Hoge hoge = SingletonS2Container.getComponent(Hoge.class);
-        Hoge hoge2 = SingletonS2Container.getComponent("hoge");
         assertNotNull(hoge);
+        Hoge hoge2 = SingletonS2Container.getComponent("hoge");
         assertNotNull(hoge2);
+    }
+
+    public static class Foo {
+    }
+
+    public static class Bar extends Foo {
     }
 
     public static class Hoge {

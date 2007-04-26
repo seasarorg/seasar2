@@ -20,11 +20,19 @@ import java.sql.Connection;
 import javax.persistence.EntityManager;
 
 /**
- * @author koichik
+ * 永続ユニットプロバイダ(JPA実装)の差違を吸収するためのインタフェースです。
  * 
+ * @author koichik
  */
 public interface Dialect {
 
+    /**
+     * {@link EntityManager エンティティマネージャ}から{@link Connection JDBCコネクション}を取得して返します。
+     * 
+     * @param em
+     *            {@link EntityManager エンティティマネージャ}
+     * @return {@link EntityManager エンティティマネージャ}が使用している{@link Connection JDBCコネクション}
+     */
     Connection getConnection(EntityManager em);
 
 }

@@ -18,15 +18,37 @@ package org.seasar.framework.jpa;
 import javax.persistence.EntityManager;
 
 /**
- * @author koichik
+ * 永続ユニットプロバイダ(JPA実装)の差違を吸収する{@link Dialect}を管理するためのインタフェースです。
  * 
+ * @author koichik
  */
 public interface DialectManager {
 
+    /**
+     * {@link Dialect}を追加します。
+     * 
+     * @param delegateClass
+     *            JPA実装が提供する{@link EntityManager エンティティマネージャ}の実装クラス
+     * @param dialect
+     *            {@link Dialect}
+     */
     void addDialect(Class<?> delegateClass, Dialect dialect);
 
+    /**
+     * {@link Dialect}を削除します。
+     * 
+     * @param delegateClass
+     *            JPA実装が提供する{@link EntityManager エンティティマネージャ}の実装クラス
+     */
     void removeDialect(Class<?> delegateClass);
 
+    /**
+     * {@link EntityManager エンティティマネージャ}から対応する{@link Dialect}を返します。
+     * 
+     * @param em
+     *            {@link EntityManager エンティティマネージャ}
+     * @return {@link Dialect}
+     */
     Dialect getDialect(EntityManager em);
 
 }

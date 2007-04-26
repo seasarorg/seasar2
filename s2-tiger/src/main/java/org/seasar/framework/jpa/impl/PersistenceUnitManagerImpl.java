@@ -28,6 +28,7 @@ import org.seasar.framework.container.annotation.tiger.Component;
 import org.seasar.framework.container.annotation.tiger.DestroyMethod;
 import org.seasar.framework.container.annotation.tiger.InitMethod;
 import org.seasar.framework.convention.NamingConvention;
+import org.seasar.framework.env.Env;
 import org.seasar.framework.jpa.PersistenceUnitContext;
 import org.seasar.framework.jpa.PersistenceUnitManager;
 import org.seasar.framework.jpa.PersistenceUnitProvider;
@@ -45,7 +46,7 @@ public class PersistenceUnitManagerImpl implements PersistenceUnitManager {
 
     protected Context context;
 
-    protected boolean useStaticContext;
+    protected boolean useStaticContext = Env.getValue().startsWith("ut");
 
     protected String defaultPersistenceUnitName = DEFAULT_PERSISTENCE_UNIT_NAME;
 

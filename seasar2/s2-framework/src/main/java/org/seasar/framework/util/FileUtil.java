@@ -19,22 +19,27 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 
 import org.seasar.framework.exception.IORuntimeException;
 
 /**
- * @author higa
+ * {@link File}を扱うユーティリティ・クラスです。
  * 
+ * @author higa
  */
 public final class FileUtil {
 
     private FileUtil() {
     }
 
-    public static byte[] getBytes(File file) {
-        return InputStreamUtil.getBytes(FileInputStreamUtil.create(file));
-    }
-
+    /**
+     * この抽象パス名の正規の形式を返します。
+     * 
+     * @param file
+     *            ファイル
+     * @return この抽象パス名と同じファイルまたはディレクトリを示す正規パス名文字列
+     */
     public static String getCanonicalPath(File file) {
         try {
             return file.getCanonicalPath();
@@ -43,6 +48,40 @@ public final class FileUtil {
         }
     }
 
+    /**
+     * この抽象パス名を<code>file:</code> URLに変換します。
+     * 
+     * @param file
+     *            ファイル
+     * @return ファイルURLを表すURLオブジェクト
+     */
+    public static URL toURL(final File file) {
+        try {
+            return file.toURL();
+        } catch (final IOException e) {
+            throw new IORuntimeException(e);
+        }
+    }
+
+    /**
+     * ファイルの内容をバイト配列に読み込んで返します。
+     * 
+     * @param file
+     *            ファイル
+     * @return ファイルの内容を読み込んだバイト配列
+     */
+    public static byte[] getBytes(File file) {
+        return InputStreamUtil.getBytes(FileInputStreamUtil.create(file));
+    }
+
+    /**
+     * <code>src</code>の内容を<code>dest</code>にコピーします。
+     * 
+     * @param src
+     *            コピー元のファイル
+     * @param dest
+     *            コピー先のファイル
+     */
     public static void copy(File src, File dest) {
         if (dest.canWrite() == false
                 || (dest.exists() && dest.canWrite() == false)) {
@@ -65,6 +104,6 @@ public final class FileUtil {
             InputStreamUtil.close(in);
             OutputStreamUtil.close(out);
         }
-
     }
+
 }
