@@ -144,6 +144,7 @@ public final class ValueTypes {
         case Types.TIMESTAMP:
             return Timestamp.class;
         case Types.BINARY:
+        case Types.BLOB:
         case Types.VARBINARY:
         case Types.LONGVARBINARY:
             return BYTE_ARRAY_CLASS;
