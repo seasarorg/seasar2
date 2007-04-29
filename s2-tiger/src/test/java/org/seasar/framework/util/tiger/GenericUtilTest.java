@@ -17,10 +17,13 @@ package org.seasar.framework.util.tiger;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
 import java.lang.reflect.WildcardType;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Map.Entry;
 
 import junit.framework.TestCase;
 
@@ -99,11 +102,99 @@ public class GenericUtilTest extends TestCase {
                 .getValueTypeOfMap(t3)));
     }
 
+    public void testGetTypeVariableMap() throws Exception {
+        Map<TypeVariable<?>, Type> map = GenericUtil
+                .getTypeVariableMap(Hoge.class);
+        assertEquals(4, map.size());
+        Iterator<Entry<TypeVariable<?>, Type>> it = map.entrySet().iterator();
+        Entry<TypeVariable<?>, Type> entry = it.next();
+        assertEquals("T1", entry.getKey().getName());
+        assertEquals(Integer.class, entry.getValue());
+        entry = it.next();
+        assertEquals("T2", entry.getKey().getName());
+        assertEquals(Long.class, entry.getValue());
+        entry = it.next();
+        assertEquals("T1", entry.getKey().getName());
+        assertEquals(String.class, entry.getValue());
+        entry = it.next();
+        assertEquals("T2", entry.getKey().getName());
+        assertEquals(Boolean.class, entry.getValue());
+    }
+
+    public void testGetActualClass() throws Exception {
+        Map<TypeVariable<?>, Type> map = GenericUtil
+                .getTypeVariableMap(Hoge.class);
+
+        Method method = Hoge.class.getMethod("foo", Object.class);
+        assertEquals(Integer.class, GenericUtil.getActualClass(method
+                .getGenericParameterTypes()[0], map));
+        assertEquals(Long.class, GenericUtil.getActualClass(method
+                .getGenericReturnType(), map));
+
+        method = Hoge.class.getMethod("array");
+        assertEquals(String[].class, GenericUtil.getActualClass(method
+                .getGenericReturnType(), map));
+
+        method = Hoge.class.getMethod("list");
+        assertEquals(List.class, GenericUtil.getActualClass(method
+                .getGenericReturnType(), map));
+
+        method = Hoge.class.getMethod("set");
+        assertEquals(Set.class, GenericUtil.getActualClass(method
+                .getGenericReturnType(), map));
+
+        method = Hoge.class.getMethod("map");
+        assertEquals(Map.class, GenericUtil.getActualClass(method
+                .getGenericReturnType(), map));
+    }
+
+    public void testGetActualElementClassOfArray() throws Exception {
+        Map<TypeVariable<?>, Type> map = GenericUtil
+                .getTypeVariableMap(Hoge.class);
+        Method method = Hoge.class.getMethod("array");
+        assertEquals(String.class, GenericUtil.getActualElementClassOfArray(
+                method.getGenericReturnType(), map));
+    }
+
+    public void testGetActualElementClassOfList() throws Exception {
+        Map<TypeVariable<?>, Type> map = GenericUtil
+                .getTypeVariableMap(Hoge.class);
+        Method method = Hoge.class.getMethod("list");
+        assertEquals(Boolean.class, GenericUtil.getActualElementClassOfList(
+                method.getGenericReturnType(), map));
+    }
+
+    public void testGetActualElementClassOfSet() throws Exception {
+        Map<TypeVariable<?>, Type> map = GenericUtil
+                .getTypeVariableMap(Hoge.class);
+        Method method = Hoge.class.getMethod("set");
+        assertEquals(String.class, GenericUtil.getActualElementClassOfSet(
+                method.getGenericReturnType(), map));
+    }
+
+    public void testGetActualKeyClassOfMap() throws Exception {
+        Map<TypeVariable<?>, Type> map = GenericUtil
+                .getTypeVariableMap(Hoge.class);
+        Method method = Hoge.class.getMethod("map");
+        assertEquals(String.class, GenericUtil.getActualKeyClassOfMap(method
+                .getGenericReturnType(), map));
+    }
+
+    public void testGetActualValueClassOfMap() throws Exception {
+        Map<TypeVariable<?>, Type> map = GenericUtil
+                .getTypeVariableMap(Hoge.class);
+        Method method = Hoge.class.getMethod("map");
+        assertEquals(Boolean.class, GenericUtil.getActualValueClassOfMap(method
+                .getGenericReturnType(), map));
+    }
+
     public interface ArrayType {
+
         Class<String>[] arrayOfStringClass();
     }
 
     public interface ListType {
+
         List<String> listOfString();
 
         List<Class<?>> listOfClass();
@@ -112,6 +203,7 @@ public class GenericUtilTest extends TestCase {
     }
 
     public interface SetType {
+
         Set<String> setOfString();
 
         Set<Class<?>> setOfClass();
@@ -120,11 +212,34 @@ public class GenericUtilTest extends TestCase {
     }
 
     public interface MapType {
+
         Map<String, Object> mapOfStringToObject();
 
         Map<Class<?>, String> mapOfClassToString();
 
         Map<?, ?> mapOfWildcard();
+    }
+
+    public interface Foo<T1, T2> {
+
+        T2 foo(T1 foo);
+    }
+
+    public interface Bar extends Foo<Integer, Long> {
+    }
+
+    public interface Baz<T1, T2> {
+
+        T1[] array();
+
+        List<T2> list();
+
+        Set<T1> set();
+
+        Map<T1, T2> map();
+    }
+
+    public static abstract class Hoge implements Bar, Baz<String, Boolean> {
     }
 
 }

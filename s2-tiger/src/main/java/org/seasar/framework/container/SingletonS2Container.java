@@ -18,23 +18,49 @@ package org.seasar.framework.container;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 
 /**
- * @author higa
+ * シングルトンのS2コンテナからキャストせずにコンポーネントを取得するためのユーティリティ・クラスです。
  * 
+ * @author higa
+ * @see SingletonS2ContainerFactory
  */
 public abstract class SingletonS2Container {
 
-    protected SingletonS2Container() {
+    private SingletonS2Container() {
     }
 
+    /**
+     * 型を指定してシングルトンのS2コンテナからコンポーネントを取得します。
+     * 
+     * @param <T>
+     *            コンポーネントの型
+     * @param componentClass
+     *            コンポーネントの型
+     * @return コンポーネント
+     * @see org.seasar.framework.container.S2Container#getComponent(Object)
+     */
     @SuppressWarnings("unchecked")
-    public static <T> T getComponent(Class<? extends T> componentClass) {
+    public static <T> T getComponent(final Class<T> componentClass) {
         return (T) SingletonS2ContainerFactory.getContainer().getComponent(
                 componentClass);
     }
 
+    /**
+     * 名前を指定してシングルトンのS2コンテナからコンポーネントを取得します。
+     * <p>
+     * 戻り値の型は、このメソッドが呼び出されたコンテキストで求められている型となります。 指定されたコンポーネントが戻り値の型にキャストできない場合は、{@link ClassCastException}がスローされます。
+     * </p>
+     * 
+     * @param <T>
+     *            コンポーネントの型
+     * @param componentName
+     *            コンポーネント名
+     * @return コンポーネント
+     * @see org.seasar.framework.container.S2Container#getComponent(Object)
+     */
     @SuppressWarnings("unchecked")
-    public static <T> T getComponent(String componentName) {
+    public static <T> T getComponent(final String componentName) {
         return (T) SingletonS2ContainerFactory.getContainer().getComponent(
                 componentName);
     }
+
 }
