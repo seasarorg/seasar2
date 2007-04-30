@@ -38,6 +38,8 @@ public class SessionState {
     private Map accessedData;
 
     /**
+     * <code>SessionState</code>を作成します。
+     * 
      * @param binaryData
      */
     public SessionState(Map binaryData) {

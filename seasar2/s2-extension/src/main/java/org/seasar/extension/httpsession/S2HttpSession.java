@@ -49,6 +49,8 @@ public class S2HttpSession implements HttpSession {
     private int maxInactiveInterval = Integer.MAX_VALUE;
 
     /**
+     * <code>S2HttpSession</code>を作成します。
+     * 
      * @param id
      * @param sessionStateManager
      * @param servletContext

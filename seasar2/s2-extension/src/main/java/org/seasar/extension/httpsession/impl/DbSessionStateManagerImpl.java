@@ -52,12 +52,14 @@ public class DbSessionStateManagerImpl implements SessionStateManager {
     private DataSource dataSource;
 
     /**
-     * 
+     * <code>DbSessionStateManagerImpl</code>を作成します。
      */
     public DbSessionStateManagerImpl() {
     }
 
     /**
+     * <code>DbSessionStateManagerImpl</code>を作成します。
+     * 
      * @param dataSource
      */
     public DbSessionStateManagerImpl(DataSource dataSource) {
