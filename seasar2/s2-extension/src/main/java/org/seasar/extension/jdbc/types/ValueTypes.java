@@ -25,7 +25,7 @@ import java.util.Map;
 
 import org.seasar.extension.jdbc.ValueType;
 
-public final class ValueTypes {
+public class ValueTypes {
 
     public final static ValueType STRING = new StringType();
 
@@ -88,7 +88,7 @@ public final class ValueTypes {
         registerValueType(Object.class, OBJECT);
     }
 
-    private ValueTypes() {
+    protected ValueTypes() {
     }
 
     public static void registerValueType(Class clazz, ValueType valueType) {
