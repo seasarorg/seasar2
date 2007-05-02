@@ -81,7 +81,7 @@ public class PersistenceUnitInfoRegistryImpl implements
             logger.info(url); // TODO
             try {
                 for (final PersistenceUnitInfo unitInfo : persistenceUnitInfoFactory
-                        .createPersistenceUnitInfo(it.next())) {
+                        .createPersistenceUnitInfo(url)) {
                     final String unitName = unitInfo.getPersistenceUnitName();
                     if (!unitInfoMap.containsKey(unitName)) {
                         logger.info(unitName); // TODO

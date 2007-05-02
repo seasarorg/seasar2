@@ -75,7 +75,7 @@ public abstract class AbstractPersistenceUnitProvider implements
     }
 
     public EntityManagerFactory getEntityManagerFactory() {
-        return persistenceUnitManager.getEntityManagerFactory(StringUtil
+        return persistenceUnitManager.getEntityManagerFactory(!StringUtil
                 .isEmpty(abstractUnitName) ? abstractUnitName : unitName,
                 unitName, this);
     }
