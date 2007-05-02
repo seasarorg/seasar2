@@ -21,12 +21,7 @@ import javax.naming.NamingException;
 import javax.persistence.EntityManagerFactory;
 
 import org.seasar.extension.j2ee.JndiResourceLocator;
-import org.seasar.framework.container.annotation.tiger.Binding;
-import org.seasar.framework.container.annotation.tiger.BindingType;
-import org.seasar.framework.container.annotation.tiger.DestroyMethod;
-import org.seasar.framework.container.annotation.tiger.InitMethod;
 import org.seasar.framework.exception.NamingRuntimeException;
-import org.seasar.framework.jpa.PersistenceUnitManager;
 import org.seasar.framework.jpa.PersistenceUnitProvider;
 import org.seasar.framework.util.tiger.CollectionsUtil;
 
@@ -36,25 +31,7 @@ import org.seasar.framework.util.tiger.CollectionsUtil;
  */
 public class JndiPersistenceUnitProvider implements PersistenceUnitProvider {
 
-    protected PersistenceUnitManager persistenceUnitManager;
-
     protected Map<String, String> JndiNames = CollectionsUtil.newHashMap();
-
-    @Binding(bindingType = BindingType.MUST)
-    public void setPersistenceUnitManager(
-            final PersistenceUnitManager persistenceUnitManager) {
-        this.persistenceUnitManager = persistenceUnitManager;
-    }
-
-    @InitMethod
-    public void register() {
-        persistenceUnitManager.addProvider(this);
-    }
-
-    @DestroyMethod
-    public void unregister() {
-        persistenceUnitManager.removeProvider(this);
-    }
 
     public void addJndiName(final String unitName, final String jndiName) {
         JndiNames.put(unitName, jndiName);

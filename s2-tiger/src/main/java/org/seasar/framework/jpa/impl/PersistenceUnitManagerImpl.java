@@ -16,7 +16,6 @@
 package org.seasar.framework.jpa.impl;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.persistence.EntityManagerFactory;
@@ -33,7 +32,6 @@ import org.seasar.framework.jpa.PersistenceUnitContext;
 import org.seasar.framework.jpa.PersistenceUnitManager;
 import org.seasar.framework.jpa.PersistenceUnitProvider;
 import org.seasar.framework.util.ClassUtil;
-import org.seasar.framework.util.tiger.CollectionsUtil;
 
 @Component
 public class PersistenceUnitManagerImpl implements PersistenceUnitManager {
@@ -54,8 +52,7 @@ public class PersistenceUnitManagerImpl implements PersistenceUnitManager {
 
     protected S2Container container;
 
-    protected List<PersistenceUnitProvider> providers = CollectionsUtil
-            .newArrayList();
+    protected PersistenceUnitProvider defaultUnitProvider;
 
     public PersistenceUnitManagerImpl() {
     }
@@ -82,6 +79,12 @@ public class PersistenceUnitManagerImpl implements PersistenceUnitManager {
         this.container = container.getRoot();
     }
 
+    @Binding(bindingType = BindingType.MUST)
+    public void setDefaultUnitProvider(
+            final PersistenceUnitProvider defaultUnitProvider) {
+        this.defaultUnitProvider = defaultUnitProvider;
+    }
+
     @InitMethod
     public void open() {
         context = useStaticContext ? staticContext : new Context();
@@ -96,20 +99,24 @@ public class PersistenceUnitManagerImpl implements PersistenceUnitManager {
         }
     }
 
-    public void addProvider(final PersistenceUnitProvider provider) {
-        providers.add(provider);
-    }
-
-    public void removeProvider(final PersistenceUnitProvider provider) {
-        providers.remove(provider);
-    }
-
     public EntityManagerFactory getEntityManagerFactory(final String unitName) {
         return getEntityManagerFactory(unitName, unitName);
     }
 
+    public EntityManagerFactory getEntityManagerFactory(final String unitName,
+            final PersistenceUnitProvider provider) {
+        return getEntityManagerFactory(unitName, unitName, provider);
+    }
+
     public EntityManagerFactory getEntityManagerFactory(
             final String abstractUnitName, final String concreteUnitName) {
+        return getEntityManagerFactory(abstractUnitName, concreteUnitName,
+                defaultUnitProvider);
+    }
+
+    public EntityManagerFactory getEntityManagerFactory(
+            final String abstractUnitName, final String concreteUnitName,
+            final PersistenceUnitProvider provider) {
         synchronized (context) {
             final EntityManagerFactory emf = context
                     .getEntityManagerFactory(concreteUnitName);
@@ -117,20 +124,18 @@ public class PersistenceUnitManagerImpl implements PersistenceUnitManager {
                 return emf;
             }
             return createEntityManagerFactory(abstractUnitName,
-                    concreteUnitName);
+                    concreteUnitName, provider);
         }
     }
 
     protected EntityManagerFactory createEntityManagerFactory(
-            final String abstractUnitName, final String concreteUnitName) {
-        for (final PersistenceUnitProvider provider : providers) {
-            final EntityManagerFactory emf = provider
-                    .createEntityManagerFactory(abstractUnitName,
-                            concreteUnitName);
-            if (emf != null) {
-                context.addEntityManagerFactory(concreteUnitName, emf);
-                return emf;
-            }
+            final String abstractUnitName, final String concreteUnitName,
+            final PersistenceUnitProvider provider) {
+        final EntityManagerFactory emf = provider.createEntityManagerFactory(
+                abstractUnitName, concreteUnitName);
+        if (emf != null) {
+            context.addEntityManagerFactory(concreteUnitName, emf);
+            return emf;
         }
         return null;
     }

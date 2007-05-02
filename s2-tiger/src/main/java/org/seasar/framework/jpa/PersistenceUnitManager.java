@@ -22,17 +22,18 @@ import javax.persistence.EntityManagerFactory;
  */
 public interface PersistenceUnitManager {
 
-    void addProvider(PersistenceUnitProvider provider);
-
-    void removeProvider(PersistenceUnitProvider provider);
-
     EntityManagerFactory getEntityManagerFactory(String unitName);
+
+    EntityManagerFactory getEntityManagerFactory(String unitName,
+            PersistenceUnitProvider provider);
 
     EntityManagerFactory getEntityManagerFactory(String abstractUnitName,
             String concreteUnitName);
 
-    PersistenceUnitContext getPersistenceUnitContext(
-            final EntityManagerFactory emf);
+    EntityManagerFactory getEntityManagerFactory(String abstractUnitName,
+            String concreteUnitName, PersistenceUnitProvider provider);
+
+    PersistenceUnitContext getPersistenceUnitContext(EntityManagerFactory emf);
 
     String getPersistenceUnitName(Class<?> entityClass);
 

@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN"
 	"http://www.seasar.org/dtd/components24.dtd">
-<components namespace="jpa">
+<components namespace="jpa" initializeOnCreate="true">
 	<include path="j2ee.dicon"/>
+	<include condition="@org.seasar.framework.container.util.SmartDeployUtil@isSmartdeployMode(container)"
+		path="jpa-support-smart.dicon"/>	
 
 	<component name="persistenceUnitManager"
 		class="org.seasar.framework.jpa.impl.PersistenceUnitManagerImpl"
@@ -12,7 +14,16 @@
 		]]></property>
 	</component>
 	
+	<component class="org.seasar.framework.jpa.impl.ContainerPersistenceUnitProvider"/>
+	
+	<component class="org.seasar.framework.jpa.impl.PersistenceUnitInfoFactoryImpl"/>
+	
+	<component class="org.seasar.framework.jpa.impl.PersistenceUnitConfigurationImpl"/>
+	
 	<component class="org.seasar.framework.jpa.impl.EntityManagerProviderImpl"/>
 
 	<component class="org.seasar.framework.jpa.impl.DialectManagerImpl"/>
+	
+	<component name="dataSourceProxy" class="org.seasar.extension.datasource.impl.SingletonDataSourceProxy"/>
+
 </components>

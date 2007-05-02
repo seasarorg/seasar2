@@ -9,7 +9,8 @@
 		</initMethod>
 	</component>
 
-	<component class="org.seasar.framework.jpa.impl.PersistenceUnitManagerImpl">
-	</component>
+	<component class="org.seasar.framework.jpa.impl.PersistenceUnitManagerImpl"/>
+	
+	<component class="org.seasar.framework.jpa.impl.DefaultPersistenceUnitProvider"/>
 		
 </components>
