@@ -15,11 +15,15 @@
  */
 package org.seasar.framework.util;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import junit.framework.TestCase;
+
+import org.seasar.framework.container.S2Container;
 
 /**
  * @author taedium
- * 
  */
 public class ChildFirstClassLoaderTest extends TestCase {
 
@@ -44,6 +48,26 @@ public class ChildFirstClassLoaderTest extends TestCase {
             fail();
         } catch (ClassNotFoundException ignore) {
         }
+    }
+
+    public void testIsIncludedClass() {
+        ChildFirstClassLoader loader = new ChildFirstClassLoader(Thread
+                .currentThread().getContextClassLoader());
+        assertFalse(loader.isIncludedClass("javax.persistence.EntityManager"));
+        assertTrue(loader.isIncludedClass("org.seasar.framework.util.Foo"));
+        assertTrue(loader.isIncludedClass("org.seasar.framework.util.Bar"));
+        assertTrue(loader.isIncludedClass("org.seasar.framework.util.Baz"));
+
+        Set set = new HashSet();
+        set.add("org.seasar.framework.util.Foo");
+        set.add("org.seasar.framework.util.Bar");
+        loader = new ChildFirstClassLoader(Thread.currentThread()
+                .getContextClassLoader(), set);
+        assertFalse(loader.isIncludedClass("javax.persistence.EntityManager"));
+        assertTrue(loader.isIncludedClass("org.seasar.framework.util.Foo"));
+        assertTrue(loader.isIncludedClass("org.seasar.framework.util.Bar"));
+        assertFalse(loader.isIncludedClass("org.seasar.framework.util.Baz"));
+        assertFalse(loader.isIncludedClass(S2Container.class.getName()));
     }
 
 }
