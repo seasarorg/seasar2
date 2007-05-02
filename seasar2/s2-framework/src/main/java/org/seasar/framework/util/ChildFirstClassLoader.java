@@ -29,34 +29,42 @@ public class ChildFirstClassLoader extends ClassLoader {
 
     protected Class loadClass(final String className, final boolean resolve)
             throws ClassNotFoundException {
-        if (isExcludedClass(className)) {
-            return super.loadClass(className, resolve);
-        }
-        Class clazz = findLoadedClass(className);
+        Class clazz = getSystemClass(className);
         if (clazz != null) {
+            if (resolve) {
+                resolveClass(clazz);
+            }
             return clazz;
         }
-        clazz = ClassLoaderUtil.findLoadedClass(getParent(), className);
-        if (clazz != null) {
+        if (isIncludedClass(className)) {
+            clazz = findLoadedClass(className);
+            if (clazz != null) {
+                return clazz;
+            }
+            clazz = ClassLoaderUtil.findLoadedClass(getParent(), className);
+            if (clazz != null) {
+                return clazz;
+            }
+            clazz = findClass(className);
+            if (resolve) {
+                resolveClass(clazz);
+            }
             return clazz;
         }
-        clazz = findClass(className);
-        if (resolve) {
-            resolveClass(clazz);
-        }
-        return clazz;
+        return super.loadClass(className, resolve);
     }
 
-    protected boolean isExcludedClass(final String className) {
-        if (className.startsWith("java.") || className.startsWith("javax.")) {
-            return true;
-        }
+    protected Class getSystemClass(final String className) {
         try {
-            Class.forName(className, true, null);
+            return Class.forName(className, true, null);
         } catch (final ClassNotFoundException e) {
-            return false;
+            return null;
         }
-        return true;
+    }
+
+    protected boolean isIncludedClass(final String className) {
+        return !(className.startsWith("java.") || className
+                .startsWith("javax."));
     }
 
     protected Class findClass(final String name) throws ClassNotFoundException {
