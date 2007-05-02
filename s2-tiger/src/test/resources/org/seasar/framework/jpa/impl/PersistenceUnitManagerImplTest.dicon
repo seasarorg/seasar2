@@ -11,6 +11,8 @@
 
 	<component class="org.seasar.framework.jpa.impl.PersistenceUnitManagerImpl"/>
 	
-	<component class="org.seasar.framework.jpa.impl.DefaultPersistenceUnitProvider"/>
+	<component class="org.seasar.framework.jpa.impl.DefaultPersistenceUnitProvider">
+		<property name="unitName">"persistenceUnit"</property>
+	</component>
 		
 </components>

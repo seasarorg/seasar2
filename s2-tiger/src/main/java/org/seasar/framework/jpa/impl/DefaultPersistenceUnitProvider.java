@@ -18,16 +18,13 @@ package org.seasar.framework.jpa.impl;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
-import org.seasar.framework.jpa.PersistenceUnitProvider;
-
 /**
+ * デフォルトの永続ユニットプロバイダです。
+ * 
  * @author koichik
  */
-public class DefaultPersistenceUnitProvider implements PersistenceUnitProvider {
-
-    public EntityManagerFactory createEntityManagerFactory(final String unitName) {
-        return createEntityManagerFactory(unitName, unitName);
-    }
+public class DefaultPersistenceUnitProvider extends
+        AbstractPersistenceUnitProvider {
 
     public EntityManagerFactory createEntityManagerFactory(
             final String abstractUnitName, final String concreteUnitName) {

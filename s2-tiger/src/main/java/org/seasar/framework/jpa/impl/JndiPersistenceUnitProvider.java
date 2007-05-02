@@ -22,23 +22,28 @@ import javax.persistence.EntityManagerFactory;
 
 import org.seasar.extension.j2ee.JndiResourceLocator;
 import org.seasar.framework.exception.NamingRuntimeException;
-import org.seasar.framework.jpa.PersistenceUnitProvider;
 import org.seasar.framework.util.tiger.CollectionsUtil;
 
 /**
- * @author taedium
+ * JNDIイニシャルコンテキストから{@link EntityManagerFactory}を取得する永続ユニットプロバイダです。
  * 
+ * @author taedium
  */
-public class JndiPersistenceUnitProvider implements PersistenceUnitProvider {
+public class JndiPersistenceUnitProvider extends
+        AbstractPersistenceUnitProvider {
 
     protected Map<String, String> JndiNames = CollectionsUtil.newHashMap();
 
+    /**
+     * 永続ユニット名に対応するJNDI名を登録します。
+     * 
+     * @param unitName
+     *            永続ユニット名
+     * @param jndiName
+     *            JNDI名
+     */
     public void addJndiName(final String unitName, final String jndiName) {
         JndiNames.put(unitName, jndiName);
-    }
-
-    public EntityManagerFactory createEntityManagerFactory(final String unitName) {
-        return createEntityManagerFactory(unitName, unitName);
     }
 
     public EntityManagerFactory createEntityManagerFactory(

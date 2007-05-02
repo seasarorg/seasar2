@@ -22,7 +22,7 @@ import javax.persistence.spi.PersistenceProvider;
 import javax.persistence.spi.PersistenceUnitInfo;
 
 import org.seasar.framework.jpa.PersistenceUnitConfiguration;
-import org.seasar.framework.jpa.PersistenceUnitInfoFactory;
+import org.seasar.framework.jpa.PersistenceUnitInfoRegistry;
 import org.seasar.framework.unit.S2TigerTestCase;
 import org.seasar.framework.unit.annotation.EasyMock;
 import org.seasar.framework.util.ClassTraversal;
@@ -38,13 +38,12 @@ import static org.easymock.EasyMock.*;
 public class ContainerPersistenceUnitProviderTest extends S2TigerTestCase {
 
     @EasyMock
-    private PersistenceUnitInfoFactory unitInfoFactory;
+    private PersistenceUnitInfoRegistry unitInfoRegistry;
 
     @EasyMock
     private PersistenceUnitConfiguration unitConfiguration;
 
-    @EasyMock
-    private PersistenceUnitInfo unitInfo;
+    private PersistenceUnitInfoImpl unitInfo = new PersistenceUnitInfoImpl();
 
     @Override
     protected void setUp() throws Exception {
@@ -58,9 +57,9 @@ public class ContainerPersistenceUnitProviderTest extends S2TigerTestCase {
      */
     public void testCreateEntityManagerFactory() throws Exception {
         ContainerPersistenceUnitProvider provider = new ContainerPersistenceUnitProvider();
-        provider.setPersistenceUnitInfoFactory(unitInfoFactory);
+        provider.setPersistenceUnitInfoRegistry(unitInfoRegistry);
         provider.setPersistenceUnitConfiguration(unitConfiguration);
-        provider.unitInfoMap.put("foo", unitInfo);
+        provider.setProviderClassName(MyPersistenceProvider.class.getName());
 
         provider.createEntityManagerFactory("hoge", "foo");
         assertTrue(MyPersistenceProvider.invoked);
@@ -72,14 +71,12 @@ public class ContainerPersistenceUnitProviderTest extends S2TigerTestCase {
      * @throws Exception
      */
     public void recordCreateEntityManagerFactory() throws Exception {
+        expect(unitInfoRegistry.getPersistenceUnitInfo("foo")).andReturn(
+                unitInfo);
         unitConfiguration.detectMappingFiles(eq("hoge"),
                 isA(ResourceTraversal.ResourceHandler.class));
         unitConfiguration.detectPersistenceClasses(eq("hoge"),
                 isA(ClassTraversal.ClassHandler.class));
-        expect(unitInfo.getNewTempClassLoader()).andReturn(
-                Thread.currentThread().getContextClassLoader());
-        expect(unitInfo.getPersistenceProviderClassName()).andReturn(
-                MyPersistenceProvider.class.getName());
     }
 
     /**
@@ -105,4 +102,5 @@ public class ContainerPersistenceUnitProviderTest extends S2TigerTestCase {
         }
 
     }
+
 }

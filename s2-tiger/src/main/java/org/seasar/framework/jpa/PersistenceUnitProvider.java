@@ -18,14 +18,38 @@ package org.seasar.framework.jpa;
 import javax.persistence.EntityManagerFactory;
 
 /**
- * 永続ユニットを提供するインターフェースです。
+ * 永続ユニットを提供するプロバイダのインターフェースです。
  * 
  * @author koichik
  */
 public interface PersistenceUnitProvider {
 
     /**
+     * {@link EntityManagerFactory エンティティマネジャーファクトリ}を返します。
+     * <p>
+     * このメソッドは{@link EntityManagerFactory エンティティマネジャーファクトリ}をコンポーネントとして登録するために、
+     * diconファイル中のOGNL式から呼び出されます。
+     * </p>
+     * 
+     * <pre>
+     * &lt;component name="persistenceUnitProvider" class="ContainerPersistenceUnitProvider"&gt;
+     *   ...
+     * &lt;/component&gt;
+     * 
+     * &lt;component name="entityManagerFactory" class="javax.persistence.EntityManagerFactory"&gt;
+     *   persistenceUnitProvider.entityManagerFactory
+     * &lt;/component&gt;
+     * </pre>
+     * 
+     * @return エンティティマネジャーファクトリ
+     */
+    EntityManagerFactory getEntityManagerFactory();
+
+    /**
      * エンティティマネジャーファクトリを作成します。
+     * <p>
+     * このメソッドは{@link EntityManagerFactory}を作成するために{@link PersistenceUnitManager}から呼び出されます。
+     * </p>
      * 
      * @param unitName
      *            永続ユニット名
@@ -38,6 +62,9 @@ public interface PersistenceUnitProvider {
      * <p>
      * 単一の抽象永続ユニットで複数の具象永続ユニットをグループ化して扱いたい場合に使用します。
      * {@link org.seasar.framework.jpa.impl.SelectableEntityManagerProxy }との併用が想定されています。
+     * </p>
+     * <p>
+     * このメソッドは{@link EntityManagerFactory}を作成するために{@link PersistenceUnitManager}から呼び出されます。
      * </p>
      * 
      * @param abstractUnitName

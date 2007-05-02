@@ -16,10 +16,9 @@
 package org.seasar.framework.jpa.impl;
 
 import java.io.InputStream;
-import java.net.URL;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.Map.Entry;
 
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.spi.PersistenceProvider;
@@ -27,13 +26,11 @@ import javax.persistence.spi.PersistenceUnitInfo;
 
 import org.seasar.framework.container.annotation.tiger.Binding;
 import org.seasar.framework.container.annotation.tiger.BindingType;
-import org.seasar.framework.container.annotation.tiger.InitMethod;
 import org.seasar.framework.jpa.PersistenceUnitConfiguration;
-import org.seasar.framework.jpa.PersistenceUnitInfoFactory;
-import org.seasar.framework.jpa.PersistenceUnitProvider;
+import org.seasar.framework.jpa.PersistenceUnitInfoRegistry;
 import org.seasar.framework.log.Logger;
-import org.seasar.framework.util.ClassLoaderUtil;
 import org.seasar.framework.util.ClassUtil;
+import org.seasar.framework.util.StringUtil;
 import org.seasar.framework.util.ClassTraversal.ClassHandler;
 import org.seasar.framework.util.ResourceTraversal.ResourceHandler;
 import org.seasar.framework.util.tiger.CollectionsUtil;
@@ -44,21 +41,23 @@ import org.seasar.framework.util.tiger.ReflectionUtil;
  * 
  * @author taedium
  */
-public class ContainerPersistenceUnitProvider implements
-        PersistenceUnitProvider {
-
-    /** <code>persistence.xml</code>のパス名 */
-    public static final String PERSISTENCE_XML = "META-INF/persistence.xml";
+public class ContainerPersistenceUnitProvider extends
+        AbstractPersistenceUnitProvider {
 
     private static final Logger logger = Logger
             .getLogger(ContainerPersistenceUnitProvider.class);
 
+    /** 永続ユニットのコンフィギュレーション */
     protected PersistenceUnitConfiguration persistenceUnitConfiguration;
 
-    protected PersistenceUnitInfoFactory persistenceUnitInfoFactory;
+    /** 永続ユニット情報のレジストリ */
+    protected PersistenceUnitInfoRegistry persistenceUnitInfoRegistry;
 
-    protected Map<String, PersistenceUnitInfo> unitInfoMap = CollectionsUtil
-            .newHashMap();
+    /** 永続プロバイダのクラス名 */
+    protected String providerClassName;
+
+    /** 永続プロバイダのプロパティ */
+    protected Map<String, String> properties = CollectionsUtil.newHashMap();
 
     /**
      * 永続ユニットのコンフィギュレーションを設定します。
@@ -73,45 +72,53 @@ public class ContainerPersistenceUnitProvider implements
     }
 
     /**
-     * 永続ユニット情報のファクトリを設定します。
+     * 永続ユニット情報のレジストリを設定します。
      * 
-     * @param persistenceUnitInfoFactory
-     *            永続ユニット情報のファクトリを設定します。
+     * @param persistenceUnitInfoRegistry
+     *            永続ユニット情報のレジストリを設定します。
      */
     @Binding(bindingType = BindingType.MUST)
-    public void setPersistenceUnitInfoFactory(
-            final PersistenceUnitInfoFactory persistenceUnitInfoFactory) {
-        this.persistenceUnitInfoFactory = persistenceUnitInfoFactory;
+    public void setPersistenceUnitInfoRegistry(
+            final PersistenceUnitInfoRegistry persistenceUnitInfoRegistry) {
+        this.persistenceUnitInfoRegistry = persistenceUnitInfoRegistry;
     }
 
     /**
-     * <code>META-INF/persistence.xml</code>をロードします。
+     * 永続プロバイダのクラス名を設定します。
+     * <p>
+     * このプロパティに値が設定されると<code>persistence.xml</code>に設定されている情報を上書きします。
+     * </p>
+     * 
+     * @param providerClassName
+     *            永続プロバイダのクラス名
      */
-    @InitMethod
-    public void load() {
-        @SuppressWarnings("unchecked")
-        final Iterator<URL> it = ClassLoaderUtil.getResources(PERSISTENCE_XML);
-        while (it.hasNext()) {
-            for (final PersistenceUnitInfo unitInfo : persistenceUnitInfoFactory
-                    .createPersistenceUnitInfo(it.next())) {
-                final String unitName = unitInfo.getPersistenceUnitName();
-                if (!unitInfoMap.containsKey(unitName)) {
-                    unitInfoMap.put(unitName, unitInfo);
-                }
-            }
-        }
+    @Binding(bindingType = BindingType.MAY)
+    public void setProviderClassName(final String providerClassName) {
+        this.providerClassName = providerClassName;
     }
 
-    public EntityManagerFactory createEntityManagerFactory(final String unitName) {
-        return createEntityManagerFactory(unitName, unitName);
+    /**
+     * 永続ユニット情報のプロパティを設定します。
+     * <p>
+     * このプロパティに値が設定されると<code>persistence.xml</code>に設定されている情報に追加されます。
+     * </p>
+     * 
+     * @param properties
+     *            永続ユニット情報のプロパティ
+     */
+    @Binding(bindingType = BindingType.MAY)
+    public void setProperties(final Map<String, String> properties) {
+        this.properties.putAll(properties);
     }
 
     public EntityManagerFactory createEntityManagerFactory(
             final String abstractUnitName, final String concreteUnitName) {
-        final PersistenceUnitInfo unitInfo = unitInfoMap.get(concreteUnitName);
+        final PersistenceUnitInfo unitInfo = persistenceUnitInfoRegistry
+                .getPersistenceUnitInfo(concreteUnitName);
         if (unitInfo == null) {
-            throw new IllegalArgumentException(concreteUnitName);
+            throw new IllegalArgumentException(concreteUnitName); // TODO
         }
+        overrideUnitInfo(PersistenceUnitInfoImpl.class.cast(unitInfo));
 
         addMappingFiles(abstractUnitName, unitInfo);
         addPersistenceClasses(abstractUnitName, unitInfo);
@@ -123,6 +130,21 @@ public class ContainerPersistenceUnitProvider implements
         final PersistenceProvider provider = ReflectionUtil
                 .newInstance(providerClass);
         return provider.createContainerEntityManagerFactory(unitInfo, null);
+    }
+
+    /**
+     * 永続ユニット情報の設定を上書きします。
+     * 
+     * @param unitInfo
+     *            永続ユニット情報
+     */
+    protected void overrideUnitInfo(final PersistenceUnitInfoImpl unitInfo) {
+        if (!StringUtil.isEmpty(providerClassName)) {
+            unitInfo.setPersistenceProviderClassName(providerClassName);
+        }
+        for (final Entry<String, String> entry : properties.entrySet()) {
+            unitInfo.addProperties(entry.getKey(), entry.getValue());
+        }
     }
 
     protected void addMappingFiles(final String abstractUnitName,
@@ -219,5 +241,7 @@ public class ContainerPersistenceUnitProvider implements
                 unitInfo.getManagedClassNames().add(packageName);
             }
         }
+
     }
+
 }
