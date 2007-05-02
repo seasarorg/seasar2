@@ -29,7 +29,7 @@ public class ChildFirstClassLoader extends ClassLoader {
 
     protected Class loadClass(final String className, final boolean resolve)
             throws ClassNotFoundException {
-        if (isStystemClass(className)) {
+        if (isExcludedClass(className)) {
             return super.loadClass(className, resolve);
         }
         Class clazz = findLoadedClass(className);
@@ -47,7 +47,10 @@ public class ChildFirstClassLoader extends ClassLoader {
         return clazz;
     }
 
-    protected boolean isStystemClass(final String className) {
+    protected boolean isExcludedClass(final String className) {
+        if (className.startsWith("java.") || className.startsWith("javax.")) {
+            return true;
+        }
         try {
             Class.forName(className, true, null);
         } catch (final ClassNotFoundException e) {
