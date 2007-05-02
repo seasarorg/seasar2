@@ -4,26 +4,28 @@
 <components namespace="jpa" initializeOnCreate="true">
 	<include path="j2ee.dicon"/>
 	<include condition="@org.seasar.framework.container.util.SmartDeployUtil@isSmartdeployMode(container)"
-		path="jpa-support-smart.dicon"/>	
+		path="jpa-support-smart.dicon"/>
 
 	<component name="persistenceUnitManager"
 		class="org.seasar.framework.jpa.impl.PersistenceUnitManagerImpl"
 	>
 		<property name="useStaticContext"><![CDATA[
-			@org.seasar.framework.env.Env@getValue() != null && @org.seasar.framework.env.Env@getValue().startsWith('ut')
+			@org.seasar.framework.env.Env@getValue().startsWith('ut')
 		]]></property>
 	</component>
-	
-	<component class="org.seasar.framework.jpa.impl.ContainerPersistenceUnitProvider"/>
-	
+
+	<component class="org.seasar.framework.jpa.impl.DefaultPersistenceUnitProvider">
+		<property name="unitName">"persistenceUnit"</property>
+	</component>
+
+	<component class="org.seasar.framework.jpa.impl.PersistenceUnitInfoRegistryImpl"/>
+
 	<component class="org.seasar.framework.jpa.impl.PersistenceUnitInfoFactoryImpl"/>
-	
+
 	<component class="org.seasar.framework.jpa.impl.PersistenceUnitConfigurationImpl"/>
-	
+
 	<component class="org.seasar.framework.jpa.impl.EntityManagerProviderImpl"/>
 
 	<component class="org.seasar.framework.jpa.impl.DialectManagerImpl"/>
-	
-	<component name="dataSourceProxy" class="org.seasar.extension.datasource.impl.SingletonDataSourceProxy"/>
 
 </components>
