@@ -47,7 +47,7 @@ public class PersistenceUnitInfoRegistryImpl implements
     /** 永続ユニット情報のファクトリ */
     protected PersistenceUnitInfoFactory persistenceUnitInfoFactory;
 
-    /* 永続ユニット名と永続ユニット情報のマップ */
+    /** 永続ユニット名と永続ユニット情報のマップ */
     protected Map<String, PersistenceUnitInfo> unitInfoMap = CollectionsUtil
             .newHashMap();
 
@@ -70,7 +70,7 @@ public class PersistenceUnitInfoRegistryImpl implements
     }
 
     /**
-     * <code>META-INF/persistence.xml</code>をロードします。
+     * 永続ユニット情報をロードします。
      */
     @InitMethod
     public void load() {
@@ -78,18 +78,18 @@ public class PersistenceUnitInfoRegistryImpl implements
         final Iterator<URL> it = ClassLoaderUtil.getResources(PERSISTENCE_XML);
         while (it.hasNext()) {
             final URL url = it.next();
-            logger.info(url); // TODO
+            logger.log("ISSR0006", new Object[] { url });
             try {
                 for (final PersistenceUnitInfo unitInfo : persistenceUnitInfoFactory
                         .createPersistenceUnitInfo(url)) {
                     final String unitName = unitInfo.getPersistenceUnitName();
                     if (!unitInfoMap.containsKey(unitName)) {
-                        logger.info(unitName); // TODO
+                        logger.log("ISSR0007", new Object[] { unitName });
                         unitInfoMap.put(unitName, unitInfo);
                     }
                 }
             } catch (final Exception e) {
-                logger.error(e); // TODO
+                logger.log("WSSR0012", new Object[] { e }, e);
             }
         }
     }
