@@ -522,6 +522,9 @@ public final class S2ContainerFactory {
                 classLoader = Thread.currentThread().getContextClassLoader();
             }
             S2Container container = build(path, classLoader);
+            if (container.isInitializeOnCreate()) {
+                container.init();
+            }
             return container;
         }
 
@@ -557,6 +560,9 @@ public final class S2ContainerFactory {
                         final S2ContainerBuilder builder = getBuilder(ext);
                         child = builder.include(parent, realPath);
                         root.registerDescendant(child);
+                        if (child.isInitializeOnCreate()) {
+                            child.init();
+                        }
                         putCreationEndLog(path, realPath);
                     }
                 }

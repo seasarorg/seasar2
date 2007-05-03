@@ -61,13 +61,6 @@ public class ComponentsTagHandler extends TagHandler {
         context.push(container);
     }
 
-    public void end(TagHandlerContext context, String body) {
-        S2Container container = (S2Container) context.pop();
-        if (container.isInitializeOnCreate()) {
-            container.init();
-        }
-    }
-
     protected S2Container createContainer() {
         return (S2Container) ClassUtil.newInstance(containerImplClass);
     }

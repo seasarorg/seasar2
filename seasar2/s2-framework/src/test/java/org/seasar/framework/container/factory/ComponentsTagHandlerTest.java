@@ -15,12 +15,9 @@
  */
 package org.seasar.framework.container.factory;
 
-import java.lang.reflect.Field;
-
 import junit.framework.TestCase;
 
 import org.seasar.framework.container.S2Container;
-import org.seasar.framework.container.impl.S2ContainerImpl;
 
 /**
  * @author higa
@@ -39,7 +36,6 @@ public class ComponentsTagHandlerTest extends TestCase {
         assertEquals("", container.getComponent("bbb"));
         assertEquals(PATH, container.getPath());
         assertFalse(container.isInitializeOnCreate());
-        assertFalse(isInited(container));
     }
 
     public void testComponentInitializeOnCreate() throws Exception {
@@ -49,12 +45,5 @@ public class ComponentsTagHandlerTest extends TestCase {
         assertEquals("", container.getComponent("bbb"));
         assertEquals(PATH2, container.getPath());
         assertTrue(container.isInitializeOnCreate());
-        assertTrue(isInited(container));
-    }
-
-    private boolean isInited(S2Container container) throws Exception {
-        Field f = S2ContainerImpl.class.getDeclaredField("inited");
-        f.setAccessible(true);
-        return f.getBoolean(container);
     }
 }

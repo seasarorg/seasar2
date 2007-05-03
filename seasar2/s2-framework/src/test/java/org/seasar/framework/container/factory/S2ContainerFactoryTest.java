@@ -18,6 +18,7 @@ package org.seasar.framework.container.factory;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.util.Iterator;
 import java.util.Properties;
 
@@ -201,6 +202,20 @@ public class S2ContainerFactoryTest extends TestCase {
     public void configure(String name) throws Exception {
         String path = getClass().getName().replace('.', '/') + "." + name;
         S2ContainerFactory.configure(path);
+    }
+
+    public void testInitializeOnCreate() throws Exception {
+        Field f = S2ContainerImpl.class.getDeclaredField("inited");
+        f.setAccessible(true);
+
+        S2Container container = S2ContainerFactory
+                .create("org/seasar/framework/container/factory/S2ContainerFactoryTest.initializeOnCreate1.dicon");
+        assertFalse(f.getBoolean(container));
+        assertTrue(f.getBoolean(container.getChild(0)));
+
+        container = S2ContainerFactory
+                .create("org/seasar/framework/container/factory/S2ContainerFactoryTest.initializeOnCreate2.dicon");
+        assertTrue(f.getBoolean(container));
     }
 
     public static class EmptyContainerFactory extends
