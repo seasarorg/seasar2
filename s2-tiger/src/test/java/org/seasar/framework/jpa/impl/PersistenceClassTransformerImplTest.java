@@ -25,6 +25,7 @@ import javax.persistence.spi.ClassTransformer;
 
 import org.easymock.IAnswer;
 import org.seasar.framework.unit.S2TigerTestCase;
+import org.seasar.framework.unit.UnitClassLoader;
 import org.seasar.framework.unit.annotation.EasyMock;
 import org.seasar.framework.util.ClassLoaderUtil;
 import org.seasar.framework.util.FileUtil;
@@ -122,6 +123,20 @@ public class PersistenceClassTransformerImplTest extends S2TigerTestCase {
                     }
 
                 }).atLeastOnce();
+    }
+
+    /**
+     * {@link PersistenceClassTransformerImpl#getTargetClassLoader(ClassLoader)}をテストします。
+     * 
+     * @throws Exception
+     */
+    public void testGetTargetClassLoader() throws Exception {
+        ClassLoader loader = Thread.currentThread().getContextClassLoader();
+        assertEquals(UnitClassLoader.class, loader.getClass());
+        PersistenceClassTransformerImpl transformer = new PersistenceClassTransformerImpl();
+        transformer.addIgnoreLoaderClassName(UnitClassLoader.class.getName());
+        ClassLoader targetLoader = transformer.getTargetClassLoader(loader);
+        assertNotSame(loader, targetLoader);
     }
 
     /**

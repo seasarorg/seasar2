@@ -24,7 +24,17 @@
 
 	<component class="org.seasar.framework.jpa.impl.PersistenceUnitConfigurationImpl"/>
 	
-	<component class="org.seasar.framework.jpa.impl.PersistenceClassTransformerImpl"/>
+	<component class="org.seasar.framework.jpa.impl.PersistenceClassTransformerImpl">
+		<initMethod name="addIgnoreLoaderClassName">
+			<arg>"org.seasar.framework.unit.UnitClassLoader"</arg>
+		</initMethod>
+		<initMethod name="addIgnoreLoaderClassName">
+			<arg>"org.seasar.framework.container.hotdeploy.HotdeployClassLoader"</arg>
+		</initMethod>
+		<initMethod name="addIgnoreLoaderClassName">
+			<arg>"org.seasar.framework.jpa.util.ChildFirstClassLoader"</arg>
+		</initMethod>
+	</component>
 
 	<component class="org.seasar.framework.jpa.impl.EntityManagerProviderImpl"/>
 

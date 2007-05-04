@@ -18,6 +18,7 @@ package org.seasar.framework.jpa.impl;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -41,6 +42,26 @@ import org.seasar.framework.util.tiger.ReflectionUtil;
  */
 public class PersistenceClassTransformerImpl implements
         PersistenceClassTransformer {
+
+    /** トランスフォームした永続クラスをロードする対象から除外するクラスローダのクラス名 */
+    protected Set<String> ignoreLoaderClassNames = CollectionsUtil.newHashSet();
+
+    /**
+     * インスタンスを構築します。
+     * 
+     */
+    public PersistenceClassTransformerImpl() {
+    }
+
+    /**
+     * トランスフォームした永続クラスをロードする対象から除外するクラスローダのクラス名を追加します。
+     * 
+     * @param ignoreLoaderClassName
+     *            トランスフォームした永続クラスをロードする対象から除外するクラスローダのクラス名
+     */
+    public void addIgnoreLoaderClassName(final String ignoreLoaderClassName) {
+        ignoreLoaderClassNames.add(ignoreLoaderClassName);
+    }
 
     public void transformJarFiles(final List<ClassTransformer> transformers,
             final ClassLoader classLoader, final List<URL> jarFileUrls) {
@@ -69,8 +90,9 @@ public class PersistenceClassTransformerImpl implements
 
     public void transformClasses(final List<ClassTransformer> transformers,
             final ClassLoader classLoader, final List<String> classNames) {
+        final ClassLoader targetLoader = getTargetClassLoader(classLoader);
         final ChildFirstClassLoader tempLoader = new ChildFirstClassLoader(
-                classLoader);
+                targetLoader);
 
         tempLoader.addClassLoaderListener(new ClassLoaderListener() {
 
@@ -78,10 +100,10 @@ public class PersistenceClassTransformerImpl implements
                 final String className = event.getClassName();
                 byte[] bytes = event.getBytecode();
                 for (final ClassTransformer transformer : transformers) {
-                    bytes = transform(transformer, classLoader, className,
+                    bytes = transform(transformer, targetLoader, className,
                             bytes);
                 }
-                ClassLoaderUtil.defineClass(classLoader, className, bytes, 0,
+                ClassLoaderUtil.defineClass(targetLoader, className, bytes, 0,
                         bytes.length);
             }
         });
@@ -95,12 +117,44 @@ public class PersistenceClassTransformerImpl implements
         }
     }
 
+    /**
+     * 永続クラスのバイト列をトランスフォームしたバイト列を返します。
+     * 
+     * @param transformer
+     *            トランスフォーマ
+     * @param classLoader
+     *            変換されるクラスを定義するローダ
+     * @param className
+     *            クラス名
+     * @param bytes
+     *            クラスファイル形式のバイト列
+     * @return 変換されたクラスファイル形式のバイト列。変換されなかった場合は引数のバイト列
+     */
     protected byte[] transform(final ClassTransformer transformer,
             final ClassLoader classLoader, final String className,
             final byte[] bytes) {
         final byte[] transformed = ClassTransformerUtil.transform(transformer,
                 classLoader, className.replace(".", "/"), null, null, bytes);
         return transformed == null ? bytes : transformed;
+    }
+
+    /**
+     * トランスフォームした永続クラスをロードする対象のクラスローダを返します。
+     * 
+     * @param originLoader
+     *            原点となるクラスローダ
+     * @return トランスフォームした永続クラスをロードする対象のクラスローダ
+     */
+    protected ClassLoader getTargetClassLoader(final ClassLoader originLoader) {
+        ClassLoader loader = originLoader;
+        while (loader != null
+                && ignoreLoaderClassNames.contains(loader.getClass().getName())) {
+            loader = loader.getParent();
+        }
+        if (loader != null) {
+            return loader;
+        }
+        return originLoader;
     }
 
 }
