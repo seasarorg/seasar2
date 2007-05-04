@@ -15,12 +15,14 @@
  */
 package org.seasar.framework.jpa.impl;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.spi.PersistenceProvider;
 import javax.persistence.spi.PersistenceUnitInfo;
 
+import org.seasar.framework.jpa.PersistenceClassTransformer;
 import org.seasar.framework.jpa.PersistenceUnitConfiguration;
 import org.seasar.framework.jpa.PersistenceUnitInfoRegistry;
 import org.seasar.framework.unit.S2TigerTestCase;
@@ -43,6 +45,9 @@ public class ContainerPersistenceUnitProviderTest extends S2TigerTestCase {
     @EasyMock
     private PersistenceUnitConfiguration unitConfiguration;
 
+    @EasyMock
+    private PersistenceClassTransformer classTransformer;
+
     private PersistenceUnitInfoImpl unitInfo = new PersistenceUnitInfoImpl();
 
     @Override
@@ -59,7 +64,9 @@ public class ContainerPersistenceUnitProviderTest extends S2TigerTestCase {
         ContainerPersistenceUnitProvider provider = new ContainerPersistenceUnitProvider();
         provider.setPersistenceUnitInfoRegistry(unitInfoRegistry);
         provider.setPersistenceUnitConfiguration(unitConfiguration);
+        provider.setPersistenceClassTransformer(classTransformer);
         provider.setProviderClassName(MyPersistenceProvider.class.getName());
+        unitInfo.setClassLoader(Thread.currentThread().getContextClassLoader());
 
         provider.createEntityManagerFactory("hoge", "foo");
         assertTrue(MyPersistenceProvider.invoked);
@@ -70,6 +77,7 @@ public class ContainerPersistenceUnitProviderTest extends S2TigerTestCase {
      * 
      * @throws Exception
      */
+    @SuppressWarnings("unchecked")
     public void recordCreateEntityManagerFactory() throws Exception {
         expect(unitInfoRegistry.getPersistenceUnitInfo("foo")).andReturn(
                 unitInfo);
@@ -77,6 +85,11 @@ public class ContainerPersistenceUnitProviderTest extends S2TigerTestCase {
                 isA(ResourceTraversal.ResourceHandler.class));
         unitConfiguration.detectPersistenceClasses(eq("hoge"),
                 isA(ClassTraversal.ClassHandler.class));
+        classTransformer.transformClasses(isA(List.class), eq(Thread
+                .currentThread().getContextClassLoader()), isA(List.class));
+        classTransformer.transformJarFiles(isA(List.class), eq(Thread
+                .currentThread().getContextClassLoader()), isA(List.class));
+
     }
 
     /**

@@ -23,6 +23,8 @@
 	<component class="org.seasar.framework.jpa.impl.PersistenceUnitInfoFactoryImpl"/>
 
 	<component class="org.seasar.framework.jpa.impl.PersistenceUnitConfigurationImpl"/>
+	
+	<component class="org.seasar.framework.jpa.impl.PersistenceClassTransformerImpl"/>
 
 	<component class="org.seasar.framework.jpa.impl.EntityManagerProviderImpl"/>
 

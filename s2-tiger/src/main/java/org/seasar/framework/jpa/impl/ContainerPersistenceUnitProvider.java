@@ -16,16 +16,19 @@
 package org.seasar.framework.jpa.impl;
 
 import java.io.InputStream;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.spi.ClassTransformer;
 import javax.persistence.spi.PersistenceProvider;
 import javax.persistence.spi.PersistenceUnitInfo;
 
 import org.seasar.framework.container.annotation.tiger.Binding;
 import org.seasar.framework.container.annotation.tiger.BindingType;
+import org.seasar.framework.jpa.PersistenceClassTransformer;
 import org.seasar.framework.jpa.PersistenceUnitConfiguration;
 import org.seasar.framework.jpa.PersistenceUnitInfoRegistry;
 import org.seasar.framework.log.Logger;
@@ -53,6 +56,9 @@ public class ContainerPersistenceUnitProvider extends
     /** 永続ユニット情報のレジストリ */
     protected PersistenceUnitInfoRegistry persistenceUnitInfoRegistry;
 
+    /** 永続クラスのトランスフォーマ */
+    protected PersistenceClassTransformer persistenceClassTransformer;
+
     /** 永続プロバイダのクラス名 */
     protected String providerClassName;
 
@@ -75,12 +81,24 @@ public class ContainerPersistenceUnitProvider extends
      * 永続ユニット情報のレジストリを設定します。
      * 
      * @param persistenceUnitInfoRegistry
-     *            永続ユニット情報のレジストリを設定します。
+     *            永続ユニット情報のレジストリ
      */
     @Binding(bindingType = BindingType.MUST)
     public void setPersistenceUnitInfoRegistry(
             final PersistenceUnitInfoRegistry persistenceUnitInfoRegistry) {
         this.persistenceUnitInfoRegistry = persistenceUnitInfoRegistry;
+    }
+
+    /**
+     * 永続クラスのトランスフォーマを設定します。
+     * 
+     * @param persistenceClassTransformer
+     *            永続クラスのトランスフォーマ
+     */
+    @Binding(bindingType = BindingType.MUST)
+    public void setPersistenceClassTransformer(
+            PersistenceClassTransformer persistenceClassTransformer) {
+        this.persistenceClassTransformer = persistenceClassTransformer;
     }
 
     /**
@@ -123,13 +141,13 @@ public class ContainerPersistenceUnitProvider extends
         addMappingFiles(abstractUnitName, unitInfo);
         addPersistenceClasses(abstractUnitName, unitInfo);
 
-        final String providerClassName = unitInfo
-                .getPersistenceProviderClassName();
-        final Class<PersistenceProvider> providerClass = ReflectionUtil
-                .forName(providerClassName);
-        final PersistenceProvider provider = ReflectionUtil
-                .newInstance(providerClass);
-        return provider.createContainerEntityManagerFactory(unitInfo, null);
+        final PersistenceProvider provider = createPersistenceProvider(unitInfo);
+        final EntityManagerFactory emf = provider
+                .createContainerEntityManagerFactory(unitInfo, null);
+
+        transform(PersistenceUnitInfoImpl.class.cast(unitInfo));
+
+        return emf;
     }
 
     /**
@@ -147,12 +165,28 @@ public class ContainerPersistenceUnitProvider extends
         }
     }
 
+    /**
+     * マッピングファイルを永続ユニット情報に登録します。
+     * 
+     * @param abstractUnitName
+     *            抽象永続ユニット名
+     * @param unitInfo
+     *            永続ユニット情報
+     */
     protected void addMappingFiles(final String abstractUnitName,
             final PersistenceUnitInfo unitInfo) {
         persistenceUnitConfiguration.detectMappingFiles(abstractUnitName,
                 new MappingFileHandler(unitInfo));
     }
 
+    /**
+     * 永続クラスを永続ユニット情報に登録します。
+     * 
+     * @param abstractUnitName
+     *            抽象永続ユニット名
+     * @param unitInfo
+     *            永続ユニット情報
+     */
     protected void addPersistenceClasses(final String abstractUnitName,
             final PersistenceUnitInfo unitInfo) {
         final ClassLoader original = Thread.currentThread()
@@ -165,6 +199,39 @@ public class ContainerPersistenceUnitProvider extends
         } finally {
             Thread.currentThread().setContextClassLoader(original);
         }
+    }
+
+    /**
+     * 永続ユニット情報から永続プロバイダを作成します。
+     * 
+     * @param unitInfo
+     *            永続ユニット情報
+     * @return 永続プロバイダ
+     */
+    protected PersistenceProvider createPersistenceProvider(
+            final PersistenceUnitInfo unitInfo) {
+        final String providerClassName = unitInfo
+                .getPersistenceProviderClassName();
+        final Class<PersistenceProvider> providerClass = ReflectionUtil
+                .forName(providerClassName);
+        return ReflectionUtil.newInstance(providerClass);
+    }
+
+    /**
+     * 永続ユニット情報で管理されるクラスにトランスフォーマ{@link ClassTransformer}を適用します。
+     * 
+     * @param unitInfo
+     *            永続ユニット情報
+     */
+    protected void transform(final PersistenceUnitInfoImpl unitInfo) {
+        final List<ClassTransformer> trasformers = unitInfo.getTransformers();
+        final ClassLoader classLoader = unitInfo.getClassLoader();
+
+        persistenceClassTransformer.transformClasses(trasformers, classLoader,
+                unitInfo.getManagedClassNames());
+
+        persistenceClassTransformer.transformJarFiles(trasformers, classLoader,
+                unitInfo.getJarFileUrls());
     }
 
     /**
