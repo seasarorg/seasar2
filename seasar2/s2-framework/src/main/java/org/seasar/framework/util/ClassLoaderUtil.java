@@ -30,10 +30,19 @@ public class ClassLoaderUtil {
 
     private static Method findLoadedClassMethod;
 
+    private static Method defineClassMethod;
+
     static {
         findLoadedClassMethod = ClassUtil.getDeclaredMethod(ClassLoader.class,
                 "findLoadedClass", new Class[] { String.class });
         findLoadedClassMethod.setAccessible(true);
+    }
+
+    static {
+        defineClassMethod = ClassUtil.getDeclaredMethod(ClassLoader.class,
+                "defineClass", new Class[] { String.class, byte[].class,
+                        int.class, int.class });
+        defineClassMethod.setAccessible(true);
     }
 
     public static ClassLoader getClassLoader(final Class targetClass) {
@@ -111,4 +120,13 @@ public class ClassLoaderUtil {
         }
         return null;
     }
+
+    public static Class defineClass(final ClassLoader classLoader,
+            final String className, final byte[] bytes, final int offset,
+            final int length) {
+        return (Class) MethodUtil.invoke(defineClassMethod, classLoader,
+                new Object[] { className, bytes, new Integer(offset),
+                        new Integer(length) });
+    }
+
 }
