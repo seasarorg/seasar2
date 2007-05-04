@@ -69,15 +69,20 @@ public class PersistenceClassTransformerImpl implements
 
     public void transformClasses(final List<ClassTransformer> transformers,
             final ClassLoader classLoader, final List<String> classNames) {
-        final List<ClassLoaderEvent> classLoaderEvents = CollectionsUtil
-                .newArrayList();
         final ChildFirstClassLoader tempLoader = new ChildFirstClassLoader(
                 classLoader);
 
         tempLoader.addClassLoaderListener(new ClassLoaderListener() {
 
             public void classFinded(final ClassLoaderEvent event) {
-                classLoaderEvents.add(event);
+                final String className = event.getClassName();
+                byte[] bytes = event.getBytecode();
+                for (final ClassTransformer transformer : transformers) {
+                    bytes = transform(transformer, classLoader, className,
+                            bytes);
+                }
+                ClassLoaderUtil.defineClass(classLoader, className, bytes, 0,
+                        bytes.length);
             }
         });
 
@@ -87,16 +92,6 @@ public class PersistenceClassTransformerImpl implements
             } catch (ClassNotFoundRuntimeException e) {
                 ReflectionUtil.forName(className + ".package-info", tempLoader);
             }
-        }
-
-        for (final ClassLoaderEvent event : classLoaderEvents) {
-            final String className = event.getClassName();
-            byte[] bytes = event.getBytecode();
-            for (final ClassTransformer transformer : transformers) {
-                bytes = transform(transformer, classLoader, className, bytes);
-            }
-            ClassLoaderUtil.defineClass(classLoader, className, bytes, 0,
-                    bytes.length);
         }
     }
 
