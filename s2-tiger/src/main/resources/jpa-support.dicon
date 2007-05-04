@@ -34,6 +34,9 @@
 		<initMethod name="addIgnoreLoaderClassName">
 			<arg>"org.seasar.framework.jpa.util.ChildFirstClassLoader"</arg>
 		</initMethod>
+		<initMethod name="addIgnoreLoaderClassName">
+			<arg>"org.seasar.kuina.dao.it.KuinaDaoItClassLoader"</arg>
+		</initMethod>		
 	</component>
 
 	<component class="org.seasar.framework.jpa.impl.EntityManagerProviderImpl"/>
