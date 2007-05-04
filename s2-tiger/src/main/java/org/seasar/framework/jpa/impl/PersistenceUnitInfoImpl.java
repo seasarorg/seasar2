@@ -24,7 +24,7 @@ import javax.persistence.spi.PersistenceUnitInfo;
 import javax.persistence.spi.PersistenceUnitTransactionType;
 import javax.sql.DataSource;
 
-import org.seasar.framework.util.ChildFirstClassLoader;
+import org.seasar.framework.jpa.util.ChildFirstClassLoader;
 import org.seasar.framework.util.tiger.CollectionsUtil;
 
 /**

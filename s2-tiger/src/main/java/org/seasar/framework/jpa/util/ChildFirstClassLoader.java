@@ -13,11 +13,16 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.framework.util;
+package org.seasar.framework.jpa.util;
 
 import java.io.InputStream;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+
+import org.seasar.framework.util.ClassLoaderUtil;
+import org.seasar.framework.util.ClassUtil;
+import org.seasar.framework.util.InputStreamUtil;
+import org.seasar.framework.util.tiger.CollectionsUtil;
 
 /**
  * 未ロードのクラスを親クラスローダに委譲せずに自身でロードするクラスローダです。
@@ -27,7 +32,23 @@ import java.util.Set;
 public class ChildFirstClassLoader extends ClassLoader {
 
     /** 親クラスローダに委譲せずに自身でロードする対象となるクラス名のセット */
-    protected final Set includedNames = new HashSet();
+    protected final Set<String> includedNames = CollectionsUtil.newHashSet();
+
+    /** {@link ClassLoaderListener}のリスト */
+    protected List<ClassLoaderListener> listeners = CollectionsUtil
+            .newArrayList();
+
+    /**
+     * インスタンスを構築します。
+     * <p>
+     * コンテキストクラスローダからロードされるクラス及び、<code>java.</code>または<code>javax.</code>で始まるクラスを除いて
+     * 親クラスローダに委譲せずに自身でロードするように構成します。
+     * </p>
+     * 
+     */
+    public ChildFirstClassLoader() {
+        this(Thread.currentThread().getContextClassLoader());
+    }
 
     /**
      * インスタンスを構築します。
@@ -57,14 +78,35 @@ public class ChildFirstClassLoader extends ClassLoader {
      *            親より先にロードする対象となるクラス名のセット
      */
     public ChildFirstClassLoader(final ClassLoader parent,
-            final Set includedNames) {
+            final Set<String> includedNames) {
         super(parent);
         this.includedNames.addAll(includedNames);
     }
 
-    protected Class loadClass(final String className, final boolean resolve)
+    /**
+     * このクラスローダから{@link ClassLoaderEvent クラスローダイベント}を受け取るために{@link ClassLoaderListener クラスローダリスナ}を追加します。
+     * 
+     * @param listener
+     *            リスナ
+     */
+    public void addClassLoaderListener(final ClassLoaderListener listener) {
+        listeners.add(listener);
+    }
+
+    /**
+     * このクラスローダから{@link ClassLoaderEvent クラスローダイベント}を受け取らないために{@link ClassLoaderListener クラスローダリスナ}を削除します。
+     * 
+     * @param listener
+     *            リスナ
+     */
+    public void removeClassLoaderListener(final ClassLoaderListener listener) {
+        listeners.remove(listener);
+    }
+
+    @Override
+    protected Class<?> loadClass(final String className, final boolean resolve)
             throws ClassNotFoundException {
-        Class clazz = getSystemClass(className);
+        Class<?> clazz = getSystemClass(className);
         if (clazz != null) {
             return resolveClass(resolve, clazz);
         }
@@ -90,7 +132,7 @@ public class ChildFirstClassLoader extends ClassLoader {
      *            クラス名
      * @return ブートストラップクラスローダからロードしたクラス
      */
-    protected Class getSystemClass(final String className) {
+    protected Class<?> getSystemClass(final String className) {
         try {
             return Class.forName(className, true, null);
         } catch (final ClassNotFoundException e) {
@@ -133,22 +175,52 @@ public class ChildFirstClassLoader extends ClassLoader {
      *            リンクするクラス
      * @return 結果の<code>Class</code>オブジェクト
      */
-    protected Class resolveClass(final boolean resolve, final Class clazz) {
+    protected Class<?> resolveClass(final boolean resolve, final Class<?> clazz) {
         if (resolve) {
             resolveClass(clazz);
         }
         return clazz;
     }
 
-    protected Class findClass(final String className)
+    @Override
+    protected Class<?> findClass(final String className)
             throws ClassNotFoundException {
         final String path = ClassUtil.getResourcePath(className);
         final InputStream in = getResourceAsStream(path);
         if (in == null) {
             throw new ClassNotFoundException(className);
         }
-        final byte[] bytes = InputStreamUtil.getBytes(in);
-        return defineClass(className, bytes, 0, bytes.length);
+        try {
+            final byte[] bytes = InputStreamUtil.getBytes(in);
+            final Class<?> definedClass = defineClass(className, bytes, 0,
+                    bytes.length);
+            fireClassDefinedEvent(className, bytes, definedClass);
+            return definedClass;
+        } catch (final Exception e) {
+            throw new ClassNotFoundException(className, e);
+        }
+    }
+
+    /**
+     * クラスが定義されたことを通知します。
+     * 
+     * @param className
+     *            見つかったクラス名
+     * @param bytecode
+     *            バイトコードが納められたバイト配列
+     * @param definedClass
+     *            定義されたクラス
+     */
+    protected void fireClassDefinedEvent(final String className,
+            final byte[] bytecode, final Class<?> definedClass) {
+        final ClassLoaderEvent event = new ClassLoaderEvent(this, className,
+                bytecode, definedClass);
+        for (final ClassLoaderListener listener : listeners) {
+            try {
+                listener.classFinded(event);
+            } catch (final Exception ignore) {
+            }
+        }
     }
 
 }

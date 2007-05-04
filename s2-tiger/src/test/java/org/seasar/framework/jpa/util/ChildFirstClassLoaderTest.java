@@ -13,9 +13,11 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.framework.util;
+package org.seasar.framework.jpa.util;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import junit.framework.TestCase;
@@ -30,10 +32,9 @@ public class ChildFirstClassLoaderTest extends TestCase {
     private String className = getClass().getPackage().getName() + ".Hoge";
 
     public void testLoadClass() throws Exception {
-        ChildFirstClassLoader loader = new ChildFirstClassLoader(Thread
-                .currentThread().getContextClassLoader());
+        ChildFirstClassLoader loader = new ChildFirstClassLoader();
 
-        Class clazz = loader.loadClass(className);
+        Class<?> clazz = loader.loadClass(className);
         assertSame(loader, clazz.getClassLoader());
         assertSame(clazz, loader.loadClass(className));
 
@@ -51,14 +52,13 @@ public class ChildFirstClassLoaderTest extends TestCase {
     }
 
     public void testIsIncludedClass() {
-        ChildFirstClassLoader loader = new ChildFirstClassLoader(Thread
-                .currentThread().getContextClassLoader());
+        ChildFirstClassLoader loader = new ChildFirstClassLoader();
         assertFalse(loader.isIncludedClass("javax.persistence.EntityManager"));
         assertTrue(loader.isIncludedClass("org.seasar.framework.util.Foo"));
         assertTrue(loader.isIncludedClass("org.seasar.framework.util.Bar"));
         assertTrue(loader.isIncludedClass("org.seasar.framework.util.Baz"));
 
-        Set set = new HashSet();
+        Set<String> set = new HashSet<String>();
         set.add("org.seasar.framework.util.Foo");
         set.add("org.seasar.framework.util.Bar");
         loader = new ChildFirstClassLoader(Thread.currentThread()
@@ -68,6 +68,35 @@ public class ChildFirstClassLoaderTest extends TestCase {
         assertTrue(loader.isIncludedClass("org.seasar.framework.util.Bar"));
         assertFalse(loader.isIncludedClass("org.seasar.framework.util.Baz"));
         assertFalse(loader.isIncludedClass(S2Container.class.getName()));
+    }
+
+    public void testClassLoaderEvent() throws Exception {
+        ChildFirstClassLoader loader = new ChildFirstClassLoader();
+        final List<String> order = new ArrayList<String>();
+        loader.addClassLoaderListener(new ClassLoaderListener() {
+
+            public void classFinded(ClassLoaderEvent event) {
+                order.add(event.getClassName());
+            }
+
+        });
+        String prefix = getClass().getName() + "$";
+        loader.loadClass(prefix + "Foo");
+        loader.loadClass(prefix + "Bar");
+        loader.loadClass(prefix + "Baz");
+        assertEquals(3, order.size());
+        assertEquals(prefix + "Baz", order.get(0));
+        assertEquals(prefix + "Bar", order.get(1));
+        assertEquals(prefix + "Foo", order.get(2));
+    }
+
+    public static class Foo extends Bar {
+    }
+
+    public static class Bar extends Baz {
+    }
+
+    public static class Baz {
     }
 
 }
