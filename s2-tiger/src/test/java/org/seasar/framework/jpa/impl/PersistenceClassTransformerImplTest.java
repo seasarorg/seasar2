@@ -17,22 +17,20 @@ package org.seasar.framework.jpa.impl;
 
 import java.io.File;
 import java.net.URL;
-import java.security.ProtectionDomain;
-import java.util.Arrays;
-import java.util.List;
+import java.util.Set;
 
-import javax.persistence.spi.ClassTransformer;
+import javax.persistence.spi.PersistenceUnitInfo;
 
-import org.easymock.IAnswer;
+import org.seasar.framework.jpa.util.ChildFirstClassLoader;
+import org.seasar.framework.jpa.util.ClassLoaderEvent;
+import org.seasar.framework.jpa.util.ClassLoaderListener;
 import org.seasar.framework.unit.S2TigerTestCase;
 import org.seasar.framework.unit.UnitClassLoader;
-import org.seasar.framework.unit.annotation.EasyMock;
-import org.seasar.framework.util.ClassLoaderUtil;
 import org.seasar.framework.util.FileUtil;
 import org.seasar.framework.util.JarFileUtil;
 import org.seasar.framework.util.ResourceUtil;
-
-import static org.easymock.EasyMock.*;
+import org.seasar.framework.util.URLUtil;
+import org.seasar.framework.util.tiger.CollectionsUtil;
 
 /**
  * {@link PersistenceClassTransformerImpl}のテストクラスです。
@@ -41,88 +39,81 @@ import static org.easymock.EasyMock.*;
  */
 public class PersistenceClassTransformerImplTest extends S2TigerTestCase {
 
-    @EasyMock
-    private ClassTransformer classTransformer;
+    String hoge = getClass().getName() + "$Hoge";
 
-    private ClassLoader classLoader = Thread.currentThread()
-            .getContextClassLoader();
+    String foo = getClass().getName() + "$Foo";
 
-    /**
-     * {@link PersistenceClassTransformerImpl#transformClasses(List, ClassLoader, List)}をテストします。
-     * 
-     * @throws Exception
-     */
-    public void testTransformClasses() throws Exception {
-        List<ClassTransformer> transformers = Arrays.asList(classTransformer);
-        String hoge = getClass().getName() + "$Hoge";
-        String foo = getClass().getName() + "$Foo";
-        List<String> classNames = Arrays.asList(hoge, foo);
-        PersistenceClassTransformerImpl transformer = new PersistenceClassTransformerImpl();
+    String bar = getClass().getName() + "$Bar";
 
-        assertNull(ClassLoaderUtil.findLoadedClass(classLoader, hoge));
-        assertNull(ClassLoaderUtil.findLoadedClass(classLoader, foo));
+    ChildFirstClassLoader loader;
 
-        transformer.transformClasses(transformers, classLoader, classNames);
-        assertNotNull(ClassLoaderUtil.findLoadedClass(classLoader, hoge));
-        assertNotNull(ClassLoaderUtil.findLoadedClass(classLoader, foo));
+    Set<String> names = CollectionsUtil.newHashSet();
 
-        transformer.transformClasses(transformers, classLoader, classNames);
-        assertNotNull(ClassLoaderUtil.findLoadedClass(classLoader, hoge));
-        assertNotNull(ClassLoaderUtil.findLoadedClass(classLoader, foo));
-    }
+    URL rootUrl;
 
-    /**
-     * @{link {@link #testTransformClasses()}}で利用するモックの振る舞いを記録します。
-     * 
-     * @throws Exception
-     */
-    public void recordTransformClasses() throws Exception {
-        expect(
-                classTransformer.transform(isA(ClassLoader.class),
-                        isA(String.class), (Class) isNull(),
-                        (ProtectionDomain) isNull(), isA(byte[].class)))
-                .andAnswer(new IAnswer<byte[]>() {
+    URL jarFileUrl;
 
-                    public byte[] answer() throws Throwable {
-                        return (byte[]) getCurrentArguments()[4];
-                    }
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        loader = new ChildFirstClassLoader();
+        loader.addClassLoaderListener(new ClassLoaderListener() {
 
-                }).times(2);
-    }
+            public void classFinded(ClassLoaderEvent event) {
+                names.add(event.getClassName());
+            }
+        });
 
-    /**
-     * {@link PersistenceClassTransformerImpl#transformJarFiles(List, ClassLoader, List)}をテストします。
-     * 
-     * @throws Exception
-     */
-    public void testTransformJarFiles() throws Exception {
-        List<ClassTransformer> transformers = Arrays.asList(classTransformer);
+        rootUrl = URLUtil.toFile(loader.getResource("s2junit4.dicon"))
+                .getParentFile().toURL();
+
         URL url = ResourceUtil.getResource("junit/framework/TestCase.class");
         File jarFile = new File(JarFileUtil.toJarFilePath(url));
-        URL jarFileUrl = FileUtil.toURL(jarFile);
-
-        PersistenceClassTransformerImpl transformer = new PersistenceClassTransformerImpl();
-        transformer.transformJarFiles(transformers, classLoader, Arrays
-                .asList(jarFileUrl));
+        jarFileUrl = FileUtil.toURL(jarFile);
     }
 
     /**
-     * @{link {@link #testTransformJarFiles()}}で利用するモックの振る舞いを記録します。
+     * {@link PersistenceClassTransformerImpl#loadPersistenceClasses(PersistenceUnitInfo, ClassLoader)}をテストします。
      * 
      * @throws Exception
      */
-    public void recordTransformJarFiles() throws Exception {
-        expect(
-                classTransformer.transform(isA(ClassLoader.class),
-                        isA(String.class), (Class) isNull(),
-                        (ProtectionDomain) isNull(), isA(byte[].class)))
-                .andAnswer(new IAnswer<byte[]>() {
+    public void testLoadPersistenceClasses() throws Exception {
+        PersistenceUnitInfoImpl unitInfo = new PersistenceUnitInfoImpl();
+        unitInfo.setPersistenceUnitRootUrl(rootUrl);
+        unitInfo.addManagedClassNames(hoge);
+        unitInfo.addManagedClassNames(foo);
+        unitInfo.addJarFileUrls(jarFileUrl);
 
-                    public byte[] answer() throws Throwable {
-                        return (byte[]) getCurrentArguments()[4];
-                    }
+        PersistenceClassTransformerImpl transformer = new PersistenceClassTransformerImpl();
+        transformer.loadPersistenceClasses(unitInfo, loader);
 
-                }).atLeastOnce();
+        assertTrue(names.contains(hoge)); // listed class
+        assertTrue(names.contains(foo)); // listed class
+        assertTrue(names.contains("junit.awtui.Logo")); // from jar
+        assertTrue(names.contains(bar)); // unlisted class from root url
+    }
+
+    /**
+     * {@link PersistenceClassTransformerImpl#loadPersistenceClasses(PersistenceUnitInfo, ClassLoader)}をテストします。
+     * 
+     * @throws Exception
+     */
+    public void testLoadPersistenceClassesExcludeUnlistedClasses()
+            throws Exception {
+        PersistenceUnitInfoImpl unitInfo = new PersistenceUnitInfoImpl();
+        unitInfo.setPersistenceUnitRootUrl(rootUrl);
+        unitInfo.addManagedClassNames(hoge);
+        unitInfo.addManagedClassNames(foo);
+        unitInfo.addJarFileUrls(jarFileUrl);
+        unitInfo.setExcludeUnlistedClasses(true);
+
+        PersistenceClassTransformerImpl transformer = new PersistenceClassTransformerImpl();
+        transformer.loadPersistenceClasses(unitInfo, loader);
+
+        assertTrue(names.contains(hoge)); // listed class
+        assertTrue(names.contains(foo)); // listed class
+        assertTrue(names.contains("junit.awtui.Logo")); // from jar
+        assertFalse(names.contains(bar)); // unlisted class from root url
     }
 
     /**
@@ -144,7 +135,15 @@ public class PersistenceClassTransformerImplTest extends S2TigerTestCase {
      * 
      * @author taedium
      */
-    static class Foo {
+    public static class Foo {
+    }
+
+    /**
+     * @{link {@link #testTransformClasses()}}で利用するクラスです。
+     * 
+     * @author taedium
+     */
+    public static class Bar {
     }
 
     /**
@@ -154,4 +153,5 @@ public class PersistenceClassTransformerImplTest extends S2TigerTestCase {
      */
     public static class Hoge extends Foo {
     }
+
 }

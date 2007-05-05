@@ -15,25 +15,28 @@
  */
 package org.seasar.framework.jpa.impl;
 
+import java.io.File;
 import java.net.URL;
-import java.util.Enumeration;
 import java.util.List;
 import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 import javax.persistence.spi.ClassTransformer;
+import javax.persistence.spi.PersistenceUnitInfo;
 
-import org.seasar.framework.exception.ClassNotFoundRuntimeException;
 import org.seasar.framework.jpa.PersistenceClassTransformer;
 import org.seasar.framework.jpa.util.ChildFirstClassLoader;
 import org.seasar.framework.jpa.util.ClassLoaderEvent;
 import org.seasar.framework.jpa.util.ClassLoaderListener;
 import org.seasar.framework.jpa.util.ClassTransformerUtil;
 import org.seasar.framework.util.ClassLoaderUtil;
+import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.JarFileUtil;
+import org.seasar.framework.util.URLUtil;
 import org.seasar.framework.util.tiger.CollectionsUtil;
-import org.seasar.framework.util.tiger.ReflectionUtil;
+
+import static org.seasar.framework.util.tiger.IterableAdapter.*;
 
 /**
  * 永続クラスをトランスフォームします。
@@ -63,37 +66,13 @@ public class PersistenceClassTransformerImpl implements
         ignoreLoaderClassNames.add(ignoreLoaderClassName);
     }
 
-    public void transformJarFiles(final List<ClassTransformer> transformers,
-            final ClassLoader classLoader, final List<URL> jarFileUrls) {
-        final List<String> classNames = CollectionsUtil.newArrayList();
-        for (final URL jarFileUrl : jarFileUrls) {
-            final JarFile jarFile = JarFileUtil.create(jarFileUrl.getPath());
-            try {
-                for (final Enumeration<JarEntry> e = jarFile.entries(); e
-                        .hasMoreElements();) {
-                    final JarEntry entry = e.nextElement();
-                    final String entryName = entry.getName();
-                    if (entry.isDirectory() || !entryName.endsWith(".class")) {
-                        continue;
-                    }
-                    final String className = entryName.substring(0,
-                            entryName.length() - 6).replace("/", ".");
-                    classNames.add(className);
-                }
-            } finally {
-                JarFileUtil.close(jarFile);
-            }
-        }
-        transformClasses(transformers, classLoader, classNames);
-
-    }
-
-    public void transformClasses(final List<ClassTransformer> transformers,
-            final ClassLoader classLoader, final List<String> classNames) {
+    public void transform(final PersistenceUnitInfo unitInfo) {
+        final List<ClassTransformer> transformers = PersistenceUnitInfoImpl.class
+                .cast(unitInfo).getTransformers();
+        final ClassLoader classLoader = unitInfo.getClassLoader();
         final ClassLoader targetLoader = getTargetClassLoader(classLoader);
         final ChildFirstClassLoader tempLoader = new ChildFirstClassLoader(
                 targetLoader);
-
         tempLoader.addClassLoaderListener(new ClassLoaderListener() {
 
             public void classFinded(final ClassLoaderEvent event) {
@@ -107,12 +86,99 @@ public class PersistenceClassTransformerImpl implements
                         bytes.length);
             }
         });
+        loadPersistenceClasses(unitInfo, tempLoader);
+    }
 
-        for (final String className : classNames) {
-            try {
-                ReflectionUtil.forName(className, tempLoader);
-            } catch (ClassNotFoundRuntimeException e) {
-                ReflectionUtil.forName(className + ".package-info", tempLoader);
+    /**
+     * 永続ユニット情報で管理されるクラスを指定のクラスローダにロードします。
+     * 
+     * @param unitInfo
+     *            永続ユニット情報
+     * @param loader
+     *            クラスローダ
+     */
+    protected void loadPersistenceClasses(final PersistenceUnitInfo unitInfo,
+            final ClassLoader loader) {
+        for (final String className : unitInfo.getManagedClassNames()) {
+            loadClass(loader, className);
+        }
+        for (final URL jarFileUrl : unitInfo.getJarFileUrls()) {
+            loadClass(loader, jarFileUrl);
+        }
+        if (!unitInfo.excludeUnlistedClasses()) {
+            final URL rootUrl = unitInfo.getPersistenceUnitRootUrl();
+            if ("file".equals(rootUrl.getProtocol())) {
+                loadClass(loader, URLUtil.toFile(rootUrl), null);
+            } else {
+                loadClass(loader, rootUrl);
+            }
+        }
+    }
+
+    /**
+     * クラスをロードします。
+     * <p>
+     * クラスが見つからない場合はクラス名をパッケージ名として解釈し、<code>package-info</code>クラスをロードします。
+     * </p>
+     * 
+     * @param loader
+     *            クラスローダ
+     * @param className
+     *            クラス名
+     */
+    protected void loadClass(final ClassLoader loader, final String className) {
+        try {
+            loader.loadClass(className);
+        } catch (final ClassNotFoundException e) {
+            ClassLoaderUtil.loadClass(loader, className + ".package-info");
+        }
+    }
+
+    /**
+     * Jarファイルからクラスをロードします。
+     * 
+     * @param loader
+     *            クラスローダ
+     * @param jarFileUrl
+     *            JarファイルのURL
+     */
+    protected void loadClass(final ClassLoader loader, final URL jarFileUrl) {
+        final JarFile jarFile = JarFileUtil.create(jarFileUrl.getPath());
+        try {
+            for (final JarEntry entry : iterable(jarFile.entries())) {
+                final String entryName = entry.getName();
+                if (entry.isDirectory() || !entryName.endsWith(".class")) {
+                    continue;
+                }
+                final String className = removeExtension(entryName).replace(
+                        '/', '.');
+                loadClass(loader, className);
+            }
+        } finally {
+            JarFileUtil.close(jarFile);
+        }
+    }
+
+    /**
+     * ファイルシステムからクラスをロードします。
+     * 
+     * @param loader
+     *            クラスローダ
+     * @param dir
+     *            ディレクトリ
+     * @param path
+     *            クラスパスの基点から現在のディレクトリまでのパス (ピリオド区切り)
+     */
+    protected void loadClass(final ClassLoader loader, final File dir,
+            final String path) {
+        for (final File file : dir.listFiles()) {
+            final String fileName = file.getName();
+            if (file.isDirectory()) {
+                loadClass(loader, file, ClassUtil.concatName(path, fileName));
+            } else if (fileName.endsWith(".class")) {
+                final String className = ClassUtil.concatName(path,
+                        removeExtension(fileName));
+                loadClass(loader, className);
             }
         }
     }
@@ -134,7 +200,7 @@ public class PersistenceClassTransformerImpl implements
             final ClassLoader classLoader, final String className,
             final byte[] bytes) {
         final byte[] transformed = ClassTransformerUtil.transform(transformer,
-                classLoader, className.replace(".", "/"), null, null, bytes);
+                classLoader, className.replace('.', '/'), null, null, bytes);
         return transformed == null ? bytes : transformed;
     }
 
@@ -155,6 +221,17 @@ public class PersistenceClassTransformerImpl implements
             return loader;
         }
         return originLoader;
+    }
+
+    /**
+     * ファイル名から拡張子を取り除いた名前を返します。
+     * 
+     * @param name
+     *            ファイル名
+     * @return ファイル名から拡張子を取り除いた名前
+     */
+    protected String removeExtension(final String name) {
+        return name.substring(0, name.lastIndexOf('.'));
     }
 
 }

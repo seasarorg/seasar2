@@ -15,7 +15,6 @@
  */
 package org.seasar.framework.jpa.impl;
 
-import java.util.List;
 import java.util.Map;
 
 import javax.persistence.EntityManagerFactory;
@@ -85,11 +84,7 @@ public class ContainerPersistenceUnitProviderTest extends S2TigerTestCase {
                 isA(ResourceTraversal.ResourceHandler.class));
         unitConfiguration.detectPersistenceClasses(eq("hoge"),
                 isA(ClassTraversal.ClassHandler.class));
-        classTransformer.transformClasses(isA(List.class), eq(Thread
-                .currentThread().getContextClassLoader()), isA(List.class));
-        classTransformer.transformJarFiles(isA(List.class), eq(Thread
-                .currentThread().getContextClassLoader()), isA(List.class));
-
+        classTransformer.transform(unitInfo);
     }
 
     /**

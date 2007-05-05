@@ -15,42 +15,22 @@
  */
 package org.seasar.framework.jpa;
 
-import java.net.URL;
-import java.util.List;
-
 import javax.persistence.spi.ClassTransformer;
+import javax.persistence.spi.PersistenceUnitInfo;
 
 /**
- * トランスフォーマ{@link ClassTransformer}を適用します。
+ * 永続ユニット情報で管理されるクラスに{@link ClassTransformer トランスフォーマ}を適用します。
  * 
  * @author taedium
  */
 public interface PersistenceClassTransformer {
 
     /**
-     * 指定されたjafファイルのリストにトランスフォーマを適用します。
+     * 永続ユニット情報で管理されるクラスに{@link ClassTransformer トランスフォーマ}を適用します。
      * 
-     * @param transformers
-     *            トランスフォーマのリスト
-     * @param classLoader
-     *            トランスフォーマが適用されたクラスが定義されるクラスローダー
-     * @param jarFileUrls
-     *            jarファイルを示すURLのリスト
+     * @param unitInfo
+     *            永続ユニット情報
      */
-    public void transformJarFiles(List<ClassTransformer> transformers,
-            ClassLoader classLoader, List<URL> jarFileUrls);
-
-    /**
-     * 指定されたクラスのリストにトランスフォーマを適用します。
-     * 
-     * @param transformers
-     *            トランスフォーマのリスト
-     * @param classLoader
-     *            トランスフォーマが適用されたクラスが定義されるクラスローダー
-     * @param classNames
-     *            クラスの名前のリスト
-     */
-    public void transformClasses(List<ClassTransformer> transformers,
-            ClassLoader classLoader, List<String> classNames);
+    void transform(PersistenceUnitInfo unitInfo);
 
 }

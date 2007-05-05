@@ -16,13 +16,11 @@
 package org.seasar.framework.jpa.impl;
 
 import java.io.InputStream;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.spi.ClassTransformer;
 import javax.persistence.spi.PersistenceProvider;
 import javax.persistence.spi.PersistenceUnitInfo;
 
@@ -145,7 +143,7 @@ public class ContainerPersistenceUnitProvider extends
         final EntityManagerFactory emf = provider
                 .createContainerEntityManagerFactory(unitInfo, null);
 
-        transform(PersistenceUnitInfoImpl.class.cast(unitInfo));
+        persistenceClassTransformer.transform(unitInfo);
 
         return emf;
     }
@@ -218,29 +216,13 @@ public class ContainerPersistenceUnitProvider extends
     }
 
     /**
-     * 永続ユニット情報で管理されるクラスにトランスフォーマ{@link ClassTransformer}を適用します。
-     * 
-     * @param unitInfo
-     *            永続ユニット情報
-     */
-    protected void transform(final PersistenceUnitInfoImpl unitInfo) {
-        final List<ClassTransformer> trasformers = unitInfo.getTransformers();
-        final ClassLoader classLoader = unitInfo.getClassLoader();
-
-        persistenceClassTransformer.transformClasses(trasformers, classLoader,
-                unitInfo.getManagedClassNames());
-
-        persistenceClassTransformer.transformJarFiles(trasformers, classLoader,
-                unitInfo.getJarFileUrls());
-    }
-
-    /**
      * マッピングファイルを永続ユニット情報に登録するクラスです。
      * 
      * @author taedium
      */
     public static class MappingFileHandler implements ResourceHandler {
 
+        /** 永続ユニット情報 */
         protected PersistenceUnitInfo unitInfo;
 
         /**
@@ -270,8 +252,10 @@ public class ContainerPersistenceUnitProvider extends
      */
     public static class PersistenceClassHandler implements ClassHandler {
 
+        /** 永続ユニット情報 */
         protected PersistenceUnitInfo unitInfo;
 
+        /** 処理済みパッケージ名のセット */
         protected final Set<String> packageNames = CollectionsUtil.newHashSet();
 
         /**
@@ -298,6 +282,15 @@ public class ContainerPersistenceUnitProvider extends
             }
         }
 
+        /**
+         * 永続ユニット情報にパッケージ名を追加します。
+         * <p>
+         * パッケージに<code>package-info</code>クラスが存在する場合はパッケージ名を永続クラスとして永続ユニット情報に追加します。
+         * </p>
+         * 
+         * @param packageName
+         *            パッケージ名
+         */
         protected void addPackageInfo(final String packageName) {
             packageNames.add(packageName);
             final String pkgInfoName = ClassUtil.concatName(packageName,
