@@ -247,11 +247,25 @@ public class PersistenceUnitInfoFactoryImpl implements
 
         private static final long serialVersionUID = 1L;
 
+        /**
+         * 永続ユニット情報を返します。
+         * 
+         * @param context
+         *            コンテキスト
+         * @return 永続ユニット情報
+         */
         protected PersistenceUnitInfoImpl getPersistenceUnitInfo(
                 final TagHandlerContext context) {
             return PersistenceUnitInfoImpl.class.cast(context.peek());
         }
 
+        /**
+         * データソースを返します。
+         * 
+         * @param name
+         *            データソースのJNDI名
+         * @return データソース
+         */
         protected DataSource getDataSource(final String name) {
             if (useDataSourceProxy) {
                 return new SingletonDataSourceProxy(name);
