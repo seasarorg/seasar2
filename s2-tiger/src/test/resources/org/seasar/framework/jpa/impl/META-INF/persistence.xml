@@ -10,8 +10,8 @@
 		<jta-data-source>java:comp/env/jdbc/dataSource</jta-data-source>
 		<non-jta-data-source>java:comp/env/jdbc/dataSource</non-jta-data-source>
 		<mapping-file>orm.xml</mapping-file>
-		<jar-file>geronimo-ejb_3.0_spec-1.0.jar</jar-file>
-		<jar-file>geronimo-jpa_3.0_spec-1.0.jar</jar-file>
+		<jar-file>foo.jar</jar-file>
+		<jar-file>bar.jar</jar-file>
 		<class>hoge.Foo</class>
 		<class>hoge.Bar</class>
 		<class>hoge.Baz</class>

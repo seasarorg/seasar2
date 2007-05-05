@@ -15,11 +15,8 @@
  */
 package org.seasar.framework.jpa.impl;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.persistence.spi.PersistenceUnitInfo;
@@ -35,12 +32,8 @@ import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.annotation.tiger.Binding;
 import org.seasar.framework.container.annotation.tiger.BindingType;
 import org.seasar.framework.env.Env;
-import org.seasar.framework.exception.IORuntimeException;
 import org.seasar.framework.jpa.PersistenceUnitInfoFactory;
-import org.seasar.framework.util.ClassLoaderUtil;
-import org.seasar.framework.util.FileUtil;
 import org.seasar.framework.util.InputStreamUtil;
-import org.seasar.framework.util.JarFileUtil;
 import org.seasar.framework.util.SAXParserFactoryUtil;
 import org.seasar.framework.util.SchemaUtil;
 import org.seasar.framework.util.StringUtil;
@@ -273,6 +266,19 @@ public class PersistenceUnitInfoFactoryImpl implements
             final String componentName = JndiResourceLocator.resolveName(name);
             return DataSource.class.cast(container.getComponent(componentName));
         }
+
+        /**
+         * 永続ユニットのルートURLを返します。
+         * 
+         * @param context
+         *            コンテキスト
+         * @return 永続ユニットのルートURL
+         */
+        protected URL getPersistenceUnitRootURL(final TagHandlerContext context) {
+            return URL.class.cast(context
+                    .getParameter(PERSISTENCE_UNIT_ROOT_URL));
+        }
+
     }
 
     private class PersistenceTagHandler extends DefaultTagHandler {
@@ -384,30 +390,11 @@ public class PersistenceUnitInfoFactoryImpl implements
 
         private static final long serialVersionUID = 1L;
 
-        private List<File> jarFiles = CollectionsUtil.newArrayList();
-        {
-            final Iterator<URL> iterator = ClassLoaderUtil.getResources(
-                    classLoader, "META-INF");
-            while (iterator.hasNext()) {
-                final URL url = iterator.next();
-                if (URLUtil.toCanonicalProtocol(url.getProtocol())
-                        .equals("jar")) {
-                    final String jarFilePath = JarFileUtil.toJarFilePath(url);
-                    jarFiles.add(new File(jarFilePath));
-                }
-            }
-        }
-
         @Override
         public void end(final TagHandlerContext context, final String body) {
-            for (final File jarFile : jarFiles) {
-                if (jarFile.getName().equals(body)) {
-                    final URL url = FileUtil.toURL(jarFile);
-                    getPersistenceUnitInfo(context).addJarFileUrls(url);
-                    return;
-                }
-            }
-            throw new IORuntimeException(new FileNotFoundException(body));
+            final URL url = URLUtil.create(getPersistenceUnitRootURL(context),
+                    body);
+            getPersistenceUnitInfo(context).addJarFileUrls(url);
         }
 
     }

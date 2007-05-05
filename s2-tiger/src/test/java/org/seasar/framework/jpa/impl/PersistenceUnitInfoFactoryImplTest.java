@@ -65,12 +65,13 @@ public class PersistenceUnitInfoFactoryImplTest extends S2TigerTestCase {
         assertEquals(1, mappingFileNames.size());
         assertEquals("orm.xml", mappingFileNames.get(0));
         List<URL> jarFileNames = info.getJarFileUrls();
+        System.out.println(jarFileNames);
         assertNotNull(jarFileNames);
         assertEquals(2, jarFileNames.size());
         assertTrue(jarFileNames.get(0).toExternalForm().endsWith(
-                "geronimo-ejb_3.0_spec-1.0.jar"));
+                "org/seasar/framework/jpa/impl/foo.jar"));
         assertTrue(jarFileNames.get(1).toExternalForm().endsWith(
-                "geronimo-jpa_3.0_spec-1.0.jar"));
+                "org/seasar/framework/jpa/impl/bar.jar"));
         List<String> classNames = info.getManagedClassNames();
         assertNotNull(classNames);
         assertEquals(3, classNames.size());

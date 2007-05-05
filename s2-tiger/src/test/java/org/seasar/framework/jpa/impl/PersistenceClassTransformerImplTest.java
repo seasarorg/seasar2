@@ -15,7 +15,6 @@
  */
 package org.seasar.framework.jpa.impl;
 
-import java.io.File;
 import java.net.URL;
 import java.util.Set;
 
@@ -26,9 +25,6 @@ import org.seasar.framework.jpa.util.ClassLoaderEvent;
 import org.seasar.framework.jpa.util.ClassLoaderListener;
 import org.seasar.framework.unit.S2TigerTestCase;
 import org.seasar.framework.unit.UnitClassLoader;
-import org.seasar.framework.util.FileUtil;
-import org.seasar.framework.util.JarFileUtil;
-import org.seasar.framework.util.ResourceUtil;
 import org.seasar.framework.util.URLUtil;
 import org.seasar.framework.util.tiger.CollectionsUtil;
 
@@ -44,6 +40,8 @@ public class PersistenceClassTransformerImplTest extends S2TigerTestCase {
     String foo = getClass().getName() + "$Foo";
 
     String bar = getClass().getName() + "$Bar";
+
+    String aaa = "org.seasar.framework.jpa.Aaa";
 
     ChildFirstClassLoader loader;
 
@@ -67,9 +65,8 @@ public class PersistenceClassTransformerImplTest extends S2TigerTestCase {
         rootUrl = URLUtil.toFile(loader.getResource("s2junit4.dicon"))
                 .getParentFile().toURL();
 
-        URL url = ResourceUtil.getResource("junit/framework/TestCase.class");
-        File jarFile = new File(JarFileUtil.toJarFilePath(url));
-        jarFileUrl = FileUtil.toURL(jarFile);
+        jarFileUrl = URLUtil.create(rootUrl,
+                "org/seasar/framework/jpa/impl/aaa.jar");
     }
 
     /**
@@ -89,7 +86,7 @@ public class PersistenceClassTransformerImplTest extends S2TigerTestCase {
 
         assertTrue(names.contains(hoge)); // listed class
         assertTrue(names.contains(foo)); // listed class
-        assertTrue(names.contains("junit.awtui.Logo")); // from jar
+        assertTrue(names.contains(aaa)); // from jar
         assertTrue(names.contains(bar)); // unlisted class from root url
     }
 
@@ -112,7 +109,7 @@ public class PersistenceClassTransformerImplTest extends S2TigerTestCase {
 
         assertTrue(names.contains(hoge)); // listed class
         assertTrue(names.contains(foo)); // listed class
-        assertTrue(names.contains("junit.awtui.Logo")); // from jar
+        assertTrue(names.contains(aaa)); // from jar
         assertFalse(names.contains(bar)); // unlisted class from root url
     }
 
