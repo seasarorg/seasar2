@@ -160,6 +160,9 @@ public class ChildFirstClassLoader extends ClassLoader {
         if (className.startsWith("java.") || className.startsWith("javax.")) {
             return false;
         }
+        if (className.endsWith("package-info")) {
+            return false;
+        }
         if (includedNames.isEmpty()) {
             return true;
         }

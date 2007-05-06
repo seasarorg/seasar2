@@ -82,15 +82,8 @@ public class PersistenceClassTransformerImpl implements
                     bytes = transform(transformer, targetLoader, className,
                             bytes);
                 }
-                final Class<?> clazz = ClassLoaderUtil.defineClass(
-                        targetLoader, className, bytes, 0, bytes.length);
-                final Package pkg = clazz.getPackage();
-                if (pkg == null) {
-                    // TODO resolve package info from manifest
-                    ClassLoaderUtil.definePackage(targetLoader, ClassUtil
-                            .getPackageName(clazz), null, null, null, null,
-                            null, null, null);
-                }
+                ClassLoaderUtil.defineClass(targetLoader, className, bytes, 0,
+                        bytes.length);
             }
         });
         loadPersistenceClasses(unitInfo, tempLoader);
