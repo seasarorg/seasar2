@@ -35,28 +35,28 @@ public class PersistenceUnitManagerImplTest extends S2TigerTestCase {
     }
 
     public void testGetPersistenceUnitNameByClass() throws Exception {
-        assertEquals("persistenceUnit", pum.getPersistenceUnitName(Foo.class));
+        assertEquals("persistenceUnit", pum.getAbstractPersistenceUnitName(Foo.class));
         assertEquals("aaaPersistenceUnit", pum
-                .getPersistenceUnitName(Bar.class));
+                .getAbstractPersistenceUnitName(Bar.class));
     }
 
     public void testGetPersistenceUnitNameByMappingFile() throws Exception {
         assertEquals(
                 "persistenceUnit",
                 pum
-                        .getPersistenceUnitName("org/seasar/framework/jpa/impl/entity/FooOrm.xml"));
+                        .getAbstractPersistenceUnitName("org/seasar/framework/jpa/impl/entity/FooOrm.xml"));
         assertEquals(
                 "aaaPersistenceUnit",
                 pum
-                        .getPersistenceUnitName("org/seasar/framework/jpa/impl/entity/aaa/FooOrm.xml"));
+                        .getAbstractPersistenceUnitName("org/seasar/framework/jpa/impl/entity/aaa/FooOrm.xml"));
         assertEquals(
                 "persistenceUnit",
                 pum
-                        .getPersistenceUnitName("org/seasar/framework/jpa/impl/dao/FooOrm.xml"));
+                        .getAbstractPersistenceUnitName("org/seasar/framework/jpa/impl/dao/FooOrm.xml"));
         assertEquals(
                 "aaaPersistenceUnit",
                 pum
-                        .getPersistenceUnitName("org/seasar/framework/jpa/impl/dao/aaa/FooOrm.xml"));
+                        .getAbstractPersistenceUnitName("org/seasar/framework/jpa/impl/dao/aaa/FooOrm.xml"));
     }
 
 }

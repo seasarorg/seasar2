@@ -15,38 +15,34 @@
  */
 package org.seasar.framework.jpa.metadata;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.concurrent.ConcurrentMap;
 
+import org.seasar.framework.jpa.PersistenceUnitManager;
+import org.seasar.framework.jpa.PersistenceUnitManagerLocater;
+import org.seasar.framework.jpa.PersistenceUnitProvider;
 import org.seasar.framework.util.Disposable;
 import org.seasar.framework.util.DisposableUtil;
 import org.seasar.framework.util.tiger.CollectionsUtil;
 
 /**
  * @author koichik
- * 
  */
 public class EntityDescFactory {
 
-    private static boolean initialized;
+    /** クラスに対応する{@link EntityDesc}が存在しないことを示すオブジェクト */
+    protected static final EntityDesc NOT_FOUND = new NotFound();
 
-    protected static final List<EntityDescProvider> providers = Collections
-            .synchronizedList(new ArrayList<EntityDescProvider>());
+    protected static boolean initialized;
 
     protected static final ConcurrentMap<Class<?>, EntityDesc> entityDescs = CollectionsUtil
             .newConcurrentHashMap();
-
-    static {
-        initialize();
-    }
 
     public static void initialize() {
         if (initialized) {
             return;
         }
         DisposableUtil.add(new Disposable() {
+
             public void dispose() {
                 clear();
             }
@@ -59,35 +55,72 @@ public class EntityDescFactory {
         initialized = false;
     }
 
-    public static void addProvider(final EntityDescProvider provider) {
-        initialize();
-        providers.add(provider);
-    }
-
-    public static void removeProvider(final EntityDescProvider provider) {
-        initialize();
-        providers.remove(provider);
-    }
-
+    /**
+     * エンティティクラスを表現する{@link EntityDesc}を返します。
+     * 
+     * @param entityClass
+     *            エンティティクラス
+     * @return エンティティクラスを表現する{@link EntityDesc}
+     */
     public static EntityDesc getEntityDesc(final Class<?> entityClass) {
         initialize();
         final EntityDesc entityDesc = entityDescs.get(entityClass);
         if (entityDesc != null) {
-            return entityDesc;
+            return entityDesc == NOT_FOUND ? null : entityDesc;
         }
         return createEntityDesc(entityClass);
     }
 
+    /**
+     * エンティティクラスを表現する{@link EntityDesc}を作成します。
+     * 
+     * @param entityClass
+     *            エンティティクラス
+     * @return エンティティクラスを表現する{@link EntityDesc}
+     */
     protected static EntityDesc createEntityDesc(final Class<?> entityClass) {
-        for (final EntityDescProvider provider : providers) {
-            final EntityDesc entityDesc = provider
-                    .createEntityDesc(entityClass);
-            if (entityDesc != null) {
-                return CollectionsUtil.putIfAbsent(entityDescs, entityClass,
-                        entityDesc);
-            }
+        final PersistenceUnitManager manager = PersistenceUnitManagerLocater
+                .getInstance();
+        final PersistenceUnitProvider unitProvider = manager
+                .getPersistenceUnitProvider(manager
+                        .getConcretePersistenceUnitName(entityClass));
+        final EntityDesc entityDesc = unitProvider.getEntityDescProvider()
+                .createEntityDesc(unitProvider.getEntityManagerFactory(),
+                        entityClass);
+        if (entityDesc == null) {
+            CollectionsUtil.putIfAbsent(entityDescs, entityClass, NOT_FOUND);
+            return null;
         }
-        return null;
+        return CollectionsUtil
+                .putIfAbsent(entityDescs, entityClass, entityDesc);
+    }
+
+    private static class NotFound implements EntityDesc {
+
+        public AttributeDesc getAttributeDesc(String attributeName) {
+            return null;
+        }
+
+        public AttributeDesc[] getAttributeDescs() {
+            return null;
+        }
+
+        public String[] getAttributeNames() {
+            return null;
+        }
+
+        public Class<?> getEntityClass() {
+            return null;
+        }
+
+        public String getEntityName() {
+            return null;
+        }
+
+        public AttributeDesc getIdAttributeDesc() {
+            return null;
+        }
+
     }
 
 }

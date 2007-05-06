@@ -13,26 +13,31 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.framework.jpa.metadata;
+package org.seasar.framework.jpa.unit;
 
-import javax.persistence.EntityManagerFactory;
+import java.util.Collection;
+
 
 /**
- * {@link EntityDesc}を提供するコンポーネントの抽象クラスです。
- * 
  * @author koichik
+ *
  */
-public interface EntityDescProvider {
+public class DummyEntityReaderProvider implements EntityReaderProvider {
 
-    /**
-     * エンティティクラスを表す{@link EntityDesc}を作成します。
-     * 
-     * @param emf
-     *            {@link EntityManagerFactory}
-     * @param entityClass
-     *            エンティティクラス
-     * @return エンティティクラスを表す{@link EntityDesc}
+    /* (non-Javadoc)
+     * @see org.seasar.framework.jpa.unit.EntityReaderProvider#createEntityReader(java.lang.Object)
      */
-    EntityDesc createEntityDesc(EntityManagerFactory emf, Class<?> entityClass);
+    public EntityReader createEntityReader(Object entity) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    /* (non-Javadoc)
+     * @see org.seasar.framework.jpa.unit.EntityReaderProvider#createEntityReader(java.util.Collection)
+     */
+    public EntityReader createEntityReader(Collection<?> entities) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
 }

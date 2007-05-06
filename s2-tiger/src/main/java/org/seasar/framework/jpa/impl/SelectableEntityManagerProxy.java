@@ -41,12 +41,12 @@ public class SelectableEntityManagerProxy implements EntityManager {
     }
 
     protected EntityManager getEntityManager() {
-        final String name = entityManagerProvider
-                .getSelectableEntityManagerName();
-        if (StringUtil.isEmpty(name)) {
+        final String prefix = entityManagerProvider
+                .getSelectableEntityManagerPrefix();
+        if (StringUtil.isEmpty(prefix)) {
             throw new EmptyRuntimeException("entityManagerName");
         }
-        return entityManagerProvider.getEntityManger(name);
+        return entityManagerProvider.getEntityManger(prefix);
     }
 
     public void clear() {

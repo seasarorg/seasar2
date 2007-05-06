@@ -95,7 +95,7 @@ public class ContainerPersistenceUnitProvider extends
      */
     @Binding(bindingType = BindingType.MUST)
     public void setPersistenceClassTransformer(
-            PersistenceClassTransformer persistenceClassTransformer) {
+            final PersistenceClassTransformer persistenceClassTransformer) {
         this.persistenceClassTransformer = persistenceClassTransformer;
     }
 
@@ -297,7 +297,7 @@ public class ContainerPersistenceUnitProvider extends
                     "package-info");
             final Class<?> pkgInfoClass = ReflectionUtil
                     .forNameNoException(pkgInfoName);
-            if (pkgInfoClass != null) {
+            if (pkgInfoClass != null && pkgInfoClass.getPackage() != null) {
                 unitInfo.getManagedClassNames().add(packageName);
             }
         }

@@ -26,45 +26,54 @@ import org.seasar.framework.jpa.EntityManagerProvider;
 import org.seasar.framework.util.StringUtil;
 
 /**
- * @author koichik
+ * {@link EntityManager}を提供するコンポーネントのインターフェースです。
  * 
+ * @author koichik
  */
 @Component
 public class EntityManagerProviderImpl implements EntityManagerProvider {
 
-    protected static final String DEFAULT_ENTITY_MANAGER_NAME = "entityManager";
-
+    /** このコンポーネントを定義しているS2コンテナ */
     @Binding(bindingType = BindingType.MUST)
     protected S2Container container;
 
+    /** データソース・ファクトリ */
     @Binding(bindingType = BindingType.MUST)
     protected DataSourceFactory dataSourceFactory;
 
+    /** デフォルトの{@link EntityManager}のコンポーネント名 */
     @Binding(bindingType = BindingType.MAY)
     protected String entityManagerBaseName = DEFAULT_ENTITY_MANAGER_NAME;
 
-    public String getSelectableEntityManagerName() {
+    /**
+     * インスタンスを構築します。
+     */
+    public EntityManagerProviderImpl() {
+    }
+
+    public String getSelectableEntityManagerPrefix() {
         return dataSourceFactory.getSelectableDataSourceName();
     }
 
-    public String getEntityManagerName(final String name) {
-        if (name != null) {
-            return name;
-        }
-        return dataSourceFactory.getSelectableDataSourceName();
+    public EntityManager getEntityManger(final String prefix) {
+        return EntityManager.class.cast(container.getRoot().getComponent(
+                getEntityManagerComponentName(prefix)));
     }
 
-    public EntityManager getEntityManger(final String name) {
-        return (EntityManager) container.getRoot().getComponent(
-                getEntityManagerComponentName(name));
-    }
-
-    protected String getEntityManagerComponentName(final String name) {
-        final String prefix = getEntityManagerName(name);
-        if (prefix == null) {
-            return entityManagerBaseName;
+    /**
+     * {@link EntityManager}のコンポーネント名を返します。
+     * 
+     * @param prefix
+     *            プレフィックス
+     * @return {@link EntityManager}のコンポーネント名
+     */
+    protected String getEntityManagerComponentName(final String prefix) {
+        final String actualPrefix = prefix != null ? prefix
+                : getSelectableEntityManagerPrefix();
+        if (!StringUtil.isEmpty(actualPrefix)) {
+            return actualPrefix + StringUtil.capitalize(entityManagerBaseName);
         }
-        return prefix + StringUtil.capitalize(entityManagerBaseName);
+        return entityManagerBaseName;
     }
 
 }

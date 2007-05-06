@@ -17,6 +17,9 @@ package org.seasar.framework.jpa;
 
 import javax.persistence.EntityManagerFactory;
 
+import org.seasar.framework.jpa.metadata.EntityDescProvider;
+import org.seasar.framework.jpa.unit.EntityReaderProvider;
+
 /**
  * 永続ユニットを提供するプロバイダのインターフェースです。
  * 
@@ -75,5 +78,19 @@ public interface PersistenceUnitProvider {
      */
     EntityManagerFactory createEntityManagerFactory(String abstractUnitName,
             String concreteUnitName);
+
+    /**
+     * {@link EntityDescProvider}を返します。
+     * 
+     * @return {@link EntityDescProvider}を返します
+     */
+    EntityDescProvider getEntityDescProvider();
+
+    /**
+     * {@link EntityReaderProvider}を返します。
+     * 
+     * @return {@link EntityReaderProvider}を返します
+     */
+    EntityReaderProvider getEntityReaderProvider();
 
 }

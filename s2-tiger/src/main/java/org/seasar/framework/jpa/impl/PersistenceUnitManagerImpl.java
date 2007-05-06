@@ -15,12 +15,10 @@
  */
 package org.seasar.framework.jpa.impl;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.persistence.EntityManagerFactory;
 
-import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.annotation.tiger.Binding;
 import org.seasar.framework.container.annotation.tiger.BindingType;
 import org.seasar.framework.container.annotation.tiger.Component;
@@ -28,73 +26,100 @@ import org.seasar.framework.container.annotation.tiger.DestroyMethod;
 import org.seasar.framework.container.annotation.tiger.InitMethod;
 import org.seasar.framework.convention.NamingConvention;
 import org.seasar.framework.env.Env;
+import org.seasar.framework.jpa.EntityManagerProvider;
 import org.seasar.framework.jpa.PersistenceUnitContext;
 import org.seasar.framework.jpa.PersistenceUnitManager;
+import org.seasar.framework.jpa.PersistenceUnitManagerLocater;
 import org.seasar.framework.jpa.PersistenceUnitProvider;
+import org.seasar.framework.jpa.exception.PersistenceUnitNodFoundException;
 import org.seasar.framework.util.ClassUtil;
+import org.seasar.framework.util.StringUtil;
+import org.seasar.framework.util.tiger.CollectionsUtil;
 
+/**
+ * 永続ユニットを管理するコンポーネントの実装クラスです。
+ * 
+ * @author koichik
+ */
 @Component
 public class PersistenceUnitManagerImpl implements PersistenceUnitManager {
 
-    public static final String DEFAULT_PERSISTENCE_UNIT_NAME = "persistenceUnit";
+    /** staticなコンテキストマップ */
+    protected static final ContextMap staticContextMap = new ContextMap();
 
-    public static final String PERSISTENCE_UNIT_NAME_SUFFIX = "PersistenceUnit";
+    /** コンテキストマップ */
+    protected ContextMap contextMap;
 
-    protected static final Context staticContext = new Context();
-
-    protected Context context;
-
+    /** staticなコンテキストマップを使用する場合は<code>true</code> */
     protected boolean useStaticContext = Env.getValue().startsWith("ut");
 
+    /** デフォルトの永続ユニット名 */
     protected String defaultPersistenceUnitName = DEFAULT_PERSISTENCE_UNIT_NAME;
 
-    protected String persistenceUnitNameSuffix = PERSISTENCE_UNIT_NAME_SUFFIX;
-
-    protected S2Container container;
-
+    /** デフォルトの{@link PersistenceUnitProvider} */
+    @Binding(bindingType = BindingType.MUST)
     protected PersistenceUnitProvider defaultUnitProvider;
 
+    /** エンティティマネージャのプロバイダ */
+    @Binding(bindingType = BindingType.MUST)
+    protected EntityManagerProvider entityManagerProvider;
+
+    /** ネーミング規約 */
+    @Binding(bindingType = BindingType.MAY)
+    protected NamingConvention convention;
+
+    /**
+     * インスタンスを構築します。
+     * 
+     */
     public PersistenceUnitManagerImpl() {
     }
 
+    /**
+     * staticなコンテキストマップを使用する場合は<code>true</code>を設定します。
+     * 
+     * @param useStaticContext
+     *            staticなコンテキストマップを使用する場合は<code>true</code>
+     */
     @Binding(bindingType = BindingType.MAY)
     public void setUseStaticContext(final boolean useStaticContext) {
         this.useStaticContext = useStaticContext;
     }
 
+    /**
+     * デフォルトの永続ユニット名を設定します。
+     * 
+     * @param defaultPersistenceUnitName
+     *            デフォルトの永続ユニット名
+     */
     @Binding(bindingType = BindingType.MAY)
     public void setDefaultPersistenceUnitName(
             final String defaultPersistenceUnitName) {
         this.defaultPersistenceUnitName = defaultPersistenceUnitName;
     }
 
-    @Binding(bindingType = BindingType.MAY)
-    public void setPersistenceUnitNameSuffix(
-            final String persistenceUnitNameSuffix) {
-        this.persistenceUnitNameSuffix = persistenceUnitNameSuffix;
-    }
-
-    @Binding(bindingType = BindingType.MUST)
-    public void setContainer(final S2Container container) {
-        this.container = container.getRoot();
-    }
-
-    @Binding(bindingType = BindingType.MUST)
-    public void setDefaultUnitProvider(
-            final PersistenceUnitProvider defaultUnitProvider) {
-        this.defaultUnitProvider = defaultUnitProvider;
-    }
-
+    /**
+     * 永続ユニットマネージャをオープンします。
+     */
     @InitMethod
     public void open() {
-        context = useStaticContext ? staticContext : new Context();
+        contextMap = useStaticContext ? staticContextMap : new ContextMap();
+        PersistenceUnitManagerLocater.setInstance(this);
     }
 
+    /**
+     * 永続ユニットマネージャをクローズします。
+     * <p>
+     * staticなコンテキストマップを使用していない場合、管理下にある{@link EntityManagerFactory}を全てクローズします。
+     * </p>
+     * 
+     */
     @DestroyMethod
     public void close() {
-        synchronized (context) {
+        PersistenceUnitManagerLocater.setInstance(null);
+        synchronized (contextMap) {
             if (!useStaticContext) {
-                context.close();
+                contextMap.close();
             }
         }
     }
@@ -117,105 +142,274 @@ public class PersistenceUnitManagerImpl implements PersistenceUnitManager {
     public EntityManagerFactory getEntityManagerFactory(
             final String abstractUnitName, final String concreteUnitName,
             final PersistenceUnitProvider provider) {
-        synchronized (context) {
-            final EntityManagerFactory emf = context
+        synchronized (contextMap) {
+            final EntityManagerFactory emf = contextMap
                     .getEntityManagerFactory(concreteUnitName);
             if (emf != null) {
                 return emf;
+            }
+            if (provider == null) {
+                throw new PersistenceUnitNodFoundException(concreteUnitName);
             }
             return createEntityManagerFactory(abstractUnitName,
                     concreteUnitName, provider);
         }
     }
 
+    /**
+     * 指定されたユニット名を持つ{@link EntityManagerFactory}を指定の{PersistenceUnitProvider}から作成して返します。
+     * 
+     * @param abstractUnitName
+     *            抽象ユニット名
+     * @param concreteUnitName
+     *            具象ユニット名
+     * @param provider
+     *            {@link EntityManagerFactory}を作成する{PersistenceUnitProvider}
+     * @return 指定されたユニット名を持ち、指定の{PersistenceUnitProvider}から作成された{@link EntityManagerFactory}
+     */
     protected EntityManagerFactory createEntityManagerFactory(
             final String abstractUnitName, final String concreteUnitName,
             final PersistenceUnitProvider provider) {
         final EntityManagerFactory emf = provider.createEntityManagerFactory(
                 abstractUnitName, concreteUnitName);
         if (emf != null) {
-            context.addEntityManagerFactory(concreteUnitName, emf);
+            contextMap.addEntityManagerFactory(concreteUnitName, provider, emf);
             return emf;
         }
-        return null;
+        throw new PersistenceUnitNodFoundException(concreteUnitName);
     }
 
     public PersistenceUnitContext getPersistenceUnitContext(
             final EntityManagerFactory emf) {
-        synchronized (context) {
-            return context.getPersistenceUnitContext(emf);
+        synchronized (contextMap) {
+            return contextMap.getPersistenceUnitContext(emf);
         }
     }
 
-    public String getPersistenceUnitName(final Class<?> entityClass) {
-        final NamingConvention convention = NamingConvention.class
-                .cast(container.getComponent(NamingConvention.class));
+    public String getAbstractPersistenceUnitName(final Class<?> entityClass) {
         if (convention == null) {
             return defaultPersistenceUnitName;
         }
         final String entityPackageName = convention.getEntityPackageName();
-        final String resourcePath = ClassUtil.getResourcePath(entityClass);
-        return getPersistenceUnitNameFromPackage(entityPackageName,
-                resourcePath);
+        final String path = ClassUtil.getResourcePath(entityClass);
+        return getAbstractPersistenceUnitName(entityPackageName, path);
     }
 
-    public String getPersistenceUnitName(final String mappingFile) {
-        final NamingConvention convention = NamingConvention.class
-                .cast(container.getComponent(NamingConvention.class));
+    public String getAbstractPersistenceUnitName(final String mappingFile) {
         if (convention == null) {
             return defaultPersistenceUnitName;
         }
         final String entityPackageName = convention.getEntityPackageName();
         if (mappingFile.lastIndexOf("/" + entityPackageName + "/") > -1) {
-            return getPersistenceUnitNameFromPackage(entityPackageName,
+            return getAbstractPersistenceUnitName(entityPackageName,
                     mappingFile);
         }
         final String daoPackageName = convention.getDaoPackageName();
-        return getPersistenceUnitNameFromPackage(daoPackageName, mappingFile);
+        return getAbstractPersistenceUnitName(daoPackageName, mappingFile);
     }
 
-    protected String getPersistenceUnitNameFromPackage(
-            final String packageName, final String path) {
+    public String getConcretePersistenceUnitName(final Class<?> entityClass) {
+        if (convention == null) {
+            return defaultPersistenceUnitName;
+        }
+        final String entityPackageName = convention.getEntityPackageName();
+        final String path = ClassUtil.getResourcePath(entityClass);
+        return getConcretePersistenceUnitName(entityPackageName, path);
+    }
+
+    public String getConcretePersistenceUnitName(final String mappingFile) {
+        if (convention == null) {
+            return defaultPersistenceUnitName;
+        }
+        final String entityPackageName = convention.getEntityPackageName();
+        if (mappingFile.lastIndexOf("/" + entityPackageName + "/") > -1) {
+            return getConcretePersistenceUnitName(entityPackageName,
+                    mappingFile);
+        }
+        final String daoPackageName = convention.getDaoPackageName();
+        return getConcretePersistenceUnitName(daoPackageName, mappingFile);
+    }
+
+    public PersistenceUnitProvider getPersistenceUnitProvider(
+            final Class<?> entityClass) {
+        if (convention == null) {
+            return getPersistenceUnitProvider(defaultPersistenceUnitName);
+        }
+        final String packageName = convention.getEntityPackageName();
+        final String path = ClassUtil.getResourcePath(entityClass);
+        final String unitName = getConcretePersistenceUnitName(packageName,
+                path);
+        return getPersistenceUnitProvider(unitName);
+    }
+
+    public PersistenceUnitProvider getPersistenceUnitProvider(
+            final String unitName) {
+        return contextMap.getPersistenceUnitProvider(unitName);
+    }
+
+    /**
+     * リソースのパス名から抽象永続ユニット名を求めて返します。
+     * 
+     * @param packageName
+     *            エンティティのパッケージ名
+     * @param path
+     *            リソースのパス名
+     * @return リソースのパス名から求めた抽象永続ユニット名
+     */
+    protected String getAbstractPersistenceUnitName(final String packageName,
+            final String path) {
+        final String prefix = getAbstractPersistenceUnitPrefix(packageName,
+                path);
+        if (StringUtil.isEmpty(prefix)) {
+            return defaultPersistenceUnitName;
+        }
+        return prefix + StringUtil.capitalize(defaultPersistenceUnitName);
+    }
+
+    /**
+     * リソースのパス名から具象永続ユニット名を求めて返します。
+     * 
+     * @param packageName
+     *            エンティティのパッケージ名
+     * @param path
+     *            リソースのパス名
+     * @return リソースのパス名から求めた具象永続ユニット名
+     */
+    protected String getConcretePersistenceUnitName(final String packageName,
+            final String path) {
+        final String prefix = getConcretePersistenceUnitPrefix(packageName,
+                path);
+        if (StringUtil.isEmpty(prefix)) {
+            return defaultPersistenceUnitName;
+        }
+        return prefix + StringUtil.capitalize(defaultPersistenceUnitName);
+    }
+
+    /**
+     * リソースのパス名から抽象永続ユニット名のプレフィックスを求めて返します。
+     * 
+     * @param packageName
+     *            エンティティのパッケージ名
+     * @param path
+     *            リソースのパス名
+     * @return リソースのパス名から求めた永続ユニット名のプレフィックス
+     */
+    protected String getAbstractPersistenceUnitPrefix(final String packageName,
+            final String path) {
         final String key = "/" + packageName + "/";
         final int pos = path.lastIndexOf(key);
         if (pos < 0) {
-            return defaultPersistenceUnitName;
+            return null;
         }
         final int pos2 = path.lastIndexOf('/');
         if (pos + key.length() - 1 == pos2) {
-            return defaultPersistenceUnitName;
+            return null;
         }
-        return path.substring(pos + key.length(), pos2)
-                + persistenceUnitNameSuffix;
+        return path.substring(pos + key.length(), pos2);
     }
 
-    public static class Context {
+    /**
+     * リソースのパス名から具象永続ユニット名のプレフィックスを求めて返します。
+     * 
+     * @param packageName
+     *            エンティティのパッケージ名
+     * @param path
+     *            リソースのパス名
+     * @return リソースのパス名から求めた具象永続ユニット名のプレフィックス
+     */
+    protected String getConcretePersistenceUnitPrefix(final String packageName,
+            final String path) {
+        final String abstractPrefix = getAbstractPersistenceUnitPrefix(
+                packageName, path);
+        if (!StringUtil.isEmpty(abstractPrefix)) {
+            return abstractPrefix;
+        }
+        return entityManagerProvider.getSelectableEntityManagerPrefix();
+    }
 
-        protected final Map<String, EntityManagerFactory> persistenceUnits = new HashMap<String, EntityManagerFactory>();
+    /**
+     * 永続ユニットに関する情報を保持するためのクラスです。
+     * 
+     * @author koichik
+     */
+    public static class ContextMap {
 
-        protected final Map<EntityManagerFactory, PersistenceUnitContext> persistenceUnitContexts = new HashMap<EntityManagerFactory, PersistenceUnitContext>();
+        /** 永続ユニット名と永続ユニットプロバイダのマップ */
+        protected final Map<String, PersistenceUnitProvider> persistenceUnitProviders = CollectionsUtil
+                .newHashMap();
 
-        public EntityManagerFactory getEntityManagerFactory(
+        /** 永続ユニット名と{@link EntityManagerFactory}のマップ */
+        protected final Map<String, EntityManagerFactory> entityManagerFactories = CollectionsUtil
+                .newHashMap();
+
+        /** {@link EntityManagerFactory}と永続ユニットコンテキストのマップ */
+        protected final Map<EntityManagerFactory, PersistenceUnitContext> persistenceUnitContexts = CollectionsUtil
+                .newHashMap();
+
+        /**
+         * ユニット名に関連づけられた永続ユニットプロバイダを返します。
+         * 
+         * @param unitName
+         *            ユニット名
+         * @return ユニット名に関連づけられた永続ユニットプロバイダ
+         */
+        public PersistenceUnitProvider getPersistenceUnitProvider(
                 final String unitName) {
-            return persistenceUnits.get(unitName);
+            return persistenceUnitProviders.get(unitName);
         }
 
+        /**
+         * ユニット名に関連づけられた{@link EntityManagerFactory}を返します。
+         * 
+         * @param unitName
+         *            ユニット名
+         * @return ユニット名に関連づけられた{@link EntityManagerFactory}
+         */
+        public EntityManagerFactory getEntityManagerFactory(
+                final String unitName) {
+            return entityManagerFactories.get(unitName);
+        }
+
+        /**
+         * ユニット名に関連づけられた{@link EntityManagerFactory}を登録します。
+         * 
+         * @param unitName
+         *            ユニット名
+         * @param persistenceUnitProvider
+         *            永続ユニットプロバイダ
+         * @param emf
+         *            {@link EntityManagerFactory}
+         * @return ユニット名に関連づけられた{@link EntityManagerFactory}
+         */
         public void addEntityManagerFactory(final String unitName,
+                final PersistenceUnitProvider persistenceUnitProvider,
                 final EntityManagerFactory emf) {
-            persistenceUnits.put(unitName, emf);
+            persistenceUnitProviders.put(unitName, persistenceUnitProvider);
+            entityManagerFactories.put(unitName, emf);
             persistenceUnitContexts.put(emf, new PersistenceUnitContextImpl());
         }
 
+        /**
+         * {@link EntityManagerFactory}に関連づけられた永続ユニットコンテキストを返します。
+         * 
+         * @param emf
+         *            {@link EntityManagerFactory}
+         * @return {@link EntityManagerFactory}に関連づけられた永続ユニットコンテキスト
+         */
         public PersistenceUnitContext getPersistenceUnitContext(
                 final EntityManagerFactory emf) {
             return persistenceUnitContexts.get(emf);
         }
 
+        /**
+         * 保持している{EntityManagerFactory}をクローズします。
+         */
         public void close() {
-            for (final EntityManagerFactory emf : persistenceUnits.values()) {
+            for (final EntityManagerFactory emf : entityManagerFactories
+                    .values()) {
                 emf.close();
             }
-            persistenceUnits.clear();
+            entityManagerFactories.clear();
             persistenceUnitContexts.clear();
         }
 

@@ -21,6 +21,8 @@ import org.seasar.framework.container.annotation.tiger.Binding;
 import org.seasar.framework.container.annotation.tiger.BindingType;
 import org.seasar.framework.jpa.PersistenceUnitManager;
 import org.seasar.framework.jpa.PersistenceUnitProvider;
+import org.seasar.framework.jpa.metadata.EntityDescProvider;
+import org.seasar.framework.jpa.unit.EntityReaderProvider;
 import org.seasar.framework.util.StringUtil;
 
 /**
@@ -34,11 +36,23 @@ public abstract class AbstractPersistenceUnitProvider implements
     /** 永続ユニットマネージャ */
     protected PersistenceUnitManager persistenceUnitManager;
 
-    /** 永続ユニット名 */
+    /** {@link EntityDescProvider} */
+    protected EntityDescProvider entityDescProvider;
+
+    /** {@link EntityReaderProvider} */
+    protected EntityReaderProvider entityReaderProvider;
+
+    /** (具象) 永続ユニット名 */
     protected String unitName;
 
     /** 抽象永続ユニット名 */
     protected String abstractUnitName;
+
+    /**
+     * インスタンスを構築します。
+     */
+    protected AbstractPersistenceUnitProvider() {
+    }
 
     /**
      * 永続ユニットマネージャを設定します。
@@ -72,6 +86,38 @@ public abstract class AbstractPersistenceUnitProvider implements
     @Binding(bindingType = BindingType.MAY)
     public void setAbstractUnitName(final String abstractUnitName) {
         this.abstractUnitName = abstractUnitName;
+    }
+
+    public EntityDescProvider getEntityDescProvider() {
+        return entityDescProvider;
+    }
+
+    /**
+     * {@link EntityDescProvider}を設定します。
+     * 
+     * @param entityDescProvider
+     *            {@link EntityDescProvider}
+     */
+    @Binding(bindingType = BindingType.MUST)
+    public void setEntityDescProvider(
+            final EntityDescProvider entityDescProvider) {
+        this.entityDescProvider = entityDescProvider;
+    }
+
+    public EntityReaderProvider getEntityReaderProvider() {
+        return entityReaderProvider;
+    }
+
+    /**
+     * {@link EntityReaderProvider}を設定します。
+     * 
+     * @param entityReaderProvider
+     *            {@link EntityReaderProvider}
+     */
+    @Binding(bindingType = BindingType.MUST)
+    public void setEntityReaderProvider(
+            final EntityReaderProvider entityReaderProvider) {
+        this.entityReaderProvider = entityReaderProvider;
     }
 
     public EntityManagerFactory getEntityManagerFactory() {

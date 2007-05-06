@@ -101,6 +101,7 @@ public class TxScopedEntityManagerProxy implements EntityManager {
         final EntityManager em = emf.createEntityManager();
         final Transaction tx = TransactionManagerUtil.getTransaction(tm);
         TransactionUtil.registerSynchronization(tx, new Synchronization() {
+
             public void afterCompletion(final int status) {
                 final PersistenceUnitContext context = pum
                         .getPersistenceUnitContext(emf);

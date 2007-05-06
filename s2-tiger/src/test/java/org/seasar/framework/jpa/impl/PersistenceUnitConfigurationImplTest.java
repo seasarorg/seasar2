@@ -54,7 +54,7 @@ public class PersistenceUnitConfigurationImplTest extends S2TigerTestCase {
     }
 
     public void recordAddMappingFile() {
-        expect(unitManager.getPersistenceUnitName("hoge.xml")).andReturn(
+        expect(unitManager.getAbstractPersistenceUnitName("hoge.xml")).andReturn(
                 "persistenceUnit");
         resourceHandler.processResource("hoge.xml", null);
     }
@@ -66,7 +66,7 @@ public class PersistenceUnitConfigurationImplTest extends S2TigerTestCase {
     }
 
     public void recordAddPersistenceClass() {
-        expect(unitManager.getPersistenceUnitName(Hoge.class)).andReturn(
+        expect(unitManager.getAbstractPersistenceUnitName(Hoge.class)).andReturn(
                 "persistenceUnit");
         classHandler.processClass("org.seasar.framework.jpa.impl",
                 "PersistenceUnitConfigurationImplTest$Hoge");

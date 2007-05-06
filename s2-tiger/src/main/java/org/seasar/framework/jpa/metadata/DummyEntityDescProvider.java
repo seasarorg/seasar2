@@ -18,21 +18,14 @@ package org.seasar.framework.jpa.metadata;
 import javax.persistence.EntityManagerFactory;
 
 /**
- * {@link EntityDesc}を提供するコンポーネントの抽象クラスです。
- * 
  * @author koichik
+ * 
  */
-public interface EntityDescProvider {
+public class DummyEntityDescProvider implements EntityDescProvider {
 
-    /**
-     * エンティティクラスを表す{@link EntityDesc}を作成します。
-     * 
-     * @param emf
-     *            {@link EntityManagerFactory}
-     * @param entityClass
-     *            エンティティクラス
-     * @return エンティティクラスを表す{@link EntityDesc}
-     */
-    EntityDesc createEntityDesc(EntityManagerFactory emf, Class<?> entityClass);
+    public EntityDesc createEntityDesc(final EntityManagerFactory emf,
+            final Class<?> entityClass) {
+        return null;
+    }
 
 }

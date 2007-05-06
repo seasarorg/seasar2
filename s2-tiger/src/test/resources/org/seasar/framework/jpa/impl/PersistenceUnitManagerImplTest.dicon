@@ -2,6 +2,7 @@
 <!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN"
 	"http://www.seasar.org/dtd/components24.dtd">
 <components>
+	<include path="javaee5.dicon"/>
 
 	<component class="org.seasar.framework.convention.impl.NamingConventionImpl">
 		<initMethod name="addRootPackageName">
@@ -13,6 +14,14 @@
 	
 	<component class="org.seasar.framework.jpa.impl.DefaultPersistenceUnitProvider">
 		<property name="unitName">"persistenceUnit"</property>
+		<property name="entityDescProvider">
+			<component class="org.seasar.framework.jpa.metadata.DummyEntityDescProvider"/>
+		</property>
+		<property name="entityReaderProvider">
+			<component class="org.seasar.framework.jpa.unit.DummyEntityReaderProvider"/>
+		</property>
 	</component>
+
+	<component class="org.seasar.framework.jpa.impl.EntityManagerProviderImpl"/>
 		
 </components>

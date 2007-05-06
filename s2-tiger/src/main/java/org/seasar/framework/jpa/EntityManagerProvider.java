@@ -17,16 +17,38 @@ package org.seasar.framework.jpa;
 
 import javax.persistence.EntityManager;
 
+import org.seasar.framework.jpa.impl.SelectableEntityManagerProxy;
+
 /**
- * @author koichik
+ * {@link EntityManager}を提供するコンポーネントのインターフェースです。
  * 
+ * @author koichik
  */
 public interface EntityManagerProvider {
 
-    String getSelectableEntityManagerName();
+    /** デフォルトの{@link EntityManager}のコンポーネント名 */
+    String DEFAULT_ENTITY_MANAGER_NAME = "entityManager";
 
-    String getEntityManagerName(String name);
+    /**
+     * {@link SelectableEntityManagerProxy}が現在選択している物理的な{@link EntityManager}のプレフィックスを返します。
+     * <p>
+     * 物理的な{@link EntityManager}が選択されていない場合は<code>null</code>を返します。
+     * </p>
+     * 
+     * @return {@link SelectableEntityManagerProxy}が現在選択している物理的な{@link EntityManager}のプレフィックス
+     */
+    String getSelectableEntityManagerPrefix();
 
-    EntityManager getEntityManger(String name);
+    /**
+     * プレフィックスを持つ{@link EntityManager}のコンポーネントを返します。
+     * <p>
+     * プレフィックスが<code>null</code>の場合はデフォルトのコンポーネント名を持つ{@link EntityManager}が返されます。
+     * </p>
+     * 
+     * @param prefix
+     *            プレフィックス
+     * @return プレフィックスを持つ{@link EntityManager}のコンポーネント
+     */
+    EntityManager getEntityManger(String prefix);
 
 }

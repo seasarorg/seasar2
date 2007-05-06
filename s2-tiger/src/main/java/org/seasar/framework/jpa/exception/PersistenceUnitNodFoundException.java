@@ -13,26 +13,27 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.framework.jpa.metadata;
+package org.seasar.framework.jpa.exception;
 
-import javax.persistence.EntityManagerFactory;
+import org.seasar.framework.exception.SRuntimeException;
 
 /**
- * {@link EntityDesc}を提供するコンポーネントの抽象クラスです。
+ * 永続ユニットの定義が存在しない場合にスローされる例外です。
  * 
  * @author koichik
  */
-public interface EntityDescProvider {
+public class PersistenceUnitNodFoundException extends SRuntimeException {
+
+    private static final long serialVersionUID = -862210393207237212L;
 
     /**
-     * エンティティクラスを表す{@link EntityDesc}を作成します。
+     * インスタンスを構築します。
      * 
-     * @param emf
-     *            {@link EntityManagerFactory}
-     * @param entityClass
-     *            エンティティクラス
-     * @return エンティティクラスを表す{@link EntityDesc}
+     * @param unitName
+     *            存在しない永続ユニットの名称
      */
-    EntityDesc createEntityDesc(EntityManagerFactory emf, Class<?> entityClass);
+    public PersistenceUnitNodFoundException(final String unitName) {
+        super("ESSR0093", new Object[] { unitName });
+    }
 
 }

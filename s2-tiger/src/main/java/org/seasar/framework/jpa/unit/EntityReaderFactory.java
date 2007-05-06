@@ -15,13 +15,11 @@
  */
 package org.seasar.framework.jpa.unit;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 
-import org.seasar.framework.util.Disposable;
-import org.seasar.framework.util.DisposableUtil;
+import org.seasar.framework.jpa.PersistenceUnitManager;
+import org.seasar.framework.jpa.PersistenceUnitManagerLocater;
+import org.seasar.framework.jpa.PersistenceUnitProvider;
 
 /**
  * 
@@ -29,61 +27,25 @@ import org.seasar.framework.util.DisposableUtil;
  */
 public class EntityReaderFactory {
 
-    private static boolean initialized;
-
-    protected static final List<EntityReaderProvider> providers = Collections
-            .synchronizedList(new ArrayList<EntityReaderProvider>());
-
-    static {
-        initialize();
-    }
-
-    public static void initialize() {
-        if (initialized) {
-            return;
-        }
-        DisposableUtil.add(new Disposable() {
-            public void dispose() {
-                clear();
-            }
-        });
-        initialized = false;
-    }
-
-    public static void clear() {
-        providers.clear();
-        initialized = true;
-    }
-
-    public static void addProvider(final EntityReaderProvider provider) {
-        initialize();
-        providers.add(provider);
-    }
-
-    public static void removeProvider(final EntityReaderProvider provider) {
-        initialize();
-        providers.remove(provider);
-    }
-
     public static EntityReader getEntityReader(final Object entity) {
-        initialize();
-        for (final EntityReaderProvider provider : providers) {
-            EntityReader reader = provider.createEntityReader(entity);
-            if (reader != null) {
-                return reader;
-            }
-        }
-        return null;
+        final Class<?> entityClass = entity.getClass();
+        final PersistenceUnitManager manager = PersistenceUnitManagerLocater
+                .getInstance();
+        final PersistenceUnitProvider provider = manager
+                .getPersistenceUnitProvider(entityClass);
+        return provider.getEntityReaderProvider().createEntityReader(entity);
     }
 
     public static EntityReader getEntityReader(final Collection<?> entities) {
-        initialize();
-        for (final EntityReaderProvider provider : providers) {
-            EntityReader reader = provider.createEntityReader(entities);
-            if (reader != null) {
-                return reader;
-            }
+        if (entities == null || entities.isEmpty()) {
+            return null;
         }
-        return null;
+        final Class<?> entityClass = entities.iterator().next().getClass();
+        final PersistenceUnitManager manager = PersistenceUnitManagerLocater
+                .getInstance();
+        final PersistenceUnitProvider provider = manager
+                .getPersistenceUnitProvider(entityClass);
+        return provider.getEntityReaderProvider().createEntityReader(entities);
     }
+
 }

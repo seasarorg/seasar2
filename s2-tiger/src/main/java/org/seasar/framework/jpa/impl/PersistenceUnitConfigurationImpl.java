@@ -208,12 +208,12 @@ public class PersistenceUnitConfigurationImpl implements
 
     protected boolean isTarget(final String unitName, final String mappingFile) {
         return unitName.equals(persistenceUnitManager
-                .getPersistenceUnitName(mappingFile));
+                .getAbstractPersistenceUnitName(mappingFile));
     }
 
     protected boolean isTarget(final String unitName, final Class<?> clazz) {
         return unitName.equals(persistenceUnitManager
-                .getPersistenceUnitName(clazz));
+                .getAbstractPersistenceUnitName(clazz));
     }
 
     public class UnitNameAwareHandler implements ResourceHandler, ClassHandler {
