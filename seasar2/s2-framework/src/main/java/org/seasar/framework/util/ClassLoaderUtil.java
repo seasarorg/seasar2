@@ -17,6 +17,7 @@ package org.seasar.framework.util;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.net.URL;
 import java.util.Enumeration;
 import java.util.Iterator;
 
@@ -35,6 +36,8 @@ public abstract class ClassLoaderUtil {
 
     private static final Method defineClassMethod = getDefineClassMethod();
 
+    private static final Method definePackageMethod = getDefinePackageMethod();
+
     private ClassLoaderUtil() {
     }
 
@@ -49,6 +52,15 @@ public abstract class ClassLoaderUtil {
         final Method method = ClassUtil.getDeclaredMethod(ClassLoader.class,
                 "defineClass", new Class[] { String.class, byte[].class,
                         int.class, int.class });
+        method.setAccessible(true);
+        return method;
+    }
+
+    private static Method getDefinePackageMethod() {
+        final Method method = ClassUtil.getDeclaredMethod(ClassLoader.class,
+                "definePackage", new Class[] { String.class, String.class,
+                        String.class, String.class, String.class, String.class,
+                        String.class, URL.class });
         method.setAccessible(true);
         return method;
     }
@@ -228,6 +240,41 @@ public abstract class ClassLoaderUtil {
     }
 
     /**
+     * 指定の<code>ClassLoader</code>で名前を使ってパッケージを定義します。
+     * 
+     * @param classLoader
+     *            パッケージを定義するクラスローダ
+     * @param name
+     *            パッケージ名
+     * @param specTitle
+     *            仕様のタイトル
+     * @param specVersion
+     *            仕様のバージョン
+     * @param specVendor
+     *            仕様のベンダー
+     * @param implTitle
+     *            実装のタイトル
+     * @param implVersion
+     *            実装のバージョン
+     * @param implVendor
+     *            実装のベンダー
+     * @param sealBase
+     *            <code>null</code>でない場合、このパッケージは指定されたコードソース<code>URL</code>オブジェクトを考慮してシールされる。そうでない場合、パッケージはシールされない
+     * @return 新しく定義された<code>Package</code>オブジェクト
+     * @see java.lang.ClassLoader#definePackage(String, String, String, String,
+     *      String, String, String, URL)
+     */
+    public static Package definePackage(final ClassLoader classLoader,
+            final String name, final String specTitle,
+            final String specVersion, final String specVendor,
+            final String implTitle, final String implVersion,
+            final String implVendor, final URL sealBase) {
+        return (Package) MethodUtil.invoke(definePackageMethod, classLoader,
+                new Object[] { name, specTitle, specVersion, specVendor,
+                        implTitle, implVersion, implVendor, sealBase });
+    }
+
+    /**
      * 指定されたバイナリ名を持つクラスをロードします。
      * 
      * @param loader
@@ -243,7 +290,7 @@ public abstract class ClassLoaderUtil {
             final String className) {
         try {
             return loader.loadClass(className);
-        } catch (ClassNotFoundException e) {
+        } catch (final ClassNotFoundException e) {
             throw new ClassNotFoundRuntimeException(e);
         }
     }
