@@ -25,7 +25,7 @@ import java.util.Map;
 
 import org.seasar.extension.jdbc.ValueType;
 
-public class ValueTypes {
+public abstract class ValueTypes {
 
     public final static ValueType STRING = new StringType();
 
@@ -114,10 +114,8 @@ public class ValueTypes {
         return OBJECT;
     }
 
-    private static ValueType getValueType0(Class clazz) {
-        synchronized (types_) {
-            return (ValueType) types_.get(clazz);
-        }
+    protected static ValueType getValueType0(Class clazz) {
+        return (ValueType) types_.get(clazz);
     }
 
     public static Class getType(int sqltype) {
