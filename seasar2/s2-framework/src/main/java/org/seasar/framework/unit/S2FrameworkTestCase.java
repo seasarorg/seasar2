@@ -263,7 +263,12 @@ public abstract class S2FrameworkTestCase extends TestCase {
     protected String resolveRootDicon() throws Throwable {
         String targetName = getTargetName();
         if (targetName.length() > 0) {
-            return (String) invoke("getRootDicon" + targetName);
+            try {
+                Method method = getClass().getMethod("getRootDri" + targetName,
+                        null);
+                return (String) method.invoke(this, null);
+            } catch (Exception ignore) {
+            }
         }
         return getRootDicon();
     }
