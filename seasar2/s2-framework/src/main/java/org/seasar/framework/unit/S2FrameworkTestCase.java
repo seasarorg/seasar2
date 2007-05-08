@@ -264,8 +264,8 @@ public abstract class S2FrameworkTestCase extends TestCase {
         String targetName = getTargetName();
         if (targetName.length() > 0) {
             try {
-                Method method = getClass().getMethod("getRootDri" + targetName,
-                        null);
+                Method method = getClass().getMethod(
+                        "getRootDicon" + targetName, null);
                 return (String) method.invoke(this, null);
             } catch (Exception ignore) {
             }
