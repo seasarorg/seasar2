@@ -42,6 +42,8 @@ public interface S2TestIntrospector {
 
     void createMock(Method method, Object test, InternalTestContext context);
 
+    String getRootDicon(Class<?> clazz, Method method);
+
     List<Method> getBeforeClassMethods(Class<?> clazz);
 
     List<Method> getAfterClassMethods(Class<?> clazz);

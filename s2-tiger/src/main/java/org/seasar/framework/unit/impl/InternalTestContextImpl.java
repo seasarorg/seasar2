@@ -94,7 +94,7 @@ public class InternalTestContextImpl implements InternalTestContext {
 
     @Binding(bindingType = BindingType.MUST)
     public void setContainer(final S2Container container) {
-        this.container = container;
+        this.container = container.getRoot();
     }
 
     @Binding(bindingType = BindingType.MAY)

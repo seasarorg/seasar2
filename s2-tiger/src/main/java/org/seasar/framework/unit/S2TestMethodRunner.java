@@ -200,7 +200,7 @@ public class S2TestMethodRunner {
         if (needsWarmDeploy()) {
             S2ContainerFactory.configure("warmdeploy.dicon");
         }
-        S2Container container = S2ContainerFactory.create(S2JUNIT4_PATH);
+        final S2Container container = createRootContainer();
         SingletonS2ContainerFactory.setContainer(container);
         testContext = InternalTestContext.class.cast(container
                 .getComponent(InternalTestContext.class));
@@ -234,6 +234,17 @@ public class S2TestMethodRunner {
                     .getComponent(ClassLoader.class));
         }
         return Thread.currentThread().getContextClassLoader();
+    }
+
+    protected S2Container createRootContainer() {
+        final String rootDicon = introspector.getRootDicon(testClass, method);
+        if (StringUtil.isEmpty(rootDicon)) {
+            return S2ContainerFactory.create(S2JUNIT4_PATH);
+        }
+        S2Container container = S2ContainerFactory.create(rootDicon);
+        S2ContainerFactory.include(container, S2JUNIT4_PATH);
+        return container;
+
     }
 
     protected void tearDownTestContext() throws Throwable {

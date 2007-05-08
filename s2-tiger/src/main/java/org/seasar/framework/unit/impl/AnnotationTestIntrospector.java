@@ -39,6 +39,7 @@ import org.seasar.framework.unit.S2TestIntrospector;
 import org.seasar.framework.unit.annotation.Mock;
 import org.seasar.framework.unit.annotation.Mocks;
 import org.seasar.framework.unit.annotation.Prerequisite;
+import org.seasar.framework.unit.annotation.RootDicon;
 import org.seasar.framework.unit.annotation.TxBehavior;
 import org.seasar.framework.unit.annotation.TxBehaviorType;
 import org.seasar.framework.unit.annotation.WarmDeploy;
@@ -184,8 +185,7 @@ public class AnnotationTestIntrospector implements S2TestIntrospector {
         return false;
     }
 
-    public boolean needsTransaction(final Class<?> clazz,
-            final Method method) {
+    public boolean needsTransaction(final Class<?> clazz, final Method method) {
         final TxBehaviorType type = getTxBehaviorType(clazz, method);
         return type == null || type != TxBehaviorType.NONE;
     }
@@ -207,8 +207,7 @@ public class AnnotationTestIntrospector implements S2TestIntrospector {
         return null;
     }
 
-    public boolean needsWarmDeploy(final Class<?> clazz,
-            final Method method) {
+    public boolean needsWarmDeploy(final Class<?> clazz, final Method method) {
         if (method.isAnnotationPresent(WarmDeploy.class)) {
             return method.getAnnotation(WarmDeploy.class).value();
         }
@@ -267,6 +266,16 @@ public class AnnotationTestIntrospector implements S2TestIntrospector {
         ctx.put("ENV", Env.getValue());
         ctx.put("method", method);
         return new OgnlExpression(source, test, ctx);
+    }
+
+    public String getRootDicon(final Class<?> clazz, final Method method) {
+        if (method.isAnnotationPresent(RootDicon.class)) {
+            return method.getAnnotation(RootDicon.class).value();
+        }
+        if (clazz.isAnnotationPresent(RootDicon.class)) {
+            return clazz.getAnnotation(RootDicon.class).value();
+        }
+        return null;
     }
 
 }
