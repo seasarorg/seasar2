@@ -210,6 +210,10 @@ public abstract class S2FrameworkTestCase extends TestCase {
         }
     }
 
+    protected String getRootDicon() throws Throwable {
+        return null;
+    }
+
     protected void setUpContainer() throws Throwable {
         Env.setFilePath(ENV_PATH);
         Env.setValueIfAbsent(ENV_VALUE);
@@ -219,7 +223,9 @@ public abstract class S2FrameworkTestCase extends TestCase {
         if (isWarmDeploy()) {
             S2ContainerFactory.configure("warmdeploy.dicon");
         }
-        container = new S2ContainerImpl();
+        String rootDicon = resolveRootDicon();
+        container = StringUtil.isEmpty(rootDicon) ? new S2ContainerImpl()
+                : S2ContainerFactory.create(rootDicon);
         SingletonS2ContainerFactory.setContainer(container);
         if (servletContext == null) {
             servletContext = new MockServletContextImpl("s2-example");
@@ -252,6 +258,14 @@ public abstract class S2FrameworkTestCase extends TestCase {
                     .getComponent(ClassLoader.class);
         }
         return Thread.currentThread().getContextClassLoader();
+    }
+
+    protected String resolveRootDicon() throws Throwable {
+        String targetName = getTargetName();
+        if (targetName.length() > 0) {
+            return (String) invoke("getRootDicon" + targetName);
+        }
+        return getRootDicon();
     }
 
     protected void tearDownContainer() throws Throwable {
@@ -358,11 +372,12 @@ public abstract class S2FrameworkTestCase extends TestCase {
         return ClassUtil.getMethod(getClass(), getName(), null);
     }
 
-    protected void invoke(String methodName) throws Throwable {
+    protected Object invoke(String methodName) throws Throwable {
         try {
             Method method = ClassUtil.getMethod(getClass(), methodName, null);
-            MethodUtil.invoke(method, this, null);
+            return MethodUtil.invoke(method, this, null);
         } catch (NoSuchMethodRuntimeException ignore) {
+            return null;
         }
     }
 

@@ -182,6 +182,15 @@ public class S2FrameworkTestCaseTest extends S2FrameworkTestCase {
         ArrayAssert.assertEquals(new byte[] { 3, 2, 1, 9, 8, 7, 6 }, bytes);
     }
 
+    public String getRootDiconGetRootDicon() {
+        return "aop.dicon";
+    }
+
+    public void testGetRootDicon() throws Throwable {
+        assertEquals("aop.dicon", resolveRootDicon());
+        assertEquals("aop.dicon", getContainer().getPath());
+    }
+
     public static class Hoge {
 
         private String aaa;
