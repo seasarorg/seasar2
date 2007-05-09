@@ -27,16 +27,38 @@ import org.seasar.framework.env.Env;
 import org.seasar.framework.util.URLUtil;
 
 /**
+ * Web上のResourceを取得するためのクラスです。
+ * <p>
+ * {@link javax.servlet.ServletContext#getResource(java.lang.String) }を使ってリソースを読み込みます。
+ * 見つからない場合には、親の{@link org.seasar.framework.container.factory.ResourceResolver}に委譲します。
+ * </p>
+ * 
  * @author koichik
+ * @author yatsu
  */
 public class WebResourceResolver implements ResourceResolver {
 
+    /**
+     * 親となる<code>ResourceResolver</code>です。
+     */
     protected ResourceResolver parent;
 
+    /**
+     * <code>WebResourceResolver</code>を構築します。
+     * <p>
+     * 親の<code>ResourceResolver</code>として{@link org.seasar.framework.container.factory.ClassPathResourceResolver}を使います。
+     * </p>
+     */
     public WebResourceResolver() {
         this(new ClassPathResourceResolver());
     }
 
+    /**
+     * <code>WebResourceResolver</code>を構築します。
+     * 
+     * @param parent
+     *            親となる<code>ResourceResolver</code>
+     */
     public WebResourceResolver(final ResourceResolver parent) {
         this.parent = parent;
     }
@@ -59,6 +81,15 @@ public class WebResourceResolver implements ResourceResolver {
         }
     }
 
+    /**
+     * 読み込み対象のリソースのパスからURLを取得します。
+     * 
+     * @param path
+     *            読み込み対象となるリソースのパス
+     * @return リソースを指し示すURL
+     * @throws MalformedURLException
+     *             無効な書式のURLだった場合
+     */
     protected URL getURL(final String path) throws MalformedURLException {
         S2Container container = SingletonS2ContainerFactory.getContainer();
         ExternalContext externalContext = container.getExternalContext();
@@ -84,6 +115,17 @@ public class WebResourceResolver implements ResourceResolver {
         return url;
     }
 
+    /**
+     * 読み込み対象のリソースのパスからURLを取得します。
+     * 
+     * @param servletContext
+     *            サーブレットのコンテキスト情報
+     * @param path
+     *            読み込み対象となるリソースのパス
+     * @return サーブレットのコンテキスト情報から取得されたURL
+     * @throws MalformedURLException
+     *             無効な書式のURLだった場合
+     */
     protected URL getURL(ServletContext servletContext, String path)
             throws MalformedURLException {
         String extPath = Env.adjustPath(path);
