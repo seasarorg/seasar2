@@ -26,6 +26,9 @@ import java.util.Map;
  */
 public class MapArrayResultSetHandler extends MapListResultSetHandler {
 
+    public MapArrayResultSetHandler() {
+    }
+
     public Object handle(ResultSet resultSet) throws SQLException {
         List list = (List) super.handle(resultSet);
         return list.toArray(new Map[list.size()]);

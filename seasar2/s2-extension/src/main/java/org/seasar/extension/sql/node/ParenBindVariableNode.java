@@ -69,7 +69,8 @@ public class ParenBindVariableNode extends AbstractNode {
         ctx.addSql("(");
         ctx.addSql("?", Array.get(array, 0), clazz);
         for (int i = 1; i < length; ++i) {
-            ctx.addSql(", ?", Array.get(array, i), clazz);
+            ctx.addSql(", ");
+            ctx.addSql("?", Array.get(array, i), clazz);
         }
         ctx.addSql(")");
     }
