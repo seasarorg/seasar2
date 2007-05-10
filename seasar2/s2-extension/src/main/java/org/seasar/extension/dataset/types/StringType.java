@@ -23,12 +23,19 @@ import org.seasar.framework.util.StringConversionUtil;
  */
 public class StringType extends ObjectType {
 
+    protected boolean trim;
+
     StringType() {
+        this(true);
+    }
+
+    StringType(final boolean trim) {
+        this.trim = trim;
     }
 
     public Object convert(Object value, String formatPattern) {
         String s = StringConversionUtil.toString(value, formatPattern);
-        if (s != null) {
+        if (s != null && trim) {
             s = s.trim();
         }
         if ("".equals(s)) {

@@ -41,7 +41,7 @@ public class XlsReaderTest extends S2TestCase {
 
     public void testSetupColumns() throws Exception {
         DataTable table = dataSet_.getTable(2);
-        assertEquals("1", 6, table.getColumnSize());
+        assertEquals("1", 7, table.getColumnSize());
         for (int i = 0; i < table.getColumnSize(); ++i) {
             assertEquals("2", "COLUMN" + i, table.getColumnName(i));
         }
@@ -51,6 +51,7 @@ public class XlsReaderTest extends S2TestCase {
         assertEquals("6", ColumnTypes.BINARY, table.getColumnType(3));
         assertEquals("7", ColumnTypes.BIGDECIMAL, table.getColumnType(4));
         assertEquals("8", ColumnTypes.BOOLEAN, table.getColumnType(5));
+        assertEquals("8", ColumnTypes.STRING, table.getColumnType(6));
     }
 
     public void testSetupColumnsForNull() throws Exception {
@@ -81,6 +82,21 @@ public class XlsReaderTest extends S2TestCase {
         assertEquals("4", "YWJj", Base64Util.encode((byte[]) row.getValue(3)));
         assertEquals("5", new BigDecimal("0.05"), row.getValue(4));
         assertEquals("6", Boolean.TRUE, row.getValue(5));
+        assertEquals("6", null, row.getValue(6));
+    }
+
+    public void testGetValueNoTrim() throws Exception {
+        dataSet_ = new XlsReader(PATH, false).read();
+        DataTable table = dataSet_.getTable(2);
+        DataRow row = table.getRow(0);
+        assertEquals("1", TimestampConversionUtil.toTimestamp("20040322",
+                "yyyyMMdd"), row.getValue(0));
+        assertEquals("2", new BigDecimal(123), row.getValue(1));
+        assertEquals("3", "\u3042", row.getValue(2));
+        assertEquals("4", "YWJj", Base64Util.encode((byte[]) row.getValue(3)));
+        assertEquals("5", new BigDecimal("0.05"), row.getValue(4));
+        assertEquals("6", Boolean.TRUE, row.getValue(5));
+        assertEquals("6", "    ", row.getValue(6));
     }
 
     public void testFloatingPoint() throws Exception {

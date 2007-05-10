@@ -52,23 +52,46 @@ public class XlsReader implements DataReader, DataSetConstants {
 
     private HSSFDataFormat dataFormat_;
 
+    private boolean trimString = true;
+
     public XlsReader(String path) {
-        this(ResourceUtil.getResourceAsStream(path));
+        this(path, true);
+    }
+
+    public XlsReader(String path, boolean trimString) {
+        this(ResourceUtil.getResourceAsStream(path), trimString);
     }
 
     public XlsReader(String dirName, String fileName) {
-        this(ResourceUtil.getResourceAsFile(dirName), fileName);
+        this(dirName, fileName, true);
+    }
+
+    public XlsReader(String dirName, String fileName, boolean trimString) {
+        this(ResourceUtil.getResourceAsFile(dirName), fileName, trimString);
     }
 
     public XlsReader(File dir, String fileName) {
-        this(new File(dir, fileName));
+        this(dir, fileName, true);
+    }
+
+    public XlsReader(File dir, String fileName, boolean trimString) {
+        this(new File(dir, fileName), trimString);
     }
 
     public XlsReader(File file) {
+        this(file, true);
+    }
+
+    public XlsReader(File file, boolean trimString) {
         this(FileInputStreamUtil.create(file));
     }
 
     public XlsReader(InputStream in) {
+        this(in, true);
+    }
+
+    public XlsReader(InputStream in, boolean trimString) {
+        this.trimString = trimString;
         try {
             workbook_ = new HSSFWorkbook(in);
         } catch (IOException ex) {
@@ -178,7 +201,7 @@ public class XlsReader implements DataReader, DataSetConstants {
             return new BigDecimal(Double.toString(numericCellValue));
         case HSSFCell.CELL_TYPE_STRING:
             String s = cell.getStringCellValue();
-            if (s != null) {
+            if (s != null && trimString) {
                 s = StringUtil.rtrim(s);
             }
             if ("".equals(s)) {
@@ -208,8 +231,11 @@ public class XlsReader implements DataReader, DataSetConstants {
         case HSSFCell.CELL_TYPE_STRING:
             if (isCellBase64Formatted(cell)) {
                 return ColumnTypes.BINARY;
+            } else if (trimString) {
+                return ColumnTypes.STRING;
+            } else {
+                return ColumnTypes.NOT_TRIM_STRING;
             }
-            return ColumnTypes.STRING;
         default:
             return ColumnTypes.STRING;
         }

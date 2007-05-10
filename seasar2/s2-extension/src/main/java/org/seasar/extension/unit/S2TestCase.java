@@ -159,7 +159,11 @@ public abstract class S2TestCase extends S2FrameworkTestCase {
     }
 
     public DataSet readXls(String path) {
-        DataReader reader = new XlsReader(convertPath(path));
+        return readXls(path, true);
+    }
+
+    public DataSet readXls(String path, boolean trimString) {
+        DataReader reader = new XlsReader(convertPath(path), trimString);
         return reader.read();
     }
 
@@ -206,17 +210,29 @@ public abstract class S2TestCase extends S2FrameworkTestCase {
     }
 
     public void readXlsWriteDb(String path) {
-        writeDb(readXls(path));
+        readXlsWriteDb(path, true);
+    }
+
+    public void readXlsWriteDb(String path, boolean trimString) {
+        writeDb(readXls(path, trimString));
     }
 
     public void readXlsReplaceDb(String path) {
-        DataSet dataSet = readXls(path);
+        readXlsReplaceDb(path, true);
+    }
+
+    public void readXlsReplaceDb(String path, boolean trimString) {
+        DataSet dataSet = readXls(path, trimString);
         deleteDb(dataSet);
         writeDb(dataSet);
     }
 
     public void readXlsAllReplaceDb(String path) {
-        DataSet dataSet = readXls(path);
+        readXlsAllReplaceDb(path, true);
+    }
+
+    public void readXlsAllReplaceDb(String path, boolean trimString) {
+        DataSet dataSet = readXls(path, trimString);
         for (int i = dataSet.getTableSize() - 1; i >= 0; --i) {
             deleteTable(dataSet.getTable(i).getTableName());
         }

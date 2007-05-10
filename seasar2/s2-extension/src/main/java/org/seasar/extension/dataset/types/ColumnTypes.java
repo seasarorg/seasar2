@@ -34,6 +34,8 @@ public class ColumnTypes {
 
     public static final ColumnType STRING = new StringType();
 
+    public static final ColumnType NOT_TRIM_STRING = new StringType(false);
+
     public static final ColumnType BIGDECIMAL = new BigDecimalType();
 
     public static final ColumnType TIMESTAMP = new TimestampType();

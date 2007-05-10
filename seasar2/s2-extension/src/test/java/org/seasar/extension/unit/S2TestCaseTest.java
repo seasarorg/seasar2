@@ -54,6 +54,19 @@ public class S2TestCaseTest extends S2TestCase {
         assertEquals("6", "aaa", row.getValue("dname"));
     }
 
+    public void testReadXlsNoTrim() {
+        DataSet dataSet = readXls("testdata.xls", false);
+        System.out.println(dataSet);
+        assertEquals("1", 2, dataSet.getTableSize());
+        DataTable table = dataSet.getTable("emp");
+        assertEquals("2", 2, table.getRowSize());
+        assertEquals("3", 3, table.getColumnSize());
+        DataRow row = table.getRow(0);
+        assertEquals("4", new BigDecimal(9900), row.getValue("empno"));
+        assertEquals("5", "hoge ", row.getValue("ename"));
+        assertEquals("6", "aaa ", row.getValue("dname"));
+    }
+
     public void setUpWriteDbTx() {
         include(J2EE_PATH);
     }
