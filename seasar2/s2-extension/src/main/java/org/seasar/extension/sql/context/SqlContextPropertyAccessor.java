@@ -23,6 +23,8 @@ import ognl.OgnlException;
 import org.seasar.extension.sql.SqlContext;
 
 /**
+ * {@link SqlContext}のためのPropertyAccessorです。
+ * 
  * @author higa
  * 
  */

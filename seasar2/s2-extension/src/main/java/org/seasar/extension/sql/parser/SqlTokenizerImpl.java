@@ -19,6 +19,8 @@ import org.seasar.extension.sql.SqlTokenizer;
 import org.seasar.extension.sql.TokenNotClosedRuntimeException;
 
 /**
+ * {@link SqlTokenizer}の実装クラスです。
+ * 
  * @author higa
  * 
  */
@@ -36,6 +38,11 @@ public class SqlTokenizerImpl implements SqlTokenizer {
 
     private int bindVariableNum = 0;
 
+    /**
+     * <code>SqlTokenizerImpl</code>を作成します。
+     * 
+     * @param sql
+     */
     public SqlTokenizerImpl(String sql) {
         this.sql = sql;
     }

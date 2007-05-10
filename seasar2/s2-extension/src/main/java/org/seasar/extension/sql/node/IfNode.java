@@ -16,10 +16,13 @@
 package org.seasar.extension.sql.node;
 
 import org.seasar.extension.sql.IllegalBoolExpressionRuntimeException;
+import org.seasar.extension.sql.Node;
 import org.seasar.extension.sql.SqlContext;
 import org.seasar.framework.util.OgnlUtil;
 
 /**
+ * If用の{@link Node}です。
+ * 
  * @author higa
  * 
  */
@@ -31,19 +34,39 @@ public class IfNode extends ContainerNode {
 
     private ElseNode elseNode;
 
+    /**
+     * <code>IfNode</code>を作成します。
+     * 
+     * @param expression
+     */
     public IfNode(String expression) {
         this.expression = expression;
         this.parsedExpression = OgnlUtil.parseExpression(expression);
     }
 
+    /**
+     * 式を返します。
+     * 
+     * @return
+     */
     public String getExpression() {
         return expression;
     }
 
+    /**
+     * {@link ElseNode}を返します。
+     * 
+     * @return
+     */
     public ElseNode getElseNode() {
         return elseNode;
     }
 
+    /**
+     * {@link ElseNode}を設定します。
+     * 
+     * @param elseNode
+     */
     public void setElseNode(ElseNode elseNode) {
         this.elseNode = elseNode;
     }

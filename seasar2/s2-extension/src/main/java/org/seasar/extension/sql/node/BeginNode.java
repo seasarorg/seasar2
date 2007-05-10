@@ -15,15 +15,21 @@
  */
 package org.seasar.extension.sql.node;
 
+import org.seasar.extension.sql.Node;
 import org.seasar.extension.sql.SqlContext;
 import org.seasar.extension.sql.context.SqlContextImpl;
 
 /**
+ * BEGINコメントに対応する{@link Node}です。
+ * 
  * @author higa
  * 
  */
 public class BeginNode extends ContainerNode {
 
+    /**
+     * <code>BeginNode</code>を作成します。
+     */
     public BeginNode() {
     }
 
@@ -33,6 +39,7 @@ public class BeginNode extends ContainerNode {
         if (childCtx.isEnabled()) {
             ctx.addSql(childCtx.getSql(), childCtx.getBindVariables(), childCtx
                     .getBindVariableTypes());
+            ctx.addCompleteSql(childCtx.getCompleteSql());
         }
     }
 }

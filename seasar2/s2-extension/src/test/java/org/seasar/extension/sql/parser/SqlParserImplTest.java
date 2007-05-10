@@ -71,19 +71,6 @@ public class SqlParserImplTest extends TestCase {
         }
     }
 
-    public void testParseBindVariable4() throws Exception {
-        String sql = "SELECT * FROM emp WHERE job = #*job*#'CLERK' AND deptno = #*deptno*#20";
-        SqlParser parser = new SqlParserImpl(sql);
-        SqlContext ctx = new SqlContextImpl();
-        String job = "CLERK";
-        Integer deptno = new Integer(20);
-        ctx.addArg("job", job, job.getClass());
-        ctx.addArg("deptno", deptno, deptno.getClass());
-        Node root = parser.parse();
-        root.accept(ctx);
-        System.out.println(ctx.getSql());
-    }
-
     public void testParseBindVariable() throws Exception {
         String sql = "SELECT * FROM emp WHERE job = /*job*/'CLERK' AND deptno = /*deptno*/20";
         String sql2 = "SELECT * FROM emp WHERE job = ? AND deptno = ?";
@@ -130,6 +117,48 @@ public class SqlParserImplTest extends TestCase {
         assertEquals("3", sql3, sqlNode.getSql());
         SqlNode sqlNode2 = (SqlNode) root.getChild(1);
         assertEquals("4", sql4, sqlNode2.getSql());
+    }
+
+    public void testParseBindVariable3() throws Exception {
+        String sql = "BETWEEN sal ? AND ?";
+        SqlParser parser = new SqlParserImpl(sql);
+        Node root = parser.parse();
+        SqlContext ctx = new SqlContextImpl();
+        ctx.addArg("$1", new Integer(0), Integer.class);
+        ctx.addArg("$2", new Integer(1000), Integer.class);
+        root.accept(ctx);
+        System.out.println(ctx.getSql());
+        assertEquals("1", sql, ctx.getSql());
+        Object[] vars = ctx.getBindVariables();
+        assertEquals("2", 2, vars.length);
+        assertEquals("3", new Integer(0), vars[0]);
+        assertEquals("4", new Integer(1000), vars[1]);
+    }
+
+    public void testParseBindVariable4() throws Exception {
+        String sql = "SELECT * FROM emp WHERE job = #*job*#'CLERK' AND deptno = #*deptno*#20";
+        SqlParser parser = new SqlParserImpl(sql);
+        SqlContext ctx = new SqlContextImpl();
+        String job = "CLERK";
+        Integer deptno = new Integer(20);
+        ctx.addArg("job", job, job.getClass());
+        ctx.addArg("deptno", deptno, deptno.getClass());
+        Node root = parser.parse();
+        root.accept(ctx);
+        System.out.println(ctx.getSql());
+    }
+
+    public void testParseBindVariable5() throws Exception {
+        String sql = "SELECT * FROM emp WHERE job = /*job*/'CLERK'";
+        String sql2 = "SELECT * FROM emp WHERE job = 'HOGE'";
+        SqlParser parser = new SqlParserImpl(sql);
+        SqlContext ctx = new SqlContextImpl();
+        String job = "HOGE";
+        ctx.addArg("job", job, job.getClass());
+        Node root = parser.parse();
+        root.accept(ctx);
+        System.out.println(ctx.getCompleteSql());
+        assertEquals(sql2, ctx.getCompleteSql());
     }
 
     public void testParseWhiteSpace() throws Exception {
@@ -338,6 +367,19 @@ public class SqlParserImplTest extends TestCase {
         assertEquals("4", sql5, ctx4.getSql());
     }
 
+    public void testBegin2() throws Exception {
+        String sql = "SELECT * FROM emp /*BEGIN*/WHERE /*IF job != null*/job = /*job*/'CLERK'/*END*//*END*/";
+        String sql2 = "SELECT * FROM emp WHERE job = 'HOGE'";
+        SqlParser parser = new SqlParserImpl(sql);
+        SqlContext ctx = new SqlContextImpl();
+        String job = "HOGE";
+        ctx.addArg("job", job, job.getClass());
+        Node root = parser.parse();
+        root.accept(ctx);
+        System.out.println(ctx.getCompleteSql());
+        assertEquals(sql2, ctx.getCompleteSql());
+    }
+
     public void testBeginAnd() throws Exception {
         String sql = "/*BEGIN*/WHERE /*IF true*/aaa BETWEEN /*bbb*/111 AND /*ccc*/123/*END*//*END*/";
         String sql2 = "WHERE aaa BETWEEN ? AND ?";
@@ -416,22 +458,6 @@ public class SqlParserImplTest extends TestCase {
         assertEquals("4", "MARY", vars[1]);
         assertEquals("5", "ANALYST", vars[2]);
         assertEquals("6", "FREE", vars[3]);
-    }
-
-    public void testParseBindVariable3() throws Exception {
-        String sql = "BETWEEN sal ? AND ?";
-        SqlParser parser = new SqlParserImpl(sql);
-        Node root = parser.parse();
-        SqlContext ctx = new SqlContextImpl();
-        ctx.addArg("$1", new Integer(0), Integer.class);
-        ctx.addArg("$2", new Integer(1000), Integer.class);
-        root.accept(ctx);
-        System.out.println(ctx.getSql());
-        assertEquals("1", sql, ctx.getSql());
-        Object[] vars = ctx.getBindVariables();
-        assertEquals("2", 2, vars.length);
-        assertEquals("3", new Integer(0), vars[0]);
-        assertEquals("4", new Integer(1000), vars[1]);
     }
 
     public void testEndNotFound() throws Exception {

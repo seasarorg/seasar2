@@ -30,6 +30,9 @@ public abstract class AbstractNode implements Node {
 
     private List children = new ArrayList();
 
+    /**
+     * <code>AbstractNode</code>を作成します。
+     */
     public AbstractNode() {
     }
 

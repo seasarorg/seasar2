@@ -16,38 +16,105 @@
 package org.seasar.extension.sql;
 
 /**
+ * SQLをトークンに分解するクラスです。
+ * 
  * @author higa
  * 
  */
 public interface SqlTokenizer {
 
+    /**
+     * SQL
+     */
     int SQL = 1;
 
+    /**
+     * COMMENT
+     */
     int COMMENT = 2;
 
+    /**
+     * ELSE
+     */
     int ELSE = 3;
 
+    /**
+     * BIND_VARIABLE
+     */
     int BIND_VARIABLE = 4;
 
+    /**
+     * EOF
+     */
     int EOF = 99;
 
+    /**
+     * トークンを返します。
+     * 
+     * @return
+     */
     String getToken();
 
+    /**
+     * SQLを返します。
+     * 
+     * @return
+     */
     String getSql();
 
+    /**
+     * 現在解析しているポジションより前のSQLを返します。
+     * 
+     * @return
+     */
     String getBefore();
 
+    /**
+     * 現在解析しているポジションより後ろのSQLを返します。
+     * 
+     * @return
+     */
     String getAfter();
 
+    /**
+     * 現在解析しているポジションを返します。
+     * 
+     * @return
+     */
     int getPosition();
 
+    /**
+     * 現在のトークン種別を返します。
+     * 
+     * @return
+     */
     int getTokenType();
 
+    /**
+     * 次のトークン種別を返します。
+     * 
+     * @return
+     */
     int getNextTokenType();
 
+    /**
+     * 次のトークンに進みます。
+     * 
+     * @return
+     */
     int next();
 
+    /**
+     * トークンをスキップします。
+     * 
+     * @return スキップしたトークン
+     */
     String skipToken();
 
+    /**
+     * ホワイトスペースをスキップします。
+     * 
+     * @return
+     */
     String skipWhitespace();
 }

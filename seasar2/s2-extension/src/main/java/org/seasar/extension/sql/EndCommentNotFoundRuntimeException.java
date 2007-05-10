@@ -18,6 +18,8 @@ package org.seasar.extension.sql;
 import org.seasar.framework.exception.SRuntimeException;
 
 /**
+ * コメントの最後が不正の場合の例外です。
+ * 
  * @author higa
  * 
  */
@@ -27,11 +29,21 @@ public class EndCommentNotFoundRuntimeException extends SRuntimeException {
 
     private String sql;
 
+    /**
+     * <code>EndCommentNotFoundRuntimeException</code>を作成します。
+     * 
+     * @param sql
+     */
     public EndCommentNotFoundRuntimeException(String sql) {
         super("ESSR0085", new Object[] { sql });
         this.sql = sql;
     }
 
+    /**
+     * SQLを返します。
+     * 
+     * @return
+     */
     public String getSql() {
         return sql;
     }

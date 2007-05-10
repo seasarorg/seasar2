@@ -18,6 +18,8 @@ package org.seasar.extension.sql;
 import org.seasar.framework.exception.SRuntimeException;
 
 /**
+ * トークンが閉じていない場合の例外クラスです。
+ * 
  * @author higa
  * 
  */
@@ -29,16 +31,32 @@ public class TokenNotClosedRuntimeException extends SRuntimeException {
 
     private String sql;
 
+    /**
+     * <code>TokenNotClosedRuntimeException</code>を返します。
+     * 
+     * @param token
+     * @param sql
+     */
     public TokenNotClosedRuntimeException(String token, String sql) {
         super("ESSR0087", new Object[] { token, sql });
         this.token = token;
         this.sql = sql;
     }
 
+    /**
+     * トークンを返します。
+     * 
+     * @return
+     */
     public String getToken() {
         return token;
     }
 
+    /**
+     * SQLを返します。
+     * 
+     * @return
+     */
     public String getSql() {
         return sql;
     }

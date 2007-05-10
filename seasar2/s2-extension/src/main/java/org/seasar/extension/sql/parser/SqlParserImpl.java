@@ -34,6 +34,8 @@ import org.seasar.extension.sql.node.SqlNode;
 import org.seasar.framework.util.StringUtil;
 
 /**
+ * {@link SqlParser}のための実装クラスです。
+ * 
  * @author higa
  * 
  */
@@ -43,6 +45,11 @@ public class SqlParserImpl implements SqlParser {
 
     private Stack nodeStack = new Stack();
 
+    /**
+     * <code>SqlParserImpl</code>を作成します。
+     * 
+     * @param sql
+     */
     public SqlParserImpl(String sql) {
         sql = sql.trim();
         if (sql.endsWith(";")) {

@@ -15,6 +15,8 @@
  */
 package org.seasar.extension.sql.node;
 
+import org.seasar.extension.jdbc.util.BindVariableUtil;
+import org.seasar.extension.sql.Node;
 import org.seasar.extension.sql.SqlContext;
 import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.PropertyDesc;
@@ -22,6 +24,8 @@ import org.seasar.framework.beans.factory.BeanDescFactory;
 import org.seasar.framework.util.StringUtil;
 
 /**
+ * バインド変数のための{@link Node}です。
+ * 
  * @author higa
  * 
  */
@@ -31,11 +35,21 @@ public class BindVariableNode extends AbstractNode {
 
     private String[] names;
 
+    /**
+     * <code>BindVariableNode</code>を作成します。
+     * 
+     * @param expression
+     */
     public BindVariableNode(String expression) {
         this.expression = expression;
         names = StringUtil.split(expression, ".");
     }
 
+    /**
+     * 式を返します。
+     * 
+     * @return
+     */
     public String getExpression() {
         return expression;
     }
@@ -53,5 +67,6 @@ public class BindVariableNode extends AbstractNode {
             clazz = pd.getPropertyType();
         }
         ctx.addSql("?", value, clazz);
+        ctx.addCompleteSql(BindVariableUtil.getBindVariableText(value));
     }
 }

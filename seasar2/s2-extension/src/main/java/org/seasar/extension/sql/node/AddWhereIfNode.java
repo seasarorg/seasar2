@@ -21,10 +21,19 @@ import java.util.regex.Pattern;
 import org.seasar.extension.sql.SqlContext;
 import org.seasar.extension.sql.context.SqlContextImpl;
 
+/**
+ * WHERE句のための<code>Node</code>です。
+ * 
+ * @author higa
+ * 
+ */
 public class AddWhereIfNode extends ContainerNode {
 
     Pattern pat = Pattern.compile("\\s*(order\\sby)|$)");
 
+    /**
+     * <code>AddWhereIfNode</code>を作成します。
+     */
     public AddWhereIfNode() {
     }
 
@@ -33,12 +42,15 @@ public class AddWhereIfNode extends ContainerNode {
         super.accept(childCtx);
         if (childCtx.isEnabled()) {
             String sql = childCtx.getSql();
+            String completeSql = childCtx.getCompleteSql();
             Matcher m = pat.matcher(sql);
             if (!m.lookingAt()) {
                 sql = " WHERE " + sql;
+                completeSql = " WHERE " + completeSql;
             }
             ctx.addSql(sql, childCtx.getBindVariables(), childCtx
                     .getBindVariableTypes());
+            ctx.addCompleteSql(completeSql);
         }
     }
 

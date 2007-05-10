@@ -15,14 +15,20 @@
  */
 package org.seasar.extension.sql.node;
 
+import org.seasar.extension.sql.Node;
 import org.seasar.extension.sql.SqlContext;
 
 /**
+ * Else用の{@link Node}です。
+ * 
  * @author higa
  * 
  */
 public class ElseNode extends ContainerNode {
 
+    /**
+     * <code>ElseNode</code>を作成します。
+     */
     public ElseNode() {
     }
 

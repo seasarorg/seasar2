@@ -18,14 +18,13 @@ package org.seasar.extension.jdbc.impl;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 
 import javax.sql.DataSource;
 
 import org.seasar.extension.jdbc.StatementFactory;
 import org.seasar.extension.jdbc.ValueType;
 import org.seasar.extension.jdbc.types.ValueTypes;
+import org.seasar.extension.jdbc.util.BindVariableUtil;
 import org.seasar.extension.jdbc.util.DataSourceUtil;
 import org.seasar.framework.exception.EmptyRuntimeException;
 import org.seasar.framework.exception.SQLRuntimeException;
@@ -164,23 +163,7 @@ public class BasicHandler {
     }
 
     protected String getBindVariableText(Object bindVariable) {
-        if (bindVariable instanceof String) {
-            return "'" + bindVariable + "'";
-        } else if (bindVariable instanceof Number) {
-            return bindVariable.toString();
-        } else if (bindVariable instanceof Timestamp) {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH.mm.ss");
-            return "'" + sdf.format((java.util.Date) bindVariable) + "'";
-        } else if (bindVariable instanceof java.util.Date) {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            return "'" + sdf.format((java.util.Date) bindVariable) + "'";
-        } else if (bindVariable instanceof Boolean) {
-            return bindVariable.toString();
-        } else if (bindVariable == null) {
-            return "null";
-        } else {
-            return "'" + bindVariable.toString() + "'";
-        }
+        return BindVariableUtil.getBindVariableText(bindVariable);
     }
 
     protected ValueType getValueType(Class clazz) {

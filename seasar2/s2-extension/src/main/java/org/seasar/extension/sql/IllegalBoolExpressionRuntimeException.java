@@ -18,6 +18,8 @@ package org.seasar.extension.sql;
 import org.seasar.framework.exception.SRuntimeException;
 
 /**
+ * OGNLの評価結果がBooleanではない場合の例外クラスです。
+ * 
  * @author higa
  * 
  */
@@ -27,11 +29,21 @@ public class IllegalBoolExpressionRuntimeException extends SRuntimeException {
 
     private String expression;
 
+    /**
+     * <code>IllegalBoolExpressionRuntimeException</code>を作成します。
+     * 
+     * @param expression
+     */
     public IllegalBoolExpressionRuntimeException(String expression) {
         super("ESSR0084", new Object[] { expression });
         this.expression = expression;
     }
 
+    /**
+     * OGNLの表現を返します。
+     * 
+     * @return
+     */
     public String getExpression() {
         return expression;
     }

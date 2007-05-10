@@ -15,14 +15,20 @@
  */
 package org.seasar.extension.sql.node;
 
+import org.seasar.extension.sql.Node;
 import org.seasar.extension.sql.SqlContext;
 
 /**
+ * {@link Node}のコンテナクラスです。
+ * 
  * @author higa
  * 
  */
 public class ContainerNode extends AbstractNode {
 
+    /**
+     * <code>ContainerNode</code>を作成します。
+     */
     public ContainerNode() {
     }
 

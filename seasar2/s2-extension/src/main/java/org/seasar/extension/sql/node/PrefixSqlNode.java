@@ -15,9 +15,12 @@
  */
 package org.seasar.extension.sql.node;
 
+import org.seasar.extension.sql.Node;
 import org.seasar.extension.sql.SqlContext;
 
 /**
+ * ANDやORのプレフィックスのための{@link Node}です。
+ * 
  * @author higa
  * 
  */
@@ -27,15 +30,31 @@ public class PrefixSqlNode extends AbstractNode {
 
     private String sql;
 
+    /**
+     * <code>PrefixSqlNode</code>を作成します。
+     * 
+     * @param prefix
+     * @param sql
+     */
     public PrefixSqlNode(String prefix, String sql) {
         this.prefix = prefix;
         this.sql = sql;
     }
 
+    /**
+     * プレフィックスを返します。
+     * 
+     * @return
+     */
     public String getPrefix() {
         return prefix;
     }
 
+    /**
+     * SQLを返します。
+     * 
+     * @return
+     */
     public String getSql() {
         return sql;
     }
@@ -43,7 +62,9 @@ public class PrefixSqlNode extends AbstractNode {
     public void accept(SqlContext ctx) {
         if (ctx.isEnabled()) {
             ctx.addSql(prefix);
+            ctx.addCompleteSql(prefix);
         }
         ctx.addSql(sql);
+        ctx.addCompleteSql(sql);
     }
 }

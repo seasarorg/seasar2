@@ -25,6 +25,8 @@ import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.CaseInsensitiveMap;
 
 /**
+ * {@link SqlContext}の実装クラスです。
+ * 
  * @author higa
  * 
  */
@@ -36,7 +38,9 @@ public class SqlContextImpl implements SqlContext {
 
     private CaseInsensitiveMap argTypes = new CaseInsensitiveMap();
 
-    private StringBuffer sqlBuf = new StringBuffer(100);
+    private StringBuffer sqlBuf = new StringBuffer(255);
+
+    private StringBuffer completeSqlBuf = new StringBuffer(255);
 
     private List bindVariables = new ArrayList();
 
@@ -51,9 +55,17 @@ public class SqlContextImpl implements SqlContext {
                 new SqlContextPropertyAccessor());
     }
 
+    /**
+     * <code>SqlContextImpl</code>を作成します。
+     */
     public SqlContextImpl() {
     }
 
+    /**
+     * <code>SqlContextImpl</code>を作成します。
+     * 
+     * @param parent
+     */
     public SqlContextImpl(SqlContext parent) {
         this.parent = parent;
         enabled = false;
@@ -137,6 +149,14 @@ public class SqlContextImpl implements SqlContext {
             this.bindVariableTypes.add(bindVariableTypes[i]);
         }
         return this;
+    }
+
+    public String getCompleteSql() {
+        return completeSqlBuf.toString();
+    }
+
+    public void addCompleteSql(String sql) {
+        completeSqlBuf.append(sql);
     }
 
     public boolean isEnabled() {

@@ -18,10 +18,14 @@ package org.seasar.extension.sql.node;
 import java.lang.reflect.Array;
 import java.util.List;
 
+import org.seasar.extension.jdbc.util.BindVariableUtil;
+import org.seasar.extension.sql.Node;
 import org.seasar.extension.sql.SqlContext;
 import org.seasar.framework.util.OgnlUtil;
 
 /**
+ * INのバインド変数用の{@link Node}です。
+ * 
  * @author higa
  * 
  */
@@ -31,11 +35,21 @@ public class ParenBindVariableNode extends AbstractNode {
 
     private Object parsedExpression;
 
+    /**
+     * <code>ParenBindVariableNode</code>を作成します。
+     * 
+     * @param expression
+     */
     public ParenBindVariableNode(String expression) {
         this.expression = expression;
         this.parsedExpression = OgnlUtil.parseExpression(expression);
     }
 
+    /**
+     * 式を返します。
+     * 
+     * @return
+     */
     public String getExpression() {
         return expression;
     }
@@ -50,10 +64,15 @@ public class ParenBindVariableNode extends AbstractNode {
             bindArray(ctx, var);
         } else {
             ctx.addSql("?", var, var.getClass());
+            ctx.addCompleteSql(BindVariableUtil.getBindVariableText(var));
         }
 
     }
 
+    /**
+     * @param ctx
+     * @param array
+     */
     protected void bindArray(SqlContext ctx, Object array) {
         int length = Array.getLength(array);
         if (length == 0) {
@@ -67,11 +86,18 @@ public class ParenBindVariableNode extends AbstractNode {
             }
         }
         ctx.addSql("(");
-        ctx.addSql("?", Array.get(array, 0), clazz);
+        ctx.addCompleteSql("(");
+        Object value = Array.get(array, 0);
+        ctx.addSql("?", value, clazz);
+        ctx.addCompleteSql(BindVariableUtil.getBindVariableText(value));
         for (int i = 1; i < length; ++i) {
             ctx.addSql(", ");
-            ctx.addSql("?", Array.get(array, i), clazz);
+            ctx.addCompleteSql(", ");
+            value = Array.get(array, i);
+            ctx.addSql("?", value, clazz);
+            ctx.addCompleteSql(BindVariableUtil.getBindVariableText(value));
         }
         ctx.addSql(")");
+        ctx.addCompleteSql(")");
     }
 }

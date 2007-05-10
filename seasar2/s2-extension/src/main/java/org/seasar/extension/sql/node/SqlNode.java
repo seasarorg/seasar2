@@ -15,9 +15,12 @@
  */
 package org.seasar.extension.sql.node;
 
+import org.seasar.extension.sql.Node;
 import org.seasar.extension.sql.SqlContext;
 
 /**
+ * SQL用の{@link Node}です。
+ * 
  * @author higa
  * 
  */
@@ -25,15 +28,26 @@ public class SqlNode extends AbstractNode {
 
     private String sql;
 
+    /**
+     * <code>SqlNode</code>を作成します。
+     * 
+     * @param sql
+     */
     public SqlNode(String sql) {
         this.sql = sql;
     }
 
+    /**
+     * SQLを返します。
+     * 
+     * @return
+     */
     public String getSql() {
         return sql;
     }
 
     public void accept(SqlContext ctx) {
         ctx.addSql(sql);
+        ctx.addCompleteSql(sql);
     }
 }

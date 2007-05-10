@@ -16,10 +16,17 @@
 package org.seasar.extension.sql;
 
 /**
+ * SQLを解析して<code>Node</code>のツリーにするクラスです。
+ * 
  * @author higa
  * 
  */
 public interface SqlParser {
 
+    /**
+     * SQLを解析して<code>Node</code>のツリーを返します。
+     * 
+     * @return
+     */
     Node parse();
 }

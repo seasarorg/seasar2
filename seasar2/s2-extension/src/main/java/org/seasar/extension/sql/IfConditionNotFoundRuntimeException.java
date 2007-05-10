@@ -18,6 +18,8 @@ package org.seasar.extension.sql;
 import org.seasar.framework.exception.SRuntimeException;
 
 /**
+ * IFコメントの条件が見つからなかった場合の例外クラスです。
+ * 
  * @author higa
  * 
  */
@@ -25,6 +27,9 @@ public class IfConditionNotFoundRuntimeException extends SRuntimeException {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * <code>IfConditionNotFoundRuntimeException</code>を作成します。
+     */
     public IfConditionNotFoundRuntimeException() {
         super("ESSR0086");
     }

@@ -77,6 +77,20 @@ public interface SqlContext {
     String getSql();
 
     /**
+     * バインド変数が埋め込まれたSQLを返します。
+     * 
+     * @return
+     */
+    String getCompleteSql();
+
+    /**
+     * バインド変数が埋め込まれたSQLを追加します。
+     * 
+     * @param sql
+     */
+    void addCompleteSql(String sql);
+
+    /**
      * 追加されたすべてのバインド変数の配列を返します。
      * 
      * @return バインド変数の配列
