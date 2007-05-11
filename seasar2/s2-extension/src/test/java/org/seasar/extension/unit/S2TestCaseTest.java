@@ -55,7 +55,7 @@ public class S2TestCaseTest extends S2TestCase {
     }
 
     public void testReadXlsNoTrim() {
-        DataSet dataSet = readXls("testdata.xls", false);
+        DataSet dataSet = readXls("testdata_notrim.xls", false);
         System.out.println(dataSet);
         assertEquals("1", 2, dataSet.getTableSize());
         DataTable table = dataSet.getTable("emp");

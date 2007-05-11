@@ -41,7 +41,7 @@ public class XlsReaderTest extends S2TestCase {
 
     public void testSetupColumns() throws Exception {
         DataTable table = dataSet_.getTable(2);
-        assertEquals("1", 7, table.getColumnSize());
+        assertEquals("1", 8, table.getColumnSize());
         for (int i = 0; i < table.getColumnSize(); ++i) {
             assertEquals("2", "COLUMN" + i, table.getColumnName(i));
         }
@@ -51,7 +51,8 @@ public class XlsReaderTest extends S2TestCase {
         assertEquals("6", ColumnTypes.BINARY, table.getColumnType(3));
         assertEquals("7", ColumnTypes.BIGDECIMAL, table.getColumnType(4));
         assertEquals("8", ColumnTypes.BOOLEAN, table.getColumnType(5));
-        assertEquals("8", ColumnTypes.STRING, table.getColumnType(6));
+        assertEquals("9", ColumnTypes.STRING, table.getColumnType(6));
+        assertEquals("10", ColumnTypes.STRING, table.getColumnType(7));
     }
 
     public void testSetupColumnsForNull() throws Exception {
@@ -82,7 +83,8 @@ public class XlsReaderTest extends S2TestCase {
         assertEquals("4", "YWJj", Base64Util.encode((byte[]) row.getValue(3)));
         assertEquals("5", new BigDecimal("0.05"), row.getValue(4));
         assertEquals("6", Boolean.TRUE, row.getValue(5));
-        assertEquals("6", null, row.getValue(6));
+        assertEquals("7", "\"    \"", row.getValue(6));
+        assertEquals("8", "\"a\"b\"", row.getValue(7));
     }
 
     public void testGetValueNoTrim() throws Exception {
@@ -96,7 +98,8 @@ public class XlsReaderTest extends S2TestCase {
         assertEquals("4", "YWJj", Base64Util.encode((byte[]) row.getValue(3)));
         assertEquals("5", new BigDecimal("0.05"), row.getValue(4));
         assertEquals("6", Boolean.TRUE, row.getValue(5));
-        assertEquals("6", "    ", row.getValue(6));
+        assertEquals("7", "    ", row.getValue(6));
+        assertEquals("8", "a\"b", row.getValue(7));
     }
 
     public void testFloatingPoint() throws Exception {

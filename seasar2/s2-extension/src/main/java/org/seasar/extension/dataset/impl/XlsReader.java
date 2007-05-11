@@ -201,8 +201,12 @@ public class XlsReader implements DataReader, DataSetConstants {
             return new BigDecimal(Double.toString(numericCellValue));
         case HSSFCell.CELL_TYPE_STRING:
             String s = cell.getStringCellValue();
-            if (s != null && trimString) {
+            if (s != null) {
                 s = StringUtil.rtrim(s);
+                if (!trimString && s.length() > 1 && s.startsWith("\"")
+                        && s.endsWith("\"")) {
+                    s = s.substring(1, s.length() - 1);
+                }
             }
             if ("".equals(s)) {
                 s = null;
