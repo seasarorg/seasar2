@@ -523,8 +523,10 @@ public class ConnectionWrapperImpl implements ConnectionWrapper {
     }
 
     private SQLException wrapException(final SQLException e, final String sql) {
-        return new SSQLException("ESSR0072", new Object[] { sql }, e
-                .getSQLState(), e.getErrorCode(), e, sql);
+        return new SSQLException("ESSR0072",
+                new Object[] { sql, e.getMessage(),
+                        new Integer(e.getErrorCode()), e.getSQLState() }, e
+                        .getSQLState(), e.getErrorCode(), e, sql);
     }
 
 }
