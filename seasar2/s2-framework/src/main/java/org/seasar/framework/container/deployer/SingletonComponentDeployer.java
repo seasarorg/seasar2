@@ -16,9 +16,12 @@
 package org.seasar.framework.container.deployer;
 
 import org.seasar.framework.container.ComponentDef;
+import org.seasar.framework.container.ComponentDeployer;
 import org.seasar.framework.container.CyclicReferenceRuntimeException;
 
 /**
+ * singleton用の{@link ComponentDeployer}です。
+ * 
  * @author higa
  * 
  */
@@ -29,6 +32,8 @@ public class SingletonComponentDeployer extends AbstractComponentDeployer {
     private boolean instantiating = false;
 
     /**
+     * {@link SingletonComponentDeployer}を作成します。
+     * 
      * @param componentDef
      */
     public SingletonComponentDeployer(ComponentDef componentDef) {

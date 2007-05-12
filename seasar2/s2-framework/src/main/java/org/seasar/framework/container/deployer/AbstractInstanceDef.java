@@ -17,6 +17,12 @@ package org.seasar.framework.container.deployer;
 
 import org.seasar.framework.container.InstanceDef;
 
+/**
+ * {@link InstanceDef}の抽象クラスです。
+ * 
+ * @author higa
+ * 
+ */
 public abstract class AbstractInstanceDef implements InstanceDef {
 
     private String name;

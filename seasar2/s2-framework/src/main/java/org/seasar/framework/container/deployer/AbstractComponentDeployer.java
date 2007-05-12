@@ -29,6 +29,8 @@ import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.StringUtil;
 
 /**
+ * {@link ComponentDeployer}の抽象クラスです。
+ * 
  * @author higa
  * 
  */
@@ -44,6 +46,11 @@ public abstract class AbstractComponentDeployer implements ComponentDeployer {
 
     private MethodAssembler destroyMethodAssembler;
 
+    /**
+     * {@link AbstractComponentDeployer}を作成します。
+     * 
+     * @param componentDef
+     */
     public AbstractComponentDeployer(ComponentDef componentDef) {
         this.componentDef = componentDef;
         setupAssembler();
@@ -99,7 +106,8 @@ public abstract class AbstractComponentDeployer implements ComponentDeployer {
             if (!pd.hasWriteMethod()) {
                 continue;
             }
-            PropertyDesc oldPd = oldBeanDesc.getPropertyDesc(pd.getPropertyName());
+            PropertyDesc oldPd = oldBeanDesc.getPropertyDesc(pd
+                    .getPropertyName());
             if (!pd.hasReadMethod()) {
                 continue;
             }

@@ -19,65 +19,161 @@ import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.ComponentDeployer;
 
 /**
+ * {@link ComponentDeployer}を作成するクラスです。
+ * 
  * @author higa
  */
 public class ComponentDeployerFactory {
 
     private static Provider provider = new DefaultProvider();
 
+    /**
+     * {@link Provider}を返します。
+     * 
+     * @return
+     */
     public static Provider getProvider() {
         return provider;
     }
 
+    /**
+     * {@link Provider}を設定します。
+     * 
+     * @param p
+     */
     public static void setProvider(final Provider p) {
         provider = p;
     }
 
+    /**
+     * singleton用の{@link ComponentDeployer}を作成します。
+     * 
+     * @param cd
+     * @return
+     */
     public static ComponentDeployer createSingletonComponentDeployer(
             final ComponentDef cd) {
         return getProvider().createSingletonComponentDeployer(cd);
     }
 
+    /**
+     * prototype用の{@link ComponentDeployer}を作成します。
+     * 
+     * @param cd
+     * @return
+     */
     public static ComponentDeployer createPrototypeComponentDeployer(
             final ComponentDef cd) {
         return getProvider().createPrototypeComponentDeployer(cd);
     }
 
+    /**
+     * application(serlvetContext)用の{@link ComponentDeployer}を作成します。
+     * 
+     * @param cd
+     * @return
+     */
     public static ComponentDeployer createServletContextComponentDeployer(
             final ComponentDef cd) {
         return getProvider().createApplicationComponentDeployer(cd);
     }
 
+    /**
+     * session用の{@link ComponentDeployer}を作成します。
+     * 
+     * @param cd
+     * @return
+     */
     public static ComponentDeployer createSessionComponentDeployer(
             final ComponentDef cd) {
         return getProvider().createSessionComponentDeployer(cd);
     }
 
+    /**
+     * request用の{@link ComponentDeployer}を作成します。
+     * 
+     * @param cd
+     * @return
+     */
     public static ComponentDeployer createRequestComponentDeployer(
             final ComponentDef cd) {
         return getProvider().createRequestComponentDeployer(cd);
     }
 
+    /**
+     * outer用の{@link ComponentDeployer}を作成します。
+     * 
+     * @param cd
+     * @return
+     */
     public static ComponentDeployer createOuterComponentDeployer(
             final ComponentDef cd) {
         return getProvider().createOuterComponentDeployer(cd);
     }
 
+    /**
+     * {@link ComponentDeployerFactory}をカスタマイズするためのインターフェースです。
+     * 
+     * @author koichk
+     * 
+     */
     public interface Provider {
 
+        /**
+         * singleton用の{@link ComponentDeployer}を作成します。
+         * 
+         * @param cd
+         * @return
+         */
         ComponentDeployer createSingletonComponentDeployer(ComponentDef cd);
 
+        /**
+         * prototype用の{@link ComponentDeployer}を作成します。
+         * 
+         * @param cd
+         * @return
+         */
         ComponentDeployer createPrototypeComponentDeployer(ComponentDef cd);
 
+        /**
+         * application用の{@link ComponentDeployer}を作成します。
+         * 
+         * @param cd
+         * @return
+         */
         ComponentDeployer createApplicationComponentDeployer(ComponentDef cd);
 
+        /**
+         * session用の{@link ComponentDeployer}を作成します。
+         * 
+         * @param cd
+         * @return
+         */
         ComponentDeployer createSessionComponentDeployer(ComponentDef cd);
 
+        /**
+         * request用の{@link ComponentDeployer}を作成します。
+         * 
+         * @param cd
+         * @return
+         */
         ComponentDeployer createRequestComponentDeployer(ComponentDef cd);
 
+        /**
+         * outer用の{@link ComponentDeployer}を作成します。
+         * 
+         * @param cd
+         * @return
+         */
         ComponentDeployer createOuterComponentDeployer(ComponentDef cd);
     }
 
+    /**
+     * {@link Provider}のデフォルト実装です。
+     * 
+     * @author koichk
+     * 
+     */
     public static class DefaultProvider implements Provider {
 
         public ComponentDeployer createSingletonComponentDeployer(
@@ -111,11 +207,6 @@ public class ComponentDeployerFactory {
         public ComponentDeployer createOuterComponentDeployer(
                 final ComponentDef cd) {
             return new OuterComponentDeployer(cd);
-        }
-
-        public ComponentDeployer createDefaultComponentDeployer(
-                final ComponentDef cd) {
-            return createOuterComponentDeployer(cd);
         }
     }
 }

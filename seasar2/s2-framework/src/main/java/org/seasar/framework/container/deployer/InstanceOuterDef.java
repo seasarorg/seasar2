@@ -17,8 +17,11 @@ package org.seasar.framework.container.deployer;
 
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.ComponentDeployer;
+import org.seasar.framework.container.InstanceDef;
 
 /**
+ * outer用の{@link InstanceDef}です。
+ * 
  * @author higa
  * 
  */

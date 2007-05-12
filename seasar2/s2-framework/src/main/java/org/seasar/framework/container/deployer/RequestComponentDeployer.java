@@ -18,11 +18,14 @@ package org.seasar.framework.container.deployer;
 import java.util.Map;
 
 import org.seasar.framework.container.ComponentDef;
+import org.seasar.framework.container.ComponentDeployer;
 import org.seasar.framework.container.ExternalContext;
 import org.seasar.framework.exception.EmptyRuntimeException;
 import org.seasar.framework.log.Logger;
 
 /**
+ * request用の{@link ComponentDeployer}です。
+ * 
  * @author higa
  * 
  */
@@ -32,6 +35,8 @@ public class RequestComponentDeployer extends AbstractComponentDeployer {
             .getLogger(RequestComponentDeployer.class);
 
     /**
+     * {@link RequestComponentDeployer}を作成します。
+     * 
      * @param componentDef
      */
     public RequestComponentDeployer(ComponentDef componentDef) {

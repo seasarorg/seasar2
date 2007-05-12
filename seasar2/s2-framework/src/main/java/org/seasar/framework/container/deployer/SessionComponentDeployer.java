@@ -18,16 +18,21 @@ package org.seasar.framework.container.deployer;
 import java.util.Map;
 
 import org.seasar.framework.container.ComponentDef;
+import org.seasar.framework.container.ComponentDeployer;
 import org.seasar.framework.container.ExternalContext;
 import org.seasar.framework.exception.EmptyRuntimeException;
 
 /**
+ * session用の{@link ComponentDeployer}です。
+ * 
  * @author higa
  * 
  */
 public class SessionComponentDeployer extends AbstractComponentDeployer {
 
     /**
+     * {@link SessionComponentDeployer}を作成します。
+     * 
      * @param componentDef
      */
     public SessionComponentDeployer(ComponentDef componentDef) {
@@ -60,7 +65,7 @@ public class SessionComponentDeployer extends AbstractComponentDeployer {
         sessionMap.put(componentName, component);
         return component;
     }
-    
+
     public void injectDependency(Object component) {
         throw new UnsupportedOperationException("injectDependency");
     }

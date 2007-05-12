@@ -21,6 +21,8 @@ import java.sql.SQLException;
 import org.seasar.framework.exception.SQLRuntimeException;
 
 /**
+ * {@link ResultSet}のためのユーティリティクラスです。
+ * 
  * @author higa
  * 
  */
@@ -29,12 +31,35 @@ public final class ResultSetUtil {
     private ResultSetUtil() {
     }
 
-    public static void close(ResultSet resultSet) {
+    /**
+     * {@link ResultSet#close()}を呼び出します。
+     * 
+     * @param resultSet
+     * @throws SQLRuntimeException
+     *             {@link SQLException}が起こった場合。
+     */
+    public static void close(ResultSet resultSet) throws SQLRuntimeException {
         if (resultSet == null) {
             return;
         }
         try {
             resultSet.close();
+        } catch (SQLException ex) {
+            throw new SQLRuntimeException(ex);
+        }
+    }
+
+    /**
+     * {@link ResultSet#next()}を呼び出します。
+     * 
+     * @param resultSet
+     * @return {@link ResultSet#next()}の結果
+     * @throws SQLRuntimeException
+     *             {@link SQLException}が起こった場合。
+     */
+    public static boolean next(ResultSet resultSet) {
+        try {
+            return resultSet.next();
         } catch (SQLException ex) {
             throw new SQLRuntimeException(ex);
         }

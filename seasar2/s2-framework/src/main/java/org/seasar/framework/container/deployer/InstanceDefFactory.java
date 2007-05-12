@@ -21,23 +21,47 @@ import java.util.Map;
 import org.seasar.framework.container.IllegalInstanceDefRuntimeException;
 import org.seasar.framework.container.InstanceDef;
 
+/**
+ * {@link InstanceDef}を作成するためのクラスです。
+ * 
+ * @author higa
+ * 
+ */
 public class InstanceDefFactory {
 
+    /**
+     * singleton用の{@link InstanceDef}。
+     */
     public static final InstanceDef SINGLETON = new InstanceSingletonDef(
             InstanceDef.SINGLETON_NAME);
 
+    /**
+     * prototype用の{@link InstanceDef}。
+     */
     public static final InstanceDef PROTOTYPE = new InstancePrototypeDef(
             InstanceDef.PROTOTYPE_NAME);
 
+    /**
+     * application用の{@link InstanceDef}。
+     */
     public static final InstanceDef APPLICATION = new InstanceApplicationDef(
             InstanceDef.APPLICATION_NAME);
 
+    /**
+     * session用の{@link InstanceDef}。
+     */
     public static final InstanceDef SESSION = new InstanceSessionDef(
             InstanceDef.SESSION_NAME);
 
+    /**
+     * request用の{@link InstanceDef}。
+     */
     public static final InstanceDef REQUEST = new InstanceRequestDef(
             InstanceDef.REQUEST_NAME);
 
+    /**
+     * outer用の{@link InstanceDef}。
+     */
     public static final InstanceDef OUTER = new InstanceOuterDef(
             InstanceDef.OUTER_NAME);
 
@@ -55,14 +79,31 @@ public class InstanceDefFactory {
     protected InstanceDefFactory() {
     }
 
+    /**
+     * {@link InstanceDef}を追加します。
+     * 
+     * @param instanceDef
+     */
     public static void addInstanceDef(InstanceDef instanceDef) {
         instanceDefs.put(instanceDef.getName(), instanceDef);
     }
 
+    /**
+     * {@link InstanceDef}が存在するかどうかを返します。
+     * 
+     * @param name
+     * @return
+     */
     public static boolean existInstanceDef(String name) {
         return instanceDefs.containsKey(name);
     }
 
+    /**
+     * nameに応じた{@link InstanceDef}を返します。
+     * 
+     * @param name
+     * @return {@link InstanceDef}
+     */
     public static InstanceDef getInstanceDef(String name) {
         if (!instanceDefs.containsKey(name)) {
             throw new IllegalInstanceDefRuntimeException(name);

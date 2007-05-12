@@ -17,14 +17,19 @@ package org.seasar.framework.container.deployer;
 
 import org.seasar.framework.container.ClassUnmatchRuntimeException;
 import org.seasar.framework.container.ComponentDef;
+import org.seasar.framework.container.ComponentDeployer;
 
 /**
+ * outer用の{@link ComponentDeployer}です。
+ * 
  * @author higa
  * 
  */
 public class OuterComponentDeployer extends AbstractComponentDeployer {
 
     /**
+     * {@link OuterComponentDeployer}を作成します。
+     * 
      * @param componentDef
      */
     public OuterComponentDeployer(ComponentDef componentDef) {

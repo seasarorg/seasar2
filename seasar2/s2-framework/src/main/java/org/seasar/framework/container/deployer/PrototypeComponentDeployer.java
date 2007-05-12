@@ -16,14 +16,19 @@
 package org.seasar.framework.container.deployer;
 
 import org.seasar.framework.container.ComponentDef;
+import org.seasar.framework.container.ComponentDeployer;
 
 /**
+ * prototype用の{@link ComponentDeployer}です。
+ * 
  * @author higa
  * 
  */
 public class PrototypeComponentDeployer extends AbstractComponentDeployer {
 
     /**
+     * {@link PrototypeComponentDeployer}を作成します。
+     * 
      * @param componentDef
      */
     public PrototypeComponentDeployer(ComponentDef componentDef) {

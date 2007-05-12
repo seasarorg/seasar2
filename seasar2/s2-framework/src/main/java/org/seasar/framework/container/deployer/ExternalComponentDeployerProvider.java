@@ -17,7 +17,14 @@ package org.seasar.framework.container.deployer;
 
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.ComponentDeployer;
+import org.seasar.framework.container.ExternalContext;
 
+/**
+ * {@link ExternalContext}用の{@link ComponentDeployerFactory.Provider}です。
+ * 
+ * @author higa
+ * 
+ */
 public class ExternalComponentDeployerProvider extends
         ComponentDeployerFactory.DefaultProvider {
 

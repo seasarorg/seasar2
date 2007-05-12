@@ -18,16 +18,21 @@ package org.seasar.framework.container.deployer;
 import java.util.Map;
 
 import org.seasar.framework.container.ComponentDef;
+import org.seasar.framework.container.ComponentDeployer;
 import org.seasar.framework.container.ExternalContext;
 import org.seasar.framework.exception.EmptyRuntimeException;
 
 /**
+ * インスタンス属性がapplication用の{@link ComponentDeployer}です。
+ * 
  * @author higa
  * 
  */
 public class ApplicationComponentDeployer extends AbstractComponentDeployer {
 
     /**
+     * {@link ApplicationComponentDeployer}を作成します。
+     * 
      * @param componentDef
      */
     public ApplicationComponentDeployer(ComponentDef componentDef) {
