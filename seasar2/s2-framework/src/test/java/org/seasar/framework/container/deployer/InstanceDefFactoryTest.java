@@ -24,6 +24,9 @@ import org.seasar.framework.container.IllegalInstanceDefRuntimeException;
  */
 public class InstanceDefFactoryTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testGetInstanceDef() throws Exception {
         assertEquals("1", InstanceDefFactory.SESSION, InstanceDefFactory
                 .getInstanceDef("session"));

@@ -34,6 +34,9 @@ import org.seasar.framework.mock.servlet.MockServletContextImpl;
  */
 public class SessionComponentDeployerTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testDeployAutoAutoConstructor() throws Exception {
         MockServletContextImpl ctx = new MockServletContextImpl("s2jsf-example");
         HttpServletRequest request = ctx.createRequest("/hello.html");
@@ -49,6 +52,9 @@ public class SessionComponentDeployerTest extends TestCase {
         assertSame("2", foo, deployer.deploy());
     }
     
+    /**
+     * @throws Exception
+     */
     public void testCopyProperties() throws Exception {
         MockServletContextImpl ctx = new MockServletContextImpl("s2jsf-example");
         HttpServletRequest request = ctx.createRequest("/hello.html");
@@ -66,30 +72,51 @@ public class SessionComponentDeployerTest extends TestCase {
         assertEquals("xxx", foo.getHoge());
     }
 
+    /**
+     *
+     */
     public static class Foo {
 
         private String hoge;
         
+        /**
+         * 
+         */
         public void aaa() {
         }
 
+        /**
+         * @return
+         */
         public String getHoge() {
             return hoge;
         }
 
+        /**
+         * @param hoge
+         */
         public void setHoge(String hoge) {
             this.hoge = hoge;
         }
     }
     
+    /**
+     *
+     */
     public static class Foo2 {
 
         private String hoge;
 
+        /**
+         * @return
+         */
         public String getHoge() {
             return hoge;
         }
 
+        /**
+         * @param hoge
+         */
         public void setHoge(String hoge) {
             this.hoge = hoge;
         }

@@ -37,6 +37,9 @@ import org.seasar.framework.util.CaseInsensitiveMap;
  */
 public class OuterComponentDeployerTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testInjectDependency() throws Exception {
         ComponentDefImpl cd = new ComponentDefImpl(HashMap.class);
         InitMethodDef md = new InitMethodDefImpl("put");
@@ -49,6 +52,9 @@ public class OuterComponentDeployerTest extends TestCase {
         assertEquals("1", "hoge", myMap.get("aaa"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testInjectDependency2() throws Exception {
         ComponentDefImpl cd = new ComponentDefImpl(ArrayMap.class);
         InitMethodDef md = new InitMethodDefImpl("put");
@@ -68,6 +74,9 @@ public class OuterComponentDeployerTest extends TestCase {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public void testDeploy() throws Exception {
         S2Container container = new S2ContainerImpl();
         ComponentDefImpl cd = new ComponentDefImpl(HashMap.class);
@@ -81,27 +90,48 @@ public class OuterComponentDeployerTest extends TestCase {
         }
     }
 
+    /**
+     *
+     */
     public interface Foo {
+        /**
+         * @return
+         */
         public String getHogeName();
     }
 
+    /**
+     *
+     */
     public static class A {
 
         private Hoge hoge_;
 
+        /**
+         * @param hoge
+         */
         public A(Hoge hoge) {
             hoge_ = hoge;
         }
 
+        /**
+         * @return
+         */
         public String getHogeName() {
             return hoge_.getName();
         }
     }
 
+    /**
+     *
+     */
     public static class A2 implements Foo {
 
         private Hoge hoge_;
 
+        /**
+         * @param hoge
+         */
         public void setHoge(Hoge hoge) {
             hoge_ = hoge;
         }
@@ -111,11 +141,20 @@ public class OuterComponentDeployerTest extends TestCase {
         }
     }
 
+    /**
+     *
+     */
     public interface Hoge {
 
+        /**
+         * @return
+         */
         public String getName();
     }
 
+    /**
+     *
+     */
     public static class B implements Hoge {
 
         public String getName() {
@@ -123,10 +162,16 @@ public class OuterComponentDeployerTest extends TestCase {
         }
     }
 
+    /**
+     *
+     */
     public static class C implements Hoge {
 
         private Foo foo_;
 
+        /**
+         * @param foo
+         */
         public void setFoo(Foo foo) {
             foo_ = foo;
         }
@@ -135,6 +180,9 @@ public class OuterComponentDeployerTest extends TestCase {
             return "C";
         }
 
+        /**
+         * @return
+         */
         public String getHogeName() {
             return foo_.getHogeName();
         }

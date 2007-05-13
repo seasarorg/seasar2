@@ -38,6 +38,9 @@ import org.seasar.framework.container.impl.S2ContainerImpl;
  */
 public class SingletonComponentDeployerTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testDeployAutoAutoConstructor() throws Exception {
         S2Container container = new S2ContainerImpl();
         ComponentDefImpl cd = new ComponentDefImpl(A.class);
@@ -49,6 +52,9 @@ public class SingletonComponentDeployerTest extends TestCase {
         assertSame("2", a, deployer.deploy());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testDeployAutoAutoConstructorAndProperty() throws Exception {
         S2Container container = new S2ContainerImpl();
         ComponentDefImpl cd = new ComponentDefImpl(A.class);
@@ -62,6 +68,9 @@ public class SingletonComponentDeployerTest extends TestCase {
         assertSame("3", a, deployer.deploy());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testDeployAutoAutoConstructorAndProperty2() throws Exception {
         S2Container container = new S2ContainerImpl();
         ComponentDefImpl cd = new ComponentDefImpl(A2.class);
@@ -74,6 +83,9 @@ public class SingletonComponentDeployerTest extends TestCase {
         assertEquals("2", 1, a2.getAaa());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testDeployAutoAutoProperty() throws Exception {
         S2Container container = new S2ContainerImpl();
         ComponentDefImpl cd = new ComponentDefImpl(A2.class);
@@ -84,6 +96,9 @@ public class SingletonComponentDeployerTest extends TestCase {
         assertEquals("1", "B", a2.getHogeName());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testDeployAutoManualConstructor() throws Exception {
         S2Container container = new S2ContainerImpl();
         ComponentDefImpl cd = new ComponentDefImpl(BigDecimal.class);
@@ -93,6 +108,9 @@ public class SingletonComponentDeployerTest extends TestCase {
         assertEquals("1", new BigDecimal(123), deployer.deploy());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testDeployAutoManualProperty() throws Exception {
         S2Container container = new S2ContainerImpl();
         ComponentDefImpl cd = new ComponentDefImpl(A2.class);
@@ -103,6 +121,9 @@ public class SingletonComponentDeployerTest extends TestCase {
         assertEquals("1", "B", a2.getHogeName());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testDeployAutoManual() throws Exception {
         S2Container container = new S2ContainerImpl();
         ComponentDefImpl cd = new ComponentDefImpl(D.class);
@@ -115,6 +136,9 @@ public class SingletonComponentDeployerTest extends TestCase {
         assertEquals("2", 1, d.getAaa());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetComponentForInitMethodDef() throws Exception {
         S2Container container = new S2ContainerImpl();
         ComponentDefImpl cd = new ComponentDefImpl(HashMap.class);
@@ -128,6 +152,9 @@ public class SingletonComponentDeployerTest extends TestCase {
         assertEquals("1", "hoge", myMap.get("aaa"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testCyclicReference() throws Exception {
         S2Container container = new S2ContainerImpl();
         ComponentDefImpl cd = new ComponentDefImpl(A2.class);
@@ -142,6 +169,9 @@ public class SingletonComponentDeployerTest extends TestCase {
         assertEquals("2", "C", c.getHogeName());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testCyclicReferenceFail() throws Exception {
         S2Container container = new S2ContainerImpl();
         ComponentDefImpl cd = new ComponentDefImpl(A2.class);
@@ -158,6 +188,9 @@ public class SingletonComponentDeployerTest extends TestCase {
         deployer2.deploy();
     }
 
+    /**
+     * @throws Exception
+     */
     public void testDeployConstructor() throws Exception {
         S2Container container = new S2ContainerImpl();
         ComponentDefImpl cd = new ComponentDefImpl(A.class);
@@ -169,6 +202,9 @@ public class SingletonComponentDeployerTest extends TestCase {
         assertEquals("1", "B", a.getHogeName());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testDeployProperty() throws Exception {
         S2Container container = new S2ContainerImpl();
         ComponentDefImpl cd = new ComponentDefImpl(A2.class);
@@ -180,6 +216,9 @@ public class SingletonComponentDeployerTest extends TestCase {
         assertEquals("1", "B", a2.getHogeName());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testDeployNoneManualConstructor() throws Exception {
         S2Container container = new S2ContainerImpl();
         ComponentDefImpl cd = new ComponentDefImpl(BigDecimal.class);
@@ -190,6 +229,9 @@ public class SingletonComponentDeployerTest extends TestCase {
         assertEquals("1", new BigDecimal(123), deployer.deploy());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testDeployNoneManualProperty() throws Exception {
         S2Container container = new S2ContainerImpl();
         ComponentDefImpl cd = new ComponentDefImpl(A2.class);
@@ -201,6 +243,9 @@ public class SingletonComponentDeployerTest extends TestCase {
         assertEquals("1", "B", a2.getHogeName());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testDeployNoneDefault() throws Exception {
         S2Container container = new S2ContainerImpl();
         ComponentDefImpl cd = new ComponentDefImpl(String.class);
@@ -210,6 +255,9 @@ public class SingletonComponentDeployerTest extends TestCase {
         assertEquals("1", "", deployer.deploy());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testDestroy() throws Exception {
         S2Container container = new S2ContainerImpl();
         ComponentDefImpl cd = new ComponentDefImpl(HashMap.class);
@@ -224,6 +272,9 @@ public class SingletonComponentDeployerTest extends TestCase {
         assertEquals("1", "hoge", myMap.get("aaa"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testInjectDependency() throws Exception {
         S2Container container = new S2ContainerImpl();
         ComponentDefImpl cd = new ComponentDefImpl(HashMap.class);
@@ -237,10 +288,19 @@ public class SingletonComponentDeployerTest extends TestCase {
         }
     }
 
+    /**
+     *
+     */
     public interface Foo {
+        /**
+         * @return
+         */
         public String getHogeName();
     }
 
+    /**
+     *
+     */
     public static class FooImpl implements Foo {
 
         public String getHogeName() {
@@ -248,35 +308,56 @@ public class SingletonComponentDeployerTest extends TestCase {
         }
     }
 
+    /**
+     *
+     */
     public static class A {
 
         private Hoge hoge_;
 
         private int aaa_;
 
+        /**
+         * @param hoge
+         */
         public A(Hoge hoge) {
             hoge_ = hoge;
         }
 
+        /**
+         * @return
+         */
         public String getHogeName() {
             return hoge_.getName();
         }
 
+        /**
+         * @return
+         */
         public int getAaa() {
             return aaa_;
         }
 
+        /**
+         * @param aaa
+         */
         public void setAaa(int aaa) {
             aaa_ = aaa;
         }
     }
 
+    /**
+     *
+     */
     public static class A2 implements Foo {
 
         private Hoge hoge_;
 
         private int aaa_;
 
+        /**
+         * @param hoge
+         */
         public void setHoge(Hoge hoge) {
             hoge_ = hoge;
         }
@@ -285,20 +366,35 @@ public class SingletonComponentDeployerTest extends TestCase {
             return hoge_.getName();
         }
 
+        /**
+         * @return
+         */
         public int getAaa() {
             return aaa_;
         }
 
+        /**
+         * @param aaa
+         */
         public void setAaa(int aaa) {
             aaa_ = aaa;
         }
     }
 
+    /**
+     *
+     */
     public interface Hoge {
 
+        /**
+         * @return
+         */
         public String getName();
     }
 
+    /**
+     *
+     */
     public static class B implements Hoge {
 
         public String getName() {
@@ -306,10 +402,16 @@ public class SingletonComponentDeployerTest extends TestCase {
         }
     }
 
+    /**
+     *
+     */
     public static class C implements Hoge {
 
         private Foo foo_;
 
+        /**
+         * @param foo
+         */
         public void setFoo(Foo foo) {
             foo_ = foo;
         }
@@ -318,14 +420,23 @@ public class SingletonComponentDeployerTest extends TestCase {
             return "C";
         }
 
+        /**
+         * @return
+         */
         public String getHogeName() {
             return foo_.getHogeName();
         }
     }
 
+    /**
+     *
+     */
     public static class C2 implements Hoge {
         private static boolean firstTime;
 
+        /**
+         * 
+         */
         public C2() {
             if (!firstTime) {
                 firstTime = true;
@@ -335,6 +446,9 @@ public class SingletonComponentDeployerTest extends TestCase {
 
         private Foo foo_;
 
+        /**
+         * @param foo
+         */
         public void setFoo(Foo foo) {
             foo_ = foo;
         }
@@ -343,17 +457,26 @@ public class SingletonComponentDeployerTest extends TestCase {
             return "C";
         }
 
+        /**
+         * @return
+         */
         public String getHogeName() {
             return foo_.getHogeName();
         }
     }
 
+    /**
+     *
+     */
     public static class D implements Hoge {
 
         private String name_;
 
         private int aaa_;
 
+        /**
+         * @param name
+         */
         public D(String name) {
             name_ = name;
         }
@@ -362,10 +485,16 @@ public class SingletonComponentDeployerTest extends TestCase {
             return name_;
         }
 
+        /**
+         * @return
+         */
         public int getAaa() {
             return aaa_;
         }
 
+        /**
+         * @param aaa
+         */
         public void setAaa(int aaa) {
             aaa_ = aaa;
         }

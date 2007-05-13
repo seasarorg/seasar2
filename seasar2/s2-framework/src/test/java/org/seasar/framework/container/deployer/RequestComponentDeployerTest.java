@@ -34,6 +34,9 @@ import org.seasar.framework.mock.servlet.MockServletContextImpl;
  */
 public class RequestComponentDeployerTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testDeployAutoAutoConstructor() throws Exception {
         MockServletContextImpl ctx = new MockServletContextImpl("s2jsf-example");
         HttpServletRequest request = ctx.createRequest("/hello.html");
@@ -49,14 +52,23 @@ public class RequestComponentDeployerTest extends TestCase {
         assertSame("2", foo, deployer.deploy());
     }
 
+    /**
+     *
+     */
     public static class Foo {
 
         private String message_;
 
+        /**
+         * @param message
+         */
         public void setMessage(String message) {
             message_ = message;
         }
 
+        /**
+         * @return
+         */
         public String getMessage() {
             return message_;
         }

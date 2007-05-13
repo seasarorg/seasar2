@@ -36,6 +36,9 @@ public class ComponentDeployerFactoryTest extends TestCase {
                 .setProvider(new ComponentDeployerFactory.DefaultProvider());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testSingleton() throws Exception {
         ComponentDef cd = new ComponentDefImpl();
         cd.setInstanceDef(InstanceDefFactory.SINGLETON);
@@ -44,6 +47,9 @@ public class ComponentDeployerFactoryTest extends TestCase {
         assertTrue("1", deployer instanceof SingletonComponentDeployer);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testPrototype() throws Exception {
         ComponentDef cd = new ComponentDefImpl();
         cd.setInstanceDef(InstanceDefFactory.PROTOTYPE);
@@ -52,6 +58,9 @@ public class ComponentDeployerFactoryTest extends TestCase {
         assertTrue("1", deployer instanceof PrototypeComponentDeployer);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testRequest() throws Exception {
         ComponentDef cd = new ComponentDefImpl();
         cd.setInstanceDef(InstanceDefFactory.REQUEST);
@@ -61,6 +70,9 @@ public class ComponentDeployerFactoryTest extends TestCase {
         assertTrue("1", deployer instanceof RequestComponentDeployer);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testApplication() throws Exception {
         ComponentDef cd = new ComponentDefImpl();
         cd.setInstanceDef(InstanceDefFactory.APPLICATION);
@@ -69,6 +81,9 @@ public class ComponentDeployerFactoryTest extends TestCase {
         assertTrue("1", deployer instanceof ApplicationComponentDeployer);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testSession() throws Exception {
         ComponentDef cd = new ComponentDefImpl();
         cd.setInstanceDef(InstanceDefFactory.SESSION);
@@ -77,6 +92,9 @@ public class ComponentDeployerFactoryTest extends TestCase {
         assertTrue("1", deployer instanceof SessionComponentDeployer);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testOuter() throws Exception {
         ComponentDef cd = new ComponentDefImpl();
         cd.setInstanceDef(InstanceDefFactory.OUTER);

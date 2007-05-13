@@ -30,6 +30,9 @@ import org.seasar.framework.container.impl.S2ContainerImpl;
  */
 public class PrototypeComponentDeployerTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testDeployAutoAutoConstructor() throws Exception {
         S2Container container = new S2ContainerImpl();
         ComponentDefImpl cd = new ComponentDefImpl(A.class);
@@ -41,6 +44,9 @@ public class PrototypeComponentDeployerTest extends TestCase {
         assertEquals("2", false, a == deployer.deploy());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testCyclicReference() throws Exception {
         S2Container container = new S2ContainerImpl();
         ComponentDefImpl cd = new ComponentDefImpl(A2.class);
@@ -55,6 +61,9 @@ public class PrototypeComponentDeployerTest extends TestCase {
         assertEquals("2", "C", c.getHogeName());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testInjectDependency() throws Exception {
         S2Container container = new S2ContainerImpl();
         ComponentDefImpl cd = new ComponentDefImpl(HashMap.class);
@@ -68,27 +77,48 @@ public class PrototypeComponentDeployerTest extends TestCase {
         }
     }
 
+    /**
+     *
+     */
     public interface Foo {
+        /**
+         * @return
+         */
         public String getHogeName();
     }
 
+    /**
+     *
+     */
     public static class A {
 
         private Hoge hoge_;
 
+        /**
+         * @param hoge
+         */
         public A(Hoge hoge) {
             hoge_ = hoge;
         }
 
+        /**
+         * @return
+         */
         public String getHogeName() {
             return hoge_.getName();
         }
     }
 
+    /**
+     *
+     */
     public static class A2 implements Foo {
 
         private Hoge hoge_;
 
+        /**
+         * @param hoge
+         */
         public void setHoge(Hoge hoge) {
             hoge_ = hoge;
         }
@@ -98,11 +128,20 @@ public class PrototypeComponentDeployerTest extends TestCase {
         }
     }
 
+    /**
+     *
+     */
     public interface Hoge {
 
+        /**
+         * @return
+         */
         public String getName();
     }
 
+    /**
+     *
+     */
     public static class B implements Hoge {
 
         public String getName() {
@@ -110,10 +149,16 @@ public class PrototypeComponentDeployerTest extends TestCase {
         }
     }
 
+    /**
+     *
+     */
     public static class C implements Hoge {
 
         private Foo foo_;
 
+        /**
+         * @param foo
+         */
         public void setFoo(Foo foo) {
             foo_ = foo;
         }
@@ -122,6 +167,9 @@ public class PrototypeComponentDeployerTest extends TestCase {
             return "C";
         }
 
+        /**
+         * @return
+         */
         public String getHogeName() {
             return foo_.getHogeName();
         }
