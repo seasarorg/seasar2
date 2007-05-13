@@ -21,6 +21,9 @@ package org.seasar.framework.convention.impl.web.add.xxx;
  */
 public class AddXxxPage {
 
+    /**
+     * 
+     */
     public AddXxxPage() {
         super();
     }

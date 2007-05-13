@@ -34,15 +34,24 @@ public class EnvTest extends TestCase {
         Env.initialize();
     }
 
+    /**
+     * @throws Exception
+     */
     public void testSetFileAndGetValue() throws Exception {
         Env.setFilePath(UT_PATH);
         assertEquals(Env.UT, Env.getValue());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testDefault() throws Exception {
         assertEquals(Env.PRODUCT, Env.getValue());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAdjustPath() throws Exception {
         assertEquals("hoge.dicon", Env.adjustPath("hoge.dicon"));
         Env.setFilePath(UT_PATH);
