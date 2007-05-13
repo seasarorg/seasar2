@@ -21,6 +21,9 @@ package org.seasar.framework.aop.intertype;
  */
 public interface PropertyInterTypeTarget {
 
+    /**
+     * @return
+     */
     public abstract int getIntWriteField();
 
 }

@@ -21,14 +21,10 @@ import junit.framework.TestCase;
  * @author koichik
  */
 public class TryBlockSupportTest extends TestCase {
-    public TryBlockSupportTest() {
-        super();
-    }
 
-    public TryBlockSupportTest(String name) {
-        super(name);
-    }
-
+    /**
+     * @throws Exception
+     */
     public void testCatch() throws Exception {
         TryBlockSupport tryBlock = new TryBlockSupport("return null;");
         tryBlock.addCatchBlock(Exception.class, "e.printStackTrace();");
@@ -39,6 +35,9 @@ public class TryBlockSupportTest extends TestCase {
                 .getSourceCode());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testFinally() throws Exception {
         TryBlockSupport tryBlock = new TryBlockSupport("return null;");
         tryBlock.setFinallyBlock("System.out.println();");
@@ -46,6 +45,9 @@ public class TryBlockSupportTest extends TestCase {
                 + "System.out.println();" + "}", tryBlock.getSourceCode());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testCatchFinally() throws Exception {
         TryBlockSupport tryBlock = new TryBlockSupport("return null;");
         tryBlock.addCatchBlock(Exception.class, "e.printStackTrace();");
@@ -57,6 +59,9 @@ public class TryBlockSupportTest extends TestCase {
                 + "System.out.println();" + "}", tryBlock.getSourceCode());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testFail() throws Exception {
         TryBlockSupport tryBlock = new TryBlockSupport("return null;");
         try {
@@ -80,6 +85,9 @@ public class TryBlockSupportTest extends TestCase {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public void testNotThrowable() throws Exception {
         TryBlockSupport tryBlock = new TryBlockSupport("return null;");
         try {

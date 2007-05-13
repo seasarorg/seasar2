@@ -37,6 +37,9 @@ public class ToStringInterceptorTest extends TestCase {
         interceptor = new ToStringInterceptor();
     }
 
+    /**
+     * @throws Exception
+     */
     public void testIntercept() throws Exception {
         interceptor.setDateFormat("yy/MM/dd H:mm");
         FooEntity proxy = (FooEntity) applyInterceptor(FooEntity.class);
@@ -54,6 +57,9 @@ public class ToStringInterceptorTest extends TestCase {
                         + "stringArray={\"1\",\"2\",\"3\"}]", proxy.toString());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testInterceptExtendsField() throws Exception {
         interceptor.setDateFormat("yyyy/MM/dd HH:mm:ss.SSS");
         BarEntity proxy = (BarEntity) applyInterceptor(BarEntity.class);
@@ -73,6 +79,9 @@ public class ToStringInterceptorTest extends TestCase {
                         + "stringArray={\"1\",\"2\",\"3\"}]", proxy.toString());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testIncludeConstant() throws Exception {
         interceptor.setIncludeConstant(true);
         interceptor.setDateFormat("yy/MM/dd H:mm");
@@ -91,6 +100,9 @@ public class ToStringInterceptorTest extends TestCase {
                         + "stringArray={\"1\",\"2\",\"3\"}]", proxy.toString());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testIncludeStatic() throws Exception {
         interceptor.setIncludeStatic(true);
         interceptor.setDateFormat("yy/MM/dd H:mm");
@@ -109,6 +121,9 @@ public class ToStringInterceptorTest extends TestCase {
                         + "stringArray={\"1\",\"2\",\"3\"}]", proxy.toString());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testIncludeConstantAndStatic() throws Exception {
         interceptor.setIncludeConstant(true);
         interceptor.setIncludeStatic(true);
@@ -136,51 +151,90 @@ public class ToStringInterceptorTest extends TestCase {
     }
 
     static class FooEntity {
-        private static final String CONSTANT = "Hoge";
+        static final String CONSTANT = "Hoge";
 
-        private static int staticInt = 1;
+        static int staticInt = 1;
 
-        private int intVal = 12;
+        int intVal = 12;
 
         protected long longVal = 123;
 
-        private char charVal = 'a';
+        char charVal = 'a';
 
         double doubleVal = 1234.5;
 
+        /**
+         * 
+         */
         public Date dateVal = new Date(0);
 
+        /**
+         * 
+         */
         public Date nullVal = null;
 
+        /**
+         * 
+         */
         public long[] longArray = new long[] { 1, 2, 3 };
 
+        /**
+         * 
+         */
         public int[] intArray = new int[] { 1, 2, 3 };
 
+        /**
+         * 
+         */
         public short[] shortArray = new short[] { 1, 2, 3 };
 
+        /**
+         * 
+         */
         public byte[] byteArray = new byte[] { 1, 2, 3 };
 
+        /**
+         * 
+         */
         public char[] charArray = new char[] { '1', '2', '3' };
 
+        /**
+         * 
+         */
         public double[] doubleArray = new double[] { 1, 2, 3 };
 
+        /**
+         * 
+         */
         public float[] floatArray = new float[] { 1, 2, 3 };
 
+        /**
+         * 
+         */
         public boolean[] booleanArray = new boolean[] { true, false, true };
 
+        /**
+         * 
+         */
         public Boolean[] booleanClassArray = new Boolean[] { Boolean.TRUE,
                 Boolean.FALSE, Boolean.FALSE };
 
+        /**
+         * 
+         */
         public String[] stringArray = new String[] { "1", "2", "3" };
     }
 
     static class BarEntity extends FooEntity {
-        private int exIntVal = 123456;
+        int exIntVal = 123456;
 
         protected long exLongVal = 1234567;
 
         double exDoubleVal = 1234567.8;
 
+        /**
+         * 
+         */
         public Date exDateVal = new Date(1);
     }
 }

@@ -33,6 +33,9 @@ import org.seasar.framework.aop.proxy.AopProxy;
  */
 public class TraceInterceptorTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testIntercept() throws Exception {
         TraceInterceptor interceptor = new TraceInterceptor();
         Pointcut pointcut = new PointcutImpl(new String[] { "getTime" });
@@ -42,6 +45,9 @@ public class TraceInterceptorTest extends TestCase {
         proxy.getTime();
     }
 
+    /**
+     * @throws Exception
+     */
     public void testIntercept2() throws Exception {
         TraceInterceptor interceptor = new TraceInterceptor();
         Pointcut pointcut = new PointcutImpl(new String[] { "hoge" });
@@ -55,6 +61,9 @@ public class TraceInterceptorTest extends TestCase {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public void testIntercept3() throws Exception {
         TraceInterceptor interceptor = new TraceInterceptor();
         Pointcut pointcut = new PointcutImpl(new String[] { "geho" });
@@ -65,6 +74,9 @@ public class TraceInterceptorTest extends TestCase {
         proxy.geho(new String[0]);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testInterceptArray() throws Exception {
         TraceInterceptor interceptor = new TraceInterceptor();
         Pointcut pointcut = new PointcutImpl(new String[] { "hoge" });
@@ -75,6 +87,9 @@ public class TraceInterceptorTest extends TestCase {
         proxy.hoge(new String[] { "111" });
     }
 
+    /**
+     * @throws Exception
+     */
     public void testInterceptPrimitiveArray() throws Exception {
         TraceInterceptor interceptor = new TraceInterceptor();
         Pointcut pointcut = new PointcutImpl(new String[] { "hoge" });
@@ -85,6 +100,9 @@ public class TraceInterceptorTest extends TestCase {
         proxy.hoge(new int[] { 1, 2 });
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAppendObject() throws Exception {
         TraceInterceptor interceptor = new TraceInterceptor();
         assertEquals("null", interceptor.appendObject(new StringBuffer(), null)
@@ -101,6 +119,9 @@ public class TraceInterceptorTest extends TestCase {
                                 "B", "C" })) }).toString());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAppendArray() throws Exception {
         TraceInterceptor interceptor = new TraceInterceptor();
         assertEquals("[[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]]", interceptor
@@ -125,20 +146,42 @@ public class TraceInterceptorTest extends TestCase {
                 .toString());
     }
 
+    /**
+     * @author higa
+     * 
+     */
     public static class ThrowError {
+        /**
+         * 
+         */
         public void hoge() {
             throw new RuntimeException("hoge");
         }
 
+        /**
+         * @param array
+         */
         public void geho(String[] array) {
         }
     }
 
+    /**
+     * @author higa
+     * 
+     */
     public static class ArrayHoge {
+        /**
+         * @param arg
+         * @return
+         */
         public String[] hoge(String[] arg) {
             return new String[] { "aaa", "bbb" };
         }
 
+        /**
+         * @param arg
+         * @return
+         */
         public int[] hoge(int[] arg) {
             return new int[] { 10, 20 };
         }

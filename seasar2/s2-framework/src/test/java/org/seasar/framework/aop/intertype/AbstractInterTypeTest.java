@@ -21,11 +21,20 @@ import java.util.List;
 import org.seasar.framework.unit.S2FrameworkTestCase;
 import org.seasar.framework.util.ClassUtil;
 
+/**
+ * 
+ */
 public class AbstractInterTypeTest extends S2FrameworkTestCase {
 
+    /**
+     * 
+     */
     public AbstractInterTypeTest() {
     }
 
+    /**
+     * @param name
+     */
     public AbstractInterTypeTest(String name) {
         super(name);
     }
@@ -35,6 +44,9 @@ public class AbstractInterTypeTest extends S2FrameworkTestCase {
                 + ".dicon");
     }
 
+    /**
+     * @throws Exception
+     */
     public void test() throws Exception {
         Runnable o = (Runnable) getComponent(List.class);
         o.run();
@@ -44,12 +56,21 @@ public class AbstractInterTypeTest extends S2FrameworkTestCase {
         assertSame("2", getComponent(Foo.class), m.invoke(o, null));
     }
 
+    /**
+     * 
+     */
     public interface Foo {
     }
 
+    /**
+     * 
+     */
     public static class FooImpl implements Foo {
     }
 
+    /**
+     * 
+     */
     public static class TestInterType extends AbstractInterType {
         protected void introduce() {
             addInterface(Runnable.class);

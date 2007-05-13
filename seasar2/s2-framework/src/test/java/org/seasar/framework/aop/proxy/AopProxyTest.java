@@ -40,18 +40,8 @@ import org.seasar.framework.util.SerializeUtil;
 public class AopProxyTest extends TestCase {
 
     /**
-     * Constructor for InvocationImplTest.
-     * 
-     * @param arg0
+     * @throws Exception
      */
-    public AopProxyTest(String arg0) {
-        super(arg0);
-    }
-
-    public static void main(String[] args) {
-        junit.textui.TestRunner.run(AopProxyTest.class);
-    }
-
     public void testIntercept() throws Exception {
         TestInvocation invocation = new TestInvocation();
         Pointcut pointcut = new PointcutImpl(new String[] { "getTime" });
@@ -62,6 +52,9 @@ public class AopProxyTest extends TestCase {
         assertEquals("2", true, invocation.invoked_);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testInterface() throws Exception {
         Pointcut pointcut = new PointcutImpl(new String[] { "greeting" });
         Aspect aspect = new AspectImpl(new HelloInterceptor(), pointcut);
@@ -70,6 +63,9 @@ public class AopProxyTest extends TestCase {
         assertEquals("1", "Hello", proxy.greeting());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testCreateForArgs() throws Exception {
         Aspect aspect = new AspectImpl(new TraceInterceptor());
         AopProxy aopProxy = new AopProxy(HelloImpl.class,
@@ -80,6 +76,9 @@ public class AopProxyTest extends TestCase {
         System.out.println(proxy.hashCode());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testEquals() throws Exception {
         Pointcut pointcut = new PointcutImpl(new String[] { "greeting" });
         Aspect aspect = new AspectImpl(new HelloInterceptor(), pointcut);
@@ -90,6 +89,9 @@ public class AopProxyTest extends TestCase {
         assertEquals("3", false, proxy.equals("hoge"));
     }
 
+    /**
+     * 
+     */
     public void testEqualsByValue() {
         Pointcut pointcut = new PointcutImpl(new String[] { "toString" });
         Aspect aspect = new AspectImpl(new HelloInterceptor(), pointcut);
@@ -104,6 +106,9 @@ public class AopProxyTest extends TestCase {
         assertFalse("3", proxy.equals("Hoge"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testFinalMethod() throws Exception {
         Pointcut pointcut = new PointcutImpl(new String[] { "greeting" });
         Aspect aspect = new AspectImpl(new HelloInterceptor(), pointcut);
@@ -113,6 +118,9 @@ public class AopProxyTest extends TestCase {
         assertEquals("1", "hoge", proxy.greeting());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testSerialize() throws Exception {
         Aspect aspect = new AspectImpl(new TraceInterceptor());
         AopProxy aopProxy = new AopProxy(HelloImpl.class,
@@ -123,6 +131,9 @@ public class AopProxyTest extends TestCase {
         assertEquals("1", "Hello", copy.greeting());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testPerformance() throws Exception {
         Date target = new Date();
         Pointcut pointcut = new PointcutImpl(new String[] { "compareTo" });
@@ -157,20 +168,9 @@ public class AopProxyTest extends TestCase {
         System.out.println("JDK proxy:" + (System.currentTimeMillis() - start));
     }
 
-    /*
-     * @see TestCase#setUp()
+    /**
+     *
      */
-    protected void setUp() throws Exception {
-        super.setUp();
-    }
-
-    /*
-     * @see TestCase#tearDown()
-     */
-    protected void tearDown() throws Exception {
-        super.tearDown();
-    }
-
     public class TestInvocation implements MethodInterceptor {
 
         private boolean invoked_ = false;
@@ -182,6 +182,9 @@ public class AopProxyTest extends TestCase {
 
     }
 
+    /**
+     *
+     */
     public class MyInvocation implements MethodInterceptor {
 
         public Object invoke(MethodInvocation invocation) throws Throwable {
@@ -190,16 +193,28 @@ public class AopProxyTest extends TestCase {
 
     }
 
+    /**
+     *
+     */
     public interface Hello extends Serializable {
+        /**
+         * @return
+         */
         public String greeting();
     }
 
+    /**
+     *
+     */
     public static class HelloImpl implements Hello {
 
         private static final long serialVersionUID = -6888891433122734807L;
 
         private String str_;
 
+        /**
+         * @param str
+         */
         public HelloImpl(String str) {
             str_ = str;
         }
@@ -209,6 +224,9 @@ public class AopProxyTest extends TestCase {
         }
     }
 
+    /**
+     *
+     */
     public static class Hello2Impl implements Hello {
 
         private static final long serialVersionUID = -7275896388662514561L;
@@ -218,6 +236,9 @@ public class AopProxyTest extends TestCase {
         }
     }
 
+    /**
+     *
+     */
     public static class HelloImpl3 implements Hello {
 
         private static final long serialVersionUID = 5992242320294594184L;
@@ -227,15 +248,24 @@ public class AopProxyTest extends TestCase {
         }
     }
 
+    /**
+     *
+     */
     public class HelloInterceptor implements MethodInterceptor {
         public Object invoke(MethodInvocation invocation) throws Throwable {
             return "Hello";
         }
     }
 
+    /**
+     *
+     */
     public static class MyInvocationHandler implements InvocationHandler {
         private Object target;
 
+        /**
+         * @param target
+         */
         public MyInvocationHandler(Object target) {
             this.target = target;
         }

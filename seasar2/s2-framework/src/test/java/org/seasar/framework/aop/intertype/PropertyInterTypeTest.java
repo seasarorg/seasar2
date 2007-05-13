@@ -32,6 +32,9 @@ public class PropertyInterTypeTest extends S2FrameworkTestCase {
         include(getClass().getName().replace('.', '/') + ".dicon");
     }
 
+    /**
+     * @throws Exception
+     */
     public void test() throws Exception {
         Method setter = target.getClass().getMethod("setName",
                 new Class[] { String.class });
@@ -40,6 +43,9 @@ public class PropertyInterTypeTest extends S2FrameworkTestCase {
         assertEquals("hoge", getter.invoke(target, null));
     }
 
+    /**
+     * 
+     */
     public static class Target {
         protected String name;
     }

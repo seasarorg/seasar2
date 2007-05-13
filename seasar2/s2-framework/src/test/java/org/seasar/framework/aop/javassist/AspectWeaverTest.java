@@ -35,14 +35,10 @@ import org.seasar.framework.aop.interceptors.AbstractInterceptor;
  * @author koichik
  */
 public class AspectWeaverTest extends TestCase {
-    public AspectWeaverTest() {
-        super();
-    }
 
-    public AspectWeaverTest(String name) {
-        super(name);
-    }
-
+    /**
+     * @throws Exception
+     */
     public void testGetEnhancedClassName() throws Exception {
         AspectWeaver weaver = new AspectWeaver(Object.class, null);
         String name1 = weaver.getEnhancedClassName();
@@ -64,6 +60,9 @@ public class AspectWeaverTest extends TestCase {
         assertTrue("6", name3.endsWith("_0"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetMethodInvocationClassName() throws Exception {
         AspectWeaver weaver = new AspectWeaver(Object.class, null);
         String name1 = weaver.getMethodInvocationClassName(Object.class
@@ -73,6 +72,9 @@ public class AspectWeaverTest extends TestCase {
         assertTrue("2", name1.endsWith("hashCode0"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGenerateFromInterface() throws Exception {
         AspectWeaver weaver = new AspectWeaver(Runnable.class, null);
         weaver.setInterceptors(Runnable.class.getDeclaredMethod("run", null),
@@ -88,6 +90,9 @@ public class AspectWeaverTest extends TestCase {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGenerateFromConcreteClass() throws Exception {
         AspectWeaver weaver = new AspectWeaver(ArrayList.class, null);
         weaver.setInterceptors(ArrayList.class.getDeclaredMethod("size", null),
@@ -99,6 +104,9 @@ public class AspectWeaverTest extends TestCase {
                 + AspectWeaver.SUFFIX_INVOKE_SUPER_METHOD, null);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGenerateFromAbstractClass() throws Exception {
         AspectWeaver weaver = new AspectWeaver(AbstractList.class, null);
         weaver.setInterceptors(AbstractList.class.getDeclaredMethod("clear",
@@ -120,6 +128,9 @@ public class AspectWeaverTest extends TestCase {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public void testInterType() throws Exception {
         AspectWeaver weaver = new AspectWeaver(Foo.class, null);
         weaver.setInterTypes(new InterType[] { new FieldInterType() });
@@ -127,6 +138,9 @@ public class AspectWeaverTest extends TestCase {
         assertNotNull("1", clazz.getDeclaredField("test"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testReturnNumber() throws Exception {
         AspectWeaver weaver = new AspectWeaver(Collection.class, null);
         weaver.setInterceptors(
@@ -137,6 +151,9 @@ public class AspectWeaverTest extends TestCase {
         assertEquals("1", 100, coll.size());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testReturnNumberNull() throws Exception {
         AspectWeaver weaver = new AspectWeaver(Collection.class, null);
         weaver.setInterceptors(
@@ -147,6 +164,9 @@ public class AspectWeaverTest extends TestCase {
         assertEquals("1", 0, coll.size());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testReturnBooleanNull() throws Exception {
         AspectWeaver weaver = new AspectWeaver(Collection.class, null);
         weaver.setInterceptors(Collection.class.getDeclaredMethod("isEmpty",
@@ -156,9 +176,15 @@ public class AspectWeaverTest extends TestCase {
         assertFalse("1", coll.isEmpty());
     }
 
+    /**
+     * 
+     */
     public static class Foo {
     }
 
+    /**
+     * 
+     */
     public static class ReturnBigDecimalInterceptor extends AbstractInterceptor {
         private static final long serialVersionUID = -3444509695408031219L;
 
@@ -167,6 +193,9 @@ public class AspectWeaverTest extends TestCase {
         }
     }
 
+    /**
+     * 
+     */
     public static class ReturnNullInterceptor extends AbstractInterceptor {
         private static final long serialVersionUID = 4724885819473955866L;
 
@@ -175,6 +204,9 @@ public class AspectWeaverTest extends TestCase {
         }
     }
 
+    /**
+     * 
+     */
     public static class FieldInterType implements InterType {
 
         public void introduce(Class targetClass, CtClass enhancedClass) {

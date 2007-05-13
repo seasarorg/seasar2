@@ -28,6 +28,9 @@ import org.seasar.framework.aop.proxy.AopProxy;
  */
 public class TraceThrowsInterceptorTest extends TestCase {
 
+    /**
+     * @throws Throwable
+     */
     public void testHandleThrowable() throws Throwable {
         MethodInterceptor interceptor = new TraceThrowsInterceptor();
         Aspect aspect = new AspectImpl(interceptor);
@@ -42,11 +45,21 @@ public class TraceThrowsInterceptorTest extends TestCase {
         }
     }
 
+    /**
+     * 
+     */
     public interface Thrower {
 
+        /**
+         * @return
+         * @throws Throwable
+         */
         public Object throwThrowable() throws Throwable;
     }
 
+    /**
+     * 
+     */
     public static class ThrowerImpl implements Thrower {
 
         public Object throwThrowable() throws Throwable {

@@ -27,6 +27,9 @@ import org.seasar.framework.aop.proxy.AopProxy;
  */
 public class MockInterceptorTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testInvoke() throws Exception {
         MockInterceptor mi = new MockInterceptor("Hello");
         Aspect aspect = new AspectImpl(mi);
@@ -35,6 +38,9 @@ public class MockInterceptorTest extends TestCase {
         assertEquals("1", "Hello", hello.greeting());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testInvoke2() throws Exception {
         MockInterceptor mi = new MockInterceptor("Hello");
         Aspect aspect = new AspectImpl(mi);
@@ -46,6 +52,9 @@ public class MockInterceptorTest extends TestCase {
         assertEquals("4", "hoge", mi.getArgs("echo")[0]);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testInvoke3() throws Exception {
         MockInterceptor mi = new MockInterceptor();
         mi.setReturnValue("greeting", "Hello");
@@ -57,12 +66,18 @@ public class MockInterceptorTest extends TestCase {
         assertEquals("2", "Hello", hello.echo("hoge"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testCreateProxy() throws Exception {
         MockInterceptor mi = new MockInterceptor("Hello");
         Hello hello = (Hello) mi.createProxy(Hello.class);
         assertEquals("1", "Hello", hello.greeting());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testThrowable() throws Exception {
         MockInterceptor mi = new MockInterceptor();
         mi.setThrowable(new NullPointerException());
@@ -88,11 +103,26 @@ public class MockInterceptorTest extends TestCase {
         super.tearDown();
     }
 
+    /**
+     * @author higa
+     *
+     */
     public interface Hello {
+        /**
+         * @return
+         */
         public String greeting();
     }
 
+    /**
+     * @author higa
+     *
+     */
     public interface Hello2 extends Hello {
+        /**
+         * @param s
+         * @return
+         */
         public String echo(String s);
     }
 }

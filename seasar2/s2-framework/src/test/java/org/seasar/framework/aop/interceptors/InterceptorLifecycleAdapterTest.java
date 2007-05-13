@@ -21,6 +21,10 @@ import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.seasar.framework.unit.S2FrameworkTestCase;
 
+/**
+ * @author koichik
+ *
+ */
 public class InterceptorLifecycleAdapterTest extends S2FrameworkTestCase {
     protected List list;
 
@@ -28,6 +32,9 @@ public class InterceptorLifecycleAdapterTest extends S2FrameworkTestCase {
         include("InterceptorLifecycleAdapterTest.dicon");
     }
 
+    /**
+     * @throws Exception
+     */
     public void test() throws Exception {
         Runnable runnable = (Runnable) getComponent(Runnable.class);
         runnable.run();
@@ -37,9 +44,16 @@ public class InterceptorLifecycleAdapterTest extends S2FrameworkTestCase {
         assertNotSame("2", list.get(0), list.get(1));
     }
 
+    /**
+     * @author koichik
+     *
+     */
     public static class PrototypeInterceptor implements MethodInterceptor {
         protected List list;
 
+        /**
+         * @param list
+         */
         public void setList(List list) {
             this.list = list;
         }

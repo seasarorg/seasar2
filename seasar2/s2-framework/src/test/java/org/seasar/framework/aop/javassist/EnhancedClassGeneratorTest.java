@@ -28,14 +28,10 @@ import org.seasar.framework.util.ClassPoolUtil;
  * @author koichik
  */
 public class EnhancedClassGeneratorTest extends TestCase {
-    public EnhancedClassGeneratorTest() {
-        super();
-    }
 
-    public EnhancedClassGeneratorTest(String name) {
-        super(name);
-    }
-
+    /**
+     * @throws Exception
+     */
     public void testNormalizeExceptionTypes() throws Exception {
         assertTrue(
                 "1",
@@ -64,6 +60,9 @@ public class EnhancedClassGeneratorTest extends TestCase {
                         IOException.class, Error.class })));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAroundTryCatchBlock() throws Exception {
         assertEquals(
                 "1",
@@ -86,6 +85,9 @@ public class EnhancedClassGeneratorTest extends TestCase {
                         RuntimeException.class, IOException.class }, "return;"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testCreateTargetMethodSource() throws Exception {
         Method method1 = Object.class.getMethod("hashCode", null);
         assertEquals(
@@ -125,12 +127,18 @@ public class EnhancedClassGeneratorTest extends TestCase {
                         .createTargetMethodSource(method3, "MethodInvocation"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testCreateInvokeSuperMethodSource() throws Exception {
         Method method = Object.class.getMethod("wait", null);
         assertEquals("1", "{" + "return ($r) super.wait($$);" + "}",
                 EnhancedClassGenerator.createInvokeSuperMethodSource(method));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGenerateFromInterface() throws Exception {
         Method[] methods = TargetInterface.class.getDeclaredMethods();
         for (int i = 0; i < methods.length; ++i) {
@@ -151,6 +159,9 @@ public class EnhancedClassGeneratorTest extends TestCase {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGenerateFromClass() throws Exception {
         Method[] methods = TargetClass.class.getDeclaredMethods();
         for (int i = 0; i < methods.length; ++i) {
@@ -177,186 +188,426 @@ public class EnhancedClassGeneratorTest extends TestCase {
         }
     }
 
+    /**
+     * 
+     */
     public static interface TargetInterface {
+        /**
+         * 
+         */
         public void fVoid();
 
+        /**
+         * @return
+         */
         public boolean fBoolean();
 
+        /**
+         * @return
+         */
         public char fChar();
 
+        /**
+         * @return
+         */
         public byte fByte();
 
+        /**
+         * @return
+         */
         public short fShort();
 
+        /**
+         * @return
+         */
         public int fInt();
 
+        /**
+         * @return
+         */
         public long fLong();
 
+        /**
+         * @return
+         */
         public float fFloat();
 
+        /**
+         * @return
+         */
         public double fDouble();
 
+        /**
+         * @return
+         */
         public int[] fIntArray();
 
+        /**
+         * @return
+         */
         public int[][] fInt2DArray();
 
+        /**
+         * @return
+         */
         public Object fObject();
 
+        /**
+         * @return
+         */
         public Object[] fObjectArray();
 
+        /**
+         * @return
+         */
         public String fString();
 
+        /**
+         * @return
+         */
         public String[] fStringArray();
 
+        /**
+         * @param arg0
+         * @return
+         */
         public boolean f(boolean arg0);
 
+        /**
+         * @param arg0
+         * @return
+         */
         public char f(char arg0);
 
+        /**
+         * @param arg0
+         * @return
+         */
         public byte f(byte arg0);
 
+        /**
+         * @param arg0
+         * @return
+         */
         public short f(short arg0);
 
+        /**
+         * @param arg0
+         * @return
+         */
         public int f(int arg0);
 
+        /**
+         * @param arg0
+         * @return
+         */
         public long f(long arg0);
 
+        /**
+         * @param arg0
+         * @return
+         */
         public float f(float arg0);
 
+        /**
+         * @param arg0
+         * @return
+         */
         public double f(double arg0);
 
+        /**
+         * @param arg0
+         * @return
+         */
         public int[] f(int[] arg0);
 
+        /**
+         * @param arg0
+         * @return
+         */
         public int[][] f(int[][] arg0);
 
+        /**
+         * @param arg0
+         * @return
+         */
         public Object f(Object arg0);
 
+        /**
+         * @param arg0
+         * @return
+         */
         public Object[] f(Object[] arg0);
 
+        /**
+         * @param arg0
+         * @return
+         */
         public String f(String arg0);
 
+        /**
+         * @param arg0
+         * @return
+         */
         public String[] f(String[] arg0);
 
+        /**
+         * @param arg0
+         * @param arg1
+         * @param arg2
+         * @param arg3
+         * @param arg4
+         * @param arg5
+         * @param arg6
+         * @param arg7
+         * @param arg8
+         * @param arg9
+         * @param arg10
+         * @param arg11
+         * @param arg12
+         * @param arg13
+         */
         public void f(boolean arg0, char arg1, byte arg2, short arg3, int arg4,
                 long arg5, float arg6, double arg7, int[] arg8, int[][] arg9,
                 Object arg10, Object[] arg11, String arg12, String[] arg13);
     }
 
+    /**
+     * 
+     */
     public static class TargetClass {
+        /**
+         * 
+         */
         public void fVoid() {
         }
 
+        /**
+         * @return
+         */
         public boolean fBoolean() {
             return false;
         }
 
+        /**
+         * @return
+         */
         public char fChar() {
             return 0;
         }
 
+        /**
+         * @return
+         */
         public byte fByte() {
             return 0;
         }
 
+        /**
+         * @return
+         */
         public short fShort() {
             return 0;
         }
 
+        /**
+         * @return
+         */
         public int fInt() {
             return 0;
         }
 
+        /**
+         * @return
+         */
         public long fLong() {
             return 0;
         }
 
+        /**
+         * @return
+         */
         public float fFloat() {
             return 0;
         }
 
+        /**
+         * @return
+         */
         public double fDouble() {
             return 0;
         }
 
+        /**
+         * @return
+         */
         public int[] fIntArray() {
             return new int[0];
         }
 
+        /**
+         * @return
+         */
         public int[][] fInt2DArray() {
             return new int[0][0];
         }
 
+        /**
+         * @return
+         */
         public Object fObject() {
             return null;
         }
 
+        /**
+         * @return
+         */
         public Object[] fObjectArray() {
             return new Object[0];
         }
 
+        /**
+         * @return
+         */
         public String fString() {
             return "";
         }
 
+        /**
+         * @return
+         */
         public String[] fStringArray() {
             return new String[0];
         }
 
+        /**
+         * @param arg0
+         * @return
+         */
         public boolean f(boolean arg0) {
             return arg0;
         }
 
+        /**
+         * @param arg0
+         * @return
+         */
         public char f(char arg0) {
             return arg0;
         }
 
+        /**
+         * @param arg0
+         * @return
+         */
         public byte f(byte arg0) {
             return arg0;
         }
 
+        /**
+         * @param arg0
+         * @return
+         */
         public short f(short arg0) {
             return arg0;
         }
 
+        /**
+         * @param arg0
+         * @return
+         */
         public int f(int arg0) {
             return arg0;
         }
 
+        /**
+         * @param arg0
+         * @return
+         */
         public long f(long arg0) {
             return arg0;
         }
 
+        /**
+         * @param arg0
+         * @return
+         */
         public float f(float arg0) {
             return arg0;
         }
 
+        /**
+         * @param arg0
+         * @return
+         */
         public double f(double arg0) {
             return arg0;
         }
 
+        /**
+         * @param arg0
+         * @return
+         */
         public int[] f(int[] arg0) {
             return arg0;
         }
 
+        /**
+         * @param arg0
+         * @return
+         */
         public int[][] f(int[][] arg0) {
             return arg0;
         }
 
+        /**
+         * @param arg0
+         * @return
+         */
         public Object f(Object arg0) {
             return arg0;
         }
 
+        /**
+         * @param arg0
+         * @return
+         */
         public Object[] f(Object[] arg0) {
             return arg0;
         }
 
+        /**
+         * @param arg0
+         * @return
+         */
         public String f(String arg0) {
             return arg0;
         }
 
+        /**
+         * @param arg0
+         * @return
+         */
         public String[] f(String[] arg0) {
             return arg0;
         }
 
+        /**
+         * @param arg0
+         * @param arg1
+         * @param arg2
+         * @param arg3
+         * @param arg4
+         * @param arg5
+         * @param arg6
+         * @param arg7
+         * @param arg8
+         * @param arg9
+         * @param arg10
+         * @param arg11
+         * @param arg12
+         * @param arg13
+         */
         public void f(boolean arg0, char arg1, byte arg2, short arg3, int arg4,
                 long arg5, float arg6, double arg7, int[] arg8, int[][] arg9,
                 Object arg10, Object[] arg11, String arg12, String[] arg13) {

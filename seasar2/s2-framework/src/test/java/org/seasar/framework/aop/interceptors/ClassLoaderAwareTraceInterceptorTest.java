@@ -30,6 +30,9 @@ import org.seasar.framework.aop.proxy.AopProxy;
  */
 public class ClassLoaderAwareTraceInterceptorTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testIntercept() throws Exception {
         ClassLoaderAwareTraceInterceptor interceptor = new ClassLoaderAwareTraceInterceptor();
         Pointcut pointcut = new PointcutImpl(new String[] { "getTime" });
@@ -39,6 +42,9 @@ public class ClassLoaderAwareTraceInterceptorTest extends TestCase {
         proxy.getTime();
     }
 
+    /**
+     * @throws Exception
+     */
     public void testIntercept2() throws Exception {
         ClassLoaderAwareTraceInterceptor interceptor = new ClassLoaderAwareTraceInterceptor();
         Pointcut pointcut = new PointcutImpl(new String[] { "hoge" });
@@ -52,6 +58,9 @@ public class ClassLoaderAwareTraceInterceptorTest extends TestCase {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public void testIntercept3() throws Exception {
         ClassLoaderAwareTraceInterceptor interceptor = new ClassLoaderAwareTraceInterceptor();
         Pointcut pointcut = new PointcutImpl(new String[] { "foo" });
@@ -61,25 +70,49 @@ public class ClassLoaderAwareTraceInterceptorTest extends TestCase {
         hoge.foo(new Foo("a"));
     }
 
+    /**
+     * @author higa
+     * 
+     */
     public static class ThrowError {
+        /**
+         * 
+         */
         public void hoge() {
             throw new RuntimeException("hoge");
         }
     }
 
+    /**
+     * @author higa
+     * 
+     */
     public static class Hoge {
+        /**
+         * @param f
+         * @return
+         */
         public Foo foo(Foo f) {
             return new Foo(f.getS());
         }
     }
 
+    /**
+     * 
+     */
     public static class Foo {
         private String s;
 
+        /**
+         * @param s
+         */
         public Foo(String s) {
             this.s = s;
         }
 
+        /**
+         * @return
+         */
         public String getS() {
             return s;
         }

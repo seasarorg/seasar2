@@ -46,9 +46,15 @@ public abstract class AbstractPropertyInterTypeTest extends TestCase {
 
     abstract protected String getPath();
 
+    /**
+     * 
+     */
     public AbstractPropertyInterTypeTest() {
     }
 
+    /**
+     * @param name
+     */
     public AbstractPropertyInterTypeTest(String name) {
         super(name);
     }
@@ -67,6 +73,9 @@ public abstract class AbstractPropertyInterTypeTest extends TestCase {
         testObject = container.getComponent("testObject");
     }
 
+    /**
+     * @throws Exception
+     */
     public void testSetterGetter() throws Exception {
         // getter test
         assertEquals(getIntField("getIntReadField"), 123);
@@ -80,6 +89,9 @@ public abstract class AbstractPropertyInterTypeTest extends TestCase {
         assertEquals(getIntField("getIntReadWriteField"), 789);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testFieldType() throws Exception {
         Object testValue1 = new Object();
         setField("setObjectField", testValue1);
@@ -96,6 +108,9 @@ public abstract class AbstractPropertyInterTypeTest extends TestCase {
 
     }
 
+    /**
+     * @throws Exception
+     */
     public void testModifier() throws Exception {
         // Does public field's getter exist?
         assertMethodExists("getPublicField");
@@ -128,6 +143,9 @@ public abstract class AbstractPropertyInterTypeTest extends TestCase {
         assertMethodNotExists("setNonAnnotatedField", Integer.TYPE);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testClassAnnotated() throws Exception {
         // Does default (not annotated) field's getter exist?
         assertMethodExists(targetClass2, "getDefaultField");
@@ -160,6 +178,9 @@ public abstract class AbstractPropertyInterTypeTest extends TestCase {
         assertMethodNotExists(targetClass2, "setNoneField", Integer.TYPE);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testHasMethod() throws Exception {
         assertMethodNotExists(targetClass2, "getHasGetter");
         assertMethodExists(targetClass2, "setHasGetter", Integer.TYPE);
@@ -171,6 +192,9 @@ public abstract class AbstractPropertyInterTypeTest extends TestCase {
         assertMethodNotExists(targetClass2, "setHasGetterSetter", Integer.TYPE);
     }
 
+    /**
+     * 
+     */
     public void testInjection() {
         BeanDesc desc = BeanDescFactory.getBeanDesc(targetClass);
         PropertyDesc pd = desc.getPropertyDesc("testObject");

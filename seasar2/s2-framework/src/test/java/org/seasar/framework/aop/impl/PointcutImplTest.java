@@ -28,18 +28,8 @@ import org.seasar.framework.util.ClassUtil;
 public class PointcutImplTest extends TestCase {
 
     /**
-     * Constructor for InvocationImplTest.
-     * 
-     * @param arg0
+     * @throws Exception
      */
-    public PointcutImplTest(String arg0) {
-        super(arg0);
-    }
-
-    public static void main(String[] args) {
-        junit.textui.TestRunner.run(PointcutImplTest.class);
-    }
-
     public void testGetMethodNames() throws Exception {
         PointcutImpl pointcut = new PointcutImpl(Hello2Impl.class);
         String[] methodNames = pointcut.getMethodNames();
@@ -49,6 +39,9 @@ public class PointcutImplTest extends TestCase {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetMethodNames2() throws Exception {
         PointcutImpl pointcut = new PointcutImpl(Hello2.class);
         String[] methodNames = pointcut.getMethodNames();
@@ -58,6 +51,9 @@ public class PointcutImplTest extends TestCase {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetMethodNames3() throws Exception {
         PointcutImpl pointcut = new PointcutImpl(Hello2Impl2.class);
         String[] methodNames = pointcut.getMethodNames();
@@ -67,6 +63,9 @@ public class PointcutImplTest extends TestCase {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public void testRegex() throws Exception {
         PointcutImpl pointcut = new PointcutImpl(new String[] { "greeting.*" });
         assertTrue("1", pointcut.isApplied(ClassUtil.getMethod(
@@ -79,6 +78,9 @@ public class PointcutImplTest extends TestCase {
                 Hello2Impl2.class, "without", null)));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testMethod() throws Exception {
         PointcutImpl pointcut = new PointcutImpl(ClassUtil.getMethod(
                 Hello2Impl2.class, "greeting2", null));
@@ -106,10 +108,21 @@ public class PointcutImplTest extends TestCase {
         super.tearDown();
     }
 
+    /**
+     * @author higa
+     * 
+     */
     public interface Hello {
+        /**
+         * @return
+         */
         public String greeting();
     }
 
+    /**
+     * @author higa
+     * 
+     */
     public static class HelloImpl implements Hello {
 
         public String greeting() {
@@ -117,16 +130,31 @@ public class PointcutImplTest extends TestCase {
         }
     }
 
+    /**
+     * @author higa
+     * 
+     */
     public class HelloInterceptor implements MethodInterceptor {
         public Object invoke(MethodInvocation invocation) throws Throwable {
             return "Hello";
         }
     }
 
+    /**
+     * @author higa
+     * 
+     */
     public interface Hello2 extends Hello {
+        /**
+         * @return
+         */
         public String greeting2();
     }
 
+    /**
+     * @author higa
+     * 
+     */
     public static class Hello2Impl extends HelloImpl implements Hello2 {
 
         public String greeting2() {
@@ -134,6 +162,10 @@ public class PointcutImplTest extends TestCase {
         }
     }
 
+    /**
+     * @author higa
+     * 
+     */
     public static class Hello2Impl2 implements Hello2 {
 
         public String greeting() {
@@ -144,10 +176,17 @@ public class PointcutImplTest extends TestCase {
             return "Hello2";
         }
 
+        /**
+         * @param s
+         * @return
+         */
         public String greeting2(String s) {
             return s;
         }
 
+        /**
+         * @return
+         */
         public String without() {
             return "Without";
         }

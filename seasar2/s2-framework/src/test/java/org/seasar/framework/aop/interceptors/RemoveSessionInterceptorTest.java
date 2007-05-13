@@ -31,6 +31,9 @@ public class RemoveSessionInterceptorTest extends S2FrameworkTestCase {
                 + ".dicon");
     }
 
+    /**
+     * @throws Exception
+     */
     public void testSessionExists() throws Exception {
         HttpSession session = getRequest().getSession();
         session.setAttribute("foo", "Foo");
@@ -46,16 +49,29 @@ public class RemoveSessionInterceptorTest extends S2FrameworkTestCase {
         assertNull(session.getAttribute("bar"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testSessionNotExists() throws Exception {
         Hoge hoge = (Hoge) getComponent("hoge");
         hoge.begin();
         hoge.end();
     }
 
+    /**
+     * @author higa
+     *
+     */
     public static class Hoge {
+        /**
+         * 
+         */
         public void begin() {
         }
 
+        /**
+         * 
+         */
         public void end() {
         }
     }

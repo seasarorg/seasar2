@@ -23,10 +23,19 @@ import javassist.NotFoundException;
 import org.seasar.framework.unit.S2FrameworkTestCase;
 import org.seasar.framework.util.ClassUtil;
 
+/**
+ *
+ */
 public class InterTypeChainTest extends S2FrameworkTestCase {
+    /**
+     * 
+     */
     public InterTypeChainTest() {
     }
 
+    /**
+     * @param name
+     */
     public InterTypeChainTest(String name) {
         super(name);
     }
@@ -36,12 +45,18 @@ public class InterTypeChainTest extends S2FrameworkTestCase {
                 + ".dicon");
     }
 
+    /**
+     * @throws Exception
+     */
     public void test() throws Exception {
         Object component = getComponent("test");
         assertTrue("1", component instanceof Serializable);
         assertTrue("2", component instanceof Runnable);
     }
 
+    /**
+     *
+     */
     public static class InterType1 extends AbstractInterType {
         protected void introduce() throws CannotCompileException,
                 NotFoundException {
@@ -49,6 +64,9 @@ public class InterTypeChainTest extends S2FrameworkTestCase {
         }
     }
 
+    /**
+     *
+     */
     public static class InterType2 extends AbstractInterType {
         protected void introduce() throws CannotCompileException,
                 NotFoundException {
@@ -56,7 +74,13 @@ public class InterTypeChainTest extends S2FrameworkTestCase {
         }
     }
 
+    /**
+     *
+     */
     public static class TestClass {
+        /**
+         * 
+         */
         public void run() {
         }
     }

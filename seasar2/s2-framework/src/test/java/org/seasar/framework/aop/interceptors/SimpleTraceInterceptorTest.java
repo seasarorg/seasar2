@@ -31,6 +31,9 @@ import org.seasar.framework.aop.proxy.AopProxy;
  */
 public class SimpleTraceInterceptorTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testIntercept() throws Exception {
         SimpleTraceInterceptor interceptor = new SimpleTraceInterceptor();
         Pointcut pointcut = new PointcutImpl(new String[] { "getTime" });
@@ -40,6 +43,9 @@ public class SimpleTraceInterceptorTest extends TestCase {
         proxy.getTime();
     }
 
+    /**
+     * @throws Exception
+     */
     public void testIntercept2() throws Exception {
         SimpleTraceInterceptor interceptor = new SimpleTraceInterceptor();
         Pointcut pointcut = new PointcutImpl(new String[] { "hoge" });
@@ -53,7 +59,14 @@ public class SimpleTraceInterceptorTest extends TestCase {
         }
     }
 
+    /**
+     * @author higa
+     *
+     */
     public static class ThrowError {
+        /**
+         * 
+         */
         public void hoge() {
             throw new RuntimeException("hoge");
         }

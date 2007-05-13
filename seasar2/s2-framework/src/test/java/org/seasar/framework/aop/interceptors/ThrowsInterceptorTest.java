@@ -30,6 +30,9 @@ import org.seasar.framework.beans.MethodNotFoundRuntimeException;
  */
 public class ThrowsInterceptorTest extends TestCase {
 
+    /**
+     * @throws Throwable
+     */
     public void testHandleThrowable() throws Throwable {
         MethodInterceptor interceptor = new MyThrowsInterceptor();
         Aspect aspect = new AspectImpl(interceptor);
@@ -46,6 +49,9 @@ public class ThrowsInterceptorTest extends TestCase {
         }
     }
 
+    /**
+     * @throws Throwable
+     */
     public void testHandleThrowable2() throws Throwable {
         MethodInterceptor interceptor = new MyThrowsInterceptor2();
         Aspect aspect = new AspectImpl(interceptor);
@@ -60,6 +66,9 @@ public class ThrowsInterceptorTest extends TestCase {
         }
     }
 
+    /**
+     * @throws Throwable
+     */
     public void testHandleThrowable3() throws Throwable {
         MethodInterceptor interceptor = new MyThrowsInterceptor3();
         Aspect aspect = new AspectImpl(interceptor);
@@ -69,6 +78,9 @@ public class ThrowsInterceptorTest extends TestCase {
         assertEquals("1", "aaa", proxy.throwException());
     }
 
+    /**
+     * @throws Throwable
+     */
     public void testHandleThrowable4() throws Throwable {
         try {
             new MyThrowsInterceptor4();
@@ -78,29 +90,43 @@ public class ThrowsInterceptorTest extends TestCase {
         }
     }
 
-    /*
-     * @see TestCase#setUp()
-     */
     protected void setUp() throws Exception {
         super.setUp();
     }
 
-    /*
-     * @see TestCase#tearDown()
-     */
     protected void tearDown() throws Exception {
         super.tearDown();
     }
 
+    /**
+     * @author higa
+     * 
+     */
     public interface Thrower {
 
+        /**
+         * @return
+         * @throws Throwable
+         */
         public Object throwThrowable() throws Throwable;
 
+        /**
+         * @return
+         * @throws Throwable
+         */
         public Object throwException() throws Throwable;
 
+        /**
+         * @return
+         * @throws Throwable
+         */
         public Object throwRuntimeException() throws Throwable;
     }
 
+    /**
+     * @author higa
+     * 
+     */
     public static class ThrowerImpl implements Thrower {
 
         private int num_;
@@ -122,19 +148,38 @@ public class ThrowsInterceptorTest extends TestCase {
         }
     }
 
+    /**
+     * @author higa
+     * 
+     */
     public class MyThrowsInterceptor extends ThrowsInterceptor {
 
         private static final long serialVersionUID = 850322067660303954L;
 
+        /**
+         * @param ex
+         * @param invocation
+         * @return
+         */
         public String handleThrowable(Exception ex, MethodInvocation invocation) {
             return ex.getClass().getName();
         }
     }
 
+    /**
+     * @author higa
+     * 
+     */
     public class MyThrowsInterceptor2 extends ThrowsInterceptor {
 
         private static final long serialVersionUID = -2523692002595965341L;
 
+        /**
+         * @param ex
+         * @param invocation
+         * @return
+         * @throws Throwable
+         */
         public String handleThrowable(Exception ex, MethodInvocation invocation)
                 throws Throwable {
 
@@ -143,10 +188,20 @@ public class ThrowsInterceptorTest extends TestCase {
         }
     }
 
+    /**
+     * @author higa
+     * 
+     */
     public class MyThrowsInterceptor3 extends ThrowsInterceptor {
 
         private static final long serialVersionUID = -5725852748409700279L;
 
+        /**
+         * @param ex
+         * @param invocation
+         * @return
+         * @throws Throwable
+         */
         public String handleThrowable(Exception ex, MethodInvocation invocation)
                 throws Throwable {
 
@@ -154,6 +209,10 @@ public class ThrowsInterceptorTest extends TestCase {
         }
     }
 
+    /**
+     * @author higa
+     * 
+     */
     public class MyThrowsInterceptor4 extends ThrowsInterceptor {
         private static final long serialVersionUID = 2583097886643107941L;
     }

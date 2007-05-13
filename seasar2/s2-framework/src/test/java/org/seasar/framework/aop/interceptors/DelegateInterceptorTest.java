@@ -28,18 +28,8 @@ import org.seasar.framework.exception.EmptyRuntimeException;
 public class DelegateInterceptorTest extends TestCase {
 
     /**
-     * Constructor for InvocationImplTest.
-     * 
-     * @param arg0
+     * @throws Exception
      */
-    public DelegateInterceptorTest(String arg0) {
-        super(arg0);
-    }
-
-    public static void main(String[] args) {
-        junit.textui.TestRunner.run(DelegateInterceptorTest.class);
-    }
-
     public void testInvoke() throws Exception {
         Hello target = new HelloImpl();
         DelegateInterceptor di = new DelegateInterceptor(target);
@@ -47,6 +37,9 @@ public class DelegateInterceptorTest extends TestCase {
         assertEquals("1", "Hello", proxy.greeting());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testInvoke2() throws Exception {
         Hello2 target = new Hello2Impl();
         DelegateInterceptor di = new DelegateInterceptor(target);
@@ -55,18 +48,27 @@ public class DelegateInterceptorTest extends TestCase {
         assertEquals("1", "Hello2", proxy.greeting());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testInvoke3() throws Exception {
         DelegateInterceptor di = new DelegateInterceptor("hoge");
         Date proxy = (Date) di.createProxy(Date.class);
         assertTrue("1", proxy.getTime() > 0);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testInvoke4() throws Exception {
         DelegateInterceptor di = new DelegateInterceptor(new Date(0));
         Date proxy = (Date) di.createProxy(Date.class);
         assertEquals("1", true, proxy.getTime() != 0);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testNullTarget() throws Exception {
         DelegateInterceptor di = new DelegateInterceptor();
         Hello proxy = (Hello) di.createProxy(Hello.class);
@@ -92,20 +94,42 @@ public class DelegateInterceptorTest extends TestCase {
         super.tearDown();
     }
 
+    /**
+     * @author higa
+     * 
+     */
     public interface Hello {
+        /**
+         * @return
+         */
         public String greeting();
     }
 
+    /**
+     * @author higa
+     * 
+     */
     public class HelloImpl implements Hello {
         public String greeting() {
             return "Hello";
         }
     }
 
+    /**
+     * @author higa
+     * 
+     */
     public interface Hello2 {
+        /**
+         * @return
+         */
         public String greeting2();
     }
 
+    /**
+     * @author higa
+     * 
+     */
     public class Hello2Impl implements Hello2 {
         public String greeting2() {
             return "Hello2";

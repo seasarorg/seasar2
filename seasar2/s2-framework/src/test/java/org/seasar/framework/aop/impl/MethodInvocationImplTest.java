@@ -31,6 +31,9 @@ import org.seasar.framework.aop.proxy.AopProxy;
  */
 public class MethodInvocationImplTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testProceed() throws Exception {
         TestInterceptor interceptor = new TestInterceptor();
         TestInterceptor interceptor2 = new TestInterceptor();
@@ -45,6 +48,9 @@ public class MethodInvocationImplTest extends TestCase {
         assertEquals("2", true, interceptor2.invoked_);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testProceedForAbstractMethod() throws Exception {
         HogeInterceptor interceptor = new HogeInterceptor();
         Aspect aspect = new AspectImpl(interceptor);
@@ -53,6 +59,10 @@ public class MethodInvocationImplTest extends TestCase {
         assertEquals("1", "Hello", proxy.foo());
     }
 
+    /**
+     * @author li0934
+     * 
+     */
     public class TestInterceptor implements MethodInterceptor {
 
         private boolean invoked_ = false;
@@ -64,10 +74,21 @@ public class MethodInvocationImplTest extends TestCase {
 
     }
 
+    /**
+     * @author higa
+     * 
+     */
     public interface Hoge {
+        /**
+         * @return
+         */
         public String foo();
     }
 
+    /**
+     * @author higa
+     * 
+     */
     public static class HogeInterceptor implements MethodInterceptor {
 
         public Object invoke(MethodInvocation invocation) throws Throwable {

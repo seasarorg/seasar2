@@ -31,6 +31,9 @@ public class InterceptorAdapterTest extends S2FrameworkTestCase {
         include("InterceptorAdapterTest.dicon");
     }
 
+    /**
+     * @throws Exception
+     */
     public void test() throws Exception {
         Runnable runnable = (Runnable) getComponent(Runnable.class);
         runnable.run();
@@ -40,9 +43,16 @@ public class InterceptorAdapterTest extends S2FrameworkTestCase {
         assertNotSame("2", list.get(0), list.get(1));
     }
 
+    /**
+     * @author koichik
+     *
+     */
     public static class PrototypeInterceptor implements MethodInterceptor {
         protected List list;
 
+        /**
+         * @param list
+         */
         public void setList(List list) {
             this.list = list;
         }

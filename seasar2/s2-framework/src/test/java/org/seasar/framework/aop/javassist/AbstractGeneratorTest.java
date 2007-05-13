@@ -21,13 +21,10 @@ import junit.framework.TestCase;
  * @author koichik
  */
 public class AbstractGeneratorTest extends TestCase {
-    public AbstractGeneratorTest() {
-    }
 
-    public AbstractGeneratorTest(String name) {
-        super(name);
-    }
-
+    /**
+     * @throws Exception
+     */
     public void testFromObject() throws Exception {
         assertEquals("1", "var", AbstractGenerator
                 .fromObject(void.class, "var"));
@@ -59,6 +56,9 @@ public class AbstractGeneratorTest extends TestCase {
                 .fromObject(String[].class, "var"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testToObject() throws Exception {
         assertEquals("1", "new java.lang.Boolean(var)", AbstractGenerator
                 .toObject(boolean.class, "var"));

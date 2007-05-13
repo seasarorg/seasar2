@@ -50,6 +50,9 @@ public class PrototypeDelegateInterceptorTest extends TestCase {
         container = containerImpl;
     }
 
+    /**
+     * @throws Exception
+     */
     public void testSingleton() throws Exception {
         PrototypeDelegateInterceptor pdi = new PrototypeDelegateInterceptor(
                 container);
@@ -61,6 +64,9 @@ public class PrototypeDelegateInterceptorTest extends TestCase {
         assertSame("2", list.get(0), list.get(1));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testPrototype() throws Exception {
         PrototypeDelegateInterceptor pdi = new PrototypeDelegateInterceptor(
                 container);
@@ -72,6 +78,9 @@ public class PrototypeDelegateInterceptorTest extends TestCase {
         assertNotSame("2", list.get(0), list.get(1));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testMethodName() throws Exception {
         PrototypeDelegateInterceptor pdi = new PrototypeDelegateInterceptor(
                 container);
@@ -82,13 +91,30 @@ public class PrototypeDelegateInterceptorTest extends TestCase {
         assertEquals("1", 1, list.size());
     }
 
+    /**
+     * @author koichik
+     *
+     */
     public static interface Hello {
+        /**
+         * 
+         */
         public void foo();
 
+        /**
+         * 
+         */
         public void bar();
     }
 
+    /**
+     * @author koichik
+     *
+     */
     public static class Target {
+        /**
+         * 
+         */
         public void foo() {
             list.add(this);
         }

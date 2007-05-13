@@ -31,14 +31,28 @@ public class HotAwareDelegateInterceptorTest extends S2FrameworkTestCase {
         register(HelloImpl.class, "hello2");
     }
 
+    /**
+     * @throws Exception
+     */
     public void testInvoke() throws Exception {
         assertEquals("Hello", hello.greeting());
     }
 
+    /**
+     * @author koichik
+     * 
+     */
     public interface Hello {
+        /**
+         * @return
+         */
         public String greeting();
     }
 
+    /**
+     * @author koichik
+     * 
+     */
     public static class HelloImpl implements Hello {
         public String greeting() {
             return "Hello";
