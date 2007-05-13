@@ -43,6 +43,9 @@ public class ComponentCreatorImplTest extends TestCase {
         creator.setEnableAbstract(true);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testCreateComponentDef() throws Exception {
         ComponentDef cd = creator.createComponentDef(AaaDao.class);
         assertNotNull(cd);
