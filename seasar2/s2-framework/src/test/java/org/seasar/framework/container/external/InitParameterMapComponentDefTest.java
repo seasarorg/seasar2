@@ -27,6 +27,9 @@ import org.seasar.framework.unit.S2FrameworkTestCase;
 public class InitParameterMapComponentDefTest extends
         S2FrameworkTestCase {
 
+    /**
+     * 
+     */
     public void testGetComponent() {
         MockServletContext context = getServletContext();
         context.setInitParameter("a", "A");

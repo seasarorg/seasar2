@@ -17,7 +17,6 @@ package org.seasar.framework.container.external.servlet;
 
 import java.util.Iterator;
 
-import org.seasar.framework.container.external.servlet.ServletRequestParameterMap;
 import org.seasar.framework.mock.servlet.MockHttpServletRequest;
 import org.seasar.framework.unit.S2FrameworkTestCase;
 
@@ -26,6 +25,9 @@ import org.seasar.framework.unit.S2FrameworkTestCase;
  */
 public class ServletRequestParameterMapTest extends S2FrameworkTestCase {
 
+    /**
+     * 
+     */
     public void testServletRequestParameterMap() {
         MockHttpServletRequest request = getRequest();
         request.setParameter("a", "A");

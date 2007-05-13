@@ -26,6 +26,9 @@ import org.seasar.framework.unit.S2FrameworkTestCase;
  */
 public class RequestParameterValuesMapComponentDefTest extends S2FrameworkTestCase {
 
+    /**
+     * 
+     */
     public void testGetComponent() {
         MockHttpServletRequest request = getRequest();
         request.setParameter("a", new String[] { "A", "B" });

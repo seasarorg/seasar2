@@ -26,6 +26,9 @@ import org.seasar.framework.unit.S2FrameworkTestCase;
  */
 public class RequestHeaderValuesMapComponentDefTest extends S2FrameworkTestCase {
 
+    /**
+     * 
+     */
     public void testServletRequestHeaderValuesMap() {
         MockHttpServletRequest request = getRequest();
         request.addHeader("a", "A");

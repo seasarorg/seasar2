@@ -27,6 +27,9 @@ import org.seasar.framework.unit.S2FrameworkTestCase;
  */
 public class ApplicationMapComponentDefTest extends S2FrameworkTestCase {
 
+    /**
+     * 
+     */
     public void testGetComponent() {
         ServletContext context = getServletContext();
         context.setAttribute("a", "A");

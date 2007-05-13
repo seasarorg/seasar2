@@ -19,7 +19,6 @@ import java.util.Iterator;
 
 import javax.servlet.http.Cookie;
 
-import org.seasar.framework.container.external.servlet.CookieMap;
 import org.seasar.framework.mock.servlet.MockHttpServletRequest;
 import org.seasar.framework.unit.S2FrameworkTestCase;
 
@@ -28,6 +27,9 @@ import org.seasar.framework.unit.S2FrameworkTestCase;
  */
 public class CookieMapTest extends S2FrameworkTestCase {
 
+    /**
+     * 
+     */
     public void testCookieMap() {
         MockHttpServletRequest request = getRequest();
         Cookie cookie = new Cookie("a", "A");

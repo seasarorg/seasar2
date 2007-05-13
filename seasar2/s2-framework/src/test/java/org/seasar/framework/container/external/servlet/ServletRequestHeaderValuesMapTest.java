@@ -15,7 +15,6 @@
  */
 package org.seasar.framework.container.external.servlet;
 
-import org.seasar.framework.container.external.servlet.ServletRequestHeaderValuesMap;
 import org.seasar.framework.mock.servlet.MockHttpServletRequest;
 import org.seasar.framework.unit.S2FrameworkTestCase;
 
@@ -24,6 +23,9 @@ import org.seasar.framework.unit.S2FrameworkTestCase;
  */
 public class ServletRequestHeaderValuesMapTest extends S2FrameworkTestCase {
 
+    /**
+     * 
+     */
     public void testServletRequestHeaderValuesMap() {
         MockHttpServletRequest request = getRequest();
         request.addHeader("a", "A");

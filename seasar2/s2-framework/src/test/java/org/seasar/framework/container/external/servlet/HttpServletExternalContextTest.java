@@ -21,7 +21,6 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpSession;
 
-import org.seasar.framework.container.external.servlet.HttpServletExternalContext;
 import org.seasar.framework.mock.servlet.MockHttpServletRequest;
 import org.seasar.framework.mock.servlet.MockServletContext;
 import org.seasar.framework.mock.servlet.MockServletContextImpl;
@@ -32,6 +31,9 @@ import org.seasar.framework.unit.S2FrameworkTestCase;
  */
 public class HttpServletExternalContextTest extends S2FrameworkTestCase {
 
+    /**
+     * 
+     */
     public void testGetRequestCookieMap() {
         MockHttpServletRequest request = getRequest();
         Cookie cookie = new Cookie("a", "A");
@@ -45,6 +47,9 @@ public class HttpServletExternalContextTest extends S2FrameworkTestCase {
         assertEquals(1, map.size());
     }
     
+    /**
+     * 
+     */
     public void testGetSessionMap() {
         MockHttpServletRequest request = getRequest();
         HttpSession session = request.getSession();
@@ -60,6 +65,9 @@ public class HttpServletExternalContextTest extends S2FrameworkTestCase {
         assertEquals("ccc", session.getAttribute("bbb"));
     }
     
+    /**
+     * 
+     */
     public void testGetApplicationMap() {
         ServletContext context = getServletContext();
         context.setAttribute("a", "A");
@@ -81,6 +89,9 @@ public class HttpServletExternalContextTest extends S2FrameworkTestCase {
         assertNull(map.get("b"));
     }
     
+    /**
+     * 
+     */
     public void testGetInitParameterMap() {
         MockServletContext context = new MockServletContextImpl(null);
         context.setInitParameter("a", "A");
@@ -109,6 +120,9 @@ public class HttpServletExternalContextTest extends S2FrameworkTestCase {
         }
     }
     
+    /**
+     * 
+     */
     public void testGetRequestHeaderMap() {
         MockHttpServletRequest request = getRequest();
         request.addHeader("a", "A");
@@ -137,6 +151,9 @@ public class HttpServletExternalContextTest extends S2FrameworkTestCase {
         }
     }
     
+    /**
+     * 
+     */
     public void testGetRequestHeaderValuesMap() {
         MockHttpServletRequest request = getRequest();
         request.addHeader("a", "A");
@@ -153,6 +170,9 @@ public class HttpServletExternalContextTest extends S2FrameworkTestCase {
         assertEquals("B", strs[1]);
     }
     
+    /**
+     * 
+     */
     public void testGetRequestMap() {
         MockHttpServletRequest request = getRequest();
         request.setAttribute("hoge", "foo");
@@ -168,6 +188,9 @@ public class HttpServletExternalContextTest extends S2FrameworkTestCase {
         assertNull(map.get("baz"));
     }
     
+    /**
+     * 
+     */
     public void testGetRequestParameterMap() {
         MockHttpServletRequest request = getRequest();
         request.setParameter("a", "A");
@@ -196,6 +219,9 @@ public class HttpServletExternalContextTest extends S2FrameworkTestCase {
         }
     }
     
+    /**
+     * 
+     */
     public void testGetRequestParameterValuesMap() {
         MockHttpServletRequest request = getRequest();
         request.setParameter("a", new String[] { "A", "B" });

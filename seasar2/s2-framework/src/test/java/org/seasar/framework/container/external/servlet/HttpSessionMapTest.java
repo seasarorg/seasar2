@@ -17,7 +17,6 @@ package org.seasar.framework.container.external.servlet;
 
 import javax.servlet.http.HttpSession;
 
-import org.seasar.framework.container.external.servlet.HttpSessionMap;
 import org.seasar.framework.mock.servlet.MockHttpServletRequest;
 import org.seasar.framework.mock.servlet.MockHttpServletRequestImpl;
 import org.seasar.framework.unit.S2FrameworkTestCase;
@@ -27,6 +26,9 @@ import org.seasar.framework.unit.S2FrameworkTestCase;
  */
 public class HttpSessionMapTest extends S2FrameworkTestCase {
 
+    /**
+     * 
+     */
     public void testHttpSessionMap() {
         MockHttpServletRequest request = getRequest();
         HttpSession session = request.getSession();

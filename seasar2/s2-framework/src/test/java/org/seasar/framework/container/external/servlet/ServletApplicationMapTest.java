@@ -17,7 +17,6 @@ package org.seasar.framework.container.external.servlet;
 
 import javax.servlet.ServletContext;
 
-import org.seasar.framework.container.external.servlet.ServletApplicationMap;
 import org.seasar.framework.unit.S2FrameworkTestCase;
 
 /**
@@ -25,6 +24,9 @@ import org.seasar.framework.unit.S2FrameworkTestCase;
  */
 public class ServletApplicationMapTest extends S2FrameworkTestCase {
 
+    /**
+     * 
+     */
     public void testServletApplicationMap() {
         ServletContext context = getServletContext();
         context.setAttribute("a", "A");

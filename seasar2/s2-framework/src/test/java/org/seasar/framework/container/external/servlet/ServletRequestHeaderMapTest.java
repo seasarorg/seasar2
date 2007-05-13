@@ -17,7 +17,6 @@ package org.seasar.framework.container.external.servlet;
 
 import java.util.Iterator;
 
-import org.seasar.framework.container.external.servlet.ServletRequestHeaderMap;
 import org.seasar.framework.mock.servlet.MockHttpServletRequest;
 import org.seasar.framework.unit.S2FrameworkTestCase;
 
@@ -26,6 +25,9 @@ import org.seasar.framework.unit.S2FrameworkTestCase;
  */
 public class ServletRequestHeaderMapTest extends S2FrameworkTestCase {
 
+    /**
+     * 
+     */
     public void testServletRequestHeaderMap() {
         MockHttpServletRequest request = getRequest();
         request.addHeader("a", "A");

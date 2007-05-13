@@ -28,6 +28,9 @@ import org.seasar.framework.unit.S2FrameworkTestCase;
  */
 public class SessionMapComponentDefTest extends S2FrameworkTestCase {
 
+    /**
+     * 
+     */
     public void testGetComponent() {
         MockHttpServletRequest request = getRequest();
         HttpSession session = request.getSession();

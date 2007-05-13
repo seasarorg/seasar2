@@ -19,7 +19,6 @@ import java.util.Map;
 
 import junit.framework.TestCase;
 
-import org.seasar.framework.container.external.servlet.ServletInitParameterMap;
 import org.seasar.framework.mock.servlet.MockServletContext;
 import org.seasar.framework.mock.servlet.MockServletContextImpl;
 
@@ -28,6 +27,9 @@ import org.seasar.framework.mock.servlet.MockServletContextImpl;
  */
 public class ServletInitParameterMapTest extends TestCase {
 
+    /**
+     * 
+     */
     public void testServletInitParameter() {
         MockServletContext context = new MockServletContextImpl(null);
         context.setInitParameter("a", "A");

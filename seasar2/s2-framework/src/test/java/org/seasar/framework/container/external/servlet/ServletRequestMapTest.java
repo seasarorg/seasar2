@@ -15,7 +15,6 @@
  */
 package org.seasar.framework.container.external.servlet;
 
-import org.seasar.framework.container.external.servlet.ServletRequestMap;
 import org.seasar.framework.mock.servlet.MockHttpServletRequest;
 import org.seasar.framework.unit.S2FrameworkTestCase;
 
@@ -24,6 +23,9 @@ import org.seasar.framework.unit.S2FrameworkTestCase;
  */
 public class ServletRequestMapTest extends S2FrameworkTestCase {
 
+    /**
+     * 
+     */
     public void testServletRequestMap() {
         MockHttpServletRequest request = getRequest();
         request.setAttribute("hoge", "foo");
