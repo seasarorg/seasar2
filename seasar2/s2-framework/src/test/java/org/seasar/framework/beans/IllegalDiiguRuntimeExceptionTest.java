@@ -17,10 +17,15 @@ package org.seasar.framework.beans;
 
 import junit.framework.TestCase;
 
-import org.seasar.framework.beans.IllegalDiiguRuntimeException;
-
+/**
+ * @author higa
+ *
+ */
 public class IllegalDiiguRuntimeExceptionTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void test() throws Exception {
         IllegalDiiguRuntimeException ex = new IllegalDiiguRuntimeException();
         System.out.println(ex.getMessage());

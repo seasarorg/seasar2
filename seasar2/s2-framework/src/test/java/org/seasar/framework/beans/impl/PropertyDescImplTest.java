@@ -34,6 +34,9 @@ import org.seasar.framework.util.MathUtil;
  */
 public class PropertyDescImplTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testSetValue() throws Exception {
         MyBean myBean = new MyBean();
         BeanDesc beanDesc = new BeanDescImpl(MyBean.class);
@@ -42,6 +45,9 @@ public class PropertyDescImplTest extends TestCase {
         assertEquals(2, myBean.getFff());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testSetValue_null() throws Exception {
         MyBean myBean = new MyBean();
         BeanDesc beanDesc = new BeanDescImpl(MyBean.class);
@@ -50,6 +56,9 @@ public class PropertyDescImplTest extends TestCase {
         assertEquals(0, myBean.getFff());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testSetIllegalValue() throws Exception {
         MyBean myBean = new MyBean();
         BeanDesc beanDesc = new BeanDescImpl(MyBean.class);
@@ -62,6 +71,9 @@ public class PropertyDescImplTest extends TestCase {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public void testSetBigDecimalValue() throws Exception {
         MyBean myBean = new MyBean();
         BeanDesc beanDesc = new BeanDescImpl(MyBean.class);
@@ -70,6 +82,9 @@ public class PropertyDescImplTest extends TestCase {
         assertEquals("1", new BigDecimal(1), myBean.getGgg());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testSetTimestampValue() throws Exception {
         MyBean myBean = new MyBean();
         BeanDesc beanDesc = new BeanDescImpl(MyBean.class);
@@ -78,6 +93,9 @@ public class PropertyDescImplTest extends TestCase {
         assertNotNull("1", myBean.getHhh());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testSetCalendarValue() throws Exception {
         MyBean myBean = new MyBean();
         BeanDesc beanDesc = new BeanDescImpl(MyBean.class);
@@ -87,6 +105,9 @@ public class PropertyDescImplTest extends TestCase {
         assertEquals(date, myBean.getCal().getTime());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testConvertWithStringConstructor() throws Exception {
         MyBean myBean = new MyBean();
         BeanDesc beanDesc = new BeanDescImpl(MyBean.class);
@@ -95,6 +116,9 @@ public class PropertyDescImplTest extends TestCase {
         assertNotNull("1", myBean.getURL());
     }
 
+    /**
+     *
+     */
     public static class MyBean {
 
         private int fff_;
@@ -107,61 +131,109 @@ public class PropertyDescImplTest extends TestCase {
 
         private Calendar cal;
 
+        /**
+         * @return
+         */
         public String getAaa() {
             return null;
         }
 
+        /**
+         * @param a
+         * @return
+         */
         public String getBbb(Object a) {
             return null;
         }
 
+        /**
+         * @return
+         */
         public boolean isCCC() {
             return true;
         }
 
+        /**
+         * @return
+         */
         public Object isDdd() {
             return null;
         }
 
+        /**
+         * @return
+         */
         public String getEee() {
             return null;
         }
 
+        /**
+         * @param eee
+         */
         public void setEee(String eee) {
         }
 
+        /**
+         * @return
+         */
         public int getFff() {
             return fff_;
         }
 
+        /**
+         * @param fff
+         */
         public void setFff(int fff) {
             fff_ = fff;
         }
 
+        /**
+         * @param arg1
+         * @param arg2
+         * @return
+         */
         public Number add(Number arg1, Number arg2) {
             return MathUtil.add(arg1, arg2);
         }
 
+        /**
+         * @return
+         */
         public BigDecimal getGgg() {
             return ggg_;
         }
 
+        /**
+         * @param ggg
+         */
         public void setGgg(BigDecimal ggg) {
             this.ggg_ = ggg;
         }
 
+        /**
+         * @return
+         */
         public Timestamp getHhh() {
             return hhh_;
         }
 
+        /**
+         * @param hhh
+         */
         public void setHhh(Timestamp hhh) {
             this.hhh_ = hhh;
         }
 
+        /**
+         * @return
+         */
         public URL getURL() {
             return url_;
         }
 
+        /**
+         * @param url
+         */
         public void setURL(URL url) {
             url_ = url;
         }

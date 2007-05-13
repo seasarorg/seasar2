@@ -26,6 +26,9 @@ import junit.framework.TestCase;
  */
 public class BeanUtilTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testCopyProperties() throws Exception {
         MyClass src = new MyClass();
         src.setAaa("111");
@@ -42,6 +45,9 @@ public class BeanUtilTest extends TestCase {
         assertEquals("ddd", dest.getDdd());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testCopyPropertiesWithoutNull() throws Exception {
         MyClass src = new MyClass();
         src.setAaa("111");
@@ -58,6 +64,9 @@ public class BeanUtilTest extends TestCase {
         assertEquals("ddd", dest.getDdd());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testCopyToMap() throws Exception {
         HogeDto hoge = new HogeDto();
         hoge.setA("A");
@@ -71,6 +80,9 @@ public class BeanUtilTest extends TestCase {
         assertEquals(new Integer(3), map.get("c"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testCopyToBean() throws Exception {
         Map map = new HashMap();
         map.put("a", "A");
@@ -84,6 +96,9 @@ public class BeanUtilTest extends TestCase {
         assertEquals(new Integer(3), new Integer(hoge.getC()));
     }
 
+    /**
+     * 
+     */
     public static class HogeDto {
         private String a;
 
@@ -91,31 +106,52 @@ public class BeanUtilTest extends TestCase {
 
         private int c;
 
+        /**
+         * @return
+         */
         public String getA() {
             return a;
         }
 
+        /**
+         * @param a
+         */
         public void setA(String a) {
             this.a = a;
         }
 
+        /**
+         * @return
+         */
         public boolean isB() {
             return b;
         }
 
+        /**
+         * @param b
+         */
         public void setB(boolean b) {
             this.b = b;
         }
 
+        /**
+         * @return
+         */
         public int getC() {
             return c;
         }
 
+        /**
+         * @param c
+         */
         public void setC(int c) {
             this.c = c;
         }
     }
 
+    /**
+     * 
+     */
     public static class MyClass {
         private String aaa;
 
@@ -169,6 +205,9 @@ public class BeanUtilTest extends TestCase {
         }
     }
 
+    /**
+     * 
+     */
     public static class MyClass2 {
         private String aaa;
 

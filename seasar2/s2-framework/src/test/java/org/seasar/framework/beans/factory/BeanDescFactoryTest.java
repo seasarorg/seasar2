@@ -24,39 +24,67 @@ import org.seasar.framework.beans.BeanDesc;
  */
 public class BeanDescFactoryTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testGetBeanDesc() throws Exception {
         BeanDesc beanDesc = BeanDescFactory.getBeanDesc(MyBean.class);
         assertSame("1", beanDesc, BeanDescFactory.getBeanDesc(MyBean.class));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testClear() throws Exception {
         BeanDesc beanDesc = BeanDescFactory.getBeanDesc(MyBean.class);
         BeanDescFactory.clear();
         assertNotSame("1", beanDesc, BeanDescFactory.getBeanDesc(MyBean.class));
     }
 
+    /**
+     *
+     */
     public static class MyBean {
 
+        /**
+         * @return
+         */
         public String getAaa() {
             return null;
         }
 
+        /**
+         * @param a
+         * @return
+         */
         public String getBbb(Object a) {
             return null;
         }
 
+        /**
+         * @return
+         */
         public boolean isCCC() {
             return true;
         }
 
+        /**
+         * @return
+         */
         public Object isDdd() {
             return null;
         }
 
+        /**
+         * @return
+         */
         public String getEee() {
             return null;
         }
 
+        /**
+         * @param eee
+         */
         public void setEee(String eee) {
         }
     }
