@@ -26,6 +26,9 @@ import org.seasar.framework.container.impl.MetaDefImpl;
  */
 public class MetaDefSupportTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testGetMetaDefs() throws Exception {
         MetaDefSupport support = new MetaDefSupport();
         support.addMetaDef(new MetaDefImpl("aaa"));

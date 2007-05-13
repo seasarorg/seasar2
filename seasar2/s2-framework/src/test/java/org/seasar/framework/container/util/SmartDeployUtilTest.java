@@ -32,10 +32,16 @@ import org.seasar.framework.util.FieldUtil;
  */
 public class SmartDeployUtilTest extends S2FrameworkTestCase {
 
+    /**
+     * 
+     */
     public SmartDeployUtilTest() {
         setWarmDeploy(false);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testHotdeployMode() throws Exception {
         S2Container container = getContainer();
         assertFalse(SmartDeployUtil.isHotdeployMode(container));
@@ -43,11 +49,17 @@ public class SmartDeployUtilTest extends S2FrameworkTestCase {
         assertTrue(SmartDeployUtil.isHotdeployMode(container));
     }
 
+    /**
+     * 
+     */
     public void tearDownHotdeployMode() {
         S2ContainerBehavior
                 .setProvider(new S2ContainerBehavior.DefaultProvider());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testCooldeployMode() throws Exception {
         S2Container container = getContainer();
         assertFalse(SmartDeployUtil.isCooldeployMode(container));
@@ -57,12 +69,18 @@ public class SmartDeployUtilTest extends S2FrameworkTestCase {
         assertTrue(SmartDeployUtil.isCooldeployMode(container));
     }
 
+    /**
+     * 
+     */
     public void tearDownCooldeployMode() {
         BeanDesc bd = BeanDescFactory.getBeanDesc(S2ContainerFactory.class);
         FieldUtil.set(bd.getField("provider"), null,
                 new S2ContainerFactory.DefaultProvider());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testWarmdeployMode() throws Exception {
         S2Container container = getContainer();
         assertFalse(SmartDeployUtil.isWarmdeployMode(container));
@@ -70,6 +88,9 @@ public class SmartDeployUtilTest extends S2FrameworkTestCase {
         assertTrue(SmartDeployUtil.isWarmdeployMode(container));
     }
 
+    /**
+     * 
+     */
     public void tearDownWarmdeployMode() {
         S2ContainerBehavior
                 .setProvider(new S2ContainerBehavior.DefaultProvider());

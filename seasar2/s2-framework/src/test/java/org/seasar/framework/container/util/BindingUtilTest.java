@@ -27,11 +27,17 @@ import junit.framework.TestCase;
  */
 public class BindingUtilTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testIsAutoBindable() throws Exception {
         assertFalse(BindingUtil.isAutoBindable(List.class));
         assertTrue(BindingUtil.isAutoBindable(DataSource.class));
     }
     
+    /**
+     * @throws Exception
+     */
     public void testIsAutoBindableArray() throws Exception {
         Class clazz = new Cloneable[0].getClass();
         assertTrue(BindingUtil.isAutoBindableArray(clazz));

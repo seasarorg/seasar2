@@ -34,6 +34,9 @@ public class MemoryLeakTest extends TestCase {
             '/')
             + "/";
 
+    /**
+     * @throws Exception
+     */
     public void testFinalize() throws Exception {
         ClassLoader origin = Thread.currentThread().getContextClassLoader();
         for (int i = 0; i < 5; ++i) {
@@ -60,6 +63,9 @@ public class MemoryLeakTest extends TestCase {
         assertEquals(0, counter);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testFinalizeConfigurationContainer() throws Exception {
         for (int i = 0; i < 2; i++) {
             S2ContainerFactory.configure(basePath
@@ -77,8 +83,14 @@ public class MemoryLeakTest extends TestCase {
         testFinalize();
     }
 
+    /**
+     *
+     */
     public static class TestClassLoader extends UnitClassLoader {
 
+        /**
+         * @param parent
+         */
         public TestClassLoader(ClassLoader parent) {
             super(parent);
             System.out.println("+++ " + toString());

@@ -35,6 +35,9 @@ public class TraversalTest extends TestCase {
                 .create("org/seasar/framework/container/util/TraversalTest.dicon");
     }
 
+    /**
+     * @throws Exception
+     */
     public void testForEachContainer() throws Exception {
         final List l = new ArrayList();
         Traversal.forEachContainer(container,
@@ -52,6 +55,9 @@ public class TraversalTest extends TestCase {
         assertEquals("5", "3", l.get(3));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testForEachContainerChildLast() throws Exception {
         final List l = new ArrayList();
         Traversal.forEachContainer(container,
@@ -69,6 +75,9 @@ public class TraversalTest extends TestCase {
         assertEquals("5", "root", l.get(3));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testForEachContainerFinding() throws Exception {
         String s = (String) Traversal.forEachContainer(container,
                 new Traversal.S2ContainerHandler() {
@@ -80,6 +89,9 @@ public class TraversalTest extends TestCase {
         assertEquals("1", "1", s);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testForEachComponent() throws Exception {
         final List l = new ArrayList();
         Traversal.forEachComponent(container,
@@ -101,6 +113,9 @@ public class TraversalTest extends TestCase {
         assertEquals("9", "3-2", l.get(7));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testForEachComponentChildFirst() throws Exception {
         final List l = new ArrayList();
         Traversal.forEachComponent(container,
@@ -122,6 +137,9 @@ public class TraversalTest extends TestCase {
         assertEquals("9", "2", l.get(7));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testForEachComponentFinding() throws Exception {
         String s = (String) Traversal.forEachComponent(container,
                 new Traversal.ComponentDefHandler() {
@@ -133,6 +151,9 @@ public class TraversalTest extends TestCase {
         assertEquals("1", "1-1", s);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testForEachParentContainer() throws Exception {
         final List l = new ArrayList();
         final S2Container container3 = container.getChild(2);
@@ -150,6 +171,9 @@ public class TraversalTest extends TestCase {
         assertEquals("4", "root", l.get(2));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testForEachParentContainerChildLast() throws Exception {
         final List l = new ArrayList();
         final S2Container container3 = container.getChild(2);
@@ -167,6 +191,9 @@ public class TraversalTest extends TestCase {
         assertEquals("4", "3", l.get(2));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testForEachParentContainerFinding() throws Exception {
         final S2Container container3 = container.getChild(2);
         String s = (String) Traversal.forEachParentContainer(container3,

@@ -24,8 +24,15 @@ import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.factory.BeanDescFactory;
 import org.seasar.framework.container.util.ConstantAnnotationUtil.MyTokenizer;
 
+/**
+ * @author higa
+ * 
+ */
 public class ConstantAnnotationUtilTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testConvertExpressionToMap() throws Exception {
         Map map = ConstantAnnotationUtil.convertExpressionToMap("required");
         assertEquals("required", map.get(null));
@@ -50,23 +57,35 @@ public class ConstantAnnotationUtilTest extends TestCase {
         assertEquals("-9999.99", map.get("hoge"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testEOF() throws Exception {
         MyTokenizer tokenizer = new MyTokenizer("");
         assertEquals(MyTokenizer.TT_EOF, tokenizer.nextToken());
         assertEquals(MyTokenizer.TT_EOF, tokenizer.nextToken());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testWhitespace() throws Exception {
         MyTokenizer tokenizer = new MyTokenizer("\t       \n");
         assertEquals(MyTokenizer.TT_EOF, tokenizer.nextToken());
     }
 
+    /**
+     * @throws Exception
+     */
     public void fixme_testHyphen() throws Exception {
         MyTokenizer tokenizer = new MyTokenizer("       - ");
         assertEquals('-', tokenizer.nextToken());
         assertEquals(MyTokenizer.TT_EOF, tokenizer.nextToken());
     }
 
+    /**
+     * @throws Exception
+     */
     public void pend_testDot() throws Exception {
         MyTokenizer tokenizer = new MyTokenizer(".hoge");
         assertEquals('.', tokenizer.nextToken());
@@ -74,6 +93,9 @@ public class ConstantAnnotationUtilTest extends TestCase {
         assertEquals("hoge", tokenizer.getStringValue());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testOrdinary() throws Exception {
         MyTokenizer tokenizer = new MyTokenizer(" hoge= 123");
         assertEquals(MyTokenizer.TT_WORD, tokenizer.nextToken());
@@ -84,6 +106,9 @@ public class ConstantAnnotationUtilTest extends TestCase {
         assertEquals(MyTokenizer.TT_EOF, tokenizer.nextToken());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testOrdinaryDouble() throws Exception {
         MyTokenizer tokenizer = new MyTokenizer(" hoge= 9999.99");
         assertEquals(MyTokenizer.TT_WORD, tokenizer.nextToken());
@@ -94,6 +119,9 @@ public class ConstantAnnotationUtilTest extends TestCase {
         assertEquals(MyTokenizer.TT_EOF, tokenizer.nextToken());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testQuote() throws Exception {
         MyTokenizer tokenizer = new MyTokenizer("hoge=',=abc', aaa=bbb");
         assertEquals(MyTokenizer.TT_WORD, tokenizer.nextToken());
@@ -110,6 +138,9 @@ public class ConstantAnnotationUtilTest extends TestCase {
         assertEquals(MyTokenizer.TT_EOF, tokenizer.nextToken());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testIsConstantAnnotation() throws Exception {
         BeanDesc beanDesc = BeanDescFactory.getBeanDesc(Hoge.class);
         Field f1 = beanDesc.getField("A");
@@ -128,15 +159,30 @@ public class ConstantAnnotationUtilTest extends TestCase {
         assertTrue(ConstantAnnotationUtil.isConstantAnnotation(f5));
     }
 
+    /**
+     *
+     */
     public static class Hoge {
+        /**
+         * 
+         */
         public static String A = "A";
 
         protected static final String B = "B";
 
+        /**
+         * 
+         */
         public String C = "C";
 
+        /**
+         * 
+         */
         public static final int D = 1;
 
+        /**
+         * 
+         */
         public static final String F = "F";
     }
 
