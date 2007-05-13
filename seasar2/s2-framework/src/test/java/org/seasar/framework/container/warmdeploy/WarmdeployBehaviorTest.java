@@ -49,10 +49,16 @@ public class WarmdeployBehaviorTest extends S2FrameworkTestCase {
                 .setProvider(new S2ContainerBehavior.DefaultProvider());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testCreatComponentDef_name() throws Exception {
         assertTrue(getContainer().hasComponentDef("fooDao"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testCreatComponentDef_class() throws Exception {
         assertTrue(getContainer().hasComponentDef(FooDao.class));
     }

@@ -42,6 +42,9 @@ public class WarmDeployTest extends S2FrameworkTestCase {
                 .setProvider(new S2ContainerBehavior.DefaultProvider());
     }
 
+    /**
+     * 
+     */
     public void test() {
         S2Container container = getContainer()
                 .getDescendant("convention.dicon");
