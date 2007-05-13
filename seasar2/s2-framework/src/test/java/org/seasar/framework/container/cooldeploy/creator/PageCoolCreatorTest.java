@@ -23,6 +23,9 @@ import org.seasar.framework.unit.S2FrameworkTestCase;
  */
 public class PageCoolCreatorTest extends S2FrameworkTestCase {
 
+    /**
+     * 
+     */
     public PageCoolCreatorTest() {
         setWarmDeploy(false);
     }
@@ -31,6 +34,9 @@ public class PageCoolCreatorTest extends S2FrameworkTestCase {
         include("PageCoolCreatorTest.dicon");
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAll() throws Exception {
         assertTrue(getContainer().hasComponentDef("ccc_dddPage"));
     }

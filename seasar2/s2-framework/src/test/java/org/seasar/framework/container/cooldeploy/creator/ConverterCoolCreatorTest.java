@@ -22,6 +22,9 @@ import org.seasar.framework.unit.S2FrameworkTestCase;
  */
 public class ConverterCoolCreatorTest extends S2FrameworkTestCase {
 
+    /**
+     * 
+     */
     public ConverterCoolCreatorTest() {
         setWarmDeploy(false);
     }
@@ -30,6 +33,9 @@ public class ConverterCoolCreatorTest extends S2FrameworkTestCase {
         include("ConverterCoolCreatorTest.dicon");
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAll() throws Exception {
         assertTrue(getContainer().hasComponentDef("dummyConverter"));
     }

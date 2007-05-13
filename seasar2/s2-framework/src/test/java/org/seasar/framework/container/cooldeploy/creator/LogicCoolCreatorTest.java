@@ -26,6 +26,9 @@ import org.seasar.framework.unit.S2FrameworkTestCase;
  */
 public class LogicCoolCreatorTest extends S2FrameworkTestCase {
 
+    /**
+     * 
+     */
     public LogicCoolCreatorTest() {
         setWarmDeploy(false);
     }
@@ -34,6 +37,9 @@ public class LogicCoolCreatorTest extends S2FrameworkTestCase {
         include("LogicCoolCreatorTest.dicon");
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAll() throws Exception {
         assertTrue(getContainer().hasComponentDef(EeeLogic.class));
         ComponentDef cd = getComponentDef(EeeLogic.class);

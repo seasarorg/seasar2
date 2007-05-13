@@ -23,6 +23,9 @@ import org.seasar.framework.unit.S2FrameworkTestCase;
  */
 public class DaoCoolCreatorTest extends S2FrameworkTestCase {
 
+    /**
+     * 
+     */
     public DaoCoolCreatorTest() {
         setWarmDeploy(false);
     }
@@ -31,6 +34,9 @@ public class DaoCoolCreatorTest extends S2FrameworkTestCase {
         include("DaoCoolCreatorTest.dicon");
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetTargetClass() throws Exception {
         assertTrue(getContainer().hasComponentDef("aaaDao"));
         assertTrue(getContainer().hasComponentDef("bbbDao"));

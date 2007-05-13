@@ -23,6 +23,9 @@ import org.seasar.framework.unit.S2FrameworkTestCase;
  */
 public class DtoCoolCreatorTest extends S2FrameworkTestCase {
 
+    /**
+     * 
+     */
     public DtoCoolCreatorTest() {
         setWarmDeploy(false);
     }
@@ -31,6 +34,9 @@ public class DtoCoolCreatorTest extends S2FrameworkTestCase {
         include("DtoCoolCreatorTest.dicon");
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAll() throws Exception {
         assertTrue(getContainer().hasComponentDef("hhhDto"));
     }

@@ -25,6 +25,9 @@ import org.seasar.framework.unit.S2FrameworkTestCase;
  */
 public class DxoCoolCreatorTest extends S2FrameworkTestCase {
 
+    /**
+     * 
+     */
     public DxoCoolCreatorTest() {
         setWarmDeploy(false);
     }
@@ -33,6 +36,9 @@ public class DxoCoolCreatorTest extends S2FrameworkTestCase {
         include("DxoCoolCreatorTest.dicon");
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAll() throws Exception {
         assertTrue(getContainer().hasComponentDef("ccc_dddDxo"));
         assertTrue(getContainer().hasComponentDef("fffDxo"));

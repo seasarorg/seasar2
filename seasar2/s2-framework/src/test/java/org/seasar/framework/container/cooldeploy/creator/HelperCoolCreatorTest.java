@@ -23,6 +23,9 @@ import org.seasar.framework.unit.S2FrameworkTestCase;
  */
 public class HelperCoolCreatorTest extends S2FrameworkTestCase {
 
+    /**
+     * 
+     */
     public HelperCoolCreatorTest() {
         setWarmDeploy(false);
     }
@@ -31,6 +34,9 @@ public class HelperCoolCreatorTest extends S2FrameworkTestCase {
         include("HelperCoolCreatorTest.dicon");
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAll() throws Exception {
         assertTrue(getContainer().hasComponentDef("iiiHelper"));
     }

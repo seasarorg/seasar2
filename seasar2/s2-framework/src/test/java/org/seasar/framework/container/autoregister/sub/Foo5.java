@@ -15,5 +15,9 @@
  */
 package org.seasar.framework.container.autoregister.sub;
 
+/**
+ * @author higa
+ * 
+ */
 public class Foo5 {
 }

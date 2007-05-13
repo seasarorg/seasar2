@@ -23,6 +23,9 @@ import org.seasar.framework.unit.S2FrameworkTestCase;
  */
 public class ActionCoolCreatorTest extends S2FrameworkTestCase {
 
+    /**
+     * 
+     */
     public ActionCoolCreatorTest() {
         setWarmDeploy(false);
     }
@@ -31,6 +34,9 @@ public class ActionCoolCreatorTest extends S2FrameworkTestCase {
         include("ActionCoolCreatorTest.dicon");
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAll() throws Exception {
         assertTrue(getContainer().hasComponentDef("ccc_dddAction"));
     }

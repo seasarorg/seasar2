@@ -38,6 +38,9 @@ public class S2ContainerFactoryCoolProviderTest extends TestCase {
         container.init();
     }
 
+    /**
+     * @throws Exception
+     */
     public void test() throws Exception {
         assertTrue(container.hasDescendant("cooldeploy-autoregister.dicon"));
     }

@@ -24,6 +24,9 @@ import org.seasar.framework.unit.S2FrameworkTestCase;
  */
 public class ServiceCoolCreatorTest extends S2FrameworkTestCase {
 
+    /**
+     * 
+     */
     public ServiceCoolCreatorTest() {
         setWarmDeploy(false);
     }
@@ -32,6 +35,9 @@ public class ServiceCoolCreatorTest extends S2FrameworkTestCase {
         include("ServiceCoolCreatorTest.dicon");
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAll() throws Exception {
         assertTrue(getContainer().hasComponentDef("ccc_dddService"));
         assertTrue(getContainer().hasComponentDef("gggService"));

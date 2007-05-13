@@ -23,6 +23,9 @@ import org.seasar.framework.unit.S2FrameworkTestCase;
  */
 public class InterceptorCoolCreatorTest extends S2FrameworkTestCase {
 
+    /**
+     * 
+     */
     public InterceptorCoolCreatorTest() {
         setWarmDeploy(false);
     }
@@ -31,6 +34,9 @@ public class InterceptorCoolCreatorTest extends S2FrameworkTestCase {
         include("InterceptorCoolCreatorTest.dicon");
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAll() throws Exception {
         assertTrue(getContainer().hasComponentDef("jjjInterceptor"));
     }

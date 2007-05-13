@@ -23,6 +23,9 @@ import org.seasar.framework.unit.S2FrameworkTestCase;
  */
 public class ValidatorCoolCreatorTest extends S2FrameworkTestCase {
 
+    /**
+     * 
+     */
     public ValidatorCoolCreatorTest() {
         setWarmDeploy(false);
     }
@@ -31,6 +34,9 @@ public class ValidatorCoolCreatorTest extends S2FrameworkTestCase {
         include("ValidatorCoolCreatorTest.dicon");
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAll() throws Exception {
         assertTrue(getContainer().hasComponentDef("dummyValidator"));
     }

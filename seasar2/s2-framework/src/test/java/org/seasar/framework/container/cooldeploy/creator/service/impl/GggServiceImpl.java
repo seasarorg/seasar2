@@ -22,6 +22,9 @@ import org.seasar.framework.container.cooldeploy.creator.service.GggService;
  * 
  */
 public class GggServiceImpl implements GggService {
+    /**
+     * 
+     */
     public static class InnerServiceImpl implements GggService {
     }
 }
