@@ -20,14 +20,23 @@ import java.lang.reflect.Field;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.unit.S2FrameworkTestCase;
 
+/**
+ *
+ */
 public class InterTypeAutoRegisterTest extends S2FrameworkTestCase {
 
     private S2Container child;
 
+    /**
+     * @throws Exception
+     */
     public void setUpRegisterAll() throws Exception {
         include("autoRegister2.dicon");
     }
 
+    /**
+     * @throws Exception
+     */
     public void testRegisterAll() throws Exception {
         Bar bar = (Bar) child.getComponent("bar");
         assertNotNull("1", bar);

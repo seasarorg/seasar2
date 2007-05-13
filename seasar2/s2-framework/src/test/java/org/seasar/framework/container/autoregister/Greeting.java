@@ -15,7 +15,14 @@
  */
 package org.seasar.framework.container.autoregister;
 
+/**
+ * @author higa
+ * 
+ */
 public interface Greeting {
 
+    /**
+     * @return
+     */
     String greet();
 }

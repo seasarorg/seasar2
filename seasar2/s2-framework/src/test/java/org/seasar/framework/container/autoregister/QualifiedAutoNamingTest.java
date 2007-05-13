@@ -23,6 +23,9 @@ import junit.framework.TestCase;
  */
 public class QualifiedAutoNamingTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testDefineName() throws Exception {
         QualifiedAutoNaming naming = new QualifiedAutoNaming();
         naming.addIgnorePackagePrefix("foo.bar");
@@ -37,12 +40,18 @@ public class QualifiedAutoNamingTest extends TestCase {
                 "HogeActionImpl"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAddReplaceRule() throws Exception {
         QualifiedAutoNaming naming = new QualifiedAutoNaming();
         naming.addReplaceRule("(Ba[rz])+", "Hoge");
         assertEquals("1", "fooHoge", naming.defineName(null, "FooBarBaz"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testClearRule() throws Exception {
         QualifiedAutoNaming naming = new QualifiedAutoNaming();
         naming.clearReplaceRule();
@@ -51,6 +60,9 @@ public class QualifiedAutoNamingTest extends TestCase {
                 "foo.bar.baz.hoge", "Foo4Impl"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testNotDecapitalize() throws Exception {
         QualifiedAutoNaming naming = new QualifiedAutoNaming();
         naming.setDecapitalize(false);

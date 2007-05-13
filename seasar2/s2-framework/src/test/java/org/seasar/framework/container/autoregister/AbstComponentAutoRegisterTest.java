@@ -23,6 +23,9 @@ import junit.framework.TestCase;
  */
 public class AbstComponentAutoRegisterTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testGetTargetPackages() throws Exception {
         AbstractComponentAutoRegister register = new AbstractComponentAutoRegister() {
             public void registerAll() {

@@ -22,11 +22,17 @@ import junit.framework.TestCase;
  */
 public class ClassPatternTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testAppliedForShortClassNameNull() throws Exception {
         ClassPattern cp = new ClassPattern();
         assertTrue("1", cp.isAppliedShortClassName("Hoge"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAppliedForNormalPattern() throws Exception {
         ClassPattern cp = new ClassPattern();
         cp.setShortClassNames(".*Impl");
@@ -34,6 +40,9 @@ public class ClassPatternTest extends TestCase {
         assertFalse("2", cp.isAppliedShortClassName("Hoge"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAppliedForMulti() throws Exception {
         ClassPattern cp = new ClassPattern();
         cp.setShortClassNames("Hoge, HogeImpl");
@@ -42,6 +51,9 @@ public class ClassPatternTest extends TestCase {
         assertFalse("3", cp.isAppliedShortClassName("Hoge2"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAppliedPackageName() throws Exception {
         ClassPattern cp = new ClassPattern();
         cp.setPackageName("org.seasar");

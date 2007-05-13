@@ -15,8 +15,15 @@
  */
 package org.seasar.framework.container.autoregister;
 
+/**
+ * @author higa
+ *
+ */
 public class Bar {
 
+    /**
+     * @return
+     */
     public String greet() {
         return null;
     }

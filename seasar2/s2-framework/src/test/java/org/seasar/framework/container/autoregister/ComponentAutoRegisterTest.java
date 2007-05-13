@@ -39,10 +39,16 @@ public class ComponentAutoRegisterTest extends S2FrameworkTestCase {
 
     private S2Container child;
 
+    /**
+     * @throws Exception
+     */
     public void setUpRegisterAll() throws Exception {
         include("ComponentAutoRegisterTest.dicon");
     }
 
+    /**
+     * @throws Exception
+     */
     public void testRegisterAll() throws Exception {
         Foo foo = (Foo) child.getComponent(Foo.class);
         assertNotNull(foo);
@@ -58,10 +64,16 @@ public class ComponentAutoRegisterTest extends S2FrameworkTestCase {
         assertNotNull(child.getComponentDef("testSuite"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void setUpBindingMode() throws Exception {
         include("ComponentAutoRegisterTest2.dicon");
     }
 
+    /**
+     * @throws Exception
+     */
     public void testBindingMode() throws Exception {
         ComponentDef cd = child.getComponentDef(Foo.class);
         assertEquals("1", AutoBindingDef.PROPERTY_NAME, cd.getAutoBindingDef()
@@ -71,19 +83,31 @@ public class ComponentAutoRegisterTest extends S2FrameworkTestCase {
                 .getName());
     }
 
+    /**
+     * @throws Exception
+     */
     public void setUpExternalBinding() throws Exception {
         include("ComponentAutoRegisterTest2.dicon");
     }
 
+    /**
+     * @throws Exception
+     */
     public void testExternalBinding() throws Exception {
         ComponentDef cd = child.getComponentDef(Foo.class);
         assertTrue(cd.isExternalBinding());
     }
 
+    /**
+     * @throws Exception
+     */
     public void setUpZipFileStrategy() throws Exception {
         include("ComponentAutoRegisterTest.dicon");
     }
 
+    /**
+     * @throws Exception
+     */
     public void testZipFileStrategy() throws Exception {
         ComponentAutoRegister register = (ComponentAutoRegister) getComponent(ComponentAutoRegister.class);
         ComponentAutoRegister.ZipFileStrategy strategy = (ComponentAutoRegister.ZipFileStrategy) register.strategies

@@ -22,6 +22,9 @@ import junit.framework.TestCase;
  */
 public class DefaultAutoNamingTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testDefineName() throws Exception {
         DefaultAutoNaming naming = new DefaultAutoNaming();
         naming.setCustomizedName("aaa.Foo", "aaaFoo");
@@ -31,6 +34,9 @@ public class DefaultAutoNamingTest extends TestCase {
         assertEquals("3", "foo", naming.defineName("bbb", "FooBean"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testApplyRule() throws Exception {
         DefaultAutoNaming naming = new DefaultAutoNaming();
         naming.addReplaceRule("aaa", "bbb");

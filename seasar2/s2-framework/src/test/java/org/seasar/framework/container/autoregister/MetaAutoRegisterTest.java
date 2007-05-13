@@ -20,21 +20,24 @@ import org.seasar.framework.container.MetaDef;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.unit.S2FrameworkTestCase;
 
+/**
+ * @author koichik
+ * 
+ */
 public class MetaAutoRegisterTest extends S2FrameworkTestCase {
 
     private S2Container child;
 
-    public MetaAutoRegisterTest() {
-    }
-
-    public MetaAutoRegisterTest(String name) {
-        super(name);
-    }
-
+    /**
+     * @throws Exception
+     */
     public void setUpRegisterAll() throws Exception {
         include("autoRegister2.dicon");
     }
 
+    /**
+     * 
+     */
     public void testRegisterAll() {
         Bar bar = (Bar) child.getComponent("bar");
         assertNotNull("1", bar);

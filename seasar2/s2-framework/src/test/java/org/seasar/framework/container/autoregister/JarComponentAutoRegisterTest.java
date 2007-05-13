@@ -32,16 +32,25 @@ public class JarComponentAutoRegisterTest extends S2FrameworkTestCase {
         include("JarComponentAutoRegisterTest.dicon");
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetBaseDir() throws Exception {
         String file = autoRegister.getBaseDir();
         System.out.println(file);
         assertNotNull("1", file);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testRegisterAll() throws Exception {
         assertTrue("1", child.hasComponentDef("testSuite"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testInvalidBaseDir() throws Exception {
         try {
             autoRegister.setBaseDir("Not Found");

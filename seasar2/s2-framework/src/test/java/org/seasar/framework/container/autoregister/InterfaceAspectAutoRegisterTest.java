@@ -26,10 +26,16 @@ public class InterfaceAspectAutoRegisterTest extends S2FrameworkTestCase {
 
     private S2Container child;
 
+    /**
+     * @throws Exception
+     */
     public void setUpRegisterAll() throws Exception {
         include("InterfaceAspectAutoRegisterTest.dicon");
     }
 
+    /**
+     * @throws Exception
+     */
     public void testRegisterAll() throws Exception {
         ComponentDef cd = child.getComponentDef("foo");
         assertEquals("1", 2, cd.getAspectDefSize());
