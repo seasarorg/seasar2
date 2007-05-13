@@ -38,6 +38,9 @@ public class DtoHotdeployCreatorTest extends HotdeployCreatorTestCase {
         return creator;
     }
 
+    /**
+     * @throws Exception
+     */
     public void testNormal() throws Exception {
         String name = "bbbDto";
         ComponentDef cd = getComponentDef(name);

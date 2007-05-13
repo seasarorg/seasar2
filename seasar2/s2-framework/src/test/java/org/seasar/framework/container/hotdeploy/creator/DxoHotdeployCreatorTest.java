@@ -15,8 +15,8 @@
  */
 package org.seasar.framework.container.hotdeploy.creator;
 
-import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.ComponentCreator;
+import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.creator.DxoCreator;
 import org.seasar.framework.container.customizer.AspectCustomizer;
 import org.seasar.framework.container.hotdeploy.creator.interceptor.HelloInterceptor;
@@ -42,6 +42,9 @@ public class DxoHotdeployCreatorTest extends HotdeployCreatorTestCase {
         super.setUp();
     }
 
+    /**
+     * @throws Exception
+     */
     public void testIsTargetByComponentName() throws Exception {
         String name = "aaa_hogeDxo";
         ComponentDef cd = getComponentDef(name);
@@ -50,6 +53,9 @@ public class DxoHotdeployCreatorTest extends HotdeployCreatorTestCase {
         assertTrue("3", getContainer().hasComponentDef("bbbDtoDxo"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testIsTargetByClass() throws Exception {
         String packageName = ClassUtil.getPackageName(getClass());
         Class clazz = ClassUtil.forName(packageName + ".web.aaa.HogeDxo");

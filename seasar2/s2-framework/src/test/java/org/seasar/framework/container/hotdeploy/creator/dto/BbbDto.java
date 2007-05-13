@@ -15,6 +15,10 @@
  */
 package org.seasar.framework.container.hotdeploy.creator.dto;
 
+/**
+ * @author higa
+ * 
+ */
 public class BbbDto {
     protected String name = "Hoge";
 }

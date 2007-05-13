@@ -15,6 +15,10 @@
  */
 package org.seasar.framework.container.hotdeploy.creator.helper;
 
+/**
+ * @author higa
+ * 
+ */
 public interface DddHelper {
 
 }

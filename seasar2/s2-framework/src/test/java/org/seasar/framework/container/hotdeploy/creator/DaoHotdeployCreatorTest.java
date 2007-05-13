@@ -15,8 +15,8 @@
  */
 package org.seasar.framework.container.hotdeploy.creator;
 
-import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.ComponentCreator;
+import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.creator.DaoCreator;
 import org.seasar.framework.convention.NamingConvention;
 import org.seasar.framework.util.ClassUtil;
@@ -31,6 +31,9 @@ public class DaoHotdeployCreatorTest extends HotdeployCreatorTestCase {
         return new DaoCreator(convention);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testIsTargetByComponentName() throws Exception {
         String name = "fooDao";
         ComponentDef cd = getComponentDef(name);
@@ -39,6 +42,9 @@ public class DaoHotdeployCreatorTest extends HotdeployCreatorTestCase {
         assertTrue(getContainer().hasComponentDef("barDao"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testIsTargetByClass() throws Exception {
         Class clazz = ClassUtil.forName(ClassUtil.getPackageName(getClass())
                 + ".dao.FooDao");

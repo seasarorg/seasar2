@@ -15,14 +15,24 @@
  */
 package org.seasar.framework.container.hotdeploy.creator.web.aaa;
 
+/**
+ * @author higa
+ * 
+ */
 public class HogeAction {
 
     private HogePage hogePage;
 
+    /**
+     * @return
+     */
     public HogePage getHogePage() {
         return hogePage;
     }
 
+    /**
+     * @param hogePage
+     */
     public void setHogePage(HogePage hogePage) {
         this.hogePage = hogePage;
     }

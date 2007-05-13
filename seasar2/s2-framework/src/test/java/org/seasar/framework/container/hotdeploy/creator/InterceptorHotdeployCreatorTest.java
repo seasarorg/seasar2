@@ -15,8 +15,8 @@
  */
 package org.seasar.framework.container.hotdeploy.creator;
 
-import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.ComponentCreator;
+import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.creator.InterceptorCreator;
 import org.seasar.framework.convention.NamingConvention;
 
@@ -30,6 +30,9 @@ public class InterceptorHotdeployCreatorTest extends HotdeployCreatorTestCase {
         return new InterceptorCreator(convention);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAll() throws Exception {
         String name = "nullInterceptor";
         ComponentDef cd = getComponentDef(name);

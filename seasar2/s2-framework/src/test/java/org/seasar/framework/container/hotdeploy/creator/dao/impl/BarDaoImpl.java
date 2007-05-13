@@ -17,6 +17,10 @@ package org.seasar.framework.container.hotdeploy.creator.dao.impl;
 
 import org.seasar.framework.container.hotdeploy.creator.dao.BarDao;
 
+/**
+ * @author higa
+ * 
+ */
 public class BarDaoImpl implements BarDao {
 
 }

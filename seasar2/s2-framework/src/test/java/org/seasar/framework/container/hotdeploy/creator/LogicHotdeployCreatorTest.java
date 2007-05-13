@@ -17,8 +17,8 @@ package org.seasar.framework.container.hotdeploy.creator;
 
 import java.lang.reflect.Method;
 
-import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.ComponentCreator;
+import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.creator.LogicCreator;
 import org.seasar.framework.container.customizer.AspectCustomizer;
 import org.seasar.framework.container.hotdeploy.creator.interceptor.HelloInterceptor;
@@ -44,6 +44,9 @@ public class LogicHotdeployCreatorTest extends HotdeployCreatorTestCase {
         super.setUp();
     }
 
+    /**
+     * @throws Exception
+     */
     public void testIsTargetByName() throws Exception {
         String name = "cccLogic";
         ComponentDef cd = getComponentDef(name);
@@ -51,12 +54,18 @@ public class LogicHotdeployCreatorTest extends HotdeployCreatorTestCase {
         assertEquals("2", name, cd.getComponentName());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testIsTargetByClass() throws Exception {
         Class clazz = ClassUtil.forName(ClassUtil.getPackageName(getClass())
                 + ".logic.CccLogic");
         assertNotNull("1", getComponent(clazz));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAspect() throws Exception {
         Object cccLogic = getComponent("cccLogic");
         Method m = cccLogic.getClass().getMethod("greet", null);

@@ -15,6 +15,10 @@
  */
 package org.seasar.framework.container.hotdeploy.creator.dxo;
 
+/**
+ * @author higa
+ * 
+ */
 public interface BbbDtoDxo {
 
 }

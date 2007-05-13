@@ -15,8 +15,8 @@
  */
 package org.seasar.framework.container.hotdeploy.creator;
 
-import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.ComponentCreator;
+import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.creator.ConverterCreator;
 import org.seasar.framework.convention.NamingConvention;
 
@@ -29,6 +29,9 @@ public class ConverterHotdeployCreatorTest extends HotdeployCreatorTestCase {
         return new ConverterCreator(convention);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAll() throws Exception {
         String name = "fakeConverter";
         ComponentDef cd = getComponentDef(name);

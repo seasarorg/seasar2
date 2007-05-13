@@ -15,7 +15,14 @@
  */
 package org.seasar.framework.container.hotdeploy.creator.logic;
 
+/**
+ * @author higa
+ * 
+ */
 public interface CccLogic {
 
+    /**
+     * @return
+     */
     String greet();
 }

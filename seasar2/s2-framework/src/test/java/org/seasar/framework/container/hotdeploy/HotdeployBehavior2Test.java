@@ -78,6 +78,9 @@ public class HotdeployBehavior2Test extends S2FrameworkTestCase {
         Thread.currentThread().setContextClassLoader(originalLoader);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testCreateComponentDef() throws Exception {
         Class clazz = ClassUtil
                 .forName(rootPackageName + ".web.aaa.HogeAction");
@@ -85,11 +88,17 @@ public class HotdeployBehavior2Test extends S2FrameworkTestCase {
                 .acquireFromGetComponentDef(getContainer(), clazz));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testHasComponentDef() throws Exception {
         assertTrue(getContainer().hasComponentDef("aaa_hogeAction"));
         assertFalse(getContainer().hasComponentDef("xxx"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetComponentDefFromCache() throws Exception {
         Class clazz = ClassUtil
                 .forName(rootPackageName + ".web.aaa.HogeAction");
@@ -99,6 +108,9 @@ public class HotdeployBehavior2Test extends S2FrameworkTestCase {
                 clazz));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetComponent() throws Exception {
         Object o = getComponent("aaa_hogeAction");
         BeanDesc beanDesc = BeanDescFactory.getBeanDesc(o.getClass());

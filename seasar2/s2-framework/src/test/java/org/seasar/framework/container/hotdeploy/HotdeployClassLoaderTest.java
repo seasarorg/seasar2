@@ -49,6 +49,9 @@ public class HotdeployClassLoaderTest extends TestCase {
         Thread.currentThread().setContextClassLoader(originalLoader);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testLoadClass() throws Exception {
         assertSame(hotLoader.loadClass(AAA_NAME), hotLoader.loadClass(AAA_NAME));
 

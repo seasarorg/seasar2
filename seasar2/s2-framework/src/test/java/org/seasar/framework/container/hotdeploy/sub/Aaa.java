@@ -15,8 +15,15 @@
  */
 package org.seasar.framework.container.hotdeploy.sub;
 
+/**
+ * @author higa
+ *
+ */
 public class Aaa {
 
+    /**
+     * @return
+     */
     public String execute() {
         return new Bbb().execute();
     }

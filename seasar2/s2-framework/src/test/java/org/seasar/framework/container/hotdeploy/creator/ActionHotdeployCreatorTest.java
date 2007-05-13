@@ -31,6 +31,9 @@ public class ActionHotdeployCreatorTest extends HotdeployCreatorTestCase {
         return new ActionCreator(convention);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAll() throws Exception {
         String name = "aaa_hogeAction";
         ComponentDef cd = getComponentDef(name);
@@ -38,10 +41,13 @@ public class ActionHotdeployCreatorTest extends HotdeployCreatorTestCase {
         assertEquals(name, cd.getComponentName());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testIllegalCase() throws Exception {
         try {
             String name = "aaa_HogeAction";
-            ComponentDef cd = getComponentDef(name);
+            getComponentDef(name);
             fail();
         } catch (ComponentNotFoundRuntimeException expected) {
         }

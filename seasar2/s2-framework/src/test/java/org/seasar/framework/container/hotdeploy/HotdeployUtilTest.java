@@ -34,16 +34,25 @@ public class HotdeployUtilTest extends S2FrameworkTestCase {
                 .setProvider(new S2ContainerBehavior.DefaultProvider());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testIsHotdeploy() throws Exception {
         assertFalse(HotdeployUtil.isHotdeploy());
         S2ContainerBehavior.setProvider(new HotdeployBehavior());
         assertTrue(HotdeployUtil.isHotdeploy());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testRebuildValue_simpleType() throws Exception {
         assertEquals("111", HotdeployUtil.rebuildValueInternal("111"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testRebuildValue_array() throws Exception {
         String[] array = (String[]) HotdeployUtil
                 .rebuildValueInternal(new String[] { "aaa", "bbb" });
@@ -52,6 +61,9 @@ public class HotdeployUtilTest extends S2FrameworkTestCase {
         assertEquals("bbb", array[1]);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testRebuildValue_array_primitive() throws Exception {
         int[] array = (int[]) HotdeployUtil.rebuildValueInternal(new int[] { 1,
                 2 });
@@ -60,6 +72,9 @@ public class HotdeployUtilTest extends S2FrameworkTestCase {
         assertEquals(2, array[1]);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testRebuildValue_arrayList() throws Exception {
         ArrayList src = new ArrayList();
         src.add("aaa");
@@ -70,6 +85,9 @@ public class HotdeployUtilTest extends S2FrameworkTestCase {
         assertEquals("bbb", dest.get(1));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testRebuildValue_collection() throws Exception {
         LinkedList src = new LinkedList();
         src.add("aaa");
@@ -80,6 +98,9 @@ public class HotdeployUtilTest extends S2FrameworkTestCase {
         assertEquals("bbb", dest.get(1));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testRebuildValue_map() throws Exception {
         HashMap src = new HashMap();
         src.put("aaa", "111");
@@ -88,6 +109,9 @@ public class HotdeployUtilTest extends S2FrameworkTestCase {
         assertEquals("111", dest.get("aaa"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testRebuildValue_bean() throws Exception {
         Hoge src = new Hoge();
         src.setAaa("111");
@@ -101,6 +125,9 @@ public class HotdeployUtilTest extends S2FrameworkTestCase {
         assertEquals("222", dest.getHoge().getAaa());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testRebuildValue_arrayListWithPrimitiveA() throws Exception {
         boolean defaultDeployMode = isWarmDeploy();
         setWarmDeploy(true);
@@ -116,6 +143,9 @@ public class HotdeployUtilTest extends S2FrameworkTestCase {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public void testRebuildValue_arrayListWithDto() throws Exception {
         boolean defaultDeployMode = isWarmDeploy();
         setWarmDeploy(true);
@@ -145,6 +175,9 @@ public class HotdeployUtilTest extends S2FrameworkTestCase {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public void testRebuildValue_arrayListWithDto2() throws Exception {
         boolean defaultDeployMode = isWarmDeploy();
         setWarmDeploy(true);
@@ -184,6 +217,9 @@ public class HotdeployUtilTest extends S2FrameworkTestCase {
         }
     }
 
+    /**
+     *
+     */
     public static class Hoge {
         private String aaa;
 
@@ -191,10 +227,16 @@ public class HotdeployUtilTest extends S2FrameworkTestCase {
 
         private Foo foo;
 
+        /**
+         * @return
+         */
         public Foo getFoo() {
             return foo;
         }
 
+        /**
+         * @param foo
+         */
         public void setFoo(Foo foo) {
             this.foo = foo;
         }
@@ -230,14 +272,23 @@ public class HotdeployUtilTest extends S2FrameworkTestCase {
         }
     }
 
+    /**
+     *
+     */
     public static class Foo {
 
         private int num;
 
+        /**
+         * @return
+         */
         public int getNum() {
             return num;
         }
 
+        /**
+         * @param num
+         */
         public void setNum(int num) {
             this.num = num;
         }

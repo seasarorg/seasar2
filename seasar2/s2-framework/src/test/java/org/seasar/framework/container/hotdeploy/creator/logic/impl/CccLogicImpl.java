@@ -17,6 +17,10 @@ package org.seasar.framework.container.hotdeploy.creator.logic.impl;
 
 import org.seasar.framework.container.hotdeploy.creator.logic.CccLogic;
 
+/**
+ * @author higa
+ * 
+ */
 public class CccLogicImpl implements CccLogic {
 
     public String greet() {

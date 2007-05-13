@@ -15,8 +15,8 @@
  */
 package org.seasar.framework.container.hotdeploy.creator;
 
-import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.ComponentCreator;
+import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.creator.ValidatorCreator;
 import org.seasar.framework.convention.NamingConvention;
 
@@ -30,6 +30,9 @@ public class ValidatorHotdeployCreatorTest extends HotdeployCreatorTestCase {
         return new ValidatorCreator(convention);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAll() throws Exception {
         String name = "fakeValidator";
         ComponentDef cd = getComponentDef(name);

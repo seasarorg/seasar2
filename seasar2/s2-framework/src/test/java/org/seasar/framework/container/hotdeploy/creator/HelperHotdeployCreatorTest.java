@@ -15,8 +15,8 @@
  */
 package org.seasar.framework.container.hotdeploy.creator;
 
-import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.ComponentCreator;
+import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.creator.HelperCreator;
 import org.seasar.framework.convention.NamingConvention;
 import org.seasar.framework.util.ClassUtil;
@@ -31,6 +31,9 @@ public class HelperHotdeployCreatorTest extends HotdeployCreatorTestCase {
         return new HelperCreator(convention);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testIsTargetByName() throws Exception {
         String name = "dddHelper";
         ComponentDef cd = getComponentDef(name);
@@ -38,6 +41,9 @@ public class HelperHotdeployCreatorTest extends HotdeployCreatorTestCase {
         assertEquals("2", name, cd.getComponentName());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testIsTargetByClass() throws Exception {
         Class clazz = ClassUtil.forName(rootPackageName + ".helper.DddHelper");
         assertNotNull("1", getComponent(clazz));

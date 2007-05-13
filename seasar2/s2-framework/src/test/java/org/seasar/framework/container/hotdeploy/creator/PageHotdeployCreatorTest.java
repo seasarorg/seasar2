@@ -15,8 +15,8 @@
  */
 package org.seasar.framework.container.hotdeploy.creator;
 
-import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.ComponentCreator;
+import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.creator.PageCreator;
 import org.seasar.framework.convention.NamingConvention;
 
@@ -30,6 +30,9 @@ public class PageHotdeployCreatorTest extends HotdeployCreatorTestCase {
         return new PageCreator(convention);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAll() throws Exception {
         String name = "aaa_hogePage";
         ComponentDef cd = getComponentDef(name);

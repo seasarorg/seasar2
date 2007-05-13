@@ -15,6 +15,10 @@
  */
 package org.seasar.framework.container.hotdeploy.creator.web.aaa;
 
+/**
+ * @author higa
+ * 
+ */
 public interface HogeService {
 
 }

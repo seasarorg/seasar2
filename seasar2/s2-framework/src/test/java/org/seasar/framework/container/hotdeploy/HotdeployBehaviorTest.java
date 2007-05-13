@@ -55,6 +55,9 @@ public class HotdeployBehaviorTest extends S2FrameworkTestCase {
         Thread.currentThread().setContextClassLoader(originalLoader);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testStartStop() throws Exception {
         BeanDesc beanDesc = BeanDescFactory.getBeanDesc(getClass());
         ondemand.start();

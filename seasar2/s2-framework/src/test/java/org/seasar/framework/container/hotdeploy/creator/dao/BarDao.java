@@ -15,6 +15,10 @@
  */
 package org.seasar.framework.container.hotdeploy.creator.dao;
 
+/**
+ * @author higa
+ * 
+ */
 public interface BarDao {
 
 }

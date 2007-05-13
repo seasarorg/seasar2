@@ -17,6 +17,10 @@ package org.seasar.framework.container.hotdeploy.creator.helper.impl;
 
 import org.seasar.framework.container.hotdeploy.creator.helper.DddHelper;
 
+/**
+ * @author higa
+ * 
+ */
 public class DddHelperImpl implements DddHelper {
 
 }

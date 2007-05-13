@@ -15,8 +15,8 @@
  */
 package org.seasar.framework.container.hotdeploy.creator;
 
-import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.ComponentCreator;
+import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.creator.ServiceCreator;
 import org.seasar.framework.convention.NamingConvention;
 import org.seasar.framework.util.ClassUtil;
@@ -31,6 +31,9 @@ public class ServiceHotdeployCreatorTest extends HotdeployCreatorTestCase {
         return new ServiceCreator(convention);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testIsTargetByName() throws Exception {
         String name = "aaa_hogeService";
         ComponentDef cd = getComponentDef(name);
@@ -38,6 +41,9 @@ public class ServiceHotdeployCreatorTest extends HotdeployCreatorTestCase {
         assertEquals("2", name, cd.getComponentName());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testIsTargetByName2() throws Exception {
         String name = "hogeService";
         ComponentDef cd = getComponentDef(name);
@@ -45,6 +51,9 @@ public class ServiceHotdeployCreatorTest extends HotdeployCreatorTestCase {
         assertEquals("2", name, cd.getComponentName());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testIsTargetByClass() throws Exception {
         Class clazz = ClassUtil.forName(ClassUtil.getPackageName(getClass())
                 + ".web.aaa.HogeService");

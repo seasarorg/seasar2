@@ -17,6 +17,10 @@ package org.seasar.framework.container.hotdeploy.creator.dxo.impl;
 
 import org.seasar.framework.container.hotdeploy.creator.dxo.BbbDtoDxo;
 
+/**
+ * @author higa
+ * 
+ */
 public class BbbDtoDxoImpl implements BbbDtoDxo {
 
 }

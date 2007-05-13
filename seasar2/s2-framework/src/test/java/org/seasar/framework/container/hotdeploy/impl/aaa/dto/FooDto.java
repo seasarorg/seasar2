@@ -15,6 +15,9 @@
  */
 package org.seasar.framework.container.hotdeploy.impl.aaa.dto;
 
-
+/**
+ * @author higa
+ * 
+ */
 public class FooDto {
 }
