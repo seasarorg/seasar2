@@ -24,6 +24,9 @@ import org.seasar.framework.container.IllegalAutoBindingDefRuntimeException;
  */
 public class AutoBindingDefFactoryTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testGetAutoBindingDef() throws Exception {
         assertEquals("1", AutoBindingDefFactory.AUTO, AutoBindingDefFactory
                 .getAutoBindingDef("auto"));

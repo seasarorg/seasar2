@@ -32,6 +32,9 @@ import org.seasar.framework.container.impl.S2ContainerImpl;
  */
 public class BindingTypeShouldDefTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testBindWarning() throws Exception {
         BeanDesc beanDesc = BeanDescFactory.getBeanDesc(A.class);
         PropertyDesc propDesc = beanDesc.getPropertyDesc("hoge");
@@ -44,31 +47,55 @@ public class BindingTypeShouldDefTest extends TestCase {
         BindingTypeDefFactory.SHOULD.bind(cd, propDef, propDesc, a);
     }
 
+    /**
+     * 
+     */
     public interface Foo {
+        /**
+         * @return
+         */
         public String getHogeName();
     }
 
+    /**
+     * 
+     */
     public static class A implements Foo {
 
         private Hoge hoge_;
 
         private String message_;
 
+        /**
+         * 
+         */
         public A() {
         }
 
+        /**
+         * @return
+         */
         public Hoge getHoge() {
             return hoge_;
         }
 
+        /**
+         * @param hoge
+         */
         public void setHoge(Hoge hoge) {
             hoge_ = hoge;
         }
 
+        /**
+         * @return
+         */
         public String getMessage() {
             return message_;
         }
 
+        /**
+         * @param message
+         */
         public void setMessage(String message) {
             message_ = message;
         }
@@ -78,14 +105,23 @@ public class BindingTypeShouldDefTest extends TestCase {
         }
     }
 
+    /**
+     * 
+     */
     public static class A2 implements Foo {
 
         private Hoge hoge_ = new B();
 
+        /**
+         * @return
+         */
         public Hoge getHoge() {
             return hoge_;
         }
 
+        /**
+         * @param hoge
+         */
         public void setHoge(Hoge hoge) {
             hoge_ = hoge;
         }
@@ -95,11 +131,20 @@ public class BindingTypeShouldDefTest extends TestCase {
         }
     }
 
+    /**
+     * 
+     */
     public interface Hoge {
 
+        /**
+         * @return
+         */
         public String getName();
     }
 
+    /**
+     * 
+     */
     public static class B implements Hoge {
 
         public String getName() {

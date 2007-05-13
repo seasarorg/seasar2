@@ -33,6 +33,9 @@ import org.seasar.framework.container.ognl.OgnlExpression;
  */
 public class BindingTypeNoneDefTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testBindExpression() throws Exception {
         BeanDesc beanDesc = BeanDescFactory.getBeanDesc(A.class);
         PropertyDesc propDesc = beanDesc.getPropertyDesc("hoge");
@@ -48,6 +51,9 @@ public class BindingTypeNoneDefTest extends TestCase {
         assertNotNull("1", a.getHoge());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testBindByName() throws Exception {
         BeanDesc beanDesc = BeanDescFactory.getBeanDesc(A.class);
         PropertyDesc propDesc = beanDesc.getPropertyDesc("message");
@@ -62,31 +68,55 @@ public class BindingTypeNoneDefTest extends TestCase {
         assertNull("1", a.getMessage());
     }
 
+    /**
+     * 
+     */
     public interface Foo {
+        /**
+         * @return
+         */
         public String getHogeName();
     }
 
+    /**
+     * 
+     */
     public static class A implements Foo {
 
         private Hoge hoge_;
 
         private String message_;
 
+        /**
+         * 
+         */
         public A() {
         }
 
+        /**
+         * @return
+         */
         public Hoge getHoge() {
             return hoge_;
         }
 
+        /**
+         * @param hoge
+         */
         public void setHoge(Hoge hoge) {
             hoge_ = hoge;
         }
 
+        /**
+         * @return
+         */
         public String getMessage() {
             return message_;
         }
 
+        /**
+         * @param message
+         */
         public void setMessage(String message) {
             message_ = message;
         }
@@ -96,14 +126,23 @@ public class BindingTypeNoneDefTest extends TestCase {
         }
     }
 
+    /**
+     * 
+     */
     public static class A2 implements Foo {
 
         private Hoge hoge_ = new B();
 
+        /**
+         * @return
+         */
         public Hoge getHoge() {
             return hoge_;
         }
 
+        /**
+         * @param hoge
+         */
         public void setHoge(Hoge hoge) {
             hoge_ = hoge;
         }
@@ -113,11 +152,20 @@ public class BindingTypeNoneDefTest extends TestCase {
         }
     }
 
+    /**
+     * 
+     */
     public interface Hoge {
 
+        /**
+         * @return
+         */
         public String getName();
     }
 
+    /**
+     * 
+     */
     public static class B implements Hoge {
 
         public String getName() {

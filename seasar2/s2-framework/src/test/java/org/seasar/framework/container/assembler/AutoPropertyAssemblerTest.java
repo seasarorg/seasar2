@@ -36,6 +36,9 @@ import org.seasar.framework.mock.servlet.MockServletContextImpl;
  */
 public class AutoPropertyAssemblerTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testAssemble() throws Exception {
         S2Container container = new S2ContainerImpl();
         ComponentDefImpl cd = new ComponentDefImpl(A.class);
@@ -47,6 +50,9 @@ public class AutoPropertyAssemblerTest extends TestCase {
         assertEquals("1", "B", a.getHogeName());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAssemble2() throws Exception {
         S2Container container = new S2ContainerImpl();
         ComponentDefImpl cd = new ComponentDefImpl(A.class);
@@ -60,6 +66,9 @@ public class AutoPropertyAssemblerTest extends TestCase {
         assertEquals("2", "aaa", a.getMessage());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAssembleNotInterface() throws Exception {
         S2Container container = new S2ContainerImpl();
         ComponentDefImpl cd = new ComponentDefImpl(Date.class);
@@ -69,6 +78,9 @@ public class AutoPropertyAssemblerTest extends TestCase {
         assembler.assemble(d);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAssembleWhenComponentNull() throws Exception {
         S2Container container = new S2ContainerImpl();
         ComponentDefImpl cd = new ComponentDefImpl(Date.class);
@@ -77,6 +89,9 @@ public class AutoPropertyAssemblerTest extends TestCase {
         assembler.assemble(null);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testSkipIllegalProperty() throws Exception {
         S2Container container = new S2ContainerImpl();
         ComponentDefImpl cd = new ComponentDefImpl(A.class);
@@ -86,6 +101,9 @@ public class AutoPropertyAssemblerTest extends TestCase {
         assembler.assemble(a);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testSkipWarning() throws Exception {
         S2Container container = new S2ContainerImpl();
         ComponentDefImpl cd = new ComponentDefImpl(A2.class);
@@ -96,6 +114,9 @@ public class AutoPropertyAssemblerTest extends TestCase {
         assertEquals("1", "B", a2.getHogeName());
     }
     
+    /**
+     * @throws Exception
+     */
     public void testBindExternally() throws Exception {
         S2Container container = new S2ContainerImpl();
         ComponentDefImpl cd = new ComponentDefImpl(D.class);
@@ -114,31 +135,55 @@ public class AutoPropertyAssemblerTest extends TestCase {
         assertEquals("1", "aaa", d.getName());
     }
 
+    /**
+     *
+     */
     public interface Foo {
+        /**
+         * @return
+         */
         public String getHogeName();
     }
 
+    /**
+     *
+     */
     public static class A implements Foo {
 
         private Hoge hoge_;
 
         private String message_;
 
+        /**
+         * 
+         */
         public A() {
         }
 
+        /**
+         * @return
+         */
         public Hoge getHoge() {
             return hoge_;
         }
 
+        /**
+         * @param hoge
+         */
         public void setHoge(Hoge hoge) {
             hoge_ = hoge;
         }
 
+        /**
+         * @return
+         */
         public String getMessage() {
             return message_;
         }
 
+        /**
+         * @param message
+         */
         public void setMessage(String message) {
             message_ = message;
         }
@@ -148,14 +193,23 @@ public class AutoPropertyAssemblerTest extends TestCase {
         }
     }
 
+    /**
+     *
+     */
     public static class A2 implements Foo {
 
         private Hoge hoge_ = new B();
 
+        /**
+         * @return
+         */
         public Hoge getHoge() {
             return hoge_;
         }
 
+        /**
+         * @param hoge
+         */
         public void setHoge(Hoge hoge) {
             hoge_ = hoge;
         }
@@ -165,11 +219,20 @@ public class AutoPropertyAssemblerTest extends TestCase {
         }
     }
 
+    /**
+     *
+     */
     public interface Hoge {
 
+        /**
+         * @return
+         */
         public String getName();
     }
 
+    /**
+     *
+     */
     public static class B implements Hoge {
 
         public String getName() {
@@ -177,6 +240,9 @@ public class AutoPropertyAssemblerTest extends TestCase {
         }
     }
 
+    /**
+     *
+     */
     public static class C implements Hoge {
 
         public String getName() {
@@ -184,13 +250,22 @@ public class AutoPropertyAssemblerTest extends TestCase {
         }
     }
     
+    /**
+     *
+     */
     public static class D {
         private String name;
 
+        /**
+         * @return
+         */
         public String getName() {
             return name;
         }
 
+        /**
+         * @param name
+         */
         public void setName(String name) {
             this.name = name;
         }

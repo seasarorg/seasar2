@@ -36,6 +36,9 @@ import org.seasar.framework.container.ognl.OgnlExpression;
  */
 public class DefaultDestroyMethodAssemblerTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testAssemble() throws Exception {
         S2Container container = new S2ContainerImpl();
         ComponentDefImpl cd = new ComponentDefImpl(HashMap.class);
@@ -52,6 +55,9 @@ public class DefaultDestroyMethodAssemblerTest extends TestCase {
         assertEquals("1", "111", map.get("aaa"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAssembleForExpression() throws Exception {
         S2Container container = new S2ContainerImpl();
         ComponentDefImpl cd = new ComponentDefImpl(HashMap.class);
@@ -65,6 +71,9 @@ public class DefaultDestroyMethodAssemblerTest extends TestCase {
         assertEquals("1", "111", map.get("aaa"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAssembleIllegalArgument() throws Exception {
         S2Container container = new S2ContainerImpl();
         ComponentDefImpl cd = new ComponentDefImpl(HashMap.class);
@@ -81,6 +90,9 @@ public class DefaultDestroyMethodAssemblerTest extends TestCase {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAssembleWhenComponentNull() throws Exception {
         S2Container container = new S2ContainerImpl();
         ComponentDefImpl cd = new ComponentDefImpl(HashMap.class);
@@ -92,21 +104,39 @@ public class DefaultDestroyMethodAssemblerTest extends TestCase {
         assembler.assemble(null);
     }
 
+    /**
+     * 
+     */
     public interface Foo {
+        /**
+         * @return
+         */
         public String getHogeName();
     }
 
+    /**
+     * 
+     */
     public static class A implements Foo {
 
         private Hoge hoge_;
 
+        /**
+         * 
+         */
         public A() {
         }
 
+        /**
+         * @return
+         */
         public Hoge getHoge() {
             return hoge_;
         }
 
+        /**
+         * @param hoge
+         */
         public void setHoge(Hoge hoge) {
             hoge_ = hoge;
         }
@@ -116,11 +146,20 @@ public class DefaultDestroyMethodAssemblerTest extends TestCase {
         }
     }
 
+    /**
+     * 
+     */
     public interface Hoge {
 
+        /**
+         * @return
+         */
         public String getName();
     }
 
+    /**
+     * 
+     */
     public static class B implements Hoge {
 
         public String getName() {

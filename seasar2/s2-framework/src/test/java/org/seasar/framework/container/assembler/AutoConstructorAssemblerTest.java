@@ -38,6 +38,9 @@ import org.seasar.framework.exception.NoSuchConstructorRuntimeException;
  */
 public class AutoConstructorAssemblerTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testAssemble() throws Exception {
         S2Container container = new S2ContainerImpl();
         ComponentDefImpl cd = new ComponentDefImpl(A.class);
@@ -48,6 +51,9 @@ public class AutoConstructorAssemblerTest extends TestCase {
         assertEquals("1", "B", a.getHogeName());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAssembleAspect() throws Exception {
         S2Container container = new S2ContainerImpl();
         ComponentDefImpl cd = new ComponentDefImpl(A.class);
@@ -59,6 +65,9 @@ public class AutoConstructorAssemblerTest extends TestCase {
         assertEquals("1", "B", a.getHogeName());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAssembleArgNotFound() throws Exception {
         S2Container container = new S2ContainerImpl();
         ComponentDefImpl cd = new ComponentDefImpl(A.class);
@@ -68,6 +77,9 @@ public class AutoConstructorAssemblerTest extends TestCase {
         assertEquals("1", null, a.getHoge());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAssembleDefaultConstructor() throws Exception {
         S2Container container = new S2ContainerImpl();
         ComponentDefImpl cd = new ComponentDefImpl(String.class);
@@ -76,6 +88,9 @@ public class AutoConstructorAssemblerTest extends TestCase {
         assertEquals("1", "", assembler.assemble());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAssembleDefaultConstructor2() throws Exception {
         S2Container container = new S2ContainerImpl();
         ComponentDefImpl cd = new ComponentDefImpl(Hoge.class);
@@ -86,6 +101,9 @@ public class AutoConstructorAssemblerTest extends TestCase {
         assertEquals("1", "hoge", hoge.getName());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAssembleAutoNotInterfaceConstructor() throws Exception {
         S2Container container = new S2ContainerImpl();
         ComponentDefImpl cd = new ComponentDefImpl(C.class);
@@ -100,6 +118,9 @@ public class AutoConstructorAssemblerTest extends TestCase {
 
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAccessComponentDef() throws Exception {
         S2Container container = new S2ContainerImpl();
         ComponentDefImpl cd = new ComponentDefImpl(Hoge.class);
@@ -112,6 +133,9 @@ public class AutoConstructorAssemblerTest extends TestCase {
         assertSame("2", cd, interceptor.getComponentDef());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAssembleExpression() throws Exception {
         S2Container container = new S2ContainerImpl();
         ComponentDefImpl cd = new ComponentDefImpl(Object.class, "obj");
@@ -124,6 +148,9 @@ public class AutoConstructorAssemblerTest extends TestCase {
         assertNotNull("1", myInt);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAssembleForClassUnmatch() throws Exception {
         S2Container container = new S2ContainerImpl();
         ComponentDefImpl cd = new ComponentDefImpl(Object.class, "obj");
@@ -138,18 +165,33 @@ public class AutoConstructorAssemblerTest extends TestCase {
         }
     }
 
+    /**
+     *
+     */
     public interface Foo {
+        /**
+         * @return
+         */
         public String getHogeName();
     }
 
+    /**
+     *
+     */
     public static class A implements Foo {
 
         private Hoge hoge_;
 
+        /**
+         * @param hoge
+         */
         public A(Hoge hoge) {
             hoge_ = hoge;
         }
 
+        /**
+         * @return
+         */
         public Hoge getHoge() {
             return hoge_;
         }
@@ -159,11 +201,20 @@ public class AutoConstructorAssemblerTest extends TestCase {
         }
     }
 
+    /**
+     *
+     */
     public interface Hoge {
 
+        /**
+         * @return
+         */
         public String getName();
     }
 
+    /**
+     *
+     */
     public static class B implements Hoge {
 
         public String getName() {
@@ -171,29 +222,47 @@ public class AutoConstructorAssemblerTest extends TestCase {
         }
     }
 
+    /**
+     *
+     */
     public static class C {
 
         private String name_;
 
+        /**
+         * @param name
+         */
         public C(String name) {
             name_ = name;
         }
 
+        /**
+         * @return
+         */
         public String getName() {
             return name_;
         }
     }
 
+    /**
+     *
+     */
     public class HogeInterceptor implements MethodInterceptor {
         public Object invoke(MethodInvocation invocation) throws Throwable {
             return "hoge";
         }
     }
 
+    /**
+     *
+     */
     public class ComponentDefInterceptor implements MethodInterceptor {
 
         private ComponentDef componentDef_;
 
+        /**
+         * @return
+         */
         public ComponentDef getComponentDef() {
             return componentDef_;
         }

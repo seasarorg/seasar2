@@ -38,6 +38,9 @@ import org.seasar.framework.container.ognl.OgnlExpression;
  */
 public class DefaultInitMethodAssemblerTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testAssemble() throws Exception {
         S2Container container = new S2ContainerImpl();
         ComponentDefImpl cd = new ComponentDefImpl(HashMap.class);
@@ -54,6 +57,9 @@ public class DefaultInitMethodAssemblerTest extends TestCase {
         assertEquals("1", "111", map.get("aaa"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAssembleForMethod() throws Exception {
         S2Container container = new S2ContainerImpl();
         ComponentDefImpl cd = new ComponentDefImpl(HashMap.class);
@@ -69,6 +75,9 @@ public class DefaultInitMethodAssemblerTest extends TestCase {
         assertEquals("1", 0, map.size());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAssembleForExpression() throws Exception {
         S2Container container = new S2ContainerImpl();
         ComponentDefImpl cd = new ComponentDefImpl(HashMap.class);
@@ -82,6 +91,9 @@ public class DefaultInitMethodAssemblerTest extends TestCase {
         assertEquals("1", "111", map.get("aaa"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAssembleForAuto() throws Exception {
         S2Container container = new S2ContainerImpl();
         ComponentDefImpl cd = new ComponentDefImpl(B.class);
@@ -95,6 +107,9 @@ public class DefaultInitMethodAssemblerTest extends TestCase {
         assertTrue("1", b.isEmpty());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAssembleIllegalArgument() throws Exception {
         S2Container container = new S2ContainerImpl();
         ComponentDefImpl cd = new ComponentDefImpl(HashMap.class);
@@ -111,6 +126,9 @@ public class DefaultInitMethodAssemblerTest extends TestCase {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAssembleIllegalArgument2() throws Exception {
         S2Container container = new S2ContainerImpl();
         ComponentDefImpl cd = new ComponentDefImpl(B.class);
@@ -128,6 +146,9 @@ public class DefaultInitMethodAssemblerTest extends TestCase {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAssembleIllegalArgument3() throws Exception {
         S2Container container = new S2ContainerImpl();
         ComponentDefImpl cd = new ComponentDefImpl(B.class);
@@ -146,6 +167,9 @@ public class DefaultInitMethodAssemblerTest extends TestCase {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAssembleField() throws Exception {
         S2Container container = new S2ContainerImpl();
         ComponentDefImpl cd = new ComponentDefImpl(Integer.class);
@@ -159,6 +183,9 @@ public class DefaultInitMethodAssemblerTest extends TestCase {
         assembler.assemble(new Integer(1));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAssembleWhenComponentNull() throws Exception {
         S2Container container = new S2ContainerImpl();
         ComponentDefImpl cd = new ComponentDefImpl(Integer.class);
@@ -172,21 +199,39 @@ public class DefaultInitMethodAssemblerTest extends TestCase {
         assembler.assemble(null);
     }
 
+    /**
+     *
+     */
     public interface Foo {
+        /**
+         * @return
+         */
         public String getHogeName();
     }
 
+    /**
+     *
+     */
     public static class A implements Foo {
 
         private Hoge hoge_;
 
+        /**
+         * 
+         */
         public A() {
         }
 
+        /**
+         * @return
+         */
         public Hoge getHoge() {
             return hoge_;
         }
 
+        /**
+         * @param hoge
+         */
         public void setHoge(Hoge hoge) {
             hoge_ = hoge;
         }
@@ -196,11 +241,20 @@ public class DefaultInitMethodAssemblerTest extends TestCase {
         }
     }
 
+    /**
+     *
+     */
     public interface Hoge {
 
+        /**
+         * @return
+         */
         public String getName();
     }
 
+    /**
+     *
+     */
     public static class B implements Hoge {
 
         private Foo foo;
@@ -209,13 +263,22 @@ public class DefaultInitMethodAssemblerTest extends TestCase {
             return "B";
         }
 
+        /**
+         * @param aaa
+         */
         public void setAaa(int aaa) {
         }
 
+        /**
+         * @param foo
+         */
         public void bbb(Foo foo) {
             this.foo = foo;
         }
 
+        /**
+         * @return
+         */
         public boolean isEmpty() {
             return foo == null;
         }

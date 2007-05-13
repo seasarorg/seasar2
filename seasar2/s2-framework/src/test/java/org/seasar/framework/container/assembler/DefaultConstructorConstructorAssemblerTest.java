@@ -37,6 +37,9 @@ import org.seasar.framework.exception.OgnlRuntimeException;
  */
 public class DefaultConstructorConstructorAssemblerTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testAssemble() throws Exception {
         S2Container container = new S2ContainerImpl();
         ComponentDefImpl cd = new ComponentDefImpl(ArrayList.class);
@@ -46,6 +49,9 @@ public class DefaultConstructorConstructorAssemblerTest extends TestCase {
         assertNotNull("1", assempbler.assemble());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAssembleAspect() throws Exception {
         S2Container container = new S2ContainerImpl();
         ComponentDefImpl cd = new ComponentDefImpl(ArrayList.class);
@@ -57,6 +63,9 @@ public class DefaultConstructorConstructorAssemblerTest extends TestCase {
         list.size();
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAssembleManual() throws Exception {
         S2Container container = new S2ContainerImpl();
         ComponentDefImpl cd = new ComponentDefImpl(A.class);
@@ -69,6 +78,9 @@ public class DefaultConstructorConstructorAssemblerTest extends TestCase {
         assertEquals("1", "B", a.getHogeName());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAssembleIllegalConstructorArgument() throws Exception {
         S2Container container = new S2ContainerImpl();
         ComponentDefImpl cd = new ComponentDefImpl(A.class);
@@ -86,18 +98,33 @@ public class DefaultConstructorConstructorAssemblerTest extends TestCase {
         }
     }
 
+    /**
+     * 
+     */
     public interface Foo {
+        /**
+         * @return
+         */
         public String getHogeName();
     }
 
+    /**
+     * 
+     */
     public static class A implements Foo {
 
         private Hoge hoge_;
 
+        /**
+         * @param hoge
+         */
         public A(Hoge hoge) {
             hoge_ = hoge;
         }
 
+        /**
+         * @return
+         */
         public Hoge getHoge() {
             return hoge_;
         }
@@ -107,11 +134,20 @@ public class DefaultConstructorConstructorAssemblerTest extends TestCase {
         }
     }
 
+    /**
+     * 
+     */
     public interface Hoge {
 
+        /**
+         * @return
+         */
         public String getName();
     }
 
+    /**
+     * 
+     */
     public static class B implements Hoge {
 
         public String getName() {

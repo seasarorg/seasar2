@@ -105,6 +105,9 @@ public class AbstractPropertyAssemblerTest extends TestCase {
         set = new HashSet();
     }
 
+    /**
+     * @throws Exception
+     */
     public void testBindParameter() throws Exception {
         request.setParameter("name", "Hoge");
         request.setParameter("age", "30");
@@ -125,6 +128,9 @@ public class AbstractPropertyAssemblerTest extends TestCase {
         assertEquals("Ray", testPage.magazines.get(2));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testBindHeader() throws Exception {
         request.addHeader("name", "Hoge");
         request.addHeader("age", "30");
@@ -148,6 +154,9 @@ public class AbstractPropertyAssemblerTest extends TestCase {
         assertEquals("Ray", testPage.magazines.get(2));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testPriority() throws Exception {
         request.setParameter("name", "Foo");
         request.addHeader("name", "Bar");
@@ -160,6 +169,9 @@ public class AbstractPropertyAssemblerTest extends TestCase {
 
     }
 
+    /**
+     * @throws Exception
+     */
     public void testExcept() throws Exception {
         request.setParameter("name", "null");
         assembler.bindExternally(beanDesc, cd, testPage, set);
@@ -167,6 +179,9 @@ public class AbstractPropertyAssemblerTest extends TestCase {
         assertEquals("", testPage.name);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testTypeMismatch() throws Exception {
         request.setParameter("contract", "hoge");
         assembler.bindExternally(beanDesc, cd, testPage, set);
@@ -174,6 +189,9 @@ public class AbstractPropertyAssemblerTest extends TestCase {
         assertEquals(null, testPage.contract);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testNotBind() throws Exception {
         assembler.bindExternally(beanDesc, cd, testPage, set);
         assertTrue(set.isEmpty());
@@ -183,7 +201,13 @@ public class AbstractPropertyAssemblerTest extends TestCase {
         assertNull(testPage.magazines);
     }
 
+    /**
+     *
+     */
     public static class TestPropertyAssembler extends AbstractPropertyAssembler {
+        /**
+         * @param componentDef
+         */
         public TestPropertyAssembler(ComponentDef componentDef) {
             super(componentDef);
         }
@@ -198,6 +222,9 @@ public class AbstractPropertyAssemblerTest extends TestCase {
 
     }
 
+    /**
+     *
+     */
     public static class TestPage {
         String name;
 
@@ -209,42 +236,72 @@ public class AbstractPropertyAssemblerTest extends TestCase {
 
         Map contract;
 
+        /**
+         * @return
+         */
         public String getName() {
             return name;
         }
 
+        /**
+         * @param name
+         */
         public void setName(String name) {
             this.name = name;
         }
 
+        /**
+         * @return
+         */
         public int getAge() {
             return age;
         }
 
+        /**
+         * @param age
+         */
         public void setAge(int age) {
             this.age = age;
         }
 
+        /**
+         * @return
+         */
         public String[] getModels() {
             return models;
         }
 
+        /**
+         * @param models
+         */
         public void setModels(String[] models) {
             this.models = models;
         }
 
+        /**
+         * @return
+         */
         public List getMagazines() {
             return magazines;
         }
 
+        /**
+         * @param magazines
+         */
         public void setMagazines(List magazines) {
             this.magazines = magazines;
         }
 
+        /**
+         * @return
+         */
         public Map getContract() {
             return contract;
         }
 
+        /**
+         * @param contract
+         */
         public void setContract(Map contract) {
             this.contract = contract;
         }

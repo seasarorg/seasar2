@@ -36,6 +36,9 @@ import org.seasar.framework.container.ognl.OgnlExpression;
  */
 public class BindingTypeMustDefTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testBindExpression() throws Exception {
         BeanDesc beanDesc = BeanDescFactory.getBeanDesc(A.class);
         PropertyDesc propDesc = beanDesc.getPropertyDesc("hoge");
@@ -51,6 +54,9 @@ public class BindingTypeMustDefTest extends TestCase {
         assertNotNull("1", a.getHoge());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testBindByName() throws Exception {
         BeanDesc beanDesc = BeanDescFactory.getBeanDesc(A.class);
         PropertyDesc propDesc = beanDesc.getPropertyDesc("message");
@@ -65,6 +71,9 @@ public class BindingTypeMustDefTest extends TestCase {
         assertEquals("1", "aaa", a.getMessage());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testBindByField() throws Exception {
         BeanDesc beanDesc = BeanDescFactory.getBeanDesc(A.class);
         Field field = beanDesc.getField("message2");
@@ -79,6 +88,9 @@ public class BindingTypeMustDefTest extends TestCase {
         assertEquals("1", "aaa", a.getMessage2());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testBindByFieldNullPropertyDesc() throws Exception {
         BeanDesc beanDesc = BeanDescFactory.getBeanDesc(A.class);
         Field field = beanDesc.getField("message3");
@@ -93,6 +105,9 @@ public class BindingTypeMustDefTest extends TestCase {
         assertEquals("1", "aaa", a.message3);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testBindByNameForDefferentType() throws Exception {
         BeanDesc beanDesc = BeanDescFactory.getBeanDesc(A.class);
         PropertyDesc propDesc = beanDesc.getPropertyDesc("message");
@@ -110,6 +125,9 @@ public class BindingTypeMustDefTest extends TestCase {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public void testBindByType() throws Exception {
         BeanDesc beanDesc = BeanDescFactory.getBeanDesc(A.class);
         PropertyDesc propDesc = beanDesc.getPropertyDesc("hoge");
@@ -124,6 +142,9 @@ public class BindingTypeMustDefTest extends TestCase {
         assertNotNull("1", a.getHoge());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testBindException() throws Exception {
         BeanDesc beanDesc = BeanDescFactory.getBeanDesc(A.class);
         PropertyDesc propDesc = beanDesc.getPropertyDesc("hoge");
@@ -141,10 +162,19 @@ public class BindingTypeMustDefTest extends TestCase {
         }
     }
 
+    /**
+     * 
+     */
     public interface Foo {
+        /**
+         * @return
+         */
         public String getHogeName();
     }
 
+    /**
+     * 
+     */
     public static class A implements Foo {
 
         private Hoge hoge_;
@@ -155,25 +185,43 @@ public class BindingTypeMustDefTest extends TestCase {
 
         private String message3;
 
+        /**
+         * 
+         */
         public A() {
         }
 
+        /**
+         * @return
+         */
         public Hoge getHoge() {
             return hoge_;
         }
 
+        /**
+         * @param hoge
+         */
         public void setHoge(Hoge hoge) {
             hoge_ = hoge;
         }
 
+        /**
+         * @return
+         */
         public String getMessage() {
             return message_;
         }
 
+        /**
+         * @param message
+         */
         public void setMessage(String message) {
             message_ = message;
         }
 
+        /**
+         * @return
+         */
         public String getMessage2() {
             return message2;
         }
@@ -183,14 +231,23 @@ public class BindingTypeMustDefTest extends TestCase {
         }
     }
 
+    /**
+     * 
+     */
     public static class A2 implements Foo {
 
         private Hoge hoge_ = new B();
 
+        /**
+         * @return
+         */
         public Hoge getHoge() {
             return hoge_;
         }
 
+        /**
+         * @param hoge
+         */
         public void setHoge(Hoge hoge) {
             hoge_ = hoge;
         }
@@ -200,11 +257,20 @@ public class BindingTypeMustDefTest extends TestCase {
         }
     }
 
+    /**
+     * 
+     */
     public interface Hoge {
 
+        /**
+         * @return
+         */
         public String getName();
     }
 
+    /**
+     * 
+     */
     public static class B implements Hoge {
 
         public String getName() {

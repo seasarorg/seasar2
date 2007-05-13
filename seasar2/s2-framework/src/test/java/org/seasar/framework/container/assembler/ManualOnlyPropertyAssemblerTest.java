@@ -38,6 +38,9 @@ import org.seasar.framework.mock.servlet.MockServletContextImpl;
  */
 public class ManualOnlyPropertyAssemblerTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testAssemble() throws Exception {
         S2Container container = new S2ContainerImpl();
         ComponentDefImpl cd = new ComponentDefImpl(A.class);
@@ -53,6 +56,9 @@ public class ManualOnlyPropertyAssemblerTest extends TestCase {
         assertEquals("1", "B", a.getHogeName());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAssembleForField() throws Exception {
         S2Container container = new S2ContainerImpl();
         ComponentDefImpl cd = new ComponentDefImpl(C.class);
@@ -67,6 +73,9 @@ public class ManualOnlyPropertyAssemblerTest extends TestCase {
         assertEquals("1", "a", c.aaa);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAssembleIllegalProperty() throws Exception {
         S2Container container = new S2ContainerImpl();
         ComponentDefImpl cd = new ComponentDefImpl(A.class);
@@ -84,6 +93,9 @@ public class ManualOnlyPropertyAssemblerTest extends TestCase {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAssembleIllegalProperty2() throws Exception {
         S2Container container = new S2ContainerImpl();
         ComponentDefImpl cd = new ComponentDefImpl(A.class);
@@ -100,6 +112,9 @@ public class ManualOnlyPropertyAssemblerTest extends TestCase {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAssembleIllegalProperty3() throws Exception {
         S2Container container = new S2ContainerImpl();
         ComponentDefImpl cd = new ComponentDefImpl(B.class);
@@ -116,6 +131,9 @@ public class ManualOnlyPropertyAssemblerTest extends TestCase {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAssembleWhenComponentNull() throws Exception {
         S2Container container = new S2ContainerImpl();
         ComponentDefImpl cd = new ComponentDefImpl(C.class);
@@ -127,6 +145,9 @@ public class ManualOnlyPropertyAssemblerTest extends TestCase {
         assembler.assemble(null);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testBindExternally() throws Exception {
         S2Container container = new S2ContainerImpl();
         ComponentDefImpl cd = new ComponentDefImpl(D.class);
@@ -147,21 +168,39 @@ public class ManualOnlyPropertyAssemblerTest extends TestCase {
         assertEquals("1", "aaa", d.getName());
     }
 
+    /**
+     *
+     */
     public interface Foo {
+        /**
+         * @return
+         */
         public String getHogeName();
     }
 
+    /**
+     *
+     */
     public static class A implements Foo {
 
         private Hoge hoge_;
 
+        /**
+         * 
+         */
         public A() {
         }
 
+        /**
+         * @return
+         */
         public Hoge getHoge() {
             return hoge_;
         }
 
+        /**
+         * @param hoge
+         */
         public void setHoge(Hoge hoge) {
             hoge_ = hoge;
         }
@@ -171,33 +210,57 @@ public class ManualOnlyPropertyAssemblerTest extends TestCase {
         }
     }
 
+    /**
+     *
+     */
     public interface Hoge {
 
+        /**
+         * @return
+         */
         public String getName();
     }
 
+    /**
+     *
+     */
     public static class B implements Hoge {
 
         public String getName() {
             return "B";
         }
 
+        /**
+         * @param aaa
+         */
         public void setAaa(int aaa) {
         }
     }
 
+    /**
+     *
+     */
     public static class C {
 
         private String aaa;
     }
 
+    /**
+     *
+     */
     public static class D {
         private String name;
 
+        /**
+         * @return
+         */
         public String getName() {
             return name;
         }
 
+        /**
+         * @param name
+         */
         public void setName(String name) {
             this.name = name;
         }

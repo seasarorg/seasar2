@@ -24,6 +24,9 @@ import org.seasar.framework.container.IllegalBindingTypeDefRuntimeException;
  */
 public class BindingTypeDefFactoryTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testGetBindingTypeDef() throws Exception {
         assertEquals("1", BindingTypeDefFactory.MUST, BindingTypeDefFactory
                 .getBindingTypeDef("must"));

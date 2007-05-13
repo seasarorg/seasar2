@@ -29,8 +29,15 @@ import org.seasar.framework.container.impl.ComponentDefImpl;
 import org.seasar.framework.container.impl.PropertyDefImpl;
 import org.seasar.framework.container.impl.S2ContainerImpl;
 
+/**
+ * @author higa
+ *
+ */
 public class AbstBindingTypeDefTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testBindingComponentDef() throws Exception {
         S2Container container = new S2ContainerImpl();
         container.register(ComponentDefAware.class);
@@ -39,6 +46,9 @@ public class AbstBindingTypeDefTest extends TestCase {
         assertSame("1", cd, cdAware.getComponentDef());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testBindAutoForField() throws Exception {
         S2Container container = new S2ContainerImpl();
         ComponentDefImpl cd = new ComponentDefImpl(Hoge.class);
@@ -49,6 +59,9 @@ public class AbstBindingTypeDefTest extends TestCase {
         assertNull("1", hoge.aaa);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testBindAutoForField2() throws Exception {
         S2Container container = new S2ContainerImpl();
         ComponentDefImpl cd = new ComponentDefImpl(Hoge2.class);
@@ -62,6 +75,9 @@ public class AbstBindingTypeDefTest extends TestCase {
         assertNotNull("1", hoge2.aaa);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testBindAutoForPackagePrefix() throws Exception {
         S2Container container = new S2ContainerImpl();
         ComponentDefImpl cd = new ComponentDefImpl(Hoge.class, "aaa_hoge");
@@ -75,6 +91,9 @@ public class AbstBindingTypeDefTest extends TestCase {
         assertNotNull(foo3.getHoGe());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testBindAutoForArray() throws Exception {
         S2Container container = new S2ContainerImpl();
         container.register(Foo2.class);
@@ -84,6 +103,9 @@ public class AbstBindingTypeDefTest extends TestCase {
         assertNotNull(foo2.getHoges());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testBindAutoForArray2() throws Exception {
         S2Container container0 = new S2ContainerImpl();
         container0.setPath("0");
@@ -138,6 +160,9 @@ public class AbstBindingTypeDefTest extends TestCase {
         assertEquals(4, holder.maps.length);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testBindAutoForArrayField() throws Exception {
         S2Container container = new S2ContainerImpl();
         container.register(Foo4.class);
@@ -147,6 +172,9 @@ public class AbstBindingTypeDefTest extends TestCase {
         assertNull(foo4.hoges);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testBindAutoForArrayField2() throws Exception {
         S2Container container = new S2ContainerImpl();
         ComponentDefImpl cd = new ComponentDefImpl(Foo4.class);
@@ -161,87 +189,150 @@ public class AbstBindingTypeDefTest extends TestCase {
         assertNotNull(foo4.hoges);
     }
 
+    /**
+     *
+     */
     public static class ComponentDefAware {
         private ComponentDef componentDef;
 
+        /**
+         * @return
+         */
         public ComponentDef getComponentDef() {
             return componentDef;
         }
 
+        /**
+         * @param componentDef
+         */
         public void setComponentDef(ComponentDef componentDef) {
             this.componentDef = componentDef;
         }
     }
 
+    /**
+     *
+     */
     public static class Hoge {
         private List aaa;
 
+        /**
+         * @return
+         */
         public List getAaa() {
             return aaa;
         }
     }
 
+    /**
+     *
+     */
     public static class Hoge2 {
         private IHoge aaa;
     }
 
+    /**
+     *
+     */
     public static interface IHoge {
     }
 
+    /**
+     *
+     */
     public static class Hoge3 implements IHoge {
     }
 
+    /**
+     *
+     */
     public static class Hoge4 extends Hoge3 {
     }
 
+    /**
+     *
+     */
     public static class Foo {
 
         private Hoge hoge;
 
+        /**
+         * @return
+         */
         public Hoge getHoge() {
             return hoge;
         }
 
+        /**
+         * @param hoge
+         */
         public void setHoge(Hoge hoge) {
             this.hoge = hoge;
         }
     }
 
+    /**
+     *
+     */
     public static class Foo2 {
 
         private IHoge[] hoges;
 
+        /**
+         * @return
+         */
         public IHoge[] getHoges() {
             return hoges;
         }
 
+        /**
+         * @param hoges
+         */
         public void setHoges(IHoge[] hoges) {
             this.hoges = hoges;
         }
     }
 
+    /**
+     *
+     */
     public static class Foo3 {
 
         private Hoge hoGe;
 
+        /**
+         * @return
+         */
         public Hoge getHoGe() {
             return hoGe;
         }
 
+        /**
+         * @param hoGe
+         */
         public void setHoGe(Hoge hoGe) {
             this.hoGe = hoGe;
         }
     }
 
+    /**
+     *
+     */
     public static class Foo4 {
 
         IHoge[] hoges;
 
     }
 
+    /**
+     *
+     */
     public static class MapArrayHolder {
         Map[] maps;
 
+        /**
+         * @param maps
+         */
         public void setMaps(Map[] maps) {
             this.maps = maps;
         }

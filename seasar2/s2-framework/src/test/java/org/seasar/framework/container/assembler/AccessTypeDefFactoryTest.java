@@ -24,6 +24,9 @@ import org.seasar.framework.container.IllegalAccessTypeDefRuntimeException;
  */
 public class AccessTypeDefFactoryTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testGetAccessTypeDef() throws Exception {
         assertEquals(AccessTypeDefFactory.PROPERTY, AccessTypeDefFactory
                 .getAccessTypeDef("property"));

@@ -28,6 +28,9 @@ import org.seasar.framework.container.impl.S2ContainerImpl;
  */
 public class AccessTypeFieldTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void test() throws Exception {
         S2Container container = new S2ContainerImpl();
         container.register(FooImpl.class, "foo");
@@ -50,23 +53,41 @@ public class AccessTypeFieldTest extends TestCase {
         assertEquals(foo, baz.getFoo());
     }
 
+    /**
+     *
+     */
     public static interface Foo {
     }
 
+    /**
+     *
+     */
     public static class FooImpl implements Foo {
     }
 
+    /**
+     *
+     */
     public static class Bar {
         private Foo foo;
     }
 
+    /**
+     *
+     */
     public static class Baz {
         private Foo foo;
 
+        /**
+         * @return
+         */
         public Foo getFoo() {
             return foo;
         }
 
+        /**
+         * @param foo
+         */
         public void setFoo(Foo foo) {
             throw new RuntimeException();
         }
