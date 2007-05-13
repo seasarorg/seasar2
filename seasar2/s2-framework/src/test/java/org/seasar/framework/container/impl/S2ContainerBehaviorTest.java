@@ -33,6 +33,9 @@ public class S2ContainerBehaviorTest extends S2FrameworkTestCase {
         include("S2ContainerBehaviorTest.dicon");
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetComponent() throws Exception {
         assertNotNull("1", container.getComponent("foo"));
         try {
@@ -48,6 +51,9 @@ public class S2ContainerBehaviorTest extends S2FrameworkTestCase {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetComponentDef() throws Exception {
         assertNotNull("1", container.getComponentDef("foo"));
         try {
@@ -60,12 +66,18 @@ public class S2ContainerBehaviorTest extends S2FrameworkTestCase {
                 container.getComponentDef("bar") instanceof TooManyRegistrationComponentDef);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testHasComponentDef() throws Exception {
         assertTrue("1", container.hasComponentDef("foo"));
         assertFalse("2", container.hasComponentDef("not exists"));
         assertTrue("3", container.hasComponentDef("bar"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testInjectDependency() throws Exception {
         Outer outer = new Outer();
         container.injectDependency(outer, "outerFoo");
@@ -83,13 +95,22 @@ public class S2ContainerBehaviorTest extends S2FrameworkTestCase {
         }
     }
 
+    /**
+     *
+     */
     public static class Outer {
         Map map;
 
+        /**
+         * @return
+         */
         public Map getMap() {
             return this.map;
         }
 
+        /**
+         * @param map
+         */
         public void setMap(Map map) {
             this.map = map;
         }

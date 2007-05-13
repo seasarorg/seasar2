@@ -28,8 +28,14 @@ import org.seasar.framework.container.ognl.OgnlExpression;
  */
 public class ComponentNameExpressionTest extends TestCase {
 
+    /**
+     * 
+     */
     public static final int COUNT = 1000000;
 
+    /**
+     * @throws Exception
+     */
     public void test() throws Exception {
         S2Container container = new S2ContainerImpl();
         ComponentDef cd = new ComponentDefImpl(Object.class, "foo");
@@ -38,6 +44,9 @@ public class ComponentNameExpressionTest extends TestCase {
         assertNotNull(expr.evaluate(container, null));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testPerf() throws Exception {
         S2Container container = new S2ContainerImpl();
         ComponentDef cd = new ComponentDefImpl(Object.class, "foo");

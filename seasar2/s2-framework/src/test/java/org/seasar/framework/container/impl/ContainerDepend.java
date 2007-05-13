@@ -17,10 +17,16 @@ package org.seasar.framework.container.impl;
 
 import org.seasar.framework.container.S2Container;
 
+/**
+ *
+ */
 public class ContainerDepend {
 
     private S2Container container;
 
+    /**
+     * 
+     */
     public ContainerDepend() {
         super();
     }

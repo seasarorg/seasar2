@@ -28,6 +28,9 @@ public class NestIncludeTest extends TestCase {
 
     private static final String PATH = "org/seasar/framework/container/impl/test3.dicon";
 
+    /**
+     * @throws Exception
+     */
     public void testInclude() throws Exception {
         S2Container container = S2ContainerFactory.create(PATH);
         container.init();

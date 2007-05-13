@@ -28,6 +28,9 @@ import org.seasar.framework.container.ognl.OgnlExpression;
  */
 public class ArgDefImplTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testSetExpression() throws Exception {
         S2Container container = new S2ContainerImpl();
         ComponentDefImpl cd = new ComponentDefImpl(A.class);
@@ -42,6 +45,9 @@ public class ArgDefImplTest extends TestCase {
         assertEquals("1", "B", a.getHogeName());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testSetChildComponentDef() throws Exception {
         S2Container container = new S2ContainerImpl();
         ComponentDefImpl cd = new ComponentDefImpl(A.class);
@@ -55,6 +61,9 @@ public class ArgDefImplTest extends TestCase {
         assertEquals("1", "B", a.getHogeName());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testPrototype() throws Exception {
         S2Container container = new S2ContainerImpl();
         ComponentDefImpl cd = new ComponentDefImpl(StrHolderImpl.class, "foo");
@@ -74,37 +83,64 @@ public class ArgDefImplTest extends TestCase {
         assertEquals("2", "bbb", facade2.getStr());
     }
 
+    /**
+     *
+     */
     public static class A {
 
         private Hoge hoge_;
 
+        /**
+         * @param hoge
+         */
         public A(Hoge hoge) {
             hoge_ = hoge;
         }
 
+        /**
+         * @return
+         */
         public String getHogeName() {
             return hoge_.getName();
         }
     }
 
+    /**
+     *
+     */
     public static class A2 {
 
         private Hoge hoge_;
 
+        /**
+         * @param hoge
+         */
         public void setHoge(Hoge hoge) {
             hoge_ = hoge;
         }
 
+        /**
+         * @return
+         */
         public String getHogeName() {
             return hoge_.getName();
         }
     }
 
+    /**
+     *
+     */
     public interface Hoge {
 
+        /**
+         * @return
+         */
         public String getName();
     }
 
+    /**
+     *
+     */
     public static class B implements Hoge {
 
         public String getName() {
@@ -112,10 +148,16 @@ public class ArgDefImplTest extends TestCase {
         }
     }
 
+    /**
+     *
+     */
     public static class C implements Hoge {
 
         private A2 a2_;
 
+        /**
+         * @param a2
+         */
         public void setA2(A2 a2) {
             a2_ = a2;
         }
@@ -124,17 +166,32 @@ public class ArgDefImplTest extends TestCase {
             return "C";
         }
 
+        /**
+         * @return
+         */
         public String getHogeName() {
             return a2_.getHogeName();
         }
     }
 
+    /**
+     *
+     */
     public static interface StrHolder {
+        /**
+         * @param str
+         */
         public void setStr(String str);
 
+        /**
+         * @return
+         */
         public String getStr();
     }
 
+    /**
+     *
+     */
     public static class StrHolderImpl implements StrHolder {
         private String str_;
 
@@ -147,15 +204,30 @@ public class ArgDefImplTest extends TestCase {
         }
     }
 
+    /**
+     *
+     */
     public static interface StrFacade {
+        /**
+         * @param str
+         */
         public void setStr(String str);
 
+        /**
+         * @return
+         */
         public String getStr();
     }
 
+    /**
+     *
+     */
     public static class StrFacadeImpl implements StrFacade {
         private StrHolder strHolder_;
 
+        /**
+         * @param strHolder
+         */
         public StrFacadeImpl(StrHolder strHolder) {
             strHolder_ = strHolder;
         }

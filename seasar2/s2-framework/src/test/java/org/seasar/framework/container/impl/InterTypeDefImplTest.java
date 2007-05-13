@@ -25,8 +25,14 @@ import org.seasar.framework.container.InterTypeDef;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.ognl.OgnlExpression;
 
+/**
+ * 
+ */
 public class InterTypeDefImplTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testSetExpression() throws Exception {
         S2Container container = new S2ContainerImpl();
         InterTypeDef id = new InterTypeDefImpl();
@@ -38,6 +44,9 @@ public class InterTypeDefImplTest extends TestCase {
         assertEquals("1", FieldInterType.class, id.getInterType().getClass());
     }
 
+    /**
+     * 
+     */
     public static class FieldInterType implements InterType {
         public void introduce(Class targetClass, CtClass enhancedClass) {
             try {

@@ -100,6 +100,9 @@ public class S2ContainerImplTest extends TestCase {
         container3.include(container4);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testRegister() throws Exception {
         S2Container container = new S2ContainerImpl();
         container.register(A.class);
@@ -117,6 +120,9 @@ public class S2ContainerImplTest extends TestCase {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public void testRegisterForAlreadyRegistration() throws Exception {
         S2Container container = new S2ContainerImpl();
         ComponentDef cd = new ComponentDefImpl(B.class, "B");
@@ -135,6 +141,9 @@ public class S2ContainerImplTest extends TestCase {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public void testInclude() throws Exception {
         S2Container container = new S2ContainerImpl();
         container.register(A.class);
@@ -147,6 +156,9 @@ public class S2ContainerImplTest extends TestCase {
         assertSame("3", container, container2.getParent(0));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testInclude2() throws Exception {
         S2Container root = new S2ContainerImpl();
         S2Container child = new S2ContainerImpl();
@@ -176,6 +188,9 @@ public class S2ContainerImplTest extends TestCase {
         assertEquals("13", 0, root.getComponentDefSize());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testInclude3() throws Exception {
         S2Container container = new S2ContainerImpl();
         S2Container child = new S2ContainerImpl();
@@ -189,6 +204,9 @@ public class S2ContainerImplTest extends TestCase {
         assertNotNull("1", container.getComponentDef("bbb"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testInclude4() throws Exception {
         S2Container aaa = new S2ContainerImpl();
         aaa.setPath("aaa.xml");
@@ -203,6 +221,9 @@ public class S2ContainerImplTest extends TestCase {
         assertNotNull("1", aaa.getComponentDef("aaa"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testInclude5() throws Exception {
         S2Container container = new S2ContainerImpl();
         S2Container child = new S2ContainerImpl();
@@ -214,6 +235,9 @@ public class S2ContainerImplTest extends TestCase {
         assertSame("1", child, container.getComponent("aaa"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testInclude6() throws Exception {
         S2Container root = new S2ContainerImpl();
         S2Container aaa = new S2ContainerImpl();
@@ -228,6 +252,9 @@ public class S2ContainerImplTest extends TestCase {
         assertNotNull("1", root.getComponentDef("bbb.date"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testInclude7() throws Exception {
         S2Container root = new S2ContainerImpl();
         S2Container aaa = new S2ContainerImpl();
@@ -257,6 +284,9 @@ public class S2ContainerImplTest extends TestCase {
                 .getNamespace());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testRegisterAfterInclude() throws Exception {
         S2Container container = new S2ContainerImpl();
         S2Container container2 = new S2ContainerImpl();
@@ -269,6 +299,9 @@ public class S2ContainerImplTest extends TestCase {
         assertEquals("2", date, container.getComponent(Date.class));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testInitAndDestroy() throws Exception {
         S2Container container = new S2ContainerImpl();
         S2Container child = new S2ContainerImpl();
@@ -311,6 +344,9 @@ public class S2ContainerImplTest extends TestCase {
         assertEquals("8", "c3", destroyList.get(2));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testContextClassLoaderWhenInit() throws Exception {
         final ClassLoader[] loader = new ClassLoader[1];
         S2Container container = new S2ContainerImpl();
@@ -341,6 +377,9 @@ public class S2ContainerImplTest extends TestCase {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public void testContextClassLoaderWhenDestroy() throws Exception {
         final ClassLoader[] loader = new ClassLoader[1];
         S2Container container = new S2ContainerImpl();
@@ -372,6 +411,9 @@ public class S2ContainerImplTest extends TestCase {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public void testInjectDependency() throws Exception {
         S2Container container = new S2ContainerImpl();
         ComponentDef componentDef = new ComponentDefImpl(HashMap.class, "hoge");
@@ -395,6 +437,9 @@ public class S2ContainerImplTest extends TestCase {
         assertEquals("3", "111", map3.get("aaa"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testSelf() throws Exception {
         S2Container container = new S2ContainerImpl();
         container.register(D.class);
@@ -402,6 +447,9 @@ public class S2ContainerImplTest extends TestCase {
         assertSame("1", container, d.getContainer());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testSelf2() throws Exception {
         S2Container container = new S2ContainerImpl();
         ComponentDef cd = new ComponentDefImpl(D.class);
@@ -413,11 +461,17 @@ public class S2ContainerImplTest extends TestCase {
         assertSame("1", container, d.getContainer());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testConstructor() throws Exception {
         S2Container container = new S2ContainerImpl();
         assertEquals("1", 0, container.getComponentDefSize());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testNamespace() throws Exception {
         S2Container container = new S2ContainerImpl();
         container.setNamespace("aaa");
@@ -426,6 +480,9 @@ public class S2ContainerImplTest extends TestCase {
         assertNotNull("2", container.getComponent("aaa.bbb"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetComponentDef() throws Exception {
         S2Container aaa = new S2ContainerImpl();
         aaa.setNamespace("aaa");
@@ -437,6 +494,9 @@ public class S2ContainerImplTest extends TestCase {
         assertNotNull("2", bbb.getComponentDef("bbb.hoge"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetComponentDef2() throws Exception {
         S2Container container = new S2ContainerImpl();
         container.register(FooImpl.class);
@@ -444,6 +504,9 @@ public class S2ContainerImplTest extends TestCase {
         assertEquals("1", "Foo", hoge.getName());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testFindComponents() throws Exception {
         Map[] found = (Map[]) container0.findComponents(Map.class);
         assertEquals(1, found.length);
@@ -461,6 +524,9 @@ public class S2ContainerImplTest extends TestCase {
         assertEquals(4, found.length);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testFindAllComponents() throws Exception {
         Map[] found = (Map[]) container0.findAllComponents(Map.class);
         assertEquals(10, found.length);
@@ -478,6 +544,9 @@ public class S2ContainerImplTest extends TestCase {
         assertEquals(4, found.length);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testFindLocalComponents() throws Exception {
         Map[] found = (Map[]) container0.findLocalComponents(Map.class);
         assertEquals(0, found.length);
@@ -495,6 +564,9 @@ public class S2ContainerImplTest extends TestCase {
         assertEquals(4, found.length);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testFindComponentDefs() throws Exception {
         ComponentDef[] found = container0.findComponentDefs(Map.class);
         assertEquals(1, found.length);
@@ -512,6 +584,9 @@ public class S2ContainerImplTest extends TestCase {
         assertEquals(4, found.length);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testFindAllComponentDefs() throws Exception {
         ComponentDef[] found = container0.findAllComponentDefs(Map.class);
         assertEquals(10, found.length);
@@ -529,6 +604,9 @@ public class S2ContainerImplTest extends TestCase {
         assertEquals(4, found.length);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testFindLocalComponentDefs() throws Exception {
         ComponentDef[] found = container0.findLocalComponentDefs(Map.class);
         assertEquals(0, found.length);
@@ -546,6 +624,9 @@ public class S2ContainerImplTest extends TestCase {
         assertEquals(4, found.length);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testRequest() throws Exception {
         S2Container container = new S2ContainerImpl();
         S2Container child = new S2ContainerImpl();
@@ -566,6 +647,9 @@ public class S2ContainerImplTest extends TestCase {
         assertNotNull("1", client.getRequest());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testSession() throws Exception {
         S2Container container = new S2ContainerImpl();
         S2Container child = new S2ContainerImpl();
@@ -586,6 +670,9 @@ public class S2ContainerImplTest extends TestCase {
         assertNotNull("1", client.getSession());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testResponse() throws Exception {
         S2Container container = new S2ContainerImpl();
         S2Container child = new S2ContainerImpl();
@@ -607,6 +694,9 @@ public class S2ContainerImplTest extends TestCase {
         assertNotNull("1", client.getResponse());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testServletContext() throws Exception {
         S2Container container = new S2ContainerImpl();
         S2Container child = new S2ContainerImpl();
@@ -626,6 +716,9 @@ public class S2ContainerImplTest extends TestCase {
         assertNotNull("1", client.getServletContext());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testOgnlClassResolvingWhileClassLoaderSpecified()
             throws Exception {
         S2Container container = new S2ContainerImpl() {
@@ -701,27 +794,48 @@ public class S2ContainerImplTest extends TestCase {
         }
     }
 
+    /**
+     *
+     */
     public static class A {
 
         private Hoge hoge_;
 
+        /**
+         * @param hoge
+         */
         public A(Hoge hoge) {
             hoge_ = hoge;
         }
 
+        /**
+         * @return
+         */
         public String getHogeName() {
             return hoge_.getName();
         }
     }
 
+    /**
+     *
+     */
     public interface Hoge {
 
+        /**
+         * @return
+         */
         public String getName();
     }
 
+    /**
+     *
+     */
     public interface Foo extends Hoge {
     }
 
+    /**
+     *
+     */
     public static class B implements Hoge {
 
         public String getName() {
@@ -729,6 +843,9 @@ public class S2ContainerImplTest extends TestCase {
         }
     }
 
+    /**
+     *
+     */
     public static class B2 implements Hoge {
 
         public String getName() {
@@ -736,6 +853,9 @@ public class S2ContainerImplTest extends TestCase {
         }
     }
 
+    /**
+     *
+     */
     public static class C {
 
         private String name_;
@@ -744,87 +864,146 @@ public class S2ContainerImplTest extends TestCase {
 
         private List destroyList_;
 
+        /**
+         * @param name
+         * @param initList
+         * @param destoryList
+         */
         public C(String name, List initList, List destoryList) {
             name_ = name;
             initList_ = initList;
             destroyList_ = destoryList;
         }
 
+        /**
+         * 
+         */
         public void init() {
             initList_.add(name_);
         }
 
+        /**
+         * 
+         */
         public void destroy() {
             destroyList_.add(name_);
         }
     }
 
+    /**
+     *
+     */
     public static class D {
 
         private S2Container container_;
 
+        /**
+         * @return
+         */
         public S2Container getContainer() {
             return container_;
         }
 
+        /**
+         * @param container
+         */
         public void setContainer(S2Container container) {
             container_ = container;
         }
     }
 
+    /**
+     *
+     */
     public static class FooImpl implements Foo {
         public String getName() {
             return "Foo";
         }
     }
 
+    /**
+     *
+     */
     public static class RequestClient {
 
         private HttpServletRequest request_;
 
+        /**
+         * @return
+         */
         public HttpServletRequest getRequest() {
             return request_;
         }
 
+        /**
+         * @param request
+         */
         public void setRequest(HttpServletRequest request) {
             this.request_ = request;
         }
     }
 
+    /**
+     *
+     */
     public static class SessionClient {
 
         private HttpSession session_;
 
+        /**
+         * @return
+         */
         public HttpSession getSession() {
             return session_;
         }
 
+        /**
+         * @param session
+         */
         public void setSession(HttpSession session) {
             this.session_ = session;
         }
     }
 
+    /**
+     *
+     */
     public static class ResponseClient {
 
         private HttpServletResponse response_;
 
+        /**
+         * @return
+         */
         public HttpServletResponse getResponse() {
             return response_;
         }
 
+        /**
+         * @param response
+         */
         public void setResponse(HttpServletResponse response) {
             this.response_ = response;
         }
     }
 
+    /**
+     *
+     */
     public static class ServletContextClient {
 
         private ServletContext servletContext_;
 
+        /**
+         * @return
+         */
         public ServletContext getServletContext() {
             return servletContext_;
         }
 
+        /**
+         * @param servletContext
+         */
         public void setServletContext(ServletContext servletContext) {
             servletContext_ = servletContext;
         }

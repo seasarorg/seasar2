@@ -28,6 +28,9 @@ import org.seasar.framework.container.ognl.OgnlExpression;
  */
 public class AspectDefImplTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testSetExpression() throws Exception {
         S2Container container = new S2ContainerImpl();
         AspectDef ad = new AspectDefImpl();
@@ -40,37 +43,64 @@ public class AspectDefImplTest extends TestCase {
                 .getMethodInterceptor().getClass());
     }
 
+    /**
+     *
+     */
     public static class A {
 
         private Hoge hoge_;
 
+        /**
+         * @param hoge
+         */
         public A(Hoge hoge) {
             hoge_ = hoge;
         }
 
+        /**
+         * @return
+         */
         public String getHogeName() {
             return hoge_.getName();
         }
     }
 
+    /**
+     *
+     */
     public static class A2 {
 
         private Hoge hoge_;
 
+        /**
+         * @param hoge
+         */
         public void setHoge(Hoge hoge) {
             hoge_ = hoge;
         }
 
+        /**
+         * @return
+         */
         public String getHogeName() {
             return hoge_.getName();
         }
     }
 
+    /**
+     *
+     */
     public interface Hoge {
 
+        /**
+         * @return
+         */
         public String getName();
     }
 
+    /**
+     *
+     */
     public static class B implements Hoge {
 
         public String getName() {
@@ -78,10 +108,16 @@ public class AspectDefImplTest extends TestCase {
         }
     }
 
+    /**
+     *
+     */
     public static class C implements Hoge {
 
         private A2 a2_;
 
+        /**
+         * @param a2
+         */
         public void setA2(A2 a2) {
             a2_ = a2;
         }
@@ -90,6 +126,9 @@ public class AspectDefImplTest extends TestCase {
             return "C";
         }
 
+        /**
+         * @return
+         */
         public String getHogeName() {
             return a2_.getHogeName();
         }
