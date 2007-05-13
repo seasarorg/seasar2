@@ -24,11 +24,17 @@ public class PersistenceConventionImplTest extends TestCase {
 
     private PersistenceConventionImpl convention = new PersistenceConventionImpl();
 
+    /**
+     * 
+     */
     public void testFromTableNameToEntityName() {
         assertEquals("Emp", convention.fromTableNameToEntityName("EMP"));
         assertEquals("AaaBbb", convention.fromTableNameToEntityName("AAA_BBB"));
     }
 
+    /**
+     * 
+     */
     public void testFromTableNameToEntityName_ignorePrefix() {
         convention.setIgnoreTablePrefix("T_");
         assertEquals("Emp", convention.fromTableNameToEntityName("T_EMP"));
@@ -36,11 +42,17 @@ public class PersistenceConventionImplTest extends TestCase {
                 .fromTableNameToEntityName("T_AAA_BBB"));
     }
 
+    /**
+     * 
+     */
     public void testFromTableNameToEntityName_noConversion() {
         convention.setNoNameConversion(true);
         assertEquals("Aaa", convention.fromTableNameToEntityName("Aaa"));
     }
 
+    /**
+     * 
+     */
     public void testFromEntityNameToTableName() {
         convention.setIgnoreTablePrefix("T_");
         assertEquals("T_EMP", convention.fromEntityNameToTableName("Emp"));
@@ -48,87 +60,135 @@ public class PersistenceConventionImplTest extends TestCase {
                 .fromEntityNameToTableName("AaaBbb"));
     }
 
+    /**
+     * 
+     */
     public void testFromEntityNameToTableName_ignorePrefix() {
         assertEquals("EMP", convention.fromEntityNameToTableName("Emp"));
         assertEquals("AAA_BBB", convention.fromEntityNameToTableName("AaaBbb"));
     }
 
+    /**
+     * 
+     */
     public void testFromEntityNameToTableName_noConversion() {
         convention.setNoNameConversion(true);
         assertEquals("Aaa", convention.fromEntityNameToTableName("Aaa"));
     }
 
+    /**
+     * 
+     */
     public void testFromColumnNameToPropertyName() {
         assertEquals("aaa", convention.fromColumnNameToPropertyName("AAA"));
         assertEquals("aaaBbb", convention
                 .fromColumnNameToPropertyName("AAA_BBB"));
     }
 
+    /**
+     * 
+     */
     public void testFromColumnNameToPropertyName_noConversion() {
         convention.setNoNameConversion(true);
         assertEquals("aaa", convention.fromColumnNameToPropertyName("aaa"));
     }
 
+    /**
+     * 
+     */
     public void testFromPropertyNameToColumnName() {
         assertEquals("AAA", convention.fromPropertyNameToColumnName("aaa"));
         assertEquals("AAA_BBB", convention
                 .fromPropertyNameToColumnName("aaaBbb"));
     }
 
+    /**
+     * 
+     */
     public void testFromPropertyNameToColumnName_noConversion() {
         convention.setNoNameConversion(true);
         assertEquals("aaa", convention.fromPropertyNameToColumnName("aaa"));
     }
 
+    /**
+     * 
+     */
     public void testIsDeleted() {
         assertTrue(convention.isDeleted("Aaa", "aaaDeleted"));
         assertFalse(convention.isDeleted("Aaa", "deleted"));
     }
 
+    /**
+     * 
+     */
     public void testIsDeleted_noUseEntityName() {
         convention.setUseEntityNameForDeleted(false);
         assertFalse(convention.isDeleted("Aaa", "aaaDeleted"));
         assertTrue(convention.isDeleted("Aaa", "deleted"));
     }
 
+    /**
+     * 
+     */
     public void testIsId() {
         assertTrue(convention.isId("Aaa", "aaaId"));
         assertFalse(convention.isId("Aaa", "id"));
     }
 
+    /**
+     * 
+     */
     public void testIsId_noUseEntityName() {
         convention.setUseEntityNameForId(false);
         assertFalse(convention.isId("Aaa", "aaaId"));
         assertTrue(convention.isId("Aaa", "id"));
     }
 
+    /**
+     * 
+     */
     public void testIsInserted() {
         assertTrue(convention.isInserted("Aaa", "aaaInserted"));
         assertFalse(convention.isInserted("Aaa", "inserted"));
     }
 
+    /**
+     * 
+     */
     public void testIsInserted_noUseEntityName() {
         convention.setUseEntityNameForInserted(false);
         assertFalse(convention.isInserted("Aaa", "aaaInserted"));
         assertTrue(convention.isInserted("Aaa", "inserted"));
     }
 
+    /**
+     * 
+     */
     public void testIsUpdated() {
         assertTrue(convention.isUpdated("Aaa", "aaaUpdated"));
         assertFalse(convention.isUpdated("Aaa", "updated"));
     }
 
+    /**
+     * 
+     */
     public void testIsUpdated_noUseEntityName() {
         convention.setUseEntityNameForUpdated(false);
         assertFalse(convention.isUpdated("Aaa", "aaaUpdated"));
         assertTrue(convention.isUpdated("Aaa", "updated"));
     }
 
+    /**
+     * 
+     */
     public void testIsVersion() {
         assertTrue(convention.isVersion("Aaa", "aaaVersion"));
         assertFalse(convention.isVersion("Aaa", "version"));
     }
 
+    /**
+     * 
+     */
     public void testIsVersion_noUseEntityName() {
         convention.setUseEntityNameForVersion(false);
         assertFalse(convention.isVersion("Aaa", "aaaVersion"));

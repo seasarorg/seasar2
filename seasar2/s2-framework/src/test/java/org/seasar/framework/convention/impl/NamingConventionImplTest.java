@@ -47,6 +47,9 @@ public class NamingConventionImplTest extends TestCase {
         convention.addIgnorePackageName(rootPackageName + ".web.ignore");
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAddAndGetRootPackageName() throws Exception {
         ExistChecker[] checkers = convention
                 .getExistCheckerArray(rootPackageName);
@@ -54,6 +57,9 @@ public class NamingConventionImplTest extends TestCase {
         assertEquals(FileExistChecker.class, checkers[0].getClass());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAddAndGetIgnorePackageName() throws Exception {
         String[] ignorePackageNames = convention.getIgnorePackageNames();
         ignorePackageNames = convention.getIgnorePackageNames();
@@ -62,54 +68,93 @@ public class NamingConventionImplTest extends TestCase {
                 ignorePackageNames[0]);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testFromSuffixToPackageName() throws Exception {
         assertEquals("logic", convention.fromSuffixToPackageName("Logic"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetImplementationPackageName() throws Exception {
         assertEquals("impl", convention.getImplementationPackageName());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetDxoPackageName() throws Exception {
         assertEquals("dxo", convention.getDxoPackageName());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetLogicPackageName() throws Exception {
         assertEquals("logic", convention.getLogicPackageName());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetDaoPackageName() throws Exception {
         assertEquals("dao", convention.getDaoPackageName());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetDtoPackageName() throws Exception {
         assertEquals("dto", convention.getDtoPackageName());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetServicePackageName() throws Exception {
         assertEquals("service", convention.getServicePackageName());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetInterceptorPackageName() throws Exception {
         assertEquals("interceptor", convention.getInterceptorPackageName());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetValidatorPackageName() throws Exception {
         assertEquals("validator", convention.getValidatorPackageName());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetConverterPackageName() throws Exception {
         assertEquals("converter", convention.getConverterPackageName());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetHelperPackageName() throws Exception {
         assertEquals("helper", convention.getHelperPackageName());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetConnectorPackageName() throws Exception {
         assertEquals("connector", convention.getConnectorPackageName());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testFromClassNameToComponentName() throws Exception {
         assertEquals("abcLogic", convention
                 .fromClassNameToComponentName("aaa.logic.impl.AbcLogicImpl"));
@@ -125,6 +170,9 @@ public class NamingConventionImplTest extends TestCase {
                 .fromClassNameToComponentName("aaa.dao.bbb.CccDao"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testFromClassNameToComponentName_performance() throws Exception {
         int num = 10000;
         long start = System.currentTimeMillis();
@@ -135,11 +183,17 @@ public class NamingConventionImplTest extends TestCase {
         System.out.println("fromClassNameToComponentName:" + num + "=" + time);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testFromComponentNameToSuffix() throws Exception {
         assertEquals("Logic", convention.fromComponentNameToSuffix("aaaLogic"));
         assertNull(convention.fromComponentNameToSuffix("aaa"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testFromComponentNameToPartOfClassName() throws Exception {
         assertEquals("AaaLogic", convention
                 .fromComponentNameToPartOfClassName("aaaLogic"));
@@ -149,6 +203,9 @@ public class NamingConventionImplTest extends TestCase {
                 .fromComponentNameToPartOfClassName("xxx_yyy_aaaLogic"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testToImplementationClassName() throws Exception {
         convention.addInterfaceToImplementationClassName("BbbLogic",
                 "mock.BbbLogicMock");
@@ -166,6 +223,9 @@ public class NamingConventionImplTest extends TestCase {
                 .toImplementationClassName("abc.logic.CccLogic"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testToInterfaceClassName() throws Exception {
         convention.addInterfaceToImplementationClassName("AaaDao",
                 "mock.AaaDaoMock");
@@ -183,12 +243,18 @@ public class NamingConventionImplTest extends TestCase {
                 .toInterfaceClassName("abc.dao.mock.CccDaoMock"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testToCompleteClass() throws Exception {
         assertEquals(AaaDao.class, convention.toCompleteClass(AaaDao.class));
         assertEquals(BbbDaoImpl.class, convention.toCompleteClass(BbbDao.class));
         assertEquals(DddPage.class, convention.toCompleteClass(DddPage.class));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testFromComponentNameToClass() throws Exception {
         assertEquals(AaaDao.class, convention
                 .fromComponentNameToClass("aaaDao"));
@@ -208,6 +274,9 @@ public class NamingConventionImplTest extends TestCase {
                 .fromComponentNameToClass("add_xxx_addXxxPage"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testFromComponentNameToClass_performance() throws Exception {
         int num = 10000;
         long start = System.currentTimeMillis();
@@ -218,6 +287,9 @@ public class NamingConventionImplTest extends TestCase {
         System.out.println("fromComponentNameToClass:" + num + "=" + time);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testFindClass() throws Exception {
         assertEquals(AaaDao.class, convention.findClass(rootPackageName, "dao",
                 "AaaDao"));
@@ -233,6 +305,9 @@ public class NamingConventionImplTest extends TestCase {
                 "AaaDao"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testFindClass_performance() throws Exception {
         int num = 10000;
         long start = System.currentTimeMillis();
@@ -243,6 +318,9 @@ public class NamingConventionImplTest extends TestCase {
         System.out.println("findClass:" + num + "=" + time);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testFromClassNameToShortComponentName() throws Exception {
         assertEquals(
                 "abcLogic",
@@ -254,6 +332,9 @@ public class NamingConventionImplTest extends TestCase {
                         .fromClassNameToShortComponentName("aaa.interceptor.AbcInterceptor"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testIsTargetClassName() throws Exception {
         assertTrue(convention
                 .isTargetClassName(rootPackageName + ".dao.AaaDao"));
@@ -268,6 +349,9 @@ public class NamingConventionImplTest extends TestCase {
         assertFalse(convention.isTargetClassName("foo.bar.dao.AaaDao", "Dao"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testIsIgnoreClassName() throws Exception {
         assertTrue(convention.isIgnoreClassName(rootPackageName
                 + ".web.ignore.EeePage"));
@@ -275,6 +359,9 @@ public class NamingConventionImplTest extends TestCase {
                 + ".web.add.DddPage"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testFromPathToPageName() throws Exception {
         assertEquals("hogePage", convention
                 .fromPathToPageName("/view/hoge.html"));
@@ -290,6 +377,9 @@ public class NamingConventionImplTest extends TestCase {
                 .fromPathToPageName("/view/aaa/hoge/Foo.html"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testFromPathToActionName() throws Exception {
         assertEquals("hogeAction", convention
                 .fromPathToActionName("/view/hoge.html"));
@@ -299,6 +389,9 @@ public class NamingConventionImplTest extends TestCase {
                 .fromPathToActionName("/view/aaa/hoge/foo.html"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testFromPageNameToPath() throws Exception {
         assertEquals("/view/hoge.html", convention
                 .fromPageNameToPath("hogePage"));
@@ -308,6 +401,9 @@ public class NamingConventionImplTest extends TestCase {
                 .fromPageNameToPath("aaa_bbb_hogePage"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testFromPageNameToPath2() throws Exception {
         convention.setViewRootPath("/");
         assertEquals("/hoge.html", convention.fromPageNameToPath("hogePage"));
@@ -317,6 +413,9 @@ public class NamingConventionImplTest extends TestCase {
                 .fromPageNameToPath("aaa_bbb_hogePage"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testFromPageClassToPath() throws Exception {
         convention.setViewRootPath("/view");
         assertEquals("/view/add/ddd.html", convention
@@ -326,6 +425,9 @@ public class NamingConventionImplTest extends TestCase {
                 .fromPageClassToPath(DddPage.class));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testFromActionNameToPath() throws Exception {
         assertEquals("/view/hoge.html", convention
                 .fromActionNameToPath("hogeAction"));
@@ -335,6 +437,9 @@ public class NamingConventionImplTest extends TestCase {
                 .fromActionNameToPath("aaa_bbb_hogeAction"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testFromActionNameToPath2() throws Exception {
         convention.setViewRootPath("/");
         assertEquals("/hoge.html", convention
@@ -345,6 +450,9 @@ public class NamingConventionImplTest extends TestCase {
                 .fromActionNameToPath("aaa_bbb_hogeAction"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testFromActionNameToPageName() throws Exception {
         assertEquals("hogePage", convention
                 .fromActionNameToPageName("hogeAction"));
@@ -354,6 +462,9 @@ public class NamingConventionImplTest extends TestCase {
                 .fromActionNameToPageName("aaa_bbb_hogeAction"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testIsExist() throws Exception {
         assertTrue(convention.isExist(rootPackageName, "dao.AaaDao"));
         assertTrue(convention.isExist(rootPackageName, "dao.BbbDao"));
@@ -362,6 +473,9 @@ public class NamingConventionImplTest extends TestCase {
         assertFalse(convention.isExist(rootPackageName, "dao.xxxDao"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testIsExist_jar() throws Exception {
         NamingConventionImpl nc = new NamingConventionImpl();
         nc.addRootPackageName("junit.framework");
@@ -369,6 +483,9 @@ public class NamingConventionImplTest extends TestCase {
         assertNull(nc.findClass("junit.framework", "", "xxx"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testIsValidViewRootPath() throws Exception {
         NamingConventionImpl nc = new NamingConventionImpl();
         nc.setViewRootPath("/view");
@@ -376,6 +493,9 @@ public class NamingConventionImplTest extends TestCase {
         assertTrue(nc.isValidViewRootPath("/view/hoge.html"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testIsValidViewRootPath_viewExtIsNotSuitable() throws Exception {
         NamingConventionImpl nc = new NamingConventionImpl();
         nc.setViewRootPath("/view");
@@ -383,6 +503,9 @@ public class NamingConventionImplTest extends TestCase {
         assertFalse(nc.isValidViewRootPath("/view/hoge.html"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testIsValidViewRootPath_viewRootPathIsNotSuitable()
             throws Exception {
         NamingConventionImpl nc = new NamingConventionImpl();
