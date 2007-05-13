@@ -37,6 +37,9 @@ public class SQLRuntimeExceptionTest extends TestCase {
         super.tearDown();
     }
 
+    /**
+     * @throws Exception
+     */
     public void testErrorMessage_ja() throws Exception {
         // ## Arrange ##
         Locale.setDefault(Locale.JAPANESE);
@@ -60,6 +63,9 @@ public class SQLRuntimeExceptionTest extends TestCase {
         assertEquals(s, true, s.indexOf(contained) > -1);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testErrorMessage_en() throws Exception {
         // ## Arrange ##
         Locale.setDefault(Locale.ENGLISH);

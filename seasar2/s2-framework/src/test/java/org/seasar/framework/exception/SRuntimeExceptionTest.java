@@ -17,8 +17,15 @@ package org.seasar.framework.exception;
 
 import junit.framework.TestCase;
 
+/**
+ * @author higa
+ *
+ */
 public class SRuntimeExceptionTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testSeasarRuntimeException() throws Exception {
         SRuntimeException ex = new SRuntimeException("ESSR0001",
                 new Object[] { "hoge" });
@@ -28,6 +35,9 @@ public class SRuntimeExceptionTest extends TestCase {
         System.out.println(ex.getMessage());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetCause() throws Exception {
         Throwable t = new NullPointerException("test");
         SRuntimeException ex = new SRuntimeException("ESSR0017",
