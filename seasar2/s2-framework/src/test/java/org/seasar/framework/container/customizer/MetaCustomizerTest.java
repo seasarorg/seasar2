@@ -32,6 +32,9 @@ public class MetaCustomizerTest extends S2FrameworkTestCase {
         include("MetaCustomizerTest.dicon");
     }
 
+    /**
+     * @throws Exception
+     */
     public void testCustomize() throws Exception {
         ComponentDef cd = child.getComponentDef(Greeting.class);
         assertEquals(2, cd.getMetaDefSize());

@@ -24,10 +24,13 @@ import org.seasar.framework.container.impl.ComponentDefImpl;
  * @author koichik
  * 
  */
-public class AbstractCustomizerTest extends TestCase {
+public class AbstCustomizerTest extends TestCase {
 
     private boolean matched;
 
+    /**
+     * @throws Exception
+     */
     public void testNoPattern() throws Exception {
         TestCustomizer customizer = new TestCustomizer();
         matched = false;
@@ -41,10 +44,13 @@ public class AbstractCustomizerTest extends TestCase {
         assertTrue(matched);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testApplyOnly() throws Exception {
         TestCustomizer customizer = new TestCustomizer();
         customizer.addClassPattern("org.seasar.framework.container.customizer",
-                "AbstractCustomizerTest\\$B.*");
+                "AbstCustomizerTest\\$B.*");
         matched = false;
         customizer.customize(new ComponentDefImpl(Foo.class));
         assertFalse(matched);
@@ -56,11 +62,14 @@ public class AbstractCustomizerTest extends TestCase {
         assertTrue(matched);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testIgnoreOnly() throws Exception {
         TestCustomizer customizer = new TestCustomizer();
         customizer.addIgnoreClassPattern(
                 "org.seasar.framework.container.customizer",
-                "AbstractCustomizerTest\\$B.*");
+                "AbstCustomizerTest\\$B.*");
         matched = false;
         customizer.customize(new ComponentDefImpl(Foo.class));
         assertTrue(matched);
@@ -72,10 +81,13 @@ public class AbstractCustomizerTest extends TestCase {
         assertFalse(matched);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testApplyIgnore() throws Exception {
         TestCustomizer customizer = new TestCustomizer();
         customizer.addClassPattern("org.seasar.framework.container.customizer",
-                "AbstractCustomizerTest\\$B.*");
+                "AbstCustomizerTest\\$B.*");
         customizer.addIgnoreClassPattern(
                 "org.seasar.framework.container.customizer", ".*z");
         matched = false;
@@ -89,6 +101,9 @@ public class AbstractCustomizerTest extends TestCase {
         assertFalse(matched);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testTargetInterface() throws Exception {
         TestCustomizer customizer = new TestCustomizer();
         customizer.setTargetInterface(Super.class);
@@ -103,6 +118,9 @@ public class AbstractCustomizerTest extends TestCase {
         assertFalse(matched);
     }
 
+    /**
+     * 
+     */
     public class TestCustomizer extends AbstractCustomizer {
         protected void doCustomize(ComponentDef componentDef) {
             System.out.println(componentDef.getComponentClass().getName());
@@ -110,18 +128,33 @@ public class AbstractCustomizerTest extends TestCase {
         }
     }
 
+    /**
+     * 
+     */
     public interface Super {
     }
 
+    /**
+     * 
+     */
     public interface Sub extends Super {
     }
 
+    /**
+     * 
+     */
     public static class Foo implements Super {
     }
 
+    /**
+     * 
+     */
     public static class Bar implements Sub {
     }
 
+    /**
+     * 
+     */
     public static class Baz {
     }
 }

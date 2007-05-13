@@ -32,10 +32,16 @@ public class AspectCustomizerTest extends S2FrameworkTestCase {
 
     private S2Container child;
 
+    /**
+     * @throws Exception
+     */
     public void setUpCustomize() throws Exception {
         include("AspectCustomizerTest.dicon");
     }
 
+    /**
+     * @throws Exception
+     */
     public void testCustomize() throws Exception {
         ComponentDef cd = child.getComponentDef(Greeting.class);
         assertEquals(3, cd.getAspectDefSize());
@@ -54,10 +60,16 @@ public class AspectCustomizerTest extends S2FrameworkTestCase {
         assertEquals("2", "Hello", greeting.greet());
     }
 
+    /**
+     * @throws Exception
+     */
     public void setUpDelegate() throws Exception {
         include("AspectCustomizerTest2.dicon");
     }
 
+    /**
+     * @throws Exception
+     */
     public void testDelegate() throws Exception {
         ComponentDef cd = child.getComponentDef(Greeting.class);
         assertEquals(2, cd.getAspectDefSize());

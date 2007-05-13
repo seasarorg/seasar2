@@ -33,6 +33,9 @@ public class InterTypeCustomizerTest extends S2FrameworkTestCase {
         include("InterTypeCustomizerTest.dicon");
     }
 
+    /**
+     * @throws Exception
+     */
     public void testCustomize() throws Exception {
         ComponentDef cd = child.getComponentDef(Greeting.class);
         assertEquals(1, cd.getInterTypeDefSize());

@@ -18,7 +18,6 @@ package org.seasar.framework.container.customizer;
 import org.seasar.framework.container.ComponentCustomizer;
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.MetaDef;
-import org.seasar.framework.container.customizer.CustomizerChain;
 import org.seasar.framework.container.impl.ComponentDefImpl;
 import org.seasar.framework.container.impl.MetaDefImpl;
 import org.seasar.framework.unit.S2FrameworkTestCase;
@@ -28,6 +27,9 @@ import org.seasar.framework.unit.S2FrameworkTestCase;
  */
 public class CustomizerChainTest extends S2FrameworkTestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testCustomize() throws Exception {
         ComponentDefImpl cd = new ComponentDefImpl();
         CustomizerChain chain = new CustomizerChain();
@@ -39,6 +41,9 @@ public class CustomizerChainTest extends S2FrameworkTestCase {
         assertEquals(2, mdefs.length);
     }
 
+    /**
+     * 
+     */
     public static class HogeCustomizer implements ComponentCustomizer {
 
         public void customize(ComponentDef componentDef) {
