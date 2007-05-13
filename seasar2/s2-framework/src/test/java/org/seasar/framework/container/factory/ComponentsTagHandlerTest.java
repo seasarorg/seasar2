@@ -29,6 +29,9 @@ public class ComponentsTagHandlerTest extends TestCase {
 
     private static final String PATH2 = "org/seasar/framework/container/factory/ComponentsTagHandlerTest2.dicon";
 
+    /**
+     * @throws Exception
+     */
     public void testComponent() throws Exception {
         S2Container container = S2ContainerFactory.create(PATH);
         assertEquals("aaa", container.getNamespace());
@@ -38,6 +41,9 @@ public class ComponentsTagHandlerTest extends TestCase {
         assertFalse(container.isInitializeOnCreate());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testComponentInitializeOnCreate() throws Exception {
         S2Container container = S2ContainerFactory.create(PATH2);
         assertEquals("aaa", container.getNamespace());

@@ -17,6 +17,9 @@ package org.seasar.framework.container.factory;
 
 import org.seasar.framework.aop.intertype.AbstractInterType;
 
+/**
+ * 
+ */
 public class FieldInterType extends AbstractInterType {
     public void introduce() {
         addField(boolean.class, "test");

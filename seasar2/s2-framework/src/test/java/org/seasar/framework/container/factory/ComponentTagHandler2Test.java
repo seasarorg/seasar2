@@ -29,6 +29,9 @@ public class ComponentTagHandler2Test extends S2FrameworkTestCase {
         include("ComponentTagHandler2Test.dicon");
     }
 
+    /**
+     * @throws Exception
+     */
     public void testNormal() throws Exception {
         Foo foo = (Foo) child.getComponent("foo");
         assertNotNull("1", foo);
@@ -38,6 +41,9 @@ public class ComponentTagHandler2Test extends S2FrameworkTestCase {
         assertEquals("4", "222", foo2.getAaa());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testInterfaceWithAspect() throws Exception {
         Greeting greeting = (Greeting) child.getComponent(Greeting.class);
         assertEquals("1", "Hello", greeting.greet());

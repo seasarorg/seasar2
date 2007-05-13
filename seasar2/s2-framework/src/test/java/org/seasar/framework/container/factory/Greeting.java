@@ -15,9 +15,19 @@
  */
 package org.seasar.framework.container.factory;
 
+/**
+ * @author higa
+ *
+ */
 public interface Greeting {
 
+    /**
+     * 
+     */
     String ASPECT = "greetingInterceptor";
 
+    /**
+     * @return
+     */
     String greet();
 }

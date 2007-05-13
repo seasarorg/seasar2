@@ -25,6 +25,9 @@ public class XmlS2ContainerBuilderTest extends TestCase {
 
     private static final String PATH = "org/seasar/framework/container/factory/XmlS2ContainerBuilderTest.dicon";
 
+    /**
+     * @throws Exception
+     */
     public void testCreate() throws Exception {
         S2ContainerFactory.create(PATH);
     }

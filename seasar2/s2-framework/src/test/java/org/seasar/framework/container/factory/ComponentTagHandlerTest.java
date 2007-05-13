@@ -40,6 +40,9 @@ public class ComponentTagHandlerTest extends TestCase {
 
     private static final String PATH = "org/seasar/framework/container/factory/ComponentTagHandlerTest.dicon";
 
+    /**
+     * @throws Exception
+     */
     public void testComponent() throws Exception {
         S2Container container = S2ContainerFactory.create(PATH);
         ComponentDeployerFactory
@@ -75,13 +78,22 @@ public class ComponentTagHandlerTest extends TestCase {
         assertEquals("aaa", kkk.getName());
     }
     
+    /**
+     *
+     */
     public static class Kkk {
         private String name;
 
+        /**
+         * @return
+         */
         public String getName() {
             return name;
         }
 
+        /**
+         * @param name
+         */
         public void setName(String name) {
             this.name = name;
         }

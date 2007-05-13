@@ -40,6 +40,9 @@ public class ClassPathResourceResolverTest extends TestCase {
         Env.initialize();
     }
 
+    /**
+     * @throws Exception
+     */
     public void testToURL1() throws Exception {
 
         URL actual = target.toURL(PATH);
@@ -47,6 +50,9 @@ public class ClassPathResourceResolverTest extends TestCase {
         assertEquals(getClass().getClassLoader().getResource(PATH), actual);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testToURL2() throws Exception {
 
         final URL expected = new File(ResourceUtil.getBuildDir(getClass()),
@@ -57,6 +63,9 @@ public class ClassPathResourceResolverTest extends TestCase {
         assertEquals(expected, actual);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetURL() throws Exception {
         URL url = target.getURL(PATH2);
         System.out.println(url.getPath());

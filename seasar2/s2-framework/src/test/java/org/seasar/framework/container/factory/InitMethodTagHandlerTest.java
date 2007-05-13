@@ -32,6 +32,9 @@ public class InitMethodTagHandlerTest extends TestCase {
 
     private static final String PATH = "org/seasar/framework/container/factory/InitMethodTagHandlerTest.dicon";
 
+    /**
+     * @throws Exception
+     */
     public void testArg() throws Exception {
         S2Container container = S2ContainerFactory.create(PATH);
         Map aaa = (HashMap) container.getComponent("aaa");
@@ -40,6 +43,9 @@ public class InitMethodTagHandlerTest extends TestCase {
         assertEquals("2", false, bbb.isEmpty());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testInitMethodAnnotation() throws Exception {
         S2Container container = S2ContainerFactory.create(PATH);
         container.init();
@@ -51,26 +57,44 @@ public class InitMethodTagHandlerTest extends TestCase {
         assertEquals("3", 1, bbb2.getInitCount());
     }
 
+    /**
+     *
+     */
     public static class Bbb {
 
+        /**
+         * 
+         */
         public static final String INIT_METHOD = "init";
 
         private List value;
 
         private int initCount = 0;
 
+        /**
+         * @param value
+         */
         public void value(List value) {
             this.value = value;
         }
 
+        /**
+         * @return
+         */
         public boolean isEmpty() {
             return value == null;
         }
 
+        /**
+         * 
+         */
         public void init() {
             ++initCount;
         }
 
+        /**
+         * @return
+         */
         public int getInitCount() {
             return initCount;
         }

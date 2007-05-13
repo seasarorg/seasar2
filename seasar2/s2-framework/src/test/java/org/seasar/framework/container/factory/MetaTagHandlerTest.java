@@ -28,6 +28,9 @@ public class MetaTagHandlerTest extends TestCase {
 
     private static final String PATH = "org/seasar/framework/container/factory/MetaTagHandlerTest.dicon";
 
+    /**
+     * @throws Exception
+     */
     public void testMeta() throws Exception {
         S2Container container = S2ContainerFactory.create(PATH);
         assertEquals("1", 1, container.getMetaDefSize());

@@ -21,10 +21,16 @@ import junit.framework.TestCase;
 
 import org.seasar.framework.container.S2Container;
 
+/**
+ * 
+ */
 public class InterTypeTagHandlerTest extends TestCase {
 
     private static final String PATH = "org/seasar/framework/container/factory/InterTypeTagHandlerTest.dicon";
 
+    /**
+     * @throws Exception
+     */
     public void testInterType() throws Exception {
         S2Container container = S2ContainerFactory.create(PATH);
         List list = (List) container.getComponent(List.class);

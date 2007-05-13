@@ -23,6 +23,9 @@ import junit.framework.TestCase;
  */
 public class AbstTagHandlerTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testIsComponentName() throws Exception {
         assertTrue(AbstractTagHandler.isComponentName("abc"));
         assertTrue(AbstractTagHandler.isComponentName("abc_def"));

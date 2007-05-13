@@ -44,17 +44,26 @@ public class IncludeTagHandlerTest extends TestCase {
         Env.initialize();
     }
 
+    /**
+     * @throws Exception
+     */
     public void testInclude() throws Exception {
         S2Container container = S2ContainerFactory.create(PATH);
         assertEquals("1", new Date(0), container.getComponent(Date.class));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testInclude2() throws Exception {
         S2Container container = S2ContainerFactory.create(AAA_PATH);
         assertSame("1", container.getComponent("aaa.cdate"), container
                 .getComponent("bbb.cdate"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testInclude3() throws Exception {
         S2Container container = S2ContainerFactory.create(PATH);
         S2Container grandChild = (S2Container) container
@@ -66,6 +75,9 @@ public class IncludeTagHandlerTest extends TestCase {
         assertSame("1", grandChild, grandChild2);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testInclude_condition() throws Exception {
         S2Container container = S2ContainerFactory.create(PATH2);
         assertFalse(container.hasComponentDef("child"));

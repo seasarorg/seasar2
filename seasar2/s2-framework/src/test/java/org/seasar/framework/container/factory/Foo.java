@@ -20,8 +20,14 @@ package org.seasar.framework.container.factory;
  */
 public class Foo {
 
+    /**
+     * 
+     */
     public static final String COMPONENT = "name = foo";
 
+    /**
+     * 
+     */
     public static final String aaa_INJECT = "aaa";
 
     private String aaa;

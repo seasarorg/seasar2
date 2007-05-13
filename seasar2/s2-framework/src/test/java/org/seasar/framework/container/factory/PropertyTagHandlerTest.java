@@ -32,6 +32,9 @@ public class PropertyTagHandlerTest extends TestCase {
 
     private static final String PATH = "org/seasar/framework/container/factory/PropertyTagHandlerTest.dicon";
 
+    /**
+     * @throws Exception
+     */
     public void testProperty() throws Exception {
         S2Container container = S2ContainerFactory.create(PATH);
         assertEquals("1", new Date(0), container.getComponent("date"));

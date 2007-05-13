@@ -30,6 +30,9 @@ public class AspectTagHandlerTest extends TestCase {
 
     private static final String PATH = "org/seasar/framework/container/factory/AspectTagHandlerTest.dicon";
 
+    /**
+     * @throws Exception
+     */
     public void testAspect() throws Exception {
         S2Container container = S2ContainerFactory.create(PATH);
         Date date = (Date) container.getComponent(Date.class);

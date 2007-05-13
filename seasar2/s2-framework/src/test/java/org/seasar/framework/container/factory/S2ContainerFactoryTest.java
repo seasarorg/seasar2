@@ -59,6 +59,9 @@ public class S2ContainerFactoryTest extends TestCase {
         AssemblerFactory.setProvider(new AssemblerFactory.DefaultProvider());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testCircularInclude() throws Exception {
         try {
             S2ContainerFactory.create(getClass().getName().replace('.', '/')
@@ -76,6 +79,9 @@ public class S2ContainerFactoryTest extends TestCase {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public void testCircularInclude2() throws Exception {
         try {
             String path = getClass().getName().replace('.', '/')
@@ -94,6 +100,9 @@ public class S2ContainerFactoryTest extends TestCase {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public void testCircularInclude3() throws Exception {
         try {
             S2Container container1 = new S2ContainerImpl();
@@ -120,18 +129,27 @@ public class S2ContainerFactoryTest extends TestCase {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public void testCustomizeContainerFactory() throws Exception {
         configure("ContainerFactory.dicon");
         S2Container container = S2ContainerFactory.create("notExists.dicon");
         assertNotNull("1", container);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testCustomizePathResolver() throws Exception {
         configure("PathResolver.dicon");
         S2Container container = S2ContainerFactory.create("notExists.dicon");
         assertNotNull("1", container);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testCustomizeContainerBuilder() throws Exception {
         configure("ContainerBuilder.dicon");
         S2Container container = S2ContainerFactory.create(getClass().getName()
@@ -142,6 +160,9 @@ public class S2ContainerFactoryTest extends TestCase {
         assertNotNull("2", container.getComponent("map"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testCustomizeResourceResolver() throws Exception {
         configure("ResourceResolver.dicon");
         S2Container container = S2ContainerFactory.create("hoge.dicon");
@@ -150,6 +171,9 @@ public class S2ContainerFactoryTest extends TestCase {
         assertNotNull("2", container.getComponent("map"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testCustomizeContainerBehavior() throws Exception {
         configure("ContainerBehavior.dicon");
         S2Container container = S2ContainerFactory.create(getClass().getName()
@@ -159,6 +183,9 @@ public class S2ContainerFactoryTest extends TestCase {
         assertNull("1", container.getComponent("notFound"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testCustomizeComponentDeployerFactory() throws Exception {
         configure("ComponetDeployerFactory.dicon");
         S2Container container = S2ContainerFactory.create(getClass().getName()
@@ -169,6 +196,9 @@ public class S2ContainerFactoryTest extends TestCase {
         assertSame("1", bar, container.getComponent("bar"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testCustomizeAssemblerFactory() throws Exception {
         configure("AssemblerFactory.dicon");
         S2Container container = S2ContainerFactory.create(getClass().getName()
@@ -179,6 +209,9 @@ public class S2ContainerFactoryTest extends TestCase {
         assertNull("1", baz.getFoo());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testCustomizeClassLoader() throws Exception {
         configure("ClassLoader.dicon");
         S2Container container = S2ContainerFactory.create(getClass().getName()
@@ -192,6 +225,9 @@ public class S2ContainerFactoryTest extends TestCase {
                 .getParent());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testDestroy() throws Exception {
         configure("ContainerFactory.dicon");
         assertNotNull("1", S2ContainerFactory.configurationContainer);
@@ -199,11 +235,18 @@ public class S2ContainerFactoryTest extends TestCase {
         assertNull("2", S2ContainerFactory.configurationContainer);
     }
 
+    /**
+     * @param name
+     * @throws Exception
+     */
     public void configure(String name) throws Exception {
         String path = getClass().getName().replace('.', '/') + "." + name;
         S2ContainerFactory.configure(path);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testInitializeOnCreate() throws Exception {
         Field f = S2ContainerImpl.class.getDeclaredField("inited");
         f.setAccessible(true);
@@ -218,6 +261,9 @@ public class S2ContainerFactoryTest extends TestCase {
         assertTrue(f.getBoolean(container));
     }
 
+    /**
+     * 
+     */
     public static class EmptyContainerFactory extends
             S2ContainerFactory.DefaultProvider {
         public S2Container create(String path) {
@@ -225,6 +271,9 @@ public class S2ContainerFactoryTest extends TestCase {
         }
     }
 
+    /**
+     * 
+     */
     public static class FixedPathResolver extends SimplePathResolver {
         public String resolvePath(String context, String path) {
             return S2ContainerFactoryTest.class.getName().replace('.', '/')
@@ -232,6 +281,9 @@ public class S2ContainerFactoryTest extends TestCase {
         }
     }
 
+    /**
+     * 
+     */
     public static class PropertyBuilder extends AbstractS2ContainerBuilder {
         public S2Container build(String path) {
             try {
@@ -254,13 +306,22 @@ public class S2ContainerFactoryTest extends TestCase {
         }
     }
 
+    /**
+     *
+     */
     public static class StringResourceResolver implements ResourceResolver {
         protected String definition;
 
+        /**
+         * @return
+         */
         public String getDefinition() {
             return this.definition;
         }
 
+        /**
+         * @param definition
+         */
         public void setDefinition(String definition) {
             this.definition = definition;
         }
@@ -270,6 +331,9 @@ public class S2ContainerFactoryTest extends TestCase {
         }
     }
 
+    /**
+     *
+     */
     public static class UnthrowExceptionBehavior extends
             S2ContainerBehavior.DefaultProvider {
         public ComponentDef acquireFromGetComponentDef(S2Container container,
@@ -278,6 +342,9 @@ public class S2ContainerFactoryTest extends TestCase {
         }
     }
 
+    /**
+     *
+     */
     public static class PrototypeToSingletonDeployerFactory extends
             ComponentDeployerFactory.DefaultProvider {
         public ComponentDeployer createPrototypeComponentDeployer(
@@ -286,6 +353,9 @@ public class S2ContainerFactoryTest extends TestCase {
         }
     }
 
+    /**
+     *
+     */
     public static class AutoToManualOnlyAssemblerFactory extends
             AssemblerFactory.DefaultProvider {
         public PropertyAssembler createAutoPropertyAssembler(ComponentDef cd) {
@@ -293,25 +363,46 @@ public class S2ContainerFactoryTest extends TestCase {
         }
     }
 
+    /**
+     *
+     */
     public static interface Foo {
     }
 
+    /**
+     *
+     */
     public static class Bar implements Foo {
     }
 
+    /**
+     *
+     */
     public static class Baz {
         Foo foo;
 
+        /**
+         * @return
+         */
         public Foo getFoo() {
             return this.foo;
         }
 
+        /**
+         * @param foo
+         */
         public void setFoo(Foo foo) {
             this.foo = foo;
         }
     }
 
+    /**
+     *
+     */
     public static class ChildFirstClassLoader extends ClassLoader {
+        /**
+         * @param parent
+         */
         public ChildFirstClassLoader(ClassLoader parent) {
             super(parent);
         }

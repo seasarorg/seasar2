@@ -34,6 +34,9 @@ public class SimplePathResolverTest extends TestCase {
         S2ContainerFactory.destroy();
     }
 
+    /**
+     * @throws Exception
+     */
     public void test() throws Exception {
         S2Container container = S2ContainerFactory.create("noExists.dicon");
         assertNotNull(container);
