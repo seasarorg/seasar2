@@ -32,6 +32,9 @@ import org.seasar.extension.dataset.states.RowStates;
  */
 public class MapReaderTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testRead() throws Exception {
         Map emp = new HashMap();
         emp.put("empno", new Integer(7788));

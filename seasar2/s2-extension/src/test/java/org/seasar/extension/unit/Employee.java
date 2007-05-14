@@ -17,6 +17,10 @@ package org.seasar.extension.unit;
 
 import java.io.Serializable;
 
+/**
+ * @author higa
+ *
+ */
 public class Employee implements Serializable {
 
     private static final long serialVersionUID = -8710890359270847237L;
@@ -29,41 +33,71 @@ public class Employee implements Serializable {
 
     private String dname;
 
+    /**
+     * 
+     */
     public Employee() {
     }
 
+    /**
+     * @param empno
+     */
     public Employee(long empno) {
         this.empno = empno;
     }
 
+    /**
+     * @return
+     */
     public long getEmpno() {
         return this.empno;
     }
 
+    /**
+     * @param empno
+     */
     public void setEmpno(long empno) {
         this.empno = empno;
     }
 
+    /**
+     * @return
+     */
     public String getEname() {
         return this.ename;
     }
 
+    /**
+     * @param ename
+     */
     public void setEname(String ename) {
         this.ename = ename;
     }
 
+    /**
+     * @return
+     */
     public int getDeptno() {
         return this.deptno;
     }
 
+    /**
+     * @param deptno
+     */
     public void setDeptno(int deptno) {
         this.deptno = deptno;
     }
 
+    /**
+     * @return
+     */
     public String getDname() {
         return this.dname;
     }
 
+    /**
+     * @param dname
+     */
     public void setDname(String dname) {
         this.dname = dname;
     }

@@ -30,6 +30,9 @@ import org.seasar.extension.dataset.states.RowStates;
  */
 public class BeanReaderTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testRead() throws Exception {
         Employee emp = new Employee();
         emp.setEmpno(7788);

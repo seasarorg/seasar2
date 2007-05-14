@@ -31,6 +31,9 @@ import org.seasar.extension.dataset.DataTable;
  */
 public class BeanListReaderTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testRead() throws Exception {
         Employee emp = new Employee();
         emp.setEmpno(7788);

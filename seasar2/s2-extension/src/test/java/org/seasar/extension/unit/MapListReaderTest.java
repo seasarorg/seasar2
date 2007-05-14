@@ -33,6 +33,9 @@ import org.seasar.extension.dataset.DataTable;
  */
 public class MapListReaderTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testRead() throws Exception {
         Map emp = new HashMap();
         emp.put("empno", new Integer(7788));

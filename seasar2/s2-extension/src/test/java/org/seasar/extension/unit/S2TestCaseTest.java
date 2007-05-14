@@ -27,20 +27,33 @@ import org.seasar.extension.dataset.DataTable;
 import org.seasar.extension.dataset.impl.DataSetImpl;
 import org.seasar.extension.dataset.impl.SqlWriter;
 
+/**
+ * @author higa
+ * 
+ */
 public class S2TestCaseTest extends S2TestCase {
 
     private static final String J2EE_PATH = "j2ee.dicon";
 
     private SqlWriter sqlWriter;
 
+    /**
+     * 
+     */
     public void setUpGetDataSource() {
         include(J2EE_PATH);
     }
 
+    /**
+     * 
+     */
     public void testGetDataSource() {
         assertNotNull("1", getDataSource());
     }
 
+    /**
+     * 
+     */
     public void testReadXls() {
         DataSet dataSet = readXls("testdata.xls");
         System.out.println(dataSet);
@@ -54,6 +67,9 @@ public class S2TestCaseTest extends S2TestCase {
         assertEquals("6", "aaa", row.getValue("dname"));
     }
 
+    /**
+     * 
+     */
     public void testReadXlsNoTrim() {
         DataSet dataSet = readXls("testdata_notrim.xls", false);
         System.out.println(dataSet);
@@ -67,19 +83,31 @@ public class S2TestCaseTest extends S2TestCase {
         assertEquals("6", "aaa ", row.getValue("dname"));
     }
 
+    /**
+     * 
+     */
     public void setUpWriteDbTx() {
         include(J2EE_PATH);
     }
 
+    /**
+     * 
+     */
     public void testWriteDbTx() {
         DataSet dataSet = readXls("testdata.xls");
         writeDb(dataSet);
     }
 
+    /**
+     * 
+     */
     public void setUpReadDb() {
         include(J2EE_PATH);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testReadDb() throws Exception {
         DataSet dataSet = new DataSetImpl();
         dataSet.addTable("emp");
@@ -92,20 +120,32 @@ public class S2TestCaseTest extends S2TestCase {
         assertTrue("2", table2.getRowSize() > 0);
     }
 
+    /**
+     * 
+     */
     public void setUpReadDbByTable() {
         include(J2EE_PATH);
     }
 
+    /**
+     * 
+     */
     public void testReadDbByTable() {
         DataTable table = readDbByTable("emp", "empno = 7788");
         System.out.println(table);
         assertEquals("1", 1, table.getRowSize());
     }
 
+    /**
+     * 
+     */
     public void setUpReadDbBySql() {
         include(J2EE_PATH);
     }
 
+    /**
+     * 
+     */
     public void testReadDbBySql() {
         DataTable table = readDbBySql("SELECT * FROM emp WHERE empno = 7788",
                 "emp");
@@ -113,10 +153,16 @@ public class S2TestCaseTest extends S2TestCase {
         assertEquals("1", 1, table.getRowSize());
     }
 
+    /**
+     * 
+     */
     public void setUpReloadOrReadDb() {
         include(J2EE_PATH);
     }
 
+    /**
+     * 
+     */
     public void testReloadOrReadDb() {
         DataSet dataSet = new DataSetImpl();
         DataTable table = dataSet.addTable("emp");
@@ -137,6 +183,9 @@ public class S2TestCaseTest extends S2TestCase {
         assertEquals("3", false, "hoge".equals(row1.getValue("ename")));
     }
 
+    /**
+     * 
+     */
     public void testWriteXls() {
         DataSet dataSet = readXls("testdata.xls");
         writeXls("aaa.xls", dataSet);
@@ -144,22 +193,37 @@ public class S2TestCaseTest extends S2TestCase {
         assertEquals("1", dataSet, dataSet2);
     }
 
+    /**
+     * 
+     */
     public void setUpReadXlsReplaceDbTx() {
         include(J2EE_PATH);
     }
 
+    /**
+     * 
+     */
     public void testReadXlsReplaceDbTx() {
         readXlsReplaceDb("testdata.xls");
     }
 
+    /**
+     * 
+     */
     public void setUpReadXlsAllReplaceDbTx() {
         include(J2EE_PATH);
     }
 
+    /**
+     * 
+     */
     public void testReadXlsAllReplaceDbTx() {
         readXlsAllReplaceDb("testdata.xls");
     }
 
+    /**
+     * 
+     */
     public void testAssertMapEquals() {
         DataSet expected = new DataSetImpl();
         DataTable table = expected.addTable("emp");
@@ -171,6 +235,9 @@ public class S2TestCaseTest extends S2TestCase {
         assertEquals("1", expected, map);
     }
 
+    /**
+     * 
+     */
     public void testAssertMapListEquals() {
         DataSet expected = new DataSetImpl();
         DataTable table = expected.addTable("emp");
@@ -184,6 +251,9 @@ public class S2TestCaseTest extends S2TestCase {
         assertEquals("1", expected, list);
     }
 
+    /**
+     * 
+     */
     public void testAssertBeanEquals() {
         DataSet expected = new DataSetImpl();
         DataTable table = expected.addTable("emp");
@@ -195,6 +265,9 @@ public class S2TestCaseTest extends S2TestCase {
         assertEquals("1", expected, bean);
     }
 
+    /**
+     * 
+     */
     public void testAssertBeanListEquals() {
         DataSet expected = new DataSetImpl();
         DataTable table = expected.addTable("emp");
@@ -208,16 +281,25 @@ public class S2TestCaseTest extends S2TestCase {
         assertEquals("1", expected, list);
     }
 
+    /**
+     * @throws Exception
+     */
     public void setUpGetSqlWriter() throws Exception {
         include(J2EE_PATH);
         sqlWriter = new SqlWriter(null);
         register(sqlWriter);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetSqlWriter() throws Exception {
         assertSame(sqlWriter, getSqlWriter());
     }
 
+    /**
+     * 
+     */
     public static class Hoge {
 
         private String aaa;
