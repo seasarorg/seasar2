@@ -34,6 +34,9 @@ public class MessageResourceBundleFacadeTest extends TestCase {
 
     private static final String PATH2 = "SSRMessages_ja.properties";
 
+    /**
+     * @throws Exception
+     */
     public void testCreateProperties_url() throws Exception {
         URL url = ResourceUtil.getResource(PATH);
         Properties props = MessageResourceBundleFacade.createProperties(url);
@@ -41,6 +44,9 @@ public class MessageResourceBundleFacadeTest extends TestCase {
         assertEquals("{0} not found", props.get("ESSR0001"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testCreateProperties_file() throws Exception {
         File file = ResourceUtil.getResourceAsFile(PATH);
         Properties props = MessageResourceBundleFacade.createProperties(file);
@@ -53,6 +59,9 @@ public class MessageResourceBundleFacadeTest extends TestCase {
         assertEquals("{0}が見つかりません", props.get("ESSR0001"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testIsModified() throws Exception {
         URL url = ResourceUtil.getResource(PATH);
         File file = ResourceUtil.getFile(url);
@@ -64,6 +73,9 @@ public class MessageResourceBundleFacadeTest extends TestCase {
         assertTrue(facade.isModified());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testSetup() throws Exception {
         URL url = ResourceUtil.getResource(PATH);
         MessageResourceBundleFacade facade = new MessageResourceBundleFacade(
@@ -73,6 +85,9 @@ public class MessageResourceBundleFacadeTest extends TestCase {
         assertEquals("{0} not found", bundle.get("ESSR0001"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testParent() throws Exception {
         URL url = ResourceUtil.getResource(PATH2);
         MessageResourceBundleFacade facade = new MessageResourceBundleFacade(

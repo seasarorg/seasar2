@@ -33,6 +33,9 @@ public class MessageResourceBundleFactoryTest extends TestCase {
         MessageResourceBundleFactory.clear();
     }
 
+    /**
+     * @throws Exception
+     */
     public void testLoadFacade() throws Exception {
         MessageResourceBundleFacade facade = MessageResourceBundleFactory
                 .loadFacade(PATH);
@@ -40,6 +43,9 @@ public class MessageResourceBundleFactoryTest extends TestCase {
         assertEquals("{0} not found", facade.getBundle().get("ESSR0001"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetNullableBundle() throws Exception {
         MessageResourceBundle bundle = MessageResourceBundleFactory
                 .getNullableBundle(BASE_NAME, Locale.JAPANESE);

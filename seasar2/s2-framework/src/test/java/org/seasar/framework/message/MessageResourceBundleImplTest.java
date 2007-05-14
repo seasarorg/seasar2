@@ -25,6 +25,9 @@ import junit.framework.TestCase;
  */
 public class MessageResourceBundleImplTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testAll() throws Exception {
         Properties parentProp = new Properties();
         parentProp.setProperty("b", "B");
