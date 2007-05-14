@@ -18,10 +18,16 @@ package org.seasar.extension.component.impl;
 import org.seasar.extension.component.ComponentInvoker;
 import org.seasar.framework.unit.S2FrameworkTestCase;
 
+/**
+ *
+ */
 public class ComponentInvokerImplTest extends S2FrameworkTestCase {
 
     private ComponentInvoker invoker;
 
+    /**
+     * @throws Throwable
+     */
     public void testInvoke() throws Throwable {
         assertEquals("1", new Integer(4), invoker.invoke("aaa", "length", null));
         try {
@@ -34,6 +40,9 @@ public class ComponentInvokerImplTest extends S2FrameworkTestCase {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public void testRedeserialize() throws Exception {
         String s = "Hoge";
         Integer i = new Integer(100);

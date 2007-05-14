@@ -34,6 +34,9 @@ public class ComponentInvokerCreatorTest extends S2FrameworkTestCase {
 
     private HotdeployBehavior ondemand;
 
+    /**
+     * @throws Exception
+     */
     public void testCoolDeploy() throws Exception {
         ComponentInvokerCreator creator = new ComponentInvokerCreator();
         ComponentDef cd = creator.createComponentDef(ComponentInvoker.class);
@@ -50,6 +53,9 @@ public class ComponentInvokerCreatorTest extends S2FrameworkTestCase {
         assertNull(cd);
     }
 
+    /**
+     * @throws Exception
+     */
     public void setUpHotDeploy() throws Exception {
         originalLoader = Thread.currentThread().getContextClassLoader();
         NamingConventionImpl convention = new NamingConventionImpl();
@@ -62,6 +68,9 @@ public class ComponentInvokerCreatorTest extends S2FrameworkTestCase {
         ondemand.start();
     }
 
+    /**
+     * @throws Exception
+     */
     public void testHotDeploy() throws Exception {
         String name = "componentInvoker";
         ComponentDef cd = getComponentDef(name);
@@ -69,6 +78,9 @@ public class ComponentInvokerCreatorTest extends S2FrameworkTestCase {
         assertEquals("2", name, cd.getComponentName());
     }
 
+    /**
+     * @throws Exception
+     */
     public void tearDownHotDeploy() throws Exception {
         ondemand.stop();
         S2ContainerBehavior

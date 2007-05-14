@@ -23,6 +23,9 @@ import junit.framework.TestCase;
  */
 public class DaoNotFoundRuntimeExceptionTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testGetMessage() throws Exception {
         DaoNotFoundRuntimeException ex = new DaoNotFoundRuntimeException(
                 getClass());
