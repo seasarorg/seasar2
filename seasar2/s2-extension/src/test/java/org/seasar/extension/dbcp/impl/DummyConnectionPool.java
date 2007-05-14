@@ -20,12 +20,19 @@ import java.sql.SQLException;
 import org.seasar.extension.dbcp.ConnectionPool;
 import org.seasar.extension.dbcp.ConnectionWrapper;
 
+/**
+ * @author higa
+ *
+ */
 public class DummyConnectionPool implements ConnectionPool {
 
     private boolean checkIned_ = false;
 
     private boolean released_ = false;
 
+    /**
+     * 
+     */
     public DummyConnectionPool() {
     }
 
@@ -38,6 +45,9 @@ public class DummyConnectionPool implements ConnectionPool {
         connectionWrapper.cleanup();
     }
 
+    /**
+     * @return
+     */
     public boolean isCheckIned() {
         return checkIned_;
     }
@@ -46,6 +56,9 @@ public class DummyConnectionPool implements ConnectionPool {
         released_ = true;
     }
 
+    /**
+     * @return
+     */
     public boolean isReleased() {
         return released_;
     }
@@ -58,6 +71,9 @@ public class DummyConnectionPool implements ConnectionPool {
         return 0;
     }
 
+    /**
+     * @return
+     */
     public int getMinPoolSize() {
         return 0;
     }

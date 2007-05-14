@@ -20,14 +20,15 @@ import java.sql.SQLException;
 
 import javax.transaction.TransactionManager;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.seasar.extension.dbcp.ConnectionPool;
 import org.seasar.extension.dbcp.ConnectionWrapper;
 import org.seasar.extension.timer.TimeoutManager;
 import org.seasar.extension.unit.S2TestCase;
 
+/**
+ * @author higa
+ * 
+ */
 public class ConnectionPoolImplTest extends S2TestCase {
 
     private static final String PATH = "connection.dicon";
@@ -40,10 +41,9 @@ public class ConnectionPoolImplTest extends S2TestCase {
 
     private boolean checkOuted_ = false;
 
-    public ConnectionPoolImplTest(String name) {
-        super(name);
-    }
-
+    /**
+     * @throws Exception
+     */
     public void testCheckOut() throws Exception {
         Runnable r = new Runnable() {
             public void run() {
@@ -68,6 +68,9 @@ public class ConnectionPoolImplTest extends S2TestCase {
         assertTrue("1", con.isClosed());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testReuseConnection() throws Exception {
         ConnectionWrapper con = pool_.checkOut();
         pool_.checkIn(con);
@@ -76,6 +79,9 @@ public class ConnectionPoolImplTest extends S2TestCase {
         assertSame("1", con, con2);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testCloseLogicalConnection() throws Exception {
         ConnectionWrapper con = pool_.checkOut();
         assertEquals("1", 1, pool_.getActivePoolSize());
@@ -85,6 +91,9 @@ public class ConnectionPoolImplTest extends S2TestCase {
         assertEquals("4", 1, pool_.getFreePoolSize());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testClose() throws Exception {
         Thread.sleep(1500);
         assertEquals(2, TimeoutManager.getInstance().getTimeoutTaskCount());
@@ -99,6 +108,9 @@ public class ConnectionPoolImplTest extends S2TestCase {
         assertEquals(0, TimeoutManager.getInstance().getTimeoutTaskCount());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testTransaction() throws Exception {
         tm_.begin();
         ConnectionWrapper con = pool_.checkOut();
@@ -118,6 +130,9 @@ public class ConnectionPoolImplTest extends S2TestCase {
         assertSame("10", con, con2);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testTransaction2() throws Exception {
         tm_.begin();
         ConnectionWrapper con = pool_.checkOut();
@@ -134,6 +149,9 @@ public class ConnectionPoolImplTest extends S2TestCase {
         assertEquals("7", 1, pool_.getFreePoolSize());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testIrregularUsecase() throws Exception {
         ConnectionWrapper con = pool_.checkOut();
         assertEquals("1", 1, pool_.getActivePoolSize());
@@ -149,6 +167,9 @@ public class ConnectionPoolImplTest extends S2TestCase {
         assertEquals("8", 1, pool_.getFreePoolSize());
     }
 
+    /**
+     * @throws Exception
+     */
     public void test2PC() throws Exception {
         tm_.begin();
         ConnectionWrapper con = pool_.checkOut();
@@ -172,6 +193,9 @@ public class ConnectionPoolImplTest extends S2TestCase {
         assertEquals("14", 1, pool2_.getFreePoolSize());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testTimeout() throws Exception {
         ConnectionWrapper con = pool_.checkOut();
         pool_.checkIn(con);
@@ -179,6 +203,9 @@ public class ConnectionPoolImplTest extends S2TestCase {
         assertEquals("1", 0, pool_.getFreePoolSize());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testTimeout2() throws Exception {
         ConnectionWrapper con = pool_.checkOut();
         pool_.checkIn(con);
@@ -187,6 +214,9 @@ public class ConnectionPoolImplTest extends S2TestCase {
         con.getAutoCommit();
     }
 
+    /**
+     * @throws Exception
+     */
     public void testRequiredTransaction() throws Exception {
         ((ConnectionPoolImpl) pool_).setAllowLocalTx(false);
         try {
@@ -196,6 +226,9 @@ public class ConnectionPoolImplTest extends S2TestCase {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public void testMaxPoolSize0() throws Exception {
         ((ConnectionPoolImpl) pool_).setMaxPoolSize(0);
         ConnectionWrapper con = pool_.checkOut();
@@ -213,6 +246,9 @@ public class ConnectionPoolImplTest extends S2TestCase {
         assertEquals("2", 0, pool_.getFreePoolSize());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testCheckInTxNotify() throws Exception {
         tm_.begin();
         ((ConnectionPoolImpl) pool_).setMaxPoolSize(1);
@@ -241,6 +277,9 @@ public class ConnectionPoolImplTest extends S2TestCase {
         thread.interrupt();
     }
 
+    /**
+     * @throws Exception
+     */
     public void testExpired() throws Exception {
         ((ConnectionPoolImpl) pool_).setTimeout(0);
         synchronized (pool_) {
@@ -252,6 +291,9 @@ public class ConnectionPoolImplTest extends S2TestCase {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public void testConnectionStatus() throws Exception {
         ((ConnectionPoolImpl) pool_).setReadOnly(true);
         ((ConnectionPoolImpl) pool_)
@@ -264,17 +306,5 @@ public class ConnectionPoolImplTest extends S2TestCase {
 
     protected void setUp() throws Exception {
         include(PATH);
-    }
-
-    protected void tearDown() throws Exception {
-    }
-
-    public static Test suite() {
-        return new TestSuite(ConnectionPoolImplTest.class);
-    }
-
-    public static void main(String[] args) {
-        junit.textui.TestRunner
-                .main(new String[] { ConnectionPoolImplTest.class.getName() });
     }
 }

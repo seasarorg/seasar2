@@ -18,21 +18,21 @@ package org.seasar.extension.dbcp.impl;
 import javax.sql.XAConnection;
 import javax.sql.XADataSource;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.seasar.extension.unit.S2TestCase;
 
+/**
+ * @author higa
+ * 
+ */
 public class XAConnectionImplTest extends S2TestCase {
 
     private static final String PATH = "connection.dicon";
 
     private XADataSource xads2_;
 
-    public XAConnectionImplTest(String name) {
-        super(name);
-    }
-
+    /**
+     * @throws Exception
+     */
     public void testGetConnectionAndGetXAResource() throws Exception {
         XAConnection xaCon = null;
         try {
@@ -46,17 +46,5 @@ public class XAConnectionImplTest extends S2TestCase {
 
     protected void setUp() throws Exception {
         include(PATH);
-    }
-
-    protected void tearDown() throws Exception {
-    }
-
-    public static Test suite() {
-        return new TestSuite(XAConnectionImplTest.class);
-    }
-
-    public static void main(String[] args) {
-        junit.textui.TestRunner.main(new String[] { XAConnectionImplTest.class
-                .getName() });
     }
 }

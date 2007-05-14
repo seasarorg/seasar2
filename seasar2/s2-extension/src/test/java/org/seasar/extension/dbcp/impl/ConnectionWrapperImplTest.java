@@ -21,13 +21,14 @@ import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
 import javax.transaction.xa.XAResource;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.seasar.extension.dbcp.ConnectionWrapper;
 import org.seasar.extension.jta.TransactionManagerImpl;
 import org.seasar.extension.unit.S2TestCase;
 
+/**
+ * @author higa
+ * 
+ */
 public class ConnectionWrapperImplTest extends S2TestCase {
 
     private static final String PATH = "connection.dicon";
@@ -36,15 +37,17 @@ public class ConnectionWrapperImplTest extends S2TestCase {
 
     private DummyConnectionPool dummyPool_;
 
-    public ConnectionWrapperImplTest(String name) {
-        super(name);
-    }
-
+    /**
+     * @throws Exception
+     */
     public void testCloseReally() throws Exception {
         con_.closeReally();
         assertEquals("1", true, con_.isClosed());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testClose() throws Exception {
         try {
             con_.close();
@@ -55,6 +58,9 @@ public class ConnectionWrapperImplTest extends S2TestCase {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public void testRelease() throws Exception {
         try {
             con_.setTransactionIsolation(100);
@@ -67,6 +73,9 @@ public class ConnectionWrapperImplTest extends S2TestCase {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public void testInit() throws Exception {
         TransactionManager tm = new TransactionManagerImpl();
         try {
@@ -82,6 +91,9 @@ public class ConnectionWrapperImplTest extends S2TestCase {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public void testCleanup() throws Exception {
         TransactionManager tm = new TransactionManagerImpl();
         try {
@@ -98,6 +110,9 @@ public class ConnectionWrapperImplTest extends S2TestCase {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public void testRestrictedOperations() throws Exception {
         TransactionManager tm = new TransactionManagerImpl();
         try {
@@ -143,17 +158,5 @@ public class ConnectionWrapperImplTest extends S2TestCase {
 
     protected void setUp() throws Exception {
         include(PATH);
-    }
-
-    protected void tearDown() throws Exception {
-    }
-
-    public static Test suite() {
-        return new TestSuite(ConnectionWrapperImplTest.class);
-    }
-
-    public static void main(String[] args) {
-        junit.textui.TestRunner
-                .main(new String[] { ConnectionWrapperImplTest.class.getName() });
     }
 }

@@ -19,21 +19,21 @@ import java.sql.Connection;
 
 import javax.sql.DataSource;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.seasar.extension.unit.S2TestCase;
 
+/**
+ * @author higa
+ * 
+ */
 public class DataSourceImplTest extends S2TestCase {
 
     private static final String PATH = "connection2.dicon";
 
     private DataSource ds_;
 
-    public DataSourceImplTest(String name) {
-        super(name);
-    }
-
+    /**
+     * @throws Exception
+     */
     public void testGetConnection() throws Exception {
         Connection con = null;
         try {
@@ -46,17 +46,5 @@ public class DataSourceImplTest extends S2TestCase {
 
     protected void setUp() throws Exception {
         include(PATH);
-    }
-
-    protected void tearDown() throws Exception {
-    }
-
-    public static Test suite() {
-        return new TestSuite(DataSourceImplTest.class);
-    }
-
-    public static void main(String[] args) {
-        junit.textui.TestRunner.main(new String[] { DataSourceImplTest.class
-                .getName() });
     }
 }

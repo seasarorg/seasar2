@@ -22,12 +22,13 @@ import javax.sql.XADataSource;
 import javax.transaction.xa.XAResource;
 import javax.transaction.xa.Xid;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.seasar.extension.jta.xa.XidImpl;
 import org.seasar.extension.unit.S2TestCase;
 
+/**
+ * @author higa
+ * 
+ */
 public class DBXAResourceImplTest extends S2TestCase {
 
     private static final String PATH = "connection2.dicon";
@@ -40,15 +41,17 @@ public class DBXAResourceImplTest extends S2TestCase {
 
     private XAResource xares_;
 
-    public DBXAResourceImplTest(String name) {
-        super(name);
-    }
-
+    /**
+     * @throws Exception
+     */
     public void testDoBegen() throws Exception {
         xares_.start(new XidImpl(), XAResource.TMNOFLAGS);
         assertEquals("1", false, con_.getAutoCommit());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testDoCommit() throws Exception {
         Xid xid = new XidImpl();
         xares_.start(xid, XAResource.TMNOFLAGS);
@@ -57,6 +60,9 @@ public class DBXAResourceImplTest extends S2TestCase {
         assertEquals("1", true, con_.getAutoCommit());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testDoRollback() throws Exception {
         Xid xid = new XidImpl();
         xares_.start(xid, XAResource.TMNOFLAGS);
@@ -75,14 +81,5 @@ public class DBXAResourceImplTest extends S2TestCase {
 
     protected void tearDown() throws Exception {
         xacon_.close();
-    }
-
-    public static Test suite() {
-        return new TestSuite(DBXAResourceImplTest.class);
-    }
-
-    public static void main(String[] args) {
-        junit.textui.TestRunner.main(new String[] { DBXAResourceImplTest.class
-                .getName() });
     }
 }
