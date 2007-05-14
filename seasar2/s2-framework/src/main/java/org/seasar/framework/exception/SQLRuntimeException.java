@@ -31,9 +31,16 @@ public final class SQLRuntimeException extends SRuntimeException {
      * @param cause
      */
     public SQLRuntimeException(SQLException cause) {
-        super("ESSR0071", new Object[] { getRealMessage(cause),
+        super("ESSR0072", new Object[] { getSql(cause), getRealMessage(cause),
                 Integer.toString(cause.getErrorCode()), cause.getSQLState() },
                 cause);
+    }
+
+    protected static String getSql(SQLException cause) {
+        if (cause instanceof SSQLException) {
+            return ((SSQLException) cause).getSql();
+        }
+        return "";
     }
 
     protected static String getRealMessage(SQLException cause) {
