@@ -30,6 +30,10 @@ import org.seasar.framework.container.warmdeploy.WarmdeployBehavior;
 import org.seasar.framework.env.Env;
 import org.seasar.framework.mock.servlet.MockHttpServletResponse;
 
+/**
+ * @author higa
+ * 
+ */
 public class S2FrameworkTestCaseTest extends S2FrameworkTestCase {
 
     private static final String J2EE_PATH = "S2FrameworkTestCaseTest_j2ee.dicon";
@@ -46,9 +50,15 @@ public class S2FrameworkTestCaseTest extends S2FrameworkTestCase {
 
     private List list1;
 
+    /**
+     * 
+     */
     public S2FrameworkTestCaseTest() {
     }
 
+    /**
+     * @param name
+     */
     public S2FrameworkTestCaseTest(String name) {
         super(name);
         if (name.equals("testNotWarmdeploy")) {
@@ -56,65 +66,110 @@ public class S2FrameworkTestCaseTest extends S2FrameworkTestCase {
         }
     }
 
+    /**
+     * 
+     */
     public void setUpAaa() {
         testAaaSetUpInvoked_ = true;
     }
 
+    /**
+     * 
+     */
     public void testAaa() {
         assertEquals("1", true, testAaaSetUpInvoked_);
     }
 
+    /**
+     * 
+     */
     public void tearDownAaa() {
         System.out.println("tearDownAaa");
     }
 
+    /**
+     * 
+     */
     public void setUpBbbTx() {
         include(J2EE_PATH);
     }
 
+    /**
+     * 
+     */
     public void testBbbTx() {
         System.out.println("testBbbTx");
     }
 
+    /**
+     * 
+     */
     public void setUpBindField() {
         include(J2EE_PATH);
         register(Date.class);
     }
 
+    /**
+     * 
+     */
     public void testBindField() {
         assertNotNull("1", date_);
     }
 
+    /**
+     * 
+     */
     public void tearDownBindField() {
         assertNull(date_);
     }
 
+    /**
+     * 
+     */
     public void setUpBindField2() {
         include("bbb.dicon");
     }
 
+    /**
+     * 
+     */
     public void testBindField2() {
         assertNotNull("1", bbb_);
         assertNotNull("2", ddd_);
     }
 
+    /**
+     * 
+     */
     public void tearDownBindField2() {
         assertNull(bbb_);
         assertNull(ddd_);
     }
 
+    /**
+     * 
+     */
     public void setUpBindField3() {
         include("ccc.dicon");
     }
 
+    /**
+     * 
+     */
     public void testBindField3() {
         assertNotNull("1", list1);
     }
 
+    /**
+     * 
+     */
     public void tearDownBindField3() {
         assertNull(list1);
     }
 
+    /**
+     * 
+     */
     public void testInclude() {
         include("aaa.dicon");
         try {
@@ -125,6 +180,9 @@ public class S2FrameworkTestCaseTest extends S2FrameworkTestCase {
         }
     }
 
+    /**
+     * 
+     */
     public void testConvertPath() {
         assertEquals("org/seasar/framework/unit/aaa.dicon",
                 convertPath("aaa.dicon"));
@@ -132,36 +190,60 @@ public class S2FrameworkTestCaseTest extends S2FrameworkTestCase {
         assertEquals("notfound.dicon", convertPath("notfound.dicon"));
     }
 
+    /**
+     * 
+     */
     public void setUpIsAssignableFrom() {
         include("bbb.dicon");
     }
 
+    /**
+     * 
+     */
     public void testIsAssignableFrom() {
         assertEquals("1", "hoge", ccc_);
     }
 
+    /**
+     * 
+     */
     public void testEmptyComponent() {
         include("empty.dicon");
     }
 
+    /**
+     * @throws Exception
+     */
     public void testEnv() throws Exception {
         assertEquals("env_ut.txt", Env.getFilePath());
         assertEquals("ut", Env.getValue());
     }
 
+    /**
+     * @throws Exception
+     */
     public void setUpWarmdeploy() throws Exception {
         include("aop.dicon");
     }
 
+    /**
+     * @throws Exception
+     */
     public void testWarmdeploy() throws Exception {
         assertTrue(S2ContainerBehavior.getProvider() instanceof WarmdeployBehavior);
         assertNotNull(getComponent("fooDao"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testNotWarmdeploy() throws Exception {
         assertFalse(S2ContainerBehavior.getProvider() instanceof WarmdeployBehavior);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetResponseString() throws Exception {
         final MockHttpServletResponse res = getResponse();
         final PrintWriter writer = res.getWriter();
@@ -171,6 +253,9 @@ public class S2FrameworkTestCaseTest extends S2FrameworkTestCase {
         assertEquals("ZXCVabc", res.getResponseString());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetResponseBytes() throws Exception {
         final MockHttpServletResponse res = getResponse();
         final ServletOutputStream os = res.getOutputStream();
@@ -182,15 +267,24 @@ public class S2FrameworkTestCaseTest extends S2FrameworkTestCase {
         ArrayAssert.assertEquals(new byte[] { 3, 2, 1, 9, 8, 7, 6 }, bytes);
     }
 
+    /**
+     * @return
+     */
     public String getRootDiconGetRootDicon() {
         return "aop.dicon";
     }
 
+    /**
+     * @throws Throwable
+     */
     public void testGetRootDicon() throws Throwable {
         assertEquals("aop.dicon", resolveRootDicon());
         assertEquals("aop.dicon", getContainer().getPath());
     }
 
+    /**
+     * 
+     */
     public static class Hoge {
 
         private String aaa;
