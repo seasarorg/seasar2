@@ -24,12 +24,18 @@ import junit.framework.TestCase;
  */
 public class BigDecimalTypeTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testEqualsSameScale() throws Exception {
         BigDecimalType type = new BigDecimalType();
         assertEquals(true, type
                 .equals(new BigDecimal("1"), new BigDecimal("1")));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testEqualsAnotherScale() throws Exception {
         BigDecimalType type = new BigDecimalType();
         assertEquals(true, type.equals(new BigDecimal("1"), new BigDecimal(

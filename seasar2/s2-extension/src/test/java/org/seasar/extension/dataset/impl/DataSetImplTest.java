@@ -15,20 +15,21 @@
  */
 package org.seasar.extension.dataset.impl;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 import org.seasar.extension.dataset.DataSet;
 import org.seasar.extension.dataset.DataTable;
 import org.seasar.extension.dataset.TableNotFoundRuntimeException;
 
+/**
+ * @author higa
+ * 
+ */
 public class DataSetImplTest extends TestCase {
 
-    public DataSetImplTest(String name) {
-        super(name);
-    }
-
+    /**
+     * @throws Exception
+     */
     public void testRemoveTable() throws Exception {
         DataSet dataSet = new DataSetImpl();
         DataTable table = dataSet.addTable("hoge");
@@ -46,20 +47,5 @@ public class DataSetImplTest extends TestCase {
         } catch (TableNotFoundRuntimeException ex) {
             System.out.println(ex);
         }
-    }
-
-    protected void setUp() throws Exception {
-    }
-
-    protected void tearDown() throws Exception {
-    }
-
-    public static Test suite() {
-        return new TestSuite(DataSetImplTest.class);
-    }
-
-    public static void main(String[] args) {
-        junit.textui.TestRunner.main(new String[] { DataSetImplTest.class
-                .getName() });
     }
 }

@@ -24,14 +24,17 @@ import org.seasar.extension.dataset.DataTable;
 import org.seasar.extension.dataset.states.RowStates;
 import org.seasar.extension.unit.S2TestCase;
 
+/**
+ * @author higa
+ * 
+ */
 public class SqlReloadTableReaderTest extends S2TestCase {
 
     private DataSource ds_;
 
-    public SqlReloadTableReaderTest(String arg0) {
-        super(arg0);
-    }
-
+    /**
+     * @throws Exception
+     */
     public void testRead() throws Exception {
         DataTable table = new DataTableImpl("emp");
         table.addColumn("empno");
@@ -49,9 +52,4 @@ public class SqlReloadTableReaderTest extends S2TestCase {
     public void setUp() {
         include("j2ee.dicon");
     }
-
-    public static void main(String[] args) {
-        junit.textui.TestRunner.run(SqlReloadTableReaderTest.class);
-    }
-
 }

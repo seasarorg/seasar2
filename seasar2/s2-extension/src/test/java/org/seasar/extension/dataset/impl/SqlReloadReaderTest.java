@@ -24,14 +24,17 @@ import org.seasar.extension.dataset.DataSet;
 import org.seasar.extension.dataset.DataTable;
 import org.seasar.extension.unit.S2TestCase;
 
+/**
+ * @author higa
+ * 
+ */
 public class SqlReloadReaderTest extends S2TestCase {
 
     private DataSource ds_;
 
-    public SqlReloadReaderTest(String arg0) {
-        super(arg0);
-    }
-
+    /**
+     * @throws Exception
+     */
     public void testRead() throws Exception {
         DataSet dataSet = new DataSetImpl();
         DataTable table = dataSet.addTable("emp");
@@ -48,9 +51,4 @@ public class SqlReloadReaderTest extends S2TestCase {
     public void setUp() {
         include("j2ee.dicon");
     }
-
-    public static void main(String[] args) {
-        junit.textui.TestRunner.run(SqlReloadReaderTest.class);
-    }
-
 }

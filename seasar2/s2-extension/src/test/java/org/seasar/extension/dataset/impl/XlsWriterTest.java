@@ -17,14 +17,16 @@ package org.seasar.extension.dataset.impl;
 
 import java.io.File;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 import org.seasar.extension.dataset.DataSet;
 import org.seasar.extension.dataset.DataWriter;
 import org.seasar.framework.util.ResourceUtil;
 
+/**
+ * @author higa
+ * 
+ */
 public class XlsWriterTest extends TestCase {
 
     private static final String PATH = "org/seasar/extension/dataset/impl/XlsReaderImplTest.xls";
@@ -35,10 +37,9 @@ public class XlsWriterTest extends TestCase {
 
     private DataWriter writer_;
 
-    public XlsWriterTest(String name) {
-        super(name);
-    }
-
+    /**
+     * @throws Exception
+     */
     public void testWrite() throws Exception {
         writer_.write(dataSet_);
     }
@@ -48,17 +49,5 @@ public class XlsWriterTest extends TestCase {
         dataSet_ = new XlsReader(readFile).read();
         File writeFile = new File(readFile.getParentFile(), PATH2);
         writer_ = new XlsWriter(writeFile);
-    }
-
-    protected void tearDown() throws Exception {
-    }
-
-    public static Test suite() {
-        return new TestSuite(XlsWriterTest.class);
-    }
-
-    public static void main(String[] args) {
-        junit.textui.TestRunner.main(new String[] { XlsWriterTest.class
-                .getName() });
     }
 }

@@ -25,8 +25,15 @@ import org.seasar.extension.dataset.states.RowStates;
 import org.seasar.extension.dataset.types.ColumnTypes;
 import org.seasar.extension.unit.S2TestCase;
 
+/**
+ * @author higa
+ *
+ */
 public class DataTableImplTest extends S2TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testRemoveRows() throws Exception {
         DataTable table = new DataTableImpl("hoge");
         table.addColumn("aaa", ColumnTypes.STRING);
@@ -47,6 +54,9 @@ public class DataTableImplTest extends S2TestCase {
         assertSame("6", row3, table.getRemovedRow(1));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testEquals() throws Exception {
         DataTable table = new DataTableImpl("hoge");
         DataTable table2 = new DataTableImpl("hoge");
@@ -70,6 +80,9 @@ public class DataTableImplTest extends S2TestCase {
         assertEquals("3", false, table.equals(table2));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testEquals2() throws Exception {
         DataTable table = new DataTableImpl("hoge");
         table.addColumn("aaa");
@@ -88,6 +101,9 @@ public class DataTableImplTest extends S2TestCase {
         assertEquals("1", table, table2);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testEquals3() throws Exception {
         DataTable table = new DataTableImpl("hoge");
         table.addColumn("aaa");
@@ -100,6 +116,9 @@ public class DataTableImplTest extends S2TestCase {
         assertEquals("1", table, table2);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testSetupColumns() throws Exception {
         DataTable table = new DataTableImpl("hoge");
         table.setupColumns(MyBean.class);
@@ -108,6 +127,9 @@ public class DataTableImplTest extends S2TestCase {
         assertEquals("3", ColumnTypes.STRING, table.getColumnType("myString"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testCopyFromList() throws Exception {
         DataTable table = new DataTableImpl("hoge");
         table.setupColumns(MyBean.class);
@@ -129,6 +151,9 @@ public class DataTableImplTest extends S2TestCase {
         assertEquals("6", RowStates.UNCHANGED, table.getRow(0).getState());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testCopyFromBeanOrMap() throws Exception {
         DataTable table = new DataTableImpl("hoge");
         table.setupColumns(MyBean.class);
@@ -142,6 +167,9 @@ public class DataTableImplTest extends S2TestCase {
         assertEquals("4", RowStates.UNCHANGED, table.getRow(0).getState());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testHasColumn() throws Exception {
         DataTable table = new DataTableImpl("hoge");
         table.addColumn("aaa_0");
@@ -150,6 +178,9 @@ public class DataTableImplTest extends S2TestCase {
         assertEquals("2", true, table.hasColumn("bbb_ccc"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetColumn() throws Exception {
         DataTable table = new DataTableImpl("hoge");
         table.addColumn("aaa_0");
@@ -158,16 +189,25 @@ public class DataTableImplTest extends S2TestCase {
         assertNotNull("2", table.getColumn("bbb_ccc"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetColumn2() throws Exception {
         DataTable table = new DataTableImpl("hoge");
         table.addColumn("aaa_bbb");
         assertNotNull("1", table.getColumn("aaaBbb"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void setUpSetupMetaData() throws Exception {
         include("j2ee.dicon");
     }
 
+    /**
+     * @throws Exception
+     */
     public void testSetupMetaData() throws Exception {
         DataTable table = new DataTableImpl("emp");
         table.addColumn("empno");
@@ -175,24 +215,39 @@ public class DataTableImplTest extends S2TestCase {
         assertEquals("1", ColumnTypes.BIGDECIMAL, table.getColumnType("empno"));
     }
 
+    /**
+     *
+     */
     public static class MyBean {
 
         private int myInt_;
 
         private String myString_;
 
+        /**
+         * @return
+         */
         public int getMyInt() {
             return myInt_;
         }
 
+        /**
+         * @param myInt
+         */
         public void setMyInt(int myInt) {
             myInt_ = myInt;
         }
 
+        /**
+         * @return
+         */
         public String getMyString() {
             return myString_;
         }
 
+        /**
+         * @param myString
+         */
         public void setMyString(String myString) {
             myString_ = myString;
         }

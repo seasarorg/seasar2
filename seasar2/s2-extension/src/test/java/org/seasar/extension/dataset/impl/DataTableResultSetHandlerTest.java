@@ -22,14 +22,17 @@ import org.seasar.extension.jdbc.SelectHandler;
 import org.seasar.extension.jdbc.impl.BasicSelectHandler;
 import org.seasar.extension.unit.S2TestCase;
 
+/**
+ * @author higa
+ * 
+ */
 public class DataTableResultSetHandlerTest extends S2TestCase {
 
     private DataSource ds_;
 
-    public DataTableResultSetHandlerTest(String arg0) {
-        super(arg0);
-    }
-
+    /**
+     * @throws Exception
+     */
     public void testHandle() throws Exception {
         String sql = "select * from emp";
         SelectHandler handler = new BasicSelectHandler(ds_, sql,
@@ -40,6 +43,9 @@ public class DataTableResultSetHandlerTest extends S2TestCase {
         assertEquals("2", true, ret.getColumn("EMPNO").isPrimaryKey());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testHandle2() throws Exception {
         String sql = "select ename, dname from emp, dept where emp.deptno = dept.deptno";
         SelectHandler handler = new BasicSelectHandler(ds_, sql,
@@ -54,9 +60,4 @@ public class DataTableResultSetHandlerTest extends S2TestCase {
     public void setUp() {
         include("j2ee.dicon");
     }
-
-    public static void main(String[] args) {
-        junit.textui.TestRunner.run(DataTableResultSetHandlerTest.class);
-    }
-
 }

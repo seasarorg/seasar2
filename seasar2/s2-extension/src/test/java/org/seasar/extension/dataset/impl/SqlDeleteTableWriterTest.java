@@ -20,12 +20,15 @@ import org.seasar.extension.dataset.DataTable;
 import org.seasar.extension.dataset.TableWriter;
 import org.seasar.extension.unit.S2TestCase;
 
+/**
+ * @author higa
+ * 
+ */
 public class SqlDeleteTableWriterTest extends S2TestCase {
 
-    public SqlDeleteTableWriterTest(String arg0) {
-        super(arg0);
-    }
-
+    /**
+     * @throws Exception
+     */
     public void testWriteTx() throws Exception {
         DataTable table = new DataTableImpl("emp");
         table.addColumn("empno");
@@ -44,9 +47,4 @@ public class SqlDeleteTableWriterTest extends S2TestCase {
     public void setUp() {
         include("j2ee.dicon");
     }
-
-    public static void main(String[] args) {
-        junit.textui.TestRunner.run(SqlDeleteTableWriterTest.class);
-    }
-
 }

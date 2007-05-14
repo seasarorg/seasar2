@@ -35,10 +35,16 @@ public class XlsReaderTest extends S2TestCase {
 
     private DataSet dataSet_;
 
+    /**
+     * @throws Exception
+     */
     public void testCreateTable() throws Exception {
         assertEquals("1", 6, dataSet_.getTableSize());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testSetupColumns() throws Exception {
         DataTable table = dataSet_.getTable(2);
         assertEquals("1", 8, table.getColumnSize());
@@ -55,11 +61,17 @@ public class XlsReaderTest extends S2TestCase {
         assertEquals("10", ColumnTypes.STRING, table.getColumnType(7));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testSetupColumnsForNull() throws Exception {
         DataTable table = dataSet_.getTable(4);
         assertEquals("1", ColumnTypes.OBJECT, table.getColumnType(1));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testSetupRows() throws Exception {
         DataTable table = dataSet_.getTable(0);
         assertEquals("1", 12, table.getRowSize());
@@ -73,6 +85,9 @@ public class XlsReaderTest extends S2TestCase {
         assertEquals("3", 0, table2.getRowSize());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetValue() throws Exception {
         DataTable table = dataSet_.getTable(2);
         DataRow row = table.getRow(0);
@@ -87,6 +102,9 @@ public class XlsReaderTest extends S2TestCase {
         assertEquals("8", "\"a\"b\"", row.getValue(7));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetValueNoTrim() throws Exception {
         dataSet_ = new XlsReader(PATH, false).read();
         DataTable table = dataSet_.getTable(2);
@@ -102,6 +120,9 @@ public class XlsReaderTest extends S2TestCase {
         assertEquals("8", "a\"b", row.getValue(7));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testFloatingPoint() throws Exception {
         DataTable table = dataSet_.getTable("FLOATING_POINT");
         DataSet dataSet = new DataSetImpl();
@@ -127,29 +148,48 @@ public class XlsReaderTest extends S2TestCase {
         dataSet_ = new XlsReader(PATH).read();
     }
 
+    /**
+     *
+     */
     public static class FloatingPointBean {
         private Double column0;
 
         private Double column1;
 
+        /**
+         * @param column0
+         * @param column1
+         */
         public FloatingPointBean(double column0, double column1) {
             super();
             this.column0 = new Double(column0);
             this.column1 = new Double(column1);
         }
 
+        /**
+         * @return
+         */
         public Double getColumn0() {
             return column0;
         }
 
+        /**
+         * @param column0
+         */
         public void setColumn0(Double column0) {
             this.column0 = column0;
         }
 
+        /**
+         * @return
+         */
         public Double getColumn1() {
             return column1;
         }
 
+        /**
+         * @param column1
+         */
         public void setColumn1(Double column1) {
             this.column1 = column1;
         }

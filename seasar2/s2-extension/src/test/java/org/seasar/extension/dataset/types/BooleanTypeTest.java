@@ -23,6 +23,9 @@ import junit.framework.TestCase;
  */
 public class BooleanTypeTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testEquals() throws Exception {
         BooleanType type = new BooleanType();
         assertEquals(true, type.equals(Boolean.TRUE, Boolean.TRUE));

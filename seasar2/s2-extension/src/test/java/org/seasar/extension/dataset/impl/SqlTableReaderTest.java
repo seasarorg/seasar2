@@ -21,14 +21,17 @@ import org.seasar.extension.dataset.DataTable;
 import org.seasar.extension.dataset.states.RowStates;
 import org.seasar.extension.unit.S2TestCase;
 
+/**
+ * @author higa
+ * 
+ */
 public class SqlTableReaderTest extends S2TestCase {
 
     private DataSource ds_;
 
-    public SqlTableReaderTest(String arg0) {
-        super(arg0);
-    }
-
+    /**
+     * @throws Exception
+     */
     public void testRead() throws Exception {
         SqlTableReader reader = new SqlTableReader(ds_);
         reader.setTable("emp");
@@ -38,6 +41,9 @@ public class SqlTableReaderTest extends S2TestCase {
         assertEquals("2", RowStates.UNCHANGED, ret.getRow(0).getState());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testRead4() throws Exception {
         SqlTableReader reader = new SqlTableReader(ds_);
         reader.setTable("emp", "", "ename");
@@ -47,6 +53,9 @@ public class SqlTableReaderTest extends S2TestCase {
         assertEquals("2", "ADAMS", ret.getRow(0).getValue("ename"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testRead2() throws Exception {
         SqlTableReader reader = new SqlTableReader(ds_);
         reader.setTable("emp", "empno = 7788");
@@ -55,6 +64,9 @@ public class SqlTableReaderTest extends S2TestCase {
         assertEquals("1", 1, ret.getRowSize());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testRead3() throws Exception {
         SqlTableReader reader = new SqlTableReader(ds_);
         reader.setSql("select * from emp", "emp");
@@ -66,9 +78,4 @@ public class SqlTableReaderTest extends S2TestCase {
     public void setUp() {
         include("j2ee.dicon");
     }
-
-    public static void main(String[] args) {
-        junit.textui.TestRunner.run(SqlTableReaderTest.class);
-    }
-
 }

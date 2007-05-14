@@ -21,14 +21,17 @@ import org.seasar.extension.dataset.DataRow;
 import org.seasar.extension.dataset.DataTable;
 import org.seasar.extension.unit.S2TestCase;
 
+/**
+ * @author higa
+ * 
+ */
 public class SqlTableWriterTest extends S2TestCase {
 
     private DataSource ds_;
 
-    public SqlTableWriterTest(String arg0) {
-        super(arg0);
-    }
-
+    /**
+     * @throws Exception
+     */
     public void testCreatedTx() throws Exception {
         DataTable table = new DataTableImpl("emp");
         table.addColumn("empno");
@@ -47,6 +50,9 @@ public class SqlTableWriterTest extends S2TestCase {
         assertNotNull("1", ret);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testModifiedTx() throws Exception {
         SqlTableReader reader = new SqlTableReader(ds_);
         String sql = "SELECT empno, ename, dname FROM emp, dept WHERE empno = 7788 AND emp.deptno = dept.deptno";
@@ -64,6 +70,9 @@ public class SqlTableWriterTest extends S2TestCase {
         assertEquals("1", "hoge", table2.getRow(0).getValue("ename"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testRemovedTx() throws Exception {
         SqlTableReader reader = new SqlTableReader(ds_);
         String sql = "SELECT empno, ename, dname FROM emp, dept WHERE empno = 7788 AND emp.deptno = dept.deptno";
@@ -82,9 +91,4 @@ public class SqlTableWriterTest extends S2TestCase {
     public void setUp() {
         include("j2ee.dicon");
     }
-
-    public static void main(String[] args) {
-        junit.textui.TestRunner.run(SqlTableWriterTest.class);
-    }
-
 }

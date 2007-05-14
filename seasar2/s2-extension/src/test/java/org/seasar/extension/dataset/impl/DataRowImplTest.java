@@ -20,21 +20,22 @@ import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 import org.seasar.extension.dataset.DataRow;
 import org.seasar.extension.dataset.DataTable;
 import org.seasar.extension.dataset.states.RowStates;
 import org.seasar.extension.dataset.types.ColumnTypes;
 
+/**
+ * @author higa
+ *
+ */
 public class DataRowImplTest extends TestCase {
 
-    public DataRowImplTest(String name) {
-        super(name);
-    }
-
+    /**
+     * @throws Exception
+     */
     public void testModify() throws Exception {
         DataTable table = new DataTableImpl("hoge");
         table.addColumn("aaa", ColumnTypes.STRING);
@@ -49,6 +50,9 @@ public class DataRowImplTest extends TestCase {
         assertEquals("3", RowStates.MODIFIED, row.getState());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testSetValue() throws Exception {
         DataTable table = new DataTableImpl("hoge");
         table.addColumn("aaa", ColumnTypes.STRING);
@@ -58,6 +62,9 @@ public class DataRowImplTest extends TestCase {
         assertEquals("2", "hoge", row.getValue("aaa"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetValue() throws Exception {
         DataTable table = new DataTableImpl("hoge");
         table.addColumn("aaa_0");
@@ -70,6 +77,9 @@ public class DataRowImplTest extends TestCase {
         assertEquals("3", "hoge2", row.getValue("bbb_ccc"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testEquals() throws Exception {
         DataTable table = new DataTableImpl("hoge");
         table.addColumn("aaa");
@@ -90,6 +100,9 @@ public class DataRowImplTest extends TestCase {
         assertEquals("6", row, row2);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testEquals2() throws Exception {
         DataTable table = new DataTableImpl("hoge");
         table.addColumn("aaa");
@@ -108,6 +121,9 @@ public class DataRowImplTest extends TestCase {
         assertEquals("1", row, row2);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testEquals3() throws Exception {
         DataTable table = new DataTableImpl("hoge");
         table.addColumn("aaa_bbb");
@@ -128,6 +144,9 @@ public class DataRowImplTest extends TestCase {
         assertEquals("1", row, row2);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testEquals4() throws Exception {
         DataTable table = new DataTableImpl("hoge");
         table.addColumn("aaa", ColumnTypes.OBJECT);
@@ -142,6 +161,9 @@ public class DataRowImplTest extends TestCase {
         assertEquals("1", row, row2);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testEquals5() throws Exception {
         DataTable table = new DataTableImpl("hoge");
         table.addColumn("aaa");
@@ -156,6 +178,9 @@ public class DataRowImplTest extends TestCase {
         assertEquals("1", row, row2);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testEquals6() throws Exception {
         DataTable table = new DataTableImpl("hoge");
         table.addColumn("aaa");
@@ -168,6 +193,9 @@ public class DataRowImplTest extends TestCase {
         assertEquals("1", row, row2);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testCopyFromMap() throws Exception {
         DataTable table = new DataTableImpl("hoge");
         table.addColumn("aaa");
@@ -181,6 +209,9 @@ public class DataRowImplTest extends TestCase {
         assertEquals("2", "222", row.getValue("bbb"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testCopyFromBean() throws Exception {
         DataTable table = new DataTableImpl("hoge");
         table.addColumn("aaa");
@@ -200,6 +231,9 @@ public class DataRowImplTest extends TestCase {
         assertEquals("4", new BigDecimal(444), row.getValue("ddd"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testCopyFromRow() throws Exception {
         DataTable table = new DataTableImpl("hoge");
         table.addColumn("aaa");
@@ -222,15 +256,9 @@ public class DataRowImplTest extends TestCase {
     protected void tearDown() throws Exception {
     }
 
-    public static Test suite() {
-        return new TestSuite(DataRowImplTest.class);
-    }
-
-    public static void main(String[] args) {
-        junit.textui.TestRunner.main(new String[] { DataRowImplTest.class
-                .getName() });
-    }
-
+    /**
+     *
+     */
     public static class MyBean {
 
         private String aaa_;
@@ -241,34 +269,58 @@ public class DataRowImplTest extends TestCase {
 
         private int ddd_;
 
+        /**
+         * @return
+         */
         public String getAaa() {
             return aaa_;
         }
 
+        /**
+         * @param aaa
+         */
         public void setAaa(String aaa) {
             aaa_ = aaa;
         }
 
+        /**
+         * @return
+         */
         public String getBbb() {
             return bbb_;
         }
 
+        /**
+         * @param bbb
+         */
         public void setBbb(String bbb) {
             bbb_ = bbb;
         }
 
+        /**
+         * @return
+         */
         public String getTestCcc() {
             return testCcc_;
         }
 
+        /**
+         * @param testCcc
+         */
         public void setTestCcc(String testCcc) {
             testCcc_ = testCcc;
         }
 
+        /**
+         * @return
+         */
         public int getDdd() {
             return ddd_;
         }
 
+        /**
+         * @param ddd
+         */
         public void setDdd(int ddd) {
             ddd_ = ddd;
         }
