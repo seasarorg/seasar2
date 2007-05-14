@@ -26,6 +26,9 @@ import org.seasar.extension.sql.SqlContext;
  */
 public class SqlContextPropertyAccessorTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testGetProperty() throws Exception {
         SqlContext ctx = new SqlContextImpl();
         ctx.addArg("aaa", "111", String.class);

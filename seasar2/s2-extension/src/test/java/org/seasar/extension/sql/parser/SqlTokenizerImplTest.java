@@ -26,6 +26,9 @@ import org.seasar.extension.sql.TokenNotClosedRuntimeException;
  */
 public class SqlTokenizerImplTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testNext() throws Exception {
         String sql = "SELECT * FROM emp";
         SqlTokenizer tokenizer = new SqlTokenizerImpl(sql);
@@ -35,6 +38,9 @@ public class SqlTokenizerImplTest extends TestCase {
         assertEquals("4", null, tokenizer.getToken());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testCommentEndNotFound() throws Exception {
         String sql = "SELECT * FROM emp/*hoge";
         SqlTokenizer tokenizer = new SqlTokenizerImpl(sql);
@@ -48,6 +54,9 @@ public class SqlTokenizerImplTest extends TestCase {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public void testBindVariable() throws Exception {
         String sql = "SELECT * FROM emp WHERE job = /*job*/'CLER K' AND deptno = /*deptno*/20";
         SqlTokenizer tokenizer = new SqlTokenizerImpl(sql);
@@ -65,6 +74,9 @@ public class SqlTokenizerImplTest extends TestCase {
         assertEquals("9", SqlTokenizer.EOF, tokenizer.next());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testParseBindVariable2() throws Exception {
         String sql = "SELECT * FROM emp WHERE job = /*job*/'CLERK'/**/";
         SqlTokenizer tokenizer = new SqlTokenizerImpl(sql);
@@ -79,6 +91,9 @@ public class SqlTokenizerImplTest extends TestCase {
         assertEquals("7", SqlTokenizer.EOF, tokenizer.next());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testParseBindVariable3() throws Exception {
         String sql = "/*job*/'CLERK',";
         SqlTokenizer tokenizer = new SqlTokenizerImpl(sql);
@@ -90,6 +105,9 @@ public class SqlTokenizerImplTest extends TestCase {
         assertEquals("5", SqlTokenizer.EOF, tokenizer.next());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testParseElse() throws Exception {
         String sql = "SELECT * FROM emp WHERE /*IF job != null*/job = /*job*/'CLERK'-- ELSE job is null/*END*/";
         SqlTokenizer tokenizer = new SqlTokenizerImpl(sql);
@@ -111,6 +129,9 @@ public class SqlTokenizerImplTest extends TestCase {
         assertEquals("14", SqlTokenizer.EOF, tokenizer.next());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testParseElse2() throws Exception {
         String sql = "/*IF false*/aaa -- ELSE bbb = /*bbb*/123/*END*/";
         SqlTokenizer tokenizer = new SqlTokenizerImpl(sql);
@@ -130,6 +151,9 @@ public class SqlTokenizerImplTest extends TestCase {
         assertEquals("12", SqlTokenizer.EOF, tokenizer.next());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAnd() throws Exception {
         String sql = " AND bbb";
         SqlTokenizer tokenizer = new SqlTokenizerImpl(sql);
@@ -139,6 +163,9 @@ public class SqlTokenizerImplTest extends TestCase {
         assertEquals("3", " bbb", tokenizer.getAfter());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testBindVariable2() throws Exception {
         String sql = "? abc ? def ?";
         SqlTokenizer tokenizer = new SqlTokenizerImpl(sql);
@@ -155,6 +182,9 @@ public class SqlTokenizerImplTest extends TestCase {
         assertEquals("11", SqlTokenizer.EOF, tokenizer.next());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testBindVariable3() throws Exception {
         String sql = "abc ? def";
         SqlTokenizer tokenizer = new SqlTokenizerImpl(sql);
@@ -166,6 +196,9 @@ public class SqlTokenizerImplTest extends TestCase {
         assertEquals("6", SqlTokenizer.EOF, tokenizer.next());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testBindVariable4() throws Exception {
         String sql = "/*IF false*/aaa--ELSE bbb = /*bbb*/123/*END*/";
         SqlTokenizer tokenizer = new SqlTokenizerImpl(sql);
@@ -180,6 +213,9 @@ public class SqlTokenizerImplTest extends TestCase {
         assertEquals("9", "bbb", tokenizer.getToken());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testSkipTokenForParent() throws Exception {
         String sql = "INSERT INTO TABLE_NAME (ID) VALUES (/*id*/20)";
         SqlTokenizer tokenizer = new SqlTokenizerImpl(sql);

@@ -23,6 +23,9 @@ import junit.framework.TestCase;
  */
 public class IfConditionNotFoundRuntimeExceptionTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testGetMessage() throws Exception {
         IfConditionNotFoundRuntimeException ex = new IfConditionNotFoundRuntimeException();
         System.out.println(ex.getMessage());

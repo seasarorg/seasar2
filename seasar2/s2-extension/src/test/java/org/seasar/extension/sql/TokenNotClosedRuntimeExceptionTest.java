@@ -23,6 +23,9 @@ import junit.framework.TestCase;
  */
 public class TokenNotClosedRuntimeExceptionTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testGetMessage() throws Exception {
         TokenNotClosedRuntimeException ex = new TokenNotClosedRuntimeException(
                 "aaa", "bbb");

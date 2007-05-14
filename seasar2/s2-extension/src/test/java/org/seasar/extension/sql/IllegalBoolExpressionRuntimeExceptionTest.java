@@ -23,6 +23,9 @@ import junit.framework.TestCase;
  */
 public class IllegalBoolExpressionRuntimeExceptionTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testGetMessage() throws Exception {
         IllegalBoolExpressionRuntimeException ex = new IllegalBoolExpressionRuntimeException(
                 "hoge");
