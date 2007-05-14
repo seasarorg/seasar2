@@ -18,6 +18,10 @@ package org.seasar.extension.jdbc.impl;
 import java.io.Serializable;
 import java.sql.Date;
 
+/**
+ * @author higa
+ *
+ */
 public class Employee implements Serializable {
 
     private static final long serialVersionUID = -5411969211921106291L;
@@ -42,6 +46,17 @@ public class Employee implements Serializable {
 
     private Department department;
 
+    /**
+     * @param empno
+     * @param ename
+     * @param job
+     * @param mgr
+     * @param hiredate
+     * @param sal
+     * @param comm
+     * @param deptno
+     * @param tstamp
+     */
     public Employee(long empno, java.lang.String ename, java.lang.String job,
             Short mgr, java.util.Date hiredate, Float sal, Float comm,
             short deptno, Date tstamp) {
@@ -56,89 +71,155 @@ public class Employee implements Serializable {
         this.tstamp = tstamp;
     }
 
+    /**
+     * 
+     */
     public Employee() {
     }
 
+    /**
+     * @param empno
+     */
     public Employee(long empno) {
         this.empno = empno;
     }
 
+    /**
+     * @return
+     */
     public long getEmpno() {
         return this.empno;
     }
 
+    /**
+     * @param empno
+     */
     public void setEmpno(long empno) {
         this.empno = empno;
     }
 
+    /**
+     * @return
+     */
     public java.lang.String getEname() {
         return this.ename;
     }
 
+    /**
+     * @param ename
+     */
     public void setEname(java.lang.String ename) {
         this.ename = ename;
     }
 
+    /**
+     * @return
+     */
     public java.lang.String getJob() {
         return this.job;
     }
 
+    /**
+     * @param job
+     */
     public void setJob(java.lang.String job) {
         this.job = job;
     }
 
+    /**
+     * @return
+     */
     public Short getMgr() {
         return this.mgr;
     }
 
+    /**
+     * @param mgr
+     */
     public void setMgr(Short mgr) {
         this.mgr = mgr;
     }
 
+    /**
+     * @return
+     */
     public java.util.Date getHiredate() {
         return this.hiredate;
     }
 
+    /**
+     * @param hiredate
+     */
     public void setHiredate(java.util.Date hiredate) {
         this.hiredate = hiredate;
     }
 
+    /**
+     * @return
+     */
     public Float getSal() {
         return this.sal;
     }
 
+    /**
+     * @param sal
+     */
     public void setSal(Float sal) {
         this.sal = sal;
     }
 
+    /**
+     * @return
+     */
     public Float getComm() {
         return this.comm;
     }
 
+    /**
+     * @param comm
+     */
     public void setComm(Float comm) {
         this.comm = comm;
     }
 
+    /**
+     * @return
+     */
     public short getDeptno() {
         return this.deptno;
     }
 
+    /**
+     * @param deptno
+     */
     public void setDeptno(short deptno) {
         this.deptno = deptno;
     }
 
+    /**
+     * @return
+     */
     public Department getDepartment() {
         return this.department;
     }
 
+    /**
+     * @param department
+     */
     public void setDepartment(Department department) {
         this.department = department;
     }
 
+    /**
+     * @return
+     */
     public Date getTstamp() {
         return this.tstamp;
     }
 
+    /**
+     * @param tstamp
+     */
     public void setTstamp(Date tstamp) {
         this.tstamp = tstamp;
     }

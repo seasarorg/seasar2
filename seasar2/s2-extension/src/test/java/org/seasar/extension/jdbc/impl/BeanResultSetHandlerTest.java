@@ -22,12 +22,15 @@ import java.sql.ResultSet;
 import org.seasar.extension.jdbc.ResultSetHandler;
 import org.seasar.extension.unit.S2TestCase;
 
+/**
+ * @author higa
+ * 
+ */
 public class BeanResultSetHandlerTest extends S2TestCase {
 
-    public BeanResultSetHandlerTest(String arg0) {
-        super(arg0);
-    }
-
+    /**
+     * @throws Exception
+     */
     public void testHandle() throws Exception {
         ResultSetHandler handler = new BeanResultSetHandler(Employee.class);
         String sql = "select * from emp where empno = 7788";
@@ -48,6 +51,9 @@ public class BeanResultSetHandlerTest extends S2TestCase {
         System.out.println(ret.getEmpno() + "," + ret.getEname());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testHandle2() throws Exception {
         ResultSetHandler handler = new BeanResultSetHandler(Employee.class);
         String sql = "select ename, job from emp where empno = 7788";
@@ -71,9 +77,4 @@ public class BeanResultSetHandlerTest extends S2TestCase {
     public void setUp() {
         include("j2ee.dicon");
     }
-
-    public static void main(String[] args) {
-        junit.textui.TestRunner.run(BeanResultSetHandlerTest.class);
-    }
-
 }

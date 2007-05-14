@@ -23,12 +23,15 @@ import java.util.List;
 import org.seasar.extension.jdbc.ResultSetHandler;
 import org.seasar.extension.unit.S2TestCase;
 
+/**
+ * @author higa
+ * 
+ */
 public class BeanListResultSetHandlerTest extends S2TestCase {
 
-    public BeanListResultSetHandlerTest(String arg0) {
-        super(arg0);
-    }
-
+    /**
+     * @throws Exception
+     */
     public void testHandle() throws Exception {
         ResultSetHandler handler = new BeanListResultSetHandler(Employee.class);
         String sql = "select * from emp";
@@ -55,9 +58,4 @@ public class BeanListResultSetHandlerTest extends S2TestCase {
     public void setUp() {
         include("j2ee.dicon");
     }
-
-    public static void main(String[] args) {
-        junit.textui.TestRunner.run(BeanListResultSetHandlerTest.class);
-    }
-
 }

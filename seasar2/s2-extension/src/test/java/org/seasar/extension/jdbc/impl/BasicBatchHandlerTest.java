@@ -24,8 +24,15 @@ import org.seasar.extension.unit.S2TestCase;
 import org.seasar.framework.exception.SQLRuntimeException;
 import org.seasar.framework.exception.SSQLException;
 
+/**
+ * @author higa
+ * 
+ */
 public class BasicBatchHandlerTest extends S2TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testExecuteTx() throws Exception {
         String sql = "update emp set ename = ?, comm = ? where empno = ?";
         BasicBatchHandler handler = new BasicBatchHandler(getDataSource(), sql,
@@ -48,6 +55,9 @@ public class BasicBatchHandlerTest extends S2TestCase {
         assertEquals("4", "ccc", rec.get("ename"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testExceptionByBrokenSqlTx() throws Exception {
         final String sql = "updat emp set ename = ?, comm = ? where empno = ?";
         BasicBatchHandler handler = new BasicBatchHandler(getDataSource(), sql,
@@ -64,6 +74,9 @@ public class BasicBatchHandlerTest extends S2TestCase {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public void testExceptionByWrongDataTypeTx() throws Exception {
         final String sql = "update emp set ename = ?, comm = ? where empno = ?";
         BasicBatchHandler handler = new BasicBatchHandler(getDataSource(), sql,

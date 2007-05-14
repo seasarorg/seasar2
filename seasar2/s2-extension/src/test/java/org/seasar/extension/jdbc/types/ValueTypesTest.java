@@ -19,8 +19,14 @@ import java.util.GregorianCalendar;
 
 import junit.framework.TestCase;
 
+/**
+ * 
+ */
 public class ValueTypesTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testGetValueTypes() throws Exception {
         assertEquals("1", ValueTypes.TIMESTAMP, ValueTypes
                 .getValueType(GregorianCalendar.class));

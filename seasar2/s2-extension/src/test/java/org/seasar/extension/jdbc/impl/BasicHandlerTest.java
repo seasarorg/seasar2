@@ -28,6 +28,9 @@ public class BasicHandlerTest extends S2TestCase {
         include("j2ee.dicon");
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetCompleteSql1() throws Exception {
         final String sql = "update emp set ename = ?, comm = ? where empno = ?";
         BasicHandler handler = new BasicHandler(getDataSource(), sql);
@@ -36,6 +39,9 @@ public class BasicHandlerTest extends S2TestCase {
                 handler.getCompleteSql(new Object[] { "foo", null, "bar" }));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetCompleteSql2() throws Exception {
         final String sql = "update emp set ename = ?, comm = '?' where empno = ?";
         BasicHandler handler = new BasicHandler(getDataSource(), sql);
@@ -44,6 +50,9 @@ public class BasicHandlerTest extends S2TestCase {
                 handler.getCompleteSql(new Object[] { "foo", "bar" }));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetCompleteSql3() throws Exception {
         final String sql = "update emp set ename = /* ? */, comm = ? where empno = ?/*?*/";
         BasicHandler handler = new BasicHandler(getDataSource(), sql);

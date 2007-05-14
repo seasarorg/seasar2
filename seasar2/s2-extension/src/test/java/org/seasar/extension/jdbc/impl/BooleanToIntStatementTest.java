@@ -17,12 +17,15 @@ package org.seasar.extension.jdbc.impl;
 
 import org.seasar.extension.unit.S2TestCase;
 
+/**
+ * @author higa
+ * 
+ */
 public class BooleanToIntStatementTest extends S2TestCase {
 
-    public BooleanToIntStatementTest(String arg0) {
-        super(arg0);
-    }
-
+    /**
+     * @throws Exception
+     */
     public void testBooleanToIntTx() throws Exception {
         String sql = "update dept set active = ? where deptno = 10";
         BasicUpdateHandler handler = new BasicUpdateHandler(getDataSource(),
@@ -40,9 +43,4 @@ public class BooleanToIntStatementTest extends S2TestCase {
     public void setUp() {
         include("j2ee.dicon");
     }
-
-    public static void main(String[] args) {
-        junit.textui.TestRunner.run(BooleanToIntStatementTest.class);
-    }
-
 }

@@ -50,6 +50,9 @@ import org.seasar.extension.jdbc.StatementFactory;
  */
 public class ConfigurableStatementFactoryTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testCunstructorWithNull() throws Exception {
         try {
             new ConfigurableStatementFactory(null);
@@ -58,6 +61,9 @@ public class ConfigurableStatementFactoryTest extends TestCase {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public void testCreatePreparedStatement() throws Exception {
         // ## Arrange ##
         final Connection mockConnection = new MockConnection();
@@ -82,6 +88,9 @@ public class ConfigurableStatementFactoryTest extends TestCase {
         assertSame(mockPreparedStatement, preparedStatement);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testCreateCallableStatement() throws Exception {
         // ## Arrange ##
         final Connection mockConnection = new MockConnection();
@@ -107,6 +116,9 @@ public class ConfigurableStatementFactoryTest extends TestCase {
         assertSame(mockCallableStatement, preparedStatement);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testConfigurePreparedStatement() throws Exception {
         // ## Arrange ##
         final int[] fetchSize = new int[1];
@@ -143,6 +155,9 @@ public class ConfigurableStatementFactoryTest extends TestCase {
         assertEquals(221, maxRows[0]);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testConfigureCallableStatement() throws Exception {
         // ## Arrange ##
         final int[] fetchSize = new int[1];

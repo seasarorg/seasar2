@@ -27,6 +27,9 @@ import org.seasar.extension.jdbc.impl.ResultSetWrapper;
  */
 public class CharacterTypeTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testGetValue() throws Exception {
         // ## Arrange ##
         CharacterType type = new CharacterType();
@@ -43,6 +46,9 @@ public class CharacterTypeTest extends TestCase {
         assertEquals(new Character('v'), value);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetValue_TooLongString() throws Exception {
         // ## Arrange ##
         CharacterType type = new CharacterType();
@@ -61,6 +67,9 @@ public class CharacterTypeTest extends TestCase {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetValue_TooShortString() throws Exception {
         // ## Arrange ##
         CharacterType type = new CharacterType();
@@ -77,6 +86,9 @@ public class CharacterTypeTest extends TestCase {
         assertEquals(null, value);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetValue_NullString() throws Exception {
         // ## Arrange ##
         CharacterType type = new CharacterType();

@@ -21,8 +21,15 @@ import org.seasar.extension.unit.S2TestCase;
 import org.seasar.framework.exception.SQLRuntimeException;
 import org.seasar.framework.exception.SSQLException;
 
+/**
+ * @author higa
+ *
+ */
 public class BasicUpdateHandlerTest extends S2TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testExecuteTx() throws Exception {
         String sql = "update emp set ename = ?, comm = ? where empno = ?";
         BasicUpdateHandler handler = new BasicUpdateHandler(getDataSource(),
@@ -32,6 +39,9 @@ public class BasicUpdateHandlerTest extends S2TestCase {
         assertEquals(1, ret);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testExecuteWithQuestionTx() throws Exception {
         String sql = "update emp set job = 'AA?A' where empno = ?";
         BasicUpdateHandler handler = new BasicUpdateHandler(getDataSource(),
@@ -40,6 +50,9 @@ public class BasicUpdateHandlerTest extends S2TestCase {
         assertEquals(1, ret);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testExecuteWithQuestion2Tx() throws Exception {
         String sql = "update emp set job = 'AA' where empno = ?";
         BasicUpdateHandler handler = new BasicUpdateHandler(getDataSource(),
@@ -48,6 +61,9 @@ public class BasicUpdateHandlerTest extends S2TestCase {
         assertEquals(1, ret);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testExecuteWithQuestion3Tx() throws Exception {
         String sql = "update emp set ename = ?, job = 'AA' where empno = ?";
         BasicUpdateHandler handler = new BasicUpdateHandler(getDataSource(),
@@ -56,6 +72,9 @@ public class BasicUpdateHandlerTest extends S2TestCase {
         assertEquals(1, ret);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testExceptionByBrokenSqlTx() throws Exception {
         String sql = "pdate emp set ename = ?, comm = ? where empno = ?";
         BasicUpdateHandler handler = new BasicUpdateHandler(getDataSource(),
@@ -70,6 +89,9 @@ public class BasicUpdateHandlerTest extends S2TestCase {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public void testExceptionByWrongDataTypeTx() throws Exception {
         final String sql = "update emp set comm = ?";
         BasicUpdateHandler handler = new BasicUpdateHandler(getDataSource(),

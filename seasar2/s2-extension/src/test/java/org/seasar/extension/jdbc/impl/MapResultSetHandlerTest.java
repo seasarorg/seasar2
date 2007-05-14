@@ -23,12 +23,15 @@ import java.util.Map;
 import org.seasar.extension.jdbc.ResultSetHandler;
 import org.seasar.extension.unit.S2TestCase;
 
+/**
+ * @author higa
+ * 
+ */
 public class MapResultSetHandlerTest extends S2TestCase {
 
-    public MapResultSetHandlerTest(String arg0) {
-        super(arg0);
-    }
-
+    /**
+     * @throws Exception
+     */
     public void testHandle() throws Exception {
         ResultSetHandler handler = new MapResultSetHandler();
         String sql = "select * from emp where empno = 7788";
@@ -52,9 +55,4 @@ public class MapResultSetHandlerTest extends S2TestCase {
     public void setUp() {
         include("j2ee.dicon");
     }
-
-    public static void main(String[] args) {
-        junit.textui.TestRunner.run(MapResultSetHandlerTest.class);
-    }
-
 }

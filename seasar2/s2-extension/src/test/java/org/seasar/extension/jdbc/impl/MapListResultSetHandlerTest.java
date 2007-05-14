@@ -23,12 +23,15 @@ import java.util.List;
 import org.seasar.extension.jdbc.ResultSetHandler;
 import org.seasar.extension.unit.S2TestCase;
 
+/**
+ * @author higa
+ * 
+ */
 public class MapListResultSetHandlerTest extends S2TestCase {
 
-    public MapListResultSetHandlerTest(String arg0) {
-        super(arg0);
-    }
-
+    /**
+     * @throws Exception
+     */
     public void testHandle() throws Exception {
         ResultSetHandler handler = new MapListResultSetHandler();
         String sql = "select * from emp";
@@ -54,9 +57,4 @@ public class MapListResultSetHandlerTest extends S2TestCase {
     public void setUp() {
         include("j2ee.dicon");
     }
-
-    public static void main(String[] args) {
-        junit.textui.TestRunner.run(MapListResultSetHandlerTest.class);
-    }
-
 }

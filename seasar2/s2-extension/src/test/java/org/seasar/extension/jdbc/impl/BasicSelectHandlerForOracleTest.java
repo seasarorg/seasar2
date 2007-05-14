@@ -17,15 +17,24 @@ package org.seasar.extension.jdbc.impl;
 
 import org.seasar.extension.unit.S2TestCase;
 
+/**
+ * @author higa
+ * 
+ */
 public class BasicSelectHandlerForOracleTest extends S2TestCase {
+    /**
+     * 
+     */
     public static final String WAVE_DASH = "\u301C";
 
+    /**
+     * 
+     */
     public static final String FULL_WIDTH_TILDE = "\uFF5E";
 
-    public BasicSelectHandlerForOracleTest(String arg0) {
-        super(arg0);
-    }
-
+    /**
+     * @throws Exception
+     */
     public void testExecuteTx() throws Exception {
         String sql = "insert into emp(empno, ename) values(99, ?)";
         BasicUpdateHandler handler = new BasicUpdateHandler(getDataSource(),
@@ -44,9 +53,4 @@ public class BasicSelectHandlerForOracleTest extends S2TestCase {
     public void setUp() {
         include("j2ee.dicon");
     }
-
-    public static void main(String[] args) {
-        junit.textui.TestRunner.run(BasicSelectHandlerForOracleTest.class);
-    }
-
 }

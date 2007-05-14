@@ -23,12 +23,18 @@ import java.util.Map;
 import org.seasar.extension.jdbc.ResultSetHandler;
 import org.seasar.extension.unit.S2TestCase;
 
+/**
+ *
+ */
 public class MapArrayResultSetHandlerTest extends S2TestCase {
 
     public void setUp() {
         include("jdbc.dicon");
     }
 
+    /**
+     * @throws Exception
+     */
     public void testHandle() throws Exception {
         ResultSetHandler handler = new MapArrayResultSetHandler();
         String sql = "select * from emp";

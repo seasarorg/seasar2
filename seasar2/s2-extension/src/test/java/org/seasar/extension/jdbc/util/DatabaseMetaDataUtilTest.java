@@ -28,8 +28,15 @@ import javax.sql.DataSource;
 import org.seasar.extension.unit.S2TestCase;
 import org.seasar.framework.exception.ClassNotFoundRuntimeException;
 
+/**
+ * @author higa
+ *
+ */
 public class DatabaseMetaDataUtilTest extends S2TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testGetColumnList() throws Exception {
         DatabaseMetaData dbMetaData = getDatabaseMetaData();
         Map columnMap = DatabaseMetaDataUtil.getColumnMap(dbMetaData, "emp");
@@ -37,18 +44,27 @@ public class DatabaseMetaDataUtilTest extends S2TestCase {
         assertTrue("1", columnMap.size() > 0);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testSpike() throws Exception {
         DatabaseMetaData dbMetaData = getDatabaseMetaData();
         System.out.println(dbMetaData.getDatabaseProductName());
         System.out.println(dbMetaData.getDatabaseProductVersion());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetColumnListForNotExistTable() throws Exception {
         DatabaseMetaData dbMetaData = getDatabaseMetaData();
         Map columnMap = DatabaseMetaDataUtil.getColumnMap(dbMetaData, "_emp_");
         assertEquals("1", 0, columnMap.size());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetColumnListForSchema() throws Exception {
         DatabaseMetaData dbMetaData = getDatabaseMetaData();
         Map columnMap = DatabaseMetaDataUtil.getColumnMap(dbMetaData, "SA.emp");
@@ -56,6 +72,9 @@ public class DatabaseMetaDataUtilTest extends S2TestCase {
         assertTrue("1", columnMap.size() > 0);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetPrimaryKeyList() throws Exception {
         DatabaseMetaData dbMetaData = getDatabaseMetaData();
         Set primaryKeySet = DatabaseMetaDataUtil.getPrimaryKeySet(dbMetaData,
@@ -65,6 +84,9 @@ public class DatabaseMetaDataUtilTest extends S2TestCase {
         System.out.println(dbMetaData.getDatabaseProductName());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testSupportsGetGeneratedKeys() throws Exception {
         DatabaseMetaData dbMetaData = getDatabaseMetaData();
         assertFalse(DatabaseMetaDataUtil.supportsGetGeneratedKeys(dbMetaData));
@@ -74,6 +96,9 @@ public class DatabaseMetaDataUtilTest extends S2TestCase {
         include("DatabaseMetaDataUtilTest.dicon");
     }
 
+    /**
+     *
+     */
     public static class SimpleDataSource implements DataSource {
 
         private String driverClassName_;
@@ -112,18 +137,30 @@ public class DatabaseMetaDataUtilTest extends S2TestCase {
             return 0;
         }
 
+        /**
+         * @param driverClassName
+         */
         public void setDriverClassName(String driverClassName) {
             driverClassName_ = driverClassName;
         }
 
+        /**
+         * @param password
+         */
         public void setPassword(String password) {
             password_ = password;
         }
 
+        /**
+         * @param url
+         */
         public void setURL(String url) {
             url_ = url;
         }
 
+        /**
+         * @param user
+         */
         public void setUser(String user) {
             user_ = user;
         }

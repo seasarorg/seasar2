@@ -21,8 +21,15 @@ import org.seasar.extension.unit.S2TestCase;
 import org.seasar.framework.exception.SQLRuntimeException;
 import org.seasar.framework.exception.SSQLException;
 
+/**
+ * @author higa
+ *
+ */
 public class BasicSelectHandlerTest extends S2TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testExecute() throws Exception {
         String sql = "select * from emp where empno = ?";
         BasicSelectHandler handler = new BasicSelectHandler(getDataSource(),
@@ -32,6 +39,9 @@ public class BasicSelectHandlerTest extends S2TestCase {
         assertNotNull("1", ret);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testExceptionByBrokenSql() throws Exception {
         final String sql = "selec * from emp";
         BasicSelectHandler handler = new BasicSelectHandler(getDataSource(),
@@ -46,6 +56,9 @@ public class BasicSelectHandlerTest extends S2TestCase {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public void testExceptionByInvalidTableName() throws Exception {
         final String sql = "select * from UNKNOWN";
         BasicSelectHandler handler = new BasicSelectHandler(getDataSource(),
