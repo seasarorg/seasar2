@@ -36,6 +36,9 @@ public class TransactionSynchronizationRegistryImplTest extends S2TestCase {
         include("j2ee.dicon");
     }
 
+    /**
+     * 
+     */
     public void testPutResourceForException() {
         try {
             tsr.putResource("hoge", "foo");
@@ -44,6 +47,9 @@ public class TransactionSynchronizationRegistryImplTest extends S2TestCase {
         }
     }
 
+    /**
+     * 
+     */
     public void testPutResourceForExceptionTx() {
         tsr.putResource("hoge", "foo");
         try {
@@ -53,6 +59,9 @@ public class TransactionSynchronizationRegistryImplTest extends S2TestCase {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetResourceForException() throws Exception {
         try {
             tsr.getResource("hoge");
@@ -61,12 +70,18 @@ public class TransactionSynchronizationRegistryImplTest extends S2TestCase {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetResourceTx() throws Exception {
         assertNull(tsr.getResource("hoge"));
         tsr.putResource("hoge", "foo");
         assertEquals("foo", tsr.getResource("hoge"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testSetRollbackOnlyForException() throws Exception {
         try {
             tsr.setRollbackOnly();
@@ -75,11 +90,17 @@ public class TransactionSynchronizationRegistryImplTest extends S2TestCase {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public void testSetRollbackOnlyTx() throws Exception {
         tsr.setRollbackOnly();
         assertEquals(Status.STATUS_MARKED_ROLLBACK, tsr.getTransactionStatus());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetRollbackOnlyForException() throws Exception {
         try {
             tsr.getRollbackOnly();
@@ -88,20 +109,32 @@ public class TransactionSynchronizationRegistryImplTest extends S2TestCase {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetRollbackOnlyTx() throws Exception {
         assertFalse(tsr.getRollbackOnly());
         tsr.setRollbackOnly();
         assertTrue(tsr.getRollbackOnly());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetTransactionKeyForException() throws Exception {
         assertNull(tsr.getTransactionKey());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetTransactionKeyTx() throws Exception {
         assertNotNull(tsr.getTransactionKey());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testRegisterInterposedSynchronizationForException()
             throws Exception {
         try {
@@ -117,6 +150,9 @@ public class TransactionSynchronizationRegistryImplTest extends S2TestCase {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public void testRegisterInterposedSynchronization() throws Exception {
         Sync.result = new StringBuffer();
         tm.begin();
@@ -135,6 +171,10 @@ public class TransactionSynchronizationRegistryImplTest extends S2TestCase {
 
         private char after;
 
+        /**
+         * @param before
+         * @param after
+         */
         public Sync(char before, char after) {
             this.before = before;
             this.after = after;

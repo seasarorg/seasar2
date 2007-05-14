@@ -15,16 +15,17 @@
  */
 package org.seasar.extension.jta.xa;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
+/**
+ * @author higa
+ * 
+ */
 public class XidImplTest extends TestCase {
 
-    public XidImplTest(String name) {
-        super(name);
-    }
-
+    /**
+     * @throws Exception
+     */
     public void testEquals() throws Exception {
         XidImpl xid = new XidImpl();
         assertEquals("1", xid, xid);
@@ -39,23 +40,11 @@ public class XidImplTest extends TestCase {
         System.out.println(xid3);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testToString() throws Exception {
         XidImpl xid = new XidImpl();
         System.out.println(xid);
-    }
-
-    protected void setUp() throws Exception {
-    }
-
-    protected void tearDown() throws Exception {
-    }
-
-    public static Test suite() {
-        return new TestSuite(XidImplTest.class);
-    }
-
-    public static void main(String[] args) {
-        junit.textui.TestRunner
-                .main(new String[] { XidImplTest.class.getName() });
     }
 }

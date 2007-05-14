@@ -19,16 +19,17 @@ import javax.transaction.xa.XAException;
 import javax.transaction.xa.XAResource;
 import javax.transaction.xa.Xid;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
+/**
+ * @author higa
+ * 
+ */
 public class DefaultXAResourceTest extends TestCase {
 
-    public DefaultXAResourceTest(String name) {
-        super(name);
-    }
-
+    /**
+     * @throws Exception
+     */
     public void testStart() throws Exception {
         DefaultXAResource xaRes = new DefaultXAResource();
         Xid xid = new XidImpl();
@@ -73,6 +74,9 @@ public class DefaultXAResourceTest extends TestCase {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public void testEnd() throws Exception {
         DefaultXAResource xaRes = new DefaultXAResource();
         Xid xid = new XidImpl();
@@ -114,6 +118,9 @@ public class DefaultXAResourceTest extends TestCase {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public void testPrepare() throws Exception {
         DefaultXAResource xaRes = new DefaultXAResource();
         Xid xid = new XidImpl();
@@ -143,6 +150,9 @@ public class DefaultXAResourceTest extends TestCase {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public void testCommit() throws Exception {
         DefaultXAResource xaRes = new DefaultXAResource();
         Xid xid = new XidImpl();
@@ -189,6 +199,9 @@ public class DefaultXAResourceTest extends TestCase {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public void testRollback() throws Exception {
         DefaultXAResource xaRes = new DefaultXAResource();
         Xid xid = new XidImpl();
@@ -224,6 +237,9 @@ public class DefaultXAResourceTest extends TestCase {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public void testForget() throws Exception {
         DefaultXAResource xaRes = new DefaultXAResource();
         Xid xid = new XidImpl();
@@ -239,20 +255,5 @@ public class DefaultXAResourceTest extends TestCase {
         } catch (XAException ex) {
             System.out.println(ex);
         }
-    }
-
-    protected void setUp() throws Exception {
-    }
-
-    protected void tearDown() throws Exception {
-    }
-
-    public static Test suite() {
-        return new TestSuite(DefaultXAResourceTest.class);
-    }
-
-    public static void main(String[] args) {
-        junit.textui.TestRunner.main(new String[] { DefaultXAResourceTest.class
-                .getName() });
     }
 }

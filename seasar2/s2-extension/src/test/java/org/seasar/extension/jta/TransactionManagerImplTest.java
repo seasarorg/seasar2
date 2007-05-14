@@ -19,18 +19,19 @@ import javax.transaction.Status;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
+/**
+ * @author higa
+ * 
+ */
 public class TransactionManagerImplTest extends TestCase {
 
     private TransactionManager tm_;
 
-    public TransactionManagerImplTest(String name) {
-        super(name);
-    }
-
+    /**
+     * @throws Exception
+     */
     public void testResume() throws Exception {
         tm_.begin();
         Transaction tx = tm_.suspend();
@@ -40,12 +41,18 @@ public class TransactionManagerImplTest extends TestCase {
         tm_.commit();
     }
 
+    /**
+     * @throws Exception
+     */
     public void testCommit() throws Exception {
         tm_.begin();
         tm_.commit();
         assertEquals("1", Status.STATUS_NO_TRANSACTION, tm_.getStatus());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testRollback() throws Exception {
         tm_.begin();
         tm_.rollback();
@@ -54,17 +61,5 @@ public class TransactionManagerImplTest extends TestCase {
 
     protected void setUp() throws Exception {
         tm_ = new TransactionManagerImpl();
-    }
-
-    protected void tearDown() throws Exception {
-    }
-
-    public static Test suite() {
-        return new TestSuite(TransactionManagerImplTest.class);
-    }
-
-    public static void main(String[] args) {
-        junit.textui.TestRunner
-                .main(new String[] { TransactionManagerImplTest.class.getName() });
     }
 }
