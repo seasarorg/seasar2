@@ -19,10 +19,17 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 
+/**
+ * @author higa
+ * 
+ */
 public class MockServletContextImplTest extends TestCase {
 
     private MockServletContextImpl context_;
 
+    /**
+     * @throws Exception
+     */
     public void testCreateRequest() throws Exception {
         MockHttpServletRequest request = context_.createRequest("/hello.html");
         assertEquals("1", "/s2jsf-example", request.getContextPath());
@@ -32,6 +39,9 @@ public class MockServletContextImplTest extends TestCase {
         assertEquals("3", "aaa=hoge", request.getQueryString());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetResourcePaths() throws Exception {
         Set paths = context_.getResourcePaths("/lib");
         System.out.println(paths);

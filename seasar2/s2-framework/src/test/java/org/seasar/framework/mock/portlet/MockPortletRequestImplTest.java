@@ -17,12 +17,18 @@ package org.seasar.framework.mock.portlet;
 
 import junit.framework.TestCase;
 
+/**
+ *
+ */
 public class MockPortletRequestImplTest extends TestCase {
 
     private MockPortletContextImpl context_;
 
     private MockPortletRequestImpl request_;
 
+    /**
+     * @throws Exception
+     */
     public void testAddParameter() throws Exception {
         request_.addParameter("aaa", "111");
         String[] values = request_.getParameterValues("aaa");

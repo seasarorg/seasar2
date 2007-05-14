@@ -17,12 +17,19 @@ package org.seasar.framework.mock.servlet;
 
 import junit.framework.TestCase;
 
+/**
+ * @author higa
+ *
+ */
 public class MockHttpServletRequestImplTest extends TestCase {
 
     private MockServletContextImpl context_;
 
     private MockHttpServletRequestImpl request_;
 
+    /**
+     * @throws Exception
+     */
     public void testAddParameter() throws Exception {
         request_.addParameter("aaa", "111");
         String[] values = request_.getParameterValues("aaa");

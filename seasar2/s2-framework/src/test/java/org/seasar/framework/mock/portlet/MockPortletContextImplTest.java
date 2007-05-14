@@ -19,16 +19,25 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 
+/**
+ *
+ */
 public class MockPortletContextImplTest extends TestCase {
 
     private MockPortletContextImpl context_;
 
+    /**
+     * @throws Exception
+     */
     public void testCreateRequest() throws Exception {
         MockPortletRequestImpl request = context_
                 .createRequest();
         assertEquals("1", "/s2jsf-example", request.getContextPath());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetResourcePaths() throws Exception {
         Set paths = context_.getResourcePaths("/lib");
         System.out.println(paths);
