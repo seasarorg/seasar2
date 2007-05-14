@@ -23,5 +23,8 @@ import java.util.List;
  */
 public interface HogeDao {
 
+    /**
+     * @return
+     */
     public List find();
 }

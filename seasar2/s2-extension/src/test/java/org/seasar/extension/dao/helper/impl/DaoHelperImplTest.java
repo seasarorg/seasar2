@@ -31,6 +31,9 @@ import org.seasar.framework.util.ClassUtil;
  */
 public class DaoHelperImplTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testGetDaoInterface() throws Exception {
         DaoHelperImpl helper = new DaoHelperImpl();
         helper.setNamingConvention(new NamingConventionImpl());
@@ -38,6 +41,9 @@ public class DaoHelperImplTest extends TestCase {
         assertEquals(HogeDao.class, helper.getDaoInterface(HogeDaoImpl.class));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetDataSourceName() throws Exception {
         DaoHelperImpl helper = new DaoHelperImpl();
         helper.setNamingConvention(new NamingConventionImpl());
@@ -45,6 +51,9 @@ public class DaoHelperImplTest extends TestCase {
         assertEquals("aaa", helper.getDataSourceName(Hoge2Dao.class));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetSqlBySqlFile() throws Exception {
         DaoHelperImpl helper = new DaoHelperImpl();
         helper.setNamingConvention(new NamingConventionImpl());
