@@ -29,10 +29,16 @@ public class CalendarDto {
         a.set(Calendar.DAY_OF_MONTH, 22);
     }
 
+    /**
+     * @return
+     */
     public Calendar getA() {
         return a;
     }
 
+    /**
+     * @param a
+     */
     public void setA(Calendar a) {
         this.a = a;
     }

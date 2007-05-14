@@ -41,6 +41,9 @@ public class DxoInterceptorTest extends S2TestCase {
         include(getClass().getName().replace('.', '/') + ".dicon");
     }
 
+    /**
+     * @throws Exception
+     */
     public void testBeanScalar1() throws Exception {
         Hoge src = new Hoge(100, "Hoge", new BigDecimal("1000"));
 
@@ -50,6 +53,9 @@ public class DxoInterceptorTest extends S2TestCase {
         assertSame(src, dest);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testBeanScalar2() throws Exception {
         Hoge src = new Hoge(100, "Hoge", new BigDecimal("1000"));
 
@@ -66,6 +72,9 @@ public class DxoInterceptorTest extends S2TestCase {
         assertEquals("hoge", dest.getHoge());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testBeanScalar3() throws Exception {
         HogeHoge src = new HogeHoge("100", "Hoge".toCharArray(), 1000);
 
@@ -77,6 +86,9 @@ public class DxoInterceptorTest extends S2TestCase {
         assertEquals(new BigDecimal("1000"), dest.getBaz());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testBeanScalar4() throws Exception {
         HogeHoge src = new HogeHoge("100", "Hoge".toCharArray(), 1000);
 
@@ -86,6 +98,9 @@ public class DxoInterceptorTest extends S2TestCase {
         assertSame(src, dest);
     }
 
+    /**
+     * 
+     */
     public void testBeanArrayToArray() {
         Hoge[] src = new Hoge[2];
         src[0] = new Hoge(100, "Hoge", new BigDecimal("1000"));
@@ -117,6 +132,9 @@ public class DxoInterceptorTest extends S2TestCase {
         assertEquals(2000, dest[1].getBaz());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testDateFormat() throws Exception {
         Employee emp = new Employee();
         emp.setHiredate(new Date(0));
@@ -131,6 +149,9 @@ public class DxoInterceptorTest extends S2TestCase {
         assertEquals("1970/01/02", dest.getCal());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testNestedProperty() throws Exception {
         Employee emp = new Employee();
         emp.setEname("Foo");
@@ -157,6 +178,9 @@ public class DxoInterceptorTest extends S2TestCase {
         assertEquals("Baz", dest.getMname());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testEmptyString() throws Exception {
         EmpDto dto = new EmpDto();
         dto.setSal(null);
@@ -169,6 +193,9 @@ public class DxoInterceptorTest extends S2TestCase {
         assertNull(dest.getComm());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testExcludeNull() throws Exception {
         Employee emp = new Employee();
         Department dept = new Department();
@@ -192,6 +219,9 @@ public class DxoInterceptorTest extends S2TestCase {
         assertEquals("hogehoge", dest.getDname());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testFromMap_Scalar() throws Exception {
         Map src = new HashMap();
         src.put("foo", new Integer(100));
@@ -206,6 +236,9 @@ public class DxoInterceptorTest extends S2TestCase {
         assertEquals(new BigDecimal("1000"), dest.getBaz());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testFromMap_Scalar2() throws Exception {
         Map src = new CaseInsensitiveMap();
         src.put("barbar", "Hoge");
@@ -216,6 +249,9 @@ public class DxoInterceptorTest extends S2TestCase {
         assertEquals("Hoge", dest.getBarBar());
     }
 
+    /**
+     * 
+     */
     public void testFromMap_ArrayToArray() {
         Map[] src = new Map[2];
         src[0] = new HashMap();
@@ -243,6 +279,9 @@ public class DxoInterceptorTest extends S2TestCase {
         assertEquals(new BigDecimal("2000"), dest[1].getBaz());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testToMap_Scalar() throws Exception {
         Hoge src = new Hoge(100, "Hoge", new BigDecimal("1000"));
 
@@ -256,6 +295,9 @@ public class DxoInterceptorTest extends S2TestCase {
         assertEquals("100Hoge1000", dest.get("four"));
     }
 
+    /**
+     * 
+     */
     public void testToMap_ArrayToArray() {
         Hoge[] src = new Hoge[2];
         src[0] = new Hoge(100, "Hoge", new BigDecimal("1000"));
@@ -279,43 +321,115 @@ public class DxoInterceptorTest extends S2TestCase {
         assertEquals("200HogeHoge2000", dest[1].get("four"));
     }
 
+    /**
+     *
+     */
     public interface BeanDxo {
+        /**
+         * 
+         */
         String DATE_PATTERN = "yyyy/MM/dd";
 
+        /**
+         * @param src
+         * @return
+         */
         Hoge convert1(Hoge src);
 
+        /**
+         * @param src
+         * @return
+         */
         HogeHoge convert2(Hoge src);
 
+        /**
+         * @param src
+         * @return
+         */
         Hoge convert3(HogeHoge src);
 
+        /**
+         * @param src
+         * @return
+         */
         HogeHoge convert4(HogeHoge src);
 
+        /**
+         * @param src
+         * @return
+         */
         HogeHoge[] convert(Hoge[] src);
 
+        /**
+         * 
+         */
         String convert_Employee_CONVERSION_RULE = "'mname' : mgr != null ? mgr.ename : null";
 
+        /**
+         * @param emp
+         * @return
+         */
         EmpDto convert(Employee emp);
 
+        /**
+         * @param empDto
+         * @return
+         */
         Employee convert(EmpDto empDto);
 
+        /**
+         * 
+         */
         String convertExcludeNull_EXCLUDE_NULL = null;
 
+        /**
+         * @param employee
+         * @param empDto
+         */
         void convertExcludeNull(Employee employee, EmpDto empDto);
     }
 
+    /**
+     *
+     */
     public interface FromMapDxo {
+        /**
+         * @param src
+         * @return
+         */
         Hoge convert(Map src);
 
+        /**
+         * @param src
+         * @return
+         */
         Hoge[] convert(Map[] src);
     }
 
+    /**
+     *
+     */
     public interface ToMapDxo {
+        /**
+         * 
+         */
         String convert_Hoge_CONVERSION_RULE = "'one' : foo, 'two' : bar, 'three' : baz, 'four' : foo+bar+baz";
 
+        /**
+         * 
+         */
         String convert_Hoge$_CONVERSION_RULE = "'one' : foo, 'two' : bar, 'three' : baz, 'four' : foo+bar+baz";
 
+        /**
+         * @param src
+         * @return
+         */
         Map convert(Hoge src);
 
+        /**
+         * @param src
+         * @return
+         */
         Map[] convert(Hoge[] src);
     }
 

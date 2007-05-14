@@ -22,6 +22,12 @@ import java.util.Date;
  * @author Satsohi Kimura
  */
 public class DateUtil {
+    /**
+     * @param year
+     * @param month
+     * @param dayOfMonth
+     * @return
+     */
     public static Date newDate(int year, int month, int dayOfMonth) {
         Calendar calendar = Calendar.getInstance();
         calendar.clear();

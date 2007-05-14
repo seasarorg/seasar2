@@ -32,6 +32,9 @@ public class BeanToBeanDxoCommandBuilderTest extends S2FrameworkTestCase {
         include("dxo.dicon");
     }
 
+    /**
+     * @throws Exception
+     */
     public void testToScalar() throws Exception {
         assertNotNull(builder.createDxoCommand(ToScalarDxo.class,
                 ToScalarDxo.class.getMethod("convert",
@@ -42,6 +45,9 @@ public class BeanToBeanDxoCommandBuilderTest extends S2FrameworkTestCase {
                         new Class[] { Object[].class })));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testToArray() throws Exception {
         assertNotNull(builder.createDxoCommand(ToArrayDxo.class,
                 ToArrayDxo.class.getMethod("convert",
@@ -54,6 +60,9 @@ public class BeanToBeanDxoCommandBuilderTest extends S2FrameworkTestCase {
                 .getMethod("convert", new Class[] { Object.class })));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testToList() throws Exception {
         assertNull(builder.createDxoCommand(ToListDxo.class, ToListDxo.class
                 .getMethod("convert", new Class[] { Object[].class })));
@@ -63,25 +72,66 @@ public class BeanToBeanDxoCommandBuilderTest extends S2FrameworkTestCase {
                 .getMethod("convert", new Class[] { Object.class })));
     }
 
+    /**
+     *
+     */
     public interface ToScalarDxo {
+        /**
+         * @param src
+         * @return
+         */
         String convert(Object src); // applicable
 
+        /**
+         * @param src
+         * @return
+         */
         Object convert(Object[] src); // not applicable
     }
 
+    /**
+     *
+     */
     public interface ToArrayDxo {
+        /**
+         * @param src
+         * @return
+         */
         String[] convert(Object[] src); // applicable
 
+        /**
+         * @param src
+         * @return
+         */
         String[] convert(List src); // applicable
 
+        /**
+         * @param src
+         * @return
+         */
         String[] convert(Object src); // not applicable
     }
 
+    /**
+     *
+     */
     public interface ToListDxo {
+        /**
+         * @param src
+         * @return
+         */
         List convert(Object[] src); // not applicable
 
+        /**
+         * @param src
+         * @return
+         */
         List convert(List src); // not applicable
 
+        /**
+         * @param src
+         * @return
+         */
         List convert(Object src); // not applicable
     }
 }

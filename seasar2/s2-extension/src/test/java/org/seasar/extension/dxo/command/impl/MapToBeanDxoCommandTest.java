@@ -38,6 +38,9 @@ public class MapToBeanDxoCommandTest extends S2FrameworkTestCase {
         include("dxo.dicon");
     }
 
+    /**
+     * @throws Exception
+     */
     public void testScalar1() throws Exception {
         DxoCommand command = builder.createDxoCommand(ToScalarDxo.class,
                 ToScalarDxo.class.getMethod("convert",
@@ -55,6 +58,9 @@ public class MapToBeanDxoCommandTest extends S2FrameworkTestCase {
         assertEquals(new BigDecimal("1000"), dest.getBaz());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testScalar2() throws Exception {
         DxoCommand command = builder.createDxoCommand(ToScalarDxo.class,
                 ToScalarDxo.class.getMethod("convert", new Class[] { Map.class,
@@ -73,6 +79,9 @@ public class MapToBeanDxoCommandTest extends S2FrameworkTestCase {
         assertEquals(new BigDecimal("1000"), dest.getBaz());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testWithRule() throws Exception {
         DxoCommand command = builder.createDxoCommand(ToScalarDxo.class,
                 ToScalarDxo.class.getMethod("convertWithRule",
@@ -94,6 +103,9 @@ public class MapToBeanDxoCommandTest extends S2FrameworkTestCase {
         assertEquals(100, dest.getBaz());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testArrayToArray1() throws Exception {
         DxoCommand command = builder.createDxoCommand(ToArrayDxo.class,
                 ToArrayDxo.class.getMethod("convert",
@@ -119,6 +131,9 @@ public class MapToBeanDxoCommandTest extends S2FrameworkTestCase {
         assertEquals(new BigDecimal("2000"), dest[1].getBaz());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testArrayToArray2() throws Exception {
         DxoCommand command = builder.createDxoCommand(ToArrayDxo.class,
                 ToArrayDxo.class.getMethod("convert", new Class[] {
@@ -145,19 +160,48 @@ public class MapToBeanDxoCommandTest extends S2FrameworkTestCase {
         assertEquals(new BigDecimal("2000"), dest[1].getBaz());
     }
 
+    /**
+     *
+     */
     public interface ToScalarDxo {
+        /**
+         * @param src
+         * @return
+         */
         Hoge convert(Map src);
 
+        /**
+         * @param src
+         * @param dest
+         */
         void convert(Map src, Hoge dest);
 
+        /**
+         * 
+         */
         public static final String convertWithRule_CONVERSION_RULE = "'foo' : baz, 'baz' : foo";
 
+        /**
+         * @param src
+         * @return
+         */
         HogeHoge convertWithRule(Map src);
     }
 
+    /**
+     *
+     */
     public interface ToArrayDxo {
+        /**
+         * @param src
+         * @return
+         */
         Hoge[] convert(Map[] src);
 
+        /**
+         * @param src
+         * @param dest
+         */
         void convert(Map[] src, Hoge[] dest);
     }
 

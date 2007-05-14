@@ -36,6 +36,9 @@ public class BeanToBeanDxoCommandTest extends S2FrameworkTestCase {
         include("dxo.dicon");
     }
 
+    /**
+     * @throws Exception
+     */
     public void testScalar1() throws Exception {
         DxoCommand command = builder.createDxoCommand(ToScalarDxo.class,
                 ToScalarDxo.class.getMethod("convert",
@@ -55,6 +58,9 @@ public class BeanToBeanDxoCommandTest extends S2FrameworkTestCase {
         assertEquals("hoge", dest.getHoge());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testScalar2() throws Exception {
         DxoCommand command = builder.createDxoCommand(ToScalarDxo.class,
                 ToScalarDxo.class.getMethod("convert", new Class[] {
@@ -75,6 +81,9 @@ public class BeanToBeanDxoCommandTest extends S2FrameworkTestCase {
         assertEquals("HogeHoge", dest.getHoge());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testWithRule() throws Exception {
         DxoCommand command = builder.createDxoCommand(ToScalarDxo.class,
                 ToScalarDxo.class.getMethod("convertWithRule",
@@ -93,6 +102,9 @@ public class BeanToBeanDxoCommandTest extends S2FrameworkTestCase {
         assertEquals(100, dest.getBaz());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testArrayToArray1() throws Exception {
         DxoCommand command = builder.createDxoCommand(ToScalarDxo.class,
                 ToArrayDxo.class.getMethod("convert",
@@ -131,6 +143,9 @@ public class BeanToBeanDxoCommandTest extends S2FrameworkTestCase {
         assertEquals(2000, hogeHoge.getBaz());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testArrayToArray2() throws Exception {
         DxoCommand command = builder.createDxoCommand(ToScalarDxo.class,
                 ToArrayDxo.class.getMethod("convert", new Class[] {
@@ -170,19 +185,48 @@ public class BeanToBeanDxoCommandTest extends S2FrameworkTestCase {
         assertEquals(2000, hogeHoge.getBaz());
     }
 
+    /**
+     *
+     */
     public interface ToScalarDxo {
+        /**
+         * @param src
+         * @return
+         */
         HogeHoge convert(Hoge src);
 
+        /**
+         * @param src
+         * @param dest
+         */
         void convert(Hoge src, HogeHoge dest);
 
+        /**
+         * 
+         */
         public static final String convertWithRule_CONVERSION_RULE = "'foo' : baz, 'baz' : foo";
 
+        /**
+         * @param src
+         * @return
+         */
         HogeHoge convertWithRule(Hoge src);
     }
 
+    /**
+     *
+     */
     public interface ToArrayDxo {
+        /**
+         * @param src
+         * @return
+         */
         HogeHoge[] convert(Hoge[] src);
 
+        /**
+         * @param src
+         * @param dest
+         */
         void convert(Hoge[] src, HogeHoge[] dest);
     }
 }

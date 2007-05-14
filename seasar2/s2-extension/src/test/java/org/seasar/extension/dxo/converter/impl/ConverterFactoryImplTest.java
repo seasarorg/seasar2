@@ -35,12 +35,18 @@ public class ConverterFactoryImplTest extends S2TestCase {
         include("dxo.dicon");
     }
 
+    /**
+     * 
+     */
     public void testBoolean() {
         Converter converter = factory.getConverter(Object.class, boolean.class);
         assertEquals(BooleanConverter.class.getName(), converter.getClass()
                 .getName());
     }
 
+    /**
+     * 
+     */
     public void testNumber() {
         Converter converter = factory.getConverter(Object.class, byte.class);
         assertEquals(ByteConverter.class.getName(), converter.getClass()
@@ -75,6 +81,9 @@ public class ConverterFactoryImplTest extends S2TestCase {
                 .getName());
     }
 
+    /**
+     * 
+     */
     public void testString() {
         Converter converter = factory.getConverter(Object.class, char.class);
         assertEquals(CharacterConverter.class.getName(), converter.getClass()
@@ -85,6 +94,9 @@ public class ConverterFactoryImplTest extends S2TestCase {
                 .getName());
     }
 
+    /**
+     * 
+     */
     public void testWrapper() {
         Converter converter = factory.getConverter(Object.class, Byte.class);
         assertEquals(ByteConverter.class.getName(), converter.getClass()
@@ -119,6 +131,9 @@ public class ConverterFactoryImplTest extends S2TestCase {
                 .getName());
     }
 
+    /**
+     * 
+     */
     public void testArray() {
         Converter converter = factory.getConverter(Object.class, char[].class);
         assertEquals(CharArrayConverter.class.getName(), converter.getClass()
@@ -133,6 +148,9 @@ public class ConverterFactoryImplTest extends S2TestCase {
                 .getName());
     }
 
+    /**
+     * 
+     */
     public void testCollection() {
         Converter converter = factory.getConverter(Object.class, List.class);
         assertEquals(ListConverter.class.getName(), converter.getClass()
@@ -143,6 +161,9 @@ public class ConverterFactoryImplTest extends S2TestCase {
                 .getName());
     }
 
+    /**
+     * 
+     */
     public void testDispose() {
         Converter converter = factory.getConverter(Object.class, String.class);
         assertEquals(StringConverter.class.getName(), converter.getClass()

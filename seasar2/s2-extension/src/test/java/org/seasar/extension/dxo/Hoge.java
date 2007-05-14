@@ -17,6 +17,9 @@ package org.seasar.extension.dxo;
 
 import java.math.BigDecimal;
 
+/**
+ *
+ */
 public class Hoge {
     private int foo;
 
@@ -26,35 +29,61 @@ public class Hoge {
 
     private BigDecimal baz;
 
+    /**
+     * 
+     */
     public Hoge() {
     }
 
+    /**
+     * @param foo
+     * @param bar
+     * @param baz
+     */
     public Hoge(int foo, String bar, BigDecimal baz) {
         this.foo = foo;
         this.bar = bar;
         this.baz = baz;
     }
 
+    /**
+     * @return
+     */
     public String getBar() {
         return bar;
     }
 
+    /**
+     * @param bar
+     */
     public void setBar(String bar) {
         this.bar = bar;
     }
 
+    /**
+     * @return
+     */
     public BigDecimal getBaz() {
         return baz;
     }
 
+    /**
+     * @param baz
+     */
     public void setBaz(BigDecimal baz) {
         this.baz = baz;
     }
 
+    /**
+     * @return
+     */
     public int getFoo() {
         return foo;
     }
 
+    /**
+     * @param foo
+     */
     public void setFoo(int foo) {
         this.foo = foo;
     }

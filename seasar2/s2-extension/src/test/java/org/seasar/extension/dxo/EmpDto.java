@@ -37,66 +37,114 @@ public class EmpDto {
 
     String comm;
 
+    /**
+     * @return
+     */
     public String getEname() {
         return ename;
     }
 
+    /**
+     * @param ename
+     */
     public void setEname(String ename) {
         this.ename = ename;
     }
 
+    /**
+     * @return
+     */
     public String getJob() {
         return job;
     }
 
+    /**
+     * @param job
+     */
     public void setJob(String job) {
         this.job = job;
     }
 
+    /**
+     * @return
+     */
     public String getDname() {
         return dname;
     }
 
+    /**
+     * @param dname
+     */
     public void setDname(String dname) {
         this.dname = dname;
     }
 
+    /**
+     * @return
+     */
     public String getMname() {
         return mname;
     }
 
+    /**
+     * @param mname
+     */
     public void setMname(String mname) {
         this.mname = mname;
     }
 
+    /**
+     * @return
+     */
     public String getHiredate() {
         return hiredate;
     }
 
+    /**
+     * @param hiredate
+     */
     public void setHiredate(String hiredate) {
         this.hiredate = hiredate;
     }
 
+    /**
+     * @return
+     */
     public String getCal() {
         return cal;
     }
 
+    /**
+     * @param cal
+     */
     public void setCal(String cal) {
         this.cal = cal;
     }
 
+    /**
+     * @return
+     */
     public String getSal() {
         return sal;
     }
 
+    /**
+     * @param sal
+     */
     public void setSal(String sal) {
         this.sal = sal;
     }
 
+    /**
+     * @return
+     */
     public String getComm() {
         return comm;
     }
 
+    /**
+     * @param comm
+     */
     public void setComm(String comm) {
         this.comm = comm;
     }

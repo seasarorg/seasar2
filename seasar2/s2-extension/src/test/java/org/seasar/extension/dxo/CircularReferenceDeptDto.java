@@ -23,18 +23,30 @@ public class CircularReferenceDeptDto {
 
     private CircularReferenceEmpDto[] emps;
 
+    /**
+     * @return
+     */
     public String getDname() {
         return dname;
     }
 
+    /**
+     * @param dname
+     */
     public void setDname(String dname) {
         this.dname = dname;
     }
 
+    /**
+     * @return
+     */
     public CircularReferenceEmpDto[] getEmps() {
         return emps;
     }
 
+    /**
+     * @param emps
+     */
     public void setEmps(CircularReferenceEmpDto[] emps) {
         this.emps = emps;
     }

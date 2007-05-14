@@ -32,6 +32,9 @@ public class ArrayConverterTest extends AbsConverterTest {
         converter = new ArrayConverter();
     }
 
+    /**
+     * @throws Exception
+     */
     public void testConvert() throws Exception {
         List list = new ArrayList();
         list.add("1");

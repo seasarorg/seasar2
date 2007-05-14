@@ -40,6 +40,9 @@ public class BeanToMapDxoCommandTest extends S2FrameworkTestCase {
         include("dxo.dicon");
     }
 
+    /**
+     * @throws Exception
+     */
     public void testScalar1() throws Exception {
         DxoCommand command = builder.createDxoCommand(ScalarDxo.class,
                 ClassUtil.getMethod(ScalarDxo.class, "convert",
@@ -59,6 +62,9 @@ public class BeanToMapDxoCommandTest extends S2FrameworkTestCase {
         assertEquals(new Integer(0), dest.get("foo"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testScalar2() throws Exception {
         DxoCommand command = builder.createDxoCommand(ScalarDxo.class,
                 ClassUtil.getMethod(ScalarDxo.class, "convert", new Class[] {
@@ -80,6 +86,9 @@ public class BeanToMapDxoCommandTest extends S2FrameworkTestCase {
         assertEquals(new Integer(0), dest.get("foo"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testScalar3() throws Exception {
         DxoCommand command = builder.createDxoCommand(ScalarDxo.class,
                 ClassUtil.getMethod(ScalarDxo.class, "convert3", new Class[] {
@@ -105,6 +114,9 @@ public class BeanToMapDxoCommandTest extends S2FrameworkTestCase {
         assertEquals("0nullnull", dest.get("four"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testScalar4() throws Exception {
         DxoCommand command = builder.createDxoCommand(ScalarDxo.class,
                 ClassUtil.getMethod(ScalarDxo.class, "convert4", new Class[] {
@@ -130,6 +142,9 @@ public class BeanToMapDxoCommandTest extends S2FrameworkTestCase {
         assertNull(dest.get("four"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testArrayToArray1() throws Exception {
         DxoCommand command = builder.createDxoCommand(ToArrayDxo.class,
                 ClassUtil.getMethod(ToArrayDxo.class, "convert",
@@ -154,6 +169,9 @@ public class BeanToMapDxoCommandTest extends S2FrameworkTestCase {
         assertEquals("200HogeHoge2000", dest[1].get("four"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testArrayToArray2() throws Exception {
         DxoCommand command = builder.createDxoCommand(ToArrayDxo.class,
                 ClassUtil.getMethod(ToArrayDxo.class, "convert", new Class[] {
@@ -179,6 +197,9 @@ public class BeanToMapDxoCommandTest extends S2FrameworkTestCase {
         assertEquals("200HogeHoge2000", dest[1].get("four"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testListToArray1() throws Exception {
         DxoCommand command = builder.createDxoCommand(ToArrayDxo.class,
                 ClassUtil.getMethod(ToArrayDxo.class, "convert",
@@ -203,6 +224,9 @@ public class BeanToMapDxoCommandTest extends S2FrameworkTestCase {
         assertEquals("200HogeHoge2000", dest[1].get("four"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testListToArray2() throws Exception {
         DxoCommand command = builder.createDxoCommand(ToArrayDxo.class,
                 ClassUtil.getMethod(ToArrayDxo.class, "convert", new Class[] {
@@ -228,33 +252,87 @@ public class BeanToMapDxoCommandTest extends S2FrameworkTestCase {
         assertEquals("200HogeHoge2000", dest[1].get("four"));
     }
 
+    /**
+     *
+     */
     public interface ScalarDxo {
+        /**
+         * 
+         */
         public static final String convert_EXCLUDE_NULL = "";
 
+        /**
+         * @param src
+         * @return
+         */
         Map convert(Hoge src);
 
+        /**
+         * @param src
+         * @param dest
+         */
         void convert(Hoge src, Map dest);
 
+        /**
+         * 
+         */
         public static final String convert3_CONVERSION_RULE = "'one' : foo, 'two' : bar, 'three' : baz, 'four' : ''+foo+bar+baz";
 
+        /**
+         * @param src
+         * @param dest
+         */
         void convert3(Hoge src, Map dest);
 
+        /**
+         * 
+         */
         public static final String convert4_CONVERSION_RULE = "one : bar";
 
+        /**
+         * @param src
+         * @param dest
+         */
         void convert4(Hoge src, Map dest);
     }
 
+    /**
+     *
+     */
     public interface ToArrayDxo {
+        /**
+         * 
+         */
         public static final String convert_CONVERSION_RULE = "'one' : foo, 'two' : bar, 'three' : baz, 'four' : foo+bar+baz";
 
+        /**
+         * @param src
+         * @return
+         */
         Map[] convert(Hoge[] src);
 
+        /**
+         * @param src
+         * @param dest
+         */
         void convert(Hoge[] src, Map[] dest);
 
+        /**
+         * @param src
+         * @return
+         */
         Map[] convert(List src);
 
+        /**
+         * @param src
+         * @param dest
+         */
         void convert(List src, Map[] dest);
 
+        /**
+         * @param src
+         * @return
+         */
         Map[] convert2(Hoge[] src);
     }
 

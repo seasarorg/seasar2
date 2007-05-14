@@ -37,6 +37,9 @@ public class ConstantAnnotationReaderTest extends S2FrameworkTestCase {
         include(getClass().getName().replace('.', '/') + ".dicon");
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetDateFormat() throws Exception {
         assertEquals("class default", factory.getAnnotationReader()
                 .getDatePattern(
@@ -62,6 +65,9 @@ public class ConstantAnnotationReaderTest extends S2FrameworkTestCase {
                 Dxo2.class.getMethod("convert", new Class[] { Object.class })));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetConversionRule() throws Exception {
         assertEquals("map1", factory.getAnnotationReader().getConversionRule(
                 Dxo.class,
@@ -77,6 +83,9 @@ public class ConstantAnnotationReaderTest extends S2FrameworkTestCase {
                                 new Class[] { Integer[].class })));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetConverters() throws Exception {
         Map converters = factory.getAnnotationReader()
                 .getConverters(Hoge.class);
@@ -92,77 +101,170 @@ public class ConstantAnnotationReaderTest extends S2FrameworkTestCase {
         assertEquals("a_bar_b", converter.convert("bar", String.class, null));
     }
 
+    /**
+     *
+     */
     public interface Dxo {
+        /**
+         * 
+         */
         String DATE_PATTERN = "class default";
 
+        /**
+         * @param src
+         * @return
+         */
         List converted(List src);
 
+        /**
+         * 
+         */
         String convert_DATE_PATTERN = "method default";
 
+        /**
+         * @param src
+         * @return
+         */
         List convert(List src);
 
+        /**
+         * 
+         */
         String convert_Object_DATE_PATTERN = "foo";
 
+        /**
+         * @param src
+         * @return
+         */
         Object convert(Object src);
 
+        /**
+         * 
+         */
         String convert_Number_String_DATE_PATTERN = "bar";
 
+        /**
+         * @param src
+         * @param date
+         */
         void convert(Number src, String date);
 
+        /**
+         * 
+         */
         String convert_Object$_DATE_PATTERN = "baz";
 
+        /**
+         * @param src
+         * @return
+         */
         Object[] convert(Object[] src);
 
+        /**
+         * 
+         */
         String convert_Integer_CONVERSION_RULE = "map1";
 
+        /**
+         * @param src
+         * @return
+         */
         Map convert(Integer src);
 
+        /**
+         * 
+         */
         String convert_Integer_Map_CONVERSION_RULE = "map2";
 
+        /**
+         * @param src
+         * @param dest
+         */
         void convert(Integer src, Map dest);
 
+        /**
+         * @param src
+         * @return
+         */
         Map[] convert(Integer[] src);
     }
 
+    /**
+     *
+     */
     public interface Dxo2 {
+        /**
+         * @param src
+         * @return
+         */
         Object convert(Object src);
     }
 
+    /**
+     *
+     */
     public static class Hoge {
+        /**
+         * 
+         */
         public static final String foo_hogeDxoConverter = null;
 
+        /**
+         * 
+         */
         public static final String bar_hogeDxoConverter = "prefix='a_', suffix='_b'";
 
         protected String foo;
 
         protected String bar;
 
+        /**
+         * @return
+         */
         public String getFoo() {
             return foo;
         }
 
+        /**
+         * @param foo
+         */
         public void setFoo(String foo) {
             this.foo = foo;
         }
 
+        /**
+         * @return
+         */
         public String getBar() {
             return bar;
         }
 
+        /**
+         * @param bar
+         */
         public void setBar(String bar) {
             this.bar = bar;
         }
     }
 
+    /**
+     *
+     */
     public static class HogeDxoConverter extends AbstractConverter {
         protected String prefix = "";
 
         protected String suffix = "";
 
+        /**
+         * @param prefix
+         */
         public void setPrefix(String prefix) {
             this.prefix = prefix;
         }
 
+        /**
+         * @param suffix
+         */
         public void setSuffix(String suffix) {
             this.suffix = suffix;
         }

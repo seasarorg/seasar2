@@ -15,15 +15,24 @@
  */
 package org.seasar.extension.dxo;
 
+/**
+ * 
+ */
 public class CircularReferenceEmployee extends Employee {
     private static final long serialVersionUID = 2842245523020553511L;
 
     private CircularReferenceDepartment dept;
 
+    /**
+     * @return
+     */
     public CircularReferenceDepartment getDept() {
         return dept;
     }
 
+    /**
+     * @param dept
+     */
     public void setDept(CircularReferenceDepartment dept) {
         this.dept = dept;
     }

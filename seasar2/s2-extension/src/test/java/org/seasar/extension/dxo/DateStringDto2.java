@@ -21,10 +21,16 @@ package org.seasar.extension.dxo;
 public class DateStringDto2 extends DateStringDto {
     private String a = "2020/03/04";
 
+    /**
+     * @return
+     */
     public String getA() {
         return a;
     }
 
+    /**
+     * @param a
+     */
     public void setA(String a) {
         this.a = a;
     }

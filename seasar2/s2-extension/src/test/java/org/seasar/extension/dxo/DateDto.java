@@ -27,18 +27,30 @@ public class DateDto {
 
     private Time b;
 
+    /**
+     * @return
+     */
     public Date getA() {
         return a;
     }
 
+    /**
+     * @param a
+     */
     public void setA(Date a) {
         this.a = a;
     }
 
+    /**
+     * @return
+     */
     public Time getB() {
         return b;
     }
 
+    /**
+     * @param b
+     */
     public void setB(Time b) {
         this.b = b;
     }

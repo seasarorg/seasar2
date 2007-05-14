@@ -31,6 +31,9 @@ public class ListConverterTest extends AbsConverterTest {
         converter = new ListConverter();
     }
 
+    /**
+     * @throws Exception
+     */
     public void testConvert() throws Exception {
         Object[] array1 = { new Integer(1), new Integer(5) };
         List list = (List) converter.convert(array1, null, createContext(

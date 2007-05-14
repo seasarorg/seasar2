@@ -43,6 +43,9 @@ public class BeanConverterTest extends AbsConverterTest {
         register(SqlDateConverter.class, "sqlDateDxoConverter");
     }
 
+    /**
+     * @throws Exception
+     */
     public void testConvert1() throws Exception {
         DateDto dateDto = (DateDto) converter.convert(new DateStringDto(),
                 DateDto.class, createContext("testConvert1", null));
@@ -50,6 +53,9 @@ public class BeanConverterTest extends AbsConverterTest {
         assertEquals(30, getDate(dateDto.getA()));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testConvert2() throws Exception {
         DateStringDto dateStringDto = (DateStringDto) converter.convert(
                 new DateDto(), DateStringDto.class, createContext(
@@ -59,8 +65,14 @@ public class BeanConverterTest extends AbsConverterTest {
         assertEquals("22", dateStringDto.getA_dd());
     }
 
+    /**
+     * 
+     */
     public static final String testConvert3_DATE_PATTERN = "yyyy/MM/dd";
 
+    /**
+     * @throws Exception
+     */
     public void testConvert3() throws Exception {
         DateStringDto2 dateStringDto = (DateStringDto2) converter.convert(
                 new DateDto(), DateStringDto2.class, createContext(
@@ -71,8 +83,14 @@ public class BeanConverterTest extends AbsConverterTest {
         assertEquals("22", dateStringDto.getA_dd());
     }
 
+    /**
+     * 
+     */
     public static final String testConvert4_DATE_PATTERN = "yyyy/MM/dd";
 
+    /**
+     * @throws Exception
+     */
     public void testConvert4() throws Exception {
         DateDto dateDto = (DateDto) converter.convert(new DateStringDto2(),
                 DateDto.class, createContext("testConvert4", null));
@@ -81,8 +99,14 @@ public class BeanConverterTest extends AbsConverterTest {
         assertEquals(4, getDate(dateDto.getA()));
     }
 
+    /**
+     * 
+     */
     public static final String testConvert5_DATE_PATTERN = "yyyy/MM/dd";
 
+    /**
+     * @throws Exception
+     */
     public void testConvert5() throws Exception {
         DateStringDto3 dateStringDto = (DateStringDto3) converter.convert(
                 new DateDto(), DateStringDto3.class, createContext(
@@ -90,8 +114,14 @@ public class BeanConverterTest extends AbsConverterTest {
         assertEquals("21000622", dateStringDto.getA_yyyyMMdd());
     }
 
+    /**
+     * 
+     */
     public static final String testConvert6_DATE_PATTERN = "yyyy/MM/dd";
 
+    /**
+     * @throws Exception
+     */
     public void testConvert6() throws Exception {
         DateDto dateDto = (DateDto) converter.convert(new DateStringDto3(),
                 DateDto.class, createContext("testConvert6", null));
@@ -100,6 +130,9 @@ public class BeanConverterTest extends AbsConverterTest {
         assertEquals(4, getDate(dateDto.getA()));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testConvert7() throws Exception {
         CalendarDto calendarDto = (CalendarDto) converter.convert(
                 new DateStringDto(), CalendarDto.class, createContext(
@@ -109,6 +142,9 @@ public class BeanConverterTest extends AbsConverterTest {
         assertEquals(30, calendarDto.getA().get(Calendar.DAY_OF_MONTH));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testConvert8() throws Exception {
         DateStringDto dateStringDto = (DateStringDto) converter.convert(
                 new CalendarDto(), DateStringDto.class, createContext(
@@ -118,6 +154,9 @@ public class BeanConverterTest extends AbsConverterTest {
         assertEquals("22", dateStringDto.getA_dd());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testConvert9() throws Exception {
         CircularReferenceEmployee employee = new CircularReferenceEmployee();
         employee.setEname("ename");
@@ -135,6 +174,9 @@ public class BeanConverterTest extends AbsConverterTest {
         System.out.println(crDeptDto);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testNestedProperty() throws Exception {
         HogeHoge hogehoge = new HogeHoge();
         Hoge hoge = (Hoge) converter.convert(hogehoge, Hoge.class,
@@ -155,6 +197,9 @@ public class BeanConverterTest extends AbsConverterTest {
         assertEquals(DateUtil.newDate(1972, 2, 28), hoge.bar);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetConverter() throws Exception {
         Converter fooConverter = converter.getConverter(String.class,
                 Hoge.class, "foo", Date.class, createContext(
@@ -187,37 +232,64 @@ public class BeanConverterTest extends AbsConverterTest {
         return calendar.get(Calendar.YEAR);
     }
 
+    /**
+     *
+     */
     public static class Hoge {
+        /**
+         * 
+         */
         public static final String foo_sqlDateDxoConverter = null;
 
         protected Date foo;
 
         protected Date bar;
 
+        /**
+         * @return
+         */
         public Date getFoo() {
             return foo;
         }
 
+        /**
+         * @param foo
+         */
         public void setFoo(Date foo) {
             this.foo = foo;
         }
 
+        /**
+         * @return
+         */
         public Date getBar() {
             return bar;
         }
 
+        /**
+         * @param bar
+         */
         public void setBar(Date bar) {
             this.bar = bar;
         }
     }
 
+    /**
+     *
+     */
     public static class HogeHoge {
         protected Hoge hoge;
 
+        /**
+         * @return
+         */
         public Hoge getHoge() {
             return hoge;
         }
 
+        /**
+         * @param hoge
+         */
         public void setHoge(Hoge hoge) {
             this.hoge = hoge;
         }

@@ -33,6 +33,9 @@ public class BeanToMapDxoCommandBuilderTest extends S2FrameworkTestCase {
         include("dxo.dicon");
     }
 
+    /**
+     * @throws Exception
+     */
     public void testToScalar() throws Exception {
         assertNotNull(builder.createDxoCommand(ToScalarDxo.class,
                 ToScalarDxo.class.getMethod("convert",
@@ -52,6 +55,9 @@ public class BeanToMapDxoCommandBuilderTest extends S2FrameworkTestCase {
                         new Class[] { List.class })));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testToArray() throws Exception {
         assertNotNull(builder.createDxoCommand(ToArrayDxo.class,
                 ToArrayDxo.class.getMethod("convert",
@@ -64,6 +70,9 @@ public class BeanToMapDxoCommandBuilderTest extends S2FrameworkTestCase {
                 .getMethod("convert", new Class[] { Object.class })));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testToList() throws Exception {
         assertNull(builder.createDxoCommand(ToListDxo.class, ToListDxo.class
                 .getMethod("convert", new Class[] { Object[].class })));
@@ -73,39 +82,104 @@ public class BeanToMapDxoCommandBuilderTest extends S2FrameworkTestCase {
                 .getMethod("convert", new Class[] { Object.class })));
     }
 
+    /**
+     *
+     */
     public interface ToScalarDxo {
+        /**
+         * 
+         */
         String convert_String_CONVERSION_RULE = "";
 
+        /**
+         * 
+         */
         String convert2_CONVERSION_RULE = "";
 
+        /**
+         * @param src
+         * @return
+         */
         Map convert(String src); // applicable
 
+        /**
+         * @param src
+         * @return
+         */
         Map convert2(String src); // applicable
 
+        /**
+         * @param src
+         * @return
+         */
         Map convert3(String src); // applicabel
 
+        /**
+         * @param src
+         * @return
+         */
         Map convert(Object[] src); // not applicable
 
+        /**
+         * @param src
+         * @return
+         */
         Map convert(List src); // not applicable
     }
 
+    /**
+     *
+     */
     public interface ToArrayDxo {
+        /**
+         * 
+         */
         String convert_CONVERSION_RULE = "";
 
+        /**
+         * @param src
+         * @return
+         */
         Map[] convert(Object[] src); // applicable
 
+        /**
+         * @param src
+         * @return
+         */
         Map[] convert(List src); // not applicable
 
+        /**
+         * @param src
+         * @return
+         */
         Map[] convert(Object src); // not applicable
     }
 
+    /**
+     *
+     */
     public interface ToListDxo {
+        /**
+         * 
+         */
         String convert_CONVERSION_RULE = "";
 
+        /**
+         * @param src
+         * @return
+         */
         List convert(Object[] src); // not applicable
 
+        /**
+         * @param src
+         * @return
+         */
         List convert(List src); // not applicable
 
+        /**
+         * @param src
+         * @return
+         */
         List convert(Object src); // not applicable
     }
 

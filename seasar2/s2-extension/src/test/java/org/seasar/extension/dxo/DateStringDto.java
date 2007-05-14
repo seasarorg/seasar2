@@ -27,34 +27,58 @@ public class DateStringDto {
 
     private String b_$$$$;
 
+    /**
+     * @return
+     */
     public String getA_dd() {
         return a_dd;
     }
 
+    /**
+     * @param a_dd
+     */
     public void setA_dd(String a_dd) {
         this.a_dd = a_dd;
     }
 
+    /**
+     * @return
+     */
     public String getA_MM() {
         return a_MM;
     }
 
+    /**
+     * @param a_mm
+     */
     public void setA_MM(String a_mm) {
         a_MM = a_mm;
     }
 
+    /**
+     * @return
+     */
     public String getA_yyyy() {
         return a_yyyy;
     }
 
+    /**
+     * @param a_yyyy
+     */
     public void setA_yyyy(String a_yyyy) {
         this.a_yyyy = a_yyyy;
     }
 
+    /**
+     * @return
+     */
     public String getB_$$$$() {
         return b_$$$$;
     }
 
+    /**
+     * @param b_$$$$
+     */
     public void setB_$$$$(String b_$$$$) {
         this.b_$$$$ = b_$$$$;
     }

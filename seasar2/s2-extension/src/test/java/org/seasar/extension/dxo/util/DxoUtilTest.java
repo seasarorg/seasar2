@@ -25,6 +25,9 @@ import junit.framework.TestCase;
  */
 public class DxoUtilTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testGetElementTypeOfListFromDestination() throws Exception {
         assertNull(DxoUtil.getElementTypeOfList(Dxo.class.getMethod("hoge",
                 new Class[] { List.class })));
@@ -32,14 +35,28 @@ public class DxoUtilTest extends TestCase {
                 new Class[] { List.class, List.class })));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAddQuote() throws Exception {
         assertEquals("'aaa':bbb,'ccc':ddd", DxoUtil
                 .addQuote("aaa : bbb , ccc : ddd"));
     }
 
+    /**
+     *
+     */
     public interface Dxo {
+        /**
+         * @param src
+         * @return
+         */
         List hoge(List src);
 
+        /**
+         * @param src
+         * @param dest
+         */
         void hoge(List src, List dest);
     }
 

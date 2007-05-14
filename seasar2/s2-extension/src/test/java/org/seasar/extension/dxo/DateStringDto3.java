@@ -21,10 +21,16 @@ package org.seasar.extension.dxo;
 public class DateStringDto3 {
     private String a_yyyyMMdd = "20200304";
 
+    /**
+     * @return
+     */
     public String getA_yyyyMMdd() {
         return a_yyyyMMdd;
     }
 
+    /**
+     * @param a_yyyyMMdd
+     */
     public void setA_yyyyMMdd(String a_yyyyMMdd) {
         this.a_yyyyMMdd = a_yyyyMMdd;
     }
