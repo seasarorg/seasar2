@@ -17,6 +17,10 @@ package org.seasar.extension.timer;
 
 import junit.framework.TestCase;
 
+/**
+ * @author higa
+ *
+ */
 public class TimeoutManagerTest extends TestCase {
 
     private int expiredCount;
@@ -30,6 +34,9 @@ public class TimeoutManagerTest extends TestCase {
         TimeoutManager.getInstance().clear();
     }
 
+    /**
+     * @throws Exception
+     */
     public void testExpired() throws Exception {
         TimeoutTask task = TimeoutManager.getInstance().addTimeoutTarget(
                 new TimeoutTarget() {
