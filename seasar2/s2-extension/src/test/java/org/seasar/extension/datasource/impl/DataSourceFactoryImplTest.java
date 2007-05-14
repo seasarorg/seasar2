@@ -30,6 +30,9 @@ public class DataSourceFactoryImplTest extends S2FrameworkTestCase {
         register(DataSourceFactoryImpl.class);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetDataSourceName() throws Exception {
         assertNull(factory.getDataSourceName(null));
         assertEquals("oracle", factory.getDataSourceName("oracle"));
@@ -37,12 +40,18 @@ public class DataSourceFactoryImplTest extends S2FrameworkTestCase {
         assertEquals("hoge", factory.getDataSourceName(null));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetDataSourceComponentName() throws Exception {
         assertEquals("dataSource", factory.getDataSourceComponentName(null));
         assertEquals("oracleDataSource", factory
                 .getDataSourceComponentName("oracle"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetDataSource() throws Exception {
         assertNotNull(factory.getDataSource(null));
     }

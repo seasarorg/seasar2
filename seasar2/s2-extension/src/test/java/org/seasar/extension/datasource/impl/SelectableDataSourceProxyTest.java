@@ -27,6 +27,10 @@ import javax.sql.DataSource;
 import org.seasar.extension.datasource.DataSourceFactory;
 import org.seasar.framework.unit.S2FrameworkTestCase;
 
+/**
+ * @author higa
+ *
+ */
 public class SelectableDataSourceProxyTest extends S2FrameworkTestCase {
 
     private DataSourceFactory factory;
@@ -44,6 +48,9 @@ public class SelectableDataSourceProxyTest extends S2FrameworkTestCase {
         register(TestDataSource.class, "barDataSource");
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAll() throws Exception {
         factory.setSelectableDataSourceName("foo");
         assertEquals(fooDataSource.con, proxy.getConnection());
@@ -74,12 +81,24 @@ public class SelectableDataSourceProxyTest extends S2FrameworkTestCase {
         assertEquals("setLogWriter:true", barDataSource.text);
     }
 
+    /**
+     *
+     */
     public static class TestDataSource implements DataSource, InvocationHandler {
+        /**
+         * 
+         */
         public String text;
 
+        /**
+         * 
+         */
         public Connection con = (Connection) Proxy.newProxyInstance(getClass()
                 .getClassLoader(), new Class[] { Connection.class }, this);
 
+        /**
+         * 
+         */
         public PrintWriter out = new PrintWriter(System.out);
 
         public Connection getConnection() throws SQLException {
