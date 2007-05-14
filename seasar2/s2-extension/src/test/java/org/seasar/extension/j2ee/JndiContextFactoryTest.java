@@ -22,10 +22,17 @@ import javax.naming.InitialContext;
 
 import org.seasar.extension.unit.S2TestCase;
 
+/**
+ * @author higa
+ *
+ */
 public class JndiContextFactoryTest extends S2TestCase {
 
     private Context ctx_;
 
+    /**
+     * @throws Exception
+     */
     public void testLookup() throws Exception {
         assertNotNull("1", ctx_.lookup("jndi.transactionManager"));
         assertNotNull("2", ctx_.lookup("jndi.dataSource"));

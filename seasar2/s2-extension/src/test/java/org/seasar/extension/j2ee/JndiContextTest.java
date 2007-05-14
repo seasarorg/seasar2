@@ -21,16 +21,26 @@ import javax.naming.Context;
 
 import org.seasar.extension.unit.S2TestCase;
 
+/**
+ * @author koichik
+ *
+ */
 public class JndiContextTest extends S2TestCase {
 
     private Context ctx_;
 
+    /**
+     * @throws Exception
+     */
     public void testLookup() throws Exception {
         assertNotNull(ctx_.lookup("jdbc.dataSource"));
         assertNotNull(ctx_.lookup("jta.TransactionManager"));
         assertNotNull("3", ctx_.lookup("jta.UserTransaction"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testLookupENC() throws Exception {
         assertNotNull("1", ctx_.lookup("java:comp/env/jdbc/dataSource"));
         assertNotNull("2", ctx_.lookup("java:comp/env/j2ee/jdbc/dataSource"));

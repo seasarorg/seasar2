@@ -21,15 +21,12 @@ import javax.naming.Context;
 
 import org.seasar.extension.unit.S2TestCase;
 
+/**
+ * @author higa
+ *
+ */
 public class JndiResourceLocatorTest extends S2TestCase {
     Hashtable env;
-
-    public JndiResourceLocatorTest() {
-    }
-
-    public JndiResourceLocatorTest(String name) {
-        super(name);
-    }
 
     protected void setUp() throws Exception {
         super.setUp();
@@ -39,6 +36,9 @@ public class JndiResourceLocatorTest extends S2TestCase {
                 .getName());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testLookup() throws Exception {
         Object userTransaction = JndiResourceLocator.lookup(
                 "java:comp/UserTransaction", env);
@@ -48,6 +48,9 @@ public class JndiResourceLocatorTest extends S2TestCase {
         assertNotNull(rransactionSynchronizationRegistry);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testResolveName() throws Exception {
         assertEquals("jdbc.DataSource", JndiResourceLocator
                 .resolveName("jdbc/DataSource"));
