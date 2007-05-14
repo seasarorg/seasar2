@@ -25,6 +25,9 @@ import junit.framework.TestCase;
  * @author koichik
  */
 public class ClassLoaderUtilTest extends TestCase {
+    /**
+     * @throws Exception
+     */
     public void testGetClassLoader() throws Exception {
         assertSame("1", ClassLoaderUtil.class.getClassLoader(), ClassLoaderUtil
                 .getClassLoader(Object.class));
@@ -43,6 +46,9 @@ public class ClassLoaderUtilTest extends TestCase {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public void testFindLoadedClass() throws Exception {
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
         Class clazz = ClassLoaderUtil.findLoadedClass(loader, getClass()
@@ -50,6 +56,9 @@ public class ClassLoaderUtilTest extends TestCase {
         assertEquals(getClass(), clazz);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetResources() throws Exception {
         String name = TestCase.class.getName().replace('.', '/') + ".class";
         Iterator itr = ClassLoaderUtil.getResources(this.getClass(), name);

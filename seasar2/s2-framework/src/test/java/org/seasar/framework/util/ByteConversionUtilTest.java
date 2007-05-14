@@ -17,12 +17,22 @@ package org.seasar.framework.util;
 
 import junit.framework.TestCase;
 
+/**
+ * @author higa
+ *
+ */
 public class ByteConversionUtilTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testToByteConversionUtilTest() throws Exception {
         assertEquals("1", new Byte("100"), ByteConversionUtil.toByte("100"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testToPrimitiveByteConversionUtilTest() throws Exception {
         assertEquals("1", 100, ByteConversionUtil.toPrimitiveByte("100"));
     }

@@ -33,6 +33,9 @@ public class DisposableUtilTest extends TestCase {
         DisposableUtil.dispose();
     }
 
+    /**
+     * @throws Exception
+     */
     public void test1() throws Exception {
         DisposableUtil.add(new TestDisposable());
         assertEquals(1, DisposableUtil.disposables.size());
@@ -41,6 +44,9 @@ public class DisposableUtilTest extends TestCase {
         assertEquals(0, DisposableUtil.disposables.size());
     }
 
+    /**
+     * @throws Exception
+     */
     public void test2() throws Exception {
         DisposableUtil.add(new TestDisposable());
         DisposableUtil.add(new TestDisposable());
@@ -50,6 +56,9 @@ public class DisposableUtilTest extends TestCase {
         assertEquals(0, DisposableUtil.disposables.size());
     }
 
+    /**
+     * @throws Exception
+     */
     public void test3() throws Exception {
         DisposableUtil.add(new TestDisposable());
         DisposableUtil.add(new TestDisposable2());
@@ -60,12 +69,18 @@ public class DisposableUtilTest extends TestCase {
         assertEquals(0, DisposableUtil.disposables.size());
     }
 
+    /**
+     *
+     */
     public class TestDisposable implements Disposable {
         public void dispose() {
             ++count;
         }
     }
 
+    /**
+     *
+     */
     public class TestDisposable2 implements Disposable {
         public void dispose() {
             ++count;
@@ -73,6 +88,9 @@ public class DisposableUtilTest extends TestCase {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public void deregisterAllDriversTest() throws Exception {
         Class clazz = Class.forName("org.hsqldb.jdbcDriver");
         Driver d = (Driver) clazz.newInstance();

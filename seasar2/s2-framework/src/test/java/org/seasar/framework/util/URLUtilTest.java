@@ -28,9 +28,11 @@ import junit.framework.TestCase;
  */
 public class URLUtilTest extends TestCase {
 
-    /*
+    /**
      * Test method for
      * 'org.seasar.framework.util.URLUtil.disableURLCaches(ClassLoader)'
+     * 
+     * @throws Exception
      */
     public void testDisableURLCaches() throws Exception {
         String root = ResourceUtil.getBuildDir(getClass()).getCanonicalPath();
@@ -56,14 +58,23 @@ public class URLUtilTest extends TestCase {
 
     }
 
+    /**
+     * @throws Exception
+     */
     public void testEncode() throws Exception {
         assertEquals("Program+Files", URLUtil.encode("Program Files", "UTF-8"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testDecode() throws Exception {
         assertEquals("Program Files", URLUtil.decode("Program+Files", "UTF-8"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testToCanonicalProtocol() throws Exception {
         assertEquals("jar", URLUtil.toCanonicalProtocol("wsjar"));
         assertEquals("jar", URLUtil.toCanonicalProtocol("jar"));
@@ -71,6 +82,9 @@ public class URLUtilTest extends TestCase {
         assertEquals("file", URLUtil.toCanonicalProtocol("file"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testToFile() throws Exception {
         File file = new File("Program Files/hoge.txt");
         URL url = file.toURL();

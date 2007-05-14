@@ -26,39 +26,60 @@ import junit.framework.TestCase;
  */
 public class NumberConversionUtilTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testFindFractionDelimeter() throws Exception {
         String delim = NumberConversionUtil.findDecimalSeparator(Locale.JAPAN);
         assertEquals(".", delim);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testFindFractionDelimeter2() throws Exception {
         String delim = NumberConversionUtil.findDecimalSeparator(Locale.FRANCE);
         assertEquals(",", delim);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testFindFractionDelimeter3() throws Exception {
         String delim = NumberConversionUtil.findDecimalSeparator(null);
         char c = new DecimalFormatSymbols(Locale.getDefault()).getDecimalSeparator();
         assertEquals(Character.toString(c), delim);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testFindIntegerDelimeter() throws Exception {
         String delim = NumberConversionUtil.findGroupingSeparator(Locale.JAPAN);
         assertEquals(",", delim);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testFindIntegerDelimeter2() throws Exception {
         String delim = NumberConversionUtil
                 .findGroupingSeparator(Locale.GERMANY);
         assertEquals(".", delim);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testFindIntegerDelimeter3() throws Exception {
         String delim = NumberConversionUtil.findGroupingSeparator(null);
         char c = new DecimalFormatSymbols(Locale.getDefault()).getGroupingSeparator();
         assertEquals(Character.toString(c), delim);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testRemoveDelimeter() throws Exception {
         assertEquals("1000000.234", NumberConversionUtil.removeDelimeter(
                 "1,000,000.234", Locale.JAPAN));

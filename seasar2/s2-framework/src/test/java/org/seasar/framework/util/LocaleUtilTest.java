@@ -19,8 +19,15 @@ import java.util.Locale;
 
 import junit.framework.TestCase;
 
+/**
+ * @author higa
+ *
+ */
 public class LocaleUtilTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testGetLocale() throws Exception {
         assertEquals("1", Locale.getDefault(), LocaleUtil.getLocale(null));
         assertEquals("2", Locale.JAPANESE, LocaleUtil.getLocale("ja"));

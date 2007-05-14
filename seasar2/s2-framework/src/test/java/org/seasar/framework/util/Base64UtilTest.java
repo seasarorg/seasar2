@@ -18,6 +18,10 @@ package org.seasar.framework.util;
 import junit.framework.TestCase;
 import sun.misc.BASE64Encoder;
 
+/**
+ * @author higa
+ *
+ */
 public class Base64UtilTest extends TestCase {
 
     private static final String ORIGINAL = "how now brown cow\r\n";
@@ -47,6 +51,9 @@ public class Base64UtilTest extends TestCase {
     private static final String ENCODED_DATA4 = new BASE64Encoder()
             .encode(BINARY_DATA4);
 
+    /**
+     * @throws Exception
+     */
     public void testEncode() throws Exception {
         assertEquals("1", ENCODED_DATA, Base64Util.encode(BINARY_DATA));
         assertEquals("2", ENCODED_DATA2, Base64Util.encode(BINARY_DATA2));
@@ -55,6 +62,9 @@ public class Base64UtilTest extends TestCase {
         System.out.println(Base64Util.encode(new byte[] { 'a', 'b', 'c' }));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testDecode() throws Exception {
         byte[] decodedData = Base64Util.decode(ENCODED_DATA);
         assertEquals("1", BINARY_DATA.length, decodedData.length);

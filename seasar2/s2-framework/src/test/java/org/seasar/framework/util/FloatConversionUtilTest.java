@@ -17,13 +17,23 @@ package org.seasar.framework.util;
 
 import junit.framework.TestCase;
 
+/**
+ * @author higa
+ *
+ */
 public class FloatConversionUtilTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testToFloat() throws Exception {
         assertEquals("1", new Float("1000.5"), FloatConversionUtil
                 .toFloat("1,000.5"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testToPrimitiveFloat() throws Exception {
         assertEquals("1", 1000.5, FloatConversionUtil
                 .toPrimitiveFloat("1,000.5"), 0);

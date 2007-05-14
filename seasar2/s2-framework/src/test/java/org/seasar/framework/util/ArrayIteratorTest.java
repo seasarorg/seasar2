@@ -25,6 +25,9 @@ import junit.framework.TestCase;
  */
 public class ArrayIteratorTest extends TestCase {
 
+    /**
+     * 
+     */
     public void testNext() {
         ArrayIterator itr = new ArrayIterator(new Object[] { "a", "b", "c" });
         assertEquals("a", itr.next());
@@ -38,6 +41,9 @@ public class ArrayIteratorTest extends TestCase {
         }
     }
 
+    /**
+     * 
+     */
     public void testHasNext() {
         ArrayIterator itr = new ArrayIterator(new Object[] { "A", "B" });
         assertEquals(true, itr.hasNext());
@@ -47,6 +53,9 @@ public class ArrayIteratorTest extends TestCase {
         assertEquals(false, itr.hasNext());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testRemove() throws Exception {
         ArrayIterator itr = new ArrayIterator(new String[] { "1", "2" });
         try {

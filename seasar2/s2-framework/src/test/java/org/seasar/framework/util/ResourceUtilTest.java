@@ -24,8 +24,15 @@ import junit.framework.TestCase;
 
 import org.seasar.framework.exception.ResourceNotFoundRuntimeException;
 
+/**
+ * @author higa
+ *
+ */
 public class ResourceUtilTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testGetResourcePath() throws Exception {
         assertEquals("1", "aaa/bbb.xml", ResourceUtil.getResourcePath(
                 "aaa/bbb.xml", "xml"));
@@ -35,6 +42,9 @@ public class ResourceUtilTest extends TestCase {
                 ResourceUtil.getResourcePath(getClass()));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetResource() throws Exception {
         assertNotNull(ResourceUtil.getResource("java/lang/String.class",
                 "class"));
@@ -49,6 +59,9 @@ public class ResourceUtilTest extends TestCase {
         System.out.println(ResourceUtil.getResource("."));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetResourceAsStreamNoException() throws Exception {
         assertNotNull(ResourceUtil.getResourceAsStreamNoException(
                 "java/lang/String.class", "class"));
@@ -56,6 +69,9 @@ public class ResourceUtilTest extends TestCase {
                 "java/lang/String2.class", "class"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetBuildDir() throws Exception {
         File file = ResourceUtil.getBuildDir(getClass());
         System.out.println(file);
@@ -68,28 +84,43 @@ public class ResourceUtilTest extends TestCase {
         loader.loadClass(TestCase.class.getName());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testIsExist() throws Exception {
         assertEquals("1", true, ResourceUtil.isExist("SSRMessages.properties"));
         assertEquals("2", false, ResourceUtil.isExist("hoge"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetExtension() throws Exception {
         assertEquals("1", "xml", ResourceUtil.getExtension("aaa/bbb.xml"));
         assertEquals("2", null, ResourceUtil.getExtension("aaa"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testRemoteExtension() throws Exception {
         assertEquals("1", "aaa/bbb", ResourceUtil
                 .removeExtension("aaa/bbb.xml"));
         assertEquals("2", "aaa/bbb", ResourceUtil.removeExtension("aaa/bbb"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testToExternalForm() throws Exception {
         URL url = new File("/Program File").toURL();
         assertEquals("file:" + getRoot() + "Program File", ResourceUtil
                 .toExternalForm(url));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetFileName() throws Exception {
         URL url = new File("/Program File").toURL();
         assertEquals(getRoot() + "Program File", ResourceUtil.getFileName(url));

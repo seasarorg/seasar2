@@ -20,33 +20,52 @@ import java.util.Map;
 
 import junit.framework.TestCase;
 
+/**
+ * @author higa
+ *
+ */
 public class CaseInsensitiveMapTest extends TestCase {
 
     private CaseInsensitiveMap map_;
 
+    /**
+     * @throws Exception
+     */
     public void testContainsKey() throws Exception {
         assertTrue("1", map_.containsKey("ONE"));
         assertTrue("2", map_.containsKey("one"));
         assertTrue("3", !map_.containsKey("onex"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGet() throws Exception {
         assertEquals("1", "1", map_.get("ONE"));
         assertEquals("2", "1", map_.get("One"));
         assertEquals("3", null, map_.get("hoge"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testPut() throws Exception {
         assertEquals("1", "1", map_.put("One", "11"));
         assertEquals("2", "11", map_.get("one"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testRemove() throws Exception {
         assertEquals("1", "1", map_.remove("ONE"));
         assertEquals("2", 1, map_.size());
         assertEquals("3", null, map_.remove("dummy"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testPutAll() throws Exception {
         Map m = new HashMap();
         m.put("three", "3");
@@ -57,6 +76,9 @@ public class CaseInsensitiveMapTest extends TestCase {
         assertEquals("3", 4, map_.size());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testPerformance() throws Exception {
         for (int j = 0; j < 3; ++j) {
 

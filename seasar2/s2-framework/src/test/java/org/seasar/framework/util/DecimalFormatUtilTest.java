@@ -19,8 +19,15 @@ import java.util.Locale;
 
 import junit.framework.TestCase;
 
+/**
+ * @author higa
+ *
+ */
 public class DecimalFormatUtilTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testNormalize() throws Exception {
         assertEquals("1", "1000.00", DecimalFormatUtil.normalize("1,000.00",
                 Locale.JAPAN));

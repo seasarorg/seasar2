@@ -25,6 +25,9 @@ import junit.framework.TestCase;
  */
 public class InputStreamUtilTest extends TestCase {
 
+    /**
+     * 
+     */
     public void testGetBytes() {
         InputStream is = ResourceUtil.getResourceAsStream(StringUtil.replace(
                 getClass().getName(), ".", "/")

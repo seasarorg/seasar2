@@ -25,6 +25,9 @@ import junit.framework.TestCase;
  */
 public class JarFileUtilTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testToJarFilePath() throws Exception {
         File f = new File("/Program Files/foo.jar");
         URL url = new URL("jar:" + f.toURL() + "!/");

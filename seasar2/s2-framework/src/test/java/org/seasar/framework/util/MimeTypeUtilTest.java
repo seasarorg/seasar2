@@ -24,25 +24,40 @@ import junit.framework.TestCase;
  */
 public class MimeTypeUtilTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testGetFromStream() throws Exception {
-        String path = ClassUtil.getPackageName(this.getClass()).replaceAll("\\.", "/") + "/aaa.html";
+        String path = ClassUtil.getPackageName(this.getClass()).replaceAll(
+                "\\.", "/")
+                + "/aaa.html";
         String contentType = MimeTypeUtil.guessContentType(path);
         assertEquals("text/html", contentType);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetFromStream_gif() throws Exception {
-        String path = ClassUtil.getPackageName(this.getClass()).replaceAll("\\.", "/") + "/ccc.gif";
+        String path = ClassUtil.getPackageName(this.getClass()).replaceAll(
+                "\\.", "/")
+                + "/ccc.gif";
         String contentType = MimeTypeUtil.guessContentType(path);
         assertEquals("image/gif", contentType);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetFromPath() throws Exception {
-        String path = ClassUtil.getPackageName(this.getClass()).replaceAll("\\.", "/") + "/bbb.html";
-        String s = URLConnection.guessContentTypeFromStream(ResourceUtil.getResourceAsStream(path));
+        String path = ClassUtil.getPackageName(this.getClass()).replaceAll(
+                "\\.", "/")
+                + "/bbb.html";
+        String s = URLConnection.guessContentTypeFromStream(ResourceUtil
+                .getResourceAsStream(path));
         assertNull(s);
         String contentType = MimeTypeUtil.guessContentType(path);
         assertEquals("text/html", contentType);
     }
-
 
 }

@@ -17,25 +17,41 @@ package org.seasar.framework.util;
 
 import org.seasar.framework.unit.S2FrameworkTestCase;
 
+/**
+ * @author higa
+ *
+ */
 public class TokenizerTest extends S2FrameworkTestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testEOF() throws Exception {
         Tokenizer tokenizer = new Tokenizer("");
         assertEquals(Tokenizer.TT_EOF, tokenizer.nextToken());
         assertEquals(Tokenizer.TT_EOF, tokenizer.nextToken());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testWhitespace() throws Exception {
         Tokenizer tokenizer = new Tokenizer("\t       \n");
         assertEquals(Tokenizer.TT_EOF, tokenizer.nextToken());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testHyphen() throws Exception {
         Tokenizer tokenizer = new Tokenizer("       - ");
         assertEquals('-', tokenizer.nextToken());
         assertEquals(Tokenizer.TT_EOF, tokenizer.nextToken());
     }
 
+    /**
+     * @throws Exception
+     */
     public void pend_testDot() throws Exception {
         Tokenizer tokenizer = new Tokenizer("abc.hoge");
         assertEquals(Tokenizer.TT_WORD, tokenizer.nextToken());

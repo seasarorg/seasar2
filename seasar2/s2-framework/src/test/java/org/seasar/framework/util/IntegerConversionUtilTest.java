@@ -17,13 +17,23 @@ package org.seasar.framework.util;
 
 import junit.framework.TestCase;
 
+/**
+ * @author higa
+ *
+ */
 public class IntegerConversionUtilTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testToInteger() throws Exception {
         assertEquals("1", new Integer("1000"), IntegerConversionUtil
                 .toInteger("1,000"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testToPrimitiveInt() throws Exception {
         assertEquals("1", 1000, IntegerConversionUtil.toPrimitiveInt("1,000"));
     }

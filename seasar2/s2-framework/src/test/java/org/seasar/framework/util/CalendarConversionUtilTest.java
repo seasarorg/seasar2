@@ -20,8 +20,15 @@ import java.util.Date;
 
 import junit.framework.TestCase;
 
+/**
+ * @author higa
+ *
+ */
 public class CalendarConversionUtilTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testToCalendar() throws Exception {
         Date date = new Date();
         Calendar cal = CalendarConversionUtil.toCalendar(date);

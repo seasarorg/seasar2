@@ -28,6 +28,9 @@ import junit.framework.TestCase;
  */
 public class ZipFileUtilTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testToJarFilePath() throws Exception {
         URL url = new URL(null, "zip:/Program Files/foo.zip!/",
                 new URLStreamHandler() {

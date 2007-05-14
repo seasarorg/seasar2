@@ -19,8 +19,15 @@ import java.math.BigDecimal;
 
 import junit.framework.TestCase;
 
+/**
+ * @author higa
+ *
+ */
 public class MathUtilTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testAdd() throws Exception {
         assertEquals("1", new Integer(3), MathUtil.add(new Integer(1),
                 new Integer(2)));
@@ -45,6 +52,9 @@ public class MathUtilTest extends TestCase {
                 new Integer(2)));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testSubtract() throws Exception {
         assertEquals("1", new Integer(-1), MathUtil.subtract(new Integer(1),
                 new Integer(2)));
@@ -69,6 +79,9 @@ public class MathUtilTest extends TestCase {
                 (short) 1), new Integer(2)));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testMultiply() throws Exception {
         assertEquals("1", new Integer(6), MathUtil.multiply(new Integer(2),
                 new Integer(3)));
@@ -95,6 +108,9 @@ public class MathUtilTest extends TestCase {
                 (short) 3), new Integer(2)));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testDivide() throws Exception {
         assertEquals("1", new Integer(1), MathUtil.divide(new Integer(3),
                 new Integer(2)));
@@ -123,6 +139,9 @@ public class MathUtilTest extends TestCase {
                 (short) 3), new Integer(2)));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testMod() throws Exception {
         assertEquals("1", new Integer(1), MathUtil.mod(new Integer(5),
                 new Integer(2)));

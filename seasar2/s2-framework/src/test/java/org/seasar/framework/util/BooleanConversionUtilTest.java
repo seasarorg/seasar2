@@ -17,8 +17,15 @@ package org.seasar.framework.util;
 
 import junit.framework.TestCase;
 
+/**
+ * @author higa
+ *
+ */
 public class BooleanConversionUtilTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testToBoolean() throws Exception {
         assertEquals("1", Boolean.TRUE, BooleanConversionUtil
                 .toBoolean(new Integer(1)));

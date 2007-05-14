@@ -19,8 +19,15 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 
+/**
+ * @author higa
+ *
+ */
 public class CaseInsensitiveSetTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testContains() throws Exception {
         Set set = new CaseInsensitiveSet();
         set.add("one");

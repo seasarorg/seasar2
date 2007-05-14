@@ -25,6 +25,9 @@ import junit.framework.TestCase;
  */
 public class MapUtilTest extends TestCase {
 
+    /**
+     * 
+     */
     public void testCreate() {
         Map map = MapUtil.createHashMap();
         assertTrue(map instanceof Map);

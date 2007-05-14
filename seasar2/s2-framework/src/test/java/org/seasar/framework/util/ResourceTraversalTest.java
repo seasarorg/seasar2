@@ -36,6 +36,9 @@ public class ResourceTraversalTest extends TestCase {
         count = 0;
     }
 
+    /**
+     * @throws Exception
+     */
     public void testForEachFile() throws Exception {
         final File rootDir = ResourceUtil.getBuildDir(getClass());
         final String path = ResourceUtil.getResourcePath(getClass());
@@ -59,6 +62,9 @@ public class ResourceTraversalTest extends TestCase {
         assertTrue(count > 0);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testForEachJarFile() throws Exception {
         final String classFilePath = TestCase.class.getName().replace('.', '/')
                 + ".class";

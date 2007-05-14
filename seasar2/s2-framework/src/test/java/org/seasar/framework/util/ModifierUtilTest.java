@@ -25,6 +25,9 @@ import junit.framework.TestCase;
  */
 public class ModifierUtilTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void test() throws Exception {
         Field f = Hoge.class.getDeclaredField("s");
         assertTrue(ModifierUtil.isPublicStaticFinalField(f));
@@ -32,10 +35,19 @@ public class ModifierUtilTest extends TestCase {
         assertTrue(ModifierUtil.isPublic(m));
     }
 
+    /**
+     * 
+     */
     public static class Hoge {
 
+        /**
+         * 
+         */
         public static final String s = null;
 
+        /**
+         * @return
+         */
         public static String hoge() {
             return "aaa";
         }

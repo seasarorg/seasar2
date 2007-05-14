@@ -26,6 +26,9 @@ import junit.framework.TestCase;
  */
 public class MethodUtilTest extends TestCase {
 
+    /**
+     * 
+     */
     public void testIsEqualsMethod() {
         Method equalsMethod = ClassUtil.getMethod(getClass(), "equals",
                 new Class[] { Object.class });
@@ -35,6 +38,9 @@ public class MethodUtilTest extends TestCase {
         assertFalse("2", MethodUtil.isEqualsMethod(hashCodeMethod));
     }
 
+    /**
+     * 
+     */
     public void testIsHashCodeMethod() {
         Method equalsMethod = ClassUtil.getMethod(getClass(), "equals",
                 new Class[] { Object.class });
@@ -44,6 +50,9 @@ public class MethodUtilTest extends TestCase {
         assertTrue("2", MethodUtil.isHashCodeMethod(hashCodeMethod));
     }
 
+    /**
+     * 
+     */
     public void testIsToStringMethod() {
         Method toStringMethod = ClassUtil.getMethod(getClass(), "toString",
                 new Class[0]);
@@ -53,16 +62,25 @@ public class MethodUtilTest extends TestCase {
         assertFalse("2", MethodUtil.isToStringMethod(hashCodeMethod));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testIsBridgeMethod() throws Exception {
         Method method = Foo.class.getMethod("foo", null);
         assertFalse(MethodUtil.isBridgeMethod(method));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testIsSyntheticMethod() throws Exception {
         Method method = Foo.class.getMethod("foo", null);
         assertFalse(MethodUtil.isSyntheticMethod(method));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetElementTypeOfListFromParameterType() throws Exception {
         assertNull(MethodUtil.getElementTypeOfListFromParameterType(Baz.class
                 .getMethod("hoge", new Class[] { List.class }), 0));
@@ -72,19 +90,39 @@ public class MethodUtilTest extends TestCase {
                 .getMethod("hoge", new Class[] { List.class, List.class }), 1));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetElementTypeOfListFromReturnType() throws Exception {
         assertNull(MethodUtil.getElementTypeOfListFromReturnType(Baz.class
                 .getMethod("hoge", new Class[] { List.class })));
     }
 
+    /**
+     *
+     */
     public static class Foo {
+        /**
+         * 
+         */
         public void foo() {
         }
     }
 
+    /**
+     *
+     */
     public interface Baz {
+        /**
+         * @param src
+         * @return
+         */
         List hoge(List src);
 
+        /**
+         * @param src
+         * @param dest
+         */
         void hoge(List src, List dest);
     }
 

@@ -32,6 +32,9 @@ import org.seasar.framework.exception.OgnlRuntimeException;
  */
 public class OgnlUtilTest extends TestCase {
 
+    /**
+     * 
+     */
     public void testAddClassResolverIfNecessary() {
         S2Container container = new S2ContainerImpl() {
             public ClassLoader getClassLoader() {
@@ -66,6 +69,9 @@ public class OgnlUtilTest extends TestCase {
         assertEquals("9", "A", origCtx.get("a"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testClassResolverImpl() throws Exception {
         ClassResolver resolver = new OgnlUtil.ClassResolverImpl(getClass()
                 .getClassLoader());
@@ -80,6 +86,9 @@ public class OgnlUtilTest extends TestCase {
         assertNotNull("3", clazz);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetValueException() throws Exception {
         final RuntimeException runtimeException = new RuntimeException(
                 "test error message");
@@ -100,6 +109,9 @@ public class OgnlUtilTest extends TestCase {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetValueException2() throws Exception {
         final Object exp = OgnlUtil.parseExpression("hoge");
         try {
@@ -113,9 +125,15 @@ public class OgnlUtilTest extends TestCase {
     }
 
     private static interface Foo {
+        /**
+         * @return
+         */
         String getBar();
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetValue() throws Exception {
         {
             final Object exp = OgnlUtil
@@ -184,6 +202,9 @@ public class OgnlUtilTest extends TestCase {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public void testHiragana() throws Exception {
         final Character a = new Character((char) 12354);
         System.out.println(a);
@@ -193,6 +214,9 @@ public class OgnlUtilTest extends TestCase {
         assertEquals(Boolean.FALSE, value);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testKatakana() throws Exception {
         final Character a = new Character((char) 12450);
         System.out.println(a);
@@ -202,6 +226,9 @@ public class OgnlUtilTest extends TestCase {
         assertEquals(Boolean.FALSE, value);
     }
 
+    /**
+     * @throws Exception
+     */
     public void todo_testDigit() throws Exception {
         final Character one = new Character((char) 65297);
         System.out.println(one);
@@ -211,6 +238,9 @@ public class OgnlUtilTest extends TestCase {
         assertEquals(Boolean.FALSE, value);
     }
 
+    /**
+     * @throws Exception
+     */
     public void todo_testSmallLetter() throws Exception {
         final Character smallA = new Character((char) 65345);
         System.out.println(smallA);
@@ -220,6 +250,9 @@ public class OgnlUtilTest extends TestCase {
         assertEquals(Boolean.FALSE, value);
     }
 
+    /**
+     * @throws Exception
+     */
     public void todo_testBigLetter() throws Exception {
         final Character largeA = new Character((char) 65313);
         System.out.println(largeA);
@@ -229,6 +262,9 @@ public class OgnlUtilTest extends TestCase {
         assertEquals(Boolean.FALSE, value);
     }
 
+    /**
+     * @throws Exception
+     */
     public void todo_testUndescore() throws Exception {
         final Character underscore = new Character((char) 65343);
         System.out.println(underscore);
@@ -238,6 +274,9 @@ public class OgnlUtilTest extends TestCase {
         assertEquals(Boolean.FALSE, value);
     }
 
+    /**
+     * @throws Exception
+     */
     public void todo_testDollor() throws Exception {
         final Character dollor = new Character((char) 65284);
         System.out.println(dollor);

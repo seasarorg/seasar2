@@ -20,8 +20,15 @@ import java.util.Locale;
 
 import junit.framework.TestCase;
 
+/**
+ * @author higa
+ * 
+ */
 public class DecimalFormatSymbolsUtilTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testGetDecimalFormatSymbols() throws Exception {
         DecimalFormatSymbols symbols = DecimalFormatSymbolsUtil
                 .getDecimalFormatSymbols(Locale.GERMAN);

@@ -19,16 +19,26 @@ import java.util.NoSuchElementException;
 
 import junit.framework.TestCase;
 
+/**
+ * @author higa
+ *
+ */
 public class SLinkedListTest extends TestCase {
 
     private SLinkedList list_;
 
+    /**
+     * @throws Exception
+     */
     public void testGetFirstEntry() throws Exception {
         assertNull("1", list_.getFirstEntry());
         list_.addFirst("1");
         assertEquals("2", "1", list_.getFirstEntry().getElement());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetFirst() throws Exception {
         try {
             list_.getFirst();
@@ -40,12 +50,18 @@ public class SLinkedListTest extends TestCase {
         assertEquals("2", "1", list_.getFirst());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetLastEntry() throws Exception {
         assertNull("1", list_.getLastEntry());
         list_.addLast("1");
         assertEquals("2", "1", list_.getLastEntry().getElement());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetLast() throws Exception {
         try {
             list_.getLast();
@@ -57,6 +73,9 @@ public class SLinkedListTest extends TestCase {
         assertEquals("2", "1", list_.getLast());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testRemoveFirst() throws Exception {
         list_.addLast("1");
         list_.addLast("2");
@@ -64,6 +83,9 @@ public class SLinkedListTest extends TestCase {
         assertEquals("1", "2", list_.getFirst());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testRemoveLast() throws Exception {
         list_.addLast("1");
         list_.addLast("2");
@@ -71,18 +93,27 @@ public class SLinkedListTest extends TestCase {
         assertEquals("1", "1", list_.getLast());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAddFirst() throws Exception {
         list_.addFirst("1");
         list_.addFirst("2");
         assertEquals("1", "2", list_.getFirst());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAddLast() throws Exception {
         list_.addLast("1");
         list_.addLast("2");
         assertEquals("1", "2", list_.getLast());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testSize() throws Exception {
         assertEquals("1", 0, list_.size());
         list_.addLast("1");
@@ -91,12 +122,18 @@ public class SLinkedListTest extends TestCase {
         assertEquals("3", 0, list_.size());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testIsEmpty() throws Exception {
         assertTrue("1", list_.isEmpty());
         list_.addLast("1");
         assertTrue("2", !list_.isEmpty());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testContaines() throws Exception {
         assertTrue("1", !list_.contains(null));
         assertTrue("2", !list_.contains("1"));
@@ -106,6 +143,9 @@ public class SLinkedListTest extends TestCase {
         assertTrue("5", !list_.contains(null));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testRemove() throws Exception {
         list_.addLast(null);
         list_.addLast("1");
@@ -130,6 +170,9 @@ public class SLinkedListTest extends TestCase {
         assertEquals("3", "3", e.getNext().getElement());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testClear() throws Exception {
         list_.addLast(null);
         list_.addLast("1");
@@ -140,6 +183,9 @@ public class SLinkedListTest extends TestCase {
         assertNull("3", list_.getLastEntry());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetEntry() throws Exception {
         list_.addLast("1");
         list_.addLast("2");
@@ -161,6 +207,9 @@ public class SLinkedListTest extends TestCase {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGet() throws Exception {
         list_.addLast("1");
         list_.addLast("2");
@@ -170,6 +219,9 @@ public class SLinkedListTest extends TestCase {
         assertEquals("3", "3", list_.get(2));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testSerialize() throws Exception {
         list_.addLast("1");
         list_.addLast("2");
@@ -177,6 +229,9 @@ public class SLinkedListTest extends TestCase {
         assertNotNull("1", SerializeUtil.serialize(list_));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testSet() throws Exception {
         list_.addLast("1");
         list_.addLast("2");
@@ -185,6 +240,9 @@ public class SLinkedListTest extends TestCase {
         assertEquals("1", "4", list_.get(1));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testEntry() throws Exception {
         list_.addLast("1");
         list_.addLast("2");
@@ -204,6 +262,9 @@ public class SLinkedListTest extends TestCase {
         assertEquals("8", 0, list_.size());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAdd() throws Exception {
         list_.addLast("1");
         list_.addLast("2");
@@ -213,6 +274,9 @@ public class SLinkedListTest extends TestCase {
         assertEquals("2", "2", list_.get(2));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testIndexOf() throws Exception {
         list_.addLast(null);
         list_.addLast("1");

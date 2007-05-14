@@ -17,13 +17,23 @@ package org.seasar.framework.util;
 
 import junit.framework.TestCase;
 
+/**
+ * @author higa
+ *
+ */
 public class DoubleConversionUtilTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testToDouble() throws Exception {
         assertEquals("1", new Double("1000.5"), DoubleConversionUtil
                 .toDouble("1,000.5"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testToPrimitiveDouble() throws Exception {
         assertEquals("1", 1000.5, DoubleConversionUtil
                 .toPrimitiveDouble("1,000.5"), 0);

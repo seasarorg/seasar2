@@ -24,14 +24,29 @@ import junit.framework.TestCase;
  * 
  */
 public class FieldUtilTest extends TestCase {
+    /**
+     * 
+     */
     public Object objectField;
 
+    /**
+     * 
+     */
     public int intField;
 
+    /**
+     * 
+     */
     public String stringField;
 
+    /**
+     * 
+     */
     public static final int INT_DATA = 987654321;
 
+    /**
+     * 
+     */
     public static final String STRING_DATA = "Hello World!";
 
     /**

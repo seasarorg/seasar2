@@ -23,6 +23,9 @@ import junit.framework.AssertionFailedError;
  */
 public class ExceptionAssert {
 
+    /**
+     * @param th
+     */
     public static void assertMessageExist(Throwable th) {
         String message = th.getMessage();
         try {

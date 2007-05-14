@@ -20,8 +20,15 @@ import java.lang.reflect.Array;
 import junit.framework.TestCase;
 import junitx.framework.ArrayAssert;
 
+/**
+ * @author higa
+ *
+ */
 public class ArrayUtilTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testAdd() throws Exception {
         String[] array = new String[] { "111" };
         String[] newArray = (String[]) ArrayUtil.add(array, "222");
@@ -30,6 +37,9 @@ public class ArrayUtilTest extends TestCase {
         assertEquals("3", "222", newArray[1]);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAdd2() throws Exception {
         String[] a = new String[] { "1", "2" };
         String[] b = new String[] { "3" };
@@ -40,6 +50,9 @@ public class ArrayUtilTest extends TestCase {
         assertEquals("4", "3", a[2]);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testIndexOf() throws Exception {
         String[] array = new String[] { "111", "222", "333" };
         assertEquals("1", 1, ArrayUtil.indexOf(array, "222"));
@@ -49,12 +62,18 @@ public class ArrayUtilTest extends TestCase {
         assertEquals("4", 1, ArrayUtil.indexOf(array, null));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testIndexOf_character() throws Exception {
         char[] array = new char[] { 'a', 'b', 'c' };
         assertEquals("1", 0, ArrayUtil.indexOf(array, 'a'));
         assertEquals("2", -1, ArrayUtil.indexOf(array, 'd'));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testRemoveFirst() throws Exception {
         String[] array = new String[] { "111", "222", "333" };
         String[] newArray = (String[]) ArrayUtil.remove(array, "111");
@@ -63,6 +82,9 @@ public class ArrayUtilTest extends TestCase {
         assertEquals("3", "333", newArray[1]);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testRemoveMiddle() throws Exception {
         String[] array = new String[] { "111", "222", "333" };
         String[] newArray = (String[]) ArrayUtil.remove(array, "222");
@@ -71,6 +93,9 @@ public class ArrayUtilTest extends TestCase {
         assertEquals("3", "333", newArray[1]);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testRemoveLast() throws Exception {
         String[] array = new String[] { "111", "222", "333" };
         String[] newArray = (String[]) ArrayUtil.remove(array, "333");
@@ -79,12 +104,18 @@ public class ArrayUtilTest extends TestCase {
         assertEquals("3", "222", newArray[1]);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testRemoveNothing() throws Exception {
         String[] array = new String[] { "111", "222", "333" };
         String[] newArray = (String[]) ArrayUtil.remove(array, "444");
         assertSame("1", array, newArray);
     }
 
+    /**
+     * 
+     */
     public void testIsEmpty() {
         assertTrue(ArrayUtil.isEmpty(null));
         assertTrue(ArrayUtil.isEmpty(new Object[] {}));
@@ -92,6 +123,9 @@ public class ArrayUtilTest extends TestCase {
         assertFalse(ArrayUtil.isEmpty(new Object[] { "aaa" }));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testContains() throws Exception {
         assertEquals(true, ArrayUtil.contains(new Object[] { "1" }, "1"));
         assertEquals(false, ArrayUtil.contains(new Object[] { "1" }, "2"));
@@ -101,6 +135,9 @@ public class ArrayUtilTest extends TestCase {
         assertEquals(true, ArrayUtil.contains(new Object[] { null }, null));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testContains_character() throws Exception {
         assertEquals(true, ArrayUtil.contains(new char[] { '1', '2' }, '1'));
         assertEquals(false, ArrayUtil.contains(new char[] { '1' }, '2'));
@@ -108,6 +145,9 @@ public class ArrayUtilTest extends TestCase {
         assertEquals(false, ArrayUtil.contains((char[]) null, '1'));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testEqualsIgnoreSequence() throws Exception {
         assertEquals(true, ArrayUtil.equalsIgnoreSequence(new Object[] { "1" },
                 new Object[] { "1" }));
@@ -125,6 +165,9 @@ public class ArrayUtilTest extends TestCase {
                 new Object[] {}));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testSetArrayValue() throws Exception {
         Object o = Array.newInstance(int.class, 3);
         ArrayUtil.setArrayValue(o, int.class, new Integer(1), 0);
@@ -134,12 +177,18 @@ public class ArrayUtilTest extends TestCase {
         ArrayAssert.assertEquals(new int[] { 1, 2, 3 }, num);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testToObjectArray() throws Exception {
         final Object[] a = ArrayUtil.toObjectArray(new int[] { 1, 5, 2 });
         ArrayAssert.assertEquals(new Integer[] { new Integer(1),
                 new Integer(5), new Integer(2) }, a);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testToObjectArray_NoArray() throws Exception {
         try {
             ArrayUtil.toObjectArray("a");

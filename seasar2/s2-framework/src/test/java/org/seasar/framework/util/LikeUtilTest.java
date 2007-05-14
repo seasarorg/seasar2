@@ -17,8 +17,15 @@ package org.seasar.framework.util;
 
 import junit.framework.TestCase;
 
+/**
+ * @author higa
+ *
+ */
 public class LikeUtilTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testMatch() throws Exception {
         assertEquals("1", true, LikeUtil.match("SCOTT", "SCOTT"));
         assertEquals("2", true, LikeUtil.match("_COT_", "SCOTT"));

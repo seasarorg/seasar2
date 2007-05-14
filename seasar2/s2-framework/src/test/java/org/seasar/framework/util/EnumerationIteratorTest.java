@@ -26,6 +26,9 @@ import junit.framework.TestCase;
  */
 public class EnumerationIteratorTest extends TestCase {
 
+    /**
+     * 
+     */
     public void testEnumerationIterator() {
         Vector vector = new Vector();
         vector.add("a");
@@ -41,12 +44,18 @@ public class EnumerationIteratorTest extends TestCase {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public void testNext() throws Exception {
         EnumerationIterator itr = new EnumerationIterator(new Vector()
                 .elements());
         assertEquals(false, itr.hasNext());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testConstructorWithNull() throws Exception {
         try {
             new EnumerationIterator((Enumeration) null);

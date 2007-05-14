@@ -30,11 +30,17 @@ public class HotTextTest extends TestCase {
             .getPackageName(HotTextTest.class), ".", "/")
             + "/HotTextTest.txt";
 
+    /**
+     * @throws Exception
+     */
     public void testSetFileAndGetValue() throws Exception {
         HotText text = new HotText(PATH);
         assertEquals("あ", text.getValue());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testSetValueAndGetValue() throws Exception {
         HotText text = new HotText();
         text.setValue("aaa");
@@ -42,6 +48,9 @@ public class HotTextTest extends TestCase {
         assertFalse(text.isModified());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testIsModified() throws Exception {
         HotText text = new HotText(PATH);
         assertFalse(text.isModified());

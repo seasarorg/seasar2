@@ -26,6 +26,9 @@ import junit.framework.TestCase;
 public class BigDecimalConversionUtilTest extends TestCase {
     private static final BigDecimal ZERO = new BigDecimal("0");
 
+    /**
+     * @throws Exception
+     */
     public void testToBigDecimal() throws Exception {
         assertNull(BigDecimalConversionUtil.toBigDecimal(null));
         assertSame(ZERO, BigDecimalConversionUtil.toBigDecimal(ZERO));

@@ -21,24 +21,32 @@ import java.io.OutputStream;
 import junit.framework.TestCase;
 
 import org.seasar.framework.exception.IORuntimeException;
-import org.seasar.framework.util.OutputStreamUtil;
 
 /**
  * @author shot
  */
 public class OutputStreamUtilTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testClose() throws Exception {
         NotifyOutputStream out = new NotifyOutputStream();
         OutputStreamUtil.close(out);
         assertEquals("closed", out.getNotify());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testCloseNull() throws Exception {
         OutputStreamUtil.close((OutputStream) null);
         assertTrue(true);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testClose_throwIOException() throws Exception {
         OutputStream out = new IOExceptionOccurOutputStream();
         try {
@@ -60,6 +68,9 @@ public class OutputStreamUtilTest extends TestCase {
             notify_ = "closed";
         }
 
+        /**
+         * @return
+         */
         public String getNotify() {
             return notify_;
         }

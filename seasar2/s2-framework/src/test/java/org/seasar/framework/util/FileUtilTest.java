@@ -32,9 +32,11 @@ public class FileUtilTest extends TestCase {
         super.setUp();
     }
 
-    /*
+    /**
      * Test method for 'org.seasar.framework.util.FileUtil.copy(File, File,
      * boolean)'
+     * 
+     * @throws Exception
      */
     public void testCopy() throws Exception {
         String root = ResourceUtil.getBuildDir(getClass()).getCanonicalPath();

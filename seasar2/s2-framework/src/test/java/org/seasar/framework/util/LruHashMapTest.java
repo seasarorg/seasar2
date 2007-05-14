@@ -25,6 +25,9 @@ import junit.framework.TestCase;
  */
 public class LruHashMapTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testAll() throws Exception {
         LruHashMap lru = new LruHashMap(3);
         lru.put("aaa", "111");

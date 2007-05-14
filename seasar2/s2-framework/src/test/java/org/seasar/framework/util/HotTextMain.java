@@ -27,6 +27,7 @@ public class HotTextMain {
 
     /**
      * @param args
+     * @throws Exception
      */
     public static void main(String[] args) throws Exception {
         HotText text = new HotText(PATH);

@@ -21,27 +21,43 @@ import java.util.Map;
 
 import junit.framework.TestCase;
 
+/**
+ * @author higa
+ *
+ */
 public class ArrayMapTest extends TestCase {
 
     private ArrayMap _map;
 
+    /**
+     * @throws Exception
+     */
     public void testSize() throws Exception {
         assertEquals("1", 3, _map.size());
         _map.put("3", "test3");
         assertEquals("2", 4, _map.size());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testIsEmpty() throws Exception {
         assertTrue("1", !_map.isEmpty());
         _map.clear();
         assertTrue("2", _map.isEmpty());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testContainsValue() throws Exception {
         assertTrue("1", _map.containsValue("test2"));
         assertTrue("2", !_map.containsValue("test3"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testContainsKey() throws Exception {
         assertTrue("1", _map.containsKey("2"));
         assertTrue("2", !_map.containsKey("3"));
@@ -49,12 +65,18 @@ public class ArrayMapTest extends TestCase {
         assertTrue("3", _map.containsKey("3"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testIndexOf() throws Exception {
         assertEquals("1", 1, _map.indexOf("test"));
         assertEquals("1", 0, _map.indexOf(null));
         assertEquals("2", -1, _map.indexOf("test3"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGet() throws Exception {
         assertEquals("1", "test", _map.get("1"));
         assertEquals("2", null, _map.get(null));
@@ -62,6 +84,9 @@ public class ArrayMapTest extends TestCase {
         assertEquals("4", null, _map.get(0));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testPut() throws Exception {
         assertEquals("1", "test", _map.put("1", "test3"));
         assertEquals("2", "test3", _map.get("1"));
@@ -70,6 +95,9 @@ public class ArrayMapTest extends TestCase {
         _map.put(null, "test5");
     }
 
+    /**
+     * @throws Exception
+     */
     public void testRemove() throws Exception {
         assertEquals("1", "test", _map.remove("1"));
         assertEquals("2", 2, _map.size());
@@ -77,6 +105,9 @@ public class ArrayMapTest extends TestCase {
         assertEquals("4", null, _map.remove(0));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testRemove2() throws Exception {
         Map m = new ArrayMap();
         m.put("1", "d");
@@ -87,6 +118,9 @@ public class ArrayMapTest extends TestCase {
         assertEquals("2", false, m.containsKey("1"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testRemove3() throws Exception {
         Map m = new ArrayMap();
         m.put(new MyKey("1"), "d");
@@ -95,6 +129,9 @@ public class ArrayMapTest extends TestCase {
         assertEquals("1", false, m.containsKey(new MyKey("1")));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testRemove4() throws Exception {
         ArrayMap m = new ArrayMap();
         m.put("1", "d");
@@ -109,6 +146,9 @@ public class ArrayMapTest extends TestCase {
         assertEquals("5", "d", m.get(0));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testPutAll() throws Exception {
         Map m = new HashMap();
         m.put("3", "test3");
@@ -119,6 +159,9 @@ public class ArrayMapTest extends TestCase {
         assertEquals("3", 5, _map.size());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testEqaulas() throws Exception {
         Map copy = (ArrayMap) _map.clone();
         assertTrue("1", _map.equals(copy));
@@ -127,15 +170,24 @@ public class ArrayMapTest extends TestCase {
         assertTrue("3", !_map.equals(copy));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testToString() throws Exception {
         assertNotNull("1", _map.toString());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testClear() throws Exception {
         _map.clear();
         assertEquals("1", 0, _map.size());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testEntrySet() throws Exception {
         Iterator i = _map.entrySet().iterator();
         assertEquals("1", null, ((Map.Entry) i.next()).getKey());
@@ -143,6 +195,9 @@ public class ArrayMapTest extends TestCase {
         assertEquals("1", "2", ((Map.Entry) i.next()).getKey());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testSerialize() throws Exception {
         ArrayMap copy = (ArrayMap) SerializeUtil.serialize(_map);
         assertEquals("1", null, copy.get(0));
@@ -151,6 +206,9 @@ public class ArrayMapTest extends TestCase {
         _map.equals(copy);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testPerformance() throws Exception {
         int num = 100000;
         Map hmap = new HashMap();

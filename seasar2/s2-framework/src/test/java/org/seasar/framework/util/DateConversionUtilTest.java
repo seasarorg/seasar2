@@ -20,53 +20,84 @@ import java.util.Locale;
 
 import junit.framework.TestCase;
 
+/**
+ * @author higa
+ *
+ */
 public class DateConversionUtilTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testRemoveDelimiter() throws Exception {
         assertEquals("1", "yyyyMMdd", DateConversionUtil
                 .removeDelimiter("yyyy/MM/dd"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetDateFormat() throws Exception {
         SimpleDateFormat sdf = DateConversionUtil.getDateFormat("2004/11/7",
                 Locale.JAPAN);
         assertEquals("1", "yyyy/MM/dd", sdf.toPattern());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetDateFormat2() throws Exception {
         SimpleDateFormat sdf = DateConversionUtil.getDateFormat("04/11/7",
                 Locale.JAPAN);
         assertEquals("1", "yy/MM/dd", sdf.toPattern());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetDateFormat3() throws Exception {
         SimpleDateFormat sdf = DateConversionUtil.getDateFormat("20041107",
                 Locale.JAPAN);
         assertEquals("1", "yyyyMMdd", sdf.toPattern());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetDateFormat4() throws Exception {
         SimpleDateFormat sdf = DateConversionUtil.getDateFormat("041107",
                 Locale.JAPAN);
         assertEquals("1", "yyMMdd", sdf.toPattern());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testFindDelimeterFromPattern1() throws Exception {
         String delim = DateConversionUtil
                 .findDelimiterFromPattern("yyyy/MM/dd");
         assertEquals("/", delim);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testFindDelimeterFromPattern2() throws Exception {
         String delim = DateConversionUtil
                 .findDelimiterFromPattern("yyyy/MM-dd");
         assertEquals("/", delim);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetPattern() throws Exception {
         System.out.println(DateConversionUtil.getPattern(Locale.JAPAN));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetDefaultPattern() throws Exception {
         System.out.println(DateConversionUtil.getY4Pattern(Locale.JAPAN));
     }

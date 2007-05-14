@@ -20,8 +20,15 @@ import java.util.ResourceBundle;
 
 import junit.framework.TestCase;
 
+/**
+ * @author higa
+ *
+ */
 public class ResourceBundleUtilTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testConvertMap() throws Exception {
         ResourceBundle bundle = ResourceBundleUtil.getBundle("SSRMessages",
                 null);
@@ -31,6 +38,9 @@ public class ResourceBundleUtilTest extends TestCase {
         assertNotNull("1", value);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetBundle() throws Exception {
         ResourceBundle bundle = ResourceBundleUtil.getBundle("SSRMessages",
                 null, this.getClass().getClassLoader());
