@@ -26,6 +26,9 @@ import junit.framework.TestCase;
  */
 public class TagHandlerContextTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testStartElementAndEndElement() throws Exception {
         TagHandlerContext ctx = new TagHandlerContext();
         ctx.startElement("aaa");
@@ -49,6 +52,9 @@ public class TagHandlerContextTest extends TestCase {
         assertEquals("12", "bbb", ctx.getQName());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testPeek() throws Exception {
         TagHandlerContext ctx = new TagHandlerContext();
         ctx.push("aaa");
@@ -59,6 +65,9 @@ public class TagHandlerContextTest extends TestCase {
         assertEquals("3", "bbb", ctx.peek(String.class));
     }
 
+    /**
+     * 
+     */
     public void testIsEmpty() {
         TagHandlerContext ctx = new TagHandlerContext();
         assertTrue("1", ctx.isEmpty());

@@ -19,12 +19,19 @@ import junit.framework.TestCase;
 
 import org.xml.sax.Attributes;
 
+/**
+ * @author higa
+ *
+ */
 public class SaxHandlerTest extends TestCase {
 
     private static final String XML_FILE_NAME = "org/seasar/framework/xml/test1.xml";
 
     private TagHandlerRule rule_;
 
+    /**
+     * @throws Exception
+     */
     public void testStart() throws Exception {
         rule_.addTagHandler("/tag1", new TagHandler() {
             private static final long serialVersionUID = -4675761325253965494L;
@@ -38,6 +45,9 @@ public class SaxHandlerTest extends TestCase {
         assertEquals("1", "aaa", parser.parse(XML_FILE_NAME));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAppendBody() throws Exception {
         final StringBuffer buf = new StringBuffer();
         rule_.addTagHandler("/tag1", new TagHandler() {
@@ -54,6 +64,9 @@ public class SaxHandlerTest extends TestCase {
         assertEquals("1", "[111][222][333]", buf.toString());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAppendBody2() throws Exception {
         final StringBuffer buf = new StringBuffer();
         rule_.addTagHandler("tag1", new TagHandler() {
@@ -70,6 +83,9 @@ public class SaxHandlerTest extends TestCase {
         assertEquals("1", "[111][222][333]", buf.toString());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAppendBody3() throws Exception {
         final StringBuffer buf = new StringBuffer();
         rule_.addTagHandler("/tag1/tag3/tag4", new TagHandler() {
@@ -86,6 +102,9 @@ public class SaxHandlerTest extends TestCase {
         assertEquals("1", "[eee]", buf.toString());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testEnd() throws Exception {
         rule_.addTagHandler("/tag1/tag2", new TagHandler() {
             private static final long serialVersionUID = -549136729563029588L;
@@ -100,6 +119,9 @@ public class SaxHandlerTest extends TestCase {
         assertEquals("1", "c c", result);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testException() throws Exception {
         rule_.addTagHandler("/tag1/tag3", new TagHandler() {
             private static final long serialVersionUID = -7435868325103101164L;
@@ -118,6 +140,9 @@ public class SaxHandlerTest extends TestCase {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public void testTagMatching() throws Exception {
         TagHandler eh = new TagHandler() {
             private static final long serialVersionUID = 313427123032197039L;
