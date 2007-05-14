@@ -39,15 +39,24 @@ public class NotSupportedInterceptorTest extends S2TestCase {
         include(PATH);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testInvoke() throws Exception {
         assertEquals("1", false, txBean.hasTransaction());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testInvokeTx() throws Exception {
         assertEquals("1", false, txBean.hasTransaction());
         assertEquals("2", Status.STATUS_ACTIVE, tm.getStatus());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testInvokeExceptionTx() throws Exception {
         try {
             exBean.invoke();

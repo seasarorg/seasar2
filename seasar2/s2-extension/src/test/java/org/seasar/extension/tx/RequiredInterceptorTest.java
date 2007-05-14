@@ -20,6 +20,9 @@ import javax.transaction.TransactionManager;
 
 import org.seasar.extension.unit.S2TestCase;
 
+/**
+ *
+ */
 public class RequiredInterceptorTest extends S2TestCase {
 
     private static final String PATH = "RequiredInterceptorTest.dicon";
@@ -34,11 +37,17 @@ public class RequiredInterceptorTest extends S2TestCase {
         include(PATH);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testInvoke() throws Exception {
         assertEquals("1", true, txBean_.hasTransaction());
         assertEquals("2", Status.STATUS_NO_TRANSACTION, tm_.getStatus());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testInvoke2() throws Exception {
         tm_.begin();
         assertEquals("1", true, txBean_.hasTransaction());
@@ -46,10 +55,16 @@ public class RequiredInterceptorTest extends S2TestCase {
         tm_.commit();
     }
 
+    /**
+     * @throws Exception
+     */
     public void testMarkRollback() throws Exception {
         txBean_.markRollback();
     }
 
+    /**
+     * @throws Exception
+     */
     public void testInvokeException() throws Exception {
         try {
             exBean_.invoke();

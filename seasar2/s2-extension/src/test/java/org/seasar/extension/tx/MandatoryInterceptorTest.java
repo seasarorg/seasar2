@@ -20,6 +20,9 @@ import javax.transaction.TransactionManager;
 
 import org.seasar.extension.unit.S2TestCase;
 
+/**
+ *
+ */
 public class MandatoryInterceptorTest extends S2TestCase {
 
     private static final String PATH = "MandatoryInterceptorTest.dicon";
@@ -32,6 +35,9 @@ public class MandatoryInterceptorTest extends S2TestCase {
         include(PATH);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testInvoke() throws Exception {
         try {
             txBean_.hasTransaction();
@@ -41,6 +47,9 @@ public class MandatoryInterceptorTest extends S2TestCase {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public void testInvoke2() throws Exception {
         tm_.begin();
         assertEquals("1", true, txBean_.hasTransaction());

@@ -41,6 +41,9 @@ public class AbstTxInterceptorTest extends S2TestCase {
         include(PATH);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testType() throws Exception {
         try {
             testTx_.addCommitRule(Throwable.class);
@@ -65,6 +68,9 @@ public class AbstTxInterceptorTest extends S2TestCase {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public void testNoRule() throws Exception {
         try {
             exBean_.invoke();
@@ -76,6 +82,9 @@ public class AbstTxInterceptorTest extends S2TestCase {
         assertFalse("3", testTx_.result);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testCommitRule() throws Exception {
         testTx_.addRollbackRule(RuntimeException.class);
         testTx_.addRollbackRule(RemoteException.class);
@@ -90,6 +99,9 @@ public class AbstTxInterceptorTest extends S2TestCase {
         assertTrue("3", testTx_.result);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testRollbackRule1() throws Exception {
         testTx_.addRollbackRule(RuntimeException.class);
         testTx_.addRollbackRule(RemoteException.class);
@@ -104,6 +116,9 @@ public class AbstTxInterceptorTest extends S2TestCase {
         assertFalse("3", testTx_.result);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testRollbackRule2() throws Exception {
         testTx_.addRollbackRule(RuntimeException.class);
         testTx_.addRollbackRule(RemoteException.class);
@@ -118,6 +133,9 @@ public class AbstTxInterceptorTest extends S2TestCase {
         assertFalse("3", testTx_.result);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testRollbackRule3() throws Exception {
         testTx_.addRollbackRule(RuntimeException.class);
         testTx_.addRollbackRule(RemoteException.class);
@@ -132,6 +150,9 @@ public class AbstTxInterceptorTest extends S2TestCase {
         assertFalse("3", testTx_.result);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testRollbackRule4() throws Exception {
         testTx_.addRollbackRule(RuntimeException.class);
         testTx_.addRollbackRule(RemoteException.class);
@@ -146,9 +167,15 @@ public class AbstTxInterceptorTest extends S2TestCase {
         assertFalse("3", testTx_.result);
     }
 
+    /**
+     *
+     */
     public static class TestInterceptor extends AbstractTxInterceptor {
         boolean result;
 
+        /**
+         * 
+         */
         public TestInterceptor() {
         }
 

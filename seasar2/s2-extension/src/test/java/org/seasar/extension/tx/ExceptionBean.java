@@ -15,9 +15,19 @@
  */
 package org.seasar.extension.tx;
 
+/**
+ *
+ */
 public interface ExceptionBean {
 
+    /**
+     * @throws Exception
+     */
     public void invoke() throws Exception;
 
+    /**
+     * @param t
+     * @throws Throwable
+     */
     public void invoke(Throwable t) throws Throwable;
 }

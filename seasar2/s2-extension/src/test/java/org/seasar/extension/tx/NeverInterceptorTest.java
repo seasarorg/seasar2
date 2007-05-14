@@ -20,6 +20,9 @@ import javax.transaction.TransactionManager;
 
 import org.seasar.extension.unit.S2TestCase;
 
+/**
+ *
+ */
 public class NeverInterceptorTest extends S2TestCase {
 
     private static final String PATH = "NeverInterceptorTest.dicon";
@@ -32,12 +35,18 @@ public class NeverInterceptorTest extends S2TestCase {
         include(PATH);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testInvokeWithoutTxn() throws Exception {
         assertEquals("1", Status.STATUS_NO_TRANSACTION, tm_.getStatus());
         assertFalse("2", txBean_.hasTransaction());
         assertEquals("3", Status.STATUS_NO_TRANSACTION, tm_.getStatus());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testInvokeWithinTxn() throws Exception {
         tm_.begin();
         try {

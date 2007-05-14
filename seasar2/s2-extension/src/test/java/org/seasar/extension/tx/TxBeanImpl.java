@@ -20,10 +20,16 @@ import javax.transaction.SystemException;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
 
+/**
+ *
+ */
 public class TxBeanImpl implements TxBean {
 
     private TransactionManager tm_;
 
+    /**
+     * @param tm
+     */
     public TxBeanImpl(TransactionManager tm) {
         tm_ = tm;
     }

@@ -15,6 +15,9 @@
  */
 package org.seasar.extension.tx;
 
+/**
+ * 
+ */
 public class ExceptionBeanImpl implements ExceptionBean {
 
     public void invoke() throws Exception {
