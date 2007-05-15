@@ -58,7 +58,7 @@ public class SessionFilter implements Filter {
         try {
             chain.doFilter(requestWrapper, responseWrapper);
         } finally {
-            S2HttpSession session = requestWrapper.getDbHttpSession();
+            S2HttpSession session = requestWrapper.getS2HttpSession();
             if (session == null) {
                 return;
             }

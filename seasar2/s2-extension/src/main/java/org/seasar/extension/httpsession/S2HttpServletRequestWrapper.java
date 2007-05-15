@@ -95,7 +95,7 @@ public class S2HttpServletRequestWrapper extends HttpServletRequestWrapper {
      * 
      * @return
      */
-    public S2HttpSession getDbHttpSession() {
+    public S2HttpSession getS2HttpSession() {
         return session;
     }
 
