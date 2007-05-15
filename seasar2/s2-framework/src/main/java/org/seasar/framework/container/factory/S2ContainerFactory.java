@@ -416,7 +416,7 @@ public final class S2ContainerFactory {
      * </p>
      * <p>
      * S2コンテナを構築した後、
-     * {@link org.seasar.framework.container.ExternalContext 外部コンテキスト}および{@link org.seasar.framework.container.ExternalContextComponentDefRegister 外部コンテキスト用コンポーネント定義を登録するオブジェクト}をコンテナへ登録します。
+     * {@link org.seasar.framework.container.ExternalContext 外部コンテキスト}および{@link org.seasar.framework.container.ExternalContextComponentDefRegister 外部コンテキストコンポーネント定義レジスタ}をコンテナへ登録します。
      * </p>
      * 
      * @author jundu
@@ -439,7 +439,7 @@ public final class S2ContainerFactory {
         public static final String externalContextComponentDefRegister_BINDING = "bindingType=may";
 
         /**
-         * パス名から物理（リアル）パスを取得するためのパスリゾルバです。
+         * 論理パスから物理（リアル）パスを取得するためのパスリゾルバです。
          */
         protected PathResolver pathResolver = new SimplePathResolver();
 
@@ -449,12 +449,12 @@ public final class S2ContainerFactory {
         protected ExternalContext externalContext;
 
         /**
-         * 外部コンテキスト用コンポーネント定義を登録するオブジェクトです。
+         * 外部コンテキストコンポーネント定義レジスタです。
          */
         protected ExternalContextComponentDefRegister externalContextComponentDefRegister;
 
         /**
-         * パス名から物理（リアル）パスを取得するためのパスリゾルバを返します。
+         * 論理パスから物理（リアル）パスを取得するためのパスリゾルバを返します。
          * 
          * @return パスリゾルバ
          */
@@ -463,7 +463,7 @@ public final class S2ContainerFactory {
         }
 
         /**
-         * パス名から物理（リアル）パスを取得するためのパスリゾルバを設定します。
+         * 論理パスから物理（リアル）パスを取得するためのパスリゾルバを設定します。
          * 
          * @param pathResolver
          *            パスリゾルバ
@@ -492,19 +492,19 @@ public final class S2ContainerFactory {
         }
 
         /**
-         * 外部コンテキスト用コンポーネント定義を登録するためのオブジェクトを返します。
+         * 外部コンテキストコンポーネント定義レジスタを返します。
          * 
-         * @return 外部コンテキスト用コンポーネント定義を登録するためのオブジェクト
+         * @return 外部コンテキストコンポーネント定義レジスタ
          */
         public ExternalContextComponentDefRegister getExternalContextComponentDefRegister() {
             return externalContextComponentDefRegister;
         }
 
         /**
-         * 外部コンテキスト用コンポーネント定義を登録するためのオブジェクトを設定します。
+         * 外部コンテキストコンポーネント定義レジスタを設定します。
          * 
          * @param externalContextComponentDefRegister
-         *            外部コンテキスト用コンポーネント定義を登録するためのオブジェクト
+         *            外部コンテキストコンポーネント定義レジスタ
          */
         public void setExternalContextComponentDefRegister(
                 ExternalContextComponentDefRegister externalContextComponentDefRegister) {
@@ -576,7 +576,7 @@ public final class S2ContainerFactory {
          * S2コンテナを構築して返します。
          * <p>
          * 指定されたクラスローダを使用してS2コンテナを構築し、
-         * 外部コンテキストおよび外部コンテキスト用コンポーネント定義を登録するオブジェクトを設定して返します。
+         * 外部コンテキストおよび外部コンテキストコンポーネント定義レジスタを設定して返します。
          * </p>
          * 
          * @param path
@@ -735,10 +735,10 @@ public final class S2ContainerFactory {
      * <dd>デフォルトのファクトリプロバイダが使用されている場合、
      * {@link org.seasar.framework.container.ExternalContext}を実装したコンポーネントがあれば、
      * 外部コンテキストとして設定します。</dd>
-     * <dt>外部コンテキスト用コンポーネント定義を登録するオブジェクト</dt>
+     * <dt>外部コンテキストコンポーネント定義レジスタ</dt>
      * <dd>デフォルトのファクトリプロバイダが使用されている場合、
      * {@link org.seasar.framework.container.ExternalContextComponentDefRegister}を実装したコンポーネントがあれば、
-     * 外部コンテキスト用コンポーネントを登録するオブジェクトとして設定します。</dd>
+     * 外部コンテキストコンポーネント定義レジスタとして設定します。</dd>
      * <dt>デフォルトのS2コンテナビルダ</dt>
      * <dd><code>defaultBuilder</code>という名前のコンポーネントがあれば、
      * デフォルトのS2コンテナビルダとして設定します。</dd>
