@@ -52,22 +52,10 @@ public class SessionFilter implements Filter {
         S2HttpServletRequestWrapper requestWrapper = new S2HttpServletRequestWrapper(
                 (HttpServletRequest) request, ssm);
         S2HttpServletResponseWrapper responseWrapper = new S2HttpServletResponseWrapper(
-                (HttpServletResponse) response, requestWrapper);
+                (HttpServletResponse) response, requestWrapper, ssm);
         SessionIdUtil.writeCookie(requestWrapper, responseWrapper,
                 requestWrapper.getSessionId());
-        try {
-            chain.doFilter(requestWrapper, responseWrapper);
-        } finally {
-            S2HttpSession session = requestWrapper.getS2HttpSession();
-            if (session == null) {
-                return;
-            }
-
-            SessionState sessionState = session.getSessionState();
-            if (sessionState != null) {
-                ssm.updateState(session.getId(), sessionState);
-            }
-        }
+        chain.doFilter(requestWrapper, responseWrapper);
     }
 
     protected SessionStateManager getSessionStateManager() {

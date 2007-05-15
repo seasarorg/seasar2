@@ -29,7 +29,14 @@ import org.seasar.framework.exception.CannotCompileRuntimeException;
 import org.seasar.framework.exception.NotFoundRuntimeException;
 import org.seasar.framework.util.ClassPoolUtil;
 
+/**
+ * {@link InterType}の抽象クラスです。
+ */
 public abstract class AbstractInterType implements InterType {
+
+    /**
+     * Componentアノテーションです。
+     */
     public static final String COMPONENT = "instance = prototype";
 
     protected Class targetClass;

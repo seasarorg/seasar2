@@ -17,11 +17,21 @@ package org.seasar.framework.aop;
 
 import java.lang.reflect.Method;
 
+import org.aopalliance.intercept.MethodInterceptor;
+
 /**
+ * {@link MethodInterceptor}がどこに適用されるのかをあらわすインターフェースです。
+ * 
  * @author higa
  * 
  */
 public interface Pointcut {
 
-    public boolean isApplied(Method method);
+    /**
+     * 指定されたメソッドに{@link MethodInterceptor}が適用されるかどうかを返します。
+     * 
+     * @param method
+     * @return
+     */
+    boolean isApplied(Method method);
 }

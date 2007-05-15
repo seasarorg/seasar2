@@ -18,9 +18,12 @@ package org.seasar.framework.aop.interceptors;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 
 /**
+ * モック用の{@link MethodInterceptor}です。
+ * 
  * @author higa
  * 
  */
@@ -36,33 +39,75 @@ public class MockInterceptor extends AbstractInterceptor {
 
     private Map argsMap = new HashMap();
 
+    /**
+     * {@link MockInterceptor}を作成します。
+     */
     public MockInterceptor() {
     }
 
+    /**
+     * {@link MockInterceptor}を作成します。
+     * 
+     * @param value
+     */
     public MockInterceptor(Object value) {
         setReturnValue(value);
     }
 
+    /**
+     * デフォルトの戻り値を設定します。
+     * 
+     * @param returnValue
+     */
     public void setReturnValue(Object returnValue) {
         setReturnValue(null, returnValue);
     }
 
+    /**
+     * 指定したメソッドに対する戻り値を設定します。
+     * 
+     * @param methodName
+     * @param returnValue
+     */
     public void setReturnValue(String methodName, Object returnValue) {
         returnValueMap.put(methodName, returnValue);
     }
 
+    /**
+     * デフォルトでスローされる例外を設定します。
+     * 
+     * @param throwable
+     */
     public void setThrowable(Throwable throwable) {
         setThrowable(null, throwable);
     }
 
+    /**
+     * 指定したメソッドを呼び出したときに、 スローされる例外を設定します。
+     * 
+     * @param methodName
+     * @param throwable
+     */
     public void setThrowable(String methodName, Throwable throwable) {
         throwableMap.put(methodName, throwable);
     }
 
+    /**
+     * メソッドが呼び出されたどうかを返します。
+     * 
+     * @param methodName
+     * @return
+     */
     public boolean isInvoked(String methodName) {
         return invokedMap.containsKey(methodName);
     }
 
+    /**
+     * 呼び出されたメソッドの引数を返します。
+     * 
+     * @param methodName
+     * @return
+     */
     public Object[] getArgs(String methodName) {
         return (Object[]) argsMap.get(methodName);
     }

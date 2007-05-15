@@ -22,6 +22,8 @@ import org.seasar.framework.aop.impl.NestedMethodInvocation;
 import org.seasar.framework.util.ArrayUtil;
 
 /**
+ * 複数の{@link MethodInterceptor}をチェイン上につなぐ{@link MethodInterceptor}です。
+ * 
  * @author higa
  * 
  */
@@ -31,6 +33,11 @@ public class InterceptorChain extends AbstractInterceptor {
 
     private MethodInterceptor[] interceptors = new MethodInterceptor[0];
 
+    /**
+     * {@link MethodInterceptor}を追加します。
+     * 
+     * @param interceptor
+     */
     public void add(MethodInterceptor interceptor) {
         interceptors = (MethodInterceptor[]) ArrayUtil.add(interceptors,
                 interceptor);

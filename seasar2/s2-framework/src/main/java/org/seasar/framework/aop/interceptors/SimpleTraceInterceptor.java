@@ -15,10 +15,13 @@
  */
 package org.seasar.framework.aop.interceptors;
 
+import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.seasar.framework.log.Logger;
 
 /**
+ * 引数や戻り値を出力しない単純なトレース用の{@link MethodInterceptor}です。
+ * 
  * @author higa
  * 
  */

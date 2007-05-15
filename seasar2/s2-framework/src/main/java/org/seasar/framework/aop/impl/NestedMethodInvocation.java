@@ -19,9 +19,13 @@ import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Method;
 
 import org.aopalliance.intercept.MethodInterceptor;
+import org.aopalliance.intercept.MethodInvocation;
 import org.seasar.framework.aop.S2MethodInvocation;
+import org.seasar.framework.aop.interceptors.InterceptorChain;
 
 /**
+ * ネストした{@link MethodInvocation}です。 {@link InterceptorChain}で使われます。
+ * 
  * @author koichik
  */
 public class NestedMethodInvocation implements S2MethodInvocation {
@@ -32,6 +36,12 @@ public class NestedMethodInvocation implements S2MethodInvocation {
 
     private int interceptorsIndex;
 
+    /**
+     * {@link NestedMethodInvocation}を作成します。
+     * 
+     * @param parent
+     * @param interceptors
+     */
     public NestedMethodInvocation(final S2MethodInvocation parent,
             final MethodInterceptor[] interceptors) {
         this.parent = parent;

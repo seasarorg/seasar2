@@ -20,19 +20,28 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.seasar.framework.beans.MethodNotFoundRuntimeException;
 
 /**
+ * 例外処理用の{@link MethodInterceptor}です。
+ * 
  * @author higa
  * 
  */
 public abstract class ThrowsInterceptor extends AbstractInterceptor {
 
+    /**
+     * {@link ThrowsInterceptor}の実装クラスが実装しなければいけないメソッド名です。
+     */
     public static final String METHOD_NAME = "handleThrowable";
 
     private Map methodMap = new HashMap();
 
+    /**
+     * {@link ThrowsInterceptor}を作成します。
+     */
     public ThrowsInterceptor() {
         Method[] methods = getClass().getMethods();
         for (int i = 0; i < methods.length; ++i) {

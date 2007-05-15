@@ -51,24 +51,45 @@ public class ToStringInterceptor extends AbstractInterceptor {
     private static final Logger logger = Logger
             .getLogger(ToStringInterceptor.class);
 
+    /**
+     * includeConstantのBindingアノテーションです。
+     */
     public static final String includeConstant_BINDING = "bindingType=none";
 
     private boolean includeConstant;
 
+    /**
+     * includeStaticのBindingアノテーションです。
+     */
     public static final String includeStatic_BINDING = "bindingType=none";
 
     private boolean includeStatic;
 
     private DateFormat dateFormat = new SimpleDateFormat();
 
+    /**
+     * 定数を出力するかどうかを設定します。
+     * 
+     * @param includeConstant
+     */
     public void setIncludeConstant(boolean includeConstant) {
         this.includeConstant = includeConstant;
     }
 
+    /**
+     * staticなfieldを出力するかどうかを設定します。
+     * 
+     * @param includeStatic
+     */
     public void setIncludeStatic(boolean includeStatic) {
         this.includeStatic = includeStatic;
     }
 
+    /**
+     * 日付のフォーマットを設定します。
+     * 
+     * @param format
+     */
     public void setDateFormat(String format) {
         dateFormat = new SimpleDateFormat(format);
     }

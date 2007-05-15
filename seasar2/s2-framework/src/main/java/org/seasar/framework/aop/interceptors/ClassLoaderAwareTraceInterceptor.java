@@ -19,6 +19,8 @@ import org.aopalliance.intercept.MethodInvocation;
 import org.seasar.framework.log.Logger;
 
 /**
+ * {@link ClassLoader}の情報も出力する{@link TraceInterceptor}です。
+ * 
  * @author shot
  */
 public class ClassLoaderAwareTraceInterceptor extends TraceInterceptor {

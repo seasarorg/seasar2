@@ -37,6 +37,8 @@ public class SessionState {
 
     private Map accessedData;
 
+    private Map persistedData;
+
     /**
      * <code>SessionState</code>を作成します。
      * 
@@ -44,7 +46,9 @@ public class SessionState {
      */
     public SessionState(Map binaryData) {
         this.binaryData = binaryData;
-        accessedData = new HashMap(Math.max(binaryData.size(), 20));
+        int size = Math.max(binaryData.size(), 20);
+        accessedData = new HashMap(size);
+        persistedData = new HashMap(size);
     }
 
     /**
@@ -56,6 +60,11 @@ public class SessionState {
     public synchronized Object getAttribute(String name) {
         if (accessedData.containsKey(name)) {
             return accessedData.get(name);
+        }
+        if (persistedData.containsKey(name)) {
+            Object value = persistedData.get(name);
+            accessedData.put(name, value);
+            return value;
         }
         if (binaryData.containsKey(name)) {
             byte[] binary = (byte[]) binaryData.get(name);
@@ -102,6 +111,23 @@ public class SessionState {
     }
 
     /**
+     * データを永続化した後に呼び出されます。
+     */
+    public synchronized void persisted() {
+        for (Iterator i = accessedData.keySet().iterator(); i.hasNext();) {
+            Object key = i.next();
+            Object value = accessedData.get(key);
+            if (value == null) {
+                persistedData.remove(key);
+                binaryData.remove(key);
+            } else {
+                persistedData.put(key, value);
+            }
+        }
+        accessedData.clear();
+    }
+
+    /**
      * insertする必要があるかどうか返します。
      * 
      * @param name
@@ -126,7 +152,9 @@ public class SessionState {
             return false;
         }
         Object value = accessedData.get(name);
-        return value != null && binaryData.containsKey(name);
+        return value != null
+                && (binaryData.containsKey(name) || persistedData
+                        .containsKey(name));
     }
 
     /**
@@ -140,6 +168,12 @@ public class SessionState {
             return false;
         }
         Object value = accessedData.get(name);
-        return value == null && binaryData.containsKey(name);
+        return value == null
+                && (binaryData.containsKey(name) || persistedData
+                        .containsKey(name));
+    }
+
+    protected Object getPersistedAttribute(String name) {
+        return persistedData.get(name);
     }
 }

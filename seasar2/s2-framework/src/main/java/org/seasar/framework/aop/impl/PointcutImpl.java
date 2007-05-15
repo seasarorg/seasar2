@@ -25,6 +25,8 @@ import org.seasar.framework.aop.Pointcut;
 import org.seasar.framework.exception.EmptyRuntimeException;
 
 /**
+ * {@link Pointcut}の実装クラスです。
+ * 
  * @author higa
  * 
  */
@@ -38,6 +40,12 @@ public final class PointcutImpl implements Pointcut, Serializable {
 
     private Method method;
 
+    /**
+     * {@link PointcutImpl}を作成します。
+     * 
+     * @param targetClass
+     * @throws EmptyRuntimeException
+     */
     public PointcutImpl(Class targetClass) throws EmptyRuntimeException {
 
         if (targetClass == null) {
@@ -46,6 +54,12 @@ public final class PointcutImpl implements Pointcut, Serializable {
         setMethodNames(getMethodNames(targetClass));
     }
 
+    /**
+     * {@link PointcutImpl}を作成します。
+     * 
+     * @param methodNames
+     * @throws EmptyRuntimeException
+     */
     public PointcutImpl(String[] methodNames) throws EmptyRuntimeException {
 
         if (methodNames == null || methodNames.length == 0) {
@@ -54,6 +68,11 @@ public final class PointcutImpl implements Pointcut, Serializable {
         setMethodNames(methodNames);
     }
 
+    /**
+     * {@link PointcutImpl}を作成します。
+     * 
+     * @param method
+     */
     public PointcutImpl(Method method) {
         this.method = method;
     }
@@ -72,6 +91,11 @@ public final class PointcutImpl implements Pointcut, Serializable {
         return false;
     }
 
+    /**
+     * 対象になったメソッド名の配列を返します。
+     * 
+     * @return
+     */
     public String[] getMethodNames() {
         return methodNames;
     }

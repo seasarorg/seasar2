@@ -27,6 +27,7 @@ import java.util.Set;
 import javassist.ClassPool;
 
 import org.aopalliance.intercept.MethodInterceptor;
+import org.aopalliance.intercept.MethodInvocation;
 import org.seasar.framework.aop.InterType;
 import org.seasar.framework.exception.NoSuchFieldRuntimeException;
 import org.seasar.framework.util.ClassLoaderUtil;
@@ -35,16 +36,29 @@ import org.seasar.framework.util.FieldUtil;
 import org.seasar.framework.util.MethodUtil;
 
 /**
+ * アスペクトを織り込むクラスです。
+ * 
  * @author koichik
  */
 public class AspectWeaver {
-    // constants
+    /**
+     * エンハンスされるクラスにつけるプレフィックス。
+     */
     public static final String PREFIX_ENHANCED_CLASS = "$$";
 
+    /**
+     * エンハンスされるクラスにつけるサフィックス。
+     */
     public static final String SUFFIX_ENHANCED_CLASS = "$$EnhancedByS2AOP$$";
 
+    /**
+     * エンハンスされる{@link MethodInvocation}につけるサフィックス。
+     */
     public static final String SUFFIX_METHOD_INVOCATION_CLASS = "$$MethodInvocation$$";
 
+    /**
+     * super(親クラス)のメソッドを呼び出すときのサフィックス。
+     */
     public static final String SUFFIX_INVOKE_SUPER_METHOD = "$$invokeSuperMethod$$";
 
     // static fields
@@ -66,6 +80,12 @@ public class AspectWeaver {
 
     protected ClassPool classPool;
 
+    /**
+     * {@link AspectWeaver}を作成します。
+     * 
+     * @param targetClass
+     * @param parameters
+     */
     public AspectWeaver(final Class targetClass, final Map parameters) {
         this.targetClass = targetClass;
         this.parameters = parameters;
@@ -76,6 +96,12 @@ public class AspectWeaver {
                 targetClass, enhancedClassName);
     }
 
+    /**
+     * {@link MethodInterceptor}を設定します。
+     * 
+     * @param method
+     * @param interceptors
+     */
     public void setInterceptors(final Method method,
             final MethodInterceptor[] interceptors) {
         final String methodInvocationClassName = getMethodInvocationClassName(method);
@@ -96,6 +122,11 @@ public class AspectWeaver {
         methodInvocationClassList.add(methodInvocationClass);
     }
 
+    /**
+     * {@link InterType}を追加します。
+     * 
+     * @param interTypes
+     */
     public void setInterTypes(final InterType[] interTypes) {
         if (interTypes == null) {
             return;
@@ -106,6 +137,11 @@ public class AspectWeaver {
         }
     }
 
+    /**
+     * クラスを生成します。
+     * 
+     * @return 生成されたクラス
+     */
     public Class generateClass() {
         if (enhancedClass == null) {
             enhancedClass = enhancedClassGenerator.toClass(ClassLoaderUtil
@@ -122,6 +158,11 @@ public class AspectWeaver {
         return enhancedClass;
     }
 
+    /**
+     * エンハンスされたクラス名を返します。
+     * 
+     * @return エンハンスされたクラス名
+     */
     public String getEnhancedClassName() {
         final StringBuffer buf = new StringBuffer(200);
         final String targetClassName = targetClass.getName();
@@ -144,11 +185,23 @@ public class AspectWeaver {
         return name;
     }
 
+    /**
+     * エンハンスされた{@link MethodInvocation}のクラス名を返します。
+     * 
+     * @param method
+     * @return
+     */
     public String getMethodInvocationClassName(final Method method) {
         return enhancedClassName + SUFFIX_METHOD_INVOCATION_CLASS
                 + method.getName() + methodInvocationClassList.size();
     }
 
+    /**
+     * superクラスのメソッドを呼び出すためのメソッド名を作成します。
+     * 
+     * @param method
+     * @return
+     */
     public String createInvokeSuperMethod(final Method method) {
         final String invokeSuperMethodName = PREFIX_ENHANCED_CLASS
                 + method.getName() + SUFFIX_INVOKE_SUPER_METHOD;
@@ -159,6 +212,13 @@ public class AspectWeaver {
         return invokeSuperMethodName;
     }
 
+    /**
+     * static filedに値を設定します。
+     * 
+     * @param clazz
+     * @param name
+     * @param value
+     */
     public void setStaticField(final Class clazz, final String name,
             final Object value) {
         try {

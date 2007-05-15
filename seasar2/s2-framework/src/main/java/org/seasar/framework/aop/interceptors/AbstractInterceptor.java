@@ -28,6 +28,8 @@ import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.ContainerConstants;
 
 /**
+ * {@link MethodInterceptor}を拡張するための抽象クラスです。
+ * 
  * @author higa
  * 
  */
@@ -36,6 +38,12 @@ public abstract class AbstractInterceptor implements MethodInterceptor,
 
     static final long serialVersionUID = 0L;
 
+    /**
+     * {@link AopProxy}を作成します。
+     * 
+     * @param proxyClass
+     * @return
+     */
     public Object createProxy(Class proxyClass) {
         Aspect aspect = new AspectImpl(this, new PointcutImpl(
                 new String[] { ".*" }));

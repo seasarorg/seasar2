@@ -15,7 +15,8 @@
  */
 package org.seasar.extension.httpsession;
 
-import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 
@@ -27,18 +28,23 @@ import javax.servlet.http.HttpServletResponseWrapper;
  */
 public class S2HttpServletResponseWrapper extends HttpServletResponseWrapper {
 
-    private HttpServletRequest request;
+    private S2HttpServletRequestWrapper requestWrapper;
+
+    private SessionStateManager sessionStateManager;
 
     /**
      * <code>S2HttpServletResponseWrapper</code>のインスタンスを構築します。
      * 
      * @param response
-     * @param request
+     * @param requestWrapper
+     * @param sessionStateManager
      */
     public S2HttpServletResponseWrapper(HttpServletResponse response,
-            HttpServletRequest request) {
+            S2HttpServletRequestWrapper requestWrapper,
+            SessionStateManager sessionStateManager) {
         super(response);
-        this.request = request;
+        this.requestWrapper = requestWrapper;
+        this.sessionStateManager = sessionStateManager;
     }
 
     public String encodeRedirectUrl(String url) {
@@ -46,7 +52,7 @@ public class S2HttpServletResponseWrapper extends HttpServletResponseWrapper {
     }
 
     public String encodeRedirectURL(String url) {
-        return SessionIdUtil.rewriteURL(url, request);
+        return SessionIdUtil.rewriteURL(url, requestWrapper);
     }
 
     public String encodeUrl(String url) {
@@ -54,6 +60,17 @@ public class S2HttpServletResponseWrapper extends HttpServletResponseWrapper {
     }
 
     public String encodeURL(String url) {
-        return SessionIdUtil.rewriteURL(url, request);
+        return SessionIdUtil.rewriteURL(url, requestWrapper);
+    }
+
+    public void flushBuffer() throws IOException {
+        S2HttpSession session = requestWrapper.getS2HttpSession();
+        if (session != null) {
+            SessionState sessionState = session.getSessionState();
+            if (sessionState != null) {
+                sessionStateManager.updateState(session.getId(), sessionState);
+            }
+        }
+        super.flushBuffer();
     }
 }

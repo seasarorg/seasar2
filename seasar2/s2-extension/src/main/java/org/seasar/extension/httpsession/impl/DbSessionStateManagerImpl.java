@@ -119,6 +119,7 @@ public class DbSessionStateManagerImpl implements SessionStateManager {
         executeBatch(INSERT_SQL, insertedData);
         executeBatch(UPDATE_SQL, updatedData);
         executeBatch(DELETE_SQL, deletedData);
+        sessionState.persisted();
     }
 
     protected void executeBatch(String sql, List data) {

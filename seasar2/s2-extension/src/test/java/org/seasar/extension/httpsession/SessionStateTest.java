@@ -21,7 +21,6 @@ import java.util.Map;
 
 import junit.framework.TestCase;
 
-import org.seasar.extension.httpsession.SessionState;
 import org.seasar.framework.util.SerializeUtil;
 
 /**
@@ -113,5 +112,32 @@ public class SessionStateTest extends TestCase {
         assertFalse(state.needDelete("aaa"));
         state.setAttribute("aaa", null);
         assertTrue(state.needDelete("aaa"));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testPersisted() throws Exception {
+        byte[] binary = SerializeUtil.fromObjectToBinary("hoge");
+        Map binaryData = new HashMap();
+        binaryData.put("aaa", binary);
+        binaryData.put("ccc", binary);
+        SessionState state = new SessionState(binaryData);
+        state.setAttribute("bbb", "111");
+        state.setAttribute("ccc", null);
+        state.persisted();
+        assertFalse(state.needInsert("aaa"));
+        assertFalse(state.needUpdate("aaa"));
+        assertFalse(state.needDelete("aaa"));
+        assertFalse(state.needInsert("bbb"));
+        assertFalse(state.needUpdate("bbb"));
+        assertFalse(state.needDelete("bbb"));
+        assertFalse(state.needInsert("ccc"));
+        assertFalse(state.needUpdate("ccc"));
+        assertFalse(state.needDelete("ccc"));
+        assertSame(binary, binaryData.get("aaa"));
+        assertEquals("111", state.getPersistedAttribute("bbb"));
+        assertNull(binaryData.get("ccc"));
+
     }
 }

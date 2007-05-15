@@ -21,11 +21,14 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.seasar.framework.aop.InterType;
 import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.StringUtil;
 
 /**
+ * プロパティを追加するための{@link InterType}です。
+ * 
  * @author y-komori
  * 
  */
@@ -96,10 +99,20 @@ public class PropertyInterType extends AbstractInterType {
                 .newInstance(clazz);
     }
 
+    /**
+     * トレースを出力するかどうか設定します。
+     * 
+     * @param trace
+     */
     public void setTrace(boolean trace) {
         this.trace = trace;
     }
 
+    /**
+     * デフォルトのpropertyType(NONE, READ, WRITE, READWRITE)を設定します。
+     * 
+     * @param defaultPropertyType
+     */
     public void setDefaultPropertyType(String defaultPropertyType) {
         this.defaultPropertyType = valueOf(defaultPropertyType);
     }
@@ -255,12 +268,33 @@ public class PropertyInterType extends AbstractInterType {
         }
     }
 
+    /**
+     * 
+     */
     public interface PropertyAnnotationHandler {
+        /**
+         * propertyTypeを返します。
+         * 
+         * @param clazz
+         * @param defaultValue
+         * @return propertyType
+         */
         int getPropertyType(Class clazz, int defaultValue);
 
+        /**
+         * propertyTypeを返します。
+         * 
+         * @param field
+         * @param defaultValue
+         * @return
+         */
         int getPropertyType(Field field, int defaultValue);
     }
 
+    /**
+     * {@link PropertyAnnotationHandler}のデフォルト実装です。
+     * 
+     */
     public static class DefaultPropertyAnnotationHandler implements
             PropertyAnnotationHandler {
 

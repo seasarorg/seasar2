@@ -76,12 +76,12 @@ public class S2HttpServletRequestWrapper extends HttpServletRequestWrapper {
         if (session != null) {
             return session;
         }
-        if (!create) {
-            return null;
-        }
         boolean isNew = false;
         String sessionId = getRequestedSessionId();
         if (sessionId == null) {
+            if (!create) {
+                return null;
+            }
             sessionId = createdSessionId;
             isNew = true;
         }

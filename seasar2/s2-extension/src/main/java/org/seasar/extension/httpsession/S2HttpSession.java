@@ -22,7 +22,6 @@ import java.util.List;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
-import javax.servlet.http.HttpSessionContext;
 
 /**
  * セッション情報をS2で管理するためのHttpSessionです。
@@ -111,7 +110,7 @@ public class S2HttpSession implements HttpSession {
     /**
      * @deprecated
      */
-    public HttpSessionContext getSessionContext() {
+    public javax.servlet.http.HttpSessionContext getSessionContext() {
         return null;
     }
 

@@ -19,11 +19,14 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.ArrayUtil;
 
 /**
+ * トレース出力用の{@link MethodInterceptor}です。
+ * 
  * @author higa
  * 
  */
@@ -36,6 +39,11 @@ public class TraceInterceptor extends AbstractInterceptor {
 
     protected int maxLengthOfCollection = 10;
 
+    /**
+     * 引数や戻り値が{@link Collection}や配列だった場合Max何件出力するかどうか設定します。
+     * 
+     * @param maxLengthOfCollection
+     */
     public void setMaxLengthOfCollection(final int maxLengthOfCollection) {
         this.maxLengthOfCollection = maxLengthOfCollection;
     }

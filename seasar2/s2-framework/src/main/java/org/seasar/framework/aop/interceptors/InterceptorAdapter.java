@@ -24,6 +24,8 @@ import org.seasar.framework.container.S2Container;
 import org.seasar.framework.util.ArrayUtil;
 
 /**
+ * {@link InterceptorChain}を名前で追加できるようにしたものです。
+ * 
  * @author koichik
  */
 public class InterceptorAdapter extends AbstractInterceptor {
@@ -34,10 +36,20 @@ public class InterceptorAdapter extends AbstractInterceptor {
 
     protected ComponentDef[] interceptorDefs = new ComponentDef[0];
 
+    /**
+     * {@link S2Container}を設定します。
+     * 
+     * @param container
+     */
     public void setContainer(final S2Container container) {
         this.container = container;
     }
 
+    /**
+     * {@link MethodInterceptor}を名前を通じて追加します。
+     * 
+     * @param interceptorNames
+     */
     public void add(final String interceptorNames) {
         interceptorDefs = (ComponentDef[]) ArrayUtil.add(interceptorDefs,
                 container.getComponentDef(interceptorNames));

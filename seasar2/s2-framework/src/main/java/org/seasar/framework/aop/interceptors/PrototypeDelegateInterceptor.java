@@ -19,6 +19,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.MethodNotFoundRuntimeException;
@@ -28,6 +29,8 @@ import org.seasar.framework.exception.EmptyRuntimeException;
 import org.seasar.framework.util.MethodUtil;
 
 /**
+ * prototypeのコンポーネントに呼び出しを転送する{@link MethodInterceptor}です。
+ * 
  * @author koichik
  */
 public class PrototypeDelegateInterceptor extends AbstractInterceptor {
@@ -41,18 +44,39 @@ public class PrototypeDelegateInterceptor extends AbstractInterceptor {
 
     private Map methodNameMap = new HashMap();
 
+    /**
+     * {@link PrototypeDelegateInterceptor}を作成します。
+     * 
+     * @param container
+     */
     public PrototypeDelegateInterceptor(final S2Container container) {
         this.container = container;
     }
 
+    /**
+     * ターゲットのコンポーネント名を返します。
+     * 
+     * @return ターゲットのコンポーネント名
+     */
     public String getTargetName() {
         return targetName;
     }
 
+    /**
+     * ターゲットのコンポーネント名を設定します。
+     * 
+     * @param targetName
+     */
     public void setTargetName(final String targetName) {
         this.targetName = targetName;
     }
 
+    /**
+     * 転送するメソッドの組を追加します。
+     * 
+     * @param methodName
+     * @param targetMethodName
+     */
     public void addMethodNameMap(final String methodName,
             final String targetMethodName) {
         methodNameMap.put(methodName, targetMethodName);

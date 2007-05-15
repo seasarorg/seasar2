@@ -18,8 +18,17 @@ package org.seasar.framework.aop;
 import javassist.CtClass;
 
 /**
+ * クラスの構造を変えるためのインターフェースです。
+ * 
  * @author koichik
  */
 public interface InterType {
+
+    /**
+     * クラスの構造を変更します。
+     * 
+     * @param targetClass
+     * @param enhancedClass
+     */
     void introduce(Class targetClass, CtClass enhancedClass);
 }

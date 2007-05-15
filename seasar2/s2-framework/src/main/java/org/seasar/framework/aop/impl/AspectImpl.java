@@ -22,6 +22,8 @@ import org.seasar.framework.aop.Aspect;
 import org.seasar.framework.aop.Pointcut;
 
 /**
+ * {@link Aspect}の実装クラスです。
+ * 
  * @author higa
  * 
  */
@@ -33,10 +35,21 @@ public class AspectImpl implements Aspect, Serializable {
 
     private Pointcut pointcut;
 
+    /**
+     * {@link AspectImpl}を作成します。
+     * 
+     * @param methodInterceptor
+     */
     public AspectImpl(MethodInterceptor methodInterceptor) {
         this(methodInterceptor, null);
     }
 
+    /**
+     * {@link AspectImpl}を作成します。
+     * 
+     * @param methodInterceptor
+     * @param pointcut
+     */
     public AspectImpl(MethodInterceptor methodInterceptor, Pointcut pointcut) {
         this.methodInterceptor = methodInterceptor;
         this.pointcut = pointcut;

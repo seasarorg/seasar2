@@ -15,9 +15,12 @@
  */
 package org.seasar.framework.aop.interceptors;
 
+import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 
 /**
+ * メソッドの呼び出しをsynchronized化する{@link MethodInterceptor}です。
+ * 
  * @author higa
  * 
  */

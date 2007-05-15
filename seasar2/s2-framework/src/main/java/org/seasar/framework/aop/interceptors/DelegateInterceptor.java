@@ -19,6 +19,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.MethodNotFoundRuntimeException;
@@ -27,6 +28,8 @@ import org.seasar.framework.exception.EmptyRuntimeException;
 import org.seasar.framework.util.MethodUtil;
 
 /**
+ * あるオブジェクトへの呼び出しを別のオブジェクトに転送する{@link MethodInterceptor}です。
+ * 
  * @author higa
  * 
  */
@@ -40,22 +43,46 @@ public class DelegateInterceptor extends AbstractInterceptor {
 
     private Map methodNameMap = new HashMap();
 
+    /**
+     * {@link DelegateInterceptor}を作成します。
+     */
     public DelegateInterceptor() {
     }
 
+    /**
+     * {@link DelegateInterceptor}を作成します。
+     * 
+     * @param target
+     */
     public DelegateInterceptor(Object target) {
         setTarget(target);
     }
 
+    /**
+     * ターゲットのオブジェクトを返します。
+     * 
+     * @return target
+     */
     public Object getTarget() {
         return target;
     }
 
+    /**
+     * ターゲットのオブジェクトを設定します。
+     * 
+     * @param target
+     */
     public void setTarget(Object target) {
         this.target = target;
         beanDesc = BeanDescFactory.getBeanDesc(target.getClass());
     }
 
+    /**
+     * 転送するメソッドの組を追加します。
+     * 
+     * @param methodName
+     * @param targetMethodName
+     */
     public void addMethodNameMap(String methodName, String targetMethodName) {
         methodNameMap.put(methodName, targetMethodName);
     }

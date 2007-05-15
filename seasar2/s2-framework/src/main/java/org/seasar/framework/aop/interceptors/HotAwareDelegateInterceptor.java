@@ -24,6 +24,7 @@ import org.seasar.framework.exception.EmptyRuntimeException;
 import org.seasar.framework.util.MethodUtil;
 
 /**
+ * HOT deployに対応させるための{@link MethodInterceptor}です。
  * 
  * @author koichik
  */
@@ -35,13 +36,26 @@ public class HotAwareDelegateInterceptor implements MethodInterceptor {
 
     protected String targetName;
 
+    /**
+     * {@link HotAwareDelegateInterceptor}を作成します。
+     */
     public HotAwareDelegateInterceptor() {
     }
 
+    /**
+     * {@link S2Container}を設定します。
+     * 
+     * @param container
+     */
     public void setContainer(S2Container container) {
         this.container = container.getRoot();
     }
 
+    /**
+     * ターゲット名を設定します。
+     * 
+     * @param targetName
+     */
     public void setTargetName(String targetName) {
         this.targetName = targetName;
     }

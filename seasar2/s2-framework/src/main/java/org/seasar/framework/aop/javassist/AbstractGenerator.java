@@ -43,11 +43,13 @@ import org.seasar.framework.util.ClassPoolUtil;
 import org.seasar.framework.util.ClassUtil;
 
 /**
+ * バイトコードを生成するための抽象クラスです。
+ * 
  * @author koichik
  */
 public class AbstractGenerator {
     // constants
-    public static final String DEFINE_CLASS_METHOD_NAME = "defineClass";
+    protected static final String DEFINE_CLASS_METHOD_NAME = "defineClass";
 
     // static fields
     protected static final ProtectionDomain protectionDomain;
@@ -86,7 +88,7 @@ public class AbstractGenerator {
     // instance fields
     protected final ClassPool classPool;
 
-    public static String fromObject(final Class type, final String expr) {
+    protected static String fromObject(final Class type, final String expr) {
         if (type.equals(void.class) || type.equals(Object.class)) {
             return expr;
         }
@@ -102,7 +104,7 @@ public class AbstractGenerator {
         return "(" + ClassUtil.getSimpleClassName(type) + ") " + expr;
     }
 
-    public static String toObject(final Class type, final String expr) {
+    protected static String toObject(final Class type, final String expr) {
         if (type.isPrimitive()) {
             final Class wrapper = ClassUtil.getWrapperClass(type);
             return "new " + wrapper.getName() + "(" + expr + ")";
@@ -157,6 +159,13 @@ public class AbstractGenerator {
         }
     }
 
+    /**
+     * <code>CtClass</code>を<code>Class</code>に変更します。
+     * 
+     * @param classLoader
+     * @param ctClass
+     * @return
+     */
     public Class toClass(final ClassLoader classLoader, final CtClass ctClass) {
         try {
             final byte[] bytecode = ctClass.toBytecode();

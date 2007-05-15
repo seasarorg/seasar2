@@ -17,13 +17,23 @@ package org.seasar.framework.aop.interceptors;
 
 import java.lang.reflect.Field;
 
+import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.seasar.framework.aop.S2MethodInvocation;
 import org.seasar.framework.container.ComponentDef;
 
+/**
+ * {@link MethodInterceptor}のインスタンス属性(lifecycle)が、 対象となるコンポーネントと異なる場合に使用します。
+ * 
+ * @author koichik
+ * 
+ */
 public class InterceptorLifecycleAdapter extends AbstractInterceptor {
     private static final long serialVersionUID = 1L;
 
+    /**
+     * {@link InterceptorLifecycleAdapter}を作成します。
+     */
     public InterceptorLifecycleAdapter() {
     }
 

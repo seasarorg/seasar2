@@ -18,10 +18,24 @@ package org.seasar.framework.aop;
 import org.aopalliance.intercept.MethodInvocation;
 
 /**
+ * Seasar2用に拡張した{@link MethodInvocation}です。
+ * 
  * @author koichik
  */
 public interface S2MethodInvocation extends MethodInvocation {
+
+    /**
+     * バイトコードがエンハンスされる前のクラスを返します。
+     * 
+     * @return
+     */
     Class getTargetClass();
 
+    /**
+     * パラメータを返します。 処理をカスタマイズするためにパラメータを使用する場合に使います。
+     * 
+     * @param name
+     * @return
+     */
     Object getParameter(String name);
 }

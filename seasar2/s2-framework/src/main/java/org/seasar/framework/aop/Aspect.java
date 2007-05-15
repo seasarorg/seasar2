@@ -18,15 +18,32 @@ package org.seasar.framework.aop;
 import org.aopalliance.intercept.MethodInterceptor;
 
 /**
+ * Aspectをあらわすインターフェースです。 Aspectとは、 Advice({@link MethodInterceptor})と{@link Pointcut}を結びつけたものです。
+ * 
  * @author higa
  * 
  */
 public interface Aspect {
 
-    public MethodInterceptor getMethodInterceptor();
+    /**
+     * {@link MethodInterceptor}を返します。
+     * 
+     * @return {@link MethodInterceptor}
+     */
+    MethodInterceptor getMethodInterceptor();
 
-    public Pointcut getPointcut();
+    /**
+     * {@link Pointcut}を返します。
+     * 
+     * @return
+     */
+    Pointcut getPointcut();
 
-    public void setPointcut(Pointcut pointcut);
+    /**
+     * {@link Pointcut}を設定します。
+     * 
+     * @param pointcut
+     */
+    void setPointcut(Pointcut pointcut);
 
 }

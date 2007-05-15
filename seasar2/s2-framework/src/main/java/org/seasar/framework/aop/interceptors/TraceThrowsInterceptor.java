@@ -19,6 +19,8 @@ import org.aopalliance.intercept.MethodInvocation;
 import org.seasar.framework.log.Logger;
 
 /**
+ * 例外をトレースするための{@link ThrowsInterceptor}です。
+ * 
  * @author higa
  * 
  */
@@ -29,6 +31,13 @@ public class TraceThrowsInterceptor extends ThrowsInterceptor {
     private static Logger logger = Logger
             .getLogger(TraceThrowsInterceptor.class);
 
+    /**
+     * 例外をトレースします。
+     * 
+     * @param t
+     * @param invocation
+     * @throws Throwable
+     */
     public void handleThrowable(Throwable t, MethodInvocation invocation)
             throws Throwable {
         logger.log(t);

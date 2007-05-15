@@ -20,12 +20,24 @@ import javassist.CtClass;
 import org.seasar.framework.aop.InterType;
 import org.seasar.framework.util.ArrayUtil;
 
+/**
+ * 複数の{@link InterType}をチェイン上につなぐ{@link InterType}です。
+ * 
+ */
 public class InterTypeChain implements InterType {
     protected InterType[] interTypes = new InterType[0];
 
+    /**
+     * {@link InterTypeChain}を作成します。
+     */
     public InterTypeChain() {
     }
 
+    /**
+     * {@link InterType}を追加します。
+     * 
+     * @param interType
+     */
     public void add(final InterType interType) {
         interTypes = (InterType[]) ArrayUtil.add(interTypes, interType);
     }
