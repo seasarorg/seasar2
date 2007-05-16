@@ -44,4 +44,8 @@ public interface InternalTestContext extends TestContext {
     void addMockInterceptor(MockInterceptor mockInterceptor);
 
     void addAspecDef(Object componentKey, AspectDef aspectDef);
+
+    boolean isEjb3Enabled();
+
+    boolean isJtaEnabled();
 }

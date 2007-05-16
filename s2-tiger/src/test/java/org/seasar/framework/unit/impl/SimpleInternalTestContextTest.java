@@ -26,18 +26,18 @@ import org.seasar.framework.unit.InternalTestContext;
  * @author taedium
  * 
  */
-public class InternalTestContextImplTest extends S2TestCase {
+public class SimpleInternalTestContextTest extends S2TestCase {
 
     private InternalTestContext testCtx;
 
     @Override
     protected void setUp() throws Exception {
-        include("TestContextImplTest.dicon");
+        include("SimpleInternalTestContextTest.dicon");
     }
 
     public void testInclude() throws Exception {
         testCtx.setTestClass(Bbb.class);
-        testCtx.include("TestContextImplTest2.dicon");
+        testCtx.include("SimpleInternalTestContextTest2.dicon");
 
         assertEquals("aaa", getComponent("hoge"));
     }

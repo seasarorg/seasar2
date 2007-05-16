@@ -83,6 +83,7 @@ public class Seasar2Test extends TestCase {
     @Override
     public void tearDown() {
         Seasar2.dispose();
+        S2TestMethodRunner.s2junit4Path = S2TestMethodRunner.DEFAULT_S2JUNIT4_PATH;
     }
 
     @RunWith(Seasar2.class)
@@ -1051,6 +1052,28 @@ public class Seasar2Test extends TestCase {
         assertTrue(result.wasSuccessful());
         assertTrue(log, log.contains("a"));
         assertTrue(log, log.contains("b"));
+    }
+
+    @RunWith(Seasar2.class)
+    public static class SimpleInternalTestContextTest {
+
+        private S2Container container;
+
+        public void aaa() {
+            assertNotNull(container);
+            count++;
+        }
+    }
+
+    public void testSimpleInternalTestContext() throws Exception {
+        S2TestMethodRunner.s2junit4Path = SimpleInternalTestContextTest.class
+                .getName().replace(".", "/")
+                + ".s2junit4.dicon";
+        JUnitCore core = new JUnitCore();
+        Result result = core.run(SimpleInternalTestContextTest.class);
+        printFailures(result.getFailures());
+        assertTrue(result.wasSuccessful());
+        assertEquals(1, count);
     }
 
     @RunWith(Seasar2.class)

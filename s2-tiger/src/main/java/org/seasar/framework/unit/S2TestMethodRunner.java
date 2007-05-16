@@ -56,11 +56,13 @@ public class S2TestMethodRunner {
         private static final long serialVersionUID = 1L;
     }
 
-    protected static final String S2JUNIT4_PATH = "s2junit4.dicon";
+    protected static final String DEFAULT_S2JUNIT4_PATH = "s2junit4.dicon";
 
     protected static final String ENV_PATH = "env_ut.txt";
 
     protected static final String ENV_VALUE = "ut";
+
+    protected static String s2junit4Path = DEFAULT_S2JUNIT4_PATH;
 
     protected final Object test;
 
@@ -239,10 +241,10 @@ public class S2TestMethodRunner {
     protected S2Container createRootContainer() {
         final String rootDicon = introspector.getRootDicon(testClass, method);
         if (StringUtil.isEmpty(rootDicon)) {
-            return S2ContainerFactory.create(S2JUNIT4_PATH);
+            return S2ContainerFactory.create(s2junit4Path);
         }
         S2Container container = S2ContainerFactory.create(rootDicon);
-        S2ContainerFactory.include(container, S2JUNIT4_PATH);
+        S2ContainerFactory.include(container, s2junit4Path);
         return container;
 
     }
@@ -378,12 +380,14 @@ public class S2TestMethodRunner {
     }
 
     protected String resolveComponentName(final Field filed) {
-        final EJB ejb = filed.getAnnotation(EJB.class);
-        if (ejb != null) {
-            if (!StringUtil.isEmpty(ejb.beanName())) {
-                return ejb.beanName();
-            } else if (!StringUtil.isEmpty(ejb.name())) {
-                return ejb.name();
+        if (testContext.isEjb3Enabled()) {
+            final EJB ejb = filed.getAnnotation(EJB.class);
+            if (ejb != null) {
+                if (!StringUtil.isEmpty(ejb.beanName())) {
+                    return ejb.beanName();
+                } else if (!StringUtil.isEmpty(ejb.name())) {
+                    return ejb.name();
+                }
             }
         }
         return normalizeName(filed.getName());
@@ -416,6 +420,10 @@ public class S2TestMethodRunner {
     }
 
     protected void runTest() throws Throwable {
+        if (!testContext.isJtaEnabled()) {
+            executeMethod();
+            return;
+        }
         TransactionManager tm = null;
         if (introspector.needsTransaction(testClass, method)) {
             try {
