@@ -15,13 +15,9 @@
  */
 package org.seasar.framework.jpa.util;
 
-import java.io.InputStream;
 import java.util.List;
 import java.util.Set;
 
-import org.seasar.framework.util.ClassLoaderUtil;
-import org.seasar.framework.util.ClassUtil;
-import org.seasar.framework.util.InputStreamUtil;
 import org.seasar.framework.util.tiger.CollectionsUtil;
 
 /**
@@ -29,10 +25,7 @@ import org.seasar.framework.util.tiger.CollectionsUtil;
  * 
  * @author taedium
  */
-public class ChildFirstClassLoader extends ClassLoader {
-
-    /** 親クラスローダに委譲せずに自身でロードする対象となるクラス名のセット */
-    protected final Set<String> includedNames = CollectionsUtil.newHashSet();
+public class ChildFirstClassLoader extends AbstractClassLoader {
 
     /** {@link ClassLoaderListener}のリスト */
     protected List<ClassLoaderListener> listeners = CollectionsUtil
@@ -79,8 +72,7 @@ public class ChildFirstClassLoader extends ClassLoader {
      */
     public ChildFirstClassLoader(final ClassLoader parent,
             final Set<String> includedNames) {
-        super(parent);
-        this.includedNames.addAll(includedNames);
+        super(parent, includedNames);
     }
 
     /**
@@ -103,107 +95,6 @@ public class ChildFirstClassLoader extends ClassLoader {
         listeners.remove(listener);
     }
 
-    @Override
-    protected Class<?> loadClass(final String className, final boolean resolve)
-            throws ClassNotFoundException {
-        Class<?> clazz = getSystemClass(className);
-        if (clazz != null) {
-            return resolveClass(resolve, clazz);
-        }
-        if (!isIncludedClass(className)) {
-            return super.loadClass(className, resolve);
-        }
-        clazz = findLoadedClass(className);
-        if (clazz != null) {
-            return resolveClass(resolve, clazz);
-        }
-        clazz = ClassLoaderUtil.findLoadedClass(getParent(), className);
-        if (clazz != null) {
-            return resolveClass(resolve, clazz);
-        }
-        clazz = findClass(className);
-        return resolveClass(resolve, clazz);
-    }
-
-    /**
-     * クラス名で指定されたクラスをブートストラップクラスローダからロードできればそのクラスを返します。
-     * 
-     * @param className
-     *            クラス名
-     * @return ブートストラップクラスローダからロードしたクラス
-     */
-    protected Class<?> getSystemClass(final String className) {
-        try {
-            return Class.forName(className, true, null);
-        } catch (final ClassNotFoundException e) {
-            return null;
-        }
-    }
-
-    /**
-     * クラス名が親クラスローダに委譲せずに自身でロードする対象の場合は<code>true</code>を、 それ以外の場合は<code>false</code>を返します。
-     * <p>
-     * 親クラスローダに委譲せずに自身でロードする対象かどうかの判定は次の順で行われます。
-     * </p>
-     * <ol>
-     * <li>クラス名が<code>java.</code>または<code>javax.</code>で始まるクラスは対象外</li>
-     * <li>コンストラクタでロード対象クラス名のセットが与えられなかった場合は対象</li>
-     * <li>コンストラクタでロード対象クラス名のセットが与えられた場合は、クラス名がセットに含まれていれば対象</li>
-     * <li>それ以外の場合は対象外</li>
-     * </ol>
-     * 
-     * @param className
-     *            クラス名
-     * @return クラス名が親クラスローダに委譲せずに自身でロードする対象の場合は<code>true</code>
-     */
-    protected boolean isIncludedClass(final String className) {
-        if (className.startsWith("java.") || className.startsWith("javax.")) {
-            return false;
-        }
-        if (className.endsWith("package-info")) {
-            return false;
-        }
-        if (includedNames.isEmpty()) {
-            return true;
-        }
-        return includedNames.contains(className);
-    }
-
-    /**
-     * <code>resolve</code>が<code>true</code>であればクラスをリンクします。
-     * 
-     * @param resolve
-     *            クラスをリンクする場合は<code>true</code>
-     * @param clazz
-     *            リンクするクラス
-     * @return 結果の<code>Class</code>オブジェクト
-     */
-    protected Class<?> resolveClass(final boolean resolve, final Class<?> clazz) {
-        if (resolve) {
-            resolveClass(clazz);
-        }
-        return clazz;
-    }
-
-    @Override
-    protected Class<?> findClass(final String className)
-            throws ClassNotFoundException {
-        final String path = ClassUtil.getResourcePath(className);
-        final InputStream in = getResourceAsStream(path);
-        if (in == null) {
-            throw new ClassNotFoundException(className);
-        }
-        try {
-            final byte[] bytes = InputStreamUtil.getBytes(in);
-            final Class<?> definedClass = defineClass(className, bytes, 0,
-                    bytes.length);
-            fireClassDefinedEvent(className, bytes, definedClass);
-            return definedClass;
-        } catch (final Exception e) {
-            throw new ClassNotFoundException(className, e);
-        }
-    }
-
     /**
      * クラスが定義されたことを通知します。
      * 
@@ -224,6 +115,14 @@ public class ChildFirstClassLoader extends ClassLoader {
             } catch (final Exception ignore) {
             }
         }
+    }
+
+    @Override
+    protected Class<?> doDefineClass(String className, byte[] bytes) {
+        final Class<?> definedClass = defineClass(className, bytes, 0,
+                bytes.length);
+        fireClassDefinedEvent(className, bytes, definedClass);
+        return definedClass;
     }
 
 }

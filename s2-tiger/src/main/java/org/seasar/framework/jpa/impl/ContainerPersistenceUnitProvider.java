@@ -29,6 +29,7 @@ import org.seasar.framework.container.annotation.tiger.BindingType;
 import org.seasar.framework.jpa.PersistenceClassTransformer;
 import org.seasar.framework.jpa.PersistenceUnitConfiguration;
 import org.seasar.framework.jpa.PersistenceUnitInfoRegistry;
+import org.seasar.framework.jpa.util.TransformClassLoader;
 import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.StringUtil;
@@ -129,19 +130,19 @@ public class ContainerPersistenceUnitProvider extends
 
     public EntityManagerFactory createEntityManagerFactory(
             final String abstractUnitName, final String concreteUnitName) {
-        final PersistenceUnitInfo unitInfo = persistenceUnitInfoRegistry
+        final PersistenceUnitInfoImpl unitInfo = (PersistenceUnitInfoImpl) persistenceUnitInfoRegistry
                 .getPersistenceUnitInfo(concreteUnitName);
         if (unitInfo == null) {
             throw new IllegalArgumentException(concreteUnitName); // TODO
         }
-        overrideUnitInfo(PersistenceUnitInfoImpl.class.cast(unitInfo));
+        overrideUnitInfo(unitInfo);
 
         addMappingFiles(abstractUnitName, unitInfo);
         addPersistenceClasses(abstractUnitName, unitInfo);
 
         final PersistenceProvider provider = createPersistenceProvider(unitInfo);
-        final EntityManagerFactory emf = provider
-                .createContainerEntityManagerFactory(unitInfo, null);
+        final EntityManagerFactory emf = createEntityManagerFactory(provider,
+                unitInfo);
 
         persistenceClassTransformer.transform(unitInfo);
 
@@ -213,6 +214,33 @@ public class ContainerPersistenceUnitProvider extends
         final Class<PersistenceProvider> providerClass = ReflectionUtil
                 .forName(providerClassName);
         return ReflectionUtil.newInstance(providerClass);
+    }
+
+    /**
+     * エンティティマネジャーファクトリを作成します。
+     * 
+     * @param provider
+     *            永続プロバイダ
+     * @param unitInfo
+     *            永続ユニット情報
+     * @return エンティティマネジャーファクトリ
+     */
+    protected EntityManagerFactory createEntityManagerFactory(
+            final PersistenceProvider provider,
+            final PersistenceUnitInfoImpl unitInfo) {
+        final ClassLoader original = Thread.currentThread()
+                .getContextClassLoader();
+        final TransformClassLoader transLoader = unitInfo
+                .getTransformClassLoader();
+        transLoader
+                .registerPersistenceClassTransformer(persistenceClassTransformer);
+        transLoader.registerPersistenceUnitInfo(unitInfo);
+        Thread.currentThread().setContextClassLoader(transLoader);
+        try {
+            return provider.createContainerEntityManagerFactory(unitInfo, null);
+        } finally {
+            Thread.currentThread().setContextClassLoader(original);
+        }
     }
 
     /**

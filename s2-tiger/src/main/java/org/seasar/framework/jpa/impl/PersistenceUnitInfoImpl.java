@@ -25,6 +25,7 @@ import javax.persistence.spi.PersistenceUnitTransactionType;
 import javax.sql.DataSource;
 
 import org.seasar.framework.jpa.util.ChildFirstClassLoader;
+import org.seasar.framework.jpa.util.TransformClassLoader;
 import org.seasar.framework.util.tiger.CollectionsUtil;
 
 /**
@@ -35,7 +36,7 @@ import org.seasar.framework.util.tiger.CollectionsUtil;
 public class PersistenceUnitInfoImpl implements PersistenceUnitInfo {
 
     /** クラスローダ */
-    protected ClassLoader classLoader;
+    protected TransformClassLoader classLoader;
 
     /** 永続ユニットのルートURL */
     protected URL persistenceUnitRootUrl;
@@ -90,7 +91,7 @@ public class PersistenceUnitInfoImpl implements PersistenceUnitInfo {
      */
     public PersistenceUnitInfoImpl(final ClassLoader classLoader,
             final URL persistenceUnitRootUrl) {
-        this.classLoader = classLoader;
+        setClassLoader(classLoader);
         this.persistenceUnitRootUrl = persistenceUnitRootUrl;
     }
 
@@ -105,7 +106,7 @@ public class PersistenceUnitInfoImpl implements PersistenceUnitInfo {
      *            クラスローダ
      */
     public void setClassLoader(final ClassLoader classLoader) {
-        this.classLoader = classLoader;
+        this.classLoader = new TransformClassLoader(classLoader);
     }
 
     public ClassLoader getNewTempClassLoader() {
@@ -281,6 +282,16 @@ public class PersistenceUnitInfoImpl implements PersistenceUnitInfo {
 
     public void addTransformer(final ClassTransformer transformer) {
         transformers.add(transformer);
+        classLoader.addTransformer(transformer);
+    }
+
+    /**
+     * トランスファーマークラスローダーを返します。
+     * 
+     * @return トランスファーマークラスローダー
+     */
+    public TransformClassLoader getTransformClassLoader() {
+        return classLoader;
     }
 
 }

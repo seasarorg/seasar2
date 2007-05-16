@@ -33,4 +33,18 @@ public interface PersistenceClassTransformer {
      */
     void transform(PersistenceUnitInfo unitInfo);
 
+    /**
+     * 指定されたクラスに{@link ClassTransformer トランスフォーマ}を適用します。
+     * 
+     * @param unitInfo
+     *            永続ユニット情報
+     * @param className
+     *            クラス名
+     * @param bytes
+     *            クラスファイル形式のバイト列
+     * @return 変換されたクラスファイル形式のバイト列。変換されなかった場合は引数のバイト列
+     */
+    Class<?> transform(PersistenceUnitInfo unitInfo, String className,
+            byte[] bytes);
+
 }

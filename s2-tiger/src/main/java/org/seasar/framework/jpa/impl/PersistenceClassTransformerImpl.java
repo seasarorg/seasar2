@@ -89,6 +89,20 @@ public class PersistenceClassTransformerImpl implements
         loadPersistenceClasses(unitInfo, tempLoader);
     }
 
+    public Class<?> transform(final PersistenceUnitInfo unitInfo, final String className,
+            final byte[] bytecode) {
+        final List<ClassTransformer> transformers = PersistenceUnitInfoImpl.class
+                .cast(unitInfo).getTransformers();
+        final ClassLoader classLoader = unitInfo.getClassLoader();
+        final ClassLoader targetLoader = getTargetClassLoader(classLoader);
+        byte[] bytes = bytecode;
+        for (final ClassTransformer transformer : transformers) {
+            bytes = transform(transformer, targetLoader, className, bytes);
+        }
+        return ClassLoaderUtil.defineClass(targetLoader, className, bytes, 0,
+                bytes.length);
+    }
+
     /**
      * 永続ユニット情報で管理されるクラスを指定のクラスローダにロードします。
      * 
