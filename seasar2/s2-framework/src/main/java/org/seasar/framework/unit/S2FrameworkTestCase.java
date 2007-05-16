@@ -38,7 +38,6 @@ import org.seasar.framework.container.factory.AnnotationHandlerFactory;
 import org.seasar.framework.container.factory.S2ContainerFactory;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 import org.seasar.framework.container.impl.S2ContainerBehavior;
-import org.seasar.framework.container.impl.S2ContainerImpl;
 import org.seasar.framework.container.servlet.S2ContainerServlet;
 import org.seasar.framework.convention.NamingConvention;
 import org.seasar.framework.convention.impl.NamingConventionImpl;
@@ -224,7 +223,7 @@ public abstract class S2FrameworkTestCase extends TestCase {
             S2ContainerFactory.configure("warmdeploy.dicon");
         }
         String rootDicon = resolveRootDicon();
-        container = StringUtil.isEmpty(rootDicon) ? new S2ContainerImpl()
+        container = StringUtil.isEmpty(rootDicon) ? S2ContainerFactory.create()
                 : S2ContainerFactory.create(rootDicon);
         SingletonS2ContainerFactory.setContainer(container);
         if (servletContext == null) {

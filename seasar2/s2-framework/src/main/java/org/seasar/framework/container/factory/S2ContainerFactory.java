@@ -27,10 +27,13 @@ import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.assembler.AssemblerFactory;
 import org.seasar.framework.container.deployer.ComponentDeployerFactory;
 import org.seasar.framework.container.impl.S2ContainerBehavior;
+import org.seasar.framework.container.impl.S2ContainerImpl;
+import org.seasar.framework.exception.EmptyRuntimeException;
 import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.Disposable;
 import org.seasar.framework.util.DisposableUtil;
 import org.seasar.framework.util.ResourceUtil;
+import org.seasar.framework.util.StringUtil;
 
 /**
  * {@link org.seasar.framework.container.S2Container S2コンテナ}を構築するためのファクトリクラスです。
@@ -126,10 +129,15 @@ public final class S2ContainerFactory {
      * @param path
      *            設定ファイルのパス
      * @return 構築したS2コンテナ
+     * @throws EmptyRuntimeException
+     *             <code>path</code>が<code>null</code>または空文字列の場合
      * 
      * @see S2ContainerFactory.Provider#create(String)
      */
     public static synchronized S2Container create(final String path) {
+        if (StringUtil.isEmpty(path)) {
+            throw new EmptyRuntimeException("path");
+        }
         if (!initialized) {
             configure();
         }
@@ -144,15 +152,34 @@ public final class S2ContainerFactory {
      * @param classLoader
      *            S2コンテナの構築に使用するクラスローダ
      * @return 構築したS2コンテナ
+     * @throws EmptyRuntimeException
+     *             <code>path</code>が<code>null</code>または空文字列の場合
      * 
      * @see S2ContainerFactory.Provider#create(String, ClassLoader)
      */
     public static synchronized S2Container create(final String path,
             final ClassLoader classLoader) {
+        if (StringUtil.isEmpty(path)) {
+            throw new EmptyRuntimeException("path");
+        }
         if (!initialized) {
             configure();
         }
         return getProvider().create(path, classLoader);
+    }
+
+    /**
+     * 設定ファイルを使用せず、 空のS2コンテナを構築して返します。
+     * 
+     * @return 構築したS2コンテナ
+     * 
+     * @see S2ContainerFactory.Provider#create()
+     */
+    public static synchronized S2Container create() {
+        if (!initialized) {
+            configure();
+        }
+        return getProvider().create();
     }
 
     /**
@@ -389,6 +416,13 @@ public final class S2ContainerFactory {
         S2Container create(String path, ClassLoader classLoader);
 
         /**
+         * 設定ファイルを使用せず、 空のS2コンテナを構築して返します。
+         * 
+         * @return 構築したS2コンテナ
+         */
+        S2Container create();
+
+        /**
          * 指定された設定ファイルからS2コンテナを構築し、 親S2コンテナに対してインクルードします。
          * 
          * @param parent
@@ -521,7 +555,8 @@ public final class S2ContainerFactory {
             } else {
                 classLoader = Thread.currentThread().getContextClassLoader();
             }
-            S2Container container = build(path, classLoader);
+            S2Container container = StringUtil.isEmpty(path) ? new S2ContainerImpl()
+                    : build(path, classLoader);
             if (container.isInitializeOnCreate()) {
                 container.init();
             }
@@ -540,6 +575,10 @@ public final class S2ContainerFactory {
             } finally {
                 Thread.currentThread().setContextClassLoader(oldLoader);
             }
+        }
+
+        public S2Container create() {
+            return create(null);
         }
 
         public S2Container include(final S2Container parent, final String path) {

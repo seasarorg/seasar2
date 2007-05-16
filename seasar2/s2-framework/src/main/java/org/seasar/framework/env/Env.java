@@ -18,6 +18,7 @@ package org.seasar.framework.env;
 import java.io.File;
 
 import org.seasar.framework.exception.EmptyRuntimeException;
+import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.ResourceUtil;
 import org.seasar.framework.util.StringUtil;
 import org.seasar.framework.util.TextUtil;
@@ -79,6 +80,9 @@ public class Env {
     /** デフォルトの環境名設定ファイルのパスです。 */
     public static final String DEFAULT_FILE_PATH = "env.txt";
 
+    /** ロガー */
+    private static final Logger logger = Logger.getLogger(Env.class);
+
     /** 環境名です。 */
     private static String value;
 
@@ -135,6 +139,9 @@ public class Env {
     public static boolean setValueIfAbsent(final String newValue) {
         if (value == null) {
             value = newValue;
+            if (logger.isDebugEnabled()) {
+                logger.log("DSSR0115", new Object[] { value, filePath });
+            }
             return true;
         }
         return false;
@@ -197,6 +204,9 @@ public class Env {
             value = value.trim();
         }
         lastModified = file.lastModified();
+        if (logger.isDebugEnabled()) {
+            logger.log("DSSR0114", new Object[] { value, filePath });
+        }
     }
 
     protected static void clearValue() {
