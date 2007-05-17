@@ -16,8 +16,10 @@
 package org.seasar.framework.container.warmdeploy;
 
 import org.seasar.framework.container.ComponentCreator;
+import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.creator.ComponentCreatorImpl;
 import org.seasar.framework.container.impl.S2ContainerBehavior;
+import org.seasar.framework.container.impl.S2ContainerImpl;
 import org.seasar.framework.container.warmdeploy.dao.FooDao;
 import org.seasar.framework.convention.impl.NamingConventionImpl;
 import org.seasar.framework.unit.S2FrameworkTestCase;
@@ -62,4 +64,11 @@ public class WarmdeployBehaviorTest extends S2FrameworkTestCase {
     public void testCreatComponentDef_class() throws Exception {
         assertTrue(getContainer().hasComponentDef(FooDao.class));
     }
+
+    public void testChild() throws Exception {
+        S2Container child = new S2ContainerImpl();
+        getContainer().include(child);
+        assertFalse(child.hasComponentDef(FooDao.class));
+    }
+
 }

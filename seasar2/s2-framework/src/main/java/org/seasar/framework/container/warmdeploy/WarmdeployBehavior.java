@@ -54,6 +54,9 @@ public class WarmdeployBehavior extends DefaultProvider {
         if (cd != null) {
             return cd;
         }
+        if (container != container.getRoot()) {
+            return null;
+        }
         if (key instanceof Class) {
             cd = createComponentDef((Class) key);
         } else if (key instanceof String) {

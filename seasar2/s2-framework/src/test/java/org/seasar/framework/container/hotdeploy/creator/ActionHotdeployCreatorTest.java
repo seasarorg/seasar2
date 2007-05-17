@@ -18,7 +18,9 @@ package org.seasar.framework.container.hotdeploy.creator;
 import org.seasar.framework.container.ComponentCreator;
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.ComponentNotFoundRuntimeException;
+import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.creator.ActionCreator;
+import org.seasar.framework.container.impl.S2ContainerImpl;
 import org.seasar.framework.convention.NamingConvention;
 
 /**
@@ -52,4 +54,12 @@ public class ActionHotdeployCreatorTest extends HotdeployCreatorTestCase {
         } catch (ComponentNotFoundRuntimeException expected) {
         }
     }
+
+    public void testChild() throws Exception {
+        S2Container child = new S2ContainerImpl();
+        getContainer().include(child);
+        String name = "aaa_hogeAction";
+        assertFalse(child.hasComponentDef(name));
+    }
+
 }

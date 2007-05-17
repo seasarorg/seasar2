@@ -85,11 +85,14 @@ public class HotdeployBehavior extends DefaultProvider {
     }
 
     protected ComponentDef getComponentDef(S2Container container, Object key) {
-        ComponentDef cd = getComponentDefFromCache(key);
+        ComponentDef cd = super.getComponentDef(container, key);
         if (cd != null) {
             return cd;
         }
-        cd = super.getComponentDef(container, key);
+        if (container != container.getRoot()) {
+            return null;
+        }
+        cd = getComponentDefFromCache(key);
         if (cd != null) {
             return cd;
         }
