@@ -64,7 +64,11 @@ public abstract class SerializeUtil {
             ByteArrayOutputStream baos = new ByteArrayOutputStream(
                     BYTE_ARRAY_SIZE);
             ObjectOutputStream oos = new ObjectOutputStream(baos);
-            oos.writeObject(o);
+            try {
+                oos.writeObject(o);
+            } finally {
+                oos.close();
+            }
             return baos.toByteArray();
         } catch (IOException ex) {
             throw new IORuntimeException(ex);
@@ -81,11 +85,16 @@ public abstract class SerializeUtil {
         try {
             ByteArrayInputStream bais = new ByteArrayInputStream(binary);
             ObjectInputStream ois = new ObjectInputStream(bais);
-            return ois.readObject();
+            try {
+                return ois.readObject();
+            } finally {
+                ois.close();
+            }
         } catch (IOException ex) {
             throw new IORuntimeException(ex);
         } catch (ClassNotFoundException ex) {
             throw new ClassNotFoundRuntimeException(ex);
         }
     }
+
 }
