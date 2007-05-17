@@ -32,7 +32,8 @@ import org.seasar.framework.util.tiger.CollectionsUtil;
 public class JndiPersistenceUnitProvider extends
         AbstractPersistenceUnitProvider {
 
-    protected Map<String, String> JndiNames = CollectionsUtil.newHashMap();
+    /** 永続ユニット名とJNDI名のマップ */
+    protected Map<String, String> jndiNames = CollectionsUtil.newHashMap();
 
     /**
      * 永続ユニット名に対応するJNDI名を登録します。
@@ -43,12 +44,12 @@ public class JndiPersistenceUnitProvider extends
      *            JNDI名
      */
     public void addJndiName(final String unitName, final String jndiName) {
-        JndiNames.put(unitName, jndiName);
+        jndiNames.put(unitName, jndiName);
     }
 
     public EntityManagerFactory createEntityManagerFactory(
             final String abstractUnitName, final String concreteUnitName) {
-        final String name = JndiNames.get(concreteUnitName);
+        final String name = jndiNames.get(concreteUnitName);
         try {
             return EntityManagerFactory.class.cast(JndiResourceLocator
                     .lookup(name));
