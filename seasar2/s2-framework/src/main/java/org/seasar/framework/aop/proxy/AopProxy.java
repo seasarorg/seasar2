@@ -36,6 +36,7 @@ import org.seasar.framework.util.ConstructorUtil;
 import org.seasar.framework.util.MethodUtil;
 
 /**
+ * {@link Aspect}を織り込んだクラスを作成するクラスです。
  * 
  * @author higa
  */
@@ -53,20 +54,48 @@ public final class AopProxy implements Serializable {
 
     private final AspectWeaver weaver;
 
+    /**
+     * {@link AopProxy}を作成します。
+     * 
+     * @param targetClass
+     * @param aspects
+     */
     public AopProxy(final Class targetClass, final Aspect[] aspects) {
         this(targetClass, aspects, null, null);
     }
 
+    /**
+     * {@link AopProxy}を作成します。
+     * 
+     * @param targetClass
+     * @param aspects
+     * @param interTypes
+     */
     public AopProxy(final Class targetClass, final Aspect[] aspects,
             final InterType[] interTypes) {
         this(targetClass, aspects, interTypes, null);
     }
 
+    /**
+     * {@link AopProxy}を作成します。
+     * 
+     * @param targetClass
+     * @param aspects
+     * @param parameters
+     */
     public AopProxy(final Class targetClass, final Aspect[] aspects,
             final Map parameters) {
         this(targetClass, aspects, null, parameters);
     }
 
+    /**
+     * {@link AopProxy}を作成します。
+     * 
+     * @param targetClass
+     * @param aspects
+     * @param interTypes
+     * @param parameters
+     */
     public AopProxy(final Class targetClass, final Aspect[] aspects,
             final InterType[] interTypes, final Map parameters) {
         if ((aspects == null || aspects.length == 0)
@@ -124,14 +153,31 @@ public final class AopProxy implements Serializable {
         }
     }
 
+    /**
+     * エンハンスされたクラスを返します。
+     * 
+     * @return
+     */
     public Class getEnhancedClass() {
         return enhancedClass;
     }
 
+    /**
+     * エンハンスされたインスタンスを作成します。
+     * 
+     * @return エンハンスされたインスタンス
+     */
     public Object create() {
         return ClassUtil.newInstance(enhancedClass);
     }
 
+    /**
+     * エンハンスされたインスタンスを作成します。
+     * 
+     * @param argTypes
+     * @param args
+     * @return エンハンスされたインスタンス
+     */
     public Object create(Class[] argTypes, Object[] args) {
         final Constructor constructor = ClassUtil.getConstructor(enhancedClass,
                 argTypes);

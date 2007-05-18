@@ -16,9 +16,12 @@
 package org.seasar.framework.aop.javassist;
 
 /**
+ * <code>try</code>ブロックをサポートするためのクラスです。
+ * 
  * @author koichik
  */
 public class TryBlockSupport {
+
     protected static final int STATUS_TRY = 0;
 
     protected static final int STATUS_CATCH = 1;
@@ -29,11 +32,22 @@ public class TryBlockSupport {
 
     protected StringBuffer codeBuf = new StringBuffer(500);
 
+    /**
+     * {@link TryBlockSupport}を作成します。
+     * 
+     * @param src
+     */
     public TryBlockSupport(final String src) {
         codeBuf.append("try {").append(src).append("}");
         status = STATUS_TRY;
     }
 
+    /**
+     * <code>catch</code>ブロックを追加します。
+     * 
+     * @param exceptionType
+     * @param src
+     */
     public void addCatchBlock(final Class exceptionType, final String src) {
         if (!Throwable.class.isAssignableFrom(exceptionType)) {
             throw new IllegalArgumentException(
@@ -49,6 +63,11 @@ public class TryBlockSupport {
         status = STATUS_CATCH;
     }
 
+    /**
+     * <code>finally</code>ブロックを設定します。
+     * 
+     * @param src
+     */
     public void setFinallyBlock(final String src) {
         if (status != STATUS_TRY && status != STATUS_CATCH) {
             throw new IllegalStateException(
@@ -59,6 +78,11 @@ public class TryBlockSupport {
         status = STATUS_FINALLY;
     }
 
+    /**
+     * 出来上がったソースを返します。
+     * 
+     * @return 出来上がったソース
+     */
     public String getSourceCode() {
         if (status != STATUS_CATCH && status != STATUS_FINALLY) {
             throw new IllegalStateException(

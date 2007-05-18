@@ -34,6 +34,8 @@ import org.seasar.framework.util.ZipFileUtil;
 import org.seasar.framework.util.ResourceTraversal.ResourceHandler;
 
 /**
+ * {@link ResourceAutoDetector}の抽象クラスです。
+ * 
  * @author taedium
  * 
  */
@@ -48,6 +50,9 @@ public abstract class AbstractResourceAutoDetector implements
 
     private List ignoreResourceNamePatterns = new ArrayList();
 
+    /**
+     * {@link AbstractResourceAutoDetector}のデフォルトコンストラクタです。
+     */
     public AbstractResourceAutoDetector() {
         strategies.put("file", new FileSystemStrategy());
         strategies.put("jar", new JarFileStrategy());
@@ -55,46 +60,106 @@ public abstract class AbstractResourceAutoDetector implements
         strategies.put("code-source", new CodeSourceFileStrategy());
     }
 
+    /**
+     * {@link Strategy}を追加します。
+     * 
+     * @param protocol
+     * @param strategy
+     */
     public void addStrategy(final String protocol, final Strategy strategy) {
         strategies.put(protocol, strategy);
     }
 
+    /**
+     * {@link Strategy}を返します。
+     * 
+     * @param protocol
+     * @return {@link Strategy}
+     */
     public Strategy getStrategy(final String protocol) {
         return (Strategy) strategies.get(URLUtil.toCanonicalProtocol(protocol));
     }
 
+    /**
+     * ターゲットのディレクトリのパスを追加します。
+     * 
+     * @param targetDirPath
+     */
     public void addTargetDirPath(final String targetDirPath) {
         targetDirPaths.add(targetDirPath);
     }
 
+    /**
+     * ターゲットのディレクトリのパスを返します。
+     * 
+     * @return ターゲットのディレクトリのパス
+     */
     public int getTargetDirPathSize() {
         return targetDirPaths.size();
     }
 
+    /**
+     * ターゲットのディレクトリのパスを返します。
+     * 
+     * @param index
+     * @return ターゲットのディレクトリのパス
+     */
     public String getTargetDirPath(final int index) {
         return (String) targetDirPaths.get(index);
     }
 
+    /**
+     * リソース名のパターンを追加します。
+     * 
+     * @param resourceName
+     */
     public void addResourceNamePattern(final String resourceName) {
         resourceNamePatterns.add(Pattern.compile(resourceName));
     }
 
+    /**
+     * 無視するリソース名のパターンを追加します。
+     * 
+     * @param resourceName
+     */
     public void addIgnoreResourceNamePattern(final String resourceName) {
         ignoreResourceNamePatterns.add(Pattern.compile(resourceName));
     }
 
+    /**
+     * リソース名のパターンを返します。
+     * 
+     * @param index
+     * @return リソース名のパターン
+     */
     public Pattern getResourceNamePattern(final int index) {
         return (Pattern) resourceNamePatterns.get(index);
     }
 
+    /**
+     * リソース名のパターン数を返します。
+     * 
+     * @return リソース名のパターン数
+     */
     public int getResourceNamePatternSize() {
         return resourceNamePatterns.size();
     }
 
+    /**
+     * 無視するリソース名のパターンを返します。
+     * 
+     * @param index
+     * @return 無視するリソース名のパターン
+     */
     public Pattern getIgnoreResourceNamePattern(final int index) {
         return (Pattern) ignoreResourceNamePatterns.get(index);
     }
 
+    /**
+     * 無視するリソース名のパターン数を返します。
+     * 
+     * @return 無視するリソース名のパターン数
+     */
     public int getIgnoreResourceNamePatternSize() {
         return ignoreResourceNamePatterns.size();
     }
@@ -121,6 +186,13 @@ public abstract class AbstractResourceAutoDetector implements
 
     protected interface Strategy {
 
+        /**
+         * リソースを認識します。
+         * 
+         * @param path
+         * @param url
+         * @param handler
+         */
         void detect(String path, URL url, ResourceHandler handler);
     }
 

@@ -28,16 +28,25 @@ import javassist.CtClass;
 import org.seasar.framework.aop.InterType;
 
 /**
+ * コンポーネントのバイトコードをエンハンスするクラスです。
+ * 
  * @author koichik
  */
 public class EnhancedClassGenerator extends AbstractGenerator {
-    // instance fields
+
     protected final Class targetClass;
 
     protected final String enhancedClassName;
 
     protected CtClass enhancedClass;
 
+    /**
+     * {@link EnhancedClassGenerator}を作成します。
+     * 
+     * @param classPool
+     * @param targetClass
+     * @param enhancedClassName
+     */
     public EnhancedClassGenerator(final ClassPool classPool,
             final Class targetClass, final String enhancedClassName) {
         super(classPool);
@@ -49,12 +58,24 @@ public class EnhancedClassGenerator extends AbstractGenerator {
         setupConstructor();
     }
 
+    /**
+     * ターゲットのメソッドを作成します。
+     * 
+     * @param method
+     * @param methodInvocationClassName
+     */
     public void createTargetMethod(final Method method,
             final String methodInvocationClassName) {
         createMethod(enhancedClass, method, createTargetMethodSource(method,
                 methodInvocationClassName));
     }
 
+    /**
+     * superクラスのメソッドを呼び出すためのメソッドを作成します。
+     * 
+     * @param method
+     * @param invokeSuperMethodName
+     */
     public void createInvokeSuperMethod(final Method method,
             final String invokeSuperMethodName) {
         createMethod(enhancedClass, method.getModifiers(), method
@@ -63,10 +84,21 @@ public class EnhancedClassGenerator extends AbstractGenerator {
                 createInvokeSuperMethodSource(method));
     }
 
+    /**
+     * {@link InterType}を適用します。
+     * 
+     * @param interType
+     */
     public void applyInterType(final InterType interType) {
         interType.introduce(targetClass, enhancedClass);
     }
 
+    /**
+     * CtClassをClassに変換します。
+     * 
+     * @param classLoader
+     * @return
+     */
     public Class toClass(final ClassLoader classLoader) {
         final Class clazz = toClass(classLoader, enhancedClass);
         enhancedClass.detach();
@@ -74,18 +106,27 @@ public class EnhancedClassGenerator extends AbstractGenerator {
         return clazz;
     }
 
+    /**
+     * CtClassをセットアップします。
+     */
     public void setupClass() {
         final Class superClass = (targetClass.isInterface()) ? Object.class
                 : targetClass;
         enhancedClass = createCtClass(enhancedClassName, superClass);
     }
 
+    /**
+     * インターフェース用のセットアップを行ないます。
+     */
     public void setupInterface() {
         if (targetClass.isInterface()) {
             setInterface(enhancedClass, targetClass);
         }
     }
 
+    /**
+     * {@link Constructor}のセットアップを行ないます。
+     */
     public void setupConstructor() {
         final Constructor[] constructors = targetClass
                 .getDeclaredConstructors();
@@ -106,6 +147,13 @@ public class EnhancedClassGenerator extends AbstractGenerator {
         }
     }
 
+    /**
+     * ターゲットメソッド用のソースコードを作成します。
+     * 
+     * @param method
+     * @param methodInvocationClassName
+     * @return ターゲットメソッド用のソースコード
+     */
     public static String createTargetMethodSource(final Method method,
             final String methodInvocationClassName) {
         final StringBuffer buf = new StringBuffer(200);
@@ -137,10 +185,22 @@ public class EnhancedClassGenerator extends AbstractGenerator {
         return "{" + code + "}";
     }
 
+    /**
+     * superクラスのメソッドを呼び出すためのソースコードを作成します。
+     * 
+     * @param method
+     * @return superクラスのメソッドを呼び出すためのソースコード
+     */
     public static String createInvokeSuperMethodSource(final Method method) {
         return "{" + "return ($r) super." + method.getName() + "($$);" + "}";
     }
 
+    /**
+     * 例外の型を正規化します。
+     * 
+     * @param exceptionTypes
+     * @return
+     */
     public static Class[] normalizeExceptionTypes(final Class[] exceptionTypes) {
         final List list = new LinkedList();
         outer: for (int i = 0; i < exceptionTypes.length; ++i) {
@@ -160,6 +220,13 @@ public class EnhancedClassGenerator extends AbstractGenerator {
         return (Class[]) list.toArray(new Class[list.size()]);
     }
 
+    /**
+     * 元のソースコードをtry, cacheで囲んだソースコードを返します。
+     * 
+     * @param exceptionTypes
+     * @param code
+     * @return 元のソースコードをtry, cacheで囲んだソースコード
+     */
     public static String aroundTryCatchBlock(final Class[] exceptionTypes,
             final String code) {
         final TryBlockSupport tryBlock = new TryBlockSupport(code);

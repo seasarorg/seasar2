@@ -33,6 +33,8 @@ import org.seasar.framework.util.ZipFileUtil;
 import org.seasar.framework.util.ClassTraversal.ClassHandler;
 
 /**
+ * {@link ClassAutoDetector}の抽象クラスです。
+ * 
  * @author taedium
  * 
  */
@@ -42,6 +44,9 @@ public abstract class AbstractClassAutoDetector implements ClassAutoDetector {
 
     private List targetPackageNames = new ArrayList();;
 
+    /**
+     * {@link AbstractClassAutoDetector}のデフォルトコンストラクタです。
+     */
     public AbstractClassAutoDetector() {
         strategies.put("file", new FileSystemStrategy());
         strategies.put("jar", new JarFileStrategy());
@@ -49,28 +54,63 @@ public abstract class AbstractClassAutoDetector implements ClassAutoDetector {
         strategies.put("code-source", new CodeSourceFileStrategy());
     }
 
+    /**
+     * {@link Strategy}を追加します。
+     * 
+     * @param protocol
+     * @param strategy
+     */
     public void addStrategy(final String protocol, final Strategy strategy) {
         strategies.put(protocol, strategy);
     }
 
+    /**
+     * {@link Strategy}を返します。
+     * 
+     * @param protocol
+     * @return
+     */
     public Strategy getStrategy(final String protocol) {
         return (Strategy) strategies.get(URLUtil.toCanonicalProtocol(protocol));
     }
 
+    /**
+     * ターゲットのパッケージ名を追加します。
+     * 
+     * @param targetPackageName
+     */
     public void addTargetPackageName(final String targetPackageName) {
         targetPackageNames.add(targetPackageName);
     }
 
+    /**
+     * ターゲットのパッケージ名の数を返します。
+     * 
+     * @return
+     */
     public int getTargetPackageNameSize() {
         return targetPackageNames.size();
     }
 
+    /**
+     * ターゲットのパッケージ名を返します。
+     * 
+     * @param index
+     * @return
+     */
     public String getTargetPackageName(final int index) {
         return (String) targetPackageNames.get(index);
     }
 
     protected interface Strategy {
 
+        /**
+         * {@link Class}を認識します。
+         * 
+         * @param packageName
+         * @param url
+         * @param handler
+         */
         void detect(String packageName, URL url, ClassHandler handler);
     }
 

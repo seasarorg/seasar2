@@ -23,6 +23,8 @@ import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.beans.factory.BeanDescFactory;
 
 /**
+ * JavaBeans用のユーティリティです。
+ * 
  * @author Kimura Satoshi
  * @author higa
  * 
@@ -32,6 +34,12 @@ public class BeanUtil {
     protected BeanUtil() {
     }
 
+    /**
+     * {@link Map}の値をJavaBeansにコピーします。
+     * 
+     * @param src
+     * @param dest
+     */
     public static void copyProperties(Map src, Object dest) {
         if (src == null || dest == null) {
             return;
@@ -49,6 +57,12 @@ public class BeanUtil {
         }
     }
 
+    /**
+     * JavaBeansの値を{@link Map}にコピーします。
+     * 
+     * @param src
+     * @param dest
+     */
     public static void copyProperties(Object src, Map dest) {
         if (src == null || dest == null) {
             return;
@@ -64,10 +78,23 @@ public class BeanUtil {
         }
     }
 
+    /**
+     * JavaBeansの値をJavaBeansにコピーします。
+     * 
+     * @param src
+     * @param dest
+     */
     public static void copyProperties(final Object src, final Object dest) {
         copyProperties(src, dest, true);
     }
 
+    /**
+     * JavaBeansの値をJavaBeansにコピーします。
+     * 
+     * @param src
+     * @param dest
+     * @param includeNull
+     */
     public static void copyProperties(final Object src, final Object dest,
             final boolean includeNull) {
         final BeanDesc srcBeanDesc = BeanDescFactory

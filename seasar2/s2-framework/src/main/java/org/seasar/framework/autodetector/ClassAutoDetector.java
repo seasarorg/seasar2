@@ -18,11 +18,18 @@ package org.seasar.framework.autodetector;
 import org.seasar.framework.util.ClassTraversal.ClassHandler;
 
 /**
+ * {@link Class}を自動的に収集するためのインターフェースです。
+ * 
  * @author taedium
  * 
  */
 public interface ClassAutoDetector {
 
+    /**
+     * {@link Class}を収集します。
+     * 
+     * @param handler
+     */
     void detect(ClassHandler handler);
 
 }

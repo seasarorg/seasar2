@@ -18,11 +18,18 @@ package org.seasar.framework.autodetector;
 import org.seasar.framework.util.ResourceTraversal.ResourceHandler;
 
 /**
+ * リソースを自動的に収集するためのインターフェースです。
+ * 
  * @author taedium
  * 
  */
 public interface ResourceAutoDetector {
 
+    /**
+     * リソースを収集します。
+     * 
+     * @param handler
+     */
     void detect(ResourceHandler handler);
 
 }
