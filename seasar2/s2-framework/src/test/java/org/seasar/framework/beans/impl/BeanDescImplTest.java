@@ -37,7 +37,7 @@ public class BeanDescImplTest extends TestCase {
      */
     public void testPropertyDesc() throws Exception {
         BeanDesc beanDesc = new BeanDescImpl(MyBean.class);
-        assertEquals(4, beanDesc.getPropertyDescSize());
+        assertEquals(5, beanDesc.getPropertyDescSize());
         PropertyDesc propDesc = beanDesc.getPropertyDesc("aaa");
         assertEquals("aaa", propDesc.getPropertyName());
         assertEquals(String.class, propDesc.getPropertyType());
@@ -190,7 +190,11 @@ public class BeanDescImplTest extends TestCase {
     public void testAddFields() throws Exception {
         BeanDesc beanDesc = new BeanDescImpl(MyBean.class);
         Field eee = beanDesc.getField("eee");
-        assertEquals("1", true, eee.isAccessible());
+        assertTrue(eee.isAccessible());
+        PropertyDesc pd = beanDesc.getPropertyDesc("ggg");
+        assertNotNull(pd);
+        assertEquals("ggg", pd.getPropertyName());
+        assertEquals(String.class, pd.getPropertyType());
     }
 
     /**
@@ -228,13 +232,18 @@ public class BeanDescImplTest extends TestCase {
     }
 
     /**
-     *
+     * 
      */
     public static class MyBean implements MyInterface2 {
 
         private String aaa;
 
         private String eee;
+
+        /**
+         * 
+         */
+        public String ggg;
 
         /**
          * @return
@@ -321,7 +330,7 @@ public class BeanDescImplTest extends TestCase {
     }
 
     /**
-     *
+     * 
      */
     public class MyBean2 {
         /**
@@ -353,7 +362,7 @@ public class BeanDescImplTest extends TestCase {
     }
 
     /**
-     *
+     * 
      */
     public static class MyBean3 {
         /**

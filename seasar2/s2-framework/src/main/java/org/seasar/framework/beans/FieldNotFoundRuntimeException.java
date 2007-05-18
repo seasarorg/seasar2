@@ -15,9 +15,13 @@
  */
 package org.seasar.framework.beans;
 
+import java.lang.reflect.Field;
+
 import org.seasar.framework.exception.SRuntimeException;
 
 /**
+ * {@link Field}が見つからない場合にスローされる例外です。
+ * 
  * @author higa
  * 
  */
@@ -25,21 +29,37 @@ public class FieldNotFoundRuntimeException extends SRuntimeException {
 
     private static final long serialVersionUID = -2715036865146285893L;
 
-    private Class targetClass_;
+    private Class targetClass;
 
-    private String fieldName_;
+    private String fieldName;
 
-    public FieldNotFoundRuntimeException(Class componentClass, String fieldName) {
-        super("ESSR0070", new Object[] { componentClass.getName(), fieldName });
-        targetClass_ = componentClass;
-        fieldName_ = fieldName;
+    /**
+     * {@link FieldNotFoundRuntimeException}を作成します。
+     * 
+     * @param targetClass
+     * @param fieldName
+     */
+    public FieldNotFoundRuntimeException(Class targetClass, String fieldName) {
+        super("ESSR0070", new Object[] { targetClass.getName(), fieldName });
+        this.targetClass = targetClass;
+        this.fieldName = fieldName;
     }
 
+    /**
+     * ターゲットの{@link Class}を返します。
+     * 
+     * @return ターゲットの{@link Class}
+     */
     public Class getTargetClass() {
-        return targetClass_;
+        return targetClass;
     }
 
+    /**
+     * フィールド名を返します。
+     * 
+     * @return
+     */
     public String getFieldName() {
-        return fieldName_;
+        return fieldName;
     }
 }

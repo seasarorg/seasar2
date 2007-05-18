@@ -16,11 +16,11 @@
 package org.seasar.framework.beans.impl;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.sql.Time;
 import java.sql.Timestamp;
 
-import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.IllegalPropertyRuntimeException;
 import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.exception.EmptyRuntimeException;
@@ -28,6 +28,7 @@ import org.seasar.framework.util.BooleanConversionUtil;
 import org.seasar.framework.util.CalendarConversionUtil;
 import org.seasar.framework.util.ConstructorUtil;
 import org.seasar.framework.util.DateConversionUtil;
+import org.seasar.framework.util.FieldUtil;
 import org.seasar.framework.util.MethodUtil;
 import org.seasar.framework.util.NumberConversionUtil;
 import org.seasar.framework.util.SqlDateConversionUtil;
@@ -35,6 +36,8 @@ import org.seasar.framework.util.TimeConversionUtil;
 import org.seasar.framework.util.TimestampConversionUtil;
 
 /**
+ * {@link PropertyDesc}の実装クラスです。
+ * 
  * @author higa
  * 
  */
@@ -50,12 +53,24 @@ public final class PropertyDescImpl implements PropertyDesc {
 
     private Method writeMethod;
 
-    private BeanDesc beanDesc;
+    private Field field;
+
+    private Class beanClass;
 
     private Constructor stringConstructor;
 
+    /**
+     * {@link PropertyDescImpl}を作成します。
+     * 
+     * @param propertyName
+     * @param propertyType
+     * @param readMethod
+     * @param writeMethod
+     * @param field
+     * @param beanClass
+     */
     public PropertyDescImpl(String propertyName, Class propertyType,
-            Method readMethod, Method writeMethod, BeanDesc beanDesc) {
+            Method readMethod, Method writeMethod, Field field, Class beanClass) {
 
         if (propertyName == null) {
             throw new EmptyRuntimeException("propertyName");
@@ -67,7 +82,8 @@ public final class PropertyDescImpl implements PropertyDesc {
         this.propertyType = propertyType;
         this.readMethod = readMethod;
         this.writeMethod = writeMethod;
-        this.beanDesc = beanDesc;
+        this.field = field;
+        this.beanClass = beanClass;
         setupStringConstructor();
     }
 
@@ -115,22 +131,46 @@ public final class PropertyDescImpl implements PropertyDesc {
         return writeMethod != null;
     }
 
+    public Field getField() {
+        return field;
+    }
+
+    public void setField(Field field) {
+        this.field = field;
+    }
+
+    public boolean isReadable() {
+        return hasReadMethod() || field != null;
+    }
+
+    public boolean isWritable() {
+        return hasWriteMethod() || field != null;
+    }
+
     public final Object getValue(Object target) {
-        return MethodUtil.invoke(readMethod, target, EMPTY_ARGS);
+        if (hasReadMethod()) {
+            return MethodUtil.invoke(readMethod, target, EMPTY_ARGS);
+        } else if (field != null) {
+            return FieldUtil.get(field, target);
+        } else {
+            throw new IllegalStateException("not readable");
+        }
     }
 
     public final void setValue(Object target, Object value) {
         try {
-            MethodUtil.invoke(writeMethod, target,
-                    new Object[] { convertIfNeed(value) });
+            value = convertIfNeed(value);
+            if (hasWriteMethod()) {
+                MethodUtil.invoke(writeMethod, target, new Object[] { value });
+            } else if (field != null) {
+                FieldUtil.set(field, target, value);
+            } else {
+                throw new IllegalStateException("not writable");
+            }
         } catch (Throwable t) {
-            throw new IllegalPropertyRuntimeException(beanDesc.getBeanClass(),
-                    propertyName, t);
+            throw new IllegalPropertyRuntimeException(beanClass, propertyName,
+                    t);
         }
-    }
-
-    public final BeanDesc getBeanDesc() {
-        return beanDesc;
     }
 
     public final String toString() {

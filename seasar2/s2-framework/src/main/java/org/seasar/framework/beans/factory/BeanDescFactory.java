@@ -24,6 +24,8 @@ import org.seasar.framework.util.DisposableUtil;
 import org.seasar.framework.util.MapUtil;
 
 /**
+ * {@link BeanDesc}を生成するクラスです。
+ * 
  * @author higa
  * 
  */
@@ -40,6 +42,12 @@ public final class BeanDescFactory {
     private BeanDescFactory() {
     }
 
+    /**
+     * {@link BeanDesc}を返します。
+     * 
+     * @param clazz
+     * @return {@link BeanDesc}
+     */
     public static BeanDesc getBeanDesc(Class clazz) {
         if (!initialized) {
             initialize();
@@ -52,6 +60,9 @@ public final class BeanDescFactory {
         return beanDesc;
     }
 
+    /**
+     * 初期化を行ないます。
+     */
     public static void initialize() {
         DisposableUtil.add(new Disposable() {
             public void dispose() {
@@ -61,6 +72,9 @@ public final class BeanDescFactory {
         initialized = true;
     }
 
+    /**
+     * キャッシュをクリアします。
+     */
     public static void clear() {
         beanDescCache.clear();
         initialized = false;

@@ -15,10 +15,14 @@
  */
 package org.seasar.framework.beans;
 
+import java.lang.reflect.Method;
+
 import org.seasar.framework.exception.SRuntimeException;
 import org.seasar.framework.util.MethodUtil;
 
 /**
+ * {@link Method}が見つからなかったときにスローされる例外です。
+ * 
  * @author higa
  * 
  */
@@ -26,50 +30,79 @@ public final class MethodNotFoundRuntimeException extends SRuntimeException {
 
     private static final long serialVersionUID = -3508955801981550317L;
 
-    private Class targetClass_;
+    private Class targetClass;
 
-    private String methodName_;
+    private String methodName;
 
-    private Class[] methodArgClasses_;
+    private Class[] methodArgClasses;
 
+    /**
+     * {@link MethodNotFoundRuntimeException}を作成します。
+     * 
+     * @param targetClass
+     * @param methodName
+     * @param methodArgs
+     */
     public MethodNotFoundRuntimeException(Class targetClass, String methodName,
             Object[] methodArgs) {
 
         super("ESSR0049", new Object[] { targetClass.getName(),
                 MethodUtil.getSignature(methodName, methodArgs) });
-        targetClass_ = targetClass;
-        methodName_ = methodName;
+        this.targetClass = targetClass;
+        this.methodName = methodName;
         if (methodArgs != null) {
-            methodArgClasses_ = new Class[methodArgs.length];
+            methodArgClasses = new Class[methodArgs.length];
             for (int i = 0; i < methodArgs.length; ++i) {
                 if (methodArgs[i] != null) {
-                    methodArgClasses_[i] = methodArgs[i].getClass();
+                    methodArgClasses[i] = methodArgs[i].getClass();
                 }
             }
         }
 
     }
 
+    /**
+     * {@link MethodNotFoundRuntimeException}を作成します。
+     * 
+     * @param targetClass
+     * @param methodName
+     * @param methodArgClasses
+     */
     public MethodNotFoundRuntimeException(Class targetClass, String methodName,
             Class[] methodArgClasses) {
 
         super("ESSR0049", new Object[] { targetClass.getName(),
                 MethodUtil.getSignature(methodName, methodArgClasses) });
-        targetClass_ = targetClass;
-        methodName_ = methodName;
-        methodArgClasses_ = methodArgClasses;
+        this.targetClass = targetClass;
+        this.methodName = methodName;
+        this.methodArgClasses = methodArgClasses;
     }
 
+    /**
+     * ターゲットの{@link Class}を返します。
+     * 
+     * @return ターゲットの{@link Class}
+     */
     public Class getTargetClass() {
-        return targetClass_;
+        return targetClass;
     }
 
+    /**
+     * メソッド名を返します。
+     * 
+     * @return メソッド名
+     */
     public String getMethodName() {
-        return methodName_;
+        return methodName;
     }
 
+    /**
+     * メソッドの引数の{@link Class}の配列を返します。
+     * 
+     * @return メソッドの引数の{@link Class}の配列
+     */
     public Class[] getMethodArgClasses() {
-        return methodArgClasses_;
+        return methodArgClasses;
     }
 
 }

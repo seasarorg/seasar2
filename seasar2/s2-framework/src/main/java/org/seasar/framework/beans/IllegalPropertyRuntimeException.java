@@ -18,6 +18,8 @@ package org.seasar.framework.beans;
 import org.seasar.framework.exception.SRuntimeException;
 
 /**
+ * プロパティの値の設定に失敗したときにスローされる例外です。
+ * 
  * @author higa
  * 
  */
@@ -25,23 +27,40 @@ public class IllegalPropertyRuntimeException extends SRuntimeException {
 
     private static final long serialVersionUID = 3584516316082904020L;
 
-    private Class componentClass_;
+    private Class targetClass;
 
-    private String propertyName_;
+    private String propertyName;
 
-    public IllegalPropertyRuntimeException(Class componentClass,
+    /**
+     * {@link IllegalPropertyRuntimeException}を作成します。
+     * 
+     * @param targetClass
+     * @param propertyName
+     * @param cause
+     */
+    public IllegalPropertyRuntimeException(Class targetClass,
             String propertyName, Throwable cause) {
-        super("ESSR0059", new Object[] { componentClass.getName(),
-                propertyName, cause }, cause);
-        componentClass_ = componentClass;
-        propertyName_ = propertyName;
+        super("ESSR0059", new Object[] { targetClass.getName(), propertyName,
+                cause }, cause);
+        this.targetClass = targetClass;
+        this.propertyName = propertyName;
     }
 
-    public Class getComponentClass() {
-        return componentClass_;
+    /**
+     * ターゲットの{@link Class}を返します。
+     * 
+     * @return ターゲットの{@link Class}
+     */
+    public Class getTargetClass() {
+        return targetClass;
     }
 
+    /**
+     * プロパティ名を返します。
+     * 
+     * @return プロパティ名
+     */
     public String getPropertyName() {
-        return propertyName_;
+        return propertyName;
     }
 }

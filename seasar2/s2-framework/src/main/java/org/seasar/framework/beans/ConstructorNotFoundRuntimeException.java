@@ -15,9 +15,13 @@
  */
 package org.seasar.framework.beans;
 
+import java.lang.reflect.Constructor;
+
 import org.seasar.framework.exception.SRuntimeException;
 
 /**
+ * {@link Constructor}が見つからなかったときにスローされる例外Vです。
+ * 
  * @author higa
  */
 public class ConstructorNotFoundRuntimeException extends SRuntimeException {
@@ -31,7 +35,10 @@ public class ConstructorNotFoundRuntimeException extends SRuntimeException {
     private Class[] paramTypes;
 
     /**
+     * {@link ConstructorNotFoundRuntimeException}を作成します。
+     * 
      * @param targetClass
+     * @param methodArgs
      */
     public ConstructorNotFoundRuntimeException(Class targetClass,
             Object[] methodArgs) {
@@ -42,6 +49,12 @@ public class ConstructorNotFoundRuntimeException extends SRuntimeException {
         this.methodArgs = methodArgs;
     }
 
+    /**
+     * {@link ConstructorNotFoundRuntimeException}を作成します。
+     * 
+     * @param targetClass
+     * @param paramTypes
+     */
     public ConstructorNotFoundRuntimeException(Class targetClass,
             Class[] paramTypes) {
         super("ESSR0048", new Object[] { targetClass.getName(),
@@ -51,14 +64,29 @@ public class ConstructorNotFoundRuntimeException extends SRuntimeException {
         this.paramTypes = paramTypes;
     }
 
+    /**
+     * ターゲットのクラスを返します。
+     * 
+     * @return ターゲットのクラス
+     */
     public Class getTargetClass() {
         return targetClass;
     }
 
+    /**
+     * メソッドの引数の配列を返します。
+     * 
+     * @return メソッドの引数の配列
+     */
     public Object[] getMethodArgs() {
         return methodArgs;
     }
 
+    /**
+     * パラメータの型の配列を返します。
+     * 
+     * @return
+     */
     public Class[] getParamTypes() {
         return paramTypes;
     }

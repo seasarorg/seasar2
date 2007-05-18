@@ -18,6 +18,8 @@ package org.seasar.framework.beans;
 import org.seasar.framework.exception.SRuntimeException;
 
 /**
+ * プロパティが見つからなかった場合にスローされる例外です。
+ * 
  * @author higa
  * 
  */
@@ -25,23 +27,39 @@ public class PropertyNotFoundRuntimeException extends SRuntimeException {
 
     private static final long serialVersionUID = -5177019197796206774L;
 
-    private Class targetClass_;
+    private Class targetClass;
 
-    private String propertyName_;
+    private String propertyName;
 
+    /**
+     * {@link PropertyNotFoundRuntimeException}を返します。
+     * 
+     * @param componentClass
+     * @param propertyName
+     */
     public PropertyNotFoundRuntimeException(Class componentClass,
             String propertyName) {
         super("ESSR0065",
                 new Object[] { componentClass.getName(), propertyName });
-        targetClass_ = componentClass;
-        propertyName_ = propertyName;
+        this.targetClass = componentClass;
+        this.propertyName = propertyName;
     }
 
+    /**
+     * ターゲットの{@link Class}を返します。
+     * 
+     * @return ターゲットの{@link Class}
+     */
     public Class getTargetClass() {
-        return targetClass_;
+        return targetClass;
     }
 
+    /**
+     * プロパティ名を返します。
+     * 
+     * @return
+     */
     public String getPropertyName() {
-        return propertyName_;
+        return propertyName;
     }
 }

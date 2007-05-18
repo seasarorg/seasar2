@@ -60,10 +60,13 @@ import org.seasar.framework.util.ShortConversionUtil;
 import org.seasar.framework.util.StringUtil;
 
 /**
+ * {@link BeanDesc}の実装クラスです。
+ * 
  * @author higa
  * 
  */
 public final class BeanDescImpl implements BeanDesc {
+
     private static final Logger logger = Logger.getLogger(BeanDescImpl.class);
 
     private static final Object[] EMPTY_ARGS = new Object[0];
@@ -91,7 +94,10 @@ public final class BeanDescImpl implements BeanDesc {
     private Map methodParameterNamesCache;
 
     /**
+     * {@link BeanDescImpl}を作成します。
      * 
+     * @param beanClass
+     * @throws EmptyRuntimeException
      */
     public BeanDescImpl(Class beanClass) throws EmptyRuntimeException {
         if (beanClass == null) {
@@ -581,7 +587,7 @@ public final class BeanDescImpl implements BeanDesc {
             }
         } else {
             propDesc = new PropertyDescImpl(propertyName, propertyType,
-                    readMethod, null, this);
+                    readMethod, null, null, beanClass);
             addPropertyDesc(propDesc);
         }
     }
@@ -597,7 +603,7 @@ public final class BeanDescImpl implements BeanDesc {
             }
         } else {
             propDesc = new PropertyDescImpl(propertyName, propertyType, null,
-                    writeMethod, this);
+                    writeMethod, null, beanClass);
             addPropertyDesc(propDesc);
         }
     }
@@ -716,6 +722,17 @@ public final class BeanDescImpl implements BeanDesc {
             if (!fieldCache.containsKey(fname)) {
                 field.setAccessible(true);
                 fieldCache.put(fname, field);
+                if (FieldUtil.isInstanceField(field)
+                        && FieldUtil.isPublicField(field)) {
+                    if (hasPropertyDesc(fname)) {
+                        PropertyDesc pd = getPropertyDesc(field.getName());
+                        pd.setField(field);
+                    } else {
+                        PropertyDesc pd = new PropertyDescImpl(field.getName(),
+                                field.getType(), null, null, field, beanClass);
+                        propertyDescCache.put(fname, pd);
+                    }
+                }
             }
         }
     }

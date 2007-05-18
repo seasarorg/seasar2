@@ -15,33 +15,130 @@
  */
 package org.seasar.framework.beans;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 /**
+ * プロパティを扱うためのインターフェースです。
+ * 
  * @author higa
  * 
  */
 public interface PropertyDesc {
 
-    public String getPropertyName();
+    /**
+     * プロパティ名を返します。
+     * 
+     * @return プロパティ名
+     */
+    String getPropertyName();
 
-    public Class getPropertyType();
+    /**
+     * プロパティの型を返します。
+     * 
+     * @return プロパティの型
+     */
+    Class getPropertyType();
 
-    public Method getReadMethod();
+    /**
+     * getterメソッドを返します。
+     * 
+     * @return getterメソッド
+     */
+    Method getReadMethod();
 
-    public void setReadMethod(Method readMethod);
+    /**
+     * getterメソッドを設定します。
+     * 
+     * @param readMethod
+     */
+    void setReadMethod(Method readMethod);
 
-    public boolean hasReadMethod();
+    /**
+     * getterメソッドを持っているかどうか返します。
+     * 
+     * @return getterメソッドを持っているかどうか
+     */
+    boolean hasReadMethod();
 
-    public Method getWriteMethod();
+    /**
+     * setterメソッドを返します。
+     * 
+     * @return setterメソッド
+     */
+    Method getWriteMethod();
 
-    public void setWriteMethod(Method writeMethod);
+    /**
+     * setterメソッドを設定します。
+     * 
+     * @param writeMethod
+     */
+    void setWriteMethod(Method writeMethod);
 
-    public boolean hasWriteMethod();
+    /**
+     * setterメソッドを持っているかどうか返します。
+     * 
+     * @return setterメソッドを持っているかどうか
+     */
+    boolean hasWriteMethod();
 
-    public Object getValue(Object target);
+    /**
+     * プロパティの値が取得できるかどうかを返します。
+     * 
+     * @return プロパティの値が取得できるかどうか
+     */
+    boolean isReadable();
 
-    public void setValue(Object target, Object value);
+    /**
+     * プロパティの値が設定できるかどうかを返します。
+     * 
+     * @return プロパティの値が設定できるかどうか
+     */
+    boolean isWritable();
 
-    public Object convertIfNeed(Object value);
+    /**
+     * プロパティとして認識しているpublicフィールドを返します。
+     * 
+     * @return プロパティとして認識しているpublicフィールド
+     */
+    Field getField();
+
+    /**
+     * プロパティとして認識しているpublicフィールドを設定します。
+     * 
+     * @param field
+     */
+    void setField(Field field);
+
+    /**
+     * プロパティの値を返します。
+     * 
+     * @param target
+     * @return プロパティの値
+     * @throws IllegalStateException
+     *             プロパティがreadableではない場合。
+     * 
+     */
+    Object getValue(Object target) throws IllegalStateException;
+
+    /**
+     * プロパティに値を設定します。
+     * 
+     * @param target
+     * @param value
+     * @throws IllegalPropertyRuntimeException
+     *             値の設定に失敗した場合。
+     * @throws IllegalStateException
+     *             writableではない場合。
+     */
+    void setValue(Object target, Object value)
+            throws IllegalPropertyRuntimeException, IllegalStateException;
+
+    /**
+     * プロパティの型に応じて必要なら適切に変換します。
+     * 
+     * @param value
+     * @return 変換された値
+     */
+    Object convertIfNeed(Object value);
 }
