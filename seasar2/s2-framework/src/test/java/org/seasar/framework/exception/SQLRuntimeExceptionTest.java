@@ -45,6 +45,12 @@ public class SQLRuntimeExceptionTest extends TestCase {
         Locale.setDefault(Locale.JAPANESE);
         SQLException sqlException = new SQLException("some reason", "fooState",
                 7650);
+        SQLException sqlException2 = new SQLException("hoge reason",
+                "barState", 7660);
+        SQLException sqlException3 = new SQLException("fuga reason",
+                "bazState", 7670);
+        sqlException.setNextException(sqlException2);
+        sqlException2.setNextException(sqlException3);
 
         SQLRuntimeException sqlRuntimeException = new SQLRuntimeException(
                 sqlException);
@@ -57,6 +63,12 @@ public class SQLRuntimeExceptionTest extends TestCase {
         assertContains(message, "ErrorCode=7650");
         assertContains(message, "SQLState=fooState");
         assertContains(message, "some reason");
+        assertContains(message, "ErrorCode=7660");
+        assertContains(message, "SQLState=barState");
+        assertContains(message, "hoge reason");
+        assertContains(message, "ErrorCode=7670");
+        assertContains(message, "SQLState=bazState");
+        assertContains(message, "fuga reason");
     }
 
     private void assertContains(String s, String contained) {

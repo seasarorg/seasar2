@@ -17,6 +17,8 @@ package org.seasar.framework.exception;
 
 import java.sql.SQLException;
 
+import org.seasar.framework.message.MessageFormatter;
+
 /**
  * @author higa
  * @author manhole
@@ -44,9 +46,23 @@ public final class SQLRuntimeException extends SRuntimeException {
     }
 
     protected static String getRealMessage(SQLException cause) {
-        if (cause instanceof SSQLException) {
-            return cause.getCause().getMessage();
+        StringBuffer buf = new StringBuffer(256);
+        buf.append(cause.getMessage()).append(" : [");
+        SQLException next = cause.getNextException();
+        while (next != null) {
+            buf.append(
+                    MessageFormatter.getSimpleMessage("ESSR0071", new Object[] {
+                            next.getMessage(),
+                            Integer.toString(next.getErrorCode()),
+                            next.getSQLState() })).append("], [");
+            next = next.getNextException();
         }
-        return cause.getMessage();
+        Throwable t = cause.getCause();
+        while (t != null) {
+            buf.append(t.getMessage()).append("], [");
+            t = t.getCause();
+        }
+        buf.setLength(buf.length() - 4);
+        return new String(buf);
     }
 }
