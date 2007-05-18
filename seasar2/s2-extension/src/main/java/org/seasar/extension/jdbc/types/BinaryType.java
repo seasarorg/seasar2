@@ -36,7 +36,19 @@ public class BinaryType implements ValueType {
      *      int)
      */
     public Object getValue(ResultSet resultSet, int index) throws SQLException {
-        return resultSet.getBytes(index);
+        try {
+            Blob blob = resultSet.getBlob(index);
+            if (blob == null) {
+                return null;
+            }
+            long l = blob.length();
+            if (Integer.MAX_VALUE < l) {
+                throw new ArrayIndexOutOfBoundsException();
+            }
+            return blob.getBytes(1, (int) l);
+        } catch (SQLException e) {
+            return resultSet.getBytes(index);
+        }
     }
 
     /**
