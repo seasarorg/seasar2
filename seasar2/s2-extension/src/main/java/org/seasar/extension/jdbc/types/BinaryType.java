@@ -37,15 +37,7 @@ public class BinaryType implements ValueType {
      */
     public Object getValue(ResultSet resultSet, int index) throws SQLException {
         try {
-            Blob blob = resultSet.getBlob(index);
-            if (blob == null) {
-                return null;
-            }
-            long l = blob.length();
-            if (Integer.MAX_VALUE < l) {
-                throw new ArrayIndexOutOfBoundsException();
-            }
-            return blob.getBytes(1, (int) l);
+            return toByteArray(resultSet.getBlob(index));
         } catch (SQLException e) {
             return resultSet.getBytes(index);
         }
@@ -58,18 +50,21 @@ public class BinaryType implements ValueType {
     public Object getValue(ResultSet resultSet, String columnName)
             throws SQLException {
         try {
-            Blob blob = resultSet.getBlob(columnName);
-            if (blob == null) {
-                return null;
-            }
-            long l = blob.length();
-            if (Integer.MAX_VALUE < l) {
-                throw new ArrayIndexOutOfBoundsException();
-            }
-            return blob.getBytes(1, (int) l);
+            return toByteArray(resultSet.getBlob(columnName));
         } catch (SQLException e) {
             return resultSet.getBytes(columnName);
         }
+    }
+
+    private byte[] toByteArray(Blob blob) throws SQLException {
+        if (blob == null) {
+            return null;
+        }
+        long l = blob.length();
+        if (Integer.MAX_VALUE < l) {
+            throw new ArrayIndexOutOfBoundsException();
+        }
+        return blob.getBytes(1, (int) l);
     }
 
     /**
