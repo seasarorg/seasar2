@@ -15,6 +15,8 @@
  */
 package org.seasar.extension.jdbc.types;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.sql.Blob;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -74,6 +76,10 @@ public class BinaryType implements ValueType {
 
         if (value == null) {
             ps.setNull(index, Types.BINARY);
+        } else if (value instanceof byte[]) {
+            byte[] ba = (byte[]) value;
+            InputStream in = new ByteArrayInputStream(ba);
+            ps.setBinaryStream(index, in, ba.length);
         } else {
             ps.setObject(index, value);
         }
