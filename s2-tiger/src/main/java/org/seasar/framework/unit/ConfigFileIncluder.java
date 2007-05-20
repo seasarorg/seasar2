@@ -16,7 +16,7 @@
 package org.seasar.framework.unit;
 
 /**
- * コンポーネント定義の設定ファイルをテスト時のルートのS2コンテナにインクルードします。
+ * コンポーネント定義の設定ファイルをS2コンテナにインクルードします。
  * <p>
  * 通常、このインターフェースの実装クラスは<code>s2junit4.dicon</code>に定義されます。
  * </p>
@@ -27,7 +27,7 @@ package org.seasar.framework.unit;
 public interface ConfigFileIncluder {
 
     /**
-     * コンポーネント定義の設定ファイルをテスト時のルートのS2コンテナにインクルードします。
+     * コンポーネント定義の設定ファイルをS2コンテナにインクルードします。
      * 
      * @param testContext
      *            テストの実行コンテキスト

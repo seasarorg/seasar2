@@ -51,18 +51,22 @@ import org.seasar.framework.util.ResourceUtil;
 import org.seasar.framework.util.TransactionManagerUtil;
 
 /**
- * @author taedium
+ * Excelファイルやデータベースにアクセスする実装クラスです。
  * 
+ * @author taedium
  */
 public class DataAccessorImpl implements DataAccessor {
 
+    /** テストコンテキスト */
     protected TestContext testContext;
 
+    /** トランザクションマネジャー */
     protected TransactionManager tm;
 
-    private DataSource dataSource;
-
+    /** エンティティマネジャー */
     protected EntityManager em;
+
+    private DataSource dataSource;
 
     private Connection connection;
 
@@ -70,29 +74,66 @@ public class DataAccessorImpl implements DataAccessor {
 
     private SqlWriter sqlWriter;
 
+    /**
+     * テストコンテキストを設定します。
+     * 
+     * @param testContext
+     *            テストコンテキスト
+     */
     @Binding(bindingType = BindingType.MUST)
     public void setTestContext(final TestContext testContext) {
         this.testContext = testContext;
     }
 
+    /**
+     * トランザクションマネジャーを設定します。
+     * 
+     * @param tm
+     *            トランザクションマネジャー
+     */
+    @Binding(bindingType = BindingType.SHOULD)
     public void setTransactionManager(final TransactionManager tm) {
         this.tm = tm;
     }
 
+    /**
+     * データソースを設定します。
+     * 
+     * @param dataSource
+     *            データソース
+     */
+    @Binding(bindingType = BindingType.SHOULD)
     public void setDataSource(final DataSource dataSource) {
         this.dataSource = dataSource;
     }
 
+    /**
+     * エンティティマネジャーを設定します。
+     * 
+     * @param em
+     *            エンティティマネジャー
+     */
     @Binding(bindingType = BindingType.MAY)
     public void setEntityManager(final EntityManager em) {
         this.em = em;
     }
 
+    /**
+     * SQLライターを設定します。
+     * 
+     * @param sqlWriter
+     *            SQLライター
+     */
     @Binding(bindingType = BindingType.MAY)
     public void setSqlWriter(final SqlWriter sqlWriter) {
         this.sqlWriter = sqlWriter;
     }
 
+    /**
+     * データソースを取得します。
+     * 
+     * @return データソース
+     */
     public DataSource getDataSource() {
         if (dataSource == null) {
             throw new EmptyRuntimeException("dataSource");
@@ -100,6 +141,11 @@ public class DataAccessorImpl implements DataAccessor {
         return dataSource;
     }
 
+    /**
+     * コネクションを取得します。
+     * 
+     * @return コネクション
+     */
     public Connection getConnection() {
         if (connection != null) {
             return connection;
@@ -108,6 +154,11 @@ public class DataAccessorImpl implements DataAccessor {
         return connection;
     }
 
+    /**
+     * データベースに関するメタデータを取得します。
+     * 
+     * @return データベースに関するメタデータ
+     */
     public DatabaseMetaData getDatabaseMetaData() {
         if (dbMetaData != null) {
             return dbMetaData;
@@ -116,6 +167,11 @@ public class DataAccessorImpl implements DataAccessor {
         return dbMetaData;
     }
 
+    /**
+     * SQLライターを取得します。
+     * 
+     * @return SQLライター
+     */
     protected SqlWriter getSqlWriter() {
         return sqlWriter != null ? sqlWriter : new SqlWriter(getDataSource());
     }
@@ -230,6 +286,13 @@ public class DataAccessorImpl implements DataAccessor {
         handler.execute(null);
     }
 
+    /**
+     * パスを適切に変換して返します。
+     * 
+     * @param path
+     *            パス
+     * @return 指定されたパスのリソースが存在すればそのパス、存在しなければテストコンテキストに応じたパス
+     */
     protected String convertPath(String path) {
         if (ResourceUtil.isExist(path)) {
             return path;
@@ -237,6 +300,9 @@ public class DataAccessorImpl implements DataAccessor {
         return testContext.getTestClassPackagePath() + "/" + path;
     }
 
+    /**
+     * 必要ならば{@link EntityManager#flush()}}を実行します。
+     */
     protected void flushIfNecessary() {
         if (em != null && TransactionManagerUtil.isActive(tm)) {
             em.flush();

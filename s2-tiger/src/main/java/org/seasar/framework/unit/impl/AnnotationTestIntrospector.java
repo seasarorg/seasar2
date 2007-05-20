@@ -47,47 +47,90 @@ import org.seasar.framework.util.StringUtil;
 import org.seasar.framework.util.tiger.CollectionsUtil;
 
 /**
- * @author taedium
+ * アノテーションを解釈してテストクラスを分析するイントロスペクターです。
  * 
+ * @author taedium
  */
 public class AnnotationTestIntrospector implements S2TestIntrospector {
 
+    /** テストクラスの初期化メソッドに注釈可能なアノテーションクラス */
     protected Class<? extends Annotation> beforeClassAnnotation = BeforeClass.class;
 
+    /** テストクラスの解放メソッドに注釈可能なアノテーションクラス */
     protected Class<? extends Annotation> afterClassAnnotation = AfterClass.class;
 
+    /** 全テストケースに共通の初期化メソッドに注釈可能なアノテーションクラス */
     protected Class<? extends Annotation> beforeAnnotation = Before.class;
 
+    /** 全テストケースに共通の解放メソッドに注釈可能なアノテーションクラス */
     protected Class<? extends Annotation> afterAnnotation = After.class;
 
+    /** テストケースを無視する処理が有効かどうかを表すフラグ。 デフォルトは<code>trye</code> */
     protected boolean enableIgnore = true;
 
+    /** テストケースの事前条件チェック処理が有効かどうかを表すフラグ。 デフォルトは<code>trye</code> */
     protected boolean enablePrerequisite = true;
 
+    /**
+     * テストクラスの初期化メソッドに注釈可能なアノテーションクラスを設定します。
+     * 
+     * @param beforeClassAnnotation
+     *            アノテーションクラス
+     */
     public void setBeforeClassAnnotation(
             final Class<? extends Annotation> beforeClassAnnotation) {
         this.beforeClassAnnotation = beforeClassAnnotation;
     }
 
+    /**
+     * テストクラスの解放メソッドに注釈可能なアノテーションクラスを設定します。
+     * 
+     * @param afterClassAnnotation
+     *            アノテーションクラス
+     */
     public void setAfterClassAnnotation(
             final Class<? extends Annotation> afterClassAnnotation) {
         this.afterClassAnnotation = afterClassAnnotation;
     }
 
+    /**
+     * 全テストケースに共通の初期化メソッドに注釈可能なアノテーションクラスを設定します。
+     * 
+     * @param beforeAnnotation
+     *            アノテーションクラス
+     */
     public void setBeforeAnnotation(
             final Class<? extends Annotation> beforeAnnotation) {
         this.beforeAnnotation = beforeAnnotation;
     }
 
+    /**
+     * 全テストケースに共通の初期化メソッドに注釈可能なアノテーションクラスを設定します。
+     * 
+     * @param afterAnnotation
+     *            アノテーションクラス
+     */
     public void setAfterAnnotation(
             final Class<? extends Annotation> afterAnnotation) {
         this.afterAnnotation = afterAnnotation;
     }
 
+    /**
+     * テストケースを無視する処理を有効とするかどうかを設定します。
+     * 
+     * @param enableIgnore
+     *            無視する処理が有効の場合<code>true</code>、そうでない場合<code>false</code>
+     */
     public void setEnableIgnore(boolean enableIgnore) {
         this.enableIgnore = enableIgnore;
     }
 
+    /**
+     * テストケースの事前条件チェックの処理を有効とするかどうかを設定します。
+     * 
+     * @param enablePrerequisite
+     *            事前条件チェックの処理が有効の場合<code>true</code>、そうでない場合<code>false</code>
+     */
     public void setEnablePrerequisite(boolean enablePrerequisite) {
         this.enablePrerequisite = enablePrerequisite;
     }
@@ -172,6 +215,13 @@ public class AnnotationTestIntrospector implements S2TestIntrospector {
         return true;
     }
 
+    /**
+     * 事前条件が満たされた場合<code>true</code>を返します。
+     * 
+     * @param expression
+     *            事前条件を表す式
+     * @return 事前条件が満たされた場合<code>true</code>、満たされない場合<code>false</code>
+     */
     protected boolean isFulfilled(final Expression expression) {
         final Object result = expression.evaluateNoException();
         if (expression.isMethodFailed()) {
@@ -196,6 +246,15 @@ public class AnnotationTestIntrospector implements S2TestIntrospector {
         return type != null && type == TxBehaviorType.COMMIT;
     }
 
+    /**
+     * トランザクションの振る舞いを返します。
+     * 
+     * @param clazz
+     *            テストクラス
+     * @param method
+     *            テストメソッド
+     * @return トランザクションの振る舞い
+     */
     protected TxBehaviorType getTxBehaviorType(final Class<?> clazz,
             final Method method) {
         if (method.isAnnotationPresent(TxBehavior.class)) {
@@ -232,6 +291,18 @@ public class AnnotationTestIntrospector implements S2TestIntrospector {
         }
     }
 
+    /**
+     * <code>mock</code>から{@link MockInterceptor モックインターセプター}を作成し、<code>context</code>に登録します。
+     * 
+     * @param mock
+     *            モックインターセプターの定義
+     * @param method
+     *            テストメソッド
+     * @param test
+     *            テストクラスのインスタンス
+     * @param context
+     *            S2JUnit4の内部的なテストコンテキスト
+     */
     protected void createMock(final Mock mock, final Method method,
             final Object test, final InternalTestContext context) {
         final MockInterceptor mi = new MockInterceptor();
@@ -260,6 +331,17 @@ public class AnnotationTestIntrospector implements S2TestIntrospector {
         context.addMockInterceptor(mi);
     }
 
+    /**
+     * 式を作成します。
+     * 
+     * @param source
+     *            式の文字列表現
+     * @param method
+     *            テストメソッド
+     * @param test
+     *            テストクラスのインスタンス
+     * @return 式
+     */
     protected Expression createExpression(final String source,
             final Method method, final Object test) {
         final Map<String, Object> ctx = CollectionsUtil.newHashMap();

@@ -28,24 +28,43 @@ import org.seasar.framework.util.ResourceUtil;
 import org.seasar.framework.util.tiger.CollectionsUtil;
 
 /**
- * @author taedium
+ * 期待値を読み込む実装クラスです。
+ * <p>
+ * 期待値はExcelから読み込みます。
+ * </p>
  * 
+ * @author taedium
  */
 public class ExpectedDataReaderImpl implements ExpectedDataReader {
 
+    /** ロガー */
     protected static final Logger logger = Logger
             .getLogger(ExpectedDataReaderImpl.class);
 
+    /** 期待値が記述されたExcelのパスのリスト */
     protected final List<String> expectedDataXlsPaths = CollectionsUtil
             .newArrayList();
 
+    /** データアクセッサー */
     protected DataAccessor dataAccessor;
 
+    /**
+     * データアクセッサーを設定します。
+     * 
+     * @param dataAccessor
+     *            データアクセッサー
+     */
     @Binding(bindingType = BindingType.MUST)
     public void setDataAccessor(final DataAccessor dataAccessor) {
         this.dataAccessor = dataAccessor;
     }
 
+    /**
+     * 期待値が記述されたExcelのパスを登録します。
+     * 
+     * @param path
+     *            期待値が記述されたExcelのパス
+     */
     public void addExpectedDataXlsPath(final String path) {
         expectedDataXlsPaths.add(path);
     }
@@ -64,6 +83,13 @@ public class ExpectedDataReaderImpl implements ExpectedDataReader {
         return null;
     }
 
+    /**
+     * 指定されたExcelを読みデータセットとして返します。
+     * 
+     * @param path
+     *            Excelのパス
+     * @return Excel内のデータのデータセット表現
+     */
     protected DataSet readXls(final String path) {
         if (logger.isDebugEnabled()) {
             logger.log("DSSR0104", new Object[] { path });

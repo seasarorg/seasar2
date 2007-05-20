@@ -28,23 +28,42 @@ import org.seasar.framework.util.ResourceUtil;
 import org.seasar.framework.util.tiger.CollectionsUtil;
 
 /**
- * @author taedium
+ * コンポーネント定義の設定ファイルをS2コンテナにインクルードする実装クラスです。
+ * <p>
+ * 設定ファイルはテストコンテキスト内のS2コンテナではなく、このオブジェクトに持つS2コンテナにインクルードします。
+ * </p>
  * 
+ * @author taedium
  */
 public class ConfigFileIncluderImpl implements ConfigFileIncluder {
 
+    /** ロガー */
     protected static final Logger logger = Logger
             .getLogger(ConfigFileIncluderImpl.class);
 
+    /** S2コンテナ */
     protected S2Container container;
 
+    /** 設定ファイルのパスのリスト */
     protected final List<String> configFiles = CollectionsUtil.newArrayList();
 
+    /**
+     * S2コンテナを設定します。
+     * 
+     * @param container
+     *            S2コンテナ
+     */
     @Binding(bindingType = BindingType.MUST)
     public void setContainer(S2Container container) {
         this.container = container;
     }
 
+    /**
+     * 設定ファイルのパスを登録します。
+     * 
+     * @param configFile
+     *            設定ファイルのパス
+     */
     public void addConfigFile(final String configFile) {
         configFiles.add(configFile);
     }
@@ -63,7 +82,16 @@ public class ConfigFileIncluderImpl implements ConfigFileIncluder {
         }
     }
 
-    protected void include(final TestContext testContext, final String path) {
+    /**
+     * 設定ファイルをS2コンテナにインクルードします。
+     * 
+     * @param testContext
+     *            テストコンテキスト
+     * @param path
+     *            設定ファイルのパス
+     */
+    protected void include(@SuppressWarnings("unused")
+    final TestContext testContext, final String path) {
         if (logger.isDebugEnabled()) {
             logger.log("DSSR0101", new Object[] { path });
         }

@@ -26,34 +26,45 @@ import org.seasar.framework.unit.Expression;
 import org.seasar.framework.util.OgnlUtil;
 
 /**
- * @author nakamura
+ * OGNL式を表すクラスです。
  * 
+ * @author nakamura
  */
 public class OgnlExpression implements Expression {
 
     private final String source;
 
-    private final Object test;
+    private final Object root;
 
     private final Map<String, Object> context;
 
     private Exception exception;
 
-    public OgnlExpression(final String source, final Object test,
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param source
+     *            式の文字列表現
+     * @param root
+     *            OGNL式のルートとなるオブジェクト
+     * @param context
+     *            OGNL式のコンテキスト
+     */
+    public OgnlExpression(final String source, final Object root,
             final Map<String, Object> context) {
         this.source = source;
-        this.test = test;
+        this.root = root;
         this.context = context;
     }
 
     public Object evaluate() {
         Object exp = OgnlUtil.parseExpression(source);
-        return OgnlUtil.getValue(exp, context, test);
+        return OgnlUtil.getValue(exp, context, root);
     }
 
     public Object evaluateNoException() {
         try {
-            return Ognl.getValue(source, context, test);
+            return Ognl.getValue(source, context, root);
         } catch (OgnlException e) {
             exception = e;
         }
@@ -76,6 +87,11 @@ public class OgnlExpression implements Expression {
         }
     }
 
+    /**
+     * 例外を持っている場合<code>true</code>を返します。
+     * 
+     * @return 例外を持っている場合<code>true</code>、持っていない場合<code>false</code>
+     */
     protected boolean hasException() {
         return exception != null;
     }

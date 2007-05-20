@@ -27,30 +27,56 @@ import org.seasar.framework.util.ResourceUtil;
 import org.seasar.framework.util.tiger.CollectionsUtil;
 
 /**
- * @author taedium
+ * テストデータを準備するインターフェースの実装クラスです。
+ * <p>
+ * テストデータはExcelから読みデータベースへ書き込みます。
+ * </p>
  * 
+ * @author taedium
  */
 public class TestDataPreparerImpl implements TestDataPreparer {
 
+    /** ロガー */
     protected static final Logger logger = Logger
             .getLogger(TestDataPreparerImpl.class);
 
+    /** テストデータを持つExcelのパスのリスト */
     protected final List<String> testDataXlsPaths = CollectionsUtil
             .newArrayList();
 
+    /** データアクセッサー */
     protected DataAccessor dataAccessor;
 
+    /** データベースのデータをテストデータで置換するかどうかを表すフラグ。デフォルトは<code>false</code> */
     protected boolean replaceDb;
 
+    /**
+     * データアクセッサーを設定します。
+     * 
+     * @param dataAccessor
+     *            データアクセッサー
+     */
     @Binding(bindingType = BindingType.MUST)
     public void setDataAccessor(final DataAccessor dataAccessor) {
         this.dataAccessor = dataAccessor;
     }
 
+    /**
+     * データベースのデータをテストデータで置換する場合<code>true</code>を設定します。
+     * 
+     * @param replaceDb
+     *            データベースのデータをテストデータで置換する場合<code>true</code>、置換しないで追加する場合<code>false</code>
+     */
     public void setReplaceDb(final boolean replaceDb) {
         this.replaceDb = replaceDb;
     }
 
+    /**
+     * テストデータを持つExcelのパスを登録します。
+     * 
+     * @param path
+     *            テストデータを持つExcelのパス
+     */
     public void addTestDataXlsPath(final String path) {
         testDataXlsPaths.add(path);
     }
@@ -70,6 +96,12 @@ public class TestDataPreparerImpl implements TestDataPreparer {
         }
     }
 
+    /**
+     * Excelから読み込んだデータをデータベースに書き込みます。
+     * 
+     * @param path
+     *            Excelのパス
+     */
     protected void readXlsWriteDb(final String path) {
         if (replaceDb) {
             if (logger.isDebugEnabled()) {

@@ -42,37 +42,77 @@ import org.seasar.framework.util.ResourceUtil;
 import org.seasar.framework.util.tiger.CollectionsUtil;
 
 /**
- * @author taedium
+ * Servlet、JTA、EJB3のAPIに依存せずにS2JUnit4を実行可能にするシンプルなテストコンテキストです。
  * 
+ * @author taedium
  */
 public class SimpleInternalTestContext implements InternalTestContext {
 
+    /** Tigerのアノテーションハンドラー */
     protected final TigerAnnotationHandler handler = new TigerAnnotationHandler();
 
+    /** モックインターセプターのリスト */
     protected final List<MockInterceptor> mockInterceptors = CollectionsUtil
             .newArrayList();
 
+    /** ルートのS2コンテナ */
     protected S2Container container;
 
+    /** 命名規約 */
     protected NamingConvention namingConvention;
 
+    /** テストクラス */
     protected Class<?> testClass;
 
+    /** テストメソッド */
     protected Method testMethod;
 
+    /** 自動インクルードをするかどうかを表すフラグ。デフォルトは<code>true</code> */
     protected boolean autoIncluding = true;
 
+    /** テストデータを自動準備するかどうかを表すフラグ。デフォルトは<code>true</code> */
     protected boolean autoPreparing = true;
 
+    /** EJB3を使用するかどうかを表すフラグ。デフォルトは<code>false</code> */
     protected boolean ejb3Enabled = false;
 
+    /** JTAを使用するかどうかを表すフラグ。デフォルトは<code>false</code> */
     protected boolean jtaEnabled = false;
 
+    /** S2コンテナが初期化されたかどうかを表すフラグ */
     protected boolean containerInitialized;
 
+    /**
+     * S2コンテナを設定します。
+     * 
+     * @param container
+     *            S2コンテナ
+     */
     @Binding(bindingType = BindingType.MUST)
     public void setContainer(final S2Container container) {
         this.container = container.getRoot();
+    }
+
+    /**
+     * EJB3を使用する場合<code>true</code>を設定します。
+     * 
+     * @param ejb3Enabled
+     *            EJB3を使用する場合<code>true</code>、使用しない場合<code>false</code>
+     */
+    @Binding(bindingType = BindingType.MAY)
+    public void setEjb3Enabled(boolean ejb3Enabled) {
+        this.ejb3Enabled = ejb3Enabled;
+    }
+
+    /**
+     * JTAを使用する場合<code>true</code>を設定します。
+     * 
+     * @param jtaEnabled
+     *            JTAを使用する場合<code>true</code>、使用しない場合<code>false</code>
+     */
+    @Binding(bindingType = BindingType.MAY)
+    public void setJtaEnabled(boolean jtaEnabled) {
+        this.jtaEnabled = jtaEnabled;
     }
 
     public void setAutoIncluding(final boolean autoIncluding) {
@@ -83,14 +123,6 @@ public class SimpleInternalTestContext implements InternalTestContext {
         this.autoPreparing = autoPreparing;
     }
 
-    public void setEjb3Enabled(boolean ejb3Enabled) {
-        this.ejb3Enabled = ejb3Enabled;
-    }
-
-    public void setJtaEnabled(boolean jtaEnabled) {
-        this.jtaEnabled = jtaEnabled;
-    }
-
     public void setTestClass(final Class<?> testClass) {
         this.testClass = testClass;
     }
@@ -99,12 +131,20 @@ public class SimpleInternalTestContext implements InternalTestContext {
         this.testMethod = testMethod;
     }
 
+    /**
+     * このコンポーネントを初期化します。
+     * 
+     * @throws Throwable
+     */
     @InitMethod
     public void init() throws Throwable {
         namingConvention = new NamingConventionImpl();
         container.register(namingConvention);
     }
 
+    /**
+     * このコンポーネントを破棄します。
+     */
     @DestroyMethod
     public void destroy() {
         MessageResourceBundleFactory.clear();
@@ -237,7 +277,9 @@ public class SimpleInternalTestContext implements InternalTestContext {
     }
 
     public void addAspecDef(final Object componentKey, final AspectDef aspectDef) {
-        assertContainerNotInitialized();
+        if (containerInitialized) {
+            throw new IllegalStateException();
+        }
         container.getComponentDef(componentKey).addAspectDef(0, aspectDef);
     }
 
@@ -247,12 +289,6 @@ public class SimpleInternalTestContext implements InternalTestContext {
 
     public boolean isJtaEnabled() {
         return jtaEnabled;
-    }
-
-    protected void assertContainerNotInitialized() {
-        if (containerInitialized) {
-            throw new IllegalStateException();
-        }
     }
 
 }

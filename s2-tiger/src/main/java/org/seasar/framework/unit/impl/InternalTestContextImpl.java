@@ -16,6 +16,10 @@
 package org.seasar.framework.unit.impl;
 
 import javax.servlet.Servlet;
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.seasar.framework.container.ExternalContext;
 import org.seasar.framework.container.annotation.tiger.Binding;
@@ -38,21 +42,36 @@ import org.seasar.framework.mock.servlet.MockServletContext;
 import org.seasar.framework.mock.servlet.MockServletContextImpl;
 
 /**
- * @author taedium
+ * テスト内でServlet、JTA、EJB3のAPIを利用することが可能なテストコンテキストです。
+ * <p>
+ * このクラスはサーブレットAPIのモックをサポートします。
+ * </p>
  * 
+ * @author taedium
  */
 public class InternalTestContextImpl extends SimpleInternalTestContext {
 
+    /** {@link ServletContext}のモック */
     protected MockServletContext servletContext;
 
+    /** サーブレット */
     protected Servlet servlet;
 
+    /** {@link ServletConfig}のモック */
     protected MockServletConfig servletConfig;
 
+    /** {@link HttpServletRequest}のモック */
     protected MockHttpServletRequest request;
 
+    /** {@link HttpServletResponse}のモック */
     protected MockHttpServletResponse response;
 
+    /**
+     * サーブレットコンテキストを設定します。
+     * 
+     * @param servletContext
+     *            サーブレットコンテキスト
+     */
     @Binding(bindingType = BindingType.MAY)
     public void setServletContext(MockServletContext servletContext) {
         this.servletContext = servletContext;
@@ -98,6 +117,9 @@ public class InternalTestContextImpl extends SimpleInternalTestContext {
         super.destroy();
     }
 
+    /**
+     * インスタンスを構築します。
+     */
     public InternalTestContextImpl() {
         setEjb3Enabled(true);
         setJtaEnabled(true);

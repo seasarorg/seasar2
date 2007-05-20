@@ -30,7 +30,7 @@ public interface ExpectedDataReader {
      * 
      * @param testContext
      *            テストの実行コンテキスト
-     * @return 期待値
+     * @return 期待値が存在すれば期待値、存在しなければ<code>null</code>
      */
     DataSet read(TestContext testContext);
 }
