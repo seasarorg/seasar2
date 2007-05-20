@@ -65,10 +65,10 @@ public class AnnotationTestIntrospector implements S2TestIntrospector {
     /** 全テストケースに共通の解放メソッドに注釈可能なアノテーションクラス */
     protected Class<? extends Annotation> afterAnnotation = After.class;
 
-    /** テストケースを無視する処理が有効かどうかを表すフラグ。 デフォルトは<code>trye</code> */
+    /** テストケースを無視する処理が有効かどうかを表すフラグ。デフォルトは<code>true</code> */
     protected boolean enableIgnore = true;
 
-    /** テストケースの事前条件チェック処理が有効かどうかを表すフラグ。 デフォルトは<code>trye</code> */
+    /** テストケースの事前条件チェック処理が有効かどうかを表すフラグ。デフォルトは<code>true</code> */
     protected boolean enablePrerequisite = true;
 
     /**

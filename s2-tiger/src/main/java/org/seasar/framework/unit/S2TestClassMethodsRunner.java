@@ -301,7 +301,7 @@ public class S2TestClassMethodsRunner extends Runner implements Filterable,
     }
 
     /**
-     * {@link S2TestClassMethodsRunner テストクラスメソッドランナー}の振る舞いを提供するプロバイダを返します。
+     * {@link S2TestClassMethodsRunner}の振る舞いを提供するプロバイダを返します。
      * 
      * @return 振る舞いを提供するプロバイダ
      */
@@ -313,7 +313,7 @@ public class S2TestClassMethodsRunner extends Runner implements Filterable,
     }
 
     /**
-     * {@link S2TestClassMethodsRunner テストクラスメソッドランナー}の振る舞いを提供するプロバイダを設定します。
+     * {@link S2TestClassMethodsRunner}の振る舞いを提供するプロバイダを設定します。
      * 
      * @param p
      *            振る舞いを提供するプロバイダ
@@ -323,7 +323,7 @@ public class S2TestClassMethodsRunner extends Runner implements Filterable,
     }
 
     /**
-     * {@link S2TestClassMethodsRunner テストクラスメソッドランナー}の振る舞いを提供するプロバイダです。
+     * {@link S2TestClassMethodsRunner}の振る舞いを提供します。
      * 
      * @author taedium
      */
@@ -360,7 +360,7 @@ public class S2TestClassMethodsRunner extends Runner implements Filterable,
          * テストメソッドランナーを作成します。
          * 
          * @param test
-         *            テスト
+         *            テストクラスのインスタンス
          * @param method
          *            テストメソッド
          * @param notifier
@@ -374,7 +374,7 @@ public class S2TestClassMethodsRunner extends Runner implements Filterable,
     }
 
     /**
-     * {@link S2TestClassMethodsRunner テストクラスメソッドランナー}の振る舞いを提供するデフォルトの実装クラスです。
+     * {@link S2TestClassMethodsRunner}の振る舞いを提供するデフォルトの実装クラスです。
      * 
      * @author taedium
      */

@@ -81,7 +81,7 @@ public class Seasar2 extends Runner {
      * 
      * @param clazz
      *            テストクラス
-     * @return
+     * @return テストクラスランナー
      * @throws Exception
      *             何らかの例外が発生した場合
      */
@@ -164,7 +164,7 @@ public class Seasar2 extends Runner {
     }
 
     /**
-     * {@link Seasar2 Seasar2ランナー}の振る舞いを構成します。
+     * {@link Seasar2}の振る舞いを構成します。
      * 
      * @author taedium
      */
@@ -180,7 +180,7 @@ public class Seasar2 extends Runner {
     }
 
     /**
-     * {@link Seasar2 Seasar2ランナー}の振る舞いを構成するデフォルトの実装クラスです。
+     * {@link Seasar2}の振る舞いを構成するデフォルトの実装クラスです。
      * 
      * @author taedium
      */
@@ -201,7 +201,7 @@ public class Seasar2 extends Runner {
     }
 
     /**
-     * {@link Seasar2 Seasar2ランナー}の振る舞いを提供します。
+     * {@link Seasar2}の振る舞いを提供します。
      * 
      * @author taedium
      */
@@ -212,7 +212,7 @@ public class Seasar2 extends Runner {
          * 
          * @param clazz
          *            テストクラス
-         * @return
+         * @return テストクラスランナー
          * @throws Exception
          *             何らかの例外が発生した場合
          */
@@ -220,7 +220,7 @@ public class Seasar2 extends Runner {
     }
 
     /**
-     * {@link Seasar2 Seasar2ランナー}の振る舞いを提供するデフォルトの実装クラスです。
+     * {@link Seasar2}の振る舞いを提供するデフォルトの実装クラスです。
      * 
      * @author taedium
      */

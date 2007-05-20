@@ -379,7 +379,6 @@ public class PersistenceUnitManagerImpl implements PersistenceUnitManager {
          *            永続ユニットプロバイダ
          * @param emf
          *            {@link EntityManagerFactory}
-         * @return ユニット名に関連づけられた{@link EntityManagerFactory}
          */
         public void addEntityManagerFactory(final String unitName,
                 final PersistenceUnitProvider persistenceUnitProvider,
@@ -402,7 +401,7 @@ public class PersistenceUnitManagerImpl implements PersistenceUnitManager {
         }
 
         /**
-         * 保持している{EntityManagerFactory}をクローズします。
+         * 保持している{@link EntityManagerFactory}をクローズします。
          */
         public void close() {
             for (final EntityManagerFactory emf : entityManagerFactories
