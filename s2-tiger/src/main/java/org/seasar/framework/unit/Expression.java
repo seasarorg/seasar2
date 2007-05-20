@@ -16,18 +16,45 @@
 package org.seasar.framework.unit;
 
 /**
- * @author nakamura
+ * 式です。
  * 
+ * @author nakamura
  */
 public interface Expression {
 
+    /**
+     * 式を評価します。
+     * 
+     * @return 評価された式の結果
+     */
     Object evaluate();
 
+    /**
+     * 式を評価します。
+     * <p>
+     * 評価に失敗した場合は<code>null</code>を返します。
+     * </p>
+     * 
+     * @return 評価に成功した場合は評価された式の結果、評価に失敗した場合は<code>null</code>
+     */
     Object evaluateNoException();
 
+    /**
+     * {@link #evaluateNoException()}を実行した結果、式の評価にメソッドが存在しかつそのメソッド呼び出しに失敗した場合<code>true</code>を返します。
+     * 
+     * @return メソッド呼び出しに失敗した場合<code>true</code>、そうでない場合<code>false</code>
+     */
     boolean isMethodFailed();
 
+    /**
+     * {@link #evaluateNoException()}を実行した結果、式の評価に失敗しているならばその原因を表す例外を返します。
+     * 
+     * @return 式の評価に失敗している場合その原因を表す例外、そうでない場合<code>null</code>
+     */
     Exception getException();
 
+    /**
+     * 式の評価または式の実行で例外が発生した場合、その例外をスローします。
+     */
     void throwExceptionIfNecessary();
 }

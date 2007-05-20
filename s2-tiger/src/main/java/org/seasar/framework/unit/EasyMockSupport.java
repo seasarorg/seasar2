@@ -26,57 +26,108 @@ import org.seasar.framework.util.FieldUtil;
 import org.seasar.framework.util.tiger.CollectionsUtil;
 
 /**
- * @author koichik
+ * EasyMockとの対話をサポートします。
  * 
+ * @author koichik
  */
 public class EasyMockSupport {
 
     // instance fields
+    /** モックのリスト */
     protected List<Object> mocks = CollectionsUtil.newArrayList();
 
+    /** モックがバインディングされたフィールド */
     protected Set<Field> boundFields = CollectionsUtil.newLinkedHashSet();
 
+    /**
+     * デフォルトのモックを作成します。
+     * 
+     * @param <T>
+     *            モックの型
+     * @param clazz
+     *            モックの対象とするクラス
+     * @return 作成されたモック
+     */
     public <T> T createMock(final Class<T> clazz) {
         final T mock = EasyMock.createMock(clazz);
         mocks.add(mock);
         return mock;
     }
 
+    /**
+     * Niceモードのモックを作成します。
+     * 
+     * @param <T>
+     *            モックの型
+     * @param clazz
+     *            モックの対象となるクラス
+     * @return 作成されたモック
+     */
     public <T> T createNiceMock(final Class<T> clazz) {
         final T mock = EasyMock.createNiceMock(clazz);
         mocks.add(mock);
         return mock;
     }
 
+    /**
+     * Strictモードのモックを作成します。
+     * 
+     * @param <T>
+     *            モックの型
+     * @param clazz
+     *            モックの対象となるクラス
+     * @return 作成された
+     */
     public <T> T createStrictMock(final Class<T> clazz) {
         final T mock = EasyMock.createStrictMock(clazz);
         mocks.add(mock);
         return mock;
     }
 
+    /**
+     * このオブジェクトで管理するすべてのモックをreplayモードに設定します。
+     */
     public void replay() {
         for (final Object mock : mocks) {
             EasyMock.replay(mock);
         }
     }
 
+    /**
+     * このオブジェクトで管理するすべてのモックとのインタラクションを検証します。
+     * 
+     */
     public void verify() {
         for (final Object mock : mocks) {
             EasyMock.verify(mock);
         }
     }
 
+    /**
+     * このオブジェクトで管理するすべてのモックをリセットします。
+     */
     public void reset() {
         for (final Object mock : mocks) {
             EasyMock.reset(mock);
         }
     }
 
+    /**
+     * このオブジェクトの状態を消去します。
+     */
     public void clear() {
         mocks.clear();
         boundFields.clear();
     }
 
+    /**
+     * モックをフィールドにバインディングします。
+     * 
+     * @param test
+     *            テストクラスのインスタンス
+     * @param container
+     *            S2コンテナ
+     */
     public void bindMockFields(final Object test, final S2Container container) {
         boundFields.clear();
         for (Class<?> clazz = test.getClass(); clazz != Object.class; clazz = clazz
@@ -87,6 +138,21 @@ public class EasyMockSupport {
         }
     }
 
+    /**
+     * モックをフィールドにバインディングします。
+     * <p>
+     * {@link org.seasar.framework.unit.annotation.EasyMock}が注釈されたフィールドがモックのバインディング対象です。
+     * {@link org.seasar.framework.unit.annotation.EasyMock#register()}に<code>true</code>が指定されている場合、
+     * 作成されたモックはS2コンテナに登録されます。
+     * </p>
+     * 
+     * @param field
+     *            フィールド
+     * @param test
+     *            テストクラスのインスタンス
+     * @param container
+     *            S2コンテナ
+     */
     protected void bindMockField(final Field field, final Object test,
             final S2Container container) {
         final org.seasar.framework.unit.annotation.EasyMock annotation = field
@@ -115,6 +181,12 @@ public class EasyMockSupport {
         }
     }
 
+    /**
+     * モックとフィールドのバインディングを解除します。
+     * 
+     * @param test
+     *            テストクラスのインスタンス
+     */
     public void unbindMockFields(final Object test) {
         for (final Field field : boundFields) {
             try {

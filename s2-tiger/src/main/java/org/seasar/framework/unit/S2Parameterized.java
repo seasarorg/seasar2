@@ -15,8 +15,6 @@
  */
 package org.seasar.framework.unit;
 
-import static org.junit.Assert.assertEquals;
-
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -28,14 +26,18 @@ import org.junit.internal.runners.CompositeRunner;
 import org.junit.internal.runners.MethodValidator;
 import org.junit.runners.Parameterized.Parameters;
 
+import static org.junit.Assert.*;
+
 /**
- * @author taedium
+ * {@link Parameters}が注釈されたメソッドを持つテストクラスを扱うランナーです。
  * 
+ * @author taedium
  */
 public class S2Parameterized extends S2TestClassRunner {
 
     private static class TestClassRunnerForParameters extends
             S2TestClassMethodsRunner {
+
         private final Object[] parameters;
 
         private final int parameterSetNumber;
@@ -74,9 +76,23 @@ public class S2Parameterized extends S2TestClassRunner {
         }
     }
 
+    /**
+     * {@link Parameters}が注釈されたすべてのメソッドを実行するランナーです。
+     * 
+     * @author taedium
+     */
     public static class RunAllParameterMethods extends CompositeRunner {
+
         private final Class<?> klass;
 
+        /**
+         * インスタンスを構築します。
+         * 
+         * @param klass
+         *            テストクラス
+         * @throws Exception
+         *             何らかの例外が発生した場合
+         */
         public RunAllParameterMethods(final Class<?> klass) throws Exception {
             super(klass.getName());
             this.klass = klass;
@@ -115,6 +131,14 @@ public class S2Parameterized extends S2TestClassRunner {
         }
     }
 
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param klass
+     *            テストクラス
+     * @throws Exception
+     *             何らかの例外が発生した場合
+     */
     public S2Parameterized(final Class<?> klass) throws Exception {
         super(klass, new RunAllParameterMethods(klass));
     }

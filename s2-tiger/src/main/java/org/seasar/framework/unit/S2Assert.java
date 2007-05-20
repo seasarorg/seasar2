@@ -44,8 +44,13 @@ import org.seasar.framework.jpa.unit.EntityReaderFactory;
  */
 public class S2Assert extends Assert {
 
-    protected static S2TestCaseAdapter adapter = new S2TestCaseAdapter();
+    /** {@link S2TestCase}のアダプタ */
+    protected static final S2TestCaseAdapter adapter = new S2TestCaseAdapter();
 
+    /**
+     * インスタンスを構築します。
+     * 
+     */
     protected S2Assert() {
     }
 
@@ -346,6 +351,11 @@ public class S2Assert extends Assert {
         }
     }
 
+    /**
+     * {@link S2TestCase}のアダプタです。
+     * 
+     * @author taedium
+     */
     protected static class S2TestCaseAdapter extends S2TestCase {
 
         @SuppressWarnings("unchecked")

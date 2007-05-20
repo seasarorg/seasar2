@@ -46,12 +46,16 @@ import org.seasar.framework.util.ResourceUtil;
  */
 public class Seasar2 extends Runner {
 
+    /** S2JUnit4の振る舞いを設定するためのコンフィグレーションファイルのキー */
     public static final String S2JUNIT4_CONFIG_KEY = "org.seasar.framework.unit.s2junit4.config";
 
+    /** S2JUnit4の振る舞いを設定するためのコンフィグレーションファイルのパス */
     public static final String S2JUNIT4_CONFIG_PATH = "s2junit4config.dicon";
 
+    /** コンフィグレーションファイルから構築されたコンフィグレーションS2コンテナ */
     protected static S2Container configurationContainer;
 
+    /** {@link Seasar2}の振る舞いを提供するプロバイダ */
     protected static Provider provider;
 
     static {
@@ -60,28 +64,65 @@ public class Seasar2 extends Runner {
 
     private final Runner delegate;
 
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param clazz
+     *            テストクラス
+     * @throws Exception
+     *             何らかの例外が発生した場合
+     */
     public Seasar2(final Class<?> clazz) throws Exception {
         delegate = createTestClassRunner(clazz);
     }
 
+    /**
+     * テストクラスランナーを作成します。
+     * 
+     * @param clazz
+     *            テストクラス
+     * @return
+     * @throws Exception
+     *             何らかの例外が発生した場合
+     */
     protected Runner createTestClassRunner(Class<?> clazz) throws Exception {
         return getProvider().createTestClassRunner(clazz);
     }
 
+    /**
+     * {@link Seasar2}の振る舞いを提供するプロバイダを返します。
+     * 
+     * @return 振る舞いを提供するプロバイダ
+     */
     protected static Provider getProvider() {
         return provider;
     }
 
+    /**
+     * {@link Seasar2}の振る舞いを提供するプロバイダを設定します。
+     * 
+     * @param p
+     *            振る舞いを提供するプロバイダ
+     */
     protected static void setProvider(final Provider p) {
         provider = p;
     }
 
+    /**
+     * このクラスを設定します。
+     */
     public static void configure() {
         final String configFile = System.getProperty(S2JUNIT4_CONFIG_KEY,
                 S2JUNIT4_CONFIG_PATH);
         configure(configFile);
     }
 
+    /**
+     * このクラスを設定します。
+     * 
+     * @param configFile
+     *            設定ファイルのパス
+     */
     public static void configure(final String configFile) {
         if (provider == null) {
             provider = new DefaultProvider();
@@ -100,6 +141,9 @@ public class Seasar2 extends Runner {
         }
     }
 
+    /**
+     * このクラスを破棄します。
+     */
     public static void dispose() {
         S2TestClassMethodsRunner.dispose();
         provider = null;
@@ -119,11 +163,27 @@ public class Seasar2 extends Runner {
         delegate.run(notifier);
     }
 
+    /**
+     * {@link Seasar2 Seasar2ランナー}の振る舞いを構成します。
+     * 
+     * @author taedium
+     */
     public interface Configurator {
 
+        /**
+         * Seasar2ランナーの振る舞いを構成します。
+         * 
+         * @param configurationContainer
+         *            コンフィグレーションS2コンテナ
+         */
         void configure(S2Container configurationContainer);
     }
 
+    /**
+     * {@link Seasar2 Seasar2ランナー}の振る舞いを構成するデフォルトの実装クラスです。
+     * 
+     * @author taedium
+     */
     public static class DefaultConfigurator implements Configurator {
 
         public void configure(final S2Container configurationContainer) {
@@ -140,11 +200,30 @@ public class Seasar2 extends Runner {
         }
     }
 
+    /**
+     * {@link Seasar2 Seasar2ランナー}の振る舞いを提供します。
+     * 
+     * @author taedium
+     */
     public interface Provider {
 
+        /**
+         * テストクラスランナーを返します。
+         * 
+         * @param clazz
+         *            テストクラス
+         * @return
+         * @throws Exception
+         *             何らかの例外が発生した場合
+         */
         Runner createTestClassRunner(Class<?> clazz) throws Exception;
     }
 
+    /**
+     * {@link Seasar2 Seasar2ランナー}の振る舞いを提供するデフォルトの実装クラスです。
+     * 
+     * @author taedium
+     */
     public static class DefaultProvider implements Provider {
 
         public Runner createTestClassRunner(final Class<?> clazz)
@@ -157,6 +236,13 @@ public class Seasar2 extends Runner {
                     clazz));
         }
 
+        /**
+         * {@link Parameters}が注釈されたメソッドが存在する場合<code>true</code>
+         * 
+         * @param clazz
+         *            テストクラス
+         * @return <code>Parameters</code>が注釈されたメソッドが存在する場合<code>true</code>、そうでない場合<code>false</code>
+         */
         protected boolean hasParameterAnnotation(final Class<?> clazz) {
             for (Method each : clazz.getMethods()) {
                 if (Modifier.isStatic(each.getModifiers())) {

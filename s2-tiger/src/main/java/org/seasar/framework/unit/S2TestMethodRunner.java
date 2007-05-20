@@ -46,8 +46,9 @@ import org.seasar.framework.util.tiger.CollectionsUtil;
 import org.seasar.framework.util.tiger.ReflectionUtil;
 
 /**
- * @author taedium
+ * テストメソッドを扱うランナーです。
  * 
+ * @author taedium
  */
 public class S2TestMethodRunner {
 
@@ -56,36 +57,65 @@ public class S2TestMethodRunner {
         private static final long serialVersionUID = 1L;
     }
 
+    /** S2JUnit4のデフォルトの設定ファイルのパス */
     protected static final String DEFAULT_S2JUNIT4_PATH = "s2junit4.dicon";
 
+    /** このランナーで使用する環境名設定ファイルのパス */
     protected static final String ENV_PATH = "env_ut.txt";
 
+    /** 環境名設定ファイルのパスにファイルが存在しない場合の環境名 */
     protected static final String ENV_VALUE = "ut";
 
+    /** S2JUnit4の設定ファイルのパス */
     protected static String s2junit4Path = DEFAULT_S2JUNIT4_PATH;
 
+    /** テストオブジェクト */
     protected final Object test;
 
+    /** テストクラス */
     protected final Class<?> testClass;
 
+    /** テストメソッド */
     protected final Method method;
 
+    /** ノティファイアー */
     protected final RunNotifier notifier;
 
+    /** テストのディスクリプション */
     protected final Description description;
 
+    /** テストクラスのイントロスペクター */
     protected final S2TestIntrospector introspector;
 
+    /** {@link #unitClassLoader テストで使用するクラスローダー}で置き換えられる前のオリジナルのクラスローダー */
     protected ClassLoader originalClassLoader;
 
+    /** テストで使用するクラスローダー */
     protected UnitClassLoader unitClassLoader;
 
+    /** S2JUnit4の内部的なテストコンテキスト */
     protected InternalTestContext testContext;
 
+    /** バインディングが行われたフィールドのリスト */
     private List<Field> boundFields = CollectionsUtil.newArrayList();
 
+    /** EasyMockとの対話をサポートするオブジェクト */
     protected EasyMockSupport easyMockSupport = new EasyMockSupport();
 
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param test
+     *            テストクラスのインスタンス
+     * @param method
+     *            テストメソッド
+     * @param notifier
+     *            ノティファイアー
+     * @param description
+     *            テストのディスクリプション
+     * @param introspector
+     *            テストクラスのイントロスペクター
+     */
     public S2TestMethodRunner(final Object test, final Method method,
             final RunNotifier notifier, final Description description,
             final S2TestIntrospector introspector) {
@@ -97,11 +127,20 @@ public class S2TestMethodRunner {
         this.introspector = introspector;
     }
 
+    /**
+     * テストの失敗を登録します。
+     * 
+     * @param e
+     *            失敗を表すスロー可能オブジェクト
+     */
     protected void addFailure(final Throwable e) {
         final Failure failure = new Failure(description, e);
         notifier.fireTestFailure(failure);
     }
 
+    /**
+     * このランナーを起動します。
+     */
     public void run() {
         try {
             Env.setFilePath(ENV_PATH);
@@ -126,14 +165,30 @@ public class S2TestMethodRunner {
         }
     }
 
+    /**
+     * 無視の対象の場合<code>true</code>を返します。
+     * 
+     * @return 無視の対象の場合<code>true</code>、そうでない場合<code>false</code>
+     */
     protected boolean isIgnored() {
         return introspector.isIgnored(method);
     }
 
+    /**
+     * 事前条件が満たされる場合<code>true</code>を返します。
+     * 
+     * @return 事前条件が満たされる場合<code>true</code>、そうでない場合<code>false</code>
+     */
     protected boolean isFulfilled() {
         return introspector.isFulfilled(testClass, method, test);
     }
 
+    /**
+     * タイムアウトのミリ秒を指定してテストを実行します。
+     * 
+     * @param timeout
+     *            タイムアウトのミリ秒
+     */
     protected void runWithTimeout(final long timeout) {
         final ExecutorService service = Executors.newSingleThreadExecutor();
         final Callable<Object> callable = new Callable<Object>() {
@@ -160,6 +215,12 @@ public class S2TestMethodRunner {
         }
     }
 
+    /**
+     * テストケースを実行します。
+     * <p>
+     * テストの実行に必要な事前処理と事後処理を行います。
+     * </p>
+     */
     protected void runMethod() {
         easyMockSupport.clear();
         try {
@@ -172,7 +233,15 @@ public class S2TestMethodRunner {
                     try {
                         bindFields();
                         try {
-                            runTestMethod();
+                            final boolean recorded = runEachRecord();
+                            if (recorded) {
+                                easyMockSupport.replay();
+                            }
+                            runTest();
+                            if (recorded) {
+                                easyMockSupport.verify();
+                                easyMockSupport.reset();
+                            }
                         } finally {
                             unbindFields();
                         }
@@ -195,6 +264,12 @@ public class S2TestMethodRunner {
         }
     }
 
+    /**
+     * テストコンテキストをセットアップします。
+     * 
+     * @throws Throwable
+     *             何らかの例外またはエラーが起きた場合
+     */
     protected void setUpTestContext() throws Throwable {
         originalClassLoader = getOriginalClassLoader();
         unitClassLoader = new UnitClassLoader(originalClassLoader);
@@ -227,6 +302,11 @@ public class S2TestMethodRunner {
         }
     }
 
+    /**
+     * オリジナルのクラスローダーを返します。
+     * 
+     * @return オリジナルのクラスローダー
+     */
     protected ClassLoader getOriginalClassLoader() {
         S2Container configurationContainer = S2ContainerFactory
                 .getConfigurationContainer();
@@ -238,6 +318,11 @@ public class S2TestMethodRunner {
         return Thread.currentThread().getContextClassLoader();
     }
 
+    /**
+     * ルートのコンテナを返します。
+     * 
+     * @return ルートのコンテナ
+     */
     protected S2Container createRootContainer() {
         final String rootDicon = introspector.getRootDicon(testClass, method);
         if (StringUtil.isEmpty(rootDicon)) {
@@ -249,6 +334,12 @@ public class S2TestMethodRunner {
 
     }
 
+    /**
+     * テストコンテキストを解放します。
+     * 
+     * @throws Throwable
+     *             何らかの例外またはエラーが起きた場合
+     */
     protected void tearDownTestContext() throws Throwable {
         testContext = null;
         DisposableUtil.dispose();
@@ -259,6 +350,12 @@ public class S2TestMethodRunner {
         originalClassLoader = null;
     }
 
+    /**
+     * すべてのテストケース共通の初期化処理を実行します。
+     * 
+     * @throws FailedBefore
+     *             何らかの例外またはエラーが発生した場合
+     */
     protected void runBefores() throws FailedBefore {
         try {
             final List<Method> befores = introspector
@@ -275,6 +372,9 @@ public class S2TestMethodRunner {
         }
     }
 
+    /**
+     * すべてのテストケース共通の解放処理を実行します。
+     */
     protected void runAfters() {
         final List<Method> afters = introspector.getAfterMethods(testClass);
         for (final Method after : afters) {
@@ -288,6 +388,12 @@ public class S2TestMethodRunner {
         }
     }
 
+    /**
+     * テストケース個別の初期化メソッドを実行します。
+     * 
+     * @throws FailedBefore
+     *             何らかの例外またはエラーが発生した場合
+     */
     protected void runEachBefore() throws FailedBefore {
         try {
             final Method eachBefore = introspector.getEachBeforeMethod(
@@ -302,6 +408,9 @@ public class S2TestMethodRunner {
         easyMockSupport.bindMockFields(test, testContext.getContainer());
     }
 
+    /**
+     * テストケース個別の解放メソッドを実行します。
+     */
     protected void runEachAfter() {
         easyMockSupport.unbindMockFields(test);
         try {
@@ -315,12 +424,21 @@ public class S2TestMethodRunner {
         }
     }
 
+    /**
+     * コンテナを初期化します。
+     */
     protected void initContainer() {
         testContext.include();
         introspector.createMock(method, test, testContext);
         testContext.initContainer();
     }
 
+    /**
+     * フィールドにコンポーネントをバインディングします。
+     * 
+     * @throws Throwable
+     *             何らかの例外またはエラーが発生した場合
+     */
     protected void bindFields() throws Throwable {
         for (Class<?> clazz = testClass; clazz != Object.class; clazz = clazz
                 .getSuperclass()) {
@@ -332,6 +450,12 @@ public class S2TestMethodRunner {
         }
     }
 
+    /**
+     * 指定されたフィールドにコンポーネントをバインディングします。
+     * 
+     * @param field
+     *            フィールド
+     */
     protected void bindField(final Field field) {
         if (isAutoBindable(field)) {
             field.setAccessible(true);
@@ -368,17 +492,39 @@ public class S2TestMethodRunner {
         }
     }
 
+    /**
+     * 指定されたフィールドに指定された値をバインディングします。
+     * 
+     * @param field
+     *            フィールド
+     * @param object
+     *            値
+     */
     protected void bindField(final Field field, final Object object) {
         ReflectionUtil.setValue(field, test, object);
         boundFields.add(field);
     }
 
+    /**
+     * 自動フィールドバインディングが可能な場合<code>true</code>を返します。
+     * 
+     * @param field
+     *            フィールド
+     * @return 自動フィールドバインディングが可能な場合<code>true</code>、そうでない場合<code>false</code>
+     */
     protected boolean isAutoBindable(final Field field) {
         final int modifiers = field.getModifiers();
         return !Modifier.isStatic(modifiers) && !Modifier.isFinal(modifiers)
                 && !field.getType().isPrimitive();
     }
 
+    /**
+     * フィールドからコンポーネントの名前を解決します。
+     * 
+     * @param filed
+     *            フィールド
+     * @return コンポーネント名
+     */
     protected String resolveComponentName(final Field filed) {
         if (testContext.isEjb3Enabled()) {
             final EJB ejb = filed.getAnnotation(EJB.class);
@@ -393,22 +539,24 @@ public class S2TestMethodRunner {
         return normalizeName(filed.getName());
     }
 
+    /**
+     * コンポーネント名を正規化します。
+     * 
+     * @param name
+     *            コンポーネント名
+     * @return 正規化されたコンポーネント名
+     */
     protected String normalizeName(final String name) {
         return StringUtil.replace(name, "_", "");
     }
 
-    protected void runTestMethod() throws Throwable {
-        final boolean recorded = runEachRecord();
-        if (recorded) {
-            easyMockSupport.replay();
-        }
-        runTest();
-        if (recorded) {
-            easyMockSupport.verify();
-            easyMockSupport.reset();
-        }
-    }
-
+    /**
+     * テストケース個別の登録メソッド存在する場合、登録メソッドを実行し<code>true</code>を返します。
+     * 
+     * @return 登録メソッドが存在する場合<code>true</code>、存在しない場合<code>false</code>
+     * @throws Throwable
+     *             何らかの例外またはエラーが発生した場合
+     */
     protected boolean runEachRecord() throws Throwable {
         final Method recordMethod = introspector.getEachRecordMethod(testClass,
                 method);
@@ -419,6 +567,15 @@ public class S2TestMethodRunner {
         return false;
     }
 
+    /**
+     * テストを実行します。
+     * <p>
+     * JTAが利用可能な場合、トランザクションの制御とテストデータの準備を行います。
+     * </p>
+     * 
+     * @throws Throwable
+     *             何らかの例外またはエラーが発生した場合
+     */
     protected void runTest() throws Throwable {
         if (!testContext.isJtaEnabled()) {
             executeMethod();
@@ -448,6 +605,15 @@ public class S2TestMethodRunner {
         }
     }
 
+    /**
+     * テストメソッドを実行します。
+     * <p>
+     * 期待される例外またはエラーが存在するか、存在する場合その例外またはエラーがスローされたかを確認します。
+     * </p>
+     * 
+     * @throws Throwable
+     *             何らかの例外またはエラーが発生した場合
+     */
     protected void executeMethod() throws Throwable {
         try {
             executeMethodBody();
@@ -468,22 +634,53 @@ public class S2TestMethodRunner {
         }
     }
 
+    /**
+     * テストメソッド本体を実行します。
+     * 
+     * @throws Throwable
+     *             何らかの例外またはエラーが発生した場合
+     */
     protected void executeMethodBody() throws Throwable {
         method.invoke(test);
     }
 
+    /**
+     * テストの実行で例外が発生することが期待されている場合<code>true</code>を返します。
+     * 
+     * @return テストの実行で例外が発生することが期待されている場合<code>true</code>、そうでない場合<code>false</code>
+     */
     protected boolean expectsException() {
         return expectedException() != null;
     }
 
+    /**
+     * 期待していない例外もしくはエラーの場合<code>true</code>を返します。
+     * 
+     * @param exception
+     *            例外もしくはエラー
+     * @return 期待されていない例外の場合<code>true</code>、そうでない場合<code>false</code>
+     */
     protected boolean isUnexpected(final Throwable exception) {
         return !expectedException().isAssignableFrom(exception.getClass());
     }
 
+    /**
+     * 発生すると期待されているエラーもしくは例外のクラスを返します。
+     * 
+     * @return 発生すると期待されているエラーもしくは例外のクラスがある場合そのクラス、ない場合<code>null</code>
+     */
     protected Class<? extends Throwable> expectedException() {
         return introspector.expectedException(method);
     }
 
+    /**
+     * 指定されたメソッドを実行します。
+     * 
+     * @param method
+     *            メソッド
+     * @throws Throwable
+     *             何らかの例外またはエラーが発生した場合
+     */
     protected void invokeMethod(final Method method) throws Throwable {
         try {
             ReflectionUtil.invoke(method, test);
@@ -491,6 +688,9 @@ public class S2TestMethodRunner {
         }
     }
 
+    /**
+     * フィールドとコンポーネントのバインディングを解除します。
+     */
     protected void unbindFields() {
         for (final Field field : boundFields) {
             try {
@@ -504,6 +704,11 @@ public class S2TestMethodRunner {
         boundFields = null;
     }
 
+    /**
+     * WARM deployが必要とされる場合<code>true</code>を返します。
+     * 
+     * @return WARM deployが必要とされる場合<code>true</code>、そうでない場合<code>false</code>
+     */
     protected boolean needsWarmDeploy() {
         return introspector.needsWarmDeploy(testClass, method)
                 && !ResourceUtil.isExist("s2container.dicon")

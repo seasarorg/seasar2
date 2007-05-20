@@ -38,8 +38,9 @@ import org.seasar.framework.unit.impl.ConventionTestIntrospector;
 import org.seasar.framework.util.tiger.ReflectionUtil;
 
 /**
- * @author taedium
+ * テストクラスに定義されたすべてのテストメソッドを扱うランナーです。
  * 
+ * @author taedium
  */
 public class S2TestClassMethodsRunner extends Runner implements Filterable,
         Sortable {
@@ -49,17 +50,29 @@ public class S2TestClassMethodsRunner extends Runner implements Filterable,
         private static final long serialVersionUID = 1L;
     }
 
+    /** {@link S2TestClassMethodsRunner}の振る舞いを提供するプロバイダ */
     protected static Provider provider;
 
+    /** テストメソッドのリスト */
     protected final List<Method> testMethods;
 
+    /** テストクラス */
     protected final Class<?> testClass;
 
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param clazz
+     *            テストクラス
+     */
     public S2TestClassMethodsRunner(final Class<?> clazz) {
         testClass = clazz;
         testMethods = getTestMethods();
     }
 
+    /**
+     * このクラスを破棄します。
+     */
     public static void dispose() {
         provider = null;
     }
@@ -81,6 +94,14 @@ public class S2TestClassMethodsRunner extends Runner implements Filterable,
         }
     }
 
+    /**
+     * テストクラスの初期化メソッドを実行します。
+     * 
+     * @param notifier
+     *            ノティファイアー
+     * @throws FailedBefore
+     *             何らかの例外が発生した場合
+     */
     protected void runBefores(final RunNotifier notifier) throws FailedBefore {
         try {
             final List<Method> befores = getBeforeClassMethods();
@@ -95,6 +116,12 @@ public class S2TestClassMethodsRunner extends Runner implements Filterable,
         }
     }
 
+    /**
+     * テストクラスの解放メソッドを実行します。
+     * 
+     * @param notifier
+     *            ノティフィアー
+     */
     protected void runAfters(final RunNotifier notifier) {
         final List<Method> afters = getAfterClassMethods();
         for (final Method after : afters)
@@ -107,6 +134,14 @@ public class S2TestClassMethodsRunner extends Runner implements Filterable,
             }
     }
 
+    /**
+     * テストの失敗を登録します。
+     * 
+     * @param targetException
+     *            例外
+     * @param notifier
+     *            ノティフィアー
+     */
     protected void addFailure(final Throwable targetException,
             final RunNotifier notifier) {
 
@@ -114,14 +149,29 @@ public class S2TestClassMethodsRunner extends Runner implements Filterable,
         notifier.fireTestFailure(failure);
     }
 
+    /**
+     * テストメソッドのリストを返します。
+     * 
+     * @return テストメソッドのリスト
+     */
     protected List<Method> getTestMethods() {
         return getProvider().getTestMethods(testClass);
     }
 
+    /**
+     * テストクラスの初期化メソッドのリストを返します。
+     * 
+     * @return 初期化メソッドのリスト
+     */
     protected List<Method> getBeforeClassMethods() {
         return getProvider().getBeforeClassMethods(testClass);
     }
 
+    /**
+     * テストクラスの解放メソッドのリストを返します。
+     * 
+     * @return 解放メソッドのリスト
+     */
     protected List<Method> getAfterClassMethods() {
         return getProvider().getAfterClassMethods(testClass);
     }
@@ -134,14 +184,34 @@ public class S2TestClassMethodsRunner extends Runner implements Filterable,
         return spec;
     }
 
+    /**
+     * テストクラスの名前を返します。
+     * 
+     * @return テストクラスの名前
+     */
     protected String getName() {
         return getTestClass().getName();
     }
 
+    /**
+     * テストクラスのインスタンスを作成します。
+     * 
+     * @return テストクラスのインスタンス
+     * @throws Exception
+     *             何らかの例外が発生した場合
+     */
     protected Object createTest() throws Exception {
         return getTestClass().getConstructor().newInstance();
     }
 
+    /**
+     * テストメソッドを実行します。
+     * 
+     * @param method
+     *            テストメソッド
+     * @param notifier
+     *            ノティファイアー
+     */
     protected void invokeTestMethod(final Method method,
             final RunNotifier notifier) {
         Object test = null;
@@ -157,6 +227,17 @@ public class S2TestClassMethodsRunner extends Runner implements Filterable,
         createMethodRunner(test, method, notifier).run();
     }
 
+    /**
+     * テストメソッドランナーを作成します。
+     * 
+     * @param test
+     *            テスト
+     * @param method
+     *            テストメソッド
+     * @param notifier
+     *            ノティファイアー
+     * @return テストメソッドランナー
+     */
     protected S2TestMethodRunner createMethodRunner(final Object test,
             final Method method, RunNotifier notifier) {
 
@@ -164,10 +245,24 @@ public class S2TestClassMethodsRunner extends Runner implements Filterable,
                 methodDescription(method));
     }
 
+    /**
+     * テストメソッドの名前を返します。
+     * 
+     * @param method
+     *            テストメソッド
+     * @return テストメソッドの名前
+     */
     protected String testName(final Method method) {
         return method.getName();
     }
 
+    /**
+     * テストのディスクリプションを返します。
+     * 
+     * @param method
+     *            テストメソッド
+     * @return ディスクリプション
+     */
     protected Description methodDescription(final Method method) {
         return Description.createTestDescription(getTestClass(),
                 testName(method));
@@ -196,10 +291,20 @@ public class S2TestClassMethodsRunner extends Runner implements Filterable,
         });
     }
 
+    /**
+     * テストクラスを返します。
+     * 
+     * @return テストクラス
+     */
     protected Class<?> getTestClass() {
         return testClass;
     }
 
+    /**
+     * {@link S2TestClassMethodsRunner テストクラスメソッドランナー}の振る舞いを提供するプロバイダを返します。
+     * 
+     * @return 振る舞いを提供するプロバイダ
+     */
     protected static Provider getProvider() {
         if (provider == null) {
             provider = new DefaultProvider();
@@ -207,30 +312,86 @@ public class S2TestClassMethodsRunner extends Runner implements Filterable,
         return provider;
     }
 
+    /**
+     * {@link S2TestClassMethodsRunner テストクラスメソッドランナー}の振る舞いを提供するプロバイダを設定します。
+     * 
+     * @param p
+     *            振る舞いを提供するプロバイダ
+     */
     protected static void setProvider(final Provider p) {
         provider = p;
     }
 
+    /**
+     * {@link S2TestClassMethodsRunner テストクラスメソッドランナー}の振る舞いを提供するプロバイダです。
+     * 
+     * @author taedium
+     */
     public interface Provider {
 
+        /**
+         * テストメソッドのリストを返します。
+         * 
+         * @param clazz
+         *            テストクラス
+         * @return テストメソッドのリスト
+         */
         List<Method> getTestMethods(Class<?> clazz);
 
+        /**
+         * テストクラスの初期化メソッドのリストを返します。
+         * 
+         * @param clazz
+         *            テストクラス
+         * @return 初期化メソッド
+         */
         List<Method> getBeforeClassMethods(Class<?> clazz);
 
+        /**
+         * テストクラスの解放メソッドのリストを返します。
+         * 
+         * @param clazz
+         *            テストクラス
+         * @return 解放メソッドのリスト
+         */
         List<Method> getAfterClassMethods(Class<?> clazz);
 
+        /**
+         * テストメソッドランナーを作成します。
+         * 
+         * @param test
+         *            テスト
+         * @param method
+         *            テストメソッド
+         * @param notifier
+         *            ノティファイアー
+         * @param description
+         *            ディスクリプション
+         * @return テストメソッドランナー
+         */
         S2TestMethodRunner createMethodRunner(Object test, Method method,
                 RunNotifier notifier, Description description);
     }
 
+    /**
+     * {@link S2TestClassMethodsRunner テストクラスメソッドランナー}の振る舞いを提供するデフォルトの実装クラスです。
+     * 
+     * @author taedium
+     */
     public static class DefaultProvider implements Provider {
 
+        /** テストクラスのイントロスペクター */
         protected S2TestIntrospector introspector;
 
+        /** メソッドランナー */
         protected Class<? extends S2TestMethodRunner> methodRunnerClass;
 
+        /** メソッドランナーのコンストラクタ */
         protected Constructor<? extends S2TestMethodRunner> constructor;
 
+        /**
+         * インスタンスを構築します。
+         */
         public DefaultProvider() {
             final ConventionTestIntrospector conventionIntrospector = new ConventionTestIntrospector();
             conventionIntrospector.init();
@@ -238,11 +399,23 @@ public class S2TestClassMethodsRunner extends Runner implements Filterable,
             setTestMethodRunnerClass(S2TestMethodRunner.class);
         }
 
+        /**
+         * テストクラスのイントロスペクターを設定します。
+         * 
+         * @param introspector
+         *            イントロスペクター
+         */
         @Binding(bindingType = BindingType.MAY)
         public void setTestIntrospector(final S2TestIntrospector introspector) {
             this.introspector = introspector;
         }
 
+        /**
+         * メソッドランナーのクラスを設定します。
+         * 
+         * @param methodRunnerClass
+         *            メソッドランナーのクラス
+         */
         @Binding(bindingType = BindingType.MAY)
         public void setTestMethodRunnerClass(
                 final Class<? extends S2TestMethodRunner> methodRunnerClass) {

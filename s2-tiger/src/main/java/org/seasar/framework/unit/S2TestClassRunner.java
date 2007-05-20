@@ -21,11 +21,22 @@ import org.junit.runner.Runner;
 import org.junit.runner.notification.RunNotifier;
 
 /**
- * @author taedium
+ * テストクラスを扱うランナーです。
  * 
+ * @author taedium
  */
 public class S2TestClassRunner extends TestClassRunner {
 
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param clazz
+     *            テストクラス
+     * @param runner
+     *            委譲先のランナー
+     * @throws InitializationError
+     *             初期化時に何らかのエラーが発生した場合
+     */
     public S2TestClassRunner(final Class<?> clazz, final Runner runner)
             throws InitializationError {
         super(clazz, runner);

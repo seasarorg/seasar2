@@ -31,5 +31,8 @@ import static java.lang.annotation.RetentionPolicy.*;
 @Retention(RUNTIME)
 public @interface Mocks {
 
+    /**
+     * {@link Mock}の配列
+     */
     Mock[] value();
 }
