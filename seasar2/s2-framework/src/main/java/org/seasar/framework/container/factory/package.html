@@ -1,0 +1,78 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+</head>
+<body>
+S2コンテナを構成および構築するためのクラスを提供します。
+<p>
+このパッケージに含まれるクラスにより、S2コンテナの構築が出来ます。
+構築を担当するS2コンテナファクトリは、
+コンフィグレータやプロバイダの差し替えによりカスタマイズが可能です。
+</p>
+<h4>ファクトリ</h4>
+<p>
+S2コンテナの構築をするためのクラス群です。
+</p>
+<ul>
+<li><a href="S2ContainerFactory.html">S2ContainerFactory</a></li>
+<li><a href="SingletonS2ContainerFactory.html">SingletonS2ContainerFactory</a></li>
+<li><a href="CircularIncludeRuntimeException.html">CircularIncludeRuntimeException</a></li>
+</ul>
+<h4>ビルダ</h4>
+<p>
+S2コンテナの構築をファクトリの内部で実際に担当するクラス群です。
+どういった情報に基づいてS2コンテナを構築するかといったことを決定します。
+</p>
+<ul>
+<li><a href="S2ContainerBuilder.html">S2ContainerBuilder</a></li>
+<li><a href="AbstractS2ContainerBuilder.html">AbstractS2ContainerBuilder</a></li>
+<li><a href="XmlS2ContainerBuilder.html">XmlS2ContainerBuilder</a></li>
+</ul>
+<h4>ファクトリのカスタマイズポイント</h4>
+<p>
+S2コンテナファクトリの挙動をカスタマイズするためのクラス群です。
+</p>
+<ul>
+<li><a href="S2ContainerFactory.Configurator.html">S2ContainerFactory.Configurator</a></li>
+<li><a href="S2ContainerFactory.DefaultConfigurator.html">S2ContainerFactory.DefaultConfigurator</a></li>
+<li><a href="S2ContainerFactory.Provider.html">S2ContainerFactory.Provider</a></li>
+<li><a href="S2ContainerFactory.DefaultProvider.html">S2ContainerFactory.DefaultProvider</a></li>
+<li><a href="PathResolver.html">PathResolver</a></li>
+<li><a href="SimplePathResolver.html">SimplePathResolver</a></li>
+<li><a href="ClassPathResourceResolver.html">ClassPathResourceResolver</a></li>
+<li><a href="ResourceResolver.html">ResourceResolver</a></li>
+<li><a href="WebResourceResolver.html">WebResourceResolver</a></li>
+</ul>
+<h4>アノテーションの解釈</h4>
+<p>
+コンポーネントに付けられたアノテーションを解釈するためのクラス群です。
+</p>
+<ul>
+<li><a href="AnnotationHandler.html">AnnotationHandler</a></li>
+<li><a href="AnnotationHandlerFactory.html">AnnotationHandlerFactory</a></li>
+<li><a href="AbstractAnnotationHandler.html">AbstractAnnotationHandler</a></li>
+<li><a href="ConstantAnnotationHandler.html">ConstantAnnotationHandler</a></li>
+<li><a href="AspectDefFactory.html">AspectDefFactory</a></li>
+</ul>
+<h4>diconファイルの解釈</h4>
+<p>
+設定ファイルとしてdiconファイルを使う場合に、 diconファイルの解析をするためのクラス群です。
+</p>
+<ul>
+<li><a href="AbstractTagHandler.html">AbstractTagHandler</a></li>
+<li><a href="ArgTagHandler.html">ArgTagHandler</a></li>
+<li><a href="AspectTagHandler.html">AspectTagHandler</a></li>
+<li><a href="ComponentsTagHandler.html">ComponentsTagHandler</a></li>
+<li><a href="ComponentTagHandler.html">ComponentTagHandler</a></li>
+<li><a href="DestroyMethodTagHandler.html">DestroyMethodTagHandler</a></li>
+<li><a href="IncludeTagHandler.html">IncludeTagHandler</a></li>
+<li><a href="InitMethodTagHandler.html">InitMethodTagHandler</a></li>
+<li><a href="InterTypeTagHandler.html">InterTypeTagHandler</a></li>
+<li><a href="MetaTagHandler.html">MetaTagHandler</a></li>
+<li><a href="MethodTagHandler.html">MethodTagHandler</a></li>
+<li><a href="PropertyTagHandler.html">PropertyTagHandler</a></li>
+<li><a href="S2ContainerTagHandlerRule.html">S2ContainerTagHandlerRule</a></li>
+<li><a href="TagAttributeNotDefinedRuntimeException.html">TagAttributeNotDefinedRuntimeException</a></li>
+</ul>
+</body>
+</html>
