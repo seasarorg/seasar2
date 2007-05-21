@@ -87,6 +87,20 @@ public class SessionStateTest extends TestCase {
     /**
      * @throws Exception
      */
+    public void testNeedInsertAndUpdate() throws Exception {
+        Map binaryData = new HashMap();
+        SessionState state = new SessionState(binaryData);
+        state.setAttribute("bbb", "111");
+        state.persisted();
+        assertFalse(state.needInsert("bbb"));
+        state.setAttribute("bbb", "222");
+        assertFalse(state.needInsert("bbb"));
+        assertTrue(state.needUpdate("bbb"));
+    }
+
+    /**
+     * @throws Exception
+     */
     public void testNeedUpdate() throws Exception {
         byte[] binary = SerializeUtil.fromObjectToBinary("hoge");
         Map binaryData = new HashMap();

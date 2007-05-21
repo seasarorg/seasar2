@@ -138,7 +138,8 @@ public class SessionState {
             return false;
         }
         Object value = accessedData.get(name);
-        return value != null && !binaryData.containsKey(name);
+        return value != null && !binaryData.containsKey(name)
+                && !persistedData.containsKey(name);
     }
 
     /**
