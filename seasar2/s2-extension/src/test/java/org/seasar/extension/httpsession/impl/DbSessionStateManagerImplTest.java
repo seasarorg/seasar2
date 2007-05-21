@@ -18,7 +18,6 @@ package org.seasar.extension.httpsession.impl;
 import java.util.HashMap;
 
 import org.seasar.extension.httpsession.SessionState;
-import org.seasar.extension.httpsession.impl.DbSessionStateManagerImpl;
 import org.seasar.extension.unit.S2TestCase;
 
 /**
@@ -108,5 +107,26 @@ public class DbSessionStateManagerImplTest extends S2TestCase {
         SessionState sessionState2 = manager.loadState("hoge");
         assertNull(sessionState2.getAttribute("aaa"));
         assertNull(sessionState2.getAttribute("bbb"));
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testUpdateStateBatchDisabled_updateTx() throws Exception {
+        DbSessionStateManagerImpl manager = new DbSessionStateManagerImpl(
+                getDataSource());
+        manager.setBatchUpdateDisabled(true);
+        SessionState sessionState = new SessionState(new HashMap());
+        sessionState.setAttribute("aaa", new Integer(1));
+        sessionState.setAttribute("bbb", new Integer(2));
+        manager.updateState("hoge", sessionState);
+        SessionState sessionState2 = manager.loadState("hoge");
+        sessionState2.setAttribute("aaa", new Integer(3));
+        sessionState2.setAttribute("bbb", new Integer(4));
+        manager.updateState("hoge", sessionState2);
+        SessionState sessionState3 = manager.loadState("hoge");
+        assertEquals(new Integer(3), sessionState3.getAttribute("aaa"));
+        assertEquals(new Integer(4), sessionState3.getAttribute("bbb"));
     }
 }

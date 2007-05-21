@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -51,6 +52,8 @@ public class DbSessionStateManagerImpl implements SessionStateManager {
 
     private DataSource dataSource;
 
+    private boolean batchUpdateDisabled;
+
     /**
      * <code>DbSessionStateManagerImpl</code>を作成します。
      */
@@ -73,6 +76,16 @@ public class DbSessionStateManagerImpl implements SessionStateManager {
      */
     public void setDataSource(DataSource dataSource) {
         this.dataSource = dataSource;
+    }
+
+    /**
+     * バッチ更新を無効にする場合<code>true</code>を設定します。
+     * 
+     * @param batchUpdateDisabled
+     *            バッチ更新を無効にする場合<code>true</code>
+     */
+    public void setBatchUpdateDisabled(boolean batchUpdateDisabled) {
+        this.batchUpdateDisabled = batchUpdateDisabled;
     }
 
     public SessionState loadState(String sessionId) {
@@ -116,17 +129,32 @@ public class DbSessionStateManagerImpl implements SessionStateManager {
                 deletedData.add(new Object[] { sessionId, name });
             }
         }
-        executeBatch(INSERT_SQL, insertedData);
-        executeBatch(UPDATE_SQL, updatedData);
-        executeBatch(DELETE_SQL, deletedData);
+        execute(INSERT_SQL, insertedData);
+        execute(UPDATE_SQL, updatedData);
+        execute(DELETE_SQL, deletedData);
         sessionState.persisted();
     }
 
-    protected void executeBatch(String sql, List data) {
+    protected void execute(String sql, List data) {
         if (data.size() == 0) {
             return;
         }
+        if (batchUpdateDisabled) {
+            executeUpdate(sql, data);
+        } else {
+            executeBatch(sql, data);
+        }
+    }
+
+    protected void executeBatch(String sql, List data) {
         BasicBatchHandler handler = new BasicBatchHandler(dataSource, sql);
         handler.execute(data);
+    }
+
+    protected void executeUpdate(String sql, List data) {
+        BasicUpdateHandler handler = new BasicUpdateHandler(dataSource, sql);
+        for (Iterator i = data.iterator(); i.hasNext();) {
+            handler.execute((Object[]) i.next());
+        }
     }
 }
