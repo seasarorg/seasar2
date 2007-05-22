@@ -237,7 +237,7 @@ public class ConversionContextImpl implements ConversionContext {
         return excludeNull;
     }
 
-    public NestedPropertyInfo getNestedProertyInfo(final Class srcClass,
+    public NestedPropertyInfo getNestedPropertyInfo(final Class srcClass,
             final String propertyName) {
         final String key = srcClass.getName() + "::" + propertyName;
         final Object value = nestedPropertyInfoCache.get(key);

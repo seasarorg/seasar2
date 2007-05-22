@@ -211,7 +211,7 @@ public class BeanConverter extends AbstractConverter {
     protected Object resolveNestedProperty(final BeanDesc sourceBeanDesc,
             final Object source, final String propertyName,
             final ConversionContext context) {
-        final NestedPropertyInfo info = context.getNestedProertyInfo(
+        final NestedPropertyInfo info = context.getNestedPropertyInfo(
                 sourceBeanDesc.getBeanClass(), propertyName);
         if (info == null) {
             return PROPERTY_NOT_FOUND;

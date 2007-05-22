@@ -15,6 +15,7 @@
  */
 package org.seasar.framework.container.external.servlet;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
@@ -22,7 +23,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.seasar.framework.container.ExternalContext;
-import org.seasar.framework.exception.EmptyRuntimeException;
 
 /**
  * @author higa
@@ -39,7 +39,7 @@ public class HttpServletExternalContext implements ExternalContext {
     public Object getRequest() {
         return getHttpServletRequest();
     }
-    
+
     protected HttpServletRequest getHttpServletRequest() {
         return (HttpServletRequest) requests.get();
     }
@@ -59,11 +59,11 @@ public class HttpServletExternalContext implements ExternalContext {
     public Object getSession() {
         return getHttpSession();
     }
-    
+
     protected HttpSession getHttpSession() {
         HttpServletRequest request = getHttpServletRequest();
         if (request == null) {
-            throw new EmptyRuntimeException("request");
+            return null;
         }
         return request.getSession();
     }
@@ -88,30 +88,58 @@ public class HttpServletExternalContext implements ExternalContext {
     }
 
     public Map getRequestCookieMap() {
-        return new CookieMap(getHttpServletRequest());
+        HttpServletRequest request = getHttpServletRequest();
+        if (request == null) {
+            return new HashMap();
+        }
+        return new CookieMap(request);
     }
 
     public Map getRequestHeaderMap() {
-        return new ServletRequestHeaderMap(getHttpServletRequest());
+        HttpServletRequest request = getHttpServletRequest();
+        if (request == null) {
+            return new HashMap();
+        }
+        return new ServletRequestHeaderMap(request);
     }
 
     public Map getRequestHeaderValuesMap() {
-        return new ServletRequestHeaderValuesMap(getHttpServletRequest());
+        HttpServletRequest request = getHttpServletRequest();
+        if (request == null) {
+            return new HashMap();
+        }
+        return new ServletRequestHeaderValuesMap(request);
     }
 
     public Map getRequestMap() {
-        return new ServletRequestMap(getHttpServletRequest());
+        HttpServletRequest request = getHttpServletRequest();
+        if (request == null) {
+            return new HashMap();
+        }
+        return new ServletRequestMap(request);
     }
 
     public Map getRequestParameterMap() {
-        return new ServletRequestParameterMap(getHttpServletRequest());
+        HttpServletRequest request = getHttpServletRequest();
+        if (request == null) {
+            return new HashMap();
+        }
+        return new ServletRequestParameterMap(request);
     }
 
     public Map getRequestParameterValuesMap() {
-        return new ServletRequestParameterValuesMap(getHttpServletRequest());
+        HttpServletRequest request = getHttpServletRequest();
+        if (request == null) {
+            return new HashMap();
+        }
+        return new ServletRequestParameterValuesMap(request);
     }
 
     public Map getSessionMap() {
-        return new HttpSessionMap(getHttpServletRequest());
+        HttpServletRequest request = getHttpServletRequest();
+        if (request == null) {
+            return new HashMap();
+        }
+        return new HttpSessionMap(request);
     }
 }

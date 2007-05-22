@@ -165,7 +165,7 @@ public interface ConversionContext {
      *            変換元のプロパティ名
      * @return ネストしたプロパティの情報
      */
-    NestedPropertyInfo getNestedProertyInfo(Class srcClass, String propertyName);
+    NestedPropertyInfo getNestedPropertyInfo(Class srcClass, String propertyName);
 
     /**
      * 日時プロパティの情報を返します。 該当するプロパティが存在しない場合は<code>null</code>を返します。

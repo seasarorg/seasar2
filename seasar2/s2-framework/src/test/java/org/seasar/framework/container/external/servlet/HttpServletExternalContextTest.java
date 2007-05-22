@@ -46,7 +46,17 @@ public class HttpServletExternalContextTest extends S2FrameworkTestCase {
         assertFalse(map.isEmpty());
         assertEquals(1, map.size());
     }
-    
+
+    /**
+     * 
+     */
+    public void testGetRequestCookieMap_requestNull() {
+        HttpServletExternalContext context = new HttpServletExternalContext();
+        Map map = context.getRequestCookieMap();
+        assertNotNull(map);
+        assertEquals(0, map.size());
+    }
+
     /**
      * 
      */
@@ -64,7 +74,17 @@ public class HttpServletExternalContextTest extends S2FrameworkTestCase {
         map.put("bbb", "ccc");
         assertEquals("ccc", session.getAttribute("bbb"));
     }
-    
+
+    /**
+     * 
+     */
+    public void testGetSessionMap_requestNull() {
+        HttpServletExternalContext context = new HttpServletExternalContext();
+        Map map = context.getSessionMap();
+        assertNotNull(map);
+        assertEquals(0, map.size());
+    }
+
     /**
      * 
      */
@@ -78,7 +98,7 @@ public class HttpServletExternalContextTest extends S2FrameworkTestCase {
         assertEquals(1, map.size());
         map.put("a", "B");
         assertEquals("B", map.get("a"));
-        
+
         map.clear();
         assertNull(map.get("a"));
 
@@ -88,7 +108,19 @@ public class HttpServletExternalContextTest extends S2FrameworkTestCase {
         context.removeAttribute("b");
         assertNull(map.get("b"));
     }
-    
+
+    /**
+     * 
+     */
+    public void testGetApplicationMap_requestNull() {
+        ServletContext sc = getServletContext();
+        HttpServletExternalContext context = new HttpServletExternalContext();
+        context.setApplication(sc);
+        Map map = context.getApplicationMap();
+        assertNotNull(map);
+        assertEquals(0, map.size());
+    }
+
     /**
      * 
      */
@@ -119,7 +151,19 @@ public class HttpServletExternalContextTest extends S2FrameworkTestCase {
             System.out.println(e);
         }
     }
-    
+
+    /**
+     * 
+     */
+    public void testGetInitParameterMap_requestNull() {
+        ServletContext sc = getServletContext();
+        HttpServletExternalContext context = new HttpServletExternalContext();
+        context.setApplication(sc);
+        Map map = context.getInitParameterMap();
+        assertNotNull(map);
+        assertEquals(0, map.size());
+    }
+
     /**
      * 
      */
@@ -150,7 +194,17 @@ public class HttpServletExternalContextTest extends S2FrameworkTestCase {
             System.out.println(e);
         }
     }
-    
+
+    /**
+     * 
+     */
+    public void testGetRequestHeaderMap_requestNull() {
+        HttpServletExternalContext context = new HttpServletExternalContext();
+        Map map = context.getRequestHeaderMap();
+        assertNotNull(map);
+        assertEquals(0, map.size());
+    }
+
     /**
      * 
      */
@@ -169,7 +223,17 @@ public class HttpServletExternalContextTest extends S2FrameworkTestCase {
         assertEquals("A", strs[0]);
         assertEquals("B", strs[1]);
     }
-    
+
+    /**
+     * 
+     */
+    public void testGetRequestHeaderValuesMap_requestNull() {
+        HttpServletExternalContext context = new HttpServletExternalContext();
+        Map map = context.getRequestHeaderValuesMap();
+        assertNotNull(map);
+        assertEquals(0, map.size());
+    }
+
     /**
      * 
      */
@@ -180,14 +244,24 @@ public class HttpServletExternalContextTest extends S2FrameworkTestCase {
         extContext.setRequest(request);
         Map map = extContext.getRequestMap();
         assertEquals("foo", map.get("hoge"));
-        
+
         map.put("bar", "baz");
         assertEquals("baz", request.getAttribute("bar"));
 
         map.remove("baz");
         assertNull(map.get("baz"));
     }
-    
+
+    /**
+     * 
+     */
+    public void testGetRequestMap_requestNull() {
+        HttpServletExternalContext context = new HttpServletExternalContext();
+        Map map = context.getRequestMap();
+        assertNotNull(map);
+        assertEquals(0, map.size());
+    }
+
     /**
      * 
      */
@@ -218,7 +292,17 @@ public class HttpServletExternalContextTest extends S2FrameworkTestCase {
             System.out.println(e);
         }
     }
-    
+
+    /**
+     * 
+     */
+    public void testGetRequestParameterMap_requestNull() {
+        HttpServletExternalContext context = new HttpServletExternalContext();
+        Map map = context.getRequestParameterMap();
+        assertNotNull(map);
+        assertEquals(0, map.size());
+    }
+
     /**
      * 
      */
@@ -235,5 +319,15 @@ public class HttpServletExternalContextTest extends S2FrameworkTestCase {
         assertEquals(2, strs.length);
         assertEquals("A", strs[0]);
         assertEquals("B", strs[1]);
+    }
+
+    /**
+     * 
+     */
+    public void testGetRequestParameterValuesMap_requestNull() {
+        HttpServletExternalContext context = new HttpServletExternalContext();
+        Map map = context.getRequestParameterValuesMap();
+        assertNotNull(map);
+        assertEquals(0, map.size());
     }
 }
