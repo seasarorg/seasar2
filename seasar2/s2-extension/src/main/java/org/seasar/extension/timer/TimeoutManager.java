@@ -93,6 +93,9 @@ public class TimeoutManager implements Runnable {
 
     protected synchronized List getExpiredTask() {
         final List expiredTask = new ArrayList();
+        if (timeoutTaskList == null || timeoutTaskList.isEmpty()) {
+            return expiredTask;
+        }
         for (SLinkedList.Entry e = timeoutTaskList.getFirstEntry(); e != null; e = e
                 .getNext()) {
             final TimeoutTask task = (TimeoutTask) e.getElement();
