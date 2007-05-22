@@ -21,6 +21,7 @@ import java.lang.reflect.Method;
 import java.sql.Time;
 import java.sql.Timestamp;
 
+import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.IllegalPropertyRuntimeException;
 import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.exception.EmptyRuntimeException;
@@ -55,7 +56,7 @@ public final class PropertyDescImpl implements PropertyDesc {
 
     private Field field;
 
-    private Class beanClass;
+    private BeanDesc beanDesc;
 
     private Constructor stringConstructor;
 
@@ -66,11 +67,28 @@ public final class PropertyDescImpl implements PropertyDesc {
      * @param propertyType
      * @param readMethod
      * @param writeMethod
-     * @param field
-     * @param beanClass
+     * @param beanDesc
      */
     public PropertyDescImpl(String propertyName, Class propertyType,
-            Method readMethod, Method writeMethod, Field field, Class beanClass) {
+            Method readMethod, Method writeMethod, BeanDesc beanDesc) {
+
+        this(propertyName, propertyType, readMethod, writeMethod, null,
+                beanDesc);
+    }
+
+    /**
+     * {@link PropertyDescImpl}を作成します。
+     * 
+     * @param propertyName
+     * @param propertyType
+     * @param readMethod
+     * @param writeMethod
+     * @param field
+     * @param beanDesc
+     */
+    public PropertyDescImpl(String propertyName, Class propertyType,
+            Method readMethod, Method writeMethod, Field field,
+            BeanDesc beanDesc) {
 
         if (propertyName == null) {
             throw new EmptyRuntimeException("propertyName");
@@ -83,7 +101,7 @@ public final class PropertyDescImpl implements PropertyDesc {
         this.readMethod = readMethod;
         this.writeMethod = writeMethod;
         this.field = field;
-        this.beanClass = beanClass;
+        this.beanDesc = beanDesc;
         setupStringConstructor();
     }
 
@@ -168,8 +186,8 @@ public final class PropertyDescImpl implements PropertyDesc {
                 throw new IllegalStateException("not writable");
             }
         } catch (Throwable t) {
-            throw new IllegalPropertyRuntimeException(beanClass, propertyName,
-                    t);
+            throw new IllegalPropertyRuntimeException(beanDesc.getBeanClass(),
+                    propertyName, t);
         }
     }
 

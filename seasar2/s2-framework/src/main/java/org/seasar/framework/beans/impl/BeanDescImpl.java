@@ -587,7 +587,7 @@ public final class BeanDescImpl implements BeanDesc {
             }
         } else {
             propDesc = new PropertyDescImpl(propertyName, propertyType,
-                    readMethod, null, null, beanClass);
+                    readMethod, null, null, this);
             addPropertyDesc(propDesc);
         }
     }
@@ -603,7 +603,7 @@ public final class BeanDescImpl implements BeanDesc {
             }
         } else {
             propDesc = new PropertyDescImpl(propertyName, propertyType, null,
-                    writeMethod, null, beanClass);
+                    writeMethod, null, this);
             addPropertyDesc(propDesc);
         }
     }
@@ -729,7 +729,7 @@ public final class BeanDescImpl implements BeanDesc {
                         pd.setField(field);
                     } else {
                         PropertyDesc pd = new PropertyDescImpl(field.getName(),
-                                field.getType(), null, null, field, beanClass);
+                                field.getType(), null, null, field, this);
                         propertyDescCache.put(fname, pd);
                     }
                 }
