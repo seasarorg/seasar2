@@ -9,12 +9,13 @@
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, 
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
 package org.seasar.framework.container.external.servlet;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -90,7 +91,7 @@ public class HttpServletExternalContext implements ExternalContext {
     public Map getRequestCookieMap() {
         HttpServletRequest request = getHttpServletRequest();
         if (request == null) {
-            return new HashMap();
+            return Collections.EMPTY_MAP;
         }
         return new CookieMap(request);
     }
@@ -98,7 +99,7 @@ public class HttpServletExternalContext implements ExternalContext {
     public Map getRequestHeaderMap() {
         HttpServletRequest request = getHttpServletRequest();
         if (request == null) {
-            return new HashMap();
+            return Collections.EMPTY_MAP;
         }
         return new ServletRequestHeaderMap(request);
     }
@@ -106,7 +107,7 @@ public class HttpServletExternalContext implements ExternalContext {
     public Map getRequestHeaderValuesMap() {
         HttpServletRequest request = getHttpServletRequest();
         if (request == null) {
-            return new HashMap();
+            return Collections.EMPTY_MAP;
         }
         return new ServletRequestHeaderValuesMap(request);
     }
@@ -122,7 +123,7 @@ public class HttpServletExternalContext implements ExternalContext {
     public Map getRequestParameterMap() {
         HttpServletRequest request = getHttpServletRequest();
         if (request == null) {
-            return new HashMap();
+            return Collections.EMPTY_MAP;
         }
         return new ServletRequestParameterMap(request);
     }
@@ -130,7 +131,7 @@ public class HttpServletExternalContext implements ExternalContext {
     public Map getRequestParameterValuesMap() {
         HttpServletRequest request = getHttpServletRequest();
         if (request == null) {
-            return new HashMap();
+            return Collections.EMPTY_MAP;
         }
         return new ServletRequestParameterValuesMap(request);
     }
