@@ -331,23 +331,84 @@ public interface NamingConvention {
      */
     String fromClassNameToSuffix(String className);
 
+    /**
+     * <code>View</code>のパスをページ名に変換します。
+     * 
+     * @param path
+     * @return ページ名
+     */
     String fromPathToPageName(String path);
 
+    /**
+     * <code>View</code>のパスをアクション名に変換します。
+     * 
+     * @param path
+     * @return アクション名
+     */
     String fromPathToActionName(String path);
 
+    /**
+     * ページ名を<code>View</code>のパスに変換します。
+     * 
+     * @param pageName
+     * @return <code>View</code>のパス
+     */
     String fromPageNameToPath(String pageName);
 
+    /**
+     * ページの{@link Class}を<code>View</code>のパスに変換します。
+     * 
+     * @param pageClass
+     * @return <code>View</code>のパス
+     */
     String fromPageClassToPath(Class pageClass);
 
+    /**
+     * アクション名を<code>View</code>のパスに変換します。
+     * 
+     * @param actionName
+     * @return <code>View</code>のパス
+     */
     String fromActionNameToPath(String actionName);
 
+    /**
+     * アクション名をページ名に変換します。
+     * 
+     * @param actionName
+     * @return ページ名
+     */
     String fromActionNameToPageName(String actionName);
 
+    /**
+     * ターゲットのクラス名かどうかを返します。
+     * 
+     * @param className
+     * @param suffix
+     * @return ターゲットのクラス名かどうか
+     */
     boolean isTargetClassName(String className, String suffix);
 
+    /**
+     * ターゲットのクラス名かどうかを返します。
+     * 
+     * @param className
+     * @return ターゲットのクラス名かどうか
+     */
     boolean isTargetClassName(String className);
 
+    /**
+     * 無視するクラス名かどうかを返します。
+     * 
+     * @param className
+     * @return 無視するクラス名かどうか
+     */
     boolean isIgnoreClassName(String className);
 
+    /**
+     * 妥当な<code>View</code>のルートパスかどうかを返します。
+     * 
+     * @param path
+     * @return 妥当な<code>View</code>のルートパスかどうか
+     */
     boolean isValidViewRootPath(String path);
 }

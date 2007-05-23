@@ -16,26 +16,42 @@
 package org.seasar.framework.convention;
 
 /**
+ * 永続化層の命名規約を表すインターフェースです。
+ * 
  * @author higa
  * 
  */
 public interface PersistenceConvention {
 
+    /**
+     * テーブル名をエンティティ名に変換します。
+     * 
+     * @param tableName
+     * @return エンティティ名
+     */
     String fromTableNameToEntityName(String tableName);
 
+    /**
+     * エンティティ名をテーブル名に変更します。
+     * 
+     * @param entityName
+     * @return テーブル名
+     */
     String fromEntityNameToTableName(String entityName);
 
+    /**
+     * カラム名をプロパティ名に変換します。
+     * 
+     * @param columnName
+     * @return プロパティ名
+     */
     String fromColumnNameToPropertyName(String columnName);
 
+    /**
+     * プロパティ名をカラム名に変換します。
+     * 
+     * @param propertyName
+     * @return カラム名
+     */
     String fromPropertyNameToColumnName(String propertyName);
-
-    boolean isId(String entityName, String propertyName);
-
-    boolean isVersion(String entityName, String propertyName);
-
-    boolean isInserted(String entityName, String propertyName);
-
-    boolean isUpdated(String entityName, String propertyName);
-
-    boolean isDeleted(String entityName, String propertyName);
 }

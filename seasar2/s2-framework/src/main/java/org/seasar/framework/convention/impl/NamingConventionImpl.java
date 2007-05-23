@@ -41,6 +41,8 @@ import org.seasar.framework.util.URLUtil;
 import org.seasar.framework.util.ZipFileUtil;
 
 /**
+ * {@link NamingConvention}の実装クラスです。
+ * 
  * @author higa
  * @author shot
  */
@@ -96,10 +98,16 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
 
     private Map implementationToInterfaceMap = new HashMap();
 
+    /**
+     * {@link NamingConventionImpl}を作成します。
+     */
     public NamingConventionImpl() {
         initialize();
     }
 
+    /**
+     * 初期化します。
+     */
     public void initialize() {
         if (!initialized) {
             for (int i = 0; i < rootPackageNames.length; ++i) {
@@ -119,6 +127,11 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
         return pageSuffix;
     }
 
+    /**
+     * <code>Page</code>の<code>suffix</code>を設定します。
+     * 
+     * @param pageSuffix
+     */
     public void setPageSuffix(String pageSuffix) {
         this.pageSuffix = pageSuffix;
     }
@@ -127,6 +140,11 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
         return actionSuffix;
     }
 
+    /**
+     * <code>Action</code>の<code>suffix</code>を設定します。
+     * 
+     * @param actionSuffix
+     */
     public void setActionSuffix(String actionSuffix) {
         this.actionSuffix = actionSuffix;
     }
@@ -135,6 +153,11 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
         return connectorSuffix;
     }
 
+    /**
+     * <code>Connector</code>の<code>suffix</code>を設定します。
+     * 
+     * @param connectorSuffix
+     */
     public void setConnectorSuffix(String connectorSuffix) {
         this.connectorSuffix = connectorSuffix;
     }
@@ -143,6 +166,11 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
         return daoSuffix;
     }
 
+    /**
+     * <code>Dao</code>の<code>suffix</code>を設定します。
+     * 
+     * @param daoSuffix
+     */
     public void setDaoSuffix(String daoSuffix) {
         this.daoSuffix = daoSuffix;
     }
@@ -151,6 +179,11 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
         return dtoSuffix;
     }
 
+    /**
+     * <code>Dto</code>の<code>suffix</code>を設定します。
+     * 
+     * @param dtoSuffix
+     */
     public void setDtoSuffix(String dtoSuffix) {
         this.dtoSuffix = dtoSuffix;
     }
@@ -159,6 +192,11 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
         return dxoSuffix;
     }
 
+    /**
+     * <code>Dxo</code>の<code>suffix</code>を設定します。
+     * 
+     * @param dxoSuffix
+     */
     public void setDxoSuffix(String dxoSuffix) {
         this.dxoSuffix = dxoSuffix;
     }
@@ -167,6 +205,11 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
         return helperSuffix;
     }
 
+    /**
+     * <code>Helper</code>の<code>suffix</code>を設定します。
+     * 
+     * @param helperSuffix
+     */
     public void setHelperSuffix(String helperSuffix) {
         this.helperSuffix = helperSuffix;
     }
@@ -175,6 +218,11 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
         return interceptorSuffix;
     }
 
+    /**
+     * <code>Interceptor</code>の<code>suffix</code>を設定します。
+     * 
+     * @param interceptorSuffix
+     */
     public void setInterceptorSuffix(String interceptorSuffix) {
         this.interceptorSuffix = interceptorSuffix;
     }
@@ -183,6 +231,11 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
         return logicSuffix;
     }
 
+    /**
+     * <code>Logic</code>の<code>suffix</code>を設定します。
+     * 
+     * @param logicSuffix
+     */
     public void setLogicSuffix(String logicSuffix) {
         this.logicSuffix = logicSuffix;
     }
@@ -191,6 +244,11 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
         return serviceSuffix;
     }
 
+    /**
+     * <code>Service</code>の<code>suffix</code>を設定します。
+     * 
+     * @param serviceSuffix
+     */
     public void setServiceSuffix(String serviceSuffix) {
         this.serviceSuffix = serviceSuffix;
     }
@@ -199,6 +257,11 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
         return validatorSuffix;
     }
 
+    /**
+     * <code>Validator</code>の<code>suffix</code>を設定します。
+     * 
+     * @param validatorSuffix
+     */
     public void setValidatorSuffix(String validatorSuffix) {
         this.validatorSuffix = validatorSuffix;
     }
@@ -207,6 +270,11 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
         return converterSuffix;
     }
 
+    /**
+     * <code>Converter</code>の<code>suffix</code>を設定します。
+     * 
+     * @param converterSuffix
+     */
     public void setConverterSuffix(String converterSuffix) {
         this.converterSuffix = converterSuffix;
     }
@@ -215,6 +283,11 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
         return implementationSuffix;
     }
 
+    /**
+     * 実装クラスの<code>suffix</code>を設定します。
+     * 
+     * @param implementationSuffix
+     */
     public void setImplementationSuffix(String implementationSuffix) {
         this.implementationSuffix = implementationSuffix;
     }
@@ -267,6 +340,11 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
         return entityPackageName;
     }
 
+    /**
+     * <code>Entity</code>のパッケージを設定します。
+     * 
+     * @param entityPackage
+     */
     public void setEntityPackage(String entityPackage) {
         this.entityPackageName = entityPackage;
     }
@@ -275,6 +353,11 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
         return viewExtension;
     }
 
+    /**
+     * <code>View</code>の拡張子を設定します。
+     * 
+     * @param viewExtension
+     */
     public void setViewExtension(String viewExtension) {
         this.viewExtension = viewExtension;
     }
@@ -283,6 +366,11 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
         return viewRootPath;
     }
 
+    /**
+     * <code>View</code>のルートパスを設定します。
+     * 
+     * @param viewRootPath
+     */
     public void setViewRootPath(String viewRootPath) {
         this.viewRootPath = viewRootPath;
     }
@@ -295,6 +383,11 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
         return subApplicationRootPackageName;
     }
 
+    /**
+     * サブアプリケーションのルートパッケージ名を設定します。
+     * 
+     * @param subApplicationRootPackageName
+     */
     public void setSubApplicationRootPackageName(
             String subApplicationRootPackageName) {
         this.subApplicationRootPackageName = subApplicationRootPackageName;
@@ -304,6 +397,11 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
         return rootPackageNames;
     }
 
+    /**
+     * ルートパッケージ名を追加します。
+     * 
+     * @param rootPackageName
+     */
     public void addRootPackageName(String rootPackageName) {
         rootPackageNames = (String[]) ArrayUtil.add(rootPackageNames,
                 rootPackageName);
@@ -314,12 +412,12 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
         return ignorePackageNames;
     }
 
-    public void addIgnorePackageName(String ignorePackageName) {
+    protected void addIgnorePackageName(String ignorePackageName) {
         ignorePackageNames = (String[]) ArrayUtil.add(ignorePackageNames,
                 ignorePackageName);
     }
 
-    public void addInterfaceToImplementationClassName(
+    protected void addInterfaceToImplementationClassName(
             final String interfaceName, final String implementationClassName) {
         interfaceToImplementationMap
                 .put(interfaceName, implementationClassName);
@@ -699,8 +797,17 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
     }
 
     protected static interface ExistChecker {
+        /**
+         * クラスが存在するかどうかを返します。
+         * 
+         * @param lastClassName
+         * @return クラスが存在するかどうか
+         */
         boolean isExist(String lastClassName);
 
+        /**
+         * リソースを開放します。
+         */
         void close();
     }
 
