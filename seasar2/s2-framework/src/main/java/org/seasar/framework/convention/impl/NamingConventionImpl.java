@@ -412,12 +412,23 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
         return ignorePackageNames;
     }
 
-    protected void addIgnorePackageName(String ignorePackageName) {
+    /**
+     * 無視するパッケージ名を追加します。
+     * 
+     * @param ignorePackageName
+     */
+    public void addIgnorePackageName(String ignorePackageName) {
         ignorePackageNames = (String[]) ArrayUtil.add(ignorePackageNames,
                 ignorePackageName);
     }
 
-    protected void addInterfaceToImplementationClassName(
+    /**
+     * インターフェース名と実装クラス名の関連を追加します。
+     * 
+     * @param interfaceName
+     * @param implementationClassName
+     */
+    public void addInterfaceToImplementationClassName(
             final String interfaceName, final String implementationClassName) {
         interfaceToImplementationMap
                 .put(interfaceName, implementationClassName);
