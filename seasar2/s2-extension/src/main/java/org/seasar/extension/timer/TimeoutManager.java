@@ -117,7 +117,7 @@ public class TimeoutManager implements Runnable {
     }
 
     protected synchronized boolean stopIfLeisure() {
-        if (timeoutTaskList.isEmpty()) {
+        if (timeoutTaskList == null || timeoutTaskList.isEmpty()) {
             thread = null;
             return true;
         }
