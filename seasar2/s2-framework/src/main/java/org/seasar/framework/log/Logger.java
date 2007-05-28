@@ -22,6 +22,12 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.seasar.framework.message.MessageFormatter;
 
+/**
+ * ログ出力を提供するクラスです。
+ * 
+ * @author higa
+ * 
+ */
 public final class Logger {
 
     private static final Map loggers = new HashMap();
@@ -30,6 +36,12 @@ public final class Logger {
 
     private final Log log;
 
+    /**
+     * {@link Logger}を返します。
+     * 
+     * @param clazz
+     * @return {@link Logger}
+     */
     public static synchronized Logger getLogger(final Class clazz) {
         if (!initialized) {
             initialize();
@@ -42,10 +54,16 @@ public final class Logger {
         return logger;
     }
 
+    /**
+     * {@link Logger}を初期化します。
+     */
     public static synchronized void initialize() {
         initialized = true;
     }
 
+    /**
+     * リソースを開放します。
+     */
     public synchronized static void dispose() {
         LogFactory.releaseAll();
         loggers.clear();
@@ -56,70 +74,153 @@ public final class Logger {
         log = LogFactory.getLog(clazz);
     }
 
+    /**
+     * DEBUG情報が出力されるかどうかを返します。
+     * 
+     * @return DEBUG情報が出力されるかどうか
+     */
     public final boolean isDebugEnabled() {
         return log.isDebugEnabled();
     }
 
+    /**
+     * DEBUG情報を出力します。
+     * 
+     * @param message
+     * @param throwable
+     */
     public final void debug(Object message, Throwable throwable) {
         if (isDebugEnabled()) {
             log.debug(message, throwable);
         }
     }
 
+    /**
+     * DEBUG情報を出力します。
+     * 
+     * @param message
+     */
     public final void debug(Object message) {
         if (isDebugEnabled()) {
             log.debug(message);
         }
     }
 
+    /**
+     * INFO情報が出力されるかどうかを返します。
+     * 
+     * @return INFO情報が出力されるかどうか
+     */
     public final boolean isInfoEnabled() {
         return log.isInfoEnabled();
     }
 
+    /**
+     * INFO情報を出力します。
+     * 
+     * @param message
+     * @param throwable
+     */
     public final void info(Object message, Throwable throwable) {
         if (isInfoEnabled()) {
             log.info(message, throwable);
         }
     }
 
+    /**
+     * INFO情報を出力します。
+     * 
+     * @param message
+     */
     public final void info(Object message) {
         if (isInfoEnabled()) {
             log.info(message);
         }
     }
 
+    /**
+     * WARN情報を出力します。
+     * 
+     * @param message
+     * @param throwable
+     */
     public final void warn(Object message, Throwable throwable) {
         log.warn(message, throwable);
     }
 
+    /**
+     * WARN情報を出力します。
+     * 
+     * @param message
+     */
     public final void warn(Object message) {
         log.warn(message);
     }
 
+    /**
+     * ERROR情報を出力します。
+     * 
+     * @param message
+     * @param throwable
+     */
     public final void error(Object message, Throwable throwable) {
         log.error(message, throwable);
     }
 
+    /**
+     * ERROR情報を出力します。
+     * 
+     * @param message
+     */
     public final void error(Object message) {
         log.error(message);
     }
 
+    /**
+     * FATAL情報を出力します。
+     * 
+     * @param message
+     * @param throwable
+     */
     public final void fatal(Object message, Throwable throwable) {
         log.fatal(message, throwable);
     }
 
+    /**
+     * FATAL情報を出力します。
+     * 
+     * @param message
+     */
     public final void fatal(Object message) {
         log.fatal(message);
     }
 
+    /**
+     * ログを出力します。
+     * 
+     * @param throwable
+     */
     public final void log(Throwable throwable) {
         error(throwable.getMessage(), throwable);
     }
 
+    /**
+     * ログを出力します。
+     * 
+     * @param messageCode
+     * @param args
+     */
     public final void log(String messageCode, Object[] args) {
         log(messageCode, args, null);
     }
 
+    /**
+     * ログを出力します。
+     * 
+     * @param messageCode
+     * @param args
+     * @param throwable
+     */
     public final void log(String messageCode, Object[] args, Throwable throwable) {
         char messageType = messageCode.charAt(0);
         if (isEnabledFor(messageType)) {
