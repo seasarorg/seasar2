@@ -15,8 +15,9 @@
  */
 package org.seasar.framework.exception;
 
-
 /**
+ * リソースが見つからなかったときにスローされる例外です。
+ * 
  * @author higa
  * 
  */
@@ -26,11 +27,21 @@ public class ResourceNotFoundRuntimeException extends SRuntimeException {
 
     private String path;
 
+    /**
+     * {@link ResourceNotFoundRuntimeException}を作成します。
+     * 
+     * @param path
+     */
     public ResourceNotFoundRuntimeException(String path) {
         super("ESSR0055", new Object[] { path });
         this.path = path;
     }
 
+    /**
+     * パスを返します。
+     * 
+     * @return パス
+     */
     public String getPath() {
         return path;
     }

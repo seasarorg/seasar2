@@ -18,6 +18,8 @@ package org.seasar.framework.exception;
 import org.seasar.framework.message.MessageFormatter;
 
 /**
+ * Seasar2の例外のベースクラスです。
+ * 
  * @author higa
  * 
  */
@@ -33,14 +35,32 @@ public class SRuntimeException extends RuntimeException {
 
     private String simpleMessage;
 
+    /**
+     * {@link SRuntimeException}を作成します。
+     * 
+     * @param messageCode
+     */
     public SRuntimeException(String messageCode) {
         this(messageCode, null, null);
     }
 
+    /**
+     * {@link SRuntimeException}を作成します。
+     * 
+     * @param messageCode
+     * @param args
+     */
     public SRuntimeException(String messageCode, Object[] args) {
         this(messageCode, args, null);
     }
 
+    /**
+     * {@link SRuntimeException}を作成します。
+     * 
+     * @param messageCode
+     * @param args
+     * @param cause
+     */
     public SRuntimeException(String messageCode, Object[] args, Throwable cause) {
 
         super(cause);
@@ -50,10 +70,20 @@ public class SRuntimeException extends RuntimeException {
         message = "[" + messageCode + "]" + simpleMessage;
     }
 
+    /**
+     * メッセージコードを返します。
+     * 
+     * @return メッセージコード
+     */
     public final String getMessageCode() {
         return messageCode;
     }
 
+    /**
+     * 引数の配列を返します。
+     * 
+     * @return 引数の配列
+     */
     public final Object[] getArgs() {
         return args;
     }
@@ -66,6 +96,11 @@ public class SRuntimeException extends RuntimeException {
         this.message = message;
     }
 
+    /**
+     * メッセージコードなしの単純なメッセージを返します。
+     * 
+     * @return メッセージコードなしの単純なメッセージ
+     */
     public final String getSimpleMessage() {
         return simpleMessage;
     }

@@ -16,6 +16,8 @@
 package org.seasar.framework.exception;
 
 /**
+ * {@link InstantiationException}をラップする例外です。
+ * 
  * @author higa
  * 
  */
@@ -25,6 +27,12 @@ public class InstantiationRuntimeException extends SRuntimeException {
 
     private Class targetClass;
 
+    /**
+     * {@link InstantiationRuntimeException}を作成します。
+     * 
+     * @param targetClass
+     * @param cause
+     */
     public InstantiationRuntimeException(Class targetClass,
             InstantiationException cause) {
 
@@ -32,6 +40,11 @@ public class InstantiationRuntimeException extends SRuntimeException {
         this.targetClass = targetClass;
     }
 
+    /**
+     * ターゲットのクラスを返します。
+     * 
+     * @return
+     */
     public Class getTargetClass() {
         return targetClass;
     }

@@ -18,6 +18,8 @@ package org.seasar.framework.exception;
 import org.seasar.framework.util.StringUtil;
 
 /**
+ * <code>OgnlException</code>をラップする例外です。
+ * 
  * @author higa
  * @author manhole
  */
@@ -25,10 +27,22 @@ public final class OgnlRuntimeException extends SRuntimeException {
 
     private static final long serialVersionUID = 2290558407298004909L;
 
+    /**
+     * {@link OgnlRuntimeException}を作成します。
+     * 
+     * @param cause
+     */
     public OgnlRuntimeException(Throwable cause) {
         this(cause, null, 0);
     }
 
+    /**
+     * {@link OgnlRuntimeException}を作成します。
+     * 
+     * @param cause
+     * @param path
+     * @param lineNumber
+     */
     public OgnlRuntimeException(Throwable cause, String path, int lineNumber) {
         super("ESSR0073",
                 new Object[] { createMessage(cause, path, lineNumber) }, cause);

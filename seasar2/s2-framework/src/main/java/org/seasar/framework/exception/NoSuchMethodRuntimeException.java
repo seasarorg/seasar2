@@ -18,6 +18,8 @@ package org.seasar.framework.exception;
 import org.seasar.framework.util.MethodUtil;
 
 /**
+ * {@link NoSuchMethodException}をラップする例外です。
+ * 
  * @author higa
  * 
  */
@@ -31,6 +33,14 @@ public class NoSuchMethodRuntimeException extends SRuntimeException {
 
     private Class[] argTypes;
 
+    /**
+     * {@link NoSuchMethodRuntimeException}を作成します。
+     * 
+     * @param targetClass
+     * @param methodName
+     * @param argTypes
+     * @param cause
+     */
     public NoSuchMethodRuntimeException(Class targetClass, String methodName,
             Class[] argTypes, NoSuchMethodException cause) {
 
@@ -41,16 +51,30 @@ public class NoSuchMethodRuntimeException extends SRuntimeException {
         this.argTypes = argTypes;
     }
 
+    /**
+     * ターゲットのクラスを返します。
+     * 
+     * @return ターゲットのクラス
+     */
     public Class getTargetClass() {
         return targetClass;
     }
 
+    /**
+     * メソッド名を返します。
+     * 
+     * @return メソッド名
+     */
     public String getMethodName() {
         return methodName;
     }
 
+    /**
+     * 引数の型の配列を返します。
+     * 
+     * @return 引数の型の配列
+     */
     public Class[] getArgTypes() {
         return argTypes;
     }
-
 }

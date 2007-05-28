@@ -20,6 +20,8 @@ import javax.transaction.xa.XAException;
 import org.seasar.framework.message.MessageFormatter;
 
 /**
+ * Seasar2用の{@link XAException}です。
+ * 
  * @author higa
  * 
  */
@@ -29,29 +31,56 @@ public class SXAException extends XAException {
 
     private String messageCode;
 
-    private Object[] messageArgs;
+    private Object[] args;
 
+    /**
+     * {@link SXAException}を作成します。
+     * 
+     * @param t
+     */
     public SXAException(Throwable t) {
         this("ESSR0017", new Object[] { t }, t);
     }
 
-    public SXAException(String messageCode, Object[] messageArgs) {
-        this(messageCode, messageArgs, null);
+    /**
+     * {@link SXAException}を作成します。
+     * 
+     * @param messageCode
+     * @param args
+     */
+    public SXAException(String messageCode, Object[] args) {
+        this(messageCode, args, null);
     }
 
-    public SXAException(String messageCode, Object[] messageArgs, Throwable t) {
-
-        super(MessageFormatter.getMessage(messageCode, messageArgs));
+    /**
+     * {@link SXAException}を作成します。
+     * 
+     * @param messageCode
+     * @param args
+     * @param t
+     */
+    public SXAException(String messageCode, Object[] args, Throwable t) {
+        super(MessageFormatter.getMessage(messageCode, args));
         this.messageCode = messageCode;
-        this.messageArgs = messageArgs;
+        this.args = args;
         initCause(t);
     }
 
+    /**
+     * メッセージコードを返します。
+     * 
+     * @return メッセージコード
+     */
     public String getMessageCode() {
         return messageCode;
     }
 
-    public Object[] getMessageArgs() {
-        return messageArgs;
+    /**
+     * 引数の配列を返します。
+     * 
+     * @return 引数の配列
+     */
+    public Object[] getArgs() {
+        return args;
     }
 }

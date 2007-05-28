@@ -18,6 +18,8 @@ package org.seasar.framework.exception;
 import org.seasar.framework.message.MessageFormatter;
 
 /**
+ * Seasar2用の{@link IllegalStateException}です。
+ * 
  * @author higa
  * 
  */
@@ -29,6 +31,12 @@ public class SIllegalStateException extends IllegalStateException {
 
     private Object[] args;
 
+    /**
+     * {@link SIllegalStateException}を作成します。
+     * 
+     * @param messageCode
+     * @param args
+     */
     public SIllegalStateException(String messageCode, Object[] args) {
         super(MessageFormatter.getMessage(messageCode, args));
 
@@ -36,10 +44,20 @@ public class SIllegalStateException extends IllegalStateException {
         this.args = args;
     }
 
+    /**
+     * メッセージコードを返します。
+     * 
+     * @return メッセージコード
+     */
     public String getMessageCode() {
         return messageCode;
     }
 
+    /**
+     * 引数の配列を返します。
+     * 
+     * @return 引数の配列
+     */
     public Object[] getArgs() {
         return args;
     }

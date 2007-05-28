@@ -15,10 +15,14 @@
  */
 package org.seasar.framework.exception;
 
+import java.lang.reflect.Constructor;
+
 import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.MethodUtil;
 
 /**
+ * {@link Constructor}が見つからない場合にスローされる{@link NoSuchMethodException}をラップする例外です。
+ * 
  * @author higa
  * 
  */
@@ -30,6 +34,13 @@ public class NoSuchConstructorRuntimeException extends SRuntimeException {
 
     private Class[] argTypes;
 
+    /**
+     * {@link NoSuchConstructorRuntimeException}を作成します。
+     * 
+     * @param targetClass
+     * @param argTypes
+     * @param cause
+     */
     public NoSuchConstructorRuntimeException(Class targetClass,
             Class[] argTypes, NoSuchMethodException cause) {
 
@@ -42,10 +53,20 @@ public class NoSuchConstructorRuntimeException extends SRuntimeException {
         this.argTypes = argTypes;
     }
 
+    /**
+     * ターゲットのクラスを返します。
+     * 
+     * @return
+     */
     public Class getTargetClass() {
         return targetClass;
     }
 
+    /**
+     * 引数の型の配列を返します。
+     * 
+     * @return
+     */
     public Class[] getArgTypes() {
         return argTypes;
     }

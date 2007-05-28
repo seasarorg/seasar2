@@ -16,6 +16,8 @@
 package org.seasar.framework.exception;
 
 /**
+ * 空の場合にスローされる例外です。
+ * 
  * @author higa
  * 
  */
@@ -26,6 +28,8 @@ public final class EmptyRuntimeException extends SRuntimeException {
     private String targetName;
 
     /**
+     * {@link EmptyRuntimeException}を作成します。
+     * 
      * @param targetName
      */
     public EmptyRuntimeException(String targetName) {
@@ -33,6 +37,11 @@ public final class EmptyRuntimeException extends SRuntimeException {
         this.targetName = targetName;
     }
 
+    /**
+     * ターゲット名を返します。
+     * 
+     * @return
+     */
     public String getTargetName() {
         return targetName;
     }

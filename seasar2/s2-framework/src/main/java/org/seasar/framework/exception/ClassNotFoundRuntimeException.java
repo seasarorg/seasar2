@@ -16,6 +16,8 @@
 package org.seasar.framework.exception;
 
 /**
+ * クラスが見つからないときにスローされる例外です。
+ * 
  * @author higa
  * 
  */
@@ -26,23 +28,36 @@ public class ClassNotFoundRuntimeException extends SRuntimeException {
     private String className;
 
     /**
-     * @param messageCode
+     * {@link ClassNotFoundRuntimeException}を作成します。
+     * 
+     * @param cause
      */
     public ClassNotFoundRuntimeException(ClassNotFoundException cause) {
         this(null, cause);
     }
 
+    /**
+     * {@link ClassNotFoundRuntimeException}を作成します。
+     * 
+     * @param className
+     * @param cause
+     */
     public ClassNotFoundRuntimeException(String className,
             ClassNotFoundException cause) {
         super("ESSR0044", new Object[] { cause }, cause);
         setClassName(className);
     }
 
+    /**
+     * クラス名を返します。
+     * 
+     * @return
+     */
     public String getClassName() {
         return className;
     }
 
-    public void setClassName(String className) {
+    protected void setClassName(String className) {
         this.className = className;
     }
 }

@@ -16,6 +16,8 @@
 package org.seasar.framework.exception;
 
 /**
+ * {@link IllegalAccessException}をラップする例外です。
+ * 
  * @author higa
  * 
  */
@@ -25,6 +27,12 @@ public final class IllegalAccessRuntimeException extends SRuntimeException {
 
     private Class targetClass;
 
+    /**
+     * {@link IllegalAccessRuntimeException}を作成します。
+     * 
+     * @param targetClass
+     * @param cause
+     */
     public IllegalAccessRuntimeException(Class targetClass,
             IllegalAccessException cause) {
 
@@ -32,6 +40,11 @@ public final class IllegalAccessRuntimeException extends SRuntimeException {
         this.targetClass = targetClass;
     }
 
+    /**
+     * ターゲットクラスを返します。
+     * 
+     * @return
+     */
     public Class getTargetClass() {
         return targetClass;
     }

@@ -16,6 +16,8 @@
 package org.seasar.framework.exception;
 
 /**
+ * {@link NoSuchFieldException}をラップする例外です。
+ * 
  * @author higa
  * 
  */
@@ -27,6 +29,13 @@ public class NoSuchFieldRuntimeException extends SRuntimeException {
 
     private String fieldName;
 
+    /**
+     * {@link NoSuchFieldRuntimeException}を作成します。
+     * 
+     * @param targetClass
+     * @param fieldName
+     * @param cause
+     */
     public NoSuchFieldRuntimeException(Class targetClass, String fieldName,
             NoSuchFieldException cause) {
 
@@ -36,10 +45,20 @@ public class NoSuchFieldRuntimeException extends SRuntimeException {
         this.fieldName = fieldName;
     }
 
+    /**
+     * ターゲットのクラスを返します。
+     * 
+     * @return ターゲットのクラス
+     */
     public Class getTargetClass() {
         return targetClass;
     }
 
+    /**
+     * フィールド名を返します。
+     * 
+     * @return フィールド名
+     */
     public String getFieldName() {
         return fieldName;
     }

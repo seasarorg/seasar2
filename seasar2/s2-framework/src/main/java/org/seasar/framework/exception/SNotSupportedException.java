@@ -20,6 +20,8 @@ import javax.transaction.NotSupportedException;
 import org.seasar.framework.message.MessageFormatter;
 
 /**
+ * Seasar2用の{@link NotSupportedException}を返します。
+ * 
  * @author higa
  * 
  */
@@ -31,16 +33,32 @@ public class SNotSupportedException extends NotSupportedException {
 
     private Object[] args;
 
+    /**
+     * {@link SNotSupportedException}を作成します。
+     * 
+     * @param messageCode
+     * @param args
+     */
     public SNotSupportedException(String messageCode, Object[] args) {
         super(MessageFormatter.getMessage(messageCode, args));
         this.messageCode = messageCode;
         this.args = args;
     }
 
+    /**
+     * メッセージコードを返します。
+     * 
+     * @return メッセージコード
+     */
     public String getMessageCode() {
         return messageCode;
     }
 
+    /**
+     * 引数の配列を返します。
+     * 
+     * @return 引数の配列
+     */
     public Object[] getArgs() {
         return args;
     }

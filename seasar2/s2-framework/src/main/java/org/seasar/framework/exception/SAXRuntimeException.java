@@ -19,12 +19,19 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 /**
+ * {@link SAXException}をラップする例外です。
+ * 
  * @author higa
  * 
  */
 public final class SAXRuntimeException extends SRuntimeException {
     private static final long serialVersionUID = -4933312103385038765L;
 
+    /**
+     * {@link SAXRuntimeException}を作成します。
+     * 
+     * @param cause
+     */
     public SAXRuntimeException(SAXException cause) {
         super("ESSR0054", createArgs(cause), cause);
     }

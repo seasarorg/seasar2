@@ -17,14 +17,17 @@ package org.seasar.framework.exception;
 
 import javassist.CannotCompileException;
 
-
 /**
+ * Javassistでコンパイルできないときにスローされる例外です。
+ * 
  * @author koichik
  */
 public class CannotCompileRuntimeException extends SRuntimeException {
     private static final long serialVersionUID = 1329201462786753994L;
 
     /**
+     * {@link CannotCompileRuntimeException}を作成します。
+     * 
      * @param cause
      */
     public CannotCompileRuntimeException(final CannotCompileException cause) {

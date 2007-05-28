@@ -18,6 +18,8 @@ package org.seasar.framework.exception;
 import java.lang.reflect.InvocationTargetException;
 
 /**
+ * {@link InvocationTargetException}をラップする例外です。
+ * 
  * @author higa
  * 
  */
@@ -27,6 +29,12 @@ public class InvocationTargetRuntimeException extends SRuntimeException {
 
     private Class targetClass;
 
+    /**
+     * {@link InvocationTargetRuntimeException}を作成します。
+     * 
+     * @param targetClass
+     * @param cause
+     */
     public InvocationTargetRuntimeException(Class targetClass,
             InvocationTargetException cause) {
 
@@ -35,6 +43,11 @@ public class InvocationTargetRuntimeException extends SRuntimeException {
         this.targetClass = targetClass;
     }
 
+    /**
+     * ターゲットのクラスを返します。
+     * 
+     * @return
+     */
     public Class getTargetClass() {
         return targetClass;
     }

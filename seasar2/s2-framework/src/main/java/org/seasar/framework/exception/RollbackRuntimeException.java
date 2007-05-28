@@ -18,6 +18,8 @@ package org.seasar.framework.exception;
 import javax.transaction.RollbackException;
 
 /**
+ * {@link RollbackException}をラップする例外です。
+ * 
  * @author higa
  * 
  */
@@ -25,6 +27,11 @@ public final class RollbackRuntimeException extends SRuntimeException {
 
     private static final long serialVersionUID = -889986104662559877L;
 
+    /**
+     * {@link RollbackRuntimeException}を作成します。
+     * 
+     * @param cause
+     */
     public RollbackRuntimeException(RollbackException cause) {
         super("ESSR0063", new Object[] { cause }, cause);
     }

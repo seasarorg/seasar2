@@ -20,6 +20,8 @@ import java.sql.SQLException;
 import org.seasar.framework.message.MessageFormatter;
 
 /**
+ * {@link SQLException}をラップする例外です。
+ * 
  * @author higa
  * @author manhole
  */
@@ -28,7 +30,7 @@ public final class SQLRuntimeException extends SRuntimeException {
     private static final long serialVersionUID = 2533513110369526191L;
 
     /**
-     * <code>SQLRuntimeException</code>を作成します。
+     * {@link SQLRuntimeException}を作成します。
      * 
      * @param cause
      */

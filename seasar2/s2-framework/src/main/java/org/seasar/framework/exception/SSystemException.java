@@ -20,6 +20,8 @@ import javax.transaction.SystemException;
 import org.seasar.framework.message.MessageFormatter;
 
 /**
+ * Seasar2用の{@link SystemException}です。
+ * 
  * @author higa
  * 
  */
@@ -31,10 +33,23 @@ public class SSystemException extends SystemException {
 
     private Object[] args;
 
+    /**
+     * {@link SSystemException}を作成します。
+     * 
+     * @param messageCode
+     * @param args
+     */
     public SSystemException(String messageCode, Object[] args) {
         this(messageCode, args, null);
     }
 
+    /**
+     * {@link SSystemException}を作成します。
+     * 
+     * @param messageCode
+     * @param args
+     * @param cause
+     */
     public SSystemException(String messageCode, Object[] args, Throwable cause) {
         super(MessageFormatter.getMessage(messageCode, args));
         this.messageCode = messageCode;
@@ -42,10 +57,20 @@ public class SSystemException extends SystemException {
         initCause(cause);
     }
 
+    /**
+     * メッセージコードを返します。
+     * 
+     * @return メッセージコード
+     */
     public String getMessageCode() {
         return messageCode;
     }
 
+    /**
+     * 引数の配列を返します。
+     * 
+     * @return 引数の配列
+     */
     public Object[] getArgs() {
         return args;
     }

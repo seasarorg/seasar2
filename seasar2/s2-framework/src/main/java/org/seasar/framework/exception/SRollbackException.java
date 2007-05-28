@@ -20,6 +20,8 @@ import javax.transaction.RollbackException;
 import org.seasar.framework.message.MessageFormatter;
 
 /**
+ * Seasar2用の{@link RollbackException}です。
+ * 
  * @author higa
  * 
  */
@@ -31,16 +33,32 @@ public class SRollbackException extends RollbackException {
 
     private Object[] args;
 
+    /**
+     * {@link SRollbackException}を作成します。
+     * 
+     * @param messageCode
+     * @param args
+     */
     public SRollbackException(String messageCode, Object[] args) {
         super(MessageFormatter.getMessage(messageCode, args));
         this.messageCode = messageCode;
         this.args = args;
     }
 
+    /**
+     * メッセージコードを返します。
+     * 
+     * @return メッセージコード
+     */
     public String getMessageCode() {
         return messageCode;
     }
 
+    /**
+     * 引数の配列を返します。
+     * 
+     * @return 引数の配列
+     */
     public Object[] getArgs() {
         return args;
     }

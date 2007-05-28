@@ -18,6 +18,8 @@ package org.seasar.framework.exception;
 import javax.xml.parsers.ParserConfigurationException;
 
 /**
+ * {@link ParserConfigurationException}をラップする例外です。
+ * 
  * @author higa
  * 
  */
@@ -26,6 +28,11 @@ public final class ParserConfigurationRuntimeException extends
 
     private static final long serialVersionUID = -4610465906028959083L;
 
+    /**
+     * {@link ParserConfigurationRuntimeException}を作成します。
+     * 
+     * @param cause
+     */
     public ParserConfigurationRuntimeException(
             ParserConfigurationException cause) {
         super("ESSR0053", new Object[] { cause }, cause);

@@ -18,6 +18,8 @@ package org.seasar.framework.exception;
 import java.text.ParseException;
 
 /**
+ * {@link ParseException}をラップする例外です。
+ * 
  * @author higa
  * 
  */
@@ -25,6 +27,11 @@ public final class ParseRuntimeException extends SRuntimeException {
 
     private static final long serialVersionUID = -5237329676597387063L;
 
+    /**
+     * {@link ParseRuntimeException}を作成します。
+     * 
+     * @param cause
+     */
     public ParseRuntimeException(ParseException cause) {
         super("ESSR0050", new Object[] { cause }, cause);
     }

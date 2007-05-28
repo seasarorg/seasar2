@@ -17,14 +17,17 @@ package org.seasar.framework.exception;
 
 import javassist.NotFoundException;
 
-
 /**
+ * <code>NotFoundException</code>をラップする例外です。
+ * 
  * @author koichik
  */
 public class NotFoundRuntimeException extends SRuntimeException {
     private static final long serialVersionUID = 1960782343618833636L;
 
     /**
+     * {@link NotFoundRuntimeException}を作成します。
+     * 
      * @param cause
      */
     public NotFoundRuntimeException(final NotFoundException cause) {
