@@ -37,6 +37,8 @@ import org.seasar.framework.util.ResourceUtil;
 import org.seasar.framework.util.StringUtil;
 
 /**
+ * {@link MockServletContext}の実装クラスです。
+ * 
  * @author higa
  * @author manhole
  */
@@ -44,10 +46,19 @@ public class MockServletContextImpl implements MockServletContext, Serializable 
 
     private static final long serialVersionUID = -5626752218858278823L;
 
+    /**
+     * Major Version
+     */
     public static final int MAJOR_VERSION = 2;
 
+    /**
+     * Minor Version
+     */
     public static final int MINOR_VERSION = 4;
 
+    /**
+     * Server Info
+     */
     public static final String SERVER_INFO = "seasar/2.0";
 
     private String servletContextName;
@@ -58,6 +69,11 @@ public class MockServletContextImpl implements MockServletContext, Serializable 
 
     private final Map attributes = new HashMap();
 
+    /**
+     * {@link MockServletContextImpl}を作成します。
+     * 
+     * @param path
+     */
     public MockServletContextImpl(String path) {
         if (path == null || path.charAt(0) != '/') {
             path = "/";

@@ -24,6 +24,12 @@ import javax.servlet.ServletContext;
 
 import org.seasar.framework.util.EnumerationAdapter;
 
+/**
+ * {@link MockServletConfig}の実装クラスです。
+ * 
+ * @author higa
+ * 
+ */
 public class MockServletConfigImpl implements MockServletConfig, Serializable {
 
     private static final long serialVersionUID = 5515573574823840162L;
@@ -34,6 +40,9 @@ public class MockServletConfigImpl implements MockServletConfig, Serializable {
 
     private Map initParameters = new HashMap();
 
+    /**
+     * {@link MockServletConfigImpl}を作成します。
+     */
     public MockServletConfigImpl() {
     }
 

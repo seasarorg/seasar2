@@ -19,12 +19,31 @@ import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 
 /**
+ * モック用の{@link ServletConfig}です。
+ * 
  * @author Satoshi Kimura
  */
 public interface MockServletConfig extends ServletConfig {
+
+    /**
+     * サーブレット名を設定します。
+     * 
+     * @param servletName
+     */
     void setServletName(String servletName);
 
+    /**
+     * {@link ServletContext}を設定します。
+     * 
+     * @param servletContext
+     */
     void setServletContext(ServletContext servletContext);
 
+    /**
+     * 初期化パラメータを設定します。
+     * 
+     * @param name
+     * @param value
+     */
     void setInitParameter(String name, final String value);
 }

@@ -18,6 +18,8 @@ package org.seasar.framework.mock.servlet;
 import javax.servlet.ServletOutputStream;
 
 /**
+ * モック用の{@link ServletOutputStream}の抽象クラスです。
+ * 
  * @author Satoshi Kimura
  * @author manhole
  */

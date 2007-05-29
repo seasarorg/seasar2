@@ -36,6 +36,8 @@ import org.seasar.framework.util.EmptyEnumeration;
 import org.seasar.framework.util.EnumerationAdapter;
 
 /**
+ * {@link MockHttpServletRequest}の実装クラスです。
+ * 
  * @author higa
  * 
  */
@@ -93,9 +95,14 @@ public class MockHttpServletRequestImpl implements MockHttpServletRequest {
 
     private List locales = new ArrayList();
 
+    /**
+     * {@link MockHttpServletRequestImpl}を作成します。
+     * 
+     * @param servletContext
+     * @param servletPath
+     */
     public MockHttpServletRequestImpl(ServletContext servletContext,
             String servletPath) {
-
         this.servletContext = servletContext;
         if (servletPath.charAt(0) == '/') {
             this.servletPath = servletPath;

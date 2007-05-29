@@ -36,6 +36,8 @@ import org.seasar.framework.util.EnumerationAdapter;
 import org.seasar.framework.util.SPrintWriter;
 
 /**
+ * {@link MockHttpServletResponse}の実装クラスです。
+ * 
  * @author higa
  * 
  */
@@ -69,7 +71,9 @@ public class MockHttpServletResponseImpl implements MockHttpServletResponse {
     private boolean getOutputStreamCalled;
 
     /**
+     * {@link MockHttpServletResponseImpl}を作成します。
      * 
+     * @param request
      */
     public MockHttpServletResponseImpl(HttpServletRequest request) {
         cookieList = new ArrayList(Arrays.asList(request.getCookies()));

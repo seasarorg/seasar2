@@ -18,6 +18,8 @@ package org.seasar.framework.mock.servlet;
 import javax.servlet.RequestDispatcher;
 
 /**
+ * モック用の{@link RequestDispatcher}のインターフェースです。
+ * 
  * @author Satoshi Kimura
  */
 public interface MockRequestDispatcher extends RequestDispatcher {

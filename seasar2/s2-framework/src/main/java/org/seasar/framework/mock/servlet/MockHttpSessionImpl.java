@@ -25,6 +25,12 @@ import javax.servlet.ServletContext;
 import org.seasar.framework.util.EnumerationAdapter;
 import org.seasar.framework.util.UUID;
 
+/**
+ * {@link MockHttpSession}の実装クラスです。
+ * 
+ * @author higa
+ * 
+ */
 public class MockHttpSessionImpl implements MockHttpSession, Serializable {
 
     private static final long serialVersionUID = 2182279632419560836L;
@@ -45,6 +51,11 @@ public class MockHttpSessionImpl implements MockHttpSession, Serializable {
 
     private Map attributes = new HashMap();
 
+    /**
+     * {@link MockHttpSessionImpl}を作成します。
+     * 
+     * @param servletContext
+     */
     public MockHttpSessionImpl(ServletContext servletContext) {
         this.servletContext = servletContext;
         this.id = UUID.create();

@@ -23,6 +23,8 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
 /**
+ * モック用の{@link GenericServlet}です。
+ * 
  * @author higa
  * 
  */

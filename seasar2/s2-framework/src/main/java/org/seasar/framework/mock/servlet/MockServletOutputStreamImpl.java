@@ -19,12 +19,19 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 /**
+ * {@link MockServletOutputStream}の実装クラスです。
+ * 
  * @author manhole
  */
 public class MockServletOutputStreamImpl extends MockServletOutputStream {
 
     private OutputStream outputStream;
 
+    /**
+     * {@link MockServletOutputStreamImpl}を作成します。
+     * 
+     * @param outputStream
+     */
     public MockServletOutputStreamImpl(final OutputStream outputStream) {
         this.outputStream = outputStream;
     }

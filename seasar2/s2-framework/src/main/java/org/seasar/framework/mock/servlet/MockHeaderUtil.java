@@ -21,6 +21,8 @@ import java.util.Date;
 import java.util.Locale;
 
 /**
+ * リクエストやレスポンスのヘッダ用のユーティリティです。
+ * 
  * @author higa
  * 
  */
@@ -36,6 +38,12 @@ public final class MockHeaderUtil {
     private MockHeaderUtil() {
     }
 
+    /**
+     * 日付の値を<code>long</code>で返します。
+     * 
+     * @param value
+     * @return 日付の値
+     */
     public static long getDateValue(String value) {
         if (value == null) {
             return -1L;
@@ -49,6 +57,12 @@ public final class MockHeaderUtil {
         throw new IllegalArgumentException(value);
     }
 
+    /**
+     * 文字列を<code>int</code>の値として返します。
+     * 
+     * @param value
+     * @return <code>int</code>の値
+     */
     public static int getIntValue(String value) {
         if (value == null) {
             return -1;
@@ -56,6 +70,12 @@ public final class MockHeaderUtil {
         return Integer.parseInt(value);
     }
 
+    /**
+     * <code>long</code>で表現された日付を文字列表現で返します。
+     * 
+     * @param value
+     * @return 日付の文字列表現
+     */
     public static String getDateValue(long value) {
         return DATE_FORMATTERS[0].format(new Date(value));
     }

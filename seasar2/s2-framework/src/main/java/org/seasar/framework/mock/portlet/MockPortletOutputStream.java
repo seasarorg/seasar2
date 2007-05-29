@@ -20,7 +20,7 @@ import java.io.PrintWriter;
 import javax.servlet.ServletOutputStream;
 
 /**
- * Portletのモック用の<code>ServletOutputStream</code>です。
+ * Portletのモック用の<code>ServletOutputStream</code>の抽象クラスです。
  * 
  * @author shot
  */
