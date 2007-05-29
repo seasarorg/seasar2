@@ -22,25 +22,22 @@ import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
 /**
+ * {@link MockPortletRequestDispatcher}の実装クラスです。
+ * 
  * @author shinsuke
  * 
  */
 public class MockPortletRequestDispatcherImpl implements
         MockPortletRequestDispatcher {
 
+    /**
+     * {@link MockPortletRequestDispatcherImpl}を作成します。
+     */
     public MockPortletRequestDispatcherImpl() {
 
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.portlet.PortletRequestDispatcher#include(javax.portlet.RenderRequest,
-     *      javax.portlet.RenderResponse)
-     */
     public void include(RenderRequest arg0, RenderResponse arg1)
             throws PortletException, IOException {
-        // nothing..
     }
-
 }

@@ -18,8 +18,10 @@ package org.seasar.framework.mock.portlet;
 import javax.portlet.PortletRequestDispatcher;
 
 /**
+ * モック用の<code>PortletRequestDispatcher</code>のインターフェースです。
+ * 
  * @author shinsuke
- *
+ * 
  */
 public interface MockPortletRequestDispatcher extends PortletRequestDispatcher {
 

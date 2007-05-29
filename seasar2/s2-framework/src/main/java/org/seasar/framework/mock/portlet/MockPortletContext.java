@@ -18,13 +18,32 @@ package org.seasar.framework.mock.portlet;
 import javax.portlet.PortletContext;
 
 /**
+ * モック用の<code>PortletContext</code>です。
+ * 
  * @author shinsuke
  * 
  */
 public interface MockPortletContext extends PortletContext {
+    /**
+     * 初期化パラメータを設定します。
+     * 
+     * @param name
+     * @param value
+     */
     public void setInitParameter(String name, String value);
 
+    /**
+     * mimeタイプを追加します。
+     * 
+     * @param file
+     * @param type
+     */
     public void addMimeType(String file, String type);
 
+    /**
+     * リクエストを作成します。
+     * 
+     * @return リクエスト
+     */
     public MockPortletRequestImpl createRequest();
 }

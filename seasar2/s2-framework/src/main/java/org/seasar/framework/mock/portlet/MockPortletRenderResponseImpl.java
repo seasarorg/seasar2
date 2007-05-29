@@ -29,6 +29,8 @@ import javax.portlet.PortletURL;
 import org.seasar.framework.util.SPrintWriter;
 
 /**
+ * {@link MockPortletRenderResponse}の実装クラスです。
+ * 
  * @author shot
  */
 public class MockPortletRenderResponseImpl implements MockPortletRenderResponse {
@@ -80,6 +82,11 @@ public class MockPortletRenderResponseImpl implements MockPortletRenderResponse 
         this.namespace = namespace;
     }
 
+    /**
+     * タイトルを返します。
+     * 
+     * @return タイトル
+     */
     public String getTitle() {
         return title;
     }
@@ -92,6 +99,11 @@ public class MockPortletRenderResponseImpl implements MockPortletRenderResponse 
         return characterEncoding;
     }
 
+    /**
+     * 文字のエンコーディングを設定します。
+     * 
+     * @param characterEncoding
+     */
     public void setCharacterEncoding(String characterEncoding) {
         this.characterEncoding = characterEncoding;
     }

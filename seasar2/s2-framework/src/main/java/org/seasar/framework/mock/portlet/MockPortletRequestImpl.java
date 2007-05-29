@@ -33,10 +33,13 @@ import javax.portlet.WindowState;
 import org.seasar.framework.util.EnumerationAdapter;
 
 /**
+ * {@link MockPortletRequest}の実装クラスです。
+ * 
  * @author shinsuke
  * 
  */
 public class MockPortletRequestImpl implements MockPortletRequest {
+
     private PortletContext portletContext;
 
     private String authType;
@@ -59,74 +62,44 @@ public class MockPortletRequestImpl implements MockPortletRequest {
 
     private List contentTypes = new ArrayList();
 
+    /**
+     * {@link MockPortletRequestImpl}を作成します。
+     * 
+     * @param portletContext
+     */
     public MockPortletRequestImpl(PortletContext portletContext) {
         this.portletContext = portletContext;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.portlet.PortletRequest#isWindowStateAllowed(javax.portlet.WindowState)
-     */
     public boolean isWindowStateAllowed(WindowState arg0) {
         // TODO is MockWindowState needed?
         throw new UnsupportedOperationException();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.portlet.PortletRequest#isPortletModeAllowed(javax.portlet.PortletMode)
-     */
     public boolean isPortletModeAllowed(PortletMode arg0) {
         // TODO is MockPortletMode needed?
         throw new UnsupportedOperationException();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.portlet.PortletRequest#getPortletMode()
-     */
     public PortletMode getPortletMode() {
         // TODO is MockPortletMode needed?
         throw new UnsupportedOperationException();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.portlet.PortletRequest#getWindowState()
-     */
     public WindowState getWindowState() {
         // TODO is MockWindowState needed?
         throw new UnsupportedOperationException();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.portlet.PortletRequest#getPreferences()
-     */
     public PortletPreferences getPreferences() {
         // TODO is MockPortletPreferences needed?
         throw new UnsupportedOperationException();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.portlet.PortletRequest#getPortletSession()
-     */
     public PortletSession getPortletSession() {
         return getPortletSession(true);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.portlet.PortletRequest#getPortletSession(boolean)
-     */
     public PortletSession getPortletSession(boolean create) {
         if (session != null) {
             return session;
@@ -140,11 +113,6 @@ public class MockPortletRequestImpl implements MockPortletRequest {
         return session;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.portlet.PortletRequest#getProperty(java.lang.String)
-     */
     public String getProperty(String name) {
         if (properties.get(name) instanceof String) {
             return (String) properties.get(name);
@@ -158,11 +126,6 @@ public class MockPortletRequestImpl implements MockPortletRequest {
         return null;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.portlet.PortletRequest#getProperties(java.lang.String)
-     */
     public Enumeration getProperties(String name) {
         if (properties.get(name) instanceof String[]) {
             String[] values = (String[]) parameters.get(name);
@@ -175,93 +138,43 @@ public class MockPortletRequestImpl implements MockPortletRequest {
         return null;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.portlet.PortletRequest#getPropertyNames()
-     */
     public Enumeration getPropertyNames() {
         return new EnumerationAdapter(properties.keySet().iterator());
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.portlet.PortletRequest#getPortalContext()
-     */
     public PortalContext getPortalContext() {
         // TODO is MockPortalContext needed?
         throw new UnsupportedOperationException();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.portlet.PortletRequest#getAuthType()
-     */
     public String getAuthType() {
         return authType;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.portlet.PortletRequest#getContextPath()
-     */
     public String getContextPath() {
         return portletContext.getPortletContextName();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.portlet.PortletRequest#getRemoteUser()
-     */
     public String getRemoteUser() {
         return System.getProperty("user.name");
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.portlet.PortletRequest#getUserPrincipal()
-     */
     public Principal getUserPrincipal() {
         throw new UnsupportedOperationException();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.portlet.PortletRequest#isUserInRole(java.lang.String)
-     */
     public boolean isUserInRole(String arg0) {
         throw new UnsupportedOperationException();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.portlet.PortletRequest#getAttribute(java.lang.String)
-     */
     public Object getAttribute(String name) {
         return attributes.get(name);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.portlet.PortletRequest#getAttributeNames()
-     */
     public Enumeration getAttributeNames() {
         return new EnumerationAdapter(attributes.keySet().iterator());
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.portlet.PortletRequest#getParameter(java.lang.String)
-     */
     public String getParameter(String name) {
         String[] values = (String[]) parameters.get(name);
         if (values == null || values.length == 0) {
@@ -270,66 +183,30 @@ public class MockPortletRequestImpl implements MockPortletRequest {
         return values[0];
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.portlet.PortletRequest#getParameterNames()
-     */
     public Enumeration getParameterNames() {
         return new EnumerationAdapter(parameters.keySet().iterator());
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.portlet.PortletRequest#getParameterValues(java.lang.String)
-     */
     public String[] getParameterValues(String name) {
         return (String[]) parameters.get(name);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.portlet.PortletRequest#getParameterMap()
-     */
     public Map getParameterMap() {
         return parameters;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.portlet.PortletRequest#isSecure()
-     */
     public boolean isSecure() {
         return false;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.portlet.PortletRequest#setAttribute(java.lang.String,
-     *      java.lang.Object)
-     */
     public void setAttribute(String name, Object value) {
         attributes.put(name, value);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.portlet.PortletRequest#removeAttribute(java.lang.String)
-     */
     public void removeAttribute(String name) {
         attributes.remove(name);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.portlet.PortletRequest#getRequestedSessionId()
-     */
     public String getRequestedSessionId() {
         if (session != null) {
             return session.getId();
@@ -337,11 +214,6 @@ public class MockPortletRequestImpl implements MockPortletRequest {
         return null;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.portlet.PortletRequest#isRequestedSessionIdValid()
-     */
     public boolean isRequestedSessionIdValid() {
         if (session != null) {
             return session.isValid();
@@ -349,65 +221,30 @@ public class MockPortletRequestImpl implements MockPortletRequest {
         return false;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.portlet.PortletRequest#getResponseContentType()
-     */
     public String getResponseContentType() {
         return (String) contentTypes.get(0);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.portlet.PortletRequest#getResponseContentTypes()
-     */
     public Enumeration getResponseContentTypes() {
         return new EnumerationAdapter(contentTypes.iterator());
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.portlet.PortletRequest#getLocale()
-     */
     public Locale getLocale() {
         return (Locale) locales.get(0);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.portlet.PortletRequest#getLocales()
-     */
     public Enumeration getLocales() {
         return new EnumerationAdapter(locales.iterator());
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.portlet.PortletRequest#getScheme()
-     */
     public String getScheme() {
         return scheme;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.portlet.PortletRequest#getServerName()
-     */
     public String getServerName() {
         return serverName;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.portlet.PortletRequest#getServerPort()
-     */
     public int getServerPort() {
         return serverPort;
     }

@@ -18,13 +18,29 @@ package org.seasar.framework.mock.portlet;
 import javax.portlet.PortletSession;
 
 /**
+ * モック用の<code>PortletSession</code>のインターフェースです。
+ * 
  * @author shinsuke
  * 
  */
 public interface MockPortletSession extends PortletSession {
+
+    /**
+     * 有効かどうかを返します。。
+     * 
+     * @return 有効かどうか
+     */
     boolean isValid();
 
+    /**
+     * 有効かどうかを設定します。
+     * 
+     * @param valid
+     */
     void setValid(boolean valid);
 
+    /**
+     * セッションにアクセスします。
+     */
     void access();
 }

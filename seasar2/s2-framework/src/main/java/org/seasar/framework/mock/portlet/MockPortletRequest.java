@@ -20,33 +20,106 @@ import java.util.Locale;
 import javax.portlet.PortletRequest;
 
 /**
+ * モック用の<code>PortletRequest</code>のインターフェースです。
+ * 
  * @author shinsuke
  * 
  */
 public interface MockPortletRequest extends PortletRequest {
+
+    /**
+     * プロパティを追加します。
+     * 
+     * @param name
+     * @param value
+     */
     public void addProperty(String name, Object value);
 
+    /**
+     * <code>authType</code>を設定します。
+     * 
+     * @param authType
+     */
     public void setAuthType(String authType);
 
+    /**
+     * パラメータを追加します。
+     * 
+     * @param name
+     * @param value
+     */
     public void addParameter(String name, String value);
 
+    /**
+     * 配列のパラメータを追加します。
+     * 
+     * @param name
+     * @param values
+     */
     public void addParameter(String name, String[] values);
 
+    /**
+     * パラメータを設定します。
+     * 
+     * @param name
+     * @param value
+     */
     public void setParameter(String name, String value);
 
+    /**
+     * 配列のパラメータを設定します。
+     * 
+     * @param name
+     * @param values
+     */
     public void setParameter(String name, String[] values);
 
+    /**
+     * レスポンスの<code>contentType</code>を追加します。
+     * 
+     * @param contentType
+     */
     public void addResponseContentType(String contentType);
 
+    /**
+     * レスポンスの<code>contentType</code>を削除します。
+     * 
+     * @param contentType
+     */
     public void removeResponseContentType(String contentType);
 
+    /**
+     * {@link Locale}を追加します。
+     * 
+     * @param locale
+     */
     public void addLocale(Locale locale);
 
+    /**
+     * {@link Locale}を削除します。
+     * 
+     * @param locale
+     */
     public void removeLocale(Locale locale);
 
+    /**
+     * <code>scheme</code>を設定します。
+     * 
+     * @param scheme
+     */
     public void setScheme(String scheme);
 
+    /**
+     * サーバ名を設定します。
+     * 
+     * @param serverName
+     */
     public void setServerName(String serverName);
 
+    /**
+     * サーバの<code>port</code>を設定します。
+     * 
+     * @param serverPort
+     */
     public void setServerPort(int serverPort);
 }

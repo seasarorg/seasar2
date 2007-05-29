@@ -20,12 +20,24 @@ import java.io.PrintWriter;
 import javax.servlet.ServletOutputStream;
 
 /**
+ * Portletのモック用の<code>ServletOutputStream</code>です。
+ * 
  * @author shot
  */
 public abstract class MockPortletOutputStream extends ServletOutputStream {
-    
+
+    /**
+     * {@link PrintWriter}を返します。
+     * 
+     * @return {@link PrintWriter}
+     */
     public abstract PrintWriter getPrintWriter();
 
+    /**
+     * {@link PrintWriter}を設定します。
+     * 
+     * @param writer
+     */
     public abstract void setPrintWriter(PrintWriter writer);
 
 }

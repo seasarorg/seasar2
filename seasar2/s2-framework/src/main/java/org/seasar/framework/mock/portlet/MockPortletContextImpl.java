@@ -32,14 +32,25 @@ import org.seasar.framework.util.ResourceUtil;
 import org.seasar.framework.util.StringUtil;
 
 /**
+ * {@link MockPortletContext}の実装クラスです。
+ * 
  * @author shinsuke
  * 
  */
 public class MockPortletContextImpl implements MockPortletContext {
+    /**
+     * MAJORバージョン
+     */
     public static final int MAJOR_VERSION = 1;
 
+    /**
+     * MINORバージョン
+     */
     public static final int MINOR_VERSION = 0;
 
+    /**
+     * SERVER情報
+     */
     public static final String SERVER_INFO = "seasar/2.0";
 
     private String path;
@@ -50,6 +61,11 @@ public class MockPortletContextImpl implements MockPortletContext {
 
     private Map mimeTypes = new HashMap();
 
+    /**
+     * {@link MockPortletContextImpl}を作成します。
+     * 
+     * @param path
+     */
     public MockPortletContextImpl(String path) {
         if (path == null || path.charAt(0) != '/') {
             path = "/";
@@ -57,110 +73,50 @@ public class MockPortletContextImpl implements MockPortletContext {
         this.path = path;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.portlet.PortletContext#getAttribute(java.lang.String)
-     */
     public Object getAttribute(String name) {
         return attributes.get(name);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.portlet.PortletContext#getAttributeNames()
-     */
     public Enumeration getAttributeNames() {
         return new EnumerationAdapter(attributes.keySet().iterator());
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.portlet.PortletContext#getInitParameter(java.lang.String)
-     */
     public String getInitParameter(String name) {
         return (String) initParameters.get(name);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.portlet.PortletContext#getInitParameterNames()
-     */
     public Enumeration getInitParameterNames() {
         return new EnumerationAdapter(initParameters.keySet().iterator());
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.portlet.PortletContext#getMajorVersion()
-     */
     public int getMajorVersion() {
         return MAJOR_VERSION;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.portlet.PortletContext#getMimeType(java.lang.String)
-     */
     public String getMimeType(String file) {
         return (String) mimeTypes.get(file);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.portlet.PortletContext#getMinorVersion()
-     */
     public int getMinorVersion() {
         return MINOR_VERSION;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.portlet.PortletContext#getNamedDispatcher(java.lang.String)
-     */
     public PortletRequestDispatcher getNamedDispatcher(String arg0) {
         return new MockPortletRequestDispatcherImpl();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.portlet.PortletContext#getPortletContextName()
-     */
     public String getPortletContextName() {
         return path;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.portlet.PortletContext#getRealPath(java.lang.String)
-     */
     public String getRealPath(String path) {
         return ResourceUtil.getResource(adjustPath(path)).getFile();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.portlet.PortletContext#getRequestDispatcher(java.lang.String)
-     */
     public PortletRequestDispatcher getRequestDispatcher(String arg0) {
         return new MockPortletRequestDispatcherImpl();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.portlet.PortletContext#getResource(java.lang.String)
-     */
     public URL getResource(String path) throws MalformedURLException {
         path = adjustPath(path);
         if (ResourceUtil.isExist(path)) {
@@ -169,11 +125,6 @@ public class MockPortletContextImpl implements MockPortletContext {
         return new URL(path);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.portlet.PortletContext#getResourceAsStream(java.lang.String)
-     */
     public InputStream getResourceAsStream(String path) {
         path = adjustPath(path);
         if (ResourceUtil.isExist(path)) {
@@ -186,11 +137,6 @@ public class MockPortletContextImpl implements MockPortletContext {
         return null;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.portlet.PortletContext#getResourcePaths(java.lang.String)
-     */
     public Set getResourcePaths(String path) {
         File src = ResourceUtil.getResourceAsFile(".");
         File root = src.getParentFile();
@@ -221,50 +167,23 @@ public class MockPortletContextImpl implements MockPortletContext {
         return null;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.portlet.PortletContext#getServerInfo()
-     */
     public String getServerInfo() {
         return SERVER_INFO;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.portlet.PortletContext#log(java.lang.String,
-     *      java.lang.Throwable)
-     */
     public void log(String message, Throwable ex) {
         System.out.println(message);
         ex.printStackTrace();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.portlet.PortletContext#log(java.lang.String)
-     */
     public void log(String message) {
         System.out.println(message);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.portlet.PortletContext#removeAttribute(java.lang.String)
-     */
     public void removeAttribute(String name) {
         attributes.remove(name);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.portlet.PortletContext#setAttribute(java.lang.String,
-     *      java.lang.Object)
-     */
     public void setAttribute(String name, Object value) {
         attributes.put(name, value);
     }

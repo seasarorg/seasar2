@@ -19,12 +19,19 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 /**
+ * {@link MockPortletOutputStream}の実装クラスです。
+ * 
  * @author shot
  */
 public class MockPortletOutputStreamImpl extends MockPortletOutputStream {
 
     private PrintWriter writer;
 
+    /**
+     * {@link MockPortletOutputStreamImpl}を作成します。
+     * 
+     * @param writer
+     */
     public MockPortletOutputStreamImpl(PrintWriter writer) {
         setPrintWriter(writer);
     }

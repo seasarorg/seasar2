@@ -25,6 +25,8 @@ import javax.portlet.PortletSession;
 import org.seasar.framework.util.EnumerationAdapter;
 
 /**
+ * {@link MockPortletSession}の実装クラスです。
+ * 
  * @author shinsuke
  * 
  */
@@ -47,25 +49,20 @@ public class MockPortletSessionImpl implements MockPortletSession {
 
     private Map applicationAttributes = new HashMap();
 
+    /**
+     * {@link MockPortletSessionImpl}を作成します。
+     * 
+     * @param portletContext
+     */
     public MockPortletSessionImpl(PortletContext portletContext) {
         this.portletContext = portletContext;
         this.id = "id/" + hashCode();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.portlet.PortletSession#getAttribute(java.lang.String)
-     */
     public Object getAttribute(String name) {
         return portletAttributes.get(name);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.portlet.PortletSession#getAttribute(java.lang.String, int)
-     */
     public Object getAttribute(String name, int scope) {
         if (scope == PortletSession.APPLICATION_SCOPE) {
             return applicationAttributes.get(name);
@@ -73,20 +70,10 @@ public class MockPortletSessionImpl implements MockPortletSession {
         return portletAttributes.get(name);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.portlet.PortletSession#getAttributeNames()
-     */
     public Enumeration getAttributeNames() {
         return new EnumerationAdapter(portletAttributes.keySet().iterator());
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.portlet.PortletSession#getAttributeNames(int)
-     */
     public Enumeration getAttributeNames(int scope) {
         if (scope == PortletSession.APPLICATION_SCOPE) {
             return new EnumerationAdapter(applicationAttributes.keySet()
@@ -95,47 +82,22 @@ public class MockPortletSessionImpl implements MockPortletSession {
         return new EnumerationAdapter(portletAttributes.keySet().iterator());
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.portlet.PortletSession#getCreationTime()
-     */
     public long getCreationTime() {
         return creationTime;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.portlet.PortletSession#getId()
-     */
     public String getId() {
         return id;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.portlet.PortletSession#getLastAccessedTime()
-     */
     public long getLastAccessedTime() {
         return lastAccessedTime;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.portlet.PortletSession#getMaxInactiveInterval()
-     */
     public int getMaxInactiveInterval() {
         return maxInactiveInterval;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.portlet.PortletSession#invalidate()
-     */
     public void invalidate() {
         if (!valid) {
             return;
@@ -145,29 +107,14 @@ public class MockPortletSessionImpl implements MockPortletSession {
         valid = false;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.portlet.PortletSession#isNew()
-     */
     public boolean isNew() {
         return new_;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.portlet.PortletSession#removeAttribute(java.lang.String)
-     */
     public void removeAttribute(String name) {
         portletAttributes.remove(name);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.portlet.PortletSession#removeAttribute(java.lang.String, int)
-     */
     public void removeAttribute(String name, int scope) {
         if (scope == PortletSession.APPLICATION_SCOPE) {
             applicationAttributes.remove(name);
@@ -175,22 +122,10 @@ public class MockPortletSessionImpl implements MockPortletSession {
         portletAttributes.remove(name);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.portlet.PortletSession#setAttribute(java.lang.String,
-     *      java.lang.Object)
-     */
     public void setAttribute(String name, Object value) {
         portletAttributes.put(name, value);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.portlet.PortletSession#setAttribute(java.lang.String,
-     *      java.lang.Object, int)
-     */
     public void setAttribute(String name, Object value, int scope) {
         if (scope == PortletSession.APPLICATION_SCOPE) {
             applicationAttributes.put(name, value);
@@ -198,20 +133,10 @@ public class MockPortletSessionImpl implements MockPortletSession {
         portletAttributes.put(name, value);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.portlet.PortletSession#setMaxInactiveInterval(int)
-     */
     public void setMaxInactiveInterval(int maxInactiveInterval) {
         this.maxInactiveInterval = maxInactiveInterval;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.portlet.PortletSession#getPortletContext()
-     */
     public PortletContext getPortletContext() {
         return portletContext;
     }

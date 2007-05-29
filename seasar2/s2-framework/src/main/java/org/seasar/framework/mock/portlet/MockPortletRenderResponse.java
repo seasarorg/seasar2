@@ -20,12 +20,24 @@ import java.util.Locale;
 import javax.portlet.RenderResponse;
 
 /**
+ * Portletのモック用の<code>RenderResponse</code>のインターフェースです。
+ * 
  * @author shot
  * 
  */
 public interface MockPortletRenderResponse extends RenderResponse {
 
+    /**
+     * 名前空間を設定します。
+     * 
+     * @param namespace
+     */
     void setNamespace(String namespace);
-    
+
+    /**
+     * {@link Locale}を設定します。
+     * 
+     * @param locale
+     */
     void setLocale(Locale locale);
 }

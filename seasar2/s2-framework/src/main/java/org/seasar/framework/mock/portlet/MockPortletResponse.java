@@ -18,6 +18,8 @@ package org.seasar.framework.mock.portlet;
 import javax.portlet.PortletResponse;
 
 /**
+ * モック用の<code>PortletResponse</code>のインターフェースです。
+ * 
  * @author shot
  * 
  */

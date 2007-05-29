@@ -21,23 +21,25 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * {@link MockPortletResponse}の実装クラスです。
+ * 
  * @author shot
  * 
  */
 public class MockPortletResponseImpl implements MockPortletResponse {
 
     private Map valueMap = new HashMap();
-    
+
     private Map onlyValueMap = new HashMap();
-    
+
     public void addProperty(String key, String value) {
-        if(key == null) {
+        if (key == null) {
             throw new IllegalArgumentException();
         }
-        if(valueMap.containsKey(key)) {
-            List list = (List)valueMap.get(key);
+        if (valueMap.containsKey(key)) {
+            List list = (List) valueMap.get(key);
             list.add(value);
-        }else {
+        } else {
             List list = new ArrayList();
             list.add(value);
             valueMap.put(key, list);
@@ -45,7 +47,7 @@ public class MockPortletResponseImpl implements MockPortletResponse {
     }
 
     public void setProperty(String key, String value) {
-        if(key == null) {
+        if (key == null) {
             throw new IllegalArgumentException();
         }
         onlyValueMap.put(key, value);
