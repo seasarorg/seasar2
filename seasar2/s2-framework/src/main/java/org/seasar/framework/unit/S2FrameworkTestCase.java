@@ -59,6 +59,8 @@ import org.seasar.framework.util.ResourceUtil;
 import org.seasar.framework.util.StringUtil;
 
 /**
+ * Seasar2を使うテストを行なうための<code>TestCase</code>です。
+ * 
  * @author higa
  */
 public abstract class S2FrameworkTestCase extends TestCase {
@@ -92,13 +94,26 @@ public abstract class S2FrameworkTestCase extends TestCase {
     private AnnotationHandler annotationHandler = AnnotationHandlerFactory
             .getAnnotationHandler();
 
+    /**
+     * {@link S2FrameworkTestCase}を作成します。
+     */
     public S2FrameworkTestCase() {
     }
 
+    /**
+     * {@link S2FrameworkTestCase}を作成します。
+     * 
+     * @param name
+     */
     public S2FrameworkTestCase(String name) {
         super(name);
     }
 
+    /**
+     * WARM deployかどうかを返します。
+     * 
+     * @return WARM deployかどうか
+     */
     public boolean isWarmDeploy() {
         return warmDeploy && !ResourceUtil.isExist("s2container.dicon")
                 && ResourceUtil.isExist("convention.dicon")
@@ -106,35 +121,81 @@ public abstract class S2FrameworkTestCase extends TestCase {
                 && ResourceUtil.isExist("customizer.dicon");
     }
 
+    /**
+     * WARM deployかどうかを設定します。
+     * 
+     * @param warmDeploy
+     */
     public void setWarmDeploy(boolean warmDeploy) {
         this.warmDeploy = warmDeploy;
     }
 
+    /**
+     * {@link S2Container}を返します。
+     * 
+     * @return {@link S2Container}
+     */
     public S2Container getContainer() {
         return container;
     }
 
+    /**
+     * コンポーネントを返します。
+     * 
+     * @param componentName
+     * @return
+     */
     public Object getComponent(String componentName) {
         return container.getComponent(componentName);
     }
 
+    /**
+     * コンポーネントを返します。
+     * 
+     * @param componentClass
+     * @return
+     */
     public Object getComponent(Class componentClass) {
         return container.getComponent(componentClass);
     }
 
+    /**
+     * {@link ComponentDef}を返します。
+     * 
+     * @param componentName
+     * @return {@link ComponentDef}
+     */
     public ComponentDef getComponentDef(String componentName) {
         return container.getComponentDef(componentName);
     }
 
+    /**
+     * {@link ComponentDef}を返します。
+     * 
+     * @param componentClass
+     * @return {@link ComponentDef}
+     */
     public ComponentDef getComponentDef(Class componentClass) {
         return container.getComponentDef(componentClass);
     }
 
+    /**
+     * コンポーネントを登録します。
+     * 
+     * @param componentClass
+     * @see #register(Class, String)
+     */
     public void register(Class componentClass) {
         register(componentClass, namingConvention
                 .fromClassNameToComponentName(componentClass.getName()));
     }
 
+    /**
+     * コンポーネントを登録します。
+     * 
+     * @param componentClass
+     * @param componentName
+     */
     public void register(Class componentClass, String componentName) {
         ComponentDef cd = annotationHandler.createComponentDef(componentClass,
                 InstanceDefFactory.SINGLETON);
@@ -147,18 +208,39 @@ public abstract class S2FrameworkTestCase extends TestCase {
         container.register(cd);
     }
 
+    /**
+     * コンポーネントを登録します。
+     * 
+     * @param component
+     */
     public void register(Object component) {
         container.register(component);
     }
 
+    /**
+     * コンポーネントを登録します。
+     * 
+     * @param component
+     * @param componentName
+     */
     public void register(Object component, String componentName) {
         container.register(component, componentName);
     }
 
+    /**
+     * コンポーネントを登録します。
+     * 
+     * @param componentDef
+     */
     public void register(ComponentDef componentDef) {
         container.register(componentDef);
     }
 
+    /**
+     * diconファイルをインクルードします。
+     * 
+     * @param path
+     */
     public void include(String path) {
         S2ContainerFactory.include(container, convertPath(path));
     }

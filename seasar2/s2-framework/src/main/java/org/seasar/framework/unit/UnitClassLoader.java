@@ -16,8 +16,10 @@
 package org.seasar.framework.unit;
 
 /**
+ * <code>UnitTest</code>用の{@link ClassLoader}です。
+ * 
  * @author higa
- *
+ * 
  */
 public class UnitClassLoader extends ClassLoader {
 
