@@ -65,6 +65,9 @@ public class WarmdeployBehaviorTest extends S2FrameworkTestCase {
         assertTrue(getContainer().hasComponentDef(FooDao.class));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testChild() throws Exception {
         S2Container child = new S2ContainerImpl();
         getContainer().include(child);

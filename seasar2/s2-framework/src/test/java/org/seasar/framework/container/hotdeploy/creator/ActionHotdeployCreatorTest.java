@@ -55,6 +55,9 @@ public class ActionHotdeployCreatorTest extends HotdeployCreatorTestCase {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public void testChild() throws Exception {
         S2Container child = new S2ContainerImpl();
         getContainer().include(child);
