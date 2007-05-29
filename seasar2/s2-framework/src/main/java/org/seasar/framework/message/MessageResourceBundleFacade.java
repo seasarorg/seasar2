@@ -29,6 +29,8 @@ import org.seasar.framework.util.ResourceUtil;
 import org.seasar.framework.util.URLUtil;
 
 /**
+ * {@link MessageResourceBundle}をキャッシュするクラスです。
+ * 
  * @author shot
  * @author higa
  */
@@ -42,10 +44,20 @@ public class MessageResourceBundleFacade {
 
     private MessageResourceBundleFacade parent;
 
+    /**
+     * {@link MessageResourceBundleFacade}を作成します。
+     * 
+     * @param url
+     */
     public MessageResourceBundleFacade(URL url) {
         setup(url);
     }
 
+    /**
+     * {@link MessageResourceBundle}を返します。
+     * 
+     * @return
+     */
     public synchronized MessageResourceBundle getBundle() {
         if (isModified()) {
             bundle = createBundle(file);
@@ -56,10 +68,20 @@ public class MessageResourceBundleFacade {
         return bundle;
     }
 
+    /**
+     * 親を返します。
+     * 
+     * @return 親
+     */
     public synchronized MessageResourceBundleFacade getParent() {
         return parent;
     }
 
+    /**
+     * 親を設定します。
+     * 
+     * @param parent
+     */
     public synchronized void setParent(MessageResourceBundleFacade parent) {
         this.parent = parent;
     }

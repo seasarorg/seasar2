@@ -25,6 +25,8 @@ import org.seasar.framework.util.AssertionUtil;
 import org.seasar.framework.util.ResourceUtil;
 
 /**
+ * {@link MessageResourceBundle}を取得するためのクラスです。
+ * 
  * @author shot
  */
 public class MessageResourceBundleFactory {
@@ -33,11 +35,28 @@ public class MessageResourceBundleFactory {
 
     private static Map cache = new HashMap();
 
+    /**
+     * {@link MessageResourceBundle}を返します。
+     * 
+     * @param baseName
+     * @return {@link MessageResourceBundle}
+     * @see #getBundle(String, Locale)
+     */
     public static MessageResourceBundle getBundle(String baseName) {
         return getBundle(baseName, Locale.getDefault());
     }
 
-    public static MessageResourceBundle getBundle(String baseName, Locale locale) {
+    /**
+     * {@link MessageResourceBundle}を返します。
+     * 
+     * @param baseName
+     * @param locale
+     * @return {@link MessageResourceBundle}
+     * @throws ResourceNotFoundRuntimeException
+     *             リソースが見つからなかった場合
+     */
+    public static MessageResourceBundle getBundle(String baseName, Locale locale)
+            throws ResourceNotFoundRuntimeException {
         MessageResourceBundle bundle = getNullableBundle(baseName, locale);
         if (bundle != null) {
             return bundle;
@@ -45,10 +64,24 @@ public class MessageResourceBundleFactory {
         throw new ResourceNotFoundRuntimeException(baseName);
     }
 
+    /**
+     * {@link MessageResourceBundle}を返します。 リソースが見つからなかった場合は、 nullを返します。
+     * 
+     * @param baseName
+     * @return {@link MessageResourceBundle}
+     * @see #getNullableBundle(String, Locale)
+     */
     public static MessageResourceBundle getNullableBundle(String baseName) {
         return getNullableBundle(baseName, Locale.getDefault());
     }
 
+    /**
+     * {@link MessageResourceBundle}を返します。 リソースが見つからなかった場合は、 nullを返します。
+     * 
+     * @param baseName
+     * @param locale
+     * @return {@link MessageResourceBundle}
+     */
     public static MessageResourceBundle getNullableBundle(String baseName,
             Locale locale) {
         AssertionUtil.assertNotNull("baseName", baseName);
@@ -87,8 +120,10 @@ public class MessageResourceBundleFactory {
         return null;
     }
 
+    /**
+     * キャッシュしている内容をクリアします。
+     */
     public static void clear() {
         cache.clear();
     }
-
 }

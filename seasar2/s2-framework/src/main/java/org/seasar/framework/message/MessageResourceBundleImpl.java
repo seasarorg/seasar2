@@ -18,6 +18,8 @@ package org.seasar.framework.message;
 import java.util.Properties;
 
 /**
+ * {@link MessageResourceBundle}の実装クラスです。
+ * 
  * @author shot
  */
 public class MessageResourceBundleImpl implements MessageResourceBundle {
@@ -26,10 +28,21 @@ public class MessageResourceBundleImpl implements MessageResourceBundle {
 
     private MessageResourceBundle parent;
 
+    /**
+     * {@link MessageResourceBundleImpl}を作成します。
+     * 
+     * @param prop
+     */
     public MessageResourceBundleImpl(Properties prop) {
         this.prop = prop;
     }
 
+    /**
+     * {@link MessageResourceBundleImpl}を作成します。
+     * 
+     * @param prop
+     * @param parent
+     */
     public MessageResourceBundleImpl(Properties prop,
             MessageResourceBundle parent) {
         this(prop);

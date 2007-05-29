@@ -16,14 +16,32 @@
 package org.seasar.framework.message;
 
 /**
+ * プロパティファイルに登録されているメッセージを扱うためのインターフェースです。
+ * 
  * @author shot
  */
 public interface MessageResourceBundle {
 
+    /**
+     * キーに対応するメッセージを返します。
+     * 
+     * @param key
+     * @return キーに対応するメッセージ
+     */
     public String get(String key);
 
+    /**
+     * 親を返します。
+     * 
+     * @return 親
+     */
     public MessageResourceBundle getParent();
 
+    /**
+     * 親を設定します。
+     * 
+     * @param parent
+     */
     public void setParent(MessageResourceBundle parent);
 
 }

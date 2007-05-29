@@ -18,6 +18,8 @@ package org.seasar.framework.message;
 import java.text.MessageFormat;
 
 /**
+ * メッセージコードと引数からメッセージを組み立てるクラスです。
+ * 
  * @author higa
  * 
  */
@@ -29,6 +31,13 @@ public final class MessageFormatter {
     private MessageFormatter() {
     }
 
+    /**
+     * メッセージを返します。
+     * 
+     * @param messageCode
+     * @param args
+     * @return メッセージ
+     */
     public static String getMessage(String messageCode, Object[] args) {
         if (messageCode == null) {
             messageCode = "";
@@ -37,11 +46,25 @@ public final class MessageFormatter {
                 args));
     }
 
+    /**
+     * メッセージコードつきのメッセージを返します。
+     * 
+     * @param messageCode
+     * @param simpleMessage
+     * @return メッセージコードつきのメッセージ
+     */
     public static String getFormattedMessage(String messageCode,
             String simpleMessage) {
         return "[" + messageCode + "]" + simpleMessage;
     }
 
+    /**
+     * メッセージコードなしの単純なメッセージを返します。
+     * 
+     * @param messageCode
+     * @param arguments
+     * @return メッセージコードなしの単純なメッセージ
+     */
     public static String getSimpleMessage(String messageCode, Object[] arguments) {
 
         try {
