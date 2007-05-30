@@ -29,6 +29,12 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
 
+/**
+ * SAXのイベントを処理するためのクラスです。
+ * 
+ * @author higa
+ * 
+ */
 public final class SaxHandler extends DefaultHandler {
 
     private TagHandlerRule tagHandlerRule;
@@ -39,10 +45,20 @@ public final class SaxHandler extends DefaultHandler {
 
     private Locator locator;
 
+    /**
+     * {@link SaxHandler}を作成します。
+     * 
+     * @param tagHandlerRule
+     */
     public SaxHandler(TagHandlerRule tagHandlerRule) {
         this.tagHandlerRule = tagHandlerRule;
     }
 
+    /**
+     * {@link TagHandlerContext}を返します。
+     * 
+     * @return {@link TagHandlerContext}
+     */
     public TagHandlerContext getTagHandlerContext() {
         return context;
     }
@@ -121,10 +137,21 @@ public final class SaxHandler extends DefaultHandler {
         System.err.println(e);
     }
 
+    /**
+     * DTDの実際のパスを登録します。
+     * 
+     * @param publicId
+     * @param dtdPath
+     */
     public void registerDtdPath(String publicId, String dtdPath) {
         dtdPaths.put(publicId, dtdPath);
     }
 
+    /**
+     * 処理された結果を返します。
+     * 
+     * @return 処理された結果
+     */
     public Object getResult() {
         return context.getResult();
     }

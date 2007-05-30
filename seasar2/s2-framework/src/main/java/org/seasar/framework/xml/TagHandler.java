@@ -19,16 +19,40 @@ import java.io.Serializable;
 
 import org.xml.sax.Attributes;
 
+/**
+ * XMLのタグを処理するベースクラスです。
+ * 
+ * @author higa
+ * 
+ */
 public class TagHandler implements Serializable {
 
     static final long serialVersionUID = 1L;
 
+    /**
+     * タグの処理を開始します。
+     * 
+     * @param context
+     * @param attributes
+     */
     public void start(TagHandlerContext context, Attributes attributes) {
     }
 
+    /**
+     * 追加されたボディを処理します。
+     * 
+     * @param context
+     * @param body
+     */
     public void appendBody(TagHandlerContext context, String body) {
     }
 
+    /**
+     * タグの処理を終了します。
+     * 
+     * @param context
+     * @param body
+     */
     public void end(TagHandlerContext context, String body) {
     }
 }

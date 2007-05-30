@@ -21,6 +21,12 @@ import java.util.Stack;
 
 import org.xml.sax.Locator;
 
+/**
+ * XMLを処理するときのコンテキストを保持するクラスです。
+ * 
+ * @author higa
+ * 
+ */
 public final class TagHandlerContext {
 
     private static final Integer ONE = new Integer(1);
@@ -65,6 +71,11 @@ public final class TagHandlerContext {
         }
     };
 
+    /**
+     * コンテキストに情報を追加します。
+     * 
+     * @param o
+     */
     public void push(Object o) {
         if (stack.empty()) {
             result = o;
@@ -72,22 +83,49 @@ public final class TagHandlerContext {
         stack.push(o);
     }
 
+    /**
+     * 結果を返します。
+     * 
+     * @return 結果
+     */
     public Object getResult() {
         return result;
     }
 
+    /**
+     * コンテキストに積まれている情報の最も上のものを取り出します。 取り出した情報はコンテキストから削除されます。
+     * 
+     * @return 最も上の情報
+     */
     public Object pop() {
         return stack.pop();
     }
 
+    /**
+     * コンテキストに積まれている情報の最も上のものを取り出します。 取り出した情報はコンテキストに残ったままです。
+     * 
+     * @return 最も上の情報
+     */
     public Object peek() {
         return stack.peek();
     }
 
+    /**
+     * コンテキストに積まれている情報で上から指定されたインデックスのものを取り出します。 取り出した情報はコンテキストに残ったままです。
+     * 
+     * @param n
+     * @return 上から指定されたインデックスの情報
+     */
     public Object peek(final int n) {
         return stack.get(stack.size() - n - 1);
     }
 
+    /**
+     * コンテキストに積まれている情報で指定されたクラスのインスタンスを取り出します。 取り出した情報はコンテキストに残ったままです。
+     * 
+     * @param clazz
+     * @return 指定されたクラスのインスタンス
+     */
     public Object peek(final Class clazz) {
         for (int i = stack.size() - 1; i >= 0; --i) {
             Object o = stack.get(i);
@@ -98,30 +136,67 @@ public final class TagHandlerContext {
         return null;
     }
 
+    /**
+     * 最初にコンテキストに積まれた情報を返します。 取り出した情報はコンテキストに残ったままです。
+     * 
+     * @return 最初にコンテキストに積まれた情報
+     */
     public Object peekFirst() {
         return stack.get(0);
     }
 
+    /**
+     * コンテキストのスタックが空かどうかを返します。
+     * 
+     * @return コンテキストのスタックが空かどうか
+     */
     public boolean isEmpty() {
         return stack.isEmpty();
     }
 
+    /**
+     * パラメータを返します。
+     * 
+     * @param name
+     * @return パラメータ
+     */
     public Object getParameter(String name) {
         return parameters.get(name);
     }
 
+    /**
+     * パラメータを追加します。
+     * 
+     * @param name
+     * @param parameter
+     */
     public void addParameter(String name, Object parameter) {
         parameters.put(name, parameter);
     }
 
+    /**
+     * {@link Locator}を返します。
+     * 
+     * @return {@link Locator}
+     */
     public Locator getLocator() {
         return locator;
     }
 
+    /**
+     * {@link Locator}を設定します。
+     * 
+     * @param locator
+     */
     public void setLocator(Locator locator) {
         this.locator = locator;
     }
 
+    /**
+     * 要素(タグ)の処理を開始します。
+     * 
+     * @param qName
+     */
     public void startElement(String qName) {
         bodyStack.push(body);
         body = new StringBuffer();
@@ -138,19 +213,41 @@ public final class TagHandlerContext {
         detailPath.append("]");
     }
 
+    /**
+     * SAXのParserから呼び出されたcharacters()を処理します。
+     * 
+     * @param buffer
+     * @param start
+     * @param length
+     */
     public void characters(char[] buffer, int start, int length) {
         body.append(buffer, start, length);
         characters.append(buffer, start, length);
     }
 
+    /**
+     * {@link #characters(char[], int, int)}の処理結果を返します。
+     * 
+     * @return {@link #characters(char[], int, int)}の処理結果
+     */
     public String getCharacters() {
         return characters.toString().trim();
     }
 
+    /**
+     * ボディを返します。
+     * 
+     * @return ボディ
+     */
     public String getBody() {
         return body.toString().trim();
     }
 
+    /**
+     * charactersの最後が行の終わりかどうかを返します。
+     * 
+     * @return charactersの最後が行の終わりかどうか
+     */
     public boolean isCharactersEol() {
         if (characters.length() == 0) {
             return false;
@@ -158,10 +255,16 @@ public final class TagHandlerContext {
         return characters.charAt(characters.length() - 1) == '\n';
     }
 
+    /**
+     * charactersをクリアします。
+     */
     public void clearCharacters() {
         characters = new StringBuffer();
     }
 
+    /**
+     * 要素(タグ)の終了処理を行ないます。
+     */
     public void endElement() {
         body = (StringBuffer) bodyStack.pop();
         remoteLastPath(path);
@@ -173,14 +276,29 @@ public final class TagHandlerContext {
         path.delete(path.lastIndexOf("/"), path.length());
     }
 
+    /**
+     * タグのパスを返します。
+     * 
+     * @return タグのパス
+     */
     public String getPath() {
         return path.toString();
     }
 
+    /**
+     * 詳細(何番目に登場したのかも含む)なタグのパスを返します。
+     * 
+     * @return 詳細(何番目に登場したのかも含む)なタグのパス
+     */
     public String getDetailPath() {
         return detailPath.toString();
     }
 
+    /**
+     * qNameを返します。
+     * 
+     * @return qName
+     */
     public String getQName() {
         return qName;
     }
