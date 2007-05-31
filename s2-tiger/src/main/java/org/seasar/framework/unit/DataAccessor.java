@@ -39,6 +39,17 @@ public interface DataAccessor {
     DataSet readXls(String path);
 
     /**
+     * Excelファイルから読み込みんだデータを返します。
+     * 
+     * @param path
+     *            Excelファイルのパス
+     * @param trimString
+     *            文字列に含まれる空白を取り除く場合<code>true</code>
+     * @return データセット
+     */
+    DataSet readXls(String path, boolean trimString);
+
+    /**
      * データセットのデータをExcelに書き込みます。
      * 
      * @param path
@@ -108,6 +119,16 @@ public interface DataAccessor {
     void readXlsWriteDb(String path);
 
     /**
+     * 指定されたExcelファイルのデータをデータベースに書き込みます。
+     * 
+     * @param path
+     *            Excelファイルのパス
+     * @param trimString
+     *            文字列に含まれる空白を取り除く場合<code>true</code>
+     */
+    void readXlsWriteDb(String path, boolean trimString);
+
+    /**
      * 指定されたExcelファイルのデータでデータベースのテーブルの特定行を置換します。
      * 
      * @param path
@@ -116,12 +137,32 @@ public interface DataAccessor {
     void readXlsReplaceDb(String path);
 
     /**
+     * 指定されたExcelファイルのデータでデータベースのテーブルの特定行を置換します。
+     * 
+     * @param path
+     *            Excelファイルのパス
+     * @param trimString
+     *            文字列に含まれる空白を取り除く場合<code>true</code>
+     */
+    void readXlsReplaceDb(String path, boolean trimString);
+
+    /**
      * 指定されたExcelファイルのデータでデータベースのテーブルの全行を置換します。
      * 
      * @param path
      *            Excelファイルのパス
      */
     void readXlsAllReplaceDb(String path);
+
+    /**
+     * 指定されたExcelファイルのデータでデータベースのテーブルの全行を置換します。
+     * 
+     * @param path
+     *            Excelファイルのパス
+     * @param trimString
+     *            文字列に含まれる空白を取り除く場合<code>true</code>
+     */
+    void readXlsAllReplaceDb(String path, boolean trimString);
 
     /**
      * 主キーを条件としてデータベースのデータを再読み込みし、新しいデータを返します。

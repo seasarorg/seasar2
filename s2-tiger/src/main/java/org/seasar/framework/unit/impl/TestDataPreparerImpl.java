@@ -83,14 +83,15 @@ public class TestDataPreparerImpl implements TestDataPreparer {
 
     public void prepare(final TestContext testContext) {
         final String dirPath = testContext.getTestClassPackagePath();
+        final boolean trimString = testContext.isTrimString();
         for (final String path : testDataXlsPaths) {
             if (ResourceUtil.isExist(path)) {
-                readXlsWriteDb(path);
+                readXlsWriteDb(path, trimString);
                 return;
             }
             final String newPath = dirPath + "/" + path;
             if (ResourceUtil.isExist(newPath)) {
-                readXlsWriteDb(newPath);
+                readXlsWriteDb(newPath, trimString);
                 return;
             }
         }
@@ -101,18 +102,20 @@ public class TestDataPreparerImpl implements TestDataPreparer {
      * 
      * @param path
      *            Excelのパス
+     * @param trimString
+     *            文字列に含まれる空白を取り除く場合<code>true</code>
      */
-    protected void readXlsWriteDb(final String path) {
+    protected void readXlsWriteDb(final String path, final boolean trimString) {
         if (replaceDb) {
             if (logger.isDebugEnabled()) {
                 logger.log("DSSR0102", new Object[] { path });
             }
-            dataAccessor.readXlsReplaceDb(path);
+            dataAccessor.readXlsReplaceDb(path, trimString);
         } else {
             if (logger.isDebugEnabled()) {
                 logger.log("DSSR0103", new Object[] { path });
             }
-            dataAccessor.readXlsWriteDb(path);
+            dataAccessor.readXlsWriteDb(path, trimString);
         }
     }
 

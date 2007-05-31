@@ -73,6 +73,9 @@ public class SimpleInternalTestContext implements InternalTestContext {
     /** テストデータを自動準備するかどうかを表すフラグ。デフォルトは<code>true</code> */
     protected boolean autoPreparing = true;
 
+    /** テストデータの文字列に含まれる空白を取り除くかどうかを表すフラグ。デフォルトは<code>true</code> */
+    protected boolean trimString = true;
+
     /** EJB3を使用するかどうかを表すフラグ。デフォルトは<code>false</code> */
     protected boolean ejb3Enabled = false;
 
@@ -121,6 +124,14 @@ public class SimpleInternalTestContext implements InternalTestContext {
 
     public void setAutoPreparing(final boolean autoPreparing) {
         this.autoPreparing = autoPreparing;
+    }
+
+    public void setTrimString(final boolean trimString) {
+        this.trimString = trimString;
+    }
+
+    public boolean isTrimString() {
+        return trimString;
     }
 
     public void setTestClass(final Class<?> testClass) {

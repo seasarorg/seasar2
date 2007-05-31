@@ -49,10 +49,11 @@ public class ExpectedDataReaderImplTest extends S2TestCase {
 
     public static class SubExpectedDataReaderImpl extends
             ExpectedDataReaderImpl {
+
         private static String path;
 
         @Override
-        protected DataSet readXls(final String path) {
+        protected DataSet readXls(final String path, final boolean trimString) {
             SubExpectedDataReaderImpl.path = path;
             return null;
         }

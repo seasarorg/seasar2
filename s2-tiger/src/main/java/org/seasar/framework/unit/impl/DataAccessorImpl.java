@@ -177,7 +177,11 @@ public class DataAccessorImpl implements DataAccessor {
     }
 
     public DataSet readXls(String path) {
-        DataReader reader = new XlsReader(convertPath(path));
+        return readXls(path, true);
+    }
+
+    public DataSet readXls(String path, boolean trimString) {
+        DataReader reader = new XlsReader(convertPath(path), trimString);
         return reader.read();
     }
 
@@ -221,20 +225,32 @@ public class DataAccessorImpl implements DataAccessor {
     }
 
     public void readXlsWriteDb(String path) {
+        readXlsWriteDb(path, true);
+    }
+
+    public void readXlsWriteDb(String path, boolean trimString) {
         flushIfNecessary();
-        writeDb(readXls(path));
+        writeDb(readXls(path, trimString));
     }
 
     public void readXlsReplaceDb(String path) {
+        readXlsAllReplaceDb(path, true);
+    }
+
+    public void readXlsReplaceDb(String path, boolean trimString) {
         flushIfNecessary();
-        DataSet dataSet = readXls(path);
+        DataSet dataSet = readXls(path, trimString);
         deleteDb(dataSet);
         writeDb(dataSet);
     }
 
     public void readXlsAllReplaceDb(String path) {
+        readXlsAllReplaceDb(path, true);
+    }
+
+    public void readXlsAllReplaceDb(String path, boolean trimString) {
         flushIfNecessary();
-        DataSet dataSet = readXls(path);
+        DataSet dataSet = readXls(path, trimString);
         for (int i = dataSet.getTableSize() - 1; i >= 0; --i) {
             deleteTable(dataSet.getTable(i).getTableName());
         }

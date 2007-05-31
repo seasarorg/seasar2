@@ -94,7 +94,7 @@ public interface TestContext {
     void include(String path);
 
     /**
-     * このコンテキストの初期化時に特定のS2コンテナを子コンテナとしてインクルードする場合は<code>true</code>を指定します。
+     * このコンテキストの初期化時に特定のS2コンテナを子コンテナとしてインクルードする場合は<code>true</code>を設定します。
      * 
      * @param autoIncluding
      *            自動インクルードをする場合<code>true</code>
@@ -102,12 +102,27 @@ public interface TestContext {
     void setAutoIncluding(boolean autoIncluding);
 
     /**
-     * テストの実行前にテストデータを事前に準備する場合は<code>true</code>を指定します。
+     * テストの実行前にテストデータを事前に準備する場合は<code>true</code>を設定します。
      * 
      * @param autoPreparing
      *            自動でテストデータを準備する場合<code>true</code>
      */
     void setAutoPreparing(boolean autoPreparing);
+
+    /**
+     * テストデータの文字列に含まれる空白を取り除く場合は<code>true</code>を設定します。
+     * 
+     * @param trimString
+     *            テストデータの文字列に含まれる空白を取り除く場合は<code>true</code>
+     */
+    void setTrimString(boolean trimString);
+
+    /**
+     * テストデータの文字列に含まれる空白を取り除く場合は<code>true</code>を返します。
+     * 
+     * @return テストデータの文字列に含まれる空白を取り除く場合は<code>true</code>、そうでない場合は<code>false</code>
+     */
+    boolean isTrimString();
 
     /**
      * 指定されたキーに対応するコンポーネントを返します。

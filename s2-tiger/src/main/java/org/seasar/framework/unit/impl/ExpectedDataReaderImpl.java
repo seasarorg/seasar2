@@ -71,13 +71,14 @@ public class ExpectedDataReaderImpl implements ExpectedDataReader {
 
     public DataSet read(TestContext testContext) {
         final String dirPath = testContext.getTestClassPackagePath();
+        final boolean trimString = testContext.isTrimString();
         for (final String path : expectedDataXlsPaths) {
             if (ResourceUtil.isExist(path)) {
-                return readXls(path);
+                return readXls(path, trimString);
             }
             final String newPath = dirPath + "/" + path;
             if (ResourceUtil.isExist(newPath)) {
-                return readXls(newPath);
+                return readXls(newPath, trimString);
             }
         }
         return null;
@@ -88,12 +89,14 @@ public class ExpectedDataReaderImpl implements ExpectedDataReader {
      * 
      * @param path
      *            Excelのパス
+     * @param trimString
+     *            文字列に含まれる空白を取り除く場合<code>true</code>
      * @return Excel内のデータのデータセット表現
      */
-    protected DataSet readXls(final String path) {
+    protected DataSet readXls(final String path, final boolean trimString) {
         if (logger.isDebugEnabled()) {
             logger.log("DSSR0104", new Object[] { path });
         }
-        return dataAccessor.readXls(path);
+        return dataAccessor.readXls(path, trimString);
     }
 }

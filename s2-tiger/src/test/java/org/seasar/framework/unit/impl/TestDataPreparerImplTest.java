@@ -47,10 +47,11 @@ public class TestDataPreparerImplTest extends S2TestCase {
     }
 
     public static class SubTestDataPreparerImpl extends TestDataPreparerImpl {
+
         private static String path;
 
         @Override
-        protected void readXlsWriteDb(String path) {
+        protected void readXlsWriteDb(String path, final boolean trimString) {
             SubTestDataPreparerImpl.path = path;
         }
     }
