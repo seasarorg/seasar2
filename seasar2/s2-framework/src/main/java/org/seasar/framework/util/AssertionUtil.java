@@ -18,6 +18,8 @@ package org.seasar.framework.util;
 import org.seasar.framework.exception.EmptyRuntimeException;
 
 /**
+ * 表明についてのユーティリティクラスです。
+ * 
  * @author shot
  */
 public class AssertionUtil {
@@ -25,19 +27,46 @@ public class AssertionUtil {
     private AssertionUtil() {
     }
 
-    public static void assertNotNull(String message, Object obj) {
+    /**
+     * <code>null</code>でないことを表明します。
+     * 
+     * @param message
+     * @param obj
+     * @throws NullPointerException
+     *             <code>null</code>の場合。
+     */
+    public static void assertNotNull(String message, Object obj)
+            throws NullPointerException {
         if (obj == null) {
             throw new NullPointerException(message);
         }
     }
 
-    public static void assertNotEmpty(String message, String s) {
+    /**
+     * 文字列が空あるいは<code>null</code>でないことを表明します。
+     * 
+     * @param message
+     * @param s
+     * @throws EmptyRuntimeException
+     *             文字列が空あるいは<code>null</code>の場合。
+     */
+    public static void assertNotEmpty(String message, String s)
+            throws EmptyRuntimeException {
         if (StringUtil.isEmpty(s)) {
             throw new EmptyRuntimeException(message);
         }
     }
 
-    public static void assertIntegerNotNegative(String message, int num) {
+    /**
+     * <code>int</code>が負でないことを表明します。
+     * 
+     * @param message
+     * @param num
+     * @throws IllegalArgumentException
+     *             <code>int</code>が負の場合。
+     */
+    public static void assertIntegerNotNegative(String message, int num)
+            throws IllegalArgumentException {
         if (num < 0) {
             throw new IllegalArgumentException(message);
         }

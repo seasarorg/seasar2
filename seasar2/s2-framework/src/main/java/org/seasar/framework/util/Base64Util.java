@@ -15,6 +15,12 @@
  */
 package org.seasar.framework.util;
 
+/**
+ * Base64を扱うためのユーティリティクラスです。
+ * 
+ * @author higa
+ * 
+ */
 public final class Base64Util {
 
     private static final char[] ENCODE_TABLE = { 'A', 'B', 'C', 'D', 'E', 'F',
@@ -36,6 +42,12 @@ public final class Base64Util {
         }
     }
 
+    /**
+     * Base64でエンコードします。
+     * 
+     * @param inData
+     * @return エンコードされたデータ
+     */
     public static String encode(final byte[] inData) {
         if (inData == null || inData.length == 0) {
             return "";
@@ -62,6 +74,12 @@ public final class Base64Util {
         return new String(outData);
     }
 
+    /**
+     * Base64でエンコードされたデータをデコードします。
+     * 
+     * @param inData
+     * @return デコードされたデータ
+     */
     public static byte[] decode(final String inData) {
         int num = (inData.length() / 4) - 1;
         int lastBytes = getLastBytes(inData);

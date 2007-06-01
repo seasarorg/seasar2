@@ -21,6 +21,7 @@ import java.sql.SQLException;
 import org.seasar.extension.jdbc.PropertyType;
 import org.seasar.extension.jdbc.ValueType;
 import org.seasar.extension.jdbc.types.ValueTypes;
+import org.seasar.framework.util.StringUtil;
 
 public final class PropertyTypeUtil {
 
@@ -33,7 +34,8 @@ public final class PropertyTypeUtil {
         int count = rsmd.getColumnCount();
         PropertyType[] propertyTypes = new PropertyType[count];
         for (int i = 0; i < count; ++i) {
-            String propertyName = rsmd.getColumnLabel(i + 1);
+            String propertyName = StringUtil.replace(
+                    rsmd.getColumnLabel(i + 1), "_", "");
             ValueType valueType = ValueTypes.getValueType(rsmd
                     .getColumnType(i + 1));
             propertyTypes[i] = new PropertyTypeImpl(propertyName, valueType);

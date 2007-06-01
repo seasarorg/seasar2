@@ -19,6 +19,8 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
+ * 配列を{@link Iterator}にするAdaptorです。
+ * 
  * @author shot
  */
 public class ArrayIterator implements Iterator {
@@ -27,6 +29,11 @@ public class ArrayIterator implements Iterator {
 
     private int index_ = 0;
 
+    /**
+     * {@link ArrayIterator}を作成します。
+     * 
+     * @param items
+     */
     public ArrayIterator(Object items[]) {
         items_ = items;
     }

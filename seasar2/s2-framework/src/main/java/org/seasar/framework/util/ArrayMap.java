@@ -27,6 +27,12 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
+/**
+ * 配列の性質を併せ持つ {@link Map}です。
+ * 
+ * @author higa
+ * 
+ */
 public class ArrayMap extends AbstractMap implements Map, Cloneable,
         Externalizable {
 
@@ -46,10 +52,18 @@ public class ArrayMap extends AbstractMap implements Map, Cloneable,
 
     private transient Set entrySet = null;
 
+    /**
+     * {@link ArrayMap}を作成します。
+     */
     public ArrayMap() {
         this(INITIAL_CAPACITY);
     }
 
+    /**
+     * {@link ArrayMap}を作成します。
+     * 
+     * @param initialCapacity
+     */
     public ArrayMap(int initialCapacity) {
         if (initialCapacity <= 0) {
             initialCapacity = INITIAL_CAPACITY;
@@ -59,6 +73,11 @@ public class ArrayMap extends AbstractMap implements Map, Cloneable,
         threshold = (int) (initialCapacity * LOAD_FACTOR);
     }
 
+    /**
+     * {@link ArrayMap}を作成します。
+     * 
+     * @param map
+     */
     public ArrayMap(Map map) {
         this((int) (map.size() / LOAD_FACTOR) + 1);
         putAll(map);
@@ -76,16 +95,22 @@ public class ArrayMap extends AbstractMap implements Map, Cloneable,
         return indexOf(value) >= 0;
     }
 
+    /**
+     * 値に対するインデックスを返します。
+     * 
+     * @param value
+     * @return 値に対するインデックス
+     */
     public final int indexOf(Object value) {
         if (value != null) {
             for (int i = 0; i < size; i++) {
-                if (value.equals(listTable[i].value_)) {
+                if (value.equals(listTable[i].value)) {
                     return i;
                 }
             }
         } else {
             for (int i = 0; i < size; i++) {
-                if (listTable[i].value_ == null) {
+                if (listTable[i].value == null) {
                     return i;
                 }
             }
@@ -98,14 +123,14 @@ public class ArrayMap extends AbstractMap implements Map, Cloneable,
         if (key != null) {
             int hashCode = key.hashCode();
             int index = (hashCode & 0x7FFFFFFF) % tbl.length;
-            for (Entry e = tbl[index]; e != null; e = e.next_) {
-                if (e.hashCode_ == hashCode && key.equals(e.key_)) {
+            for (Entry e = tbl[index]; e != null; e = e.next) {
+                if (e.hashCode == hashCode && key.equals(e.key)) {
                     return true;
                 }
             }
         } else {
-            for (Entry e = tbl[0]; e != null; e = e.next_) {
-                if (e.key_ == null) {
+            for (Entry e = tbl[0]; e != null; e = e.next) {
+                if (e.key == null) {
                     return true;
                 }
             }
@@ -118,29 +143,47 @@ public class ArrayMap extends AbstractMap implements Map, Cloneable,
         if (key != null) {
             int hashCode = key.hashCode();
             int index = (hashCode & 0x7FFFFFFF) % tbl.length;
-            for (Entry e = tbl[index]; e != null; e = e.next_) {
-                if (e.hashCode_ == hashCode && key.equals(e.key_)) {
-                    return e.value_;
+            for (Entry e = tbl[index]; e != null; e = e.next) {
+                if (e.hashCode == hashCode && key.equals(e.key)) {
+                    return e.value;
                 }
             }
         } else {
-            for (Entry e = tbl[0]; e != null; e = e.next_) {
-                if (e.key_ == null) {
-                    return e.value_;
+            for (Entry e = tbl[0]; e != null; e = e.next) {
+                if (e.key == null) {
+                    return e.value;
                 }
             }
         }
         return null;
     }
 
+    /**
+     * indexに対応する値を返します。
+     * 
+     * @param index
+     * @return indexに対応する値
+     */
     public final Object get(final int index) {
-        return getEntry(index).value_;
+        return getEntry(index).value;
     }
 
+    /**
+     * indexに対応するキーを返します。
+     * 
+     * @param index
+     * @return indexに対応するキー
+     */
     public final Object getKey(final int index) {
-        return getEntry(index).key_;
+        return getEntry(index).key;
     }
 
+    /**
+     * indexに対応する {@link Entry}を返します。
+     * 
+     * @param index
+     * @return indexに対応する {@link Entry}
+     */
     public final Entry getEntry(final int index) {
         if (index >= size) {
             throw new IndexOutOfBoundsException("Index:" + index + ", Size:"
@@ -156,14 +199,14 @@ public class ArrayMap extends AbstractMap implements Map, Cloneable,
         if (key != null) {
             hashCode = key.hashCode();
             index = (hashCode & 0x7FFFFFFF) % mapTable.length;
-            for (Entry e = mapTable[index]; e != null; e = e.next_) {
-                if ((e.hashCode_ == hashCode) && key.equals(e.key_)) {
+            for (Entry e = mapTable[index]; e != null; e = e.next) {
+                if ((e.hashCode == hashCode) && key.equals(e.key)) {
                     return swapValue(e, value);
                 }
             }
         } else {
-            for (Entry e = mapTable[0]; e != null; e = e.next_) {
-                if (e.key_ == null) {
+            for (Entry e = mapTable[0]; e != null; e = e.next) {
+                if (e.key == null) {
                     return swapValue(e, value);
                 }
             }
@@ -176,6 +219,12 @@ public class ArrayMap extends AbstractMap implements Map, Cloneable,
         return null;
     }
 
+    /**
+     * indexに対応する値を設定します。
+     * 
+     * @param index
+     * @param value
+     */
     public final void set(final int index, final Object value) {
         getEntry(index).setValue(value);
     }
@@ -183,7 +232,7 @@ public class ArrayMap extends AbstractMap implements Map, Cloneable,
     public Object remove(final Object key) {
         Entry e = removeMap(key);
         if (e != null) {
-            Object value = e.value_;
+            Object value = e.value;
             removeList(indexOf(e));
             e.clear();
             return value;
@@ -191,11 +240,17 @@ public class ArrayMap extends AbstractMap implements Map, Cloneable,
         return null;
     }
 
+    /**
+     * indexに対応する値を削除します。
+     * 
+     * @param index
+     * @return indexに対応する値
+     */
     public final Object remove(int index) {
         Entry e = removeList(index);
-        Object value = e.value_;
-        removeMap(e.key_);
-        e.value_ = null;
+        Object value = e.value;
+        removeMap(e.key);
+        e.value = null;
         return value;
     }
 
@@ -216,6 +271,11 @@ public class ArrayMap extends AbstractMap implements Map, Cloneable,
         size = 0;
     }
 
+    /**
+     * 配列に変換します。
+     * 
+     * @return 配列
+     */
     public final Object[] toArray() {
         Object[] array = new Object[size];
         for (int i = 0; i < array.length; i++) {
@@ -224,6 +284,12 @@ public class ArrayMap extends AbstractMap implements Map, Cloneable,
         return array;
     }
 
+    /**
+     * 配列に変換します。
+     * 
+     * @param proto
+     * @return 配列
+     */
     public final Object[] toArray(final Object proto[]) {
         Object[] array = proto;
         if (proto.length < size) {
@@ -267,9 +333,8 @@ public class ArrayMap extends AbstractMap implements Map, Cloneable,
                         return false;
                     }
                     Entry entry = (Entry) o;
-                    int index = (entry.hashCode_ & 0x7FFFFFFF)
-                            % mapTable.length;
-                    for (Entry e = mapTable[index]; e != null; e = e.next_) {
+                    int index = (entry.hashCode & 0x7FFFFFFF) % mapTable.length;
+                    for (Entry e = mapTable[index]; e != null; e = e.next) {
                         if (e.equals(entry)) {
                             return true;
                         }
@@ -282,7 +347,7 @@ public class ArrayMap extends AbstractMap implements Map, Cloneable,
                         return false;
                     }
                     Entry entry = (Entry) o;
-                    return ArrayMap.this.remove(entry.key_) != null;
+                    return ArrayMap.this.remove(entry.key) != null;
                 }
 
                 public int size() {
@@ -301,8 +366,8 @@ public class ArrayMap extends AbstractMap implements Map, Cloneable,
         out.writeInt(listTable.length);
         out.writeInt(size);
         for (int i = 0; i < size; i++) {
-            out.writeObject(listTable[i].key_);
-            out.writeObject(listTable[i].value_);
+            out.writeObject(listTable[i].key);
+            out.writeObject(listTable[i].value);
         }
     }
 
@@ -346,23 +411,23 @@ public class ArrayMap extends AbstractMap implements Map, Cloneable,
         if (key != null) {
             hashCode = key.hashCode();
             index = (hashCode & 0x7FFFFFFF) % mapTable.length;
-            for (Entry e = mapTable[index], prev = null; e != null; prev = e, e = e.next_) {
-                if ((e.hashCode_ == hashCode) && key.equals(e.key_)) {
+            for (Entry e = mapTable[index], prev = null; e != null; prev = e, e = e.next) {
+                if ((e.hashCode == hashCode) && key.equals(e.key)) {
                     if (prev != null) {
-                        prev.next_ = e.next_;
+                        prev.next = e.next;
                     } else {
-                        mapTable[index] = e.next_;
+                        mapTable[index] = e.next;
                     }
                     return e;
                 }
             }
         } else {
-            for (Entry e = mapTable[index], prev = null; e != null; prev = e, e = e.next_) {
-                if ((e.hashCode_ == hashCode) && e.key_ == null) {
+            for (Entry e = mapTable[index], prev = null; e != null; prev = e, e = e.next) {
+                if ((e.hashCode == hashCode) && e.key == null) {
                     if (prev != null) {
-                        prev.next_ = e.next_;
+                        prev.next = e.next;
                     } else {
-                        mapTable[index] = e.next_;
+                        mapTable[index] = e.next;
                     }
                     return e;
                 }
@@ -391,10 +456,10 @@ public class ArrayMap extends AbstractMap implements Map, Cloneable,
             System.arraycopy(oldTable, 0, newListTable, 0, size);
             for (int i = 0; i < size; i++) {
                 Entry old = oldTable[i];
-                int index = (old.hashCode_ & 0x7FFFFFFF) % newCapacity;
+                int index = (old.hashCode & 0x7FFFFFFF) % newCapacity;
                 Entry e = old;
-                old = old.next_;
-                e.next_ = newMapTable[index];
+                old = old.next;
+                e.next = newMapTable[index];
                 newMapTable[index] = e;
             }
             mapTable = newMapTable;
@@ -403,25 +468,25 @@ public class ArrayMap extends AbstractMap implements Map, Cloneable,
     }
 
     private final Object swapValue(final Entry entry, final Object value) {
-        Object old = entry.value_;
-        entry.value_ = value;
+        Object old = entry.value;
+        entry.value = value;
         return old;
     }
 
     private class ArrayMapIterator implements Iterator {
 
-        private int current_ = 0;
+        private int current = 0;
 
-        private int last_ = -1;
+        private int last = -1;
 
         public boolean hasNext() {
-            return current_ != size;
+            return current != size;
         }
 
         public Object next() {
             try {
-                Object n = listTable[current_];
-                last_ = current_++;
+                Object n = listTable[current];
+                last = current++;
                 return n;
             } catch (IndexOutOfBoundsException e) {
                 throw new NoSuchElementException();
@@ -429,14 +494,14 @@ public class ArrayMap extends AbstractMap implements Map, Cloneable,
         }
 
         public void remove() {
-            if (last_ == -1) {
+            if (last == -1) {
                 throw new IllegalStateException();
             }
-            ArrayMap.this.remove(last_);
-            if (last_ < current_) {
-                current_--;
+            ArrayMap.this.remove(last);
+            if (last < current) {
+                current--;
             }
-            last_ = -1;
+            last = -1;
         }
     }
 
@@ -444,41 +509,52 @@ public class ArrayMap extends AbstractMap implements Map, Cloneable,
 
         private static final long serialVersionUID = -6625980241350717177L;
 
-        transient int hashCode_;
+        transient int hashCode;
 
-        transient Object key_;
+        transient Object key;
 
-        transient Object value_;
+        transient Object value;
 
-        transient Entry next_;
+        transient Entry next;
 
+        /**
+         * {@link Entry}を作成します。
+         * 
+         * @param hashCode
+         * @param key
+         * @param value
+         * @param next
+         */
         public Entry(final int hashCode, final Object key, final Object value,
                 final Entry next) {
 
-            hashCode_ = hashCode;
-            key_ = key;
-            value_ = value;
-            next_ = next;
+            this.hashCode = hashCode;
+            this.key = key;
+            this.value = value;
+            this.next = next;
         }
 
         public Object getKey() {
-            return key_;
+            return key;
         }
 
         public Object getValue() {
-            return value_;
+            return value;
         }
 
         public Object setValue(final Object value) {
-            Object oldValue = value_;
-            value_ = value;
+            Object oldValue = value;
+            this.value = value;
             return oldValue;
         }
 
+        /**
+         * 状態をクリアします。
+         */
         public void clear() {
-            key_ = null;
-            value_ = null;
-            next_ = null;
+            key = null;
+            value = null;
+            next = null;
         }
 
         public boolean equals(final Object o) {
@@ -486,33 +562,32 @@ public class ArrayMap extends AbstractMap implements Map, Cloneable,
                 return true;
             }
             Entry e = (Entry) o;
-            return (key_ != null ? key_.equals(e.key_) : e.key_ == null)
-                    && (value_ != null ? value_.equals(e.value_)
-                            : e.value_ == null);
+            return (key != null ? key.equals(e.key) : e.key == null)
+                    && (value != null ? value.equals(e.value) : e.value == null);
         }
 
         public int hashCode() {
-            return hashCode_;
+            return hashCode;
         }
 
         public String toString() {
-            return key_ + "=" + value_;
+            return key + "=" + value;
         }
 
         public void writeExternal(final ObjectOutput s) throws IOException {
-            s.writeInt(hashCode_);
-            s.writeObject(key_);
-            s.writeObject(value_);
-            s.writeObject(next_);
+            s.writeInt(hashCode);
+            s.writeObject(key);
+            s.writeObject(value);
+            s.writeObject(next);
         }
 
         public void readExternal(final ObjectInput s) throws IOException,
                 ClassNotFoundException {
 
-            hashCode_ = s.readInt();
-            key_ = s.readObject();
-            value_ = s.readObject();
-            next_ = (Entry) s.readObject();
+            hashCode = s.readInt();
+            key = s.readObject();
+            value = s.readObject();
+            next = (Entry) s.readObject();
         }
     }
 }
