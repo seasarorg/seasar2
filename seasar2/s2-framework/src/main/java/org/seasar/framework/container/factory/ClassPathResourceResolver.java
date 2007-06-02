@@ -31,6 +31,8 @@ public class ClassPathResourceResolver implements ResourceResolver {
 
     private static final char COLON = ':';
 
+    private ClassLoader classLoader;
+
     public ClassPathResourceResolver() {
     }
 
@@ -40,6 +42,19 @@ public class ClassPathResourceResolver implements ResourceResolver {
             return null;
         }
         return URLUtil.openStream(url);
+    }
+
+    /**
+     * リソースを読み込むためのクラスローダを設定します。<br />
+     * <p>
+     * 本メソッドによってクラスローダを設定されていない場合、コンテクストクラスローダが利用されます。
+     * </p>
+     * 
+     * @param loader
+     *            クラスローダ
+     */
+    public void setClassLoader(ClassLoader loader) {
+        this.classLoader = loader;
     }
 
     protected URL getURL(final String path) {
@@ -58,6 +73,11 @@ public class ClassPathResourceResolver implements ResourceResolver {
             } catch (MalformedURLException ignore) {
             }
         }
-        return ResourceUtil.getResourceNoException(path);
+
+        if (classLoader == null) {
+            return ResourceUtil.getResourceNoException(path);
+        } else {
+            return ResourceUtil.getResourceNoException(path, null, classLoader);
+        }
     }
 }

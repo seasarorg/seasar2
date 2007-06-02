@@ -68,11 +68,17 @@ public final class ResourceUtil {
     }
 
     public static URL getResourceNoException(String path, String extension) {
-        if (path == null) {
+        return getResourceNoException(path, extension, Thread.currentThread()
+                .getContextClassLoader());
+    }
+
+    public static URL getResourceNoException(String path, String extension,
+            ClassLoader loader) {
+        if (path == null || loader == null) {
             return null;
         }
         path = getResourcePath(path, extension);
-        return getClassLoader().getResource(path);
+        return loader.getResource(path);
     }
 
     public static InputStream getResourceAsStream(String path) {
