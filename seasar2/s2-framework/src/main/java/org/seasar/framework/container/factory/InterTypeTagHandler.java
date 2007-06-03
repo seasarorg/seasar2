@@ -22,6 +22,11 @@ import org.seasar.framework.util.StringUtil;
 import org.seasar.framework.xml.TagHandlerContext;
 import org.xml.sax.Attributes;
 
+/**
+ * diconファイルの<code>interType</code>要素を解釈するためのクラスです。
+ * 
+ * @author jundu
+ */
 public class InterTypeTagHandler extends AbstractTagHandler {
     private static final long serialVersionUID = 1L;
 

@@ -27,8 +27,9 @@ import org.seasar.framework.xml.TagHandlerContext;
 import org.xml.sax.Attributes;
 
 /**
- * @author higa
+ * diconファイルの<code>component</code>要素を解釈するためのクラスです。
  * 
+ * @author higa
  */
 public class ComponentTagHandler extends AbstractTagHandler {
     private static final long serialVersionUID = -8182227769800177833L;

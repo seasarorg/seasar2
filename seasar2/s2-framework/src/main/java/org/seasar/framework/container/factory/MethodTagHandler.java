@@ -20,10 +20,25 @@ import org.seasar.framework.util.StringUtil;
 import org.seasar.framework.xml.TagHandlerContext;
 
 /**
- * @author higa
+ * diconファイルに指定されたメソッドインジェクションに共通する処理のための抽象クラスです。
  * 
+ * @author higa
  */
 public abstract class MethodTagHandler extends AbstractTagHandler {
+    /**
+     * 指定された{@link org.seasar.framework.container.MethodDef メソッド定義}に対して、
+     * {@link org.seasar.framework.container.Expression 式}を設定します。
+     * 
+     * @param methodDef
+     *            メソッド定義
+     * @param expression
+     *            式を表す文字列
+     * @param tagName
+     *            処理対象の要素名
+     * @param context
+     *            コンテキスト
+     * @thorws TagAttributeNotDefinedRuntimeException メソッド定義の<code>name</code>属性および式のいずれも指定されなかった場合
+     */
     protected void processExpression(MethodDef methodDef, String expression,
             String tagName, TagHandlerContext context) {
         String expr = expression;
