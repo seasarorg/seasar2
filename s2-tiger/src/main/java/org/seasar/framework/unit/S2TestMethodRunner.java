@@ -32,6 +32,7 @@ import javax.transaction.TransactionManager;
 
 import org.junit.runner.Description;
 import org.junit.runner.notification.Failure;
+import org.junit.runner.notification.RunListener;
 import org.junit.runner.notification.RunNotifier;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.factory.S2ContainerFactory;
@@ -102,6 +103,9 @@ public class S2TestMethodRunner {
     /** EasyMockとの対話をサポートするオブジェクト */
     protected EasyMockSupport easyMockSupport = new EasyMockSupport();
 
+    /** テストが失敗したことを表すフラグ */
+    protected boolean testFailed;
+
     /**
      * インスタンスを構築します。
      * 
@@ -125,6 +129,13 @@ public class S2TestMethodRunner {
         this.notifier = notifier;
         this.description = description;
         this.introspector = introspector;
+        this.notifier.addListener(new RunListener() {
+
+            @Override
+            public void testFailure(Failure failure) throws Exception {
+                testFailed = true;
+            }
+        });
     }
 
     /**
@@ -595,14 +606,24 @@ public class S2TestMethodRunner {
             executeMethod();
         } finally {
             if (tm != null) {
-                if (introspector.requiresTransactionCommitment(testClass,
-                        method)) {
+                if (requiresTransactionCommitment()) {
                     tm.commit();
                 } else {
                     tm.rollback();
                 }
             }
         }
+    }
+
+    /**
+     * テストが失敗していない場合かつトランザクションをコミットするように設定されている場合に<code>true</code>を返します。
+     * 
+     * @return テストが失敗していない場合かつトランザクションをコミットするように設定されている場合に<code>true</code>、そうでない場合<code>false</code>
+     */
+    protected boolean requiresTransactionCommitment() {
+        return !testFailed
+                && introspector
+                        .requiresTransactionCommitment(testClass, method);
     }
 
     /**
