@@ -29,19 +29,36 @@ import org.seasar.framework.util.SLinkedList;
  */
 public class TimeoutManager implements Runnable {
 
+    /**
+     * シングルトンのためのインスタンスです。
+     */
     protected static final TimeoutManager instance = new TimeoutManager();
 
+    /**
+     * Timerのための{@link Thread}です。
+     */
     protected Thread thread;
 
+    /**
+     * {@link TimeoutTask}管理用のリストです。
+     */
     protected final SLinkedList timeoutTaskList = new SLinkedList();
 
     private TimeoutManager() {
     }
 
+    /**
+     * シングルトン用のインスタンスを返します。
+     * 
+     * @return シングルトン用のインスタンス
+     */
     public static TimeoutManager getInstance() {
         return instance;
     }
 
+    /**
+     * 処理を開始します。
+     */
     public synchronized void start() {
         if (thread == null) {
             thread = new Thread(this, "Seasar2-TimeoutManager");
@@ -50,6 +67,9 @@ public class TimeoutManager implements Runnable {
         }
     }
 
+    /**
+     * 処理を停止します。
+     */
     public synchronized void stop() {
         if (thread != null) {
             thread.interrupt();
@@ -57,10 +77,21 @@ public class TimeoutManager implements Runnable {
         }
     }
 
+    /**
+     * 管理している {@link TimeoutTask}をクリアします。
+     */
     public synchronized void clear() {
         timeoutTaskList.clear();
     }
 
+    /**
+     * {@link TimeoutTarget}を追加します。
+     * 
+     * @param timeoutTarget
+     * @param timeout
+     * @param permanent
+     * @return {@link TimeoutTask}
+     */
     public synchronized TimeoutTask addTimeoutTarget(
             final TimeoutTarget timeoutTarget, final int timeout,
             final boolean permanent) {
@@ -73,6 +104,11 @@ public class TimeoutManager implements Runnable {
         return task;
     }
 
+    /**
+     * 管理している {@link TimeoutTask}の数を返します。
+     * 
+     * @return 管理している {@link TimeoutTask}の数
+     */
     public synchronized int getTimeoutTaskCount() {
         return timeoutTaskList.size();
     }
@@ -97,6 +133,11 @@ public class TimeoutManager implements Runnable {
         }
     }
 
+    /**
+     * 期限の切れた {@link TimeoutTask}のリストを返します。
+     * 
+     * @return 期限の切れた {@link TimeoutTask}のリスト
+     */
     protected synchronized List getExpiredTask() {
         final List expiredTask = new ArrayList();
         try {
@@ -126,6 +167,11 @@ public class TimeoutManager implements Runnable {
         return expiredTask;
     }
 
+    /**
+     * 管理しているタスクが無いなら処理を停止します。
+     * 
+     * @return 停止したかどうか
+     */
     protected synchronized boolean stopIfLeisure() {
         try {
             if (timeoutTaskList == null || timeoutTaskList.isEmpty()) {

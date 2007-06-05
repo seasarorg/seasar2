@@ -17,6 +17,12 @@ package org.seasar.extension.timer;
 
 import org.seasar.framework.exception.SIllegalStateException;
 
+/**
+ * タイムアウトを管理するクラスです。
+ * 
+ * @author higa
+ * 
+ */
 public class TimeoutTask {
 
     private final static int ACTIVE = 0;
@@ -42,26 +48,52 @@ public class TimeoutTask {
         startTime_ = System.currentTimeMillis();
     }
 
+    /**
+     * 期限切れかどうかを返します。
+     * 
+     * @return 期限切れかどうか
+     */
     public boolean isExpired() {
         return System.currentTimeMillis() >= startTime_ + timeoutMillis_;
     }
 
+    /**
+     * 永続的かどうかを返します。
+     * 
+     * @return 永続的かどうか
+     */
     public boolean isPermanent() {
         return permanent_;
     }
 
+    /**
+     * キャンセルされているかどうかを返します。
+     * 
+     * @return キャンセルされているか
+     */
     public boolean isCanceled() {
         return status_ == CANCELED;
     }
 
+    /**
+     * キャンセルします。
+     */
     public void cancel() {
         status_ = CANCELED;
     }
 
+    /**
+     * 止まっているかどうか返します。
+     * 
+     * @return 止まっているかどうか
+     */
     public boolean isStopped() {
         return status_ == STOPPED;
     }
 
+    /**
+     * タイマーをとめます。
+     */
     public void stop() {
         if (status_ != ACTIVE) {
             throw new SIllegalStateException("ESSR0026", new Object[] { String
@@ -70,6 +102,9 @@ public class TimeoutTask {
         status_ = STOPPED;
     }
 
+    /**
+     * タイマーを再開始します。
+     */
     public void restart() {
         status_ = ACTIVE;
         startTime_ = System.currentTimeMillis();

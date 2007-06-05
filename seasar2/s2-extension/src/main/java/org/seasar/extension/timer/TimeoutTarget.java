@@ -15,7 +15,16 @@
  */
 package org.seasar.extension.timer;
 
+/**
+ * タイムアウトを処理するインターフェースです。
+ * 
+ * @author higa
+ * 
+ */
 public interface TimeoutTarget {
 
+    /**
+     * タイムアウトの処理を記述します。
+     */
     public void expired();
 }
