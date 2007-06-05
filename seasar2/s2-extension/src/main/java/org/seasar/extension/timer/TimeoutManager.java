@@ -21,6 +21,12 @@ import java.util.List;
 
 import org.seasar.framework.util.SLinkedList;
 
+/**
+ * Timerを扱うクラスです。
+ * 
+ * @author higa
+ * 
+ */
 public class TimeoutManager implements Runnable {
 
     protected static final TimeoutManager instance = new TimeoutManager();
@@ -93,7 +99,11 @@ public class TimeoutManager implements Runnable {
 
     protected synchronized List getExpiredTask() {
         final List expiredTask = new ArrayList();
-        if (timeoutTaskList == null || timeoutTaskList.isEmpty()) {
+        try {
+            if (timeoutTaskList == null || timeoutTaskList.isEmpty()) {
+                return expiredTask;
+            }
+        } catch (NullPointerException e) {
             return expiredTask;
         }
         for (SLinkedList.Entry e = timeoutTaskList.getFirstEntry(); e != null; e = e
@@ -117,8 +127,12 @@ public class TimeoutManager implements Runnable {
     }
 
     protected synchronized boolean stopIfLeisure() {
-        if (timeoutTaskList == null || timeoutTaskList.isEmpty()) {
-            thread = null;
+        try {
+            if (timeoutTaskList == null || timeoutTaskList.isEmpty()) {
+                thread = null;
+                return true;
+            }
+        } catch (NullPointerException e) {
             return true;
         }
         return false;
