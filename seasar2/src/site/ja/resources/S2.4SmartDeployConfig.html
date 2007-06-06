@@ -1,0 +1,327 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja" lang="ja">
+<!-- don't edit start -->
+<head>
+<title>Seasar - DI Container with AOP -</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="seasar_b.css" type="text/css" rel="stylesheet" media="screen" />
+<link href="seasar_p.css" type="text/css" rel="stylesheet" media="print" />
+<script src="seasar_b.js" type="text/JavaScript" language="JavaScript">
+</script>
+</head>
+<body onload="preload('ja')">
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="left">
+<tr>
+<td align="left" valign="top" width="780">
+<table width="780" border="0" cellspacing="0" cellpadding="0" class="white">
+<tr>
+<td colspan="7"><img height="5" width="780" src="images/top01_b.gif" alt="" /></td>
+</tr>
+<tr>
+<td><img height="117" width="235" src="images/top02_b.gif" alt="Seasar" /></td>
+<td colspan="3"><img height="117" width="289" src="images/top03.gif" alt="DI Container with AOP" /></td>
+<td colspan="3"><img height="117" width="256" src="images/spacer.gif" alt="" /></td>
+</tr>
+<tr>
+<td rowspan="2"><img src="images/top04.gif" alt="" height="49" width="235" /></td>
+<td><a href="http://www.seasar.org/index.html"><img src="images/menu01_b_ja.gif" height="30" width="78" border="0" alt="" id="menu01" onmouseover="swap(1)" onmouseout="restore(1)" name="menu01" /></a></td>
+<td><a href="http://www.seasar.org/projects.html"><img src="images/menu02_b_ja.gif" height="30" width="101" border="0" alt="" id="menu02" onmouseover="swap(2)" onmouseout="restore(2)" name="menu02" /></a></td>
+<td><a href="http://www.seasar.org/products.html"><img src="images/menu03_b_ja.gif" height="30" width="110" border="0" alt="" id="menu03" onmouseover="swap(3)" onmouseout="restore(3)" name="menu03" /></a></td>
+<td><a href="http://www.seasar.org/resources.html"><img src="images/menu04_b_ja.gif" height="30" width="113" border="0" alt="" id="menu04" onmouseover="swap(4)" onmouseout="restore(4)" name="menu04" /></a></td>
+<td><img src="images/menu05_b_ja.gif" height="30" width="109" border="0" alt="" id="menu05" onmouseover="swap(5)" onmouseout="restore(5)" name="menu05" /></td>
+<td><img height="30" width="34" src="images/menu06.gif" alt="" /></td>
+</tr>
+<tr>
+<td colspan="6"><img height="19" width="545" src="images/spacer.gif" alt="" /></td>
+</tr>
+</table>
+<table width="780" border="0" cellspacing="0" cellpadding="0" class="white">
+<tr align="left" valign="top">
+<td width="14"><img height="14" width="14" src="images/spacer.gif" alt="" /></td>
+<td width="740" class="main"><!-- don't edit end -->
+<!-- document start -->
+<h1>SMART deployの設定方法</h1>
+<p>
+<a href="http://s2container.seasar.org/ja/S2.4SmartDeploy.html">SMART deploy</a>を利用すると、コンポーネントの定義やコンポーネントに対するインターセプタの適用等の設定を自動化できます。
+このページではSMART deploy自体の設定に必要な情報といくつかの設定例を紹介します。
+</p>
+
+<h2>目次</h2>
+<ul>
+    <li><a href="#creatorAndCustomizer">Creator（クリエータ）とCustomizer（カスタマイザ）</a>
+    <ul>
+         <li><a href="#creator">クリエータ</a></li>
+         <li><a href="#customizer">カスタマイザ</a>
+         <ul>
+         	<li><a href="#customizerConfig">カスタマイザの設定</a></li>
+         </ul></li>
+    </ul></li>
+    <li><a href="#configExample">設定例</a>
+    <ul>
+    	<li><a href="#specificClasses">特定のクラスにだけ標準カスタマイザを適用する</a></li>    	
+    	<li><a href="#tx">標準カスタマイザでトランザクション制御を設定する</a>
+    	<ul>
+    		<li><a href="#txForServiceComponent">サービスのコンポーネントに適用する場合</a>
+    		<li><a href="#txForPageComponent">ページのコンポーネントに適用する場合</a>
+    		<li><a href="#txForStatelessSessionBean">EJB 3.0のステートレスセッションBeanを利用する場合</a>
+    	</ul>
+    	</li>
+    	<li><a href="#multiDataSource">複数のデータソースを利用する</a></li>
+    </ul>
+    </li>
+</ul>
+<h2><a name="creatorAndCustomizer"></a>Creator（クリエータ）とCustomizer（カスタマイザ）</h2>
+<p>
+SMART deployにおけるコンポーネントの自動登録にはS2Container内のCreator（クリエータ）やCustomizer（カスタマイザ）と呼ばれるコンポーネント群が使用されています。
+以下では、SMART deployの理解に必須であるクリエータとカスタマイザについてそれぞれ説明します。
+</p>
+<p>
+クリエータとはSMART deployの命名規約に従いコンポーネント定義を作成するコンポーネントの総称です。creater.diconに定義されます。
+カスタマイザとはコンポーネント定義をカスタマイズするコンポーネントの総称です。customizer.diconに定義されます。
+</p>
+<p>
+クリエータはコンポーネント定義を作成した後、自身に関連付けられたカスタマイザを使用してコンポーネント定義をカスタマイズします。カスタマイザの機能の代表例はアスペクト定義（インターセプタ）の追加です。
+例えば、サービスのカスタマイザにログ出力のアスペクト定義を設定しておくと、サービスのクリエータによって作成されたコンポーネントにはログ出力のインターセプタが適用されます。
+</p>
+
+<h3><a name="creator">クリエータ</a></h3>
+<p>
+Seasar2にはあらかじめ以下に示すクリエータが用意されています。
+これらのクリエータは、それぞれ規約に合致するクラスのコンポーネント定義を作成します。
+</p>
+<h4>クリエータ一覧</h4>
+<table border="1">
+<tr nowrap bgcolor="#d1f3f4" align="center">
+<th width="200">クリエータのクラスの単純名</th>
+<th width="200">コンポーネント化対象とするクラスの名前のサフィックス</th>
+<th width="200">関連付けられたカスタマイザのコンポーネント名</th></tr>
+<tr><td>ActionCreator</td><td>Action</td><td>actionCustomizer</td></tr>
+<tr><td>ConverterCreator</td><td>Converter</td><td>converterCustomizer</td></tr>
+<tr><td>DaoCreator</td><td>Dao</td><td>daoCustomizer</td></tr>
+<tr><td>DtoCreator</td><td>Dto</td><td>dtoCustomizer</td></tr>
+<tr><td>DxoCreator</td><td>Dxl</td><td>dxoCustomizer</td></tr>
+<tr><td>HelperCreator</td><td>Helper</td><td>helperCustomizer</td></tr>
+<tr><td>InterceptorCreator</td><td>Interceptor</td><td>interceptorCustomizer</td></tr>
+<tr><td>LogicCreator</td><td>Logic</td><td>interceptorCustomizer</td></tr>
+<tr><td>PageCreator</td><td>Page</td><td>pageCustomizer</td></tr>
+<tr><td>ServiceCreator</td><td>Service</td><td>serviceCustomizer</td></tr>
+<tr><td>ValidatorCreator</td><td>Validator</td><td>validatorCustomizer</td></tr>
+</table>
+<p>
+</p>
+<p>
+クリエータは、クラス名のサフィックスを利用して対象となるクラスを見つけコンポーネント定義を作成します。
+作成したコンポーネント定義は関連付けられたカスタマイザに渡されます。
+</p>
+<p>
+クラスを個別パッケージから探す場合とサブアプリケーションパッケージから探す場合で検出の条件が異なります。
+</p>
+<h4>クラス検出条件</h4>
+<table border="1">
+<tr nowrap bgcolor="#d1f3f4" align="center">
+<th width="200">&nbsp;</th>
+<th width="200">パッケージ名に関する条件</th>
+<th width="200">クラス名に関する条件</th></tr>
+<tr><td>個別パッケージから見つける場合</td><td>クラスは「<var>ルートパッケージ名.サフィックスを小文字にした文字列</var>」というパッケージの配下のどこかに属する</td><td>クラス名称がサフィックスで終わる、もしくはサフィックスと<var>Impl</var>を連結した文字列で終わる</td></tr>
+<tr><td>サブアプリケーションから見つける場合</td><td>クラスは「<var>ルートパッケージ名.web</var>」というパッケージの配下のどこかに属する</td><td>クラス名称がサフィックスで終わる、もしくはサフィックスと<var>Impl</var>を連結した文字列で終わる</td></tr>
+</table>
+<p>
+ルートパッケージ、個別パッケージ、サブアプリケーションの説明については<a href="http://s2container.seasar.org/ja/S2.4SmartDeploy.html">SMART deploy</a>を参照してください。
+</p>
+
+<h3><a name="customizer">カスタマイザ</a></h3>
+<p>
+Seasar2には標準とデフォルトの2種類のカスタマイザが用意されています。
+</p>
+<p>
+標準カスタマイザはSMART deployで使用される標準的なカスタマイザです。これらは自身に関連付けられたインターセプタをコンポーネント定義に適用します。std-customizer.diconに定義されます。
+</p>
+<p>
+デフォルトカスタマイザはクリエータに関連付けられるカスタマイザです。これらは実際には何のカスタマイズも行いません。default-customizer.diconに定義されます。
+</p>
+
+<h4><a name="standardCustomizers">標準カスタマイザ一覧</a></h4>
+<table border="1">
+<tr nowrap bgcolor="#d1f3f4" align="center">
+<th width="200">コンポーネント名</th><th width="400">説明</th></tr>
+<tr><td>traceCustomizer</td><td>トレース出力のためのカスタマイザ</td></tr>
+<tr><td>simpleTraceCustomizer</td><td>引数や戻り値を出力しない単純なトレースのためのカスタマイザ</td></tr>
+<tr><td>classLoaderAwareTraceCustomizer</td><td>クラスローダーの情報を含めたトレース出力のためのカスタマイザ</td></tr>
+<tr><td>syncCustomizer</td><td>同期処理のためのカスタマイザ</td></tr>
+<tr><td>traceThrowsCustomizer</td><td>例外のトレース出力のためのカスタマイザ</td></tr>
+<tr><td>toStringCustomizer</td><td>オブジェクトのフィールドの値を文字列化するためのカスタマイザ</td></tr>
+<tr><td>removeSessionCustomizer</td><td>メソッドの実行後にHTTPセッションから属性を削除するためのカスタマイザ</td></tr>
+<tr><td>commandTraceCustomizer</td><td>do.*, initialize, prerenderをポイントカットとしてトレース出力するカスタマイザ</td></tr>
+<tr><td>requiredTxCustomizer</td><td>Requiredのトランザクション属性を有効にするためのカスタマイザ</td></tr>
+<tr><td>requiresNewTxCustomizer</td><td>RequiresNewのトランザクション属性を有効にするためのカスタマイザ</td></tr>
+<tr><td>mandatoryTxCustomizer</td><td>Mandatoryのトランザクション属性を有効にするためのカスタマイザ</td></tr>
+<tr><td>notSupportedTxCustomizer</td><td>NotSupportedのトランザクション属性を有効にするためのカスタマイザ</td></tr>
+<tr><td>neverTxCustomizer</td><td>Neverのトランザクション属性を有効にするためのカスタマイザ</tr>
+<tr><td>s2DxoCustomizer</td><td>Dxoを利用するためのカスタマイザ</td></tr>
+<tr><td>s2DaoCustomizer</td><td>S2Daoを利用するためのカスタマイザ</td></tr>
+<tr><td>kuinaDaoCustomizer</td><td>Kuina-Daoを利用するためのカスタマイザ</td></tr>
+</table>
+
+<h4><a name="defaultCustomizers">デフォルトカスタマイザ一覧</a></h4>
+<table border="1">
+<tr nowrap bgcolor="#d1f3f4" align="center">
+<th width="200">コンポーネント名</th><th width="400">説明</th></tr>
+<tr><td>actionCustomizer</td><td>Action用のカスタマイザ</td></tr>
+<tr><td>converterCustomizer</td><td>Converter用のカスタマイザ</td></tr>
+<tr><td>daoCustomizer</td><td>Dao用のカスタマイザ</td></tr>
+<tr><td>dtoCustomizer</td><td>Dto用のカスタマイザ</td></tr>
+<tr><td>dxoCustomizer</td><td>Dxoカスタマイザ</td></tr>
+<tr><td>helperCustomizer</td><td>Helper用のカスタマイザ</td></tr>
+<tr><td>logicCustomizer</td><td>Logic用のカスタマイザ</td></tr>
+<tr><td>interceptorCustomizer</td><td>Interceptor用のカスタマイザ</td></tr>
+<tr><td>pageCustomizer</td><td>Page用のカスタマイザ</td></tr>
+<tr><td>serviceCustomizer</td><td>Service用のカスタマイザ</td></tr>
+<tr><td>validatorCustomizer</td><td>Validator用のカスタマイザ</td></tr>
+</table>
+
+<h4><a name="customizerConfig">カスタマイザの設定</a></h4>
+<p>
+デフォルトのカスタマイザはコンポーネントの種類ごとに用意されていますが、これら自身は何の処理も行いません。
+コンポーネントの種類ごとにどのようにカスタマイザを設定するかはアプリケーション開発者にまかされています。
+カスタマイザの設定はcustomizer.diconに記述します。
+例えば、サービスのコンポーネントに標準のカスタマイズである<code>traceCustomizer</code>と<code>traceThrowsCustomizer</code>を適用する場合、次のように記述します。
+</p>
+<pre>
+&lt;components&gt;
+  &lt;include path=&quot;default-customizer.dicon&quot;/&gt;
+  ...
+  &lt;component name=&quot;<b>serviceCustomizer</b>&quot; class=&quot;<b>org.seasar.framework.container.customizer.CustomizerChain</b>&quot;&gt;
+    &lt;initMethod name=&quot;<b>addCustomizer</b>&quot;&gt;
+      &lt;arg&gt;<b>traceCustomizer</b>&lt;/arg&gt;
+    &lt;/initMethod&gt;
+    &lt;initMethod name=&quot;<b>addCustomizer</b>&quot;&gt;
+      &lt;arg&gt;<b>traceThrowsCustomizer</b>&lt;/arg&gt;
+    &lt;/initMethod&gt;
+  &lt;/component&gt;
+  ...
+&lt;/components&gt;
+</pre>
+<p>
+定義するコンポーネントの名前はデフォルトカスタマイザ一覧に示したコンポーネント名と同じにしてください。
+こうすることで、クリエータはstd-customizar.diconではなくcusomizer.diconに定義されたカスタマイザを使用することになります。
+</p>
+<p>
+クラスには<code>CustomizerChain</code>を指定してください。このクラスには任意の個数のカスタマイザを登録できます。
+</p>
+
+<h2><a name="configExample">設定例</a></h2>
+カスタマイザの設定例を紹介します。
+ここで紹介する設定はすべてcusomizer.diconに対する設定です。
+
+<h3><a name="specificClasses">特定のクラスにだけカスタマイザを適用する</a></h3>
+<p>
+例えば、サービスのコンポーネントのうち「Hoge」で始まるクラス名をもつコンポーネントにtraceCustomizerを適用する場合、
+次のように<code>addClassPattern</code>メソッドを使用し、引数に条件を記述します。
+第1引数はパッケージ名の正規表現、第2引数にはクラス名の正規表現を指定します。
+</p>
+<pre>
+  &lt;component name=&quot;serviceCustomizer&quot; class=&quot;org.seasar.framework.container.customizer.CustomizerChain&quot;&gt;
+    &lt;initMethod name=&quot;<b>addClassPattern</b>&quot;&gt;
+      &lt;arg&gt;"example.service"&lt;/arg&gt;
+      &lt;arg&gt;"Hoge.*"&lt;/arg&gt;
+    &lt;/initMethod&gt;
+    &lt;initMethod name=&quot;addCustomizer&quot;&gt;
+      &lt;arg&gt;traceCustomizer&lt;/arg&gt;
+    &lt;/initMethod&gt;    
+  &lt;/component&gt;
+</pre>
+<p>
+逆に、サービスのコンポーネントのうち「Hoge」で始まるクラス名をもつコンポーネント以外にtraceCustomizerを適用する場合、
+次のように<code>addIgnoreClassPattern</code>メソッドを使用し、引数に条件を記述します。
+第1引数はパッケージ名の正規表現、第2引数にはクラス名の正規表現を指定します。
+</p>
+<pre>
+  &lt;component name=&quot;serviceCustomizer&quot; class=&quot;org.seasar.framework.container.customizer.CustomizerChain&quot;&gt;
+    &lt;initMethod name=&quot;<b>addIgnoreClassPattern</b>&quot;&gt;
+      &lt;arg&gt;"example.service"&lt;/arg&gt;
+      &lt;arg&gt;"Hoge.*"&lt;/arg&gt;
+    &lt;/initMethod&gt;
+    &lt;initMethod name=&quot;addCustomizer&quot;&gt;
+      &lt;arg&gt;traceCustomizer&lt;/arg&gt;
+    &lt;/initMethod&gt;    
+  &lt;/component&gt;
+</pre>
+
+<h3><a name="tx">トランザクション制御を設定する</a></h3>
+<ul>
+	<li><h4><a name="txForServiceComponent">サービスのコンポーネントに適用する場合</a></h4></li>
+	<p>
+		<code>serviceCustomizer</code>にトランザクション制御を有効にするためのカスタマイザを設定します。
+		ここでは<code>requiredTxCustomizer</code>を使用します。
+		他のトランザクション属性に対応するカスタマイザについては<a href="#standardCustomizers">標準カスタマイザ一覧</a>を参照してください。
+	</p>
+<pre>
+  &lt;component name=&quot;serviceCustomizer&quot; 
+    class=&quot;org.seasar.framework.container.customizer.CustomizerChain&quot;&gt;
+    &lt;initMethod name=&quot;addCustomizer&quot;&gt;
+      &lt;arg&gt;<b>requiredTxCustomizer</b>&lt;/arg&gt;
+    &lt;/initMethod&gt;
+  &lt;/component&gt;
+</pre>
+	<p>
+		この設定ではサービスのコンポーネントがもつインタフェースのすべてのメソッドがトランザクション制御の対象になります。
+	</p>
+
+	<li><h4><a name="txForPageComponent">ページのコンポーネントに適用する場合</a></h4></li>
+	<p>
+		<code>pageCustomizer</code>にトランザクション制御を有効にするためのカスタマイザを設定します。
+		「サービスのコンポーネントに適用する場合」の例ではサービスのコンポーネントがもつインタフェースのすべてのメソッドをトランザクション制御の対象にしましたが、
+		ここでは特定のメソッドだけをトランザクション制御の対象とします。
+		この場合、標準カスタマイザは使用できません。
+		次のようにインターセプタとポイントカットを設定した<code>AspectCustomizer</code>のコンポーネントを<code>pageCustomizer</code>に設定します。
+	</p>	
+	
+<pre>
+  &lt;component name=&quot;pageCustomizer&quot; 
+    class=&quot;org.seasar.framework.container.customizer.CustomizerChain&quot;&gt;
+    &lt;initMethod name=&quot;addCustomizer&quot;&gt;
+      &lt;arg&gt;<b>
+        &lt;component class=&quot;org.seasar.framework.container.customizer.AspectCustomizer&quot;&gt;
+          &lt;property name=&quot;interceptorName&quot;&gt;&quot;j2ee.requiredTx&quot;&lt;/property&gt;
+          &lt;property name=&quot;pointcut&quot;&gt;&quot;do.*, initialize, prerender&quot;&lt;/property&gt;
+        &lt;/component&gt;</b>
+      &lt;/arg&gt;
+    &lt;/initMethod&gt;
+  &lt;/component&gt;
+</pre>
+	<li><h4><a name="txForStatelessSessionBean">EJB 3.0のステートレスセッションBeanを利用する場合</a></h4></li>
+	<p>
+		EJB 3.0のステートレスセッションBeanはデフォルトでトランザクション制御を行う機能が備わっているのでcusomizer.diconに対する設定は不要です。
+		S2ContainerのEJB 3.0サポートについては<a href="http://s2container.seasar.org/ja/ejb3.html">EJB3.0 Simplified API</a>を参照してください。
+	</p>
+</ul>
+<h3><a name="multiDataSource">複数のデータソースを利用する</a></h3>
+<p>
+データソースごとにカスタマイザを作成し、それらのカスタマイザをdaoCustomizerに設定してください。
+S2Daoを使用した例については<a href="http://www.seasar.org/wiki/index.php?FAQ%2FS2DAO#w7da6e0e">SMART deployで複数データソースに対応するには?</a>を参照してください。
+</p>
+
+<!-- document end -->
+<!-- don't edit start --></td>
+<td width="14"><img height="14" width="14" src="images/spacer.gif" alt="" /></td>
+</tr>
+<tr>
+<td width="14"><img height="30" width="14" src="images/spacer.gif" alt="" /></td>
+<td width="766"><img height="30" width="592" src="images/spacer.gif" alt="" /></td>
+</tr>
+<tr>
+<td width="14"><img height="14" width="14" src="images/spacer.gif" alt="" /></td>
+<td width="766" class="copyright">Copyrightc 2004-2005, The Seasar Foundation and the others. All rights reserved.</td>
+</tr>
+</table>
+</td>
+<td class="backright" align="left" valign="top">&nbsp;</td>
+</tr>
+<tr>
+<td class="backunder" align="left" valign="top" width="780" height="16">&nbsp;</td>
+<td class="backcorner" align="left" valign="top" height="16">&nbsp;</td>
+</tr>
+</table>
+<!-- don't edit end -->
+</body>
+</html>

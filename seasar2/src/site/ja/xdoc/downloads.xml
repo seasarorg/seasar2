@@ -4,15 +4,246 @@
 		<title>Downloads</title>
 	</properties>
 	<body>
-		<section name="Latest Release">
-			<ul>
-				<li><p><a href="../downloads/2007/01/14/Kuina-Dao-1.0.0-rc1.zip">Kuina-Dao 1.0.0-rc1</a></p></li>
-			</ul>
+		<section name="ダウンロード">
+			<subsection name="Seasar2.4系">
+				<dl>
+				<dt><a href="/download/2007-05-22/S2.4.13.zip">S2Container 2.4.13</a></dt>
+				<dd>S2Container 本体 (S2Framework) と、JDBC コネクションプールや JTA などの拡張機能 (S2Extension)</dd>
+				<dt><a href="/download/2007-05-22/S2Tiger-2.4.13.zip">S2Tiger 2.4.13</a></dt>
+				<dd>Tiger (Java5) アノテーションを使用してコンポーネント定義を Java ソースに記述するためのアドオン</dd>
+				<dt><a href="/download/2006-11-16/Diigu-Core-1.0.0.zip">Diigu-Core 1.0.0</a></dt>
+				<dd>メソッドの引数名をクラスファイルに埋め込むためのライブラリ</dd>
+				</dl>
+			</subsection>
+			<subsection name="Seasar2.3系">
+				<dl>
+				<dt><a href="/download/2007-04-09/S2.3.19.zip">S2Container 2.3.19</a></dt>
+				<dd>S2Container 本体 (S2Framework) と、JDBC コネクションプールや JTA などの拡張機能 (S2Extension)</dd>
+				<dt><a href="/download/2006-06-02/S2Tiger-2.3.9.zip">S2Tiger 2.3.9</a></dt>
+				<dd>Tiger (Java5) アノテーションを使用してコンポーネント定義を Java ソースに記述するためのアドオン</dd>
+				<dt><a href="/download/2006-06-02/S2Backport175-2.3.9.zip">S2Backport175 2.3.9</a></dt>
+				<dd>Backport175 アノテーションを使用してコンポーネント定義を Java ソースに記述するためのアドオン</dd>
+				</dl>
+			</subsection>
+			<subsection name="その他">
+				<dl>
+				<dt><a href="/download/2006-11-16/Diigu-Core-1.0.0.zip">Diigu-Core 1.0.0</a></dt>
+				<dd>メソッドの引数名をクラスファイルに埋め込むためのライブラリ</dd>
+				</dl>
+			</subsection>
 		</section>
 		<section name="All Releases">
-			<ul>
-				<li><p><a href="../downloads/2007/01/14/Kuina-Dao-1.0.0-rc1.zip">Kuina-Dao 1.0.0-rc1</a></p></li>
-			</ul>
+			<subsection name="Seasar2.4系">
+				<table>
+				<thead><col span="2" width="200"/></thead>
+				<tbody>
+				<tr>
+				<td><a href="/download/2007-05-22/S2.4.13.zip">S2Container 2.4.13</a></td>
+				<td><a href="/download/2007-05-22/S2Tiger-2.4.13.zip">S2Tiger 2.4.13</a></td>
+				</tr>
+				<tr>
+				<td><a href="/download/2007-04-25/S2.4.13-rc1.zip">S2Container 2.4.13-rc1</a></td>
+				<td><a href="/download/2007-04-25/S2Tiger-2.4.13-rc1.zip">S2Tiger 2.4.13-rc1</a></td>
+				</tr>
+				<tr>
+				<td><a href="/download/2007-04-09/S2.4.12.zip">S2Container 2.4.12</a></td>
+				<td><a href="/download/2007-04-09/S2Tiger-2.4.12.zip">S2Tiger 2.4.12</a></td>
+				</tr>
+				<tr>
+				<td><a href="/download/2007-03-08/S2.4.11.zip">S2Container 2.4.11</a></td>
+				<td><a href="/download/2007-03-08/S2Tiger-2.4.11.zip">S2Tiger 2.4.11</a></td>
+				</tr>
+				<tr>
+				<td><a href="/download/2007-02-19/S2.4.10.zip">S2Container 2.4.10</a></td>
+				<td><a href="/download/2007-02-19/S2Tiger-2.4.10.zip">S2Tiger 2.4.10</a></td>
+				</tr>
+				<tr>
+				<td><a href="/download/2007-01-30/S2.4.9.zip">S2Container 2.4.9</a></td>
+				<td><a href="/download/2007-01-30/S2Tiger-2.4.9.zip">S2Tiger 2.4.9</a></td>
+				</tr>
+				<tr>
+				<td><a href="/download/2007-01-12/S2.4.8.zip">S2Container 2.4.8</a></td>
+				<td><a href="/download/2007-01-12/S2Tiger-2.4.8.zip">S2Tiger 2.4.8</a></td>
+				</tr>
+				<tr>
+				<td><a href="/download/2006-12-25/S2.4.7.zip">S2Container 2.4.7</a></td>
+				<td><a href="/download/2006-12-25/S2Tiger-2.4.7.zip">S2Tiger 2.4.7</a></td>
+				</tr>
+				<tr>
+				<td><a href="/download/2006-12-04/S2.4.6.zip">S2Container 2.4.6</a></td>
+				<td><a href="/download/2006-12-04/S2Tiger-2.4.6.zip">S2Tiger 2.4.6</a></td>
+				</tr>
+				<tr>
+				<td><a href="/download/2006-11-27/S2.4.5.zip">S2Container 2.4.5</a></td>
+				<td><a href="/download/2006-11-27/S2Tiger-2.4.5.zip">S2Tiger 2.4.5</a></td>
+				</tr>
+				<tr>
+				<td><a href="/download/2006-11-17/S2.4.4.zip">S2Container 2.4.4</a></td>
+				<td><a href="/download/2006-11-17/S2Tiger-2.4.4.zip">S2Tiger 2.4.4</a></td>
+				</tr>
+				<tr>
+				<td><a href="/download/2006-11-16/S2.4.3.zip">S2Container 2.4.3</a></td>
+				<td><a href="/download/2006-11-16/S2Tiger-2.4.3.zip">S2Tiger 2.4.3</a></td>
+				</tr>
+				<tr>
+				<td><a href="/download/2006-11-14/S2.4.2.zip">S2Container 2.4.2</a></td>
+				<td><a href="/download/2006-11-14/S2Tiger-2.4.2.zip">S2Tiger 2.4.2</a></td>
+				</tr>
+				<tr>
+				<td><a href="/download/2006-11-11/S2.4.1.zip">S2Container 2.4.1</a></td>
+				<td><a href="/download/2006-11-11/S2Tiger-2.4.1.zip">S2Tiger 2.4.1</a></td>
+				</tr>
+				<tr>
+				<td><a href="/download/2006-11-11/S2.4.0.zip">S2Container 2.4.0</a></td>
+				<td><a href="/download/2006-11-11/S2Tiger-2.4.0.zip">S2Tiger 2.4.0</a></td>
+				</tr>
+				<tr>
+				<td><a href="/download/2006-09-21/S2.4.0-rc-2.zip">S2Container 2.4.0-rc-2</a></td>
+				<td><a href="/download/2006-09-21/S2Tiger-2.4.0-rc-2.zip">S2Tiger 2.4.0-rc-2</a></td>
+				</tr>
+				<tr>
+				<td><a href="/download/2006-08-16/S2.4.0-rc-1.zip">S2Container 2.4.0-rc-1</a></td>
+				<td><a href="/download/2006-08-16/S2Tiger-2.4.0-rc-1.zip">S2Tiger 2.4.0-rc-1</a></td>
+				</tr>
+				<tr>
+				<td><a href="/download/2006-07-26/S2.4.0-beta-4.zip">S2Container 2.4.0-beta-4</a></td>
+				<td><a href="/download/2006-07-26/S2Tiger-2.4.0-beta-4.zip">S2Tiger 2.4.0-beta-4</a></td>
+				</tr>
+				<tr>
+				<td><a href="/download/2006-06-15/S2.4.0-beta-3.zip">S2Container 2.4.0-beta-3</a></td>
+				<td><a href="/download/2006-06-15/S2Tiger-2.4.0-beta-3.zip">S2Tiger 2.4.0-beta-3</a></td>
+				</tr>
+				<tr>
+				<td><a href="/download/2006-05-09/S2.4.0-beta-2.zip">S2Container 2.4.0-beta-2</a></td>
+				<td><a href="/download/2006-05-09/S2Tiger-2.4.0-beta-2.zip">S2Tiger 2.4.0-beta-2</a></td>
+				</tr>
+				<tr>
+				<td><a href="/download/2006-03-27/S2.4.0-beta-1.zip">S2Container 2.4.0-beta-1</a></td>
+				<td><a href="/download/2006-03-27/S2Tiger-2.4.0-beta-1.zip">S2Tiger 2.4.0-beta-1</a></td>
+				</tr>
+				</tbody>
+				</table>
+			</subsection>
+			<subsection name="Seasar2.3系">
+				<table>
+				<thead><col span="3" width="200"/></thead>
+				<tbody>
+				<tr>
+				<td><a href="/download/2007-04-09/S2.3.19.zip">S2Container 2.3.19</a></td>
+				<td></td>
+				<td></td>
+				</tr>
+				<tr>
+				<td><a href="/download/2007-03-08/S2.3.18.zip">S2Container 2.3.18</a></td>
+				<td></td>
+				<td></td>
+				</tr>
+				<tr>
+				<td><a href="/download/2007-02-19/S2.3.17.zip">S2Container 2.3.17</a></td>
+				<td></td>
+				<td></td>
+				</tr>
+				<tr>
+				<td><a href="/download/2006-12-25/S2.3.16.zip">S2Container 2.3.16</a></td>
+				<td></td>
+				<td></td>
+				</tr>
+				<tr>
+				<td><a href="/download/2006-11-1/S2.3.15.zip">S2Container 2.3.15</a></td>
+				<td></td>
+				<td></td>
+				</tr>
+				<tr>
+				<td><a href="/download/2006-11-01/S2.3.14.zip">S2Container 2.3.14</a></td>
+				<td></td>
+				<td></td>
+				</tr>
+				<tr>
+				<td><a href="/download/2006-10-31/S2.3.13.zip">S2Container 2.3.13</a></td>
+				<td></td>
+				<td></td>
+				</tr>
+				<tr>
+				<td><a href="/download/2006-09-22/S2.3.12.zip">S2Container 2.3.12</a></td>
+				<td></td>
+				<td></td>
+				</tr>
+				<tr>
+				<td><a href="/download/2006-08-07/S2.3.11.zip">S2Container 2.3.11</a></td>
+				<td></td>
+				<td></td>
+				</tr>
+				<tr>
+				<td><a href="/download/2006-06-05/S2.3.10.zip">S2Container 2.3.10</a></td>
+				<td></td>
+				<td></td>
+				</tr>
+				<tr>
+				<td><a href="/download/2006-06-02/S2.3.9.zip">S2Container 2.3.9</a></td>
+				<td><a href="/download/2006-06-02/S2Tiger-2.3.9.zip">S2Tiger 2.3.9</a></td>
+				<td><a href="/download/2006-06-02/S2Backport175-2.3.9.zip">S2Backport175 2.3.9</a></td>
+				</tr>
+				<tr>
+				<td><a href="/download/2006-04-04/S2.3.8.zip">S2Container 2.3.8</a></td>
+				<td><a href="/download/2006-04-04/S2Tiger-2.3.8.zip">S2Tiger 2.3.8</a></td>
+				<td><a href="/download/2006-04-04/S2Backport175-2.3.8.zip">S2Backport175 2.3.8</a></td>
+				</tr>
+				<tr>
+				<td><a href="/download/2006-02-23/S2.3.7.zip">S2Container 2.3.7</a></td>
+				<td></td>
+				<td></td>
+				</tr>
+				<tr>
+				<td><a href="/download/2006-02-15/S2.3.6.zip">S2Container 2.3.6</a></td>
+				<td></td>
+				<td></td>
+				</tr>
+				<tr>
+				<td><a href="/download/2006-02-13/S2.3.5.zip">S2Container 2.3.5</a></td>
+				<td></td>
+				<td></td>
+				</tr>
+				<tr>
+				<td><a href="/download/2005-12-02/S2.3.4.zip">S2Container 2.3.4</a></td>
+				<td><a href="/download/2005-12-02/S2Tiger-2.3.4.zip">S2Tiger 2.3.4</a></td>
+				<td><a href="/download/2005-12-02/S2Backport175-2.3.4.zip">S2Backport175 2.3.4</a></td>
+				</tr>
+				<tr>
+				<td><a href="/download/2005-11-25/S2.3.3.zip">S2Container 2.3.3</a></td>
+				<td></td>
+				<td></td>
+				</tr>
+				<tr>
+				<td><a href="/download/2005-11-21/S2.3.2.zip">S2Container 2.3.2</a></td>
+				<td><a href="/download/2005-11-21/S2Tiger-2.3.2.zip">S2Tiger 2.3.2</a></td>
+				<td><a href="/download/2005-11-21/S2Backport175-2.3.2.zip">S2Backport175 2.3.2</a></td>
+				</tr>
+				<tr>
+				<td><a href="/download/2005-11-17/S2.3.1.zip">S2Container 2.3.1</a></td>
+				<td></td>
+				<td></td>
+				</tr>
+				<tr>
+				<td><a href="/download/2005-11-08/S2.3.0.zip">S2Container 2.3.0</a></td>
+				<td><a href="/download/2005-11-08/S2Tiger-2.3.0.zip">S2Tiger 2.3.0</a></td>
+				<td><a href="/download/2005-11-08/S2Backport175-2.3.0.zip">S2Backport175 2.3.0</a></td>
+				</tr>
+				</tbody>
+				</table>
+			</subsection>
+			<subsection name="Seasar2.0 - 2.2系">
+				<p>
+					「<a href="http://seasarproject.g.hatena.ne.jp/keyword/S2リリース履歴">リリース履歴</a>」を参照してください．
+				</p>
+			</subsection>
+			<subsection name="Diigu-Core">
+				<table>
+				<thead><col width="200"/></thead>
+				<tbody>
+				<tr><td><a href="/download/2006-11-16/Diigu-Core-1.0.0.zip">Diigu-Core 1.0.0</a></td></tr>
+				</tbody>
+				</table>
+			</subsection>
 		</section>
 	</body>
 </document>

@@ -1,0 +1,7 @@
+<project name="s2-framework" default="dist" basedir=".">
+	<target name="dist">
+		<ant antfile="../build.xml" target="fix-site">
+			<property name="site" value="${basedir}/target/site"/>
+		</ant>
+	</target>
+</project>

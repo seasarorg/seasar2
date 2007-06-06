@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="Shift_JIS"?>
 
 <!--
  | Copyright 2001-2005 The Apache Software Foundation.
@@ -32,14 +32,29 @@
       <item name="Maven 2" href="http://maven.apache.org/maven2/"/>
     </links>
     <menu name="About">
-      <item name="Home" href="index.html"/>
-      <item name="License" href="license.html"/>
-      <item name="Downloads" href="downloads.html"/>
+      <item name="ホーム" href="index.html"/>
+      <item name="ライセンス" href="license.html"/>
+      <item name="ダウンロード" href="downloads.html"/>
+      <item name="ChangeLog" href="http://www.seasar.org/wiki/index.php?ChangeLog%2FSeasar"/>
+      <item name="移行ガイド" href="http://www.seasar.org/wiki/index.php?SeasarUpdateOperationLog"/>
     </menu>
-    <menu name="Documentation">
-      <item name="FAQ" href="faq.html"/>
-      <item name="Install" href="install.html"/>
-      <item name="Reference" href="reference/index.html"/>
+    <menu name="ドキュメント">
+      <item name="一覧" href="documents.html"/>
+      <item name="セットアップ" href="setup.html"/>
+      <item name="DIContainer" href="DIContainer.html"/>
+      <item name="AOP" href="aop.html"/>
+      <item name="FAQ (全般)" href="http://www.seasar.org/wiki/index.php?FAQ%2FS2Container"/>
+      <item name="FAQ (AOP)" href="http://www.seasar.org/wiki/index.php?FAQ%2FS2AOP"/>
+    </menu>
+    <menu name="Javadoc">
+      <item name="S2-Framework" href="../s2-framework/ja/apidocs/index.html"/>
+      <item name="S2-Extension" href="../s2-extension/ja/apidocs/index.html"/>
+      <item name="S2-Tiger" href="../s2-tiger/ja/apidocs/index.html"/>
+    </menu>
+    <menu name="モジュール">
+      <item name="S2-Framework" href="../s2-framework/ja/index.html"/>
+      <item name="S2-Extension" href="../s2-extension/ja/index.html"/>
+      <item name="S2-Tiger" href="../s2-tiger/ja/index.html"/>
     </menu>
     ${reports}
   </body>

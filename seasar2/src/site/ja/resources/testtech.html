@@ -1,0 +1,821 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja" lang="ja">
+<!-- don't edit start -->
+<head>
+<title>Seasar - DI Container with AOP -</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="seasar_b.css" type="text/css" rel="stylesheet" media="screen" />
+<link href="seasar_p.css" type="text/css" rel="stylesheet" media="print" />
+<script src="seasar_b.js" type="text/JavaScript" language="JavaScript">
+</script>
+</head>
+<body onload="preload('ja')">
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="left">
+<tr>
+<td align="left" valign="top" width="780">
+<table width="780" border="0" cellspacing="0" cellpadding="0" class="white">
+<tr>
+<td colspan="7"><img height="5" width="780" src="images/top01_b.gif" alt="" /></td>
+</tr>
+<tr>
+<td><img height="117" width="235" src="images/top02_b.gif" alt="Seasar" /></td>
+<td colspan="3"><img height="117" width="289" src="images/top03.gif" alt="DI Container with AOP" /></td>
+<td colspan="3"><img height="117" width="256" src="images/spacer.gif" alt="" /></td>
+</tr>
+<tr>
+<td rowspan="2"><img src="images/top04.gif" alt="" height="49" width="235" /></td>
+<td><a href="http://www.seasar.org/index.html"><img src="images/menu01_b_ja.gif" height="30" width="78" border="0" alt="" id="menu01" onmouseover="swap(1)" onmouseout="restore(1)" name="menu01" /></a></td>
+<td><a href="http://www.seasar.org/projects.html"><img src="images/menu02_b_ja.gif" height="30" width="101" border="0" alt="" id="menu02" onmouseover="swap(2)" onmouseout="restore(2)" name="menu02" /></a></td>
+<td><a href="http://www.seasar.org/products.html"><img src="images/menu03_b_ja.gif" height="30" width="110" border="0" alt="" id="menu03" onmouseover="swap(3)" onmouseout="restore(3)" name="menu03" /></a></td>
+<td><a href="http://www.seasar.org/resources.html"><img src="images/menu04_b_ja.gif" height="30" width="113" border="0" alt="" id="menu04" onmouseover="swap(4)" onmouseout="restore(4)" name="menu04" /></a></td>
+<td><img src="images/menu05_b_ja.gif" height="30" width="109" border="0" alt="" id="menu05" onmouseover="swap(5)" onmouseout="restore(5)" name="menu05" /></td>
+<td><img height="30" width="34" src="images/menu06.gif" alt="" /></td>
+</tr>
+<tr>
+<td colspan="6"><img height="19" width="545" src="images/spacer.gif" alt="" /></td>
+</tr>
+</table>
+<table width="780" border="0" cellspacing="0" cellpadding="0" class="white">
+<tr align="left" valign="top">
+<td width="14"><img height="14" width="14" src="images/spacer.gif" alt="" /></td>
+<td width="740" class="main"><!-- don't edit end -->
+<!-- document start -->
+<!-- 表題 -->
+<ul>
+<li><a href="#TestOutline">テストの概要</a></li>
+<li><a href="#S2TestReference">S2テストリファレンス</a></li>
+<li style="list-style: none">
+<ul>
+<li><a href="#MockMake">モックを作成するための設定</a></li>
+<li><a href="#MockUse">モックの使用方法</a></li>
+<li><a href="#S2UnitMake">S2Unitを使ったテストクラスの作成方法</a></li>
+<li><a href="#s2Unitfunction">S2Unitの機能</a></li>
+<li><a href="#s2unitexcel">Excelファイルの作成</a></li>
+<li><a href="#S2DaoTestCase">S2DaoTestCase</a></li>
+</ul>
+</li>
+<li><a href="#s2Unitexample">Example</a></li>
+<li style="list-style: none">
+<ul>
+<li><a href="#s2examplemock">モック</a></li>
+<li><a href="#s2unitdatabasetest">データベースに対するテスト</a></li>
+<li><a href="#S2DaoTestCaseExample">S2DaoTestCaseのExample</a></li>
+</ul>
+</li>
+<li><a href="testtechExercise.html">テスト技法エクササイズ</a></li>
+</ul>
+<!--  テスト関連の概要  -->
+<h2><a name="TestOutline" id="TestOutline">テストの概要</a></h2>
+<p><a href="DIContainer.html">S2Container</a>ではコンポーネント同士がインターフェースのみで会話することにより依存関係をなくすということから、 インターフェースの実装が出来上がってからテストを行うことになり開発のボトルネックが発生します。この問題を解決するために、Seasar2ではインターフェースのモックを簡単に作成できます。 実装をモックオブジェクトに置き換えることが可能なため、出来上がった順にテストが出来るので、開発のボトルネックが発生しづらくなります。 またコンテナを使った開発のテストを簡単に行う機能(S2Unit)、データベースに対するテストをExcelファイルで行う機能が提供されています。</p>
+<!--  S2テストリファレンス  -->
+<h2><a name="S2TestReference" id="S2TestReference">S2テストリファレンス</a></h2>
+<!--  モックの作成  -->
+<h3><a name="MockMake" id="MockMake">モックを作成するための設定</a></h3>
+<p>インターフェースのモックを設定するには、org.seasar.framework.aop.interceptors.MockInterceptorを使用します。MockInterceptorは<a href="aop.html">S2AOP</a>で提供されているInterceptorです。MockInterceptorの以下のメソッドを使用してインターフェースのモックの設定、インターフェースのメソッドの呼び出し、引数の確認が出来ます。</p>
+<dl>
+<dt style="text-indent:1em;">public void setReturnValue(String methodName, Object returnValue)</dt>
+<dd>概要：インターフェースのメソッドに戻り値をセットする場合に使用します。</dd>
+<dd>第1引数：インターフェースのメソッド名を指定します。</dd>
+<dd>第2引数：第1引数で指定したメソッドの返す値を指定します。</dd>
+</dl>
+<dl>
+<dt style="text-indent:1em;">public void setReturnValue(Object returnValue)</dt>
+<dd>概要：インターフェースのすべてのメソッドに戻り値をセットする場合に使用します。</dd>
+<dd>第1引数：返す値を指定します。この場合、どんなメソッドが呼ばれてもその値を返します。通常、１つのメソッドしか呼び出さないことが分かっている場合に使います。</dd>
+</dl>
+<dl>
+<dt style="text-indent:1em;">public boolean isInvoked(String methodName)</dt>
+<dd>概要：インターフェースのメソッドが呼ばれたかどうかチェックする場合に使用します。</dd>
+<dd>第1引数：呼び出されたどうか確認したいメソッド名を指定します。</dd>
+<dd>戻り値：booleanでメソッドが呼び出されたかどうかを返します。</dd>
+</dl>
+<dl>
+<dt style="text-indent:1em;">public Object[] getArgs(String methodName)</dt>
+<dd>概要：インターフェースのメソッドの引数の値を取得したい場合に使用します。</dd>
+<dd>第1引数：呼び出されたソッドの引数の値を知りたい場合のメソッド名を指定します。</dd>
+<dd>戻り値：Object[]で呼び出されたメソッドの引数の値を返します。</dd>
+</dl>
+<!--  モックの作成方法  -->
+<h3><a name="MockUse" id="MockUse">モックの使用方法</a></h3>
+<p>インターフェースのモックを作成するには、設定したMockInterceptorをアスペクトして使用します。例えば以下のようなインターフェースがあったとします。</p>
+<pre>
+public interface Hello {
+    public String greeting();
+    public String echo(String str);
+}
+</pre>
+<p>このインターフェースのモックを作成する仕様として、greeting()メソッドが呼び出されたときは、"Hello"を返し、echo()メソッドが呼び出されたときは"Hoge"を返すこととする場合、以下のように作成します。</p>
+<pre>
+MockInterceptor mi = new MockInterceptor();
+mi.setReturnValue("greeting", "Hello");
+mi.setReturnValue("echo", "Hoge");
+Hello hello = mi.createProxy(Hello.class);
+</pre>
+<p>上記のコードをコンポーネント定義で書くと次のようになります。</p>
+<pre>
+&lt;component class="examples.aop.Hello"&gt;
+    &lt;aspect&gt;
+        &lt;component class="org.seasar.framework.aop.interceptors.MockInterceptor"&gt;
+            &lt;initMethod name="setReturnValue"&gt;
+                &lt;arg&gt;"greeting"&lt;/arg&gt;
+                &lt;arg&gt;"Hello"&lt;/arg&gt;
+            &lt;/initMethod&gt;
+            &lt;initMethod name="setReturnValue"&gt;
+                &lt;arg&gt;"echo"&lt;/arg&gt;
+                &lt;arg&gt;"Hoge"&lt;/arg&gt;
+            &lt;/initMethod&gt;
+        &lt;/component&gt;
+    &lt;/aspect&gt;
+&lt;/component&gt;
+</pre>
+<p>詳しい使用方法は、Exampleの<a href="#s2examplemock">モック</a>を参照してください。</p>
+<!--  S2Unitを使ったテストクラスの作成方法  -->
+<h3><a name="S2UnitMake" id="S2UnitMake">S2Unitを使ったテストクラスの作成方法</a></h3>
+<p>テストクラスは、org.seasar.extension.unit.S2TestCaseを継承して作成します。またS2TestCaseはJUnitを拡張したクラスなので、テストメソッド等の使用方法はJUnitと同様です。</p>
+<!--  S2Unitの機能  -->
+<h3><a name="s2Unitfunction" id="s2Unitfunction">S2Unitの機能</a></h3>
+<p><a href="DIContainer.html">S2Container</a>を使った開発のテストを簡単に行えるように以下の機能があります。</p>
+<dl>
+<dt style="text-indent:1em;"><b>・S2Containerの自動生成</b></dt>
+<dd>S2Containerを生成する場合、テストメソッド(testXxx)ごとに自動的にS2Containerを作成します。</dd>
+<dd>S2ContainerFactory.create(PATH)と記述してS2Containerを生成する必要がありません。</dd>
+</dl>
+<dl>
+<dt style="text-indent:1em;"><b>・register(),getComponent(),include()メソッド</b></dt>
+<dd>S2Containerに対するregister(),getComponent(),include()メソッドが用意されています。</dd>
+</dl>
+<dl>
+<dt style="text-indent:1em;"><b>・include時のPATHの省略</b></dt>
+<dd>include()するPATHがテストクラスと同じパッケージにある場合は、パッケージ部分のパスは省略できます。</dd>
+<dd>例えばaaa.bbb.CccTestクラスがaaa/bbb/hoge.diconをinclude()する場合、include("hoge.dicon")と記述することができます。</dd>
+</dl>
+<dl>
+<dt style="text-indent:1em;"><b>・変数の自動セット</b></dt>
+<dd>TestCaseのstaticでなくfinalでもないフィールドが存在し、その名前からアンダースコア(_)を除いた名前のコンポーネントがコンテナに存在すれば自動的にセットされます。</dd>
+<dd>TestCaseのフィールドにインターフェースの変数が定義されていればS2Containerから取り出して自動的にセットされます。テストメソッドが終わると自動セットされた値は自動的にクリア(nullをセット)されます。</dd>
+</dl>
+<dl>
+<dt style="text-indent:1em;"><b>・setUpXxx(),tearDownXxx()メソッド</b></dt>
+<dd>テストメソッド(testXxx)に対応するsetUpXxx(),tearDownXxx()を定義しておくと、setUp()の後、tearDown()の前に自動的に呼び出されます。</dd>
+<dd>個別のテストメソッドごとの初期化・終了処理を簡単に行えるようになります。</dd>
+</dl>
+<p>データベースに対するテストを行うために以下の機能が用意されています。</p>
+<dl>
+<dt style="text-indent:1em;"><a name="s2transaction" id="s2transaction"><b>・トランザクション制御</b></a></dt>
+<dd>include("j2ee.dicon")をしておき、テストメソッド名の最後にTxをつける(testXxxTx)ことにより、テストメソッドの直前にトランザクションを開始し、テストメソッドの直後にトランザクションをロールバックするようになるので、データベースに関するテストを行った場合のクリー&nbsp;ンアップの処理が不要になります。</dd>
+</dl>
+<dl>
+<dt style="text-indent:1em;"><b>・assertEquals()メソッド</b></dt>
+<dd>assertEquals()で予想されるDataSetの結果に対して、Map、MapのList、Bean、BeanのListと比較することができます。</dd>
+</dl>
+<dl>
+<dt style="text-indent:1em;"><b>・readXls()メソッド</b></dt>
+<dd>DataSet expected = readXls("検証用.xls")のようにしてDataSetに検証用のExcelデータを読み込むことができます。</dd>
+<dd>検証用のExcelデータのPATHがテストクラスと同じパッケージにある場合PATHを省略できます。</dd>
+<dd>検証用のExcelデータを作成する場合は<a href="#s2unitexcel">Excelファイルの作成</a>を参照してください。</dd>
+</dl>
+<dl>
+<dt style="text-indent:1em;"><b>・reload()メソッド</b></dt>
+<dd>reload(DataSet)を使い、データの中身をプライマリーキーでリロードして新しいDataSetを取得できます。更新後の予想される結果をExcelで定義しておき、以下のようにして簡単に更新のテストができます。</dd>
+<dd>DataSet expected = readXls("検証用.xls");</dd>
+<dd>assertEquals(expected, reload(expected);</dd>
+</dl>
+<dl>
+<dt style="text-indent:1em;"><b>・readXlsWriteDb(),readXlsAllReplaceDb()メソッド</b></dt>
+<dd>readXlsWriteDb("検証用.xls")又はreadXlsAllReplaceDb("検証用.xls")のようにして検証用のExcelデータをデータベースに格納します。検証用のExcelファイルがテストクラスと同じパッケージにある場合は、パッケージのパスを省略できます。</dd>
+<dd>通常、readXlsWriteDb()、readXlsAllReplaceDb()はテスト後にロールバックしてデータが元に戻るようにtestXxxTx()の最初に実行します。また、これらのメソッドはシートの定義の逆順に削除した後にデータを挿入します。</dd>
+<dd>readXlsAllReplaceDb()を使う場合、外部キー制約に引っかからないように、データのないシートを用意する必要があります。</dd>
+<dd>例えば、テーブルAの外部キーでテーブルBを参照している場合、テーブルAのデータしか使わない場合でも、テーブルB用にシート名だけのシートを用意する必要があります。シートの定義順は、テーブルA、テーブルBの順になります。</dd>
+</dl>
+<!--  データベースに対するテスト  -->
+<h3><a name="s2unitexcel" id="s2unitexcel">Excelファイルの作成</a></h3>
+<p>検証用のExcelファイルを作成するには、以下のように設定します。作成したExcelファイルはテストクラスと同じ場所に配置するのが一般的です。</p>
+<img src="images/testtech01.gif" alt="" />
+<dl>
+<dt style="text-indent: 1em;">１．シート名</dt>
+<dd>テーブル名を記述します。</dd>
+<dt style="text-indent: 1em;">２．シートの1行目</dt>
+<dd>カラム名を記述します。</dd>
+<dd><br />
+N:1のマッピングもベースとなるシートに「カラム名_関連番号」の名前で記述します。</dd>
+<dt style="text-indent: 1em;">３．シートの2行目以降</dt>
+<dd>データを記述します。</dd>
+</dl>
+<p>データベースから検証用のExcelファイルを作成することが出来るように以下のクラスが用意されています。</p>
+<ul>
+<li type="circle">データベースの内容をDataSetに読み込むクラス</li>
+<li type="circle">DataSetをExcelファイルに出力するクラス</li>
+</ul>
+<p><a name="SqlReader" id="SqlReader"><b>データベースの内容をDataSetに読み込むクラス</b></a></p>
+<dl>
+<dt style="text-indent:1em;">クラス名</dt>
+<dd>org.seasar.extension.dataset.impl.SqlReader</dd>
+<dt style="text-indent:1em;">メソッド詳細</dt>
+<dd>
+<dl>
+<dt>public void addTable(String tableName)</dt>
+<dd>説明：指定されたテーブル名のすべてのデータをDataSetに読み込みます。</dd>
+<dd>第1引数：取り出すデータのテーブル名を指定します。<br /></dd>
+</dl>
+<dl>
+<dt>public void addTable(String tableName, String condition)</dt>
+<dd>説明：指定された条件で指定されたテーブルのデータをDataSetに読み込みます。</dd>
+<dd>第1引数：取り出すデータのテーブル名を指定します。</dd>
+<dd>第2引数：取り出す条件を指定します。</dd>
+</dl>
+<dl>
+<dt>public void addSql(String sql, String tableName)</dt>
+<dd>説明：指定されたテーブルを指定されたSelect文の条件でデータをDataSetに読み込みます。</dd>
+<dd>第1引数：テーブルからデータを取り出すためのSelect文を指定します。</dd>
+<dd>第2引数：取り出すデータのテーブル名を指定します。</dd>
+</dl>
+<dl>
+<dt>public DataSet read()</dt>
+<dd>説明：読み込んだDateSetを返します。</dd>
+<dd>戻り値：addTable()メソッドまたはaddSql()メソッドで読み込んだDateSetを返します。</dd>
+</dl>
+</dd>
+</dl>
+<p><a name="XlsWriter" id="XlsWriter"><b>DataSetをExcelファイルに出力するクラス</b></a></p>
+<dl>
+<dt style="text-indent:1em;">クラス名</dt>
+<dd>org.seasar.extension.dataset.impl.XlsWriter</dd>
+<dt style="text-indent:1em;">メソッド詳細</dt>
+<dd>
+<dl>
+<dt>(コンストラクタ）public XlsWriter(String path)</dt>
+<dd>説明：コンストラクタでファイルのパスを指定します。</dd>
+<dd>第1引数：出力するファイルパスを指定します。</dd>
+</dl>
+<dl>
+<dt>public void write(DataSet dataSet)</dt>
+<dd>説明：指定されたDataSetをコンストラクタで指定したファイルパスのExcelファイルに出力します。</dd>
+<dd>第1引数：出力するDataSetを指定します。</dd>
+</dl>
+</dd>
+</dl>
+<p>詳しい使用方法はExampleの<a href="#s2unitdatabasetest">データベースに対するテスト</a>を参照してください。</p>
+<h3><a name="S2DaoTestCase" id="S2DaoTestCase">S2DaoTestCase</a></h3>
+<p><a href="http://www.seasar.org/s2dao.html">S2Dao</a>で実行したSELECT文の結果(Bean or BeanList)を簡単にテストできるようにS2DaoTestCaseクラスが用意されています。</p>
+<h4>S2DaoTestCaseを使用するにあたり作成すべきファイル</h4>
+<p>テストを実施するにあたり、テスト対象のDao、JavaBeans、SQLファイル(自動生成の場合は必要ありません)、diconファイル、テストクラス、SELECT文の予想として使用するExcelファイルが必要となります。</p>
+<p>Dao、JavaBeans、SQLファイル、diconファイルについては<a href="http://www.seasar.org/s2dao.html">S2Dao</a>のページを参照してください。</p>
+<h5>テストクラス</h5>
+<p>テストクラスは以下のクラスを継承して作成します。</p>
+<p>- org.seasar.dao.unit.S2DaoTestCase</p>
+<p>また以下の"test"で始まる形式のメソッドを一つ以上実装する必要があります。</p>
+<p>- public void test<em>Xxx</em>()</p>
+<h5>Excelファイル</h5>
+<p>ExcelファイルはDaoが実行したSELECT文の予想結果として使用します。作成したExcelファイルはテストクラスと同じ場所に配置するのが一般的です。</p>
+<dl>
+<dt style="text-indent: 1em;">シート名</dt>
+<dd>テーブル名を記述します。</dd>
+<dt style="text-indent: 1em;">シートの1行目</dt>
+<dd>カラム名を記述します。</dd>
+<dd><br />
+N:1のマッピングもベースとなるシートに「カラム名_関連番号」の名前で記述します。</dd>
+<dt style="text-indent: 1em;">シートの2行目以降</dt>
+<dd>データを記述します。</dd>
+</dl>
+<p>EMPテーブルを全件検索するSELECT文の結果を予想したExcelのサンプル(<a href="getAllEmployeesResult.xls">getAllEmployeesResult.xls</a>)は以下のようになります。</p>
+<img src="images/dao_getAllEmployeesResult_image.jpg" alt="" />
+<h4>テスト方法</h4>
+<p>Daoの実行結果と予想したExcelファイルを比較する手順は以下の通りです。</p>
+<ol>
+<li>以下のメソッドを使用し、作成したExcelを読み込みます。
+<p>- org.seasar.extension.dataset.DataSet S2DaoTestCase#readXls(String path)</p>
+引数にはExcelのパスを設定してください。Excelの情報が戻り値となります。</li>
+<li>次にDaoを実行します。実行方法については<a href="http://www.seasar.org/s2dao.html#HowToRun">S2Daoの実行</a>を参照してください。</li>
+<li>以下のメソッドを使用し、作成したExcelとDaoの実行結果をテストします。
+<p>- S2DaoTestCase#assertEquals(String message, DataSet expected, Object actual)</p>
+第1引数は省略可能です。<br />
+第2引数はreadXlsメソッドで読み込んだ結果を指定します。<br />
+第3引数はDaoの実行結果を指定します。ただし、Beanまたは、BeanのListとなるので、Daoのメソッドの戻り値はBeanかListである必要があります。<br /></li>
+</ol>
+<p>1～3を実装したサンプルは以下のようになります。</p>
+<pre>
+DataSet expected = readXls("getAllEmployeesResult.xls"); /* 手順1 */
+List actual = dao_.getAllEmployees(); /* 手順2 */
+assertEquals("1", expected, actual); /* 手順3 */
+</pre>
+<p>S2DaoTestCaseクラスは、S2TestCaseクラスを継承していますので、S2TestCaseクラスやその他のメソッド等の使用方法については、 <a href="#S2UnitMake">S2Unitを使ったテストクラスの作成方法</a>を参照してください。</p>
+<p>S2DaoTestCaseの詳しい使用方法はExampleの<a href="#S2DaoTestCaseExample">S2DaoTestCaseのExample</a>を参照してください。</p>
+<h2><a name="s2Unitexample" id="s2Unitexample">Example</a></h2>
+<p>以下のサンプルを試す場合は、<a href="setup.html">セットアップ</a>を参照して環境を作ってから行ってください。<br />
+<a href="#S2DaoTestCaseExample">S2DaoTestCaseのExample</a>に関しては、こちらの<a href="http://www.seasar.org/s2dao.html#setup">セットアップ</a>を参照してください。</p>
+<h3><a name="s2examplemock" id="s2examplemock">モック</a></h3>
+<p>S2で用意されているMockInterceptorを使ってインターフェースのモックを作成して、メソッドと引数が正しく呼ばれていかS2Unitを使ってテストを作成しましょう。作成するファイルは以下のとおりです。</p>
+<ul>
+<li type="circle">インターフェース(Hello.java)</li>
+<li type="circle">インターフェースにモックの定義を行うdiconファイル(Hello.dicon)</li>
+<li type="circle">作成したインターフェースのテストを行うクラス(HelloTest.java)</li>
+</ul>
+<h5><b>インターフェースの作成</b></h5>
+<ul>
+<li type="circle">引数が無く、戻り値がStringのメソッド(greeting)を作成します。</li>
+<li type="circle">引数が1つで、戻り値がStringのメソッド(echo)を作成します。</li>
+</ul>
+Hello.java
+<pre>
+package examples.aop.mockinterceptor;
+
+public interface Hello {
+
+    public String greeting();
+
+    public String echo(String str);
+
+}
+</pre>
+<h5><b>diconファイルの作成</b></h5>
+<ul>
+<li type="circle">モックの仕様はgreeting()メソッドが呼び出されたときは、"Hello"を返し、echo()メソッドが呼び出されたときは"Hoge"を返すことにします。</li>
+<li type="circle">MockInterceptorをコンポーネントに定義します。name属性はhelloMockInterceptorとします。</li>
+<li type="circle">MockInterceptorのsetReturnValue()メソッドに対してメソッド・インジェクションを使ってモックの仕様どおりに引数を指定します。</li>
+<li type="circle">インターフェースをコンポーネントに定義します。aspectタグにコンポーネントに定義したMockInterceptorを指定します。</li>
+</ul>
+Hello.dicon
+<pre>
+&lt;?xml version="1.0" encoding="Shift_JIS"?&gt;
+&lt;!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container//EN"
+"http://www.seasar.org/dtd/components.dtd"&gt;
+&lt;components&gt;
+    &lt;component name="mockInterceptor"
+               class="org.seasar.framework.aop.interceptors.MockInterceptor"&gt;
+        &lt;initMethod name="setReturnValue"&gt;
+            &lt;arg&gt;"greeting"&lt;/arg&gt;
+            &lt;arg&gt;"Hello"&lt;/arg&gt;
+        &lt;/initMethod&gt;
+        &lt;initMethod name="setReturnValue"&gt;
+            &lt;arg&gt;"echo"&lt;/arg&gt;
+            &lt;arg&gt;"Hoge"&lt;/arg&gt;
+        &lt;/initMethod&gt;
+    &lt;/component&gt;
+    &lt;component class="examples.aop.mockinterceptor.Hello"&gt;
+        &lt;aspect&gt;
+            mockInterceptor
+        &lt;/aspect&gt;
+    &lt;/component&gt;
+&lt;/components&gt;
+</pre>
+<br />
+<h5><b>テストクラスの作成</b></h5>
+<ul>
+<li type="circle">S2TestCaseを継承します。</li>
+<li type="circle">diconファイルに設定したexamples.aop.Helloとorg.seasar.framework.aop.interceptors.MockInterceptorを自動的にセットするように変数を宣言します。</li>
+<li type="circle">MockInterceptor#isInvoked(String methodName)を使ってメソッドが呼び出されたかどうか確認します。</li>
+<li type="circle">MockInterceptor#getArgs(String methodName)を使ってメソッドの引数の値が正しいか確認します。</li>
+</ul>
+HelloTest.java
+<pre>
+package examples.aop.mockinterceptor;
+
+import org.seasar.extension.unit.S2TestCase;
+import org.seasar.framework.aop.interceptors.MockInterceptor;
+
+public class HelloTest extends S2TestCase{
+    //テストクラスと同じパッケージにあるのでパスが省略できる
+    private static String PATH = "Hello.dicon";
+
+    //変数の自動セット
+    private Hello hello ;
+
+    private MockInterceptor mi ;
+
+    public void testHello() throws Exception{
+
+        //diconファイルでインターフェースのモックが正しく行われているか
+        assertEquals("Hello", hello.greeting());
+        assertEquals("Hoge", hello.echo("test"));
+
+        hello.echo("Hello");
+        //echo()メソッドが呼ばれたかどうか
+        assertEquals(true, mi.isInvoked("echo"));
+
+        //echo()メソッドの引数の値が"Hello"かどうか
+        assertEquals("Hello", mi.getArgs("echo")[0]);
+
+    }
+
+    protected void setUp() throws Exception {
+          //S2Containerに対するinclude()メソッド
+        include(PATH);
+    }
+
+    protected void tearDown() throws Exception {
+    }
+
+    public HelloTest(String arg0) {
+        super(arg0);
+    }
+
+    public static void main(String[] args) {
+        junit.textui.TestRunner.run(HelloTest.class);
+    }
+
+}
+</pre>
+<p>コンポーネントの組み立てやコンポーネントの取り出しといった作業はS2TestCaseが自動的に行うので、テストメソッドは必要なことにだけに集中できます。</p>
+<h5><b>実行結果</b></h5>
+<p>"OK (テスト数 test)"と出ていればassertEquals()メソッドで予想した通り結果が得られています。</p>
+<pre>
+.
+Time: 1.643
+
+OK (1 test)
+</pre>
+<p>この演習は、seasar2/src/examples/aop/mockinterceptor以下に用意されています。</p>
+<h3><a name="s2unitdatabasetest" id="s2unitdatabasetest">データベースに対するテスト</a></h3>
+<p>以下のサンプルを動かすためにはHSQLDBを使用しますので、<a href="setup.html">セットアップ</a>を参照してHSQLDBを起動させておいてください。ここでは、以下のEMP(従業員)テーブルとDEPT(部署）テーブルを使います。</p>
+<b>テーブル：EMP(従業員)</b>
+<table border="1" class="main">
+<tr bgcolor="#D1F3F4" align="center">
+<th>カラム名</th>
+<th>論理名</th>
+<th>型</th>
+<th>NotNull</th>
+<th>主キー</th>
+</tr>
+<tr>
+<td>EMPNO</td>
+<td>従業員番号</td>
+<td>NUMBER</td>
+<td align="center">〇</td>
+<td align="center">〇</td>
+</tr>
+<tr>
+<td>ENAME</td>
+<td>従業員名</td>
+<td>VARCHAR2</td>
+<td><br /></td>
+<td><br /></td>
+</tr>
+<tr>
+<td>JOB</td>
+<td>仕事</td>
+<td>VARCHAR2</td>
+<td><br /></td>
+<td><br /></td>
+</tr>
+<tr>
+<td>MGR</td>
+<td>上司</td>
+<td>NUMBER</td>
+<td><br /></td>
+<td><br /></td>
+</tr>
+<tr>
+<td>HIREDATE</td>
+<td>雇用日</td>
+<td>DATE</td>
+<td><br /></td>
+<td><br /></td>
+</tr>
+<tr>
+<td>SAL</td>
+<td>給料</td>
+<td>NUMBER</td>
+<td><br /></td>
+<td><br /></td>
+</tr>
+<tr>
+<td>COMM</td>
+<td>手数料</td>
+<td>NUMBER</td>
+<td><br /></td>
+<td><br /></td>
+</tr>
+<tr>
+<td>DEPTNO</td>
+<td>部署番号</td>
+<td>NUMBER</td>
+<td><br /></td>
+<td><br /></td>
+</tr>
+</table>
+<br />
+<b>テーブル：DEPT(部署)</b>
+<table border="1" class="main">
+<tr bgcolor="#D1F3F4" align="center">
+<th>カラム名</th>
+<th>論理名</th>
+<th>型</th>
+<th>NotNull</th>
+<th>主キー</th>
+</tr>
+<tr>
+<td>DEPTNO</td>
+<td>部署番号</td>
+<td>NUMBER</td>
+<td align="center">〇</td>
+<td align="center">〇</td>
+</tr>
+<tr>
+<td>DNAME</td>
+<td>部署名</td>
+<td>VARCHAR2</td>
+<td><br /></td>
+<td><br /></td>
+</tr>
+<tr>
+<td>LOC</td>
+<td>ロケーション</td>
+<td>VARCHAR2</td>
+<td><br /></td>
+<td><br /></td>
+</tr>
+<tr>
+<td>VERSIONNO</td>
+<td>バージョン番号</td>
+<td>NUMBER</td>
+<td><br /></td>
+<td><br /></td>
+</tr>
+</table>
+<p>SQL文を発行するためのフレームワークとして最も単純な<a href="s2jdbc.html">S2JDBC</a>を使ってデータベースに対するテストを行います。 テストをする内容は従業員テーブルを従業員番号で検索するDAOの結果について行います。検索を行うDAOのソースはseasar2/src/exapmles/unit/以下に配置してあります。 シナリオとして従業員番号9900で検索をかけると、従業員番号9900の従業員テーブルと部署番号99の部署テーブルをジョインして返す想定とします。</p>
+<p>テストを行う為の手順は以下のとおりになります。</p>
+<ol>
+<li>テスト用の従業員テーブルと部署テーブルのExcelデータの作成</li>
+<li>結果を検証するためのExcelデータの作成</li>
+<li>テストを行うクラスの作成、実行</li>
+</ol>
+<b>１．テスト用の従業員テーブルと部署テーブルのExcelデータの作成</b>
+<p>Excelのデータを用意するには、シート名がテーブル名で、シートの第1行にカラム名を2行目以降にデータを記述して作成できますが、ここでは既存のテーブルのデータを利用してテストデータを作成します。</p>
+<p>テスト用のテーブルデータを作成するためのファイルは以下のとおりです。</p>
+<ul>
+<li type="circle">データベースの内容をExcelに書き出す為のdiconファイル(Db2Excel.dicon)</li>
+<li type="circle">diconファイルに設定した内容をExcelにデータを書き出す実行ファイル(Db2Excel.java)</li>
+</ul>
+<p><b>diconファイルの作成</b></p>
+<ul>
+<li type="circle">j2ee.diconをインクルードします。</li>
+<li type="circle"><a href="#SqlReader">SqlReader</a>クラスのコンポーネント定義をします。1レコードしか必要ないので条件として従業員テーブルは従業員番号を7788で部署テーブルは部署番号を20で検索した結果のデータとします。</li>
+<li type="circle"><a href="#XlsWriter">XlsWriter</a>クラスのコンポーネント定義をします。コンストラクタ・インジェクションで出力するファイルパスを指定します。</li>
+</ul>
+Db2Excel.dicon
+<pre>
+&lt;?xml version="1.0" encoding="Shift_JIS"?&gt;
+&lt;!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container//EN"
+"http://www.seasar.org/dtd/components.dtd"&gt;
+&lt;components&gt;
+    &lt;include path="j2ee.dicon"/&gt;
+    &lt;component class="org.seasar.extension.dataset.impl.SqlReader"&gt;
+        &lt;initMethod&gt;#self.addTable("emp", "empno = 7788")&lt;/initMethod&gt;
+        &lt;initMethod&gt;#self.addTable("dept", "deptno = 20")&lt;/initMethod&gt;
+    &lt;/component&gt;
+    &lt;component class="org.seasar.extension.dataset.impl.XlsWriter" instance="prototype"&gt;
+        &lt;arg&gt;"../src/test/examples/unit/getEmployeePrepare.xls"&lt;/arg&gt;
+    &lt;/component&gt;
+&lt;/components&gt;
+</pre>
+<p><b>実行ファイルの作成</b></p>
+<ul>
+<li type="circle">org.seasar.framework.container.S2Container#create()メソッドの最初の引数に作成したdiconファイル(Db2Excel.dicon)のパスを指定してコンテナを作成します。</li>
+<li type="circle">org.seasar.framework.container.S2Container#getComponent()メソッドの第１引数にコンポーネントに登録したクラス名（SqlReader.class)を指定して取得します。</li>
+<li type="circle">org.seasar.framework.container.S2Container#getComponent()メソッドの第１引数にコンポーネントに登録したクラス名（XlsWriter.class)を指定して取得します。</li>
+<li type="circle">コンテナから取得したXlsWriter#write()メソッドの第1引数にSqlReader#read()を指定して実行します。</li>
+</ul>
+Db2Excel.java
+<pre>
+package test.examples.unit;
+
+import org.seasar.extension.dataset.impl.SqlReader;
+import org.seasar.extension.dataset.impl.XlsWriter;
+import org.seasar.framework.container.S2Container;
+import org.seasar.framework.container.factory.S2ContainerFactory;
+
+public class Db2Excel {
+
+    private static final String PATH =
+        "test/examples/unit/Db2Excel.dicon";
+
+    public static void main(String[] args) {
+        S2Container container = S2ContainerFactory.create(PATH);
+        container.init();
+        try {
+            SqlReader reader = (SqlReader)
+                container.getComponent(SqlReader.class);
+            XlsWriter writer = (XlsWriter)
+                container.getComponent(XlsWriter.class);
+            writer.write(reader.read());
+        } finally {
+            container.destroy();
+        }
+    }
+}
+</pre>
+<p><b>実行結果</b></p>
+<p>../src/test/examples/unit/getEmployeePrepare.xlsが以下のように作成されていることを確認してください。</p>
+<img src="images/testtech02.gif" alt="" /> <img src="images/testtech03.gif" alt="" />
+<p>従業員番号9900で検索をかけると、従業員番号9900の従業員テーブルと部署番号99の部署テーブルをジョインして返す想定としているので、empシートのEMPNOを9900とDEPTNOを99、deptシートのDEPTNOを99に書き換えて保存します。</p>
+<img src="images/testtech04.gif" alt="" /> <img src="images/testtech05.gif" alt="" /> <b>2．結果を検証するためのExcelデータの作成</b>
+<p>結果を検証するためのデータを用意します。このデータも手書きで用意できますが先ほどと同じように作成します。結果を検証するデータを作成するためのファイルは以下のとおりです。</p>
+<ul>
+<li type="circle">先ほど作成したDb2Excel.diconを変更して、結果を検証するためのデータをExcelに書き出すようにするdiconファイル(Db2Excel.dicon)</li>
+</ul>
+<p><b>diconファイルの作成</b></p>
+<ul>
+<li type="circle"><a href="#SqlReader">SqlReader</a>クラスのaddSql()メソッドを使用してSqlReaderクラスのコンポーネントの定義をしなおします。</li>
+<li type="circle"><a href="#XlsWriter">XlsWriter</a>クラスのコンポーネント定義で出力するファイルパスを変更します。</li>
+</ul>
+Db2Excel.dicon
+<pre>
+&lt;components&gt;
+    &lt;include path="j2ee.dicon"/&gt;
+    &lt;component class="org.seasar.extension.dataset.impl.SqlReader"&gt;
+        &lt;initMethod&gt;
+        #self.addSql("SELECT e.empno, e.ename, e.deptno, d.dname
+        FROM emp e, dept d WHERE empno = 7788 AND e.deptno = d.deptno", "emp")
+        &lt;/initMethod&gt;
+    &lt;/component&gt;
+    &lt;component class="org.seasar.extension.dataset.impl.XlsWriter"
+        instance="prototype"&gt;
+        &lt;arg&gt;"../src/test/examples/unit/getEmployeeResult.xls"&lt;/arg&gt;
+    &lt;/component&gt;
+&lt;/components&gt;
+</pre>
+<p>先ほど作成した実行ファイル(Db2Excel.java)を実行します。</p>
+<p><b>実行結果</b></p>
+<p>../src/test/examples/unit/getEmployeeResult.xlsが以下のように作成されていることを確認してください。</p>
+<img src="images/testtech06.gif" alt="" />
+<p>従業員番号9900で検索をかけると、従業員番号9900の従業員テーブルと部署番号99の部署テーブルをジョインして返す想定としているので、empシートのEMPNOを9900、DEPTNOを99に書き換えて保存します。</p>
+<img src="images/testtech07.gif" alt="" /> <b>3．テストを行うクラスの作成</b>
+<p>テスト用の従業員テーブルと部署テーブルのExcelデータと結果を検証するExcelデータが作成できたので、それを使って実際にDaoを呼び出して取得したデータの検証をするテストクラスを作成します。</p>
+<p><b>テストクラスの作成</b></p>
+<ul>
+<li type="circle">S2TestCaseを継承します。</li>
+<li type="circle">setUp()でdiconファイルをインクルードします。</li>
+<li type="circle">S2Unitの<a href="#s2transaction">トランザクション制御機能</a>を使ってテスト用の従業員テーブルと部署テーブルのExcelデータをデータベースに格納してもテストメソッドが終了した直後にトランザクションがロールバックされるようにテストメソッド名の最後にTxを付ける。</li>
+<li type="circle">readXlsWriteDb()メソッドを使ってテスト用のExcelデータをデータベースに登録します。</li>
+<li type="circle">readXls()メソッドを使って検証用のExcelデータをDataSetに読み込ませます。</li>
+<li type="circle">assertEquals()メソッドを使って読み込ませたDataSetとDaoを呼び出して取得したデータを比較します。</li>
+</ul>
+EmployeeDaoImplTest.java
+<pre>
+package test.examples.unit;
+
+import org.seasar.extension.dataset.DataSet;
+import org.seasar.extension.unit.S2TestCase;
+
+import examples.unit.Employee;
+import examples.unit.EmployeeDao;
+
+public class EmployeeDaoImplTest extends S2TestCase {
+
+    private EmployeeDao dao_;
+
+    public EmployeeDaoImplTest(String arg0) {
+        super(arg0);
+    }
+
+    public void setUp() {
+        include("examples/unit/EmployeeDao.dicon");
+    }
+
+    public void testGetEmployeeTx() throws Exception {
+        readXlsWriteDb("getEmployeePrepare.xls");
+        Employee emp = dao_.getEmployee(9900);
+        DataSet expected = readXls("getEmployeeResult.xls");
+        assertEquals("1", expected, emp);
+    }
+
+    public static void main(String[] args) {
+        junit.textui.TestRunner.run(EmployeeDaoImplTest.class);
+    }
+}
+</pre>
+<p><b>実行結果</b></p>
+<p>"OK (テスト数 test)"と出ていればassertEquals()メソッドで予想した通りの結果が得られています。</p>
+<pre>
+.DEBUG 2004-10-08 13:10:00,762 [main] トランザクションを開始しました
+DEBUG 2004-10-08 13:10:05,379 [main] 物理的なコネクションを取得しました
+DEBUG 2004-10-08 13:10:05,469 [main] 論理的なコネクションを取得しました
+DEBUG 2004-10-08 13:10:05,990 [main] 論理的なコネクションを閉じました
+DEBUG 2004-10-08 13:10:06,140 [main] INSERT INTO emp(EMPNO, ENAME, JOB, MGR, HIREDATE, SAL,
+COMM, DEPTNO) VALUES(9900, 'SCOTT2', 'ANALYST', 7566, '1982-12-09 00.00.00', 3000, null, 99)
+DEBUG 2004-10-08 13:10:06,140 [main] 論理的なコネクションを取得しました
+DEBUG 2004-10-08 13:10:06,901 [main] 論理的なコネクションを閉じました
+DEBUG 2004-10-08 13:10:06,911 [main] 論理的なコネクションを取得しました
+DEBUG 2004-10-08 13:10:07,151 [main] 論理的なコネクションを閉じました
+DEBUG 2004-10-08 13:10:07,151 [main] INSERT INTO dept(DEPTNO, DNAME, LOC) VALUES(99, 'RESEARCH2',
+'DALLAS')
+DEBUG 2004-10-08 13:10:07,151 [main] 論理的なコネクションを取得しました
+DEBUG 2004-10-08 13:10:07,151 [main] 論理的なコネクションを閉じました
+DEBUG 2004-10-08 13:10:07,151 [main] SELECT e.empno, e.ename, e.deptno, d.dname FROM emp e, dept d
+WHERE e.empno = 9900 AND e.deptno = d.deptno
+DEBUG 2004-10-08 13:10:07,151 [main] 論理的なコネクションを取得しました
+DEBUG 2004-10-08 13:10:07,312 [main] 論理的なコネクションを閉じました
+DEBUG 2004-10-08 13:10:07,392 [main] トランザクションをロールバックしました
+DEBUG 2004-10-08 13:10:07,492 [main] 物理的なコネクションを閉じました
+
+Time: 13.87
+
+OK (1 test)
+</pre>
+<p>このようにreadXls()で結果検証用のExcelデータを読み込み、Daoの結果と比較することが出来ることが確認できます。また、テストのためにデータベースに格納したデータもすべてロールバックしてもとに戻るため、データのクリーンアップを考える必要がなくなります。</p>
+<p>この演習は、seasar2/src/test/examples/unit以下に用意されています。</p>
+<h3><a name="S2DaoTestCaseExample" id="S2DaoTestCaseExample">S2DaoTestCaseのExample</a></h3>
+<p>以下のSELECT文のテストを行う演習です。</p>
+全件検索をするSELECT文（EmployeeDao_getAllEmployees.sql）
+<pre>
+SELECT emp.*, dept.dname dname_0, dept.loc loc_0 FROM emp, dept
+WHERE emp.deptno = dept.deptno ORDER BY emp.empno
+</pre>
+<p>作成するファイルは以下のとおりです。</p>
+<ul>
+<li type="circle">Dao(EmployeeDao.java)</li>
+<li type="circle">diconファイル(EmployeeDao)</li>
+<li type="circle">Excelファイル(getAllEmployeesResult.xls)</li>
+<li type="circle">テスト実行javaファイル(EmployeeDaoTest.java)</li>
+</ul>
+<p>※テスト対象のDao, diconファイルは<a href="http://www.seasar.org/s2dao.html#SelectExample">SQL文を記述する場合のExample</a>のものを使用しています。</p>
+<h5>Excelファイルの作成</h5>
+<ul>
+<li type="circle">テストするSELECT文の予想結果をExcelファイルに作成します</li>
+</ul>
+<p>作成(予想)したExcelファイル(getAllEmployeesResult.xls)は以下のようになります。</p>
+<img src="images/dao_getAllEmployeesResult_image.jpg" alt="" />
+<h5>テスト実行javaファイルの作成</h5>
+<ul>
+<li type="circle">org.seasar.dao.unit.S2DaoTestCaseを継承して作成します。</li>
+<li type="circle">getAllEmployeesメソッドに対するテストメソッド(testGetAllEmployees)を実装します。</li>
+<li type="circle">作成したExcelファイルを読み込みます。</li>
+<li type="circle">Daoに定義したメソッドを実行します。</li>
+<li type="circle">実行した結果とExcelファイルをassertEqualsメソッドで比較します。</li>
+</ul>
+<pre>
+package test.examples.dao;
+
+import java.util.List;
+
+import org.seasar.dao.unit.S2DaoTestCase;
+import org.seasar.extension.dataset.DataSet;
+
+import examples.dao.EmployeeDao;
+
+public class EmployeeDaoTest extends S2DaoTestCase {
+
+    private EmployeeDao employeeDao_;
+
+    public EmployeeDaoTest(String arg0) {
+        super(arg0);
+    }
+
+    public static void main(String[] args) {
+        junit.textui.TestRunner.run(EmployeeDaoTest.class);
+    }
+
+    public void setUp() {
+        include("examples/dao/EmployeeDao.dicon");
+    }
+
+    public void testGetAllEmployees() throws Exception {
+        DataSet expected = readXls("getAllEmployeesResult.xls");
+        List actual = employeeDao_.getAllEmployees();
+        assertEquals("1", expected, actual);
+    }
+}
+</pre>
+<h5>実行結果</h5>
+<pre>
+DEBUG 2004-09-10 10:55:07,447 [main] 物理的なコネクションを取得しました
+DEBUG 2004-09-10 10:55:07,447 [main] 論理的なコネクションを取得しました
+DEBUG 2004-09-10 10:55:08,384 [main] 論理的なコネクションを閉じました
+DEBUG 2004-09-10 10:55:09,181 [main] SELECT emp.*, dept.dname dname_0, dept.loc loc_0 FROM emp, dept
+WHERE emp.deptno = dept.deptno ORDER BY emp.empno
+DEBUG 2004-09-10 10:55:09,181 [main] 論理的なコネクションを取得しました
+DEBUG 2004-09-10 10:55:09,306 [main] 論理的なコネクションを閉じました
+DEBUG 2004-09-10 10:55:09,306 [main] 論理的なコネクションを取得しました
+DEBUG 2004-09-10 10:55:09,353 [main] 論理的なコネクションを閉じました
+DEBUG 2004-09-10 10:55:09,353 [main] 物理的なコネクションを閉じました
+
+Time: 4.844
+
+OK (1 test)
+</pre>
+<p>“OK(1 test)”と出力されましたので、予想した結果(Excel)とDaoの実行結果が等しいということになります。<br />
+この演習は、s2dao/src/test/examples/dao以下に用意されています。</p>
+<!-- document end -->
+<!-- don't edit start --></td>
+<td width="14"><img height="14" width="14" src="images/spacer.gif" alt="" /></td>
+</tr>
+<tr>
+<td width="14"><img height="30" width="14" src="images/spacer.gif" alt="" /></td>
+<td width="766"><img height="30" width="592" src="images/spacer.gif" alt="" /></td>
+</tr>
+<tr>
+<td width="14"><img height="14" width="14" src="images/spacer.gif" alt="" /></td>
+<td width="766" class="copyright">Copyright© 2004-2005, The Seasar Foundation and the others. All rights reserved.</td>
+</tr>
+</table>
+</td>
+<td class="backright" align="left" valign="top">&nbsp;</td>
+</tr>
+<tr>
+<td class="backunder" align="left" valign="top" width="780" height="16">&nbsp;</td>
+<td class="backcorner" align="left" valign="top" height="16">&nbsp;</td>
+</tr>
+</table>
+<!-- don't edit end -->
+</body>
+</html>

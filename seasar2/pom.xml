@@ -276,7 +276,6 @@
       <plugin>
         <artifactId>maven-javadoc-plugin</artifactId>
         <configuration>
-          <source>1.4</source>
           <encoding>UTF-8</encoding>
           <docencoding>UTF-8</docencoding>
           <charset>UTF-8</charset>
@@ -287,20 +286,42 @@
             <link>http://jakarta.apache.org/commons/logging/apidocs/</link>
             <link>http://www.csg.is.titech.ac.jp/~chiba/javassist/html/</link>
             <link>http://www.ognl.org/2.6.9/Documentation/javadoc/</link>
+            <link>http://www.junit.org/junit/javadoc/4.3/</link>
             <link>http://www.junit.org/junit/javadoc/3.8.1/</link>
+            <!--
+            <link>http://s2container.seasar.org/2.4/s2-framework/ja/apidocs/</link>
+            <link>http://s2container.seasar.org/2.4/s2-extension/ja/apidocs/</link>
+            <link>http://s2container.seasar.org/2.4/s2-tiger/ja/apidocs/</link>
+            -->
           </links>
         </configuration>
-        <!--
         <executions>
           <execution>
-            <id>javadoc-jar</id>
-            <phase>package</phase>
+            <phase>site</phase>
             <goals>
-              <goal>jar</goal>
+              <goal>javadoc</goal>
             </goals>
           </execution>
         </executions>
-        -->
+      </plugin>
+      <plugin>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>ant-dist</id>
+            <phase>site</phase>
+            <configuration>
+              <tasks>
+                <ant antfile="build.xml" target="dist">
+                  <property name="ver" value="${version}"/>
+                </ant>
+              </tasks>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
     <extensions>
@@ -313,6 +334,7 @@
   <modules>
     <module>s2-framework</module>
     <module>s2-extension</module>
+    <module>s2-dist</module>
   </modules>
   <repositories>
     <repository>
@@ -322,13 +344,6 @@
     </repository>
   </repositories>
   <dependencies>
-    <dependency>
-      <groupId>hsqldb</groupId>
-      <artifactId>hsqldb</artifactId>
-      <version>1.8.0.1</version>
-      <type>jar</type>
-      <scope>test</scope>
-    </dependency>
     <dependency>
       <groupId>org.apache.geronimo.specs</groupId>
       <artifactId>geronimo-j2ee_1.4_spec</artifactId>
@@ -352,6 +367,13 @@
       <optional>true</optional>
     </dependency>
     <dependency>
+      <groupId>portlet-api</groupId>
+      <artifactId>portlet-api</artifactId>
+      <version>1.0</version>
+      <type>jar</type>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
       <groupId>log4j</groupId>
       <artifactId>log4j</artifactId>
       <version>1.2.13</version>
@@ -359,11 +381,11 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>portlet-api</groupId>
-      <artifactId>portlet-api</artifactId>
-      <version>1.0</version>
+      <groupId>hsqldb</groupId>
+      <artifactId>hsqldb</artifactId>
+      <version>1.8.0.1</version>
       <type>jar</type>
-      <scope>provided</scope>
+      <scope>test</scope>
     </dependency>
   </dependencies>
   <distributionManagement>
@@ -379,5 +401,9 @@
       <name>The Seasar Foundation Maven2 Snapshot Repository</name>
       <url>dav:https://www.seasar.org/maven/maven2-snapshot</url>
     </snapshotRepository>
+    <site>
+      <id>www.seasar.org</id>
+      <url>scp://www.seasar.org/home/groups/s2container/public_html/2.4/</url>
+    </site>
   </distributionManagement>
 </project>

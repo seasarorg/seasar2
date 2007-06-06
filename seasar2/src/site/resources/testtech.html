@@ -1,0 +1,619 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- don't edit start -->
+<head><title>Seasar - DI Container with AOP - </title><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<link href="seasar_b.css" type="text/css" rel="stylesheet" media="screen"><script src="seasar_b.js" type="text/JavaScript" language="JavaScript"></script>
+</head><body onload="preload('en')">
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="left"><tr>
+<td align="left" valign="top" width="780"><table width="780" border="0" cellspacing="0" cellpadding="0" class="white">
+<tr><td colspan="7"><img height="5" width="780" src="images/top01_b.gif" alt=""></td></tr>
+<tr><td><img height="117" width="235" src="images/top02_b.gif" alt="Seasar"></td>
+<td colspan="3"><img height="117" width="289" src="images/top03.gif" alt="DI Container with AOP"></td>
+<td colspan="3"><img height="117" width="256" src="images/spacer.gif" alt=""></td>
+</tr><tr><td rowspan="2"><img src="images/top04.gif" alt="" height="49" width="235"></td>
+<td><a href="http://www.seasar.org/en/index.html"><img src="images/menu01_b_en.gif" height="30" width="78" border="0" alt="" id="menu01" onmouseover="swap(1)" onmouseout="restore(1)"></a></td>
+<td><a href="http://www.seasar.org/en/projects.html"><img src="images/menu02_b_en.gif" height="30" width="101" border="0" alt="" id="menu02" onmouseover="swap(2)" onmouseout="restore(2)"></a></td>
+<td><a href="http://www.seasar.org/en/products.html"><img src="images/menu06_b_en.gif" height="30" width="110" border="0" alt="" id="menu06" onmouseover="swap(6)" onmouseout="restore(6)"></a></td>
+<td><a href="http://www.seasar.org/en/documents.html"><img src="images/menu04_b_en.gif" height="30" width="109" border="0" alt="" id="menu04" onmouseover="swap(4)" onmouseout="restore(4)"></a></td>
+<td><a href="http://www.seasar.org/en/resources.html"><img src="images/menu05_b_en.gif" height="30" width="113" border="0" alt="" id="menu05" onmouseover="swap(5)" onmouseout="restore(5)"></a></td>
+<!--
+<td><img src="images/menu07_b_en.gif" height="30" width="109" border="0" alt=""  id="menu07" onmouseover="swap(7)" onmouseout="restore(7)"></td>
+//-->
+<td><img height="30" width="34" src="images/menu06.gif" alt=""></td></tr><tr>
+
+<td colspan="6"><img height="19" width="545" src="images/spacer.gif" alt=""></td></tr></table>
+<table  width="780" border="0" cellspacing="0" cellpadding="0" class="menu">
+<tr align="left" valign="top"><td width="14"><img height="14" width="14" src="images/spacer.gif" alt=""></td><td width="740" class="main">
+<!-- don't edit end -->
+<!-- document start --><!-- title -->
+            <UL>
+              <LI><A
+              href="testtech.html#TestOutline">Test Outline</A>
+
+              <LI><A
+              href="testtech.html#S2TestReference">S2 Test Reference</A>
+
+              <UL>
+                <LI><A
+                href="testtech.html#MockMake">Creating a Mock Test</A>
+
+                <LI><A
+                href="testtech.html#MockUse">Using a Mock Test</A>
+
+                <LI><A
+                href="testtech.html#S2UnitMake">Creating Test Class with S2Unit</A>
+
+                <LI><A
+                href="testtech.html#s2Unitfunction">S2Unit Functionalities</A>
+
+                <LI><A
+                href="testtech.html#s2unitexcel">Creating an Excel File</A>
+                </LI></UL>
+              <LI><A
+              href="testtech.html#s2Unitexample">Example</A>
+
+              <UL>
+                <LI><A
+                href="testtech.html#s2examplemock">Mock</A>
+
+                <LI><A
+                href="testtech.html#s2unitdatabasetest">Testing with a Database</A>
+                </LI></UL></LI></UL>
+            <H2><A name=TestOutline>Test Outline</A></H2>
+            <P><A href="DIContainer.html">S2Container</A> is able remove dependencies by using only interfaces to communicate between components. This, however, creates a bottleneck during program development because interfaces must be created before testing can start. Seasar2 circumvents this problem by allowing mock interfaces to be easily created. Because implementations can be replaced by mock objects, testing can begin as components are created.<BR />
+Furthermore, S2Unit allows unit testing using containers and there is a functionality to test using database with Excel files.。</P><!--  S2 Test Reference  -->
+            <H2><A name=S2TestReference>S2 Test Reference</A></H2><!--  モックの作成  -->
+            <H3><A name=MockMake>Creating a Mock Test</A></H3>
+            <P>org.seasar.framework.aop.interceptors.MockInterceptor is used to define a mock interface.  MockInterceptor is an Interceptor offered by <A href="aop.html">S2AOP</A>.  By using the following methods in MockInterceptor, mock interface may be set, interface may be called, and arguments may be checked.</P>
+            <DL>
+              <DT style="TEXT-INDENT: 1em">public void setReturnValue(String
+              methodName, Object returnValue)
+              <DD>Description: Sets return value to an interface method
+              <DD>Arg 1: Interface method name to return a value
+              <DD>Arg 2: Value to be returned by argument 1</DD></DL>
+            <DL>
+              <DT style="TEXT-INDENT: 1em">public void setReturnValue(Object
+              returnValue)
+              <DD>Description: Set return value to all interface methods
+              <DD>Arg 1: Value to be returned. All calls to a method will return this value. Usually, this method is used to set a return value when only interface method is called.
+              </DD></DL>
+            <DL>
+              <DT style="TEXT-INDENT: 1em">public boolean isInvoked(String
+              methodName)
+              <DD>Description: Used to check to determine if interface method was called
+              <DD>Arg 1: Name of interface method to check if it was called
+              <DD>Returns: boolean value indicating whether the interface method was called</DD></DL>
+            <DL>
+              <DT style="TEXT-INDENT: 1em">public Object[] getArgs(String
+              methodName)
+              <DD>Description: Gets arguments passed to an interface method
+              <DD>Arg 1: Name of interface method to get argment values from
+              <DD>Returns: Object[] array containing argument values of an interface method</DD></DL><!--  Creating a Mock  -->
+            <H3><A name=MockUse>Using a Mock Test</A></H3>
+            <P>To create an mock interface, values are set using an MockInterceptor aspect. For example, let's assume thiere is a following interface:
+</P><PRE>public interface Hello {
+    public String greeting();
+    public String echo(String str);
+}
+</PRE>
+            <P>Following code is used to create a mock interface that returns "Hello" when greeting() method is called and returns "Hoge" when echo() method is called.</P>
+<PRE>MockInterceptor mi = new MockInterceptor();
+mi.setReturnValue("greeting", "Hello");
+mi.setReturnValue("echo", "Hoge");
+Hello hello = mi.createProxy(Hello.class);
+</PRE>
+            <P>Above code may be written as the following component definition.</P><PRE>&lt;component class="examples.aop.Hello"&gt;
+    &lt;aspect&gt;
+        &lt;component class="org.seasar.framework.aop.interceptors.MockInterceptor"&gt;
+            &lt;initMethod name="setReturnValue"&gt;
+                &lt;arg&gt;"greeting"&lt;/arg&gt;
+                &lt;arg&gt;"Hello"&lt;/arg&gt;
+            &lt;/initMethod&gt;
+            &lt;initMethod name="setReturnValue"&gt;
+                &lt;arg&gt;"echo"&lt;/arg&gt;
+                &lt;arg&gt;"Hoge"&lt;/arg&gt;
+            &lt;/initMethod&gt;
+        &lt;/component&gt;
+    &lt;/aspect&gt;
+&lt;/component&gt;
+</PRE>
+            <P>Refer to <A  href="testtech.html#s2examplemock">Mock Examples</A> for detailed information on creating mock interfaces.</P><!--  Creating Test Class with S2Unit  -->
+            <H3><A name=S2UnitMake>Creating Test Class with S2Unit</A></H3>
+            <P>Test classes are created by extending org.seasar.extension.unit.S2TestCase class. Test methods are the same as thos in JUnit because S2TestCase class is extended from JUnit.</P><!--  S2Unit Functionalities  -->
+            <H3><A name=s2Unitfunction>S2Unit Functionalities</A></H3>
+            <P>Following functions are offered to make unit testing with <A href="DIContainer.html">S2Container</A> easier.</P>
+            <DL>
+              <DT style="TEXT-INDENT: 1em"><B>Automatic creation of S2Container</B>
+              <DD>When S2Container is constructed, test method (testXxx) is also constructed.
+              <DD>It is not neccessary to write S2ContainerFactory.create(PATH) to construct a S2Container.
+              </DD></DL>
+            <DL>
+              <DT style="TEXT-INDENT: 1em"><B>register(),getComponent(),include() methods</B>
+
+              <DD>register(),getComponent(),include() methods are available to S2Container.
+              </DD></DL>
+            <DL>
+              <DT style="TEXT-INDENT: 1em"><B>Omitting PATH in include</B>
+              <DD>It is possible to omit PATH in include() when path are the same as that is a test class.
+              <DD>For example, if aaa.bbb.CccTest class include() aaa/bbb/hoge.dicon, it is possible to just write include("hoge.dicon").
+              </DD></DL>
+            <DL>
+              <DT style="TEXT-INDENT: 1em"><B>Automatic setting of variables</B>
+              <DD>TestCase fields that are not static nor final are automatically set with underscore character (_) omitted from their names
+              <DD>TestCase fields with interface type variable definitions are automatically set by S2Container.  Values automatically assigned are cleared (set to null) afer test method ends.
+              </DD></DL>
+            <DL>
+              <DT style="TEXT-INDENT: 1em"><B>setUpXxx(),tearDownXxx() methods</B>
+              <DD>If test method(testXxx) is defined with corresponding setUpXxx() and tearDownXxx() methods, it is invoked after setUp() and before tearDown() are invoked.
+              <DD>It is easy to initialize and finalize on each test method.</DD></DL>
+            <P>Following features are available when conducting a test using a database.</P>
+            <DL>
+              <DT style="TEXT-INDENT: 1em"><A
+              name=s2transaction><B>Transactions</B></A>
+              <DD>By ending test method names with Tx(e.g.testXxxTx) in include("j2ee.dicon") file, transaction is initiated just before the test method and rolled back after the test method is invoked. Thus, it is unnecessary to manually rollback data after each test.
+              </DD></DL>
+            <DL>
+              <DT style="TEXT-INDENT: 1em"><B>assertEquals() method</B>
+              <DD>assertEquals() method may be used to compare expected DataSet result with Map, Map List, Bean, and Bean List.
+              </DD></DL>
+            <DL>
+              <DT style="TEXT-INDENT: 1em"><B>readXls() method</B>
+              <DD>DataSet expected = readXls("verification.xls") statement reads verification data from Excel into a DataSet.
+              <DD>If PATH of a Excel verification data is in the same package as a class, path may be omitted
+              <DD>Refer to <A href="testtech.html#s2unitexcel">Creating an Excel File</A> on steps to create a verification data.
+              </DD></DL>
+            <DL>
+              <DT style="TEXT-INDENT: 1em"><B>reload() method</B>
+              <DD>reload(DataSet) is used to reload data by a primary key and to obtain a new DataSet. Update test may be easily done by entering expected updated values into the Excel sheet.
+              <DD>DataSet expected = readXls("verification.xls");
+              <DD>assertEquals(expected, reload(expected); </DD></DL>
+            <DL>
+              <DT
+              style="TEXT-INDENT: 1em"><B>readXlsWriteDb(),readXlsAllReplaceDb() methods</B>
+
+              <DD>Verification data entered into Excel sheet are inserted into a database by readXlsWriteDb("verification.xls") or readXlsAllReplaceDb("verification.xls"). If verification Excel file is in the same package as the test class, package path may be omitted.
+              <DD>Usually, to rollback data to their original values, readXlsWriteDb() and readXlsAllReplaceDb() are executed in the first lines of testXxxTx().
+Furthermore, these methods insert data after deleting in reverse order of Excel sheet order.
+              <DD>When using readXlsAllReplaceDb() method, it may be neccessary to create an empty sheet to avoid foreign data constraint error.
+              <DD>For example, if foreign key in table A reference table B, it is neccessary to create an Excel sheet for table B even when there is only data fro table A. It is, also, necessary to create Excel sheet for table A before a sheet for table B.
+              </DD></DL><!--  Test using a Database  -->
+            <H3><A name=s2unitexcel>Creating an Excel File</A></H3>
+            <P>Verification Excel file is created as follows. Excel file is usually created in the same directory as the test class file.</P><IMG
+            alt="" src="../ja/images/testtech01.gif">
+            <DL>
+              <DT style="TEXT-INDENT: 1em">1. Sheet name
+              <DD>Table name
+              <DT style="TEXT-INDENT: 1em">2. First row
+              <DD>Column name <BR>Sheets with N:1 table mapping should have a name "ColumnName_RelationShipNumber".
+              <DT style="TEXT-INDENT: 1em">3. Other rows
+              <DD>Test data</DD></DL>
+            <P>To generate verification Excel data from a database, following class may be used.</P>
+            <UL>
+              <LI type=circle>Class to read content from a database into a DataSet
+              <LI type=circle>Output DataSet to an Excel file</LI></UL>
+            <P><A name=SqlReader><B>Class to read content from a database into a DataSet</B></A></P>
+            <DL>
+              <DT style="TEXT-INDENT: 1em">
+              <DD></DD></DL>
+            <DL>
+              <DT style="TEXT-INDENT: 1em">Class Name
+              <DD>org.seasar.extension.dataset.impl.SqlReader
+              <DT style="TEXT-INDENT: 1em">Methods
+              <DL>
+                <DT>public void addTable(String tableName)
+                <DD>Description: Read entire data from a specified table into a DataSet
+                <DD>Arg 1: Table name of a table to get the data<BR></DD></DL>
+              <DL>
+                <DT>public void addTable(String tableName, String condition)
+                <DD>Description: Get data from the specified table matching the specified condition into a DataSet
+                <DD>Arg 1: Table name of a table to get te data
+                <DD>Arg 2: Condition to match when getting a data</DD></DL>
+              <DL>
+                <DT>public void addSql(String sql, String tableName)
+                <DD>Description: Get data from the specified table matching the specified SQL statement into a DataSet
+                <DD>Arg 1: Select statement to get the data
+                <DD>Arg 2: Table name of a table to get the data</DD></DL>
+              <DL>
+                <DT>public DataSet read()
+                <DD>Description: Return DateSet that was read
+                <DD>Return: DataSet from addTable() method or addSql() method.
+              </DD></DL></DT></DL>
+            <P><A name=XlsWriter><B>Class to output DataSet to an Excel file</B></A></P>
+            <DL>
+              <DT style="TEXT-INDENT: 1em">Class Name
+              <DD>org.seasar.extension.dataset.impl.XlsWriter
+              <DT style="TEXT-INDENT: 1em">Methods
+              <DL>
+                <DT>(Constructor)public XlsWriter(String path)
+                <DD>Description: Specify file the path of Excel file to generate data
+                <DD>Arg 1: File path of output Excel file</DD></DL>
+              <DL>
+                <DT>public void write(DataSet dataSet)
+                <DD>Description: Output data from DataSet to an Excel file specified in the XlsWriter()
+                <DD>Arg 1: Result DataSet</DD></DL></DT></DL>
+            <P>Refer to an example in<A href="testtech.html#s2unitdatabasetest">Testing with a Database</A> for further detailed information.</P>
+            <H2><A name=s2Unitexample>Example</A></H2>
+            <P>To test the following example, please setup the environment following steps outlined in <A href="setup.html">Setup</A>.<BR>
+            <H3><A name=s2examplemock>Mock</A></H3>
+            <P>Let's create a mock interface using MockInterceptor that is made available by S2 and than test using S2Unit to verify that method and their arguments are correct. Required files are as follows:</P>
+            <UL>
+              <LI type=circle>Interface(Hello.java)
+              <LI type=circle>dicon file (Hello.dicon) defining mock to an interface
+              <LI type=circle>Class (HelloTest.java) to test created interface</LI></UL>
+            <H5><B>Creating Interface</B></H5>
+            <UL>
+              <LI type=circle>Create method (greeting) with no argument and String return type.
+              <LI type=circle>Create method (echo) with 1 argument and String return type.
+            </LI></UL>Hello.java <PRE>package examples.aop.mockinterceptor;
+
+public interface Hello {
+
+    public String greeting();
+
+    public String echo(String str);
+
+}</PRE>
+            <H5><B>Creating dicon File</B></H5>
+            <UL>
+              <LI type=circle>Mock will return "Hello" when greeting() method is called and "Hoge" when echo() method is called.
+              <LI type=circle>MockInterceptor is defined in a component. name attribute is set to helloMockInterceptor.
+              <LI type=circle>Set argument as specified by a mock by method injunction to setReturnValue() method in MockInterceptor.
+              <LI type=circle>Interface is defined in a component. Specify MockInterceptor defined in a component to an aspect tag.
+              </LI></UL>Hello.dicon <PRE>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container//EN"
+"http://www.seasar.org/dtd/components.dtd"&gt;
+&lt;components&gt;
+    &lt;component name="mockInterceptor"
+               class="org.seasar.framework.aop.interceptors.MockInterceptor"&gt;
+        &lt;initMethod name="setReturnValue"&gt;
+            &lt;arg&gt;"greeting"&lt;/arg&gt;
+            &lt;arg&gt;"Hello"&lt;/arg&gt;
+        &lt;/initMethod&gt;
+        &lt;initMethod name="setReturnValue"&gt;
+            &lt;arg&gt;"echo"&lt;/arg&gt;
+            &lt;arg&gt;"Hoge"&lt;/arg&gt;
+        &lt;/initMethod&gt;
+    &lt;/component&gt;
+    &lt;coponent class="examples.aop.mockinterceptor.Hello"&gt;
+        &lt;aspect&gt;
+            mockInterceptor
+        &lt;/aspect&gt;
+    &lt;/component&gt;
+&lt;/components&gt;</PRE><BR>
+            <H5><B>Creating Test Class</B></H5>
+            <UL>
+              <LI type=circle>Inherit S2TestCase
+              <LI type=circle>Declare variables so examples.aop.Hello and org.seasar.framework.aop.interceptors.MockInterceptor in dicon file will automatically be set.
+              <LI type=circle>Use MockInterceptor#isInvoked(String
+              methodName) to verify method was called.
+              <LI type=circle>use MockInterceptor#getArgs(String methodName) to verify values of method's arguments are correct.</LI></UL>HelloTest.java <PRE>package examples.aop.mockinterceptor;
+
+import org.seasar.extension.unit.S2TestCase;
+import org.seasar.framework.aop.interceptors.MockInterceptor;
+
+public class HelloTest extends S2TestCase{
+    //omitted path because in same package as test class
+    private static String PATH = "Hello.dicon";
+
+    //auto set variable
+    private Hello hello ;
+
+    private MockInterceptor mi ;
+
+    public void testHello() throws Exception{
+
+	//check if dicon file defined mock interface correctly
+	assertEquals("Hello", hello.greeting());
+	assertEquals("Hoge", hello.echo("test"));
+
+	hello.echo("Hello");
+	//check if echo()method is called
+	assertEquals(true, mi.isInvoked("echo"));
+
+	//check if argument of echo() method is "Hello"
+	assertEquals("Hello", mi.getArgs("echo")[0]);
+
+    }
+
+    protected void setUp() throws Exception {
+          //S2Container include() method
+	include(PATH);
+    }
+
+    protected void tearDown() throws Exception {
+    }
+
+    public HelloTest(String arg0) {
+	super(arg0);
+    }
+
+    public static void main(String[] args) {
+	junit.textui.TestRunner.run(HelloTest.class);
+    }
+
+}
+</PRE>
+            <P>Components are automatically constructed by S2TestCase so only necessary processes needs to be in a test method.</P>
+            <H5><B>Results</B></H5>
+            <P>If "OK (Test Count test)" is displayed, assertEquals() method executed as expected.</P><PRE>.
+Time: 1.643
+
+OK (1 test)
+</PRE>
+            <P>Example files may be found under seasar2/src/examples/aop/mockinterceptor directory.</P>
+            <H3><A name=s2unitdatabasetest>Testing with a Database</A></H3>
+            <P>Following example uses HSQLDB. Refer to <A href="setup.html">Setup</A> to setup and start HSQLDB before trying out this example.<BR />This example uses the following EMP(Employee) table and DEPT(Department) table.</P><B>Table: EMP(Employee)</B>
+
+            <TABLE class=main border=1>
+              <TBODY>
+              <TR align=middle bgColor=#d1f3f4>
+                <TH>Column Name</TH>
+                <TH>Label</TH>
+                <TH>Type</TH>
+                <TH>NotNull</TH>
+                <TH>Primary Key</TH></TR>
+              <TR>
+                <TD>EMPNO</TD>
+                <TD>Employee Number</TD>
+                <TD>NUMBER</TD>
+                <TD align=middle>〇</TD>
+                <TD align=middle>〇</TD></TR>
+              <TR>
+                <TD>ENAME</TD>
+                <TD>Employee Name</TD>
+                <TD>VARCHAR2</TD>
+                <TD><BR></TD>
+                <TD><BR></TD></TR>
+              <TR>
+                <TD>JOB</TD>
+                <TD>Job</TD>
+                <TD>VARCHAR2</TD>
+                <TD><BR></TD>
+                <TD><BR></TD></TR>
+              <TR>
+                <TD>MGR</TD>
+                <TD>Manager</TD>
+                <TD>NUMBER</TD>
+                <TD><BR></TD>
+                <TD><BR></TD></TR>
+              <TR>
+                <TD>HIREDATE</TD>
+                <TD>Hire Date</TD>
+                <TD>DATE</TD>
+                <TD><BR></TD>
+                <TD><BR></TD></TR>
+              <TR>
+                <TD>SAL</TD>
+                <TD>Salary</TD>
+                <TD>NUMBER</TD>
+                <TD><BR></TD>
+                <TD><BR></TD></TR>
+              <TR>
+                <TD>COMM</TD>
+                <TD>Commission</TD>
+                <TD>NUMBER</TD>
+                <TD><BR></TD>
+                <TD><BR></TD></TR>
+              <TR>
+                <TD>DEPTNO</TD>
+                <TD>Department Number</TD>
+                <TD>NUMBER</TD>
+                <TD><BR></TD>
+                <TD><BR></TD></TR></TBODY></TABLE><BR><B>Table:DEPT(Department)</B>
+            <TABLE class=main border=1>
+              <TBODY>
+              <TR align=middle bgColor=#d1f3f4>
+                <TH>Column Name</TH>
+                <TH>Label</TH>
+                <TH>Type</TH>
+                <TH>NotNull</TH>
+                <TH>Primary Key</TH></TR>
+              <TR>
+                <TD>DEPTNO</TD>
+                <TD>Department Number</TD>
+                <TD>NUMBER</TD>
+                <TD align=middle>〇</TD>
+                <TD align=middle>〇</TD></TR>
+              <TR>
+                <TD>DNAME</TD>
+                <TD>Department Name</TD>
+                <TD>VARCHAR2</TD>
+                <TD><BR></TD>
+                <TD><BR></TD></TR>
+              <TR>
+                <TD>LOC</TD>
+                <TD>Location</TD>
+                <TD>VARCHAR2</TD>
+                <TD><BR></TD>
+                <TD><BR></TD></TR>
+              <TR>
+                <TD>VERSIONNO</TD>
+                <TD>Version Number</TD>
+                <TD>NUMBER</TD>
+                <TD><BR></TD>
+                <TD><BR></TD></TR></TBODY></TABLE>
+            <P>This example used <A href="s2jdbc.html">S2JDBC</A>, the most simplistic way to execute a SQL statement. Test verifies DAO result from a query on EMP table based on employee number. DAO source that is used can be found in the seasar2/src/examples/unit/ directory.<BR />
+This example will query EMP table for employee number 9900 and obtain a result data set that is a join on EMP table and a DEPT table.</P>
+            <P>Testing steps are as follows:</P>
+            <OL>
+              <LI>Create Excel sheets with data for EMP table and DEPT table
+              <LI>Create an Excel sheet with verification data to compare test results
+              <LI>Create test class and then execute it
+            </LI></OL><B>1.Create Excel sheets with data for EMP table and DEPT table</B>
+            <P>Excel sheets have table name as their names, table column names in their first rows, and data to be used for a test in following rows. In this example, however, Excel sheets will be generated from the database.</P>
+            <P>Following files are used to generate Excel sheets with test data</P>
+            <UL>
+              <LI type=circle>dicon file (Db2Excel.dicon) to output database data to Excel.
+              <LI type=circle>Java program file (Db2Excel.java) to use the dicon file to output database data to Excel.</LI></UL>
+            <P><B>Create dicon file</B></P>
+            <UL>
+              <LI type=circle>Include j2ee.dicon
+              <LI type=circle>Define component in <A href="testtech.html#SqlReader">SqlReader</A>class. In this example, only one record will be selected - employee number 7788 record from the EMP table and department number 20 from the DEPT table.
+              <LI type=circle>Define component in <A href="testtech.html#XlsWriter">XlsWriter</A> class. Specify file path to output by constructor injection.
+              </LI></UL>Db2Excel.dicon <PRE>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container//EN"
+"http://www.seasar.org/dtd/components.dtd"&gt;
+&lt;components&gt;
+    &lt;include path="j2ee.dicon"/&gt;
+    &lt;component class="org.seasar.extension.dataset.impl.SqlReader"&gt;
+        &lt;initMethod&gt;#self.addTable("emp", "empno = 7788")&lt;/initMethod&gt;
+        &lt;initMethod&gt;#self.addTable("dept", "deptno = 20")&lt;/initMethod&gt;
+    &lt;/component&gt;
+    &lt;component class="org.seasar.extension.dataset.impl.XlsWriter" instance="prototype"&gt;
+        &lt;arg&gt;"../src/test/examples/unit/getEmployeePrepare.xls"&lt;/arg&gt;
+    &lt;/component&gt;
+&lt;/components&gt;</PRE>
+            <P><B>Creating an Executable File</B></P>
+            <UL>
+              <LI type=circle>Create a container using org.seasar.framework.container.S2Container#create() method with the first argument set to path of the created dicon file (Db2Excel.dicon)
+              <LI type=circle>Set the first argument of org.seasar.framework.container.S2Container#getComponent() method to class name（SqlReader.class) registered in the component.
+              <LI type=circle>Set the first argument of org.seasar.framework.container.S2Container#getComponent() method to class name（XlsWriter.class) registered in the component.
+              <LI type=circle>Execute after setting the first argument of XlsWriter#write() got from the container to SqlReader#read().
+              </LI></UL>Db2Excel.java <PRE>package test.examples.unit;
+
+import org.seasar.extension.dataset.impl.SqlReader;
+import org.seasar.extension.dataset.impl.XlsWriter;
+import org.seasar.framework.container.S2Container;
+import org.seasar.framework.container.factory.S2ContainerFactory;
+
+public class Db2Excel {
+
+    private static final String PATH =
+        "test/examples/unit/Db2Excel.dicon";
+
+    public static void main(String[] args) {
+        S2Container container = S2ContainerFactory.create(PATH);
+        container.init();
+        try {
+            SqlReader reader = (SqlReader)
+                container.getComponent(SqlReader.class);
+            XlsWriter writer = (XlsWriter)
+                container.getComponent(XlsWriter.class);
+            writer.write(reader.read());
+        } finally {
+            container.destroy();
+        }
+    }
+}
+</PRE>
+            <P><B>Result</B></P>
+            <P>Check whether if the content of file ../src/test/examples/unit/getEmployeePrepare.xls is like those below:</P><IMG alt="" src="../ja/images/testtech02.gif">
+            <P></P><IMG alt=""
+            src="../ja/images/testtech03.gif">
+            <P>Inquiry of employee number 9900 should return a result that is a result of a join of employee number 9900 row from an EMP table and department number 99 from DEPT table. Thus, enter EMPNO as 9900 and DEPTNO as 99 in Excel's emp sheet and DEPTNO as 99 in the dept sheet. Save the Excel document to a file.</P><IMG
+            alt="" src="../ja/images/testtech04.gif">
+            <P></P><IMG alt=""
+            src="../ja/images/testtech05.gif"><BR />
+            <B>2.Create an Excel sheet with verification data to compare test results</B>
+            <P>Create data to verify the result. This data may be manually created but it can also be generated using steps similar to generate test data. Followings are files necessary to generate verification data:</P>
+            <UL>
+              <LI type=circle>dicon file (Db2Excel.dicon) that was used to generate test data can be modified slight so it will now generate verification data.               </LI></UL>
+            <P><B>Creating dicon file</B></P>
+            <UL>
+              <LI type=circle>Redefine a component in SqlReader class using addSql() method in <A href="testtech.html#SqlReader">SqlReader</A>class.
+              <LI type=circle>Change output file path using component definition in <A href="testtech.html#XlsWriter">XlsWriter</A>.
+              </LI></UL>Db2Excel.dicon <PRE>&lt;components&gt;
+    &lt;include path="j2ee.dicon"/&gt;
+    &lt;component class="org.seasar.extension.dataset.impl.SqlReader"&gt;
+        &lt;initMethod&gt;
+        #self.addSql("SELECT e.empno, e.ename, e.deptno, d.dname
+        FROM emp e, dept d WHERE empno = 7788 AND e.deptno = d.deptno", "emp")
+        &lt;/initMethod&gt;
+    &lt;/component&gt;
+    &lt;component class="org.seasar.extension.dataset.impl.XlsWriter"
+        instance="prototype"&gt;
+        &lt;arg&gt;"../src/test/examples/unit/getEmployeeResult.xls"&lt;/arg&gt;
+    &lt;/component&gt;
+&lt;/components&gt;
+</PRE>
+            <P>Execute Db2Excel.java file created earlier.</P>
+            <P><B>Results</B></P>
+            <P>Verify that content of ../src/test/examples/unit/getEmployeeResult.xls file are like those below:</P><IMG alt="" src="../ja/images/testtech06.gif">
+            <P>This example assumes a query on EMP table on employee number 9900 will return a result that is a join of employee number 9900 in EMP table and department number 99 in DEPT table. Thus, enter 9900 as EMPNO in a Excel's emp sheet and 99 as DEPTNO.</P><IMG alt="" src="../ja/images/testtech07.gif"><BR />
+            <B>3.Creating Test Classes to Conduct a Test</B>
+            <P>After creating Excel sheet containing data for EMP table and DEPT table and another Excel sheet containing test verification data, test class to actually call Dao and do data verification should be created.</P>
+            <P><B>Creating a Test Class</B></P>
+            <UL>
+              <LI type=circle>Extend S2TestCase
+              <LI type=circle>Include dicon file in setUp()
+              <LI type=circle>Append test method name with Tx to rollback database after using S2Unit <A href="testtech.html#s2transaction">transaction control</A> to add from Excel sheet to EMP table and DEPT table.
+              <LI type=circle>Insert database data entered in Excel sheet into database using readXlsWriteDb() method.
+              <LI type=circle>Set verification data Excel sheet into DataSet using readXls() method.
+              <LI type=circle>Use assertEquals() method to compare data read into DataSet with data from Dao.
+              </LI></UL>EmployeeDaoImplTest.java <PRE>package test.examples.unit;
+
+import org.seasar.extension.dataset.DataSet;
+import org.seasar.extension.unit.S2TestCase;
+
+import examples.unit.Employee;
+import examples.unit.EmployeeDao;
+
+public class EmployeeDaoImplTest extends S2TestCase {
+
+    private EmployeeDao dao_;
+
+    public EmployeeDaoImplTest(String arg0) {
+        super(arg0);
+    }
+
+    public void setUp() {
+        include("examples/unit/EmployeeDao.dicon");
+    }
+
+    public void testGetEmployeeTx() throws Exception {
+        readXlsWriteDb("getEmployeePrepare.xls");
+        Employee emp = dao_.getEmployee(9900);
+        DataSet expected = readXls("getEmployeeResult.xls");
+        assertEquals("1", expected, emp);
+    }
+
+    public static void main(String[] args) {
+        junit.textui.TestRunner.run(EmployeeDaoImplTest.class);
+    }
+}
+</PRE>
+            <P><B>Results</B></P>
+            <P>If message "OK (Test Count test)" is displayed, assertEquals() method obtained the expected result.</P>
+<PRE>.DEBUG 2004-10-08 13:10:00,762 [main] Transaction started
+DEBUG 2004-10-08 13:10:05,379 [main] physical connection opened
+DEBUG 2004-10-08 13:10:05,469 [main] logical connection opened
+DEBUG 2004-10-08 13:10:05,990 [main] logical connection closed
+DEBUG 2004-10-08 13:10:06,140 [main] INSERT INTO emp(EMPNO, ENAME, JOB, MGR, HIREDATE,
+  SAL, COMM, DEPTNO) VALUES(9900, 'SCOTT2', 'ANALYST', 7566, '1982-12-09 00.00.00',
+  3000, null, 99)
+DEBUG 2004-10-08 13:10:06,140 [main] logical connection opened
+DEBUG 2004-10-08 13:10:06,901 [main] logical connection closed
+DEBUG 2004-10-08 13:10:06,911 [main] logical connection opened
+DEBUG 2004-10-08 13:10:07,151 [main] logical connection closed
+DEBUG 2004-10-08 13:10:07,151 [main] INSERT INTO dept(DEPTNO, DNAME, LOC) VALUES(99,
+  'RESEARCH2', 'DALLAS')
+DEBUG 2004-10-08 13:10:07,151 [main] logical connection opened
+DEBUG 2004-10-08 13:10:07,151 [main] logical connection closed
+DEBUG 2004-10-08 13:10:07,151 [main] SELECT e.empno, e.ename, e.deptno, d.dname
+  FROM emp e, dept d
+WHERE e.empno = 9900 AND e.deptno = d.deptno
+DEBUG 2004-10-08 13:10:07,151 [main] logical connecion opened
+DEBUG 2004-10-08 13:10:07,312 [main] logical connection closed
+DEBUG 2004-10-08 13:10:07,392 [main] transaction rolled back
+DEBUG 2004-10-08 13:10:07,492 [main] physical connection closed
+
+Time: 13.87
+
+OK (1 test)
+</PRE>
+            <P>In this way, test result verification data is read from Excel sheet and compared with results from Dao. Furthermore, all data updated in the database during the test are rollbacked so the values are returned to those before the test was conducted.</P>
+            <P>Examples are in seasar2/src/test/examples/unit directory.</P><!-- document end -->
+<!-- don't edit start -->
+</td></tr><tr>
+<td width="14"><img height="30" width="14" src="images/spacer.gif" alt=""></td>
+<td width="766"><img height="30" width="592" src="images/spacer.gif" alt=""></td></tr><tr>
+<td width="14"><img height="14" width="14" src="images/spacer.gif" alt=""></td>
+<TD class=copyright><TABLE cellSpacing=0 cellPadding=0 width=766><TR><TD align="left">Trans. by H.Ozawa</TD><TD align="right">Copyright&copy; 2004-2005, The Seasar Foundation and
+            the others. All rights reserved.</TD></TR></TABLE></TD>
+</tr></tbody></table>
+</td><td class="backright" align="left" valign="top">&nbsp;</td></tr><tr>
+<td class="backunder" align="left" height="16" valign="top" width="780">&nbsp;</td>
+<td class="backcorner" align="left" height="16" valign="top">&nbsp;</td>
+</tr></tbody></table><!-- don't edit end -->
+</html>

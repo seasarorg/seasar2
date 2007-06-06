@@ -37,6 +37,16 @@
       <item name="Downloads" href="downloads.html"/>
     </menu>
     <menu name="Documentation">
+      <item name="Setup" href="setup.html"/>
+      <item name="DIContainer" href="DIContainer.html"/>
+      <item name="EJB3.0" href="ejb3.html"/>
+      <item name="AOP" href="aop.html"/>
+      <item name="Transaction" href="tx.html"/>
+      <item name="Connection pooling" href="dbcp.html"/>
+      <item name="Integration" href="SabaJTAandDBCP.html"/>
+      <item name="S2JDBC" href="s2jdbc.html"/>
+      <item name="S2Unit" href="S2Unit.html"/>
+      <item name="Testing" href="testtech.html"/>
     </menu>
     ${reports}
   </body>

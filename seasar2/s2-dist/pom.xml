@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+  xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"
+>
+  <parent>
+    <groupId>org.seasar.container</groupId>
+    <artifactId>s2-container-project</artifactId>
+    <version>2.4.14-SNAPSHOT</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>s2-dist</artifactId>
+  <packaging>pom</packaging>
+  <name>Seasar2 Distribution</name>
+  <url>http://s2container.seasar.org/</url>
+</project>

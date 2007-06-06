@@ -1,0 +1,331 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja" lang="ja">
+<!-- don't edit start -->
+<head>
+<title>Seasar - DI Container with AOP -</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="seasar_b.css" type="text/css" rel="stylesheet" media="screen" />
+<link href="seasar_p.css" type="text/css" rel="stylesheet" media="print" />
+<script src="seasar_b.js" type="text/JavaScript" language="JavaScript">
+</script>
+</head>
+<body onload="preload('ja')">
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="left">
+<tr>
+<td align="left" valign="top" width="780">
+<table width="780" border="0" cellspacing="0" cellpadding="0" class="white">
+<tr>
+<td colspan="7"><img height="5" width="780" src="images/top01_b.gif" alt="" /></td>
+</tr>
+<tr>
+<td><img height="117" width="235" src="images/top02_b.gif" alt="Seasar" /></td>
+<td colspan="3"><img height="117" width="289" src="images/top03.gif" alt="DI Container with AOP" /></td>
+<td colspan="3"><img height="117" width="256" src="images/spacer.gif" alt="" /></td>
+</tr>
+<tr>
+<td rowspan="2"><img src="images/top04.gif" alt="" height="49" width="235" /></td>
+<td><a href="http://www.seasar.org/index.html"><img src="images/menu01_b_ja.gif" height="30" width="78" border="0" alt="" id="menu01" onmouseover="swap(1)" onmouseout="restore(1)" name="menu01" /></a></td>
+<td><a href="http://www.seasar.org/projects.html"><img src="images/menu02_b_ja.gif" height="30" width="101" border="0" alt="" id="menu02" onmouseover="swap(2)" onmouseout="restore(2)" name="menu02" /></a></td>
+<td><a href="http://www.seasar.org/products.html"><img src="images/menu03_b_ja.gif" height="30" width="110" border="0" alt="" id="menu03" onmouseover="swap(3)" onmouseout="restore(3)" name="menu03" /></a></td>
+<td><a href="http://www.seasar.org/resources.html"><img src="images/menu04_b_ja.gif" height="30" width="113" border="0" alt="" id="menu04" onmouseover="swap(4)" onmouseout="restore(4)" name="menu04" /></a></td>
+<td><img src="images/menu05_b_ja.gif" height="30" width="109" border="0" alt="" id="menu05" onmouseover="swap(5)" onmouseout="restore(5)" name="menu05" /></td>
+<td><img height="30" width="34" src="images/menu06.gif" alt="" /></td>
+</tr>
+<tr>
+<td colspan="6"><img height="19" width="545" src="images/spacer.gif" alt="" /></td>
+</tr>
+</table>
+<table width="780" border="0" cellspacing="0" cellpadding="0" class="white">
+<tr align="left" valign="top">
+<td width="14"><img height="14" width="14" src="images/spacer.gif" alt="" /></td>
+<td width="740" class="main"><!-- don't edit end -->
+<!-- document start -->
+<h1>Oracle 10g AS上でSeasar2.4を動かすための設定</h1>
+<p>
+Seasar2.4はOracle Application Server上で動作します。
+</p>
+<p>
+以下、動作確認に利用した環境やアプリケーションの設定についてOracle Application Serverとの連携に必要なものを中心に説明します。
+</p>
+<h2><a name="toc">目次</a></h2>
+<ul>
+<li><a href="#environment">動作環境</a></li>
+<li><a href="#dataSource">データソースの設定</a></li>
+<li><a href="#jta">JTAの設定</a></li>
+<li><a href="#jpa">JPAの設定</a></li>
+<li><a href="#deploy">デプロイのための設定</a></li>
+</ul>
+<h2><a name="environment">動作環境</a></h2>
+<h3>動作環境の構成</h3>
+<p>
+動作確認に用いた環境は次の通りです。
+</p>
+<table class="indent" border="1" cellspacing="0">
+<tbody>
+<tr>
+<td style="width: 140px; height: 45px;">ハードウェア</td>
+<td style="width: 500px; height: 45px;"><a href="http://h50157.www5.hp.com/is-bin/INTERSHOP.enfinity/eCS/Store/ja/-/JPY/BrowseCatalogForBusiness-Start?CatalogCategoryID=43EQmAGEXBkAAADo2HgtXlG2&sc=2">HP ProLiant DL360 G5 server</a><br/>CPU:Intel(R) Xeon(R) CPU 5160 3.00GHz (x2)<br/>メモリ:2GB</td>
+</tr>
+<tr>
+<td style="width: 140px; height: 45px;">OS</td>
+<td style="width: 500px; height: 45px;">Red Hat Enterprise Linux AS 4 Update 2 (AMD64/Intel EM64T)</td>
+</tr>
+<tr>
+<td style="width: 140px; height: 45px;">アプリケーションサーバー</td>
+<td style="width: 500px; height: 45px;"><a href="http://www.oracle.co.jp/appserver/">Oracle Application Server 10g</a> Release 3 (10.1.3.0) for Linux x86</td>
+</tr>
+<tr>
+<td style="width: 140px; height: 45px;">RDBMS</td>
+<td style="width: 500px; height: 45px;"><a href="http://www.oracle.co.jp/database/packaging.html">Oracle Database 10g</a> Release 2 (10.2.0) for Linux x86-64</td>
+</tr>
+</tbody></table>
+<br/>
+
+<p>
+動作確認に用いたアプリケーションは、データベースの内容を一覧取得、追加、更新、削除、照会といった一連の機能を提供するWebアプリケーションです。
+</p>
+<p>
+主な技術要素としては、EJB3.0、JSF1.1、JPA1.0を使用しています。EJBコンテナの実装として<a href="http://s2container.seasar.org/ja/">S2Container</a>、JSFの実装として<a href="http://teeda.seasar.org/ja/">Teeda</a>を利用します。JPAの実装には<a href="http://www.hibernate.org/">Hibernate</a>を利用します。<a href="http://kuina.seasar.org/ja/">Kuina-Dao</a>はJPAに対するDAOとして利用します。
+</p>
+<p>
+使用したSeasar2のプロダクトとそのバージョンは次の通りです。
+</p>
+<table class="indent" border="1" cellspacing="0">
+<tbody>
+<tr>
+<td style="width: 140px; height: 45px;">S2Container</td>
+<td style="width: 200px; height: 45px;">2.4.12-SNAPSHOT</td>
+</tr>
+<tr>
+<td style="width: 140px; height: 45px;">Teeda</td>
+<td style="width: 200px; height: 45px;">1.0.7-SNAPSHOT</td>
+</tr>
+<tr>
+<td style="width: 140px; height: 45px;">S2Hibernate-JPA</td>
+<td style="width: 200px; height: 45px;">1.0.0-rc2-SNAPSHOT</td>
+</tr>
+<tr>
+<td style="width: 140px; height: 45px;">Kuina-Dao</td>
+<td style="width: 200px; height: 45px;">1.0.0-rc2-SNAPSHOT</td>
+</tr>
+</tbody></table>
+<br/>
+<h3>Subversionリポジトリ</h3>
+<p>
+動作確認に使用したソースコードや依存jarファイル一式は以下のリポジトリにあります。設定情報の詳細はこちらを参照してください。<br/>
+https://www.seasar.org/svn/s2container/trunk/employee-benchmark/employee-seasar2-teeda-oc4j
+</p>
+<h2><a name="dataSource">データソースの設定</a></h2>
+<h3>アプリケーションサーバー</h3>
+<p>
+アプリケーションサーバーにデータソースを設定します。設定の方法はアプリケーションサーバーのドキュメントを参照してください。
+ここではデータソースのJNDI名に<code>jdbc/dataSource</code>と設定するものとします。
+</p>
+<h3>web.xml</h3>
+webアプリケーションからデータソースを利用するので以下のように<code>resource-ref</code>要素を定義します。
+<pre>
+    ・・・
+    &lt;resource-ref&gt;
+        &lt;res-ref-name&gt;jdbc/dataSource&lt;/res-ref-name&gt;
+        &lt;res-type&gt;javax.sql.DataSource&lt;/res-type&gt;
+        &lt;res-auth&gt;Container&lt;/res-auth&gt;    
+    &lt;/resource-ref&gt;
+    ・・・
+</pre>
+<h3>jdbc.dion</h3>
+<p>
+データソースはJNDIからルックアップするように定義します。ルックアップのキーには<code>java:comp/env/</code><var>リソース名</var>を指定してください。
+</p>
+<pre>
+&lt;?xml version="1.0" encoding="UTF-8"?>
+&lt;!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN"
+    "http://www.seasar.org/dtd/components24.dtd"&gt;
+&lt;components namespace="jdbc"&gt;
+    &lt;include path="jta.dicon"/&gt;
+    &lt;include path="jdbc-extension.dicon"/&gt;
+
+    &lt;component class="org.seasar.extension.jdbc.impl.OracleResultSetFactory"/&gt;
+    &lt;component class="org.seasar.extension.jdbc.impl.ConfigurableStatementFactory"&gt;
+        &lt;arg&gt;
+            &lt;component class="org.seasar.extension.jdbc.impl.BasicStatementFactory"/&gt;
+        &lt;/arg&gt;
+        &lt;property name="fetchSize"&gt;100&lt;/property&gt;
+        &lt;!--
+        &lt;property name="maxRows"&gt;100&lt;/property&gt;
+        --&gt;
+    &lt;/component&gt;
+
+    &lt;!-- from JNDI --&gt;
+    <b>&lt;component name="dataSource"
+        class="javax.sql.DataSource"&gt;
+        @org.seasar.extension.j2ee.JndiResourceLocator@lookup("java:comp/env/jdbc/dataSource")
+    &lt;/component&gt;</b>
+    
+&lt;/components&gt;
+</pre>
+<h2><a name="jta">JTAの設定</a></h2>
+<h3>oc4j-jta.dion</h3>
+<p>
+アプリケーションサーバーのJTAと連動するために以下の設定を行います。
+</p>
+<pre>
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE components PUBLIC "-//SEASAR2.1//DTD S2Container//EN"
+    "http://www.seasar.org/dtd/components21.dtd"&gt;
+&lt;components namespace="jta"&gt;
+
+    &lt;!-- Oracle10gAS --&gt;
+    <b>&lt;component name="TransactionManager"
+            class="javax.transaction.TransactionManager"&gt;
+        @org.seasar.extension.j2ee.JndiResourceLocator@lookup("java:comp/UserTransaction")
+    &lt;/component&gt;</b>
+    
+    &lt;!-- UserTransaction from JNDI --&gt;
+    <b>&lt;component name="UserTransaction"
+            class="javax.transaction.UserTransaction"&gt;
+        @org.seasar.extension.j2ee.JndiResourceLocator@lookup("java:comp/UserTransaction")
+    &lt;/component&gt;</b>
+    
+&lt;/components&gt;
+</pre>
+<h3>s2container.dion</h3>
+<p>
+s2container.diconに<code>SimplePathResolver</code>を定義し、Seasar2のjarファイルに同梱されている<code>jta.dicon</code>を<code>oc4j-jta.dion</code>に置き換えるように指定します。
+</p>
+<pre>
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN" 
+    "http://www.seasar.org/dtd/components24.dtd"&gt;
+&lt;components&gt;
+    &lt;include condition="#ENV == 'ut'" path="hotdeploy.dicon"/&gt;
+    &lt;include condition="#ENV != 'ut'" path="cooldeploy.dicon"/&gt;
+
+    <b>&lt;component class="org.seasar.framework.container.factory.SimplePathResolver"&gt;
+        &lt;initMethod name="addRealPath"&gt;
+            &lt;arg&gt;"jta.dicon"&lt;/arg&gt;
+            &lt;arg&gt;"oc4j-jta.dicon"&lt;/arg&gt;
+        &lt;/initMethod&gt;
+    &lt;/component&gt;</b>
+&lt;/components&gt;
+</pre>
+
+<h2><a name="jpa">JPAの設定</a></h2>
+<h3>persistence.xml</h3>
+<p>
+<code>jta-data-source</code>要素にはアプリケーションサーバーに定義したデータソースのJNDI名を指定します。<br/>
+アプリケーションサーバーと連携するために<code>hibernate.transaction.manager_lookup_class</code>プロパティを設定します。
+データベースと連携するために<code>hibernate.dialect</code>プロパティを設定します。
+</p>
+<pre>
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;persistence&gt;
+    &lt;persistence-unit name="persistenceUnit" transaction-type="JTA"&gt;
+        &lt;jta-data-source&gt;<b>jdbc/dataSource</b>&lt;/jta-data-source&gt;
+        &lt;provider&gt;org.hibernate.ejb.HibernatePersistence&lt;/provider&gt;
+        &lt;properties&gt;
+            &lt;property name="hibernate.transaction.manager_lookup_class" 
+                value=<b>"org.hibernate.transaction.OC4JTransactionManagerLookup"</b>/&gt;
+            &lt;property name="hibernate.dialect" value=<b>"org.hibernate.dialect.Oracle9Dialect"</b>/&gt;
+            &lt;property name="hibernate.show_sql" value="false"/&gt;
+            &lt;property name="hibernate.format_sql" value="true"/&gt;
+            &lt;property name="hibernate.use_sql_comments" value="false"/&gt;
+        &lt;/properties&gt;
+    &lt;/persistence-unit&gt;
+&lt;/persistence&gt;
+</pre>
+<h3>jpa.dion</h3>
+<p>
+アプリケーションサーバーで管理された永続ユニットをJNDIで取得して利用するために<code>JndiPersistenceUnitProvider</code>を定義し、永続ユニット名と永続ユニットのJNDI名を対応づけます。このコンポーネントはJNDIから永続ユニットをルックアップして返します。
+</p>
+<pre>
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.3//EN" 
+    "http://www.seasar.org/dtd/components23.dtd"&gt;
+&lt;components&gt;
+    &lt;include path="s2hibernate-jpa.dicon"/&gt;
+    
+    <b>&lt;component class="org.seasar.framework.jpa.impl.JndiPersistenceUnitProvider"&gt;
+        &lt;initMethod name="addJndiName" &gt;
+            &lt;arg&gt;"persistenceUnit"&lt;/arg&gt;
+            &lt;arg&gt;"employee-seasar2-teeda-oc4j/persistenceUnit"&lt;/arg&gt;
+        &lt;/initMethod&gt;
+    &lt;/component&gt;</b>
+
+    &lt;component name="entityManagerFactory" class="javax.persistence.EntityManagerFactory"&gt;
+        jpa.persistenceUnitManager.getEntityManagerFactory("persistenceUnit")
+    &lt;/component&gt;
+
+    &lt;component name="entityManager" class="org.seasar.framework.jpa.impl.TxScopedEntityManagerProxy"/&gt;
+
+    &lt;component class="org.seasar.hibernate.jpa.metadata.HibernateEntityDescProvider"/&gt;
+
+&lt;/components&gt;
+</pre>
+<h2><a name="deploy">デプロイのための設定</a></h2>
+<p>
+アプリケーションサーバーにデプロイを行うには以下の設定が必要になります。
+</p>
+<ul>
+<li>リソース参照名とJNDI名のマッピング</li>
+<li>クラスローディングの設定</li>
+</ul>
+<p>
+リソース参照名とJNDI名のマッピングはWebアプリケーションからリソース参照名でリソースにアクセスするために必要です。ここでは<code>jdbc/dataSource</code>というリソース参照名を<code>jdbc/dataSource</code>というJNDI名にマッピングします。
+</p>
+<p>
+クラスローディングの設定はOC4J上でHibernateを利用するために必要です。ここでは、OC4Jにパッケージされたantlr.jarとHibernateが依存するアプリケーションのantlr.jarのクラスの衝突を避けるため、oracle.toplink共有ライブラリを明示的に削除します。
+</p>
+<p>
+以下は、Application Server Controlコンソールで保存したデプロイプランの内容です。
+</p>
+<pre>
+moduleType=ear
+applicationID=employee-seasar2-teeda-oc4j
+bindWebApp=default-web-site
+webSiteBindings=
+parent=default
+moduleID=.
+doctype=orion-application
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;orion-application xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xsi:noNamespaceSchemaLocation="http://xmlns.oracle.com/oracleas/schema/orion-application-10_0.xsd"&gt;
+    <b>&lt;imported-shared-libraries&gt;
+        &lt;remove-inherited name="oracle.toplink"&gt;
+        &lt;/remove-inherited&gt;
+    &lt;/imported-shared-libraries&gt;</b>
+&lt;/orion-application&gt;
+moduleID=employee-seasar2-teeda-oc4j.war
+doctype=orion-web-app
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;orion-web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xsi:noNamespaceSchemaLocation="http://xmlns.oracle.com/oracleas/schema/orion-web-10_0.xsd" 
+    context-root="employee-seasar2-teeda-oc4j"&gt;
+    <b>&lt;resource-ref-mapping name="jdbc/dataSource" location="jdbc/dataSource"&gt;
+    &lt;/resource-ref-mapping&gt;</b>
+    &lt;web-app-class-loader&gt;
+    &lt;/web-app-class-loader&gt;
+&lt;/orion-web-app&gt;
+</pre>
+<!-- don't edit start --></td>
+<td width="14"><img height="14" width="14" src="images/spacer.gif" alt="" /></td>
+</tr>
+<tr>
+<td width="14"><img height="30" width="14" src="images/spacer.gif" alt="" /></td>
+<td width="766"><img height="30" width="592" src="images/spacer.gif" alt="" /></td>
+</tr>
+<tr>
+<td width="14"><img height="14" width="14" src="images/spacer.gif" alt="" /></td>
+<td width="766" class="copyright">Copyright© 2004-2005, The Seasar Foundation and the others. All rights reserved.</td>
+</tr>
+</table>
+</td>
+<td class="backright" align="left" valign="top">&nbsp;</td>
+</tr>
+<tr>
+<td class="backunder" align="left" valign="top" width="780" height="16">&nbsp;</td>
+<td class="backcorner" align="left" valign="top" height="16">&nbsp;</td>
+</tr>
+</table>
+<!-- don't edit end -->
+</body>
+</html>

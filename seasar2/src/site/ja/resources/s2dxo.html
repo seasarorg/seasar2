@@ -1,0 +1,917 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja" lang="ja">
+<!-- don't edit start -->
+<head>
+<title>Seasar - DI Container with AOP -</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<link href="seasar_b.css" type="text/css" rel="stylesheet" media="screen" />
+<link href="seasar_p.css" type="text/css" rel="stylesheet" media="print" />
+<script src="seasar_b.js" type="text/JavaScript" language="JavaScript">
+</script>
+<style type="text/css">
+/*<![CDATA[*/
+<!--
+.indent{
+margin-left : 30px;
+margin-right : 20px;
+}
+TH{
+font-size : 10pt;
+text-align : center;
+background-color : #d1f3f4;
+}
+TD{
+font-size : 10pt;
+}
+-->
+/*]]>*/
+</style>
+</head>
+<body onload="preload('ja')">
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="left">
+<tr>
+<td align="left" valign="top" width="780">
+<table width="780" border="0" cellspacing="0" cellpadding="0" class="white">
+<tr>
+<td colspan="7"><img height="5" width="780" src="images/top01_b.gif" alt="" /></td>
+</tr>
+<tr>
+<td><img height="117" width="235" src="images/top02_b.gif" alt="Seasar" /></td>
+<td colspan="3"><img height="117" width="289" src="images/top03.gif" alt="DI Container with AOP" /></td>
+<td colspan="3"><img height="117" width="256" src="images/spacer.gif" alt="" /></td>
+</tr>
+<tr>
+<td rowspan="2"><img src="images/top04.gif" alt="" height="49" width="235" /></td>
+<td><a href="http://www.seasar.org/index.html"><img src="images/menu01_b_ja.gif" height="30" width="78" border="0" alt="" id="menu01" onmouseover="swap(1)" onmouseout="restore(1)" name="menu01" /></a></td>
+<td><a href="http://www.seasar.org/projects.html"><img src="images/menu02_b_ja.gif" height="30" width="101" border="0" alt="" id="menu02" onmouseover="swap(2)" onmouseout="restore(2)" name="menu02" /></a></td>
+<td><a href="http://www.seasar.org/products.html"><img src="images/menu03_b_ja.gif" height="30" width="110" border="0" alt="" id="menu03" onmouseover="swap(3)" onmouseout="restore(3)" name="menu03" /></a></td>
+<td><a href="http://www.seasar.org/resources.html"><img src="images/menu04_b_ja.gif" height="30" width="113" border="0" alt="" id="menu04" onmouseover="swap(4)" onmouseout="restore(4)" name="menu04" /></a></td>
+<td><img src="images/menu05_b_ja.gif" height="30" width="109" border="0" alt="" id="menu05" onmouseover="swap(5)" onmouseout="restore(5)" name="menu05" /></td>
+<td><img height="30" width="34" src="images/menu06.gif" alt="" /></td>
+</tr>
+<tr>
+<td colspan="6"><img height="19" width="545" src="images/spacer.gif" alt="" /></td>
+</tr>
+</table>
+<table width="780" border="0" cellspacing="0" cellpadding="0" class="white">
+<tr align="left" valign="top">
+<td width="14"><img height="14" width="14" src="images/spacer.gif" alt="" /></td>
+<td width="740" class="main"><!-- don't edit end -->
+<!-- document start -->
+<br />
+<h1>S2Dxo</h1>
+<h2><a name="toc" id="toc">目次</a></h2>
+<ul>
+<li><a href="#about">S2Dxo とは</a></li>
+<li><a href="#quickstart">クイックスタート</a></li>
+<li><a href="#defineDxo">DXOの定義</a>
+<ul>
+<li><a href="#defineInterface">インタフェース／クラス定義</a></li>
+<li><a href="#defineMethod">メソッド定義</a></li>
+<li><a href="#applyInterceptor">インターセプタの適用</a></li>
+</ul>
+</li>
+<li><a href="#conversionRule">変換ルール</a>
+<ul>
+<li><a href="#conversionBasics">変換の基本</a></li>
+<li><a href="#convertType">型変換</a></li>
+<li><a href="#nestedProperty">ネストしたJavaBeansのプロパティ</a></li>
+</ul>
+</li>
+<li><a href="#customizeRule">変換のカスタマイズ</a>
+<ul>
+<li><a href="#propertyName">変換元プロパティ名の指定</a></li>
+<li><a href="#ognl">OGNL式の利用</a></li>
+<li><a href="#formatDate">日付・時刻のフォーマット</a></li>
+<li><a href="#customConverter">独自のコンバータ</a></li>
+</ul>
+</li>
+</ul>
+<h2><a name="about" id="about">S2Dxo とは</a></h2>
+<p>DXO (Data eXchange Object) とは，JavaBeansとJavaBeansまたはJavaBeansとMapを相互変換 (exchange) することを目的としたオブジェクトです．主な用途としては，プレゼンテーション層のモデル (ページ) とドメイン層のモデル (エンティティ) を相互変換することを意図しています．</p>
+<p>S2DxoはDXOを実現するためのフレームワークです．S2Dxoを使うと，Javaインタフェースを定義するだけでDXOを実現することが可能となります．</p>
+<h2><a name="quickstart" id="quickstart">クイックスタート</a></h2>
+<p>さっそく試してみましょう．登場人物は次のようになります．</p>
+<dl>
+<dt>変換元のJavaBeans</dt>
+<dd>EmployeeとDepartmentの二つ．EmployeeはDepartmentを参照します．<br />
+<img src="images/dxo_employeeDepartment.png" width="511" height="98" /></dd>
+<dt>変換先のJavaBeans</dt>
+<dd>EmployeePage．EmployeePageはEmployeeとDepartmentの両方のプロパティを持っています．<br />
+<img src="images/dxo_employeePage.png" width="163" height="100" /></dd>
+<dt>変換を行うDXO</dt>
+<dd>EmployeeDxo．EmployeeとDepartmentをEmployeePageに変換するDXOのJavaインタフェースです．</dd>
+</dl>
+<p>S2Dxoは，上記3つのJavaBeansに対して，以下の図のような変換を行います．<br />
+<img src="images/dxo_s2dxo.png" width="520" height="300" /></p>
+<h5>Employee.java</h5>
+<p>変換元のJavaBeansです．Departmentを参照します．</p>
+<pre>
+package examples.dxo;
+
+public class Employee {
+    private String ename;
+    private Department department;
+
+    public String getEname() {
+        return ename;
+    }
+
+    public void setEname(String ename) {
+        this.ename = ename;
+    }
+
+    public Department getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(Department department) {
+        this.department = department;
+    }
+}
+</pre>
+<h5>Department.java</h5>
+<p>変換元のJavaBeansです．Employeeから参照されます．</p>
+<pre>
+package examples.dxo;
+
+public class Department {
+    private String dname;
+
+    public String getDname() {
+        return dname;
+    }
+
+    public void setDname(String dname) {
+        this.dname = dname;
+    }
+}
+</pre>
+<h5>EmployeePage.java</h5>
+<p>変換先のJavaBeansです．Employeeのプロパティenameに加えて，Departmentのプロパティdnameも持っています．toString()メソッドではこの二つのプロパティを文字列化しています．</p>
+<pre>
+package examples.dxo;
+
+public class EmployeePage {
+    private String ename;
+    private String dname;
+
+    public String getEname() {
+        return ename;
+    }
+
+    public void setEname(String ename) {
+        this.ename = ename;
+    }
+
+    public String getDname() {
+        return dname;
+    }
+
+    public void setDname(String dname) {
+        this.dname = dname;
+    }
+
+    public String toString() {
+        return "employee : " + ename + ", department : " + dname;
+    }
+}
+</pre>
+<h5>EmployeeDxo.java</h5>
+<p>変換を行うDXOです．引数として変換元のJavaBeansであるEmployeeを受け取り，戻り値として変換先のJavaBeansであるEmployeePageを返します．単なるJavaインタフェースで実装がないことに注目してください．</p>
+<pre>
+package examples.dxo;
+
+public interface EmployeeDxo {
+    EmployeePage convert(Employee employee);
+}
+</pre>
+<h5>app.dicon</h5>
+<p>EmployeeDxoを利用するために必要な設定を記述します．</p>
+<pre>
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN"
+    "http://www.seasar.org/dtd/components24.dtd"&gt;
+&lt;components&gt;
+    &lt;include path="dxo.dicon"/&gt;
+
+        &lt;component class="examples.dxo.EmployeeDxo"&gt;
+                &lt;aspect&gt;dxo.interceptor&lt;/aspect&gt;
+        &lt;/component&gt;
+&lt;/components&gt;
+</pre>
+<h5>DxoMain.java</h5>
+<p>サンプルを実行するためのクラスです．S2コンテナを初期化した後，変換元のJavaBeansを準備しています．それをS2コンテナから取得したDXOを使って変換しています．</p>
+<pre>
+package examples.dxo;
+
+import org.seasar.framework.container.S2Container;
+import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
+
+public class DxoMain {
+
+    public static void main(String[] args) {
+        SingletonS2ContainerFactory.setConfigPath("examples/dxo/app.dicon");
+        SingletonS2ContainerFactory.init();
+        S2Container container = SingletonS2ContainerFactory.getContainer();
+
+        Employee employee = new Employee();
+        employee.setEname("Mike");
+        Department department = new Department();
+        department.setDname("Sales");
+        employee.setDepartment(department);
+
+        EmployeeDxo dxo = (EmployeeDxo) container
+                .getComponent(EmployeeDxo.class);
+        EmployeePage page = dxo.convert(employee);
+        System.out.println(page);
+    }
+}
+</pre>
+<h5>実行結果</h5>
+<p>DxoMainの実行結果は以下のようになります．EmployeeとDepartmentのプロパティがEmployeePageに設定されたことが分かります．</p>
+<pre>
+employee : Mike, department : Sales
+</pre>
+<p>このサンプルはSeasar2.4配布ファイルのexamplesに含まれています．</p>
+<h2><a name="defineDxo" id="defineDxo">DXOの定義</a></h2>
+<h3><a name="defineInterface" id="defineInterface">インタフェース／クラス定義</a></h3>
+<p>DXOは通常Javaインタフェースとして定義します．抽象クラスとして定義することもできますが，S2Dxoが適用されるのは抽象メソッドのみとなります．</p>
+<p>次のようになります．</p>
+<pre>
+publi interface FooDxo {
+    ・・・
+}
+</pre>
+<p>SMART deployを使用する場合，DXOのパッケージ名およびクラス名はSMART deployの規約に従ってください．SMART deployについては「<a href="S2.4SmartDeploy.html">Seasr2.4の新機能－SMART deploy</a>」を参照してください．</p>
+<h3><a name="defineMethod" id="defineMethod">メソッド定義</a></h3>
+<p>DXOには変換を行うメソッドを定義します．メソッド名は自由ですが，慣例として<code>convert</code>で始めます．</p>
+<p>DXOのメソッドは次の2つの形式のいずれかにすることができます．</p>
+<ul>
+<li><var>変換先型</var> <var>メソッド名</var>(<var>変換元型</var>)</li>
+<li>void <var>メソッド名</var>(<var>変換元型</var>, <var>変換先型</var>)</li>
+</ul>
+<p>戻り値が変換後型の場合はS2Dxoが変換後のインスタンスを生成して返します．戻り値型がvoidの場合は第2引数で受け取ったインスタンスを更新します．</p>
+<p>変換前及び変換後の型の組み合わせは次のものがサポートされています．</p>
+<table border="1">
+<tbody>
+<tr>
+<th>変換前型</th>
+<th>変換後型</th>
+</tr>
+<tr>
+<td>JavaBeans</td>
+<td>JavaBeans</td>
+</tr>
+<tr>
+<td>JavaBeans[]</td>
+<td>JavaBeans[]</td>
+</tr>
+<tr>
+<td>JavaBeans</td>
+<td><code>java.util.Map</code></td>
+</tr>
+<tr>
+<td>JavaBeans[]</td>
+<td><code>java.util.Map[]</code></td>
+</tr>
+<tr>
+<td><code>java.util.Map</code></td>
+<td>JavaBeans</td>
+</tr>
+<tr>
+<td><code>java.util.Map[]</code></td>
+<td>JavaBeans[]</td>
+</tr>
+</tbody>
+</table>
+<p>例えば次のようになります．</p>
+<pre>
+public interface FooDxo {
+    ToBean convertBeanToBean(FromBean fromBean);
+    void convertBeanToBean(FromBean[] fromBeans, ToBean[] toBeans);
+
+    Map convertBeanToMap(FromBean fromBean);
+    void convertBeanToMap(FromBean[] fromBeans, Map[] toMaps);
+
+    ToBean convertMapToBean(Map fromMap);
+    void convertMapToBean(Map[] fromMaps, ToBean[] toBeans);
+}
+</pre>
+<p>Java5のGenericsを使うとJavaBeansまたはMapのListもサポートされます．</p>
+<table border="1">
+<tbody>
+<tr>
+<th>変換前型</th>
+<th>変換後型</th>
+</tr>
+<tr>
+<td>JavaBeans[]</td>
+<td><code>java.util.List&lt;</code>JavaBeans<code>&gt;</code></td>
+</tr>
+<tr>
+<td><code>java.util.List&lt;</code>JavaBeans<code>&gt;</code></td>
+<td>JavaBeans[]</td>
+</tr>
+<tr>
+<td><code>java.util.List&lt;</code>JavaBeans<code>&gt;</code></td>
+<td><code>java.util.List&lt;</code>JavaBeans<code>&gt;</code></td>
+</tr>
+<tr>
+<td>JavaBeans[]</td>
+<td><code>java.util.List&lt;java.util.Map&gt;</code></td>
+</tr>
+<tr>
+<td><code>java.util.List&lt;</code>JavaBeans<code>&gt;</code></td>
+<td><code>java.util.Map[]</code></td>
+</tr>
+<tr>
+<td><code>java.util.List&lt;</code>JavaBeans<code>&gt;</code></td>
+<td><code>java.util.List&lt;java.util.Map&gt;</code></td>
+</tr>
+<tr>
+<td><code>java.util.Map[]</code></td>
+<td><code>java.util.List&lt;</code>JavaBeans<code>&gt;</code></td>
+</tr>
+<tr>
+<td><code>java.util.List&lt;java.util.Map&gt;</code></td>
+<td>JavaBeans[]</td>
+</tr>
+<tr>
+<td><code>java.util.List&lt;java.util.Map&gt;</code></td>
+<td><code>java.util.List&lt;</code>JavaBeans<code>&gt;</code></td>
+</tr>
+</tbody>
+</table>
+<p>例えば次のようになります．</p>
+<pre>
+public interface BarDxo {
+    List&lt;ToBean&gt; convert(FromBean[] fromBeans);
+    Map[] convert(List&lt;FromBean&gt; fromBeans);
+    List&lt;ToBean&gt; convert(List&lt;Map&gt; fromMaps);
+}
+</pre>
+<p>Mapの型引数を指定することもできます．キーの型はStringまたはStringを代入可能な型のみ有効です．値の型は任意の型を指定することができます．変換元の値が型引数で指定された型に代入できない場合は型変換が行われます．</p>
+<p>例えば次のようになります．</p>
+<pre>public interface BarDxo {
+    Map&lt;String, String&gt; convert(FromBean fromBean);
+    List&lt;Map&lt;String, String&gt; convert(FromBean[] fromBeans);
+}</pre>
+<h3><a name="applyInterceptor" id="applyInterceptor">インターセプタの適用</a></h3>
+<p>DXOインタフェース／クラスにはS2Dxoの提供するインターセプタを適用します．</p>
+<pre>
+&lt;include path="dxo.dicon"/&gt;
+
+&lt;component class="examples.dxo.FooDxo"&gt;
+    &lt;aspect&gt;dxo.interceptor&lt;/aspect&gt;
+&lt;/component&gt;
+</pre>
+<p>SMART deployを使用する場合は，<code>app.dicon</code>で<code>dxo.dicon</code>をインクルードし，<code>customizer.dicon</code>に記述されている<code>dxoCustomizer</code>の設定を次のようにします．</p>
+<pre>&lt;component name=&quot;dxoCustomizer&quot; class=&quot;org.seasar.framework.container.customizer.CustomizerChain&quot;&gt;
+    &lt;initMethod name=&quot;addCustomizer&quot;&gt;
+        &lt;arg&gt;defaultCustomizer&lt;/arg&gt;
+    &lt;/initMethod&gt;
+    &lt;initMethod name=&quot;addCustomizer&quot;&gt;
+        &lt;arg&gt;
+            &lt;component class=&quot;org.seasar.framework.container.customizer.AspectCustomizer&quot;&gt;
+                &lt;property name=&quot;interceptorName&quot;&gt;&quot;dxo.interceptor&quot;&lt;/property&gt;
+            &lt;/component&gt;
+        &lt;/arg&gt;
+    &lt;/initMethod&gt;
+&lt;/component&gt;</pre>
+<p>Customizerの詳細は「<a href="S2.4SmartDeploy.html">Seasr2.4の新機能－SMART deploy</a>」を参照してください．</p>
+<h2><a name="conversionRule" id="conversionRule">変換ルール</a></h2>
+<h3><a name="conversionBasics" id="conversionBasics">変換の基本</a></h3>
+<p>JavaBeansまたはMapからJavaBeansに変換する場合，変換先となるJavaBeansのプロパティを変換元から探し，(必要なら)型変換を行って変換先のプロパティに設定します．</p>
+<p>JavaBeansからMapに変換する場合は，変換元のJavaBeansの全プロパティについて変換先のMapに追加します．追加されるエントリのキーは変換元のプロパティ名(<code>String</code>)，値は変換元のプロパティ値です．</p>
+<h3><a name="convertType" id="convertType">型変換</a></h3>
+<p>変換元と変換先の型が異なる場合は型変換が行われます．S2Dxoが標準で提供する型変換は以下の通りです．変換先の型を基準に参照してください．</p>
+<table border="1">
+<tbody>
+<tr>
+<th>変換元の型</th>
+<th>変換先の型</th>
+<th>説明</th>
+</tr>
+<tr>
+<td><code>boolean/Boolean</code></td>
+<td rowspan="3"><code>boolean/Boolean</code></td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>Number</code></td>
+<td>数値が<code>1</code>より大きければ<code>true</code>，そうでなければ<code>false</code>に変換します．</td>
+</tr>
+<tr>
+<td>その他任意の型</td>
+<td>変換元を文字列化し，それが<code>"yes"</code>，<code>"y"</code>，<code>"true"</code>，<code>"on"</code>，<code>"1"</code>のいずれかであれば<code>true</code>，そうでなければ<code>false</code>に変換します．</td>
+</tr>
+<tr>
+<td><code>boolean/Boolean</code></td>
+<td rowspan="4"><code>byte/Byte</code><br />
+<code>short/Short</code><br />
+<code>int/Integer</code><br />
+<code>long/Long</code><br />
+<code>float/Float</code><br />
+<code>double/Double</code><br />
+<code>java.math.BigDecimal</code><br />
+<code>java.math.BigInteger</code></td>
+<td>変換元が<code>true</code>なら<code>1</code>，そうでなければ<code>0</code>に変換します．</td>
+</tr>
+<tr>
+<td><code>Number</code></td>
+<td>同等の値に変換します．<br />
+プリミティブ型への変換は，<code>Number#<var>xxx</var>Value()</code>で行われます．<br />
+BigDecimal/BigIntegerへの変換は，変換元を文字列化したものをコンストラクタ引数に渡すことで行われます．</td>
+</tr>
+<tr>
+<td><code>String</code></td>
+<td>文字列の表現する数値と同等の値に変換します．</td>
+</tr>
+<tr>
+<td><code>Enum</code>のサブクラス</td>
+<td>列挙定数の序数に変換します (S2-Tigerが必要です)．<br />
+序数への変換は<code>Enum#ordinal()</code>で行われます．</td>
+</tr>
+<tr>
+<td><code>char/Character</code></td>
+<td><code>char/Character</code></td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>String</code></td>
+                  <td rowspan="7"><code>String</code></td>
+                  <td>-</td>
+</tr>
+<tr>
+<td><code>char[]</code></td>
+<td>変換元を文字シーケンスとして持つ<code>String</code>に変換します．</td>
+</tr>
+                <tr>
+                  <td><code>Enum</code>のサブクラス</td>
+                  <td>列挙定数の名前に変換します (S2-Tigerが必要です)．<br>
+                  列挙定数への変換は<code>Enum#name()</code>で行われます．</td>
+                </tr>
+                <tr>
+<td><code>java.util.Calender</code><br />
+<code>java.util.Date</code><br />
+<code>java.sql.Date</code></td>
+<td><code>DATE_PATTERN</code>フォーマットに従い変換します．<br />
+詳細は「<a href="#formatDate">日付・時刻のフォーマット</a>」を参照してください．</td>
+</tr>
+<tr>
+<td><code>java.sql.Time</code></td>
+<td><code>TIME_PATTERN</code>フォーマットに従い変換します．<br />
+詳細は「<a href="#formatDate">日付・時刻のフォーマット</a>」を参照してください．</td>
+</tr>
+<tr>
+<td><code>java.sql.Timestamp</code></td>
+<td><code>TIMESTAMP_PATTERN</code>フォーマットに従い変換します．<br />
+詳細は「<a href="#formatDate">日付・時刻のフォーマット</a>」を参照してください．</td>
+</tr>
+<tr>
+<td>その他任意の型</td>
+<td>変換元の文字列表現の持つ文字配列に変換します．</td>
+</tr>
+<tr>
+<td><code>char[]</code></td>
+<td rowspan="3"><code>char[]</code></td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>String</code></td>
+<td>変換元の持つ文字配列に変換します．</td>
+</tr>
+<tr>
+<td>その他任意の型</td>
+<td>変換元の文字列表現に変換します．</td>
+</tr>
+<tr>
+<td><code>java.util.Calendar</code></td>
+<td rowspan="4"><code>java.util.Calendar</code></td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>java.util.Date</code></td>
+<td>変換元の時刻値を持つ<code>java.util.Calendar</code>に変換します．</td>
+</tr>
+<tr>
+<td><code>Number</code></td>
+<td>変換元の<code>long</code>値を時刻値として持つ<code>java.util.Calendar</code>に変換します．</td>
+</tr>
+<tr>
+<td><code>String</code></td>
+<td><code>DATE_PATTERN</code>フォーマットに従い<code>java.util.Calendar</code>に変換します．<br />
+詳細は「<a href="#formatDate">日付・時刻のフォーマット</a>」を参照してください．</td>
+</tr>
+<tr>
+<td><code>java.util.Date</code></td>
+<td rowspan="4"><code>java.util.Date</code></td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>java.util.Calendar</code></td>
+<td>変換元の時刻値を持つ<code>java.util.Date</code>に変換します．</td>
+</tr>
+<tr>
+<td><code>Number</code></td>
+<td>変換元の<code>long</code>値を時刻値として持つ<code>java.util.Date</code>に変換します．</td>
+</tr>
+<tr>
+<td><code>String</code></td>
+<td><code>DATE_PATTERN</code>フォーマットに従い<code>java.util.Date</code>に変換します．<br />
+詳細は「<a href="#formatDate">日付・時刻のフォーマット</a>」を参照してください．</td>
+</tr>
+<tr>
+<td><code>java.sql.Date</code></td>
+<td rowspan="5"><code>java.sql.Date</code></td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>java.util.Date</code></td>
+<td>変換元の時刻値を持つ<code>java.sql.Date</code>に変換します．</td>
+</tr>
+<tr>
+<td><code>java.util.Calendar</code></td>
+<td>変換元の時刻値を持つ<code>java.sql.Date</code>に変換します．</td>
+</tr>
+<tr>
+<td><code>Number</code></td>
+<td>変換元の<code>long</code>値を時刻値として持つ<code>java.sql.Date</code>に変換します．</td>
+</tr>
+<tr>
+<td><code>String</code></td>
+<td><code>DATE_PATTERN</code>フォーマットに従い<code>java.sql.Date</code>に変換します．<br />
+詳細は「<a href="#formatDate">日付・時刻のフォーマット</a>」を参照してください．</td>
+</tr>
+<tr>
+<td><code>java.sql.Time</code></td>
+<td rowspan="5"><code>java.sql.Time</code></td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>java.util.Date</code></td>
+<td>変換元の時刻値を持つ<code>java.sql.Time</code>に変換します．</td>
+</tr>
+<tr>
+<td><code>java.util.Calendar</code></td>
+<td>変換元の時刻値を持つ<code>java.sql.Time</code>に変換します．</td>
+</tr>
+<tr>
+<td><code>Number</code></td>
+<td>変換元の<code>long</code>値を時刻値として持つ<code>java.sql.Time</code>に変換します．</td>
+</tr>
+<tr>
+<td><code>String</code></td>
+<td><code>TIME_PATTERN</code>フォーマットに従い<code>java.sql.Time</code>に変換します．<br />
+詳細は「<a href="#formatDate">日付・時刻のフォーマット</a>」を参照してください．</td>
+</tr>
+<tr>
+<td><code>java.sql.Timestamp</code></td>
+<td rowspan="5"><code>java.sql.Timestamp</code></td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>java.util.Date</code></td>
+<td>変換元の時刻値を持つ<code>java.sql.Timestamp</code>に変換します．</td>
+</tr>
+<tr>
+<td><code>java.util.Calendar</code></td>
+<td>変換元の時刻値を持つ<code>java.sql.Timestamp</code>に変換します．</td>
+</tr>
+<tr>
+<td><code>Number</code></td>
+<td>変換元の<code>long</code>値を時刻値として持つ<code>java.sql.Timestamp</code>に変換します．</td>
+</tr>
+<tr>
+<td><code>String</code></td>
+<td><code>TIMESTAMP_PATTERN</code>フォーマットに従い<code>java.sql.Timestamp</code>に変換します．<br />
+詳細は「<a href="#formatDate">日付・時刻のフォーマット</a>」を参照してください．</td>
+</tr>
+<tr>
+<td>配列</td>
+<td rowspan="3">配列</td>
+<td>変換元と同じ大きさの配列に変換します．<br />
+変換元配列の要素は変換先配列の要素型に変換します．</td>
+</tr>
+<tr>
+<td><code>java.util.Collection</code></td>
+<td>変換元と同じ大きさの配列に変換します．変換元が順序のあるコレクション(<code>java.util.List</code>や<code>java.util.LinkedHashSet</code>など)の場合，順序は維持されます．<br />
+変換元の要素は変換先配列の要素型に変換します．</td>
+</tr>
+<tr>
+<td>その他任意の型</td>
+<td>変換元を変換先配列の要素型に変換したオブジェクトを唯一の要素とする配列に変換します．</td>
+</tr>
+<tr>
+<td><code>java.util.List</code></td>
+<td rowspan="4"><code>java.util.List</code></td>
+<td>-</td>
+</tr>
+<tr>
+<td>配列</td>
+<td>変換元と同じ大きさのリストに変換します．<br />
+変換元配列の要素はそのまま変換先リストの要素になります．</td>
+</tr>
+<tr>
+<td><code>java.util.Collection</code></td>
+<td>変換元と同じ大きさのリストに変換します．変換元が順序のあるコレクション(<code>java.util.List</code>や<code>java.util.LinkedHashSet</code>など)の場合，順序は維持されます．<br />
+変換元コレクションの要素はそのまま変換先リストの要素になります．</td>
+</tr>
+<tr>
+<td>その他任意の型</td>
+<td>変換元を変換先配列の要素型に変換したオブジェクトを唯一の要素とするリストに変換します．</td>
+</tr>
+<tr>
+<td><code>java.util.Set</code></td>
+<td rowspan="4"><code>java.util.Set</code></td>
+<td>-</td>
+</tr>
+<tr>
+<td>配列</td>
+<td>変換元と同じ大きさのセット(<code>java.util.LinkedHashSet</code>)に変換します．配列の順序は維持されます．<br />
+変換元配列の要素はそのまま変換先セットの要素になります．</td>
+</tr>
+<tr>
+<td><code>java.util.Collection</code></td>
+<td>変換元と同じ大きさのセット(<code>java.util.LinkedHashSet</code>)に変換します．変換元が順序のあるコレクション(<code>java.util.List</code>や<code>java.util.LinkedHashSet</code>など)の場合，順序は維持されます．<br />
+変換元コレクションの要素はそのまま変換先リストの要素になります．</td>
+</tr>
+<tr>
+<td>その他任意の型</td>
+<td>変換元を変換先配列の要素型に変換したオブジェクトを唯一の要素とするリストに変換します．</td>
+</tr>
+<tr>
+<td>JavaBeans</td>
+<td>JavaBeans</td>
+<td>変換元JavaBeansを変換先JavaBeansに変換します．<br />
+変換元JavaBeansのプロパティは変換先JavaBeansの対応するプロパティに変換されます．</td>
+</tr>
+<tr>
+<td><code>Number</code></td>
+<td rowspan="2"><code>Enum</code>のサブクラス</td>
+<td>変換元の数値を序数とする列挙定数に変換します (S2-Tigerが必要です)．<br>
+                  変換は<code>Class#getEnumConstants()</code>が返す配列を使って行われます．</td>
+</tr>
+<tr>
+<td>その他任意の型</td>
+<td>変換元の文字列表現を名前とする列挙定数に変換します (S2-Tigerが必要です)．<br>
+                  変換は<code>Enum#valueOf(Class, String)</code>で行われます．</td>
+</tr>
+</tbody>
+</table>
+<h3><a name="nestedProperty" id="nestedProperty">ネストしたJavaBeansのプロパティ</a></h3>
+<p>変換先のJavaBeansに存在するプロパティと同名のプロパティが変換元のJavaBeansに存在しない場合，S2DxoはネストしたJavaBeansのプロパティを探します．ネストしたJavaBeansのプロパティとは，変換元JavaBeansが持つJavaBeansを型とするプロパティのプロパティです．この探索は一段階のみ行われます．</p>
+<pre>
+public class Employee {
+    private Department department;
+    ・・・
+}
+
+public class Department {
+    private String dname;
+    ・・・
+}
+
+public class EmployeePage {
+    private String dname;
+    ・・・
+}
+</pre>
+<p>上の例で，<code>Employee</code>から<code>EmployeePage</code>への変換を行うと，<code>EmployeePage</code>の<code>dname</code>プロパティには，<code>Employee</code>の<code>department</code>プロパティが参照する，<code>Department</code>の<code>dname</code>プロパティが設定されます．</p>
+<p>より深くネストしたプロパティを扱うには，「<a href="#propertyName">変換元プロパティ名の指定</a>」を参照してください．</p>
+<h2><a name="customizeRule" id="customizeRule">変換のカスタマイズ</a></h2>
+<h3><a name="propertyName" id="propertyName">変換元プロパティ名の指定</a></h3>
+<p>変換元JavaBeansまたはマップのプロパティ名と変換先JavaBeansまたはマップのプロパティ名が異なる場合はアノテーションで変換ルールを指定することができます．アノテーションはDXOのメソッドに定数アノテーションまたはTigerアノテーションで指定します．</p>
+<p>変換ルールは文字列で，その内容は</p>
+<pre>
+<var>destPropertyName</var> : <var>sourcePropertyName</var>
+</pre>
+<p>という組をカンマ区切りで並べたものです．変換先のプロパティ名が前になるので注意してください．</p>
+<p>変換元のプロパティ名にはネストしたJavaBeansのプロパティ名をピリオド区切りで指定することもできます．</p>
+<pre>
+ename : name, dname : department.name
+</pre>
+<p>という変換ルールを指定した場合，変換先JavaBeansの<code>ename</code>プロパティには変換元JavaBeansの<code>name</code>プロパティの値が，変換先JavaBeansの<code>dname</code>プロパティには変換元JavaBeansの<code>department</code>プロパティに設定されているJavaBeansの<code>name</code>プロパティの値が設定されます．必要があれば「<a href="#convertType">型変換</a>」に従って変換が行われます．ただし，<code>department</code>が<code>null</code>だと<code>NullPointerException</code>が発生します．その対策については「<a href="#ognl">OGNL式の利用</a>」を参照してください．</p>
+<p>JavaBeansからMapに変換する場合，変換ルールを指定すると指定したプロパティだけが変換先のマップに追加されることになるので注意してください．</p>
+<h4>定数アノテーション</h4>
+<p>定数アノテーションでは，DXOインタフェースの文字列定数として次のように指定します．定数名はメソッド名の後ろに<code>"_CONVERSION_RULE"</code>をつけたものになります．</p>
+<pre>
+public interface FooDxo {
+    String convert_CONVERSION_RULE = "ename : name, dname : department.name";
+    EmployeePage convert(Employee employee);
+}
+</pre>
+<p>DXOインタフェースがメソッドをオーバーロードしている場合は，引数型の非修飾名をアンダースコア区切りで並べて指定することもできます．引数型が配列型の場合は配列要素の型名の後ろに'$'を付加します．'$'は配列の次元と同じ数だけ並べます．</p>
+<pre>public interface BarDxo {
+    String convert_Employee_CONVERSION_RULE = &quot;ename : name&quot;;
+    EmployeePage convert(Employee employee);
+
+    String convert_Employee$_CONVERSION_RULE = &quot;ename : name, dname : department.name&quot;;
+    EmployeePage[] convert(Employee[] employees);
+
+    DepartmentPage convert(Department department);
+}</pre>
+<p>この場合，最初の変換ルールは<code>convert(Employee)</code>メソッドにのみ適用され，2番目の変換ルールはconvert(Employee[])メソッドにのみ適用されます．<code>convert(Department)</code>メソッドにはどちらの変換ルールも適用されません．</p>
+<p>引数型の指定されない変換ルールは，同じ名前のメソッド全てに適用されます．引数型を伴う変換ルールと引数型のない変換ルールが混在する場合は，引数型の一致する変換ルールのあるメソッドはその変換ルールが，引数型の一致する変換ルールがないメソッドは引数型を伴わない変換ルールが適用されます．</p>
+<h4>Tigerアノテーション</h4>
+<p>Tigerアノテーションでは，DXOメソッドのアノテーションとして次のように指定します．</p>
+<pre>
+import org.seasar.extension.dxo.annotation.ConversionRule;
+pubic interface BazDxo {
+    @ConversionRule("ename : name, dname : department.name")
+    EmployeePage convert(Employee employee);
+}
+</pre>
+<h3><a name="ognl" id="ognl">OGNL式の利用</a></h3>
+<p>前述の変換ルールでは，OGNL式の評価結果を変換先JavaBeansのプロパティに設定することもできます．</p>
+<p>この場合の変換ルールも文字列で，その内容は</p>
+<pre>
+'<var>destPropertyName</var>' : <var>expression</var>
+</pre>
+<p>という組をカンマ区切りで並べたものです．変換先のプロパティ名はシングルクオートで囲んでください．</p>
+<pre>
+'name' : ename + '-' + dname
+</pre>
+<p>という変換ルールを指定した場合，変換先JavaBeansの<code>name</code>プロパティには変換元JavaBeansの<code>ename</code>プロパティと<code>dname</code>プロパティをハイフン区切りで連結した値が設定されます．OGNLE式の評価結果が変換先JavaBeansのプロパティ型と異なる場合は「<a href="#convertType">型変換</a>」に従って変換が行われます．</p>
+<p>また，「<a href="#propertyName">変換元プロパティ名の指定</a>」の次の例</p>
+<pre>dname : department.name</pre>
+<p>この例で変換元の<code>department</code>が<code>null</code>だった場合は変換時に<code>NullPointerException</code>が発生してしまいます．<code>department</code>が<code>null</code>の場合は変換先の<code>dname</code>に<code>null</code>を設定するには、以下のようにOGNL式の3項演算子を使用してください．</p>
+<pre>
+'dname' : department != null ? department.name : null
+</pre>
+<p>OGNL式の詳細については「<a href="ognl.html">OGNLガイド</a>」を参照してください．</p>
+<h4>定数アノテーション</h4>
+<p>「<a href="#propertyName">変換元プロパティ名の指定</a>」と同様に指定します．</p>
+<pre>
+public interface FooDxo {
+    String convert_CONVERSION_RULE = "'name' : ename + '-' + dname";
+    EmployeePage convert(Employee employee);
+}
+</pre>
+<h4>Tigerアノテーション</h4>
+<p>「<a href="#propertyName">変換元プロパティ名の指定</a>」と同様に指定します．</p>
+<pre>
+import org.seasar.extension.dxo.annotation.ConversionRule;
+public interface FooDxo {
+    @ConversionRule("'name' : ename + '-' + dname")
+    EmployeePage convert(Employee employee);
+}
+</pre>
+<h3><a name="formatDate" id="formatDate">日付・時刻のフォーマット</a></h3>
+<p><code>java.util.Date</code>や<code>java.util.Calendar</code>などと<code>String</code>との相互変換を行う場合には，フォーマットパターンを指定することができます．フォーマットパターンは<code>java.text.SimpleDateFormat</code>が解釈することができるパターン文字列で，DXOインタフェースまたはそのメソッドにアノテーションで指定することができます．アノテーションが指定されたメソッドで行われる変換の際に，JavaBeansのプロパティに<code>java.util.Date</code>や<code>java.util.Calendar</code>などと<code>String</code>との変換が必要になると，指定されたフォーマットパターンが使われます．フォーマットパターンが指定されなかった場合は，デフォルトロケールのデフォルトパターンが使われます．</p>
+<h4>定数アノテーション</h4>
+<p>定数アノテーションでは，DXOインタフェースの文字列定数としてフォーマットパターンを指定します．定数名は次のいずれかで，最初に見つかったものが適用されます．</p>
+<ol>
+<li><code><var>methodName</var>[_<var>parameterType</var> ...]_<var>patternName</var></code><br />
+指定された名前と引数並びを持つメソッドに固有のフォーマットパターンを指定します．</li>
+<li><code><var>methodName</var>_<var>patternName</var></code><br />
+指定された名前を持つメソッドに固有のフォーマットパターンを指定します．</li>
+<li><code><var>patternName</var></code><br />
+DXOインタフェース内の全メソッドに適用されるフォーマットパターンを指定します．</li>
+</ol>
+<p><code><var>patternName</var></code>は次のいずれかです．</p>
+<table border="1">
+<tbody>
+<tr>
+<th>パターン名</th>
+<th>適用される型</th>
+</tr>
+<tr>
+<td rowspan="3"><code>DATE_PATTERN</code></td>
+<td><code>java.util.Calendar</code></td>
+</tr>
+<tr>
+<td><code>java.util.Date</code></td>
+</tr>
+<tr>
+<td><code>java.sql.Date</code></td>
+</tr>
+<tr>
+<td><code>TIME_PATTERN</code></td>
+<td><code>java.sql.Time</code></td>
+</tr>
+<tr>
+<td><code>TIMESTAMP_PATTERN</code></td>
+<td><code>java.sql.Timestamp</code></td>
+</tr>
+</tbody>
+</table>
+<p>次のようになります．</p>
+<pre>
+public interface FooDxo {
+    String DATE_PATTERN = "yyyy-MM-dd";
+    String TIME_PATTERN = "HH:mm:ss.SSS";
+    String TIMESTAMP_PATTERN = "yyyy-MM-dd HH:mm:ss";
+
+    String convert_DATE_PATTERN = "yyyy/MM/dd";
+    String convert_Foo_TIME_PATTERN = "HH:mm:ss";
+    String convert2_TIMESTAMP_PATTERN = "yyyy/MM/dd HH:mm:ss.SSS";
+
+    Bar convert(Foo foo);
+    Foo convert(Bar bar);
+    Bar convert2(Foo foo);
+}
+</pre>
+<p>上の例では，次の表のように定数アノテーションが適用されます．</p>
+<table border="1">
+<tbody>
+<tr>
+<th>メソッド</th>
+<th><code>DATE_PATTERN</code></th>
+<th><code>TIME_PATTERN</code></th>
+<th><code>TIMESTAMP_PATTERN</code></th>
+</tr>
+<tr>
+<td><code>convert(Foo)</code></td>
+<td><code>convert_DATE_PATTERN</code></td>
+<td><code>convert_Foo_TIME_PATTERN</code></td>
+<td><code>TIMESTAMP_PATTERN</code></td>
+</tr>
+<tr>
+<td><code>convert(Bar)</code></td>
+<td><code>convert_DATE_PATTERN</code></td>
+<td><code>TIME_PATTERN</code></td>
+<td><code>TIMESTAMP_PATTERN</code></td>
+</tr>
+<tr>
+<td><code>convert2(Foo)</code></td>
+<td><code>DATE_PATTERN</code></td>
+<td><code>TIME_PATTERN</code></td>
+<td><code>TIMESTAMP_PATTERN</code></td>
+</tr>
+</tbody>
+</table>
+<h4>Tigerアノテーション</h4>
+<p>Tigerアノテーションでは，DXOのメソッドまたはインタフェースのアノテーションとして指定します．</p>
+<table border="1">
+<tbody>
+<tr>
+<th>アノテーション</th>
+<th>適用される型</th>
+</tr>
+<tr>
+<td rowspan="3"><code>org.seasar.extension.dxo.DatePattern</code></td>
+<td><code>java.util.Calendar</code></td>
+</tr>
+<tr>
+<td><code>java.util.Date</code></td>
+</tr>
+<tr>
+<td><code>java.sql.Date</code></td>
+</tr>
+<tr>
+<td><code>org.seasar.extension.dxo.TimePattern</code></td>
+<td><code>java.sql.Time</code></td>
+</tr>
+<tr>
+<td><code>org.seasar.extension.dxo.TimestampPattern</code></td>
+<td><code>java.sql.Timestamp</code></td>
+</tr>
+</tbody>
+</table>
+<p>次のようになります．</p>
+<pre>
+@DatePattern("yyyy-MM-dd")
+@TimePattern("HH:mm:ss.SSS")
+@TimestampPattern("yyyy-MM-dd HH:mm:ss")
+public interface FooDxo {
+    @DatePattern("yyyy/MM/dd")
+    @TimePattern("HH:mm:ss")
+    Bar convert(Foo foo);
+
+    @DatePattern("yyyy/MM/dd")
+    Foo convert(Bar bar);
+
+    @TimestampPattern("yyyy/MM/dd HH:mm:ss.SSS")
+    Bar convert2(Foo foo);
+}
+</pre>
+<p>上の例では，定数アノテーションの例と同じになるようにフォーマットパターンを指定しています．</p>
+<h3><a name="customConverter" id="customConverter">独自のコンバータ</a></h3>
+<p>工事中</p>
+<!-- document end -->
+<!-- don't edit start --></td>
+<td width="14"><img height="14" width="14" src="images/spacer.gif" alt="" /></td>
+</tr>
+<tr>
+<td width="14"><img height="30" width="14" src="images/spacer.gif" alt="" /></td>
+<td width="766"><img height="30" width="592" src="images/spacer.gif" alt="" /></td>
+</tr>
+<tr>
+<td width="14"><img height="14" width="14" src="images/spacer.gif" alt="" /></td>
+<td width="766" class="copyright">Copyright© 2004-2005, The Seasar Foundation and the others. All rights reserved.</td>
+</tr>
+</table>
+</td>
+<td class="backright" align="left" valign="top">&nbsp;</td>
+</tr>
+<tr>
+<td class="backunder" align="left" valign="top" width="780" height="16">&nbsp;</td>
+<td class="backcorner" align="left" valign="top" height="16">&nbsp;</td>
+</tr>
+</table>
+<!-- don't edit end -->
+</body>
+</html>

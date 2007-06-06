@@ -1,0 +1,221 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja" lang="ja">
+<!-- don't edit start -->
+<head>
+<title>Seasar - DI Container with AOP -</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<link href="seasar_b.css" type="text/css" rel="stylesheet" media="screen" />
+<link href="seasar_p.css" type="text/css" rel="stylesheet" media="print" />
+<script src="seasar_b.js" type="text/JavaScript" language="JavaScript">
+</script>
+</head>
+<body onload="preload('ja')">
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="left">
+<tr>
+<td align="left" valign="top" width="780">
+<table width="780" border="0" cellspacing="0" cellpadding="0" class="white">
+<tr>
+<td colspan="7"><img height="5" width="780" src="images/top01_b.gif" alt="" /></td>
+</tr>
+<tr>
+<td><img height="117" width="235" src="images/top02_b.gif" alt="Seasar" /></td>
+<td colspan="3"><img height="117" width="289" src="images/top03.gif" alt="DI Container with AOP" /></td>
+<td colspan="3"><img height="117" width="256" src="images/spacer.gif" alt="" /></td>
+</tr>
+<tr>
+<td rowspan="2"><img src="images/top04.gif" alt="" height="49" width="235" /></td>
+<td><a href="http://www.seasar.org/index.html"><img src="images/menu01_b_ja.gif" height="30" width="78" border="0" alt="" id="menu01" onmouseover="swap(1)" onmouseout="restore(1)" name="menu01" /></a></td>
+<td><a href="http://www.seasar.org/projects.html"><img src="images/menu02_b_ja.gif" height="30" width="101" border="0" alt="" id="menu02" onmouseover="swap(2)" onmouseout="restore(2)" name="menu02" /></a></td>
+<td><a href="http://www.seasar.org/products.html"><img src="images/menu03_b_ja.gif" height="30" width="110" border="0" alt="" id="menu03" onmouseover="swap(3)" onmouseout="restore(3)" name="menu03" /></a></td>
+<td><a href="http://www.seasar.org/resources.html"><img src="images/menu04_b_ja.gif" height="30" width="113" border="0" alt="" id="menu04" onmouseover="swap(4)" onmouseout="restore(4)" name="menu04" /></a></td>
+<td><img src="images/menu05_b_ja.gif" height="30" width="109" border="0" alt="" id="menu05" onmouseover="swap(5)" onmouseout="restore(5)" name="menu05" /></td>
+<td><img height="30" width="34" src="images/menu06.gif" alt="" /></td>
+</tr>
+<tr>
+<td colspan="6"><img height="19" width="545" src="images/spacer.gif" alt="" /></td>
+</tr>
+</table>
+<table width="780" border="0" cellspacing="0" cellpadding="0" class="white">
+<tr align="left" valign="top">
+<td width="14"><img height="14" width="14" src="images/spacer.gif" alt="" /></td>
+<td width="740" class="main"><!-- don't edit end -->
+<!-- document start -->
+<ul>
+<li><a href="#Tx">トランザクションの自動制御</a>
+<ul>
+<li><a href="#TransAttribute">トランザクション属性</a></li>
+<li><a href="#Example">Example</a></li>
+</ul>
+</li>
+<li><a href="#Exception">例外発生時の動作</a>
+<ul>
+<li><a href="#ExExample">Example</a></li>
+<li><a href="#EJBTx">EJB互換のAdvice</a></li>
+</ul>
+</li>
+</ul>
+<h2><a name="Tx" id="Tx">トランザクションの自動制御</a></h2>
+<p>S2Txの機能を使って、POJO(普通のJavaのクラス)に対して、<a href="aop.html">Aspect</a>でトランザクションの自動管理機能を組み込むことができます。EJBコンテナが提供するようなトランザクション管理機能をPOJOに対して透明に組み込むことができるのです。組む込むことのできるトランザクション属性は次のとおりです。</p>
+<h3><a name="TransAttribute" id="TransAttribute">トランザクション属性</a></h3>
+<p>S2が標準で用意しているj2ee.diconには、次のトランザクション属性に対応した<a href="aop.html#Advice">Advice</a>が定義されています。コンポーネント名が<a href="aop.html#Advice">Advice</a>の名前です。</p>
+<table border="1">
+<tr bgcolor="#D1F3F4" align="center">
+<th width="72">属性</th>
+<th width="123">コンポーネント名</th>
+<th width="534">説明</th>
+</tr>
+<tr>
+<td>Required</td>
+<td><code>j2ee.requiredTx</code></td>
+<td>トランザクションが開始されていなければ、<br />
+自動的にトランザクションを開始します。<br />
+既にトランザクションが開始されていれば、<br />
+そのトランザクションを引き継ぎます。</td>
+</tr>
+<tr>
+<td>RequiresNew</td>
+<td><code>j2ee.requiresNewTx</code></td>
+<td>常に新しいトランザクションを開始させます。<br />
+既存のトランザクションが開始されているなら、<br />
+既存のトランザクションを中断し、<br />
+自分自身のトランザクションの終了後、<br />
+中断したトランザクションを復帰させます。</td>
+</tr>
+<tr>
+<td>Mandatory</td>
+<td><code>j2ee.mandatoryTx</code></td>
+<td>トランザクションが既に開始されてなければエラーにします。</td>
+</tr>
+<tr>
+<td>NotSupported</td>
+<td><code>j2ee.notSupportedTx</code></td>
+<td>既存のトランザクションが開始されているなら、<br />
+既存のトランザクションを中断します。<br />
+コンポーネントのメソッドの終了後、<br />
+中断したトランザクションを復帰させます。</td>
+</tr>
+</table>
+<h3><a name="Example" id="Example">Example</a></h3>
+<h4>Hoge.java</h4>
+<pre>
+package examples.tx;
+
+public interface Hoge {
+
+    public void foo();
+}
+</pre>
+<h4>HogeImpl.java</h4>
+<pre>
+package examples.tx;
+
+public class HogeImpl implements Hoge {
+
+    public void foo() {
+        System.out.println("foo");
+    }
+}
+</pre>
+<h4>HogeClient.dicon</h4>
+<pre>
+&lt;components&gt;<br />    &lt;include path="j2ee.dicon"/&gt;<br />    &lt;component class="examples.tx.HogeImpl"&gt;<br />        &lt;aspect&gt;j2ee.requiredTx&lt;/aspect&gt;<br />    &lt;/component&gt;<br />&lt;/components&gt;
+</pre>
+<h4>HogeClient.java</h4>
+<pre>
+package examples.tx;
+
+import org.seasar.framework.container.S2Container;
+import org.seasar.framework.container.factory.S2ContainerFactory;
+
+public class HogeClient {
+
+    private static final String PATH =
+        "examples/tx/HogeClient.dicon";
+
+    public static void main(String[] args) {
+        S2Container container = S2ContainerFactory.create(PATH);
+        Hoge hoge = (Hoge) container.getComponent(Hoge.class);
+        hoge.foo();
+    }
+}
+</pre>
+<h4>実行結果</h4>
+<pre>
+DEBUG 2004-03-14 18:05:18,402 [main] Transaction.begin()
+foo
+DEBUG 2004-03-14 18:05:18,432 [main] Transaction.commit()
+</pre>
+<p>j2ee.diconはS2としてあらかじめ用意(srcの直下)されています。Adviceのコンポーネント名をaspectタグのボディに指定するだけなので簡単です。 POJOに簡単にトランザクション管理機能が組み込めることがわかってもらえたと思います。</p>
+<h2><a name="Exception" id="Exception">例外発生時の動作</a></h2>
+<p>j2ee.diconに定義されているAdviceは、コンポーネントが例外をスローした場合はトランザクションをロールバックします．<br />
+発生した例外に応じてトランザクションをコミットするかロールバックするかを指定することもできます。</p>
+<ul>
+<li>Adviceの<code>addCommitRule(Class)</code>メソッドを使用すると、コンポーネントからスローされてもトランザクションをコミットする例外を指定することができます。</li>
+<li>Adviceの<code>addRollbackRule(Class)</code>メソッドを使用すると、コンポーネントからスローされてもトランザクションをロールバックする例外を指定することができます。</li>
+</ul>
+<p>コンポーネントから例外がスローされると、<code>addCommitRule()/addRollbackRule()</code>が設定された順番にマッチするかチェックされます。スローされた例外が<code>addCommitRule()/addRollbackRule()</code>で指定された例外またはその派生例外であれば、その設定に従ってトランザクションをコミットまたはロールバックします。スローされた例外が<code>addCommitRule()/addRollbackRule()</code>で指定された例外とマッチしない場合、トランザクションはロールバックされます。</p>
+<h3><a name="ExExample" id="ExExample">Example</a></h3>
+<h4>MyTx.dicon</h4>
+<p>次の例では、実行時例外 (<code>java.lang.RuntimeException</code>) またはその派生型がスローされた場合はロールバック、例外 (<code>java.lang.Exception</code>) またはその派生型がスローされた場合はコミットするRequired のAdviceとして<code>myTx</code>を定義しています．<br />
+実行時例外 (<code>java.lang.RuntimeException</code>) は例外 (<code>java.lang.Exception</code>) の派生例外であるため、設定する順番を逆にすると実行時例外 (<code>java.lang.RuntimeException</code>) がスローされた場合でもコミットされてしまうので注意してください (Java言語のcatch節と似ています)。</p>
+<pre>
+&lt;components&gt;<br />    &lt;include path="j2ee.dicon"/&gt;<br />    &lt;component name="myTx"
+        class="org.seasar.extension.tx.RequiredInterceptor"&gt;
+        &lt;initMethod name="addRollbackRule"&gt;
+            &lt;arg&gt;@java.lang.RuntimeException@class&lt;/arg&gt;
+        &lt;/initMethod&gt;
+        &lt;initMethod name="addCommitRule"&gt;
+            &lt;arg&gt;@java.lang.Exception@class&lt;/arg&gt;
+        &lt;/initMethod&gt;
+    &lt;/component&gt;
+&lt;/components&gt;
+</pre>
+<h3><a name="EJBTx" id="EJBTx">EJB互換のAdvice</a></h3>
+<p>S2が標準で用意しているejbtx.diconには、EJBのコンテナ管理トランザクション (CMT) と同じように実行時例外 (<code>java.lang.RuntimeException</code>)・リモート例外 (<code>java.rmi.RemoteException</code>) とその派生例外が発生した場合はロールバックし、その他の例外 (<code>java.lang.Exception</code>) が発生した場合はコミットする<a href="aop.html#Advice">Advice</a>が定義されています。コンポーネント名が<a href="aop.html#Advice">Advice</a>の名前です。</p>
+<table border="1">
+<tr bgcolor="#D1F3F4" align="center">
+<th width="72">属性</th>
+<th width="123">コンポーネント名</th>
+</tr>
+<tr>
+<td>Required</td>
+<td><code>ejbtx.requiredTx</code></td>
+</tr>
+<tr>
+<td>RequiresNew</td>
+<td><code>ejbtx.requiresNewTx</code></td>
+</tr>
+<tr>
+<td>Mandatory</td>
+<td><code>ejbtx.mandatoryTx</code></td>
+</tr>
+<tr>
+<td>NotSupported</td>
+<td><code>ejbtx.notSupportedTx</code></td>
+</tr>
+</table>
+<!-- document end -->
+<!-- don't edit start --></td>
+<td width="14"><img height="14" width="14" src="images/spacer.gif" alt="" /></td>
+</tr>
+<tr>
+<td width="14"><img height="30" width="14" src="images/spacer.gif" alt="" /></td>
+<td width="766"><img height="30" width="592" src="images/spacer.gif" alt="" /></td>
+</tr>
+<tr>
+<td width="14"><img height="14" width="14" src="images/spacer.gif" alt="" /></td>
+<td width="766" class="copyright">Copyright© 2004-2005, The Seasar Foundation and the others. All rights reserved.</td>
+</tr>
+</table>
+</td>
+<td class="backright" align="left" valign="top">&nbsp;</td>
+</tr>
+<tr>
+<td class="backunder" align="left" valign="top" width="780" height="16">&nbsp;</td>
+<td class="backcorner" align="left" valign="top" height="16">&nbsp;</td>
+</tr>
+</table>
+<!-- don't edit end -->
+</body>
+</html>

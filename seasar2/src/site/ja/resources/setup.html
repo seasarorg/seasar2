@@ -1,0 +1,202 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja" lang="ja">
+<!-- don't edit start -->
+<head>
+<title>Seasar - DI Container with AOP -</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Style-Type" content="text/css">
+<link href="seasar_b.css" type="text/css" rel="stylesheet" media="screen" />
+<link href="seasar_p.css" type="text/css" rel="stylesheet" media="print" />
+<script src="seasar_b.js" type="text/JavaScript" language="JavaScript">
+</script>
+</head>
+<body onload="preload('ja')">
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="left">
+<tr>
+<td align="left" valign="top" width="780">
+<table width="780" border="0" cellspacing="0" cellpadding="0" class="white">
+<tr>
+<td colspan="7"><img height="5" width="780" src="images/top01_b.gif" alt="" /></td>
+</tr>
+<tr>
+<td><img height="117" width="235" src="images/top02_b.gif" alt="Seasar" /></td>
+<td colspan="3"><img height="117" width="289" src="images/top03.gif" alt="DI Container with AOP" /></td>
+<td colspan="3"><img height="117" width="256" src="images/spacer.gif" alt="" /></td>
+</tr>
+<tr>
+<td rowspan="2"><img src="images/top04.gif" alt="" height="49" width="235" /></td>
+<td><a href="http://www.seasar.org/index.html"><img src="images/menu01_b_ja.gif" height="30" width="78" border="0" alt="" id="menu01" onmouseover="swap(1)" onmouseout="restore(1)" /></a></td>
+<td><a href="http://www.seasar.org/projects.html"><img src="images/menu02_b_ja.gif" height="30" width="101" border="0" alt="" id="menu02" onmouseover="swap(2)" onmouseout="restore(2)" /></a></td>
+<td><a href="http://www.seasar.org/products.html"><img src="images/menu03_b_ja.gif" height="30" width="110" border="0" alt="" id="menu03" onmouseover="swap(3)" onmouseout="restore(3)" /></a></td>
+<td><a href="http://www.seasar.org/resources.html"><img src="images/menu04_b_ja.gif" height="30" width="113" border="0" alt="" id="menu04" onmouseover="swap(4)" onmouseout="restore(4)" /></a></td>
+<td><img src="images/menu05_b_ja.gif" height="30" width="109" border="0" alt="" id="menu05" onmouseover="swap(5)" onmouseout="restore(5)" /></td>
+<td><img height="30" width="34" src="images/menu06.gif" alt="" /></td>
+</tr>
+<tr>
+<td colspan="6"><img height="19" width="545" src="images/spacer.gif" alt="" /></td>
+</tr>
+</table>
+<table width="780" border="0" cellspacing="0" cellpadding="0" height="100%" class="white">
+<tr align="left" valign="top">
+<td width="14"><img height="14" width="14" src="images/spacer.gif" alt="" /></td>
+<td width="740" class="main"><!-- don't edit end -->
+<!-- document start -->
+            <p>S2はJDK1.4 or JDK1.5が必要です。</p>
+<p>S2xxx.zipを解凍してできたseasar2ディレクトリをEclipseで、｢ファイル→インポート→既存のプロジェクトをワークスペースへ｣でインポートしてください。</p>
+            <h2>S2-Framework</h2>
+            <p>Seasar2の基本機能(S2Container, S2AOP)を利用する場合には以下のファイルをCLASSPATHに含める必要があります。</p>
+<ul>
+<li>lib/aopalliance-1.0.jar</li>
+<li>lib/commons-logging-1.1.jar</li>
+<li>lib/javassist-3.3.ga.jar</li>
+<li>lib/ognl-2.6.7.jar</li>
+<li>lib/s2-framework-2.x.x.jar</li>
+<li>lib/geronimo-j2ee_1.4_spec-1.0.jar (オプション，下記参照)</li>
+<li>lib/portlet-api-1.0.jar (オプション)</li>
+<li>lib/log4j-1.2.13.jar (オプション)</li>
+<li>resources/log4j.properties (オプション)</li>
+<li>resources/aop.dicon (オプション)</li>
+</ul>
+            <h2>S2-Extension</h2>
+            <p>Seasar2の拡張機能(S2JTA, S2DBCP, S2JDBC, S2Unit, S2Tx, S2DataSet)を利用する場合には以下のファイルを追加でCLASSPATHに含める必要があります。</p>
+<ul>
+<li>lib/junit-3.8.2.jar</li>
+<li>lib/poi-2.5-final-20040804.jar</li>
+<li>lib/s2-extension-2.x.x.jar</li>
+<li>lib/geronimo-jta_1.1_spec-1.0.jar (オプション，下記参照)</li>
+<li>lib/geronimo-ejb_2.1_spec-1.0.jar (オプション，下記参照)</li>
+<li>resources/jdbc.dicon</li>
+</ul>
+<p>アプリケーションの実行環境により、J2EE関連Jarファイルのいずれが必要になるかが異なります。</p>
+<table border="1">
+<tr>
+<th>環境</th>
+<th>geronimo-j2ee_1.4<br>
+                  _spec-1.0.jar</th>
+<th>geronimo-jta_1.1<br>
+                  _spec-1.0.jar</th>
+<th>geronimo-ejb_2.1<br>
+                  _spec-1.0.jar</th>
+</tr>
+<tr align="center">
+<td>J2EEフル対応でないWebコンテナ<br />
+(Tomcat等)</td>
+<td>不要</td>
+<td>要<br />
+(S2JTA,S2Txを使う場合)</td>
+<td>要<br />
+(S2Tigerを使う場合)</td>
+</tr>
+<tr align="center">
+<td>J2EEフル対応のAPサーバ<br />
+(JBoss, WebSphere, WebLogic等)</td>
+<td>不要</td>
+<td>要<br />
+(S2JTAを使う場合)</td>
+<td>不要</td>
+</tr>
+<tr align="center">
+<td>スタンドアロン</td>
+<td>要<br />
+(S2JTA,S2Txを使う場合)</td>
+<td>要<br />
+(S2JTA,S2Txを使う場合)</td>
+<td>不要</td>
+</tr>
+</table>
+<br />
+<p>データベースに関する機能を簡単に試すことができるように、RDBMSとしてHSQLDBを用意しています。オラクルでも直ぐに機能を試せるように、hsql/sql/demo-oracle.sqlが用意されています。SQL*Plusなどで実行した後、jdbc.diconの<a href="dbcp.html#Setup">XADataSourceImplの設定項目</a>を環境に合わせて書き換えてください。</p>
+<p><a href="http://www.seasar.org/updates.html">S2Container用のプラグインKijimuna</a>も是非ご利用ください。</p>
+            <h2>S2-Tiger</h2>
+            <p>Java5対応機能を使いたい場合は､S2TigerXXX.zipを解凍してできたs2-tigerディレクトリをEclipseで、 ｢ファイル→インポート→既存のプロジェクトをワークスペースへ｣でインポートしてください。
+            Seasar2の設定の上に、さらに以下のファイルを追加でCLASSPATHに含める必要があります。</p>
+<ul>
+<li>lib/s2-tiger-x.x.x.jar</li>
+              <li>lib/geronimo-annotation_1.0_spec-1.0.jar (オプション，下記参照)</li>
+              <li>lib/geronimo-ejb_3.0_spec-1.0.jar (オプション，下記参照)</li>
+              <li>lib/geronimo-interceptor_3.0_spec-1.0.jar (オプション，下記参照)</li>
+              <li>lib/geronimo-jpa_3.0_spec-1.0.jar (オプション，下記参照)</li>
+            </ul>
+            <p>オプションのJarファイルは、EJB3やJPAのサポート機能をJavaEE5対応でない環境で使う場合に必要となります。詳細は以下の表を参照してください。</p>
+            <table border="1">
+              <col span="5" align="center">
+              <tbody>
+                <tr>
+<th>環境</th>
+<th>geronimo-annotation_1.0<br>
+                  _spec-1.0.jar</th>
+                  <th>geronimo-ejb_3.0<br>
+                  _spec-1.0.jar</th>
+                  <th>geronimo-interceptor_3.0<br>
+                  _spec-1.0.jar</th>
+<th>geronimo-jpa_3.0<br>
+                  _spec-1.0.jar</th>
+</tr>
+                <tr>
+<td>Servlet2.4対応のWebコンテナ<br>
+                  (Tomcat5.x等)</td>
+<td>要</td>
+                  <td>要</td>
+                  <td>要<br>
+                  (EJB3を使う場合)</td>
+<td>要</td>
+</tr>
+                <tr>
+                  <td>Servlet2.5対応のWebコンテナ<br>
+                  (Tomcat6)</td>
+                  <td>不要</td>
+                  <td>要</td>
+                  <td>要<br>
+                  (EJB3を使う場合)</td>
+                  <td>要<br>
+                  (JPAを使う場合)</td>
+                </tr>
+                <tr>
+<td>J2EE1.4対応のAPサーバ</td>
+<td>要</td>
+                  <td>要</td>
+                  <td>要<br>
+                  (EJB3を使う場合)</td>
+<td>要</td>
+</tr>
+                <tr>
+                  <td>JavaEE5対応のAPサーバ</td>
+                  <td>不要</td>
+                  <td>不要</td>
+                  <td>不要</td>
+                  <td>不要</td>
+                </tr>
+                <tr>
+<td>スタンドアロン</td>
+<td>要</td>
+                  <td>要</td>
+                  <td>要<br>
+                  (EJB3を使う場合)</td>
+<td>要</td>
+</tr>
+              </tbody>
+            </table>
+            <!-- document end -->
+<!-- don't edit start --></td>
+<td width="14"><img height="14" width="14" src="images/spacer.gif" alt="" /></td>
+</tr>
+<tr>
+<td width="14"><img height="30" width="14" src="images/spacer.gif" alt="" /></td>
+<td width="766"><img height="30" width="592" src="images/spacer.gif" alt="" /></td>
+</tr>
+<tr>
+<td width="14"><img height="14" width="14" src="images/spacer.gif" alt="" /></td>
+<td width="766" class="copyright">Copyright© 2004-2005, The Seasar Foundation and the others. All rights reserved.</td>
+</tr>
+</table>
+</td>
+<td class="backright" align="left" valign="top">&nbsp;</td>
+</tr>
+<tr>
+<td class="backunder" align="left" valign="top" width="780" height="16">&nbsp;</td>
+<td class="backcorner" align="left" valign="top" height="16">&nbsp;</td>
+</tr>
+</table>
+<!-- don't edit end -->
+</body>
+</html>

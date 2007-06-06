@@ -1,0 +1,69 @@
+.backright {
+	BACKGROUND-IMAGE: url(images/rightback.gif); BACKGROUND-REPEAT: repeat-y; BACKGROUND-COLOR: #cccccc
+}
+.backunder {
+	BACKGROUND-IMAGE: url(images/underback.gif); BACKGROUND-REPEAT: repeat-x; BACKGROUND-COLOR: #cccccc
+}
+.backcorner {
+	BACKGROUND-IMAGE: url(images/cornerback.gif); BACKGROUND-REPEAT: no-repeat; BACKGROUND-COLOR: #cccccc
+}
+.white {
+	BACKGROUND-COLOR: #ffffff
+}
+.main {
+	FONT-SIZE: 10pt; LINE-HEIGHT: 150%; FONT-STYLE: normal
+}
+.main SPAN.anchor {
+	PADDING-RIGHT: 20px; BACKGROUND-POSITION: right bottom; PADDING-LEFT: 0px; FONT-SIZE: 1px; BACKGROUND-IMAGE: url(images/item_large_b.gif); PADDING-BOTTOM: 0px; COLOR: #ffffff; PADDING-TOP: 20px; BACKGROUND-REPEAT: no-repeat; BACKGROUND-COLOR: transparent
+}
+.main SPAN.title {
+	FONT-WEIGHT: bold; FONT-SIZE: 12pt; LINE-HEIGHT: 200%
+}
+.main P {
+	MARGIN-TOP: 0px; TEXT-INDENT: 1em
+}
+.main PRE {
+	BORDER-RIGHT: #7e7e7e 1px solid; PADDING-RIGHT: 5pt; BORDER-TOP: #7e7e7e 1px solid; PADDING-LEFT: 5pt; FONT-SIZE: 9pt; PADDING-BOTTOM: 5pt; BORDER-LEFT: #7e7e7e 1px solid; COLOR: #333333; LINE-HEIGHT: 120%; PADDING-TOP: 5pt; BORDER-BOTTOM: #7e7e7e 1px solid; FONT-FAMILY: Courier New; BACKGROUND-COLOR: #eaeaea
+}
+.main DIV.quote {
+	BORDER-RIGHT: #7e7e7e 1px solid; PADDING-RIGHT: 5pt; BORDER-TOP: #7e7e7e 1px solid; PADDING-LEFT: 5pt; PADDING-BOTTOM: 5pt; BORDER-LEFT: #7e7e7e 1px solid; COLOR: #333333; PADDING-TOP: 5pt; BORDER-BOTTOM: #7e7e7e 1px solid; BACKGROUND-COLOR: #eaeaea
+}
+.main UL {
+	LIST-STYLE: disc url(images/item_little.gif) outside
+}
+.main SPAN.strike {
+	TEXT-DECORATION: line-through
+}
+.main SPAN.italic {
+	FONT-STYLE: italic
+}
+.main SPAN.bold {
+	FONT-WEIGHT: bold
+}
+.menu {
+	FONT-STYLE: normal; BACKGROUND-COLOR: #ffffff
+}
+.menu UL {
+	LIST-STYLE: circle url(images/item_large_b.gif) outside; FONT-WEIGHT: bold; FONT-SIZE: 10pt; MARGIN: 14px 14px 3px 23px; LINE-HEIGHT: 200%
+}
+.menu UL UL {
+	LIST-STYLE: disc url(images/item_little.gif) outside; FONT-WEIGHT: normal; FONT-SIZE: 9pt; MARGIN: 3px 14px
+}
+.copyright {
+	BORDER-TOP: #888888 1px solid; FONT-WEIGHT: bold; FONT-SIZE: 8pt; TEXT-ALIGN: right
+}
+BODY {
+	MARGIN: 0px; BACKGROUND-COLOR: #cccccc
+}
+A:link {
+	COLOR: #006699; TEXT-DECORATION: none
+}
+A:visited {
+	COLOR: #006699; TEXT-DECORATION: none
+}
+A:active {
+	COLOR: #006699; TEXT-DECORATION: none
+}
+A:hover {
+	COLOR: #ff3300; TEXT-DECORATION: none
+}

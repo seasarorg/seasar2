@@ -1,0 +1,193 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<!-- don't edit start -->
+<head>
+<title>Seasar - DI Container with AOP -</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<link href="seasar_b.css" type="text/css" rel="stylesheet" media="screen" />
+<script src="seasar_b.js" type="text/JavaScript" language="JavaScript">
+</script>
+</head>
+<body onload="preload('en')">
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="left">
+<tr>
+<td align="left" valign="top" width="780">
+<table width="780" border="0" cellspacing="0" cellpadding="0" class="white">
+<tr>
+<td colspan="7"><img height="5" width="780" src="images/top01_b.gif" alt="" /></td>
+</tr>
+<tr>
+<td><img height="117" width="235" src="images/top02_b.gif" alt="Seasar" /></td>
+<td colspan="3"><img height="117" width="289" src="images/top03.gif" alt="DI Container with AOP" /></td>
+<td colspan="3"><img height="117" width="256" src="images/spacer.gif" alt="" /></td>
+</tr>
+<tr>
+<td rowspan="2"><img src="images/top04.gif" alt="" height="49" width="235" /></td>
+<td><a href="http://www.seasar.org/en/index.html"><img src="images/menu01_b_en.gif" height="30" width="78" border="0" alt="" id="menu01" onmouseover="swap(1)" onmouseout="restore(1)" name="menu01" /></a></td>
+<td><a href="http://www.seasar.org/en/projects.html"><img src="images/menu02_b_en.gif" height="30" width="101" border="0" alt="" id="menu02" onmouseover="swap(2)" onmouseout="restore(2)" name="menu02" /></a></td>
+<td><a href="http://www.seasar.org/en/products.html"><img src="images/menu06_b_en.gif" height="30" width="110" border="0" alt="" id="menu06" onmouseover="swap(6)" onmouseout="restore(6)" name="menu06" /></a></td>
+<td><a href="http://www.seasar.org/en/documents.html"><img src="images/menu04_b_en.gif" height="30" width="109" border="0" alt="" id="menu04" onmouseover="swap(4)" onmouseout="restore(4)" name="menu04" /></a></td>
+<td><a href="http://www.seasar.org/en/resources.html"><img src="images/menu05_b_en.gif" height="30" width="113" border="0" alt="" id="menu05" onmouseover="swap(5)" onmouseout="restore(5)" name="menu05" /></a></td>
+<!--
+<td><img src="images/menu07_b_en.gif" height="30" width="109" border="0" alt=""  id="menu07" onmouseover="swap(7)" onmouseout="restore(7)"></td>
+//-->
+<td><img height="30" width="34" src="images/menu06.gif" alt="" /></td>
+</tr>
+<tr>
+<td colspan="6"><img height="19" width="545" src="images/spacer.gif" alt="" /></td>
+</tr>
+</table>
+<table width="780" border="0" cellspacing="0" cellpadding="0" class="menu">
+<tr align="left" valign="top">
+<td width="14"><img height="14" width="14" src="images/spacer.gif" alt="" /></td>
+<td width="740" class="main"><!-- don't edit end -->
+<!-- document start -->
+<h2><a name="Tx" id="Tx">Transaction Management</a></h2>
+<p>S2Tx provides the automatic transaction management by using <a href="aop.html">Aspect</a> for POJOs. You can use the transaction management that the EJB container offers without adding the code to POJOs. Showing as follows is a transaction attribute offered with S2tx.</p>
+<h2><a name="TransAttribute" id="TransAttribute">Transaction Attributes</a></h2>
+<p>The column of the component is a name of <a href="aop.html#Advice">Advice.</a></p>
+<table border="1">
+<tr bgcolor="#D1F3F4" align="center">
+<th width="72">attribute</th>
+<th width="123">component</th>
+<th width="534">description</th>
+</tr>
+<tr>
+<td>Required</td>
+<td>j2ee.requiredTx</td>
+<td>If the method's caller is already part of a transaction, it does not create a new transaction, but continues in the same transaction as its caller. If the caller is not in a transaction, a new transaction is created.</td>
+</tr>
+<tr>
+<td>RequiresNew</td>
+<td>j2ee.requiresNewTx</td>
+<td>A new transaction is created always, regardless of the transactional state of the caller. If the caller was operating in a transaction, its transaction is suspended until the method completes.</td>
+</tr>
+<tr>
+<td>Mandatory</td>
+<td>j2ee.mandatoryTx</td>
+<td>The method will not even start unless its caller is in a transaction. It will throw a Exception instead.</td>
+</tr>
+</table>
+<h2><a name="Example" id="Example">Example</a></h2>
+<h4>Hoge.java</h4>
+<pre>
+package examples.tx;
+
+public interface Hoge {
+
+    public void foo();
+}
+</pre>
+<h4>HogeImpl.java</h4>
+<pre>
+package examples.tx;
+
+public class HogeImpl implements Hoge {
+
+    public void foo() {
+        System.out.println("foo");
+    }
+}
+</pre>
+<h4>HogeClient.dicon</h4>
+<pre>
+&lt;components&gt;<br />    &lt;include path="j2ee.dicon"/&gt;<br />    &lt;component class="examples.tx.HogeImpl"&gt;<br />        &lt;aspect&gt;j2ee.requiredTx&lt;/aspect&gt;<br />    &lt;/component&gt;<br />&lt;/components&gt;
+</pre>
+<h4>HogeClient.java</h4>
+<pre>
+package examples.tx;
+
+import org.seasar.framework.container.S2Container;
+import org.seasar.framework.container.factory.S2ContainerFactory;
+
+public class HogeClient {
+
+    private static final String PATH =
+        "examples/tx/HogeClient.dicon";
+
+    public static void main(String[] args) {
+        S2Container container = S2ContainerFactory.create(PATH);
+        Hoge hoge = (Hoge) container.getComponent(Hoge.class);
+        hoge.foo();
+    }
+}
+</pre>
+<h4>Execution result</h4>
+<pre>
+DEBUG 2004-03-14 18:05:18,402 [main] Transaction.begin()
+foo
+DEBUG 2004-03-14 18:05:18,432 [main] Transaction.commit()
+</pre>
+<p>J2ee.dicon file is in S2(under src directory). You only specify the component name of Advice for the body of the aspect tag. Thus, it is very easy to manage the transaction with POJO by using S2tx.</p>
+<h2><a name="Exception" id="Exception">Exception Handling</a></h2>
+<p>The Advice defined in j2ee.dicon rolles back the transaction, when a component throws an exception. The Advice can be specified to commit or roll back the transaction depending on the exception class.</p>
+<ul>
+<li>Using <code>addCommitRule(Class)</code> method of Advice, you can specify the exception which invokes to commit the transaction when thrown.</li>
+<li>Using <code>addRollbackRule(Class)</code> method of Advice, you can specify the exception which invokes to roll back the transaction when thrown.</li>
+</ul>
+<p>When a component throws an exception, S2Tx checks if it matches the classes specified by <code>addCommitRule()/addRollbackRule()</code> method. When an exception matches the class or subclass of the class specified by <code>addCommitRule()/addRollbackRule()</code> method, the transaction is commited or rolled back as specified. When an exception does not match the class or subclass of the class specified by addCommitRule()/addRollbackRule() method, the transaction is rolled back.</p>
+<h3><a name="ExExample" id="ExExample">Example</a></h3>
+<h4>MyTx.dicon</h4>
+<p>Following example shows myTx definition as a required Advice that rolls back the transaction when a RuntimeException (<code>java.lang.RuntimeException</code>) or subclass of it is thrown, and it commits when an Exception (<code>java.lang.Exception</code>) or subclass of it is thrown.<br />
+Be aware that when the order of the setting of RuntimeException (<code>java.lang.RuntimeException</code>) and Exception (<code>java.lang.Exception</code>) is reversed, Advice commits the transaction when a RuntimeException (<code>java.lang.RuntimeException</code>) is thrown, because it is a subclass of Exception. (It looks like the try/catch block of Java)</p>
+<pre>
+&lt;components&gt;<br />    &lt;include path="j2ee.dicon"/&gt;<br />    &lt;component name="myTx"
+        class="org.seasar.extension.tx.RequiredInterceptor"&gt;
+        &lt;initMethod name="addRollbackRule"&gt;
+            &lt;arg&gt;@java.lang.RuntimeException@class&lt;/arg&gt;
+        &lt;/initMethod&gt;
+        &lt;initMethod name="addCommitRule"&gt;
+            &lt;arg&gt;@java.lang.Exception@class&lt;/arg&gt;
+        &lt;/initMethod&gt;
+    &lt;/component&gt;
+&lt;/components&gt;
+</pre>
+<h3><a name="EJBTx" id="EJBTx">Advice compatible with EJB</a></h3>
+<p>S2 provides ejbtx.dicon that has definition of <a href="aop.html#Advice">Advice</a> that rolls back the transaction when a RuntimeException (<code>java.lang.RuntimeException</code>), RemoteException (<code>java.rmi.RemoteException</code>), or subclass of them is thrown, and commits when another Exception is thrown. The column of the component is a name of <a href="aop.html#Advice">Advice.</a></p>
+<table border="1">
+<tr bgcolor="#D1F3F4" align="center">
+<th width="72">attribute</th>
+<th width="123">component</th>
+</tr>
+<tr>
+<td>Required</td>
+<td><code>ejbtx.requiredTx</code></td>
+</tr>
+<tr>
+<td>RequiresNew</td>
+<td><code>ejbtx.requiresNewTx</code></td>
+</tr>
+<tr>
+<td>Mandatory</td>
+<td><code>ejbtx.mandatoryTx</code></td>
+</tr>
+<tr>
+<td>NotSupported</td>
+<td><code>ejbtx.notSupportedTx</code></td>
+</tr>
+</table>
+<!-- document end -->
+<!-- don't edit start --></td>
+<td width="14"><img height="14" width="14" src="images/spacer.gif" alt="" /></td>
+</tr>
+<tr>
+<td width="14"><img height="30" width="14" src="images/spacer.gif" alt="" /></td>
+<td width="766"><img height="30" width="592" src="images/spacer.gif" alt="" /></td>
+</tr>
+<tr>
+<td width="14"><img height="14" width="14" src="images/spacer.gif" alt="" /></td>
+<td width="766" class="copyright">Copyright© 2004-2005, The Seasar Foundation and the others. All rights reserved.</td>
+</tr>
+</table>
+</td>
+<td class="backright" align="left" valign="top">&nbsp;</td>
+</tr>
+<tr>
+<td class="backunder" align="left" valign="top" width="780" height="16">&nbsp;</td>
+<td class="backcorner" align="left" valign="top" height="16">&nbsp;</td>
+</tr>
+</table>
+<!-- don't edit end -->
+</body>
+</html>

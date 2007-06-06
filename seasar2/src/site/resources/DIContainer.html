@@ -1,0 +1,1586 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<!-- don't edit start -->
+<head>
+<title>Seasar - DI Container with AOP -</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<link href="seasar_p.css" type="text/css" rel="stylesheet" media="print" />
+<link href="seasar_b.css" type="text/css" rel="stylesheet" media="screen" />
+<script src="seasar_b.js" type="text/JavaScript" language="JavaScript">
+</script>
+</head>
+<body onload="preload('en')">
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="left">
+<tr>
+<td align="left" valign="top" width="780">
+<table width="780" border="0" cellspacing="0" cellpadding="0" class="white">
+<tr>
+<td colspan="7"><img height="5" width="780" src="images/top01_b.gif" alt="" /></td>
+</tr>
+<tr>
+<td><img height="117" width="235" src="images/top02_b.gif" alt="Seasar" /></td>
+<td colspan="3"><img height="117" width="289" src="images/top03.gif" alt="DI Container with AOP" /></td>
+<td colspan="3">&nbsp;</td>
+</tr>
+<tr>
+<td rowspan="2"><img src="images/top04.gif" alt="" height="49" width="235" /></td>
+<td><a href="http://www.seasar.org/en/index.html"><img src="images/menu01_b_en.gif" height="30" width="78" border="0" alt="" id="menu01" onmouseover="swap(1)" onmouseout="restore(1)" name="menu01" /></a></td>
+<td><a href="http://www.seasar.org/en/projects.html"><img src="images/menu02_b_en.gif" height="30" width="101" border="0" alt="" id="menu02" onmouseover="swap(2)" onmouseout="restore(2)" name="menu02" /></a></td>
+<td><a href="http://www.seasar.org/en/products.html"><img src="images/menu06_b_en.gif" height="30" width="110" border="0" alt="" id="menu06" onmouseover="swap(6)" onmouseout="restore(6)" name="menu06" /></a></td>
+<td><a href="http://www.seasar.org/en/documents.html"><img src="images/menu04_b_en.gif" height="30" width="109" border="0" alt="" id="menu04" onmouseover="swap(4)" onmouseout="restore(4)" name="menu04" /></a></td>
+<td><a href="http://www.seasar.org/en/resources.html"><img src="images/menu05_b_en.gif" height="30" width="113" border="0" alt="" id="menu05" onmouseover="swap(5)" onmouseout="restore(5)" name="menu05" /></a></td>
+<!--
+<td><img src="images/menu07_b_en.gif" height="30" width="109" border="0" alt=""  id="menu07" onmouseover="swap(7)" onmouseout="restore(7)"></td>
+//-->
+<td><img height="30" width="34" src="images/menu06.gif" alt="" /></td>
+</tr>
+<tr>
+<td colspan="6"><img height="19" width="545" src="images/spacer.gif" alt="" /></td>
+</tr>
+</table>
+<table width="780" border="0" cellspacing="0" cellpadding="0" class="white">
+<tr align="left" valign="top">
+<td width="14"><img height="14" width="14" src="images/spacer.gif" alt="" /></td>
+<td width="740" class="main"><!-- don't edit end -->
+<!-- document start -->
+<ul>
+<li><a href="#Quickstart">Quickstart</a>
+<ul>
+<li><a href="#FirstStep">First step</a></li>
+<li><a href="#NextStep">Next step</a></li>
+</ul>
+</li>
+<li><a href="#S2ContainerReference">S2Container reference</a>
+<ul>
+<li><a href="#CreateFile">Files to be Created</a></li>
+<li><a href="#S2ContainerDefinition">S2Container Definition</a></li>
+<li><a href="#S2ContainerCreation">S2Container Creation</a>
+<ul>
+<li><a href="#SingletonS2ContainerFactory">Using SingletonS2ContainerFactory</a></li>
+<li><a href="#S2ContainerFactory">Using S2ContainerFactory</a></li>
+</ul>
+</li>
+<li><a href="#getComponent">Acquiring Components</a></li>
+<li><a href="#DIType">Dependency Injection Type</a>
+<ul>
+<li type="circle"><a href="#ConstructorInjection">Constructor Injection</a></li>
+<li type="circle"><a href="#SetterInjection">Setter Injection</a></li>
+<li type="circle"><a href="#MethodInjection">Method Injection</a></li>
+</ul>
+</li>
+<li><a href="#Include">S2Container Definition division and include</a></li>
+<li><a href="#Namespace">Namespace</a></li>
+<li><a href="#InstanceMode">Instance Management</a></li>
+<li><a href="#Lifecycle">Lifecycle</a></li>
+<li><a href="#AutoBindingMode">Automatic Binding</a></li>
+<li><a href="#UseS2Container">Using S2Container in Components</a></li>
+<li><a href="#S2ContainerServlet">S2ContainerServlet</a></li>
+<li><a href="#app.dicon">Purpose of app.dicon</a></li>
+<li><a href="#Aop">Use of AOP</a></li>
+<li><a href="#Meta">Metadata</a></li>
+<li><a href="#Request">Auto-binding of Requests</a></li>
+<li><a href="#ComponentAutoRegister">Component Auto-registration</a></li>
+<li><a href="#AspectAutoRegister">Aspect Auto-registration</a></li>
+<li><a href="#MetaAutoRegister">Meta Auto-registration</a></li>
+<li><a href="#Hotswap">Hotswap</a></li>
+</ul>
+</li>
+<li><a href="#DefReference">S2Container Tag Reference</a>
+<ul>
+<li><a href="#DOCTYPE">DOCTYPE</a></li>
+<li><a href="#componentsTag">components tag</a></li>
+<li><a href="#includeTag">include tag</a></li>
+<li><a href="#componentTag">component tag</a></li>
+<li><a href="#argTag">arg tag</a></li>
+<li><a href="#propertyTag">property tag</a></li>
+<li><a href="#metaTag">meta tag</a></li>
+<li><a href="#initMethodTag">initMethod tag</a></li>
+<li><a href="#destroyMethodTag">destroyMethod tag</a></li>
+<li><a href="#aspectTag">aspect tag</a></li>
+<li><a href="#interTypeTag">interType tag</a></li>
+<li><a href="#descriptionTag">description tag</a></li>
+<li><a href="#ognlExpr">OGNL expressions</a></li>
+</ul>
+</li>
+<li><a href="#AnnotationReference">S2Container Annotation Reference</a>
+<ul>
+<li><a href="#ComponentAnnotation">Component Annotation</a></li>
+<li><a href="#BindingAnnotation">Binding Annotation</a></li>
+<li><a href="#AspectAnnotation">Aspect Annotation</a></li>
+<li><a href="#InterTypeAnnotation">InterType Annotation</a></li>
+<li><a href="#InitMethodAnnotation">InitMethod Annotation</a></li>
+<li><a href="#DestroyMethodAnnotation">DestroyMethod Annotation</a></li>
+</ul>
+</li>
+</ul>
+<h2><a name="Quickstart" id="Quickstart">Quickstart</a></h2>
+<p>Seasar2 is a light weight container for Dependency Injection (DI) operations.</p>
+<h3><a name="FirstStep" id="FirstStep">First Step</a></h3>
+<p>Let us give this a try. The following objects will be used.</p>
+<ul>
+<li>Greeting Class
+<ul>
+<li>Returns a greeting string.</li>
+</ul>
+</li>
+<li>Greeting Client Class
+<ul>
+<li>Outputs string obtained from the greeting class to console.</li>
+</ul>
+</li>
+<li>Greeting Main Class
+<ul>
+<li>Startup Class. Also constructs greeting and greeting client class.</li>
+</ul>
+</li>
+</ul>
+<h5>Greeting.java</h5>
+<p>Greeting interface.</p>
+<pre>
+package examples.di;
+
+public interface Greeting {
+
+    String greet();
+}
+</pre>
+<h5>GreetingImpl.java</h5>
+<p>Implementation of the greeting.</p>
+<pre>
+package examples.di.impl;
+
+import examples.di.Greeting;
+
+public class GreetingImpl implements Greeting {
+
+    public String greet() {
+        return "Hello World!";
+    }
+}
+</pre>
+<h5>GreetingClient.java</h5>
+<p>Client interface to use the greeting.</p>
+<pre>
+package examples.di;
+
+public interface GreetingClient {
+
+    void execute();
+}
+</pre>
+<h5>GreetingClientImpl.java</h5>
+<p>Client implementation to use the greeting. Instead of using Greeting Implementation (GreetingImpl) directly, the interface (Greeting) will be used.</p>
+<pre>
+package examples.di.impl;
+
+import examples.di.Greeting;
+import examples.di.GreetingClient;
+
+public class GreetingClientImpl implements GreetingClient {
+
+    private Greeting greeting;
+
+    public void setGreeting(Greeting greeting) {
+        this.greeting = greeting;
+    }
+
+    public void execute() {
+        System.out.println(greeting.greet());
+    }
+}
+</pre>
+<p>Both function provider and user are prepared. Let us try running this.</p>
+<h5>GreetingMain.java</h5>
+<pre>
+package examples.di.main;
+
+import examples.di.Greeting;
+import examples.di.impl.GreetingClientImpl;
+import examples.di.impl.GreetingImpl;
+
+public class GreetingMain {
+
+    public static void main(String[] args) {
+        Greeting greeting = new GreetingImpl();
+        GreetingClientImpl greetingClient = new GreetingClientImpl();
+        greetingClient.setGreeting(greeting);
+        greetingClient.execute();
+    }
+}
+</pre>
+<p>The result will be as follows.</p>
+<pre>
+Hello World!
+</pre>
+<p>As shown here, the function user (GreetingClientImpl) uses the function through the interface (Greeting), a third party (GreetingMain, in this case) provides the implementation object at runtime. That is the basic style of DI.</p>
+<p>However, if one writes configurations into the source as GreetingMain, the source code must be altered to reflect any changes. DIContainer is used to avoid this. DIContainer constructs objects by reading external configuration files.</p>
+<p>We will write the configuration information into the configuration file. That extension is ".dicon" in S2Container.</p>
+<h5>GreetingMain2.dicon</h5>
+<pre>
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;<br />&lt;!DOCTYPE components PUBLIC<br />    "-//SEASAR//DTD S2Container 2.3//EN"<br />    "http://www.seasar.org/dtd/components23.dtd"&gt;<br />&lt;components&gt;<br />    &lt;component name="greeting"<br />        class="examples.di.impl.GreetingImpl"/&gt;<br />    &lt;component name="greetingClient"<br />        class="examples.di.impl.GreetingClientImpl"&gt;<br />        &lt;property name="greeting"&gt;greeting&lt;/property&gt;<br />    &lt;/component&gt;<br />&lt;/components&gt;
+</pre>
+<p>Look at <a href="#DefReference">S2Container Tag Reference</a> for details. We will first describe the main points.</p>
+<pre>
+&lt;component name="greeting"<br />    class="examples.di.impl.GreetingImpl"/&gt;
+</pre>
+<p>We define component as above. This is equivalent to the following Java code.</p>
+<pre>
+Greeting greeting = new GreetingImpl();
+</pre>
+<p>We define a component name using the name property in the component tag, and a class name using the class property. Next, we configure greetingClient.</p>
+<pre>
+&lt;component name="greetingClient"<br />    class="examples.di.impl.GreetingClientImpl"&gt;<br />    &lt;property name="greeting"&gt;greeting&lt;/property&gt;<br />&lt;/component&gt;
+</pre>
+<p>We define a property name using the name property in the property tag, and specify the component name in the body. This is equivalent to the following Java code. Take care not to surround the component name in double quotation marks, as this will cause the contents to be interpreted as a string.</p>
+<pre>
+GreetingClientImpl greetingClient = new GreetingClientImpl();
+greetingClient.setGreeting(greeting);
+</pre>
+<p>The startup class using S2Container will be as follows.</p>
+<h5>GreetingMain2.java</h5>
+<pre>
+package examples.di.main;
+
+import org.seasar.framework.container.S2Container;
+import org.seasar.framework.container.factory.S2ContainerFactory;
+
+import examples.di.GreetingClient;
+
+public class GreetingMain2 {
+
+    private static final String PATH =
+        "examples/di/dicon/GreetingMain2.dicon";
+
+    public static void main(String[] args) {
+        S2Container container =
+            S2ContainerFactory.create(PATH);
+        GreetingClient greetingClient = (GreetingClient)
+            container.getComponent("greetingClient");
+        greetingClient.execute();
+    }
+}
+</pre>
+<p>S2Container is created using S2ContainerFactory#create(String Path). Read <a href="#S2ContainerCreation">Creating S2Container</a> for details.</p>
+<p>The component(greetingClient) is acquired using S2Container#getComponent(String componentName). Please reference <a href="#getComponent">Acquiring Components</a> for details.</p>
+<p>As before, the result will be as follows.</p>
+<pre>
+Hello World!
+</pre>
+<p>AOP is often used with DI. AOP is a technique to modularize the functions like logging that are spread over many classes. We will now output a log (trace) from GreetingImpl, and GreetingClientImpl without altering the existing source code. The configuration file with AOP will be as follows.</p>
+<h5>GreetingMain3.dicon</h5>
+<pre>
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;<br />&lt;!DOCTYPE components PUBLIC<br />    "-//SEASAR//DTD S2Container 2.3//EN"<br />    "http://www.seasar.org/dtd/components23.dtd"&gt;<br />&lt;components&gt;<br />    &lt;include path="aop.dicon"/&gt;<br />    &lt;component name="greeting"<br />        class="examples.di.impl.GreetingImpl"&gt;<br />        &lt;aspect&gt;aop.traceInterceptor&lt;/aspect&gt;<br />    &lt;/component&gt;<br />    &lt;component name="greetingClient"<br />        class="examples.di.impl.GreetingClientImpl"&gt;<br />        &lt;property name="greeting"&gt;greeting&lt;/property&gt;<br />        &lt;aspect&gt;aop.traceInterceptor&lt;/aspect&gt;<br />    &lt;/component&gt;<br />&lt;/components&gt;
+</pre>
+<p>Seasar2 contains commonly used AOP modules predefined within aop.dicon. We use the include tag as follows. Please reference <a href="#Include">S2Container Definition division and include</a> for details.</p>
+<pre>
+&lt;include path="aop.dicon"/&gt;
+</pre>
+<p>We define <a href="#aspectTag">the aspect tag</a> to apply AOP to a component, and specify the AOP module name in the body. We will be using aop.traceInterceptor as the AOP module name.</p>
+<pre>
+&lt;aspect&gt;aop.traceInterceptor&lt;/aspect&gt;
+</pre>
+<p>This concludes the configuration of AOP. We will now try running GreetingMain3. The only difference from GreetingMain2 is the path of the configuration file.</p>
+<h5>GreetingMain3.java</h5>
+<pre>
+package examples.di.main;
+
+import org.seasar.framework.container.S2Container;
+import org.seasar.framework.container.factory.S2ContainerFactory;
+
+import examples.di.GreetingClient;
+
+public class GreetingMain3 {
+
+    private static final String PATH =
+        "examples/di/dicon/GreetingMain3.dicon";
+
+    public static void main(String[] args) {
+        S2Container container =
+            S2ContainerFactory.create(PATH);
+        GreetingClient greetingClient = (GreetingClient)
+            container.getComponent("greetingClient");
+        greetingClient.execute();
+    }
+}
+</pre>
+<p>The results will be as follows. We see the log output with no alteration to the original source code.</p>
+<pre>
+DEBUG 2005-10-11 21:01:49,655 [main] BEGIN examples.di.impl.GreetingClientImpl#execute()
+DEBUG 2005-10-11 21:01:49,665 [main] BEGIN examples.di.impl.GreetingImpl#greet()
+DEBUG 2005-10-11 21:01:49,665 [main] END examples.di.impl.GreetingImpl#greet() : Hello World!
+Hello World!
+DEBUG 2005-10-11 21:01:49,675 [main] END examples.di.impl.GreetingClientImpl#execute() : null
+</pre>
+<p>We have now mastered the basic use of S2Container.</p>
+<h3><a name="NextStep" id="NextStep">Next Step</a></h3>
+<p>Writing the configuration file is still annoying, isn t it? S2Container also possesses the following concepts to minimize the amount of writing in configuration files.</p>
+<ul>
+<li><a name="CoC" id="CoC">Convention over Configuration</a></li>
+</ul>
+<p>This implements a number of practical conventions, so that a program will run with no configuration as long as it follows these rules. For example, the configuration file from earlier explicitly defines the property tag as follows.</p>
+<pre>
+&lt;component name="greetingClient"<br />    class="examples.di.impl.GreetingClientImpl"&gt;<br />    &lt;property name="greeting"&gt;greeting&lt;/property&gt;<br />&lt;/component&gt;
+</pre>
+<p>As long as the property type is interface and there is a component impementing interface in the container, S2Container has a function to automatically DI. This means S2Container will automatically process components as long as they follow the DI convention of defining property type by interface.</p>
+<p>"Convention" may sound annoying, but they are not only recommended but also making development easier.</p>
+<p>We can simplify the configuration from above as follows.</p>
+<pre>
+&lt;component name="greetingClient"<br />    class="examples.di.impl.GreetingClientImpl"&gt;<br />&lt;/component&gt;
+</pre>
+<p>Actually, "Convention over Configuration" is used in the AOP example from earlier. Normally, where (or which method) the AOP module is applied is defined in pointcut. All methods defined by interface have the AOP module applied without the use of pointcut in <a href="aop.html">S2AOP</a> as long as they follow the convention of using interface. This is how there was no need to define a module in pointcut in the earlier example.</p>
+<p>Using Convention over Configuration will simplify the configuration of DI and AOP. However, component registration itself becomes a burden as the number of components increase. The automation of this component registration is <a href="#ComponentAutoRegister">Component auto-registration</a> functionality. The registration of GreetingImpl, GreetingClientImpl from earlier is automated as follows.</p>
+<pre>
+&lt;component<br />  class="org.seasar.framework.container.autoregister.FileSystemComponentAutoRegister"&gt;<br />    &lt;initMethod name="addClassPattern"&gt;<br />        &lt;arg&gt;"examples.di.impl"&lt;/arg&gt;<br />        &lt;arg&gt;".*Impl"&lt;/arg&gt;<br />    &lt;/initMethod&gt;<br />&lt;/component&gt;
+</pre>
+<p>This FileSystemComponentAutoRegister component searches classes defined in addClassPattern from the file system and auto-registers them in S2Container. Please refer to <a href="#MethodInjection">Method Injection</a> for details on the initMethod tag.</p>
+<p>The first argument of addClassPattern method is the package name of the component to be auto-registered. Child packages are also recursively searched. The second argument is the class name, which may be a regular expression. Multiple definitions are separated by commas.</p>
+<p>Auto-registration of components decreases the overall amount of work, as the programmer is not required to configure anything for new components.</p>
+<p>As we automate the registration of components, next focus is the automation of aspect registration. The configuration of <a href="#AspectAutoRegister">Aspect auto-registration</a> for GreetingImpl and GreetingClientImp is as follows.</p>
+<pre>
+&lt;include path="aop.dicon"/&gt;
+...
+&lt;component<br />  class="org.seasar.framework.container.autoregister.AspectAutoRegister"&gt;<br />    &lt;property name="interceptor"&gt;aop.traceInterceptor&lt;/property&gt;<br />    &lt;initMethod name="addClassPattern"&gt;<br />        &lt;arg&gt;"examples.di.impl"&lt;/arg&gt;<br />        &lt;arg&gt;".*Impl"&lt;/arg&gt;<br />    &lt;/initMethod&gt;<br />&lt;/component&gt;
+</pre>
+<p>We specify the AOP module name in the interceptor property. We will skip the explanation of the addClassPattern method, as it is identical to the component auto-registration. The combination of component and aspect auto-registration looks like the following.</p>
+<h5>GreetingMain4.dicon</h5>
+<pre>
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;<br />&lt;!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.3//EN" <br />     "http://www.seasar.org/dtd/components23.dtd"&gt;
+&lt;components&gt;<br />    &lt;include path="aop.dicon"/&gt;
+
+    &lt;component<br />      class="org.seasar.framework.container.autoregister.FileSystemComponentAutoRegister"&gt;<br />        &lt;initMethod name="addClassPattern"&gt;<br />            &lt;arg&gt;"examples.di.impl"&lt;/arg&gt;<br />            &lt;arg&gt;".*Impl"&lt;/arg&gt;<br />        &lt;/initMethod&gt;<br />    &lt;/component&gt;
+
+    &lt;component<br />      class="org.seasar.framework.container.autoregister.AspectAutoRegister"&gt;<br />        &lt;property name="interceptor"&gt;aop.traceInterceptor&lt;/property&gt;<br />        &lt;initMethod name="addClassPattern"&gt;<br />            &lt;arg&gt;"examples.di.impl"&lt;/arg&gt;<br />            &lt;arg&gt;".*Impl"&lt;/arg&gt;<br />        &lt;/initMethod&gt;<br />    &lt;/component&gt;<br />&lt;/components&gt;
+</pre>
+<p>We will now run GreetingMain4. We must invoke S2Container#init() and S2Container#destroy() in the case of using auto-registration.</p>
+<h5>GreetingMain4.java</h5>
+<pre>
+package examples.di.main;
+
+import org.seasar.framework.container.S2Container;
+import org.seasar.framework.container.factory.S2ContainerFactory;
+
+import examples.di.GreetingClient;
+
+public class GreetingMain4 {
+
+    private static final String PATH =
+        "examples/di/dicon/GreetingMain4.dicon";
+
+    public static void main(String[] args) {
+        S2Container container =
+            S2ContainerFactory.create(PATH);
+        container.init();
+        try {
+            GreetingClient greetingClient = (GreetingClient)
+                container.getComponent("greetingClient");
+            greetingClient.execute();
+        } finally {
+            container.destroy();
+        }
+    }
+}
+</pre>
+<p>The result will be identical to GreetingMain3 as follows.</p>
+<pre>
+DEBUG 2005-10-12 16:00:08,093 [main] BEGIN examples.di.impl.GreetingClientImpl#execute()
+DEBUG 2005-10-12 16:00:08,103 [main] BEGIN examples.di.impl.GreetingImpl#greet()
+DEBUG 2005-10-12 16:00:08,103 [main] END examples.di.impl.GreetingImpl#greet() : Hello World!
+Hello World!
+DEBUG 2005-10-12 16:00:08,103 [main] END examples.di.impl.GreetingClientImpl#execute() : null
+</pre>
+<p>Auto-registration and Auto-binding will work well in most cases. Components can be excluded from auto-registration using the addIgnoreClassPattern method.</p>
+<p><a href="#BindingAnnotation">Binding Annotation</a> can be used to fine tune configuration settings without using configuration files for properties excluded from auto-binding.</p>
+<p><a href="#Hotswap">Hotswap</a> can be used to retry immediately without restarting application so that development is more efficient.</p>
+<p>We have now mastered advanced use of S2Container. Please reference the manual as needed.</p>
+<h2><a name="S2ContainerReference" id="S2ContainerReference">S2Container Reference</a></h2>
+<h3><a name="CreateFile" id="CreateFile">Files to be Created</a></h3>
+<p>A definition file must be created in order to use S2Container. A definition file is a XML file with a .dicon extension, and serves as a blueprint for component creation.</p>
+<h3><a name="S2ContainerDefinition" id="S2ContainerDefinition">S2Container Definition</a></h3>
+<p>The definition of S2Container is as follows.</p>
+<pre>
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.3//EN"
+"http://www.seasar.org/dtd/components23.dtd"&gt;
+&lt;components&gt;
+    &lt;component name="..." class="..."&gt;
+            ...
+    &lt;/component&gt;
+    &lt;component name="..." class="..."&gt;
+            ...
+    &lt;/component&gt;
+&lt;/components&gt;
+</pre>
+<p>DOCTYPE may not be abbreviated. The above sample should be copied verbatim when creating a dicon file. The root is the <a href="#componentsTag">components tag</a>. We will define the component tag for every <a href="#componentTag">component tag</a>. Please refer to the <a href="#DefReference">S2Container Definition Tag Reference</a> for additional details.</p>
+<pre>
+&lt;components&gt;
+    &lt;component name="hoge" class="examples.dicon.HogeImpl"/&gt;
+&lt;/components&gt;
+</pre>
+<h3><a name="S2ContainerCreation" id="S2ContainerCreation">S2Container Creation</a></h3>
+<p>There are two methods of creating S2Container.</p>
+<ul>
+<li>Use SingletonS2ContainerFactory</li>
+<li>Use S2ContainerFactory</li>
+</ul>
+<h4><a name="SingletonS2ContainerFactory" id="SingletonS2ContainerFactory">Using SingletonS2ContainerFactory</a></h4>
+<p>We will use the following method when utilizing SingletonS2ContainerFactory.</p>
+<p>- org.seasar.framework.container.factory.SingletonS2ContainerFactory#init()</p>
+<p>app.dicon located in the directory as defined in CLASSPATH is used.</p>
+<p>The created S2Container can be obtained by the following method from any location.</p>
+<p>- org.seasar.framework.container.factory.SingletonS2ContainerFactory#getContainer()</p>
+<pre>
+SingletonS2ContainerFactory.init();
+...
+S2Container container = SingletonS2ContainerFactory.getContainer();
+</pre>
+<p>Use the following method before calling init() if specifying a path to the definition file.</p>
+<p>- org.seasar.framework.container.factory.SingletonS2ContainerFactory#setConfigPath(String Path)</p>
+<p>The arguments path is an absolute path of the definition file referencing the directory defined in CLASSPATH as root. For example, WEB-INF/classes/aaa.dicon is aaa.dicon. WEB-INF/classes/aaa/bbb/ccc.dicon becomes aaa/bbb/ccc.dicon. The separator is ?/? in both Windows and UNIX systems.</p>
+<pre>
+private static final String PATH = "aaa/bbb/ccc.dicon";
+...
+SingletonS2ContainerFactory.setConfigPath(PATH);
+SingletonS2ContainerFactory.init();
+...
+S2Container container = SingletonS2ContainerFactory.getContainer();
+</pre>
+<h4><a name="S2ContainerFactory" id="S2ContainerFactory">Using S2ContainerFactory</a></h4>
+<p>We will use the following method when utilizing S2ContainerFactory.</p>
+<p>- org.seasar.framework.container.factory.S2ContainerFactory#create(String path)</p>
+<p>We will call the following method after creating S2Container.</p>
+<p>- org.seasar.framework.container.S2Container#init()</p>
+<pre>
+private static final String PATH = "aaa/bbb/ccc.dicon";
+...
+S2Container container = S2ContainerFactory.create(PATH);
+container.init();
+</pre>
+<p>An instance of the container obtained using this method must be managed by an application.</p>
+<h3><a name="getComponent" id="getComponent">Acquiring Components</a></h3>
+<p>To extract a component from S2Container, we use the following method.</p>
+<p>- org.seasar.framework.container.S2Container#getComponent(Object componentKey)</p>
+<p>A component name or component class can be specified as an argument. Please refer to <a href="#componentTag">component tag</a> for details. When specifying a component class, the class must return true for the component class instanceof class. If there are multiple components that implement the specified class, S2Container will fail to identify the target component and throw TooManyRegistrationRuntimeException. Please specify a class that will uniquely identify an implemented component, or acquire using the component name. If there are multiple components with identical names registered, S2Container will throw TooManyRegistrationRuntimeException as well.</p>
+<h4>Example: When acquiring a component by class</h4>
+<pre>
+S2Container container = S2ContainerFactory.create(PATH);
+Hoge hoge = (Hoge) container.getComponent(Hoge.class);
+</pre>
+<h4>Example: When acquiring a component by name</h4>
+<pre>
+S2Container container = S2ContainerFactory.create(PATH);
+Hoge hoge = (Hoge) container.getComponent("hoge");
+</pre>
+<h3><a name="DIType" id="DIType">Dependency Injection Type</a></h3>
+<p>Dependency Injection has three different types, Constructor Injection, Setter Injection, and Method Injection. Constructor Injection configures by the constructor, Setter Injection configures by the setter method, and Method Injection is configured by the initialization method. Method injection is specific to S2Container. S2Container supports all types and its hybrids.</p>
+<h3><a name="ConstructorInjection" id="ConstructorInjection">Constructor Injection</a></h3>
+<p>Constructor Injection applies DI to the constructor arguments. The following contents are written into the S2Container definition file.</p>
+<ul>
+<li><b>Specifying component</b><br />
+The component is constructed using the component tag. The class name is specified using the class property. The name property can be used to give the component a name.</li>
+<li><b>Specifying constructor argument</b><br />
+The arguments of the constructor are specified in the arg sub-tag of the component tag. Strings are to be surrounded by double quotation marks (").</li>
+</ul>
+<pre>
+&lt;components&gt;
+    &lt;component name="..." class="..."&gt;
+          &lt;arg&gt;...&lt;/arg&gt;
+    &lt;/component&gt;
+&lt;/components&gt;
+</pre>
+<h3><a name="SetterInjection" id="SetterInjection">Setter Injection</a></h3>
+<p>Setter Injection applies DI using the setter method on specified properties.<br />
+The following contents are written into the S2Container definition file.</p>
+<ul>
+<li><b>Specifying component</b><br />
+Specifying component is identical to constructor injection.</li>
+<li><b>Specifying property</b><br />
+The component properties are specified using the property sub-tag of the component tag. The name property is used to specify a property name.</li>
+</ul>
+<pre>
+&lt;components&gt;
+    &lt;component name="..." class="..."&gt;
+          &lt;property name="..."&gt;...&lt;/property&gt;
+    &lt;/component&gt;
+&lt;/components&gt;
+</pre>
+<h3><a name="MethodInjection" id="MethodInjection">Method Injection</a></h3>
+<p>Method injection applies DI by calling a specified method. The following contents are written into the S2Container definition file.</p>
+<ul>
+<li><b>Specifying component</b><br />
+Specifying component is identical to constructor injection.</li>
+<li><b>Specifing initialization method</b><br />
+The initMethod tag is used to call the specified method of the component. The name property is used to specify a method name. The arg sub-tag is used to define arguments. The name property can be abbreviated, and <a href="#ognlExpr">OGNL expression</a> used in the body.</li>
+</ul>
+<pre>
+&lt;components&gt;
+    &lt;component name="..." class="..."&gt;
+        &lt;initMethod name="..."&gt;
+            &lt;arg&gt;...&lt;/arg&gt;
+        &lt;/initMethod&gt;
+    &lt;/component&gt;
+&lt;/components&gt;
+</pre>
+<h3><a name="Include" id="Include">S2Container Definition division and include</a></h3>
+<p>Listing all components in one file quickly lead to an immense and unmanageable system. To avoid this, S2Container has functionality to split the definitions into several pieces and recombine those pieces. The inclusion of S2Container definition files are done as follows.</p>
+<pre>
+&lt;components&gt;
+    &lt;include path="bar.dicon"/&gt;
+&lt;/components&gt;
+</pre>
+<p>Specify the S2Container definition file to be included using the path property of <a href="#includeTag">the include tag</a>. Please refer to <a href="#includeTag">include tag</a> for additional details.</p>
+<p>The search order for components start with those components registered with itself. When no matches are found, the process searches in each child S2Container component registration list, returning the first component found.</p>
+<pre>
+&lt;components&gt;
+    &lt;include path="aaa.dicon"/&gt;
+    &lt;include path="bbb.dicon"/&gt;
+    &lt;component class="example.container.Foo" /&gt;
+&lt;/components&gt;
+</pre>
+<h3><a name="Namespace" id="Namespace">Namespace</a></h3>
+<p>Namespace of components can be specified using the namespace property of the <a href="#componentsTag">components tag</a>. This can be used to prevent component name collisions (overlap) between the multiple divided component definitions.</p>
+<h5>foo.dicon</h5>
+<pre>
+&lt;components namespace="foo"&gt;
+    &lt;component name="aaa" .../&gt;
+    &lt;component name="bbb" ...&gt;
+        &lt;arg&gt;aaa&lt;/arg&gt;
+    &lt;/component&gt;
+&lt;/components&gt;
+</pre>
+<h5>bar.dicon</h5>
+<pre>
+&lt;components namespace="bar"&gt;
+    &lt;include path="foo.dicon"/&gt;
+    &lt;component name="aaa" .../&gt;
+    &lt;component name="bbb" ...&gt;
+        &lt;arg&gt;aaa&lt;/arg&gt;
+    &lt;/component&gt;
+    &lt;component name="ccc" ...&gt;
+        &lt;arg&gt;foo.aaa&lt;/arg&gt;
+    &lt;/component&gt;
+&lt;/components&gt;
+</pre>
+<h5>app.dicon</h5>
+<pre>
+&lt;components&gt;
+    &lt;include path="bar.dicon"/&gt;
+&lt;/components&gt;
+</pre>
+<p>Within a single component definition, items may be referenced without a namespace. "namespace." is prefixed on the component name when referencing an external namespace. "foo.aaa" and "bar.aaa" shares an identical component name, aaa, but are recognized as unique components as they inhabit different namespaces, foo and bar.</p>
+<h3><a name="InstanceMode" id="InstanceMode">Instance Management</a></h3>
+<p>The instance property of the <a href="#componentTag">component tag</a> is used to specify the method of component instance management.</p>
+<table width="744" border="1">
+<tr bgcolor="#D1F3F4" align="center">
+<th width="104" scope="col">instance</th>
+<th width="624" scope="col">Description</th>
+</tr>
+<tr>
+<td>singleton(default)</td>
+<td>Every call of S2Container.getComponent() will return the same instance.</td>
+</tr>
+<tr>
+<td>prototype</td>
+<td>Every call of S2Container.getComponent() will return a new instance.</td>
+</tr>
+<tr>
+<td>request</td>
+<td>A new instance is created for each request. The component is stored in the request as named using the name property. <a href="#request">S2ContainerFilter</a> must be configured to use request.</td>
+</tr>
+<tr>
+<td>session</td>
+<td>A new instance is created for each session. The component is stored in the session as named using the name property. <a href="#request">S2ContainerFilter</a> must be configured to use session.</td>
+</tr>
+<tr>
+<td>application</td>
+<td>In case we use servlet, a new instance is created for each ServletContext. The component is stored in the ServletContext as named using the name property. <a href="#request">S2ContainerFilter</a> must be configured to use application.</td>
+</tr>
+<tr>
+<td>outer</td>
+<td>The component instance is created external to S2Container, and only Dependency Injection is applied. <a href="#Aop">Aspect</a> and <a href="#ConstructorInjection">Constructor Injection</a> cannot be used.</td>
+</tr>
+</table>
+<h3><a name="Lifecycle" id="Lifecycle">Lifecycle</a></h3>
+<p><a href="#initMethodTag">initMethod tag</a> and <a href="#destroyMethodTag">destroyMethod tag</a> can be used to manage component lifecycles in S2Container. The method specified in the <a href="#initMethodTag">initMethod tag</a> is called at the initialization of S2Container, or S2Container.init(). Conversely, S2Container will call the method specified in the <a href="#destroyMethodTag">destroyMethod tag</a> at shutdown of S2Container, or S2Container.destroy(). initMethod is run in order of component registration in the container, and destroyMethod makes calls in reverse order. destroyMethod is ignored by any method whose instance property is not set to singleton. java.util.HashMap#put() method looks like the following when configured for initialization (aaa set as 111), or shutdown procedure (aaa set as null).</p>
+<pre>
+&lt;components namespace="bar"&gt;
+    &lt;component name="map" class="java.util.HashMap"&gt;
+        &lt;initMethod name="put"&gt;
+            &lt;arg&gt;"aaa"&lt;/arg&gt;
+            &lt;arg&gt;111&lt;/arg&gt;
+        &lt;/initMethod&gt;
+        &lt;destroyMethod name="put"&gt;
+            &lt;arg&gt;"aaa"&lt;/arg&gt;
+            &lt;arg&gt;null&lt;/arg&gt;
+        &lt;/destroyMethod&gt;
+    &lt;/component&gt;
+&lt;/components&gt;
+</pre>
+<h3><a name="AutoBindingMode" id="AutoBindingMode">Automatic Binding</a></h3>
+<p>Inter-component dependencies are automatically resolved by the container when type is interface. This is default behavior of S2Container, but can be more finely controlled using the autoBinding property of the <a href="#componentTag">component tag</a>.</p>
+<table width="744" border="1">
+<tr bgcolor="#D1F3F4" align="center">
+<th width="104" scope="col">autoBinding</th>
+<th width="624" scope="col">Description</th>
+</tr>
+<tr>
+<td>auto(default)</td>
+<td>Automatic binding of constructor and property is applied.</td>
+</tr>
+<tr>
+<td>constructor</td>
+<td>Automatic binding of constructor is applied.</td>
+</tr>
+<tr>
+<td>property</td>
+<td>Automatic binding of property is applied.</td>
+</tr>
+<tr>
+<td>none</td>
+<td>Manual binding of constructor and property only.</td>
+</tr>
+</table>
+<br />
+<p>Constructor auto-binding rules are as follows.</p>
+<ul>
+<li>When constructor arguments are explicitly specified, auto-binding is not applied.</li>
+<li>When above conditions are not true and a default constructor is specified with no arguments, that constructor is used with no auto-binding.</li>
+<li>When above conditions are not met, the constructor with the largest number of 'interface' type arguments is used. In addition, components with implemented argument type are acquired from the container and applied.</li>
+<li>When above conditions are not met, auto-binding is not applied.</li>
+</ul>
+<p>Property auto-binding rules are as follows.</p>
+<ul>
+<li>When property is explicitly selected, auto-binding is not applied.</li>
+<li>When above conditions are not met, if a component with an identical name to the property name is registered in container, this component will be used.</li>
+<li>When above conditions are not met, if a component that has implemented 'interface' type property is registered in container, this component will be used.</li>
+<li>When above conditions are not met, auto-binding is not applied.</li>
+</ul>
+<p>The bindingType property of the property tag can be used to more finely control each property.</p>
+<table width="744" border="1">
+<tr bgcolor="#D1F3F4" align="center">
+<th width="104" scope="col">bindingType</th>
+<th width="624" scope="col">Description</th>
+</tr>
+<tr>
+<td>must</td>
+<td>An exception is throwed when auto-binding is not applied.</td>
+</tr>
+<tr>
+<td>should(default)</td>
+<td>A warning is returned when auto-binding is not applied.</td>
+</tr>
+<tr>
+<td>may</td>
+<td>No response is returned when auto-binding is not applied.</td>
+</tr>
+<tr>
+<td>none</td>
+<td>Auto-binding is not applied even if the autoBinding property is set to auto or property.</td>
+</tr>
+</table>
+<br />
+<h3><a name="UseS2Container" id="UseS2Container">Using S2Container in Components.</a></h3>
+<p>It is preferable that components are not dependent on S2Container. However, there are certain components that would want to call the S2Container method. S2Container itself is registered by the name of container. Using this, an instance of the container can be acquired by specifying container in the body of arg and property tags. It can also be configured using auto-binding by defining the setter method of the S2Container type. Specifying container using arg and property tags looks like the following.</p>
+<pre>
+&lt;components&gt;
+    &lt;component class="examples.dicon.BarImpl"&gt;
+        &lt;arg&gt;container&lt;/arg&gt;
+    &lt;/component&gt;
+
+    &lt;component class="examples.dicon.FooImpl"&gt;
+        &lt;property name="foo"&gt;container&lt;/property&gt;
+    &lt;/component&gt;
+&lt;/components&gt;
+</pre>
+<h3><a name="S2ContainerServlet" id="S2ContainerServlet">S2ContainerServlet</a></h3>
+<p>We have explicitly created S2Container using Java applications so far. But in the case of web applications, who will create S2Container? The following class is prepared for this reason.</p>
+<ul>
+<li>org.seasar.framework.container.servlet#S2ContainerServlet</li>
+</ul>
+<p>The following is entered in web.xml in order to use S2ContainerServlet.</p>
+<pre>
+&lt;servlet&gt;
+    &lt;servlet-name&gt;s2servlet&lt;/servlet-name&gt;
+    &lt;servlet-class&gt;org.seasar.framework.container.servlet.S2ContainerServlet&lt;/servlet-class&gt;
+    &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+    &lt;init-param&gt;
+        &lt;param-name&gt;configPath&lt;/param-name&gt;
+        &lt;param-value&gt;app.dicon&lt;/param-value&gt;
+    &lt;/init-param&gt;
+    &lt;init-param&gt;
+        &lt;param-name&gt;debug&lt;/param-name&gt;
+        &lt;param-value&gt;false&lt;/param-value&gt;
+    &lt;/init-param&gt;
+&lt;/servlet&gt;
+
+&lt;servlet-mapping&gt;
+    &lt;servlet-name&gt;s2servlet&lt;/servlet-name&gt;
+    &lt;url-pattern&gt;/s2servlet&lt;/url-pattern&gt;
+&lt;/servlet-mapping&gt;
+</pre>
+<p>The path to the root S2Container definition is selected in configPath. The definition file is placed in WEB-INF/classes. Configure load-on-startup tag to make sure S2ContainerServlet is initialized first. Once S2ContainerServlet is initialized, an instance of S2Container is acquired using the following method.</p>
+<ul>
+<li>org.seasar.framework.container.factory.SingletonS2ContainerFactory#getContainer()</li>
+</ul>
+<p>The lifecycle of S2Container is linked with S2ContainerServlet. When the debug parameter is set to true, S2Container may be restarted while operating by using the following command. In this example, xxx is the web application's context name.</p>
+<pre>
+http://localhost:8080/xxx/s2servlet?command=restart
+</pre>
+<p>ServletContext can be accessed as a component named servletContext when using S2ContainerServlet.</p>
+<h3><a name="app.dicon" id="app.dicon">Purpose of app.dicon</a></h3>
+<p>Name the root S2Container definition file "app.dicon" as convention. It is recommended that the file be stored in WEB-INF/classes.</p>
+<h3><a name="Aop" id="Aop">Use of AOP</a></h3>
+<p>We can apply <a href="aop.html">AOP</a> to components. For example, we do the following if we want to apply <a href="aop.html#TraceInterceptor">TraceInterceptor</a> to ArrayList.</p>
+<pre>
+&lt;components&gt;
+    &lt;component name="traceInterceptor"
+               class="org.seasar.framework.aop.interceptors.TraceInterceptor"/&gt;
+    &lt;component class="java.util.ArrayList"&gt;
+        &lt;aspect&gt;traceInterceptor&lt;/aspect&gt;
+    &lt;/component&gt;
+    &lt;component class="java.util.Date"&gt;
+        &lt;arg&gt;0&lt;/arg&gt;
+        &lt;aspect pointcut="getTime, hashCode"&gt;traceInterceptor&lt;/aspect&gt;
+    &lt;/component&gt;
+&lt;/components&gt;
+</pre>
+<p>We specify the name of <a href="aop.html#Advice">Interceptor</a> in the body of the aspect tag. We can specify target method names in the pointcut property. Multiple entries can be entered separated by commas. When pointcut is not specified, all interfaces implemented methods in the component are targeted. A regular expression(JDK1.4 regex) can be used for method name. A sample use of this definition is as follows.</p>
+<pre>
+private static final String PATH =
+    "examples/dicon/Aop.dicon";
+S2Container container = S2ContainerFactory.create(PATH);
+List list = (List) container.getComponent(List.class);
+list.size();
+Date date = (Date) container.getComponent(Date.class);
+date.getTime();
+date.hashCode();
+date.toString();
+</pre>
+<p>The results will be the following.</p>
+<pre>
+BEGIN java.util.ArrayList#size()
+END java.util.ArrayList#size() : 0
+BEGIN java.util.Date#getTime()
+END java.util.Date#getTime() : 0
+BEGIN java.util.Date#hashCode()
+BEGIN java.util.Date#getTime()
+END java.util.Date#getTime() : 0
+END java.util.Date#hashCode() : 0
+BEGIN java.util.Date#getTime()
+END java.util.Date#getTime() : 0
+</pre>
+<p>We can apply <a href="aop.html#InterType">InterType</a> to a component. For example, When we want to apply <a href="aop.html#PropertyInterType">PropertyInterType</a> to Hoge, we define as follows:</p>
+<pre>
+&lt;components&gt;
+    &lt;include path="aop.dicon"/&gt;
+    &lt;component class="examples.Hoge"&gt;
+        &lt;interType&gt;aop.propertyInterType&lt;/aspect&gt;
+    &lt;/component&gt;
+&lt;/components&gt;
+</pre>
+<p>We can specify <a href="aop.html#InterType">InterType</a> in the interType tag body.</p>
+<h3><a name="Meta" id="Meta">Metadata</a></h3>
+<p>Metadata can be defined in the components, component, arg, and property tags. The meta tag is used as a child tag in the parent tag where the metadata is to be set. Adding metadata to a components tag will look like the following example.</p>
+<pre>
+&lt;components&gt;
+    &lt;meta name="aaa"&gt;111&lt;/meta&gt;
+&lt;/components&gt;
+</pre>
+<h3><a name="request" id="request">Auto-binding of Requests</a></h3>
+<p>HttpServletRequest can be automatically bound to a component. For this, setRequest (HttpServletRequest request) method is defined within the component. S2Container will then automatically configure a request. Also, the following Filter must be defined in web.xml.</p>
+<pre>
+&lt;web-app&gt;<br />    &lt;filter&gt;<br />        &lt;filter-name&gt;s2filter&lt;/filter-name&gt;<br />        &lt;filter-class&gt;org.seasar.framework.container.filter.S2ContainerFilter&lt;/filter-class&gt;<br />    &lt;/filter&gt;<br />    <br />    &lt;filter-mapping&gt;<br />        &lt;filter-name&gt;s2filter&lt;/filter-name&gt;<br />        &lt;url-pattern&gt;/*&lt;/url-pattern&gt;<br />    &lt;/filter-mapping&gt;<br />&lt;/web-app&gt;
+</pre>
+<p>In this manner, HttpServletResponse, HttpSession and ServletContext can be automatically bound by defining the setter method. Also, HttpServletRequest, HttpServletResponse, HttpSession and ServletContext can be accessed as components respectively named request, response, session and application by using S2ContainerFilter.</p>
+<h3><a name="ComponentAutoRegister" id="ComponentAutoRegister">Component Auto-registration</a></h3>
+<p>DI configuration can be mostly automated using <a href="#AutoBindingMode">autobinding</a>. Fine control can be exerted using <a href="#AnnotationReference">annotation</a>. Taking this a step further is component auto-registration.</p>
+<h5><a name="FileSystemComponentAutoRegister" id="FileSystemComponentAutoRegister">org.seasar.framework.container.autoregister.FileSystemComponentAutoRegister</a></h5>
+<p>When we use FileSystemComponentAutoRegister, components will be searched in the file system, and will be automatically registered.</p>
+<table border="1">
+<tr bgcolor="#D1F3F4" align="center">
+<th>property</th>
+<th>Description</th>
+</tr>
+<tr>
+<td><code>instanceDef</code></td>
+<td>A sample use of XML is as follows.<br />
+<code>@org.seasar.framework.container.deployer.InstanceDefFactory@REQUEST</code></td>
+</tr>
+<tr>
+<td><code>autoBindingDef</code></td>
+<td>A sample use of XML is as follows.<br />
+<code>@org.seasar.framework.container.assembler.AutoBindingDefFactory@NONE</code></td>
+</tr>
+<tr>
+<td><code>autoNaming</code></td>
+<td>Component to automatically name components from class name. Requires implementation of org.seasar.framework.container.autoregister.AutoNaming interface.</td>
+</tr>
+</table>
+<br />
+<table border="1">
+<tr bgcolor="#D1F3F4" align="center">
+<th>method</th>
+<th>Description</th>
+</tr>
+<tr>
+<td><code>addClassPattern</code></td>
+<td>A class pattern to be auto-registered is registered. The first argument is the component package name. Child packages are searched recursively. The second argument is class name. One may use regular expressions, and multiple entries can be separated by commas.</td>
+</tr>
+<tr>
+<td><code>addIgnoreClassPattern</code></td>
+<td>Class patterns to be ignored by auto-registration are registered. The first argument is the component package name. Child packages are searched recursively. The second argument is class name. One may use regular expressions, and multiple entries can be separated by commas.</td>
+</tr>
+</table>
+<h5><a name="JarComponentAutoRegister" id="JarComponentAutoRegister">org.seasar.framework.container.autoregister.JarComponentAutoRegister</a></h5>
+<p>When we use JarComponentAutoRegister, components will be searched in the jar file, and will be automatically registered.</p>
+<table border="1">
+<tr bgcolor="#D1F3F4" align="center">
+<th>property</th>
+<th>Description</th>
+</tr>
+<tr>
+<td><code>jarFileNames</code></td>
+<td>Target jar file names excluded extension are registered. One may use regular expressions, and multiple entries can be separated by commas.</td>
+</tr>
+<tr>
+<td><code>referenceClass</code></td>
+<td>Class in jar is entered. Default value is @org.aopalliance.intercept.MethodInterceptor@class.</td>
+</tr>
+<tr>
+<td><code>instanceDef</code></td>
+<td>A sample use of XML is as follows.<br />
+<code>@org.seasar.framework.container.deployer.InstanceDefFactory@REQUEST</code></td>
+</tr>
+<tr>
+<td><code>autoBindingDef</code></td>
+<td>A sample use of XML is as follows.<br />
+<code>@org.seasar.framework.container.assembler.AutoBindingDefFactory@NONE</code></td>
+</tr>
+<tr>
+<td><code>autoNaming</code></td>
+<td>Component to automatically name components from class name. Requires implementation of org.seasar.framework.container.autoregister.AutoNaming interface.</td>
+</tr>
+</table>
+<br />
+<table border="1">
+<tr bgcolor="#D1F3F4" align="center">
+<th>method</th>
+<th>Description</th>
+</tr>
+<tr>
+<td><code>addClassPattern</code></td>
+<td>A class pattern to be auto-registered is registered. The first argument is the component package name. Child packages are searched recursively. The second argument is class name. One may use regular expressions, and multiple entries can be separated by commas.</td>
+</tr>
+<tr>
+<td><code>addIgnoreClassPattern</code></td>
+<td>Class patterns to be ignored by auto-registration are registered. The first argument is the component package name. Child packages are searched recursively. The second argument is class name. One may use regular expressions, and multiple entries can be separated by commas.</td>
+</tr>
+</table>
+<h5><a name="aComponentAutoRegister" id="aComponentAutoRegister">org.seasar.framework.container.autoregister.ComponentAutoRegister</a></h5>
+<p>When we use ComponentAutoRegister, components will be searched in the file system or the jar file, and will be automatically registered.</p>
+<table border="1">
+<tr bgcolor="#D1F3F4" align="center">
+<th>property</th>
+<th>Description</th>
+</tr>
+<tr>
+<td><code>instanceDef</code></td>
+<td>A sample use of XML is as follows.<br />
+<code>@org.seasar.framework.container.deployer.InstanceDefFactory@REQUEST</code></td>
+</tr>
+<tr>
+<td><code>autoBindingDef</code></td>
+<td>A sample use of XML is as follows.<br />
+<code>@org.seasar.framework.container.assembler.AutoBindingDefFactory@NONE</code></td>
+</tr>
+<tr>
+<td><code>autoNaming</code></td>
+<td>Component to automatically name components from class name. Requires implementation of org.seasar.framework.container.autoregister.AutoNaming interface.</td>
+</tr>
+</table>
+<br />
+<table border="1">
+<tr bgcolor="#D1F3F4" align="center">
+<th>method</th>
+<th>Description</th>
+</tr>
+<tr>
+<td><code>addReferenceClass</code></td>
+<td>Classes in jars are specified.</td>
+</tr>
+<tr>
+<td><code>addClassPattern</code></td>
+<td>A class pattern to be auto-registered is registered. The first argument is the component package name. Child packages are searched recursively. The second argument is class name. One may use regular expressions, and multiple entries can be separated by commas.</td>
+</tr>
+<tr>
+<td><code>addIgnoreClassPattern</code></td>
+<td>Class patterns to be ignored by auto-registration are registered. The first argument is the component package name. Child packages are searched recursively. The second argument is class name. One may use regular expressions, and multiple entries can be separated by commas.</td>
+</tr>
+</table>
+<br />
+<p>AutoNaming automatially names components.</p>
+<h5><a name="DefaultAutoNaming" id="DefaultAutoNaming">org.seasar.framework.container.autoregister.DefaultAutoNaming</a></h5>
+<table border="1">
+<tr bgcolor="#D1F3F4" align="center">
+<th>property</th>
+<th>Description</th>
+</tr>
+<tr>
+<td><code>decapitalize</code></td>
+<td>Set to true in order to decapitalize component name. Default value is true.</td>
+</tr>
+</table>
+<br />
+<table border="1">
+<tr bgcolor="#D1F3F4" align="center">
+<th>method</th>
+<th>Deccription</th>
+</tr>
+<tr>
+<td><code>setCustomizedName</code></td>
+<td>Class to be not applied to default rule is registered. The first argument is the class FQDN. The second argument is the component name.</td>
+</tr>
+<tr>
+<td><code>addIgnoreClassSuffix</code></td>
+<td>Define the part removed from the tail of the class name. "Impl" and "Bean" are already registered.</td>
+</tr>
+<tr>
+<td><code>addReplaceRule</code></td>
+<td>Add the replacement rule by regular expressions. The first argument is the regular expressions. The second argument is the replacement value.</td>
+</tr>
+<tr>
+<td><code>clearReplaceRule</code></td>
+<td>The replacement rules that are added by setCustomizedName, addIgnoreClassSuffix and addReplaceRuleare method are cleared.</td>
+</tr>
+</table>
+<h5><a name="QualifiedAutoNaming" id="QualifiedAutoNaming">org.seasar.framework.container.autoregister.QualifiedAutoNaming</a></h5>
+<table border="1">
+<tr bgcolor="#D1F3F4" align="center">
+<th>property</th>
+<th>Description</th>
+</tr>
+<tr>
+<td><code>decapitalize</code></td>
+<td>Set to true in order to decapitalize component name. Default value is true.</td>
+</tr>
+</table>
+<br />
+<table border="1">
+<tr bgcolor="#D1F3F4" align="center">
+<th>method</th>
+<th>Description</th>
+</tr>
+<tr>
+<td><code>setCustomizedName</code></td>
+<td>Class to be not applied to default rule is registered. The first argument is the class FQDN. The second argument is the component name.</td>
+</tr>
+<tr>
+<td><code>addIgnorePackagePrefix</code></td>
+<td>Define the part removed from the head of the package name.</td>
+</tr>
+<tr>
+<td><code>addIgnoreClassSuffix</code></td>
+<td>Define the part removed from the tail of the class name. "Impl" and "Bean" are already registered.</td>
+</tr>
+<tr>
+<td><code>addReplaceRule</code></td>
+<td>Add the replacement rule by regular expressions. The first argument is the regular expressions. The second argument is the replacement value.</td>
+</tr>
+<tr>
+<td><code>clearReplaceRule</code></td>
+<td>The replacement rules that are added by setCustomizedName, addIgnoreClassSuffix and addReplaceRuleare method are cleared.</td>
+</tr>
+</table>
+<h5>Example</h5>
+<pre>
+&lt;component
+  class="org.seasar.framework.container.autoregister.FileSystemComponentAutoRegister"&gt;
+    &lt;property name="autoNaming"&gt;
+        &lt;component class="org.seasar.framework.container.autoregister.DefaultAutoNaming"&gt;
+            &lt;initMethod name="setCustomizedName"&gt;
+                &lt;arg&gt;"examples.di.impl.HogeImpl"&lt;/arg&gt;
+                &lt;arg&gt;"hoge2"&lt;/arg&gt;
+            &lt;/initMethod&gt;
+        &lt;/component&gt;
+    &lt;/property&gt;
+    &lt;initMethod name="addClassPattern"&gt;
+        &lt;arg&gt;"examples.di.impl"&lt;/arg&gt;
+        &lt;arg&gt;".*Impl"&lt;/arg&gt;
+    &lt;/initMethod&gt;
+&lt;/component&gt;
+</pre>
+<pre>
+&lt;component class="org.seasar.framework.container.autoregister.JarComponentAutoRegister"&gt;
+    &lt;property name="referenceClass"&gt;
+        @junit.framework.TestSuite@class
+    &lt;/property&gt;
+    &lt;property name="jarFileNames"&gt;"junit.*"&lt;/property&gt;
+    &lt;initMethod name="addClassPattern"&gt;
+        &lt;arg&gt;"junit.framework"&lt;/arg&gt;
+        &lt;arg&gt;"TestSuite"&lt;/arg&gt;
+    &lt;/initMethod&gt;
+&lt;/component&gt;
+</pre>
+<pre>
+&lt;component class="org.seasar.framework.container.autoregister.ComponentAutoRegister"&gt;
+    &lt;initMethod name="addReferenceClass"&gt;
+        &lt;arg&gt;@aaa.bbb.ccc.ddd.HogeImpl@class&lt;/arg&gt;
+    &lt;/initMethod&gt;
+    &lt;initMethod name="addClassPattern"&gt;
+        &lt;arg&gt;"aaa.bbb"&lt;/arg&gt;
+        &lt;arg&gt;".*Impl"&lt;/arg&gt;
+    &lt;/initMethod&gt;
+&lt;/component&gt;
+</pre>
+<h3><a name="AspectAutoRegister" id="AspectAutoRegister">Aspect auto-registration</a></h3>
+<p>Component registration is automated by <a href="#ComponentAutoRegister">component auto-registration</a>. Taking this a step further is the automation of aspect auto-registration.</p>
+<p>When we combine aspect auto-registration and component auto-registration, we need to write the aspect auto-registration configuration after component auto-registration configuration. The components manually registered are to be written after aspect auto-registeration configuration.</p>
+<pre>
+&lt;components&gt;
+    &lt;!-- 1.component auto-registration --&gt;
+    &lt;component class="org.seasar.framework.container.autoregister.ComponentAutoRegister"&gt;
+        ...
+    &lt;/component&gt;
+
+    &lt;!-- 2.aspect auto-registration --&gt;
+    &lt;component class="org.seasar.framework.container.autoregister.AspectAutoRegister"&gt;
+        ...
+    &lt;/component&gt;
+
+    &lt;!-- 3.component manually-registration --&gt;
+    &lt;component class="..."&gt;
+        ...
+    &lt;/component&gt;
+    ...
+&lt;components&gt;
+</pre>
+<h5>org.seasar.framework.container.autoregister.AspectAutoRegister</h5>
+<table border="1">
+<tr bgcolor="#D1F3F4" align="center">
+<th>property</th>
+<th>Description</th>
+</tr>
+<tr>
+<td><code>interceptor</code></td>
+<td>Specify interceptor. Use <a href="aop.html#InterceptorChain">InterceptorChain</a> to specify multiple interceptors.</td>
+</tr>
+<tr>
+<td><code>pointcut</code></td>
+<td>Specify methods to be targeted by interceptor, separated by commas. When pointcut is not specified, all interfaces implemented methods in component are targeted. Regular expressions (JDK1.4 regex) may be used for method names.</td>
+</tr>
+</table>
+<table border="1">
+<tr bgcolor="#D1F3F4" align="center">
+<th>method</th>
+<th>Description</th>
+</tr>
+<tr>
+<td><code>addClassPattern</code></td>
+<td>A class pattern to be auto-registered is registered. The first argument is the component package name. Child packages are searched recursively. The second argument is class name. One may use regular expressions, and multiple entries can be separated by commas.</td>
+</tr>
+<tr>
+<td><code>addIgnoreClassPattern</code></td>
+<td>Class patterns to be ignored by auto-registration are registered. The first argument is the component package name. Child packages are searched recursively. The second argument is class name. One may use regular expressions, and multiple entries can be separated by commas.</td>
+</tr>
+</table>
+<h5>Example</h5>
+<pre>
+&lt;include path="aop.dicon"/&gt;
+...
+&lt;component<br />  class="org.seasar.framework.container.autoregister.AspectAutoRegister"&gt;<br />    &lt;property name="interceptor"&gt;aop.traceInterceptor&lt;/property&gt;<br />    &lt;initMethod name="addClassPattern"&gt;<br />        &lt;arg&gt;"examples.di.impl"&lt;/arg&gt;<br />        &lt;arg&gt;".*Impl"&lt;/arg&gt;<br />    &lt;/initMethod&gt;<br />&lt;/component&gt;
+</pre>
+<h5><a name="InterfaceAspectAutoRegister" id="InterfaceAspectAutoRegister">org.seasar.framework.container.autoregister.InterfaceAspectAutoRegister</a></h5>
+<table border="1">
+<tr bgcolor="#D1F3F4" align="center">
+<th>property</th>
+<th>Description</th>
+</tr>
+<tr>
+<td><code>interceptor</code></td>
+<td>Specify interceptor. Use <a href="aop.html#InterceptorChain">InterceptorChain</a> to specify multiple interceptors.</td>
+</tr>
+<tr>
+<td><code>targetInterface</code></td>
+<td>The components implementing target interface are applied above interceptor.</td>
+</tr>
+</table>
+<h5>Example</h5>
+<pre>
+&lt;include path="aop.dicon"/&gt;
+...
+&lt;component<br />  class="org.seasar.framework.container.autoregister.InterfaceAspectAutoRegister"&gt;<br />    &lt;property name="interceptor"&gt;aop.traceInterceptor&lt;/property&gt;
+    &lt;property name="targetInterface"&gt;@examples.Greeing@class&lt;/property&gt;<br />&lt;/component&gt;
+</pre>
+<h3><a name="MetaAutoRegister" id="MetaAutoRegister">Meta auto-registration</a></h3>
+<p>We can automatically register meta data.</p>
+<p>When we combine meta auto-registration and component auto-registration, we need to write the meta auto-registration configuration after component auto-registration configuration. The components manually registered are to be written after meta auto-registeration configuration.</p>
+<pre>
+&lt;components&gt;
+    &lt;!-- 1.component auto-registration --&gt;
+    &lt;component class="org.seasar.framework.container.autoregister.ComponentAutoRegister"&gt;
+        ...
+    &lt;/component&gt;
+
+    &lt;!-- 2.meta auto-registration --&gt;
+    &lt;component class="org.seasar.framework.container.autoregister.MetaAutoRegister"&gt;
+        ...
+    &lt;/component&gt;
+
+    &lt;!-- 3.component manually-registration --&gt;
+    &lt;component class="..."&gt;
+        ...
+    &lt;/component&gt;
+    ...
+&lt;components&gt;
+</pre>
+<h5>org.seasar.framework.container.autoregister.MetaAutoRegister</h5>
+<p>MetaAutoRegister is a component in order to automatically register meta data in class name patterns.<br />
+We write the meta data automatially registered to child meta data named "autoRegister".</p>
+<table border="1">
+<tr bgcolor="#D1F3F4" align="center">
+<th>method</th>
+<th>Description</th>
+</tr>
+<tr>
+<td><code>addClassPattern</code></td>
+<td>A class pattern to be auto-registered is registered. The first argument is the component package name. Child packages are searched recursively. The second argument is class name. One may use regular expressions, and multiple entries can be separated by commas.</td>
+</tr>
+<tr>
+<td><code>addIgnoreClassPattern</code></td>
+<td>Class patterns to be ignored by auto-registration are registered. The first argument is the component package name. Child packages are searched recursively. The second argument is class name. One may use regular expressions, and multiple entries can be separated by commas.</td>
+</tr>
+</table>
+<h5>Example</h5>
+<pre>
+&lt;component
+  class="org.seasar.framework.container.autoregister.MetaAutoRegister"&gt;
+    &lt;meta name="autoRegister"&gt;
+        &lt;meta name="hoge"&lt;/meta&gt;
+    &lt;/meta&gt;
+    &lt;initMethod name="addClassPattern"&gt;
+        &lt;arg&gt;"examples.di.impl"&lt;/arg&gt;
+        &lt;arg&gt;".*Impl"&lt;/arg&gt;
+    &lt;/initMethod&gt;
+&lt;/component&gt;
+</pre>
+<p>In this sample, we can automatically register the meta data named "hoge".</p>
+<h3><a name="Hotswap" id="Hotswap">Hotswap</a></h3>
+<p>Seasar2 realizes <b>Hotswap</b>, then let's try.</p>
+<h4>Greeting.java</h4>
+<pre>
+package examples.hotswap;
+
+public interface Greeting {
+
+    String greet();
+}
+</pre>
+<h4>GreetingImpl.java</h4>
+<pre>
+package examples.hotswap.impl;
+
+import examples.hotswap.Greeting;
+
+public class GreetingImpl implements Greeting {
+
+    public String greet() {
+        return "Hello";
+    }
+}
+</pre>
+<h4>hotswap.dicon</h4>
+<pre>
+&lt;components&gt;<br />    &lt;component class="examples.hotswap.impl.GreetingImpl"/&gt;<br />&lt;/components&gt;
+</pre>
+<p>Change hotswap mode using "s2container.dicon".</p>
+<h4>s2container.dicon</h4>
+<pre>
+&lt;components&gt;<br />    &lt;component<br />      class="org.seasar.framework.container.factory.S2ContainerFactory$DefaultProvider"&gt;<br />        &lt;property name="hotswapMode"&gt;true&lt;/property&gt;<br />    &lt;/component&gt;<br />&lt;/components&gt;<br />
+</pre>
+<p>"s2container.dicon" is placed in root directory of CLASSPATH.</p>
+<h4>GreetingMain.dicon</h4>
+<pre>
+package examples.hotswap.main;
+
+import org.seasar.framework.container.S2Container;
+import org.seasar.framework.container.factory.S2ContainerFactory;
+
+import examples.hotswap.Greeting;
+
+public class GreetingMain {
+
+    private static final String CONFIGURE_PATH =
+        "examples/hotswap/dicon/s2container.dicon";
+
+    private static final String PATH =
+        "examples/hotswap/dicon/hotswap.dicon";
+
+    public static void main(String[] args) throws Exception {
+        S2ContainerFactory.configure(CONFIGURE_PATH);
+        S2Container container = S2ContainerFactory.create(PATH);
+        System.out.println("hotswapMode:" + container.isHotswapMode());
+        container.init();
+        try {
+            Greeting greeting = (Greeting) container
+                    .getComponent(Greeting.class);
+            System.out.println(greeting.greet());
+            System.out.println("Let's modify GreetingImpl, then press ENTER.");
+            System.in.read();
+            System.out.println("after modify");
+            System.out.println(greeting.greet());
+        } finally {
+            container.destroy();
+        }
+    }
+}
+</pre>
+<h4>The results will be as follows.</h4>
+<pre>
+hotswapMode:true
+Hello
+Let's modify GreetingImpl, then press ENTER.
+
+after modify
+Hello2
+</pre>
+<p>We need to use inerface in order to hotswap.</p>
+<h2><a name="DefReference" id="DefReference">S2Container tag reference</a></h2>
+<h3><a name="DOCTYPE" id="DOCTYPE">DOCTYPE</a></h3>
+<p>DOCTYPE is specified after the XML declaration. Please specify as shown below.</p>
+<pre>
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.3//EN"
+"http://www.seasar.org/dtd/components23.dtd"&gt;
+&lt;components&gt;
+    &lt;component name="hello" class="examples.dicon.HelloConstructorInjection"&gt;
+        &lt;arg&gt;"Hello World!"&lt;/arg&gt;
+    &lt;/component&gt;
+&lt;/components&gt;
+</pre>
+<h3><a name="componentsTag" id="componentsTag">components tag (required)</a></h3>
+<p>Becomes the root tag.</p>
+<h4><a name="namespaceAttr" id="namespaceAttr">namespace property (optional)</a></h4>
+<p>Specifies a <a href="#Namespace">namespace</a>.</p>
+<pre>
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.3//EN"
+"http://www.seasar.org/dtd/components23.dtd"&gt;
+&lt;components namespace="hoge"&gt;
+    ...
+&lt;/components&gt;
+</pre>
+<h3><a name="includeTag" id="includeTag">include tag (optional)</a></h3>
+<p><a href="#Include">Used to consolidate separated S2Container definitions.</a></p>
+<h4><a name="pathAttr" id="pathAttr">path property (required)</a></h4>
+<p>Specifies the definition file path. It is an absolute path referencing the directory specified in CLASSPATH as root. For example, WEB-INF/classes/aaa.dicon becomes aaa.dicon. WEB-INF/classes/aaa/bbb/ccc.dicon becomes aaa/bbb/ccc.dicon. The separator is '/' in both Windows and UNIX.</p>
+<pre>
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.3//EN"
+"http://www.seasar.org/dtd/components23.dtd"&gt;
+&lt;components&gt;
+    &lt;include path="aaa/bbb/ccc.dicon" /&gt;
+&lt;/components&gt;
+</pre>
+<h3><a name="componentTag" id="componentTag">component tag (optional)</a></h3>
+<p>Defines components.</p>
+<h4><a name="classAttr" id="classAttr">class property (optional)</a></h4>
+<p><a name="classAttr" id="classAttr">Specifies a FQDN of a class. The class property can be omitted if components are selected using</a> <a href="#ognlExpr">OGNL expression</a> in the body.</p>
+<h4><a name="componentTag.nameAttr" id="componentTag.nameAttr">name property (optional)</a></h4>
+<p>Specifies a name, usable as a java identifier. Refer to <a href="#getComponent">acquiring components</a> for details.</p>
+<h4><a name="instanceAttr" id="instanceAttr">instance property (optional)</a></h4>
+<p>Specifies how S2Container manages instances of components. Options are singleton (default), prototype, outer, request, and session. Refer to <a href="#InstanceMode">Instance Management</a> for details.</p>
+<h4><a name="autoBindingAttr" id="autoBindingAttr">autobinding property (optional)</a></h4>
+<p>Specifies how S2Container will resolve dependencies. Options are auto (default), constructor, property, and none. Refer to <a href="#AutoBindingMode">Automatic Binding</a> for details.</p>
+<h3><a name="argTag" id="argTag">arg tag (optional)</a></h3>
+<p>Becomes a constructor argument when used as a child tag of the <a href="#componentTag">component tag</a>. It is passed to the constructor in the order described. Becomes a method argument when used as a child <a href="#initMethodTag">initMethod tag</a> and <a href="#destroyMethodTag">destroyMethod tag</a>. It is passed to the method in the order described. Either <a href="#ognlExpr">OGNL expressions</a> in the body or the child <a href="#componentTag">component tag</a> is used for the value passed as an argument.</p>
+<h3><a name="propertyTag" id="propertyTag">property tag (optional)</a></h3>
+<p>Used as a child tag of the <a href="#componentTag">component tag</a>. Either <a href="#ognlExpr">OGNL expressions</a> in the body or the child <a href="#componentTag">component tag</a> is used for the value to be configured as a property.</p>
+<h4><a name="propertyTag.nameAttr" id="propertyTag.nameAttr">name property (required)</a></h4>
+<p>Specifies a property name.</p>
+<h4><a name="propertyTag.bindingTypeAttr" id="propertyTag.bindingTypeAttr">bindingType property (optional)</a></h4>
+<p>Allows fine control of auto-binding per property. Options are must, should (default), may, and none. Refer to <a href="#AutoBindingMode">Automatic Binding</a> for details.</p>
+<h3><a name="metaTag" id="metaTag">meta tag (optional)</a></h3>
+<p>Used as a child tag in the <a href="#componentsTag">components</a>, <a href="#componentTag">component</a>, <a href="#argTag">arg</a> and <a href="#propertyTag">property</a> tags. Either <a href="#ognlExpr">OGNL expressions</a> in the body or the child <a href="#componentTag">component tag</a> is used for the metadata value.</p>
+<h4><a name="propertyTag.nameAttr" id="propertyTag.nameAttr">name property (optional)</a></h4>
+<p>Specifies a meta name.</p>
+<h3><a name="initMethodTag" id="initMethodTag">initMethod tag (optional)</a></h3>
+<p>Used as a child tag of the <a href="#componentTag">component tag</a>. A child <a href="#argTag">arg tag</a> is used for arguments. <a href="#ognlExpr">OGNL expressions</a> can be used to call a component method without writing the name property. The component defined in initMethod itself, System.out, and System.err is respectively represented as #self, #out, and #err. These can be used as valid objects within the initMethod tag.</p>
+<h4><a name="initMethodTag.nameAttr" id="initMethodTag.nameAttr">name property (optional)</a></h4>
+<p>Specifies a method name.</p>
+<pre>
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.3//EN"
+"http://www.seasar.org/dtd/components23.dtd"&gt;
+&lt;components&gt;
+    &lt;component class="java.util.HashMap"&gt;
+        &lt;initMethod name="put"&gt;
+            &lt;arg&gt;"aaa"&lt;/arg&gt;
+            &lt;arg&gt;111&lt;/arg&gt;
+        &lt;/initMethod&gt;
+        &lt;initMethod&gt;#self.put("aaa", 111)&lt;/initMethod&gt;
+        &lt;initMethod&gt;#out.println("Hello")&lt;/initMethod&gt;
+    &lt;/component&gt;
+&lt;/components&gt;
+</pre>
+<h3><a name="destroyMethodTag" id="destroyMethodTag">destroyMethod tag (optional)</a></h3>
+<p>Same as initMethod tag.</p>
+<h3><a name="aspectTag" id="aspectTag">aspect tag (optional)</a></h3>
+<p>Builds in aspect into a component. Refer to the description of the <a href="aop.html#aspectTag">aspect tag</a> in S2AOP.</p>
+<h3><a name="interTypeTag" id="interTypeTag">interType tag(optional)</a></h3>
+<p>Builds in inter-type into a component. Refer to the description of the <a href="aop.html#interTypeTag">interType tag</a> in S2AOP.</p>
+<h3><a name="descriptionTag" id="descriptionTag">description tag (optional)</a></h3>
+<p>Used as a child tag in the <a href="#componentsTag">components</a>, <a href="#componentTag">component</a>, <a href="#argTag">arg</a> and <a href="#propertyTag">property</a> tags. Can freely used to hold descriptions or explanations.</p>
+<h3><a name="ognlExpr" id="ognlExpr">OGNL expressions</a></h3>
+<p>S2Container uses <a href="http://www.ognl.org/">OGNL</a> as its expression language. It is in order to convert the contents described in XML as strings into a java object.</p>
+<ul>
+<li>strings are surrounded in ("), as "hoge".</li>
+<li>char is surrounded by ('), as 'a'.</li>
+<li>Numeral values are directly entered, as 123.</li>
+<li>boolean values are directly entered, as true false.</li>
+<li>A FQDN of class like new java.util.date(0) can be used to call a constructor</li>
+<li>Results of a static method like @java.lang.Math@max(1,2) can be referenced.</li>
+<li>Class like @java.lang.String@class can be referenced.</li>
+<li>Results of a calling a component method like hoge.toString() can be referenced. This example is assuming there is a component named hoge defined somewhere.</li>
+</ul>
+<p>Refer to the <a href="http://www.ognl.org/2.6.7/Documentation/html/LanguageGuide/index.html">OGNL Manual</a> for details.</p>
+<br />
+<br />
+<h2><a name="AnnotationReference" id="AnnotationReference">S2Container Annotation Reference</a></h2>
+<p>S2Container uses 3 annotation implementations; Tiger annotation, Backport175 annotation, and constant annotation. Generally, annotation refers to Tiger annotation in Java5, but this would exclude users of JDK1.4. <a href="http://backport175.codehaus.org/">backport175</a> annotation allows tiger (JSR-175) style annotations in JDK1.4, and constant annotation uses public static final constants. These are implemented to give annotations capability to as many users as possible.</p>
+<h3><a name="ComponentAnnotation" id="ComponentAnnotation">Component Annotation</a></h3>
+<p>Can be substituted for the <a href="#componentTag">component tag</a>.</p>
+<p>Tiger annotation is as follows.</p>
+<pre>
+@Component(name="xxx", instance=InstanceType.PROTOTYPE,
+        autoBinding=AutoBindingType.PROPERTY)
+public class Xxx {
+    ...
+}
+</pre>
+<p>Backport175 annotation is as follows.</p>
+<pre>
+/**
+ * @org.seasar.framework.container.annotation.backport175.Component(
+ *      name = "xxx",
+ *      instance = "prototype",
+ *      autoBinding = "property")
+ */
+public class Xxx {
+    ...
+}
+</pre>
+<p>Constant annotation is as follows.</p>
+<pre>
+public static final String COMPONENT =
+  "name = xxx, instance = prototype, autoBinding = property";
+</pre>
+<h3><a name="BindingAnnotation" id="BindingAnnotation">Binding Annotation</a></h3>
+<p>Can be substituted for the <a href="#propertyTag">property tag</a>.</p>
+<p>Tiger annotation is as follows.</p>
+<pre>
+@Binding("aaa2")
+public void setAaa(String aaa) {
+    ...
+}
+
+@Binding(bindingType=BindingType.NONE)
+public void setBbb(String bbb) {
+    ...
+}
+
+@Binding
+public void setCcc(String ccc) {
+    ...
+}
+</pre>
+<p>Backport175 annotation is as follows.</p>
+<pre>
+/**
+
+ * @org.seasar.framework.container.annotation.backport175.Binding("aaa2")
+ */
+public void setAaa(String aaa) {
+    ...
+}
+
+/**
+ * @org.seasar.framework.container.annotation.backport175.Binding(bindingType="none")
+ */
+public void setBbb(String bbb) {
+    ...
+}
+
+/**
+ * @org.seasar.framework.container.annotation.backport175.Binding
+ */
+public void setCcc(String ccc) {
+    ...
+}
+</pre>
+<p>Constant annotation specifies the property name_BINDING.</p>
+<pre>
+public static final String aaa_BINDING = "aaa2";
+
+public static final String bbb_BINDING = "bindingType=none";
+
+public static final String ccc_BINDING = null;
+
+public void setAaa(String aaa) {
+    ...
+}
+
+public void setBbb(String bbb) {
+    ...
+}
+
+public void setCcc(String ccc) {
+    ...
+}
+</pre>
+<h3><a name="AspectAnnotation" id="AspectAnnotation">Aspect Annotation</a></h3>
+<p>Can be substituted for the <a href="aop.html#aspectTag">aspect tag</a>. Multiple definitions cannot be made unlike the aspect tag, so use <a href="aop.html#InterceptorChain">InterceptorChain</a> when multiple interceptors are to be applied.</p>
+<p>Tiger annotation is as follows.</p>
+<pre>
+@Aspect("aop.traceInterceptor")
+public class Xxx {
+    ...
+}
+
+public class Xxx {
+    ...
+    @Aspect("aop.traceInterceptor")
+    public void hoge() {
+        ...
+    }
+}
+</pre>
+<p>Backport175 annotation is as follows.</p>
+<pre>
+/**
+ * @org.seasar.framework.container.annotation.backport175.Aspect(
+ *  "aop.traceInterceptor")
+ */
+public class Xxx {
+    ...
+}
+
+public class Xxx {
+    ...
+    /**
+     * @org.seasar.framework.container.annotation.backport175.Aspect(
+     *  "aop.traceInterceptor")
+     */
+    public void hoge() {
+        ...
+    }
+}
+</pre>
+<p>Constant annotation is as follows. Separate multiple pointcuts with \n, as in get.*\nexecute. Only \n may be used as a separator character.</p>
+<pre>
+public static final String ASPECT =
+    "value=aop.traceInterceptor, pointcut=getAaa";
+</pre>
+<h3><a name="InterTypeAnnotation" id="InterTypeAnnotation">InterType Annotation</a></h3>
+<p>Can be substituted for the <a href="aop.html#intetTypeTag">interType tag</a>.</p>
+<p>Tiger annotation is as follows.</p>
+<pre>
+@InterType({"aop.propertyInterType", "aop.someInterType"})
+public class Xxx {
+    ...
+}
+</pre>
+<p>backport175 annotation is as follows.</p>
+<pre>
+/**
+ * @org.seasar.framework.container.annotation.backport175.InterType(
+ *  {"aop.propertyInterType", "aop.someInterType"})
+ */
+public class Xxx {
+    ...
+}
+</pre>
+<p>Constant Annotation is as follows.</p>
+<pre>
+public static final String INTER_TYPE =
+    "aop.propertyInterType, aop.someInterType";
+</pre>
+<h3><a name="InitMethodAnnotation" id="InitMethodAnnotation">InitMethod Annotation</a></h3>
+<p>Can be substituted for the <a href="#initMethodTag">initMethod tag</a>.</p>
+<p>Tiger annotation is as follows.</p>
+<pre>
+public class Xxx {
+    ...
+    @InitMethod
+    public void init() {
+        ...
+    }
+}
+</pre>
+<p>Backport175 annotation is as follows.</p>
+<pre>
+public class Xxx {
+    ...
+    /**
+     * @org.seasar.framework.container.annotation.backport175.InitMethod
+     */
+    public void init() {
+        ...
+    }
+}
+</pre>
+<p>Constant annotation is as follows. Separate multiple initialization methods with commas.</p>
+<pre>
+public static final String INIT_METHOD = "init";
+</pre>
+<h3><a name="DestroyMethodAnnotation" id="DestroyMethodAnnotation">DestroyMethod Annotation</a></h3>
+<p>Can be substituted for the <a href="#destroyMethodTag">destroyMethod tag</a>.</p>
+<p>Tiger annotation is as follows.</p>
+<pre>
+public class Xxx {
+    ...
+    @DestroyMethod
+    public void destroy() {
+        ...
+    }
+}
+</pre>
+<p>Backport175 annotation is as follows.</p>
+<pre>
+public class Xxx {
+    ...
+    /**
+     * @org.seasar.framework.container.annotation.backport175.DestroyMethod
+     */
+    public void destroy() {
+        ...
+    }
+}
+</pre>
+<p>Constant annotation is as follows. Separate multiple initialization methods with commas.</p>
+<pre>
+public static final String DESTROY_METHOD = "destroy";
+</pre>
+<!-- document end -->
+<!-- don't edit start --></td>
+<td width="14"><img height="14" width="14" src="images/spacer.gif" alt="" /></td>
+</tr>
+<tr>
+<td width="14"><img height="30" width="14" src="images/spacer.gif" alt="" /></td>
+<td width="766"><img height="30" width="592" src="images/spacer.gif" alt="" /></td>
+</tr>
+<tr>
+<td width="14"><img height="14" width="14" src="images/spacer.gif" alt="" /></td>
+<td width="766" class="copyright">Copyright© 2004-2005, The Seasar Foundation and the others. All rights reserved.</td>
+</tr>
+</table>
+</td>
+<td class="backright" align="left" valign="top">&nbsp;</td>
+</tr>
+<tr>
+<td class="backunder" align="left" valign="top" width="780" height="16">&nbsp;</td>
+<td class="backcorner" align="left" valign="top" height="16">&nbsp;</td>
+</tr>
+</table>
+<!-- don't edit end -->
+</body>
+</html>

@@ -1,0 +1,433 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja" lang="ja">
+<!-- don't edit start -->
+<head>
+<title>Seasar - DI Container with AOP -</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<link href="seasar_b.css" type="text/css" rel="stylesheet" media="screen" />
+<link href="seasar_p.css" type="text/css" rel="stylesheet" media="print" />
+<script src="seasar_b.js" type="text/JavaScript" language="JavaScript">
+</script>
+<style type="text/css">
+/*<![CDATA[*/
+<!--
+.indent{
+margin-left : 30px;
+margin-right : 20px;
+}
+TH{
+font-size : 10pt;
+text-align : center;
+background-color : #d1f3f4;
+}
+TD{
+font-size : 10pt;
+}
+-->
+/*]]>*/
+</style>
+</head>
+<body onload="preload('ja')">
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="left">
+<tr>
+<td align="left" valign="top" width="780">
+<table width="780" border="0" cellspacing="0" cellpadding="0" class="white">
+<tr>
+<td colspan="7"><img height="5" width="780" src="images/top01_b.gif" alt="" /></td>
+</tr>
+<tr>
+<td><img height="117" width="235" src="images/top02_b.gif" alt="Seasar" /></td>
+<td colspan="3"><img height="117" width="289" src="images/top03.gif" alt="DI Container with AOP" /></td>
+<td colspan="3"><img height="117" width="256" src="images/spacer.gif" alt="" /></td>
+</tr>
+<tr>
+<td rowspan="2"><img src="images/top04.gif" alt="" height="49" width="235" /></td>
+<td><a href="http://www.seasar.org/index.html"><img src="images/menu01_b_ja.gif" height="30" width="78" border="0" alt="" id="menu01" onmouseover="swap(1)" onmouseout="restore(1)" name="menu01" /></a></td>
+<td><a href="http://www.seasar.org/projects.html"><img src="images/menu02_b_ja.gif" height="30" width="101" border="0" alt="" id="menu02" onmouseover="swap(2)" onmouseout="restore(2)" name="menu02" /></a></td>
+<td><a href="http://www.seasar.org/products.html"><img src="images/menu03_b_ja.gif" height="30" width="110" border="0" alt="" id="menu03" onmouseover="swap(3)" onmouseout="restore(3)" name="menu03" /></a></td>
+<td><a href="http://www.seasar.org/resources.html"><img src="images/menu04_b_ja.gif" height="30" width="113" border="0" alt="" id="menu04" onmouseover="swap(4)" onmouseout="restore(4)" name="menu04" /></a></td>
+<td><img src="images/menu05_b_ja.gif" height="30" width="109" border="0" alt="" id="menu05" onmouseover="swap(5)" onmouseout="restore(5)" name="menu05" /></td>
+<td><img height="30" width="34" src="images/menu06.gif" alt="" /></td>
+</tr>
+<tr>
+<td colspan="6"><img height="19" width="545" src="images/spacer.gif" alt="" /></td>
+</tr>
+</table>
+<table width="780" border="0" cellspacing="0" cellpadding="0" class="white">
+<tr align="left" valign="top">
+<td width="14"><img height="14" width="14" src="images/spacer.gif" alt="" /></td>
+<td width="740" class="main">
+<!-- don't edit end -->
+<!-- document start -->
+<br />
+<h1>OGNLガイド</h1>
+<h2>目次</h2>
+<ul>
+<li><a href="#overview">概要</a></li>
+<li><a href="#literal">リテラル</a></li>
+<li><a href="#object">定義済みオブジェクト</a></li>
+<li><a href="#variable">変数</a></li>
+<li><a href="#creation">オブジェクトの生成</a></li>
+<li><a href="#field">フィールドへのアクセス</a></li>
+<li><a href="#method">メソッドの呼び出し</a></li>
+<li><a href="#property">プロパティへのアクセス</a></li>
+<li><a href="#indexing">インデックスによるアクセス</a></li>
+<li><a href="#collection">コレクションの操作</a></li>
+<li><a href="#chained">カンマ演算子とチェーン</a></li>
+<li><a href="#others">その他の演算子</a></li>
+</ul>
+<h2><a name="overview" id="overview">概要</a></h2>
+<p>OGNL (<b>O</b>bject <b>G</b>raph <b>N</b>avigation <b>L</b>anguage) は，Javaオブジェクトのプロパティにアクセスしたりメソッドを呼び出したりすることの出来る，Javaによく似た式言語です．<br />
+Seasar2では，diconファイルの&lt;property&gt;要素の他，&lt;component&gt;要素・&lt;initMethod&gt;要素・&lt;destroyMethod&gt;要素・&lt;arg&gt;要素・&lt;meta&gt;要素にOGNL式を記述することが出来ます．<br />
+OGNLの詳細は<a href="http://www.ognl.org/">OGNL Tecnologyのサイト</a>を参照してください．</p>
+<h2><a name="literal" id="literal">リテラル</a></h2>
+<h3>Java標準のリテラル</h3>
+<p>OGNLでは，Java言語で定められているリテラルをそのまま記述することが出来ます．</p>
+<table border="1" cellspacing="0" class="indent">
+<col span="2" width="200" />
+<tbody>
+<tr>
+<th>例</th>
+<th>型</th>
+</tr>
+<tr>
+<td><code>true</code></td>
+<td rowspan="2"><code>boolean</code></td>
+</tr>
+<tr>
+<td><code>false</code></td>
+</tr>
+<tr>
+<td><code>10</code></td>
+<td rowspan="2"><code>int</code></td>
+</tr>
+<tr>
+<td><code>0xABCD</code></td>
+</tr>
+<tr>
+<td><code>100L</code></td>
+<td><code>long</code></td>
+</tr>
+<tr>
+<td><code>1.0</code></td>
+<td rowspan="2"><code>float</code></td>
+</tr>
+<tr>
+<td><code>0.5F</code></td>
+</tr>
+<tr>
+<td><code>0.01D</code></td>
+<td><code>double</code></td>
+</tr>
+<tr>
+<td><code>'A'</code></td>
+<td rowspan="2"><code>char</code></td>
+</tr>
+<tr>
+<td><code>'\uFFFF'</code></td>
+</tr>
+<tr>
+<td><code>"seasar2"</code></td>
+<td><code>java.lang.String</code></td>
+</tr>
+<tr>
+<td><code>null</code></td>
+<td>参照型</td>
+</tr>
+</tbody>
+</table>
+<p>文字列を記述する際には，ダブルクォーテーションが必要なことに注意してください．</p>
+<pre class="indent">
+&lt;component class="Person"&gt;
+    &lt;property name="name"&gt;<b>"Taro Yamada"</b>&lt;/property&gt;
+    &lt;property name="age"&gt;<b>25</b>&lt;/property&gt;
+&lt;/component&gt;
+</pre>
+<h3>OGNL独自のリテラル</h3>
+<p>OGNL独自のリテラルも用意されています．<br />
+<code>java.math.BigDecimal</code>および<code>java.math.BigInteger</code>を表すリテラルがあります．</p>
+<table border="1" cellspacing="0" class="indent">
+<col span="2" width="200" />
+<tbody>
+<tr>
+<th>例</th>
+<th>型</th>
+</tr>
+<tr>
+<td><code>100.00B</code></td>
+<td><code>java.math.BigDecimal</code></td>
+</tr>
+<tr>
+<td><code>100000H</code></td>
+<td><code>java.math.BigInteger</code></td>
+</tr>
+</tbody>
+</table>
+<h2><a name="object" id="object">定義済みオブジェクト</a></h2>
+<p>diconファイルに記述されたOGNL式は，S2コンテナが用意したコンテキストで実行されます．<br />
+この実行コンテキストには，次のオブジェクトがあらかじめ定義されています．</p>
+<table border="1" cellspacing="0" class="indent">
+<col span="1" width="100" />
+<col span="2" width="250" />
+<tbody>
+<tr>
+<th>名前</th>
+<th>型</th>
+<th>説明</th>
+</tr>
+<tr>
+<td><code>container</code></td>
+<td><code>org.seasar.framework.container.S2Container</code></td>
+<td>現在のdiconファイルを処理しているS2コンテナです．</td>
+</tr>
+<tr>
+<td><code>request</code></td>
+<td><code>java.lang.Object</code><br />
+(Webコンテナでは<code>javax.servlet.http.HttpServletRequest</code>)</td>
+<td>Webコンテナ上で実行されている場合，現在のスレッドで処理しているリクエストです．<br />
+設定されていない場合もあります．</td>
+</tr>
+<tr>
+<td><code>response</code></td>
+<td><code>java.lang.Object</code><br />
+(Webコンテナでは<code>javax.servlet.http.HttpServletResponse</code>)</td>
+<td>Webコンテナ上で実行されている場合，現在のスレッドで処理しているレスポンスです．<br />
+設定されていない場合もあります．</td>
+</tr>
+<tr>
+<td><code>session</code></td>
+<td><code>java.lang.Object</code><br />
+(Webコンテナでは<code>javax.servlet.http.HttpSession</code>)</td>
+<td>Webコンテナ上で実行されている場合，現在のスレッドで処理しているセッションです．<br />
+設定されていない場合もあります．</td>
+</tr>
+<tr>
+<td><code>application</code></td>
+<td><code>java.lang.Object</code><br />
+(Webコンテナでは<code>javax.servlet.http.ServletContext</code>)</td>
+<td>Webコンテナ上で実行されている場合，現在のS2コンテナに関連づけられたサーブレットコンテキストです．<br />
+設定されていない場合もあります．</td>
+</tr>
+</tbody>
+</table>
+<p>さらに，コンテナに登録されているコンポーネントをその名前 (<code>name</code>属性の値) で参照することが出来ます．</p>
+<h2><a name="variable" id="variable">変数</a></h2>
+<p>OGNLは変数を使うことが出来ます．全ての変数はグローバルで，先頭に'<code>#</code>'を付けます．<br />
+変数の設定はJava言語と同様，<code>=</code>演算子を使って値を代入しますが，diconファイルの中で変数を設定することはあまりないでしょう．</p>
+<h3>定義済みの変数</h3>
+<table border="1" cellspacing="0" class="indent">
+<col span="1" width="100" />
+<col span="1" width="500" />
+<tbody>
+<tr>
+<th>変数</th>
+<th>説明</th>
+</tr>
+<tr>
+<td><code>#this</code></td>
+<td>この変数を含んだ式の「現在のオブジェクト」を表します．</td>
+</tr>
+<tr>
+<td><code>#self</code></td>
+<td><code>&lt;initMethod&gt;</code>または<code>&lt;destroyMethod&gt;</code>のボディの中でのみ定義されている変数です．<br />
+この変数は，現在のコンポーネント (<code>&lt;initMethod&gt;</code>または<code>&lt;destroyMethod&gt;</code>を囲む<code>&lt;component&gt;</code>要素で表されているオブジェクト) を参照します．</td>
+</tr>
+<tr>
+<td><code>#ENV</code></td>
+<td>環境設定ファイル(<code>env.txt</code>)の値です．環境設定ファイルが存在しない場合は<code>"product"</code>です．</td>
+</tr>
+</tbody>
+</table>
+<h2><a name="creation" id="creation">オブジェクトの生成</a></h2>
+<p>オブジェクトを生成するには，Java言語の場合と同様に<code>new</code>演算子を使用します．クラス名はパッケージ名で修飾した完全限定名で指定する必要があります (<code>java.lang</code>パッケージの場合は省略することが出来ます)．</p>
+<pre class="indent">
+&lt;property name="url"&gt;<b>new java.net.URL("http://localhost/")</b>&lt;/property&gt;
+</pre>
+<p>配列を生成することも出来ます．</p>
+<pre class="indent">
+&lt;property name="array1"&gt;<b>new int[5]</b>&lt;/property&gt;&lt;!-- 配列の要素はすべて0 --&gt;
+&lt;property name="array2"&gt;<b>new int[] {1, 3, 5}</b>&lt;/property&gt;
+</pre>
+<p><code>java.uti.ArrayList</code>のインスタンスを手軽に生成することも出来ます．ただし，具体的な実装型 (<code>java.util.LinkedList</code>など) は指定することが出来ません．</p>
+<pre class="indent">
+&lt;property name="list"&gt;<b>{"green", "red", "blue"}</b>&lt;/property&gt;
+</pre>
+<p><code>java.util.Map</code>のインスタンスを手軽に生成することも出来ます．</p>
+<pre class="indent">
+&lt;property name="map"&gt;
+    <b>#{"key1" : "value1", "key2" : "value2", "key3" : "value3"}</b>
+&lt;/property&gt;
+</pre>
+<p><code>java.util.Map</code>の実装型を指定することも出来ます (省略時は<code>java.util.LinkedHashMap</code>になります)．</p>
+<pre class="indent">
+&lt;property name="map"&gt;
+    #<b>@java.util.TreeMap@</b>{"key1" : "value1", "key2" : "value2"}
+&lt;/property&gt;
+</pre>
+<h2><a name="field" id="field">フィールドへのアクセス</a></h2>
+オブジェクトの<code>public</code>なフィールドへアクセスすることが出来ます．
+<h3>インスタンスフィールド</h3>
+<p>インスタンスフィールドは，Java言語と同じようにアクセスすることが出来ます．</p>
+<pre class="indent">
+&lt;property name="x"&gt;<b>point.x</b>&lt;/property&gt;
+</pre>
+<h3><code>static</code>フィールド</h3>
+<p><code>static</code>フィールドにアクセスするには，クラス名の前後を'@'で囲んで，その後にフィールド名を記述します．クラス名はパッケージ名で修飾した完全限定名を指定する必要があります (<code>java.lang</code>パッケージの場合は省略することが出来ます)．</p>
+<pre class="indent">
+&lt;property name="priority"&gt;<b>@Thread@NORM_PRIORITY</b>&lt;/property&gt;
+</pre>
+<h2><a name="method" id="method">メソッドの呼び出し</a></h2>
+オブジェクトの<code>public</code>なメソッドを呼び出すことが出来ます．
+<h3>インスタンスメソッド</h3>
+<p>インスタンスメソッドは，Java言語と同じように呼び出すことが出来ます．</p>
+<pre class="indent">
+&lt;property name="files"&gt;<b>dir.listFiles()</b>&lt;/property&gt;
+</pre>
+<h3><code>static</code>メソッド</h3>
+<p><code>static</code>メソッドを呼び出すには，クラス名の前後を'@'で囲んで，その後にメソッド名を記述します．クラス名はパッケージ名で修飾した完全限定名を指定する必要があります (<code>java.lang</code>パッケージの場合は省略することが出来ます)．</p>
+<pre class="indent">
+&lt;property name="roots"&gt;<b>@java.io.File@listRoots()</b>&lt;/property&gt;
+</pre>
+<h2><a name="property" id="property">プロパティへのアクセス</a></h2>
+<p>OGNLを使用する上で中心となるのがプロパティへのアクセスです．</p>
+<h3>JavaBeansのプロパティ</h3>
+<p>OGNLでは，JavaBeansにおけるプロパティ (getter/setterメソッドでアクセスできるもの)を扱うことが出来ます．<br />
+次の例では，<code>hello</code>という名前の付けられたコンポーネントの<code>message</code>というプロパティ値をコンポーネントとして定義しています．<code>message</code>プロパティの値は，<code>examples.dicon.HelloSetterInjection</code>クラスの<code>getMessage()</code>メソッドが返す値です．</p>
+<pre class="indent">
+&lt;component name="hello" class="examples.dicon.HelloSetterInjection"&gt;
+    &lt;property name="message"&gt;"Hello World!"&lt;/property&gt;
+&lt;/component&gt;
+
+&lt;component name="msg"&gt;
+    <b>hello.message</b>
+&lt;/component&gt;
+</pre>
+<h3>Mapのエントリ</h3>
+<p><code>java.util.Map</code>のエントリもプロパティとして扱うことが出来ます．この場合，キーがプロパティ名となります．ただし，プロパティ名として使うことが出来るのは，識別子として有効な<code>java.lang.String</code>型のキーだけです．<br />
+次の例では，コンポーネント<code>one</code>はコンポーネント<code>map</code>のキー<code>one</code>に関連づけられている値<code>1B</code> (<code>java.math.BigDecimal</code>の1) になります．</p>
+<pre class="indent">
+&lt;component name="map"&gt;
+    #{"one" : 1B, "two" : 2B, "three" : 3B}
+&lt;/component&gt;
+
+&lt;component name="one"&gt;
+    <b>map.one</b>
+&lt;/component&gt;
+</pre>
+<h3>コンポーネント</h3>
+<p>コンテナに登録されているコンポーネントをプロパティとして扱うことが出来ます．この場合，コンポーネントの名前 (<code>name</code>属性の値) がプロパティ名となります．</p>
+<pre class="indent">
+&lt;component name="foo" class="Foo"/&gt;
+
+&lt;component name=""&gt;
+    &lt;property name="foo"&gt;<b>container.foo</b>&lt;/property&gt;
+&lt;/component&gt;
+</pre>
+<h2><a name="indexing" id="indexing">インデックスによるアクセス</a></h2>
+<h3>Javaの配列</h3>
+<p>Javaの配列はJavaと同じようにアクセスすることが出来ます．<br />
+次の例では，<code>java.io.File#listRoots()</code>メソッドが返す配列の最初の要素がプロパティに設定されます．</p>
+<pre class="indent">
+&lt;property name="root"&gt;<b>@java.io.File@listRoots()[0]</b>&lt;/property&gt;
+</pre>
+<h3>JavaBeansのインデックス付きプロパティ</h3>
+<p>JavaBeansのインデックス付きプロパティを配列のように扱うことが出来ます．<br />
+次の例では，<code>org.seasar.framework.container.S2Container#getChild(int)</code>が呼び出されます．</p>
+<pre class="indent">
+&lt;property name="firstChild"&gt;<b>container.child[0]</b>&lt;/property&gt;
+</pre>
+<h3>連想配列</h3>
+<p>プロパティやフィールドを連想配列のようにアクセスすることが出来ます．<br />
+次の例では，<code>org.seasar.framework.container.S2Container#getNamespace()</code>が呼び出されます．</p>
+<pre class="indent">
+&lt;property name="tm"&gt;<b>container["namepace"]</b>&lt;/property&gt;
+</pre>
+<h3>連想配列によるインデックス付きプロパティ</h3>
+<p>JavaBeansのインデックス付きプロパティの拡張として，任意の型をインデックスとするプロパティにアクセスすることが出来ます．<br />
+次の例では，<code>org.seasar.framework.container.S2Container#getComponentDef(String)</code>が呼び出されます．</p>
+<pre class="indent">
+&lt;property name="tm"&gt;
+    <b>container.componentDef["j2ee.transactionManager"]</b>
+&lt;/property&gt;
+</pre>
+<h2><a name="collection" id="collection">コレクションの操作</a></h2>
+<h3><code>in</code> 演算子</h3>
+<p><code>in</code>演算子を使うことで，配列またはコレクション (<code>java.util.Collection</code>のインスタンス) に要素が含まれているかをテストすることが出来ます．<br />
+次の例では，<code>color</code>というコンポーネントが<code>"red"</code>，<code>"green"</code>，<code>"blue"</code>の中に含まれているかをテストしています．<code>color</code>の値は<code>"red"</code>であるため，コンポーネント<code>contains</code>は<code>ture</code>になります (実際には<code>boolean</code>のラッパー型である<code>Boolean</code>型になります)．</p>
+<pre class="indent">
+&lt;component name="color"&gt;"red"&lt;/component&gt;
+
+&lt;component name="contains"&gt;<b>color in {"red", "green", "blue"}</b>&lt;/component&gt;
+</pre>
+<h3>セレクション</h3>
+<p>配列またはコレクションから，条件にマッチする要素だけを選択することが出来ます．<br />
+次の例では，リスト<code>colors</code>から，3文字より長い要素だけを選択したリスト (要素は <code>"green"</code>と<code>"blue"</code>) がコンポーネント<code>selected</code>になります．<br />
+<code>#this</code>は配列またはコレクションの各要素への参照です．</p>
+<pre class="indent">
+&lt;component name="colors"&gt;{"red", "green", "blue"}&lt;/component&gt;
+
+&lt;component name="selected"&gt;<b>colors.{? #this.length() &gt; 3}</b>&lt;/component&gt;
+</pre>
+<p>条件にマッチする最初の要素だけを選択することも出来ます．<br />
+次の例では，コンポーネント<code>firstMatch</code>は<code>"green"</code>になります．</p>
+<pre class="indent">
+&lt;component name="colors"&gt;{"red", "green", "blue"}&lt;/component&gt;
+
+&lt;component name="firstMatch"&gt;<b>colors.{^ #this.length() &gt; 3}</b>&lt;/component&gt;
+</pre>
+<p>条件にマッチする最後の要素だけを選択することも出来ます．<br />
+次の例では，コンポーネント<code>lastMatch</code>は<code>"blue"</code>を唯一の要素とするリストになります．</p>
+<pre class="indent">
+&lt;component name="colors"&gt;{"red", "green", "blue"}&lt;/component&gt;
+
+&lt;component name="lastMatch"&gt;<b>colors.{$ #this.length() &gt; 3}</b>&lt;/component&gt;
+</pre>
+<h3>プロジェクション</h3>
+<p>配列またはコレクションの各要素に対して，そのプロパティまたはメソッドを適用した戻り値からなるコレクションを作ることも出来ます．<br />
+次の例では，様々な型の数値からなるリスト<code>numbers</code>から，その文字列表現を要素とするリスト<code>strings</code>を作成しています．</p>
+<pre class="indent">
+&lt;component name="numbers"&gt;{0, 1L, 2.5f, 3B}&lt;/component&gt;
+
+&lt;component name="strings"&gt;<b>numbers.{#this.toString()}</b>&lt;/component&gt;
+</pre>
+<h2><a name="chained" id="chained">カンマ演算子とチェーン</a></h2>
+<p>カンマ演算子を使うと，複数の副式を続けて記述することが出来ます．最後の副式の値が式全体の結果となります．<br />
+次の例では，標準出力へのプリントと，<code>foo</code>というオブジェクトの参照という二つの副式が記述されています．式全体の結果は最後の副式である<code>foo</code>になります．</p>
+<pre class="indent">
+&lt;property name="foo"&gt;<b>@System@out.println("Foo:" + foo), foo</b>&lt;/property&gt;
+</pre>
+<p>同一オブジェクトに対するメソッドを繰り返し呼び出す場合などに便利な記述方法が用意されています．<br />
+次の例では，<code>&lt;initMethod&gt;</code>要素の中で<code>#self</code> (<code>HashSet</code>のインスタンス) に対する<code>add()</code>メソッドの呼び出しを3回繰り返しています．<code>add()</code>メソッドは，それを囲んでいるカッコで区切られたコンテキストで評価されます．このコンテキストは<code>#self</code> (<code>HashSet</code>)であるため，どの<code>add()</code>メソッドの呼び出しも<code>HashSet</code>に対して行われます．</p>
+<pre class="indent">
+&lt;component name="set" class="java.util.HashSet"&gt;
+    &lt;initMethod&gt;<b>#self.( add("one"), add("two"), add("three") )</b>&lt;/initMethod&gt;
+&lt;/component&gt;
+</pre>
+<h2><a name="others">その他の演算子</a></h2>
+<p>その他，Javaの演算子の多くを利用することができます．詳細は「<a href="http://www.ognl.org/">OGNL Technology</a>」の「<a href="http://www.ognl.org/2.6.7/Documentation/html/LanguageGuide/apa.html#N10644">OGNL Language Reference</a>」を参照してください．</p>
+<!-- document end -->
+<!-- don't edit start -->
+</td>
+<td width="14"><img height="14" width="14" src="images/spacer.gif" alt="" /></td>
+</tr>
+<tr>
+<td width="14"><img height="30" width="14" src="images/spacer.gif" alt="" /></td>
+<td width="766"><img height="30" width="592" src="images/spacer.gif" alt="" /></td>
+</tr>
+<tr>
+<td width="14"><img height="14" width="14" src="images/spacer.gif" alt="" /></td>
+<td width="766" class="copyright">Copyright© 2004-2005, The Seasar Foundation and the others. All rights reserved.</td>
+</tr>
+</table>
+</td>
+<td class="backright" align="left" valign="top">&nbsp;</td>
+</tr>
+<tr>
+<td class="backunder" align="left" valign="top" width="780" height="16">&nbsp;</td>
+<td class="backcorner" align="left" valign="top" height="16">&nbsp;</td>
+</tr>
+</table>
+</body>
+<!-- don't edit end -->
+</html>

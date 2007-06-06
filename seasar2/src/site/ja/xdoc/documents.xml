@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<document>
+	<properties>
+		<title>ドキュメント</title>
+	</properties>
+	<body>
+		<section name="ドキュメント一覧">
+			<subsection name="Seasar2.4新機能">
+				<ul>
+					<li><p><a href="S2.4SmartDeploy.html">SMART deploy</a></p></li>
+					<li><p><a href="ejb3.html">EJB3.0 Simplified API</a></p></li>
+					<li><p><a href="conditionalInclude.html">条件インクルード</a></p></li>
+					<li><p><a href="xinclude.html">XInclude</a></p></li>
+					<li><p><a href="stdDicon.html">S2標準dicon</a></p></li>
+					<li><p><a href="s2dxo.html">S2Dxo</a></p></li>
+					<li><p><a href="dbsession.html">DBセッションレプリケーション</a></p></li>
+					<li><p><a href="S2JUnit4.html">S2JUnit4</a></p></li>
+					<li><p><a href="easyMock.html">EasyMockサポート</a></p></li>
+				</ul>
+			</subsection>
+			<subsection name="ベーシック">
+				<ul>
+					<li><p><a href="setup.html">セットアップ</a></p></li>
+					<li><p><a href="DIContainer.html">DIContainer</a></p></li>
+					<li><p><a href="aop.html">AOP</a></p></li>
+					<li><p><a href="tx.html">トランザクションの自動制御</a></p></li>
+					<li><p><a href="dbcp.html">コネクションプーリング</a></p></li>
+					<li><p><a href="SabaJTAandDBCP.html">アプリケーションサーバのJTAとコネクションプールを使う</a></p></li>
+					<li><p><a href="s2jdbc.html">S2JDBC</a></p></li>
+					<li><p><a href="S2Unit.html">S2Unit</a></p></li>
+					<li><p><a href="testtech.html">テスト技法</a></p></li>
+					<li><p><a href="ognl.html">OGNLガイド</a></p></li>
+					<li><p><a href="S2Logger.html">Logger</a></p></li>
+				</ul>
+			</subsection>
+			<subsection name="リファレンス">
+				<ul>
+					<li><p><a href="reference/html/index.html">Online HTML</a>
+					(<a href="reference/html/s2reference.zip">download</a>)</p></li>
+					<li><p><a href="reference/htmlsingle/s2reference.html">Single page HTML</a></p></li>
+					<li><p><a href="reference/pdf/s2reference.pdf">PDF</a></p></li>
+				</ul>
+			</subsection>
+			<subsection name="FAQ">
+				<ul>
+					<li><p><a href="http://www.seasar.org/wiki/index.php?FAQ%2FS2Container">全般</a></p></li>
+					<li><p><a href="http://www.seasar.org/wiki/index.php?FAQ%2FS2AOP">S2AOP</a></p></li>
+				</ul>
+			</subsection>
+			<subsection name="Javadoc">
+				<ul>
+					<li><p><a href="../s2-framework/ja/apidocs/index.html">S2Framework</a></p></li>
+					<li><p><a href="../s2-extension/ja/apidocs/index.html">S2Extension</a></p></li>
+					<li><p><a href="../s2-tiger/ja/apidocs/index.html">S2Tiger</a></p></li>
+				</ul>
+			</subsection>
+			<subsection name="その他">
+				<ul>
+					<li><p><a href="http://www.seasar.org/wiki/index.php?ChangeLog%2FSeasar">ChangeLog</a></p></li>
+		            <li><p><a href="http://www.seasar.org/wiki/index.php?SeasarUpdateOperationLog">移行ガイド</a></p></li>
+				</ul>
+			</subsection>
+		</section>
+	</body>
+</document>

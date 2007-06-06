@@ -1,0 +1,226 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja" lang="ja">
+<!-- don't edit start -->
+<head>
+<title>Seasar - DI Container with AOP -</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<link href="seasar_b.css" type="text/css" rel="stylesheet" media="screen" />
+<link href="seasar_p.css" type="text/css" rel="stylesheet" media="print" />
+<script src="seasar_b.js" type="text/JavaScript" language="JavaScript">
+</script>
+<style type="text/css">
+/*<![CDATA[*/
+<!--
+.indent{
+margin-left : 30px;
+margin-right : 20px;
+}
+TH{
+font-size : 10pt;
+text-align : center;
+background-color : #d1f3f4;
+}
+TD{
+font-size : 10pt;
+}
+-->
+/*]]>*/
+</style>
+</head>
+<body onload="preload('ja')">
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="left">
+<tr>
+<td align="left" valign="top" width="780">
+<table width="780" border="0" cellspacing="0" cellpadding="0" class="white">
+<tr>
+<td colspan="7"><img height="5" width="780" src="images/top01_b.gif" alt="" /></td>
+</tr>
+<tr>
+<td><img height="117" width="235" src="images/top02_b.gif" alt="Seasar" /></td>
+<td colspan="3"><img height="117" width="289" src="images/top03.gif" alt="DI Container with AOP" /></td>
+<td colspan="3"><img height="117" width="256" src="images/spacer.gif" alt="" /></td>
+</tr>
+<tr>
+<td rowspan="2"><img src="images/top04.gif" alt="" height="49" width="235" /></td>
+<td><a href="http://www.seasar.org/index.html"><img src="images/menu01_b_ja.gif" height="30" width="78" border="0" alt="" id="menu01" onmouseover="swap(1)" onmouseout="restore(1)" name="menu01" /></a></td>
+<td><a href="http://www.seasar.org/projects.html"><img src="images/menu02_b_ja.gif" height="30" width="101" border="0" alt="" id="menu02" onmouseover="swap(2)" onmouseout="restore(2)" name="menu02" /></a></td>
+<td><a href="http://www.seasar.org/products.html"><img src="images/menu03_b_ja.gif" height="30" width="110" border="0" alt="" id="menu03" onmouseover="swap(3)" onmouseout="restore(3)" name="menu03" /></a></td>
+<td><a href="http://www.seasar.org/resources.html"><img src="images/menu04_b_ja.gif" height="30" width="113" border="0" alt="" id="menu04" onmouseover="swap(4)" onmouseout="restore(4)" name="menu04" /></a></td>
+<td><img src="images/menu05_b_ja.gif" height="30" width="109" border="0" alt="" id="menu05" onmouseover="swap(5)" onmouseout="restore(5)" name="menu05" /></td>
+<td><img height="30" width="34" src="images/menu06.gif" alt="" /></td>
+</tr>
+<tr>
+<td colspan="6"><img height="19" width="545" src="images/spacer.gif" alt="" /></td>
+</tr>
+</table>
+<table width="780" border="0" cellspacing="0" cellpadding="0" class="white">
+<tr align="left" valign="top">
+<td width="14"><img height="14" width="14" src="images/spacer.gif" alt="" /></td>
+<td width="740" class="main"><!-- don't edit end -->
+<!-- document start -->
+<br />
+<h1>EasyMockサポート</h1>
+<h2><a name="toc">目次</a></h2>
+<ul>
+<li><a href="#about">概要</a>
+<ul>
+<li><a href="#requisite">前提条件</a>
+<li><a href="#story">EasyMockを使ったテストの流れ</a>
+</ul>
+</li>
+<li><a href="#testClass">テストクラス</a></li>
+<li><a href="#createMock">モックの作成</a>
+<ul>
+<li><a href="#annotationCreate">アノテーションによるモックの作成</a>
+<ul>
+<li><a href="#mockType">モックの種類を指定する</a>
+<li><a href="#registerMock">モックをS2コンテナに登録する</a>
+</ul>
+<li><a href="#explicitCreate">明示的にモックを作成する</a>
+</ul>
+</li>
+<li><a href="#record">モックの振る舞いを記録する</a></li>
+<li><a href="#replay">モックとのインタラクションを再現する</a></li>
+<li><a href="#verify">モックとのインタラクションを検証する</a></li>
+</ul>
+<h2><a name="about" id="about">概要</a></h2>
+<p><a href="http://www.easymock.org/">EasyMock</a>はモックを利用したテストのためのフレームワークです．モックの振る舞いを設定するのにメソッド名などを文字列で指定するのではなく，インタフェースのメソッド呼び出しで指定することができるため，タイプミスを防げる・エディタの入力補完を利用できる・リファクタリングに追従しやすいなどのメリットがあります．</p>
+<p>Seasar2のEasyMockサポートを使うとEasyMockを利用するための定型的なコードの記述を減少することができるため，モックを使ったテストがより簡単になります．</p>
+<h3><a name="requisite" id="requisite">前提条件</a></h3>
+<ul>
+<li>Seasar2ではEasyMock2.2をサポートしています．</li>
+<li>EasyMock Class Extensionはサポートしていません．</li>
+<li>EasyMock2.2はJava5で導入されたGenericsを使用しているため，J2SE1.4では利用できません．</li>
+<li>Seasar2のEasyMockサポートを利用するにはS2-Tigerが必要です．</li>
+</ul>
+<h3><a name="story">EasyMockを使ったテストの流れ</a></h3>
+<p>EasyMockを使ったテストの流れを以下に示します．</p>
+<ul>
+<li>モックを作成する
+<li>モックの振る舞いを記録する (record)
+<li>モックとのインタラクションを再現する (replay)
+<li>モックとのインタラクションを検証する (verify)
+</ul>
+<p>モックとインタラクションする「replay」モードのコードが本来のテストコードになります．</p>
+<p>Seasar2のEasyMockサポートもこの流れに沿ったテストを支援します．</p>
+<h2><a name="testClass">テストクラス</a></h2>
+<p>Seasar2のEasyMockサポートはJUnit3とJUnit4の両方をサポートします．</p>
+<h3>JUnit3</h3>
+<p>JUnit3でEasyMockを使ったテストを行うために，次の二つの抽象クラスが提供されています．</p>
+<dl>
+<dt><code>org.seasar.framework.unit.EasyMockTestCase</code>
+<dd><code>junit.framework.TestCase</code>の派生クラスで，S2コンテナを利用しない場合に使用します．
+<dt><code>org.seasar.framework.unit.S2EasyMockTestCase</code>
+<dd><code>org.seasar.framework.unit.S2TestCase</code>の派生クラスで，S2コンテナを利用する場合に使用します．
+</dl>
+<pre>public class HogeTest extends S2EasyMockTestCase {
+    ・・・
+}</pre>
+<h3>JUnit4</h3>
+<p>JUnit4でEasyMockを使ったテストを行うには，<a href="S2JUnit4.html">S2JUnit4</a>のRunnerを使用します．</p>
+<pre>@RunWith(Seasar2.class)
+public class HogeTest {
+    ・・・
+}</pre>
+<h2><a name="createMock">モックの作成</a></h2>
+<h3><a name="annotationCreate">アノテーションによるモックの作成</a></h3>
+<p>モックを作成するにはテストクラスのフィールドに<code>@EasyMock</code>アノテーションを指定します．</p>
+<pre>public class HogeTest extends S2EasyMockTestCase {
+    @EasyMock
+    private Foo foo;
+    ・・・
+}</pre>
+<p>@EasyMockアノテーションが付けられたフィールドの型からモックが作成され，フィールドに設定されます．</p>
+<h4><a name="mockType">モックの種類を指定する</a></h4>
+<p>モックの種類を指定することもできます．それには<code>@EasyMock</code>アノテーションの<code>value</code>要素で列挙型<code>EasyMockType</code>の定数を指定します．</p>
+<pre>public class HogeTest extends S2EasyMockTestCase {
+    @EasyMock(EasyMockType.STRICT)
+    private Foo foo;
+    ・・・
+}</pre>
+<p>列挙型<code>EasyMockType</code>には以下の定数があります．</p>
+<dl>
+<dt><code>DEFAULT</code>
+<dd>デフォルトモードのモックを作成します．<br>
+デフォルトモードのモックは指定されていないメソッドが呼び出されると例外をスローしますが，メソッドの呼び出し順は無視します．
+<dt><code>STRICT</code>
+<dd>Strictモードのモックを作成します．<br>
+Strictモードのモックは指定されていないメソッドが呼び出されると例外をスローします．指定されたメソッドであっても，指定された通りの順でメソッドが呼び出されないと例外をスローします．
+<dt><code>NICE</code>
+<dd>Niceモードのモックを作成します．Niceモードのモックは指定されていないメソッド呼び出しが行われても例外をスローしません．
+</dl>
+<h4><a name="registerMock">モックをS2コンテナに登録する</a></h4>
+<p><code>S2EasyMockTestCase</code>のサブクラスでは，作成されたモックをS2コンテナに登録することができます．それには@EasyMockアノテーションの<code>register</code>要素で<code>true</code>を指定します．</p>
+<pre>public class HogeTest extends S2EasyMockTestCase {
+    @EasyMock(register=true)
+    private Foo foo;
+   ・・・
+}</pre>
+<p>モックのコンポーネント名はフィールド名となります．</p>
+<p>モックの登録はS2コンテナの初期化前に行われるため，登録されたモックは他のコンポーネントにDIされる対象となります．モックに対するDIは行われません．</p>
+<h3><a name="explicitCreate">明示的にモックを作成する</a></h3>
+<p>JUnit3では，<code>@EasyMock</code>アノテーションを使わず，<code>setUp()</code>メソッドまたは<code>setUpXxx()</code>メソッド (<code>S2EasyMockTestCase</code>のサブクラスのみ) の中で明示的にモックを作成することもできます．それには以下のメソッドを使用します．</p>
+<ul>
+<li><code>T createMock(Class&lt;T&gt;)</code>
+<li><code>T createStrictMock(Class&lt;T&gt;)</code>
+<li><code>T createNiceMock(Class&lt;T&gt;)</code>
+</ul>
+<pre>public class HogeTest extends S2EasyMockTestCase {
+    private Foo foo;
+
+    protected void setUp() throws Exception {
+        super.setUp();
+        foo = createMock(Foo.class);
+    }
+    ・・・
+}</pre>
+<h2><a name="record">モックの振る舞いを記録する</a></h2>
+<p>モックの振る舞いを記録するには，&quot;record&quot;メソッドを使用します．</p>
+<p>&quot;record&quot;メソッドはテストメソッドの接頭辞&quot;test&quot;を&quot;record&quot;にした名前を持つ<code>public</code>なインスタンスメソッドです．</p>
+<pre>public class HogeTest extends S2EasyMockTestCase {
+    public void recordXxx() throws Exception {
+        ・・・
+    }
+
+    public void testXxx() throws Exception {
+        ・・・
+    }
+}</pre>
+<p><code>textXxx()</code>メソッドの実行前に，対応する<code>recordXxx()</code>メソッドが実行されます．テストメソッドが<code>test()</code>の場合は対応する&quot;record&quot;メソッドは実行されません．</p>
+<p>&quot;record&quot;メソッド内ではEasyMockの機能を使用してモックの振る舞いを記録します．</p>
+<pre>    public void recordXxx() throws Exception {
+        expected(foo.someMethod(100)).andReturn(200);
+    }</pre>
+<h2><a name="replay">モックとのインタラクションを再現する</a></h2>
+<p>モックとのインタラクションを再現するには通常のテストメソッドを使用します．</p>
+<p>作成済みのモックは，テストメソッドの実行前に&quot;replay&quot;モードに設定されます．</p>
+<pre>    public void testXxx() throws Exception {
+        assertEquals(200, foo.someMethod(100));
+    }</pre>
+<h2><a name="verify">モックとのインタラクションを検証する</a></h2>
+<p>テストメソッドの実行が正常に終了すると自動的にモックとのインタラクションが検証されます．</p>
+<!-- document end -->
+<!-- don't edit start --></td>
+<td width="14"><img height="14" width="14" src="images/spacer.gif" alt="" /></td>
+</tr>
+<tr>
+<td width="14"><img height="30" width="14" src="images/spacer.gif" alt="" /></td>
+<td width="766"><img height="30" width="592" src="images/spacer.gif" alt="" /></td>
+</tr>
+<tr>
+<td width="14"><img height="14" width="14" src="images/spacer.gif" alt="" /></td>
+<td width="766" class="copyright">Copyright© 2004-2005, The Seasar Foundation and the others. All rights reserved.</td>
+</tr>
+</table>
+</td>
+<td class="backright" align="left" valign="top">&nbsp;</td>
+</tr>
+<tr>
+<td class="backunder" align="left" valign="top" width="780" height="16">&nbsp;</td>
+<td class="backcorner" align="left" valign="top" height="16">&nbsp;</td>
+</tr>
+</table>
+<!-- don't edit end -->
+</body>
+</html>

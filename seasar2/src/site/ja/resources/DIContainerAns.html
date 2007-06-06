@@ -1,0 +1,993 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja" lang="ja">
+<!-- don't edit start -->
+<head>
+<title>Seasar - DI Container with AOP -</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<link href="seasar_b.css" type="text/css" rel="stylesheet" media="screen" />
+<link href="seasar_p.css" type="text/css" rel="stylesheet" media="print" />
+<script src="seasar_b.js" type="text/JavaScript" language="JavaScript">
+</script>
+</head>
+<body onload="preload('ja')">
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="left">
+<tr>
+<td align="left" valign="top" width="780">
+<table width="780" border="0" cellspacing="0" cellpadding="0" class="white">
+<tr>
+<td colspan="7"><img height="5" width="780" src="images/top01_b.gif" alt="" /></td>
+</tr>
+<tr>
+<td width="235"><img height="117" width="235" src="images/top02_b.gif" alt="Seasar" /></td>
+<td colspan="3"><img height="117" width="289" src="images/top03.gif" alt="DI Container with AOP" /></td>
+<td colspan="3"><img height="117" width="256" src="images/spacer.gif" alt="" /></td>
+</tr>
+<tr>
+<td rowspan="2"><img src="images/top04.gif" alt="" height="49" width="235" /></td>
+<td><a href="http://www.seasar.org/index.html"><img src="images/menu01_b_ja.gif" height="30" width="78" border="0" alt="" id="menu01" onmouseover="swap(1)" onmouseout="restore(1)" name="menu01" /></a></td>
+<td><a href="http://www.seasar.org/projects.html"><img src="images/menu02_b_ja.gif" height="30" width="101" border="0" alt="" id="menu02" onmouseover="swap(2)" onmouseout="restore(2)" name="menu02" /></a></td>
+<td><a href="http://www.seasar.org/products.html"><img src="images/menu03_b_ja.gif" height="30" width="110" border="0" alt="" id="menu03" onmouseover="swap(3)" onmouseout="restore(3)" name="menu03" /></a></td>
+<td><a href="http://www.seasar.org/resources.html"><img src="images/menu04_b_ja.gif" height="30" width="113" border="0" alt="" id="menu04" onmouseover="swap(4)" onmouseout="restore(4)" name="menu04" /></a></td>
+<td><img src="images/menu05_b_ja.gif" height="30" width="109" border="0" alt="" id="menu05" onmouseover="swap(5)" onmouseout="restore(5)" name="menu05" /></td>
+<td width="34"><img height="30" width="34" src="images/menu06.gif" alt="" /></td>
+</tr>
+<tr>
+<td colspan="6"><img height="19" width="545" src="images/spacer.gif" alt="" /></td>
+</tr>
+</table>
+<table width="780" border="0" cellspacing="0" cellpadding="0" class="white">
+<tr align="left" valign="top">
+<td width="18"><img height="14" width="18" src="images/spacer.gif" alt="" /></td>
+<td width="744" class="main"><!-- don't edit end -->
+<!-- document start -->
+<ul>
+<li><a href="#S2ContainerDefinition_Ans">S2Containerの定義に関する問題の解説</a></li>
+<li><a href="#S2ContainerCreation_Ans">S2Containerの生成に関する問題の解説</a></li>
+<li><a href="#getComponent_Ans">コンポーネントの取得に関する問題の解説</a></li>
+<li><a href="#ConstructorInjection_Ans">コンストラクタ・インジェクションに関する問題の解説</a></li>
+<li><a href="#SetterInjection_Ans">セッター・インジェクションに関する問題の解説</a></li>
+<li><a href="#MethodInjection_Ans">メソッド・インジェクションに関する問題の解説</a></li>
+<li><a href="#AutoBindingMode_Ans">自動バインディングに関する問題の解説</a></li>
+<li><a href="#S2ContainerInclude_Ans">S2Container定義の分割とインクルードに関する問題の解説</a></li>
+<li><a href="#S2Namespace_Ans">名前空間に関する問題の解説</a></li>
+<li><a href="#InstanceMode_Ans">インスタンス管理に関する問題の解説</a></li>
+<li><a href="#Lifecycle_Ans">ライフサイクルに関する問題の解説</a></li>
+<li><a href="#UseS2Container_Ans">コンポーネントでS2Containerを利用するに関する問題の解説</a></li>
+<li><a href="#S2ContainerServlet_Ans">S2ContainerServletに関する問題の解説</a></li>
+<li><a href="#AppDicon_Ans">app.diconの役割に関する問題の解説</a></li>
+<li><a href="#Meta_Ans">メタデータに関する問題の解説</a></li>
+<li><a href="#OgnlExpr_Ans">OGNL式に関する問題の解説</a></li>
+</ul>
+<h2><a name="S2ContainerExercise_Ans" id="S2ContainerExercise_Ans">DIContainerExerciseの解説</a></h2>
+<h2><a name="S2ContainerDefinition_Ans" id="S2ContainerDefinition_Ans">S2Containerの定義に関する問題の解説</a></h2>
+<h3><a name="Definition" id="Definition">問題1</a></h3>
+<p><b>【解説】</b><br />
+components21.dtdには、次の項目が追加されました。<br />
+&lt;initMethod&gt;タグの子タグに&lt;meta&gt;タグは指定できません。<br />
+<br />
+・&lt;component&gt;タグのinstance属性にrequestを追加<br />
+- 指定することでリクエスト毎に１つのインスタンスを作成します。<br />
+<br />
+・&lt;component&gt;タグのinstance属性にsessionを追加<br />
+- 指定することでセッション毎に１つのインスタンスを作成します。<br />
+<br />
+・&lt;components&gt;、&lt;component&gt;、&lt;arg&gt;、&lt;property&gt;タグの子タグに&lt;meta&gt;タグを追加<br />
+- 指定することで各タグに対応した定義クラスにメタデータを保持させることが可能になります。<br />
+<br /></p>
+<table border="0" cellspacing="3" cellpadding="3">
+<tr>
+<td><b><a href="DIContainerExercise.html#S2ContainerDefinition">&lt;&lt; 問題へ戻る</a></b></td>
+</tr>
+<tr>
+<td><b><a href="DIContainerExercise.html#S2ContainerCreation">次の問題へ&gt;&gt;</a></b></td>
+</tr>
+</table>
+<br />
+<h2><a name="S2ContainerCreation_Ans" id="S2ContainerCreation_Ans">S2Containerの生成に関する問題の解説</a></h2>
+<h3><a name="Creation" id="Creation">問題1</a></h3>
+<p><b>【解説】</b><br />
+S2Containerを生成する場合は以下のメソッドを使用します。<br />
+- org.seasar.framework.container.factory.S2ContainerFactory#create(String path)</p>
+1,2,3はS2ContainerFactoryに存在しないメソッドなので間違いです。<br />
+<br />
+<table border="0" cellspacing="3" cellpadding="3">
+<tr>
+<td><b><a href="DIContainerExercise.html#S2ContainerCreation">&lt;&lt; 問題へ戻る</a></b></td>
+</tr>
+<tr>
+<td><b><a href="DIContainerExercise.html#Creation2">次の問題へ&gt;&gt;</a></b></td>
+</tr>
+</table>
+<br />
+<h3><a name="Creation2" id="Creation2">問題2</a></h3>
+<p><b>【解説】</b><br />
+S2ContainerFactory#create(String path)の引数はCLASSPATHで指定されているディレクトリを ルートとする設定ファイルの絶対パスです。</p>
+2は絶対パスを指定してないので間違いです。<br />
+3は絶対パスの前に"/"が入っているので間違いです。<br />
+4はファイルの拡張子(dicon)がないため間違いです。<br />
+<br />
+<table border="0" cellspacing="3" cellpadding="3">
+<tr>
+<td><b><a href="DIContainerExercise.html#Creation2">&lt;&lt; 問題へ戻る</a></b></td>
+</tr>
+<tr>
+<td><b><a href="DIContainerExercise.html#getComponent">次の問題へ&gt;&gt;</a></b></td>
+</tr>
+</table>
+<br />
+<h2><a name="getComponent_Ans" id="getComponent_Ans">コンポーネントの取得に関する問題の解説</a></h2>
+<h3><a name="Component" id="Component">問題1</a></h3>
+<p><b>【解説】</b><br />
+S2Containerからコンポーネントを取り出すには以下のメソッドを使用します。<br />
+-org.seasar.framework.container.S2Container#getComponent(Object componentKey)<br />
+componentKeyにはコンポーネント名または、コンポーネントのクラスを指定します。</p>
+1は指定したキーに対応するコンポーネント定義を取得するメソッドなので間違いです。<br />
+2,4はS2Containerに存在しないメソッドなので間違いです。<br />
+<br />
+<table border="0" cellspacing="3" cellpadding="3">
+<tr>
+<td><b><a href="DIContainerExercise.html#getComponent">&lt;&lt; 問題へ戻る</a></b></td>
+</tr>
+<tr>
+<td><b><a href="DIContainerExercise.html#Component2">次の問題へ&gt;&gt;</a></b></td>
+</tr>
+</table>
+<br />
+<h3><a name="Component2" id="Component2">問題2</a></h3>
+<p><b>【解説】</b><br />
+S2Container#getComponent(Object componentKey)の引数にコンポーネント名を指定するとS2Containerに登録されているコンポーネントを取得することができます。</p>
+1はコンポーネント名は大文字小文字を区別するので間違いです。<br />
+2,4はコンポーネント名を指定してないので間違いです。<br />
+<br />
+<table border="0" cellspacing="3" cellpadding="3">
+<tr>
+<td><b><a href="DIContainerExercise.html#Component2">&lt;&lt; 問題へ戻る</a></b></td>
+</tr>
+<tr>
+<td><b><a href="DIContainerExercise.html#Component3">次の問題へ&gt;&gt;</a></b></td>
+</tr>
+</table>
+<br />
+<h3><a name="Component3" id="Component3">問題3</a></h3>
+<p><b>【解説】</b><br />
+S2Container#getComponent(Object componentKey)の引数にクラス名を指定するとコンポーネントを取得することができます。</p>
+1,3は引数が文字列なのでコンポーネントとして扱われてしまうので、間違いです。<br />
+4は".class"が抜けているので間違いです。<br />
+<br />
+<table border="0" cellspacing="3" cellpadding="3">
+<tr>
+<td><b><a href="DIContainerExercise.html#Component3">&lt;&lt; 問題へ戻る</a></b></td>
+</tr>
+<tr>
+<td><b><a href="DIContainerExercise.html#Component4">次の問題へ&gt;&gt;</a></b></td>
+</tr>
+</table>
+<br />
+<h3><a name="Component4" id="Component4">問題4</a></h3>
+<p><b>【解説】</b><br />
+コンポーネントが見つからなかったときは、以下の例外が発生します。<br />
+- org.seasar.framework.container.ComponentNotFoundRuntimeException<br />
+<br />
+発生した場合のメッセージは次のようになります。{0}にはコンポーネント名が入ります。<br />
+[ESSR0046]コンポーネント({0})が見つかりません</p>
+1,3はクラス名を指定し、コンポーネントを取得できるので間違いです。<br />
+2はコンポーネント名を指定し、コンポーネントを取得できるので間違いです。<br />
+<br />
+<table border="0" cellspacing="3" cellpadding="3">
+<tr>
+<td><b><a href="DIContainerExercise.html#Component4">&lt;&lt; 問題へ戻る</a></b></td>
+</tr>
+<tr>
+<td><b><a href="DIContainerExercise.html#Component5">次の問題へ&gt;&gt;</a></b></td>
+</tr>
+</table>
+<br />
+<h3><a name="Component5" id="Component5">問題5</a></h3>
+<p><b>【解説】</b><br />
+同じコンポーネントが複数登録されていた場合、コンポーネントを取得しようとすると以下の例外が発生します。<br />
+- org.seasar.framework.container.TooManyRegistrationRuntimeException<br />
+<br />
+発生した場合のメッセージは次のようになります。<br />
+{0}には定義されたインターフェースの完全限定名、 {1}にはコンポーネントクラスの完全限定名が入ります。<br />
+[ESSR0045]{0}に複数のコンポーネント({1})が登録されています<br />
+<br />
+また、コンポーネント毎にname属性が一意になるように定義すると コンポーネントを識別できるのでこの例外を回避することができます。</p>
+2,3は存在しない例外なので間違いです。<br />
+4は定義されたコンポーネントのクラスと実際のコンポーネントのクラスが異なるときの実行時例外なので間違いです。<br />
+<br />
+<table border="0" cellspacing="3" cellpadding="3">
+<tr>
+<td><b><a href="DIContainerExercise.html#Component5">&lt;&lt; 問題へ戻る</a></b></td>
+</tr>
+<tr>
+<td><b><a href="DIContainerExercise.html#Component6">次の問題へ&gt;&gt;</a></b></td>
+</tr>
+</table>
+<br />
+<h3><a name="Component6" id="Component6">問題6</a></h3>
+<p><b>【解説】</b><br />
+CyclicReferenceRuntimeExceptionは、コンポーネントの実装クラスまたは、実装クラスのインターフェースをコンストラクタの引数に設定し、コンストラクタインジェクションを行うときに発生するRuntimeExceptionです。<br />
+発生した場合のメッセージは次のようになります。{0}には実装クラスの完全限定名が入ります。<br />
+[ESSR0047]{0}で循環参照が発生しました<br />
+<br />
+&lt;components&gt;<br />
+&nbsp;&nbsp;&lt;component name="a" class="aaa.bbb.Ccc"/&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;arg&gt;b&lt;/arg&gt;<br />
+&nbsp;&nbsp;&lt;/component&gt;<br />
+&nbsp;&nbsp;&lt;component name="b" class="aaa.bbb.Ccc"&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;arg&gt;a&lt;/arg&gt;<br />
+&nbsp;&nbsp;&lt;/component&gt;<br />
+&lt;/components&gt;<br />
+<br />
+上記のようにaコンポーネントがbコンポーネントを参照し、bコンポーネントがaコンポーネントを参照するような場合でも循環参照は発生します。<br />
+なお、セッターメソッドの引数にコンポーネントの実装クラス、実装クラスのインターフェースを設定し、 セッターインジェクションを行った場合は循環参照は発生しません。</p>
+2はコンポーネントが見つからないときに発生する例外なので間違いです。<br />
+3は同じコンポーネントが複数登録されていた場合、コンポーネントを取得しようとすると発生する例外なので間違いです。<br />
+4は存在しない例外なので間違いです。<br />
+<br />
+<table border="0" cellspacing="3" cellpadding="3">
+<tr>
+<td><b><a href="DIContainerExercise.html#Component6">&lt;&lt; 問題へ戻る</a></b></td>
+</tr>
+<tr>
+<td><b><a href="DIContainerExercise.html#Component7">次の問題へ&gt;&gt;</a></b></td>
+</tr>
+</table>
+<br />
+<h3><a name="Component7" id="Component7">問題7</a></h3>
+<p><b>【解説】</b><br />
+IllegalMethodRuntimeExceptionは、コンポーネントのメソッドの引数の設定に失敗した場合に発生するRuntimeExceptionです。 発生した場合のメッセージは次のようになります。{0}にはコンポーネントのクラス名、{1}にはメソッド名、{2}にはIllegalMethodRuntimeExceptionにマッピングされたExceptionの詳細が入ります。<br />
+[ESSR0060]クラス({0])のメソッド({1})の設定に失敗しました。理由は{2}</p>
+1はセッターインジェクションに変更してもエラーは発生するので間違いです。<br />
+なお、変更した場合は、org.seasar.framework.beans.IllegalPropertyRuntimeExceptionが発生します。<br />
+3はdiconファイルを修正することで正しく実行されるので間違いです。<br />
+4はエラーは発生するので間違いです。<br />
+<br />
+<table border="0" cellspacing="3" cellpadding="3">
+<tr>
+<td><b><a href="DIContainerExercise.html#Component7">&lt;&lt; 問題へ戻る</a></b></td>
+</tr>
+<tr>
+<td><b><a href="DIContainerExercise.html#Component8">次の問題へ&gt;&gt;</a></b></td>
+</tr>
+</table>
+<br />
+<h3><a name="Component8" id="Component8">問題8</a></h3>
+<p><b>【解説】</b><br />
+ContainerNotRegisteredRuntimeExceptionは、コンテナが見つからない場合に発生するRuntimeExceptionです。<br />
+発生した場合のメッセージは次のようになります。{0}には、指定したパス名が入ります。<br />
+[ESSR0075]({0})のコンテナはまだ登録されていません</p>
+2はS2Containerもコンポーネント登録されていますが、この場合は発生しないので間違いです。<br />
+3は存在しないRuntimeExceptionなので間違いです。<br />
+4はnullを返すことはないので間違いです。<br />
+<br />
+<table border="0" cellspacing="3" cellpadding="3">
+<tr>
+<td><b><a href="DIContainerExercise.html#Component8">&lt;&lt; 問題へ戻る</a></b></td>
+</tr>
+<tr>
+<td><b><a href="DIContainerExercise.html#Component9">次の問題へ&gt;&gt;</a></b></td>
+</tr>
+</table>
+<br />
+<h3><a name="Component9" id="Component9">問題9</a></h3>
+<p><b>【解説】</b><br />
+ExtensionNotFoundRuntimeExceptionは、パスを指定する際に拡張子を指定しない場合に発生するRuntimeExceptionです。<br />
+発生した場合のメッセージは次のようになります。{0}には、指定したパス名が入ります。<br />
+[ESSR0074]{0}に拡張子が見つかりません</p>
+1は正しくS2Containerが生成されるので間違いです。<br />
+2は違う拡張子を指定した場合は、org.seasar.framework.util.ResourceNotFoundRuntimeExceptionが発生するので間違いです。<br />
+4はフルパスを指定せずにファイル名のみ指定した場合は、org.seasar.framework.util.ResourceNotFoundRuntimeExceptionが発生するので間違いです。<br />
+<br />
+<table border="0" cellspacing="3" cellpadding="3">
+<tr>
+<td><b><a href="DIContainerExercise.html#Component9">&lt;&lt; 問題へ戻る</a></b></td>
+</tr>
+<tr>
+<td><b><a href="DIContainerExercise.html#ConstructorInjection">次の問題へ&gt;&gt;</a></b></td>
+</tr>
+</table>
+<br />
+<h2><a name="ConstructorInjection_Ans" id="ConstructorInjection_Ans">コンストラクタ・インジェクションに関する問題の解説</a></h2>
+<h3><a name="Constructor" id="Constructor">問題1</a></h3>
+<p><b>【解説】</b><br />
+コンストラクタ・インジェクションでコンストラクタの引数に値を設定する場合は、 &lt;component&gt;タグの子タグに&lt;arg&gt;タグを使用します。<br />
+S2Containerに他のコンポーネントが登録されている場合は、&lt;arg&gt;コンポーネント名&lt;/arg&gt;でも設定することができます。</p>
+2は文字列はダブルクォーテーション(")が必要なので間違いです。<br />
+3は&lt;component&gt;タグの子タグに&lt;args&gt;タグはないので間違いです。<br />
+4は2,3と同じなので間違いです。<br />
+<br />
+<table border="0" cellspacing="3" cellpadding="3">
+<tr>
+<td><b><a href="DIContainerExercise.html#ConstructorInjection">&lt;&lt; 問題へ戻る</a></b></td>
+</tr>
+<tr>
+<td><b><a href="DIContainerExercise.html#SetterInjection">次の問題へ&gt;&gt;</a></b></td>
+</tr>
+</table>
+<br />
+<h2><a name="SetterInjection_Ans" id="SetterInjection_Ans">セッター・インジェクションに関する問題の解説</a></h2>
+<h3><a name="Setter" id="Setter">問題1</a></h3>
+<p><b>【解説】</b><br />
+セッター・インジェクションでセッター・メソッドに値を設定する場合は、&lt;property&gt;タグを 使用し、name属性でプロパティ名を指定する必要があります。</p>
+1は&lt;property&gt;タグのname属性が記述されていないので間違いです。<br />
+3は&lt;arg&gt;タグにname属性はないので間違いです。<br />
+4はS2Containerの定義タグに&lt;message&gt;タグはないので間違いです。<br />
+<br />
+<table border="0" cellspacing="3" cellpadding="3">
+<tr>
+<td><b><a href="DIContainerExercise.html#SetterInjection">&lt;&lt; 問題へ戻る</a></b></td>
+</tr>
+<tr>
+<td><b><a href="DIContainerExercise.html#MethodInjection">次の問題へ&gt;&gt;</a></b></td>
+</tr>
+</table>
+<br />
+<h2><a name="MethodInjection_Ans" id="MethodInjection_Ans">メソッド・インジェクションに関する問題の解説</a></h2>
+<h3><a name="Method" id="Method">問題1</a></h3>
+<p><b>【解説】</b><br />
+メソッド・インジェクションを用いて、任意のメソッドに値を設定する場合は以下のように記述し、 &lt;initMethod&gt;タグのname属性でメソッド名を指定します。<br />
+<br />
+&lt;initMethod name="メソッド名"&gt;<br />
+&nbsp;&nbsp;&lt;arg&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;...<br />
+&nbsp;&nbsp;&lt;/arg&gt;<br />
+&lt;/initMethod&gt;<br />
+<br />
+また、name属性を省略して、ボディで、OGNL式を使うこともできます。<br />
+その場合、&lt;arg&gt;タグは必要ありません。#selfはコンポーネント自身を表します。<br />
+この問題の答えを#selfを使ったものに書き直すと以下のようになります。<br />
+<br />
+&lt;initMethod&gt;<br />
+&nbsp;&nbsp;#self.setTime(0)<br />
+&lt;/initMethod&gt;</p>
+1は&lt;property&gt;タグはセッター・インジェクションで使用するので間違いです。<br />
+2は&lt;arg&gt;タグはコンストラクタ・インジェクションで使用するので間違いです。<br />
+3は&lt;arg&gt;タグが記述されてないので間違いです。<br />
+<br />
+<table border="0" cellspacing="3" cellpadding="3">
+<tr>
+<td><b><a href="DIContainerExercise.html#MethodInjection">&lt;&lt; 問題へ戻る</a></b></td>
+</tr>
+<tr>
+<td><b><a href="DIContainerExercise.html#AutoBindingMode">次の問題へ&gt;&gt;</a></b></td>
+</tr>
+</table>
+<br />
+<h2><a name="AutoBindingMode_Ans" id="AutoBindingMode_Ans">自動バインディングに関する問題の解説</a></h2>
+<h3><a name="Auto" id="Auto">問題1</a></h3>
+<p><b>【解説】</b><br />
+&lt;component&gt;タグのautoBinding属性を省略した場合、autoBinding属性にはautoが設定されます。</p>
+<table border="0" cellspacing="3" cellpadding="3">
+<tr>
+<td><b><a href="DIContainerExercise.html#AutoBindingMode">&lt;&lt; 問題へ戻る</a></b></td>
+</tr>
+<tr>
+<td><b><a href="DIContainerExercise.html#Auto2">次の問題へ&gt;&gt;</a></b></td>
+</tr>
+</table>
+<br />
+<h3><a name="Auto2" id="Auto2">問題2</a></h3>
+<p><b>【解説】</b><br />
+自動バインディングをできないように設定するには、&lt;component&gt;タグのautoBinding属性にnoneを指定します。</p>
+1,3,4は自動バインディングできるので間違いです。<br />
+<br />
+<table border="0" cellspacing="3" cellpadding="3">
+<tr>
+<td><b><a href="DIContainerExercise.html#Auto2">&lt;&lt; 問題へ戻る</a></b></td>
+</tr>
+<tr>
+<td><b><a href="DIContainerExercise.html#Auto3">次の問題へ&gt;&gt;</a></b></td>
+</tr>
+</table>
+<br />
+<h3><a name="Auto3" id="Auto3">問題3</a></h3>
+<p><b>【解説】</b><br />
+自動バインディングするには、&lt;component&gt;タグのautoBinding属性を指定します。<br />
+autoBinding属性を省略するとautoが自動的に設定されます。</p>
+2はautoBinding属性にnoneを指定すると、自動バインディングできないので間違いです。<br />
+3は型がインターフェースのプロパティを自動的にバインドしたいときに指定するので間違いです。<br />
+4は&lt;component&gt;タグのautoBinding属性にMessageImplというのはないので間違いです。<br />
+<br />
+<table border="0" cellspacing="3" cellpadding="3">
+<tr>
+<td><b><a href="DIContainerExercise.html#Auto3">&lt;&lt; 問題へ戻る</a></b></td>
+</tr>
+<tr>
+<td><b><a href="DIContainerExercise.html#Auto4">次の問題へ&gt;&gt;</a></b></td>
+</tr>
+</table>
+<br />
+<h3><a name="Auto4" id="Auto4">問題4</a></h3>
+<p><b>【解説】</b><br />
+デフォルトのコンストラクタがない場合、コンストラクタに自動バインディングするには、 コンストラクタの引数の値が全てインタフェースである必要があります。</p>
+1,3,4は実装クラスまたは抽象クラスなので間違いです。<br />
+<br />
+<table border="0" cellspacing="3" cellpadding="3">
+<tr>
+<td><b><a href="DIContainerExercise.html#Auto4">&lt;&lt; 問題へ戻る</a></b></td>
+</tr>
+<tr>
+<td><b><a href="DIContainerExercise.html#Auto5">次の問題へ&gt;&gt;</a></b></td>
+</tr>
+</table>
+<br />
+<h3><a name="Auto5" id="Auto5">問題5</a></h3>
+<p><b>【解説】</b><br />
+引数のないデフォルトコンストラクタが定義されている場合は デフォルトのコンストラクタが使用されます。</p>
+1,2はデフォルトコンストラクタが定義されているので間違いです。<br />
+4はデフォルトのコンストラクタが呼ばれるので間違いです。<br />
+<br />
+<table border="0" cellspacing="3" cellpadding="3">
+<tr>
+<td><b><a href="DIContainerExercise.html#Auto5">&lt;&lt; 問題へ戻る</a></b></td>
+</tr>
+<tr>
+<td><b><a href="DIContainerExercise.html#Auto6">次の問題へ&gt;&gt;</a></b></td>
+</tr>
+</table>
+<br />
+<h3><a name="Auto6" id="Auto6">問題6</a></h3>
+<p><b>【解説】</b><br />
+デフォルトのコンストラクタがない場合、コンストラクタの引数の数が1以上で、引数の型がすべてインターフェースの コンストラクタで最も引数の数が多いものを使います。</p>
+1は定義されているコンストラクタの中で一番引数の数が少ないので間違いです。<br />
+2はコンストラクタの引数の中にインターフェースでないものが混ざっているので間違いです。<br />
+3はprivateで不可視になっているので間違いです。<br />
+<br />
+<table border="0" cellspacing="3" cellpadding="3">
+<tr>
+<td><b><a href="DIContainerExercise.html#Auto6">&lt;&lt; 問題へ戻る</a></b></td>
+</tr>
+<tr>
+<td><b><a href="DIContainerExercise.html#Auto7">次の問題へ&gt;&gt;</a></b></td>
+</tr>
+</table>
+<br />
+<h3><a name="Auto7" id="Auto7">問題7</a></h3>
+<p><b>【解説】</b><br />
+セッターメソッドはset～という名前になります。</p>
+1,2,4はセッターメソッドの名前がsetから始まり、自動バインディングされるので間違いです。<br />
+<br />
+<table border="0" cellspacing="3" cellpadding="3">
+<tr>
+<td><b><a href="DIContainerExercise.html#Auto7">&lt;&lt; 問題へ戻る</a></b></td>
+</tr>
+<tr>
+<td><b><a href="DIContainerExercise.html#Auto8">次の問題へ&gt;&gt;</a></b></td>
+</tr>
+</table>
+<br />
+<h3><a name="Auto8" id="Auto8">問題8</a></h3>
+<p><b>【解説】</b><br />
+引数がインターフェースのセッターメソッドに自動バインディングします。 この場合、ArrayListがdiconファイルに定義されているので、引数がListのセッターメソッドが呼ばれます。</p>
+1はセッターメソッドのsetのsが大文字になっているので間違いです。<br />
+2,3はセッターメソッドの引数がインターフェースではないので間違いです。<br />
+<br />
+<table border="0" cellspacing="3" cellpadding="3">
+<tr>
+<td><b><a href="DIContainerExercise.html#Auto8">&lt;&lt; 問題へ戻る</a></b></td>
+</tr>
+<tr>
+<td><b><a href="DIContainerExercise.html#Auto9">次の問題へ&gt;&gt;</a></b></td>
+</tr>
+</table>
+<br />
+<h3><a name="Auto9" id="Auto9">問題9</a></h3>
+<p><b>【解説】</b><br />
+引数が一つのセッターメソッドが呼ばれます。</p>
+<table border="0" cellspacing="3" cellpadding="3">
+<tr>
+<td><b><a href="DIContainerExercise.html#Auto9">&lt;&lt; 問題へ戻る</a></b></td>
+</tr>
+<tr>
+<td><b><a href="DIContainerExercise.html#Auto10">次の問題へ&gt;&gt;</a></b></td>
+</tr>
+</table>
+<br />
+<h3><a name="Auto10" id="Auto10">問題10</a></h3>
+<p><b>【解説】</b><br />
+&lt;component&gt;タグのautoBinding属性に"auto"を指定するとコンストラクタとセッターメソッドに自動バインディングすることができます。 また、autoBinding属性に"constructor"を指定するとコンストラクタにのみ自動バインディングされ、"property"を指定するとセッターメソッドに自動バインディングされます。</p>
+<table border="0" cellspacing="3" cellpadding="3">
+<tr>
+<td><b><a href="DIContainerExercise.html#Auto10">&lt;&lt; 問題へ戻る</a></b></td>
+</tr>
+<tr>
+<td><b><a href="DIContainerExercise.html#S2ContainerInclude">次の問題へ&gt;&gt;</a></b></td>
+</tr>
+</table>
+<br />
+<h2><a name="S2ContainerInclude_Ans" id="S2ContainerInclude_Ans">S2Container定義の分割とインクルードに関する問題の解説</a></h2>
+<h3><a name="Include" id="Include">問題1</a></h3>
+<p><b>【解説】</b><br />
+コンポーネントの検索は、まず、自分自身のコンポーネントを検索し、 次にincludeされているコンポーネントを登録している順に検索します。 最初にコンポーネントが見つかった時点でそのコンポーネントを返します。</p>
+<table border="0" cellspacing="3" cellpadding="3">
+<tr>
+<td><b><a href="DIContainerExercise.html#S2ContainerInclude">&lt;&lt; 問題へ戻る</a></b></td>
+</tr>
+<tr>
+<td><b><a href="DIContainerExercise.html#Include2">次の問題へ&gt;&gt;</a></b></td>
+</tr>
+</table>
+<br />
+<h3><a name="Include2" id="Include2">問題2</a></h3>
+<p><b>【解説】</b><br />
+S2Containerはインクルード先のコンポーネントを自動インジェクションすることができ、 &lt;include&gt;タグで先に登録したほうのコンポーネントの値が設定されます。</p>
+<table border="0" cellspacing="3" cellpadding="3">
+<tr>
+<td><b><a href="DIContainerExercise.html#Include2">&lt;&lt; 問題へ戻る</a></b></td>
+</tr>
+<tr>
+<td><b><a href="DIContainerExercise.html#Include3">次の問題へ&gt;&gt;</a></b></td>
+</tr>
+</table>
+<br />
+<h3><a name="Include3" id="Include3">問題3</a></h3>
+<p><b>【解説】</b><br />
+直接コンポーネント名がbbbというコンポーネントを取得しているので、そのままbbbのコンポーネントにセットされている "Hello Bbb!"が表示されます。</p>
+<table border="0" cellspacing="3" cellpadding="3">
+<tr>
+<td><b><a href="DIContainerExercise.html#Include3">&lt;&lt; 問題へ戻る</a></b></td>
+</tr>
+<tr>
+<td><b><a href="DIContainerExercise.html#S2Namespace">次の問題へ&gt;&gt;</a></b></td>
+</tr>
+</table>
+<br />
+<h2><a name="S2Namespace_Ans" id="S2Namespace_Ans">名前空間に関する問題の解説</a></h2>
+<h3><a name="Namespace" id="Namespace">問題1</a></h3>
+<p><b>【解説】</b><br />
+他のS2Container定義のコンポーネントを参照する場合は、 名前空間をコンポーネント名の頭につけます。</p>
+1,3はroot.diconに定義されているコンポーネント名がbbbのコンポーネントを参照するので間違いです。<br />
+4は文字列"child.bbb"がセットされるので間違いです。<br />
+<br />
+<table border="0" cellspacing="3" cellpadding="3">
+<tr>
+<td><b><a href="DIContainerExercise.html#S2Namespace">&lt;&lt; 問題へ戻る</a></b></td>
+</tr>
+<tr>
+<td><b><a href="DIContainerExercise.html#InstanceMode">次の問題へ&gt;&gt;</a></b></td>
+</tr>
+</table>
+<br />
+<h2><a name="InstanceMode_Ans" id="InstanceMode_Ans">インスタンス管理に関する問題の解説</a></h2>
+<h3><a name="Instance" id="Instance">問題1</a></h3>
+<p><b>【解説】</b><br />
+&lt;component&gt;タグのinstance属性を省略した場合、singletonが設定されます。</p>
+<table border="0" cellspacing="3" cellpadding="3">
+<tr>
+<td><b><a href="DIContainerExercise.html#InstanceMode">&lt;&lt; 問題へ戻る</a></b></td>
+</tr>
+<tr>
+<td><b><a href="DIContainerExercise.html#Instance2">次の問題へ&gt;&gt;</a></b></td>
+</tr>
+</table>
+<br />
+<h3><a name="Instance2" id="Instance2">問題2</a></h3>
+<p><b>【解説】</b><br />
+&lt;component&gt;タグのinstance属性を省略すると、singletonがデフォルトで設定されるため、そのコンポーネントはシングルトンになり、同じインスタンスを返します。</p>
+1,3,4はMessageMainクラスで、messageプロパティを"Hello World!"に変更しているので間違いです。<br />
+<br />
+<table border="0" cellspacing="3" cellpadding="3">
+<tr>
+<td><b><a href="DIContainerExercise.html#Instance2">&lt;&lt; 問題へ戻る</a></b></td>
+</tr>
+<tr>
+<td><b><a href="DIContainerExercise.html#Instance3">次の問題へ&gt;&gt;</a></b></td>
+</tr>
+</table>
+<br />
+<h3><a name="Instance3" id="Instance3">問題3</a></h3>
+<p><b>【解説】</b><br />
+セッション毎に1つのインスタンスを作成したい場合、instance属性にsessionを指定します。 また、name属性に指定した名前で、コンポーネントがセッションに格納されます。</p>
+1はS2Container#getComponent()を何度呼び出しても同じインスタンスを返したい場合に指定するので間違いです。<br />
+3はS2Container#getComponent()を呼び出すたびに、新たに作成されたコンポーネントを返して欲しい場合に指定するので間違いです。<br />
+4は&lt;component&gt;タグのinstance属性に存在しないので間違いです。<br />
+<br />
+<table border="0" cellspacing="3" cellpadding="3">
+<tr>
+<td><b><a href="DIContainerExercise.html#Instance3">&lt;&lt; 問題へ戻る</a></b></td>
+</tr>
+<tr>
+<td><b><a href="DIContainerExercise.html#Instance4">次の問題へ&gt;&gt;</a></b></td>
+</tr>
+</table>
+<br />
+<h3><a name="Instance4" id="Instance4">問題4</a></h3>
+<p><b>【解説】</b><br />
+&lt;component&gt;タグのinstance属性にrequestを指定すると、リクエスト毎に1つのインスタンスが作成されます。 また、name属性に指定した名前で、コンポーネントがリクエストに格納されます。</p>
+1はセッション毎に1つのインスタンスを作成したい場合に指定するので間違いです。<br />
+3,4は&lt;component&gt;タグのinstance属性に存在しないので間違いです。<br />
+<br />
+<table border="0" cellspacing="3" cellpadding="3">
+<tr>
+<td><b><a href="DIContainerExercise.html#Instance4">&lt;&lt; 問題へ戻る</a></b></td>
+</tr>
+<tr>
+<td><b><a href="DIContainerExercise.html#Instance5">次の問題へ&gt;&gt;</a></b></td>
+</tr>
+</table>
+<br />
+<h3><a name="Instance5" id="Instance5">問題5</a></h3>
+<p><b>【解説】</b><br />
+S2Container外のコンポーネントに対してDependency Injectionする場合、以下のメソッドを使用します。<br />
+<br />
+- org.seasar.framework.container.S2Container#injectDependency(Object outerComponent)<br />
+- org.seasar.framework.container.S2Container#injectDependency(Object outerComponent, Class componentClass)<br />
+- org.seasar.framework.container.S2Container#injectDependency(Object outerComponent, String componentName)</p>
+2はクラスをコンポーネント定義として登録するメソッドなので間違いです。<br />
+3はS2Container#getComponent()はコンポーネントを取得するメソッドなので間違いです。<br />
+4はS2Containerに存在しないメソッドなので間違いです。<br />
+<br />
+<table border="0" cellspacing="3" cellpadding="3">
+<tr>
+<td><b><a href="DIContainerExercise.html#Instance5">&lt;&lt; 問題へ戻る</a></b></td>
+</tr>
+<tr>
+<td><b><a href="DIContainerExercise.html#Instance6">次の問題へ&gt;&gt;</a></b></td>
+</tr>
+</table>
+<br />
+<h3><a name="Instance6" id="Instance6">問題6</a></h3>
+<p><b>【解説】</b><br />
+S2Container外のコンポーネントに対してDependency Injectionする場合、コンポーネント名だけでなく コンポーネントクラス名でも指定することができます。</p>
+2,3,4はHashMapの値が設定されるので間違いです。<br />
+<br />
+<table border="0" cellspacing="3" cellpadding="3">
+<tr>
+<td><b><a href="DIContainerExercise.html#Instance6">&lt;&lt; 問題へ戻る</a></b></td>
+</tr>
+<tr>
+<td><b><a href="DIContainerExercise.html#Instance7">次の問題へ&gt;&gt;</a></b></td>
+</tr>
+</table>
+<br />
+<h3><a name="Instance7" id="Instance7">問題7</a></h3>
+<p><b>【解説】</b><br />
+ClassUnmatchRuntimeExceptionは、異なるクラスを使用してDependencyInjectionを行った場合に発生するRuntimeExceptionです。 発生した場合のメッセージは次のようになります。{0}には定義されたクラスの完全限定名、{1}には実際のクラスの完全限定名が入ります。<br />
+[ESSR0069]定義されたクラス({0})に実際のクラス({1])を適用できません</p>
+2はコンポーネントが見つからない場合に発生するRuntimeExceptionなので間違いです。<br />
+ただし、injectDependency(hashMap)のようにコンポーネント名を省略した場合は、ComponentNotFoundRuntimeExceptionが発生します。<br />
+3は存在しないRuntimeExceptionなので間違いです。<br />
+4は発生するので間違いです。<br />
+<br />
+<table border="0" cellspacing="3" cellpadding="3">
+<tr>
+<td><b><a href="DIContainerExercise.html#Instance7">&lt;&lt; 問題へ戻る</a></b></td>
+</tr>
+<tr>
+<td><b><a href="DIContainerExercise.html#Lifecycle">次の問題へ&gt;&gt;</a></b></td>
+</tr>
+</table>
+<br />
+<h2><a name="Lifecycle_Ans" id="Lifecycle_Ans">ライフサイクルに関する問題の解説</a></h2>
+<h3><a name="Life" id="Life">問題1</a></h3>
+<p><b>【解説】</b><br />
+S2Container終了時に&lt;destroyMethod&gt;タグで指定したメソッドが呼び出されます。</p>
+2は引数の設定が逆になっているので間違いです。<br />
+3は初期化処理を設定する&lt;initMethod&gt;タグなので間違いです。<br />
+4はメソッド名が"get"になっているので間違いです。<br />
+<br />
+<table border="0" cellspacing="3" cellpadding="3">
+<tr>
+<td><b><a href="DIContainerExercise.html#Lifecycle">&lt;&lt; 問題へ戻る</a></b></td>
+</tr>
+<tr>
+<td><b><a href="DIContainerExercise.html#Life2">次の問題へ&gt;&gt;</a></b></td>
+</tr>
+</table>
+<br />
+<h3><a name="Life2" id="Life2">問題2</a></h3>
+<p><b>【解説】</b><br />
+&lt;initMethod&gt;タグはコンポーネントがコンテナに登録した順番に実行され、 &lt;destroyMethod&gt;タグはその逆順に呼び出されます。</p>
+1は終了処理は登録した順番の逆順になるので間違いです。<br />
+3はlistコンポーネントに&lt;destroyMethod&gt;タグが定義され、終了処理は行われるので間違いです。<br />
+4は&lt;component&gt;タグのinstance属性が"singleton"の場合、終了処理は行われるので間違いです。<br />
+<br />
+<table border="0" cellspacing="3" cellpadding="3">
+<tr>
+<td><b><a href="DIContainerExercise.html#Life2">&lt;&lt; 問題へ戻る</a></b></td>
+</tr>
+<tr>
+<td><b><a href="DIContainerExercise.html#Life3">次の問題へ&gt;&gt;</a></b></td>
+</tr>
+</table>
+<br />
+<h3><a name="Life3" id="Life3">問題3</a></h3>
+<p><b>【解説】</b><br />
+&lt;component&gt;タグのinstance属性がsingleton以外の場合、destroyMethodを指定しても無視されます。</p>
+<table border="0" cellspacing="3" cellpadding="3">
+<tr>
+<td><b><a href="DIContainerExercise.html#Life3">&lt;&lt; 問題へ戻る</a></b></td>
+</tr>
+<tr>
+<td><b><a href="DIContainerExercise.html#UseS2Container">次の問題へ&gt;&gt;</a></b></td>
+</tr>
+</table>
+<br />
+<h2><a name="UseS2Container_Ans" id="UseS2Container_Ans">コンポーネントでS2Containerを利用するに関する問題の解説</a></h2>
+<h3><a name="S2Use" id="S2Use">問題1</a></h3>
+<p><b>【解説】</b><br />
+S2Containerはcontainerという名前で登録されています。</p>
+<table border="0" cellspacing="3" cellpadding="3">
+<tr>
+<td><b><a href="DIContainerExercise.html#UseS2Container">&lt;&lt; 問題へ戻る</a></b></td>
+</tr>
+<tr>
+<td><b><a href="DIContainerExercise.html#S2Use2">次の問題へ&gt;&gt;</a></b></td>
+</tr>
+</table>
+<br />
+<h3><a name="S2Use2" id="S2Use2">問題2</a></h3>
+<p><b>【解説】</b><br />
+S2Containerはcontainerと言う名前で登録されているので、自動インジェクションする場合は書く必要はありません。</p>
+<table border="0" cellspacing="3" cellpadding="3">
+<tr>
+<td><b><a href="DIContainerExercise.html#S2Use2">&lt;&lt; 問題へ戻る</a></b></td>
+</tr>
+<tr>
+<td><b><a href="DIContainerExercise.html#S2ContainerServlet">次の問題へ&gt;&gt;</a></b></td>
+</tr>
+</table>
+<br />
+<h2><a name="S2ContainerServlet_Ans" id="S2ContainerServlet_Ans">S2ContainerServletに関する問題の解説</a></h2>
+<h3><a name="S2Servlet" id="S2Servlet">問題1</a></h3>
+<p><b>【解説】</b><br />
+SingletonS2ContainerFactory#initで生成したS2Containerを取得するにはSingletonS2ContainerFactory#getContainer()を使用します。</p>
+<table border="0" cellspacing="3" cellpadding="3">
+<tr>
+<td><b><a href="DIContainerExercise.html#S2ContainerServlet">&lt;&lt; 問題へ戻る</a></b></td>
+</tr>
+<tr>
+<td><b><a href="DIContainerExercise.html#S2Servlet2">次の問題へ&gt;&gt;</a></b></td>
+</tr>
+</table>
+<br />
+<h3><a name="S2Servlet2" id="S2Servlet2">問題2</a></h3>
+<p><b>【解説】</b><br />
+S2ContainerServletは、他のサーブレットよりもはやく開始されるように、web.xmlの&lt;load-on-startup&gt;タグを調整します。</p>
+<table border="0" cellspacing="3" cellpadding="3">
+<tr>
+<td><b><a href="DIContainerExercise.html#S2Servlet2">&lt;&lt; 問題へ戻る</a></b></td>
+</tr>
+<tr>
+<td><b><a href="DIContainerExercise.html#S2Servlet3">次の問題へ&gt;&gt;</a></b></td>
+</tr>
+</table>
+<br />
+<h3><a name="S2Servlet3" id="S2Servlet3">問題3</a></h3>
+<p><b>【解説】</b><br />
+S2Containerのライフサイクルは、S2ContainerServletと連動するため、web.xmlに記述したdebugパラメータをtrueにして以下のURLにアクセスすると稼動中にS2Containerを再起動することできます。<br />
+http://localhost:8080/xxx/s2servlet?command=restart</p>
+<table border="0" cellspacing="3" cellpadding="3">
+<tr>
+<td><b><a href="DIContainerExercise.html#S2Servlet3">&lt;&lt; 問題へ戻る</a></b></td>
+</tr>
+<tr>
+<td><b><a href="DIContainerExercise.html#AppDicon">次の問題へ&gt;&gt;</a></b></td>
+</tr>
+</table>
+<br />
+<h2><a name="AppDicon_Ans" id="AppDicon_Ans">app.diconの役割に関する問題の解説</a></h2>
+<h3><a name="App" id="App">問題1</a></h3>
+<p><b>【解説】</b><br />
+すべてのS2Container定義のルートになる定義ファイルは、慣例でapp.diconという名前にします。 app.diconにはincludeの定義を記述し、コンポーネントの定義はしないようにしてください。 また、app.diconは通常WEB-INF/classes以下に配置します。</p>
+<table border="0" cellspacing="3" cellpadding="3">
+<tr>
+<td><b><a href="DIContainerExercise.html#AppDicon">&lt;&lt; 問題へ戻る</a></b></td>
+</tr>
+<tr>
+<td><b><a href="DIContainerExercise.html#Meta">次の問題へ&gt;&gt;</a></b></td>
+</tr>
+</table>
+<br />
+<h2><a name="Meta_Ans" id="Meta_Ans">メタデータに関する問題の解説</a></h2>
+<h3><a name="MetaData" id="MetaData">問題1</a></h3>
+<p><b>【解説】</b><br />
+&lt;components&gt;、&lt;component&gt;、&lt;arg&gt;、&lt;property&gt;タグにメタデータを指定することができます。 定義したメタデータの情報はS2Container、ComponentDef、ArgDef、PropertyDefで定義されている 以下のメソッドで取得することが出来ます。</p>
+・public int getMetaDefSize()<br />
+・public MetaDef getMetaDef(int index)<br />
+・public MetaDef getMetaDef(String name)<br />
+・public MetaDef[] getMetaDefs(String name)<br />
+<br />
+<table border="0" cellspacing="3" cellpadding="3">
+<tr>
+<td><b><a href="DIContainerExercise.html#Meta">&lt;&lt; 問題へ戻る</a></b></td>
+</tr>
+<tr>
+<td><b><a href="DIContainerExercise.html#Metadata2">次の問題へ&gt;&gt;</a></b></td>
+</tr>
+</table>
+<br />
+<h3><a name="MetaData2" id="MetaData2">問題2</a></h3>
+<p><b>【解説】</b><br />
+&lt;meta&gt;タグの値をS2Container#getMetaDef()で取得する場合、&lt;meta&gt;タグのname属性を引数に指定することで取得することができます。</p>
+<table border="0" cellspacing="3" cellpadding="3">
+<tr>
+<td><b><a href="DIContainerExercise.html#Metadata2">&lt;&lt; 問題へ戻る</a></b></td>
+</tr>
+<tr>
+<td><b><a href="DIContainerExercise.html#Metadata3">次の問題へ&gt;&gt;</a></b></td>
+</tr>
+</table>
+<br />
+<h3><a name="MetaData3" id="MetaData3">問題3</a></h3>
+<p><b>【解説】</b><br />
+S2Container#getmetaDefs(String name)を用いると配列でメタデータの値を取得することができます。 &lt;meta&gt;タグのname属性に複数同じ名前がある場合、S2Container#getmetaDefs(String name)の引数に その名前を指定すると、その名前で定義されているメタデータをすべて配列に格納することができます。</p>
+<table border="0" cellspacing="3" cellpadding="3">
+<tr>
+<td><b><a href="DIContainerExercise.html#Metadata3">&lt;&lt; 問題へ戻る</a></b></td>
+</tr>
+<tr>
+<td><b><a href="DIContainerExercise.html#OgnlExpr">次の問題へ&gt;&gt;</a></b></td>
+</tr>
+</table>
+<br />
+<h2><a name="OgnlExpr_Ans" id="OgnlExpr_Ans">OGNL式に関する問題の解説</a></h2>
+<h3><a name="Ognl" id="Ognl">問題1</a></h3>
+<p><b>【解説】</b><br />
+diconファイルで文字列をセットする場合は、"hoge"のように"で囲みます。</p>
+<table border="0" cellspacing="3" cellpadding="3">
+<tr>
+<td><b><a href="DIContainerExercise.html#OgnlExpr">&lt;&lt; 問題へ戻る</a></b></td>
+</tr>
+<tr>
+<td><b><a href="DIContainerExercise.html#Ognl2">次の問題へ&gt;&gt;</a></b></td>
+</tr>
+</table>
+<br />
+<h3><a name="Ognl2" id="Ognl2">問題2</a></h3>
+<p><b>【解説】</b><br />
+diconファイルでcharは、'a'のように'で囲みます。</p>
+<table border="0" cellspacing="3" cellpadding="3">
+<tr>
+<td><b><a href="DIContainerExercise.html#Ognl2">&lt;&lt; 問題へ戻る</a></b></td>
+</tr>
+<tr>
+<td><b><a href="DIContainerExercise.html#Ognl3">次の問題へ&gt;&gt;</a></b></td>
+</tr>
+</table>
+<br />
+<h3><a name="Ognl3" id="Ognl3">問題3</a></h3>
+<p><b>【解説】</b><br />
+diconファイルで論理値は、true,falseのようにそのまま記述します。</p>
+<table border="0" cellspacing="3" cellpadding="3">
+<tr>
+<td><b><a href="DIContainerExercise.html#Ognl3">&lt;&lt; 問題へ戻る</a></b></td>
+</tr>
+<tr>
+<td><b><a href="DIContainerExercise.html#Ognl4">次の問題へ&gt;&gt;</a></b></td>
+</tr>
+</table>
+<br />
+<h3><a name="Ognl4" id="Ognl4">問題4</a></h3>
+<p><b>【解説】</b><br />
+new java.lang.String("foo")のようにクラスの完全限定名で指定してもコンストラクタを呼び出すことができます。</p>
+<table border="0" cellspacing="3" cellpadding="3">
+<tr>
+<td><b><a href="DIContainerExercise.html#Ognl4">&lt;&lt; 問題へ戻る</a></b></td>
+</tr>
+<tr>
+<td><b><a href="DIContainerExercise.html#Ognl5">次の問題へ&gt;&gt;</a></b></td>
+</tr>
+</table>
+<br />
+<h3><a name="Ognl5" id="Ognl5">問題5</a></h3>
+<p><b>【解説】</b><br />
+@java.lang.Math@max(1, 2)のようにしてstaticなメソッドの呼び出した結果を参照することができます。</p>
+<table border="0" cellspacing="3" cellpadding="3">
+<tr>
+<td><b><a href="DIContainerExercise.html#Ognl5">&lt;&lt; 問題へ戻る</a></b></td>
+</tr>
+<tr>
+<td><b><a href="DIContainerExercise.html#Ognl6">次の問題へ&gt;&gt;</a></b></td>
+</tr>
+</table>
+<br />
+<h3><a name="Ognl6" id="Ognl6">問題6</a></h3>
+<p><b>【解説】</b><br />
+OGNL式は文字列で記述した内容(式)をJavaのオブジェクトに変換するためのものです。</p>
+1はクラスを参照するときの正しい記述なので間違いです。<br />
+2は数値の設定の正しい記述なので間違いです。<br />
+4は文字列の設定の正しい記述なので間違いです。<br />
+<br />
+<table border="0" cellspacing="3" cellpadding="3">
+<tr>
+<td><b><a href="DIContainerExercise.html#Ognl6">&lt;&lt; 問題へ戻る</a></b></td>
+</tr>
+<tr>
+<td><b><a href="DIContainerExercise.html#Ognl7">次の問題へ&gt;&gt;</a></b></td>
+</tr>
+</table>
+<br />
+<h3><a name="Ognl7" id="Ognl7">問題7</a></h3>
+<p><b>【解説】</b><br />
+foo.getMessage()のようにコンポーネントのメソッドを呼び出した結果を参照することができます。</p>
+<table border="0" cellspacing="3" cellpadding="3">
+<tr>
+<td><b><a href="DIContainerExercise.html#Ognl7">&lt;&lt; 問題へ戻る</a></b></td>
+</tr>
+<tr>
+<td><b><a href="DIContainerExercise.html#Ognl8">次の問題へ&gt;&gt;</a></b></td>
+</tr>
+</table>
+<br />
+<h3><a name="Ognl8" id="Ognl8">問題8</a></h3>
+<p><b>【解説】</b><br />
+#selfは自分自身のコンポーネントを表します。 使い方は以下のようになります。</p>
+#self.メソッド名(引数1、引数2、引数3...)<br />
+<br />
+<table border="0" cellspacing="3" cellpadding="3">
+<tr>
+<td><b><a href="DIContainerExercise.html#Ognl8">&lt;&lt; 問題へ戻る</a></b></td>
+</tr>
+<tr>
+<td><b><a href="DIContainerExercise.html#Ognl9">次の問題へ&gt;&gt;</a></b></td>
+</tr>
+</table>
+<br />
+<h3><a name="Ognl9" id="Ognl9">問題9</a></h3>
+<p><b>【解説】</b><br />
+#outはSystem.outを表します。</p>
+2は#outだけではコンソールに出力できないので間違いです。<br />
+3,4はognl式で存在しないので間違いです。<br />
+<br />
+<table border="0" cellspacing="3" cellpadding="3">
+<tr>
+<td><b><a href="DIContainerExercise.html#Ognl9">&lt;&lt; 問題へ戻る</a></b></td>
+</tr>
+<tr>
+<td><b><a href="DIContainerExercise.html#Ognl10">次の問題へ&gt;&gt;</a></b></td>
+</tr>
+</table>
+<br />
+<h3><a name="Ognl10" id="Ognl10">問題10</a></h3>
+<p><b>【解説】</b><br />
+#errはSystem.errを表します。</p>
+1は#errだけではエラーメッセージを出力できないので間違いです。<br />
+3,4はognl式で存在しないので間違いです。<br />
+<br />
+<table border="0" cellspacing="3" cellpadding="3">
+<tr>
+<td><b><a href="DIContainerExercise.html#Ognl10">&lt;&lt; 問題へ戻る</a></b></td>
+</tr>
+<tr>
+<td><b><a href="DIContainerExercise.html#Ognl11">次の問題へ&gt;&gt;</a></b></td>
+</tr>
+</table>
+<br />
+<h3><a name="Ognl11" id="Ognl11">問題11</a></h3>
+<p><b>【解説】</b><br />
+#self,#out,#errは&lt;initMethod&gt;タグ内で有効なオブジェクトです。</p>
+4は#systemはognl式で存在しないので間違いです。<br />
+<br />
+<table border="0" cellspacing="3" cellpadding="3">
+<tr>
+<td><b><a href="DIContainerExercise.html#Ognl11">&lt;&lt; 問題へ戻る</a></b></td>
+</tr>
+</table>
+<br />
+<!-- document end -->
+<!-- don't edit start --></td>
+<td width="14"><img height="14" width="14" src="images/spacer.gif" alt="" /></td>
+</tr>
+<tr>
+<td width="14"><img height="30" width="14" src="images/spacer.gif" alt="" /></td>
+<td width="766"><img height="30" width="592" src="images/spacer.gif" alt="" /></td>
+</tr>
+<tr>
+<td width="14"><img height="14" width="14" src="images/spacer.gif" alt="" /></td>
+<td width="766" class="copyright">Copyright© 2004-2005, The Seasar Foundation and the others. All rights reserved.</td>
+</tr>
+</table>
+</td>
+<td class="backright" align="left" valign="top">&nbsp;</td>
+</tr>
+<tr>
+<td class="backunder" align="left" valign="top" width="780" height="16">&nbsp;</td>
+<td class="backcorner" align="left" valign="top" height="16">&nbsp;</td>
+</tr>
+</table>
+<!-- don't edit end -->
+</body>
+</html>

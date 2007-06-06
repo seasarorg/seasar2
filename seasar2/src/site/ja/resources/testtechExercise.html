@@ -1,0 +1,919 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja" lang="ja">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja" lang="ja">
+<!-- don't edit start -->
+<head>
+<title>Seasar - DI Container with AOP -</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<link href="seasar_b.css" type="text/css" rel="stylesheet" media="screen" />
+<link href="seasar_p.css" type="text/css" rel="stylesheet" media="print" />
+<script src="seasar_b.js" type="text/JavaScript" language="JavaScript">
+</script>
+<script src="testtechAns.js" type="text/JavaScript" language="JavaScript">
+</script>
+</head>
+<body onload="preload('ja')">
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="left">
+<tr>
+<td align="left" valign="top" width="780">
+<table width="780" border="0" cellspacing="0" cellpadding="0" class="white">
+<tr>
+<td colspan="7"><img height="5" width="780" src="images/top01_b.gif" alt="" /></td>
+</tr>
+<tr>
+<td><img height="117" width="235" src="images/top02_b.gif" alt="Seasar" /></td>
+<td colspan="3"><img height="117" width="289" src="images/top03.gif" alt="DI Container with AOP" /></td>
+<td colspan="3"><img height="117" width="256" src="images/spacer.gif" alt="" /></td>
+</tr>
+<tr>
+<td rowspan="2"><img src="images/top04.gif" alt="" height="49" width="235" /></td>
+<td><a href="http://www.seasar.org/index.html"><img src="images/menu01_b_ja.gif" height="30" width="78" border="0" alt="" id="menu01" onmouseover="swap(1)" onmouseout="restore(1)" name="menu01" /></a></td>
+<td><a href="http://www.seasar.org/projects.html"><img src="images/menu02_b_ja.gif" height="30" width="101" border="0" alt="" id="menu02" onmouseover="swap(2)" onmouseout="restore(2)" name="menu02" /></a></td>
+<td><a href="http://www.seasar.org/products.html"><img src="images/menu03_b_ja.gif" height="30" width="110" border="0" alt="" id="menu03" onmouseover="swap(3)" onmouseout="restore(3)" name="menu03" /></a></td>
+<td><a href="http://www.seasar.org/resources.html"><img src="images/menu04_b_ja.gif" height="30" width="113" border="0" alt="" id="menu04" onmouseover="swap(4)" onmouseout="restore(4)" name="menu04" /></a></td>
+<td><img src="images/menu05_b_ja.gif" height="30" width="109" border="0" alt="" id="menu05" onmouseover="swap(5)" onmouseout="restore(5)" name="menu05" /></td>
+<td><img height="30" width="34" src="images/menu06.gif" alt="" /></td>
+</tr>
+<tr>
+<td colspan="6"><img height="19" width="545" src="images/spacer.gif" alt="" /></td>
+</tr>
+</table>
+<table width="780" border="0" cellspacing="0" cellpadding="0" class="white">
+<tr align="left" valign="top">
+<td width="14"><img height="14" width="14" src="images/spacer.gif" alt="" /></td>
+<td width="740" class="main"><!-- don't edit end -->
+<!-- document start -->
+<ul>
+<li><a href="#MockCreate">モックを作成するための設定に関する問題</a></li>
+<li><a href="#MockUsed">モックの使用方法に関する問題</a></li>
+<li><a href="#S2UnitCreate">S2Unitの作成方法に関する問題</a></li>
+<li><a href="#AutoS2Container">S2Containerの自動生成に関する問題</a></li>
+<li><a href="#S2Methods">S2Containerに対するregister(),getComponent(),include()に関する問題</a></li>
+<li><a href="#S2include">include時のPATHの省略に関する問題</a></li>
+<li><a href="#S2SetValue">変数の自動セットに関する問題</a></li>
+<li><a href="#S2UnitFunction">setUpXxx(),tearDownXxx()メソッドに関する問題</a></li>
+<li><a href="#S2UnitFunction2">トランザクション制御に関する問題</a></li>
+<li><a href="#S2UnitFunction3">readXls()メソッドに関する問題</a></li>
+<li><a href="#S2UnitFunction4">assertEquals()メソッドに関する問題</a></li>
+<li><a href="#S2UnitFunction5">reload()メソッドに関する問題</a></li>
+<li><a href="#S2UnitFunction6">readXlsWriteDb(),readXlsAllReplaceDb()メソッドに関する問題</a></li>
+<li><a href="#S2ExcelMake">Excelファイルの作成に関する問題</a></li>
+<li><a href="#S2DaoTestCase">S2DaoTestCaseに関する問題</a></li>
+</ul>
+<h2>テスト技法Exercise</h2>
+<p><a href="testtech.html">テスト技法</a>の理解度をチェックします。下記の問題に関して当てはまるものを1つ選んでチェックを入れたら、下の「解答へGO」ボタンをクリックしてください。</p>
+<h3><a name="MockCreate" id="MockCreate">モックを作成するための設定に関する問題</a></h3>
+<p><a name="Mock" id="Mock"><b>【問題1】</b></a><br />
+インターフェースのモックを設定するには、以下のどのInterceptorを使えばいいでしょうか？<br />
+ヒント：<a href="testtech.html#MockMake">モックを作成するための設定</a>を参照してください。</p>
+<form name="myForm" id="myForm">
+<table width="80%" border="0" cellspacing="1" cellpadding="5">
+<tr>
+<td bgcolor="#D1F3F4" width="23"><input type="radio" name="Mock" value="Mock1" /></td>
+<td bgcolor="#D1F3F4" width="474">1) TraceInterceptor</td>
+</tr>
+<tr>
+<td bgcolor="#66FFCC" width="23"><input type="radio" name="Mock" value="Mock2" /></td>
+<td bgcolor="#66FFCC" width="474">2) MockInterceptor</td>
+</tr>
+<tr>
+<td bgcolor="#D1F3F4" width="23"><input type="radio" name="Mock" value="Mock3" /></td>
+<td bgcolor="#D1F3F4" width="474">3) ThrowsInterceptor</td>
+</tr>
+<tr>
+<td bgcolor="#66FFCC" width="23"><input type="radio" name="Mock" value="Mock4" /></td>
+<td bgcolor="#66FFCC" width="474">4) DelegateInterceptor</td>
+</tr>
+</table>
+<br />
+<p><input type="button" name="btnTable" value="解答へGO" onclick="check('Mock','Mock2')" /></p>
+<!-- document end -->
+<p><a name="Mock2" id="Mock2"><b>【問題2】</b></a><br />
+インターフェースのメソッドに戻り値を設定するMockInterceptorのメソッドは以下のどれでしょうか？<br />
+ヒント：<a href="testtech.html#MockMake">モックを作成するための設定</a>を参照してください。</p>
+<table width="80%" border="0" cellspacing="1" cellpadding="5">
+<tr>
+<td bgcolor="#D1F3F4" width="23"><input type="radio" name="Mock2" value="Mock2_1" /></td>
+<td bgcolor="#D1F3F4" width="474">1) setMock(String methodName, Object returnValue)</td>
+</tr>
+<tr>
+<td bgcolor="#66FFCC" width="23"><input type="radio" name="Mock2" value="Mock2_2" /></td>
+<td bgcolor="#66FFCC" width="474">2) isInvoked(String methodName)</td>
+</tr>
+<tr>
+<td bgcolor="#D1F3F4" width="23"><input type="radio" name="Mock2" value="Mock2_3" /></td>
+<td bgcolor="#D1F3F4" width="474">3) getArgs(String methodName)</td>
+</tr>
+<tr>
+<td bgcolor="#66FFCC" width="23"><input type="radio" name="Mock2" value="Mock2_4" /></td>
+<td bgcolor="#66FFCC" width="474">4) setReturnValue(String methodName, Object returnValue)</td>
+</tr>
+</table>
+<br />
+<p><input type="button" name="btnTable" value="解答へGO" onclick="check('Mock2','Mock3')" /></p>
+<p><a name="Mock3" id="Mock3"><b>【問題3】</b></a><br />
+MockInterceptor#isInvoked()は何を判定するメソッドでしょうか？<br />
+ヒント：<a href="testtech.html#MockMake">モックを作成するための設定</a>を参照してください。</p>
+<table width="80%" border="0" cellspacing="1" cellpadding="5">
+<tr>
+<td bgcolor="#D1F3F4" width="23"><input type="radio" name="Mock3" value="Mock3_1" /></td>
+<td bgcolor="#D1F3F4" width="474">1) メソッドに引数が入っているかどうかを判定する。</td>
+</tr>
+<tr>
+<td bgcolor="#66FFCC" width="23"><input type="radio" name="Mock3" value="Mock3_2" /></td>
+<td bgcolor="#66FFCC" width="474">2) メソッドがあるかどうかを判定する。</td>
+</tr>
+<tr>
+<td bgcolor="#D1F3F4" width="23"><input type="radio" name="Mock3" value="Mock3_3" /></td>
+<td bgcolor="#D1F3F4" width="474">3) メソッドが呼ばれたかどうかを判定する。</td>
+</tr>
+<tr>
+<td bgcolor="#66FFCC" width="23"><input type="radio" name="Mock3" value="Mock3_4" /></td>
+<td bgcolor="#66FFCC" width="474">4) メソッドにモックが作成できるかどうかを判定する。</td>
+</tr>
+</table>
+<br />
+<p><input type="button" name="btnTable" value="解答へGO" onclick="check('Mock3','MockUsed')" /></p>
+<!-- document end -->
+<br />
+<h3><a name="MockUsed" id="MockUsed">モックの使用方法に関する問題</a></h3>
+<p><a name="Use" id="Use"><b>【問題1】</b></a><br />
+文中の[1]に入る言葉はどれでしょうか？<br />
+インターフェースのモックを作成するには、インターフェースに対して設定したMockInterceptorを[1]して使用します。<br />
+ヒント：<a href="testtech.html#MockUse">モックの使用方法</a>を参照してください。</p>
+<table width="80%" border="0" cellspacing="1" cellpadding="5">
+<tr>
+<td bgcolor="#D1F3F4" width="23"><input type="radio" name="Use" value="Use1" /></td>
+<td bgcolor="#D1F3F4" width="474">1) アスペクト</td>
+</tr>
+<tr>
+<td bgcolor="#66FFCC" width="23"><input type="radio" name="Use" value="Use2" /></td>
+<td bgcolor="#66FFCC" width="474">2) Dependency Injection</td>
+</tr>
+<tr>
+<td bgcolor="#D1F3F4" width="23"><input type="radio" name="Use" value="Use3" /></td>
+<td bgcolor="#D1F3F4" width="474">3) BEANアノテーション</td>
+</tr>
+<tr>
+<td bgcolor="#66FFCC" width="23"><input type="radio" name="Use" value="Use4" /></td>
+<td bgcolor="#66FFCC" width="474">4) 継承</td>
+</tr>
+</table>
+<br />
+<p><input type="button" name="btnTable" value="解答へGO" onclick="check('Use','Use2')" /></p>
+<p><a name="Use2" id="Use2"><b>【問題2】</b></a><br />
+public interface Hello {<br />
+&nbsp;&nbsp;public String showMessage(String str);<br />
+}<br />
+上記のインターフェースでshowMessage()メソッドが呼び出されたときは"Hello"を返すようにコンポーネント定義でモックを作成する場合、<br />
+以下の定義で[1]に入るタグはどれでしょうか？<br /></p>
+<pre>
+&lt;component class="examples.aop.Hello"&gt;
+  &lt;aspect&gt;
+    &lt;component class="org.seasar.framework.aop.interceptors.MockInterceptor"&gt;
+      &lt;initMethod name="setReturnValue"&gt;
+          [1]
+      &lt;initMethod&gt;
+    &lt;/component&gt;
+  &lt;/aspect&gt;
+&lt;/component&gt;
+</pre>
+ヒント：<a href="testtech.html#MockUse">モックの使用方法</a>を参照してください。
+<table width="80%" border="0" cellspacing="1" cellpadding="5">
+<tr>
+<td bgcolor="#D1F3F4" width="23"><input type="radio" name="Use2" value="Use2_1" /></td>
+<td bgcolor="#D1F3F4" width="474">1)<br />
+&lt;arg&gt;"showMessage(String str)"&lt;/arg&gt;<br />
+&lt;arg&gt;"Hello"&lt;/arg&gt;</td>
+</tr>
+<tr>
+<td bgcolor="#66FFCC" width="23"><input type="radio" name="Use2" value="Use2_2" /></td>
+<td bgcolor="#66FFCC" width="474">2)<br />
+&lt;arg&gt;"showMessage"&lt;/arg&gt;<br />
+&lt;arg&gt;"Hello"&lt;/arg&gt;</td>
+</tr>
+<tr>
+<td bgcolor="#D1F3F4" width="23"><input type="radio" name="Use2" value="Use2_3" /></td>
+<td bgcolor="#D1F3F4" width="474">3)<br />
+&lt;arg&gt;"showMessage"&lt;/arg&gt;</td>
+</tr>
+<tr>
+<td bgcolor="#66FFCC" width="23"><input type="radio" name="Use2" value="Use2_4" /></td>
+<td bgcolor="#66FFCC" width="474">4)<br />
+&lt;arg&gt;"Hello"&lt;/arg&gt;<br />
+&lt;arg&gt;"showMessage"&lt;/arg&gt;</td>
+</tr>
+</table>
+<br />
+<p><input type="button" name="btnTable" value="解答へGO" onclick="check('Use2','Use3')" /></p>
+<p><a name="Use3" id="Use3"><b>【問題3】</b></a><br />
+public interface Hello {<br />
+&nbsp;&nbsp;public String showMessage(String str);<br />
+}<br />
+上記メソッドに対してdiconファイルを使用せずにJavaでモックを定義した場合、メソッドを呼び出したときに<br />
+引数の値を正しく表示するコードはどれでしょうか？</p>
+MockInterceptor mi = new MockInterceptor();<br />
+mi.setReturnValue("showMessage", "world");<br />
+Hello hello = mi.createProxy(Hello.class);<br />
+hello.showMessage("hoge");<br />
+ヒント：<a href="testtech.html#MockUse">モックの使用方法</a>を参照してください。
+<table width="80%" border="0" cellspacing="1" cellpadding="5">
+<tr>
+<td bgcolor="#D1F3F4" width="23"><input type="radio" name="Use3" value="Use3_1" /></td>
+<td bgcolor="#D1F3F4" width="474">1) System.out.println(mi.getArgs("showMessage"));</td>
+</tr>
+<tr>
+<td bgcolor="#66FFCC" width="23"><input type="radio" name="Use3" value="Use3_2" /></td>
+<td bgcolor="#66FFCC" width="474">2) System.out.println(mi.getArgs("Hello")[0]);</td>
+</tr>
+<tr>
+<td bgcolor="#D1F3F4" width="23"><input type="radio" name="Use3" value="Use3_3" /></td>
+<td bgcolor="#D1F3F4" width="474">3) System.out.println(mi.getReturnValue("showMessage")[0]);</td>
+</tr>
+<tr>
+<td bgcolor="#66FFCC" width="23"><input type="radio" name="Use3" value="Use3_4" /></td>
+<td bgcolor="#66FFCC" width="474">4) System.out.println(mi.getArgs("showMessage")[0]);</td>
+</tr>
+</table>
+<br />
+<p><input type="button" name="btnTable" value="解答へGO" onclick="check('Use3','S2UnitCreate')" /></p>
+<br />
+<h3><a name="S2UnitCreate" id="S2UnitCreate">S2Unitの作成方法に関する問題</a></h3>
+<p><a name="Unit" id="Unit"><b>【問題1】</b></a><br />
+S2Unitを使用する場合、どのクラスを継承してテストクラスを作成するでしょうか？<br />
+ヒント：<a href="testtech.html#S2UnitMake">S2Unitを使ったテストクラスの作成方法</a>を参照してください。</p>
+<table width="80%" border="0" cellspacing="1" cellpadding="5">
+<tr>
+<td bgcolor="#D1F3F4" width="23"><input type="radio" name="Unit" value="Unit1" /></td>
+<td bgcolor="#D1F3F4" width="474">1) junit.framework.TestCase</td>
+</tr>
+<tr>
+<td bgcolor="#66FFCC" width="23"><input type="radio" name="Unit" value="Unit2" /></td>
+<td bgcolor="#66FFCC" width="474">2) org.seasar.extension.unit.S2UnitTestCase</td>
+</tr>
+<tr>
+<td bgcolor="#D1F3F4" width="23"><input type="radio" name="Unit" value="Unit3" /></td>
+<td bgcolor="#D1F3F4" width="474">3) org.seasar.framework.unit.S2TestCase</td>
+</tr>
+<tr>
+<td bgcolor="#66FFCC" width="23"><input type="radio" name="Unit" value="Unit4" /></td>
+<td bgcolor="#66FFCC" width="474">4) org.seasar.extension.unit.S2TestCase</td>
+</tr>
+</table>
+<br />
+<p><input type="button" name="btnTable" value="解答へGO" onclick="check('Unit','AutoS2Container')" /></p>
+<br />
+<h3><a name="AutoS2Container" id="AutoS2Container">S2Containerの自動生成に関する問題</a></h3>
+<p><a name="Auto" id="Auto"><b>【問題1】</b></a><br />
+S2Unitを使用するテストクラスで自動的にS2Containerが生成されるのはどこでしょうか？<br />
+ヒント：S2Unit機能の<a href="testtech.html#AutoS2Container">S2Containerの自動生成</a>を参照してください。</p>
+<table width="80%" border="0" cellspacing="1" cellpadding="5">
+<tr>
+<td bgcolor="#D1F3F4" width="23"><input type="radio" name="Auto" value="Auto1" /></td>
+<td bgcolor="#D1F3F4" width="474">1) テストメソッド(testXxx)ごと</td>
+</tr>
+<tr>
+<td bgcolor="#66FFCC" width="23"><input type="radio" name="Auto" value="Auto2" /></td>
+<td bgcolor="#66FFCC" width="474">2) setUp()メソッド</td>
+</tr>
+<tr>
+<td bgcolor="#D1F3F4" width="23"><input type="radio" name="Auto" value="Auto3" /></td>
+<td bgcolor="#D1F3F4" width="474">3) コンストラクタ</td>
+</tr>
+<tr>
+<td bgcolor="#66FFCC" width="23"><input type="radio" name="Auto" value="Auto4" /></td>
+<td bgcolor="#66FFCC" width="474">4) main</td>
+</tr>
+</table>
+<br />
+<p><input type="button" name="btnTable" value="解答へGO" onclick="check('Auto','S2Methods')" /></p>
+<br />
+<h3><a name="S2Methods" id="S2Methods">S2Containerに対するregister(),getComponent(),include()に関する問題</a></h3>
+<p><a name="Methods" id="Methods"><b>【問題1】</b></a><br />
+S2Unitには、S2Containerに対するメソッドが用意されていますが、用意されていないメソッドはどれでしょうか？<br />
+ヒント：S2Unit機能の<a href="testtech.html#S2ContainerMethods">register(),getComponent(),include()メソッド</a>を参照してください。</p>
+<table width="80%" border="0" cellspacing="1" cellpadding="5">
+<tr>
+<td bgcolor="#D1F3F4" width="23"><input type="radio" name="Methods" value="Methods1" /></td>
+<td bgcolor="#D1F3F4" width="474">1) register()</td>
+</tr>
+<tr>
+<td bgcolor="#66FFCC" width="23"><input type="radio" name="Methods" value="Methods2" /></td>
+<td bgcolor="#66FFCC" width="474">2) getComponent()</td>
+</tr>
+<tr>
+<td bgcolor="#D1F3F4" width="23"><input type="radio" name="Methods" value="Methods3" /></td>
+<td bgcolor="#D1F3F4" width="474">3) destroy()</td>
+</tr>
+<tr>
+<td bgcolor="#66FFCC" width="23"><input type="radio" name="Methods" value="Methods4" /></td>
+<td bgcolor="#66FFCC" width="474">4) include()</td>
+</tr>
+</table>
+<br />
+<p><input type="button" name="btnTable" value="解答へGO" onclick="check('Methods','S2include')" /></p>
+<br />
+<h3><a name="S2include" id="S2include">include時のPATHの省略に関する問題</a></h3>
+<p><a name="Include" id="Include"><b>【問題1】</b></a><br />
+S2Unitでdiconファイルを読み込みたい場合に使うメソッドはどれでしょうか？<br />
+ヒント：S2Unit機能の<a href="testtech.html#S2ContainerMethods">register(),getComponent(),include()メソッド</a>を参照してください。</p>
+<table width="80%" border="0" cellspacing="1" cellpadding="5">
+<tr>
+<td bgcolor="#D1F3F4" width="23"><input type="radio" name="Include" value="Include1" /></td>
+<td bgcolor="#D1F3F4" width="474">1) readDicon()</td>
+</tr>
+<tr>
+<td bgcolor="#66FFCC" width="23"><input type="radio" name="Include" value="Include2" /></td>
+<td bgcolor="#66FFCC" width="474">2) register()</td>
+</tr>
+<tr>
+<td bgcolor="#D1F3F4" width="23"><input type="radio" name="Include" value="Include3" /></td>
+<td bgcolor="#D1F3F4" width="474">3) include()</td>
+</tr>
+<tr>
+<td bgcolor="#66FFCC" width="23"><input type="radio" name="Include" value="Include4" /></td>
+<td bgcolor="#66FFCC" width="474">4) create()</td>
+</tr>
+</table>
+<br />
+<p><input type="button" name="btnTable" value="解答へGO" onclick="check('Include','Include2')" /></p>
+<p><a name="Include2" id="Include2"><b>【問題2】</b></a><br />
+S2Unitを使用しているaaa.bbb.CccTestテストクラスでaaa/bbb/hoge.diconをインクルードする場合、正しいのはどれでしょうか？<br />
+ヒント：S2Unit機能の<a href="testtech.html#includePath">include時のPATHの省略</a> を参照してください。</p>
+<table width="80%" border="0" cellspacing="1" cellpadding="5">
+<tr>
+<td bgcolor="#D1F3F4" width="23"><input type="radio" name="Include2" value="Include2_1" /></td>
+<td bgcolor="#D1F3F4" width="474">1) include("../hoge.dicon")</td>
+</tr>
+<tr>
+<td bgcolor="#66FFCC" width="23"><input type="radio" name="Include2" value="Include2_2" /></td>
+<td bgcolor="#66FFCC" width="474">2) include("aaa/bbb/hoge")</td>
+</tr>
+<tr>
+<td bgcolor="#D1F3F4" width="23"><input type="radio" name="Include2" value="Include2_3" /></td>
+<td bgcolor="#D1F3F4" width="474">3) include("aaa.bbb.hoge.dicon")</td>
+</tr>
+<tr>
+<td bgcolor="#66FFCC" width="23"><input type="radio" name="Include2" value="Include2_4" /></td>
+<td bgcolor="#66FFCC" width="474">4) include("hoge.dicon")</td>
+</tr>
+</table>
+<br />
+<p><input type="button" name="btnTable" value="解答へGO" onclick="check('Include2','S2SetValue')" /></p>
+<br />
+<h3><a name="S2SetValue" id="S2SetValue">変数の自動セットに関する問題</a></h3>
+<p><a name="Value" id="Value"><b>【問題1】</b></a><br /></p>
+<pre>
+&lt;component name="TestA" class="java.lang.String"&gt;
+  &lt;arg&gt;"Hello"&lt;arg&gt;
+&lt;/component&gt;
+</pre>
+文字列&amp;quotHello"が自動的にセットされない変数宣言はどれでしょうか？<br />
+ヒント：S2Unit機能<a href="testtech.html#setValue">変数の自動セット</a>を参照してください。
+<table width="80%" border="0" cellspacing="1" cellpadding="5">
+<tr>
+<td bgcolor="#D1F3F4" width="23"><input type="radio" name="Value" value="Value1" /></td>
+<td bgcolor="#D1F3F4" width="474">1) public String hoge</td>
+</tr>
+<tr>
+<td bgcolor="#66FFCC" width="23"><input type="radio" name="Value" value="Value2" /></td>
+<td bgcolor="#66FFCC" width="474">2) private String hello;</td>
+</tr>
+<tr>
+<td bgcolor="#D1F3F4" width="23"><input type="radio" name="Value" value="Value3" /></td>
+<td bgcolor="#D1F3F4" width="474">3) private String testA="testA";</td>
+</tr>
+<tr>
+<td bgcolor="#66FFCC" width="23"><input type="radio" name="Value" value="Value4" /></td>
+<td bgcolor="#66FFCC" width="474">4) private String testA_;</td>
+</tr>
+</table>
+<br />
+<p><input type="button" name="btnTable" value="解答へGO" onclick="check('Value','Value2')" /></p>
+<br />
+<p><a name="Value2" id="Value2"><b>【問題2】</b></a><br /></p>
+<pre>
+&lt;component name="testB" class="java.lang.String"&gt;
+  &lt;arg&gt;"Hello"&lt;/arg&gt;
+&lt;/component&gt;
+&lt;component name="testA" class="java.lang.String"&gt;
+  &lt;arg&gt;"world"&lt;/arg&gt;
+&lt;/component&gt;
+</pre>
+文字列"world"が自動的にセットされる変数宣言はどれでしょうか？コンポーネントの登録順はtestB,testAとする。<br />
+ヒント：S2Unit機能<a href="testtech.html#setValue">変数の自動セット</a>を参照してください。
+<table width="80%" border="0" cellspacing="1" cellpadding="5">
+<tr>
+<td bgcolor="#D1F3F4" width="23"><input type="radio" name="Value2" value="Value2_1" /></td>
+<td bgcolor="#D1F3F4" width="474">1) private String TESTA_;</td>
+</tr>
+<tr>
+<td bgcolor="#66FFCC" width="23"><input type="radio" name="Value2" value="Value2_2" /></td>
+<td bgcolor="#66FFCC" width="474">2) private String testA_;</td>
+</tr>
+<tr>
+<td bgcolor="#D1F3F4" width="23"><input type="radio" name="Value2" value="Value2_3" /></td>
+<td bgcolor="#D1F3F4" width="474">3) private String testA_ = "testA";</td>
+</tr>
+<tr>
+<td bgcolor="#66FFCC" width="23"><input type="radio" name="Value2" value="Value2_4" /></td>
+<td bgcolor="#66FFCC" width="474">4) private static final String testA_ = "testA";</td>
+</tr>
+</table>
+<br />
+<p><input type="button" name="btnTable" value="解答へGO" onclick="check('Value2','S2UnitFunction')" /></p>
+<br />
+<h3><a name="S2UnitFunction" id="S2UnitFunction">setUpXxx(),tearDownXxx()メソッドに関する問題</a></h3>
+<p><a name="SetUp" id="SetUp"><b>【問題1】</b></a><br />
+あるテストメソッドにだけ個別の初期化処理を行いたい場合の正しいメソッド定義は以下のどれでしょう？<br />
+ヒント：S2Unit機能の<a href="testtech.html#S2ContainerMethods2">setUpXxx(),tearDownXxx()メソッド</a>を参照してください。</p>
+<table width="80%" border="0" cellspacing="1" cellpadding="5">
+<tr>
+<td bgcolor="#D1F3F4" width="23"><input type="radio" name="SetUp" value="SetUp1" /></td>
+<td bgcolor="#D1F3F4" width="474">1) xxxSetUp()</td>
+</tr>
+<tr>
+<td bgcolor="#66FFCC" width="23"><input type="radio" name="SetUp" value="SetUp2" /></td>
+<td bgcolor="#66FFCC" width="474">2) afterSetUp()</td>
+</tr>
+<tr>
+<td bgcolor="#D1F3F4" width="23"><input type="radio" name="SetUp" value="SetUp3" /></td>
+<td bgcolor="#D1F3F4" width="474">3) setUpXxx()</td>
+</tr>
+<tr>
+<td bgcolor="#66FFCC" width="23"><input type="radio" name="SetUp" value="SetUp4" /></td>
+<td bgcolor="#66FFCC" width="474">4) setupXxx()</td>
+</tr>
+</table>
+<br />
+<p><input type="button" name="btnTable" value="解答へGO" onclick="check('SetUp','SetUp2')" /></p>
+<p><a name="SetUp2" id="SetUp2"><b>【問題2】</b></a><br />
+S2Unitを使用するテストクラスで以下のようなString型の変数strにtestHello()メソッドだけに"Hello"文字を設定したい場合、<br />
+その設定を行うメソッドの定義で正しいのはどれでしょうか？<br />
+private String str;<br />
+<br />
+public void testHello() throws Exception {<br />
+&nbsp;&nbsp;&nbsp;&nbsp;：<br />
+}<br />
+ヒント：S2Unit機能の<a href="testtech.html#S2ContainerMethods2">setUpXxx(),tearDownXxx()メソッド</a>を参照してください。</p>
+<table width="80%" border="0" cellspacing="1" cellpadding="5">
+<tr>
+<td bgcolor="#D1F3F4" width="23"><input type="radio" name="SetUp2" value="SetUp2_1" /></td>
+<td bgcolor="#D1F3F4" width="474">1) public void setUpHello() throws Exception;</td>
+</tr>
+<tr>
+<td bgcolor="#66FFCC" width="23"><input type="radio" name="SetUp2" value="SetUp2_2" /></td>
+<td bgcolor="#66FFCC" width="474">2) private void setUpHello() throws Exception;</td>
+</tr>
+<tr>
+<td bgcolor="#D1F3F4" width="23"><input type="radio" name="SetUp2" value="SetUp2_3" /></td>
+<td bgcolor="#D1F3F4" width="474">3) public void setUpTestHello() throws Exception;</td>
+</tr>
+<tr>
+<td bgcolor="#66FFCC" width="23"><input type="radio" name="SetUp2" value="SetUp2_4" /></td>
+<td bgcolor="#66FFCC" width="474">4) public void setUphello() throws Exception;</td>
+</tr>
+</table>
+<br />
+<p><input type="button" name="btnTable" value="解答へGO" onclick="check('SetUp2','tearDown')" /></p>
+<p><a name="tearDown" id="tearDown"><b>【問題3】</b></a><br />
+あるテストメソッドにだけ個別の終了処理を行いたい場合の正しいメソッド定義は以下のどれでしょう？<br />
+ヒント：S2Unit機能の<a href="testtech.html#S2ContainerMethods2">setUpXxx(),tearDownXxx()メソッド</a>を参照してください。</p>
+<table width="80%" border="0" cellspacing="1" cellpadding="5">
+<tr>
+<td bgcolor="#D1F3F4" width="23"><input type="radio" name="tearDown" value="tearDown1" /></td>
+<td bgcolor="#D1F3F4" width="474">1) xxxTearDown()</td>
+</tr>
+<tr>
+<td bgcolor="#66FFCC" width="23"><input type="radio" name="tearDown" value="tearDown2" /></td>
+<td bgcolor="#66FFCC" width="474">2) afterTearDown()</td>
+</tr>
+<tr>
+<td bgcolor="#D1F3F4" width="23"><input type="radio" name="tearDown" value="tearDown3" /></td>
+<td bgcolor="#D1F3F4" width="474">3) tearDownXxx()</td>
+</tr>
+<tr>
+<td bgcolor="#66FFCC" width="23"><input type="radio" name="tearDown" value="tearDown4" /></td>
+<td bgcolor="#66FFCC" width="474">4) teardownXxx()</td>
+</tr>
+</table>
+<br />
+<p><input type="button" name="btnTable" value="解答へGO" onclick="check('tearDown','tearDown2')" /></p>
+<p><a name="tearDown2" id="tearDown2"><b>【問題4】</b></a><br />
+testHelloメソッドに対応するtearDownHelloメソッドはどのタイミングで実行されるでしょう？<br />
+ヒント：S2Unit機能の<a href="testtech.html#S2ContainerMethods2">setUpXxx(),tearDownXxx()メソッド</a>を参照してください。</p>
+<table width="80%" border="0" cellspacing="1" cellpadding="5">
+<tr>
+<td bgcolor="#D1F3F4" width="23"><input type="radio" name="tearDown2" value="tearDown2_1" /></td>
+<td bgcolor="#D1F3F4" width="474">1) tearDown()メソッドの直後</td>
+</tr>
+<tr>
+<td bgcolor="#66FFCC" width="23"><input type="radio" name="tearDown2" value="tearDown2_2" /></td>
+<td bgcolor="#66FFCC" width="474">2) tearDown()メソッドの直前</td>
+</tr>
+<tr>
+<td bgcolor="#D1F3F4" width="23"><input type="radio" name="tearDown2" value="tearDown2_3" /></td>
+<td bgcolor="#D1F3F4" width="474">3) destroy()メソッドの直前</td>
+</tr>
+<tr>
+<td bgcolor="#66FFCC" width="23"><input type="radio" name="tearDown2" value="tearDown2_4" /></td>
+<td bgcolor="#66FFCC" width="474">4) testHello()メソッドの直前</td>
+</tr>
+</table>
+<br />
+<p><input type="button" name="btnTable" value="解答へGO" onclick="check('tearDown2','S2UnitFunction2')" /></p>
+<h3><a name="S2UnitFunction2" id="S2UnitFunction2">トランザクション制御に関する問題</a></h3>
+<p><a name="tx" id="tx"><b>【問題1】</b></a><br />
+テストメソッドの直前にトランザクションを開始し、テストで行った処理をロールバックするためにはテストメソッド名をどのようにすればよいでしょうか？<br />
+ヒント：S2Unit機能の<a href="testtech.html#s2transaction">トランザクション制御</a>を参照してください。</p>
+<table width="80%" border="0" cellspacing="1" cellpadding="5">
+<tr>
+<td bgcolor="#D1F3F4" width="23"><input type="radio" name="tx" value="tx1" /></td>
+<td bgcolor="#D1F3F4" width="474">1) testXxxTx()</td>
+</tr>
+<tr>
+<td bgcolor="#66FFCC" width="23"><input type="radio" name="tx" value="tx2" /></td>
+<td bgcolor="#66FFCC" width="474">2) testXxxTX()</td>
+</tr>
+<tr>
+<td bgcolor="#D1F3F4" width="23"><input type="radio" name="tx" value="tx3" /></td>
+<td bgcolor="#D1F3F4" width="474">3) testTxXxx()</td>
+</tr>
+<tr>
+<td bgcolor="#66FFCC" width="23"><input type="radio" name="tx" value="tx4" /></td>
+<td bgcolor="#66FFCC" width="474">4) txTestXxx()</td>
+</tr>
+</table>
+<br />
+<p><input type="button" name="btnTable" value="解答へGO" onclick="check('tx','S2UnitFunction3')" /></p>
+<h3><a name="S2UnitFunction3" id="S2UnitFunction3">readXls()メソッドに関する問題</a></h3>
+<p><a name="readXls" id="readXls"><b>【問題1】</b></a><br />
+DataSetに検証用のExcelデータを読み込むメソッドはどれでしょうか？<br />
+ヒント：S2Unit機能の<a href="testtech.html#readXls">readXls()メソッド</a>を参照してください。</p>
+<table width="80%" border="0" cellspacing="1" cellpadding="5">
+<tr>
+<td bgcolor="#D1F3F4" width="23"><input type="radio" name="readXls" value="readXls1" /></td>
+<td bgcolor="#D1F3F4" width="474">1) readXls()</td>
+</tr>
+<tr>
+<td bgcolor="#66FFCC" width="23"><input type="radio" name="readXls" value="readXls2" /></td>
+<td bgcolor="#66FFCC" width="474">2) readDbByTable()</td>
+</tr>
+<tr>
+<td bgcolor="#D1F3F4" width="23"><input type="radio" name="readXls" value="readXls3" /></td>
+<td bgcolor="#D1F3F4" width="474">3) readDbBySql()</td>
+</tr>
+<tr>
+<td bgcolor="#66FFCC" width="23"><input type="radio" name="readXls" value="readXls4" /></td>
+<td bgcolor="#66FFCC" width="474">4) readXlsByDataSet()</td>
+</tr>
+</table>
+<br />
+<p><input type="button" name="btnTable" value="解答へGO" onclick="check('readXls','readXls2')" /></p>
+<p><a name="readXls2" id="readXls2"><b>【問題2】</b></a><br />
+検証用のExcelデータがaaa/bbb/getEmployee.xlsにある場合、readXls()の<b>正しくない</b>定義方法はどれでしょうか？<br />
+テストクラスは、aaa.bbb.EmployeeTestとする。<br />
+ヒント：S2Unit機能の<a href="testtech.html#readXls">readXls()メソッド</a>を参照してください。</p>
+<table width="80%" border="0" cellspacing="1" cellpadding="5">
+<tr>
+<td bgcolor="#D1F3F4" width="23"><input type="radio" name="readXls2" value="readXls2_1" /></td>
+<td bgcolor="#D1F3F4" width="474">1) readXls("getEmployee.xls")</td>
+</tr>
+<tr>
+<td bgcolor="#66FFCC" width="23"><input type="radio" name="readXls2" value="readXls2_2" /></td>
+<td bgcolor="#66FFCC" width="474">2) readXls("aaa/bbb/getEmployee.xls")</td>
+</tr>
+<tr>
+<td bgcolor="#D1F3F4" width="23"><input type="radio" name="readXls2" value="readXls2_3" /></td>
+<td bgcolor="#D1F3F4" width="474">3) readXls("../bbb/getEmployee.xls")</td>
+</tr>
+<tr>
+<td bgcolor="#66FFCC" width="23"><input type="radio" name="readXls2" value="readXls2_4" /></td>
+<td bgcolor="#66FFCC" width="474">4) readXls("getEmployee")</td>
+</tr>
+</table>
+<br />
+<p><input type="button" name="btnTable" value="解答へGO" onclick="check('readXls2','S2UnitFunction4')" /></p>
+<h3><a name="S2UnitFunction4" id="S2UnitFunction4">assertEquals()メソッドに関する問題</a></h3>
+<p><a name="assert" id="assert"><b>【問題1】</b></a><br />
+assertEquals()メソッドで予想されるDataSetの結果に対して比較できないものはどれでしょうか？<br />
+ヒント：S2Unit機能の<a href="testtech.html#assert">assertEquals()メソッド</a>を参照してください。</p>
+<table width="80%" border="0" cellspacing="1" cellpadding="5">
+<tr>
+<td bgcolor="#D1F3F4" width="23"><input type="radio" name="assert" value="assert1" /></td>
+<td bgcolor="#D1F3F4" width="474">1) BeanのList</td>
+</tr>
+<tr>
+<td bgcolor="#66FFCC" width="23"><input type="radio" name="assert" value="assert2" /></td>
+<td bgcolor="#66FFCC" width="474">2) MapのList</td>
+</tr>
+<tr>
+<td bgcolor="#D1F3F4" width="23"><input type="radio" name="assert" value="assert3" /></td>
+<td bgcolor="#D1F3F4" width="474">3) Bean</td>
+</tr>
+<tr>
+<td bgcolor="#66FFCC" width="23"><input type="radio" name="assert" value="assert4" /></td>
+<td bgcolor="#66FFCC" width="474">4) Beanの配列</td>
+</tr>
+</table>
+<br />
+<p><input type="button" name="btnTable" value="解答へGO" onclick="check('assert','dao')" /></p>
+<p><a name="dao" id="dao"><b>【問題2】</b></a><br />
+public interface EmployeeDao {<br />
+&nbsp;&nbsp;public Class BEAN = Employee.class;<br />
+&nbsp;&nbsp;public List getAllEmployees();<br />
+}<br />
+上記のDAOのgetAllEmployees()メソッドの結果に対してテストを行う場合、 S2Unitを使用するテストクラスで予想されるDataSetを使ってassertEquals()メソッド で比較する方法が正しいのはどれでしょうか？<br />
+ただし予想されるDataSetの変数名をexpected、getAllEmployees()メソッドで取得したList の変数名をemployeesとする。<br />
+ヒント：S2Unit機能の<a href="testtech.html#assert">assertEquals()メソッド</a>を参照してください。</p>
+<table width="80%" border="0" cellspacing="1" cellpadding="5">
+<tr>
+<td bgcolor="#D1F3F4" width="23"><input type="radio" name="dao" value="dao1" /></td>
+<td bgcolor="#D1F3F4" width="474">1) assertEquals(expected, employees, "TEST")</td>
+</tr>
+<tr>
+<td bgcolor="#66FFCC" width="23"><input type="radio" name="dao" value="dao2" /></td>
+<td bgcolor="#66FFCC" width="474">2) assertEquals(employees)</td>
+</tr>
+<tr>
+<td bgcolor="#D1F3F4" width="23"><input type="radio" name="dao" value="dao3" /></td>
+<td bgcolor="#D1F3F4" width="474">3) assertEquals(expected, employees)</td>
+</tr>
+<tr>
+<td bgcolor="#66FFCC" width="23"><input type="radio" name="dao" value="dao4" /></td>
+<td bgcolor="#66FFCC" width="474">4) assertEquals(employees, expected)</td>
+</tr>
+</table>
+<br />
+<p><input type="button" name="btnTable" value="解答へGO" onclick="check('dao','S2UnitFunction5')" /></p>
+<h3><a name="S2UnitFunction5" id="S2UnitFunction5">reload()メソッドに関する問題</a></h3>
+<p><a name="reload" id="reload"><b>【問題1】</b></a><br />
+DataSetの中身をプライマリーキーでリロードして新しいDataSetを取得するreload()の正しい定義はどれでしょうか？<br />
+ヒント：S2Unit機能の<a href="testtech.html#reload">reload()メソッド</a>を参照してください。</p>
+<table width="80%" border="0" cellspacing="1" cellpadding="5">
+<tr>
+<td bgcolor="#D1F3F4" width="23"><input type="radio" name="reload" value="reload1" /></td>
+<td bgcolor="#D1F3F4" width="474">1) public void reload(DataSet dataSet)</td>
+</tr>
+<tr>
+<td bgcolor="#66FFCC" width="23"><input type="radio" name="reload" value="reload2" /></td>
+<td bgcolor="#66FFCC" width="474">2) public DataTable reload(DataTable table)</td>
+</tr>
+<tr>
+<td bgcolor="#D1F3F4" width="23"><input type="radio" name="reload" value="reload3" /></td>
+<td bgcolor="#D1F3F4" width="474">3) public DataSet reload()</td>
+</tr>
+<tr>
+<td bgcolor="#66FFCC" width="23"><input type="radio" name="reload" value="reload4" /></td>
+<td bgcolor="#66FFCC" width="474">4) public DataSet reload(DataSet dataSet)</td>
+</tr>
+</table>
+<br />
+<p><input type="button" name="btnTable" value="解答へGO" onclick="check('reload','reload2')" /></p>
+<p><a name="reload2" id="reload2"><b>【問題2】</b></a><br />
+プライマリーキーでリロードして新しいDataSetを取得するreload()でプライマリーキーの指定について、 正しい説明はどれでしょうか？<br />
+ヒント：S2Unit機能の<a href="testtech.html#reload">reload()メソッド</a>を参照してください。</p>
+<table width="80%" border="0" cellspacing="1" cellpadding="5">
+<tr>
+<td bgcolor="#D1F3F4" width="23"><input type="radio" name="reload2" value="reload2_1" /></td>
+<td bgcolor="#D1F3F4" width="474">1) Excelデータにプライマリーキーを指定する必要がある。</td>
+</tr>
+<tr>
+<td bgcolor="#66FFCC" width="23"><input type="radio" name="reload2" value="reload2_2" /></td>
+<td bgcolor="#66FFCC" width="474">2) DataSetにプライマリーキーを指定する必要がある。</td>
+</tr>
+<tr>
+<td bgcolor="#D1F3F4" width="23"><input type="radio" name="reload2" value="reload2_3" /></td>
+<td bgcolor="#D1F3F4" width="474">3) reload()の引数でプライマリーキーを指定する必要がある。</td>
+</tr>
+<tr>
+<td bgcolor="#66FFCC" width="23"><input type="radio" name="reload2" value="reload2_4" /></td>
+<td bgcolor="#66FFCC" width="474">4) 何も指定する必要がない。</td>
+</tr>
+</table>
+<br />
+<p><input type="button" name="btnTable" value="解答へGO" onclick="check('reload2','readXlsWriteDb')" /></p>
+<h3><a name="S2UnitFunction6" id="S2UnitFunction6">readXlsWriteDb(),readXlsAllReplaceDb()メソッドに関する問題</a></h3>
+<p><a name="readXlsWriteDb" id="readXlsWriteDb"><b>【問題1】</b></a><br />
+あらかじめ準備したテスト用のExcelデータをDBに登録するメソッドはどれでしょうか？<br />
+ヒント：S2Unit機能の<a href="testtech.html#readMethods">readXlsWriteDb(),readXlsAllReplaceDb()メソッド</a>を参照してください。</p>
+<table width="80%" border="0" cellspacing="1" cellpadding="5">
+<tr>
+<td bgcolor="#D1F3F4" width="23"><input type="radio" name="readXlsWriteDb" value="readXlsWriteDb1" /></td>
+<td bgcolor="#D1F3F4" width="474">1) writeXls()</td>
+</tr>
+<tr>
+<td bgcolor="#66FFCC" width="23"><input type="radio" name="readXlsWriteDb" value="readXlsWriteDb2" /></td>
+<td bgcolor="#66FFCC" width="474">2) readXlsWriteDb()</td>
+</tr>
+<tr>
+<td bgcolor="#D1F3F4" width="23"><input type="radio" name="readXlsWriteDb" value="readXlsWriteDb3" /></td>
+<td bgcolor="#D1F3F4" width="474">3) writeDb()</td>
+</tr>
+<tr>
+<td bgcolor="#66FFCC" width="23"><input type="radio" name="readXlsWriteDb" value="readXlsWriteDb4" /></td>
+<td bgcolor="#66FFCC" width="474">4) dbWrite()</td>
+</tr>
+</table>
+<br />
+<p><input type="button" name="btnTable" value="解答へGO" onclick="check('readXlsWriteDb','readXlsWriteDb2')" /></p>
+<p><a name="readXlsWriteDb2" id="readXlsWriteDb2"><b>【問題2】</b></a><br />
+あらかじめ準備したテスト用のExcelデータがaaa/bbb/getEmployee.xlsにある場合、readXlsWriteDb()の正しい定義方法はどれでしょうか？<br />
+テストクラスは、aaa.EmployeeTestとする。<br />
+ヒント：S2Unit機能の<a href="testtech.html#readMethods">readXlsWriteDb(),readXlsAllReplaceDb()メソッド</a>を参照してください。</p>
+<table width="80%" border="0" cellspacing="1" cellpadding="5">
+<tr>
+<td bgcolor="#D1F3F4" width="23"><input type="radio" name="readXlsWriteDb2" value="readXlsWriteDb2_1" /></td>
+<td bgcolor="#D1F3F4" width="474">1) readXlsWriteDb("getEmployee.xls")</td>
+</tr>
+<tr>
+<td bgcolor="#66FFCC" width="23"><input type="radio" name="readXlsWriteDb2" value="readXlsWriteDb2_2" /></td>
+<td bgcolor="#66FFCC" width="474">2) readXlsWriteDb("aaa/bbb/getEmployee")</td>
+</tr>
+<tr>
+<td bgcolor="#D1F3F4" width="23"><input type="radio" name="readXlsWriteDb2" value="readXlsWriteDb2_3" /></td>
+<td bgcolor="#D1F3F4" width="474">3) readXlsWriteDb("../getEmployee.xls")</td>
+</tr>
+<tr>
+<td bgcolor="#66FFCC" width="23"><input type="radio" name="readXlsWriteDb2" value="readXlsWriteDb2_4" /></td>
+<td bgcolor="#66FFCC" width="474">4) readXlsWriteDb("aaa/bbb/getEmployee.xls")</td>
+</tr>
+</table>
+<br />
+<p><input type="button" name="btnTable" value="解答へGO" onclick="check('readXlsWriteDb2','readXlsWriteDb3')" /></p>
+<p><a name="readXlsWriteDb3" id="readXlsWriteDb3"><b>【問題3】</b></a><br />
+テーブルAのテスト用のデータをExcelファイルに作成してreadXlsAllReplaceDb()メソッドで、そのExcelファイルの内容をテーブルAに格納する場合、Excelファイルの作成方法で正しいのはどれでしょうか？<br />
+ただしテーブルAは外部キーでテーブルBを参照しているとする。<br />
+ヒント：S2Unit機能の<a href="testtech.html#readMethods">readXlsWriteDb(),readXlsAllReplaceDb()メソッド</a>を参照してください。</p>
+<table width="80%" border="0" cellspacing="1" cellpadding="5">
+<tr>
+<td bgcolor="#D1F3F4" width="23"><input type="radio" name="readXlsWriteDb3" value="readXlsWriteDb3_1" /></td>
+<td bgcolor="#D1F3F4" width="474">1) テーブルAのシートを1つ作成する。</td>
+</tr>
+<tr>
+<td bgcolor="#66FFCC" width="23"><input type="radio" name="readXlsWriteDb3" value="readXlsWriteDb3_2" /></td>
+<td bgcolor="#66FFCC" width="474">2) テーブルA,テーブルBの定義順にシートを2つ作成する。</td>
+</tr>
+<tr>
+<td bgcolor="#D1F3F4" width="23"><input type="radio" name="readXlsWriteDb3" value="readXlsWriteDb3_3" /></td>
+<td bgcolor="#D1F3F4" width="474">3) テーブルBのシートを1つ作成する。</td>
+</tr>
+<tr>
+<td bgcolor="#66FFCC" width="23"><input type="radio" name="readXlsWriteDb3" value="readXlsWriteDb3_4" /></td>
+<td bgcolor="#66FFCC" width="474">4) テーブルB、テーブルAの定義順にシートを2つ作成する。</td>
+</tr>
+</table>
+<br />
+<p><input type="button" name="btnTable" value="解答へGO" onclick="check('readXlsWriteDb3','S2ExcelMake')" /></p>
+<h3><a name="S2ExcelMake" id="S2ExcelMake">Excelファイルの作成に関する問題</a></h3>
+<p><a name="ExcelMake" id="ExcelMake"><b>【問題1】</b></a><br />
+以下の文章の[1]と[2]に入る言葉はどれでしょうか？<br />
+検証用のExcelファイルを作成する場合、シート名には[1]、シートの1行目には[2]を記述します。また、N:1のマッピングしている場合は「[2]_関連番号」の名前で記述します。シートの2行目以降にはデータを記述します。<br />
+ヒント：テスト技法の<a href="testtech.html#s2unitexcel">Excelファイルの作成</a>を参照してください。</p>
+<table width="80%" border="0" cellspacing="1" cellpadding="5">
+<tr>
+<td bgcolor="#D1F3F4" width="23"><input type="radio" name="ExcelMake" value="ExcelMake1" /></td>
+<td bgcolor="#D1F3F4" width="474">1) [1]Beanクラス名 [2]カラム名</td>
+</tr>
+<tr>
+<td bgcolor="#66FFCC" width="23"><input type="radio" name="ExcelMake" value="ExcelMake2" /></td>
+<td bgcolor="#66FFCC" width="474">2) [1]テーブル名 [2]カラム名</td>
+</tr>
+<tr>
+<td bgcolor="#D1F3F4" width="23"><input type="radio" name="ExcelMake" value="ExcelMake3" /></td>
+<td bgcolor="#D1F3F4" width="474">3) [1]テーブル名 [2]Dao名</td>
+</tr>
+<tr>
+<td bgcolor="#66FFCC" width="23"><input type="radio" name="ExcelMake" value="ExcelMake4" /></td>
+<td bgcolor="#66FFCC" width="474">4) [1]データベース名 [2]テーブル名</td>
+</tr>
+</table>
+<br />
+<p><input type="button" name="btnTable" value="解答へGO" onclick="check('ExcelMake','SqlReader')" /></p>
+<p><a name="SqlReader" id="SqlReader"><b>【問題2】</b></a><br />
+org.seasar.extension.dataset.impl.SqlReaderクラスを使ってデータベースのテーブルの内容をDataSetに読み込ませる場合、SQL文を使用して、その結果をDataSetに読み込ませるメソッドはどれでしょうか？<br />
+ヒント：テスト技法の<a href="testtech.html#s2unitexcel">Excelファイルの作成</a>を参照してください。</p>
+<table width="80%" border="0" cellspacing="1" cellpadding="5">
+<tr>
+<td bgcolor="#D1F3F4" width="23"><input type="radio" name="SqlReader" value="SqlReader1" /></td>
+<td bgcolor="#D1F3F4" width="474">1) addSql()</td>
+</tr>
+<tr>
+<td bgcolor="#66FFCC" width="23"><input type="radio" name="SqlReader" value="SqlReader2" /></td>
+<td bgcolor="#66FFCC" width="474">2) readSql()</td>
+</tr>
+<tr>
+<td bgcolor="#D1F3F4" width="23"><input type="radio" name="SqlReader" value="SqlReader3" /></td>
+<td bgcolor="#D1F3F4" width="474">3) addTable()</td>
+</tr>
+<tr>
+<td bgcolor="#66FFCC" width="23"><input type="radio" name="SqlReader" value="SqlReader4" /></td>
+<td bgcolor="#66FFCC" width="474">4) read()</td>
+</tr>
+</table>
+<br />
+<p><input type="button" name="btnTable" value="解答へGO" onclick="check('SqlReader','XlsWriter')" /></p>
+<p><a name="XlsWriter" id="XlsWriter"><b>【問題3】</b></a><br />
+aaa/bbb/Cccクラスでデータベースのテーブルから読み込んだDataSetをExcelファイルに出力する場合、org.seasar.extension.dataset.impl.XlsWriterクラスで出力先を指定して出力しますが、以下のXlsWriterクラスのコンポーネント定義で[1]に入る出力先のパスの指定方法で正しいのはどれでしょうか？出力先のExcelファイルはaaa/bbb/test.xlsとする。<br /></p>
+<pre>
+&lt;component class="org.seasar.extension.dataset.impl.XlsWriter" instance="prototype"&gt;
+                 [1]
+&lt;/component&gt;
+</pre>
+ヒント：テスト技法の<a href="testtech.html#s2unitexcel">Excelファイルの作成</a>を参照してください。
+<table width="80%" border="0" cellspacing="1" cellpadding="5">
+<tr>
+<td bgcolor="#D1F3F4" width="23"><input type="radio" name="XlsWriter" value="XlsWriter1" /></td>
+<td bgcolor="#D1F3F4" width="474">1) &lt;initMethod&gt;#self("aaa/bbb/test.xls")&lt;/initMethod&gt;</td>
+</tr>
+<tr>
+<td bgcolor="#66FFCC" width="23"><input type="radio" name="XlsWriter" value="XlsWriter2" /></td>
+<td bgcolor="#66FFCC" width="474">2) &lt;property name="path"&gt;"aaa/bbb/test.xls"&lt;/property&gt;</td>
+</tr>
+<tr>
+<td bgcolor="#D1F3F4" width="23"><input type="radio" name="XlsWriter" value="XlsWriter3" /></td>
+<td bgcolor="#D1F3F4" width="474">3) &lt;initMethod name="write"&gt;"aaa/bbb/test.xls"&lt;/initMethod&gt;</td>
+</tr>
+<tr>
+<td bgcolor="#66FFCC" width="23"><input type="radio" name="XlsWriter" value="XlsWriter4" /></td>
+<td bgcolor="#66FFCC" width="474">4) &lt;arg&gt;"test.xls"&lt;/arg&gt;</td>
+</tr>
+</table>
+<br />
+<p><input type="button" name="btnTable" value="解答へGO" onclick="check('XlsWriter','S2DaoTestCase')" /></p>
+<h3><a name="S2DaoTestCase" id="S2DaoTestCase">S2DaoTestCaseに関する問題</a></h3>
+<p><a name="DaoTestCase" id="DaoTestCase"><b>【問題1】</b></a><br />
+S2DaoTestCaseの説明として間違っているのはどれでしょうか？<br />
+ヒント：テスト技法の<a href="testtech.html#S2DaoTestCase">S2DaoTestCase</a>を参照してください。</p>
+<table width="80%" border="0" cellspacing="1" cellpadding="5">
+<tr>
+<td bgcolor="#D1F3F4" width="23"><input type="radio" name="DaoTestCase" value="DaoTestCase1" /></td>
+<td bgcolor="#D1F3F4" width="520">1) S2DaoTestCaseはS2TestCaseを継承している。</td>
+</tr>
+<tr>
+<td bgcolor="#66FFCC" width="23"><input type="radio" name="DaoTestCase" value="DaoTestCase2" /></td>
+<td bgcolor="#66FFCC" width="520">2) S2DaoTestCaseを継承してテストクラスを作成する。</td>
+</tr>
+<tr>
+<td bgcolor="#D1F3F4" width="23"><input type="radio" name="DaoTestCase" value="DaoTestCase3" /></td>
+<td bgcolor="#D1F3F4" width="520">3) S2DaoTestCaseでは、S2DaoのSELECT文の結果(Bean or BeanList)以外テストできない。</td>
+</tr>
+<tr>
+<td bgcolor="#66FFCC" width="23"><input type="radio" name="DaoTestCase" value="DaoTestCase4" /></td>
+<td bgcolor="#66FFCC" width="520">4) SELECT文の結果をテストする場合、予想結果のExcelファイルと比較することができる。</td>
+</tr>
+</table>
+<br />
+<p><input type="button" name="btnTable" value="解答へGO" onclick="check('DaoTestCase','DaoTestCase2')" /></p>
+<p><a name="DaoTestCase2" id="DaoTestCase2"><b>【問題2】</b></a><br />
+S2DaoTestCaseでS2DaoのSELECT文の結果(Bean)をExcelファイルと比較するとき、結果のBeanに以下のようなCOLUMNアノテーションがある場合、 Excelファイルのシート1行目にそのカラム名を記述する書き方で正しいのはどれでしょうか？<br />
+<br />
+public static final String employeeNumber_COLUMN = "EMPNO";<br />
+ヒント：テスト技法の<a href="testtech.html#S2DaoTestCase">S2DaoTestCase</a>を参照してください。</p>
+<table width="80%" border="0" cellspacing="1" cellpadding="5">
+<tr>
+<td bgcolor="#D1F3F4" width="23"><input type="radio" name="DaoTestCase2" value="DaoTestCase2_1" /></td>
+<td bgcolor="#D1F3F4" width="520">1) employeeNumber</td>
+</tr>
+<tr>
+<td bgcolor="#66FFCC" width="23"><input type="radio" name="DaoTestCase2" value="DaoTestCase2_2" /></td>
+<td bgcolor="#66FFCC" width="520">2) EMPNO</td>
+</tr>
+<tr>
+<td bgcolor="#D1F3F4" width="23"><input type="radio" name="DaoTestCase2" value="DaoTestCase2_3" /></td>
+<td bgcolor="#D1F3F4" width="520">3) employeeNumber_COLUMN</td>
+</tr>
+<tr>
+<td bgcolor="#66FFCC" width="23"><input type="radio" name="DaoTestCase2" value="DaoTestCase2_4" /></td>
+<td bgcolor="#66FFCC" width="520">4) カラムアノテーションされているカラムは比較が出来ないので記述しない。</td>
+</tr>
+</table>
+<br />
+<p><input type="button" name="btnTable" value="解答へGO" onclick="check('DaoTestCase2','')" /></p>
+</form>
+<!-- document end -->
+<!-- don't edit start --></td>
+<td width="14"><img height="14" width="14" src="images/spacer.gif" alt="" /></td>
+</tr>
+<tr>
+<td width="14"><img height="30" width="14" src="images/spacer.gif" alt="" /></td>
+<td width="766"><img height="30" width="592" src="images/spacer.gif" alt="" /></td>
+</tr>
+<tr>
+<td width="14"><img height="14" width="14" src="images/spacer.gif" alt="" /></td>
+<td width="766" class="copyright">Copyright© 2004-2005, The Seasar Foundation and the others. All rights reserved.</td>
+</tr>
+</table>
+</td>
+<td class="backright" align="left" valign="top">&nbsp;</td>
+</tr>
+<tr>
+<td class="backunder" align="left" valign="top" width="780" height="16">&nbsp;</td>
+<td class="backcorner" align="left" valign="top" height="16">&nbsp;</td>
+</tr>
+</table>
+<!-- don't edit end -->
+</body>
+</html>

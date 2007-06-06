@@ -1,0 +1,348 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<!-- don't edit start -->
+<head>
+<title>Seasar - DI Container with AOP -</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<link href="seasar_p.css" type="text/css" rel="stylesheet" media="print" />
+<link href="seasar_b.css" type="text/css" rel="stylesheet" media="screen" />
+<script src="seasar_b.js" type="text/JavaScript" language="JavaScript">
+</script>
+</head>
+<body onload="preload('en')">
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="left">
+<tr>
+<td align="left" valign="top" width="780">
+<table width="780" border="0" cellspacing="0" cellpadding="0" class="white">
+<tr>
+<td colspan="7"><img height="5" width="780" src="images/top01_b.gif" alt="" /></td>
+</tr>
+<tr>
+<td><img height="117" width="235" src="images/top02_b.gif" alt="Seasar" /></td>
+<td colspan="3"><img height="117" width="289" src="images/top03.gif" alt="DI Container with AOP" /></td>
+<td colspan="3">&nbsp;</td>
+</tr>
+<tr>
+<td rowspan="2"><img src="images/top04.gif" alt="" height="49" width="235" /></td>
+<td><a href="http://www.seasar.org/en/index.html"><img src="images/menu01_b_en.gif" height="30" width="78" border="0" alt="" id="menu01" onmouseover="swap(1)" onmouseout="restore(1)" name="menu01" /></a></td>
+<td><a href="http://www.seasar.org/en/projects.html"><img src="images/menu02_b_en.gif" height="30" width="101" border="0" alt="" id="menu02" onmouseover="swap(2)" onmouseout="restore(2)" name="menu02" /></a></td>
+<td><a href="http://www.seasar.org/en/products.html"><img src="images/menu06_b_en.gif" height="30" width="110" border="0" alt="" id="menu06" onmouseover="swap(6)" onmouseout="restore(6)" name="menu06" /></a></td>
+<td><a href="http://www.seasar.org/en/documents.html"><img src="images/menu04_b_en.gif" height="30" width="109" border="0" alt="" id="menu04" onmouseover="swap(4)" onmouseout="restore(4)" name="menu04" /></a></td>
+<td><a href="http://www.seasar.org/en/resources.html"><img src="images/menu05_b_en.gif" height="30" width="113" border="0" alt="" id="menu05" onmouseover="swap(5)" onmouseout="restore(5)" name="menu05" /></a></td>
+<!--
+<td><img src="images/menu07_b_en.gif" height="30" width="109" border="0" alt=""  id="menu07" onmouseover="swap(7)" onmouseout="restore(7)"></td>
+//-->
+<td><img height="30" width="34" src="images/menu06.gif" alt="" /></td>
+</tr>
+<tr>
+<td colspan="6"><img height="19" width="545" src="images/spacer.gif" alt="" /></td>
+</tr>
+</table>
+<table width="780" border="0" cellspacing="0" cellpadding="0" class="white">
+<tr align="left" valign="top">
+<td width="14"><img height="14" width="14" src="images/spacer.gif" alt="" /></td>
+<td width="740" class="main"><!-- don't edit end -->
+<!-- document start -->
+<ul>
+<li><a href="#Quickstart">Quickstart</a>
+<ul>
+<li><a href="#FirstStep">First step</a></li>
+</ul>
+</li>
+<li><a href="#EJB3AnnotationReference">EJB3 Annotation Reference</a>
+<ul>
+<li><a href="#StatelessAnnotation">Stateless Annotation</a></li>
+<li><a href="#StatefulAnnotation">Stateful Annotation</a></li>
+<li><a href="#EJBAnnotation">EJB Annotation</a></li>
+<li><a href="#TransactionManagementAnnotation">TransactionManagement Annotation</a></li>
+<li><a href="#TransactionAttributeAnnotation">TransactionAttribute Annotation</a></li>
+<li><a href="#InterceptorsAnnotation">Interceptors Annotation</a></li>
+<li><a href="#ExcludeClassInterceptorsAnnotation">ExcludeClassInterceptors Annotation</a></li>
+<li><a href="#PostConstructAnnotation">PostConstruct Annotation</a></li>
+<li><a href="#AroundInvokeAnnotation">AroundInoke Annotation</a></li>
+</ul>
+</li>
+</ul>
+<h2><a name="QuickStart" id="QuickStart">Quickstart</a></h2>
+<p>Seasar2 is a light weight container for Dependency Injection (DI) operations, and also implements EJB3.</p>
+<h3><a name="FirstStep" id="FirstStep">First Step</a></h3>
+<p>Let us give this a try. The following objects will be used.</p>
+<ul>
+<li>Greeting class
+<ul>
+<li>Returns a greeting string.</li>
+</ul>
+</li>
+<li>Greeting Client Class
+<ul>
+<li>Outputs string obtained from the greeting class to console.</li>
+</ul>
+</li>
+<li>Greeting Main Class
+<ul>
+<li>Startup Class.</li>
+</ul>
+</li>
+</ul>
+<h5>Greeting.java</h5>
+<p>Greeting interface.</p>
+<pre>
+package examples.ejb3;
+
+public interface Greeting {
+
+    String greet();
+}
+</pre>
+<h5>GreetingImpl.java</h5>
+<p>Implementation of the greeting. We can make a stateless session bean using the <a href="#StatelessAnnotation">Stateless annotation</a>.</p>
+<pre>
+package examples.ejb3.impl;
+
+import javax.ejb.Stateless;
+
+import examples.ejb3.Greeting;
+
+@Stateless
+public class GreetingImpl implements Greeting {
+
+    public String greet() {
+        return "Hello World!";
+    }
+}
+</pre>
+<h5>GreetingClient.java</h5>
+<p>Client interface to use the greeting.</p>
+<pre>
+package examples.ejb3;
+
+public interface GreetingClient {
+
+    void execute();
+}
+</pre>
+<h5>GreetingClientImpl.java</h5>
+<p>Client implementation to use the greeting. We can refer the session bean implementing the greeting interface using the <a href="#EJBAnnotation">EJB annotation</a>.</p>
+<pre>
+package examples.ejb3.impl;
+
+import javax.ejb.EJB;
+import javax.ejb.Stateless;
+
+import examples.ejb3.Greeting;
+import examples.ejb3.GreetingClient;
+
+@Stateless
+public class GreetingClientImpl implements GreetingClient {
+
+    @EJB
+    private Greeting greeting;
+    
+    public void execute() {
+        System.out.println(greeting.greet());
+    }
+}
+</pre>
+<h5>GreetingMain.dicon</h5>
+<p>Configration file for EJB3. If we define this content from the beginning, it's not necessary to add any information to the configuration file, even if the number of EJB increases. Please refer <a href="DIContainer.html#ComponentAutoRegister">component auto-registration</a> in the details.</p>
+<pre>
+&lt;components&gt;<br />     &lt;include path="ejb3tx.dicon"/&gt;<br />    &lt;component<br />      class="org.seasar.framework.container.autoregister.FileSystemComponentAutoRegister"&gt;<br />        &lt;initMethod name="addClassPattern"&gt;<br />            &lt;arg&gt;"examples.ejb3.impl"&lt;/arg&gt;<br />            &lt;arg&gt;".*Impl"&lt;/arg&gt;<br />        &lt;/initMethod&gt;<br />    &lt;/component&gt;<br />&lt;/components&gt;
+
+</pre>
+<h5>GreetingMain.java</h5>
+<p>The source code to run Seasar2 EJB3 is as follows. Please refer <a href="DIContainer.html#S2ContainerCreation">S2Container creation</a> about SingletonS2ContainerFactory. Please refer <a href="DIContainer.html#DefaultAutoNaming">DefaultAutoNaming</a> about the naming rule in case we don't specify the name property of @EJB.</p>
+<pre>
+package examples.ejb3.main;
+
+import javax.naming.Context;
+import javax.naming.InitialContext;
+
+import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
+
+import examples.ejb3.GreetingClient;
+
+public class GreetingMain {
+
+    private static final String PATH = "examples/ejb3/dicon/GreetingMain.dicon";
+
+    public static void main(String[] args) throws Exception {
+        SingletonS2ContainerFactory.setConfigPath(PATH);
+        SingletonS2ContainerFactory.init();
+        try {
+            doMain(args);
+        } finally {
+            SingletonS2ContainerFactory.destroy();
+        }
+    }
+
+    public static void doMain(String[] args) throws Exception {
+        Context ctx = new InitialContext();
+        GreetingClient greetingClient = (GreetingClient)
+            ctx.lookup("greetingClient");
+        greetingClient.execute();
+    }
+}
+</pre>
+<p>The result will be as follows:</p>
+<pre>
+DEBUG 2006-03-25 18:38:47,892 [main] Transaction began
+Hello World!
+DEBUG 2006-03-25 18:38:47,922 [main] Transaction committed
+</pre>
+<h2><a name="EJB3AnnotationReference" id="EJB3AnnotationReference">EJB3 Annotation Reference</a></h2>
+<p>S2Container supports EJB 3.0 Simplified API. We need Java5 in order to use the EJB3 annotation.</p>
+<h3><a name="StatelessAnnotation" id="StatelessAnnotation">Stateless Annotaion</a></h3>
+<p>We can define a stateless session bean using Stateless annnotaion.</p>
+<p>Tiger annotation is as follows.</p>
+<pre>
+@Stateless(name="xxx")
+public class Xxx {
+    ...
+}
+</pre>
+<p>When we don't specify the name property, the implementation class of AutoNaming interface which we use <a href="#ComponentAutoRegister">the automatic registration of components</a> will automatically deside the name.</p>
+<h3><a name="StatefulAnnotation" id="StatefulAnnotation">Stateful Annotaion</a></h3>
+<p>We can define a stateful session bean using Stateful annnotaion.</p>
+<p>Tiger annotation is as follows.</p>
+<pre>
+@Stateful(name="xxx")
+public class Xxx {
+    ...
+}
+</pre>
+<p>When we don't specify the name property, the implementation class of AutoNaming interface which we use <a href="#ComponentAutoRegister">the automatic registration of components</a> will automatically deside the name.</p>
+<h3><a name="EJBAnnotation" id="EJBAnnotation">EJB Annotation</a></h3>
+<p>The EJB annotation denotes a reference to a session bean. The beanName property references the value of the name property of the Stateful or Stateless annotation. The beanName property allows disambiguation if multiple session beans implement the same interface.</p>
+<p>Tiger annotation is as follows.</p>
+<pre>
+@EJB
+public void setAaa(Aaa aaa) {
+    ...
+}
+
+@EJB(beanName="bbb2")
+public void setBbb(Bbb bbb) {
+    ...
+}
+</pre>
+<h3><a name="TransactionManagementAnnotation" id="TransactionManagementAnnotation">TransactionManagement Annotation</a></h3>
+<p>We can use "Container Management Transaction(CMT)" and "Bean Management Transaction(BMT)" using the TransactionManagement annotation. The default is CMT, therefore we don't need to specify the TransactionManagement annotation using CMT.</p>
+<p>Tiger annotation is as follows.</p>
+<pre>
+@Stateless
+@TransactionManagement(TransactionManagementType.BEAN)
+public class Xxx {
+    ...
+}
+</pre>
+<h3><a name="TransactionAttributeAnnotation" id="TransactionAttributeAnnotation">TransactionAttribute Annotation</a></h3>
+<p>If we use CMT, we can specify transaction attribute for business method using the TransactionAttribute annotation. The default is REQUIRED. If we sepcify the TransactionAttribute annotation for a class, we can specify its annotation for all the business methods of the class. If we sepcify the TransactionAttribute annotation for a method, we can specify its annotation for the business method.</p>
+<p>Tiger annotation is as follows.</p>
+<pre>
+@Stateless
+@TransactionAttribute(TransactionAttributeType.MANDATRY)
+public class Xxx {
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public void someMethod() {
+        ...
+    }
+}
+</pre>
+<h3><a name="InterceptorsAnnotation" id="InterceptorsAnnotation">Interceptors Annotation</a></h3>
+<p>We can specify several interceptors for the invocation of business methods and the lifecycle methods using the Interceptors annotation.<br />
+We can specify interceptors annotation for class or method.</p>
+<pre>
+@Stateless
+@Interceptors({foo.bar.HogeInterceptor.class, foo.bar.SomeInterceptor})
+public class Xxx {
+    ...
+    @Interceptors(foo.bar.MethodInterceptor)
+    private void hogehoge() {
+        ...
+    }
+}
+</pre>
+<h3><a name="ExcludeClassInterceptorsAnnotation" id="ExcludeClassInterceptorsAnnotation">ExcludeClassInterceptors Annotation</a></h3>
+<p>When the ExcludeDefaultInterceptors annotation applied to a business method, it excludes the invocation of default interceptors for that method.</p>
+<pre>
+@Stateless
+@Interceptors(foo.bar.HogeInterceptor.class)
+public class Xxx {
+    ...
+    @ExcludeClassInterceptos
+    @Interceptors(foo.bar.MethodInterceptor)
+    private void hogehoge() {
+        ...
+    }
+}
+</pre>
+<h3><a name="PostConstructAnnotation" id="PostConstructAnnotation">PostConstruct Annotation</a></h3>
+<p>We can specify the method invoked after an instance creation and DI using the PostConstruct annotation. We can specify the PostConstruct annotation for a sesssion bean or a method of a interceptor. Lifecycle callback methods defined on a bean class have the following signature: public void &lt;METHOD&gt;()<br />
+Lifecycle callback methods defined on an interceptor class have the following signature: public void &lt;METHOD&gt;(InvocationContext)</p>
+<p>Tiger annotation is as follows.</p>
+<pre>
+@Stateless
+@Interceptors(Yyy.class)
+public class Xxx {
+    ...
+    @PostConstruct
+    public void initialize() {
+        ...
+    }
+}
+
+public class Yyy {
+    ...
+    @PostConstruct
+    public void initialize(InvocationContext context) {
+        ...
+    }
+}
+</pre>
+<h3><a name="AroundInvokeAnnotation" id="AroundInvokeAnnotation">AroundInvoke Annotation</a></h3>
+<p>We can intercept invocations of business method using the AroundInvoke annotation. We can specify AroundInvoke annotation for a session bean and the method of interceptor. The method with the AroundInvoke annotation must be no static, no final, and the type of argument must be javax.interceptor.InvocationContext, and the type of return must be Object. We can specify the AroundInvoke annotation for only one method.</p>
+<p>Tiger annotation is as follows.</p>
+<pre>
+@Stateless
+@Interceptors(Yyy.class)
+public class Xxx {
+    ...
+    @AroundInvoke
+    Object invoke(InvocationContext context) throws Exception {
+        ...
+    }
+}
+
+public class Yyy {
+    ...
+    @AroundInvoke
+    private Object invoke(InvocationContext context) throws Exception {
+        ...
+    }
+}
+</pre>
+<!-- document end -->
+<!-- don't edit start --></td>
+<td width="14"><img height="14" width="14" src="images/spacer.gif" alt="" /></td>
+</tr>
+<tr>
+<td width="14"><img height="30" width="14" src="images/spacer.gif" alt="" /></td>
+<td width="766"><img height="30" width="592" src="images/spacer.gif" alt="" /></td>
+</tr>
+<tr>
+<td width="14"><img height="14" width="14" src="images/spacer.gif" alt="" /></td>
+<td width="766" class="copyright">Copyright© 2004-2005, The Seasar Foundation and the others. All rights reserved.</td>
+</tr>
+</table>
+</td>
+<td class="backright" align="left" valign="top">&nbsp;</td>
+</tr>
+<tr>
+<td class="backunder" align="left" valign="top" width="780" height="16">&nbsp;</td>
+<td class="backcorner" align="left" valign="top" height="16">&nbsp;</td>
+</tr>
+</table>
+<!-- don't edit end -->
+</body>
+</html>

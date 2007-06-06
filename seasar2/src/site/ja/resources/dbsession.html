@@ -1,0 +1,153 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja" lang="ja">
+<!-- don't edit start -->
+<head>
+<title>Seasar - DI Container with AOP -</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<link href="seasar_b.css" type="text/css" rel="stylesheet" media="screen" />
+<link href="seasar_p.css" type="text/css" rel="stylesheet" media="print" />
+<script src="seasar_b.js" type="text/JavaScript" language="JavaScript">
+</script>
+</head>
+<body onload="preload('ja')">
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="left" height="100%">
+<tr>
+<td align="left" valign="top" width="780">
+<table width="780" border="0" cellspacing="0" cellpadding="0" class="white">
+<tr>
+<td colspan="7"><img height="5" width="780" src="images/top01_b.gif" alt="" /></td>
+</tr>
+<tr>
+<td><img height="117" width="235" src="images/top02_b.gif" alt="Seasar" /></td>
+<td colspan="3"><img height="117" width="289" src="images/top03.gif" alt="DI Container with AOP" /></td>
+<td colspan="3"><img height="117" width="256" src="images/spacer.gif" alt="" /></td>
+</tr>
+<tr>
+<td rowspan="2"><img src="images/top04.gif" alt="" height="49" width="235" /></td>
+<td><a href="http://www.seasar.org/index.html"><img src="images/menu01_b_ja.gif" height="30" width="78" border="0" alt="" id="menu01" onmouseover="swap(1)" onmouseout="restore(1)" /></a></td>
+<td><a href="http://www.seasar.org/projects.html"><img src="images/menu02_b_ja.gif" height="30" width="101" border="0" alt="" id="menu02" onmouseover="swap(2)" onmouseout="restore(2)" /></a></td>
+<td><a href="http://www.seasar.org/products.html"><img src="images/menu03_b_ja.gif" height="30" width="110" border="0" alt="" id="menu03" onmouseover="swap(3)" onmouseout="restore(3)" /></a></td>
+<td><a href="http://www.seasar.org/resources.html"><img src="images/menu04_b_ja.gif" height="30" width="113" border="0" alt="" id="menu04" onmouseover="swap(4)" onmouseout="restore(4)" /></a></td>
+<td><img src="images/menu05_b_ja.gif" height="30" width="109" border="0" alt="" id="menu05" onmouseover="swap(5)" onmouseout="restore(5)" /></td>
+<td><img height="30" width="34" src="images/menu06.gif" alt="" /></td>
+</tr>
+<tr>
+<td colspan="6"><img height="19" width="545" src="images/spacer.gif" alt="" /></td>
+</tr>
+</table>
+<table width="780" border="0" cellspacing="0" cellpadding="0" class="white">
+<tr align="left" valign="top">
+<td width="14"><img height="14" width="14" src="images/spacer.gif" alt="" /></td>
+<td width="740" class="main"><!-- don't edit end -->
+<!-- document start -->
+<p>本ドキュメントは<code>S2.4.13</code>について記述しています．旧バージョンについては該当バージョンの配布ファイルに含まれているドキュメントを参照してください．</p>
+<p>DBセッションレプリケーションを使って、HttpSessionのレプリケーションを実現できます。
+その際にアプリケーションサーバのセッション機能は利用しません。
+クラスタリングをサポートしていないアプリケーションサーバを使って、
+セッションレプリケーションを実現できるのです。
+セッション情報はデータベースに書き出されます。
+レプリケーションを使わない場合でも、メモリを節約する効果もあります。</p>
+<p>
+セッションタイムアウトは現在実装されていないため、セッションデータの削除は、 
+個別に実装する必要があります。 その際、最後にアクセスした日時をLAST_ACCESSカラムで知ることができます。
+</p>
+<h2><a name="Setup">セットアップ</a></h2>
+<p>
+セッション情報は、できる限り速度の速いデータベースに書き込んでください。
+インメモリデータベースなどを使うことを推奨します。
+</p>
+<h3>dbsession.dicon</h3>
+<p>s2-xxx.zipのresources/dbsession.diconをクラスパスに通します。
+dbsession.diconのDbSessionStateManagerImplのdataSourceプロパティを適切に設定します。
+dbsession.diconは、app.diconでincludeします。
+</p>
+<p>
+セッション情報の値はバイトストリームとしてバッチ更新によりデータベースに書き込まれますが、
+RDBMSによってはバイトストリームを含む行のバッチ更新に制限があります。
+その場合、DbSessionStateManagerImplのbatchUpdateDisabledプロパティにtrueを設定し、
+バッチ更新を利用しないようにしてください。
+現在、バイトストリームを含む行のバッチ更新に制限があると判明しているRDBMSには
+以下のものがあります。
+</p>
+<ul>
+<li>Oracle Database 9i (ただし、9iのバージョンによってはこの対応が不要なものもあるかもしれません)</li>
+</ul>
+<h3>テーブル定義</h3>
+<p>
+定義したデータソースにテーブル定義を追加します。
+テーブル定義は使用するRDBMSごとに若干異なります
+</p>
+<p>
+HSQLDBを使用する場合次のように定義します。
+</p>
+<pre>
+CREATE MEMORY TABLE S2SESSION(
+  SESSION_ID VARCHAR NOT NULL,
+  NAME VARCHAR(255) NOT NULL,
+  VALUE VARBINARY(10485760),
+  LAST_ACCESS TIMESTAMP,
+  PRIMARY KEY(SESSION_ID,NAME))
+</pre>
+<p>
+Oracle Database 10g、DB2を使用する場合次のように定義します。
+</p>
+<pre>
+CREATE MEMORY TABLE S2SESSION(
+  SESSION_ID VARCHAR(255) NOT NULL,
+  NAME VARCHAR(255) NOT NULL,
+  VALUE BLOB,
+  LAST_ACCESS TIMESTAMP,
+  PRIMARY KEY(SESSION_ID,NAME))
+</pre>
+<p>
+Oracle Database 9iを使用する場合次のように定義します (ただし、9iのバージョンによっては10gと同じ定義で動作するかもしれません)。
+</p>
+<pre>
+CREATE MEMORY TABLE S2SESSION(
+  SESSION_ID VARCHAR(255) NOT NULL,
+  NAME VARCHAR(255) NOT NULL,
+  VALUE LONG RAW,
+  LAST_ACCESS TIMESTAMP,
+  PRIMARY KEY(SESSION_ID,NAME))
+</pre>
+<h3>Servlet Filter</h3>
+<p>
+web.xmlに次のようにfilterの設定を追加します。
+DbSessionFilterはfilterの中で最初に記述してください。
+</p>
+<pre>
+&lt;filter&gt;
+    &lt;filter-name&gt;dbSessionFilter&lt;/filter-name&gt;
+    &lt;filter-class&gt;org.seasar.extension.dbsession.DbSessionFilter&lt;/filter-class&gt;
+&lt;/filter&gt;
+
+&lt;filter-mapping&gt;
+    &lt;filter-name&gt;dbSessionFilter&lt;/filter-name&gt;
+    &lt;url-pattern&gt;/*&lt;/url-pattern&gt;
+&lt;/filter-mapping&gt;
+</pre>
+<!-- document end -->
+<!-- don't edit start --></td>
+<td width="14"><img height="14" width="14" src="images/spacer.gif" alt="" /></td>
+</tr>
+<tr>
+<td width="14"><img height="30" width="14" src="images/spacer.gif" alt="" /></td>
+<td width="766"><img height="30" width="592" src="images/spacer.gif" alt="" /></td>
+</tr>
+<tr>
+<td width="14"><img height="14" width="14" src="images/spacer.gif" alt="" /></td>
+<td width="766" class="copyright">Copyright© 2004-2007, The Seasar Foundation and the others. All rights reserved.</td>
+</tr>
+</table>
+</td>
+<td class="backright" align="left" valign="top">&nbsp;</td>
+</tr>
+<tr>
+<td class="backunder" align="left" valign="top" width="780" height="16">&nbsp;</td>
+<td class="backcorner" align="left" valign="top" height="16">&nbsp;</td>
+</tr>
+</table>
+<!-- don't edit end -->
+</body>
+</html>

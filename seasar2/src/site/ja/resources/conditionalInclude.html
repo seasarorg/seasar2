@@ -1,0 +1,154 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja" lang="ja">
+<!-- don't edit start -->
+<head>
+<title>Seasar - DI Container with AOP -</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<link href="seasar_b.css" type="text/css" rel="stylesheet" media="screen" />
+<link href="seasar_p.css" type="text/css" rel="stylesheet" media="print" />
+<script src="seasar_b.js" type="text/JavaScript" language="JavaScript">
+</script>
+<style type="text/css">
+/*<![CDATA[*/
+<!--
+.indent{
+margin-left : 30px;
+margin-right : 20px;
+}
+TH{
+font-size : 10pt;
+text-align : center;
+background-color : #d1f3f4;
+}
+TD{
+font-size : 10pt;
+}
+-->
+/*]]>*/
+</style>
+</head>
+<body onload="preload('ja')">
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="left">
+<tr>
+<td align="left" valign="top" width="780">
+<table width="780" border="0" cellspacing="0" cellpadding="0" class="white">
+<tr>
+<td colspan="7"><img height="5" width="780" src="images/top01_b.gif" alt="" /></td>
+</tr>
+<tr>
+<td><img height="117" width="235" src="images/top02_b.gif" alt="Seasar" /></td>
+<td colspan="3"><img height="117" width="289" src="images/top03.gif" alt="DI Container with AOP" /></td>
+<td colspan="3"><img height="117" width="256" src="images/spacer.gif" alt="" /></td>
+</tr>
+<tr>
+<td rowspan="2"><img src="images/top04.gif" alt="" height="49" width="235" /></td>
+<td><a href="http://www.seasar.org/index.html"><img src="images/menu01_b_ja.gif" height="30" width="78" border="0" alt="" id="menu01" onmouseover="swap(1)" onmouseout="restore(1)" name="menu01" /></a></td>
+<td><a href="http://www.seasar.org/projects.html"><img src="images/menu02_b_ja.gif" height="30" width="101" border="0" alt="" id="menu02" onmouseover="swap(2)" onmouseout="restore(2)" name="menu02" /></a></td>
+<td><a href="http://www.seasar.org/products.html"><img src="images/menu03_b_ja.gif" height="30" width="110" border="0" alt="" id="menu03" onmouseover="swap(3)" onmouseout="restore(3)" name="menu03" /></a></td>
+<td><a href="http://www.seasar.org/resources.html"><img src="images/menu04_b_ja.gif" height="30" width="113" border="0" alt="" id="menu04" onmouseover="swap(4)" onmouseout="restore(4)" name="menu04" /></a></td>
+<td><img src="images/menu05_b_ja.gif" height="30" width="109" border="0" alt="" id="menu05" onmouseover="swap(5)" onmouseout="restore(5)" name="menu05" /></td>
+<td><img height="30" width="34" src="images/menu06.gif" alt="" /></td>
+</tr>
+<tr>
+<td colspan="6"><img height="19" width="545" src="images/spacer.gif" alt="" /></td>
+</tr>
+</table>
+<table width="780" border="0" cellspacing="0" cellpadding="0" class="white">
+<tr align="left" valign="top">
+<td width="14"><img height="14" width="14" src="images/spacer.gif" alt="" /></td>
+<td width="740" class="main">
+<!-- don't edit end -->
+<!-- document start -->
+<br />
+<h1>条件インクルード</h1>
+<h2>目次</h2>
+<ul>
+<li><a href="#about">条件インクルードとは</a></li>
+<li><a href="#env">環境名</a></li>
+<li><a href="#implicit">暗黙的な条件インクルード</a></li>
+<li><a href="#explicit">明示的な条件インクルード</a></li>
+</ul>
+<h2><a name="about" id="about">条件インクルードとは</a></h2>
+<p>一つのアプリケーションで利用されるdiconファイルであっても，状況によって異なった設定が必要になることがあります．RDBMSの接続情報などがその典型です．Seasar2.4で導入されたSMART deployでは，IDE内で単体テストを行う場合はHOT deployを使用し，結合テストや運用時にはSMART deployを使用することになります．</p>
+<p>このような場合に，diconファイルの記述を変更することなく，環境に応じた設定をするための機能が条件インクルードです．条件インクルードでは，環境ごとに必要な設定を記述したdiconファイルを選択的にインクルードすることができます．</p>
+<p>条件インクルードは環境別のdiconファイルをインクルードするために，2つの方法を提供します．</p>
+<dl>
+<dt>暗黙的な条件インクルード</dt>
+<dd>&lt;include&gt;要素の<code>path</code>属性で指定されたdicon名に，環境名(環境を表す名前)をサフィックスとして持つdiconがあればそれをインクルードする機能です．</dd>
+<dt>明示的な条件インクルード</dt>
+<dd>OGNL式によって指定した条件が真となる場合のみdiconをインクルードする機能です．</dd>
+</dl>
+<h2><a name="env" id="env">環境名</a></h2>
+<p>環境名とは実行環境を表現する名前で，<code>env.txt</code>というテキストファイルによって指定します．この<code>env.txt</code>ファイルはクラスパス上に配置します．Webアプリケーションでは<code>WEB-INF/classes</code>になります．</p>
+<p><code>env.txt</code>の内容は環境を表す任意の名称を記述します．以下に標準的な名称を示します．</p>
+<ul>
+<li><code>ut</code><br />
+単体テスト環境を表します．</li>
+<li><code>ct</code><br />
+結合テスト環境を表します．</li>
+<li><code>it</code><br />
+統合テスト環境を表します．</li>
+<li><code>product</code><br />
+運用環境を表します．<code>env.txt</code>ファイルが存在しない場合のデフォルトです．</li>
+</ul>
+<h2><a name="implicit" id="implicit">暗黙的な条件インクルード</a></h2>
+<p>暗黙的な条件インクルードとは，&lt;include&gt;要素の<code>path</code>属性で指定されたdicon名に，環境名をサフィックスとして持つdiconがあればそれをインクルードする機能です．</p>
+<p>暗黙的な条件インクルードを使う場合，インクルードする側のdiconは通常通り記述します．</p>
+<pre>
+&lt;?xml version="1.0" encoding="UTF-8"?&lt;
+&lt;!DOCTYPE components PUBLIC <strong>"-//SEASAR//DTD S2Container 2.4//EN"</strong>
+    <strong>"http://www.seasar.org/dtd/components24.dtd"</strong>
+&gt;
+&lt;components&gt;
+    <strong>&lt;include path="foo.dicon"/&gt;</strong>
+&lt;/components&gt;
+</pre>
+<p>インクルードされる側のdiconは，拡張子を除いたファイル名の最後にサフィックスを付加します．サフィックスは，アンダースコアと環境名をつなげたものです．次のようになります．</p>
+<ul>
+<li><code>foo_ut.dicon</code><br />
+環境名が<code>ut</code>の場合にインクルードされます．</li>
+<li><code>foo_ct.dicon</code><br />
+環境名が<code>ct</code>の場合にインクルードされます．</li>
+<li><code>foo.dicon</code><br />
+環境名が<code>ut</code>でも<code>ct</code>でもない場合にインクルードされます．</li>
+</ul>
+<h2><a name="explicit" id="explicit">明示的な条件インクルード</a></h2>
+<p>より複雑な状況でインクルードするdiconを切り替えたい場合には，<code>&lt;include&gt;</code>要素の<code>condition</code>属性でインクルードする条件をOGNL式で明示的に指定することができます．この場合には，指定された条件が満たされた場合のみ，指定されたdiconがインクルードされます．</p>
+<pre>
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE components PUBLIC <strong>"-//SEASAR//DTD S2Container 2.4//EN"</strong>
+    <strong>"http://www.seasar.org/dtd/components24.dtd"</strong>
+&gt;
+&lt;components&gt;
+    <strong>&lt;include condition="#ENV == 'ut'" path="hotdeploy.dicon"/&gt;</strong>
+    <strong>&lt;include condition="#ENV != 'ut'" path="cooldeploy.dicon"/&gt;</strong>
+&lt;/components&gt;
+</pre>
+<p>この例では，<code>#ENV</code>で参照することのできる環境名が<code>'ut'</code>(単体テスト)であればHOT deployのdiconを，それ以外であればCOOL deployのdiconをインクルードします．</p>
+<p><code>&lt;include&gt;</code>要素の<code>condition</code>属性には<code>static</code>メソッドの呼び出しを含む任意のOGNL式を記述することができます．OGNL式については「<a href="ognl.html">OGNLガイド</a>」を参照してください．</p>
+<!-- document end -->
+<!-- don't edit start -->
+</td>
+<td width="14"><img height="14" width="14" src="images/spacer.gif" alt="" /></td>
+</tr>
+<tr>
+<td width="14"><img height="30" width="14" src="images/spacer.gif" alt="" /></td>
+<td width="766"><img height="30" width="592" src="images/spacer.gif" alt="" /></td>
+</tr>
+<tr>
+<td width="14"><img height="14" width="14" src="images/spacer.gif" alt="" /></td>
+<td width="766" class="copyright">Copyright© 2004-2005, The Seasar Foundation and the others. All rights reserved.</td>
+</tr>
+</table>
+</td>
+<td class="backright" align="left" valign="top">&nbsp;</td>
+</tr>
+<tr>
+<td class="backunder" align="left" valign="top" width="780" height="16">&nbsp;</td>
+<td class="backcorner" align="left" valign="top" height="16">&nbsp;</td>
+</tr>
+</table>
+<!-- don't edit end -->
+</body>
+</html>

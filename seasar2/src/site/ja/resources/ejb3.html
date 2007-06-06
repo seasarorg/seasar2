@@ -1,0 +1,359 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja" lang="ja">
+<!-- don't edit start -->
+<head>
+<title>Seasar - DI Container with AOP -</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<link href="seasar_b.css" type="text/css" rel="stylesheet" media="screen" />
+<link href="seasar_p.css" type="text/css" rel="stylesheet" media="print" />
+<script src="seasar_b.js" type="text/JavaScript" language="JavaScript">
+</script>
+</head>
+<body onload="preload('ja')">
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="left">
+<tr>
+<td align="left" valign="top" width="780">
+<table width="780" border="0" cellspacing="0" cellpadding="0" class="white">
+<tr>
+<td colspan="7"><img height="5" width="780" src="images/top01_b.gif" alt="" /></td>
+</tr>
+<tr>
+<td width="235"><img height="117" width="235" src="images/top02_b.gif" alt="Seasar" /></td>
+<td colspan="3"><img height="117" width="289" src="images/top03.gif" alt="DI Container with AOP" /></td>
+<td colspan="3"><img height="117" width="256" src="images/spacer.gif" alt="" /></td>
+</tr>
+<tr>
+<td rowspan="2"><img src="images/top04.gif" alt="" height="49" width="235" /></td>
+<td><a href="http://www.seasar.org/index.html"><img src="images/menu01_b_ja.gif" height="30" width="78" border="0" alt="" id="menu01" onmouseover="swap(1)" onmouseout="restore(1)" name="menu01" /></a></td>
+<td><a href="http://www.seasar.org/projects.html"><img src="images/menu02_b_ja.gif" height="30" width="101" border="0" alt="" id="menu02" onmouseover="swap(2)" onmouseout="restore(2)" name="menu02" /></a></td>
+<td><a href="http://www.seasar.org/products.html"><img src="images/menu03_b_ja.gif" height="30" width="110" border="0" alt="" id="menu03" onmouseover="swap(3)" onmouseout="restore(3)" name="menu03" /></a></td>
+<td><a href="http://www.seasar.org/resources.html"><img src="images/menu04_b_ja.gif" height="30" width="113" border="0" alt="" id="menu04" onmouseover="swap(4)" onmouseout="restore(4)" name="menu04" /></a></td>
+<td><img src="images/menu05_b_ja.gif" height="30" width="109" border="0" alt="" id="menu05" onmouseover="swap(5)" onmouseout="restore(5)" name="menu05" /></td>
+<td width="34"><img height="30" width="34" src="images/menu06.gif" alt="" /></td>
+</tr>
+<tr>
+<td colspan="6"><img height="19" width="545" src="images/spacer.gif" alt="" /></td>
+</tr>
+</table>
+<table width="780" border="0" cellspacing="0" cellpadding="0" class="white">
+<tr align="left" valign="top">
+<td width="18"><img height="14" width="18" src="images/spacer.gif" alt="" /></td>
+<td width="744" class="main"><!-- don't edit end -->
+<!-- document start -->
+<ul>
+<li><a href="#Quickstart">クイックスタート</a> 　
+<ul>
+<li><a href="#FirstStep">最初の一歩</a> 　　　　　　　　</li>
+</ul>
+</li>
+<li><a href="#EJB3AnnotationReference">EJB3アノテーションリファレンス</a>
+<ul>
+<li><a href="#StatelessAnnotation">Statelessアノテーション</a></li>
+<li><a href="#StatefulAnnotation">Statefulアノテーション</a></li>
+<li><a href="#EJBAnnotation">EJBアノテーション</a></li>
+<li><a href="#ResourceAnnotation">Resouceアノテーション</a></li>
+<li><a href="#TransactionManagementAnnotation">TransactionManagementアノテーション</a></li>
+<li><a href="#TransactionAttributeAnnotation">TransactionAttributeアノテーション</a></li>
+<li><a href="#InterceptorsAnnotation">Interceptorsアノテーション</a></li>
+<li><a href="#ExcludeClassInterceptorsAnnotation">ExcludeClassInterceptorsアノテーション</a></li>
+<li><a href="#PostConstructAnnotation">PostConstructアノテーション</a></li>
+<li><a href="#AroundInvokeAnnotation">AroundInokeアノテーション</a></li>
+</ul>
+</li>
+</ul>
+<h2><a name="QuickStart" id="QuickStart">クイックスタート</a></h2>
+<p>S2Containerは、Dependency Injection（以降DIと略します）をおこなう軽量コンテナです。 EJB3も実装しています。</p>
+<h3><a name="FirstStep" id="FirstStep">最初の一歩</a></h3>
+<p>早速試してみましょう。登場人物は次のようになります。</p>
+<ul>
+<li>あいさつクラス
+<ul>
+<li>あいさつ用の文字列を返す。</li>
+</ul>
+</li>
+<li>あいさつクライアントクラス
+<ul>
+<li>あいさつクラスから取得したあいさつ（文字列）をコンソールに出力する。</li>
+</ul>
+</li>
+<li>あいさつメインクラス
+<ul>
+<li>起動用のクラス。あいさつクラスとあいさつクライアントクラスの組み立ても行う｡</li>
+</ul>
+</li>
+</ul>
+<h5>Greeting.java</h5>
+<p>あいさつのためのインターフェースです。</p>
+<pre>
+package examples.ejb3;
+
+public interface Greeting {
+
+    String greet();
+}
+</pre>
+<h5>GreetingImpl.java</h5>
+<p>あいさつの実装です。<a href="#StatelessAnnotation">Statelessアノテーション</a>を使って、簡単にStateless SessionBeanを作ることができます。</p>
+<pre>
+package examples.ejb3.impl;
+
+import javax.ejb.Stateless;
+
+import examples.ejb3.Greeting;
+
+@Stateless
+public class GreetingImpl implements Greeting {
+
+    public String greet() {
+        return "Hello World!";
+    }
+}
+</pre>
+<h5>GreetingClient.java</h5>
+<p>あいさつを利用するクライアントのインターフェースです。</p>
+<pre>
+package examples.ejb3;
+
+public interface GreetingClient {
+
+    void execute();
+}
+</pre>
+<h5>GreetingClientImpl.java</h5>
+<p>あいさつを利用するクライアントの実装です。 <a href="#EJBAnnotation">EJBアノテーション</a>を使って、Greetingインターフェースを実装したSessionBeanを参照することができます。</p>
+<pre>
+package examples.ejb3.impl;
+
+import javax.ejb.EJB;
+import javax.ejb.Stateless;
+
+import examples.ejb3.Greeting;
+import examples.ejb3.GreetingClient;
+
+@Stateless
+public class GreetingClientImpl implements GreetingClient {
+
+    @EJB
+    private Greeting greeting;
+
+    public void execute() {
+        System.out.println(greeting.greet());
+    }
+}
+</pre>
+<h5>GreetingMain.dicon</h5>
+<p>EJB3用の設定ファイルです。 この内容を最初に記述しておけば､後からEJBが増えても、ファイルに情報を追加する必要はありません。 詳しくは､<a href="DIContainer.html#ComponentAutoRegister">コンポーネントの自動登録</a>を参照してください。</p>
+<pre>
+&lt;components&gt;<br />     &lt;include path="ejb3tx.dicon"/&gt;<br />    &lt;component<br />      class="org.seasar.framework.container.autoregister.FileSystemComponentAutoRegister"&gt;<br />        &lt;initMethod name="addClassPattern"&gt;<br />            &lt;arg&gt;"examples.ejb3.impl"&lt;/arg&gt;<br />            &lt;arg&gt;".*Impl"&lt;/arg&gt;<br />        &lt;/initMethod&gt;<br />    &lt;/component&gt;<br />&lt;/components&gt;
+
+</pre>
+<h5>GreetingMain.java</h5>
+<p>Seasar2のEJB3を実行するためのコードは次のようになります。 SingletonS2ContainerFactoryについての詳細は<a href="DIContainer.html#S2ContainerCreation">S2Containerの生成</a>を参照してください。 @EJBのname属性を指定しなかった場合の､デフォルトの名前の命名規則は､<a href="DIContainer.html#DefaultAutoNaming">DefaultAutoNaming</a>を参照してください。</p>
+<pre>
+package examples.ejb3.main;
+
+import javax.naming.Context;
+import javax.naming.InitialContext;
+
+import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
+
+import examples.ejb3.GreetingClient;
+
+public class GreetingMain {
+
+    private static final String PATH = "examples/ejb3/dicon/GreetingMain.dicon";
+
+    public static void main(String[] args) throws Exception {
+        SingletonS2ContainerFactory.setConfigPath(PATH);
+        SingletonS2ContainerFactory.init();
+        try {
+            doMain(args);
+        } finally {
+            SingletonS2ContainerFactory.destroy();
+        }
+    }
+
+    public static void doMain(String[] args) throws Exception {
+        Context ctx = new InitialContext();
+        GreetingClient greetingClient = (GreetingClient)
+            ctx.lookup("greetingClient");
+        greetingClient.execute();
+    }
+}
+</pre>
+<p>実行結果は下記のようになります。</p>
+<pre>
+DEBUG 2006-03-25 18:38:47,892 [main] トランザクションを開始しました
+Hello World!
+DEBUG 2006-03-25 18:38:47,922 [main] トランザクションをコミットしました
+</pre>
+<h2><a name="EJB3AnnotationReference" id="EJB3AnnotationReference">EJB3アノテーションリファレンス</a></h2>
+<p>S2Containerでは、EJB 3.0 Simplified APIのアノテーションもサポートしています。EJB3アノテーションを利用するにはJava5(Tiger)が必要です。</p>
+<h3><a name="StatelessAnnotation" id="StatelessAnnotation">Statelessアノテーション</a></h3>
+<p>Statelessアノテーションを使って、Stateless SessionBeanを定義します。</p>
+<p>Tigerアノテーションは以下のようになります。name属性を省略した場合､ <a href="#ComponentAutoRegister">コンポーネントの自動登録</a>で使われるAutoNamingの実装クラスによって､ 名前が自動的に決められます。</p>
+<pre>
+@Stateless(name="xxx")
+public class Xxx {
+    ...
+}
+</pre>
+<h3><a name="StatefulAnnotation" id="StatefulAnnotation">Statefulアノテーション</a></h3>
+<p>Statefulアノテーションを使って、Stateful SessionBeanを定義します。</p>
+<p>Tigerアノテーションは以下のようになります。name属性を省略した場合､ <a href="#ComponentAutoRegister">コンポーネントの自動登録</a>で使われるAutoNamingの実装クラスによって､ 名前が自動的に決められます。</p>
+<pre>
+@Stateful(name="xxx")
+public class Xxx {
+    ...
+}
+</pre>
+<h3><a name="EJBAnnotation" id="EJBAnnotation">EJBアノテーション</a></h3>
+<p>EJBアノテーションによって､EJB3コンポーネントを参照することができます。 Statless、Statefulアノテーションのname属性で付けた名前をbeanName属性に指定することができます。 beanName属性は､インターフェースを実装したオブジェクトが複数存在する場合にのみ使うようにしてください。</p>
+<p>EJBアノテーションはフィールドまたはsetterメソッドに指定することができます．フィールドに指定された場合でbeanName属性が指定されなかった場合は，フィールド名がEJB3コンポーネント名として使用されます．</p>
+<pre>
+@EJB
+private Aaa aaa;
+
+@EJB(beanName="bbb2")
+public void setBbb(Bbb bbb) {
+    ...
+}
+</pre>
+<h3><a name="ResourceAnnotation" id="ResourceAnnotation">Resourceアノテーション</a></h3>
+<p>Resourceアノテーションによって､DataSourceやDAO等のコンポーネントを参照することができます。 コンポーネントの名前をname属性に指定することができます。 name属性は､インターフェースを実装したオブジェクトが複数存在する場合にのみ使うようにしてください。</p>
+<p>Resourceアノテーションはフィールドまたはsetterメソッドに指定することができます．フィールドに指定された場合でname属性が指定されなかった場合は，フィールド名がコンポーネント名として使用されます．</p>
+<pre>
+@Resource
+private EmployeeDao employeeDao;
+
+@Resource(name="fooDataSource")
+private void setDataSource(DataSource ds) {
+    ...
+}
+</pre>
+<h3><a name="TransactionManagementAnnotation" id="TransactionManagementAnnotation">TransactionManagementアノテーション</a></h3>
+<p>TransactionManagementアノテーションにより、コンテナ管理トランザクション(CMT)とBean管理トランザクション(BMT)を使い分けることができます。<br />
+デフォルトはCMTであるため、CMTを使用する場合はTransactionManagementアノテーションを明示する必要はありません。</p>
+<pre>
+@Stateless
+@TransactionManagement(TransactionManagementType.BEAN)
+public class Xxx {
+    ...
+}
+</pre>
+<h3><a name="TransactionAttributeAnnotation" id="TransactionAttributeAnnotation">TransactionAttributeアノテーション</a></h3>
+<p>TransactionAttributeアノテーションにより、ビジネスメソッドのトランザクション属性を設定することができます。この指定が有効なのは、CMTの場合のみです。<br />
+クラスにTransactionAttributeアノテーションを付けることにより、そのクラスのビジネスメソッド全体のトランザクション属性を設定することができます。指定しなかった場合のデフォルトはREQUIREDです。<br />
+メソッドにTransactionAttributeアノテーションを付けることにより、そのビジネスメソッドのトランザクション属性を設定することができます。指定しなかった場合のデフォルトはクラスに付けられたトランザクション属性です。<br />
+TransactionAttributeアノテーションを使用するには、そのセッションビーンを登録するコンテナにejb3tx.diconをインクルードする必要があります。 ejb3tx.diconはS2Tigerのresourcesディレクトリの下にあります。</p>
+<pre>
+@Stateless
+@TransactionAttribute(TransactionAttributeType.MANDATRY)
+public class Xxx {
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public void someMethod() {
+        ...
+    }
+}
+</pre>
+<h3><a name="InterceptorsAnnotation" id="InterceptorsAnnotation">Interceptorsアノテーション</a></h3>
+<p>Interceptorsアノテーションにより、ビジネスメソッドの呼び出しやライフサイクルイベントをインターセプトするクラスを複数指定することができます。<br />
+Interceptorsアノテーションはクラスまたはメソッドに付けることができます。</p>
+<pre>
+@Stateless
+@Interceptors({foo.bar.HogeInterceptor.class, foo.bar.SomeInterceptor})
+public class Xxx {
+    ...
+    @Interceptors(foo.bar.MethodInterceptor)
+    private void hogehoge() {
+        ...
+    }
+}
+</pre>
+<h3><a name="ExcludeClassInterceptorsAnnotation" id="ExcludeClassInterceptorsAnnotation">ExcludeClassInterceptorsアノテーション</a></h3>
+<p>ExcludeClassInterceptorsアノテーションにより、クラスに@Interceptorsアノテーションで指定したインターセプタをメソッドに適用しないことを指定することができます。<br /></p>
+<pre>
+@Stateless
+@Interceptors(foo.bar.HogeInterceptor.class)
+public class Xxx {
+    ...
+    @ExcludeClassInterceptos
+    @Interceptors(foo.bar.MethodInterceptor)
+    private void hogehoge() {
+        ...
+    }
+}
+</pre>
+<h3><a name="PostConstructAnnotation" id="PostConstructAnnotation">PostConstructアノテーション</a></h3>
+<p>PostConstructアノテーションにより、インスタンス生成～DIの後に呼び出されるメソッドを指定することができます。<br />
+PostConstructアノテーションはセッションビーンまたはインターセプタクラスのメソッドに指定することができます。<br />
+セッションビーンにPostConstructアノテーションを付ける場合、そのメソッドは非<code>static</code>、非<code>final</code>で引数がなく、戻り値型が<code>void</code>でなければなりません。メソッド名および可視性は任意です。<br />
+インターセプタにPostConstructアノテーションを付ける場合、そのメソッドは非<code>static</code>、非<code>final</code>で引数は<code>javax.interceptor.InvocationContext</code>型一つだけ、戻り値型が<code>void</code>でなければなりません。メソッド名および可視性は任意です。</p>
+<pre>
+@Stateless
+@Interceptors(Yyy.class)
+public class Xxx {
+    ...
+    @PostConstruct
+    private void initialize() {
+        ...
+    }
+}
+
+public class Yyy {
+    ...
+    @PostConstruct
+    private void initialize(InvocationContext context) {
+        ...
+    }
+}
+</pre>
+<h3><a name="AroundInvokeAnnotation" id="AroundInvokeAnnotation">AroundInvokeアノテーション</a></h3>
+<p>AroundInvokeアノテーションにより、ビジネスメソッドの呼び出しをインターセプトすることができます。<br />
+AroundInvokeアノテーションはセッションビーンまたはインターセプタクラスのメソッドに指定することができます。<br />
+セッションビーンにAroundInvokeアノテーションを付けることができるメソッドは非<code>static</code>、非<code>final</code>で引数は<code>javax.interceptor.InvocationContext</code>型一つだけ、戻り値型は<code>java.lang.Object</code>型でなければなりません。メソッドの名前や可視性は任意です。<br />
+クラスで一つのメソッドにだけAroundInvokeアノテーションを付けることができます。</p>
+<pre>
+@Stateless
+@Interceptors(Yyy.class)
+public class Xxx {
+    ...
+    @AroundInvoke
+    private Object invoke(InvocationContext context) throws Exception {
+        ...
+    }
+}
+
+public class Yyy {
+    ...
+    @AroundInvoke
+    Object invoke(InvocationContext context) throws Exception {
+        ...
+    }
+}
+</pre>
+<!-- document end -->
+<!-- don't edit start --></td>
+<td width="14"><img height="14" width="14" src="images/spacer.gif" alt="" /></td>
+</tr>
+<tr>
+<td width="14"><img height="30" width="14" src="images/spacer.gif" alt="" /></td>
+<td width="766"><img height="30" width="592" src="images/spacer.gif" alt="" /></td>
+</tr>
+<tr>
+<td width="14"><img height="14" width="14" src="images/spacer.gif" alt="" /></td>
+<td width="766" class="copyright">Copyright© 2004-2005, The Seasar Foundation and the others. All rights reserved.</td>
+</tr>
+</table>
+</td>
+<td class="backright" align="left" valign="top">&nbsp;</td>
+</tr>
+<tr>
+<td class="backunder" align="left" valign="top" width="780" height="16">&nbsp;</td>
+<td class="backcorner" align="left" valign="top" height="16">&nbsp;</td>
+</tr>
+</table>
+<!-- don't edit end -->
+</body>
+</html>

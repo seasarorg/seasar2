@@ -1,0 +1,185 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<!-- don't edit start -->
+<head>
+<title>Seasar - DI Container with AOP -</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<link href="seasar_b.css" type="text/css" rel="stylesheet" media="screen" />
+<script src="seasar_b.js" type="text/JavaScript" language="JavaScript">
+</script>
+</head>
+<body onload="preload('en')">
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="left">
+<tr>
+<td align="left" valign="top" width="780">
+<table width="780" border="0" cellspacing="0" cellpadding="0" class="white">
+<tr>
+<td colspan="7"><img height="5" width="780" src="images/top01_b.gif" alt="" /></td>
+</tr>
+<tr>
+<td><img height="117" width="235" src="images/top02_b.gif" alt="Seasar" /></td>
+<td colspan="3"><img height="117" width="289" src="images/top03.gif" alt="DI Container with AOP" /></td>
+<td colspan="3"><img height="117" width="256" src="images/spacer.gif" alt="" /></td>
+</tr>
+<tr>
+<td rowspan="2"><img src="images/top04.gif" alt="" height="49" width="235" /></td>
+<td><a href="http://www.seasar.org/en/index.html"><img src="images/menu01_b_en.gif" height="30" width="78" border="0" alt="" id="menu01" onmouseover="swap(1)" onmouseout="restore(1)" name="menu01" /></a></td>
+<td><a href="http://www.seasar.org/en/projects.html"><img src="images/menu02_b_en.gif" height="30" width="101" border="0" alt="" id="menu02" onmouseover="swap(2)" onmouseout="restore(2)" name="menu02" /></a></td>
+<td><a href="http://www.seasar.org/en/products.html"><img src="images/menu06_b_en.gif" height="30" width="110" border="0" alt="" id="menu06" onmouseover="swap(6)" onmouseout="restore(6)" name="menu06" /></a></td>
+<td><a href="http://www.seasar.org/en/documents.html"><img src="images/menu04_b_en.gif" height="30" width="109" border="0" alt="" id="menu04" onmouseover="swap(4)" onmouseout="restore(4)" name="menu04" /></a></td>
+<td><a href="http://www.seasar.org/en/resources.html"><img src="images/menu05_b_en.gif" height="30" width="113" border="0" alt="" id="menu05" onmouseover="swap(5)" onmouseout="restore(5)" name="menu05" /></a></td>
+<!--
+<td><img src="images/menu07_b_en.gif" height="30" width="109" border="0" alt=""  id="menu07" onmouseover="swap(7)" onmouseout="restore(7)"></td>
+//-->
+<td><img height="30" width="34" src="images/menu06.gif" alt="" /></td>
+</tr>
+<tr>
+<td colspan="6"><img height="19" width="545" src="images/spacer.gif" alt="" /></td>
+</tr>
+</table>
+<table width="780" border="0" cellspacing="0" cellpadding="0" class="white">
+<tr align="left" valign="top">
+<td width="14"><img height="14" width="14" src="images/spacer.gif" alt="" /></td>
+<td width="740" class="main"><!-- don't edit end -->
+<!-- document start -->
+<h2>REQUIREMENT</h2>
+<p>S2 requires JDK1.4 or JDK1.5 to run.</p>
+<h2>SETUP</h2>
+<ul>
+<li>Download S2xxx.zip, and Unzip it!</li>
+<li>Import seasar2 directory as an existing project to Eclipse.</li>
+<li style="list-style: none">
+<ul>
+<li>Select menu 'File -&gt; Import... -&gt; Existing Project into workspace'</li>
+</ul>
+</li>
+</ul>
+<h2>CLASSPATH</h2>
+<p>For using the basic function of Seasar2(S2Container, S2AOP), you need to include the following files in CLASSPATH.</p>
+<ul>
+<li>lib/aopalliance-1.0.jar</li>
+<li>lib/commons-logging-1.0.4.jar</li>
+<li>lib/geronimo-j2ee_1.4_spec-1.0.jar (refer to below)</li>
+<li>lib/javassist-3.0.jar</li>
+<li>lib/ognl-2.6.5.jar</li>
+<li>lib/s2-framework-2.x.x.jar</li>
+<li>lib/log4j-1.2.8.jar (optional)</li>
+<li>resources/log4j.properties (optional)</li>
+<li>resources/aop.dicon (optional)</li>
+</ul>
+<p>For using the extended function of Seasar2(S2JTA, S2DBCP, S2JDBC, S2Unit, S2Tx, and S2DataSet), you need to include the following files in CLASSPATH.</p>
+<ul>
+<li>lib/junit-3.8.1.jar</li>
+<li>lib/poi-2.5-final-20040804.jar</li>
+<li>lib/s2-extension-2.x.x.jar</li>
+<li>lib/geronimo-jta_1.0.1B_spec-1.0.jar (refer to below)</li>
+<li>lib/geronimo-ejb_2.1_spec-1.0.jar (refer to below)</li>
+<li>resources/jdbc.dicon</li>
+</ul>
+<p>Selects geronimo-j2ee_1.4_spec-1.0.jar, geronimo-jta_1.0.1B_spec-1.0.jar or geronimo-ejb_2.1_spec-1.0.jar responding to the application evnironment.</p>
+<table border="1">
+<tr>
+<th>environment</th>
+<th>geronimo-j2ee_1.4_spec-1.0.jar</th>
+<th>geronimo-jta_1.0.1B_spec-1.0.jar</th>
+<th>geronimo-ejb_2.1_spec-1.0.jar</th>
+</tr>
+<tr align="center">
+<td>Servlet Container not implementing J2EE full spec<br />
+(Tomcat etc.)</td>
+<td>unnecessary</td>
+<td>necessary<br />
+(using S2JTA,S2Tx)</td>
+<td>necessary<br />
+(using S2Tiger)</td>
+</tr>
+<tr align="center">
+<td>Application Server implementing J2EE full spec<br />
+(JBoss, WebSphere, WebLogic etc)</td>
+<td>unnecessary</td>
+<td>unnecessary</td>
+<td>unnecessary</td>
+</tr>
+<tr align="center">
+<td>Standalone</td>
+<td>necessary</td>
+<td>unnecessary</td>
+<td>unnecessary</td>
+</tr>
+</table>
+<br />
+<p>HSQLDB is included so that you can try the function of a database easily. You need to <a href="dbcp.html#Setup">configurate XADataSourceImpl</a> in jdbc.dicon in accordance with your environment.</p>
+<p>Let's try <a href="http://www.seasar.org/en/updates.html">Kijimuna Eclipse Plugin for S2Container</a>.</p>
+<p>Using EJB3 Annotation, the operations are as follows.</p>
+<ul>
+<li>Download S2Tigerxxx.zip, and Unzip it!</li>
+<li>Import s2-tiger directory as an existing project to Eclipse.</li>
+<li style="list-style: none">
+<ul>
+<li>Select menu 'File -&gt; Import... -&gt; Existing Project into workspace'</li>
+</ul>
+</li>
+<li>Add following jar file to CLASSPATH.
+<ul>
+<li>lib/s2-tiger-x.x.x.jar</li>
+<li>src/examples/resources/jndi.properties</li>
+</ul>
+</li>
+</ul>
+<p>Using Tiger Annotation, the operations are as follows.</p>
+<ul>
+<li>Download S2Tigerxxx.zip, and Unzip it!</li>
+<li>Import s2-tiger directory as an existing project to Eclipse.</li>
+<li style="list-style: none">
+<ul>
+<li>Select menu 'File -&gt; Import... -&gt; Existing Project into workspace'</li>
+</ul>
+</li>
+<li>Add following jar file to CLASSPATH.
+<ul>
+<li>lib/s2-tiger-x.x.x.jar</li>
+</ul>
+</li>
+</ul>
+<p>Using Backport175 Annotation, the operations are as follows.</p>
+<ul>
+<li>Download S2Backport175xxx.zip, and Unzip it!</li>
+<li>Import s2-backport175 directory as an existing project to Eclipse.</li>
+<li style="list-style: none">
+<ul>
+<li>Select menu 'File -&gt; Import... -&gt; Existing Project into workspace'</li>
+</ul>
+</li>
+<li>Add following jar file to CLASSPATH.
+<ul>
+<li>lib/s2-backport175-x.x.x.jar</li>
+<li>lib/backport175-x.x.jar</li>
+</ul>
+</li>
+</ul>
+<p>Let's try <a href="http://backport175.codehaus.org/Eclipse+plugin">backport175 Eclipse plugin</a>.</p>
+<!-- document end -->
+<!-- don't edit start --></td>
+<td width="14"><img height="14" width="14" src="images/spacer.gif" alt="" /></td>
+</tr>
+<tr>
+<td width="14"><img height="30" width="14" src="images/spacer.gif" alt="" /></td>
+<td width="766"><img height="30" width="592" src="images/spacer.gif" alt="" /></td>
+</tr>
+<tr>
+<td width="14"><img height="14" width="14" src="images/spacer.gif" alt="" /></td>
+<td width="766" class="copyright">Copyright© 2004-2005, The Seasar Foundation and the others. All rights reserved.</td>
+</tr>
+</table>
+</td>
+<td class="backright" align="left" valign="top">&nbsp;</td>
+</tr>
+<tr>
+<td class="backunder" align="left" valign="top" width="780" height="16">&nbsp;</td>
+<td class="backcorner" align="left" valign="top" height="16">&nbsp;</td>
+</tr>
+</table>
+<!-- don't edit end -->
+</body>
+</html>

@@ -1,14 +1,73 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <document>
 	<properties>
-		<title>Top</title>
+		<title>DI Container with AOP</title>
 	</properties>
 	<body>
 		<section name="Welcome">
 			<p>
-				「Seasar2」とは、「Javaのアプリケーション開発」で悩みを抱えている「開発者」向けの 「軽量コンテナ」であり、「高い生産性と品質」を提供します。 
-				そして、「他の軽量コンテナ」とは違って、「設定ファイルをほとんど書く必要がなく」、 「アプリケーションを修正したときでも再起動なしで即座にその変更を認識できるので、 スクリプト言語並みのさくさく感」が得られます。
+				「Seasar2」とは、「Javaのアプリケーション開発」で悩みを抱えている「開発者」向けの 「軽量コンテナ」であり、
+				「高い生産性と品質」を提供します。 
+				そして、「他の軽量コンテナ」とは違って、「設定ファイルをほとんど書く必要がなく」、
+				 「アプリケーションを修正したときでも再起動なしで即座にその変更を認識できるので、
+				スクリプト言語並みのさくさく感」が得られます。
 			</p>
+			<p>
+				設定ファイルを書かなくてもすむように、<b>Convention over Configuration</b>の考え方が取り入れられています。
+				Convention over Configurationとは、 「適切な規約を守れば特に面倒な設定をしなくても、
+				フレームワークが自動的に適切な設定をしてくれるという考え」で、
+				<a href="http://www.rubyonrails.org/">Ruby on Rails</a>によって 提唱されました。
+				Seasar2のConvention over Configurationは、Ruby on Railsから ヒントを得ました。
+			</p>
+			<p>
+				Seasar2を使えばテーブルをメンテナンスするだけの簡単なアプリケーションなら3分間もあれば作成できます。
+				<ul>
+					<li><p>動画(Flash)によるデモは<a href="demo/chura.html">こちら</a>。</p></li>
+				</ul>
+			</p>
+			<p>
+				アプリケーションを修正したときでも再起動なしで即座にその変更を認識できる機能のことを、
+				Seasar2では<b>HOT deploy</b>と呼んでいます。
+			</p>
+			<p>
+				Seasar2をつくるにあたって参考にした以下のプロダクトに対して、 感謝いたします。
+				<ul>
+					<li><p><a href="http://www.rubyonrails.org/">Ruby on Rails</a></p></li>
+					<li><p><a href="http://www.springframework.org">Spring Framework</a></p></li>
+					<li><p><a href="http://www.picocontainer.org/">PicoContainer</a></p></li>
+				</ul>
+			</p>
+			<p>
+				Seasar2の基本機能を15分ほどでご紹介する<a href="DIContainer.html#Quickstart">クイックスタート</a>を
+				用意しています。
+				最初にお試しください
+			</p>
+			<h4>Flashによる<a name="demo" id="demo">デモ</a></h4>
+			<dl>
+				<dt><a href="demo/chura.html">3分でできるWebアプリケーション</a></dt>
+				<dd>
+					Seasar2を使えばテーブルをメンテナンスするだけの簡単なアプリケーションなら3分間もあれば作成できます。<br />
+					デモアプリケーションが動くまでを見てみましょう。
+				</dd>
+			</dl>
+		</section>
+		<section name="メーリングリスト">
+			<dl>
+				<dt><a href="https://www.seasar.org/mailman/listinfo/seasar-user">seasar-user</a></dt>
+				<dd>Seasar2および関連プロダクトの利用者のためのメーリングリストです。<br />
+				Seasar2を利用していて疑問に思ったことや困ったこと、要望などはこちらへ。</dd>
+				<dt><a href="https://www.seasar.org/mailman/listinfo/seasar-dev">seasar-dev</a></dt>
+				<dd>Seasar2および関連プロダクト開発者のためのメーリングリストです。</dd>
+				<dt><a href="https://www.seasar.org/mailman/listinfo/seasar-javadoc">seasar-javadoc</a></dt>
+				<dd>Seasar2および関連プロダクトにJavadocを記述するプロジェクトのためのメーリングリストです。<br />
+				<a href="http://www.seasar.org/wiki/index.php?SeasarJavadocProject">協力者を募集しています。</a></dd>
+			</dl>
+		</section>
+		<section name="トラッキング">
+			<dl>
+				<dt><a href="https://www.seasar.org/issues/browse/CONTAINER">JIRA</a></dt>
+				<dd>バグや問題の報告はこちらへ</dd>
+			</dl>
 		</section>
 		<section name="News">
 			<dl>

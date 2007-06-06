@@ -1,0 +1,178 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja" lang="ja">
+<!-- don't edit start -->
+<head>
+<title>Seasar - DI Container with AOP -</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="seasar_b.css" type="text/css" rel="stylesheet" media="screen" />
+<link href="seasar_p.css" type="text/css" rel="stylesheet" media="print" />
+<script src="seasar_b.js" type="text/JavaScript" language="JavaScript">
+</script>
+</head>
+<body onload="preload('ja')">
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="left">
+<tr>
+<td align="left" valign="top" width="780">
+<table width="780" border="0" cellspacing="0" cellpadding="0" class="white">
+<tr>
+<td colspan="7"><img height="5" width="780" src="images/top01_b.gif" alt="" /></td>
+</tr>
+<tr>
+<td><img height="117" width="235" src="images/top02_b.gif" alt="Seasar" /></td>
+<td colspan="3"><img height="117" width="289" src="images/top03.gif" alt="DI Container with AOP" /></td>
+<td colspan="3"><img height="117" width="256" src="images/spacer.gif" alt="" /></td>
+</tr>
+<tr>
+<td rowspan="2"><img src="images/top04.gif" alt="" height="49" width="235" /></td>
+<td><a href="http://www.seasar.org/index.html"><img src="images/menu01_b_ja.gif" height="30" width="78" border="0" alt="" id="menu01" onmouseover="swap(1)" onmouseout="restore(1)" name="menu01" /></a></td>
+<td><a href="http://www.seasar.org/projects.html"><img src="images/menu02_b_ja.gif" height="30" width="101" border="0" alt="" id="menu02" onmouseover="swap(2)" onmouseout="restore(2)" name="menu02" /></a></td>
+<td><a href="http://www.seasar.org/products.html"><img src="images/menu03_b_ja.gif" height="30" width="110" border="0" alt="" id="menu03" onmouseover="swap(3)" onmouseout="restore(3)" name="menu03" /></a></td>
+<td><a href="http://www.seasar.org/resources.html"><img src="images/menu04_b_ja.gif" height="30" width="113" border="0" alt="" id="menu04" onmouseover="swap(4)" onmouseout="restore(4)" name="menu04" /></a></td>
+<td><img src="images/menu05_b_ja.gif" height="30" width="109" border="0" alt="" id="menu05" onmouseover="swap(5)" onmouseout="restore(5)" name="menu05" /></td>
+<td><img height="30" width="34" src="images/menu06.gif" alt="" /></td>
+</tr>
+<tr>
+<td colspan="6"><img height="19" width="545" src="images/spacer.gif" alt="" /></td>
+</tr>
+</table>
+<table width="780" border="0" cellspacing="0" cellpadding="0" class="white">
+<tr align="left" valign="top">
+<td width="14"><img height="14" width="14" src="images/spacer.gif" alt="" /></td>
+<td width="740" class="main"><!-- don't edit end -->
+<!-- document start -->
+<h1>Loggerクラス</h1> 
+
+<p>S2Containerの中にはlog4jをラップした便利なLoggerクラスがあります。</p>
+
+<h2>目次</h2>
+
+<ul>
+	<li><a href="#mainClass">主要クラス</a></li>
+	<li><a href="#propertieFile">プロパティファイル</a>
+	<ul>
+		<li><a href="#propertiesNaming">メッセージの命名規約</a></li>
+		<li><a href="#propertiesKind">メッセージ種別</a></li>
+	</ul></li>
+	<li><a href="#logMethod">log()メソッド</a>
+	<ul>
+		<li><a href="#useLogMethod">log()メソッドの使用例</a></li>
+	</ul></li>
+</ul>
+
+<br>
+<h2><a name="mainClass">主要クラス</a></h2>
+<ul>
+<li>org.seasar.framework.log.Logger</li> 
+<dl>
+<dt>Commons Loggingをラップしたクラス(Log4jはCommons Loggingで設定)</dt>
+<dt>内部的には次のMessageFormatterを利用している </dt>
+</dl>
+<li>org.seasar.framework.message.MessageFormatter</li>
+<dl> 
+<dt>java.text.MessageFormatと</dt>
+<dt>(S2.3)java.util.ResourceBundle</dt> 
+<dt>(S2.4)org.seasar.framework.message.MessageResourceBundleを内部で利用している </dt>
+<dt>以下はSMART deploy対応のメッセージバンドルを定義しているクラス</dt>
+</dl>
+<li>org.seasar.framework.message.MessageResourceBundle</li>
+<li>org.seasar.framework.message.MessageResourceBundleFacade</li>
+<li>org.seasar.framework.message.MessageResourceBundleFactory</li>
+</ul>
+<br>
+
+<h2><a name="propertieFile">プロパティファイル</a></h2>
+<p>Loggerの出力メッセージを定義するファイルです。</p>
+<ul>
+<li>XXXMessages.properties</li>
+<dl> 
+<dt>「XXX」がシステム名になる。</dt>
+</dl>
+<li>XXXMessages_ja.properties</li> 
+<dl>
+<dt>日本語対応する場合は、ロケールに合わせたプロパティファイルを用意する。</dt>
+</dl>
+</ul>
+<br>
+
+<h4>例：SSRMessages.properties</h4>
+<p>以下はS2Containerで使用しているメッセージ用プロパティファイルです。</p>
+
+<pre>
+ESSR0001={0} not found
+ESSR0002=<{0}> expected:<{1}> but actual:<{2}>
+ESSR0003=<{0}> unexpected:<{1}>
+ESSR0004={0} not found from {1}
+ESSR0007={0} should not be null or empty
+</pre>
+<br>
+
+<h4><a name="propertiesNaming">メッセージの命名規約</a></h4>
+<p>メッセージ[　ESSR0001={0} not found　]は次の規則に沿って作られています。</p>
+<pre>
+メッセージ種別(1字)　＋　システム名　＋　連番(4桁)　＝　メッセージ内容
+</pre>
+<br>
+
+<h4><a name="propertiesKind">メッセージ種別</a></h4>
+<p>メッセージの頭１文字はそのメッセージの種別を表しています。</p>
+<table border="1" width="40%">
+<tr bgcolor="#d1f3f4" align="center"><th>メッセージ種別</th><th>表記(１字)</th></tr>
+<tr align="center"><td>FATAL</td><td>F</td></tr>
+<tr align="center"><td>ERROR</td><td>E</td></tr>
+<tr align="center"><td>WARN</td><td>W</td></tr>
+<tr align="center"><td>INFO</td><td>I</td></tr>
+<tr align="center"><td>DEBUG</td><td>D</td></tr>
+</table>
+<br>
+
+<h2><a name="logMethod">log()メソッド</a></h2>
+<p>org.seasar.framework.log.Loggerのlog()メソッドは2種類あります。</p>
+
+<ul>
+<li>public final void log(String messageCode, Object[] args) </li>
+<dl>
+<dt>内部的には次のlog()メソッドの第3引き数をnullにして呼び出す </dt>
+</dl>
+<li>public final void log(String messageCode, Object[] args, Throwable throwable) </li>
+<dl>
+<dt>3つの引数を持つlog()メソッドは、内部でメッセージコードからメッセージ種別を判別し、対応するCommons Loggingのメソッド</dt>
+<dt>（debug, info, warn, error, fatal）を呼び出します。</dt>
+</dl>
+</ul>
+<br>
+
+<h4><a name="useLogMethod">log()メソッドの使用例</a></h4>
+<p>org.seasar.framework.log.Logger.getLogger()メソッドでLoggerクラスのインスタンスを取得します。</p>
+<pre>
+    logger.log("DRMI0001", new Object[] { Integer.toString(this.registryPort) });
+</pre>
+<p>実際に表示される内容は以下の通り。</p>
+<pre>
+DEBUG 2005-06-01 00:44:49,616 [main] RMIレジストリをポート 1108 で作成しました。
+</pre>
+
+
+<!-- document end -->
+<!-- don't edit start --></td>
+<td width="14"><img height="14" width="14" src="images/spacer.gif" alt="" /></td>
+</tr>
+<tr>
+<td width="14"><img height="30" width="14" src="images/spacer.gif" alt="" /></td>
+<td width="766"><img height="30" width="592" src="images/spacer.gif" alt="" /></td>
+</tr>
+<tr>
+<td width="14"><img height="14" width="14" src="images/spacer.gif" alt="" /></td>
+<td width="766" class="copyright">Copyright© 2004-2005, The Seasar Foundation and the others. All rights reserved.</td>
+</tr>
+</table>
+</td>
+<td class="backright" align="left" valign="top">&nbsp;</td>
+</tr>
+<tr>
+<td class="backunder" align="left" valign="top" width="780" height="16">&nbsp;</td>
+<td class="backcorner" align="left" valign="top" height="16">&nbsp;</td>
+</tr>
+</table>
+<!-- don't edit end -->
+</body>
+</html>

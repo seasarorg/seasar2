@@ -1,0 +1,1608 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//CN">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="cn" lang="cn">
+<!-- don't edit start -->
+<head>
+<title>Seasar - DI Container with AOP -</title>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<link href="seasar_b.css" type="text/css" rel="stylesheet" media="screen" />
+<link href="seasar_p.css" type="text/css" rel="stylesheet" media="print" />
+<script src="seasar_b.js" type="text/JavaScript" language="JavaScript">
+</script>
+</head>
+<body onload="preload('ja')">
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="left">
+<tr>
+<td align="left" valign="top" width="780">
+<table width="780" border="0" cellspacing="0" cellpadding="0" class="white">
+<tr>
+<td colspan="7"><img height="5" width="780" src="images/top01_b.gif" alt="" /></td>
+</tr>
+<tr>
+<td width="235"><img height="117" width="235" src="images/top02_b.gif" alt="Seasar" /></td>
+<td colspan="3"><img height="117" width="289" src="images/top03.gif" alt="DI Container with AOP" /></td>
+<td colspan="3"><img height="117" width="256" src="images/spacer.gif" alt="" /></td>
+</tr>
+<tr>
+<td rowspan="2"><img src="images/top04.gif" alt="" height="49" width="235" /></td>
+<td><a href="http://www.seasar.org/index.html"><img src="images/menu01_b_ja.gif" height="30" width="78" border="0" alt="" id="menu01" onmouseover="swap(1)" onmouseout="restore(1)" name="menu01" /></a></td>
+<td><a href="http://www.seasar.org/projects.html"><img src="images/menu02_b_ja.gif" height="30" width="101" border="0" alt="" id="menu02" onmouseover="swap(2)" onmouseout="restore(2)" name="menu02" /></a></td>
+<td><a href="http://www.seasar.org/products.html"><img src="images/menu03_b_ja.gif" height="30" width="110" border="0" alt="" id="menu03" onmouseover="swap(3)" onmouseout="restore(3)" name="menu03" /></a></td>
+<td><a href="http://www.seasar.org/resources.html"><img src="images/menu04_b_ja.gif" height="30" width="113" border="0" alt="" id="menu04" onmouseover="swap(4)" onmouseout="restore(4)" name="menu04" /></a></td>
+<td><img src="images/menu05_b_ja.gif" height="30" width="109" border="0" alt="" id="menu05" onmouseover="swap(5)" onmouseout="restore(5)" name="menu05" /></td>
+<td width="34"><img height="30" width="34" src="images/menu06.gif" alt="" /></td>
+</tr>
+<tr>
+<td colspan="6"><img height="19" width="545" src="images/spacer.gif" alt="" /></td>
+</tr>
+</table>
+<table width="780" border="0" cellspacing="0" cellpadding="0" class="white">
+<tr align="left" valign="top">
+<td width="18"><img height="14" width="18" src="images/spacer.gif" alt="" /></td>
+<td width="744" class="main"><!-- don't edit end -->
+<!-- document start -->
+<ul>
+<li><a href="#Quickstart">快速上手</a> 　
+<ul>
+<li><a href="#FirstStep">最初的一步</a></li>
+<li><a href="#NextStep">更进一步</a> 　　　　　　　　</li>
+</ul>
+</li>
+<li><a href="#S2ContainerReference">S2Container指南</a>
+<ul>
+<li><a href="#CreateFile">需要作成的文件</a></li>
+<li><a href="#S2ContainerDefinition">S2Container的定义</a></li>
+<li><a href="#S2ContainerCreation">S2Container的生成</a>
+<ul>
+<li><a href="#SingletonS2ContainerFactory">SingletonS2ContainerFactory的使用</a></li>
+<li><a href="#S2ContainerFactory">S2ContainerFactory的使用</a></li>
+</ul>
+</li>
+<li><a href="#getComponent">组件的取得</a></li>
+<li><a href="#DIType">Dependency Injection的方式</a>
+<ul>
+<li type="circle"><a href="#ConstructorInjection">构造函数注入</a></li>
+<li type="circle"><a href="#SetterInjection">设定函数注入</a></li>
+<li type="circle"><a href="#MethodInjection">方法函数注入</a></li>
+</ul>
+</li>
+<li><a href="#Include">S2Container定义的分解和引入</a></li>
+<li><a href="#Namespace">名称空间</a></li>
+<li><a href="#InstanceMode">实例管理</a></li>
+<li><a href="#Lifecycle">生存周期</a></li>
+<li><a href="#AutoBindingMode">自动绑定</a></li>
+<li><a href="#UseS2Container">组件中利用S2Container</a></li>
+<li><a href="#S2ContainerServlet">S2ContainerServlet</a></li>
+<li><a href="#app.dicon">app.dicon的角色</a></li>
+<li><a href="#Aop">AOP的适用范围</a></li>
+<li><a href="#Meta">META数据</a></li>
+<li><a href="#Request">Request的自动绑定</a></li>
+<li><a href="#ComponentAutoRegister">组件的自动登陆</a></li>
+<li><a href="#AspectAutoRegister">Aspect的自动登陆</a></li>
+<li><a href="#MetaAutoRegister">Meta的自动登陆</a></li>
+<li><a href="#Hotswap">Hotswap</a></li>
+</ul>
+</li>
+<li><a href="#DefReference">S2Container标签指南</a>
+<ul>
+<li><a href="#DOCTYPE">DOCTYPE</a></li>
+<li><a href="#componentsTag">components标签</a></li>
+<li><a href="#includeTag">include标签</a></li>
+<li><a href="#componentTag">component标签</a></li>
+<li><a href="#argTag">arg标签</a></li>
+<li><a href="#propertyTag">property标签</a></li>
+<li><a href="#metaTag">meta标签</a></li>
+<li><a href="#initMethodTag">initMethod标签</a></li>
+<li><a href="#destroyMethodTag">destroyMethod标签</a></li>
+<li><a href="#aspectTag">aspect标签</a></li>
+<li><a href="#interTypeTag">interType标签</a></li>
+<li><a href="#descriptionTag">description标签</a></li>
+<li><a href="#ognlExpr">OGNL式</a></li>
+</ul>
+</li>
+<li><a href="#AnnotationReference">S2Container备注码(Annotation本篇翻译为备注码)指南</a>
+<ul>
+<li><a href="#ComponentAnnotation">Component备注码</a></li>
+<li><a href="#BindingAnnotation">Binding备注码</a></li>
+<li><a href="#AspectAnnotation">Aspect备注码</a></li>
+<li><a href="#InterTypeAnnotation">InterType备注码</a></li>
+<li><a href="#InitMethodAnnotation">InitMethod备注码</a></li>
+<li><a href="#DestroyMethodAnnotation">DestroyMethod备注码</a></li>
+</ul>
+</li>
+<li><a href="DIContainerExercise.html">DIContainer练习</a></li>
+</ul>
+<h2><a name="QuickStart" id="QuickStart">快速上手</a></h2>
+<p>S2Container，就是进行Dependency Injection（注:依赖注入——译者）（以后略称为DI）的一个轻量级容器。DI，就是Interface和实装分离，程序相互之间仅通过Interface来会话的一种思考方式。</p>
+<h3><a name="FirstStep" id="FirstStep">最初的一步</a></h3>
+<p>让我们赶快试一试吧。登场人物如下。</p>
+<ul>
+<li>问候语类
+<ul>
+<li>返回问候语的字符串。</li>
+</ul>
+</li>
+<li>问候客户端类
+<ul>
+<li>从问候类获得问候语(字符串)并输出到终端屏幕。</li>
+</ul>
+</li>
+<li>问候语应用主类
+<ul>
+<li>启动用的类。用来组织问候语类和问候语使用者类的组成方式。</li>
+</ul>
+</li>
+</ul>
+<h5>Greeting.java</h5>
+<p>问侯语的Interface。</p>
+<pre>
+package examples.di;
+
+public interface Greeting {
+
+    String greet();
+}
+</pre>
+<h5>GreetingImpl.java</h5>
+<p>问候语的实装。</p>
+<pre>
+package examples.di.impl;
+
+import examples.di.Greeting;
+
+public class GreetingImpl implements Greeting {
+
+    public String greet() {
+        return "Hello World!";
+    }
+}
+</pre>
+<h5>GreetingClient.java</h5>
+<p>使用问候语的使用者客户端Interface。</p>
+<pre>
+package examples.di;
+
+public interface GreetingClient {
+
+    void execute();
+}
+</pre>
+<h5>GreetingClientImpl.java</h5>
+<p>使用问候语的客户端的实装。不是直接使用这个GreetngImpl(实装)，而是通过Greeting（Interface）来实现问候的机能。</p>
+<pre>
+package examples.di.impl;
+
+import examples.di.Greeting;
+import examples.di.GreetingClient;
+
+public class GreetingClientImpl implements GreetingClient {
+
+    private Greeting greeting;
+
+    public void setGreeting(Greeting greeting) {
+        this.greeting = greeting;
+    }
+
+    public void execute() {
+        System.out.println(greeting.greet());
+    }
+}
+</pre>
+<p>机能提供端和使用端的准备都完成了。下面我们就执行一下试试吧。</p>
+<h5>GreetingMain.java</h5>
+<pre>
+package examples.di.main;
+
+import examples.di.Greeting;
+import examples.di.impl.GreetingClientImpl;
+import examples.di.impl.GreetingImpl;
+
+public class GreetingMain {
+
+    public static void main(String[] args) {
+        Greeting greeting = new GreetingImpl();
+        GreetingClientImpl greetingClient = new GreetingClientImpl();
+        greetingClient.setGreeting(greeting);
+        greetingClient.execute();
+    }
+}
+</pre>
+<p>实行结果如下。</p>
+<pre>
+Hello World!
+</pre>
+<p>象这样机能的使用者(GreetingClientImpl)经由Interface(Greeting)的中介来使用机能，具体的机能对象(既Interface的实装类)在实行的时候由第三者(在这里是GreetingMain)来提供的情况，就是DI的基本思考方法。</p>
+<p>但是，如果象GreetingMain中那样实装类的设定内容直接被写出来的话，一旦实装类需要变更的时候源代码也必须跟着修正。为了避免这个麻烦，DIContainer就登场了。把实装设定抽出到一个设定文件中，由DIContainer把这个设定文件读入并组织对象运行。</p>
+<p>那么，让我们试着把刚才的提到的那个设定文件的内容写一下。S2Container中，设定文件的后缀是".dicon"。</p>
+<h5>GreetingMain2.dicon</h5>
+<pre>
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;<br />&lt;!DOCTYPE components PUBLIC<br />    "-//SEASAR//DTD S2Container 2.3//EN"<br />    "http://www.seasar.org/dtd/components23.dtd"&gt;<br />&lt;components&gt;<br />    &lt;component name="greeting"<br />        class="examples.di.impl.GreetingImpl"/&gt;<br />    &lt;component name="greetingClient"<br />        class="examples.di.impl.GreetingClientImpl"&gt;<br />        &lt;property name="greeting"&gt;greeting&lt;/property&gt;<br />    &lt;/component&gt;<br />&lt;/components&gt;
+
+</pre>
+<p>更加具体的，请大家参照<a href="#DefReference">S2Container参考</a>。这里先说明关键几点。</p>
+<pre>
+&lt;component name="greeting"<br />    class="examples.di.impl.GreetingImpl"/&gt;
+</pre>
+<p>上文记载的是组件的定义。在这里，相当于如下的Java代码。</p>
+<pre>
+Greeting greeting = new GreetingImpl();
+</pre>
+<p>component标签的name属性指定了组件的名称，class属性指定了组件的Java类文件名。下文就是greetingClient的设定。</p>
+<pre>
+&lt;component name="greetingClient"<br />    class="examples.di.impl.GreetingClientImpl"&gt;<br />    &lt;property name="greeting"&gt;greeting&lt;/property&gt;<br />&lt;/component&gt;
+</pre>
+<p>property标签的name属性指定了组件Java类中的属性名，标签的定义体则指定了一个组件名称。这个设定相当于如下Java代码。组件名要注意不要用["]括起来。用["]括起来的话就会被当作字符串来处理了。</p>
+<pre>
+GreetingClientImpl greetingClient = new GreetingClientImpl();
+greetingClient.setGreeting(greeting);
+</pre>
+<p>利用S2Container的起动类的内容如下。</p>
+<h5>GreetingMain2.java</h5>
+<pre>
+package examples.di.main;
+
+import org.seasar.framework.container.S2Container;
+import org.seasar.framework.container.factory.S2ContainerFactory;
+
+import examples.di.GreetingClient;
+
+public class GreetingMain2 {
+
+    private static final String PATH =
+        "examples/di/dicon/GreetingMain2.dicon";
+
+    public static void main(String[] args) {
+        S2Container container =
+            S2ContainerFactory.create(PATH);
+        container.init();
+        GreetingClient greetingClient = (GreetingClient)
+            container.getComponent("greetingClient");
+        greetingClient.execute();
+    }
+}
+</pre>
+<p>S2Container，是由S2ContainerFactory#create(String path)做成的。更加详细的内容请参照<a href="#S2ContainerCreation">S2Container的生成</a>。</p>
+<p>组件(greetingClient)，是由S2Container#getComponent(String componentName)的方法取得的。详细内容请参照<a href="#getComponent">组件的取得</a>。</p>
+<p>实行结果同先前一样表示如下。</p>
+<pre>
+Hello World!
+</pre>
+<p>经常同DI一起使用的是AOP。AOP是指、将日志等的输出分散到复数个类中的逻辑模块化的一种技术。那么、让我们不修改已经作成的GreetingImpl、GreetingClinetImpl的源代码?试着将日志（追踪）输出。 适用于AOP的设定文件如下。</p>
+<h5>GreetingMain3.dicon</h5>
+<pre>
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;<br />&lt;!DOCTYPE components PUBLIC<br />    "-//SEASAR//DTD S2Container 2.3//EN"<br />    "http://www.seasar.org/dtd/components23.dtd"&gt;<br />&lt;components&gt;<br />    &lt;include path="aop.dicon"/&gt;<br />    &lt;component name="greeting"<br />        class="examples.di.impl.GreetingImpl"&gt;<br />        &lt;aspect&gt;aop.traceInterceptor&lt;/aspect&gt;<br />    &lt;/component&gt;<br />    &lt;component name="greetingClient"<br />        class="examples.di.impl.GreetingClientImpl"&gt;<br />        &lt;property name="greeting"&gt;greeting&lt;/property&gt;<br />        &lt;aspect&gt;aop.traceInterceptor&lt;/aspect&gt;<br />    &lt;/component&gt;<br />&lt;/components&gt;
+</pre>
+<p>Seasar2中，经常使用的AOP模块在aop.dicon中预先定义。 象下面这样、使用include标签。 更加详细的?敬请参照<a href="#Include">S2Container定义的分解和引入</a>。</p>
+<pre>
+&lt;include path="aop.dicon"/&gt;
+</pre>
+<p>对于在组件中适用的AOP来说?我们<a href="#componentTag">component标签</a>的字标签 <a href="#aspectTag">aspect标签</a>的正文中指定AOP的模块名称。aop.traceInterceptor是AOP模块的名字。</p>
+<pre>
+&lt;aspect&gt;aop.traceInterceptor&lt;/aspect&gt;
+</pre>
+<p>AOP的设定如上所述。那么就让我们执行一下GreetingMain3吧。同GreetingMain2不同的仅仅是设定文件的路径而已。</p>
+<h5>GreetingMain3.java</h5>
+<pre>
+package examples.di.main;
+
+import org.seasar.framework.container.S2Container;
+import org.seasar.framework.container.factory.S2ContainerFactory;
+
+import examples.di.GreetingClient;
+
+public class GreetingMain3 {
+
+    private static final String PATH =
+        "examples/di/dicon/GreetingMain3.dicon";
+
+    public static void main(String[] args) {
+        S2Container container =
+            S2ContainerFactory.create(PATH);
+        GreetingClient greetingClient = (GreetingClient)
+            container.getComponent("greetingClient");
+        greetingClient.execute();
+    }
+}
+</pre>
+<p>执行结果如下。可以明白一点，没有修改源代码，日志就被输出了。</p>
+<pre>
+DEBUG 2005-10-11 21:01:49,655 [main] BEGIN examples.di.impl.GreetingClientImpl#execute()
+DEBUG 2005-10-11 21:01:49,665 [main] BEGIN examples.di.impl.GreetingImpl#greet()
+DEBUG 2005-10-11 21:01:49,665 [main] END examples.di.impl.GreetingImpl#greet() : Hello World!
+Hello World!
+DEBUG 2005-10-11 21:01:49,675 [main] END examples.di.impl.GreetingClientImpl#execute() : null
+</pre>
+<p>这样、S2Container的基本使用方法就被掌握了。</p>
+<h3><a name="NextStep" id="NextStep">更进一步</a></h3>
+<p>但是，不管怎么说书写设定文件都是一件麻烦的事啊。在S2Container中，为了尽可能的减少设定文件的记述量、采用了如下的概念。</p>
+<ul>
+<li><a name="CoC" id="CoC">Convention over Configuration</a></li>
+</ul>
+<p>就是说制定一个适当的规约，遵守这个规约的话?无需什么设定也可以运作。比如说，刚才的设定文件中，象下面这样明确地指定属性的部分存在着。</p>
+<pre>
+&lt;component name="greetingClient"<br />    class="examples.di.impl.GreetingClientImpl"&gt;<br />    &lt;property name="greeting"&gt;greeting&lt;/property&gt;<br />&lt;/component&gt;
+</pre>
+<p>S2Container中、属性的类型是Interface的情形下? 如果要将属性类型的实装组件注册进软件容器中， 不需要什么特殊的设定也可以自动得运作DI的机能。 这就是，如果遵守DI中推荐的所谓“属性类型用Interface定义”的规则<b></b>，S2Container会自动地处理一切。</p>
+<p>虽然一说到规约就容易产生麻烦之类的想法，“推荐而已，如果遵守的话就能使开发愉快”的话，遵守规约的动机就产生了。这才是问题的重点。</p>
+<p>如上的设定，可以做如下化简</p>
+<pre>
+&lt;component name="greetingClient"<br />    class="examples.di.impl.GreetingClientImpl"&gt;<br />&lt;/component&gt;
+</pre>
+<p>实际上?刚才的AOP的例子也适用“Convention over Configuration”。 通常在AOP中，AOP的模块在什么地方适用是由pointcut指定的，<a href="aop.html">S2AOP</a>的情况下? 如果遵守所谓“使用Interface”这个<b>推荐的规约</b>，不指定pointcut，自动的适用于在Interface中定义的所有方法。因为有这个机能，在刚才的那个例子中，就没有必要指定pointcut。</p>
+<p>虽然根据“Convention over Configuration”，DI和AOP的设定可以得以简化，需要处理的组件数增加了、仅仅组件的注册也会变成一个非常累的作业。那么这个组件注册自动化就叫做<a href="#ComponentAutoRegister">组件自动注册</a>机能。 刚才的GreetingImpl、GreetingClientImpl的注册自动化如下。</p>
+<pre>
+&lt;component<br />  class="org.seasar.framework.container.autoregister.FileSystemComponentAutoRegister"&gt;<br />    &lt;initMethod name="addClassPattern"&gt;<br />        &lt;arg&gt;"examples.di.impl"&lt;/arg&gt;<br />        &lt;arg&gt;".*Impl"&lt;/arg&gt;<br />    &lt;/initMethod&gt;<br />&lt;/component&gt;
+</pre>
+<p>FileSystemComponentAutoRegister组件将addClassPattern方法指定的类从文件系统中探寻出来，自动注册到S2Container中。关于initMethod标签，请参照<a href="#MethodInjection">方法函数注入</a>。</p>
+<p>addClassPattern方法的第一个参数是想要注册的组件的包的名字。 子包的内容也会用回归的方式检索。第二个参数是类的名字。可以使用正则表达式。也可以用“,”做分隔符指定复数个设定。</p>
+<p>根据组件自动注册原则，即使后续追加组件的情况下，也没有必要追加设定，这样手续就大大地简化了。</p>
+<p>如果组件的自动化注册可以了，接下来就会想让AOP的注册也自动化了吧。刚才的GreetingImpl、GreetingClientImp的AOP注册自动化的设定如下。</p>
+<pre>
+&lt;include path="aop.dicon"/&gt;
+...
+&lt;component<br />  class="org.seasar.framework.container.autoregister.AspectAutoRegister"&gt;<br />    &lt;property name="interceptor"&gt;aop.traceInterceptor&lt;/property&gt;<br />    &lt;initMethod name="addClassPattern"&gt;<br />        &lt;arg&gt;"examples.di.impl"&lt;/arg&gt;<br />        &lt;arg&gt;".*Impl"&lt;/arg&gt;<br />    &lt;/initMethod&gt;<br />&lt;/component&gt;
+</pre>
+<p>用interceptor属性指定AOP的名称。addClassPattern方法同组件的自动化注册时的用法一样，这里就不做特殊的说明了。 组件自动化注册和AOP自动化注册的例子如下。</p>
+<h5>GreetingMain4.dicon</h5>
+<pre>
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;<br />&lt;!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.3//EN" <br />    "http://www.seasar.org/dtd/components23.dtd"&gt;
+&lt;components&gt;<br />    &lt;include path="aop.dicon"/&gt;
+
+    &lt;component<br />      class="org.seasar.framework.container.autoregister.FileSystemComponentAutoRegister"&gt;<br />        &lt;initMethod name="addClassPattern"&gt;<br />            &lt;arg&gt;"examples.di.impl"&lt;/arg&gt;<br />            &lt;arg&gt;".*Impl"&lt;/arg&gt;<br />        &lt;/initMethod&gt;<br />    &lt;/component&gt;
+
+    &lt;component<br />      class="org.seasar.framework.container.autoregister.AspectAutoRegister"&gt;<br />        &lt;property name="interceptor"&gt;aop.traceInterceptor&lt;/property&gt;<br />        &lt;initMethod name="addClassPattern"&gt;<br />            &lt;arg&gt;"examples.di.impl"&lt;/arg&gt;<br />            &lt;arg&gt;".*Impl"&lt;/arg&gt;<br />        &lt;/initMethod&gt;<br />    &lt;/component&gt;<br />&lt;/components&gt;
+</pre>
+<p>那么来执行一下GreetingMain4吧。 自动注册的情况下，S2Container#init()和S2Container#destroy()的调用是必要的。</p>
+<h5>GreetingMain4.java</h5>
+<pre>
+package examples.di.main;
+
+import org.seasar.framework.container.S2Container;
+import org.seasar.framework.container.factory.S2ContainerFactory;
+
+import examples.di.GreetingClient;
+
+public class GreetingMain4 {
+
+    private static final String PATH =
+        "examples/di/dicon/GreetingMain4.dicon";
+
+    public static void main(String[] args) {
+        S2Container container =
+            S2ContainerFactory.create(PATH);
+        container.init();
+        try {
+            GreetingClient greetingClient = (GreetingClient)
+                container.getComponent("greetingClient");
+            greetingClient.execute();
+        } finally {
+            container.destroy();
+        }
+    }
+}
+</pre>
+<p>执行的结果同GreetingMain3一样如下列出。</p>
+<pre>
+DEBUG 2005-10-12 16:00:08,093 [main] BEGIN examples.di.impl.GreetingClientImpl#execute()
+DEBUG 2005-10-12 16:00:08,103 [main] BEGIN examples.di.impl.GreetingImpl#greet()
+DEBUG 2005-10-12 16:00:08,103 [main] END examples.di.impl.GreetingImpl#greet() : Hello World!
+Hello World!
+DEBUG 2005-10-12 16:00:08,103 [main] END examples.di.impl.GreetingClientImpl#execute() : null
+</pre>
+<p>大多数的情况下?自动注册和自动绑定的组合方式都能顺利的进行下去。不想要自动注册的组件存在的情况下，自动注册组件中准备了addIgnoreClassPattern方法，可以指定自动注册外的组件。</p>
+<p>不想要自动绑定的属性存在的情况下，使用<a href="#BindingAnnotation">Binding备注码</a>，不使用设定文件也可以做细节的调整。</p>
+<p>使用<a href="#Hotswap">Hotswap</a>的话?应用程序在运行中重新书写更换类文件，马上就能够直接测试结果。不需要一个一个地将应用程序在启动，因此开发的效率能够得到大幅度的提高。</p>
+<p>现在，关于S2Container的高级使用方法也可以掌握了。这之后嘛，只要根据需要参照对应的操作手册就可以了。</p>
+<h2><a name="S2ContainerReference" id="S2ContainerReference">S2Container参考</a></h2>
+<h3><a name="CreateFile" id="CreateFile"><b>需要作成的文件</b></a></h3>
+<p>为了使用S2Container，定义文件的做成是必要的。定义文件就像是为了组织组件而制作的设计书一样的东西。形式为XML，后缀为dicon。</p>
+<h3><a name="S2ContainerDefinition" id="S2ContainerDefinition"><b>S2Container的定义</b></a></h3>
+<p>S2Container的定义、象下面这样。</p>
+<pre>
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.3//EN"
+"http://www.seasar.org/dtd/components23.dtd"&gt;
+&lt;components&gt;
+    &lt;component name="..." class="..."&gt;
+            ...
+    &lt;/component&gt;
+    &lt;component name="..." class="..."&gt;
+            ...
+    &lt;/component&gt;
+&lt;/components&gt;
+</pre>
+<p>DOCTYPE是不能省略的。dicon做成的时候、请将前述例子拷贝粘贴。根是<a href="#componentsTag">components标签</a>。每一个组件用<a href="#componentTag">component标签</a>定义。用component标签的class属性指定组件的类的全名。在name属性中、指定组件的名称。详细内容请参照<a href="#DefReference">S2Container定义标签参考</a>。</p>
+<pre>
+&lt;components&gt;
+    &lt;component name="hoge" class="examples.dicon.HogeImpl"/&gt;
+&lt;/components&gt;
+</pre>
+<h3><a name="S2ContainerCreation" id="S2ContainerCreation">S2Container的生成</a></h3>
+<p>S2Container的生成方法有两种。</p>
+<ul>
+<li>使用SingletonS2ContainerFactory。</li>
+<li>使用S2ContainerFactory。</li>
+</ul>
+<h4><a name="SingletonS2ContainerFactory" id="SingletonS2ContainerFactory">使用SingletonS2ContainerFactory</a></h4>
+<p>使用SingletonS2ContainerFactory的情况下，使用如下方法。</p>
+<p>- org.seasar.framework.container.factory.SingletonS2ContainerFactory#init()</p>
+<p>定义文件使用的是CLASSPATH所指定的路径中存在的app.dicon。</p>
+<p>做成的S2Container，无论在什么地方都是可以从如下方法中取得。</p>
+<p>- org.seasar.framework.container.factory.SingletonS2ContainerFactory#getContainer()</p>
+<pre>
+SingletonS2ContainerFactory.init();
+...
+S2Container container = SingletonS2ContainerFactory.getContainer();
+</pre>
+<p>定义文件的路径需要被指定的情况下应在调用init()之前执行如下方法。</p>
+<p>- org.seasar.framework.container.factory.SingletonS2ContainerFactory#setConfigPath(String Path)</p>
+<p>参数path是相对于以CLASSPATH指定的路径为根的定义文件的绝对路径。例如，WEB-INF/classes/aaa.dicon 的情况下就是aaa.dicon，WEB-INF/classes/aaa/bbb/ccc.dicon的情况下就是aaa/bbb/ccc.dicon。分隔符在Windows和Unix下都是/。</p>
+<pre>
+private static final String PATH = "aaa/bbb/ccc.dicon";
+...
+SingletonS2ContainerFactory.setConfigPath(PATH);
+SingletonS2ContainerFactory.init();
+...
+S2Container container = SingletonS2ContainerFactory.getContainer();
+</pre>
+<h4><a name="S2ContainerFactory" id="S2ContainerFactory">使用S2ContainerFactory</a></h4>
+<p>使用S2ContainerFactory的场合下，使用如下方法。</p>
+<p>- org.seasar.framework.container.factory.S2ContainerFactory#create(String path)</p>
+<p>S2Container生成之后需要许呼叫下一个方法。</p>
+<p>- org.seasar.framework.container.S2Container#init()</p>
+<pre>
+private static final String PATH = "aaa/bbb/ccc.dicon";
+...
+S2Container container = S2ContainerFactory.create(PATH);
+container.init();
+</pre>
+<p>用这个方法取得的组件的实例，有必要进行在应用中的管理。</p>
+<h3><a name="getComponent" id="getComponent">组件的取得</a></h3>
+<p>从S2Container中将组件取出来，使用下面的方法。</p>
+<p>- org.seasar.framework.container.S2Container#getComponent(Object componentKey)</p>
+参数中指定的是组件的类或者是组件的名称。详细的请参照<a href="#componentTag">component标签</a>。要指定组件的类，只要是 组件 instanceof 类 的操作返回为true的类就能够指定。但是、S2Container中所指定的类对应了好几个实装的组件的时候，S2Container将不能判断返回哪一个组件为好，这样就会发生TooManyRegistrationRuntimeException。请指定实装组件为唯一的类。也可以用组件名称取得组件。这种情况下也是同样，用一个名称的复数个组件被注册的情况下，将发生TooManyRegistrationRuntimeException。指定组件名的场合下，因为也可能发生拼写错误，所以尽可能的指定组件的类为好。<br />
+<br />
+<p>例）通过指定类来取得组件的场合</p>
+<pre>
+S2Container container = S2ContainerFactory.create(PATH);
+Hoge hoge = (Hoge) container.getComponent(Hoge.class);
+</pre>
+<p>例）通过指定组件名来取得组件场合</p>
+<pre>
+S2Container container = S2ContainerFactory.create(PATH);
+Hoge hoge = (Hoge) container.getComponent("hoge");
+</pre>
+<h3><a name="DIType" id="DIType">Dependency Injection的类型</a></h3>
+<p>在Dependency Injection中，组件的构成所必要的值是用构造函数来设定(Constructor Injection)，还是用设定函数来设定(Setter Injection)，或者是用初始化函数来设定(Method Injection)，这样进行分类。Method Injection是S2Container的本源。S2Container支持以上所有类型和混合类型。</p>
+<h3><a name="ConstructorInjection" id="ConstructorInjection"><b>构造函数?注入</b></a></h3>
+<p>对构造函数的参数进行DI，这就是构造函数注入。<br />
+S2Container的定义文件中，记述如下内容。</p>
+<ul>
+<li><b>组件的指定</b><br />
+组件，用component标签来组建。用class指定对应的类。<br />
+也可以用name属性给组件起名称。</li>
+<li><b>构造函数的参数的指定</b><br />
+组件的构造函数的参数用component标签的子标签arg标签来指定。<br />
+值为字符串的时候，用双引号(")括起来。</li>
+</ul>
+<pre>
+&lt;components&gt;
+    &lt;component name="..." class="..."&gt;
+          &lt;arg&gt;...&lt;/arg&gt;
+    &lt;/component&gt;
+&lt;/components&gt;
+</pre>
+<h3><a name="SetterInjection" id="SetterInjection"><b>设定函数?注入</b></a></h3>
+<p>设定函数注入是指对于任意一个属性变量使用设定函数来行使DI。<br />
+S2Container的定义文件中作如下内容的记述。</p>
+<ul>
+<li><b>组件的指定</b><br />
+组件的指定同构造函数注入相同。</li>
+<li><b>属性变量的指定</b><br />
+组件的属性变量用component标签的子标签property来指定。<br />
+用name属性来指定变量的名称。</li>
+</ul>
+<pre>
+&lt;components&gt;
+    &lt;component name="..." class="..."&gt;
+          &lt;property name="..."&gt;...&lt;/property&gt;
+    &lt;/component&gt;
+&lt;/components&gt;
+</pre>
+<h3><a name="MethodInjection" id="MethodInjection"><b>方法函数?注入</b></a></h3>
+<p>方法函数注入是指，通过任意一个函数的调用来完成DI的功能。<br />
+S2Container的定义文件中，记述如下内容。</p>
+<ul>
+<li><b>组件的指定</b><br />
+组件的指定同构造函数注入相同。</li>
+<li><b>初始化方法函数的指定</b><br />
+使用initMethod标签，调用组件的任意一个方法函数。在name属性中，指定方法函数的名称。 用arg标签指定参数，name属性省略，在正文中，使用<a href="#ognlExpr">OGNL式</a>也可以。</li>
+</ul>
+<pre>
+&lt;components&gt;
+    &lt;component name="..." class="..."&gt;
+        &lt;initMethod name="..."&gt;
+            &lt;arg&gt;...&lt;/arg&gt;
+        &lt;/initMethod&gt;
+    &lt;/component&gt;
+&lt;/components&gt;
+</pre>
+<h3><a name="Include" id="Include">S2Container定义的分割和引入</a></h3>
+<p>所有的组件用一个文件来设定的话，很快就会变得臃肿而难以管理。因此，S2Container就具有了将组件的定义进行复数个分割的机能和将多个分割的定义文件引入而组织成一个文件的机能。S2Container定义文件的引入方法如下。</p>
+<pre>
+&lt;components&gt;
+    &lt;include path="bar.dicon"/&gt;
+&lt;/components&gt;
+</pre>
+<p><a href="#includeTag">include标签</a>的path属性被用来指定想要引入的S2Container定义文件的路径。详细情况请参照<a href="#includeTag">include标签</a>。<br />
+组件的检索顺序，先是在自身注册的文件中寻找组件，没有找到所需组件的情况下，将按照include的顺序在子定义文件中查找注册到S2Container中的组件，最先找到的那个组件将被返回。</p>
+<pre>
+&lt;components&gt;
+    &lt;include path="aaa.dicon"/&gt;
+    &lt;include path="bbb.dicon"/&gt;
+    &lt;component class="example.container.Foo" /&gt;
+&lt;/components&gt;
+</pre>
+<h3><a name="Namespace" id="Namespace">命名空间</a></h3>
+<p>组件的定义被分割的情况下，为了不让复数个组件的定义名称发生冲突，可以用<a href="#componentsTag">components标签</a>的namespace属性指定命名空间。</p>
+<h5>foo.dicon</h5>
+<pre>
+&lt;components namespace="foo"&gt;
+    &lt;component name="aaa" .../&gt;
+    &lt;component name="bbb" ...&gt;
+        &lt;arg&gt;aaa&lt;/arg&gt;
+    &lt;/component&gt;
+&lt;/components&gt;
+</pre>
+<h5>bar.dicon</h5>
+<pre>
+&lt;components namespace="bar"&gt;
+    &lt;include path="foo.dicon"/&gt;
+    &lt;component name="aaa" .../&gt;
+    &lt;component name="bbb" ...&gt;
+        &lt;arg&gt;aaa&lt;/arg&gt;
+    &lt;/component&gt;
+    &lt;component name="ccc" ...&gt;
+        &lt;arg&gt;foo.aaa&lt;/arg&gt;
+    &lt;/component&gt;
+&lt;/components&gt;
+</pre>
+<h5>app.dicon</h5>
+<pre>
+&lt;components&gt;
+    &lt;include path="bar.dicon"/&gt;
+&lt;/components&gt;
+</pre>
+<p>在同一个组件定义文件中可以不需要指定命名空间而调用组件。调用其它S2Container文件中定义的组件时，要在组件名前加上命名空间。foo.aaa 和 bar.aaa 虽然有相同名称的组件，但是因为命名空间的不同，就被认为是不同的组件。</p>
+<h3><a name="InstanceMode" id="InstanceMode">实例(instance)管理</a></h3>
+<p>在S2Container中，怎么样对实例进行管理，这个设定是用<a href="#componentTag">component标签</a>的instance属性。</p>
+<table width="744" border="1">
+<tr bgcolor="#D1F3F4" align="center">
+<th width="104" scope="col">instance属性</th>
+<th width="624" scope="col">说明</th>
+</tr>
+<tr>
+<td>singleton(default)</td>
+<td>不论S2Container.getComponent()被调用多少次都返回同一个实例。</td>
+</tr>
+<tr>
+<td>prototype</td>
+<td>S2Container.getComponent()每次被调用的时候都返回一个新的实例。</td>
+</tr>
+<tr>
+<td>request</td>
+<td>对应每一个请求(request)做成一个实例。用name属性中指定的名称，组件被容纳在请求中。使用request的场合下需要设定<a href="#request">S2ContainerFilter</a>。</td>
+</tr>
+<tr>
+<td>session</td>
+<td>对应每一个session做成一个实例。用name属性中指定的名称，组件被容纳在session中。使用session的场合下需要设定<a href="#request">S2ContainerFilter</a>。</td>
+</tr>
+<tr>
+<td>application</td>
+<td>使用Servlet的场合下，对应每一个ServletContext做成一个实例。用name属性中指定的名称，组件被容纳在ServletContext中。使用application的场合下需要设定<a href="#request">S2ContainerFilter</a>。</td>
+</tr>
+<tr>
+<td>outer</td>
+<td>组件的实例在S2Container之外作成，从而仅仅行使Dependency Injection的功能。<a href="#Aop">Aspect</a>、<a href="#ConstructorInjection">构造函数注入</a>不能适用。</td>
+</tr>
+</table>
+<h3><a name="Lifecycle" id="Lifecycle">生存周期</a></h3>
+<p>使用initMethod 和 destroyMethod组件的生存周期也可以用容器来管理。在S2Container的开始时用(S2Container.init())调用<a href="#initMethodTag">initMethod标签</a>中指定的方法，S2Container结束时用(S2Container.destroy())调用<a href="#destroyMethodTag">destroyMethod标签</a>中指定的方法。initMethod将按照容器中注册的组件的顺序来执行组件，destroyMethod则按照相反的顺序去执行。instance属性是singleton之外的情况下，指定了destroyMethod也会被忽视。java.util.HashMap#put()方法中初始化(给aaa赋值为111)?结束处理(给aaa赋值为null)的设定，向下面那样。</p>
+<pre>
+&lt;components namespace="bar"&gt;
+    &lt;component name="map" class="java.util.HashMap"&gt;
+        &lt;initMethod name="put"&gt;
+            &lt;arg&gt;"aaa"&lt;/arg&gt;
+            &lt;arg&gt;111&lt;/arg&gt;
+        &lt;/initMethod&gt;
+        &lt;destroyMethod name="put"&gt;
+            &lt;arg&gt;"aaa"&lt;/arg&gt;
+            &lt;arg&gt;null&lt;/arg&gt;
+        &lt;/destroyMethod&gt;
+    &lt;/component&gt;
+&lt;/components&gt;
+</pre>
+<h3><a name="AutoBindingMode" id="AutoBindingMode">自动绑定</a></h3>
+<p>组件间的依存关系，类型是interface的场合时，将由容器来自动解决。这是在S2Container被默认的，指定<a href="#componentTag">component标签</a>的autoBinding属性可以进行更加细致的控制。</p>
+<table width="744" border="1">
+<tr bgcolor="#D1F3F4" align="center">
+<th width="104" scope="col">autoBinding</th>
+<th width="624" scope="col">说明</th>
+</tr>
+<tr>
+<td>auto(default)</td>
+<td>适用于构造函数和属性变量的自动绑定。</td>
+</tr>
+<tr>
+<td>constructor</td>
+<td>适用于构造函数的自动绑定。</td>
+</tr>
+<tr>
+<td>property</td>
+<td>适用于属性变量的自动绑定。</td>
+</tr>
+<tr>
+<td>none</td>
+<td>只能对构造函数、属性变量进行手动绑定。</td>
+</tr>
+</table>
+<br />
+<p>构造函数的自动绑定规则如下所示。</p>
+<ul>
+<li>明确指定了构造函数的参数的情况下，自动绑定将不再适用。</li>
+<li>不属于上述情况，如果是定义了没有参数的默认的构造函数的话，对于这个构造函数，自动绑定也不适用。</li>
+<li>不属于上述情况，参数的类型全是interface并且参数数目最多的构造函数将被使用。 这样，对于从容器中取得参数类型的实装组件，自动绑定是适用的。</li>
+<li>如果不是以上情况，自动绑定将不适用。</li>
+</ul>
+<p>属性变量的自动绑定规则如下。</p>
+<ul>
+<li>明确指定了属性变量的情况下，自动绑定将不适用。</li>
+<li>不属于上述情况，如果在容器的注册组件中存在着可以代入属性变量中的同名组件，自动绑定将适用于该组件。</li>
+<li>不属于上述情况，属性变量的类型是interface并且该属性类型的实装组件在容器中注册了的话，自动绑定是适用的。</li>
+<li>如果不是以上情况，自动绑定将不适用。</li>
+</ul>
+<p>用property标签的bindingType属性，可以更加细致的控制属性变量。</p>
+<table width="744" border="1">
+<tr bgcolor="#D1F3F4" align="center">
+<th width="104" scope="col">bindingType</th>
+<th width="624" scope="col">说明</th>
+</tr>
+<tr>
+<td>must</td>
+<td>自动绑定不适用的情况下?将会发生例外。</td>
+</tr>
+<tr>
+<td>should(default)</td>
+<td>自动绑定不适用的情况下，将发出警告通知。</td>
+</tr>
+<tr>
+<td>may</td>
+<td>自动绑定不适用的情况下，什么都不发生。</td>
+</tr>
+<tr>
+<td>none</td>
+<td>autoBinding的属性虽然是auto、property情况下，自动绑定也不适用。</td>
+</tr>
+</table>
+<br />
+<h3><a name="UseS2Container" id="UseS2Container">在组件中利用S2Container</a></h3>
+<p>不想让组件依存于S2Container的情况下，根据组件的具体情况，在组件中需要调用S2Container的方法，这样的场合也许会存在。S2Container自身也以container的名称，自我注册了。所以可以在arg,property标签的正文中指定container，从而取得容器的实例。还有，S2Container类型的setter方法定义好了后也可以做自动绑定的设定。用arg,property标签指定container的情况下，向下面这样进行。</p>
+<pre>
+&lt;components&gt;
+    &lt;component class="examples.dicon.BarImpl"&gt;
+        &lt;arg&gt;container&lt;/arg&gt;
+    &lt;/component&gt;
+
+    &lt;component class="examples.dicon.FooImpl"&gt;
+        &lt;property name="foo"&gt;container&lt;/property&gt;
+    &lt;/component&gt;
+&lt;/components&gt;
+</pre>
+<h3><a name="S2ContainerServlet" id="S2ContainerServlet">S2ContainerServlet</a></h3>
+<p>到此为止，在Java application中，是用明确表示的方法做成S2Container的，Web application的情况下，由谁来作成S2Container呢？为了达到这个目的，准备了以下的类。</p>
+<ul>
+<li>org.seasar.framework.container.servlet#S2ContainerServlet</li>
+</ul>
+<p>为了使用S2ContainerServlet，在web.xml中记述如下项目。</p>
+<pre>
+&lt;servlet&gt;
+    &lt;servlet-name&gt;s2servlet&lt;/servlet-name&gt;
+    &lt;servlet-class&gt;org.seasar.framework.container.servlet.S2ContainerServlet&lt;/servlet-class&gt;
+    &lt;init-param&gt;
+        &lt;param-name&gt;configPath&lt;/param-name&gt;
+        &lt;param-value&gt;app.dicon&lt;/param-value&gt;
+    &lt;/init-param&gt;
+    &lt;init-param&gt;
+        &lt;param-name&gt;debug&lt;/param-name&gt;
+        &lt;param-value&gt;false&lt;/param-value&gt;
+    &lt;/init-param&gt;
+    &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+&lt;/servlet&gt;
+
+&lt;servlet-mapping&gt;
+    &lt;servlet-name&gt;s2servlet&lt;/servlet-name&gt;
+    &lt;url-pattern&gt;/s2servlet&lt;/url-pattern&gt;
+&lt;/servlet-mapping&gt;
+</pre>
+<p>用configPath来指定作为根的S2Container的定义路径。定义文件将放在WEB-INF/classes中。对于S2ContainerServlet，为了比其它的servlet更早的起动，请做load-on-startup标签的调整。S2ContainerServlet起动之后，可以用如下的方法函数取得S2Container的实例。</p>
+<ul>
+<li>org.seasar.framework.container.factory.SingletonS2ContainerFactory#getContainer()</li>
+</ul>
+<p>另外，S2Container的生命周期和S2ContainerServlet是连动的。debug变量被设为true的话，按照以下的方法，可以将运行中的S2Container再次起动。xxx是Web application的context名。</p>
+<pre>
+http://localhost:8080/xxx/s2servlet?command=restart
+            
+</pre>
+<p>在使用了S2ContainerServlet的情况下，ServletContext将会作为一个组件可以用servletContext的名字来访问。</p>
+<h3><a name="app.dicon" id="app.dicon">app.dicon的角色</a></h3>
+<p>根的S2Container的定义文件，按照惯例用app.dicon的名称。通常放在WEB-INF/classes中就好了。</p>
+<h3><a name="Aop" id="Aop">AOP的适用</a></h3>
+<p>在组件中<a href="aop.html">AOP</a>的适用情况也可以被设定。比如，想要在ArrayList中设定<a href="aop.html#TraceInterceptor">TraceInterceptor</a>使用的情况下需要象下面这样做。</p>
+<pre>
+&lt;components&gt;
+    &lt;component name="traceInterceptor"
+               class="org.seasar.framework.aop.interceptors.TraceInterceptor"/&gt;
+    &lt;component class="java.util.ArrayList"&gt;
+        &lt;aspect&gt;traceInterceptor&lt;/aspect&gt;
+    &lt;/component&gt;
+    &lt;component class="java.util.Date"&gt;
+        &lt;arg&gt;0&lt;/arg&gt;
+        &lt;aspect pointcut="getTime, hashCode"&gt;traceInterceptor&lt;/aspect&gt;
+    &lt;/component&gt;
+&lt;/components&gt;
+</pre>
+<p>aspect标签的正文中指定<a href="aop.html#Advice">Interceptor</a>的名字。pointcut的属性中可以用逗号做分隔符指定AOP对象的方法的名字。pointcut的属性没有被指定的情况下，组件将把实装的interface的所有方法函数作为AOP的对象。方法函数的名称指定也可以用正则表达式(JDK1.4のregex)。这样的定义例子如下。</p>
+<pre>
+private static final String PATH =
+    "examples/dicon/Aop.dicon";
+S2Container container = S2ContainerFactory.create(PATH);
+List list = (List) container.getComponent(List.class);
+list.size();
+Date date = (Date) container.getComponent(Date.class);
+date.getTime();
+date.hashCode();
+date.toString();
+</pre>
+<p>执行结果。</p>
+<pre>
+BEGIN java.util.ArrayList#size()
+END java.util.ArrayList#size() : 0
+BEGIN java.util.Date#getTime()
+END java.util.Date#getTime() : 0
+BEGIN java.util.Date#hashCode()
+BEGIN java.util.Date#getTime()
+END java.util.Date#getTime() : 0
+END java.util.Date#hashCode() : 0
+BEGIN java.util.Date#getTime()
+END java.util.Date#getTime() : 0
+</pre>
+<p>组件中也可以设定<a href="aop.html#InterType">InterType</a>的适用情况。比如，在Hoge中设定<a href="aop.html#PropertyInterType">PropertyInterType</a>的适用情况如下进行。</p>
+<pre>
+&lt;components&gt;
+    &lt;include path="aop.dicon"/&gt;
+    &lt;component class="examples.Hoge"&gt;
+        &lt;interType&gt;aop.propertyInterType&lt;/aspect&gt;
+    &lt;/component&gt;
+&lt;/components&gt;
+</pre>
+<p>在interType标签的正文中指定<a href="aop.html#InterType">InterType</a>的名称。</p>
+<h3><a name="Meta" id="Meta">Meta数据</a></h3>
+<p>在components、component、arg、property标签中也可以指定Meta数据。meta标签将作为需要指定Meta数据的标签的字标签来指定Meta数据。例如，想要在components标签中指定Meta数据的情况时，象下面一样设定。</p>
+<pre>
+&lt;components&gt;
+    &lt;meta name="aaa"&gt;111&lt;/meta&gt;
+&lt;/components&gt;
+</pre>
+<h3><a name="request" id="request">request的自动绑定</a></h3>
+<p>对于组件来说，也可以进行HttpServletRequest的自动绑定。为了实现这个目的，在组件中，定义了setRequest(HttpServletRequest request)方法。这样的话，S2Container就自动得设定了request。还有，需要象下面这样在web.xml中进行Filter的定义。</p>
+<pre>
+&lt;web-app&gt;<br />    &lt;filter&gt;<br />        &lt;filter-name&gt;s2filter&lt;/filter-name&gt;<br />        &lt;filter-class&gt;org.seasar.framework.container.filter.S2ContainerFilter&lt;/filter-class&gt;<br />    &lt;/filter&gt;<br />    <br />    &lt;filter-mapping&gt;<br />        &lt;filter-name&gt;s2filter&lt;/filter-name&gt;<br />        &lt;url-pattern&gt;/*&lt;/url-pattern&gt;<br />    &lt;/filter-mapping&gt;<br />&lt;/web-app&gt;
+</pre>
+<p>同样地对HttpServletResponse、HttpSession、ServletContext也是只要定义了setter方法，就可以自动绑定了。而且，使用了S2ContainerFilter的话，HttpServletRequest、HttpServletResponse、HttpSession、ServletContext就可以各自用request、response、session、application的名字来做为组件被自由访问了。</p>
+<h3><a name="ComponentAutoRegister" id="ComponentAutoRegister">组件的自动注册</a></h3>
+<p>根据<a href="#AutoBindingMode">自动绑定</a>的原理，DI的设定几乎可以做近乎全部的自动化。 使用<a href="#AnnotationReference">备注码</a>就有可能进行更加细致的设定。 更进一步、对组件的注册也进行自动化的话，就可以称为组件的自动注册机能了。</p>
+<h5><a name="FileSystemComponentAutoRegister" id="FileSystemComponentAutoRegister">org.seasar.framework.container.autoregister.FileSystemComponentAutoRegister</a></h5>
+<p>是从文件系统中将类检索出来对组件进行自动注册的组件。</p>
+<table border="1">
+<tr bgcolor="#D1F3F4" align="center">
+<th>属性</th>
+<th>说明</th>
+</tr>
+<tr>
+<td><code>instanceDef</code></td>
+<td>在自动注册的组件中指定适用的InstanceDef。用XML指定的场合下，<br />
+<code>@org.seasar.framework.container.deployer.InstanceDefFactory@REQUEST</code><br />
+这样来指定。</td>
+</tr>
+<tr>
+<td><code>autoBindingDef</code></td>
+<td>在自动注册的组件中指定适用的AutoBindingDef。用XML指定的场合下，<br />
+<code>@org.seasar.framework.container.assembler.AutoBindingDefFactory@NONE</code><br />
+这样来指定。</td>
+</tr>
+<tr>
+<td><code>autoNaming</code></td>
+<td>可以根据类名来自动决定组件名的组件。需要实装 org.seasar.framework.container.autoregister.AutoNaming interface。默认状态下，使用org.seasar.framework.container.autoregister.DefaultAutoNaming类的实例。</td>
+</tr>
+</table>
+<br />
+<table border="1">
+<tr bgcolor="#D1F3F4" align="center">
+<th>方法</th>
+<th>说明</th>
+</tr>
+<tr>
+<td><code>addClassPattern</code></td>
+<td>将想要自动注册的类模式注册。最开始的一个参数是组件所在包的名字。子包也能被以回归的方式进行检索。第二个参数是类的名字。可以使用正则表达式。也可以用“,”分隔做复数个设定。</td>
+</tr>
+<tr>
+<td><code>addIgnoreClassPattern</code></td>
+<td>将不想自动注册的类模式注册。最开始的一个参数是组件所在包的名字。子包也能被以回归的方式进行检索。第二个参数是类的名字。可以使用正则表达式。也可以用“,”分隔做复数个设定。</td>
+</tr>
+</table>
+<h5><a name="JarComponentAutoRegister" id="JarComponentAutoRegister">org.seasar.framework.container.autoregister.JarComponentAutoRegister</a></h5>
+<p>从Jar文件中检索类自动注册组件的组件。</p>
+<table border="1">
+<tr bgcolor="#D1F3F4" align="center">
+<th>属性</th>
+<th>说明</th>
+</tr>
+<tr>
+<td><code>jarFileNames</code></td>
+<td>指定设定对象的jar文件名。可以使用正则表达式。但是能包含后缀。指定复数个对象的场合下，用“,”做分割符。例如，myapp.*, yourapp.*这样。</td>
+</tr>
+<tr>
+<td><code>referenceClass</code></td>
+<td>用这个属性指定的类所属的jar文件的父路径为基础路径(例如，WEB-INF/lib)。默认的是org.aopalliance.intercept.MethodInterceptor.class。</td>
+</tr>
+<tr>
+<td><code>instanceDef</code></td>
+<td>适用于自动注册的组件的InstanceDef的指定。在XML中如下，<br />
+<code>@org.seasar.framework.container.deployer.InstanceDefFactory@REQUEST</code><br />
+这样指定。</td>
+</tr>
+<tr>
+<td><code>autoBindingDef</code></td>
+<td>适用于自动注册的组件的AutoBindingDef的指定。在XML中如下，<br />
+<code>@org.seasar.framework.container.assembler.AutoBindingDefFactory@NONE</code><br />
+这样指定。</td>
+</tr>
+<tr>
+<td><code>autoNaming</code></td>
+<td>根据类名自动决定组件的名称的组件。需要对org.seasar.framework.container.autoregister.AutoNaming interface 进行实装。默认的情况下是org.seasar.framework.container.autoregister.DefaultAutoNaming类的实例。</td>
+</tr>
+</table>
+<br />
+<table border="1">
+<tr bgcolor="#D1F3F4" align="center">
+<th>方法</th>
+<th>说明</th>
+</tr>
+<tr>
+<td><code>addClassPattern</code></td>
+<td>将想要自动注册的类模式注册。最开始的一个参数是组件所在包的名字。子包也能被以回归的方式进行检索。第二个参数是类的名字。可以使用正则表达式。也可以用“,”分隔做复数个设定。</td>
+</tr>
+<tr>
+<td><code>addIgnoreClassPattern</code></td>
+<td>将不想自动注册的类模式注册。最开始的一个参数是组件所在包的名字。子包也能被以回归的方式进行检索。第二个参数是类的名字。可以使用正则表达式。也可以用“,”分隔做复数个设定。</td>
+</tr>
+</table>
+<h5><a name="aComponentAutoRegister" id="aComponentAutoRegister">org.seasar.framework.container.autoregister.ComponentAutoRegister</a></h5>
+<p>将类从文件系统或者Jar文件中检索出来并将组件自动注册的组件。</p>
+<table border="1">
+<tr bgcolor="#D1F3F4" align="center">
+<th>属性</th>
+<th>说明</th>
+</tr>
+<tr>
+<td><code>instanceDef</code></td>
+<td>适用于自动注册的组件的InstanceDef的指定。在XML中如下，@org.seasar.framework.container.deployer.InstanceDefFactory@REQUEST这样指定。</td>
+</tr>
+<tr>
+<td><code>autoBindingDef</code></td>
+<td>适用于自动注册的组件的AutoBindingDef的指定。在XML中如下，<br />
+<code>@org.seasar.framework.container.assembler.AutoBindingDefFactory@NONE</code><br />
+这样指定。</td>
+</tr>
+<tr>
+<td><code>autoNaming</code></td>
+<td>从类的名称来自动决定组件的名称的组件。需要对org.seasar.framework.container.autoregister.AutoNaming instance进行实装。默认的是 org.seasar.framework.container.autoregister.DefaultAutoNaming类的实例。</td>
+</tr>
+</table>
+<br />
+<table border="1">
+<tr bgcolor="#D1F3F4" align="center">
+<th>方法</th>
+<th>说明</th>
+</tr>
+<tr>
+<td><code>addReferenceClass</code></td>
+<td>以这个方法所指定的类所存在的路径或者Jar文件为基点对类进行检索。</td>
+</tr>
+<tr>
+<td><code>addClassPattern</code></td>
+<td>将想要自动注册的类模式注册。最开始的一个参数是组件所在包的名字。子包也能被以回归的方式进行检索。第二个参数是类的名字。可以使用正则表达式。也可以用“,”分隔做复数个设定。</td>
+</tr>
+<tr>
+<td><code>addIgnoreClassPattern</code></td>
+<td>将不想 自动注册的类模式注册。最开始的一个参数是组件所在包的名字。子包也能被以回归的方式进行检索。第二个参数是类的名字。可以使用正则表达式。也可以用“,”分隔做复数个设定。</td>
+</tr>
+</table>
+<br />
+<h4>AutoNaming</h4>
+<p>根据AutoNaming来控制组件名称。</p>
+<h5><a name="DefaultAutoNaming" id="DefaultAutoNaming">org.seasar.framework.container.autoregister.DefaultAutoNaming</a></h5>
+<p>从类的完整合法名称中将类的包的那部分名称去掉，如果结尾是Impl或者Bean也要去掉，之后将开头的字母变成小写做为组件名称来设定。 例如，aaa.HogeImpl类的情况下，组件的名称就成了hoge。</p>
+<table border="1">
+<tr bgcolor="#D1F3F4" align="center">
+<th>属性</th>
+<th>说明</th>
+</tr>
+<tr>
+<td><code>decapitalize</code></td>
+<td>组件名的开头字母为小写的情况下指定为true。默认值是true。</td>
+</tr>
+</table>
+<br />
+<table border="1">
+<tr bgcolor="#D1F3F4" align="center">
+<th>方法</th>
+<th>说明</th>
+</tr>
+<tr>
+<td><code>setCustomizedName</code></td>
+<td>不依从于默认的规则对类进行注册。第一个参数是类的完整合法名。第二个参数是组件的名称。</td>
+</tr>
+<tr>
+<td><code>addIgnoreClassSuffix</code></td>
+<td>指定从类名的尾端消除的部分。注册默认值为Impl以及Bean。</td>
+</tr>
+<tr>
+<td><code>addReplaceRule</code></td>
+<td>根据正则表达式追加替换规则。第一个参数为正则表达式。第二个参数为向要替换的字符串。</td>
+</tr>
+<tr>
+<td><code>clearReplaceRule</code></td>
+<td>用setCustomizedName、addIgnoreClassSuffix、addReplaceRule将注册的变换规则清零。作为默认值被注册的Impl和Bean也被清零。</td>
+</tr>
+</table>
+<h5><a name="QualifiedAutoNaming" id="QualifiedAutoNaming">org.seasar.framework.container.autoregister.QualifiedAutoNaming</a></h5>
+<p>将包的名字或者是一部分类的合法名做为组件名称的设定。从类的完整合法名的最后把Impl或者Bean去掉，开头字母小写，分隔点后紧接着的字母变成大写并取掉分隔点，将这个新的单词设定为组件的名称。<br />
+可以将包的开头的不要的部分做消除指定。<br />
+例如，aaa.bbb.ccc.ddd.HogeImpl类的情况下，将开头的aaa.bbb做消除指定的情况下组件的名称为，cccDddHogeになります。</p>
+<table border="1">
+<tr bgcolor="#D1F3F4" align="center">
+<th>属性</th>
+<th>说明</th>
+</tr>
+<tr>
+<td><code>decapitalize</code></td>
+<td>组件名的开头字母为小写的情况下指定为true。默认值是true。</td>
+</tr>
+</table>
+<br />
+<table border="1">
+<tr bgcolor="#D1F3F4" align="center">
+<th>方法</th>
+<th>说明</th>
+</tr>
+<tr>
+<td><code>setCustomizedName</code></td>
+<td>遵从默认的规则来注册类。第一个参数是类的完整合法名。 第二个参数是组件的名称。</td>
+</tr>
+<tr>
+<td><code>addIgnorePackagePrefix</code></td>
+<td>从包名称的开头开始指定消除的部分。</td>
+</tr>
+<tr>
+<td><code>addIgnoreClassSuffix</code></td>
+<td>类名称的最末尾开始指定消除的部分。默认地将Impl和Bean注册。</td>
+ </tr>
+<tr>
+<td><code>addReplaceRule</code></td>
+<td>根据正则表达式追加替换规则。第一个参数为正则表达式。第二个参数是替换的新字符串。</td>
+</tr>
+<tr>
+<td><code>clearReplaceRule</code></td>
+<td>将setCustomizedName、 addIgnorePackagePrefix、 addIgnoreClassSuffix、 addReplaceRule注册的替换规则清除。默认注册的Impl以及Bean也将被清除。</td>
+</tr>
+</table>
+<h5>例</h5>
+<pre>
+&lt;component
+  class="org.seasar.framework.container.autoregister.FileSystemComponentAutoRegister"&gt;
+    &lt;property name="autoNaming"&gt;
+        &lt;component class="org.seasar.framework.container.autoregister.DefaultAutoNaming"&gt;
+            &lt;initMethod name="setCustomizedName"&gt;
+                &lt;arg&gt;"examples.di.impl.HogeImpl"&lt;/arg&gt;
+                &lt;arg&gt;"hoge2"&lt;/arg&gt;
+            &lt;/initMethod&gt;
+        &lt;/component&gt;
+    &lt;/property&gt;
+    &lt;initMethod name="addClassPattern"&gt;
+        &lt;arg&gt;"examples.di.impl"&lt;/arg&gt;
+        &lt;arg&gt;".*Impl"&lt;/arg&gt;
+    &lt;/initMethod&gt;
+&lt;/component&gt;
+</pre>
+<pre>
+&lt;component class="org.seasar.framework.container.autoregister.JarComponentAutoRegister"&gt;
+    &lt;property name="referenceClass"&gt;
+        @junit.framework.TestSuite@class
+    &lt;/property&gt;
+    &lt;property name="jarFileNames"&gt;"junit.*"&lt;/property&gt;
+    &lt;initMethod name="addClassPattern"&gt;
+        &lt;arg&gt;"junit.framework"&lt;/arg&gt;
+        &lt;arg&gt;"TestSuite"&lt;/arg&gt;
+    &lt;/initMethod&gt;
+&lt;/component&gt;
+</pre>
+<pre>
+&lt;component class="org.seasar.framework.container.autoregister.ComponentAutoRegister"&gt;
+    &lt;initMethod name="addReferenceClass"&gt;
+        &lt;arg&gt;@aaa.bbb.ccc.ddd.HogeImpl@class&lt;/arg&gt;
+    &lt;/initMethod&gt;
+    &lt;initMethod name="addClassPattern"&gt;
+        &lt;arg&gt;"aaa.bbb"&lt;/arg&gt;
+        &lt;arg&gt;".*Impl"&lt;/arg&gt;
+    &lt;/initMethod&gt;
+&lt;/component&gt;
+</pre>
+<h3><a name="AspectAutoRegister" id="AspectAutoRegister">AOP的自动注册</a></h3>
+<p>根据<a href="#ComponentAutoRegister">组件的自动注册</a>规则，组件的注册可以做到自动化。进一步，AOP的注册也可以做到自动化，这就是AOP的自动注册机能。</p>
+<p>和组件的自动注册功能组和使用的场合下，必须在组件的自动注册设定之后，作AOP的自动注册的设定。对于适用于使用AOP的组件的记述，必须在AOP的自动注册设定之后进行。</p>
+<pre>
+&lt;components&gt;
+    &lt;!-- 1.组件的自动注册 --&gt;
+    &lt;component class="org.seasar.framework.container.autoregister.ComponentAutoRegister"&gt;
+        ...
+    &lt;/component&gt;
+
+    &lt;!-- 2.AOP的自动注册 --&gt;
+    &lt;component class="org.seasar.framework.container.autoregister.AspectAutoRegister"&gt;
+        ...
+    &lt;/component&gt;
+
+    &lt;!-- 3.其它的组件 --&gt;
+    &lt;component class="..."&gt;
+        ...
+    &lt;/component&gt;
+    ...
+&lt;components&gt;
+</pre>
+<h5>org.seasar.framework.container.autoregister.AspectAutoRegister</h5>
+<p>通过指定类名的模式来进行AOP的自动注册的组件。</p>
+<table border="1">
+<tr bgcolor="#D1F3F4" align="center">
+<th>属性</th>
+<th>说明</th>
+</tr>
+<tr>
+<td><code>interceptor</code></td>
+<td>指定interceptor。想要指定复数个interceptor的场合下，请使用<a href="aop.html#InterceptorChain">InterceptorChain</a>。</td>
+</tr>
+<tr>
+<td><code>pointcut</code></td>
+<td>适于使用interceptor的方法用逗号分隔开进行指定。不指定pointcut的情况下，实装组件的interface的所有方法都做为interceptor的对象。对于方法名称也可以使用正则表达式(JDK1.4のregex)来指定。</td>
+</tr>
+</table>
+<br />
+<table border="1">
+<tr bgcolor="#D1F3F4" align="center">
+<th>方法</th>
+<th>说明</th>
+</tr>
+<tr>
+<td><code>addClassPattern</code></td>
+<td>将想要自动注册的类的模式注册。第一个参数是组件的包的名。子包也可以用回归的方法检索。第二个参数是类名。可以使用正则表达式。用“,”分隔可以做复数个记述。</td>
+</tr>
+<tr>
+<td><code>addIgnoreClassPattern</code></td>
+<td>将不想自动注册的类模式注册。第一个参数是组件的包的名。子包也可以用回归的方法检索。第二个参数是类名。可以使用正则表达式。用“,”分隔可以做复数个记述。</td>
+</tr>
+</table>
+<br />
+<h5>例</h5>
+<pre>
+&lt;include path="aop.dicon"/&gt;
+...
+&lt;component<br />  class="org.seasar.framework.container.autoregister.AspectAutoRegister"&gt;<br />    &lt;property name="interceptor"&gt;aop.traceInterceptor&lt;/property&gt;<br />    &lt;initMethod name="addClassPattern"&gt;<br />        &lt;arg&gt;"examples.di.impl"&lt;/arg&gt;<br />        &lt;arg&gt;".*Impl"&lt;/arg&gt;<br />    &lt;/initMethod&gt;<br />&lt;/component&gt;
+</pre>
+<h5><a name="InterfaceAspectAutoRegister" id="InterfaceAspectAutoRegister">org.seasar.framework.container.autoregister.InterfaceAspectAutoRegister</a></h5>
+<p>针对某个interface的实装类进行AOP的自动注册的组件。</p>
+<table border="1">
+<tr bgcolor="#D1F3F4" align="center">
+<th>属性</th>
+<th>说明</th>
+</tr>
+<tr>
+<td><code>interceptor</code></td>
+<td>指定interceptor。想要指定复数个interceptor的场合下，请使用<a href="aop.html#InterceptorChain">InterceptorChain</a>。</td>
+</tr>
+<tr>
+<td><code>targetInterface</code></td>
+<td>针对某一指定的interface的实装组件，使用AOP。</td>
+</tr>
+</table>
+<h5>例</h5>
+<pre>
+&lt;include path="aop.dicon"/&gt;
+...
+&lt;component<br />  class="org.seasar.framework.container.autoregister.InterfaceAspectAutoRegister"&gt;<br />    &lt;property name="interceptor"&gt;aop.traceInterceptor&lt;/property&gt;
+    &lt;property name="targetInterface"&gt;@examples.Greeing@class&lt;/property&gt;<br />&lt;/component&gt;
+</pre>
+<h3><a name="MetaAutoRegister" id="MetaAutoRegister">META的自动注册</a></h3>
+<p>META信息也可以自动注册。</p>
+<p>同组件的自动注册相组合使用的场合下，必须在组件的自动注册设定之后，做META的自动注册的设定记述。 调用META信息的组件必须在META自动注册的设定之后记述。</p>
+<pre>
+&lt;components&gt;
+    &lt;!-- 1.组件的自动注册 --&gt;
+    &lt;component class="org.seasar.framework.container.autoregister.ComponentAutoRegister"&gt;
+        ...
+    &lt;/component&gt;
+
+    &lt;!-- 2.META的自动注册 --&gt;
+    &lt;component class="org.seasar.framework.container.autoregister.MetaAutoRegister"&gt;
+        ...
+    &lt;/component&gt;
+
+    &lt;!-- 3.其它的组件 --&gt;
+    &lt;component class="..."&gt;
+        ...
+    &lt;/component&gt;
+    ...
+&lt;components&gt;
+</pre>
+<h5>org.seasar.framework.container.autoregister.MetaAutoRegister</h5>
+<p>通过指定类名的模式来做META自动注册的组件。<br />
+被自动注册的META数据，将做为在这个组件自身的定义中一个叫做autoRegister的META数据的子数据来记述。</p>
+<table border="1">
+<tr bgcolor="#D1F3F4" align="center">
+<th>方法</th>
+<th>说明</th>
+</tr>
+<tr>
+<td><code>addClassPattern</code></td>
+<td>将想要自动注册的类模式注册。第一个参数是组件所在包的名字。子包也将被用回归的方式所检索。第二个参数是类名。可以使用正则表达式。用“,”做分隔符号，可以做复数个记述。</td>
+</tr>
+<tr>
+<td><code>addIgnoreClassPattern</code></td>
+<td>将不想自动注册的类模式注册。第一个参数是组件所在包的名字。子包也将被用回归的方式所检索。第二个参数是类名。可以使用正则表达式。用“,”做分隔符号，可以做复数个记述。</td>
+</tr>
+</table>
+<h5>例</h5>
+<pre>
+&lt;component
+  class="org.seasar.framework.container.autoregister.MetaAutoRegister"&gt;
+    &lt;meta name="autoRegister"&gt;
+        &lt;meta name="hoge"&lt;/meta&gt;
+    &lt;/meta&gt;
+    &lt;initMethod name="addClassPattern"&gt;
+        &lt;arg&gt;"examples.di.impl"&lt;/arg&gt;
+        &lt;arg&gt;".*Impl"&lt;/arg&gt;
+    &lt;/initMethod&gt;
+&lt;/component&gt;
+</pre>
+<p>本例中、叫做hoge的META数据自动地注册到其它的组件定义中。</p>
+<h3><a name="Hotswap" id="Hotswap">Hotswap</a></h3>
+<p>一直以来，更改了源代码并重新编译之后的场合，想要测试编译后的机能，必须让应用程序（确切地说是ClassLoader)再起动。在应用程序服务器上，进行程序再起动将非常花时间。 “真烦人”这样想的人很多不是吗。</p>
+<p>在Seasar2中，应用程序在运行中，即使类文件替换了，也可以即刻测试的<b>Hotswap</b>机能得以实现。这样就让我们从那种“心情烦躁”中解放出来了。无须花费多余的时间使得出产率得以提高。这样的好东西，不想试一试吗？</p>
+<h4>Greeting.java</h4>
+<pre>
+package examples.hotswap;
+
+public interface Greeting {
+
+    String greet();
+}
+</pre>
+<h4>GreetingImpl.java</h4>
+<pre>
+package examples.hotswap.impl;
+
+import examples.hotswap.Greeting;
+
+public class GreetingImpl implements Greeting {
+
+    public String greet() {
+        return "Hello";
+    }
+}
+</pre>
+<h4>hotswap.dicon</h4>
+<pre>
+&lt;components&gt;<br />    &lt;component class="examples.hotswap.impl.GreetingImpl"/&gt;<br />&lt;/components&gt;
+</pre>
+<p>到此为止，并没有什么特别的变化。关键点从此开始。 使用s2container.dicon，切换成hotswap模式。</p>
+<h4>s2container.dicon</h4>
+<pre>
+&lt;components&gt;<br />    &lt;component<br />      class="org.seasar.framework.container.factory.S2ContainerFactory$DefaultProvider"&gt;<br />        &lt;property name="hotswapMode"&gt;true&lt;/property&gt;<br />    &lt;/component&gt;<br />&lt;/components&gt;<br />
+</pre>
+<p>把s2container.dicon根据class path放到根路径下的话，就能被自动识别到。也可以使用S2ContainerFactory#configure()明确地指定。</p>
+<h4>GreetingMain.dicon</h4>
+<pre>
+package examples.hotswap.main;
+
+import org.seasar.framework.container.S2Container;
+import org.seasar.framework.container.factory.S2ContainerFactory;
+
+import examples.hotswap.Greeting;
+
+public class GreetingMain {
+
+    private static final String CONFIGURE_PATH =
+        "examples/hotswap/dicon/s2container.dicon";
+
+    private static final String PATH =
+        "examples/hotswap/dicon/hotswap.dicon";
+
+    public static void main(String[] args) throws Exception {
+        S2ContainerFactory.configure(CONFIGURE_PATH);
+        S2Container container = S2ContainerFactory.create(PATH);
+        System.out.println("hotswapMode:" + container.isHotswapMode());
+        container.init();
+        try {
+            Greeting greeting = (Greeting) container
+                    .getComponent(Greeting.class);
+            System.out.println(greeting.greet());
+            System.out.println("Let's modify GreetingImpl, then press ENTER.");
+            System.in.read();
+            System.out.println("after modify");
+            System.out.println(greeting.greet());
+        } finally {
+            container.destroy();
+        }
+    }
+}
+</pre>
+<p>为了使用hotswap，有必要调用S2Container#init()。 执行了的话"Hello"表示出来后，程序就停止了，所以将GreetingImpl#greet()修改并编译使之表示"Hello2"。这之后，请将文字终端显示窗口调成聚焦状态并按下ENTER键。虽然是用同一个instance也没有关系，class文件被替换了的事实可以很容易的被测知。这个是<a href="#InstanceMode">实例模式</a>为singleton的场合下的例子，<a href="#InstanceMode">实例模式</a>为prototype的场合下，类将在调用S2Container#getComponent()的时刻被置换。</p>
+<h4>执行结果</h4>
+<pre>
+hotswapMode:true
+Hello
+Let's modify GreetingImpl, then press ENTER.
+
+after modify
+Hello2
+</pre>
+<p>为了使用hotswap，组件提供了interface，组件的利用者方面，必须通过interface来利用组件。 <a href="#InstanceMode">实例模式</a>为request、session的情况下，对于一个组件不能被其它的组件调用的场合来说，没有interface也可以利用hotswap。</p>
+<h2><a name="DefReference" id="DefReference">S2Container标签参考</a></h2>
+<h3><a name="DOCTYPE" id="DOCTYPE">DOCTYPE</a></h3>
+<p>DOCTYPE要在XML声明之后指定。请象下面那样指定。</p>
+<pre>
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.3//EN"
+"http://www.seasar.org/dtd/components23.dtd"&gt;
+&lt;components&gt;
+    &lt;component name="hello" class="examples.dicon.HelloConstructorInjection"&gt;
+        &lt;arg&gt;"Hello World!"&lt;/arg&gt;
+    &lt;/component&gt;
+&lt;/components&gt;
+</pre>
+<h3><a name="componentsTag" id="componentsTag">components标签(必须)</a></h3>
+<p>成为了根标签。</p>
+<h4><a name="namespaceAttr" id="namespaceAttr">namespace属性(任意)</a></h4>
+<p>可以指定<a href="#Namespace">命名空间</a>。做为Java的标识语来使用</p>
+<pre>
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.3//EN"
+"http://www.seasar.org/dtd/components23.dtd"&gt;
+&lt;components namespace="hoge"&gt;
+    ...
+&lt;/components&gt;
+</pre>
+<h3><a name="includeTag" id="includeTag">include标签(任意)</a></h3>
+<p>将被分割的S2Container的定义<a href="#Include">读入</a>的情况下使用。</p>
+<h4><a name="pathAttr" id="pathAttr">path属性(必须)</a></h4>
+<p>可以指定定义文件的路径。相对于CLASSPATH所指定的路径为根的绝对路径。例如，WEB-INF/classes/aaa.dicon的情况下就指定为aaa.dicon 、WEB-INF/classes/aaa/bbb/ccc.dicon 的情况下就指定为 aaa/bbb/ccc.dicon 路径分隔符在Windows下Unix下都是/。</p>
+<pre>
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.3//EN"
+"http://www.seasar.org/dtd/components23.dtd"&gt;
+&lt;components&gt;
+    &lt;include path="aaa/bbb/ccc.dicon" /&gt;
+&lt;/components&gt;
+</pre>
+<h3><a name="componentTag" id="componentTag">component标签(任意)</a></h3>
+<p>定义组件。</p>
+<h4><a name="classAttr" id="classAttr">class属性(任意)</a></h4>
+<p>指定类的完整合法名。在正文中，是用了<a href="#ognlExpr">OGNL式</a>来指定组件的场合下，class的属性可以被省略。使用OGNL式来指定类的属性的时候，需要进行类型检查。</p>
+<h4><a name="componentTag.nameAttr" id="componentTag.nameAttr">name属性(任意)</a></h4>
+<p>指定名称也可以。将做为Java的标示语来使用。详细情况请参照<a href="#getComponent">组件的取得</a>。</p>
+<h4><a name="instanceAttr" id="instanceAttr">instance属性(任意)</a></h4>
+<p>可以指定让S2Container对组件的实例如进行管理。可以指定singleton(默认)、prototype、outer、request、session几种类型。更详细的请参照<a href="#InstanceMode">实例管理</a>。</p>
+<h4><a name="autoBindingAttr" id="autoBindingAttr">autoBinding属性(任意)</a></h4>
+<p>S2Container可以指定如何解决组件之间的依存关系。有auto(默认)、constructor、property、none几种类型。详细，请参照<a href="#AutoBindingMode">自动绑定</a>。</p>
+<h3><a name="argTag" id="argTag">arg标签(任意)</a></h3>
+<p>做为<a href="#componentTag">component标签</a>的子标签来使用的场合下，就成了构造函数的参数。根据记述的顺序传给构造函数。 做为<a href="#initMethodTag">initMethod标签</a>、<a href="#destroyMethodTag">destroyMethod标签</a>的子标签被使用的场合下，就成了方法函数的参数。按照记述的顺序传给方法函数。 做为参数被传递的实际值，要么在正文中使用<a href="#ognlExpr">OGNL式</a>指定，要么在子标签中使用<a href="#componentTag">component标签</a>指定。</p>
+<h3><a name="propertyTag" id="propertyTag">property标签(任意)</a></h3>
+<p>做为<a href="#componentTag">component标签</a>的子标签来使用。做为属性变量被设定的实际值，要么在正文中使用<a href="#ognlExpr">OGNL式</a>指定，要么在子标签中使用<a href="#componentTag">component标签</a>指定。</p>
+<h4><a name="propertyTag.nameAttr" id="propertyTag.nameAttr">name属性(必须)</a></h4>
+<p>指定属性变量名。</p>
+<h4><a name="propertyTag.bindingTypeAttr" id="propertyTag.bindingTypeAttr">bindingType属性(任意)</a></h4>
+<p>可以根据每一个属性变量进行细致的自动绑定控制。must、should(默认)、may、none几个类型可以用来指定。详细请参照<a href="#AutoBindingMode">自动绑定</a>。</p>
+<h3><a name="metaTag" id="metaTag">meta标签(任意)</a></h3>
+<p>做为<a href="#componentsTag">components标签</a>、<a href="#componentTag">component标签</a>、<a href="#argTag">arg标签</a>、<a href="#propertyTag">property标签</a>的子标签来使用。META数据的值，要么在正文中使用<a href="#ognlExpr">OGNL式</a>指定，要么在子标签中使用<a href="#componentTag">component标签</a>指定。</p>
+<h4><a name="propertyTag.nameAttr" id="propertyTag.nameAttr">name属性(任意)</a></h4>
+<p>指定META名。</p>
+<h3><a name="initMethodTag" id="initMethodTag">initMethod标签(任意)</a></h3>
+<p>做为<a href="#componentTag">component标签</a>的子标签使用。参数，在子标签中，使用<a href="#argTag">arg标签</a>指定。无须写出name属性，使用<a href="#ognlExpr">OGNL式</a>也可以调用组件的方法。定义了initMethod标签的组件将做为表示组件自身#self、表示System.out#out、表示System.err#err等仅在initMethod标签内部有效的对象来使用。</p>
+<h4><a name="initMethodTag.nameAttr" id="initMethodTag.nameAttr">name属性(任意)</a></h4>
+<p>指定方法名。</p>
+<pre>
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.3//EN"
+"http://www.seasar.org/dtd/components23.dtd"&gt;
+&lt;components&gt;
+    &lt;component class="java.util.HashMap"&gt;
+        &lt;initMethod name="put"&gt;
+            &lt;arg&gt;"aaa"&lt;/arg&gt;
+            &lt;arg&gt;111&lt;/arg&gt;
+        &lt;/initMethod&gt;
+        &lt;initMethod&gt;#self.put("aaa", 111)&lt;/initMethod&gt;
+        &lt;initMethod&gt;#out.println("Hello")&lt;/initMethod&gt;
+    &lt;/component&gt;
+&lt;/components&gt;
+</pre>
+<h3><a name="destroyMethodTag" id="destroyMethodTag">destroyMethod标签(任意)</a></h3>
+<p>和initMethod标签一样。</p>
+<h3><a name="aspectTag" id="aspectTag">aspect标签(任意)</a></h3>
+<p>将AOP组入到组件的定义中。详细请参照S2AOP的<a href="aop.html#aspectTag">aspect标签</a>的说明。</p>
+<h3><a name="interTypeTag" id="interTypeTag">interType标签(任意)</a></h3>
+<p>象组件中组入interType。详请请参照S2AOP的<a href="aop.html#interTypeTag">interType标签</a>的说明。</p>
+<h3><a name="descriptionTag" id="descriptionTag">description标签(任意)</a></h3>
+<p>做为<a href="#componentsTag">components标签</a>、<a href="#componentTag">component标签</a>、<a href="#argTag">arg标签</a>、<a href="#propertyTag">property标签</a>的子标签可以使用description标签。可以自由地记述说明。</p>
+<h3><a name="ognlExpr" id="ognlExpr">OGNL式</a></h3>
+<p>在S2Container中，做为表达式语言可以利用<a href="http://www.ognl.org/">OGNL</a>。在XML中，将用字符串记述的内容(式)变换成相应的对象为目的的东西，这一观点一定要记住不要搞错了。</p>
+<ul>
+<li>字符串是象"hoge"这样用"来括起来。</li>
+<li>char是象'a'一样用'括起来。</li>
+<li>数值就像123这样直接记述。</li>
+<li>伦理值就直接向true,false这样记述。</li>
+<li>new java.util.Date(0)这样可以用类的完整合法限定名来直接调用其构造函数。</li>
+<li>@java.lang.Math@max(1, 2)这样可以调用static方法的直接呼出结果。</li>
+<li>@java.lang.String@class这样可以直接调用类。</li>
+<li>hoge.toString()这样可以参照组件的方法调用结果。本例中，前提是在某个地方已经定义了叫做hoge的组件。</li>
+</ul>
+详细请参照<a href="ognl.html">OGNL指南</a>。<br />
+<br />
+<h2><a name="AnnotationReference" id="AnnotationReference">S2Container备注码参考</a></h2>
+<p>在S2Container中，做为备注码的实装方法，准备了Tiger备注码?backport175备注码?定数备注码共3个种类。一般说起备注码的话，都是指从Java 5导入的Tiger备注码，但是仅仅如此的话，JDK1.4的使用者将不可能利用这一个特性了。</p>
+<p>为了尽可能地让更多的人乐意方便地使用备注码，在JDK1.4中，可以使用Tiger风格的备注码(JSR-175) <a href="http://backport175.codehaus.org/">backport175</a>备注码，是利用public static final这样的常量定义来完成备注码功能的。</p>
+<h3><a name="ComponentAnnotation" id="ComponentAnnotation">Component备注码</a></h3>
+<p><a href="#componentTag">component标签</a>的代替方法是Component备注码。</p>
+<p>Tiger备注码的利用方式如下。</p>
+<pre>
+@Component(name="xxx", instance=InstanceType.PROTOTYPE,
+        autoBinding=AutoBindingType.PROPERTY)
+public class Xxx {
+    ...
+}
+</pre>
+<p>backport175备注码的利用方式如下。</p>
+<pre>
+/**
+ * @org.seasar.framework.container.annotation.backport175.Component(
+ *      name = "xxx",
+ *      instance = "prototype",
+ *      autoBinding = "property")
+ */
+public class Xxx {
+    ...
+}
+</pre>
+<p>常量备注码的利用方式如下。</p>
+<pre>
+public static final String COMPONENT =
+  "name = xxx, instance = prototype, autoBinding = property";
+</pre>
+<h3><a name="BindingAnnotation" id="BindingAnnotation">Binding备注码</a></h3>
+<p><a href="#propertyTag">property标签</a>的替代方法、是Binding备注码。</p>
+<p>Tiger方式的备注码如下。</p>
+<pre>
+@Binding("aaa2")
+public void setAaa(String aaa) {
+    ...
+}
+
+@Binding(bindingType=BindingType.NONE)
+public void setBbb(String bbb) {
+    ...
+}
+
+@Binding
+public void setCcc(String ccc) {
+    ...
+}
+</pre>
+<p>backport175方式的备注码如下。</p>
+<pre>
+/**
+
+ * @org.seasar.framework.container.annotation.backport175.Binding("aaa2")
+ */
+public void setAaa(String aaa) {
+    ...
+}
+
+/**
+ * @org.seasar.framework.container.annotation.backport175.Binding(bindingType="none")
+ */
+public void setBbb(String bbb) {
+    ...
+}
+
+/**
+ * @org.seasar.framework.container.annotation.backport175.Binding
+ */
+public void setCcc(String ccc) {
+    ...
+}
+</pre>
+<p>常量备注码要用属性变量名_BINDING这样来指定。</p>
+<pre>
+public static final String aaa_BINDING = "aaa2";
+
+public static final String bbb_BINDING = "bindingType=none";
+
+public static final String ccc_BINDING = null;
+
+public void setAaa(Aaa aaa) {
+    ...
+}
+
+public void setBbb(Bbb bbb) {
+    ...
+}
+
+public void setCcc(Ccc ccc) {
+    ...
+}
+</pre>
+<h3><a name="AspectAnnotation" id="AspectAnnotation">Aspect备注码</a></h3>
+<p><a href="aop.html#aspectTag">aspect标签</a>的替代使用方法是、Aspect备注码。与aspect标签不同，因为可以定义复数个定义? 想要适用于复数个intercepter的情况下?请使用<a href="aop.html#InterceptorChain">InterceptorChain</a>。想要指定pointcut的时候?请指定pointcut属性。对于类中的备注码来说，不指定pointcut是?那个类中的所有实装自interface的方法都将被指定。</p>
+<p>Tiger方式的备注码如下。</p>
+<pre>
+@Aspect("aop.traceInterceptor")
+public class Xxx {
+    ...
+}
+
+public class Xxx {
+    ...
+    @Aspect("aop.traceInterceptor")
+    public void hoge() {
+        ...
+    }
+}
+</pre>
+<p>backport175方式的备注码如下。</p>
+<pre>
+/**
+ * @org.seasar.framework.container.annotation.backport175.Aspect(
+ *  "aop.traceInterceptor")
+ */
+public class Xxx {
+    ...
+}
+
+public class Xxx {
+    ...
+    /**
+     * @org.seasar.framework.container.annotation.backport175.Aspect(
+     *  "aop.traceInterceptor")
+     */
+    public void hoge() {
+        ...
+    }
+}
+</pre>
+<p>常量备注码的形式如下。想要指定复数个pointcut的情况下，请象pointcut= get.*\nexecute.*这样用\n做分隔。 不能使用\n之外的其它分隔文字。</p>
+<pre>
+public static final String ASPECT =
+    "value=aop.traceInterceptor, pointcut=getAaa";
+</pre>
+<h3><a name="InterTypeAnnotation" id="InterTypeAnnotation">InterType备注码</a></h3>
+<p><a href="aop.html#intetTypeTag">interType标签</a>的替代使用方法是InterType备注码。</p>
+<p>Tiger方式的备注码如下。</p>
+<pre>
+@InterType({"aop.propertyInterType", "aop.someInterType"})
+public class Xxx {
+    ...
+}
+</pre>
+<p>backport175方式的备注码如下。</p>
+<pre>
+/**
+ * @org.seasar.framework.container.annotation.backport175.InterType(
+ *  {"aop.propertyInterType", "aop.someInterType"})
+ */
+public class Xxx {
+    ...
+}
+</pre>
+<p>常量方式的备注码如下。</p>
+<pre>
+public static final String INTER_TYPE =
+    "aop.propertyInterType, aop.someInterType";
+</pre>
+<h3><a name="InitMethodAnnotation" id="InitMethodAnnotation">InitMethod备注码</a></h3>
+<p><a href="#initMethodTag">initMethod标签</a>的代替使用方法是InitMethod备注码。 与initMethod标签不同，OGNL式的使用和参数的设定都不可以。</p>
+<p>Tiger方式的备注码如下。</p>
+<pre>
+public class Xxx {
+    ...
+    @InitMethod
+    public void init() {
+        ...
+    }
+}
+</pre>
+<p>backport175方式的备注码如下。</p>
+<pre>
+public class Xxx {
+    ...
+    /**
+     * @org.seasar.framework.container.annotation.backport175.InitMethod
+     */
+    public void init() {
+        ...
+    }
+}
+</pre>
+<p>常量方式的备注码如下。想要指定复数个初始化方法的情况下，请用逗号(,)做分隔符。</p>
+<pre>
+public static final String INIT_METHOD = "init";
+</pre>
+<h3><a name="DestroyMethodAnnotation" id="DestroyMethodAnnotation">DestroyMethod备注码</a></h3>
+<p><a href="#destroyMethodTag">destroyMethod标签</a>的替代使用方式是DestroyMethod备注码。 与destroyMethod标签不同，OGNL式的使用，参数的设定都不可以。</p>
+<p>Tiger方式的备注码如下。</p>
+<pre>
+public class Xxx {
+    ...
+    @DestroyMethod
+    public void destroy() {
+        ...
+    }
+}
+</pre>
+<p>backport175方式的备注码如下。</p>
+<pre>
+public class Xxx {
+    ...
+    /**
+     * @org.seasar.framework.container.annotation.backport175.DestroyMethod
+     */
+    public void destroy() {
+        ...
+    }
+}
+</pre>
+<p>常量备注码如下。想要指定复数个初始化方法的情况下，请用逗号(,)做分隔符。</p>
+<pre>
+public static final String DESTROY_METHOD = "destroy";
+</pre>
+<!-- document end -->
+<!-- don't edit start --></td>
+<td width="14"><img height="14" width="14" src="images/spacer.gif" alt="" /></td>
+</tr>
+<tr>
+<td width="14"><img height="30" width="14" src="images/spacer.gif" alt="" /></td>
+<td width="766"><img height="30" width="592" src="images/spacer.gif" alt="" /></td>
+</tr>
+<tr>
+<td width="14"><img height="14" width="14" src="images/spacer.gif" alt="" /></td>
+<td width="766" class="copyright">Copyright? 2004-2005, The Seasar Foundation and the others. All rights reserved.</td>
+</tr>
+</table>
+</td>
+<td class="backright" align="left" valign="top">&nbsp;</td>
+</tr>
+<tr>
+<td class="backunder" align="left" valign="top" width="780" height="16">&nbsp;</td>
+<td class="backcorner" align="left" valign="top" height="16">&nbsp;</td>
+</tr>
+</table>
+<!-- don't edit end -->
+</body>
+</html>

@@ -1,0 +1,1311 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<!-- don't edit start -->
+<head>
+<title>Seasar - DI Container with AOP -</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<link href="seasar_b.css" type="text/css" rel="stylesheet" media="screen" />
+<script src="seasar_b.js" type="text/JavaScript" language="JavaScript">
+</script>
+</head>
+<body onload="preload('en')">
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="left">
+<tr>
+<td align="left" valign="top" width="780">
+<table width="780" border="0" cellspacing="0" cellpadding="0" class="white">
+<tr>
+<td colspan="7"><img height="5" width="780" src="images/top01_b.gif" alt="" /></td>
+</tr>
+<tr>
+<td><img height="117" width="235" src="images/top02_b.gif" alt="Seasar" /></td>
+<td colspan="3"><img height="117" width="289" src="images/top03.gif" alt="DI Container with AOP" /></td>
+<td colspan="3"><img height="117" width="256" src="images/spacer.gif" alt="" /></td>
+</tr>
+<tr>
+<td rowspan="2"><img src="images/top04.gif" alt="" height="49" width="235" /></td>
+<td><a href="http://www.seasar.org/en/index.html"><img src="images/menu01_b_en.gif" height="30" width="78" border="0" alt="" id="menu01" onmouseover="swap(1)" onmouseout="restore(1)" name="menu01" /></a></td>
+<td><a href="http://www.seasar.org/en/projects.html"><img src="images/menu02_b_en.gif" height="30" width="101" border="0" alt="" id="menu02" onmouseover="swap(2)" onmouseout="restore(2)" name="menu02" /></a></td>
+<td><a href="http://www.seasar.org/en/products.html"><img src="images/menu06_b_en.gif" height="30" width="110" border="0" alt="" id="menu06" onmouseover="swap(6)" onmouseout="restore(6)" name="menu06" /></a></td>
+<td><a href="http://www.seasar.org/en/documents.html"><img src="images/menu04_b_en.gif" height="30" width="109" border="0" alt="" id="menu04" onmouseover="swap(4)" onmouseout="restore(4)" name="menu04" /></a></td>
+<td><a href="http://www.seasar.org/en/resources.html"><img src="images/menu05_b_en.gif" height="30" width="113" border="0" alt="" id="menu05" onmouseover="swap(5)" onmouseout="restore(5)" name="menu05" /></a></td>
+<!--
+<td><img src="images/menu07_b_en.gif" height="30" width="109" border="0" alt=""  id="menu07" onmouseover="swap(7)" onmouseout="restore(7)"></td>
+//-->
+<td><img height="30" width="34" src="images/menu06.gif" alt="" /></td>
+</tr>
+<tr>
+<td colspan="6"><img height="19" width="545" src="images/spacer.gif" alt="" /></td>
+</tr>
+</table>
+<table width="780" border="0" cellspacing="0" cellpadding="0" class="white">
+<tr align="left" valign="top">
+<td width="14"><img height="14" width="14" src="images/spacer.gif" alt="" /></td>
+<td width="740" class="main"><!-- don't edit end -->
+<!-- document start -->
+<ul>
+<li><a href="#S2Overview">An Overview of S2AOP</a>
+<ul>
+<li><a href="#AOPKey">The main idea of AOP</a></li>
+<li><a href="#AOPMerit">AOP advantages</a></li>
+<li><a href="#S2AOPMerit">S2AOP advantages</a></li>
+<li><a href="#Warning">What you have to care about S2AOP</a></li>
+</ul>
+</li>
+<li><a href="#S2AOPReference">Brief Notes of S2AOP</a>
+<ul>
+<li><a href="#AOPMakeFile">The file you need</a></li>
+<li><a href="#AOPExplanationFile">Setup file Descriptions</a></li>
+<li><a href="#AOPInterceptor">Available S2AOP Interceptors</a>
+<ul>
+<li><a href="#TraceInterceptor">TraceInterceptor</a></li>
+<li><a href="#ThrowsInterceptor">ThrowsInterceptor</a></li>
+<li><a href="#ToStringInterceptor">ToStringInterceptor</a></li>
+<li><a href="#MockInterceptor">MockInterceptor</a></li>
+<li><a href="#DelegateInterceptor">DelegateInterceptor</a></li>
+<li><a href="#PrototypeDelegateInterceptor">PrototypeDelegateInterceptor</a></li>
+<li><a href="#SyncInterceptor">SyncInterceptor</a></li>
+<li><a href="#InterceptorChain">InterceptorChain</a></li>
+<li><a href="#InterceptorLifecycleAdapter">InterceptorLifecycleAdapter</a></li>
+</ul>
+</li>
+<li><a href="#OriginalInterceptor">How to define your own Interceptor</a></li>
+<li><a href="#AOPInterType">Available S2AOP InterType</a>
+<ul>
+<li><a href="#PropertyInterType">PropertyInterType</a></li>
+<li><a href="#InterTypeChain">InterTypeChain</a></li>
+</ul>
+</li>
+<li><a href="#OriginalInterType">How to define your own InterType</a></li>
+<li><a href="#nodicon">AOP without "dicon file"</a></li>
+</ul>
+</li>
+<li><a href="#Example">Example</a>
+<ul>
+<li><a href="#TraceInterceptorSample">TraceInterceptor</a></li>
+<li><a href="#ThrowsInterceptorSample">ThrowsInterceptor</a></li>
+<li><a href="#ToStringInterceptorSample">ToStringInterceptor</a></li>
+<li><a href="#DelegateInterceptorSample">DelegateInterceptor</a></li>
+<li><a href="#PrototypeDelegateInterceptorSample">PrototypeDelegateInterceptor</a></li>
+<li><a href="#SyncInterceptorSample">SyncInterceptor</a></li>
+<li><a href="#OriginalInterceptorSample">How to implement your Interceptor</a></li>
+</ul>
+</li>
+</ul>
+<h2><a name="S2Overview" id="S2Overview">An Overview of S2AOP</a></h2>
+<h3><a name="AOPKey" id="AOPKey">The main idea of AOP</a></h3>
+<br />
+<h4><a name="Advice" id="Advice">Advice(MethodInterceptor)</a></h4>
+<p>Advice is a block of codes which will be inserted into another program. This could be called Interceptor.</p>
+<h4><a name="Joinpoint" id="Joinpoint">Joinpoint(MethodInvocation)</a></h4>
+<p>Joinpoint is a point which Advice will be associated with a targeted class. Advice is allowed to get information about a method name and arguments from Joinpoint.</p>
+<h4><a name="Pointcut" id="Pointcut">Pointcut</a></h4>
+<p>Pointcut is used to define the point where Jopinpoint is set in.</p>
+<h4><a name="Aspect" id="Aspect">Aspect</a></h4>
+<p>Aspect associates Advice with Pointcut.</p>
+<h4><a name="InterType" id="InterType">InterType</a></h4>
+<p>InterType modifies class internal structures, including adding fields, methodds and interfaces.</p>
+<h3><a name="AOPMerit" id="AOPMerit">AOP advantates</a></h3>
+<ul>
+<li>AOP offers you a better maintenance by separating a "Core Concern" and a "Crosscutting Concern".</li>
+<li>Your source code will be simple by detaching a systematic feature from a business logic. The detached systematic feature becomes a "Core Concern" in a "Croscutting Concern". As a result, your source code will be responsible only for your purpose.</li>
+<li>You don't need complicated procedures such as an automatic transaction management or a remote method invocation made by EJB anymore. You can do it by POJO(Plain Old Java Object: POJO is an object indepented from a specific Java API.)</li>
+</ul>
+<h3><a name="S2AOPMerit" id="S2AOPMerit">S2AOP advantages</a></h3>
+<ul>
+<li>A configuration becomes simplified.</li>
+<li>Required interface implementations will be reduced to only one.</li>
+<li>An aspect applied to the component can be cleared.</li>
+<li>S2AOP enables you to start AOP programmings immediately since common implementations of object patterns for Aspect are provided. (You are allowd to implement your own interfaces and abstract classe.)</li>
+</ul>
+<h3><a name="Warning" id="Warning">What you have to care about S2AOP</a></h3>
+<ul>
+<li>You can't adopt an aspect to a final class.</li>
+<li>You can't adopt an aspect to a final method, a static method and a non-public method.</li>
+<li>If you don't set a pointcut attribute, some methods will not accept an aspect. In order to make every method to accept an aspect, you must set ".*" to a pointcut attribute.</li>
+</ul>
+<h2><a name="S2AOPReference" id="S2AOPReference">Brief Notes of S2AOP</a></h2>
+<h3><a name="AOPMakeFile" id="AOPMakeFile">The file you need</a></h3>
+<p>You need a configuration file (known as "dicon file") for S2Container to use S2AOP. However, you can place a configuration file in any directory, a configuration file is commonly created in the same directory(a.k.a. folder) as the "Crosscutting Concern" or the targeted component resides.</p>
+<h3><a name="AOPExplanationFile" id="AOPExplanationFile">Setup file Descriptions</a></h3>
+<h4><a name="aspecTtag" id="aspecTtag">Aspect Tag (mandatory for AOP)</a></h4>
+<p>An aspect tag is used to associate an aspect with a component. Write the Interceptor configuration in the body by using the OGNL expression or in the nested tag accompanied by the component tag.<br />
+* Please refer below for OGNL <a href="http://www.ognl.org/2.6.7/Documentation/html/LanguageGuide/index.html">OGNL Language Guide</a><br />
+What will happen if you associate multiple aspects with one component ? Aspects will be invoked according to the order which they are defined in a configuration file. If you want to know more, please read <a href="#OriginalInterceptor">Original Interceptor</a> for futher information</p>
+<h5>Pay attention</h5>
+<p>The component specified by the aspect tag will be get through the container while its initialization processes are going on. This indicates that a new instance doesn't create everytime when an Interceptor method is invoked under the condition that an instance attribute of a component is assigned as a prototype.</p>
+<h5>pointcut attribute(optional)</h5>
+<p>You can specify multiple method names delimited by commmas. If you don't set any pointcut, all implemented methods in a component will be invoked. You can use the regular expression(JDK1.4 regex) to specify method names.</p>
+<h5>Configuration Example</h5>
+<p>Suppose you want to set the aspect in both getTime() method and hasCode() method of java.util.Date class by means of a pointcut attribute, then the configuration will be as follows.</p>
+<pre>
+&lt;component class="java.util.Date"&gt;
+    &lt;aspect pointcut="getTime,hashCode"&gt;
+        &lt;component class="org.seasar.framework.aop.interceptors.TraceInterceptor"/&gt;
+    &lt;/aspect&gt;
+&lt;/component&gt;
+</pre>
+The example shown below describes how to use regular expression to set an aspect.
+<pre>
+&lt;component class="java.util.Date"&gt;
+    &lt;aspect pointcut=".*"&gt;
+        &lt;component class="org.seasar.framework.aop.interceptors.TraceInterceptor"/&gt;
+    &lt;/aspect&gt;
+&lt;/component&gt;
+</pre>
+<h4><a name="interTypeTag" id="interTypeTag">interType Tag</a></h4>
+<p>Specifies interType which is added into components. Either <a href="#ognlExpr">OGNL expressions</a> in the body or the child component tag is used for the value passed as an interType.<br />
+* Please refer below for <a href="http://www.ognl.org/2.6.7/Documentation/html/LanguageGuide/index.html">OGNL Language Guide</a></p>
+<h5>Configuration Example</h5>
+<pre>
+&lt;component class="java.util.Date"&gt;
+    &lt;interType&gt;
+        &lt;component class="org.seasar.framework.aop.intertype.PropertyInterType"/&gt;
+    &lt;/interType&gt;
+&lt;/component&gt;
+</pre>
+<h3><a name="AOPInterceptor" id="AOPInterceptor">Available S2AOP Interceptors</a></h3>
+<p>Following Interceptors are provided by S2AOP. Besides, you can define your own Interceptor easily.</p>
+<h4><a name="TraceInterceptor" id="TraceInterceptor">(1) TraceInterceptor</a></h4>
+<h5>Class Name</h5>
+<p>org.seasar.framework.aop.interceptors.TraceInterceptor</p>
+<h5>Description</h5>
+<p>This Interceptor handles a trace as a "Crosscutting Concern". Dicon file shown below is an example that TraceInterceptor is applied to getTime() method of java.uitl.Date class.</p>
+<pre>
+&lt;component class="java.util.Date"&gt;
+    &lt;aspect pointcut="getTime"&gt;
+        &lt;component class="org.seasar.framework.aop.interceptors.TraceInterceptor"/&gt;
+    &lt;/aspect&gt;
+&lt;/component&gt;
+</pre>
+<p>Please read <a href="#TraceInterceptorSample">TraceInterceptor</a> for further information.</p>
+<h4><a name="ThrowsInterceptor" id="ThrowsInterceptor">(2) ThrowsInterceptor</a></h4>
+<h5>Class Name</h5>
+<p>org.seasar.framework.aop.interceptors.ThrowsInterceptor</p>
+<h5>Description</h5>
+<p>This Interceptor handles an exception as a "Crosscutting Concern". Implement the method "Object handleThrowable(Throwable, MethodInvocation)" in your class inherited from ThrowsInterceptor before you use this. You can assign a subclass of java.lang.Throwable to the first parameter of this method. If you define the method "Object handleThrowable(IOException, MethodInvocation)", the exception will be caught by the object which type is IOException or the subclass of IOException when the excpetion raised in the component associated with ThrowsInterceptor. You are allowed to define multiple handleThrowable() methods. Please read <a href="#ThrowsInterceptorSample">ThrowsInterceptor</a> for further information.</p>
+<h4><a name="ToStringInterceptor" id="ToStringInterceptor">(3) ToStringInterceptor</a></h4>
+<h5>Class Name</h5>
+<p>org.seasar.framework.aop.interceptors.ToStringInterceptor</p>
+<h5>Description</h5>
+<p>ToStringInterceptor treats the string processing by the toString() method as "Crosscutting Concern".</p>
+<pre>
+&lt;component class="java.util.Date"&gt;
+    &lt;aspect pointcut="toString"&gt;
+        &lt;component class="org.seasar.framework.aop.interceptors.ToStringInterceptor"/&gt;
+    &lt;/aspect&gt;
+&lt;/component&gt;
+</pre>
+<p>Please refer to the <a href="#ToStringInterceptorSample">ToStringInterceptor</a> sample in details.</p>
+<h4><a name="MockInterceptor" id="MockInterceptor">(4) MockInterceptor</a></h4>
+<h5>Class Name</h5>
+<p>org.seasar.framework.aop.interceptors.MockInterceptor</p>
+<h5>Description</h5>
+<p>This Interceptor let a test made by Mock easier. Please read <a href="testtech.html#MockMake">Testing</a> for further information.</p>
+<h4><a name="DelegateInterceptor" id="DelegateInterceptor">(5) DelegateInterceptor</a></h4>
+<h5>Class Name</h5>
+<p>org.seasar.framework.aop.interceptors.DelegateInterceptor</p>
+<h5>Description</h5>
+<p>This Interceptor delegates a method invocation to another component. A delegation is performed when a component is assigned to a target property of DelegateInterceptor. If you want to specify a method name explicitly to support different method names, use "DelegateInterceptor#addMethodNameMap(String methodName, String targetMethodName)". Suppose you want to let the method bar() be delegated to foo.bar2(), then your code might be like this: "DelegateInterceptor#setTarget(foo), DelegateInterceptor#addMethodNameMap("bar", "bar2")". Please read <a href="#DelegateInterceptorSample">DelegateInterceptor</a> for further information.</p>
+<h5>Pay attention</h5>
+<p>A component assigned to a target property will be get through the container while its initialization processes are going on. As a result, the same instance will be used even if the instance attribute of the component is a property. If you want to get a new instance for every method invocation, use PrototypeDelegateInterceptor described below.</p>
+<h4><a name="PrototypeDelegateInterceptor" id="PrototypeDelegateInterceptor">(6) PrototypeDelegateInterceptor</a></h4>
+<h5>Class Name</h5>
+<p>org.seasar.framework.aop.interceptors.PrototypeDelegateInterceptor</p>
+<h5>Description</h5>
+<p>This Interceptor delegates a method invocation to another component. A new component will be get from a container in every method invocation. The delegation is performed when the targeted component name is assigned to the targetName property of PrototypeDelegateInterceptor. If you want to set a method name explicitly to support different method names, use "PrototypeDelegateInterceptor#setTarget(foo), PrototypeDelegateInterceptor#addMethodNameMap("bar", "bar2")". Please read <a href="#PrototypeDelegateInterceptorSample">PrototypeDelegateInterceptor</a> for further information.</p>
+<h4><a name="SyncInterceptor" id="SyncInterceptor">(7) SyncInterceptor</a></h4>
+<h5>Class Name</h5>
+<p>org.seasar.framework.aop.interceptors.SyncInterceptor</p>
+<h5>Description</h5>
+<p>This Interceptor synchronizes a multiple method invocations by an aspect. You don't need to modify your code when you want to sychronize method invocations. Please read <a href="#SyncInterceptorSample">SyncInterceptor</a> for further information.</p>
+<h4><a name="InterceptorChain" id="InterceptorChain">(8) InterceptorChain</a></h4>
+<h5>Class Name</h5>
+<p>org.seasar.framework.aop.interceptors.InterceptorChain</p>
+<h5>Description</h5>
+<p>This Interceptor enables you to combine multiple Interceptors and to reuse them easily. If you want to adopt a combination to more than one component, give the name of InterceptorChain into each component as follows.</p>
+<pre>
+&lt;component name="interceptor1" .../&gt;
+&lt;component name="interceptor2" .../&gt;
+&lt;component name="interceptor3" .../&gt;<br />&lt;component name="chain" class="org.seasar.framework.aop.interceptors.InterceptorChain"&gt;<br />    &lt;initMethod name="add"&gt;&lt;arg&gt;interceptor1&lt;/arg&gt;&lt;/initMethod&gt;<br />    &lt;initMethod name="add"&gt;&lt;arg&gt;interceptor2&lt;/arg&gt;&lt;/initMethod&gt;<br />    &lt;initMethod name="add"&gt;&lt;arg&gt;interceptor3&lt;/arg&gt;&lt;/initMethod&gt;<br />&lt;/component&gt;
+&lt;component ...&gt;
+    &lt;aspect&gt;chain&lt;/aspect&gt;
+&lt;/component&gt;
+&lt;component ...&gt;
+    &lt;aspect&gt;chain&lt;/aspect&gt;
+&lt;/component&gt;
+</pre>
+<h4><a name="InterceptorLifecycleAdapter" id="InterceptorLifecycleAdapter">(9) InterceptorLifecycleAdapter</a></h4>
+<h5>Class Name</h5>
+<p>org.seasar.framework.aop.interceptors.InterceptorLifecycleAdapter</p>
+<h5>Description</h5>
+<p>Interceptor instances are built into classes only when initializeing container. This is why new interceptors are not built into classes even if instance property is prototype. In this case, applies InterceptorLifecycleAdapter to MethodInterceptor#invoke().</p>
+<pre>
+&lt;component name="myInterceptor" instance="prototype" .../&gt;
+    &lt;aspect pointcut="invoke"&gt;
+        &lt;component class="org.seasar.framework.aop.interceptors.InterceptorLifecycleAdapter"&gt;
+    &lt;/aspect&gt;
+&lt;/component&gt;
+&lt;component ...&gt;
+    &lt;aspect&gt;myInterceptor&lt;/aspect&gt;
+&lt;/component&gt;
+</pre>
+<h3><a name="OriginalInterceptor" id="OriginalInterceptor">How to define your own Interceptor</a></h3>
+<h4>Description</h4>
+<p>To define your own Interceptor, you need to implement an interface or an abstract class shown below.</p>
+<dl>
+<dt style="text-indent:1em;">org.aopalliance.intercept.MethodInterceptor</dt>
+<dt style="text-indent:1em;">org.seasar.framework.aop.interceptors.AbstractInterceptor</dt>
+</dl>
+<p>The invoke() method shown below is the only one that you have to implement in both cases.</p>
+<dl>
+<dt style="text-indent:1em;">public Object invoke(MethodInvocation invocation) throws Throwable</dt>
+</dl>
+<p>AbstractInterceptor is an abstract class and implements MethodInterceptor. AbstracInterceptor has two methods, createProxy() and getTargetClass() shown below. createProxy() method is used to get a Proxy object. getTargetClass() method is used to get a target class which an aspect is associated. When Interceptor requires a name of a class that an aspect is associated with, for example, logging Interceptor, you can get a required class name easily from AbstractInterceptor.</p>
+<dl>
+<dt style="text-indent:1em;">public Object createProxy(Class proxyClass)</dt>
+<dt style="text-indent:1em;">protected Class getTargetClass(MethodInvocation invocation)</dt>
+</dl>
+<p>You can get a target object, method and arguments from MethodInvocation object given as a parameter of getTargetClass() method. getThis() method has a feature to get a class name from a bytecode. proceed() method invokes a concrete method and gets the result through this invocation. Following is an example how to use proceed() method.</p>
+<h4>Warning</h4>
+<p>Interceptor instances are built into classes only when initializeing container. This is why new interceptors are not built into classes even if instance property is prototype.<br />
+Applies <a href="#InterceptorLifecycleAdapter">InterceptorLifecycleAdapter</a> to such interceptor.</p>
+<h4>Example</h4>
+<pre>
+public class ABS implements MethodInterceptor {
+    public Object invoke(MethodInvocation invocation) throws Throwable {
+        System.out.println("Before");
+        Object ret = invocation/proceed();
+        System.out.println("After");
+        return ret;
+    }
+}
+</pre>
+<!--<img src="images/aop02.gif" width="515" height="263" border="0"/>-->
+<p>This example consists of two parts, before and after the proceed() method. The first part is ensured to be executed before proceed() method and the second part is ensured to be done after proceed() method. Suppose multiple aspects associated with only one component, then aspects will be invoked as follows:</p>
+<ol>
+<li>An execution goes down along the order of aspect elements appeared in dicon file. At this stage, codes reside in former part of proceed() method of MethodInterceptor are executed.</li>
+<li>After the last execution has done, methods in a component are invoked next.</li>
+<li>An execution goes up along the reverse order of aspect elements appered in dicon file. At this state, codes reside in latter part of proceed() method of MethodInterceptor are executed.</li>
+</ol>
+<p>Please read <a href="#OriginalInterceptorSample">How to define your own Interceptor</a> for further information.</p>
+<h3><a name="AOPInterType" id="AOPInterType">Available S2AOP InterTypes</a></h3>
+<p>Following Intertypes are provided by S2AOP. Besides, you can define your own InterType easily.</p>
+<h4><a name="PropertyInterType" id="PropertyInterType">(1) PropertyTraceInterType</a></h4>
+<h5>Class Name</h5>
+<p>org.seasar.framework.aop.intertype.PropertyInterType</p>
+<h5>Description</h5>
+<p>PropertyInterType creates the setter and getter method for the field.</p>
+<h5>Warning</h5>
+<p>PropertyInterType doesn't create the getter and setter method for the private field. We need to define field scope as either protected or package.</p>
+<pre>
+&lt;component class="Hoge"&gt;
+    &lt;interType&gt;
+        &lt;component class="org.seasar.framework.aop.interType.PropertyInterType"/&gt;
+    &lt;/interType&gt;
+&lt;/component&gt;
+</pre>
+<p>We can specify the Property annotation for the fields where we want to create the getter and setter method.<br />
+Tiger annotation is as follows.</p>
+<pre>
+import org.seasar.framework.container.annotation.tiger.Property;
+import org.seasar.framework.container.annotation.tiger.PropertyType;
+
+public class Hoge {
+    @Property
+    int foo;
+
+    @Property(PropertyType.READ)
+    long bar;
+
+    @Property(PropertyType.WRITE)
+    String baz;
+}
+</pre>
+<p>Backport175 annotation is as follows.</p>
+<pre>
+public class Hoge {
+    /** @org.seasar.framework.container.annotation.backport175.Property */
+    int foo;
+
+    /** @org.seasar.framework.container.annotation.backport175.Property("read") */
+    long bar;
+
+    /** @org.seasar.framework.container.annotation.backport175.Property("write") */
+    String baz;
+}
+</pre>
+<p>In the above sample, We create the getter and setter method in foo field, and create the getter method in bar field, and create the setter method in baz field.</p>
+<p>We can sepecify the Property annotation for a class. The annotation for a class is adapted for the fields which we don't specify the annotation.<br />
+Tiger annotation is as follows.</p>
+<pre>
+import org.seasar.framework.container.annotation.tiger.Property;
+import org.seasar.framework.container.annotation.tiger.PropertyType;
+
+@Property
+public class Hoge {
+    int foo;
+
+    long bar;
+
+    @Property(PropertyType.NONE)
+    String baz;
+}
+</pre>
+<p>Backport175 annotation is as follows.</p>
+<pre>
+/** @org.seasar.framework.container.annotation.backport175.Property */
+public class Hoge {
+    int foo;
+
+    long bar;
+
+    /** @org.seasar.framework.container.annotation.backport175.Property("none") */
+    String baz;
+}
+</pre>
+<p>In the above sample, we create the getter and setter method in the foo and bar field, and don't create any method in the baz field.</p>
+<h4><a name="InterTypeChain" id="InterTypeChain">(2) InterTypeChain</a></h4>
+<h5>Class Name</h5>
+<p>org.seasar.framework.aop.intertye.InterTypeChain</p>
+<h5>Description</h5>
+<p>InterType enables you to combine multiple InterTypes and to reuse them easily.</p>
+<pre>
+&lt;component name="interType1" .../&gt;
+&lt;component name="interType2" .../&gt;
+&lt;component name="interType3" .../&gt;<br />&lt;component name="chain" class="org.seasar.framework.aop.interttype.InterTypeChain"&gt;<br />    &lt;initMethod name="add"&gt;&lt;arg&gt;interType1&lt;/arg&gt;&lt;/initMethod&gt;<br />    &lt;initMethod name="add"&gt;&lt;arg&gt;interType2&lt;/arg&gt;&lt;/initMethod&gt;<br />    &lt;initMethod name="add"&gt;&lt;arg&gt;interType3&lt;/arg&gt;&lt;/initMethod&gt;<br />&lt;/component&gt;
+&lt;component ...&gt;
+    &lt;interType&gt;chain&lt;/interType&gt;
+&lt;/component&gt;
+&lt;component ...&gt;
+    &lt;interType&gt;chain&lt;/interType&gt;
+&lt;/component&gt;
+</pre>
+<h3><a name="OriginalInterType" id="OriginalInterType">How to define your own InterType</a></h3>
+<h4>Description</h4>
+<p>To define your own InterType, you need to implement an interface or an abstract class shown below.</p>
+<dl>
+<dt style="text-indent:1em;">org.seasar.framework.aop.InterType</dt>
+<dt style="text-indent:1em;">org.seasar.framework.aop.intertype.AbstractInterType</dt>
+</dl>
+<p>The class implementing InterType need to implement the folloing method.</p>
+<dl>
+<dt style="text-indent:1em;">public void introduce(Class targetClass, CtClass enhancedClass)</dt>
+</dl>
+<p>InterType is applied to targetClass and is built into enhancedClass. Please refer to <a href="http://jboss.com/products/javassist">Javassist</a>, <a href="http://www.smg.co.jp/seminar/techsquare/javassist01.html">Tutorial</a>, <a href="http://www.csg.is.titech.ac.jp/~chiba/javassist/html/">JavaDoc</a> for details.</p>
+<p>AbstractInterType is an abstract class implementing InterType. The sub-class of InterType need to implement folloing methods.</p>
+<dl>
+<dt style="text-indent:1em;">public void introduce() trhows CannotCompileException, NotFoundException</dt>
+</dl>
+<p>AbstractInterType acquires objects using folloing methods.</p>
+<dl>
+<dt style="text-indent:1em;">protected Class getTargetClass()</dt>
+<dt style="text-indent:1em;">protected CtClass getEnhancedClass()</dt>
+<dt style="text-indent:1em;">protected ClassPool getClassPool()</dt>
+</dl>
+<p>AbstractInterType supplies following utility methods for adding fields, methods, and interfaces.</p>
+<dl>
+<dt style="text-indent:1em;">protected void addField(Class type, String name)</dt>
+<dt style="text-indent:1em;">protected void addField(Class type, String name, String init)</dt>
+<dt style="text-indent:1em;">protected void addStaticField(Class type, String name)</dt>
+<dt style="text-indent:1em;">protected void addStaticField(Class type, String name, String init)</dt>
+<dt style="text-indent:1em;">protected void addMethod(String name, String src)</dt>
+<dt style="text-indent:1em;">protected void addMethod(Class returnType, String name, String src)</dt>
+<dt style="text-indent:1em;">protected void addMethod(String name, Class[] paramTypes, String src)</dt>
+<dt style="text-indent:1em;">protected void addMethod(Class returnType, String name, Class[] paramTypes, String src)</dt>
+<dt style="text-indent:1em;">protected void addStaticMethod(String name, String src)</dt>
+<dt style="text-indent:1em;">protected void addStaticMethod(Class returnType, String name, String src)</dt>
+<dt style="text-indent:1em;">protected void addStaticMethod(String name, Class[] paramTypes, String src)</dt>
+<dt style="text-indent:1em;">protected void addStaticMethod(Class returnType, String name, Class[] paramTypes, String src)</dt>
+</dl>
+<h3><a name="nodicon" id="nodicon">AOP without "dicon file"</a></h3>
+<p>This section describes how to put aspects into your program without dicon file. Four solutions shown below are provided.</p>
+<ul>
+<li>Assign one or more method names to arguments of org.seasar.framework.aop.impl.PointcutImpl constructor. Suppose a class implements some interfaces, all methods in an interface can be associated with an aspect. For example, when you emply java.util.HashMap and write your code like new PointcutImpl(HashMap.class), all methods in java.util.Map interface can be associated with an aspect automatically.</li>
+<li>Set Interceptor to the first argument and Pointcut to the second argument of org.seasar.framework.aop.impl.AspectImpl constructor. You need to create this Pointcut from PointcutImpl.</li>
+<li>Set the target class and an array of Aspect to arguments of org.seasar.framework.aop.proxy.AopProxy constructor. You need to create this Aspect from AspectImple.</li>
+<li>You can get an object which is associated with Aspect from a method, org.seasar.framework.aop.proxy.AopProxy#create()</li>
+</ul>
+<p>This is an example how to insert an aspect without dicon file. This example adopts TraceInterceptor to java.uitl.Date, and let getTime() method be a target method.</p>
+<pre>
+Pointcut pointcut = new PointcutImpl(new String[]{"getTime"});
+Aspect aspect = new AspectImpl(new TraceInterceptor(), pointcut);
+AopProxy aopProxy = new AopProxy(Date.class, new Aspect[]{aspect});
+Date proxy = (Date) aopProxy.create();
+proxy.getTime();
+</pre>
+<h2><a name="Example" id="Example">Example</a></h2>
+<p>You have to finish a <a href="setup.html">setup</a> before running these samples.</p>
+<h3><a name="TraceInterceptorSample" id="TraceInterceptorSample">TraceInterceptor</a></h3>
+<p>First example uses TraceInterceptor. This shows you how to output a trace when getTime() and hasCode() methods in both java.util.Array and java.util.Date classes are invoked. Write two files explained below.</p>
+<ul>
+<li type="circle">Dicon file to define a component(Trace.icon)</li>
+<li type="circle">Java class to check whether the configuration is defined correcltly or not(AopTraceClient.java)</li>
+</ul>
+<p><b>How to write dicon file</b></p>
+<ul>
+<li type="circle">Define a component element for TraceInterceptor. In this case, name attribute is "traceInterceptor".</li>
+<li type="circle">Define a component element for java.util.ArrayList class. Add an aspect element as a nested child element of component and set the name "traceInterceptor" in its body.</li>
+<li type="circle">Define a component element for java.util.Date class. Likewise, add an aspect element and set "traceInterceptor" to its body. This time, set both getTime() and hashCode() methods to a pointcut attribute of an aspect element. In addition, define an arg element to pass a value of zero to java.util.Date constructor.</li>
+</ul>
+<p>Trace.dicon</p>
+<pre>
+&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
+&lt;!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container//EN"
+"http://www.seasar.org/dtd/components.dtd"&gt;
+&lt;components&gt;
+    &lt;component name="traceInterceptor"
+               class="org.seasar.framework.aop.interceptors.TraceInterceptor"/&gt;
+    &lt;component class="java.util.ArrayList&gt;
+        &lt;aspect&gt;traceInterceptor&lt;/aspect&gt;
+    &lt;/component&gt;
+    &lt;component class="java.util.Date"&gt;
+        &lt;arg&gt;0&lt;/arg&gt;
+        &lt;aspect pointcut="getTime, hashCode"&gt;
+            traceInterceptor
+        &lt;/aspect&gt;
+    &lt;/component&gt;
+&lt;/components&gt;
+</pre>
+<p><b>How to write a cline Java program</b></p>
+<ul>
+<li type="circle">Create a S2Container object by the method, org.seasar.framework.container.S2ContainerFactory#create(). Set a path to dicon file(Trace.dicon) to an argument of create() method.</li>
+<li type="circle">Get an object by the method, org.seasar.framework.container.S2Container#getComponent(). Set a component name to an argument of getComponent() method. A component name must be the name defined in dicon file. In this case, assign List.class and java.util.Date to the arguments of each getComponent() method.</li>
+<li type="circle">Inovke one of methods ArrayList component has. This example choose size() method. Check that the trace captured by an aspect while the method is executing.</li>
+<li type="circle">Equally, invoke getTime() and hasCode() methods of Date component and check the trace.</li>
+</ul>
+<p>AopTraceClient.java</p>
+<pre>
+package examples.aop.traceinterceptor;
+
+import java.util.Date;
+import java.util.List;
+
+import org.seasar.framework.container.S2Container;
+import org.seasar.framework.container.factory.S2ContainerFactory;
+
+public class AopTraceClient {
+    private static String PATH = "examples/aop/traceinterceptor/Trace.dicon";
+
+    public static void main(String[] args) {
+        S2Container container = S2ContainerFactory.create(PATH);
+        ArrayList list = (List) container.getComponent(ArrayList.class);
+        list.size();
+        Date date = (Date) container.getComponent(Date.class);
+        date.getTime();
+        date.hashCode();
+    }
+}
+</pre>
+<p><b>Output</b></p>
+<p>You see an output shown below. This means that the traces are outputed both before and after the method invocation. As for Date component, you know java.util.Date#getTime() method is traced between BEGIN and END of hasCode() method, too. The reason is that getTime() method is used in hashCode() method.</p>
+<pre>
+BEGIN java.util.ArrayList#size()
+END java.util.ArrayList#size() : 0
+BEGIN java.util.Date#getTime()
+END java.util.Date#getTime() : 0
+BEGIN java.util.Date#hashCode()
+BEGIN java.util.Date#getTime()
+END java.util.Date#getTime() : 0
+END java.util.Date#hashCode() : 0
+</pre>
+<p>This example is included in the directory, seasar2/src/examples/aop/traceinterceptor.</p>
+<br />
+<h3><a name="ThrowsInterceptorSample" id="ThrowsInterceptorSample">ThrowsInterceptor</a></h3>
+<p>(1)The second example uses ThrowsInterceptor. This shows you how to go processing through to the end even if an exception occurs. Write four files explained below.</p>
+<ul>
+<li type="circle">A class that raises RuntimeException(Checker.java)</li>
+<li type="circle">Interceptor inherited from ThrowsInterceptor(HandleThrowableInterceptor.java)</li>
+<li type="circle">Dicon file to define a component(Checker.dicon)</li>
+<li type="circle">Java class to check whether the configuration is made correctly or not(AopCheckerClient.java)</li>
+</ul>
+<p><b>How to define a class that throws exception</b></p>
+<ul>
+<li type="circle">This class outputs a string given as an argument when a string is not null.</li>
+<li type="circle">This class throws NullPointerException when null is set to an argument of check() method.</li>
+</ul>
+<p>Checker.java</p>
+<pre>
+package examples.aop.throwsinterceptor;
+
+public class Checker {
+    public void check(String str) {
+        if (str != null) {
+            System.out.println(str);
+        } else {
+            throw new NullPointerException("null");
+        }
+    }
+}
+</pre>
+<p><b>How to define Interceptor inherited from ThrowsInterceptor</b></p>
+<ul>
+<li type="circle">Define a subclass of ThrowsInterceptor.</li>
+<li type="circle">Implement handleThrowable(Throwable, MethodInvocation) method.</li>
+</ul>
+<p>HandleThrowableInterceptor.java</p>
+<pre>
+package examples.aop.throwsinterceptor;
+
+import org.aopalliance.intercept.MethodInvocation;
+import org.seasar.framework.aop.interceptors.ThrowsInterceptor;
+
+public class HandleThrowableInterceptor extends ThrowsInterceptor {
+    public void handleThrowable(Throwable t, MethodInvocation invocation)
+        throws Throwable {
+    }
+}
+</pre>
+<p><b>How to write dicon file</b></p>
+<ul>
+<li type="circle">Write a component element for Interceptor you defined before and set handleThrowableInterceptor to the name attribute</li>
+<li type="circle">Associate HandleThrowableInterceptor class with check() method in Checker class so that an aspect can work.</li>
+</ul>
+<p>Checker.dicon</p>
+<pre>
+&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
+&lt;!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container//EN"
+"http://www.seasar.org/dtd/components.dtd"&gt;
+&lt;components&gt;
+    &lt;component name="handleThrowableInterceptor"
+               class="examples.aop.throwsinterceptor.HandleThrowableInterceptor"/&gt;
+    &lt;component class="examples.aop.throwsinterceptor.Checker"&gt;
+        &lt;aspect pointcut="check"&gt;
+            handleThrowableInterceptor
+        &lt;/aspect&gt;
+    &lt;/component&gt;
+&lt;/components&gt;
+</pre>
+<p><b>How to write a client Java class</b></p>
+<ul>
+<li type="circle">Create a S2Container object by the method, org.seasar.framework.container.S2ContainerFactory#create(). Set a path to dicon file(Checker.dicon) to an argument of create() method.</li>
+<li type="circle">Get an object by the method, org.seasar.framework.container.S2Container#getComponent(). Set a component name to an argument of getComponent() method. A component name must be the name defined in dicon file. In this case, assign Foo.class.</li>
+<li type="circle">Pass the string "foo" to Checker#check() method as an argument</li>
+<li type="circle">Raise an exception by passing null to an argument of Checker#check() method.</li>
+<li type="circle">Pass the second string "hoge" to Checker#check() method as an argument.</li>
+</ul>
+<p>AopCheckerClient.java</p>
+<pre>
+package examples.aop.throwsinterceptor;
+
+import org.seasar.framework.container.S2Container;
+import org.seasar.framework.container.factory.S2ContainerFactory;
+
+public class AopCheckerClient {
+    private static String PATH = "examples/aop/throwsinterceptor/Checker.dicon";
+
+    public static void main(String[] args) {
+        S2Container container = S2ContainerFactory.create(PATH);
+        Checker checker = (Checker) container.getComponent(Checker.class);
+        checker.check("foo");
+        checker.check(null);
+        checker.check("hoge");
+    }
+}
+</pre>
+<p><b>Output</b></p>
+<p>You see the string "hoge", so you know that the raised exception didn't stop processing.</p>
+<pre>
+foo
+hoge
+</pre>
+<p>This example is included in seasar2/src/examples/aop/throwsinterceptor</p>
+<br />
+<p>(2) This ThrowsInterceptor example shows you how to replace the type of exeception with another Interceptor. Modify HandleThrowableInterceptor defined above.</p>
+<p><b>How to make Interceptor to throw a new exception</b></p>
+<p>Suppose org.seasar.framework.exception.SRuntimeException will be thrown when the first argument of handleThrowable(Throwable, MethodInvocation) method is NullPointerException, then you need to modify HandleThrowableInterceptor as follows.</p>
+<pre>
+package examples.aop.throwsinterceptor;
+
+import org.aopalliance.intercept.MethodInvocation;
+import org.seasar.framework.aop.interceptors.ThrowsInterceptor;
+import org.seasar.framework.exception.SRuntimeException;
+
+public class HandleThrowableInterceptor extends ThrowsInterceptor {
+    public void handleThrowable(NullPointerException t, MethodInvocation invocation)
+            throws Throwable {
+        throw new SRuntimeException("ESSR0007", new Object[] { "argument" });
+    }
+}
+</pre>
+<p>You use other three files, Checker.java, Checker.dicon and AopCheckerClient.java, to run this example.</p>
+<b>Output</b>
+<p>You see new error messages shown below.</p>
+<pre>
+foo
+Exception in thread "main" org.seasar.framework.exception.SRuntimeException:
+  [ESSR0007]argument should not be null or empty
+        at examples.aop.throwsinterceptor.HandleThrowableInterceptor.handleThrowable(
+            HandleThrowableInterceptor.java:12)
+        at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+        at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+        at sun.reflect.DelegatingMethodAccessorImpl.invoke(
+            DelegatingMethodAccessorImpl.java:25)
+        at java.lang.reflect.Method.invoke(Method.java:585)
+        at org.seasar.framework.aop.interceptors.ThrowsInterceptor.invoke(
+            ThrowsInterceptor.java:54)
+        at examples.aop.throwsinterceptor.Checker$$EnhancedByS2AOP$$16672d6$$
+            MethodInvocation$$check0.proceed(MethodInvocationClassGenerator.java)
+        at examples.aop.throwsinterceptor.Checker$$EnhancedByS2AOP$$16672d6.check(
+             Checker$$EnhancedByS2AOP$$16672d6.java)
+        at examples.aop.throwsinterceptor.AopCheckerClient.main(AopCheckerClient.java:13)
+</pre>
+<p>This example is included in seasar2/src/examples/aop/throwsinterceptor</p>
+<h3><a name="ToStringInterceptorSample" id="ToStringInterceptorSample">ToStringInterceptor</a></h3>
+<p>We can automatically output the fields information using ToStringInterceptor. The written files are as follows.</p>
+<ul>
+<li type="circle">Entity classes which have fields(Entity.java, EntityImpl.java, EntityImplImpl.java, InnerEntity.java)</li>
+<li type="circle">dicon file where we define components(ToString.dicon)</li>
+<li type="circle">Main program to confirm the settering(AopToStringClient.java)</li>
+</ul>
+<p><b>Creation entity classes</b></p>
+<p>Entity.java</p>
+<pre>
+package examples.aop.tostringinterceptor;
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class Entity {
+    private int intValue = 1;
+    private static int staticIntValue = 12;
+    private double doubleValue = 12.3;
+    private String stringValue = "1234";
+    public static final int staticFinalIntValue = 12345;
+    private Map mapValue = new HashMap();
+    private InnerEntity innerEntity;
+
+    public Entity(InnerEntity innerEntity) {
+        this.innerEntity = innerEntity;
+    }
+}
+</pre>
+<p>EntityImpl.java</p>
+<pre>
+package examples.aop.tostringinterceptor;
+
+public class EntityImpl extends Entity {
+    private int implValue = 1;
+
+    public EntityImpl(InnerEntity innerEntity) {
+        super(innerEntity);
+    }
+}
+</pre>
+<p>EntityImplImpl.java</p>
+<pre>
+package examples.aop.tostringinterceptor;
+
+public class EntityImplImpl extends EntityImpl {
+    private int implImplValue = 1;
+
+    public EntityImplImpl(InnerEntity innerEntity) {
+        super(innerEntity);
+    }
+}
+</pre>
+<p>InnerEntity.java</p>
+<pre>
+package examples.aop.tostringinterceptor;
+
+public class InnerEntity {
+    int innerInt = 0;
+    long innerLong = 234;
+    String str = "foo";
+    char[] charArray = new char[]{'a', 'b', 'c'};
+}
+</pre>
+<p><b>How to write dicon file</b></p>
+<ul>
+<li type="circle">We define the ToStringInterceptor class as a component, and the component name is toStringInterceptor.</li>
+<li type="circle">We define the EntityImplImpl class as a component. We set the innerEntity component to the constructor argument using the arg tag. We specify the toStringInterceptor component for the arg tag, and specify the toString method for the pointcut property.</li>
+<li type="circle">We define the InnerEntity class as a component. We specify the toStringInterceptor component to the aspect tag, and specify the toString method for the pointcut property.</li>
+</ul>
+<p>ToString.dicon</p>
+<pre>
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container//EN"
+"http://www.seasar.org/dtd/components.dtd"&gt;
+&lt;components&gt;
+        &lt;component name="toStringInterceptor" 
+          class="org.seasar.framework.aop.interceptors.ToStringInterceptor"/&gt;
+        &lt;component class="examples.aop.tostringinterceptor.EntityImplImpl"&gt;
+                &lt;arg&gt;
+                        innterEntity
+                &lt;/arg&gt;
+                &lt;aspect pointcut="toString"&gt;
+                        toStringInterceptor
+                &lt;/aspect&gt;
+        &lt;/component&gt;
+        &lt;component name="innterEntity" 
+          class="examples.aop.tostringinterceptor.InnerEntity"&gt;
+                &lt;aspect pointcut="toString"&gt;
+                        toStringInterceptor
+                &lt;/aspect&gt;
+        &lt;/component&gt;
+&lt;/components&gt;
+</pre>
+<p><b>Creation the main program</b></p>
+<ul>
+<li type="circle">We specify the dicon file path for the first argument of S2Container#create(), and create a container.</li>
+<li type="circle">When we specify the class, such as EnitityImpl.class, for the first argument of S2Container#getComponent(), we can get the component.</li>
+<li type="circle">We show the result using Sytem.out.println() in order to confirm it.</li>
+</ul>
+<p>AopTraceClient.java</p>
+<pre>
+package examples.aop.tostringinterceptor;
+
+import org.seasar.framework.container.S2Container;
+import org.seasar.framework.container.factory.S2ContainerFactory;
+
+public class AopToStringClient {
+    private static String PATH = "examples/aop/tostringinterceptor/ToString.dicon";
+
+    public static void main(String[] args) {
+        S2Container container = S2ContainerFactory.create(PATH);
+        Entity entity = (Entity) container.getComponent(EntityImpl.class);
+        System.out.println(entity);
+    }
+}
+</pre>
+<p><b>Output</b></p>
+<pre>
+examples.aop.tostringinterceptor.EntityImplImpl@1db4f6f[
+  implImplValue=3,implValue=2,intValue=1,staticIntValue=12,doubleValue=12.3,
+  stringValue="1234",staticFinalIntValue=12345,mapValue={},
+  innerEntity=examples.aop.tostringinterceptor.InnerEntity@13c1b02[
+    innerInt=0,innerLong=234,str="foo",charArray={'a','b','c'}]]
+</pre>
+<p>This example is included in seasar2/src/examples/aop/tostringinterceptor.</p>
+<br />
+<h3><a name="DelegateInterceptorSample" id="DelegateInterceptorSample">DelegateInterceptor</a></h3>
+<p>The third example uses DelegateInterceptor of S2AOP. This shows how to delegate a method invocation to another class's method invocation.<br />
+First, define an abstract method in the interface, IBase.java. Next, define one abatract class, Dummy.java and one concreate class, Substance.java to implement IBase interface. Then, you are ready to delegate a method invocation in an abstract class to a concrete class. Write five files explained below.</p>
+<ul>
+<li type="circle">An interface(IBase.java)</li>
+<li type="circle">An abstract class that implmenets IBase interface(Dummy.java)</li>
+<li type="circle">A concreate class that implements IBase interface.(Substance.java)</li>
+<li type="circle">A dicon file so that the method invocation can be delegated.(Delegate.dicon)</li>
+<li type="circle">Java class to check whether the configuration is made correctly or not(AopDelegateClient.java).</li>
+</ul>
+<p><b>An interface, IBase.java</b></p>
+<ul>
+<li type="circle">Define an interface so that it has an abstract method.</li>
+</ul>
+<p>IBase.java</p>
+<pre>
+package examples.aop.delegateinterceptor;
+
+public interface IBase {
+    public abstract void run();
+}
+</pre>
+<p><b>An abstract class, Dummy.java</b></p>
+<ul>
+<li type="circle">Implement the interface defined above.</li>
+</ul>
+<p>Dummy.java</p>
+<pre>
+package examples.aop.delegateinterceptor;
+
+public abstract class Dummy implements IBase {
+}
+</pre>
+<p><b>A concrete class, Substance.java</b></p>
+<ul>
+<li type="circle">Implement the interface defined above.</li>
+<li type="circle">Implement the abstract method defined above.</li>
+</ul>
+<p>Substance.java</p>
+<pre>
+package examples.aop.delegateinterceptor;
+
+public class Substance implements IBase {
+    public void run() {
+        System.out.println("substance");
+    }
+}
+</pre>
+<p><b>Dicon file</b></p>
+<ul>
+<li type="circle">Define a component element for the abstract class, Dummy</li>
+<li type="circle">Define an aspect element to associate Dummy with DelegateInterceptor component. Within this component element, define initMethod element to specify target component so that DelegateInterceptor#setTarget() delegates a method invocation to a target component. As shown below, the target component, examples.aop.delegateinterceptor.Substance, is set by a method injection.</li>
+</ul>
+<p>Delegate.dicon</p>
+<pre>
+&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
+&lt;!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container//EN"
+"http://www.seasar.org/dtd/components.dtd"&gt;
+&lt;components&gt;
+    &lt;component class="sample.aop.delegateinterceptor.Dummy"&gt;
+        &lt;aspect&gt;
+            &lt;component
+              class="org.seasar.framework.aop.interceptors.DelegateInterceptor"&gt;
+                &lt;initMethod name="setTarget"&gt;
+                    &lt;arg&gt;new sample.aop.delegateinterceptor.Substance()&lt;/arg&gt;
+                &lt;/initMethod&gt;
+            &lt;/component&gt;
+        &lt;/aspect&gt;
+    &lt;/component&gt;
+&lt;/components&gt;
+</pre>
+<p><b>A client Java class</b></p>
+<ul>
+<li type="circle">Create a S2Container object by the method, org.seasar.framework.container.S2ContainerFactory#create(). Set a path to dicon file(Delegate.dicon) to an argument of create() method.</li>
+<li type="circle">Get an object by the method, org.seasar.framework.container.S2Container#getComponent(). Set a component name to an argument of getComponent() method. A component name must be the name defined in dicon file. In this case, assign IBase.class.</li>
+<li type="circle">Invoke IBase#run() method in the component got from a container.</li>
+</ul>
+AopDelegateCilent.dicon
+<pre>
+package examples.aop.delegateinterceptor;
+
+import org.seasar.framework.container.S2Container;
+import org.seasar.framework.container.factory.S2ContainerFactory;
+
+public class AopDelegateClient {
+    private static String PATH = "examples/aop/delegateinterceptor/Delegate.dicon";
+    public static void main( String[] args ){
+        S2Container container = S2ContainerFactory.create(PATH);
+        IBase base = (IBase) container.getComponent(Dummy.class);
+        base.run();
+    }
+}
+</pre>
+<p><b>Output</b></p>
+<p>The output string "substance" will appear on a console, so you can check that Dummy#run() has been delegated to Substance#run()</p>
+<pre>
+substance
+</pre>
+<p>This example is included in seasar2/src/examples/aop/delegateinterceptor.</p>
+<br />
+<h3><a name="PrototypeDelegateInterceptorSample" id="PrototypeDelegateInterceptorSample">PrototypeDelegateInterceptor</a></h3>
+<p>This example uses PrototypeDelegateInterceptor and delegates from a singlton component to a prototype component.<br />
+To make this example, first, define an abstract method in an intarface, then define an abstract class(singleton) and a concrete class(prototype) so that these two classes implement the interface. Second, write dicon file so that the method invocation of the abstract class will be delegated to the method in the concrete class. Write four files described below.</p>
+<ul>
+<li type="circle">An interface(IBase.java)</li>
+<li type="circle">An abstract singleton class that implements the interface(Dummy.java)</li>
+<li type="circle">A prototype class that implements the interface(Substance.java)</li>
+<li type="circle">Dicon file to deinfe a delegation(Delegate.dicon)</li>
+<li type="circle">Java class to check whether the configuration is made correctly or not(AopPrototypeDelegateClient.java)</li>
+</ul>
+<p><b>An interface, IBase.java</b></p>
+<ul>
+<li type="circle">Define a abstract method.</li>
+</ul>
+<p>IBase.java</p>
+<pre>
+package examples.aop.delegateinterceptor;
+
+public interface IBase {
+    public abstract void run();
+}
+</pre>
+<p><b>An abstract class that implements the interface, Dummy.java</b></p>
+<ul>
+<li type="circle">Implement the interface defined above.</li>
+</ul>
+<p>Dummy.java</p>
+<pre>
+package examples.aop.delegateinterceptor;
+
+public abstract class Dummy implements IBase {
+}
+</pre>
+<p><b>A concrete class that implements the interface, Substance.java</b></p>
+<ul>
+<li type="circle">Implement the interface defined above.</li>
+<li type="circle">Implement the abstract method defined in the interface.</li>
+</ul>
+<p>Substance.java</p>
+<pre>
+package examples.aop.delegateinterceptor;
+
+public class Substance implements IBase {
+    public void run() {
+        System.out.println(this);
+    }
+}
+</pre>
+<p><b>Dicon file</b></p>
+<ul>
+<li type="circle">Define a component element for an abstract class, Dummy. This component is a singleton.</li>
+<li type="circle">Define an aspect element for the component, PrototypeDelegateInterceptor. Within this component element, define a property element to specify the target name ("target") to the property, targetName.</li>
+<li type="circle">In addition, define a component element for a target class, Substance. An instance attribute of this component is a prototype.</li>
+</ul>
+<p>PrototypeDelegate.dicon</p>
+<pre>
+&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
+&lt;!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container//EN"
+"http://www.seasar.org/dtd/components.dtd"&gt;
+&lt;components&gt;
+    &lt;component class="sample.aop.delegateinterceptor.Dummy"&gt;
+        &lt;aspect&gt;
+            &lt;component
+              class="org.seasar.framework.aop.interceptors.PrototypeDelegateInterceptor"&gt;
+                &lt;property name="targetName"&gt;"target"&lt;/property&gt;
+            &lt;/component&gt;
+        &lt;/aspect&gt;
+    &lt;/component&gt;
+
+    &lt;component name="target"
+                  class="examples.aop.prototypedelegateinterceptor.Substance"
+                  instance="prototype"/&gt;
+&lt;/components&gt;
+</pre>
+<p><b>A client Java class</b></p>
+<ul>
+<li type="circle">Create a S2Container object by the method, org.seasar.framework.container.S2ContainerFactory#create(). Set a path to dicon file(PrototypeDelegate.dicon) to an argument of create() method.</li>
+<li type="circle">Get an object by the method, org.seasar.framework.container.S2Container#getComponent(). Set a component name to an argument of getComponent() method. A component name must be the name defined in dicon file. In this case, assign IBase.class.</li>
+<li type="circle">Invoke IBase#run() method in the component got from a container several times.</li>
+</ul>
+AopPrototypeDelegateCilent.dicon
+<pre>
+package examples.aop.prototypedelegateinterceptor;
+
+import org.seasar.framework.container.S2Container;
+import org.seasar.framework.container.factory.S2ContainerFactory;
+
+public class AopDelegateClient {
+    private static String PATH =
+        "examples/aop/prototypedelegateinterceptor/PrototypeDelegate.dicon";
+    public static void main( String[] args ){
+        S2Container container = S2ContainerFactory.create(PATH);
+        IBase base = (IBase) container.getComponent(Dummy.class);
+        for (int i = 0; i &lt; 5; ++i) {
+            base.run();
+        }
+    }
+}
+</pre>
+<p><b>Output</b></p>
+<p>The output strings such as "examples.aop.prototypedelegateinterceptor.Substance@xxxxxx" will appear on a console, so you can check that Dummy#run() has been delegated to Substance#run(). Besides, you know that new Substance instances are created in every run() method invocation because output strings contain "@" followed by a hashcode value.</p>
+<pre>
+examples.aop.prototypedelegateinterceptor.Substance@ae533a
+examples.aop.prototypedelegateinterceptor.Substance@da18ac
+examples.aop.prototypedelegateinterceptor.Substance@8a0544
+examples.aop.prototypedelegateinterceptor.Substance@401369
+examples.aop.prototypedelegateinterceptor.Substance@e49dcd
+</pre>
+<p>This example is included in seasar2/src/examples/aop/delegateinterceptor</p>
+<br />
+<h3><a name="SyncInterceptorSample" id="SyncInterceptorSample">SyncInterceptor</a></h3>
+<p>This example uses SyncInterceptor to be able to synchronize accessing to one object from multiple threads.<br />
+For the comparison with SyncInterceptor and without it, we make a example without SyncInterceptor. First example creates multiple threads to access to a shared object. A shared object provides a method that adds one to the counter. Wrtie four files described below.</p>
+<ul>
+<li type="circle">An interface that has a method to add one to the counter.(Count.java)</li>
+<li type="circle">A conrete class that implements an interface(CountImpl.java)</li>
+<li type="circle">Dicon file that defines components(SyncCalc.dicon)</li>
+<li type="circle">Java class to check whether the configuration is defined correcltly or not(AopSyncClient.java)</li>
+</ul>
+<b>An interface, Count.java</b>
+<ul>
+<li type="circle">Define a method to add one to a counter</li>
+<li type="circle">Define another method to get a counter value.</li>
+</ul>
+<p>Count.java</p>
+<pre>
+package examples.aop.syncinterceptor;
+
+public interface Count {
+
+    public void add();
+
+    public int get();
+}
+</pre>
+<p><b>A concrete class, CountImple.java</b></p>
+<ul>
+<li type="circle">Implement the interface defined above.</li>
+<li type="circle">Declare counter variable and assign an initial value of zero.</li>
+<li type="circle">Implement add() method so that it adds one to counter after sleeps for two seconds. The value before the addition is diplayed, too.</li>
+<li type="circle">Implement get() method so that it returns the counter value.</li>
+</ul>
+<p>CountImpl.java</p>
+<pre>
+package examples.aop.syncinterceptor;
+
+public class CountImpl implements Count {
+    private int _count = 0;
+
+    public void add() {
+        int a = _count;
+
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        _count = a + 1;
+        System.out.println(a);
+    }
+
+    public int get() {
+        return _count;
+    }
+}
+</pre>
+<p><b>Dicon file</b></p>
+<ul>
+<li type="circle">Define a component element for CountImple created above.</li>
+</ul>
+<p>SyncCalc.dicon</p>
+<pre>
+&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
+&lt;!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container//EN"
+"http://www.seasar.org/dtd/components.dtd"&gt;
+&lt;components&gt;
+    &lt;component class="examples.aop.syncinterceptor.CountImpl"&gt;
+    &lt;/component&gt;
+&lt;/components&gt;
+</pre>
+<p><b>A client Java class</b></p>
+<ul>
+<li type="circle">Create a S2Container object by the method, org.seasar.framework.container.S2ContainerFactory#create(). Set a path to dicon file(SyncCalc.dicon) to an argument of create() method.</li>
+<li type="circle">Get an object by the method, org.seasar.framework.container.S2Container#getComponent(). Set a component name to an argument of getComponent() method. A component name must be the name defined in dicon file. In this case, assign Count.class.</li>
+<li type="circle">Create new Runnable instance. This instance is run by a thread and invokes add() method in Count class.</li>
+<li type="circle">Create five Thread instances</li>
+<li type="circle">Invoke each Thread#start() method so that five threads can work.</li>
+<li type="circle">Invoke Thread#join() method to wait all of other threads finish thier works.</li>
+<li type="circle">Output counter value when all created threads have done thier work.</li>
+</ul>
+<p>AopSyncClient.java</p>
+<pre>
+package examples.aop.syncinterceptor;
+
+import org.seasar.framework.container.S2Container;
+import org.seasar.framework.container.factory.S2ContainerFactory;
+
+public class AopSyncClient {
+    private String PATH = "examples/aop/syncinterceptor/SyncCalc.dicon";
+    private Count _count = null;
+
+    public void init() {
+        S2Container container = S2ContainerFactory.create(PATH);
+        _count = (Count) container.getComponent(Count.class);
+    }
+
+    public void start() {
+        System.out.println("count: " + _count.get());
+
+        Runnable r = new Runnable() {
+            public void run() {
+                _count.add();
+            }
+        };
+        Thread[] thres = new Thread[5];
+        for (int i=0; i&lt;5; i++) {
+            thres[i] = new Thread(r);
+            thres[i].start();
+        }
+        for (int i=0; i&lt;5; i++) {
+            try {
+                thres[i].join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        System.out.println("count: " + _count.get());
+    }
+
+    public static void main(String[] args) {
+        AopSyncClient asc = new AopSyncClient();
+        asc.init();
+        asc.start();
+    }
+}
+</pre>
+<p><b>Output</b></p>
+<p>This output shows that created threads aren't synchronized.</p>
+<pre>
+count: 0
+0
+0
+0
+0
+0
+count: 1
+</pre>
+<b>Next, redefine dicon file to make created threads to synchronize by SyncInterceptor.</b>
+<ul>
+<li type="circle">Associate</li>
+</ul>
+<p>SyncCalc.dicon</p>
+<pre>
+&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
+&lt;!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container//EN"
+"http://www.seasar.org/dtd/components.dtd"&gt;
+&lt;components&gt;
+    &lt;component class="examples.aop.syncinterceptor.CountImpl"&gt;
+        &lt;aspect&gt;
+            &lt;component class="org.seasar.framework.aop.interceptors.SyncInterceptor"/&gt;
+        &lt;/aspect&gt;
+    &lt;/component&gt;
+&lt;/components&gt;
+</pre>
+<p><b>Output</b></p>
+<p>This output shows that all created threads are synchronized because counter value increases one by one.</p>
+<pre>
+count: 0
+0
+1
+2
+3
+4
+count: 5
+</pre>
+<p>This example is included in seasar2/src/examples/aop/syncinterceptor</p>
+<br />
+<h3><a name="OriginalInterceptorSample" id="OriginalInterceptorSample">How to define your own Interceptor</a></h3>
+<p>This section describes how you can make your own Interceptor. To help you to understand well, we adopt one example that get a target class name, method name and arguments. Besides, this example measures processing times needed in each method invocations. Also, we try to keep track a processing time that extremly consumes cpu power by our Interceptor. Write four files shown below.</p>
+<ul>
+<li type="circle">An Interceptor that outputs a target class name, method name and arguments. Also, this outputs a method processing time measured by this Interceptor.(MeasurementInterceptor.java)</li>
+<li type="circle">A class which will be associated with Interceptor. Write this class so that consumes much cpu power.(HeavyProcess.java)</li>
+<li type="circle">Dicon file that defines components.(Measurement.dicon)</li>
+<li type="circle">Java class to check whether the configuration is defined correcltly or not.(AopMeasurementClient.java)</li>
+</ul>
+<p><b>How to define your own Intercepter</b></p>
+<ul>
+<li type="circle">Implement org.seasar.framework.aop.interceptors.AbstractInterceptor class.</li>
+<li type="circle">Implement invoke(MethodInvocation invocation) method.</li>
+<li type="circle">Get FQCN(Fully Qualified Class Name) of a target class through getTargetClass(invocation).getName() method. If you get a name from MethodInvocation#getThis() method, you'll be get an embeded class name in bytecode.</li>
+<li type="circle">Get the method name through invocation.getMethod().getName() method.</li>
+<li type="circle">Get arguments through invocation.getArguments() method.</li>
+<li type="circle">Get the current time before invocation.proceed() method. This means that you get the time just before the method invocation because invocation.proceed() invokes a target method.</li>
+<li type="circle">Get the current time again after invocation.proceed() method. This has an effect to get the time right after the real method invocation. Then, output the processing time in a finally clause.</li>
+</ul>
+<p>MeasurementInterceptor.java</p>
+<pre>
+package examples.aop.originalinterceptor;
+
+import org.aopalliance.intercept.MethodInvocation;
+import org.seasar.framework.aop.interceptors.AbstractInterceptor;
+
+public class MeasurementInterceptor extends AbstractInterceptor{
+    public Object invoke(MethodInvocation invocation) throws Throwable {
+        long start = 0;
+        long end = 0;
+        StringBuffer buf = new StringBuffer(100);
+
+        buf.append(getTargetClass(invocation).getName());
+        buf.append("#");
+        buf.append(invocation.getMethod().getName());
+        buf.append("(");
+        Object[] args = invocation.getArguments();
+        if (args != null &amp;&amp; args.length &gt; 0) {
+            for (int i = 0; i &lt; args.length; ++i) {
+                buf.append(args[i]);
+                buf.append(", ");
+            }
+            buf.setLength(buf.length() - 2);
+        }
+        buf.append(")");
+        try {
+            start = System.currentTimeMillis();
+            Object ret = invocation.proceed();
+            end = System.currentTimeMillis();
+            buf.append(" : ");
+            return ret;
+        } catch (Throwable t) {
+            buf.append(" Throwable:");
+            buf.append(t);
+            throw t;
+        } finally {
+            System.out.println(buf.toString() + (end - start));
+        }
+    }
+}
+</pre>
+<p><b>How to wrtie a class that will be associated with Interceptor</b></p>
+<ul>
+<li type="circle">Make this class to sleep five seconds because we want to assume this class consumes much cpu power.</li>
+</ul>
+<p>HeavyProcess.java</p>
+<pre>
+package examples.aop.originalinterceptor;
+
+public class HeavyProcess {
+    public void heavy(){
+        try{
+            Thread.sleep(5000);
+        } catch (InterruptedException ex) {
+            ex.printStackTrace();
+        }
+    }
+}
+</pre>
+<b>Dicon file</b>
+<ul>
+<li type="circle">Define a component element for MeasurementInterceptor. Assign measurement to name attribute.</li>
+<li type="circle">Define a component element for HeavyProcess class and define an aspect element as a nested element to associated heavy() method with MeasurementInterceptor.</li>
+</ul>
+<p>Measurement.dicon</p>
+<pre>
+&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
+&lt;!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container//EN"
+"http://www.seasar.org/dtd/components.dtd"&gt;
+&lt;components&gt;
+    &lt;component name="measurement"
+      class="examples.aop.originalinterceptor.MeasurementInterceptor"/&gt;
+    &lt;component class="examples.aop.originalinterceptor.HeavyProcess"&gt;
+        &lt;aspect pointcut="heavy"&gt;
+               measurement
+        &lt;/aspect&gt;
+    &lt;/component&gt;
+&lt;/components&gt;
+</pre>
+<p><b>A client Java class</b></p>
+<ul>
+<li type="circle">Create a S2Container object by the method, org.seasar.framework.container.S2ContainerFactory#create(). Set a path to dicon file(Measurement.dicon) to an argument of create() method.</li>
+<li type="circle">Get an object by the method, org.seasar.framework.container.S2Container#getComponent(). Set a component name to an argument of getComponent() method. A component name must be the name defined in dicon file. In this case, assign HeavyProcess.class.</li>
+<li type="circle">Invoke HeavyProcess#heavy() method got from a container.</li>
+</ul>
+<p>AopMeasurementClient.java</p>
+<pre>
+package examples.aop.originalinterceptor;
+
+import org.seasar.framework.container.S2Container;
+import org.seasar.framework.container.factory.S2ContainerFactory;
+
+public class AopMeasurementClient {
+    private static String PATH = "examples/aop/originalinterceptor/Measurement.dicon";
+
+    public static void main(String[] args) {
+        S2Container container = S2ContainerFactory.create(PATH);
+        HeavyProcess heavyProcess = (HeavyProcess) container
+                .getComponent(HeavyProcess.class);
+        heavyProcess.heavy();
+    }
+}
+</pre>
+<p><b>Output</b></p>
+<p>You see the message shown below, so you know this class keeps track a class name, a method name, arguments and processing time.</p>
+<pre>
+examples.aop.HeavyProcess#heavy() : 5004
+</pre>
+<p>This example is included in seasar2/src/examples/aop/originalinterceptor</p>
+<!-- document end -->
+<!-- don't edit start --></td>
+<td width="14"><img height="14" width="14" src="images/spacer.gif" alt="" /></td>
+</tr>
+<tr>
+<td width="14"><img height="30" width="14" src="images/spacer.gif" alt="" /></td>
+<td width="766"><img height="30" width="592" src="images/spacer.gif" alt="" /></td>
+</tr>
+<tr>
+<td width="14"><img height="14" width="14" src="images/spacer.gif" alt="" /></td>
+<td width="766" class="copyright">Copyright© 2004-2005, The Seasar Foundation and the others. All rights reserved.</td>
+</tr>
+</table>
+</td>
+<td class="backright" align="left" valign="top">&nbsp;</td>
+</tr>
+<tr>
+<td class="backunder" align="left" valign="top" width="780" height="16">&nbsp;</td>
+<td class="backcorner" align="left" valign="top" height="16">&nbsp;</td>
+</tr>
+</table>
+<!-- don't edit end -->
+</body>
+</html>

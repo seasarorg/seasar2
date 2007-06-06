@@ -1,58 +1,38 @@
 <project name="seasar2" default="dist" basedir=".">
-	<property name="ver" value="2.4.13"/>
+	<tstamp>
+		<format property="releaseDate" pattern="yyyy-MM-dd" locale="ja,JP"/>
+	</tstamp>
+
+	<target name="dist" depends="make-reference">
+		<antcall target="fix-site">
+			<param name="site" value="${basedir}/target/site"/>
+		</antcall>
+	</target>
+
+	<target name="make-reference">
+        <ant antfile="build.xml" dir="src/docbook" target="build"/>
+	    <mkdir dir="target/site/ja/reference"/>
+	    <copy todir="target/site/ja/reference">
+	      <fileset dir="target/docbook/reference">
+	        <exclude name="tmp/**"/>
+	      </fileset>
+	    </copy>
+	</target>
 
 	<target name="fix-site">
-		<mkdir dir="target/site/en"/>
-		<move todir="target/site/en">
-			<fileset dir="target/site">
+		<mkdir dir="${site}/en"/>
+		<move todir="${site}/en">
+			<fileset dir="${site}">
 				<exclude name="apidocs/**"/>
 				<exclude name="en/**"/>
 				<exclude name="ja/**"/>
+				<exclude name="zh/**"/>
 				<exclude name="index.html.en"/>
 				<exclude name="index.html.ja"/>
 			</fileset>
 		</move>
-		<delete file="target/site/ja/index.html.en"/>
-		<delete file="target/site/ja/index.html.ja"/>
+		<move file="${site}/apidocs" todir="${site}/ja" failonerror="false"/>
+		<delete file="${site}/ja/index.html.en"/>
+		<delete file="${site}/ja/index.html.ja"/>
 	</target>
-
-	<target name="dist" depends="fix-site">
-		<mkdir dir="target"/>
-		<zip zipfile="target/S${ver}.zip">
-			<zipfileset prefix="seasar2" dir=".">
-				<exclude name="**/build**"/>
-				<exclude name="**/target/**"/>
-			</zipfileset>
-			<zipfileset prefix="seasar2/lib" dir="s2-framework/target">
-				<include name="s2-framework-${ver}.jar"/>
-				<include name="s2-framework-${ver}-sources.jar"/>
-			</zipfileset>
-			<zipfileset prefix="seasar2/lib" dir="s2-extension/target">
-				<include name="s2-extension-${ver}.jar"/>
-				<include name="s2-extension-${ver}-sources.jar"/>
-			</zipfileset>
-			<zipfileset prefix="seasar2/resources" dir="s2-framework/src/test/resources">
-				<include name="convention.dicon"/>
-				<include name="creator.dicon"/>
-				<include name="customizer.dicon"/>
-				<include name="log4j.properties"/>
-			</zipfileset>
-			<zipfileset prefix="seasar2/resources" dir="s2-extension/src/test/resources">
-				<include name="jdbc.dicon"/>
-				<include name="dbsession.dicon"/>
-			</zipfileset>
-			<zipfileset prefix="seasar2/doc" dir="../s2container-www">
-				<exclude name="**/download/**"/>
-				<exclude name="**/ja/benchmark**"/>
-				<exclude name="**/ja/demo/**"/>
-				<exclude name=".project"/>
-			</zipfileset>
-			<!--
-			<zipfileset prefix="seasar2/doc/ja" dir="s2-framework/target/site">
-				<include name="apidocs/**"/>
-			</zipfileset>
-			-->
-		</zip>
-	</target>
-
 </project>
