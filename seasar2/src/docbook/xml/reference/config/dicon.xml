@@ -1,0 +1,941 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="config-dicon">
+  <title>diconファイル</title>
+
+  <section>
+    <title>はじめに</title>
+
+    <para>本章では，Seasar2の標準的な設定ファイルについて説明します．</para>
+
+    <para>Seasar2の標準的な設定ファイルはXML形式のテキストファイルであり，dicon (Dependency Injection
+    CONfiguration) ファイルと呼ばれます． ファイルの拡張子は '<literal>dicon</literal>' です．</para>
+  </section>
+
+  <section>
+    <title>基本構造</title>
+
+    <para>diconファイルは次のような構造のXMLファイルです．</para>
+
+    <programlistingco>
+      <areaspec>
+        <area coords="1" id="dicon1" />
+
+        <area coords="2" id="dicon2" />
+
+        <area coords="3" id="dicon3" />
+
+        <area coords="4" id="dicon4" />
+
+        <area coords="5" id="dicon5" />
+      </areaspec>
+
+      <programlisting>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE components 
+  PUBLIC "-//SEASAR//DTD S2Container 2.4//EN" 
+  "http://www.seasar.org/dtd/components24.dtd"&gt;
+&lt;components&gt;
+    ...
+&lt;/components&gt;
+</programlisting>
+
+      <calloutlist>
+        <callout arearefs="dicon1">
+          <para>XML宣言 (任意)：diconファイルの文字エンコーディングがUTF-8以外の場合は必須となります．</para>
+        </callout>
+
+        <callout arearefs="dicon2">
+          <para>文書型宣言 (必須)：Seasar2の定義ファイルであることを示します．</para>
+        </callout>
+
+        <callout arearefs="dicon3">
+          <para>パブリックID (必須)：diconファイルのパブリックIDを指定します．</para>
+        </callout>
+
+        <callout arearefs="dicon4">
+          <para>システムID (必須)：diconファイルのシステムIDを指定します．</para>
+        </callout>
+
+        <callout arearefs="dicon5">
+          <para><literal>&lt;components&gt;</literal>要素
+          (必須)：diconファイルのルート要素です．</para>
+        </callout>
+      </calloutlist>
+    </programlistingco>
+
+    <para>diconファイルは妥当 (valid) なXMLファイルでなくてはなりません．</para>
+  </section>
+
+  <section>
+    <title>文書型宣言</title>
+
+    <para>diconファイルは妥当 (valid) なXMLファイルでなくてはなりません． そのため，文書型宣言が必須です．
+    文書型宣言で指定するDTDは，使用するSeasar2のバージョンによって，次の中から選択することができます (独自のDTDを使用することも可能です．
+    詳細は「」を参照してください)．</para>
+
+    <table>
+      <title>DTDとSeasar2のバージョン</title>
+
+      <tgroup cols="3">
+        <colspec colname="c1" colwidth="1*" />
+
+        <colspec colname="c2" colwidth="1*" />
+
+        <colspec colname="c3" colwidth="4*" />
+
+        <thead>
+          <row>
+            <entry morerows="1">DTDのバージョン</entry>
+
+            <entry morerows="1">利用可能なSeasar2</entry>
+
+            <entry>パブリックID</entry>
+          </row>
+
+          <row>
+            <entry>システムID</entry>
+          </row>
+        </thead>
+
+        <tbody>
+          <row>
+            <entry morerows="1">2.0</entry>
+
+            <entry morerows="1">Version: 2.0～</entry>
+
+            <entry><literal>-//SEASAR//DTD S2Container//EN</literal></entry>
+          </row>
+
+          <row>
+            <entry><literal>http://www.seasar.org/dtd/components.dtd</literal></entry>
+          </row>
+
+          <row>
+            <entry morerows="1">2.1</entry>
+
+            <entry morerows="1">Version: 2.1～</entry>
+
+            <entry><literal>-//SEASAR2.1//DTD
+            S2Container//EN</literal></entry>
+          </row>
+
+          <row>
+            <entry><literal>http://www.seasar.org/dtd/components21.dtd</literal></entry>
+          </row>
+
+          <row>
+            <entry morerows="1">2.3</entry>
+
+            <entry morerows="1">Version: 2.3～</entry>
+
+            <entry><literal>-//SEASAR//DTD S2Container
+            2.3//EN</literal></entry>
+          </row>
+
+          <row>
+            <entry><literal>http://www.seasar.org/dtd/components23.dtd</literal></entry>
+          </row>
+
+          <row>
+            <entry morerows="1">2.4</entry>
+
+            <entry morerows="1">Version: 2.4～</entry>
+
+            <entry><literal>-//SEASAR//DTD S2Container
+            2.4//EN</literal></entry>
+          </row>
+
+          <row>
+            <entry><literal>http://www.seasar.org/dtd/components24.dtd</literal></entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+
+    <para>DTDによって指定可能な要素や属性およびその値が異なります．
+    DTDのバージョンとそれぞれで利用可能な要素・属性・値を次の表に示します．</para>
+
+    <table>
+      <title>DTDのバージョンと指定可能な要素・属性・値</title>
+
+      <tgroup cols="7">
+        <colspec colname="c1" colwidth="2*" />
+
+        <colspec colname="c2" colwidth="2*" />
+
+        <colspec colname="c3" colwidth="2*" />
+
+        <colspec align="center" colname="c4" colwidth="1*" />
+
+        <colspec align="center" charoff="" colname="c5" colwidth="1*" />
+
+        <colspec align="center" colname="c6" colwidth="1*" />
+
+        <colspec align="center" colname="c7" colwidth="1*" />
+
+        <thead>
+          <row>
+            <entry>要素</entry>
+
+            <entry>属性</entry>
+
+            <entry>値</entry>
+
+            <entry>2.0</entry>
+
+            <entry>2.1</entry>
+
+            <entry>2.3</entry>
+
+            <entry>2.4</entry>
+          </row>
+        </thead>
+
+        <tbody>
+          <row>
+            <entry morerows="3"><literal>&lt;components&gt;</literal></entry>
+
+            <entry>(要素自体)</entry>
+
+            <entry>-</entry>
+
+            <entry>○</entry>
+
+            <entry>○</entry>
+
+            <entry>○</entry>
+
+            <entry>○</entry>
+          </row>
+
+          <row>
+            <entry><literal>namespace</literal></entry>
+
+            <entry>-</entry>
+
+            <entry>○</entry>
+
+            <entry>○</entry>
+
+            <entry>○</entry>
+
+            <entry>○</entry>
+          </row>
+
+          <row>
+            <entry><literal>initializeOnCreate</literal></entry>
+
+            <entry>-</entry>
+
+            <entry>×</entry>
+
+            <entry>×</entry>
+
+            <entry>×</entry>
+
+            <entry>○</entry>
+          </row>
+
+          <row>
+            <entry><literal>xmlns:xi</literal></entry>
+
+            <entry>-</entry>
+
+            <entry>×</entry>
+
+            <entry>×</entry>
+
+            <entry>×</entry>
+
+            <entry>○</entry>
+          </row>
+
+          <row>
+            <entry><literal>&lt;description&gt;</literal></entry>
+
+            <entry>(要素自体)</entry>
+
+            <entry>-</entry>
+
+            <entry>○</entry>
+
+            <entry>○</entry>
+
+            <entry>○</entry>
+
+            <entry>○</entry>
+          </row>
+
+          <row>
+            <entry morerows="2"><literal>&lt;include&gt;</literal></entry>
+
+            <entry>(要素自体)</entry>
+
+            <entry>-</entry>
+
+            <entry>○</entry>
+
+            <entry>○</entry>
+
+            <entry>○</entry>
+
+            <entry>○</entry>
+          </row>
+
+          <row>
+            <entry><literal>path</literal></entry>
+
+            <entry>-</entry>
+
+            <entry>○</entry>
+
+            <entry>○</entry>
+
+            <entry>○</entry>
+
+            <entry>○</entry>
+          </row>
+
+          <row>
+            <entry><literal>condition</literal></entry>
+
+            <entry>-</entry>
+
+            <entry>×</entry>
+
+            <entry>×</entry>
+
+            <entry>○</entry>
+
+            <entry>○</entry>
+          </row>
+
+          <row>
+            <entry><literal>&lt;xi:include&gt;</literal></entry>
+
+            <entry>(要素自体)</entry>
+
+            <entry>-</entry>
+
+            <entry>×</entry>
+
+            <entry>×</entry>
+
+            <entry>×</entry>
+
+            <entry>○</entry>
+          </row>
+
+          <row>
+            <entry morerows="14"><literal>&lt;component&gt;</literal></entry>
+
+            <entry>(要素自体)</entry>
+
+            <entry>-</entry>
+
+            <entry>○</entry>
+
+            <entry>○</entry>
+
+            <entry>○</entry>
+
+            <entry>○</entry>
+          </row>
+
+          <row>
+            <entry><literal>name</literal></entry>
+
+            <entry>-</entry>
+
+            <entry>○</entry>
+
+            <entry>○</entry>
+
+            <entry>○</entry>
+
+            <entry>○</entry>
+          </row>
+
+          <row>
+            <entry><literal>class</literal></entry>
+
+            <entry>-</entry>
+
+            <entry>○</entry>
+
+            <entry>○</entry>
+
+            <entry>○</entry>
+
+            <entry>○</entry>
+          </row>
+
+          <row>
+            <entry morerows="5"><literal>instance</literal></entry>
+
+            <entry><literal>singleton</literal></entry>
+
+            <entry>○</entry>
+
+            <entry>○</entry>
+
+            <entry>○</entry>
+
+            <entry>○</entry>
+          </row>
+
+          <row>
+            <entry><literal>prototype</literal></entry>
+
+            <entry>○</entry>
+
+            <entry>○</entry>
+
+            <entry>○</entry>
+
+            <entry>○</entry>
+          </row>
+
+          <row>
+            <entry><literal>outer</literal></entry>
+
+            <entry>○</entry>
+
+            <entry>○</entry>
+
+            <entry>○</entry>
+
+            <entry>○</entry>
+          </row>
+
+          <row>
+            <entry><literal>request</literal></entry>
+
+            <entry>×</entry>
+
+            <entry>○</entry>
+
+            <entry>○</entry>
+
+            <entry>○</entry>
+          </row>
+
+          <row>
+            <entry><literal>session</literal></entry>
+
+            <entry>×</entry>
+
+            <entry>○</entry>
+
+            <entry>○</entry>
+
+            <entry>○</entry>
+          </row>
+
+          <row>
+            <entry><literal>application</literal></entry>
+
+            <entry>×</entry>
+
+            <entry>×</entry>
+
+            <entry>×</entry>
+
+            <entry>○</entry>
+          </row>
+
+          <row>
+            <entry morerows="4"><literal>autoBinding</literal></entry>
+
+            <entry><literal>auto</literal></entry>
+
+            <entry>○</entry>
+
+            <entry>○</entry>
+
+            <entry>○</entry>
+
+            <entry>○</entry>
+          </row>
+
+          <row>
+            <entry><literal>constructor</literal></entry>
+
+            <entry>○</entry>
+
+            <entry>○</entry>
+
+            <entry>○</entry>
+
+            <entry>○</entry>
+          </row>
+
+          <row>
+            <entry><literal>property</literal></entry>
+
+            <entry>○</entry>
+
+            <entry>○</entry>
+
+            <entry>○</entry>
+
+            <entry>○</entry>
+          </row>
+
+          <row>
+            <entry><literal>none</literal></entry>
+
+            <entry>○</entry>
+
+            <entry>○</entry>
+
+            <entry>○</entry>
+
+            <entry>○</entry>
+          </row>
+
+          <row>
+            <entry><literal>semiauto</literal></entry>
+
+            <entry>×</entry>
+
+            <entry>×</entry>
+
+            <entry>×</entry>
+
+            <entry>○</entry>
+          </row>
+
+          <row>
+            <entry><literal>externalBinding</literal></entry>
+
+            <entry>-</entry>
+
+            <entry>×</entry>
+
+            <entry>×</entry>
+
+            <entry>×</entry>
+
+            <entry>○</entry>
+          </row>
+
+          <row>
+            <entry><literal>&lt;arg&gt;</literal></entry>
+
+            <entry>(要素自体)</entry>
+
+            <entry>-</entry>
+
+            <entry>○</entry>
+
+            <entry>○</entry>
+
+            <entry>○</entry>
+
+            <entry>○</entry>
+          </row>
+
+          <row>
+            <entry morerows="2"><literal>&lt;property&gt;</literal></entry>
+
+            <entry>(要素自体)</entry>
+
+            <entry>-</entry>
+
+            <entry>○</entry>
+
+            <entry>○</entry>
+
+            <entry>○</entry>
+
+            <entry>○</entry>
+          </row>
+
+          <row>
+            <entry><literal>name</literal></entry>
+
+            <entry>-</entry>
+
+            <entry>○</entry>
+
+            <entry>○</entry>
+
+            <entry>○</entry>
+
+            <entry>○</entry>
+          </row>
+
+          <row>
+            <entry><literal>bindingType</literal></entry>
+
+            <entry>-</entry>
+
+            <entry>×</entry>
+
+            <entry>×</entry>
+
+            <entry>○</entry>
+
+            <entry>○</entry>
+          </row>
+
+          <row>
+            <entry morerows="1">&lt;initMethod&gt;</entry>
+
+            <entry>(要素自体)</entry>
+
+            <entry>-</entry>
+
+            <entry>○</entry>
+
+            <entry>○</entry>
+
+            <entry>○</entry>
+
+            <entry>○</entry>
+          </row>
+
+          <row>
+            <entry><literal>name</literal></entry>
+
+            <entry>-</entry>
+
+            <entry>○</entry>
+
+            <entry>○</entry>
+
+            <entry>○</entry>
+
+            <entry>○</entry>
+          </row>
+
+          <row>
+            <entry
+            morerows="1"><literal>&lt;destroyMethod&gt;</literal></entry>
+
+            <entry>(要素自体)</entry>
+
+            <entry>-</entry>
+
+            <entry>○</entry>
+
+            <entry>○</entry>
+
+            <entry>○</entry>
+
+            <entry>○</entry>
+          </row>
+
+          <row>
+            <entry><literal>name</literal></entry>
+
+            <entry>-</entry>
+
+            <entry>○</entry>
+
+            <entry>○</entry>
+
+            <entry>○</entry>
+
+            <entry>○</entry>
+          </row>
+
+          <row>
+            <entry morerows="1"><literal>&lt;aspect&gt;</literal></entry>
+
+            <entry>(要素自体)</entry>
+
+            <entry>-</entry>
+
+            <entry>○</entry>
+
+            <entry>○</entry>
+
+            <entry>○</entry>
+
+            <entry>○</entry>
+          </row>
+
+          <row>
+            <entry><literal>pointcut</literal></entry>
+
+            <entry>-</entry>
+
+            <entry>○</entry>
+
+            <entry>○</entry>
+
+            <entry>○</entry>
+
+            <entry>○</entry>
+          </row>
+
+          <row>
+            <entry><literal>&lt;interType&gt;</literal></entry>
+
+            <entry>(要素自体)</entry>
+
+            <entry>-</entry>
+
+            <entry>×</entry>
+
+            <entry>×</entry>
+
+            <entry>×</entry>
+
+            <entry>○</entry>
+          </row>
+
+          <row>
+            <entry><literal>&lt;meta&gt;</literal></entry>
+
+            <entry>(要素自体)</entry>
+
+            <entry>-</entry>
+
+            <entry>×</entry>
+
+            <entry>○</entry>
+
+            <entry>○</entry>
+
+            <entry>○</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+  </section>
+
+  <section>
+    <title><literal>&lt;components&gt;</literal>要素</title>
+
+    <subtitle>－コンテナ定義－</subtitle>
+
+    <para><literal>&lt;components&gt;</literal>要素は，diconファイルのルート要素です．</para>
+
+    <programlistingco>
+      <areaspec>
+        <area coords="2" id="components1" />
+
+        <area coords="3" id="components2" />
+
+        <area coords="4" id="components3" />
+      </areaspec>
+
+      <programlisting>&lt;components
+    namespace="<emphasis>nameSpace</emphasis>"
+    initializeOnCreate="false | true"
+    xmlns:xi="http://www.w3.org/2001/XInclude"
+&gt;
+    ...
+&lt;/components&gt;
+</programlisting>
+
+      <calloutlist>
+        <callout arearefs="components1">
+          <para><literal>namespace</literal> (任意):
+          このdiconファイルを読み込んだコンテナの名前空間を指定します．</para>
+        </callout>
+
+        <callout arearefs="components2">
+          <para><literal>initializeOnCreate</literal> (任意):
+          コンテナの作成時に初期化も行うことを指定します． デフォルトは<literal>false</literal>です．</para>
+        </callout>
+
+        <callout arearefs="components3">
+          <para><literal>xmlns:xi</literal> (任意):
+          XIncludeで使用する名前空間を宣言します．</para>
+        </callout>
+      </calloutlist>
+    </programlistingco>
+
+    <para><literal>&lt;components&gt;</literal>要素の内容には次のものを記述することができます．</para>
+
+    <itemizedlist>
+      <listitem>
+        <para><literal>&lt;description&gt;</literal>要素 (任意)</para>
+      </listitem>
+
+      <listitem>
+        <para><literal>&lt;include&gt;</literal>要素 (0個以上)</para>
+      </listitem>
+
+      <listitem>
+        <para><literal>&lt;xi:include&gt;</literal>要素 (0個以上)</para>
+      </listitem>
+
+      <listitem>
+        <para><literal>&lt;component&gt;</literal>要素 (0個以上)</para>
+      </listitem>
+
+      <listitem>
+        <para><literal>&lt;meta&gt;</literal>要素 (0個以上)</para>
+      </listitem>
+    </itemizedlist>
+
+    <para><literal>&lt;components&gt;</literal>要素はルート要素としてのみ記述することができます．他の要素の子となることはできません．</para>
+
+    <section>
+      <title><literal>namespace</literal>属性</title>
+
+      <subtitle>－名前空間－</subtitle>
+
+      <para>diconファイルに定義されたコンポーネントの名前空間を指定します． 名前空間の詳細は「」を参照してください．
+      名前空間を指定すると，コンテナからコンポーネントを名前で取得する際に，名前空間で修飾した名前を指定することができるようになります．</para>
+
+      <sidebar>
+        <title>JavaBeansのプロパティ名</title>
+
+        <para>JavaBeansの仕様では，プロパティ名の最初の文字は小文字となります．
+        ただし，二文字目が大文字の場合は先頭も大文字となります．</para>
+
+        <para>正: <literal>fooBar</literal>, <literal>z</literal>,
+        <literal>URL</literal></para>
+
+        <para>誤: <literal>FooBar</literal>, <literal>Z</literal>,
+        <literal>url</literal>, <literal>uRL</literal></para>
+      </sidebar>
+
+      <para>名前空間は，Javaの識別子として有効な名前を指定します．
+      JavaBeansのプロパティ名と同じルールに従うことを推奨します．</para>
+    </section>
+
+    <section>
+      <sectioninfo>
+        <releaseinfo>(Version: 2.4.5～)</releaseinfo>
+      </sectioninfo>
+
+      <title><literal>initializeOnCreate</literal>属性</title>
+
+      <subtitle>－生成時に初期化－</subtitle>
+
+      <para>コンテナの生成時にコンテナを初期化するかしないかを指定します．</para>
+
+      <variablelist>
+        <varlistentry>
+          <term>false (デフォルト)</term>
+
+          <listitem>
+            <para>コンテナの生成時には初期化を行いません．</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>true</term>
+
+          <listitem>
+            <para>コンテナの生成時に初期化を行います．</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
+    <section>
+      <sectioninfo>
+        <releaseinfo>(Version: 2.4.0～)</releaseinfo>
+      </sectioninfo>
+
+      <title><literal>xmlns:xi</literal>属性</title>
+
+      <subtitle>－XInclude名前空間宣言－</subtitle>
+
+      <para><ulink
+      url="http://www.w3.org/TR/xinclude/">XInclude</ulink>を使用する場合は，その名前空間を宣言します
+      ()． 名前空間接頭辞は '<literal>xi</literal>' だけが利用可能です． 名前空間URIは
+      '<literal>http://www.w3.org/2001/XInclude</literal>' を指定します．
+      この名前空間は<ulink
+      url="http://www.w3.org/TR/2006/REC-xml-names-20060816/">XML名前空間仕様</ulink>のものであり，<literal>namespace</literal>属性で指定するコンポーネントの名前空間とは別のものです．
+      XIncludeの詳細は「」を参照してください．</para>
+    </section>
+  </section>
+
+  <section>
+    <title><literal>&lt;description&gt;</literal>要素</title>
+
+    <subtitle>－説明－</subtitle>
+
+    <para><literal>&lt;description&gt;</literal>要素を使用して，diconファイルの説明を記述することができます．</para>
+
+    <programlisting>&lt;description&gt;
+    ...
+&lt;/description&gt;
+</programlisting>
+
+    <para><literal>&lt;description&gt;</literal>要素の内容には次のものを記述することができます．</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>任意のテキスト</para>
+      </listitem>
+    </itemizedlist>
+
+    <para>このテキストはドキュメンテーションのためのものであり，コンテナの動作には影響を与えません．</para>
+  </section>
+
+  <section>
+    <sectioninfo>
+      <releaseinfo>(Version: 2.1.0～)</releaseinfo>
+    </sectioninfo>
+
+    <title><literal>&lt;meta&gt;</literal>要素</title>
+
+    <subtitle>－メタ情報－</subtitle>
+
+    <para>コンテナやコンポーネント定義にメタ情報を付けることができます．
+    メタ情報は，コンポーネントをリモートオブジェクトとして公開することを示すなど，様々な用途で使うことができます．</para>
+
+    <programlistingco>
+      <areaspec>
+        <area coords="2" id="meta1" />
+      </areaspec>
+
+      <programlisting>&lt;meta
+    name="<emphasis>name</emphasis>"
+&gt;
+    ...
+&lt;/meta&gt;
+</programlisting>
+
+      <calloutlist>
+        <callout arearefs="meta1">
+          <para>name (任意): メタ情報の名前を指定します．</para>
+        </callout>
+      </calloutlist>
+    </programlistingco>
+
+    <para><literal>&lt;meta&gt;</literal>要素の内容には次のものを記述することができます．</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>任意のテキスト</para>
+      </listitem>
+
+      <listitem>
+        <para><literal>&lt;description&gt;</literal>要素 (0個以上)</para>
+      </listitem>
+
+      <listitem>
+        <para><literal>&lt;component&gt;</literal>要素 (0個以上)</para>
+      </listitem>
+
+      <listitem>
+        <para><literal>&lt;meta&gt;</literal>要素 (0個以上)</para>
+      </listitem>
+    </itemizedlist>
+
+    <section>
+      <title><literal>name</literal>属性</title>
+
+      <subtitle>－メタ情報名－</subtitle>
+
+      <para>メタ情報は名前を持つことができます．
+      この名前はコンテナやコンポーネント定義からメタ情報を取得する際のキーとして使うことができます．</para>
+    </section>
+  </section>
+
+  <section>
+    <title>まとめ</title>
+
+    <para></para>
+  </section>
+</chapter>

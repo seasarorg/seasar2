@@ -1,0 +1,613 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="intro_quickstart">
+  <title>クイックスタート</title>
+
+  <section>
+    <title>はじめに</title>
+
+    <para>S2Containerは，Dependency Injection (以降DIと略します) とAOP (Aspect-Oriented
+    Programming) をサポートする軽量コンテナです．
+    DIとは，複数のコンポーネント間の直接的な依存関係を排除し，それぞれのコンポーネントはインタフェースを通じて対話 (コラボレーション)
+    しようという考え方です． AOPとは，コンポーネントに特有の本質的な機能 (core concern)
+    と，ロギングなど複数のコンポーネントにまたがる機能 (cross-cutting concern) とを分離しようという考え方です．</para>
+
+    <para>本章では，コンソールベースの単純なアプリケーションの作成を通じて，Seasar2を紹介します．
+    個々のアプリケーションで利用している機能についての詳細な説明は後続の章で行います．
+    まずはSeasar2を使ったアプリケーションの雰囲気を感じ取ってください．</para>
+  </section>
+
+  <section>
+    <title>はじめてのSeasar2アプリケーション</title>
+
+    <para>最初に作成するアプリケーションでは，Seasar2を単なるファクトリのように使用します．</para>
+
+    <section>
+      <title>コンポーネントクラス</title>
+
+      <para>まずはコンポーネントクラスを作成します．Seasar2におけるコンポーネントは特別なクラスではなく，ごく普通のクラスです．</para>
+
+      <para>以下にコンポーネントクラス<filename>ex01/Hello.java</filename>を示します．</para>
+
+      <example>
+        <title>ex01/Hello.java</title>
+
+        <programlisting>package ex01;
+
+public class Hello {
+    public String say() {
+        return "Hello, Seasar2";
+    }
+}
+</programlisting>
+      </example>
+
+      <para>say() メソッドが呼び出されると文字列を返すだけの単純なクラスです．</para>
+    </section>
+
+    <section>
+      <title>設定ファイル</title>
+
+      <para>Seasar2を使用するには，使用するコンポーネントの情報を定義した設定ファイルを作成します．
+      Seasar2の標準的な設定ファイルはXML形式で記述します． この設定ファイルの拡張子は '<literal>dicon</literal>'
+      (Dependency Injection CONfiguration) となります．</para>
+
+      <para>以下に設定ファイル<filename>ex01/app.dicon</filename>を示します．</para>
+
+      <example>
+        <title>ex01/app.dicon</title>
+
+        <programlistingco>
+          <areaspec>
+            <area coords="3" id="ex01dicon1" />
+
+            <area coords="4" id="ex01dicon2" />
+          </areaspec>
+
+          <programlisting>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN"
+  "http://www.seasar.org/dtd/components24.dtd"&gt;
+&lt;components&gt;
+  &lt;component name="hello" class="ex01.Hello"/&gt;
+&lt;/components&gt;
+</programlisting>
+
+          <calloutlist>
+            <callout arearefs="ex01dicon1">
+              <para>設定ファイルのルート要素は&lt;components&gt;要素です．</para>
+            </callout>
+
+            <callout arearefs="ex01dicon2">
+              <para>コンポーネントの設定を<literal>&lt;component&gt;</literal>要素で定義しています．
+              <literal>&lt;component&gt;</literal>要素の<literal>name</literal>属性でコンポーネント名を，<literal>class</literal>属性でコンポーネントクラスを指定します．
+              <literal>&lt;components&gt;</literal>要素には複数の<literal>&lt;component&gt;</literal>要素を定義することができます．</para>
+            </callout>
+          </calloutlist>
+        </programlistingco>
+      </example>
+    </section>
+
+    <section>
+      <title>メインクラス</title>
+
+      <para>アプリケーションを実行するためのメインクラス<filename>ex01/Main.java</filename>を作成します．</para>
+
+      <example>
+        <title>ex01/Main.java</title>
+
+        <programlistingco>
+          <areaspec>
+            <area coords="7" id="ex02main1" />
+
+            <area coords="8" id="ex02main2" />
+
+            <area coords="9" id="ex02main3" />
+
+            <area coords="10" id="ex02main4" />
+
+            <area coords="11" id="ex02main5" />
+
+            <area coords="12" id="ex02main6" />
+          </areaspec>
+
+          <programlisting>package ex01;
+import org.seasar.framework.container.S2Container;
+import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
+
+public class Main {
+    public static void main(String[] args) {
+        SingletonS2ContainerFactory.setConfigPath("ex01/app.dicon");
+        SingletonS2ContainerFactory.init();
+        S2Container container = SingletonS2ContainerFactory.getContainer();
+        Hello hello = (Hello) container.getComponent(Hello.class);
+        String message = hello.say();
+        System.out.println(message);
+    }
+}
+</programlisting>
+
+          <calloutlist>
+            <callout arearefs="ex02main1">
+              <para>使用する設定ファイルのパスを指定します．</para>
+            </callout>
+
+            <callout arearefs="ex02main2">
+              <para>コンテナを初期化します．</para>
+            </callout>
+
+            <callout arearefs="ex02main3">
+              <para>コンテナを取得します．</para>
+            </callout>
+
+            <callout arearefs="ex02main4">
+              <para>コンテナから<classname>Hello</classname>コンポーネントを取得します．</para>
+            </callout>
+
+            <callout arearefs="ex02main5">
+              <para>Helloコンポーネントのメソッドを呼び出し，メッセージを取得します．</para>
+            </callout>
+
+            <callout arearefs="ex02main6">
+              <para>メッセージを出力します．</para>
+            </callout>
+          </calloutlist>
+        </programlistingco>
+      </example>
+    </section>
+
+    <section>
+      <title>実行</title>
+
+      <para>メインクラスを実行すると，標準出力には次のように出力されます．</para>
+
+      <example>
+        <title>実行結果</title>
+
+        <screen><computeroutput>DEBUG 2007-02-27 20:10:23,562 [main] S2Containerを作成します。path=ex01/app.dicon
+DEBUG 2007-02-27 20:10:23,750 [main] S2Containerを作成しました。path=ex01/app.dicon
+INFO  2007-02-27 20:10:23,796 [main] Running on [ENV]product, [DEPLOY MODE]Normal Mode
+Hello, Seasar2
+</computeroutput></screen>
+      </example>
+
+      <para>Seasar2によって生成された<classname>Hello</classname>クラスのインスタンスを取得し，<literal>say()</literal>メソッドを呼び出すことができました．</para>
+    </section>
+  </section>
+
+  <section>
+    <title>プロパティの設定</title>
+
+    <para>次のアプリケーションでは，コンポーネントのプロパティにSeasar2で値を設定します．</para>
+
+    <section>
+      <title>コンポーネントクラス</title>
+
+      <para><literal>message</literal>という文字列型のプロパティを持ったコンポーネントクラス<filename>ex02/Hello.java</filename>を作成します．</para>
+
+      <example>
+        <title>ex02/Hello.java</title>
+
+        <programlisting>package ex02;
+
+public class Hello {
+    private String message;
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public String say() {
+        return message;
+    }
+}
+</programlisting>
+      </example>
+    </section>
+
+    <section>
+      <title>設定ファイル</title>
+
+      <para>設定ファイルで<classname>Greeting</classname>クラスの<literal>message</literal>プロパティにメッセージ文字列を設定します．</para>
+
+      <para>以下に設定ファイル<filename>ex02/app.dicon</filename>を示します．</para>
+
+      <example>
+        <title>ex02/app.dicon</title>
+
+        <programlistingco>
+          <areaspec>
+            <area coords="6" id="ex02dicon1" />
+          </areaspec>
+
+          <programlisting>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN"
+  "http://www.seasar.org/dtd/components24.dtd"&gt;
+&lt;components&gt;
+  &lt;component name="hello" class="ex02.Hello"&gt;
+    &lt;property name="message"&gt;"Hello, Dicon!!"&lt;/property&gt;
+  &lt;/component&gt;
+&lt;/components&gt;
+</programlisting>
+
+          <calloutlist>
+            <callout arearefs="ex02dicon1">
+              <para><literal>&lt;property&gt;</literal>要素を使ってプロパティの値を設定しています．
+              <literal>name</literal>属性でプロパティの名前を，要素の内容でプロパティに設定する値を指定します．</para>
+            </callout>
+          </calloutlist>
+        </programlistingco>
+      </example>
+    </section>
+
+    <section>
+      <title>メインクラス</title>
+
+      <para>アプリケーションを実行するためのメインクラス<filename>ex02/Main.java</filename>を作成します．</para>
+
+      <example>
+        <title>ex02/Main.java</title>
+
+        <programlisting>package ex02;
+import org.seasar.framework.container.S2Container;
+import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
+
+public class Main {
+    public static void main(String[] args) {
+        SingletonS2ContainerFactory.setConfigPath("ex02/app.dicon");
+        SingletonS2ContainerFactory.init();
+        S2Container container = SingletonS2ContainerFactory.getContainer();
+        Hello hello = (Hello) container.getComponent(Hello.class);
+        String message = hello.say();
+        System.out.println(message);
+    }
+}
+</programlisting>
+      </example>
+    </section>
+
+    <section>
+      <title>実行</title>
+
+      <para>メインクラスを実行すると，標準出力には次のように出力されます．</para>
+
+      <example>
+        <title>実行結果</title>
+
+        <screen><computeroutput>DEBUG 2007-02-27 19:37:56,031 [main] S2Containerを作成します。path=ex02/app.dicon
+DEBUG 2007-02-27 19:37:56,375 [main] S2Containerを作成しました。path=ex02/app.dicon
+INFO  2007-02-27 19:37:56,437 [main] Running on [ENV]product, [DEPLOY MODE]Normal Mode
+Hello, Dicon!!
+</computeroutput></screen>
+      </example>
+
+      <para>設定ファイルで指定したメッセージが表示されました．</para>
+    </section>
+  </section>
+
+  <section>
+    <title>DIの導入</title>
+
+    <para>次のアプリケーションでは，複数のコンポーネントの依存性をSeasar2によって設定します．</para>
+
+    <section>
+      <title>コンポーネントクラス</title>
+
+      <para>今回は，コンポーネントクラスを2つ作成します．</para>
+
+      <para>まずはコンポーネントクラス<filename>ex03/Hello.java</filename>を作成します．</para>
+
+      <example>
+        <title>ex03/Hello.java</title>
+
+        <programlisting>package ex03;
+
+public class Hello {
+    private String message;
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public String say() {
+        return message;
+    }
+}
+</programlisting>
+      </example>
+
+      <para>続いてコンポーネントクラス<filename>ex03/Greeting.java</filename>を作成します．</para>
+
+      <example>
+        <title>ex03/Greeting.java</title>
+
+        <programlisting>package ex03;
+public class Greeting {
+    Hello hello;
+
+    public Hello getHello() {
+        return hello;
+    }
+
+    public void setHello(Hello hello) {
+        this.hello = hello;
+    }
+
+    public void greet() {
+        String message = hello.say();
+        System.out.println(message);
+    }
+}
+</programlisting>
+      </example>
+
+      <para><classname>Greeting</classname>クラスは<classname>Hello</classname>型のプロパティを持っています
+      (<classname>Hello</classname>に依存しています)．</para>
+    </section>
+
+    <section>
+      <title>設定ファイル</title>
+
+      <para>設定ファイルで<literal>Hello</literal>クラスと<classname>Greeting</classname>クラスを定義します．</para>
+
+      <para>以下に設定ファイル<filename>ex03/app.dicon</filename>を示します．</para>
+
+      <example>
+        <title>ex03/app.dicon</title>
+
+        <programlistingco>
+          <areaspec>
+            <area coords="5" id="ex03dicon1" />
+
+            <area coords="8" id="ex03dicon2" />
+
+            <area coords="9" id="ex03dicon3" />
+          </areaspec>
+
+          <programlisting>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN"
+  "http://www.seasar.org/dtd/components24.dtd"&gt;
+&lt;components&gt;
+  &lt;component name="hello" class="ex03.Hello"&gt;
+    &lt;property name="message"&gt;"Hello, DI!!"&lt;/property&gt;
+  &lt;/component&gt;
+  &lt;component name="greeting" class="ex03.Greeting"&gt;
+    &lt;property name="hello"&gt;hello&lt;/property&gt;
+  &lt;/component&gt;
+&lt;/components&gt;
+</programlisting>
+
+          <calloutlist>
+            <callout arearefs="ex03dicon1">
+              <para>Helloコンポーネントを定義しています．</para>
+            </callout>
+
+            <callout arearefs="ex03dicon2">
+              <para>Greetingコンポーネントを定義しています．</para>
+            </callout>
+
+            <callout arearefs="ex03dicon3">
+              <para><literal>&lt;property&gt;</literal>要素を使ってプロパティの値を設定しています．
+              <classname>Greeting</classname>クラスの<literal>hello</literal>プロパティに<classname>Hello</classname>クラスのコンポーネントを設定します．</para>
+            </callout>
+          </calloutlist>
+        </programlistingco>
+      </example>
+    </section>
+
+    <section>
+      <title>メインクラス</title>
+
+      <para>アプリケーションを実行するためのメインクラス<filename>ex03/Main.java</filename>を作成します．</para>
+
+      <example>
+        <title>ex03/Main.java</title>
+
+        <programlisting>package ex03;
+import org.seasar.framework.container.S2Container;
+import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
+
+public class Main {
+    public static void main(String[] args) {
+        SingletonS2ContainerFactory.setConfigPath("ex03/app.dicon");
+        SingletonS2ContainerFactory.init();
+        S2Container container = SingletonS2ContainerFactory.getContainer();
+        Greeting greeting = (Greeting) container.getComponent(Greeting.class);
+        greeting.greet();
+    }
+}
+</programlisting>
+      </example>
+    </section>
+
+    <section>
+      <title>実行</title>
+
+      <para>メインクラスを実行すると，標準出力には次のように出力されます．</para>
+
+      <example>
+        <title>実行結果</title>
+
+        <screen><computeroutput>DEBUG 2007-02-27 20:23:11,187 [main] S2Containerを作成します。path=ex03/app.dicon
+DEBUG 2007-02-27 20:23:11,406 [main] S2Containerを作成しました。path=ex03/app.dicon
+INFO  2007-02-27 20:23:11,453 [main] Running on [ENV]product, [DEPLOY MODE]Normal Mode
+Hello, DI!!
+</computeroutput></screen>
+      </example>
+
+      <para><classname>Greeting</classname>は<classname>Hello</classname>から取得したメッセージを表示しました．</para>
+    </section>
+  </section>
+
+  <section>
+    <title>AOPの適用</title>
+
+    <para>次のアプリケーションでは，AOPを使用してコンポーネントにロギングの機能を追加します．</para>
+
+    <section>
+      <title>コンポーネントクラス</title>
+
+      <para>今回も，コンポーネントクラスを2つ作成します．</para>
+
+      <para>まずはコンポーネントクラス<filename>ex04/Hello.java</filename>を作成します．</para>
+
+      <example>
+        <title>ex04/Hello.java</title>
+
+        <programlisting>package ex04;
+
+public class Hello {
+    private String message;
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public String say() {
+        return message;
+    }
+}
+</programlisting>
+      </example>
+
+      <para>続いてコンポーネントクラス<filename>ex04/Greeting.java</filename>を作成します．</para>
+
+      <example>
+        <title>ex04/Greeting.java</title>
+
+        <programlisting>package ex02;
+
+public class Greeting {
+    private String message;
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public String say() {
+        return message;
+    }
+}
+</programlisting>
+      </example>
+    </section>
+
+    <section>
+      <title>設定ファイル</title>
+
+      <para>設定ファイル<filename>ex04/app.dicon</filename>で<classname>Greeting</classname>クラスにAOPを適用します．</para>
+
+      <example>
+        <title>ex04/app.dicon</title>
+
+        <programlistingco>
+          <areaspec>
+            <area coords="10" id="ex04dicon1" />
+
+            <area coords="12" id="ex04dicon2" />
+
+            <area coords="13" id="ex04dicon3" />
+          </areaspec>
+
+          <programlisting>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN"
+  "http://www.seasar.org/dtd/components24.dtd"&gt;
+&lt;components&gt;
+  &lt;component name="hello" class="ex04.Hello"&gt;
+    &lt;property name="message"&gt;"Hello, AOP!!"&lt;/property&gt;
+  &lt;/component&gt;
+  &lt;component name="greeting" class="ex04.Greeting"&gt;
+    &lt;property name="hello"&gt;hello&lt;/property&gt;
+    &lt;aspect pointcut="greet"&gt;traceInterceptor&lt;/aspect&gt;
+  &lt;/component&gt;
+  &lt;component name="traceInterceptor"
+    class="org.seasar.framework.aop.interceptors.TraceInterceptor"/&gt;
+&lt;/components&gt;
+</programlisting>
+
+          <calloutlist>
+            <callout arearefs="ex04dicon1">
+              <para><literal>&lt;adpect&gt;</literal>要素を使ってAOPを設定しています．
+              <literal>pointcut</literal>属性でAOPを適用するメソッドを，内容で適用するインターセプタを指定します．</para>
+            </callout>
+
+            <callout arearefs="ex04dicon2">
+              <para><classname>Greeting</classname>に適用するインターセプタを定義しています．</para>
+            </callout>
+
+            <callout arearefs="ex04dicon3">
+              <para><classname>TraceInterceptor</classname>クラスはSeasar2が提供するクラスです．</para>
+            </callout>
+          </calloutlist>
+        </programlistingco>
+      </example>
+    </section>
+
+    <section>
+      <title>メインクラス</title>
+
+      <para>アプリケーションを実行するためのメインクラス<filename>ex04/Main.java</filename>を作成します．</para>
+
+      <example>
+        <title>ex04/Main.java</title>
+
+        <programlisting>package ex04;
+import org.seasar.framework.container.S2Container;
+import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
+
+public class Main {
+    public static void main(String[] args) {
+        SingletonS2ContainerFactory.setConfigPath("ex04/app.dicon");
+        SingletonS2ContainerFactory.init();
+        S2Container container = SingletonS2ContainerFactory.getContainer();
+        Greeting greeting = (Greeting) container.getComponent(Greeting.class);
+        greeting.greet();
+    }
+}
+</programlisting>
+      </example>
+    </section>
+
+    <section>
+      <title>実行</title>
+
+      <para>メインクラスを実行すると，標準出力には次のように出力されます．</para>
+
+      <example>
+        <title>実行結果</title>
+
+        <screen><computeroutput>DEBUG 2007-02-27 20:51:52,453 [main] S2Containerを作成します。path=ex04/app.dicon
+DEBUG 2007-02-27 20:51:52,546 [main] S2Containerを作成します。path=aop.dicon
+DEBUG 2007-02-27 20:51:52,796 [main] S2Containerを作成しました。path=aop.dicon
+DEBUG 2007-02-27 20:51:52,812 [main] S2Containerを作成しました。path=ex04/app.dicon
+INFO  2007-02-27 20:51:53,203 [main] Running on [ENV]product, [DEPLOY MODE]Normal Mode
+DEBUG 2007-02-27 20:51:53,203 [main] BEGIN ex04.Greeting#greet()
+Hello, AOP!!
+DEBUG 2007-02-27 20:51:53,203 [main] END ex04.Greeting#greet() : null
+</computeroutput></screen>
+      </example>
+
+      <para><classname>Greeting</classname>クラスの<literal>greet()</literal>メソッドがメッセージを出力している前後に，AOPによるトレースが出力されています．</para>
+    </section>
+  </section>
+
+  <section>
+    <title>まとめ</title>
+
+    <para></para>
+  </section>
+</chapter>

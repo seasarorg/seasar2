@@ -1,0 +1,488 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="config-component">
+  <title>コンポーネント定義</title>
+
+  <section>
+    <title>はじめに</title>
+
+    <para>本章では，diconファイルでコンポーネントを定義する方法について説明します．</para>
+  </section>
+
+  <section>
+    <title>コンポーネント</title>
+
+    <para>コンポーネントとは，S2コンテナに管理されるオブジェクトのことです．</para>
+
+    <para>S2コンテナで管理可能なコンポーネントは特別なクラスである必要はなく，ほとんどのJavaクラスをコンポーネントとして扱うことが可能です．</para>
+  </section>
+
+  <section>
+    <title><literal>&lt;component&gt;</literal>要素</title>
+
+    <subtitle>－コンポーネント定義－</subtitle>
+
+    <para>コンポーネントは<literal>&lt;component&gt;</literal>要素で定義します．</para>
+
+    <programlistingco>
+      <areaspec>
+        <area coords="2" id="component1" />
+
+        <area coords="3" id="component2" />
+
+        <area coords="4" id="component3" />
+
+        <area coords="5" id="component4" />
+
+        <area coords="6" id="component5" />
+      </areaspec>
+
+      <programlisting>&lt;component
+    name="<emphasis>componentName</emphasis>"
+    class="<emphasis>fullQualifiedClassName</emphasis>"
+    instance="singleton | prototype | outer | request | session | application"
+    autoBinding="auto | constructor | property | semiauto | none"
+    externalBinding="true | false"
+&gt;
+    ...
+&lt;/component&gt;
+</programlisting>
+
+      <calloutlist>
+        <callout arearefs="component1">
+          <para><literal>name</literal> (任意): コンポーネントの名前を指定します．</para>
+        </callout>
+
+        <callout arearefs="component2">
+          <para><literal>class</literal> (任意): コンポーネントのクラス名 (完全限定名)
+          を指定します．</para>
+        </callout>
+
+        <callout arearefs="component3">
+          <para><literal>instance</literal> (任意): インスタンス・モードを指定します．
+          デフォルトは<literal>singleton</literal>です．</para>
+        </callout>
+
+        <callout arearefs="component4">
+          <para><literal>autoBinding</literal> (任意):
+          自動バインディング・モードを指定します．デフォルトは<literal>auto</literal>です．</para>
+        </callout>
+
+        <callout arearefs="component5">
+          <para><literal>externalBinding</literal> (任意): 外部バインディング・モードを指定します．
+          デフォルトは<literal>false</literal>です．</para>
+        </callout>
+      </calloutlist>
+    </programlistingco>
+
+    <para>&lt;component&gt;要素の内容には，次のものを記述することができます．</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>インスタンス生成式</para>
+      </listitem>
+
+      <listitem>
+        <para><literal>&lt;arg&gt;</literal>要素</para>
+      </listitem>
+
+      <listitem>
+        <para><literal>&lt;property&gt;</literal>要素</para>
+      </listitem>
+
+      <listitem>
+        <para><literal>&lt;initMethod&gt;</literal>要素</para>
+      </listitem>
+
+      <listitem>
+        <para><literal>&lt;destroyMethod&gt;</literal>要素</para>
+      </listitem>
+
+      <listitem>
+        <para><literal>&lt;aspect&gt;</literal>要素</para>
+      </listitem>
+
+      <listitem>
+        <para><literal>&lt;interType&gt;</literal>要素 (Seasar2.4以降)</para>
+      </listitem>
+
+      <listitem>
+        <para><literal>&lt;meta&gt;</literal>要素 (Seasar2.1以降)</para>
+      </listitem>
+
+      <listitem>
+        <para><literal>&lt;description&gt;</literal>要素</para>
+      </listitem>
+    </itemizedlist>
+
+    <para><literal>&lt;component&gt;</literal>要素は，次の要素の子として記述することができます．</para>
+
+    <itemizedlist>
+      <listitem>
+        <para><literal>&lt;components&gt;</literal>要素</para>
+      </listitem>
+
+      <listitem>
+        <para><literal>&lt;arg&gt;</literal>要素</para>
+      </listitem>
+
+      <listitem>
+        <para><literal>&lt;property&gt;</literal>要素</para>
+      </listitem>
+
+      <listitem>
+        <para><literal>&lt;aspect&gt;</literal>要素</para>
+      </listitem>
+
+      <listitem>
+        <para><literal>&lt;interType&gt;</literal>要素 (Seasar2.4以降)</para>
+      </listitem>
+
+      <listitem>
+        <para><literal>&lt;meta&gt;</literal>要素 (Seasar2.1以降)</para>
+      </listitem>
+    </itemizedlist>
+
+    <para><literal>&lt;components&gt;</literal>要素以外の要素の子として定義したコンポーネントは，他のコンポーネントから参照することができません．</para>
+
+    <section>
+      <title><literal>name</literal>属性</title>
+
+      <subtitle>－コンポーネント名－</subtitle>
+
+      <sidebar>
+        <title>コンポーネント名</title>
+
+        <para><literal><literal>name</literal></literal>属性で指定するコンポーネント名は，<literal>&lt;components&gt;</literal>要素の直下に定義した<literal>&lt;component&gt;要素</literal>のみ有効です．</para>
+      </sidebar>
+
+      <para>コンポーネントは名前を持つことができます． この名前は，コンテナからコンポーネントを取得する際のキーとして使うことができます ()．
+      また，自動バインディグの際にはプロパティ名とのマッチングに使用されます ()．
+      インスタンス・モードが<literal>request</literal>・<literal>session</literal>・<literal>application</literal>の場合，コンポーネント名は必須です．</para>
+
+      <sidebar>
+        <title>JavaBeansのプロパティ名</title>
+
+        <para>JavaBeansの仕様では，プロパティ名の最初の文字は小文字となります．
+        ただし，二文字目が大文字の場合は先頭も大文字となります．</para>
+
+        <para>正: <literal>fooBar</literal>, <literal>z</literal>,
+        <literal>URL</literal></para>
+
+        <para>誤: <literal>FooBar</literal>, <literal>Z</literal>,
+        <literal>url</literal>, <literal>uRL</literal></para>
+      </sidebar>
+
+      <para>コンポーネント名は，Javaの識別子として有効な名前を指定します．
+      JavaBeansのプロパティ名と同じルールに従うことを推奨します．</para>
+
+      <para>コンポーネント名は，<literal>&lt;components&gt;</literal>要素の直下に定義されたコンポーネント定義の場合のみ有効です．
+      <literal>&lt;property&gt;</literal>要素など，他の要素の子として定義された<literal>&lt;component&gt;</literal>要素では，<literal>name</literal>属性は無視されます．</para>
+    </section>
+
+    <section>
+      <title><literal>class</literal>属性</title>
+
+      <subtitle>－コンポーネント・クラス－</subtitle>
+
+      <sidebar>
+        <title>ネステッド・クラスを指定する</title>
+
+        <para>コンポーネント・クラスにネステッド・クラスを指定するには，外側のクラスとネステッド・クラスの区切りにピリオド
+        (<literal>.</literal>)ではなく，ドル記号 (<literal>$</literal>) を使用します．</para>
+
+        <para><classname>foo.bar.Outer$Inner</classname></para>
+      </sidebar>
+
+      <para>コンポーネントのクラスを指定することができます．
+      この指定の必要性と解釈は<literal>instance</literal>属性の値が<literal>outer</literal>かどうかと，インスタンス生成式の有無によって変わります．</para>
+
+      <table>
+        <title><literal>instance</literal>属性・インスタンス生成式と<literal>class</literal>属性の関係</title>
+
+        <tgroup cols="4">
+          <colspec colname="c1" colwidth="1*" />
+
+          <colspec colname="c2" colwidth="1*" />
+
+          <colspec colname="c3" colwidth="1*" />
+
+          <colspec colname="c4" colwidth="3*" />
+
+          <thead>
+            <row>
+              <entry><literal>instance</literal>属性</entry>
+
+              <entry>インスタンス生成式</entry>
+
+              <entry><literal>class</literal>属性</entry>
+
+              <entry>説明</entry>
+            </row>
+          </thead>
+
+          <tbody>
+            <row>
+              <entry morerows="3"><literal>outer</literal>以外</entry>
+
+              <entry morerows="1">あり</entry>
+
+              <entry>あり</entry>
+
+              <entry>インスタンス生成式によって生成されるインスタンスがコンポーネントとなります．
+              このインスタンスは，<literal>class</literal>属性で指定されたクラスに代入可能でなくてはなりません．
+              代入可能でない場合は，<classname>org.seasar.framework.container.ClassUnmatchRuntimeException</classname>がスローされます．</entry>
+            </row>
+
+            <row>
+              <entry>なし</entry>
+
+              <entry>インスタンス生成式によって生成されるインスタンスがコンポーネントとなります．</entry>
+            </row>
+
+            <row>
+              <entry morerows="1">なし</entry>
+
+              <entry>あり</entry>
+
+              <entry>指定されたクラスのインスタンスがコンポーネントとなります．
+              インスタンスの生成に使用されるコンストラクタについては，「コンストラクタ・インジェクション」を参照してください．</entry>
+            </row>
+
+            <row>
+              <entry>なし</entry>
+
+              <entry>エラー． インスタンス生成式またはclass属性のどちらかが必要です．
+              両方が省略されると<classname>org.seasar.framework.container.factory.TagAttributeNotDefinedRuntimeException</classname>がスローされます．</entry>
+            </row>
+
+            <row>
+              <entry morerows="1"><literal>outer</literal></entry>
+
+              <entry morerows="1">-</entry>
+
+              <entry>あり</entry>
+
+              <entry>外部から渡されるインスタンスがコンポーネントとなります．
+              <literal>class</literal>属性が指定された場合，外部から渡されるインスタンスは<literal>class</literal>属性で指定されたクラスに代入可能でなくてはなりません．
+              代入可能でない場合は，<classname>org.seasar.framework.container.ClassUnmatchRuntimeException</classname>がスローされます．</entry>
+            </row>
+
+            <row>
+              <entry>なし</entry>
+
+              <entry>外部から渡されるインスタンスがコンポーネントとなります．</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </table>
+    </section>
+
+    <section>
+      <title><literal>instance</literal>属性</title>
+
+      <subtitle>－インスタンス・モード－</subtitle>
+
+      <para>インスタンス・モードとして，コンポーネントのスコープを指定することができます．</para>
+
+      <para>指定可能な値を次に示します．</para>
+
+      <variablelist>
+        <varlistentry>
+          <term><literal>singleton</literal> (デフォルト)</term>
+
+          <listitem>
+            <para>コンテナ内で唯一のインスタンスが作成されるモードです．
+            <literal>singleton</literal>のインスタンスはコンテナの初期化時に作成されます．
+            コンテナからコンポーネントが取得されると，毎回同一のインスタンスが返されます．</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>prototype</literal></term>
+
+          <listitem>
+            <para>コンテナからコンポーネントが取得される度に，新しいインスタンスが作成されるモードです．</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>outer</literal></term>
+
+          <listitem>
+            <para>外部で作成されたインスタンスがコンテナに渡されるモードです．
+            コンテナは<literal>outer</literal>のコンポーネントについてはインスタンスの生成も管理も行いません．
+            <literal>outer</literal>は，コンテナの外部で生成されたインスタンスにDIを適用するためのモードです．</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>request</literal> (Version: 2.1～)</term>
+
+          <listitem>
+            <para><emphasis>リクエスト</emphasis>単位にインスタンスが作成されるモードです．
+            <literal>request</literal>モードでは，<literal>name</literal>属性が必須となります．</para>
+
+            <para><literal>request</literal>モードを使用するにはコンテナに外部コンテキストが設定されている必要があります．外部コンテキストの詳細は「」を参照してください．</para>
+
+            <para>Webアプリケーションでは，<literal>request</literal>のインスタンスは<interfacename>HttpServletRequest</interfacename>の属性として保持されます．
+            コンポーネントが取得される際，コンテナは<literal>HttpServletRequest</literal>からコンポーネント名をキーとして属性を取得します．
+            属性が存在しなければ，コンポーネントをインスタンス化して<literal>HttpServletRequest</literal>に設定し，それをコンポーネントとして返します．
+            属性が存在すれば，それをコンポーネントとして返します ()．</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>session</literal> (Version: 2.1～)</term>
+
+          <listitem>
+            <para><emphasis>セッション</emphasis>単位にインスタンスが作成されるモードです．
+            <literal>session</literal>モードでは，<literal>name</literal>属性が必須となります．</para>
+
+            <para><literal>session</literal>モードを使用するにはコンテナに外部コンテキストが設定されている必要があります．外部コンテキストの詳細は「」を参照してください．</para>
+
+            <para>Webアプリケーションでは，<literal>session</literal>のインスタンスは<interfacename>HttpSession</interfacename>の属性として保持されます．
+            コンポーネントが取得される際，コンテナは<literal>HttpSessiont</literal>からコンポーネント名をキーとして属性を取得します．
+            属性が存在しなければ，コンポーネントをインスタンス化して<literal>HttpSession</literal>に設定し，それをコンポーネントとして返します．
+            属性が存在すれば，それをコンポーネントとして返します ()．</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>application</literal> (Version: 2.4～)</term>
+
+          <listitem>
+            <para><emphasis>アプリケーション</emphasis>単位にインスタンスが作成されるモードです．
+            <literal>application</literal>モードでは，<literal>name</literal>属性が必須となります．</para>
+
+            <para><literal>application</literal>モードを使用するにはコンテナに外部コンテキストが設定されている必要があります．外部コンテキストの詳細は「」を参照してください．</para>
+
+            <para>Webアプリケーションでは，<literal>application</literal>のインスタンスは<interfacename>ServletContext</interfacename>の属性として保持されます．
+            コンポーネントが取得される際，コンテナは<literal>ServletContext</literal>からコンポーネント名をキーとして属性を取得します．
+            属性が存在しなければ，コンポーネントをインスタンス化して<literal>ServletContext</literal>に設定し，それをコンポーネントとして返します．
+            属性が存在すれば，それをコンポーネントとして返します．</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
+    <section>
+      <title><literal>autoBinding</literal>属性</title>
+
+      <subtitle>－自動バインディング・モード－</subtitle>
+
+      <para>自動バインディングのモードを指定することができます． 自動バインディングの詳細は「」を参照してください．</para>
+
+      <para><literal>autoBinding</literal>属性に指定可能な値を次に示します．</para>
+
+      <variablelist>
+        <varlistentry>
+          <term><literal>auto</literal> (デフォルト)</term>
+
+          <listitem>
+            <para>コンストラクタ・インジェクションとセッター・インジェクションの両方に自動バインディングが適用されます．</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>constructor</literal></term>
+
+          <listitem>
+            <para>コンストラクタ・インジェクションに対してのみ，自動バインディングが適用されます．</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>property</literal></term>
+
+          <listitem>
+            <para>セッター・インジェクションに対してのみ，自動バインディングが適用されます．</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>none</literal></term>
+
+          <listitem>
+            <para>自動バインディングは適用されません．</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>semiauto</literal> (Seasar2.4以降)</term>
+
+          <listitem>
+            <para>アノテーション等で明示的に指定されたプロパティに対してのみ，自動バインディングが適用されます．</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
+    <section>
+      <sectioninfo>
+        <releaseinfo>(Version: 2.4.0～)</releaseinfo>
+      </sectioninfo>
+
+      <title><literal>externalBinding</literal>属性</title>
+
+      <subtitle>－外部バインディング・モード－</subtitle>
+
+      <para>外部バインディングを使用するかどうかを指定することができます． 外部バインディングの詳細は「」を参照してください．</para>
+
+      <para><literal>externalBinding</literal>属性に指定可能な値を次に示します．</para>
+
+      <variablelist>
+        <varlistentry>
+          <term><literal>false</literal> (デフォルト)</term>
+
+          <listitem>
+            <para>外部バインディングを使用しません．</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>true</literal></term>
+
+          <listitem>
+            <para>外部バインディングを使用します．</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
+    <section>
+      <title>インスタンス生成式</title>
+
+      <sidebar>
+        <para>コンストラクタを使用してインスタンスを生成する場合は「コンストラクタ・インジェクション」を参照してください．</para>
+      </sidebar>
+
+      <para><literal>&lt;component&gt;</literal>要素の内容に，コンポーネントのインスタンスを生成するためのOGNL式を記述することができます．
+      OGNL式の詳細は「」を参照してください．</para>
+
+      <para>OGNL式を評価した結果のオブジェクトがコンポーネントのインスタンスとなります．</para>
+
+      <programlisting>&lt;component name="hoge"
+  new foo.bar.Hoge()
+&lt;/component&gt;
+</programlisting>
+
+      <para>インスタンス生成式を使うことにより，シングルトン・パターンやファクトリによって取得したインスタンスや定数をコンポーネントとして扱うことができます．</para>
+
+      <programlisting>&lt;component name="hoge"&gt;
+  @foo.bar.HogeFactory@getInstance()
+&lt;/component&gt;
+</programlisting>
+
+      <para>インスタンス生成式は，コンポーネントが作成される際に評価されます．</para>
+
+      <para><literal>&lt;component&gt;</literal>要素に<literal>class</literal>属性が指定された場合は，インスタンス生成式を評価した結果のオブジェクトは<literal>class</literal>属性で指定されたクラスに代入可能でなくてはなりません．
+      代入可能でない場合は，<classname>org.seasar.framework.container.ClassUnmatchRuntimeException</classname>がスローされます．</para>
+    </section>
+  </section>
+
+  <section>
+    <title>まとめ</title>
+
+    <para></para>
+  </section>
+</chapter>

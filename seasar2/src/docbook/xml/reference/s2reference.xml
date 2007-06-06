@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+<!ENTITY __overview__f2eczdky SYSTEM "intro/overview.xml">
+<!ENTITY __setup__f2daq7l8 SYSTEM "intro/setup.xml">
+<!ENTITY __quickstart__f2dardfb SYSTEM "intro/quickstart.xml">
+<!ENTITY __architecture__f2das3ll SYSTEM "intro/architecture.xml">
+<!ENTITY __overview__f2datad3 SYSTEM "config/overview.xml">
+<!ENTITY __dicon__f2datutm SYSTEM "config/dicon.xml">
+<!ENTITY __component__f2dau6yp SYSTEM "config/component.xml">
+<!ENTITY __di__f2daukzw SYSTEM "config/di.xml">
+<!ENTITY __aop__f2dav11l SYSTEM "config/aop.xml">
+<!ENTITY __annotation__f2davb5q SYSTEM "config/annotation.xml">
+<!ENTITY __organize__f2daw0zf SYSTEM "config/organize.xml">
+<!ENTITY __smartdeploy__f2dawhbj SYSTEM "config/smartdeploy.xml">
+<!ENTITY __autoregister__f2dawp9k SYSTEM "config/autoregister.xml">
+<!ENTITY __ognl__f2daw8d2 SYSTEM "config/ognl.xml">
+<!ENTITY __overview__f2day179 SYSTEM "container/overview.xml">
+<!ENTITY __creating__f2dayfy2 SYSTEM "container/creating.xml">
+<!ENTITY __using__f2daymxd SYSTEM "container/using.xml">
+<!ENTITY __singleton__f2daywif SYSTEM "container/singleton.xml">
+<!ENTITY __external__f2daz588 SYSTEM "container/external.xml">
+<!ENTITY __customize__f2dazdlg SYSTEM "container/customize.xml">
+]>
+<book lang="ja">
+  <bookinfo>
+    <title>Seasar2 Reference Documentation</title>
+
+    <subtitle>DI Container with AOP</subtitle>
+
+    <releaseinfo>Version: 2.4</releaseinfo>
+
+    <productname>Seasar2</productname>
+  </bookinfo>
+
+  <toc>
+    <title>目次</title>
+  </toc>
+
+  <part id="intro">
+    <title>Seasar2の紹介</title>
+
+    &__overview__f2eczdky;
+
+    &__setup__f2daq7l8;
+
+    &__quickstart__f2dardfb;
+
+    &__architecture__f2das3ll;
+  </part>
+
+  <part id="config">
+    <title>設定</title>
+
+    &__overview__f2datad3;
+
+    &__dicon__f2datutm;
+
+    &__component__f2dau6yp;
+
+    &__di__f2daukzw;
+
+    &__aop__f2dav11l;
+
+    &__annotation__f2davb5q;
+
+    &__organize__f2daw0zf;
+
+    &__smartdeploy__f2dawhbj;
+
+    &__autoregister__f2dawp9k;
+
+    &__ognl__f2daw8d2;
+  </part>
+
+  <part id="container">
+    <title>コンテナ</title>
+
+    &__overview__f2day179;
+
+    &__creating__f2dayfy2;
+
+    &__using__f2daymxd;
+
+    &__singleton__f2daywif;
+
+    &__external__f2daz588;
+
+    &__customize__f2dazdlg;
+  </part>
+
+  <part id="web">
+    <title>Web</title>
+
+    <partintro>
+      <itemizedlist>
+        <listitem>
+          <para>overview</para>
+        </listitem>
+
+        <listitem>
+          <para>S2ContainerServlet</para>
+        </listitem>
+
+        <listitem>
+          <para>S2ContainerFilter</para>
+        </listitem>
+
+        <listitem>
+          <para>Portlet</para>
+        </listitem>
+      </itemizedlist>
+    </partintro>
+  </part>
+
+  <part id="data">
+    <title>データアクセス</title>
+
+    <partintro>
+      <itemizedlist>
+        <listitem>
+          <para>overview</para>
+        </listitem>
+
+        <listitem>
+          <para>transaction management</para>
+        </listitem>
+
+        <listitem>
+          <para>declarative transaction</para>
+        </listitem>
+
+        <listitem>
+          <para>connection pooling</para>
+        </listitem>
+
+        <listitem>
+          <para>jdbc</para>
+        </listitem>
+      </itemizedlist>
+    </partintro>
+  </part>
+
+  <part>
+    <title />
+
+    <partintro>
+      <itemizedlist>
+        <listitem>
+          <para>overview</para>
+        </listitem>
+
+        <listitem>
+          <para>EJB3</para>
+        </listitem>
+
+        <listitem>
+          <para>S2Dxo</para>
+        </listitem>
+
+        <listitem>
+          <para>standard components</para>
+        </listitem>
+
+        <listitem>
+          <para>standard dicons</para>
+        </listitem>
+      </itemizedlist>
+    </partintro>
+  </part>
+
+  <part id="test">
+    <title>テスト</title>
+
+    <partintro>
+      <itemizedlist>
+        <listitem>
+          <para>overview</para>
+        </listitem>
+
+        <listitem>
+          <para>S2Unit</para>
+        </listitem>
+
+        <listitem>
+          <para>S2Unit4</para>
+        </listitem>
+
+        <listitem>
+          <para>S2Dataset</para>
+        </listitem>
+      </itemizedlist>
+    </partintro>
+  </part>
+
+  <part>
+    <title>for Framework Programmer</title>
+
+    <partintro>
+      <itemizedlist>
+        <listitem>
+          <para>overview</para>
+        </listitem>
+
+        <listitem>
+          <para>logging</para>
+        </listitem>
+
+        <listitem>
+          <para>S2ContainerBuilder</para>
+        </listitem>
+      </itemizedlist>
+    </partintro>
+  </part>
+
+  <index>
+    <title>索引</title>
+  </index>
+</book>

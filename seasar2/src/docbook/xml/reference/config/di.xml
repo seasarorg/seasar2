@@ -1,0 +1,565 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="config-di">
+  <title>Dependency Injection</title>
+
+  <subtitle>－依存性の注入－</subtitle>
+
+  <section>
+    <title>はじめに</title>
+
+    <para>本章では，Dependency Injection (依存性の注入，以下DI) の利用方法について説明します．</para>
+  </section>
+
+  <section>
+    <title>Dependency Injection概要</title>
+
+    <para>DIとは，コンポーネントが他のコンポーネントに依存している場合に，その依存物 (他のコンポーネント) を外部 (S2コンテナ)
+    から注入することです． DIを利用すると，コンポーネントが他のコンポーネントに直接依存することを避けることができます．</para>
+
+    <para>図</para>
+
+    <para></para>
+
+    <para>図</para>
+
+    <para></para>
+  </section>
+
+  <section>
+    <title>Dependency Injectionのタイプ</title>
+
+    <para>Dependency Injectionは，あるコンポーネントが依存する (必要とする) 他のコンポーネントをコンテナから渡されます．
+    その際の方法として，次のものがあります．</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>コンストラクタ・インジェクション</para>
+      </listitem>
+
+      <listitem>
+        <para>セッター・メソッド</para>
+      </listitem>
+
+      <listitem>
+        <para>メソッド・インジェクション</para>
+      </listitem>
+    </itemizedlist>
+
+    <para></para>
+
+    <section>
+      <title>コンストラクタ・インジェクション</title>
+
+      <para>コンストラクタ・インジェクションでは，コンストラクタを通じて依存するコンポーネントが設定されます．</para>
+    </section>
+
+    <section>
+      <title>セッター・インジェクション</title>
+
+      <para>セッター・インジェクションでは，プロパティのセッター・メソッドを通じて依存するコンポーネントが設定されます．</para>
+    </section>
+
+    <section>
+      <title>メソッド・インジェクション</title>
+
+      <para>メソッド・インジェクションでは，任意のメソッドを通じて依存するコンポーネントが設定されます．</para>
+
+      <para>メソッド・インジェクション</para>
+    </section>
+
+    <section>
+      <title>フィールド・インジェクション</title>
+
+      <para>フィールド・インジェクションでは，任意のフィールドに直接コンポーネントが設定されます．
+      フィールド・インジェクションはdiconファイルで指定することはできません．
+      フィールド・インジェクションを使用するにはアノテーションを指定します．</para>
+    </section>
+  </section>
+
+  <section>
+    <title>ライフサイクルとDI</title>
+
+    <para>図が欲しい</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>コンストラクタ・インジェクション</para>
+      </listitem>
+
+      <listitem>
+        <para>セッター・インジェクション／フィールド・インジェクション</para>
+      </listitem>
+
+      <listitem>
+        <para>initメソッド・インジェクション</para>
+      </listitem>
+
+      <listitem>
+        <para></para>
+      </listitem>
+
+      <listitem>
+        <para>destroyメソッド・インジェクション</para>
+      </listitem>
+    </itemizedlist>
+  </section>
+
+  <section>
+    <title><literal>&lt;arg&gt;</literal>要素</title>
+
+    <subtitle>－コンストラクタ・インジェクション－</subtitle>
+
+    <sidebar>
+      <title><literal>&lt;arg&gt;</literal>要素の用途</title>
+
+      <para><literal>&lt;arg&gt;</literal>要素はコンストラクタ・インジェクションだけではなく，メソッド・インジェクションでも使われます．</para>
+    </sidebar>
+
+    <para>明示的なコンストラクタ・インジェクションは，<literal>&lt;component&gt;</literal>要素の子として<literal>&lt;arg&gt;</literal>要素を記述することによって指定します．
+    <literal>&lt;arg&gt;</literal>要素は，呼び出したいコンストラクタの引数の数だけ記述します．</para>
+
+    <programlisting>&lt;component class="<emphasis>fullQualifiedClassName</emphasis>"&gt;
+  &lt;arg&gt;<emphasis>content</emphasis>&lt;/arg&gt;
+  &lt;arg&gt;<emphasis>content</emphasis>&lt;/arg&gt;
+  ...
+&lt;/component&gt;
+</programlisting>
+
+    <para><literal>&lt;arg&gt;</literal>要素の内容には次のものを記述することができます．</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>OGNL式または<literal>&lt;component&gt;</literal>要素</para>
+      </listitem>
+
+      <listitem>
+        <para><literal>&lt;meta&gt;</literal>要素 (Seasar2.1以降)</para>
+      </listitem>
+
+      <listitem>
+        <para><literal>&lt;description&gt;</literal>要素</para>
+      </listitem>
+    </itemizedlist>
+
+    <sidebar>
+      <title>コンストラクタを呼び出せない場合</title>
+
+      <para>コンストラクタ呼び出しでコンポーネントを直接インスタンス化できない場合は，<literal>&lt;arg&gt;</literal>要素を指定せず「インスタンス生成式」を指定してください．</para>
+    </sidebar>
+
+    <para><literal>&lt;arg&gt;</literal>要素の内容がコンストラクタの引数として渡されます．
+    <literal>&lt;arg&gt;</literal>要素を複数記述した場合は，その内容が記述した順番にコンストラクタ引数に渡されます．
+    <literal>&lt;arg&gt;</literal>要素の数とその内容 (型)
+    を適用できるコンストラクタが存在しない場合は，<classname>org.seasar.framework.beans.ConstructorNotFoundRuntimeException</classname>がスローされます．</para>
+
+    <para><literal>&lt;component&gt;</literal>要素にインスタンス生成式 (OGNL式)
+    を記述した場合は，<literal>&lt;arg&gt;</literal>要素が記述されていても無視されます．
+    <literal>&lt;arg&gt;</literal>要素の内容にOGNL式と<literal>&lt;component&gt;</literal>要素の両方を記述した場合，<literal>&lt;component&gt;</literal>要素は無視されます．</para>
+  </section>
+
+  <section>
+    <title><literal>&lt;property&gt;</literal>要素</title>
+
+    <subtitle>－セッター・インジェクション－</subtitle>
+
+    <para></para>
+
+    <programlistingco>
+      <areaspec>
+        <area coords="3" id="property1" />
+
+        <area coords="4" id="property2" />
+      </areaspec>
+
+      <programlisting>&lt;component class="<emphasis>fullQualifiedClassName</emphasis>"&gt;
+  &lt;property
+    name="<emphasis>propertyName</emphasis>"
+    bindingType="must | should | may | none"
+  &gt;
+    <emphasis>content</emphasis>
+  &lt;/property&gt;
+&lt;/component&gt;
+</programlisting>
+
+      <calloutlist>
+        <callout arearefs="property1">
+          <para><literal>name</literal> (必須): プロパティの名前を指定します．</para>
+        </callout>
+
+        <callout arearefs="property2">
+          <para><literal>bindingType</literal> (任意):
+          バインディング・タイプを指定します．デフォルトは<literal>should</literal>です．</para>
+        </callout>
+      </calloutlist>
+    </programlistingco>
+
+    <para>&lt;property&gt;要素の内容には次のものを記述することができます．</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>OGNL式または<literal>&lt;component&gt;</literal>要素</para>
+      </listitem>
+
+      <listitem>
+        <para><literal>&lt;meta&gt;</literal>要素 (Seasar2.1以降)</para>
+      </listitem>
+
+      <listitem>
+        <para><literal>&lt;description&gt;</literal>要素</para>
+      </listitem>
+    </itemizedlist>
+
+    <para><literal>&lt;property&gt;</literal>要素の内容にOGNL式と<literal>&lt;component&gt;</literal>要素の両方を記述した場合，<literal>&lt;component&gt;</literal>要素は無視されます．</para>
+
+    <section>
+      <title><literal>name</literal>属性</title>
+
+      <subtitle>－プロパティ名－</subtitle>
+
+      <para></para>
+    </section>
+
+    <section>
+      <sectioninfo>
+        <releaseinfo>Version: 2.3.0～</releaseinfo>
+      </sectioninfo>
+
+      <title>bindingType属性</title>
+
+      <subtitle>－バインディング・タイプ－</subtitle>
+
+      <para></para>
+
+      <variablelist>
+        <varlistentry>
+          <term><literal>must</literal></term>
+
+          <listitem>
+            <para></para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>should</literal> (デフォルト)</term>
+
+          <listitem>
+            <para></para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>may</literal></term>
+
+          <listitem>
+            <para></para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>none</literal></term>
+
+          <listitem>
+            <para></para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+  </section>
+
+  <section>
+    <title><literal>&lt;initMethod&gt;</literal>要素</title>
+
+    <subtitle>－initメソッド・インジェクション－</subtitle>
+
+    <para></para>
+
+    <programlistingco>
+      <areaspec>
+        <area coords="3" id="initmethod1" />
+      </areaspec>
+
+      <programlisting>&lt;component class="<emphasis>fullQualifiedClassName</emphasis>"&gt;
+  &lt;initMethod
+    name="<emphasis>methodName</emphasis>"
+  &gt;
+    &lt;arg&gt;<emphasis>content</emphasis>&lt;/arg&gt;
+    &lt;arg&gt;<emphasis>content</emphasis>&lt;/arg&gt;
+    ...
+  &lt;/initMethod&gt;
+&lt;/component&gt;
+</programlisting>
+
+      <calloutlist>
+        <callout arearefs="initmethod1">
+          <para><literal>name</literal>属性 (任意): メソッドの名前を指定します．</para>
+        </callout>
+      </calloutlist>
+    </programlistingco>
+
+    <sidebar>
+      <title><literal>&lt;arg&gt;</literal>要素について</title>
+
+      <para><literal>&lt;arg&gt;</literal>要素については「」を参照してください．</para>
+    </sidebar>
+
+    <para><literal>&lt;initMethod&gt;</literal>要素の内容には次のものを記述することができます．</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>OGNL式または<literal>&lt;arg&gt;</literal>要素</para>
+      </listitem>
+
+      <listitem>
+        <para><literal>&lt;description&gt;</literal>要素</para>
+      </listitem>
+    </itemizedlist>
+
+    <para><literal>&lt;initMethod&gt;</literal>要素に<literal>name</literal>属性でメソッド名を指定した場合は，そのメソッドの引数を<literal>&lt;arg&gt;</literal>要素を記述します．メソッドに引数がない場合は<literal>&lt;arg&gt;</literal>要素は不要です．</para>
+
+    <example>
+      <title><literal>&lt;initMethod&gt;</literal>要素に<literal>name</literal>属性を指定した場合</title>
+
+      <programlisting>&lt;component class="java.util.HashMap"&gt;
+  &lt;initMethod name="clear"/&gt;
+  &lt;initMethod name="put"&gt;
+    &lt;arg&gt;"key"&lt;/arg&gt;
+    &lt;arg&gt;"value"&lt;/arg&gt;
+  &lt;/initMethod&gt;
+&lt;/component&gt;
+</programlisting>
+    </example>
+
+    <para><literal>&lt;initMethod&gt;</literal>要素に<literal>name</literal>属性を指定しなかった場合は，内容としてOGNL式を記述します．
+    OGNL式の中では，<literal>#self</literal>という変数で<literal>&lt;initMethod&gt;</literal>が記述されているコンポーネントを参照することができます．</para>
+
+    <example>
+      <title><literal>&lt;initMethod&gt;</literal>要素に<literal>name</literal>属性を指定しなかった場合</title>
+
+      <programlisting>&lt;component class="java.util.HashMap"&gt;
+  &lt;initMethod&gt;
+    #self.clear()
+  &lt;/initMethod&gt;
+  &lt;initMethod&gt;
+    #self.put("key", "value")
+  &lt;/initMethod&gt;
+&lt;/component&gt;
+</programlisting>
+    </example>
+
+    <para><literal>&lt;initMethod&gt;</literal>要素に<literal>name</literal>属性が指定された場合は，OGNL式が記述されていても無視されます．</para>
+  </section>
+
+  <section>
+    <title><literal>&lt;destroyMethod&gt;</literal>要素</title>
+
+    <subtitle>－destroyメソッド・インジェクション－</subtitle>
+
+    <sidebar>
+      <title><literal>&lt;destroyMethod&gt;</literal>の適用対象</title>
+
+      <para><literal>&lt;destroyMethod&gt;</literal>は<literal>&lt;component&gt;</literal>要素の<literal>instance</literal>属性が<literal>singleton</literal>の場合に限り有効です．</para>
+    </sidebar>
+
+    <para></para>
+
+    <programlistingco>
+      <areaspec>
+        <area coords="3" id="destroymethod1" />
+      </areaspec>
+
+      <programlisting>&lt;component class="<emphasis>fullQualifiedClassName</emphasis>"&gt;
+  &lt;destroyMethod
+    name="<emphasis>methodName</emphasis>"
+  &gt;
+    &lt;arg&gt;<emphasis>content</emphasis>&lt;/arg&gt;
+    &lt;arg&gt;<emphasis>content</emphasis>&lt;/arg&gt;
+    ...
+  &lt;/destroyMethod&gt;
+&lt;/component&gt;
+</programlisting>
+
+      <calloutlist>
+        <callout arearefs="destroymethod1">
+          <para><literal>name</literal>属性 (任意): メソッドの名前を指定します．</para>
+        </callout>
+      </calloutlist>
+    </programlistingco>
+
+    <sidebar>
+      <title><literal>&lt;arg&gt;</literal>要素について</title>
+
+      <para><literal>&lt;arg&gt;</literal>要素については「」を参照してください．</para>
+    </sidebar>
+
+    <para><literal>&lt;destroyMethod&gt;</literal>要素の内容には次のものを記述することができます．</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>OGNL式または<literal>&lt;arg&gt;</literal>要素</para>
+      </listitem>
+
+      <listitem>
+        <para><literal>&lt;description&gt;</literal>要素</para>
+      </listitem>
+    </itemizedlist>
+
+    <para><literal>&lt;destroyMethod&gt;</literal>要素に<literal>name</literal>属性でメソッド名を指定した場合は，そのメソッドの引数を<literal>&lt;arg&gt;</literal>要素で記述します．メソッドに引数がない場合は<literal>&lt;arg&gt;</literal>要素は不要です．</para>
+
+    <example>
+      <title><literal>&lt;destroyMethod&gt;</literal>要素に<literal>name</literal>属性を指定した場合</title>
+
+      <programlisting>&lt;component class="java.util.HashMap"&gt;
+  &lt;destroyMethod name="remove"&gt;
+    &lt;arg&gt;"key"&lt;/arg&gt;
+  &lt;/destroyMethod&gt;
+&lt;/component&gt;
+</programlisting>
+    </example>
+
+    <para><literal>&lt;destroyMethod&gt;</literal>要素に<literal>name</literal>属性を指定しなかった場合は，内容としてOGNL式を記述します．
+    OGNL式の中では，<literal>#self</literal>という変数で<literal>&lt;destroyMethod&gt;</literal>が記述されているコンポーネントを参照することができます．</para>
+
+    <example>
+      <title><literal>&lt;destroyMethod&gt;</literal>要素に<literal>name</literal>属性を指定しなかった場合</title>
+
+      <programlisting>&lt;component class="java.util.HashMap"&gt;
+  &lt;destroyMethod&gt;
+    #self.remove("key")
+  &lt;/destroyMethod&gt;
+&lt;/component&gt;
+</programlisting>
+    </example>
+
+    <para><literal>&lt;destroyMethod&gt;</literal>要素に<literal>name</literal>属性が指定された場合は，OGNL式が記述されていても無視されます．</para>
+  </section>
+
+  <section>
+    <title>自動バインディング</title>
+
+    <para></para>
+
+    <section>
+      <title>バインディング・タイプ</title>
+
+      <para></para>
+
+      <variablelist>
+        <varlistentry>
+          <term><literal>must</literal></term>
+
+          <listitem>
+            <para></para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>should</literal> (デフォルト)</term>
+
+          <listitem>
+            <para></para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>may</literal></term>
+
+          <listitem>
+            <para></para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>none</literal></term>
+
+          <listitem>
+            <para></para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
+    <section>
+      <title>依存コンポーネントの解決</title>
+
+      <para></para>
+    </section>
+
+    <section>
+      <title>自動バインディング・モード</title>
+
+      <para></para>
+
+      <variablelist>
+        <varlistentry>
+          <term><literal>auto</literal></term>
+
+          <listitem>
+            <para></para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>constructor</literal></term>
+
+          <listitem>
+            <para></para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>property</literal></term>
+
+          <listitem>
+            <para></para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>none</literal></term>
+
+          <listitem>
+            <para></para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>semiauto</literal> (Version: 2.4～)</term>
+
+          <listitem>
+            <para></para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+  </section>
+
+  <section>
+    <title>特殊なコンポーネント</title>
+
+    <para></para>
+
+    <section>
+      <title>S2Container</title>
+
+      <para></para>
+    </section>
+
+    <section>
+      <title>ComponentDef</title>
+
+      <para></para>
+    </section>
+  </section>
+
+  <section>
+    <title>外部バインディング</title>
+
+    <para></para>
+  </section>
+
+  <section>
+    <title>まとめ</title>
+
+    <para></para>
+  </section>
+</chapter>

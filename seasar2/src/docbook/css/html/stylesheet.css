@@ -1,0 +1,152 @@
+body {
+	background-color: #FFFFFF;
+	margin: 0px;
+	padding: 10px;
+	font-size: small;
+	text-align: left;
+}
+
+a {
+	text-decoration: none;
+	color: #006699;
+}
+
+a:hover {
+	text-decoration: underline;
+	color: #FF3300;
+}
+
+img {
+	border: none;
+}
+
+img.border {
+	border: 0px solid #888;
+}
+
+h1.title {
+    font-size: 180%;
+    font-weight: bold;
+}
+h2.subtitle {
+    font-size: 140%;
+    font-style: italic;
+}
+h2.title {
+    display: inline;
+    font-size: 140%;
+    font-weight: bold;
+}
+h3.subtitle {
+    display: inline;
+    font-size: 120%;
+    font-weight: normal;
+    font-style: italic;
+}
+h3.title {
+    display: inline;
+    font-size: 120%;
+    font-weight: bold;
+}
+h4.subtitle {
+    display: inline;
+    font-size: 110%;
+    font-weight: normal;
+    font-style: italic;
+}
+h4.title {
+    display: inline;
+    font-size: 110%;
+    font-weight: bold;
+}
+h5.subtitle {
+    display: inline;
+    font-size: 100%;
+    font-weight: normal;
+    font-style: italic;
+}
+p.releaseinfo {
+    display: inline;
+    font-size: 100%;
+}
+
+div.titlepage {
+	margin: 0px;
+	padding: 3px 0px 0px 8px;
+	color: #FFFFFF;
+	background-color: #308FAA;
+	border-bottom: 2px solid #000000;
+}
+
+div.titlepage div div {
+    display: inline;
+}
+
+ul {
+	list-style-image	: url(../images/item_little.gif);
+	margin-left: 2em;
+	padding-left: 0;
+}
+
+pre {
+	margin: 15px;
+	padding: 5px;
+	font-size: 100%;
+	border: 1px solid #CCCCCC;
+    background-color: #F4F4F4;
+}
+
+.clear {
+	clear: both;
+}
+
+.hide {
+	display: none;
+	width: 0px;
+	height: 0px;
+	overflow: hidden;
+	position: absolute; /* for the benefit of IE5 Mac */
+}
+
+div.table table {
+    border-collapse: collapse;
+    border-spacing: 0;
+    border: 2px solid black;
+    empty-cells: show;
+}
+
+div.table th {
+    color: black;
+    background-color: #F4F4F4;
+    font-weight: bold;
+    padding: 4pt;
+	border: 1px solid #CCCCCC;
+}
+
+div.table td  {
+    padding: 4pt;
+	border: 1px solid #CCCCCC;
+}
+
+div.toc dt {
+    font-weight: normal;
+}
+
+dt {
+    font-weight: bold;
+}
+
+.line {
+	height: 5px;
+	background: #000000 url(../images/line_blue.gif) repeat-y 0 0;
+}
+
+.sidebar {
+    float: right;
+    margin: 10px 0 10px 30px;
+    padding: 10px 20px 20px 20px;
+    width: 33%;
+	font-size: 90%;
+	border: 1px solid #CCCCCC;
+    background-color: #F4F4F4;
+}

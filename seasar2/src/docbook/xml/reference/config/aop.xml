@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="config-aop">
+  <title>Aspect-Oriented Programming</title>
+
+  <subtitle>アスペクト指向プログラミング</subtitle>
+
+  <section>
+    <title>はじめに</title>
+
+    <para></para>
+  </section>
+
+  <section>
+    <title><literal>&lt;aspect&gt;</literal>要素</title>
+
+    <subtitle>アスペクト</subtitle>
+
+    <para></para>
+  </section>
+
+  <section>
+    <sectioninfo>
+      <releaseinfo>2.4.0</releaseinfo>
+    </sectioninfo>
+
+    <title><literal>&lt;interType&gt;</literal>要素</title>
+
+    <subtitle>インタータイプ</subtitle>
+
+    <para></para>
+  </section>
+
+  <section>
+    <title>インターセプタの作成</title>
+
+    <para></para>
+  </section>
+
+  <section>
+    <title>インタータイプの作成</title>
+
+    <para></para>
+  </section>
+
+  <section>
+    <title>標準インターセプタ</title>
+
+    <para></para>
+  </section>
+
+  <section>
+    <title>標準インタータイプ</title>
+
+    <para></para>
+  </section>
+
+  <section>
+    <title>まとめ</title>
+
+    <para></para>
+  </section>
+</chapter>
