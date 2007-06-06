@@ -4,63 +4,21 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"
 >
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.seasar.container</groupId>
+  <parent>
+    <groupId>org.seasar.container</groupId>
+    <artifactId>s2-container-project</artifactId>
+    <version>2.4.14-SNAPSHOT</version>
+    <relativePath>../seasar2</relativePath>
+  </parent>
   <artifactId>s2-tiger</artifactId>
   <packaging>jar</packaging>
   <name>S2 Tiger</name>
-  <version>2.4.14-SNAPSHOT</version>
-  <description></description>
   <url>http://s2container.seasar.org/</url>
-  <issueManagement>
-    <system>JIRA</system>
-    <url><![CDATA[https://www.seasar.org/issues/browse/CONTAINER]]></url>
-  </issueManagement>
-  <inceptionYear>2005</inceptionYear>
-  <mailingLists>
-    <mailingList>
-      <name>Seasar-user</name>
-      <subscribe>https://www.seasar.org/mailman/listinfo/seasar-user</subscribe>
-      <unsubscribe>https://www.seasar.org/mailman/listinfo/seasar-user</unsubscribe>
-      <post>seasar-user@ml.seasar.org</post>
-      <archive>https://www.seasar.org/mailman/listinfo/seasar-user</archive>
-    </mailingList>
-    <mailingList>
-      <name>Seasar-dev</name>
-      <subscribe>https://www.seasar.org/mailman/listinfo/seasar-dev</subscribe>
-      <unsubscribe>https://www.seasar.org/mailman/listinfo/seasar-dev</unsubscribe>
-      <post>seasar-dev@ml.seasar.org</post>
-      <archive>https://www.seasar.org/mailman/listinfo/seasar-dev</archive>
-    </mailingList>
-    <mailingList>
-      <name>Seasar-user-en</name>
-      <subscribe>https://www.seasar.org/mailman/listinfo/seasar-user-en</subscribe>
-      <unsubscribe>https://www.seasar.org/mailman/listinfo/seasar-user-en</unsubscribe>
-      <post>seasar-user-en@ml.seasar.org</post>
-      <archive>http://ml.seasar.org/archives/seasar-user-en/</archive>
-    </mailingList>
-  </mailingLists>
-  <licenses>
-    <license>
-      <name>The Apache Software License, Version 2.0</name>
-      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-      <distribution>repo</distribution>
-    </license>
-  </licenses>
-  <scm>
-    <connection>scm:svn:https://www.seasar.org/svn/s2container/trunk/s2-tiger/</connection>
-    <developerConnection>scm:svn:https://www.seasar.org/svn/s2container/trunk/s2-tiger/</developerConnection>
-    <url>http://www.seasar.org/websvn/listing.php?repname=s2container</url>
-  </scm>
-  <organization>
-    <name>The Seasar Foundation</name>
-    <url>http://www.seasar.org/</url>
-  </organization>
   <build>
     <defaultGoal>validate</defaultGoal>
     <pluginManagement>
       <plugins>
         <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
           <configuration>
             <source>1.5</source>
@@ -70,88 +28,20 @@
         </plugin>
       </plugins>
     </pluginManagement>
-    <plugins>
-      <plugin>
-        <artifactId>maven-source-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>source-jar</id>
-            <phase>package</phase>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <configuration>
-          <encoding>UTF-8</encoding>
-          <docencoding>UTF-8</docencoding>
-          <charset>UTF-8</charset>
-          <links>
-            <link>http://java.sun.com/javaee/5/docs/api/</link>
-          	<link>http://java.sun.com/j2se/1.5.0/ja/docs/ja/api/</link>
-            <link>http://aopalliance.sourceforge.net/doc/</link>
-            <link>http://www.junit.org/junit/javadoc/4.3/</link>
-            <link>http://s2container.seasar.org/ja/s2-framework/apidocs/</link>
-            <link>http://s2container.seasar.org/ja/s2-extension/apidocs/</link>
-          </links>
-        </configuration>
-        <!--
-        <executions>
-          <execution>
-            <id>javadoc-jar</id>
-            <phase>package</phase>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-          </execution>
-        </executions>
-        -->
-      </plugin>
-    </plugins>
-    <extensions>
-      <extension>
-        <groupId>org.apache.maven.wagon</groupId>
-        <artifactId>wagon-webdav</artifactId>
-      </extension>
-    </extensions>
   </build>
-  <repositories>
-    <repository>
-      <id>maven.seasar.org</id>
-      <name>The Seasar Foundation Maven2 Repository</name>
-      <url>http://maven.seasar.org/maven2</url>
-    </repository>
-  </repositories>
   <dependencies>
     <dependency>
       <groupId>org.seasar.container</groupId>
       <artifactId>s2-extension</artifactId>
-      <version>2.4.14-SNAPSHOT</version>
+      <version>${version}</version>
       <type>jar</type>
     </dependency>
     <dependency>
       <groupId>org.seasar.container</groupId>
       <artifactId>s2-framework</artifactId>
-      <version>2.4.14-SNAPSHOT</version>
+      <version>${version}</version>
       <type>test-jar</type>
       <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.geronimo.specs</groupId>
-      <artifactId>geronimo-j2ee_1.4_spec</artifactId>
-      <version>1.0</version>
-      <type>jar</type>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.geronimo.specs</groupId>
-      <artifactId>geronimo-jta_1.1_spec</artifactId>
-      <version>1.0</version>
-      <type>jar</type>
-      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.geronimo.specs</groupId>
@@ -182,13 +72,6 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>hsqldb</groupId>
-      <artifactId>hsqldb</artifactId>
-      <version>1.8.0.1</version>
-      <type>jar</type>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>4.3.1</version>
@@ -201,26 +84,5 @@
       <type>jar</type>
       <optional>true</optional>
     </dependency>
-    <dependency>
-      <groupId>log4j</groupId>
-      <artifactId>log4j</artifactId>
-      <version>1.2.13</version>
-      <type>jar</type>
-      <scope>test</scope>
-    </dependency>
   </dependencies>
-  <distributionManagement>
-    <repository>
-      <uniqueVersion>false</uniqueVersion>
-      <id>maven.seasar.org</id>
-      <name>The Seasar Foundation Maven2 Repository</name>
-      <url>dav:https://www.seasar.org/maven/maven2</url>
-    </repository>
-    <snapshotRepository>
-      <uniqueVersion>true</uniqueVersion>
-      <id>maven.seasar.org</id>
-      <name>The Seasar Foundation Maven2 Snapshot Repository</name>
-      <url>dav:https://www.seasar.org/maven/maven2-snapshot</url>
-    </snapshotRepository>
-  </distributionManagement>
 </project>
