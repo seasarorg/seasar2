@@ -62,7 +62,7 @@
     <ul>
     	<li><a href="#applyClassPattern">特定のパターンに従ってカスタマイザを適用する</a>
     	<ul>
-    		<li><a href="#classPattern">パターンに合致するコンポーネントにのみカスタマイザ適用する場合</a>
+    		<li><a href="#classPattern">パターンに合致するコンポーネントにのみカスタマイザを適用する場合</a>
     		<li><a href="#ignoreClassPattern">パターンに合致するコンポーネントにはカスタマイザを適用しない場合</a>
     	</ul></li>
     	<li><a href="#tx">トランザクション制御を設定する</a>
@@ -91,7 +91,7 @@ SMART deployにおけるコンポーネントの自動登録にはS2Container内
 カスタマイザとはコンポーネント定義をカスタマイズするコンポーネントの総称です。
 クリエータに呼び出されたカスタマイザは自身に定義されたカスタマイズ処理をコンポーネント定義に対し実行します。
 カスタマイザの機能の代表例はアスペクト定義（インターセプタ）の追加です。
-例えば、サービスのカスタマイザにトレース出力のアスペクト定義を設定しておくと、サービスのクリエータによって作成されたすべてのコンポーネントにはトレース出力のインターセプタが自動で適用されます。
+例えば、サービスのカスタマイザにトレース出力のアスペクト定義を設定すると、サービスのクリエータによって作成されたすべてのコンポーネントにトレース出力のインターセプタが自動で適用されます。
 </p>
 
 <h3><a name="creator">クリエータ</a></h3>
@@ -233,7 +233,7 @@ S2Containerにはdefault-customizer.diconに定義されたデフォルトカス
 <h4><a name="customizerConfig">カスタマイザの設定</a></h4>
 <p>
 アプリケーションで使用するカスタマイザの設定はcustomizer.diconに定義します。
-例えば、サービスのコンポーネントに標準のカスタマイズである<code>traceCustomizer</code>と<code>traceThrowsCustomizer</code>を適用する場合、次のように記述します。
+例えば、サービスのコンポーネントに標準のカスタマイザである<code>traceCustomizer</code>と<code>traceThrowsCustomizer</code>を適用する場合、次のように記述します。
 </p>
 <pre>
 &lt;components&gt;
@@ -266,7 +266,7 @@ S2Containerにはdefault-customizer.diconに定義されたデフォルトカス
 
 <h3><a name="applyClassPattern">特定のパターンに従ってカスタマイザを適用する</a></h3>
 <ul>
-	<li><h4><a name="classPattern">パターンに合致するコンポーネントにのみカスタマイザ適用する場合</a></h4></li>
+	<li><h4><a name="classPattern">パターンに合致するコンポーネントにのみカスタマイザを適用する場合</a></h4></li>
 <p>
 例えば、サービスのコンポーネントのうち「Hoge」で始まるクラス名をもつコンポーネントにtraceCustomizerを適用する場合、
 次のように<code>addClassPattern</code>メソッドを使用し条件を引数で渡します。
