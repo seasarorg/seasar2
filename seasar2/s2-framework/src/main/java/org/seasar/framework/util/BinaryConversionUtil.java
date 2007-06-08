@@ -15,11 +15,23 @@
  */
 package org.seasar.framework.util;
 
+/**
+ * byte配列用の変換ユーティリティです。
+ * 
+ * @author higa
+ * 
+ */
 public final class BinaryConversionUtil {
 
     private BinaryConversionUtil() {
     }
 
+    /**
+     * byteの配列に変換します。
+     * 
+     * @param o
+     * @return byteの配列
+     */
     public static byte[] toBinary(Object o) {
         if (o instanceof byte[]) {
             return (byte[]) o;

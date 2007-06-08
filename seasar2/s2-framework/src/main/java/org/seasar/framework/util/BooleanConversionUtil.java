@@ -15,11 +15,23 @@
  */
 package org.seasar.framework.util;
 
+/**
+ * {@link Boolean}用の変換ユーティリティです。
+ * 
+ * @author higa
+ * 
+ */
 public final class BooleanConversionUtil {
 
     private BooleanConversionUtil() {
     }
 
+    /**
+     * {@link Boolean}に変換します。
+     * 
+     * @param o
+     * @return {@link Boolean}
+     */
     public static Boolean toBoolean(Object o) {
         if (o == null) {
             return null;
@@ -44,6 +56,12 @@ public final class BooleanConversionUtil {
         }
     }
 
+    /**
+     * booleanに変換します。
+     * 
+     * @param o
+     * @return boolean
+     */
     public static boolean toPrimitiveBoolean(Object o) {
         Boolean b = toBoolean(o);
         if (b != null) {

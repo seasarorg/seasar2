@@ -29,6 +29,8 @@ import org.seasar.framework.exception.NoSuchFieldRuntimeException;
 import org.seasar.framework.exception.NoSuchMethodRuntimeException;
 
 /**
+ * {@link Class}用のユーティリティクラスです。
+ * 
  * @author higa
  * 
  */
@@ -75,6 +77,15 @@ public final class ClassUtil {
     private ClassUtil() {
     }
 
+    /**
+     * {@link Class}を返します。
+     * 
+     * @param className
+     * @return {@link Class}
+     * @throws ClassNotFoundRuntimeException
+     *             {@link ClassNotFoundException}がおきた場合
+     * @see {@link Class#forName(String)}
+     */
     public static Class forName(String className)
             throws ClassNotFoundRuntimeException {
 
@@ -86,6 +97,15 @@ public final class ClassUtil {
         }
     }
 
+    /**
+     * プリミティブクラスの場合は、ラッパークラスに変換して返します。
+     * 
+     * @param className
+     * @return {@link Class}
+     * @throws ClassNotFoundRuntimeException
+     *             {@link ClassNotFoundException}がおきた場合
+     * @see #forName(String)
+     */
     public static Class convertClass(String className)
             throws ClassNotFoundRuntimeException {
         Class clazz = (Class) primitiveClsssNameMap.get(className);
@@ -95,6 +115,17 @@ public final class ClassUtil {
         return forName(className);
     }
 
+    /**
+     * 新しいインスタンスを作成します。
+     * 
+     * @param clazz
+     * @return 新しいインスタンス
+     * @throws InstantiationRuntimeException
+     *             {@link InstantiationException}がおきた場合
+     * @throws IllegalAccessRuntimeException
+     *             {@link IllegalAccessException}がおきた場合
+     * @see Class#newInstance()
+     */
     public static Object newInstance(Class clazz)
             throws InstantiationRuntimeException, IllegalAccessRuntimeException {
 
@@ -107,6 +138,19 @@ public final class ClassUtil {
         }
     }
 
+    /**
+     * 新しいインスタンスを作成します。
+     * 
+     * @param className
+     * @return 新しいインスタンス
+     * @throws ClassNotFoundRuntimeException
+     *             {@link ClassNotFoundException}がおきた場合
+     * @throws InstantiationRuntimeException
+     *             {@link InstantiationException}がおきた場合
+     * @throws IllegalAccessRuntimeException
+     *             {@link IllegalAccessException}がおきた場合
+     * @see {@link #newInstance(Class)}
+     */
     public static Object newInstance(String className)
             throws ClassNotFoundRuntimeException,
             InstantiationRuntimeException, IllegalAccessRuntimeException {
@@ -114,6 +158,14 @@ public final class ClassUtil {
         return newInstance(forName(className));
     }
 
+    /**
+     * 代入可能かどうかを返します。
+     * 
+     * @param toClass
+     * @param fromClass
+     * @return 代入可能かどうか
+     * @see Class#isAssignableFrom(Class)
+     */
     public static boolean isAssignableFrom(Class toClass, Class fromClass) {
         if (toClass == Object.class && !fromClass.isPrimitive()) {
             return true;
@@ -124,10 +176,22 @@ public final class ClassUtil {
         return toClass.isAssignableFrom(fromClass);
     }
 
+    /**
+     * ラッパークラスをプリミティブクラスに変換します。
+     * 
+     * @param clazz
+     * @return プリミティブクラス
+     */
     public static Class getPrimitiveClass(Class clazz) {
         return (Class) wrapperToPrimitiveMap.get(clazz);
     }
 
+    /**
+     * ラッパークラスならプリミティブクラスに、 そうでなければそのままクラスを返します。
+     * 
+     * @param clazz
+     * @return {@link Class}
+     */
     public static Class getPrimitiveClassIfWrapper(Class clazz) {
         Class ret = getPrimitiveClass(clazz);
         if (ret != null) {
@@ -136,10 +200,22 @@ public final class ClassUtil {
         return clazz;
     }
 
+    /**
+     * プリミティブクラスをラッパークラスに変換します。
+     * 
+     * @param clazz
+     * @return {@link Class}
+     */
     public static Class getWrapperClass(Class clazz) {
         return (Class) primitiveToWrapperMap.get(clazz);
     }
 
+    /**
+     * プリミティブの場合はラッパークラス、そうでない場合はもとのクラスを返します。
+     * 
+     * @param clazz
+     * @return {@link Class}
+     */
     public static Class getWrapperClassIfPrimitive(Class clazz) {
         Class ret = getWrapperClass(clazz);
         if (ret != null) {
@@ -148,7 +224,18 @@ public final class ClassUtil {
         return clazz;
     }
 
-    public static Constructor getConstructor(Class clazz, Class[] argTypes) {
+    /**
+     * {@link Constructor}を返します。
+     * 
+     * @param clazz
+     * @param argTypes
+     * @return {@link Constructor}
+     * @throws NoSuchConstructorRuntimeException
+     *             {@link NoSuchMethodException}がおきた場合
+     * @see Class#getConstructor(Class[])
+     */
+    public static Constructor getConstructor(Class clazz, Class[] argTypes)
+            throws NoSuchConstructorRuntimeException {
         try {
             return clazz.getConstructor(argTypes);
         } catch (NoSuchMethodException ex) {
@@ -156,8 +243,18 @@ public final class ClassUtil {
         }
     }
 
+    /**
+     * そのクラスに宣言されている {@link Constructor}を返します。
+     * 
+     * @param clazz
+     * @param argTypes
+     * @return {@link Constructor}
+     * @throws NoSuchConstructorRuntimeException
+     *             {@link NoSuchMethodException}がおきた場合
+     * @see Class#getDeclaredConstructor(Class[])
+     */
     public static Constructor getDeclaredConstructor(Class clazz,
-            Class[] argTypes) {
+            Class[] argTypes) throws NoSuchConstructorRuntimeException {
         try {
             return clazz.getDeclaredConstructor(argTypes);
         } catch (NoSuchMethodException ex) {
@@ -165,8 +262,19 @@ public final class ClassUtil {
         }
     }
 
+    /**
+     * {@link Method}を返します。
+     * 
+     * @param clazz
+     * @param methodName
+     * @param argTypes
+     * @return {@link Method}
+     * @throws NoSuchMethodRuntimeException
+     *             {@link NoSuchMethodException}がおきた場合
+     * @see Class#getMethod(String, Class[])
+     */
     public static Method getMethod(Class clazz, String methodName,
-            Class[] argTypes) {
+            Class[] argTypes) throws NoSuchMethodRuntimeException {
 
         try {
             return clazz.getMethod(methodName, argTypes);
@@ -176,8 +284,19 @@ public final class ClassUtil {
         }
     }
 
+    /**
+     * そのクラスに宣言されている {@link Method}を返します。
+     * 
+     * @param clazz
+     * @param methodName
+     * @param argTypes
+     * @return {@link Method}
+     * @throws NoSuchMethodRuntimeException
+     *             {@link NoSuchMethodException}がおきた場合
+     * @see Class#getDeclaredMethod(String, Class[])
+     */
     public static Method getDeclaredMethod(Class clazz, String methodName,
-            Class[] argTypes) {
+            Class[] argTypes) throws NoSuchMethodRuntimeException {
 
         try {
             return clazz.getDeclaredMethod(methodName, argTypes);
@@ -187,8 +306,18 @@ public final class ClassUtil {
         }
     }
 
-    public static Field getField(Class clazz, String fieldName) {
-
+    /**
+     * {@link Field}を返します。
+     * 
+     * @param clazz
+     * @param fieldName
+     * @return {@link Field}
+     * @throws NoSuchFieldRuntimeException
+     *             {@link NoSuchFieldException}がおきた場合
+     * @see Class#getField(String)
+     */
+    public static Field getField(Class clazz, String fieldName)
+            throws NoSuchFieldRuntimeException {
         try {
             return clazz.getField(fieldName);
         } catch (NoSuchFieldException ex) {
@@ -196,8 +325,18 @@ public final class ClassUtil {
         }
     }
 
-    public static Field getDeclaredField(Class clazz, String fieldName) {
-
+    /**
+     * そのクラスに宣言されている {@link Field}を返します。
+     * 
+     * @param clazz
+     * @param fieldName
+     * @return {@link Field}
+     * @throws NoSuchFieldRuntimeException
+     *             {@link NoSuchFieldException}がおきた場合
+     * @see Class#getDeclaredField(String)
+     */
+    public static Field getDeclaredField(Class clazz, String fieldName)
+            throws NoSuchFieldRuntimeException {
         try {
             return clazz.getDeclaredField(fieldName);
         } catch (NoSuchFieldException ex) {
@@ -205,6 +344,12 @@ public final class ClassUtil {
         }
     }
 
+    /**
+     * パッケージ名を返します。
+     * 
+     * @param clazz
+     * @return パッケージ名
+     */
     public static String getPackageName(Class clazz) {
         String fqcn = clazz.getName();
         int pos = fqcn.lastIndexOf('.');
@@ -214,10 +359,23 @@ public final class ClassUtil {
         return null;
     }
 
+    /**
+     * FQCNからパッケージ名を除いた名前を返します。
+     * 
+     * @param clazz
+     * @return FQCNからパッケージ名を除いた名前
+     * @see #getShortClassName(String)
+     */
     public static String getShortClassName(Class clazz) {
         return getShortClassName(clazz.getName());
     }
 
+    /**
+     * FQCNからパッケージ名を除いた名前を返します。
+     * 
+     * @param className
+     * @return FQCNからパッケージ名を除いた名前
+     */
     public static String getShortClassName(String className) {
         int i = className.lastIndexOf('.');
         if (i > 0) {
@@ -226,6 +384,12 @@ public final class ClassUtil {
         return className;
     }
 
+    /**
+     * FQCNをパッケージ名とFQCNからパッケージ名を除いた名前に分けます。
+     * 
+     * @param className
+     * @return パッケージ名とFQCNからパッケージ名を除いた名前
+     */
     public static String[] splitPackageAndShortClassName(String className) {
         String[] ret = new String[2];
         int i = className.lastIndexOf('.');
@@ -238,6 +402,12 @@ public final class ClassUtil {
         return ret;
     }
 
+    /**
+     * 配列の場合は要素のクラス名、それ以外はクラス名そのものを返します。
+     * 
+     * @param clazz
+     * @return クラス名
+     */
     public static String getSimpleClassName(final Class clazz) {
         if (clazz.isArray()) {
             return getSimpleClassName(clazz.getComponentType()) + "[]";
@@ -245,6 +415,34 @@ public final class ClassUtil {
         return clazz.getName();
     }
 
+    /**
+     * クラス名をリソースパスとして表現します。
+     * 
+     * @param clazz
+     * @return リソースパス
+     * @see #getResourcePath(String)
+     */
+    public static String getResourcePath(Class clazz) {
+        return getResourcePath(clazz.getName());
+    }
+
+    /**
+     * クラス名をリソースパスとして表現します。
+     * 
+     * @param className
+     * @return リソースパス
+     */
+    public static String getResourcePath(String className) {
+        return StringUtil.replace(className, ".", "/") + ".class";
+    }
+
+    /**
+     * クラス名の要素を結合します。
+     * 
+     * @param s1
+     * @param s2
+     * @return 結合された名前
+     */
     public static String concatName(String s1, String s2) {
         if (StringUtil.isEmpty(s1) && StringUtil.isEmpty(s2)) {
             return null;
@@ -256,13 +454,5 @@ public final class ClassUtil {
             return s2;
         }
         return s1 + '.' + s2;
-    }
-
-    public static String getResourcePath(String className) {
-        return StringUtil.replace(className, ".", "/") + ".class";
-    }
-
-    public static String getResourcePath(Class clazz) {
-        return getResourcePath(clazz.getName());
     }
 }

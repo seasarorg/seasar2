@@ -27,17 +27,34 @@ import javassist.NotFoundException;
 import org.seasar.framework.exception.NotFoundRuntimeException;
 
 /**
+ * ClassPool用のユーティリティクラスです。
+ * 
  * @author koichik
  */
 public class ClassPoolUtil {
-    // static fields
+
+    /**
+     * ClassPoolのキャッシュです。
+     */
     protected static final Map classPoolMap = Collections
             .synchronizedMap(new WeakHashMap());
 
+    /**
+     * ClassPoolを返します。
+     * 
+     * @param targetClass
+     * @return ClassPool
+     */
     public static ClassPool getClassPool(final Class targetClass) {
         return getClassPool(ClassLoaderUtil.getClassLoader(targetClass));
     }
 
+    /**
+     * ClassPoolを返します。
+     * 
+     * @param classLoader
+     * @return ClassPool
+     */
     public static ClassPool getClassPool(final ClassLoader classLoader) {
         ClassPool classPool = (ClassPool) classPoolMap.get(classLoader);
         if (classPool == null) {
@@ -51,10 +68,24 @@ public class ClassPoolUtil {
         return classPool;
     }
 
+    /**
+     * CtClassに変換します。
+     * 
+     * @param classPool
+     * @param clazz
+     * @return CtClass
+     */
     public static CtClass toCtClass(final ClassPool classPool, final Class clazz) {
         return toCtClass(classPool, ClassUtil.getSimpleClassName(clazz));
     }
 
+    /**
+     * CtClassに変換します。
+     * 
+     * @param classPool
+     * @param className
+     * @return CtClass
+     */
     public static CtClass toCtClass(final ClassPool classPool,
             final String className) {
         try {
@@ -64,6 +95,13 @@ public class ClassPoolUtil {
         }
     }
 
+    /**
+     * CtClassの配列に変換します。
+     * 
+     * @param classPool
+     * @param classNames
+     * @return CtClassの配列
+     */
     public static CtClass[] toCtClassArray(final ClassPool classPool,
             final String[] classNames) {
         if (classNames == null) {
@@ -76,6 +114,13 @@ public class ClassPoolUtil {
         return result;
     }
 
+    /**
+     * CtClassの配列に変換します。
+     * 
+     * @param classPool
+     * @param classes
+     * @return CtClassの配列
+     */
     public static CtClass[] toCtClassArray(final ClassPool classPool,
             final Class[] classes) {
         if (classes == null) {
@@ -88,19 +133,41 @@ public class ClassPoolUtil {
         return result;
     }
 
+    /**
+     * CtClassを作成します。
+     * 
+     * @param classPool
+     * @param name
+     * @return CtClass
+     */
     public static CtClass createCtClass(final ClassPool classPool,
             final String name) {
         return createCtClass(classPool, name, Object.class);
     }
 
+    /**
+     * CtClassを作成します。
+     * 
+     * @param classPool
+     * @param name
+     * @param superClass
+     * @return CtClass
+     */
     public static CtClass createCtClass(final ClassPool classPool,
             final String name, final Class superClass) {
         return createCtClass(classPool, name, toCtClass(classPool, superClass));
     }
 
+    /**
+     * CtClassを作成します。
+     * 
+     * @param classPool
+     * @param name
+     * @param superClass
+     * @return CtClass
+     */
     public static CtClass createCtClass(final ClassPool classPool,
             final String name, final CtClass superClass) {
         return classPool.makeClass(name, superClass);
     }
-
 }

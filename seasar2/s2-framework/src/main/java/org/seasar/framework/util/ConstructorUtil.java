@@ -23,6 +23,8 @@ import org.seasar.framework.exception.InstantiationRuntimeException;
 import org.seasar.framework.exception.InvocationTargetRuntimeException;
 
 /**
+ * {@link Constructor}用のユーティリティクラスです。
+ * 
  * @author higa
  * 
  */
@@ -31,6 +33,19 @@ public final class ConstructorUtil {
     private ConstructorUtil() {
     }
 
+    /**
+     * 新しいインスタンスを作成します。
+     * 
+     * @param constructor
+     * @param args
+     * @return
+     * @throws InstantiationRuntimeException
+     *             {@link InstantiationException}が起こった場合
+     * @throws IllegalAccessRuntimeException
+     *             {@link IllegalAccessException}が起こった場合
+     * @throws InvocationTargetRuntimeException
+     *             {@link InvocationTargetException}が起こった場合
+     */
     public static Object newInstance(Constructor constructor, Object[] args)
             throws InstantiationRuntimeException,
             IllegalAccessRuntimeException, InvocationTargetRuntimeException {

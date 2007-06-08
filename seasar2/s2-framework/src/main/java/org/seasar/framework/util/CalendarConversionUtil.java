@@ -17,15 +17,34 @@ package org.seasar.framework.util;
 
 import java.util.Calendar;
 
+/**
+ * {@link Calendar}用の変換ユーティリティです。
+ * 
+ * @author higa
+ * 
+ */
 public final class CalendarConversionUtil {
 
     private CalendarConversionUtil() {
     }
 
+    /**
+     * {@link Calendar}に変換します。
+     * 
+     * @param o
+     * @return {@link Calendar}
+     */
     public static Calendar toCalendar(Object o) {
         return toCalendar(o, null);
     }
 
+    /**
+     * {@link Calendar}に変換します。
+     * 
+     * @param o
+     * @param pattern
+     * @return {@link Calendar}
+     */
     public static Calendar toCalendar(Object o, String pattern) {
         if (o instanceof Calendar) {
             return (Calendar) o;

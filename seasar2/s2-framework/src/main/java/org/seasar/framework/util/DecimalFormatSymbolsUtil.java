@@ -20,6 +20,8 @@ import java.util.Locale;
 import java.util.Map;
 
 /**
+ * {@link DecimalFormatSymbols}用のユーティリティクラスです。
+ * 
  * @author higa
  * 
  */

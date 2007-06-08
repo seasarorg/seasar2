@@ -21,6 +21,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 /**
+ * クラスを横断して処理するためのハンドラです。
  * 
  * @author koichik
  */
@@ -36,16 +37,35 @@ public final class ClassTraversal {
      * 
      */
     public interface ClassHandler {
+        /**
+         * クラスを処理します。
+         * 
+         * @param packageName
+         * @param shortClassName
+         */
         void processClass(String packageName, String shortClassName);
     }
 
     private ClassTraversal() {
     }
 
+    /**
+     * rootディレクトリ配下を処理します。
+     * 
+     * @param rootDir
+     * @param handler
+     */
     public static void forEach(final File rootDir, final ClassHandler handler) {
         forEach(rootDir, null, handler);
     }
 
+    /**
+     * rootディレクトリ配下でrootパッケージ名配下を処理します。
+     * 
+     * @param rootDir
+     * @param rootPackage
+     * @param handler
+     */
     public static void forEach(final File rootDir, final String rootPackage,
             final ClassHandler handler) {
         final File packageDir = getPackageDir(rootDir, rootPackage);
@@ -54,6 +74,12 @@ public final class ClassTraversal {
         }
     }
 
+    /**
+     * 指定されたjarファイルを処理します。
+     * 
+     * @param jarFile
+     * @param handler
+     */
     public static void forEach(final JarFile jarFile, final ClassHandler handler) {
         final boolean hasWarExtension = jarFile.getName().endsWith(
                 WAR_FILE_EXTENSION);

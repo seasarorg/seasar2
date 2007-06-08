@@ -22,6 +22,12 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * 大文字小文字を気にしない {@link Set}です。
+ * 
+ * @author higa
+ * 
+ */
 public class CaseInsensitiveSet extends AbstractSet implements Set,
         Serializable {
 
@@ -31,15 +37,28 @@ public class CaseInsensitiveSet extends AbstractSet implements Set,
 
     private static final Object PRESENT = new Object();
 
+    /**
+     * {@link CaseInsensitiveSet}を作成します。
+     */
     public CaseInsensitiveSet() {
         map = new CaseInsensitiveMap();
     }
 
+    /**
+     * {@link CaseInsensitiveSet}を作成します。
+     * 
+     * @param c
+     */
     public CaseInsensitiveSet(Collection c) {
         map = new CaseInsensitiveMap(Math.max((int) (c.size() / .75f) + 1, 16));
         addAll(c);
     }
 
+    /**
+     * {@link CaseInsensitiveSet}を作成します。
+     * 
+     * @param initialCapacity
+     */
     public CaseInsensitiveSet(int initialCapacity) {
         map = new CaseInsensitiveMap(initialCapacity);
     }

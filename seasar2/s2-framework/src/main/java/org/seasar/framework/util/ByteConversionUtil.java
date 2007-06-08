@@ -17,15 +17,34 @@ package org.seasar.framework.util;
 
 import java.text.SimpleDateFormat;
 
+/**
+ * {@link Byte}用の変換ユーティリティです。
+ * 
+ * @author higa
+ * 
+ */
 public final class ByteConversionUtil {
 
     private ByteConversionUtil() {
     }
 
+    /**
+     * {@link Byte}に変換します。
+     * 
+     * @param o
+     * @return {@link Byte}
+     */
     public static Byte toByte(Object o) {
         return toByte(o, null);
     }
 
+    /**
+     * {@link Byte}に変換します。
+     * 
+     * @param o
+     * @param pattern
+     * @return {@link Byte}
+     */
     public static Byte toByte(Object o, String pattern) {
         if (o == null) {
             return null;
@@ -52,10 +71,23 @@ public final class ByteConversionUtil {
         return new Byte(DecimalFormatUtil.normalize(s));
     }
 
+    /**
+     * byteに変換します。
+     * 
+     * @param o
+     * @return byte
+     */
     public static byte toPrimitiveByte(Object o) {
         return toPrimitiveByte(o, null);
     }
 
+    /**
+     * byteに変換します。
+     * 
+     * @param o
+     * @param pattern
+     * @return byte
+     */
     public static byte toPrimitiveByte(Object o, String pattern) {
         if (o == null) {
             return 0;

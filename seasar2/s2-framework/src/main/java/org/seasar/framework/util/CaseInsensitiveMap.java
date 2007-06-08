@@ -18,18 +18,38 @@ package org.seasar.framework.util;
 import java.util.Iterator;
 import java.util.Map;
 
+/**
+ * キーで大文字小文字を気にしない {@link ArrayMap}です。
+ * 
+ * @author higa
+ * 
+ */
 public final class CaseInsensitiveMap extends ArrayMap {
 
-    private static final long serialVersionUID = -8729643434998175410L;
+    private static final long serialVersionUID = 1L;
 
+    /**
+     * {@link CaseInsensitiveMap}を作成します。
+     */
     public CaseInsensitiveMap() {
         super();
     }
 
+    /**
+     * {@link CaseInsensitiveMap}を作成します。
+     * 
+     * @param capacity
+     */
     public CaseInsensitiveMap(int capacity) {
         super(capacity);
     }
 
+    /**
+     * キーが含まれているかどうかを返します。
+     * 
+     * @param key
+     * @return キーが含まれているかどうか
+     */
     public final boolean containsKey(String key) {
         return super.containsKey(convertKey(key));
     }

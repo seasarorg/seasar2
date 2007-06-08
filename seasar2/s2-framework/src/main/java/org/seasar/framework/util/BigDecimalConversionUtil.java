@@ -26,8 +26,14 @@ import java.text.SimpleDateFormat;
  */
 public final class BigDecimalConversionUtil {
 
+    /**
+     * Tiger用のNormalizerのクラス名です。
+     */
     protected static final String TIGER_NORMALIZER_CLASS_NAME = "org.seasar.framework.util.TigerBigDecimalConversion";
 
+    /**
+     * デフォルトのNormalizerです。
+     */
     protected static BigDecimalNormalizer normalizer = new DefaultNormalizer();
     static {
         try {

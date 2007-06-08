@@ -17,15 +17,34 @@ package org.seasar.framework.util;
 
 import java.math.BigInteger;
 
+/**
+ * {@link BigInteger}用の変換ユーティリティです。
+ * 
+ * @author higa
+ * 
+ */
 public final class BigIntegerConversionUtil {
 
     private BigIntegerConversionUtil() {
     }
 
+    /**
+     * {@link BigInteger}に変換します。
+     * 
+     * @param o
+     * @return {@link BigInteger}
+     */
     public static BigInteger toBigInteger(Object o) {
         return toBigInteger(o, null);
     }
 
+    /**
+     * {@link BigInteger}に変換します。
+     * 
+     * @param o
+     * @param pattern
+     * @return {@link BigInteger}
+     */
     public static BigInteger toBigInteger(Object o, String pattern) {
         if (o == null) {
             return null;

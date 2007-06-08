@@ -24,6 +24,12 @@ import java.util.Locale;
 
 import org.seasar.framework.exception.ParseRuntimeException;
 
+/**
+ * {@link Date}用の変換ユーティリティです。
+ * 
+ * @author higa
+ * 
+ */
 public final class DateConversionUtil {
 
     private DateConversionUtil() {
