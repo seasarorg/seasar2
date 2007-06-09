@@ -19,7 +19,7 @@ import junit.framework.TestCase;
 
 /**
  * @author higa
- *
+ * 
  */
 public class StringUtilTest extends TestCase {
 
@@ -187,6 +187,18 @@ public class StringUtilTest extends TestCase {
         assertEquals("abc", StringUtil.substringFromLast("abc", ""));
         assertEquals("abc", StringUtil.substringFromLast("abc", null));
         assertEquals("abc", StringUtil.substringFromLast("abc", "dddd"));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testSubstringToLast() throws Exception {
+        assertEquals("", StringUtil.substringToLast("abc", "c"));
+        assertEquals("c", StringUtil.substringToLast("abc", "b"));
+        assertEquals("c", StringUtil.substringToLast("abcbc", "b"));
+        assertEquals("abc", StringUtil.substringToLast("abc", ""));
+        assertEquals("abc", StringUtil.substringToLast("abc", null));
+        assertEquals("abc", StringUtil.substringToLast("abc", "dddd"));
     }
 
     /**

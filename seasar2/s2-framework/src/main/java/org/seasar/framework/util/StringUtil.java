@@ -248,6 +248,17 @@ public final class StringUtil {
         return str.substring(0, pos);
     }
 
+    public static String substringToLast(String str, String separator) {
+        if (isEmpty(str) || isEmpty(separator)) {
+            return str;
+        }
+        int pos = str.lastIndexOf(separator);
+        if (pos == -1) {
+            return str;
+        }
+        return str.substring(pos + 1, str.length());
+    }
+
     public static String toHex(byte[] bytes) {
         if (bytes == null) {
             return "";
