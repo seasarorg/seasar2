@@ -22,6 +22,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.seasar.framework.exception.ParserConfigurationRuntimeException;
 
 /**
+ * {@link DocumentBuilderFactory}の用のユーティリティクラスです。
+ * 
  * @author higa
  * 
  */
@@ -30,10 +32,20 @@ public final class DocumentBuilderFactoryUtil {
     private DocumentBuilderFactoryUtil() {
     }
 
+    /**
+     * 新しい {@link DocumentBuilderFactory}のインスタンスを返します。
+     * 
+     * @return 新しい {@link DocumentBuilderFactory}のインスタンス
+     */
     public static DocumentBuilderFactory newInstance() {
         return DocumentBuilderFactory.newInstance();
     }
 
+    /**
+     * 新しい {@link DocumentBuilder}を作成します。
+     * 
+     * @return 新しい {@link DocumentBuilder}
+     */
     public static DocumentBuilder newDocumentBuilder() {
         try {
             return newInstance().newDocumentBuilder();

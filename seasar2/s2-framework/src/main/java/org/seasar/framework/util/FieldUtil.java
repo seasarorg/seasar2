@@ -21,6 +21,8 @@ import java.lang.reflect.Modifier;
 import org.seasar.framework.exception.IllegalAccessRuntimeException;
 
 /**
+ * {@link Field}用のユーティリティクラスです。
+ * 
  * @author higa
  * 
  */
@@ -29,6 +31,16 @@ public final class FieldUtil {
     private FieldUtil() {
     }
 
+    /**
+     * {@link Field}の値をオブジェクトとして取得します。
+     * 
+     * @param field
+     * @param target
+     * @return {@link Object}
+     * @throws IllegalAccessRuntimeException
+     *             {@link IllegalAccessException}がおきた場合
+     * @see Field#get(Object)
+     */
     public static Object get(Field field, Object target)
             throws IllegalAccessRuntimeException {
 

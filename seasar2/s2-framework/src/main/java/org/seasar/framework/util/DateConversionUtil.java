@@ -35,10 +35,23 @@ public final class DateConversionUtil {
     private DateConversionUtil() {
     }
 
+    /**
+     * {@link Date}に変換します。
+     * 
+     * @param o
+     * @return {@link Date}
+     */
     public static Date toDate(Object o) {
         return toDate(o, null);
     }
 
+    /**
+     * {@link Date}に変換します。
+     * 
+     * @param o
+     * @param pattern
+     * @return {@link Date}
+     */
     public static Date toDate(Object o, String pattern) {
         if (o == null) {
             return null;
@@ -53,10 +66,23 @@ public final class DateConversionUtil {
         }
     }
 
+    /**
+     * {@link Date}に変換します。
+     * 
+     * @param s
+     * @param pattern
+     * @return {@link Date}
+     */
     public static Date toDate(String s, String pattern) {
         return toDate(s, pattern, Locale.getDefault());
     }
 
+    /**
+     * @param s
+     * @param pattern
+     * @param locale
+     * @return
+     */
     public static Date toDate(String s, String pattern, Locale locale) {
         SimpleDateFormat sdf = getDateFormat(s, pattern, locale);
         try {
@@ -66,6 +92,14 @@ public final class DateConversionUtil {
         }
     }
 
+    /**
+     * {@link SimpleDateFormat}を返します。
+     * 
+     * @param s
+     * @param pattern
+     * @param locale
+     * @return {@link SimpleDateFormat}
+     */
     public static SimpleDateFormat getDateFormat(String s, String pattern,
             Locale locale) {
         if (pattern != null) {
@@ -74,6 +108,13 @@ public final class DateConversionUtil {
         return getDateFormat(s, locale);
     }
 
+    /**
+     * {@link SimpleDateFormat}を返します。
+     * 
+     * @param s
+     * @param locale
+     * @return {@link SimpleDateFormat}
+     */
     public static SimpleDateFormat getDateFormat(String s, Locale locale) {
         String pattern = getPattern(locale);
         String shortPattern = removeDelimiter(pattern);
@@ -99,14 +140,32 @@ public final class DateConversionUtil {
         return new SimpleDateFormat();
     }
 
+    /**
+     * {@link SimpleDateFormat}を返します。
+     * 
+     * @param locale
+     * @return {@link SimpleDateFormat}
+     */
     public static SimpleDateFormat getDateFormat(Locale locale) {
         return new SimpleDateFormat(getPattern(locale));
     }
 
+    /**
+     * 年4桁用の{@link SimpleDateFormat}を返します。
+     * 
+     * @param locale
+     * @return 年4桁用の{@link SimpleDateFormat}
+     */
     public static SimpleDateFormat getY4DateFormat(Locale locale) {
         return new SimpleDateFormat(getY4Pattern(locale));
     }
 
+    /**
+     * 年4桁用の日付パターンを返します。
+     * 
+     * @param locale
+     * @return 年4桁用の日付パターン
+     */
     public static String getY4Pattern(Locale locale) {
         String pattern = getPattern(locale);
         if (pattern.indexOf("yyyy") < 0) {
@@ -115,6 +174,12 @@ public final class DateConversionUtil {
         return pattern;
     }
 
+    /**
+     * 日付パターンを返します。
+     * 
+     * @param locale
+     * @return 日付パターン
+     */
     public static String getPattern(Locale locale) {
         SimpleDateFormat df = (SimpleDateFormat) DateFormat.getDateInstance(
                 DateFormat.SHORT, locale);
@@ -132,6 +197,12 @@ public final class DateConversionUtil {
         return pattern;
     }
 
+    /**
+     * 日付のデリミタを探します。
+     * 
+     * @param value
+     * @return 日付のデリミタ
+     */
     public static String findDelimiter(String value) {
         for (int i = 0; i < value.length(); ++i) {
             char c = value.charAt(i);
@@ -143,6 +214,12 @@ public final class DateConversionUtil {
         return null;
     }
 
+    /**
+     * 日付パターンから日付のデリミタを探します。
+     * 
+     * @param pattern
+     * @return 日付のデリミタ
+     */
     public static String findDelimiterFromPattern(String pattern) {
         String ret = null;
         for (int i = 0; i < pattern.length(); ++i) {
@@ -155,6 +232,12 @@ public final class DateConversionUtil {
         return ret;
     }
 
+    /**
+     * 日付パターンから日付のデリミタを取り除きます。
+     * 
+     * @param pattern
+     * @return 日付のデリミタを取り除いた後のパターン
+     */
     public static String removeDelimiter(String pattern) {
         StringBuffer buf = new StringBuffer();
         for (int i = 0; i < pattern.length(); ++i) {

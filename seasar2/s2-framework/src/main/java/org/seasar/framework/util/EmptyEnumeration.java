@@ -15,12 +15,19 @@
  */
 package org.seasar.framework.util;
 
+import java.util.Enumeration;
+
 /**
+ * 空の {@link Enumeration}です。
+ * 
  * @author higa
  * 
  */
 public class EmptyEnumeration extends EnumerationAdapter {
 
+    /**
+     * {@link EmptyEnumeration}を作成します。
+     */
     public EmptyEnumeration() {
         super(new EmptyIterator());
     }

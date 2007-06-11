@@ -19,12 +19,19 @@ import java.util.Enumeration;
 import java.util.Iterator;
 
 /**
+ * {@link Enumeration}を {@link Iterator}にするためのアダブタです。
+ * 
  * @author shot
  */
 public class EnumerationIterator implements Iterator {
 
     private Enumeration enumeration = null;
 
+    /**
+     * {@link EnumerationIterator}を作成します。
+     * 
+     * @param e
+     */
     public EnumerationIterator(final Enumeration e) {
         if (e == null) {
             throw new NullPointerException("Enumeration");

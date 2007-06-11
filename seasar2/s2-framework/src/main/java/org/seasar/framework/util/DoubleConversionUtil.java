@@ -17,15 +17,34 @@ package org.seasar.framework.util;
 
 import java.text.SimpleDateFormat;
 
+/**
+ * {@link Double}用の変換ユーティリティです。
+ * 
+ * @author higa
+ * 
+ */
 public final class DoubleConversionUtil {
 
     private DoubleConversionUtil() {
     }
 
+    /**
+     * {@link Double}に変換します。
+     * 
+     * @param o
+     * @return {@link Double}
+     */
     public static Double toDouble(Object o) {
         return toDouble(o, null);
     }
 
+    /**
+     * {@link Double}に変換します。
+     * 
+     * @param o
+     * @param pattern
+     * @return {@link Double}
+     */
     public static Double toDouble(Object o, String pattern) {
         if (o == null) {
             return null;
@@ -49,10 +68,23 @@ public final class DoubleConversionUtil {
         return new Double(DecimalFormatUtil.normalize(s));
     }
 
+    /**
+     * doubleに変換します。
+     * 
+     * @param o
+     * @return double
+     */
     public static double toPrimitiveDouble(Object o) {
         return toPrimitiveDouble(o, null);
     }
 
+    /**
+     * doubleに変換します。
+     * 
+     * @param o
+     * @param pattern
+     * @return double
+     */
     public static double toPrimitiveDouble(Object o, String pattern) {
         if (o == null) {
             return 0;

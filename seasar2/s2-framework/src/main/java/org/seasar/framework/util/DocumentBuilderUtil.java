@@ -26,6 +26,8 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 /**
+ * {@link DocumentBuilder}用のユーティリティクラスです。
+ * 
  * @author higa
  * 
  */
@@ -34,6 +36,13 @@ public final class DocumentBuilderUtil {
     private DocumentBuilderUtil() {
     }
 
+    /**
+     * XMLを解析します。
+     * 
+     * @param builder
+     * @param is
+     * @return {@link Document}
+     */
     public static Document parse(DocumentBuilder builder, InputStream is) {
         try {
             return builder.parse(is);

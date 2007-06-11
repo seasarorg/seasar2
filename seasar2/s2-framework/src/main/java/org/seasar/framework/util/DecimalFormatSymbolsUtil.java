@@ -32,10 +32,21 @@ public final class DecimalFormatSymbolsUtil {
     private DecimalFormatSymbolsUtil() {
     }
 
+    /**
+     * {@link DecimalFormatSymbols}を返します。
+     * 
+     * @return {@link DecimalFormatSymbols}
+     */
     public static DecimalFormatSymbols getDecimalFormatSymbols() {
         return getDecimalFormatSymbols(Locale.getDefault());
     }
 
+    /**
+     * {@link DecimalFormatSymbols}を返します。
+     * 
+     * @param locale
+     * @return {@link DecimalFormatSymbols}
+     */
     public static DecimalFormatSymbols getDecimalFormatSymbols(Locale locale) {
         DecimalFormatSymbols symbols = (DecimalFormatSymbols) cache.get(locale);
         if (symbols == null) {

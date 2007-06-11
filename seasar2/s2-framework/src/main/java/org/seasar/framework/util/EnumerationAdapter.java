@@ -18,10 +18,21 @@ package org.seasar.framework.util;
 import java.util.Enumeration;
 import java.util.Iterator;
 
+/**
+ * {@link Iterator}を {@link Enumeration}にするためのアダブタです。
+ * 
+ * @author higa
+ * 
+ */
 public class EnumerationAdapter implements Enumeration {
 
     private Iterator iterator;
 
+    /**
+     * {@link EnumerationAdapter}を作成します。
+     * 
+     * @param iterator
+     */
     public EnumerationAdapter(Iterator iterator) {
         this.iterator = iterator;
     }

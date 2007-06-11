@@ -30,15 +30,34 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 
+/**
+ * DOM用のユーティリティクラスです。
+ * 
+ * @author higa
+ * 
+ */
 public final class DomUtil {
 
     private DomUtil() {
     }
 
+    /**
+     * XMLの内容を {@link InputStream}として取得します。
+     * 
+     * @param contents
+     * @return {@link InputStream}
+     */
     public static InputStream getContentsAsStream(String contents) {
         return getContentsAsStream(contents, null);
     }
 
+    /**
+     * XMLの内容を {@link InputStream}として取得します。
+     * 
+     * @param contents
+     * @param encoding
+     * @return {@link InputStream}
+     */
     public static InputStream getContentsAsStream(String contents,
             String encoding) {
 
@@ -52,6 +71,12 @@ public final class DomUtil {
         }
     }
 
+    /**
+     * 属性の値をエンコードします。
+     * 
+     * @param s
+     * @return エンコードされた値
+     */
     public static String encodeAttrQuot(final String s) {
         if (s == null) {
             return null;
@@ -79,6 +104,12 @@ public final class DomUtil {
         return buf.toString();
     }
 
+    /**
+     * テキストをエンコードします。
+     * 
+     * @param s
+     * @return エンコードされた値
+     */
     public static String encodeText(final String s) {
         if (s == null) {
             return null;
@@ -103,18 +134,36 @@ public final class DomUtil {
         return buf.toString();
     }
 
+    /**
+     * {@link Document}を文字列に変換します。
+     * 
+     * @param document
+     * @return 変換された文字列
+     */
     public static String toString(Document document) {
         StringBuffer buf = new StringBuffer();
         appendElement(document.getDocumentElement(), buf);
         return buf.toString();
     }
 
+    /**
+     * {@link Element}を文字列に変換します。
+     * 
+     * @param element
+     * @return 変換された文字列
+     */
     public static String toString(Element element) {
         StringBuffer buf = new StringBuffer();
         appendElement(element, buf);
         return buf.toString();
     }
 
+    /**
+     * {@link Element}の文字列表現を追加します。
+     * 
+     * @param element
+     * @param buf
+     */
     public static void appendElement(Element element, StringBuffer buf) {
         String tag = element.getTagName();
         buf.append('<');
@@ -127,6 +176,12 @@ public final class DomUtil {
         buf.append('>');
     }
 
+    /**
+     * {@link NodeList}の文字列表現を追加します。
+     * 
+     * @param children
+     * @param buf
+     */
     public static void appendChildren(NodeList children, StringBuffer buf) {
         int length = children.getLength();
         for (int i = 0; i < length; ++i) {
@@ -134,6 +189,12 @@ public final class DomUtil {
         }
     }
 
+    /**
+     * {@link NamedNodeMap}の文字列表現を追加します。
+     * 
+     * @param attrs
+     * @param buf
+     */
     public static void appendAttrs(NamedNodeMap attrs, StringBuffer buf) {
         int length = attrs.getLength();
         for (int i = 0; i < length; ++i) {
@@ -143,6 +204,12 @@ public final class DomUtil {
         }
     }
 
+    /**
+     * {@link Attr}の文字列表現を追加します。
+     * 
+     * @param attr
+     * @param buf
+     */
     public static void appendAttr(Attr attr, StringBuffer buf) {
         buf.append(attr.getName());
         buf.append("=\"");
@@ -150,10 +217,22 @@ public final class DomUtil {
         buf.append('\"');
     }
 
+    /**
+     * {@link Text}の文字列表現を追加します。
+     * 
+     * @param text
+     * @param buf
+     */
     public static void appendText(Text text, StringBuffer buf) {
         buf.append(encodeText(text.getData()));
     }
 
+    /**
+     * {@link CDATASection}の文字列表現を追加します。
+     * 
+     * @param cdataSection
+     * @param buf
+     */
     public static void appendCDATASection(CDATASection cdataSection,
             StringBuffer buf) {
         buf.append("<![CDATA[");
@@ -161,6 +240,12 @@ public final class DomUtil {
         buf.append("]]>");
     }
 
+    /**
+     * {@link EntityReference}を追加します。
+     * 
+     * @param entityReference
+     * @param buf
+     */
     public static void appendEntityReference(EntityReference entityReference,
             StringBuffer buf) {
         buf.append('&');
@@ -168,6 +253,12 @@ public final class DomUtil {
         buf.append(';');
     }
 
+    /**
+     * {@link Node}の文字列表現を追加します。
+     * 
+     * @param node
+     * @param buf
+     */
     public static void appendNode(Node node, StringBuffer buf) {
         switch (node.getNodeType()) {
         case Node.ELEMENT_NODE:
