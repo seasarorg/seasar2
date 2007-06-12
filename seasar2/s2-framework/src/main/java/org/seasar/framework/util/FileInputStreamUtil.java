@@ -22,6 +22,8 @@ import java.io.IOException;
 import org.seasar.framework.exception.IORuntimeException;
 
 /**
+ * {@link FileInputStream}用のユーティリティクラスです。
+ * 
  * @author higa
  * 
  */
@@ -30,7 +32,16 @@ public final class FileInputStreamUtil {
     private FileInputStreamUtil() {
     }
 
-    public static FileInputStream create(File file) {
+    /**
+     * {@link FileInputStream}を作成します。
+     * 
+     * @param file
+     * @return {@link FileInputStream}
+     * @throws IORuntimeException
+     *             {@link IOException}が発生した場合
+     * @see FileInputStream#FileInputStream(File)
+     */
+    public static FileInputStream create(File file) throws IORuntimeException {
         try {
             return new FileInputStream(file);
         } catch (IOException e) {

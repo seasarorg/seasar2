@@ -17,15 +17,34 @@ package org.seasar.framework.util;
 
 import java.text.SimpleDateFormat;
 
+/**
+ * {@link Float}用の変換ユーティリティです。
+ * 
+ * @author higa
+ * 
+ */
 public final class FloatConversionUtil {
 
     private FloatConversionUtil() {
     }
 
+    /**
+     * {@link Float}に変換します。
+     * 
+     * @param o
+     * @return {@link Float}
+     */
     public static Float toFloat(Object o) {
         return toFloat(o, null);
     }
 
+    /**
+     * {@link Float}に変換します。
+     * 
+     * @param o
+     * @param pattern
+     * @return {@link Float}
+     */
     public static Float toFloat(Object o, String pattern) {
         if (o == null) {
             return null;
@@ -49,10 +68,23 @@ public final class FloatConversionUtil {
         return new Float(DecimalFormatUtil.normalize(s));
     }
 
+    /**
+     * floatに変換します。
+     * 
+     * @param o
+     * @return float
+     */
     public static float toPrimitiveFloat(Object o) {
         return toPrimitiveFloat(o, null);
     }
 
+    /**
+     * floatに変換します。
+     * 
+     * @param o
+     * @param pattern
+     * @return float
+     */
     public static float toPrimitiveFloat(Object o, String pattern) {
         if (o == null) {
             return 0;

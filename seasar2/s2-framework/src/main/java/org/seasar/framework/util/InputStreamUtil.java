@@ -23,6 +23,8 @@ import java.io.OutputStream;
 import org.seasar.framework.exception.IORuntimeException;
 
 /**
+ * {@link InputStream}用のユーティリティクラスです。
+ * 
  * @author higa
  * 
  */
@@ -31,7 +33,15 @@ public final class InputStreamUtil {
     private InputStreamUtil() {
     }
 
-    public static void close(InputStream is) {
+    /**
+     * {@link InputStream}を閉じます。
+     * 
+     * @param is
+     * @throws IORuntimeException
+     *             {@link IOException}が発生した場合
+     * @see InputStream#close()
+     */
+    public static void close(InputStream is) throws IORuntimeException {
         if (is == null) {
             return;
         }
@@ -42,7 +52,16 @@ public final class InputStreamUtil {
         }
     }
 
-    public static final byte[] getBytes(InputStream is) {
+    /**
+     * {@link InputStream}からbyteの配列を取得します。
+     * 
+     * @param is
+     * @return byteの配列
+     * @throws IORuntimeException
+     *             {@link IOException}が発生した場合
+     */
+    public static final byte[] getBytes(InputStream is)
+            throws IORuntimeException {
         byte[] bytes = null;
         byte[] buf = new byte[8192];
         try {
@@ -62,7 +81,16 @@ public final class InputStreamUtil {
         return bytes;
     }
 
-    public static final void copy(InputStream is, OutputStream os) {
+    /**
+     * {@link InputStream}の内容を {@link OutputStream}にコピーします。
+     * 
+     * @param is
+     * @param os
+     * @throws IORuntimeException
+     *             {@link IOException}が発生した場合
+     */
+    public static final void copy(InputStream is, OutputStream os)
+            throws IORuntimeException {
         byte[] buf = new byte[8192];
         try {
             int n = 0;
@@ -74,7 +102,15 @@ public final class InputStreamUtil {
         }
     }
 
-    public static int available(InputStream is) {
+    /**
+     * {@link InputStream#available()}の例外処理をラップしたメソッドです。
+     * 
+     * @param is
+     * @return 可能なサイズ
+     * @throws IORuntimeException
+     *             {@link IOException}が発生した場合
+     */
+    public static int available(InputStream is) throws IORuntimeException {
         try {
             return is.available();
         } catch (IOException e) {

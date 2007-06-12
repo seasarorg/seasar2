@@ -22,6 +22,8 @@ import java.io.InputStreamReader;
 import org.seasar.framework.exception.IORuntimeException;
 
 /**
+ * {@link InputStreamReader}用のユーティリティクラスです。
+ * 
  * @author higa
  * 
  */
@@ -30,11 +32,29 @@ public final class InputStreamReaderUtil {
     private InputStreamReaderUtil() {
     }
 
+    /**
+     * {@link InputStreamReader}を作成します。
+     * 
+     * @param is
+     * @return {@link InputStreamReader}
+     * @see #create(InputStream, String)
+     */
     public static InputStreamReader create(InputStream is) {
         return create(is, "JISAutoDetect");
     }
 
-    public static InputStreamReader create(InputStream is, String encoding) {
+    /**
+     * {@link InputStreamReader}を作成します。
+     * 
+     * @param is
+     * @param encoding
+     * @return {@link InputStreamReader}
+     * @throws IORuntimeException
+     *             {@link IOException}が発生した場合
+     * @see InputStreamReader#InputStreamReader(InputStream, String)
+     */
+    public static InputStreamReader create(InputStream is, String encoding)
+            throws IORuntimeException {
         try {
             return new InputStreamReader(is, encoding);
         } catch (IOException e) {

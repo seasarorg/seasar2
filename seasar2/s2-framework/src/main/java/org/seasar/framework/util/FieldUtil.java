@@ -52,10 +52,29 @@ public final class FieldUtil {
         }
     }
 
+    /**
+     * staticな {@link Field}の値をintとして取得します。
+     * 
+     * @param field
+     * @return intの値
+     * @throws IllegalAccessRuntimeException
+     *             {@link IllegalAccessException}が発生した場合
+     * @see #getInt(Field, Object)
+     */
     public static int getInt(Field field) throws IllegalAccessRuntimeException {
         return getInt(field, null);
     }
 
+    /**
+     * {@link Field}の値をintとして取得します。
+     * 
+     * @param field
+     * @param target
+     * @return intの値
+     * @throws IllegalAccessRuntimeException
+     *             {@link IllegalAccessException}が発生した場合
+     * @see Field#getInt(Object)
+     */
     public static int getInt(Field field, Object target)
             throws IllegalAccessRuntimeException {
         try {
@@ -66,11 +85,30 @@ public final class FieldUtil {
         }
     }
 
+    /**
+     * staticな {@link Field}の値を {@link String}として取得します。
+     * 
+     * @param field
+     * @return {@link String}の値
+     * @throws IllegalAccessRuntimeException
+     *             {@link IllegalAccessException}が発生した場合
+     * @see {@link #getString(Field, Object)}
+     */
     public static String getString(Field field)
             throws IllegalAccessRuntimeException {
         return getString(field, null);
     }
 
+    /**
+     * {@link Field}の値を {@link String}として取得します。
+     * 
+     * @param field
+     * @param target
+     * @return {@link String}の値
+     * @throws IllegalAccessRuntimeException
+     *             {@link IllegalAccessException}が発生した場合
+     * @see Field#get(Object)
+     */
     public static String getString(Field field, Object target)
             throws IllegalAccessRuntimeException {
 
@@ -82,6 +120,16 @@ public final class FieldUtil {
         }
     }
 
+    /**
+     * {@link Field}に値を設定します。
+     * 
+     * @param field
+     * @param target
+     * @param value
+     * @throws IllegalAccessRuntimeException
+     *             {@link IllegalAccessException}が発生した場合
+     * @see Field#set(Object, Object)
+     */
     public static void set(Field field, Object target, Object value)
             throws IllegalAccessRuntimeException {
 
@@ -94,11 +142,23 @@ public final class FieldUtil {
 
     }
 
+    /**
+     * インスタンスフィールドかどうか返します。
+     * 
+     * @param field
+     * @return インスタンスフィールドかどうか
+     */
     public static boolean isInstanceField(Field field) {
         int mod = field.getModifiers();
         return !Modifier.isStatic(mod) && !Modifier.isFinal(mod);
     }
 
+    /**
+     * パブリックフィールドかどうか返します。
+     * 
+     * @param field
+     * @return パブリックフィールドかどうか
+     */
     public static boolean isPublicField(Field field) {
         int mod = field.getModifiers();
         return Modifier.isPublic(mod);
