@@ -83,7 +83,8 @@ font-size : 10pt;
 <ul>
 <li><a href="#propertyName">変換元プロパティ名の指定</a></li>
 <li><a href="#ognl">OGNL式の利用</a></li>
-<li><a href="#formatDate">日付・時刻のフォーマット</a></li>
+                <li><a href="#prefixProperty">プレフィックス付きのプロパティ</a></li>
+                <li><a href="#formatDate">日付・時刻のフォーマット</a></li>
 <li><a href="#customConverter">独自のコンバータ</a></li>
 </ul>
 </li>
@@ -724,7 +725,7 @@ pubic interface BazDxo {
     EmployeePage convert(Employee employee);
 }
 </pre>
-<h3><a name="ognl" id="ognl">OGNL式の利用</a></h3>
+            <h3><a name="ognl" id="ognl">OGNL式の利用</a></h3>
 <p>前述の変換ルールでは，OGNL式の評価結果を変換先JavaBeansのプロパティに設定することもできます．</p>
 <p>この場合の変換ルールも文字列で，その内容は</p>
 <pre>
@@ -759,7 +760,41 @@ public interface FooDxo {
     EmployeePage convert(Employee employee);
 }
 </pre>
-<h3><a name="formatDate" id="formatDate">日付・時刻のフォーマット</a></h3>
+            <h3><a name="prefixProperty">プレフィックス付きのプロパティ</a></h3>
+            <p>変換元のJavaBeansまたは<code>Map</code>からプレフィックスの付いたプロパティまたはキーのみを変換変換対象とすることができます．プレフィックスはDXOのメソッドに定数アノテーションまたはTigerアノテーションで指定します．</p>
+            <p>プレフィックスが指定されると，変換元JavaBeansのプロパティまたはMapのキーの中で，プレフィックスで始まる物だけが変換の対象となります．変換先のJavaBeansまたはMapへはプレフィックスを取り除いたプロパティまたはキーで設定されます．</p>
+            <p>変換元として次のようなクラスがあるとします．</p>
+            <pre>public class SearchPage {
+    private String search_name_GE;
+    private String search_name_LE;
+    private String search_name_STARTS;
+    private String search_name_ENDS;
+    ...
+}</pre>
+            <p>変換先は次のようなクラスです．</p>
+            <pre>public clsss EmpDto {
+    private String name_GE;
+    private String name_LE;
+    private String name_STARTS;
+    private String name_ENDS;
+    ...
+}</pre>
+            <p>このような場合に，'<code>search_</code>'で始まるプロパティだけを対象として，変換先の'<code>search_</code>'を取り除いた名前のプロパティに設定することができます．</p>
+            <h4>定数アノテーション</h4>
+            <p>定数アノテーションでは，DXOインタフェースの文字列定数として次のように指定します．定数名はメソッド名の後ろに<code>&quot;_SOURCE_PREFIX&quot;</code>をつけたものになります．</p>
+<pre>public interface SearchDxo {
+    String convert_SOURCE_PREFIX = &quot;search_&quot;;
+    EmpDto convert(SearchPage page);
+}</pre>
+            <p>DXOインタフェースがメソッドをオーバーロードしている場合は，引数型の非修飾名をアンダースコア区切りで並べて指定することもできます．引数型が配列型の場合は配列要素の型名の後ろに'$'を付加します．'$'は配列の次元と同じ数だけ並べます．</p>
+<h4>Tigerアノテーション</h4>
+<p>Tigerアノテーションでは，DXOメソッドのアノテーションとして次のように指定します．</p>
+<pre>import org.seasar.extension.dxo.annotation.SourcePrefix;
+public interface FooDxo {
+    @SourcePrefix(&quot;search_&quot;)
+    EmpDto convert(SearchPage page);
+}</pre>
+            <h3><a name="formatDate" id="formatDate">日付・時刻のフォーマット</a></h3>
 <p><code>java.util.Date</code>や<code>java.util.Calendar</code>などと<code>String</code>との相互変換を行う場合には，フォーマットパターンを指定することができます．フォーマットパターンは<code>java.text.SimpleDateFormat</code>が解釈することができるパターン文字列で，DXOインタフェースまたはそのメソッドにアノテーションで指定することができます．アノテーションが指定されたメソッドで行われる変換の際に，JavaBeansのプロパティに<code>java.util.Date</code>や<code>java.util.Calendar</code>などと<code>String</code>との変換が必要になると，指定されたフォーマットパターンが使われます．フォーマットパターンが指定されなかった場合は，デフォルトロケールのデフォルトパターンが使われます．</p>
 <h4>定数アノテーション</h4>
 <p>定数アノテーションでは，DXOインタフェースの文字列定数としてフォーマットパターンを指定します．定数名は次のいずれかで，最初に見つかったものが適用されます．</p>
