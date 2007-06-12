@@ -167,29 +167,31 @@ public class BeanConverter extends AbstractConverter {
      *            変換元のBean記述子
      * @param source
      *            変換元のオブジェクト
-     * @param propertyName
+     * @param destPropertyName
      *            変換対象のプロパティ名
      * @param context
      *            変換コンテキスト
      * @return 変換元オブジェクトのプロパティの値
      */
     protected Object getSourceValue(final BeanDesc sourceBeanDesc,
-            final Object source, final String propertyName,
+            final Object source, final String destPropertyName,
             final ConversionContext context) {
-        if (context.hasEvalueatedValue(propertyName)) {
-            return context.getEvaluatedValue(propertyName);
+        final String sourcePropertyName = context
+                .getSourcePropertyName(destPropertyName);
+        if (context.hasEvalueatedValue(sourcePropertyName)) {
+            return context.getEvaluatedValue(sourcePropertyName);
         }
 
-        if (sourceBeanDesc.hasPropertyDesc(propertyName)) {
+        if (sourceBeanDesc.hasPropertyDesc(sourcePropertyName)) {
             final PropertyDesc sourcePropertyDesc = sourceBeanDesc
-                    .getPropertyDesc(propertyName);
+                    .getPropertyDesc(sourcePropertyName);
             if (!sourcePropertyDesc.hasReadMethod()) {
                 return PROPERTY_NOT_FOUND;
             }
             return sourcePropertyDesc.getValue(source);
         }
-        return resolveNestedProperty(sourceBeanDesc, source, propertyName,
-                context);
+        return resolveNestedProperty(sourceBeanDesc, source,
+                sourcePropertyName, context);
     }
 
     /**

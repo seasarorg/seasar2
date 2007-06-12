@@ -19,21 +19,86 @@ import java.lang.reflect.Method;
 import java.util.Map;
 
 /**
+ * Dxoからアノテーションを読み取るためのインタフェースです。
+ * 
  * @author Satsohi Kimura
  * @author koichik
  */
 public interface AnnotationReader {
 
+    /**
+     * <code>Date</code>と<code>String</code>の変換フォーマットを返します。
+     * 
+     * @param dxoClass
+     *            Dxoクラスまたはインタフェース
+     * @param method
+     *            Dxoメソッド
+     * @return <code>Date</code>と<code>String</code>の変換フォーマット
+     */
     String getDatePattern(Class dxoClass, Method method);
 
+    /**
+     * <code>Time</code>と<code>String</code>の変換フォーマットを返します。
+     * 
+     * @param dxoClass
+     *            Dxoクラスまたはインタフェース
+     * @param method
+     *            Dxoメソッド
+     * @return <code>Time</code>と<code>String</code>の変換フォーマット
+     */
     String getTimePattern(Class dxoClass, Method method);
 
+    /**
+     * <code>Timestamp</code>と<code>String</code>の変換フォーマットを返します。
+     * 
+     * @param dxoClass
+     *            Dxoクラスまたはインタフェース
+     * @param method
+     *            Dxoメソッド
+     * @return <code>Timestamp</code>と<code>String</code>の変換フォーマット
+     */
     String getTimestampPattern(Class dxoClass, Method method);
 
+    /**
+     * 変換ルールを返します。
+     * 
+     * @param dxoClass
+     *            Dxoクラスまたはインタフェース
+     * @param method
+     *            Dxoメソッド
+     * @return 変換ルール
+     */
     String getConversionRule(Class dxoClass, Method method);
 
+    /**
+     * 変換元プロパティの値が<code>null</code>の場合に変換先プロパティに値を設定しない場合は<code>true</code>を返します。
+     * 
+     * @param dxoClass
+     *            Dxoクラスまたはインタフェース
+     * @param method
+     *            Dxoメソッド
+     * @return 変換元プロパティの値が<code>null</code>の場合に変換先プロパティに値を設定しない場合は<code>true</code>
+     */
     boolean isExcludeNull(Class dxoClass, Method method);
 
+    /**
+     * 変換元プロパティのprefixを返します。
+     * 
+     * @param dxoClass
+     *            Dxoクラスまたはインタフェース
+     * @param method
+     *            Dxoメソッド
+     * @return 変換元プロパティのprefix
+     */
+    String getSourcePrefix(Class dxoClass, Method method);
+
+    /**
+     * 変換先クラスに指定されたコンバータの{@Link Map}を返します。
+     * 
+     * @param destClass
+     *            変換先クラス
+     * @return 変換先クラスに指定されたコンバータの{@Link Map}
+     */
     Map getConverters(Class destClass);
 
 }

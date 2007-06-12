@@ -17,7 +17,6 @@ package org.seasar.extension.dxo.util;
 
 import java.lang.reflect.Method;
 
-import org.seasar.extension.dxo.DxoConstants;
 import org.seasar.framework.util.MethodUtil;
 import org.seasar.framework.util.OgnlUtil;
 import org.seasar.framework.util.StringUtil;
@@ -29,6 +28,10 @@ import org.seasar.framework.util.Tokenizer;
  * 
  */
 public class DxoUtil {
+
+    protected static final String OGNL_MAP_PREFIX = "#@java.util.LinkedHashMap@{";
+
+    protected static final String OGNL_MAP_SUFFIX = "}";
 
     protected static final Method GET_VALUE_TYPE_OF_TARGET_MAP_METHOD = getValueTypeOfTargetMapMethod();
 
@@ -66,8 +69,7 @@ public class DxoUtil {
         if (!expression.startsWith("'")) {
             s = addQuote(expression);
         }
-        return OgnlUtil.parseExpression(DxoConstants.OGNL_MAP_PREFIX + s
-                + DxoConstants.OGNL_MAP_SUFFIX);
+        return OgnlUtil.parseExpression(OGNL_MAP_PREFIX + s + OGNL_MAP_SUFFIX);
     }
 
     protected static String addQuote(final String expr) {

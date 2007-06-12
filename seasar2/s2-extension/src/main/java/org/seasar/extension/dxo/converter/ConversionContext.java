@@ -187,4 +187,27 @@ public interface ConversionContext {
      */
     DateFormat getDateFormat(String format);
 
+    /**
+     * 変換元JavaBeansのプロパティのprefixを返します。
+     * 
+     * @return 変換先JavaBeansのプロパティのprefix
+     */
+    String getSourcePrefix();
+
+    /**
+     * コピー先のプロパティ名からコピー元のプロパティ名を求めて返します。
+     * <p>
+     * <code>SOURCE_PREFIX</code>定数アノテーションまたは@<code>SourcePrefix</code>アノテーションで
+     * コピー元プロパティのprefixが指定されている場合は、コピー先プロパティ名にprefixを付加した名前を返します。
+     * </p>
+     * <p>
+     * prefixが<code>'_'</code>以外の文字で終了している場合は、コピー先プロパティ名をキャピタライズしてからprefixを付加します。
+     * </p>
+     * 
+     * @param destPropertyName
+     *            コピー先プロパティ名
+     * @return コピー元のプロパティ名
+     */
+    String getSourcePropertyName(String destPropertyName);
+
 }

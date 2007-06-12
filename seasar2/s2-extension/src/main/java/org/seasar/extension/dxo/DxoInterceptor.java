@@ -25,15 +25,23 @@ import org.seasar.framework.aop.interceptors.AbstractInterceptor;
 import org.seasar.framework.util.MethodUtil;
 
 /**
- * @author koichik
+ * S2Dxoの機能を提供するインターセプタです。
  * 
+ * @author koichik
  */
 public class DxoInterceptor extends AbstractInterceptor {
 
     private static final long serialVersionUID = 1L;
 
+    /** Dxoメタデータファクトリ */
     protected DxoMetadataFactory metadataFactory;
 
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param metadataFactory
+     *            Dxoメタデータファクトリ
+     */
     public DxoInterceptor(final DxoMetadataFactory metadataFactory) {
         this.metadataFactory = metadataFactory;
     }

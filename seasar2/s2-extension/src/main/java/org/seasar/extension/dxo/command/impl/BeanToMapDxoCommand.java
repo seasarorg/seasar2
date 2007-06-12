@@ -30,6 +30,7 @@ import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.beans.factory.BeanDescFactory;
 import org.seasar.framework.util.OgnlUtil;
+import org.seasar.framework.util.StringUtil;
 
 /**
  * @author koichik
@@ -40,6 +41,8 @@ public class BeanToMapDxoCommand extends AbstractDxoCommand {
     protected Object parsedExpression;
 
     protected boolean excludeNull;
+
+    protected String sourcePrefix;
 
     protected Class valueType;
 
@@ -57,6 +60,7 @@ public class BeanToMapDxoCommand extends AbstractDxoCommand {
             parsedExpression = DxoUtil.parseMap(expression);
         }
         excludeNull = annotationReader.isExcludeNull(dxoClass, method);
+        sourcePrefix = annotationReader.getSourcePrefix(dxoClass, method);
         valueType = DxoUtil.getValueTypeOfTargetMap(method);
         if (valueType == Object.class) {
             valueType = null;
@@ -123,9 +127,14 @@ public class BeanToMapDxoCommand extends AbstractDxoCommand {
         for (int i = 0; i < propertySize; ++i) {
             final PropertyDesc propertyDesc = beanDesc.getPropertyDesc(i);
             if (propertyDesc.hasReadMethod()) {
-                final String propertyName = propertyDesc.getPropertyName();
-                buf.append("'").append(propertyName).append("': ").append(
-                        propertyName).append(", ");
+                final String sourcePropertyName = propertyDesc
+                        .getPropertyName();
+                final String destPropertyName = toDestPropertyName(sourcePropertyName);
+                if (destPropertyName == null) {
+                    continue;
+                }
+                buf.append("'").append(destPropertyName).append("': ").append(
+                        sourcePropertyName).append(", ");
             }
         }
         if (propertySize > 0) {
@@ -134,4 +143,14 @@ public class BeanToMapDxoCommand extends AbstractDxoCommand {
         return new String(buf);
     }
 
+    protected String toDestPropertyName(final String sourcePropertyName) {
+        if (StringUtil.isEmpty(sourcePrefix)) {
+            return sourcePropertyName;
+        }
+        if (!sourcePropertyName.startsWith(sourcePrefix)) {
+            return null;
+        }
+        return StringUtil.decapitalize(sourcePropertyName
+                .substring(sourcePrefix.length()));
+    }
 }

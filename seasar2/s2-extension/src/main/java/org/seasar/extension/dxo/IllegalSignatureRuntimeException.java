@@ -20,12 +20,22 @@ import java.lang.reflect.Method;
 import org.seasar.framework.exception.SRuntimeException;
 
 /**
+ * Dxoメソッドのシグネチャが不正な場合にスローされる例外です。
+ * 
  * @author koichik
  */
 public class IllegalSignatureRuntimeException extends SRuntimeException {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param clazz
+     *            Dxoインタフェースまたはクラス
+     * @param method
+     *            Dxoのメソッド
+     */
     public IllegalSignatureRuntimeException(final Class clazz,
             final Method method) {
         super("ESSR0600", new Object[] { clazz, method });

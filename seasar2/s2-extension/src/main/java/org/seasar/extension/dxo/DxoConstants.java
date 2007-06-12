@@ -16,23 +16,41 @@
 package org.seasar.extension.dxo;
 
 /**
+ * S2Dxoで使用する定数です。
+ * 
  * @author Satsohi Kimura
  * @author koichik
  */
 public interface DxoConstants {
 
+    /**
+     * <code>Date</code>と<code>String</code>の変換フォーマットを指定する定数アノテーションの名前です。
+     */
     String DATE_PATTERN = "DATE_PATTERN";
 
+    /**
+     * <code>Time</code>と<code>String</code>の変換フォーマットを指定する定数アノテーションの名前です。
+     */
     String TIME_PATTERN = "TIME_PATTERN";
 
+    /**
+     * <code>Timestamp</code>と<code>String</code>の変換フォーマットを指定する定数アノテーションの名前です。
+     */
     String TIMESTAMP_PATTERN = "TIMESTAMP_PATTERN";
 
+    /**
+     * 変換ルールを指定する定数アノテーションの名前です。
+     */
     String CONVERSION_RULE = "CONVERSION_RULE";
 
+    /**
+     * 変換元プロパティの値が<code>null</code>の場合に変換先プロパティに値を設定しないことを指定する定数アノテーションの名前です。
+     */
     String EXCLUDE_NULL = "EXCLUDE_NULL";
 
-    String OGNL_MAP_PREFIX = "#@java.util.LinkedHashMap@{";
-
-    String OGNL_MAP_SUFFIX = "}";
+    /**
+     * 変換元プロパティのprefixを指定する定数アノテーションの名前です。
+     */
+    String SOURCE_PREFIX = "SOURCE_PREFIX";
 
 }

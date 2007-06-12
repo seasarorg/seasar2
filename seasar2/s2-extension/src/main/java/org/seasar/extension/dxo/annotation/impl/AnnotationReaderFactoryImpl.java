@@ -25,17 +25,32 @@ import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.ConstructorUtil;
 
 /**
+ * 実行環境で利用可能な{@link AnnotationReader}のインスタンスを作成するファクトリの実装クラスです。
+ * <p>
+ * Java5以上が利用可能な環境では{@link org.seasar.extension.dxo.annotation.impl.TigerAnnotationReader}のインスタンスを返します。
+ * そうでない場合は{@link org.seasar.extension.dxo.annotation.impl.ConstantAnnotationReader}を返します。
+ * </p>
+ * 
  * @author Satoshi Kimura
  * @author koichik
  */
 public class AnnotationReaderFactoryImpl implements AnnotationReaderFactory {
 
-    private static final String TIGER_ANNOTATION_HANDLER_CLASS_NAME = "org.seasar.extension.dxo.annotation.impl.TigerAnnotationReader";
+    /** {@link org.seasar.extension.dxo.annotation.impl.TigerAnnotationReader}のFQN名 */
+    protected static final String TIGER_ANNOTATION_HANDLER_CLASS_NAME = "org.seasar.extension.dxo.annotation.impl.TigerAnnotationReader";
 
+    /** S2コンテナ */
     protected S2Container container;
 
+    /** 実行環境で利用可能な{@link AnnotationReader} */
     protected AnnotationReader annotationReader;
 
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param container
+     *            S2コンテナ
+     */
     public AnnotationReaderFactoryImpl(final S2Container container) {
         this.container = container;
         annotationReader = new ConstantAnnotationReader(container);
@@ -53,4 +68,5 @@ public class AnnotationReaderFactoryImpl implements AnnotationReaderFactory {
     public AnnotationReader getAnnotationReader() {
         return annotationReader;
     }
+
 }

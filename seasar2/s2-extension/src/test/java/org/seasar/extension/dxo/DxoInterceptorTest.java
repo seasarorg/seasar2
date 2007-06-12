@@ -30,11 +30,13 @@ import org.seasar.framework.util.CaseInsensitiveMap;
  */
 public class DxoInterceptorTest extends S2TestCase {
 
-    private BeanDxo beanDxo;
+    BeanDxo beanDxo;
 
-    private FromMapDxo fromMapDxo;
+    FromMapDxo fromMapDxo;
 
-    private ToMapDxo toMapDxo;
+    ToMapDxo toMapDxo;
+
+    SearchDxo searchDxo;
 
     protected void setUp() throws Exception {
         super.setUp();
@@ -322,7 +324,65 @@ public class DxoInterceptorTest extends S2TestCase {
     }
 
     /**
-     *
+     * @throws Exception
+     */
+    public void testPrefix_BeanToBean() throws Exception {
+        SearchPage src = new SearchPage();
+        src.setSearch_name_LIKE("%hoge%");
+        src.setSearch_age_GT(new Integer(25));
+        src.setName("foo");
+        src.setAge(new Integer(100));
+        src.setHoge("hoge");
+
+        SearchDto dest = searchDxo.convert(src);
+        assertEquals("%hoge%", dest.getName_LIKE());
+        assertEquals(new Integer(25), dest.getAge_GT());
+        assertNull(dest.getName());
+        assertNull(dest.getAge());
+        assertNull(dest.getHoge());
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testPrefix_MapToBean() throws Exception {
+        Map src = new HashMap();
+        src.put("search_name_LIKE", "%hoge%");
+        src.put("search_age_GT", new Integer(25));
+        src.put("name", "foo");
+        src.put("age", new Integer(100));
+        src.put("hoge", "hoge");
+
+        SearchDto dest = searchDxo.convert(src);
+        assertEquals("%hoge%", dest.getName_LIKE());
+        assertEquals(new Integer(25), dest.getAge_GT());
+        assertNull(dest.getName());
+        assertNull(dest.getAge());
+        assertNull(dest.getHoge());
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testPrefix_BeanToMap() throws Exception {
+        SearchPage src = new SearchPage();
+        src.setSearch_name_LIKE("%hoge%");
+        src.setSearch_age_GT(new Integer(25));
+        src.setName("foo");
+        src.setAge(new Integer(100));
+        src.setHoge("hoge");
+
+        Map dest = new HashMap();
+        searchDxo.convert(src, dest);
+        assertEquals("%hoge%", dest.get("name_LIKE"));
+        assertEquals(new Integer(25), dest.get("age_GT"));
+        assertNull(dest.get("name"));
+        assertNull(dest.get("age"));
+        assertNull(dest.get("hoge"));
+    }
+
+    /**
+     * 
      */
     public interface BeanDxo {
         /**
@@ -390,7 +450,7 @@ public class DxoInterceptorTest extends S2TestCase {
     }
 
     /**
-     *
+     * 
      */
     public interface FromMapDxo {
         /**
@@ -407,7 +467,7 @@ public class DxoInterceptorTest extends S2TestCase {
     }
 
     /**
-     *
+     * 
      */
     public interface ToMapDxo {
         /**
@@ -431,6 +491,34 @@ public class DxoInterceptorTest extends S2TestCase {
          * @return
          */
         Map[] convert(Hoge[] src);
+    }
+
+    /**
+     * 
+     */
+    public interface SearchDxo {
+        /** */
+        public static final String convert_SOURCE_PREFIX = "search_";
+
+        /**
+         * @param src
+         * @return
+         */
+        SearchDto convert(SearchPage src);
+
+        /**
+         * @param src
+         * @return
+         */
+        SearchDto convert(Map src);
+
+        /**
+         * @param src
+         * @param dest
+         * @return
+         */
+        void convert(SearchPage src, Map dest);
+
     }
 
 }

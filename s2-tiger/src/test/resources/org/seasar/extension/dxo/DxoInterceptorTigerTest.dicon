@@ -15,4 +15,8 @@
 	<component class="org.seasar.extension.dxo.DxoInterceptorTigerTest$ToMapDxo">
 		<aspect>dxo.interceptor</aspect>
 	</component>	
+
+	<component class="org.seasar.extension.dxo.DxoInterceptorTigerTest$SearchDxo">
+		<aspect>dxo.interceptor</aspect>
+	</component>	
 </components>

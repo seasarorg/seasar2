@@ -109,6 +109,9 @@ public class ConversionContextImpl implements ConversionContext {
     /** 変換先のJavaBeansに<code>null</code>の値を設定しないことを示します。 */
     protected boolean excludeNull;
 
+    /** 変換元JavaBeansのプロパティのprefixです。 */
+    protected String sourcePrefix;
+
     static {
         initialize();
     }
@@ -170,6 +173,7 @@ public class ConversionContextImpl implements ConversionContext {
         }
         excludeNull = ((Boolean) getContextInfo(DxoConstants.EXCLUDE_NULL))
                 .booleanValue();
+        sourcePrefix = (String) getContextInfo(DxoConstants.SOURCE_PREFIX);
     }
 
     public ConverterFactory getConverterFactory() {
@@ -267,6 +271,20 @@ public class ConversionContextImpl implements ConversionContext {
         return formatter;
     }
 
+    public String getSourcePrefix() {
+        return sourcePrefix;
+    }
+
+    public String getSourcePropertyName(final String destPropertyName) {
+        if (StringUtil.isEmpty(sourcePrefix)) {
+            return destPropertyName;
+        }
+        if (sourcePrefix.endsWith("_")) {
+            return sourcePrefix + destPropertyName;
+        }
+        return sourcePrefix + StringUtil.capitalize(destPropertyName);
+    }
+
     /**
      * コンテキスト情報を返します。
      * <p>
@@ -314,6 +332,8 @@ public class ConversionContextImpl implements ConversionContext {
         }
         contextInfo.put(DxoConstants.EXCLUDE_NULL, Boolean
                 .valueOf(annotationReader.isExcludeNull(dxoClass, method)));
+        contextInfo.put(DxoConstants.SOURCE_PREFIX, annotationReader
+                .getSourcePrefix(dxoClass, method));
         contextInfoCache.put(method, contextInfo);
         return contextInfo;
     }

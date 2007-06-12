@@ -24,6 +24,7 @@ import org.seasar.extension.dxo.annotation.ConversionRule;
 import org.seasar.extension.dxo.annotation.DatePattern;
 import org.seasar.extension.dxo.annotation.DxoConverter;
 import org.seasar.extension.dxo.annotation.ExcludeNull;
+import org.seasar.extension.dxo.annotation.SourcePrefix;
 import org.seasar.extension.dxo.annotation.TimePattern;
 import org.seasar.extension.dxo.annotation.TimestampPattern;
 import org.seasar.extension.dxo.converter.Converter;
@@ -120,6 +121,19 @@ public class TigerAnnotationReader implements AnnotationReader {
             return next.isExcludeNull(dxoClass, method);
         }
         return false;
+    }
+
+    @SuppressWarnings("unchecked")
+    public String getSourcePrefix(Class dxoClass, Method method) {
+        final SourcePrefix sourcePrefix = getAnnotation(dxoClass, method,
+                SourcePrefix.class);
+        if (sourcePrefix != null) {
+            return sourcePrefix.value();
+        }
+        if (next != null) {
+            return next.getSourcePrefix(dxoClass, method);
+        }
+        return null;
     }
 
     @SuppressWarnings("unchecked")

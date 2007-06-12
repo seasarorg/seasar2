@@ -15,19 +15,25 @@
  */
 package org.seasar.extension.dxo.annotation;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
 /**
- * 実行環境で利用可能な{@link AnnotationReader}のインスタンスを作成するファクトリのインタフェースです。
+ * 変換元のJavaBeansまたは<code>Map</code>のプロパティ名に付与されているprefixを指定する注釈です。
  * 
- * @author Satoshi Kimura
  * @author koichik
  */
-public interface AnnotationReaderFactory {
+@Retention(RetentionPolicy.RUNTIME)
+@Target( { ElementType.TYPE, ElementType.METHOD })
+public @interface SourcePrefix {
 
     /**
-     * 実行環境で利用可能な{@link AnnotationReader}のインスタンスを作成して返します。
+     * 変換元のJavaBeansまたは<code>Map</code>のプロパティ名に付与されているprefixです。
      * 
-     * @return 実行環境で利用可能な{@link AnnotationReader}のインスタンス
+     * @return 変換元のJavaBeansまたは<code>Map</code>のプロパティ名に付与されているprefix
      */
-    AnnotationReader getAnnotationReader();
+    String value();
 
 }

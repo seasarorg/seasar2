@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.seasar.extension.dxo.annotation.ExcludeNull;
+import org.seasar.extension.dxo.annotation.SourcePrefix;
 import org.seasar.extension.unit.S2TestCase;
 
 /**
@@ -29,11 +30,13 @@ import org.seasar.extension.unit.S2TestCase;
  */
 public class DxoInterceptorTigerTest extends S2TestCase {
 
-    private BeanDxo beanDxo;
+    BeanDxo beanDxo;
 
-    private FromMapDxo fromMapDxo;
+    FromMapDxo fromMapDxo;
 
-    private ToMapDxo toMapDxo;
+    ToMapDxo toMapDxo;
+
+    SearchDxo searchDxo;
 
     @Override
     protected void setUp() throws Exception {
@@ -287,10 +290,68 @@ public class DxoInterceptorTigerTest extends S2TestCase {
         Bar bar = beanDxo.convert(foo);
         assertEquals(Color.RED, bar.getOrdinal());
         assertEquals(Color.GREEN, bar.getName());
-        
+
         foo = beanDxo.convert(bar);
         assertEquals(Color.RED.ordinal(), foo.getOrdinal());
         assertEquals(Color.GREEN.name(), foo.getName());
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testPrefix_BeanToBean() throws Exception {
+        SearchPage src = new SearchPage();
+        src.setSearch_name_LIKE("%hoge%");
+        src.setSearch_age_GT(Integer.valueOf(25));
+        src.setName("foo");
+        src.setAge(Integer.valueOf(100));
+        src.setHoge("hoge");
+
+        SearchDto dest = searchDxo.convert(src);
+        assertEquals("%hoge%", dest.getName_LIKE());
+        assertEquals(Integer.valueOf(25), dest.getAge_GT());
+        assertNull(dest.getName());
+        assertNull(dest.getAge());
+        assertNull(dest.getHoge());
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testPrefix_MapToBean() throws Exception {
+        Map src = new HashMap();
+        src.put("search_name_LIKE", "%hoge%");
+        src.put("search_age_GT", Integer.valueOf(25));
+        src.put("name", "foo");
+        src.put("age", Integer.valueOf(100));
+        src.put("hoge", "hoge");
+
+        SearchDto dest = searchDxo.convert(src);
+        assertEquals("%hoge%", dest.getName_LIKE());
+        assertEquals(Integer.valueOf(25), dest.getAge_GT());
+        assertNull(dest.getName());
+        assertNull(dest.getAge());
+        assertNull(dest.getHoge());
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testPrefix_BeanToMap() throws Exception {
+        SearchPage src = new SearchPage();
+        src.setSearch_name_LIKE("%hoge%");
+        src.setSearch_age_GT(Integer.valueOf(25));
+        src.setName("foo");
+        src.setAge(Integer.valueOf(100));
+        src.setHoge("hoge");
+
+        Map dest = new HashMap();
+        searchDxo.convert(src, dest);
+        assertEquals("%hoge%", dest.get("name_LIKE"));
+        assertEquals(Integer.valueOf(25), dest.get("age_GT"));
+        assertNull(dest.get("name"));
+        assertNull(dest.get("age"));
+        assertNull(dest.get("hoge"));
     }
 
     public interface BeanDxo {
@@ -329,6 +390,33 @@ public class DxoInterceptorTigerTest extends S2TestCase {
         Map[] convert(Hoge[] src);
 
         List<Map> convert(List<Hoge> src);
+    }
+
+    /**
+     * 
+     */
+    @SourcePrefix("search_")
+    public interface SearchDxo {
+
+        /**
+         * @param src
+         * @return
+         */
+        SearchDto convert(SearchPage src);
+
+        /**
+         * @param src
+         * @return
+         */
+        SearchDto convert(Map src);
+
+        /**
+         * @param src
+         * @param dest
+         * @return
+         */
+        void convert(SearchPage src, Map dest);
+
     }
 
 }

@@ -33,15 +33,25 @@ import org.seasar.framework.util.FieldUtil;
 import org.seasar.framework.util.MapUtil;
 
 /**
+ * Dxoから定数アノテーションを読み取る{@link AnnotationReader}の実装クラスです。
+ * 
  * @author Satoshi Kimura
  * @author koichik
  */
 public class ConstantAnnotationReader implements AnnotationReader {
 
+    /** S2コンテナ */
     protected S2Container container;
 
+    /** 変換先クラスに指定されたコンバータのキャッシュです */
     protected Map convertersCache = MapUtil.createHashMap();
 
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param container
+     *            S2コンテナ
+     */
     public ConstantAnnotationReader(final S2Container container) {
         this.container = container.getRoot();
     }
@@ -56,24 +66,6 @@ public class ConstantAnnotationReader implements AnnotationReader {
 
     public String getTimestampPattern(final Class dxoClass, final Method method) {
         return getDatePattern(dxoClass, method, DxoConstants.TIMESTAMP_PATTERN);
-    }
-
-    public String getDatePattern(final Class dxoClass, final Method method,
-            final String annotation) {
-        final BeanDesc dxoBeanDesc = BeanDescFactory.getBeanDesc(dxoClass);
-        String fieldName = getConstantAnnotationName(method, annotation);
-        if (dxoBeanDesc.hasField(fieldName)) {
-            return (String) dxoBeanDesc.getFieldValue(fieldName, null);
-        }
-        fieldName = method.getName() + "_" + annotation;
-        if (dxoBeanDesc.hasField(fieldName)) {
-            return (String) dxoBeanDesc.getFieldValue(fieldName, null);
-        }
-        fieldName = annotation;
-        if (dxoBeanDesc.hasField(fieldName)) {
-            return (String) dxoBeanDesc.getFieldValue(fieldName, null);
-        }
-        return null;
     }
 
     public String getConversionRule(final Class dxoClass, final Method method) {
@@ -104,6 +96,20 @@ public class ConstantAnnotationReader implements AnnotationReader {
         return false;
     }
 
+    public String getSourcePrefix(final Class dxoClass, final Method method) {
+        final BeanDesc dxoBeanDesc = BeanDescFactory.getBeanDesc(dxoClass);
+        String fieldName = getConstantAnnotationName(method,
+                DxoConstants.SOURCE_PREFIX);
+        if (dxoBeanDesc.hasField(fieldName)) {
+            return (String) dxoBeanDesc.getFieldValue(fieldName, null);
+        }
+        fieldName = method.getName() + "_" + DxoConstants.SOURCE_PREFIX;
+        if (dxoBeanDesc.hasField(fieldName)) {
+            return (String) dxoBeanDesc.getFieldValue(fieldName, null);
+        }
+        return null;
+    }
+
     public Map getConverters(final Class destClass) {
         final Map converters = (Map) convertersCache.get(destClass);
         if (converters != null) {
@@ -112,6 +118,42 @@ public class ConstantAnnotationReader implements AnnotationReader {
         return createConverters(destClass);
     }
 
+    /**
+     * 日付(<code>Date, Time, Timestamp</code>)と<code>String</code>の変換フォーマットを返します。
+     * 
+     * @param dxoClass
+     *            Dxoクラスまたはインタフェース
+     * @param method
+     *            Dxoメソッド
+     * @param annotation
+     *            定数アノテーション名
+     * @return 変換フォーマット
+     */
+    protected String getDatePattern(final Class dxoClass, final Method method,
+            final String annotation) {
+        final BeanDesc dxoBeanDesc = BeanDescFactory.getBeanDesc(dxoClass);
+        String fieldName = getConstantAnnotationName(method, annotation);
+        if (dxoBeanDesc.hasField(fieldName)) {
+            return (String) dxoBeanDesc.getFieldValue(fieldName, null);
+        }
+        fieldName = method.getName() + "_" + annotation;
+        if (dxoBeanDesc.hasField(fieldName)) {
+            return (String) dxoBeanDesc.getFieldValue(fieldName, null);
+        }
+        fieldName = annotation;
+        if (dxoBeanDesc.hasField(fieldName)) {
+            return (String) dxoBeanDesc.getFieldValue(fieldName, null);
+        }
+        return null;
+    }
+
+    /**
+     * 変換先クラスに指定されたコンバータの{@link Map}を作成して返します。
+     * 
+     * @param destClass
+     *            変換先クラス
+     * @return 変換先クラスに指定されたコンバータの{@link Map}
+     */
     protected Map createConverters(final Class destClass) {
         final Map converters = new HashMap();
         final BeanDesc beanDesc = BeanDescFactory.getBeanDesc(destClass);
@@ -144,6 +186,15 @@ public class ConstantAnnotationReader implements AnnotationReader {
         return converters;
     }
 
+    /**
+     * 指定されたメソッド固有の定数アノテーション名を返します。
+     * 
+     * @param method
+     *            メソッド
+     * @param suffix
+     *            定数アノテーションのsuffix
+     * @return 指定されたメソッド固有の定数アノテーション名
+     */
     protected String getConstantAnnotationName(final Method method,
             final String suffix) {
         final StringBuffer buf = new StringBuffer(100).append(method.getName());
@@ -155,6 +206,13 @@ public class ConstantAnnotationReader implements AnnotationReader {
         return new String(buf);
     }
 
+    /**
+     * クラスを表す単純な名前を返します。
+     * 
+     * @param clazz
+     *            クラス
+     * @return クラスを表す単純な名前
+     */
     protected String getShortClassName(final Class clazz) {
         if (clazz.isArray()) {
             return ClassUtil.getShortClassName(clazz.getComponentType()) + "$";
