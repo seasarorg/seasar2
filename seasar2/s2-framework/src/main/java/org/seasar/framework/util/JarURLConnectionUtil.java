@@ -22,6 +22,8 @@ import java.util.jar.JarFile;
 import org.seasar.framework.exception.IORuntimeException;
 
 /**
+ * {@link JarURLConnection}用のユーティリティクラスです。
+ * 
  * @author higa
  * 
  */
@@ -30,7 +32,16 @@ public class JarURLConnectionUtil {
     private JarURLConnectionUtil() {
     }
 
-    public static JarFile getJarFile(JarURLConnection conn) {
+    /**
+     * {@link JarURLConnection#getJarFile()}の例外処理をラップするメソッドです。
+     * 
+     * @param conn
+     * @return {@link JarFile}
+     * @throws IORuntimeException
+     *             {@link IOException}が発生した場合
+     */
+    public static JarFile getJarFile(JarURLConnection conn)
+            throws IORuntimeException {
         try {
             return conn.getJarFile();
         } catch (IOException e) {

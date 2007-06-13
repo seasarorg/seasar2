@@ -23,6 +23,7 @@ import java.util.jar.JarInputStream;
 import org.seasar.framework.exception.IORuntimeException;
 
 /**
+ * {@link JarInputStream}用のユーティリティクラスです。
  * 
  * @author koichik
  */
@@ -30,7 +31,17 @@ public final class JarInputStreamUtil {
     private JarInputStreamUtil() {
     }
 
-    public static JarInputStream create(final InputStream is) {
+    /**
+     * {@link JarInputStream}を作成します。
+     * 
+     * @param is
+     * @return {@link JarInputStream}
+     * @throws IORuntimeException
+     *             {@link IOException}が発生した場合
+     * @see JarInputStream#JarInputStream(InputStream)
+     */
+    public static JarInputStream create(final InputStream is)
+            throws IORuntimeException {
         try {
             return new JarInputStream(is);
         } catch (final IOException e) {
@@ -38,7 +49,17 @@ public final class JarInputStreamUtil {
         }
     }
 
-    public static JarEntry getNextJarEntry(final JarInputStream is) {
+    /**
+     * {@link JarInputStream#getNextJarEntry()}の例外処理をラップするメソッドです。
+     * 
+     * @param is
+     * @return {@link JarEntry}
+     * @throws IORuntimeException
+     *             {@link IOException}が発生した場合
+     * @see JarInputStream#getNextJarEntry()
+     */
+    public static JarEntry getNextJarEntry(final JarInputStream is)
+            throws IORuntimeException {
         try {
             return is.getNextJarEntry();
         } catch (final IOException e) {

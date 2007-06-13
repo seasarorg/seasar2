@@ -17,15 +17,34 @@ package org.seasar.framework.util;
 
 import java.text.SimpleDateFormat;
 
+/**
+ * {@link Integer}用の変換ユーティリティです。
+ * 
+ * @author higa
+ * 
+ */
 public final class IntegerConversionUtil {
 
     private IntegerConversionUtil() {
     }
 
+    /**
+     * {@link Integer}に変換します。
+     * 
+     * @param o
+     * @return {@link Integer}
+     */
     public static Integer toInteger(Object o) {
         return toInteger(o, null);
     }
 
+    /**
+     * {@link Integer}に変換します。
+     * 
+     * @param o
+     * @param pattern
+     * @return {@link Integer}
+     */
     public static Integer toInteger(Object o, String pattern) {
         if (o == null) {
             return null;
@@ -52,10 +71,23 @@ public final class IntegerConversionUtil {
         return new Integer(DecimalFormatUtil.normalize(s));
     }
 
+    /**
+     * intに変換します。
+     * 
+     * @param o
+     * @return int
+     */
     public static int toPrimitiveInt(Object o) {
         return toPrimitiveInt(o, null);
     }
 
+    /**
+     * intに変換します。
+     * 
+     * @param o
+     * @param pattern
+     * @return int
+     */
     public static int toPrimitiveInt(Object o, String pattern) {
         if (o == null) {
             return 0;

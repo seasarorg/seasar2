@@ -15,10 +15,13 @@
  */
 package org.seasar.framework.util;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
+ * LRU用の {@link HashMap}です。
+ * 
  * @author koichik
  * 
  */
@@ -26,22 +29,48 @@ public class LruHashMap extends LinkedHashMap {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * デフォルトの初期容量です。
+     */
     protected static final int DEFAULT_INITIAL_CAPACITY = 16;
 
+    /**
+     * デフォルトのロードファクタです。
+     */
     protected static final float DEFAULT_LOAD_FACTOR = 0.75f;
 
+    /**
+     * 上限サイズです。
+     */
     protected int limitSize;
 
+    /**
+     * {@link LruHashMap}を作成します。
+     * 
+     * @param limitSize
+     */
     public LruHashMap(final int limitSize) {
         this(limitSize, DEFAULT_INITIAL_CAPACITY, DEFAULT_LOAD_FACTOR);
     }
 
+    /**
+     * {@link LruHashMap}を作成します。
+     * 
+     * @param limitSize
+     * @param initialCapacity
+     * @param loadFactor
+     */
     public LruHashMap(final int limitSize, final int initialCapacity,
             final float loadFactor) {
         super(initialCapacity, loadFactor, true);
         this.limitSize = limitSize;
     }
 
+    /**
+     * 上限サイズを返します。
+     * 
+     * @return 上限サイズ
+     */
     public int getLimitSize() {
         return limitSize;
     }
@@ -49,5 +78,4 @@ public class LruHashMap extends LinkedHashMap {
     protected boolean removeEldestEntry(final Map.Entry entry) {
         return size() > limitSize;
     }
-
 }

@@ -17,15 +17,34 @@ package org.seasar.framework.util;
 
 import java.text.SimpleDateFormat;
 
+/**
+ * {@link Long}用の変換ユーティリティです。
+ * 
+ * @author higa
+ * 
+ */
 public final class LongConversionUtil {
 
     private LongConversionUtil() {
     }
 
+    /**
+     * {@link Long}に変換します。
+     * 
+     * @param o
+     * @return {@link Long}
+     */
     public static Long toLong(Object o) {
         return toLong(o, null);
     }
 
+    /**
+     * {@link Long}に変換します。
+     * 
+     * @param o
+     * @param pattern
+     * @return {@link Long}
+     */
     public static Long toLong(Object o, String pattern) {
         if (o == null) {
             return null;
@@ -51,10 +70,23 @@ public final class LongConversionUtil {
         return new Long(DecimalFormatUtil.normalize(s));
     }
 
+    /**
+     * longに変換します。
+     * 
+     * @param o
+     * @return long
+     */
     public static long toPrimitiveLong(Object o) {
         return toPrimitiveLong(o, null);
     }
 
+    /**
+     * longに変換します。
+     * 
+     * @param o
+     * @param pattern
+     * @return long
+     */
     public static long toPrimitiveLong(Object o, String pattern) {
         if (o == null) {
             return 0;

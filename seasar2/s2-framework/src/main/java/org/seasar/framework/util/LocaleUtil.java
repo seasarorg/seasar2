@@ -18,6 +18,8 @@ package org.seasar.framework.util;
 import java.util.Locale;
 
 /**
+ * {@link Locale}用のユーティリティクラスです。
+ * 
  * @author higa
  * 
  */
@@ -26,6 +28,12 @@ public class LocaleUtil {
     private LocaleUtil() {
     }
 
+    /**
+     * {@link Locale}を返します。
+     * 
+     * @param localeStr
+     * @return {@link Locale}
+     */
     public static Locale getLocale(String localeStr) {
         Locale locale = Locale.getDefault();
         if (localeStr != null) {
