@@ -40,14 +40,22 @@ public class DaoHotdeployCreatorTest extends HotdeployCreatorTestCase {
         assertNotNull(cd);
         assertEquals(name, cd.getComponentName());
         assertTrue(getContainer().hasComponentDef("barDao"));
+
+        assertFalse(getContainer().hasComponentDef("hogeDao"));
+        assertFalse(getContainer().hasComponentDef("hogeHogeDao"));
     }
 
     /**
      * @throws Exception
      */
     public void testIsTargetByClass() throws Exception {
-        Class clazz = ClassUtil.forName(ClassUtil.getPackageName(getClass())
-                + ".dao.FooDao");
+        String pkgName = ClassUtil.getPackageName(getClass());
+        Class clazz = ClassUtil.forName(pkgName + ".dao.FooDao");
         assertTrue(getContainer().hasComponentDef(clazz));
+
+        clazz = ClassUtil.forName(pkgName + ".hoge.HogeDao");
+        assertFalse(getContainer().hasComponentDef(clazz));
+        clazz = ClassUtil.forName(pkgName + "hoge.HogeHogeDao");
+        assertFalse(getContainer().hasComponentDef(clazz));
     }
 }

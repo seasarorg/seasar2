@@ -15,6 +15,10 @@
  */
 package org.seasar.framework.container.cooldeploy.creator;
 
+import org.seasar.framework.container.cooldeploy.creator.dao.AaaDao;
+import org.seasar.framework.container.cooldeploy.creator.dao.BbbDao;
+import org.seasar.framework.container.cooldeploy.creator.hoge.HogeDao;
+import org.seasar.framework.container.hotdeploy.creatorhoge.HogeHogeDao;
 import org.seasar.framework.unit.S2FrameworkTestCase;
 
 /**
@@ -39,7 +43,15 @@ public class DaoCoolCreatorTest extends S2FrameworkTestCase {
      */
     public void testGetTargetClass() throws Exception {
         assertTrue(getContainer().hasComponentDef("aaaDao"));
+        assertTrue(getContainer().hasComponentDef(AaaDao.class));
         assertTrue(getContainer().hasComponentDef("bbbDao"));
+        assertTrue(getContainer().hasComponentDef(BbbDao.class));
         assertNotNull(getContainer().getComponent("bbbDao"));
+
+        assertFalse(getContainer().hasComponentDef("hogeDao"));
+        assertFalse(getContainer().hasComponentDef("hogeHogeDao"));
+
+        assertFalse(getContainer().hasComponentDef(HogeDao.class));
+        assertFalse(getContainer().hasComponentDef(HogeHogeDao.class));
     }
 }

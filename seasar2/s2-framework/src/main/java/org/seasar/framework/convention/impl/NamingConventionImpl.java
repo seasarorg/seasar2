@@ -731,18 +731,40 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
                 + pageSuffix;
     }
 
-    public boolean isTargetClassName(String className, String suffix) {
-        if (!isTargetClassName(className)) {
+    public boolean isTargetClassName(final String className, final String suffix) {
+        if (isIgnoreClassName(className)) {
             return false;
         }
-        String name = StringUtil.trimSuffix(className, implementationSuffix);
-        return name.endsWith(suffix);
+        if (!StringUtil.trimSuffix(className, implementationSuffix).endsWith(
+                suffix)) {
+            return false;
+        }
+        final String shortClassName = ClassUtil.getShortClassName(className);
+        if (className.endsWith(implementationSuffix)
+                && !className.endsWith("." + getImplementationPackageName()
+                        + "." + shortClassName)) {
+            return false;
+        }
+        final String middlePkgName = StringUtil.decapitalize(suffix);
+        for (int i = 0; i < rootPackageNames.length; ++i) {
+            if (className.startsWith(rootPackageNames[i] + "." + middlePkgName
+                    + ".")) {
+                return true;
+            }
+            if (className.startsWith(rootPackageNames[i] + "."
+                    + subApplicationRootPackageName + ".")) {
+                return true;
+            }
+        }
+        return false;
     }
 
-    public boolean isTargetClassName(String className) {
+    public boolean isTargetClassName(final String className) {
+        if (isIgnoreClassName(className)) {
+            return false;
+        }
         for (int i = 0; i < rootPackageNames.length; ++i) {
-            if (className.startsWith(rootPackageNames[i])
-                    && !isIgnoreClassName(className)) {
+            if (className.startsWith(rootPackageNames[i] + ".")) {
                 return true;
             }
         }
@@ -751,7 +773,7 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
 
     public boolean isIgnoreClassName(String className) {
         for (int i = 0; i < ignorePackageNames.length; ++i) {
-            if (className.startsWith(ignorePackageNames[i])) {
+            if (className.startsWith(ignorePackageNames[i] + ".")) {
                 return true;
             }
         }
