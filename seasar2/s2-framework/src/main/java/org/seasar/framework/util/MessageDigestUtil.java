@@ -22,12 +22,21 @@ import java.security.NoSuchAlgorithmException;
  * @author higa
  * 
  */
-public class MessageDigestUtil {
+public final class MessageDigestUtil {
 
-    protected MessageDigestUtil() {
+    private MessageDigestUtil() {
     }
 
-    public static MessageDigest getInstance(String algorithm) {
+    /**
+     * {@link MessageDigest#getInstance(String)}の例外処理をラップします。
+     * 
+     * @param algorithm
+     * @return {@link MessageDigest}
+     * @throws RuntimeException
+     *             {@link NoSuchAlgorithmException}が発生した場合
+     */
+    public static MessageDigest getInstance(String algorithm)
+            throws RuntimeException {
         try {
             return MessageDigest.getInstance(algorithm);
         } catch (NoSuchAlgorithmException e) {

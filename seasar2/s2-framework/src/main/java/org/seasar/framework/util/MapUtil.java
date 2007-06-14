@@ -26,6 +26,9 @@ import java.util.Map;
  */
 public class MapUtil {
 
+    /**
+     * {@link MapFactory}です。
+     */
     protected static final MapFactory factory = getMapFactory();
 
     /**

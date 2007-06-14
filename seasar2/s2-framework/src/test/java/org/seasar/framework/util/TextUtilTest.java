@@ -19,7 +19,7 @@ import junit.framework.TestCase;
 
 /**
  * @author higa
- *
+ * 
  */
 public class TextUtilTest extends TestCase {
 
@@ -52,7 +52,7 @@ public class TextUtilTest extends TestCase {
         assertEquals("1", "あ", TextUtil.readUTF8(getPath("hoge_utf8.txt")));
     }
 
-    protected String getPath(String fileName) {
+    private String getPath(String fileName) {
         return getClass().getName().replace('.', '/').replaceFirst(
                 "TextUtilTest", fileName);
     }

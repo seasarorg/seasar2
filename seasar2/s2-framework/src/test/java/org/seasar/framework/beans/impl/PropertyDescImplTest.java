@@ -26,7 +26,6 @@ import junit.framework.TestCase;
 import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.IllegalPropertyRuntimeException;
 import org.seasar.framework.beans.PropertyDesc;
-import org.seasar.framework.util.MathUtil;
 
 /**
  * @author higa
@@ -117,7 +116,7 @@ public class PropertyDescImplTest extends TestCase {
     }
 
     /**
-     *
+     * 
      */
     public static class MyBean {
 
@@ -193,7 +192,7 @@ public class PropertyDescImplTest extends TestCase {
          * @return
          */
         public Number add(Number arg1, Number arg2) {
-            return MathUtil.add(arg1, arg2);
+            return new Integer(3);
         }
 
         /**

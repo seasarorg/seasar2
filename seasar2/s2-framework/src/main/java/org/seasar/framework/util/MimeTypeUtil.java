@@ -22,13 +22,21 @@ import java.net.URLConnection;
 import org.seasar.framework.exception.IORuntimeException;
 
 /**
+ * Mimeタイプ用のユーティリティクラスです。
+ * 
  * @author shot
  */
 public class MimeTypeUtil {
 
     private MimeTypeUtil() {
     }
-    
+
+    /**
+     * コンテントタイプを予想します。
+     * 
+     * @param path
+     * @return コンテントタイプ
+     */
     public static String guessContentType(final String path) {
         AssertionUtil.assertNotNull("path is null.", path);
         final InputStream is = ResourceUtil.getResourceAsStream(path);
@@ -38,7 +46,7 @@ public class MimeTypeUtil {
         } catch (IOException e) {
             throw new IORuntimeException(e);
         }
-        if(mimetype == null) {
+        if (mimetype == null) {
             mimetype = URLConnection.guessContentTypeFromName(path);
         }
         return mimetype;

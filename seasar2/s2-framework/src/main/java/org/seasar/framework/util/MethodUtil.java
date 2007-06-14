@@ -20,10 +20,11 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
 import org.seasar.framework.exception.IllegalAccessRuntimeException;
-import org.seasar.framework.exception.InstantiationRuntimeException;
 import org.seasar.framework.exception.InvocationTargetRuntimeException;
 
 /**
+ * {@link Method}用のユーティリティクラスです。
+ * 
  * @author higa
  * 
  */
@@ -33,17 +34,40 @@ public final class MethodUtil {
 
     private static final Method IS_SYNTHETIC_METHOD = getIsSyntheticMethod();
 
+    /**
+     * ReflectUtilのクラス名です。
+     */
     protected static final String REFLECTION_UTIL_CLASS_NAME = "org.seasar.framework.util.tiger.ReflectionUtil";
 
+    /**
+     * {@link #getElementTypeOfListFromParameterMethod()}への定数参照です
+     */
     protected static final Method GET_ELEMENT_TYPE_FROM_PARAMETER_METHOD = getElementTypeOfListFromParameterMethod();
 
+    /**
+     * {@link #getElementTypeOfListFromReturnMethod()}への定数参照です。
+     */
     protected static final Method GET_ELEMENT_TYPE_FROM_RETURN_METHOD = getElementTypeOfListFromReturnMethod();
 
     private MethodUtil() {
     }
 
+    /**
+     * {@link Method#invoke(Object, Object[])}の例外処理をラップします。
+     * 
+     * @param method
+     * @param target
+     * @param args
+     * @return 戻り値
+     * @throws InvocationTargetRuntimeException
+     *             {@link InvocationTargetException}が発生した場合
+     * @throws IllegalAccessRuntimeException
+     *             {@link IllegalAccessException}が発生した場合
+     * @see Method#invoke(Object, Object[])
+     */
     public static Object invoke(Method method, Object target, Object[] args)
-            throws InstantiationRuntimeException, IllegalAccessRuntimeException {
+            throws InvocationTargetRuntimeException,
+            IllegalAccessRuntimeException {
 
         try {
             return method.invoke(target, args);
@@ -63,11 +87,24 @@ public final class MethodUtil {
         }
     }
 
+    /**
+     * <code>abstract</code>かどうかを返します。
+     * 
+     * @param method
+     * @return <code>abstract</code>かどうか
+     */
     public static boolean isAbstract(Method method) {
         int mod = method.getModifiers();
         return Modifier.isAbstract(mod);
     }
 
+    /**
+     * シグニチャを返します。
+     * 
+     * @param methodName
+     * @param argTypes
+     * @return シグニチャ
+     */
     public static String getSignature(String methodName, Class[] argTypes) {
         StringBuffer buf = new StringBuffer(100);
         buf.append(methodName);
@@ -84,6 +121,13 @@ public final class MethodUtil {
         return buf.toString();
     }
 
+    /**
+     * シグニチャを返します。
+     * 
+     * @param methodName
+     * @param methodArgs
+     * @return シグニチャ
+     */
     public static String getSignature(String methodName, Object[] methodArgs) {
         StringBuffer buf = new StringBuffer(100);
         buf.append(methodName);
@@ -104,6 +148,12 @@ public final class MethodUtil {
         return buf.toString();
     }
 
+    /**
+     * equalsメソッドかどうかを返します。
+     * 
+     * @param method
+     * @return equalsメソッドかどうか
+     */
     public static boolean isEqualsMethod(Method method) {
         return method != null && method.getName().equals("equals")
                 && method.getReturnType() == boolean.class
@@ -111,18 +161,36 @@ public final class MethodUtil {
                 && method.getParameterTypes()[0] == Object.class;
     }
 
+    /**
+     * hashCodeメソッドかどうか返します。
+     * 
+     * @param method
+     * @return hashCodeメソッドかどうか
+     */
     public static boolean isHashCodeMethod(Method method) {
         return method != null && method.getName().equals("hashCode")
                 && method.getReturnType() == int.class
                 && method.getParameterTypes().length == 0;
     }
 
+    /**
+     * toStringメソッドかどうか返します。
+     * 
+     * @param method
+     * @return toStringメソッドかどうか
+     */
     public static boolean isToStringMethod(Method method) {
         return method != null && method.getName().equals("toString")
                 && method.getReturnType() == String.class
                 && method.getParameterTypes().length == 0;
     }
 
+    /**
+     * ブリッジメソッドかどうか返します。
+     * 
+     * @param method
+     * @return ブリッジメソッドかどうか
+     */
     public static boolean isBridgeMethod(final Method method) {
         if (IS_BRIDGE_METHOD == null) {
             return false;
@@ -131,6 +199,12 @@ public final class MethodUtil {
                 .booleanValue();
     }
 
+    /**
+     * 合成メソッドかどうかを返します。
+     * 
+     * @param method
+     * @return 合成メソッドかどうか
+     */
     public static boolean isSyntheticMethod(final Method method) {
         if (IS_SYNTHETIC_METHOD == null) {
             return false;
@@ -155,6 +229,13 @@ public final class MethodUtil {
         }
     }
 
+    /**
+     * Java5以上の場合は、引数のGenericsなListの要素を返します。
+     * 
+     * @param method
+     * @param position
+     * @return GenericsなListの要素
+     */
     public static Class getElementTypeOfListFromParameterType(
             final Method method, final int position) {
         if (GET_ELEMENT_TYPE_FROM_PARAMETER_METHOD == null) {
@@ -165,6 +246,12 @@ public final class MethodUtil {
                         method, new Integer(position) });
     }
 
+    /**
+     * Java5以上の場合は、戻り値のGenericsなListの要素を返します。
+     * 
+     * @param method
+     * @return GenericsなListの要素
+     */
     public static Class getElementTypeOfListFromReturnType(final Method method) {
         if (GET_ELEMENT_TYPE_FROM_RETURN_METHOD == null) {
             return null;
@@ -173,6 +260,11 @@ public final class MethodUtil {
                 null, new Object[] { method });
     }
 
+    /**
+     * getElementTypeOfListFromParameterの {@link Method}を返します。
+     * 
+     * @return {@link Method}
+     */
     protected static Method getElementTypeOfListFromParameterMethod() {
         try {
             final Class reflectionUtilClass = Class
@@ -185,6 +277,11 @@ public final class MethodUtil {
         return null;
     }
 
+    /**
+     * getElementTypeOfListFromReturnの {@link Method}を返します。
+     * 
+     * @return {@link Method}
+     */
     protected static Method getElementTypeOfListFromReturnMethod() {
         try {
             final Class reflectionUtilClass = Class
