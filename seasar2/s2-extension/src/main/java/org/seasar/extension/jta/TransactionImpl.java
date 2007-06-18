@@ -199,13 +199,14 @@ public final class TransactionImpl implements Transaction {
                         rollbackForVoteOK();
                     }
                 }
-            }
-            if (status_ == Status.STATUS_COMMITTED) {
-                if (logger_.isDebugEnabled()) {
-                    logger_.log("DSSR0004", null);
+                if (status_ == Status.STATUS_COMMITTED) {
+                    if (logger_.isDebugEnabled()) {
+                        logger_.log("DSSR0004", null);
+                    }
                 }
-                afterCompletion();
-            } else {
+            }
+            afterCompletion();
+            if (status_ != Status.STATUS_COMMITTED) {
                 throw new SRollbackException("ESSR0303",
                         new Object[] { toString() });
             }
@@ -254,8 +255,8 @@ public final class TransactionImpl implements Transaction {
         try {
             xari.commit(true);
             status_ = Status.STATUS_COMMITTED;
-        } catch (XAException ex) {
-            logger_.log(ex);
+        } catch (Throwable t) {
+            logger_.log(t);
             status_ = Status.STATUS_UNKNOWN;
         }
     }
@@ -283,7 +284,8 @@ public final class TransactionImpl implements Transaction {
                 } else {
                     xarw.setVoteOk(false);
                 }
-            } catch (XAException ex) {
+            } catch (Throwable t) {
+                logger_.log(t);
                 xarw.setVoteOk(false);
                 status_ = Status.STATUS_MARKED_ROLLBACK;
                 return VOTE_ROLLBACK;

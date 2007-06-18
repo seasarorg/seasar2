@@ -387,6 +387,8 @@ public class TransactionImplTest extends TestCase {
      */
     public void testBeforeCompletion() throws Exception {
         tx_.begin();
+        Sync sync = new Sync();
+        tx_.registerSynchronization(sync);
         tx_.registerSynchronization(new ExceptionSync());
         try {
             tx_.commit();
@@ -394,6 +396,8 @@ public class TransactionImplTest extends TestCase {
         } catch (RollbackException ex) {
             System.out.println(ex);
         }
+        assertTrue(sync.beforeCompleted_);
+        assertTrue(sync.afterCompleted_);
     }
 
     private class Sync implements Synchronization {
