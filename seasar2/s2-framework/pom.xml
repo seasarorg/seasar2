@@ -5,15 +5,21 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"
 >
   <modelVersion>4.0.0</modelVersion>
+
+  <!-- The Basics -->
+  <artifactId>s2-framework</artifactId>
+  <packaging>jar</packaging>
   <parent>
     <groupId>org.seasar.container</groupId>
     <artifactId>s2-container-project</artifactId>
     <version>2.4.14-SNAPSHOT</version>
   </parent>
-  <artifactId>s2-framework</artifactId>
-  <packaging>jar</packaging>
+
+  <!-- More Project Information -->
   <name>Seasar2 Framework</name>
   <url>http://s2container.seasar.org/</url>
+
+  <!-- Build Settings -->
   <build>
     <plugins>
       <plugin>
@@ -30,11 +36,25 @@
       </plugin>
     </plugins>
   </build>
+
+  <!-- Dependency Settings -->
   <dependencies>
     <dependency>
       <groupId>aopalliance</groupId>
       <artifactId>aopalliance</artifactId>
       <version>1.0</version>
+      <type>jar</type>
+    </dependency>
+    <dependency>
+      <groupId>jboss</groupId>
+      <artifactId>javassist</artifactId>
+      <version>3.4.ga</version>
+      <type>jar</type>
+    </dependency>
+    <dependency>
+      <groupId>ognl</groupId>
+      <artifactId>ognl</artifactId>
+      <version>2.6.7</version>
       <type>jar</type>
     </dependency>
     <dependency>
@@ -62,12 +82,6 @@
       </exclusions>
     </dependency>
     <dependency>
-      <groupId>jboss</groupId>
-      <artifactId>javassist</artifactId>
-      <version>3.4.ga</version>
-      <type>jar</type>
-    </dependency>
-    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>3.8.2</version>
@@ -85,12 +99,6 @@
           <artifactId>junit-addons-runner</artifactId>
         </exclusion>
       </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>ognl</groupId>
-      <artifactId>ognl</artifactId>
-      <version>2.6.7</version>
-      <type>jar</type>
     </dependency>
   </dependencies>
 </project>

@@ -31,8 +31,31 @@
       <item name="Seasar" href="http://www.seasar.org/"/>
       <item name="Maven 2" href="http://maven.apache.org/maven2/"/>
     </links>
-    <menu name="親プロジェクト">
+    <menu name="About">
+      <item name="ホーム" href="../../ja/index.html"/>
+      <item name="ライセンス" href="../../ja/license.html"/>
+      <item name="ダウンロード" href="../../ja/downloads.html"/>
+      <item name="ChangeLog" href="http://www.seasar.org/wiki/index.php?ChangeLog%2FSeasar"/>
+      <item name="移行ガイド" href="http://www.seasar.org/wiki/index.php?SeasarUpdateOperationLog"/>
+    </menu>
+    <menu name="ドキュメント">
+      <item name="一覧" href="../../ja/documents.html"/>
+      <item name="セットアップ" href="../../ja/setup.html"/>
+      <item name="DIContainer" href="../../ja/DIContainer.html"/>
+      <item name="AOP" href="../../ja/aop.html"/>
+      <item name="FAQ (全般)" href="http://www.seasar.org/wiki/index.php?FAQ%2FS2Container"/>
+      <item name="FAQ (AOP)" href="http://www.seasar.org/wiki/index.php?FAQ%2FS2AOP"/>
+    </menu>
+    <menu name="Javadoc">
+      <item name="S2-Framework" href="apidocs/index.html"/>
+      <item name="S2-Extension" href="../../s2-extension/ja/apidocs/index.html"/>
+      <item name="S2-Tiger" href="../../s2-tiger/ja/apidocs/index.html"/>
+    </menu>
+    <menu name="モジュール">
       <item name="Seasar2" href="../../ja/index.html"/>
+      <item name="S2-Framework" href="index.html"/>
+      <item name="S2-Extension" href="../../s2-extension/ja/index.html"/>
+      <item name="S2-Tiger" href="../../s2-tiger/ja/index.html"/>
     </menu>
     ${reports}
   </body>

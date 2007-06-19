@@ -4,16 +4,22 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"
 >
   <modelVersion>4.0.0</modelVersion>
+
+  <!-- The Basics -->
+  <artifactId>s2-tiger</artifactId>
+  <packaging>jar</packaging>
   <parent>
     <groupId>org.seasar.container</groupId>
     <artifactId>s2-container-project</artifactId>
     <version>2.4.14-SNAPSHOT</version>
     <relativePath>../seasar2</relativePath>
   </parent>
-  <artifactId>s2-tiger</artifactId>
-  <packaging>jar</packaging>
+
+  <!-- More Project Information -->
   <name>S2 Tiger</name>
   <url>http://s2container.seasar.org/</url>
+
+  <!-- Build Settings -->
   <build>
     <defaultGoal>validate</defaultGoal>
     <pluginManagement>
@@ -29,6 +35,8 @@
       </plugins>
     </pluginManagement>
   </build>
+
+  <!-- Dependency Settings -->
   <dependencies>
     <dependency>
       <groupId>org.seasar.container</groupId>
@@ -82,7 +90,6 @@
       <artifactId>easymock</artifactId>
       <version>2.2</version>
       <type>jar</type>
-      <optional>true</optional>
     </dependency>
   </dependencies>
 </project>
