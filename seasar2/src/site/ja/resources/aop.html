@@ -718,13 +718,13 @@ public class InnerEntity {
         &lt;component name="toStringInterceptor" class="org.seasar.framework.aop.interceptors.ToStringInterceptor"/&gt;
         &lt;component class="examples.aop.tostringinterceptor.EntityImplImpl"&gt;
                 &lt;arg&gt;
-                        innterEntity
+                        innerEntity
                 &lt;/arg&gt;
                 &lt;aspect pointcut="toString"&gt;
                         toStringInterceptor
                 &lt;/aspect&gt;
         &lt;/component&gt;
-        &lt;component name="innterEntity" class="examples.aop.tostringinterceptor.InnerEntity"&gt;
+        &lt;component name="innerEntity" class="examples.aop.tostringinterceptor.InnerEntity"&gt;
                 &lt;aspect pointcut="toString"&gt;
                         toStringInterceptor
                 &lt;/aspect&gt;
@@ -737,7 +737,7 @@ public class InnerEntity {
 <li type="circle">org.seasar.framework.container.S2Container#getComponent()メソッドの第１引数にコンポーネントに登録したクラス名（EntityImplImpl.class)を指定してコンポーネントを取得します。</li>
 <li type="circle">toString()にAspectが適用されているか確認するために取得したコンポーネントをSystem.out.println()メソッドの引数に渡して表示します。</li>
 </ul>
-<p>AopTraceClient.java</p>
+<p>AopToStringClient.java</p>
 <pre>
 package examples.aop.tostringinterceptor;
 
@@ -758,7 +758,7 @@ public class AopToStringClient {
 <p>ObjectクラスのtoString()メソッドと異なり、クラス名とハッシュ値だけでなく、各フィールドの値が表示されていることが確認できます。 また、EntityImplImplクラスのフィールド(implimplValue)だけでなく、スーパークラスであるEntityImplクラスのフィールド(implValue)やそのさらにスーパークラスであるEntityクラスのフィールド(その他のフィールド)が表示されていることが確認できます。 Entityクラスがフィールドとして持っているInnerEntityクラスのフィールドも表示されています。</p>
 <pre>
 examples.aop.tostringinterceptor.EntityImplImpl@1db4f6f[
-  implImplValue=3,implValue=2,intValue=1,staticIntValue=12,doubleValue=12.3,
+  implImplValue=1,implValue=1,intValue=1,staticIntValue=12,doubleValue=12.3,
   stringValue="1234",staticFinalIntValue=12345,mapValue={},
   innerEntity=examples.aop.tostringinterceptor.InnerEntity@13c1b02[
     innerInt=0,innerLong=234,str="foo",charArray={'a','b','c'}]]
@@ -824,11 +824,11 @@ public class Substance implements IBase {
 &lt;!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container//EN"
 "http://www.seasar.org/dtd/components.dtd"&gt;
 &lt;components&gt;
-    &lt;component class="sample.aop.delegateinterceptor.Dummy"&gt;
+    &lt;component class="examples.aop.delegateinterceptor.Dummy"&gt;
         &lt;aspect&gt;
             &lt;component class="org.seasar.framework.aop.interceptors.DelegateInterceptor"&gt;
                 &lt;initMethod name="setTarget"&gt;
-                    &lt;arg&gt;new sample.aop.delegateinterceptor.Substance()&lt;/arg&gt;
+                    &lt;arg&gt;new examples.aop.delegateinterceptor.Substance()&lt;/arg&gt;
                 &lt;/initMethod&gt;
             &lt;/component&gt;
         &lt;/aspect&gt;
@@ -862,7 +862,6 @@ public class AopDelegateClient {
 <pre>
 substance
 </pre>
-<p>このサンプルは、seasar2/src/examples/aop/delegateinterceptor以下に用意されています。</p>
 <br />
 <h3><a name="PrototypeDelegateInterceptorSample" id="PrototypeDelegateInterceptorSample">PrototypeDelegateInterceptor</a></h3>
 <p>S2AOPで用意されているPrototypeDelegateInterceptorを使って、singletonのコンポーネントからprototypeのコンポーネントのメソッドに委譲させましょう。<br />
@@ -880,7 +879,7 @@ substance
 </ul>
 <p>IBase.java</p>
 <pre>
-package examples.aop.delegateinterceptor;
+package examples.aop.prototypedelegateinterceptor;
 
 public interface IBase {
     public abstract void run();
@@ -892,7 +891,7 @@ public interface IBase {
 </ul>
 <p>Dummy.java</p>
 <pre>
-package examples.aop.delegateinterceptor;
+package examples.aop.prototypedelegateinterceptor;
 
 public abstract class Dummy implements IBase {
 }
@@ -904,7 +903,7 @@ public abstract class Dummy implements IBase {
 </ul>
 <p>Substance.java</p>
 <pre>
-package examples.aop.delegateinterceptor;
+package examples.aop.prototypedelegateinterceptor;
 
 public class Substance implements IBase {
     public void run() {
@@ -924,7 +923,7 @@ public class Substance implements IBase {
 &lt;!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container//EN"
 "http://www.seasar.org/dtd/components.dtd"&gt;
 &lt;components&gt;
-    &lt;component class="sample.aop.delegateinterceptor.Dummy"&gt;
+    &lt;component class="examples.aop.prototypedelegateinterceptor.Dummy"&gt;
         &lt;aspect&gt;
             &lt;component class="org.seasar.framework.aop.interceptors.PrototypeDelegateInterceptor"&gt;
                 &lt;property name="targetName"&gt;"target"&lt;/property&gt;
@@ -943,14 +942,14 @@ public class Substance implements IBase {
 <li type="circle">org.seasar.framework.container.S2Container#getComponent()メソッドの第１引数にコンポーネントに登録したクラス名（IBase.class)を指定して取得します。</li>
 <li type="circle">コンテナから取得したIBase#run()メソッドを繰り返し実行します。</li>
 </ul>
-AopPrototypeDelegateCilent.dicon
+AopPrototypeDelegateCilent.java
 <pre>
 package examples.aop.prototypedelegateinterceptor;
 
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.factory.S2ContainerFactory;
 
-public class AopDelegateClient {
+public class AopPrototypeDelegateClient {
     private static String PATH = "examples/aop/prototypedelegateinterceptor/PrototypeDelegate.dicon";
     public static void main( String[] args ){
         S2Container container = S2ContainerFactory.create(PATH);
@@ -970,7 +969,6 @@ examples.aop.prototypedelegateinterceptor.Substance@8a0544
 examples.aop.prototypedelegateinterceptor.Substance@401369
 examples.aop.prototypedelegateinterceptor.Substance@e49dcd
 </pre>
-<p>このサンプルは、seasar2/src/examples/aop/delegateinterceptor以下に用意されています。</p>
 <br />
 <h3><a name="SyncInterceptorSample" id="SyncInterceptorSample">SyncInterceptor</a></h3>
 <p>SyncInterceptorを使って、同期を取りましょう。<br />
@@ -978,7 +976,7 @@ examples.aop.prototypedelegateinterceptor.Substance@e49dcd
 <ul>
 <li type="circle">ある変数に1加算するインターフェース(Count.java)</li>
 <li type="circle">インターフェースを実装するクラス(CountImpl.java)</li>
-<li type="circle">コンポーネントの定義を行うdiconファイル(SyncCalc.dicon)</li>
+<li type="circle">コンポーネントの定義を行うdiconファイル(Count.dicon)</li>
 <li type="circle">設定が正しく行われているか確認する実行ファイル(AopSyncClient.java)</li>
 </ul>
 <b>ある変数に1加算するインターフェース作成</b>
