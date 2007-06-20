@@ -388,7 +388,7 @@ public class BatchClient {
 DEBUG 2004-04-23 20:12:38,680 [main] 物理的なコネクションを取得しました<br />DEBUG 2004-04-23 20:12:38,710 [main] 論理的なコネクションを取得しました<br />DEBUG 2004-04-23 20:12:38,761 [main] UPDATE emp SET ename = 'SMITH' WHERE empno = 7369<br />DEBUG 2004-04-23 20:12:38,941 [main] UPDATE emp SET ename = 'SCOTT' WHERE empno = 7788<br />DEBUG 2004-04-23 20:12:38,971 [main] 論理的なコネクションを閉じました<br />2<br />DEBUG 2004-04-23 20:12:38,981 [main] 物理的なコネクションを閉じました<br />
 </pre>
 <h2><a name="OracleUnicode" id="OracleUnicode">OracleのUnicode問題</a></h2>
-<p>OracleのJDBC Driverは、Unicodeのマッピングに一部問題があり、～が化けてしまいます。この問題に対処するには、j2ee.diconのResultSetFactoryの設定を変更します。通常は下記のようになっています。</p>
+<p>OracleのJDBC Driverは、Unicodeのマッピングに一部問題があり、～が化けてしまいます。この問題に対処するには、jdbc.diconのResultSetFactoryの設定を変更します。通常は下記のようになっています。</p>
 <pre>
 &lt;component class="org.seasar.extension.jdbc.impl.BasicResultSetFactory"/&gt;
 &lt;!--<br />&lt;component class="org.seasar.extension.jdbc.impl.OracleResultSetFactory"/&gt;<br />--&gt;
@@ -398,7 +398,32 @@ DEBUG 2004-04-23 20:12:38,680 [main] 物理的なコネクションを取得し�
 &lt;!--<br />&lt;component class="org.seasar.extension.jdbc.impl.BasicResultSetFactory"/&gt;<br />--&gt;<br />&lt;component class="org.seasar.extension.jdbc.impl.OracleResultSetFactory"/&gt;
 </pre>
 <h2><a name="BooleanToInt" id="BooleanToInt">Booleanの扱い</a></h2>
-<p>Oracleのようにboolean型に対応していないRDBMSもあります。この問題に対処するには、j2ee.diconのCallableStatementFactoryの設定を変更します。通常は下記のようになっています。</p>
+<p>Oracleのようにboolean型に対応していないRDBMSもあります。この問題に対処するには、jdbc.diconを変更します。<p>
+<p>StatementFactoryの設定を変更します。通常は下記のようになっています。</p>
+<pre>
+&lt;component class="org.seasar.extension.jdbc.impl.ConfigurableStatementFactory"&gt;
+  &lt;arg&gt;
+    &lt;component class="org.seasar.extension.jdbc.impl.BasicStatementFactory"/&gt;
+    &lt;!--
+    &lt;component class="org.seasar.extension.jdbc.impl.BooleanToIntStatementFactory"/&gt;
+    --&gt;
+    ...
+  &lt;/arg&gt;
+&lt;/component&gt;
+</pre>
+<p>BasicStatementFactoryの部分をコメントアウトし、かわりにBooleanToIntStatementFactoryの部分のコメントをはずし有効にします。</p>
+<pre>
+&lt;component class="org.seasar.extension.jdbc.impl.ConfigurableStatementFactory"&gt;
+  &lt;arg&gt;
+    &lt;!--
+    &lt;component class="org.seasar.extension.jdbc.impl.BasicStatementFactory"/&gt;
+    --&gt;
+    &lt;component class="org.seasar.extension.jdbc.impl.BooleanToIntStatementFactory"/&gt;
+    ...
+  &lt;/arg&gt;
+&lt;/component&gt;
+</pre>
+<p>CallableStatementFactoryの設定を変更します。通常は下記のようになっています。</p>
 <pre>
 &lt;component class="org.seasar.extension.jdbc.impl.BasicCallableStatementFactory"/&gt;
 &lt;!--<br />&lt;component class="org.seasar.extension.jdbc.impl.BooleanToIntCallableStatementFactory"/&gt;<br />--&gt;

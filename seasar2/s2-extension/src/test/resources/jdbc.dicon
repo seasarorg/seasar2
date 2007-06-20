@@ -6,18 +6,24 @@
 	<include path="jdbc-extension.dicon"/>
 
 	<component class="org.seasar.extension.jdbc.impl.BasicResultSetFactory"/>
+	<!--
+	<component class="org.seasar.extension.jdbc.impl.OracleResultSetFactory"/>
+	-->
 	<component class="org.seasar.extension.jdbc.impl.ConfigurableStatementFactory">
 		<arg>
 			<component class="org.seasar.extension.jdbc.impl.BasicStatementFactory"/>
+			<!--
+			<component class="org.seasar.extension.jdbc.impl.BooleanToIntStatementFactory"/>
+			-->
 		</arg>
 		<property name="fetchSize">100</property>
 		<!--
 		<property name="maxRows">100</property>
 		-->
 	</component>
+	<component class="org.seasar.extension.jdbc.impl.BasicCallableStatementFactory"/>
 	<!--
-	<component class="org.seasar.extension.jdbc.impl.OracleResultSetFactory"/>
-	<component class="org.seasar.extension.jdbc.impl.BooleanToIntStatementFactory"/>
+	<component class="org.seasar.extension.jdbc.impl.BooleanToIntCallableStatementFactory"/>
 	-->
 
 	<!-- for HSQLDB -->
