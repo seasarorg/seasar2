@@ -15,15 +15,21 @@
  */
 package org.seasar.framework.container.external;
 
+import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.ContainerConstants;
 import org.seasar.framework.container.impl.SimpleComponentDef;
 
 /**
+ * applicationスコープ用の {@link ComponentDef}です。
+ * 
  * @author higa
  * 
  */
 public class ApplicationMapComponentDef extends SimpleComponentDef {
 
+    /**
+     * {@link ApplicationMapComponentDef}を作成します。
+     */
     public ApplicationMapComponentDef() {
         super(null, null, ContainerConstants.APPLICATION_SCOPE);
     }

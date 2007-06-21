@@ -25,7 +25,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.seasar.framework.container.ExternalContext;
+
 /**
+ * {@link ExternalContext}用の抽象 {@link Map}です。
+ * 
  * @author shot
  * @author higa
  */
@@ -37,6 +41,9 @@ public abstract class AbstractExternalContextMap extends AbstractMap {
 
     private Collection values;
 
+    /**
+     * {@link AbstractExternalContextMap}を作成します。
+     */
     public AbstractExternalContextMap() {
     }
 
@@ -125,21 +132,38 @@ public abstract class AbstractExternalContextMap extends AbstractMap {
         return values;
     }
 
+    /**
+     * 属性の値を返します。
+     * 
+     * @param key
+     * @return 属性の値
+     */
     protected abstract Object getAttribute(String key);
 
+    /**
+     * 属性の値を設定します。
+     * 
+     * @param key
+     * @param value
+     */
     protected abstract void setAttribute(String key, Object value);
 
+    /**
+     * 属性名の {@link Iterator}を返します。
+     * 
+     * @return
+     */
     protected abstract Iterator getAttributeNames();
 
+    /**
+     * 属性を削除します。
+     * 
+     * @param key
+     */
     protected abstract void removeAttribute(String key);
 
     abstract class AbstractExternalContextSet extends AbstractSet {
 
-        /*
-         * (non-Javadoc)
-         * 
-         * @see java.util.AbstractCollection#size()
-         */
         public int size() {
             int size = 0;
             for (Iterator itr = iterator(); itr.hasNext(); size++) {
@@ -154,24 +178,19 @@ public abstract class AbstractExternalContextMap extends AbstractMap {
 
         private AbstractExternalContextMap contextMap;
 
+        /**
+         * {@link EntrySet}を作成します。
+         * 
+         * @param contextMap
+         */
         public EntrySet(AbstractExternalContextMap contextMap) {
             this.contextMap = contextMap;
         }
 
-        /*
-         * (non-Javadoc)
-         * 
-         * @see java.util.AbstractCollection#iterator()
-         */
         public Iterator iterator() {
             return new EntryIterator(contextMap);
         }
 
-        /*
-         * (non-Javadoc)
-         * 
-         * @see java.util.AbstractCollection#remove(java.lang.Object)
-         */
         public boolean remove(Object o) {
             if (!(o instanceof Map.Entry)) {
                 return false;
@@ -186,24 +205,19 @@ public abstract class AbstractExternalContextMap extends AbstractMap {
 
         private AbstractExternalContextMap contextMap;
 
+        /**
+         * {@link KeySet}を作成します。
+         * 
+         * @param contextMap
+         */
         public KeySet(AbstractExternalContextMap contextMap) {
             this.contextMap = contextMap;
         }
 
-        /*
-         * (non-Javadoc)
-         * 
-         * @see java.util.AbstractCollection#iterator()
-         */
         public Iterator iterator() {
             return new KeyIterator(contextMap);
         }
 
-        /*
-         * (non-Javadoc)
-         * 
-         * @see java.util.AbstractCollection#remove(java.lang.Object)
-         */
         public boolean remove(Object o) {
             if (!(o instanceof String)) {
                 return false;
@@ -218,6 +232,11 @@ public abstract class AbstractExternalContextMap extends AbstractMap {
 
         private AbstractExternalContextMap contextMap;
 
+        /**
+         * {@link ValuesCollection}を作成します。
+         * 
+         * @param contextMap
+         */
         public ValuesCollection(AbstractExternalContextMap contextMap) {
             this.contextMap = contextMap;
         }
@@ -246,6 +265,11 @@ public abstract class AbstractExternalContextMap extends AbstractMap {
 
         private boolean removeCalled = false;
 
+        /**
+         * {@link AbstractExternalContextIterator}を作成します。
+         * 
+         * @param contextMap
+         */
         public AbstractExternalContextIterator(
                 final AbstractExternalContextMap contextMap) {
             iterator = contextMap.getAttributeNames();
@@ -274,18 +298,39 @@ public abstract class AbstractExternalContextMap extends AbstractMap {
             }
         }
 
+        /**
+         * 現在のキーを返します。
+         * 
+         * @return 現在のキー
+         */
         protected String getCurrentKey() {
             return currentKey;
         }
 
+        /**
+         * 値を返します。
+         * 
+         * @param key
+         * @return 値
+         */
         protected Object getValueFromMap(String key) {
             return contextMap.get(key);
         }
 
+        /**
+         * キーに対するエントリを削除します。
+         * 
+         * @param key
+         */
         protected void removeKeyFromMap(String key) {
             contextMap.remove(key);
         }
 
+        /**
+         * 値に対するエントリを削除します。
+         * 
+         * @param value
+         */
         protected void removeValueFromMap(Object value) {
             if (containsValue(value)) {
                 for (Iterator itr = entrySet().iterator(); itr.hasNext();) {
@@ -298,13 +343,26 @@ public abstract class AbstractExternalContextMap extends AbstractMap {
 
         }
 
+        /**
+         * 次の要素に移動します。
+         * 
+         * @return 次の要素
+         */
         protected abstract Object doNext();
 
+        /**
+         * 現在の要素を削除します。
+         */
         protected abstract void doRemove();
     }
 
     class EntryIterator extends AbstractExternalContextIterator {
 
+        /**
+         * {@link EntryIterator}を作成します。
+         * 
+         * @param contextMap
+         */
         public EntryIterator(AbstractExternalContextMap contextMap) {
             super(contextMap);
         }
@@ -323,6 +381,11 @@ public abstract class AbstractExternalContextMap extends AbstractMap {
 
     class KeyIterator extends AbstractExternalContextIterator {
 
+        /**
+         * {@link KeyIterator}を作成します。
+         * 
+         * @param contextMap
+         */
         public KeyIterator(AbstractExternalContextMap contextMap) {
             super(contextMap);
         }
@@ -338,6 +401,11 @@ public abstract class AbstractExternalContextMap extends AbstractMap {
 
     class ValuesIterator extends AbstractExternalContextIterator {
 
+        /**
+         * {@link ValuesIterator}を作成します。
+         * 
+         * @param contextMap
+         */
         public ValuesIterator(AbstractExternalContextMap contextMap) {
             super(contextMap);
         }
@@ -355,12 +423,22 @@ public abstract class AbstractExternalContextMap extends AbstractMap {
 
     }
 
+    /**
+     * 変化しない {@link Entry}です。
+     * 
+     */
     protected static class ImmutableEntry implements Map.Entry {
 
         private final Object key;
 
         private final Object value;
 
+        /**
+         * {@link ImmutableEntry}を作成します。
+         * 
+         * @param key
+         * @param value
+         */
         public ImmutableEntry(Object key, Object value) {
             this.key = key;
             this.value = value;

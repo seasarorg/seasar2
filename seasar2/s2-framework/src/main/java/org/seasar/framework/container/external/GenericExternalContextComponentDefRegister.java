@@ -21,6 +21,8 @@ import org.seasar.framework.container.external.servlet.CookieMapComponentDef;
 import org.seasar.framework.container.impl.S2ContainerImpl;
 
 /**
+ * {@link GenericExternalContext}用の {@link ExternalContextComponentDefRegister}です。
+ * 
  * @author koichik
  * 
  */

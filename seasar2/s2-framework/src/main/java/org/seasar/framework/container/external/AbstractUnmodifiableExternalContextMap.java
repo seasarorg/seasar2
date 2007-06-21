@@ -20,13 +20,17 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
-
 /**
+ * 更新しない {@link AbstractExternalContextMap}です。
+ * 
  * @author shot
  */
 public abstract class AbstractUnmodifiableExternalContextMap extends
         AbstractExternalContextMap {
 
+    /**
+     * 
+     */
     public AbstractUnmodifiableExternalContextMap() {
     }
 

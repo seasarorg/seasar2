@@ -15,15 +15,21 @@
  */
 package org.seasar.framework.container.external;
 
+import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.ContainerConstants;
 import org.seasar.framework.container.impl.SimpleComponentDef;
 
 /**
+ * requestスコープ用の {@link ComponentDef}です。
+ * 
  * @author higa
  * 
  */
 public class RequestMapComponentDef extends SimpleComponentDef {
 
+    /**
+     * {@link RequestMapComponentDef}を作成します。
+     */
     public RequestMapComponentDef() {
         super(null, null, ContainerConstants.REQUEST_SCOPE);
     }

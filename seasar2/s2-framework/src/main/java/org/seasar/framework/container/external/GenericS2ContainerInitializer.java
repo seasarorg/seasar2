@@ -25,23 +25,46 @@ import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 import org.seasar.framework.util.StringUtil;
 
 /**
+ * Genericな {@link S2Container}の初期化クラスです。
+ * 
  * @author koichik
  */
 public class GenericS2ContainerInitializer {
 
+    /**
+     * {@link S2Container}用の設定パスです。
+     */
     protected String containerConfigPath;
 
+    /**
+     * アプリケーション用の設定パスです。
+     */
     protected String configPath;
 
+    /**
+     * {@link ExternalContext}です。
+     */
     protected ExternalContext externalContext;
 
+    /**
+     * {@link ExternalContextComponentDefRegister}です。
+     */
     protected ExternalContextComponentDefRegister externalContextComponentDefRegister;
 
+    /**
+     * {@link GenericS2ContainerInitializer}を作成します。
+     */
     public GenericS2ContainerInitializer() {
         this(new GenericExternalContext(),
                 new GenericExternalContextComponentDefRegister());
     }
 
+    /**
+     * {@link GenericS2ContainerInitializer}を作成します。
+     * 
+     * @param externalContext
+     * @param externalContextComponentDefRegister
+     */
     public GenericS2ContainerInitializer(
             ExternalContext externalContext,
             ExternalContextComponentDefRegister externalContextComponentDefRegister) {
@@ -49,6 +72,11 @@ public class GenericS2ContainerInitializer {
         this.externalContextComponentDefRegister = externalContextComponentDefRegister;
     }
 
+    /**
+     * 初期化します。
+     * 
+     * @return {@link S2Container}
+     */
     public S2Container initialize() {
         if (isAlreadyInitialized()) {
             return SingletonS2ContainerFactory.getContainer();
@@ -71,10 +99,20 @@ public class GenericS2ContainerInitializer {
         return SingletonS2ContainerFactory.getContainer();
     }
 
+    /**
+     * 初期化されているかどうか返します。
+     * 
+     * @return 初期化されているかどうか
+     */
     protected boolean isAlreadyInitialized() {
         return SingletonS2ContainerFactory.hasContainer();
     }
 
+    /**
+     * 設定パスを設定します。
+     * 
+     * @param configPath
+     */
     public void setConfigPath(final String configPath) {
         this.configPath = configPath;
     }

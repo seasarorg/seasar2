@@ -23,15 +23,26 @@ import org.seasar.framework.container.ExternalContext;
 import org.seasar.framework.util.MapUtil;
 
 /**
+ * Genericな {@link ExternalContext}です。
+ * 
  * @author koichik
  */
 public class GenericExternalContext implements ExternalContext {
 
+    /**
+     * 空の {@link Map}です。
+     */
     protected static final Map EMPTY_MAP = Collections
             .unmodifiableMap(new HashMap());
 
+    /**
+     * applicationスコープ用の {@link Map}です。
+     */
     protected Map application = MapUtil.createHashMap();
 
+    /**
+     * requestを管理するための {@link ThreadLocal}です。
+     */
     protected ThreadLocal requests = new ThreadLocal();
 
     public Object getApplication() {

@@ -15,15 +15,21 @@
  */
 package org.seasar.framework.container.external;
 
+import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.ContainerConstants;
 import org.seasar.framework.container.impl.SimpleComponentDef;
 
 /**
+ * RequestParameter用の {@link ComponentDef}です。
+ * 
  * @author higa
  * 
  */
 public class RequestParameterMapComponentDef extends SimpleComponentDef {
 
+    /**
+     * {@link RequestParameterMapComponentDef}を作成します。
+     */
     public RequestParameterMapComponentDef() {
         super(null, null, ContainerConstants.PARAM);
     }
@@ -32,6 +38,7 @@ public class RequestParameterMapComponentDef extends SimpleComponentDef {
      * @see org.seasar.framework.container.ComponentDef#getComponent()
      */
     public Object getComponent() {
-        return getContainer().getRoot().getExternalContext().getRequestParameterMap();
+        return getContainer().getRoot().getExternalContext()
+                .getRequestParameterMap();
     }
 }

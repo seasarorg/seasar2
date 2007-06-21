@@ -17,15 +17,21 @@ package org.seasar.framework.container.external;
 
 import java.util.Map;
 
+import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.ContainerConstants;
 import org.seasar.framework.container.impl.SimpleComponentDef;
 
 /**
+ * application用の {@link ComponentDef}です。
+ * 
  * @author koichik
  */
 public class ApplicationComponentDef extends SimpleComponentDef {
+    /**
+     * {@link ApplicationComponentDef}を作成します。
+     */
     public ApplicationComponentDef() {
-        super(Map.class, ContainerConstants.APPLICATION_SCOPE);
+        super(Map.class, ContainerConstants.SERVLET_CONTEXT_NAME);
     }
 
     /**

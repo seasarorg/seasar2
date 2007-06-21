@@ -15,15 +15,21 @@
  */
 package org.seasar.framework.container.external;
 
+import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.ContainerConstants;
 import org.seasar.framework.container.impl.SimpleComponentDef;
 
 /**
+ * InitParameter用の {@link ComponentDef}です。
+ * 
  * @author higa
  * 
  */
 public class InitParameterMapComponentDef extends SimpleComponentDef {
 
+    /**
+     * {@link InitParameterMapComponentDef}を作成します。
+     */
     public InitParameterMapComponentDef() {
         super(null, null, ContainerConstants.INIT_PARAM);
     }

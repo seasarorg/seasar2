@@ -15,15 +15,21 @@
  */
 package org.seasar.framework.container.external;
 
+import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.ContainerConstants;
 import org.seasar.framework.container.impl.SimpleComponentDef;
 
 /**
+ * RequestHeaderValues用の {@link ComponentDef}です。
+ * 
  * @author higa
  * 
  */
 public class RequestHeaderValuesMapComponentDef extends SimpleComponentDef {
 
+    /**
+     * {@link RequestHeaderValuesMapComponentDef}を作成します。
+     */
     public RequestHeaderValuesMapComponentDef() {
         super(null, null, ContainerConstants.HEADER_VALUES);
     }
@@ -32,6 +38,7 @@ public class RequestHeaderValuesMapComponentDef extends SimpleComponentDef {
      * @see org.seasar.framework.container.ComponentDef#getComponent()
      */
     public Object getComponent() {
-        return getContainer().getRoot().getExternalContext().getRequestHeaderValuesMap();
+        return getContainer().getRoot().getExternalContext()
+                .getRequestHeaderValuesMap();
     }
 }

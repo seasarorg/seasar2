@@ -15,15 +15,21 @@
  */
 package org.seasar.framework.container.external;
 
+import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.ContainerConstants;
 import org.seasar.framework.container.impl.SimpleComponentDef;
 
 /**
+ * sessionスコープ用の {@link ComponentDef}です。
+ * 
  * @author higa
  * 
  */
 public class SessionMapComponentDef extends SimpleComponentDef {
 
+    /**
+     * {@link SessionMapComponentDef}を作成します。
+     */
     public SessionMapComponentDef() {
         super(null, null, ContainerConstants.SESSION_SCOPE);
     }

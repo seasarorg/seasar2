@@ -17,13 +17,20 @@ package org.seasar.framework.container.external;
 
 import java.util.Map;
 
+import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.ContainerConstants;
 import org.seasar.framework.container.impl.SimpleComponentDef;
 
 /**
+ * Request用の {@link ComponentDef}です。
+ * 
  * @author koichik
  */
 public class RequestComponentDef extends SimpleComponentDef {
+
+    /**
+     * {@link RequestComponentDef}を作成します。
+     */
     public RequestComponentDef() {
         super(Map.class, ContainerConstants.REQUEST_NAME);
     }
