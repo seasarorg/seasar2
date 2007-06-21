@@ -21,10 +21,6 @@
 		<property name="maxRows">100</property>
 		-->
 	</component>
-	<component class="org.seasar.extension.jdbc.impl.BasicCallableStatementFactory"/>
-	<!--
-	<component class="org.seasar.extension.jdbc.impl.BooleanToIntCallableStatementFactory"/>
-	-->
 
 	<!-- for HSQLDB -->
 	<component name="xaDataSource"

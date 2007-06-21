@@ -398,8 +398,7 @@ DEBUG 2004-04-23 20:12:38,680 [main] 物理的なコネクションを取得し�
 &lt;!--<br />&lt;component class="org.seasar.extension.jdbc.impl.BasicResultSetFactory"/&gt;<br />--&gt;<br />&lt;component class="org.seasar.extension.jdbc.impl.OracleResultSetFactory"/&gt;
 </pre>
 <h2><a name="BooleanToInt" id="BooleanToInt">Booleanの扱い</a></h2>
-<p>Oracleのようにboolean型に対応していないRDBMSもあります。この問題に対処するには、jdbc.diconを変更します。<p>
-<p>StatementFactoryの設定を変更します。通常は下記のようになっています。</p>
+<p>Oracleのようにboolean型に対応していないRDBMSもあります。この問題に対処するには、jdbc.diconのStatementFactoryの設定を変更します。通常は下記のようになっています。<p>
 <pre>
 &lt;component class="org.seasar.extension.jdbc.impl.ConfigurableStatementFactory"&gt;
   &lt;arg&gt;
@@ -422,15 +421,6 @@ DEBUG 2004-04-23 20:12:38,680 [main] 物理的なコネクションを取得し�
     ...
   &lt;/arg&gt;
 &lt;/component&gt;
-</pre>
-<p>CallableStatementFactoryの設定を変更します。通常は下記のようになっています。</p>
-<pre>
-&lt;component class="org.seasar.extension.jdbc.impl.BasicCallableStatementFactory"/&gt;
-&lt;!--<br />&lt;component class="org.seasar.extension.jdbc.impl.BooleanToIntCallableStatementFactory"/&gt;<br />--&gt;
-</pre>
-<p>BasicCallableStatementFactoryの部分をコメントアウトし、かわりにBooleanToIntCallableStatementFactoryの部分のコメントをはずし有効にします。</p>
-<pre>
-&lt;!--<br />&lt;component class="org.seasar.extension.jdbc.impl.BasicCallableStatementFactory"/&gt;<br />--&gt;<br />&lt;component class="org.seasar.extension.jdbc.impl.BooleanToIntCallableStatementFactory"/&gt;
 </pre>
 <!-- document end -->
 <!-- don't edit start --></td>
