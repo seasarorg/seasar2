@@ -22,22 +22,46 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 /**
+ * リソースをトラバースするためのクラスです。
  * 
  * @author taedium
  */
 public final class ResourceTraversal {
 
+    /**
+     * リソースを処理するインターフェースです。
+     * 
+     */
     public interface ResourceHandler {
+        /**
+         * リソースを処理します。
+         * 
+         * @param path
+         * @param is
+         */
         void processResource(String path, InputStream is);
     }
 
     private ResourceTraversal() {
     }
 
+    /**
+     * トラバースします。
+     * 
+     * @param rootDir
+     * @param handler
+     */
     public static void forEach(final File rootDir, final ResourceHandler handler) {
         forEach(rootDir, null, handler);
     }
 
+    /**
+     * トラバースします。
+     * 
+     * @param rootDir
+     * @param baseDirectory
+     * @param handler
+     */
     public static void forEach(final File rootDir, final String baseDirectory,
             final ResourceHandler handler) {
         final File baseDir = getBaseDir(rootDir, baseDirectory);
@@ -46,6 +70,12 @@ public final class ResourceTraversal {
         }
     }
 
+    /**
+     * トラバースします。
+     * 
+     * @param jarFile
+     * @param handler
+     */
     public static void forEach(final JarFile jarFile,
             final ResourceHandler handler) {
         final Enumeration enumeration = jarFile.entries();

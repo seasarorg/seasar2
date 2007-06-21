@@ -16,6 +16,8 @@
 package org.seasar.framework.util;
 
 /**
+ * トークンを認識するクラスです。
+ * 
  * @author higa
  * 
  */

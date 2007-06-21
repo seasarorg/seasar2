@@ -22,6 +22,8 @@ import java.sql.SQLException;
 import org.seasar.framework.exception.SQLRuntimeException;
 
 /**
+ * {@link PreparedStatement}用のユーティリティクラスです。
+ * 
  * @author higa
  * 
  */
@@ -30,7 +32,16 @@ public final class PreparedStatementUtil {
     private PreparedStatementUtil() {
     }
 
-    public static ResultSet executeQuery(PreparedStatement ps) {
+    /**
+     * クエリを実行します。
+     * 
+     * @param ps
+     * @return {@link ResultSet}
+     * @throws SQLRuntimeException
+     *             {@link SQLException}が発生した場合
+     */
+    public static ResultSet executeQuery(PreparedStatement ps)
+            throws SQLRuntimeException {
         try {
             return ps.executeQuery();
         } catch (SQLException ex) {
@@ -38,7 +49,16 @@ public final class PreparedStatementUtil {
         }
     }
 
-    public static int executeUpdate(PreparedStatement ps) {
+    /**
+     * 更新を実行します。
+     * 
+     * @param ps
+     * @return 更新した結果の行数
+     * @throws SQLRuntimeException
+     *             {@link SQLException}が発生した場合
+     */
+    public static int executeUpdate(PreparedStatement ps)
+            throws SQLRuntimeException {
         try {
             return ps.executeUpdate();
         } catch (SQLException ex) {
@@ -46,7 +66,16 @@ public final class PreparedStatementUtil {
         }
     }
 
-    public static int[] executeBatch(PreparedStatement ps) {
+    /**
+     * バッチ更新を行ないます。
+     * 
+     * @param ps
+     * @return 更新した結果の行数の配列
+     * @throws SQLRuntimeException
+     *             {@link SQLException}が発生した場合
+     */
+    public static int[] executeBatch(PreparedStatement ps)
+            throws SQLRuntimeException {
         try {
             return ps.executeBatch();
         } catch (SQLException ex) {
@@ -54,7 +83,15 @@ public final class PreparedStatementUtil {
         }
     }
 
-    public static void addBatch(PreparedStatement ps) {
+    /**
+     * バッチを追加します。
+     * 
+     * @param ps
+     * @throws SQLRuntimeException
+     *             {@link SQLException}が発生した場合
+     */
+    public static void addBatch(PreparedStatement ps)
+            throws SQLRuntimeException {
         try {
             ps.addBatch();
         } catch (SQLException ex) {

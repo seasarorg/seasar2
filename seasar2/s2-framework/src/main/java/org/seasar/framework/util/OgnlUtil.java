@@ -25,6 +25,8 @@ import org.seasar.framework.container.S2Container;
 import org.seasar.framework.exception.OgnlRuntimeException;
 
 /**
+ * Ognl用のユーティリティクラスです。
+ * 
  * @author higa
  * 
  */
@@ -33,21 +35,60 @@ public final class OgnlUtil {
     private OgnlUtil() {
     }
 
+    /**
+     * 値を返します。
+     * 
+     * @param exp
+     * @param root
+     * @return 値
+     * @see #getValue(Object, Map, Object, String, int)
+     */
     public static Object getValue(Object exp, Object root) {
         return getValue(exp, root, null, 0);
     }
 
+    /**
+     * 値を返します。
+     * 
+     * @param exp
+     * @param root
+     * @param path
+     * @param lineNumber
+     * @return 値
+     * @see #getValue(Object, Map, Object, String, int)
+     */
     public static Object getValue(Object exp, Object root, String path,
             int lineNumber) {
         return getValue(exp, null, root, path, lineNumber);
     }
 
+    /**
+     * 値を返します。
+     * 
+     * @param exp
+     * @param ctx
+     * @param root
+     * @return 値
+     * @see #getValue(Object, Map, Object, String, int)
+     */
     public static Object getValue(Object exp, Map ctx, Object root) {
         return getValue(exp, ctx, root, null, 0);
     }
 
+    /**
+     * 値を返します。
+     * 
+     * @param exp
+     * @param ctx
+     * @param root
+     * @param path
+     * @param lineNumber
+     * @return 値
+     * @throws OgnlRuntimeException
+     *             OgnlExceptionが発生した場合
+     */
     public static Object getValue(Object exp, Map ctx, Object root,
-            String path, int lineNumber) {
+            String path, int lineNumber) throws OgnlRuntimeException {
         try {
             Map newCtx = addClassResolverIfNecessary(ctx, root);
             if (newCtx != null) {
@@ -63,12 +104,29 @@ public final class OgnlUtil {
         }
     }
 
+    /**
+     * 式を解析します。
+     * 
+     * @param expression
+     * @return 解析した結果
+     * @see #parseExpression(String, String, int)
+     */
     public static Object parseExpression(String expression) {
         return parseExpression(expression, null, 0);
     }
 
+    /**
+     * 式を解析します。
+     * 
+     * @param expression
+     * @param path
+     * @param lineNumber
+     * @return 解析した結果
+     * @throws OgnlRuntimeException
+     *             OgnlExceptionが発生した場合
+     */
     public static Object parseExpression(String expression, String path,
-            int lineNumber) {
+            int lineNumber) throws OgnlRuntimeException {
         try {
             return Ognl.parseExpression(expression);
         } catch (Exception ex) {
@@ -93,9 +151,18 @@ public final class OgnlUtil {
         return ctx;
     }
 
+    /**
+     * ClassResolverの実装クラスです。
+     * 
+     */
     public static class ClassResolverImpl implements ClassResolver {
         final private ClassLoader classLoader;
 
+        /**
+         * {@link ClassResolverImpl}を作成します。
+         * 
+         * @param classLoader
+         */
         public ClassResolverImpl(ClassLoader classLoader) {
             this.classLoader = classLoader;
         }

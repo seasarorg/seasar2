@@ -26,6 +26,8 @@ import org.seasar.framework.exception.SAXRuntimeException;
 import org.xml.sax.SAXException;
 
 /**
+ * {@link SAXParser}用のユーティリティクラスです。
+ * 
  * @author higa
  * 
  */

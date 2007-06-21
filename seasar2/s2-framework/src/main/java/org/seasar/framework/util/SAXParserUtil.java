@@ -27,7 +27,7 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
 /**
- * {@link SAXParser}を扱うユーティリティ・クラスです。
+ * {@link SAXParser}用のユーティリティ・クラスです。
  * 
  * @author higa
  */

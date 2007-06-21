@@ -17,15 +17,34 @@ package org.seasar.framework.util;
 
 import java.sql.Time;
 
+/**
+ * {@link Time}用の変換ユーティリティです。
+ * 
+ * @author higa
+ * 
+ */
 public final class TimeConversionUtil {
 
     private TimeConversionUtil() {
     }
 
+    /**
+     * {@link Time}に変換します。
+     * 
+     * @param o
+     * @return {@link Time}
+     */
     public static Time toTime(Object o) {
         return toTime(o, null);
     }
 
+    /**
+     * {@link Time}に変換します。
+     * 
+     * @param o
+     * @param pattern
+     * @return {@link Time}
+     */
     public static Time toTime(Object o, String pattern) {
         if (o instanceof Time) {
             return (Time) o;

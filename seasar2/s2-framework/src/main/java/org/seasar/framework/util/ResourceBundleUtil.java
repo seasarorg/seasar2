@@ -23,6 +23,8 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 /**
+ * {@link ResourceBundle}用のユーティリティクラスです。
+ * 
  * @author higa
  * 
  */
@@ -31,6 +33,14 @@ public class ResourceBundleUtil {
     private ResourceBundleUtil() {
     }
 
+    /**
+     * バンドルを返します。 見つからない場合は、<code>null</code>を返します。
+     * 
+     * @param name
+     * @param locale
+     * @return {@link ResourceBundle}
+     * @see ResourceBundle#getBundle(String, Locale)
+     */
     public static final ResourceBundle getBundle(String name, Locale locale) {
         if (locale == null) {
             locale = Locale.getDefault();
@@ -42,6 +52,15 @@ public class ResourceBundleUtil {
         }
     }
 
+    /**
+     * バンドルを返します。 見つからない場合は、<code>null</code>を返します。
+     * 
+     * @param name
+     * @param locale
+     * @param classLoader
+     * @return {@link ResourceBundle}
+     * @see ResourceBundle#getBundle(String, Locale, ClassLoader)
+     */
     public static final ResourceBundle getBundle(String name, Locale locale,
             ClassLoader classLoader) {
         if (locale == null) {
@@ -54,6 +73,12 @@ public class ResourceBundleUtil {
         }
     }
 
+    /**
+     * {@link Map}に変換します。
+     * 
+     * @param bundle
+     * @return {@link Map}
+     */
     public static final Map convertMap(ResourceBundle bundle) {
         Map ret = new HashMap();
         for (Enumeration e = bundle.getKeys(); e.hasMoreElements();) {
@@ -64,6 +89,13 @@ public class ResourceBundleUtil {
         return ret;
     }
 
+    /**
+     * {@link Map}に変換します。
+     * 
+     * @param name
+     * @param locale
+     * @return {@link Map}
+     */
     public static final Map convertMap(String name, Locale locale) {
         ResourceBundle bundle = getBundle(name, locale);
         return convertMap(bundle);

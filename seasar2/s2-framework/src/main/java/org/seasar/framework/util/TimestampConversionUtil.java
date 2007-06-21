@@ -18,15 +18,34 @@ package org.seasar.framework.util;
 import java.sql.Timestamp;
 import java.util.Date;
 
+/**
+ * {@link Timestamp}用の変換ユーティリティです。
+ * 
+ * @author higa
+ * 
+ */
 public final class TimestampConversionUtil {
 
     private TimestampConversionUtil() {
     }
 
+    /**
+     * {@link Timestamp}に変換します。
+     * 
+     * @param o
+     * @return {@link Timestamp}
+     */
     public static Timestamp toTimestamp(Object o) {
         return toTimestamp(o, null);
     }
 
+    /**
+     * {@link Timestamp}に変換します。
+     * 
+     * @param o
+     * @param pattern
+     * @return {@link Timestamp}
+     */
     public static Timestamp toTimestamp(Object o, String pattern) {
         if (o instanceof Timestamp) {
             return (Timestamp) o;

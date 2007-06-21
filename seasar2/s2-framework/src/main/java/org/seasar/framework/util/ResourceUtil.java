@@ -24,6 +24,12 @@ import java.util.Properties;
 import org.seasar.framework.exception.IORuntimeException;
 import org.seasar.framework.exception.ResourceNotFoundRuntimeException;
 
+/**
+ * リソース用のユーティリティクラスです。
+ * 
+ * @author higa
+ * 
+ */
 public final class ResourceUtil {
 
     private ResourceUtil() {

@@ -22,6 +22,8 @@ import java.io.Reader;
 import org.seasar.framework.exception.IORuntimeException;
 
 /**
+ * {@link Reader}用のユーティリティクラスです。
+ * 
  * @author higa
  * 
  */
@@ -32,7 +34,14 @@ public final class ReaderUtil {
     private ReaderUtil() {
     }
 
-    public static String readText(Reader reader) {
+    /**
+     * テキストを読み込みます。
+     * 
+     * @param reader
+     * @return テキスト
+     * @throws IORuntimeException
+     */
+    public static String readText(Reader reader) throws IORuntimeException {
         BufferedReader in = new BufferedReader(reader);
         StringBuffer out = new StringBuffer(100);
         try {

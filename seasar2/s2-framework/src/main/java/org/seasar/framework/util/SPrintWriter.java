@@ -18,8 +18,17 @@ package org.seasar.framework.util;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
+/**
+ * Seasar2用の {@link PrintWriter}です。
+ * 
+ * @author higa
+ * 
+ */
 public class SPrintWriter extends PrintWriter {
 
+    /**
+     * {@link SPrintWriter}を作成します。
+     */
     public SPrintWriter() {
         super(new StringWriter());
     }

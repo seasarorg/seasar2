@@ -20,6 +20,8 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 /**
+ * {@link String}用のユーティリティクラスです。
+ * 
  * @author higa
  * 
  */

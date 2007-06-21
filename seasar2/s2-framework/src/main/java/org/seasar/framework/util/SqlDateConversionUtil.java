@@ -17,15 +17,34 @@ package org.seasar.framework.util;
 
 import java.sql.Date;
 
+/**
+ * {@link Date}用の変換ユーティリティです。
+ * 
+ * @author higa
+ * 
+ */
 public final class SqlDateConversionUtil {
 
     private SqlDateConversionUtil() {
     }
 
+    /**
+     * {@link Date}に変換します。
+     * 
+     * @param o
+     * @return {@link Date}
+     */
     public static Date toDate(Object o) {
         return toDate(o, null);
     }
 
+    /**
+     * {@link Date}に変換します。
+     * 
+     * @param o
+     * @param pattern
+     * @return {@link Date}
+     */
     public static Date toDate(Object o, String pattern) {
         if (o instanceof Date) {
             return (Date) o;

@@ -17,6 +17,12 @@ package org.seasar.framework.util;
 
 import java.text.SimpleDateFormat;
 
+/**
+ * {@link Short}用の変換ユーティリティです。
+ * 
+ * @author higa
+ * 
+ */
 public final class ShortConversionUtil {
 
     private ShortConversionUtil() {

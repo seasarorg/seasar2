@@ -22,6 +22,8 @@ import java.util.Properties;
 import org.seasar.framework.exception.IORuntimeException;
 
 /**
+ * {@link Properties}用のユーティリティクラスです。
+ * 
  * @author higa
  * 
  */
@@ -30,7 +32,16 @@ public final class PropertiesUtil {
     private PropertiesUtil() {
     }
 
-    public static void load(Properties props, InputStream in) {
+    /**
+     * {@link Properties#load(InputStream)}の例外処理をラップします。
+     * 
+     * @param props
+     * @param in
+     * @throws IORuntimeException
+     *             {@link IOException}が発生した場合
+     */
+    public static void load(Properties props, InputStream in)
+            throws IORuntimeException {
         try {
             props.load(in);
         } catch (IOException e) {

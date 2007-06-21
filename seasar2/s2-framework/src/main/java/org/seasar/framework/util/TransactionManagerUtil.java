@@ -23,6 +23,8 @@ import javax.transaction.TransactionManager;
 import org.seasar.framework.exception.SystemRuntimeException;
 
 /**
+ * {@link TransactionManager}用のユーティリティクラスです。
+ * 
  * @author higa
  * 
  */

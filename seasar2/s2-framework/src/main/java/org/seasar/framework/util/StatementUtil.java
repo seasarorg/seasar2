@@ -21,6 +21,8 @@ import java.sql.Statement;
 import org.seasar.framework.exception.SQLRuntimeException;
 
 /**
+ * {@link Statement}用のユーティリティクラスです。
+ * 
  * @author higa
  * 
  */

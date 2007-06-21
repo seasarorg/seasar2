@@ -18,6 +18,12 @@ package org.seasar.framework.util;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 
+/**
+ * {@link String}用の変換ユーティリティです。
+ * 
+ * @author higa
+ * 
+ */
 public final class StringConversionUtil {
 
     private StringConversionUtil() {

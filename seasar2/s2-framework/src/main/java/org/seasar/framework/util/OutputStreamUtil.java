@@ -21,11 +21,20 @@ import java.io.OutputStream;
 import org.seasar.framework.exception.IORuntimeException;
 
 /**
+ * {@link OutputStream}用のユーティリティクラスです。
+ * 
  * @author shot
  */
 public class OutputStreamUtil {
 
-    public static void close(OutputStream out) {
+    /**
+     * {@link OutputStream}を閉じます。
+     * 
+     * @param out
+     * @throws IORuntimeException
+     *             {@link IOException}が発生した場合
+     */
+    public static void close(OutputStream out) throws IORuntimeException {
         if (out == null) {
             return;
         }
@@ -36,6 +45,11 @@ public class OutputStreamUtil {
         }
     }
 
+    /**
+     * {@link OutputStream}をflushします。
+     * 
+     * @param out
+     */
     public static void flush(OutputStream out) {
         if (out == null) {
             return;

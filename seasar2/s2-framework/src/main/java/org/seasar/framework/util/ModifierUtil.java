@@ -20,34 +20,72 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
 /**
+ * {@link Modifier}用のユーティリティクラスです。
+ * 
  * @author shot
- *
+ * 
  */
 public class ModifierUtil {
 
     private ModifierUtil() {
     }
 
+    /**
+     * <code>public</code>かどうか返します。
+     * 
+     * @param m
+     * @return パブリックかどうか
+     */
     public static boolean isPublic(Method m) {
         return isPublic(m.getModifiers());
     }
 
+    /**
+     * <code>public</code>,<code>static</code>,<code>final</code>かどうか返します。
+     * 
+     * @param f
+     * @return <code>public</code>,<code>static</code>,<code>final</code>かどうか
+     */
     public static boolean isPublicStaticFinalField(Field f) {
         return isPublicStaticFinal(f.getModifiers());
     }
 
+    /**
+     * <code>public</code>,<code>static</code>,<code>final</code>かどうか返します。
+     * 
+     * @param modifier
+     * @return <code>public</code>,<code>static</code>,<code>final</code>かどうか
+     */
     public static boolean isPublicStaticFinal(int modifier) {
         return isPublic(modifier) && isStatic(modifier) && isFinal(modifier);
     }
 
+    /**
+     * <code>public</code>かどうか返します。
+     * 
+     * @param modifier
+     * @return <code>public</code>かどうか
+     */
     public static boolean isPublic(int modifier) {
         return Modifier.isPublic(modifier);
     }
 
+    /**
+     * <code>static</code>かどうか返します。
+     * 
+     * @param modifier
+     * @return <code>static</code>かどうか
+     */
     public static boolean isStatic(int modifier) {
         return Modifier.isStatic(modifier);
     }
 
+    /**
+     * <code>final</code>かどうか返します。
+     * 
+     * @param modifier
+     * @return <code>final</code>か
+     */
     public static boolean isFinal(int modifier) {
         return Modifier.isFinal(modifier);
     }

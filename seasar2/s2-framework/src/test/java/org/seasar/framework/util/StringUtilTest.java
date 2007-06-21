@@ -47,6 +47,16 @@ public class StringUtilTest extends TestCase {
     }
 
     /**
+     * 
+     */
+    public void testSplit2() {
+        String[] array = StringUtil.split("aaa, bbb", ", ");
+        assertEquals("1", 2, array.length);
+        assertEquals("2", "aaa", array[0]);
+        assertEquals("3", "bbb", array[1]);
+    }
+
+    /**
      * @throws Exception
      */
     public void testLtrim() throws Exception {

@@ -21,6 +21,12 @@ import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.util.NoSuchElementException;
 
+/**
+ * Seasar2用の連結リストです。
+ * 
+ * @author higa
+ * 
+ */
 public class SLinkedList implements Cloneable, Externalizable {
 
     static final long serialVersionUID = 1L;
@@ -29,6 +35,9 @@ public class SLinkedList implements Cloneable, Externalizable {
 
     private transient int size = 0;
 
+    /**
+     * {@link SLinkedList}を作成します。
+     */
     public SLinkedList() {
         header._next = header._previous = header;
     }

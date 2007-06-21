@@ -25,6 +25,8 @@ import org.seasar.framework.exception.RollbackRuntimeException;
 import org.seasar.framework.exception.SystemRuntimeException;
 
 /**
+ * {@link Transaction}用のユーティリティクラスです。
+ * 
  * @author higa
  * 
  */
@@ -33,6 +35,12 @@ public final class TransactionUtil {
     private TransactionUtil() {
     }
 
+    /**
+     * トランザクションに参加します。
+     * 
+     * @param tx
+     * @param xaResource
+     */
     public static void enlistResource(Transaction tx, XAResource xaResource) {
         try {
             tx.enlistResource(xaResource);
@@ -43,6 +51,12 @@ public final class TransactionUtil {
         }
     }
 
+    /**
+     * {@link Synchronization}を登録します。
+     * 
+     * @param tx
+     * @param sync
+     */
     public static void registerSynchronization(Transaction tx,
             Synchronization sync) {
 

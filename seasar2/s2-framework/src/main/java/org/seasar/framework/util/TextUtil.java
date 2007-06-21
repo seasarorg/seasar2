@@ -20,6 +20,8 @@ import java.io.InputStream;
 import java.io.Reader;
 
 /**
+ * テキスト用のユーティリティクラスです。
+ * 
  * @author higa
  * 
  */
