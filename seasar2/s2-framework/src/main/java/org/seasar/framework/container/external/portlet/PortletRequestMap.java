@@ -23,12 +23,19 @@ import org.seasar.framework.container.external.AbstractExternalContextMap;
 import org.seasar.framework.util.EnumerationIterator;
 
 /**
+ * Portlet用のRequestMapです。
+ * 
  * @author <a href="mailto:shinsuke@yahoo.co.jp">Shinsuke Sugaya</a>
  */
 public class PortletRequestMap extends AbstractExternalContextMap {
 
     private PortletRequest request;
 
+    /**
+     * {@link PortletRequestMap}を作成します。
+     * 
+     * @param request
+     */
     public PortletRequestMap(PortletRequest request) {
         this.request = request;
     }

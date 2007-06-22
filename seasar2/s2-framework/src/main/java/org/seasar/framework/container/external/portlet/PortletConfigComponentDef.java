@@ -27,21 +27,20 @@ import org.seasar.framework.exception.EmptyRuntimeException;
  * @author <a href="mailto:shinsuke@yahoo.co.jp">Shinsuke Sugaya</a>
  * 
  */
-public class PortletConfigComponentDef extends SimpleComponentDef
-{
+public class PortletConfigComponentDef extends SimpleComponentDef {
 
-    public PortletConfigComponentDef()
-    {
+    /**
+     * {@link PortletConfigComponentDef}を作成します。
+     */
+    public PortletConfigComponentDef() {
         super(PortletConfig.class, ContainerConstants.CONFIG_NAME);
     }
 
     /**
      * @see org.seasar.framework.container.ComponentDef#getComponent()
      */
-    public Object getComponent()
-    {
-        if (getContainer().getRoot().getExternalContext() instanceof PortletExternalContext)
-        {
+    public Object getComponent() {
+        if (getContainer().getRoot().getExternalContext() instanceof PortletExternalContext) {
             return getContainer().getRoot().getExternalContext().getRequest();
         }
         throw new EmptyRuntimeException("config");

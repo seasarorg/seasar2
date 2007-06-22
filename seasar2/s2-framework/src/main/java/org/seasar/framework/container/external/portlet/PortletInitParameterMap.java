@@ -23,6 +23,8 @@ import org.seasar.framework.container.external.AbstractUnmodifiableExternalConte
 import org.seasar.framework.util.EnumerationIterator;
 
 /**
+ * Portlet用のInitParameterMapです。
+ * 
  * @author <a href="mailto:shinsuke@yahoo.co.jp">Shinsuke Sugaya</a>
  */
 public class PortletInitParameterMap extends
@@ -30,6 +32,11 @@ public class PortletInitParameterMap extends
 
     private final PortletContext context;
 
+    /**
+     * {@link PortletInitParameterMap}を作成します。
+     * 
+     * @param context
+     */
     public PortletInitParameterMap(final PortletContext context) {
         this.context = context;
     }

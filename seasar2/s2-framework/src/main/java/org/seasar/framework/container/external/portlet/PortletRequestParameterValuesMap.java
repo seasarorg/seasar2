@@ -25,6 +25,8 @@ import javax.portlet.PortletRequest;
 import org.seasar.framework.container.external.AbstractUnmodifiableExternalContextMap;
 
 /**
+ * Portlet用のRequestParameterValuesMapです。
+ * 
  * @author <a href="mailto:shinsuke@yahoo.co.jp">Shinsuke Sugaya</a>
  */
 public class PortletRequestParameterValuesMap extends
@@ -34,6 +36,11 @@ public class PortletRequestParameterValuesMap extends
 
     private final Set parameterNames = new HashSet();
 
+    /**
+     * {@link PortletRequestParameterValuesMap}を作成します。
+     * 
+     * @param request
+     */
     public PortletRequestParameterValuesMap(final PortletRequest request) {
         this.request = request;
         for (final Enumeration names = request.getParameterNames(); names

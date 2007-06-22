@@ -24,6 +24,8 @@ import javax.portlet.PortletResponse;
 import org.seasar.framework.container.external.servlet.HttpServletExternalContext;
 
 /**
+ * 拡張された {@link PortletExternalContext}です。
+ * 
  * @author shinsuke
  * 
  */
@@ -32,12 +34,20 @@ public class PortletExtendedExternalContext extends PortletExternalContext {
 
     private ThreadLocal isPortlet = new ThreadLocal();
 
+    /**
+     * {@link PortletExtendedExternalContext}を作成します。
+     */
     public PortletExtendedExternalContext() {
         super();
         servletExternalContext = new HttpServletExternalContext();
         setPortlet(false);
     }
 
+    /**
+     * Portletかどうか設定します。
+     * 
+     * @param value
+     */
     protected void setPortlet(boolean value) {
         if (value) {
             isPortlet.set(Boolean.TRUE);
@@ -46,6 +56,11 @@ public class PortletExtendedExternalContext extends PortletExternalContext {
         }
     }
 
+    /**
+     * Portletかどうか返します。
+     * 
+     * @return Portletかどうか
+     */
     protected boolean isPortlet() {
         Boolean value = (Boolean) isPortlet.get();
         if (value != null && value.equals(Boolean.TRUE)) {

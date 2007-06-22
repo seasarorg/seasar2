@@ -43,9 +43,14 @@ public class PortletExternalContext implements ExternalContext {
     public Object getRequest() {
         return getPortletRequest();
     }
-    
+
+    /**
+     * PortletRequestを返します。
+     * 
+     * @return PortletRequest
+     */
     protected PortletRequest getPortletRequest() {
-        return (PortletRequest)requests.get();
+        return (PortletRequest) requests.get();
     }
 
     public void setRequest(Object request) {
@@ -60,10 +65,20 @@ public class PortletExternalContext implements ExternalContext {
         responses.set(response);
     }
 
+    /**
+     * 設定用のオブジェクトを返します。
+     * 
+     * @return 設定用のオブジェクト
+     */
     public Object getConfig() {
         return configs.get();
     }
 
+    /**
+     * 設定用のオブジェクトを設定します。
+     * 
+     * @param config
+     */
     public void setConfig(Object config) {
         configs.set(config);
     }

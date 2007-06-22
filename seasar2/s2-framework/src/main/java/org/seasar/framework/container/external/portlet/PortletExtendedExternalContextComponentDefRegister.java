@@ -18,13 +18,13 @@ package org.seasar.framework.container.external.portlet;
 import org.seasar.framework.container.ExternalContextComponentDefRegister;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.external.ApplicationMapComponentDef;
-import org.seasar.framework.container.external.SessionMapComponentDef;
 import org.seasar.framework.container.external.InitParameterMapComponentDef;
 import org.seasar.framework.container.external.RequestHeaderMapComponentDef;
 import org.seasar.framework.container.external.RequestHeaderValuesMapComponentDef;
 import org.seasar.framework.container.external.RequestMapComponentDef;
 import org.seasar.framework.container.external.RequestParameterMapComponentDef;
 import org.seasar.framework.container.external.RequestParameterValuesMapComponentDef;
+import org.seasar.framework.container.external.SessionMapComponentDef;
 import org.seasar.framework.container.external.servlet.CookieMapComponentDef;
 import org.seasar.framework.container.external.servlet.HttpServletRequestComponentDef;
 import org.seasar.framework.container.external.servlet.HttpServletResponseComponentDef;
@@ -33,6 +33,8 @@ import org.seasar.framework.container.external.servlet.ServletContextComponentDe
 import org.seasar.framework.container.impl.S2ContainerImpl;
 
 /**
+ * 拡張されたPortlet用の {@link ExternalContextComponentDefRegister}です。
+ * 
  * @author shinsuke
  * 
  */

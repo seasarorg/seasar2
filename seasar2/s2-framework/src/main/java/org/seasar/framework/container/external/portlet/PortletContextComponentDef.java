@@ -27,19 +27,19 @@ import org.seasar.framework.container.impl.SimpleComponentDef;
  * @author <a href="mailto:shinsuke@yahoo.co.jp">Shinsuke Sugaya</a>
  * 
  */
-public class PortletContextComponentDef extends SimpleComponentDef
-{
+public class PortletContextComponentDef extends SimpleComponentDef {
 
-    public PortletContextComponentDef()
-    {
+    /**
+     * {@link PortletContextComponentDef}を作成します。
+     */
+    public PortletContextComponentDef() {
         super(PortletContext.class, ContainerConstants.SERVLET_CONTEXT_NAME);
     }
 
     /**
      * @see org.seasar.framework.container.ComponentDef#getComponent()
      */
-    public Object getComponent()
-    {
+    public Object getComponent() {
         return getContainer().getRoot().getExternalContext().getApplication();
     }
 }

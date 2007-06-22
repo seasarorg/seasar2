@@ -28,6 +28,9 @@ import org.seasar.framework.container.impl.SimpleComponentDef;
  */
 public class PortletRequestComponentDef extends SimpleComponentDef {
 
+    /**
+     * {@link PortletRequestComponentDef}を作成します。
+     */
     public PortletRequestComponentDef() {
         super(PortletRequest.class, ContainerConstants.REQUEST_NAME);
     }

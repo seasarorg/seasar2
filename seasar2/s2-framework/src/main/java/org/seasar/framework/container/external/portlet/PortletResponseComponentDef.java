@@ -28,6 +28,9 @@ import org.seasar.framework.container.impl.SimpleComponentDef;
  */
 public class PortletResponseComponentDef extends SimpleComponentDef {
 
+    /**
+     * {@link PortletResponseComponentDef}を作成します。
+     */
     public PortletResponseComponentDef() {
         super(PortletResponse.class, ContainerConstants.RESPONSE_NAME);
     }

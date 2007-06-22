@@ -28,6 +28,9 @@ import org.seasar.framework.container.impl.SimpleComponentDef;
  */
 public class PortletSessionComponentDef extends SimpleComponentDef {
 
+    /**
+     * {@link PortletSessionComponentDef}を作成します。
+     */
     public PortletSessionComponentDef() {
         super(PortletSession.class, ContainerConstants.SESSION_NAME);
     }

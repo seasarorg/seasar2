@@ -24,12 +24,19 @@ import org.seasar.framework.util.AssertionUtil;
 import org.seasar.framework.util.EnumerationIterator;
 
 /**
+ * PortletのApplication用の {@link AbstractExternalContextMap}です。
+ * 
  * @author <a href="mailto:shinsuke@yahoo.co.jp">Shinsuke Sugaya</a>
  */
 public class PortletApplicationMap extends AbstractExternalContextMap {
 
     private PortletContext context;
 
+    /**
+     * {@link PortletApplicationMap}を作成します。
+     * 
+     * @param context
+     */
     public PortletApplicationMap(PortletContext context) {
         AssertionUtil.assertNotNull("context is null.", context);
         this.context = context;

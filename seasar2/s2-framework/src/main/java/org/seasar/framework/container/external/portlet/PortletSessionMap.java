@@ -26,6 +26,8 @@ import org.seasar.framework.util.EmptyIterator;
 import org.seasar.framework.util.EnumerationIterator;
 
 /**
+ * Portlet用のSessionMapです。
+ * 
  * @author <a href="mailto:shinsuke@yahoo.co.jp">Shinsuke Sugaya</a>
  */
 public class PortletSessionMap extends AbstractExternalContextMap {
@@ -34,6 +36,11 @@ public class PortletSessionMap extends AbstractExternalContextMap {
 
     private PortletRequest request;
 
+    /**
+     * {@link PortletSessionMap}を作成します。
+     * 
+     * @param request
+     */
     public PortletSessionMap(PortletRequest request) {
         AssertionUtil.assertNotNull("request is null.", request);
         this.request = request;
