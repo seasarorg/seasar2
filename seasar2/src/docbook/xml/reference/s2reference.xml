@@ -5,22 +5,24 @@
 <!ENTITY __setup__f2daq7l8 SYSTEM "intro/setup.xml">
 <!ENTITY __quickstart__f2dardfb SYSTEM "intro/quickstart.xml">
 <!ENTITY __architecture__f2das3ll SYSTEM "intro/architecture.xml">
+<!ENTITY __overview__f2day179 SYSTEM "container/overview.xml">
+<!ENTITY __di__f38j46yj SYSTEM "container/di.xml">
+<!ENTITY __aop__f38j4jq6 SYSTEM "container/aop.xml">
+<!ENTITY __creating__f2dayfy2 SYSTEM "container/creating.xml">
+<!ENTITY __using__f2daymxd SYSTEM "container/using.xml">
+<!ENTITY __singleton__f2daywif SYSTEM "container/singleton.xml">
+<!ENTITY __external__f2daz588 SYSTEM "container/external.xml">
 <!ENTITY __overview__f2datad3 SYSTEM "config/overview.xml">
 <!ENTITY __dicon__f2datutm SYSTEM "config/dicon.xml">
 <!ENTITY __component__f2dau6yp SYSTEM "config/component.xml">
 <!ENTITY __di__f2daukzw SYSTEM "config/di.xml">
 <!ENTITY __aop__f2dav11l SYSTEM "config/aop.xml">
+<!ENTITY __ognl__f2daw8d2 SYSTEM "config/ognl.xml">
 <!ENTITY __annotation__f2davb5q SYSTEM "config/annotation.xml">
 <!ENTITY __organize__f2daw0zf SYSTEM "config/organize.xml">
 <!ENTITY __smartdeploy__f2dawhbj SYSTEM "config/smartdeploy.xml">
 <!ENTITY __autoregister__f2dawp9k SYSTEM "config/autoregister.xml">
-<!ENTITY __ognl__f2daw8d2 SYSTEM "config/ognl.xml">
-<!ENTITY __overview__f2day179 SYSTEM "container/overview.xml">
-<!ENTITY __creating__f2dayfy2 SYSTEM "container/creating.xml">
-<!ENTITY __using__f2daymxd SYSTEM "container/using.xml">
-<!ENTITY __singleton__f2daywif SYSTEM "container/singleton.xml">
-<!ENTITY __external__f2daz588 SYSTEM "container/external.xml">
-<!ENTITY __customize__f2dazdlg SYSTEM "container/customize.xml">
+<!ENTITY __customize__f38iw4xz SYSTEM "container/customize.xml">
 ]>
 <book lang="ja">
   <bookinfo>
@@ -49,6 +51,24 @@
     &__architecture__f2das3ll;
   </part>
 
+  <part id="container">
+    <title>S2コンテナ</title>
+
+    &__overview__f2day179;
+
+    &__di__f38j46yj;
+
+    &__aop__f38j4jq6;
+
+    &__creating__f2dayfy2;
+
+    &__using__f2daymxd;
+
+    &__singleton__f2daywif;
+
+    &__external__f2daz588;
+  </part>
+
   <part id="config">
     <title>設定</title>
 
@@ -62,6 +82,8 @@
 
     &__aop__f2dav11l;
 
+    &__ognl__f2daw8d2;
+
     &__annotation__f2davb5q;
 
     &__organize__f2daw0zf;
@@ -70,23 +92,7 @@
 
     &__autoregister__f2dawp9k;
 
-    &__ognl__f2daw8d2;
-  </part>
-
-  <part id="container">
-    <title>コンテナ</title>
-
-    &__overview__f2day179;
-
-    &__creating__f2dayfy2;
-
-    &__using__f2daymxd;
-
-    &__singleton__f2daywif;
-
-    &__external__f2daz588;
-
-    &__customize__f2dazdlg;
+    &__customize__f38iw4xz;
   </part>
 
   <part id="web">

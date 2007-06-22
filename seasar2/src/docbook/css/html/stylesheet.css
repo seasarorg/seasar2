@@ -24,25 +24,98 @@ img.border {
 	border: 0px solid #888;
 }
 
-h1.title {
-    font-size: 180%;
-    font-weight: bold;
+div.titlepage {
+	margin: 0px;
+	padding: 3px;
+	color: #FFFFFF;
+	background-color: #308FAA;
+	border-bottom: 2px solid #000000;
 }
-h2.subtitle {
+div.titlepage div div {
+    display: inline;
+}
+div.titlepage hr {
+	display: none;
+}
+
+div.book h1.title {
+	margin: 10px;
+	padding: 0px;
+	text-align: center;
+    font-size: 240%;
+    font-weight: lighter;
+    font-family: fantasy;
+}
+div.book h2.subtitle {
+	margin: 5px;
+	padding: 0px;
+	text-align: center;
     font-size: 140%;
     font-style: italic;
 }
-h2.title {
-    display: inline;
+div.book p.releaseinfo {
+	margin: 5px;
+	padding: 0px;
+	text-align: center;
+    font-size: 100%;
+}
+
+div.part h1.title {
+	margin: 10px;
+	padding: 0px;
+    font-size: 200%;
+    font-weight: normal;
+}
+div.part h2.subtitle {
+	margin: 5px;
+	padding: 0px;
     font-size: 140%;
+    font-weight: normal;
+    font-style: italic;
+}
+div.part p.releaseinfo {
+    display: inline;
+    padding-left: 5px;
+    font-size: 100%;
+}
+
+div.chapter h2.title {
+    display: inline;
+    font-size: 150%;
     font-weight: bold;
 }
-h3.subtitle {
+div.chapter h3.subtitle {
     display: inline;
+    padding-left: 3px;
     font-size: 120%;
     font-weight: normal;
     font-style: italic;
 }
+div.chapter p.releaseinfo {
+    display: inline;
+    padding-left: 3px;
+    font-size: 100%;
+}
+
+div.section h2.title {
+	padding: 5px;
+    display: inline;
+    font-size: 140%;
+    font-weight: bold;
+}
+div.section h3.subtitle {
+    display: inline;
+    padding-left: 3px;
+    font-size: 120%;
+    font-weight: normal;
+    font-style: italic;
+}
+div.section p.releaseinfo {
+    display: inline;
+    padding-left: 3px;
+    font-size: 100%;
+}
+
 h3.title {
     display: inline;
     font-size: 120%;
@@ -50,10 +123,12 @@ h3.title {
 }
 h4.subtitle {
     display: inline;
+    padding-left: 3px;
     font-size: 110%;
     font-weight: normal;
     font-style: italic;
 }
+
 h4.title {
     display: inline;
     font-size: 110%;
@@ -61,25 +136,10 @@ h4.title {
 }
 h5.subtitle {
     display: inline;
+    padding-left: 3px;
     font-size: 100%;
     font-weight: normal;
     font-style: italic;
-}
-p.releaseinfo {
-    display: inline;
-    font-size: 100%;
-}
-
-div.titlepage {
-	margin: 0px;
-	padding: 3px 0px 0px 8px;
-	color: #FFFFFF;
-	background-color: #308FAA;
-	border-bottom: 2px solid #000000;
-}
-
-div.titlepage div div {
-    display: inline;
 }
 
 ul {

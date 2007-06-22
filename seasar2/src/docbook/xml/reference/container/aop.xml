@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="container-aop">
+  <title>Aspect-Oriented Programming</title>
+
+  <subtitle>－アスペクト指向プログラミング－</subtitle>
+
+  <section>
+    <title></title>
+
+    <para></para>
+  </section>
+
+  <section>
+    <title>インターセプタの作成</title>
+
+    <para></para>
+  </section>
+
+  <section>
+    <title>インタータイプの作成</title>
+
+    <para></para>
+  </section>
+
+  <section>
+    <title>標準インターセプタ</title>
+
+    <para></para>
+  </section>
+
+  <section>
+    <title>標準インタータイプ</title>
+
+    <para></para>
+  </section>
+</chapter>

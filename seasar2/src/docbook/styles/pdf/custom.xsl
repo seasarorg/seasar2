@@ -286,7 +286,7 @@
 
     <!-- don't use images for callouts -->
     <xsl:param name="callout.graphics">0</xsl:param>
-    <xsl:param name="callout.unicode">0</xsl:param>
+    <xsl:param name="callout.unicode">1</xsl:param>
 
     <!-- Place callout marks at this column in annotated areas -->
     <xsl:param name="callout.defaultcolumn">90</xsl:param>

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <chapter id="config-aop">
-  <title>Aspect-Oriented Programming</title>
+  <title>AOP定義</title>
 
-  <subtitle>アスペクト指向プログラミング</subtitle>
+  <subtitle>－アスペクト指向プログラミング－</subtitle>
 
   <section>
     <title>はじめに</title>
@@ -16,42 +16,102 @@
     <subtitle>アスペクト</subtitle>
 
     <para></para>
+
+    <programlistingco>
+      <areaspec>
+        <area coords="3" id="aspect1" />
+      </areaspec>
+
+      <programlisting>&lt;component class="<emphasis>fullQualifiedClassName</emphasis>"&gt;
+  &lt;aspect
+    pointcut="<emphasis>pointcut</emphasis>"
+  &gt;
+    <emphasis>content</emphasis>
+  &lt;/aspect&gt;
+&lt;/component&gt;
+</programlisting>
+
+      <calloutlist>
+        <callout arearefs="property1">
+          <para><literal>pointcut</literal> (任意):
+          インターセプタを適用するメソッドを選択するためのポイントカットを指定します．</para>
+        </callout>
+      </calloutlist>
+    </programlistingco>
+
+    <para><literal>&lt;aspect&gt;</literal>要素の内容には次のものを記述することができます．</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>OGNL式または<literal>&lt;component&gt;</literal>要素</para>
+      </listitem>
+
+      <listitem>
+        <para><literal>&lt;description&gt;</literal>要素</para>
+      </listitem>
+    </itemizedlist>
+
+    <para><literal>&lt;aspect&gt;</literal>要素の内容にOGNL式と<literal>&lt;component&gt;</literal>要素の両方を記述した場合，<literal>&lt;component&gt;</literal>要素は無視されます．</para>
+
+    <para><literal>&lt;component&gt;</literal>要素には複数の<literal>&lt;aspect&gt;</literal>要素を記述することができます．
+    その場合，複数の<literal>&lt;aspect&gt;</literal>要素の<literal>pointcut</literal>属性で選択されたメソッドには，
+    複数のインターセプタが<literal>&lt;aspect&gt;</literal>要素の記述された順番で適用されます．</para>
+
+    <section>
+      <title><literal>pointcut</literal>属性</title>
+
+      <subtitle>－ポイントカット－</subtitle>
+
+      <para>インターセプタを適用するメソッドを正規表現で指定します． 正規表現はカンマ区切りで複数並べることができます．</para>
+
+      <para>次の例では，<literal>do</literal>で始まるメソッドと<literal>init</literal>で始まる<literal>public</literal>メソッドが選択されます．</para>
+
+      <programlisting>&lt;component name="hoge"&gt;
+  &lt;aspect pointcut="do.*,init.*"&gt;traceInterceptor&lt;/aspect&gt;
+&lt;/component&gt;
+</programlisting>
+
+      <para>オーバーライドされたメソッドの一部だけを選択することはdiconではできません． 同名のメソッドは全部選択されます
+      (ただし<literal>public</literal>メソッドのみ)．
+      アノテーションでは特定のメソッドだけを選択することができます．「」</para>
+    </section>
   </section>
 
   <section>
     <sectioninfo>
-      <releaseinfo>2.4.0</releaseinfo>
+      <releaseinfo>(Version: 2.4.0～)</releaseinfo>
     </sectioninfo>
 
     <title><literal>&lt;interType&gt;</literal>要素</title>
 
-    <subtitle>インタータイプ</subtitle>
+    <subtitle>－インタータイプ－</subtitle>
 
     <para></para>
-  </section>
 
-  <section>
-    <title>インターセプタの作成</title>
+    <programlisting>&lt;component class="<emphasis>fullQualifiedClassName</emphasis>"&gt;
+  &lt;intertype&gt;
+    <emphasis>content</emphasis>
+  &lt;/interType&gt;
+&lt;/component&gt;
+</programlisting>
 
-    <para></para>
-  </section>
+    <para><literal>&lt;interType&gt;</literal>要素の内容には次のものを記述することができます．</para>
 
-  <section>
-    <title>インタータイプの作成</title>
+    <itemizedlist>
+      <listitem>
+        <para>OGNL式または<literal>&lt;component&gt;</literal>要素</para>
+      </listitem>
 
-    <para></para>
-  </section>
+      <listitem>
+        <para><literal>&lt;description&gt;</literal>要素</para>
+      </listitem>
+    </itemizedlist>
 
-  <section>
-    <title>標準インターセプタ</title>
+    <para><literal>&lt;interType&gt;</literal>要素の内容にOGNL式と<literal>&lt;component&gt;</literal>要素の両方を記述した場合，<literal>&lt;component&gt;</literal>要素は無視されます．</para>
 
-    <para></para>
-  </section>
-
-  <section>
-    <title>標準インタータイプ</title>
-
-    <para></para>
+    <para><literal>&lt;component&gt;</literal>要素には複数の<literal>&lt;interType&gt;</literal>要素を記述することができます．
+    その場合，
+    複数のインタータイプが<literal>&lt;interType&gt;</literal>要素の記述された順番で適用されます．</para>
   </section>
 
   <section>

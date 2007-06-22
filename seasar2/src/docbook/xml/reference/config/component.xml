@@ -461,7 +461,7 @@
 
       <para>OGNL式を評価した結果のオブジェクトがコンポーネントのインスタンスとなります．</para>
 
-      <programlisting>&lt;component name="hoge"
+      <programlisting>&lt;component name="hoge"&gt;
   new foo.bar.Hoge()
 &lt;/component&gt;
 </programlisting>
