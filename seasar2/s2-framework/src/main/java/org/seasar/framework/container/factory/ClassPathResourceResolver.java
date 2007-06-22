@@ -24,13 +24,19 @@ import org.seasar.framework.util.ResourceUtil;
 import org.seasar.framework.util.URLUtil;
 
 /**
+ * クラスパス経由でリソースを取得する{@link ResourceResolver ResourceResolver}の実装クラスです。
+ * 
  * @author koichik
  * @author skirnir
+ * @author azusa
  */
 public class ClassPathResourceResolver implements ResourceResolver {
 
     private static final char COLON = ':';
 
+    /**
+     * <code>ClassPathResourceResolver</code>を構築します。
+     */
     public ClassPathResourceResolver() {
     }
 
@@ -42,6 +48,15 @@ public class ClassPathResourceResolver implements ResourceResolver {
         return URLUtil.openStream(url);
     }
 
+    /**
+     * クラスパスから読み込み対象となるリソースを取得し、URLを構築します。 取得する際には、拡張子の手前に環境名をサフィックスを加えたパス(例
+     * env.txt→env_ut.txt)を用います。 環境名を加えたパスのリソースが存在しない場合は、パスをそのまま用います。
+     * 
+     * @param path
+     *            読み込み対象となるリソースのパス
+     * @return 取得したリソースのURL
+     * @see Env#adjustPath(String)
+     */
     protected URL getURL(final String path) {
         String extPath = Env.adjustPath(path);
         URL url = toURL(extPath);
