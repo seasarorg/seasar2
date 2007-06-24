@@ -20,6 +20,8 @@ import org.seasar.framework.container.S2Container;
 import org.seasar.framework.util.CaseInsensitiveMap;
 
 /**
+ * {@link PropertyDef}を補助するクラスです。
+ * 
  * @author higa
  * 
  */
@@ -29,32 +31,68 @@ public final class PropertyDefSupport {
 
     private S2Container container;
 
+    /**
+     * {@link PropertyDefSupport}を作成します。
+     */
     public PropertyDefSupport() {
     }
 
-    public synchronized void addPropertyDef(PropertyDef propertyDef) {
+    /**
+     * {@link PropertyDef}を追加します。
+     * 
+     * @param propertyDef
+     */
+    public void addPropertyDef(PropertyDef propertyDef) {
         if (container != null) {
             propertyDef.setContainer(container);
         }
         propertyDefs.put(propertyDef.getPropertyName(), propertyDef);
     }
 
-    public synchronized int getPropertyDefSize() {
+    /**
+     * {@link PropertyDef}の数を返します。
+     * 
+     * @return {@link PropertyDef}の数
+     */
+    public int getPropertyDefSize() {
         return propertyDefs.size();
     }
 
-    public synchronized PropertyDef getPropertyDef(int index) {
+    /**
+     * {@link PropertyDef}を返します。
+     * 
+     * @param index
+     * @return {@link PropertyDef}
+     */
+    public PropertyDef getPropertyDef(int index) {
         return (PropertyDef) propertyDefs.get(index);
     }
 
-    public synchronized PropertyDef getPropertyDef(String propertyName) {
+    /**
+     * {@link PropertyDef}を返します。
+     * 
+     * @param propertyName
+     * @return {@link PropertyDef}
+     */
+    public PropertyDef getPropertyDef(String propertyName) {
         return (PropertyDef) propertyDefs.get(propertyName);
     }
 
-    public synchronized boolean hasPropertyDef(String propertyName) {
+    /**
+     * {@link PropertyDef}を持っているかどうか返します。
+     * 
+     * @param propertyName
+     * @return {@link PropertyDef}を持っているかどうか
+     */
+    public boolean hasPropertyDef(String propertyName) {
         return propertyDefs.containsKey(propertyName);
     }
 
+    /**
+     * {@link S2Container}を設定します。
+     * 
+     * @param container
+     */
     public void setContainer(S2Container container) {
         this.container = container;
         for (int i = 0; i < getPropertyDefSize(); ++i) {

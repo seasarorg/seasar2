@@ -27,23 +27,43 @@ import org.seasar.framework.container.warmdeploy.WarmdeployBehavior;
 import org.seasar.framework.util.FieldUtil;
 
 /**
+ * SMART deploy用のユーティリティクラスです。
+ * 
  * @author shot
  * 
  */
-public class SmartDeployUtil {
+public final class SmartDeployUtil {
 
     private SmartDeployUtil() {
     }
 
+    /**
+     * SMART deployかどうか返します。
+     * 
+     * @param container
+     * @return SMART deployかどうか
+     */
     public static boolean isSmartdeployMode(S2Container container) {
         return isHotdeployMode(container) || isCooldeployMode(container)
                 || isWarmdeployMode(container);
     }
 
+    /**
+     * HOT deployかどうか返します。
+     * 
+     * @param container
+     * @return HOT deployかどうか
+     */
     public static boolean isHotdeployMode(S2Container container) {
         return HotdeployUtil.isHotdeploy();
     }
 
+    /**
+     * COOL deployかどうか返します。
+     * 
+     * @param container
+     * @return COOL deployかどうか
+     */
     public static boolean isCooldeployMode(S2Container container) {
         BeanDesc bd = BeanDescFactory.getBeanDesc(S2ContainerFactory.class);
         S2ContainerFactory.Provider provider = (Provider) FieldUtil.get(bd
@@ -54,12 +74,24 @@ public class SmartDeployUtil {
         return false;
     }
 
+    /**
+     * WARM deployかどうか返します。
+     * 
+     * @param container
+     * @return WARM deployかどうか
+     */
     public static boolean isWarmdeployMode(S2Container container) {
         S2ContainerBehavior.Provider provider = S2ContainerBehavior
                 .getProvider();
         return provider instanceof WarmdeployBehavior;
     }
 
+    /**
+     * Deployモードを返します。
+     * 
+     * @param container
+     * @return Deployモード
+     */
     public static String getDeployMode(S2Container container) {
         if (isHotdeployMode(container)) {
             return "Hot Deploy";

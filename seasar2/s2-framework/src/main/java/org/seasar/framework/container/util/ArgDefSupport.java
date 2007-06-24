@@ -16,25 +16,34 @@
 package org.seasar.framework.container.util;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.seasar.framework.container.ArgDef;
 import org.seasar.framework.container.S2Container;
 
 /**
+ * {@link ArgDef}の補助クラスです。
+ * 
  * @author higa
  * 
  */
 public final class ArgDefSupport {
 
-    private List argDefs = Collections.synchronizedList(new ArrayList());
+    private List argDefs = new ArrayList();
 
     private S2Container container;
 
+    /**
+     * {@link ArgDefSupport}を作成します。
+     */
     public ArgDefSupport() {
     }
 
+    /**
+     * {@link ArgDef}を追加します。
+     * 
+     * @param argDef
+     */
     public void addArgDef(ArgDef argDef) {
         if (container != null) {
             argDef.setContainer(container);
@@ -42,14 +51,30 @@ public final class ArgDefSupport {
         argDefs.add(argDef);
     }
 
+    /**
+     * {@link ArgDef}の数を返します。
+     * 
+     * @return {@link ArgDef}の数
+     */
     public int getArgDefSize() {
         return argDefs.size();
     }
 
+    /**
+     * {@link ArgDef}を返します。
+     * 
+     * @param index
+     * @return {@link ArgDef}
+     */
     public ArgDef getArgDef(int index) {
         return (ArgDef) argDefs.get(index);
     }
 
+    /**
+     * {@link S2Container}を設定します。
+     * 
+     * @param container
+     */
     public void setContainer(S2Container container) {
         this.container = container;
         for (int i = 0; i < getArgDefSize(); ++i) {

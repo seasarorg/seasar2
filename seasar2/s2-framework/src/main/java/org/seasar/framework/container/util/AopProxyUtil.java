@@ -25,13 +25,21 @@ import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.ContainerConstants;
 
 /**
+ * {@link AopProxy}用のユーティリティクラスです。
+ * 
  * @author koichik
  */
-public class AopProxyUtil {
+public final class AopProxyUtil {
 
-    protected AopProxyUtil() {
+    private AopProxyUtil() {
     }
 
+    /**
+     * 完全なクラスを返します。
+     * 
+     * @param componentDef
+     * @return 完全なクラス
+     */
     public static Class getConcreteClass(final ComponentDef componentDef) {
         if (componentDef.getAspectDefSize() == 0
                 && componentDef.getInterTypeDefSize() == 0) {
@@ -46,7 +54,7 @@ public class AopProxyUtil {
         return proxy.getEnhancedClass();
     }
 
-    protected static Aspect[] getAspects(final ComponentDef componentDef) {
+    private static Aspect[] getAspects(final ComponentDef componentDef) {
         final int size = componentDef.getAspectDefSize();
         Aspect[] aspects = new Aspect[size];
         for (int i = 0; i < size; ++i) {
@@ -55,7 +63,7 @@ public class AopProxyUtil {
         return aspects;
     }
 
-    protected static InterType[] getInterTypes(final ComponentDef componentDef) {
+    private static InterType[] getInterTypes(final ComponentDef componentDef) {
         final int size = componentDef.getInterTypeDefSize();
         InterType[] interTypes = new InterType[size];
         for (int i = 0; i < size; ++i) {

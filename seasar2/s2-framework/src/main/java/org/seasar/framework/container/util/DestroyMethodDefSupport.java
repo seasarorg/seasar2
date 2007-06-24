@@ -16,25 +16,34 @@
 package org.seasar.framework.container.util;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.seasar.framework.container.DestroyMethodDef;
 import org.seasar.framework.container.S2Container;
 
 /**
+ * {@link DestroyMethodDef}を補助するクラスです。
+ * 
  * @author higa
  * 
  */
 public final class DestroyMethodDefSupport {
 
-    private List methodDefs = Collections.synchronizedList(new ArrayList());
+    private List methodDefs = new ArrayList();
 
     private S2Container container;
 
+    /**
+     * {@link DestroyMethodDefSupport}を作成します。
+     */
     public DestroyMethodDefSupport() {
     }
 
+    /**
+     * {@link DestroyMethodDef}を追加します。
+     * 
+     * @param methodDef
+     */
     public void addDestroyMethodDef(DestroyMethodDef methodDef) {
         if (container != null) {
             methodDef.setContainer(container);
@@ -42,14 +51,30 @@ public final class DestroyMethodDefSupport {
         methodDefs.add(methodDef);
     }
 
+    /**
+     * {@link DestroyMethodDef}の数を返します。
+     * 
+     * @return {@link DestroyMethodDef}
+     */
     public int getDestroyMethodDefSize() {
         return methodDefs.size();
     }
 
+    /**
+     * {@link DestroyMethodDef}を返します。
+     * 
+     * @param index
+     * @return {@link DestroyMethodDef}
+     */
     public DestroyMethodDef getDestroyMethodDef(int index) {
         return (DestroyMethodDef) methodDefs.get(index);
     }
 
+    /**
+     * {@link S2Container}を設定します。
+     * 
+     * @param container
+     */
     public void setContainer(S2Container container) {
         this.container = container;
         for (int i = 0; i < getDestroyMethodDefSize(); ++i) {

@@ -16,25 +16,34 @@
 package org.seasar.framework.container.util;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.seasar.framework.container.InitMethodDef;
 import org.seasar.framework.container.S2Container;
 
 /**
+ * {@link InitMethodDef}を補助するクラスです。
+ * 
  * @author higa
  * 
  */
 public final class InitMethodDefSupport {
 
-    private List methodDefs = Collections.synchronizedList(new ArrayList());
+    private List methodDefs = new ArrayList();
 
     private S2Container container;
 
+    /**
+     * {@link InitMethodDefSupport}を作成します。
+     */
     public InitMethodDefSupport() {
     }
 
+    /**
+     * {@link InitMethodDef}を追加します。
+     * 
+     * @param methodDef
+     */
     public void addInitMethodDef(InitMethodDef methodDef) {
         if (container != null) {
             methodDef.setContainer(container);
@@ -42,14 +51,30 @@ public final class InitMethodDefSupport {
         methodDefs.add(methodDef);
     }
 
+    /**
+     * {@link InitMethodDef}の数を返します。
+     * 
+     * @return {@link InitMethodDef}の数
+     */
     public int getInitMethodDefSize() {
         return methodDefs.size();
     }
 
+    /**
+     * {@link InitMethodDef}を返します。
+     * 
+     * @param index
+     * @return {@link InitMethodDef}
+     */
     public InitMethodDef getInitMethodDef(int index) {
         return (InitMethodDef) methodDefs.get(index);
     }
 
+    /**
+     * {@link S2Container}を返します。
+     * 
+     * @param container
+     */
     public void setContainer(S2Container container) {
         this.container = container;
         for (int i = 0; i < getInitMethodDefSize(); ++i) {

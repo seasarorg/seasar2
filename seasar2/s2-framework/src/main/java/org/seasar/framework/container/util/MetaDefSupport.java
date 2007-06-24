@@ -16,29 +16,43 @@
 package org.seasar.framework.container.util;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.seasar.framework.container.MetaDef;
 import org.seasar.framework.container.S2Container;
 
 /**
+ * {@link MetaDef}を補助するクラスです。
+ * 
  * @author higa
  * 
  */
 public final class MetaDefSupport {
 
-    private List metaDefs = Collections.synchronizedList(new ArrayList());
+    private List metaDefs = new ArrayList();
 
     private S2Container container;
 
+    /**
+     * {@link MetaDefSupport}を作成します。
+     */
     public MetaDefSupport() {
     }
 
+    /**
+     * {@link MetaDefSupport}を作成します。
+     * 
+     * @param container
+     */
     public MetaDefSupport(S2Container container) {
         setContainer(container);
     }
 
+    /**
+     * {@link MetaDef}を追加します。
+     * 
+     * @param metaDef
+     */
     public void addMetaDef(MetaDef metaDef) {
         if (container != null) {
             metaDef.setContainer(container);
@@ -46,14 +60,31 @@ public final class MetaDefSupport {
         metaDefs.add(metaDef);
     }
 
+    /**
+     * {@link MetaDef}の数を返します。
+     * 
+     * @return {@link MetaDef}の数
+     */
     public int getMetaDefSize() {
         return metaDefs.size();
     }
 
+    /**
+     * {@link MetaDef}を返します。
+     * 
+     * @param index
+     * @return {@link MetaDef}
+     */
     public MetaDef getMetaDef(int index) {
         return (MetaDef) metaDefs.get(index);
     }
 
+    /**
+     * {@link MetaDef}を返します。
+     * 
+     * @param name
+     * @return {@link MetaDef}
+     */
     public MetaDef getMetaDef(String name) {
         for (int i = 0; i < getMetaDefSize(); ++i) {
             MetaDef metaDef = getMetaDef(i);
@@ -65,6 +96,12 @@ public final class MetaDefSupport {
         return null;
     }
 
+    /**
+     * {@link MetaDef}の配列を返します。
+     * 
+     * @param name
+     * @return {@link MetaDef}の配列
+     */
     public MetaDef[] getMetaDefs(String name) {
         List defs = new ArrayList();
         for (int i = 0; i < getMetaDefSize(); ++i) {
@@ -77,6 +114,11 @@ public final class MetaDefSupport {
         return (MetaDef[]) defs.toArray(new MetaDef[defs.size()]);
     }
 
+    /**
+     * {@link S2Container}を返します。
+     * 
+     * @param container
+     */
     public void setContainer(S2Container container) {
         this.container = container;
         for (int i = 0; i < getMetaDefSize(); ++i) {

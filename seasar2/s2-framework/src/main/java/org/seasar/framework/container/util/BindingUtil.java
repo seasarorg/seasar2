@@ -24,23 +24,44 @@ import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.ContainerConstants;
 
 /**
+ * コンポーネントとコンポーネントを結びつけるためのユーティリティクラスです。
+ * 
  * @author higa
  * 
  */
 public final class BindingUtil implements ContainerConstants {
 
-    protected BindingUtil() {
+    private BindingUtil() {
     }
 
+    /**
+     * 自動バインディング可能かどうか返します。
+     * 
+     * @param clazz
+     * @return 自動バインディング可能かどうか
+     */
     public static final boolean isAutoBindable(Class clazz) {
         return clazz.isInterface() && !Collection.class.isAssignableFrom(clazz)
                 && !Map.class.isAssignableFrom(clazz);
     }
 
+    /**
+     * 自動バインディング可能かどうか返します。
+     * 
+     * @param clazz
+     * @return 自動バインディング可能かどうか
+     */
     public static final boolean isAutoBindableArray(Class clazz) {
         return clazz.isArray() && clazz.getComponentType().isInterface();
     }
 
+    /**
+     * 自動バインディング可能かどうか返します。
+     * 
+     * @param classes
+     * @return 自動バインディング可能かどうか
+     * @see #isAutoBindable(Class)
+     */
     public static final boolean isAutoBindable(Class[] classes) {
         for (int i = 0; i < classes.length; ++i) {
             if (!isAutoBindable(classes[i])) {
@@ -50,12 +71,26 @@ public final class BindingUtil implements ContainerConstants {
         return true;
     }
 
+    /**
+     * {@link BeanDesc}を返します。
+     * 
+     * @param componentDef
+     * @param component
+     * @return {@link BeanDesc}
+     */
     public static BeanDesc getBeanDesc(ComponentDef componentDef,
             Object component) {
         return BeanDescFactory.getBeanDesc(getComponentClass(componentDef,
                 component));
     }
 
+    /**
+     * コンポーネントのクラスを返します。AOPでクラスが拡張されている場合は、拡張前のクラスが返されます。
+     * 
+     * @param componentDef
+     * @param component
+     * @return コンポーネントのクラス
+     */
     public static Class getComponentClass(ComponentDef componentDef,
             Object component) {
         Class clazz = componentDef.getConcreteClass();

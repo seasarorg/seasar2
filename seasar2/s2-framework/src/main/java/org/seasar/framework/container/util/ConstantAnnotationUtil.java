@@ -24,14 +24,22 @@ import org.seasar.framework.util.StringUtil;
 import org.seasar.framework.util.Tokenizer;
 
 /**
+ * 定数アノテーション用のユーティリティクラスです。
+ * 
  * @author higa
  * 
  */
-public class ConstantAnnotationUtil {
+public final class ConstantAnnotationUtil {
 
-    protected ConstantAnnotationUtil() {
+    private ConstantAnnotationUtil() {
     }
 
+    /**
+     * key=value, key2=value2形式の式を {@link Map}に変換します。
+     * 
+     * @param expression
+     * @return {@link Map}に変換された式
+     */
     public static Map convertExpressionToMap(String expression) {
         if (StringUtil.isEmpty(expression)) {
             return null;
@@ -57,15 +65,31 @@ public class ConstantAnnotationUtil {
         return ret;
     }
 
+    /**
+     * 定数アノテーションかどうか返します。
+     * 
+     * @param field
+     * @return 定数アノテーションかどうか
+     */
     public static boolean isConstantAnnotation(Field field) {
         return ModifierUtil.isPublicStaticFinalField(field)
                 && field.getType().equals(String.class);
     }
 
+    /**
+     * 定数アノテーション用のトークン認識クラスです。
+     * 
+     */
     protected static class MyTokenizer extends Tokenizer {
 
+        /**
+         * 等号です。
+         */
         public static final int TT_EQUAL = '=';
 
+        /**
+         * カンマです。
+         */
         public static final int TT_COMMA = ',';
 
         private static byte[] defaultCtype = new byte[256];
@@ -74,10 +98,21 @@ public class ConstantAnnotationUtil {
             setup(defaultCtype);
         }
 
+        /**
+         * {@link MyTokenizer}を作成します。
+         * 
+         * @param str
+         */
         public MyTokenizer(String str) {
             super(str, defaultCtype);
         }
 
+        /**
+         * {@link MyTokenizer}を作成します。
+         * 
+         * @param str
+         * @param ctype
+         */
         public MyTokenizer(String str, byte[] ctype) {
             super(str, ctype);
         }

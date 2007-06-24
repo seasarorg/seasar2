@@ -16,25 +16,34 @@
 package org.seasar.framework.container.util;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.seasar.framework.container.AspectDef;
 import org.seasar.framework.container.S2Container;
 
 /**
+ * {@link AspectDef}の補助クラスです。
+ * 
  * @author higa
  * 
  */
 public final class AspectDefSupport {
 
-    private List aspectDefs = Collections.synchronizedList(new ArrayList());
+    private List aspectDefs = new ArrayList();
 
     private S2Container container;
 
+    /**
+     * {@link AspectDefSupport}を作成します。
+     */
     public AspectDefSupport() {
     }
 
+    /**
+     * {@link AspectDef}を追加します。
+     * 
+     * @param aspectDef
+     */
     public void addAspectDef(AspectDef aspectDef) {
         if (container != null) {
             aspectDef.setContainer(container);
@@ -42,6 +51,12 @@ public final class AspectDefSupport {
         aspectDefs.add(aspectDef);
     }
 
+    /**
+     * {@link AspectDef}を追加します。
+     * 
+     * @param index
+     * @param aspectDef
+     */
     public void addAspectDef(int index, AspectDef aspectDef) {
         if (container != null) {
             aspectDef.setContainer(container);
@@ -49,14 +64,30 @@ public final class AspectDefSupport {
         aspectDefs.add(index, aspectDef);
     }
 
+    /**
+     * {@link AspectDef}の数を返します。
+     * 
+     * @return {@link AspectDef}の数
+     */
     public int getAspectDefSize() {
         return aspectDefs.size();
     }
 
+    /**
+     * {@link AspectDef}を返します。
+     * 
+     * @param index
+     * @return {@link AspectDef}
+     */
     public AspectDef getAspectDef(int index) {
         return (AspectDef) aspectDefs.get(index);
     }
 
+    /**
+     * {@link S2Container}を設定します。
+     * 
+     * @param container
+     */
     public void setContainer(S2Container container) {
         this.container = container;
         for (int i = 0; i < getAspectDefSize(); ++i) {

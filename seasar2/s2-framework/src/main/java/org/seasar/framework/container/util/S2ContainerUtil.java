@@ -22,10 +22,13 @@ import java.util.Set;
 
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.ContainerConstants;
+import org.seasar.framework.container.S2Container;
 import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.StringUtil;
 
 /**
+ * {@link S2Container}の用のユーティリティクラスです。
+ * 
  * @author higa
  * 
  */
@@ -44,9 +47,15 @@ public final class S2ContainerUtil implements ContainerConstants {
         notAssignableClasses.add(ContainerConstants.class);
     }
 
-    protected S2ContainerUtil() {
+    private S2ContainerUtil() {
     }
 
+    /**
+     * アサイン可能なクラスを返します。
+     * 
+     * @param componentClass
+     * @return アサイン可能なクラス
+     */
     public static Class[] getAssignableClasses(Class componentClass) {
         Set classes = new HashSet();
         for (Class clazz = componentClass; clazz != Object.class
@@ -57,7 +66,7 @@ public final class S2ContainerUtil implements ContainerConstants {
         return (Class[]) classes.toArray(new Class[classes.size()]);
     }
 
-    public static void addAssignableClasses(Set classes, Class clazz) {
+    private static void addAssignableClasses(Set classes, Class clazz) {
         if (notAssignableClasses.contains(clazz)) {
             return;
         }
@@ -68,6 +77,11 @@ public final class S2ContainerUtil implements ContainerConstants {
         }
     }
 
+    /**
+     * {@link ComponentDef}を登録したときのログを出力します。
+     * 
+     * @param cd
+     */
     public static void putRegisterLog(final ComponentDef cd) {
         if (logger.isDebugEnabled()) {
             final StringBuffer buf = new StringBuffer(100);

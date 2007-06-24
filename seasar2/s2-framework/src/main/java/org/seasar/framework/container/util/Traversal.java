@@ -22,22 +22,63 @@ import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.S2Container;
 
 /**
+ * トラバースするためのクラスです。
+ * 
  * @author koichik
  */
 public class Traversal {
+
+    /**
+     * {@link S2Container}を処理するためのインターフェースです。
+     * 
+     */
     public static interface S2ContainerHandler {
+        /**
+         * {@link S2Container}を処理します。
+         * 
+         * @param container
+         * @return 処理した結果
+         */
         Object processContainer(S2Container container);
     }
 
+    /**
+     * {@link ComponentDef}を処理するためのインターフェースです。
+     * 
+     */
     public static interface ComponentDefHandler {
+        /**
+         * {@link ComponentDef}を処理します。
+         * 
+         * @param componentDef
+         * @return 処理した結果
+         */
         Object processComponent(ComponentDef componentDef);
     }
 
+    /**
+     * コンポーネントをトラバースします。
+     * 
+     * @param container
+     * @param handler
+     * @return 処理した結果
+     * @see #forEachComponent(S2Container,
+     *      org.seasar.framework.container.util.Traversal.ComponentDefHandler,
+     *      boolean)
+     */
     public static Object forEachComponent(final S2Container container,
             final ComponentDefHandler handler) {
         return forEachComponent(container, handler, true);
     }
 
+    /**
+     * コンポーネントをトラバースします。
+     * 
+     * @param container
+     * @param handler
+     * @param parentFirst
+     * @return 処理した結果
+     */
     public static Object forEachComponent(final S2Container container,
             final ComponentDefHandler handler, final boolean parentFirst) {
         return forEachContainer(container, new S2ContainerHandler() {
@@ -54,16 +95,46 @@ public class Traversal {
         }, parentFirst);
     }
 
+    /**
+     * {@link S2Container}をトラバースします。
+     * 
+     * @param container
+     * @param handler
+     * @return 処理した結果
+     * @see #forEachContainer(S2Container,
+     *      org.seasar.framework.container.util.Traversal.S2ContainerHandler,
+     *      boolean, Set)
+     */
     public static Object forEachContainer(final S2Container container,
             final S2ContainerHandler handler) {
         return forEachContainer(container, handler, true, new HashSet());
     }
 
+    /**
+     * {@link S2Container}をトラバースします。
+     * 
+     * @param container
+     * @param handler
+     * @param parentFirst
+     * @return 処理した結果
+     * @see #forEachContainer(S2Container,
+     *      org.seasar.framework.container.util.Traversal.S2ContainerHandler,
+     *      boolean, Set)
+     */
     public static Object forEachContainer(final S2Container container,
             final S2ContainerHandler handler, final boolean parentFirst) {
         return forEachContainer(container, handler, parentFirst, new HashSet());
     }
 
+    /**
+     * {@link S2Container}をトラバースします。
+     * 
+     * @param container
+     * @param handler
+     * @param parentFirst
+     * @param processed
+     * @return 処理した結果
+     */
     protected static Object forEachContainer(final S2Container container,
             final S2ContainerHandler handler, final boolean parentFirst,
             final Set processed) {
@@ -91,17 +162,47 @@ public class Traversal {
         return null;
     }
 
+    /**
+     * 親の {@link S2Container}をトラバースします。
+     * 
+     * @param container
+     * @param handler
+     * @return 処理した結果
+     * @see #forEachParentContainer(S2Container,
+     *      org.seasar.framework.container.util.Traversal.S2ContainerHandler,
+     *      boolean, Set)
+     */
     public static Object forEachParentContainer(final S2Container container,
             final S2ContainerHandler handler) {
         return forEachParentContainer(container, handler, true, new HashSet());
     }
 
+    /**
+     * 親の {@link S2Container}をトラバースします。
+     * 
+     * @param container
+     * @param handler
+     * @param childFirst
+     * @return 処理した結果
+     * @see #forEachParentContainer(S2Container,
+     *      org.seasar.framework.container.util.Traversal.S2ContainerHandler,
+     *      boolean, Set)
+     */
     public static Object forEachParentContainer(final S2Container container,
             final S2ContainerHandler handler, final boolean childFirst) {
         return forEachParentContainer(container, handler, childFirst,
                 new HashSet());
     }
 
+    /**
+     * 親の {@link S2Container}をトラバースします。
+     * 
+     * @param container
+     * @param handler
+     * @param childFirst
+     * @param processed
+     * @return 処理した結果
+     */
     protected static Object forEachParentContainer(final S2Container container,
             final S2ContainerHandler handler, final boolean childFirst,
             final Set processed) {
