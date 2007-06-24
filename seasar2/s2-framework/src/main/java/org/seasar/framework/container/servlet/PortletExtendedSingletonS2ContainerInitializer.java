@@ -23,6 +23,8 @@ import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 import org.seasar.framework.util.StringUtil;
 
 /**
+ * Portlet用に拡張した {@link SingletonS2ContainerInitializer}です。
+ * 
  * @author shinsuke
  */
 public class PortletExtendedSingletonS2ContainerInitializer {
@@ -31,6 +33,9 @@ public class PortletExtendedSingletonS2ContainerInitializer {
 
     private String configPath;
 
+    /**
+     * 初期化します。
+     */
     public void initialize() {
         if (isAlreadyInitialized()) {
             return;
@@ -54,10 +59,20 @@ public class PortletExtendedSingletonS2ContainerInitializer {
         return SingletonS2ContainerFactory.hasContainer();
     }
 
+    /**
+     * アプリケーションオブジェクトを設定します。
+     * 
+     * @param application
+     */
     public void setApplication(Object application) {
         this.application = application;
     }
 
+    /**
+     * 設定パスを設定します。
+     * 
+     * @param configPath
+     */
     public void setConfigPath(String configPath) {
         this.configPath = configPath;
     }

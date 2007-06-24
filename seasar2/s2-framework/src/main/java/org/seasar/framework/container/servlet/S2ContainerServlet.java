@@ -42,38 +42,73 @@ import org.seasar.framework.env.Env;
 import org.seasar.framework.util.StringUtil;
 import org.seasar.framework.util.URLUtil;
 
+/**
+ * {@link S2Container}用の {@link HttpServlet}です。
+ * 
+ * @author higa
+ * 
+ */
 public class S2ContainerServlet extends HttpServlet {
 
     private static final long serialVersionUID = 407266935204779128L;
 
+    /**
+     * 初期化パラメータの設定パスのキーです。
+     */
     public static final String CONFIG_PATH_KEY = "configPath";
 
+    /**
+     * 初期化パラメータのデバッグのキーです。
+     */
     public static final String DEBUG_KEY = "debug";
 
+    /**
+     * queryStringのコマンドのキーです。
+     */
     public static final String COMMAND = "command";
 
+    /**
+     * queryStringの再起動のキーです。
+     */
     public static final String RESTART = "restart";
 
+    /**
+     * queryStringの一覧のキーです。
+     */
     public static final String LIST = "list";
 
+    /**
+     * パスです。
+     */
     public static final String PATH = "path";
 
-    public static final String MODE_BEGIN = "<strong><font color='#DC143C'>";
+    private static final String MODE_BEGIN = "<strong><font color='#DC143C'>";
 
-    public static final String MODE_END = "</font></strong>";
+    private static final String MODE_END = "</font></strong>";
 
     private static S2ContainerServlet instance;
 
     private boolean debug;
 
+    /**
+     * {@link S2ContainerServlet}を作成します。
+     */
     public S2ContainerServlet() {
         instance = this;
     }
 
+    /**
+     * {@link S2ContainerServlet}を返します。
+     * 
+     * @return {@link S2ContainerServlet}
+     */
     public static S2ContainerServlet getInstance() {
         return instance;
     }
 
+    /**
+     * インスタンスをクリアします。
+     */
     public static void clearInstance() {
         instance = null;
     }
@@ -92,6 +127,11 @@ public class S2ContainerServlet extends HttpServlet {
         initializeContainer(configPath);
     }
 
+    /**
+     * {@link S2Container}を初期化します。
+     * 
+     * @param configPath
+     */
     protected void initializeContainer(String configPath) {
         SingletonS2ContainerInitializer initializer = new SingletonS2ContainerInitializer();
         initializer.setConfigPath(configPath);
@@ -103,6 +143,11 @@ public class S2ContainerServlet extends HttpServlet {
         SingletonS2ContainerFactory.destroy();
     }
 
+    /**
+     * {@link S2Container}を返します。
+     * 
+     * @return {@link S2Container}
+     */
     public static S2Container getContainer() {
         return SingletonS2ContainerFactory.getContainer();
     }
@@ -125,6 +170,13 @@ public class S2ContainerServlet extends HttpServlet {
         }
     }
 
+    /**
+     * {@link S2Container}の中身({@link ComponentDef})を表示します。
+     * 
+     * @param request
+     * @param response
+     * @throws IOException
+     */
     protected void list(final HttpServletRequest request,
             final HttpServletResponse response) throws IOException {
         final PrintWriter out = response.getWriter();
@@ -164,6 +216,12 @@ public class S2ContainerServlet extends HttpServlet {
         }
     }
 
+    /**
+     * {@link S2Container}を返します。
+     * 
+     * @param path
+     * @return {@link S2Container}
+     */
     protected S2Container getContainer(final String path) {
         final S2Container root = SingletonS2ContainerFactory.getContainer();
         try {
@@ -191,7 +249,7 @@ public class S2ContainerServlet extends HttpServlet {
         }
     }
 
-    protected void listInclude(final S2Container container,
+    private void listInclude(final S2Container container,
             final HttpServletRequest request, final PrintWriter out)
             throws IOException {
         if (container.getChildSize() == 0) {
@@ -215,7 +273,7 @@ public class S2ContainerServlet extends HttpServlet {
         }
     }
 
-    protected void listComponent(final S2Container container,
+    private void listComponent(final S2Container container,
             final PrintWriter out) throws IOException {
         if (container.getComponentDefSize() == 0) {
             return;
@@ -232,7 +290,7 @@ public class S2ContainerServlet extends HttpServlet {
         }
     }
 
-    protected void printComponent(final ComponentDef cd, final PrintWriter out)
+    private void printComponent(final ComponentDef cd, final PrintWriter out)
             throws IOException {
         final String name = cd.getComponentName();
         final Class clazz = cd.getComponentClass();
@@ -269,7 +327,7 @@ public class S2ContainerServlet extends HttpServlet {
         out.write("</ul>");
     }
 
-    protected void printArg(final ArgDefAware cd, final PrintWriter out)
+    private void printArg(final ArgDefAware cd, final PrintWriter out)
             throws IOException {
         for (int i = 0; i < cd.getArgDefSize(); ++i) {
             out.write("<li style='list-style-type: circle'>arg<ul>");
@@ -292,7 +350,7 @@ public class S2ContainerServlet extends HttpServlet {
         }
     }
 
-    protected void printAspect(final ComponentDef cd, final PrintWriter out)
+    private void printAspect(final ComponentDef cd, final PrintWriter out)
             throws IOException {
         for (int i = 0; i < cd.getAspectDefSize(); ++i) {
             out.write("<li style='list-style-type: circle'>aspect<ul>");
@@ -328,7 +386,7 @@ public class S2ContainerServlet extends HttpServlet {
         }
     }
 
-    protected void printProperty(final ComponentDef cd, final PrintWriter out)
+    private void printProperty(final ComponentDef cd, final PrintWriter out)
             throws IOException {
         for (int i = 0; i < cd.getPropertyDefSize(); ++i) {
             out.write("<li style='list-style-type: circle'>property<ul>");
@@ -353,7 +411,7 @@ public class S2ContainerServlet extends HttpServlet {
         }
     }
 
-    protected void printInitMethod(final ComponentDef cd, final PrintWriter out)
+    private void printInitMethod(final ComponentDef cd, final PrintWriter out)
             throws IOException {
         for (int i = 0; i < cd.getInitMethodDefSize(); ++i) {
             out.write("<li style='list-style-type: circle'>initMethod<ul>");
@@ -362,8 +420,8 @@ public class S2ContainerServlet extends HttpServlet {
         }
     }
 
-    protected void printDestroyMethod(final ComponentDef cd,
-            final PrintWriter out) throws IOException {
+    private void printDestroyMethod(final ComponentDef cd, final PrintWriter out)
+            throws IOException {
         for (int i = 0; i < cd.getDestroyMethodDefSize(); ++i) {
             out.write("<li style='list-style-type: circle'>destroyMethod<ul>");
             printMethod(cd.getDestroyMethodDef(i), out);
@@ -371,7 +429,7 @@ public class S2ContainerServlet extends HttpServlet {
         }
     }
 
-    protected void printMethod(final MethodDef md, final PrintWriter out)
+    private void printMethod(final MethodDef md, final PrintWriter out)
             throws IOException {
         out.write("<li style='list-style-type: circle'>name : <code>"
                 + escape(md.getMethodName()) + "</code></li>");
@@ -389,7 +447,7 @@ public class S2ContainerServlet extends HttpServlet {
         }
     }
 
-    protected ComponentDef getChildComponentDef(final Object o) {
+    private ComponentDef getChildComponentDef(final Object o) {
         try {
             final Field f = ArgDefImpl.class
                     .getDeclaredField("childComponentDef");
@@ -400,7 +458,7 @@ public class S2ContainerServlet extends HttpServlet {
         }
     }
 
-    protected String escape(final String text) {
+    private String escape(final String text) {
         if (text == null) {
             return "null";
         }
@@ -427,5 +485,4 @@ public class S2ContainerServlet extends HttpServlet {
         }
         return new String(buf);
     }
-
 }

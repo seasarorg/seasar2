@@ -16,6 +16,8 @@
 package org.seasar.framework.container.servlet;
 
 /**
+ * Portlet用に拡張した {@link S2ContainerServlet}です。
+ * 
  * @author shinsuke
  * 
  */
@@ -23,6 +25,9 @@ public class PortletExtendedS2ContainerServlet extends S2ContainerServlet {
 
     private static final long serialVersionUID = -7099205379599391521L;
 
+    /**
+     * {@link PortletExtendedS2ContainerServlet}を作成します。
+     */
     public PortletExtendedS2ContainerServlet() {
         super();
     }

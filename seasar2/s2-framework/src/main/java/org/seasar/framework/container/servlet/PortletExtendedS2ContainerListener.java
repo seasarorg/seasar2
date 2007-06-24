@@ -18,6 +18,8 @@ package org.seasar.framework.container.servlet;
 import javax.servlet.ServletContext;
 
 /**
+ * Portlet用に拡張した {@link S2ContainerListener}です。
+ * 
  * @author manhole
  * @author shinsuke
  */

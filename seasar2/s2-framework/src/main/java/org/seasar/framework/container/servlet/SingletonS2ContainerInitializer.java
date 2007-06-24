@@ -23,6 +23,8 @@ import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 import org.seasar.framework.util.StringUtil;
 
 /**
+ * {@link SingletonS2ContainerFactory}を初期化するためのクラスです。
+ * 
  * @author manhole
  */
 class SingletonS2ContainerInitializer {
@@ -31,6 +33,9 @@ class SingletonS2ContainerInitializer {
 
     private String configPath;
 
+    /**
+     * 初期化します。
+     */
     public void initialize() {
         if (isAlreadyInitialized()) {
             return;
@@ -54,10 +59,20 @@ class SingletonS2ContainerInitializer {
         return SingletonS2ContainerFactory.hasContainer();
     }
 
+    /**
+     * アプリケーションオブジェクトを設定します。
+     * 
+     * @param application
+     */
     public void setApplication(Object application) {
         this.application = application;
     }
 
+    /**
+     * 設定パスを設定します。
+     * 
+     * @param configPath
+     */
     public void setConfigPath(String configPath) {
         this.configPath = configPath;
     }

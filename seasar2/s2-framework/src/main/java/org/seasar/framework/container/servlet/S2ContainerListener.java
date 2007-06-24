@@ -19,18 +19,29 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
+import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 import org.seasar.framework.log.Logger;
 
 /**
+ * {@link S2Container}用の {@link ServletContextListener}です。
+ * 
  * @author manhole
  */
 public class S2ContainerListener implements ServletContextListener {
 
+    /**
+     * 設定パスのキーです。
+     */
     public static final String CONFIG_PATH_KEY = "org.seasar.framework.container.configPath";
 
     private static Logger logger = Logger.getLogger(S2ContainerListener.class);
 
+    /**
+     * コンテナを初期化します。
+     * 
+     * @param servletContext
+     */
     protected void initializeContainer(ServletContext servletContext) {
         String configPath = servletContext.getInitParameter(CONFIG_PATH_KEY);
         SingletonS2ContainerInitializer initializer = new SingletonS2ContainerInitializer();
