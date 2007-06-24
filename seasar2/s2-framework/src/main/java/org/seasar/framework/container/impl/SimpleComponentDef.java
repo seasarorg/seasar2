@@ -30,6 +30,8 @@ import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.TooManyRegistrationRuntimeException;
 
 /**
+ * {@link ComponentDef}のシンプルな実装です。
+ * 
  * @author higa
  * 
  */
@@ -43,29 +45,67 @@ public class SimpleComponentDef implements ComponentDef {
 
     private S2Container container;
 
+    /**
+     * {@link SimpleComponentDef}を作成します。
+     */
     public SimpleComponentDef() {
     }
 
+    /**
+     * {@link SimpleComponentDef}を作成します。
+     * 
+     * @param componentClass
+     */
     public SimpleComponentDef(Class componentClass) {
         this(null, componentClass, null);
     }
 
+    /**
+     * {@link SimpleComponentDef}を作成します。
+     * 
+     * @param componentClass
+     * @param componentName
+     */
     public SimpleComponentDef(Class componentClass, String componentName) {
         this(null, componentClass, componentName);
     }
 
+    /**
+     * {@link SimpleComponentDef}を作成します。
+     * 
+     * @param component
+     */
     public SimpleComponentDef(Object component) {
         this(component, component.getClass());
     }
 
+    /**
+     * {@link SimpleComponentDef}を作成します。
+     * 
+     * @param component
+     * @param componentClass
+     */
     public SimpleComponentDef(Object component, Class componentClass) {
         this(component, componentClass, null);
     }
 
+    /**
+     * {@link SimpleComponentDef}を作成します。
+     * 
+     * @param component
+     * @param componentName
+     */
     public SimpleComponentDef(Object component, String componentName) {
         this(component, component.getClass(), componentName);
     }
 
+    /**
+     * {@link SimpleComponentDef}を作成します。
+     * 
+     * @param component
+     * @param componentClass
+     * @param componentName
+     */
     public SimpleComponentDef(Object component, Class componentClass,
             String componentName) {
 

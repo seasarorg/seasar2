@@ -18,20 +18,37 @@ package org.seasar.framework.container.impl;
 import java.lang.reflect.Method;
 
 import org.seasar.framework.container.InitMethodDef;
+import org.seasar.framework.container.MethodDef;
 
 /**
+ * {@link InitMethodDef}の実装クラスです。
+ * 
  * @author higa
+ * @see MethodDef
  * 
  */
 public class InitMethodDefImpl extends MethodDefImpl implements InitMethodDef {
 
+    /**
+     * {@link InitMethodDefImpl}を作成します。
+     */
     public InitMethodDefImpl() {
     }
 
+    /**
+     * {@link InitMethodDefImpl}を作成します。
+     * 
+     * @param method
+     */
     public InitMethodDefImpl(Method method) {
         super(method);
     }
 
+    /**
+     * {@link InitMethodDefImpl}を作成します。
+     * 
+     * @param methodName
+     */
     public InitMethodDefImpl(String methodName) {
         super(methodName);
     }

@@ -23,6 +23,8 @@ import org.seasar.framework.container.TooManyRegistrationComponentDef;
 import org.seasar.framework.container.TooManyRegistrationRuntimeException;
 
 /**
+ * 1つのキーに複数のコンポーネントが登録されるときの {@link ComponentDef}です。
+ * 
  * @author higa
  * 
  */
@@ -33,6 +35,11 @@ public class TooManyRegistrationComponentDefImpl extends SimpleComponentDef
 
     private List componentDefs = new ArrayList();
 
+    /**
+     * {@link TooManyRegistrationComponentDefImpl}を作成します。
+     * 
+     * @param key
+     */
     public TooManyRegistrationComponentDefImpl(Object key) {
         this.key = key;
     }
@@ -46,10 +53,21 @@ public class TooManyRegistrationComponentDefImpl extends SimpleComponentDef
                 getComponentClasses());
     }
 
+    /**
+     * {@link ComponentDef}の数を返します。
+     * 
+     * @return {@link ComponentDef}の数
+     */
     public int getComponentDefSize() {
         return componentDefs.size();
     }
 
+    /**
+     * {@link ComponentDef}を返します。
+     * 
+     * @param index
+     * @return {@link ComponentDef}
+     */
     public ComponentDef getComponentDef(int index) {
         return (ComponentDef) componentDefs.get(index);
     }

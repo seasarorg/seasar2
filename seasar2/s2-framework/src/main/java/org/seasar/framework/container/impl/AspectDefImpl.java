@@ -22,6 +22,8 @@ import org.seasar.framework.aop.impl.AspectImpl;
 import org.seasar.framework.container.AspectDef;
 
 /**
+ * {@link AspectDef}の実装クラスです。
+ * 
  * @author higa
  * 
  */
@@ -29,17 +31,36 @@ public class AspectDefImpl extends ArgDefImpl implements AspectDef {
 
     private Pointcut pointcut;
 
+    /**
+     * {@link AspectDefImpl}を作成します。
+     */
     public AspectDefImpl() {
     }
 
+    /**
+     * {@link AspectDefImpl}を作成します。
+     * 
+     * @param pointcut
+     */
     public AspectDefImpl(Pointcut pointcut) {
         setPointcut(pointcut);
     }
 
+    /**
+     * {@link AspectDefImpl}を作成します。
+     * 
+     * @param interceptor
+     */
     public AspectDefImpl(MethodInterceptor interceptor) {
         setValue(interceptor);
     }
 
+    /**
+     * {@link AspectDefImpl}を作成します。
+     * 
+     * @param interceptor
+     * @param pointcut
+     */
     public AspectDefImpl(MethodInterceptor interceptor, Pointcut pointcut) {
         setValue(interceptor);
         setPointcut(pointcut);

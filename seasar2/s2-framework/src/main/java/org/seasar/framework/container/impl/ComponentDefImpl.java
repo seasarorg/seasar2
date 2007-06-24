@@ -42,6 +42,8 @@ import org.seasar.framework.container.util.MetaDefSupport;
 import org.seasar.framework.container.util.PropertyDefSupport;
 
 /**
+ * {@link ComponentDef}の実装クラスです。
+ * 
  * @author higa
  * 
  */
@@ -79,56 +81,52 @@ public class ComponentDefImpl implements ComponentDef, ContainerConstants {
 
     private boolean externalBinding = false;
 
+    /**
+     * {@link ComponentDefImpl}を作成します。
+     */
     public ComponentDefImpl() {
     }
 
+    /**
+     * {@link ComponentDefImpl}を作成します。
+     * 
+     * @param componentClass
+     */
     public ComponentDefImpl(Class componentClass) {
         this(componentClass, null);
     }
 
+    /**
+     * {@link ComponentDefImpl}を作成します。
+     * 
+     * @param componentClass
+     * @param componentName
+     */
     public ComponentDefImpl(Class componentClass, String componentName) {
         this.componentClass = componentClass;
         setComponentName(componentName);
     }
 
-    /**
-     * @see org.seasar.framework.container.ComponentDef#getComponent()
-     */
     public Object getComponent() {
         return getComponentDeployer().deploy();
     }
 
-    /**
-     * @see org.seasar.framework.container.ComponentDef#injectDependency(java.lang.Object)
-     */
     public void injectDependency(Object outerComponent) {
         getComponentDeployer().injectDependency(outerComponent);
     }
 
-    /**
-     * @see org.seasar.framework.container.ComponentDef#getComponentClass()
-     */
     public Class getComponentClass() {
         return componentClass;
     }
 
-    /**
-     * @see org.seasar.framework.container.ComponentDef#getComponentName()
-     */
     public String getComponentName() {
         return componentName;
     }
 
-    /**
-     * @see org.seasar.framework.container.ComponentDef#setComponentName(java.lang.String)
-     */
     public void setComponentName(String componentName) {
         this.componentName = componentName;
     }
 
-    /**
-     * @see org.seasar.framework.container.ComponentDef#getConcreteClass()
-     */
     public Class getConcreteClass() {
         if (concreteClass == null) {
             ClassLoader oldLoader = Thread.currentThread()
@@ -147,16 +145,10 @@ public class ComponentDefImpl implements ComponentDef, ContainerConstants {
         return concreteClass;
     }
 
-    /**
-     * @see org.seasar.framework.container.ComponentDef#getContainer()
-     */
     public S2Container getContainer() {
         return container;
     }
 
-    /**
-     * @see org.seasar.framework.container.ComponentDef#setContainer(org.seasar.framework.container.S2Container)
-     */
     public void setContainer(S2Container container) {
         this.container = container;
         argDefSupport.setContainer(container);
@@ -168,140 +160,82 @@ public class ComponentDefImpl implements ComponentDef, ContainerConstants {
         interTypeDefSupport.setContainer(container);
     }
 
-    /**
-     * @see org.seasar.framework.container.ComponentDef#addArgDef(org.seasar.framework.container.ArgDef)
-     */
     public void addArgDef(ArgDef argDef) {
         argDefSupport.addArgDef(argDef);
     }
 
-    /**
-     * @see org.seasar.framework.container.ComponentDef#addPropertyDef(org.seasar.framework.container.PropertyDef)
-     */
     public void addPropertyDef(PropertyDef propertyDef) {
         propertyDefSupport.addPropertyDef(propertyDef);
     }
 
-    /**
-     * @see org.seasar.framework.container.InitMethodDefAware#addInitMethodDef(org.seasar.framework.container.InitMethodDef)
-     */
     public void addInitMethodDef(InitMethodDef methodDef) {
         initMethodDefSupport.addInitMethodDef(methodDef);
     }
 
-    /**
-     * @see org.seasar.framework.container.DestroyMethodDefAware#addDestroyMethodDef(org.seasar.framework.container.DestroyMethodDef)
-     */
     public void addDestroyMethodDef(DestroyMethodDef methodDef) {
         destroyMethodDefSupport.addDestroyMethodDef(methodDef);
     }
 
-    /**
-     * @see org.seasar.framework.container.ComponentDef#addAspectDef(org.seasar.framework.container.AspectDef)
-     */
     public void addAspectDef(AspectDef aspectDef) {
         aspectDefSupport.addAspectDef(aspectDef);
         concreteClass = null;
     }
 
-    /**
-     * @see org.seasar.framework.container.ComponentDef#addAspectDef(int,
-     *      org.seasar.framework.container.AspectDef)
-     */
     public void addAspectDef(int index, AspectDef aspectDef) {
         aspectDefSupport.addAspectDef(index, aspectDef);
         concreteClass = null;
     }
 
-    /**
-     * @see org.seasar.framework.container.ComponentDef#addInterTypeDef(org.seasar.framework.container.InterTypeDef)
-     */
     public void addInterTypeDef(InterTypeDef interTypeDef) {
         interTypeDefSupport.addInterTypeDef(interTypeDef);
         concreteClass = null;
     }
 
-    /**
-     * @see org.seasar.framework.container.ArgDefAware#getArgDefSize()
-     */
     public int getArgDefSize() {
         return argDefSupport.getArgDefSize();
     }
 
-    /**
-     * @see org.seasar.framework.container.PropertyDefAware#getPropertyDefSize()
-     */
     public int getPropertyDefSize() {
         return propertyDefSupport.getPropertyDefSize();
     }
 
-    /**
-     * @see org.seasar.framework.container.InitMethodDefAware#getInitMethodDefSize()
-     */
     public int getInitMethodDefSize() {
         return initMethodDefSupport.getInitMethodDefSize();
     }
 
-    /**
-     * @see org.seasar.framework.container.DestroyMethodDefAware#getDestroyMethodDefSize()
-     */
     public int getDestroyMethodDefSize() {
         return destroyMethodDefSupport.getDestroyMethodDefSize();
     }
 
-    /**
-     * @see org.seasar.framework.container.AspectDefAware#getAspectDefSize()
-     */
     public int getAspectDefSize() {
         return aspectDefSupport.getAspectDefSize();
     }
 
-    /**
-     * @see org.seasar.framework.container.InterTypeDefAware#getInterTypeDefSize()
-     */
     public int getInterTypeDefSize() {
         return interTypeDefSupport.getInterTypeDefSize();
     }
 
-    /*
-     * @see org.seasar.framework.container.ComponentDef#getInstanceDef()
-     */
     public InstanceDef getInstanceDef() {
         return instanceDef;
     }
 
-    /*
-     * @see org.seasar.framework.container.ComponentDef#setInstanceDef(org.seasar.framework.container.InstanceDef)
-     */
     public void setInstanceDef(InstanceDef instanceDef) {
         this.instanceDef = instanceDef;
     }
 
-    /**
-     * @see org.seasar.framework.container.ComponentDef#getAutoBindingDef()
-     */
     public AutoBindingDef getAutoBindingDef() {
         return autoBindingDef;
     }
 
-    /**
-     * @see org.seasar.framework.container.ComponentDef#setAutoBindingDef(org.seasar.framework.container.AutoBindingDef)
-     */
     public void setAutoBindingDef(AutoBindingDef autoBindingDef) {
         this.autoBindingDef = autoBindingDef;
     }
 
-    /**
-     * @see org.seasar.framework.container.ComponentDef#init()
-     */
     public void init() {
         getConcreteClass();
         getComponentDeployer().init();
     }
 
-    /**
-     * @see org.seasar.framework.container.ComponentDef#destroy()
-     */
     public void destroy() {
         getComponentDeployer().destroy();
         componentClass = null;
@@ -321,37 +255,22 @@ public class ComponentDefImpl implements ComponentDef, ContainerConstants {
         componentDeployer = null;
     }
 
-    /**
-     * @see org.seasar.framework.container.ComponentDef#getExpression()
-     */
     public Expression getExpression() {
         return expression;
     }
 
-    /**
-     * @see org.seasar.framework.container.ComponentDef#setExpression(java.lang.String)
-     */
     public void setExpression(Expression expression) {
         this.expression = expression;
     }
 
-    /**
-     * @see org.seasar.framework.container.ArgDefAware#getArgDef(int)
-     */
     public ArgDef getArgDef(int index) {
         return argDefSupport.getArgDef(index);
     }
 
-    /**
-     * @see org.seasar.framework.container.PropertyDefAware#getPropertyDef(int)
-     */
     public PropertyDef getPropertyDef(int index) {
         return propertyDefSupport.getPropertyDef(index);
     }
 
-    /**
-     * @see org.seasar.framework.container.PropertyDefAware#getPropertyDef(java.lang.String)
-     */
     public PropertyDef getPropertyDef(String propertyName) {
         if (hasPropertyDef(propertyName)) {
             return propertyDefSupport.getPropertyDef(propertyName);
@@ -359,76 +278,51 @@ public class ComponentDefImpl implements ComponentDef, ContainerConstants {
         throw new PropertyNotFoundRuntimeException(componentClass, propertyName);
     }
 
-    /**
-     * @see org.seasar.framework.container.PropertyDefAware#hasPropertyDef(java.lang.String)
-     */
     public boolean hasPropertyDef(String propertyName) {
         return propertyDefSupport.hasPropertyDef(propertyName);
     }
 
-    /**
-     * @see org.seasar.framework.container.InitMethodDefAware#getInitMethodDef(int)
-     */
     public InitMethodDef getInitMethodDef(int index) {
         return initMethodDefSupport.getInitMethodDef(index);
     }
 
-    /**
-     * @see org.seasar.framework.container.DestroyMethodDefAware#getDestroyMethodDef(int)
-     */
     public DestroyMethodDef getDestroyMethodDef(int index) {
         return destroyMethodDefSupport.getDestroyMethodDef(index);
     }
 
-    /**
-     * @see org.seasar.framework.container.AspectDefAware#getAspectDef(int)
-     */
     public AspectDef getAspectDef(int index) {
         return aspectDefSupport.getAspectDef(index);
     }
 
-    /**
-     * @see org.seasar.framework.container.InterTypeDefAware#getInterTypeDef(int)
-     */
     public InterTypeDef getInterTypeDef(int index) {
         return interTypeDefSupport.getInterTypeDef(index);
     }
 
-    /**
-     * @see org.seasar.framework.container.MetaDefAware#addMetaDef(org.seasar.framework.container.MetaDef)
-     */
     public void addMetaDef(MetaDef metaDef) {
         metaDefSupport.addMetaDef(metaDef);
     }
 
-    /**
-     * @see org.seasar.framework.container.MetaDefAware#getMetaDef(int)
-     */
     public MetaDef getMetaDef(int index) {
         return metaDefSupport.getMetaDef(index);
     }
 
-    /**
-     * @see org.seasar.framework.container.MetaDefAware#getMetaDef(java.lang.String)
-     */
     public MetaDef getMetaDef(String name) {
         return metaDefSupport.getMetaDef(name);
     }
 
-    /**
-     * @see org.seasar.framework.container.MetaDefAware#getMetaDefs(java.lang.String)
-     */
     public MetaDef[] getMetaDefs(String name) {
         return metaDefSupport.getMetaDefs(name);
     }
 
-    /**
-     * @see org.seasar.framework.container.MetaDefAware#getMetaDefSize()
-     */
     public int getMetaDefSize() {
         return metaDefSupport.getMetaDefSize();
     }
 
+    /**
+     * {@link ComponentDeployer}を返します。
+     * 
+     * @return {@link ComponentDeployer}
+     */
     public ComponentDeployer getComponentDeployer() {
         if (componentDeployer == null) {
             componentDeployer = instanceDef.createComponentDeployer(this);

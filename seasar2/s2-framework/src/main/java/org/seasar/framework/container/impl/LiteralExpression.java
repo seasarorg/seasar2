@@ -26,6 +26,9 @@ import org.seasar.framework.container.S2Container;
  */
 public class LiteralExpression extends AbstractExpression {
 
+    /**
+     * 値です。
+     */
     protected Object value;
 
     /**

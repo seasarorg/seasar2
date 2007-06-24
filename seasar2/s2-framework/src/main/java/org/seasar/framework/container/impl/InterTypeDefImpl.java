@@ -18,11 +18,23 @@ package org.seasar.framework.container.impl;
 import org.seasar.framework.aop.InterType;
 import org.seasar.framework.container.InterTypeDef;
 
+/**
+ * {@link InterTypeDef}の実装クラスです。
+ * 
+ */
 public class InterTypeDefImpl extends ArgDefImpl implements InterTypeDef {
 
+    /**
+     * {@link InterTypeDefImpl}を作成します。
+     */
     public InterTypeDefImpl() {
     }
 
+    /**
+     * {@link InterTypeDefImpl}を作成します。
+     * 
+     * @param interType
+     */
     public InterTypeDefImpl(final InterType interType) {
         setValue(interType);
     }

@@ -22,6 +22,8 @@ import org.seasar.framework.container.MetaDef;
 import org.seasar.framework.container.S2Container;
 
 /**
+ * ThreadSafeな {@link S2Container}の実装です。
+ * 
  * @author koichik
  * 
  */

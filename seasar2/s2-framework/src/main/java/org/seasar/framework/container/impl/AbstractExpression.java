@@ -28,10 +28,19 @@ import org.seasar.framework.container.Expression;
  */
 public abstract class AbstractExpression implements Expression {
 
+    /**
+     * ソース名です。
+     */
     protected String sourceName;
 
+    /**
+     * 行番号です。
+     */
     protected int lineNumber;
 
+    /**
+     * ソースです。
+     */
     protected String source;
 
     /**

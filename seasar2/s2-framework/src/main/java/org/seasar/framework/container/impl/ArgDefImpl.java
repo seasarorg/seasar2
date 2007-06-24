@@ -23,6 +23,8 @@ import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.util.MetaDefSupport;
 
 /**
+ * {@link ArgDef}の実装クラスです。
+ * 
  * @author higa
  * 
  */
@@ -38,9 +40,17 @@ public class ArgDefImpl implements ArgDef {
 
     private MetaDefSupport metaDefSupport = new MetaDefSupport();
 
+    /**
+     * {@link ArgDefImpl}を作成します。
+     */
     public ArgDefImpl() {
     }
 
+    /**
+     * {@link ArgDefImpl}を作成します。
+     * 
+     * @param value
+     */
     public ArgDefImpl(Object value) {
         setValue(value);
     }

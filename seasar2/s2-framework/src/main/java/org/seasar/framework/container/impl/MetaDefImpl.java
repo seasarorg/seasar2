@@ -18,6 +18,8 @@ package org.seasar.framework.container.impl;
 import org.seasar.framework.container.MetaDef;
 
 /**
+ * {@link MetaDef}の実装クラスです。
+ * 
  * @author higa
  * 
  */
@@ -25,13 +27,27 @@ public class MetaDefImpl extends ArgDefImpl implements MetaDef {
 
     private String name;
 
+    /**
+     * {@link MetaDefImpl}を作成します。
+     */
     public MetaDefImpl() {
     }
 
+    /**
+     * {@link MetaDefImpl}を作成します。
+     * 
+     * @param name
+     */
     public MetaDefImpl(String name) {
         this.name = name;
     }
 
+    /**
+     * {@link MetaDefImpl}を作成します。
+     * 
+     * @param name
+     * @param value
+     */
     public MetaDefImpl(String name, Object value) {
         super(value);
         this.name = name;

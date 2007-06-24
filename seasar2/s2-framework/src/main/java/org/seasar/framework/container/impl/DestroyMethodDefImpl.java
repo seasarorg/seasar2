@@ -18,21 +18,38 @@ package org.seasar.framework.container.impl;
 import java.lang.reflect.Method;
 
 import org.seasar.framework.container.DestroyMethodDef;
+import org.seasar.framework.container.MethodDef;
 
 /**
+ * {@link DestroyMethodDef}の実装クラスです。
+ * 
  * @author higa
+ * @see MethodDef
  * 
  */
 public class DestroyMethodDefImpl extends MethodDefImpl implements
         DestroyMethodDef {
 
+    /**
+     * {@link DestroyMethodDefImpl}を作成します。
+     */
     public DestroyMethodDefImpl() {
     }
 
+    /**
+     * {@link DestroyMethodDefImpl}を作成します。
+     * 
+     * @param method
+     */
     public DestroyMethodDefImpl(Method method) {
         super(method);
     }
 
+    /**
+     * {@link DestroyMethodDefImpl}を作成します。
+     * 
+     * @param methodName
+     */
     public DestroyMethodDefImpl(String methodName) {
         super(methodName);
     }

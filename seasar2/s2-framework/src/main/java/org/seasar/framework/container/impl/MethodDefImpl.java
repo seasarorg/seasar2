@@ -24,6 +24,8 @@ import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.util.ArgDefSupport;
 
 /**
+ * {@link MethodDef}の抽象クラスです。
+ * 
  * @author higa
  * 
  */
@@ -39,13 +41,26 @@ public abstract class MethodDefImpl implements MethodDef {
 
     private Expression expression;
 
+    /**
+     * {@link MethodDefImpl}を作成します。
+     */
     public MethodDefImpl() {
     }
 
+    /**
+     * {@link MethodDefImpl}を作成します。
+     * 
+     * @param method
+     */
     public MethodDefImpl(Method method) {
         this.method = method;
     }
 
+    /**
+     * {@link MethodDefImpl}を作成します。
+     * 
+     * @param methodName
+     */
     public MethodDefImpl(String methodName) {
         this.methodName = methodName;
     }

@@ -22,6 +22,8 @@ import org.seasar.framework.container.assembler.AccessTypeDefFactory;
 import org.seasar.framework.container.assembler.BindingTypeDefFactory;
 
 /**
+ * {@link PropertyDef}の実装クラスです。
+ * 
  * @author higa
  * 
  */
@@ -33,18 +35,26 @@ public class PropertyDefImpl extends ArgDefImpl implements PropertyDef {
 
     private AccessTypeDef accessTypeDef = AccessTypeDefFactory.PROPERTY;
 
+    /**
+     * {@link PropertyDefImpl}を作成します。
+     * 
+     * @param propertyName
+     */
     public PropertyDefImpl(String propertyName) {
         this(propertyName, null);
     }
 
+    /**
+     * {@link PropertyDefImpl}を作成します。
+     * 
+     * @param propertyName
+     * @param value
+     */
     public PropertyDefImpl(String propertyName, Object value) {
         super(value);
         this.propertyName = propertyName;
     }
 
-    /*
-     * @see org.seasar.framework.container.PropertyDef#getPropertyName()
-     */
     public String getPropertyName() {
         return propertyName;
     }
@@ -57,9 +67,6 @@ public class PropertyDefImpl extends ArgDefImpl implements PropertyDef {
         this.accessTypeDef = accessTypeDef;
     }
 
-    /*
-     * @see org.seasar.framework.container.PropertyDef#getBindingTypeDef()
-     */
     public BindingTypeDef getBindingTypeDef() {
         return bindingTypeDef;
     }

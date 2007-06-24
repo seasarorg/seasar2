@@ -15,14 +15,23 @@
  */
 package org.seasar.framework.container.impl;
 
+import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.S2Container;
 
 /**
+ * {@link S2Container}用の {@link ComponentDef}です。
+ * 
  * @author higa
  * 
  */
 public class S2ContainerComponentDef extends SimpleComponentDef {
 
+    /**
+     * {@link S2ContainerComponentDef}を作成します。
+     * 
+     * @param container
+     * @param name
+     */
     public S2ContainerComponentDef(S2Container container, String name) {
         super(container, name);
     }

@@ -48,6 +48,8 @@ import org.seasar.framework.util.CaseInsensitiveMap;
 import org.seasar.framework.util.StringUtil;
 
 /**
+ * {@link S2Container}の実装クラスです。
+ * 
  * @author higa
  * 
  */
@@ -97,6 +99,9 @@ public class S2ContainerImpl implements S2Container, ContainerConstants {
         };
     }
 
+    /**
+     * {@link S2ContainerImpl}を作成します。
+     */
     public S2ContainerImpl() {
         root = this;
         register0(new SimpleComponentDef(this, CONTAINER_NAME));
@@ -155,6 +160,13 @@ public class S2ContainerImpl implements S2Container, ContainerConstants {
         return toComponentArray(componentKey, componentDefs);
     }
 
+    /**
+     * コンポーネントの配列に変換します。
+     * 
+     * @param componentKey
+     * @param componentDefs
+     * @return コンポーネントの配列
+     */
     protected Object[] toComponentArray(Object componentKey,
             ComponentDef[] componentDefs) {
         int length = componentDefs.length;
@@ -243,6 +255,11 @@ public class S2ContainerImpl implements S2Container, ContainerConstants {
         componentDefList.add(componentDef);
     }
 
+    /**
+     * {@link ComponentDef}を登録します。
+     * 
+     * @param componentDef
+     */
     public void register0(ComponentDef componentDef) {
         if (componentDef.getContainer() == null) {
             componentDef.setContainer(this);
@@ -251,6 +268,11 @@ public class S2ContainerImpl implements S2Container, ContainerConstants {
         registerByName(componentDef);
     }
 
+    /**
+     * {@link Class}をキーにして {@link ComponentDef}を登録します。
+     * 
+     * @param componentDef
+     */
     protected void registerByClass(ComponentDef componentDef) {
         Class[] classes = S2ContainerUtil.getAssignableClasses(componentDef
                 .getComponentClass());
@@ -259,6 +281,11 @@ public class S2ContainerImpl implements S2Container, ContainerConstants {
         }
     }
 
+    /**
+     * 名前をキーにして {@link ComponentDef}を登録します。
+     * 
+     * @param componentDef
+     */
     protected void registerByName(ComponentDef componentDef) {
         String componentName = componentDef.getComponentName();
         if (componentName != null) {
@@ -266,6 +293,12 @@ public class S2ContainerImpl implements S2Container, ContainerConstants {
         }
     }
 
+    /**
+     * キャッシュに {@link ComponentDef}を登録します。
+     * 
+     * @param key
+     * @param componentDef
+     */
     protected void registerMap(Object key, ComponentDef componentDef) {
         registerMap(key, componentDef, this);
     }
@@ -293,6 +326,12 @@ public class S2ContainerImpl implements S2Container, ContainerConstants {
         registerParent(key, holder.getComponentDef());
     }
 
+    /**
+     * {@link S2Container}のネストが深くなってもパフォーマンスが落ちないように親に {@link ComponentDef}を登録します。
+     * 
+     * @param key
+     * @param componentDef
+     */
     protected void registerParent(Object key, ComponentDef componentDef) {
         for (int i = 0; i < getParentSize(); i++) {
             S2Container parent = (S2Container) getParent(i);
@@ -367,6 +406,12 @@ public class S2ContainerImpl implements S2Container, ContainerConstants {
         return toComponentDefArray(holder.getComponentDef());
     }
 
+    /**
+     * {@link ComponentDef}の配列に変換します。
+     * 
+     * @param cd
+     * @return {@link ComponentDef}の配列
+     */
     protected ComponentDef[] toComponentDefArray(ComponentDef cd) {
         if (cd == null) {
             return new ComponentDef[0];
@@ -377,6 +422,12 @@ public class S2ContainerImpl implements S2Container, ContainerConstants {
         return new ComponentDef[] { cd };
     }
 
+    /**
+     * 内部的なgetComponentDefの実装です。
+     * 
+     * @param key
+     * @return {@link ComponentDef}
+     */
     protected ComponentDef internalGetComponentDef(Object key) {
         ComponentDefHolder holder = (ComponentDefHolder) componentDefMap
                 .get(key);
@@ -438,6 +489,12 @@ public class S2ContainerImpl implements S2Container, ContainerConstants {
         child.addParent(this);
     }
 
+    /**
+     * 子供の位置を返します。
+     * 
+     * @param container
+     * @return 子供の位置
+     */
     protected int getContainerPosition(S2Container container) {
         if (container == this) {
             return 0;
@@ -445,6 +502,13 @@ public class S2ContainerImpl implements S2Container, ContainerConstants {
         return ((Integer) childPositions.get(container)).intValue();
     }
 
+    /**
+     * 名前空間が必要かどうかを返します。
+     * 
+     * @param key
+     * @param cd
+     * @return 名前空間が必要かどうか
+     */
     protected boolean isNeedNS(Object key, ComponentDef cd) {
         return key instanceof String && namespace != null;
     }
@@ -613,6 +677,14 @@ public class S2ContainerImpl implements S2Container, ContainerConstants {
         this.classLoader = classLoader;
     }
 
+    /**
+     * {@link TooManyRegistrationComponentDef}を作成します。
+     * 
+     * @param key
+     * @param currentComponentDef
+     * @param newComponentDef
+     * @return {@link TooManyRegistrationComponentDef}
+     */
     public static ComponentDef createTooManyRegistration(Object key,
             ComponentDef currentComponentDef, ComponentDef newComponentDef) {
 
@@ -629,40 +701,81 @@ public class S2ContainerImpl implements S2Container, ContainerConstants {
         }
     }
 
+    /**
+     * パラメータが<code>null</code>でないことを表明します。
+     * 
+     * @param parameter
+     * @param name
+     */
     protected void assertParameterIsNotNull(Object parameter, String name) {
         if (parameter == null) {
             throw new IllegalArgumentException(name);
         }
     }
 
+    /**
+     * パラメータが空でないことを表明します。
+     * 
+     * @param parameter
+     * @param name
+     */
     protected void assertParameterIsNotEmpty(String parameter, String name) {
         if (StringUtil.isEmpty(parameter)) {
             throw new IllegalArgumentException(name);
         }
     }
 
+    /**
+     * 子供の位置を保持するクラスです。
+     */
     static class ComponentDefHolder {
         private int position;
 
         private ComponentDef componentDef;
 
+        /**
+         * {@link ComponentDefHolder}を作成します。
+         * 
+         * @param position
+         * @param componentDef
+         */
         public ComponentDefHolder(int position, ComponentDef componentDef) {
             this.position = position;
             this.componentDef = componentDef;
         }
 
+        /**
+         * 位置を返します。
+         * 
+         * @return 位置
+         */
         public int getPosition() {
             return position;
         }
 
+        /**
+         * 位置を設定します。
+         * 
+         * @param position
+         */
         public void setPosition(int position) {
             this.position = position;
         }
 
+        /**
+         * {@link ComponentDef}を返します。
+         * 
+         * @return {@link ComponentDef}
+         */
         public ComponentDef getComponentDef() {
             return componentDef;
         }
 
+        /**
+         * {@link ComponentDef}を設定します。
+         * 
+         * @param componentDef
+         */
         public void setComponentDef(ComponentDef componentDef) {
             this.componentDef = componentDef;
         }

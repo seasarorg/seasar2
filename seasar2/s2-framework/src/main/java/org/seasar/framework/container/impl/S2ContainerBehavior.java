@@ -20,6 +20,8 @@ import org.seasar.framework.container.ComponentNotFoundRuntimeException;
 import org.seasar.framework.container.S2Container;
 
 /**
+ * {@link S2Container}の振る舞いをカスタマイズするためのクラスです。 {@link Provider}を取り替えることによってカスタマイズが可能です。
+ * {@link Provider}はs2container.diconで設定します。
  * 
  * @author koichik
  */
@@ -30,54 +32,122 @@ public final class S2ContainerBehavior {
     private S2ContainerBehavior() {
     }
 
+    /**
+     * {@link Provider}を返します。
+     * 
+     * @return {@link Provider}
+     */
     public static Provider getProvider() {
         return provider;
     }
 
+    /**
+     * {@link Provider}を設定します。
+     * 
+     * @param p
+     */
     public static void setProvider(final Provider p) {
         provider = p;
     }
 
+    /**
+     * {@link S2Container#getComponent(Object)}のカスタマイズポイントです。
+     * 
+     * @param container
+     * @param key
+     * @return {@link ComponentDef}
+     */
     public static ComponentDef acquireFromGetComponent(S2Container container,
             final Object key) {
         return getProvider().acquireFromGetComponent(container, key);
     }
 
+    /**
+     * {@link S2Container#getComponentDef(Object)}のカスタマイズポイントです。
+     * 
+     * @param container
+     * @param key
+     * @return {@link ComponentDef}
+     */
     public static ComponentDef acquireFromGetComponentDef(
             S2Container container, final Object key) {
         return getProvider().acquireFromGetComponentDef(container, key);
     }
 
+    /**
+     * {@link S2Container#hasComponentDef(Object)}のカスタマイズポイントです。
+     * 
+     * @param container
+     * @param key
+     * @return {@link ComponentDef}
+     */
     public static ComponentDef acquireFromHasComponentDef(
             S2Container container, final Object key) {
         return getProvider().acquireFromHasComponentDef(container, key);
     }
 
+    /**
+     * {@link S2Container#injectDependency(Object)}のカスタマイズポイントです。
+     * 
+     * @param container
+     * @param key
+     * @return
+     */
     public static ComponentDef acquireFromInjectDependency(
             S2Container container, final Object key) {
         return getProvider().acquireFromInjectDependency(container, key);
     }
 
     /**
+     * S2Containerの振る舞いをカスタマイズするためのインターフェースです。
      * 
      * @author koichik
      */
     public interface Provider {
 
+        /**
+         * {@link S2Container#getComponent(Object)}のカスタマイズポイントです。
+         * 
+         * @param container
+         * @param key
+         * @return {@link ComponentDef}
+         */
         ComponentDef acquireFromGetComponent(S2Container container,
                 final Object key);
 
+        /**
+         * {@link S2Container#getComponentDef(Object)}のカスタマイズポイントです。
+         * 
+         * @param container
+         * @param key
+         * @return {@link ComponentDef}
+         */
         ComponentDef acquireFromGetComponentDef(S2Container container,
                 final Object key);
 
+        /**
+         * {@link S2Container#hasComponentDef(Object)}のカスタマイズポイントです。
+         * 
+         * @param container
+         * @param key
+         * @return {@link ComponentDef}
+         */
         ComponentDef acquireFromHasComponentDef(S2Container container,
                 final Object key);
 
+        /**
+         * {@link S2Container#injectDependency(Object)}のカスタマイズポイントです。
+         * 
+         * @param container
+         * @param key
+         * @return {@link ComponentDef}
+         */
         ComponentDef acquireFromInjectDependency(S2Container container,
                 final Object key);
     }
 
     /**
+     * デフォルトの {@link Provider}実装です。
      * 
      * @author koichik
      */
@@ -106,6 +176,13 @@ public final class S2ContainerBehavior {
             return acquireFromGetComponentDef(container, key);
         }
 
+        /**
+         * {@link ComponentDef}を返すときのデフォルトの振る舞いです。
+         * 
+         * @param container
+         * @param key
+         * @return {@link ComponentDef}
+         */
         protected ComponentDef getComponentDef(final S2Container container,
                 final Object key) {
             return ((S2ContainerImpl) container).internalGetComponentDef(key);
