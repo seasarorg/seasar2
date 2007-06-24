@@ -16,6 +16,7 @@
 package org.seasar.framework.container.external.servlet;
 
 import java.util.Iterator;
+import java.util.Map;
 
 import javax.servlet.ServletRequest;
 
@@ -23,6 +24,8 @@ import org.seasar.framework.container.external.AbstractExternalContextMap;
 import org.seasar.framework.util.EnumerationIterator;
 
 /**
+ * {@link ServletRequest}に {@link Map}としてアクセスするためのクラスです。
+ * 
  * @author shot
  * @author higa
  */
@@ -30,6 +33,11 @@ public class ServletRequestMap extends AbstractExternalContextMap {
 
     private ServletRequest request;
 
+    /**
+     * {@link ServletRequestMap}を作成します。
+     * 
+     * @param request
+     */
     public ServletRequestMap(ServletRequest request) {
         this.request = request;
     }

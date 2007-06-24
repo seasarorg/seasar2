@@ -16,6 +16,7 @@
 package org.seasar.framework.container.external.servlet;
 
 import java.util.Iterator;
+import java.util.Map;
 
 import javax.servlet.ServletContext;
 
@@ -24,6 +25,8 @@ import org.seasar.framework.util.AssertionUtil;
 import org.seasar.framework.util.EnumerationIterator;
 
 /**
+ * {@link ServletContext}に {@link Map}としてアクセスするためのクラスです。
+ * 
  * @author shot
  * @author higa
  */
@@ -31,6 +34,11 @@ public class ServletApplicationMap extends AbstractExternalContextMap {
 
     private ServletContext context;
 
+    /**
+     * {@link ServletApplicationMap}を作成します。
+     * 
+     * @param context
+     */
     public ServletApplicationMap(ServletContext context) {
         AssertionUtil.assertNotNull("context is null.", context);
         this.context = context;

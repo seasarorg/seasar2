@@ -24,6 +24,8 @@ import org.seasar.framework.container.external.AbstractUnmodifiableExternalConte
 import org.seasar.framework.util.AssertionUtil;
 
 /**
+ * CookieにMapとしてアクセスすためのクラスです。
+ * 
  * @author shot
  * @author higa
  */
@@ -33,6 +35,11 @@ public class CookieMap extends AbstractUnmodifiableExternalContextMap {
 
     private final HttpServletRequest request;
 
+    /**
+     * {@link CookieMap}を作成します。
+     * 
+     * @param request
+     */
     public CookieMap(final HttpServletRequest request) {
         AssertionUtil.assertNotNull("request is null.", request);
         this.request = request;

@@ -18,6 +18,7 @@ package org.seasar.framework.container.external.servlet;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.ServletRequest;
@@ -25,6 +26,8 @@ import javax.servlet.ServletRequest;
 import org.seasar.framework.container.external.AbstractUnmodifiableExternalContextMap;
 
 /**
+ * ServletRequestParameterに {@link Map}としてアクセスするためのクラスです。
+ * 
  * @author shot
  * @author higa
  */
@@ -37,6 +40,11 @@ public class ServletRequestParameterMap extends
 
     private final Set parameterNames = new HashSet();
 
+    /**
+     * {@link ServletRequestParameterMap}を作成します。
+     * 
+     * @param request
+     */
     public ServletRequestParameterMap(final ServletRequest request) {
         this.request = request;
         for (final Enumeration names = request.getParameterNames(); names

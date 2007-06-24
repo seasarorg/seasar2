@@ -17,15 +17,21 @@ package org.seasar.framework.container.external.servlet;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.ContainerConstants;
 import org.seasar.framework.container.impl.SimpleComponentDef;
 
 /**
+ * {@link HttpServletResponse}用の {@link ComponentDef}です。
+ * 
  * @author higa
  * 
  */
 public class HttpServletResponseComponentDef extends SimpleComponentDef {
 
+    /**
+     * {@link HttpServletResponseComponentDef}を作成します。
+     */
     public HttpServletResponseComponentDef() {
         super(HttpServletResponse.class, ContainerConstants.RESPONSE_NAME);
     }

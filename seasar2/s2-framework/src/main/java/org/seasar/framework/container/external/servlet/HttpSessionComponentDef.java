@@ -17,15 +17,21 @@ package org.seasar.framework.container.external.servlet;
 
 import javax.servlet.http.HttpSession;
 
+import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.ContainerConstants;
 import org.seasar.framework.container.impl.SimpleComponentDef;
 
 /**
+ * {@link HttpSession}用の {@link ComponentDef}です。
+ * 
  * @author higa
  * 
  */
 public class HttpSessionComponentDef extends SimpleComponentDef {
 
+    /**
+     * {@link HttpSessionComponentDef}を作成します。
+     */
     public HttpSessionComponentDef() {
         super(HttpSession.class, ContainerConstants.SESSION_NAME);
     }

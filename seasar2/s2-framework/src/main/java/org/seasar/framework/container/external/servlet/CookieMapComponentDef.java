@@ -15,15 +15,21 @@
  */
 package org.seasar.framework.container.external.servlet;
 
+import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.ContainerConstants;
 import org.seasar.framework.container.impl.SimpleComponentDef;
 
 /**
+ * {@link CookieMap}用の {@link ComponentDef}です。
+ * 
  * @author higa
  * 
  */
 public class CookieMapComponentDef extends SimpleComponentDef {
 
+    /**
+     * {@link CookieMapComponentDef}を作成します。
+     */
     public CookieMapComponentDef() {
         super(null, null, ContainerConstants.COOKIE);
     }
@@ -32,6 +38,7 @@ public class CookieMapComponentDef extends SimpleComponentDef {
      * @see org.seasar.framework.container.ComponentDef#getComponent()
      */
     public Object getComponent() {
-        return getContainer().getRoot().getExternalContext().getRequestCookieMap();
+        return getContainer().getRoot().getExternalContext()
+                .getRequestCookieMap();
     }
 }

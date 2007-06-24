@@ -20,6 +20,7 @@ import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,6 +28,8 @@ import javax.servlet.http.HttpServletRequest;
 import org.seasar.framework.container.external.AbstractUnmodifiableExternalContextMap;
 
 /**
+ * ServletRequestHeaderValuesに {@link Map}としてアクセスするためのクラスです。
+ * 
  * @author shot
  * @author higa
  */
@@ -39,6 +42,11 @@ public class ServletRequestHeaderValuesMap extends
 
     private final Set headerNames = new HashSet();
 
+    /**
+     * {@link ServletRequestHeaderValuesMap}を作成します。
+     * 
+     * @param request
+     */
     public ServletRequestHeaderValuesMap(final HttpServletRequest request) {
         this.request = request;
         for (final Enumeration names = request.getHeaderNames(); names

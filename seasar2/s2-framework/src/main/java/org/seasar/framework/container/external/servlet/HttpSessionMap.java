@@ -16,6 +16,7 @@
 package org.seasar.framework.container.external.servlet;
 
 import java.util.Iterator;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -26,6 +27,8 @@ import org.seasar.framework.util.EmptyIterator;
 import org.seasar.framework.util.EnumerationIterator;
 
 /**
+ * {@link HttpSession}を {@link Map}としてアクセスするためのクラスです。
+ * 
  * @author shot
  * @author higa
  */
@@ -35,6 +38,11 @@ public class HttpSessionMap extends AbstractExternalContextMap {
 
     private HttpServletRequest request;
 
+    /**
+     * {@link HttpSessionMap}を作成します。
+     * 
+     * @param request
+     */
     public HttpSessionMap(HttpServletRequest request) {
         AssertionUtil.assertNotNull("request is null.", request);
         this.request = request;

@@ -17,15 +17,21 @@ package org.seasar.framework.container.external.servlet;
 
 import javax.servlet.ServletContext;
 
+import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.ContainerConstants;
 import org.seasar.framework.container.impl.SimpleComponentDef;
 
 /**
+ * {@link ServletContext}用の {@link ComponentDef}です。
+ * 
  * @author higa
  * 
  */
 public class ServletContextComponentDef extends SimpleComponentDef {
 
+    /**
+     * {@link ServletContextComponentDef}を作成します。
+     */
     public ServletContextComponentDef() {
         super(ServletContext.class, ContainerConstants.SERVLET_CONTEXT_NAME);
     }

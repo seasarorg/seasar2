@@ -16,6 +16,7 @@
 package org.seasar.framework.container.external.servlet;
 
 import java.util.Iterator;
+import java.util.Map;
 
 import javax.servlet.ServletContext;
 
@@ -23,6 +24,8 @@ import org.seasar.framework.container.external.AbstractUnmodifiableExternalConte
 import org.seasar.framework.util.EnumerationIterator;
 
 /**
+ * ServletInitParameterに {@link Map}としてアクセスするためのクラスです。
+ * 
  * @author shot
  * @author higa
  */
@@ -31,6 +34,11 @@ public class ServletInitParameterMap extends
 
     private final ServletContext context;
 
+    /**
+     * {@link ServletInitParameterMap}を作成します。
+     * 
+     * @param context
+     */
     public ServletInitParameterMap(final ServletContext context) {
         this.context = context;
     }

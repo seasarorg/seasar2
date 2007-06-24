@@ -17,15 +17,21 @@ package org.seasar.framework.container.external.servlet;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.ContainerConstants;
 import org.seasar.framework.container.impl.SimpleComponentDef;
 
 /**
+ * {@link HttpServletRequest}用の {@link ComponentDef}です。
+ * 
  * @author higa
  * 
  */
 public class HttpServletRequestComponentDef extends SimpleComponentDef {
 
+    /**
+     * {@link HttpServletRequestComponentDef}を作成します。
+     */
     public HttpServletRequestComponentDef() {
         super(HttpServletRequest.class, ContainerConstants.REQUEST_NAME);
     }

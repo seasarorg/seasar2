@@ -26,6 +26,8 @@ import javax.servlet.http.HttpSession;
 import org.seasar.framework.container.ExternalContext;
 
 /**
+ * Servlet用の {@link ExternalContext}です。
+ * 
  * @author higa
  * 
  */
@@ -41,6 +43,11 @@ public class HttpServletExternalContext implements ExternalContext {
         return getHttpServletRequest();
     }
 
+    /**
+     * {@link HttpServletRequest}を返します。
+     * 
+     * @return {@link HttpServletRequest}
+     */
     protected HttpServletRequest getHttpServletRequest() {
         return (HttpServletRequest) requests.get();
     }
@@ -61,6 +68,11 @@ public class HttpServletExternalContext implements ExternalContext {
         return getHttpSession();
     }
 
+    /**
+     * {@link HttpSession}を返します。
+     * 
+     * @return {@link HttpSession}
+     */
     protected HttpSession getHttpSession() {
         HttpServletRequest request = getHttpServletRequest();
         if (request == null) {
