@@ -28,6 +28,9 @@ import org.seasar.framework.util.OgnlUtil;
  */
 public class OgnlExpression extends AbstractExpression {
 
+    /**
+     * 解析された結果です。
+     */
     protected Object parsedExpression;
 
     /**
