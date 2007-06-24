@@ -24,11 +24,21 @@ import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 import org.seasar.framework.container.impl.S2ContainerImpl;
 import org.seasar.framework.container.impl.S2ContainerBehavior.DefaultProvider;
+import org.seasar.framework.container.impl.S2ContainerBehavior.Provider;
 import org.seasar.framework.container.util.S2ContainerUtil;
 import org.seasar.framework.convention.NamingConvention;
 import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.DisposableUtil;
 
+/**
+ * HOT deployのための {@link Provider}です。
+ * <p>
+ * このクラスをs2container.diconに登録するとHOT deployで動作するようになります。
+ * </p>
+ * 
+ * @author higa
+ * 
+ */
 public class HotdeployBehavior extends DefaultProvider {
 
     private static final Logger logger = Logger
@@ -44,22 +54,45 @@ public class HotdeployBehavior extends DefaultProvider {
 
     private ComponentCreator[] creators = new ComponentCreator[0];
 
+    /**
+     * {@link NamingConvention}を返します。
+     * 
+     * @return {@link NamingConvention}
+     */
     public NamingConvention getNamingConvention() {
         return namingConvention;
     }
 
+    /**
+     * {@link NamingConvention}を設定します。
+     * 
+     * @param namingConvention
+     */
     public void setNamingConvention(NamingConvention namingConvention) {
         this.namingConvention = namingConvention;
     }
 
+    /**
+     * {@link ComponentCreator}の配列を返します。
+     * 
+     * @return {@link ComponentCreator}の配列
+     */
     public ComponentCreator[] getCreators() {
         return creators;
     }
 
+    /**
+     * {@link ComponentCreator}の配列を設定します。
+     * 
+     * @param creators
+     */
     public void setCreators(ComponentCreator[] creators) {
         this.creators = creators;
     }
 
+    /**
+     * HOT deployを開始します。
+     */
     public void start() {
         if (logger.isDebugEnabled()) {
             logger.log("DSSR0108", null);
@@ -73,6 +106,9 @@ public class HotdeployBehavior extends DefaultProvider {
         container.setClassLoader(hotdeployClassLoader);
     }
 
+    /**
+     * HOT deployを終了します。
+     */
     public void stop() {
         DisposableUtil.dispose();
         Thread.currentThread().setContextClassLoader(originalClassLoader);
@@ -117,10 +153,22 @@ public class HotdeployBehavior extends DefaultProvider {
         return cd;
     }
 
+    /**
+     * キャッシュにある {@link ComponentDef}を返します。
+     * 
+     * @param key
+     * @return {@link ComponentDef}
+     */
     protected ComponentDef getComponentDefFromCache(Object key) {
         return (ComponentDef) componentDefCache.get(key);
     }
 
+    /**
+     * {@link ComponentDef}を作成します。
+     * 
+     * @param componentClass
+     * @return {@link ComponentDef}
+     */
     protected ComponentDef createComponentDef(Class componentClass) {
         for (int i = 0; i < creators.length; ++i) {
             ComponentCreator creator = creators[i];
@@ -132,6 +180,12 @@ public class HotdeployBehavior extends DefaultProvider {
         return null;
     }
 
+    /**
+     * {@link ComponentDef}を作成します。
+     * 
+     * @param componentName
+     * @return {@link ComponentDef}
+     */
     protected ComponentDef createComponentDef(String componentName) {
         for (int i = 0; i < creators.length; ++i) {
             ComponentCreator creator = creators[i];
@@ -143,12 +197,22 @@ public class HotdeployBehavior extends DefaultProvider {
         return null;
     }
 
+    /**
+     * {@link ComponentDef}を登録します。
+     * 
+     * @param componentDef
+     */
     protected void register(ComponentDef componentDef) {
         componentDef.setContainer(SingletonS2ContainerFactory.getContainer());
         registerByClass(componentDef);
         registerByName(componentDef);
     }
 
+    /**
+     * {@link ComponentDef}をクラスをキーにして登録します。
+     * 
+     * @param componentDef
+     */
     protected void registerByClass(ComponentDef componentDef) {
         Class[] classes = S2ContainerUtil.getAssignableClasses(componentDef
                 .getComponentClass());
@@ -157,6 +221,11 @@ public class HotdeployBehavior extends DefaultProvider {
         }
     }
 
+    /**
+     * {@link ComponentDef}を名前をキーにして登録します。
+     * 
+     * @param componentDef
+     */
     protected void registerByName(ComponentDef componentDef) {
         String componentName = componentDef.getComponentName();
         if (componentName != null) {
@@ -164,6 +233,15 @@ public class HotdeployBehavior extends DefaultProvider {
         }
     }
 
+    /**
+     * {@link ComponentDef}をキャッシュに登録します。
+     * <p>
+     * キャッシュは基本的にリクエストごとに破棄されます
+     * </p>
+     * 
+     * @param key
+     * @param componentDef
+     */
     protected void registerMap(Object key, ComponentDef componentDef) {
         ComponentDef previousCd = (ComponentDef) componentDefCache.get(key);
         if (previousCd == null) {

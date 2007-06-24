@@ -26,30 +26,30 @@ import javax.servlet.ServletResponse;
 
 import org.seasar.framework.container.impl.S2ContainerBehavior;
 
+/**
+ * HOT deploy用の {@link Filter}です。
+ * 
+ * @author higa
+ * 
+ */
 public class HotdeployFilter implements Filter {
 
     private static final String KEY = HotdeployFilter.class.getName();
 
-    // private FilterConfig config = null;
-
+    /**
+     * {@link HotdeployFilter}を作成します。
+     */
     public HotdeployFilter() {
     }
 
     public void init(FilterConfig config) throws ServletException {
-        // this.config = config;
     }
 
     public void destroy() {
-        // config = null;
     }
 
-    /**
-     * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest,
-     *      javax.servlet.ServletResponse, javax.servlet.FilterChain)
-     */
     public void doFilter(ServletRequest request, ServletResponse response,
             FilterChain chain) throws IOException, ServletException {
-
         if (request.getAttribute(KEY) == null) {
             S2ContainerBehavior.Provider provider = S2ContainerBehavior
                     .getProvider();

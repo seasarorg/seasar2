@@ -31,24 +31,42 @@ import org.seasar.framework.container.impl.S2ContainerBehavior.Provider;
 import org.seasar.framework.util.ClassUtil;
 
 /**
+ * HOT deploy用のユーティリティクラスです。
+ * 
  * @author higa
  * 
  */
-public abstract class HotdeployUtil {
+public final class HotdeployUtil {
 
     private static Boolean hotdeploy;
 
-    protected HotdeployUtil() {
+    private HotdeployUtil() {
     }
 
+    /**
+     * デバッグ用にHOT deployかどうかを設定します。
+     * <p>
+     * 通常は {@link S2ContainerBehavior#getProvider()}が何かによって自動的に判定されます。
+     * </p>
+     * 
+     * @param hotdeploy
+     */
     public static void setHotdeploy(boolean hotdeploy) {
         HotdeployUtil.hotdeploy = Boolean.valueOf(hotdeploy);
     }
 
+    /**
+     * デバッグ用のHOT deployかどうかの設定をクリアします。
+     */
     public static void clearHotdeploy() {
         hotdeploy = null;
     }
 
+    /**
+     * HOT deployかどうかを返します。
+     * 
+     * @return HOT deployかどうか
+     */
     public static boolean isHotdeploy() {
         if (hotdeploy != null) {
             return hotdeploy.booleanValue();
@@ -57,18 +75,32 @@ public abstract class HotdeployUtil {
         return provider instanceof HotdeployBehavior;
     }
 
+    /**
+     * HOT deployを開始します。
+     */
     public static void start() {
         if (isHotdeploy()) {
             ((HotdeployBehavior) S2ContainerBehavior.getProvider()).start();
         }
     }
 
+    /**
+     * HOT deployを終了します。
+     */
     public static void stop() {
         if (isHotdeploy()) {
             ((HotdeployBehavior) S2ContainerBehavior.getProvider()).stop();
         }
     }
 
+    /**
+     * HOT deploy中は、リクエストごとにクラスが変わってしまうので、 セッションなどに入れたデータを別のリクエストで取り出すと
+     * {@link ClassCastException}が起きます。 これを防ぐために最新のクラスで元のオブジェクトを再作成します。
+     * 
+     * @param value
+     * @return 再作成されたオブジェクト
+     * @see #rebuildValueInternal(Object)
+     */
     public static Object rebuildValue(Object value) {
         if (isHotdeploy()) {
             return rebuildValueInternal(value);
@@ -76,6 +108,12 @@ public abstract class HotdeployUtil {
         return value;
     }
 
+    /**
+     * 値を再作成するために内部的に呼び出されるメソッドです。
+     * 
+     * @param value
+     * @return 再作成されたオブジェクト
+     */
     protected static Object rebuildValueInternal(Object value) {
         if (value == null) {
             return null;
@@ -99,7 +137,7 @@ public abstract class HotdeployUtil {
         return rebuildBean(value);
     }
 
-    protected static Object rebuildArray(Object value) {
+    private static Object rebuildArray(Object value) {
         Class clazz = value.getClass().getComponentType();
         if (!clazz.isPrimitive()) {
             clazz = ClassUtil.forName(clazz.getName());
@@ -112,7 +150,7 @@ public abstract class HotdeployUtil {
         return array;
     }
 
-    protected static ArrayList rebuildArrayList(ArrayList value) {
+    private static ArrayList rebuildArrayList(ArrayList value) {
         ArrayList arrayList = new ArrayList(value.size());
         for (int i = 0; i < value.size(); ++i) {
             arrayList.add(rebuildValueInternal(value.get(i)));
@@ -120,7 +158,7 @@ public abstract class HotdeployUtil {
         return arrayList;
     }
 
-    protected static Collection rebuildCollection(Collection value) {
+    private static Collection rebuildCollection(Collection value) {
         Collection collection = (Collection) ClassUtil.newInstance(value
                 .getClass());
         for (Iterator i = value.iterator(); i.hasNext();) {
@@ -129,7 +167,7 @@ public abstract class HotdeployUtil {
         return collection;
     }
 
-    protected static Map rebuildMap(Map value) {
+    private static Map rebuildMap(Map value) {
         Map map = (Map) ClassUtil.newInstance(value.getClass());
         for (Iterator i = value.entrySet().iterator(); i.hasNext();) {
             Map.Entry entry = (Map.Entry) i.next();
@@ -139,7 +177,7 @@ public abstract class HotdeployUtil {
         return map;
     }
 
-    protected static Object rebuildBean(Object value) {
+    private static Object rebuildBean(Object value) {
         Object bean = ClassUtil.newInstance(value.getClass().getName());
         BeanDesc srcBeanDesc = BeanDescFactory.getBeanDesc(value.getClass());
         BeanDesc destBeanDesc = BeanDescFactory.getBeanDesc(bean.getClass());
@@ -165,7 +203,13 @@ public abstract class HotdeployUtil {
         return bean;
     }
 
-    public static boolean isSimpleValueType(Class type) {
+    /**
+     * 単純な値の型かどうかを返します。
+     * 
+     * @param type
+     * @return 単純な値の型かどうか
+     */
+    private static boolean isSimpleValueType(Class type) {
         return type == String.class || type == Boolean.class
                 || Number.class.isAssignableFrom(type)
                 || Date.class.isAssignableFrom(type)

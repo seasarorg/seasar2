@@ -23,10 +23,22 @@ import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.InputStreamUtil;
 import org.seasar.framework.util.ResourceUtil;
 
+/**
+ * HOT deploy用の {@link ClassLoader}です。
+ * 
+ * @author higa
+ * 
+ */
 public class HotdeployClassLoader extends ClassLoader {
 
     private NamingConvention namingConvention;
 
+    /**
+     * {@link HotdeployClassLoader}を作成します。
+     * 
+     * @param classLoader
+     * @param namingConvention
+     */
     public HotdeployClassLoader(ClassLoader classLoader,
             NamingConvention namingConvention) {
         super(classLoader);
@@ -58,14 +70,34 @@ public class HotdeployClassLoader extends ClassLoader {
         return super.loadClass(className, resolve);
     }
 
+    /**
+     * {@link Class}を定義します。
+     * 
+     * @param className
+     * @param classFile
+     * @return {@link Class}
+     */
     protected Class defineClass(String className, InputStream classFile) {
         return defineClass(className, InputStreamUtil.getBytes(classFile));
     }
 
+    /**
+     * {@link Class}を定義します。
+     * 
+     * @param className
+     * @param bytes
+     * @return {@link Class}
+     */
     protected Class defineClass(String className, byte[] bytes) {
         return defineClass(className, bytes, 0, bytes.length);
     }
 
+    /**
+     * HOT deployの対象のクラスかどうか返します。
+     * 
+     * @param className
+     * @return HOT deployの対象のクラスかどうか
+     */
     protected boolean isTargetClass(String className) {
         return namingConvention.isTargetClassName(className);
     }
