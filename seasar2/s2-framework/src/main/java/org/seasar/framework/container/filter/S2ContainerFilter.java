@@ -29,25 +29,26 @@ import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 import org.seasar.framework.exception.EmptyRuntimeException;
 
+/**
+ * {@link S2Container}用の {@link Filter}です。
+ * 
+ * @author higa
+ * 
+ */
 public class S2ContainerFilter implements Filter {
 
-    // private FilterConfig config = null;
-
+    /**
+     * {@link S2ContainerFilter}を作成します。
+     */
     public S2ContainerFilter() {
     }
 
     public void init(FilterConfig config) throws ServletException {
-        // this.config = config;
     }
 
     public void destroy() {
-        // config = null;
     }
 
-    /**
-     * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest,
-     *      javax.servlet.ServletResponse, javax.servlet.FilterChain)
-     */
     public void doFilter(ServletRequest request, ServletResponse response,
             FilterChain chain) throws IOException, ServletException {
 
