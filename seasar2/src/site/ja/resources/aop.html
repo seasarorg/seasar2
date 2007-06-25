@@ -150,6 +150,26 @@
     &lt;/aspect&gt;
 &lt;/component&gt;
 </pre>
+pointcutの対象から外したいメソッドがある場合は以下のようにします。
+
+以下は「do」で始まり，その後に「ABC」が続くメソッドをpointcutの対象から外す例です。
+doABC()メソッド、doABCDEF()メソッドがpointcutの対象から外れます。
+<pre>
+&lt;component class="java.util.Date"&gt;
+    &lt;aspect pointcut="do(?!ABC).*"&gt;
+        &lt;component class="org.seasar.framework.aop.interceptors.TraceInterceptor"/&gt;
+    &lt;/aspect&gt;
+&lt;/component&gt;
+</pre>
+また、以下のような設定も可能です。
+「do」で始まり，その後に「ABC」または「BCD」が続くメソッドをpointcutの対象から外す例です。
+<pre>
+&lt;component class="java.util.Date"&gt;
+    &lt;aspect pointcut="do(?!ABC|BCD).*"&gt;
+        &lt;component class="org.seasar.framework.aop.interceptors.TraceInterceptor"/&gt;
+    &lt;/aspect&gt;
+&lt;/component&gt;
+</pre>
 <h4><a name="interTypeTag" id="interTypeTag">interTypeタグ</a></h4>
 <p>InterTypeをコンポーネントに組み込みます。InterTypeの指定は、ボディでOGNL式を使うか、子タグでcomponentタグを使います。<br />
 ※OGNLについては <a href="ognl.html">OGNLガイド</a>を参照してください。1つのコンポーネントに複数のInterTypeを組み込んだ場合はInterTypeの登録順に組み込まれます。詳しい説明は<a href="#OriginalInterType">独自実装のInterType</a>を参照してください。</p>
