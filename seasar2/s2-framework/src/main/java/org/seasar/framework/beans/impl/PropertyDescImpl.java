@@ -31,6 +31,7 @@ import org.seasar.framework.util.ConstructorUtil;
 import org.seasar.framework.util.DateConversionUtil;
 import org.seasar.framework.util.FieldUtil;
 import org.seasar.framework.util.MethodUtil;
+import org.seasar.framework.util.ModifierUtil;
 import org.seasar.framework.util.NumberConversionUtil;
 import org.seasar.framework.util.SqlDateConversionUtil;
 import org.seasar.framework.util.TimeConversionUtil;
@@ -59,6 +60,8 @@ public final class PropertyDescImpl implements PropertyDesc {
     private BeanDesc beanDesc;
 
     private Constructor stringConstructor;
+
+    private Method valueOfMethod;
 
     /**
      * {@link PropertyDescImpl}を作成します。
@@ -103,6 +106,7 @@ public final class PropertyDescImpl implements PropertyDesc {
         this.field = field;
         this.beanDesc = beanDesc;
         setupStringConstructor();
+        setupValueOfMethod();
     }
 
     private void setupStringConstructor() {
@@ -112,6 +116,20 @@ public final class PropertyDescImpl implements PropertyDesc {
             if (con.getParameterTypes().length == 1
                     && con.getParameterTypes()[0].equals(String.class)) {
                 stringConstructor = con;
+                break;
+            }
+        }
+    }
+
+    private void setupValueOfMethod() {
+        Method[] methods = propertyType.getMethods();
+        for (int i = 0; i < methods.length; ++i) {
+            Method method = methods[i];
+            if (ModifierUtil.isStatic(method.getModifiers())
+                    && method.getName().equals("valueOf")
+                    && method.getParameterTypes().length == 1
+                    && method.getParameterTypes()[0].equals(String.class)) {
+                valueOfMethod = method;
                 break;
             }
         }
@@ -214,7 +232,7 @@ public final class PropertyDescImpl implements PropertyDesc {
         } else if (Boolean.class.isAssignableFrom(propertyType)) {
             return BooleanConversionUtil.toBoolean(arg);
         } else if (arg instanceof String && !String.class.equals(propertyType)) {
-            return convertWithStringConstructor(arg);
+            return convertWithString(arg);
         } else if (java.util.Calendar.class.isAssignableFrom(propertyType)) {
             return CalendarConversionUtil.toCalendar(arg);
         }
@@ -242,12 +260,18 @@ public final class PropertyDescImpl implements PropertyDesc {
         return arg;
     }
 
-    private Object convertWithStringConstructor(Object arg) {
-        if (stringConstructor == null || arg == null) {
+    private Object convertWithString(Object arg) {
+        if (arg == null) {
             return arg;
         }
-        return ConstructorUtil.newInstance(stringConstructor,
-                new Object[] { arg });
+        if (stringConstructor != null) {
+            return ConstructorUtil.newInstance(stringConstructor,
+                    new Object[] { arg });
+        }
+        if (valueOfMethod != null) {
+            return MethodUtil.invoke(valueOfMethod, null, new Object[] { arg });
+        }
+        return arg;
     }
 
 }

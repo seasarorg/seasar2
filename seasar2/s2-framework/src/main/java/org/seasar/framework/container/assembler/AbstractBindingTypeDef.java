@@ -38,6 +38,11 @@ public abstract class AbstractBindingTypeDef implements BindingTypeDef {
 
     private String name;
 
+    /**
+     * {@link AbstractBindingTypeDef}を作成します。
+     * 
+     * @param name
+     */
     protected AbstractBindingTypeDef(String name) {
         this.name = name;
     }
@@ -88,6 +93,16 @@ public abstract class AbstractBindingTypeDef implements BindingTypeDef {
         }
     }
 
+    /**
+     * 明示的な設定にもとづいてオブジェクトを結び付けます。
+     * 
+     * @param componentDef
+     * @param propertyDef
+     * @param field
+     * @param component
+     * @see #getValue(ComponentDef, PropertyDef, Object)
+     * @see #setValue(ComponentDef, Field, Object, Object)
+     */
     protected void bindManual(ComponentDef componentDef,
             PropertyDef propertyDef, Field field, Object component) {
 
@@ -95,6 +110,16 @@ public abstract class AbstractBindingTypeDef implements BindingTypeDef {
         setValue(componentDef, field, component, value);
     }
 
+    /**
+     * 明示的な設定にもとづいてオブジェクトを結び付けます。
+     * 
+     * @param componentDef
+     * @param propertyDef
+     * @param propertyDesc
+     * @param component
+     * @see #getValue(ComponentDef, PropertyDef, Object)
+     * @see #setValue(ComponentDef, PropertyDesc, Object, Object)
+     */
     protected void bindManual(ComponentDef componentDef,
             PropertyDef propertyDef, PropertyDesc propertyDesc, Object component) {
 
@@ -102,6 +127,16 @@ public abstract class AbstractBindingTypeDef implements BindingTypeDef {
         setValue(componentDef, propertyDesc, component, value);
     }
 
+    /**
+     * 自動的にオブジェクトを結び付けます。
+     * 
+     * @param componentDef
+     * @param field
+     * @param component
+     * @return オブジェクトを結び付けたかどうか
+     * @see #getValue(ComponentDef, Object, Object, String)
+     * @see #setValue(ComponentDef, Field, Object, Object)
+     */
     protected boolean bindAuto(ComponentDef componentDef, Field field,
             Object component) {
 
@@ -150,6 +185,14 @@ public abstract class AbstractBindingTypeDef implements BindingTypeDef {
         return false;
     }
 
+    /**
+     * 自動的にオブジェクトを結び付けます。
+     * 
+     * @param componentDef
+     * @param propertyDesc
+     * @param component
+     * @return オブジェクトを結び付けたかどうか
+     */
     protected boolean bindAuto(ComponentDef componentDef,
             PropertyDesc propertyDesc, Object component) {
 
@@ -198,8 +241,19 @@ public abstract class AbstractBindingTypeDef implements BindingTypeDef {
         return false;
     }
 
+    /**
+     * プロパティの値を返します。
+     * 
+     * @param componentDef
+     * @param propertyDef
+     * @param component
+     * @return プロパティの値
+     * @throws IllegalPropertyRuntimeException
+     *             {@link RuntimeException}が発生した場合
+     */
     protected Object getValue(ComponentDef componentDef,
-            PropertyDef propertyDef, Object component) {
+            PropertyDef propertyDef, Object component)
+            throws IllegalPropertyRuntimeException {
         try {
             return propertyDef.getValue();
         } catch (RuntimeException cause) {
@@ -210,8 +264,20 @@ public abstract class AbstractBindingTypeDef implements BindingTypeDef {
 
     }
 
+    /**
+     * コンポーネントを返します。
+     * 
+     * @param componentDef
+     * @param key
+     * @param component
+     * @param propertyName
+     * @return コンポーネント
+     * @throws IllegalPropertyRuntimeException
+     *             {@link RuntimeException}が発生した場合
+     */
     protected Object getValue(ComponentDef componentDef, Object key,
-            Object component, String propertyName) {
+            Object component, String propertyName)
+            throws IllegalPropertyRuntimeException {
         try {
             return componentDef.getContainer().getComponent(key);
         } catch (RuntimeException cause) {
@@ -222,10 +288,19 @@ public abstract class AbstractBindingTypeDef implements BindingTypeDef {
 
     }
 
+    /**
+     * プロパティに値を設定します。
+     * 
+     * @param componentDef
+     * @param propertyDesc
+     * @param component
+     * @param value
+     * @throws IllegalPropertyRuntimeException
+     *             {@link NumberFormatException}が発生した場合
+     */
     protected void setValue(ComponentDef componentDef,
             PropertyDesc propertyDesc, Object component, Object value)
             throws IllegalPropertyRuntimeException {
-
         if (value == null) {
             return;
         }
@@ -237,6 +312,16 @@ public abstract class AbstractBindingTypeDef implements BindingTypeDef {
         }
     }
 
+    /**
+     * {@link Field}に値を設定します。
+     * 
+     * @param componentDef
+     * @param field
+     * @param component
+     * @param value
+     * @throws IllegalPropertyRuntimeException
+     *             {@link NumberFormatException}が発生した場合
+     */
     protected void setValue(ComponentDef componentDef, Field field,
             Object component, Object value)
             throws IllegalPropertyRuntimeException {
@@ -252,9 +337,23 @@ public abstract class AbstractBindingTypeDef implements BindingTypeDef {
         }
     }
 
+    /**
+     * オブジェクトを結びつけるための抽象メソッドです。
+     * 
+     * @param componentDef
+     * @param propertyDesc
+     * @param component
+     */
     protected abstract void doBind(ComponentDef componentDef,
             PropertyDesc propertyDesc, Object component);
 
+    /**
+     * オブジェクトを結びつけるための抽象メソッドです。
+     * 
+     * @param componentDef
+     * @param field
+     * @param component
+     */
     protected abstract void doBind(ComponentDef componentDef, Field field,
             Object component);
 }

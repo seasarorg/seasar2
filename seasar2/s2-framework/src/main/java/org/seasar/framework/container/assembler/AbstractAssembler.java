@@ -40,18 +40,43 @@ public abstract class AbstractAssembler {
         this.componentDef = componentDef;
     }
 
+    /**
+     * {@link ComponentDef}を返します。
+     * 
+     * @return {@link ComponentDef}
+     */
     protected final ComponentDef getComponentDef() {
         return componentDef;
     }
 
+    /**
+     * {@link BeanDesc}を返します。
+     * 
+     * @param component
+     * @return {@link BeanDesc}
+     * @see BindingUtil#getBeanDesc(ComponentDef, Object)
+     */
     protected BeanDesc getBeanDesc(Object component) {
         return BindingUtil.getBeanDesc(getComponentDef(), component);
     }
 
+    /**
+     * コンポーネントのクラスを返します。
+     * 
+     * @param component
+     * @return コンポーネントのクラス
+     * @see BindingUtil#getComponentClass(ComponentDef, Object)
+     */
     protected Class getComponentClass(Object component) {
         return BindingUtil.getComponentClass(getComponentDef(), component);
     }
 
+    /**
+     * 引数を返します。
+     * 
+     * @param argTypes
+     * @return 引数
+     */
     protected Object[] getArgs(Class[] argTypes) {
         Object[] args = new Object[argTypes.length];
         for (int i = 0; i < argTypes.length; ++i) {

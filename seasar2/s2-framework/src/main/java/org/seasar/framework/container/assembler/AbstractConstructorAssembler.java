@@ -55,9 +55,21 @@ public abstract class AbstractConstructorAssembler extends AbstractAssembler
         return doAssemble();
     }
 
+    /**
+     * コンポーネント組み立てるための抽象メソッドです。
+     * 
+     * @return コンポーネント
+     */
     protected abstract Object doAssemble();
 
-    protected Object assembleExpression() {
+    /**
+     * 式にもとづいてコンポーネントを組み立てます。
+     * 
+     * @return コンポーネント
+     * @throws ClassUnmatchRuntimeException
+     *             コンポーネントと定義上のクラスが異なる場合
+     */
+    protected Object assembleExpression() throws ClassUnmatchRuntimeException {
         ComponentDef cd = getComponentDef();
         S2Container container = cd.getContainer();
         Expression expression = cd.getExpression();
@@ -72,6 +84,11 @@ public abstract class AbstractConstructorAssembler extends AbstractAssembler
         return component;
     }
 
+    /**
+     * コンポーネント定義に基づいてコンポーネントを組み立てます。
+     * 
+     * @return コンポーネント
+     */
     protected Object assembleManual() {
         Object[] args = new Object[getComponentDef().getArgDefSize()];
         for (int i = 0; i < args.length; ++i) {
@@ -87,6 +104,11 @@ public abstract class AbstractConstructorAssembler extends AbstractAssembler
         return beanDesc.newInstance(args);
     }
 
+    /**
+     * デフォルトのコンストラクタを使ってコンポーネントを組み立てます。
+     * 
+     * @return コンポーネント
+     */
     protected Object assembleDefault() {
         Class clazz = getComponentDef().getConcreteClass();
         Constructor constructor = ClassUtil.getConstructor(clazz, null);

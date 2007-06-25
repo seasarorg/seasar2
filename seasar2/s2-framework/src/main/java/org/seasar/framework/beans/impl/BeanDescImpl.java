@@ -341,7 +341,7 @@ public final class BeanDescImpl implements BeanDesc {
         return (String[]) methodParameterNamesCache.get(method);
     }
 
-    protected Map createConstructorParameterNamesCache() {
+    private Map createConstructorParameterNamesCache() {
         final Map map = new HashMap();
         final ClassPool pool = ClassPoolUtil.getClassPool(beanClass);
         for (int i = 0; i < constructors.length; ++i) {
@@ -366,7 +366,7 @@ public final class BeanDescImpl implements BeanDesc {
         return map;
     }
 
-    protected Map createMethodParameterNamesCache() {
+    private Map createMethodParameterNamesCache() {
         final Map map = new HashMap();
         final ClassPool pool = ClassPoolUtil.getClassPool(beanClass);
         for (final Iterator it = methodsCache.values().iterator(); it.hasNext();) {
@@ -394,7 +394,7 @@ public final class BeanDescImpl implements BeanDesc {
         return map;
     }
 
-    protected String[] getParameterNames(final CtBehavior behavior)
+    private String[] getParameterNames(final CtBehavior behavior)
             throws NotFoundException {
         final MethodInfo methodInfo = behavior.getMethodInfo();
         final ParameterAnnotationsAttribute attribute = (ParameterAnnotationsAttribute) methodInfo
@@ -419,7 +419,7 @@ public final class BeanDescImpl implements BeanDesc {
         return parameterNames;
     }
 
-    protected String getParameterName(final Annotation[] annotations) {
+    private String getParameterName(final Annotation[] annotations) {
         Annotation nameAnnotation = null;
         for (int i = 0; i < annotations.length; ++i) {
             final Annotation annotation = annotations[i];
