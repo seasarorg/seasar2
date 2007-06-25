@@ -21,7 +21,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 変換元のJavaBeansまたは<code>Map</code>のプロパティ名に付与されているprefixを指定する注釈です。
+ * 変換元のJavaBeansまたは<code>Map</code>のプロパティ名に付与されているprefixを指定します。
  * 
  * @author koichik
  */
@@ -30,7 +30,7 @@ import java.lang.annotation.Target;
 public @interface SourcePrefix {
 
     /**
-     * 変換元のJavaBeansまたは<code>Map</code>のプロパティ名に付与されているprefixです。
+     * 変換元のJavaBeansまたは<code>Map</code>のプロパティ名に付与されているprefixを指定します。
      * 
      * @return 変換元のJavaBeansまたは<code>Map</code>のプロパティ名に付与されているprefix
      */

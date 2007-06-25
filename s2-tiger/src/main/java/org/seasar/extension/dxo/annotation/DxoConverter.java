@@ -21,11 +21,19 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * @author koichik
+ * 変換に使用するコンバータを指定するアノテーションを注釈するメタアノテーションです。
  * 
+ * @author koichik
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.ANNOTATION_TYPE)
 public @interface DxoConverter {
+
+    /**
+     * 変換に使用するコンバータのコンポーネント名です。
+     * 
+     * @return 変換に使用するコンバータのコンポーネント名
+     */
     String value();
+
 }

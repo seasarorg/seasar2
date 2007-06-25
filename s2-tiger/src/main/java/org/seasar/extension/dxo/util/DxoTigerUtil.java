@@ -19,15 +19,27 @@ import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.List;
+import java.util.Map;
 
 import org.seasar.framework.util.tiger.GenericUtil;
 
 /**
- * @author koichik
+ * J2SE1.4でビルドされるS2-ExtensionからJava5の機能を利用するために使用されるユーティリティクラスです。
+ * <p>
+ * このクラスは{@link DxoUtil}からリフレクションで呼び出されます。
+ * </p>
  * 
+ * @author koichik
  */
 public class DxoTigerUtil {
 
+    /**
+     * メソッドの戻り値型である{@link Map}の値の型変数に指定された型を返します。
+     * 
+     * @param method
+     *            メソッド
+     * @return メソッドの戻り値型である{@link Map}の値の型変数に指定された型
+     */
     public static Class<?> getValueTypeOfTargetMap(final Method method) {
         final Type[] parameterTypes = method.getGenericParameterTypes();
         Type type = parameterTypes.length == 2 ? parameterTypes[1] : method

@@ -37,21 +37,40 @@ import org.seasar.framework.util.tiger.AnnotationUtil;
 import org.seasar.framework.util.tiger.CollectionsUtil;
 
 /**
+ * DxoインタフェースまたはクラスやそのメソッドからTigerアノテーションを読み取るクラスです。
+ * 
  * @author koichik
  */
 public class TigerAnnotationReader implements AnnotationReader {
 
+    /** S2コンテナ */
     protected S2Container container;
 
+    /** 後続の{@link AnnotationReader} */
     protected AnnotationReader next;
 
+    /** コンバータのキャッシュ */
     protected Map<Class<?>, Map<String, Converter>> convertersCache = CollectionsUtil
             .newConcurrentHashMap();
 
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param container
+     *            S2コンテナ
+     */
     public TigerAnnotationReader(final S2Container container) {
         this(container, null);
     }
 
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param container
+     *            S2コンテナ
+     * @param next
+     *            後続の{@link AnnotationReader}
+     */
     public TigerAnnotationReader(final S2Container container,
             final AnnotationReader next) {
         this.container = container.getRoot();
@@ -146,6 +165,24 @@ public class TigerAnnotationReader implements AnnotationReader {
         return createConverters(destClass);
     }
 
+    /**
+     * 指定アノテーションを取得して返します。
+     * <p>
+     * メソッドに指定のアノテーションが付与されていればそれを返します。
+     * メソッドに指定のアノテーションが付与されていなければ、クラスに付与されているアノテーションを返します。
+     * メソッドにもクラスに指定アノテーションが付与されていなければ<code>null</code>を返します。
+     * </p>
+     * 
+     * @param <T>
+     *            アノテーションの型
+     * @param dxoClass
+     *            Dxoクラス
+     * @param method
+     *            Dxoメソッド
+     * @param annotationType
+     *            アノテーションの型
+     * @return メソッドまたはクラスに付けられたアノテーション
+     */
     protected <T extends Annotation> T getAnnotation(final Class<?> dxoClass,
             final Method method, final Class<T> annotationType) {
         final T annotation = method.getAnnotation(annotationType);
@@ -155,6 +192,16 @@ public class TigerAnnotationReader implements AnnotationReader {
         return dxoClass.getAnnotation(annotationType);
     }
 
+    /**
+     * クラスに指定されたコンバータの{@link Map}を返します。
+     * <p>
+     * 指定されたクラスのコンバータの指定されたプロパティについて、プロパティ名をキー、コンバータを値とする{@link Map}を作成します。
+     * </p>
+     * 
+     * @param destClass
+     *            変換先のクラス
+     * @return クラスに指定されたコンバータの{@link Map}
+     */
     protected Map<String, Converter> createConverters(final Class<?> destClass) {
         final Map<String, Converter> converters = CollectionsUtil.newHashMap();
         final BeanDesc beanDesc = BeanDescFactory.getBeanDesc(destClass);

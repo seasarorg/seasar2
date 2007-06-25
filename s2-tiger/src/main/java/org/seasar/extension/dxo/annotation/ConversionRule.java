@@ -21,13 +21,51 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * @author koichik
+ * 変換ルールを指定します。
  * 
+ * @author koichik
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface ConversionRule {
 
+    /**
+     * 変換ルールです。
+     * <p>
+     * 指定の方法は2種類あります。
+     * </p>
+     * <dl>
+     * <dt>簡易記法</dt>
+     * <dd>
+     * <p>
+     * 変換先のプロパティ名と変換元のプロパティ名のペアをコロン区切りで指定します。 カンマ区切りで複数のペアを指定することができます。
+     * </p>
+     * 
+     * <pre>
+     * &#64;ConversionRule("aaa : xxx, bbb : yyy, ccc : zzz")
+     * </pre>
+     * 
+     * <p>
+     * 変換元および変換先のプロパティは、ピリオド区切りでネストしたプロパティを指定することがでいます。
+     * ただし、演算子を含むような複雑なOGNL式を指定することはできません。
+     * </p>
+     * </dd>
+     * <dt>OGNL記法</dt>
+     * <dd>
+     * <p>
+     * 変換先のプロパティ名とその値となるOGNL式のペアをコロン区切りで指定します。 カンマ区切りで複数のペアを指定することができます。
+     * 変換先のプロパティ名は文字列で指定します．そのため，シングルクオートまたはダブルクオートで囲む必要があります。
+     * </p>
+     * 
+     * <pre>
+     * &#64;ConversionRule("'aaa' : xxx, 'bbb' : yyy == null ? '' : yyy.toString()")
+     * </pre>
+     * 
+     * </dd>
+     * </dl>
+     * 
+     * @return 変換ルール
+     */
     String value();
 
 }

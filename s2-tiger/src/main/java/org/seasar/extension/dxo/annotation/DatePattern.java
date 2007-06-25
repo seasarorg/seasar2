@@ -19,15 +19,25 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.text.SimpleDateFormat;
 
 /**
- * @author koichik
+ * <code>java.util.Date</code>および<code>java.sql.Date</code>と<code>String</code>の変換に使用するフォーマットを指定します。
  * 
+ * @author koichik
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target( { ElementType.TYPE, ElementType.METHOD })
 public @interface DatePattern {
 
+    /**
+     * <code>java.util.Date</code>および<code>java.sql.Date</code>と<code>String</code>の変換に使用するフォーマットです。
+     * <p>
+     * フォーマットは{@link SimpleDateFormat}に従います．
+     * </p>
+     * 
+     * @return <code>java.util.Date</code>および<code>java.sql.Date</code>と<code>String</code>の変換に使用するフォーマット
+     */
     String value();
 
 }

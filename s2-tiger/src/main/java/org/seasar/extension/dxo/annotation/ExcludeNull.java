@@ -21,8 +21,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * @author koichik
+ * 変換元プロパティまたは<code>Map</code>の値が<code>null</code>の場合に変換から除外することを指定します。
  * 
+ * @author koichik
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target( { ElementType.TYPE, ElementType.METHOD })
