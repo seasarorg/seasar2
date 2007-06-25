@@ -28,6 +28,11 @@ import org.seasar.framework.container.ComponentDef;
  */
 public class BindingTypeMayDef extends AbstractBindingTypeDef {
 
+    /**
+     * {@link BindingTypeMayDef}を作成します。
+     * 
+     * @param name
+     */
     protected BindingTypeMayDef(String name) {
         super(name);
     }

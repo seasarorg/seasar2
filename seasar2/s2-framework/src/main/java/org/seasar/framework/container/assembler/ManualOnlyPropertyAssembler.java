@@ -30,6 +30,8 @@ import org.seasar.framework.container.PropertyDef;
 public class ManualOnlyPropertyAssembler extends AbstractPropertyAssembler {
 
     /**
+     * {@link ManualOnlyPropertyAssembler}を作成します。
+     * 
      * @param componentDef
      */
     public ManualOnlyPropertyAssembler(ComponentDef componentDef) {

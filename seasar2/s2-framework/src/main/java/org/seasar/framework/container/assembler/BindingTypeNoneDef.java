@@ -28,6 +28,11 @@ import org.seasar.framework.container.ComponentDef;
  */
 public class BindingTypeNoneDef extends AbstractBindingTypeDef {
 
+    /**
+     * {@link BindingTypeNoneDef}を作成します。
+     * 
+     * @param name
+     */
     protected BindingTypeNoneDef(String name) {
         super(name);
     }

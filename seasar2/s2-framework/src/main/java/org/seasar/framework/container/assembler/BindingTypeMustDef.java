@@ -30,6 +30,11 @@ import org.seasar.framework.container.util.BindingUtil;
  */
 public class BindingTypeMustDef extends AbstractBindingTypeDef {
 
+    /**
+     * {@link BindingTypeMustDef}を作成します。
+     * 
+     * @param name
+     */
     protected BindingTypeMustDef(String name) {
         super(name);
     }

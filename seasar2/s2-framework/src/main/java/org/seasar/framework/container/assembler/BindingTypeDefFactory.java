@@ -27,7 +27,7 @@ import org.seasar.framework.container.IllegalBindingTypeDefRuntimeException;
  * @author higa
  * 
  */
-public class BindingTypeDefFactory {
+public final class BindingTypeDefFactory {
 
     /**
      * バインディングタイプ定義MUSTのフィールドです。
@@ -62,7 +62,7 @@ public class BindingTypeDefFactory {
         addBindingTypeDef(NONE);
     }
 
-    protected BindingTypeDefFactory() {
+    private BindingTypeDefFactory() {
     }
 
     /**

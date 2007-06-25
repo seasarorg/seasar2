@@ -27,7 +27,7 @@ import org.seasar.framework.container.IllegalAutoBindingDefRuntimeException;
  * @author higa
  * 
  */
-public class AutoBindingDefFactory {
+public final class AutoBindingDefFactory {
 
     /**
      * 自動バインディング定義AUTOのフィールドです。
@@ -69,7 +69,7 @@ public class AutoBindingDefFactory {
         addAutoBindingDef(SEMIAUTO);
     }
 
-    protected AutoBindingDefFactory() {
+    private AutoBindingDefFactory() {
     }
 
     /**

@@ -27,6 +27,8 @@ public class DefaultConstructorConstructorAssembler extends
         AbstractConstructorAssembler {
 
     /**
+     * {@link DefaultConstructorConstructorAssembler}を作成します。
+     * 
      * @param componentDef
      */
     public DefaultConstructorConstructorAssembler(ComponentDef componentDef) {

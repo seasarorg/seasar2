@@ -32,6 +32,11 @@ public class BindingTypeShouldDef extends AbstractBindingTypeDef {
 
     private static Logger logger = Logger.getLogger(BindingTypeShouldDef.class);
 
+    /**
+     * {@link BindingTypeShouldDef}を作成します。
+     * 
+     * @param name
+     */
     protected BindingTypeShouldDef(String name) {
         super(name);
     }

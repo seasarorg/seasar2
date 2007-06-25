@@ -29,6 +29,8 @@ import org.seasar.framework.container.MethodDef;
 public class DefaultDestroyMethodAssembler extends AbstractMethodAssembler {
 
     /**
+     * {@link DefaultDestroyMethodAssembler}を作成します。
+     * 
      * @param componentDef
      */
     public DefaultDestroyMethodAssembler(ComponentDef componentDef) {

@@ -34,6 +34,8 @@ public abstract class AbstractAssembler {
     private ComponentDef componentDef;
 
     /**
+     * {@link AbstractAssembler}のコンストラクタです。
+     * 
      * @param componentDef
      */
     public AbstractAssembler(ComponentDef componentDef) {

@@ -43,9 +43,19 @@ public abstract class AbstractPropertyAssembler extends AbstractAssembler
         super(componentDef);
     }
 
+    /**
+     * {@link ExternalContext}のデータをプロパティに自動設定します。
+     * 
+     * @param beanDesc
+     * @param componentDef
+     * @param component
+     * @param names
+     * @throws EmptyRuntimeException
+     *             {@link ExternalContext}がnullの場合
+     */
     protected void bindExternally(final BeanDesc beanDesc,
             final ComponentDef componentDef, final Object component,
-            final Set names) {
+            final Set names) throws EmptyRuntimeException {
         final ExternalContext extCtx = componentDef.getContainer().getRoot()
                 .getExternalContext();
         if (extCtx == null) {
@@ -73,6 +83,14 @@ public abstract class AbstractPropertyAssembler extends AbstractAssembler
         }
     }
 
+    /**
+     * {@link ExternalContext}から値を取り出します。
+     * 
+     * @param name
+     * @param type
+     * @param extCtx
+     * @return 値
+     */
     protected Object getValue(final String name, final Class type,
             final ExternalContext extCtx) {
         if (type.isArray()) {
@@ -89,6 +107,13 @@ public abstract class AbstractPropertyAssembler extends AbstractAssembler
         return getValue(name, extCtx);
     }
 
+    /**
+     * {@link ExternalContext}から値を取り出します。
+     * 
+     * @param name
+     * @param extCtx
+     * @return 値
+     */
     protected Object getValue(final String name, final ExternalContext extCtx) {
         Object value = extCtx.getRequestParameterMap().get(name);
         if (value != null) {
@@ -101,6 +126,13 @@ public abstract class AbstractPropertyAssembler extends AbstractAssembler
         return extCtx.getRequestMap().get(name);
     }
 
+    /**
+     * {@link ExternalContext}から配列の値を取り出します。
+     * 
+     * @param name
+     * @param extCtx
+     * @return 配列の値
+     */
     protected Object[] getValues(final String name, final ExternalContext extCtx) {
         Object[] values = (Object[]) extCtx.getRequestParameterValuesMap().get(
                 name);

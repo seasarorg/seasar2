@@ -56,7 +56,7 @@ public abstract class AbstractConstructorAssembler extends AbstractAssembler
     }
 
     /**
-     * コンポーネント組み立てるための抽象メソッドです。
+     * コンポーネント組み立てるためのメソッドです。
      * 
      * @return コンポーネント
      */

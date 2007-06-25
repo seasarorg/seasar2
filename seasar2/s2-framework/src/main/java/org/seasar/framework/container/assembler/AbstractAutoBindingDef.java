@@ -28,7 +28,7 @@ public abstract class AbstractAutoBindingDef implements AutoBindingDef {
     private String name;
 
     /**
-     * {@link AbstractAutoBindingDef}を作成します。
+     * {@link AbstractAutoBindingDef}のコンストラクタです。
      * 
      * @param name
      */

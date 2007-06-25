@@ -46,6 +46,15 @@ public abstract class AbstractMethodAssembler extends AbstractAssembler
         super(componentDef);
     }
 
+    /**
+     * 定義されたメソッドを呼び出します。
+     * 
+     * @param beanDesc
+     * @param component
+     * @param methodDef
+     * @throws IllegalMethodRuntimeException
+     *             メソッド呼び出しで例外が発生した場合
+     */
     protected void invoke(BeanDesc beanDesc, Object component,
             MethodDef methodDef) throws IllegalMethodRuntimeException {
 

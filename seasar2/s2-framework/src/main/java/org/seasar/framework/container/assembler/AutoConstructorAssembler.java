@@ -30,6 +30,8 @@ import org.seasar.framework.util.ConstructorUtil;
 public class AutoConstructorAssembler extends AbstractConstructorAssembler {
 
     /**
+     * {@link AutoConstructorAssembler}を作成します。
+     * 
      * @param componentDef
      */
     public AutoConstructorAssembler(ComponentDef componentDef) {
@@ -45,6 +47,11 @@ public class AutoConstructorAssembler extends AbstractConstructorAssembler {
         return ConstructorUtil.newInstance(constructor, args);
     }
 
+    /**
+     * 適した {@link Constructor}を返します。
+     * 
+     * @return 適した {@link Constructor}
+     */
     protected Constructor getSuitableConstructor() {
         int argSize = -1;
         Constructor constructor = null;

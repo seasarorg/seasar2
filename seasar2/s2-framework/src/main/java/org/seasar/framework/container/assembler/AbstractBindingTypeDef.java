@@ -338,7 +338,7 @@ public abstract class AbstractBindingTypeDef implements BindingTypeDef {
     }
 
     /**
-     * オブジェクトを結びつけるための抽象メソッドです。
+     * オブジェクトを結びつけるためのメソッドです。
      * 
      * @param componentDef
      * @param propertyDesc
@@ -348,7 +348,7 @@ public abstract class AbstractBindingTypeDef implements BindingTypeDef {
             PropertyDesc propertyDesc, Object component);
 
     /**
-     * オブジェクトを結びつけるための抽象メソッドです。
+     * オブジェクトを結びつけるためのメソッドです。
      * 
      * @param componentDef
      * @param field

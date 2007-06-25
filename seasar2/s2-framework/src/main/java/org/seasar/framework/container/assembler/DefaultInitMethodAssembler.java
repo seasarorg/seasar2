@@ -29,6 +29,8 @@ import org.seasar.framework.container.MethodDef;
 public class DefaultInitMethodAssembler extends AbstractMethodAssembler {
 
     /**
+     * {@link DefaultInitMethodAssembler}を作成します。
+     * 
      * @param componentDef
      */
     public DefaultInitMethodAssembler(ComponentDef componentDef) {

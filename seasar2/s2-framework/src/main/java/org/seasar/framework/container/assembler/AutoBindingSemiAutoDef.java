@@ -27,6 +27,11 @@ import org.seasar.framework.container.PropertyAssembler;
  */
 public class AutoBindingSemiAutoDef extends AbstractAutoBindingDef {
 
+    /**
+     * {@link AutoBindingSemiAutoDef}を作成します。
+     * 
+     * @param name
+     */
     protected AutoBindingSemiAutoDef(String name) {
         super(name);
     }

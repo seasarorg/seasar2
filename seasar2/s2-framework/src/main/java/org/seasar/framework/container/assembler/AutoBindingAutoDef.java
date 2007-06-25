@@ -23,10 +23,15 @@ import org.seasar.framework.container.PropertyAssembler;
  * 自動バインディング定義の自動版です。
  * 
  * @author higa
- *
+ * 
  */
 public class AutoBindingAutoDef extends AbstractAutoBindingDef {
 
+    /**
+     * {@link AutoBindingAutoDef}を作成します。
+     * 
+     * @param name
+     */
     protected AutoBindingAutoDef(String name) {
         super(name);
     }

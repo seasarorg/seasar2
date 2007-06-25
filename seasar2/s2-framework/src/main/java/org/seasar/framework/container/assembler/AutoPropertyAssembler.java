@@ -33,6 +33,8 @@ import org.seasar.framework.container.PropertyDef;
 public class AutoPropertyAssembler extends AbstractPropertyAssembler {
 
     /**
+     * {@link AutoPropertyAssembler}を作成します。
+     * 
      * @param componentDef
      */
     public AutoPropertyAssembler(ComponentDef componentDef) {

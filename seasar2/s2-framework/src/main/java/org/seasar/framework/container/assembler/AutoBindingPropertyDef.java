@@ -27,6 +27,11 @@ import org.seasar.framework.container.PropertyAssembler;
  */
 public class AutoBindingPropertyDef extends AbstractAutoBindingDef {
 
+    /**
+     * {@link AutoBindingPropertyDef}を作成します。
+     * 
+     * @param name
+     */
     protected AutoBindingPropertyDef(String name) {
         super(name);
     }
