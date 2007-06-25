@@ -29,9 +29,9 @@ import org.seasar.framework.beans.factory.BeanDescFactory;
  * @author higa
  * 
  */
-public class BeanUtil {
+public final class BeanUtil {
 
-    protected BeanUtil() {
+    private BeanUtil() {
     }
 
     /**

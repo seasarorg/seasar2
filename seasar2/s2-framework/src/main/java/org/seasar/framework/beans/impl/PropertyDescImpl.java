@@ -261,9 +261,6 @@ public final class PropertyDescImpl implements PropertyDesc {
     }
 
     private Object convertWithString(Object arg) {
-        if (arg == null) {
-            return arg;
-        }
         if (stringConstructor != null) {
             return ConstructorUtil.newInstance(stringConstructor,
                     new Object[] { arg });
