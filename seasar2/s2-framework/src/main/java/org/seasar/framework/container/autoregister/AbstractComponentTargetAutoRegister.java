@@ -38,8 +38,19 @@ public abstract class AbstractComponentTargetAutoRegister extends
         }
     }
 
+    /**
+     * {@link ComponentDef}を登録します。
+     * 
+     * @param cd
+     */
     protected abstract void register(ComponentDef cd);
 
+    /**
+     * 処理対象のコンポーネントかどうか返します。
+     * 
+     * @param cd
+     * @return 処理対象のコンポーネントかどうか
+     */
     protected boolean isAppliedComponent(final ComponentDef cd) {
         final Class componentClass = cd.getComponentClass();
         if (componentClass == null) {

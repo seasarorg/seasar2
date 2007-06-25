@@ -122,10 +122,22 @@ public abstract class AbstractAutoRegister {
      */
     public abstract void registerAll();
 
+    /**
+     * {@link ComponentDef}があるかどうかを返します。
+     * 
+     * @param name
+     * @return {@link ComponentDef}があるかどうか
+     */
     protected boolean hasComponentDef(String name) {
         return findComponentDef(name) != null;
     }
 
+    /**
+     * {@link ComponentDef}を検索します。
+     * 
+     * @param name
+     * @return {@link ComponentDef}
+     */
     protected ComponentDef findComponentDef(String name) {
         if (name == null) {
             return null;
@@ -140,6 +152,13 @@ public abstract class AbstractAutoRegister {
         return null;
     }
 
+    /**
+     * 無視するかどうかを返します。
+     * 
+     * @param packageName
+     * @param shortClassName
+     * @return 無視するかどうか
+     */
     protected boolean isIgnore(String packageName, String shortClassName) {
         if (ignoreClassPatterns.isEmpty()) {
             return false;

@@ -33,14 +33,29 @@ import org.seasar.framework.util.StringUtil;
  */
 public abstract class AbstractAutoNaming implements AutoNaming {
 
+    /**
+     * Implのsuffixです。
+     */
     protected static final String IMPL = "Impl";
 
+    /**
+     * Beanのsuffixです。
+     */
     protected static final String BEAN = "Bean";
 
+    /**
+     * decapitalizeするかどうか。
+     */
     protected boolean decapitalize = true;
 
+    /**
+     * カスタマイズされた名前です。
+     */
     protected Map customizedNames = new HashMap();
 
+    /**
+     * 置換するルールです。
+     */
     protected Map replaceRules = new LinkedHashMap();
 
     /**
@@ -107,15 +122,35 @@ public abstract class AbstractAutoNaming implements AutoNaming {
         return makeDefineName(packageName, shortClassName);
     }
 
+    /**
+     * カスタマイズされた名前を返します。
+     * 
+     * @param packageName
+     * @param shortClassName
+     * @return カスタマイズされた名前
+     */
     protected String getCustomizedName(final String packageName,
             final String shortClassName) {
         final String fqn = ClassUtil.concatName(packageName, shortClassName);
         return (String) customizedNames.get(fqn);
     }
 
+    /**
+     * コンポーネント名を定義します。
+     * 
+     * @param packageName
+     * @param shortClassName
+     * @return コンポーネント名
+     */
     protected abstract String makeDefineName(final String packageName,
             final String shortClassName);
 
+    /**
+     * ルールを適用します。
+     * 
+     * @param name
+     * @return ルールが適用された結果
+     */
     protected String applyRule(String name) {
         for (Iterator it = replaceRules.entrySet().iterator(); it.hasNext();) {
             final Entry entry = (Entry) it.next();
@@ -131,6 +166,12 @@ public abstract class AbstractAutoNaming implements AutoNaming {
         return name;
     }
 
+    /**
+     * 正規化します。
+     * 
+     * @param name
+     * @return 正規化された名前
+     */
     protected String normalize(final String name) {
         final String[] names = name.split("\\.");
         final StringBuffer buf = new StringBuffer(name.length());
