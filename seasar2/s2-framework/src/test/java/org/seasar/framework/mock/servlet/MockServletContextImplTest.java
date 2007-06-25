@@ -15,6 +15,7 @@
  */
 package org.seasar.framework.mock.servlet;
 
+import java.net.URL;
 import java.util.Set;
 
 import junit.framework.TestCase;
@@ -46,6 +47,14 @@ public class MockServletContextImplTest extends TestCase {
         Set paths = context_.getResourcePaths("/lib");
         System.out.println(paths);
         assertNotNull("1", paths);
+        assertFalse(paths.isEmpty());
+
+        String path = (String) paths.iterator().next();
+        assertTrue(path.startsWith("/lib"));
+
+        URL url = context_.getResource(path);
+        System.out.println(url);
+        assertNotNull(url);
     }
 
     protected void setUp() throws Exception {
