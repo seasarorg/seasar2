@@ -19,14 +19,37 @@ import javax.persistence.EntityManager;
 import javax.transaction.Transaction;
 
 /**
+ * 永続ユニットのコンテキストです。
+ * 
  * @author koichik
  */
 public interface PersistenceUnitContext {
 
+    /**
+     * 指定されたトランザクションに関連付いた{@link EntityManager}を返します。
+     * 
+     * @param tx
+     *            トランザクション
+     * @return {@link EntityManager}のコンポーネント
+     */
     EntityManager getEntityManager(Transaction tx);
 
+    /**
+     * 指定されたトランザクションに関連付けて{@link EntityManager}を登録します。
+     * 
+     * @param tx
+     *            トランザクション
+     * @param em
+     *            {@link EntityManager}のコンポーネント
+     */
     void registerEntityManager(Transaction tx, EntityManager em);
 
+    /**
+     * 指定されたトランザクションに関連付けられた{@link EntityManager}の登録を取り消します。
+     * 
+     * @param tx
+     *            トランザクション
+     */
     void unregisterEntityManager(Transaction tx);
 
 }

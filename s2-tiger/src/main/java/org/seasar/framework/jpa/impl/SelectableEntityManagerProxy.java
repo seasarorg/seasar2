@@ -29,17 +29,31 @@ import org.seasar.framework.jpa.EntityManagerProvider;
 import org.seasar.framework.util.StringUtil;
 
 /**
+ * 複数の{@link EntityManager}から任意の{@link EntityManager}を選択し処理を委譲するプロキシです。
+ * <p>
+ * 委譲先の{@link EntityManager}は{@link EntityManagerProvider}から取得します。
+ * </p>
+ * 
  * @author koichik
  */
 @Component
 public class SelectableEntityManagerProxy implements EntityManager {
 
+    /** {@link EntityManagerProvider}のインスタンス */
     @Binding(bindingType = BindingType.MUST)
     protected EntityManagerProvider entityManagerProvider;
 
+    /**
+     * インスタンスを構築します。
+     */
     public SelectableEntityManagerProxy() {
     }
 
+    /**
+     * {@link EntityManager}のコンポーネントを返します。
+     * 
+     * @return {@link EntityManager}のコンポーネント
+     */
     protected EntityManager getEntityManager() {
         final String prefix = entityManagerProvider
                 .getSelectableEntityManagerPrefix();

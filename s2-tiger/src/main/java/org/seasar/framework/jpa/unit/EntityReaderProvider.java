@@ -18,13 +18,28 @@ package org.seasar.framework.jpa.unit;
 import java.util.Collection;
 
 /**
+ * {@link EntityReader エンティティリーダ}を提供するインターフェースです。
  * 
  * @author taedium
  */
 public interface EntityReaderProvider {
 
+    /**
+     * エンティティリーダを作成します。
+     * 
+     * @param entity
+     *            エンティティのインスタンス
+     * @return エンティティリーダ
+     */
     EntityReader createEntityReader(Object entity);
 
+    /**
+     * エンティティリーダを作成します。
+     * 
+     * @param entities
+     *            エンティティのインスタンスのコレクション
+     * @return エンティティリーダ
+     */
     EntityReader createEntityReader(Collection<?> entities);
 
 }

@@ -20,10 +20,19 @@ import java.sql.Types;
 import javax.persistence.TemporalType;
 
 /**
+ * {@link TemporalType}のユーティリティクラスです。
+ * 
  * @author koichik
  */
 public class TemporalTypeUtil {
 
+    /**
+     * JDBCのSQL型を適切な{@link TemporalType}に変換します。
+     * 
+     * @param sqlType
+     *            SQL型
+     * @return <code>sqlType</code>を変換できる場合は{@link TemporalType}、変換できない場合は<code>null</code>
+     */
     public static TemporalType fromSqlTypeToTemporalType(final int sqlType) {
         switch (sqlType) {
         case Types.DATE:
@@ -36,6 +45,13 @@ public class TemporalTypeUtil {
         return null;
     }
 
+    /**
+     * {@link TemporalType}をJDBCのSQL型に変換します。
+     * 
+     * @param temporalType
+     *            時制を表わす型
+     * @return <code>temporalType</code>を変換できる場合は適切なJDBCのSQL型、変換できない場合は{@link Types#OTHER}
+     */
     public static int fromTemporalTypeToSqlType(final TemporalType temporalType) {
         if (temporalType == TemporalType.DATE) {
             return Types.DATE;

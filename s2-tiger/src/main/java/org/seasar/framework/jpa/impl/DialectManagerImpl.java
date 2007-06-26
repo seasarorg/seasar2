@@ -26,11 +26,13 @@ import org.seasar.framework.jpa.exception.DialectNotFoundException;
 import org.seasar.framework.util.tiger.CollectionsUtil;
 
 /**
- * @author koichik
+ * {@link DialectManager}の実装クラスです。
  * 
+ * @author koichik
  */
 public class DialectManagerImpl implements DialectManager {
 
+    /** JPA実装が提供する{@link EntityManager}の実装クラスをキー、{@link Dialect}を値とするマップ */
     protected Map<Class<?>, Dialect> dialects = CollectionsUtil
             .newLinkedHashMap();
 

@@ -17,26 +17,18 @@ package org.seasar.framework.jpa.unit;
 
 import java.util.Collection;
 
-
 /**
+ * {@link EntityReaderProvider}のダミー実装クラスです。
+ * 
  * @author koichik
- *
  */
 public class DummyEntityReaderProvider implements EntityReaderProvider {
 
-    /* (non-Javadoc)
-     * @see org.seasar.framework.jpa.unit.EntityReaderProvider#createEntityReader(java.lang.Object)
-     */
     public EntityReader createEntityReader(Object entity) {
-        // TODO Auto-generated method stub
         return null;
     }
 
-    /* (non-Javadoc)
-     * @see org.seasar.framework.jpa.unit.EntityReaderProvider#createEntityReader(java.util.Collection)
-     */
     public EntityReader createEntityReader(Collection<?> entities) {
-        // TODO Auto-generated method stub
         return null;
     }
 

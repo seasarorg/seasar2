@@ -22,11 +22,19 @@ import org.seasar.framework.jpa.PersistenceUnitManagerLocater;
 import org.seasar.framework.jpa.PersistenceUnitProvider;
 
 /**
+ * {@link EntityReader エンティティリーダ}のファクトリです。
  * 
  * @author taedium
  */
 public class EntityReaderFactory {
 
+    /**
+     * エンティティリーダを返します。
+     * 
+     * @param entity
+     *            エンティティのインスタンス
+     * @return エンティティリーダ
+     */
     public static EntityReader getEntityReader(final Object entity) {
         final Class<?> entityClass = entity.getClass();
         final PersistenceUnitManager manager = PersistenceUnitManagerLocater
@@ -36,6 +44,13 @@ public class EntityReaderFactory {
         return provider.getEntityReaderProvider().createEntityReader(entity);
     }
 
+    /**
+     * エンティティリーダを返します。
+     * 
+     * @param entities
+     *            エンティティのインスタンスのコレクション
+     * @return エンティティリーダ
+     */
     public static EntityReader getEntityReader(final Collection<?> entities) {
         if (entities == null || entities.isEmpty()) {
             return null;

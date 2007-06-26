@@ -26,17 +26,30 @@ import org.seasar.framework.container.annotation.tiger.Binding;
 import org.seasar.framework.container.annotation.tiger.BindingType;
 
 /**
+ * {@link EntityManager}のダミー実装クラスです。
  * 
  * @author koichik
  */
 public class DummyEntityManager implements EntityManager {
 
+    /** データソース */
     protected DataSource dataSource;
 
+    /**
+     * データソースを返します。
+     * 
+     * @return データソース
+     */
     public DataSource getDataSource() {
         return dataSource;
     }
 
+    /**
+     * データソースを設定します。
+     * 
+     * @param dataSource
+     *            データソース
+     */
     @Binding(bindingType = BindingType.MUST)
     public void setDataSource(final DataSource dataSource) {
         this.dataSource = dataSource;

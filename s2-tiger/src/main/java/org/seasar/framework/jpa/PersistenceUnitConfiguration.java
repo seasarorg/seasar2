@@ -21,7 +21,7 @@ import org.seasar.framework.util.ClassTraversal.ClassHandler;
 import org.seasar.framework.util.ResourceTraversal.ResourceHandler;
 
 /**
- * 永続ユニットに対するコンフィギュレーションです。
+ * 永続ユニットのコンフィギュレーションです。
  * 
  * @author taedium
  * 

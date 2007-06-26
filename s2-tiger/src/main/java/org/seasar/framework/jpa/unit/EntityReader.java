@@ -18,6 +18,7 @@ package org.seasar.framework.jpa.unit;
 import org.seasar.extension.dataset.DataReader;
 
 /**
+ * エンティティを読み取るインターフェースです。
  * 
  * @author taedium
  */

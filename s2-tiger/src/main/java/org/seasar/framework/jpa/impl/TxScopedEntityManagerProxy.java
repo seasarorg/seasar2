@@ -54,28 +54,50 @@ public class TxScopedEntityManagerProxy implements EntityManager {
     private static final Logger logger = Logger
             .getLogger(TxScopedEntityManagerProxy.class);
 
+    /** トランザクションマネージャ */
     @Binding(bindingType = BindingType.MUST)
     protected TransactionManager tm;
 
+    /** 永続マネージャファクトリ */
     @Binding(bindingType = BindingType.MUST)
     protected EntityManagerFactory emf;
 
+    /** 永続ユニットマネージャ */
     @Binding(bindingType = BindingType.MUST)
     protected PersistenceUnitManager pum;
 
+    /**
+     * インスタンスを構築します。
+     */
     public TxScopedEntityManagerProxy() {
     }
 
+    /**
+     * トランザクションが活動中の場合<code>true</code>を返します。
+     * 
+     * @return トランザクションが活動中の場合<code>true</code>、そうでない場合<code>false</code>
+     */
     protected boolean isTxActive() {
         return TransactionManagerUtil.isActive(tm);
     }
 
+    /**
+     * トランザクションが活動中であることをアサートします。
+     * 
+     * @exception TransactionRequiredException
+     *                トランザクションが活動中でない場合
+     */
     protected void assertTxActive() {
         if (!isTxActive()) {
             throw new TransactionRequiredException();
         }
     }
 
+    /**
+     * エンティティマネージャを返します。
+     * 
+     * @return エンティティマネージャ
+     */
     protected EntityManager getEntityManager() {
         if (!isTxActive()) {
             return emf.createEntityManager();
@@ -87,6 +109,11 @@ public class TxScopedEntityManagerProxy implements EntityManager {
         return createEntityManager();
     }
 
+    /**
+     * トランザクションに関連付けられたエンティティマネージャを返します。
+     * 
+     * @return トランザクションに関連付けられたエンティティマネージャ
+     */
     protected EntityManager getTxBoundEntityManager() {
         final PersistenceUnitContext context = pum
                 .getPersistenceUnitContext(emf);
@@ -97,6 +124,11 @@ public class TxScopedEntityManagerProxy implements EntityManager {
         return context.getEntityManager(tx);
     }
 
+    /**
+     * エンティティマネージャを作成します。
+     * 
+     * @return エンティティマネージャ
+     */
     protected EntityManager createEntityManager() {
         final EntityManager em = emf.createEntityManager();
         final Transaction tx = TransactionManagerUtil.getTransaction(tm);

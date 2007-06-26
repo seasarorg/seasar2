@@ -24,10 +24,13 @@ import org.seasar.framework.jpa.PersistenceUnitContext;
 import org.seasar.framework.util.tiger.CollectionsUtil;
 
 /**
+ * {@link PersistenceUnitContext}の実装クラスです。
+ * 
  * @author koichik
  */
 public class PersistenceUnitContextImpl implements PersistenceUnitContext {
 
+    /** トランザクションをキー、{@link EntityManager}を値とするマップ */
     protected ConcurrentMap<Transaction, EntityManager> entityManagers = CollectionsUtil
             .newConcurrentHashMap();
 

@@ -29,19 +29,33 @@ import org.seasar.framework.jpa.Dialect;
 import org.seasar.framework.jpa.DialectManager;
 
 /**
- * @author koichik
+ * {@link Dialect}のダミー実装クラスです。
  * 
+ * @author koichik
  */
 public class DummyEntityManagerDialect implements Dialect {
 
+    /** このインスタンスを管理するマネージャ */
     @Binding(bindingType = BindingType.MUST)
     protected DialectManager dialectManager;
 
+    /**
+     * このインスタンスを初期化します。
+     * <p>
+     * このインスタンスを{@link #dialectManager}に登録します。
+     * </p>
+     */
     @InitMethod
     public void initialize() {
         dialectManager.addDialect(DummyEntityManager.class, this);
     }
 
+    /**
+     * このインスタンスを破棄します。
+     * <p>
+     * このインスタンスを{@link #dialectManager}から削除します。
+     * </p>
+     */
     @DestroyMethod
     public void destroy() {
         dialectManager.removeDialect(DummyEntityManager.class);

@@ -32,38 +32,65 @@ import org.seasar.framework.util.tiger.CollectionsUtil;
 import org.seasar.framework.util.tiger.ReflectionUtil;
 
 /**
- * @author taedium
+ * {@link PersistenceUnitConfiguration}の実装クラスです。
+ * <p>
+ * 永続クラスやマッピングファイルを手動または自動で永続ユニットに登録するために使用します。
+ * </p>
  * 
+ * @author taedium
  */
 public class PersistenceUnitConfigurationImpl implements
         PersistenceUnitConfiguration {
 
+    /** 永続ユニットマネージャ */
     protected PersistenceUnitManager persistenceUnitManager;
 
+    /** 永続ユニット名をキー、マッピングファイル名のリストを値とするマップ */
     protected Map<String, List<String>> mappingFiles = CollectionsUtil
             .newHashMap();
 
+    /** 永続ユニット名をキー、永続クラスのリストを値とするマップ */
     protected Map<String, List<Class<?>>> persistenceClasses = CollectionsUtil
             .newHashMap();
 
+    /** 永続ユニット名をキー、{@link ResourceAutoDetector}のリストを値とするマップ */
     protected Map<String, List<ResourceAutoDetector>> mappingFileAutoDetectors = CollectionsUtil
             .newHashMap();
 
+    /** 永続ユニット名をキー、{@link ClassAutoDetector}のリストを値とするマップ */
     protected Map<String, List<ClassAutoDetector>> persistenceClassAutoDetectors = CollectionsUtil
             .newHashMap();
 
+    /**
+     * 永続ユニットマネージャを設定します。
+     * 
+     * @param persistenceUnitManager
+     *            永続ユニットマネージャ
+     */
     public void setPersistenceUnitManager(
             final PersistenceUnitManager persistenceUnitManager) {
         this.persistenceUnitManager = persistenceUnitManager;
     }
 
+    /**
+     * {@link ResourceAutoDetector}の配列を設定します。
+     * 
+     * @param detectors
+     *            {@link ResourceAutoDetector}の配列
+     */
     public void setMappingFileAutoDetector(
-            final ResourceAutoDetector[] resourceAutoDetectors) {
-        for (final ResourceAutoDetector detector : resourceAutoDetectors) {
+            final ResourceAutoDetector[] detectors) {
+        for (final ResourceAutoDetector detector : detectors) {
             addMappingFileAutoDetector(detector);
         }
     }
 
+    /**
+     * {@link ClassAutoDetector}の配列を設定します。
+     * 
+     * @param detectors
+     *            {@link ClassAutoDetector}の配列
+     */
     public void setPersistenceClassAutoDetector(
             final ClassAutoDetector[] detectors) {
         for (final ClassAutoDetector detector : detectors) {
@@ -160,16 +187,28 @@ public class PersistenceUnitConfigurationImpl implements
                 || mappingFileAutoDetectors.size() > 0;
     }
 
-    @SuppressWarnings("unchecked")
+    /**
+     * マッピングファイルのリストを返します。
+     * 
+     * @param unitName
+     *            永続ユニット名
+     * @return マッピングファイルのリスト
+     */
     protected List<String> getMappingFileList(final String unitName) {
         final List<String> result = mappingFiles.get(unitName);
         if (result != null) {
             return result;
         }
-        return Collections.EMPTY_LIST;
+        return Collections.emptyList();
     }
 
-    @SuppressWarnings("unchecked")
+    /**
+     * {@link ResourceAutoDetector}のリストを返します。
+     * 
+     * @param unitName
+     *            永続ユニット名
+     * @return {@link ResourceAutoDetector}のリスト
+     */
     protected List<ResourceAutoDetector> getMappingFileAutoDetectorList(
             final String unitName) {
         final List<ResourceAutoDetector> result = mappingFileAutoDetectors
@@ -177,19 +216,31 @@ public class PersistenceUnitConfigurationImpl implements
         if (result != null) {
             return result;
         }
-        return Collections.EMPTY_LIST;
+        return Collections.emptyList();
     }
 
-    @SuppressWarnings("unchecked")
+    /**
+     * 永続クラスのリストを返します。
+     * 
+     * @param unitName
+     *            永続ユニット名
+     * @return 永続クラスのリスト
+     */
     protected List<Class<?>> getPersistenceClassList(final String unitName) {
         final List<Class<?>> result = persistenceClasses.get(unitName);
         if (result != null) {
             return result;
         }
-        return Collections.EMPTY_LIST;
+        return Collections.emptyList();
     }
 
-    @SuppressWarnings("unchecked")
+    /**
+     * {@link ClassAutoDetector}のリストを返します。
+     * 
+     * @param unitName
+     *            永続ユニット名
+     * @return {@link ClassAutoDetector}のリスト
+     */
     protected List<ClassAutoDetector> getPersistenceClassAutoDetectorList(
             final String unitName) {
         final List<ClassAutoDetector> result = persistenceClassAutoDetectors
@@ -197,39 +248,93 @@ public class PersistenceUnitConfigurationImpl implements
         if (result != null) {
             return result;
         }
-        return Collections.EMPTY_LIST;
+        return Collections.emptyList();
     }
 
+    /**
+     * <code>handler</code>を実行します。
+     * 
+     * @param handler
+     *            クラスを処理するためのハンドラ
+     * @param clazz
+     *            処理対象のクラス
+     */
     protected void invokeHandler(final ClassHandler handler,
             final Class<?> clazz) {
         handler.processClass(ClassUtil.getPackageName(clazz), ClassUtil
                 .getShortClassName(clazz));
     }
 
+    /**
+     * <code>unitName</code>と<code>mappingFile</code>を管理する永続ユニットの名前が等しい場合
+     * <code>true</code>を返します。
+     * 
+     * @param unitName
+     *            永続ユニット名
+     * @param mappingFile
+     *            マッピングファイル
+     * @return <code>unitName</code>と<code>mappingFile</code>を
+     *         管理する永続ユニットの名前が等しい場合<code>true</code>、等しくない場合<code>false</code>
+     */
     protected boolean isTarget(final String unitName, final String mappingFile) {
         return unitName.equals(persistenceUnitManager
                 .getAbstractPersistenceUnitName(mappingFile));
     }
 
+    /**
+     * <code>unitName</code>と<code>clazz</code>を管理する永続ユニットの名前が等しい場合
+     * <code>true</code>を返します。
+     * 
+     * @param unitName
+     *            永続ユニット名
+     * @param clazz
+     *            永続クラス
+     * @return <code>unitName</code>と<code>clazz</code>を
+     *         管理する永続ユニットの名前が等しい場合<code>true</code>、等しくない場合<code>false</code>
+     */
     protected boolean isTarget(final String unitName, final Class<?> clazz) {
         return unitName.equals(persistenceUnitManager
                 .getAbstractPersistenceUnitName(clazz));
     }
 
+    /**
+     * 扱うリソースやクラスが指定された永続ユニットで管理されている場合に限り処理を指定されたハンドラに委譲するラッパです。
+     * 
+     * @author taedium
+     */
     public class UnitNameAwareHandler implements ResourceHandler, ClassHandler {
 
+        /** 永続ユニット名 */
         protected String unitName;
 
+        /** 委譲先のリソースハンドラ */
         protected ResourceHandler delegateResourceHandler;
 
+        /** 委譲先のクラスハンドラ */
         protected ClassHandler delegateClassHandler;
 
+        /**
+         * インスタンスを構築します。
+         * 
+         * @param unitName
+         *            永続ユニット名
+         * @param delegateResourceHandler
+         *            委譲先のリソースハンドラ
+         */
         public UnitNameAwareHandler(final String unitName,
                 final ResourceHandler delegateResourceHandler) {
             this.unitName = unitName;
             this.delegateResourceHandler = delegateResourceHandler;
         }
 
+        /**
+         * インスタンスを構築します。
+         * 
+         * @param unitName
+         *            永続ユニット名
+         * @param delegateClassHandler
+         *            委譲先のクラスハンドラ
+         */
         public UnitNameAwareHandler(final String unitName,
                 final ClassHandler delegateClassHandler) {
             this.unitName = unitName;
