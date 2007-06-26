@@ -16,6 +16,8 @@
 package org.seasar.extension.jdbc.types;
 
 import java.io.InputStream;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.sql.Types;
@@ -24,42 +26,99 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.seasar.extension.jdbc.ValueType;
+import org.seasar.framework.util.ConstructorUtil;
+import org.seasar.framework.util.MethodUtil;
 
-public abstract class ValueTypes {
+/**
+ * {@link ValueType}のファクトリです。
+ * 
+ * @author higa
+ * 
+ */
+public final class ValueTypes {
 
+    /**
+     * String用の {@link ValueType}です。
+     */
     public final static ValueType STRING = new StringType();
 
+    /**
+     * Character用の {@link ValueType}です。
+     */
     public final static ValueType CHARACTER = new CharacterType();
 
+    /**
+     * Short用の {@link ValueType}です。
+     */
     public final static ValueType SHORT = new ShortType();
 
+    /**
+     * Integer用の {@link ValueType}です。
+     */
     public final static ValueType INTEGER = new IntegerType();
 
+    /**
+     * Long用の {@link ValueType}です。
+     */
     public final static ValueType LONG = new LongType();
 
+    /**
+     * Float用の {@link ValueType}です。
+     */
     public final static ValueType FLOAT = new FloatType();
 
+    /**
+     * Double用の {@link ValueType}です。
+     */
     public final static ValueType DOUBLE = new DoubleType();
 
+    /**
+     * BigDecimal用の {@link ValueType}です。
+     */
     public final static ValueType BIGDECIMAL = new BigDecimalType();
 
+    /**
+     * Time用の {@link ValueType}です。
+     */
     public final static ValueType TIME = new TimeType();
 
+    /**
+     * java.sql.Date用の {@link ValueType}です。
+     */
     public final static ValueType SQLDATE = new SqlDateType();
 
+    /**
+     * Timestamp用の {@link ValueType}です。
+     */
     public final static ValueType TIMESTAMP = new TimestampType();
 
+    /**
+     * Binary用の {@link ValueType}です。
+     */
     public final static ValueType BINARY = new BinaryType();
 
+    /**
+     * BinaryStream用の {@link ValueType}です。
+     */
     public final static ValueType BINARY_STREAM = new BinaryStreamType();
 
+    /**
+     * Boolean用の {@link ValueType}です。
+     */
     public final static ValueType BOOLEAN = new BooleanType();
 
+    /**
+     * 汎用的な {@link ValueType}です。
+     */
     public final static ValueType OBJECT = new ObjectType();
 
     private static final Class BYTE_ARRAY_CLASS = new byte[0].getClass();
 
-    private static Map types_ = new HashMap();
+    private static Map types = new HashMap();
+
+    private static Constructor enumTypeConstructor;
+
+    private static Method isEnumMethod;
 
     static {
         registerValueType(String.class, STRING);
@@ -85,18 +144,39 @@ public abstract class ValueTypes {
         registerValueType(InputStream.class, BINARY_STREAM);
         registerValueType(boolean.class, BOOLEAN);
         registerValueType(Boolean.class, BOOLEAN);
-        registerValueType(Object.class, OBJECT);
-    }
-
-    protected ValueTypes() {
-    }
-
-    public static void registerValueType(Class clazz, ValueType valueType) {
-        synchronized (types_) {
-            types_.put(clazz, valueType);
+        // registerValueType(Object.class, OBJECT);
+        try {
+            isEnumMethod = Class.class.getMethod("isEnum", null);
+        } catch (Throwable ignore) {
+        }
+        try {
+            Class clazz = Class
+                    .forName("org.seasar.extension.jdbc.types.EnumType");
+            enumTypeConstructor = clazz
+                    .getConstructor(new Class[] { Class.class });
+        } catch (Throwable ignore) {
         }
     }
 
+    private ValueTypes() {
+    }
+
+    /**
+     * {@link ValueType}を登録します。
+     * 
+     * @param clazz
+     * @param valueType
+     */
+    public static void registerValueType(Class clazz, ValueType valueType) {
+        types.put(clazz, valueType);
+    }
+
+    /**
+     * {@link ValueType}を返します。
+     * 
+     * @param obj
+     * @return {@link ValueType}
+     */
     public static ValueType getValueType(Object obj) {
         if (obj == null) {
             return OBJECT;
@@ -104,20 +184,40 @@ public abstract class ValueTypes {
         return getValueType(obj.getClass());
     }
 
+    /**
+     * {@link ValueType}を返します。
+     * 
+     * @param clazz
+     * @return {@link ValueType}
+     */
     public static ValueType getValueType(Class clazz) {
-        for (Class c = clazz; c != null; c = c.getSuperclass()) {
+        for (Class c = clazz; c != null && c != Object.class; c = c
+                .getSuperclass()) {
             ValueType valueType = getValueType0(c);
             if (valueType != null) {
                 return valueType;
             }
         }
+        if (enumTypeConstructor != null
+                && isEnumMethod != null
+                && MethodUtil.invoke(isEnumMethod, clazz, null).equals(
+                        Boolean.TRUE)) {
+            return (ValueType) ConstructorUtil.newInstance(enumTypeConstructor,
+                    new Class[] { clazz });
+        }
         return OBJECT;
     }
 
-    protected static ValueType getValueType0(Class clazz) {
-        return (ValueType) types_.get(clazz);
+    private static ValueType getValueType0(Class clazz) {
+        return (ValueType) types.get(clazz);
     }
 
+    /**
+     * sqltypeに応じた {@link Class}を返します。
+     * 
+     * @param sqltype
+     * @return {@link Class}
+     */
     public static Class getType(int sqltype) {
         switch (sqltype) {
         case Types.TINYINT:
@@ -157,6 +257,12 @@ public abstract class ValueTypes {
         }
     }
 
+    /**
+     * {@link ValueType}を返します。
+     * 
+     * @param sqltype
+     * @return {@link ValueType}
+     */
     public static ValueType getValueType(int sqltype) {
         return getValueType(getType(sqltype));
     }
