@@ -24,6 +24,8 @@ import org.seasar.extension.jdbc.ValueType;
 import org.seasar.framework.util.StringConversionUtil;
 
 /**
+ * Character用の {@link ValueType}です。
+ * 
  * @author manhole
  */
 public class CharacterType implements ValueType {

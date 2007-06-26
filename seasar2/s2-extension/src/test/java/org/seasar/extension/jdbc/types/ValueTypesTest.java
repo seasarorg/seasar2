@@ -15,9 +15,14 @@
  */
 package org.seasar.extension.jdbc.types;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.GregorianCalendar;
 
 import junit.framework.TestCase;
+
+import org.seasar.extension.jdbc.ValueType;
+import org.seasar.extension.jdbc.impl.ResultSetWrapper;
 
 /**
  * 
@@ -30,5 +35,27 @@ public class ValueTypesTest extends TestCase {
     public void testGetValueTypes() throws Exception {
         assertEquals("1", ValueTypes.TIMESTAMP, ValueTypes
                 .getValueType(GregorianCalendar.class));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testUserDefineType() throws Exception {
+        ValueType valueType = ValueTypes.getValueType(Authority.class);
+        assertNotNull(valueType);
+        assertTrue(valueType instanceof UserDefineType);
+        final ResultSet resultSet = new MockResultSet() {
+            public Object getObject(int columnIndex) throws SQLException {
+                return new Integer(2);
+            }
+        };
+        final Authority value = (Authority) valueType.getValue(resultSet, 0);
+        assertEquals(2, value.value());
+    }
+
+    private static class MockResultSet extends ResultSetWrapper {
+        MockResultSet() {
+            super(null);
+        }
     }
 }

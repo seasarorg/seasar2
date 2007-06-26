@@ -26,15 +26,13 @@ import java.sql.Types;
 import org.seasar.extension.jdbc.ValueType;
 
 /**
+ * Binary用の {@link ValueType}です。
+ * 
  * @author higa
  * 
  */
 public class BinaryType implements ValueType {
 
-    /**
-     * @see org.seasar.extension.jdbc.ValueType#getValue(java.sql.ResultSet,
-     *      int)
-     */
     public Object getValue(ResultSet resultSet, int index) throws SQLException {
         try {
             return toByteArray(resultSet.getBlob(index));
@@ -43,10 +41,6 @@ public class BinaryType implements ValueType {
         }
     }
 
-    /**
-     * @see org.seasar.extension.jdbc.ValueType#getValue(java.sql.ResultSet,
-     *      java.lang.String)
-     */
     public Object getValue(ResultSet resultSet, String columnName)
             throws SQLException {
         try {
@@ -67,10 +61,6 @@ public class BinaryType implements ValueType {
         return blob.getBytes(1, (int) l);
     }
 
-    /**
-     * @see org.seasar.extension.jdbc.ValueType#bindValue(java.sql.PreparedStatement,
-     *      int, java.lang.Object)
-     */
     public void bindValue(PreparedStatement ps, int index, Object value)
             throws SQLException {
 
@@ -84,5 +74,4 @@ public class BinaryType implements ValueType {
             ps.setObject(index, value);
         }
     }
-
 }

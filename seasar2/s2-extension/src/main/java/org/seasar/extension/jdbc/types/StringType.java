@@ -24,41 +24,28 @@ import org.seasar.extension.jdbc.ValueType;
 import org.seasar.framework.util.StringConversionUtil;
 
 /**
+ * String用の {@link ValueType}です。
+ * 
  * @author higa
  * 
  */
 public class StringType implements ValueType {
 
-    /**
-     * @see org.seasar.extension.jdbc.ValueType#getValue(java.sql.ResultSet,
-     *      int)
-     */
     public Object getValue(ResultSet resultSet, int index) throws SQLException {
         return resultSet.getString(index);
     }
 
-    /**
-     * @see org.seasar.extension.jdbc.ValueType#getValue(java.sql.ResultSet,
-     *      java.lang.String)
-     */
     public Object getValue(ResultSet resultSet, String columnName)
             throws SQLException {
-
         return resultSet.getString(columnName);
     }
 
-    /**
-     * @see org.seasar.extension.jdbc.ValueType#bindValue(java.sql.PreparedStatement,
-     *      int, java.lang.Object)
-     */
     public void bindValue(PreparedStatement ps, int index, Object value)
             throws SQLException {
-
         if (value == null) {
             ps.setNull(index, Types.VARCHAR);
         } else {
             ps.setString(index, StringConversionUtil.toString(value));
         }
     }
-
 }

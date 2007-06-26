@@ -27,6 +27,8 @@ import org.seasar.framework.util.ReaderUtil;
 import org.seasar.framework.util.StringConversionUtil;
 
 /**
+ * ClobをStringとして扱うための {@link ValueType}です。
+ * 
  * @author manhole
  */
 public class StringClobType implements ValueType {
@@ -53,5 +55,4 @@ public class StringClobType implements ValueType {
             ps.setCharacterStream(index, new StringReader(s), s.length());
         }
     }
-
 }

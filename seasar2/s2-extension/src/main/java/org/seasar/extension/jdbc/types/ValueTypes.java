@@ -21,13 +21,16 @@ import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.sql.Types;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.seasar.extension.jdbc.ValueType;
 import org.seasar.framework.util.ConstructorUtil;
 import org.seasar.framework.util.MethodUtil;
+import org.seasar.framework.util.ModifierUtil;
 
 /**
  * {@link ValueType}のファクトリです。
@@ -191,6 +194,9 @@ public final class ValueTypes {
      * @return {@link ValueType}
      */
     public static ValueType getValueType(Class clazz) {
+        if (clazz == null) {
+            return OBJECT;
+        }
         for (Class c = clazz; c != null && c != Object.class; c = c
                 .getSuperclass()) {
             ValueType valueType = getValueType0(c);
@@ -205,11 +211,52 @@ public final class ValueTypes {
             return (ValueType) ConstructorUtil.newInstance(enumTypeConstructor,
                     new Class[] { clazz });
         }
+        ValueType valueType = createUserDefineValueType(clazz);
+        if (valueType != null) {
+            return valueType;
+        }
         return OBJECT;
     }
 
     private static ValueType getValueType0(Class clazz) {
         return (ValueType) types.get(clazz);
+    }
+
+    private static ValueType createUserDefineValueType(Class clazz) {
+        List valueOfMethods = new ArrayList();
+        Method valueMethod = null;
+        Method[] methods = clazz.getMethods();
+        for (int i = 0; i < methods.length; ++i) {
+            Method method = methods[i];
+            int mod = method.getModifiers();
+            if (method.getName().equals("valueOf")
+                    && method.getParameterTypes().length == 1
+                    && ModifierUtil.isPublic(mod) && ModifierUtil.isStatic(mod)) {
+                valueOfMethods.add(method);
+            } else if (method.getName().equals("value")
+                    && method.getParameterTypes().length == 0
+                    && ModifierUtil.isPublic(mod)
+                    && !ModifierUtil.isStatic(mod)) {
+                valueMethod = method;
+            }
+        }
+        if (valueMethod == null) {
+            return null;
+        }
+        for (int i = 0; i < valueOfMethods.size(); ++i) {
+            Method valueOfMethod = (Method) valueOfMethods.get(i);
+            if (valueOfMethod.getParameterTypes()[0] == valueMethod
+                    .getReturnType()) {
+                Class baseClass = valueMethod.getReturnType();
+                ValueType baseValueType = getValueType0(baseClass);
+                if (baseValueType == null) {
+                    return null;
+                }
+                return new UserDefineType(baseValueType, valueOfMethod,
+                        valueMethod);
+            }
+        }
+        return null;
     }
 
     /**
