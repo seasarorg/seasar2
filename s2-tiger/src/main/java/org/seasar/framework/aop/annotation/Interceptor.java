@@ -21,11 +21,22 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * @author koichik
+ * インターセプタを適用するためにメソッドに指定されるアノテーションを注釈する、 メタアノテーションです。
  * 
+ * @author koichik
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.ANNOTATION_TYPE)
 public @interface Interceptor {
+
+    /**
+     * インターセプタのコンポーネント名です。
+     * <p>
+     * 省略された場合はこのアノテーションが付与されているアノテーションのクラス名をデキャピタライズした名前をコンポーネント名とします。
+     * </p>
+     * 
+     * @return インターセプタのコンポーネント名
+     */
     String value() default "";
+
 }

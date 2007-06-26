@@ -20,14 +20,27 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.seasar.framework.aop.interceptors.TraceThrowsInterceptor;
 
 /**
- * @author koichik
+ * メソッドに{@link TraceThrowsInterceptor}を適用することを指定します。
  * 
+ * @author koichik
+ * @see TraceThrowsInterceptor
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target( { ElementType.TYPE, ElementType.METHOD })
 @Interceptor
 public @interface TraceThrows {
+
+    /**
+     * {@link TraceThrowsInterceptor}を適用するメソッドを選択するポイントカットです。
+     * <p>
+     * この注釈をクラスに指定した場合、ポイントカットに適合するメソッドに{@link TraceThrowsInterceptor}が適用されます。
+     * </p>
+     * 
+     * @return {@link TraceThrowsInterceptor}を適用するメソッドを選択するポイントカット
+     */
     String pointcut() default "";
+
 }

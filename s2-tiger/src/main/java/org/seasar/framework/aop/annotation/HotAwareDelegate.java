@@ -20,13 +20,24 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.seasar.framework.aop.interceptors.HotAwareDelegateInterceptor;
+
 /**
- * @author koichik
+ * メソッドに{@link HotAwareDelegateInterceptor}を適用することを指定します。
  * 
+ * @author koichik
+ * @see HotAwareDelegateInterceptor
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 @Interceptor
 public @interface HotAwareDelegate {
+
+    /**
+     * 移譲する対象となるコンポーネント名です。
+     * 
+     * @return 移譲する対象となるコンポーネント名
+     */
     String targetName();
+
 }

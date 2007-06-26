@@ -20,10 +20,13 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.seasar.framework.aop.interceptors.RemoveSessionInterceptor;
+
 /**
- * メソッドが実行された後、HTTPセッションから{@link #name() name}要素で指定された属性が削除されることを示します。
+ * メソッドに{@link RemoveSessionInterceptor}を適用することを指定します。
  * 
  * @author koichik
+ * @see RemoveSessionInterceptor
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
@@ -31,7 +34,7 @@ import java.lang.annotation.Target;
 public @interface RemoveSession {
 
     /**
-     * 注釈を付けられたメソッドが実行された後にHTTPセッションから削除される属性のセットです。
+     * 注釈を付けられたメソッドが実行された後にHTTPセッションから削除される属性名のセットです。
      */
     String[] name();
 

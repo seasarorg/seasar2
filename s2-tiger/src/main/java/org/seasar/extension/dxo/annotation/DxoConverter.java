@@ -21,7 +21,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 変換に使用するコンバータを指定するアノテーションを注釈するメタアノテーションです。
+ * JavaBeansのプロパティを変換するコンバータを指定するために、 変換先プロパティのsetterメソッドに指定されるアノテーションを注釈する、
+ * メタアノテーションです。
  * 
  * @author koichik
  */

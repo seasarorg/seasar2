@@ -20,13 +20,26 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.seasar.framework.aop.interceptors.InterceptorLifecycleAdapter;
+
 /**
- * @author koichik
+ * メソッドに{@link InterceptorLifecycleAdapter}を適用することを指定します。
  * 
+ * @author koichik
+ * @see InterceptorLifecycleAdapter
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target( { ElementType.TYPE, ElementType.METHOD })
 @Interceptor("aop.lifecycleAdapter")
 public @interface LifecycleAdapter {
+
+    /**
+     * {@link InterceptorLifecycleAdapter}を適用するメソッドを選択するポイントカットです。
+     * <p>
+     * この注釈をクラスに指定した場合、ポイントカットに適合するメソッドに{@link InterceptorLifecycleAdapter}が適用されます。
+     * </p>
+     * 
+     * @return {@link InterceptorLifecycleAdapter}を適用するメソッドを選択するポイントカット
+     */
     String pointcut() default "";
 }

@@ -20,14 +20,17 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.seasar.extension.tx.MandatoryInterceptor;
 import org.seasar.framework.aop.annotation.Interceptor;
 
 /**
+ * メソッドに{@link MandatoryInterceptor}を適用することを指定します。
+ * 
  * @author koichik
+ * @see MandatoryInterceptor
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target( { ElementType.TYPE, ElementType.METHOD })
 @Interceptor("j2ee.mandatoryTx")
 public @interface MandatoryTx {
-
 }

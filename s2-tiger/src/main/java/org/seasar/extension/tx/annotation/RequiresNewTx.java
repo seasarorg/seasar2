@@ -20,14 +20,17 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.seasar.extension.tx.RequiresNewInterceptor;
 import org.seasar.framework.aop.annotation.Interceptor;
 
 /**
+ * メソッドに{@link RequiresNewInterceptor}を適用することを指定します。
+ * 
  * @author koichik
+ * @see RequiresNewInterceptor
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target( { ElementType.TYPE, ElementType.METHOD })
 @Interceptor("j2ee.requiresNewTx")
 public @interface RequiresNewTx {
-
 }

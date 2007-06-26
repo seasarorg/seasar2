@@ -20,14 +20,27 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.seasar.framework.aop.interceptors.ToStringInterceptor;
 
 /**
- * @author koichik
+ * メソッドに{@link ToStringInterceptor}を適用することを指定します。
  * 
+ * @author koichik
+ * @see ToStringInterceptor
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target( { ElementType.TYPE, ElementType.METHOD })
 @Interceptor
 public @interface ToString {
+
+    /**
+     * {@link ToStringInterceptor}を適用するメソッドを選択するポイントカットです。
+     * <p>
+     * この注釈をクラスに指定した場合、ポイントカットに適合するメソッドに{@link ToStringInterceptor}が適用されます。
+     * </p>
+     * 
+     * @return {@link ToStringInterceptor}を適用するメソッドを選択するポイントカット
+     */
     String pointcut() default "";
+
 }

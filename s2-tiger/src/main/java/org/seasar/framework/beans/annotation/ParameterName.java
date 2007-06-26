@@ -20,12 +20,26 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.seasar.framework.beans.BeanDesc;
+
 /**
+ * 引数名を指定します。
+ * <p>
+ * このアノテーションを使用すると、Diiguによる引数名のエンハンス処理と互換性のある形式で引数名が.classファイルに保存されます
+ * (正しくは、Diiguはこのアノテーションを指定した場合と同じ形式で引数名を.classファイルに保存します)。 Diiguを使用できない状況で{@link BeanDesc}から引数名を取得する必要がある場合に利用できます。
+ * </p>
  * 
  * @author koichik
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.PARAMETER)
 public @interface ParameterName {
+
+    /**
+     * 引数の名前です。
+     * 
+     * @return 引数の名前
+     */
     String value();
+
 }

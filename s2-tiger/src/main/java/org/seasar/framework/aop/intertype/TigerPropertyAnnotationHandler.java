@@ -23,11 +23,13 @@ import org.seasar.framework.container.annotation.tiger.Property;
 import org.seasar.framework.container.annotation.tiger.PropertyType;
 
 /**
- * @author y-komori
+ * Tigerアノテーションでを読み取る{@link PropertyAnnotationHandler}の実装クラスです。
  * 
+ * @author y-komori
  */
 public class TigerPropertyAnnotationHandler implements
         PropertyAnnotationHandler {
+
     @SuppressWarnings("unchecked")
     public int getPropertyType(Class clazz, int defaultValue) {
         return getPropertyTypeInternal(clazz, defaultValue);
@@ -37,6 +39,18 @@ public class TigerPropertyAnnotationHandler implements
         return getPropertyTypeInternal(field, defaultValue);
     }
 
+    /**
+     * 指定された{@link AnnotattedElement 注釈可能な要素} ({@link Class}または{@link Field})
+     * が{@link Property}で注釈されていれば、 その<code>{@link Property#value() value}</code>で指定された値を返します。
+     * 指定された要素が注釈されていなければデフォルト値を返します。
+     * 
+     * @param element
+     *            注釈可能な要素
+     * @param defaultValue
+     *            デフォルト値
+     * @return 指定された{@link AnnotattedElement 注釈可能な要素} ({@link Class}または{@link Field})
+     *         が{@link Property}で注釈されていれば、 その<code>{@link Property#value() value}</code>で指定された値
+     */
     public int getPropertyTypeInternal(AnnotatedElement element,
             int defaultValue) {
         Property property = element.getAnnotation(Property.class);
@@ -56,4 +70,5 @@ public class TigerPropertyAnnotationHandler implements
 
         return propertyType;
     }
+
 }
