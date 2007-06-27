@@ -33,19 +33,38 @@ import org.xml.sax.SAXException;
  */
 public final class SAXParserFactoryUtil {
 
-    public static final String XERCES_XINCLUDE_FUTURE = "http://apache.org/xml/features/xinclude";
-
     private SAXParserFactoryUtil() {
     }
 
+    /**
+     * {@link SAXParserFactory}の新しいインスタンスを作成します。
+     * 
+     * @return {@link SAXParserFactory}の新しいインスタンス
+     */
     public static SAXParserFactory newInstance() {
         return SAXParserFactory.newInstance();
     }
 
+    /**
+     * デフォルト構成の{@link SAXParserFactory}を使って{@link SAXParser}の新しいインスタンスを作成します。
+     * 
+     * @return {@link SAXParser}の新しいインスタンス
+     * @throws SAXRuntimeException
+     *             {@link SAXParser}の作成中に{@link SAXException}がスローされた場合
+     */
     public static SAXParser newSAXParser() {
         return newSAXParser(newInstance());
     }
 
+    /**
+     * 指定の{@link SAXParserFactory}を使って{@link SAXParser}の新しいインスタンスを作成します。
+     * 
+     * @param factory
+     *            {@link SAXParserFactory}
+     * @return {@link SAXParser}の新しいインスタンス
+     * @throws SAXRuntimeException
+     *             {@link SAXParser}の作成中に{@link SAXException}がスローされた場合
+     */
     public static SAXParser newSAXParser(SAXParserFactory factory) {
         try {
             return factory.newSAXParser();
@@ -56,6 +75,15 @@ public final class SAXParserFactoryUtil {
         }
     }
 
+    /**
+     * XIncludeの有効／無効を設定します。
+     * 
+     * @param spf
+     *            {@link SAXParserFactory}
+     * @param state
+     *            XIncludeを有効にするなら<code>true</code>
+     * @return XIncludeの有効／無効を設定できた場合は<code>true</code>
+     */
     public static boolean setXIncludeAware(final SAXParserFactory spf,
             final boolean state) {
         try {
@@ -64,13 +92,8 @@ public final class SAXParserFactoryUtil {
             method.invoke(spf, new Object[] { Boolean.valueOf(state) });
             return true;
         } catch (final Exception ignore) {
+            return false;
         }
-        try {
-            spf.setFeature(XERCES_XINCLUDE_FUTURE, state);
-            return true;
-        } catch (Exception ignore) {
-        }
-        return false;
     }
 
 }

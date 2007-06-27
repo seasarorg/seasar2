@@ -72,9 +72,14 @@ font-size : 10pt;
 <h2><a name="about" id="about">XInclude とは</a></h2>
 <p><a href="http://www.w3.org/TR/xinclude/">XInclude (XML Inclusion)</a> は，複数の XML ドキュメントを一つの XML ドキュメントに統合するための仕様です． Seasar2.4 で導入された XInclude のサポートにより，複数の dicon ファイルを一つの dicon ファイルのように扱うことが可能になります．</p>
 <h2><a name="requisite" id="requisite">前提条件</a></h2>
-<p>XInclude を利用するには，XInclude に対応した XML パーサが必要です．<br />
-Java5 にバンドルされている XML パーサは XInclude に対応しています．<br />
-J2SE1.4 にバンドルされている XML パーサは XInclude に対応していません． J2SE1.4 で XInclude を利用するには，Xerces (2.7.0 以降) と組み合わせて使用してください．</p>
+<p>XInclude を利用するには，Java5 以降でかつ，XInclude に対応した XML パーサが必要です．Java5 にバンドルされている
+XML パーサは XInclude に対応しています．</p>
+<p>Teeda や S2JSF，Mayaa 等にバンドルされている Xerces 2.6.2 は XInclude に対応していません．Xerces
+2.6.2 は Tomcat 5.0 でも利用されています．これらの環境で XInclude を使用するには次の設定が必要です．</p>
+<ul>
+<li><code>META-INF/services</code>ディレクトリを作成し，<code>javax.xml.parsers.SAXParserFactory</code> というファイルを作成し，以下の内容を記述します (SunのJDK/JREの場合)．
+</ul>
+<pre>com.sun.org.apache.xerces.internal.jaxp.SAXParserFactoryImpl</pre>
 <h2><a name="usage" id="usage">XInclude の使い方</a></h2>
 <p>XInclude を使って他の dicon ファイルを取り込むには，次のように記述します．</p>
 <pre>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
