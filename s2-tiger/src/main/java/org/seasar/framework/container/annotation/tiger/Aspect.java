@@ -21,14 +21,37 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * @author higa
+ * クラスまたはメソッドにインターセプタを適用することを示します。
+ * <p>
+ * diconファイルの<code>&lt;aspect&gt;</code>要素で指定する項目を設定するためのアノテーションです。
+ * </p>
+ * <p>
+ * この注釈がクラスまたはインターフェースに指定された場合で、 {@link #pointcut() ポイントカット}が指定された場合は、
+ * ポイントカットに適合するメソッドにのみインターセプタが適用されます。 ポイントカットが指定されなかった場合は、
+ * クラスが実装するインターフェースのメンバであるメソッドにのみインターセプタが適用されます。
+ * </p>
+ * <p>
+ * この注釈がメソッドに指定された場合は、そのメソッドにインターセプタが適用されます。ポイントカットは無視されます。
+ * </p>
  * 
+ * @author higa
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target( { ElementType.TYPE, ElementType.METHOD })
 public @interface Aspect {
 
+    /**
+     * 適用するインターセプタを示すOGNL式です。
+     * 
+     * @return 適用するインターセプタを示すOGNL式
+     */
     String value();
 
+    /**
+     * インターセプタを適用するメソッドを選択するポイントカットです。
+     * 
+     * @return インターセプタを適用するメソッドを選択するポイントカット
+     */
     String pointcut() default "";
+
 }

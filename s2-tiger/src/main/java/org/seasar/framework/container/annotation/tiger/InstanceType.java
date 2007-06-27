@@ -15,15 +15,52 @@
  */
 package org.seasar.framework.container.annotation.tiger;
 
+import org.seasar.framework.container.InstanceDef;
+
 /**
- * @author higa
+ * {@link InstanceDef インスタンス定義}を示します。
  * 
+ * @author higa
  */
 public enum InstanceType {
 
-    SINGLETON, PROTOTYPE, APPLICATION, SESSION, REQUEST, OUTER;
+    /**
+     * {@link InstanceDef#SINGLETON_NAME シングルトン}です。
+     */
+    SINGLETON,
 
+    /**
+     * {@link InstanceDef#PROTOTYPE_NAME プロトタイプ}です。
+     */
+    PROTOTYPE,
+
+    /**
+     * {@link InstanceDef#APPLICATION_NAME アプリケーション}です。
+     */
+    APPLICATION,
+
+    /**
+     * {@link InstanceDef#SESSION_NAME セッション}です。
+     */
+    SESSION,
+
+    /**
+     * {@link InstanceDef#REQUEST_NAME リクエスト}です。
+     */
+    REQUEST,
+
+    /**
+     * {@link InstanceDef#OUTER_NAME アウター}です。
+     */
+    OUTER;
+
+    /**
+     * インスタンスタイプの名前を返します。
+     * 
+     * @return インスタンスタイプの名前
+     */
     public String getName() {
         return toString().toLowerCase();
     }
+
 }

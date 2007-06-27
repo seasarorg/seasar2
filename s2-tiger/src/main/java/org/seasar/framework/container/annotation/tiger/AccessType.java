@@ -15,10 +15,30 @@
  */
 package org.seasar.framework.container.annotation.tiger;
 
+/**
+ * アクセス方法の列挙型です。
+ * 
+ * @author higa
+ */
 public enum AccessType {
-    PROPERTY, FIELD;
 
+    /**
+     * プロパティアクセスです。
+     */
+    PROPERTY,
+
+    /**
+     * フィールドアクセスです。
+     */
+    FIELD;
+
+    /**
+     * アクセス方法の名前を返します。
+     * 
+     * @return アクセス方法の名前
+     */
     public String getName() {
         return toString().toLowerCase();
     }
+
 }

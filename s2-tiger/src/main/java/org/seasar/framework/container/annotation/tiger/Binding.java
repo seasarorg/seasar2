@@ -21,14 +21,29 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * @author higa
+ * バインディング(Dependency Injection)の詳細を示します。
+ * <p>
+ * diconファイルの<code>&lt;property&gt;</code>要素で指定する項目を設定するためのアノテーションです。
+ * </p>
  * 
+ * @author higa
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target( { ElementType.METHOD, ElementType.FIELD })
 public @interface Binding {
 
+    /**
+     * バインディングするコンポーネントを示すOGNL式です。
+     * 
+     * @return バインディングするコンポーネントを示すOGNL式
+     */
     String value() default "";
 
+    /**
+     * バインディングタイプです。
+     * 
+     * @return バインディングタイプ
+     */
     BindingType bindingType() default BindingType.SHOULD;
+
 }

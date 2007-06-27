@@ -20,12 +20,22 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.seasar.framework.aop.intertype.PropertyInterType;
+
 /**
- * @author y-komori
+ * {@link PropertyInterType}を適用してsetter/getterメソッドを生成することを示します。
  * 
+ * @author y-komori
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target( { ElementType.TYPE, ElementType.FIELD })
 public @interface Property {
+
+    /**
+     * プロパティタイプです。
+     * 
+     * @return プロパティタイプ
+     */
     PropertyType value() default PropertyType.READWRITE;
+
 }

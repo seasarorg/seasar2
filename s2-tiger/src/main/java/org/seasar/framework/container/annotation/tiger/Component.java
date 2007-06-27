@@ -21,17 +21,43 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * @author higa
+ * S2コンテナで管理されるコンポーネントであることを示します。
+ * <p>
+ * diconファイルの<code>&lt;component&gt;</code>要素で指定する項目を設定するためのアノテーションです。
+ * </p>
  * 
+ * @author higa
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface Component {
+
+    /**
+     * コンポーネントの名前です。
+     * 
+     * @return コンポーネントの名前
+     */
     String name() default "";
 
+    /**
+     * インスタンスタイプです。
+     * 
+     * @return インスタンスタイプ
+     */
     InstanceType instance() default InstanceType.SINGLETON;
 
+    /**
+     * 自動バインディングタイプです。
+     * 
+     * @return 自動バインディングタイプ
+     */
     AutoBindingType autoBinding() default AutoBindingType.AUTO;
-    
+
+    /**
+     * 外部バインディングを有効にする場合は{@code null}
+     * 
+     * @return 外部バインディングを有効にする場合は{@code null}
+     */
     boolean externalBinding() default false;
+
 }

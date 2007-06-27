@@ -20,7 +20,13 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.seasar.framework.container.DestroyMethodDef;
+
 /**
+ * {@link DestroyMethodDef}であることを示します。
+ * <p>
+ * diconファイルの<code>&lt;destroyMethod&gt;</code>要素で指定する項目を設定するためのアノテーションです。
+ * </p>
  * 
  * @author koichik
  */

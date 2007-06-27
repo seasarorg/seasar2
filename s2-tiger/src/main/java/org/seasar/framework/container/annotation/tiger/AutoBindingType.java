@@ -16,14 +16,39 @@
 package org.seasar.framework.container.annotation.tiger;
 
 /**
- * @author higa
+ * 自動バインディングの列挙型です。
  * 
+ * @author higa
  */
 public enum AutoBindingType {
 
-    AUTO, CONSTRUCTOR, PROPERTY, NONE;
+    /**
+     * コンストラクタ・プロパティともに自動バインディングを行います。
+     */
+    AUTO,
 
+    /**
+     * コンストラクタのみ自動バインディングを行います。
+     */
+    CONSTRUCTOR,
+
+    /**
+     * プロパティのみ自動バインディングを行います。
+     */
+    PROPERTY,
+
+    /**
+     * 自動バインディグを行いません。
+     */
+    NONE;
+
+    /**
+     * 自動バインディングタイプの名前を返します。
+     * 
+     * @return 自動バインディングタイプの名前
+     */
     public String getName() {
         return toString().toLowerCase();
     }
+
 }

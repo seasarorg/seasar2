@@ -16,13 +16,51 @@
 package org.seasar.framework.container.annotation.tiger;
 
 /**
- * @author y-komori
+ * プロパティタイプの列挙型です。
  * 
+ * @author y-komori
  */
 public enum PropertyType {
-    READ, WRITE, READWRITE, NONE;
 
+    /**
+     * 参照のみ可能なプロパティです。
+     * <p>
+     * getterメソッドのみ生成されます。
+     * </p>
+     */
+    READ,
+
+    /**
+     * 更新のみ可能なプロパティです。
+     * <p>
+     * setterメソッドのみ生成されます。
+     * </p>
+     */
+    WRITE,
+
+    /**
+     * 参照・更新のみ可能なプロパティです。
+     * <p>
+     * getter/setterメソッドとも生成されます。
+     * </p>
+     */
+    READWRITE,
+
+    /**
+     * プロパティではありません。
+     * <p>
+     * getter/setterメソッドとも生成されません。
+     * </p>
+     */
+    NONE;
+
+    /**
+     * プロパティタイプの名前を返します。
+     * 
+     * @return プロパティタイプの名前
+     */
     public String getName() {
         return toString().toLowerCase();
     }
+
 }

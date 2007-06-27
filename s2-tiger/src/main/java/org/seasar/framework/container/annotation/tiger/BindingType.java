@@ -15,15 +15,55 @@
  */
 package org.seasar.framework.container.annotation.tiger;
 
+import org.seasar.framework.container.BindingTypeDef;
+import org.seasar.framework.container.IllegalAutoBindingPropertyRuntimeException;
+
 /**
- * @author higa
+ * {@link BindingTypeDef バインディングタイプ}の列挙型です。
  * 
+ * @author higa
  */
 public enum BindingType {
 
-    MUST, SHOULD, MAY, NONE;
+    /**
+     * バインディングが必須です。
+     * <p>
+     * バインディングできない場合は{@link IllegalAutoBindingPropertyRuntimeException}がスローされます。
+     * </p>
+     */
+    MUST,
 
+    /**
+     * バインディングすべきです。
+     * <p>
+     * バインディングできない場合は警告メッセージが出力されます。
+     * </p>
+     */
+    SHOULD,
+
+    /**
+     * バインディングは任意です。
+     * <p>
+     * バインディングできなくても何も起きません。
+     * </p>
+     */
+    MAY,
+
+    /**
+     * バインディングしません。
+     * <p>
+     * 自動バインディングが有効になっている場合に特定のプロパティのみDI非対象にするために使用されます。
+     * </p>
+     */
+    NONE;
+
+    /**
+     * バインディングの名前を返します。
+     * 
+     * @return バインディングの名前
+     */
     public String getName() {
         return toString().toLowerCase();
     }
+
 }
