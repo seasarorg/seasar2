@@ -16,14 +16,20 @@
 package org.seasar.framework.container.cooldeploy;
 
 import org.seasar.framework.container.S2Container;
+import org.seasar.framework.container.factory.S2ContainerFactory;
 import org.seasar.framework.container.factory.S2ContainerFactory.DefaultProvider;
 
 /**
+ * COOL deploy用の {@link S2ContainerFactory.Provider}です。
+ * 
  * @author koichik
  * 
  */
 public class S2ContainerFactoryCoolProvider extends DefaultProvider {
 
+    /**
+     * COOL deploy用のdiconファイルのパスです。
+     */
     protected static final String DICON_PATH = "cooldeploy-autoregister.dicon";
 
     public S2Container create(final String path) {

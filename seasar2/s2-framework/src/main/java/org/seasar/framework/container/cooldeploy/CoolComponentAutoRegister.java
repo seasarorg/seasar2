@@ -41,7 +41,7 @@ import org.seasar.framework.util.ZipFileUtil;
 import org.seasar.framework.util.ClassTraversal.ClassHandler;
 
 /**
- * NamingConventionに一致するコンポーネントを自動登録するクラスです。
+ * {@link NamingConvention}に一致するコンポーネントを自動登録するクラスです。
  * 
  * @author higa
  * 
@@ -49,12 +49,12 @@ import org.seasar.framework.util.ClassTraversal.ClassHandler;
 public class CoolComponentAutoRegister implements ClassHandler {
 
     /**
-     * INIT_METHODアノテーションの定義です。
+     * InitMethodアノテーションの定義です。
      */
     public static final String INIT_METHOD = "registerAll";
 
     /**
-     * BINDINGアノテーションの定義です。
+     * Bindingアノテーションの定義です。
      */
     public static final String container_BINDING = "bindingType=must";
 
@@ -69,7 +69,7 @@ public class CoolComponentAutoRegister implements ClassHandler {
     private Set registerdClasses = new HashSet();
 
     /**
-     * デフォルトのコンストラクタです。
+     * {@link CoolComponentAutoRegister}を作成します。
      */
     public CoolComponentAutoRegister() {
         addStrategy("file", new FileSystemStrategy());
@@ -79,16 +79,16 @@ public class CoolComponentAutoRegister implements ClassHandler {
     }
 
     /**
-     * コンテナを返します。
+     * {@link S2Container}を返します。
      * 
-     * @return
+     * @return {@link S2Container}
      */
     public S2Container getContainer() {
         return container;
     }
 
     /**
-     * コンテナを設定します。
+     * {@link S2Container}を設定します。
      * 
      * @param container
      */
@@ -99,31 +99,43 @@ public class CoolComponentAutoRegister implements ClassHandler {
     /**
      * 登録されているストラテジを返します。
      * 
-     * @return
+     * @return 登録されているストラテジ
      */
     public Map getStrategies() {
         return strategies;
     }
 
+    /**
+     * {@link Strategy} を返します。
+     * 
+     * @param protocol
+     * @return {@link Strategy}
+     */
     protected Strategy getStrategy(String protocol) {
         return (Strategy) strategies.get(URLUtil.toCanonicalProtocol(protocol));
     }
 
+    /**
+     * {@link Strategy}を追加します。
+     * 
+     * @param protocol
+     * @param strategy
+     */
     protected void addStrategy(String protocol, Strategy strategy) {
         strategies.put(protocol, strategy);
     }
 
     /**
-     * クリエータを返します。
+     * {@link ComponentCreator}の配列を返します。
      * 
-     * @return
+     * @return {@link ComponentCreator}の配列
      */
     public ComponentCreator[] getCreators() {
         return creators;
     }
 
     /**
-     * クリエータを設定します。
+     * {@link ComponentCreator}の配列を設定します。
      * 
      * @param creators
      */
@@ -132,16 +144,16 @@ public class CoolComponentAutoRegister implements ClassHandler {
     }
 
     /**
-     * NamingConventionを返します。
+     * {@link NamingConvention}を返します。
      * 
-     * @return
+     * @return {@link NamingConvention}
      */
     public NamingConvention getNamingConvention() {
         return namingConvention;
     }
 
     /**
-     * NamingConventionを設定します。
+     * {@link NamingConvention}を設定します。
      * 
      * @param namingConvention
      */
@@ -176,10 +188,10 @@ public class CoolComponentAutoRegister implements ClassHandler {
     }
 
     /**
-     * Jarファイルからコンポーネントの登録を行う。
+     * Jarファイルからコンポーネントの登録を行います。
      * <p>
      * WebSphere のクラスローダーはJarファイル中のディレクトリエントリを<code>ClassLoader#getResource()</code>で
-     * 返してくれないので、 S2のJarと同じ場所にあるJarファイルからコンポーネントの登録を行う。
+     * 返してくれないので、 S2のJarと同じ場所にあるJarファイルからコンポーネントの登録を行います。
      * </p>
      */
     protected void webSphereClassLoaderFix() {
@@ -229,6 +241,12 @@ public class CoolComponentAutoRegister implements ClassHandler {
         S2ContainerUtil.putRegisterLog(cd);
     }
 
+    /**
+     * {@link ComponentDef}を作成します。
+     * 
+     * @param componentClass
+     * @return {@link ComponentDef}
+     */
     protected ComponentDef createComponentDef(Class componentClass) {
         for (int i = 0; i < creators.length; ++i) {
             ComponentCreator creator = creators[i];
@@ -240,6 +258,10 @@ public class CoolComponentAutoRegister implements ClassHandler {
         return null;
     }
 
+    /**
+     * プロトコルに応じた自動登録を行なうストラテジです。
+     * 
+     */
     protected interface Strategy {
         /**
          * 自動登録を行います。
@@ -250,6 +272,10 @@ public class CoolComponentAutoRegister implements ClassHandler {
         void registerAll(String path, URL url);
     }
 
+    /**
+     * ファイルシステム用の {@link Strategy}です。
+     * 
+     */
     protected class FileSystemStrategy implements Strategy {
 
         public void registerAll(String path, URL url) {
@@ -261,6 +287,13 @@ public class CoolComponentAutoRegister implements ClassHandler {
             }
         }
 
+        /**
+         * ルートディレクトリを返します。
+         * 
+         * @param path
+         * @param url
+         * @return ルートディレクトリ
+         */
         protected File getRootDir(String path, URL url) {
             File file = URLUtil.toFile(url);
             String[] names = StringUtil.split(path, "/");
@@ -271,6 +304,10 @@ public class CoolComponentAutoRegister implements ClassHandler {
         }
     }
 
+    /**
+     * jarファイル用の {@link Strategy}です。
+     * 
+     */
     protected class JarFileStrategy implements Strategy {
 
         public void registerAll(String path, URL url) {
@@ -278,6 +315,12 @@ public class CoolComponentAutoRegister implements ClassHandler {
             ClassTraversal.forEach(jarFile, CoolComponentAutoRegister.this);
         }
 
+        /**
+         * {@link JarFile}を作成します。
+         * 
+         * @param url
+         * @return {@link JarFile}
+         */
         protected JarFile createJarFile(URL url) {
             return JarFileUtil.toJarFile(url);
         }
@@ -293,6 +336,12 @@ public class CoolComponentAutoRegister implements ClassHandler {
             ClassTraversal.forEach(jarFile, CoolComponentAutoRegister.this);
         }
 
+        /**
+         * {@link JarFile}を作成します。
+         * 
+         * @param url
+         * @return {@link JarFile}
+         */
         protected JarFile createJarFile(URL url) {
             final String jarFileName = ZipFileUtil.toZipFilePath(url);
             return JarFileUtil.create(new File(jarFileName));
@@ -309,6 +358,12 @@ public class CoolComponentAutoRegister implements ClassHandler {
             ClassTraversal.forEach(jarFile, CoolComponentAutoRegister.this);
         }
 
+        /**
+         * {@link JarFile}を作成します。
+         * 
+         * @param url
+         * @return {@link JarFile}
+         */
         protected JarFile createJarFile(final URL url) {
             final URL jarUrl = URLUtil.create("jar:file:" + url.getPath());
             return JarFileUtil.toJarFile(jarUrl);
