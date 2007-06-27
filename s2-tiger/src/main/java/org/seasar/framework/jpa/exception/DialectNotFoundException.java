@@ -18,15 +18,23 @@ package org.seasar.framework.jpa.exception;
 import javax.persistence.EntityManager;
 
 import org.seasar.framework.exception.SRuntimeException;
+import org.seasar.framework.jpa.Dialect;
 
 /**
- * @author koichik
+ * {@link Dialect}が存在しない場合にスローされる例外です。
  * 
+ * @author koichik
  */
 public class DialectNotFoundException extends SRuntimeException {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param em
+     *            エンティティマネージャ
+     */
     public DialectNotFoundException(final EntityManager em) {
         super("ESSR0089", new Object[] { em });
     }

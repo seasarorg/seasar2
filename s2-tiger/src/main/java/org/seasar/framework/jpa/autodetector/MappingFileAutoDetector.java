@@ -30,23 +30,49 @@ import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.ResourceTraversal.ResourceHandler;
 
 /**
+ * 規約を利用してJPAのマッピングファイルを自動検出するクラスです。
+ * <p>
+ * このインスタンスが自動検出を実行するには{@link #namingConvention}に値が設定されていることが必須です。
+ * デフォルトで次の条件に合致するマッピングファイルを検出します。
+ * </p>
+ * <ul>
+ * <li>ファイルが{@link NamingConvention#getEntityPackageName()}で決定されるパッケージ、もしくは
+ * {@link NamingConvention#getDaoPackageName()}}で決定されるパッケージの階層に含まれる</li>
+ * <li>ファイルの名称が正規表現 {@code .*Orm.xml} にマッチする</li>
+ * </ul>
+ * 
  * @author taedium
  */
 @Component
 public class MappingFileAutoDetector extends AbstractResourceAutoDetector {
 
+    /** 命名規約 */
     protected NamingConvention namingConvention;
 
+    /**
+     * インスタンスを構築します。
+     * 
+     */
     public MappingFileAutoDetector() {
         addTargetDirPath("META-INF");
         addResourceNamePattern(".*Orm.xml");
     }
 
+    /**
+     * 命名規約を設定します。
+     * 
+     * @param namingConvention
+     *            命名規約
+     */
     @Binding(bindingType = BindingType.MAY)
     public void setNamingConvention(final NamingConvention namingConvention) {
         this.namingConvention = namingConvention;
     }
 
+    /**
+     * このインスタンスを初期化します。
+     * 
+     */
     @InitMethod
     public void init() {
         if (namingConvention != null) {
@@ -58,6 +84,12 @@ public class MappingFileAutoDetector extends AbstractResourceAutoDetector {
         }
     }
 
+    /**
+     * 検出対象とするパッケージ名を追加します。
+     * 
+     * @param packageName
+     *            パッケージ名
+     */
     protected void addTargetPackageName(final String packageName) {
         for (final String rootPackageName : namingConvention
                 .getRootPackageNames()) {
@@ -79,6 +111,16 @@ public class MappingFileAutoDetector extends AbstractResourceAutoDetector {
         }
     }
 
+    /**
+     * マッピングファイルの検出を実行します。
+     * 
+     * @param handler
+     *            リソースのハンドラ
+     * @param targetDirPath
+     *            検出対象のディレクトリを表わすパス
+     * @param targetDirUrl
+     *            検出対象のディレクトリを表わすURL
+     */
     protected void detect(final ResourceHandler handler,
             final String targetDirPath, final URL targetDirUrl) {
         final Strategy strategy = getStrategy(targetDirUrl.getProtocol());

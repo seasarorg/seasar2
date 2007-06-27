@@ -37,34 +37,67 @@ import org.seasar.framework.util.tiger.CollectionsUtil;
 import org.seasar.framework.util.tiger.ReflectionUtil;
 
 /**
+ * 規約を利用してJPAで管理すべき永続クラスを自動検出するクラスです。
+ * <p>
+ * このインスタンスが自動検出を実行するには{@link #namingConvention}に値が設定されていることが必須です。
+ * デフォルトで次の条件に合致するクラスを検出します。
+ * </p>
+ * <ul>
+ * <li>クラスが{@link NamingConvention#getEntityPackageName()}で決定されるパッケージの階層に含まれる</li>
+ * <li>クラスに{@link Entity}、{@link MappedSuperclass}、{@link Embeddable}のいずれかのアノテーションが指定されている</li>
+ * </ul>
+ * 
  * @author taedium
  */
 @Component
 public class PersistenceClassAutoDetector extends AbstractClassAutoDetector {
 
+    /** アノテーションのリスト */
     protected final List<Class<? extends Annotation>> annotations = CollectionsUtil
             .newArrayList();
 
+    /** 命名規約 */
     protected NamingConvention namingConvention;
 
+    /** エンティティをロードするためのクラスローダ */
     protected ClassLoader classLoader;
 
+    /**
+     * インスタンスを構築します。
+     * 
+     */
     public PersistenceClassAutoDetector() {
         annotations.add(Entity.class);
         annotations.add(MappedSuperclass.class);
         annotations.add(Embeddable.class);
     }
 
+    /**
+     * 命名規約を設定します。
+     * 
+     * @param namingConvention
+     *            命名規約
+     */
     @Binding(bindingType = BindingType.MAY)
     public void setNamingConvention(final NamingConvention namingConvention) {
         this.namingConvention = namingConvention;
     }
 
+    /**
+     * クラスローダを設定します。
+     * 
+     * @param classLoader
+     *            クラスローダ
+     */
     @Binding(bindingType = BindingType.MAY)
     public void setClassLoader(final ClassLoader classLoader) {
         this.classLoader = classLoader;
     }
 
+    /**
+     * このインスタンスを初期化します。
+     * 
+     */
     @InitMethod
     public void init() {
         if (namingConvention != null) {
@@ -79,6 +112,12 @@ public class PersistenceClassAutoDetector extends AbstractClassAutoDetector {
         }
     }
 
+    /**
+     * 検出の条件として使用するアノテーションを追加します。
+     * 
+     * @param annotation
+     *            アノテーション
+     */
     public void addAnnotation(final Class<? extends Annotation> annotation) {
         annotations.add(annotation);
     }
@@ -94,10 +133,18 @@ public class PersistenceClassAutoDetector extends AbstractClassAutoDetector {
         }
     }
 
+    /**
+     * 検出を実行します。
+     * 
+     * @param handler
+     * @param entityPackageName
+     * @param url
+     */
     protected void detect(final ClassHandler handler,
             final String entityPackageName, final URL url) {
         final Strategy strategy = getStrategy(url.getProtocol());
         strategy.detect(entityPackageName, url, new ClassHandler() {
+
             public void processClass(final String packageName,
                     final String shortClassName) {
                 if (packageName.startsWith(entityPackageName)
@@ -108,6 +155,15 @@ public class PersistenceClassAutoDetector extends AbstractClassAutoDetector {
         });
     }
 
+    /**
+     * 指定されたクラスが永続クラスである場合{@code true}を返します。
+     * 
+     * @param packageName
+     *            パッケージ名
+     * @param shortClassName
+     *            クラス名
+     * @return 指定されたクラスが永続クラスである場合{@code true}、永続クラスでない場合{@code false}
+     */
     protected boolean isEntity(final String packageName,
             final String shortClassName) {
         final String name = ClassUtil.concatName(packageName, shortClassName);
@@ -120,6 +176,13 @@ public class PersistenceClassAutoDetector extends AbstractClassAutoDetector {
         return false;
     }
 
+    /**
+     * 名前から解決してクラスを返します。
+     * 
+     * @param className
+     *            クラス名
+     * @return クラス
+     */
     protected Class<?> getClass(final String className) {
         if (classLoader != null) {
             return ReflectionUtil.forName(className, classLoader);
