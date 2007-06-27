@@ -36,6 +36,9 @@ import org.seasar.framework.util.ClassUtil;
  */
 public final class HotdeployUtil {
 
+    /** {@link RrebuilderImpl}のクラス名です。 */
+    public static final String REBUILDER_CLASS_NAME = "org.seasar.framework.container.hotdeploy.HotdeployUtil$RebuilderImpl";
+
     private static Boolean hotdeploy;
 
     private HotdeployUtil() {
@@ -118,7 +121,7 @@ public final class HotdeployUtil {
         }
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
         Class rebuilderClass = ClassLoaderUtil.loadClass(loader,
-                RebuilderImpl.class.getName());
+                REBUILDER_CLASS_NAME);
         Rebuilder rebuilder = (Rebuilder) ClassUtil.newInstance(rebuilderClass);
         return rebuilder.rebuild(value);
     }

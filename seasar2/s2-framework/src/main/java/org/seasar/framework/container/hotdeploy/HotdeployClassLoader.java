@@ -17,7 +17,6 @@ package org.seasar.framework.container.hotdeploy;
 
 import java.io.InputStream;
 
-import org.seasar.framework.container.hotdeploy.HotdeployUtil.RebuilderImpl;
 import org.seasar.framework.convention.NamingConvention;
 import org.seasar.framework.util.ClassLoaderUtil;
 import org.seasar.framework.util.ClassUtil;
@@ -28,12 +27,8 @@ import org.seasar.framework.util.ResourceUtil;
  * HOT deploy用の {@link ClassLoader}です。
  * 
  * @author higa
- * 
  */
 public class HotdeployClassLoader extends ClassLoader {
-
-    private static final String REBUILDER_CLASS_NAME = RebuilderImpl.class
-            .getName();
 
     private NamingConvention namingConvention;
 
@@ -52,7 +47,11 @@ public class HotdeployClassLoader extends ClassLoader {
     public Class loadClass(String className, boolean resolve)
             throws ClassNotFoundException {
 
-        if (REBUILDER_CLASS_NAME.equals(className)) {
+        if (HotdeployUtil.REBUILDER_CLASS_NAME.equals(className)) {
+            Class clazz = findLoadedClass(className);
+            if (clazz != null) {
+                return clazz;
+            }
             return defineClass(className, resolve);
         }
         if (isTargetClass(className)) {
