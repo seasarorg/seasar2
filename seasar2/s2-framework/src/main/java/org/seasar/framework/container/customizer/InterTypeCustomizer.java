@@ -37,6 +37,9 @@ import org.seasar.framework.container.ognl.OgnlExpression;
  */
 public class InterTypeCustomizer extends AbstractCustomizer {
 
+    /**
+     * インタータイプ名のリストです。
+     */
     protected final List interTypeNames = new ArrayList();
 
     /**

@@ -45,6 +45,9 @@ import org.seasar.framework.container.impl.MetaDefImpl;
  */
 public class MetaCustomizer extends AbstractCustomizer {
 
+    /**
+     * {@link ComponentDef}です。
+     */
     protected ComponentDef componentDef;
 
     /**

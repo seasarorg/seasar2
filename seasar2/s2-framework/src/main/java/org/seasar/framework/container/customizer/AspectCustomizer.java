@@ -166,6 +166,9 @@ public class AspectCustomizer extends AbstractCustomizer {
 
         private static final long serialVersionUID = 1L;
 
+        /**
+         * インターセプタ名の配列です。
+         */
         protected String[] interceptorNames;
 
         /**
