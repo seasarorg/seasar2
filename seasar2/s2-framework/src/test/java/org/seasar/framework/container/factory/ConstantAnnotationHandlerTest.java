@@ -406,10 +406,19 @@ public class ConstantAnnotationHandlerTest extends S2FrameworkTestCase {
      * 
      */
     public static class Hoge6 {
+        /**
+         * 
+         */
         protected String component = "name = a";
 
+        /**
+         * 
+         */
         protected String aspect;
 
+        /**
+         * 
+         */
         protected String init_method;
     }
 
@@ -417,10 +426,19 @@ public class ConstantAnnotationHandlerTest extends S2FrameworkTestCase {
      * 
      */
     public static class Hoge7 {
+        /**
+         * 
+         */
         protected String COMPONENT = "name = a";
 
+        /**
+         * 
+         */
         protected String ASPECT;
 
+        /**
+         * 
+         */
         protected String INIT_METHOD;
     }
 
@@ -488,10 +506,19 @@ public class ConstantAnnotationHandlerTest extends S2FrameworkTestCase {
      * 
      */
     public static class Hoge11 {
+        /**
+         * 
+         */
         protected static final String COMPONENT = "name = a";
 
+        /**
+         * 
+         */
         protected static final String ASPECT = "a";
 
+        /**
+         * 
+         */
         protected static final String INIT_METHOD = "a";
     }
 }

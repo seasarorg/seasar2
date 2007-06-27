@@ -157,6 +157,9 @@ public class ToStringInterceptorTest extends TestCase {
 
         int intVal = 12;
 
+        /**
+         * 
+         */
         protected long longVal = 123;
 
         char charVal = 'a';
@@ -228,6 +231,9 @@ public class ToStringInterceptorTest extends TestCase {
     static class BarEntity extends FooEntity {
         int exIntVal = 123456;
 
+        /**
+         * 
+         */
         protected long exLongVal = 1234567;
 
         double exDoubleVal = 1234567.8;

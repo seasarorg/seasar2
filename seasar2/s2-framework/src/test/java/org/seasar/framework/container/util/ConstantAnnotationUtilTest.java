@@ -168,6 +168,9 @@ public class ConstantAnnotationUtilTest extends TestCase {
          */
         public static String A = "A";
 
+        /**
+         * 
+         */
         protected static final String B = "B";
 
         /**

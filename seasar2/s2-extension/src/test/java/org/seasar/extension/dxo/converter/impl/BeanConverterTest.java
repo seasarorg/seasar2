@@ -241,8 +241,14 @@ public class BeanConverterTest extends AbsConverterTest {
          */
         public static final String foo_sqlDateDxoConverter = null;
 
+        /**
+         * 
+         */
         protected Date foo;
 
+        /**
+         * 
+         */
         protected Date bar;
 
         /**
@@ -278,6 +284,9 @@ public class BeanConverterTest extends AbsConverterTest {
      *
      */
     public static class HogeHoge {
+        /**
+         * 
+         */
         protected Hoge hoge;
 
         /**

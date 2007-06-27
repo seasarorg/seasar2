@@ -29,12 +29,24 @@ import org.seasar.framework.util.ClassUtil;
  */
 public abstract class HotdeployCreatorTestCase extends S2FrameworkTestCase {
 
+    /**
+     * 
+     */
     protected ClassLoader originalLoader;
 
+    /**
+     * 
+     */
     protected String rootPackageName;
 
+    /**
+     * 
+     */
     protected HotdeployBehavior ondemand;
 
+    /**
+     * 
+     */
     protected ComponentCreator creator;
 
     protected void setUp() {
@@ -50,6 +62,10 @@ public abstract class HotdeployCreatorTestCase extends S2FrameworkTestCase {
         ondemand.start();
     }
 
+    /**
+     * @param convention
+     * @return
+     */
     protected abstract ComponentCreator newOndemandCreator(
             NamingConvention convention);
 

@@ -26,6 +26,9 @@ import org.seasar.framework.unit.S2FrameworkTestCase;
  *
  */
 public class InterceptorLifecycleAdapterTest extends S2FrameworkTestCase {
+    /**
+     * 
+     */
     protected List list;
 
     protected void setUp() throws Exception {
@@ -49,6 +52,9 @@ public class InterceptorLifecycleAdapterTest extends S2FrameworkTestCase {
      *
      */
     public static class PrototypeInterceptor implements MethodInterceptor {
+        /**
+         * 
+         */
         protected List list;
 
         /**

@@ -310,6 +310,9 @@ public class S2ContainerFactoryTest extends TestCase {
      *
      */
     public static class StringResourceResolver implements ResourceResolver {
+        /**
+         * 
+         */
         protected String definition;
 
         /**

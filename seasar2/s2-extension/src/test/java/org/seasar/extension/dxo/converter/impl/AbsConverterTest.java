@@ -35,6 +35,12 @@ public abstract class AbsConverterTest extends S2FrameworkTestCase {
         include("dxo.dicon");
     }
 
+    /**
+     * @param methodName
+     * @param source
+     * @return
+     * @throws Exception
+     */
     protected ConversionContext createContext(String methodName, Object source)
             throws Exception {
         return new ConversionContextImpl(getClass(), getClass().getMethod(

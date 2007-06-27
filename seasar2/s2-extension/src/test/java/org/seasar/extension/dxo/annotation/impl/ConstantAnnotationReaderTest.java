@@ -214,8 +214,14 @@ public class ConstantAnnotationReaderTest extends S2FrameworkTestCase {
          */
         public static final String bar_hogeDxoConverter = "prefix='a_', suffix='_b'";
 
+        /**
+         * 
+         */
         protected String foo;
 
+        /**
+         * 
+         */
         protected String bar;
 
         /**
@@ -251,8 +257,14 @@ public class ConstantAnnotationReaderTest extends S2FrameworkTestCase {
      *
      */
     public static class HogeDxoConverter extends AbstractConverter {
+        /**
+         * 
+         */
         protected String prefix = "";
 
+        /**
+         * 
+         */
         protected String suffix = "";
 
         /**

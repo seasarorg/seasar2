@@ -47,6 +47,9 @@ public class PropertyInterTypeTest extends S2FrameworkTestCase {
      * 
      */
     public static class Target {
+        /**
+         * 
+         */
         protected String name;
     }
 

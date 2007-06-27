@@ -44,6 +44,9 @@ public abstract class AbstractPropertyInterTypeTest extends TestCase {
 
     private Object testObject;
 
+    /**
+     * @return
+     */
     abstract protected String getPath();
 
     /**
