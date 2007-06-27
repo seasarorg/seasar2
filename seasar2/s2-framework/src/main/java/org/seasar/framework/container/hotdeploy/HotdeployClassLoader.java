@@ -17,6 +17,7 @@ package org.seasar.framework.container.hotdeploy;
 
 import java.io.InputStream;
 
+import org.seasar.framework.container.hotdeploy.HotdeployUtil.RebuilderImpl;
 import org.seasar.framework.convention.NamingConvention;
 import org.seasar.framework.util.ClassLoaderUtil;
 import org.seasar.framework.util.ClassUtil;
@@ -30,6 +31,9 @@ import org.seasar.framework.util.ResourceUtil;
  * 
  */
 public class HotdeployClassLoader extends ClassLoader {
+
+    private static final String REBUILDER_CLASS_NAME = RebuilderImpl.class
+            .getName();
 
     private NamingConvention namingConvention;
 
@@ -48,6 +52,9 @@ public class HotdeployClassLoader extends ClassLoader {
     public Class loadClass(String className, boolean resolve)
             throws ClassNotFoundException {
 
+        if (REBUILDER_CLASS_NAME.equals(className)) {
+            return defineClass(className, resolve);
+        }
         if (isTargetClass(className)) {
             Class clazz = findLoadedClass(className);
             if (clazz != null) {
@@ -57,17 +64,32 @@ public class HotdeployClassLoader extends ClassLoader {
             if (clazz != null) {
                 return clazz;
             }
-            String path = ClassUtil.getResourcePath(className);
-            InputStream is = ResourceUtil.getResourceAsStreamNoException(path);
-            if (is != null) {
-                clazz = defineClass(className, is);
-                if (resolve) {
-                    resolveClass(clazz);
-                }
+            clazz = defineClass(className, resolve);
+            if (clazz != null) {
                 return clazz;
             }
         }
         return super.loadClass(className, resolve);
+    }
+
+    /**
+     * {@link Class}を定義します。
+     * 
+     * @param className
+     * @return {@link Class}
+     */
+    private Class defineClass(String className, boolean resolve) {
+        Class clazz;
+        String path = ClassUtil.getResourcePath(className);
+        InputStream is = ResourceUtil.getResourceAsStreamNoException(path);
+        if (is != null) {
+            clazz = defineClass(className, is);
+            if (resolve) {
+                resolveClass(clazz);
+            }
+            return clazz;
+        }
+        return null;
     }
 
     /**

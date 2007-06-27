@@ -15,19 +15,17 @@
  */
 package org.seasar.framework.container.hotdeploy;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.Map;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
-import org.seasar.framework.beans.BeanDesc;
-import org.seasar.framework.beans.PropertyDesc;
-import org.seasar.framework.beans.factory.BeanDescFactory;
 import org.seasar.framework.container.impl.S2ContainerBehavior;
 import org.seasar.framework.container.impl.S2ContainerBehavior.Provider;
+import org.seasar.framework.exception.ClassNotFoundRuntimeException;
+import org.seasar.framework.exception.IORuntimeException;
+import org.seasar.framework.util.ClassLoaderUtil;
 import org.seasar.framework.util.ClassUtil;
 
 /**
@@ -118,101 +116,54 @@ public final class HotdeployUtil {
         if (value == null) {
             return null;
         }
-        Class valueClass = value.getClass();
-        if (isSimpleValueType(valueClass)) {
-            return value;
-        }
-        if (valueClass.isArray()) {
-            return rebuildArray(value);
-        }
-        if (valueClass == ArrayList.class) {
-            return rebuildArrayList((ArrayList) value);
-        }
-        if (Collection.class.isAssignableFrom(valueClass)) {
-            return rebuildCollection((Collection) value);
-        }
-        if (Map.class.isAssignableFrom(valueClass)) {
-            return rebuildMap((Map) value);
-        }
-        return rebuildBean(value);
-    }
-
-    private static Object rebuildArray(Object value) {
-        Class clazz = value.getClass().getComponentType();
-        if (!clazz.isPrimitive()) {
-            clazz = ClassUtil.forName(clazz.getName());
-        }
-        int size = Array.getLength(value);
-        Object array = Array.newInstance(clazz, size);
-        for (int i = 0; i < size; ++i) {
-            Array.set(array, i, rebuildValueInternal(Array.get(value, i)));
-        }
-        return array;
-    }
-
-    private static ArrayList rebuildArrayList(ArrayList value) {
-        ArrayList arrayList = new ArrayList(value.size());
-        for (int i = 0; i < value.size(); ++i) {
-            arrayList.add(rebuildValueInternal(value.get(i)));
-        }
-        return arrayList;
-    }
-
-    private static Collection rebuildCollection(Collection value) {
-        Collection collection = (Collection) ClassUtil.newInstance(value
-                .getClass());
-        for (Iterator i = value.iterator(); i.hasNext();) {
-            collection.add(rebuildValueInternal(i.next()));
-        }
-        return collection;
-    }
-
-    private static Map rebuildMap(Map value) {
-        Map map = (Map) ClassUtil.newInstance(value.getClass());
-        for (Iterator i = value.entrySet().iterator(); i.hasNext();) {
-            Map.Entry entry = (Map.Entry) i.next();
-            map.put(rebuildValueInternal(entry.getKey()),
-                    rebuildValueInternal(entry.getValue()));
-        }
-        return map;
-    }
-
-    private static Object rebuildBean(Object value) {
-        Object bean = ClassUtil.newInstance(value.getClass().getName());
-        BeanDesc srcBeanDesc = BeanDescFactory.getBeanDesc(value.getClass());
-        BeanDesc destBeanDesc = BeanDescFactory.getBeanDesc(bean.getClass());
-
-        int propertyDescSize = srcBeanDesc.getPropertyDescSize();
-        for (int i = 0; i < propertyDescSize; i++) {
-            PropertyDesc srcPropertyDesc = srcBeanDesc.getPropertyDesc(i);
-            if (!srcPropertyDesc.hasReadMethod()) {
-                continue;
-            }
-            String propertyName = srcPropertyDesc.getPropertyName();
-            if (!destBeanDesc.hasPropertyDesc(propertyName)) {
-                continue;
-            }
-            PropertyDesc destPropertyDesc = destBeanDesc
-                    .getPropertyDesc(propertyName);
-            if (!destPropertyDesc.hasWriteMethod()) {
-                continue;
-            }
-            destPropertyDesc.setValue(bean,
-                    rebuildValueInternal(srcPropertyDesc.getValue(value)));
-        }
-        return bean;
+        ClassLoader loader = Thread.currentThread().getContextClassLoader();
+        Class rebuilderClass = ClassLoaderUtil.loadClass(loader,
+                RebuilderImpl.class.getName());
+        Rebuilder rebuilder = (Rebuilder) ClassUtil.newInstance(rebuilderClass);
+        return rebuilder.rebuild(value);
     }
 
     /**
-     * 単純な値の型かどうかを返します。
-     * 
-     * @param type
-     * @return 単純な値の型かどうか
+     * 値を再構成するためのインターフェースです。
      */
-    private static boolean isSimpleValueType(Class type) {
-        return type == String.class || type == Boolean.class
-                || Number.class.isAssignableFrom(type)
-                || Date.class.isAssignableFrom(type)
-                || Calendar.class.isAssignableFrom(type);
+    public interface Rebuilder {
+        /**
+         * 値を再構成します。
+         * 
+         * @param value
+         *            値
+         * @return 再構成されたオブジェクト
+         */
+        Object rebuild(Object value);
     }
+
+    /**
+     * 値を再構成するための実装クラスです。
+     * <p>
+     * このクラスは常に{@link HotdeployClassLoader}からロードされます。 これにより、 デシリアライズされたオブジェクトは{@link HotdeployClassLoader}からロードされたものになります。
+     * </p>
+     */
+    public static class RebuilderImpl implements Rebuilder {
+
+        public Object rebuild(Object value) {
+            try {
+                final ByteArrayOutputStream baos = new ByteArrayOutputStream(
+                        1024);
+                final ObjectOutputStream oos = new ObjectOutputStream(baos);
+                oos.writeObject(value);
+                oos.close();
+
+                final ByteArrayInputStream bais = new ByteArrayInputStream(baos
+                        .toByteArray());
+                final ObjectInputStream ois = new ObjectInputStream(bais);
+                return ois.readObject();
+            } catch (final IOException e) {
+                throw new IORuntimeException(e);
+            } catch (final ClassNotFoundException e) {
+                throw new ClassNotFoundRuntimeException(e);
+            }
+        }
+
+    }
+
 }

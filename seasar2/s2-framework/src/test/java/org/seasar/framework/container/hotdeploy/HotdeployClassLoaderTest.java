@@ -17,6 +17,8 @@ package org.seasar.framework.container.hotdeploy;
 
 import junit.framework.TestCase;
 
+import org.seasar.framework.container.hotdeploy.HotdeployUtil.Rebuilder;
+import org.seasar.framework.container.hotdeploy.HotdeployUtil.RebuilderImpl;
 import org.seasar.framework.convention.impl.NamingConventionImpl;
 import org.seasar.framework.util.ClassUtil;
 
@@ -57,6 +59,10 @@ public class HotdeployClassLoaderTest extends TestCase {
 
         Class clazz = hotLoader.loadClass("junit.framework.TestCase");
         assertEquals(TestCase.class, clazz);
+
+        clazz = hotLoader.loadClass(RebuilderImpl.class.getName());
+        assertSame(hotLoader, clazz.getClassLoader());
+        assertTrue(Rebuilder.class.isAssignableFrom(clazz));
 
         try {
             hotLoader.loadClass(PACKAGE_NAME + ".xxx");

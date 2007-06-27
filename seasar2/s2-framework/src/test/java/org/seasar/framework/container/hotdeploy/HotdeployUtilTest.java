@@ -15,6 +15,7 @@
  */
 package org.seasar.framework.container.hotdeploy;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -218,9 +219,9 @@ public class HotdeployUtilTest extends S2FrameworkTestCase {
     }
 
     /**
-     *
+     * 
      */
-    public static class Hoge {
+    public static class Hoge implements Serializable {
         private String aaa;
 
         private Hoge hoge;
@@ -273,9 +274,9 @@ public class HotdeployUtilTest extends S2FrameworkTestCase {
     }
 
     /**
-     *
+     * 
      */
-    public static class Foo {
+    public static class Foo implements Serializable {
 
         private int num;
 
