@@ -15,12 +15,13 @@
  */
 package org.seasar.framework.container.creator;
 
+import org.seasar.framework.container.ComponentCreator;
 import org.seasar.framework.container.ComponentCustomizer;
 import org.seasar.framework.container.deployer.InstanceDefFactory;
 import org.seasar.framework.convention.NamingConvention;
 
 /**
- * Logic用のクリエータです。
+ * Logic用の {@link ComponentCreator}です。
  * 
  * @author higa
  * 
@@ -28,7 +29,7 @@ import org.seasar.framework.convention.NamingConvention;
 public class LogicCreator extends ComponentCreatorImpl {
 
     /**
-     * Logic用のクリエータを返します。
+     * {@link LogicCreator}を作成します。
      * 
      * @param namingConvention
      */
@@ -39,7 +40,7 @@ public class LogicCreator extends ComponentCreatorImpl {
     }
 
     /**
-     * Logic用のカスタマイザを返します。
+     * Logic用の {@link ComponentCustomizer}を返します。
      * 
      * @return
      */
@@ -48,7 +49,7 @@ public class LogicCreator extends ComponentCreatorImpl {
     }
 
     /**
-     * Logic用のカスタマイザを設定します。
+     * Logic用の {@link ComponentCustomizer}を設定します。
      * 
      * @param customizer
      */

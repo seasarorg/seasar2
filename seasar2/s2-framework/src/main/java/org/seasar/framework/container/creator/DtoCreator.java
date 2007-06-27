@@ -29,7 +29,7 @@ import org.seasar.framework.convention.NamingConvention;
 public class DtoCreator extends ComponentCreatorImpl {
 
     /**
-     * Dto用のクリエータを返します。
+     * {@link DtoCreator}を作成します。
      * 
      * @param namingConvention
      */
@@ -41,7 +41,7 @@ public class DtoCreator extends ComponentCreatorImpl {
     }
 
     /**
-     * Dto用のカスタマイザを返します。
+     * Dto用の {@link ComponentCustomizer}を返します。
      * 
      * @return
      */
@@ -50,7 +50,7 @@ public class DtoCreator extends ComponentCreatorImpl {
     }
 
     /**
-     * Dto用のカスタマイザを設定します。
+     * Dto用の {@link ComponentCustomizer}を設定します。
      * 
      * @param customizer
      */

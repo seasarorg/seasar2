@@ -15,12 +15,13 @@
  */
 package org.seasar.framework.container.creator;
 
+import org.seasar.framework.container.ComponentCreator;
 import org.seasar.framework.container.ComponentCustomizer;
 import org.seasar.framework.container.deployer.InstanceDefFactory;
 import org.seasar.framework.convention.NamingConvention;
 
 /**
- * Helper用のクリエータです。
+ * Helper用の {@link ComponentCreator}です。
  * 
  * @author higa
  * 
@@ -28,7 +29,7 @@ import org.seasar.framework.convention.NamingConvention;
 public class HelperCreator extends ComponentCreatorImpl {
 
     /**
-     * Helper用のクリエータを返します。
+     * {@link HelperCreator}を作成します。
      * 
      * @param namingConvention
      */
@@ -39,7 +40,7 @@ public class HelperCreator extends ComponentCreatorImpl {
     }
 
     /**
-     * Helper用のカスタマイザを返します。
+     * Helper用の {@link ComponentCustomizer}を返します。
      * 
      * @return
      */
@@ -48,7 +49,7 @@ public class HelperCreator extends ComponentCreatorImpl {
     }
 
     /**
-     * Helper用のカスタマイザを設定します。
+     * Helper用の {@link ComponentCustomizer}を設定します。
      * 
      * @param customizer
      */

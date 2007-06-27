@@ -28,7 +28,7 @@ import org.seasar.framework.convention.NamingConvention;
 import org.seasar.framework.exception.EmptyRuntimeException;
 
 /**
- * ComponentCreatorの実装です。
+ * {@link ComponentCreator}の実装です。
  * 
  * @author higa
  * 
@@ -38,35 +38,35 @@ public class ComponentCreatorImpl implements ComponentCreator {
     private NamingConvention namingConvention;
 
     /**
-     * BINDINGアノテーションの定義です。
+     * Bindingアノテーションの定義です。
      */
     public static final String instanceDef_BINDING = "bindingType=may";
 
     private InstanceDef instanceDef;
 
     /**
-     * BINDINGアノテーションの定義です。
+     * Bindingアノテーションの定義です。
      */
     public static final String autoBindingDef_BINDING = "bindingType=may";
 
     private AutoBindingDef autoBindingDef;
 
     /**
-     * BINDINGアノテーションの定義です。
+     * Bindingアノテーションの定義です。
      */
     public static final String externalBinding_BINDING = "bindingType=may";
 
     private boolean externalBinding = false;
 
     /**
-     * BINDINGアノテーションの定義です。
+     * Bindingアノテーションの定義です。
      */
     public static final String enableInterface_BINDING = "bindingType=may";
 
     private boolean enableInterface = false;
 
     /**
-     * BINDINGアノテーションの定義です。
+     * Bindingアノテーションの定義です。
      */
     public static final String enableAbstract_BINDING = "bindingType=may";
 
@@ -77,7 +77,7 @@ public class ComponentCreatorImpl implements ComponentCreator {
     private ComponentCustomizer customizer;
 
     /**
-     * コンストラクタです。
+     * {@link ComponentCreatorImpl}を作成します。
      * 
      * @param namingConvention
      */
@@ -89,25 +89,25 @@ public class ComponentCreatorImpl implements ComponentCreator {
     }
 
     /**
-     * NamingConventionを返します。
+     * {@link NamingConvention}を返します。
      * 
-     * @return
+     * @return {@link NamingConvention}
      */
     public NamingConvention getNamingConvention() {
         return namingConvention;
     }
 
     /**
-     * インスタンス定義を返します。
+     * {@link InstanceDef}を返します。
      * 
-     * @return
+     * @return {@link InstanceDef}
      */
     public InstanceDef getInstanceDef() {
         return instanceDef;
     }
 
     /**
-     * インスタンス定義を設定します。
+     * {@link InstanceDef}を設定します。
      * 
      * @param instanceDef
      */
@@ -116,16 +116,16 @@ public class ComponentCreatorImpl implements ComponentCreator {
     }
 
     /**
-     * 自動バインディング定義を返します。
+     * {@link AutoBindingDef}を返します。
      * 
-     * @return
+     * @return {@link AutoBindingDef}
      */
     public AutoBindingDef getAutoBindingDef() {
         return autoBindingDef;
     }
 
     /**
-     * 自動バインディング定義を設定します。
+     * {@link AutoBindingDef}を設定します。
      * 
      * @param autoBindingDef
      */
@@ -136,7 +136,7 @@ public class ComponentCreatorImpl implements ComponentCreator {
     /**
      * デフォルトで外部バインディングをするかどうかを返します。
      * 
-     * @return
+     * @return デフォルトで外部バインディングをするかどうか
      */
     public boolean isExternalBinding() {
         return externalBinding;
@@ -154,7 +154,7 @@ public class ComponentCreatorImpl implements ComponentCreator {
     /**
      * インターフェースだけしかないクラスを可能にするかどうかを返します。インターフェースだけしかない場合は、AOP(AspectCustomzier)で実装クラスが作られるでしょう。
      * 
-     * @return
+     * @return インターフェースだけしかないクラスを可能にするかどうか
      */
     public boolean isEnableInterface() {
         return enableInterface;
@@ -172,7 +172,7 @@ public class ComponentCreatorImpl implements ComponentCreator {
     /**
      * 抽象クラスを可能にするかどうかを返します。抽象クラスの場合、AOP(AspectCustomzier)で実装クラスが作られるでしょう。
      * 
-     * @return
+     * @return 抽象クラスを可能にするかどうか
      */
     public boolean isEnableAbstract() {
         return enableAbstract;
@@ -190,7 +190,7 @@ public class ComponentCreatorImpl implements ComponentCreator {
     /**
      * 名前のサフィックスを返します。
      * 
-     * @return
+     * @return 名前のサフィックス
      */
     public String getNameSuffix() {
         return nameSuffix;
@@ -205,10 +205,20 @@ public class ComponentCreatorImpl implements ComponentCreator {
         this.nameSuffix = nameSuffix;
     }
 
+    /**
+     * {@link ComponentCustomizer}を返します。
+     * 
+     * @return {@link ComponentCustomizer}
+     */
     protected ComponentCustomizer getCustomizer() {
         return customizer;
     }
 
+    /**
+     * {@link ComponentCustomizer}を設定します。
+     * 
+     * @param customizer
+     */
     protected void setCustomizer(ComponentCustomizer customizer) {
         this.customizer = customizer;
     }
@@ -261,12 +271,17 @@ public class ComponentCreatorImpl implements ComponentCreator {
      * 対象となるコンポーネント名かどうかを返します。
      * 
      * @param componentName
-     * @return
+     * @return 対象となるコンポーネント名かどうか
      */
     public boolean isTargetComponentName(String componentName) {
         return componentName.endsWith(nameSuffix);
     }
 
+    /**
+     * {@link ComponentDef}をカスタマイズします。
+     * 
+     * @param componentDef
+     */
     protected void customize(ComponentDef componentDef) {
         if (customizer != null) {
             customizer.customize(componentDef);

@@ -15,12 +15,13 @@
  */
 package org.seasar.framework.container.creator;
 
+import org.seasar.framework.container.ComponentCreator;
 import org.seasar.framework.container.ComponentCustomizer;
 import org.seasar.framework.container.deployer.InstanceDefFactory;
 import org.seasar.framework.convention.NamingConvention;
 
 /**
- * Service用のクリエータです。
+ * Service用の {@link ComponentCreator}です。
  * 
  * @author higa
  * 
@@ -28,7 +29,7 @@ import org.seasar.framework.convention.NamingConvention;
 public class ServiceCreator extends ComponentCreatorImpl {
 
     /**
-     * Service用のクリエータを返します。
+     * {@link ServiceCreator}を作成します。
      * 
      * @param namingConvention
      */
@@ -41,7 +42,7 @@ public class ServiceCreator extends ComponentCreatorImpl {
     }
 
     /**
-     * Service用のカスタマイザを返します。
+     * Service用の {@link ComponentCustomizer}を返します。
      * 
      * @return
      */
@@ -50,7 +51,7 @@ public class ServiceCreator extends ComponentCreatorImpl {
     }
 
     /**
-     * Service用のカスタマイザを設定します。
+     * Service用の {@link ComponentCustomizer}を設定します。
      * 
      * @param customizer
      */

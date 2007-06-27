@@ -15,12 +15,13 @@
  */
 package org.seasar.framework.container.creator;
 
+import org.seasar.framework.container.ComponentCreator;
 import org.seasar.framework.container.ComponentCustomizer;
 import org.seasar.framework.container.deployer.InstanceDefFactory;
 import org.seasar.framework.convention.NamingConvention;
 
 /**
- * Page用のクリエータです。
+ * Page用の {@link ComponentCreator}です。
  * 
  * @author higa
  * 
@@ -28,7 +29,7 @@ import org.seasar.framework.convention.NamingConvention;
 public class PageCreator extends ComponentCreatorImpl {
 
     /**
-     * Page用のクリエータを返します。
+     * {@link PageCreator}を作成します。
      * 
      * @param namingConvention
      */
@@ -40,7 +41,7 @@ public class PageCreator extends ComponentCreatorImpl {
     }
 
     /**
-     * Page用のカスタマイザを返します。
+     * Page用の {@link ComponentCustomizer}を返します。
      * 
      * @return
      */
@@ -49,7 +50,7 @@ public class PageCreator extends ComponentCreatorImpl {
     }
 
     /**
-     * Page用のカスタマイザを設定します。
+     * Page用の {@link ComponentCustomizer}を設定します。
      * 
      * @param customizer
      */

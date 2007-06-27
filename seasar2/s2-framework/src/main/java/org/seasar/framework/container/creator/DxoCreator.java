@@ -15,11 +15,12 @@
  */
 package org.seasar.framework.container.creator;
 
+import org.seasar.framework.container.ComponentCreator;
 import org.seasar.framework.container.ComponentCustomizer;
 import org.seasar.framework.convention.NamingConvention;
 
 /**
- * Dxo用のクリエータです。
+ * Dxo用の {@link ComponentCreator}です。
  * 
  * @author higa
  * 
@@ -27,7 +28,7 @@ import org.seasar.framework.convention.NamingConvention;
 public class DxoCreator extends ComponentCreatorImpl {
 
     /**
-     * Dxo用のクリエータを返します。
+     * {@link DxoCreator}を作成します。
      * 
      * @param namingConvention
      */
@@ -39,7 +40,7 @@ public class DxoCreator extends ComponentCreatorImpl {
     }
 
     /**
-     * Dxo用のカスタマイザを返します。
+     * Dxo用の {@link ComponentCustomizer}を返します。
      * 
      * @return
      */
@@ -48,7 +49,7 @@ public class DxoCreator extends ComponentCreatorImpl {
     }
 
     /**
-     * Dxo用のカスタマイザを設定します。
+     * Dxo用の {@link ComponentCustomizer}を設定します。
      * 
      * @param customizer
      */

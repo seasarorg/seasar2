@@ -15,12 +15,13 @@
  */
 package org.seasar.framework.container.creator;
 
+import org.seasar.framework.container.ComponentCreator;
 import org.seasar.framework.container.ComponentCustomizer;
 import org.seasar.framework.container.deployer.InstanceDefFactory;
 import org.seasar.framework.convention.NamingConvention;
 
 /**
- * Action用のクリエータです。
+ * Action用の {@link ComponentCreator}です。
  * 
  * @author higa
  * 
@@ -28,7 +29,7 @@ import org.seasar.framework.convention.NamingConvention;
 public class ActionCreator extends ComponentCreatorImpl {
 
     /**
-     * コンストラクタです。
+     * {@link ActionCreator}を作成します。
      * 
      * @param namingConvention
      */
@@ -39,16 +40,16 @@ public class ActionCreator extends ComponentCreatorImpl {
     }
 
     /**
-     * Action用のカスタマイザを返します。
+     * {@link ComponentCustomizer}を返します。
      * 
-     * @return
+     * @return {@link ComponentCustomizer}
      */
     public ComponentCustomizer getActionCustomizer() {
         return getCustomizer();
     }
 
     /**
-     * Action用のカスタマイザを設定します。
+     * {@link ComponentCustomizer}を設定します。
      * 
      * @param customizer
      */

@@ -15,19 +15,20 @@
  */
 package org.seasar.framework.container.creator;
 
+import org.seasar.framework.container.ComponentCreator;
 import org.seasar.framework.container.ComponentCustomizer;
 import org.seasar.framework.container.deployer.InstanceDefFactory;
 import org.seasar.framework.convention.NamingConvention;
 
 /**
- * コンバータ用のクリエータです。
+ * コンバータ用の {@link ComponentCreator}です。
  * 
  * @author shot
  */
 public class ConverterCreator extends ComponentCreatorImpl {
 
     /**
-     * コンバータ用のクリエータを返します。
+     * {@link ConverterCreator}を作成します。
      * 
      * @param namingConvention
      */
@@ -38,7 +39,7 @@ public class ConverterCreator extends ComponentCreatorImpl {
     }
 
     /**
-     * コンバータ用のカスタマイザを返します。
+     * コンバータ用の {@link ComponentCustomizer}を返します。
      * 
      * @return
      */
@@ -47,12 +48,11 @@ public class ConverterCreator extends ComponentCreatorImpl {
     }
 
     /**
-     * コンバータ用のカスタマイザを設定します。
+     * コンバータ用の {@link ComponentCustomizer}を設定します。
      * 
      * @param customizer
      */
     public void setConverterCustomizer(ComponentCustomizer customizer) {
         setCustomizer(customizer);
     }
-
 }

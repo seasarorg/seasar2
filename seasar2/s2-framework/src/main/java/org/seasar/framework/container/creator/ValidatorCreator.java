@@ -15,12 +15,13 @@
  */
 package org.seasar.framework.container.creator;
 
+import org.seasar.framework.container.ComponentCreator;
 import org.seasar.framework.container.ComponentCustomizer;
 import org.seasar.framework.container.deployer.InstanceDefFactory;
 import org.seasar.framework.convention.NamingConvention;
 
 /**
- * Validator用のクリエータです。
+ * Validator用の {@link ComponentCreator}です。
  * 
  * @author higa
  * 
@@ -28,7 +29,7 @@ import org.seasar.framework.convention.NamingConvention;
 public class ValidatorCreator extends ComponentCreatorImpl {
 
     /**
-     * Validator用のクリエータを返します。
+     * {@link ValidatorCreator}を作成します。
      * 
      * @param namingConvention
      */
