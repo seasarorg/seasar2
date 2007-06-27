@@ -27,6 +27,9 @@ import org.seasar.framework.container.impl.InterTypeDefImpl;
  */
 public class InterTypeAutoRegister extends AbstractComponentTargetAutoRegister {
 
+    /**
+     * {@link InterType}です。
+     */
     protected InterType interType;
 
     /**

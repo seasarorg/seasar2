@@ -27,6 +27,9 @@ import org.seasar.framework.container.impl.MetaDefImpl;
  */
 public class MetaAutoRegister extends AbstractComponentTargetAutoRegister {
 
+    /**
+     * {@link ComponentDef}です。
+     */
     protected ComponentDef componentDef;
 
     /**

@@ -38,8 +38,14 @@ import org.seasar.framework.util.ClassTraversal.ClassHandler;
 public class ComponentAutoRegister extends AbstractComponentAutoRegister
         implements ClassHandler {
 
+    /**
+     * 参照するクラスのリストです。
+     */
     protected List referenceClasses = new ArrayList();
 
+    /**
+     * {@link Strategy}の集合です。
+     */
     protected Map strategies = new HashMap();
 
     /**
@@ -93,6 +99,10 @@ public class ComponentAutoRegister extends AbstractComponentAutoRegister
         }
     }
 
+    /**
+     * プロトコルに応じた自動登録のストラテジです。
+     * 
+     */
     protected interface Strategy {
 
         /**
@@ -104,6 +114,10 @@ public class ComponentAutoRegister extends AbstractComponentAutoRegister
         void registerAll(Class referenceClass, URL url);
     }
 
+    /**
+     * ファイルシステム用の {@link Strategy}です。
+     * 
+     */
     protected class FileSystemStrategy implements Strategy {
 
         public void registerAll(final Class referenceClass, final URL url) {
@@ -115,6 +129,13 @@ public class ComponentAutoRegister extends AbstractComponentAutoRegister
             }
         }
 
+        /**
+         * ルートディレクトリを返します。
+         * 
+         * @param referenceClass
+         * @param url
+         * @return ルートディレクトリ
+         */
         protected File getRootDir(final Class referenceClass, final URL url) {
             final String[] names = referenceClass.getName().split("\\.");
             File path = ResourceUtil.getFile(url);
@@ -125,6 +146,11 @@ public class ComponentAutoRegister extends AbstractComponentAutoRegister
         }
     }
 
+    /**
+     * jarファイル用の {@link Strategy}です。
+     * 
+     * 
+     */
     protected class JarFileStrategy implements Strategy {
 
         public void registerAll(final Class referenceClass, final URL url) {
@@ -132,6 +158,12 @@ public class ComponentAutoRegister extends AbstractComponentAutoRegister
             ClassTraversal.forEach(jarFile, ComponentAutoRegister.this);
         }
 
+        /**
+         * {@link JarFile}を作成します。
+         * 
+         * @param url
+         * @return {@link JarFile}
+         */
         protected JarFile createJarFile(final URL url) {
             return JarFileUtil.toJarFile(url);
         }
@@ -147,6 +179,12 @@ public class ComponentAutoRegister extends AbstractComponentAutoRegister
             ClassTraversal.forEach(jarFile, ComponentAutoRegister.this);
         }
 
+        /**
+         * {@link JarFile}を作成します。
+         * 
+         * @param url
+         * @return {@link JarFile}
+         */
         protected JarFile createJarFile(final URL url) {
             final String jarFileName = ZipFileUtil.toZipFilePath(url);
             return JarFileUtil.create(new File(jarFileName));
@@ -163,6 +201,12 @@ public class ComponentAutoRegister extends AbstractComponentAutoRegister
             ClassTraversal.forEach(jarFile, ComponentAutoRegister.this);
         }
 
+        /**
+         * {@link JarFile}を作成します。
+         * 
+         * @param url
+         * @return {@link JarFile}
+         */
         protected JarFile createJarFile(final URL url) {
             final URL jarUrl = URLUtil.create("jar:file:" + url.getPath());
             return JarFileUtil.toJarFile(jarUrl);

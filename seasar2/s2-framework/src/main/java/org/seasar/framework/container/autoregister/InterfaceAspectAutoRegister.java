@@ -84,6 +84,11 @@ public class InterfaceAspectAutoRegister {
         }
     }
 
+    /**
+     * コンポーネントを登録します。
+     * 
+     * @param componentDef
+     */
     protected void register(ComponentDef componentDef) {
         Class componentClass = componentDef.getComponentClass();
         if (componentClass == null) {
@@ -95,6 +100,11 @@ public class InterfaceAspectAutoRegister {
         registerInterceptor(componentDef);
     }
 
+    /**
+     * インターセプタを登録します。
+     * 
+     * @param componentDef
+     */
     protected void registerInterceptor(ComponentDef componentDef) {
         AspectDef aspectDef = AspectDefFactory.createAspectDef(interceptor,
                 pointcut);

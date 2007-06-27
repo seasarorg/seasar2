@@ -74,8 +74,17 @@ public abstract class AbstractJarComponentAutoRegister extends
         }
     }
 
+    /**
+     * ベースディレクトリを設定します。
+     */
     protected abstract void setupBaseDir();
 
+    /**
+     * jarファイルが適用されるかどうか返します。
+     * 
+     * @param jarFileName
+     * @return jarファイルが適用されるかどうか
+     */
     protected boolean isAppliedJar(final String jarFileName) {
         if (jarFileNamePatterns == null) {
             return true;
@@ -93,6 +102,12 @@ public abstract class AbstractJarComponentAutoRegister extends
         return false;
     }
 
+    /**
+     * jarファイルを検索します。
+     * 
+     * @param jarFileName
+     * @return jarファイル
+     */
     protected File findJar(final String jarFileName) {
         return new File(baseDir, jarFileName);
     }

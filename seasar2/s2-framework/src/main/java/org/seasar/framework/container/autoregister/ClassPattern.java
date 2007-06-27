@@ -115,6 +115,12 @@ public class ClassPattern {
         return false;
     }
 
+    /**
+     * デリミタを追加します。
+     * 
+     * @param name
+     * @return デリミタが追加された名前
+     */
     protected static String appendDelimiter(final String name) {
         return name.endsWith(".") ? name : name + ".";
     }
