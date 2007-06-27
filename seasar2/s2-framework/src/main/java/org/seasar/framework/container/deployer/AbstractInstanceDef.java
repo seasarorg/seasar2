@@ -27,6 +27,11 @@ public abstract class AbstractInstanceDef implements InstanceDef {
 
     private String name;
 
+    /**
+     * {@link AbstractInstanceDef}を作成します。
+     * 
+     * @param name
+     */
     protected AbstractInstanceDef(String name) {
         this.name = name;
     }

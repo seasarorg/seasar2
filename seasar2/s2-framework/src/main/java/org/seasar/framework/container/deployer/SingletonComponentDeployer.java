@@ -76,23 +76,6 @@ public class SingletonComponentDeployer extends AbstractComponentDeployer {
         deploy();
     }
 
-    protected boolean isAppliedHotswap() {
-        Class clazz = getComponentDef().getComponentClass();
-        if (clazz == null) {
-            return false;
-        }
-        Class[] itfs = clazz.getInterfaces();
-        if (itfs == null) {
-            return false;
-        }
-        for (int i = 0; i < itfs.length; ++i) {
-            if (itfs[i].getMethods().length > 0) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     /**
      * @see org.seasar.framework.container.ComponentDeployer#destroy()
      */

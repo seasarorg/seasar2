@@ -27,6 +27,11 @@ import org.seasar.framework.container.InstanceDef;
  */
 public class InstanceSingletonDef extends AbstractInstanceDef {
 
+    /**
+     * {@link InstanceSingletonDef}を作成します。
+     * 
+     * @param name
+     */
     protected InstanceSingletonDef(String name) {
         super(name);
     }

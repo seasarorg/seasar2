@@ -39,9 +39,6 @@ public class ApplicationComponentDeployer extends AbstractComponentDeployer {
         super(componentDef);
     }
 
-    /**
-     * @see org.seasar.framework.container.ComponentDeployer#deploy()
-     */
     public Object deploy() {
         ComponentDef cd = getComponentDef();
         ExternalContext extCtx = cd.getContainer().getRoot()
@@ -70,15 +67,9 @@ public class ApplicationComponentDeployer extends AbstractComponentDeployer {
         throw new UnsupportedOperationException("injectDependency");
     }
 
-    /**
-     * @see org.seasar.framework.container.ComponentDeployer#init()
-     */
     public void init() {
     }
 
-    /**
-     * @see org.seasar.framework.container.ComponentDeployer#destroy()
-     */
     public void destroy() {
     }
 }

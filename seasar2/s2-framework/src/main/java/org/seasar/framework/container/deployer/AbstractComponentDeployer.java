@@ -56,26 +56,54 @@ public abstract class AbstractComponentDeployer implements ComponentDeployer {
         setupAssembler();
     }
 
+    /**
+     * {@link ComponentDef}を返します。
+     * 
+     * @return {@link ComponentDef}
+     */
     protected final ComponentDef getComponentDef() {
         return componentDef;
     }
 
+    /**
+     * {@link ConstructorAssembler}を返します。
+     * 
+     * @return {@link ConstructorAssembler}
+     */
     protected final ConstructorAssembler getConstructorAssembler() {
         return constructorAssembler;
     }
 
+    /**
+     * {@link PropertyAssembler}を返します。
+     * 
+     * @return {@link PropertyAssembler}
+     */
     protected final PropertyAssembler getPropertyAssembler() {
         return propertyAssembler;
     }
 
+    /**
+     * 初期化用の {@link MethodAssembler}を返します。
+     * 
+     * @return 初期化用の {@link MethodAssembler}
+     */
     protected final MethodAssembler getInitMethodAssembler() {
         return initMethodAssembler;
     }
 
+    /**
+     * 破棄用の {@link MethodAssembler}を返します。
+     * 
+     * @return 破棄用の {@link MethodAssembler}
+     */
     protected final MethodAssembler getDestroyMethodAssembler() {
         return destroyMethodAssembler;
     }
 
+    /**
+     * アセンブラを準備します。
+     */
     protected void setupAssembler() {
         AutoBindingDef autoBindingDef = componentDef.getAutoBindingDef();
         constructorAssembler = autoBindingDef
@@ -88,6 +116,11 @@ public abstract class AbstractComponentDeployer implements ComponentDeployer {
                 .createDestroyMethodAssembler(componentDef);
     }
 
+    /**
+     * コンポーネント名を返します。
+     * 
+     * @return コンポーネント名
+     */
     protected String getComponentName() {
         String componentName = componentDef.getComponentName();
         if (componentName == null) {
@@ -98,6 +131,12 @@ public abstract class AbstractComponentDeployer implements ComponentDeployer {
         return componentName;
     }
 
+    /**
+     * プロパティをコピーします。
+     * 
+     * @param old
+     * @param component
+     */
     protected void copyProperties(Object old, Object component) {
         BeanDesc oldBeanDesc = BeanDescFactory.getBeanDesc(old.getClass());
         BeanDesc beanDesc = BeanDescFactory.getBeanDesc(component.getClass());

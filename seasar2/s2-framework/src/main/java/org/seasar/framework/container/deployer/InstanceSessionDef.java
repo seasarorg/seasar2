@@ -27,6 +27,11 @@ import org.seasar.framework.container.InstanceDef;
  */
 public class InstanceSessionDef extends AbstractInstanceDef {
 
+    /**
+     * {@link InstanceSessionDef}を作成します。
+     * 
+     * @param name
+     */
     protected InstanceSessionDef(String name) {
         super(name);
     }

@@ -27,6 +27,11 @@ import org.seasar.framework.container.InstanceDef;
  */
 public class InstancePrototypeDef extends AbstractInstanceDef {
 
+    /**
+     * {@link InstancePrototypeDef}を作成します。
+     * 
+     * @param name
+     */
     protected InstancePrototypeDef(String name) {
         super(name);
     }

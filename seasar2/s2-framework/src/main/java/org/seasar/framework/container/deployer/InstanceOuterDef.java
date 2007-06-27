@@ -27,6 +27,11 @@ import org.seasar.framework.container.InstanceDef;
  */
 public class InstanceOuterDef extends AbstractInstanceDef {
 
+    /**
+     * {@link InstanceOuterDef}を作成します。
+     * 
+     * @param name
+     */
     protected InstanceOuterDef(String name) {
         super(name);
     }

@@ -76,6 +76,9 @@ public class InstanceDefFactory {
         addInstanceDef(OUTER);
     }
 
+    /**
+     * {@link InstanceDefFactory}を作成します。
+     */
     protected InstanceDefFactory() {
     }
 
