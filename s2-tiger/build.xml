@@ -19,9 +19,6 @@
 				<include name="s2-tiger-${ver}.jar"/>
 				<include name="s2-tiger-${ver}-sources.jar"/>
 			</zipfileset>
-			<zipfileset prefix="s2-tiger/resources" dir="src/examples/resources">
-				<include name="jndi.properties"/>
-			</zipfileset>
 			<zipfileset prefix="s2-tiger/resources" dir="src/test/resources">
 				<include name="jdbc.dicon"/>
 				<include name="s2junit4.dicon"/>
