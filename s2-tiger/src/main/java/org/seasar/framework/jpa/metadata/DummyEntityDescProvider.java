@@ -18,8 +18,9 @@ package org.seasar.framework.jpa.metadata;
 import javax.persistence.EntityManagerFactory;
 
 /**
- * @author koichik
+ * {@link EntityDescProvider}のダミー実装クラスです。
  * 
+ * @author koichik
  */
 public class DummyEntityDescProvider implements EntityDescProvider {
 

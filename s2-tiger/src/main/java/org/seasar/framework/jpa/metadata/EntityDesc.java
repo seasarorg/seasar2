@@ -16,21 +16,54 @@
 package org.seasar.framework.jpa.metadata;
 
 /**
- * @author koichik
+ * エンティティ定義を表すインターフェースです。
  * 
+ * @author koichik
  */
 public interface EntityDesc {
 
+    /**
+     * エンティティクラスを返します。
+     * 
+     * @return エンティティクラス
+     */
     Class<?> getEntityClass();
 
+    /**
+     * エンティティ名を返します。
+     * 
+     * @return エンティティ名
+     */
     String getEntityName();
 
+    /**
+     * 属性名の配列を返します。
+     * 
+     * @return 属性名の配列
+     */
     String[] getAttributeNames();
 
+    /**
+     * IDの属性定義を返します。
+     * 
+     * @return 属性定義
+     */
     AttributeDesc getIdAttributeDesc();
 
+    /**
+     * 指定された名前をもつ属性定義を返します。
+     * 
+     * @param attributeName
+     *            属性名
+     * @return 属性定義
+     */
     AttributeDesc getAttributeDesc(String attributeName);
 
+    /**
+     * 属性定義の配列を返します。
+     * 
+     * @return 属性定義の配列
+     */
     AttributeDesc[] getAttributeDescs();
 
 }

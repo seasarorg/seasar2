@@ -25,6 +25,8 @@ import org.seasar.framework.util.DisposableUtil;
 import org.seasar.framework.util.tiger.CollectionsUtil;
 
 /**
+ * {@link EntityDesc}のファクトリです。
+ * 
  * @author koichik
  */
 public class EntityDescFactory {
@@ -32,11 +34,17 @@ public class EntityDescFactory {
     /** クラスに対応する{@link EntityDesc}が存在しないことを示すオブジェクト */
     protected static final EntityDesc NOT_FOUND = new NotFound();
 
+    /** 初期化されているかどうかを表すフラグ */
     protected static boolean initialized;
 
+    /** エンティティクラスをキー、エンティティ定義を値とするマップ */
     protected static final ConcurrentMap<Class<?>, EntityDesc> entityDescs = CollectionsUtil
             .newConcurrentHashMap();
 
+    /**
+     * このクラスを初期化します。
+     * 
+     */
     public static void initialize() {
         if (initialized) {
             return;
@@ -50,6 +58,10 @@ public class EntityDescFactory {
         initialized = true;
     }
 
+    /**
+     * このクラスがキャッシュしている値を消去し、初期化以前の状態にします。
+     * 
+     */
     public static void clear() {
         entityDescs.clear();
         initialized = false;
