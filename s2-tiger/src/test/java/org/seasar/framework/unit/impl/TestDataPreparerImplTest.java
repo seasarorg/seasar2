@@ -16,6 +16,7 @@
 package org.seasar.framework.unit.impl;
 
 import org.seasar.extension.unit.S2TestCase;
+import org.seasar.framework.unit.PreparationType;
 import org.seasar.framework.unit.TestContext;
 import org.seasar.framework.unit.TestDataPreparer;
 
@@ -51,7 +52,8 @@ public class TestDataPreparerImplTest extends S2TestCase {
         private static String path;
 
         @Override
-        protected void readXlsWriteDb(String path, final boolean trimString) {
+        protected void prepare(PreparationType preparingType, String path,
+                final boolean trimString) {
             SubTestDataPreparerImpl.path = path;
         }
     }

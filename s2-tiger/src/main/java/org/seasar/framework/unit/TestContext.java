@@ -103,11 +103,30 @@ public interface TestContext {
 
     /**
      * テストの実行前にテストデータを事前に準備する場合は<code>true</code>を設定します。
+     * <p>
+     * 代わりに{@link #setPreparationType(PreparationType)}を使用してください。
+     * </p>
      * 
      * @param autoPreparing
      *            自動でテストデータを準備する場合<code>true</code>
      */
+    @Deprecated()
     void setAutoPreparing(boolean autoPreparing);
+
+    /**
+     * {@link PreparationType}を設定します。
+     * 
+     * @param preparationType
+     *            {@link PreparationType}
+     */
+    void setPreparationType(PreparationType preparationType);
+
+    /**
+     * {@link PreparationType}を返します。
+     * 
+     * @return {@link PreparationType}
+     */
+    PreparationType getPreparationType();
 
     /**
      * テストデータの文字列に含まれる空白を取り除く場合は<code>true</code>を設定します。

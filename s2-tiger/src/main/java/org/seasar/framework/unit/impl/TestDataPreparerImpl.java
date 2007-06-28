@@ -21,6 +21,7 @@ import org.seasar.framework.container.annotation.tiger.Binding;
 import org.seasar.framework.container.annotation.tiger.BindingType;
 import org.seasar.framework.log.Logger;
 import org.seasar.framework.unit.DataAccessor;
+import org.seasar.framework.unit.PreparationType;
 import org.seasar.framework.unit.TestContext;
 import org.seasar.framework.unit.TestDataPreparer;
 import org.seasar.framework.util.ResourceUtil;
@@ -47,7 +48,13 @@ public class TestDataPreparerImpl implements TestDataPreparer {
     /** データアクセッサー */
     protected DataAccessor dataAccessor;
 
-    /** データベースのデータをテストデータで置換するかどうかを表すフラグ。デフォルトは<code>false</code> */
+    /**
+     * データベースのデータをテストデータで置換するかどうかを表すフラグ。デフォルトは<code>false</code>
+     * <p>
+     * 代わりに{@link TestContext#setPreparationType(PreparationType)}を使用してください。
+     * </p>
+     */
+    @Deprecated
     protected boolean replaceDb;
 
     /**
@@ -63,10 +70,14 @@ public class TestDataPreparerImpl implements TestDataPreparer {
 
     /**
      * データベースのデータをテストデータで置換する場合<code>true</code>を設定します。
+     * <p>
+     * 代わりに{@link TestContext#setPreparationType(PreparationType)}を使用してください。
+     * </p>
      * 
      * @param replaceDb
      *            データベースのデータをテストデータで置換する場合<code>true</code>、置換しないで追加する場合<code>false</code>
      */
+    @Deprecated
     public void setReplaceDb(final boolean replaceDb) {
         this.replaceDb = replaceDb;
     }
@@ -82,40 +93,55 @@ public class TestDataPreparerImpl implements TestDataPreparer {
     }
 
     public void prepare(final TestContext testContext) {
+        final PreparationType preparingType = determinePreparationType(testContext);
         final String dirPath = testContext.getTestClassPackagePath();
         final boolean trimString = testContext.isTrimString();
         for (final String path : testDataXlsPaths) {
             if (ResourceUtil.isExist(path)) {
-                readXlsWriteDb(path, trimString);
+                prepare(preparingType, path, trimString);
                 return;
             }
             final String newPath = dirPath + "/" + path;
             if (ResourceUtil.isExist(newPath)) {
-                readXlsWriteDb(newPath, trimString);
+                prepare(preparingType, newPath, trimString);
                 return;
             }
         }
     }
 
+    private PreparationType determinePreparationType(
+            final TestContext testContext) {
+        return replaceDb ? PreparationType.REPLACE : testContext
+                .getPreparationType();
+    }
+
     /**
-     * Excelから読み込んだデータをデータベースに書き込みます。
+     * テストデータを準備します。
      * 
+     * @param preparationType
+     *            テストデータの準備方法
      * @param path
      *            Excelのパス
      * @param trimString
      *            文字列に含まれる空白を取り除く場合<code>true</code>
      */
-    protected void readXlsWriteDb(final String path, final boolean trimString) {
-        if (replaceDb) {
-            if (logger.isDebugEnabled()) {
-                logger.log("DSSR0102", new Object[] { path });
-            }
-            dataAccessor.readXlsReplaceDb(path, trimString);
-        } else {
-            if (logger.isDebugEnabled()) {
-                logger.log("DSSR0103", new Object[] { path });
-            }
+    protected void prepare(final PreparationType preparationType,
+            final String path, final boolean trimString) {
+        switch (preparationType) {
+        case NONE:
+            break;
+        case WRITE:
+            logger.log("DSSR0103", new Object[] { path });
             dataAccessor.readXlsWriteDb(path, trimString);
+            break;
+        case REPLACE:
+            logger.log("DSSR0102", new Object[] { path });
+            dataAccessor.readXlsReplaceDb(path, trimString);
+            break;
+        case ALL_REPLACE:
+            logger.log("DSSR0116", new Object[] { path });
+            dataAccessor.readXlsAllReplaceDb(path, trimString);
+            break;
         }
     }
 

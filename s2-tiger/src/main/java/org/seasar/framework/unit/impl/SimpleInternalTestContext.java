@@ -36,6 +36,7 @@ import org.seasar.framework.message.MessageResourceBundleFactory;
 import org.seasar.framework.unit.ConfigFileIncluder;
 import org.seasar.framework.unit.ExpectedDataReader;
 import org.seasar.framework.unit.InternalTestContext;
+import org.seasar.framework.unit.PreparationType;
 import org.seasar.framework.unit.TestDataPreparer;
 import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.ResourceUtil;
@@ -72,6 +73,9 @@ public class SimpleInternalTestContext implements InternalTestContext {
 
     /** テストデータを自動準備するかどうかを表すフラグ。デフォルトは<code>true</code> */
     protected boolean autoPreparing = true;
+
+    /** テストデータの準備方法 */
+    protected PreparationType preparationType = PreparationType.WRITE;
 
     /** テストデータの文字列に含まれる空白を取り除くかどうかを表すフラグ。デフォルトは<code>true</code> */
     protected boolean trimString = true;
@@ -124,6 +128,14 @@ public class SimpleInternalTestContext implements InternalTestContext {
 
     public void setAutoPreparing(final boolean autoPreparing) {
         this.autoPreparing = autoPreparing;
+    }
+
+    public PreparationType getPreparationType() {
+        return preparationType;
+    }
+
+    public void setPreparationType(PreparationType preparationType) {
+        this.preparationType = preparationType;
     }
 
     public void setTrimString(final boolean trimString) {
