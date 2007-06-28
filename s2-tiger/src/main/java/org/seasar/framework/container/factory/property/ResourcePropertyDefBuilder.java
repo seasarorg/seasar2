@@ -21,9 +21,17 @@ import org.seasar.extension.j2ee.JndiResourceLocator;
 import org.seasar.framework.container.AccessTypeDef;
 import org.seasar.framework.container.PropertyDef;
 
+/**
+ * {@link Resource}アノテーションを読み取り{@link PropertyDef}を作成するコンポーネントの実装クラスです。
+ * 
+ * @author koichik
+ */
 public class ResourcePropertyDefBuilder extends
         AbstractPropertyDefBuilder<Resource> {
 
+    /**
+     * インスタンスを構築します。
+     */
     public ResourcePropertyDefBuilder() {
     }
 

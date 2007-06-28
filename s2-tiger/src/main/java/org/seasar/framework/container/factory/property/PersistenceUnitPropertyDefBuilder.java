@@ -31,9 +31,17 @@ import org.seasar.framework.container.impl.DestroyMethodDefImpl;
 import org.seasar.framework.jpa.PersistenceUnitManager;
 import org.seasar.framework.util.StringUtil;
 
+/**
+ * {@link PersistenceUnit}アノテーションを読み取り{@link PropertyDef}を作成するコンポーネントの実装クラスです。
+ * 
+ * @author koichik
+ */
 public class PersistenceUnitPropertyDefBuilder extends
         AbstractPropertyDefBuilder<PersistenceUnit> {
 
+    /**
+     * インスタンスを構築します。
+     */
     public PersistenceUnitPropertyDefBuilder() {
     }
 
@@ -60,6 +68,13 @@ public class PersistenceUnitPropertyDefBuilder extends
                 createPersistenceUnitCompoentDef(unitName));
     }
 
+    /**
+     * {@link EntityManagerFactory 永続ユニット}を取得するための{@link ComponentDef}を作成して返します。
+     * 
+     * @param unitName
+     *            永続ユニット名
+     * @return {@link EntityManagerFactory 永続ユニット}を取得するための{@link ComponentDef}
+     */
     protected static ComponentDef createPersistenceUnitCompoentDef(
             final String unitName) {
         final ComponentDef componentDef = new ComponentDefImpl(
@@ -69,19 +84,42 @@ public class PersistenceUnitPropertyDefBuilder extends
         return componentDef;
     }
 
+    /**
+     * 評価されると{@link EntityManagerFactory 永続ユニット}を返す{@link Expression}を作成して返します。
+     * 
+     * @param unitName
+     *            永続ユニット名
+     * @return 評価されると{@link EntityManagerFactory 永続ユニット}を返す{@link Expression}
+     */
     protected static Expression getExpression(final String unitName) {
         return new PersistenceUnitExpression(unitName);
     }
 
+    /**
+     * 評価されると{@link EntityManagerFactory 永続ユニット}を返す{@link Expression}の実装クラスです。
+     * 
+     * @author koichik
+     */
     public static class PersistenceUnitExpression extends AbstractExpression {
 
         String unitName;
 
+        /**
+         * インスタンスを構築します。
+         * 
+         * @param unitName
+         *            永続ユニット名
+         */
         public PersistenceUnitExpression(String unitName) {
             super(unitName);
             this.unitName = unitName;
         }
 
+        /**
+         * 永続ユニット名を返します。
+         * 
+         * @return 永続ユニット名
+         */
         public String getUnitName() {
             return unitName;
         }
@@ -92,5 +130,7 @@ public class PersistenceUnitPropertyDefBuilder extends
                     .getComponent("jpa.persistenceUnitManager");
             return pum.getEntityManagerFactory(unitName);
         }
+
     }
+
 }

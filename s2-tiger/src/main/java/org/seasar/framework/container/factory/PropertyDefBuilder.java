@@ -21,10 +21,39 @@ import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.container.PropertyDef;
 
+/**
+ * Tigerアノテーションを読み取り{@link PropertyDef}を作成するインターフェースです。
+ * 
+ * @author koichik
+ */
 public interface PropertyDefBuilder {
+
+    /**
+     * コンポーネントからTigerアノテーションを読み取り{@link PropertyDef}を作成します。
+     * 
+     * @param annotationHandler
+     *            このメソッドを呼び出しているアノテーションハンドラ
+     * @param beanDesc
+     *            コンポーネントの{@link BeanDesc ビーン定義}
+     * @param propertyDesc
+     *            対象の{@link PropertyDesc プロパティ定義}
+     * @return {@link PropertyDef}
+     */
     PropertyDef createPropertyDef(AnnotationHandler annotationHandler,
             BeanDesc beanDesc, PropertyDesc propertyDesc);
 
+    /**
+     * コンポーネントからTigerアノテーションを読み取り{@link PropertyDef}を作成します。
+     * 
+     * @param annotationHandler
+     *            このメソッドを呼び出しているアノテーションハンドラ
+     * @param beanDesc
+     *            コンポーネントの{@link BeanDesc ビーン定義}
+     * @param field
+     *            対象の{@link Field フィールド}
+     * @return {@link PropertyDef}
+     */
     PropertyDef createPropertyDef(AnnotationHandler annotationHandler,
             BeanDesc beanDesc, Field field);
+
 }

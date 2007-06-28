@@ -17,7 +17,10 @@ package org.seasar.framework.container.factory.initmethod;
 
 import java.lang.reflect.Method;
 
+import javax.annotation.PostConstruct;
+
 import org.seasar.framework.container.ComponentDef;
+import org.seasar.framework.container.DestroyMethodDef;
 import org.seasar.framework.container.factory.AnnotationHandler;
 import org.seasar.framework.container.factory.InitMethodDefBuilder;
 import org.seasar.framework.container.impl.InitMethodDefImpl;
@@ -25,8 +28,9 @@ import org.seasar.framework.ejb.EJB3Desc;
 import org.seasar.framework.ejb.EJB3DescFactory;
 
 /**
- * @author koichik
+ * EJB3の{@link PostConstruct}アノテーションを読み取り{@link DestroyMethodDef}を作成するコンポーネントの実装クラスです。
  * 
+ * @author koichik
  */
 public class EJB3InitMethodDefBuilder implements InitMethodDefBuilder {
 

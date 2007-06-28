@@ -21,8 +21,16 @@ import org.seasar.framework.container.AccessTypeDef;
 import org.seasar.framework.container.PropertyDef;
 import org.seasar.framework.util.StringUtil;
 
+/**
+ * {@link EJB}アノテーションを読み取り{@link PropertyDef}を作成するコンポーネントの実装クラスです。
+ * 
+ * @author koichik
+ */
 public class EJBPropertyDefBuilder extends AbstractPropertyDefBuilder<EJB> {
 
+    /**
+     * インスタンスを構築します。
+     */
     public EJBPropertyDefBuilder() {
     }
 
@@ -38,6 +46,13 @@ public class EJBPropertyDefBuilder extends AbstractPropertyDefBuilder<EJB> {
                 getExpression(ejb));
     }
 
+    /**
+     * {@link EJB}アノテーションで指定されたセッションビーンを取得するOGNL式を返します。
+     * 
+     * @param ejb
+     *            {@link EJB}アノテーション
+     * @return {@link EJB}アノテーションで指定されたセッションビーンを取得するOGNL式
+     */
     protected String getExpression(final EJB ejb) {
         String name = ejb.beanName();
         if (StringUtil.isEmpty(name)) {

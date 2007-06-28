@@ -18,7 +18,10 @@ package org.seasar.framework.container.factory.aspect;
 import java.lang.reflect.Method;
 import java.util.Map;
 
+import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
+import javax.interceptor.AroundInvoke;
+import javax.interceptor.Interceptors;
 
 import org.aopalliance.intercept.MethodInterceptor;
 import org.seasar.framework.aop.impl.PointcutImpl;
@@ -35,8 +38,9 @@ import org.seasar.framework.ejb.impl.EJB3InterceptorSupportInterceptor;
 import org.seasar.framework.util.tiger.CollectionsUtil;
 
 /**
- * @author koichik
+ * EJB3の{@link TransactionAttribute}、{@link Interceptors}、{@link AroundInvoke}アノテーションを読み取り{@link AspectDef}を作成するコンポーネントの実装クラスです。
  * 
+ * @author koichik
  */
 public class EJB3AnnotationAspectDefBuilder extends AbstractAspectDefBuilder {
 
@@ -71,6 +75,14 @@ public class EJB3AnnotationAspectDefBuilder extends AbstractAspectDefBuilder {
         appendEJB3AroundInvokeAspect(componentDef, ejb3desc);
     }
 
+    /**
+     * {@link TransactionAttribute}アノテーションを読み取り{@link AspectDef アスペクト定義}を作成して{@link ComponentDef コンポーネント定義}に追加します。
+     * 
+     * @param componentDef
+     *            コンポーネント定義
+     * @param ejb3desc
+     *            {@link EJB3Desc}
+     */
     protected void appendEJB3TxAspect(final ComponentDef componentDef,
             final EJB3Desc ejb3desc) {
         if (!ejb3desc.isCMT()) {
@@ -88,6 +100,14 @@ public class EJB3AnnotationAspectDefBuilder extends AbstractAspectDefBuilder {
         }
     }
 
+    /**
+     * {@link Interceptors}アノテーションを読み取り{@link AspectDef アスペクト定義}を作成して{@link ComponentDef コンポーネント定義}に追加します。
+     * 
+     * @param componentDef
+     *            コンポーネント定義
+     * @param ejb3desc
+     *            {@link EJB3Desc}
+     */
     protected void appendEJB3InterceptorsAspect(
             final ComponentDef componentDef, final EJB3Desc ejb3desc) {
         for (final EJB3BusinessMethodDesc methodDesc : ejb3desc
@@ -108,6 +128,14 @@ public class EJB3AnnotationAspectDefBuilder extends AbstractAspectDefBuilder {
         }
     }
 
+    /**
+     * {@link AroundInvoke}アノテーションを読み取り{@link AspectDef アスペクト定義}を作成して{@link ComponentDef コンポーネント定義}に追加します。
+     * 
+     * @param componentDef
+     *            コンポーネント定義
+     * @param ejb3desc
+     *            {@link EJB3Desc}
+     */
     protected void appendEJB3AroundInvokeAspect(
             final ComponentDef componentDef, final EJB3Desc ejb3desc) {
         for (final Method aroundInvokeMethod : ejb3desc

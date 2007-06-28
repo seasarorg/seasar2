@@ -15,14 +15,24 @@
  */
 package org.seasar.framework.container.factory;
 
+import org.seasar.framework.container.AspectDef;
 import org.seasar.framework.container.ComponentDef;
 
 /**
- * @author koichik
+ * Tigerアノテーションを読み取り{@link AspectDef}を作成するインターフェースです。
  * 
+ * @author koichik
  */
 public interface AspectDefBuilder {
 
+    /**
+     * コンポーネントからTigerアノテーションを読み取り{@link AspectDef}を作成し、コンポーネント定義に追加します。
+     * 
+     * @param annotationHandler
+     *            このメソッドを呼び出しているアノテーションハンドラ
+     * @param componentDef
+     *            コンポーネント定義
+     */
     void appendAspectDef(AnnotationHandler annotationHandler,
             ComponentDef componentDef);
 

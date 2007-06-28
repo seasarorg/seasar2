@@ -35,12 +35,23 @@ import org.seasar.framework.container.impl.PropertyDefImpl;
 import org.seasar.framework.container.ognl.OgnlExpression;
 import org.seasar.framework.util.StringUtil;
 
+/**
+ * Tigerアノテーションを読み取り{@link PropertyDef}を作成するコンポーネントの実装クラスです。
+ * 
+ * @param <T>
+ *            アノテーションの型
+ * @author koichik
+ */
 public abstract class AbstractPropertyDefBuilder<T extends Annotation>
         implements PropertyDefBuilder {
 
+    /** アノテーションハンドラ */
     protected AnnotationHandler handler = AnnotationHandlerFactory
             .getAnnotationHandler();
 
+    /**
+     * インスタンスを構築します
+     */
     public AbstractPropertyDefBuilder() {
     }
 
@@ -70,15 +81,47 @@ public abstract class AbstractPropertyDefBuilder<T extends Annotation>
                 annotation);
     }
 
+    /**
+     * 参照するアノテーションの型を返します。
+     * 
+     * @return 参照するアノテーションの型
+     */
     protected abstract Class<T> getAnnotationType();
 
+    /**
+     * {@link PropertyDef}を作成して返します。
+     * 
+     * @param name
+     *            プロパティ名
+     * @param accessTypeDef
+     *            アクセスタイプ定義
+     * @param annotation
+     *            アノテーション
+     * @return {@link PropertyDef}
+     */
     protected abstract PropertyDef createPropertyDef(String name,
             AccessTypeDef accessTypeDef, T annotation);
 
+    /**
+     * {@link InstanceDefFactory#SINGLETON シングルトン}の{@link ComponentDef}を作成して返します。
+     * 
+     * @param componentClass
+     *            コンポーネントのクラス
+     * @return {@link ComponentDef}
+     */
     protected ComponentDef createComponentDef(final Class<?> componentClass) {
         return createComponentDef(componentClass, InstanceDefFactory.SINGLETON);
     }
 
+    /**
+     * 指定のインスタンス定義で{@link ComponentDef}を作成して返します。
+     * 
+     * @param componentClass
+     *            コンポーネントのクラス
+     * @param instanceDef
+     *            インスタンス定義
+     * @return {@link ComponentDef}
+     */
     protected ComponentDef createComponentDef(final Class<?> componentClass,
             final InstanceDef instanceDef) {
         final ComponentDef componentDef = handler.createComponentDef(
@@ -91,21 +134,65 @@ public abstract class AbstractPropertyDefBuilder<T extends Annotation>
         return componentDef;
     }
 
+    /**
+     * {@link PropertyDef}を作成して返します。
+     * 
+     * @param propertyName
+     *            プロパティ名
+     * @param accessTypeDef
+     *            アクセスタイプ定義
+     * @return {@link PropertyDef}
+     */
     protected PropertyDef createPropertyDef(final String propertyName,
             final AccessTypeDef accessTypeDef) {
         return createPropertyDef(propertyName, accessTypeDef, "");
     }
 
+    /**
+     * {@link PropertyDef}を作成して返します。
+     * 
+     * @param propertyName
+     *            プロパティ名
+     * @param accessTypeDef
+     *            アクセスタイプ定義
+     * @param expression
+     *            式
+     * @return {@link PropertyDef}
+     */
     protected PropertyDef createPropertyDef(final String propertyName,
             final AccessTypeDef accessTypeDef, final String expression) {
         return createPropertyDef(propertyName, accessTypeDef, expression, null);
     }
 
+    /**
+     * {@link PropertyDef}を作成して返します。
+     * 
+     * @param propertyName
+     *            プロパティ名
+     * @param accessTypeDef
+     *            アクセスタイプ定義
+     * @param child
+     *            {@link PropertyDefImpl#setChildComponentDef(ComponentDef)}に設定されるコンポーネント
+     * @return {@link PropertyDef}
+     */
     protected PropertyDef createPropertyDef(final String propertyName,
             final AccessTypeDef accessTypeDef, final ComponentDef child) {
         return createPropertyDef(propertyName, accessTypeDef, "", child);
     }
 
+    /**
+     * {@link PropertyDef}を作成して返します。
+     * 
+     * @param propertyName
+     *            プロパティ名
+     * @param accessTypeDef
+     *            アクセスタイプ定義
+     * @param expression
+     *            式
+     * @param child
+     *            {@link PropertyDefImpl#setChildComponentDef(ComponentDef)}に設定されるコンポーネント
+     * @return {@link PropertyDef}
+     */
     protected PropertyDef createPropertyDef(final String propertyName,
             final AccessTypeDef accessTypeDef, final String expression,
             final ComponentDef child) {
@@ -120,4 +207,5 @@ public abstract class AbstractPropertyDefBuilder<T extends Annotation>
         }
         return propertyDef;
     }
+
 }

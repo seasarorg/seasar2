@@ -37,20 +37,35 @@ import org.seasar.framework.util.MethodUtil;
 import org.seasar.framework.util.StringUtil;
 
 /**
- * @author koichik
+ * メタアノテーションで注釈されたアノテーションを読み取り{@link AspectDef}を作成するコンポーネントの実装クラスです。
  * 
+ * @author koichik
  */
 public class MetaAnnotationAspectDefBuilder extends AbstractAspectDefBuilder {
 
+    /** メタアノテーションの型 */
     protected Class<? extends Annotation> metaAnnotationType;
 
+    /** インターセプタの名前空間 */
     protected String interceptorNamespace;
 
+    /** インターセプタの接尾辞 */
     protected String interceptorSuffix;
 
+    /**
+     * インスタンスを構築します。
+     */
     public MetaAnnotationAspectDefBuilder() {
     }
 
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param metaAnnotationType
+     *            メタアノテーションの型
+     * @param interceptorSuffix
+     *            インターセプタの接尾辞
+     */
     public MetaAnnotationAspectDefBuilder(
             final Class<? extends Annotation> metaAnnotationType,
             final String interceptorSuffix) {
@@ -59,6 +74,16 @@ public class MetaAnnotationAspectDefBuilder extends AbstractAspectDefBuilder {
         this.interceptorSuffix = interceptorSuffix;
     }
 
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param metaAnnotationType
+     *            メタアノテーションの型
+     * @param interceptorNamespace
+     *            インターセプタの名前空間
+     * @param interceptorSuffix
+     *            インターセプタの接尾辞
+     */
     public MetaAnnotationAspectDefBuilder(
             final Class<? extends Annotation> metaAnnotationType,
             final String interceptorNamespace, final String interceptorSuffix) {
@@ -67,27 +92,60 @@ public class MetaAnnotationAspectDefBuilder extends AbstractAspectDefBuilder {
         this.interceptorSuffix = interceptorSuffix;
     }
 
+    /**
+     * メタアノテーションの型を返します。
+     * 
+     * @return メタアノテーションの型
+     */
     public Class<? extends Annotation> getMetaAnnotationType() {
         return metaAnnotationType;
     }
 
+    /**
+     * メタアノテーションの型を設定します。
+     * 
+     * @param metaAnnotationType
+     *            メタアノテーションの型
+     */
     public void setMetaAnnotationType(
             final Class<? extends Annotation> metaAnnotationType) {
         this.metaAnnotationType = metaAnnotationType;
     }
 
+    /**
+     * インターセプタの名前空間を返します。
+     * 
+     * @return インターセプタの名前空間
+     */
     public String getInterceptorNamespace() {
         return interceptorNamespace;
     }
 
+    /**
+     * インターセプタの名前空間を設定します。
+     * 
+     * @param interceptorNamespace
+     *            インターセプタの名前空間
+     */
     public void setInterceptorNamespace(final String interceptorNamespace) {
         this.interceptorNamespace = interceptorNamespace;
     }
 
+    /**
+     * インターセプタの接尾辞を返します。
+     * 
+     * @return インターセプタの接尾辞
+     */
     public String getInterceptorSuffix() {
         return interceptorSuffix;
     }
 
+    /**
+     * インターセプタの接尾辞を設定します。
+     * 
+     * @param interceptorSuffix
+     *            インターセプタの接尾辞
+     */
     public void setInterceptorSuffix(final String interceptorSuffix) {
         this.interceptorSuffix = interceptorSuffix;
     }
@@ -102,6 +160,14 @@ public class MetaAnnotationAspectDefBuilder extends AbstractAspectDefBuilder {
         processMethod(componentDef, componentClass);
     }
 
+    /**
+     * クラスに付けられたメタアノテーションで注釈されたアノテーションを読み取り{@link AspectDef アスペクト定義}を作成して{@link ComponentDef コンポーネント定義}に追加します。
+     * 
+     * @param componentDef
+     *            コンポーネント定義
+     * @param componentClass
+     *            コンポーネントの型
+     */
     protected void processClass(final ComponentDef componentDef,
             final Class<?> componentClass) {
         for (final Annotation annotation : componentClass.getAnnotations()) {
@@ -123,6 +189,14 @@ public class MetaAnnotationAspectDefBuilder extends AbstractAspectDefBuilder {
         }
     }
 
+    /**
+     * メソッドに付けられたメタアノテーションで注釈されたアノテーションを読み取り{@link AspectDef アスペクト定義}を作成して{@link ComponentDef コンポーネント定義}に追加します。
+     * 
+     * @param componentDef
+     *            コンポーネント定義
+     * @param componentClass
+     *            コンポーネントの型
+     */
     protected void processMethod(final ComponentDef componentDef,
             final Class<?> componentClass) {
         for (final Method method : componentClass.getMethods()) {
@@ -147,6 +221,13 @@ public class MetaAnnotationAspectDefBuilder extends AbstractAspectDefBuilder {
         }
     }
 
+    /**
+     * アノテーションに指定されているポイントカットを返します。
+     * 
+     * @param annotation
+     *            アノテーション
+     * @return アノテーションに指定されているポイントカット
+     */
     protected String getPointcut(final Annotation annotation) {
         for (final Method method : annotation.getClass().getMethods()) {
             if ("pointcut".equals(method.getName())
@@ -158,6 +239,13 @@ public class MetaAnnotationAspectDefBuilder extends AbstractAspectDefBuilder {
         return null;
     }
 
+    /**
+     * アノテーションに指定されているインターセプタのコンポーネント名を返します。
+     * 
+     * @param annotation
+     *            アノテーション
+     * @return インターセプタのコンポーネント名
+     */
     protected String getInterceptorName(final Annotation annotation) {
         final Class<? extends Annotation> annotationType = annotation
                 .annotationType();
@@ -177,10 +265,26 @@ public class MetaAnnotationAspectDefBuilder extends AbstractAspectDefBuilder {
         return interceptorName + suffix;
     }
 
+    /**
+     * 評価されると指定されたアノテーションで指定された名前のコンポーネント (インターセプタ) をコンテナから取得して返す{@link Expression}の実装です。
+     * <p>
+     * コンテナから取得したインターセプタのインスタンスにアノテーションの要素と名前の一致するプロパティがあれば、
+     * アノテーションの要素の値がインターセプタのプロパティにコピーされます。
+     * </p>
+     * 
+     * @author koichik
+     */
     public class ExpressionImpl implements Expression {
 
+        /** アノテーション */
         protected Annotation annotation;
 
+        /**
+         * インスタンスを構築します。
+         * 
+         * @param annotation
+         *            アノテーション
+         */
         public ExpressionImpl(final Annotation annotation) {
             this.annotation = annotation;
         }
@@ -208,6 +312,7 @@ public class MetaAnnotationAspectDefBuilder extends AbstractAspectDefBuilder {
             }
             return interceptor;
         }
+
     }
 
 }

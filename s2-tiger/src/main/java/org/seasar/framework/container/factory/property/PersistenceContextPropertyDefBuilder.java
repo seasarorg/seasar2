@@ -24,9 +24,17 @@ import org.seasar.framework.container.assembler.AccessTypeDefFactory;
 import org.seasar.framework.jpa.impl.TxScopedEntityManagerProxy;
 import org.seasar.framework.util.StringUtil;
 
+/**
+ * {@link PersistenceContext}アノテーションを読み取り{@link PropertyDef}を作成するコンポーネントの実装クラスです。
+ * 
+ * @author koichik
+ */
 public class PersistenceContextPropertyDefBuilder extends
         AbstractPropertyDefBuilder<PersistenceContext> {
 
+    /**
+     * インスタンスを構築します。
+     */
     public PersistenceContextPropertyDefBuilder() {
     }
 

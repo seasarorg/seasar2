@@ -24,8 +24,9 @@ import org.seasar.framework.container.impl.InterTypeDefImpl;
 import org.seasar.framework.container.ognl.OgnlExpression;
 
 /**
- * @author koichik
+ * {@link InterType}アノテーションを読み取り{@link InterTypeDef}を作成するコンポーネントの実装クラスです。
  * 
+ * @author koichik
  */
 public class S2IntertypeDefBuilder implements IntertypeDefBuilder {
 

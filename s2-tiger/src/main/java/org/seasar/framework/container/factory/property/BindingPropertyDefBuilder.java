@@ -20,9 +20,17 @@ import org.seasar.framework.container.PropertyDef;
 import org.seasar.framework.container.annotation.tiger.Binding;
 import org.seasar.framework.container.assembler.BindingTypeDefFactory;
 
+/**
+ * {@link Binding}アノテーションを読み取り{@link PropertyDef}を作成するコンポーネントの実装クラスです。
+ * 
+ * @author koichik
+ */
 public class BindingPropertyDefBuilder extends
         AbstractPropertyDefBuilder<Binding> {
 
+    /**
+     * インスタンスを構築します。
+     */
     public BindingPropertyDefBuilder() {
     }
 

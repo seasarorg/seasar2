@@ -15,6 +15,9 @@
  */
 package org.seasar.framework.container.factory.component;
 
+import javax.ejb.Stateful;
+import javax.ejb.Stateless;
+
 import org.seasar.framework.container.AutoBindingDef;
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.InstanceDef;
@@ -27,8 +30,16 @@ import org.seasar.framework.ejb.EJB3Desc;
 import org.seasar.framework.ejb.EJB3DescFactory;
 import org.seasar.framework.util.StringUtil;
 
+/**
+ * EJB3の{@link Stateless}、{@link Stateful}アノテーションを読み取り{@link ComponentDef}を作成するコンポーネントの実装クラスです。
+ * 
+ * @author koichik
+ */
 public class EJB3ComponentDefBuilder implements ComponentDefBuilder {
 
+    /**
+     * インスタンスを構築します。
+     */
     public EJB3ComponentDefBuilder() {
     }
 
@@ -52,11 +63,31 @@ public class EJB3ComponentDefBuilder implements ComponentDefBuilder {
         return componentDef;
     }
 
+    /**
+     * {@link InstanceDef インスタンス定義}を返します。
+     * <p>
+     * デフォルトのインスタンス定義が<code>null</code>の場合は{@link InstanceDefFactory#PROTOTYPE}を返します。
+     * </p>
+     * 
+     * @param defaultInstanceDef
+     *            デフォルトの{@link InstanceDef インスタンス定義}
+     * @return {@link InstanceDef インスタンス定義}
+     */
     protected InstanceDef getInstanceDef(final InstanceDef defaultInstanceDef) {
         return defaultInstanceDef != null ? defaultInstanceDef
                 : InstanceDefFactory.PROTOTYPE;
     }
 
+    /**
+     * {@link AutoBindingDef 自動バインディング定義}を返します。
+     * <p>
+     * デフォルトのバインディング定義が<code>null</code>の場合は{@link AutoBindingDefFactory#SEMIAUTO}を返します。
+     * </p>
+     * 
+     * @param defaultAutoBindingDef
+     *            デフォルトの{@link AutoBindingDef 自動バインディング定義}
+     * @return {@link AutoBindingDef 自動バインディング定義}
+     */
     protected AutoBindingDef getAutoBindingDef(
             final AutoBindingDef defaultAutoBindingDef) {
         return defaultAutoBindingDef != null ? defaultAutoBindingDef

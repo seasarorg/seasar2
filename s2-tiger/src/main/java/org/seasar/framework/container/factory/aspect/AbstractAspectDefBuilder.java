@@ -24,11 +24,22 @@ import org.seasar.framework.container.factory.AspectDefFactory;
 import org.seasar.framework.exception.EmptyRuntimeException;
 
 /**
- * @author koichik
+ * Tigerアノテーションを読み取り{@link AspectDef}を作成するコンポーネントの実装クラスです。
  * 
+ * @author koichik
  */
 public abstract class AbstractAspectDefBuilder implements AspectDefBuilder {
 
+    /**
+     * 指定のインターセプタとポイントカットを持つ{@link AspectDef アスペクト定義}を作成して{@link ComponentDef コンポーネント定義に追加します。
+     * 
+     * @param componentDef
+     *            コンポーネント定義
+     * @param interceptor
+     *            インターセプタを示すOGNL式
+     * @param pointcut
+     *            ポイントカットを示す文字列 (カンマ区切りの正規表現)
+     */
     protected void appendAspect(final ComponentDef componentDef,
             final String interceptor, final String pointcut) {
         if (interceptor == null) {
@@ -39,6 +50,16 @@ public abstract class AbstractAspectDefBuilder implements AspectDefBuilder {
         componentDef.addAspectDef(aspectDef);
     }
 
+    /**
+     * 指定のインターセプタを指定のメソッドに適用する{@link AspectDef アスペクト定義}を作成して{@link ComponentDef コンポーネント定義に追加します。
+     * 
+     * @param componentDef
+     *            コンポーネント定義
+     * @param interceptor
+     *            インターセプタを示すOGNL式
+     * @param pointcut
+     *            インターセプタを適用するメソッド
+     */
     protected void appendAspect(final ComponentDef componentDef,
             final String interceptor, final Method pointcut) {
         if (interceptor == null) {

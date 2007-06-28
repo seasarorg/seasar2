@@ -28,8 +28,16 @@ import org.seasar.framework.container.factory.ComponentDefBuilder;
 import org.seasar.framework.container.impl.ComponentDefImpl;
 import org.seasar.framework.util.StringUtil;
 
+/**
+ * {@link Component}アノテーションを読み取り{@link ComponentDef}を作成するコンポーネントの実装クラスです。
+ * 
+ * @author koichik
+ */
 public class PojoComponentDefBuilder implements ComponentDefBuilder {
 
+    /**
+     * インスタンスを構築します。
+     */
     public PojoComponentDefBuilder() {
     }
 
@@ -57,6 +65,18 @@ public class PojoComponentDefBuilder implements ComponentDefBuilder {
         return componentDef;
     }
 
+    /**
+     * {@link InstanceDef インスタンス定義}を返します。
+     * <p>
+     * {@link Component#instance()}が指定されていればその値を返します。 指定されていない場合はデフォルト値を返します。
+     * </p>
+     * 
+     * @param component
+     *            {@link Component}アノテーション
+     * @param defaultInstanceDef
+     *            デフォルトの{@link InstanceDef インスタンス定義}
+     * @return {@link InstanceDef インスタンス定義}
+     */
     protected InstanceDef getInstanceDef(final Component component,
             final InstanceDef defaultInstanceDef) {
         final InstanceType instanceType = component.instance();
@@ -66,6 +86,19 @@ public class PojoComponentDefBuilder implements ComponentDefBuilder {
         return InstanceDefFactory.getInstanceDef(instanceType.getName());
     }
 
+    /**
+     * {@link AutoBindingDef 自動バインディング定義}を返します。
+     * <p>
+     * {@link Component#autoBinding()}が指定されていればその値を返します。
+     * 指定されていない場合はデフォルト値を返します。
+     * </p>
+     * 
+     * @param component
+     *            {@link Component}アノテーション
+     * @param defaultAutoBindingDef
+     *            デフォルトの{@link AutoBindingDef 自動バインディング定義}
+     * @return {@link AutoBindingDef 自動バインディング定義}
+     */
     protected AutoBindingDef getAutoBindingDef(final Component component,
             final AutoBindingDef defaultAutoBindingDef) {
         final AutoBindingType autoBindingType = component.autoBinding();
@@ -76,4 +109,5 @@ public class PojoComponentDefBuilder implements ComponentDefBuilder {
         return AutoBindingDefFactory.getAutoBindingDef(autoBindingType
                 .getName());
     }
+
 }

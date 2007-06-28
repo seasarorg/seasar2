@@ -18,13 +18,15 @@ package org.seasar.framework.container.factory.aspect;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
+import org.seasar.framework.container.AspectDef;
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.annotation.tiger.Aspect;
 import org.seasar.framework.container.factory.AnnotationHandler;
 
 /**
- * @author koichik
+ * {@link Aspect}アノテーションを読み取り{@link AspectDef}を作成するコンポーネントの実装クラスです。
  * 
+ * @author koichik
  */
 public class AspectAnnotationAspectDefBuilder extends AbstractAspectDefBuilder {
 
@@ -34,6 +36,12 @@ public class AspectAnnotationAspectDefBuilder extends AbstractAspectDefBuilder {
         processMethod(componentDef);
     }
 
+    /**
+     * クラスに付けられた{@link Aspect}アノテーションを読み取り{@link AspectDef アスペクト定義}を作成して{@link ComponentDef コンポーネント定義}に追加します。
+     * 
+     * @param componentDef
+     *            コンポーネント定義
+     */
     protected void processClass(final ComponentDef componentDef) {
         final Class<?> componentClass = componentDef.getComponentClass();
         if (componentClass == null) {
@@ -48,6 +56,12 @@ public class AspectAnnotationAspectDefBuilder extends AbstractAspectDefBuilder {
         }
     }
 
+    /**
+     * メソッドに付けられた{@link Aspect}アノテーションを読み取り{@link AspectDef アスペクト定義}を作成して{@link ComponentDef コンポーネント定義}に追加します。
+     * 
+     * @param componentDef
+     *            コンポーネント定義
+     */
     protected void processMethod(final ComponentDef componentDef) {
         final Class<?> componentClass = componentDef.getComponentClass();
         if (componentClass == null) {

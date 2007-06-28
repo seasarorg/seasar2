@@ -19,14 +19,16 @@ import java.lang.reflect.Method;
 
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.IllegalInitMethodAnnotationRuntimeException;
+import org.seasar.framework.container.InitMethodDef;
 import org.seasar.framework.container.annotation.tiger.InitMethod;
 import org.seasar.framework.container.factory.AnnotationHandler;
 import org.seasar.framework.container.factory.InitMethodDefBuilder;
 import org.seasar.framework.container.impl.InitMethodDefImpl;
 
 /**
- * @author koichik
+ * {@link InitMethod}アノテーションを読み取り{@link InitMethodDef}を作成するコンポーネントの実装クラスです。
  * 
+ * @author koichik
  */
 public class S2InitMethodDefBuilder implements InitMethodDefBuilder {
 

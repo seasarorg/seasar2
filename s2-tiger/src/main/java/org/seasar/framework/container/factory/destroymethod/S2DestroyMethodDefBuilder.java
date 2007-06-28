@@ -18,6 +18,7 @@ package org.seasar.framework.container.factory.destroymethod;
 import java.lang.reflect.Method;
 
 import org.seasar.framework.container.ComponentDef;
+import org.seasar.framework.container.DestroyMethodDef;
 import org.seasar.framework.container.IllegalDestroyMethodAnnotationRuntimeException;
 import org.seasar.framework.container.annotation.tiger.DestroyMethod;
 import org.seasar.framework.container.factory.AnnotationHandler;
@@ -25,8 +26,9 @@ import org.seasar.framework.container.factory.DestroyMethodDefBuilder;
 import org.seasar.framework.container.impl.DestroyMethodDefImpl;
 
 /**
- * @author koichik
+ * {@link DestroyMethod}アノテーションを読み取り{@link DestroyMethodDef}を作成するコンポーネントの実装クラスです。
  * 
+ * @author koichik
  */
 public class S2DestroyMethodDefBuilder implements DestroyMethodDefBuilder {
 

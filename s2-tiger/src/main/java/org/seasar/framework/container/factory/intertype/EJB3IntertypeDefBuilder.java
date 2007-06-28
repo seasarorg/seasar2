@@ -18,7 +18,10 @@ package org.seasar.framework.container.factory.intertype;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.interceptor.Interceptors;
+
 import org.seasar.framework.container.ComponentDef;
+import org.seasar.framework.container.InterTypeDef;
 import org.seasar.framework.container.PropertyDef;
 import org.seasar.framework.container.factory.AnnotationHandler;
 import org.seasar.framework.container.factory.IntertypeDefBuilder;
@@ -31,8 +34,9 @@ import org.seasar.framework.ejb.EJB3InterceptorDesc;
 import org.seasar.framework.ejb.impl.EJB3InterceptorSupportInterType;
 
 /**
- * @author koichik
+ * {@link EJB3InterceptorSupportInterType EJB3をサポートするインタータイプ}の{@link InterTypeDef}を作成するコンポーネントの実装クラスです。
  * 
+ * @author koichik
  */
 public class EJB3IntertypeDefBuilder implements IntertypeDefBuilder {
 
@@ -57,6 +61,13 @@ public class EJB3IntertypeDefBuilder implements IntertypeDefBuilder {
         componentDef.addInterTypeDef(new InterTypeDefImpl(interType));
     }
 
+    /**
+     * {@link Interceptors}アノテーションで指定されたインターセプタクラスの配列を返します。
+     * 
+     * @param ejb3desc
+     *            {@link EJB3Desc}
+     * @return {@link Interceptors}アノテーションで指定されたインターセプタクラスの配列
+     */
     protected Set<Class<?>> getInterceptorClasses(final EJB3Desc ejb3desc) {
         final Set<Class<?>> interceptorClasses = new HashSet<Class<?>>();
         for (final EJB3InterceptorDesc interceptorDesc : ejb3desc
@@ -73,6 +84,16 @@ public class EJB3IntertypeDefBuilder implements IntertypeDefBuilder {
         return interceptorClasses;
     }
 
+    /**
+     * {@link EJB3InterceptorSupportInterType}が追加するプロパティに、 {@link Interceptors}アノテーションで指定されたインターセプタを設定する、
+     * {@link PropertyDef}を作成して返します。
+     * 
+     * @param annotationHandler
+     *            アノテーションハンドラ
+     * @param interceptorClass
+     *            {@link Interceptors}アノテーションで指定されたインターセプタクラス
+     * @return {@link PropertyDef}
+     */
     protected PropertyDef createPropertyDef(
             final AnnotationHandler annotationHandler,
             final Class<?> interceptorClass) {
@@ -83,6 +104,16 @@ public class EJB3IntertypeDefBuilder implements IntertypeDefBuilder {
         return propDef;
     }
 
+    /**
+     * {@link Interceptors}アノテーションで指定されたインターセプタをコンポーネントとして登録する
+     * {@link ComponentDef}を作成して返します。
+     * 
+     * @param annotationHandler
+     *            アノテーションハンドラ
+     * @param interceptorClass
+     *            {@link Interceptors}アノテーションで指定されたインターセプタクラス
+     * @return {@link ComponentDef}
+     */
     protected ComponentDef createInterceptorComonentDef(
             final AnnotationHandler annotationHandler,
             final Class<?> interceptorClass) {

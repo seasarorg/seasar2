@@ -19,8 +19,28 @@ import org.seasar.framework.container.AutoBindingDef;
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.InstanceDef;
 
+/**
+ * Tigerアノテーションを読み取り、{@link ComponentDef}を作成するインターフェースです。
+ * 
+ * @author koichik
+ */
 public interface ComponentDefBuilder {
 
+    /**
+     * コンポーネント定義を作成して返します。
+     * 
+     * @param annotationHandler
+     *            このメソッドを呼び出しているアノテーションハンドラ
+     * @param componentClass
+     *            コンポーネントのクラス
+     * @param defaultInstanceDef
+     *            デフォルトの{@link InstanceDef}
+     * @param defaultAutoBindingDef
+     *            デフォルトの{@link AutoBindingDef}
+     * @param defaultExternalBinding
+     *            デフォルトの外部バインディグ
+     * @return コンポーネント定義
+     */
     ComponentDef createComponentDef(AnnotationHandler annotationHandler,
             Class<?> componentClass, InstanceDef defaultInstanceDef,
             AutoBindingDef defaultAutoBindingDef, boolean defaultExternalBinding);

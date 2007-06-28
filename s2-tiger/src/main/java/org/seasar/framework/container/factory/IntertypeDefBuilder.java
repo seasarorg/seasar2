@@ -16,13 +16,23 @@
 package org.seasar.framework.container.factory;
 
 import org.seasar.framework.container.ComponentDef;
+import org.seasar.framework.container.InterTypeDef;
 
 /**
- * @author koichik
+ * Tigerアノテーションを読み取り{@link InterTypeDef}を作成するインターフェースです。
  * 
+ * @author koichik
  */
 public interface IntertypeDefBuilder {
 
+    /**
+     * コンポーネントからTigerアノテーションを読み取り{@link InterTypeDef}を作成し、コンポーネント定義に追加します。
+     * 
+     * @param annotationHandler
+     *            このメソッドを呼び出しているアノテーションハンドラ
+     * @param componentDef
+     *            コンポーネント定義
+     */
     void appendIntertypeDef(AnnotationHandler annotationHandler,
             ComponentDef componentDef);
 

@@ -10,27 +10,27 @@
  * </tr>
  * <tr>
  * <td><code>&lt;component&gt;</code></td>
- * <td>{@link Component}</td>
+ * <td>{@link org.seasar.framework.container.annotation.tiger.Component}</td>
  * </tr>
  * <tr>
  * <td><code>&lt;property&gt;</code></td>
- * <td>{@link Binding}</td>
+ * <td>{@link org.seasar.framework.container.annotation.tiger.Binding}</td>
  * </tr>
  * <tr>
  * <td><code>&lt;initMethod&gt;</code></td>
- * <td>{@link InitMethod}</td>
+ * <td>{@link org.seasar.framework.container.annotation.tiger.InitMethod}</td>
  * </tr>
  * <tr>
  * <td><code>&lt;destroyMethod&gt;</code></td>
- * <td>{@link DestroyMethod}</td>
+ * <td>{@link org.seasar.framework.container.annotation.tiger.DestroyMethod}</td>
  * </tr>
  * <tr>
  * <td><code>&lt;aspect&gt;</code></td>
- * <td>{@link Aspect}</td>
+ * <td>{@link org.seasar.framework.container.annotation.tiger.Aspect}</td>
  * </tr>
  * <tr>
  * <td><code>&lt;interType&gt;</code></td>
- * <td>{@link InterType}</td>
+ * <td>{@link org.seasar.framework.container.annotation.tiger.InterType}</td>
  * </tr>
  * </table>
  */
