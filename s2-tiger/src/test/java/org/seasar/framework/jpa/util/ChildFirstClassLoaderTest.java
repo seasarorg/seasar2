@@ -31,6 +31,9 @@ public class ChildFirstClassLoaderTest extends TestCase {
 
     private String className = getClass().getPackage().getName() + ".Hoge";
 
+    /**
+     * @throws Exception
+     */
     public void testLoadClass() throws Exception {
         ChildFirstClassLoader loader = new ChildFirstClassLoader();
 
@@ -51,7 +54,10 @@ public class ChildFirstClassLoaderTest extends TestCase {
         }
     }
 
-    public void testIsIncludedClass() {
+    /**
+     * @throws Exception
+     */
+    public void testIsIncludedClass() throws Exception {
         ChildFirstClassLoader loader = new ChildFirstClassLoader();
         assertFalse(loader.isIncludedClass("javax.persistence.EntityManager"));
         assertTrue(loader.isIncludedClass("org.seasar.framework.util.Foo"));
@@ -70,6 +76,9 @@ public class ChildFirstClassLoaderTest extends TestCase {
         assertFalse(loader.isIncludedClass(S2Container.class.getName()));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testClassLoaderEvent() throws Exception {
         ChildFirstClassLoader loader = new ChildFirstClassLoader();
         final List<String> order = new ArrayList<String>();
@@ -90,12 +99,21 @@ public class ChildFirstClassLoaderTest extends TestCase {
         assertEquals(prefix + "Foo", order.get(2));
     }
 
+    /**
+     * @author taedium
+     */
     public static class Foo extends Bar {
     }
 
+    /**
+     * @author taedium
+     */
     public static class Bar extends Baz {
     }
 
+    /**
+     * @author taedium
+     */
     public static class Baz {
     }
 

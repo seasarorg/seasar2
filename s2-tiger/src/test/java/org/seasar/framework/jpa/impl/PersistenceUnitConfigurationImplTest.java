@@ -53,49 +53,76 @@ public class PersistenceUnitConfigurationImplTest extends S2TigerTestCase {
         super.setUp();
     }
 
+    /**
+     * 
+     */
     public void recordAddMappingFile() {
-        expect(unitManager.getAbstractPersistenceUnitName("hoge.xml")).andReturn(
-                "persistenceUnit");
+        expect(unitManager.getAbstractPersistenceUnitName("hoge.xml"))
+                .andReturn("persistenceUnit");
         resourceHandler.processResource("hoge.xml", null);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAddMappingFile() throws Exception {
         cfg.setPersistenceUnitManager(unitManager);
         cfg.addMappingFile("hoge.xml");
         cfg.detectMappingFiles("persistenceUnit", resourceHandler);
     }
 
+    /**
+     * 
+     */
     public void recordAddPersistenceClass() {
-        expect(unitManager.getAbstractPersistenceUnitName(Hoge.class)).andReturn(
-                "persistenceUnit");
+        expect(unitManager.getAbstractPersistenceUnitName(Hoge.class))
+                .andReturn("persistenceUnit");
         classHandler.processClass("org.seasar.framework.jpa.impl",
                 "PersistenceUnitConfigurationImplTest$Hoge");
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAddPersistenceClass() throws Exception {
         cfg.setPersistenceUnitManager(unitManager);
         cfg.addPersistenceClass(Hoge.class);
         cfg.detectPersistenceClasses("persistenceUnit", classHandler);
     }
 
+    /**
+     * 
+     */
     public void recordAddMappingFileAutoDetector() {
         resourceDetector.detect(isA(ResourceHandler.class));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAddMappingFileAutoDetector() throws Exception {
         cfg.addMappingFileAutoDetector(resourceDetector);
         cfg.detectMappingFiles("persistenceUnit", resourceHandler);
     }
 
+    /**
+     * 
+     */
     public void recordAddPersistenceClassAutoDetector() {
         classDetector.detect(isA(ClassHandler.class));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAddPersistenceClassAutoDetector() throws Exception {
         cfg.addPersistenceClassAutoDetector(classDetector);
         cfg.detectPersistenceClasses("persistenceUnit", classHandler);
     }
 
+    /**
+     * @author taedium
+     */
     public static class Hoge {
     }
 

@@ -15,8 +15,6 @@
  */
 package org.seasar.framework.jpa.impl;
 
-import static org.easymock.EasyMock.expect;
-
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -30,6 +28,8 @@ import org.seasar.extension.datasource.impl.DataSourceFactoryImpl;
 import org.seasar.framework.exception.EmptyRuntimeException;
 import org.seasar.framework.jpa.EntityManagerProvider;
 import org.seasar.framework.unit.S2TigerTestCase;
+
+import static org.easymock.EasyMock.*;
 
 /**
  * @author koichik
@@ -63,9 +63,13 @@ public class SelectableEntityManagerProxyTest extends S2TigerTestCase {
         entityTransaction = createStrictMock(EntityTransaction.class);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAll() throws Exception {
         dataSourceFactory.setSelectableDataSourceName("foo");
         new Subsequence() {
+
             @Override
             public void replay() throws Exception {
                 proxy.clear();
@@ -141,6 +145,7 @@ public class SelectableEntityManagerProxyTest extends S2TigerTestCase {
 
         dataSourceFactory.setSelectableDataSourceName("bar");
         new Subsequence() {
+
             @Override
             public void replay() throws Exception {
                 proxy.clear();
@@ -215,6 +220,9 @@ public class SelectableEntityManagerProxyTest extends S2TigerTestCase {
         }.doTest();
     }
 
+    /**
+     * @throws Exception
+     */
     public void testNotSelected() throws Exception {
         try {
             proxy.close();
@@ -223,22 +231,41 @@ public class SelectableEntityManagerProxyTest extends S2TigerTestCase {
         }
     }
 
+    /**
+     * @author taedium
+     */
     @Entity
     public static class Foo {
+
         @Id
         private int id;
 
+        /**
+         * 
+         */
         public Foo() {
         }
 
+        /**
+         * 
+         * @param id
+         */
         public Foo(int id) {
             this.id = id;
         }
 
+        /**
+         * 
+         * @return
+         */
         public int getId() {
             return id;
         }
 
+        /**
+         * 
+         * @param id
+         */
         public void setId(int id) {
             this.id = id;
         }

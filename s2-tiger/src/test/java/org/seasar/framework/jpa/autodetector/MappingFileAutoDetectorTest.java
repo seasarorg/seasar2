@@ -36,6 +36,9 @@ public class MappingFileAutoDetectorTest extends S2TestCase {
         include("MappingFileAutoDetectorTest.dicon");
     }
 
+    /**
+     * @throws Exception
+     */
     public void testDetect() throws Exception {
         final List<String> paths = new ArrayList<String>();
         detector.detect(new ResourceHandler() {

@@ -40,10 +40,14 @@ public class PersistenceClassAutoDetectorTest extends S2TestCase {
         include("PersistenceClassAutoDetectorTest.dicon");
     }
 
+    /**
+     * @throws Exception
+     */
     @SuppressWarnings("unchecked")
     public void testDetect() throws Exception {
         final List<Class> classes = new ArrayList<Class>();
         detector.detect(new ClassTraversal.ClassHandler() {
+
             public void processClass(String packageName, String shortClassName) {
                 String name = ClassUtil.concatName(packageName, shortClassName);
                 Class clazz = ReflectionUtil.forNameNoException(name);

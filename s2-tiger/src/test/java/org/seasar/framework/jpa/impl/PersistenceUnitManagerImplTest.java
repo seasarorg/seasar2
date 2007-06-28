@@ -34,12 +34,19 @@ public class PersistenceUnitManagerImplTest extends S2TigerTestCase {
         include(getClass().getName().replace('.', '/') + ".dicon");
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetPersistenceUnitNameByClass() throws Exception {
-        assertEquals("persistenceUnit", pum.getAbstractPersistenceUnitName(Foo.class));
+        assertEquals("persistenceUnit", pum
+                .getAbstractPersistenceUnitName(Foo.class));
         assertEquals("aaaPersistenceUnit", pum
                 .getAbstractPersistenceUnitName(Bar.class));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetPersistenceUnitNameByMappingFile() throws Exception {
         assertEquals(
                 "persistenceUnit",
