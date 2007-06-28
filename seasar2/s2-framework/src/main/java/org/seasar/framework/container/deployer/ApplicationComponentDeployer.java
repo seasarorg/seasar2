@@ -48,18 +48,11 @@ public class ApplicationComponentDeployer extends AbstractComponentDeployer {
         }
         Map applicationMap = extCtx.getApplicationMap();
         String componentName = getComponentName();
-        Object old = applicationMap.get(componentName);
-        if (old != null && old.getClass().equals(cd.getConcreteClass())) {
-            return old;
+        Object component = applicationMap.get(componentName);
+        if (component == null) {
+            component = getConstructorAssembler().assemble();
+            applicationMap.put(componentName, component);
         }
-        Object component = getConstructorAssembler().assemble();
-        if (old != null) {
-            copyProperties(old, component);
-        } else {
-            getPropertyAssembler().assemble(component);
-            getInitMethodAssembler().assemble(component);
-        }
-        applicationMap.put(componentName, component);
         return component;
     }
 

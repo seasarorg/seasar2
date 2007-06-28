@@ -15,65 +15,58 @@
  */
 package org.seasar.extension.component.impl;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-
 import org.seasar.extension.component.ComponentInvoker;
 import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.factory.BeanDescFactory;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.hotdeploy.HotdeployUtil;
-import org.seasar.framework.exception.ClassNotFoundRuntimeException;
-import org.seasar.framework.exception.IORuntimeException;
 import org.seasar.framework.exception.InvocationTargetRuntimeException;
 
+/**
+ * 指定されたコンポーネントのメソッドを呼び出すコンポーネントの実装です。
+ * <p>
+ * このクラスはS2RMIなどから利用されることを意図しています。
+ * </p>
+ * 
+ * @author Kenichiro Murata
+ */
 public class ComponentInvokerImpl implements ComponentInvoker {
 
     private S2Container container;
 
+    /**
+     * インスタンスを構築します。
+     */
     public ComponentInvokerImpl() {
     }
 
-    public Object invoke(String componentName, String methodName, Object[] args)
-            throws Throwable {
+    public Object invoke(final String componentName, final String methodName,
+            final Object[] args) throws Throwable {
 
-        Object component = container.getRoot().getComponent(componentName);
-        BeanDesc beanDesc = BeanDescFactory.getBeanDesc(component.getClass());
+        final Object component = container.getRoot()
+                .getComponent(componentName);
+        final BeanDesc beanDesc = BeanDescFactory.getBeanDesc(component
+                .getClass());
         try {
             if (HotdeployUtil.isHotdeploy()) {
-                redeserialize(args);
+                final Object[] newArgs = (Object[]) HotdeployUtil
+                        .rebuildValue(args);
+                return beanDesc.invoke(component, methodName, newArgs);
             }
             return beanDesc.invoke(component, methodName, args);
-        } catch (InvocationTargetRuntimeException e) {
+        } catch (final InvocationTargetRuntimeException e) {
             throw e.getCause();
         }
     }
 
-    public void setContainer(S2Container container) {
+    /**
+     * S2コンテナを設定します。
+     * 
+     * @param container
+     *            S2コンテナ
+     */
+    public void setContainer(final S2Container container) {
         this.container = container;
     }
 
-    protected void redeserialize(final Object[] args) {
-        try {
-            for (int i = 0; i < args.length; ++i) {
-                final ByteArrayOutputStream baos = new ByteArrayOutputStream(
-                        1024);
-                final ObjectOutputStream oos = new ObjectOutputStream(baos);
-                oos.writeObject(args[i]);
-                oos.close();
-
-                final ByteArrayInputStream bais = new ByteArrayInputStream(baos
-                        .toByteArray());
-                final ObjectInputStream ois = new ObjectInputStream(bais);
-                args[i] = ois.readObject();
-            }
-        } catch (final IOException e) {
-            throw new IORuntimeException(e);
-        } catch (final ClassNotFoundException e) {
-            throw new ClassNotFoundRuntimeException(e);
-        }
-    }
 }

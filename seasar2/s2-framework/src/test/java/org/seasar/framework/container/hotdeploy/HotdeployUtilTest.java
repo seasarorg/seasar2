@@ -22,6 +22,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.seasar.framework.container.impl.S2ContainerBehavior;
+import org.seasar.framework.convention.impl.NamingConventionImpl;
 import org.seasar.framework.unit.S2FrameworkTestCase;
 
 /**
@@ -219,9 +220,41 @@ public class HotdeployUtilTest extends S2FrameworkTestCase {
     }
 
     /**
+     * @throws Exception
+     */
+    public void testPerformance() throws Exception {
+        int n = 1000;
+        Bar[] src = new Bar[n];
+        for (int i = 0; i < n; ++i) {
+            src[i] = new Bar();
+        }
+        ClassLoader originalLoader = Thread.currentThread()
+                .getContextClassLoader();
+        NamingConventionImpl convention = new NamingConventionImpl();
+        for (int i = 0; i < 5; ++i) {
+            HotdeployClassLoader hotLoader = new HotdeployClassLoader(
+                    originalLoader, convention);
+            Thread.currentThread().setContextClassLoader(hotLoader);
+            try {
+                long t1 = System.currentTimeMillis();
+                Bar[] dest = (Bar[]) HotdeployUtil.rebuildValueInternal(src);
+                long t2 = System.currentTimeMillis();
+                System.out.println("" + (t2 - t1) + "ms");
+                assertEquals(n, dest.length);
+                assertEquals("A", dest[0].s01);
+            } finally {
+                Thread.currentThread().setContextClassLoader(originalLoader);
+            }
+        }
+    }
+
+    /**
      * 
      */
     public static class Hoge implements Serializable {
+
+        private static final long serialVersionUID = 1L;
+
         private String aaa;
 
         private Hoge hoge;
@@ -278,6 +311,8 @@ public class HotdeployUtilTest extends S2FrameworkTestCase {
      */
     public static class Foo implements Serializable {
 
+        private static final long serialVersionUID = 1L;
+
         private int num;
 
         /**
@@ -295,4 +330,100 @@ public class HotdeployUtilTest extends S2FrameworkTestCase {
         }
 
     }
+
+    /**
+     * 
+     */
+    public static class Bar implements Serializable {
+
+        private static final long serialVersionUID = 1L;
+
+        /** */
+        public String s01;
+
+        /** */
+        public String s02;
+
+        /** */
+        public String s03;
+
+        /** */
+        public String s04;
+
+        /** */
+        public String s05;
+
+        /** */
+        public String s06;
+
+        /** */
+        public String s07;
+
+        /** */
+        public String s08;
+
+        /** */
+        public String s09;
+
+        /** */
+        public String s10;
+
+        /** */
+        public String s11;
+
+        /** */
+        public String s12;
+
+        /** */
+        public String s13;
+
+        /** */
+        public String s14;
+
+        /** */
+        public String s15;
+
+        /** */
+        public String s16;
+
+        /** */
+        public String s17;
+
+        /** */
+        public String s18;
+
+        /** */
+        public String s19;
+
+        /** */
+        public String s20;
+
+        /**
+         * 
+         */
+        public Bar() {
+            s01 = "A";
+            s02 = "B";
+            s03 = "C";
+            s04 = "D";
+            s05 = "E";
+            s06 = "F";
+            s07 = "G";
+            s08 = "H";
+            s09 = "I";
+            s10 = "J";
+            s11 = "K";
+            s12 = "L";
+            s13 = "M";
+            s14 = "N";
+            s15 = "O";
+            s16 = "P";
+            s17 = "Q";
+            s18 = "R";
+            s19 = "S";
+            s20 = "T";
+        }
+
+    }
+
 }

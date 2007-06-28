@@ -51,34 +51,14 @@ public class SessionComponentDeployerTest extends TestCase {
         assertSame("1", foo, request.getSession().getAttribute("foo"));
         assertSame("2", foo, deployer.deploy());
     }
-    
-    /**
-     * @throws Exception
-     */
-    public void testCopyProperties() throws Exception {
-        MockServletContextImpl ctx = new MockServletContextImpl("s2jsf-example");
-        HttpServletRequest request = ctx.createRequest("/hello.html");
-        S2Container container = new S2ContainerImpl();
-        ExternalContext extCtx = new HttpServletExternalContext();
-        extCtx.setRequest(request);
-        container.setExternalContext(extCtx);
-        ComponentDef cd = new ComponentDefImpl(Foo.class, "foo");
-        container.register(cd);
-        Foo2 foo2 = new Foo2();
-        foo2.setHoge("xxx");
-        request.getSession().setAttribute("foo", foo2);
-        ComponentDeployer deployer = new SessionComponentDeployer(cd);
-        Foo foo = (Foo) deployer.deploy();
-        assertEquals("xxx", foo.getHoge());
-    }
 
     /**
-     *
+     * 
      */
     public static class Foo {
 
         private String hoge;
-        
+
         /**
          * 
          */
@@ -99,26 +79,5 @@ public class SessionComponentDeployerTest extends TestCase {
             this.hoge = hoge;
         }
     }
-    
-    /**
-     *
-     */
-    public static class Foo2 {
 
-        private String hoge;
-
-        /**
-         * @return
-         */
-        public String getHoge() {
-            return hoge;
-        }
-
-        /**
-         * @param hoge
-         */
-        public void setHoge(String hoge) {
-            this.hoge = hoge;
-        }
-    }
 }

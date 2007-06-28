@@ -51,18 +51,11 @@ public class SessionComponentDeployer extends AbstractComponentDeployer {
         }
         Map sessionMap = extCtx.getSessionMap();
         String componentName = getComponentName();
-        Object old = sessionMap.get(componentName);
-        if (old != null && old.getClass().equals(cd.getConcreteClass())) {
-            return old;
+        Object component = sessionMap.get(componentName);
+        if (component == null) {
+            component = getConstructorAssembler().assemble();
+            sessionMap.put(componentName, component);
         }
-        Object component = getConstructorAssembler().assemble();
-        if (old != null) {
-            copyProperties(old, component);
-        } else {
-            getPropertyAssembler().assemble(component);
-            getInitMethodAssembler().assemble(component);
-        }
-        sessionMap.put(componentName, component);
         return component;
     }
 

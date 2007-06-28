@@ -21,7 +21,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.seasar.framework.container.external.AbstractExternalContextMap;
+import org.seasar.framework.container.external.RebuildableExternalContextMap;
 import org.seasar.framework.util.AssertionUtil;
 import org.seasar.framework.util.EmptyIterator;
 import org.seasar.framework.util.EnumerationIterator;
@@ -32,7 +32,7 @@ import org.seasar.framework.util.EnumerationIterator;
  * @author shot
  * @author higa
  */
-public class HttpSessionMap extends AbstractExternalContextMap {
+public class HttpSessionMap extends RebuildableExternalContextMap {
 
     private static final Iterator EMPTY_ITERATOR = new EmptyIterator();
 

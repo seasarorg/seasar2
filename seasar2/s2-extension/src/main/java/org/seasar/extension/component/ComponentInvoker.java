@@ -15,8 +15,30 @@
  */
 package org.seasar.extension.component;
 
+/**
+ * 指定されたコンポーネントのメソッドを呼び出すコンポーネントの実装です。
+ * <p>
+ * このクラスはS2RMIなどから利用されることを意図しています。
+ * </p>
+ * 
+ * @author Kenichiro Murata
+ */
 public interface ComponentInvoker {
 
+    /**
+     * 指定されたコンポーネントのメソッドを実行します。
+     * 
+     * @param componentName
+     *            コンポーネント名
+     * @param methodName
+     *            メソッド名
+     * @param args
+     *            メソッドの引数
+     * @return メソッドの戻り値
+     * @throws Throwable
+     *             メソッドの実行中に例外が発生した場合
+     */
     public Object invoke(String componentName, String methodName, Object[] args)
             throws Throwable;
+
 }

@@ -50,26 +50,7 @@ public class ApplicationComponentDeployerTest extends TestCase {
     }
 
     /**
-     * @throws Exception
-     */
-    public void testCopyProperties() throws Exception {
-        MockServletContextImpl ctx = new MockServletContextImpl("s2jsf-example");
-        S2Container container = new S2ContainerImpl();
-        ExternalContext extCtx = new HttpServletExternalContext();
-        extCtx.setApplication(ctx);
-        container.setExternalContext(extCtx);
-        ComponentDef cd = new ComponentDefImpl(Foo.class, "foo");
-        container.register(cd);
-        Foo2 foo2 = new Foo2();
-        foo2.setHoge("xxx");
-        ctx.setAttribute("foo", foo2);
-        ComponentDeployer deployer = new ApplicationComponentDeployer(cd);
-        Foo foo = (Foo) deployer.deploy();
-        assertEquals("xxx", foo.getHoge());
-    }
-
-    /**
-     *
+     * 
      */
     public static class Foo {
 
@@ -96,25 +77,4 @@ public class ApplicationComponentDeployerTest extends TestCase {
         }
     }
 
-    /**
-     *
-     */
-    public static class Foo2 {
-
-        private String hoge;
-
-        /**
-         * @return
-         */
-        public String getHoge() {
-            return hoge;
-        }
-
-        /**
-         * @param hoge
-         */
-        public void setHoge(String hoge) {
-            this.hoge = hoge;
-        }
-    }
 }

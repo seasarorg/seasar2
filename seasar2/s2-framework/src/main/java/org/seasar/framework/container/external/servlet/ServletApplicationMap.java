@@ -20,7 +20,7 @@ import java.util.Map;
 
 import javax.servlet.ServletContext;
 
-import org.seasar.framework.container.external.AbstractExternalContextMap;
+import org.seasar.framework.container.external.RebuildableExternalContextMap;
 import org.seasar.framework.util.AssertionUtil;
 import org.seasar.framework.util.EnumerationIterator;
 
@@ -30,7 +30,7 @@ import org.seasar.framework.util.EnumerationIterator;
  * @author shot
  * @author higa
  */
-public class ServletApplicationMap extends AbstractExternalContextMap {
+public class ServletApplicationMap extends RebuildableExternalContextMap {
 
     private ServletContext context;
 
