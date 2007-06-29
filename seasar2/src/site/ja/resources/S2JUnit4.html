@@ -93,7 +93,7 @@
 </li>
 <li><a href="#tips">Tips</a>
 <ul>
-<li><a href="#tipsMethodName">テスト実行時にテストケースの名前を知る</a></li>
+<li><a href="#tipsMethodName">テスト実行時にテストケースの名前を取得する</a></li>
 <li><a href="#tipsBlankString">Excelファイルで作成する事前準備値データや期待値データで空白を除去しない</a></li>
 <li><a href="#tipsAllReplace">データベース上のデータをテーブルごとに完全に置き換える</a></li>
 </ul>
@@ -573,7 +573,7 @@ public void hoge() {
 <p>
 知っていると便利なTipsを紹介します。
 </p>
-<h3><a name="tipsMethodName">テスト実行時にテストケースの名前を知る</a></h3>
+<h3><a name="tipsMethodName">テスト実行時にテストケースの名前を取得する</a></h3>
 <p>
 テストケースの名前を知るには<code>TestContext#getTestMethodName()</code>を利用します。
 </p>
@@ -624,6 +624,15 @@ public void before() {
 </pre>
 <p>
 この設定をデフォルトとしてすべてのテストケースに反映させたい場合は、<code>s2junit4.dicon</code>を変更します。
+</p>
+<pre>
+&lt;component name="context" class="org.seasar.framework.unit.impl.InternalTestContextImpl"&gt;
+  &lt;property name="preparationType"&gt;@org.seasar.framework.unit.PreparationType@ALL_REPLACE&lt;/property&gt; 
+&lt;/component&gt;  
+</pre>
+<p>
+列挙型<code>PreparationType</code>には<code>ALL_REPLACE</code>の他に<code>NONE</code>、<code>WRITE</code>、<code>REPLACE</code>
+が定義されています。
 </p>
 <!-- don't edit start --></td>
 <td width="14"><img height="14" width="14" src="images/spacer.gif" alt="" /></td>
