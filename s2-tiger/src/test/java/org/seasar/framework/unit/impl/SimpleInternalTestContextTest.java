@@ -35,6 +35,9 @@ public class SimpleInternalTestContextTest extends S2TestCase {
         include("SimpleInternalTestContextTest.dicon");
     }
 
+    /**
+     * @throws Exception
+     */
     public void testInclude() throws Exception {
         testCtx.setTestClass(Bbb.class);
         testCtx.include("SimpleInternalTestContextTest2.dicon");
@@ -42,6 +45,9 @@ public class SimpleInternalTestContextTest extends S2TestCase {
         assertEquals("aaa", getComponent("hoge"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testRegisterComponent() throws Exception {
         testCtx.setTestClass(Bbb.class);
         Aaa aaa = new Aaa();
@@ -53,6 +59,9 @@ public class SimpleInternalTestContextTest extends S2TestCase {
         assertEquals(date, getComponent("hoge"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testRegisterComponentClass() throws Exception {
         testCtx.setTestClass(Bbb.class);
         testCtx.register(Aaa.class);
@@ -63,6 +72,9 @@ public class SimpleInternalTestContextTest extends S2TestCase {
         assertNotNull(getComponent("hoge"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testRegisterComponentDef() throws Exception {
         testCtx.setTestClass(Bbb.class);
         ComponentDef componentDef = new ComponentDefImpl(Aaa.class);
@@ -71,9 +83,15 @@ public class SimpleInternalTestContextTest extends S2TestCase {
         assertNotNull(getComponent(Aaa.class));
     }
 
+    /**
+     * 
+     */
     public static class Aaa {
     }
 
+    /**
+     * 
+     */
     public static class Bbb {
     }
 }

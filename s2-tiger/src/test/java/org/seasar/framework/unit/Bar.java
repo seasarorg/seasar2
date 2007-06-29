@@ -17,6 +17,9 @@ package org.seasar.framework.unit;
 
 import javax.ejb.Stateless;
 
+/**
+ * 
+ */
 @Stateless
 public class Bar implements IBar {
 

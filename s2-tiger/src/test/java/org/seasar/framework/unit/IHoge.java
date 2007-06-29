@@ -17,7 +17,14 @@ package org.seasar.framework.unit;
 
 import javax.ejb.Local;
 
+/**
+ * 
+ */
 @Local
 public interface IHoge {
+
+    /**
+     * @return
+     */
     String aaa();
 }

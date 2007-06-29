@@ -36,10 +36,16 @@ public class TestDataPreparerImplTest extends S2TestCase {
         SubTestDataPreparerImpl.path = null;
     }
 
+    /**
+     * @throws Exception
+     */
     public void setUpPrepare() throws Exception {
         include("TestDataPreparerImplTest.dicon");
     }
 
+    /**
+     * @throws Exception
+     */
     public void testPrepare() throws Exception {
         testDataPreparer.prepare(testContext);
         assertEquals(
@@ -47,6 +53,9 @@ public class TestDataPreparerImplTest extends S2TestCase {
                 SubTestDataPreparerImpl.path);
     }
 
+    /**
+     * 
+     */
     public static class SubTestDataPreparerImpl extends TestDataPreparerImpl {
 
         private static String path;

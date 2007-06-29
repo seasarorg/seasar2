@@ -15,8 +15,6 @@
  */
 package org.seasar.framework.unit;
 
-import static org.easymock.EasyMock.expect;
-
 import java.util.Map;
 
 import javax.sql.DataSource;
@@ -27,6 +25,8 @@ import org.seasar.framework.unit.annotation.EasyMock;
 import org.seasar.framework.unit.annotation.EasyMockType;
 import org.seasar.framework.unit.annotation.Mock;
 import org.seasar.framework.unit.annotation.Mocks;
+
+import static org.easymock.EasyMock.*;
 
 /**
  * @author koichik
@@ -53,32 +53,50 @@ public class S2TigerTestCaseTest extends S2TigerTestCase {
         include(getClass().getName().replace('.', '/') + ".dicon");
     }
 
+    /**
+     * 
+     */
     @Mock(target = Hello.class, returnValue = "'aa'")
     public void testTargetIsInterface() {
         assertEquals("aa", hello.greeting());
     }
 
+    /**
+     * 
+     */
     @Mock(target = HelloImpl.class, returnValue = "'bb'")
     public void testTargetIsClass() {
         assertEquals("bb", hello.greeting());
     }
 
+    /**
+     * 
+     */
     @Mock(target = Hello.class, targetName = "hoge", returnValue = "'cc'")
     public void testUsesTargetName() {
         assertEquals("cc", hello.greeting());
     }
 
+    /**
+     * 
+     */
     @Mock(target = Hello.class, pointcut = "e.*", returnValue = "'dd'")
     public void testUsesPointcut() {
         assertEquals("hello", hello.greeting());
         assertEquals("dd", hello.echo("hoge"));
     }
 
+    /**
+     * 
+     */
     @Mock(target = Hello2.class, targetName = "foo", returnValue = "'ee'")
     public void testOverridesOtherInterceptor() {
         assertEquals("ee", hello2.greeting());
     }
 
+    /**
+     * 
+     */
     @Mocks( {
             @Mock(target = Hello.class, pointcut = "greeting", returnValue = "'ff'"),
             @Mock(target = Hello.class, pointcut = "echo", returnValue = "'gg'"),
@@ -89,15 +107,24 @@ public class S2TigerTestCaseTest extends S2TigerTestCase {
         assertEquals("hh", hello2.greeting());
     }
 
+    /**
+     * 
+     */
     @Mock(target = Hello.class, returnValue = "getValue()")
     public void testInvokesMethod() {
         assertEquals("ii", hello.greeting());
     }
 
+    /**
+     * @return
+     */
     public String getValue() {
         return "ii";
     }
 
+    /**
+     * 
+     */
     @Mock(target = Hello.class, throwable = "new IllegalArgumentException()")
     public void testUsesThrowable() {
         try {
@@ -107,26 +134,41 @@ public class S2TigerTestCaseTest extends S2TigerTestCase {
         }
     }
 
+    /**
+     * 
+     */
     public void testRunnable() {
         runnable.run();
     }
 
+    /**
+     * 
+     */
     public void recordRunnable() {
         runnable.run();
     }
 
+    /**
+     * @throws Exception
+     */
     public void testMap() throws Exception {
         map.put("a", "A");
         map.put("b", "B");
         assertEquals(2, map.size());
     }
 
+    /**
+     * @throws Exception
+     */
     public void recordMap() throws Exception {
         expect(map.put("a", "A")).andReturn(null);
         expect(map.put("b", "B")).andReturn(null);
         expect(map.size()).andReturn(2);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testRegister() throws Exception {
         assertSame(dataSource, getComponent("dataSource"));
         assertSame(dataSource, getComponent(DataSource.class));
@@ -134,8 +176,12 @@ public class S2TigerTestCaseTest extends S2TigerTestCase {
         assertFalse(getContainer().hasComponentDef(Map.class));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testOldStyle() throws Exception {
         new Subsequence() {
+
             @Override
             protected void replay() throws Exception {
                 map.put("a", "A");
@@ -153,13 +199,28 @@ public class S2TigerTestCaseTest extends S2TigerTestCase {
         }.doTest();
     }
 
+    /**
+     * 
+     */
     public interface Hello {
+
+        /**
+         * @return
+         */
         public String greeting();
 
+        /**
+         * @param str
+         * @return
+         */
         public String echo(String str);
     }
 
+    /**
+     * 
+     */
     public static class HelloImpl implements Hello {
+
         public String greeting() {
             return "hello";
         }
@@ -169,16 +230,30 @@ public class S2TigerTestCaseTest extends S2TigerTestCase {
         }
     }
 
+    /**
+     * 
+     */
     public interface Hello2 {
+
+        /**
+         * @return
+         */
         public String greeting();
     }
 
+    /**
+     * 
+     */
     public static class Hello2Impl implements Hello2 {
+
         public String greeting() {
             return "hello";
         }
     }
 
+    /**
+     * 
+     */
     public static class DummyInteceptor extends AbstractInterceptor {
 
         static final long serialVersionUID = 0L;

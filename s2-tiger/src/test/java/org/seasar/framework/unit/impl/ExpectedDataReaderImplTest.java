@@ -36,10 +36,16 @@ public class ExpectedDataReaderImplTest extends S2TestCase {
         SubExpectedDataReaderImpl.path = null;
     }
 
+    /**
+     * @throws Exception
+     */
     public void setUpReader() throws Exception {
         include("ExpectedDataReaderImplTest.dicon");
     }
 
+    /**
+     * @throws Exception
+     */
     public void testReader() throws Exception {
         reader.read(testContext);
         assertEquals(
@@ -47,6 +53,9 @@ public class ExpectedDataReaderImplTest extends S2TestCase {
                 SubExpectedDataReaderImpl.path);
     }
 
+    /**
+     * 
+     */
     public static class SubExpectedDataReaderImpl extends
             ExpectedDataReaderImpl {
 

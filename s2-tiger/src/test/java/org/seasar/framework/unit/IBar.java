@@ -17,7 +17,15 @@ package org.seasar.framework.unit;
 
 import javax.ejb.Local;
 
+/**
+ * 
+ */
 @Local
 public interface IBar {
+
+    
+    /**
+     * @return
+     */
     String aaa();
 }

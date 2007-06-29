@@ -34,6 +34,9 @@ public class ConventionTestIntrospectorTest extends S2TestCase {
 
     private ConventionTestIntrospector introspector;
 
+    /**
+     * @throws Exception
+     */
     public void testGetTestMethods() throws Exception {
         introspector = new ConventionTestIntrospector();
         introspector.init();
@@ -47,6 +50,9 @@ public class ConventionTestIntrospectorTest extends S2TestCase {
         assertTrue(methods.contains(method));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testBeforeClassMethods() throws Exception {
         introspector = new ConventionTestIntrospector();
         introspector.init();
@@ -58,6 +64,9 @@ public class ConventionTestIntrospectorTest extends S2TestCase {
         assertEquals(method, methods.get(1));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAfterClassMethods() throws Exception {
         introspector = new ConventionTestIntrospector();
         introspector.init();
@@ -69,6 +78,9 @@ public class ConventionTestIntrospectorTest extends S2TestCase {
         assertEquals(method, methods.get(1));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testBeforeMethods() throws Exception {
         introspector = new ConventionTestIntrospector();
         introspector.init();
@@ -80,6 +92,9 @@ public class ConventionTestIntrospectorTest extends S2TestCase {
         assertEquals(method, methods.get(1));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAfterMethods() throws Exception {
         introspector = new ConventionTestIntrospector();
         introspector.init();
@@ -91,6 +106,9 @@ public class ConventionTestIntrospectorTest extends S2TestCase {
         assertEquals(method, methods.get(1));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testEachBeforeMethod() throws Exception {
         introspector = new ConventionTestIntrospector();
         introspector.init();
@@ -99,6 +117,9 @@ public class ConventionTestIntrospectorTest extends S2TestCase {
         assertEquals("beforeDdd", actual.getName());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testNonExistEachBeforeMethod() throws Exception {
         introspector = new ConventionTestIntrospector();
         introspector.init();
@@ -107,6 +128,9 @@ public class ConventionTestIntrospectorTest extends S2TestCase {
         assertNull(actual);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testEachAfterMethod() throws Exception {
         introspector = new ConventionTestIntrospector();
         introspector.init();
@@ -115,6 +139,9 @@ public class ConventionTestIntrospectorTest extends S2TestCase {
         assertEquals("afterDdd", actual.getName());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testNonExistEachAfterMethod() throws Exception {
         introspector = new ConventionTestIntrospector();
         introspector.init();
@@ -123,6 +150,9 @@ public class ConventionTestIntrospectorTest extends S2TestCase {
         assertNull(actual);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testEachRecordMethod() throws Exception {
         introspector = new ConventionTestIntrospector();
         introspector.init();
@@ -131,6 +161,9 @@ public class ConventionTestIntrospectorTest extends S2TestCase {
         assertEquals("recordDdd", actual.getName());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testNonExistEachRecordMethod() throws Exception {
         introspector = new ConventionTestIntrospector();
         introspector.init();
@@ -139,6 +172,9 @@ public class ConventionTestIntrospectorTest extends S2TestCase {
         assertNull(actual);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testSuperclassTestMethods() throws Exception {
         introspector = new ConventionTestIntrospector();
         introspector.init();
@@ -146,6 +182,9 @@ public class ConventionTestIntrospectorTest extends S2TestCase {
         assertEquals(2, methods.size());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testSuperclassBeforeClassMethods() throws Exception {
         introspector = new ConventionTestIntrospector();
         introspector.init();
@@ -153,6 +192,9 @@ public class ConventionTestIntrospectorTest extends S2TestCase {
         assertEquals(1, methods.size());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testSuperclassAfterClassMethods() throws Exception {
         introspector = new ConventionTestIntrospector();
         introspector.init();
@@ -160,6 +202,9 @@ public class ConventionTestIntrospectorTest extends S2TestCase {
         assertEquals(1, methods.size());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testSuperclassBeforeMethods() throws Exception {
         introspector = new ConventionTestIntrospector();
         introspector.init();
@@ -167,6 +212,9 @@ public class ConventionTestIntrospectorTest extends S2TestCase {
         assertEquals(1, methods.size());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testSuperclassAfterMethods() throws Exception {
         introspector = new ConventionTestIntrospector();
         introspector.init();
@@ -174,6 +222,9 @@ public class ConventionTestIntrospectorTest extends S2TestCase {
         assertEquals(1, methods.size());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testSuperclassEachBeforeMethod() throws Exception {
         introspector = new ConventionTestIntrospector();
         introspector.init();
@@ -186,6 +237,9 @@ public class ConventionTestIntrospectorTest extends S2TestCase {
         assertEquals("beforeBbb", actual.getName());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testSuperclassEachAfterMethod() throws Exception {
         introspector = new ConventionTestIntrospector();
         introspector.init();
@@ -198,6 +252,9 @@ public class ConventionTestIntrospectorTest extends S2TestCase {
         assertEquals("afterBbb", actual.getName());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testSuperclassEachRecordMethod() throws Exception {
         introspector = new ConventionTestIntrospector();
         introspector.init();
@@ -210,10 +267,16 @@ public class ConventionTestIntrospectorTest extends S2TestCase {
         assertEquals("recordBbb", actual.getName());
     }
 
+    /**
+     * @throws Exception
+     */
     public void setUpCustomize() throws Exception {
         include("ConventionTestIntrospectorTest.dicon");
     }
 
+    /**
+     * @throws Exception
+     */
     public void testCustomize() throws Exception {
         List<Method> methods = introspector.getBeforeClassMethods(Baz.class);
         assertEquals(1, methods.size());
@@ -239,44 +302,83 @@ public class ConventionTestIntrospectorTest extends S2TestCase {
         assertEquals("tearDownAaa", actual.getName());
     }
 
+    /**
+     * 
+     */
     public static class Hoge {
 
+        /**
+         * 
+         */
         public static void beforeClass() {
         }
 
+        /**
+         * 
+         */
         public static void afterClass() {
         }
 
+        /**
+         * 
+         */
         public void before() {
         }
 
+        /**
+         * 
+         */
         public void after() {
         }
 
+        /**
+         * 
+         */
         @Before
         public void aaa() {
         }
 
+        /**
+         * 
+         */
         @After
         public void bbb() {
         }
 
+        /**
+         * 
+         */
         @Test
         public void ccc() {
         }
 
+        /**
+         * 
+         */
         public void beforeDdd() {
         }
 
+        /**
+         * 
+         */
         public void ddd() {
         }
 
+        /**
+         * 
+         */
         public void recordDdd() {
         }
 
+        /**
+         * 
+         */
         public void afterDdd() {
         }
 
+        /**
+         * 
+         */
         public void record() {
         }
 
@@ -284,87 +386,168 @@ public class ConventionTestIntrospectorTest extends S2TestCase {
         private void eee() {
         }
 
+        /**
+         * 
+         */
         public static void fff() {
         }
 
+        /**
+         * @return
+         */
         public String ggg() {
             return null;
         }
 
+        /**
+         * @param s
+         */
         @SuppressWarnings("unused")
         public void hhh(String s) {
         }
 
+        /**
+         * 
+         */
         @BeforeClass
         public static void iii() {
         }
 
+        /**
+         * 
+         */
         @AfterClass
         public static void jjj() {
         }
 
     }
 
+    /**
+     * 
+     */
     public static class Foo {
+        /**
+         * 
+         */
         public static void beforeClass() {
         }
 
+        /**
+         * 
+         */
         public static void afterClass() {
         }
 
+        /**
+         * 
+         */
         public void before() {
         }
 
+        /**
+         * 
+         */
         public void after() {
         }
 
+        /**
+         * 
+         */
         public void beforeAaa() {
         }
 
+        /**
+         * 
+         */
         public void aaa() {
         }
 
+        /**
+         * 
+         */
         public void afterAaa() {
         }
 
+        /**
+         * 
+         */
         public void recordAaa() {
         }
 
+        /**
+         * 
+         */
         public void beforeBbb() {
         }
 
+        /**
+         * 
+         */
         public void afterBbb() {
         }
 
+        /**
+         * 
+         */
         public void recordBbb() {
         }
 
     }
 
+    /**
+     * 
+     */
     public static class Bar extends Foo {
+        /**
+         * 
+         */
         public void bbb() {
         }
     }
 
+    /**
+     * 
+     */
     public static class Baz {
+        /**
+         * 
+         */
         public static void setUpClass() {
         }
 
+        /**
+         * 
+         */
         public static void tearDownClass() {
         }
 
+        /**
+         * 
+         */
         public void setUp() {
         }
 
+        /**
+         * 
+         */
         public void tearDown() {
         }
 
+        /**
+         * 
+         */
         public void setUpAaa() {
         }
 
+        /**
+         * 
+         */
         public void aaa() {
         }
 
+        /**
+         * 
+         */
         public void tearDownAaa() {
         }
     }

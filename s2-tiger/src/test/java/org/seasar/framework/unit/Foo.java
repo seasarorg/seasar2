@@ -17,8 +17,12 @@ package org.seasar.framework.unit;
 
 import javax.ejb.Stateless;
 
+/**
+ * 
+ */
 @Stateless
 public class Foo implements IFoo {
+
     public String aaa() {
         return "aaa";
     }

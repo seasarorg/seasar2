@@ -15,12 +15,12 @@
  */
 package org.seasar.framework.unit;
 
-import static org.easymock.EasyMock.expect;
-
 import java.util.Map;
 
 import org.seasar.framework.unit.annotation.EasyMock;
 import org.seasar.framework.unit.annotation.EasyMockType;
+
+import static org.easymock.EasyMock.*;
 
 /**
  * @author koichik
@@ -33,26 +33,41 @@ public class EasyMockTestCaseTest extends EasyMockTestCase {
     @EasyMock(EasyMockType.STRICT)
     private Map<String, String> map;
 
+    /**
+     * 
+     */
     public void testRunnable() {
         runnable.run();
     }
 
+    /**
+     * 
+     */
     public void recordRunnable() {
         runnable.run();
     }
 
+    /**
+     * @throws Exception
+     */
     public void testMap() throws Exception {
         map.put("a", "A");
         map.put("b", "B");
         assertEquals(2, map.size());
     }
 
+    /**
+     * @throws Exception
+     */
     public void recordMap() throws Exception {
         expect(map.put("a", "A")).andReturn(null);
         expect(map.put("b", "B")).andReturn(null);
         expect(map.size()).andReturn(2);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testOldStyle() throws Exception {
         new Subsequence() {
             @Override

@@ -27,6 +27,9 @@ import org.seasar.framework.util.tiger.ReflectionUtil;
  */
 public class OgnlExpressionTest extends S2TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testContext() throws Exception {
         Map<String, Object> context = CollectionsUtil.newHashMap();
         context.put("method", ReflectionUtil.getMethod(this.getClass(),
@@ -36,6 +39,9 @@ public class OgnlExpressionTest extends S2TestCase {
         assertEquals("testContext", expression.evaluate());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testEvaluate() throws Exception {
         Map<String, Object> context = CollectionsUtil.newHashMap();
         context.put("method", ReflectionUtil.getMethod(this.getClass(),
@@ -45,6 +51,9 @@ public class OgnlExpressionTest extends S2TestCase {
         assertEquals("hoge", expression.evaluate());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testEvaluateNoException() throws Exception {
         Map<String, Object> context = CollectionsUtil.newHashMap();
         context.put("method", ReflectionUtil.getMethod(this.getClass(),
@@ -59,6 +68,9 @@ public class OgnlExpressionTest extends S2TestCase {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public void testIsMethodFailed() throws Exception {
         Map<String, Object> context = CollectionsUtil.newHashMap();
         context.put("method", ReflectionUtil.getMethod(this.getClass(),
@@ -68,10 +80,16 @@ public class OgnlExpressionTest extends S2TestCase {
         assertTrue(expression.isMethodFailed());
     }
 
+    /**
+     * @return
+     */
     public String hoge() {
         return "hoge";
     }
 
+    /**
+     * @return
+     */
     public String foo() {
         throw new IllegalStateException();
     }

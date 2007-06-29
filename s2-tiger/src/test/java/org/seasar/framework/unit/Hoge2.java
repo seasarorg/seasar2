@@ -18,6 +18,9 @@ package org.seasar.framework.unit;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 
+/**
+ * 
+ */
 @Stateless(name = "xxx")
 public class Hoge2 implements IHoge {
 
