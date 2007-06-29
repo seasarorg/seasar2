@@ -7,9 +7,9 @@
 		<section name="ダウンロード">
 			<subsection name="Seasar2.4系">
 				<dl>
-				<dt><a href="/download/2007-05-22/S2.4.13.zip">S2Container 2.4.13</a></dt>
+				<dt><a href="/download/2007-06-29/S2.4.14.zip">S2Container 2.4.14</a></dt>
 				<dd>S2Container 本体 (S2Framework) と、JDBC コネクションプールや JTA などの拡張機能 (S2Extension)</dd>
-				<dt><a href="/download/2007-05-22/S2Tiger-2.4.13.zip">S2Tiger 2.4.13</a></dt>
+				<dt><a href="/download/2007-06-29/S2Tiger-2.4.14.zip">S2Tiger 2.4.14</a></dt>
 				<dd>Tiger (Java5) アノテーションを使用してコンポーネント定義を Java ソースに記述するためのアドオン</dd>
 				<dt><a href="/download/2006-11-16/Diigu-Core-1.0.0.zip">Diigu-Core 1.0.0</a></dt>
 				<dd>メソッドの引数名をクラスファイルに埋め込むためのライブラリ</dd>
@@ -17,11 +17,11 @@
 			</subsection>
 			<subsection name="Seasar2.3系">
 				<dl>
-				<dt><a href="/download/2007-04-09/S2.3.19.zip">S2Container 2.3.19</a></dt>
+				<dt><a href="/download/2007-06-29/S2.3.20.zip">S2Container 2.3.20</a></dt>
 				<dd>S2Container 本体 (S2Framework) と、JDBC コネクションプールや JTA などの拡張機能 (S2Extension)</dd>
-				<dt><a href="/download/2006-06-02/S2Tiger-2.3.9.zip">S2Tiger 2.3.9</a></dt>
+				<dt><a href="/download/2007-06-29/S2Tiger-2.3.20.zip">S2Tiger 2.3.20</a></dt>
 				<dd>Tiger (Java5) アノテーションを使用してコンポーネント定義を Java ソースに記述するためのアドオン</dd>
-				<dt><a href="/download/2006-06-02/S2Backport175-2.3.9.zip">S2Backport175 2.3.9</a></dt>
+				<dt><a href="/download/2007-06-29/S2Backport175-2.3.20.zip">S2Backport175 2.3.20</a></dt>
 				<dd>Backport175 アノテーションを使用してコンポーネント定義を Java ソースに記述するためのアドオン</dd>
 				</dl>
 			</subsection>
@@ -37,6 +37,10 @@
 				<table>
 				<thead><col span="2" width="200"/></thead>
 				<tbody>
+				<tr>
+				<td><a href="/download/2007-06-29/S2.4.14.zip">S2Container 2.4.14</a></td>
+				<td><a href="/download/2007-06-29/S2Tiger-2.4.14.zip">S2Tiger 2.4.14</a></td>
+				</tr>
 				<tr>
 				<td><a href="/download/2007-05-22/S2.4.13.zip">S2Container 2.4.13</a></td>
 				<td><a href="/download/2007-05-22/S2Tiger-2.4.13.zip">S2Tiger 2.4.13</a></td>
@@ -128,6 +132,11 @@
 				<table>
 				<thead><col span="3" width="200"/></thead>
 				<tbody>
+				<tr>
+				<td><a href="/download/2007-06-29/S2.3.20.zip">S2Container 2.3.20</a></td>
+				<td><a href="/download/2007-06-29/S2Tiger-2.3.20.zip">S2Tiger 2.3.20</a></td>
+				<td><a href="/download/2007-06-29/S2Backport175-2.3.20.zip">S2Backport175 2.3.20</a></td>
+				</tr>
 				<tr>
 				<td><a href="/download/2007-04-09/S2.3.19.zip">S2Container 2.3.19</a></td>
 				<td></td>
