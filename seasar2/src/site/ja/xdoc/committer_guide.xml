@@ -15,22 +15,20 @@
 				<dt>pom.xmlの修正・コミット</dt>
 				<dd>
 					<ul>
-						<li><p>kuina-dao/pom.xml</p></li>
-					</ul>
-				</dd>
-				<dt>build.xmlの修正・コミット</dt>
-				<dd>
-					<ul>
-						<li><p>kuina-dao/build.xml</p></li>
+						<li><p>seasar2/pom.xml</p></li>
+						<li><p>seasar2/s2-framework/pom.xml</p></li>
+						<li><p>seasar2/s2-extension/pom.xml</p></li>
+						<li><p>seasar2/s2-dist/pom.xml</p></li>
+						<li><p>s2-tiger/pom.xml</p></li>
 					</ul>
 				</dd>
 				<dt>ドキュメントの修正・コミット</dt>
 				<dd>
 					<ul>
-						<li><p>kuina-dao/src/site/index.xml</p></li>
-						<li><p>kuina-dao/src/site/downloads.xml</p></li>
-						<li><p>kuina-dao/src/site/ja/index.xml</p></li>
-						<li><p>kuina-dao/src/site/ja/downloads.xml</p></li>
+						<li><p>seasar2/src/site/resources/index.html</p></li>
+						<li><p>seasar2/src/site/resources/zh/index.html</p></li>
+						<li><p>seasar2/src/site/ja/xdoc/index.xml</p></li>
+						<li><p>seasar2/src/site/ja/xdoc/downloads.xml</p></li>
 					</ul>
 				</dd>
 			</dl>
@@ -38,29 +36,46 @@
 
 		<section name="リリース手順">
 			<dl>
-				<dt>Kuina-Daoのビルド～デプロイ</dt>
+				<dt>Seasar2のビルド</dt>
 				<dd>
 <source>
-<kbd>cd kuina-dao</kbd>
-<kbd>mvn clean deploy</kbd>
+<kbd>cd seasar2</kbd>
+<kbd>mvn clean install</kbd>
 </source>
 				</dd>
-				<dt>サイトの作成</dt>
+				<dt>S2-Tigerのビルド</dt>
 				<dd>
 <source>
-<kbd>mvn site</kbd>
+<kbd>cd s2-tiger</kbd>
+<kbd>mvn clean install</kbd>
 </source>
 				</dd>
-				<dt>配布ファイルの作成</dt>
+				<dt>Seasar2のデプロイ</dt>
 				<dd>
 <source>
-<kbd>ant</kbd>
+<kbd>cd seasar2</kbd>
+<kbd>mvn deploy -Dmaven.test.skip=true</kbd>
 </source>
 				</dd>
-				<dt>サイトのデプロイ</dt>
+				<dt>S2-Tigerのデプロイ</dt>
 				<dd>
 <source>
-<kbd>mvn site:deploy</kbd>
+<kbd>cd s2-tiger</kbd>
+<kbd>mvn deploy -Dmaven.test.skip=true</kbd>
+</source>
+				</dd>
+				<dt>Seasar2のサイトデプロイ</dt>
+				<dd>
+<source>
+<kbd>cd seasar2</kbd>
+<kbd>mvn site-deploy</kbd>
+</source>
+				</dd>
+				<dt>S2-Tigerのサイトデプロイ</dt>
+				<dd>
+<source>
+<kbd>cd s2-tiger</kbd>
+<kbd>mvn site-deploy</kbd>
 </source>
 				</dd>
 			</dl>
