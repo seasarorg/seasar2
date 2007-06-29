@@ -39,6 +39,9 @@ public class BeanToMapDxoCommandTigerTest extends S2FrameworkTestCase {
         include("dxo.dicon");
     }
 
+    /**
+     * @throws Exception
+     */
     @SuppressWarnings("unchecked")
     public void testScalar1() throws Exception {
         DxoCommand command = builder.createDxoCommand(ToScalarDxo.class,
@@ -61,6 +64,10 @@ public class BeanToMapDxoCommandTigerTest extends S2FrameworkTestCase {
         assertNull(dest.get("baz"));
     }
 
+    /**
+     * 
+     */
+    @SuppressWarnings("unchecked")
     public void testListToArray1() {
         DxoCommand command = builder.createDxoCommand(ToArrayDxo.class,
                 ClassUtil.getMethod(ToArrayDxo.class, "convert",
@@ -87,6 +94,10 @@ public class BeanToMapDxoCommandTigerTest extends S2FrameworkTestCase {
         assertEquals("200HogeHoge2000", dest[1].get("four"));
     }
 
+    /**
+     * 
+     */
+    @SuppressWarnings("unchecked")
     public void testListToArray2() {
         DxoCommand command = builder.createDxoCommand(ToArrayDxo.class,
                 ClassUtil.getMethod(ToArrayDxo.class, "convert", new Class[] {
@@ -114,6 +125,9 @@ public class BeanToMapDxoCommandTigerTest extends S2FrameworkTestCase {
         assertEquals("200HogeHoge2000", dest[1].get("four"));
     }
 
+    /**
+     * 
+     */
     @SuppressWarnings("unchecked")
     public void testArrayToList1() {
         DxoCommand command = builder.createDxoCommand(ToListDxo.class,
@@ -144,6 +158,9 @@ public class BeanToMapDxoCommandTigerTest extends S2FrameworkTestCase {
         assertEquals("200HogeHoge2000", map.get("four"));
     }
 
+    /**
+     * 
+     */
     public void testArrayToList2() {
         DxoCommand command = builder.createDxoCommand(ToListDxo.class,
                 ClassUtil.getMethod(ToListDxo.class, "convert", new Class[] {
@@ -173,6 +190,9 @@ public class BeanToMapDxoCommandTigerTest extends S2FrameworkTestCase {
         assertEquals("200HogeHoge2000", map.get("four"));
     }
 
+    /**
+     * 
+     */
     @SuppressWarnings("unchecked")
     public void testListToList1() {
         DxoCommand command = builder.createDxoCommand(ToListDxo.class,
@@ -203,6 +223,9 @@ public class BeanToMapDxoCommandTigerTest extends S2FrameworkTestCase {
         assertEquals("200HogeHoge2000", map.get("four"));
     }
 
+    /**
+     * 
+     */
     public void testListToList2() {
         DxoCommand command = builder.createDxoCommand(ToListDxo.class,
                 ClassUtil.getMethod(ToListDxo.class, "convert", new Class[] {
@@ -232,27 +255,75 @@ public class BeanToMapDxoCommandTigerTest extends S2FrameworkTestCase {
         assertEquals("200HogeHoge2000", map.get("four"));
     }
 
+    /**
+     * 
+     */
     public interface ToScalarDxo {
+
+        /**
+         * @param src
+         * @return
+         */
         Map<String, String> convert(Hoge src);
     }
 
+    /**
+     * 
+     */
     public interface ToArrayDxo {
+
+        /**
+         * 
+         */
         public static final String convert_CONVERSION_RULE = "'one' : foo, 'two' : bar, 'three' : baz, 'four' : foo+bar+baz";
 
+        /**
+         * @param src
+         * @return
+         */
+        @SuppressWarnings("unchecked")
         Map[] convert(List<?> src);
 
+        /**
+         * @param src
+         * @param dest
+         */
+        @SuppressWarnings("unchecked")
         void convert(List<?> src, Map[] dest);
     }
 
+    /**
+     * 
+     */
     public interface ToListDxo {
+
+        /**
+         * 
+         */
         public static final String convert_CONVERSION_RULE = "'one' : foo, 'two' : bar, 'three' : baz, 'four' : foo+bar+baz";
 
+        /**
+         * @param src
+         * @return
+         */
         List<Map<String, ?>> convert(Hoge[] src);
 
+        /**
+         * @param src
+         * @return
+         */
         List<Map<String, ?>> convert(List<?> src);
 
+        /**
+         * @param src
+         * @param dest
+         */
         void convert(Hoge[] src, List<Map<String, ?>> dest);
 
+        /**
+         * @param src
+         * @param dest
+         */
         void convert(List<?> src, List<Map<String, String>> dest);
     }
 

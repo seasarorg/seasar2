@@ -17,6 +17,9 @@ package org.seasar.extension.dxo;
 
 import java.io.Serializable;
 
+/**
+ *
+ */
 public class Department implements Serializable {
 
     private static final long serialVersionUID = 208333601296668554L;
@@ -29,41 +32,69 @@ public class Department implements Serializable {
 
     private int versionNo;
 
+    /**
+     * 
+     */
     public Department() {
     }
 
+    /**
+     * @return
+     */
     public int getDeptno() {
         return this.deptno;
     }
 
+    /**
+     * @param deptno
+     */
     public void setDeptno(int deptno) {
         this.deptno = deptno;
     }
 
+    /**
+     * @return
+     */
     public java.lang.String getDname() {
         return this.dname;
     }
 
+    /**
+     * @param dname
+     */
     public void setDname(java.lang.String dname) {
         this.dname = dname;
     }
 
+    /**
+     * @return
+     */
     public java.lang.String getLoc() {
         return this.loc;
     }
 
+    /**
+     * @param loc
+     */
     public void setLoc(java.lang.String loc) {
         this.loc = loc;
     }
 
+    /**
+     * @return
+     */
     public int getVersionNo() {
         return this.versionNo;
     }
 
+    /**
+     * @param versionNo
+     */
     public void setVersionNo(int versionNo) {
         this.versionNo = versionNo;
     }
 
+    @Override
     public boolean equals(Object other) {
         if (!(other instanceof Department))
             return false;
@@ -71,6 +102,7 @@ public class Department implements Serializable {
         return this.getDeptno() == castOther.getDeptno();
     }
 
+    @Override
     public String toString() {
         StringBuffer buf = new StringBuffer();
         buf.append(deptno).append(", ");
@@ -79,6 +111,7 @@ public class Department implements Serializable {
         return buf.toString();
     }
 
+    @Override
     public int hashCode() {
         return this.getDeptno();
     }

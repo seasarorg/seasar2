@@ -32,6 +32,9 @@ public class BeanToBeanDxoCommandBuilderTigerTest extends S2FrameworkTestCase {
         include("dxo.dicon");
     }
 
+    /**
+     * @throws Exception
+     */
     public void testToArray() throws Exception {
         assertNotNull(builder.createDxoCommand(ToArrayDxo.class,
                 ToArrayDxo.class.getMethod("convert",
@@ -44,6 +47,9 @@ public class BeanToBeanDxoCommandBuilderTigerTest extends S2FrameworkTestCase {
                 .getMethod("convert", new Class[] { Object.class })));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testToList() throws Exception {
         assertNotNull(builder.createDxoCommand(ToListDxo.class, ToListDxo.class
                 .getMethod("convert", new Class[] { Object[].class })));
@@ -54,19 +60,49 @@ public class BeanToBeanDxoCommandBuilderTigerTest extends S2FrameworkTestCase {
                 .getMethod("convert", new Class[] { Object.class })));
     }
 
+    /**
+     *
+     */
     public interface ToArrayDxo {
+        /**
+         * @param src
+         * @return
+         */
         String[] convert(Object[] src); // applicable
 
+        /**
+         * @param src
+         * @return
+         */
         String[] convert(List<Object> src); // applicable
 
+        /**
+         * @param src
+         * @return
+         */
         String[] convert(Object src); // not applicable
     }
 
+    /**
+     *
+     */
     public interface ToListDxo {
+        /**
+         * @param src
+         * @return
+         */
         List<Object> convert(Object[] src); // applicable
 
+        /**
+         * @param src
+         * @return
+         */
         List<Object> convert(List<Object> src); // applicable
 
+        /**
+         * @param src
+         * @return
+         */
         List<Object> convert(Object src); // not applicable
     }
 }

@@ -44,6 +44,9 @@ public class DxoInterceptorTigerTest extends S2TestCase {
         include(getClass().getName().replace('.', '/') + ".dicon");
     }
 
+    /**
+     * @throws Exception
+     */
     public void testBeanArrayToArray() throws Exception {
         HogeHoge[] src = new HogeHoge[2];
         src[0] = new HogeHoge("100", "Hoge".toCharArray(), 1000);
@@ -65,6 +68,9 @@ public class DxoInterceptorTigerTest extends S2TestCase {
         assertEquals(new BigDecimal("2000"), hoge.getBaz());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testBeanArrayToList() throws Exception {
         HogeHoge[] src = new HogeHoge[2];
         src[0] = new HogeHoge("100", "Hoge".toCharArray(), 1000);
@@ -86,6 +92,9 @@ public class DxoInterceptorTigerTest extends S2TestCase {
         assertEquals(new BigDecimal("2000"), hoge.getBaz());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testBeanListToArray() throws Exception {
         List<HogeHoge> src = new ArrayList<HogeHoge>();
         src.add(new HogeHoge("100", "Hoge".toCharArray(), 1000));
@@ -107,6 +116,9 @@ public class DxoInterceptorTigerTest extends S2TestCase {
         assertEquals(new BigDecimal("2000"), hoge.getBaz());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testBeanListToList() throws Exception {
         List<HogeHoge> src = new ArrayList<HogeHoge>();
         src.add(new HogeHoge("100", "Hoge".toCharArray(), 1000));
@@ -128,6 +140,9 @@ public class DxoInterceptorTigerTest extends S2TestCase {
         assertEquals(new BigDecimal("2000"), hoge.getBaz());
     }
 
+    /**
+     * @throws Exception
+     */
     @SuppressWarnings("unchecked")
     public void testFromMap_Scalar() throws Exception {
         Map src = new HashMap();
@@ -143,6 +158,9 @@ public class DxoInterceptorTigerTest extends S2TestCase {
         assertEquals(new BigDecimal("1000"), dest.getBaz());
     }
 
+    /**
+     * 
+     */
     @SuppressWarnings("unchecked")
     public void testFromMap_ArrayToList() {
         Map[] src = new Map[2];
@@ -173,6 +191,9 @@ public class DxoInterceptorTigerTest extends S2TestCase {
         assertEquals(new BigDecimal("2000"), hoge.getBaz());
     }
 
+    /**
+     * 
+     */
     @SuppressWarnings("unchecked")
     public void testFromMap_ListToArray() {
         List<Map> src = new ArrayList<Map>();
@@ -204,6 +225,9 @@ public class DxoInterceptorTigerTest extends S2TestCase {
         assertEquals(new BigDecimal("2000"), dest[1].getBaz());
     }
 
+    /**
+     * @throws Exception
+     */
     @SuppressWarnings("unchecked")
     public void testToMap_Scalar() throws Exception {
         Hoge src = new Hoge(100, "Hoge", new BigDecimal("1000"));
@@ -217,6 +241,10 @@ public class DxoInterceptorTigerTest extends S2TestCase {
         assertEquals(new BigDecimal("1000"), dest.get("baz"));
     }
 
+    /**
+     * @throws Exception
+     */
+    @SuppressWarnings("unchecked")
     public void testToMap_ArrayToArray() throws Exception {
         Hoge[] src = new Hoge[2];
         src[0] = new Hoge(100, "Hoge", new BigDecimal("1000"));
@@ -238,6 +266,9 @@ public class DxoInterceptorTigerTest extends S2TestCase {
         assertEquals(new BigDecimal("2000"), dest[1].get("baz"));
     }
 
+    /**
+     * @throws Exception
+     */
     @SuppressWarnings("unchecked")
     public void testToMap_ListToList() throws Exception {
         List<Hoge> src = new ArrayList<Hoge>();
@@ -262,6 +293,9 @@ public class DxoInterceptorTigerTest extends S2TestCase {
         assertEquals(new BigDecimal("2000"), map.get("baz"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testExcludeNull() throws Exception {
         Employee emp = new Employee();
         Department dept = new Department();
@@ -285,6 +319,9 @@ public class DxoInterceptorTigerTest extends S2TestCase {
         assertEquals("hogehoge", dest.getDname());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testEnum() throws Exception {
         Foo foo = new Foo(Color.RED.ordinal(), Color.GREEN.name());
         Bar bar = beanDxo.convert(foo);
@@ -318,6 +355,7 @@ public class DxoInterceptorTigerTest extends S2TestCase {
     /**
      * @throws Exception
      */
+    @SuppressWarnings("unchecked")
     public void testPrefix_MapToBean() throws Exception {
         Map src = new HashMap();
         src.put("search_name_LIKE", "%hoge%");
@@ -337,6 +375,7 @@ public class DxoInterceptorTigerTest extends S2TestCase {
     /**
      * @throws Exception
      */
+    @SuppressWarnings("unchecked")
     public void testPrefix_BeanToMap() throws Exception {
         SearchPage src = new SearchPage();
         src.setSearch_name_LIKE("%hoge%");
@@ -354,41 +393,102 @@ public class DxoInterceptorTigerTest extends S2TestCase {
         assertNull(dest.get("hoge"));
     }
 
+    /**
+     *
+     */
     public interface BeanDxo {
 
+        /**
+         * @param src
+         * @return
+         */
         Hoge[] convertArrayToArray(HogeHoge[] src);
 
+        /**
+         * @param src
+         * @return
+         */
         List<Hoge> convertArrayToList(HogeHoge[] src);
 
+        /**
+         * @param src
+         * @return
+         */
         Hoge[] convertListToArray(List<HogeHoge> src);
 
+        /**
+         * @param src
+         * @return
+         */
         List<Hoge> convertListToList(List<HogeHoge> src);
 
+        /**
+         * @param employee
+         * @param empDto
+         */
         @ExcludeNull
         void convertExcludeNull(Employee employee, EmpDto empDto);
 
+        /**
+         * @param bar
+         * @return
+         */
         Foo convert(Bar bar);
 
+        /**
+         * @param foo
+         * @return
+         */
         Bar convert(Foo foo);
     }
 
+    /**
+     *
+     */
     @SuppressWarnings("unchecked")
     public interface FromMapDxo {
 
+        /**
+         * @param src
+         * @return
+         */
         Hoge convert(Map src);
 
+        /**
+         * @param src
+         * @return
+         */
         List<Hoge> convert(Map[] src);
 
+        /**
+         * @param src
+         * @return
+         */
         Hoge[] convert(List<Map> src);
     }
 
+    /**
+     *
+     */
     @SuppressWarnings("unchecked")
     public interface ToMapDxo {
 
+        /**
+         * @param src
+         * @return
+         */
         Map convert(Hoge src);
 
+        /**
+         * @param src
+         * @return
+         */
         Map[] convert(Hoge[] src);
 
+        /**
+         * @param src
+         * @return
+         */
         List<Map> convert(List<Hoge> src);
     }
 
@@ -408,6 +508,7 @@ public class DxoInterceptorTigerTest extends S2TestCase {
          * @param src
          * @return
          */
+        @SuppressWarnings("unchecked")
         SearchDto convert(Map src);
 
         /**
@@ -415,6 +516,7 @@ public class DxoInterceptorTigerTest extends S2TestCase {
          * @param dest
          * @return
          */
+        @SuppressWarnings("unchecked")
         void convert(SearchPage src, Map dest);
 
     }

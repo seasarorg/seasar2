@@ -27,35 +27,61 @@ public class HogeHoge {
 
     private int baz;
 
+    /**
+     * 
+     */
     public HogeHoge() {
     }
 
+    /**
+     * @param foo
+     * @param bar
+     * @param baz
+     */
     public HogeHoge(String foo, char[] bar, int baz) {
         this.foo = foo;
         this.bar = bar;
         this.baz = baz;
     }
 
+    /**
+     * @return
+     */
     public String getFoo() {
         return foo;
     }
 
+    /**
+     * @param foo
+     */
     public void setFoo(String foo) {
         this.foo = foo;
     }
 
+    /**
+     * @return
+     */
     public char[] getBar() {
         return bar;
     }
 
+    /**
+     * @param bar
+     */
     public void setBar(char[] bar) {
         this.bar = bar;
     }
 
+    /**
+     * @return
+     */
     public int getBaz() {
         return baz;
     }
 
+    /**
+     * @param baz
+     */
     public void setBaz(int baz) {
         this.baz = baz;
     }

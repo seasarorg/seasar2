@@ -27,6 +27,9 @@ import junit.framework.TestCase;
  */
 public class DxoTigerUtilTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testGetElementTypeOfListFromDestination() throws Exception {
         assertEquals(Map.class, DxoUtil
                 .getElementTypeOfList(GenericListOfMapDxo.class.getMethod(
@@ -36,6 +39,9 @@ public class DxoTigerUtilTest extends TestCase {
                         "convert", new Class[] { List.class, List.class })));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testRawMap() throws Exception {
         Method m1 = RawMapDxo.class.getMethod("convert", Object.class);
         assertEquals(Object.class, DxoTigerUtil.getValueTypeOfTargetMap(m1));
@@ -45,6 +51,9 @@ public class DxoTigerUtilTest extends TestCase {
         assertEquals(Object.class, DxoTigerUtil.getValueTypeOfTargetMap(m2));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGenericMap() throws Exception {
         Method m1 = GenericMapDxo.class.getMethod("convert", Object.class);
         assertEquals(String.class, DxoTigerUtil.getValueTypeOfTargetMap(m1));
@@ -54,6 +63,9 @@ public class DxoTigerUtilTest extends TestCase {
         assertEquals(String.class, DxoTigerUtil.getValueTypeOfTargetMap(m2));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGenericListOfMap() throws Exception {
         Method m1 = GenericListOfMapDxo.class.getMethod("convert", List.class);
         assertEquals(String.class, DxoTigerUtil.getValueTypeOfTargetMap(m1));
@@ -63,6 +75,9 @@ public class DxoTigerUtilTest extends TestCase {
         assertEquals(String.class, DxoTigerUtil.getValueTypeOfTargetMap(m2));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGenericArrayOfMap() throws Exception {
         Method m1 = GenericArrayOfMapDxo.class.getMethod("convert",
                 Object[].class);
@@ -73,28 +88,72 @@ public class DxoTigerUtilTest extends TestCase {
         assertEquals(String.class, DxoTigerUtil.getValueTypeOfTargetMap(m2));
     }
 
+    /**
+     *
+     */
     @SuppressWarnings("unchecked")
     public interface RawMapDxo {
+        /**
+         * @param src
+         * @return
+         */
         Map convert(Object src);
 
+        /**
+         * @param src
+         * @param dest
+         */
         void convert(Object src, Map dest);
     }
 
+    /**
+     *
+     */
     public interface GenericMapDxo {
+        /**
+         * @param src
+         * @return
+         */
         Map<String, String> convert(Object src);
 
+        /**
+         * @param src
+         * @param dest
+         */
         void convert(Object src, Map<String, String> dest);
     }
 
+    /**
+     *
+     */
     public interface GenericListOfMapDxo {
+        /**
+         * @param src
+         * @return
+         */
         List<Map<String, String>> convert(List<Object> src);
 
+        /**
+         * @param src
+         * @param dest
+         */
         void convert(List<Object> src, List<Map<String, String>> dest);
     }
 
+    /**
+     *
+     */
     public interface GenericArrayOfMapDxo {
+        /**
+         * @param src
+         * @return
+         */
         Map<String, String>[] convert(Object[] src);
 
+        /**
+         * @param src
+         * @param dest
+         */
         void convert(Object[] src, Map<String, String>[] dest);
     }
 

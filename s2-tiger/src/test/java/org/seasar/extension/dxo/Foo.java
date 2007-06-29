@@ -25,26 +25,45 @@ public class Foo {
 
     private String name;
 
+    /**
+     * 
+     */
     public Foo() {
     }
 
+    /**
+     * @param ordinal
+     * @param name
+     */
     public Foo(int ordinal, String name) {
         this.ordinal = ordinal;
         this.name = name;
     }
 
+    /**
+     * @return
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * @param name
+     */
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * @return
+     */
     public int getOrdinal() {
         return ordinal;
     }
 
+    /**
+     * @param ordinal
+     */
     public void setOrdinal(int ordinal) {
         this.ordinal = ordinal;
     }

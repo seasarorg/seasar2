@@ -38,6 +38,9 @@ public class BeanToBeanDxoCommandTigerTest extends S2FrameworkTestCase {
         include("dxo.dicon");
     }
 
+    /**
+     * @throws Exception
+     */
     @SuppressWarnings("unchecked")
     public void testListToArray1() throws Exception {
         DxoCommand command = builder.createDxoCommand(ToArrayDxo.class,
@@ -63,6 +66,9 @@ public class BeanToBeanDxoCommandTigerTest extends S2FrameworkTestCase {
         assertEquals(new BigDecimal("2000"), hoge.getBaz());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testListToArray2() throws Exception {
         DxoCommand command = builder.createDxoCommand(ToArrayDxo.class,
                 ToArrayDxo.class.getMethod("convert", new Class[] { List.class,
@@ -88,6 +94,9 @@ public class BeanToBeanDxoCommandTigerTest extends S2FrameworkTestCase {
         assertEquals(new BigDecimal("2000"), hoge.getBaz());
     }
 
+    /**
+     * @throws Exception
+     */
     @SuppressWarnings("unchecked")
     public void testArrayToList1() throws Exception {
         DxoCommand command = builder.createDxoCommand(ToListDxo.class,
@@ -113,6 +122,9 @@ public class BeanToBeanDxoCommandTigerTest extends S2FrameworkTestCase {
         assertEquals(new BigDecimal("2000"), hoge.getBaz());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testArrayToList2() throws Exception {
         DxoCommand command = builder.createDxoCommand(ToListDxo.class,
                 ToListDxo.class.getMethod("convert", new Class[] {
@@ -138,6 +150,9 @@ public class BeanToBeanDxoCommandTigerTest extends S2FrameworkTestCase {
         assertEquals(new BigDecimal("2000"), hoge.getBaz());
     }
 
+    /**
+     * @throws Exception
+     */
     @SuppressWarnings("unchecked")
     public void testListToList1() throws Exception {
         DxoCommand command = builder.createDxoCommand(ToListDxo.class,
@@ -163,6 +178,9 @@ public class BeanToBeanDxoCommandTigerTest extends S2FrameworkTestCase {
         assertEquals(new BigDecimal("2000"), hoge.getBaz());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testLIstToList2() throws Exception {
         DxoCommand command = builder.createDxoCommand(ToListDxo.class,
                 ToListDxo.class.getMethod("convert", new Class[] { List.class,
@@ -188,19 +206,49 @@ public class BeanToBeanDxoCommandTigerTest extends S2FrameworkTestCase {
         assertEquals(new BigDecimal("2000"), hoge.getBaz());
     }
 
+    /**
+     *
+     */
     public interface ToArrayDxo {
+        /**
+         * @param src
+         * @return
+         */
         Hoge[] convert(List<HogeHoge> src);
 
+        /**
+         * @param src
+         * @param dest
+         */
         void convert(List<HogeHoge> src, Hoge[] dest);
     }
 
+    /**
+     *
+     */
     public interface ToListDxo {
+        /**
+         * @param src
+         * @return
+         */
         List<Hoge> convert(HogeHoge[] src);
 
+        /**
+         * @param src
+         * @param dest
+         */
         void convert(HogeHoge[] src, List<Hoge> dest);
 
+        /**
+         * @param src
+         * @return
+         */
         List<Hoge> convert(List<HogeHoge> src);
 
+        /**
+         * @param src
+         * @param dest
+         */
         void convert(List<HogeHoge> src, List<Hoge> dest);
     }
 }

@@ -25,26 +25,45 @@ public class Bar {
 
     private Color name;
 
+    /**
+     * 
+     */
     public Bar() {
     }
 
+    /**
+     * @param ordinal
+     * @param name
+     */
     public Bar(Color ordinal, Color name) {
         this.ordinal = ordinal;
         this.name = name;
     }
 
+    /**
+     * @return
+     */
     public Color getName() {
         return name;
     }
 
+    /**
+     * @param name
+     */
     public void setName(Color name) {
         this.name = name;
     }
 
+    /**
+     * @return
+     */
     public Color getOrdinal() {
         return ordinal;
     }
 
+    /**
+     * @param ordinal
+     */
     public void setOrdinal(Color ordinal) {
         this.ordinal = ordinal;
     }

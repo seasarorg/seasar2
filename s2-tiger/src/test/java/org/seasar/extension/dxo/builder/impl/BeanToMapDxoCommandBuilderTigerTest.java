@@ -33,6 +33,9 @@ public class BeanToMapDxoCommandBuilderTigerTest extends S2FrameworkTestCase {
         include("dxo.dicon");
     }
 
+    /**
+     * @throws Exception
+     */
     public void testApplicable() throws Exception {
         assertNotNull(builder.createDxoCommand(ToListDxo.class, ToListDxo.class
                 .getMethod("convert", new Class[] { Object[].class })));
@@ -43,15 +46,33 @@ public class BeanToMapDxoCommandBuilderTigerTest extends S2FrameworkTestCase {
                 .getMethod("convert", new Class[] { String[].class })));
     }
 
+    /**
+     *
+     */
     public interface ToListDxo {
+        /**
+         * 
+         */
         String convert_CONVERSION_RULE = "";
 
+        /**
+         * @param src
+         * @return
+         */
         @SuppressWarnings("unchecked")
         List<Map> convert(Object[] src);
 
+        /**
+         * @param src
+         * @return
+         */
         @SuppressWarnings("unchecked")
         List<Map> convert(List<Object> src);
 
+        /**
+         * @param src
+         * @return
+         */
         List<Integer> convert(String[] src);
     }
 

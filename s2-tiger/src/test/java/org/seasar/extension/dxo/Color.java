@@ -20,5 +20,16 @@ package org.seasar.extension.dxo;
  * 
  */
 public enum Color {
-    RED, GREEN, BLUE
+    /**
+     * 
+     */
+    RED,
+    /**
+     * 
+     */
+    GREEN,
+    /**
+     * 
+     */
+    BLUE
 }
