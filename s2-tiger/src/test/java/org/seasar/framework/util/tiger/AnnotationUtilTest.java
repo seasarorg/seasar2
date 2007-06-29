@@ -28,6 +28,9 @@ import org.seasar.framework.util.ClassUtil;
  */
 public class AnnotationUtilTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     @Hoge(bbb = "3")
     public void testGetProperties() throws Exception {
         Method m = ClassUtil.getMethod(getClass(), "testGetProperties", null);

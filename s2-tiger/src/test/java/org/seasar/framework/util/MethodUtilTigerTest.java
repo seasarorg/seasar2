@@ -26,6 +26,9 @@ import junit.framework.TestCase;
  */
 public class MethodUtilTigerTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testIsBridgeMethod() throws Exception {
         Method[] methods = Bar.class.getDeclaredMethods();
         assertEquals(2, methods.length);
@@ -38,6 +41,9 @@ public class MethodUtilTigerTest extends TestCase {
         assertEquals(1, bridge);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetElementTypeOfListFromParameterType() throws Exception {
         assertEquals(Integer.class, MethodUtil
                 .getElementTypeOfListFromParameterType(Baz.class.getMethod(
@@ -50,28 +56,54 @@ public class MethodUtilTigerTest extends TestCase {
                         "hoge", new Class[] { List.class, List.class }), 1));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetElementTypeOfListFromReturnType() throws Exception {
         assertEquals(String.class, MethodUtil
                 .getElementTypeOfListFromReturnType(Baz.class.getMethod("hoge",
                         new Class[] { List.class })));
     }
 
+    /**
+     * 
+     */
     public class Foo {
+
+        /**
+         * @return
+         */
         public Foo foo() {
             return null;
         }
     }
 
+    /**
+     * 
+     */
     public class Bar extends Foo {
+
         @Override
         public Bar foo() {
             return null;
         }
     }
 
+    /**
+     * 
+     */
     public interface Baz {
+
+        /**
+         * @param src
+         * @return
+         */
         List<String> hoge(List<Integer> src);
 
+        /**
+         * @param src
+         * @param dest
+         */
         void hoge(List<Double> src, List<BigDecimal> dest);
     }
 

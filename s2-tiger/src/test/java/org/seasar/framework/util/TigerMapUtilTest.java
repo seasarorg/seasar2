@@ -26,6 +26,10 @@ import junit.framework.TestCase;
  */
 public class TigerMapUtilTest extends TestCase {
 
+    /**
+     * 
+     */
+    @SuppressWarnings("unchecked")
     public void testCreate() {
         Map map = MapUtil.createHashMap();
         assertTrue(map instanceof ConcurrentHashMap);

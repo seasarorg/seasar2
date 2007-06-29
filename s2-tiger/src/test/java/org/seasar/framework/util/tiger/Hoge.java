@@ -28,9 +28,18 @@ import java.lang.annotation.Target;
 @Target( { ElementType.TYPE, ElementType.METHOD })
 public @interface Hoge {
 
+    /**
+     * 
+     */
     String aaa() default "123";
 
+    /**
+     * 
+     */
     String bbb();
 
+    /**
+     * 
+     */
     String ccc() default "";
 }

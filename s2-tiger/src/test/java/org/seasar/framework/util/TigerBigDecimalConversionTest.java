@@ -26,11 +26,17 @@ import junit.framework.TestCase;
  */
 public class TigerBigDecimalConversionTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testBigDouble() throws Exception {
         assertEquals("12500000", BigDecimalConversionUtil.toBigDecimal(
                 12500000D).toString());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testToString() throws Exception {
         BigDecimal d = new BigDecimal(new BigInteger("125"), -1);
         assertEquals("1250", BigDecimalConversionUtil.toString(d));

@@ -28,33 +28,51 @@ import junit.framework.TestCase;
  */
 public class ReflectionUtilTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testForName() throws Exception {
         Class<Foo> clazz = ReflectionUtil
                 .forName(getClass().getName() + "$Foo");
         assertNotNull(clazz);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetConstructor() throws Exception {
         Constructor<Foo> ctor = ReflectionUtil.getConstructor(Foo.class);
         assertNotNull(ctor);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetDeclaredConstructor() throws Exception {
         Constructor<Foo> ctor = ReflectionUtil.getDeclaredConstructor(
                 Foo.class, int.class, String.class);
         assertNotNull(ctor);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetField() throws Exception {
         Field f = ReflectionUtil.getField(Foo.class, "s");
         assertNotNull(f);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetDeclaredField() throws Exception {
         Field f = ReflectionUtil.getDeclaredField(Foo.class, "n");
         assertNotNull(f);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetMethod() throws Exception {
         Method m = ReflectionUtil.getMethod(Foo.class, "getS");
         assertNotNull(m);
@@ -63,6 +81,9 @@ public class ReflectionUtilTest extends TestCase {
         assertNotNull(m);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetDeclaredMethod() throws Exception {
         Method m = ReflectionUtil.getDeclaredMethod(Foo.class, "getN");
         assertNotNull(m);
@@ -71,6 +92,9 @@ public class ReflectionUtilTest extends TestCase {
         assertNotNull(m);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testNewInstance() throws Exception {
         Foo foo = ReflectionUtil.newInstance(Foo.class);
         assertNotNull(foo);
@@ -84,6 +108,9 @@ public class ReflectionUtilTest extends TestCase {
         assertEquals("foo", foo.getS());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetValue() throws Exception {
         Foo foo = new Foo(10, "foo");
 
@@ -97,6 +124,9 @@ public class ReflectionUtilTest extends TestCase {
         assertEquals("foo", s);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testSetValue() throws Exception {
         Foo foo = new Foo();
 
@@ -110,6 +140,9 @@ public class ReflectionUtilTest extends TestCase {
         assertEquals("foo", foo.s);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testInvoke() throws Exception {
         Foo foo = new Foo();
 
@@ -124,12 +157,18 @@ public class ReflectionUtilTest extends TestCase {
         assertEquals("foo", foo.s);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetElementTypeOfList() throws Exception {
         Type clazz = ReflectionUtil.getField(Foo.class, "array")
                 .getGenericType();
         assertEquals(String.class, ReflectionUtil.getElementTypeOfList(clazz));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetElementTypeOfListFromParameter() throws Exception {
         Method m = Foo.class.getMethod("convert", List.class, List.class);
         assertEquals(Object.class, ReflectionUtil
@@ -138,19 +177,34 @@ public class ReflectionUtilTest extends TestCase {
                 .getElementTypeOfListFromParameterType(m, 1));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetElementTypeOfListFromReturnType() throws Exception {
         Method m = Foo.class.getMethod("convert", List.class, List.class);
         assertEquals(String.class, ReflectionUtil
                 .getElementTypeOfListFromReturnType(m));
     }
 
+    /**
+     * 
+     */
     public static class Foo {
         private int n;
 
+        /**
+         * 
+         */
         public List<String> array;
 
+        /**
+         * 
+         */
         public String s;
 
+        /**
+         * 
+         */
         public Foo() {
         }
 
@@ -167,14 +221,25 @@ public class ReflectionUtilTest extends TestCase {
             this.n = n;
         }
 
+        /**
+         * @return
+         */
         public String getS() {
             return s;
         }
 
+        /**
+         * @param s
+         */
         public void setS(String s) {
             this.s = s;
         }
 
+        /**
+         * @param o
+         * @param i
+         * @return
+         */
         @SuppressWarnings("unused")
         public List<String> convert(List<Object> o, List<Integer> i) {
             return null;

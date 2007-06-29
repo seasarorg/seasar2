@@ -33,6 +33,9 @@ import junit.framework.TestCase;
  */
 public class GenericUtilTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testArray() throws Exception {
         Method m1 = ArrayType.class.getMethod("arrayOfStringClass");
         Type t1 = m1.getGenericReturnType();
@@ -41,6 +44,9 @@ public class GenericUtilTest extends TestCase {
         assertEquals(String.class, GenericUtil.getGenericParameter(t2, 0));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testList() throws Exception {
         Method m1 = ListType.class.getMethod("listOfString");
         Type t1 = m1.getGenericReturnType();
@@ -60,6 +66,9 @@ public class GenericUtilTest extends TestCase {
                 .getElementTypeOfList(t3)));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testSet() throws Exception {
         Method m1 = SetType.class.getMethod("setOfString");
         Type t1 = m1.getGenericReturnType();
@@ -79,6 +88,9 @@ public class GenericUtilTest extends TestCase {
                 .getElementTypeOfSet(t3)));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testMap() throws Exception {
         Method m1 = MapType.class.getMethod("mapOfStringToObject");
         Type t1 = m1.getGenericReturnType();
@@ -102,6 +114,9 @@ public class GenericUtilTest extends TestCase {
                 .getValueTypeOfMap(t3)));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetTypeVariableMap() throws Exception {
         Map<TypeVariable<?>, Type> map = GenericUtil
                 .getTypeVariableMap(Hoge.class);
@@ -121,6 +136,9 @@ public class GenericUtilTest extends TestCase {
         assertEquals(Boolean.class, entry.getValue());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetActualClass() throws Exception {
         Map<TypeVariable<?>, Type> map = GenericUtil
                 .getTypeVariableMap(Hoge.class);
@@ -148,6 +166,9 @@ public class GenericUtilTest extends TestCase {
                 .getGenericReturnType(), map));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetActualElementClassOfArray() throws Exception {
         Map<TypeVariable<?>, Type> map = GenericUtil
                 .getTypeVariableMap(Hoge.class);
@@ -156,6 +177,9 @@ public class GenericUtilTest extends TestCase {
                 method.getGenericReturnType(), map));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetActualElementClassOfList() throws Exception {
         Map<TypeVariable<?>, Type> map = GenericUtil
                 .getTypeVariableMap(Hoge.class);
@@ -164,6 +188,9 @@ public class GenericUtilTest extends TestCase {
                 method.getGenericReturnType(), map));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetActualElementClassOfSet() throws Exception {
         Map<TypeVariable<?>, Type> map = GenericUtil
                 .getTypeVariableMap(Hoge.class);
@@ -172,6 +199,9 @@ public class GenericUtilTest extends TestCase {
                 method.getGenericReturnType(), map));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetActualKeyClassOfMap() throws Exception {
         Map<TypeVariable<?>, Type> map = GenericUtil
                 .getTypeVariableMap(Hoge.class);
@@ -180,6 +210,9 @@ public class GenericUtilTest extends TestCase {
                 .getGenericReturnType(), map));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetActualValueClassOfMap() throws Exception {
         Map<TypeVariable<?>, Type> map = GenericUtil
                 .getTypeVariableMap(Hoge.class);
@@ -188,57 +221,131 @@ public class GenericUtilTest extends TestCase {
                 .getGenericReturnType(), map));
     }
 
+    /**
+     * 
+     */
     public interface ArrayType {
 
+        /**
+         * @return
+         */
         Class<String>[] arrayOfStringClass();
     }
 
+    /**
+     * 
+     */
     public interface ListType {
 
+        /**
+         * @return
+         */
         List<String> listOfString();
 
+        /**
+         * @return
+         */
         List<Class<?>> listOfClass();
 
+        /**
+         * @return
+         */
         List<?> listOfWildcard();
     }
 
+    /**
+     * 
+     */
     public interface SetType {
 
+        /**
+         * @return
+         */
         Set<String> setOfString();
 
+        /**
+         * @return
+         */
         Set<Class<?>> setOfClass();
 
+        /**
+         * @return
+         */
         Set<?> setOfWildcard();
     }
 
+    /**
+     * 
+     */
     public interface MapType {
 
+        /**
+         * @return
+         */
         Map<String, Object> mapOfStringToObject();
 
+        /**
+         * @return
+         */
         Map<Class<?>, String> mapOfClassToString();
 
+        /**
+         * @return
+         */
         Map<?, ?> mapOfWildcard();
     }
 
+    /**
+     * @param <T1>
+     * @param <T2>
+     * 
+     */
     public interface Foo<T1, T2> {
 
+        /**
+         * @param foo
+         * @return
+         */
         T2 foo(T1 foo);
     }
 
+    /**
+     * 
+     */
     public interface Bar extends Foo<Integer, Long> {
     }
 
+    /**
+     * @param <T1>
+     * @param <T2>
+     * 
+     */
     public interface Baz<T1, T2> {
 
+        /**
+         * @return
+         */
         T1[] array();
 
+        /**
+         * @return
+         */
         List<T2> list();
 
+        /**
+         * @return
+         */
         Set<T1> set();
 
+        /**
+         * @return
+         */
         Map<T1, T2> map();
     }
 
+    /**
+     * 
+     */
     public static abstract class Hoge implements Bar, Baz<String, Boolean> {
     }
 
