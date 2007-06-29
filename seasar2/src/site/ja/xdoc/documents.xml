@@ -34,6 +34,7 @@
 					<li><p><a href="S2Logger.html">Logger</a></p></li>
 				</ul>
 			</subsection>
+			<!--
 			<subsection name="リファレンス(作成中)">
 				<ul>
 					<li><p><a href="reference/html/index.html">Online HTML</a>
@@ -42,6 +43,7 @@
 					<li><p><a href="reference/pdf/s2reference.pdf">PDF</a></p></li>
 				</ul>
 			</subsection>
+			-->
 			<subsection name="FAQ">
 				<ul>
 					<li><p><a href="http://www.seasar.org/wiki/index.php?FAQ%2FS2Container">全般</a></p></li>
