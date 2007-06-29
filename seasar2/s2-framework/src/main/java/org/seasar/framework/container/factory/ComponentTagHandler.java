@@ -104,6 +104,13 @@ public class ComponentTagHandler extends AbstractTagHandler {
         }
     }
 
+    /**
+     * コンポーネント定義を作成します。
+     * 
+     * @param componentClass
+     * @param name
+     * @return コンポーネント定義
+     */
     protected ComponentDef createComponentDef(Class componentClass, String name) {
         return new ComponentDefImpl(componentClass, name);
     }

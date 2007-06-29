@@ -21,18 +21,36 @@ import org.seasar.framework.container.S2Container;
 import org.seasar.framework.exception.ResourceNotFoundRuntimeException;
 
 /**
+ * {@link S2ContainerBuilder}の抽象クラスです。
+ * 
  * @author koichik
  */
 public abstract class AbstractS2ContainerBuilder implements S2ContainerBuilder {
 
+    /**
+     * Bindingアノテーションの定義です。
+     */
     public static final String resourceResolver_BINDING = "bindingType=may";
 
+    /**
+     * {@link ResourceResolver}です。
+     */
     protected ResourceResolver resourceResolver = new ClassPathResourceResolver();
 
+    /**
+     * {@link ResourceResolver}を返します。
+     * 
+     * @return {@link ResourceResolver}
+     */
     public ResourceResolver getResourceResolver() {
         return resourceResolver;
     }
 
+    /**
+     * {@link ResourceResolver}を設定します。
+     * 
+     * @param resolver
+     */
     public void setResourceResolver(final ResourceResolver resolver) {
         resourceResolver = resolver;
     }
@@ -50,6 +68,12 @@ public abstract class AbstractS2ContainerBuilder implements S2ContainerBuilder {
         }
     }
 
+    /**
+     * {@link InputStream}を返します。
+     * 
+     * @param path
+     * @return {@link InputStream}
+     */
     protected InputStream getInputStream(final String path) {
         final InputStream is = resourceResolver.getInputStream(path);
         if (is == null) {

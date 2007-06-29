@@ -44,6 +44,11 @@ public class InterTypeTagHandler extends AbstractTagHandler {
         componentDef.addInterTypeDef(interTypeDef);
     }
 
+    /**
+     * インタータイプ定義を作成します。
+     * 
+     * @return インタータイプ定義
+     */
     protected InterTypeDef createInterTypeDef() {
         return new InterTypeDefImpl();
     }

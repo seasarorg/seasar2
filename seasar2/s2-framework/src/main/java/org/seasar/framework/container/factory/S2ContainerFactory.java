@@ -798,6 +798,12 @@ public final class S2ContainerFactory {
             setupAssembler(configurationContainer);
         }
 
+        /**
+         * プロバイダを作成します。
+         * 
+         * @param configurationContainer
+         * @return プロバイダ
+         */
         protected Provider createProvider(
                 final S2Container configurationContainer) {
             if (configurationContainer.hasComponentDef(Provider.class)) {
@@ -825,6 +831,12 @@ public final class S2ContainerFactory {
             return provider;
         }
 
+        /**
+         * コンテナのビルダを作成します。
+         * 
+         * @param configurationContainer
+         * @return コンテナのビルダ
+         */
         protected S2ContainerBuilder createDefaultBuilder(
                 final S2Container configurationContainer) {
             if (configurationContainer.hasComponentDef(DEFAULT_BUILDER_NAME)) {
@@ -840,6 +852,11 @@ public final class S2ContainerFactory {
             return defaultBuilder;
         }
 
+        /**
+         * ビヘイビアを設定します。
+         * 
+         * @param configurationContainer
+         */
         protected void setupBehavior(final S2Container configurationContainer) {
             if (configurationContainer
                     .hasComponentDef(S2ContainerBehavior.Provider.class)) {
@@ -849,6 +866,11 @@ public final class S2ContainerFactory {
             }
         }
 
+        /**
+         * デプロイヤを設定します。
+         * 
+         * @param configurationContainer
+         */
         protected void setupDeployer(final S2Container configurationContainer) {
             if (configurationContainer
                     .hasComponentDef(ComponentDeployerFactory.Provider.class)) {
@@ -858,6 +880,11 @@ public final class S2ContainerFactory {
             }
         }
 
+        /**
+         * アセンブラを設定します。
+         * 
+         * @param configurationContainer
+         */
         protected void setupAssembler(final S2Container configurationContainer) {
             if (configurationContainer
                     .hasComponentDef(AssemblerFactory.Provider.class)) {

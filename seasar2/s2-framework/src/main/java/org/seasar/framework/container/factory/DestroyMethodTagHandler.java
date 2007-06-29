@@ -29,19 +29,11 @@ import org.xml.sax.Attributes;
 public class DestroyMethodTagHandler extends MethodTagHandler {
     private static final long serialVersionUID = 3083124978566352071L;
 
-    /**
-     * @see org.seasar.framework.xml.sax.handler.TagHandler#start(org.seasar.framework.xml.sax.handler.TagHandlerContext,
-     *      org.xml.sax.Attributes)
-     */
     public void start(TagHandlerContext context, Attributes attributes) {
         String name = attributes.getValue("name");
         context.push(createDestroyMethodDef(name));
     }
 
-    /**
-     * @see org.seasar.framework.xml.sax.handler.TagHandler#end(org.seasar.framework.xml.sax.handler.TagHandlerContext,
-     *      java.lang.String)
-     */
     public void end(TagHandlerContext context, String body) {
         DestroyMethodDef methodDef = (DestroyMethodDef) context.pop();
         processExpression(methodDef, body, "destroyMethod", context);
@@ -49,6 +41,12 @@ public class DestroyMethodTagHandler extends MethodTagHandler {
         componentDef.addDestroyMethodDef(methodDef);
     }
 
+    /**
+     * 終了メソッド定義を作成します。
+     * 
+     * @param name
+     * @return 終了メソッド定義
+     */
     protected DestroyMethodDefImpl createDestroyMethodDef(String name) {
         return new DestroyMethodDefImpl(name);
     }

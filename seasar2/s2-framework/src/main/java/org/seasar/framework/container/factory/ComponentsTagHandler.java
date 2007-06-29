@@ -31,12 +31,25 @@ import org.xml.sax.Attributes;
 public class ComponentsTagHandler extends TagHandler {
     private static final long serialVersionUID = 3182865184697069169L;
 
+    /**
+     * {@link S2Container}の実装クラスです。
+     */
     protected Class containerImplClass = S2ContainerImpl.class;
 
+    /**
+     * {@link S2Container}の実装クラスを返します。
+     * 
+     * @return {@link S2Container}の実装クラス
+     */
     public Class getContainerImplClass() {
         return containerImplClass;
     }
 
+    /**
+     * {@link S2Container}の実装クラスを設定します。
+     * 
+     * @param containerImplClass
+     */
     public void setContainerImplClass(Class containerImplClass) {
         this.containerImplClass = containerImplClass;
     }
@@ -62,6 +75,11 @@ public class ComponentsTagHandler extends TagHandler {
         context.push(container);
     }
 
+    /**
+     * {@link S2Container}を作成します。
+     * 
+     * @return {@link S2Container}
+     */
     protected S2Container createContainer() {
         return (S2Container) ClassUtil.newInstance(containerImplClass);
     }

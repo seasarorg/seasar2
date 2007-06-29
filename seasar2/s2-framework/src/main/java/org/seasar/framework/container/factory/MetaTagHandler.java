@@ -44,6 +44,12 @@ public class MetaTagHandler extends AbstractTagHandler {
         metaDefAware.addMetaDef(metaDef);
     }
 
+    /**
+     * メタ定義を作成します。
+     * 
+     * @param name
+     * @return メタ定義
+     */
     protected MetaDefImpl createMetaDef(String name) {
         return new MetaDefImpl(name);
     }

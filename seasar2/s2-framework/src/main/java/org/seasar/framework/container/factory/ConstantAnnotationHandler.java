@@ -263,7 +263,7 @@ public class ConstantAnnotationHandler extends AbstractAnnotationHandler {
     }
 
     /**
-     * 指定されたインターセプタ名とポイントカットを表す文字列からアスペクト定義を生成し、コンポーネント定義に追加します。 但し、インターセプタ名が<code>null</code>の場合には{@throws EmptyRuntimeException}がスローされます。
+     * 指定されたインターセプタ名とポイントカットを表す文字列からアスペクト定義を生成し、コンポーネント定義に追加します。 但し、インターセプタ名が<code>null</code>の場合には{@link EmptyRuntimeException}がスローされます。
      * 
      * @param componentDef
      *            コンポーネント定義
@@ -286,7 +286,7 @@ public class ConstantAnnotationHandler extends AbstractAnnotationHandler {
     }
 
     /**
-     * 指定されたインターセプタ名とメソッドからアスペクト定義を生成し、コンポーネント定義に追加します。 但し、インターセプタ名が<code>null</code>の場合には{@throws EmptyRuntimeException}がスローされます。
+     * 指定されたインターセプタ名とメソッドからアスペクト定義を生成し、コンポーネント定義に追加します。 但し、インターセプタ名が<code>null</code>の場合には{@link EmptyRuntimeException}がスローされます。
      * 
      * @param componentDef
      *            コンポーネント定義
@@ -439,7 +439,7 @@ public class ConstantAnnotationHandler extends AbstractAnnotationHandler {
      * 
      * @param componentDef
      *            コンポーネント定義
-     * @param method
+     * @param targetMethod
      *            メソッド
      */
     protected void appendDestroyMethod(ComponentDef componentDef,

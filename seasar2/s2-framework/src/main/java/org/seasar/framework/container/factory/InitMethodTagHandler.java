@@ -41,6 +41,12 @@ public class InitMethodTagHandler extends MethodTagHandler {
         componentDef.addInitMethodDef(methodDef);
     }
 
+    /**
+     * 初期化メソッド定義を作成します。
+     * 
+     * @param name
+     * @return 初期化メソッド定義
+     */
     protected InitMethodDefImpl createInitMethodDef(String name) {
         return new InitMethodDefImpl(name);
     }

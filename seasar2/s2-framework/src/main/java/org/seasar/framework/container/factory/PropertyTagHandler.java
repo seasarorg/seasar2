@@ -56,6 +56,12 @@ public class PropertyTagHandler extends AbstractTagHandler {
         componentDef.addPropertyDef(propertyDef);
     }
 
+    /**
+     * プロパティ定義を作成します。
+     * 
+     * @param name
+     * @return プロパティ定義
+     */
     protected PropertyDefImpl createPropertyDef(String name) {
         return new PropertyDefImpl(name);
     }

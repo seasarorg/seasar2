@@ -53,14 +53,31 @@ public class AspectTagHandler extends AbstractTagHandler {
         componentDef.addAspectDef(aspectDef);
     }
 
+    /**
+     * アスペクト定義を作成します。
+     * 
+     * @return アスペクト定義
+     */
     protected AspectDefImpl createAspectDef() {
         return new AspectDefImpl();
     }
 
+    /**
+     * アスペクト定義を作成します。
+     * 
+     * @param pointcut
+     * @return アスペクト定義
+     */
     protected AspectDefImpl createAspectDef(Pointcut pointcut) {
         return new AspectDefImpl(pointcut);
     }
 
+    /**
+     * ポイントカットを作成します。
+     * 
+     * @param methodNames
+     * @return ポイントカット
+     */
     protected Pointcut createPointcut(String[] methodNames) {
         return new PointcutImpl(methodNames);
     }
