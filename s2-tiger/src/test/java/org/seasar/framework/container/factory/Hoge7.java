@@ -17,6 +17,9 @@ package org.seasar.framework.container.factory;
 
 import javax.ejb.Stateless;
 
+/**
+ * 
+ */
 @Stateless(name = "hoge77")
 public class Hoge7 implements IHoge7 {
 

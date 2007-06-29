@@ -23,6 +23,10 @@ import junit.framework.TestCase;
  */
 public class TigerAnnotationHandlerFactoryTest extends TestCase {
 
+    /**
+     * @throws Exception
+     * 
+     */
     public void testGetAnnotationHandler() throws Exception {
         AnnotationHandler handler = AnnotationHandlerFactory
                 .getAnnotationHandler();

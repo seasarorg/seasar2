@@ -19,9 +19,15 @@ import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 
+/**
+ * 
+ */
 @Stateless
 public class Hoge19Derived extends Hoge19Base implements IHoge19 {
 
+    /**
+     * 
+     */
     public Hoge19Derived() {
     }
 

@@ -15,16 +15,33 @@
  */
 package org.seasar.framework.container.factory;
 
+/**
+ * 
+ */
 public interface IHoge11A {
 
+    /**
+     * 
+     */
     public void mandatory();
 
+    /**
+     * 
+     */
     public void required();
 
+    /**
+     * 
+     */
     public void requiresNew();
 
+    /**
+     * 
+     */
     public void supports();
 
+    /**
+     * 
+     */
     public void notSupported();
-
 }

@@ -21,10 +21,16 @@ import org.seasar.framework.container.annotation.tiger.DestroyMethod;
 import org.seasar.framework.container.annotation.tiger.InitMethod;
 import org.seasar.framework.container.annotation.tiger.InterType;
 
+/**
+ * 
+ */
 @Aspect(value = "aop.traceInterceptor", pointcut = "getAaa")
 @InterType("fieldInterType")
 public class Hoge {
 
+    /**
+     * @return
+     */
     public String getAaa() {
         return null;
     }
@@ -32,10 +38,16 @@ public class Hoge {
     @Binding("hoge")
     private String bbb;
 
+    /**
+     * @return
+     */
     public String getBbb() {
         return bbb;
     }
 
+    /**
+     * @param bbb
+     */
     public void setBbb(String bbb) {
         this.bbb = bbb;
     }
@@ -43,19 +55,31 @@ public class Hoge {
     @Binding("foo")
     private String ccc;
 
+    /**
+     * @return
+     */
     public String getCcc() {
         return ccc;
     }
 
+    /**
+     * @param ccc
+     */
     @Binding("bar")
     public void setCcc(String ccc) {
         this.ccc = ccc;
     }
 
+    /**
+     * 
+     */
     @InitMethod
     public void init() {
     }
 
+    /**
+     * 
+     */
     @DestroyMethod
     public void destroy() {
     }

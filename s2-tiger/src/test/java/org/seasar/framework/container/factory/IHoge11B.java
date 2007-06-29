@@ -15,12 +15,24 @@
  */
 package org.seasar.framework.container.factory;
 
+/**
+ * 
+ */
 public interface IHoge11B {
 
+    /**
+     * 
+     */
     public void never();
 
+    /**
+     * 
+     */
     public void defaultValue();
 
+    /**
+     * 
+     */
     public void notAnnotated();
 
 }

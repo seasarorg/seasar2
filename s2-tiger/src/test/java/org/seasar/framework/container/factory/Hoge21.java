@@ -18,13 +18,22 @@ package org.seasar.framework.container.factory;
 import org.seasar.framework.aop.annotation.Trace;
 import org.seasar.framework.container.annotation.tiger.Component;
 
+/**
+ * 
+ */
 @Component
 public class Hoge21 {
 
+    /**
+     * 
+     */
     @Trace
     public void foo() {
     }
 
+    /**
+     * 
+     */
     public void bar() {
     }
 }

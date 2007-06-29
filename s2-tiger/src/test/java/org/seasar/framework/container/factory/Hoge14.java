@@ -21,6 +21,9 @@ import javax.interceptor.ExcludeClassInterceptors;
 import javax.interceptor.Interceptors;
 import javax.interceptor.InvocationContext;
 
+/**
+ * 
+ */
 @Stateful
 @Interceptors(Interceptor1.class)
 public class Hoge14 implements IHoge14 {
@@ -40,6 +43,10 @@ public class Hoge14 implements IHoge14 {
         return param + "-baz";
     }
 
+    /**
+     * @param param
+     * @return
+     */
     public String hoge(String param) {
         return param + "-hoge";
     }

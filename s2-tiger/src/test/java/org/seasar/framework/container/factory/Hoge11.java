@@ -27,6 +27,9 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceUnit;
 import javax.sql.DataSource;
 
+/**
+ * 
+ */
 @Stateless
 @Local( { IHoge11A.class, IHoge11B.class })
 public class Hoge11 implements IHoge11A, IHoge11B {
@@ -73,53 +76,86 @@ public class Hoge11 implements IHoge11A, IHoge11B {
 
     DataSource ds4;
 
+    /**
+     * @param em
+     */
     @PersistenceContext
     public void setEm4(EntityManager em) {
         em4 = em;
     }
 
+    /**
+     * @param em
+     */
     @PersistenceContext(name = "emf")
     public void setEm5(EntityManager em) {
         em5 = em;
     }
 
+    /**
+     * @param em
+     */
     @PersistenceContext(unitName = "hibernate")
     public void setEm6(EntityManager em) {
         em6 = em;
     }
 
+    /**
+     * @return
+     */
     public EntityManagerFactory getEmf4() {
         return emf4;
     }
 
+    /**
+     * @param emf4
+     */
     @PersistenceUnit
     public void setEmf4(EntityManagerFactory emf4) {
         this.emf4 = emf4;
     }
 
+    /**
+     * @return
+     */
     public EntityManagerFactory getEmf5() {
         return emf5;
     }
 
+    /**
+     * @param emf5
+     */
     @PersistenceUnit(name = "emf")
     public void setEmf5(EntityManagerFactory emf5) {
         this.emf5 = emf5;
     }
 
+    /**
+     * @return
+     */
     public EntityManagerFactory getEmf6() {
         return emf6;
     }
 
+    /**
+     * @param emf6
+     */
     @PersistenceUnit(unitName = "hibernate")
     public void setEmf6(EntityManagerFactory emf6) {
         this.emf6 = emf6;
     }
 
+    /**
+     * @param ds3
+     */
     @Resource
     public void setDs3(DataSource ds3) {
         this.ds3 = ds3;
     }
 
+    /**
+     * @param ds4
+     */
     @Resource(name = "DataSource")
     public void setDs4(DataSource ds4) {
         this.ds4 = ds4;

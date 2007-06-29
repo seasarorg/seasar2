@@ -67,6 +67,9 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
         TigerAnnotationHandler.initialize();
     }
 
+    /**
+     * @throws Exception
+     */
     public void testCreateComponentDef() throws Exception {
         assertNotNull(handler.createComponentDef(Hoge.class, null));
         ComponentDef cd = handler.createComponentDef(Hoge2.class, null);
@@ -132,6 +135,9 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
         assertTrue(cd12.isExternalBinding());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testCreatePropertyDef() throws Exception {
         BeanDesc beanDesc = BeanDescFactory.getBeanDesc(Hoge.class);
         PropertyDesc propDesc = beanDesc.getPropertyDesc("aaa");
@@ -162,6 +168,9 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
         assertEquals("4", "none", propDef.getBindingTypeDef().getName());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testCreatePropertyDefForEJB3() throws Exception {
         BeanDesc beanDesc = BeanDescFactory.getBeanDesc(Hoge2.class);
         PropertyDesc propDesc = beanDesc.getPropertyDesc("ddd");
@@ -190,6 +199,9 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
                 .getSource());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testCreatePropertyDefForEJB3ForField() throws Exception {
         BeanDesc beanDesc = BeanDescFactory.getBeanDesc(Hoge2.class);
         Field field = beanDesc.getField("fff");
@@ -218,6 +230,9 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
                 .getSource());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAppendDIForEJB3() throws Exception {
         ComponentDef cd = handler.createComponentDef(Hoge2.class, null);
         handler.appendDI(cd);
@@ -226,6 +241,9 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
                 .getSource());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testCreatePropertyDefForConstantAnnotation() throws Exception {
         BeanDesc beanDesc = BeanDescFactory.getBeanDesc(Hoge.class);
         PropertyDesc propDesc = beanDesc.getPropertyDesc("aaa");
@@ -243,6 +261,9 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
         assertEquals("4", "none", propDef.getBindingTypeDef().getName());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAppendAspect() throws Exception {
         ComponentDef cd = handler.createComponentDef(Hoge.class, null);
         handler.appendAspect(cd);
@@ -252,6 +273,9 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
                 .getExpression()).getSource());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAppendAspectForMethod() throws Exception {
         ComponentDef cd = handler.createComponentDef(Hoge4.class, null);
         handler.appendAspect(cd);
@@ -265,6 +289,9 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
                 Hoge4.class.getMethod("getAaa", new Class[] { String.class })));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAppendInterceptorForClass() throws Exception {
         S2Container container = new S2ContainerImpl();
         S2ContainerFactory.include(container, "aop.dicon");
@@ -279,6 +306,9 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
         assertNull(aspectDef.getPointcut());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAppendInterceptorForMethod() throws Exception {
         S2Container container = new S2ContainerImpl();
         S2ContainerFactory.include(container, "aop.dicon");
@@ -295,6 +325,9 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
                 Hoge21.class.getMethod("bar", null)));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAppendAspectForConstantAnnotation() throws Exception {
         ComponentDef cd = handler.createComponentDef(Hoge3.class, null);
         handler.appendAspect(cd);
@@ -304,6 +337,9 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
                 .getExpression()).getSource());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAppendAspectForEJB3CMT1() throws Exception {
         ComponentDef cd = handler.createComponentDef(Hoge11.class, null);
         handler.appendAspect(cd);
@@ -321,6 +357,9 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
         assertEquals("8", "ejb3tx.requiredTx", map.get("notAnnotated"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAppendAspectForEJB3CMT2() throws Exception {
         ComponentDef cd = handler.createComponentDef(Hoge12.class, null);
         handler.appendAspect(cd);
@@ -331,6 +370,9 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
         assertEquals("3", "ejb3tx.requiresNewTx", map.get("notAnnotated"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAppendAspectForEJB3CMT3() throws Exception {
         ComponentDef cd = handler.createComponentDef(Hoge19Derived.class, null);
         handler.appendAspect(cd);
@@ -342,12 +384,18 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
         assertEquals("4", "ejb3tx.requiresNewTx", map.get("cMethod"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAppendAspectForEJB3BMT() throws Exception {
         ComponentDef cd = handler.createComponentDef(Hoge13.class, null);
         handler.appendAspect(cd);
         assertEquals("1", 0, cd.getAspectDefSize());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAppendAspectForEJB3Interceptor() throws Exception {
         include("ejb3tx.dicon");
         ComponentDef cd = handler.createComponentDef(Hoge14.class, null);
@@ -365,6 +413,9 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
         assertEquals("4", "start-hoge", hoge14.hoge("start"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAppendAspectForEJB3InterceptorInvalid1() throws Exception {
         try {
             ComponentDef cd = handler.createComponentDef(Hoge15.class, null);
@@ -375,6 +426,9 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAppendAspectForEJB3InterceptorInvalid2() throws Exception {
         try {
             ComponentDef cd = handler.createComponentDef(Hoge16.class, null);
@@ -385,6 +439,9 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAppendAspectForEJB3InterceptorInvalid3() throws Exception {
         try {
             ComponentDef cd = handler.createComponentDef(Hoge17.class, null);
@@ -395,6 +452,9 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public void testPersistenceContextForEJB3ByField() throws Exception {
         BeanDesc beanDesc = BeanDescFactory.getBeanDesc(PropertyDefImpl.class);
 
@@ -429,6 +489,9 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
                         .getExpression()).getUnitName());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testPersistenceContextForEJB3ByProperty() throws Exception {
         BeanDesc beanDesc = BeanDescFactory.getBeanDesc(PropertyDefImpl.class);
 
@@ -463,6 +526,9 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
                         .getExpression()).getUnitName());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testPersistenceUnitForEJB3ByField() throws Exception {
         BeanDesc beanDesc = BeanDescFactory.getBeanDesc(PropertyDefImpl.class);
 
@@ -488,6 +554,9 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
                         .getExpression()).getUnitName());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testPersistenceUnitForEJB3ByProperty() throws Exception {
         BeanDesc beanDesc = BeanDescFactory.getBeanDesc(PropertyDefImpl.class);
 
@@ -513,6 +582,9 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
                         .getExpression()).getUnitName());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testResourceForEJB3ByField() throws Exception {
         ComponentDef cd = handler.createComponentDef(Hoge11.class, null);
         handler.appendDI(cd);
@@ -527,6 +599,9 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
         assertEquals("field", pd2.getAccessTypeDef().getName());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testResourceForEJB3ByProperty() throws Exception {
         ComponentDef cd = handler.createComponentDef(Hoge11.class, null);
         handler.appendDI(cd);
@@ -541,6 +616,9 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
         assertEquals("property", pd2.getAccessTypeDef().getName());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testInterType() throws Exception {
         ComponentDef cd = handler.createComponentDef(Hoge.class, null);
         handler.appendInterType(cd);
@@ -550,6 +628,9 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
                 .getExpression()).getSource());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAppendInterTypeForConstantAnnotation() throws Exception {
         ComponentDef cd = handler.createComponentDef(Hoge3.class, null);
         handler.appendInterType(cd);
@@ -559,6 +640,9 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
                 .getExpression()).getSource());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAppendInitMethod() throws Exception {
         ComponentDef cd = handler.createComponentDef(Hoge.class, null);
         handler.appendInitMethod(cd);
@@ -567,6 +651,9 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
         assertEquals("2", "init", initMethodDef.getMethod().getName());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAppendInitMethodForConstantAnnotation() throws Exception {
         ComponentDef cd = handler.createComponentDef(Hoge3.class, null);
         handler.appendInitMethod(cd);
@@ -575,15 +662,24 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
         assertEquals("2", "init", initMethodDef.getMethodName());
     }
 
+    /**
+     * @throws Exception
+     */
     public void setUpAppendInitMethodForDicon() throws Exception {
         include("TigerAnnotationHandlerTest.dicon");
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAppendInitMethodForDicon() throws Exception {
         ComponentDef cd = getComponentDef(Hoge5.class);
         assertEquals("1", 1, cd.getInitMethodDefSize());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAppendInitMethodForException() throws Exception {
         ComponentDef cd = handler.createComponentDef(Hoge6.class, null);
         try {
@@ -594,6 +690,9 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAppendInitMethodForEJB3() throws Exception {
         include("ejb3tx.dicon");
         ComponentDef cd = handler.createComponentDef(Hoge11.class, null);
@@ -610,6 +709,9 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
         assertEquals("4", "FOO", hoge.foo);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAppendInitMethodForEJB3Exception() throws Exception {
         try {
             ComponentDef cd = handler.createComponentDef(Hoge18.class, null);
@@ -620,6 +722,9 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAppendDestroyMethod() throws Exception {
         ComponentDef cd = handler.createComponentDef(Hoge.class, null);
         handler.appendDestroyMethod(cd);
@@ -628,6 +733,9 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
         assertEquals("2", "destroy", destroyMethodDef.getMethod().getName());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAppendDestroyMethodForConstantAnnotation() throws Exception {
         ComponentDef cd = handler.createComponentDef(Hoge3.class, null);
         handler.appendDestroyMethod(cd);
@@ -636,15 +744,24 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
         assertEquals("2", "destroy", destroyMethodDef.getMethodName());
     }
 
+    /**
+     * @throws Exception
+     */
     public void setUpAppendDestroyMethodForDicon() throws Exception {
         include("TigerAnnotationHandlerTest.dicon");
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAppendDestroyMethodForDicon() throws Exception {
         ComponentDef cd = getComponentDef(Hoge5.class);
         assertEquals("1", 1, cd.getDestroyMethodDefSize());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAppendDestroyMethodForException() throws Exception {
         ComponentDef cd = handler.createComponentDef(Hoge6.class, null);
         try {
@@ -655,6 +772,9 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
         }
     }
 
+    /**
+     * 
+     */
     public void testAddComponentDefFactory() {
         TigerAnnotationHandler
                 .addComponentDefBuilder(new TestComponentDefFactory());
@@ -663,10 +783,16 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
         assertTrue("1", componentDef instanceof TestComponentDef);
     }
 
+    /**
+     * 
+     */
     public void tearDownAddComponentDefFactory() {
         TigerAnnotationHandler.loadDefaultComponentDefBuilder();
     }
 
+    /**
+     * 
+     */
     public void testClearAndReloadComponentDefFactory() {
         assertEquals(2, TigerAnnotationHandler.componentDefBuilders.size());
         TigerAnnotationHandler.clearComponentDefBuilder();
@@ -680,6 +806,9 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
         assertTrue(TigerAnnotationHandler.componentDefBuilders.get(2) instanceof PojoComponentDefBuilder);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAddPropertyDefFactory() throws Exception {
         TigerAnnotationHandler
                 .addPropertyDefBuilder(new TestPropertyDefFactory());
@@ -689,6 +818,9 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
         assertTrue("1", propertyDef instanceof TestPropertyDef);
     }
 
+    /**
+     * 
+     */
     public void testClearAndReloadPropertyDefFactory() {
         assertEquals(5, TigerAnnotationHandler.propertyDefBuilders.size());
         TigerAnnotationHandler.clearPropertyDefBuilder();
@@ -704,6 +836,9 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
         assertTrue(TigerAnnotationHandler.propertyDefBuilders.get(4) instanceof ResourcePropertyDefBuilder);
     }
 
+    /**
+     * @throws Exception
+     */
     public void tearDownAddPropertyDefFactory() throws Exception {
         TigerAnnotationHandler.loadDefaultPropertyDefBuilder();
     }
@@ -725,7 +860,11 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
         return map;
     }
 
+    /**
+     * 
+     */
     public static class TestComponentDefFactory implements ComponentDefBuilder {
+
         public ComponentDef createComponentDef(AnnotationHandler handler,
                 Class<?> componentClass, InstanceDef defaultInstanceDef,
                 AutoBindingDef defaultAutoBindingDef,
@@ -735,10 +874,17 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
 
     }
 
+    /**
+     * 
+     */
     public static class TestComponentDef extends ComponentDefImpl {
     }
 
+    /**
+     * 
+     */
     public static class TestPropertyDefFactory implements PropertyDefBuilder {
+
         public PropertyDef createPropertyDef(AnnotationHandler handler,
                 BeanDesc beanDesc, Field field) {
             return new TestPropertyDef("foo");
@@ -750,7 +896,14 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
         }
     }
 
+    /**
+     * 
+     */
     public static class TestPropertyDef extends PropertyDefImpl {
+
+        /**
+         * @param propertyName
+         */
         public TestPropertyDef(String propertyName) {
             super(propertyName);
         }

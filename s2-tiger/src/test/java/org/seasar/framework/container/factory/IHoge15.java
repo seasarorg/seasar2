@@ -17,10 +17,23 @@ package org.seasar.framework.container.factory;
 
 import javax.interceptor.InvocationContext;
 
+/**
+ * 
+ */
 public interface IHoge15 {
 
+    /**
+     * @param context
+     * @return
+     * @throws Exception
+     */
     public Object interceptor1(InvocationContext context) throws Exception;
 
+    /**
+     * @param context
+     * @return
+     * @throws Exception
+     */
     public Object interceptor2(InvocationContext context) throws Exception;
 
 }

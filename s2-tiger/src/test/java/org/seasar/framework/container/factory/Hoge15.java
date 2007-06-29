@@ -19,6 +19,9 @@ import javax.ejb.Stateless;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.InvocationContext;
 
+/**
+ * 
+ */
 @Stateless
 public class Hoge15 implements IHoge15 {
 

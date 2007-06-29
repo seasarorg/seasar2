@@ -21,6 +21,9 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.ejb.TransactionManagement;
 
+/**
+ * 
+ */
 @Stateless
 @TransactionManagement
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)

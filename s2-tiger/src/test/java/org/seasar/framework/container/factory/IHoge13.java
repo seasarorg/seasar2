@@ -15,10 +15,19 @@
  */
 package org.seasar.framework.container.factory;
 
+/**
+ * 
+ */
 public interface IHoge13 {
 
+    /**
+     * 
+     */
     public void required();
 
+    /**
+     * 
+     */
     public void notAnnotated();
 
 }

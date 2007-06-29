@@ -15,11 +15,26 @@
  */
 package org.seasar.framework.container.factory;
 
+/**
+ * 
+ */
 public interface IHoge14 {
 
+    /**
+     * @param param
+     * @return
+     */
     String foo(String param);
 
+    /**
+     * @param param
+     * @return
+     */
     String bar(String param);
 
+    /**
+     * @param param
+     * @return
+     */
     String baz(String param);
 }

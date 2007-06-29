@@ -21,6 +21,9 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
 
+/**
+ * 
+ */
 @Stateful
 @Remote(IHoge13.class)
 @TransactionManagement(TransactionManagementType.BEAN)

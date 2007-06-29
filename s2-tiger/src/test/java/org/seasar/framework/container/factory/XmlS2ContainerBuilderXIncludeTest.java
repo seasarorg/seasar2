@@ -33,6 +33,9 @@ public class XmlS2ContainerBuilderXIncludeTest extends S2FrameworkTestCase {
         include(getClass().getName().replace('.', '/') + ".dicon");
     }
 
+    /**
+     * 
+     */
     public void test() {
         S2Container child = container.getChild(0);
         assertEquals(4, child.getComponentDefSize());

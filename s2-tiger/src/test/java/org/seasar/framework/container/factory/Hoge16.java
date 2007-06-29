@@ -18,6 +18,9 @@ package org.seasar.framework.container.factory;
 import javax.ejb.Stateless;
 import javax.interceptor.AroundInvoke;
 
+/**
+ * 
+ */
 @Stateless
 public class Hoge16 implements IHoge16 {
 

@@ -15,8 +15,15 @@
  */
 package org.seasar.framework.container.factory;
 
+/**
+ * 
+ */
 public interface IHoge16 {
 
+    /**
+     * @return
+     * @throws Exception
+     */
     public Object interceptor2() throws Exception;
 
 }

@@ -17,8 +17,14 @@ package org.seasar.framework.container;
 
 import org.seasar.framework.unit.S2FrameworkTestCase;
 
+/**
+ * 
+ */
 public class SingletonS2ContainerTest extends S2FrameworkTestCase {
 
+    /**
+     * @throws Exception
+     */
     public void test() throws Exception {
         register(Bar.class);
         register(Hoge.class, "hoge");
@@ -34,12 +40,21 @@ public class SingletonS2ContainerTest extends S2FrameworkTestCase {
         assertNotNull(hoge2);
     }
 
+    /**
+     * 
+     */
     public static class Foo {
     }
 
+    /**
+     * 
+     */
     public static class Bar extends Foo {
     }
 
+    /**
+     * 
+     */
     public static class Hoge {
 
     }

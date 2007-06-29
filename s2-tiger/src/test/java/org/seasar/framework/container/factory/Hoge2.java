@@ -23,6 +23,9 @@ import org.seasar.framework.container.annotation.tiger.BindingType;
 import org.seasar.framework.container.annotation.tiger.Component;
 import org.seasar.framework.container.annotation.tiger.InstanceType;
 
+/**
+ * 
+ */
 @Component(name = "aaa", instance = InstanceType.PROTOTYPE, autoBinding = AutoBindingType.PROPERTY, externalBinding = true)
 public class Hoge2 {
 
@@ -46,41 +49,65 @@ public class Hoge2 {
     @EJB(beanName = "mmm2", name = "ejb/mmm2")
     private String mmm;
 
+    /**
+     * @param aaa
+     */
     @SuppressWarnings("unused")
     @Binding("aaa2")
     public void setAaa(String aaa) {
     }
 
+    /**
+     * @param bbb
+     */
     @SuppressWarnings("unused")
     @Binding(bindingType = BindingType.NONE)
     public void setBbb(String bbb) {
     }
 
+    /**
+     * @param ccc
+     */
     @SuppressWarnings("unused")
     @Binding
     public void setCcc(String ccc) {
     }
 
+    /**
+     * @param ddd
+     */
     @SuppressWarnings("unused")
     @EJB
     public void setDdd(String ddd) {
     }
 
+    /**
+     * @param eee
+     */
     @SuppressWarnings("unused")
     @EJB(name = "eee2")
     public void setEee(String eee) {
     }
 
+    /**
+     * @param iii
+     */
     @SuppressWarnings("unused")
     @EJB(name = "ejb/iii")
     public void setIii(String iii) {
     }
 
+    /**
+     * @param jjj
+     */
     @SuppressWarnings("unused")
     @EJB(beanName = "jjj2")
     public void setJjj(String jjj) {
     }
 
+    /**
+     * @param kkk
+     */
     @SuppressWarnings("unused")
     @EJB(beanName = "kkk2", name = "ejb/kkk2")
     public void setKkk(String kkk) {

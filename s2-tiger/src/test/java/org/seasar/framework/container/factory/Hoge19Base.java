@@ -18,18 +18,33 @@ package org.seasar.framework.container.factory;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 
+/**
+ * 
+ */
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 public class Hoge19Base {
 
+    /**
+     * 
+     */
     public Hoge19Base() {
     }
 
+    /**
+     * 
+     */
     public void aMethod() {
     }
 
+    /**
+     * 
+     */
     public void bMethod() {
     }
 
+    /**
+     * 
+     */
     public void cMethod() {
     }
 }
