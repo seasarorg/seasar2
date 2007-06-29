@@ -25,6 +25,9 @@ import org.seasar.framework.beans.factory.BeanDescFactory;
  */
 public class PropertyDescImplTest extends TestCase {
 
+    /**
+     * 
+     */
     public void testConvertWithString() {
         BeanDesc beanDesc = BeanDescFactory.getBeanDesc(MyDto.class);
         PropertyDesc pd = beanDesc.getPropertyDesc("myEnum");
@@ -34,12 +37,25 @@ public class PropertyDescImplTest extends TestCase {
 
     }
 
+    /**
+     *
+     */
     public enum MyEnum {
-        ONE, TWO
+        /**
+         * 
+         */
+        ONE,
+        /**
+         * 
+         */
+        TWO
     }
 
     private class MyDto {
 
+        /**
+         * 
+         */
         public MyEnum myEnum;
     }
 }
