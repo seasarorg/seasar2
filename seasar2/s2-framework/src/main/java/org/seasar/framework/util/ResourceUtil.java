@@ -35,6 +35,13 @@ public final class ResourceUtil {
     private ResourceUtil() {
     }
 
+    /**
+     * リソースパスを返します。
+     * 
+     * @param path
+     * @param extension
+     * @return リソースパス
+     */
     public static String getResourcePath(String path, String extension) {
         if (extension == null) {
             return path;
@@ -46,18 +53,45 @@ public final class ResourceUtil {
         return path.replace('.', '/') + extension;
     }
 
+    /**
+     * リソースパスを返します。
+     * 
+     * @param clazz
+     * @return リソースパス
+     */
     public static String getResourcePath(Class clazz) {
         return clazz.getName().replace('.', '/') + ".class";
     }
 
+    /**
+     * クラスローダを返します。
+     * 
+     * @return クラスローダ
+     */
     public static ClassLoader getClassLoader() {
         return Thread.currentThread().getContextClassLoader();
     }
 
+    /**
+     * リソースを返します。
+     * 
+     * @param path
+     * @return リソース
+     * @see #getResource(String, String)
+     */
     public static URL getResource(String path) {
         return getResource(path, null);
     }
 
+    /**
+     * リソースを返します。
+     * 
+     * @param path
+     * @param extension
+     * @return リソース
+     * @throws ResourceNotFoundRuntimeException
+     *             リソースが見つからなかった場合
+     */
     public static URL getResource(String path, String extension)
             throws ResourceNotFoundRuntimeException {
 
@@ -69,15 +103,39 @@ public final class ResourceUtil {
                 extension));
     }
 
+    /**
+     * リソースを返します。見つからなかった場合は<code>null</code>を返します。
+     * 
+     * @param path
+     * @return リソース
+     * @see #getResourceNoException(String, String)
+     */
     public static URL getResourceNoException(String path) {
         return getResourceNoException(path, null);
     }
 
+    /**
+     * リソースを返します。見つからなかった場合は<code>null</code>を返します。
+     * 
+     * @param path
+     * @param extension
+     * @return リソース
+     * @see #getResourceNoException(String, String, ClassLoader)
+     */
     public static URL getResourceNoException(String path, String extension) {
         return getResourceNoException(path, extension, Thread.currentThread()
                 .getContextClassLoader());
     }
 
+    /**
+     * リソースを返します。見つからなかった場合は<code>null</code>を返します。
+     * 
+     * @param path
+     * @param extension
+     * @param loader
+     * @return リソース
+     * @see #getResourcePath(String, String)
+     */
     public static URL getResourceNoException(String path, String extension,
             ClassLoader loader) {
         if (path == null || loader == null) {
@@ -87,6 +145,13 @@ public final class ResourceUtil {
         return loader.getResource(path);
     }
 
+    /**
+     * リソースをストリームとして返します。
+     * 
+     * @param path
+     * @return ストリーム
+     * @see #getResourceAsStream(String, String)
+     */
     public static InputStream getResourceAsStream(String path) {
         return getResourceAsStream(path, null);
     }
