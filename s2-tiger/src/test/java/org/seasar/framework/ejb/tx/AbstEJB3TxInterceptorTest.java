@@ -30,6 +30,9 @@ import junit.framework.TestCase;
  */
 public class AbstEJB3TxInterceptorTest extends TestCase {
 
+    /**
+     * @throws Exception
+     */
     public void testIsRollingBack() throws Exception {
         assertFalse(AbstractEJB3TxInterceptor.isRollingBack(new IOException()));
         assertFalse(AbstractEJB3TxInterceptor
@@ -55,18 +58,30 @@ public class AbstEJB3TxInterceptorTest extends TestCase {
                 .isRollingBack(new OutOfMemoryError()));
     }
 
+    /**
+     * 
+     */
     @ApplicationException
     public static class Exception1 extends RuntimeException {
+
         private static final long serialVersionUID = 1L;
     }
 
+    /**
+     * 
+     */
     @ApplicationException(rollback = false)
     public static class Exception2 extends RuntimeException {
+
         private static final long serialVersionUID = 1L;
     }
 
+    /**
+     * 
+     */
     @ApplicationException(rollback = true)
     public static class Exception3 extends RuntimeException {
+
         private static final long serialVersionUID = 1L;
     }
 

@@ -26,15 +26,27 @@ import org.seasar.framework.aop.impl.AspectImpl;
 import org.seasar.framework.aop.proxy.AopProxy;
 import org.seasar.framework.ejb.impl.AroundInvokeSupportInterceptor;
 
+/**
+ * 
+ */
 public class AroundInvokeSupportInterceptorTest extends TestCase {
 
+    /**
+     * 
+     */
     public AroundInvokeSupportInterceptorTest() {
     }
 
+    /**
+     * @param name
+     */
     public AroundInvokeSupportInterceptorTest(String name) {
         super(name);
     }
 
+    /**
+     * @throws Exception
+     */
     public void test() throws Exception {
         Method method = HogeImpl.class.getMethod("around", new Class<?>[] {InvocationContext.class});
         Aspect aspect = new AspectImpl(new AroundInvokeSupportInterceptor(method));
@@ -43,15 +55,30 @@ public class AroundInvokeSupportInterceptorTest extends TestCase {
         
     }
     
+    /**
+     * 
+     */
     public interface Hoge {
+        /**
+         * @param param
+         * @return
+         */
         String foo(String param);
     }
-    
+   
+    /**
+     * 
+     */
     public static class HogeImpl implements Hoge {
         public String foo(String param) {
             return param + "-foo";
         }
 
+        /**
+         * @param context
+         * @return
+         * @throws Exception
+         */
         public Object around(InvocationContext context) throws Exception {
             String param = (String) context.getParameters()[0];
             context.setParameters(new Object[] {param + "-before"});
