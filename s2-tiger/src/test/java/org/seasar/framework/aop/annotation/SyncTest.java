@@ -43,6 +43,9 @@ public class SyncTest extends TestCase {
         handler = AnnotationHandlerFactory.getAnnotationHandler();
     }
 
+    /**
+     * @throws Exception
+     */
     public void test() throws Exception {
         ComponentDef cd = handler.createComponentDef(Hoge.class,
                 InstanceDefFactory.SINGLETON);
@@ -69,10 +72,16 @@ public class SyncTest extends TestCase {
         assertEquals("foobar", hoge.buf.toString());
     }
 
+    /**
+     *
+     */
     @Component
     public static class Hoge {
         StringBuffer buf = new StringBuffer();
 
+        /**
+         * 
+         */
         @Sync
         public void foo() {
             try {
@@ -86,6 +95,9 @@ public class SyncTest extends TestCase {
             }
         }
 
+        /**
+         * 
+         */
         @Sync
         public void bar() {
             try {

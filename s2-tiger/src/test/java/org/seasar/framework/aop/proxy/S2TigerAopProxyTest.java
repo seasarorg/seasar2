@@ -24,15 +24,27 @@ import org.seasar.framework.aop.Pointcut;
 import org.seasar.framework.aop.impl.AspectImpl;
 import org.seasar.framework.aop.impl.PointcutImpl;
 
-public class AopProxyTest extends TestCase {
+/**
+ * 
+ */
+public class S2TigerAopProxyTest extends TestCase {
 
-    public AopProxyTest() {
+    /**
+     * 
+     */
+    public S2TigerAopProxyTest() {
     }
 
-    public AopProxyTest(String name) {
+    /**
+     * @param name
+     */
+    public S2TigerAopProxyTest(String name) {
         super(name);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGeneric() throws Exception {
         TestInterceptor interceptor = new TestInterceptor();
         Pointcut pointcut = new PointcutImpl(new String[] { "get" });
@@ -44,20 +56,36 @@ public class AopProxyTest extends TestCase {
         assertTrue("2", interceptor.invoked);
     }
 
+    /**
+     * 
+     * @param <T>
+     */
     public static class Foo<T> {
+
+        /**
+         * @return
+         */
         public T get() {
             return null;
         }
     }
 
+    /**
+     * 
+     */
     public static class Bar extends Foo<String> {
+
         @Override
         public String get() {
             return "Hoge";
         }
     }
 
+    /**
+     * 
+     */
     public class TestInterceptor implements MethodInterceptor {
+
         private boolean invoked = false;
 
         public Object invoke(MethodInvocation invocation) throws Throwable {

@@ -44,6 +44,9 @@ public class ReturnValueTest extends TestCase {
         handler = AnnotationHandlerFactory.getAnnotationHandler();
     }
 
+    /**
+     * @throws Exception
+     */
     public void test() throws Exception {
         ComponentDef cd = handler.createComponentDef(Hoge.class,
                 InstanceDefFactory.SINGLETON);
@@ -56,8 +59,14 @@ public class ReturnValueTest extends TestCase {
         assertEquals("Hoge", hoge.hoge());
     }
 
+    /**
+     *
+     */
     @Component
     public static class Hoge {
+        /**
+         * @return
+         */
         @ReturnValue("Hoge")
         public String hoge() {
             return null;

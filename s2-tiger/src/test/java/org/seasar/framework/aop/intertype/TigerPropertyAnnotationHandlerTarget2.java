@@ -19,8 +19,12 @@ import org.seasar.framework.container.annotation.tiger.InterType;
 import org.seasar.framework.container.annotation.tiger.Property;
 import org.seasar.framework.container.annotation.tiger.PropertyType;
 
+/**
+ * 
+ */
 @InterType("aop.propertyInterType")
 public class TigerPropertyAnnotationHandlerTarget2 {
+
     int defaultField;
 
     @Property(PropertyType.READ)
@@ -41,21 +45,36 @@ public class TigerPropertyAnnotationHandlerTarget2 {
 
     int hasGetterSetter;
 
+    /**
+     * 
+     */
     public TigerPropertyAnnotationHandlerTarget2() {
     }
 
+    /**
+     * @return
+     */
     public int getHasGetter() {
         return hasGetter;
     }
 
+    /**
+     * @param hasSetter
+     */
     public void setHasSetter(int hasSetter) {
         this.hasSetter = hasSetter;
     }
 
+    /**
+     * @return
+     */
     public int getHasGetterSetter() {
         return hasGetterSetter;
     }
 
+    /**
+     * @param hasGetterSetter
+     */
     public void setHasGetterSetter(int hasGetterSetter) {
         this.hasGetterSetter = hasGetterSetter;
     }

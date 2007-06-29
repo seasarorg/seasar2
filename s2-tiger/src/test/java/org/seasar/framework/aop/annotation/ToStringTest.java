@@ -44,6 +44,9 @@ public class ToStringTest extends TestCase {
         handler = AnnotationHandlerFactory.getAnnotationHandler();
     }
 
+    /**
+     * @throws Exception
+     */
     public void test() throws Exception {
         ComponentDef cd = handler.createComponentDef(Hoge.class,
                 InstanceDefFactory.SINGLETON);
@@ -54,8 +57,12 @@ public class ToStringTest extends TestCase {
         System.out.println(hoge);
     }
 
+    /**
+     * 
+     */
     @Component
     public static class Hoge {
+
         String name = "Hoge";
 
         @Override

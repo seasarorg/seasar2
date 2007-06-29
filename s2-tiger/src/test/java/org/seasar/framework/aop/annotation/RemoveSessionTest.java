@@ -32,6 +32,9 @@ public class RemoveSessionTest extends S2FrameworkTestCase {
         include(RemoveSessionTest.class.getName().replace('.', '/') + ".dicon");
     }
 
+    /**
+     * @throws Exception
+     */
     public void testRemove() throws Exception {
         HttpSession session = getRequest().getSession();
         session.setAttribute("foo", "Foo");
@@ -47,6 +50,9 @@ public class RemoveSessionTest extends S2FrameworkTestCase {
         assertNull(session.getAttribute("bar"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testRemove2() throws Exception {
         HttpSession session = getRequest().getSession();
         session.setAttribute("foo", "Foo");
@@ -62,16 +68,28 @@ public class RemoveSessionTest extends S2FrameworkTestCase {
         assertNull(session.getAttribute("bar"));
     }
 
+    /**
+     *
+     */
     @Component
     public static class Hoge {
 
+        /**
+         * 
+         */
         public void begin() {
         }
 
+        /**
+         * 
+         */
         @RemoveSession(name = "bar")
         public void end() {
         }
 
+        /**
+         * 
+         */
         @RemoveSession(name = { "foo", "bar" })
         public void end2() {
         }

@@ -28,7 +28,14 @@ import java.lang.annotation.Target;
 @Target( { ElementType.TYPE, ElementType.METHOD })
 @Interceptor("returnValueInterceptor")
 public @interface ReturnValue {
+
+    /**
+     * 
+     */
     String pointcut() default "";
 
+    /**
+     * 
+     */
     String value();
 }

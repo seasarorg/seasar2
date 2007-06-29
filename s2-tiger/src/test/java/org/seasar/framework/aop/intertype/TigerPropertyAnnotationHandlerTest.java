@@ -15,14 +15,24 @@
  */
 package org.seasar.framework.aop.intertype;
 
+/**
+ * 
+ */
 public class TigerPropertyAnnotationHandlerTest extends
         AbstractPropertyInterTypeTest {
 
     private static final String PATH = "org/seasar/framework/aop/intertype/TigerPropertyAnnotationHandlerTest.dicon";
 
+    /**
+     * 
+     */
     public TigerPropertyAnnotationHandlerTest() {
     }
 
+    /**
+     * @param name
+     * 
+     */
     public TigerPropertyAnnotationHandlerTest(String name) {
         super(name);
     }

@@ -20,9 +20,13 @@ import org.seasar.framework.container.annotation.tiger.BindingType;
 import org.seasar.framework.container.annotation.tiger.Property;
 import org.seasar.framework.container.annotation.tiger.PropertyType;
 
+/**
+ * 
+ */
 @Property(PropertyType.NONE)
 public class TigerPropertyAnnotationHandlerTarget implements
         PropertyInterTypeTarget {
+
     @Property(PropertyType.READ)
     int intReadField_ = 123;
 
@@ -35,9 +39,15 @@ public class TigerPropertyAnnotationHandlerTarget implements
     @Property(PropertyType.NONE)
     int intNoneField_;
 
+    /**
+     * 
+     */
     @Property(PropertyType.READWRITE)
     public int publicField_;
 
+    /**
+     * 
+     */
     @Property(PropertyType.READWRITE)
     protected int protectedField_;
 

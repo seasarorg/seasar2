@@ -44,6 +44,9 @@ public class TraceThrowsTest extends TestCase {
         handler = AnnotationHandlerFactory.getAnnotationHandler();
     }
 
+    /**
+     * @throws Exception
+     */
     public void test() throws Exception {
         ComponentDef cd = handler.createComponentDef(Hoge.class,
                 InstanceDefFactory.SINGLETON);
@@ -58,8 +61,14 @@ public class TraceThrowsTest extends TestCase {
         }
     }
 
+    /**
+     *
+     */
     @Component
     public static class Hoge {
+        /**
+         * 
+         */
         @TraceThrows
         public void hoge() {
             throw new RuntimeException();

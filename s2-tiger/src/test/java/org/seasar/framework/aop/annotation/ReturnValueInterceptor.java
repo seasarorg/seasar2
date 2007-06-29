@@ -24,8 +24,14 @@ import org.aopalliance.intercept.MethodInvocation;
  */
 public class ReturnValueInterceptor implements MethodInterceptor {
 
+    /**
+     * 
+     */
     protected String value;
 
+    /**
+     * @param value
+     */
     public void setValue(String value) {
         this.value = value;
     }
