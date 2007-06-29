@@ -31,7 +31,18 @@ public final class StatementUtil {
     private StatementUtil() {
     }
 
-    public static boolean execute(Statement statement, String sql) {
+    /**
+     * SQLを実行します。
+     * 
+     * @param statement
+     * @param sql
+     * @return 実行した結果
+     * @throws SQLRuntimeException
+     *             {@link SQLException}が発生した場合
+     * @see Statement#execute(String)
+     */
+    public static boolean execute(Statement statement, String sql)
+            throws SQLRuntimeException {
         try {
             return statement.execute(sql);
         } catch (SQLException ex) {
@@ -39,7 +50,17 @@ public final class StatementUtil {
         }
     }
 
-    public static void setFetchSize(Statement statement, int fetchSize) {
+    /**
+     * フェッチサイズを設定します。
+     * 
+     * @param statement
+     * @param fetchSize
+     * @throws SQLRuntimeException
+     *             {@link SQLException}が発生した場合
+     * @see Statement#setFetchSize(int)
+     */
+    public static void setFetchSize(Statement statement, int fetchSize)
+            throws SQLRuntimeException {
         try {
             statement.setFetchSize(fetchSize);
         } catch (SQLException ex) {
@@ -47,7 +68,17 @@ public final class StatementUtil {
         }
     }
 
-    public static void setMaxRows(Statement statement, int maxRows) {
+    /**
+     * 最大行数を設定します。
+     * 
+     * @param statement
+     * @param maxRows
+     * @throws SQLRuntimeException
+     *             {@link SQLException}が発生した場合
+     * @see Statement#setMaxRows(int)
+     */
+    public static void setMaxRows(Statement statement, int maxRows)
+            throws SQLRuntimeException {
         try {
             statement.setMaxRows(maxRows);
         } catch (SQLException ex) {
@@ -55,7 +86,33 @@ public final class StatementUtil {
         }
     }
 
-    public static void close(Statement statement) {
+    /**
+     * クエリタイムアウトを設定します。
+     * 
+     * @param statement
+     * @param queryTimeout
+     * @throws SQLRuntimeException
+     *             {@link SQLException}が発生した場合
+     * @see Statement#setQueryTimeout(int)
+     */
+    public static void setQueryTimeout(Statement statement, int queryTimeout)
+            throws SQLRuntimeException {
+        try {
+            statement.setQueryTimeout(queryTimeout);
+        } catch (SQLException ex) {
+            throw new SQLRuntimeException(ex);
+        }
+    }
+
+    /**
+     * {@link Statement}を閉じます。
+     * 
+     * @param statement
+     * @throws SQLRuntimeException
+     *             {@link SQLException}が発生した場合
+     * @see Statement#close()
+     */
+    public static void close(Statement statement) throws SQLRuntimeException {
         if (statement == null) {
             return;
         }

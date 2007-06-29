@@ -123,6 +123,7 @@ public class ConfigurableStatementFactoryTest extends TestCase {
         // ## Arrange ##
         final int[] fetchSize = new int[1];
         final int[] maxRows = new int[1];
+        final int[] queryTimeout = new int[1];
         final PreparedStatement mockPreparedStatement = new MockPreparedStatement() {
             public void setFetchSize(int arg0) throws SQLException {
                 fetchSize[0] = arg0;
@@ -130,6 +131,10 @@ public class ConfigurableStatementFactoryTest extends TestCase {
 
             public void setMaxRows(int arg0) throws SQLException {
                 maxRows[0] = arg0;
+            }
+
+            public void setQueryTimeout(int arg0) throws SQLException {
+                queryTimeout[0] = arg0;
             }
         };
 
@@ -145,6 +150,7 @@ public class ConfigurableStatementFactoryTest extends TestCase {
 
         statementFactory.setFetchSize(new Integer(123));
         statementFactory.setMaxRows(new Integer(221));
+        statementFactory.setQueryTimeout(new Integer(321));
 
         // ## Act ##
         statementFactory.createPreparedStatement(new MockConnection(),
@@ -153,6 +159,7 @@ public class ConfigurableStatementFactoryTest extends TestCase {
         // ## Assert ##
         assertEquals(123, fetchSize[0]);
         assertEquals(221, maxRows[0]);
+        assertEquals(321, queryTimeout[0]);
     }
 
     /**

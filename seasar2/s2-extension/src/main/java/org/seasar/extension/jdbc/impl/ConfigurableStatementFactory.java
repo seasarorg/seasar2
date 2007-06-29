@@ -18,21 +18,44 @@ package org.seasar.extension.jdbc.impl;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.Statement;
 
 import org.seasar.extension.jdbc.StatementFactory;
 import org.seasar.framework.util.StatementUtil;
 
 /**
+ * {@link Statement}をカスタマイズするためのファクトリです。
+ * 
  * @author manhole
+ * @author higa
  */
 public class ConfigurableStatementFactory implements StatementFactory {
 
+    /**
+     * {@link StatementFactory}です。
+     */
     protected StatementFactory statementFactory;
 
+    /**
+     * フェッチサイズです。
+     */
     protected Integer fetchSize;
 
+    /**
+     * 最大行数です。
+     */
     protected Integer maxRows;
 
+    /**
+     * クエリのタイムアウトです。
+     */
+    protected Integer queryTimeout;
+
+    /**
+     * {@link ConfigurableStatementFactory}を作成します。
+     * 
+     * @param statementFactory
+     */
     public ConfigurableStatementFactory(StatementFactory statementFactory) {
         if (statementFactory == null) {
             throw new NullPointerException("statementFactory");
@@ -54,6 +77,11 @@ public class ConfigurableStatementFactory implements StatementFactory {
         return cs;
     }
 
+    /**
+     * {@link PreparedStatement}をカスタマイズします。
+     * 
+     * @param ps
+     */
     protected void configurePreparedStatement(PreparedStatement ps) {
         if (fetchSize != null) {
             StatementUtil.setFetchSize(ps, fetchSize.intValue());
@@ -61,14 +89,36 @@ public class ConfigurableStatementFactory implements StatementFactory {
         if (maxRows != null) {
             StatementUtil.setMaxRows(ps, maxRows.intValue());
         }
+        if (queryTimeout != null) {
+            StatementUtil.setQueryTimeout(ps, queryTimeout.intValue());
+        }
     }
 
+    /**
+     * フェッチサイズを設定します。
+     * 
+     * @param fetchSize
+     */
     public void setFetchSize(Integer fetchSize) {
         this.fetchSize = fetchSize;
     }
 
+    /**
+     * 最大行数を設定します。
+     * 
+     * @param maxRows
+     */
     public void setMaxRows(Integer maxRows) {
         this.maxRows = maxRows;
+    }
+
+    /**
+     * クエリタイムアウトを設定します。
+     * 
+     * @param queryTimeout
+     */
+    public void setQueryTimeout(Integer queryTimeout) {
+        this.queryTimeout = queryTimeout;
     }
 
 }
