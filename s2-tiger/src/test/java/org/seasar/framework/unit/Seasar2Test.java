@@ -19,6 +19,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -38,6 +39,7 @@ import org.junit.Test;
 import org.junit.internal.runners.TestClassRunner;
 import org.junit.runner.Description;
 import org.junit.runner.JUnitCore;
+import org.junit.runner.Request;
 import org.junit.runner.Result;
 import org.junit.runner.RunWith;
 import org.junit.runner.Runner;
@@ -89,6 +91,90 @@ public class Seasar2Test extends TestCase {
     public void tearDown() {
         Seasar2.dispose();
         S2TestMethodRunner.s2junit4Path = S2TestMethodRunner.DEFAULT_S2JUNIT4_PATH;
+    }
+
+    /**
+     * 
+     */
+    @RunWith(Seasar2.class)
+    public static class FilterTest {
+
+        /**
+         * 
+         */
+        public void aaa() {
+            log += "a";
+        }
+
+        /**
+         * 
+         */
+        public void bbb() {
+            log += "b";
+        }
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testFilter() throws Exception {
+        JUnitCore core = new JUnitCore();
+        Result result = core.run(Request.method(FilterTest.class, "bbb"));
+        printFailures(result.getFailures());
+        assertTrue(result.wasSuccessful());
+        assertFalse(log.contains("a"));
+        assertTrue(log.contains("b"));
+    }
+
+    /**
+     * 
+     */
+    @RunWith(Seasar2.class)
+    public static class SortTest {
+
+        /**
+         * 
+         */
+        public void aaa() {
+            log += "a";
+        }
+
+        /**
+         * 
+         */
+        public void bbb() {
+            log += "b";
+        }
+
+        /**
+         * 
+         */
+        public void ccc() {
+            log += "c";
+        }
+
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testSort() throws Exception {
+        JUnitCore core = new JUnitCore();
+        Request req = Request.aClass(SortTest.class).sortWith(
+                new Comparator<Description>() {
+
+                    public int compare(Description o1, Description o2) {
+                        return -1
+                                * (o1.getDisplayName().compareTo(o2
+                                        .getDisplayName()));
+                    }
+                });
+        Result result = core.run(req);
+        printFailures(result.getFailures());
+        assertTrue(result.wasSuccessful());
+        assertEquals("cba", log);
     }
 
     /**

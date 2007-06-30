@@ -21,6 +21,11 @@ import java.lang.reflect.Modifier;
 
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
+import org.junit.runner.manipulation.Filter;
+import org.junit.runner.manipulation.Filterable;
+import org.junit.runner.manipulation.NoTestsRemainException;
+import org.junit.runner.manipulation.Sortable;
+import org.junit.runner.manipulation.Sorter;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.Parameterized.Parameters;
 import org.seasar.framework.container.S2Container;
@@ -44,7 +49,7 @@ import org.seasar.framework.util.ResourceUtil;
  * @author taedium
  * 
  */
-public class Seasar2 extends Runner {
+public class Seasar2 extends Runner implements Filterable, Sortable {
 
     /** S2JUnit4の振る舞いを設定するためのコンフィグレーションファイルのキー */
     public static final String S2JUNIT4_CONFIG_KEY = "org.seasar.framework.unit.s2junit4.config";
@@ -159,8 +164,16 @@ public class Seasar2 extends Runner {
     }
 
     @Override
-    public void run(RunNotifier notifier) {
+    public void run(final RunNotifier notifier) {
         delegate.run(notifier);
+    }
+
+    public void filter(final Filter filter) throws NoTestsRemainException {
+        filter.apply(delegate);
+    }
+
+    public void sort(final Sorter sorter) {
+        sorter.apply(delegate);
     }
 
     /**
