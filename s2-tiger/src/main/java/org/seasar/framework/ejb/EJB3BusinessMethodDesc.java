@@ -21,15 +21,31 @@ import java.util.List;
 import javax.ejb.TransactionAttributeType;
 
 /**
- * @author koichik
+ * EJB3セッションビーンのビジネスメソッドを表現するインターフェースです。
  * 
+ * @author koichik
  */
 public interface EJB3BusinessMethodDesc {
 
+    /**
+     * このビジネスメソッドの{@link Method}を返します。
+     * 
+     * @return このビジネスメソッドの{@link Method}
+     */
     Method getMethod();
 
+    /**
+     * このビジネスメソッドの{@link TransactionAttributeType}を返します。
+     * 
+     * @return このビジネスメソッドの{@link TransactionAttributeType}
+     */
     TransactionAttributeType getTransactionAttributeType();
 
+    /**
+     * このビジネスメソッドに適用されるインターセプタ定義のリストを返します。
+     * 
+     * @return このビジネスメソッドに適用されるインターセプタ定義のリスト
+     */
     List<EJB3InterceptorDesc> getInterceptors();
 
 }

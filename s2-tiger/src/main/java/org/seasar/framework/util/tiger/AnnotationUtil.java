@@ -25,14 +25,22 @@ import org.seasar.framework.beans.factory.BeanDescFactory;
 import org.seasar.framework.util.MethodUtil;
 
 /**
- * @author higa
+ * アノテーションのためのユーティリティクラスです。
  * 
+ * @author higa
  */
 public class AnnotationUtil {
 
-    protected AnnotationUtil() {
+    private AnnotationUtil() {
     }
 
+    /**
+     * アノテーションの要素を名前と値の{@link Map}として返します。
+     * 
+     * @param annotation
+     *            アノテーション
+     * @return アノテーションの要素の名前と値からなる{@link Map}
+     */
     public static Map<String, Object> getProperties(Annotation annotation) {
         Map<String, Object> map = new HashMap<String, Object>();
         BeanDesc beanDesc = BeanDescFactory.getBeanDesc(annotation
@@ -48,6 +56,17 @@ public class AnnotationUtil {
         return map;
     }
 
+    /**
+     * アノテーションの要素の値を返します。
+     * 
+     * @param beanDesc
+     *            アノテーションを表す{@link BeanDesc}
+     * @param annotation
+     *            アノテーション
+     * @param name
+     *            要素の名前
+     * @return アノテーションの要素の値
+     */
     public static Object getProperty(BeanDesc beanDesc, Annotation annotation,
             String name) {
         Method m = beanDesc.getMethodNoException(name);
@@ -60,4 +79,5 @@ public class AnnotationUtil {
         }
         return null;
     }
+
 }

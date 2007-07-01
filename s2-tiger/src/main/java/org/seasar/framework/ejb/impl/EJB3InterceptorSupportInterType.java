@@ -24,19 +24,41 @@ import javassist.NotFoundException;
 import org.seasar.framework.aop.intertype.AbstractInterType;
 
 /**
- * @author koichik
+ * EJB3インターセプタをサポートするためのインタータイプです。
+ * <p>
+ * EJB3のインターセプタとAOP Allianceに準拠したSeasar2のインターセプタは互換性がないため、 EJB3のインターセプタはAOP
+ * Alliance準拠の{@link EJB3InterceptorSupportInterceptor}を介して呼び出されます。
+ * そのために必要な情報を保持するために、 セッションビーンをエンハンスします。
+ * </p>
  * 
+ * @author koichik
  */
 public class EJB3InterceptorSupportInterType extends AbstractInterType {
+
+    /** セッションビーンに適用するEJB3インターセプタの{@link List} */
     protected List<Class<?>> interceptorClasses = new ArrayList<Class<?>>();
 
+    /**
+     * インスタンスを構築します。
+     */
     public EJB3InterceptorSupportInterType() {
     }
 
+    /**
+     * EJB3インターセプタを追加します。
+     * 
+     * @param interceptorClass
+     *            EJB3インターセプタ
+     */
     public void addInterceptor(final Class<?> interceptorClass) {
         interceptorClasses.add(interceptorClass);
     }
 
+    /**
+     * EJB3インターセプタを一つ以上持っている場合は{@code true}を返します。
+     * 
+     * @return EJB3インターセプタを一つ以上持っている場合は{@code true}
+     */
     public boolean hasInterceptor() {
         return !interceptorClasses.isEmpty();
     }
@@ -51,7 +73,15 @@ public class EJB3InterceptorSupportInterType extends AbstractInterType {
         }
     }
 
+    /**
+     * EJB3インターセプタクラスのインスタンスを保持するセッションビーンのフィールド名を返します。
+     * 
+     * @param clazz
+     *            EJB3インターセプタのクラス
+     * @return EJB3インターセプタクラスのインスタンスを保持するセッションビーンのフィールド名
+     */
     public static String getFieldName(final Class<?> clazz) {
         return "$$S2EJB3$$" + clazz.getName().replace('.', '$') + "$$";
     }
+
 }

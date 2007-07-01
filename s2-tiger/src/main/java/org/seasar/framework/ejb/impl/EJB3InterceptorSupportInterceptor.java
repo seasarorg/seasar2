@@ -18,6 +18,7 @@ package org.seasar.framework.ejb.impl;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
+import javax.interceptor.AroundInvoke;
 import javax.interceptor.InvocationContext;
 
 import org.aopalliance.intercept.MethodInterceptor;
@@ -27,16 +28,34 @@ import org.seasar.framework.util.FieldUtil;
 import org.seasar.framework.util.MethodUtil;
 
 /**
- * @author koichik
+ * EJB3のインターセプタをサポートするAOP Alliance準拠のインターセプタです。
  * 
+ * @author koichik
  */
 public class EJB3InterceptorSupportInterceptor implements MethodInterceptor {
+
+    /** EJB3インターセプタのクラス */
     protected Class<?> interceptorClass;
 
+    /** {@link AroundInvoke}で注釈されたEJB3インターセプタのメソッド */
     protected Method interceptorMethod;
 
+    /**
+     * EJB3インターセプタのインスタンスを保持するEJB3セッションビーンのフィールド。
+     * <p>
+     * このフィールドは{@link EJB3InterceptorSupportInterType}によってセッションビーンのクラスをエンハンスしたサブクラスに追加されます。
+     * </p>
+     */
     protected Field interceptorField;
 
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param interceptorClass
+     *            EJB3インターセプタのクラス
+     * @param interceptorMethod
+     *            {@link AroundInvoke}で注釈されたEJB3インターセプタのメソッド
+     */
     public EJB3InterceptorSupportInterceptor(final Class<?> interceptorClass,
             final Method interceptorMethod) {
         this.interceptorClass = interceptorClass;
@@ -59,4 +78,5 @@ public class EJB3InterceptorSupportInterceptor implements MethodInterceptor {
         return MethodUtil.invoke(interceptorMethod, interceptor,
                 new Object[] { context });
     }
+
 }

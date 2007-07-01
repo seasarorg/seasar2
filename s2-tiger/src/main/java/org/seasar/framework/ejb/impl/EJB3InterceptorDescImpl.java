@@ -31,19 +31,32 @@ import org.seasar.framework.ejb.SEJBException;
 import org.seasar.framework.util.ClassUtil;
 
 /**
- * @author koichik
+ * EJB3セッションビーンに適用されるインターセプタを表現するクラスです。
  * 
+ * @author koichik
  */
 public class EJB3InterceptorDescImpl implements EJB3InterceptorDesc {
 
+    /** このインターセプタ定義が適用される{@link EJB3Desc} */
     protected EJB3Desc ejb3desc;
 
+    /** インターセプタのクラス */
     protected Class<?> interceptorClass;
 
+    /** このインターセプタが適用されるセッションビーンのビジネスメソッドの{@link List} */
     protected LinkedList<Method> interceptorMethods = new LinkedList<Method>();
 
+    /** {@link AroundInvoke}で注釈されたインターセプタのメソッド */
     protected LinkedList<Method> postConstructMethods = new LinkedList<Method>();
 
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param ejb3desc
+     *            このインターセプタ定義が適用される{@link EJB3Desc}
+     * @param interceptorClass
+     *            インターセプタのクラス
+     */
     public EJB3InterceptorDescImpl(final EJB3Desc ejb3desc,
             final Class<?> interceptorClass) {
         this.ejb3desc = ejb3desc;
@@ -72,12 +85,15 @@ public class EJB3InterceptorDescImpl implements EJB3InterceptorDesc {
         return postConstructMethods;
     }
 
+    /**
+     * このインターセプタが適用されるセッションビーンのビジネスメソッドを検出します。
+     */
     protected void detectInterceptorMethods() {
         final Set<String> methods = new HashSet<String>();
         for (Class<?> clazz = interceptorClass; clazz != Object.class; clazz = clazz
                 .getSuperclass()) {
             for (final Method method : clazz.getDeclaredMethods()) {
-                if (method.isBridge()) {
+                if (method.isBridge() || method.isSynthetic()) {
                     continue;
                 }
                 final Class[] paramTypes = method.getParameterTypes();
@@ -104,6 +120,9 @@ public class EJB3InterceptorDescImpl implements EJB3InterceptorDesc {
         }
     }
 
+    /**
+     * {@link AroundInvoke}で注釈されたインターセプタのメソッドを検出します。
+     */
     protected void detectPostConstructMethod() {
         final Set<String> methods = new HashSet<String>();
         for (Class<?> clazz = interceptorClass; clazz != Object.class; clazz = clazz
@@ -135,4 +154,5 @@ public class EJB3InterceptorDescImpl implements EJB3InterceptorDesc {
             }
         }
     }
+
 }

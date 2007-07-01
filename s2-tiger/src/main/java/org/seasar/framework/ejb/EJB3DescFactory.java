@@ -23,13 +23,15 @@ import org.seasar.framework.util.DisposableUtil;
 import org.seasar.framework.util.tiger.CollectionsUtil;
 
 /**
- * @author koichik
+ * EJB3セッションビーン定義のインスタンスを生成するファクトリクラスです。
  * 
+ * @author koichik
  */
 public class EJB3DescFactory {
 
     private static boolean initialized;
 
+    /** {@link EJB3Desc}のキャッシュ */
     protected static final ConcurrentMap<Class<?>, EJB3DescImpl> ejb3Descs = CollectionsUtil
             .newConcurrentHashMap();
 
@@ -37,11 +39,15 @@ public class EJB3DescFactory {
         initialize();
     }
 
+    /**
+     * 初期化します。
+     */
     public static void initialize() {
         if (initialized) {
             return;
         }
         DisposableUtil.add(new Disposable() {
+
             public void dispose() {
                 EJB3DescFactory.dispose();
             }
@@ -49,11 +55,24 @@ public class EJB3DescFactory {
         initialized = true;
     }
 
+    /**
+     * {@link EJB3Desc}のキャッシュをクリアします。
+     */
     public static void dispose() {
         ejb3Descs.clear();
         initialized = false;
     }
 
+    /**
+     * {@code beanClass}に対応する{@link EJB3Desc}のインスタンスを返します。
+     * <p>
+     * {@code beanClass}がEJB3セッションビーンでない場合は{@code null}を返します。
+     * </p>
+     * 
+     * @param beanClass
+     *            セッションビーンクラス
+     * @return {@code beanClass}に対応する{@link EJB3Desc}のインスタンス
+     */
     public static EJB3Desc getEJB3Desc(final Class<?> beanClass) {
         initialize();
         EJB3DescImpl ejb3Desc = ejb3Descs.get(beanClass);

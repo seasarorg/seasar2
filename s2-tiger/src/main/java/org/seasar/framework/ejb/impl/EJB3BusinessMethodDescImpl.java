@@ -29,18 +29,32 @@ import org.seasar.framework.ejb.EJB3Desc;
 import org.seasar.framework.ejb.EJB3InterceptorDesc;
 
 /**
- * @author koichik
+ * EJB3セッションビーンのビジネスメソッドを表現するクラスです。
  * 
+ * @author koichik
  */
 public class EJB3BusinessMethodDescImpl implements EJB3BusinessMethodDesc {
+
+    /** このビジネスメソッドを含むEJB3セッションビーン定義 */
     protected EJB3Desc ejb3desc;
 
+    /** このビジネスメソッドの{@link Method} */
     protected Method method;
 
+    /** このビジネスメソッドの{@link TransactionAttributeType} */
     protected TransactionAttributeType transactionAttributeType;
 
+    /** このビジネスメソッドに適用されるインターセプタ定義の{@link List} */
     protected List<EJB3InterceptorDesc> interceptors = new ArrayList<EJB3InterceptorDesc>();
 
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param ejb3desc
+     *            このビジネスメソッドを含むEJB3セッションビーン定義
+     * @param method
+     *            このビジネスメソッドの{@link Method}
+     */
     public EJB3BusinessMethodDescImpl(final EJB3Desc ejb3desc,
             final Method method) {
         this.ejb3desc = ejb3desc;
@@ -61,6 +75,9 @@ public class EJB3BusinessMethodDescImpl implements EJB3BusinessMethodDesc {
         return interceptors;
     }
 
+    /**
+     * ビジネスメソッドの{@link TransactionAttributeType}を検出します．
+     */
     protected void detectTransactionAttribute() {
         if (!ejb3desc.isCMT()) {
             return;
@@ -79,6 +96,10 @@ public class EJB3BusinessMethodDescImpl implements EJB3BusinessMethodDesc {
         transactionAttributeType = attribute.value();
     }
 
+    /**
+     * このビジネスメソッドに適用されるインターセプタを検出します。
+     * 
+     */
     protected void detectInterceptors() {
         final ExcludeClassInterceptors exclude = method
                 .getAnnotation(ExcludeClassInterceptors.class);
@@ -97,4 +118,5 @@ public class EJB3BusinessMethodDescImpl implements EJB3BusinessMethodDesc {
                     interceptorClass));
         }
     }
+
 }

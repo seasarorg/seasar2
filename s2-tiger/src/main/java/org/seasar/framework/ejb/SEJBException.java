@@ -20,8 +20,9 @@ import javax.ejb.EJBException;
 import org.seasar.framework.message.MessageFormatter;
 
 /**
- * @author koichik
+ * {@link EJBException}をラップする例外です。
  * 
+ * @author koichik
  */
 public class SEJBException extends EJBException {
 
@@ -31,17 +32,36 @@ public class SEJBException extends EJBException {
 
     private Object[] args;
 
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param messageCode
+     *            メッセージコード
+     * @param args
+     *            メッセージに埋め込まれる引数
+     */
     public SEJBException(final String messageCode, final Object... args) {
         super(MessageFormatter.getMessage(messageCode, args));
         this.messageCode = messageCode;
         this.args = args;
     }
 
+    /**
+     * メッセージコードを返します。
+     * 
+     * @return メッセージコード
+     */
     public String getMessageCode() {
         return messageCode;
     }
 
+    /**
+     * メッセージに埋め込まれる引数を返します。
+     * 
+     * @return メッセージに埋め込まれる引数
+     */
     public Object[] getArgs() {
         return args;
     }
+
 }

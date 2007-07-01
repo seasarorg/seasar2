@@ -42,39 +42,62 @@ import org.seasar.framework.ejb.EJB3InterceptorDesc;
 import org.seasar.framework.ejb.SEJBException;
 
 /**
- * @author koichik
+ * EJB3のセッションビーンを表現するクラスです。
  * 
+ * @author koichik
  */
 public class EJB3DescImpl implements EJB3Desc {
 
+    /** セッションビーンのクラス */
     protected Class<?> beanClass;
 
+    /** セッションビーンのクラス名 */
     protected String beanClassName;
 
+    /** このセッションビーンがステートレスなら{@code true} */
     protected boolean stateless;
 
+    /** このセッションビーンがステートフルなら{@code true} */
     protected boolean stateful;
 
+    /** このセッションビーンの名前 */
     protected String name;
 
+    /** このセッションビーンが実装するビジネスインターフェースの{@link List} */
     protected List<Class<?>> businessInterfaces = new ArrayList<Class<?>>();
 
+    /** このセッションビーンがコンテナ管理トランザクションを使用する場合は{@code true} */
     protected boolean cmt = true;
 
+    /** このセッションビーンに適用されるインターセプタ定義の{@link List} */
     protected List<EJB3InterceptorDesc> interceptors = new ArrayList<EJB3InterceptorDesc>();
 
+    /** このセッションビーンが持つビジネスメソッドの{@link List} */
     protected List<EJB3BusinessMethodDesc> businessMethods = new ArrayList<EJB3BusinessMethodDesc>();
 
+    /** {@link AroundInvoke}で注釈されたメソッドの{@link List} */
     protected LinkedList<Method> aroundInvokeMethods = new LinkedList<Method>();
 
+    /** {@link PostConstruct}で注釈されたメソッドの{@link List} */
     protected LinkedList<Method> postConstructMethods = new LinkedList<Method>();
 
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param beanClass
+     *            セッションビーンのクラス
+     */
     public EJB3DescImpl(final Class<?> beanClass) {
         this.beanClass = beanClass;
         this.beanClassName = beanClass.getName();
         introspection();
     }
 
+    /**
+     * コンストラクタ引数で指定されたクラスがEJB3セッションビーの場合は{@code true}を返します。
+     * 
+     * @return コンストラクタ引数で指定されたクラスがEJB3セッションビーの場合は{@code true}
+     */
     public boolean isEJB3() {
         return stateless || stateful;
     }
@@ -134,6 +157,9 @@ public class EJB3DescImpl implements EJB3Desc {
         return postConstructMethods;
     }
 
+    /**
+     * コンストラクタ引数で指定されたクラスを解析します。
+     */
     protected void introspection() {
         final int modifiers = beanClass.getModifiers();
         if (beanClass.isInterface() || Modifier.isAbstract(modifiers)
@@ -177,6 +203,9 @@ public class EJB3DescImpl implements EJB3Desc {
         detectPostConstructMethods();
     }
 
+    /**
+     * {@link Local}アノテーションで指定されたビジネスインターフェースを検出します。
+     */
     protected void detectLocalBusinessInterfaces() {
         final Local local = beanClass.getAnnotation(Local.class);
         if (local != null) {
@@ -196,6 +225,9 @@ public class EJB3DescImpl implements EJB3Desc {
         }
     }
 
+    /**
+     * {@link Remote}アノテーションで指定されたビジネスインターフェースを検出します。
+     */
     protected void detectRemoteBusinessInterfaces() {
         final Remote remote = beanClass.getAnnotation(Remote.class);
         if (remote != null) {
@@ -214,6 +246,9 @@ public class EJB3DescImpl implements EJB3Desc {
         }
     }
 
+    /**
+     * 暗黙的なビジネスインターフェースを検出します。
+     */
     protected void detectImplicitBusinessInterfaces() {
         for (final Class<?> type : beanClass.getInterfaces()) {
             if (isBusinessInterface(type)) {
@@ -222,6 +257,9 @@ public class EJB3DescImpl implements EJB3Desc {
         }
     }
 
+    /**
+     * {@link TransactionManagementType}を検出します。
+     */
     protected void detectTransactionManagementType() {
         final TransactionManagement txManegement = beanClass
                 .getAnnotation(TransactionManagement.class);
@@ -234,6 +272,9 @@ public class EJB3DescImpl implements EJB3Desc {
         }
     }
 
+    /**
+     * インターセプタを検出します。
+     */
     protected void detectInterceptors() {
         final Interceptors annotation = beanClass
                 .getAnnotation(Interceptors.class);
@@ -246,6 +287,9 @@ public class EJB3DescImpl implements EJB3Desc {
         }
     }
 
+    /**
+     * ビジネスメソッドを検出します。
+     */
     protected void detectBusinessMethods() {
         for (final Method method : beanClass.getMethods()) {
             final int modifier = method.getModifiers();
@@ -259,6 +303,9 @@ public class EJB3DescImpl implements EJB3Desc {
         }
     }
 
+    /**
+     * {@link AroundInvoke}で注釈されたメソッドを検出します。
+     */
     public void detectAroundInvokeMethods() {
         final Set<String> methods = new HashSet<String>();
         for (Class<?> clazz = beanClass; clazz != Object.class; clazz = clazz
@@ -316,6 +363,9 @@ public class EJB3DescImpl implements EJB3Desc {
         }
     }
 
+    /**
+     * {@link PostConstruct}で注釈されたメソッドを検出します。
+     */
     public void detectPostConstructMethods() {
         final Set<String> methods = new HashSet<String>();
         for (Class<?> clazz = beanClass; clazz != Object.class; clazz = clazz
@@ -371,6 +421,13 @@ public class EJB3DescImpl implements EJB3Desc {
         }
     }
 
+    /**
+     * {@code type}がビジネスインターフェースなら{@code true}を返します。
+     * 
+     * @param type
+     *            セッションビーンが実装しているインターフェースの型
+     * @return {@code type}がビジネスインターフェースなら{@code true}
+     */
     protected boolean isBusinessInterface(final Class<?> type) {
         if (!type.isInterface()) {
             throw new SEJBException("ESSR0407", beanClassName, type.getName());
@@ -390,6 +447,13 @@ public class EJB3DescImpl implements EJB3Desc {
         return true;
     }
 
+    /**
+     * {@code method}がビジネスメソッドなら{@code ture}を返します。
+     * 
+     * @param method
+     *            セッションビーンのメソッド
+     * @return {@code method}がビジネスメソッドなら{@code ture}
+     */
     protected boolean isBusinessMethod(final Method method) {
         for (final Class<?> type : businessInterfaces) {
             try {
@@ -401,4 +465,5 @@ public class EJB3DescImpl implements EJB3Desc {
         }
         return false;
     }
+
 }

@@ -18,18 +18,41 @@ package org.seasar.framework.ejb;
 import java.lang.reflect.Method;
 import java.util.List;
 
+import javax.interceptor.AroundInvoke;
+
 /**
- * @author koichik
+ * EJB3セッションビーンに適用されるインターセプタを表現するインターフェースです。
  * 
+ * @author koichik
  */
 public interface EJB3InterceptorDesc {
 
+    /**
+     * このインターセプタ定義が適用される{@link EJB3Desc}を返します。
+     * 
+     * @return このインターセプタ定義が適用される{@link EJB3Desc}
+     */
     EJB3Desc getEJB3Desc();
 
+    /**
+     * インターセプタのクラスを返します。
+     * 
+     * @return インターセプタのクラス
+     */
     Class<?> getInterceptorClass();
 
+    /**
+     * このインターセプタが適用されるセッションビーンのビジネスメソッドの{@link List}を返します。
+     * 
+     * @return このインターセプタが適用されるセッションビーンのビジネスメソッドの{@link List}
+     */
     List<Method> getInterceptorMethods();
 
+    /**
+     * {@link AroundInvoke}で注釈されたインターセプタのメソッドを返します。
+     * 
+     * @return {@link AroundInvoke}で注釈されたインターセプタのメソッド
+     */
     List<Method> getPostConstructMethods();
 
 }

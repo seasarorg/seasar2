@@ -25,20 +25,44 @@ import javax.interceptor.InvocationContext;
 import org.aopalliance.intercept.MethodInvocation;
 
 /**
- * @author koichik
+ * {@link InvocationContext}の実装クラスです。
+ * <p>
+ * Seasar2はEJB3のインターセプタをAOP Alliance準拠のインターセプタ経由で呼び出すため、 このクラスはAOP
+ * Alliance準拠のメソッド呼び出しコンテキストである{@link MethodInvocation}のラッパーとして実装されています。
+ * </p>
  * 
+ * @author koichik
  */
 public class InvocationContextImpl implements InvocationContext {
+
+    /** AOP Alliance準拠のメソッド呼び出しコンテキスト */
     protected MethodInvocation context;
 
+    /** ライフサイクルコールバックの場合は{@code true} */
     protected boolean lifecycleCallback;
 
+    /** コンテキスト情報 */
     protected Map<String, Object> contextData = new HashMap<String, Object>();
 
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param context
+     *            AOP Alliance準拠のメソッド呼び出しコンテキスト
+     */
     public InvocationContextImpl(final MethodInvocation context) {
         this(context, false);
     }
 
+    /**
+     * 
+     * インスタンスを構築します。
+     * 
+     * @param context
+     *            AOP Alliance準拠のメソッド呼び出しコンテキスト
+     * @param lifecycleCallback
+     *            ライフサイクルコールバックの場合は{@code true}
+     */
     public InvocationContextImpl(final MethodInvocation context,
             final boolean lifecycleCallback) {
         this.context = context;

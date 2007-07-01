@@ -17,18 +17,28 @@ package org.seasar.framework.ejb.impl;
 
 import java.lang.reflect.Method;
 
+import javax.interceptor.AroundInvoke;
 import javax.interceptor.InvocationContext;
 
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 
 /**
- * @author koichik
+ * {@link AroundInvoke}で注釈されたメソッドをサポートする、AOP Alliance準拠のインターセプタです。
  * 
+ * @author koichik
  */
 public class AroundInvokeSupportInterceptor implements MethodInterceptor {
+
+    /** {@link AroundInvoke}で注釈されたメソッド */
     protected Method aroundInvokeMethod;
 
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param method
+     *            {@link AroundInvoke}で注釈されたメソッド
+     */
     public AroundInvokeSupportInterceptor(final Method method) {
         this.aroundInvokeMethod = method;
         aroundInvokeMethod.setAccessible(true);
@@ -38,4 +48,5 @@ public class AroundInvokeSupportInterceptor implements MethodInterceptor {
         final InvocationContext context = new InvocationContextImpl(invocation);
         return aroundInvokeMethod.invoke(invocation.getThis(), context);
     }
+
 }

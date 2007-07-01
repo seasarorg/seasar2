@@ -59,6 +59,15 @@ public class EJB3RequiredInterceptor extends AbstractEJB3TxInterceptor {
         }
     }
 
+    /**
+     * 現在のスレッドでトランザクションが開始されていなければトランザクションを開始します。
+     * 
+     * @return トランザクションを開始した場合は{@code true}
+     * @throws SystemException
+     *             トランザクションの開始中に例外が発生した場合
+     * @throws NotSupportedException
+     *             トランザクションの開始中に例外が発生した場合
+     */
     protected boolean beginIfNecessary() throws SystemException,
             NotSupportedException {
         if (hasTransaction()) {
