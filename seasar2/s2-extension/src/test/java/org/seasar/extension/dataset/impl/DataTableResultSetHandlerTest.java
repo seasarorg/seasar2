@@ -72,8 +72,8 @@ public class DataTableResultSetHandlerTest extends S2TestCase {
         assertEquals(2, ret.getColumnSize());
         assertEquals(1, ret.getRowSize());
         DataRow row = ret.getRow(0);
-        assertEquals(row.getValue("DEPT_NO"), row.getValue(0));
-        assertEquals(row.getValue("D_NAME"), row.getValue(1));
+        assertSame(row.getValue("DEPT_NO"), row.getValue(0));
+        assertSame(row.getValue("D_NAME"), row.getValue(1));
     }
 
     public void setUp() {

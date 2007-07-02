@@ -55,6 +55,10 @@ public class DataRowReloadResultSetHandlerTest extends S2TestCase {
         assertEquals("2", row, newRow);
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     public void testHandle2() throws Exception {
         String sql = "select dept_no, d_name from dept3 where dept_no = ?";
         DataTable table = new DataTableImpl("dept3");
@@ -72,8 +76,6 @@ public class DataRowReloadResultSetHandlerTest extends S2TestCase {
         handler.execute(new Object[] { new Integer(20) });
         System.out.println(newRow);
         assertEquals(row, newRow);
-        assertEquals(newRow.getValue("DEPT_NO"), newRow.getValue(0));
-        assertEquals(newRow.getValue("D_NAME"), newRow.getValue(1));
     }
 
     public void setUp() {
