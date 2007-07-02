@@ -31,7 +31,7 @@ import org.seasar.extension.jdbc.ValueType;
 public class EnumType implements ValueType {
 
     @SuppressWarnings("unchecked")
-    private Class<? extends Enum> enumClass;
+    private final Class<? extends Enum> enumClass;
 
     /**
      * <code>EnumType</code>を返します。
@@ -67,13 +67,14 @@ public class EnumType implements ValueType {
         return toEnum(resultSet.getString(columnName));
     }
 
+    @SuppressWarnings("unchecked")
     public void bindValue(PreparedStatement ps, int index, Object value)
             throws SQLException {
 
         if (value == null) {
             ps.setNull(index, Types.VARCHAR);
         } else {
-            ps.setString(index, ((Enum) value).name());
+            ps.setString(index, (Enum.class.cast(value)).name());
         }
     }
 
