@@ -55,6 +55,27 @@ public class DataRowReloadResultSetHandlerTest extends S2TestCase {
         assertEquals("2", row, newRow);
     }
 
+    public void testHandle2() throws Exception {
+        String sql = "select dept_no, d_name from dept3 where dept_no = ?";
+        DataTable table = new DataTableImpl("dept3");
+        table.addColumn("dept_no").setPrimaryKey(true);
+        table.addColumn("d_name");
+        DataRow row = table.addRow();
+        row.setValue("dept_no", new BigDecimal(20));
+        row.setValue("d_name", "RESEARCH");
+        DataTable newTable = new DataTableImpl("dept3");
+        newTable.addColumn("dept_no").setPrimaryKey(true);
+        newTable.addColumn("d_name");
+        DataRow newRow = newTable.addRow();
+        SelectHandler handler = new BasicSelectHandler(ds_, sql,
+                new DataRowReloadResultSetHandler(row, newRow));
+        handler.execute(new Object[] { new Integer(20) });
+        System.out.println(newRow);
+        assertEquals(row, newRow);
+        assertEquals(newRow.getValue("DEPT_NO"), newRow.getValue(0));
+        assertEquals(newRow.getValue("D_NAME"), newRow.getValue(1));
+    }
+
     public void setUp() {
         include("j2ee.dicon");
     }

@@ -46,8 +46,8 @@ public class DataTableResultSetHandler implements ResultSetHandler {
                 .createPropertyTypes(rsmd);
         DataTable table = new DataTableImpl(tableName_);
         for (int i = 0; i < propertyTypes.length; ++i) {
-            String propertyName = propertyTypes[i].getPropertyName();
-            table.addColumn(propertyName, ColumnTypes.getColumnType(rsmd
+            String columnName = propertyTypes[i].getColumnName();
+            table.addColumn(columnName, ColumnTypes.getColumnType(rsmd
                     .getColumnType(i + 1)));
         }
         DatabaseMetaData dbMetaData = rs.getStatement().getConnection()
@@ -65,7 +65,7 @@ public class DataTableResultSetHandler implements ResultSetHandler {
         DataRow row = table.addRow();
         for (int i = 0; i < propertyTypes.length; ++i) {
             Object value = propertyTypes[i].getValueType().getValue(rs, i + 1);
-            row.setValue(propertyTypes[i].getPropertyName(), value);
+            row.setValue(propertyTypes[i].getColumnName(), value);
         }
         row.setState(RowStates.UNCHANGED);
     }

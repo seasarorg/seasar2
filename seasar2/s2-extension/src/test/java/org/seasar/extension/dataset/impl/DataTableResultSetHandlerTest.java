@@ -17,6 +17,7 @@ package org.seasar.extension.dataset.impl;
 
 import javax.sql.DataSource;
 
+import org.seasar.extension.dataset.DataRow;
 import org.seasar.extension.dataset.DataTable;
 import org.seasar.extension.jdbc.SelectHandler;
 import org.seasar.extension.jdbc.impl.BasicSelectHandler;
@@ -55,6 +56,24 @@ public class DataTableResultSetHandlerTest extends S2TestCase {
         assertNotNull("1", ret);
         assertEquals("2", true, ret.getColumn("ENAME").isWritable());
         assertEquals("3", false, ret.getColumn("DNAME").isWritable());
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testHandle3() throws Exception {
+        String sql = "select dept_no, d_name from dept3 where dept_no = ?";
+        SelectHandler handler = new BasicSelectHandler(ds_, sql,
+                new DataTableResultSetHandler("dept3"));
+        DataTable ret = (DataTable) handler.execute(new Object[] { new Integer(
+                20) });
+        System.out.println(ret);
+        assertNotNull(ret);
+        assertEquals(2, ret.getColumnSize());
+        assertEquals(1, ret.getRowSize());
+        DataRow row = ret.getRow(0);
+        assertEquals(row.getValue("DEPT_NO"), row.getValue(0));
+        assertEquals(row.getValue("D_NAME"), row.getValue(1));
     }
 
     public void setUp() {

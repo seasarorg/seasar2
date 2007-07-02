@@ -58,7 +58,7 @@ public class DataRowReloadResultSetHandler implements ResultSetHandler {
             throws SQLException {
         for (int i = 0; i < propertyTypes.length; ++i) {
             Object value = propertyTypes[i].getValueType().getValue(rs, i + 1);
-            newRow_.setValue(propertyTypes[i].getPropertyName(), value);
+            newRow_.setValue(propertyTypes[i].getColumnName(), value);
         }
         newRow_.setState(RowStates.UNCHANGED);
     }

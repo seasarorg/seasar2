@@ -52,9 +52,14 @@ public class PropertyTypeImpl implements PropertyType {
     }
 
     public PropertyTypeImpl(String propertyName, ValueType valueType) {
+        this(propertyName, valueType, propertyName);
+    }
+
+    public PropertyTypeImpl(String propertyName, ValueType valueType,
+            String columnName) {
         propertyName_ = propertyName;
         valueType_ = valueType;
-        columnName_ = propertyName;
+        columnName_ = columnName;
     }
 
     public PropertyDesc getPropertyDesc() {

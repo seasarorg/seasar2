@@ -34,11 +34,12 @@ public final class PropertyTypeUtil {
         int count = rsmd.getColumnCount();
         PropertyType[] propertyTypes = new PropertyType[count];
         for (int i = 0; i < count; ++i) {
-            String propertyName = StringUtil.replace(
-                    rsmd.getColumnLabel(i + 1), "_", "");
+            String columnName = rsmd.getColumnLabel(i + 1);
+            String propertyName = StringUtil.replace(columnName, "_", "");
             ValueType valueType = ValueTypes.getValueType(rsmd
                     .getColumnType(i + 1));
-            propertyTypes[i] = new PropertyTypeImpl(propertyName, valueType);
+            propertyTypes[i] = new PropertyTypeImpl(propertyName, valueType,
+                    columnName);
         }
         return propertyTypes;
     }
