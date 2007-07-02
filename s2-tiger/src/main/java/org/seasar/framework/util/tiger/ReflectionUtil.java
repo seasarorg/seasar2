@@ -141,7 +141,8 @@ public abstract class ReflectionUtil {
      * @see Class#getConstructor(Class[])
      */
     public static <T> Constructor<T> getConstructor(final Class<T> clazz,
-            final Class... argTypes) throws NoSuchConstructorRuntimeException {
+            final Class<?>... argTypes)
+            throws NoSuchConstructorRuntimeException {
         try {
             return clazz.getConstructor(argTypes);
         } catch (final NoSuchMethodException e) {
@@ -164,7 +165,7 @@ public abstract class ReflectionUtil {
      * @see Class#getDeclaredConstructor(Class[])
      */
     public static <T> Constructor<T> getDeclaredConstructor(
-            final Class<T> clazz, final Class... argTypes)
+            final Class<T> clazz, final Class<?>... argTypes)
             throws NoSuchConstructorRuntimeException {
         try {
             return clazz.getDeclaredConstructor(argTypes);
@@ -230,7 +231,7 @@ public abstract class ReflectionUtil {
      * @see Class#getMethod(String, Class[])
      */
     public static Method getMethod(final Class<?> clazz, final String name,
-            final Class... argTypes) throws NoSuchMethodRuntimeException {
+            final Class<?>... argTypes) throws NoSuchMethodRuntimeException {
         try {
             return clazz.getMethod(name, argTypes);
         } catch (final NoSuchMethodException e) {
@@ -253,7 +254,7 @@ public abstract class ReflectionUtil {
      * @see Class#getDeclaredMethod(String, Class[])
      */
     public static Method getDeclaredMethod(final Class<?> clazz,
-            final String name, final Class... argTypes)
+            final String name, final Class<?>... argTypes)
             throws NoSuchMethodRuntimeException {
         try {
             return clazz.getDeclaredMethod(name, argTypes);

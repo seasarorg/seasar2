@@ -96,7 +96,7 @@ public class EJB3InterceptorDescImpl implements EJB3InterceptorDesc {
                 if (method.isBridge() || method.isSynthetic()) {
                     continue;
                 }
-                final Class[] paramTypes = method.getParameterTypes();
+                final Class<?>[] paramTypes = method.getParameterTypes();
                 if (paramTypes.length != 1
                         || paramTypes[0] != InvocationContext.class) {
                     continue;
@@ -131,7 +131,7 @@ public class EJB3InterceptorDescImpl implements EJB3InterceptorDesc {
                 if (method.isBridge()) {
                     continue;
                 }
-                final Class[] paramTypes = method.getParameterTypes();
+                final Class<?>[] paramTypes = method.getParameterTypes();
                 if (paramTypes.length != 1
                         || paramTypes[0] != InvocationContext.class) {
                     continue;

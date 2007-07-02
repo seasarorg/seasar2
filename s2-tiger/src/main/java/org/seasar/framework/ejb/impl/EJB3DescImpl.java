@@ -326,7 +326,7 @@ public class EJB3DescImpl implements EJB3Desc {
                     continue;
                 }
 
-                final Class[] paramTypes = method.getParameterTypes();
+                final Class<?>[] paramTypes = method.getParameterTypes();
                 if (paramTypes.length != 1
                         || paramTypes[0] != InvocationContext.class) {
                     if (aroundInvoke != null) {
@@ -386,7 +386,7 @@ public class EJB3DescImpl implements EJB3Desc {
                     continue;
                 }
 
-                final Class[] paramTypes = method.getParameterTypes();
+                final Class<?>[] paramTypes = method.getParameterTypes();
                 if (paramTypes.length != 0) {
                     if (postConstruct != null) {
                         throw new SEJBException("ESSR0409", "PostConstruct",
