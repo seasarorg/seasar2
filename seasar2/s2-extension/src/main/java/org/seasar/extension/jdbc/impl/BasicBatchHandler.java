@@ -25,7 +25,6 @@ import org.seasar.extension.jdbc.BatchHandler;
 import org.seasar.extension.jdbc.StatementFactory;
 import org.seasar.extension.jdbc.util.ConnectionUtil;
 import org.seasar.framework.exception.SQLRuntimeException;
-import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.PreparedStatementUtil;
 import org.seasar.framework.util.StatementUtil;
 
@@ -34,8 +33,6 @@ import org.seasar.framework.util.StatementUtil;
  * 
  */
 public class BasicBatchHandler extends BasicHandler implements BatchHandler {
-
-    private static Logger logger_ = Logger.getLogger(BasicBatchHandler.class);
 
     private int batchSize_ = -1;
 
@@ -90,9 +87,7 @@ public class BasicBatchHandler extends BasicHandler implements BatchHandler {
         try {
             for (int i = 0, j = 0; i < list.size(); ++i) {
                 Object[] args = (Object[]) list.get(i);
-                if (logger_.isDebugEnabled()) {
-                    logger_.debug(getCompleteSql(args));
-                }
+                logSql(args, argTypes);
                 bindArgs(ps, args, argTypes);
                 PreparedStatementUtil.addBatch(ps);
                 if (j == batchSize - 1 || i == list.size() - 1) {

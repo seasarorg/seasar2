@@ -15,6 +15,11 @@
  */
 package org.seasar.extension.jdbc.impl;
 
+import java.math.BigDecimal;
+
+import org.seasar.extension.jdbc.SqlLog;
+import org.seasar.extension.jdbc.SqlLogRegistry;
+import org.seasar.extension.jdbc.SqlLogRegistryLocator;
 import org.seasar.extension.unit.S2TestCase;
 
 /**
@@ -59,6 +64,29 @@ public class BasicHandlerTest extends S2TestCase {
         assertEquals(
                 "update emp set ename = /* ? */, comm = null where empno = 'bar'/*?*/",
                 handler.getCompleteSql(new Object[] { null, "bar" }));
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testLogSql() throws Exception {
+        final String sql = "update emp set ename = ?, comm = ? where empno = ?";
+        Object[] args = new Object[] { "hoge", new BigDecimal("100.5"),
+                new Integer(7788) };
+        Object[] argTypes = new Object[] { String.class, BigDecimal.class,
+                Integer.class };
+        BasicHandler handler = new BasicHandler(getDataSource(), sql);
+        handler.logSql(args, argTypes);
+
+        SqlLogRegistry registry = SqlLogRegistryLocator.getInstance();
+        SqlLog sqlLog = registry.getLast();
+        assertEquals(sql, sqlLog.getRawSql());
+        assertEquals(
+                "update emp set ename = 'hoge', comm = 100.5 where empno = 7788",
+                sqlLog.getCompleteSql());
+        assertSame(args, sqlLog.getBindArgs());
+        assertSame(argTypes, sqlLog.getBindArgTypes());
     }
 
 }

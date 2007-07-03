@@ -24,7 +24,6 @@ import org.seasar.extension.jdbc.StatementFactory;
 import org.seasar.extension.jdbc.UpdateHandler;
 import org.seasar.extension.jdbc.util.ConnectionUtil;
 import org.seasar.framework.exception.SQLRuntimeException;
-import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.PreparedStatementUtil;
 import org.seasar.framework.util.StatementUtil;
 
@@ -33,8 +32,6 @@ import org.seasar.framework.util.StatementUtil;
  * 
  */
 public class BasicUpdateHandler extends BasicHandler implements UpdateHandler {
-
-    private static Logger logger_ = Logger.getLogger(BasicUpdateHandler.class);
 
     public BasicUpdateHandler() {
     }
@@ -67,9 +64,7 @@ public class BasicUpdateHandler extends BasicHandler implements UpdateHandler {
     }
 
     public int execute(Connection connection, Object[] args, Class[] argTypes) {
-        if (logger_.isDebugEnabled()) {
-            logger_.debug(getCompleteSql(args));
-        }
+        logSql(args, argTypes);
         PreparedStatement ps = prepareStatement(connection);
         try {
             bindArgs(ps, args, argTypes);
