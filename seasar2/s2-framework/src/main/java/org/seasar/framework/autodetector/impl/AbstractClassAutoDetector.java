@@ -102,6 +102,10 @@ public abstract class AbstractClassAutoDetector implements ClassAutoDetector {
         return (String) targetPackageNames.get(index);
     }
 
+    /**
+     * 戦略をあらわすインターフェースです。
+     * 
+     */
     protected interface Strategy {
 
         /**
@@ -114,6 +118,10 @@ public abstract class AbstractClassAutoDetector implements ClassAutoDetector {
         void detect(String packageName, URL url, ClassHandler handler);
     }
 
+    /**
+     * ファイルシステム用の戦略です。
+     * 
+     */
     protected static class FileSystemStrategy implements Strategy {
 
         public void detect(final String packageName, final URL url,
@@ -123,6 +131,15 @@ public abstract class AbstractClassAutoDetector implements ClassAutoDetector {
             ClassTraversal.forEach(rootDir, packageName, handler);
         }
 
+        /**
+         * ルートディレクトリを返します。
+         * 
+         * @param path
+         *            パス
+         * @param url
+         *            URL
+         * @return ルートディレクトリ
+         */
         protected File getRootDir(final String path, final URL url) {
             File file = ResourceUtil.getFile(url);
             final String[] names = StringUtil.split(path, ".");
@@ -133,6 +150,10 @@ public abstract class AbstractClassAutoDetector implements ClassAutoDetector {
         }
     }
 
+    /**
+     * jarファイル用の戦略です。
+     * 
+     */
     protected static class JarFileStrategy implements Strategy {
 
         public void detect(final String packageName, final URL url,
@@ -142,11 +163,22 @@ public abstract class AbstractClassAutoDetector implements ClassAutoDetector {
             ClassTraversal.forEach(jarFile, handler);
         }
 
+        /**
+         * jarファイルを作成します。
+         * 
+         * @param url
+         *            URL
+         * @return jarファイル
+         */
         protected JarFile createJarFile(final URL url) {
             return JarFileUtil.toJarFile(url);
         }
     }
 
+    /**
+     * zipファイル用の戦略です。
+     * 
+     */
     protected static class ZipFileStrategy implements Strategy {
 
         public void detect(final String packageName, final URL url,
@@ -156,12 +188,23 @@ public abstract class AbstractClassAutoDetector implements ClassAutoDetector {
             ClassTraversal.forEach(jarFile, handler);
         }
 
+        /**
+         * jarファイルを作成します。
+         * 
+         * @param url
+         *            URL
+         * @return jarファイル
+         */
         protected JarFile createJarFile(final URL url) {
             final String jarFileName = ZipFileUtil.toZipFilePath(url);
             return JarFileUtil.create(new File(jarFileName));
         }
     }
 
+    /**
+     * OC4J用の戦略です。
+     * 
+     */
     protected static class CodeSourceFileStrategy implements Strategy {
 
         public void detect(final String packageName, final URL url,
@@ -171,6 +214,13 @@ public abstract class AbstractClassAutoDetector implements ClassAutoDetector {
             ClassTraversal.forEach(jarFile, handler);
         }
 
+        /**
+         * jarファイルを作成します。
+         * 
+         * @param url
+         *            URL
+         * @return jarファイル
+         */
         protected JarFile createJarFile(final URL url) {
             final URL jarUrl = URLUtil.create("jar:file:" + url.getPath());
             return JarFileUtil.toJarFile(jarUrl);

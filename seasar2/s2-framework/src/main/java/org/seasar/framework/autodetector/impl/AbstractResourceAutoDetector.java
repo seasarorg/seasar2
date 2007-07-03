@@ -164,6 +164,13 @@ public abstract class AbstractResourceAutoDetector implements
         return ignoreResourceNamePatterns.size();
     }
 
+    /**
+     * 適用されるかどうかを返します。
+     * 
+     * @param resourceName
+     *            リソース名
+     * @return 適用されるかどうか
+     */
     protected boolean isApplied(final String resourceName) {
         for (int i = 0; i < getResourceNamePatternSize(); i++) {
             final Pattern pattern = getResourceNamePattern(i);
@@ -174,6 +181,13 @@ public abstract class AbstractResourceAutoDetector implements
         return false;
     }
 
+    /**
+     * 無視されるかどうかを返します。
+     * 
+     * @param resourceName
+     *            リソース名
+     * @return 無視されるかどうか
+     */
     protected boolean isIgnored(final String resourceName) {
         for (int i = 0; i < getIgnoreResourceNamePatternSize(); i++) {
             final Pattern pattern = getIgnoreResourceNamePattern(i);
@@ -184,6 +198,10 @@ public abstract class AbstractResourceAutoDetector implements
         return false;
     }
 
+    /**
+     * 戦略をあらわすインターフェースです。
+     * 
+     */
     protected interface Strategy {
 
         /**
@@ -196,6 +214,10 @@ public abstract class AbstractResourceAutoDetector implements
         void detect(String path, URL url, ResourceHandler handler);
     }
 
+    /**
+     * ファイルシステム用の戦略です。
+     * 
+     */
     protected static class FileSystemStrategy implements Strategy {
 
         public void detect(final String path, final URL url,
@@ -205,6 +227,15 @@ public abstract class AbstractResourceAutoDetector implements
             ResourceTraversal.forEach(rootDir, path, handler);
         }
 
+        /**
+         * ルートディレクトリを返します。
+         * 
+         * @param path
+         *            パス
+         * @param url
+         *            URL
+         * @return ルートディレクトリ
+         */
         protected File getRootDir(final String path, final URL url) {
             File file = ResourceUtil.getFile(url);
             final String[] names = StringUtil.split(path, "/");
@@ -215,6 +246,10 @@ public abstract class AbstractResourceAutoDetector implements
         }
     }
 
+    /**
+     * jarファイル用の戦略を返します。
+     * 
+     */
     protected static class JarFileStrategy implements Strategy {
 
         public void detect(final String path, final URL url,
@@ -224,11 +259,22 @@ public abstract class AbstractResourceAutoDetector implements
             ResourceTraversal.forEach(jarFile, handler);
         }
 
+        /**
+         * jarファイルを作成します。
+         * 
+         * @param url
+         *            URL
+         * @return jarファイル
+         */
         protected JarFile createJarFile(final URL url) {
             return JarFileUtil.toJarFile(url);
         }
     }
 
+    /**
+     * zipファイル用の戦略です。
+     * 
+     */
     protected static class ZipFileStrategy implements Strategy {
 
         public void detect(final String path, final URL url,
@@ -238,12 +284,23 @@ public abstract class AbstractResourceAutoDetector implements
             ResourceTraversal.forEach(jarFile, handler);
         }
 
+        /**
+         * jarファイルを作成します。
+         * 
+         * @param url
+         *            URL
+         * @return jarファイル
+         */
         protected JarFile createJarFile(final URL url) {
             final String jarFileName = ZipFileUtil.toZipFilePath(url);
             return JarFileUtil.create(new File(jarFileName));
         }
     }
 
+    /**
+     * OC4J用の戦略です。
+     * 
+     */
     protected static class CodeSourceFileStrategy implements Strategy {
 
         public void detect(final String path, final URL url,
@@ -253,6 +310,13 @@ public abstract class AbstractResourceAutoDetector implements
             ResourceTraversal.forEach(jarFile, handler);
         }
 
+        /**
+         * jarファイルを作成します。
+         * 
+         * @param url
+         *            URL
+         * @return jarファイル
+         */
         protected JarFile createJarFile(final URL url) {
             final URL jarUrl = URLUtil.create("jar:file:" + url.getPath());
             return JarFileUtil.toJarFile(jarUrl);
