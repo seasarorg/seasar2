@@ -115,15 +115,17 @@ public class XlsReader implements DataReader, DataSetConstants {
         DataTable table = dataSet_.addTable(sheetName);
         int rowCount = sheet.getLastRowNum();
         if (rowCount > 0) {
-            setupColumns(table, sheet.getRow(0), sheet.getRow(1));
+            setupColumns(table, sheet);
             setupRows(table, sheet);
         } else if (rowCount == 0) {
-            setupColumns(table, sheet.getRow(0), null);
+            setupColumns(table, sheet);
         }
         return table;
     }
 
-    private void setupColumns(DataTable table, HSSFRow nameRow, HSSFRow valueRow) {
+    private void setupColumns(DataTable table, HSSFSheet sheet) {
+        HSSFRow nameRow = sheet.getRow(0);
+        HSSFRow valueRow = sheet.getRow(1);
         for (int i = 0;; ++i) {
             HSSFCell nameCell = nameRow.getCell((short) i);
             if (nameCell == null) {
@@ -135,7 +137,12 @@ public class XlsReader implements DataReader, DataSetConstants {
             }
             HSSFCell valueCell = null;
             if (valueRow != null) {
-                valueCell = valueRow.getCell((short) i);
+                for (int j = 1; j <= sheet.getLastRowNum(); j++) {
+                    valueCell = sheet.getRow(j).getCell((short) i);
+                    if (valueCell != null) {
+                        break;
+                    }
+                }
             }
             if (valueCell != null) {
                 table.addColumn(columnName, getColumnType(valueCell));

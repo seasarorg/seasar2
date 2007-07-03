@@ -47,7 +47,7 @@ public class XlsReaderTest extends S2TestCase {
      */
     public void testSetupColumns() throws Exception {
         DataTable table = dataSet_.getTable(2);
-        assertEquals("1", 8, table.getColumnSize());
+        assertEquals("1", 9, table.getColumnSize());
         for (int i = 0; i < table.getColumnSize(); ++i) {
             assertEquals("2", "COLUMN" + i, table.getColumnName(i));
         }
@@ -59,6 +59,7 @@ public class XlsReaderTest extends S2TestCase {
         assertEquals("8", ColumnTypes.BOOLEAN, table.getColumnType(5));
         assertEquals("9", ColumnTypes.STRING, table.getColumnType(6));
         assertEquals("10", ColumnTypes.STRING, table.getColumnType(7));
+        assertEquals("11", ColumnTypes.BIGDECIMAL, table.getColumnType(8));
     }
 
     /**
@@ -100,6 +101,7 @@ public class XlsReaderTest extends S2TestCase {
         assertEquals("6", Boolean.TRUE, row.getValue(5));
         assertEquals("7", "\"    \"", row.getValue(6));
         assertEquals("8", "\"a\"b\"", row.getValue(7));
+        assertNull("9", row.getValue(8));
     }
 
     /**
@@ -118,6 +120,8 @@ public class XlsReaderTest extends S2TestCase {
         assertEquals("6", Boolean.TRUE, row.getValue(5));
         assertEquals("7", "    ", row.getValue(6));
         assertEquals("8", "a\"b", row.getValue(7));
+        assertEquals("8", "a\"b", row.getValue(7));
+        assertNull("9", row.getValue(8));
     }
 
     /**
@@ -149,7 +153,7 @@ public class XlsReaderTest extends S2TestCase {
     }
 
     /**
-     *
+     * 
      */
     public static class FloatingPointBean {
         private Double column0;
