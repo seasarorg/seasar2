@@ -27,6 +27,9 @@ import java.util.StringTokenizer;
  */
 public final class StringUtil {
 
+    /**
+     * 空の文字列の配列です。
+     */
     public static final String[] EMPTY_STRINGS = new String[0];
 
     /**
@@ -35,10 +38,28 @@ public final class StringUtil {
     private StringUtil() {
     }
 
+    /**
+     * 空かどうかを返します。
+     * 
+     * @param text
+     *            文字列
+     * @return 空かどうか
+     */
     public static final boolean isEmpty(String text) {
         return text == null || text.length() == 0;
     }
 
+    /**
+     * 文字列を置き換えます。
+     * 
+     * @param text
+     *            テキスト
+     * @param fromText
+     *            置き換え対象のテキスト
+     * @param toText
+     *            置き換えるテキスト
+     * @return 結果
+     */
     public static final String replace(String text, String fromText,
             String toText) {
 

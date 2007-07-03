@@ -28,10 +28,26 @@ public final class ShortConversionUtil {
     private ShortConversionUtil() {
     }
 
+    /**
+     * {@link Short}に変換します。
+     * 
+     * @param o
+     *            変換するオブジェクト
+     * @return 変換後のオブジェクト
+     */
     public static Short toShort(Object o) {
         return toShort(o, null);
     }
 
+    /**
+     * {@link Short}に変換します。
+     * 
+     * @param o
+     *            変換するオブジェクト
+     * @param pattern
+     *            パターン
+     * @return 変換後のオブジェクト
+     */
     public static Short toShort(Object o, String pattern) {
         if (o == null) {
             return null;
@@ -58,10 +74,26 @@ public final class ShortConversionUtil {
         return new Short(DecimalFormatUtil.normalize(s));
     }
 
+    /**
+     * shortに変換します。
+     * 
+     * @param o
+     *            変換するオブジェクト
+     * @return 変換されたshort
+     */
     public static short toPrimitiveShort(Object o) {
         return toPrimitiveShort(o, null);
     }
 
+    /**
+     * shortに変換します。
+     * 
+     * @param o
+     *            変換するオブジェクト
+     * @param pattern
+     *            パターン
+     * @return 変換されたshort
+     */
     public static short toPrimitiveShort(Object o, String pattern) {
         if (o == null) {
             return 0;

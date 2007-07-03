@@ -29,10 +29,26 @@ public final class StringConversionUtil {
     private StringConversionUtil() {
     }
 
+    /**
+     * 文字列に変換します。
+     * 
+     * @param value
+     *            値
+     * @return 変換された結果
+     */
     public static String toString(Object value) {
         return toString(value, null);
     }
 
+    /**
+     * 文字列に変換します。
+     * 
+     * @param value
+     *            値
+     * @param pattern
+     *            パターン
+     * @return 変換された結果
+     */
     public static String toString(Object value, String pattern) {
         if (value == null) {
             return null;
@@ -49,6 +65,15 @@ public final class StringConversionUtil {
         }
     }
 
+    /**
+     * 文字列に変換します。
+     * 
+     * @param value
+     *            値
+     * @param pattern
+     *            パターン
+     * @return 変換された結果
+     */
     public static String toString(Number value, String pattern) {
         if (value != null) {
             if (pattern != null) {
@@ -59,6 +84,15 @@ public final class StringConversionUtil {
         return null;
     }
 
+    /**
+     * 文字列に変換します。
+     * 
+     * @param value
+     *            値
+     * @param pattern
+     *            パターン
+     * @return 変換された結果
+     */
     public static String toString(java.util.Date value, String pattern) {
         if (value != null) {
             if (pattern != null) {

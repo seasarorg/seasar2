@@ -156,15 +156,38 @@ public final class ResourceUtil {
         return getResourceAsStream(path, null);
     }
 
+    /**
+     * リソースをストリームとして返します。
+     * 
+     * @param path
+     * @param extension
+     * @return ストリーム
+     * @see #getResource(String, String)
+     */
     public static InputStream getResourceAsStream(String path, String extension) {
         URL url = getResource(path, extension);
         return URLUtil.openStream(url);
     }
 
+    /**
+     * リソースをストリームとして返します。リソースが見つからなかった場合は<code>null</code>を返します。
+     * 
+     * @param path
+     * @return ストリーム
+     * @see #getResourceAsStreamNoException(String, String)
+     */
     public static InputStream getResourceAsStreamNoException(String path) {
         return getResourceAsStreamNoException(path, null);
     }
 
+    /**
+     * リソースをストリームとして返します。リソースが見つからなかった場合は<code>null</code>を返します。
+     * 
+     * @param path
+     * @param extension
+     * @return ストリーム
+     * @see #getResourceNoException(String, String)
+     */
     public static InputStream getResourceAsStreamNoException(String path,
             String extension) {
         URL url = getResourceNoException(path, extension);
@@ -178,11 +201,27 @@ public final class ResourceUtil {
         }
     }
 
+    /**
+     * リソースが存在するかどうかを返します。
+     * 
+     * @param path
+     * @return リソースが存在するかどうか
+     * @see #getResourceNoException(String)
+     */
     public static boolean isExist(String path) {
         return getResourceNoException(path) != null;
     }
 
-    public static Properties getProperties(String path) {
+    /**
+     * プロパティファイルを返します。
+     * 
+     * @param path
+     * @return プロパティファイル
+     * @throws IORuntimeException
+     *             {@link IOException}が発生した場合
+     */
+    public static Properties getProperties(String path)
+            throws IORuntimeException {
         Properties props = new Properties();
         InputStream is = getResourceAsStream(path);
         try {
@@ -193,6 +232,12 @@ public final class ResourceUtil {
         }
     }
 
+    /**
+     * 拡張子を返します。
+     * 
+     * @param path
+     * @return 拡張子
+     */
     public static String getExtension(String path) {
         int extPos = path.lastIndexOf(".");
         if (extPos >= 0) {
@@ -201,6 +246,12 @@ public final class ResourceUtil {
         return null;
     }
 
+    /**
+     * 拡張子を取り除きます。
+     * 
+     * @param path
+     * @return 取り除いた後の結果
+     */
     public static String removeExtension(String path) {
         int extPos = path.lastIndexOf(".");
         if (extPos >= 0) {
@@ -209,10 +260,23 @@ public final class ResourceUtil {
         return path;
     }
 
+    /**
+     * クラスファイルが置かれているルートディレクトリを返します。
+     * 
+     * @param clazz
+     * @return ルートディレクトリ
+     * @see #getBuildDir(String)
+     */
     public static File getBuildDir(Class clazz) {
         return getBuildDir(getResourcePath(clazz));
     }
 
+    /**
+     * クラスファイルが置かれているルートディレクトリを返します。
+     * 
+     * @param path
+     * @return ルートディレクトリ
+     */
     public static File getBuildDir(String path) {
         File dir = null;
         URL url = getResource(path);
@@ -227,16 +291,34 @@ public final class ResourceUtil {
         return dir;
     }
 
+    /**
+     * 外部形式に変換します。
+     * 
+     * @param url
+     * @return 外部形式
+     */
     public static String toExternalForm(URL url) {
         String s = url.toExternalForm();
         return URLUtil.decode(s, "UTF8");
     }
 
+    /**
+     * ファイル名を返します。
+     * 
+     * @param url
+     * @return ファイル名
+     */
     public static String getFileName(URL url) {
         String s = url.getFile();
         return URLUtil.decode(s, "UTF8");
     }
 
+    /**
+     * ファイルを返します。
+     * 
+     * @param url
+     * @return ファイル
+     */
     public static File getFile(URL url) {
         File file = new File(getFileName(url));
         if (file != null && file.exists()) {
@@ -245,18 +327,47 @@ public final class ResourceUtil {
         return null;
     }
 
+    /**
+     * リソースをファイルとして返します。
+     * 
+     * @param path
+     * @return ファイル
+     * @see #getResourceAsFile(String, String)
+     */
     public static File getResourceAsFile(String path) {
         return getResourceAsFile(path, null);
     }
 
+    /**
+     * リソースをファイルとして返します。
+     * 
+     * @param path
+     * @param extension
+     * @return ファイル
+     * @see #getFile(URL)
+     */
     public static File getResourceAsFile(String path, String extension) {
         return getFile(getResource(path, extension));
     }
 
+    /**
+     * リソースをファイルとして返します。リソースが見つからない場合は<code>null</code>を返します。
+     * 
+     * @param clazz
+     * @return ファイル
+     * @see #getResourceAsFileNoException(String)
+     */
     public static File getResourceAsFileNoException(Class clazz) {
         return getResourceAsFileNoException(getResourcePath(clazz));
     }
 
+    /**
+     * リソースをファイルとして返します。リソースが見つからない場合は<code>null</code>を返します。
+     * 
+     * @param path
+     * @return ファイル
+     * @see #getResourceNoException(String)
+     */
     public static File getResourceAsFileNoException(String path) {
         URL url = getResourceNoException(path);
         if (url == null) {
@@ -265,6 +376,13 @@ public final class ResourceUtil {
         return getFile(url);
     }
 
+    /**
+     * パスを変換します。
+     * 
+     * @param path
+     * @param clazz
+     * @return 変換された結果
+     */
     public static String convertPath(String path, Class clazz) {
         if (isExist(path)) {
             return path;
