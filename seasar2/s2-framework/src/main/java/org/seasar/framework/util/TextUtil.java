@@ -32,24 +32,52 @@ public final class TextUtil {
     private TextUtil() {
     }
 
+    /**
+     * テキストを読み込みます。
+     * 
+     * @param path
+     *            パス
+     * @return 読み込んだテキスト
+     */
     public static String readText(String path) {
         InputStream is = ResourceUtil.getResourceAsStream(path);
         Reader reader = InputStreamReaderUtil.create(is);
         return ReaderUtil.readText(reader);
     }
 
+    /**
+     * テキストを読み込みます。
+     * 
+     * @param file
+     *            ファイル
+     * @return 読み込んだテキスト
+     */
     public static String readText(File file) {
         InputStream is = FileInputStreamUtil.create(file);
         Reader reader = InputStreamReaderUtil.create(is);
         return ReaderUtil.readText(reader);
     }
 
+    /**
+     * UTF8でテキストを読み込みます。
+     * 
+     * @param path
+     *            パス
+     * @return 読み込んだテキスト
+     */
     public static String readUTF8(String path) {
         InputStream is = ResourceUtil.getResourceAsStream(path);
         Reader reader = InputStreamReaderUtil.create(is, UTF8);
         return ReaderUtil.readText(reader);
     }
 
+    /**
+     * UTF8でテキストを読み込みます。
+     * 
+     * @param file
+     *            ファイル
+     * @return 読み込んだテキスト
+     */
     public static String readUTF8(File file) {
         InputStream is = FileInputStreamUtil.create(file);
         Reader reader = InputStreamReaderUtil.create(is, UTF8);

@@ -33,7 +33,17 @@ public final class TransactionManagerUtil {
     private TransactionManagerUtil() {
     }
 
-    public static Transaction getTransaction(TransactionManager tm) {
+    /**
+     * トランザクションを返します。
+     * 
+     * @param tm
+     *            トランザクションマネージャ
+     * @return トランザクション
+     * @throws SystemRuntimeException
+     *             {@link SystemException}が発生した場合
+     */
+    public static Transaction getTransaction(TransactionManager tm)
+            throws SystemRuntimeException {
         try {
             return tm.getTransaction();
         } catch (SystemException e) {
@@ -41,11 +51,28 @@ public final class TransactionManagerUtil {
         }
     }
 
+    /**
+     * トランザクションがアクティブかどうか返します。
+     * 
+     * @param tm
+     *            トランザクションマネージャ
+     * @return トランザクションがアクティブかどうか
+     */
     public static boolean isActive(TransactionManager tm) {
         return getStatus(tm) != Status.STATUS_NO_TRANSACTION;
     }
 
-    public static int getStatus(TransactionManager tm) {
+    /**
+     * ステータスを返します。
+     * 
+     * @param tm
+     *            トランザクションマネージャ
+     * @return ステータス
+     * @throws SystemRuntimeException
+     *             {@link SystemException}が発生した場合
+     */
+    public static int getStatus(TransactionManager tm)
+            throws SystemRuntimeException {
         try {
             return tm.getStatus();
         } catch (SystemException e) {
@@ -53,7 +80,16 @@ public final class TransactionManagerUtil {
         }
     }
 
-    public static void setRollbackOnly(TransactionManager tm) {
+    /**
+     * ロールバックオンリーに設定します。
+     * 
+     * @param tm
+     *            トランザクションマネージャ
+     * @throws SystemRuntimeException
+     *             {@link SystemException}が発生した場合
+     */
+    public static void setRollbackOnly(TransactionManager tm)
+            throws SystemRuntimeException {
         try {
             tm.setRollbackOnly();
         } catch (SystemException e) {

@@ -86,6 +86,15 @@ public final class StringUtil {
         return buf.toString();
     }
 
+    /**
+     * 文字列を分割します。
+     * 
+     * @param str
+     *            文字列
+     * @param delim
+     *            分割するためのデリミタ
+     * @return 分割された文字列の配列
+     */
     public static String[] split(String str, String delim) {
         if (isEmpty(str)) {
             return EMPTY_STRINGS;
@@ -98,10 +107,26 @@ public final class StringUtil {
         return (String[]) list.toArray(new String[list.size()]);
     }
 
+    /**
+     * 左側の空白を削ります。
+     * 
+     * @param text
+     *            テキスト
+     * @return 結果の文字列
+     */
     public static final String ltrim(final String text) {
         return ltrim(text, null);
     }
 
+    /**
+     * 左側の指定した文字列を削ります。
+     * 
+     * @param text
+     *            テキスト
+     * @param trimText
+     *            削るテキスト
+     * @return 結果の文字列
+     */
     public static final String ltrim(final String text, String trimText) {
         if (text == null) {
             return null;
@@ -118,10 +143,26 @@ public final class StringUtil {
         return text.substring(pos);
     }
 
+    /**
+     * 右側の空白を削ります。
+     * 
+     * @param text
+     *            テキスト
+     * @return 結果の文字列
+     */
     public static final String rtrim(final String text) {
         return rtrim(text, null);
     }
 
+    /**
+     * 右側の指定した文字列を削ります。
+     * 
+     * @param text
+     *            テキスト
+     * @param trimText
+     *            削る文字列
+     * @return 結果の文字列
+     */
     public static final String rtrim(final String text, String trimText) {
         if (text == null) {
             return null;
@@ -138,6 +179,15 @@ public final class StringUtil {
         return text.substring(0, pos + 1);
     }
 
+    /**
+     * サフィックスを削ります。
+     * 
+     * @param text
+     *            テキスト
+     * @param suffix
+     *            サフィックス
+     * @return 結果の文字列
+     */
     public static final String trimSuffix(final String text, String suffix) {
         if (text == null) {
             return null;
@@ -151,6 +201,15 @@ public final class StringUtil {
         return text;
     }
 
+    /**
+     * プレフィックスを削ります。
+     * 
+     * @param text
+     *            テキスト
+     * @param prefix
+     *            プレフィックス
+     * @return 結果の文字列
+     */
     public static final String trimPrefix(final String text, String prefix) {
         if (text == null) {
             return null;
@@ -164,6 +223,13 @@ public final class StringUtil {
         return text;
     }
 
+    /**
+     * JavaBeansの仕様にしたがってデキャピタライズを行ないます。大文字が2つ以上続く場合は、小文字にならないので注意してください。
+     * 
+     * @param name
+     *            名前
+     * @return 結果の文字列
+     */
     public static String decapitalize(String name) {
         if (isEmpty(name)) {
             return name;
@@ -177,6 +243,13 @@ public final class StringUtil {
         return new String(chars);
     }
 
+    /**
+     * JavaBeansの仕様にしたがってキャピタライズを行ないます。大文字が2つ以上続く場合は、大文字にならないので注意してください。
+     * 
+     * @param name
+     *            名前
+     * @return 結果の文字列
+     */
     public static String capitalize(String name) {
         if (isEmpty(name)) {
             return name;
@@ -186,15 +259,28 @@ public final class StringUtil {
         return new String(chars);
     }
 
+    /**
+     * ケースインセンシティブで特定の文字列で開始されているかどうかを返します。
+     * 
+     * @param text
+     *            テキスト
+     * @param fragment
+     *            特定の文字列
+     * @return ケースインセンシティブで特定の文字列で開始されているかどうか
+     * @see #startsWithIgnoreCase(String, String)
+     * @deprecated
+     */
     public static boolean startsWith(String text, String fragment) {
-        if (text == null || fragment == null) {
-            return false;
-        }
-        return text.length() > fragment.length()
-                && text.substring(0, fragment.length()).equalsIgnoreCase(
-                        fragment);
+        return startsWithIgnoreCase(text, fragment);
     }
 
+    /**
+     * ブランクかどうか返します。
+     * 
+     * @param str
+     *            文字列
+     * @return ブランクかどうか
+     */
     public static boolean isBlank(String str) {
         if (str == null || str.length() == 0) {
             return true;
@@ -207,10 +293,27 @@ public final class StringUtil {
         return true;
     }
 
+    /**
+     * ブランクではないかどうか返します。
+     * 
+     * @param str
+     *            文字列
+     * @return ブランクではないかどうか
+     * @see #isBlank(String)
+     */
     public static boolean isNotBlank(String str) {
         return !isBlank(str);
     }
 
+    /**
+     * charを含んでいるかどうか返します。
+     * 
+     * @param str
+     *            文字列
+     * @param ch
+     *            char
+     * @return charを含んでいるかどうか
+     */
     public static boolean contains(String str, char ch) {
         if (isEmpty(str)) {
             return false;
@@ -218,6 +321,15 @@ public final class StringUtil {
         return str.indexOf(ch) >= 0;
     }
 
+    /**
+     * 文字列を含んでいるかどうか返します。
+     * 
+     * @param s1
+     *            文字列
+     * @param s2
+     *            比較する対象となる文字列
+     * @return 文字列を含んでいるかどうか
+     */
     public static boolean contains(String s1, String s2) {
         if (isEmpty(s1)) {
             return false;
@@ -225,15 +337,42 @@ public final class StringUtil {
         return s1.indexOf(s2) >= 0;
     }
 
+    /**
+     * 文字列同士が等しいかどうか返します。どちらもnullの場合は、<code>true</code>を返します。
+     * 
+     * @param target1
+     *            文字列1
+     * @param target2
+     *            文字列2
+     * @return 文字列同士が等しいかどうか
+     */
     public static boolean equals(String target1, String target2) {
         return (target1 == null) ? (target2 == null) : target1.equals(target2);
     }
 
+    /**
+     * ケースインセンシティブで文字列同士が等しいかどうか返します。どちらもnullの場合は、<code>true</code>を返します。
+     * 
+     * @param target1
+     *            文字列1
+     * @param target2
+     *            文字列2
+     * @return ケースインセンシティブで文字列同士が等しいか
+     */
     public static boolean equalsIgnoreCase(String target1, String target2) {
         return (target1 == null) ? (target2 == null) : target1
                 .equalsIgnoreCase(target2);
     }
 
+    /**
+     * ケースインセンシティブで特定の文字で終わっているのかどうかを返します。
+     * 
+     * @param target1
+     *            テキスト
+     * @param target2
+     *            比較する文字列
+     * @return ケースインセンシティブで特定の文字で終わっているのかどうか
+     */
     public static boolean endsWithIgnoreCase(String target1, String target2) {
         if (target1 == null || target2 == null) {
             return false;
@@ -247,6 +386,15 @@ public final class StringUtil {
         return s1.equalsIgnoreCase(target2);
     }
 
+    /**
+     * ケースインセンシティブで特定の文字ではじまっているのかどうかを返します。
+     * 
+     * @param target1
+     *            テキスト
+     * @param target2
+     *            比較する文字列
+     * @return ケースインセンシティブで特定の文字ではじまっているのかどうか
+     */
     public static boolean startsWithIgnoreCase(String target1, String target2) {
         if (target1 == null || target2 == null) {
             return false;
@@ -260,6 +408,15 @@ public final class StringUtil {
         return s1.equalsIgnoreCase(target2);
     }
 
+    /**
+     * 文字列の最後から指定した文字列で始まっている部分より手前を返します。
+     * 
+     * @param str
+     *            文字列
+     * @param separator
+     *            セパレータ
+     * @return 結果の文字列
+     */
     public static String substringFromLast(String str, String separator) {
         if (isEmpty(str) || isEmpty(separator)) {
             return str;
@@ -271,6 +428,15 @@ public final class StringUtil {
         return str.substring(0, pos);
     }
 
+    /**
+     * 文字列の最後から指定した文字列で始まっている部分より後ろを返します。
+     * 
+     * @param str
+     *            文字列
+     * @param separator
+     *            セパレータ
+     * @return 結果の文字列
+     */
     public static String substringToLast(String str, String separator) {
         if (isEmpty(str) || isEmpty(separator)) {
             return str;
@@ -282,6 +448,13 @@ public final class StringUtil {
         return str.substring(pos + 1, str.length());
     }
 
+    /**
+     * 16進数の文字列に変換します。
+     * 
+     * @param bytes
+     *            バイトの配列
+     * @return 16進数の文字列
+     */
     public static String toHex(byte[] bytes) {
         if (bytes == null) {
             return "";
@@ -293,6 +466,13 @@ public final class StringUtil {
         return sb.toString();
     }
 
+    /**
+     * 16進数の文字列に変換します。
+     * 
+     * @param i
+     *            int
+     * @return 16進数の文字列
+     */
     public static String toHex(final int i) {
         StringBuffer buf = new StringBuffer();
         appendHex(buf, i);
@@ -327,6 +507,13 @@ public final class StringUtil {
         buf.append(Integer.toHexString(i & 0xff));
     }
 
+    /**
+     * _記法をキャメル記法に変換します。
+     * 
+     * @param s
+     *            テキスト
+     * @return 結果の文字列
+     */
     public static String camelize(String s) {
         if (s == null) {
             return null;
@@ -343,6 +530,13 @@ public final class StringUtil {
         return buf.toString();
     }
 
+    /**
+     * キャメル記法を_記法に変換します。
+     * 
+     * @param s
+     *            テキスト
+     * @return 結果の文字列
+     */
     public static String decamelize(String s) {
         if (s == null) {
             return null;

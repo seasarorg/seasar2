@@ -23,10 +23,19 @@ package org.seasar.framework.util;
  */
 public class Tokenizer {
 
+    /**
+     * EOFをあらわします。
+     */
     public static final int TT_EOF = -1;
 
+    /**
+     * Quoteをあらわします。
+     */
     public static final int TT_QUOTE = '\'';
 
+    /**
+     * 単語をあらわします。
+     */
     public static final int TT_WORD = -3;
 
     private static final int TT_NOTHING = -4;
@@ -61,15 +70,33 @@ public class Tokenizer {
         setup(defaultCtype);
     }
 
+    /**
+     * {@link Tokenizer}を作成します。
+     * 
+     * @param str
+     *            文字列
+     */
     public Tokenizer(String str) {
         this(str, defaultCtype);
     }
 
+    /**
+     * {@link Tokenizer}を作成します。
+     * 
+     * @param str
+     *            文字列
+     * @param ctype
+     *            文字のタイプの配列
+     */
     public Tokenizer(String str, byte[] ctype) {
         this.str = str;
         this.ctype = ctype;
     }
 
+    /**
+     * @param ctype2
+     *            文字のタイプの配列
+     */
     protected static void setup(byte[] ctype2) {
         wordChars(ctype2, 'a', 'z');
         wordChars(ctype2, 'A', 'Z');
@@ -91,6 +118,14 @@ public class Tokenizer {
         whitespaceChars(ctype2, 0, ' ');
     }
 
+    /**
+     * 単語用の文字として設定します。
+     * 
+     * @param ctype2
+     *            文字のタイプの配列
+     * @param low
+     * @param hi
+     */
     protected static void wordChars(byte[] ctype2, int low, int hi) {
         if (low < 0) {
             low = 0;
@@ -103,10 +138,28 @@ public class Tokenizer {
         }
     }
 
+    /**
+     * 単語用の文字として設定します。
+     * 
+     * @param ctype2
+     *            文字のタイプの配列
+     * @param val
+     *            文字コード
+     */
     protected static void wordChar(byte[] ctype2, int val) {
         ctype2[val] |= CT_ALPHA;
     }
 
+    /**
+     * 空白用の文字として設定します。
+     * 
+     * @param ctype2
+     *            文字のタイプの配列
+     * @param low
+     *            最小の文字コード
+     * @param hi
+     *            最大の文字コード
+     */
     protected static void whitespaceChars(byte[] ctype2, int low, int hi) {
         if (low < 0) {
             low = 0;
@@ -119,16 +172,34 @@ public class Tokenizer {
         }
     }
 
+    /**
+     * 単独で存在する文字として設定します。
+     * 
+     * @param ctype2
+     *            文字のタイプの配列
+     * @param ch
+     *            文字コード
+     */
     protected static void ordinaryChar(byte[] ctype2, int ch) {
         if (ch >= 0 && ch < ctype2.length) {
             ctype2[ch] = 0;
         }
     }
 
+    /**
+     * 文字列の値を返します。
+     * 
+     * @return 文字列の値
+     */
     public final String getStringValue() {
         return sval;
     }
 
+    /**
+     * 次のトークンに進めます。
+     * 
+     * @return トークンのタイプ
+     */
     public int nextToken() {
         initVal();
         if (processEOF()) {
@@ -149,6 +220,11 @@ public class Tokenizer {
         return ttype = peekc;
     }
 
+    /**
+     * 既に読み込んだ文字列を返します。
+     * 
+     * @return 既に読み込んだ文字列
+     */
     public final String getReadString() {
         return str.substring(0, colno - 1);
     }
