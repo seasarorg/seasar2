@@ -61,23 +61,45 @@ public class AspectWeaver {
      */
     public static final String SUFFIX_INVOKE_SUPER_METHOD = "$$invokeSuperMethod$$";
 
-    // static fields
+    /**
+     * エンハンスされるクラス名の {@link Set}
+     */
     protected static final Set enhancedClassNames = Collections
             .synchronizedSet(new HashSet());
 
-    // instance fields
+    /**
+     * ターゲットクラス
+     */
     protected final Class targetClass;
 
+    /**
+     * パラメータ
+     */
     protected final Map parameters;
 
+    /**
+     * エンハンスされるクラス名
+     */
     protected final String enhancedClassName;
 
+    /**
+     * エンハンスされるクラスジェネレータ
+     */
     protected final EnhancedClassGenerator enhancedClassGenerator;
 
+    /**
+     * メソッド呼び出しクラスの {@link List}
+     */
     protected final List methodInvocationClassList = new ArrayList();
 
+    /**
+     * エンハンスされるクラス
+     */
     protected Class enhancedClass;
 
+    /**
+     * クラスプール
+     */
     protected ClassPool classPool;
 
     /**

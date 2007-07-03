@@ -48,12 +48,19 @@ import org.seasar.framework.util.ClassUtil;
  * @author koichik
  */
 public class AbstractGenerator {
-    // constants
+    /**
+     * defineClassです。
+     */
     protected static final String DEFINE_CLASS_METHOD_NAME = "defineClass";
 
-    // static fields
+    /**
+     * 保護ドメインです。
+     */
     protected static final ProtectionDomain protectionDomain;
 
+    /**
+     * defineClassメソッドです。
+     */
     protected static Method defineClassMethod;
 
     // static initializer
@@ -85,9 +92,20 @@ public class AbstractGenerator {
         });
     }
 
-    // instance fields
+    /**
+     * クラスプールです。
+     */
     protected final ClassPool classPool;
 
+    /**
+     * オブジェクトの表現から文字列表現に変換します。
+     * 
+     * @param type
+     *            型
+     * @param expr
+     *            値
+     * @return 文字列表現
+     */
     protected static String fromObject(final Class type, final String expr) {
         if (type.equals(void.class) || type.equals(Object.class)) {
             return expr;
@@ -104,6 +122,15 @@ public class AbstractGenerator {
         return "(" + ClassUtil.getSimpleClassName(type) + ") " + expr;
     }
 
+    /**
+     * オブジェクトの文字列表現に変換します。
+     * 
+     * @param type
+     *            型
+     * @param expr
+     *            値
+     * @return 文字列表現
+     */
     protected static String toObject(final Class type, final String expr) {
         if (type.isPrimitive()) {
             final Class wrapper = ClassUtil.getWrapperClass(type);
@@ -112,44 +139,121 @@ public class AbstractGenerator {
         return expr;
     }
 
+    /**
+     * {@link AbstractGenerator}を作成します。
+     * 
+     * @param classPool
+     *            クラスプール
+     */
     protected AbstractGenerator(final ClassPool classPool) {
         this.classPool = classPool;
     }
 
+    /**
+     * コンパイル時のクラスに変換します。
+     * 
+     * @param clazz
+     *            元のクラス
+     * @return コンパイル時のクラス
+     */
     protected CtClass toCtClass(final Class clazz) {
         return ClassPoolUtil.toCtClass(classPool, clazz);
     }
 
+    /**
+     * コンパイル時のクラスに変換します。
+     * 
+     * @param className
+     *            クラス名
+     * @return コンパイル時のクラス
+     */
     protected CtClass toCtClass(final String className) {
         return ClassPoolUtil.toCtClass(classPool, className);
     }
 
+    /**
+     * コンパイル時のクラスの配列に変換します。
+     * 
+     * @param classNames
+     *            元のクラス名の配列
+     * @return コンパイル時のクラスの配列
+     */
     protected CtClass[] toCtClassArray(final String[] classNames) {
         return ClassPoolUtil.toCtClassArray(classPool, classNames);
     }
 
+    /**
+     * コンパイル時のクラスの配列に変換します。
+     * 
+     * @param classes
+     *            元のクラスの配列
+     * @return コンパイル時のクラスの配列
+     */
     protected CtClass[] toCtClassArray(final Class[] classes) {
         return ClassPoolUtil.toCtClassArray(classPool, classes);
     }
 
+    /**
+     * コンパイル時のクラスを作成します。
+     * 
+     * @param name
+     *            クラス名
+     * @return コンパイル時のクラス
+     */
     protected CtClass createCtClass(final String name) {
         return ClassPoolUtil.createCtClass(classPool, name);
     }
 
+    /**
+     * コンパイル時のクラスを作成します。
+     * 
+     * @param name
+     *            クラス名
+     * @param superClass
+     *            親クラス
+     * @return コンパイル時のクラス
+     */
     protected CtClass createCtClass(final String name, final Class superClass) {
         return ClassPoolUtil.createCtClass(classPool, name, superClass);
     }
 
+    /**
+     * コンパイル時のクラスを作成します。
+     * 
+     * @param name
+     *            クラス名
+     * @param superClass
+     *            親クラス
+     * @return コンパイル時のクラス
+     */
     protected CtClass createCtClass(final String name, final CtClass superClass) {
         return ClassPoolUtil.createCtClass(classPool, name, superClass);
     }
 
+    /**
+     * コンパイル時のクラスを取得して名前を変えます。
+     * 
+     * @param orgClass
+     *            元のクラス
+     * @param newName
+     *            新しい名前
+     * @return コンパイル時のクラス
+     */
     protected CtClass getAndRenameCtClass(final Class orgClass,
             final String newName) {
         return getAndRenameCtClass(ClassUtil.getSimpleClassName(orgClass),
                 newName);
     }
 
+    /**
+     * コンパイル時のクラスを取得して名前を変えます。
+     * 
+     * @param orgName
+     *            元の名前
+     * @param newName
+     *            新しい名前
+     * @return コンパイル時のクラス
+     */
     protected CtClass getAndRenameCtClass(final String orgName,
             final String newName) {
         try {
@@ -163,8 +267,10 @@ public class AbstractGenerator {
      * <code>CtClass</code>を<code>Class</code>に変更します。
      * 
      * @param classLoader
+     *            クラスローダ
      * @param ctClass
-     * @return
+     *            コンパイル時のクラス
+     * @return クラス
      */
     public Class toClass(final ClassLoader classLoader, final CtClass ctClass) {
         try {
@@ -183,18 +289,48 @@ public class AbstractGenerator {
         }
     }
 
+    /**
+     * インターフェースを設定します。
+     * 
+     * @param clazz
+     *            対象のコンパイル時クラス
+     * @param interfaceType
+     *            インターフェース
+     */
     protected void setInterface(final CtClass clazz, final Class interfaceType) {
         clazz.setInterfaces(new CtClass[] { toCtClass(interfaceType) });
     }
 
+    /**
+     * インターフェースの配列を設定します。
+     * 
+     * @param clazz
+     *            対象のコンパイル時クラス
+     * @param interfaces
+     *            インターフェースの配列
+     */
     protected void setInterfaces(final CtClass clazz, final Class[] interfaces) {
         clazz.setInterfaces(toCtClassArray(interfaces));
     }
 
+    /**
+     * デフォルトコンストラクタを作成します。
+     * 
+     * @param clazz
+     *            元のクラス
+     * @return コンパイル時コンストラクタ
+     */
     protected CtConstructor createDefaultConstructor(final Class clazz) {
         return createDefaultConstructor(toCtClass(clazz));
     }
 
+    /**
+     * デフォルトコンストラクタを作成します。
+     * 
+     * @param clazz
+     *            対象のコンパイル時クラス
+     * @return コンパイル時コンストラクタ
+     */
     protected CtConstructor createDefaultConstructor(final CtClass clazz) {
         try {
             final CtConstructor ctConstructor = CtNewConstructor
@@ -206,6 +342,15 @@ public class AbstractGenerator {
         }
     }
 
+    /**
+     * コンストラクタを作成します。
+     * 
+     * @param clazz
+     *            対象となるコンパイル時クラス
+     * @param constructor
+     *            元のコンストラクタ
+     * @return コンパイル時コンストラクタ
+     */
     protected CtConstructor createConstructor(final CtClass clazz,
             final Constructor constructor) {
         return createConstructor(clazz, toCtClassArray(constructor
@@ -213,6 +358,17 @@ public class AbstractGenerator {
                 .getExceptionTypes()));
     }
 
+    /**
+     * コンストラクタを作成します。
+     * 
+     * @param clazz
+     *            対象となるコンパイル時クラス
+     * @param parameterTypes
+     *            パラメータの型の配列
+     * @param exceptionTypes
+     *            例外の型の配列
+     * @return コンパイル時コンストラクタ
+     */
     protected CtConstructor createConstructor(final CtClass clazz,
             final CtClass[] parameterTypes, final CtClass[] exceptionTypes) {
         try {
@@ -225,6 +381,17 @@ public class AbstractGenerator {
         }
     }
 
+    /**
+     * 宣言されているメソッドを返します。
+     * 
+     * @param clazz
+     *            対象のコンパイル時クラス
+     * @param name
+     *            メソッド名
+     * @param argTypes
+     *            パラメータの型の配列
+     * @return コンパイル時メソッド
+     */
     protected CtMethod getDeclaredMethod(final CtClass clazz,
             final String name, final CtClass[] argTypes) {
         try {
@@ -234,6 +401,15 @@ public class AbstractGenerator {
         }
     }
 
+    /**
+     * メソッドを作成します。
+     * 
+     * @param clazz
+     *            対象のコンパイル時クラス
+     * @param src
+     *            ソース
+     * @return コンパイル時メソッド
+     */
     protected CtMethod createMethod(final CtClass clazz, final String src) {
         try {
             final CtMethod ctMethod = CtNewMethod.make(src, clazz);
@@ -244,6 +420,17 @@ public class AbstractGenerator {
         }
     }
 
+    /**
+     * メソッドを作成します。
+     * 
+     * @param clazz
+     *            対象のコンパイル時クラス
+     * @param method
+     *            元のメソッド
+     * @param body
+     *            メソッドの中身
+     * @return コンパイル時メソッド
+     */
     protected CtMethod createMethod(final CtClass clazz, final Method method,
             final String body) {
         return createMethod(clazz, method.getModifiers(), method
@@ -251,6 +438,25 @@ public class AbstractGenerator {
                 method.getExceptionTypes(), body);
     }
 
+    /**
+     * メソッドを作成します。
+     * 
+     * @param clazz
+     *            対象となるコンパイル時クラス
+     * @param modifier
+     *            アクセス修飾子
+     * @param returnType
+     *            戻り値の型
+     * @param methodName
+     *            メソッド名
+     * @param parameterTypes
+     *            パラメータの型の配列
+     * @param exceptionTypes
+     *            例外の型の配列
+     * @param body
+     *            メソッドの中身
+     * @return コンパイル時メソッド
+     */
     protected CtMethod createMethod(final CtClass clazz, final int modifier,
             final Class returnType, final String methodName,
             final Class[] parameterTypes, final Class[] exceptionTypes,
@@ -268,6 +474,14 @@ public class AbstractGenerator {
         }
     }
 
+    /**
+     * メソッドの中身を設定します。
+     * 
+     * @param method
+     *            コンパイル時メソッド
+     * @param src
+     *            ソース
+     */
     protected void setMethodBody(final CtMethod method, final String src) {
         try {
             method.setBody(src);

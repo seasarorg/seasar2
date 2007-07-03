@@ -32,8 +32,14 @@ public class HotAwareDelegateInterceptor implements MethodInterceptor {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * S2コンテナです。
+     */
     protected S2Container container;
 
+    /**
+     * ターゲット名です。
+     */
     protected String targetName;
 
     /**

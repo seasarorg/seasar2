@@ -50,6 +50,13 @@ public abstract class AbstractInterceptor implements MethodInterceptor,
         return new AopProxy(proxyClass, new Aspect[] { aspect }).create();
     }
 
+    /**
+     * ターゲットクラスを返します。
+     * 
+     * @param invocation
+     *            メソッド呼び出し
+     * @return ターゲットクラス
+     */
     protected Class getTargetClass(MethodInvocation invocation) {
         if (invocation instanceof S2MethodInvocation) {
             return ((S2MethodInvocation) invocation).getTargetClass();
@@ -62,6 +69,13 @@ public abstract class AbstractInterceptor implements MethodInterceptor,
         return superClass;
     }
 
+    /**
+     * コンポーネント定義を返します。
+     * 
+     * @param invocation
+     *            メソッド呼び出し
+     * @return コンポーネント定義
+     */
     protected ComponentDef getComponentDef(MethodInvocation invocation) {
         if (invocation instanceof S2MethodInvocation) {
             S2MethodInvocation impl = (S2MethodInvocation) invocation;

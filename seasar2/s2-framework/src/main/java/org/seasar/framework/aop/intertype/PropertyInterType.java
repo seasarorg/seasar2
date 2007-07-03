@@ -38,20 +38,44 @@ public class PropertyInterType extends AbstractInterType {
 
     private static final String GETTER_PREFIX = "get";
 
+    /**
+     * プロパティを追加しません。
+     */
     protected static final int NONE = 0;
 
+    /**
+     * getterメソッドだけを追加します。
+     */
     protected static final int READ = 1;
 
+    /**
+     * setterメソッドだけを追加します。
+     */
     protected static final int WRITE = 2;
 
+    /**
+     * getter、setterメソッドを追加します。
+     */
     protected static final int READWRITE = 3;
 
+    /**
+     * noneの値
+     */
     protected static final String STR_NONE = "none";
 
+    /**
+     * readの値
+     */
     protected static final String STR_READ = "read";
 
+    /**
+     * writeの値
+     */
     protected static final String STR_WRITE = "write";
 
+    /**
+     * readwriteの値
+     */
     protected static final String STR_READWRITE = "readwrite";
 
     private static final String TIGER_ANNOTATION_HANDLER = "org.seasar.framework.aop.intertype.TigerPropertyAnnotationHandler";
@@ -70,6 +94,13 @@ public class PropertyInterType extends AbstractInterType {
         setupAnnotationHandler();
     }
 
+    /**
+     * 値を求めます。
+     * 
+     * @param type
+     *            タイプ
+     * @return 値
+     */
     protected static int valueOf(String type) {
         int propertyType = NONE;
         if (STR_READ.equals(type)) {

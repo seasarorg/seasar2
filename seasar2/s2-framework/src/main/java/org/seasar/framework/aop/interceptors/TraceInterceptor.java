@@ -37,6 +37,9 @@ public class TraceInterceptor extends AbstractInterceptor {
     private static final Logger logger = Logger
             .getLogger(TraceInterceptor.class);
 
+    /**
+     * コレクションの最大サイズです。
+     */
     protected int maxLengthOfCollection = 10;
 
     /**
@@ -81,6 +84,15 @@ public class TraceInterceptor extends AbstractInterceptor {
         throw cause;
     }
 
+    /**
+     * オブジェクトのトレース情報を追加します。
+     * 
+     * @param buf
+     *            バッファ
+     * @param arg
+     *            オブジェクト
+     * @return 結果のバッファ
+     */
     protected StringBuffer appendObject(final StringBuffer buf, final Object arg) {
         if (arg == null) {
             buf.append("null");
@@ -98,6 +110,15 @@ public class TraceInterceptor extends AbstractInterceptor {
         return buf;
     }
 
+    /**
+     * コレクションのトレース情報を追加します。
+     * 
+     * @param buf
+     *            バッファ
+     * @param collection
+     *            コレクション
+     * @return 結果のバッファ
+     */
     protected StringBuffer appendList(final StringBuffer buf,
             final Collection collection) {
         buf.append("[");

@@ -32,8 +32,14 @@ public class InterceptorAdapter extends AbstractInterceptor {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * S2コンテナです。
+     */
     protected S2Container container;
 
+    /**
+     * コンポーネント定義の配列です。
+     */
     protected ComponentDef[] interceptorDefs = new ComponentDef[0];
 
     /**

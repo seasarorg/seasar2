@@ -22,14 +22,29 @@ package org.seasar.framework.aop.javassist;
  */
 public class TryBlockSupport {
 
+    /**
+     * try状態です。
+     */
     protected static final int STATUS_TRY = 0;
 
+    /**
+     * catch状態です。
+     */
     protected static final int STATUS_CATCH = 1;
 
+    /**
+     * finally状態です。
+     */
     protected static final int STATUS_FINALLY = 2;
 
+    /**
+     * 状態です。
+     */
     protected int status;
 
+    /**
+     * コード用のバッファです。
+     */
     protected StringBuffer codeBuf = new StringBuffer(500);
 
     /**

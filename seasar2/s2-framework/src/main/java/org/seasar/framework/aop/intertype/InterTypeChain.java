@@ -25,6 +25,9 @@ import org.seasar.framework.util.ArrayUtil;
  * 
  */
 public class InterTypeChain implements InterType {
+    /**
+     * インタータイプの配列です。
+     */
     protected InterType[] interTypes = new InterType[0];
 
     /**

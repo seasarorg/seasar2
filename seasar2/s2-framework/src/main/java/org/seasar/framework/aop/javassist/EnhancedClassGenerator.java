@@ -34,10 +34,19 @@ import org.seasar.framework.aop.InterType;
  */
 public class EnhancedClassGenerator extends AbstractGenerator {
 
+    /**
+     * ターゲットクラス
+     */
     protected final Class targetClass;
 
+    /**
+     * エンハンスされるクラス名
+     */
     protected final String enhancedClassName;
 
+    /**
+     * エンハンスされるクラス
+     */
     protected CtClass enhancedClass;
 
     /**

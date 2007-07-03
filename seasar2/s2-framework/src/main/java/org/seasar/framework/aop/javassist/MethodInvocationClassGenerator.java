@@ -35,9 +35,15 @@ import org.seasar.framework.util.MethodUtil;
  * @author koichik
  */
 public class MethodInvocationClassGenerator extends AbstractGenerator {
-    // instance fields
+
+    /**
+     * エンハンスされるクラス名
+     */
     protected final String enhancedClassName;
 
+    /**
+     * メソッド呼び出しクラス
+     */
     protected CtClass methodInvocationClass;
 
     /**

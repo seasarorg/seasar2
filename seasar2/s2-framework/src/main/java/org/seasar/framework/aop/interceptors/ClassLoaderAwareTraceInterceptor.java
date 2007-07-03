@@ -72,6 +72,15 @@ public class ClassLoaderAwareTraceInterceptor extends TraceInterceptor {
         return ret;
     }
 
+    /**
+     * クラスローダの情報を追加します。
+     * 
+     * @param buf
+     *            バッファ
+     * @param obj
+     *            オブジェクト
+     * @return 結果のバッファ
+     */
     protected StringBuffer appendClassLoader(final StringBuffer buf,
             final Object obj) {
         if (obj != null) {
