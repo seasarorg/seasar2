@@ -18,14 +18,41 @@ package org.seasar.extension.dao.helper;
 import java.lang.reflect.Method;
 
 /**
+ * Dao用のHelperインターフェースです。
+ * 
  * @author higa
  * 
  */
 public interface DaoHelper {
 
+    /**
+     * Daoのインターフェースを返します。
+     * 
+     * @param daoClass
+     *            Daoのクラス
+     * @return Daoのインターフェース
+     */
     Class getDaoInterface(Class daoClass);
 
+    /**
+     * データソース名を返します。
+     * 
+     * @param daoClass
+     *            Daoクラス
+     * @return データソース名
+     */
     String getDataSourceName(Class daoClass);
 
+    /**
+     * Daoのメソッドに対するSQLファイルの中身を返します。
+     * 
+     * @param daoClass
+     *            Daoクラス
+     * @param method
+     *            メソッド名
+     * @param suffix
+     *            データベースサフィックス
+     * @return Daoのメソッドに対するSQLファイルの中身
+     */
     String getSqlBySqlFile(Class daoClass, Method method, String suffix);
 }

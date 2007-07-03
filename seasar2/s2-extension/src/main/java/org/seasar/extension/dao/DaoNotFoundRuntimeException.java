@@ -18,6 +18,8 @@ package org.seasar.extension.dao;
 import org.seasar.framework.exception.SRuntimeException;
 
 /**
+ * Daoが見つからなかったときの例外です。
+ * 
  * @author higa
  * 
  */
@@ -27,11 +29,21 @@ public class DaoNotFoundRuntimeException extends SRuntimeException {
 
     private Class targetClass;
 
+    /**
+     * {@link DaoNotFoundRuntimeException}を作成します。
+     * 
+     * @param targetClass
+     */
     public DaoNotFoundRuntimeException(Class targetClass) {
         super("ESSR0088", new Object[] { targetClass.getName() });
         this.targetClass = targetClass;
     }
 
+    /**
+     * ターゲットクラスを返します。
+     * 
+     * @return ターゲットクラス
+     */
     public Class getTargetClass() {
         return targetClass;
     }

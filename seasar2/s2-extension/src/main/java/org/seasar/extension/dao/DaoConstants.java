@@ -16,10 +16,15 @@
 package org.seasar.extension.dao;
 
 /**
+ * Dao用の定数を定義します。
+ * 
  * @author higa
  * 
  */
 public interface DaoConstants {
 
+    /**
+     * SQLファイルの拡張子です。
+     */
     String SQL_EXTENSION = ".sql";
 }

@@ -26,6 +26,8 @@ import org.seasar.framework.util.StringUtil;
 import org.seasar.framework.util.TextUtil;
 
 /**
+ * {@link DaoHelper}の実装クラスです。
+ * 
  * @author higa
  * 
  */
@@ -34,15 +36,17 @@ public class DaoHelperImpl implements DaoHelper {
     private NamingConvention namingConvention;
 
     /**
-     * @return Returns the namingConvention.
+     * @return 命名規約を返します。
      */
     public NamingConvention getNamingConvention() {
         return namingConvention;
     }
 
     /**
+     * 命名規約を設定します。
+     * 
      * @param namingConvention
-     *            The namingConvention to set.
+     *            命名規約
      */
     public void setNamingConvention(NamingConvention namingConvention) {
         this.namingConvention = namingConvention;
