@@ -82,7 +82,7 @@ public class DisposableUtil {
      * {@link java.sql.DriverManager}に登録されている{@link java.sql.Driver}を 解除します。
      * <p>
      * このメソッドは互換性のために残されています。 バージョン2.4.10以降では、
-     * {@DriverManagerUtil#deregisterAllDrivers()}を使用してください。
+     * {@link DriverManagerUtil#deregisterAllDrivers()}を使用してください。
      * </p>
      */
     public static void deregisterAllDrivers() {
