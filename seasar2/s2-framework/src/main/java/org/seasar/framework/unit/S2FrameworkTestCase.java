@@ -65,8 +65,14 @@ import org.seasar.framework.util.StringUtil;
  */
 public abstract class S2FrameworkTestCase extends TestCase {
 
+    /**
+     * 環境が設定されているファイルのパスです。
+     */
     protected static final String ENV_PATH = "env_ut.txt";
 
+    /**
+     * 環境が設定されていない場合のデフォルト値です。
+     */
     protected static final String ENV_VALUE = "ut";
 
     private S2Container container;
@@ -245,6 +251,13 @@ public abstract class S2FrameworkTestCase extends TestCase {
         S2ContainerFactory.include(container, convertPath(path));
     }
 
+    /**
+     * パスを変換します。
+     * 
+     * @param path
+     *            パス
+     * @return 変換後のパス
+     */
     protected String convertPath(String path) {
         return ResourceUtil.convertPath(path, getClass());
     }
@@ -291,10 +304,22 @@ public abstract class S2FrameworkTestCase extends TestCase {
         }
     }
 
+    /**
+     * ルートのdiconのパスを返します。
+     * 
+     * @return ルートのdiconのパス
+     * @throws Throwable
+     */
     protected String getRootDicon() throws Throwable {
         return null;
     }
 
+    /**
+     * S2コンテナをセットアップします。
+     * 
+     * @throws Throwable
+     *             例外が発生した場合
+     */
     protected void setUpContainer() throws Throwable {
         Env.setFilePath(ENV_PATH);
         Env.setValueIfAbsent(ENV_VALUE);
@@ -330,6 +355,11 @@ public abstract class S2FrameworkTestCase extends TestCase {
         container.register(namingConvention);
     }
 
+    /**
+     * オリジナルのクラスローダを返します。
+     * 
+     * @return オリジナルのクラスローダ
+     */
     protected ClassLoader getOriginalClassLoader() {
         S2Container configurationContainer = S2ContainerFactory
                 .getConfigurationContainer();
@@ -341,6 +371,13 @@ public abstract class S2FrameworkTestCase extends TestCase {
         return Thread.currentThread().getContextClassLoader();
     }
 
+    /**
+     * ルートのdiconを解決します。
+     * 
+     * @return ルートのdicon
+     * @throws Throwable
+     *             例外が発生した場合
+     */
     protected String resolveRootDicon() throws Throwable {
         String targetName = getTargetName();
         if (targetName.length() > 0) {
@@ -354,6 +391,12 @@ public abstract class S2FrameworkTestCase extends TestCase {
         return getRootDicon();
     }
 
+    /**
+     * S2コンテナの終了処理を行ないます。
+     * 
+     * @throws Throwable
+     *             例外が発生した場合
+     */
     protected void tearDownContainer() throws Throwable {
         ComponentDeployerFactory
                 .setProvider(new ComponentDeployerFactory.DefaultProvider());
@@ -376,15 +419,39 @@ public abstract class S2FrameworkTestCase extends TestCase {
         Env.initialize();
     }
 
+    /**
+     * S2コンテナが初期化された後のセットアップを行ないます。
+     * 
+     * @throws Throwable
+     *             例外が発生した場合
+     */
     protected void setUpAfterContainerInit() throws Throwable {
     }
 
+    /**
+     * フィールドのバインディング後のセットアップを行ないます。
+     * 
+     * @throws Throwable
+     *             例外が発生した場合
+     */
     protected void setUpAfterBindFields() throws Throwable {
     }
 
+    /**
+     * フィールドがアンバインディングされる前に終了処理を行ないます。
+     * 
+     * @throws Throwable
+     *             例外が発生した場合
+     */
     protected void tearDownBeforeUnbindFields() throws Throwable {
     }
 
+    /**
+     * テストメソッドごとのセットアップを行ないます。
+     * 
+     * @throws Throwable
+     *             例外が発生した場合
+     */
     protected void setUpForEachTestMethod() throws Throwable {
         String targetName = getTargetName();
         if (targetName.length() > 0) {
@@ -392,9 +459,21 @@ public abstract class S2FrameworkTestCase extends TestCase {
         }
     }
 
+    /**
+     * S2コンテナが破棄される前に終了処理を行ないます。
+     * 
+     * @throws Throwable
+     *             例外が発生した場合
+     */
     protected void tearDownBeforeContainerDestroy() throws Throwable {
     }
 
+    /**
+     * テストメソッドごとの終了処理を行ないます。
+     * 
+     * @throws Throwable
+     *             例外が発生した場合
+     */
     protected void tearDownForEachTestMethod() throws Throwable {
         String targetName = getTargetName();
         if (targetName.length() > 0) {
@@ -402,62 +481,144 @@ public abstract class S2FrameworkTestCase extends TestCase {
         }
     }
 
+    /**
+     * テストを実行します。
+     * 
+     * @throws Throwable
+     *             例外が発生した場合
+     */
     protected void doRunTest() throws Throwable {
         runTest();
     }
 
+    /**
+     * サーブレットを返します。
+     * 
+     * @return サーブレット
+     */
     protected Servlet getServlet() {
         return servlet;
     }
 
+    /**
+     * サーブレットを設定します。
+     * 
+     * @param servlet
+     *            サーブレット
+     */
     protected void setServlet(Servlet servlet) {
         this.servlet = servlet;
     }
 
+    /**
+     * サーブレットの設定を返します。
+     * 
+     * @return サーブレットの設定
+     */
     protected MockServletConfig getServletConfig() {
         return servletConfig;
     }
 
+    /**
+     * サーブレットの設定を設定します。
+     * 
+     * @param servletConfig
+     *            サーブレットの設定
+     */
     protected void setServletConfig(MockServletConfig servletConfig) {
         this.servletConfig = servletConfig;
     }
 
+    /**
+     * サーブレットコンテキストを返します。
+     * 
+     * @return サーブレットコンテキスト
+     */
     protected MockServletContext getServletContext() {
         return servletContext;
     }
 
+    /**
+     * サーブレットコンテキストを設定します。
+     * 
+     * @param servletContext
+     *            サーブレットコンテキスト
+     */
     protected void setServletContext(MockServletContext servletContext) {
         this.servletContext = servletContext;
     }
 
+    /**
+     * リクエストを返します。
+     * 
+     * @return リクエスト
+     */
     protected MockHttpServletRequest getRequest() {
         return request;
     }
 
+    /**
+     * リクエストを設定します。
+     * 
+     * @param request
+     *            リクエスト
+     */
     protected void setRequest(MockHttpServletRequest request) {
         this.request = request;
     }
 
+    /**
+     * レスポンスを返します。
+     * 
+     * @return レスポンス
+     */
     protected MockHttpServletResponse getResponse() {
         return response;
     }
 
+    /**
+     * @param response
+     */
     protected void setResponse(MockHttpServletResponse response) {
         this.response = response;
     }
 
+    /**
+     * 命名規約を返します。
+     * 
+     * @return 命名規約
+     */
     protected NamingConvention getNamingConvention() {
         return namingConvention;
     }
 
+    /**
+     * ターゲット名を返します。
+     * 
+     * @return ターゲット名
+     */
     protected String getTargetName() {
         return getName().substring(4);
     }
 
+    /**
+     * ターゲットメソッドを返します。
+     * 
+     * @return ターゲットメソッド
+     */
     protected Method getTargetMethod() {
         return ClassUtil.getMethod(getClass(), getName(), null);
     }
 
+    /**
+     * メソッドを実行します。
+     * 
+     * @param methodName
+     *            メソッド名
+     * @return 実行結果
+     * @throws Throwable
+     *             例外が発生した場合
+     */
     protected Object invoke(String methodName) throws Throwable {
         try {
             Method method = ClassUtil.getMethod(getClass(), methodName, null);
@@ -467,6 +628,12 @@ public abstract class S2FrameworkTestCase extends TestCase {
         }
     }
 
+    /**
+     * フィールドにコンポーネントをバインドします。
+     * 
+     * @throws Throwable
+     *             例外が発生した場合
+     */
     protected void bindFields() throws Throwable {
         boundFields = new ArrayList();
         for (Class clazz = getClass(); clazz != S2FrameworkTestCase.class
@@ -479,6 +646,12 @@ public abstract class S2FrameworkTestCase extends TestCase {
         }
     }
 
+    /**
+     * フィールドにコンポーネントをバインドします。
+     * 
+     * @param field
+     *            フィールド
+     */
     protected void bindField(Field field) {
         if (isAutoBindable(field)) {
             field.setAccessible(true);
@@ -516,16 +689,33 @@ public abstract class S2FrameworkTestCase extends TestCase {
         }
     }
 
+    /**
+     * 名前を正規化します。
+     * 
+     * @param name
+     *            名前
+     * @return 正規化された名前
+     */
     protected String normalizeName(String name) {
         return StringUtil.replace(name, "_", "");
     }
 
+    /**
+     * 自動バインディング可能かどうか返します。
+     * 
+     * @param field
+     *            フィールド
+     * @return 自動バインディング可能かどうか
+     */
     protected boolean isAutoBindable(Field field) {
         int modifiers = field.getModifiers();
         return !Modifier.isStatic(modifiers) && !Modifier.isFinal(modifiers)
                 && !field.getType().isPrimitive();
     }
 
+    /**
+     * バインディングされた情報をクリアします。
+     */
     protected void unbindFields() {
         for (int i = 0; i < boundFields.size(); ++i) {
             Field field = (Field) boundFields.get(i);

@@ -40,6 +40,13 @@ public final class SQLRuntimeException extends SRuntimeException {
                 cause);
     }
 
+    /**
+     * <code>SQL</code>を返します。
+     * 
+     * @param cause
+     *            原因
+     * @return <code>SQL</code>
+     */
     protected static String getSql(SQLException cause) {
         if (cause instanceof SSQLException) {
             return ((SSQLException) cause).getSql();
@@ -47,6 +54,12 @@ public final class SQLRuntimeException extends SRuntimeException {
         return "";
     }
 
+    /**
+     * 本当のメッセージを返します。
+     * 
+     * @param cause
+     * @return 本当のメッセージ
+     */
     protected static String getRealMessage(SQLException cause) {
         StringBuffer buf = new StringBuffer(256);
         buf.append(cause.getMessage()).append(" : [");

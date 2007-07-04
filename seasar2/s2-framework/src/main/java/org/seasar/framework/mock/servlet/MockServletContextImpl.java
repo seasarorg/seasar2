@@ -199,6 +199,13 @@ public class MockServletContextImpl implements MockServletContext, Serializable 
         return null;
     }
 
+    /**
+     * パスを調整します。
+     * 
+     * @param path
+     *            パス
+     * @return 調整後のパス
+     */
     protected String adjustPath(String path) {
         if (path != null && path.length() >= 0 && path.charAt(0) == '/') {
             return path.substring(1);

@@ -90,14 +90,6 @@ public class StringUtilTest extends TestCase {
     /**
      * @throws Exception
      */
-    public void testStartsWith() throws Exception {
-        assertEquals("1", true, StringUtil.startsWith("abcdef", "ABC"));
-        assertEquals("2", false, StringUtil.startsWith("ab", "ABC"));
-    }
-
-    /**
-     * @throws Exception
-     */
     public void testIsBlank() throws Exception {
         assertEquals("1", true, StringUtil.isBlank(" "));
         assertEquals("2", true, StringUtil.isBlank(""));

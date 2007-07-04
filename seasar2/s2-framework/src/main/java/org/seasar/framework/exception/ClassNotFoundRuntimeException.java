@@ -57,6 +57,12 @@ public class ClassNotFoundRuntimeException extends SRuntimeException {
         return className;
     }
 
+    /**
+     * クラス名を設定します。
+     * 
+     * @param className
+     *            クラス名
+     */
     protected void setClassName(String className) {
         this.className = className;
     }

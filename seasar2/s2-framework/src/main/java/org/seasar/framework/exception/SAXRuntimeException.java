@@ -36,10 +36,24 @@ public final class SAXRuntimeException extends SRuntimeException {
         super("ESSR0054", createArgs(cause), cause);
     }
 
+    /**
+     * 引数の配列を作成します。
+     * 
+     * @param cause
+     *            原因
+     * @return 引数の配列
+     */
     protected static Object[] createArgs(SAXException cause) {
         return new Object[] { createMessage(cause) };
     }
 
+    /**
+     * メッセージを作成します。
+     * 
+     * @param cause
+     *            原因
+     * @return メッセージ
+     */
     protected static String createMessage(final SAXException cause) {
         StringBuffer buf = new StringBuffer(100);
         buf.append(cause);

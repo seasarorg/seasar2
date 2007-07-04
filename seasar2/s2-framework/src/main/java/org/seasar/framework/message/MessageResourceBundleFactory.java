@@ -103,6 +103,13 @@ public class MessageResourceBundleFactory {
         return null;
     }
 
+    /**
+     * メッセージリソースバンドルファザードを返します。
+     * 
+     * @param path
+     *            パス
+     * @return メッセージリソースバンドルファザード
+     */
     protected static MessageResourceBundleFacade loadFacade(String path) {
         synchronized (cache) {
             MessageResourceBundleFacade facade = (MessageResourceBundleFacade) cache

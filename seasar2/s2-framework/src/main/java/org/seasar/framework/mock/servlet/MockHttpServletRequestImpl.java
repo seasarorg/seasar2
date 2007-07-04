@@ -283,6 +283,11 @@ public class MockHttpServletRequestImpl implements MockHttpServletRequest {
         return getRequestedSessionIdFromURL();
     }
 
+    /**
+     * クッキーからセッションIDを取得します。
+     * 
+     * @return セッションID
+     */
     protected String getRequestedSessionIdFromCookie() {
         Cookie[] cookies = getCookies();
         if (cookies == null) {
@@ -297,6 +302,11 @@ public class MockHttpServletRequestImpl implements MockHttpServletRequest {
         return null;
     }
 
+    /**
+     * URLからセッションIDを取得します。
+     * 
+     * @return セッションID
+     */
     protected String getRequestedSessionIdFromURL() {
         String uri = getRequestURI();
         int index = uri.lastIndexOf("sessionid");
@@ -335,16 +345,10 @@ public class MockHttpServletRequestImpl implements MockHttpServletRequest {
         return url;
     }
 
-    /**
-     * @see javax.servlet.http.HttpServletRequest#getServletPath()
-     */
     public String getServletPath() {
         return servletPath;
     }
 
-    /**
-     * @see javax.servlet.http.HttpServletRequest#getSession(boolean)
-     */
     public HttpSession getSession(boolean create) {
         if (session != null) {
             return session;

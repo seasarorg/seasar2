@@ -92,6 +92,12 @@ public class SRuntimeException extends RuntimeException {
         return message;
     }
 
+    /**
+     * メッセージを設定します。
+     * 
+     * @param message
+     *            メッセージ
+     */
     protected void setMessage(String message) {
         this.message = message;
     }

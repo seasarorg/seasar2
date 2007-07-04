@@ -528,6 +528,13 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
         return null;
     }
 
+    /**
+     * サブアプリケーションサフィックスかどうかを返します。
+     * 
+     * @param suffix
+     *            サフィックス
+     * @return サブアプリケーションサフィックスかどうか
+     */
     protected boolean isSubApplicationSuffix(String suffix) {
         if (pageSuffix.equals(suffix)) {
             return true;
@@ -544,6 +551,17 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
         return false;
     }
 
+    /**
+     * クラスを探します。
+     * 
+     * @param rootPackageName
+     *            ルートパッケージ名
+     * @param middlePackageName
+     *            ミドルパッケージ名
+     * @param partOfClassName
+     *            クラス名の一部
+     * @return クラス
+     */
     protected Class findClass(final String rootPackageName,
             final String middlePackageName, final String partOfClassName) {
         initialize();
@@ -655,6 +673,13 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
         return fromNameToSuffix(componentName);
     }
 
+    /**
+     * 名前をサフィックスに変換します。
+     * 
+     * @param name
+     *            名前
+     * @return サフィックス
+     */
     protected String fromNameToSuffix(String name) {
         if (StringUtil.isEmpty(name)) {
             throw new EmptyRuntimeException("name");
@@ -678,6 +703,15 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
         return fromPathToComponentName(path, pageSuffix);
     }
 
+    /**
+     * パスをコンポーネント名に変換します。
+     * 
+     * @param path
+     *            パス
+     * @param nameSuffix
+     *            サフィックス
+     * @return コンポーネント名
+     */
     protected String fromPathToComponentName(String path, String nameSuffix) {
         if (!path.startsWith(viewRootPath) || !path.endsWith(viewExtension)) {
             throw new IllegalArgumentException(path);
@@ -780,6 +814,15 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
         return false;
     }
 
+    /**
+     * 存在するかどうかを返します。
+     * 
+     * @param rootPackageName
+     *            ルートパッケージ名
+     * @param lastClassName
+     *            クラス名の最後
+     * @return 存在するかどうか
+     */
     protected boolean isExist(final String rootPackageName,
             final String lastClassName) {
         final ExistChecker[] checkerArray = getExistCheckerArray(rootPackageName);
@@ -791,15 +834,35 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
         return false;
     }
 
+    /**
+     * 存在チェッカの配列を返します。
+     * 
+     * @param rootPackageName
+     *            ルートパッケージ名
+     * @return 存在チェッカの配列
+     */
     protected ExistChecker[] getExistCheckerArray(final String rootPackageName) {
         return (ExistChecker[]) existCheckerArrays.get(rootPackageName);
     }
 
+    /**
+     * 存在チェッカを追加します。
+     * 
+     * @param rootPackageName
+     *            ルートパッケージ名
+     */
     protected void addExistChecker(final String rootPackageName) {
         ExistChecker[] checkerArray = createExistCheckerArray(rootPackageName);
         existCheckerArrays.put(rootPackageName, checkerArray);
     }
 
+    /**
+     * 存在チェッカの配列を作成します。
+     * 
+     * @param rootPackageName
+     *            ルートパッケージ名
+     * @return 存在チェッカの配列
+     */
     protected ExistChecker[] createExistCheckerArray(
             final String rootPackageName) {
         if (StringUtil.isEmpty(rootPackageName)) {
@@ -825,10 +888,21 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
         return (ExistChecker[]) list.toArray(new ExistChecker[list.size()]);
     }
 
+    /**
+     * パス名を返します。
+     * 
+     * @param lastClassName
+     *            クラス名の最後
+     * @return パス名
+     */
     protected static String getPathName(final String lastClassName) {
         return lastClassName.replace('.', '/') + ".class";
     }
 
+    /**
+     * 存在チェッカのインターフェースです。
+     * 
+     */
     protected static interface ExistChecker {
         /**
          * クラスが存在するかどうかを返します。
@@ -844,9 +918,19 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
         void close();
     }
 
+    /**
+     * ファイル用の存在チェッカです。
+     * 
+     */
     protected static class FileExistChecker implements ExistChecker {
         private File rootFile;
 
+        /**
+         * {@link FileExistChecker}を作成します。
+         * 
+         * @param rootUrl
+         *            ルートURL
+         */
         protected FileExistChecker(final URL rootUrl) {
             rootFile = URLUtil.toFile(rootUrl);
         }
@@ -860,11 +944,23 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
         }
     }
 
+    /**
+     * jar用の存在チェッカです。
+     * 
+     */
     protected static class JarExistChecker implements ExistChecker {
         private JarFile jarFile;
 
         private String rootPath;
 
+        /**
+         * {@link JarExistChecker}を作成します。
+         * 
+         * @param jarUrl
+         *            jar URL
+         * @param rootPackageName
+         *            ルートパッケージ名
+         */
         protected JarExistChecker(final URL jarUrl, final String rootPackageName) {
             jarFile = JarFileUtil.toJarFile(jarUrl);
             this.rootPath = rootPackageName.replace('.', '/') + "/";
@@ -879,11 +975,23 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
         }
     }
 
+    /**
+     * zip用の存在チェッカです。
+     * 
+     */
     protected static class ZipExistChecker implements ExistChecker {
         private ZipFile zipFile;
 
         private String rootPath;
 
+        /**
+         * {@link ZipExistChecker}を作成します。
+         * 
+         * @param zipUrl
+         *            zip URL
+         * @param rootPackageName
+         *            ルートパッケージ名
+         */
         protected ZipExistChecker(final URL zipUrl, final String rootPackageName) {
             zipFile = ZipFileUtil.toZipFile(zipUrl);
             this.rootPath = rootPackageName.replace('.', '/') + "/";
@@ -898,11 +1006,23 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
         }
     }
 
+    /**
+     * OC4J用の存在チェッカです。
+     * 
+     */
     protected static class CodeSourceExistChecker implements ExistChecker {
         private JarFile jarFile;
 
         private String rootPath;
 
+        /**
+         * {@link CodeSourceExistChecker}を作成します。
+         * 
+         * @param url
+         *            URL
+         * @param rootPackageName
+         *            ルートパッケージ名
+         */
         protected CodeSourceExistChecker(final URL url,
                 final String rootPackageName) {
             final URL jarUrl = URLUtil.create("jar:file:" + url.getPath());

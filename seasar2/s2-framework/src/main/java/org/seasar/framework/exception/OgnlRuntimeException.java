@@ -48,6 +48,17 @@ public final class OgnlRuntimeException extends SRuntimeException {
                 new Object[] { createMessage(cause, path, lineNumber) }, cause);
     }
 
+    /**
+     * メッセージを作成します。
+     * 
+     * @param cause
+     *            原因
+     * @param path
+     *            パス
+     * @param lineNumber
+     *            行番号
+     * @return メッセージ
+     */
     protected static String createMessage(Throwable cause, String path,
             int lineNumber) {
         StringBuffer buf = new StringBuffer(100);

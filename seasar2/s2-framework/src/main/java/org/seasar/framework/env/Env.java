@@ -198,6 +198,9 @@ public class Env {
         }
     }
 
+    /**
+     * 値を計算します。
+     */
     protected static void calcValue() {
         value = TextUtil.readUTF8(file);
         if (value != null) {
@@ -209,6 +212,9 @@ public class Env {
         }
     }
 
+    /**
+     * 値をクリアします。
+     */
     protected static void clearValue() {
         value = null;
         lastModified = 0;

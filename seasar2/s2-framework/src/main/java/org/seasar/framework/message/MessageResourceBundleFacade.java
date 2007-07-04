@@ -86,6 +86,11 @@ public class MessageResourceBundleFacade {
         this.parent = parent;
     }
 
+    /**
+     * 更新されているかどうかを返します。
+     * 
+     * @return 更新されているかどうか
+     */
     protected boolean isModified() {
         if (file != null && file.lastModified() > lastModified) {
             return true;
@@ -93,6 +98,12 @@ public class MessageResourceBundleFacade {
         return false;
     }
 
+    /**
+     * セットアップをします。
+     * 
+     * @param url
+     *            URL
+     */
     protected void setup(URL url) {
         AssertionUtil.assertNotNull("url", url);
         file = ResourceUtil.getFile(url);
@@ -107,22 +118,57 @@ public class MessageResourceBundleFacade {
         }
     }
 
+    /**
+     * メッセージリソースバンドルを作成します。
+     * 
+     * @param file
+     *            ファイル
+     * @return メッセージリソースバンドル
+     */
     protected static MessageResourceBundle createBundle(File file) {
         return new MessageResourceBundleImpl(createProperties(file));
     }
 
+    /**
+     * メッセージリソースバンドルを作成します。
+     * 
+     * @param url
+     *            URL
+     * @return メッセージリソースバンドル
+     */
     protected static MessageResourceBundle createBundle(URL url) {
         return new MessageResourceBundleImpl(createProperties(url));
     }
 
+    /**
+     * {@link Properties}を作成します。
+     * 
+     * @param file
+     *            ファイル
+     * @return {@link Properties}
+     */
     protected static Properties createProperties(File file) {
         return createProperties(FileInputStreamUtil.create(file));
     }
 
+    /**
+     * {@link Properties}を作成します。
+     * 
+     * @param url
+     *            URL
+     * @return {@link Properties}
+     */
     protected static Properties createProperties(URL url) {
         return createProperties(URLUtil.openStream(url));
     }
 
+    /**
+     * {@link Properties}を作成します。
+     * 
+     * @param is
+     *            入力ストリーム
+     * @return {@link Properties}
+     */
     protected static Properties createProperties(InputStream is) {
         AssertionUtil.assertNotNull("is", is);
         if (!(is instanceof BufferedInputStream)) {
