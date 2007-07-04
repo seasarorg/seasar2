@@ -77,8 +77,17 @@ public class BasicHandlerTest extends S2TestCase {
         Object[] argTypes = new Object[] { String.class, BigDecimal.class,
                 Integer.class };
         BasicHandler handler = new BasicHandler(getDataSource(), sql);
+        assertTrue(handler.getLoggerClass() == BasicHandler.class);
         handler.logSql(args, argTypes);
 
+        assertSqlLog(sql, args, argTypes);
+        handler.setLoggerClass(BasicHandlerTest.class);
+        handler.logSql(args, argTypes);
+        assertSqlLog(sql, args, argTypes);
+        assertTrue(handler.getLoggerClass() == BasicHandlerTest.class);
+    }
+
+    private void assertSqlLog(final String sql, Object[] args, Object[] argTypes) {
         SqlLogRegistry registry = SqlLogRegistryLocator.getInstance();
         SqlLog sqlLog = registry.getLast();
         assertEquals(sql, sqlLog.getRawSql());
