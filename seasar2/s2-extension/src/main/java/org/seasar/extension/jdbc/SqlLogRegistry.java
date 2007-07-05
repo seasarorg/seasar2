@@ -37,6 +37,13 @@ public interface SqlLogRegistry {
     int getSize();
 
     /**
+     * このインスタンスに{@link SqlLog}が登録されていない場合<code>true</code>を返します。
+     * 
+     * @return {@link SqlLog}が登録されていない場合<code>true</code>、登録されている場合<code>false</code>
+     */
+    boolean isEmpty();
+
+    /**
      * 指定されたインデックスの{@link SqlLog}を返します。
      * 
      * @param index
@@ -48,7 +55,7 @@ public interface SqlLogRegistry {
     /**
      * 最後に記録された{@link SqlLog}を返します。
      * 
-     * @return 最後に記録された{@link SqlLog}
+     * @return 登録されている場合最後に記録された{@link SqlLog}、登録されていない場合<code>null</code>
      */
     SqlLog getLast();
 

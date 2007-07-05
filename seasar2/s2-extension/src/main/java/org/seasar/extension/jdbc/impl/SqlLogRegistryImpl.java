@@ -53,12 +53,16 @@ public class SqlLogRegistryImpl implements SqlLogRegistry {
         return getSqlLogList().size();
     }
 
+    public boolean isEmpty() {
+        return getSize() == 0;
+    }
+
     public SqlLog get(int index) {
         return (SqlLog) getSqlLogList().get(index);
     }
 
     public SqlLog getLast() {
-        return (SqlLog) getSqlLogList().getLast();
+        return isEmpty() ? null : (SqlLog) getSqlLogList().getLast();
     }
 
     public void add(SqlLog sqlLog) {

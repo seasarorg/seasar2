@@ -62,6 +62,7 @@ public class SqlLogRegistryImplTest extends S2TestCase {
      */
     public void testGetLast() throws Exception {
         SqlLogRegistryImpl registry = new SqlLogRegistryImpl(3);
+        assertNull(registry.getLast());
         registry.add(sqlLog);
         assertSame(sqlLog, registry.getLast());
         registry.add(sqlLog2);
