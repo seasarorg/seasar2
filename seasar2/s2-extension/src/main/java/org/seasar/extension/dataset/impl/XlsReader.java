@@ -43,16 +43,17 @@ import org.seasar.framework.util.TimestampConversionUtil;
 /**
  * @author higa
  * @author manhole
+ * @author azusa
  */
 public class XlsReader implements DataReader, DataSetConstants {
 
-    private DataSet dataSet_;
+    protected DataSet dataSet_;
 
-    private HSSFWorkbook workbook_;
+    protected HSSFWorkbook workbook_;
 
-    private HSSFDataFormat dataFormat_;
+    protected HSSFDataFormat dataFormat_;
 
-    private boolean trimString = true;
+    protected boolean trimString = true;
 
     public XlsReader(String path) {
         this(path, true);
@@ -111,7 +112,7 @@ public class XlsReader implements DataReader, DataSetConstants {
         return dataSet_;
     }
 
-    private DataTable createTable(String sheetName, HSSFSheet sheet) {
+    protected DataTable createTable(String sheetName, HSSFSheet sheet) {
         DataTable table = dataSet_.addTable(sheetName);
         int rowCount = sheet.getLastRowNum();
         if (rowCount > 0) {
@@ -123,7 +124,7 @@ public class XlsReader implements DataReader, DataSetConstants {
         return table;
     }
 
-    private void setupColumns(DataTable table, HSSFSheet sheet) {
+    protected void setupColumns(DataTable table, HSSFSheet sheet) {
         HSSFRow nameRow = sheet.getRow(0);
         HSSFRow valueRow = sheet.getRow(1);
         for (int i = 0;; ++i) {
@@ -152,7 +153,7 @@ public class XlsReader implements DataReader, DataSetConstants {
         }
     }
 
-    private void setupRows(DataTable table, HSSFSheet sheet) {
+    protected void setupRows(DataTable table, HSSFSheet sheet) {
         for (int i = 1;; ++i) {
             HSSFRow row = sheet.getRow((short) i);
             if (row == null) {
@@ -162,7 +163,7 @@ public class XlsReader implements DataReader, DataSetConstants {
         }
     }
 
-    private void setupRow(DataTable table, HSSFRow row) {
+    protected void setupRow(DataTable table, HSSFRow row) {
         DataRow dataRow = table.addRow();
         for (int i = 0; i < table.getColumnSize(); ++i) {
             HSSFCell cell = row.getCell((short) i);
@@ -252,7 +253,7 @@ public class XlsReader implements DataReader, DataSetConstants {
         }
     }
 
-    private boolean isInt(final double numericCellValue) {
+    protected boolean isInt(final double numericCellValue) {
         return ((int) numericCellValue) == numericCellValue;
     }
 

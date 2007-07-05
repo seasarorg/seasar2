@@ -39,17 +39,18 @@ import org.seasar.framework.util.StringConversionUtil;
 
 /**
  * @author higa
+ * @author azusa
  * 
  */
 public class XlsWriter implements DataWriter, DataSetConstants {
 
-    private OutputStream out_;
+    protected OutputStream out_;
 
-    private HSSFWorkbook workbook_;
+    protected HSSFWorkbook workbook_;
 
-    private HSSFCellStyle dateStyle_;
+    protected HSSFCellStyle dateStyle_;
 
-    private HSSFCellStyle base64Style_;
+    protected HSSFCellStyle base64Style_;
 
     public XlsWriter(String path) {
         this(new File(ResourceUtil.getResourceAsFile("."), path));
@@ -116,7 +117,7 @@ public class XlsWriter implements DataWriter, DataSetConstants {
         }
     }
 
-    private void setValue(HSSFCell cell, Object value) {
+    protected void setValue(HSSFCell cell, Object value) {
         if (value instanceof Number) {
             cell.setCellValue(value.toString());
         } else if (value instanceof Date) {
