@@ -422,6 +422,40 @@ DEBUG 2004-04-23 20:12:38,680 [main] 物理的なコネクションを取得し�
   &lt;/arg&gt;
 &lt;/component&gt;
 </pre>
+<h2><a name="SqlLog" id="SqlLog">SQLのログの取得</a></h2>
+<p>
+S2JDBCで実行したSQLはログとして記録されるためアプリケーションから参照することが可能です。
+SQLのログは<code>org.seasar.extension.jdbc.SqlRegistry</code>のインスタンスから取得します。
+</p>
+<p>
+<code>SqlRegistry</code>のインスタンスはDIもしくはルックアップにより取得できます。
+</p>
+<p>
+DIのための設定は次のようになります。
+</p>
+<pre>
+&lt;component name="sqlLogRegistry" class="org.seasar.extension.jdbc.SqlLogRegistry">
+  @org.seasar.extension.jdbc.SqlLogRegistryLocator@getInstance()
+&lt;/component&gt;
+</pre>
+<p>
+プログラムから直接ルックアップする場合は次のようなコードが必要です。
+</p>
+<pre>
+SqlLogRegistry sqlLogRegistry = SqlLogRegistryLocator.getInstance();
+</pre>
+<code>SqlRegistry</code>のインスタンスは複数のログを保持しています（デフォルトでは最新3つのログを保持します）。
+最新の（最後に実行された）SQLのログは次のようなコードで取得できます。
+<pre>
+SqlLog sqlLog = sqlLogRegistry.getLast();
+</pre>
+<code>org.seasar.extension.jdbc.SqlLog</code>のインスタンスは次の情報を保持しています。
+<ul>
+<li>未加工のSQL</li>
+<li>バインド変数を実際の値で置き換えた完全なSQL</li>
+<li>SQLにバインドされる値の配列</li>
+<li>SQLにバインドされる値の型の配列</li>
+</ul>
 <!-- document end -->
 <!-- don't edit start --></td>
 <td width="14"><img height="14" width="14" src="images/spacer.gif" alt="" /></td>
