@@ -735,20 +735,21 @@ public class InnerEntity {
 &lt;!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container//EN"
 "http://www.seasar.org/dtd/components.dtd"&gt;
 &lt;components&gt;
-        &lt;component name="toStringInterceptor" class="org.seasar.framework.aop.interceptors.ToStringInterceptor"/&gt;
-        &lt;component class="examples.aop.tostringinterceptor.EntityImplImpl"&gt;
-                &lt;arg&gt;
-                        innerEntity
-                &lt;/arg&gt;
-                &lt;aspect pointcut="toString"&gt;
-                        toStringInterceptor
-                &lt;/aspect&gt;
-        &lt;/component&gt;
-        &lt;component name="innerEntity" class="examples.aop.tostringinterceptor.InnerEntity"&gt;
-                &lt;aspect pointcut="toString"&gt;
-                        toStringInterceptor
-                &lt;/aspect&gt;
-        &lt;/component&gt;
+    &lt;component name="toStringInterceptor" 
+        class="org.seasar.framework.aop.interceptors.ToStringInterceptor"/&gt;
+    &lt;component class="examples.aop.tostringinterceptor.EntityImplImpl"&gt;
+        &lt;arg&gt;
+            innerEntity
+        &lt;/arg&gt;
+        &lt;aspect pointcut="toString"&gt;
+            toStringInterceptor
+        &lt;/aspect&gt;
+    &lt;/component&gt;
+    &lt;component name="innerEntity" class="examples.aop.tostringinterceptor.InnerEntity"&gt;
+        &lt;aspect pointcut="toString"&gt;
+            toStringInterceptor
+        &lt;/aspect&gt;
+    &lt;/component&gt;
 &lt;/components&gt;
 </pre>
 <p><b>実行ファイルの作成</b></p>
