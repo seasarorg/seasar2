@@ -378,6 +378,48 @@ public class NamingConventionImplTest extends TestCase {
     }
 
     /**
+     * viewRootPathに空文字が設定された場合のTest
+     * 
+     * @throws Exception
+     */
+    public void testFromPathToPageName2() throws Exception {
+        convention.setViewRootPath("");
+        assertEquals("view_hogePage", convention
+                .fromPathToPageName("/view/hoge.html"));
+        assertEquals("view_hogePage", convention
+                .fromPathToPageName("/view/Hoge.html"));
+        assertEquals("view_hoge_fooPage", convention
+                .fromPathToPageName("/view/hoge/foo.html"));
+        assertEquals("view_hoge_fooPage", convention
+                .fromPathToPageName("/view/hoge/Foo.html"));
+        assertEquals("view_aaa_hoge_fooPage", convention
+                .fromPathToPageName("/view/aaa/hoge/foo.html"));
+        assertEquals("view_aaa_hoge_fooPage", convention
+                .fromPathToPageName("/view/aaa/hoge/Foo.html"));
+    }
+
+    /**
+     * viewRootPathに"/"が設定された場合のTest
+     * 
+     * @throws Exception
+     */
+    public void testFromPathToPageName3() throws Exception {
+        convention.setViewRootPath("/");
+        assertEquals("view_hogePage", convention
+                .fromPathToPageName("/view/hoge.html"));
+        assertEquals("view_hogePage", convention
+                .fromPathToPageName("/view/Hoge.html"));
+        assertEquals("view_hoge_fooPage", convention
+                .fromPathToPageName("/view/hoge/foo.html"));
+        assertEquals("view_hoge_fooPage", convention
+                .fromPathToPageName("/view/hoge/Foo.html"));
+        assertEquals("view_aaa_hoge_fooPage", convention
+                .fromPathToPageName("/view/aaa/hoge/foo.html"));
+        assertEquals("view_aaa_hoge_fooPage", convention
+                .fromPathToPageName("/view/aaa/hoge/Foo.html"));
+    }
+
+    /**
      * @throws Exception
      */
     public void testFromPathToActionName() throws Exception {

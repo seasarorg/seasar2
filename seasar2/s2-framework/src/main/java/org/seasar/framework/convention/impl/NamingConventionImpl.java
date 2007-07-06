@@ -716,7 +716,7 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
         if (!path.startsWith(viewRootPath) || !path.endsWith(viewExtension)) {
             throw new IllegalArgumentException(path);
         }
-        String componentName = (path.substring(viewRootPath.length() + 1, path
+        String componentName = (path.substring(adjustViewRootPath().length() + 1, path
                 .length()
                 - viewExtension.length()) + nameSuffix).replace('/', '_');
         int pos = componentName.lastIndexOf('_');
