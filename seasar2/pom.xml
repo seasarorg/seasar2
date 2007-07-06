@@ -102,6 +102,14 @@
       <url>http://d.hatena.ne.jp/taedium/</url>
       <timezone>+9</timezone>
     </developer>
+    <developer>
+      <id>yone</id>
+      <name>Masaaki Yonebayashi</name>
+      <email>yone098_at_gmail.com</email>
+      <organization>Abby Co., Ltd.</organization>
+      <organizationUrl>http://www.abby.co.jp/</organizationUrl>
+      <timezone>+9</timezone>
+    </developer>
 
     <developer>
       <id>jundu</id>
@@ -209,6 +217,10 @@
     </contributor>
     <contributor>
     	<name>Yokoyama Hideaki</name>
+    </contributor>
+    <contributor>
+      <name>mopemope</name>
+      <url>http://d.hatena.ne.jp/mopemope/</url>
     </contributor>
   </contributors>
 
