@@ -376,7 +376,7 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
     }
 
     public String adjustViewRootPath() {
-        return viewRootPath == "/" ? "" : viewRootPath;
+        return "/".equals(viewRootPath) ? "" : viewRootPath;
     }
 
     public String getSubApplicationRootPackageName() {
