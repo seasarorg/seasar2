@@ -38,21 +38,28 @@ import org.seasar.framework.util.CaseInsensitiveMap;
 import org.seasar.framework.util.StringUtil;
 
 /**
+ * {@link DataTable}の実装クラスです。
+ * 
  * @author higa
  * 
  */
 public class DataTableImpl implements DataTable {
 
-    private String tableName_;
+    private String tableName;
 
-    private List rows_ = new ArrayList();
+    private List rows = new ArrayList();
 
-    private List removedRows_ = new ArrayList();
+    private List removedRows = new ArrayList();
 
-    private ArrayMap columns_ = new CaseInsensitiveMap();
+    private ArrayMap columns = new CaseInsensitiveMap();
 
-    private boolean hasMetaData_ = false;
+    private boolean hasMetaData = false;
 
+    /**
+     * {@link DataTableImpl}を作成します。
+     * 
+     * @param tableName
+     */
     public DataTableImpl(String tableName) {
         setTableName(tableName);
     }
@@ -61,28 +68,28 @@ public class DataTableImpl implements DataTable {
      * @see org.seasar.extension.dataset.DataTable#getTableName()
      */
     public String getTableName() {
-        return tableName_;
+        return tableName;
     }
 
     /**
      * @see org.seasar.extension.dataset.DataTable#setTableName(java.lang.String)
      */
     public void setTableName(String tableName) {
-        tableName_ = tableName;
+        this.tableName = tableName;
     }
 
     /**
      * @see org.seasar.extension.dataset.DataTable#getRowSize()
      */
     public int getRowSize() {
-        return rows_.size();
+        return rows.size();
     }
 
     /**
      * @see org.seasar.extension.dataset.DataTable#getRow(int)
      */
     public DataRow getRow(int index) {
-        return (DataRow) rows_.get(index);
+        return (DataRow) rows.get(index);
     }
 
     /**
@@ -90,7 +97,7 @@ public class DataTableImpl implements DataTable {
      */
     public DataRow addRow() {
         DataRow row = new DataRowImpl(this);
-        rows_.add(row);
+        rows.add(row);
         row.setState(RowStates.CREATED);
         return row;
     }
@@ -99,45 +106,44 @@ public class DataTableImpl implements DataTable {
      * @see org.seasar.extension.dataset.DataTable#getRemovedRowSize()
      */
     public int getRemovedRowSize() {
-        return removedRows_.size();
+        return removedRows.size();
     }
 
     /**
      * @see org.seasar.extension.dataset.DataTable#getRemovedRow(int)
      */
     public DataRow getRemovedRow(int index) {
-        return (DataRow) removedRows_.get(index);
+        return (DataRow) removedRows.get(index);
     }
 
     /**
      * @see org.seasar.extension.dataset.DataTable#removeRows()
      */
     public DataRow[] removeRows() {
-        for (int i = 0; i < rows_.size();) {
+        for (int i = 0; i < rows.size();) {
             DataRow row = getRow(i);
             if (row.getState().equals(RowStates.REMOVED)) {
-                removedRows_.add(row);
-                rows_.remove(i);
+                removedRows.add(row);
+                rows.remove(i);
             } else {
                 ++i;
             }
         }
-        return (DataRow[]) removedRows_
-                .toArray(new DataRow[removedRows_.size()]);
+        return (DataRow[]) removedRows.toArray(new DataRow[removedRows.size()]);
     }
 
     /**
      * @see org.seasar.extension.dataset.DataTable#getColumnSize()
      */
     public int getColumnSize() {
-        return columns_.size();
+        return columns.size();
     }
 
     /**
      * @see org.seasar.extension.dataset.DataTable#getColumn(int)
      */
     public DataColumn getColumn(int index) {
-        return (DataColumn) columns_.get(index);
+        return (DataColumn) columns.get(index);
     }
 
     /**
@@ -146,22 +152,22 @@ public class DataTableImpl implements DataTable {
     public DataColumn getColumn(String columnName) {
         DataColumn column = getColumn0(columnName);
         if (column == null) {
-            throw new ColumnNotFoundRuntimeException(tableName_, columnName);
+            throw new ColumnNotFoundRuntimeException(tableName, columnName);
         }
         return column;
     }
 
     private DataColumn getColumn0(String columnName) {
-        DataColumn column = (DataColumn) columns_.get(columnName);
+        DataColumn column = (DataColumn) columns.get(columnName);
         if (column == null) {
             String name = StringUtil.replace(columnName, "_", "");
-            column = (DataColumn) columns_.get(name);
+            column = (DataColumn) columns.get(name);
             if (column == null) {
-                for (int i = 0; i < columns_.size(); ++i) {
-                    String key = (String) columns_.getKey(i);
+                for (int i = 0; i < columns.size(); ++i) {
+                    String key = (String) columns.getKey(i);
                     String key2 = StringUtil.replace(key, "_", "");
                     if (key2.equalsIgnoreCase(name)) {
-                        column = (DataColumn) columns_.get(i);
+                        column = (DataColumn) columns.get(i);
                         break;
                     }
                 }
@@ -210,9 +216,9 @@ public class DataTableImpl implements DataTable {
      *      org.seasar.extension.dataset.ColumnType)
      */
     public DataColumn addColumn(String columnName, ColumnType columnType) {
-        DataColumn column = new DataColumnImpl(columnName, columnType, columns_
+        DataColumn column = new DataColumnImpl(columnName, columnType, columns
                 .size());
-        columns_.put(columnName, column);
+        columns.put(columnName, column);
         return column;
     }
 
@@ -220,7 +226,7 @@ public class DataTableImpl implements DataTable {
      * @see org.seasar.extension.dataset.DataTable#hasMetaData()
      */
     public boolean hasMetaData() {
-        return hasMetaData_;
+        return hasMetaData;
     }
 
     /**
@@ -228,9 +234,9 @@ public class DataTableImpl implements DataTable {
      */
     public void setupMetaData(DatabaseMetaData dbMetaData) {
         Set primaryKeySet = DatabaseMetaDataUtil.getPrimaryKeySet(dbMetaData,
-                tableName_);
-        Map columnMap = DatabaseMetaDataUtil.getColumnMap(dbMetaData,
-                tableName_);
+                tableName);
+        Map columnMap = DatabaseMetaDataUtil
+                .getColumnMap(dbMetaData, tableName);
         for (int i = 0; i < getColumnSize(); ++i) {
             DataColumn column = getColumn(i);
             if (primaryKeySet.contains(column.getColumnName())) {
@@ -249,7 +255,7 @@ public class DataTableImpl implements DataTable {
                 column.setWritable(false);
             }
         }
-        hasMetaData_ = true;
+        hasMetaData = true;
     }
 
     /**
@@ -289,15 +295,15 @@ public class DataTableImpl implements DataTable {
 
     public String toString() {
         StringBuffer buf = new StringBuffer(100);
-        buf.append(tableName_);
+        buf.append(tableName);
         buf.append(":");
-        for (int i = 0; i < columns_.size(); ++i) {
+        for (int i = 0; i < columns.size(); ++i) {
             buf.append(getColumnName(i));
             buf.append(", ");
         }
         buf.setLength(buf.length() - 2);
         buf.append("\n");
-        for (int i = 0; i < rows_.size(); ++i) {
+        for (int i = 0; i < rows.size(); ++i) {
             buf.append(getRow(i) + "\n");
         }
         buf.setLength(buf.length() - 1);

@@ -16,10 +16,18 @@
 package org.seasar.extension.dataset;
 
 /**
+ * データを書き込むためのインターフェースです。
+ * 
  * @author higa
  * 
  */
 public interface DataWriter {
 
-    public void write(DataSet dataSet);
+    /**
+     * データを書き込みます。
+     * 
+     * @param dataSet
+     *            データ
+     */
+    void write(DataSet dataSet);
 }

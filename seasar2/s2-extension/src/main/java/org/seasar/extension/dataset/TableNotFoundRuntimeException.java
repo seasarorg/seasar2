@@ -18,6 +18,8 @@ package org.seasar.extension.dataset;
 import org.seasar.framework.exception.SRuntimeException;
 
 /**
+ * テーブルが見つからない場合の例外です。
+ * 
  * @author higa
  * 
  */
@@ -25,14 +27,25 @@ public final class TableNotFoundRuntimeException extends SRuntimeException {
 
     private static final long serialVersionUID = -8455516906109819288L;
 
-    private String tableName_;
+    private String tableName;
 
+    /**
+     * {@link TableNotFoundRuntimeException}を作成します。
+     * 
+     * @param tableName
+     *            テーブル名
+     */
     public TableNotFoundRuntimeException(String tableName) {
         super("ESSR0067", new Object[] { tableName });
-        tableName_ = tableName;
+        this.tableName = tableName;
     }
 
+    /**
+     * テーブル名を返します。
+     * 
+     * @return テーブル名
+     */
     public String getTableName() {
-        return tableName_;
+        return tableName;
     }
 }

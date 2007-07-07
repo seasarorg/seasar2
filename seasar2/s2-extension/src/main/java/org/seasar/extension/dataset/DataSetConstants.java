@@ -16,14 +16,21 @@
 package org.seasar.extension.dataset;
 
 /**
+ * 
+ * DataSet機能で使われる定数を定義します。
+ * 
  * @author higa
  * 
  */
 public interface DataSetConstants {
 
-    public String DATE_FORMAT = "yyyy/MM/dd";
+    /**
+     * 日付のフォーマットです。
+     */
+    String DATE_FORMAT = "yyyy/MM/dd";
 
-    public String BASE64_FORMAT = "\\B\\:@";
-
-    public String TABLE_KEY = "table";
+    /**
+     * Base64のフォーマットです。
+     */
+    String BASE64_FORMAT = "\\B\\:@";
 }

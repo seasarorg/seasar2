@@ -32,27 +32,37 @@ import org.seasar.extension.jdbc.util.ConnectionUtil;
 import org.seasar.extension.jdbc.util.DataSourceUtil;
 
 /**
+ * SQLのreload用の {@link TableReader}です。
+ * 
  * @author higa
  * 
  */
 public class SqlReloadTableReader implements TableReader {
 
-    private DataSource dataSource_;
+    private DataSource dataSource;
 
-    private DataTable table_;
+    private DataTable table;
 
-    private String sql_;
+    private String sql;
 
-    private String[] primaryKeys_;
+    private String[] primaryKeys;
 
+    /**
+     * {@link SqlReloadTableReader}を作成します。
+     * 
+     * @param dataSource
+     *            データソース
+     * @param table
+     *            テーブル
+     */
     public SqlReloadTableReader(DataSource dataSource, DataTable table) {
 
-        dataSource_ = dataSource;
-        table_ = table;
+        this.dataSource = dataSource;
+        this.table = table;
         Connection con = DataSourceUtil.getConnection(dataSource);
         try {
             DatabaseMetaData dbMetaData = ConnectionUtil.getMetaData(con);
-            table_.setupMetaData(dbMetaData);
+            table.setupMetaData(dbMetaData);
         } finally {
             ConnectionUtil.close(con);
         }
@@ -65,8 +75,8 @@ public class SqlReloadTableReader implements TableReader {
         StringBuffer whereBuf = new StringBuffer(100);
         whereBuf.append(" WHERE");
         List primaryKeyList = new ArrayList();
-        for (int i = 0; i < table_.getColumnSize(); ++i) {
-            DataColumn column = table_.getColumn(i);
+        for (int i = 0; i < table.getColumnSize(); ++i) {
+            DataColumn column = table.getColumn(i);
             buf.append(column.getColumnName());
             buf.append(", ");
             if (column.isPrimaryKey()) {
@@ -79,44 +89,59 @@ public class SqlReloadTableReader implements TableReader {
         buf.setLength(buf.length() - 2);
         whereBuf.setLength(whereBuf.length() - 4);
         buf.append(" FROM ");
-        buf.append(table_.getTableName());
+        buf.append(table.getTableName());
         buf.append(whereBuf);
-        sql_ = buf.toString();
-        primaryKeys_ = (String[]) primaryKeyList
+        sql = buf.toString();
+        primaryKeys = (String[]) primaryKeyList
                 .toArray(new String[primaryKeyList.size()]);
     }
 
+    /**
+     * データソースを返します。
+     * 
+     * @return データソース
+     */
     public DataSource getDataSource() {
-        return dataSource_;
-    }
-
-    public DataTable getTable() {
-        return table_;
+        return dataSource;
     }
 
     /**
-     * @see org.seasar.extension.dataset.TableReader#read()
+     * テーブルを返します。
+     * 
+     * @return テーブル
      */
+    public DataTable getTable() {
+        return table;
+    }
+
     public DataTable read() {
-        DataTable newTable = new DataTableImpl(table_.getTableName());
-        for (int i = 0; i < table_.getColumnSize(); ++i) {
-            DataColumn column = table_.getColumn(i);
+        DataTable newTable = new DataTableImpl(table.getTableName());
+        for (int i = 0; i < table.getColumnSize(); ++i) {
+            DataColumn column = table.getColumn(i);
             newTable.addColumn(column.getColumnName(), column.getColumnType());
         }
-        for (int i = 0; i < table_.getRowSize(); ++i) {
-            DataRow row = table_.getRow(i);
+        for (int i = 0; i < table.getRowSize(); ++i) {
+            DataRow row = table.getRow(i);
             DataRow newRow = newTable.addRow();
             reload(row, newRow);
         }
         return newTable;
     }
 
+    /**
+     * データを再読み込みします。
+     * 
+     * @param row
+     *            元の行
+     * @param newRow
+     *            新しい行
+     */
     protected void reload(DataRow row, DataRow newRow) {
-        SelectHandler selectHandler = new BasicSelectHandler(dataSource_, sql_,
-                new DataRowReloadResultSetHandler(row, newRow));
-        Object[] args = new Object[primaryKeys_.length];
-        for (int i = 0; i < primaryKeys_.length; ++i) {
-            args[i] = row.getValue(primaryKeys_[i]);
+        SelectHandler selectHandler = new BasicSelectHandler(dataSource, sql,
+                new DataRowReloadResultSetHandler(newRow));
+        Object[] args = new Object[primaryKeys.length];
+        for (int i = 0; i < primaryKeys.length; ++i) {
+            args[i] = row.getValue(primaryKeys[i]);
         }
         selectHandler.execute(args);
     }

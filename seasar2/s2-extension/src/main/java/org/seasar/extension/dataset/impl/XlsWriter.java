@@ -38,19 +38,33 @@ import org.seasar.framework.util.ResourceUtil;
 import org.seasar.framework.util.StringConversionUtil;
 
 /**
+ * Excel用の {@link DataWriter}です。
+ * 
  * @author higa
  * @author azusa
  * 
  */
 public class XlsWriter implements DataWriter, DataSetConstants {
 
-    protected OutputStream out_;
+    /**
+     * 出力ストリームです。
+     */
+    protected OutputStream out;
 
-    protected HSSFWorkbook workbook_;
+    /**
+     * ワークブックです。
+     */
+    protected HSSFWorkbook workbook;
 
-    protected HSSFCellStyle dateStyle_;
+    /**
+     * 日付用のスタイルです。
+     */
+    protected HSSFCellStyle dateStyle;
 
-    protected HSSFCellStyle base64Style_;
+    /**
+     * Base64用のスタイルです。
+     */
+    protected HSSFCellStyle base64Style;
 
     public XlsWriter(String path) {
         this(new File(ResourceUtil.getResourceAsFile("."), path));
@@ -73,13 +87,13 @@ public class XlsWriter implements DataWriter, DataSetConstants {
     }
 
     public void setOutputStream(OutputStream out) {
-        out_ = out;
-        workbook_ = new HSSFWorkbook();
-        HSSFDataFormat df = workbook_.createDataFormat();
-        dateStyle_ = workbook_.createCellStyle();
-        dateStyle_.setDataFormat(df.getFormat(DATE_FORMAT));
-        base64Style_ = workbook_.createCellStyle();
-        base64Style_.setDataFormat(df.getFormat(BASE64_FORMAT));
+        this.out = out;
+        workbook = new HSSFWorkbook();
+        HSSFDataFormat df = workbook.createDataFormat();
+        dateStyle = workbook.createCellStyle();
+        dateStyle.setDataFormat(df.getFormat(DATE_FORMAT));
+        base64Style = workbook.createCellStyle();
+        base64Style.setDataFormat(df.getFormat(BASE64_FORMAT));
     }
 
     /**
@@ -88,8 +102,8 @@ public class XlsWriter implements DataWriter, DataSetConstants {
     public void write(DataSet dataSet) {
         for (int i = 0; i < dataSet.getTableSize(); ++i) {
             DataTable table = dataSet.getTable(i);
-            HSSFSheet sheet = workbook_.createSheet();
-            workbook_.setSheetName(i, table.getTableName(),
+            HSSFSheet sheet = workbook.createSheet();
+            workbook.setSheetName(i, table.getTableName(),
                     HSSFWorkbook.ENCODING_UTF_16);
             HSSFRow headerRow = sheet.createRow(0);
             for (int j = 0; j < table.getColumnSize(); ++j) {
@@ -109,9 +123,9 @@ public class XlsWriter implements DataWriter, DataSetConstants {
             }
         }
         try {
-            workbook_.write(out_);
-            out_.flush();
-            out_.close();
+            workbook.write(out);
+            out.flush();
+            out.close();
         } catch (IOException ex) {
             throw new IORuntimeException(ex);
         }
@@ -122,10 +136,10 @@ public class XlsWriter implements DataWriter, DataSetConstants {
             cell.setCellValue(value.toString());
         } else if (value instanceof Date) {
             cell.setCellValue((Date) value);
-            cell.setCellStyle(dateStyle_);
+            cell.setCellStyle(dateStyle);
         } else if (value instanceof byte[]) {
             cell.setCellValue(Base64Util.encode((byte[]) value));
-            cell.setCellStyle(base64Style_);
+            cell.setCellStyle(base64Style);
         } else if (value instanceof Boolean) {
             cell.setCellValue(((Boolean) value).booleanValue());
         } else {

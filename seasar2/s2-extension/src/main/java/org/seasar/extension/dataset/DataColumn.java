@@ -16,30 +16,93 @@
 package org.seasar.extension.dataset;
 
 /**
+ * DataSetのカラムをあらわすインターフェースです。
+ * 
  * @author higa
  * 
  */
 public interface DataColumn {
 
-    public String getColumnName();
+    /**
+     * カラム名を返します。
+     * 
+     * @return カラム名
+     */
+    String getColumnName();
 
-    public int getColumnIndex();
+    /**
+     * カラムの位置を返します。
+     * 
+     * @return カラムの位置
+     */
+    int getColumnIndex();
 
-    public ColumnType getColumnType();
+    /**
+     * カラムの型を返します。
+     * 
+     * @return カラムの型
+     */
+    ColumnType getColumnType();
 
-    public void setColumnType(ColumnType columnType);
+    /**
+     * カラムの型を設定します。
+     * 
+     * @param columnType
+     *            カラムの型
+     */
+    void setColumnType(ColumnType columnType);
 
-    public boolean isPrimaryKey();
+    /**
+     * プライマリキーかどうかを返します。
+     * 
+     * @return プライマリキーかどうか
+     */
+    boolean isPrimaryKey();
 
-    public void setPrimaryKey(boolean primaryKey);
+    /**
+     * プライマリーキーかどうかを設定します。
+     * 
+     * @param primaryKey
+     *            プライマリキーかどうか
+     */
+    void setPrimaryKey(boolean primaryKey);
 
-    public boolean isWritable();
+    /**
+     * 更新可能かどうかを返します。
+     * 
+     * @return 更新可能かどうか
+     */
+    boolean isWritable();
 
-    public void setWritable(boolean writable);
+    /**
+     * 更新可能かどうかを設定します。
+     * 
+     * @param writable
+     *            更新可能かどうか
+     */
+    void setWritable(boolean writable);
 
-    public String getFormatPattern();
+    /**
+     * フォーマットパターンを返します。
+     * 
+     * @return フォーマットパターン
+     */
+    String getFormatPattern();
 
-    public void setFormatPattern(String formatPattern);
+    /**
+     * フォーマットパターンを設定します。
+     * 
+     * @param formatPattern
+     *            フォーマットパターン
+     */
+    void setFormatPattern(String formatPattern);
 
-    public Object convert(Object value);
+    /**
+     * 値を適切な型に変換します。
+     * 
+     * @param value
+     *            値
+     * @return 変換後の値
+     */
+    Object convert(Object value);
 }

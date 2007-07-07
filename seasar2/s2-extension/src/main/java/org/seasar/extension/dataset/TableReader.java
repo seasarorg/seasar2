@@ -16,10 +16,17 @@
 package org.seasar.extension.dataset;
 
 /**
+ * テーブルを読み込むためのインターフェースです。
+ * 
  * @author higa
  * 
  */
 public interface TableReader {
 
-    public DataTable read();
+    /**
+     * テーブルを読み込みます。
+     * 
+     * @return テーブル
+     */
+    DataTable read();
 }

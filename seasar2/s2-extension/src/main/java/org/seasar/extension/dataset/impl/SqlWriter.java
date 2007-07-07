@@ -22,19 +22,32 @@ import org.seasar.extension.dataset.DataWriter;
 import org.seasar.extension.dataset.TableWriter;
 
 /**
+ * SQL用の {@link DataWriter}です。
+ * 
  * @author higa
  * 
  */
 public class SqlWriter implements DataWriter {
 
-    private DataSource dataSource_;
+    private DataSource dataSource;
 
+    /**
+     * {@link SqlWriter}を作成します。
+     * 
+     * @param dataSource
+     *            データソース
+     */
     public SqlWriter(DataSource dataSource) {
-        dataSource_ = dataSource;
+        this.dataSource = dataSource;
     }
 
+    /**
+     * データソースを返します。
+     * 
+     * @return データソース
+     */
     public DataSource getDataSource() {
-        return dataSource_;
+        return dataSource;
     }
 
     /**

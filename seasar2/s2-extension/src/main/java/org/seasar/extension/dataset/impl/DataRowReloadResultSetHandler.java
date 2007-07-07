@@ -25,23 +25,33 @@ import org.seasar.extension.jdbc.PropertyType;
 import org.seasar.extension.jdbc.ResultSetHandler;
 import org.seasar.extension.jdbc.impl.PropertyTypeUtil;
 
+/**
+ * Reload用の {@link ResultSetHandler}です。
+ * 
+ * @author higa
+ * 
+ */
 public class DataRowReloadResultSetHandler implements ResultSetHandler {
 
-    private DataRow row_;
+    private DataRow newRow;
 
-    private DataRow newRow_;
-
-    public DataRowReloadResultSetHandler(DataRow row, DataRow newRow) {
-        row_ = row;
-        newRow_ = newRow;
+    /**
+     * {@link DataRowReloadResultSetHandler}を作成します。
+     * 
+     * @param newRow
+     *            新しい行
+     */
+    public DataRowReloadResultSetHandler(DataRow newRow) {
+        this.newRow = newRow;
     }
 
-    public DataRow getRow() {
-        return row_;
-    }
-
+    /**
+     * 新しい行を返します。
+     * 
+     * @return 新しい行
+     */
     public DataRow getNewRow() {
-        return newRow_;
+        return newRow;
     }
 
     public Object handle(ResultSet rs) throws SQLException {
@@ -51,15 +61,15 @@ public class DataRowReloadResultSetHandler implements ResultSetHandler {
         if (rs.next()) {
             reload(rs, propertyTypes);
         }
-        return newRow_;
+        return newRow;
     }
 
     private void reload(ResultSet rs, PropertyType[] propertyTypes)
             throws SQLException {
         for (int i = 0; i < propertyTypes.length; ++i) {
             Object value = propertyTypes[i].getValueType().getValue(rs, i + 1);
-            newRow_.setValue(propertyTypes[i].getColumnName(), value);
+            newRow.setValue(propertyTypes[i].getColumnName(), value);
         }
-        newRow_.setState(RowStates.UNCHANGED);
+        newRow.setState(RowStates.UNCHANGED);
     }
 }

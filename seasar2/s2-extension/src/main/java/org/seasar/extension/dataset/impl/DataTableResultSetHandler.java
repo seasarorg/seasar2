@@ -28,23 +28,30 @@ import org.seasar.extension.jdbc.PropertyType;
 import org.seasar.extension.jdbc.ResultSetHandler;
 import org.seasar.extension.jdbc.impl.PropertyTypeUtil;
 
+/**
+ * {@link DataTable}用の {@link ResultSetHandler}です。
+ * 
+ * @author higa
+ * 
+ */
 public class DataTableResultSetHandler implements ResultSetHandler {
 
-    private String tableName_;
+    private String tableName;
 
+    /**
+     * {@link DataTableResultSetHandler}を作成します。
+     * 
+     * @param tableName
+     */
     public DataTableResultSetHandler(String tableName) {
-        tableName_ = tableName;
-    }
-
-    public String getTableName() {
-        return tableName_;
+        this.tableName = tableName;
     }
 
     public Object handle(ResultSet rs) throws SQLException {
         ResultSetMetaData rsmd = rs.getMetaData();
         PropertyType[] propertyTypes = PropertyTypeUtil
                 .createPropertyTypes(rsmd);
-        DataTable table = new DataTableImpl(tableName_);
+        DataTable table = new DataTableImpl(tableName);
         for (int i = 0; i < propertyTypes.length; ++i) {
             String columnName = propertyTypes[i].getColumnName();
             table.addColumn(columnName, ColumnTypes.getColumnType(rsmd

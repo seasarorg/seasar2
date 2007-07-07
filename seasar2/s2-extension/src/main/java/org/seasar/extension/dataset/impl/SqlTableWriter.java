@@ -27,24 +27,34 @@ import org.seasar.extension.jdbc.util.ConnectionUtil;
 import org.seasar.extension.jdbc.util.DataSourceUtil;
 
 /**
+ * SQL用の {@link TableWriter}です。
+ * 
  * @author higa
  * 
  */
 public class SqlTableWriter implements TableWriter {
 
-    private DataSource dataSource_;
+    private DataSource dataSource;
 
+    /**
+     * {@link SqlTableWriter}を作成します。
+     * 
+     * @param dataSource
+     *            データソース
+     */
     public SqlTableWriter(DataSource dataSource) {
-        dataSource_ = dataSource;
-    }
-
-    public DataSource getDataSource() {
-        return dataSource_;
+        this.dataSource = dataSource;
     }
 
     /**
-     * @see org.seasar.extension.dataset.TableWriter#write(org.seasar.extension.dataset.DataTable)
+     * データソースを返します。
+     * 
+     * @return データソース
      */
+    public DataSource getDataSource() {
+        return dataSource;
+    }
+
     public void write(DataTable table) {
         if (!table.hasMetaData()) {
             setupMetaData(table);
@@ -52,16 +62,22 @@ public class SqlTableWriter implements TableWriter {
         doWrite(table);
     }
 
+    /**
+     * データを書き込みます。
+     * 
+     * @param table
+     *            テーブル
+     */
     protected void doWrite(DataTable table) {
         for (int i = 0; i < table.getRowSize(); ++i) {
             DataRow row = table.getRow(i);
             RowState state = row.getState();
-            state.update(dataSource_, row);
+            state.update(dataSource, row);
         }
     }
 
     private void setupMetaData(DataTable table) {
-        Connection con = DataSourceUtil.getConnection(dataSource_);
+        Connection con = DataSourceUtil.getConnection(dataSource);
         try {
             table.setupMetaData(ConnectionUtil.getMetaData(con));
         } finally {

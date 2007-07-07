@@ -19,6 +19,8 @@ import org.seasar.extension.dataset.ColumnType;
 import org.seasar.extension.dataset.DataColumn;
 
 /**
+ * {@link DataColumn}の実装クラスです。
+ * 
  * @author higa
  * 
  */
@@ -36,6 +38,16 @@ public class DataColumnImpl implements DataColumn {
 
     private String formatPattern;
 
+    /**
+     * {@link DataColumnImpl}を作成します。
+     * 
+     * @param columnName
+     *            カラム名
+     * @param columnType
+     *            カラムの型
+     * @param columnIndex
+     *            カラムの位置
+     */
     public DataColumnImpl(String columnName, ColumnType columnType,
             int columnIndex) {
 
@@ -44,80 +56,62 @@ public class DataColumnImpl implements DataColumn {
         setColumnIndex(columnIndex);
     }
 
-    /**
-     * @see org.seasar.extension.dataset.DataColumn#getColumnName()
-     */
     public String getColumnName() {
         return columnName;
     }
 
-    public void setColumnName(String columnName) {
+    /**
+     * カラム名を設定します。
+     * 
+     * @param columnName
+     *            カラム名
+     */
+    private void setColumnName(String columnName) {
         this.columnName = columnName;
     }
 
-    /**
-     * @see org.seasar.extension.dataset.DataColumn#getColumnType()
-     */
     public ColumnType getColumnType() {
         return columnType;
     }
 
-    /**
-     * @see org.seasar.extension.dataset.DataColumn#setColumnType(org.seasar.extension.dataset.ColumnType)
-     */
     public void setColumnType(ColumnType columnType) {
         this.columnType = columnType;
     }
 
-    /**
-     * @see org.seasar.extension.dataset.DataColumn#getColumnIndex()
-     */
     public int getColumnIndex() {
         return columnIndex;
     }
 
-    public void setColumnIndex(int columnIndex) {
+    /**
+     * カラムの位置を設定します。
+     * 
+     * @param columnIndex
+     *            カラムの位置
+     */
+    private void setColumnIndex(int columnIndex) {
         this.columnIndex = columnIndex;
     }
 
-    /**
-     * @see org.seasar.extension.dataset.DataColumn#isPrimaryKey()
-     */
     public boolean isPrimaryKey() {
         return primaryKey;
     }
 
-    /**
-     * @see org.seasar.extension.dataset.DataColumn#setPrimaryKey(boolean)
-     */
     public void setPrimaryKey(boolean primaryKey) {
         this.primaryKey = primaryKey;
     }
 
-    /**
-     * @see org.seasar.extension.dataset.DataColumn#isWritable()
-     */
     public boolean isWritable() {
         return writable;
     }
 
-    /**
-     * @see org.seasar.extension.dataset.DataColumn#setWritable(boolean)
-     */
     public void setWritable(boolean writable) {
         this.writable = writable;
     }
 
-    /**
-     * @see org.seasar.extension.dataset.DataColumn#getFormatPattern()
-     */
     public String getFormatPattern() {
         return formatPattern;
     }
 
-    /**
-     * @see org.seasar.extension.dataset.DataColumn#setFormatPattern(java.lang.String)
-     */
     public void setFormatPattern(String formatPattern) {
         this.formatPattern = formatPattern;
     }

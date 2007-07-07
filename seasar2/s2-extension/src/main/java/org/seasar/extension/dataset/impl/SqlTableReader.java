@@ -30,41 +30,78 @@ import org.seasar.extension.jdbc.util.DatabaseMetaDataUtil;
 import org.seasar.framework.util.StringUtil;
 
 /**
+ * SQL用の {@link TableReader}です。
+ * 
  * @author higa
  * 
  */
 public class SqlTableReader implements TableReader {
 
-    private DataSource dataSource_;
+    private DataSource dataSource;
 
-    private String tableName_;
+    private String tableName;
 
-    private String sql_;
+    private String sql;
 
+    /**
+     * {@link SqlTableReader}を作成します。
+     * 
+     * @param dataSource
+     *            データソース
+     */
     public SqlTableReader(DataSource dataSource) {
-        dataSource_ = dataSource;
+        this.dataSource = dataSource;
     }
 
+    /**
+     * データソースを返します。
+     * 
+     * @return データソース
+     */
     public DataSource getDataSource() {
-        return dataSource_;
+        return dataSource;
     }
 
+    /**
+     * テーブル名を返します。
+     * 
+     * @return テーブル名
+     */
     public String getTableName() {
-        return tableName_;
+        return tableName;
     }
 
+    /**
+     * SQLを返します。
+     * 
+     * @return SQL
+     */
     public String getSql() {
-        return sql_;
+        return sql;
     }
 
+    /**
+     * テーブルを設定します。
+     * 
+     * @param tableName
+     *            テーブル名
+     */
     public void setTable(String tableName) {
         setTable(tableName, null);
     }
 
+    /**
+     * テーブルを設定します。
+     * 
+     * @param tableName
+     *            テーブル名
+     * @param condition
+     *            条件
+     */
     public void setTable(String tableName, String condition) {
         StringBuffer sortBuf = new StringBuffer(100);
         String[] primaryKeys = null;
-        Connection con = DataSourceUtil.getConnection(dataSource_);
+        Connection con = DataSourceUtil.getConnection(dataSource);
         try {
             DatabaseMetaData dbMetaData = ConnectionUtil.getMetaData(con);
             primaryKeys = DatabaseMetaDataUtil.getPrimaryKeys(dbMetaData,
@@ -82,8 +119,18 @@ public class SqlTableReader implements TableReader {
         setTable(tableName, condition, sortBuf.toString());
     }
 
+    /**
+     * テーブルを設定します。
+     * 
+     * @param tableName
+     *            テーブル名
+     * @param condition
+     *            条件
+     * @param sort
+     *            ソート条件
+     */
     public void setTable(String tableName, String condition, String sort) {
-        tableName_ = tableName;
+        this.tableName = tableName;
         StringBuffer sqlBuf = new StringBuffer(100);
         sqlBuf.append("SELECT * FROM ");
         sqlBuf.append(tableName);
@@ -95,12 +142,20 @@ public class SqlTableReader implements TableReader {
             sqlBuf.append(" ORDER BY ");
             sqlBuf.append(sort);
         }
-        sql_ = sqlBuf.toString();
+        sql = sqlBuf.toString();
     }
 
+    /**
+     * SQLを設定します。
+     * 
+     * @param sql
+     *            SQL
+     * @param tableName
+     *            テーブル名
+     */
     public void setSql(String sql, String tableName) {
-        sql_ = sql;
-        tableName_ = tableName;
+        this.sql = sql;
+        this.tableName = tableName;
 
     }
 
@@ -108,8 +163,8 @@ public class SqlTableReader implements TableReader {
      * @see org.seasar.extension.dataset.TableReader#read()
      */
     public DataTable read() {
-        SelectHandler selectHandler = new BasicSelectHandler(dataSource_, sql_,
-                new DataTableResultSetHandler(tableName_));
+        SelectHandler selectHandler = new BasicSelectHandler(dataSource, sql,
+                new DataTableResultSetHandler(tableName));
         return (DataTable) selectHandler.execute(null);
     }
 }

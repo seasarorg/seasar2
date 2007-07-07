@@ -20,51 +20,186 @@ import java.sql.DatabaseMetaData;
 import org.seasar.extension.jdbc.ColumnNotFoundRuntimeException;
 
 /**
+ * DataSetのテーブルをあらわすインターフェースです。
+ * 
  * @author higa
  * 
  */
 public interface DataTable {
 
-    public String getTableName();
+    /**
+     * テーブル名を返します。
+     * 
+     * @return テーブル名
+     */
+    String getTableName();
 
-    public void setTableName(String tableName);
+    /**
+     * テーブル名を設定します。
+     * 
+     * @param tableName
+     *            テーブル名
+     */
+    void setTableName(String tableName);
 
-    public int getRowSize();
+    /**
+     * 行数を返します。
+     * 
+     * @return 行数
+     */
+    int getRowSize();
 
-    public DataRow getRow(int index);
+    /**
+     * 行を返します。
+     * 
+     * @param index
+     *            位置
+     * @return 行
+     */
+    DataRow getRow(int index);
 
-    public DataRow addRow();
+    /**
+     * 行を追加します。
+     * 
+     * @return 行
+     */
+    DataRow addRow();
 
-    public int getRemovedRowSize();
+    /**
+     * 削除された行数を返します。
+     * 
+     * @return 削除された行数
+     */
+    int getRemovedRowSize();
 
-    public DataRow getRemovedRow(int index);
+    /**
+     * 削除された行を返します。
+     * 
+     * @param index
+     *            位置
+     * @return 削除された行
+     */
+    DataRow getRemovedRow(int index);
 
-    public DataRow[] removeRows();
+    /**
+     * 削除されたすべての行を返します。
+     * 
+     * @return 削除されたすべての行
+     */
+    DataRow[] removeRows();
 
-    public int getColumnSize();
+    /**
+     * カラム数を返します。
+     * 
+     * @return カラム数
+     */
+    int getColumnSize();
 
-    public DataColumn getColumn(int index);
+    /**
+     * カラムを返します。
+     * 
+     * @param index
+     *            位置
+     * @return カラム
+     */
+    DataColumn getColumn(int index);
 
-    public DataColumn getColumn(String columnName)
+    /**
+     * カラムを返します。
+     * 
+     * @param columnName
+     *            カラム名
+     * @return カラム
+     * @throws ColumnNotFoundRuntimeException
+     *             カラムが見つからなかった場合
+     */
+    DataColumn getColumn(String columnName)
             throws ColumnNotFoundRuntimeException;
 
-    public boolean hasColumn(String columnName);
+    /**
+     * カラムを持っているかどうかを返します。
+     * 
+     * @param columnName
+     *            カラム名
+     * @return カラムを持っているかどうか
+     */
+    boolean hasColumn(String columnName);
 
-    public String getColumnName(int index);
+    /**
+     * カラム名を返します。
+     * 
+     * @param index
+     *            位置
+     * @return カラム名
+     */
+    String getColumnName(int index);
 
-    public ColumnType getColumnType(int index);
+    /**
+     * カラムの型を返します。
+     * 
+     * @param index
+     *            位置
+     * @return カラムの型
+     */
+    ColumnType getColumnType(int index);
 
-    public ColumnType getColumnType(String columnName);
+    /**
+     * カラムの型を返します。
+     * 
+     * @param columnName
+     *            カラム名
+     * @return カラムの型
+     */
+    ColumnType getColumnType(String columnName);
 
-    public DataColumn addColumn(String columnName);
+    /**
+     * カラムを追加します。
+     * 
+     * @param columnName
+     *            カラム名
+     * @return カラム
+     */
+    DataColumn addColumn(String columnName);
 
-    public DataColumn addColumn(String columnName, ColumnType columnType);
+    /**
+     * カラムを追加します。
+     * 
+     * @param columnName
+     *            カラム名
+     * @param columnType
+     *            カラムの型
+     * @return カラム
+     */
+    DataColumn addColumn(String columnName, ColumnType columnType);
 
-    public boolean hasMetaData();
+    /**
+     * メタデータを持っているかどうかを返します。
+     * 
+     * @return メタデータを持っているかどうか
+     */
+    boolean hasMetaData();
 
-    public void setupMetaData(DatabaseMetaData dbMetaData);
+    /**
+     * メタデータのセットアップを行ないます。
+     * 
+     * @param dbMetaData
+     *            データベースのメタデータ
+     */
+    void setupMetaData(DatabaseMetaData dbMetaData);
 
-    public void setupColumns(Class beanClass);
+    /**
+     * カラムのセットアップを行ないます。
+     * 
+     * @param beanClass
+     *            JavaBeansのクラス
+     */
+    void setupColumns(Class beanClass);
 
-    public void copyFrom(Object source);
+    /**
+     * 他のオブジェクトから値をコピーします。
+     * 
+     * @param source
+     *            他のオブジェクト
+     */
+    void copyFrom(Object source);
 }

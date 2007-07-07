@@ -16,14 +16,39 @@
 package org.seasar.extension.dataset;
 
 /**
+ * カラムの型をあらわすインターフェースです。
+ * 
  * @author higa
  * 
  */
 public interface ColumnType {
 
-    public Object convert(Object value, String formatPattern);
+    /**
+     * 適切な型に変換します。
+     * 
+     * @param value
+     *            値
+     * @param formatPattern
+     *            フォーマットするためのパターン
+     * @return 変換後の値
+     */
+    Object convert(Object value, String formatPattern);
 
-    public boolean equals(Object arg1, Object arg2);
+    /**
+     * 等しいかどうかを返します。
+     * 
+     * @param arg1
+     *            引数1
+     * @param arg2
+     *            引数2
+     * @return 等しいかどうか
+     */
+    boolean equals(Object arg1, Object arg2);
 
-    public Class getType();
+    /**
+     * 型を返します。
+     * 
+     * @return 型
+     */
+    Class getType();
 }

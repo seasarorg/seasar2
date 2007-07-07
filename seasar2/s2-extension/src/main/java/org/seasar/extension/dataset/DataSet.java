@@ -16,31 +16,105 @@
 package org.seasar.extension.dataset;
 
 /**
+ * データの抽象的な集まりをあらわします。
+ * 
  * @author higa
  * 
  */
 public interface DataSet {
 
-    public int getTableSize();
+    /**
+     * テーブル数を返します。
+     * 
+     * @return テーブル数
+     */
+    int getTableSize();
 
-    public String getTableName(int index);
+    /**
+     * テーブル名を返します。
+     * 
+     * @param index
+     *            位置
+     * @return テーブル名
+     */
+    String getTableName(int index);
 
-    public boolean hasTable(String tableName);
+    /**
+     * テーブルを持っているかどうか返します。
+     * 
+     * @param tableName
+     *            テーブル名
+     * @return テーブルを持っているかどうか
+     */
+    boolean hasTable(String tableName);
 
-    public DataTable getTable(String tableName)
+    /**
+     * テーブルを返します。
+     * 
+     * @param tableName
+     *            テーブル名
+     * @return テーブル
+     * @throws TableNotFoundRuntimeException
+     *             テーブルが存在しない場合
+     */
+    DataTable getTable(String tableName) throws TableNotFoundRuntimeException;
+
+    /**
+     * テーブルを返します。
+     * 
+     * @param index
+     *            位置
+     * @return テーブル
+     */
+    DataTable getTable(int index);
+
+    /**
+     * テーブルを追加します。
+     * 
+     * @param tableName
+     *            テーブル名
+     * @return テーブル
+     */
+    DataTable addTable(String tableName);
+
+    /**
+     * テーブルを追加します。
+     * 
+     * @param table
+     *            テーブル
+     * @return テーブル
+     */
+    DataTable addTable(DataTable table);
+
+    /**
+     * テーブルを削除します。
+     * 
+     * @param tableName
+     *            テーブル名
+     * @return 削除したテーブル
+     * @throws TableNotFoundRuntimeException
+     *             テーブルが見つからない場合
+     */
+    DataTable removeTable(String tableName)
             throws TableNotFoundRuntimeException;
 
-    public DataTable getTable(int index);
+    /**
+     * テーブルを削除します。
+     * 
+     * @param index
+     *            位置
+     * @return 削除したテーブル
+     */
+    DataTable removeTable(int index);
 
-    public DataTable addTable(String tableName);
-
-    public DataTable addTable(DataTable table);
-
-    public DataTable removeTable(String tableName)
-            throws TableNotFoundRuntimeException;
-
-    public DataTable removeTable(int index);
-
-    public DataTable removeTable(DataTable table)
-            throws TableNotFoundRuntimeException;
+    /**
+     * テーブルを削除します。
+     * 
+     * @param table
+     *            テーブル
+     * @return 削除したテーブル
+     * @throws TableNotFoundRuntimeException
+     *             テーブルが見つからない場合
+     */
+    DataTable removeTable(DataTable table) throws TableNotFoundRuntimeException;
 }

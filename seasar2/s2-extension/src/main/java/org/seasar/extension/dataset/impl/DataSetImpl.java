@@ -22,13 +22,18 @@ import org.seasar.framework.util.ArrayMap;
 import org.seasar.framework.util.CaseInsensitiveMap;
 
 /**
+ * {@link DataSet}の実装です。
+ * 
  * @author higa
  * 
  */
 public class DataSetImpl implements DataSet {
 
-    private ArrayMap tables_ = new CaseInsensitiveMap();
+    private ArrayMap tables = new CaseInsensitiveMap();
 
+    /**
+     * {@link DataSetImpl}を作成します。
+     */
     public DataSetImpl() {
     }
 
@@ -36,7 +41,7 @@ public class DataSetImpl implements DataSet {
      * @see org.seasar.extension.dataset.DataSet#getTableSize()
      */
     public int getTableSize() {
-        return tables_.size();
+        return tables.size();
     }
 
     /**
@@ -50,14 +55,14 @@ public class DataSetImpl implements DataSet {
      * @see org.seasar.extension.dataset.DataSet#getTable(int)
      */
     public DataTable getTable(int index) {
-        return (DataTable) tables_.get(index);
+        return (DataTable) tables.get(index);
     }
 
     /**
      * @see org.seasar.extension.dataset.DataSet#hasTable(java.lang.String)
      */
     public boolean hasTable(String tableName) {
-        return tables_.containsKey(tableName);
+        return tables.containsKey(tableName);
     }
 
     /**
@@ -66,7 +71,7 @@ public class DataSetImpl implements DataSet {
     public DataTable getTable(String tableName)
             throws TableNotFoundRuntimeException {
 
-        DataTable table = (DataTable) tables_.get(tableName);
+        DataTable table = (DataTable) tables.get(tableName);
         if (table == null) {
             throw new TableNotFoundRuntimeException(tableName);
         }
@@ -84,7 +89,7 @@ public class DataSetImpl implements DataSet {
      * @see org.seasar.extension.dataset.DataSet#addTable(org.seasar.extension.dataset.DataTable)
      */
     public DataTable addTable(DataTable table) {
-        tables_.put(table.getTableName(), table);
+        tables.put(table.getTableName(), table);
         return table;
     }
 
@@ -99,14 +104,14 @@ public class DataSetImpl implements DataSet {
      * @see org.seasar.extension.dataset.DataSet#removeTable(int)
      */
     public DataTable removeTable(int index) {
-        return (DataTable) tables_.remove(index);
+        return (DataTable) tables.remove(index);
     }
 
     /**
      * @see org.seasar.extension.dataset.DataSet#removeTable(java.lang.String)
      */
     public DataTable removeTable(String tableName) {
-        DataTable table = (DataTable) tables_.remove(tableName);
+        DataTable table = (DataTable) tables.remove(tableName);
         if (table == null) {
             throw new TableNotFoundRuntimeException(tableName);
         }

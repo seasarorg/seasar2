@@ -21,11 +21,19 @@ import org.seasar.extension.dataset.DataSet;
 import org.seasar.extension.dataset.TableWriter;
 
 /**
+ * SqlServer用の {@link SqlWriter}です。
+ * 
  * @author taedium
  * 
  */
 public class SqlServerSqlWriter extends SqlWriter {
 
+    /**
+     * {@link SqlServerSqlWriter}を作成します。
+     * 
+     * @param dataSource
+     *            データソース
+     */
     public SqlServerSqlWriter(final DataSource dataSource) {
         super(dataSource);
     }

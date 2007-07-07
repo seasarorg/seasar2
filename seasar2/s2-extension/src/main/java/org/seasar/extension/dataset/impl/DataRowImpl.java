@@ -34,6 +34,8 @@ import org.seasar.framework.util.CaseInsensitiveMap;
 import org.seasar.framework.util.StringUtil;
 
 /**
+ * {@link DataRow}の実装クラスです。
+ * 
  * @author higa
  * 
  */
@@ -45,6 +47,11 @@ public class DataRowImpl implements DataRow {
 
     private RowState state_ = RowStates.UNCHANGED;
 
+    /**
+     * {@link DataRowImpl}を作成します。
+     * 
+     * @param table
+     */
     public DataRowImpl(DataTable table) {
         table_ = table;
         initValues();

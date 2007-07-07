@@ -26,23 +26,41 @@ import org.seasar.extension.dataset.DataTable;
 import org.seasar.extension.dataset.TableReader;
 
 /**
+ * SQLを扱うための {@link DataReader}です。
+ * 
  * @author higa
  * 
  */
 public class SqlReader implements DataReader {
 
-    private DataSource dataSource_;
+    private DataSource dataSource;
 
-    private List tableReaders_ = new ArrayList();
+    private List tableReaders = new ArrayList();
 
+    /**
+     * {@link SqlReader}を作成します。
+     * 
+     * @param dataSource
+     */
     public SqlReader(DataSource dataSource) {
-        dataSource_ = dataSource;
+        this.dataSource = dataSource;
     }
 
+    /**
+     * データソースを返します。
+     * 
+     * @return データソース
+     */
     public DataSource getDataSource() {
-        return dataSource_;
+        return dataSource;
     }
 
+    /**
+     * データセットを追加します。
+     * 
+     * @param dataSet
+     *            データセット
+     */
     public void addDataSet(DataSet dataSet) {
         for (int i = 0; i < dataSet.getTableSize(); i++) {
             DataTable table = dataSet.getTable(i);
@@ -50,35 +68,64 @@ public class SqlReader implements DataReader {
         }
     }
 
+    /**
+     * テーブルを追加します。
+     * 
+     * @param tableName
+     *            テーブル名
+     */
     public void addTable(String tableName) {
         addTable(tableName, null);
     }
 
+    /**
+     * テーブルを追加します。
+     * 
+     * @param tableName
+     *            テーブル名
+     * @param condition
+     *            条件
+     */
     public void addTable(String tableName, String condition) {
-        SqlTableReader reader = new SqlTableReader(dataSource_);
+        SqlTableReader reader = new SqlTableReader(dataSource);
         reader.setTable(tableName, condition);
-        tableReaders_.add(reader);
-    }
-
-    public void addTable(String tableName, String condition, String sort) {
-        SqlTableReader reader = new SqlTableReader(dataSource_);
-        reader.setTable(tableName, condition, sort);
-        tableReaders_.add(reader);
-    }
-
-    public void addSql(String sql, String tableName) {
-        SqlTableReader reader = new SqlTableReader(dataSource_);
-        reader.setSql(sql, tableName);
-        tableReaders_.add(reader);
+        tableReaders.add(reader);
     }
 
     /**
-     * @see org.seasar.extension.dataset.DataReader#read()
+     * テーブルを追加します。
+     * 
+     * @param tableName
+     *            テーブル名
+     * @param condition
+     *            条件
+     * @param sort
+     *            ソート条件
      */
+    public void addTable(String tableName, String condition, String sort) {
+        SqlTableReader reader = new SqlTableReader(dataSource);
+        reader.setTable(tableName, condition, sort);
+        tableReaders.add(reader);
+    }
+
+    /**
+     * SQLを追加します。
+     * 
+     * @param sql
+     *            SQL
+     * @param tableName
+     *            テーブル名
+     */
+    public void addSql(String sql, String tableName) {
+        SqlTableReader reader = new SqlTableReader(dataSource);
+        reader.setSql(sql, tableName);
+        tableReaders.add(reader);
+    }
+
     public DataSet read() {
         DataSet dataSet = new DataSetImpl();
-        for (int i = 0; i < tableReaders_.size(); ++i) {
-            TableReader reader = (TableReader) tableReaders_.get(i);
+        for (int i = 0; i < tableReaders.size(); ++i) {
+            TableReader reader = (TableReader) tableReaders.get(i);
             dataSet.addTable(reader.read());
         }
         return dataSet;

@@ -18,28 +18,88 @@ package org.seasar.extension.dataset;
 import org.seasar.extension.jdbc.ColumnNotFoundRuntimeException;
 
 /**
+ * DataSetの業をあらわすインターフェースです。
+ * 
  * @author higa
  * 
  */
 public interface DataRow {
 
-    public Object getValue(int index);
+    /**
+     * 値を返します。
+     * 
+     * @param index
+     *            位置
+     * @return 値
+     */
+    Object getValue(int index);
 
-    public Object getValue(String columnName)
+    /**
+     * 値を返します。
+     * 
+     * @param columnName
+     *            カラム名
+     * @return 値
+     * @throws ColumnNotFoundRuntimeException
+     *             カラムが見つからなかった場合
+     */
+    Object getValue(String columnName) throws ColumnNotFoundRuntimeException;
+
+    /**
+     * 値を設定します。
+     * 
+     * @param index
+     *            位置
+     * @param value
+     *            値
+     */
+    void setValue(int index, Object value);
+
+    /**
+     * 値を設定します。
+     * 
+     * @param columnName
+     *            カラム名
+     * @param value
+     *            値
+     * @throws ColumnNotFoundRuntimeException
+     *             カラムが見つからなかった場合
+     */
+    void setValue(String columnName, Object value)
             throws ColumnNotFoundRuntimeException;
 
-    public void setValue(int index, Object value);
+    /**
+     * 削除します。
+     */
+    void remove();
 
-    public void setValue(String columnName, Object value)
-            throws ColumnNotFoundRuntimeException;
+    /**
+     * テーブルを返します。
+     * 
+     * @return テーブル
+     */
+    DataTable getTable();
 
-    public void remove();
+    /**
+     * 行の状態を返します。
+     * 
+     * @return 行の状態
+     */
+    RowState getState();
 
-    public DataTable getTable();
+    /**
+     * 行の状態を設定します。
+     * 
+     * @param rowState
+     *            行の状態
+     */
+    void setState(RowState rowState);
 
-    public RowState getState();
-
-    public void setState(RowState rowState);
-
-    public void copyFrom(Object source);
+    /**
+     * 他から値をコピーします。
+     * 
+     * @param source
+     *            他のデータ
+     */
+    void copyFrom(Object source);
 }

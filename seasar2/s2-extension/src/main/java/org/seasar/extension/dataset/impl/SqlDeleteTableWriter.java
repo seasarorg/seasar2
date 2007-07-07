@@ -19,14 +19,22 @@ import javax.sql.DataSource;
 
 import org.seasar.extension.dataset.DataRow;
 import org.seasar.extension.dataset.DataTable;
+import org.seasar.extension.dataset.TableWriter;
 import org.seasar.extension.dataset.states.RowStates;
 
 /**
+ * SQLのDELETE文を実行するための {@link TableWriter}です。
+ * 
  * @author higa
  * 
  */
 public class SqlDeleteTableWriter extends SqlTableWriter {
 
+    /**
+     * {@link SqlDeleteTableWriter}を作成します。
+     * 
+     * @param dataSource
+     */
     public SqlDeleteTableWriter(DataSource dataSource) {
         super(dataSource);
     }

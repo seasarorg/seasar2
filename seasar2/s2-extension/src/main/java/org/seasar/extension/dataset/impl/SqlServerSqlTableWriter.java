@@ -29,6 +29,8 @@ import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.StatementUtil;
 
 /**
+ * SqlServer用の {@link SqlTableWriter}です。
+ * 
  * @author taedium
  * 
  */
@@ -37,6 +39,12 @@ public class SqlServerSqlTableWriter extends SqlTableWriter {
 
     private static final Logger logger = Logger.getLogger(SqlTableWriter.class);
 
+    /**
+     * {@link SqlServerSqlTableWriter}を作成します。
+     * 
+     * @param dataSource
+     *            データソース
+     */
     public SqlServerSqlTableWriter(final DataSource dataSource) {
         super(dataSource);
     }

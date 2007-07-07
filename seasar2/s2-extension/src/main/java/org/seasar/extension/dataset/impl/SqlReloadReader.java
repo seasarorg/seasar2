@@ -22,26 +22,46 @@ import org.seasar.extension.dataset.DataSet;
 import org.seasar.extension.dataset.TableReader;
 
 /**
+ * SQLのreload用の {@link DataReader}です。
+ * 
  * @author higa
  * 
  */
 public class SqlReloadReader implements DataReader {
 
-    private DataSource dataSource_;
+    private DataSource dataSource;
 
-    private DataSet dataSet_;
+    private DataSet dataSet;
 
+    /**
+     * {@link SqlReloadReader}を作成します。
+     * 
+     * @param dataSource
+     *            データソース
+     * @param dataSet
+     *            データセット
+     */
     public SqlReloadReader(DataSource dataSource, DataSet dataSet) {
-        dataSource_ = dataSource;
-        dataSet_ = dataSet;
+        this.dataSource = dataSource;
+        this.dataSet = dataSet;
     }
 
+    /**
+     * データソースを返します。
+     * 
+     * @return データソース
+     */
     public DataSource getDataSource() {
-        return dataSource_;
+        return dataSource;
     }
 
+    /**
+     * データセットを返します。
+     * 
+     * @return データセット
+     */
     public DataSet getDataSet() {
-        return dataSet_;
+        return dataSet;
     }
 
     /**
@@ -49,8 +69,8 @@ public class SqlReloadReader implements DataReader {
      */
     public DataSet read() {
         DataSet newDataSet = new DataSetImpl();
-        for (int i = 0; i < dataSet_.getTableSize(); ++i) {
-            TableReader reader = new SqlReloadTableReader(dataSource_, dataSet_
+        for (int i = 0; i < dataSet.getTableSize(); ++i) {
+            TableReader reader = new SqlReloadTableReader(dataSource, dataSet
                     .getTable(i));
             newDataSet.addTable(reader.read());
         }

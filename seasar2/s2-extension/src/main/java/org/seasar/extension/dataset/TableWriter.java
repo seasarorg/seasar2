@@ -16,10 +16,18 @@
 package org.seasar.extension.dataset;
 
 /**
+ * テーブルを書き込むためのインターフェースです。
+ * 
  * @author higa
  * 
  */
 public interface TableWriter {
 
+    /**
+     * テーブルを書き込みます。
+     * 
+     * @param table
+     *            テーブル
+     */
     public void write(DataTable table);
 }

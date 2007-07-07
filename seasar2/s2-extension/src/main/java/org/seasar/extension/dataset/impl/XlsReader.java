@@ -41,79 +41,177 @@ import org.seasar.framework.util.StringUtil;
 import org.seasar.framework.util.TimestampConversionUtil;
 
 /**
+ * Excel用の {@link DataReader}です。
+ * 
  * @author higa
  * @author manhole
  * @author azusa
  */
 public class XlsReader implements DataReader, DataSetConstants {
 
-    protected DataSet dataSet_;
+    /**
+     * データセットです。
+     */
+    protected DataSet dataSet;
 
-    protected HSSFWorkbook workbook_;
+    /**
+     * ワークブックです。
+     */
+    protected HSSFWorkbook workbook;
 
-    protected HSSFDataFormat dataFormat_;
+    /**
+     * データフォーマットです。
+     */
+    protected HSSFDataFormat dataFormat;
 
+    /**
+     * 文字列をトリミングするかどうか
+     */
     protected boolean trimString = true;
 
+    /**
+     * {@link XlsReader}を作成します。
+     * 
+     * @param path
+     *            パス
+     */
     public XlsReader(String path) {
         this(path, true);
     }
 
+    /**
+     * {@link XlsReader}を作成します。
+     * 
+     * @param path
+     *            パス
+     * @param trimString
+     *            文字列をトリムするかどうか
+     */
     public XlsReader(String path, boolean trimString) {
         this(ResourceUtil.getResourceAsStream(path), trimString);
     }
 
+    /**
+     * {@link XlsReader}を作成します。
+     * 
+     * @param dirName
+     *            ディレクトリ名
+     * @param fileName
+     *            ファイル名
+     */
     public XlsReader(String dirName, String fileName) {
         this(dirName, fileName, true);
     }
 
+    /**
+     * {@link XlsReader}を作成します。
+     * 
+     * @param dirName
+     *            ディレクトリ名
+     * @param fileName
+     *            ファイル名
+     * @param trimString
+     *            文字列をトリムするかどうか
+     */
     public XlsReader(String dirName, String fileName, boolean trimString) {
         this(ResourceUtil.getResourceAsFile(dirName), fileName, trimString);
     }
 
+    /**
+     * {@link XlsReader}を作成します。
+     * 
+     * @param dir
+     *            ディレクトリ
+     * @param fileName
+     *            ファイル名
+     */
     public XlsReader(File dir, String fileName) {
         this(dir, fileName, true);
     }
 
+    /**
+     * {@link XlsReader}を作成します。
+     * 
+     * @param dir
+     *            ディレクトリ
+     * @param fileName
+     *            ファイル名
+     * @param trimString
+     *            文字列をトリムするかどうか
+     */
     public XlsReader(File dir, String fileName, boolean trimString) {
         this(new File(dir, fileName), trimString);
     }
 
+    /**
+     * {@link XlsReader}を作成します。
+     * 
+     * @param file
+     *            ファイル
+     */
     public XlsReader(File file) {
         this(file, true);
     }
 
+    /**
+     * {@link XlsReader}を作成します。
+     * 
+     * @param file
+     *            ファイル
+     * @param trimString
+     *            文字列をトリムするかどうか
+     */
     public XlsReader(File file, boolean trimString) {
         this(FileInputStreamUtil.create(file));
     }
 
+    /**
+     * {@link XlsReader}を作成します。
+     * 
+     * @param in
+     *            入力ストリーム
+     */
     public XlsReader(InputStream in) {
         this(in, true);
     }
 
+    /**
+     * {@link XlsReader}を作成します。
+     * 
+     * @param in
+     *            入力ストリーム
+     * @param trimString
+     *            文字列をトリムするかどうか
+     */
     public XlsReader(InputStream in, boolean trimString) {
         this.trimString = trimString;
         try {
-            workbook_ = new HSSFWorkbook(in);
+            workbook = new HSSFWorkbook(in);
         } catch (IOException ex) {
             throw new IORuntimeException(ex);
         }
-        dataFormat_ = workbook_.createDataFormat();
-        dataSet_ = new DataSetImpl();
-        for (int i = 0; i < workbook_.getNumberOfSheets(); ++i) {
-            createTable(workbook_.getSheetName(i), workbook_.getSheetAt(i));
+        dataFormat = workbook.createDataFormat();
+        dataSet = new DataSetImpl();
+        for (int i = 0; i < workbook.getNumberOfSheets(); ++i) {
+            createTable(workbook.getSheetName(i), workbook.getSheetAt(i));
         }
     }
 
-    /**
-     * @see org.seasar.extension.dataset.DataReader#read()
-     */
     public DataSet read() {
-        return dataSet_;
+        return dataSet;
     }
 
+    /**
+     * テーブルを作成します。
+     * 
+     * @param sheetName
+     *            シート名
+     * @param sheet
+     *            シート
+     * @return テーブル
+     */
     protected DataTable createTable(String sheetName, HSSFSheet sheet) {
-        DataTable table = dataSet_.addTable(sheetName);
+        DataTable table = dataSet.addTable(sheetName);
         int rowCount = sheet.getLastRowNum();
         if (rowCount > 0) {
             setupColumns(table, sheet);
@@ -124,6 +222,14 @@ public class XlsReader implements DataReader, DataSetConstants {
         return table;
     }
 
+    /**
+     * カラムの情報をセットアップします。
+     * 
+     * @param table
+     *            テーブル
+     * @param sheet
+     *            シート
+     */
     protected void setupColumns(DataTable table, HSSFSheet sheet) {
         HSSFRow nameRow = sheet.getRow(0);
         HSSFRow valueRow = sheet.getRow(1);
@@ -132,7 +238,7 @@ public class XlsReader implements DataReader, DataSetConstants {
             if (nameCell == null) {
                 break;
             }
-            String columnName = nameCell.getStringCellValue().trim();
+            String columnName = nameCell.getRichStringCellValue().getString();
             if (columnName.length() == 0) {
                 break;
             }
@@ -153,6 +259,14 @@ public class XlsReader implements DataReader, DataSetConstants {
         }
     }
 
+    /**
+     * シートの行をセットアップします。
+     * 
+     * @param table
+     *            テーブル
+     * @param sheet
+     *            シート
+     */
     protected void setupRows(DataTable table, HSSFSheet sheet) {
         for (int i = 1;; ++i) {
             HSSFRow row = sheet.getRow((short) i);
@@ -163,6 +277,14 @@ public class XlsReader implements DataReader, DataSetConstants {
         }
     }
 
+    /**
+     * 行をセットアップします。
+     * 
+     * @param table
+     *            テーブル
+     * @param row
+     *            行
+     */
     protected void setupRow(DataTable table, HSSFRow row) {
         DataRow dataRow = table.addRow();
         for (int i = 0; i < table.getColumnSize(); ++i) {
@@ -172,16 +294,30 @@ public class XlsReader implements DataReader, DataSetConstants {
         }
     }
 
+    /**
+     * セルがBase64でフォーマットされているかどうかを返します。
+     * 
+     * @param cell
+     *            セル
+     * @return セルがBase64でフォーマットされているかどうか
+     */
     public boolean isCellBase64Formatted(HSSFCell cell) {
         HSSFCellStyle cs = cell.getCellStyle();
         short dfNum = cs.getDataFormat();
-        return BASE64_FORMAT.equals(dataFormat_.getFormat(dfNum));
+        return BASE64_FORMAT.equals(dataFormat.getFormat(dfNum));
     }
 
+    /**
+     * セルが日付のフォーマットかどうかを返します。
+     * 
+     * @param cell
+     *            セル
+     * @return セルが日付のフォーマットかどうか
+     */
     public boolean isCellDateFormatted(HSSFCell cell) {
         HSSFCellStyle cs = cell.getCellStyle();
         short dfNum = cs.getDataFormat();
-        String format = dataFormat_.getFormat(dfNum);
+        String format = dataFormat.getFormat(dfNum);
         if (StringUtil.isEmpty(format)) {
             return false;
         }
@@ -192,6 +328,13 @@ public class XlsReader implements DataReader, DataSetConstants {
         return false;
     }
 
+    /**
+     * セルの値を返します。
+     * 
+     * @param cell
+     *            セル
+     * @return セルの値
+     */
     public Object getValue(HSSFCell cell) {
         if (cell == null) {
             return null;
@@ -208,7 +351,7 @@ public class XlsReader implements DataReader, DataSetConstants {
             }
             return new BigDecimal(Double.toString(numericCellValue));
         case HSSFCell.CELL_TYPE_STRING:
-            String s = cell.getStringCellValue();
+            String s = cell.getRichStringCellValue().getString();
             if (s != null) {
                 s = StringUtil.rtrim(s);
                 if (!trimString && s.length() > 1 && s.startsWith("\"")
@@ -231,6 +374,13 @@ public class XlsReader implements DataReader, DataSetConstants {
         }
     }
 
+    /**
+     * カラムの型を返します。
+     * 
+     * @param cell
+     *            セル
+     * @return カラムの型
+     */
     protected ColumnType getColumnType(HSSFCell cell) {
         switch (cell.getCellType()) {
         case HSSFCell.CELL_TYPE_NUMERIC:
@@ -253,6 +403,13 @@ public class XlsReader implements DataReader, DataSetConstants {
         }
     }
 
+    /**
+     * 整数かどうかを返します。
+     * 
+     * @param numericCellValue
+     *            numericな値
+     * @return 整数かどうか
+     */
     protected boolean isInt(final double numericCellValue) {
         return ((int) numericCellValue) == numericCellValue;
     }

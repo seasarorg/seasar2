@@ -49,7 +49,7 @@ public class DataRowReloadResultSetHandlerTest extends S2TestCase {
         newTable.addColumn("ename");
         DataRow newRow = newTable.addRow();
         SelectHandler handler = new BasicSelectHandler(ds_, sql,
-                new DataRowReloadResultSetHandler(row, newRow));
+                new DataRowReloadResultSetHandler(newRow));
         handler.execute(new Object[] { new Integer(7788) });
         System.out.println(newRow);
         assertEquals("2", row, newRow);
@@ -72,7 +72,7 @@ public class DataRowReloadResultSetHandlerTest extends S2TestCase {
         newTable.addColumn("d_name");
         DataRow newRow = newTable.addRow();
         SelectHandler handler = new BasicSelectHandler(ds_, sql,
-                new DataRowReloadResultSetHandler(row, newRow));
+                new DataRowReloadResultSetHandler(newRow));
         handler.execute(new Object[] { new Integer(20) });
         System.out.println(newRow);
         assertEquals(row, newRow);
