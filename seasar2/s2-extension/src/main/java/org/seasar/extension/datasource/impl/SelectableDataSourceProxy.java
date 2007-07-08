@@ -37,11 +37,14 @@ import org.seasar.framework.exception.EmptyRuntimeException;
  */
 public class SelectableDataSourceProxy implements DataSource {
 
+    /**
+     * データソースファクトリです。
+     */
     protected DataSourceFactory dataSourceFactory;
 
     /**
      * @param dataSourceFactory
-     *            The dataSourceFactory to set.
+     *            データソースファクトリ
      */
     public void setDataSourceFactory(DataSourceFactory dataSourceFactory) {
         this.dataSourceFactory = dataSourceFactory;

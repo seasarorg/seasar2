@@ -25,21 +25,44 @@ import org.seasar.extension.j2ee.JndiResourceLocator;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 
 /**
+ * {@link SingletonS2ContainerFactory}を利用したデータソースのプロキシです。
+ * 
  * @author koichik
  */
 public class SingletonDataSourceProxy implements DataSource {
 
+    /**
+     * Bindingアノテーションの定義です。
+     */
     public static final String actualDataSourceName_BINDING = "bindingType=may";
 
+    /**
+     * 実際のデータソース名です。
+     */
     protected String actualDataSourceName = "jdbc.dataSource";
 
+    /**
+     * {@link SingletonDataSourceProxy}を作成します。
+     */
     public SingletonDataSourceProxy() {
     }
 
+    /**
+     * {@link SingletonDataSourceProxy}を作成します。
+     * 
+     * @param actualDataSourceName
+     *            実際のデータソース名
+     */
     public SingletonDataSourceProxy(final String actualDataSourceName) {
         setActualDataSourceName(actualDataSourceName);
     }
 
+    /**
+     * 実際のデータソース名を設定します。
+     * 
+     * @param actualDataSourceName
+     *            実際のデータソース名
+     */
     public void setActualDataSourceName(final String actualDataSourceName) {
         this.actualDataSourceName = JndiResourceLocator
                 .resolveName(actualDataSourceName);
@@ -70,6 +93,11 @@ public class SingletonDataSourceProxy implements DataSource {
         getActualDataSource().setLoginTimeout(seconds);
     }
 
+    /**
+     * 実際のデータソースを返します。
+     * 
+     * @return 実際のデータソース
+     */
     protected DataSource getActualDataSource() {
         return (DataSource) SingletonS2ContainerFactory.getContainer()
                 .getComponent(actualDataSourceName);

@@ -22,13 +22,21 @@ import org.seasar.framework.container.S2Container;
 import org.seasar.framework.util.StringUtil;
 
 /**
+ * {@link DataSourceFactory}の実装クラスです。
+ * 
  * @author higa
  * 
  */
 public class DataSourceFactoryImpl implements DataSourceFactory {
 
+    /**
+     * 動的なデータソース名を管理します。
+     */
     protected ThreadLocal selectableDataSourceName = new ThreadLocal();
 
+    /**
+     * S2コンテナです。
+     */
     protected S2Container container;
 
     public String getSelectableDataSourceName() {
@@ -47,7 +55,7 @@ public class DataSourceFactoryImpl implements DataSourceFactory {
     }
 
     /**
-     * @return Returns the container.
+     * @return S2コンテナ
      */
     public S2Container getContainer() {
         return container;
@@ -55,7 +63,7 @@ public class DataSourceFactoryImpl implements DataSourceFactory {
 
     /**
      * @param container
-     *            The container to set.
+     *            S2コンテナ
      */
     public void setContainer(S2Container container) {
         this.container = container;
@@ -66,6 +74,13 @@ public class DataSourceFactoryImpl implements DataSourceFactory {
                 getDataSourceComponentName(name));
     }
 
+    /**
+     * データソースのコンポーネント名を返します。
+     * 
+     * @param name
+     *            dao.nameのようなdaoの後ろのサブパッケージ名
+     * @return コンポーネント名
+     */
     protected String getDataSourceComponentName(String name) {
         String dsName = getDataSourceName(name);
         if (StringUtil.isEmpty(dsName)) {
