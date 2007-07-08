@@ -18,16 +18,38 @@ package org.seasar.extension.dataset.states;
 import org.seasar.extension.dataset.RowState;
 
 /**
+ * {@link RowState}を管理するインターフェースです。
+ * 
  * @author higa
  * 
  */
 public interface RowStates {
 
-    public RowState UNCHANGED = new UnchangedState();
+    /**
+     * 変更がないとき用の {@link RowState}です。
+     * 
+     * @see UnchangedState
+     */
+    RowState UNCHANGED = new UnchangedState();
 
-    public RowState CREATED = new CreatedState();
+    /**
+     * 新規作成用の {@link RowState}です。
+     * 
+     * @see CreatedState
+     */
+    RowState CREATED = new CreatedState();
 
-    public RowState MODIFIED = new ModifiedState();
+    /**
+     * 更新用の {@link RowState}です。
+     * 
+     * @see ModifiedState
+     */
+    RowState MODIFIED = new ModifiedState();
 
-    public RowState REMOVED = new RemovedState();
+    /**
+     * 削除用の {@link RowState}です。
+     * 
+     * @see RemovedState
+     */
+    RowState REMOVED = new RemovedState();
 }

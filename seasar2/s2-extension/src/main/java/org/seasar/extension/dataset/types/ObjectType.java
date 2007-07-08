@@ -18,6 +18,8 @@ package org.seasar.extension.dataset.types;
 import org.seasar.extension.dataset.ColumnType;
 
 /**
+ * 汎用的なオブジェクト用の {@link ColumnType}です。
+ * 
  * @author higa
  * 
  */
@@ -37,6 +39,15 @@ public class ObjectType implements ColumnType {
         return doEquals(arg1, arg2);
     }
 
+    /**
+     * 等しいかどうかを返します。
+     * 
+     * @param arg1
+     *            引数1
+     * @param arg2
+     *            引数1
+     * @return 等しいかどうか
+     */
     protected boolean doEquals(Object arg1, Object arg2) {
         try {
             arg1 = convert(arg1, null);

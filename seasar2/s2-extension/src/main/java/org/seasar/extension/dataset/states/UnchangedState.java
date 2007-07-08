@@ -21,15 +21,13 @@ import org.seasar.extension.dataset.DataRow;
 import org.seasar.extension.dataset.RowState;
 
 /**
+ * 変更がないとき用の {@link RowState}です。
+ * 
  * @author higa
  * 
  */
 public class UnchangedState implements RowState {
 
-    /**
-     * @see org.seasar.extension.dataset.RowState#update(javax.sql.DataSource,
-     *      org.seasar.extension.dataset.DataRow)
-     */
     public void update(DataSource dataSource, DataRow row) {
     }
 

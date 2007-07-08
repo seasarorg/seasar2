@@ -21,15 +21,15 @@ import java.util.List;
 import org.seasar.extension.dataset.DataColumn;
 import org.seasar.extension.dataset.DataRow;
 import org.seasar.extension.dataset.DataTable;
+import org.seasar.extension.dataset.RowState;
 
 /**
+ * 削除用の {@link RowState}です。
+ * 
  * @author higa
  * 
  */
 public class RemovedState extends AbstractRowState {
-
-    // private static Map sqlCache_ = Collections.synchronizedMap(new
-    // WeakHashMap());
 
     public String toString() {
         return "REMOVED";

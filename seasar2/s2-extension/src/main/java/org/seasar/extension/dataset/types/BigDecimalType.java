@@ -20,6 +20,8 @@ import java.math.BigDecimal;
 import org.seasar.framework.util.BigDecimalConversionUtil;
 
 /**
+ * 数値用の型です。
+ * 
  * @author higa
  * 
  */

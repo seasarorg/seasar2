@@ -18,6 +18,8 @@ package org.seasar.extension.dataset.types;
 import org.seasar.framework.util.BooleanConversionUtil;
 
 /**
+ * 論理値用の型です。
+ * 
  * @author manhole
  */
 public class BooleanType extends ObjectType {

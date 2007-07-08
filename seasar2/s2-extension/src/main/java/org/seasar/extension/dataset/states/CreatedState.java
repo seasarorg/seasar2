@@ -21,8 +21,11 @@ import java.util.List;
 import org.seasar.extension.dataset.DataColumn;
 import org.seasar.extension.dataset.DataRow;
 import org.seasar.extension.dataset.DataTable;
+import org.seasar.extension.dataset.RowState;
 
 /**
+ * 新規作成用の {@link RowState}です。
+ * 
  * @author higa
  * 
  */

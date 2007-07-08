@@ -27,23 +27,60 @@ import org.seasar.extension.jdbc.ValueType;
 import org.seasar.extension.jdbc.types.ValueTypes;
 
 /**
+ * カラムの型を管理するクラスです。
+ * 
  * @author higa
  * 
  */
-public class ColumnTypes {
+public final class ColumnTypes {
 
+    /**
+     * 文字列用の {@link ColumnType}です。
+     * 
+     * @see StringType
+     */
     public static final ColumnType STRING = new StringType();
 
+    /**
+     * トリムをしない文字列用の {@link ColumnType}です。
+     * 
+     * @see StringType
+     */
     public static final ColumnType NOT_TRIM_STRING = new StringType(false);
 
+    /**
+     * 数値用の {@link ColumnType}です。
+     * 
+     * @see BigDecimalType
+     */
     public static final ColumnType BIGDECIMAL = new BigDecimalType();
 
+    /**
+     * 日付用の {@link ColumnType}です。
+     * 
+     * @see TimestampType
+     */
     public static final ColumnType TIMESTAMP = new TimestampType();
 
+    /**
+     * バイナリ用の {@link ColumnType}です。
+     * 
+     * @see BinaryType
+     */
     public static final ColumnType BINARY = new BinaryType();
 
+    /**
+     * オブジェクト用の {@link ColumnType}です。
+     * 
+     * @see ObjectType
+     */
     public static final ColumnType OBJECT = new ObjectType();
 
+    /**
+     * 論理値用の {@link ColumnType}です。
+     * 
+     * @see BooleanType
+     */
     public static final ColumnType BOOLEAN = new BooleanType();
 
     private static Map types_ = new HashMap();
@@ -70,6 +107,17 @@ public class ColumnTypes {
         types_.put(new byte[0].getClass(), BINARY);
     }
 
+    private ColumnTypes() {
+    }
+
+    /**
+     * S2JDBC用の型を返します。
+     * 
+     * @param type
+     *            型
+     * @return JDBC用の型
+     * @see ValueTypes
+     */
     public static ValueType getValueType(int type) {
         switch (type) {
         case Types.TINYINT:
@@ -101,6 +149,13 @@ public class ColumnTypes {
         }
     }
 
+    /**
+     * カラムの型を返します。
+     * 
+     * @param type
+     *            型
+     * @return カラムの型
+     */
     public static ColumnType getColumnType(int type) {
         switch (type) {
         case Types.TINYINT:
@@ -132,6 +187,13 @@ public class ColumnTypes {
         }
     }
 
+    /**
+     * カラムの型を返します。
+     * 
+     * @param value
+     *            値
+     * @return カラムの型
+     */
     public static ColumnType getColumnType(Object value) {
         if (value == null) {
             return OBJECT;
@@ -139,6 +201,13 @@ public class ColumnTypes {
         return getColumnType(value.getClass());
     }
 
+    /**
+     * カラムの型を返します。
+     * 
+     * @param clazz
+     *            クラス
+     * @return カラムの型
+     */
     public static ColumnType getColumnType(Class clazz) {
         ColumnType columnType = getColumnType0(clazz);
         if (columnType != null) {

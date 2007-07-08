@@ -23,6 +23,7 @@ import java.util.Date;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFDataFormat;
+import org.apache.poi.hssf.usermodel.HSSFRichTextString;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -66,26 +67,66 @@ public class XlsWriter implements DataWriter, DataSetConstants {
      */
     protected HSSFCellStyle base64Style;
 
+    /**
+     * {@link XlsWriter}を作成します。
+     * 
+     * @param path
+     *            パス
+     */
     public XlsWriter(String path) {
         this(new File(ResourceUtil.getResourceAsFile("."), path));
     }
 
+    /**
+     * {@link XlsWriter}を作成します。
+     * 
+     * @param dirName
+     *            ディレクトリ名
+     * @param fileName
+     *            ファイル名
+     */
     public XlsWriter(String dirName, String fileName) {
         this(ResourceUtil.getResourceAsFile(dirName), fileName);
     }
 
+    /**
+     * {@link XlsWriter}を作成します。
+     * 
+     * @param dir
+     *            ディレクトリ
+     * @param fileName
+     *            ファイル名
+     */
     public XlsWriter(File dir, String fileName) {
         this(new File(dir, fileName));
     }
 
+    /**
+     * {@link XlsWriter}を作成します。
+     * 
+     * @param file
+     *            ファイル
+     */
     public XlsWriter(File file) {
         this(FileOutputStreamUtil.create(file));
     }
 
+    /**
+     * {@link XlsWriter}を作成します。
+     * 
+     * @param out
+     *            出力ストリーム
+     */
     public XlsWriter(OutputStream out) {
         setOutputStream(out);
     }
 
+    /**
+     * 出力ストリームを設定します。
+     * 
+     * @param out
+     *            出力ストリーム
+     */
     public void setOutputStream(OutputStream out) {
         this.out = out;
         workbook = new HSSFWorkbook();
@@ -96,19 +137,17 @@ public class XlsWriter implements DataWriter, DataSetConstants {
         base64Style.setDataFormat(df.getFormat(BASE64_FORMAT));
     }
 
-    /**
-     * @see org.seasar.extension.dataset.DataWriter#write(org.seasar.extension.dataset.DataSet)
-     */
     public void write(DataSet dataSet) {
         for (int i = 0; i < dataSet.getTableSize(); ++i) {
             DataTable table = dataSet.getTable(i);
             HSSFSheet sheet = workbook.createSheet();
-            workbook.setSheetName(i, table.getTableName(),
-                    HSSFWorkbook.ENCODING_UTF_16);
+            workbook.setSheetName(i, table.getTableName());
             HSSFRow headerRow = sheet.createRow(0);
             for (int j = 0; j < table.getColumnSize(); ++j) {
                 HSSFCell cell = headerRow.createCell((short) j);
-                cell.setCellValue(table.getColumnName(j));
+                cell
+                        .setCellValue(new HSSFRichTextString(table
+                                .getColumnName(j)));
             }
             for (int j = 0; j < table.getRowSize(); ++j) {
                 HSSFRow row = sheet.createRow(j + 1);
@@ -131,20 +170,29 @@ public class XlsWriter implements DataWriter, DataSetConstants {
         }
     }
 
+    /**
+     * セルに値を設定します。
+     * 
+     * @param cell
+     *            セル
+     * @param value
+     *            値
+     */
     protected void setValue(HSSFCell cell, Object value) {
         if (value instanceof Number) {
-            cell.setCellValue(value.toString());
+            cell.setCellValue(new HSSFRichTextString(value.toString()));
         } else if (value instanceof Date) {
             cell.setCellValue((Date) value);
             cell.setCellStyle(dateStyle);
         } else if (value instanceof byte[]) {
-            cell.setCellValue(Base64Util.encode((byte[]) value));
+            cell.setCellValue(new HSSFRichTextString(Base64Util
+                    .encode((byte[]) value)));
             cell.setCellStyle(base64Style);
         } else if (value instanceof Boolean) {
             cell.setCellValue(((Boolean) value).booleanValue());
         } else {
-            cell.setEncoding(HSSFWorkbook.ENCODING_UTF_16);
-            cell.setCellValue(StringConversionUtil.toString(value, null));
+            cell.setCellValue(new HSSFRichTextString(StringConversionUtil
+                    .toString(value, null)));
         }
     }
 }

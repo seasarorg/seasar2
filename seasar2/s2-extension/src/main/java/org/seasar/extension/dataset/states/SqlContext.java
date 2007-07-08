@@ -16,6 +16,8 @@
 package org.seasar.extension.dataset.states;
 
 /**
+ * SQLを実行するためのコンテキストです。
+ * 
  * @author higa
  * 
  */
@@ -27,35 +29,81 @@ public class SqlContext {
 
     private Class[] argTypes;
 
+    /**
+     * {@link SqlContext}を作成します。
+     */
     public SqlContext() {
     }
 
+    /**
+     * {@link SqlContext}を作成します。
+     * 
+     * @param sql
+     *            SQL
+     * @param args
+     *            引数
+     * @param argTypes
+     *            引数の型
+     */
     public SqlContext(String sql, Object[] args, Class[] argTypes) {
         setSql(sql);
         setArgs(args);
         setArgTypes(argTypes);
     }
 
+    /**
+     * 引数を返します。
+     * 
+     * @return 引数
+     */
     public Object[] getArgs() {
         return args;
     }
 
+    /**
+     * 引数を設定します。
+     * 
+     * @param args
+     *            引数
+     */
     public void setArgs(Object[] args) {
         this.args = args;
     }
 
+    /**
+     * 引数の型を返します。
+     * 
+     * @return 引数の型
+     */
     public Class[] getArgTypes() {
         return argTypes;
     }
 
+    /**
+     * 引数の型を設定します。
+     * 
+     * @param argTypes
+     *            引数の型
+     */
     public void setArgTypes(Class[] argTypes) {
         this.argTypes = argTypes;
     }
 
+    /**
+     * SQLを返します。
+     * 
+     * @return SQL
+     */
     public String getSql() {
         return sql;
     }
 
+    /**
+     * SQLを設定します。
+     * 
+     * @param sql
+     *            SQL
+     */
     public void setSql(String sql) {
         this.sql = sql;
     }

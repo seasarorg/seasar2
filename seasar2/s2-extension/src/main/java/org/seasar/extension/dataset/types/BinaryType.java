@@ -20,6 +20,8 @@ import java.util.Arrays;
 import org.seasar.framework.util.BinaryConversionUtil;
 
 /**
+ * バイナリ用の型です。
+ * 
  * @author higa
  * 
  */

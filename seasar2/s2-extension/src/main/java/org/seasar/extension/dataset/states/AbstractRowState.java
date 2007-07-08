@@ -23,6 +23,8 @@ import org.seasar.extension.jdbc.UpdateHandler;
 import org.seasar.extension.jdbc.impl.BasicUpdateHandler;
 
 /**
+ * {@link RowState}の抽象クラスです。
+ * 
  * @author higa
  * 
  */
@@ -31,18 +33,31 @@ public abstract class AbstractRowState implements RowState {
     AbstractRowState() {
     }
 
-    /**
-     * @see org.seasar.extension.dataset.RowState#update(javax.sql.DataSource,
-     *      org.seasar.extension.dataset.DataRow)
-     */
     public void update(DataSource dataSource, DataRow row) {
         SqlContext ctx = getSqlContext(row);
         UpdateHandler handler = new BasicUpdateHandler(dataSource, ctx.getSql());
         execute(handler, ctx.getArgs(), ctx.getArgTypes());
     }
 
+    /**
+     * SQLコンテキストを返します。
+     * 
+     * @param row
+     *            行
+     * @return SQLコンテキスト
+     */
     protected abstract SqlContext getSqlContext(DataRow row);
 
+    /**
+     * 更新します。
+     * 
+     * @param handler
+     *            更新ハンドラ
+     * @param args
+     *            引数
+     * @param argTypes
+     *            引数の型
+     */
     protected void execute(UpdateHandler handler, Object[] args,
             Class[] argTypes) {
         handler.execute(args, argTypes);

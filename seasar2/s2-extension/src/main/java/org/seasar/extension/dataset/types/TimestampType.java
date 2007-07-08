@@ -17,9 +17,12 @@ package org.seasar.extension.dataset.types;
 
 import java.sql.Timestamp;
 
+import org.seasar.extension.dataset.ColumnType;
 import org.seasar.framework.util.TimestampConversionUtil;
 
 /**
+ * 日付用の {@link ColumnType}です。
+ * 
  * @author higa
  * 
  */

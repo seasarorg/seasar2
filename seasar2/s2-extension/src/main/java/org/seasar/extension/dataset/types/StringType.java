@@ -15,14 +15,20 @@
  */
 package org.seasar.extension.dataset.types;
 
+import org.seasar.extension.dataset.ColumnType;
 import org.seasar.framework.util.StringConversionUtil;
 
 /**
+ * 文字列用の {@link ColumnType}です。
+ * 
  * @author higa
  * 
  */
 public class StringType extends ObjectType {
 
+    /**
+     * トリムするかどうか。
+     */
     protected boolean trim;
 
     StringType() {
