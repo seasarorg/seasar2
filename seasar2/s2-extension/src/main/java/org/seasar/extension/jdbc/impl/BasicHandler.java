@@ -45,8 +45,6 @@ public class BasicHandler {
 
     private StatementFactory statementFactory_ = BasicStatementFactory.INSTANCE;
 
-    private SqlLogRegistry sqlLogRegistry = SqlLogRegistryLocator.getInstance();
-
     protected Class loggerClass = BasicHandler.class;
 
     public BasicHandler() {
@@ -187,13 +185,19 @@ public class BasicHandler {
      *            SQLにバインドされる値の型の配列
      */
     protected void logSql(Object[] args, Object[] argTypes) {
-        String completeSql = getCompleteSql(args);
         Logger logger = Logger.getLogger(loggerClass);
-        if (logger.isDebugEnabled()) {
-            logger.debug(completeSql);
+        SqlLogRegistry sqlLogRegistry = SqlLogRegistryLocator.getInstance();
+        if (logger.isDebugEnabled() || sqlLogRegistry != null) {
+            String completeSql = getCompleteSql(args);
+            if (logger.isDebugEnabled()) {
+                logger.debug(completeSql);
+            }
+            if (sqlLogRegistry != null) {
+                SqlLog sqlLog = new SqlLogImpl(getSql(), completeSql, args,
+                        argTypes);
+                sqlLogRegistry.add(sqlLog);
+            }
         }
-        SqlLog sqlLog = new SqlLogImpl(getSql(), completeSql, args, argTypes);
-        sqlLogRegistry.add(sqlLog);
     }
 
     public Class getLoggerClass() {

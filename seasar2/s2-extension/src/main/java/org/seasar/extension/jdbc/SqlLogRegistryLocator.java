@@ -25,7 +25,7 @@ import org.seasar.extension.jdbc.impl.SqlLogRegistryImpl;
 public class SqlLogRegistryLocator {
 
     /** SQLログのレジストリ */
-    protected static SqlLogRegistry instance = new SqlLogRegistryImpl(3);
+    protected static SqlLogRegistry instance = new SqlLogRegistryImpl();
 
     /**
      * SQLログのレジストリを返します。

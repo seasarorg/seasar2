@@ -27,6 +27,8 @@ import org.seasar.extension.jdbc.SqlLogRegistry;
  */
 public class SqlLogRegistryImpl implements SqlLogRegistry {
 
+    private static final int DEFAULT_LIMIT_SIZE = 3;
+
     private int limitSize;
 
     private ThreadLocal threadList = new ThreadLocal() {
@@ -34,6 +36,14 @@ public class SqlLogRegistryImpl implements SqlLogRegistry {
             return new LinkedList();
         }
     };
+
+    /**
+     * デフォルトの上限サイズを使用してインスタンスを構築します。
+     * 
+     */
+    public SqlLogRegistryImpl() {
+        this(DEFAULT_LIMIT_SIZE);
+    }
 
     /**
      * 上限サイズを指定してインスタンスを構築します。
