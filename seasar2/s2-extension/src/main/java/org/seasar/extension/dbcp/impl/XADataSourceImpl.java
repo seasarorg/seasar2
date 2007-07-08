@@ -24,66 +24,126 @@ import java.util.Properties;
 import javax.sql.XAConnection;
 import javax.sql.XADataSource;
 
-import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.DriverManagerUtil;
 import org.seasar.framework.util.StringUtil;
 
+/**
+ * {@link XADataSource}の実装です。
+ * 
+ * @author higa
+ * 
+ */
 public class XADataSourceImpl implements XADataSource {
 
-    private String driverClassName_;
+    private String driverClassName;
 
-    private String url_;
+    private String url;
 
-    private String user_;
+    private String user;
 
-    private String password_;
+    private String password;
 
-    private Properties properties_ = new Properties();
+    private Properties properties = new Properties();
 
+    /**
+     * {@link XADataSourceImpl}を作成します。
+     */
     public XADataSourceImpl() {
     }
 
+    /**
+     * ドライバクラス名を返します。
+     * 
+     * @return ドライバクラス名
+     */
     public String getDriverClassName() {
-        return driverClassName_;
+        return driverClassName;
     }
 
+    /**
+     * ドライバクラス名を設定します。
+     * 
+     * @param driverClassName
+     *            ドライバクラス名
+     */
     public void setDriverClassName(String driverClassName) {
-        driverClassName_ = driverClassName;
+        this.driverClassName = driverClassName;
         if (driverClassName != null && driverClassName.length() > 0) {
             DriverManagerUtil.registerDriver(driverClassName);
         }
     }
 
+    /**
+     * URLを返します。
+     * 
+     * @return URL
+     */
     public String getURL() {
-        return url_;
+        return url;
     }
 
+    /**
+     * URLを設定します。
+     * 
+     * @param url
+     *            URL
+     */
     public void setURL(String url) {
-        url_ = url;
+        this.url = url;
     }
 
+    /**
+     * ユーザを返します。
+     * 
+     * @return ユーザ
+     */
     public String getUser() {
-        return user_;
+        return user;
     }
 
+    /**
+     * ユーザを設定します。
+     * 
+     * @param user
+     *            ユーザ
+     */
     public void setUser(String user) {
-        user_ = user;
+        this.user = user;
     }
 
+    /**
+     * パスワードを返します。
+     * 
+     * @return パスワード
+     */
     public String getPassword() {
-        return password_;
+        return password;
     }
 
+    /**
+     * パスワードを設定します。
+     * 
+     * @param password
+     *            パスワード
+     */
     public void setPassword(String password) {
-        password_ = password;
+        this.password = password;
     }
 
+    /**
+     * プロパティを追加します。
+     * 
+     * @param name
+     *            プロパティ名
+     * @param value
+     *            値
+     */
     public void addProperty(String name, String value) {
-        properties_.put(name, value);
+        properties.put(name, value);
     }
 
     public XAConnection getXAConnection() throws SQLException {
-        return getXAConnection(user_, password_);
+        return getXAConnection(user, password);
     }
 
     public XAConnection getXAConnection(String user, String password)
@@ -91,15 +151,15 @@ public class XADataSourceImpl implements XADataSource {
 
         Connection con = null;
         if (StringUtil.isEmpty(user)) {
-            con = DriverManager.getConnection(url_);
-        } else if (properties_.isEmpty()) {
-            con = DriverManager.getConnection(url_, user, password);
+            con = DriverManager.getConnection(url);
+        } else if (properties.isEmpty()) {
+            con = DriverManager.getConnection(url, user, password);
         } else {
             Properties info = new Properties();
-            info.putAll(properties_);
+            info.putAll(properties);
             info.put("user", user);
             info.put("password", password);
-            con = DriverManager.getConnection(url_, info);
+            con = DriverManager.getConnection(url, info);
         }
         return new XAConnectionImpl(con);
     }

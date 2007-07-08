@@ -18,24 +18,68 @@ package org.seasar.extension.dbcp;
 import java.sql.SQLException;
 
 /**
+ * コネクションプーリングのためのインターフェースです。
+ * 
  * @author higa
  * 
  */
 public interface ConnectionPool {
 
-    public ConnectionWrapper checkOut() throws SQLException;
+    /**
+     * コネクションを取り出します。
+     * 
+     * @return コネクション
+     * @throws SQLException
+     *             SQL例外が発生した場合
+     */
+    ConnectionWrapper checkOut() throws SQLException;
 
-    public void checkIn(ConnectionWrapper connectionWrapper);
+    /**
+     * コネクションを戻します。
+     * 
+     * @param connectionWrapper
+     *            コネクション
+     */
+    void checkIn(ConnectionWrapper connectionWrapper);
 
-    public void release(ConnectionWrapper connectionWrapper);
+    /**
+     * コネクションを解放します。
+     * 
+     * @param connectionWrapper
+     *            コネクション
+     */
+    void release(ConnectionWrapper connectionWrapper);
 
-    public void close();
+    /**
+     * プールしているすべてのコネクションを開放します。
+     */
+    void close();
 
-    public int getActivePoolSize();
+    /**
+     * トランザクション外でアクティブなコネクションの数を返します。
+     * 
+     * @return トランザクション外でアクティブなコネクションの数
+     */
+    int getActivePoolSize();
 
-    public int getTxActivePoolSize();
+    /**
+     * トランザクション中でアクティブなコネクションの数を返します。
+     * 
+     * @return トランザクション中でアクティブなコネクションの数
+     */
+    int getTxActivePoolSize();
 
-    public int getFreePoolSize();
+    /**
+     * プーリングされているコネクションの数を返します。
+     * 
+     * @return プーリングされているコネクションの数
+     */
+    int getFreePoolSize();
 
-    public int getMaxPoolSize();
+    /**
+     * プーリング可能な上限を返します。
+     * 
+     * @return プーリング可能な上限
+     */
+    int getMaxPoolSize();
 }

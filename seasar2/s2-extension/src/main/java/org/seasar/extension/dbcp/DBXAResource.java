@@ -20,10 +20,17 @@ import java.sql.Connection;
 import javax.transaction.xa.XAResource;
 
 /**
+ * データベース用の {@link XAResource}です。
+ * 
  * @author higa
  * 
  */
 public interface DBXAResource extends XAResource {
 
+    /**
+     * コネクションを返します。
+     * 
+     * @return コネクション
+     */
     public Connection getConnection();
 }

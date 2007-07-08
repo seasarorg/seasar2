@@ -24,44 +24,56 @@ import javax.sql.ConnectionEventListener;
 import javax.sql.XAConnection;
 import javax.transaction.xa.XAResource;
 
+/**
+ * {@link XAConnection}の実装です。
+ * 
+ * @author higa
+ * 
+ */
 public class XAConnectionImpl implements XAConnection {
 
-    private Connection connection_;
+    private Connection connection;
 
-    private XAResource xaResource_;
+    private XAResource xaResource;
 
-    private List _listeners = new ArrayList();
+    private List listeners = new ArrayList();
 
+    /**
+     * {@link XAConnectionImpl}を作成します。
+     * 
+     * @param connection
+     *            コネクション
+     */
     public XAConnectionImpl(Connection connection) {
-        connection_ = connection;
-        xaResource_ = new DBXAResourceImpl(connection);
+        this.connection = connection;
+        this.xaResource = new DBXAResourceImpl(connection);
     }
 
     public XAResource getXAResource() {
-        return xaResource_;
+        return xaResource;
     }
 
     public Connection getConnection() throws SQLException {
-        return connection_;
+        return connection;
     }
 
     public void close() throws SQLException {
-        if (connection_ == null) {
+        if (connection == null) {
             return;
         }
-        if (!connection_.isClosed()) {
-            connection_.close();
+        if (!connection.isClosed()) {
+            connection.close();
         }
-        connection_ = null;
+        connection = null;
     }
 
     public synchronized void addConnectionEventListener(
             final ConnectionEventListener listener) {
-        _listeners.add(listener);
+        listeners.add(listener);
     }
 
     public synchronized void removeConnectionEventListener(
             final ConnectionEventListener listener) {
-        _listeners.remove(listener);
+        listeners.remove(listener);
     }
 }

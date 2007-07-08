@@ -22,22 +22,57 @@ import javax.sql.XAConnection;
 import javax.transaction.xa.XAResource;
 
 /**
+ * コネクションをラップするためのインターフェースです。 {@link ConnectionPool}で管理するのはこのインターフェースのオブジェクトです。
+ * 
  * @author higa
  * 
  */
 public interface ConnectionWrapper extends Connection {
 
-    public void closeReally();
+    /**
+     * 本当にクローズします。 {@link Connection#close()}を呼び出すとプールに返るだけで実際にはクローズしません。
+     */
+    void closeReally();
 
-    public void release() throws SQLException;
+    /**
+     * 解放します。
+     * 
+     * @throws SQLException
+     *             SQL例外が発生した場合
+     */
+    void release() throws SQLException;
 
-    public void init(boolean localTx);
+    /**
+     * 初期化します。
+     * 
+     * @param localTx
+     *            トランザクション中かどうか
+     */
+    void init(boolean localTx);
 
-    public void cleanup();
+    /**
+     * クリーンアップします。
+     */
+    void cleanup();
 
-    public Connection getPhysicalConnection();
+    /**
+     * 物理的なコネクションを返します。
+     * 
+     * @return 物理的なコネクション
+     */
+    Connection getPhysicalConnection();
 
-    public XAResource getXAResource();
+    /**
+     * XAリソースを返します。
+     * 
+     * @return XAリソース
+     */
+    XAResource getXAResource();
 
-    public XAConnection getXAConnection();
+    /**
+     * XAコネクションを返します。
+     * 
+     * @return XAコネクション
+     */
+    XAConnection getXAConnection();
 }

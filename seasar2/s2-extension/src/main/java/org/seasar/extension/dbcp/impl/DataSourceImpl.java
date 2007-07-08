@@ -25,26 +25,43 @@ import javax.sql.DataSource;
 import org.seasar.extension.dbcp.ConnectionPool;
 import org.seasar.framework.log.Logger;
 
+/**
+ * {@link DataSource}の実装です。
+ * 
+ * @author higa
+ * 
+ */
 public class DataSourceImpl implements DataSource, Serializable {
 
     static final long serialVersionUID = 1L;
 
-    private static final Logger logger_ = Logger
+    private static final Logger logger = Logger
             .getLogger(DataSourceImpl.class);
 
-    private ConnectionPool connectionPool_;
+    private ConnectionPool connectionPool;
 
+    /**
+     * {@link DataSourceImpl}を作成します。
+     * 
+     * @param connectionPool
+     *            コネクションプール
+     */
     public DataSourceImpl(ConnectionPool connectionPool) {
-        connectionPool_ = connectionPool;
+        this.connectionPool = connectionPool;
     }
 
+    /**
+     * コネクションプールを返します。
+     * 
+     * @return コネクションプール
+     */
     public ConnectionPool getConnectionPool() {
-        return connectionPool_;
+        return connectionPool;
     }
 
     public Connection getConnection() throws SQLException {
-        Connection con = connectionPool_.checkOut();
-        logger_.log("DSSR0007", null);
+        Connection con = connectionPool.checkOut();
+        logger.log("DSSR0007", null);
         return con;
     }
 

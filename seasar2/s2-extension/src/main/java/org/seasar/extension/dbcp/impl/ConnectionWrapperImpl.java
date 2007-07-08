@@ -34,6 +34,12 @@ import org.seasar.extension.jdbc.impl.PreparedStatementWrapper;
 import org.seasar.framework.exception.SSQLException;
 import org.seasar.framework.log.Logger;
 
+/**
+ * {@link ConnectionWrapper}の実装クラスです。
+ * 
+ * @author higa
+ * 
+ */
 public class ConnectionWrapperImpl implements ConnectionWrapper {
 
     private static final Logger logger_ = Logger
@@ -51,6 +57,18 @@ public class ConnectionWrapperImpl implements ConnectionWrapper {
 
     private boolean localTx_;
 
+    /**
+     * {@link ConnectionWrapperImpl}を作成します。
+     * 
+     * @param xaConnection
+     *            XAコネクション
+     * @param connectionPool
+     *            コネクションプール
+     * @param localTx
+     *            トランザクション中かどうか
+     * @throws SQLException
+     *             SQL例外が発生した場合
+     */
     public ConnectionWrapperImpl(final XAConnection xaConnection,
             final ConnectionPool connectionPool, final boolean localTx)
             throws SQLException {

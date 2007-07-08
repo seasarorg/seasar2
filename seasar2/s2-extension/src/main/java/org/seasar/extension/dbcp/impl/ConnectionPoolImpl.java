@@ -39,112 +39,202 @@ import org.seasar.framework.util.SLinkedList;
 import org.seasar.framework.util.TransactionManagerUtil;
 import org.seasar.framework.util.TransactionUtil;
 
+/**
+ * {@link ConnectionPool}の実装クラスです。
+ * 
+ * @author higa
+ * 
+ */
 public class ConnectionPoolImpl implements ConnectionPool, Synchronization {
 
+    /**
+     * readonly用のBindingアノテーションです。
+     */
     public static final String readOnly_BINDING = "bindingType=may";
 
+    /**
+     * transactionIsolationLevel用のBindingアノテーションです。
+     */
     public static final String transactionIsolationLevel_BINDING = "bindingType=may";
 
+    /**
+     * デフォルトのトランザクション分離レベルです。
+     */
     public static final int DEFAULT_TRANSACTION_ISOLATION_LEVEL = -1;
 
-    private static Logger logger_ = Logger.getLogger(ConnectionPoolImpl.class);
+    private static Logger logger = Logger.getLogger(ConnectionPoolImpl.class);
 
-    private XADataSource xaDataSource_;
+    private XADataSource xaDataSource;
 
-    private TransactionManager transactionManager_;
+    private TransactionManager transactionManager;
 
-    private int timeout_ = 600;
+    private int timeout = 600;
 
-    private int maxPoolSize_ = 10;
+    private int maxPoolSize = 10;
 
-    private boolean allowLocalTx_ = true;
+    private boolean allowLocalTx = true;
 
-    private boolean readOnly_ = false;
+    private boolean readOnly = false;
 
-    private int transactionIsolationLevel_ = DEFAULT_TRANSACTION_ISOLATION_LEVEL;
+    private int transactionIsolationLevel = DEFAULT_TRANSACTION_ISOLATION_LEVEL;
 
-    private Set activePool_ = new HashSet();
+    private Set activePool = new HashSet();
 
-    private Map txActivePool_ = new HashMap();
+    private Map txActivePool = new HashMap();
 
-    private SLinkedList freePool_ = new SLinkedList();
+    private SLinkedList freePool = new SLinkedList();
 
-    private TimeoutTask timeoutTask_;
+    private TimeoutTask timeoutTask;
 
+    /**
+     * {@link ConnectionPoolImpl}を作成します。
+     */
     public ConnectionPoolImpl() {
-        timeoutTask_ = TimeoutManager.getInstance().addTimeoutTarget(
+        timeoutTask = TimeoutManager.getInstance().addTimeoutTarget(
                 new TimeoutTarget() {
                     public void expired() {
                     }
                 }, Integer.MAX_VALUE, true);
     }
 
+    /**
+     * XAデータソースを返します。
+     * 
+     * @return XAデータソース
+     */
     public XADataSource getXADataSource() {
-        return xaDataSource_;
+        return xaDataSource;
     }
 
+    /**
+     * XAデータソースを設定します。
+     * 
+     * @param xaDataSource
+     *            XAデータソース
+     */
     public void setXADataSource(XADataSource xaDataSource) {
-        xaDataSource_ = xaDataSource;
+        this.xaDataSource = xaDataSource;
     }
 
+    /**
+     * トランザクションマネージャを返します。
+     * 
+     * @return トランザクションマネージャ
+     */
     public TransactionManager getTransactionManager() {
-        return transactionManager_;
+        return transactionManager;
     }
 
+    /**
+     * トランザクションマネージャを設定します。
+     * 
+     * @param transactionManager
+     *            トランザクションマネージャ
+     */
     public void setTransactionManager(TransactionManager transactionManager) {
-        transactionManager_ = transactionManager;
+        this.transactionManager = transactionManager;
     }
 
+    /**
+     * タイムアウトを返します。
+     * 
+     * @return タイムアウト
+     */
     public int getTimeout() {
-        return timeout_;
+        return timeout;
     }
 
+    /**
+     * タイムアウトを設定します。
+     * 
+     * @param timeout
+     *            タイムアウト
+     */
     public void setTimeout(int timeout) {
-        timeout_ = timeout;
+        this.timeout = timeout;
     }
 
     public int getMaxPoolSize() {
-        return maxPoolSize_;
+        return maxPoolSize;
     }
 
+    /**
+     * プーリング可能な上限を設定します。
+     * 
+     * @param maxPoolSize
+     *            プーリング可能な上限
+     */
     public void setMaxPoolSize(int maxPoolSize) {
-        maxPoolSize_ = maxPoolSize;
+        this.maxPoolSize = maxPoolSize;
     }
 
+    /**
+     * トランザクション外でコネクションの取得を許すかどうかを返します。
+     * 
+     * @return トランザクション外でコネクションの取得を許すかどうか
+     */
     public boolean isAllowLocalTx() {
-        return allowLocalTx_;
+        return allowLocalTx;
     }
 
+    /**
+     * トランザクション外でコネクションの取得を許すかどうかを設定します。
+     * 
+     * @param allowLocalTx
+     *            トランザクション外でコネクションの取得を許すかどうか
+     */
     public void setAllowLocalTx(boolean allowLocalTx) {
-        allowLocalTx_ = allowLocalTx;
+        this.allowLocalTx = allowLocalTx;
     }
 
+    /**
+     * 読み取り専用かどうかを返します。
+     * 
+     * @return 読み取り専用かどうか
+     */
     public boolean isReadOnly() {
-        return readOnly_;
+        return readOnly;
     }
 
+    /**
+     * 読み取り専用かどうかを設定します。
+     * 
+     * @param readOnly
+     *            読み取り専用かどうか
+     */
     public void setReadOnly(boolean readOnly) {
-        readOnly_ = readOnly;
+        this.readOnly = readOnly;
     }
 
+    /**
+     * トランザクション分離レベルを設定します。
+     * 
+     * @return トランザクション分離レベル
+     */
     public int getTransactionIsolationLevel() {
-        return transactionIsolationLevel_;
+        return transactionIsolationLevel;
     }
 
+    /**
+     * トランザクション分離レベルを設定します。
+     * 
+     * @param transactionIsolationLevel
+     *            トランザクション分離レベル
+     */
     public void setTransactionIsolationLevel(int transactionIsolationLevel) {
-        transactionIsolationLevel_ = transactionIsolationLevel;
+        this.transactionIsolationLevel = transactionIsolationLevel;
     }
 
     public int getActivePoolSize() {
-        return activePool_.size();
+        return activePool.size();
     }
 
     public int getTxActivePoolSize() {
-        return txActivePool_.size();
+        return txActivePool.size();
     }
 
     public int getFreePoolSize() {
-        return freePool_.size();
+        return freePool.size();
     }
 
     public synchronized ConnectionWrapper checkOut() throws SQLException {
@@ -177,26 +267,26 @@ public class ConnectionPoolImpl implements ConnectionPool, Synchronization {
         } else {
             setConnectionActivePool(con);
         }
-        con.setReadOnly(readOnly_);
-        if (transactionIsolationLevel_ != DEFAULT_TRANSACTION_ISOLATION_LEVEL) {
-            con.setTransactionIsolation(transactionIsolationLevel_);
+        con.setReadOnly(readOnly);
+        if (transactionIsolationLevel != DEFAULT_TRANSACTION_ISOLATION_LEVEL) {
+            con.setTransactionIsolation(transactionIsolationLevel);
         }
         return con;
     }
 
     private Transaction getTransaction() {
-        return TransactionManagerUtil.getTransaction(transactionManager_);
+        return TransactionManagerUtil.getTransaction(transactionManager);
     }
 
     private ConnectionWrapper getConnectionTxActivePool(Transaction tx) {
-        return (ConnectionWrapper) txActivePool_.get(tx);
+        return (ConnectionWrapper) txActivePool.get(tx);
     }
 
     private ConnectionWrapper checkOutFreePool() {
-        if (freePool_.isEmpty()) {
+        if (freePool.isEmpty()) {
             return null;
         }
-        FreeItem item = (FreeItem) freePool_.removeLast();
+        FreeItem item = (FreeItem) freePool.removeLast();
         ConnectionWrapper con = item.getConnection();
         item.destroy();
         return con;
@@ -204,34 +294,34 @@ public class ConnectionPoolImpl implements ConnectionPool, Synchronization {
 
     private ConnectionWrapper createConnection(boolean localTx)
             throws SQLException {
-        ConnectionWrapper con = new ConnectionWrapperImpl(xaDataSource_
+        ConnectionWrapper con = new ConnectionWrapperImpl(xaDataSource
                 .getXAConnection(), this, localTx);
-        logger_.log("DSSR0006", null);
+        logger.log("DSSR0006", null);
         return con;
     }
 
     private void setConnectionTxActivePool(Transaction tx,
             ConnectionWrapper connection) {
 
-        txActivePool_.put(tx, connection);
+        txActivePool.put(tx, connection);
     }
 
     private void setConnectionActivePool(ConnectionWrapper connection) {
-        activePool_.add(connection);
+        activePool.add(connection);
     }
 
     public synchronized void release(ConnectionWrapper connection) {
-        activePool_.remove(connection);
+        activePool.remove(connection);
         Transaction tx = getTransaction();
         if (tx != null) {
-            txActivePool_.remove(tx);
+            txActivePool.remove(tx);
         }
         connection.closeReally();
         notify();
     }
 
     public synchronized void checkIn(ConnectionWrapper connection) {
-        activePool_.remove(connection);
+        activePool.remove(connection);
         connection.cleanup();
         if (getMaxPoolSize() > 0) {
             checkInFreePool(connection);
@@ -242,7 +332,7 @@ public class ConnectionPoolImpl implements ConnectionPool, Synchronization {
     }
 
     private void checkInFreePool(ConnectionWrapper connection) {
-        freePool_.addLast(new FreeItem(connection));
+        freePool.addLast(new FreeItem(connection));
     }
 
     public void afterCompletion(int status) {
@@ -268,31 +358,31 @@ public class ConnectionPoolImpl implements ConnectionPool, Synchronization {
     }
 
     private ConnectionWrapper checkOutTxPool(Transaction tx) {
-        return (ConnectionWrapper) txActivePool_.remove(tx);
+        return (ConnectionWrapper) txActivePool.remove(tx);
     }
 
     public final void beforeCompletion() {
     }
 
     public final synchronized void close() {
-        for (SLinkedList.Entry e = freePool_.getFirstEntry(); e != null; e = e
+        for (SLinkedList.Entry e = freePool.getFirstEntry(); e != null; e = e
                 .getNext()) {
             FreeItem item = (FreeItem) e.getElement();
             item.getConnection().closeReally();
             item.destroy();
         }
-        freePool_.clear();
-        for (Iterator i = txActivePool_.values().iterator(); i.hasNext();) {
+        freePool.clear();
+        for (Iterator i = txActivePool.values().iterator(); i.hasNext();) {
             ConnectionWrapper con = (ConnectionWrapper) i.next();
             con.closeReally();
         }
-        txActivePool_.clear();
-        for (Iterator i = activePool_.iterator(); i.hasNext();) {
+        txActivePool.clear();
+        for (Iterator i = activePool.iterator(); i.hasNext();) {
             ConnectionWrapper con = (ConnectionWrapper) i.next();
             con.closeReally();
         }
-        activePool_.clear();
-        timeoutTask_.cancel();
+        activePool.clear();
+        timeoutTask.cancel();
     }
 
     private class FreeItem implements TimeoutTarget {
@@ -304,16 +394,21 @@ public class ConnectionPoolImpl implements ConnectionPool, Synchronization {
         FreeItem(ConnectionWrapper connectionWrapper) {
             connectionWrapper_ = connectionWrapper;
             timeoutTask_ = TimeoutManager.getInstance().addTimeoutTarget(this,
-                    timeout_, false);
+                    timeout, false);
         }
 
+        /**
+         * コネクションを返します。
+         * 
+         * @return コネクション
+         */
         public ConnectionWrapper getConnection() {
             return connectionWrapper_;
         }
 
         public void expired() {
             synchronized (ConnectionPoolImpl.this) {
-                freePool_.remove(this);
+                freePool.remove(this);
             }
             synchronized (this) {
                 if (timeoutTask_ != null) {
@@ -327,6 +422,9 @@ public class ConnectionPoolImpl implements ConnectionPool, Synchronization {
             }
         }
 
+        /**
+         * 破棄します。
+         */
         public synchronized void destroy() {
             if (timeoutTask_ != null) {
                 timeoutTask_.cancel();

@@ -25,22 +25,34 @@ import org.seasar.extension.dbcp.DBXAResource;
 import org.seasar.extension.jta.xa.DefaultXAResource;
 import org.seasar.framework.exception.SXAException;
 
+/**
+ * {@link DBXAResource}の実装クラスです。
+ * 
+ * @author higa
+ * 
+ */
 public class DBXAResourceImpl extends DefaultXAResource implements DBXAResource {
 
-    private Connection connection_;
+    private Connection connection;
 
+    /**
+     * {@link DBXAResourceImpl}を作成します。
+     * 
+     * @param connection
+     *            コネクション
+     */
     public DBXAResourceImpl(Connection connection) {
-        connection_ = connection;
+        this.connection = connection;
     }
 
     public Connection getConnection() {
-        return connection_;
+        return connection;
     }
 
     protected void doBegin(Xid xid) throws XAException {
         try {
-            if (connection_.getAutoCommit()) {
-                connection_.setAutoCommit(false);
+            if (connection.getAutoCommit()) {
+                connection.setAutoCommit(false);
             }
         } catch (SQLException ex) {
             throw new SXAException(ex);
@@ -49,8 +61,8 @@ public class DBXAResourceImpl extends DefaultXAResource implements DBXAResource 
 
     protected void doCommit(Xid xid, boolean onePhase) throws XAException {
         try {
-            connection_.commit();
-            connection_.setAutoCommit(true);
+            connection.commit();
+            connection.setAutoCommit(true);
         } catch (SQLException ex) {
             throw new SXAException(ex);
         }
@@ -58,7 +70,7 @@ public class DBXAResourceImpl extends DefaultXAResource implements DBXAResource 
 
     protected int doPrepare(Xid xid) throws XAException {
         try {
-            if (connection_.isClosed()) {
+            if (connection.isClosed()) {
                 return XA_RDONLY;
             }
             return XA_OK;
@@ -69,8 +81,8 @@ public class DBXAResourceImpl extends DefaultXAResource implements DBXAResource 
 
     protected void doRollback(Xid xid) throws XAException {
         try {
-            connection_.rollback();
-            connection_.setAutoCommit(true);
+            connection.rollback();
+            connection.setAutoCommit(true);
         } catch (SQLException ex) {
             throw new SXAException(ex);
         }
