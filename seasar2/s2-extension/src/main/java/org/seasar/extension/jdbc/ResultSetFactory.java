@@ -19,10 +19,19 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 /**
+ * 結果セットのファクトリです。
+ * 
  * @author higa
  * 
  */
 public interface ResultSetFactory {
 
-    public ResultSet createResultSet(PreparedStatement ps);
+    /**
+     * 結果セットを作成します。
+     * 
+     * @param ps
+     *            準備された文
+     * @return 結果セット
+     */
+    ResultSet createResultSet(PreparedStatement ps);
 }

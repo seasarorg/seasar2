@@ -18,13 +18,34 @@ package org.seasar.extension.jdbc;
 import org.seasar.framework.exception.SQLRuntimeException;
 
 /**
+ * 検索処理のためのインターフェースです。
+ * 
  * @author higa
  * 
  */
 public interface SelectHandler {
 
-    public Object execute(Object[] args) throws SQLRuntimeException;
+    /**
+     * 検索を行ないます。
+     * 
+     * @param args
+     *            引数
+     * @return 検索結果
+     * @throws SQLRuntimeException
+     *             SQL例外が発生した場合
+     */
+    Object execute(Object[] args) throws SQLRuntimeException;
 
-    public Object execute(Object[] args, Class[] argTypes)
-            throws SQLRuntimeException;
+    /**
+     * 検索を行ないます。
+     * 
+     * @param args
+     *            引数
+     * @param argTypes
+     *            引数の型
+     * @return 検索結果
+     * @throws SQLRuntimeException
+     *             SQL例外が発生した場合
+     */
+    Object execute(Object[] args, Class[] argTypes) throws SQLRuntimeException;
 }

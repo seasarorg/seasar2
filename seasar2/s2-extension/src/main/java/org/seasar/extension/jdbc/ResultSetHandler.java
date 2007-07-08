@@ -19,10 +19,21 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
+ * 結果セットを処理するインターフェースです。
+ * 
  * @author higa
  * 
  */
 public interface ResultSetHandler {
 
-    public Object handle(ResultSet resultSet) throws SQLException;
+    /**
+     * 結果セットを処理します。
+     * 
+     * @param resultSet
+     *            結果セット
+     * @return 処理した結果
+     * @throws SQLException
+     *             SQL例外が発生した場合
+     */
+    Object handle(ResultSet resultSet) throws SQLException;
 }

@@ -20,12 +20,34 @@ import java.util.List;
 import org.seasar.framework.exception.SQLRuntimeException;
 
 /**
+ * バッチ更新のためのインターフェースです。
+ * 
  * @author higa
  * 
  */
 public interface BatchHandler {
 
-    public int execute(List list) throws SQLRuntimeException;
+    /**
+     * 複数のデータをバッチ更新します。
+     * 
+     * @param list
+     *            複数のデータ
+     * @return 更新したデータの数
+     * @throws SQLRuntimeException
+     *             SQL例外が発生した場合
+     */
+    int execute(List list) throws SQLRuntimeException;
 
-    public int execute(List list, Class[] argTypes) throws SQLRuntimeException;
+    /**
+     * 複数のデータをバッチ更新します。
+     * 
+     * @param list
+     *            複数のデータ
+     * @param argTypes
+     *            引数のタイプ
+     * @return 更新したデータの数
+     * @throws SQLRuntimeException
+     *             SQL例外が発生した場合
+     */
+    int execute(List list, Class[] argTypes) throws SQLRuntimeException;
 }

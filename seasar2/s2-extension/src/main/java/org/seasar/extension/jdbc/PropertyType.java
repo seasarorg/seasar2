@@ -18,27 +18,76 @@ package org.seasar.extension.jdbc;
 import org.seasar.framework.beans.PropertyDesc;
 
 /**
+ * プロパティの型をあらわすインターフェースです。
+ * 
  * @author higa
  * 
  */
 public interface PropertyType {
 
-    public PropertyDesc getPropertyDesc();
+    /**
+     * プロパティ記述を返します。
+     * 
+     * @return プロパティ記述
+     */
+    PropertyDesc getPropertyDesc();
 
-    public ValueType getValueType();
+    /**
+     * JDBC用の型を返します。
+     * 
+     * @return JDBC用の型
+     */
+    ValueType getValueType();
 
-    public String getPropertyName();
+    /**
+     * プロパティ名を返します。
+     * 
+     * @return プロパティ名
+     */
+    String getPropertyName();
 
-    public String getColumnName();
+    /**
+     * カラム名を返します。
+     * 
+     * @return カラム名
+     */
+    String getColumnName();
 
-    public void setColumnName(String columnName);
+    /**
+     * カラム名を設定します。
+     * 
+     * @param columnName
+     *            カラム名
+     */
+    void setColumnName(String columnName);
 
-    public boolean isPrimaryKey();
+    /**
+     * プライマリーキーかどうかを返します。
+     * 
+     * @return プライマリーキーかどうか
+     */
+    boolean isPrimaryKey();
 
-    public void setPrimaryKey(boolean primaryKey);
+    /**
+     * プライマリーキーかどうかを設定します。
+     * 
+     * @param primaryKey
+     *            プライマリーキーかどうか
+     */
+    void setPrimaryKey(boolean primaryKey);
 
-    public boolean isPersistent();
+    /**
+     * 永続されるかどうかを返します。
+     * 
+     * @return 永続されるかどうか
+     */
+    boolean isPersistent();
 
-    public void setPersistent(boolean persistent);
-
+    /**
+     * 永続されるかどうかを設定します。
+     * 
+     * @param persistent
+     *            永続されるかどうか
+     */
+    void setPersistent(boolean persistent);
 }

@@ -18,28 +18,48 @@ package org.seasar.extension.jdbc;
 import org.seasar.framework.exception.SRuntimeException;
 
 /**
+ * カラムが見つらない場合の例外です。
+ * 
  * @author higa
  * 
  */
 public final class ColumnNotFoundRuntimeException extends SRuntimeException {
 
-    private static final long serialVersionUID = -5447029001596658262L;
+    private static final long serialVersionUID = 0L;
 
-    private String tableName_;
+    private String tableName;
 
-    private String columnName_;
+    private String columnName;
 
+    /**
+     * {@link ColumnNotFoundRuntimeException}を作成します。
+     * 
+     * @param tableName
+     *            テーブル名
+     * @param columnName
+     *            カラム名
+     */
     public ColumnNotFoundRuntimeException(String tableName, String columnName) {
         super("ESSR0068", new Object[] { tableName, columnName });
-        tableName_ = tableName;
-        columnName_ = columnName;
+        this.tableName = tableName;
+        this.columnName = columnName;
     }
 
+    /**
+     * テーブル名を返します。
+     * 
+     * @return テーブル名
+     */
     public String getTableName() {
-        return tableName_;
+        return tableName;
     }
 
+    /**
+     * カラム名を返します。
+     * 
+     * @return カラム名
+     */
     public String getColumnName() {
-        return columnName_;
+        return columnName;
     }
 }
