@@ -15,7 +15,11 @@
  */
 package org.seasar.extension.jdbc.util;
 
+import java.sql.Types;
+
 /**
+ * データベースメタデータから取得したカラム情報を格納するクラスです。
+ * 
  * @author higa
  * 
  */
@@ -25,18 +29,42 @@ public class ColumnDesc {
 
     private int sqlType;
 
+    /**
+     * 名前を返します。
+     * 
+     * @return 名前
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * 名前を設定します。
+     * 
+     * @param name
+     *            名前
+     */
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * JDBCで定義されている型を返します。
+     * 
+     * @return JDBCで定義されている型
+     * @see Types
+     */
     public int getSqlType() {
         return sqlType;
     }
 
+    /**
+     * JDBCで定義されている型を設定します。
+     * 
+     * @param sqlType
+     *            JDBCで定義されている型
+     * @see Types
+     */
     public void setSqlType(int sqlType) {
         this.sqlType = sqlType;
     }

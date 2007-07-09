@@ -27,6 +27,8 @@ import org.seasar.framework.util.CaseInsensitiveMap;
 import org.seasar.framework.util.CaseInsensitiveSet;
 
 /**
+ * データベースメタデータ用のユーティリティです。
+ * 
  * @author higa
  * @author manhole
  */

@@ -19,6 +19,8 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 
 /**
+ * バインド変数用のユーティリティです。
+ * 
  * @author higa
  * 
  */
@@ -28,8 +30,11 @@ public final class BindVariableUtil {
     }
 
     /**
+     * バインド変数を文字列として返します。
+     * 
      * @param bindVariable
-     * @return
+     *            バインド変数
+     * @return バインド変数の文字列表現
      */
     public static String getBindVariableText(Object bindVariable) {
         if (bindVariable instanceof String) {

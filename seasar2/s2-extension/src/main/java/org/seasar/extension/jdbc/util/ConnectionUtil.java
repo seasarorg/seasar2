@@ -25,6 +25,8 @@ import java.sql.Statement;
 import org.seasar.framework.exception.SQLRuntimeException;
 
 /**
+ * {@link Connection}用のユーティリティです。
+ * 
  * @author higa
  * 
  */
@@ -33,7 +35,15 @@ public final class ConnectionUtil {
     private ConnectionUtil() {
     }
 
-    public static void close(Connection connection) {
+    /**
+     * コネクションを閉じます。
+     * 
+     * @param connection
+     *            コネクション
+     * @throws SQLRuntimeException
+     *             SQL例外が発生した場合
+     */
+    public static void close(Connection connection) throws SQLRuntimeException {
         if (connection == null) {
             return;
         }
@@ -44,7 +54,17 @@ public final class ConnectionUtil {
         }
     }
 
-    public static Statement createStatement(Connection connection) {
+    /**
+     * {@link Statement}を作成します。
+     * 
+     * @param connection
+     *            コネクション
+     * @return {@link Statement}
+     * @throws SQLRuntimeException
+     *             SQL例外が発生した場合
+     */
+    public static Statement createStatement(Connection connection)
+            throws SQLRuntimeException {
         try {
             return connection.createStatement();
         } catch (SQLException ex) {
@@ -52,8 +72,19 @@ public final class ConnectionUtil {
         }
     }
 
+    /**
+     * {@link PreparedStatement}を作成します。
+     * 
+     * @param connection
+     *            コネクション
+     * @param sql
+     *            SQL
+     * @return {@link PreparedStatement}
+     * @throws SQLRuntimeException
+     *             SQL例外が発生した場合
+     */
     public static PreparedStatement prepareStatement(Connection connection,
-            String sql) {
+            String sql) throws SQLRuntimeException {
 
         try {
             return connection.prepareStatement(sql);
@@ -62,8 +93,19 @@ public final class ConnectionUtil {
         }
     }
 
+    /**
+     * {@link CallableStatement}を作成します。
+     * 
+     * @param connection
+     *            コネクション
+     * @param sql
+     *            SQL
+     * @return {@link CallableStatement}
+     * @throws SQLRuntimeException
+     *             SQL例外が発生した場合
+     */
     public static CallableStatement prepareCall(Connection connection,
-            String sql) {
+            String sql) throws SQLRuntimeException {
 
         try {
             return connection.prepareCall(sql);
@@ -72,7 +114,17 @@ public final class ConnectionUtil {
         }
     }
 
-    public static DatabaseMetaData getMetaData(Connection connection) {
+    /**
+     * データベースメタデータを返します。
+     * 
+     * @param connection
+     *            コネクション
+     * @return データベースメタデータ
+     * @throws SQLRuntimeException
+     *             SQL例外が発生した場合
+     */
+    public static DatabaseMetaData getMetaData(Connection connection)
+            throws SQLRuntimeException {
         try {
             return connection.getMetaData();
         } catch (SQLException ex) {
