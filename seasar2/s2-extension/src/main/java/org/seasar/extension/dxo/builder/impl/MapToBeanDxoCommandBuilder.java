@@ -21,21 +21,15 @@ import java.util.Map;
 
 import org.seasar.extension.dxo.command.DxoCommand;
 import org.seasar.extension.dxo.command.impl.MapToBeanDxoCommand;
-import org.seasar.extension.dxo.converter.ConverterFactory;
 import org.seasar.extension.dxo.util.DxoUtil;
 import org.seasar.framework.util.MethodUtil;
 
 /**
- * @author koichik
+ * {@link Map}からBeanに変換するDxoのメソッドに応じた{@link DxoCommand}のインスタンスを生成するビルダです。
  * 
+ * @author koichik
  */
 public class MapToBeanDxoCommandBuilder extends AbstractDxoCommandBuilder {
-
-    protected ConverterFactory converterFactory;
-
-    public void setConverterFactory(final ConverterFactory converterFactory) {
-        this.converterFactory = converterFactory;
-    }
 
     public DxoCommand createDxoCommand(final Class dxoClass, final Method method) {
         final Class[] parameterTypes = method.getParameterTypes();

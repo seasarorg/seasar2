@@ -22,13 +22,29 @@ import org.seasar.extension.dxo.converter.Converter;
 import org.seasar.extension.dxo.converter.ConverterFactory;
 
 /**
- * @author koichik
+ * BeanからBeanに変換するコマンドです。
  * 
+ * @author koichik
  */
 public class BeanToBeanDxoCommand extends AbstractDxoCommand {
 
+    /** 変換先のクラスです。 */
     protected Class destClass;
 
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param dxoClass
+     *            Dxoのインターフェースまたはクラス
+     * @param method
+     *            Dxoのメソッド
+     * @param converterFactory
+     *            {@link Converter}のファクトリ
+     * @param annotationReader
+     *            {@link AnnotationReader}のファクトリ
+     * @param destClass
+     *            変換先のクラス
+     */
     public BeanToBeanDxoCommand(final Class dxoClass, final Method method,
             final ConverterFactory converterFactory,
             final AnnotationReader annotationReader, final Class destClass) {

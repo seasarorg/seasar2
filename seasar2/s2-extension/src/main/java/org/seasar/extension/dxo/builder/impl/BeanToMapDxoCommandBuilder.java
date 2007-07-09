@@ -24,11 +24,13 @@ import org.seasar.extension.dxo.command.impl.BeanToMapDxoCommand;
 import org.seasar.extension.dxo.util.DxoUtil;
 
 /**
- * @author koichik
+ * Beanから{@link Map}に変換するDxoのメソッドに応じた{@link DxoCommand}のインスタンスを生成するビルダです。
  * 
+ * @author koichik
  */
 public class BeanToMapDxoCommandBuilder extends AbstractDxoCommandBuilder {
 
+    /** 変換先として受け入れ可能なクラスの配列です。 */
     protected Class[] ACCEPTABLE_DEST_CLASSES = new Class[] { Map.class,
             Map[].class, List.class };
 

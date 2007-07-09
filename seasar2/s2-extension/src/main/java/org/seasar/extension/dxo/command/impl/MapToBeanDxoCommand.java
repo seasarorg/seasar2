@@ -21,14 +21,30 @@ import java.util.Map;
 
 import org.seasar.extension.dxo.annotation.AnnotationReader;
 import org.seasar.extension.dxo.converter.ConversionContext;
+import org.seasar.extension.dxo.converter.Converter;
 import org.seasar.extension.dxo.converter.ConverterFactory;
 
 /**
- * @author koichik
+ * {@link Map}からBeanに変換するコマンドです。
  * 
+ * @author koichik
  */
 public class MapToBeanDxoCommand extends BeanToBeanDxoCommand {
 
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param dxoClass
+     *            Dxoのインターフェースまたはクラス
+     * @param method
+     *            Dxoのメソッド
+     * @param converterFactory
+     *            {@link Converter}のファクトリ
+     * @param annotationReader
+     *            {@link AnnotationReader}のファクトリ
+     * @param destClass
+     *            変換先のクラス
+     */
     public MapToBeanDxoCommand(final Class dxoClass, final Method method,
             final ConverterFactory converterFactory,
             final AnnotationReader annotationReader, final Class destClass) {

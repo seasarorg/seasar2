@@ -16,11 +16,27 @@
 package org.seasar.extension.dxo.command;
 
 /**
+ * Dxoのメソッドに応じた変換を行うコマンドのインターフェースです。
+ * 
  * @author higa
  * @author koichik
  */
 public interface DxoCommand {
 
+    /**
+     * Dxoのメソッドに応じた変換を行います。
+     * <p>
+     * Dxoのメソッドは次の形式のいずれかになります。
+     * </p>
+     * <ul>
+     * <li><code><var>Dest convert(Src src)</var></code></li>
+     * <li><code><var>void convert(Src src, Dest dest)</var></code></li>
+     * </ul>
+     * 
+     * @param args
+     *            Dxoメソッドの引数の配列
+     * @return Dxoメソッドの戻り値を返します。
+     */
     Object execute(Object[] args);
 
 }

@@ -33,25 +33,56 @@ import org.seasar.framework.util.OgnlUtil;
 import org.seasar.framework.util.StringUtil;
 
 /**
- * @author koichik
+ * Beanから{@link Map}に変換するコマンドです。
  * 
+ * @author koichik
  */
 public class BeanToMapDxoCommand extends AbstractDxoCommand {
 
+    /** パーズ済みの変換ルール (OGNL式) です。 */
     protected Object parsedExpression;
 
+    /** 変換先の{@link Map}に<code>null</code>のマッピングを追加しない場合に<code>true</code>。 */
     protected boolean excludeNull;
 
+    /** 変換元Beanのプロパティの接頭辞です。 */
     protected String sourcePrefix;
 
+    /** {@link Map}の要素型です。Java5以降の場合のみ有効です。 */
     protected Class valueType;
 
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param dxoClass
+     *            Dxoのインターフェースまたはクラス
+     * @param method
+     *            Dxoのメソッド
+     * @param converterFactory
+     *            {@link Converter}のファクトリ
+     * @param annotationReader
+     *            {@link AnnotationReader}のファクトリ
+     */
     public BeanToMapDxoCommand(final Class dxoClass, final Method method,
             final ConverterFactory converterFactory,
             final AnnotationReader annotationReader) {
         this(dxoClass, method, converterFactory, annotationReader, null);
     }
 
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param dxoClass
+     *            Dxoのインターフェースまたはクラス
+     * @param method
+     *            Dxoのメソッド
+     * @param converterFactory
+     *            {@link Converter}のファクトリ
+     * @param annotationReader
+     *            {@link AnnotationReader}のファクトリ
+     * @param expression
+     *            変換ルールを表すOGNL式
+     */
     public BeanToMapDxoCommand(final Class dxoClass, final Method method,
             final ConverterFactory converterFactory,
             final AnnotationReader annotationReader, final String expression) {
@@ -89,6 +120,12 @@ public class BeanToMapDxoCommand extends AbstractDxoCommand {
         ((Map) dest).putAll((Map) convertScalar(source));
     }
 
+    /**
+     * {@link Map}から値が<code>null</code>のマッピングを取り除きます。
+     * 
+     * @param map
+     *            <code>null</code>のマッピングを取り除く{@link Map}
+     */
     protected void removeNullEntry(final Map map) {
         for (final Iterator it = map.entrySet().iterator(); it.hasNext();) {
             final Entry entry = (Entry) it.next();
@@ -98,6 +135,17 @@ public class BeanToMapDxoCommand extends AbstractDxoCommand {
         }
     }
 
+    /**
+     * 引数で渡された{@link Map}が持つマッピングの値を{@link #valueType}に変換したマッピングを持つ{@link Map}を作成して返します。
+     * <p>
+     * 変換元の{@link Map}は<code>Map&lt;String, Object&gt;</code>、 変換後の{@link Map}は<code>Map&lt;String, V&gt;です。
+     * ただし、<code>V</code>は{@link #valueType}です。
+     * </p>
+     * 
+     * @param from 変換元の{@link Map}
+     * @param context 変換コンテキスト
+     * @return 返還後の{@link Map}
+     */
     protected Map convertValueType(final Map from,
             final ConversionContext context) {
         final Map to = new LinkedHashMap();
@@ -120,6 +168,13 @@ public class BeanToMapDxoCommand extends AbstractDxoCommand {
         return Map.class;
     }
 
+    /**
+     * Beanのプロパティ名をキー、プロパティ値を値とする{@link Map}を表現するOGNL式を返します。
+     * 
+     * @param sourceType
+     *            変換元Beanの型
+     * @return Beanのプロパティ名をキー、プロパティ値を値とする{@link Map}
+     */
     protected String createConversionRule(final Class sourceType) {
         final StringBuffer buf = new StringBuffer(100);
         final BeanDesc beanDesc = BeanDescFactory.getBeanDesc(sourceType);
@@ -143,6 +198,17 @@ public class BeanToMapDxoCommand extends AbstractDxoCommand {
         return new String(buf);
     }
 
+    /**
+     * 変換元のプロパティに対応する変換後のプロパティ名を返します。
+     * <p>
+     * 変換元プロパティの接頭辞が指定されている場合は、変換元のプロパティ名から接頭辞を取り除いてデキャピタライズしたものが
+     * 変換後のプロパティ名となります。
+     * </p>
+     * 
+     * @param sourcePropertyName
+     *            変換元のプロパティ名
+     * @return 変換元のプロパティに対応する変換後のプロパティ名
+     */
     protected String toDestPropertyName(final String sourcePropertyName) {
         if (StringUtil.isEmpty(sourcePrefix)) {
             return sourcePropertyName;
@@ -153,4 +219,5 @@ public class BeanToMapDxoCommand extends AbstractDxoCommand {
         return StringUtil.decapitalize(sourcePropertyName
                 .substring(sourcePrefix.length()));
     }
+
 }

@@ -25,25 +25,44 @@ import org.seasar.extension.dxo.IllegalSignatureRuntimeException;
 import org.seasar.extension.dxo.annotation.AnnotationReader;
 import org.seasar.extension.dxo.command.DxoCommand;
 import org.seasar.extension.dxo.converter.ConversionContext;
+import org.seasar.extension.dxo.converter.Converter;
 import org.seasar.extension.dxo.converter.ConverterFactory;
 import org.seasar.extension.dxo.converter.impl.ConversionContextImpl;
 
 /**
- * @author koichik
+ * Dxoのメソッドに応じた変換を行うコマンドの抽象クラスです。
  * 
+ * @author koichik
  */
 public abstract class AbstractDxoCommand implements DxoCommand {
 
+    /** Dxoのインターフェースまたはクラス */
     protected Class dxoClass;
 
+    /** Dxoのメソッド */
     protected Method method;
 
+    /** {@link Converter}のファクトリです。 */
     protected ConverterFactory converterFactory;
 
+    /** {@link AnnotationReader}のファクトリです。 */
     protected AnnotationReader annotationReader;
 
+    /** 変換のヘルパです。 */
     protected ConversionHelper conversionHelper;
 
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param dxoClass
+     *            Dxoのインターフェースまたはクラス
+     * @param method
+     *            Dxoのメソッド
+     * @param converterFactory
+     *            {@link Converter}のファクトリ
+     * @param annotationReader
+     *            {@link AnnotationReader}のファクトリ
+     */
     public AbstractDxoCommand(final Class dxoClass, final Method method,
             final ConverterFactory converterFactory,
             final AnnotationReader annotationReader) {
@@ -58,21 +77,62 @@ public abstract class AbstractDxoCommand implements DxoCommand {
         return conversionHelper.convert(args);
     }
 
+    /**
+     * 単一のオブジェクトを変換して返します。
+     * 
+     * @param source
+     *            変換元のオブジェクト
+     * @return 変換した結果のオブジェクト
+     */
     protected abstract Object convertScalar(Object source);
 
+    /**
+     * 単一のオブジェクト<code>src</code>を<code>dest</code>に変換します。
+     * 
+     * @param source
+     *            変換元のオブジェクト
+     * @param dest
+     *            変換先のオブジェクト
+     */
     protected abstract void convertScalar(Object source, Object dest);
 
+    /**
+     * 変換先の要素の型を返します。
+     * 
+     * @return 変換先の要素の型
+     */
     protected abstract Class getDestElementType();
 
+    /**
+     * 変換先の要素型の配列を作成して返します。
+     * 
+     * @param length
+     *            配列の長さ
+     * @return 変換先の要素型の配列
+     */
     protected Object[] createArray(final int length) {
         return (Object[]) Array.newInstance(getDestElementType(), length);
     }
 
+    /**
+     * 変換コンテキストを作成して返します。
+     * 
+     * @param source
+     *            変換元のオブジェクト
+     * @return 変換コンテキスト
+     */
     protected ConversionContext createContext(final Object source) {
         return new ConversionContextImpl(dxoClass, method, converterFactory,
                 annotationReader, source);
     }
 
+    /**
+     * 変換ヘルパを作成して返します。
+     * 
+     * @param method
+     *            Dxoのメソッド
+     * @return 変換ヘルパ
+     */
     protected ConversionHelper getConversionHelper(final Method method) {
         final Class[] parameterTypes = method.getParameterTypes();
         final int parameterSize = parameterTypes.length;
@@ -104,10 +164,25 @@ public abstract class AbstractDxoCommand implements DxoCommand {
                 method);
     }
 
+    /**
+     * メソッドのシグネチャに応じて変換を行うヘルパのインターフェースです。
+     */
     public interface ConversionHelper {
+
+        /**
+         * 変換を行います。
+         * 
+         * @param args
+         *            Dxoメソッドの引数の配列
+         * @return Dxoメソッドの戻り値
+         */
         Object convert(Object[] args);
+
     }
 
+    /**
+     * スカラ値 (配列でも{@link List}でもない型) を変換するヘルパです。
+     */
     public class ScalarConversionHelper implements ConversionHelper {
         public Object convert(final Object[] args) {
             if (args.length == 1) {
@@ -119,6 +194,9 @@ public abstract class AbstractDxoCommand implements DxoCommand {
         }
     }
 
+    /**
+     * 配列から配列へ変換するヘルパです。
+     */
     public class ArrayToArrayConversionHelper implements ConversionHelper {
         public Object convert(final Object[] args) {
             final Object[] src = (Object[]) args[0];
@@ -131,6 +209,9 @@ public abstract class AbstractDxoCommand implements DxoCommand {
         }
     }
 
+    /**
+     * 配列から{@link List}へ変換するヘルパです。
+     */
     public class ArrayToListConversionHelper implements ConversionHelper {
         public Object convert(final Object[] args) {
             final Object[] src = (Object[]) args[0];
@@ -144,6 +225,9 @@ public abstract class AbstractDxoCommand implements DxoCommand {
         }
     }
 
+    /**
+     * {@link List}から配列へ変換するヘルパです。
+     */
     public class ListToArrayConversionHelper implements ConversionHelper {
         public Object convert(final Object[] args) {
             final List src = (List) args[0];
@@ -158,6 +242,9 @@ public abstract class AbstractDxoCommand implements DxoCommand {
         }
     }
 
+    /**
+     * {@link List}から{@link List}へ変換するヘルパです。
+     */
     public class ListToListConvertsionHelper implements ConversionHelper {
         public Object convert(final Object[] args) {
             final List source = (List) args[0];
@@ -170,4 +257,5 @@ public abstract class AbstractDxoCommand implements DxoCommand {
             return dest;
         }
     }
+
 }

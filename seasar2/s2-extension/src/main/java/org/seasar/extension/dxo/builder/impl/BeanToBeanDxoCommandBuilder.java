@@ -23,8 +23,9 @@ import org.seasar.extension.dxo.command.impl.BeanToBeanDxoCommand;
 import org.seasar.extension.dxo.util.DxoUtil;
 
 /**
- * @author koichik
+ * BeanからBeanに変換するDxoのメソッドに応じた{@link DxoCommand}のインスタンスを生成するビルダです。
  * 
+ * @author koichik
  */
 public class BeanToBeanDxoCommandBuilder extends AbstractDxoCommandBuilder {
 

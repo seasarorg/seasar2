@@ -20,11 +20,22 @@ import java.lang.reflect.Method;
 import org.seasar.extension.dxo.command.DxoCommand;
 
 /**
+ * Dxoのメソッドに応じた{@link DxoCommand}のインスタンスを生成するビルダのインタフェースです。
+ * 
  * @author higa
  * @author koichik
  */
 public interface DxoCommandBuilder {
 
+    /**
+     * 指定されたDxoのメソッドに応じた変換を行う{@link DxoCommand}のインスタンスを作成して返します。
+     * 
+     * @param dxoClass
+     *            Dxoのインターフェースまたはクラス
+     * @param method
+     *            Dxoのメソッド
+     * @return 指定されたDxoのメソッドに応じた変換を行う{@link DxoCommand}のインスタンス
+     */
     DxoCommand createDxoCommand(Class dxoClass, Method method);
 
 }
