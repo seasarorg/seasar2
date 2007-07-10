@@ -20,11 +20,19 @@ import java.lang.reflect.Method;
 import org.seasar.extension.dxo.command.DxoCommand;
 
 /**
+ * Dxoのメタデータを管理するクラスのインターフェースです。
  * 
  * @author koichik
  */
 public interface DxoMetadata {
 
+    /**
+     * Dxoのメソッドに対応する{@link Command}を返します。
+     * 
+     * @param method
+     *            Dxoのメソッド
+     * @return Dxoのメソッドに対応する{@link Command}
+     */
     DxoCommand getCommand(Method method);
 
 }

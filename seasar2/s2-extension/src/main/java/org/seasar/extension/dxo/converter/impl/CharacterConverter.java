@@ -18,6 +18,18 @@ package org.seasar.extension.dxo.converter.impl;
 import org.seasar.extension.dxo.converter.ConversionContext;
 
 /**
+ * 任意のオブジェクトから{@link Character}への変換を行うコンバータです。
+ * <p>
+ * 変換は次のように行われます。
+ * </p>
+ * <ul>
+ * <li>変換元のオブジェクトが{@link Character}なら、変換元をそのまま変換先とします。</li>
+ * <li>それ以外の場合は、<code>null</code>とします。</li>
+ * </ul>
+ * <p>
+ * <i>もうちょっと頑張ってもいいかも</i>
+ * </p>
+ * 
  * @author Satoshi Kimura
  * @author koichik
  */

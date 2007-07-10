@@ -16,6 +16,8 @@
 package org.seasar.extension.dxo.converter.impl;
 
 /**
+ * {@link Number 数}から{@link Byte}への変換を行うコンバータです。
+ * 
  * @author koichik
  * @author Satoshi Kimura
  */

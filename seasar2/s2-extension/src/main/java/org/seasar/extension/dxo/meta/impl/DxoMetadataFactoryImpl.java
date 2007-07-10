@@ -25,25 +25,41 @@ import org.seasar.framework.util.Disposable;
 import org.seasar.framework.util.DisposableUtil;
 
 /**
- * @author koichik
+ * Dxoのメタデータを生成するファクトリの実装クラスです。
  * 
+ * @author koichik
  */
 public class DxoMetadataFactoryImpl implements DxoMetadataFactory, Disposable {
 
+    /** インスタンスが初期化済みの状態なら<code>true</code>です。 */
     protected boolean initialized;
 
+    /** コマンドを構築するビルダの配列です。 */
     protected DxoCommandBuilder[] builders;
 
+    /** メタデータを保持するキャッシュです。 */
     protected final Map metadataCache = new HashMap();
 
+    /**
+     * インスタンスを構築します。
+     */
     public DxoMetadataFactoryImpl() {
         initialize();
     }
 
+    /**
+     * コマンドを構築するビルダの配列を設定します。
+     * 
+     * @param builders
+     *            コマンドを構築するビルダの配列
+     */
     public void setBuilders(final DxoCommandBuilder[] builders) {
         this.builders = builders;
     }
 
+    /**
+     * インスタンスを初期化します。
+     */
     public void initialize() {
         if (initialized) {
             return;
@@ -66,9 +82,17 @@ public class DxoMetadataFactoryImpl implements DxoMetadataFactory, Disposable {
         return createMetadata(dxoClass);
     }
 
+    /**
+     * Dxoの型に応じたメタデータを作成して返します。
+     * 
+     * @param dxoClass
+     *            Dxoの型
+     * @return Dxoの型に応じたメタデータ
+     */
     protected DxoMetadata createMetadata(final Class dxoClass) {
         final DxoMetadata metadata = new DxoMetadataImpl(dxoClass, builders);
         metadataCache.put(dxoClass, metadata);
         return metadata;
     }
+
 }

@@ -37,7 +37,7 @@ import org.seasar.framework.util.DisposableUtil;
  */
 public class ConverterFactoryImpl implements ConverterFactory, Disposable {
 
-    /** 組み込みのコンバータ */
+    /** 組み込みのコンバータです。 */
     protected static final Converter[] BUILTIN_CONVERTERS = new Converter[] {
             new ArrayConverter(), new BeanConverter(),
             new BigDecimalConverter(), new BigIntegerConverter(),
@@ -50,6 +50,7 @@ public class ConverterFactoryImpl implements ConverterFactory, Disposable {
             new SqlTimeConverter(), new SqlTimestampConverter(),
             new StringConverter(), };
 
+    /** S2-Tigerによって提供される組み込みのコンバータです。 */
     protected static final String[] BUILTIN_TIGER_CONVERTERS = new String[] { "org.seasar.extension.dxo.converter.impl.EnumConverter", };
 
     /** プリミティブ型の配列クラスとラッパー型の配列クラスのマッピング */

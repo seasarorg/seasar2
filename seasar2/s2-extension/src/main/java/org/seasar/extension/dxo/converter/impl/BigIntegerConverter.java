@@ -18,6 +18,8 @@ package org.seasar.extension.dxo.converter.impl;
 import java.math.BigInteger;
 
 /**
+ * {@link Number 数}から{@link BigInteger}への変換を行うコンバータです。
+ * 
  * @author Satoshi Kimura
  * @author koichik
  */

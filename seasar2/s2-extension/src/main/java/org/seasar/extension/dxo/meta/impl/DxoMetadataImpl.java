@@ -26,13 +26,23 @@ import org.seasar.extension.dxo.meta.DxoMetadata;
 import org.seasar.framework.util.MethodUtil;
 
 /**
- * @author koichik
+ * Dxoのメタデータを管理するクラスです。
  * 
+ * @author koichik
  */
 public class DxoMetadataImpl implements DxoMetadata {
 
+    /** Dxoのメソッドに対応した{@link Command}を保持するマップです。 */
     protected Map commands = new HashMap();
 
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param dxoClass
+     *            Dxoの型
+     * @param builders
+     *            コマンドを構築するビルダの配列
+     */
     public DxoMetadataImpl(final Class dxoClass,
             final DxoCommandBuilder[] builders) {
         final Method[] methods = dxoClass.getMethods();

@@ -16,6 +16,8 @@
 package org.seasar.extension.dxo.converter.impl;
 
 /**
+ * {@link Number 数}から{@link Float}への変換を行うコンバータです。
+ * 
  * @author Satoshi Kimura
  * @author koichik
  */

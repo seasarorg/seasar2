@@ -16,11 +16,19 @@
 package org.seasar.extension.dxo.meta;
 
 /**
+ * Dxoのメタデータを生成するファクトリのインターフェースです。
  * 
  * @author koichik
  */
 public interface DxoMetadataFactory {
 
+    /**
+     * Dxoの型に応じたメタデータを返します。
+     * 
+     * @param dxoClass
+     *            Dxoの型
+     * @return Dxoの型に応じたメタデータ
+     */
     DxoMetadata getMetadata(Class dxoClass);
 
 }

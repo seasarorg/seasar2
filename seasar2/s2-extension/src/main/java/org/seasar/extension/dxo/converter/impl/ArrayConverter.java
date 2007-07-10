@@ -24,6 +24,17 @@ import org.seasar.extension.dxo.converter.Converter;
 import org.seasar.extension.dxo.converter.ConverterFactory;
 
 /**
+ * 任意のオブジェクトを配列への変換を行うコンバータです。
+ * <p>
+ * 変換は次のように行われます。
+ * </p>
+ * <ul>
+ * <li>変換元のオブジェクトが変換先の型に代入可能な配列なら、変換元をそのまま変換先とします。</li>
+ * <li>変換元のオブジェクトが配列なら、変換元配列と同じ長さで，各要素を変換した配列を変換先とします。</li>
+ * <li>変換元のオブジェクトが{@link Collection コレクション}なら、コレクションのサイズと同じ長さで、各要素を変換した配列を変換先とします。</li>
+ * <li>それ以外の場合は、変換元オブジェクトを変換したオブジェクトを唯一の要素とする長さ1の配列を変換先とします。</li>
+ * </ul>
+ * 
  * @author Satoshi Kimura
  * @author koichik
  */
@@ -60,6 +71,17 @@ public class ArrayConverter extends AbstractConverter {
         return result;
     }
 
+    /**
+     * 配列を配列に変換して返します。
+     * 
+     * @param componentType
+     *            変換先配列の要素型
+     * @param source
+     *            変換元の配列
+     * @param context
+     *            変換コンテキスト
+     * @return 変換した結果の配列
+     */
     protected Object toArray(final Class componentType, final Object[] source,
             final ConversionContext context) {
         final int length = source.length;
@@ -80,6 +102,17 @@ public class ArrayConverter extends AbstractConverter {
         return result;
     }
 
+    /**
+     * コレクションを配列に変換して返します。
+     * 
+     * @param componentType
+     *            変換先配列の要素型
+     * @param source
+     *            変換元のコレクション
+     * @param context
+     *            変換コンテキスト
+     * @return 変換した結果の配列
+     */
     protected Object toArray(final Class componentType,
             final Collection source, final ConversionContext context) {
         final int length = source.size();
@@ -100,4 +133,5 @@ public class ArrayConverter extends AbstractConverter {
         }
         return result;
     }
+
 }

@@ -22,13 +22,27 @@ import org.seasar.extension.dxo.exception.ConversionRuntimeException;
 import org.seasar.framework.util.StringUtil;
 
 /**
+ * {@link Number 数}から{@link Short}への変換を行うコンバータの抽象クラスです。
+ * <p>
+ * 変換は次のように行われます。
+ * </p>
+ * <ul>
+ * <li>変換元のオブジェクトが{@link Number}なら、サブクラスによる変換結果を変換先とします。</li>
+ * <li>変換元のオブジェクトが{@link CharSequence}なら、それを値とする{@link BigDecimal}からサブクラスが変換した結果を変換先とします。</li>
+ * <li>変換元のオブジェクトが{@link Boolean}なら、変換元が<code>true</code>なら1、<code>false</code>なら0を変換先とします。</li>
+ * <li>変換元のオブジェクトが列挙なら、その序数を変換先とします。</li>
+ * <li>それ以外の場合は、{@link ConversionRuntimeException}をスローします。</li>
+ * </ul>
+ * 
  * @author Satoshi Kimura
  * @author koichik
  */
 public abstract class NumberConverter extends AbstractConverter {
 
+    /** 変換元が<code>true</code>だった場合の値です。 */
     protected static final Integer TRUE = new Integer(1);
 
+    /** 変換元が<code>false</code>だった場合の値です。 */
     protected static final Integer FALSE = new Integer(0);
 
     public Class[] getSourceClasses() {
@@ -60,8 +74,22 @@ public abstract class NumberConverter extends AbstractConverter {
         throw new ConversionRuntimeException(source.getClass());
     }
 
+    /**
+     * 数値を変換して返します。
+     * 
+     * @param number
+     *            変換元の数値
+     * @return 変換結果の数値
+     */
     protected abstract Number convert(Number number);
 
+    /**
+     * 数を表す文字列から数値に変換して返します。
+     * 
+     * @param number
+     *            数を表す文字列
+     * @return 変換結果の数値
+     */
     protected Number convert(final String number) {
         if (StringUtil.isEmpty(number)) {
             return null;

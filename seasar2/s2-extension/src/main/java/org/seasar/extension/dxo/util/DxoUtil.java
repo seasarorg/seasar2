@@ -16,6 +16,8 @@
 package org.seasar.extension.dxo.util;
 
 import java.lang.reflect.Method;
+import java.util.List;
+import java.util.Map;
 
 import org.seasar.framework.util.MethodUtil;
 import org.seasar.framework.util.OgnlUtil;
@@ -23,18 +25,29 @@ import org.seasar.framework.util.StringUtil;
 import org.seasar.framework.util.Tokenizer;
 
 /**
+ * Dxoのユーティリティクラスです。
+ * 
  * @author koichik
  * @author higa
- * 
  */
 public class DxoUtil {
 
+    /** OGNL式による{@link Map}リテラルの接頭辞です。 */
     protected static final String OGNL_MAP_PREFIX = "#@java.util.LinkedHashMap@{";
 
+    /** OGNL式による{@link Map}リテラルの接尾辞です。 */
     protected static final String OGNL_MAP_SUFFIX = "}";
 
+    /** genericな{@link Map}から値の型を取得するためのメソッドです。 */
     protected static final Method GET_VALUE_TYPE_OF_TARGET_MAP_METHOD = getValueTypeOfTargetMapMethod();
 
+    /**
+     * S2-Tigerが利用可能な場合、Dxoのメソッドからgenericな{@link List}である変換先の要素型を返します。
+     * 
+     * @param method
+     *            Dxoのメソッド
+     * @return Dxoのメソッドからgenericな{@link List}である変換先の要素型
+     */
     public static Class getElementTypeOfList(final Method method) {
         final Class[] parameterTypes = method.getParameterTypes();
         return parameterTypes.length == 1 ? MethodUtil
@@ -42,6 +55,13 @@ public class DxoUtil {
                 .getElementTypeOfListFromParameterType(method, 1);
     }
 
+    /**
+     * S2-Tigerが利用可能な場合、Dxoのメソッドからgenericな{@link Map}である変換先の値の型を返します。
+     * 
+     * @param method
+     *            Dxoのメソッド
+     * @return Dxoのメソッドからgenericな{@link Map}である変換先の値の型
+     */
     public static Class getValueTypeOfTargetMap(final Method method) {
         if (GET_VALUE_TYPE_OF_TARGET_MAP_METHOD == null) {
             return null;
@@ -50,6 +70,11 @@ public class DxoUtil {
                 null, new Object[] { method });
     }
 
+    /**
+     * S2-Tigerが利用可能な場合、Dxoのメソッドからgenericな{@link Map}である変換先の値の型を返すメソッドを返します。
+     * 
+     * @return Dxoのメソッドからgenericな{@link Map}である変換先の値の型を返すメソッド
+     */
     protected static Method getValueTypeOfTargetMapMethod() {
         try {
             final Class clazz = Class
@@ -61,6 +86,13 @@ public class DxoUtil {
         return null;
     }
 
+    /**
+     * OGNL式の{@link Map}リテラルを解析した結果のオブジェクトを返します。
+     * 
+     * @param expression
+     *            OGNL式の{@link Map}リテラル
+     * @return OGNL式の{@link Map}リテラルを解析した結果のオブジェクト
+     */
     public static Object parseMap(final String expression) {
         if (StringUtil.isEmpty(expression)) {
             return null;
@@ -72,6 +104,25 @@ public class DxoUtil {
         return OgnlUtil.parseExpression(OGNL_MAP_PREFIX + s + OGNL_MAP_SUFFIX);
     }
 
+    /**
+     * <code>CONVERSION_RULE</code>アノテーションで指定される簡素な{@link Map}表現を OGNLの{@link Map}リテラルに変換して返します。
+     * <p>
+     * 簡素な{@link Map}表現は次の形式の文字列です。
+     * </p>
+     * 
+     * <pre>
+     * key1 : value1, key2 : value2 ...
+     * </pre>
+     * 
+     * <p>
+     * これをOGNLの{@link Map}リテラルにするため，キーをシングルクオートで囲んだ文字列を返します。
+     * 値に複雑な式が指定されると適切に変換できない場合があります。 そのような場合は簡素な{@link Map}表現ではなく、 OGNLの{@link Map}リテラルを使用してください。
+     * </p>
+     * 
+     * @param expr
+     *            <code>CONVERSION_RULE</code>アノテーションで指定される簡素な{@link Map}表現
+     * @return OGNLの{@link Map}リテラル
+     */
     protected static String addQuote(final String expr) {
         final MyTokenizer tokenizer = new MyTokenizer(expr);
         final StringBuffer buf = new StringBuffer(expr.length() + 10);
@@ -110,22 +161,41 @@ public class DxoUtil {
         return buf.toString();
     }
 
+    /**
+     * <code>CONVERSION_RULE</code>アノテーションで指定される簡素な{@link Map}表現からトークンを取り出すクラスです。
+     */
     protected static class MyTokenizer extends Tokenizer {
 
+        /** コロン */
         public static final int TT_COLON = ':';
 
+        /** カンマ */
         public static final int TT_COMMA = ',';
 
+        /** 単語の構成要素ではない文字の配列 */
         private static byte[] defaultCtype = new byte[256];
 
         static {
             setup(defaultCtype);
         }
 
+        /**
+         * インスタンスを構築します。
+         * 
+         * @param str
+         *            <code>CONVERSION_RULE</code>アノテーションで指定される簡素な{@link Map}表現
+         */
         public MyTokenizer(final String str) {
             this(str, defaultCtype);
         }
 
+        /**
+         * インスタンスを構築します。
+         * 
+         * @param str
+         *            <code>CONVERSION_RULE</code>アノテーションで指定される簡素な{@link Map}表現
+         * @param ctype
+         */
         public MyTokenizer(final String str, final byte[] ctype) {
             super(str, ctype);
         }

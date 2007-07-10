@@ -22,6 +22,19 @@ import java.util.Date;
 import org.seasar.extension.dxo.converter.ConversionContext;
 
 /**
+ * 任意のオブジェクトから{@link String}への変換を行うコンバータです。
+ * <p>
+ * 変換は次のように行われます。
+ * </p>
+ * <ul>
+ * <li>変換元のオブジェクトが{@link String}なら、変換元をそのまま変換先とします。</li>
+ * <li>変換元のオブジェクトが<code>char</code>の配列なら、その配列を内容とする文字列を変換先とします。</li>
+ * <li>変換元のオブジェクトが列挙なら、変換元の名前を変換先とします。</li>
+ * <li>変換元のオブジェクトが{@link java.sql.Date}・{@link java.sql.Time}・{@link java.sql.Timestamp}・{@link Date}・{@link Calendar}なら、
+ * その値をフォーマットに従って文字列化した結果を変換先とします。</li>
+ * <li>それ以外の場合は、変換元オブジェクトの文字列表現を変換先とします。</li>
+ * </ul>
+ * 
  * @author Satoshi Kimura
  * @author koichik
  */

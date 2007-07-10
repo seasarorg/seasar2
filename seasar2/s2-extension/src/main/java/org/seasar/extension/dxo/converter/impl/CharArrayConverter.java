@@ -18,6 +18,16 @@ package org.seasar.extension.dxo.converter.impl;
 import org.seasar.extension.dxo.converter.ConversionContext;
 
 /**
+ * 任意のオブジェクトから{@link String}への変換を行うコンバータです。
+ * <p>
+ * 変換は次のように行われます。
+ * </p>
+ * <ul>
+ * <li>変換元のオブジェクトが<code>char</code>の配列なら、変換元をそのまま変換先とします。</li>
+ * <li>変換元のオブジェクトが{@link String}なら、変換元の持つ文字配列を変換先とします。</li>
+ * <li>それ以外の場合は、変換元オブジェクトの文字列表現が持つ文字配列を変換先とします。</li>
+ * </ul>
+ * 
  * @author Satoshi Kimura
  * @author koichik
  */

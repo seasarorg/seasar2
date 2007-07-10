@@ -19,7 +19,7 @@ import org.seasar.extension.dxo.converter.ConversionContext;
 import org.seasar.extension.dxo.converter.Converter;
 
 /**
- * {Converter}の抽象クラスです。
+ * {@link Converter}の抽象クラスです。
  * 
  * @author koichik
  */

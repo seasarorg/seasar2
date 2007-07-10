@@ -18,6 +18,8 @@ package org.seasar.extension.dxo.exception;
 import org.seasar.framework.exception.SRuntimeException;
 
 /**
+ * 変換に失敗した場合にスローされる例外です。
+ * 
  * @author Satoshi Kimura
  * @author koichik
  */
@@ -25,6 +27,12 @@ public class ConversionRuntimeException extends SRuntimeException {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param type
+     *            変換に失敗した変換元の型
+     */
     public ConversionRuntimeException(final Class type) {
         super("WSSR0000", new Object[] { type.getName() });// TODO
     }

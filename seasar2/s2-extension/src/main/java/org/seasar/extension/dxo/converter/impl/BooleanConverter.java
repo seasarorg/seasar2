@@ -20,14 +20,27 @@ import java.math.BigDecimal;
 import org.seasar.extension.dxo.converter.ConversionContext;
 
 /**
+ * 任意のオブジェクトから{@link Boolean}への変換を行うコンバータです。
+ * <p>
+ * 変換は次のように行われます。
+ * </p>
+ * <ul>
+ * <li>変換元のオブジェクトが{@link Boolean}なら、変換元をそのまま変換先とします。</li>
+ * <li>変換元のオブジェクトが{@link Number 数}なら、その値が0より大きければ<code>true</code>、そうでなければ<code>false</code>とします。</li>
+ * <li>それ以外の場合は、変換元オブジェクトの文字列表現が<code>yes</code>、<code>y</code>、<code>true</code>、<code>on</code>、<code>1</code>なら<code>true</code>、
+ * そうでなければ<code>false</code>とします。</li>
+ * </ul>
+ * 
  * @author Satoshi Kimura
  * @author koichik
  */
 public class BooleanConverter extends AbstractConverter {
 
+    /** <code>true</code>に評価する文字列の配列です。 */
     protected static final String[] TRUES = new String[] { "yes", "y", "true",
             "on", "1", };
 
+    /** 0を示す定数です。 */
     protected static final BigDecimal ZERO = new BigDecimal("0");
 
     public Class[] getSourceClasses() {
@@ -52,6 +65,13 @@ public class BooleanConverter extends AbstractConverter {
         return toBoolean(source.toString());
     }
 
+    /**
+     * 文字列を{@link Boolean}に変換して返します。
+     * 
+     * @param value
+     *            変換元の文字列表現
+     * @return 変換した結果の{@link Boolean}
+     */
     protected Object toBoolean(final String value) {
         for (int i = 0; i < TRUES.length; ++i) {
             if (TRUES[i].equalsIgnoreCase(value)) {
@@ -61,6 +81,13 @@ public class BooleanConverter extends AbstractConverter {
         return Boolean.FALSE;
     }
 
+    /**
+     * 数を{@link Boolean}に変換して返します。
+     * 
+     * @param value
+     *            変換元の数
+     * @return 変換した結果の{@link Boolean}
+     */
     protected Object toBoolean(final Number value) {
         final BigDecimal decimal = new BigDecimal(value.toString());
         if (decimal.compareTo(ZERO) > 0) {
