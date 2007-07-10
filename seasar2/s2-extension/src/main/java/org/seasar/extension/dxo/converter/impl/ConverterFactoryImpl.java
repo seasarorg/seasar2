@@ -91,7 +91,7 @@ public class ConverterFactoryImpl implements ConverterFactory, Disposable {
      *            S2コンテナ
      */
     public void setContainer(final S2Container container) {
-        this.container = container;
+        this.container = container.getRoot();
     }
 
     /**

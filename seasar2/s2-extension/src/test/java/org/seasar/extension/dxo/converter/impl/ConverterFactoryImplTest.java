@@ -19,7 +19,9 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Pattern;
 
+import org.seasar.extension.dxo.converter.ConversionContext;
 import org.seasar.extension.dxo.converter.Converter;
 import org.seasar.extension.unit.S2TestCase;
 import org.seasar.framework.util.DisposableUtil;
@@ -174,6 +176,41 @@ public class ConverterFactoryImplTest extends S2TestCase {
         converter = factory.getConverter(Object.class, String.class);
         assertEquals(StringConverter.class.getName(), converter.getClass()
                 .getName());
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testCustomConverter() throws Exception {
+        register(PatternConverter.class);
+        PatternConverter converter = (PatternConverter) factory.getConverter(
+                String.class, Pattern.class);
+        assertNotNull(converter);
+    }
+
+    /**
+     * 
+     */
+    public static class PatternConverter implements Converter {
+
+        public Class[] getSourceClasses() {
+            return new Class[] { String.class };
+        }
+
+        public Class getDestClass() {
+            return Pattern.class;
+        }
+
+        public Object convert(Object source, Class destClass,
+                ConversionContext context) {
+            return Pattern.compile((String) source);
+        }
+
+        public void convert(Object source, Object dest,
+                ConversionContext context) {
+            throw new UnsupportedOperationException();
+        }
+
     }
 
 }

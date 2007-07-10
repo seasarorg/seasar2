@@ -547,6 +547,25 @@ public class S2ContainerImplTest extends TestCase {
     /**
      * @throws Exception
      */
+    public void testFindAllComponentsPerformance() throws Exception {
+        S2Container container = new S2ContainerImpl();
+        for (int i = 0; i < 100; ++i) {
+            S2Container child = new S2ContainerImpl();
+            for (int j = 0; j < 100; ++j) {
+                child.register(new HashMap());
+            }
+            container.include(child);
+        }
+        long t1 = System.currentTimeMillis();
+        Map[] found = (Map[]) container.findAllComponents(Map.class);
+        long t2 = System.currentTimeMillis();
+        System.out.println((t2 - t1) + "ms");
+        assertEquals(10000, found.length);
+    }
+
+    /**
+     * @throws Exception
+     */
     public void testFindLocalComponents() throws Exception {
         Map[] found = (Map[]) container0.findLocalComponents(Map.class);
         assertEquals(0, found.length);
@@ -795,7 +814,7 @@ public class S2ContainerImplTest extends TestCase {
     }
 
     /**
-     *
+     * 
      */
     public static class A {
 
@@ -817,7 +836,7 @@ public class S2ContainerImplTest extends TestCase {
     }
 
     /**
-     *
+     * 
      */
     public interface Hoge {
 
@@ -828,13 +847,13 @@ public class S2ContainerImplTest extends TestCase {
     }
 
     /**
-     *
+     * 
      */
     public interface Foo extends Hoge {
     }
 
     /**
-     *
+     * 
      */
     public static class B implements Hoge {
 
@@ -844,7 +863,7 @@ public class S2ContainerImplTest extends TestCase {
     }
 
     /**
-     *
+     * 
      */
     public static class B2 implements Hoge {
 
@@ -854,7 +873,7 @@ public class S2ContainerImplTest extends TestCase {
     }
 
     /**
-     *
+     * 
      */
     public static class C {
 
@@ -891,7 +910,7 @@ public class S2ContainerImplTest extends TestCase {
     }
 
     /**
-     *
+     * 
      */
     public static class D {
 
@@ -913,7 +932,7 @@ public class S2ContainerImplTest extends TestCase {
     }
 
     /**
-     *
+     * 
      */
     public static class FooImpl implements Foo {
         public String getName() {
@@ -922,7 +941,7 @@ public class S2ContainerImplTest extends TestCase {
     }
 
     /**
-     *
+     * 
      */
     public static class RequestClient {
 
@@ -944,7 +963,7 @@ public class S2ContainerImplTest extends TestCase {
     }
 
     /**
-     *
+     * 
      */
     public static class SessionClient {
 
@@ -966,7 +985,7 @@ public class S2ContainerImplTest extends TestCase {
     }
 
     /**
-     *
+     * 
      */
     public static class ResponseClient {
 
@@ -988,7 +1007,7 @@ public class S2ContainerImplTest extends TestCase {
     }
 
     /**
-     *
+     * 
      */
     public static class ServletContextClient {
 

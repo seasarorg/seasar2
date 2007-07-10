@@ -925,8 +925,75 @@ public interface FooDxo {
 </pre>
 <p>上の例では，定数アノテーションの例と同じになるようにフォーマットパターンを指定しています．</p>
 <h3><a name="customConverter" id="customConverter">独自のコンバータ</a></h3>
-<p>工事中</p>
-<!-- document end -->
+<p>プロパティやマップの要素の型が異なる場合はコンバータによって型変換されます．独自のコンバータを作成することにより，「<a href="#convertType">型変換</a>」に記述されていない独自の型をサポートすることができます．</p>
+            <h4>コンバータの作成</h4>
+            <p>コンバータは<code>org.seasar.extension.dxo.converter.Converter</code>インタフェースを実装したクラスで，次のメソッドを持ちます．</p>
+            <dl>
+              <dt><code>Class[] getSourceClasses()</code>
+              <dd>このコンバータがサポートしている変換元のクラスを配列で返します．
+              <dt><code>Class getDestClass()</code>
+              <dd>このコンバータがサポートしている変換先のクラスを返します
+              <dt><code>Object convert(Object source, Class destClass, ConversionContext context)</code>
+              <dd><code>source</code>を<code>destClass</code>のインスタンスに変換して返します．
+              <dt>
+            <code>void convert(Object source, Object dest, ConversionContext context)</code>
+              <dd><code>source</code>を<code>dist</code>に変換します．不変なオブジェクトへの変換を行うコンバータはこのメソッドを実装できないため，このメソッドが呼び出されると<code>UnsupportedOperationException</code>をスローします．
+            </dl>
+            <p>コンバータのクラス名は&quot;<code>DxoConverter</code>&quot;で終了するようにします．</p>
+            <p>以下は文字列 (<code>String</code>) を正規表現 (<code>java.util.regex.Pattern</code>) に変換するコンバータの例です．</p>
+            <pre>public class PatternDxoConverter implements Converter {
+
+    public Class[] getSourceClasses() {
+        return new Class[] { String.class };
+    }
+
+    public Class getDestClass() {
+        return Pattern.class;
+    }
+
+    public Object convert(Object source, Class destClass,
+            ConversionContext context) {
+        return Pattern.compile((String) source);
+    }
+
+    public void convert(Object source, Object dest, ConversionContext context) {
+        throw new UnsupportedOperationException();
+    }
+
+}</pre>
+            <p>独自作成したコンバータはdiconファイルに定義するか，SMART deployまたはAutoRegisterによりS2コンテナに自動登録されるようにします．</p>
+            <h4>diconファイルへの登録</h4>
+            <p>独自作成したコンバータは，diconファイルに登録して使用します．コンバータのコンポーネント名は&quot;<code>DxoConverter</code>&quot;で終了するようにします．</p>
+            <pre>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;!DOCTYPE components PUBLIC &quot;-//SEASAR//DTD S2Container 2.4//EN&quot;
+    &quot;http://www.seasar.org/dtd/components24.dtd&quot;&gt;
+&lt;components&gt;
+  &lt;component name=&quot;patternDxoConverter&quot;
+    class=&quot;org.seasar.extension.dxo.annotation.impl.ConstantAnnotationReaderTest$HogeDxoConverter&quot;/&gt;
+&lt;/components&gt;</pre>
+            <p>SMART deployやAutoRegisterを使って自動登録することもできます．コンポーネントとして登録されたコンバータはS2Dxoに組み込まれ，「<a href="#convertType">型変換</a>」に記述されている標準のコンバータと同じように動作します．</p>
+            <h4>アノテーションでコンバータを明示する</h4>
+            <p>変換先JavaBeansのプロパティに特定のコンバータを使用することを明示することもできます．</p>
+            <p>定数アノテーションでは，変換先クラスに文字列定数として次のように指定します．定数名は，コンバータを適用するプロパティ名の後ろに<code>&quot;_<var>コンバータ名</var>&quot;</code>をつけたものになります．コンバータ名は独自作成したコンバータのコンポーネント名で，最後は&quot;<code>DxoConverter</code>&quot;で終了しなければなりません．</p>
+            <pre>public class Dest {
+  // namePattern プロパティは PatternDxoConverter を使って変換
+  public static final namePattern_patternDxoConverter = null;
+  private Pattern namePattern;
+  ...
+  public void setNamePattern(Pattern namePattern) {
+    this.namePattern = namePattern;
+  }
+}</pre>
+            <p>Tigerアノテーションでは，変換先クラスのsetterメソッドにアノテーションで次のように指定します．</p>
+            <pre>public class Dest {
+  private Pattern namePattern;
+  ...
+  @DxoConverter(&quot;patternDxoConverter&quot;)
+  public void setNamePattern(Pattern namePattern) {
+    this.namePattern = namePattern;
+  }
+}</pre>
+            <!-- document end -->
 <!-- don't edit start --></td>
 <td width="14"><img height="14" width="14" src="images/spacer.gif" alt="" /></td>
 </tr>
