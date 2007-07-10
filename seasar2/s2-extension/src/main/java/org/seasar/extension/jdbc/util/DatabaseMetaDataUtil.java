@@ -37,6 +37,15 @@ public final class DatabaseMetaDataUtil {
     private DatabaseMetaDataUtil() {
     }
 
+    /**
+     * プライマリーキーを返します。
+     * 
+     * @param dbMetaData
+     *            データベースメタデータ
+     * @param tableName
+     *            テーブル名
+     * @return プライマリーキー
+     */
     public static String[] getPrimaryKeys(DatabaseMetaData dbMetaData,
             String tableName) {
 
