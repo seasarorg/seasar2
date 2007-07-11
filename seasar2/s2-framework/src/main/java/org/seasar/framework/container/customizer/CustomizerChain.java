@@ -63,6 +63,69 @@ public class CustomizerChain extends AbstractCustomizer {
     }
 
     /**
+     * チェーンの最後にアスペクトカスタマイザを追加します。
+     * 
+     * @param interceptorName
+     *            インターセプタのコンポーネント名
+     */
+    public void addAspectCustomizer(final String interceptorName) {
+        AspectCustomizer customizer = new AspectCustomizer();
+        customizer.setInterceptorName(interceptorName);
+        addCustomizer(customizer);
+    }
+
+    /**
+     * チェーンの最後にアスペクトカスタマイザを追加します。
+     * 
+     * @param interceptorName
+     *            インターセプタのコンポーネント名
+     * @param pointcut
+     *            ポイントカット
+     */
+    public void addAspectCustomizer(final String interceptorName,
+            final String pointcut) {
+        AspectCustomizer customizer = new AspectCustomizer();
+        customizer.setInterceptorName(interceptorName);
+        customizer.setPointcut(pointcut);
+        addCustomizer(customizer);
+    }
+
+    /**
+     * チェーンの最後にアスペクトカスタマイザを追加します。
+     * 
+     * @param interceptorName
+     *            インターセプタのコンポーネント名
+     * @param useLookupAdapter
+     *            インスタンス属性が<code>singleton</code>以外のインターセプタを適用する場合は<code>true</code>
+     */
+    public void addAspectCustomizer(final String interceptorName,
+            final boolean useLookupAdapter) {
+        AspectCustomizer customizer = new AspectCustomizer();
+        customizer.setInterceptorName(interceptorName);
+        customizer.setUseLookupAdapter(useLookupAdapter);
+        addCustomizer(customizer);
+    }
+
+    /**
+     * チェーンの最後にアスペクトカスタマイザを追加します。
+     * 
+     * @param interceptorName
+     *            インターセプタのコンポーネント名
+     * @param pointcut
+     *            ポイントカット
+     * @param useLookupAdapter
+     *            インスタンス属性が<code>singleton</code>以外のインターセプタを適用する場合は<code>true</code>
+     */
+    public void addAspectCustomizer(final String interceptorName,
+            final String pointcut, final boolean useLookupAdapter) {
+        AspectCustomizer customizer = new AspectCustomizer();
+        customizer.setInterceptorName(interceptorName);
+        customizer.setPointcut(pointcut);
+        customizer.setUseLookupAdapter(useLookupAdapter);
+        addCustomizer(customizer);
+    }
+
+    /**
      * カスタマイズ対象のコンポーネント定義をカスタマイズをします。
      * <p>
      * コンポーネント定義を、このカスタマイザチェーンに設定されているコンポーネントカスタマイザに、 設定されている順に適用します。

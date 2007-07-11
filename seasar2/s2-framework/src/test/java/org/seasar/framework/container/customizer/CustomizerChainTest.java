@@ -15,6 +15,9 @@
  */
 package org.seasar.framework.container.customizer;
 
+import java.lang.reflect.Field;
+import java.util.List;
+
 import org.seasar.framework.container.ComponentCustomizer;
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.MetaDef;
@@ -39,6 +42,58 @@ public class CustomizerChainTest extends S2FrameworkTestCase {
         chain.customize(cd);
         MetaDef[] mdefs = cd.getMetaDefs("hoge");
         assertEquals(2, mdefs.length);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testAddAspect() throws Exception {
+        Field interceptorName = AspectCustomizer.class
+                .getDeclaredField("interceptorNames");
+        interceptorName.setAccessible(true);
+        Field pointcut = AspectCustomizer.class.getDeclaredField("pointcut");
+        pointcut.setAccessible(true);
+        Field useLookupAdapter = AspectCustomizer.class
+                .getDeclaredField("useLookupAdapter");
+        useLookupAdapter.setAccessible(true);
+
+        CustomizerChain chain = new CustomizerChain();
+        chain.addAspectCustomizer("fooInterceptor");
+        assertEquals(1, chain.getCustomizerSize());
+        AspectCustomizer customizer = (AspectCustomizer) chain.getCustomizer(0);
+        List interceptorNames = (List) interceptorName.get(customizer);
+        assertEquals(1, interceptorNames.size());
+        assertEquals("fooInterceptor", interceptorNames.get(0));
+        assertNull(pointcut.get(customizer));
+        assertNull(pointcut.get(customizer));
+        assertFalse(((Boolean) useLookupAdapter.get(customizer)).booleanValue());
+
+        chain.addAspectCustomizer("barInterceptor", "do.*");
+        assertEquals(2, chain.getCustomizerSize());
+        customizer = (AspectCustomizer) chain.getCustomizer(1);
+        interceptorNames = (List) interceptorName.get(customizer);
+        assertEquals(1, interceptorNames.size());
+        assertEquals("barInterceptor", interceptorNames.get(0));
+        assertEquals("do.*", pointcut.get(customizer));
+        assertFalse(((Boolean) useLookupAdapter.get(customizer)).booleanValue());
+
+        chain.addAspectCustomizer("bazInterceptor", true);
+        assertEquals(3, chain.getCustomizerSize());
+        customizer = (AspectCustomizer) chain.getCustomizer(2);
+        interceptorNames = (List) interceptorName.get(customizer);
+        assertEquals(1, interceptorNames.size());
+        assertEquals("bazInterceptor", interceptorNames.get(0));
+        assertNull(pointcut.get(customizer));
+        assertTrue(((Boolean) useLookupAdapter.get(customizer)).booleanValue());
+
+        chain.addAspectCustomizer("hogeInterceptor", ".*", true);
+        assertEquals(4, chain.getCustomizerSize());
+        customizer = (AspectCustomizer) chain.getCustomizer(3);
+        interceptorNames = (List) interceptorName.get(customizer);
+        assertEquals(1, interceptorNames.size());
+        assertEquals("hogeInterceptor", interceptorNames.get(0));
+        assertEquals(".*", pointcut.get(customizer));
+        assertTrue(((Boolean) useLookupAdapter.get(customizer)).booleanValue());
     }
 
     /**

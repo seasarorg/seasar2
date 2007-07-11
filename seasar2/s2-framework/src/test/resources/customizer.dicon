@@ -11,15 +11,9 @@
 	-->
 	<!--
 	<component name="pageCustomizer" class="org.seasar.framework.container.customizer.CustomizerChain">
-		<initMethod name="addCustomizer">
-			<arg>
-				<component class="org.seasar.framework.container.customizer.AspectCustomizer">
-					<initMethod name="addInterceptorName">
-						<arg>"aop.traceInterceptor"</arg>
-					</initMethod>
-					<property name="pointcut">"do.*, initialize, prerender"</property>
-				</component>
-			</arg>
+		<initMethod name="addAspectCustomizer">
+			<arg>"aop.traceInterceptor"</arg>
+			<arg>"do.*, initialize, prerender"</arg>
 		</initMethod>
 	</component>
 	-->
