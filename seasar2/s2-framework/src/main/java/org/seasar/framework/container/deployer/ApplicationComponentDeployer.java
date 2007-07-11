@@ -51,6 +51,8 @@ public class ApplicationComponentDeployer extends AbstractComponentDeployer {
         Object component = applicationMap.get(componentName);
         if (component == null) {
             component = getConstructorAssembler().assemble();
+            getPropertyAssembler().assemble(component);
+            getInitMethodAssembler().assemble(component);
             applicationMap.put(componentName, component);
         }
         return component;

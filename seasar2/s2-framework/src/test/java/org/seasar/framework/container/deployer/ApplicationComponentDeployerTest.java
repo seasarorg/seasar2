@@ -41,12 +41,14 @@ public class ApplicationComponentDeployerTest extends TestCase {
         ExternalContext extCtx = new HttpServletExternalContext();
         extCtx.setApplication(ctx);
         container.setExternalContext(extCtx);
+        container.register("aaa", "hoge");
         ComponentDef cd = new ComponentDefImpl(Foo.class, "foo");
         container.register(cd);
         ComponentDeployer deployer = new ApplicationComponentDeployer(cd);
         Foo foo = (Foo) deployer.deploy();
         assertSame("1", foo, ctx.getAttribute("foo"));
         assertSame("2", foo, deployer.deploy());
+        assertEquals("aaa", foo.getHoge());
     }
 
     /**

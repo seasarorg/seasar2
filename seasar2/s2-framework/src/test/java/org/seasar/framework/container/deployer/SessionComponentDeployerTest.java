@@ -44,12 +44,14 @@ public class SessionComponentDeployerTest extends TestCase {
         ExternalContext extCtx = new HttpServletExternalContext();
         extCtx.setRequest(request);
         container.setExternalContext(extCtx);
+        container.register("aaa", "hoge");
         ComponentDef cd = new ComponentDefImpl(Foo.class, "foo");
         container.register(cd);
         ComponentDeployer deployer = new SessionComponentDeployer(cd);
         Foo foo = (Foo) deployer.deploy();
         assertSame("1", foo, request.getSession().getAttribute("foo"));
         assertSame("2", foo, deployer.deploy());
+        assertEquals("aaa", foo.getHoge());
     }
 
     /**

@@ -54,6 +54,8 @@ public class SessionComponentDeployer extends AbstractComponentDeployer {
         Object component = sessionMap.get(componentName);
         if (component == null) {
             component = getConstructorAssembler().assemble();
+            getPropertyAssembler().assemble(component);
+            getInitMethodAssembler().assemble(component);
             sessionMap.put(componentName, component);
         }
         return component;
