@@ -71,12 +71,14 @@
 		</section>
 		<section name="News">
 			<dl>
-				<dt>2007/06/29</dt>
+				<dt>2007/07/11</dt>
 				<dd>
-					Seasar2 2.4.14 をリリースしました． (<a href="downloads.html">ダウンロード</a>)
+					Seasar2 2.4.15 をリリースしました． (<a href="downloads.html">ダウンロード</a>)<br/>
+					Seasar2 2.3.21 をリリースしました． (<a href="downloads.html">ダウンロード</a>)
 				</dd>
 				<dt>2007/06/29</dt>
 				<dd>
+					Seasar2 2.4.14 をリリースしました． (<a href="downloads.html">ダウンロード</a>)<br/>
 					Seasar2 2.3.20 をリリースしました． (<a href="downloads.html">ダウンロード</a>)
 				</dd>
 			</dl>
