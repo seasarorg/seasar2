@@ -20,81 +20,129 @@ import org.seasar.extension.jdbc.ValueType;
 import org.seasar.extension.jdbc.types.ValueTypes;
 import org.seasar.framework.beans.PropertyDesc;
 
+/**
+ * {@link PropertyType}の実装クラスです。
+ * 
+ * @author higa
+ * 
+ */
 public class PropertyTypeImpl implements PropertyType {
 
-    private PropertyDesc propertyDesc_;
+    private PropertyDesc propertyDesc;
 
-    private String propertyName_;
+    private String propertyName;
 
-    private String columnName_;
+    private String columnName;
 
-    private ValueType valueType_;
+    private ValueType valueType;
 
-    private boolean primaryKey_ = false;
+    private boolean primaryKey = false;
 
-    private boolean persistent_ = true;
+    private boolean persistent = true;
 
+    /**
+     * {@link PropertyTypeImpl}を作成します。
+     * 
+     * @param propertyDesc
+     *            プロパティ記述
+     */
     public PropertyTypeImpl(PropertyDesc propertyDesc) {
         this(propertyDesc, ValueTypes.OBJECT, propertyDesc.getPropertyName());
     }
 
+    /**
+     * {@link PropertyTypeImpl}を作成します。
+     * 
+     * @param propertyDesc
+     *            プロパティ記述
+     * @param valueType
+     *            値型
+     */
     public PropertyTypeImpl(PropertyDesc propertyDesc, ValueType valueType) {
         this(propertyDesc, valueType, propertyDesc.getPropertyName());
     }
 
+    /**
+     * {@link PropertyTypeImpl}を作成します。
+     * 
+     * @param propertyDesc
+     *            プロパティ記述
+     * @param valueType
+     *            値型
+     * @param columnName
+     *            カラム名
+     */
     public PropertyTypeImpl(PropertyDesc propertyDesc, ValueType valueType,
             String columnName) {
 
-        propertyDesc_ = propertyDesc;
-        propertyName_ = propertyDesc.getPropertyName();
-        valueType_ = valueType;
-        columnName_ = columnName;
+        this.propertyDesc = propertyDesc;
+        this.propertyName = propertyDesc.getPropertyName();
+        this.valueType = valueType;
+        this.columnName = columnName;
     }
 
+    /**
+     * {@link PropertyTypeImpl}を作成します。
+     * 
+     * @param propertyName
+     *            プロパティ名
+     * @param valueType
+     *            値型
+     */
     public PropertyTypeImpl(String propertyName, ValueType valueType) {
         this(propertyName, valueType, propertyName);
     }
 
+    /**
+     * {@link PropertyTypeImpl}を作成します。
+     * 
+     * @param propertyName
+     *            プロパティ名
+     * @param valueType
+     *            値型
+     * @param columnName
+     *            カラム名
+     */
     public PropertyTypeImpl(String propertyName, ValueType valueType,
             String columnName) {
-        propertyName_ = propertyName;
-        valueType_ = valueType;
-        columnName_ = columnName;
+        this.propertyName = propertyName;
+        this.valueType = valueType;
+        this.columnName = columnName;
     }
 
     public PropertyDesc getPropertyDesc() {
-        return propertyDesc_;
+        return propertyDesc;
     }
 
     public String getPropertyName() {
-        return propertyName_;
+        return propertyName;
     }
 
     public String getColumnName() {
-        return columnName_;
+        return columnName;
     }
 
     public void setColumnName(String columnName) {
-        columnName_ = columnName;
+        this.columnName = columnName;
     }
 
     public ValueType getValueType() {
-        return valueType_;
+        return valueType;
     }
 
     public boolean isPrimaryKey() {
-        return primaryKey_;
+        return primaryKey;
     }
 
     public void setPrimaryKey(boolean primaryKey) {
-        primaryKey_ = primaryKey;
+        this.primaryKey = primaryKey;
     }
 
     public boolean isPersistent() {
-        return persistent_;
+        return persistent;
     }
 
     public void setPersistent(boolean persistent) {
-        persistent_ = persistent;
+        this.persistent = persistent;
     }
 }

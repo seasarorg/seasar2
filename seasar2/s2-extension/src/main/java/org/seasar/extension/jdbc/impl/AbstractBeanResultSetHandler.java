@@ -29,26 +29,58 @@ import org.seasar.framework.beans.factory.BeanDescFactory;
 import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.StringUtil;
 
+/**
+ * JavaBeans用の {@link ResultSetHandler}の抽象クラスです。
+ * 
+ * @author higa
+ * 
+ */
 public abstract class AbstractBeanResultSetHandler implements ResultSetHandler {
 
-    private Class beanClass_;
+    private Class beanClass;
 
-    private BeanDesc beanDesc_;
+    private BeanDesc beanDesc;
 
+    /**
+     * {@link AbstractBeanResultSetHandler}を作成します。
+     * 
+     * @param beanClass
+     *            Beanクラス
+     */
     public AbstractBeanResultSetHandler(Class beanClass) {
         setBeanClass(beanClass);
 
     }
 
+    /**
+     * Beanクラスを返します。
+     * 
+     * @return Beanクラス
+     */
     public Class getBeanClass() {
-        return beanClass_;
+        return beanClass;
     }
 
+    /**
+     * Beanクラスを設定します。
+     * 
+     * @param beanClass
+     *            Beanクラス
+     */
     public void setBeanClass(Class beanClass) {
-        beanClass_ = beanClass;
-        beanDesc_ = BeanDescFactory.getBeanDesc(beanClass);
+        this.beanClass = beanClass;
+        beanDesc = BeanDescFactory.getBeanDesc(beanClass);
     }
 
+    /**
+     * プロパティの型の配列を作成します。
+     * 
+     * @param rsmd
+     *            結果セットメタデータ
+     * @return プロパティの型の配列
+     * @throws SQLException
+     *             SQL例外が発生した場合
+     */
     protected PropertyType[] createPropertyTypes(ResultSetMetaData rsmd)
             throws SQLException {
 
@@ -57,7 +89,7 @@ public abstract class AbstractBeanResultSetHandler implements ResultSetHandler {
         for (int i = 0; i < count; ++i) {
             String columnName = rsmd.getColumnLabel(i + 1);
             String propertyName = StringUtil.replace(columnName, "_", "");
-            PropertyDesc propertyDesc = beanDesc_.getPropertyDesc(propertyName);
+            PropertyDesc propertyDesc = beanDesc.getPropertyDesc(propertyName);
             ValueType valueType = ValueTypes.getValueType(propertyDesc
                     .getPropertyType());
             propertyTypes[i] = new PropertyTypeImpl(propertyDesc, valueType,
@@ -66,10 +98,21 @@ public abstract class AbstractBeanResultSetHandler implements ResultSetHandler {
         return propertyTypes;
     }
 
+    /**
+     * 行を作成します。
+     * 
+     * @param rs
+     *            結果セット
+     * @param propertyTypes
+     *            プロパティの型の配列
+     * @return 行
+     * @throws SQLException
+     *             SQL例外が発生した場合
+     */
     protected Object createRow(ResultSet rs, PropertyType[] propertyTypes)
             throws SQLException {
 
-        Object row = ClassUtil.newInstance(beanClass_);
+        Object row = ClassUtil.newInstance(beanClass);
         for (int i = 0; i < propertyTypes.length; ++i) {
             PropertyType pt = propertyTypes[i];
             ValueType valueType = pt.getValueType();

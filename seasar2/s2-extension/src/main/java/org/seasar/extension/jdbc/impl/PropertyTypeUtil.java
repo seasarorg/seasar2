@@ -23,11 +23,26 @@ import org.seasar.extension.jdbc.ValueType;
 import org.seasar.extension.jdbc.types.ValueTypes;
 import org.seasar.framework.util.StringUtil;
 
+/**
+ * {@link PropertyType}用のユーティリティクラスです。
+ * 
+ * @author higa
+ * 
+ */
 public final class PropertyTypeUtil {
 
     private PropertyTypeUtil() {
     }
 
+    /**
+     * {@link PropertyType}の配列を作成します。
+     * 
+     * @param rsmd
+     *            結果セットメタデータ
+     * @return {@link PropertyType}の配列
+     * @throws SQLException
+     *             SQL例外が発生した場合
+     */
     public static PropertyType[] createPropertyTypes(ResultSetMetaData rsmd)
             throws SQLException {
 

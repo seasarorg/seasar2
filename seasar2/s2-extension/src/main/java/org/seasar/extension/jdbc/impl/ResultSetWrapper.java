@@ -35,309 +35,317 @@ import java.util.Calendar;
 import java.util.Map;
 
 /**
+ * 結果セットのラッパです。
+ * 
  * @author higa
  * 
  */
 public class ResultSetWrapper implements ResultSet {
 
-    private ResultSet original_;
+    private ResultSet original;
 
+    /**
+     * {@link ResultSetWrapper}を作成します。
+     * 
+     * @param original
+     *            オリジナル
+     */
     public ResultSetWrapper(ResultSet original) {
-        original_ = original;
+        this.original = original;
     }
 
     /**
      * @see java.sql.ResultSet#getConcurrency()
      */
     public int getConcurrency() throws SQLException {
-        return original_.getConcurrency();
+        return original.getConcurrency();
     }
 
     /**
      * @see java.sql.ResultSet#getFetchDirection()
      */
     public int getFetchDirection() throws SQLException {
-        return original_.getFetchDirection();
+        return original.getFetchDirection();
     }
 
     /**
      * @see java.sql.ResultSet#getFetchSize()
      */
     public int getFetchSize() throws SQLException {
-        return original_.getFetchSize();
+        return original.getFetchSize();
     }
 
     /**
      * @see java.sql.ResultSet#getRow()
      */
     public int getRow() throws SQLException {
-        return original_.getRow();
+        return original.getRow();
     }
 
     /**
      * @see java.sql.ResultSet#getType()
      */
     public int getType() throws SQLException {
-        return original_.getType();
+        return original.getType();
     }
 
     /**
      * @see java.sql.ResultSet#afterLast()
      */
     public void afterLast() throws SQLException {
-        original_.afterLast();
+        original.afterLast();
     }
 
     /**
      * @see java.sql.ResultSet#beforeFirst()
      */
     public void beforeFirst() throws SQLException {
-        original_.beforeFirst();
+        original.beforeFirst();
     }
 
     /**
      * @see java.sql.ResultSet#cancelRowUpdates()
      */
     public void cancelRowUpdates() throws SQLException {
-        original_.cancelRowUpdates();
+        original.cancelRowUpdates();
     }
 
     /**
      * @see java.sql.ResultSet#clearWarnings()
      */
     public void clearWarnings() throws SQLException {
-        original_.clearWarnings();
+        original.clearWarnings();
     }
 
     /**
      * @see java.sql.ResultSet#close()
      */
     public void close() throws SQLException {
-        original_.close();
+        original.close();
     }
 
     /**
      * @see java.sql.ResultSet#deleteRow()
      */
     public void deleteRow() throws SQLException {
-        original_.deleteRow();
+        original.deleteRow();
     }
 
     /**
      * @see java.sql.ResultSet#insertRow()
      */
     public void insertRow() throws SQLException {
-        original_.insertRow();
+        original.insertRow();
     }
 
     /**
      * @see java.sql.ResultSet#moveToCurrentRow()
      */
     public void moveToCurrentRow() throws SQLException {
-        original_.moveToCurrentRow();
+        original.moveToCurrentRow();
     }
 
     /**
      * @see java.sql.ResultSet#moveToInsertRow()
      */
     public void moveToInsertRow() throws SQLException {
-        original_.moveToInsertRow();
+        original.moveToInsertRow();
     }
 
     /**
      * @see java.sql.ResultSet#refreshRow()
      */
     public void refreshRow() throws SQLException {
-        original_.refreshRow();
+        original.refreshRow();
     }
 
     /**
      * @see java.sql.ResultSet#updateRow()
      */
     public void updateRow() throws SQLException {
-        original_.updateRow();
+        original.updateRow();
     }
 
     /**
      * @see java.sql.ResultSet#first()
      */
     public boolean first() throws SQLException {
-        return original_.first();
+        return original.first();
     }
 
     /**
      * @see java.sql.ResultSet#isAfterLast()
      */
     public boolean isAfterLast() throws SQLException {
-        return original_.isAfterLast();
+        return original.isAfterLast();
     }
 
     /**
      * @see java.sql.ResultSet#isBeforeFirst()
      */
     public boolean isBeforeFirst() throws SQLException {
-        return original_.isBeforeFirst();
+        return original.isBeforeFirst();
     }
 
     /**
      * @see java.sql.ResultSet#isFirst()
      */
     public boolean isFirst() throws SQLException {
-        return original_.isFirst();
+        return original.isFirst();
     }
 
     /**
      * @see java.sql.ResultSet#isLast()
      */
     public boolean isLast() throws SQLException {
-        return original_.isLast();
+        return original.isLast();
     }
 
     /**
      * @see java.sql.ResultSet#last()
      */
     public boolean last() throws SQLException {
-        return original_.last();
+        return original.last();
     }
 
     /**
      * @see java.sql.ResultSet#next()
      */
     public boolean next() throws SQLException {
-        return original_.next();
+        return original.next();
     }
 
     /**
      * @see java.sql.ResultSet#previous()
      */
     public boolean previous() throws SQLException {
-        return original_.previous();
+        return original.previous();
     }
 
     /**
      * @see java.sql.ResultSet#rowDeleted()
      */
     public boolean rowDeleted() throws SQLException {
-        return original_.rowDeleted();
+        return original.rowDeleted();
     }
 
     /**
      * @see java.sql.ResultSet#rowInserted()
      */
     public boolean rowInserted() throws SQLException {
-        return original_.rowInserted();
+        return original.rowInserted();
     }
 
     /**
      * @see java.sql.ResultSet#rowUpdated()
      */
     public boolean rowUpdated() throws SQLException {
-        return original_.rowUpdated();
+        return original.rowUpdated();
     }
 
     /**
      * @see java.sql.ResultSet#wasNull()
      */
     public boolean wasNull() throws SQLException {
-        return original_.wasNull();
+        return original.wasNull();
     }
 
     /**
      * @see java.sql.ResultSet#getByte(int)
      */
     public byte getByte(int columnIndex) throws SQLException {
-        return original_.getByte(columnIndex);
+        return original.getByte(columnIndex);
     }
 
     /**
      * @see java.sql.ResultSet#getDouble(int)
      */
     public double getDouble(int columnIndex) throws SQLException {
-        return original_.getDouble(columnIndex);
+        return original.getDouble(columnIndex);
     }
 
     /**
      * @see java.sql.ResultSet#getFloat(int)
      */
     public float getFloat(int columnIndex) throws SQLException {
-        return original_.getFloat(columnIndex);
+        return original.getFloat(columnIndex);
     }
 
     /**
      * @see java.sql.ResultSet#getInt(int)
      */
     public int getInt(int columnIndex) throws SQLException {
-        return original_.getInt(columnIndex);
+        return original.getInt(columnIndex);
     }
 
     /**
      * @see java.sql.ResultSet#getLong(int)
      */
     public long getLong(int columnIndex) throws SQLException {
-        return original_.getLong(columnIndex);
+        return original.getLong(columnIndex);
     }
 
     /**
      * @see java.sql.ResultSet#getShort(int)
      */
     public short getShort(int columnIndex) throws SQLException {
-        return original_.getShort(columnIndex);
+        return original.getShort(columnIndex);
     }
 
     /**
      * @see java.sql.ResultSet#setFetchDirection(int)
      */
     public void setFetchDirection(int direction) throws SQLException {
-        original_.setFetchDirection(direction);
+        original.setFetchDirection(direction);
     }
 
     /**
      * @see java.sql.ResultSet#setFetchSize(int)
      */
     public void setFetchSize(int rows) throws SQLException {
-        original_.setFetchSize(rows);
+        original.setFetchSize(rows);
     }
 
     /**
      * @see java.sql.ResultSet#updateNull(int)
      */
     public void updateNull(int columnIndex) throws SQLException {
-        original_.updateNull(columnIndex);
+        original.updateNull(columnIndex);
     }
 
     /**
      * @see java.sql.ResultSet#absolute(int)
      */
     public boolean absolute(int row) throws SQLException {
-        return original_.absolute(row);
+        return original.absolute(row);
     }
 
     /**
      * @see java.sql.ResultSet#getBoolean(int)
      */
     public boolean getBoolean(int columnIndex) throws SQLException {
-        return original_.getBoolean(columnIndex);
+        return original.getBoolean(columnIndex);
     }
 
     /**
      * @see java.sql.ResultSet#relative(int)
      */
     public boolean relative(int rows) throws SQLException {
-        return original_.relative(rows);
+        return original.relative(rows);
     }
 
     /**
      * @see java.sql.ResultSet#getBytes(int)
      */
     public byte[] getBytes(int columnIndex) throws SQLException {
-        return original_.getBytes(columnIndex);
+        return original.getBytes(columnIndex);
     }
 
     /**
      * @see java.sql.ResultSet#updateByte(int, byte)
      */
     public void updateByte(int columnIndex, byte x) throws SQLException {
-        original_.updateByte(columnIndex, x);
+        original.updateByte(columnIndex, x);
 
     }
 
@@ -345,35 +353,35 @@ public class ResultSetWrapper implements ResultSet {
      * @see java.sql.ResultSet#updateDouble(int, double)
      */
     public void updateDouble(int columnIndex, double x) throws SQLException {
-        original_.updateDouble(columnIndex, x);
+        original.updateDouble(columnIndex, x);
     }
 
     /**
      * @see java.sql.ResultSet#updateFloat(int, float)
      */
     public void updateFloat(int columnIndex, float x) throws SQLException {
-        original_.updateFloat(columnIndex, x);
+        original.updateFloat(columnIndex, x);
     }
 
     /**
      * @see java.sql.ResultSet#updateInt(int, int)
      */
     public void updateInt(int columnIndex, int x) throws SQLException {
-        original_.updateInt(columnIndex, x);
+        original.updateInt(columnIndex, x);
     }
 
     /**
      * @see java.sql.ResultSet#updateLong(int, long)
      */
     public void updateLong(int columnIndex, long x) throws SQLException {
-        original_.updateLong(columnIndex, x);
+        original.updateLong(columnIndex, x);
     }
 
     /**
      * @see java.sql.ResultSet#updateShort(int, short)
      */
     public void updateShort(int columnIndex, short x) throws SQLException {
-        original_.updateShort(columnIndex, x);
+        original.updateShort(columnIndex, x);
 
     }
 
@@ -381,28 +389,28 @@ public class ResultSetWrapper implements ResultSet {
      * @see java.sql.ResultSet#updateBoolean(int, boolean)
      */
     public void updateBoolean(int columnIndex, boolean x) throws SQLException {
-        original_.updateBoolean(columnIndex, x);
+        original.updateBoolean(columnIndex, x);
     }
 
     /**
      * @see java.sql.ResultSet#updateBytes(int, byte[])
      */
     public void updateBytes(int columnIndex, byte[] x) throws SQLException {
-        original_.updateBytes(columnIndex, x);
+        original.updateBytes(columnIndex, x);
     }
 
     /**
      * @see java.sql.ResultSet#getAsciiStream(int)
      */
     public InputStream getAsciiStream(int columnIndex) throws SQLException {
-        return original_.getAsciiStream(columnIndex);
+        return original.getAsciiStream(columnIndex);
     }
 
     /**
      * @see java.sql.ResultSet#getBinaryStream(int)
      */
     public InputStream getBinaryStream(int columnIndex) throws SQLException {
-        return original_.getBinaryStream(columnIndex);
+        return original.getBinaryStream(columnIndex);
     }
 
     /**
@@ -411,7 +419,7 @@ public class ResultSetWrapper implements ResultSet {
      *             <code>getUnicodeStream</code>
      */
     public InputStream getUnicodeStream(int columnIndex) throws SQLException {
-        return original_.getUnicodeStream(columnIndex);
+        return original.getUnicodeStream(columnIndex);
     }
 
     /**
@@ -420,7 +428,7 @@ public class ResultSetWrapper implements ResultSet {
     public void updateAsciiStream(int columnIndex, InputStream x, int length)
             throws SQLException {
 
-        original_.updateAsciiStream(columnIndex, x, length);
+        original.updateAsciiStream(columnIndex, x, length);
     }
 
     /**
@@ -429,14 +437,14 @@ public class ResultSetWrapper implements ResultSet {
     public void updateBinaryStream(int columnIndex, InputStream x, int length)
             throws SQLException {
 
-        original_.updateBinaryStream(columnIndex, x, length);
+        original.updateBinaryStream(columnIndex, x, length);
     }
 
     /**
      * @see java.sql.ResultSet#getCharacterStream(int)
      */
     public Reader getCharacterStream(int columnIndex) throws SQLException {
-        return original_.getCharacterStream(columnIndex);
+        return original.getCharacterStream(columnIndex);
     }
 
     /**
@@ -445,21 +453,21 @@ public class ResultSetWrapper implements ResultSet {
     public void updateCharacterStream(int columnIndex, Reader x, int length)
             throws SQLException {
 
-        original_.updateCharacterStream(columnIndex, x, length);
+        original.updateCharacterStream(columnIndex, x, length);
     }
 
     /**
      * @see java.sql.ResultSet#getObject(int)
      */
     public Object getObject(int columnIndex) throws SQLException {
-        return original_.getObject(columnIndex);
+        return original.getObject(columnIndex);
     }
 
     /**
      * @see java.sql.ResultSet#updateObject(int, java.lang.Object)
      */
     public void updateObject(int columnIndex, Object x) throws SQLException {
-        original_.updateObject(columnIndex, x);
+        original.updateObject(columnIndex, x);
     }
 
     /**
@@ -468,161 +476,161 @@ public class ResultSetWrapper implements ResultSet {
     public void updateObject(int columnIndex, Object x, int scale)
             throws SQLException {
 
-        original_.updateObject(columnIndex, x, scale);
+        original.updateObject(columnIndex, x, scale);
     }
 
     /**
      * @see java.sql.ResultSet#getCursorName()
      */
     public String getCursorName() throws SQLException {
-        return original_.getCursorName();
+        return original.getCursorName();
     }
 
     /**
      * @see java.sql.ResultSet#getString(int)
      */
     public String getString(int columnIndex) throws SQLException {
-        return original_.getString(columnIndex);
+        return original.getString(columnIndex);
     }
 
     /**
      * @see java.sql.ResultSet#updateString(int, java.lang.String)
      */
     public void updateString(int columnIndex, String x) throws SQLException {
-        original_.updateString(columnIndex, x);
+        original.updateString(columnIndex, x);
     }
 
     /**
      * @see java.sql.ResultSet#getByte(java.lang.String)
      */
     public byte getByte(String columnName) throws SQLException {
-        return original_.getByte(columnName);
+        return original.getByte(columnName);
     }
 
     /**
      * @see java.sql.ResultSet#getDouble(java.lang.String)
      */
     public double getDouble(String columnName) throws SQLException {
-        return original_.getDouble(columnName);
+        return original.getDouble(columnName);
     }
 
     /**
      * @see java.sql.ResultSet#getFloat(java.lang.String)
      */
     public float getFloat(String columnName) throws SQLException {
-        return original_.getFloat(columnName);
+        return original.getFloat(columnName);
     }
 
     /**
      * @see java.sql.ResultSet#findColumn(java.lang.String)
      */
     public int findColumn(String columnName) throws SQLException {
-        return original_.findColumn(columnName);
+        return original.findColumn(columnName);
     }
 
     /**
      * @see java.sql.ResultSet#getInt(java.lang.String)
      */
     public int getInt(String columnName) throws SQLException {
-        return original_.getInt(columnName);
+        return original.getInt(columnName);
     }
 
     /**
      * @see java.sql.ResultSet#getLong(java.lang.String)
      */
     public long getLong(String columnName) throws SQLException {
-        return original_.getLong(columnName);
+        return original.getLong(columnName);
     }
 
     /**
      * @see java.sql.ResultSet#getShort(java.lang.String)
      */
     public short getShort(String columnName) throws SQLException {
-        return original_.getShort(columnName);
+        return original.getShort(columnName);
     }
 
     /**
      * @see java.sql.ResultSet#updateNull(java.lang.String)
      */
     public void updateNull(String columnName) throws SQLException {
-        original_.updateNull(columnName);
+        original.updateNull(columnName);
     }
 
     /**
      * @see java.sql.ResultSet#getBoolean(java.lang.String)
      */
     public boolean getBoolean(String columnName) throws SQLException {
-        return original_.getBoolean(columnName);
+        return original.getBoolean(columnName);
     }
 
     /**
      * @see java.sql.ResultSet#getBytes(java.lang.String)
      */
     public byte[] getBytes(String columnName) throws SQLException {
-        return original_.getBytes(columnName);
+        return original.getBytes(columnName);
     }
 
     /**
      * @see java.sql.ResultSet#updateByte(java.lang.String, byte)
      */
     public void updateByte(String columnName, byte x) throws SQLException {
-        original_.updateByte(columnName, x);
+        original.updateByte(columnName, x);
     }
 
     /**
      * @see java.sql.ResultSet#updateDouble(java.lang.String, double)
      */
     public void updateDouble(String columnName, double x) throws SQLException {
-        original_.updateDouble(columnName, x);
+        original.updateDouble(columnName, x);
     }
 
     /**
      * @see java.sql.ResultSet#updateFloat(java.lang.String, float)
      */
     public void updateFloat(String columnName, float x) throws SQLException {
-        original_.updateFloat(columnName, x);
+        original.updateFloat(columnName, x);
     }
 
     /**
      * @see java.sql.ResultSet#updateInt(java.lang.String, int)
      */
     public void updateInt(String columnName, int x) throws SQLException {
-        original_.updateInt(columnName, x);
+        original.updateInt(columnName, x);
     }
 
     /**
      * @see java.sql.ResultSet#updateLong(java.lang.String, long)
      */
     public void updateLong(String columnName, long x) throws SQLException {
-        original_.updateLong(columnName, x);
+        original.updateLong(columnName, x);
     }
 
     /**
      * @see java.sql.ResultSet#updateShort(java.lang.String, short)
      */
     public void updateShort(String columnName, short x) throws SQLException {
-        original_.updateShort(columnName, x);
+        original.updateShort(columnName, x);
     }
 
     /**
      * @see java.sql.ResultSet#updateBoolean(java.lang.String, boolean)
      */
     public void updateBoolean(String columnName, boolean x) throws SQLException {
-        original_.updateBoolean(columnName, x);
+        original.updateBoolean(columnName, x);
     }
 
     /**
      * @see java.sql.ResultSet#updateBytes(java.lang.String, byte[])
      */
     public void updateBytes(String columnName, byte[] x) throws SQLException {
-        original_.updateBytes(columnName, x);
+        original.updateBytes(columnName, x);
     }
 
     /**
      * @see java.sql.ResultSet#getBigDecimal(int)
      */
     public BigDecimal getBigDecimal(int columnIndex) throws SQLException {
-        return original_.getBigDecimal(columnIndex);
+        return original.getBigDecimal(columnIndex);
     }
 
     /**
@@ -632,7 +640,7 @@ public class ResultSetWrapper implements ResultSet {
     public BigDecimal getBigDecimal(int columnIndex, int scale)
             throws SQLException {
 
-        return original_.getBigDecimal(columnIndex, scale);
+        return original.getBigDecimal(columnIndex, scale);
     }
 
     /**
@@ -641,126 +649,126 @@ public class ResultSetWrapper implements ResultSet {
     public void updateBigDecimal(int columnIndex, BigDecimal x)
             throws SQLException {
 
-        original_.updateBigDecimal(columnIndex, x);
+        original.updateBigDecimal(columnIndex, x);
     }
 
     /**
      * @see java.sql.ResultSet#getURL(int)
      */
     public URL getURL(int columnIndex) throws SQLException {
-        return original_.getURL(columnIndex);
+        return original.getURL(columnIndex);
     }
 
     /**
      * @see java.sql.ResultSet#getArray(int)
      */
     public Array getArray(int i) throws SQLException {
-        return original_.getArray(i);
+        return original.getArray(i);
     }
 
     /**
      * @see java.sql.ResultSet#updateArray(int, java.sql.Array)
      */
     public void updateArray(int columnIndex, Array x) throws SQLException {
-        original_.updateArray(columnIndex, x);
+        original.updateArray(columnIndex, x);
     }
 
     /**
      * @see java.sql.ResultSet#getBlob(int)
      */
     public Blob getBlob(int i) throws SQLException {
-        return original_.getBlob(i);
+        return original.getBlob(i);
     }
 
     /**
      * @see java.sql.ResultSet#updateBlob(int, java.sql.Blob)
      */
     public void updateBlob(int columnIndex, Blob x) throws SQLException {
-        original_.updateBlob(columnIndex, x);
+        original.updateBlob(columnIndex, x);
     }
 
     /**
      * @see java.sql.ResultSet#getClob(int)
      */
     public Clob getClob(int i) throws SQLException {
-        return original_.getClob(i);
+        return original.getClob(i);
     }
 
     /**
      * @see java.sql.ResultSet#updateClob(int, java.sql.Clob)
      */
     public void updateClob(int columnIndex, Clob x) throws SQLException {
-        original_.updateClob(columnIndex, x);
+        original.updateClob(columnIndex, x);
     }
 
     /**
      * @see java.sql.ResultSet#getDate(int)
      */
     public Date getDate(int columnIndex) throws SQLException {
-        return original_.getDate(columnIndex);
+        return original.getDate(columnIndex);
     }
 
     /**
      * @see java.sql.ResultSet#updateDate(int, java.sql.Date)
      */
     public void updateDate(int columnIndex, Date x) throws SQLException {
-        original_.updateDate(columnIndex, x);
+        original.updateDate(columnIndex, x);
     }
 
     /**
      * @see java.sql.ResultSet#getRef(int)
      */
     public Ref getRef(int i) throws SQLException {
-        return original_.getRef(i);
+        return original.getRef(i);
     }
 
     /**
      * @see java.sql.ResultSet#updateRef(int, java.sql.Ref)
      */
     public void updateRef(int columnIndex, Ref x) throws SQLException {
-        original_.updateRef(columnIndex, x);
+        original.updateRef(columnIndex, x);
     }
 
     /**
      * @see java.sql.ResultSet#getMetaData()
      */
     public ResultSetMetaData getMetaData() throws SQLException {
-        return original_.getMetaData();
+        return original.getMetaData();
     }
 
     /**
      * @see java.sql.ResultSet#getWarnings()
      */
     public SQLWarning getWarnings() throws SQLException {
-        return original_.getWarnings();
+        return original.getWarnings();
     }
 
     /**
      * @see java.sql.ResultSet#getStatement()
      */
     public Statement getStatement() throws SQLException {
-        return original_.getStatement();
+        return original.getStatement();
     }
 
     /**
      * @see java.sql.ResultSet#getTime(int)
      */
     public Time getTime(int columnIndex) throws SQLException {
-        return original_.getTime(columnIndex);
+        return original.getTime(columnIndex);
     }
 
     /**
      * @see java.sql.ResultSet#updateTime(int, java.sql.Time)
      */
     public void updateTime(int columnIndex, Time x) throws SQLException {
-        original_.updateTime(columnIndex, x);
+        original.updateTime(columnIndex, x);
     }
 
     /**
      * @see java.sql.ResultSet#getTimestamp(int)
      */
     public Timestamp getTimestamp(int columnIndex) throws SQLException {
-        return original_.getTimestamp(columnIndex);
+        return original.getTimestamp(columnIndex);
     }
 
     /**
@@ -769,21 +777,21 @@ public class ResultSetWrapper implements ResultSet {
     public void updateTimestamp(int columnIndex, Timestamp x)
             throws SQLException {
 
-        original_.updateTimestamp(columnIndex, x);
+        original.updateTimestamp(columnIndex, x);
     }
 
     /**
      * @see java.sql.ResultSet#getAsciiStream(java.lang.String)
      */
     public InputStream getAsciiStream(String columnName) throws SQLException {
-        return original_.getAsciiStream(columnName);
+        return original.getAsciiStream(columnName);
     }
 
     /**
      * @see java.sql.ResultSet#getBinaryStream(java.lang.String)
      */
     public InputStream getBinaryStream(String columnName) throws SQLException {
-        return original_.getBinaryStream(columnName);
+        return original.getBinaryStream(columnName);
     }
 
     /**
@@ -791,7 +799,7 @@ public class ResultSetWrapper implements ResultSet {
      * @deprecated use <code>getCharacterStream</code> instead
      */
     public InputStream getUnicodeStream(String columnName) throws SQLException {
-        return original_.getUnicodeStream(columnName);
+        return original.getUnicodeStream(columnName);
     }
 
     /**
@@ -801,7 +809,7 @@ public class ResultSetWrapper implements ResultSet {
     public void updateAsciiStream(String columnName, InputStream x, int length)
             throws SQLException {
 
-        original_.updateAsciiStream(columnName, x, length);
+        original.updateAsciiStream(columnName, x, length);
     }
 
     /**
@@ -811,14 +819,14 @@ public class ResultSetWrapper implements ResultSet {
     public void updateBinaryStream(String columnName, InputStream x, int length)
             throws SQLException {
 
-        original_.updateBinaryStream(columnName, x, length);
+        original.updateBinaryStream(columnName, x, length);
     }
 
     /**
      * @see java.sql.ResultSet#getCharacterStream(java.lang.String)
      */
     public Reader getCharacterStream(String columnName) throws SQLException {
-        return original_.getCharacterStream(columnName);
+        return original.getCharacterStream(columnName);
     }
 
     /**
@@ -828,21 +836,21 @@ public class ResultSetWrapper implements ResultSet {
     public void updateCharacterStream(String columnName, Reader reader,
             int length) throws SQLException {
 
-        original_.updateCharacterStream(columnName, reader, length);
+        original.updateCharacterStream(columnName, reader, length);
     }
 
     /**
      * @see java.sql.ResultSet#getObject(java.lang.String)
      */
     public Object getObject(String columnName) throws SQLException {
-        return original_.getObject(columnName);
+        return original.getObject(columnName);
     }
 
     /**
      * @see java.sql.ResultSet#updateObject(java.lang.String, java.lang.Object)
      */
     public void updateObject(String columnName, Object x) throws SQLException {
-        original_.updateObject(columnName, x);
+        original.updateObject(columnName, x);
     }
 
     /**
@@ -852,35 +860,35 @@ public class ResultSetWrapper implements ResultSet {
     public void updateObject(String columnName, Object x, int scale)
             throws SQLException {
 
-        original_.updateObject(columnName, x, scale);
+        original.updateObject(columnName, x, scale);
     }
 
     /**
      * @see java.sql.ResultSet#getObject(int, java.util.Map)
      */
     public Object getObject(int i, Map map) throws SQLException {
-        return original_.getObject(i, map);
+        return original.getObject(i, map);
     }
 
     /**
      * @see java.sql.ResultSet#getString(java.lang.String)
      */
     public String getString(String columnName) throws SQLException {
-        return original_.getString(columnName);
+        return original.getString(columnName);
     }
 
     /**
      * @see java.sql.ResultSet#updateString(java.lang.String, java.lang.String)
      */
     public void updateString(String columnName, String x) throws SQLException {
-        original_.updateString(columnName, x);
+        original.updateString(columnName, x);
     }
 
     /**
      * @see java.sql.ResultSet#getBigDecimal(java.lang.String)
      */
     public BigDecimal getBigDecimal(String columnName) throws SQLException {
-        return original_.getBigDecimal(columnName);
+        return original.getBigDecimal(columnName);
     }
 
     /**
@@ -890,7 +898,7 @@ public class ResultSetWrapper implements ResultSet {
     public BigDecimal getBigDecimal(String columnName, int scale)
             throws SQLException {
 
-        return original_.getBigDecimal(columnName, scale);
+        return original.getBigDecimal(columnName, scale);
     }
 
     /**
@@ -900,119 +908,119 @@ public class ResultSetWrapper implements ResultSet {
     public void updateBigDecimal(String columnName, BigDecimal x)
             throws SQLException {
 
-        original_.updateBigDecimal(columnName, x);
+        original.updateBigDecimal(columnName, x);
     }
 
     /**
      * @see java.sql.ResultSet#getURL(java.lang.String)
      */
     public URL getURL(String columnName) throws SQLException {
-        return original_.getURL(columnName);
+        return original.getURL(columnName);
     }
 
     /**
      * @see java.sql.ResultSet#getArray(java.lang.String)
      */
     public Array getArray(String colName) throws SQLException {
-        return original_.getArray(colName);
+        return original.getArray(colName);
     }
 
     /**
      * @see java.sql.ResultSet#updateArray(java.lang.String, java.sql.Array)
      */
     public void updateArray(String columnName, Array x) throws SQLException {
-        original_.updateArray(columnName, x);
+        original.updateArray(columnName, x);
     }
 
     /**
      * @see java.sql.ResultSet#getBlob(java.lang.String)
      */
     public Blob getBlob(String colName) throws SQLException {
-        return original_.getBlob(colName);
+        return original.getBlob(colName);
     }
 
     /**
      * @see java.sql.ResultSet#updateBlob(java.lang.String, java.sql.Blob)
      */
     public void updateBlob(String columnName, Blob x) throws SQLException {
-        original_.updateBlob(columnName, x);
+        original.updateBlob(columnName, x);
     }
 
     /**
      * @see java.sql.ResultSet#getClob(java.lang.String)
      */
     public Clob getClob(String colName) throws SQLException {
-        return original_.getClob(colName);
+        return original.getClob(colName);
     }
 
     /**
      * @see java.sql.ResultSet#updateClob(java.lang.String, java.sql.Clob)
      */
     public void updateClob(String columnName, Clob x) throws SQLException {
-        original_.updateClob(columnName, x);
+        original.updateClob(columnName, x);
     }
 
     /**
      * @see java.sql.ResultSet#getDate(java.lang.String)
      */
     public Date getDate(String columnName) throws SQLException {
-        return original_.getDate(columnName);
+        return original.getDate(columnName);
     }
 
     /**
      * @see java.sql.ResultSet#updateDate(java.lang.String, java.sql.Date)
      */
     public void updateDate(String columnName, Date x) throws SQLException {
-        original_.updateDate(columnName, x);
+        original.updateDate(columnName, x);
     }
 
     /**
      * @see java.sql.ResultSet#getDate(int, java.util.Calendar)
      */
     public Date getDate(int columnIndex, Calendar cal) throws SQLException {
-        return original_.getDate(columnIndex, cal);
+        return original.getDate(columnIndex, cal);
     }
 
     /**
      * @see java.sql.ResultSet#getRef(java.lang.String)
      */
     public Ref getRef(String colName) throws SQLException {
-        return original_.getRef(colName);
+        return original.getRef(colName);
     }
 
     /**
      * @see java.sql.ResultSet#updateRef(java.lang.String, java.sql.Ref)
      */
     public void updateRef(String columnName, Ref x) throws SQLException {
-        original_.updateRef(columnName, x);
+        original.updateRef(columnName, x);
     }
 
     /**
      * @see java.sql.ResultSet#getTime(java.lang.String)
      */
     public Time getTime(String columnName) throws SQLException {
-        return original_.getTime(columnName);
+        return original.getTime(columnName);
     }
 
     /**
      * @see java.sql.ResultSet#updateTime(java.lang.String, java.sql.Time)
      */
     public void updateTime(String columnName, Time x) throws SQLException {
-        original_.updateTime(columnName, x);
+        original.updateTime(columnName, x);
     }
 
     /**
      * @see java.sql.ResultSet#getTime(int, java.util.Calendar)
      */
     public Time getTime(int columnIndex, Calendar cal) throws SQLException {
-        return original_.getTime(columnIndex, cal);
+        return original.getTime(columnIndex, cal);
     }
 
     /**
      * @see java.sql.ResultSet#getTimestamp(java.lang.String)
      */
     public Timestamp getTimestamp(String columnName) throws SQLException {
-        return original_.getTimestamp(columnName);
+        return original.getTimestamp(columnName);
     }
 
     /**
@@ -1022,7 +1030,7 @@ public class ResultSetWrapper implements ResultSet {
     public void updateTimestamp(String columnName, Timestamp x)
             throws SQLException {
 
-        original_.updateTimestamp(columnName, x);
+        original.updateTimestamp(columnName, x);
     }
 
     /**
@@ -1031,28 +1039,28 @@ public class ResultSetWrapper implements ResultSet {
     public Timestamp getTimestamp(int columnIndex, Calendar cal)
             throws SQLException {
 
-        return original_.getTimestamp(columnIndex, cal);
+        return original.getTimestamp(columnIndex, cal);
     }
 
     /**
      * @see java.sql.ResultSet#getObject(java.lang.String, java.util.Map)
      */
     public Object getObject(String colName, Map map) throws SQLException {
-        return original_.getObject(colName, map);
+        return original.getObject(colName, map);
     }
 
     /**
      * @see java.sql.ResultSet#getDate(java.lang.String, java.util.Calendar)
      */
     public Date getDate(String columnName, Calendar cal) throws SQLException {
-        return original_.getDate(columnName, cal);
+        return original.getDate(columnName, cal);
     }
 
     /**
      * @see java.sql.ResultSet#getTime(java.lang.String, java.util.Calendar)
      */
     public Time getTime(String columnName, Calendar cal) throws SQLException {
-        return original_.getTime(columnName, cal);
+        return original.getTime(columnName, cal);
     }
 
     /**
@@ -1062,6 +1070,6 @@ public class ResultSetWrapper implements ResultSet {
     public Timestamp getTimestamp(String columnName, Calendar cal)
             throws SQLException {
 
-        return original_.getTimestamp(columnName, cal);
+        return original.getTimestamp(columnName, cal);
     }
 }

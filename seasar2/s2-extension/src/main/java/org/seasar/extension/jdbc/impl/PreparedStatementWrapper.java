@@ -38,6 +38,8 @@ import java.util.Calendar;
 import org.seasar.framework.exception.SSQLException;
 
 /**
+ * {@link PreparedStatement}のラッパです。
+ * 
  * @author higa
  * 
  */
@@ -47,6 +49,14 @@ public class PreparedStatementWrapper implements PreparedStatement {
 
     private final String sql;
 
+    /**
+     * {@link PreparedStatementWrapper}を作成します。
+     * 
+     * @param original
+     *            オリジナル
+     * @param sql
+     *            SQL
+     */
     public PreparedStatementWrapper(final PreparedStatement original,
             final String sql) {
         this.original = original;
@@ -668,6 +678,9 @@ public class PreparedStatementWrapper implements PreparedStatement {
         }
     }
 
+    /**
+     * @deprecated
+     */
     public void setUnicodeStream(final int parameterIndex, final InputStream x,
             final int length) throws SQLException {
         try {

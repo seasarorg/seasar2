@@ -20,12 +20,19 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
+import org.seasar.extension.jdbc.ResultSetHandler;
+
 /**
+ * Mapを配列で返す {@link ResultSetHandler}です。
+ * 
  * @author higa
  * 
  */
 public class MapArrayResultSetHandler extends MapListResultSetHandler {
 
+    /**
+     * {@link MapArrayResultSetHandler}を作成します。
+     */
     public MapArrayResultSetHandler() {
     }
 

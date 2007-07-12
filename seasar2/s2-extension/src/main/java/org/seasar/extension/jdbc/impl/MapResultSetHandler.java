@@ -19,9 +19,19 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.seasar.extension.jdbc.PropertyType;
+import org.seasar.extension.jdbc.ResultSetHandler;
 
+/**
+ * Mapを返す {@link ResultSetHandler}です。
+ * 
+ * @author higa
+ * 
+ */
 public class MapResultSetHandler extends AbstractMapResultSetHandler {
 
+    /**
+     * {@link MapResultSetHandler}を作成します。
+     */
     public MapResultSetHandler() {
     }
 

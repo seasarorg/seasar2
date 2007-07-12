@@ -18,13 +18,34 @@ package org.seasar.extension.jdbc;
 import org.seasar.framework.exception.SQLRuntimeException;
 
 /**
+ * 更新のためのインターフェースです。
+ * 
  * @author higa
  * 
  */
 public interface UpdateHandler {
 
-    public int execute(Object[] args) throws SQLRuntimeException;
+    /**
+     * 更新を行ないます。
+     * 
+     * @param args
+     *            引数
+     * @return 更新した行数
+     * @throws SQLRuntimeException
+     *             SQL例外が発生した場合
+     */
+    int execute(Object[] args) throws SQLRuntimeException;
 
-    public int execute(Object[] args, Class[] argTypes)
-            throws SQLRuntimeException;
+    /**
+     * 更新を行ないます。
+     * 
+     * @param args
+     *            引数
+     * @param argTypes
+     *            引数の型
+     * @return 更新した行数
+     * @throws SQLRuntimeException
+     *             SQL例外が発生した場合
+     */
+    int execute(Object[] args, Class[] argTypes) throws SQLRuntimeException;
 }

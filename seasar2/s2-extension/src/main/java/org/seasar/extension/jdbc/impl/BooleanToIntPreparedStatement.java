@@ -20,42 +20,46 @@ import java.sql.SQLException;
 import java.sql.Types;
 
 /**
+ * Booleanをintに変換する {@link PreparedStatement}です。
+ * 
  * @author higa
  * @author manhole
  */
 public class BooleanToIntPreparedStatement extends PreparedStatementWrapper {
 
     /**
+     * {@link BooleanToIntPreparedStatement}を作成します。
+     * 
      * @param original
+     *            オリジナル
      * @param sql
+     *            SQL
      */
     public BooleanToIntPreparedStatement(PreparedStatement original, String sql) {
         super(original, sql);
     }
 
-    /**
-     * @see java.sql.PreparedStatement#setBoolean(int, boolean)
-     */
     public void setBoolean(int parameterIndex, boolean x) throws SQLException {
         setInt(parameterIndex, x ? 1 : 0);
     }
 
-    /**
-     * @see java.sql.PreparedStatement#setNull(int, int, java.lang.String)
-     */
     public void setNull(int paramIndex, int sqlType, String typeName)
             throws SQLException {
 
         super.setNull(paramIndex, changeSqlTypeIfBoolean(sqlType), typeName);
     }
 
-    /**
-     * @see java.sql.PreparedStatement#setNull(int, int)
-     */
     public void setNull(int parameterIndex, int sqlType) throws SQLException {
         super.setNull(parameterIndex, changeSqlTypeIfBoolean(sqlType));
     }
 
+    /**
+     * SQLの型をbooleanの場合にintegerに変換します。
+     * 
+     * @param sqlType
+     *            SQLの型
+     * @return 変換結果
+     */
     protected int changeSqlTypeIfBoolean(int sqlType) {
         return sqlType == Types.BOOLEAN ? Types.INTEGER : sqlType;
     }

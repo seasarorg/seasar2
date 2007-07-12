@@ -21,9 +21,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.seasar.extension.jdbc.PropertyType;
+import org.seasar.extension.jdbc.ResultSetHandler;
 
+/**
+ * BeanをListで返す {@link ResultSetHandler}です。
+ * 
+ * @author higa
+ * 
+ */
 public class BeanListResultSetHandler extends AbstractBeanResultSetHandler {
 
+    /**
+     * {@link BeanListResultSetHandler}を作成します。
+     * 
+     * @param beanClass
+     *            Beanクラス
+     */
     public BeanListResultSetHandler(Class beanClass) {
         super(beanClass);
     }

@@ -23,8 +23,17 @@ import org.seasar.extension.jdbc.ResultSetHandler;
 import org.seasar.extension.jdbc.ValueType;
 import org.seasar.extension.jdbc.types.ValueTypes;
 
+/**
+ * 単独のオブジェクトを返す {@link ResultSetHandler}です。
+ * 
+ * @author higa
+ * 
+ */
 public class ObjectResultSetHandler implements ResultSetHandler {
 
+    /**
+     * {@link ObjectResultSetHandler}を作成します。
+     */
     public ObjectResultSetHandler() {
     }
 

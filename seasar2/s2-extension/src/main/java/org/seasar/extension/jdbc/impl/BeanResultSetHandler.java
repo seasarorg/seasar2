@@ -18,8 +18,22 @@ package org.seasar.extension.jdbc.impl;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.seasar.extension.jdbc.ResultSetHandler;
+
+/**
+ * Beanを返す {@link ResultSetHandler}です。
+ * 
+ * @author higa
+ * 
+ */
 public class BeanResultSetHandler extends AbstractBeanResultSetHandler {
 
+    /**
+     * {@link BeanResultSetHandler}を作成します。
+     * 
+     * @param beanClass
+     *            Beanクラス
+     */
     public BeanResultSetHandler(Class beanClass) {
         super(beanClass);
     }

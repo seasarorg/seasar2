@@ -18,12 +18,31 @@ package org.seasar.extension.jdbc.impl;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * Oracle用の {@link ResultSet}です。 WAVE DASH(U+301C)をFULLWIDTH
+ * TILDE(U+FF5E)に変換します。
+ * 
+ * @author higa
+ * 
+ */
 public class OracleResultSet extends ResultSetWrapper {
 
+    /**
+     * WAVE DASHです。
+     */
     public static final int WAVE_DASH = 0x301c;
 
+    /**
+     * FULLWIDTH TILDEです。
+     */
     public static final int FULLWIDTH_TILDE = 0xff5e;
 
+    /**
+     * {@link OracleResultSet}を作成します。
+     * 
+     * @param resultSet
+     *            結果セット
+     */
     public OracleResultSet(ResultSet resultSet) {
         super(resultSet);
     }
@@ -36,6 +55,13 @@ public class OracleResultSet extends ResultSetWrapper {
         return convert(super.getString(columnName));
     }
 
+    /**
+     * WAVE DASH(U+301C)をFULLWIDTH TILDE(U+FF5E)に変換します。
+     * 
+     * @param source
+     *            ソース
+     * @return 変換結果
+     */
     protected String convert(String source) {
         if (source == null) {
             return null;

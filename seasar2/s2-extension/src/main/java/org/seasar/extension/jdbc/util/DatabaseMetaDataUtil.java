@@ -38,13 +38,13 @@ public final class DatabaseMetaDataUtil {
     }
 
     /**
-     * プライマリーキーを返します。
+     * プライマリーキーの配列を返します。
      * 
      * @param dbMetaData
      *            データベースメタデータ
      * @param tableName
      *            テーブル名
-     * @return プライマリーキー
+     * @return プライマリーキーの配列
      */
     public static String[] getPrimaryKeys(DatabaseMetaData dbMetaData,
             String tableName) {
@@ -53,6 +53,15 @@ public final class DatabaseMetaDataUtil {
         return (String[]) set.toArray(new String[set.size()]);
     }
 
+    /**
+     * プライマリーキーの {@link Set}を返します。
+     * 
+     * @param dbMetaData
+     *            データベースメタデータ
+     * @param tableName
+     *            テーブル名
+     * @return プライマリーキーの {@link Set}
+     */
     public static Set getPrimaryKeySet(DatabaseMetaData dbMetaData,
             String tableName) {
         final String schema;
@@ -80,6 +89,14 @@ public final class DatabaseMetaDataUtil {
         return set;
     }
 
+    /**
+     * プライマリーキーの {@link Set}を返します。
+     * 
+     * @param dbMetaData
+     * @param schema
+     * @param tableName
+     * @return
+     */
     public static Set getPrimaryKeySet(DatabaseMetaData dbMetaData,
             String schema, String tableName) {
         Set set = new CaseInsensitiveSet();

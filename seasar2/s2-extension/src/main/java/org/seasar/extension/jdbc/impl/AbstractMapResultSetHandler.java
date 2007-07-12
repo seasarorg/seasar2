@@ -23,11 +23,31 @@ import org.seasar.extension.jdbc.PropertyType;
 import org.seasar.extension.jdbc.ResultSetHandler;
 import org.seasar.framework.util.CaseInsensitiveMap;
 
+/**
+ * Map用の {@link ResultSetHandler}の抽象クラスです。
+ * 
+ * @author higa
+ * 
+ */
 public abstract class AbstractMapResultSetHandler implements ResultSetHandler {
 
+    /**
+     * {@link AbstractMapResultSetHandler}を作成します。
+     */
     public AbstractMapResultSetHandler() {
     }
 
+    /**
+     * 行を作成します。
+     * 
+     * @param rs
+     *            結果セット
+     * @param propertyTypes
+     *            プロパティの型の配列
+     * @return 行
+     * @throws SQLException
+     *             SQL例外が発生した場合
+     */
     protected Map createRow(ResultSet rs, PropertyType[] propertyTypes)
             throws SQLException {
 

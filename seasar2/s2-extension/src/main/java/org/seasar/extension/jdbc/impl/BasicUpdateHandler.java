@@ -28,27 +28,47 @@ import org.seasar.framework.util.PreparedStatementUtil;
 import org.seasar.framework.util.StatementUtil;
 
 /**
+ * {@link UpdateHandler}の基本的な実装クラスです。
+ * 
  * @author higa
  * 
  */
 public class BasicUpdateHandler extends BasicHandler implements UpdateHandler {
 
+    /**
+     * {@link BasicUpdateHandler}を作成します。
+     */
     public BasicUpdateHandler() {
     }
 
+    /**
+     * {@link BasicUpdateHandler}を作成します。
+     * 
+     * @param dataSource
+     *            データソース
+     * @param sql
+     *            SQL
+     */
     public BasicUpdateHandler(DataSource dataSource, String sql) {
         super(dataSource, sql);
     }
 
+    /**
+     * {@link BasicUpdateHandler}を作成します。
+     * 
+     * @param dataSource
+     *            データソース
+     * @param sql
+     *            SQL
+     * @param statementFactory
+     *            ステートメントファクトリ
+     */
     public BasicUpdateHandler(DataSource dataSource, String sql,
             StatementFactory statementFactory) {
 
         super(dataSource, sql, statementFactory);
     }
 
-    /**
-     * @see org.seasar.extension.jdbc.SelectHandler#execute(java.lang.Object[])
-     */
     public int execute(Object[] args) throws SQLRuntimeException {
         return execute(args, getArgTypes(args));
     }
@@ -63,6 +83,17 @@ public class BasicUpdateHandler extends BasicHandler implements UpdateHandler {
         }
     }
 
+    /**
+     * SQL文を実行します。
+     * 
+     * @param connection
+     *            コネクション
+     * @param args
+     *            引数
+     * @param argTypes
+     *            引数の型
+     * @return 更新した行数
+     */
     public int execute(Connection connection, Object[] args, Class[] argTypes) {
         logSql(args, argTypes);
         PreparedStatement ps = prepareStatement(connection);

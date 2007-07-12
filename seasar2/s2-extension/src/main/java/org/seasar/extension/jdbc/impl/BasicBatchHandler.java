@@ -29,24 +29,59 @@ import org.seasar.framework.util.PreparedStatementUtil;
 import org.seasar.framework.util.StatementUtil;
 
 /**
+ * バッチを処理するための基本的なクラスです。
+ * 
  * @author higa
  * 
  */
 public class BasicBatchHandler extends BasicHandler implements BatchHandler {
 
-    private int batchSize_ = -1;
+    private int batchSize = -1;
 
+    /**
+     * {@link BasicBatchHandler}を作成します。
+     */
     public BasicBatchHandler() {
     }
 
+    /**
+     * {@link BasicBatchHandler}を作成します。
+     * 
+     * @param dataSource
+     *            データソース
+     * @param sql
+     *            SQL
+     */
     public BasicBatchHandler(DataSource dataSource, String sql) {
         this(dataSource, sql, -1);
     }
 
+    /**
+     * {@link BasicBatchHandler}を作成します。
+     * 
+     * @param dataSource
+     *            データソース
+     * @param sql
+     *            SQL
+     * @param batchSize
+     *            バッチ数
+     */
     public BasicBatchHandler(DataSource dataSource, String sql, int batchSize) {
         this(dataSource, sql, batchSize, BasicStatementFactory.INSTANCE);
     }
 
+    /**
+     * {@link BasicBatchHandler}を作成します。
+     * 
+     * @param dataSource
+     *            データソース
+     * @param sql
+     *            SQL
+     * @param batchSize
+     *            バッチ数
+     * @param statementFactory
+     *            ステートメントファクトリ
+     */
     public BasicBatchHandler(DataSource dataSource, String sql, int batchSize,
             StatementFactory statementFactory) {
 
@@ -56,12 +91,23 @@ public class BasicBatchHandler extends BasicHandler implements BatchHandler {
         setStatementFactory(statementFactory);
     }
 
+    /**
+     * バッチ数を返します。
+     * 
+     * @return バッチ数
+     */
     public int getBatchSize() {
-        return batchSize_;
+        return batchSize;
     }
 
+    /**
+     * バッチ数を設定します。
+     * 
+     * @param batchSize
+     *            バッチ数
+     */
     public void setBatchSize(int batchSize) {
-        batchSize_ = batchSize;
+        this.batchSize = batchSize;
     }
 
     public int execute(List list) throws SQLRuntimeException {
@@ -81,16 +127,27 @@ public class BasicBatchHandler extends BasicHandler implements BatchHandler {
         }
     }
 
+    /**
+     * 更新を実行します。
+     * 
+     * @param connection
+     *            コネクション
+     * @param list
+     *            バッチ対象のデータ
+     * @param argTypes
+     *            引数の型のリスト
+     * @return 対象のデータの行数
+     */
     protected int execute(Connection connection, List list, Class[] argTypes) {
         PreparedStatement ps = prepareStatement(connection);
-        int batchSize = batchSize_ > 0 ? batchSize_ : list.size();
+        int size = batchSize > 0 ? batchSize : list.size();
         try {
             for (int i = 0, j = 0; i < list.size(); ++i) {
                 Object[] args = (Object[]) list.get(i);
                 logSql(args, argTypes);
                 bindArgs(ps, args, argTypes);
                 PreparedStatementUtil.addBatch(ps);
-                if (j == batchSize - 1 || i == list.size() - 1) {
+                if (j == size - 1 || i == list.size() - 1) {
                     PreparedStatementUtil.executeBatch(ps);
                     j = 0;
                 } else {

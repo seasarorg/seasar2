@@ -23,11 +23,16 @@ import org.seasar.extension.jdbc.StatementFactory;
 import org.seasar.extension.jdbc.util.ConnectionUtil;
 
 /**
+ * {@link StatementFactory}の基本的な実装クラスです。
+ * 
  * @author higa
  * 
  */
 public class BasicStatementFactory implements StatementFactory {
 
+    /**
+     * 自分自身のインスタンスです。
+     */
     public static final StatementFactory INSTANCE = new BasicStatementFactory();
 
     public PreparedStatement createPreparedStatement(Connection con, String sql) {

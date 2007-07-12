@@ -21,9 +21,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.seasar.extension.jdbc.PropertyType;
+import org.seasar.extension.jdbc.ResultSetHandler;
 
+/**
+ * Mapをリストで返す {@link ResultSetHandler}です。
+ * 
+ * @author higa
+ * 
+ */
 public class MapListResultSetHandler extends AbstractMapResultSetHandler {
 
+    /**
+     * {@link MapListResultSetHandler}を作成します。
+     */
     public MapListResultSetHandler() {
     }
 

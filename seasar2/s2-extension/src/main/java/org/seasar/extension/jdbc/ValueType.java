@@ -20,16 +20,51 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
+ * S2JDBC用の値の型をあらわすインターフェースです。
+ * 
  * @author higa
  * 
  */
 public interface ValueType {
 
-    public Object getValue(ResultSet resultSet, int index) throws SQLException;
+    /**
+     * カラムの値を返します。
+     * 
+     * @param resultSet
+     *            結果セット
+     * @param index
+     *            位置
+     * @return カラムの値
+     * @throws SQLException
+     *             SQL例外が発生した場合
+     */
+    Object getValue(ResultSet resultSet, int index) throws SQLException;
 
-    public Object getValue(ResultSet resultSet, String columnName)
-            throws SQLException;
+    /**
+     * カラムの値を返します。
+     * 
+     * @param resultSet
+     *            結果セット
+     * @param columnName
+     *            カラム名
+     * @return カラムの値
+     * @throws SQLException
+     *             SQL例外が発生した場合
+     */
+    Object getValue(ResultSet resultSet, String columnName) throws SQLException;
 
-    public void bindValue(PreparedStatement ps, int index, Object value)
+    /**
+     * 変数の値をバインドします。
+     * 
+     * @param ps
+     *            準備されたSQL文
+     * @param index
+     *            位置
+     * @param value
+     *            値
+     * @throws SQLException
+     *             SQL例外が発生した場合
+     */
+    void bindValue(PreparedStatement ps, int index, Object value)
             throws SQLException;
 }

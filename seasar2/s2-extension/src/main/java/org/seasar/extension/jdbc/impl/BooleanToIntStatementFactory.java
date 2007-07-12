@@ -23,11 +23,16 @@ import org.seasar.extension.jdbc.StatementFactory;
 import org.seasar.extension.jdbc.util.ConnectionUtil;
 
 /**
+ * Booleanをintに変換する {@link StatementFactory}です。
+ * 
  * @author higa
  * @author manhole
  */
 public class BooleanToIntStatementFactory implements StatementFactory {
 
+    /**
+     * 自分自身のインスタンスです。
+     */
     public static final StatementFactory INSTANCE = new BooleanToIntStatementFactory();
 
     public PreparedStatement createPreparedStatement(Connection con, String sql) {

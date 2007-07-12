@@ -18,11 +18,16 @@ package org.seasar.extension.jdbc.impl;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+import org.seasar.extension.jdbc.ResultSetFactory;
+
+/**
+ * Oracle用の {@link ResultSetFactory}です。
+ * 
+ * @author higa
+ * 
+ */
 public class OracleResultSetFactory extends BasicResultSetFactory {
 
-    /**
-     * @see org.seasar.extension.jdbc.ResultSetFactory#createResultSet(java.sql.PreparedStatement)
-     */
     public ResultSet createResultSet(PreparedStatement ps) {
         return new OracleResultSet(super.createResultSet(ps));
     }
