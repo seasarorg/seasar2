@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 /**
- * Session Idに関するユーティリティです。
+ * セッション識別子に関するユーティリティクラスです。
  * 
  * @author higa
  * 
@@ -29,17 +29,18 @@ import javax.servlet.http.HttpSession;
 public final class SessionIdUtil {
 
     /**
-     * Session Idのキーをあらわします。
+     * セッション識別子のキーをあらわします。
      */
     public static final String SESSION_ID_KEY = "S2SESSIONID";
 
     private static final String PART_OF_URI = ";" + SESSION_ID_KEY + "=";
 
     /**
-     * CookieからSession Idを取り出します。
+     * Cookieからセッション識別子を取り出します。
      * 
      * @param request
-     * @return
+     *            リクエスト
+     * @return セッション識別子
      */
     public static String getSessionIdFromCookie(HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
@@ -56,10 +57,11 @@ public final class SessionIdUtil {
     }
 
     /**
-     * URIからSession Idを取り出します。
+     * URIからセッション識別子を取り出します。
      * 
      * @param request
-     * @return
+     *            リクエスト
+     * @return セッション識別子
      */
     public static String getSessionIdFromURL(HttpServletRequest request) {
         String uri = request.getRequestURI();
@@ -76,11 +78,13 @@ public final class SessionIdUtil {
     }
 
     /**
-     * URLを書き換えて、必要ならSession Idを組み込みます。
+     * URLを書き換えて必要ならセッション識別子を組み込みます。
      * 
      * @param url
+     *            URL
      * @param request
-     * @return
+     *            リクエスト
+     * @return 書き換えたURL
      */
     public static String rewriteURL(String url, HttpServletRequest request) {
         if (request.isRequestedSessionIdFromCookie()) {
@@ -100,11 +104,14 @@ public final class SessionIdUtil {
     }
 
     /**
-     * Session Id用のCookieを書き込みます。
+     * セッション識別子用のCookieを書き込みます。
      * 
      * @param request
+     *            リクエスト
      * @param response
+     *            レスポンス
      * @param sessionId
+     *            セッション識別子
      */
     public static void writeCookie(HttpServletRequest request,
             HttpServletResponse response, String sessionId) {

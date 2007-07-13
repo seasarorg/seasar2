@@ -24,7 +24,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
 
 /**
- * セッション情報をS2で管理するためのHttpSessionです。
+ * セッション情報をSeasar2で管理するための {@link HttpSession}です。
  * 
  * @author higa
  * 
@@ -48,12 +48,16 @@ public class S2HttpSession implements HttpSession {
     private int maxInactiveInterval = Integer.MAX_VALUE;
 
     /**
-     * <code>S2HttpSession</code>を作成します。
+     * {@link S2HttpSession}を作成します。
      * 
      * @param id
+     *            識別子
      * @param sessionStateManager
+     *            セッション状態マネージャ
      * @param servletContext
+     *            サーブレットコンテキスト
      * @param isNew
+     *            新規かどうか
      */
     public S2HttpSession(String id, SessionStateManager sessionStateManager,
             ServletContext servletContext, boolean isNew) {
@@ -63,9 +67,9 @@ public class S2HttpSession implements HttpSession {
     }
 
     /**
-     * SessionStateを返します。
+     * セッション状態を返します。
      * 
-     * @return
+     * @return セッション状態
      */
     public SessionState getSessionState() {
         return sessionState;
@@ -76,6 +80,9 @@ public class S2HttpSession implements HttpSession {
         return sessionState.getAttribute(name);
     }
 
+    /**
+     * セッションの状態をセットアップします。
+     */
     protected synchronized void setupSessionState() {
         if (sessionState == null) {
             sessionState = sessionStateManager.loadState(id);

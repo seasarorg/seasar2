@@ -16,7 +16,7 @@
 package org.seasar.extension.httpsession;
 
 /**
- * セッションの状態を管理するインターフェースです。
+ * セッション状態を管理するインターフェースです。
  * 
  * @author higa
  * 
@@ -24,18 +24,22 @@ package org.seasar.extension.httpsession;
 public interface SessionStateManager {
 
     /**
-     * セッションの状態をロードします。
+     * セッション状態をロードします。
      * 
      * @param sessionId
-     * @return
+     *            セッション識別子
+     * 
+     * @return セッション状態
      */
     SessionState loadState(String sessionId);
 
     /**
-     * セッションの状態を格納します。
+     * セッション状態を格納します。
      * 
      * @param sessionId
+     *            セッション識別子
      * @param sessionState
+     *            セッション状態
      */
     void updateState(String sessionId, SessionState sessionState);
 
@@ -43,6 +47,7 @@ public interface SessionStateManager {
      * セッションの状態を削除します。
      * 
      * @param sessionId
+     *            セッション識別子
      */
     void removeState(String sessionId);
 }

@@ -46,7 +46,9 @@ public class S2HttpServletRequestWrapper extends HttpServletRequestWrapper {
      * <code>S2HttpServletRequestWrapper</code>のインスタンスを構築します。
      * 
      * @param request
+     *            リクエスト
      * @param sessionStateManager
+     *            セッション状態マネージャ
      */
     public S2HttpServletRequestWrapper(HttpServletRequest request,
             SessionStateManager sessionStateManager) {
@@ -56,6 +58,9 @@ public class S2HttpServletRequestWrapper extends HttpServletRequestWrapper {
         setupSessionId();
     }
 
+    /**
+     * セッション識別子をセットアップします。
+     */
     protected void setupSessionId() {
         requestedSessionIdFromCookie = SessionIdUtil
                 .getSessionIdFromCookie(request);
@@ -91,9 +96,9 @@ public class S2HttpServletRequestWrapper extends HttpServletRequestWrapper {
     }
 
     /**
-     * S2HttpSessionを返します。
+     * Seasar2用のセッションを返します。
      * 
-     * @return
+     * @return Seasar2用のセッション
      */
     public S2HttpSession getS2HttpSession() {
         return session;
@@ -107,18 +112,18 @@ public class S2HttpServletRequestWrapper extends HttpServletRequestWrapper {
     }
 
     /**
-     * 作成されたSession Idを返します。
+     * 作成されたセッション識別子を返します。
      * 
-     * @return
+     * @return 作成されたセッション識別子
      */
     public String getCreatedSessionId() {
         return createdSessionId;
     }
 
     /**
-     * Session Idを返します。
+     * セッション識別子を返します。
      * 
-     * @return
+     * @return セッション識別子
      */
     public String getSessionId() {
         String sessionId = getRequestedSessionId();

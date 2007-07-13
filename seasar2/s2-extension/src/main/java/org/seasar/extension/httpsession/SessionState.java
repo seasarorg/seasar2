@@ -26,7 +26,7 @@ import org.seasar.framework.util.EnumerationAdapter;
 import org.seasar.framework.util.SerializeUtil;
 
 /**
- * HttpSessionの状態をあらわすクラスです。
+ * セッションの状態をあらわすクラスです。
  * 
  * @author higa
  * 
@@ -40,9 +40,10 @@ public class SessionState {
     private Map persistedData;
 
     /**
-     * <code>SessionState</code>を作成します。
+     * {@link SessionState}を作成します。
      * 
      * @param binaryData
+     *            バイナリデータ
      */
     public SessionState(Map binaryData) {
         this.binaryData = binaryData;
@@ -52,10 +53,11 @@ public class SessionState {
     }
 
     /**
-     * 指定された名前に対する値を返します。
+     * 属性の値を返します。
      * 
      * @param name
-     * @return
+     *            名前
+     * @return 属性の値
      */
     public synchronized Object getAttribute(String name) {
         if (accessedData.containsKey(name)) {
@@ -78,7 +80,7 @@ public class SessionState {
     /**
      * セッションで管理されているすべての属性名を返します。
      * 
-     * @return
+     * @return セッションで管理されているすべての属性名
      */
     public Enumeration getAttributeNames() {
         Set set = new LinkedHashSet();
@@ -94,17 +96,19 @@ public class SessionState {
     /**
      * アクセスされたすべての属性名を返します。
      * 
-     * @return
+     * @return アクセスされたすべての属性名
      */
     public Enumeration getAccessedAttributeNames() {
         return new EnumerationAdapter(accessedData.keySet().iterator());
     }
 
     /**
-     * 名前に対する値を設定します。
+     * 属性の値を設定します。
      * 
      * @param name
+     *            名前
      * @param value
+     *            値
      */
     public void setAttribute(String name, Object value) {
         accessedData.put(name, value);
@@ -128,10 +132,11 @@ public class SessionState {
     }
 
     /**
-     * insertする必要があるかどうか返します。
+     * insertする必要があるかどうかを返します。
      * 
      * @param name
-     * @return
+     *            名前
+     * @return insertする必要があるかどうか
      */
     public boolean needInsert(String name) {
         if (!accessedData.containsKey(name)) {
@@ -143,10 +148,11 @@ public class SessionState {
     }
 
     /**
-     * updateする必要があるかどうか返します。
+     * updateする必要があるかどうかを返します。
      * 
      * @param name
-     * @return
+     *            名前
+     * @return updateする必要があるかどうか
      */
     public boolean needUpdate(String name) {
         if (!accessedData.containsKey(name)) {
@@ -159,10 +165,11 @@ public class SessionState {
     }
 
     /**
-     * deleteする必要があるかどうか返します。
+     * deleteする必要があるかどうかを返します。
      * 
      * @param name
-     * @return
+     *            名前
+     * @return deleteする必要があるかどうか
      */
     public boolean needDelete(String name) {
         if (!accessedData.containsKey(name)) {
@@ -174,6 +181,13 @@ public class SessionState {
                         .containsKey(name));
     }
 
+    /**
+     * 永続化された属性の値を返します。
+     * 
+     * @param name
+     *            名前
+     * @return 永続化された属性の値
+     */
     protected Object getPersistedAttribute(String name) {
         return persistedData.get(name);
     }

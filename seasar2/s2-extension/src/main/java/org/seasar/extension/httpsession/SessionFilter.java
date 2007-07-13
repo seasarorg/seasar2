@@ -69,6 +69,11 @@ public class SessionFilter implements Filter {
         }
     }
 
+    /**
+     * セッション状態マネージャを返します。
+     * 
+     * @return セッション状態マネージャ
+     */
     protected SessionStateManager getSessionStateManager() {
         if (sessionStateManager == null) {
             S2Container container = SingletonS2ContainerFactory.getContainer();

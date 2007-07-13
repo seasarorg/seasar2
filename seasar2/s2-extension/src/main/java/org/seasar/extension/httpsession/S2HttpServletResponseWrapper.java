@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 
 /**
- * セッション情報をS2で管理するためのHttpServletResponseWrapperです。
+ * セッション情報をSeasar2で管理するための {@link HttpServletResponseWrapper}です。
  * 
  * @author higa
  * 
@@ -33,11 +33,14 @@ public class S2HttpServletResponseWrapper extends HttpServletResponseWrapper {
     private SessionStateManager sessionStateManager;
 
     /**
-     * <code>S2HttpServletResponseWrapper</code>のインスタンスを構築します。
+     * {@link S2HttpServletResponseWrapper}を作成します。
      * 
      * @param response
+     *            レスポンス
      * @param requestWrapper
+     *            リクエストラッパ
      * @param sessionStateManager
+     *            セッション状態マネージャ
      */
     public S2HttpServletResponseWrapper(HttpServletResponse response,
             S2HttpServletRequestWrapper requestWrapper,

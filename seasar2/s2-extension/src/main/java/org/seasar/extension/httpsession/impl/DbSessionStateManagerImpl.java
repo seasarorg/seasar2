@@ -35,6 +35,8 @@ import org.seasar.extension.jdbc.impl.MapListResultSetHandler;
 import org.seasar.framework.util.SerializeUtil;
 
 /**
+ * データベース用の {@link SessionStateManager}の実装クラスです。
+ * 
  * @author higa
  * 
  */
@@ -55,24 +57,26 @@ public class DbSessionStateManagerImpl implements SessionStateManager {
     private boolean batchUpdateDisabled;
 
     /**
-     * <code>DbSessionStateManagerImpl</code>を作成します。
+     * {@link DbSessionStateManagerImpl}を作成します。
      */
     public DbSessionStateManagerImpl() {
     }
 
     /**
-     * <code>DbSessionStateManagerImpl</code>を作成します。
+     * {@link DbSessionStateManagerImpl}を作成します。
      * 
      * @param dataSource
+     *            データソース
      */
     public DbSessionStateManagerImpl(DataSource dataSource) {
-        super();
         this.dataSource = dataSource;
     }
 
     /**
+     * データソースを設定します。
+     * 
      * @param dataSource
-     *            The dataSource to set.
+     *            データソース
      */
     public void setDataSource(DataSource dataSource) {
         this.dataSource = dataSource;
@@ -135,6 +139,14 @@ public class DbSessionStateManagerImpl implements SessionStateManager {
         sessionState.persisted();
     }
 
+    /**
+     * データを更新します。
+     * 
+     * @param sql
+     *            SQL
+     * @param data
+     *            データ
+     */
     protected void execute(String sql, List data) {
         if (data.size() == 0) {
             return;
@@ -146,11 +158,27 @@ public class DbSessionStateManagerImpl implements SessionStateManager {
         }
     }
 
+    /**
+     * バッチ更新を行ないます。
+     * 
+     * @param sql
+     *            SQL
+     * @param data
+     *            データ
+     */
     protected void executeBatch(String sql, List data) {
         BasicBatchHandler handler = new BasicBatchHandler(dataSource, sql);
         handler.execute(data);
     }
 
+    /**
+     * 1行ずつ更新処理を行ないます。
+     * 
+     * @param sql
+     *            SQL
+     * @param data
+     *            データ
+     */
     protected void executeUpdate(String sql, List data) {
         BasicUpdateHandler handler = new BasicUpdateHandler(dataSource, sql);
         for (Iterator i = data.iterator(); i.hasNext();) {
