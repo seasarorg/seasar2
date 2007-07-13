@@ -21,6 +21,12 @@ import javax.naming.Context;
 import javax.naming.NamingException;
 import javax.naming.spi.InitialContextFactory;
 
+/**
+ * {@link JndiContext}用の {@link InitialContextFactory}です。
+ * 
+ * @author higa
+ * 
+ */
 public final class JndiContextFactory implements InitialContextFactory {
 
     public Context getInitialContext(Hashtable env) throws NamingException {

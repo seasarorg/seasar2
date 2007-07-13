@@ -32,15 +32,30 @@ import org.seasar.framework.exception.SRuntimeException;
 import org.seasar.framework.util.StringUtil;
 
 /**
+ * S2コンテナに<code>JNDI</code>経由でアクセスするためのコンテキストです。
+ * 
  * @author higa
  * 
  */
 public class JndiContext implements Context {
+
+    /**
+     * 環境です。
+     */
     protected final Hashtable env;
 
+    /**
+     * パスです。
+     */
     protected final String path;
 
-    public JndiContext(final Hashtable env) throws NamingException {
+    /**
+     * {@link JndiContext}を作成します。
+     * 
+     * @param env
+     *            環境
+     */
+    public JndiContext(final Hashtable env) {
         this.env = env;
         this.path = (String) env.get(PROVIDER_URL);
     }
@@ -181,6 +196,16 @@ public class JndiContext implements Context {
         throw new OperationNotSupportedException("unbind");
     }
 
+    /**
+     * JNDI空間にバインドします。
+     * 
+     * @param names
+     *            名前をデリミタで分割した配列
+     * @param obj
+     *            オブジェクト
+     * @throws NamingException
+     *             JNDI例外が発生した場合
+     */
     protected void bind(final String[] names, final Object obj)
             throws NamingException {
         final StringBuffer buf = new StringBuffer(100);
@@ -204,6 +229,15 @@ public class JndiContext implements Context {
         }
     }
 
+    /**
+     * {@link NamingException}を作成します。
+     * 
+     * @param message
+     *            メッセージ
+     * @param cause
+     *            原因
+     * @return {@link NamingException}
+     */
     protected NamingException createNamingException(final String message,
             final Throwable cause) {
         final NamingException e = new NamingException(message);

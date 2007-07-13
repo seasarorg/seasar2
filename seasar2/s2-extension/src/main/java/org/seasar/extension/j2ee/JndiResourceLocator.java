@@ -26,9 +26,21 @@ import javax.naming.NamingException;
 import org.seasar.framework.container.ContainerConstants;
 import org.seasar.framework.util.StringUtil;
 
+/**
+ * JNDIのリソースを解決するためのロケータです。
+ * 
+ * @author koichk
+ * 
+ */
 public class JndiResourceLocator {
+    /**
+     * ENCプレフィックスです。
+     */
     public static final String ENC_PREFIX = "java:comp/env/";
 
+    /**
+     * マジックコンポーネントです。
+     */
     protected static final Map MAGIC_COMPONENTS = new HashMap();
     static {
         MAGIC_COMPONENTS
@@ -37,10 +49,30 @@ public class JndiResourceLocator {
                 "jta/TransactionSynchronizationRegistry");
     }
 
+    /**
+     * ルックアップします。
+     * 
+     * @param name
+     *            名前
+     * @return ルックアップの結果
+     * @throws NamingException
+     *             {@link NamingException}が発生した場合
+     */
     public static Object lookup(final String name) throws NamingException {
         return lookup(name, null);
     }
 
+    /**
+     * ルックアップします。
+     * 
+     * @param name
+     *            名前
+     * @param env
+     *            環境
+     * @return ルックアップした結果
+     * @throws NamingException
+     *             {@link NamingException}が発生した場合
+     */
     public static Object lookup(final String name, final Hashtable env)
             throws NamingException {
         final InitialContext context = new InitialContext(env);
@@ -51,10 +83,24 @@ public class JndiResourceLocator {
         }
     }
 
+    /**
+     * 名前を解決します。
+     * 
+     * @param name
+     *            名前
+     * @return 解決された名前
+     */
     public static String resolveName(final Name name) {
         return resolveName(name.toString());
     }
 
+    /**
+     * 名前を解決します。
+     * 
+     * @param name
+     *            名前
+     * @return 解決された名前
+     */
     public static String resolveName(final String name) {
         String n = name;
         if (MAGIC_COMPONENTS.containsKey(name)) {
