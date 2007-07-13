@@ -46,7 +46,7 @@ public class SqlParserImpl implements SqlParser {
     private Stack nodeStack = new Stack();
 
     /**
-     * <code>SqlParserImpl</code>を作成します。
+     * {@link SqlParserImpl}を作成します。
      * 
      * @param sql
      */
@@ -66,6 +66,9 @@ public class SqlParserImpl implements SqlParser {
         return pop();
     }
 
+    /**
+     * トークンを解析します。
+     */
     protected void parseToken() {
         switch (tokenizer.getTokenType()) {
         case SqlTokenizer.SQL:
@@ -83,6 +86,9 @@ public class SqlParserImpl implements SqlParser {
         }
     }
 
+    /**
+     * SQLを解析します。
+     */
     protected void parseSql() {
         String sql = tokenizer.getToken();
         if (isElseMode()) {
@@ -113,6 +119,9 @@ public class SqlParserImpl implements SqlParser {
         }
     }
 
+    /**
+     * コメントを解析します。
+     */
     protected void parseComment() {
         String comment = tokenizer.getToken();
         if (isTargetComment(comment)) {
@@ -128,6 +137,9 @@ public class SqlParserImpl implements SqlParser {
         }
     }
 
+    /**
+     * IFを解析します。
+     */
     protected void parseIf() {
         String condition = tokenizer.getToken().substring(2).trim();
         if (StringUtil.isEmpty(condition)) {
@@ -139,6 +151,9 @@ public class SqlParserImpl implements SqlParser {
         parseEnd();
     }
 
+    /**
+     * BEGINを解析します。
+     */
     protected void parseBegin() {
         BeginNode beginNode = new BeginNode();
         peek().addChild(beginNode);
@@ -146,6 +161,9 @@ public class SqlParserImpl implements SqlParser {
         parseEnd();
     }
 
+    /**
+     * ENDを解析します。
+     */
     protected void parseEnd() {
         while (SqlTokenizer.EOF != tokenizer.next()) {
             if (tokenizer.getTokenType() == SqlTokenizer.COMMENT
@@ -159,6 +177,9 @@ public class SqlParserImpl implements SqlParser {
         throw new EndCommentNotFoundRuntimeException(tokenizer.getSql());
     }
 
+    /**
+     * ELSEを解析します。
+     */
     protected void parseElse() {
         Node parent = peek();
         if (!(parent instanceof IfNode)) {
@@ -171,6 +192,9 @@ public class SqlParserImpl implements SqlParser {
         tokenizer.skipWhitespace();
     }
 
+    /**
+     * バインド変数コメントを解析します。
+     */
     protected void parseCommentBindVariable() {
         String expr = tokenizer.getToken();
         String s = tokenizer.skipToken();
@@ -183,23 +207,47 @@ public class SqlParserImpl implements SqlParser {
         }
     }
 
+    /**
+     * バインド変数を解析します。
+     */
     protected void parseBindVariable() {
         String expr = tokenizer.getToken();
         peek().addChild(new BindVariableNode(expr));
     }
 
+    /**
+     * 一番上のノードを取り出します。
+     * 
+     * @return 一番上のノード
+     */
     protected Node pop() {
         return (Node) nodeStack.pop();
     }
 
+    /**
+     * 一番上のノードを返します。
+     * 
+     * @return 一番上のノード
+     */
     protected Node peek() {
         return (Node) nodeStack.peek();
     }
 
+    /**
+     * ノードを一番上に追加します。
+     * 
+     * @param node
+     *            ノード
+     */
     protected void push(Node node) {
         nodeStack.push(node);
     }
 
+    /**
+     * ELSEモードかどうかを返します。
+     * 
+     * @return ELSEモードかどうか
+     */
     protected boolean isElseMode() {
         for (int i = 0; i < nodeStack.size(); ++i) {
             if (nodeStack.get(i) instanceof ElseNode) {
@@ -209,19 +257,47 @@ public class SqlParserImpl implements SqlParser {
         return false;
     }
 
+    /**
+     * 対象とするコメントかどうかを返します。
+     * 
+     * @param comment
+     *            コメント
+     * @return 対象とするコメントかどうか
+     */
     protected static boolean isTargetComment(String comment) {
         return comment != null && comment.length() > 0
                 && Character.isJavaIdentifierStart(comment.charAt(0));
     }
 
+    /**
+     * IFコメントかどうかを返します。
+     * 
+     * @param comment
+     *            コメント
+     * @return IFコメントかどうか
+     */
     protected static boolean isIfComment(String comment) {
         return comment.startsWith("IF");
     }
 
+    /**
+     * BEGINコメントかどうかを返します。
+     * 
+     * @param content
+     *            コメント
+     * @return BEGINコメントかどうか
+     */
     protected static boolean isBeginComment(String content) {
         return content != null && "BEGIN".equals(content);
     }
 
+    /**
+     * ENDコメントかどうかを返します。
+     * 
+     * @param content
+     *            コメント
+     * @return ENDコメントかどうか
+     */
     protected static boolean isEndComment(String content) {
         return content != null && "END".equals(content);
     }

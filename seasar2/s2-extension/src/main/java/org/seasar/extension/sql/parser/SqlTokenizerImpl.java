@@ -102,6 +102,9 @@ public class SqlTokenizerImpl implements SqlTokenizer {
         return tokenType;
     }
 
+    /**
+     * SQLを解析します。
+     */
     protected void parseSql() {
         int commentStartPos = sql.indexOf("/*", position);
         int commentStartPos2 = sql.indexOf("#*", position);
@@ -147,6 +150,17 @@ public class SqlTokenizerImpl implements SqlTokenizer {
         }
     }
 
+    /**
+     * 次の開始位置を返します。
+     * 
+     * @param commentStartPos
+     *            コメントの開始位置
+     * @param elseCommentStartPos
+     *            ELSEコメントの開始位置
+     * @param bindVariableStartPos
+     *            バインド変数の開始位置
+     * @return 次の開始位置
+     */
     protected int getNextStartPos(int commentStartPos, int elseCommentStartPos,
             int bindVariableStartPos) {
 
@@ -165,10 +179,18 @@ public class SqlTokenizerImpl implements SqlTokenizer {
         return nextStartPos;
     }
 
+    /**
+     * 自動でつけられる次の変数名を返します。
+     * 
+     * @return 自動でつけられる次の変数名
+     */
     protected String nextBindVariableName() {
         return "$" + ++bindVariableNum;
     }
 
+    /**
+     * コメントを解析します。
+     */
     protected void parseComment() {
         int commentEndPos = sql.indexOf("*/", position);
         int commentEndPos2 = sql.indexOf("*#", position);
@@ -185,6 +207,9 @@ public class SqlTokenizerImpl implements SqlTokenizer {
         tokenType = COMMENT;
     }
 
+    /**
+     * バインド変数を解析します。
+     */
     protected void parseBindVariable() {
         token = nextBindVariableName();
         nextTokenType = SQL;
@@ -192,12 +217,18 @@ public class SqlTokenizerImpl implements SqlTokenizer {
         tokenType = BIND_VARIABLE;
     }
 
+    /**
+     * ELSEを解析します。
+     */
     protected void parseElse() {
         token = null;
         nextTokenType = SQL;
         tokenType = ELSE;
     }
 
+    /**
+     * SQLの終わりを解析します。
+     */
     protected void parseEof() {
         token = null;
         tokenType = EOF;
