@@ -24,40 +24,47 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
+/**
+ * リクエストのエンコーディングを設定するためのフィルタです。
+ * 
+ * @author higa
+ * 
+ */
 public class EncodingFilter implements Filter {
 
+    /**
+     * エンコーディングのキー
+     */
     public static String ENCODING = "encoding";
 
+    /**
+     * デフォルトのエンコーディング
+     */
     public static String DEFAULT_ENCODING = "Windows-31j";
 
-    // private FilterConfig config_ = null;
-    private String encoding_;
+    private String encoding;
 
+    /**
+     * {@link EncodingFilter}を作成します。
+     */
     public EncodingFilter() {
-        super();
     }
 
     public void init(FilterConfig config) throws ServletException {
-        // config_ = config;
-        encoding_ = config.getInitParameter(ENCODING);
-        if (encoding_ == null) {
-            encoding_ = DEFAULT_ENCODING;
+        encoding = config.getInitParameter(ENCODING);
+        if (encoding == null) {
+            encoding = DEFAULT_ENCODING;
         }
     }
 
     public void destroy() {
-        // config_ = null;
     }
 
-    /**
-     * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest,
-     *      javax.servlet.ServletResponse, javax.servlet.FilterChain)
-     */
     public void doFilter(ServletRequest request, ServletResponse response,
             FilterChain chain) throws IOException, ServletException {
 
         if (request.getCharacterEncoding() == null) {
-            request.setCharacterEncoding(encoding_);
+            request.setCharacterEncoding(encoding);
         }
         chain.doFilter(request, response);
     }
