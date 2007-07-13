@@ -104,6 +104,13 @@ public final class DatabaseMetaDataUtil {
         return set;
     }
 
+    /**
+     * ユーザ名を返します。
+     * 
+     * @param dbMetaData
+     *            データベースメタデータ
+     * @return ユーザ名
+     */
     public static String getUserName(DatabaseMetaData dbMetaData) {
         try {
             return dbMetaData.getUserName();
@@ -125,6 +132,15 @@ public final class DatabaseMetaDataUtil {
         }
     }
 
+    /**
+     * カラム名の配列を返します。
+     * 
+     * @param dbMetaData
+     *            データベースメタデータ
+     * @param tableName
+     *            テーブル名
+     * @return カラム名の配列
+     */
     public static String[] getColumns(DatabaseMetaData dbMetaData,
             String tableName) {
 
@@ -138,10 +154,28 @@ public final class DatabaseMetaDataUtil {
         return ret;
     }
 
+    /**
+     * カラムデータの {@link Map}を返します。
+     * 
+     * @param dbMetaData
+     *            データベースメタデータ
+     * @param tableName
+     *            テーブル名
+     * @return カラムデータの {@link Map}
+     */
     public static Map getColumnMap(DatabaseMetaData dbMetaData, String tableName) {
         return getColumnCaseInsensitiveMap(dbMetaData, tableName);
     }
 
+    /**
+     * カラムデータの {@link CaseInsensitiveMap}を返します。
+     * 
+     * @param dbMetaData
+     *            データベースメタデータ
+     * @param tableName
+     *            テーブル名
+     * @return カラムデータの {@link CaseInsensitiveMap}
+     */
     public static CaseInsensitiveMap getColumnCaseInsensitiveMap(
             DatabaseMetaData dbMetaData, String tableName) {
         final String schema;
@@ -169,6 +203,17 @@ public final class DatabaseMetaDataUtil {
         return map;
     }
 
+    /**
+     * カラムデータの {@link CaseInsensitiveMap}を返します。
+     * 
+     * @param dbMetaData
+     *            データベースメタデータ
+     * @param schema
+     *            スキーマ
+     * @param tableName
+     *            テーブル名
+     * @return カラムデータの {@link CaseInsensitiveMap}
+     */
     public static CaseInsensitiveMap getColumnMap(DatabaseMetaData dbMetaData,
             String schema, String tableName) {
         CaseInsensitiveMap map = new CaseInsensitiveMap();
@@ -192,6 +237,15 @@ public final class DatabaseMetaDataUtil {
         }
     }
 
+    /**
+     * 識別子を変換します。
+     * 
+     * @param dbMetaData
+     *            データベースメタデータ
+     * @param identifier
+     *            識別子
+     * @return 変換後の識別子
+     */
     public static String convertIdentifier(DatabaseMetaData dbMetaData,
             String identifier) {
 
@@ -207,8 +261,17 @@ public final class DatabaseMetaDataUtil {
         return identifier;
     }
 
+    /**
+     * 大文字小文字のミックスをサポートしているかどうか返します。
+     * 
+     * @param dbMetaData
+     *            データベースメタデータ
+     * @return 大文字小文字のミックスをサポートしているかどうか
+     * @throws SQLRuntimeException
+     *             SQL例外が発生した場合
+     */
     public static boolean supportsMixedCaseIdentifiers(
-            DatabaseMetaData dbMetaData) {
+            DatabaseMetaData dbMetaData) throws SQLRuntimeException {
 
         try {
             return dbMetaData.supportsMixedCaseIdentifiers();
@@ -217,7 +280,17 @@ public final class DatabaseMetaDataUtil {
         }
     }
 
-    public static boolean storesUpperCaseIdentifiers(DatabaseMetaData dbMetaData) {
+    /**
+     * 識別子を大文字で保存するかどうかを返します。
+     * 
+     * @param dbMetaData
+     *            データベースメタデータ
+     * @return 識別子を大文字で保存するかどうか
+     * @throws SQLRuntimeException
+     *             SQL例外が発生した場合
+     */
+    public static boolean storesUpperCaseIdentifiers(DatabaseMetaData dbMetaData)
+            throws SQLRuntimeException {
         try {
             return dbMetaData.storesUpperCaseIdentifiers();
         } catch (SQLException ex) {
@@ -225,7 +298,17 @@ public final class DatabaseMetaDataUtil {
         }
     }
 
-    public static boolean storesLowerCaseIdentifiers(DatabaseMetaData dbMetaData) {
+    /**
+     * 識別子を小文字で保存するかどうかを返します。
+     * 
+     * @param dbMetaData
+     *            データベースメタデータ
+     * @return 識別子を小文字で保存するかどうか
+     * @throws SQLRuntimeException
+     *             SQL例外が発生した場合
+     */
+    public static boolean storesLowerCaseIdentifiers(DatabaseMetaData dbMetaData)
+            throws SQLRuntimeException {
         try {
             return dbMetaData.storesLowerCaseIdentifiers();
         } catch (SQLException ex) {
@@ -233,8 +316,17 @@ public final class DatabaseMetaDataUtil {
         }
     }
 
+    /**
+     * スキーマをサポートしているかどうかを返します。
+     * 
+     * @param dbMetaData
+     *            データベースメタデータ
+     * @return スキーマをサポートしているかどうか
+     * @throws SQLRuntimeException
+     *             SQL例外が発生した場合
+     */
     public static boolean supportsSchemasInTableDefinitions(
-            DatabaseMetaData dbMetaData) {
+            DatabaseMetaData dbMetaData) throws SQLRuntimeException {
         try {
             return dbMetaData.supportsSchemasInTableDefinitions();
         } catch (SQLException ex) {
@@ -242,6 +334,13 @@ public final class DatabaseMetaDataUtil {
         }
     }
 
+    /**
+     * 識別子の自動作成をサポートしているかどうかを返します。
+     * 
+     * @param dbMetaData
+     *            データベースメタデータ
+     * @return 識別子の自動作成をサポートしているかどうか
+     */
     public static boolean supportsGetGeneratedKeys(DatabaseMetaData dbMetaData) {
         try {
             return dbMetaData.supportsGetGeneratedKeys();
@@ -250,6 +349,13 @@ public final class DatabaseMetaDataUtil {
         }
     }
 
+    /**
+     * データベースのプロダクト名を返します。
+     * 
+     * @param dbMetaData
+     *            データベースメタデータ
+     * @return データベースのプロダクト名
+     */
     public static String getDatabaseProductName(DatabaseMetaData dbMetaData) {
         try {
             return dbMetaData.getDatabaseProductName();

@@ -23,6 +23,8 @@ import javax.sql.DataSource;
 import org.seasar.framework.exception.SQLRuntimeException;
 
 /**
+ * {@link DataSource}用のユーティリティクラスです。
+ * 
  * @author higa
  * 
  */
@@ -31,7 +33,17 @@ public final class DataSourceUtil {
     private DataSourceUtil() {
     }
 
-    public static Connection getConnection(DataSource dataSource) {
+    /**
+     * コネクションを返します。
+     * 
+     * @param dataSource
+     *            データソース
+     * @return コネクション
+     * @throws SQLRuntimeException
+     *             SQL例外が発生した場合
+     */
+    public static Connection getConnection(DataSource dataSource)
+            throws SQLRuntimeException {
         try {
             return dataSource.getConnection();
         } catch (SQLException ex) {
