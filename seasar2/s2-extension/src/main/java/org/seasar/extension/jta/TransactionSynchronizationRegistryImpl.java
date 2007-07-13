@@ -20,9 +20,12 @@ import javax.transaction.Synchronization;
 import javax.transaction.TransactionManager;
 import javax.transaction.TransactionSynchronizationRegistry;
 
+import org.seasar.framework.exception.SIllegalStateException;
 import org.seasar.framework.util.TransactionManagerUtil;
 
 /**
+ * {@link TransactionSynchronizationRegistry}の実装クラスです。
+ * 
  * @author nakamura
  * 
  */
@@ -31,6 +34,12 @@ public class TransactionSynchronizationRegistryImpl implements
 
     private TransactionManager tm;
 
+    /**
+     * トランザクションマネージャを設定します。
+     * 
+     * @param tm
+     *            トランザクションマネージャ
+     */
     public void setTransactionManager(TransactionManager tm) {
         this.tm = tm;
     }
@@ -82,16 +91,32 @@ public class TransactionSynchronizationRegistryImpl implements
         getTransaction().registerInterposedSynchronization(sync);
     }
 
+    /**
+     * トランザクションを返します。
+     * 
+     * @return トランザクション
+     */
     protected TransactionImpl getTransaction() {
         return (TransactionImpl) TransactionManagerUtil.getTransaction(tm);
     }
 
-    protected void assertActive() {
+    /**
+     * トランザクションがアクティブであることを表明します。
+     * 
+     * @throws IllegalStateException
+     *             アクティブでない場合
+     */
+    protected void assertActive() throws IllegalStateException {
         if (!isActive()) {
-            throw new IllegalStateException("ESSR0311");
+            throw new SIllegalStateException("ESSR0311");
         }
     }
 
+    /**
+     * トランザクションがアクティブかどうかを返します。
+     * 
+     * @return トランザクションがアクティブかどうか
+     */
     protected boolean isActive() {
         return TransactionManagerUtil.isActive(tm);
     }

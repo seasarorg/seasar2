@@ -19,6 +19,12 @@ import java.io.Serializable;
 
 import javax.transaction.xa.Xid;
 
+/**
+ * {@link Xid}の実装クラスです。
+ * 
+ * @author higa
+ * 
+ */
 public class XidImpl implements Xid, Serializable {
 
     static final long serialVersionUID = 1L;
@@ -30,37 +36,48 @@ public class XidImpl implements Xid, Serializable {
     private static final String GLOBAL_ID_BASE = System.currentTimeMillis()
             + "/";
 
-    private static int nextId_ = 0;
+    private static int nextId = 0;
 
-    private int hashCode_;
+    private int hashCode;
 
-    private byte[] globalId_;
+    private byte[] globalId;
 
-    private byte[] branchId_;
+    private byte[] branchId;
 
+    /**
+     * {@link XidImpl}を作成します。
+     */
     public XidImpl() {
-        hashCode_ = getNextId();
-        globalId_ = createGlobalId();
-        branchId_ = INITIAL_BRANCH_ID;
+        hashCode = getNextId();
+        globalId = createGlobalId();
+        branchId = INITIAL_BRANCH_ID;
     }
 
-    public XidImpl(Xid xid, int branchId) {
-        hashCode_ = xid.hashCode();
-        globalId_ = xid.getGlobalTransactionId();
-        branchId_ = convert64bytes(Integer.toString(branchId).getBytes());
+    /**
+     * {@link XidImpl}を作成します。
+     * 
+     * @param xid
+     *            トランザクション識別子
+     * @param bid
+     *            ブランチ識別子
+     */
+    public XidImpl(Xid xid, int bid) {
+        hashCode = xid.hashCode();
+        globalId = xid.getGlobalTransactionId();
+        branchId = convert64bytes(Integer.toString(bid).getBytes());
     }
 
     private byte[] createGlobalId() {
-        return convert64bytes((GLOBAL_ID_BASE + Integer.toString(hashCode_))
+        return convert64bytes((GLOBAL_ID_BASE + Integer.toString(hashCode))
                 .getBytes());
     }
 
     public byte[] getGlobalTransactionId() {
-        return (byte[]) globalId_.clone();
+        return (byte[]) globalId.clone();
     }
 
     public byte[] getBranchQualifier() {
-        return (byte[]) branchId_.clone();
+        return (byte[]) branchId.clone();
     }
 
     public int getFormatId() {
@@ -75,21 +92,21 @@ public class XidImpl implements Xid, Serializable {
             return false;
         }
         XidImpl other = (XidImpl) obj;
-        if (hashCode_ != other.hashCode_) {
+        if (hashCode != other.hashCode) {
             return false;
         }
-        if (globalId_.length != other.globalId_.length
-                || branchId_.length != other.branchId_.length) {
+        if (globalId.length != other.globalId.length
+                || branchId.length != other.branchId.length) {
 
             return false;
         }
-        for (int i = 0; i < globalId_.length; ++i) {
-            if (globalId_[i] != other.globalId_[i]) {
+        for (int i = 0; i < globalId.length; ++i) {
+            if (globalId[i] != other.globalId[i]) {
                 return false;
             }
         }
-        for (int i = 0; i < branchId_.length; ++i) {
-            if (branchId_[i] != other.branchId_[i]) {
+        for (int i = 0; i < branchId.length; ++i) {
+            if (branchId[i] != other.branchId[i]) {
                 return false;
             }
         }
@@ -97,13 +114,13 @@ public class XidImpl implements Xid, Serializable {
     }
 
     public int hashCode() {
-        return hashCode_;
+        return hashCode;
     }
 
     public String toString() {
         return "[FormatId=" + FORMAT_ID + ", GlobalId="
-                + new String(globalId_).trim() + ", BranchId="
-                + new String(branchId_).trim() + "]";
+                + new String(globalId).trim() + ", BranchId="
+                + new String(branchId).trim() + "]";
     }
 
     private static byte[] convert64bytes(byte[] bytes) {
@@ -113,6 +130,6 @@ public class XidImpl implements Xid, Serializable {
     }
 
     private static synchronized int getNextId() {
-        return nextId_++;
+        return nextId++;
     }
 }

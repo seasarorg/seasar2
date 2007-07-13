@@ -21,15 +21,24 @@ import javax.transaction.xa.Xid;
 
 import org.seasar.framework.exception.SXAException;
 
+/**
+ * {@link XAResource}の抽象クラスです。
+ * 
+ * @author higa
+ * 
+ */
 public abstract class AbstractXAResource implements XAResource,
         XAResourceStatus {
 
-    private Xid currentXid_;
+    private Xid currentXid;
 
-    private int status_ = RS_NONE;
+    private int status = RS_NONE;
 
-    private int timeout_ = 0;
+    private int timeout = 0;
 
+    /**
+     * {@link AbstractXAResource}を作成します。
+     */
     public AbstractXAResource() {
     }
 
@@ -50,38 +59,53 @@ public abstract class AbstractXAResource implements XAResource,
     private void begin(Xid xid) throws XAException {
         assertCurrentXidNull();
         doBegin(xid);
-        currentXid_ = xid;
-        status_ = RS_ACTIVE;
+        currentXid = xid;
+        status = RS_ACTIVE;
     }
 
     private void assertCurrentXidNull() throws XAException {
-        if (currentXid_ != null) {
+        if (currentXid != null) {
             throw new SXAException("ESSR0316", null);
         }
     }
 
+    /**
+     * トランザクションを開始します。
+     * 
+     * @param xid
+     *            トランザクション識別子
+     * @throws XAException
+     *             XA例外が発生した場合
+     */
     protected abstract void doBegin(Xid xid) throws XAException;
 
     private void resume(Xid xid) throws XAException {
         assertCurrentXidSame(xid);
         assertStatusSuspended();
         doResume(xid);
-        status_ = RS_ACTIVE;
+        status = RS_ACTIVE;
     }
 
     private void assertCurrentXidSame(final Xid xid) throws XAException {
-        if (currentXid_ != xid) {
-            throw new SXAException("ESSR0319",
-                    new Object[] { xid, currentXid_ });
+        if (currentXid != xid) {
+            throw new SXAException("ESSR0319", new Object[] { xid, currentXid });
         }
     }
 
     private void assertStatusSuspended() throws XAException {
-        if (status_ != RS_SUSPENDED) {
+        if (status != RS_SUSPENDED) {
             throw new SXAException("ESSR0323", null);
         }
     }
 
+    /**
+     * レジュームします。
+     * 
+     * @param xid
+     *            トランザクション識別子
+     * @throws XAException
+     *             XA例外が発生した場合
+     */
     protected abstract void doResume(Xid xid) throws XAException;
 
     public void end(Xid xid, int flags) throws XAException {
@@ -104,30 +128,53 @@ public abstract class AbstractXAResource implements XAResource,
     }
 
     private void assertStatusActive() throws XAException {
-        if (status_ != RS_ACTIVE) {
+        if (status != RS_ACTIVE) {
             throw new SXAException("ESSR0324", null);
         }
     }
 
     private void suspend(Xid xid) throws XAException {
         doSuspend(xid);
-        status_ = RS_SUSPENDED;
+        status = RS_SUSPENDED;
     }
 
+    /**
+     * サスペンドします。
+     * 
+     * @param xid
+     *            トランザクション識別子
+     * @throws XAException
+     *             XA例外が発生した場合
+     */
     protected abstract void doSuspend(Xid xid) throws XAException;
 
     private void fail(Xid xid) throws XAException {
         doFail(xid);
-        status_ = RS_FAIL;
+        status = RS_FAIL;
     }
 
+    /**
+     * 失敗させます。
+     * 
+     * @param xid
+     *            トランザクション識別子
+     * @throws XAException
+     */
     protected abstract void doFail(Xid xid) throws XAException;
 
     private void success(Xid xid) throws XAException {
         doSuccess(xid);
-        status_ = RS_SUCCESS;
+        status = RS_SUCCESS;
     }
 
+    /**
+     * 成功時の処理を行ないます。
+     * 
+     * @param xid
+     *            トランザクション識別子
+     * @throws XAException
+     *             XA例外が発生した場合
+     */
     protected abstract void doSuccess(Xid xid) throws XAException;
 
     public int prepare(Xid xid) throws XAException {
@@ -135,19 +182,28 @@ public abstract class AbstractXAResource implements XAResource,
         assertStatusSuccess();
         int ret = doPrepare(xid);
         if (ret == XA_OK) {
-            status_ = RS_PREPARED;
+            status = RS_PREPARED;
         } else {
-            status_ = RS_NONE;
+            status = RS_NONE;
         }
         return ret;
     }
 
     private void assertStatusSuccess() throws XAException {
-        if (status_ != RS_SUCCESS) {
+        if (status != RS_SUCCESS) {
             throw new SXAException("ESSR0320", null);
         }
     }
 
+    /**
+     * コミットする準備を行ないます。
+     * 
+     * @param xid
+     *            トランザクション識別子
+     * @return 投票の結果
+     * @throws XAException
+     *             XA例外が発生した場合
+     */
     protected abstract int doPrepare(Xid xid) throws XAException;
 
     public void commit(Xid xid, boolean onePhase) throws XAException {
@@ -162,17 +218,27 @@ public abstract class AbstractXAResource implements XAResource,
     }
 
     private void assertStatusPrepared() throws XAException {
-        if (status_ != RS_PREPARED) {
+        if (status != RS_PREPARED) {
             throw new SXAException("ESSR0321", null);
         }
     }
 
+    /**
+     * コミットします。
+     * 
+     * @param xid
+     *            トランザクション識別子
+     * @param onePhase
+     *            1フェーズかどうか
+     * @throws XAException
+     *             XA例外が発生した場合
+     */
     protected abstract void doCommit(Xid xid, boolean onePhase)
             throws XAException;
 
     private void init() {
-        currentXid_ = null;
-        status_ = RS_NONE;
+        currentXid = null;
+        status = RS_NONE;
     }
 
     public void forget(Xid xid) throws XAException {
@@ -181,6 +247,14 @@ public abstract class AbstractXAResource implements XAResource,
         init();
     }
 
+    /**
+     * トランザクションを忘れます。
+     * 
+     * @param xid
+     *            トランザクション識別子
+     * @throws XAException
+     *             XA例外が発生した場合
+     */
     protected abstract void doForget(Xid xid) throws XAException;
 
     public Xid[] recover(final int flag) throws XAException {
@@ -195,7 +269,7 @@ public abstract class AbstractXAResource implements XAResource,
     }
 
     private void assertStatusSuccessOrFailOrPrepared() throws XAException {
-        switch (status_) {
+        switch (status) {
         case RS_SUCCESS:
         case RS_FAIL:
         case RS_PREPARED:
@@ -205,6 +279,14 @@ public abstract class AbstractXAResource implements XAResource,
         }
     }
 
+    /**
+     * ロールバックします。
+     * 
+     * @param xid
+     *            トランザクション識別子
+     * @throws XAException
+     *             XA例外が発生した場合
+     */
     protected abstract void doRollback(Xid xid) throws XAException;
 
     public boolean isSameRM(XAResource xar) throws XAException {
@@ -212,19 +294,29 @@ public abstract class AbstractXAResource implements XAResource,
     }
 
     public int getTransactionTimeout() throws XAException {
-        return timeout_;
+        return timeout;
     }
 
     public boolean setTransactionTimeout(int timeout) throws XAException {
-        timeout_ = timeout;
+        this.timeout = timeout;
         return true;
     }
 
+    /**
+     * 現在のトランザクション識別子を返します。
+     * 
+     * @return 現在のトランザクション識別子
+     */
     public Xid getCurrentXid() {
-        return currentXid_;
+        return currentXid;
     }
 
+    /**
+     * ステータスを返します。
+     * 
+     * @return ステータス
+     */
     public int getStatus() {
-        return status_;
+        return status;
     }
 }

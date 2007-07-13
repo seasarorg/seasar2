@@ -35,6 +35,17 @@ public class SIllegalStateException extends IllegalStateException {
      * {@link SIllegalStateException}を作成します。
      * 
      * @param messageCode
+     */
+    public SIllegalStateException(String messageCode) {
+        super(MessageFormatter.getMessage(messageCode, null));
+
+        this.messageCode = messageCode;
+    }
+
+    /**
+     * {@link SIllegalStateException}を作成します。
+     * 
+     * @param messageCode
      * @param args
      */
     public SIllegalStateException(String messageCode, Object[] args) {

@@ -13,45 +13,29 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.jta.xa;
+package org.seasar.framework.exception;
 
-import javax.transaction.xa.XAResource;
+import junit.framework.TestCase;
 
 /**
- * {@link XAResource}のステータスを定義したインターフェースです。
- * 
  * @author higa
  * 
  */
-public interface XAResourceStatus {
+public class SIllegalStateExceptionTest extends TestCase {
+
+    protected void setUp() throws Exception {
+        super.setUp();
+    }
 
     /**
-     * None
+     * Test method for
+     * {@link org.seasar.framework.exception.SIllegalStateException#SIllegalStateException(java.lang.String)}.
      */
-    int RS_NONE = 0;
+    public void testSIllegalStateExceptionString() {
+        SIllegalStateException ex = new SIllegalStateException("ESSR0311");
+        System.out.println(ex.getMessage());
+        assertNotNull(ex.getMessage());
+        assertEquals("ESSR0311", ex.getMessageCode());
+    }
 
-    /**
-     * Active
-     */
-    int RS_ACTIVE = 1;
-
-    /**
-     * Suspended
-     */
-    int RS_SUSPENDED = 2;
-
-    /**
-     * Fail
-     */
-    int RS_FAIL = 3;
-
-    /**
-     * Success
-     */
-    int RS_SUCCESS = 4;
-
-    /**
-     * Prepared
-     */
-    int RS_PREPARED = 5;
 }
