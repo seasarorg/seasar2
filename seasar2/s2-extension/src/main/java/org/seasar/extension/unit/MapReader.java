@@ -28,31 +28,59 @@ import org.seasar.extension.dataset.impl.DataSetImpl;
 import org.seasar.extension.dataset.states.RowStates;
 import org.seasar.extension.dataset.types.ColumnTypes;
 
+/**
+ * {@link Map}用の {@link DataReader}です。
+ * 
+ * @author higa
+ * 
+ */
 public class MapReader implements DataReader {
 
-    private DataSet dataSet_ = new DataSetImpl();
+    private DataSet dataSet = new DataSetImpl();
 
-    private DataTable table_ = dataSet_.addTable("Map");
+    private DataTable table = dataSet.addTable("Map");
 
+    /**
+     * {@link MapReader}を作成します。
+     */
     protected MapReader() {
     }
 
+    /**
+     * {@link MapReader}を作成します。
+     * 
+     * @param map
+     *            マップ
+     */
     public MapReader(Map map) {
         setupColumns(map);
         setupRow(map);
     }
 
+    /**
+     * カラムをセットアップします。
+     * 
+     * @param map
+     *            マップ
+     * 
+     */
     protected void setupColumns(Map map) {
         for (Iterator i = map.keySet().iterator(); i.hasNext();) {
             String key = (String) i.next();
-            table_.addColumn(key);
+            table.addColumn(key);
         }
     }
 
+    /**
+     * 行をセットアップします。
+     * 
+     * @param map
+     *            マップ
+     */
     protected void setupRow(Map map) {
-        DataRow row = table_.addRow();
-        for (int i = 0; i < table_.getColumnSize(); ++i) {
-            DataColumn column = table_.getColumn(i);
+        DataRow row = table.addRow();
+        for (int i = 0; i < table.getColumnSize(); ++i) {
+            DataColumn column = table.getColumn(i);
             Object value = map.get(column.getColumnName());
             if (value != null) {
                 ColumnType ct = ColumnTypes.getColumnType(value.getClass());
@@ -63,7 +91,7 @@ public class MapReader implements DataReader {
     }
 
     public DataSet read() {
-        return dataSet_;
+        return dataSet;
     }
 
 }

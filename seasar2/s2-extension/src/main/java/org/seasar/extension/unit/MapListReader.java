@@ -19,11 +19,19 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * リスト用の {@link MapReader}です。
+ * 
  * @author higa
  * 
  */
 public class MapListReader extends MapReader {
 
+    /**
+     * {@link MapListReader}を作成します。
+     * 
+     * @param list
+     *            リスト
+     */
     public MapListReader(List list) {
         setupColumns((Map) list.get(0));
         for (int i = 0; i < list.size(); ++i) {

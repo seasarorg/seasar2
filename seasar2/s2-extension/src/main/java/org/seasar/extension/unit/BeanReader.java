@@ -27,32 +27,61 @@ import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.beans.factory.BeanDescFactory;
 
+/**
+ * Bean用の {@link DataReader}です。
+ * 
+ * @author higa
+ * 
+ */
 public class BeanReader implements DataReader {
 
-    private DataSet dataSet_ = new DataSetImpl();
+    private DataSet dataSet = new DataSetImpl();
 
-    private DataTable table_ = dataSet_.addTable("Bean");
+    private DataTable table = dataSet.addTable("Bean");
 
+    /**
+     * {@link BeanReader}を作成します。
+     */
     protected BeanReader() {
     }
 
+    /**
+     * {@link BeanReader}を作成します。
+     * 
+     * @param bean
+     *            Bean
+     */
     public BeanReader(Object bean) {
         BeanDesc beanDesc = BeanDescFactory.getBeanDesc(bean.getClass());
         setupColumns(beanDesc);
         setupRow(beanDesc, bean);
     }
 
+    /**
+     * カラムをセットアップします。
+     * 
+     * @param beanDesc
+     *            Bean記述
+     */
     protected void setupColumns(BeanDesc beanDesc) {
         for (int i = 0; i < beanDesc.getPropertyDescSize(); ++i) {
             PropertyDesc pd = beanDesc.getPropertyDesc(i);
             Class propertyType = pd.getPropertyType();
-            table_.addColumn(pd.getPropertyName(), ColumnTypes
+            table.addColumn(pd.getPropertyName(), ColumnTypes
                     .getColumnType(propertyType));
         }
     }
 
+    /**
+     * 行をセットアップします。
+     * 
+     * @param beanDesc
+     *            Bean記述
+     * @param bean
+     *            Bean
+     */
     protected void setupRow(BeanDesc beanDesc, Object bean) {
-        DataRow row = table_.addRow();
+        DataRow row = table.addRow();
         for (int i = 0; i < beanDesc.getPropertyDescSize(); ++i) {
             PropertyDesc pd = beanDesc.getPropertyDesc(i);
             Object value = pd.getValue(bean);
@@ -63,7 +92,7 @@ public class BeanReader implements DataReader {
     }
 
     public DataSet read() {
-        return dataSet_;
+        return dataSet;
     }
 
 }

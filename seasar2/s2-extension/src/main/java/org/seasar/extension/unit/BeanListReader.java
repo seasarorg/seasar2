@@ -21,11 +21,19 @@ import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.factory.BeanDescFactory;
 
 /**
+ * リスト用の {@link BeanReader}です。
+ * 
  * @author higa
  * 
  */
 public class BeanListReader extends BeanReader {
 
+    /**
+     * {@link BeanListReader}を作成します。
+     * 
+     * @param list
+     *            リスト
+     */
     public BeanListReader(List list) {
         BeanDesc beanDesc = BeanDescFactory.getBeanDesc(list.get(0).getClass());
         setupColumns(beanDesc);

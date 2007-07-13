@@ -58,6 +58,8 @@ import org.seasar.framework.util.FileOutputStreamUtil;
 import org.seasar.framework.util.ResourceUtil;
 
 /**
+ * トランザクションやデータソースを使うためのTestCaseです。
+ * 
  * @author higa
  */
 public abstract class S2TestCase extends S2FrameworkTestCase {
@@ -71,9 +73,18 @@ public abstract class S2TestCase extends S2FrameworkTestCase {
 
     private DatabaseMetaData dbMetaData;
 
+    /**
+     * {@link S2TestCase}を作成します。
+     */
     public S2TestCase() {
     }
 
+    /**
+     * {@link S2TestCase}を作成します。
+     * 
+     * @param name
+     *            名前
+     */
     public S2TestCase(String name) {
         super(name);
     }
@@ -97,6 +108,11 @@ public abstract class S2TestCase extends S2FrameworkTestCase {
         }
     }
 
+    /**
+     * トランザクション処理が必要かどうかを返します。
+     * 
+     * @return トランザクション処理が必要かどうか
+     */
     protected boolean needTransaction() {
         return getName().endsWith("Tx");
     }
@@ -111,6 +127,9 @@ public abstract class S2TestCase extends S2FrameworkTestCase {
         super.tearDownBeforeContainerDestroy();
     }
 
+    /**
+     * 
+     */
     protected void setupDataSource() {
         S2Container container = getContainer();
         try {
@@ -126,6 +145,9 @@ public abstract class S2TestCase extends S2FrameworkTestCase {
         }
     }
 
+    /**
+     * データソースの終了処理を行ないます。
+     */
     protected void tearDownDataSource() {
         dbMetaData = null;
         if (connection != null) {
@@ -135,6 +157,11 @@ public abstract class S2TestCase extends S2FrameworkTestCase {
         dataSource = null;
     }
 
+    /**
+     * データソースを返します。
+     * 
+     * @return データソース
+     */
     public DataSource getDataSource() {
         if (dataSource == null) {
             throw new EmptyRuntimeException("dataSource");
@@ -142,6 +169,11 @@ public abstract class S2TestCase extends S2FrameworkTestCase {
         return dataSource;
     }
 
+    /**
+     * コネクションを返します。
+     * 
+     * @return コネクション
+     */
     public Connection getConnection() {
         if (connection != null) {
             return connection;
@@ -150,6 +182,11 @@ public abstract class S2TestCase extends S2FrameworkTestCase {
         return connection;
     }
 
+    /**
+     * データベースメタデータを返します。
+     * 
+     * @return データベースメタデータ
+     */
     public DatabaseMetaData getDatabaseMetaData() {
         if (dbMetaData != null) {
             return dbMetaData;
@@ -158,15 +195,39 @@ public abstract class S2TestCase extends S2FrameworkTestCase {
         return dbMetaData;
     }
 
+    /**
+     * エクセルを読み込みます。
+     * 
+     * @param path
+     *            パス
+     * @return エクセルのデータ
+     */
     public DataSet readXls(String path) {
         return readXls(path, true);
     }
 
+    /**
+     * エクセルを読み込みます。
+     * 
+     * @param path
+     *            パス
+     * @param trimString
+     *            文字列をトリムするかどうか
+     * @return エクセルのデータ
+     */
     public DataSet readXls(String path, boolean trimString) {
         DataReader reader = new XlsReader(convertPath(path), trimString);
         return reader.read();
     }
 
+    /**
+     * エクセルに書き込みます。
+     * 
+     * @param path
+     *            パス
+     * @param dataSet
+     *            データセット
+     */
     public void writeXls(String path, DataSet dataSet) {
         File dir = ResourceUtil.getBuildDir(getClass());
         File file = new File(dir, convertPath(path));
@@ -174,11 +235,22 @@ public abstract class S2TestCase extends S2FrameworkTestCase {
         writer.write(dataSet);
     }
 
+    /**
+     * データベースに書き込みます。
+     * 
+     * @param dataSet
+     *            データセット
+     */
     public void writeDb(DataSet dataSet) {
         SqlWriter writer = getSqlWriter();
         writer.write(dataSet);
     }
 
+    /**
+     * {@link SqlWriter}を返します。
+     * 
+     * @return {@link SqlWriter}
+     */
     protected SqlWriter getSqlWriter() {
         S2Container container = getContainer();
         if (container.hasComponentDef(SqlWriter.class)) {
@@ -187,50 +259,124 @@ public abstract class S2TestCase extends S2FrameworkTestCase {
         return new SqlWriter(getDataSource());
     }
 
+    /**
+     * データベースの内容を読み込みます。
+     * 
+     * @param dataSet
+     *            データセット
+     * @return データベースの内容
+     */
     public DataSet readDb(DataSet dataSet) {
         SqlReader reader = new SqlReader(getDataSource());
         reader.addDataSet(dataSet);
         return reader.read();
     }
 
+    /**
+     * テーブルの内容を読み込みます。
+     * 
+     * @param table
+     *            テーブル
+     * @return テーブルの内容
+     */
     public DataTable readDbByTable(String table) {
         return readDbByTable(table, null);
     }
 
+    /**
+     * テーブルの内容を読み込みます。
+     * 
+     * @param table
+     *            テーブル名
+     * @param condition
+     *            条件
+     * @return テーブルの内容
+     */
     public DataTable readDbByTable(String table, String condition) {
         SqlTableReader reader = new SqlTableReader(getDataSource());
         reader.setTable(table, condition);
         return reader.read();
     }
 
+    /**
+     * テーブルの内容を読み込みます。
+     * 
+     * @param sql
+     *            SQL
+     * @param tableName
+     *            テーブル名
+     * @return テーブルの内容
+     */
     public DataTable readDbBySql(String sql, String tableName) {
         SqlTableReader reader = new SqlTableReader(getDataSource());
         reader.setSql(sql, tableName);
         return reader.read();
     }
 
+    /**
+     * エクセルから読み込んだデータをデータベースに書き出します。
+     * 
+     * @param path
+     *            パス
+     */
     public void readXlsWriteDb(String path) {
         readXlsWriteDb(path, true);
     }
 
+    /**
+     * エクセルから読み込んだデータをデータベースに書き出します。
+     * 
+     * @param path
+     *            パス
+     * @param trimString
+     *            文字列をトリムするかどうか
+     */
     public void readXlsWriteDb(String path, boolean trimString) {
         writeDb(readXls(path, trimString));
     }
 
+    /**
+     * エクセルから読み込んだデータでそのテーブルの内容を置き換えます。
+     * 
+     * @param path
+     *            パス
+     */
     public void readXlsReplaceDb(String path) {
         readXlsReplaceDb(path, true);
     }
 
+    /**
+     * エクセルから読み込んだデータでそのテーブルの内容を置き換えます。
+     * 
+     * @param path
+     *            パス
+     * @param trimString
+     *            文字列をトリムするかどうか
+     */
     public void readXlsReplaceDb(String path, boolean trimString) {
         DataSet dataSet = readXls(path, trimString);
         deleteDb(dataSet);
         writeDb(dataSet);
     }
 
+    /**
+     * エクセルから読み込んだデータでそのテーブルの内容を全部置き換えます。
+     * 
+     * @param path
+     *            パス
+     */
     public void readXlsAllReplaceDb(String path) {
         readXlsAllReplaceDb(path, true);
     }
 
+    /**
+     * エクセルから読み込んだデータでそのテーブルの内容を全部置き換えます。
+     * 
+     * @param path
+     *            パス
+     * @param trimString
+     *            文字列をトリムするかどうか
+     */
     public void readXlsAllReplaceDb(String path, boolean trimString) {
         DataSet dataSet = readXls(path, trimString);
         for (int i = dataSet.getTableSize() - 1; i >= 0; --i) {
@@ -239,14 +385,32 @@ public abstract class S2TestCase extends S2FrameworkTestCase {
         writeDb(dataSet);
     }
 
+    /**
+     * リロードします。
+     * 
+     * @param dataSet
+     *            データセット
+     * @return リロードした結果
+     */
     public DataSet reload(DataSet dataSet) {
         return new SqlReloadReader(getDataSource(), dataSet).read();
     }
 
+    /**
+     * @param table
+     * @return
+     */
     public DataTable reload(DataTable table) {
         return new SqlReloadTableReader(getDataSource(), table).read();
     }
 
+    /**
+     * テーブルの内容をリロードもしくは読み込みます。
+     * 
+     * @param dataSet
+     *            データセット
+     * @return 読み込んだ結果
+     */
     public DataSet reloadOrReadDb(DataSet dataSet) {
         DataSet newDataSet = new DataSetImpl();
         outer: for (int i = 0; i < dataSet.getTableSize(); i++) {
@@ -266,6 +430,12 @@ public abstract class S2TestCase extends S2FrameworkTestCase {
         return newDataSet;
     }
 
+    /**
+     * データベースからデータを削除します。
+     * 
+     * @param dataSet
+     *            データセット
+     */
     public void deleteDb(DataSet dataSet) {
         SqlDeleteTableWriter writer = new SqlDeleteTableWriter(getDataSource());
         for (int i = dataSet.getTableSize() - 1; i >= 0; --i) {
@@ -273,16 +443,40 @@ public abstract class S2TestCase extends S2FrameworkTestCase {
         }
     }
 
+    /**
+     * テーブルのデータを削除します。
+     * 
+     * @param tableName
+     *            テーブル名
+     */
     public void deleteTable(String tableName) {
         UpdateHandler handler = new BasicUpdateHandler(getDataSource(),
                 "DELETE FROM " + tableName);
         handler.execute(null);
     }
 
+    /**
+     * 等しいことを表明します。
+     * 
+     * @param expected
+     *            期待値
+     * @param actual
+     *            実際の値
+     */
     public void assertEquals(DataSet expected, DataSet actual) {
         assertEquals(null, expected, actual);
     }
 
+    /**
+     * 等しいことを表明します。
+     * 
+     * @param message
+     *            メッセージ
+     * @param expected
+     *            期待値
+     * @param actual
+     *            実際の値
+     */
     public void assertEquals(String message, DataSet expected, DataSet actual) {
         message = message == null ? "" : message;
         assertEquals(message + ":TableSize", expected.getTableSize(), actual
@@ -292,10 +486,28 @@ public abstract class S2TestCase extends S2FrameworkTestCase {
         }
     }
 
+    /**
+     * 等しいことを表明します。
+     * 
+     * @param expected
+     *            期待値
+     * @param actual
+     *            実際の値
+     */
     public void assertEquals(DataTable expected, DataTable actual) {
         assertEquals(null, expected, actual);
     }
 
+    /**
+     * 等しいことを表明します。
+     * 
+     * @param message
+     *            メッセージ
+     * @param expected
+     *            期待値
+     * @param actual
+     *            実際の値
+     */
     public void assertEquals(String message, DataTable expected,
             DataTable actual) {
 
@@ -327,10 +539,28 @@ public abstract class S2TestCase extends S2FrameworkTestCase {
         }
     }
 
+    /**
+     * 等しいことを表明します。
+     * 
+     * @param expected
+     *            期待値
+     * @param actual
+     *            実際の値
+     */
     public void assertEquals(DataSet expected, Object actual) {
         assertEquals(null, expected, actual);
     }
 
+    /**
+     * 等しいことを表明します。
+     * 
+     * @param message
+     *            メッセージ
+     * @param expected
+     *            期待値
+     * @param actual
+     *            実際の値
+     */
     public void assertEquals(String message, DataSet expected, Object actual) {
         if (expected == null || actual == null) {
             Assert.assertEquals(message, expected, actual);
@@ -356,12 +586,32 @@ public abstract class S2TestCase extends S2FrameworkTestCase {
         }
     }
 
+    /**
+     * 等しいことを表明します。
+     * 
+     * @param message
+     *            メッセージ
+     * @param expected
+     *            期待値
+     * @param map
+     *            実際の値
+     */
     protected void assertMapEquals(String message, DataSet expected, Map map) {
 
         MapReader reader = new MapReader(map);
         assertEquals(message, expected, reader.read());
     }
 
+    /**
+     * 等しいことを表明します。
+     * 
+     * @param message
+     *            メッセージ
+     * @param expected
+     *            期待値
+     * @param list
+     *            実際の値
+     */
     protected void assertMapListEquals(String message, DataSet expected,
             List list) {
 
@@ -369,6 +619,16 @@ public abstract class S2TestCase extends S2FrameworkTestCase {
         assertEquals(message, expected, reader.read());
     }
 
+    /**
+     * 等しいことを表明します。
+     * 
+     * @param message
+     *            メッセージ
+     * @param expected
+     *            期待値
+     * @param bean
+     *            実際の値
+     */
     protected void assertBeanEquals(String message, DataSet expected,
             Object bean) {
 
@@ -376,6 +636,16 @@ public abstract class S2TestCase extends S2FrameworkTestCase {
         assertEquals(message, expected, reader.read());
     }
 
+    /**
+     * 等しいことを表明します。
+     * 
+     * @param message
+     *            メッセージ
+     * @param expected
+     *            期待値
+     * @param list
+     *            実際の値
+     */
     protected void assertBeanListEquals(String message, DataSet expected,
             List list) {
 
