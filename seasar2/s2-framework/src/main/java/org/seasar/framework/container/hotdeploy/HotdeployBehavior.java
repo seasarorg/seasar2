@@ -24,14 +24,14 @@ import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 import org.seasar.framework.container.impl.S2ContainerImpl;
 import org.seasar.framework.container.impl.S2ContainerBehavior.DefaultProvider;
-import org.seasar.framework.container.impl.S2ContainerBehavior.Provider;
 import org.seasar.framework.container.util.S2ContainerUtil;
 import org.seasar.framework.convention.NamingConvention;
 import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.DisposableUtil;
 
 /**
- * HOT deployのための {@link Provider}です。
+ * HOT deployのための
+ * {@link org.seasar.framework.container.impl.S2ContainerBehavior.Provider}です。
  * <p>
  * このクラスをs2container.diconに登録するとHOT deployで動作するようになります。
  * </p>

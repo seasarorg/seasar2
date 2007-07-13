@@ -179,10 +179,10 @@ public class ArrayMap extends AbstractMap implements Map, Cloneable,
     }
 
     /**
-     * indexに対応する {@link Entry}を返します。
+     * indexに対応する {@link java.util.Map.Entry}を返します。
      * 
      * @param index
-     * @return indexに対応する {@link Entry}
+     * @return indexに対応する {@link java.util.Map.Entry}
      */
     public final Entry getEntry(final int index) {
         if (index >= size) {

@@ -99,7 +99,7 @@ public final class ConstantAnnotationUtil {
         }
 
         /**
-         * {@link MyTokenizer}を作成します。
+         * {@link org.seasar.framework.container.util.ConstantAnnotationUtil.MyTokenizer}を作成します。
          * 
          * @param str
          */
@@ -108,7 +108,7 @@ public final class ConstantAnnotationUtil {
         }
 
         /**
-         * {@link MyTokenizer}を作成します。
+         * {@link org.seasar.framework.container.util.ConstantAnnotationUtil.MyTokenizer}を作成します。
          * 
          * @param str
          * @param ctype

@@ -32,7 +32,7 @@ import org.seasar.framework.util.MethodUtil;
  */
 public class DxoMetadataImpl implements DxoMetadata {
 
-    /** Dxoのメソッドに対応した{@link Command}を保持するマップです。 */
+    /** Dxoのメソッドに対応した{@link DxoCommand}を保持するマップです。 */
     protected Map commands = new HashMap();
 
     /**

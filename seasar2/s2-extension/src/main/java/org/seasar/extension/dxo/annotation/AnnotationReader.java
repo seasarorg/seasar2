@@ -93,11 +93,11 @@ public interface AnnotationReader {
     String getSourcePrefix(Class dxoClass, Method method);
 
     /**
-     * 変換先クラスに指定されたコンバータの{@Link Map}を返します。
+     * 変換先クラスに指定されたコンバータの{@link Map}を返します。
      * 
      * @param destClass
      *            変換先クラス
-     * @return 変換先クラスに指定されたコンバータの{@Link Map}
+     * @return 変換先クラスに指定されたコンバータの{@link Map}
      */
     Map getConverters(Class destClass);
 

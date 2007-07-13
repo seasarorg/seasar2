@@ -113,7 +113,7 @@ public final class BigDecimalConversionUtil {
     }
 
     /**
-     * デフォルトの{@link BigDecimalNormalizer}の実装クラスです。
+     * デフォルトの{@link BigDecimalConversionUtil.BigDecimalNormalizer}の実装クラスです。
      * 
      */
     public static class DefaultNormalizer implements BigDecimalNormalizer {

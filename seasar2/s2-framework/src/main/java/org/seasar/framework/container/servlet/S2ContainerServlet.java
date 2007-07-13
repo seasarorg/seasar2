@@ -128,7 +128,7 @@ public class S2ContainerServlet extends HttpServlet {
     }
 
     /**
-     * {@link S2Container}を初期化します。
+     * {@link org.seasar.framework.container.S2Container}を初期化します。
      * 
      * @param configPath
      */

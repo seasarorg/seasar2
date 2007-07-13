@@ -19,15 +19,15 @@ import org.seasar.framework.container.ExternalContext;
 import org.seasar.framework.container.ExternalContextComponentDefRegister;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.factory.PathResolver;
-import org.seasar.framework.container.factory.S2ContainerFactory;
 import org.seasar.framework.container.factory.S2ContainerFactory.DefaultConfigurator;
 import org.seasar.framework.container.factory.S2ContainerFactory.Provider;
 
 /**
- * COOL deploy用の {@link S2ContainerFactory.Configurator}です。
+ * COOL deploy用の
+ * {@link org.seasar.framework.container.factory.S2ContainerFactory.Configurator}です。
  * 
  * @author koichik
- * @see DefaultConfigurator
+ * @see org.seasar.framework.container.factory.S2ContainerFactory.DefaultConfigurator
  * 
  */
 public class S2ContainerFactoryCoolConfigurator extends DefaultConfigurator {

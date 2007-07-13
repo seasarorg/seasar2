@@ -108,11 +108,11 @@ public abstract class CollectionsUtil {
     }
 
     /**
-     * {@list ArrayList}の新しいインスタンスを作成して返します。
+     * {@link ArrayList}の新しいインスタンスを作成して返します。
      * 
      * @param <E>
-     *            {@list ArrayList}の要素型
-     * @return {@list ArrayList}の新しいインスタンス
+     *            {@link ArrayList}の要素型
+     * @return {@link ArrayList}の新しいインスタンス
      * @see ArrayList#ArrayList()
      */
     public static <E> ArrayList<E> newArrayList() {
@@ -120,13 +120,13 @@ public abstract class CollectionsUtil {
     }
 
     /**
-     * {@list ArrayList}の新しいインスタンスを作成して返します。
+     * {@link ArrayList}の新しいインスタンスを作成して返します。
      * 
      * @param <E>
-     *            {@list ArrayList}の要素型
+     *            {@link ArrayList}の要素型
      * @param c
      *            要素がリストに配置されるコレクション
-     * @return {@list ArrayList}の新しいインスタンス
+     * @return {@link ArrayList}の新しいインスタンス
      * @see ArrayList#ArrayList(Collection)
      */
     public static <E> ArrayList<E> newArrayList(final Collection<? extends E> c) {
@@ -134,13 +134,13 @@ public abstract class CollectionsUtil {
     }
 
     /**
-     * {@list ArrayList}の新しいインスタンスを作成して返します。
+     * {@link ArrayList}の新しいインスタンスを作成して返します。
      * 
      * @param <E>
-     *            {@list ArrayList}の要素型
+     *            {@link ArrayList}の要素型
      * @param initialCapacity
      *            リストの初期容量
-     * @return {@list ArrayList}の新しいインスタンス
+     * @return {@link ArrayList}の新しいインスタンス
      * @see ArrayList#ArrayList(int)
      */
     public static <E> ArrayList<E> newArrayList(final int initialCapacity) {
@@ -747,11 +747,11 @@ public abstract class CollectionsUtil {
     }
 
     /**
-     * {@list LinkedList}の新しいインスタンスを作成して返します。
+     * {@link LinkedList}の新しいインスタンスを作成して返します。
      * 
      * @param <E>
-     *            {@list LinkedList}の要素型
-     * @return {@list LinkedList}の新しいインスタンス
+     *            {@link LinkedList}の要素型
+     * @return {@link LinkedList}の新しいインスタンス
      * @see LinkedList#LinkedList()
      */
     public static <E> LinkedList<E> newLinkedList() {
@@ -759,13 +759,13 @@ public abstract class CollectionsUtil {
     }
 
     /**
-     * {@list LinkedList}の新しいインスタンスを作成して返します。
+     * {@link LinkedList}の新しいインスタンスを作成して返します。
      * 
      * @param <E>
-     *            {@list LinkedList}の要素型
+     *            {@link LinkedList}の要素型
      * @param c
      *            要素がリストに配置されるコレクション
-     * @return {@list LinkedList}の新しいインスタンス
+     * @return {@link LinkedList}の新しいインスタンス
      * @see LinkedList#LinkedList(Collection)
      */
     public static <E> LinkedList<E> newLinkedList(
@@ -1051,11 +1051,11 @@ public abstract class CollectionsUtil {
     }
 
     /**
-     * {@list Vector}の新しいインスタンスを作成して返します。
+     * {@link Vector}の新しいインスタンスを作成して返します。
      * 
      * @param <E>
-     *            {@list Vector}の要素型
-     * @return {@list Vector}の新しいインスタンス
+     *            {@link Vector}の要素型
+     * @return {@link Vector}の新しいインスタンス
      * @see Vector#Vector()
      */
     public static <E> Vector<E> newVector() {
@@ -1063,13 +1063,13 @@ public abstract class CollectionsUtil {
     }
 
     /**
-     * {@list Vector}の新しいインスタンスを作成して返します。
+     * {@link Vector}の新しいインスタンスを作成して返します。
      * 
      * @param <E>
-     *            {@list Vector}の要素型
+     *            {@link Vector}の要素型
      * @param c
      *            要素がセットに配置されるコレクション
-     * @return {@list Vector}の新しいインスタンス
+     * @return {@link Vector}の新しいインスタンス
      * @see Vector#Vector(Collection)
      */
     public static <E> Vector<E> newVector(final Collection<? extends E> c) {
@@ -1077,13 +1077,13 @@ public abstract class CollectionsUtil {
     }
 
     /**
-     * {@list Vector}の新しいインスタンスを作成して返します。
+     * {@link Vector}の新しいインスタンスを作成して返します。
      * 
      * @param <E>
-     *            {@list Vector}の要素型
+     *            {@link Vector}の要素型
      * @param initialCapacity
      *            {@link Vector}の初期容量
-     * @return {@list Vector}の新しいインスタンス
+     * @return {@link Vector}の新しいインスタンス
      * @see Vector#Vector(int)
      */
     public static <E> Vector<E> newVector(final int initialCapacity) {
@@ -1091,15 +1091,15 @@ public abstract class CollectionsUtil {
     }
 
     /**
-     * {@list Vector}の新しいインスタンスを作成して返します。
+     * {@link Vector}の新しいインスタンスを作成して返します。
      * 
      * @param <E>
-     *            {@list Vector}の要素型
+     *            {@link Vector}の要素型
      * @param initialCapacity
      *            {@link Vector}の初期容量
      * @param capacityIncrement
      *            {@link Vector}があふれたときに増加される容量
-     * @return {@list Vector}の新しいインスタンス
+     * @return {@link Vector}の新しいインスタンス
      * @see Vector#Vector(int, int)
      */
     public static <E> Vector<E> newVector(final int initialCapacity,

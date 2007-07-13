@@ -323,7 +323,7 @@ public class PropertyInterType extends AbstractInterType {
     }
 
     /**
-     * {@link PropertyAnnotationHandler}のデフォルト実装です。
+     * {@link PropertyInterType.PropertyAnnotationHandler}のデフォルト実装です。
      * 
      */
     public static class DefaultPropertyAnnotationHandler implements

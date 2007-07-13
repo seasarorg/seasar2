@@ -37,7 +37,8 @@ public abstract class MethodTagHandler extends AbstractTagHandler {
      *            処理対象の要素名
      * @param context
      *            コンテキスト
-     * @thorws TagAttributeNotDefinedRuntimeException メソッド定義の<code>name</code>属性および式のいずれも指定されなかった場合
+     * @throws TagAttributeNotDefinedRuntimeException
+     *             メソッド定義の<code>name</code>属性および式のいずれも指定されなかった場合
      */
     protected void processExpression(MethodDef methodDef, String expression,
             String tagName, TagHandlerContext context) {

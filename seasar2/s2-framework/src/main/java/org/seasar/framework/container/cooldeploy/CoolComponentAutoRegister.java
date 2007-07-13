@@ -273,7 +273,8 @@ public class CoolComponentAutoRegister implements ClassHandler {
     }
 
     /**
-     * ファイルシステム用の {@link Strategy}です。
+     * ファイルシステム用の
+     * {@link org.seasar.framework.container.cooldeploy.CoolComponentAutoRegister.Strategy}です。
      * 
      */
     protected class FileSystemStrategy implements Strategy {
@@ -305,7 +306,7 @@ public class CoolComponentAutoRegister implements ClassHandler {
     }
 
     /**
-     * jarファイル用の {@link Strategy}です。
+     * jarファイル用の {@link CoolComponentAutoRegister.Strategy}です。
      * 
      */
     protected class JarFileStrategy implements Strategy {

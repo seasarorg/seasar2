@@ -25,7 +25,7 @@ import org.seasar.framework.log.Logger;
  * S2コンテナの終了時に破棄しなければならないリソースがある場合は、 {@link Disposable}を実装したクラスを作成し、
  * このクラスに登録します。 通常、
  * {@link org.seasar.framework.container.factory.SingletonS2ContainerFactory#destroy()}が実行される際に、
- * {@link dispose()}メソッドが呼び出され、 登録されている{@link Disposable}の{@link Disposable#dispose()}メソッドが呼び出されます。
+ * {@link #dispose()}メソッドが呼び出され、 登録されている{@link Disposable}の{@link Disposable#dispose()}メソッドが呼び出されます。
  * {@link org.seasar.framework.unit.S2FrameworkTestCase}のサブクラスであるテストケースでは、
  * テストメソッドを実行する毎に{@link #dispose()}メソッドが呼び出されます．
  * </p>

@@ -84,7 +84,7 @@ public final class ClassUtil {
      * @return {@link Class}
      * @throws ClassNotFoundRuntimeException
      *             {@link ClassNotFoundException}がおきた場合
-     * @see {@link Class#forName(String)}
+     * @see Class#forName(String)
      */
     public static Class forName(String className)
             throws ClassNotFoundRuntimeException {
@@ -149,7 +149,7 @@ public final class ClassUtil {
      *             {@link InstantiationException}がおきた場合
      * @throws IllegalAccessRuntimeException
      *             {@link IllegalAccessException}がおきた場合
-     * @see {@link #newInstance(Class)}
+     * @see #newInstance(Class)
      */
     public static Object newInstance(String className)
             throws ClassNotFoundRuntimeException,

@@ -716,9 +716,10 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
         if (!path.startsWith(viewRootPath) || !path.endsWith(viewExtension)) {
             throw new IllegalArgumentException(path);
         }
-        String componentName = (path.substring(adjustViewRootPath().length() + 1, path
-                .length()
-                - viewExtension.length()) + nameSuffix).replace('/', '_');
+        String componentName = (path.substring(
+                adjustViewRootPath().length() + 1, path.length()
+                        - viewExtension.length()) + nameSuffix).replace('/',
+                '_');
         int pos = componentName.lastIndexOf('_');
         if (pos == -1) {
             return StringUtil.decapitalize(componentName);
@@ -926,7 +927,7 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
         private File rootFile;
 
         /**
-         * {@link FileExistChecker}を作成します。
+         * インスタンスを作成します。
          * 
          * @param rootUrl
          *            ルートURL
@@ -954,7 +955,7 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
         private String rootPath;
 
         /**
-         * {@link JarExistChecker}を作成します。
+         * インスタンスを作成します。
          * 
          * @param jarUrl
          *            jar URL
@@ -985,7 +986,7 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
         private String rootPath;
 
         /**
-         * {@link ZipExistChecker}を作成します。
+         * インスタンスを作成します。
          * 
          * @param zipUrl
          *            zip URL
@@ -1016,7 +1017,7 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
         private String rootPath;
 
         /**
-         * {@link CodeSourceExistChecker}を作成します。
+         * インスタンスを作成します。
          * 
          * @param url
          *            URL

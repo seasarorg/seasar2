@@ -139,7 +139,7 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
     }
 
     /**
-     * デフォルトの{@link #ComponentDefBuilder}を追加します。
+     * デフォルトの{@link ComponentDefBuilder}を追加します。
      */
     public static void loadDefaultComponentDefBuilder() {
         if (enableEJB3) {
@@ -149,20 +149,20 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
     }
 
     /**
-     * {@link #ComponentDefBuilder}を追加します。
+     * {@link ComponentDefBuilder}を追加します。
      * 
      * @param builder
-     *            {@link #ComponentDefBuilder}
+     *            {@link ComponentDefBuilder}
      */
     public static void addComponentDefBuilder(final ComponentDefBuilder builder) {
         componentDefBuilders.add(builder);
     }
 
     /**
-     * {@link #ComponentDefBuilder}を削除します。
+     * {@link ComponentDefBuilder}を削除します。
      * 
      * @param builder
-     *            {@link #ComponentDefBuilder}
+     *            {@link ComponentDefBuilder}
      */
     public static void removeComponentDefBuilder(
             final ComponentDefBuilder builder) {
@@ -170,14 +170,14 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
     }
 
     /**
-     * {@link #ComponentDefBuilder}をクリアします。
+     * {@link ComponentDefBuilder}をクリアします。
      */
     public static void clearComponentDefBuilder() {
         componentDefBuilders.clear();
     }
 
     /**
-     * デフォルトの{@link #PropertyDefBuilder}を追加します。
+     * デフォルトの{@link PropertyDefBuilder}を追加します。
      */
     public static void loadDefaultPropertyDefBuilder() {
         clearPropertyDefBuilder();
@@ -191,34 +191,34 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
     }
 
     /**
-     * {@link #PropertyDefBuilder}を追加します。
+     * {@link PropertyDefBuilder}を追加します。
      * 
      * @param builder
-     *            {@link #PropertyDefBuilder}
+     *            {@link PropertyDefBuilder}
      */
     public static void addPropertyDefBuilder(final PropertyDefBuilder builder) {
         propertyDefBuilders.add(builder);
     }
 
     /**
-     * {@link #PropertyDefBuilder}を削除します。
+     * {@link PropertyDefBuilder}を削除します。
      * 
      * @param builder
-     *            {@link #PropertyDefBuilder}
+     *            {@link PropertyDefBuilder}
      */
     public static void removePropertyDefBuilder(final PropertyDefBuilder builder) {
         propertyDefBuilders.remove(builder);
     }
 
     /**
-     * {@link #PropertyDefBuilder}をクリアします。
+     * {@link PropertyDefBuilder}をクリアします。
      */
     public static void clearPropertyDefBuilder() {
         propertyDefBuilders.clear();
     }
 
     /**
-     * デフォルトの{@link #AspectDefBuilder}を追加します。
+     * デフォルトの{@link AspectDefBuilder}を追加します。
      */
     public static void loadDefaultAspectDefBuilder() {
         if (enableEJB3) {
@@ -230,34 +230,34 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
     }
 
     /**
-     * {@link #AspectDefBuilder}を追加します。
+     * {@link AspectDefBuilder}を追加します。
      * 
      * @param builder
-     *            {@link #AspectDefBuilder}
+     *            {@link AspectDefBuilder}
      */
     public static void addAspectDefBuilder(final AspectDefBuilder builder) {
         aspectDefBuilders.add(builder);
     }
 
     /**
-     * {@link #AspectDefBuilder}を削除します。
+     * {@link AspectDefBuilder}を削除します。
      * 
      * @param builder
-     *            {@link #AspectDefBuilder}
+     *            {@link AspectDefBuilder}
      */
     public static void removeAspectDefBuilder(final AspectDefBuilder builder) {
         aspectDefBuilders.remove(builder);
     }
 
     /**
-     * {@link #AspectDefBuilder}をクリアします。
+     * {@link AspectDefBuilder}をクリアします。
      */
     public static void clearAspectDefBuilder() {
         aspectDefBuilders.clear();
     }
 
     /**
-     * デフォルトの{@link #IntertypeDefBuilder}を追加します。
+     * デフォルトの{@link IntertypeDefBuilder}を追加します。
      */
     public static void loadDefaultIntertypeDefBuilder() {
         if (enableEJB3) {
@@ -267,20 +267,20 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
     }
 
     /**
-     * {@link #IntertypeDefBuilder}を追加します。
+     * {@link IntertypeDefBuilder}を追加します。
      * 
      * @param builder
-     *            {@link #IntertypeDefBuilder}
+     *            {@link IntertypeDefBuilder}
      */
     public static void addIntertypeDefBuilder(final IntertypeDefBuilder builder) {
         intertypeDefBuilders.add(builder);
     }
 
     /**
-     * {@link #IntertypeDefBuilder}を削除します。
+     * {@link IntertypeDefBuilder}を削除します。
      * 
      * @param builder
-     *            {@link #IntertypeDefBuilder}
+     *            {@link IntertypeDefBuilder}
      */
     public static void removeIntertypeDefBuilder(
             final IntertypeDefBuilder builder) {
@@ -288,14 +288,14 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
     }
 
     /**
-     * {@link #IntertypeDefBuilder}をクリアします。
+     * {@link IntertypeDefBuilder}をクリアします。
      */
     public static void clearIntertypeDefBuilder() {
         intertypeDefBuilders.clear();
     }
 
     /**
-     * デフォルトの{@link #InitMethodDefBuilder}を追加します。
+     * デフォルトの{@link InitMethodDefBuilder}を追加します。
      */
     public static void loadDefaultInitMethodDefBuilder() {
         if (enableEJB3) {
@@ -305,10 +305,10 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
     }
 
     /**
-     * {@link #InitMethodDefBuilder}を追加します。
+     * {@link InitMethodDefBuilder}を追加します。
      * 
      * @param builder
-     *            {@link #InitMethodDefBuilder}
+     *            {@link InitMethodDefBuilder}
      */
     public static void addInitMethodDefBuilder(
             final InitMethodDefBuilder builder) {
@@ -316,10 +316,10 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
     }
 
     /**
-     * {@link #InitMethodDefBuilder}を削除します。
+     * {@link InitMethodDefBuilder}を削除します。
      * 
      * @param builder
-     *            {@link #InitMethodDefBuilder}
+     *            {@link InitMethodDefBuilder}
      */
     public static void removeInitMethodDefBuilder(
             final InitMethodDefBuilder builder) {
@@ -327,24 +327,24 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
     }
 
     /**
-     * {@link #InitMethodDefBuilder}をクリアします。
+     * {@link InitMethodDefBuilder}をクリアします。
      */
     public static void clearInitMethodDefBuilder() {
         initMethodDefBuilders.clear();
     }
 
     /**
-     * デフォルトの{@link #DestroyMethodDefBuilder}を追加します。
+     * デフォルトの{@link DestroyMethodDefBuilder}を追加します。
      */
     public static void loadDefaultDestroyMethodDefBuilder() {
         destroyMethodDefBuilders.add(new S2DestroyMethodDefBuilder());
     }
 
     /**
-     * {@link #DestroyMethodDefBuilder}を追加します。
+     * {@link DestroyMethodDefBuilder}を追加します。
      * 
      * @param builder
-     *            {@link #DestroyMethodDefBuilder}
+     *            {@link DestroyMethodDefBuilder}
      */
     public static void addDestroyMethodDefBuilder(
             final DestroyMethodDefBuilder builder) {
@@ -352,10 +352,10 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
     }
 
     /**
-     * {@link #DestroyMethodDefBuilder}を削除します。
+     * {@link DestroyMethodDefBuilder}を削除します。
      * 
      * @param builder
-     *            {@link #DestroyMethodDefBuilder}
+     *            {@link DestroyMethodDefBuilder}
      */
     public static void removeDestroyMethodDefBuilder(
             final DestroyMethodDefBuilder builder) {
@@ -363,7 +363,7 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
     }
 
     /**
-     * {@link #DestroyMethodDefBuilder}をクリアします。
+     * {@link DestroyMethodDefBuilder}をクリアします。
      */
     public static void clearDestroyMethodDefBuilder() {
         destroyMethodDefBuilders.clear();

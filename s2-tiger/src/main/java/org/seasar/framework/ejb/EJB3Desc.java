@@ -47,7 +47,7 @@ public interface EJB3Desc {
     /**
      * このセッションビーンの名前を返します。
      * 
-     * @return
+     * @return このセッションビーンの名前
      * @see Stateless#name()
      * @see Stateful#name()
      */
@@ -82,14 +82,14 @@ public interface EJB3Desc {
     List<EJB3InterceptorDesc> getInterceptors();
 
     /**
-     * {@link code method}に対応するビジネスメソッド定義を返します。
+     * {@code method}に対応するビジネスメソッド定義を返します。
      * <p>
-     * {@link code method}に対応するビジネスメソッドが存在しない場合は{@code null}を返します。
+     * {@code method}に対応するビジネスメソッドが存在しない場合は{@code null}を返します。
      * </p>
      * 
      * @param method
      *            このセッションビーンのメソッド
-     * @return {@link code method}に対応するビジネスメソッド定義
+     * @return {@code method}に対応するビジネスメソッド定義
      */
     EJB3BusinessMethodDesc getBusinessMethod(Method method);
 

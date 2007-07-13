@@ -169,7 +169,7 @@ public class ComponentDeployerFactory {
     }
 
     /**
-     * {@link Provider}のデフォルト実装です。
+     * {@link ComponentDeployerFactory.Provider}のデフォルト実装です。
      * 
      * @author koichk
      * 

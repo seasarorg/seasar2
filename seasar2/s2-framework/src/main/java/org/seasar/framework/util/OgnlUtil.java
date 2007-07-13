@@ -159,7 +159,7 @@ public final class OgnlUtil {
         final private ClassLoader classLoader;
 
         /**
-         * {@link ClassResolverImpl}を作成します。
+         * インスタンスを作成します。
          * 
          * @param classLoader
          */

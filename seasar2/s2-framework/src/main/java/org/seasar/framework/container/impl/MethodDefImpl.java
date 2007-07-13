@@ -131,7 +131,7 @@ public abstract class MethodDefImpl implements MethodDef {
     }
 
     /**
-     * @see org.seasar.framework.container.MethodDef#setExpression(java.lang.String)
+     * @see org.seasar.framework.container.MethodDef#setExpression(Expression)
      */
     public void setExpression(Expression expression) {
         this.expression = expression;

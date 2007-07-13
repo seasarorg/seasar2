@@ -136,9 +136,6 @@ import org.seasar.framework.util.StringUtil;
  * 指定されたメソッド名からdestroyメソッドを生成し、コンポーネント定義に追加します。
  * </p>
  * 
- * @throws IllegalArgumentException
- *             フィールドの値が不正な場合
- * 
  * @author Maeno
  */
 public class ConstantAnnotationHandler extends AbstractAnnotationHandler {

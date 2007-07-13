@@ -42,7 +42,7 @@ public class DataSourceXADataSource implements XADataSource {
     /** JNDIからルックアップするデータソース名 */
     protected String dataSourceName;
 
-    /** JNDIの{@javax.naming.InitialContext 初期コンテキスト}を作成するための環境 */
+    /** JNDIの{@link javax.naming.InitialContext 初期コンテキスト}を作成するための環境 */
     protected Hashtable env = new Hashtable();
 
     /** JNDIからルックアップしたデータソース */
@@ -59,7 +59,7 @@ public class DataSourceXADataSource implements XADataSource {
     }
 
     /**
-     * JNDIの{@javax.naming.InitialContext 初期コンテキスト}を作成するための環境を設定します。
+     * JNDIの{@link javax.naming.InitialContext 初期コンテキスト}を作成するための環境を設定します。
      * 
      * @param env
      *            JNDIの初期コンテキストを作成するための環境

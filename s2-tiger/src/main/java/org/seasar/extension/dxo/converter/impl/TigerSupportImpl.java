@@ -16,7 +16,7 @@
 package org.seasar.extension.dxo.converter.impl;
 
 /**
- * {@link TigerSupport}の実装クラスです。
+ * {@code TigerSupport}の実装クラスです。
  * 
  * @author koichik
  */

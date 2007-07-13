@@ -209,7 +209,7 @@ public class MethodInvocationClassGenerator extends AbstractGenerator {
         int interceptorsIndex;
 
         /**
-         * {@link MethodInvocationTemplate}を作成します。
+         * インスタンスを構築します。
          * 
          * @param target
          * @param arguments

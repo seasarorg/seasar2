@@ -115,7 +115,7 @@ public class ComponentAutoRegister extends AbstractComponentAutoRegister
     }
 
     /**
-     * ファイルシステム用の {@link Strategy}です。
+     * ファイルシステム用の {@link ComponentAutoRegister.Strategy}です。
      * 
      */
     protected class FileSystemStrategy implements Strategy {
@@ -147,7 +147,7 @@ public class ComponentAutoRegister extends AbstractComponentAutoRegister
     }
 
     /**
-     * jarファイル用の {@link Strategy}です。
+     * jarファイル用の {@link ComponentAutoRegister.Strategy}です。
      * 
      * 
      */

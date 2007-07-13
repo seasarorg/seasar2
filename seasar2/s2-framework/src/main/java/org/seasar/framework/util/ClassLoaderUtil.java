@@ -136,7 +136,7 @@ public abstract class ClassLoaderUtil {
     }
 
     /**
-     * {@link getClassLoader(Class)}が返すクラスローダから指定された名前を持つすべてのリソースを探します。
+     * {@link #getClassLoader(Class)}が返すクラスローダから指定された名前を持つすべてのリソースを探します。
      * 
      * @param targetClass
      *            ターゲット・クラス

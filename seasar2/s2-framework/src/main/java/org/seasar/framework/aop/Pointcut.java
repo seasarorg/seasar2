@@ -28,7 +28,7 @@ import org.aopalliance.intercept.MethodInterceptor;
 public interface Pointcut {
 
     /**
-     * 指定されたメソッドに{@link MethodInterceptor}が適用されるかどうかを返します。
+     * 指定されたメソッドに{@link org.aopalliance.intercept.MethodInterceptor}が適用されるかどうかを返します。
      * 
      * @param method
      * @return

@@ -16,11 +16,11 @@
 package org.seasar.framework.container.cooldeploy;
 
 import org.seasar.framework.container.S2Container;
-import org.seasar.framework.container.factory.S2ContainerFactory;
 import org.seasar.framework.container.factory.S2ContainerFactory.DefaultProvider;
 
 /**
- * COOL deploy用の {@link S2ContainerFactory.Provider}です。
+ * COOL deploy用の
+ * {@link org.seasar.framework.container.factory.S2ContainerFactory.Provider}です。
  * 
  * @author koichik
  * 

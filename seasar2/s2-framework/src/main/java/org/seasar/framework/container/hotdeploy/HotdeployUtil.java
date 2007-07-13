@@ -36,7 +36,7 @@ import org.seasar.framework.util.ClassUtil;
  */
 public final class HotdeployUtil {
 
-    /** {@link RrebuilderImpl}のクラス名です。 */
+    /** {@link org.seasar.framework.container.hotdeploy.HotdeployUtil.RrebuilderImpl}のクラス名です。 */
     public static final String REBUILDER_CLASS_NAME = "org.seasar.framework.container.hotdeploy.HotdeployUtil$RebuilderImpl";
 
     private static Boolean hotdeploy;

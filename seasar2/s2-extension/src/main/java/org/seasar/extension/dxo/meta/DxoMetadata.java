@@ -27,11 +27,11 @@ import org.seasar.extension.dxo.command.DxoCommand;
 public interface DxoMetadata {
 
     /**
-     * Dxoのメソッドに対応する{@link Command}を返します。
+     * Dxoのメソッドに対応する{@link DxoCommand}を返します。
      * 
      * @param method
      *            Dxoのメソッド
-     * @return Dxoのメソッドに対応する{@link Command}
+     * @return Dxoのメソッドに対応する{@link DxoCommand}
      */
     DxoCommand getCommand(Method method);
 

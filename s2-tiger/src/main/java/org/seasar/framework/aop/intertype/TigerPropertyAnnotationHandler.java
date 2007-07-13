@@ -40,7 +40,7 @@ public class TigerPropertyAnnotationHandler implements
     }
 
     /**
-     * 指定された{@link AnnotattedElement 注釈可能な要素} ({@link Class}または{@link Field})
+     * 指定された{@link AnnotatedElement 注釈可能な要素} ({@link Class}または{@link Field})
      * が{@link Property}で注釈されていれば、 その<code>{@link Property#value() value}</code>で指定された値を返します。
      * 指定された要素が注釈されていなければデフォルト値を返します。
      * 
@@ -48,7 +48,7 @@ public class TigerPropertyAnnotationHandler implements
      *            注釈可能な要素
      * @param defaultValue
      *            デフォルト値
-     * @return 指定された{@link AnnotattedElement 注釈可能な要素} ({@link Class}または{@link Field})
+     * @return 指定された{@link AnnotatedElement 注釈可能な要素} ({@link Class}または{@link Field})
      *         が{@link Property}で注釈されていれば、 その<code>{@link Property#value() value}</code>で指定された値
      */
     public int getPropertyTypeInternal(AnnotatedElement element,

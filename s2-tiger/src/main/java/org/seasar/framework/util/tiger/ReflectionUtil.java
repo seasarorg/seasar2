@@ -70,7 +70,7 @@ public abstract class ReflectionUtil {
      * @return 指定された名前を持つクラスの{@link Class}オブジェクト
      * @throws ClassNotFoundRuntimeException
      *             クラスが見つからなかった場合
-     * @see Class#forName(String, ClassLoader)
+     * @see Class#forName(String, boolean, ClassLoader)
      */
     @SuppressWarnings("unchecked")
     public static <T> Class<T> forName(final String className,

@@ -32,7 +32,7 @@ package org.seasar.framework.container;
  * @see ComponentDeployer#destroy()
  * @see ComponentDef#destroy()
  * @see S2Container#destroy()
- * @see org.seasar.framework.container.factory.S2ContainerFactory#dispose()
+ * @see org.seasar.framework.container.factory.S2ContainerFactory#destroy()
  * @see org.seasar.framework.container.factory.SingletonS2ContainerFactory#destroy()
  */
 public interface DestroyMethodDef extends MethodDef {

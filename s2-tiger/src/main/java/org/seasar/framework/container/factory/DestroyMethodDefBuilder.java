@@ -26,7 +26,7 @@ import org.seasar.framework.container.DestroyMethodDef;
 public interface DestroyMethodDefBuilder {
 
     /**
-     * コンポーネントからTigerアノテーションを読み取り{@link DestroyMethosDef}を作成し、コンポーネント定義に追加します。
+     * コンポーネントからTigerアノテーションを読み取り{@link DestroyMethodDef}を作成し、コンポーネント定義に追加します。
      * 
      * @param annotationHandler
      *            このメソッドを呼び出しているアノテーションハンドラ

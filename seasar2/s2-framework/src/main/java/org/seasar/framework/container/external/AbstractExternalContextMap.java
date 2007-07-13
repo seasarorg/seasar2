@@ -424,7 +424,7 @@ public abstract class AbstractExternalContextMap extends AbstractMap {
     }
 
     /**
-     * 変化しない {@link Entry}です。
+     * 変化しない {@link java.util.Map.Entry}です。
      * 
      */
     protected static class ImmutableEntry implements Map.Entry {
@@ -434,7 +434,7 @@ public abstract class AbstractExternalContextMap extends AbstractMap {
         private final Object value;
 
         /**
-         * {@link ImmutableEntry}を作成します。
+         * {@link AbstractExternalContextMap.ImmutableEntry}を作成します。
          * 
          * @param key
          * @param value

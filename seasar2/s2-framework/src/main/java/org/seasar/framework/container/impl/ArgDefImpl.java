@@ -99,7 +99,7 @@ public class ArgDefImpl implements ArgDef {
     }
 
     /**
-     * @see org.seasar.framework.container.ArgDef#setExpression(java.lang.String)
+     * @see org.seasar.framework.container.ArgDef#setExpression(Expression)
      */
     public final void setExpression(Expression expression) {
         this.expression = expression;

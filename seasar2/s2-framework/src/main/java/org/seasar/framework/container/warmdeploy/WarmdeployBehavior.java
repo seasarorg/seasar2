@@ -19,14 +19,13 @@ import org.seasar.framework.container.ComponentCreator;
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
-import org.seasar.framework.container.factory.S2ContainerFactory.Provider;
 import org.seasar.framework.container.impl.S2ContainerBehavior.DefaultProvider;
 import org.seasar.framework.container.util.S2ContainerUtil;
 import org.seasar.framework.convention.NamingConvention;
 import org.seasar.framework.log.Logger;
 
 /**
- * WARM deploy時にコンポーネントを自動登録する{@link Provider}の実装です。
+ * WARM deploy時にコンポーネントを自動登録する{@link org.seasar.framework.container.factory.S2ContainerFactory.Provider}の実装です。
  * 
  * @author higa
  */

@@ -42,7 +42,7 @@ public interface TigerSupport {
      * @return 列挙定数の序数
      * @throws ClassCastException
      *             <code>o</code>が列挙でない場合にスローされます
-     * @see Enum#ordinal()
+     * @see java.lang.Enum#ordinal()
      */
     int getEnumOrdinal(Object o);
 
@@ -54,7 +54,7 @@ public interface TigerSupport {
      * @return 列挙定数の名前
      * @throws ClassCastException
      *             <code>o</code>が列挙でない場合にスローされます
-     * @see Enum#name()
+     * @see java.lang.Enum#name()
      */
     String getEnumName(Object o);
 

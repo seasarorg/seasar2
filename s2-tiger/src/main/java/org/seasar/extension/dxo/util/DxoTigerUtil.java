@@ -26,7 +26,7 @@ import org.seasar.framework.util.tiger.GenericUtil;
 /**
  * J2SE1.4でビルドされるS2-ExtensionからJava5の機能を利用するために使用されるユーティリティクラスです。
  * <p>
- * このクラスは{@link DxoUtil}からリフレクションで呼び出されます。
+ * このクラスは{@code DxoUtil}からリフレクションで呼び出されます。
  * </p>
  * 
  * @author koichik

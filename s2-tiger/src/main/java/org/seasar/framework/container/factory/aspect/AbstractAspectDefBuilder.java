@@ -31,7 +31,7 @@ import org.seasar.framework.exception.EmptyRuntimeException;
 public abstract class AbstractAspectDefBuilder implements AspectDefBuilder {
 
     /**
-     * 指定のインターセプタとポイントカットを持つ{@link AspectDef アスペクト定義}を作成して{@link ComponentDef コンポーネント定義に追加します。
+     * 指定のインターセプタとポイントカットを持つ{@link AspectDef アスペクト定義}を作成して{@link ComponentDef コンポーネント定義}に追加します。
      * 
      * @param componentDef
      *            コンポーネント定義
@@ -51,7 +51,7 @@ public abstract class AbstractAspectDefBuilder implements AspectDefBuilder {
     }
 
     /**
-     * 指定のインターセプタを指定のメソッドに適用する{@link AspectDef アスペクト定義}を作成して{@link ComponentDef コンポーネント定義に追加します。
+     * 指定のインターセプタを指定のメソッドに適用する{@link AspectDef アスペクト定義}を作成して{@link ComponentDef コンポーネント定義}に追加します。
      * 
      * @param componentDef
      *            コンポーネント定義

@@ -147,7 +147,8 @@ public final class S2ContainerBehavior {
     }
 
     /**
-     * デフォルトの {@link Provider}実装です。
+     * デフォルトの
+     * {@link org.seasar.framework.container.impl.S2ContainerBehavior.Provider}実装です。
      * 
      * @author koichik
      */

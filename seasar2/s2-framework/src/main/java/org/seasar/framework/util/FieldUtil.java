@@ -92,7 +92,7 @@ public final class FieldUtil {
      * @return {@link String}の値
      * @throws IllegalAccessRuntimeException
      *             {@link IllegalAccessException}が発生した場合
-     * @see {@link #getString(Field, Object)}
+     * @see #getString(Field, Object)
      */
     public static String getString(Field field)
             throws IllegalAccessRuntimeException {

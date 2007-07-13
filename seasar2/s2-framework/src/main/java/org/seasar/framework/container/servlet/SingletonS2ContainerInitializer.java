@@ -27,7 +27,7 @@ import org.seasar.framework.util.StringUtil;
  * 
  * @author manhole
  */
-class SingletonS2ContainerInitializer {
+public class SingletonS2ContainerInitializer {
 
     private Object application;
 

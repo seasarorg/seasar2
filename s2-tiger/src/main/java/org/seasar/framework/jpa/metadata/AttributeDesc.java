@@ -37,7 +37,7 @@ public interface AttributeDesc {
     /**
      * 属性の型を返します。
      * 
-     * @return
+     * @return 属性の型
      */
     Class<?> getType();
 
