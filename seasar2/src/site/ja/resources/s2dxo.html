@@ -83,7 +83,8 @@ font-size : 10pt;
 <ul>
 <li><a href="#propertyName">変換元プロパティ名の指定</a></li>
 <li><a href="#ognl">OGNL式の利用</a></li>
-                <li><a href="#prefixProperty">プレフィックス付きのプロパティ</a></li>
+<li><a href="#excludeNull"><code>null</code>のプロパティを変換から除外する</a></li>
+<li><a href="#prefixProperty">プレフィックス付きのプロパティ</a></li>
                 <li><a href="#formatDate">日付・時刻のフォーマット</a></li>
 <li><a href="#customConverter">独自のコンバータ</a></li>
 </ul>
@@ -760,7 +761,23 @@ public interface FooDxo {
     EmployeePage convert(Employee employee);
 }
 </pre>
-            <h3><a name="prefixProperty">プレフィックス付きのプロパティ</a></h3>
+<h3><a name="excludeNull"><code>null</code>のプロパティを変換から除外する</a></h3>
+<p>変換元JavaBeansのプロパティまたは<code>Map</code>のマッピングの値が<code>null</code>の場合は，変換先のJavaBeansまたは<code>Map</code>に値を設定しないことをアノテーションで指定することができます．アノテーションはDXOのメソッドに定数アノテーションまたはTigerアノテーションで指定します．</p>
+<h4>定数アノテーション</h4>
+<p>定数アノテーションでは，DXOインタフェースの文字列定数として次のように指定します．定数名はメソッド名の後ろに<code>&quot;_EXCLUDE_NULL&quot;</code>をつけたものになります．</p>
+<pre>public interface FooDxo {
+    String convert_EXCLUDE_NULL = null;
+    EmployeePage convert(Employee employee);
+}</pre>
+<p>DXOインタフェースがメソッドをオーバーロードしている場合は，「<a href="#propertyName">変換元プロパティ名の指定</a>」と同様に，引数型の非修飾名をアンダースコア区切りで並べて指定することもできます．</p>
+<h4>Tigerアノテーション</h4>
+<p>Tigerアノテーションでは，DXOメソッドのアノテーションとして次のように指定します．</p>
+<pre>import org.seasar.extension.dxo.annotation.ExcludeNull;
+pubic interface BazDxo {
+    @ExcludeNull
+    EmployeePage convert(Employee employee);
+}</pre>
+<h3><a name="prefixProperty">プレフィックス付きのプロパティ</a></h3>
             <p>変換元のJavaBeansまたは<code>Map</code>からプレフィックスの付いたプロパティまたはキーのみを変換変換対象とすることができます．プレフィックスはDXOのメソッドに定数アノテーションまたはTigerアノテーションで指定します．</p>
             <p>プレフィックスが指定されると，変換元JavaBeansのプロパティまたはMapのキーの中で，プレフィックスで始まる物だけが変換の対象となります．変換先のJavaBeansまたはMapへはプレフィックスを取り除いたプロパティまたはキーで設定されます．</p>
             <p>変換元として次のようなクラスがあるとします．</p>
@@ -786,7 +803,7 @@ public interface FooDxo {
     String convert_SOURCE_PREFIX = &quot;search_&quot;;
     EmpDto convert(SearchPage page);
 }</pre>
-            <p>DXOインタフェースがメソッドをオーバーロードしている場合は，引数型の非修飾名をアンダースコア区切りで並べて指定することもできます．引数型が配列型の場合は配列要素の型名の後ろに'$'を付加します．'$'は配列の次元と同じ数だけ並べます．</p>
+            <p>DXOインタフェースがメソッドをオーバーロードしている場合は，「<a href="#propertyName">変換元プロパティ名の指定</a>」と同様に，引数型の非修飾名をアンダースコア区切りで並べて指定することもできます．引数型が配列型の場合は配列要素の型名の後ろに'$'を付加します．'$'は配列の次元と同じ数だけ並べます．</p>
 <h4>Tigerアノテーション</h4>
 <p>Tigerアノテーションでは，DXOメソッドのアノテーションとして次のように指定します．</p>
 <pre>import org.seasar.extension.dxo.annotation.SourcePrefix;
