@@ -156,6 +156,12 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
         assertEquals("bar", ((OgnlExpression) propDef.getExpression())
                 .getSource());
 
+        propDef = cd.getPropertyDef("ddd");
+        assertNotNull(propDef);
+        assertEquals("field", propDef.getAccessTypeDef().getName());
+        assertEquals("ddd", ((OgnlExpression) propDef.getExpression())
+                .getSource());
+
         beanDesc = BeanDescFactory.getBeanDesc(Hoge2.class);
         propDesc = beanDesc.getPropertyDesc("aaa");
         propDef = handler.createPropertyDef(beanDesc, propDesc);

@@ -70,6 +70,10 @@ public class Hoge {
         this.ccc = ccc;
     }
 
+    @SuppressWarnings("unused")
+    @Binding("ddd")
+    private String ddd;
+
     /**
      * 
      */
