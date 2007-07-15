@@ -978,17 +978,17 @@ public interface FooDxo {
     }
 
 }</pre>
-            <p>独自作成したコンバータはdiconファイルに定義するか，SMART deployまたはAutoRegisterによりS2コンテナに自動登録されるようにします．</p>
+            <p>独自作成したコンバータはdiconファイルに定義するか，AutoRegisterによりS2コンテナに自動登録されるようにします．</p>
             <h4>diconファイルへの登録</h4>
             <p>独自作成したコンバータは，diconファイルに登録して使用します．コンバータのコンポーネント名は&quot;<code>DxoConverter</code>&quot;で終了するようにします．</p>
             <pre>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
 &lt;!DOCTYPE components PUBLIC &quot;-//SEASAR//DTD S2Container 2.4//EN&quot;
     &quot;http://www.seasar.org/dtd/components24.dtd&quot;&gt;
 &lt;components&gt;
-  &lt;component name=&quot;patternDxoConverter&quot;
+  &lt;component name=&quot;patternDxoConverter&quot; instance=&quot;prototype&quot;
     class=&quot;org.seasar.extension.dxo.annotation.impl.ConstantAnnotationReaderTest$HogeDxoConverter&quot;/&gt;
 &lt;/components&gt;</pre>
-            <p>SMART deployやAutoRegisterを使って自動登録することもできます．コンポーネントとして登録されたコンバータはS2Dxoに組み込まれ，「<a href="#convertType">型変換</a>」に記述されている標準のコンバータと同じように動作します．</p>
+            <p>AutoRegisterを使って自動登録することもできます．コンポーネントとして登録されたコンバータはS2Dxoに組み込まれ，「<a href="#convertType">型変換</a>」に記述されている標準のコンバータと同じように動作します．</p>
             <h4>アノテーションでコンバータを明示する</h4>
             <p>変換先JavaBeansのプロパティに特定のコンバータを使用することを明示することもできます．</p>
             <p>定数アノテーションでは，変換先クラスに文字列定数として次のように指定します．定数名は，コンバータを適用するプロパティ名の後ろに<code>&quot;_<var>コンバータ名</var>&quot;</code>をつけたものになります．コンバータ名は独自作成したコンバータのコンポーネント名で，最後は&quot;<code>DxoConverter</code>&quot;で終了しなければなりません．</p>
@@ -1001,16 +1001,36 @@ public interface FooDxo {
     this.namePattern = namePattern;
   }
 }</pre>
-            <p>Tigerアノテーションでは，変換先クラスのsetterメソッドにアノテーションで次のように指定します．</p>
+<p>独自作成したコンバータにプロパティがあれば設定することもできます．</p>
+<pre>  public static final name_prefixDxoConverter = &quot;prefix='$$'&quot;;</pre>
+<p>Tigerアノテーションの場合は，独自コンバータのためのアノテーションを作成します．</p>
+<pre>@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
+@DxoConverter(&quot;patternDxoConverter&quot;)
+public @interface PatternDxoConverter {
+}</pre>
+<p>変換先クラスのsetterメソッドに作成したアノテーションを次のように指定します．</p>
             <pre>public class Dest {
   private Pattern namePattern;
   ...
-  @DxoConverter(&quot;patternDxoConverter&quot;)
+  @PatternDxoConverter
   public void setNamePattern(Pattern namePattern) {
     this.namePattern = namePattern;
   }
 }</pre>
-            <!-- document end -->
+<p>独自作成したコンバータにプロパティがある場合は，アノテーションにプロパティのための要素を持たせます．</p>
+<pre>@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
+@DxoConverter(&quot;prefixDxoConverter&quot;)
+public @interface PrefixDxoConverter {
+    String prefix();
+}</pre>
+<p>変換先クラスのsetterメソッドに作成したアノテーションを次のように指定します．</p>
+            <pre>  @PrefixDxoConverter(prefix=&quot;$$&quot;)
+  public void setName(String name) {
+    this.name = name;
+  }</pre>
+<!-- document end -->
 <!-- don't edit start --></td>
 <td width="14"><img height="14" width="14" src="images/spacer.gif" alt="" /></td>
 </tr>
