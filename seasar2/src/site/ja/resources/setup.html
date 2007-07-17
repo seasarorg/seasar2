@@ -41,6 +41,72 @@
 <td width="14"><img height="14" width="14" src="images/spacer.gif" alt="" /></td>
 <td width="740" class="main"><!-- don't edit end -->
 <!-- document start -->
+<p>Seasar2を最も簡単に試すには、Eclipseを使うのがお勧めです。
+次のソフトウェアをインストールしておきます。</p>
+<ul>
+<li>JDK5.0</li>
+<li>Eclipse3.2</li>
+<li>Tomcat5.5</li>
+<li>Tomcat Plugin3.2</li>
+<li><b>Dolteng</b></li>
+<li>DbLauncher</li>
+<li>日本語でプロパティファイルを入力するためのプラグイン</li>
+</ul>
+<p>
+JDK5.0を<a href="http://java.sun.com/j2se/1.5.0/ja/download.html">このリンク</a>から指示に従ってインストールします。
+既にインストール済みの場合はその必要はありません。
+次にJDK1.5がPCのデフォルトのJavaになっているのか確認します。
+コマンドプロンプトからjava –versionを実行してください。</p>
+<pre>
+D:\USER\workspace2\teeda>java -version
+java version "1.5.0_07"
+Java(TM) 2 Runtime Environment, Standard Edition (build 1.5.0_07-b03)
+Java HotSpot(TM) Client VM (build 1.5.0_07-b03, mixed mode, sharing)
+</pre>
+<p>
+上記のようにバージョンが1.5.0_xxxのように表示されればOKです。
+もし、OKでない場合は、環境変数のJAVA_HOMEとPATHを確認してください。</p>
+<p>Eclipseのバージョン3.2を<a href="http://download.eclipse.org/eclipse/downloads/drops/R-3.2.1-200609210945/index.php">このリンク</a>から指示に従ってインストールします。
+既にインストール済みの場合はその必要はありません。
+標準のJDKのバージョンが1.5系でない場合、Eclipseの起動引数に</p>
+<pre>
+eclipse.exe -vm "C:\Program Files\Java\jdk1.5.0_07\bin\javaw.exe"
+</pre>
+<p>のように1.5系のjavaw.exeを指定する必要があります。</p>
+<p>Tomcat5.5.xを<a href="http://tomcat.apache.org/download-55.cgi">このリンク</a>から指示に従ってインストールします。
+既にインストール済みの場合はその必要はありません。</p>
+<p>Tomcat Plugin3.2を<a href="http://www.sysdeo.com/eclipse/tomcatplugin">このリンク</a>から指示に従ってインストールします。
+既にインストール済みの場合はその必要はありません。
+インストールが終わったら、Eclipseを起動してTomcat Pluginの設定を行います。
+メニューの[Window] -> [Preferences…] -> [Tomcat]を選択してください。
+Tomcatバージョンにバージョン5.xを選択し、Tomcatホームにインストールしたディレクトリを指定します。
+コンテキスト宣言モードにコンテキストファイルを選び、[OK]をクリックします。</p>
+<p>これで、Tomcat Pluginの設定は完了しました。
+早速、Tomcatを起動してみましょう。メニューから[Tomcat] -> [Tomcat起動]を選択して、Tomcatを起動します。
+エラーなしに無事に起動したのを確認して、一旦、Tomcatを停止させましょう。
+メニューから[Tomcat] -> [Tomcat停止]を選択します。</p>
+<p>Dolteng、DbLauncherは、Seasarプロジェクトで開発されているEclipse用のPluginです。
+Eclipseのメニューから[Help] -> [Software Updates] -> [Find and Install…]を選択し、
+Install/Updateのダイアログを表示させます。
+[Search for new features to install]のラジオボタンをチェックして[Next]ボタンをクリックします。
+[New Remote site]ボタンをクリックして[Name]を[Seasar Plugin3.2]、
+[URL]に[http://eclipse.seasar.org/updates/3.2/]を入力して[OK]をクリックします。
+[Finish]ボタンをクリックするとインストールする候補として、
+DoltengとDbLauncherが出てくるのでそのままインストールしましょう。
+既にインストール済みの場合はその必要はありません。</p>
+<p>日本語でプロパティファイルを入力するためのプラグインとしてプロパティエディタを
+<a href="http://propedit.sourceforge.jp/">このリンク</a>から指示に従ってインストールします。
+既にインストール済みの場合は、その必要はありません。</p>
+<p>すべてのインストールがうまく行ったかどうかを確認するために、Hello Worldと表示する単純な画面を作ってみましょう。
+Eclipseのメニューから[File] -> [New] -> [Project]を選びます。
+図1のようなダイアログが表示されるので、[Chura Project]を選択します。<br /><br />
+<img src="images/setup1.jpg"/><br /><br />
+[Next]のボタンをクリックしてください。図2-3のように、[Project name]に[chura-tutorial]、[Root Package Name]に[tutorial.chura]と入力し、JREコンテナーが[Use Default JRE(1.5)]になっていることを確認します。図2-3 Chura projectの設定 picture2-3.bmp参照。[Project type]に[Super Agile(Teeda + S2Dao)]を選択し、[Finish]ボタンをクリックしてください。図2-4のようにchura-tutorialのプロジェクトが作成されます。図2-4 chura-tutorialプロジェクト picture2-4.bmp参照
+プロジェクトを右クリックして、[Tomcatプロジェクト] -> [Tomcatのコンテキストを更新]を選択します。これで開発を始めるための必要な設定は完了しました。メニューから[Tomcat] -> [Tomcat起動]を選択して、Tomcatを立ち上げます。HOT deployで開発するので、アプリケーションサーバを起動したままで開発することが可能です。
+図2-5のようにプロジェクトのツリーを開き、src/main/webapp/viewを右クリックして[New] -> [File]を選びます。図2-5 src/main/webapp/view picture2-5.bmp参照。[Enter or select the parent folder]に[chura-tutorial/src/main/webapp/view/hello]と入力し、[File name]に[hello.html]と入力して、[Finish]ボタンをクリックします。図2-6 hello.htmlの作成 picture2-6.bmp参照。ファイルが作成されたので、Package Exploreからhello.htmlを右クリックして[Open With] -> [Text Editor]を選びます。リスト2-4のようにHTMLを入力してください。 リスト2-4 hello.html list2-4.txt参照。
+入力が終わったら、hello.html を右クリックして、[Dolteng] -> [View on Server]を選びましょう。http://localhost:8080/chura-tutorial/view/hello/hello.htmlにアクセスするはずです。無事にHello Worldと表示されたらプロジェクトの設定はうまくいっています。ブラウザのアドレスバーにURLを入力するのも、実はかったるくて間違えやすい作業です。Seasar2ではこの辺の作業も自動化(メニューから選ぶだけ)されています。
+
+
             <p>S2はJDK1.4 or JDK1.5が必要です。</p>
 <p>S2xxx.zipを解凍してできたseasar2ディレクトリをEclipseで、｢ファイル→インポート→既存のプロジェクトをワークスペースへ｣でインポートしてください。</p>
             <h2>S2-Framework</h2>
