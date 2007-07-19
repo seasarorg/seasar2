@@ -21,7 +21,7 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
-import org.seasar.extension.jdbc.BatchHandler;
+import org.seasar.extension.jdbc.ReturningRowsBatchHandler;
 import org.seasar.extension.jdbc.StatementFactory;
 import org.seasar.extension.jdbc.util.ConnectionUtil;
 import org.seasar.framework.exception.SQLRuntimeException;
@@ -31,36 +31,40 @@ import org.seasar.framework.util.StatementUtil;
 /**
  * 一つのSQLに複数のパラメータを適用してバッチ実行するための基本的なクラスです。
  * <p>
- * バッチ実行された各SQLが挿入／更新／削除した行数の配列を取得する場合は{@link BasicReturningRowsBatchHandler}を使用してください。
+ * {@link BasicBatchHandler}と異なり、このインターフェースのメソッドはバッチ実行された各コマンドが更新した行数を配列で返します。
  * </p>
  * 
  * @author higa
- * @see BasicReturningRowsBatchHandler
+ * @see BasicBatchHandler
  */
-public class BasicBatchHandler extends BasicHandler implements BatchHandler {
+public class BasicReturningRowsBatchHandler extends BasicHandler implements
+        ReturningRowsBatchHandler {
+
+    private static final int[] EMPTY_ARRAY = new int[0];
 
     private int batchSize = -1;
 
     /**
-     * {@link BasicBatchHandler}を作成します。
+     * {@link BasicReturningRowsBatchHandler}を作成します。
      */
-    public BasicBatchHandler() {
+    public BasicReturningRowsBatchHandler() {
     }
 
     /**
-     * {@link BasicBatchHandler}を作成します。
+     * {@link BasicReturningRowsBatchHandler}を作成します。
      * 
      * @param dataSource
      *            データソース
      * @param sql
      *            SQL
      */
-    public BasicBatchHandler(DataSource dataSource, String sql) {
+    public BasicReturningRowsBatchHandler(final DataSource dataSource,
+            final String sql) {
         this(dataSource, sql, -1);
     }
 
     /**
-     * {@link BasicBatchHandler}を作成します。
+     * {@link BasicReturningRowsBatchHandler}を作成します。
      * 
      * @param dataSource
      *            データソース
@@ -69,12 +73,13 @@ public class BasicBatchHandler extends BasicHandler implements BatchHandler {
      * @param batchSize
      *            バッチ数
      */
-    public BasicBatchHandler(DataSource dataSource, String sql, int batchSize) {
+    public BasicReturningRowsBatchHandler(final DataSource dataSource,
+            final String sql, final int batchSize) {
         this(dataSource, sql, batchSize, BasicStatementFactory.INSTANCE);
     }
 
     /**
-     * {@link BasicBatchHandler}を作成します。
+     * {@link BasicReturningRowsBatchHandler}を作成します。
      * 
      * @param dataSource
      *            データソース
@@ -85,8 +90,9 @@ public class BasicBatchHandler extends BasicHandler implements BatchHandler {
      * @param statementFactory
      *            ステートメントファクトリ
      */
-    public BasicBatchHandler(DataSource dataSource, String sql, int batchSize,
-            StatementFactory statementFactory) {
+    public BasicReturningRowsBatchHandler(final DataSource dataSource,
+            final String sql, final int batchSize,
+            final StatementFactory statementFactory) {
 
         setDataSource(dataSource);
         setSql(sql);
@@ -109,20 +115,21 @@ public class BasicBatchHandler extends BasicHandler implements BatchHandler {
      * @param batchSize
      *            バッチ数
      */
-    public void setBatchSize(int batchSize) {
+    public void setBatchSize(final int batchSize) {
         this.batchSize = batchSize;
     }
 
-    public int execute(List list) throws SQLRuntimeException {
+    public int[] execute(final List list) throws SQLRuntimeException {
         if (list.size() == 0) {
-            return 0;
+            return EMPTY_ARRAY;
         }
-        Object[] args = (Object[]) list.get(0);
+        final Object[] args = (Object[]) list.get(0);
         return execute(list, getArgTypes(args));
     }
 
-    public int execute(List list, Class[] argTypes) throws SQLRuntimeException {
-        Connection connection = getConnection();
+    public int[] execute(final List list, final Class[] argTypes)
+            throws SQLRuntimeException {
+        final Connection connection = getConnection();
         try {
             return execute(connection, list, argTypes);
         } finally {
@@ -139,27 +146,28 @@ public class BasicBatchHandler extends BasicHandler implements BatchHandler {
      *            バッチ対象のデータ
      * @param argTypes
      *            引数の型のリスト
-     * @return 対象のデータの行数
+     * @return バッチ内のコマンドごとに 1 つの要素が格納されている更新カウントの配列。
+     *         配列の要素はコマンドがバッチに追加された順序で並べられる
      */
-    protected int execute(Connection connection, List list, Class[] argTypes) {
-        PreparedStatement ps = prepareStatement(connection);
-        int size = batchSize > 0 ? batchSize : list.size();
+    protected int[] execute(final Connection connection, final List list,
+            final Class[] argTypes) {
+        final int size = batchSize > 0 ? Math.min(batchSize, list.size())
+                : list.size();
+        if (size == 0) {
+            return EMPTY_ARRAY;
+        }
+        final PreparedStatement ps = prepareStatement(connection);
         try {
-            for (int i = 0, j = 0; i < list.size(); ++i) {
-                Object[] args = (Object[]) list.get(i);
+            for (int i = 0; i < list.size(); ++i) {
+                final Object[] args = (Object[]) list.get(i);
                 logSql(args, argTypes);
                 bindArgs(ps, args, argTypes);
                 PreparedStatementUtil.addBatch(ps);
-                if (j == size - 1 || i == list.size() - 1) {
-                    PreparedStatementUtil.executeBatch(ps);
-                    j = 0;
-                } else {
-                    ++j;
-                }
             }
-            return list.size();
+            return PreparedStatementUtil.executeBatch(ps);
         } finally {
             StatementUtil.close(ps);
         }
     }
+
 }

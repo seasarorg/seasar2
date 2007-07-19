@@ -22,36 +22,36 @@ import org.seasar.framework.exception.SQLRuntimeException;
 /**
  * 一つのSQLに複数のパラメータを適用してバッチ実行するためのインターフェースです。
  * <p>
- * バッチ実行された各SQLが挿入／更新／削除した行数の配列を取得する場合は{@link ReturningRowsBatchHandler}を使用してください。
+ * {@link BatchHandler}と異なり、このインターフェースのメソッドはバッチ実行された各SQLが挿入／更新／削除した行数の配列を返します。
  * </p>
  * 
  * @author higa
- * @see ReturningRowsBatchHandler
+ * @see BatchHandler
  */
-public interface BatchHandler {
+public interface ReturningRowsBatchHandler {
 
     /**
      * 一つのSQLに複数のパラメータを適用してバッチ実行します。
      * 
      * @param list
-     *            バッチ実行する各SQLに渡されるパラメータの配列からなるリスト
-     * @return バッチ実行した数
+     *            バッチ実行する各SQLに渡されるパラメータの配列からなるリスト。
+     * @return バッチ内のコマンドごとに1つの要素が格納されている更新カウントの配列。 配列の要素はコマンドがバッチに追加された順序で並べられます
      * @throws SQLRuntimeException
      *             SQL例外が発生した場合
      */
-    int execute(List list) throws SQLRuntimeException;
+    int[] execute(List list) throws SQLRuntimeException;
 
     /**
-     * 一つのSQLに複数のパラメータを適用してバッチ実行します。
+     * 一つのコマンド (SQL) に複数のパラメータを適用してバッチ実行します。
      * 
      * @param list
-     *            バッチ実行する各SQLに渡されるパラメータの配列からなるリスト
+     *            バッチ実行するSQLに渡されるパラメータの配列からなるリスト
      * @param argTypes
      *            パラメータのタイプの配列
-     * @return バッチ実行した数
+     * @return バッチ内のコマンドごとに1つの要素が格納されている更新カウントの配列。 配列の要素はコマンドがバッチに追加された順序で並べられます
      * @throws SQLRuntimeException
      *             SQL例外が発生した場合
      */
-    int execute(List list, Class[] argTypes) throws SQLRuntimeException;
+    int[] execute(List list, Class[] argTypes) throws SQLRuntimeException;
 
 }
