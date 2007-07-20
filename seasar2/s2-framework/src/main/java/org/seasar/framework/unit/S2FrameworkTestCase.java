@@ -97,6 +97,8 @@ public abstract class S2FrameworkTestCase extends TestCase {
 
     private boolean warmDeploy = true;
 
+    private boolean registerNamingConvention = true;
+
     private AnnotationHandler annotationHandler = AnnotationHandlerFactory
             .getAnnotationHandler();
 
@@ -134,6 +136,25 @@ public abstract class S2FrameworkTestCase extends TestCase {
      */
     public void setWarmDeploy(boolean warmDeploy) {
         this.warmDeploy = warmDeploy;
+    }
+
+    /**
+     * テスト用のS2コンテナを作成する際に{@link NamingConvention}を登録する場合は<code>true</code>を返します。
+     * 
+     * @return テスト用のS2コンテナを作成する際に{@link NamingConvention}を登録する場合は<code>true</code>
+     */
+    public boolean isRegisterNamingConvention() {
+        return registerNamingConvention;
+    }
+
+    /**
+     * テスト用のS2コンテナを作成する際に{@link NamingConvention}を登録する場合は<code>true</code>を設定します。
+     * 
+     * @param registerNamingConvention
+     *            テスト用のS2コンテナを作成する際に{@link NamingConvention}を登録する場合は<code>true</code>
+     */
+    public void setRegisterNamingConvention(boolean registerNamingConvention) {
+        this.registerNamingConvention = registerNamingConvention;
     }
 
     /**
@@ -351,8 +372,11 @@ public abstract class S2FrameworkTestCase extends TestCase {
                 .setExternalContextComponentDefRegister(new HttpServletExternalContextComponentDefRegister());
         ComponentDeployerFactory
                 .setProvider(new ExternalComponentDeployerProvider());
-        namingConvention = new NamingConventionImpl();
-        container.register(namingConvention);
+        if (!container.hasComponentDef(NamingConvention.class)
+                && isRegisterNamingConvention()) {
+            namingConvention = new NamingConventionImpl();
+            container.register(namingConvention);
+        }
     }
 
     /**
