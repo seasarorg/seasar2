@@ -19,6 +19,7 @@ import java.lang.reflect.Method;
 import java.util.List;
 
 import org.seasar.framework.aop.interceptors.MockInterceptor;
+import org.seasar.framework.convention.NamingConvention;
 
 /**
  * テストクラスを分析するイントロスペクターです。
@@ -108,6 +109,17 @@ public interface S2TestIntrospector {
      * @return WARM deployが必要とされる場合<code>true</code>、そうでない場合<code>false</code>
      */
     boolean needsWarmDeploy(Class<?> clazz, Method method);
+
+    /**
+     * {@link NamingConvention}が登録される場合<code>true</code>を返します。
+     * 
+     * @param clazz
+     *            テストクラス
+     * @param method
+     *            テストメソッド
+     * @return {@link NamingConvention}が登録される場合<code>true</code>、登録されない場合<code>false</code>を返します。
+     */
+    boolean isRegisterNamingConvention(Class<?> clazz, Method method);
 
     /**
      * {@link MockInterceptor}を利用したモックを作成します。

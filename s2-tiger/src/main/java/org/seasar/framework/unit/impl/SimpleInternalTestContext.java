@@ -31,7 +31,6 @@ import org.seasar.framework.container.deployer.InstanceDefFactory;
 import org.seasar.framework.container.factory.S2ContainerFactory;
 import org.seasar.framework.container.factory.TigerAnnotationHandler;
 import org.seasar.framework.convention.NamingConvention;
-import org.seasar.framework.convention.impl.NamingConventionImpl;
 import org.seasar.framework.message.MessageResourceBundleFactory;
 import org.seasar.framework.unit.ConfigFileIncluder;
 import org.seasar.framework.unit.ExpectedDataReader;
@@ -154,6 +153,11 @@ public class SimpleInternalTestContext implements InternalTestContext {
         this.testMethod = testMethod;
     }
 
+    @Binding(bindingType = BindingType.NONE)
+    public void setNamingConvention(NamingConvention namingConvention) {
+        this.namingConvention = namingConvention;
+    }
+
     /**
      * このコンポーネントを初期化します。
      * 
@@ -161,8 +165,6 @@ public class SimpleInternalTestContext implements InternalTestContext {
      */
     @InitMethod
     public void init() throws Throwable {
-        namingConvention = new NamingConventionImpl();
-        container.register(namingConvention);
     }
 
     /**
@@ -171,7 +173,6 @@ public class SimpleInternalTestContext implements InternalTestContext {
     @DestroyMethod
     public void destroy() {
         MessageResourceBundleFactory.clear();
-        namingConvention = null;
     }
 
     public void initContainer() {
@@ -214,8 +215,12 @@ public class SimpleInternalTestContext implements InternalTestContext {
     }
 
     public void register(final Class<?> componentClass) {
-        register(componentClass, namingConvention
-                .fromClassNameToComponentName(componentClass.getName()));
+        if (namingConvention == null) {
+            register(componentClass, null);
+        } else {
+            register(componentClass, namingConvention
+                    .fromClassNameToComponentName(componentClass.getName()));
+        }
     }
 
     public void register(final ComponentDef componentDef) {

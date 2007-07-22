@@ -38,6 +38,8 @@ import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.factory.S2ContainerFactory;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 import org.seasar.framework.container.impl.S2ContainerBehavior;
+import org.seasar.framework.convention.NamingConvention;
+import org.seasar.framework.convention.impl.NamingConventionImpl;
 import org.seasar.framework.env.Env;
 import org.seasar.framework.exception.NoSuchMethodRuntimeException;
 import org.seasar.framework.util.DisposableUtil;
@@ -294,6 +296,12 @@ public class S2TestMethodRunner {
                 .getComponent(InternalTestContext.class));
         testContext.setTestClass(testClass);
         testContext.setTestMethod(method);
+        if (!testContext.hasComponentDef(NamingConvention.class)
+                && introspector.isRegisterNamingConvention(testClass, method)) {
+            final NamingConvention namingConvention = new NamingConventionImpl();
+            testContext.register(namingConvention);
+            testContext.setNamingConvention(namingConvention);
+        }
 
         for (Class<?> clazz = testClass; clazz != Object.class; clazz = clazz
                 .getSuperclass()) {

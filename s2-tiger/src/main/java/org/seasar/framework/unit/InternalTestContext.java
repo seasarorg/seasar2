@@ -20,6 +20,7 @@ import java.lang.reflect.Method;
 import org.seasar.framework.aop.interceptors.MockInterceptor;
 import org.seasar.framework.container.AspectDef;
 import org.seasar.framework.container.S2Container;
+import org.seasar.framework.convention.NamingConvention;
 
 /**
  * S2JUnit4の内部的なテストコンテキストです。
@@ -46,6 +47,14 @@ public interface InternalTestContext extends TestContext {
      *            テストメソッド
      */
     void setTestMethod(Method testMethod);
+
+    /**
+     * 命名規約を設定します。
+     * 
+     * @param namingConvention
+     *            命名規約
+     */
+    void setNamingConvention(NamingConvention namingConvention);
 
     /**
      * S2コンテナを初期化します。

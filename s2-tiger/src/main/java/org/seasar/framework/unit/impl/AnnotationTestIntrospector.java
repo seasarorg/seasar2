@@ -39,6 +39,7 @@ import org.seasar.framework.unit.S2TestIntrospector;
 import org.seasar.framework.unit.annotation.Mock;
 import org.seasar.framework.unit.annotation.Mocks;
 import org.seasar.framework.unit.annotation.Prerequisite;
+import org.seasar.framework.unit.annotation.RegisterNamingConvention;
 import org.seasar.framework.unit.annotation.RootDicon;
 import org.seasar.framework.unit.annotation.TxBehavior;
 import org.seasar.framework.unit.annotation.TxBehaviorType;
@@ -272,6 +273,17 @@ public class AnnotationTestIntrospector implements S2TestIntrospector {
         }
         if (clazz.isAnnotationPresent(WarmDeploy.class)) {
             return clazz.getAnnotation(WarmDeploy.class).value();
+        }
+        return true;
+    }
+
+    public boolean isRegisterNamingConvention(final Class<?> clazz,
+            final Method method) {
+        if (method.isAnnotationPresent(RegisterNamingConvention.class)) {
+            return method.getAnnotation(RegisterNamingConvention.class).value();
+        }
+        if (clazz.isAnnotationPresent(RegisterNamingConvention.class)) {
+            return clazz.getAnnotation(RegisterNamingConvention.class).value();
         }
         return true;
     }

@@ -20,6 +20,7 @@ import java.util.Date;
 import org.seasar.extension.unit.S2TestCase;
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.impl.ComponentDefImpl;
+import org.seasar.framework.convention.impl.NamingConventionImpl;
 import org.seasar.framework.unit.InternalTestContext;
 
 /**
@@ -64,6 +65,7 @@ public class SimpleInternalTestContextTest extends S2TestCase {
      */
     public void testRegisterComponentClass() throws Exception {
         testCtx.setTestClass(Bbb.class);
+        testCtx.setNamingConvention(new NamingConventionImpl());
         testCtx.register(Aaa.class);
         testCtx.register(Date.class, "hoge");
 
