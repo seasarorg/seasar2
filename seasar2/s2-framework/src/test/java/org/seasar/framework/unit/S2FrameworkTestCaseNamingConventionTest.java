@@ -15,6 +15,8 @@
  */
 package org.seasar.framework.unit;
 
+import java.util.HashMap;
+
 import org.seasar.framework.convention.NamingConvention;
 
 /**
@@ -35,6 +37,13 @@ public class S2FrameworkTestCaseNamingConventionTest extends
     public void test() throws Exception {
         assertEquals("/", namingConvention.getViewRootPath());
         assertEquals(".htm", namingConvention.getViewExtension());
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testRegister() throws Exception {
+        register(HashMap.class);
     }
 
 }

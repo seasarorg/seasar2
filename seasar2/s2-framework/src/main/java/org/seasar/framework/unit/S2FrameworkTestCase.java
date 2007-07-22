@@ -213,8 +213,12 @@ public abstract class S2FrameworkTestCase extends TestCase {
      * @see #register(Class, String)
      */
     public void register(Class componentClass) {
-        register(componentClass, namingConvention
-                .fromClassNameToComponentName(componentClass.getName()));
+        if (namingConvention == null) {
+            register(componentClass, null);
+        } else {
+            register(componentClass, namingConvention
+                    .fromClassNameToComponentName(componentClass.getName()));
+        }
     }
 
     /**
