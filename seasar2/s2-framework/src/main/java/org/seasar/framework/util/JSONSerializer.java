@@ -27,11 +27,9 @@ import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.beans.factory.BeanDescFactory;
 
-import com.sun.tools.javac.resources.javac;
-
 /**
- * JSON形式の文字列を解析します。
- * ObjectをJSON文字列へシリアライズ、JSON文字列をObjectへ評価します。
+ * JSON形式の文字列を解析します。 ObjectをJSON文字列へシリアライズ、JSON文字列をObjectへ評価します。
+ * 
  * @author mopemope
  */
 public class JSONSerializer {
