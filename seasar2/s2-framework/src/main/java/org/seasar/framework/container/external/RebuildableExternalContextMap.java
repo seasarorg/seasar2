@@ -17,6 +17,7 @@ package org.seasar.framework.container.external;
 
 import java.lang.ref.WeakReference;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -45,17 +46,8 @@ public abstract class RebuildableExternalContextMap extends
 
     public Object get(final Object key) {
         final Object value = getAttribute(key.toString());
-        if (value == null || !HotdeployUtil.isHotdeploy()) {
+        if (value == null || !isHotdeployMode()) {
             return value;
-        }
-        final ClassLoader currentLoader = Thread.currentThread()
-                .getContextClassLoader();
-        if (!(currentLoader instanceof HotdeployClassLoader)) {
-            return value;
-        }
-        if (currentLoader != hotdeployClassLoader.get()) {
-            hotdeployClassLoader = new WeakReference(currentLoader);
-            rebuiltNames.clear();
         }
         if (rebuiltNames.contains(key)) {
             return value;
@@ -64,6 +56,46 @@ public abstract class RebuildableExternalContextMap extends
         rebuiltNames.add(key);
         setAttribute(key.toString(), rebuiltValue);
         return rebuiltValue;
+    }
+
+    public Object put(Object key, Object value) {
+        final Object oldValue = super.put(key, value);
+        if (isHotdeployMode()) {
+            rebuiltNames.add(key);
+        }
+        return oldValue;
+    }
+
+    public void putAll(Map map) {
+        for (final Iterator it = map.entrySet().iterator(); it.hasNext();) {
+            final Entry entry = (Entry) it.next();
+            put(entry.getKey(), entry.getValue());
+        }
+    }
+
+    /**
+     * HOT deployモードの場合は<code>true</code>を返します。
+     * <p>
+     * HOT deployモードの場合で、{@link HotdeployClassLoader}が前回のチェック以降に切り替わっていた場合は
+     * 保持しているリビルド済みオブジェクトの名前をクリアします。
+     * </p>
+     * 
+     * @return HOT deployモードの場合は<code>true</code>
+     */
+    protected boolean isHotdeployMode() {
+        if (!HotdeployUtil.isHotdeploy()) {
+            return false;
+        }
+        final ClassLoader currentLoader = Thread.currentThread()
+                .getContextClassLoader();
+        if (!(currentLoader instanceof HotdeployClassLoader)) {
+            return false;
+        }
+        if (currentLoader != hotdeployClassLoader.get()) {
+            hotdeployClassLoader = new WeakReference(currentLoader);
+            rebuiltNames.clear();
+        }
+        return true;
     }
 
 }
