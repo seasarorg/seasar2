@@ -48,8 +48,6 @@ public class RebuildableExternalContextMapTest extends TestCase {
      * @throws Exception
      */
     public void test() throws Exception {
-        TestMap map = new TestMap();
-
         NamingConventionImpl convention = new NamingConventionImpl();
         convention.addRootPackageName("org.seasar.framework.external");
         HotdeployUtil.setHotdeploy(true);
@@ -57,19 +55,19 @@ public class RebuildableExternalContextMapTest extends TestCase {
                 convention);
         Thread.currentThread().setContextClassLoader(hotLoader);
         Foo foo = new Foo("hoge");
-        map.put("foo", foo);
-        Foo foo2 = (Foo) map.get("foo");
+        new TestMap().put("foo", foo);
+        Foo foo2 = (Foo) new TestMap().get("foo");
         assertSame(foo, foo2);
-        assertSame(foo2, map.get("foo"));
+        assertSame(foo2, new TestMap().get("foo"));
         assertEquals("hoge", foo2.name);
 
         ClassLoader hotLoader2 = new HotdeployClassLoader(originalLoader,
                 convention);
         Thread.currentThread().setContextClassLoader(hotLoader2);
-        Foo foo3 = (Foo) map.get("foo");
+        Foo foo3 = (Foo) new TestMap().get("foo");
         assertNotSame(foo, foo3);
         assertNotSame(foo2, foo3);
-        assertSame(foo3, map.get("foo"));
+        assertSame(foo3, new TestMap().get("foo"));
         assertEquals("hoge", foo2.name);
     }
 
@@ -78,7 +76,7 @@ public class RebuildableExternalContextMapTest extends TestCase {
      */
     public static class TestMap extends RebuildableExternalContextMap {
 
-        Map map = new HashMap();
+        static Map map = new HashMap();
 
         protected Object getAttribute(String key) {
             return map.get(key);

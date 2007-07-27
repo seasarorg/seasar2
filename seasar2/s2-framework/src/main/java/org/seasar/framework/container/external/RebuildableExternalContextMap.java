@@ -31,6 +31,9 @@ import org.seasar.framework.container.hotdeploy.HotdeployUtil;
  * HOT deploy中はリクエストごとにクラスが変わってしまうので、 セッションなどに入れたデータを別のリクエストで取り出すと
  * {@link ClassCastException}が起きます。 これを防ぐために最新のクラスで元のオブジェクトを再作成します。
  * </p>
+ * <p>
+ * HOT deployは単一スレッドで実行されることが前提なので、このクラスはスレッドセーフではありません。
+ * </p>
  * 
  * @author koichik
  * @see HotdeployUtil#rebuildValue(Object)
@@ -39,10 +42,11 @@ public abstract class RebuildableExternalContextMap extends
         AbstractExternalContextMap {
 
     /** {@link HotdeployClassLoader} */
-    protected WeakReference hotdeployClassLoader = new WeakReference(null);
+    protected static WeakReference hotdeployClassLoader = new WeakReference(
+            null);
 
     /** {@link #hotdeployClassLoader}の元で再構築したコンポーネント名の{@link Set} */
-    protected Set rebuiltNames = new HashSet(64);
+    protected static Set rebuiltNames = new HashSet(64);
 
     public Object get(final Object key) {
         final Object value = getAttribute(key.toString());
