@@ -5,20 +5,6 @@
 	</properties>
 	<body>
 		<section name="ドキュメント一覧">
-			<subsection name="Seasar2.4新機能">
-				<ul>
-					<li><p><a href="S2.4SmartDeploy.html">SMART deploy</a></p></li>
-					<li><p><a href="S2.4SmartDeployConfig.html">SMART deployの設定方法</a></p></li>
-					<li><p><a href="ejb3.html">EJB3.0 Simplified API</a></p></li>
-					<li><p><a href="conditionalInclude.html">条件インクルード</a></p></li>
-					<li><p><a href="xinclude.html">XInclude</a></p></li>
-					<li><p><a href="stdDicon.html">S2標準dicon</a></p></li>
-					<li><p><a href="s2dxo.html">S2Dxo</a></p></li>
-					<li><p><a href="dbsession.html">DBセッションレプリケーション</a></p></li>
-					<li><p><a href="S2JUnit4.html">S2JUnit4</a></p></li>
-					<li><p><a href="easyMock.html">EasyMockサポート</a></p></li>
-				</ul>
-			</subsection>
 			<subsection name="ベーシック">
 				<ul>
 					<li><p><a href="setup.html">セットアップ</a></p></li>
@@ -32,6 +18,12 @@
 					<li><p><a href="testtech.html">テスト技法</a></p></li>
 					<li><p><a href="ognl.html">OGNLガイド</a></p></li>
 					<li><p><a href="S2Logger.html">Logger</a></p></li>
+					<li><p><a href="ejb3.html">EJB3.0 Simplified API</a></p></li>
+					<li><p><a href="stdDicon.html">S2標準dicon</a></p></li>
+					<li><p><a href="s2dxo.html">S2Dxo</a></p></li>
+					<li><p><a href="dbsession.html">DBセッションレプリケーション</a></p></li>
+					<li><p><a href="S2JUnit4.html">S2JUnit4</a></p></li>
+					<li><p><a href="easyMock.html">EasyMockサポート</a></p></li>
 				</ul>
 			</subsection>
 			<!--
