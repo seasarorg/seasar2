@@ -757,8 +757,8 @@ Map paramValues;
 <p>container以外のコンポーネントを使うには<a href="#S2ContainerFilter">S2ContainerFilter</a>が必要です。</p>
 
 <h3><a name="Aop" id="Aop">AOPの適用</a></h3>
-<p>コンポーネントに<a href="aop.html">AOP</a>を適用することもできます。
-詳しい説明は、<a href="aop.html">AOP</a>を参照してください。</p>
+<p>コンポーネントに<a href="aop.html#Aspect">アスペクト</a>を適用することもできます。
+詳しい説明は、<a href="aop.html">S2AOP</a>を参照してください。</p>
 
 <h3><a name="Meta" id="Meta">メタデータ</a></h3>
 <p>components、component、arg、propertyタグにメタデータを指定することもできます。metaタグはメタデータを指定したいタグの子タグに指定します。例えば、componentsタグにメタデータを指定したい場合次のようにします。</p>
@@ -1019,7 +1019,9 @@ Map paramValues;
 &lt;/component&gt;
 </pre>
 <h3><a name="AspectAutoRegister" id="AspectAutoRegister">アスペクトの自動登録</a></h3>
-<p><a href="#ComponentAutoRegister">コンポーネントの自動登録</a>により、コンポーネントの登録は自動化できます。 さらに、アスペクトの登録も自動化してしまおうというのが、アスペクトの自動登録機能です。</p>
+<p><a href="#ComponentAutoRegister">コンポーネントの自動登録</a>により、コンポーネントの登録は自動化できます。 
+さらに、アスペクトの登録も自動化してしまおうというのが、アスペクトの自動登録機能です。
+アスペクトについては、<a href="#aspectTag">aspectタグ</a>を参照してください。</p>
 <p>コンポーネントの自動登録と組み合わせる場合は､コンポーネントの自動登録の設定よりも後に、アスペクトの自動登録の設定を記述する必要があります。 アスペクトを適用されるコンポーネントは、アスペクトの自動登録の設定よりも後に記述する必要があります。</p>
 <pre>
 &lt;components&gt;
@@ -1513,7 +1515,7 @@ S2Containerにはdefault-customizer.diconに定義されたデフォルトカス
 	</p>
 </ul>
 
-<h5>インスタンス属性がsingleton以外のインターセプタを利用する</h5>
+<h5><a name="useLookupAdapter">インスタンス属性がsingleton以外のインターセプタを利用する</a></h5>
 <p>
 	インターセプタを適用する<code>AspectCustomizer</code>の<code>useLookupAdapter</code>プロパティに<code>true</code>を設定をします。
 </p>
@@ -1620,10 +1622,85 @@ S2Daoを使用した例については<a href="http://www.seasar.org/wiki/index.
 </pre>
 <h3><a name="destroyMethodTag" id="destroyMethodTag">destroyMethodタグ(任意)</a></h3>
 <p>initMethodタグと同様です。</p>
+
 <h3><a name="aspectTag" id="aspectTag">aspectタグ(任意)</a></h3>
-<p>アスペクトをコンポーネントに組み込みます。詳しくは、S2AOPの<a href="aop.html#aspectTag">aspectタグ</a>の説明を参照してください。</p>
+<p><a href="aop.html#Advice">Advice</a>(以下Interceptor)をコンポーネントに組み込みます。
+Interceptorの指定は、ボディで他のコンポーネントを参照するか、子タグでcomponentタグを使います。
+1つのコンポーネントに複数のアスペクトを組み込んだ場合はアスペクトの登録順に組み込まれ実行されます。</p>
+<h4><a name="aspectWarning" id="aspectWarning">注意点</a></h4>
+<ul>
+<li>finalなクラスにはアスペクトを適用できません。</li>
+<li>finalまたはstaticまたは非publicなメソッドにはアスペクトを適用できません。</li>
+<li>aspectタグで指定されたコンポーネントは、
+コンテナの初期化時にコンテナから取得されます。
+そのため、aspectタグで指定されたコンポーネントのinstance属性がprototypeだったとしても、
+Interceptor のメソッドが呼び出される度に新しいインスタンスが作成されるわけではありません。
+singleton以外のスコープにしたい場合は、
+<a href="aop.html#InterceptorLifecycleAdapter">InterceptorLifecycleAdapter</a>を使ってください。
+</li>
+</ul>
+
+<h4><a name="pointcut">pointcut属性(任意)</a></h4>
+<p>カンマ区切りで対象となるメソッド名を指定することができます。
+pointcutを指定しない場合は、コンポーネントが実装しているインターフェースのすべてのメソッドが対象になります。
+<b>publicなメソッドがすべて対象になるわけではないので注意してください。</b>
+メソッド名には正規表現(JDK1.4のregex)も使えます。</p>
+<h4>設定例</h4>
+<p>pointcut属性を指定してjava.util.DateのgetTime()メソッドとhashCode()メソッドを対象とする場合以下のようになります。</p>
+<pre>
+&lt;component class="java.util.Date"&gt;
+    &lt;aspect pointcut="getTime,hashCode"&gt;
+        &lt;component class="org.seasar.framework.aop.interceptors.TraceInterceptor"/&gt;
+    &lt;/aspect&gt;
+&lt;/component&gt;
+</pre>
+<p>
+正規表現を使ってjava.util.Dateのpublicなメソッドすべてを対象としたい場合は、以下のように設定します。
+</p>
+<pre>
+&lt;component class="java.util.Date"&gt;
+    &lt;aspect pointcut=".*"&gt;
+        &lt;component class="org.seasar.framework.aop.interceptors.TraceInterceptor"/&gt;
+    &lt;/aspect&gt;
+&lt;/component&gt;
+</pre>
+<p>
+pointcutの対象から外したいメソッドがある場合は以下のようにします。<br />
+以下は「do」で始まり，その後に「ABC」が続くメソッドをpointcutの対象から外す例です。
+doABC()メソッド、doABCDEF()メソッドがpointcutの対象から外れます。
+</p>
+<pre>
+&lt;component class="java.util.Date"&gt;
+    &lt;aspect pointcut="do(?!ABC).*"&gt;
+        &lt;component class="org.seasar.framework.aop.interceptors.TraceInterceptor"/&gt;
+    &lt;/aspect&gt;
+&lt;/component&gt;
+</pre>
+<p>
+また、以下のような設定も可能です。<br />
+「do」で始まり，その後に「ABC」または「BCD」が続くメソッドをpointcutの対象から外す例です。
+</p>
+<pre>
+&lt;component class="java.util.Date"&gt;
+    &lt;aspect pointcut="do(?!ABC|BCD).*"&gt;
+        &lt;component class="org.seasar.framework.aop.interceptors.TraceInterceptor"/&gt;
+    &lt;/aspect&gt;
+&lt;/component&gt;
+</pre>
+
 <h3><a name="interTypeTag" id="interTypeTag">interTypeタグ(任意)</a></h3>
-<p>インタータイプをコンポーネントに組み込みます。詳しくは、S2AOPの<a href="aop.html#interTypeTag">interTypeタグ</a>の説明を参照してください。</p>
+<p><a href="aop.html#InterType">InterType</a>をコンポーネントに組み込みます。InterTypeの指定は、
+ボディで他のコンポーネントを参照するか、子タグでcomponentタグを使います。
+1つのコンポーネントに複数のInterTypeを組み込んだ場合はInterTypeの登録順に組み込まれます。</p>
+<h5>設定例</h5>
+<pre>
+&lt;component class="java.util.Date"&gt;
+    &lt;interType&gt;
+        &lt;component class="org.seasar.framework.aop.intertype.PropertyInterType"/&gt;
+    &lt;/interType&gt;
+&lt;/component&gt;
+</pre>
+
 <h3><a name="descriptionTag" id="descriptionTag">descriptionタグ(任意)</a></h3>
 <p><a href="#componentsTag">componentsタグ</a>、<a href="#componentTag">componentタグ</a>、<a href="#argTag">argタグ</a>、<a href="#propertyTag">propertyタグ</a>の子タグとしてdescriptionタグを使うことができます。自由に説明を記述できます。</p>
 <h3><a name="ognlExpr" id="ognlExpr">OGNL式</a></h3>
@@ -1706,7 +1783,7 @@ public void setCcc(Ccc ccc) {
 </pre>
 
 <h3><a name="AspectAnnotation" id="AspectAnnotation">Aspectアノテーション</a></h3>
-<p><a href="aop.html#aspectTag">aspectタグ</a>のかわりに使えるのが、Aspectアノテーションです。
+<p><a href="#aspectTag">aspectタグ</a>のかわりに使えるのが、Aspectアノテーションです。
 aspectタグと異なり､複数定義することはできないので､ 複数のインターセプタを適用したい場合は､
 <a href="aop.html#InterceptorChain">InterceptorChain</a>を使ってください。
 ポイントカットを指定したいときは､pointcut属性を指定します。
@@ -1734,7 +1811,7 @@ public static final String ASPECT =
 </pre>
 
 <h3><a name="InterTypeAnnotation" id="InterTypeAnnotation">InterTypeアノテーション</a></h3>
-<p><a href="aop.html#intetTypeTag">interTypeタグ</a>のかわりに使えるのが、InterTypeアノテーションです。</p>
+<p><a href="#interTypeTag">interTypeタグ</a>のかわりに使えるのが、InterTypeアノテーションです。</p>
 <p>Tigerアノテーションは以下のようになります。</p>
 <pre>
 @InterType({"aop.propertyInterType", "aop.someInterType"})
