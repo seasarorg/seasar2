@@ -13,9 +13,9 @@
 					<li><p><a href="transaction.html">トランザクションの設定</a></p></li>
 					<li><p><a href="tx.html">トランザクションの自動制御</a></p></li>
 					<li><p><a href="jdbc.html">JDBCの設定</a></p></li>
+					<li><p><a href="garble.html">文字化け対策</a></p></li>
 					<li><p><a href="s2jdbc.html">S2JDBC</a></p></li>
 					<li><p><a href="S2Unit.html">S2Unit</a></p></li>
-					<li><p><a href="testtech.html">テスト技法</a></p></li>
 					<li><p><a href="ognl.html">OGNLガイド</a></p></li>
 					<li><p><a href="S2Logger.html">Logger</a></p></li>
 					<li><p><a href="ejb3.html">EJB3.0 Simplified API</a></p></li>
