@@ -53,9 +53,9 @@
 				Seasar2を利用していて疑問に思ったことや困ったこと、要望などはこちらへ。</dd>
 				<dt><a href="https://www.seasar.org/mailman/listinfo/seasar-dev">seasar-dev</a></dt>
 				<dd>Seasar2および関連プロダクト開発者のためのメーリングリストです。</dd>
-				<dt><a href="https://www.seasar.org/mailman/listinfo/seasar-javadoc">seasar-javadoc</a></dt>
-				<dd>Seasar2および関連プロダクトにJavadocを記述するプロジェクトのためのメーリングリストです。<br />
-				<a href="http://www.seasar.org/wiki/index.php?SeasarJavadocProject">協力者を募集しています。</a></dd>
+				<dt><a href="https://www.seasar.org/mailman/listinfo/seasar-javadoc">seasar-javadoc</a>
+					<a href="http://www.seasar.org/wiki/index.php?SeasarJavadocProject">(協力者募集中)</a></dt>
+				<dd>Seasar2および関連プロダクトにJavadocを記述するプロジェクトのためのメーリングリストです。</dd>
 			</dl>
 		</section>
 		<section name="トラッキング">
@@ -66,6 +66,10 @@
 		</section>
 		<section name="News">
 			<dl>
+				<dt>2007/07/30</dt>
+				<dd>
+					Seasar2 2.4.16 をリリースしました． (<a href="downloads.html">ダウンロード</a>)
+				</dd>
 				<dt>2007/07/11</dt>
 				<dd>
 					Seasar2 2.4.15 をリリースしました． (<a href="downloads.html">ダウンロード</a>)<br/>
