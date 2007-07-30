@@ -37,11 +37,6 @@
 					<li><p><a href="http://www.picocontainer.org/">PicoContainer</a></p></li>
 				</ul>
 			</p>
-			<p>
-				Seasar2の基本機能を15分ほどでご紹介する<a href="DIContainer.html#Quickstart">クイックスタート</a>を
-				用意しています。
-				最初にお試しください
-			</p>
 			<h4>Flashによる<a name="demo" id="demo">デモ</a></h4>
 			<dl>
 				<dt><a href="demo/chura.html">3分でできるWebアプリケーション</a></dt>
