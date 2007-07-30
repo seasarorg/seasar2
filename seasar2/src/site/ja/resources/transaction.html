@@ -56,7 +56,7 @@
 <h2><a name="setup">セットアップ</a></h2>
 <p>Javaでトランザクション処理を行なうには、JTA(Java Transaction API)を使います。
 JTAは通常、アプリケーションサーバが実装しますが、
-TomcatのようにJTAの実装のないアプリケーションサーバ用に<a href="#S2JTA">S2JTA</a>も用意されています。
+TomcatのようなJTAの実装のないアプリケーションサーバ用に<a href="#S2JTA">S2JTA</a>を用意しています。
 </p>
 <p>
 JTAの設定は、jta.diconで行ないます。
@@ -107,11 +107,6 @@ S2JTAの設定は必要ありませんが参考までに載せておきます。
       class="javax.transaction.UserTransaction"&gt;
         @org.seasar.extension.j2ee.JndiResourceLocator@lookup("java:comp/UserTransaction")
     &lt;/component&gt;
-
-    &lt;component name="TransactionSynchronizationRegistry"
-      class="javax.transaction.TransactionSynchronizationRegistry"&gt
-    @org.seasar.extension.j2ee.JndiResourceLocator@lookup("java:comp/TransactionSynchronizationRegistry")
-    &lt;/component&gt
 &lt;/components&gt
 </pre>
 
@@ -130,11 +125,6 @@ S2JTAの設定は必要ありませんが参考までに載せておきます。
       class="javax.transaction.UserTransaction"&gt;
         @org.seasar.extension.j2ee.JndiResourceLocator@lookup("java:comp/UserTransaction")
     &lt;/component&gt;
-
-    &lt;component name="TransactionSynchronizationRegistry"
-      class="javax.transaction.TransactionSynchronizationRegistry"&gt
-    @org.seasar.extension.j2ee.JndiResourceLocator@lookup("java:comp/TransactionSynchronizationRegistry")
-    &lt;/component&gt
 &lt;/components&gt
 </pre>
 
@@ -153,9 +143,6 @@ S2JTAの設定は必要ありませんが参考までに載せておきます。
       class="javax.transaction.UserTransaction"&gt;
         @org.seasar.extension.j2ee.JndiResourceLocator@lookup("java:comp/UserTransaction")
     &lt;/component&gt;
-
-    &lt;component name="TransactionSynchronizationRegistry"
-      class="org.seasar.extension.jta.TransactionSynchronizationRegistryImpl"/&gt;
 &lt;/components&gt
 </pre>
 
@@ -175,10 +162,6 @@ S2JTAの設定は必要ありませんが参考までに載せておきます。
         @org.seasar.extension.j2ee.JndiResourceLocator@lookup("java:comp/UserTransaction")
     &lt;/component&gt;
 
-    &lt;component name="TransactionSynchronizationRegistry"
-      class="javax.transaction.TransactionSynchronizationRegistry"&gt
-    @org.seasar.extension.j2ee.JndiResourceLocator@lookup("java:comp/TransactionSynchronizationRegistry")
-    &lt;/component&gt
 &lt;/components&gt
 </pre>
 

@@ -2,9 +2,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja" lang="ja">
 <!-- don't edit start -->
 <head>
-<title>Seasar - DI Container with AOP -</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>JDBCの設定</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta http-equiv="Content-Style-Type" content="text/css" />
 <link href="seasar_b.css" type="text/css" rel="stylesheet" media="screen" />
 <link href="seasar_p.css" type="text/css" rel="stylesheet" media="print" />
 <script src="seasar_b.js" type="text/JavaScript" language="JavaScript">
@@ -39,13 +39,35 @@
 <table width="780" border="0" cellspacing="0" cellpadding="0" class="white">
 <tr align="left" valign="top">
 <td width="14"><img height="14" width="14" src="images/spacer.gif" alt="" /></td>
-<td width="740" class="main"><!-- don't edit end -->
+<td width="752" class="main"><!-- don't edit end -->
 <!-- document start -->
-<p>本ドキュメントは<code>S2.4.0</code>について記述しています．旧バージョンについては該当バージョンの配布ファイルに含まれているドキュメントを参照してください．</p>
-<p>S2DBCPの機能を使って、コネクションプーリングを実現できます。<a href="tx.html">JTA</a>と連動するので、トランザクション中にコネクションを取得し閉じるということを何度か行っても、トランザクションは維持されます。JDBCで行っていたようなトランザクションを維持したいがために複数のクラスでコネクションを持ちまわるようなことはもう必要なくなります。<a href="tx.html">S2Tx</a>を使えば、トランザクションも<a href="aop.html#Aspect">Aspect</a>で自動的に処理することができます。</p>
-<h2><a name="Setup">セットアップ</a></h2>
-<p>XADataSource、ConnectionPoolの設定をおこないます。JDBC DriverがXADataSourceの機能を提供している場合は、 それをそのまま使えますが、提供されていない場合、S2で用意しているXADataSourceImplを使って、XAの機能をエミュレートします。</p>
-<h3>org.seasar.extension.dbcp.impl.XADataSourceImpl</h3>
+<ul>
+<li><a href="#setup">セットアップ</a>
+<ul>
+<li><a href="#S2DBCP">S2DBCP</a>
+<li><a href="#GenericApplicationServer">一般的なアプリケーションサーバ</a>
+<li><a href="#Oracle">オラクル</a>
+</li>
+</ul>
+</li>
+</ul>
+<h2><a name="setup">セットアップ</a></h2>
+<p>Javaでデータベースにアクセスするには、データソースを経由したコネクションプールを使うのが一般的です。
+コネクションプールは通常、アプリケーションサーバが実装しますが、
+Tomcatのようなトランザクションと連動するコネクションプールの実装のないアプリケーションサーバ用に
+<a href="#S2DBCP">S2DBCP</a>を用意しています。
+</p>
+<p>
+データソースの設定は、jdbc.diconで行ないます。
+jdbc.diconはクラスパスの通っているディレクトリ、
+通常はWEB-INF/classesにおきます。
+</p>
+
+<h3><a name="S2DBCP">S2DBCP</a></h2>
+<p>XADataSource、ConnectionPoolの設定をおこないます。
+JDBC DriverがXADataSourceの機能を提供している場合は、 それをそのまま使えますが、
+提供されていない場合、S2で用意しているXADataSourceImplを使って、XAの機能をエミュレートします。</p>
+<h4>org.seasar.extension.dbcp.impl.XADataSourceImpl</h4>
 <table border="1">
 <tr bgcolor="#D1F3F4" align="center">
 <th width="96">プロパティ</th>
@@ -73,7 +95,8 @@
 <td><code>"password"</code></td>
 </tr>
 </table>
-<h3>org.seasar.extension.dbcp.impl.ConnectionPoolImpl</h3>
+
+<h4>org.seasar.extension.dbcp.impl.ConnectionPoolImpl</h4>
 <table border="1">
 <tr bgcolor="#D1F3F4" align="center">
 <th width="118">プロパティ</th>
@@ -83,8 +106,8 @@
 <tr>
 <td><code>XADataSource</code></td>
 <td>
-<p>XADataSourceのインスタンスを設定します。S2Containerで設定する場合は、XADataSourceのコンポーネント名を設定します。<br />
-必須です。</p>
+XADataSourceのインスタンスを設定します。S2Containerで設定する場合は、XADataSourceのコンポーネント名を設定します。<br />
+必須です。
 </td>
 <td><code>xaDataSource</code></td>
 </tr>
@@ -92,7 +115,7 @@
 <td><code>transactionManager</code></td>
 <td>TransactionManagerのインスタンスを設定します。S2Containerで設定する場合は、TransactionManagerのコンポーネント名を設定します。<br />
 必須です。</td>
-<td><code>transactionManager</code></td>
+<td><code>TransactionManager</code></td>
 </tr>
 <tr>
 <td><code>timeout</code></td>
@@ -117,10 +140,26 @@
 </tr>
 </table>
 <p>コンポーネントの設定は以下のようになります。環境に合わせて書き換えてください。</p>
-<h3>jdbc.dicon</h3>
+<h4>jdbc.dicon</h4>
 <pre>
+&lt;?xml version="1.0" encoding="UTF-8"?&gt
+&lt;!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN" 
+	"http://www.seasar.org/dtd/components24.dtd"&gt
 &lt;components namespace="jdbc"&gt;
     &lt;include path="jta.dicon"/&gt;
+    &lt;include path="jdbc-extension.dicon"/&gt;
+    
+    &lt;component class="org.seasar.extension.jdbc.impl.BasicResultSetFactory"/&gt;
+    &lt;component class="org.seasar.extension.jdbc.impl.ConfigurableStatementFactory"&gt;
+        &lt;arg>
+            &lt;component class="org.seasar.extension.jdbc.impl.BasicStatementFactory"/&gt;
+        &lt;/arg&gt;
+        &lt;property name="fetchSize"&gt;100&lt;/property&gt;
+        &lt;!--
+        &lt;property name="maxRows"&gt;100&lt;/property&gt;
+        --&gt;
+    &lt;/component&gt;
+
     &lt;component name="xaDataSource"
             class="org.seasar.extension.dbcp.impl.XADataSourceImpl"&gt;
         &lt;property name="driverClassName"&gt;
@@ -143,124 +182,70 @@
        class="org.seasar.extension.dbcp.impl.DataSourceImpl"/&gt;
 &lt;/components&gt;
 </pre>
-<h2><a name="Example">Example</a></h2>
-<h3>EmployeeDao.java</h3>
+
+<h3><a name="GenericApplicationServer">一般的なアプリケーションサーバ</a></h3>
+<p>一般的なアプリケーションサーバでは、JNDI経由(JndiResourceLocator)でデータソースを取得します。
+</p>
+<h4>jdbc.dicon</h4>
 <pre>
-package examples.dbcp;
+&lt;?xml version="1.0" encoding="UTF-8"?&gt
+&lt;!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN" 
+	"http://www.seasar.org/dtd/components24.dtd"&gt
+&lt;components namespace="jdbc"&gt;
+    &lt;include path="jta.dicon"/&gt;
+    &lt;include path="jdbc-extension.dicon"/&gt;
+    
+    &lt;component class="org.seasar.extension.jdbc.impl.BasicResultSetFactory"/&gt;
+    &lt;component class="org.seasar.extension.jdbc.impl.ConfigurableStatementFactory"&gt;
+        &lt;arg>
+            &lt;component class="org.seasar.extension.jdbc.impl.BasicStatementFactory"/&gt;
+        &lt;/arg&gt;
+        &lt;property name="fetchSize"&gt;100&lt;/property&gt;
+        &lt;!--
+        &lt;property name="maxRows"&gt;100&lt;/property&gt;
+        --&gt;
+    &lt;/component&gt;
 
-import java.sql.SQLException;
-
-public interface EmployeeDao {
-
-    public String getEmployeeName(int empno) throws SQLException;
-}
+    &lt;component name="dataSource"
+            class="javax.sql.DataSource"&gt;
+        @org.seasar.extension.j2ee.JndiResourceLocator@lookup("JNDI名")
+    &lt;/component&gt;
+&lt;/components&gt;
 </pre>
-<h4>EmployeeDaoImpl.java</h4>
+
+<h3><a name="Oracle">オラクル</a></h3>
+<p>オラクルをShift_JISで使う場合に、WAVE DASHが化ける場合があります。
+これに対応するためには、BasicResultSetFactoryのかわりに、
+OracleResultSetFactoryを使います。
+</p>
+<p>
+また、Javaではbooleanで扱いたいけど、データベースがbooleanに対応していない場合は、
+BasicStatementFactoryのかわりに、BooleanToIntStatementFactoryを使います。
+</p>
+<h4>jdbc.dicon</h4>
 <pre>
-package examples.dbcp;
+&lt;?xml version="1.0" encoding="UTF-8"?&gt
+&lt;!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN" 
+	"http://www.seasar.org/dtd/components24.dtd"&gt
+&lt;components namespace="jdbc"&gt;
+    &lt;include path="jta.dicon"/&gt;
+    &lt;include path="jdbc-extension.dicon"/&gt;
+    
+    &lt;component class="<b>org.seasar.extension.jdbc.impl.OracleResultSetFactory</b>"/&gt;
+    &lt;component class="org.seasar.extension.jdbc.impl.ConfigurableStatementFactory"&gt;
+        &lt;arg>
+            &lt;component class="<b>org.seasar.extension.jdbc.impl.BooleanToIntStatementFactory</b>"/&gt;
+        &lt;/arg&gt;
+        &lt;property name="fetchSize"&gt;100&lt;/property&gt;
+        &lt;!--
+        &lt;property name="maxRows"&gt;100&lt;/property&gt;
+        --&gt;
+    &lt;/component&gt;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
-import javax.sql.DataSource;
-
-public class EmployeeDaoImpl implements EmployeeDao {
-
-    private DataSource dataSource_;
-
-    public EmployeeDaoImpl(DataSource dataSource) {
-        dataSource_ = dataSource;
-    }
-
-    public String getEmployeeName(int empno) throws SQLException {
-        String ename = null;
-        Connection con = dataSource_.getConnection();
-        try {
-            PreparedStatement ps = con.prepareStatement(
-                "SELECT ename FROM emp WHERE empno = ?");
-            try {
-                ps.setInt(1, empno);
-                ResultSet rs = ps.executeQuery();
-                try {
-                    if (rs.next()) {
-                        ename = rs.getString("ename");
-                    }
-                } finally {
-                    rs.close();
-                }
-            } finally {
-                ps.close();
-            }
-        } finally {
-            con.close();
-        }
-        return ename;
-    }
-}
+    ...
+&lt;/components&gt;
 </pre>
-<h3>EmployeeService.java</h3>
-<pre>
-package examples.dbcp;
 
-import java.sql.SQLException;
-
-public interface EmployeeService {
-
-    public String getEmployeeName(int empno) throws SQLException;
-}
-</pre>
-<h3>EmployeeServiceImpl.java</h3>
-<pre>
-package examples.dbcp;
-
-import java.sql.SQLException;
-
-public class EmployeeServiceImpl implements EmployeeService {
-
-    private EmployeeDao dao_;
-
-    public EmployeeServiceImpl(EmployeeDao dao) {
-        dao_ = dao;
-    }
-
-    public String getEmployeeName(int empno) throws SQLException {
-        return dao_.getEmployeeName(empno);
-    }
-}
-</pre>
-<h3>Employee.dicon</h3>
-<pre>
-&lt;components&gt;<br />    &lt;include path="j2ee.dicon"/&gt;<br />    &lt;component class="examples.dbcp.EmployeeDaoImpl"/&gt;<br />    &lt;component class="examples.dbcp.EmployeeServiceImpl"&gt;<br />        &lt;aspect&gt;j2ee.requiredTx&lt;/aspect&gt;<br />    &lt;/component&gt;<br />&lt;/components&gt;
-</pre>
-<h3>EmployeeClient.java</h3>
-<pre>
-package examples.dbcp;
-
-import java.sql.SQLException;
-
-import org.seasar.framework.container.S2Container;
-import org.seasar.framework.container.factory.S2ContainerFactory;
-
-public class EmployeeClient {
-
-    private static final String PATH =
-        "examples/dbcp/Employee.dicon";
-
-    public static void main(String[] args) {
-        S2Container container = S2ContainerFactory.create(PATH);
-        container.init();<br />        try {<br />            EmployeeService service = (EmployeeService)<br />            container.getComponent(EmployeeService.class);<br />            System.out.println(service.getEmployeeName(7788));<br />        } catch (SQLException ex) {<br />            ex.printStackTrace();<br />        } finally {<br />            container.destroy();<br />        }
-    }
-}
-</pre>
-<h3>実行結果</h3>
-<pre>
-DEBUG 2004-03-21 12:51:35,653 [main] Transaction.begin()
-DEBUG 2004-03-21 12:51:37,075 [main] Transaction.commit()
-SCOTT
-</pre>
-<p>これまで、JTAやJTAと連動したコネクションプールに対して、敷居が高いなぁと感じていた方も、POJOでこんなに簡単に利用できるということが分かっていただけたと思います。</p>
 <!-- document end -->
 <!-- don't edit start --></td>
 <td width="14"><img height="14" width="14" src="images/spacer.gif" alt="" /></td>
