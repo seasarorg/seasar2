@@ -44,10 +44,10 @@
 <ul>
 <li><a href="#setup">セットアップ</a>
 <ul>
-<li><a href="#S2DBCP">S2DBCP</a>
-<li><a href="#GenericApplicationServer">一般的なアプリケーションサーバ</a>
-<li><a href="#Oracle">オラクル</a>
-</li>
+<li><a href="#S2DBCP">S2DBCP</a></li>
+<li><a href="#GenericApplicationServer">一般的なアプリケーションサーバ</a></li>
+<li><a href="#OracleUnicode">オラクルのユニコード問題</a></li>
+<li><a href="#BooleanToInt">Booleanの扱い</a></li>
 </ul>
 </li>
 </ul>
@@ -213,38 +213,19 @@ XADataSourceのインスタンスを設定します。S2Containerで設定する
 &lt;/components&gt;
 </pre>
 
-<h3><a name="Oracle">オラクル</a></h3>
-<p>オラクルをShift_JISで使う場合に、WAVE DASHが化ける場合があります。
+<h3><a name="OracleUnicode">オラクルのUnicode問題</a></h3>
+<p>OracleのJDBC Driverは、Unicodeのマッピングに一部問題があり、～が化ける場合があります。
 これに対応するためには、BasicResultSetFactoryのかわりに、
 OracleResultSetFactoryを使います。
+詳細は<a href="s2jdbc.html#OracleUnicode">オラクルのUnicode問題</a>を参照してください。
 </p>
-<p>
-また、Javaではbooleanで扱いたいけど、データベースがbooleanに対応していない場合は、
-BasicStatementFactoryのかわりに、BooleanToIntStatementFactoryを使います。
-</p>
-<h4>jdbc.dicon</h4>
-<pre>
-&lt;?xml version="1.0" encoding="UTF-8"?&gt
-&lt;!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN" 
-	"http://www.seasar.org/dtd/components24.dtd"&gt
-&lt;components namespace="jdbc"&gt;
-    &lt;include path="jta.dicon"/&gt;
-    &lt;include path="jdbc-extension.dicon"/&gt;
-    
-    &lt;component class="<b>org.seasar.extension.jdbc.impl.OracleResultSetFactory</b>"/&gt;
-    &lt;component class="org.seasar.extension.jdbc.impl.ConfigurableStatementFactory"&gt;
-        &lt;arg>
-            &lt;component class="<b>org.seasar.extension.jdbc.impl.BooleanToIntStatementFactory</b>"/&gt;
-        &lt;/arg&gt;
-        &lt;property name="fetchSize"&gt;100&lt;/property&gt;
-        &lt;!--
-        &lt;property name="maxRows"&gt;100&lt;/property&gt;
-        --&gt;
-    &lt;/component&gt;
 
-    ...
-&lt;/components&gt;
-</pre>
+<h3><a name="BooleanToInt">Booleanの扱い</a></h3>
+<p>
+Javaではbooleanで扱いたいけど、データベースがbooleanに対応していない場合は、
+BasicStatementFactoryのかわりに、BooleanToIntStatementFactoryを使います。
+詳細は<a href="s2jdbc.html#BooleanToInt">Booleanの扱い</a>を参照してください。
+</p>
 
 <!-- document end -->
 <!-- don't edit start --></td>
