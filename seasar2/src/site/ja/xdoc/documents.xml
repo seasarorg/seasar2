@@ -13,7 +13,6 @@
 					<li><p><a href="transaction.html">トランザクションの設定</a></p></li>
 					<li><p><a href="tx.html">トランザクションの自動制御</a></p></li>
 					<li><p><a href="dbcp.html">コネクションプーリング</a></p></li>
-					<li><p><a href="SabaJTAandDBCP.html">アプリケーションサーバのJTAとコネクションプールを使う</a></p></li>
 					<li><p><a href="s2jdbc.html">S2JDBC</a></p></li>
 					<li><p><a href="S2Unit.html">S2Unit</a></p></li>
 					<li><p><a href="testtech.html">テスト技法</a></p></li>
