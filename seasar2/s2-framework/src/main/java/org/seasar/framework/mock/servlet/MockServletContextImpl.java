@@ -35,7 +35,6 @@ import org.seasar.framework.exception.ResourceNotFoundRuntimeException;
 import org.seasar.framework.util.EnumerationAdapter;
 import org.seasar.framework.util.FileUtil;
 import org.seasar.framework.util.ResourceUtil;
-import org.seasar.framework.util.StringUtil;
 
 /**
  * {@link MockServletContext}の実装クラスです。
@@ -118,7 +117,7 @@ public class MockServletContextImpl implements MockServletContext, Serializable 
      * @see javax.servlet.ServletContext#getResourcePaths(java.lang.String)
      */
     public Set getResourcePaths(String path) {
-        path = path.endsWith("/") ? path : path + "/";
+        path = path.endsWith("/") ? path.substring(0, path.length() - 1) : path;
         File src = ResourceUtil.getResourceAsFile(".");
         File root = src.getParentFile();
         if (root.getName().equalsIgnoreCase("WEB-INF")) {
@@ -126,17 +125,18 @@ public class MockServletContextImpl implements MockServletContext, Serializable 
         }
         File file = new File(root, adjustPath(path));
         if (!file.exists()) {
-            String[] array = StringUtil.split(path, "/");
-            if (array.length > 1) {
-                path = array[array.length - 1];
+            int pos = path.lastIndexOf('/');
+            if (pos != -1) {
+                path = path.substring(pos + 1);
             }
             do {
                 file = new File(root, path);
                 root = root.getParentFile();
             } while (!file.exists() && root != null);
+            path = "/" + path;
         }
         if (file.isDirectory()) {
-            int len = file.getAbsolutePath().length() + 1;
+            int len = file.getAbsolutePath().length();
             Set paths = new HashSet();
             File[] files = file.listFiles();
             if (files != null) {

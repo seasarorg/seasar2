@@ -46,13 +46,25 @@ public class MockServletContextImplTest extends TestCase {
     public void testGetResourcePaths() throws Exception {
         Set paths = context_.getResourcePaths("/lib");
         System.out.println(paths);
-        assertNotNull("1", paths);
+        assertNotNull(paths);
         assertFalse(paths.isEmpty());
 
         String path = (String) paths.iterator().next();
-        assertTrue(path.startsWith("/lib"));
+        assertTrue(path.startsWith("/lib/"));
 
         URL url = context_.getResource(path);
+        System.out.println(url);
+        assertNotNull(url);
+
+        paths = context_.getResourcePaths("/WEB-INF/lib/");
+        System.out.println(paths);
+        assertNotNull(paths);
+        assertFalse(paths.isEmpty());
+
+        path = (String) paths.iterator().next();
+        assertTrue(path.startsWith("/lib/"));
+
+        url = context_.getResource(path);
         System.out.println(url);
         assertNotNull(url);
     }
