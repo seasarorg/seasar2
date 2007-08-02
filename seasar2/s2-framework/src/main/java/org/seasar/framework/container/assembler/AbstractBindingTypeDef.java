@@ -74,7 +74,7 @@ public abstract class AbstractBindingTypeDef implements BindingTypeDef {
                 bindManual(componentDef, propertyDef, propertyDesc, component);
             }
         } else {
-            if (propertyDesc != null && propertyDesc.hasWriteMethod()) {
+            if (propertyDesc != null && propertyDesc.isWritable()) {
                 doBind(componentDef, propertyDesc, component);
             }
         }

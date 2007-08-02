@@ -370,7 +370,7 @@ public class ConversionContextImpl implements ConversionContext {
             }
             final PropertyDesc nestedPropertyDesc = nestedBeanDesc
                     .getPropertyDesc(propertyName);
-            if (!nestedPropertyDesc.hasReadMethod()) {
+            if (!nestedPropertyDesc.isReadable()) {
                 continue;
             }
             final NestedPropertyInfo info = new NestedPropertyInfo(
