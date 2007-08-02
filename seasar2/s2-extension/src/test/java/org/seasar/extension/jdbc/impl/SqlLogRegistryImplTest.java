@@ -84,4 +84,14 @@ public class SqlLogRegistryImplTest extends S2TestCase {
         assertSame(sqlLog4, registry.get(1));
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testClear() throws Exception {
+        SqlLogRegistryImpl registry = new SqlLogRegistryImpl(3);
+        registry.add(sqlLog);
+        registry.clear();
+        assertTrue(registry.isEmpty());
+    }
 }

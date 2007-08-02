@@ -86,6 +86,10 @@ public class SqlLogRegistryImpl implements SqlLogRegistry {
         }
     }
 
+    public void clear() {
+        getSqlLogList().clear();
+    }
+
     private LinkedList getSqlLogList() {
         return (LinkedList) threadList.get();
     }

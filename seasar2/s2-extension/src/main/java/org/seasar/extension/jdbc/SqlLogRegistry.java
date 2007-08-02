@@ -67,4 +67,10 @@ public interface SqlLogRegistry {
      */
     void add(SqlLog sqlLog);
 
+    /**
+     * すべての{@link SqlLog}をこのレジストリから削除します。
+     * 
+     */
+    void clear();
+
 }
