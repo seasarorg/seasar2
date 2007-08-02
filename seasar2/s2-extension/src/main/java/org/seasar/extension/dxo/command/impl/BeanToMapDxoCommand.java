@@ -181,7 +181,7 @@ public class BeanToMapDxoCommand extends AbstractDxoCommand {
         final int propertySize = beanDesc.getPropertyDescSize();
         for (int i = 0; i < propertySize; ++i) {
             final PropertyDesc propertyDesc = beanDesc.getPropertyDesc(i);
-            if (propertyDesc.hasReadMethod()) {
+            if (propertyDesc.isReadable()) {
                 final String sourcePropertyName = propertyDesc
                         .getPropertyName();
                 final String destPropertyName = toDestPropertyName(sourcePropertyName);

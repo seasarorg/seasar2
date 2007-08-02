@@ -154,7 +154,7 @@ public abstract class AbstractAnnotationHandler implements AnnotationHandler {
                 .getComponentClass());
         for (int i = 0; i < beanDesc.getPropertyDescSize(); ++i) {
             PropertyDesc pd = beanDesc.getPropertyDesc(i);
-            if (!pd.hasWriteMethod()) {
+            if (!pd.isWritable()) {
                 continue;
             }
             PropertyDef propDef = createPropertyDef(beanDesc, pd);

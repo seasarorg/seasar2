@@ -64,7 +64,7 @@ public abstract class AbstractPropertyAssembler extends AbstractAssembler
 
         for (int i = 0; i < beanDesc.getPropertyDescSize(); ++i) {
             final PropertyDesc pd = beanDesc.getPropertyDesc(i);
-            if (!pd.hasWriteMethod()) {
+            if (!pd.isWritable()) {
                 continue;
             }
             final String name = pd.getPropertyName();

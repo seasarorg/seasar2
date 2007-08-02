@@ -51,7 +51,7 @@ public final class BeanUtil {
                 continue;
             }
             PropertyDesc pd = beanDesc.getPropertyDesc(key);
-            if (pd.hasWriteMethod()) {
+            if (pd.isWritable()) {
                 pd.setValue(dest, src.get(key));
             }
         }
@@ -71,7 +71,7 @@ public final class BeanUtil {
         final int size = beanDesc.getPropertyDescSize();
         for (int i = 0; i < size; ++i) {
             final PropertyDesc pd = beanDesc.getPropertyDesc(i);
-            if (pd.hasReadMethod() && pd.hasWriteMethod()) {
+            if (pd.isReadable() && pd.isWritable()) {
                 final Object value = pd.getValue(src);
                 dest.put(pd.getPropertyName(), value);
             }
@@ -110,8 +110,8 @@ public final class BeanUtil {
             if (srcBeanDesc.hasPropertyDesc(propertyName)) {
                 final PropertyDesc srcPropertyDesc = srcBeanDesc
                         .getPropertyDesc(propertyName);
-                if (destPropertyDesc.hasWriteMethod()
-                        && srcPropertyDesc.hasReadMethod()) {
+                if (destPropertyDesc.isWritable()
+                        && srcPropertyDesc.isReadable()) {
                     final Object value = srcPropertyDesc.getValue(src);
                     if (includeNull || value != null) {
                         destPropertyDesc.setValue(dest, srcPropertyDesc

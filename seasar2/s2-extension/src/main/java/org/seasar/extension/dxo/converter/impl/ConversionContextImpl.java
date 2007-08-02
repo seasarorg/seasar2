@@ -359,7 +359,7 @@ public class ConversionContextImpl implements ConversionContext {
         for (int i = 0; i < propertyDefSize; ++i) {
             final PropertyDesc propertyDesc = beanDesc.getPropertyDesc(i);
             final Class propertyType = propertyDesc.getPropertyType();
-            if (!propertyDesc.hasReadMethod() || isBasicType(propertyType)) {
+            if (!propertyDesc.isReadable() || isBasicType(propertyType)) {
                 continue;
             }
 

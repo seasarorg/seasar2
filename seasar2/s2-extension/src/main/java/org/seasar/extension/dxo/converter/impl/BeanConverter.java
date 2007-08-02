@@ -100,7 +100,7 @@ public class BeanConverter extends AbstractConverter {
         for (int i = 0; i < size; i++) {
             final PropertyDesc destPropertyDesc = destBeanDesc
                     .getPropertyDesc(i);
-            if (!destPropertyDesc.hasWriteMethod()) {
+            if (!destPropertyDesc.isWritable()) {
                 continue;
             }
             setValue(sourceBeanDesc, source, destBeanDesc, dest,
@@ -185,7 +185,7 @@ public class BeanConverter extends AbstractConverter {
         if (sourceBeanDesc.hasPropertyDesc(sourcePropertyName)) {
             final PropertyDesc sourcePropertyDesc = sourceBeanDesc
                     .getPropertyDesc(sourcePropertyName);
-            if (!sourcePropertyDesc.hasReadMethod()) {
+            if (!sourcePropertyDesc.isReadable()) {
                 return PROPERTY_NOT_FOUND;
             }
             return sourcePropertyDesc.getValue(source);
@@ -304,7 +304,7 @@ public class BeanConverter extends AbstractConverter {
 
         final PropertyDesc sourcePropertyDesc = sourceBeanDesc
                 .getPropertyDesc(sourcePropertyName);
-        if (!sourcePropertyDesc.hasReadMethod()) {
+        if (!sourcePropertyDesc.isReadable()) {
             return null;
         }
 

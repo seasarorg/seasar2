@@ -70,7 +70,7 @@ public abstract class AbstractBindingTypeDef implements BindingTypeDef {
     public void bind(ComponentDef componentDef, PropertyDef propertyDef,
             PropertyDesc propertyDesc, Object component) {
         if (propertyDef != null && propertyDef.isValueGettable()) {
-            if (propertyDesc != null && propertyDesc.hasWriteMethod()) {
+            if (propertyDesc != null && propertyDesc.isWritable()) {
                 bindManual(componentDef, propertyDef, propertyDesc, component);
             }
         } else {
