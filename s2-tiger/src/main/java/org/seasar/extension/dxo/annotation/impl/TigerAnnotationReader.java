@@ -207,7 +207,7 @@ public class TigerAnnotationReader implements AnnotationReader {
         final BeanDesc beanDesc = BeanDescFactory.getBeanDesc(destClass);
         for (int i = 0; i < beanDesc.getPropertyDescSize(); ++i) {
             final PropertyDesc propertyDesc = beanDesc.getPropertyDesc(i);
-            if (!propertyDesc.hasWriteMethod()) {
+            if (!propertyDesc.isWritable()) {
                 continue;
             }
             final Method method = propertyDesc.getWriteMethod();

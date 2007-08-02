@@ -391,7 +391,7 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
     @Override
     public PropertyDef createPropertyDef(final BeanDesc beanDesc,
             PropertyDesc propertyDesc) {
-        if (propertyDesc.hasWriteMethod()) {
+        if (propertyDesc.isWritable()) {
             for (final PropertyDefBuilder builder : propertyDefBuilders) {
                 final PropertyDef propertyDef = builder.createPropertyDef(this,
                         beanDesc, propertyDesc);

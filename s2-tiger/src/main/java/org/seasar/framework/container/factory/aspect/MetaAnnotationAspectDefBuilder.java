@@ -304,7 +304,7 @@ public class MetaAnnotationAspectDefBuilder extends AbstractAspectDefBuilder {
                 }
                 final PropertyDesc propertyDesc = beanDesc
                         .getPropertyDesc(propertyName);
-                if (!propertyDesc.hasWriteMethod()) {
+                if (!propertyDesc.isWritable()) {
                     continue;
                 }
                 propertyDesc.setValue(interceptor, MethodUtil.invoke(method,
