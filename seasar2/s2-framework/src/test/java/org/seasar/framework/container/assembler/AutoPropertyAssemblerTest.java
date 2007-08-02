@@ -113,7 +113,7 @@ public class AutoPropertyAssemblerTest extends TestCase {
         assembler.assemble(a2);
         assertEquals("1", "B", a2.getHogeName());
     }
-    
+
     /**
      * @throws Exception
      */
@@ -124,8 +124,10 @@ public class AutoPropertyAssemblerTest extends TestCase {
         cd.setExternalBinding(true);
         container.register(cd);
         ExternalContext extCtx = new HttpServletExternalContext();
-        MockServletContext servletContext = new MockServletContextImpl("s2-example");
-        MockHttpServletRequest request = servletContext.createRequest("/hello.html");
+        MockServletContext servletContext = new MockServletContextImpl(
+                "s2-example");
+        MockHttpServletRequest request = servletContext
+                .createRequest("/hello.html");
         request.setParameter("name", "aaa");
         extCtx.setRequest(request);
         container.setExternalContext(extCtx);
@@ -136,7 +138,44 @@ public class AutoPropertyAssemblerTest extends TestCase {
     }
 
     /**
-     *
+     * @throws Exception
+     */
+    public void testPublicField() throws Exception {
+        S2Container container = new S2ContainerImpl();
+        ComponentDefImpl cd = new ComponentDefImpl(Ggg.class);
+        container.register(cd);
+        container.register(Eee.class, "eee");
+        PropertyAssembler assembler = new AutoPropertyAssembler(cd);
+        Ggg ggg = new Ggg();
+        assembler.assemble(ggg);
+        assertNotNull(ggg.eee);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testPublicFieldBindExternally() throws Exception {
+        S2Container container = new S2ContainerImpl();
+        ComponentDefImpl cd = new ComponentDefImpl(Ggg.class);
+        cd.setAutoBindingDef(AutoBindingDefFactory.NONE);
+        cd.setExternalBinding(true);
+        container.register(cd);
+        ExternalContext extCtx = new HttpServletExternalContext();
+        MockServletContext servletContext = new MockServletContextImpl(
+                "s2-example");
+        MockHttpServletRequest request = servletContext
+                .createRequest("/hello.html");
+        request.setParameter("name", "aaa");
+        extCtx.setRequest(request);
+        container.setExternalContext(extCtx);
+        PropertyAssembler assembler = new AutoPropertyAssembler(cd);
+        Ggg ggg = new Ggg();
+        assembler.assemble(ggg);
+        assertEquals("aaa", ggg.name);
+    }
+
+    /**
+     * 
      */
     public interface Foo {
         /**
@@ -146,7 +185,7 @@ public class AutoPropertyAssemblerTest extends TestCase {
     }
 
     /**
-     *
+     * 
      */
     public static class A implements Foo {
 
@@ -194,7 +233,7 @@ public class AutoPropertyAssemblerTest extends TestCase {
     }
 
     /**
-     *
+     * 
      */
     public static class A2 implements Foo {
 
@@ -220,7 +259,7 @@ public class AutoPropertyAssemblerTest extends TestCase {
     }
 
     /**
-     *
+     * 
      */
     public interface Hoge {
 
@@ -231,7 +270,7 @@ public class AutoPropertyAssemblerTest extends TestCase {
     }
 
     /**
-     *
+     * 
      */
     public static class B implements Hoge {
 
@@ -241,7 +280,7 @@ public class AutoPropertyAssemblerTest extends TestCase {
     }
 
     /**
-     *
+     * 
      */
     public static class C implements Hoge {
 
@@ -249,9 +288,9 @@ public class AutoPropertyAssemblerTest extends TestCase {
             return "C";
         }
     }
-    
+
     /**
-     *
+     * 
      */
     public static class D {
         private String name;
@@ -269,6 +308,27 @@ public class AutoPropertyAssemblerTest extends TestCase {
         public void setName(String name) {
             this.name = name;
         }
-        
+
+    }
+
+    /**
+     * 
+     */
+    public static class Eee {
+    }
+
+    /**
+     * 
+     */
+    public static class Ggg {
+        /**
+         * 
+         */
+        public Eee eee;
+
+        /**
+         * 
+         */
+        public String name;
     }
 }

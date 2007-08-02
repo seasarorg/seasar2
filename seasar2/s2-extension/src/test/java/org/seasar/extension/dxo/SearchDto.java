@@ -21,84 +21,28 @@ package org.seasar.extension.dxo;
  */
 public class SearchDto {
 
-    private String name;
-
-    private String name_LIKE;
-
-    private Integer age;
-
-    private Integer age_GT;
-
-    private String hoge;
+    /**
+     * 
+     */
+    public String name;
 
     /**
-     * @return
+     * 
      */
-    public Integer getAge() {
-        return age;
-    }
+    public String name_LIKE;
 
     /**
-     * @param age
+     * 
      */
-    public void setAge(Integer age) {
-        this.age = age;
-    }
+    public Integer age;
 
     /**
-     * @return
+     * 
      */
-    public Integer getAge_GT() {
-        return age_GT;
-    }
+    public Integer age_GT;
 
     /**
-     * @param age_GT
+     * 
      */
-    public void setAge_GT(Integer age_GT) {
-        this.age_GT = age_GT;
-    }
-
-    /**
-     * @return
-     */
-    public String getHoge() {
-        return hoge;
-    }
-
-    /**
-     * @param hoge
-     */
-    public void setHoge(String hoge) {
-        this.hoge = hoge;
-    }
-
-    /**
-     * @return
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * @param name
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    /**
-     * @return
-     */
-    public String getName_LIKE() {
-        return name_LIKE;
-    }
-
-    /**
-     * @param name_LIKE
-     */
-    public void setName_LIKE(String name_LIKE) {
-        this.name_LIKE = name_LIKE;
-    }
-
+    public String hoge;
 }

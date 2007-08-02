@@ -335,11 +335,11 @@ public class DxoInterceptorTest extends S2TestCase {
         src.setHoge("hoge");
 
         SearchDto dest = searchDxo.convert(src);
-        assertEquals("%hoge%", dest.getName_LIKE());
-        assertEquals(new Integer(25), dest.getAge_GT());
-        assertNull(dest.getName());
-        assertNull(dest.getAge());
-        assertNull(dest.getHoge());
+        assertEquals("%hoge%", dest.name_LIKE);
+        assertEquals(new Integer(25), dest.age_GT);
+        assertNull(dest.name);
+        assertNull(dest.age);
+        assertNull(dest.hoge);
     }
 
     /**
@@ -354,11 +354,11 @@ public class DxoInterceptorTest extends S2TestCase {
         src.put("hoge", "hoge");
 
         SearchDto dest = searchDxo.convert(src);
-        assertEquals("%hoge%", dest.getName_LIKE());
-        assertEquals(new Integer(25), dest.getAge_GT());
-        assertNull(dest.getName());
-        assertNull(dest.getAge());
-        assertNull(dest.getHoge());
+        assertEquals("%hoge%", dest.name_LIKE);
+        assertEquals(new Integer(25), dest.age_GT);
+        assertNull(dest.name);
+        assertNull(dest.age);
+        assertNull(dest.hoge);
     }
 
     /**
