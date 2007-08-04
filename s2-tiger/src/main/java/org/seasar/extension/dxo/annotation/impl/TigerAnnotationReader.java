@@ -210,29 +210,49 @@ public class TigerAnnotationReader implements AnnotationReader {
             if (!propertyDesc.isWritable()) {
                 continue;
             }
-            final Method method = propertyDesc.getWriteMethod();
-            for (final Annotation annotation : method.getDeclaredAnnotations()) {
-                final Class<? extends Annotation> annotationType = annotation
-                        .annotationType();
-                final Annotation metaAnnotation = annotationType
-                        .getAnnotation(DxoConverter.class);
-                if (metaAnnotation == null) {
-                    continue;
-                }
-                final DxoConverter dxoConverterAnnotation = DxoConverter.class
-                        .cast(metaAnnotation);
-                final String converterName = dxoConverterAnnotation.value();
-                final Converter converter = Converter.class.cast(container
-                        .getComponent(converterName));
-                final Map<?, ?> props = AnnotationUtil
-                        .getProperties(annotation);
-                BeanUtil.copyProperties(props, converter);
+            final Annotation[] annotations = (propertyDesc.hasWriteMethod()) ? propertyDesc
+                    .getWriteMethod().getDeclaredAnnotations()
+                    : propertyDesc.getField().getDeclaredAnnotations();
+            final Converter converter = detectConverter(annotations);
+            if (converter != null) {
                 converters.put(propertyDesc.getPropertyName(), converter);
-                break;
             }
         }
         convertersCache.put(destClass, converters);
         return converters;
+    }
+
+    /**
+     * アノテーションの配列に{@link DxoConverter}メタアノテーションで注釈されたアノテーションが含まれていれば、
+     * そのアノテーションに従い{@link Converter}を作成して返します。
+     * <p>
+     * アノテーションの配列に{@link DxoConverter}メタアノテーションで注釈されたアノテーションが含まれていない場合は
+     * <code>null</code>を返します。
+     * </p>
+     * 
+     * @param annotations
+     *            プロパティのsetterメソッドまたはpublicフィールドに指定されたアノテーションの配列
+     * @return {@link DxoConverter}メタアノテーションで注釈されたアノテーションに従い作成された{@link Converter}
+     */
+    protected Converter detectConverter(final Annotation[] annotations) {
+        for (final Annotation annotation : annotations) {
+            final Class<? extends Annotation> annotationType = annotation
+                    .annotationType();
+            final Annotation metaAnnotation = annotationType
+                    .getAnnotation(DxoConverter.class);
+            if (metaAnnotation == null) {
+                continue;
+            }
+            final DxoConverter dxoConverterAnnotation = DxoConverter.class
+                    .cast(metaAnnotation);
+            final String converterName = dxoConverterAnnotation.value();
+            final Converter converter = Converter.class.cast(container
+                    .getComponent(converterName));
+            final Map<?, ?> props = AnnotationUtil.getProperties(annotation);
+            BeanUtil.copyProperties(props, converter);
+            return converter;
+        }
+        return null;
     }
 
 }

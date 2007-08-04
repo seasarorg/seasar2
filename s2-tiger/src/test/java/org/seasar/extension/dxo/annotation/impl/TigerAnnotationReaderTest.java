@@ -93,7 +93,7 @@ public class TigerAnnotationReaderTest extends S2FrameworkTestCase {
         Map<String, Converter> converters = factory.getAnnotationReader()
                 .getConverters(Hoge.class);
         assertNotNull(converters);
-        assertEquals(2, converters.size());
+        assertEquals(3, converters.size());
 
         Converter converter = converters.get("foo");
         assertNotNull(converter);
@@ -102,6 +102,10 @@ public class TigerAnnotationReaderTest extends S2FrameworkTestCase {
         converter = converters.get("bar");
         assertNotNull(converter);
         assertEquals("a_bar_b", converter.convert("bar", String.class, null));
+
+        converter = converters.get("baz");
+        assertNotNull(converter);
+        assertEquals("baz", converter.convert("baz", String.class, null));
     }
 
     /**
@@ -187,6 +191,12 @@ public class TigerAnnotationReaderTest extends S2FrameworkTestCase {
         protected String bar;
 
         /**
+         * 
+         */
+        @HogeDxoConverter
+        public String baz;
+
+        /**
          * @return
          */
         public String getFoo() {
@@ -221,7 +231,7 @@ public class TigerAnnotationReaderTest extends S2FrameworkTestCase {
      * 
      */
     @Retention(RetentionPolicy.RUNTIME)
-    @Target(ElementType.METHOD)
+    @Target( { ElementType.METHOD, ElementType.FIELD })
     @DxoConverter("hogeDxoConverter")
     public @interface HogeDxoConverter {
 

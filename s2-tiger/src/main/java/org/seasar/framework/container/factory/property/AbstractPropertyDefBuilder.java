@@ -58,7 +58,7 @@ public abstract class AbstractPropertyDefBuilder<T extends Annotation>
     public PropertyDef createPropertyDef(
             final AnnotationHandler annotationHandler, BeanDesc beanDesc,
             PropertyDesc propertyDesc) {
-        if (!propertyDesc.isWritable()) {
+        if (!propertyDesc.hasWriteMethod()) {
             return null;
         }
         final Method method = propertyDesc.getWriteMethod();
