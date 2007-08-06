@@ -54,4 +54,26 @@ public interface PersistenceConvention {
      * @return カラム名
      */
     String fromPropertyNameToColumnName(String propertyName);
+
+    /**
+     * プライマリキー用のプロパティかどうかを返します。
+     * 
+     * @param entityName
+     *            エンティティ名
+     * @param propertyName
+     *            プロパティ名
+     * @return プライマリキーかどうか
+     */
+    boolean isPrimaryKey(String entityName, String propertyName);
+
+    /**
+     * バージョンチェック用のプロパティかどうかを返します。
+     * 
+     * @param entityName
+     *            エンティティ名
+     * @param propertyName
+     *            プロパティ名
+     * @return バージョンチェック用のプロパティかどうか
+     */
+    boolean isVersion(String entityName, String propertyName);
 }

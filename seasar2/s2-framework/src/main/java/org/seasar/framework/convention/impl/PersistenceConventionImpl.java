@@ -31,41 +31,9 @@ public class PersistenceConventionImpl implements PersistenceConvention {
 
     private boolean noNameConversion = false;
 
-    /**
-     * 無視するテーブルの<code>prefix</code>を返します。
-     * 
-     * @return 無視するテーブルの<code>prefix</code>
-     */
-    public String getIgnoreTablePrefix() {
-        return ignoreTablePrefix;
-    }
+    private String primaryKeySuffix = "Id";
 
-    /**
-     * 無視するテーブルの<code>prefix</code>を設定します。
-     * 
-     * @param ignoreTablePrefix
-     */
-    public void setIgnoreTablePrefix(String ignoreTablePrefix) {
-        this.ignoreTablePrefix = ignoreTablePrefix;
-    }
-
-    /**
-     * 名前を変換しないかどうかを返します。
-     * 
-     * @return 名前を変換しないかどうか
-     */
-    public boolean isNoNameConversion() {
-        return noNameConversion;
-    }
-
-    /**
-     * 名前を変換しないかどうかを設定します。
-     * 
-     * @param noNameConversion
-     */
-    public void setNoNameConversion(boolean noNameConversion) {
-        this.noNameConversion = noNameConversion;
-    }
+    private String versionSuffix = "Version";
 
     public String fromTableNameToEntityName(String tableName) {
         AssertionUtil.assertNotNull("tableName", tableName);
@@ -102,5 +70,93 @@ public class PersistenceConventionImpl implements PersistenceConvention {
             return propertyName;
         }
         return StringUtil.decamelize(propertyName);
+    }
+
+    public boolean isPrimaryKey(String entityName, String propertyName) {
+        AssertionUtil.assertNotNull("entityName", entityName);
+        AssertionUtil.assertNotNull("propertyName", propertyName);
+        return propertyName.equalsIgnoreCase(entityName + primaryKeySuffix)
+                || propertyName.equalsIgnoreCase(primaryKeySuffix);
+    }
+
+    public boolean isVersion(String entityName, String propertyName) {
+        AssertionUtil.assertNotNull("entityName", entityName);
+        AssertionUtil.assertNotNull("propertyName", propertyName);
+        return propertyName.equalsIgnoreCase(entityName + versionSuffix)
+                || propertyName.equalsIgnoreCase(versionSuffix);
+    }
+
+    /**
+     * 無視するテーブルの<code>prefix</code>を返します。
+     * 
+     * @return 無視するテーブルの<code>prefix</code>
+     */
+    public String getIgnoreTablePrefix() {
+        return ignoreTablePrefix;
+    }
+
+    /**
+     * 無視するテーブルの<code>prefix</code>を設定します。
+     * 
+     * @param ignoreTablePrefix
+     */
+    public void setIgnoreTablePrefix(String ignoreTablePrefix) {
+        this.ignoreTablePrefix = ignoreTablePrefix;
+    }
+
+    /**
+     * 名前を変換しないかどうかを返します。
+     * 
+     * @return 名前を変換しないかどうか
+     */
+    public boolean isNoNameConversion() {
+        return noNameConversion;
+    }
+
+    /**
+     * 名前を変換しないかどうかを設定します。
+     * 
+     * @param noNameConversion
+     */
+    public void setNoNameConversion(boolean noNameConversion) {
+        this.noNameConversion = noNameConversion;
+    }
+
+    /**
+     * プライマリキーのサフィックスを返します。
+     * 
+     * @return プライマリキーのサフィックス
+     */
+    public String getPrimaryKeySuffix() {
+        return primaryKeySuffix;
+    }
+
+    /**
+     * プライマリキーのサフィックスを設定します。
+     * 
+     * @param primaryKeySuffix
+     *            プライマリキーのサフィックス
+     */
+    public void setPrimaryKeySuffix(String primaryKeySuffix) {
+        this.primaryKeySuffix = primaryKeySuffix;
+    }
+
+    /**
+     * バージョン用プロパティのサフィックスを返します。
+     * 
+     * @return バージョン用プロパティのサフィックス
+     */
+    public String getVersionSuffix() {
+        return versionSuffix;
+    }
+
+    /**
+     * バージョン用プロパティのサフィックスを設定します。
+     * 
+     * @param versionSuffix
+     *            バージョン用プロパティのサフィックス
+     */
+    public void setVersionSuffix(String versionSuffix) {
+        this.versionSuffix = versionSuffix;
     }
 }
