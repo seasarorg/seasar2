@@ -1494,19 +1494,19 @@ S2Containerにはdefault-customizer.diconに定義されたデフォルトカス
 	<li><h5>ページのコンポーネントに適用する場合</h5></li>
 	<p>
 		<code>pageCustomizer</code>にトランザクション制御を有効にするためのカスタマイザを設定します。
-		ページのコンポーネントでトランザクション制御を行う場合は制御の対象となる特定のメソッドをポイントカットとして指定します。
-		ポイントカットは、addAspectCustomizer()メソッドの2つめの引数で指定します。
+		<code>addAspectCustomizer()</code>メソッドの第1引数にインターセプタのコンポーネント名、
+		第2引数にトランザクション制御の対象となる特定のメソッドをポイントカットとして指定します。
 	</p>	
-	
 <pre>
   &lt;component name=&quot;pageCustomizer&quot; 
     class=&quot;org.seasar.framework.container.customizer.CustomizerChain&quot;&gt;
     &lt;initMethod name=&quot;addAspectCustomizer&quot;&gt;
-      &lt;arg&gt;<b>requiredTxCustomizer</b>&lt;/arg&gt;
+      &lt;arg&gt;<b>&quot;j2ee.requiredTx&quot;</b>&lt;/arg&gt;
       &lt;arg&gt;<b>&quot;do.*, initialize, prerender&quot;</b>&lt;/arg&gt;
     &lt;/initMethod&gt;
   &lt;/component&gt;
 </pre>
+
 	<li><h5>EJB 3.0のステートレスセッションBeanを利用する場合</h5></li>
 	<p>
 		EJB 3.0のステートレスセッションBeanはデフォルトでトランザクション制御を行う機能が備わっているのでcusomizer.diconに対する設定は不要です。
