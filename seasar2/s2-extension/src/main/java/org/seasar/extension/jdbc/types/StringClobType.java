@@ -43,6 +43,9 @@ public class StringClobType implements ValueType {
     }
 
     private String convertToString(Reader reader) throws SQLException {
+        if (reader == null) {
+            return null;
+        }
         return ReaderUtil.readText(reader);
     }
 
