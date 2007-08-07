@@ -110,6 +110,12 @@
       <organizationUrl>http://www.abby.co.jp/</organizationUrl>
       <timezone>+9</timezone>
     </developer>
+    <developer>
+      <id>mopemope</id>
+      <name>mopemope</name>
+      <url>http://d.hatena.ne.jp/mopemope/</url>
+      <timezone>+9</timezone>
+    </developer>
 
     <developer>
       <id>jundu</id>
@@ -219,8 +225,8 @@
     	<name>Yokoyama Hideaki</name>
     </contributor>
     <contributor>
-      <name>mopemope</name>
-      <url>http://d.hatena.ne.jp/mopemope/</url>
+      <name>PPOI</name>
+      <url>http://softlab.tsukuba-bunko.org/</url>
     </contributor>
   </contributors>
 
