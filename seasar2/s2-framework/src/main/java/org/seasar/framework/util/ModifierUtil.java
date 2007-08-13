@@ -90,4 +90,15 @@ public class ModifierUtil {
         return Modifier.isFinal(modifier);
     }
 
+    /**
+     * インスタンスフィールドかどうかを返します。
+     * 
+     * @param field
+     *            フィールド
+     * @return インスタンスフィールドかどうか
+     */
+    public static boolean isInstanceField(Field field) {
+        int m = field.getModifiers();
+        return !isStatic(m) && !isFinal(m);
+    }
 }

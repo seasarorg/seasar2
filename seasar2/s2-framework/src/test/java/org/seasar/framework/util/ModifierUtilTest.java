@@ -28,11 +28,21 @@ public class ModifierUtilTest extends TestCase {
     /**
      * @throws Exception
      */
-    public void test() throws Exception {
+    public void testIsPublic() throws Exception {
         Field f = Hoge.class.getDeclaredField("s");
         assertTrue(ModifierUtil.isPublicStaticFinalField(f));
         Method m = Hoge.class.getDeclaredMethod("hoge", new Class[] {});
         assertTrue(ModifierUtil.isPublic(m));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testIsInstanceField() throws Exception {
+        Field f = Hoge.class.getDeclaredField("aaa");
+        assertTrue(ModifierUtil.isInstanceField(f));
+        f = Hoge.class.getDeclaredField("s");
+        assertFalse(ModifierUtil.isInstanceField(f));
     }
 
     /**
@@ -52,5 +62,9 @@ public class ModifierUtilTest extends TestCase {
             return "aaa";
         }
 
+        /**
+         * 
+         */
+        public String aaa;
     }
 }
