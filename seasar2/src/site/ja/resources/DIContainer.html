@@ -303,6 +303,15 @@ initMethodタグの子タグであるargタグで引数を指定することや�
 @Binding("foo")
 private Foo foo;
 </pre>
+<p>
+バージョン2.4.17からは、publicなフィールドをプロパティとして認識するようになったので、
+publicフィールドを定義しておけば<a href="#AutoBindingMode">自動バインディング</a>が
+適用されます。上記のfooプロパティの例は次のようになります。
+publicフィールドにBindingアノテーションを指定することもできます。
+</p>
+<pre>
+public Foo foo;
+</pre>
 
 <h3><a name="InstanceMode" id="InstanceMode">インスタンス管理</a></h3>
 <p><a href="#componentTag">componentタグ</a>のinstance属性で、
