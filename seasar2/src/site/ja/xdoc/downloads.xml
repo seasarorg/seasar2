@@ -17,9 +17,9 @@
 				<dl>
 				<dt><a href="/download/2007-08-13/S2.3.22.zip">S2Container 2.3.22</a></dt>
 				<dd>S2Container 本体 (S2Framework) と、JDBC コネクションプールや JTA などの拡張機能 (S2Extension)</dd>
-				<dt><a href="/download/2007-07-13/S2Tiger-2.3.22.zip">S2Tiger 2.3.22</a></dt>
+				<dt><a href="/download/2007-08-13/S2Tiger-2.3.22.zip">S2Tiger 2.3.22</a></dt>
 				<dd>Tiger (Java5) アノテーションを使用してコンポーネント定義を Java ソースに記述するためのアドオン</dd>
-				<dt><a href="/download/2007-07-13/S2Backport175-2.3.22.zip">S2Backport175 2.3.22</a></dt>
+				<dt><a href="/download/2007-08-13/S2Backport175-2.3.22.zip">S2Backport175 2.3.22</a></dt>
 				<dd>Backport175 アノテーションを使用してコンポーネント定義を Java ソースに記述するためのアドオン</dd>
 				</dl>
 			</subsection>
