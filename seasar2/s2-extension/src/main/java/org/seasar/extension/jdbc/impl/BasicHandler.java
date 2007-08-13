@@ -293,7 +293,7 @@ public class BasicHandler {
      * @param argTypes
      *            SQLにバインドされる値の型の配列
      */
-    protected void logSql(Object[] args, Object[] argTypes) {
+    protected void logSql(Object[] args, Class[] argTypes) {
         Logger logger = Logger.getLogger(loggerClass);
         SqlLogRegistry sqlLogRegistry = SqlLogRegistryLocator.getInstance();
         if (logger.isDebugEnabled() || sqlLogRegistry != null) {

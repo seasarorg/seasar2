@@ -51,6 +51,6 @@ public interface SqlLog {
      * 
      * @return SQLにバインドされる値の型の配列
      */
-    Object[] getBindArgTypes();
+    Class[] getBindArgTypes();
 
 }

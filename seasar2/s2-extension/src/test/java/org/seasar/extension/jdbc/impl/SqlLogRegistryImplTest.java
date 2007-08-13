@@ -30,7 +30,7 @@ public class SqlLogRegistryImplTest extends S2TestCase {
 
     private Object[] bindArgs = new Object[] { new Integer(10) };
 
-    private Object[] bindArgTypes = new Object[] { Integer.class };
+    private Class[] bindArgTypes = new Class[] { Integer.class };
 
     private SqlLog sqlLog = new SqlLogImpl(rawSql, completeSql, bindArgs,
             bindArgTypes);

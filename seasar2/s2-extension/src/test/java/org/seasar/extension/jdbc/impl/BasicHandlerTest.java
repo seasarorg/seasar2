@@ -74,7 +74,7 @@ public class BasicHandlerTest extends S2TestCase {
         final String sql = "update emp set ename = ?, comm = ? where empno = ?";
         Object[] args = new Object[] { "hoge", new BigDecimal("100.5"),
                 new Integer(7788) };
-        Object[] argTypes = new Object[] { String.class, BigDecimal.class,
+        Class[] argTypes = new Class[] { String.class, BigDecimal.class,
                 Integer.class };
         BasicHandler handler = new BasicHandler(getDataSource(), sql);
         assertTrue(handler.getLoggerClass() == BasicHandler.class);
@@ -87,7 +87,7 @@ public class BasicHandlerTest extends S2TestCase {
         assertTrue(handler.getLoggerClass() == BasicHandlerTest.class);
     }
 
-    private void assertSqlLog(final String sql, Object[] args, Object[] argTypes) {
+    private void assertSqlLog(final String sql, Object[] args, Class[] argTypes) {
         SqlLogRegistry registry = SqlLogRegistryLocator.getInstance();
         SqlLog sqlLog = registry.getLast();
         assertEquals(sql, sqlLog.getRawSql());

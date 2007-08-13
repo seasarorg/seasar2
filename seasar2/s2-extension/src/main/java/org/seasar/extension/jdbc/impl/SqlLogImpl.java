@@ -30,7 +30,7 @@ public class SqlLogImpl implements SqlLog {
 
     private Object[] bindArgs;
 
-    private Object[] bindArgTypes;
+    private Class[] bindArgTypes;
 
     /**
      * インスタンスを構築します。
@@ -45,7 +45,7 @@ public class SqlLogImpl implements SqlLog {
      *            SQLにバインドされる値の型の配列
      */
     public SqlLogImpl(String rawSql, String completeSql, Object[] bindArgs,
-            Object[] bindArgTypes) {
+            Class[] bindArgTypes) {
         this.rawSql = rawSql;
         this.completeSql = completeSql;
         this.bindArgs = bindArgs;
@@ -56,7 +56,7 @@ public class SqlLogImpl implements SqlLog {
         return bindArgs;
     }
 
-    public Object[] getBindArgTypes() {
+    public Class[] getBindArgTypes() {
         return bindArgTypes;
     }
 
