@@ -18,7 +18,6 @@ package org.seasar.extension.sql.node;
 import java.lang.reflect.Array;
 import java.util.List;
 
-import org.seasar.extension.jdbc.util.BindVariableUtil;
 import org.seasar.extension.sql.Node;
 import org.seasar.extension.sql.SqlContext;
 import org.seasar.framework.util.OgnlUtil;
@@ -64,7 +63,6 @@ public class ParenBindVariableNode extends AbstractNode {
             bindArray(ctx, var);
         } else {
             ctx.addSql("?", var, var.getClass());
-            ctx.addCompleteSql(BindVariableUtil.getBindVariableText(var));
         }
 
     }
@@ -86,18 +84,13 @@ public class ParenBindVariableNode extends AbstractNode {
             }
         }
         ctx.addSql("(");
-        ctx.addCompleteSql("(");
         Object value = Array.get(array, 0);
         ctx.addSql("?", value, clazz);
-        ctx.addCompleteSql(BindVariableUtil.getBindVariableText(value));
         for (int i = 1; i < length; ++i) {
             ctx.addSql(", ");
-            ctx.addCompleteSql(", ");
             value = Array.get(array, i);
             ctx.addSql("?", value, clazz);
-            ctx.addCompleteSql(BindVariableUtil.getBindVariableText(value));
         }
         ctx.addSql(")");
-        ctx.addCompleteSql(")");
     }
 }

@@ -15,7 +15,6 @@
  */
 package org.seasar.extension.sql.node;
 
-import org.seasar.extension.jdbc.util.BindVariableUtil;
 import org.seasar.extension.sql.Node;
 import org.seasar.extension.sql.SqlContext;
 import org.seasar.framework.beans.BeanDesc;
@@ -67,6 +66,5 @@ public class BindVariableNode extends AbstractNode {
             clazz = pd.getPropertyType();
         }
         ctx.addSql("?", value, clazz);
-        ctx.addCompleteSql(BindVariableUtil.getBindVariableText(value));
     }
 }

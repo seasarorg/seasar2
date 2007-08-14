@@ -40,8 +40,6 @@ public class SqlContextImpl implements SqlContext {
 
     private StringBuffer sqlBuf = new StringBuffer(255);
 
-    private StringBuffer completeSqlBuf = new StringBuffer(255);
-
     private List bindVariables = new ArrayList();
 
     private List bindVariableTypes = new ArrayList();
@@ -149,14 +147,6 @@ public class SqlContextImpl implements SqlContext {
             this.bindVariableTypes.add(bindVariableTypes[i]);
         }
         return this;
-    }
-
-    public String getCompleteSql() {
-        return completeSqlBuf.toString();
-    }
-
-    public void addCompleteSql(String sql) {
-        completeSqlBuf.append(sql);
     }
 
     public boolean isEnabled() {

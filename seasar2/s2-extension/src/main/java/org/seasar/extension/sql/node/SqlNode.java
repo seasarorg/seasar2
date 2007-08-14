@@ -48,6 +48,5 @@ public class SqlNode extends AbstractNode {
 
     public void accept(SqlContext ctx) {
         ctx.addSql(sql);
-        ctx.addCompleteSql(sql);
     }
 }

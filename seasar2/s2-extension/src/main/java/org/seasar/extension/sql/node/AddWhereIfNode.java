@@ -42,15 +42,12 @@ public class AddWhereIfNode extends ContainerNode {
         super.accept(childCtx);
         if (childCtx.isEnabled()) {
             String sql = childCtx.getSql();
-            String completeSql = childCtx.getCompleteSql();
             Matcher m = pat.matcher(sql);
             if (!m.lookingAt()) {
                 sql = " WHERE " + sql;
-                completeSql = " WHERE " + completeSql;
             }
             ctx.addSql(sql, childCtx.getBindVariables(), childCtx
                     .getBindVariableTypes());
-            ctx.addCompleteSql(completeSql);
         }
     }
 

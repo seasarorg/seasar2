@@ -71,7 +71,6 @@ public class EmbeddedValueNode extends AbstractNode {
         if (value != null) {
             String sql = value.toString();
             ctx.addSql(sql);
-            ctx.addCompleteSql(sql);
         }
     }
 }

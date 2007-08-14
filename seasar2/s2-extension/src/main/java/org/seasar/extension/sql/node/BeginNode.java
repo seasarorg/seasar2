@@ -39,7 +39,6 @@ public class BeginNode extends ContainerNode {
         if (childCtx.isEnabled()) {
             ctx.addSql(childCtx.getSql(), childCtx.getBindVariables(), childCtx
                     .getBindVariableTypes());
-            ctx.addCompleteSql(childCtx.getCompleteSql());
         }
     }
 }

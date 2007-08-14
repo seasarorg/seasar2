@@ -62,9 +62,7 @@ public class PrefixSqlNode extends AbstractNode {
     public void accept(SqlContext ctx) {
         if (ctx.isEnabled()) {
             ctx.addSql(prefix);
-            ctx.addCompleteSql(prefix);
         }
         ctx.addSql(sql);
-        ctx.addCompleteSql(sql);
     }
 }
