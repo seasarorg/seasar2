@@ -35,8 +35,7 @@ public class DataSourceImpl implements DataSource, Serializable {
 
     static final long serialVersionUID = 1L;
 
-    private static final Logger logger = Logger
-            .getLogger(DataSourceImpl.class);
+    private static final Logger logger = Logger.getLogger(DataSourceImpl.class);
 
     private ConnectionPool connectionPool;
 
@@ -61,7 +60,6 @@ public class DataSourceImpl implements DataSource, Serializable {
 
     public Connection getConnection() throws SQLException {
         Connection con = connectionPool.checkOut();
-        logger.log("DSSR0007", null);
         return con;
     }
 

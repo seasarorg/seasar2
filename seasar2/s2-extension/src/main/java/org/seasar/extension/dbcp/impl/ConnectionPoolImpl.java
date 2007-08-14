@@ -245,6 +245,9 @@ public class ConnectionPoolImpl implements ConnectionPool, Synchronization {
 
         ConnectionWrapper con = getConnectionTxActivePool(tx);
         if (con != null) {
+            if (logger.isDebugEnabled()) {
+                logger.log("DSSR0007", new Object[] { tx });
+            }
             return con;
         }
         while (getMaxPoolSize() > 0
@@ -256,7 +259,7 @@ public class ConnectionPoolImpl implements ConnectionPool, Synchronization {
         }
         con = checkOutFreePool();
         if (con == null) {
-            con = createConnection(tx == null);
+            con = createConnection(tx);
         } else {
             con.init(tx == null);
         }
@@ -270,6 +273,9 @@ public class ConnectionPoolImpl implements ConnectionPool, Synchronization {
         con.setReadOnly(readOnly);
         if (transactionIsolationLevel != DEFAULT_TRANSACTION_ISOLATION_LEVEL) {
             con.setTransactionIsolation(transactionIsolationLevel);
+        }
+        if (logger.isDebugEnabled()) {
+            logger.log("DSSR0007", new Object[] { tx });
         }
         return con;
     }
@@ -292,11 +298,13 @@ public class ConnectionPoolImpl implements ConnectionPool, Synchronization {
         return con;
     }
 
-    private ConnectionWrapper createConnection(boolean localTx)
+    private ConnectionWrapper createConnection(Transaction tx)
             throws SQLException {
         ConnectionWrapper con = new ConnectionWrapperImpl(xaDataSource
-                .getXAConnection(), this, localTx);
-        logger.log("DSSR0006", null);
+                .getXAConnection(), this, tx == null);
+        if (logger.isDebugEnabled()) {
+            logger.log("DSSR0006", null);
+        }
         return con;
     }
 
@@ -321,6 +329,9 @@ public class ConnectionPoolImpl implements ConnectionPool, Synchronization {
     }
 
     public synchronized void checkIn(ConnectionWrapper connection) {
+        if (logger.isDebugEnabled()) {
+            logger.log("DSSR0002", new Object[] { getTransaction() });
+        }
         activePool.remove(connection);
         connection.cleanup();
         if (getMaxPoolSize() > 0) {

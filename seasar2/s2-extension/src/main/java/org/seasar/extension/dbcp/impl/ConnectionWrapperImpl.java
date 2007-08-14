@@ -244,7 +244,6 @@ public class ConnectionWrapperImpl implements ConnectionWrapper {
         if (localTx_) {
             connectionPool_.checkIn(this);
         }
-        logger_.log("DSSR0002", null);
     }
 
     public void setTransactionIsolation(final int level) throws SQLException {

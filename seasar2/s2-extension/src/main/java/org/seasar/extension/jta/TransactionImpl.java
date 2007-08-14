@@ -83,7 +83,7 @@ public final class TransactionImpl implements Transaction {
         status_ = Status.STATUS_ACTIVE;
         init();
         if (logger_.isDebugEnabled()) {
-            logger_.log("DSSR0003", null);
+            logger_.log("DSSR0003", new Object[] { this });
         }
     }
 
@@ -201,7 +201,7 @@ public final class TransactionImpl implements Transaction {
                 }
                 if (status_ == Status.STATUS_COMMITTED) {
                     if (logger_.isDebugEnabled()) {
-                        logger_.log("DSSR0004", null);
+                        logger_.log("DSSR0004", new Object[] { this });
                     }
                 }
             }
@@ -375,7 +375,7 @@ public final class TransactionImpl implements Transaction {
             endResources(XAResource.TMFAIL);
             rollbackResources();
             if (logger_.isDebugEnabled()) {
-                logger_.log("DSSR0005", null);
+                logger_.log("DSSR0005", new Object[] { this });
             }
             afterCompletion();
         } finally {
