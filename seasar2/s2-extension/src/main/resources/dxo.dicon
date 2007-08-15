@@ -2,6 +2,10 @@
 <!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN"
 	"http://www.seasar.org/dtd/components24.dtd">
 <components namespace="dxo">
+	<include path="dxo-builtin-converters.dicon"/>
+	<include path="dxo-tiger-converters.dicon"
+		condition="@org.seasar.framework.util.ResourceUtil@isExist('dxo-tiger-converters.dicon')"/>
+
 	<component name="interceptor" class="org.seasar.extension.dxo.DxoInterceptor"/>
 	
 	<component class="org.seasar.extension.dxo.meta.impl.DxoMetadataFactoryImpl"/>

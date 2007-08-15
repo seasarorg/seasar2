@@ -15,10 +15,7 @@
  */
 package org.seasar.extension.dxo.converter.impl;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -36,22 +33,6 @@ import org.seasar.framework.util.DisposableUtil;
  * @author koichik
  */
 public class ConverterFactoryImpl implements ConverterFactory, Disposable {
-
-    /** 組み込みのコンバータです。 */
-    protected static final Converter[] BUILTIN_CONVERTERS = new Converter[] {
-            new ArrayConverter(), new BeanConverter(),
-            new BigDecimalConverter(), new BigIntegerConverter(),
-            new BooleanConverter(), new ByteConverter(),
-            new CalendarConverter(), new CharacterConverter(),
-            new CharArrayConverter(), new DateConverter(),
-            new DoubleConverter(), new FloatConverter(),
-            new IntegerConverter(), new ListConverter(), new LongConverter(),
-            new SetConverter(), new ShortConverter(), new SqlDateConverter(),
-            new SqlTimeConverter(), new SqlTimestampConverter(),
-            new StringConverter(), };
-
-    /** S2-Tigerによって提供される組み込みのコンバータです。 */
-    protected static final String[] BUILTIN_TIGER_CONVERTERS = new String[] { "org.seasar.extension.dxo.converter.impl.EnumConverter", };
 
     /** プリミティブ型の配列クラスとラッパー型の配列クラスのマッピング */
     protected static Map PRIMITIVE_ARRAY_TO_WRAPPER_ARRAY = new HashMap();
@@ -103,19 +84,7 @@ public class ConverterFactoryImpl implements ConverterFactory, Disposable {
         if (initialized) {
             return;
         }
-        final List list = new ArrayList(100);
-        list.addAll(Arrays.asList(BUILTIN_CONVERTERS));
-        for (int i = 0; i < BUILTIN_TIGER_CONVERTERS.length; ++i) {
-            try {
-                list.add(Class.forName(BUILTIN_TIGER_CONVERTERS[i])
-                        .newInstance());
-            } catch (final Throwable ignore) {
-            }
-        }
-        list
-                .addAll(Arrays.asList(container
-                        .findAllComponents(Converter.class)));
-        converters = (Converter[]) list.toArray(new Converter[list.size()]);
+        converters = (Converter[]) container.findAllComponents(Converter.class);
         DisposableUtil.add(this);
         initialized = true;
     }

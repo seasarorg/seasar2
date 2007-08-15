@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN"
+	"http://www.seasar.org/dtd/components24.dtd">
+<components namespace="dxo">
+	<component class="org.seasar.extension.dxo.converter.impl.ArrayConverter"/>
+	<component class="org.seasar.extension.dxo.converter.impl.BeanConverter"/>
+	<component class="org.seasar.extension.dxo.converter.impl.BigDecimalConverter"/>
+	<component class="org.seasar.extension.dxo.converter.impl.BigIntegerConverter"/>
+	<component class="org.seasar.extension.dxo.converter.impl.BooleanConverter"/>
+	<component class="org.seasar.extension.dxo.converter.impl.ByteConverter"/>
+	<component class="org.seasar.extension.dxo.converter.impl.CalendarConverter"/>
+	<component class="org.seasar.extension.dxo.converter.impl.CharacterConverter"/>
+	<component class="org.seasar.extension.dxo.converter.impl.CharArrayConverter"/>
+	<component class="org.seasar.extension.dxo.converter.impl.DateConverter"/>
+	<component class="org.seasar.extension.dxo.converter.impl.DoubleConverter"/>
+	<component class="org.seasar.extension.dxo.converter.impl.FloatConverter"/>
+	<component class="org.seasar.extension.dxo.converter.impl.IntegerConverter"/>
+	<component class="org.seasar.extension.dxo.converter.impl.ListConverter"/>
+	<component class="org.seasar.extension.dxo.converter.impl.LongConverter"/>
+	<component class="org.seasar.extension.dxo.converter.impl.SetConverter"/>
+	<component class="org.seasar.extension.dxo.converter.impl.ShortConverter"/>
+	<component class="org.seasar.extension.dxo.converter.impl.SqlDateConverter"/>
+	<component class="org.seasar.extension.dxo.converter.impl.SqlTimeConverter"/>
+	<component class="org.seasar.extension.dxo.converter.impl.SqlTimestampConverter"/>
+	<component class="org.seasar.extension.dxo.converter.impl.StringConverter"/>
+</components>
