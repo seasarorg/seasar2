@@ -992,7 +992,8 @@ public interface FooDxo {
     class=&quot;org.seasar.extension.dxo.annotation.impl.ConstantAnnotationReaderTest$HogeDxoConverter&quot;/&gt;
 &lt;/components&gt;</pre>
             <p>AutoRegisterを使って自動登録することもできます．コンポーネントとして登録されたコンバータはS2Dxoに組み込まれ，「<a href="#convertType">型変換</a>」に記述されている標準のコンバータと同じように動作します．</p>
-            <h4>アノテーションでコンバータを明示する</h4>
+<p>「<a href="#convertType">型変換</a>」に記述されている標準のコンバータは，<code>dxo-builtin-converters.dicon</code>および<code>dxo-tiger-converters.dicon</code>に定義されています．これらのdiconファイルは，それぞれ<code>s2-extension-2.4.x.jar</code>および<code>s2-tiger-2.4.x.jar</code>の中にバンドルされています．標準のコンバータを独自作成したコンバータに変更する場合はこれらのdiconファイルを置き換えてください．</p>
+<h4>アノテーションでコンバータを明示する</h4>
             <p>変換先JavaBeansのプロパティに特定のコンバータを使用することを明示することもできます．</p>
             <p>定数アノテーションでは，変換先クラスに文字列定数として次のように指定します．定数名は，コンバータを適用するプロパティ名の後ろに<code>&quot;_<var>コンバータ名</var>&quot;</code>をつけたものになります．コンバータ名は独自作成したコンバータのコンポーネント名で，最後は&quot;<code>DxoConverter</code>&quot;で終了しなければなりません．</p>
             <pre>public class Dest {
