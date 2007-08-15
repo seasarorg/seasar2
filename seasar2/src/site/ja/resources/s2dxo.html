@@ -74,6 +74,7 @@ font-size : 10pt;
 </li>
 <li><a href="#conversionRule">変換ルール</a>
 <ul>
+<li><a href="#publicField">JavaBeansのプロパティとpublicフィールド</a></li>
 <li><a href="#conversionBasics">変換の基本</a></li>
 <li><a href="#convertType">型変換</a></li>
 <li><a href="#nestedProperty">ネストしたJavaBeansのプロパティ</a></li>
@@ -384,6 +385,8 @@ public interface BarDxo {
 &lt;/component&gt;</pre>
 <p>Customizerの詳細は「<a href="S2.4SmartDeploy.html">Seasr2.4の新機能－SMART deploy</a>」を参照してください．</p>
 <h2><a name="conversionRule" id="conversionRule">変換ルール</a></h2>
+<h3><a name="publicField">JavaBeansのプロパティとpublicフィールド</a></h3>
+<p>Seasar2は，2.4.17からpublicフィールドをプロパティとして扱う機能をサポートしています．S2Dxoもpublicフィールドをサポートします．本ドキュメントにおける「プロパティ」は，JavaBeans本来のgetter/setterメソッドによるプロパティに加えて，publicフィールドも含みます．</p>
 <h3><a name="conversionBasics" id="conversionBasics">変換の基本</a></h3>
 <p>JavaBeansまたはMapからJavaBeansに変換する場合，変換先となるJavaBeansのプロパティを変換元から探し，(必要なら)型変換を行って変換先のプロパティに設定します．</p>
 <p>JavaBeansからMapに変換する場合は，変換元のJavaBeansの全プロパティについて変換先のMapに追加します．追加されるエントリのキーは変換元のプロパティ名(<code>String</code>)，値は変換元のプロパティ値です．</p>
@@ -1009,7 +1012,7 @@ public interface FooDxo {
 @DxoConverter(&quot;patternDxoConverter&quot;)
 public @interface PatternDxoConverter {
 }</pre>
-<p>変換先クラスのsetterメソッドに作成したアノテーションを次のように指定します．</p>
+<p>変換先クラスのsetterメソッドまたはpublicフィールドに作成したアノテーションを次のように指定します．</p>
             <pre>public class Dest {
   private Pattern namePattern;
   ...
