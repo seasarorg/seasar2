@@ -23,7 +23,6 @@ import java.sql.SQLException;
 import javax.sql.DataSource;
 
 import org.seasar.extension.dbcp.ConnectionPool;
-import org.seasar.framework.log.Logger;
 
 /**
  * {@link DataSource}の実装です。
@@ -34,8 +33,6 @@ import org.seasar.framework.log.Logger;
 public class DataSourceImpl implements DataSource, Serializable {
 
     static final long serialVersionUID = 1L;
-
-    private static final Logger logger = Logger.getLogger(DataSourceImpl.class);
 
     private ConnectionPool connectionPool;
 
