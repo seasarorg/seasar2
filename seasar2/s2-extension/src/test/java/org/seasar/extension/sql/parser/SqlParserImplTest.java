@@ -22,6 +22,7 @@ import junit.framework.TestCase;
 
 import org.seasar.extension.sql.EndCommentNotFoundRuntimeException;
 import org.seasar.extension.sql.Node;
+import org.seasar.extension.sql.SemicolonNotAllowedRuntimeException;
 import org.seasar.extension.sql.SqlContext;
 import org.seasar.extension.sql.SqlParser;
 import org.seasar.extension.sql.TokenNotClosedRuntimeException;
@@ -573,5 +574,22 @@ public class SqlParserImplTest extends TestCase {
         root.accept(ctx);
         System.out.println(ctx.getSql());
         assertEquals("1", "0", ctx.getSql());
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testEmbeddedValue_semicolon() throws Exception {
+        String sql = "/*$aaa*/";
+        SqlParser parser = new SqlParserImpl(sql);
+        Node root = parser.parse();
+        SqlContext ctx = new SqlContextImpl();
+        ctx.addArg("aaa", ";update", String.class);
+        try {
+            root.accept(ctx);
+            fail();
+        } catch (SemicolonNotAllowedRuntimeException e) {
+            System.out.println(e);
+        }
     }
 }

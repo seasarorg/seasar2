@@ -16,6 +16,7 @@
 package org.seasar.extension.sql.node;
 
 import org.seasar.extension.sql.Node;
+import org.seasar.extension.sql.SemicolonNotAllowedRuntimeException;
 import org.seasar.extension.sql.SqlContext;
 import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.PropertyDesc;
@@ -70,6 +71,9 @@ public class EmbeddedValueNode extends AbstractNode {
         }
         if (value != null) {
             String sql = value.toString();
+            if (sql.indexOf(';') >= 0) {
+                throw new SemicolonNotAllowedRuntimeException();
+            }
             ctx.addSql(sql);
         }
     }
