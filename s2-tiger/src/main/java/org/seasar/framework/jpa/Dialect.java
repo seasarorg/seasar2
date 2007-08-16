@@ -35,4 +35,15 @@ public interface Dialect {
      */
     Connection getConnection(EntityManager em);
 
+    /**
+     * 管理されたエンティティを永続コンテキストから分離します．
+     * 
+     * @param em
+     *            {@link EntityManager エンティティマネージャ}
+     * @param managedEntity
+     *            管理されたエンティティ
+     * @throws UnsupportedOperationException
+     */
+    void detach(EntityManager em, Object managedEntity);
+
 }

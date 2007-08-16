@@ -70,4 +70,8 @@ public class DummyEntityManagerDialect implements Dialect {
         }
     }
 
+    public void detach(EntityManager em, Object managedEntity) {
+        throw new UnsupportedOperationException("detach(Object)");
+    }
+
 }
