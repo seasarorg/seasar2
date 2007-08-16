@@ -39,6 +39,12 @@
       <artifactId>poi</artifactId>
       <version>3.0-FINAL</version>
       <type>jar</type>
+      <exclusions>
+        <exclusion>
+          <artifactId>log4j</artifactId>
+          <groupId>log4j</groupId>
+        </exclusion>
+      </exclusions>
     </dependency>
   </dependencies>
 </project>
