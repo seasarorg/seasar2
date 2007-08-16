@@ -50,23 +50,23 @@ public final class TransactionImpl implements Transaction {
 
     private static final int VOTE_ROLLBACK = 2;
 
-    private static Logger logger_ = Logger.getLogger(TransactionImpl.class);
+    private static Logger logger = Logger.getLogger(TransactionImpl.class);
 
-    private Xid xid_;
+    private Xid xid;
 
-    private int status_ = Status.STATUS_NO_TRANSACTION;
+    private int status = Status.STATUS_NO_TRANSACTION;
 
-    private List xaResourceWrappers_ = new ArrayList();
+    private List xaResourceWrappers = new ArrayList();
 
-    private List synchronizations_ = new ArrayList();
+    private List synchronizations = new ArrayList();
 
-    private List interposedSynchronizations_ = new ArrayList();
+    private List interposedSynchronizations = new ArrayList();
 
-    private Map resourceMap_ = new HashMap();
+    private Map resourceMap = new HashMap();
 
-    private boolean suspended_ = false;
+    private boolean suspended = false;
 
-    private int branchId_ = 0;
+    private int branchId = 0;
 
     /**
      * <code>TransactionImpl</code>のインスタンスを構築します。
@@ -80,10 +80,10 @@ public final class TransactionImpl implements Transaction {
      * 
      */
     public void begin() {
-        status_ = Status.STATUS_ACTIVE;
+        status = Status.STATUS_ACTIVE;
         init();
-        if (logger_.isDebugEnabled()) {
-            logger_.log("DSSR0003", new Object[] { this });
+        if (logger.isDebugEnabled()) {
+            logger.log("DSSR0003", new Object[] { this });
         }
     }
 
@@ -100,17 +100,17 @@ public final class TransactionImpl implements Transaction {
             XAResourceWrapper xarw = getXAResourceWrapper(i);
             xarw.end(XAResource.TMSUSPEND);
         }
-        suspended_ = true;
+        suspended = true;
     }
 
     private void assertNotSuspended() throws IllegalStateException {
-        if (suspended_) {
+        if (suspended) {
             throw new SIllegalStateException("ESSR0314", null);
         }
     }
 
     private void assertActive() throws IllegalStateException {
-        switch (status_) {
+        switch (status) {
         case Status.STATUS_ACTIVE:
             break;
         default:
@@ -119,7 +119,7 @@ public final class TransactionImpl implements Transaction {
     }
 
     private void throwIllegalStateException() throws IllegalStateException {
-        switch (status_) {
+        switch (status) {
         case Status.STATUS_PREPARING:
             throw new SIllegalStateException("ESSR0304", null);
         case Status.STATUS_PREPARED:
@@ -140,16 +140,16 @@ public final class TransactionImpl implements Transaction {
             throw new SIllegalStateException("ESSR0312", null);
         default:
             throw new SIllegalStateException("ESSR0032", new Object[] { String
-                    .valueOf(status_) });
+                    .valueOf(status) });
         }
     }
 
     private int getXAResourceWrapperSize() {
-        return xaResourceWrappers_.size();
+        return xaResourceWrappers.size();
     }
 
     private XAResourceWrapper getXAResourceWrapper(int index) {
-        return (XAResourceWrapper) xaResourceWrappers_.get(index);
+        return (XAResourceWrapper) xaResourceWrappers.get(index);
     }
 
     /**
@@ -164,11 +164,11 @@ public final class TransactionImpl implements Transaction {
             XAResourceWrapper xarw = getXAResourceWrapper(i);
             xarw.start(XAResource.TMRESUME);
         }
-        suspended_ = false;
+        suspended = false;
     }
 
     private void assertSuspended() throws IllegalStateException {
-        if (!suspended_) {
+        if (!suspended) {
             throw new SIllegalStateException("ESSR0315", null);
         }
     }
@@ -181,16 +181,16 @@ public final class TransactionImpl implements Transaction {
             assertNotSuspended();
             assertActive();
             beforeCompletion();
-            if (status_ == Status.STATUS_ACTIVE) {
+            if (status == Status.STATUS_ACTIVE) {
                 endResources(XAResource.TMSUCCESS);
                 if (getXAResourceWrapperSize() == 0) {
-                    status_ = Status.STATUS_COMMITTED;
+                    status = Status.STATUS_COMMITTED;
                 } else if (getXAResourceWrapperSize() == 1) {
                     commitOnePhase();
                 } else {
                     switch (prepareResources()) {
                     case VOTE_READONLY:
-                        status_ = Status.STATUS_COMMITTED;
+                        status = Status.STATUS_COMMITTED;
                         break;
                     case VOTE_COMMIT:
                         commitTwoPhase();
@@ -199,14 +199,14 @@ public final class TransactionImpl implements Transaction {
                         rollbackForVoteOK();
                     }
                 }
-                if (status_ == Status.STATUS_COMMITTED) {
-                    if (logger_.isDebugEnabled()) {
-                        logger_.log("DSSR0004", new Object[] { this });
+                if (status == Status.STATUS_COMMITTED) {
+                    if (logger.isDebugEnabled()) {
+                        logger.log("DSSR0004", new Object[] { this });
                     }
                 }
             }
             afterCompletion();
-            if (status_ != Status.STATUS_COMMITTED) {
+            if (status != Status.STATUS_COMMITTED) {
                 throw new SRollbackException("ESSR0303",
                         new Object[] { toString() });
             }
@@ -217,11 +217,11 @@ public final class TransactionImpl implements Transaction {
 
     private void beforeCompletion() {
         for (int i = 0; i < getSynchronizationSize()
-                && status_ == Status.STATUS_ACTIVE; ++i) {
+                && status == Status.STATUS_ACTIVE; ++i) {
             beforeCompletion(getSynchronization(i));
         }
         for (int i = 0; i < getInterposedSynchronizationSize()
-                && status_ == Status.STATUS_ACTIVE; ++i) {
+                && status == Status.STATUS_ACTIVE; ++i) {
             beforeCompletion(getInterposedSynchronization(i));
         }
     }
@@ -230,8 +230,8 @@ public final class TransactionImpl implements Transaction {
         try {
             sync.beforeCompletion();
         } catch (Throwable t) {
-            logger_.log(t);
-            status_ = Status.STATUS_MARKED_ROLLBACK;
+            logger.log(t);
+            status = Status.STATUS_MARKED_ROLLBACK;
             endResources(XAResource.TMFAIL);
             rollbackResources();
         }
@@ -243,26 +243,26 @@ public final class TransactionImpl implements Transaction {
             try {
                 xarw.end(flag);
             } catch (Throwable t) {
-                logger_.log(t);
-                status_ = Status.STATUS_MARKED_ROLLBACK;
+                logger.log(t);
+                status = Status.STATUS_MARKED_ROLLBACK;
             }
         }
     }
 
     private void commitOnePhase() {
-        status_ = Status.STATUS_COMMITTING;
+        status = Status.STATUS_COMMITTING;
         XAResourceWrapper xari = getXAResourceWrapper(0);
         try {
             xari.commit(true);
-            status_ = Status.STATUS_COMMITTED;
+            status = Status.STATUS_COMMITTED;
         } catch (Throwable t) {
-            logger_.log(t);
-            status_ = Status.STATUS_UNKNOWN;
+            logger.log(t);
+            status = Status.STATUS_UNKNOWN;
         }
     }
 
     private int prepareResources() {
-        status_ = Status.STATUS_PREPARING;
+        status = Status.STATUS_PREPARING;
         int vote = VOTE_READONLY;
         SLinkedList xarwList = new SLinkedList();
         for (int i = 0; i < getXAResourceWrapperSize(); ++i) {
@@ -285,51 +285,51 @@ public final class TransactionImpl implements Transaction {
                     xarw.setVoteOk(false);
                 }
             } catch (Throwable t) {
-                logger_.log(t);
+                logger.log(t);
                 xarw.setVoteOk(false);
-                status_ = Status.STATUS_MARKED_ROLLBACK;
+                status = Status.STATUS_MARKED_ROLLBACK;
                 return VOTE_ROLLBACK;
             }
         }
-        if (status_ == Status.STATUS_PREPARING) {
-            status_ = Status.STATUS_PREPARED;
+        if (status == Status.STATUS_PREPARING) {
+            status = Status.STATUS_PREPARED;
         }
         return vote;
     }
 
     private void commitTwoPhase() {
-        status_ = Status.STATUS_COMMITTING;
+        status = Status.STATUS_COMMITTING;
         for (int i = 0; i < getXAResourceWrapperSize(); ++i) {
             XAResourceWrapper xarw = getXAResourceWrapper(i);
             if (xarw.isCommitTarget() && xarw.isVoteOk()) {
                 try {
                     xarw.commit(false);
                 } catch (Throwable t) {
-                    logger_.log(t);
-                    status_ = Status.STATUS_UNKNOWN;
+                    logger.log(t);
+                    status = Status.STATUS_UNKNOWN;
                 }
             }
         }
-        if (status_ == Status.STATUS_COMMITTING) {
-            status_ = Status.STATUS_COMMITTED;
+        if (status == Status.STATUS_COMMITTING) {
+            status = Status.STATUS_COMMITTED;
         }
     }
 
     private void rollbackForVoteOK() {
-        status_ = Status.STATUS_ROLLING_BACK;
+        status = Status.STATUS_ROLLING_BACK;
         for (int i = 0; i < getXAResourceWrapperSize(); ++i) {
             XAResourceWrapper xarw = getXAResourceWrapper(i);
             if (xarw.isVoteOk()) {
                 try {
                     xarw.rollback();
                 } catch (Throwable t) {
-                    logger_.log(t);
-                    status_ = Status.STATUS_UNKNOWN;
+                    logger.log(t);
+                    status = Status.STATUS_UNKNOWN;
                 }
             }
         }
-        if (status_ == Status.STATUS_ROLLING_BACK) {
-            status_ = Status.STATUS_ROLLEDBACK;
+        if (status == Status.STATUS_ROLLING_BACK) {
+            status = Status.STATUS_ROLLEDBACK;
         }
     }
 
@@ -344,26 +344,26 @@ public final class TransactionImpl implements Transaction {
 
     private void afterCompletion(Synchronization sync) {
         try {
-            sync.afterCompletion(status_);
+            sync.afterCompletion(status);
         } catch (Throwable t) {
-            logger_.log(t);
+            logger.log(t);
         }
     }
 
     private int getSynchronizationSize() {
-        return synchronizations_.size();
+        return synchronizations.size();
     }
 
     private Synchronization getSynchronization(int index) {
-        return (Synchronization) synchronizations_.get(index);
+        return (Synchronization) synchronizations.get(index);
     }
 
     private int getInterposedSynchronizationSize() {
-        return interposedSynchronizations_.size();
+        return interposedSynchronizations.size();
     }
 
     private Synchronization getInterposedSynchronization(int index) {
-        return (Synchronization) interposedSynchronizations_.get(index);
+        return (Synchronization) interposedSynchronizations.get(index);
     }
 
     public void rollback() throws IllegalStateException, SecurityException,
@@ -374,8 +374,8 @@ public final class TransactionImpl implements Transaction {
             assertActiveOrMarkedRollback();
             endResources(XAResource.TMFAIL);
             rollbackResources();
-            if (logger_.isDebugEnabled()) {
-                logger_.log("DSSR0005", new Object[] { this });
+            if (logger.isDebugEnabled()) {
+                logger.log("DSSR0005", new Object[] { this });
             }
             afterCompletion();
         } finally {
@@ -384,7 +384,7 @@ public final class TransactionImpl implements Transaction {
     }
 
     private void assertActiveOrMarkedRollback() throws IllegalStateException {
-        switch (status_) {
+        switch (status) {
         case Status.STATUS_ACTIVE:
         case Status.STATUS_MARKED_ROLLBACK:
             break;
@@ -394,7 +394,7 @@ public final class TransactionImpl implements Transaction {
     }
 
     private void rollbackResources() {
-        status_ = Status.STATUS_ROLLING_BACK;
+        status = Status.STATUS_ROLLING_BACK;
         for (int i = 0; i < getXAResourceWrapperSize(); ++i) {
             XAResourceWrapper xarw = getXAResourceWrapper(i);
             try {
@@ -402,12 +402,12 @@ public final class TransactionImpl implements Transaction {
                     xarw.rollback();
                 }
             } catch (Throwable t) {
-                logger_.log(t);
-                status_ = Status.STATUS_UNKNOWN;
+                logger.log(t);
+                status = Status.STATUS_UNKNOWN;
             }
         }
-        if (status_ == Status.STATUS_ROLLING_BACK) {
-            status_ = Status.STATUS_ROLLEDBACK;
+        if (status == Status.STATUS_ROLLING_BACK) {
+            status = Status.STATUS_ROLLEDBACK;
         }
     }
 
@@ -415,12 +415,12 @@ public final class TransactionImpl implements Transaction {
 
         assertNotSuspended();
         assertActiveOrPreparingOrPrepared();
-        status_ = Status.STATUS_MARKED_ROLLBACK;
+        status = Status.STATUS_MARKED_ROLLBACK;
     }
 
     private void assertActiveOrPreparingOrPrepared()
             throws IllegalStateException {
-        switch (status_) {
+        switch (status) {
         case Status.STATUS_ACTIVE:
         case Status.STATUS_PREPARING:
         case Status.STATUS_PREPARED:
@@ -461,7 +461,7 @@ public final class TransactionImpl implements Transaction {
         }
         try {
             xaResource.start(xid, flag);
-            xaResourceWrappers_.add(new XAResourceWrapper(xaResource, xid,
+            xaResourceWrappers.add(new XAResourceWrapper(xaResource, xid,
                     commitTarget));
             return true;
         } catch (XAException ex) {
@@ -472,7 +472,7 @@ public final class TransactionImpl implements Transaction {
     }
 
     private Xid createXidBranch() {
-        return new XidImpl(xid_, ++branchId_);
+        return new XidImpl(xid, ++branchId);
     }
 
     public boolean delistResource(XAResource xaResource, int flag)
@@ -487,8 +487,8 @@ public final class TransactionImpl implements Transaction {
                     xarw.end(flag);
                     return true;
                 } catch (XAException ex) {
-                    logger_.log(ex);
-                    status_ = Status.STATUS_MARKED_ROLLBACK;
+                    logger.log(ex);
+                    status = Status.STATUS_MARKED_ROLLBACK;
                     return false;
                 }
             }
@@ -497,7 +497,7 @@ public final class TransactionImpl implements Transaction {
     }
 
     public int getStatus() {
-        return status_;
+        return status;
     }
 
     public void registerSynchronization(Synchronization sync)
@@ -505,7 +505,7 @@ public final class TransactionImpl implements Transaction {
 
         assertNotSuspended();
         assertActive();
-        synchronizations_.add(sync);
+        synchronizations.add(sync);
     }
 
     /**
@@ -521,7 +521,7 @@ public final class TransactionImpl implements Transaction {
 
         assertNotSuspended();
         assertActive();
-        interposedSynchronizations_.add(sync);
+        interposedSynchronizations.add(sync);
     }
 
     /**
@@ -538,7 +538,7 @@ public final class TransactionImpl implements Transaction {
             throws IllegalStateException {
         assertNotSuspended();
         assertActive();
-        resourceMap_.put(key, value);
+        resourceMap.put(key, value);
     }
 
     /**
@@ -553,7 +553,7 @@ public final class TransactionImpl implements Transaction {
     public Object getResource(Object key) throws IllegalStateException {
         assertNotSuspended();
         assertActive();
-        return resourceMap_.get(key);
+        return resourceMap.get(key);
     }
 
     /**
@@ -562,7 +562,7 @@ public final class TransactionImpl implements Transaction {
      * @return トランザクションID
      */
     public Xid getXid() {
-        return xid_;
+        return xid;
     }
 
     /**
@@ -571,23 +571,32 @@ public final class TransactionImpl implements Transaction {
      * @return トランザクションが中断されている場合は<code>true</code>
      */
     public boolean isSuspended() {
-        return suspended_;
+        return suspended;
     }
 
     private void init() {
-        xid_ = new XidImpl();
+        xid = new XidImpl();
     }
 
     private void destroy() {
-        status_ = Status.STATUS_NO_TRANSACTION;
-        xaResourceWrappers_.clear();
-        synchronizations_.clear();
-        interposedSynchronizations_.clear();
-        resourceMap_.clear();
-        suspended_ = false;
+        status = Status.STATUS_NO_TRANSACTION;
+        xaResourceWrappers.clear();
+        synchronizations.clear();
+        interposedSynchronizations.clear();
+        resourceMap.clear();
+        suspended = false;
     }
 
     public String toString() {
-        return xid_.toString();
+        return xid.toString();
+    }
+
+    /**
+     * {@link Synchronization}のリストを返します。
+     * 
+     * @return
+     */
+    public List getSynchronizations() {
+        return synchronizations;
     }
 }
