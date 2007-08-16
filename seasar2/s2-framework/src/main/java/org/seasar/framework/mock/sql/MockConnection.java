@@ -70,18 +70,59 @@ public class MockConnection implements Connection {
     }
 
     public Statement createStatement() throws SQLException {
-        return null;
+        return createMockStatement();
+    }
+
+    /**
+     * モック用のステートメントを作成します。
+     * 
+     * @return モック用のステートメント
+     */
+    public MockStatement createMockStatement() {
+        return new MockStatement(this);
     }
 
     public Statement createStatement(int resultSetType,
             int resultSetConcurrency, int resultSetHoldability)
             throws SQLException {
-        return null;
+        return createMockStatement(resultSetType, resultSetConcurrency,
+                resultSetHoldability);
+    }
+
+    /**
+     * モック用のステートメントを作成します。
+     * 
+     * @param resultSetType
+     *            結果セットタイプ
+     * @param resultSetConcurrency
+     *            結果セット同時並行性
+     * @param resultSetHoldability
+     *            結果セット保持力
+     * @return
+     */
+    public MockStatement createMockStatement(int resultSetType,
+            int resultSetConcurrency, int resultSetHoldability) {
+        return new MockStatement(this, resultSetType, resultSetConcurrency,
+                resultSetHoldability);
     }
 
     public Statement createStatement(int resultSetType, int resultSetConcurrency)
             throws SQLException {
-        return null;
+        return createMockStatement(resultSetType, resultSetConcurrency);
+    }
+
+    /**
+     * モック用のステートメントを作成します。
+     * 
+     * @param resultSetType
+     *            結果セットタイプ
+     * @param resultSetConcurrency
+     *            結果セット同時並行性
+     * @return
+     */
+    public MockStatement createMockStatement(int resultSetType,
+            int resultSetConcurrency) {
+        return new MockStatement(this, resultSetType, resultSetConcurrency);
     }
 
     public boolean getAutoCommit() throws SQLException {
