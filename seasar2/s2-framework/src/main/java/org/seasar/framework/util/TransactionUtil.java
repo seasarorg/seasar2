@@ -36,6 +36,21 @@ public final class TransactionUtil {
     }
 
     /**
+     * トランザクションのステータスを返します。
+     * 
+     * @param tx
+     *            トランザクション
+     * @return トランザクションのステータス
+     */
+    public static int getStatus(final Transaction tx) {
+        try {
+            return tx.getStatus();
+        } catch (final SystemException e) {
+            throw new SystemRuntimeException(e);
+        }
+    }
+
+    /**
      * トランザクションに参加します。
      * 
      * @param tx

@@ -22,11 +22,11 @@ import java.util.Map;
 
 import javax.transaction.HeuristicMixedException;
 import javax.transaction.HeuristicRollbackException;
+import javax.transaction.NotSupportedException;
 import javax.transaction.RollbackException;
 import javax.transaction.Status;
 import javax.transaction.Synchronization;
 import javax.transaction.SystemException;
-import javax.transaction.Transaction;
 import javax.transaction.xa.XAException;
 import javax.transaction.xa.XAResource;
 import javax.transaction.xa.Xid;
@@ -34,6 +34,7 @@ import javax.transaction.xa.Xid;
 import org.seasar.extension.jta.xa.XidImpl;
 import org.seasar.framework.exception.SIllegalStateException;
 import org.seasar.framework.exception.SRollbackException;
+import org.seasar.framework.exception.SSystemException;
 import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.SLinkedList;
 
@@ -42,7 +43,7 @@ import org.seasar.framework.util.SLinkedList;
  * 
  * @author higa
  */
-public final class TransactionImpl implements Transaction {
+public final class TransactionImpl implements ExtendedTransaction {
 
     private static final int VOTE_READONLY = 0;
 
@@ -79,7 +80,7 @@ public final class TransactionImpl implements Transaction {
      * トランザクションを開始します。
      * 
      */
-    public void begin() {
+    public void begin() throws NotSupportedException, SystemException {
         status = Status.STATUS_ACTIVE;
         init();
         if (logger.isDebugEnabled()) {
@@ -93,12 +94,16 @@ public final class TransactionImpl implements Transaction {
      * @throws XAException
      *             <code>XAResource</code>を中断できなかった場合にスローされます
      */
-    public void suspend() throws XAException {
+    public void suspend() throws SystemException {
         assertNotSuspended();
         assertActive();
         for (int i = 0; i < getXAResourceWrapperSize(); ++i) {
             XAResourceWrapper xarw = getXAResourceWrapper(i);
-            xarw.end(XAResource.TMSUSPEND);
+            try {
+                xarw.end(XAResource.TMSUSPEND);
+            } catch (final XAException ex) {
+                throw new SSystemException("ESSR0363", new Object[] { ex }, ex);
+            }
         }
         suspended = true;
     }
@@ -158,11 +163,15 @@ public final class TransactionImpl implements Transaction {
      * @throws XAException
      *             <code>XAResource</code>を再開できなかった場合にスローされます
      */
-    public void resume() throws XAException {
+    public void resume() throws SystemException {
         assertSuspended();
         for (int i = 0; i < getXAResourceWrapperSize(); ++i) {
             XAResourceWrapper xarw = getXAResourceWrapper(i);
-            xarw.start(XAResource.TMRESUME);
+            try {
+                xarw.start(XAResource.TMRESUME);
+            } catch (final XAException ex) {
+                throw new SSystemException("ESSR0364", new Object[] { ex }, ex);
+            }
         }
         suspended = false;
     }

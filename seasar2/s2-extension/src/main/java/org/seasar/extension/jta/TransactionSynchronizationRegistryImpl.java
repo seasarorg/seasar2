@@ -35,6 +35,22 @@ public class TransactionSynchronizationRegistryImpl implements
     private TransactionManager tm;
 
     /**
+     * インスタンスを構築します。
+     */
+    public TransactionSynchronizationRegistryImpl() {
+    }
+
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param tm
+     *            トランザクションマネージャ
+     */
+    public TransactionSynchronizationRegistryImpl(TransactionManager tm) {
+        this.tm = tm;
+    }
+
+    /**
      * トランザクションマネージャを設定します。
      * 
      * @param tm
