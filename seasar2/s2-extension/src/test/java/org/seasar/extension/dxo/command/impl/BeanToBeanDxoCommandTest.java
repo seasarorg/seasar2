@@ -21,6 +21,7 @@ import org.seasar.extension.dxo.Hoge;
 import org.seasar.extension.dxo.HogeHoge;
 import org.seasar.extension.dxo.builder.impl.BeanToBeanDxoCommandBuilder;
 import org.seasar.extension.dxo.command.DxoCommand;
+import org.seasar.framework.exception.SIllegalArgumentException;
 import org.seasar.framework.unit.S2FrameworkTestCase;
 
 /**
@@ -56,6 +57,41 @@ public class BeanToBeanDxoCommandTest extends S2FrameworkTestCase {
         assertEquals('e', dest.getBar()[3]);
         assertEquals(1000, dest.getBaz());
         assertEquals("hoge", dest.getHoge());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testScalarNull1() throws Exception {
+        try {
+            DxoCommand command = builder.createDxoCommand(ToScalarDxo.class,
+                    ToScalarDxo.class.getMethod("convert",
+                            new Class[] { Hoge.class }));
+            Hoge src = null;
+            command.execute(new Object[] { src });
+        } catch (final SIllegalArgumentException e) {
+            assertEquals("ESSR0601", e.getMessageCode());
+            System.out.println(e.getMessage());
+        }
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testScalarNull2() throws Exception {
+        try {
+            DxoCommand command = builder.createDxoCommand(ToScalarDxo.class,
+                    ToScalarDxo.class.getMethod("convert", new Class[] {
+                            Hoge.class, HogeHoge.class }));
+            Hoge src = new Hoge(100, "Hoge", new BigDecimal("1000"));
+            HogeHoge dest = null;
+            command.execute(new Object[] { src, dest });
+        } catch (final SIllegalArgumentException e) {
+            assertEquals("ESSR0602", e.getMessageCode());
+            System.out.println(e.getMessage());
+        }
     }
 
     /**
@@ -186,7 +222,7 @@ public class BeanToBeanDxoCommandTest extends S2FrameworkTestCase {
     }
 
     /**
-     *
+     * 
      */
     public interface ToScalarDxo {
         /**
@@ -214,7 +250,7 @@ public class BeanToBeanDxoCommandTest extends S2FrameworkTestCase {
     }
 
     /**
-     *
+     * 
      */
     public interface ToArrayDxo {
         /**
