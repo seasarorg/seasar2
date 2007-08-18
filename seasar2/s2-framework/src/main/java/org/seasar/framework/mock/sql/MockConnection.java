@@ -178,16 +178,64 @@ public class MockConnection implements Connection {
     public CallableStatement prepareCall(String sql, int resultSetType,
             int resultSetConcurrency, int resultSetHoldability)
             throws SQLException {
-        return null;
+        return prepareMockCall(sql, resultSetType, resultSetConcurrency,
+                resultSetHoldability);
+    }
+
+    /**
+     * モック用の呼び出し可能なステートメントを作成します。
+     * 
+     * @param sql
+     *            SQL
+     * @param resultSetType
+     *            結果セットタイプ
+     * @param resultSetConcurrency
+     *            結果セット同時並行性
+     * @param resultSetHoldability
+     *            結果セット保持力
+     * @return モック用の呼び出し可能なステートメント
+     */
+    public MockCallableStatement prepareMockCall(String sql, int resultSetType,
+            int resultSetConcurrency, int resultSetHoldability) {
+        return new MockCallableStatement(this, sql, resultSetType,
+                resultSetConcurrency, resultSetHoldability);
     }
 
     public CallableStatement prepareCall(String sql, int resultSetType,
             int resultSetConcurrency) throws SQLException {
-        return null;
+        return prepareMockCall(sql, resultSetType, resultSetConcurrency);
+    }
+
+    /**
+     * モック用の呼び出し可能なステートメントを作成します。
+     * 
+     * @param sql
+     *            SQL
+     * @param resultSetType
+     *            結果セットタイプ
+     * @param resultSetConcurrency
+     *            結果セット同時並行性
+     * @return モック用の呼び出し可能なステートメント
+     */
+    public MockCallableStatement prepareMockCall(String sql, int resultSetType,
+            int resultSetConcurrency) {
+        return new MockCallableStatement(this, sql, resultSetType,
+                resultSetConcurrency);
     }
 
     public CallableStatement prepareCall(String sql) throws SQLException {
-        return null;
+        return prepareMockCall(sql);
+    }
+
+    /**
+     * モック用の呼び出し可能なステートメントを作成します。
+     * 
+     * @param sql
+     *            SQL
+     * @return モック用の呼び出し可能なステートメント
+     */
+    public MockCallableStatement prepareMockCall(String sql) {
+        return new MockCallableStatement(this, sql);
     }
 
     public PreparedStatement prepareStatement(String sql, int resultSetType,

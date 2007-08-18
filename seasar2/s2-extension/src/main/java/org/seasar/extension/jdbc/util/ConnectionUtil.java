@@ -94,6 +94,33 @@ public final class ConnectionUtil {
     }
 
     /**
+     * 準備されたステートメントを作成します。
+     * 
+     * @param connection
+     *            コネクション
+     * @param sql
+     *            SQL
+     * @param resultSetType
+     *            結果セットタイプ
+     * @param resultSetConcurrency
+     *            結果セット同時並行性
+     * @return 準備されたステートメント
+     * @throws SQLRuntimeException
+     *             SQL例外が発生した場合
+     */
+    public static PreparedStatement prepareStatement(Connection connection,
+            String sql, int resultSetType, int resultSetConcurrency)
+            throws SQLRuntimeException {
+
+        try {
+            return connection.prepareStatement(sql, resultSetType,
+                    resultSetConcurrency);
+        } catch (SQLException ex) {
+            throw new SQLRuntimeException(ex);
+        }
+    }
+
+    /**
      * {@link CallableStatement}を作成します。
      * 
      * @param connection
