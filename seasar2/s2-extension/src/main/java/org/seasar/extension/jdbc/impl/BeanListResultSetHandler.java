@@ -24,7 +24,7 @@ import org.seasar.extension.jdbc.PropertyType;
 import org.seasar.extension.jdbc.ResultSetHandler;
 
 /**
- * BeanをListで返す {@link ResultSetHandler}です。
+ * Beanのリストを返す {@link ResultSetHandler}です。
  * 
  * @author higa
  * 
@@ -41,9 +41,6 @@ public class BeanListResultSetHandler extends AbstractBeanResultSetHandler {
         super(beanClass);
     }
 
-    /**
-     * @see org.seasar.extension.jdbc.ResultSetHandler#handle(java.sql.ResultSet)
-     */
     public Object handle(ResultSet rs) throws SQLException {
         PropertyType[] propertyTypes = createPropertyTypes(rs.getMetaData());
         List list = new ArrayList();

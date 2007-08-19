@@ -38,9 +38,6 @@ public class BeanResultSetHandler extends AbstractBeanResultSetHandler {
         super(beanClass);
     }
 
-    /**
-     * @see org.seasar.extension.jdbc.ResultSetHandler#handle(java.sql.ResultSet)
-     */
     public Object handle(ResultSet rs) throws SQLException {
         if (rs.next()) {
             return createRow(rs, createPropertyTypes(rs.getMetaData()));
