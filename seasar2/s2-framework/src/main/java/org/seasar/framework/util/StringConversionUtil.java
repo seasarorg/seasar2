@@ -26,6 +26,16 @@ import java.text.SimpleDateFormat;
  */
 public final class StringConversionUtil {
 
+    /**
+     * WAVE DASHです。
+     */
+    public static final int WAVE_DASH = 0x301c;
+
+    /**
+     * FULLWIDTH TILDEです。
+     */
+    public static final int FULLWIDTH_TILDE = 0xff5e;
+
     private StringConversionUtil() {
     }
 
@@ -101,5 +111,32 @@ public final class StringConversionUtil {
             return value.toString();
         }
         return null;
+    }
+
+    /**
+     * WAVE DASH(U+301C)をFULLWIDTH TILDE(U+FF5E)に変換します。
+     * 
+     * @param source
+     *            ソース
+     * @return 変換結果
+     */
+    public static String fromWaveDashToFullwidthTilde(String source) {
+        if (source == null) {
+            return null;
+        }
+        StringBuffer result = new StringBuffer(source.length());
+        char ch;
+        for (int i = 0; i < source.length(); i++) {
+            ch = source.charAt(i);
+            switch (ch) {
+            case WAVE_DASH:
+                ch = FULLWIDTH_TILDE;
+                break;
+            default:
+                break;
+            }
+            result.append(ch);
+        }
+        return result.toString();
     }
 }

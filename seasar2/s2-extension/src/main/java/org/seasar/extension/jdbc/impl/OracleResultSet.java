@@ -18,6 +18,8 @@ package org.seasar.extension.jdbc.impl;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.seasar.framework.util.StringConversionUtil;
+
 /**
  * Oracle用の {@link ResultSet}です。 WAVE DASH(U+301C)をFULLWIDTH
  * TILDE(U+FF5E)に変換します。
@@ -61,28 +63,9 @@ public class OracleResultSet extends ResultSetWrapper {
      * @param source
      *            ソース
      * @return 変換結果
+     * @see StringConversionUtil#fromWaveDashToFullwidthTilde(String)
      */
     protected String convert(String source) {
-        if (source == null) {
-            return null;
-        }
-        StringBuffer result = new StringBuffer();
-        char ch;
-
-        for (int i = 0; i < source.length(); i++) {
-            ch = source.charAt(i);
-
-            switch (ch) {
-            case WAVE_DASH: // WAVE DASH(U+301C) -> FULLWIDTH TILDE(U+FF5E)
-                ch = FULLWIDTH_TILDE;
-                break;
-            default:
-                break;
-            }
-
-            result.append(ch);
-        }
-
-        return result.toString();
+        return StringConversionUtil.fromWaveDashToFullwidthTilde(source);
     }
 }
