@@ -30,6 +30,53 @@ public final class BindVariableUtil {
     }
 
     /**
+     * バインド変数をSQLの中にリテラルで埋め込んだ完全なSQLを返します。
+     * 
+     * @param sql
+     *            SQL
+     * @param args
+     *            引数
+     * @return バインド変数をSQLの中にリテラルで埋め込んだ完全なSQL
+     */
+    public static String getCompleteSql(String sql, Object[] args) {
+        if (args == null || args.length == 0) {
+            return sql;
+        }
+        StringBuffer buf = new StringBuffer(sql.length() + args.length * 15);
+        int pos = 0;
+        int pos2 = 0;
+        int pos3 = 0;
+        int pos4 = 0;
+        int pos5 = 0;
+        int pos6 = 0;
+        int index = 0;
+        while (true) {
+            pos = sql.indexOf('?', pos2);
+            pos3 = sql.indexOf('\'', pos2);
+            pos4 = sql.indexOf('\'', pos3 + 1);
+            pos5 = sql.indexOf("/*", pos2);
+            pos6 = sql.indexOf("*/", pos5 + 1);
+            if (pos > 0) {
+                if (pos3 >= 0 && pos3 < pos && pos < pos4) {
+                    buf.append(sql.substring(pos2, pos4 + 1));
+                    pos2 = pos4 + 1;
+                } else if (pos5 >= 0 && pos5 < pos && pos < pos6) {
+                    buf.append(sql.substring(pos2, pos6 + 1));
+                    pos2 = pos6 + 1;
+                } else {
+                    buf.append(sql.substring(pos2, pos));
+                    buf.append(getBindVariableText(args[index++]));
+                    pos2 = pos + 1;
+                }
+            } else {
+                buf.append(sql.substring(pos2));
+                break;
+            }
+        }
+        return buf.toString();
+    }
+
+    /**
      * バインド変数を文字列として返します。
      * 
      * @param bindVariable

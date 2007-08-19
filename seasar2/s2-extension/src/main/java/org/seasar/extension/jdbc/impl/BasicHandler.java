@@ -226,41 +226,7 @@ public class BasicHandler {
      * @return 完全なSQL文
      */
     protected String getCompleteSql(Object[] args) {
-        if (args == null || args.length == 0) {
-            return sql;
-        }
-        StringBuffer buf = new StringBuffer(200);
-        int pos = 0;
-        int pos2 = 0;
-        int pos3 = 0;
-        int pos4 = 0;
-        int pos5 = 0;
-        int pos6 = 0;
-        int index = 0;
-        while (true) {
-            pos = sql.indexOf('?', pos2);
-            pos3 = sql.indexOf('\'', pos2);
-            pos4 = sql.indexOf('\'', pos3 + 1);
-            pos5 = sql.indexOf("/*", pos2);
-            pos6 = sql.indexOf("*/", pos5 + 1);
-            if (pos > 0) {
-                if (pos3 >= 0 && pos3 < pos && pos < pos4) {
-                    buf.append(sql.substring(pos2, pos4 + 1));
-                    pos2 = pos4 + 1;
-                } else if (pos5 >= 0 && pos5 < pos && pos < pos6) {
-                    buf.append(sql.substring(pos2, pos6 + 1));
-                    pos2 = pos6 + 1;
-                } else {
-                    buf.append(sql.substring(pos2, pos));
-                    buf.append(getBindVariableText(args[index++]));
-                    pos2 = pos + 1;
-                }
-            } else {
-                buf.append(sql.substring(pos2));
-                break;
-            }
-        }
-        return buf.toString();
+        return BindVariableUtil.getCompleteSql(sql, args);
     }
 
     /**

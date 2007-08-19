@@ -34,39 +34,6 @@ public class BasicHandlerTest extends S2TestCase {
     }
 
     /**
-     * @throws Exception
-     */
-    public void testGetCompleteSql1() throws Exception {
-        final String sql = "update emp set ename = ?, comm = ? where empno = ?";
-        BasicHandler handler = new BasicHandler(getDataSource(), sql);
-        assertEquals(
-                "update emp set ename = 'foo', comm = null where empno = 'bar'",
-                handler.getCompleteSql(new Object[] { "foo", null, "bar" }));
-    }
-
-    /**
-     * @throws Exception
-     */
-    public void testGetCompleteSql2() throws Exception {
-        final String sql = "update emp set ename = ?, comm = '?' where empno = ?";
-        BasicHandler handler = new BasicHandler(getDataSource(), sql);
-        assertEquals(
-                "update emp set ename = 'foo', comm = '?' where empno = 'bar'",
-                handler.getCompleteSql(new Object[] { "foo", "bar" }));
-    }
-
-    /**
-     * @throws Exception
-     */
-    public void testGetCompleteSql3() throws Exception {
-        final String sql = "update emp set ename = /* ? */, comm = ? where empno = ?/*?*/";
-        BasicHandler handler = new BasicHandler(getDataSource(), sql);
-        assertEquals(
-                "update emp set ename = /* ? */, comm = null where empno = 'bar'/*?*/",
-                handler.getCompleteSql(new Object[] { null, "bar" }));
-    }
-
-    /**
      * 
      * @throws Exception
      */
