@@ -33,7 +33,7 @@ import org.seasar.framework.util.MethodUtil;
 import org.seasar.framework.util.ModifierUtil;
 
 /**
- * {@link ValueType}のファクトリです。
+ * 値タイプのファクトリです。
  * 
  * @author higa
  * 
@@ -41,77 +41,87 @@ import org.seasar.framework.util.ModifierUtil;
 public final class ValueTypes {
 
     /**
-     * String用の {@link ValueType}です。
+     * String用の値タイプです。
      */
     public final static ValueType STRING = new StringType();
 
     /**
-     * Character用の {@link ValueType}です。
+     * WaveDashを変換するString用の値タイプです。
+     */
+    public final static ValueType WAVE_DASH_STRING = new WaveDashStringType();
+
+    /**
+     * Character用の値タイプです。
      */
     public final static ValueType CHARACTER = new CharacterType();
 
     /**
-     * Short用の {@link ValueType}です。
+     * Short用の値タイプです。
      */
     public final static ValueType SHORT = new ShortType();
 
     /**
-     * Integer用の {@link ValueType}です。
+     * Integer用の値タイプです。
      */
     public final static ValueType INTEGER = new IntegerType();
 
     /**
-     * Long用の {@link ValueType}です。
+     * Long用の値タイプです。
      */
     public final static ValueType LONG = new LongType();
 
     /**
-     * Float用の {@link ValueType}です。
+     * Float用の値タイプです。
      */
     public final static ValueType FLOAT = new FloatType();
 
     /**
-     * Double用の {@link ValueType}です。
+     * Double用の値タイプです。
      */
     public final static ValueType DOUBLE = new DoubleType();
 
     /**
-     * BigDecimal用の {@link ValueType}です。
+     * BigDecimal用の値タイプです。
      */
     public final static ValueType BIGDECIMAL = new BigDecimalType();
 
     /**
-     * Time用の {@link ValueType}です。
+     * Time用の値タイプです。
      */
     public final static ValueType TIME = new TimeType();
 
     /**
-     * java.sql.Date用の {@link ValueType}です。
+     * java.sql.Date用の値タイプです。
      */
     public final static ValueType SQLDATE = new SqlDateType();
 
     /**
-     * Timestamp用の {@link ValueType}です。
+     * Timestamp用の値タイプです。
      */
     public final static ValueType TIMESTAMP = new TimestampType();
 
     /**
-     * Binary用の {@link ValueType}です。
+     * Binary用の値タイプです。
      */
     public final static ValueType BINARY = new BinaryType();
 
     /**
-     * BinaryStream用の {@link ValueType}です。
+     * BinaryStream用の値タイプです。
      */
     public final static ValueType BINARY_STREAM = new BinaryStreamType();
 
     /**
-     * Boolean用の {@link ValueType}です。
+     * Boolean用の値タイプです。
      */
     public final static ValueType BOOLEAN = new BooleanType();
 
     /**
-     * 汎用的な {@link ValueType}です。
+     * JavaのBooleanの値をデータベースのIntegerに変換する値タイプです。
+     */
+    public final static ValueType BOOLEAN_INTEGER = new BooleanIntegerType();
+
+    /**
+     * 汎用的な値タイプです。
      */
     public final static ValueType OBJECT = new ObjectType();
 
