@@ -134,4 +134,23 @@ public class MockResultSetMetaData implements ResultSetMetaData {
     public boolean isWritable(int column) throws SQLException {
         return getColumnMetaData(column).isWritable();
     }
+
+    /**
+     * カラム番号を返します。
+     * 
+     * @param columnName
+     *            カラム名
+     * @return カラム番号
+     * @throws SQLException
+     *             カラム名が見つからなかった場合。
+     */
+    public int findColumn(String columnName) throws SQLException {
+        for (int i = 1; i <= getColumnCount(); i++) {
+            MockColumnMetaData columnMetaData = getColumnMetaData(i);
+            if (columnName.equals(columnMetaData.getColumnName())) {
+                return i;
+            }
+        }
+        throw new SQLException(columnName + " not found.");
+    }
 }

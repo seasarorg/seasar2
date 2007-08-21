@@ -15,6 +15,8 @@
  */
 package org.seasar.framework.mock.sql;
 
+import java.sql.SQLException;
+
 import junit.framework.TestCase;
 
 /**
@@ -49,4 +51,21 @@ public class MockResultSetMetaDataTest extends TestCase {
         assertEquals("aaa", meta.getColumnLabel(1));
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testFindColumn() throws Exception {
+        MockResultSetMetaData meta = new MockResultSetMetaData();
+        MockColumnMetaData columnMeta = new MockColumnMetaData();
+        columnMeta.setColumnName("aaa");
+        meta.addColumnMetaData(columnMeta);
+        assertEquals(1, meta.findColumn("aaa"));
+        try {
+            meta.findColumn("bbb");
+            fail();
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+    }
 }
