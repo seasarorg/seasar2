@@ -42,6 +42,7 @@ public class BeanDescImplTest extends TestCase {
         assertEquals(String.class, propDesc.getPropertyType());
         assertNotNull(propDesc.getReadMethod());
         assertNull(propDesc.getWriteMethod());
+        assertNotNull(propDesc.getField());
 
         propDesc = beanDesc.getPropertyDesc("CCC");
         assertEquals("CCC", propDesc.getPropertyName());

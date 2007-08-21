@@ -722,12 +722,11 @@ public final class BeanDescImpl implements BeanDesc {
             if (!fieldCache.containsKey(fname)) {
                 field.setAccessible(true);
                 fieldCache.put(fname, field);
-                if (FieldUtil.isInstanceField(field)
-                        && FieldUtil.isPublicField(field)) {
+                if (FieldUtil.isInstanceField(field)) {
                     if (hasPropertyDesc(fname)) {
                         PropertyDesc pd = getPropertyDesc(field.getName());
                         pd.setField(field);
-                    } else {
+                    } else if (FieldUtil.isPublicField(field)) {
                         PropertyDesc pd = new PropertyDescImpl(field.getName(),
                                 field.getType(), null, null, field, this);
                         propertyDescCache.put(fname, pd);
