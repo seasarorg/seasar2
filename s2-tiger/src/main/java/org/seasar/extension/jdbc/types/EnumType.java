@@ -15,12 +15,11 @@
  */
 package org.seasar.extension.jdbc.types;
 
+import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
-
-import org.seasar.extension.jdbc.ValueType;
 
 /**
  * EnumをJDBCで扱うためのクラスです。
@@ -28,7 +27,7 @@ import org.seasar.extension.jdbc.ValueType;
  * @author higa
  * 
  */
-public class EnumType implements ValueType {
+public class EnumType extends AbstractValueType {
 
     @SuppressWarnings("unchecked")
     private final Class<? extends Enum> enumClass;
@@ -40,6 +39,7 @@ public class EnumType implements ValueType {
      */
     @SuppressWarnings("unchecked")
     public EnumType(Class<? extends Enum> enumClass) {
+        super(Types.VARCHAR);
         this.enumClass = enumClass;
     }
 
@@ -67,12 +67,22 @@ public class EnumType implements ValueType {
         return toEnum(resultSet.getString(columnName));
     }
 
+    public Object getValue(CallableStatement cs, int index) throws SQLException {
+        return toEnum(cs.getString(index));
+    }
+
+    public Object getValue(CallableStatement cs, String parameterName)
+            throws SQLException {
+
+        return toEnum(cs.getString(parameterName));
+    }
+
     @SuppressWarnings("unchecked")
     public void bindValue(PreparedStatement ps, int index, Object value)
             throws SQLException {
 
         if (value == null) {
-            ps.setNull(index, Types.VARCHAR);
+            setNull(ps, index);
         } else {
             ps.setString(index, (Enum.class.cast(value)).name());
         }
