@@ -15,7 +15,9 @@
  */
 package org.seasar.extension.jdbc.types;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -30,7 +32,14 @@ import org.seasar.framework.util.InputStreamUtil;
  * @author higa
  * 
  */
-public class BinaryStreamType implements ValueType {
+public class BinaryStreamType extends AbstractValueType {
+
+    /**
+     * インスタンスを構築します。
+     */
+    public BinaryStreamType() {
+        super(Types.BINARY);
+    }
 
     public Object getValue(ResultSet resultSet, int index) throws SQLException {
         return resultSet.getBinaryStream(index);
@@ -42,11 +51,28 @@ public class BinaryStreamType implements ValueType {
         return resultSet.getBinaryStream(columnName);
     }
 
+    public Object getValue(CallableStatement cs, int index) throws SQLException {
+        return toBinaryStream(cs.getBytes(index));
+    }
+
+    public Object getValue(CallableStatement cs, String parameterName)
+            throws SQLException {
+
+        return toBinaryStream(cs.getBytes(parameterName));
+    }
+
+    private InputStream toBinaryStream(byte[] bytes) {
+        if (bytes == null) {
+            return null;
+        }
+        return new ByteArrayInputStream(bytes);
+    }
+
     public void bindValue(PreparedStatement ps, int index, Object value)
             throws SQLException {
 
         if (value == null) {
-            ps.setNull(index, Types.BINARY);
+            setNull(ps, index);
         } else if (value instanceof InputStream) {
             InputStream is = (InputStream) value;
             ps.setBinaryStream(index, is, InputStreamUtil.available(is));

@@ -17,51 +17,54 @@ package org.seasar.extension.jdbc.types;
 
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Types;
 
 import org.seasar.extension.jdbc.ValueType;
 
 /**
- * Object用の {@link ValueType}です。
+ * {@link ValueType}の抽象クラスです。
  * 
- * @author higa
- * 
+ * @author taedium
  */
-public class ObjectType extends AbstractValueType {
+public abstract class AbstractValueType implements ValueType {
+
+    /** JDBCのSQL型 */
+    private int sqlType;
 
     /**
      * インスタンスを構築します。
+     * 
+     * @param sqlType
+     *            JDBCのSQL型
      */
-    public ObjectType() {
-        super(Types.VARCHAR);
+    public AbstractValueType(int sqlType) {
+        this.sqlType = sqlType;
     }
 
-    public Object getValue(ResultSet resultSet, int index) throws SQLException {
-        return resultSet.getObject(index);
+    /**
+     * SQLの<code>NULL</code>を設定します。
+     * 
+     * @param ps
+     *            準備された文
+     * @param index
+     *            位置
+     * @throws SQLException
+     *             SQL例外が発生した場合
+     */
+    protected void setNull(PreparedStatement ps, int index) throws SQLException {
+        ps.setNull(index, sqlType);
     }
 
-    public Object getValue(ResultSet resultSet, String columnName)
+    public void registerOutParameter(CallableStatement cs, int index)
             throws SQLException {
-        return resultSet.getObject(columnName);
+
+        cs.registerOutParameter(index, sqlType);
     }
 
-    public Object getValue(CallableStatement cs, int index) throws SQLException {
-        return cs.getObject(index);
-    }
-
-    public Object getValue(CallableStatement cs, String parameterName)
+    public void registerOutParameter(CallableStatement cs, String parameterName)
             throws SQLException {
-        return cs.getObject(parameterName);
+
+        cs.registerOutParameter(parameterName, sqlType);
     }
 
-    public void bindValue(PreparedStatement ps, int index, Object value)
-            throws SQLException {
-        if (value == null) {
-            setNull(ps, index);
-        } else {
-            ps.setObject(index, value);
-        }
-    }
 }

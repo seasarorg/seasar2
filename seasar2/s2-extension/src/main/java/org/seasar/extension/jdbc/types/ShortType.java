@@ -15,6 +15,7 @@
  */
 package org.seasar.extension.jdbc.types;
 
+import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -29,7 +30,14 @@ import org.seasar.framework.util.ShortConversionUtil;
  * @author higa
  * 
  */
-public class ShortType implements ValueType {
+public class ShortType extends AbstractValueType {
+
+    /**
+     * インスタンスを構築します。
+     */
+    public ShortType() {
+        super(Types.SMALLINT);
+    }
 
     public Object getValue(ResultSet resultSet, int index) throws SQLException {
         return ShortConversionUtil.toShort(resultSet.getObject(index));
@@ -40,10 +48,19 @@ public class ShortType implements ValueType {
         return ShortConversionUtil.toShort(resultSet.getObject(columnName));
     }
 
+    public Object getValue(CallableStatement cs, int index) throws SQLException {
+        return ShortConversionUtil.toShort(cs.getObject(index));
+    }
+
+    public Object getValue(CallableStatement cs, String parameterName)
+            throws SQLException {
+        return ShortConversionUtil.toShort(cs.getObject(parameterName));
+    }
+
     public void bindValue(PreparedStatement ps, int index, Object value)
             throws SQLException {
         if (value == null) {
-            ps.setNull(index, Types.SMALLINT);
+            setNull(ps, index);
         } else {
             ps.setShort(index, ShortConversionUtil.toPrimitiveShort(value));
         }

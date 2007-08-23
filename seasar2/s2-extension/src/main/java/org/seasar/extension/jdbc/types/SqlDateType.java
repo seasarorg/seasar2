@@ -15,6 +15,7 @@
  */
 package org.seasar.extension.jdbc.types;
 
+import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -29,7 +30,14 @@ import org.seasar.framework.util.SqlDateConversionUtil;
  * @author higa
  * 
  */
-public class SqlDateType implements ValueType {
+public class SqlDateType extends AbstractValueType {
+
+    /**
+     * インスタンスを構築します。
+     */
+    public SqlDateType() {
+        super(Types.DATE);
+    }
 
     public Object getValue(ResultSet resultSet, int index) throws SQLException {
         return resultSet.getDate(index);
@@ -40,10 +48,19 @@ public class SqlDateType implements ValueType {
         return resultSet.getDate(columnName);
     }
 
+    public Object getValue(CallableStatement cs, int index) throws SQLException {
+        return cs.getDate(index);
+    }
+
+    public Object getValue(CallableStatement cs, String parameterName)
+            throws SQLException {
+        return cs.getDate(parameterName);
+    }
+
     public void bindValue(PreparedStatement ps, int index, Object value)
             throws SQLException {
         if (value == null) {
-            ps.setNull(index, Types.DATE);
+            setNull(ps, index);
         } else {
             ps.setDate(index, SqlDateConversionUtil.toDate(value));
         }

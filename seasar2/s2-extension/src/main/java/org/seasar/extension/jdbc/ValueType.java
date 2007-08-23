@@ -15,6 +15,7 @@
  */
 package org.seasar.extension.jdbc;
 
+import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -54,6 +55,33 @@ public interface ValueType {
     Object getValue(ResultSet resultSet, String columnName) throws SQLException;
 
     /**
+     * パラメータの値を返します。
+     * 
+     * @param cs
+     *            ストアドプロシージャを表す文
+     * @param index
+     *            位置
+     * @return パラメータの値
+     * @throws SQLException
+     *             SQL例外が発生した場合
+     */
+    Object getValue(CallableStatement cs, int index) throws SQLException;
+
+    /**
+     * パラメータの値を返します。
+     * 
+     * @param cs
+     *            ストアドプロシージャを表す文
+     * @param parameterName
+     *            パラメータ名
+     * @return パラメータの値
+     * @throws SQLException
+     *             SQL例外が発生した場合
+     */
+    Object getValue(CallableStatement cs, String parameterName)
+            throws SQLException;
+
+    /**
      * 変数の値をバインドします。
      * 
      * @param ps
@@ -66,5 +94,31 @@ public interface ValueType {
      *             SQL例外が発生した場合
      */
     void bindValue(PreparedStatement ps, int index, Object value)
+            throws SQLException;
+
+    /**
+     * OUTパラメータを登録します。
+     * 
+     * @param cs
+     *            ストアドプロシージャを表す文
+     * @param index
+     *            位置
+     * @throws SQLException
+     *             SQL例外が発生した場合
+     */
+    void registerOutParameter(CallableStatement cs, int index)
+            throws SQLException;
+
+    /**
+     * OUTパラメータを登録します。
+     * 
+     * @param cs
+     *            ストアドプロシージャを表す文
+     * @param parameterName
+     *            パラメータ名
+     * @throws SQLException
+     *             SQL例外が発生した場合
+     */
+    void registerOutParameter(CallableStatement cs, String parameterName)
             throws SQLException;
 }

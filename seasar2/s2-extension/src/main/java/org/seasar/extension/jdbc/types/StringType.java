@@ -15,6 +15,7 @@
  */
 package org.seasar.extension.jdbc.types;
 
+import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -29,7 +30,14 @@ import org.seasar.framework.util.StringConversionUtil;
  * @author higa
  * 
  */
-public class StringType implements ValueType {
+public class StringType extends AbstractValueType {
+
+    /**
+     * インスタンスを構築します。
+     */
+    public StringType() {
+        super(Types.VARCHAR);
+    }
 
     public Object getValue(ResultSet resultSet, int index) throws SQLException {
         return resultSet.getString(index);
@@ -40,10 +48,19 @@ public class StringType implements ValueType {
         return resultSet.getString(columnName);
     }
 
+    public Object getValue(CallableStatement cs, int index) throws SQLException {
+        return cs.getString(index);
+    }
+
+    public Object getValue(CallableStatement cs, String parameterName)
+            throws SQLException {
+        return cs.getString(parameterName);
+    }
+
     public void bindValue(PreparedStatement ps, int index, Object value)
             throws SQLException {
         if (value == null) {
-            ps.setNull(index, Types.VARCHAR);
+            setNull(ps, index);
         } else {
             ps.setString(index, StringConversionUtil.toString(value));
         }

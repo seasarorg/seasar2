@@ -16,6 +16,7 @@
 package org.seasar.extension.jdbc.types;
 
 import java.lang.reflect.Method;
+import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -61,10 +62,32 @@ public class UserDefineType implements ValueType {
         return fromDbToJava(baseValueType.getValue(resultSet, columnName));
     }
 
+    public Object getValue(CallableStatement cs, int index) throws SQLException {
+        return fromDbToJava(baseValueType.getValue(cs, index));
+    }
+
+    public Object getValue(CallableStatement cs, String parameterName)
+            throws SQLException {
+
+        return fromDbToJava(baseValueType.getValue(cs, parameterName));
+    }
+
     public void bindValue(PreparedStatement ps, int index, Object value)
             throws SQLException {
 
         baseValueType.bindValue(ps, index, fromJavaToDb(value));
+    }
+
+    public void registerOutParameter(CallableStatement cs, int index)
+            throws SQLException {
+
+        baseValueType.registerOutParameter(cs, index);
+    }
+
+    public void registerOutParameter(CallableStatement cs, String parameterName)
+            throws SQLException {
+
+        baseValueType.registerOutParameter(cs, parameterName);
     }
 
     private Object fromDbToJava(Object value) {

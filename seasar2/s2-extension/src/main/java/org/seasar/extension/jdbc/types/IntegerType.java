@@ -15,6 +15,7 @@
  */
 package org.seasar.extension.jdbc.types;
 
+import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -29,7 +30,14 @@ import org.seasar.framework.util.IntegerConversionUtil;
  * @author higa
  * 
  */
-public class IntegerType implements ValueType {
+public class IntegerType extends AbstractValueType {
+
+    /**
+     * インスタンスを構築します。
+     */
+    public IntegerType() {
+        super(Types.INTEGER);
+    }
 
     public Object getValue(ResultSet resultSet, int index) throws SQLException {
         return IntegerConversionUtil.toInteger(resultSet.getObject(index));
@@ -40,10 +48,19 @@ public class IntegerType implements ValueType {
         return IntegerConversionUtil.toInteger(resultSet.getObject(columnName));
     }
 
+    public Object getValue(CallableStatement cs, int index) throws SQLException {
+        return IntegerConversionUtil.toInteger(cs.getObject(index));
+    }
+
+    public Object getValue(CallableStatement cs, String parameterName)
+            throws SQLException {
+        return IntegerConversionUtil.toInteger(cs.getObject(parameterName));
+    }
+
     public void bindValue(PreparedStatement ps, int index, Object value)
             throws SQLException {
         if (value == null) {
-            ps.setNull(index, Types.INTEGER);
+            setNull(ps, index);
         } else {
             ps.setInt(index, IntegerConversionUtil.toPrimitiveInt(value));
         }

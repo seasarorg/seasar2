@@ -15,6 +15,7 @@
  */
 package org.seasar.extension.jdbc.types;
 
+import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -29,7 +30,14 @@ import org.seasar.framework.util.LongConversionUtil;
  * @author higa
  * 
  */
-public class LongType implements ValueType {
+public class LongType extends AbstractValueType {
+
+    /**
+     * インスタンスを構築します。
+     */
+    public LongType() {
+        super(Types.BIGINT);
+    }
 
     public Object getValue(ResultSet resultSet, int index) throws SQLException {
         return LongConversionUtil.toLong(resultSet.getObject(index));
@@ -40,10 +48,19 @@ public class LongType implements ValueType {
         return LongConversionUtil.toLong(resultSet.getObject(columnName));
     }
 
+    public Object getValue(CallableStatement cs, int index) throws SQLException {
+        return LongConversionUtil.toLong(cs.getObject(index));
+    }
+
+    public Object getValue(CallableStatement cs, String parameterName)
+            throws SQLException {
+        return LongConversionUtil.toLong(cs.getObject(parameterName));
+    }
+
     public void bindValue(PreparedStatement ps, int index, Object value)
             throws SQLException {
         if (value == null) {
-            ps.setNull(index, Types.BIGINT);
+            setNull(ps, index);
         } else {
             ps.setLong(index, LongConversionUtil.toPrimitiveLong(value));
         }

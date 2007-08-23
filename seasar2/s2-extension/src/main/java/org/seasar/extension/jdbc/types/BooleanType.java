@@ -15,6 +15,7 @@
  */
 package org.seasar.extension.jdbc.types;
 
+import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -29,7 +30,14 @@ import org.seasar.framework.util.BooleanConversionUtil;
  * @author higa
  * 
  */
-public class BooleanType implements ValueType {
+public class BooleanType extends AbstractValueType {
+
+    /**
+     * インスタンスを構築します。
+     */
+    public BooleanType() {
+        super(Types.BOOLEAN);
+    }
 
     public Object getValue(ResultSet resultSet, int index) throws SQLException {
         return BooleanConversionUtil.toBoolean(resultSet.getObject(index));
@@ -41,10 +49,20 @@ public class BooleanType implements ValueType {
         return BooleanConversionUtil.toBoolean(resultSet.getObject(columnName));
     }
 
+    public Object getValue(CallableStatement cs, int index) throws SQLException {
+        return BooleanConversionUtil.toBoolean(cs.getObject(index));
+    }
+
+    public Object getValue(CallableStatement cs, String parameterName)
+            throws SQLException {
+
+        return BooleanConversionUtil.toBoolean(cs.getObject(parameterName));
+    }
+
     public void bindValue(PreparedStatement ps, int index, Object value)
             throws SQLException {
         if (value == null) {
-            ps.setNull(index, Types.BOOLEAN);
+            setNull(ps, index);
         } else {
             ps.setBoolean(index, BooleanConversionUtil
                     .toPrimitiveBoolean(value));

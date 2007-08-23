@@ -15,6 +15,7 @@
  */
 package org.seasar.extension.jdbc.types;
 
+import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -29,7 +30,14 @@ import org.seasar.framework.util.BigDecimalConversionUtil;
  * @author higa
  * 
  */
-public class BigDecimalType implements ValueType {
+public class BigDecimalType extends AbstractValueType {
+
+    /**
+     * インスタンスを構築します。
+     */
+    public BigDecimalType() {
+        super(Types.DECIMAL);
+    }
 
     public Object getValue(ResultSet resultSet, int index) throws SQLException {
         return resultSet.getBigDecimal(index);
@@ -41,11 +49,21 @@ public class BigDecimalType implements ValueType {
         return resultSet.getBigDecimal(columnName);
     }
 
+    public Object getValue(CallableStatement cs, int index) throws SQLException {
+        return cs.getBigDecimal(index);
+    }
+
+    public Object getValue(CallableStatement cs, String parameterName)
+            throws SQLException {
+
+        return cs.getBigDecimal(parameterName);
+    }
+
     public void bindValue(PreparedStatement ps, int index, Object value)
             throws SQLException {
 
         if (value == null) {
-            ps.setNull(index, Types.DECIMAL);
+            setNull(ps, index);
         } else {
             ps.setBigDecimal(index, BigDecimalConversionUtil
                     .toBigDecimal(value));

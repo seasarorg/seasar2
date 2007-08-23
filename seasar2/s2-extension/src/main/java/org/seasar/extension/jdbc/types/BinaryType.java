@@ -18,6 +18,7 @@ package org.seasar.extension.jdbc.types;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.sql.Blob;
+import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -31,7 +32,14 @@ import org.seasar.extension.jdbc.ValueType;
  * @author higa
  * 
  */
-public class BinaryType implements ValueType {
+public class BinaryType extends AbstractValueType {
+
+    /**
+     * インスタンスを構築します。
+     */
+    public BinaryType() {
+        super(Types.BINARY);
+    }
 
     public Object getValue(ResultSet resultSet, int index) throws SQLException {
         try {
@@ -50,6 +58,23 @@ public class BinaryType implements ValueType {
         }
     }
 
+    public Object getValue(CallableStatement cs, int index) throws SQLException {
+        try {
+            return toByteArray(cs.getBlob(index));
+        } catch (SQLException e) {
+            return cs.getBytes(index);
+        }
+    }
+
+    public Object getValue(CallableStatement cs, String parameterName)
+            throws SQLException {
+        try {
+            return toByteArray(cs.getBlob(parameterName));
+        } catch (SQLException e) {
+            return cs.getBytes(parameterName);
+        }
+    }
+
     private byte[] toByteArray(Blob blob) throws SQLException {
         if (blob == null) {
             return null;
@@ -65,7 +90,7 @@ public class BinaryType implements ValueType {
             throws SQLException {
 
         if (value == null) {
-            ps.setNull(index, Types.BINARY);
+            setNull(ps, index);
         } else if (value instanceof byte[]) {
             byte[] ba = (byte[]) value;
             InputStream in = new ByteArrayInputStream(ba);

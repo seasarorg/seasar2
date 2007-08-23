@@ -15,6 +15,7 @@
  */
 package org.seasar.extension.jdbc.types;
 
+import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -29,7 +30,14 @@ import org.seasar.framework.util.FloatConversionUtil;
  * @author higa
  * 
  */
-public class FloatType implements ValueType {
+public class FloatType extends AbstractValueType {
+
+    /**
+     * インスタンスを構築します。
+     */
+    public FloatType() {
+        super(Types.FLOAT);
+    }
 
     public Object getValue(ResultSet resultSet, int index) throws SQLException {
         return FloatConversionUtil.toFloat(resultSet.getObject(index));
@@ -40,10 +48,19 @@ public class FloatType implements ValueType {
         return FloatConversionUtil.toFloat(resultSet.getObject(columnName));
     }
 
+    public Object getValue(CallableStatement cs, int index) throws SQLException {
+        return FloatConversionUtil.toFloat(cs.getObject(index));
+    }
+
+    public Object getValue(CallableStatement cs, String parameterName)
+            throws SQLException {
+        return FloatConversionUtil.toFloat(cs.getObject(parameterName));
+    }
+
     public void bindValue(PreparedStatement ps, int index, Object value)
             throws SQLException {
         if (value == null) {
-            ps.setNull(index, Types.FLOAT);
+            setNull(ps, index);
         } else {
             ps.setFloat(index, FloatConversionUtil.toPrimitiveFloat(value));
         }

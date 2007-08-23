@@ -15,6 +15,7 @@
  */
 package org.seasar.extension.jdbc.types;
 
+import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -29,7 +30,14 @@ import org.seasar.framework.util.TimestampConversionUtil;
  * @author higa
  * 
  */
-public class TimestampType implements ValueType {
+public class TimestampType extends AbstractValueType {
+
+    /**
+     * インスタンスを構築します。
+     */
+    public TimestampType() {
+        super(Types.TIMESTAMP);
+    }
 
     public Object getValue(ResultSet resultSet, int index) throws SQLException {
         return resultSet.getTimestamp(index);
@@ -40,10 +48,20 @@ public class TimestampType implements ValueType {
         return resultSet.getTimestamp(columnName);
     }
 
+    public Object getValue(CallableStatement cs, int index) throws SQLException {
+        return cs.getTimestamp(index);
+    }
+
+    public Object getValue(CallableStatement cs, String parameterName)
+            throws SQLException {
+        return cs.getTimestamp(parameterName);
+    }
+
     public void bindValue(PreparedStatement ps, int index, Object value)
             throws SQLException {
         if (value == null) {
-            ps.setNull(index, Types.TIMESTAMP);
+            setNull(ps, index);
+            ;
         } else {
             ps.setTimestamp(index, TimestampConversionUtil.toTimestamp(value));
         }
