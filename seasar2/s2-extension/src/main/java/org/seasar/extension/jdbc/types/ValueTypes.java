@@ -23,6 +23,7 @@ import java.sql.Timestamp;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -322,5 +323,24 @@ public final class ValueTypes {
      */
     public static ValueType getValueType(int sqltype) {
         return getValueType(getType(sqltype));
+    }
+
+    /**
+     * 単純な型かどうかを返します。
+     * 
+     * @param clazz
+     *            クラス
+     * @return 単純な型かどうか
+     */
+    public static boolean isSimpleType(Class clazz) {
+        if (clazz == null) {
+            throw new NullPointerException("clazz");
+        }
+        return clazz == String.class || clazz.isPrimitive()
+                || clazz == Boolean.class || clazz == Character.class
+                || Number.class.isAssignableFrom(clazz)
+                || Date.class.isAssignableFrom(clazz)
+                || Calendar.class.isAssignableFrom(clazz)
+                || clazz == BYTE_ARRAY_CLASS;
     }
 }
