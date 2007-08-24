@@ -36,6 +36,14 @@ public class ValueTypesTest extends TestCase {
         assertEquals(MyEnum.ONE, enumType.toEnum("ONE"));
     }
 
+    /**
+     * @throws Exception
+     */
+    public void testIsSimpleType() throws Exception {
+        assertTrue(ValueTypes.isSimpleType(String.class));
+        assertTrue(ValueTypes.isSimpleType(int.class));
+    }
+
     private static enum MyEnum {
         /**
          * 
