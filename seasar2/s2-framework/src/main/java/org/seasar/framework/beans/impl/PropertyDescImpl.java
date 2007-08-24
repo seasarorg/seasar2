@@ -63,6 +63,10 @@ public final class PropertyDescImpl implements PropertyDesc {
 
     private Method valueOfMethod;
 
+    private boolean readable = false;
+
+    private boolean writable = false;
+
     /**
      * {@link PropertyDescImpl}を作成します。
      * 
@@ -101,9 +105,15 @@ public final class PropertyDescImpl implements PropertyDesc {
         }
         this.propertyName = propertyName;
         this.propertyType = propertyType;
-        this.readMethod = readMethod;
-        this.writeMethod = writeMethod;
-        this.field = field;
+        if (readMethod != null) {
+            setReadMethod(readMethod);
+        }
+        if (writeMethod != null) {
+            setWriteMethod(writeMethod);
+        }
+        if (field != null) {
+            setField(field);
+        }
         this.beanDesc = beanDesc;
         setupStringConstructor();
         setupValueOfMethod();
@@ -149,6 +159,7 @@ public final class PropertyDescImpl implements PropertyDesc {
 
     public final void setReadMethod(Method readMethod) {
         this.readMethod = readMethod;
+        readable = true;
     }
 
     public final boolean hasReadMethod() {
@@ -161,6 +172,7 @@ public final class PropertyDescImpl implements PropertyDesc {
 
     public final void setWriteMethod(Method writeMethod) {
         this.writeMethod = writeMethod;
+        writable = true;
     }
 
     public final boolean hasWriteMethod() {
@@ -173,14 +185,18 @@ public final class PropertyDescImpl implements PropertyDesc {
 
     public void setField(Field field) {
         this.field = field;
+        if (ModifierUtil.isPublic(field)) {
+            readable = true;
+            writable = true;
+        }
     }
 
     public boolean isReadable() {
-        return hasReadMethod() || field != null;
+        return readable;
     }
 
     public boolean isWritable() {
-        return hasWriteMethod() || field != null;
+        return writable;
     }
 
     public final Object getValue(Object target) {

@@ -34,10 +34,22 @@ public class ModifierUtil {
      * <code>public</code>かどうか返します。
      * 
      * @param m
+     *            メソッド
      * @return パブリックかどうか
      */
     public static boolean isPublic(Method m) {
         return isPublic(m.getModifiers());
+    }
+
+    /**
+     * <code>public</code>かどうか返します。
+     * 
+     * @param f
+     *            フィールド
+     * @return パブリックかどうか
+     */
+    public static boolean isPublic(Field f) {
+        return isPublic(f.getModifiers());
     }
 
     /**
