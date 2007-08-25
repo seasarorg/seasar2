@@ -15,6 +15,7 @@
  */
 package org.seasar.framework.util;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -118,6 +119,22 @@ public final class StatementUtil {
         }
         try {
             statement.close();
+        } catch (SQLException ex) {
+            throw new SQLRuntimeException(ex);
+        }
+    }
+
+    /**
+     * 結果セットを返します。
+     * 
+     * @param statement
+     * @return 結果セット
+     * @throws SQLRuntimeException
+     */
+    public static ResultSet getResultSet(Statement statement)
+            throws SQLRuntimeException {
+        try {
+            return statement.getResultSet();
         } catch (SQLException ex) {
             throw new SQLRuntimeException(ex);
         }

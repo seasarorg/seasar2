@@ -77,10 +77,22 @@ public class StringClobType extends AbstractValueType {
     public void bindValue(PreparedStatement ps, int index, Object value)
             throws SQLException {
         if (value == null) {
-            ps.setNull(index, Types.CLOB);
+            setNull(ps, index);
         } else {
             final String s = StringConversionUtil.toString(value);
             ps.setCharacterStream(index, new StringReader(s), s.length());
         }
     }
+
+    public void bindValue(CallableStatement cs, String parameterName,
+            Object value) throws SQLException {
+        if (value == null) {
+            setNull(cs, parameterName);
+        } else {
+            final String s = StringConversionUtil.toString(value);
+            cs.setCharacterStream(parameterName, new StringReader(s), s
+                    .length());
+        }
+    }
+
 }

@@ -65,4 +65,15 @@ public class DoubleType extends AbstractValueType {
             ps.setDouble(index, DoubleConversionUtil.toPrimitiveDouble(value));
         }
     }
+
+    public void bindValue(CallableStatement cs, String parameterName,
+            Object value) throws SQLException {
+        if (value == null) {
+            setNull(cs, parameterName);
+        } else {
+            cs.setDouble(parameterName, DoubleConversionUtil
+                    .toPrimitiveDouble(value));
+        }
+    }
+
 }

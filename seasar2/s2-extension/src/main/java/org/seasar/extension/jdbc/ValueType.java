@@ -97,6 +97,21 @@ public interface ValueType {
             throws SQLException;
 
     /**
+     * 変数の値をバインドします。
+     * 
+     * @param cs
+     *            ストアドプロシージャを表す文
+     * @param parameterName
+     *            パラメータ名
+     * @param value
+     *            値
+     * @throws SQLException
+     *             SQL例外が発生した場合
+     */
+    void bindValue(CallableStatement cs, String parameterName, Object value)
+            throws SQLException;
+
+    /**
      * OUTパラメータを登録します。
      * 
      * @param cs

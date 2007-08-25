@@ -17,6 +17,7 @@ package org.seasar.extension.jdbc;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Statement;
 
 /**
  * 結果セットのファクトリです。
@@ -27,6 +28,15 @@ import java.sql.ResultSet;
 public interface ResultSetFactory {
 
     /**
+     * 結果セットを返します。
+     * 
+     * @param statement
+     *            文
+     * @return 結果セット
+     */
+    ResultSet getResultSet(Statement statement);
+
+    /**
      * 結果セットを作成します。
      * 
      * @param ps
@@ -34,4 +44,5 @@ public interface ResultSetFactory {
      * @return 結果セット
      */
     ResultSet createResultSet(PreparedStatement ps);
+
 }

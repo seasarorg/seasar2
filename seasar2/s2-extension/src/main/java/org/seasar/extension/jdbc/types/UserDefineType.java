@@ -78,6 +78,12 @@ public class UserDefineType implements ValueType {
         baseValueType.bindValue(ps, index, fromJavaToDb(value));
     }
 
+    public void bindValue(CallableStatement cs, String parameterName,
+            Object value) throws SQLException {
+
+        baseValueType.bindValue(cs, parameterName, fromJavaToDb(value));
+    }
+
     public void registerOutParameter(CallableStatement cs, int index)
             throws SQLException {
 

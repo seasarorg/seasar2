@@ -65,4 +65,15 @@ public class FloatType extends AbstractValueType {
             ps.setFloat(index, FloatConversionUtil.toPrimitiveFloat(value));
         }
     }
+
+    public void bindValue(CallableStatement cs, String parameterName,
+            Object value) throws SQLException {
+        if (value == null) {
+            setNull(cs, parameterName);
+        } else {
+            cs.setFloat(parameterName, FloatConversionUtil
+                    .toPrimitiveFloat(value));
+        }
+    }
+
 }

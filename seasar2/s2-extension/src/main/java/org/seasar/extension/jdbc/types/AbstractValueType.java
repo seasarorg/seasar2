@@ -55,6 +55,21 @@ public abstract class AbstractValueType implements ValueType {
         ps.setNull(index, sqlType);
     }
 
+    /**
+     * SQLの<code>NULL</code>を設定します。
+     * 
+     * @param cs
+     *            ストアドプロシージャを表す文
+     * @param parameterName
+     *            パラメータ名
+     * @throws SQLException
+     *             SQL例外が発生した場合
+     */
+    protected void setNull(CallableStatement cs, String parameterName)
+            throws SQLException {
+        cs.setNull(parameterName, sqlType);
+    }
+
     public void registerOutParameter(CallableStatement cs, int index)
             throws SQLException {
 

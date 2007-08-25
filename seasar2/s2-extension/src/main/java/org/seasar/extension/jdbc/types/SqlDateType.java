@@ -65,4 +65,14 @@ public class SqlDateType extends AbstractValueType {
             ps.setDate(index, SqlDateConversionUtil.toDate(value));
         }
     }
+
+    public void bindValue(CallableStatement cs, String parameterName,
+            Object value) throws SQLException {
+        if (value == null) {
+            setNull(cs, parameterName);
+        } else {
+            cs.setDate(parameterName, SqlDateConversionUtil.toDate(value));
+        }
+    }
+
 }

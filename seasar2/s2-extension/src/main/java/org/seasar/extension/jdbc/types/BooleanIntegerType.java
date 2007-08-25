@@ -68,4 +68,15 @@ public class BooleanIntegerType extends AbstractValueType {
                     BooleanConversionUtil.toPrimitiveBoolean(value) ? 1 : 0);
         }
     }
+
+    public void bindValue(CallableStatement cs, String parameterName,
+            Object value) throws SQLException {
+        if (value == null) {
+            setNull(cs, parameterName);
+        } else {
+            cs.setInt(parameterName, BooleanConversionUtil
+                    .toPrimitiveBoolean(value) ? 1 : 0);
+        }
+    }
+
 }

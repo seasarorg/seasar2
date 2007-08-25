@@ -17,9 +17,11 @@ package org.seasar.extension.jdbc.impl;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Statement;
 
 import org.seasar.extension.jdbc.ResultSetFactory;
 import org.seasar.framework.util.PreparedStatementUtil;
+import org.seasar.framework.util.StatementUtil;
 
 /**
  * {@link ResultSetFactory}の基本的な実装クラスです。
@@ -33,6 +35,10 @@ public class BasicResultSetFactory implements ResultSetFactory {
      * 自分自身のインスタンスです。
      */
     public static final ResultSetFactory INSTANCE = new BasicResultSetFactory();
+
+    public ResultSet getResultSet(Statement statement) {
+        return StatementUtil.getResultSet(statement);
+    }
 
     public ResultSet createResultSet(PreparedStatement ps) {
         return PreparedStatementUtil.executeQuery(ps);

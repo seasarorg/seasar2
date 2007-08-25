@@ -65,4 +65,15 @@ public class IntegerType extends AbstractValueType {
             ps.setInt(index, IntegerConversionUtil.toPrimitiveInt(value));
         }
     }
+
+    public void bindValue(CallableStatement cs, String parameterName,
+            Object value) throws SQLException {
+        if (value == null) {
+            setNull(cs, parameterName);
+        } else {
+            cs.setInt(parameterName, IntegerConversionUtil
+                    .toPrimitiveInt(value));
+        }
+    }
+
 }

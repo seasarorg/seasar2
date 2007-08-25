@@ -17,6 +17,7 @@ package org.seasar.extension.jdbc.impl;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Statement;
 
 import org.seasar.extension.jdbc.ResultSetFactory;
 
@@ -28,8 +29,11 @@ import org.seasar.extension.jdbc.ResultSetFactory;
  */
 public class OracleResultSetFactory extends BasicResultSetFactory {
 
+    public ResultSet getResultSet(Statement statement) {
+        return new OracleResultSet(super.getResultSet(statement));
+    }
+
     public ResultSet createResultSet(PreparedStatement ps) {
         return new OracleResultSet(super.createResultSet(ps));
     }
-
 }

@@ -65,4 +65,14 @@ public class StringType extends AbstractValueType {
             ps.setString(index, StringConversionUtil.toString(value));
         }
     }
+
+    public void bindValue(CallableStatement cs, String parameterName,
+            Object value) throws SQLException {
+        if (value == null) {
+            setNull(cs, parameterName);
+        } else {
+            cs.setString(parameterName, StringConversionUtil.toString(value));
+        }
+    }
+
 }
