@@ -88,4 +88,15 @@ public class EnumType extends AbstractValueType {
         }
     }
 
+    @SuppressWarnings("unchecked")
+    public void bindValue(CallableStatement cs, String parameterName,
+            Object value) throws SQLException {
+
+        if (value == null) {
+            setNull(cs, parameterName);
+        } else {
+            cs.setString(parameterName, (Enum.class.cast(value)).name());
+        }
+    }
+
 }
