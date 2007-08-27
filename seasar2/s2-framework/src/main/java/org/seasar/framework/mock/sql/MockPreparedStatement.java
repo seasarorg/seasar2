@@ -163,7 +163,10 @@ public class MockPreparedStatement extends MockStatement implements
     }
 
     public ResultSet executeQuery() throws SQLException {
-        return null;
+        MockResultSet rs = new MockResultSet();
+        rs.setType(getResultSetType());
+        rs.setFetchSize(getFetchSize());
+        return rs;
     }
 
     public int executeUpdate() throws SQLException {

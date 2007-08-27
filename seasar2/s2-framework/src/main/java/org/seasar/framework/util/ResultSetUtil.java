@@ -32,11 +32,12 @@ public final class ResultSetUtil {
     }
 
     /**
-     * {@link ResultSet#close()}を呼び出します。
+     * 結果セットを閉じます。
      * 
      * @param resultSet
+     *            結果セット
      * @throws SQLRuntimeException
-     *             {@link SQLException}が起こった場合。
+     *             SQL例外が起こった場合。
      */
     public static void close(ResultSet resultSet) throws SQLRuntimeException {
         if (resultSet == null) {
@@ -50,16 +51,37 @@ public final class ResultSetUtil {
     }
 
     /**
-     * {@link ResultSet#next()}を呼び出します。
+     * 結果セットを次に進めます。
      * 
      * @param resultSet
-     * @return {@link ResultSet#next()}の結果
+     *            結果セット
+     * @return 次に進めたかどうか
      * @throws SQLRuntimeException
-     *             {@link SQLException}が起こった場合。
+     *             SQL例外が起こった場合。
      */
     public static boolean next(ResultSet resultSet) {
         try {
             return resultSet.next();
+        } catch (SQLException ex) {
+            throw new SQLRuntimeException(ex);
+        }
+    }
+
+    /**
+     * カーソルを指定した位置まで進めます。
+     * 
+     * @param resultSet
+     *            結果セット
+     * @param index
+     *            位置
+     * @return 指定した位置まで進めたかどうか
+     * @throws SQLRuntimeException
+     *             SQL例外が起こった場合。
+     */
+    public static boolean absolute(ResultSet resultSet, int index)
+            throws SQLRuntimeException {
+        try {
+            return resultSet.absolute(index);
         } catch (SQLException ex) {
             throw new SQLRuntimeException(ex);
         }
