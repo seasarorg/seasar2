@@ -105,15 +105,9 @@ public final class PropertyDescImpl implements PropertyDesc {
         }
         this.propertyName = propertyName;
         this.propertyType = propertyType;
-        if (readMethod != null) {
-            setReadMethod(readMethod);
-        }
-        if (writeMethod != null) {
-            setWriteMethod(writeMethod);
-        }
-        if (field != null) {
-            setField(field);
-        }
+        setReadMethod(readMethod);
+        setWriteMethod(writeMethod);
+        setField(field);
         this.beanDesc = beanDesc;
         setupStringConstructor();
         setupValueOfMethod();
@@ -159,7 +153,9 @@ public final class PropertyDescImpl implements PropertyDesc {
 
     public final void setReadMethod(Method readMethod) {
         this.readMethod = readMethod;
-        readable = true;
+        if (readMethod != null) {
+            readable = true;
+        }
     }
 
     public final boolean hasReadMethod() {
@@ -172,7 +168,9 @@ public final class PropertyDescImpl implements PropertyDesc {
 
     public final void setWriteMethod(Method writeMethod) {
         this.writeMethod = writeMethod;
-        writable = true;
+        if (writeMethod != null) {
+            writable = true;
+        }
     }
 
     public final boolean hasWriteMethod() {
@@ -185,7 +183,7 @@ public final class PropertyDescImpl implements PropertyDesc {
 
     public void setField(Field field) {
         this.field = field;
-        if (ModifierUtil.isPublic(field)) {
+        if (field != null && ModifierUtil.isPublic(field)) {
             readable = true;
             writable = true;
         }
