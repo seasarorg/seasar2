@@ -66,24 +66,4 @@ public class PersistenceConventionImplTest extends TestCase {
         assertEquals("AAA_BBB", convention
                 .fromPropertyNameToColumnName("aaaBbb"));
     }
-
-    /**
-     * Test method for
-     * {@link org.seasar.framework.convention.impl.PersistenceConventionImpl#isId(java.lang.String, java.lang.String)}.
-     */
-    public void testIsId() {
-        assertTrue(convention.isId("Emp", "empId"));
-        assertTrue(convention.isId("Emp", "id"));
-        assertFalse(convention.isId("Emp", "empNo"));
-    }
-
-    /**
-     * Test method for
-     * {@link org.seasar.framework.convention.impl.PersistenceConventionImpl#isVersion(java.lang.String, java.lang.String)}.
-     */
-    public void testIsVersion() {
-        assertTrue(convention.isVersion("Emp", "empVersion"));
-        assertTrue(convention.isVersion("Emp", "version"));
-        assertFalse(convention.isVersion("Emp", "empNo"));
-    }
 }

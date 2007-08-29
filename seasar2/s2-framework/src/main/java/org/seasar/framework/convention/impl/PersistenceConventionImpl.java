@@ -31,10 +31,6 @@ public class PersistenceConventionImpl implements PersistenceConvention {
 
     private boolean noNameConversion = false;
 
-    private String primaryKeySuffix = "Id";
-
-    private String versionSuffix = "Version";
-
     public String fromTableNameToEntityName(String tableName) {
         AssertionUtil.assertNotNull("tableName", tableName);
         if (noNameConversion) {
@@ -72,20 +68,6 @@ public class PersistenceConventionImpl implements PersistenceConvention {
         return StringUtil.decamelize(propertyName);
     }
 
-    public boolean isId(String entityName, String propertyName) {
-        AssertionUtil.assertNotNull("entityName", entityName);
-        AssertionUtil.assertNotNull("propertyName", propertyName);
-        return propertyName.equalsIgnoreCase(entityName + primaryKeySuffix)
-                || propertyName.equalsIgnoreCase(primaryKeySuffix);
-    }
-
-    public boolean isVersion(String entityName, String propertyName) {
-        AssertionUtil.assertNotNull("entityName", entityName);
-        AssertionUtil.assertNotNull("propertyName", propertyName);
-        return propertyName.equalsIgnoreCase(entityName + versionSuffix)
-                || propertyName.equalsIgnoreCase(versionSuffix);
-    }
-
     /**
      * 無視するテーブルの<code>prefix</code>を返します。
      * 
@@ -120,43 +102,5 @@ public class PersistenceConventionImpl implements PersistenceConvention {
      */
     public void setNoNameConversion(boolean noNameConversion) {
         this.noNameConversion = noNameConversion;
-    }
-
-    /**
-     * プライマリキーのサフィックスを返します。
-     * 
-     * @return プライマリキーのサフィックス
-     */
-    public String getPrimaryKeySuffix() {
-        return primaryKeySuffix;
-    }
-
-    /**
-     * プライマリキーのサフィックスを設定します。
-     * 
-     * @param primaryKeySuffix
-     *            プライマリキーのサフィックス
-     */
-    public void setPrimaryKeySuffix(String primaryKeySuffix) {
-        this.primaryKeySuffix = primaryKeySuffix;
-    }
-
-    /**
-     * バージョン用プロパティのサフィックスを返します。
-     * 
-     * @return バージョン用プロパティのサフィックス
-     */
-    public String getVersionSuffix() {
-        return versionSuffix;
-    }
-
-    /**
-     * バージョン用プロパティのサフィックスを設定します。
-     * 
-     * @param versionSuffix
-     *            バージョン用プロパティのサフィックス
-     */
-    public void setVersionSuffix(String versionSuffix) {
-        this.versionSuffix = versionSuffix;
     }
 }
