@@ -72,7 +72,7 @@ public class PersistenceConventionImpl implements PersistenceConvention {
         return StringUtil.decamelize(propertyName);
     }
 
-    public boolean isPrimaryKey(String entityName, String propertyName) {
+    public boolean isId(String entityName, String propertyName) {
         AssertionUtil.assertNotNull("entityName", entityName);
         AssertionUtil.assertNotNull("propertyName", propertyName);
         return propertyName.equalsIgnoreCase(entityName + primaryKeySuffix)

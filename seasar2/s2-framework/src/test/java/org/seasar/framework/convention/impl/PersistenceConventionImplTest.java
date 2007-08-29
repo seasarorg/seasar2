@@ -69,12 +69,12 @@ public class PersistenceConventionImplTest extends TestCase {
 
     /**
      * Test method for
-     * {@link org.seasar.framework.convention.impl.PersistenceConventionImpl#isPrimaryKey(java.lang.String, java.lang.String)}.
+     * {@link org.seasar.framework.convention.impl.PersistenceConventionImpl#isId(java.lang.String, java.lang.String)}.
      */
-    public void testIsPrimaryKey() {
-        assertTrue(convention.isPrimaryKey("Emp", "empId"));
-        assertTrue(convention.isPrimaryKey("Emp", "id"));
-        assertFalse(convention.isPrimaryKey("Emp", "empNo"));
+    public void testIsId() {
+        assertTrue(convention.isId("Emp", "empId"));
+        assertTrue(convention.isId("Emp", "id"));
+        assertFalse(convention.isId("Emp", "empNo"));
     }
 
     /**
