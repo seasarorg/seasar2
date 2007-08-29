@@ -28,6 +28,7 @@ import org.seasar.framework.convention.impl.dao.impl.Ddd2DaoImpl;
 import org.seasar.framework.convention.impl.dao.xxx.CccDao;
 import org.seasar.framework.convention.impl.web.add.DddPage;
 import org.seasar.framework.convention.impl.web.add.xxx.AddXxxPage;
+import org.seasar.framework.convention.impl.web.web.foo.FffPage;
 import org.seasar.framework.util.ClassUtil;
 
 /**
@@ -156,18 +157,38 @@ public class NamingConventionImplTest extends TestCase {
      * @throws Exception
      */
     public void testFromClassNameToComponentName() throws Exception {
-        assertEquals("abcLogic", convention
-                .fromClassNameToComponentName("aaa.logic.impl.AbcLogicImpl"));
-        assertEquals("abcInterceptor", convention
-                .fromClassNameToComponentName("aaa.interceptor.AbcInterceptor"));
-        assertEquals("add_addPage", convention
-                .fromClassNameToComponentName("aaa.web.add.AddPage"));
-        assertEquals("add_xxx_addPage", convention
-                .fromClassNameToComponentName("aaa.web.add.xxx.AddPage"));
-        assertEquals("add_addDxo", convention
-                .fromClassNameToComponentName("aaa.web.add.impl.AddDxoImpl"));
-        assertEquals("bbb_cccDao", convention
-                .fromClassNameToComponentName("aaa.dao.bbb.CccDao"));
+        assertEquals(
+                "abcLogic",
+                convention
+                        .fromClassNameToComponentName("org.seasar.framework.convention.impl.logic.impl.AbcLogicImpl"));
+        assertEquals(
+                "abcInterceptor",
+                convention
+                        .fromClassNameToComponentName("org.seasar.framework.convention.impl.interceptor.AbcInterceptor"));
+        assertEquals(
+                "add_addPage",
+                convention
+                        .fromClassNameToComponentName("org.seasar.framework.convention.impl.web.add.AddPage"));
+        assertEquals(
+                "add_xxx_addPage",
+                convention
+                        .fromClassNameToComponentName("org.seasar.framework.convention.impl.web.add.xxx.AddPage"));
+        assertEquals(
+                "add_addDxo",
+                convention
+                        .fromClassNameToComponentName("org.seasar.framework.convention.impl.web.add.impl.AddDxoImpl"));
+        assertEquals(
+                "bbb_cccDao",
+                convention
+                        .fromClassNameToComponentName("org.seasar.framework.convention.impl.dao.bbb.CccDao"));
+
+        NamingConventionImpl convention = new NamingConventionImpl();
+        convention.addRootPackageName(ClassUtil.getPackageName(getClass())
+                + ".web");
+        assertEquals(
+                "foo_fffPage",
+                convention
+                        .fromClassNameToComponentName("org.seasar.framework.convention.impl.web.web.foo.FffPage"));
     }
 
     /**
@@ -272,6 +293,12 @@ public class NamingConventionImplTest extends TestCase {
                 .fromComponentNameToClass("add_dddPage"));
         assertEquals(AddXxxPage.class, convention
                 .fromComponentNameToClass("add_xxx_addXxxPage"));
+
+        NamingConventionImpl convention = new NamingConventionImpl();
+        convention.addRootPackageName(ClassUtil.getPackageName(getClass())
+                + ".web");
+        assertEquals(FffPage.class, convention
+                .fromComponentNameToClass("foo_fffPage"));
     }
 
     /**

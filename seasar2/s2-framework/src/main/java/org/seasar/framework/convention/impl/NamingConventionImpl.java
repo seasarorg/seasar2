@@ -462,18 +462,24 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
         String cname = toInterfaceClassName(className);
         String suffix = fromClassNameToSuffix(cname);
         String middlePackageName = fromSuffixToPackageName(suffix);
-        String key = "." + middlePackageName + ".";
-        int index = cname.indexOf(key);
         String name = null;
-        if (index > 0) {
-            name = cname.substring(index + key.length());
-        } else {
-            key = "." + subApplicationRootPackageName + ".";
-            index = cname.indexOf(key);
-            if (index < 0) {
+        for (int i = 0; i < rootPackageNames.length; ++i) {
+            String prefix = rootPackageNames[i] + "." + middlePackageName + ".";
+            if (cname.startsWith(prefix)) {
+                name = cname.substring(prefix.length());
+            }
+        }
+        if (StringUtil.isEmpty(name)) {
+            for (int i = 0; i < rootPackageNames.length; ++i) {
+                String prefix = rootPackageNames[i] + "."
+                        + subApplicationRootPackageName + ".";
+                if (cname.startsWith(prefix)) {
+                    name = cname.substring(prefix.length());
+                }
+            }
+            if (StringUtil.isEmpty(name)) {
                 return fromClassNameToShortComponentName(className);
             }
-            name = cname.substring(index + key.length());
         }
         String[] array = StringUtil.split(name, ".");
         StringBuffer buf = new StringBuffer();
