@@ -59,4 +59,23 @@ public class HotTextTest extends TestCase {
         file.setLastModified(new Date().getTime());
         assertTrue(text.isModified());
     }
+
+    /**
+     * @throws Exception
+     */
+    public void xxxtestPerformance() throws Exception {
+        HotText text = new HotText(PATH);
+        final int count = 10000;
+        long start = System.nanoTime();
+        for (int i = 0; i < count; i++) {
+            text.isModified();
+        }
+        System.out.println(System.nanoTime() - start);
+
+        start = System.nanoTime();
+        for (int i = 0; i < count; i++) {
+            text.updateValueByFile();
+        }
+        System.out.println(System.nanoTime() - start);
+    }
 }
