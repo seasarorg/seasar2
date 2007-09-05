@@ -66,16 +66,16 @@ public class HotTextTest extends TestCase {
     public void xxxtestPerformance() throws Exception {
         HotText text = new HotText(PATH);
         final int count = 10000;
-        long start = System.nanoTime();
+        long start = System.currentTimeMillis();
         for (int i = 0; i < count; i++) {
             text.isModified();
         }
-        System.out.println(System.nanoTime() - start);
+        System.out.println(System.currentTimeMillis() - start);
 
-        start = System.nanoTime();
+        start = System.currentTimeMillis();
         for (int i = 0; i < count; i++) {
             text.updateValueByFile();
         }
-        System.out.println(System.nanoTime() - start);
+        System.out.println(System.currentTimeMillis() - start);
     }
 }
