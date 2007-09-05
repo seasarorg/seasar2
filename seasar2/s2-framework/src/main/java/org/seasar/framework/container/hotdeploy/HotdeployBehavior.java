@@ -110,11 +110,14 @@ public class HotdeployBehavior extends DefaultProvider {
      * HOT deployを終了します。
      */
     public void stop() {
+        componentDefCache.clear();
         DisposableUtil.dispose();
+        S2ContainerImpl container = (S2ContainerImpl) SingletonS2ContainerFactory
+                .getContainer();
+        container.setClassLoader(originalClassLoader);
         Thread.currentThread().setContextClassLoader(originalClassLoader);
         hotdeployClassLoader = null;
         originalClassLoader = null;
-        componentDefCache.clear();
         if (logger.isDebugEnabled()) {
             logger.log("DSSR0109", null);
         }

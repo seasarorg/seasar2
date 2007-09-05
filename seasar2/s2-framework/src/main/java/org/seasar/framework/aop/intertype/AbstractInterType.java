@@ -64,6 +64,10 @@ public abstract class AbstractInterType implements InterType {
             throw new CannotCompileRuntimeException(e);
         } catch (final NotFoundException e) {
             throw new NotFoundRuntimeException(e);
+        } finally {
+            this.targetClass = null;
+            this.enhancedClass = null;
+            this.classPool = null;
         }
     }
 

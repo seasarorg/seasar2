@@ -62,6 +62,7 @@ public class HotdeployFilter implements Filter {
                                 .getContextClassLoader());
                         chain.doFilter(request, response);
                     } finally {
+                        request.removeAttribute(KEY);
                         ondemand.stop();
                     }
                 }
