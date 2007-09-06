@@ -258,6 +258,9 @@ public class Seasar2 extends Runner implements Filterable, Sortable {
          */
         protected boolean hasParameterAnnotation(final Class<?> clazz) {
             for (Method each : clazz.getMethods()) {
+                if (each.isBridge() || each.isSynthetic()) {
+                    continue;
+                }
                 if (Modifier.isStatic(each.getModifiers())) {
                     Annotation[] annotations = each.getAnnotations();
                     for (Annotation annotation : annotations) {

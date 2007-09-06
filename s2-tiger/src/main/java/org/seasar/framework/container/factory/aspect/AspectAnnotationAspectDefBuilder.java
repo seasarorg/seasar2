@@ -70,6 +70,9 @@ public class AspectAnnotationAspectDefBuilder extends AbstractAspectDefBuilder {
 
         final Method[] methods = componentClass.getMethods();
         for (final Method method : methods) {
+            if (method.isBridge() || method.isSynthetic()) {
+                continue;
+            }
             final int modifiers = method.getModifiers();
             if (!Modifier.isPublic(modifiers) || Modifier.isStatic(modifiers)
                     || Modifier.isFinal(modifiers)) {

@@ -127,7 +127,8 @@ public final class AopProxy implements Serializable {
         Method[] methods = targetClass.getMethods();
         for (int i = 0; i < methods.length; ++i) {
             Method method = methods[i];
-            if (MethodUtil.isBridgeMethod(method)) {
+            if (MethodUtil.isBridgeMethod(method)
+                    || MethodUtil.isSyntheticMethod(method)) {
                 continue;
             }
 

@@ -200,6 +200,9 @@ public class MetaAnnotationAspectDefBuilder extends AbstractAspectDefBuilder {
     protected void processMethod(final ComponentDef componentDef,
             final Class<?> componentClass) {
         for (final Method method : componentClass.getMethods()) {
+            if (method.isBridge() || method.isSynthetic()) {
+                continue;
+            }
             final int modifiers = method.getModifiers();
             if (!Modifier.isPublic(modifiers) || Modifier.isStatic(modifiers)
                     || Modifier.isFinal(modifiers)) {
@@ -230,6 +233,9 @@ public class MetaAnnotationAspectDefBuilder extends AbstractAspectDefBuilder {
      */
     protected String getPointcut(final Annotation annotation) {
         for (final Method method : annotation.getClass().getMethods()) {
+            if (method.isBridge() || method.isSynthetic()) {
+                continue;
+            }
             if ("pointcut".equals(method.getName())
                     && method.getReturnType() == String.class) {
                 return String.class.cast(MethodUtil.invoke(method, annotation,
@@ -297,6 +303,9 @@ public class MetaAnnotationAspectDefBuilder extends AbstractAspectDefBuilder {
             final BeanDesc beanDesc = BeanDescFactory.getBeanDesc(interceptor
                     .getClass());
             for (final Method method : annotation.annotationType().getMethods()) {
+                if (method.isBridge() || method.isSynthetic()) {
+                    continue;
+                }
                 final String propertyName = method.getName();
                 if ("pointcut".equals(propertyName)
                         || !beanDesc.hasPropertyDesc(propertyName)) {

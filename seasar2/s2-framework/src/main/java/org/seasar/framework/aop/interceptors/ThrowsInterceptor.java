@@ -23,6 +23,7 @@ import java.util.Map;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.seasar.framework.beans.MethodNotFoundRuntimeException;
+import org.seasar.framework.util.MethodUtil;
 
 /**
  * 例外処理用の{@link MethodInterceptor}です。
@@ -46,6 +47,9 @@ public abstract class ThrowsInterceptor extends AbstractInterceptor {
         Method[] methods = getClass().getMethods();
         for (int i = 0; i < methods.length; ++i) {
             Method m = methods[i];
+            if (MethodUtil.isBridgeMethod(m) || MethodUtil.isSyntheticMethod(m)) {
+                continue;
+            }
             if (isHandleThrowable(m)) {
                 methodMap.put(m.getParameterTypes()[0], m);
             }

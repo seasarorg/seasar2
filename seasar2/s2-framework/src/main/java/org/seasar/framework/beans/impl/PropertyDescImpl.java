@@ -129,6 +129,10 @@ public final class PropertyDescImpl implements PropertyDesc {
         Method[] methods = propertyType.getMethods();
         for (int i = 0; i < methods.length; ++i) {
             Method method = methods[i];
+            if (MethodUtil.isBridgeMethod(method)
+                    || MethodUtil.isSyntheticMethod(method)) {
+                continue;
+            }
             if (ModifierUtil.isStatic(method.getModifiers())
                     && method.getName().equals("valueOf")
                     && method.getParameterTypes().length == 1

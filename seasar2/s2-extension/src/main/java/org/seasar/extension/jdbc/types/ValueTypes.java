@@ -239,6 +239,10 @@ public final class ValueTypes {
         Method[] methods = clazz.getMethods();
         for (int i = 0; i < methods.length; ++i) {
             Method method = methods[i];
+            if (MethodUtil.isBridgeMethod(method)
+                    || MethodUtil.isSyntheticMethod(method)) {
+                continue;
+            }
             int mod = method.getModifiers();
             if (method.getName().equals("valueOf")
                     && method.getParameterTypes().length == 1

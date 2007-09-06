@@ -118,6 +118,9 @@ public class S2Parameterized extends S2TestClassRunner {
 
         private Method getParametersMethod() throws Exception {
             for (final Method each : klass.getMethods()) {
+                if (each.isBridge() || each.isSynthetic()) {
+                    continue;
+                }
                 if (Modifier.isStatic(each.getModifiers())) {
                     final Annotation[] annotations = each.getAnnotations();
                     for (final Annotation annotation : annotations) {

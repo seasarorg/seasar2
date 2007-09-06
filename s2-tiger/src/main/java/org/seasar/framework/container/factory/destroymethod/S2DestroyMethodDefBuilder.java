@@ -40,6 +40,9 @@ public class S2DestroyMethodDefBuilder implements DestroyMethodDefBuilder {
         }
 
         for (final Method method : componentClass.getMethods()) {
+            if (method.isBridge() || method.isSynthetic()) {
+                continue;
+            }
             final DestroyMethod destroyMethod = method
                     .getAnnotation(DestroyMethod.class);
             if (destroyMethod == null) {

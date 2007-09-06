@@ -292,6 +292,9 @@ public class EJB3DescImpl implements EJB3Desc {
      */
     protected void detectBusinessMethods() {
         for (final Method method : beanClass.getMethods()) {
+            if (method.isBridge() || method.isSynthetic()) {
+                continue;
+            }
             final int modifier = method.getModifiers();
             if (Modifier.isStatic(modifier) || Modifier.isFinal(modifier)) {
                 continue;

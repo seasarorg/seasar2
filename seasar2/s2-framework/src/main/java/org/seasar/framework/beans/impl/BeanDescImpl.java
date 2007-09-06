@@ -519,6 +519,9 @@ public final class BeanDescImpl implements BeanDesc {
         Method[] methods = beanClass.getMethods();
         for (int i = 0; i < methods.length; i++) {
             Method m = methods[i];
+            if (MethodUtil.isBridgeMethod(m) || MethodUtil.isSyntheticMethod(m)) {
+                continue;
+            }
             String methodName = m.getName();
             if (methodName.startsWith("get")) {
                 if (m.getParameterTypes().length != 0
@@ -671,12 +674,18 @@ public final class BeanDescImpl implements BeanDesc {
         ArrayMap methodListMap = new ArrayMap();
         Method[] methods = beanClass.getMethods();
         for (int i = 0; i < methods.length; i++) {
-            List list = (List) methodListMap.get(methods[i].getName());
+            Method method = methods[i];
+            if (MethodUtil.isBridgeMethod(method)
+                    || MethodUtil.isSyntheticMethod(method)) {
+                continue;
+            }
+            String methodName = method.getName();
+            List list = (List) methodListMap.get(methodName);
             if (list == null) {
                 list = new ArrayList();
-                methodListMap.put(methods[i].getName(), list);
+                methodListMap.put(methodName, list);
             }
-            list.add(methods[i]);
+            list.add(method);
         }
         for (int i = 0; i < methodListMap.size(); ++i) {
             List methodList = (List) methodListMap.get(i);

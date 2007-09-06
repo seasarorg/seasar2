@@ -40,6 +40,9 @@ public class S2InitMethodDefBuilder implements InitMethodDefBuilder {
         }
 
         for (final Method method : componentClass.getMethods()) {
+            if (method.isBridge() || method.isSynthetic()) {
+                continue;
+            }
             final InitMethod initMethod = method
                     .getAnnotation(InitMethod.class);
             if (initMethod == null) {
