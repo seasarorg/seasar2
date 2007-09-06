@@ -28,45 +28,56 @@ import org.seasar.framework.convention.NamingConvention;
 import org.seasar.framework.exception.EmptyRuntimeException;
 
 /**
- * {@link ComponentCreator}の実装です。
+ * {@link org.seasar.framework.container.ComponentCreator}の汎用的な実装です。
+ * <p>
+ * このクラスによって作られるコンポーネント定義に含める{@link InstanceDef インスタンス定義}、
+ * {@link AutoBindingDef 自動バインディング定義}、
+ * {@link org.seasar.framework.container.ExternalContext 外部バインディング}の有効/無効が設定できます。
+ * インターフェースや抽象クラスをコンポーネント定義作成の対象とする場合、
+ * AOP(AspectCustomzier)で実装クラスが作られるようにする必要があります。
+ * </p>
+ * <p>
+ * このクラスがコンポーネント定義を作成するべきかどうかは、 コンポーネント名のサフィックスで判断しています。 コンポーネント名が{@link #setNameSuffix(String)}で設定したサフィックスに該当した場合のみ、
+ * コンポーネント定義を作成します。
+ * </p>
  * 
  * @author higa
- * 
+ * @author jundu
  */
 public class ComponentCreatorImpl implements ComponentCreator {
 
     private NamingConvention namingConvention;
 
     /**
-     * Bindingアノテーションの定義です。
+     * プロパティ<code>instanceDef</code>のためのBindingアノテーションの定義です。
      */
     public static final String instanceDef_BINDING = "bindingType=may";
 
     private InstanceDef instanceDef;
 
     /**
-     * Bindingアノテーションの定義です。
+     * プロパティ<code>autoBindingDef</code>のためのBindingアノテーションの定義です。
      */
     public static final String autoBindingDef_BINDING = "bindingType=may";
 
     private AutoBindingDef autoBindingDef;
 
     /**
-     * Bindingアノテーションの定義です。
+     * プロパティ<code>externalBinding</code>のためのBindingアノテーションの定義です。
      */
     public static final String externalBinding_BINDING = "bindingType=may";
 
     private boolean externalBinding = false;
 
     /**
-     * Bindingアノテーションの定義です。
+     * プロパティ<code>enableInterface</code>のためのBindingアノテーションの定義です。
      */
     public static final String enableInterface_BINDING = "bindingType=may";
 
     private boolean enableInterface = false;
 
     /**
-     * Bindingアノテーションの定義です。
+     * プロパティ<code>enableAbstract</code>のためのBindingアノテーションの定義です。
      */
     public static final String enableAbstract_BINDING = "bindingType=may";
 
@@ -77,9 +88,10 @@ public class ComponentCreatorImpl implements ComponentCreator {
     private ComponentCustomizer customizer;
 
     /**
-     * {@link ComponentCreatorImpl}を作成します。
+     * 指定された{@link NamingConvention 命名規約}に従った<code>ComponentCreatorImpl</code>を構築します。
      * 
      * @param namingConvention
+     *            命名規約
      */
     public ComponentCreatorImpl(NamingConvention namingConvention) {
         if (namingConvention == null) {
@@ -89,106 +101,111 @@ public class ComponentCreatorImpl implements ComponentCreator {
     }
 
     /**
-     * {@link NamingConvention}を返します。
+     * {@link NamingConvention 命名規約}を返します。
      * 
-     * @return {@link NamingConvention}
+     * @return 命名規約
      */
     public NamingConvention getNamingConvention() {
         return namingConvention;
     }
 
     /**
-     * {@link InstanceDef}を返します。
+     * {@link InstanceDef インスタンス定義}を返します。
      * 
-     * @return {@link InstanceDef}
+     * @return インスタンス定義
      */
     public InstanceDef getInstanceDef() {
         return instanceDef;
     }
 
     /**
-     * {@link InstanceDef}を設定します。
+     * {@link InstanceDef インスタンス定義}を設定します。
      * 
      * @param instanceDef
+     *            インスタンス定義
      */
     public void setInstanceDef(InstanceDef instanceDef) {
         this.instanceDef = instanceDef;
     }
 
     /**
-     * {@link AutoBindingDef}を返します。
+     * {@link AutoBindingDef 自動バインディング定義}を返します。
      * 
-     * @return {@link AutoBindingDef}
+     * @return 自動バインディング定義
      */
     public AutoBindingDef getAutoBindingDef() {
         return autoBindingDef;
     }
 
     /**
-     * {@link AutoBindingDef}を設定します。
+     * {@link AutoBindingDef 自動バインディング定義}を設定します。
      * 
      * @param autoBindingDef
+     *            自動バインディング定義
      */
     public void setAutoBindingDef(AutoBindingDef autoBindingDef) {
         this.autoBindingDef = autoBindingDef;
     }
 
     /**
-     * デフォルトで外部バインディングをするかどうかを返します。
+     * {@link org.seasar.framework.container.ExternalContext 外部バインディング}が有効かどうかを返します。
      * 
-     * @return デフォルトで外部バインディングをするかどうか
+     * @return 外部バインディングが有効な場合<code>true</code>、 それ以外の場合<code>false</code>を返す
      */
     public boolean isExternalBinding() {
         return externalBinding;
     }
 
     /**
-     * デフォルトで外部バインディングをするかどうかを設定します。
+     * 外{@link org.seasar.framework.container.ExternalContext 外部バインディング}を有効にするかどうかを設定します。
      * 
      * @param externalBinding
+     *            外部バインディングを有効にする場合は<code>true</code>、 それ以外の場合<code>false</code>を指定する
      */
     public void setExternalBinding(boolean externalBinding) {
         this.externalBinding = externalBinding;
     }
 
     /**
-     * インターフェースだけしかないクラスを可能にするかどうかを返します。インターフェースだけしかない場合は、AOP(AspectCustomzier)で実装クラスが作られるでしょう。
+     * インターフェースを対象にするかどうかを返します。
      * 
-     * @return インターフェースだけしかないクラスを可能にするかどうか
+     * @return インターフェースを対象にする場合<code>true</code>、 それ以外の場合<code>false</code>を返す
      */
     public boolean isEnableInterface() {
         return enableInterface;
     }
 
     /**
-     * インターフェースしかないクラスを可能にするかどうかを設定します。
+     * インターフェースを対象にするかどうかを設定します。
      * 
      * @param enableInterface
+     *            インターフェースを対象にする場合<code>true</code>、 それ以外の場合<code>false</code>を指定する
      */
     public void setEnableInterface(boolean enableInterface) {
         this.enableInterface = enableInterface;
     }
 
     /**
-     * 抽象クラスを可能にするかどうかを返します。抽象クラスの場合、AOP(AspectCustomzier)で実装クラスが作られるでしょう。
+     * 抽象クラスを対象にするかどうかを返します。
      * 
-     * @return 抽象クラスを可能にするかどうか
+     * @return 抽象クラスを対象にする場合<code>true</code>、 それ以外の場合<code>false</code>を返す
      */
     public boolean isEnableAbstract() {
         return enableAbstract;
     }
 
     /**
-     * 抽象クラスを可能にするかどうかを設定します。
+     * 抽象クラスを対象にするかどうかを設定します。
      * 
      * @param enableAbstract
+     *            抽象クラスを対象とする場合<code>true</code>、 それ以外の場合<code>false</code>を指定する
      */
     public void setEnableAbstract(boolean enableAbstract) {
         this.enableAbstract = enableAbstract;
     }
 
     /**
-     * 名前のサフィックスを返します。
+     * コンポーネント名のサフィックスを返します。
      * 
      * @return 名前のサフィックス
      */
@@ -197,27 +214,29 @@ public class ComponentCreatorImpl implements ComponentCreator {
     }
 
     /**
-     * 名前のサフィックスを設定します。
+     * コンポーネント名のサフィックスを設定します。
      * 
      * @param nameSuffix
+     *            名前のサフィックス
      */
     public void setNameSuffix(String nameSuffix) {
         this.nameSuffix = nameSuffix;
     }
 
     /**
-     * {@link ComponentCustomizer}を返します。
+     * {@link ComponentCustomizer コンポーネント定義カスタマイザ}を返します。
      * 
-     * @return {@link ComponentCustomizer}
+     * @return コンポーネント定義カスタマイザ
      */
     protected ComponentCustomizer getCustomizer() {
         return customizer;
     }
 
     /**
-     * {@link ComponentCustomizer}を設定します。
+     * {@link ComponentCustomizer コンポーネント定義カスタマイザ}を設定します。
      * 
      * @param customizer
+     *            コンポーネント定義カスタマイザ
      */
     protected void setCustomizer(ComponentCustomizer customizer) {
         this.customizer = customizer;
@@ -268,19 +287,22 @@ public class ComponentCreatorImpl implements ComponentCreator {
     }
 
     /**
-     * 対象となるコンポーネント名かどうかを返します。
+     * 指定されたコンポーネント名が、 対象となるコンポーネント名かどうかを返します。
      * 
      * @param componentName
-     * @return 対象となるコンポーネント名かどうか
+     *            コンポーネント名
+     * @return 対象となるコンポーネント名の場合<code>true</code>、 それ以外の場合<code>false</code>
      */
     public boolean isTargetComponentName(String componentName) {
         return componentName.endsWith(nameSuffix);
     }
 
     /**
-     * {@link ComponentDef}をカスタマイズします。
+     * 指定された{@link ComponentDef コンポーネント定義}を、
+     * {@link ComponentCustomizer コンポーネント定義カスタマイザ}を使ってカスタマイズします。
      * 
      * @param componentDef
+     *            コンポーネント定義
      */
     protected void customize(ComponentDef componentDef) {
         if (customizer != null) {
