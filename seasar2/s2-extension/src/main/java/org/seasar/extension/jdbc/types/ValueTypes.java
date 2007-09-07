@@ -340,11 +340,16 @@ public final class ValueTypes {
         if (clazz == null) {
             throw new NullPointerException("clazz");
         }
-        return clazz == String.class || clazz.isPrimitive()
-                || clazz == Boolean.class || clazz == Character.class
+        return clazz == String.class
+                || clazz.isPrimitive()
+                || clazz == Boolean.class
+                || clazz == Character.class
                 || Number.class.isAssignableFrom(clazz)
                 || Date.class.isAssignableFrom(clazz)
                 || Calendar.class.isAssignableFrom(clazz)
-                || clazz == BYTE_ARRAY_CLASS;
+                || clazz == BYTE_ARRAY_CLASS
+                || isEnumMethod != null
+                && MethodUtil.invoke(isEnumMethod, clazz, null).equals(
+                        Boolean.TRUE);
     }
 }
