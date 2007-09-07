@@ -141,18 +141,22 @@ public class S2Assert extends Assert {
     /**
      * データセットとマップが等しいことをアサートします。
      * 
+     * @param <V>
+     *            マップの値の型
      * @param expected
      *            期待値
      * @param map
      *            実際値
      */
-    public static void assertMapEquals(DataSet expected, Map<?, ?> map) {
+    public static <V> void assertMapEquals(DataSet expected, Map<String, V> map) {
         adapter.assertMapEquals(null, expected, map);
     }
 
     /**
      * データセットとマップが等しいことをアサートします。もし等しくない場合、エラー情報に指定したメッセージが含まれます。
      * 
+     * @param <V>
+     *            マップの値の型
      * @param message
      *            メッセージ
      * @param expected
@@ -160,8 +164,8 @@ public class S2Assert extends Assert {
      * @param map
      *            実際値
      */
-    public static void assertMapEquals(String message, DataSet expected,
-            Map<?, ?> map) {
+    public static <V> void assertMapEquals(String message, DataSet expected,
+            Map<String, V> map) {
 
         adapter.assertMapEquals(message, expected, map);
     }
@@ -169,18 +173,23 @@ public class S2Assert extends Assert {
     /**
      * データセットとマップのリストが等しいことをアサートします。
      * 
+     * @param <V>
+     *            マップの値の型
      * @param expected
      *            期待値
      * @param list
      *            実際値
      */
-    public static void assertMapEquals(DataSet expected, List<Map<?, ?>> list) {
+    public static <V> void assertMapEquals(DataSet expected,
+            List<Map<String, V>> list) {
         adapter.assertMapListEquals(null, expected, list);
     }
 
     /**
      * データセットとマップのリストが等しいことをアサートします。もし等しくない場合、エラー情報に指定したメッセージが含まれます。
      * 
+     * @param <V>
+     *            マップの値の型
      * @param message
      *            メッセージ
      * @param expected
@@ -188,8 +197,8 @@ public class S2Assert extends Assert {
      * @param list
      *            実際値
      */
-    public static void assertMapEquals(String message, DataSet expected,
-            List<Map<?, ?>> list) {
+    public static <V> void assertMapEquals(String message, DataSet expected,
+            List<Map<String, V>> list) {
 
         adapter.assertMapListEquals(message, expected, list);
     }
