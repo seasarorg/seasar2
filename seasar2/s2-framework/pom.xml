@@ -54,7 +54,7 @@
     <dependency>
       <groupId>ognl</groupId>
       <artifactId>ognl</artifactId>
-      <version>2.6.9-patch-20070624</version>
+      <version>2.6.9-patch-20070908</version>
       <type>jar</type>
     </dependency>
     <dependency>

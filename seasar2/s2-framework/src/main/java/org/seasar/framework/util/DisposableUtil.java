@@ -17,6 +17,8 @@ package org.seasar.framework.util;
 
 import java.util.LinkedList;
 
+import ognl.OgnlRuntime;
+
 import org.seasar.framework.log.Logger;
 
 /**
@@ -75,6 +77,7 @@ public class DisposableUtil {
             }
         }
         disposables.clear();
+        OgnlRuntime.clearCache();
         Logger.dispose();
     }
 
