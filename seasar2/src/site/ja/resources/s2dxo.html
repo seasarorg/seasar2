@@ -736,6 +736,7 @@ pubic interface BazDxo {
 '<var>destPropertyName</var>' : <var>expression</var>
 </pre>
 <p>という組をカンマ区切りで並べたものです．変換先のプロパティ名はシングルクオートで囲んでください．</p>
+<p>OGNL式を利用する場合の変換ルールと「<a href="#propertyName">変換元プロパティ名の指定</a>」のルールを<strong>混在することはできません</strong>．OGNL式を使用する場合は，ルール全体で変換先のプロパティ名をシングルクオートで囲む必要があります．</p>
 <pre>
 'name' : ename + '-' + dname
 </pre>
