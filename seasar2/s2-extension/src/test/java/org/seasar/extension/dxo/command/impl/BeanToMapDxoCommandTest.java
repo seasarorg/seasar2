@@ -24,6 +24,7 @@ import java.util.Map;
 import org.seasar.extension.dxo.Hoge;
 import org.seasar.extension.dxo.builder.impl.BeanToMapDxoCommandBuilder;
 import org.seasar.extension.dxo.command.DxoCommand;
+import org.seasar.framework.exception.SIllegalArgumentException;
 import org.seasar.framework.unit.S2FrameworkTestCase;
 import org.seasar.framework.util.ClassUtil;
 
@@ -145,6 +146,50 @@ public class BeanToMapDxoCommandTest extends S2FrameworkTestCase {
     /**
      * @throws Exception
      */
+    public void testScalarNull1() throws Exception {
+        DxoCommand command = builder.createDxoCommand(ScalarDxo.class,
+                ClassUtil.getMethod(ScalarDxo.class, "convert",
+                        new Class[] { Hoge.class }));
+        assertNull(command.execute(new Object[] { null }));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testScalarNull2() throws Exception {
+        DxoCommand command = builder.createDxoCommand(ScalarDxo.class,
+                ClassUtil.getMethod(ScalarDxo.class, "convert", new Class[] {
+                        Hoge.class, Map.class }));
+        Map dest = new HashMap();
+        try {
+            command.execute(new Object[] { null, dest });
+            fail();
+        } catch (final SIllegalArgumentException e) {
+            assertEquals("ESSR0601", e.getMessageCode());
+            System.out.println(e.getMessage());
+        }
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testScalarNull3() throws Exception {
+        DxoCommand command = builder.createDxoCommand(ScalarDxo.class,
+                ClassUtil.getMethod(ScalarDxo.class, "convert", new Class[] {
+                        Hoge.class, Map.class }));
+        Hoge src = new Hoge(100, "Hoge", new BigDecimal("1000"));
+        try {
+            command.execute(new Object[] { src, null });
+            fail();
+        } catch (final SIllegalArgumentException e) {
+            assertEquals("ESSR0602", e.getMessageCode());
+            System.out.println(e.getMessage());
+        }
+    }
+
+    /**
+     * @throws Exception
+     */
     public void testArrayToArray1() throws Exception {
         DxoCommand command = builder.createDxoCommand(ToArrayDxo.class,
                 ClassUtil.getMethod(ToArrayDxo.class, "convert",
@@ -253,7 +298,7 @@ public class BeanToMapDxoCommandTest extends S2FrameworkTestCase {
     }
 
     /**
-     *
+     * 
      */
     public interface ScalarDxo {
         /**
@@ -297,7 +342,7 @@ public class BeanToMapDxoCommandTest extends S2FrameworkTestCase {
     }
 
     /**
-     *
+     * 
      */
     public interface ToArrayDxo {
         /**

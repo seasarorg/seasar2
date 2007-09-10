@@ -23,6 +23,7 @@ import org.seasar.extension.dxo.Hoge;
 import org.seasar.extension.dxo.HogeHoge;
 import org.seasar.extension.dxo.builder.impl.MapToBeanDxoCommandBuilder;
 import org.seasar.extension.dxo.command.DxoCommand;
+import org.seasar.framework.exception.SIllegalArgumentException;
 import org.seasar.framework.unit.S2FrameworkTestCase;
 
 /**
@@ -77,6 +78,50 @@ public class MapToBeanDxoCommandTest extends S2FrameworkTestCase {
         assertEquals(100, dest.getFoo());
         assertEquals("Hoge", dest.getBar());
         assertEquals(new BigDecimal("1000"), dest.getBaz());
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testScalarNull1() throws Exception {
+        DxoCommand command = builder.createDxoCommand(ToScalarDxo.class,
+                ToScalarDxo.class.getMethod("convert",
+                        new Class[] { Map.class }));
+        assertNull(command.execute(new Object[] { null }));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testScalarNull2() throws Exception {
+        DxoCommand command = builder.createDxoCommand(ToScalarDxo.class,
+                ToScalarDxo.class.getMethod("convert", new Class[] { Map.class,
+                        Hoge.class }));
+        Hoge dest = new Hoge();
+        try {
+            command.execute(new Object[] { null, dest });
+            fail();
+        } catch (final SIllegalArgumentException e) {
+            assertEquals("ESSR0601", e.getMessageCode());
+            System.out.println(e.getMessage());
+        }
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testScalarNull3() throws Exception {
+        DxoCommand command = builder.createDxoCommand(ToScalarDxo.class,
+                ToScalarDxo.class.getMethod("convert", new Class[] { Map.class,
+                        Hoge.class }));
+        Map src = new HashMap();
+        try {
+            command.execute(new Object[] { src, null });
+            fail();
+        } catch (final SIllegalArgumentException e) {
+            assertEquals("ESSR0602", e.getMessageCode());
+            System.out.println(e.getMessage());
+        }
     }
 
     /**
@@ -161,7 +206,7 @@ public class MapToBeanDxoCommandTest extends S2FrameworkTestCase {
     }
 
     /**
-     *
+     * 
      */
     public interface ToScalarDxo {
         /**
@@ -189,7 +234,7 @@ public class MapToBeanDxoCommandTest extends S2FrameworkTestCase {
     }
 
     /**
-     *
+     * 
      */
     public interface ToArrayDxo {
         /**

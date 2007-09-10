@@ -60,41 +60,6 @@ public class BeanToBeanDxoCommandTest extends S2FrameworkTestCase {
     }
 
     /**
-     * 
-     * @throws Exception
-     */
-    public void testScalarNull1() throws Exception {
-        try {
-            DxoCommand command = builder.createDxoCommand(ToScalarDxo.class,
-                    ToScalarDxo.class.getMethod("convert",
-                            new Class[] { Hoge.class }));
-            Hoge src = null;
-            command.execute(new Object[] { src });
-        } catch (final SIllegalArgumentException e) {
-            assertEquals("ESSR0601", e.getMessageCode());
-            System.out.println(e.getMessage());
-        }
-    }
-
-    /**
-     * 
-     * @throws Exception
-     */
-    public void testScalarNull2() throws Exception {
-        try {
-            DxoCommand command = builder.createDxoCommand(ToScalarDxo.class,
-                    ToScalarDxo.class.getMethod("convert", new Class[] {
-                            Hoge.class, HogeHoge.class }));
-            Hoge src = new Hoge(100, "Hoge", new BigDecimal("1000"));
-            HogeHoge dest = null;
-            command.execute(new Object[] { src, dest });
-        } catch (final SIllegalArgumentException e) {
-            assertEquals("ESSR0602", e.getMessageCode());
-            System.out.println(e.getMessage());
-        }
-    }
-
-    /**
      * @throws Exception
      */
     public void testScalar2() throws Exception {
@@ -115,6 +80,53 @@ public class BeanToBeanDxoCommandTest extends S2FrameworkTestCase {
         assertEquals('e', dest.getBar()[3]);
         assertEquals(1000, dest.getBaz());
         assertEquals("HogeHoge", dest.getHoge());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testScalarNull1() throws Exception {
+        DxoCommand command = builder.createDxoCommand(ToScalarDxo.class,
+                ToScalarDxo.class.getMethod("convert",
+                        new Class[] { Hoge.class }));
+        assertNull(command.execute(new Object[] { null }));
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testScalarNull2() throws Exception {
+        try {
+            DxoCommand command = builder.createDxoCommand(ToScalarDxo.class,
+                    ToScalarDxo.class.getMethod("convert", new Class[] {
+                            Hoge.class, HogeHoge.class }));
+            HogeHoge dest = new HogeHoge();
+            command.execute(new Object[] { null, dest });
+            fail();
+        } catch (final SIllegalArgumentException e) {
+            assertEquals("ESSR0601", e.getMessageCode());
+            System.out.println(e.getMessage());
+        }
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testScalarNull3() throws Exception {
+        try {
+            DxoCommand command = builder.createDxoCommand(ToScalarDxo.class,
+                    ToScalarDxo.class.getMethod("convert", new Class[] {
+                            Hoge.class, HogeHoge.class }));
+            Hoge src = new Hoge(100, "Hoge", new BigDecimal("1000"));
+            command.execute(new Object[] { src, null });
+            fail();
+        } catch (final SIllegalArgumentException e) {
+            assertEquals("ESSR0602", e.getMessageCode());
+            System.out.println(e.getMessage());
+        }
     }
 
     /**

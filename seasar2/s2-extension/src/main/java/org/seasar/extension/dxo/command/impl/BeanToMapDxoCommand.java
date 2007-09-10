@@ -99,6 +99,9 @@ public class BeanToMapDxoCommand extends AbstractDxoCommand {
     }
 
     protected Object convertScalar(final Object source) {
+        if (source == null) {
+            return null;
+        }
         final Map dest;
         if (parsedExpression != null) {
             dest = parsedExpression.evaluate(source);
@@ -116,6 +119,8 @@ public class BeanToMapDxoCommand extends AbstractDxoCommand {
     }
 
     protected void convertScalar(final Object source, final Object dest) {
+        assertSource(source);
+        assertDest(dest);
         ((Map) dest).putAll((Map) convertScalar(source));
     }
 

@@ -28,6 +28,7 @@ import org.seasar.extension.dxo.converter.ConversionContext;
 import org.seasar.extension.dxo.converter.Converter;
 import org.seasar.extension.dxo.converter.ConverterFactory;
 import org.seasar.extension.dxo.converter.impl.ConversionContextImpl;
+import org.seasar.framework.exception.SIllegalArgumentException;
 
 /**
  * Dxoのメソッドに応じた変換を行うコマンドの抽象クラスです。
@@ -162,6 +163,36 @@ public abstract class AbstractDxoCommand implements DxoCommand {
 
         throw new IllegalSignatureRuntimeException(method.getDeclaringClass(),
                 method);
+    }
+
+    /**
+     * 変換元となる引数がnullの場合に{@link SIllegalArgumentException}をスローします。
+     * 
+     * @param source
+     *            変換元となる引数
+     * @throws SIllegalArgumentException
+     *             引数がnullの場合
+     */
+    protected void assertSource(Object source) throws SIllegalArgumentException {
+        if (source == null) {
+            throw new SIllegalArgumentException("ESSR0601", new Object[] {
+                    dxoClass, method });
+        }
+    }
+
+    /**
+     * 変換先となる引数がnullの場合に{@link SIllegalArgumentException}をスローします。
+     * 
+     * @param dest
+     *            変換先となる引数
+     * @throws SIllegalArgumentException
+     *             引数がnullの場合
+     */
+    protected void assertDest(Object dest) throws SIllegalArgumentException {
+        if (dest == null) {
+            throw new SIllegalArgumentException("ESSR0602", new Object[] {
+                    dxoClass, method });
+        }
     }
 
     /**

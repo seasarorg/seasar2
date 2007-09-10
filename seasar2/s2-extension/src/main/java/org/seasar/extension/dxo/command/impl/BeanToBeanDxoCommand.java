@@ -20,7 +20,6 @@ import java.lang.reflect.Method;
 import org.seasar.extension.dxo.annotation.AnnotationReader;
 import org.seasar.extension.dxo.converter.Converter;
 import org.seasar.extension.dxo.converter.ConverterFactory;
-import org.seasar.framework.exception.SIllegalArgumentException;
 
 /**
  * BeanからBeanに変換するコマンドです。
@@ -55,7 +54,9 @@ public class BeanToBeanDxoCommand extends AbstractDxoCommand {
     }
 
     protected Object convertScalar(final Object source) {
-        assertSource(source);
+        if (source == null) {
+            return null;
+        }
         final Converter converter = converterFactory.getConverter(source
                 .getClass(), destClass);
         return converter.convert(source, destClass, createContext(source));
@@ -71,34 +72,6 @@ public class BeanToBeanDxoCommand extends AbstractDxoCommand {
 
     protected Class getDestElementType() {
         return destClass;
-    }
-
-    /**
-     * 変換元となる引数がnullの場合に{@link SIllegalArgumentException}をスローします。
-     * 
-     * @param source
-     *            変換元となる引数
-     * @throws SIllegalArgumentException
-     *             引数がnullの場合
-     */
-    protected void assertSource(Object source) throws SIllegalArgumentException {
-        if (source == null) {
-            throw new SIllegalArgumentException("ESSR0601", null);
-        }
-    }
-
-    /**
-     * 変換先となる引数がnullの場合に{@link SIllegalArgumentException}をスローします。
-     * 
-     * @param dest
-     *            変換先となる引数
-     * @throws SIllegalArgumentException
-     *             引数がnullの場合
-     */
-    protected void assertDest(Object dest) throws SIllegalArgumentException {
-        if (dest == null) {
-            throw new SIllegalArgumentException("ESSR0602", null);
-        }
     }
 
 }
