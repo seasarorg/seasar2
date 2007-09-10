@@ -28,33 +28,32 @@ import junit.framework.TestCase;
  * @author koichik
  * 
  */
-public class AbstEJB3TxInterceptorTest extends TestCase {
+public class EJB3TransactionCallbackTest extends TestCase {
 
     /**
      * @throws Exception
      */
     public void testIsRollingBack() throws Exception {
-        assertFalse(AbstractEJB3TxInterceptor.isRollingBack(new IOException()));
-        assertFalse(AbstractEJB3TxInterceptor
+        assertFalse(EJB3TransactionCallback.isRollingBack(new IOException()));
+        assertFalse(EJB3TransactionCallback
                 .isRollingBack(new FileNotFoundException()));
 
-        assertFalse(AbstractEJB3TxInterceptor.isRollingBack(new Exception1()));
-        assertFalse(AbstractEJB3TxInterceptor.isRollingBack(new Exception2()));
-        assertTrue(AbstractEJB3TxInterceptor.isRollingBack(new Exception3()));
+        assertFalse(EJB3TransactionCallback.isRollingBack(new Exception1()));
+        assertFalse(EJB3TransactionCallback.isRollingBack(new Exception2()));
+        assertTrue(EJB3TransactionCallback.isRollingBack(new Exception3()));
 
-        assertTrue(AbstractEJB3TxInterceptor
-                .isRollingBack(new RemoteException()));
-        assertTrue(AbstractEJB3TxInterceptor
-                .isRollingBack(new ConnectException("")));
+        assertTrue(EJB3TransactionCallback.isRollingBack(new RemoteException()));
+        assertTrue(EJB3TransactionCallback.isRollingBack(new ConnectException(
+                "")));
 
-        assertTrue(AbstractEJB3TxInterceptor
+        assertTrue(EJB3TransactionCallback
                 .isRollingBack(new RuntimeException()));
-        assertTrue(AbstractEJB3TxInterceptor
+        assertTrue(EJB3TransactionCallback
                 .isRollingBack(new ArrayIndexOutOfBoundsException()));
 
-        assertTrue(AbstractEJB3TxInterceptor.isRollingBack(new Throwable()));
-        assertTrue(AbstractEJB3TxInterceptor.isRollingBack(new Error()));
-        assertTrue(AbstractEJB3TxInterceptor
+        assertTrue(EJB3TransactionCallback.isRollingBack(new Throwable()));
+        assertTrue(EJB3TransactionCallback.isRollingBack(new Error()));
+        assertTrue(EJB3TransactionCallback
                 .isRollingBack(new OutOfMemoryError()));
     }
 

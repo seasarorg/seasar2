@@ -15,10 +15,8 @@
  */
 package org.seasar.framework.ejb.tx;
 
-import javax.transaction.NotSupportedException;
-import javax.transaction.SystemException;
-
 import org.aopalliance.intercept.MethodInvocation;
+import org.seasar.extension.tx.RequiredInterceptor;
 
 /**
  * トランザクションを要求するメソッドのためのインターセプタです。
@@ -30,7 +28,7 @@ import org.aopalliance.intercept.MethodInvocation;
  * 
  * @author koichik
  */
-public class EJB3RequiredInterceptor extends AbstractEJB3TxInterceptor {
+public class EJB3RequiredInterceptor extends RequiredInterceptor {
 
     /**
      * インスタンスを構築します。
@@ -39,42 +37,10 @@ public class EJB3RequiredInterceptor extends AbstractEJB3TxInterceptor {
     public EJB3RequiredInterceptor() {
     }
 
+    @Override
     public Object invoke(final MethodInvocation invocation) throws Throwable {
-        final boolean began = beginIfNecessary();
-        try {
-            final Object result = invocation.proceed();
-            if (began) {
-                end();
-            }
-            return result;
-        } catch (final Throwable t) {
-            if (began) {
-                if (isRollingBack(t)) {
-                    rollback();
-                } else {
-                    end();
-                }
-            }
-            throw t;
-        }
-    }
-
-    /**
-     * 現在のスレッドでトランザクションが開始されていなければトランザクションを開始します。
-     * 
-     * @return トランザクションを開始した場合は{@code true}
-     * @throws SystemException
-     *             トランザクションの開始中に例外が発生した場合
-     * @throws NotSupportedException
-     *             トランザクションの開始中に例外が発生した場合
-     */
-    protected boolean beginIfNecessary() throws SystemException,
-            NotSupportedException {
-        if (hasTransaction()) {
-            return false;
-        }
-        begin();
-        return true;
+        return transactionControl.required(new EJB3TransactionCallback(
+                invocation, txRules));
     }
 
 }

@@ -15,10 +15,8 @@
  */
 package org.seasar.framework.ejb.tx;
 
-import javax.transaction.SystemException;
-import javax.transaction.Transaction;
-
 import org.aopalliance.intercept.MethodInvocation;
+import org.seasar.extension.tx.RequiresNewInterceptor;
 
 /**
  * 新しいトランザクションを要求するメソッドのためのインターセプタです。
@@ -31,7 +29,7 @@ import org.aopalliance.intercept.MethodInvocation;
  * 
  * @author koichik
  */
-public class EJB3RequiresNewInterceptor extends AbstractEJB3TxInterceptor {
+public class EJB3RequiresNewInterceptor extends RequiresNewInterceptor {
 
     /**
      * インスタンスを構築します。
@@ -40,41 +38,10 @@ public class EJB3RequiresNewInterceptor extends AbstractEJB3TxInterceptor {
     public EJB3RequiresNewInterceptor() {
     }
 
+    @Override
     public Object invoke(final MethodInvocation invocation) throws Throwable {
-        final Transaction tx = suspendIfNecessary();
-        try {
-            begin();
-            try {
-                final Object result = invocation.proceed();
-                end();
-                return result;
-            } catch (final Throwable t) {
-                if (isRollingBack(t)) {
-                    rollback();
-                } else {
-                    end();
-                }
-                throw t;
-            }
-        } finally {
-            if (tx != null) {
-                resume(tx);
-            }
-        }
-    }
-
-    /**
-     * トランザクションが開始されていれば中断します。
-     * 
-     * @return 中断されたトランザクション
-     * @throws SystemException
-     *             トランザクションマネージャで例外が発生した場合にスローされます
-     */
-    protected Transaction suspendIfNecessary() throws SystemException {
-        if (!hasTransaction()) {
-            return null;
-        }
-        return suspend();
+        return transactionControl.requiresNew(new EJB3TransactionCallback(
+                invocation, txRules));
     }
 
 }
