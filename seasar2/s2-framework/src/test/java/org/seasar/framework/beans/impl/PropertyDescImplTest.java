@@ -116,6 +116,15 @@ public class PropertyDescImplTest extends TestCase {
     }
 
     /**
+     * @throws Exception
+     */
+    public void testGetBeanDesc() throws Exception {
+        BeanDesc beanDesc = new BeanDescImpl(MyBean.class);
+        PropertyDesc propDesc = beanDesc.getPropertyDesc("URL");
+        assertNotNull(propDesc.getBeanDesc());
+    }
+
+    /**
      * 
      */
     public static class MyBean {

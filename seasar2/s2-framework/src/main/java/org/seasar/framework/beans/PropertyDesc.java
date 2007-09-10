@@ -141,4 +141,11 @@ public interface PropertyDesc {
      * @return 変換された値
      */
     Object convertIfNeed(Object value);
+
+    /**
+     * Bean記述を返します。
+     * 
+     * @return Bean記述
+     */
+    BeanDesc getBeanDesc();
 }

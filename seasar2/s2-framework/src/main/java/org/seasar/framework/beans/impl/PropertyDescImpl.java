@@ -227,6 +227,10 @@ public final class PropertyDescImpl implements PropertyDesc {
         }
     }
 
+    public BeanDesc getBeanDesc() {
+        return beanDesc;
+    }
+
     public final String toString() {
         StringBuffer buf = new StringBuffer();
         buf.append("propertyName=");

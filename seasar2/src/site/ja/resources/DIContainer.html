@@ -1197,6 +1197,9 @@ HOT deployの機能は不要です。
 修正を即座に認識しないのがWARM deployの機能です。
 </p>
 <p>HOT deploy、COOL deploy、WARM deployをあわせてSMART deployと呼びます。</p>
+<p style="background-color:red">HOT deployは、各開発者が個人のPCでテストするときに使うことを想定しています。
+そのため、リクエストを複数同時に処理することはできません。
+複数の開発者で使うときは、HOT deployは使わないようにしてください。</p>
 
 <h4><a name="SMARTdeployS2ContainerDicon" id="SMARTdeployS2ContainerDicon">SMART deployの切り替え</a></h4>
 <p>
@@ -1204,6 +1207,7 @@ SMART deployの切り替えは、<a href="#Env">環境名</a>を変えるだけ�
 例えば、次のようにs2container.diconが設定されている場合、
 utのときにはWARM deploy、ctのときはHOT deploy、それ以外はCOOL deployになります。
 </p>
+
 <pre>
 &lt;components&gt;
     &lt;include condition="#ENV == 'ut'" path="warmdeploy.dicon"/&gt;
