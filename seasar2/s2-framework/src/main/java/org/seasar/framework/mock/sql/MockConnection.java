@@ -39,6 +39,8 @@ public class MockConnection implements Connection {
 
     private boolean rolledback = false;
 
+    private boolean autoCommit = true;
+
     public void clearWarnings() throws SQLException {
     }
 
@@ -126,7 +128,7 @@ public class MockConnection implements Connection {
     }
 
     public boolean getAutoCommit() throws SQLException {
-        return false;
+        return autoCommit;
     }
 
     public String getCatalog() throws SQLException {
@@ -389,6 +391,7 @@ public class MockConnection implements Connection {
     }
 
     public void setAutoCommit(boolean autoCommit) throws SQLException {
+        this.autoCommit = autoCommit;
     }
 
     public void setCatalog(String catalog) throws SQLException {

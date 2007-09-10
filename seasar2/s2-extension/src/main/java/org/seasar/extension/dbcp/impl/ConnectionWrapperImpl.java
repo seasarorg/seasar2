@@ -108,6 +108,24 @@ public class ConnectionWrapperImpl implements ConnectionWrapper {
         }
         closed_ = true;
         try {
+            if (!physicalConnection_.isClosed()) {
+                if (!physicalConnection_.getAutoCommit()) {
+                    try {
+                        physicalConnection_.rollback();
+                        physicalConnection_.setAutoCommit(true);
+                    } catch (final SQLException ex) {
+                        logger_.log(ex);
+                    }
+                }
+                physicalConnection_.close();
+            }
+        } catch (final SQLException ex) {
+            logger_.log(ex);
+        } finally {
+            physicalConnection_ = null;
+        }
+
+        try {
             xaConnection_.close();
             logger_.log("DSSR0001", null);
         } catch (final SQLException ex) {
@@ -115,14 +133,6 @@ public class ConnectionWrapperImpl implements ConnectionWrapper {
         } finally {
             xaConnection_ = null;
         }
-        try {
-            if (!physicalConnection_.isClosed()) {
-                physicalConnection_.close();
-            }
-        } catch (final SQLException ex) {
-            logger_.log(ex);
-        }
-
     }
 
     private void assertOpened() throws SQLException {

@@ -24,6 +24,8 @@ import javax.transaction.xa.XAResource;
 import org.seasar.extension.dbcp.ConnectionWrapper;
 import org.seasar.extension.jta.TransactionManagerImpl;
 import org.seasar.extension.unit.S2TestCase;
+import org.seasar.framework.mock.sql.MockConnection;
+import org.seasar.framework.mock.sql.MockXAConnection;
 
 /**
  * @author higa
@@ -43,6 +45,21 @@ public class ConnectionWrapperImplTest extends S2TestCase {
     public void testCloseReally() throws Exception {
         con_.closeReally();
         assertEquals("1", true, con_.isClosed());
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testCloseReallyWithTransaction() throws Exception {
+        MockXAConnection xaCon = new MockXAConnection();
+        ConnectionWrapperImpl wrapper = new ConnectionWrapperImpl(xaCon,
+                dummyPool_, true);
+        MockConnection con = (MockConnection) wrapper.getPhysicalConnection();
+        wrapper.setAutoCommit(false);
+        wrapper.closeReally();
+        assertTrue(con.isRolledback());
+        assertTrue(con.getAutoCommit());
+        assertTrue(con.isClosed());
     }
 
     /**
