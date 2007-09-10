@@ -38,24 +38,8 @@ public class RequiredInterceptor extends AbstractTxInterceptor {
     }
 
     public Object invoke(final MethodInvocation invocation) throws Throwable {
-        boolean began = false;
-        if (!hasTransaction()) {
-            begin();
-            began = true;
-        }
-        Object ret = null;
-        try {
-            ret = invocation.proceed();
-            if (began) {
-                end();
-            }
-            return ret;
-        } catch (final Throwable t) {
-            if (began) {
-                complete(t);
-            }
-            throw t;
-        }
+        return transactionControl.required(new DefaultTransactionCallback(
+                invocation, txRules));
     }
 
 }

@@ -16,7 +16,6 @@
 package org.seasar.extension.tx;
 
 import org.aopalliance.intercept.MethodInvocation;
-import org.seasar.framework.exception.SIllegalStateException;
 
 /**
  * トランザクションが必須なメソッドのためのインターセプタです。
@@ -36,10 +35,8 @@ public class MandatoryInterceptor extends AbstractTxInterceptor {
     }
 
     public Object invoke(final MethodInvocation invocation) throws Throwable {
-        if (!hasTransaction()) {
-            throw new SIllegalStateException("ESSR0311", null);
-        }
-        return invocation.proceed();
+        return transactionControl.mandatory(new DefaultTransactionCallback(
+                invocation, txRules));
     }
 
 }

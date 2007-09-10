@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE components PUBLIC "-//SEASAR2.1//DTD S2Container//EN"
+	"http://www.seasar.org/dtd/components21.dtd">
+<components namespace="jta">
+	<component name="UserTransaction"
+		class="org.seasar.extension.jta.UserTransactionImpl"/>
+	<component name="TransactionSynchronizationRegistry"
+		class="org.seasar.extension.jta.TransactionSynchronizationRegistryImpl"/>
+
+	<component name="transacstionControl"
+		class="org.seasar.extension.tx.UserTransactionControl"/>
+
+
+	<!-- UserTransaction from JNDI -->
+	<!--
+	<component name="UserTransaction"
+			class="javax.transaction.UserTransaction">
+		@org.seasar.extension.j2ee.JndiResourceLocator@lookup("java:comp/UserTransaction")
+	</component>
+	-->
+	
+	<!-- TransactionSynchronizationRegistry from JNDI -->
+	<!--
+	<component name="TransactionSynchronizationRegistry"
+			class="javax.transaction.TransactionSynchronizationRegistry">
+		@org.seasar.extension.j2ee.JndiResourceLocator@lookup("java:comp/TransactionSynchronizationRegistry")
+	</component>
+	-->
+</components>

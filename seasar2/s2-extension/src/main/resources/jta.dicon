@@ -3,14 +3,15 @@
 	"http://www.seasar.org/dtd/components21.dtd">
 <components namespace="jta">
 	<component name="TransactionManager"
-		class="org.seasar.extension.jta.TransactionManagerImpl"
-	/>
+		class="org.seasar.extension.jta.TransactionManagerImpl"/>
 	<component name="UserTransaction"
-		class="org.seasar.extension.jta.UserTransactionImpl"
-	/>
-	<component name="TransactionSynchronizationRegistry" 
-		class="org.seasar.extension.jta.TransactionSynchronizationRegistryImpl"
-	/>
+		class="org.seasar.extension.jta.UserTransactionImpl"/>
+	<component name="TransactionSynchronizationRegistry"
+		class="org.seasar.extension.jta.TransactionSynchronizationRegistryImpl"/>
+
+	<component name="transactionControl"
+		class="org.seasar.extension.tx.TransactionManagerControl"/>
+
 
 	<!-- WebLogic -->
 	<!--

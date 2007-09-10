@@ -29,13 +29,16 @@ import org.seasar.extension.unit.S2TestCase;
  * @author koichik
  */
 public class AbstTxInterceptorTest extends S2TestCase {
+
     private static final String PATH = "AbstractTxInterceptorTest.dicon";
 
-    private ExceptionBean exBean_;
+    private ExceptionBean exBean;
 
-    private TransactionManager tm_;
+    private TransactionManager tm;
 
-    private TestInterceptor testTx_;
+    private TestInterceptor testTx;
+
+    private boolean committed;
 
     protected void setUp() throws Exception {
         include(PATH);
@@ -46,22 +49,22 @@ public class AbstTxInterceptorTest extends S2TestCase {
      */
     public void testType() throws Exception {
         try {
-            testTx_.addCommitRule(Throwable.class);
-            testTx_.addCommitRule(Error.class);
-            testTx_.addCommitRule(Exception.class);
-            testTx_.addCommitRule(RuntimeException.class);
-            testTx_.addCommitRule(Object.class);
+            testTx.addCommitRule(Throwable.class);
+            testTx.addCommitRule(Error.class);
+            testTx.addCommitRule(Exception.class);
+            testTx.addCommitRule(RuntimeException.class);
+            testTx.addCommitRule(Object.class);
             fail("1");
         } catch (IllegalArgumentException expected) {
             System.out.println(expected);
         }
 
         try {
-            testTx_.addRollbackRule(Throwable.class);
-            testTx_.addRollbackRule(Error.class);
-            testTx_.addRollbackRule(Exception.class);
-            testTx_.addRollbackRule(RuntimeException.class);
-            testTx_.addRollbackRule(String.class);
+            testTx.addRollbackRule(Throwable.class);
+            testTx.addRollbackRule(Error.class);
+            testTx.addRollbackRule(Exception.class);
+            testTx.addRollbackRule(RuntimeException.class);
+            testTx.addRollbackRule(String.class);
             fail("2");
         } catch (IllegalArgumentException expected) {
             System.out.println(expected);
@@ -73,131 +76,108 @@ public class AbstTxInterceptorTest extends S2TestCase {
      */
     public void testNoRule() throws Exception {
         try {
-            exBean_.invoke();
+            exBean.invoke();
             fail("1");
         } catch (Exception expected) {
             System.out.println(expected);
         }
-        assertEquals("2", Status.STATUS_NO_TRANSACTION, tm_.getStatus());
-        assertFalse("3", testTx_.result);
+        assertEquals("2", Status.STATUS_NO_TRANSACTION, tm.getStatus());
+        assertFalse("3", testTx.transactionControl.isCommitted());
     }
 
     /**
      * @throws Exception
      */
     public void testCommitRule() throws Exception {
-        testTx_.addRollbackRule(RuntimeException.class);
-        testTx_.addRollbackRule(RemoteException.class);
-        testTx_.addCommitRule(Exception.class);
+        testTx.addRollbackRule(RuntimeException.class);
+        testTx.addRollbackRule(RemoteException.class);
+        testTx.addCommitRule(Exception.class);
         try {
-            exBean_.invoke(new SystemException());
+            exBean.invoke(new SystemException());
             fail("1");
         } catch (Throwable expected) {
             System.out.println(expected);
         }
-        assertEquals("2", Status.STATUS_NO_TRANSACTION, tm_.getStatus());
-        assertTrue("3", testTx_.result);
+        assertEquals("2", Status.STATUS_NO_TRANSACTION, tm.getStatus());
+        assertTrue("3", testTx.transactionControl.isCommitted());
     }
 
     /**
      * @throws Exception
      */
     public void testRollbackRule1() throws Exception {
-        testTx_.addRollbackRule(RuntimeException.class);
-        testTx_.addRollbackRule(RemoteException.class);
-        testTx_.addCommitRule(Exception.class);
+        testTx.addRollbackRule(RuntimeException.class);
+        testTx.addRollbackRule(RemoteException.class);
+        testTx.addCommitRule(Exception.class);
         try {
-            exBean_.invoke(new UnsupportedOperationException());
+            exBean.invoke(new UnsupportedOperationException());
             fail("1");
         } catch (Throwable expected) {
             System.out.println(expected);
         }
-        assertEquals("2", Status.STATUS_NO_TRANSACTION, tm_.getStatus());
-        assertFalse("3", testTx_.result);
+        assertEquals("2", Status.STATUS_NO_TRANSACTION, tm.getStatus());
+        assertFalse("3", testTx.transactionControl.isCommitted());
     }
 
     /**
      * @throws Exception
      */
     public void testRollbackRule2() throws Exception {
-        testTx_.addRollbackRule(RuntimeException.class);
-        testTx_.addRollbackRule(RemoteException.class);
-        testTx_.addCommitRule(Exception.class);
+        testTx.addRollbackRule(RuntimeException.class);
+        testTx.addRollbackRule(RemoteException.class);
+        testTx.addCommitRule(Exception.class);
         try {
-            exBean_.invoke(new AccessException(""));
+            exBean.invoke(new AccessException(""));
             fail("1");
         } catch (Throwable expected) {
             System.out.println(expected);
         }
-        assertEquals("2", Status.STATUS_NO_TRANSACTION, tm_.getStatus());
-        assertFalse("3", testTx_.result);
+        assertEquals("2", Status.STATUS_NO_TRANSACTION, tm.getStatus());
+        assertFalse("3", testTx.transactionControl.isCommitted());
     }
 
     /**
      * @throws Exception
      */
     public void testRollbackRule3() throws Exception {
-        testTx_.addRollbackRule(RuntimeException.class);
-        testTx_.addRollbackRule(RemoteException.class);
-        testTx_.addCommitRule(Exception.class);
+        testTx.addRollbackRule(RuntimeException.class);
+        testTx.addRollbackRule(RemoteException.class);
+        testTx.addCommitRule(Exception.class);
         try {
-            exBean_.invoke(new Throwable());
+            exBean.invoke(new Throwable());
             fail("1");
         } catch (Throwable expected) {
             System.out.println(expected);
         }
-        assertEquals("2", Status.STATUS_NO_TRANSACTION, tm_.getStatus());
-        assertFalse("3", testTx_.result);
+        assertEquals("2", Status.STATUS_NO_TRANSACTION, tm.getStatus());
+        assertFalse("3", testTx.transactionControl.isCommitted());
     }
 
     /**
      * @throws Exception
      */
     public void testRollbackRule4() throws Exception {
-        testTx_.addRollbackRule(RuntimeException.class);
-        testTx_.addRollbackRule(RemoteException.class);
-        testTx_.addCommitRule(Exception.class);
+        testTx.addRollbackRule(RuntimeException.class);
+        testTx.addRollbackRule(RemoteException.class);
+        testTx.addCommitRule(Exception.class);
         try {
-            exBean_.invoke(new OutOfMemoryError());
+            exBean.invoke(new OutOfMemoryError());
             fail("1");
         } catch (Throwable expected) {
             System.out.println(expected);
         }
-        assertEquals("2", Status.STATUS_NO_TRANSACTION, tm_.getStatus());
-        assertFalse("3", testTx_.result);
+        assertEquals("2", Status.STATUS_NO_TRANSACTION, tm.getStatus());
+        assertFalse("3", testTx.transactionControl.isCommitted());
     }
 
     /**
-     *
+     * 
      */
     public static class TestInterceptor extends AbstractTxInterceptor {
-        boolean result;
-
-        /**
-         * 
-         */
-        public TestInterceptor() {
-        }
 
         public Object invoke(MethodInvocation invocation) throws Throwable {
-            boolean began = false;
-            if (!hasTransaction()) {
-                begin();
-                began = true;
-            }
-            Object ret = null;
-            try {
-                ret = invocation.proceed();
-                if (began) {
-                    end();
-                }
-                return ret;
-            } catch (Throwable t) {
-                if (began) {
-                    result = complete(t);
-                }
-                throw t;
-            }
+            return transactionControl.required(new DefaultTransactionCallback(
+                    invocation, txRules));
         }
     }
 }

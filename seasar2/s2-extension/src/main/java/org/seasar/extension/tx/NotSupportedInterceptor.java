@@ -15,8 +15,6 @@
  */
 package org.seasar.extension.tx;
 
-import javax.transaction.Transaction;
-
 import org.aopalliance.intercept.MethodInvocation;
 
 /**
@@ -30,9 +28,6 @@ import org.aopalliance.intercept.MethodInvocation;
  */
 public class NotSupportedInterceptor extends AbstractTxInterceptor {
 
-    /** <coce>transactionManager</code>プロパティのバインディング定義です。 */
-    public static final String transactionManager_BINDING = "bindingType=must";
-
     /**
      * インスタンスを構築します。
      * 
@@ -41,14 +36,8 @@ public class NotSupportedInterceptor extends AbstractTxInterceptor {
     }
 
     public Object invoke(final MethodInvocation invocation) throws Throwable {
-        final Transaction tx = hasTransaction() ? suspend() : null;
-        try {
-            return invocation.proceed();
-        } finally {
-            if (tx != null) {
-                resume(tx);
-            }
-        }
+        return transactionControl.notSupported(new DefaultTransactionCallback(
+                invocation, txRules));
     }
 
 }

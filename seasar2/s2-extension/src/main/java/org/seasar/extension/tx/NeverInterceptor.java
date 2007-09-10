@@ -16,7 +16,6 @@
 package org.seasar.extension.tx;
 
 import org.aopalliance.intercept.MethodInvocation;
-import org.seasar.framework.exception.SIllegalStateException;
 
 /**
  * トランザクションを許容しないメソッドのためのインターセプタです。
@@ -36,10 +35,8 @@ public class NeverInterceptor extends AbstractTxInterceptor {
     }
 
     public Object invoke(final MethodInvocation invocation) throws Throwable {
-        if (hasTransaction()) {
-            throw new SIllegalStateException("ESSR0317", null);
-        }
-        return invocation.proceed();
+        return transactionControl.never(new DefaultTransactionCallback(
+                invocation, txRules));
     }
 
 }
