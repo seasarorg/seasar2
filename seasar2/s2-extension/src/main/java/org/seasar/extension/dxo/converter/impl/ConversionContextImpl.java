@@ -32,6 +32,7 @@ import org.seasar.extension.dxo.converter.ConverterFactory;
 import org.seasar.extension.dxo.converter.DatePropertyInfo;
 import org.seasar.extension.dxo.converter.NestedPropertyInfo;
 import org.seasar.extension.dxo.util.DxoUtil;
+import org.seasar.extension.dxo.util.Expression;
 import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.beans.factory.BeanDescFactory;
@@ -39,7 +40,6 @@ import org.seasar.framework.util.CaseInsensitiveMap;
 import org.seasar.framework.util.Disposable;
 import org.seasar.framework.util.DisposableUtil;
 import org.seasar.framework.util.MapUtil;
-import org.seasar.framework.util.OgnlUtil;
 import org.seasar.framework.util.StringUtil;
 
 /**
@@ -167,9 +167,9 @@ public class ConversionContextImpl implements ConversionContext {
         this.annotationReader = annotationReader;
 
         contextInfo = getContextInfo(annotationReader);
-        final Object conversionRule = getContextInfo(DxoConstants.CONVERSION_RULE);
+        final Expression conversionRule = (Expression) getContextInfo(DxoConstants.CONVERSION_RULE);
         if (conversionRule != null) {
-            evaluatedValues = (Map) OgnlUtil.getValue(conversionRule, source);
+            evaluatedValues = conversionRule.evaluate(source);
         }
         excludeNull = ((Boolean) getContextInfo(DxoConstants.EXCLUDE_NULL))
                 .booleanValue();
@@ -328,7 +328,7 @@ public class ConversionContextImpl implements ConversionContext {
                 .getConversionRule(dxoClass, method);
         if (!StringUtil.isEmpty(conversionRule)) {
             contextInfo.put(DxoConstants.CONVERSION_RULE, DxoUtil
-                    .parseMap(conversionRule));
+                    .parseRule(conversionRule));
         }
         contextInfo.put(DxoConstants.EXCLUDE_NULL, Boolean
                 .valueOf(annotationReader.isExcludeNull(dxoClass, method)));

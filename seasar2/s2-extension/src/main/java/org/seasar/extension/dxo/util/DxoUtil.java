@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.seasar.framework.util.MethodUtil;
-import org.seasar.framework.util.OgnlUtil;
 import org.seasar.framework.util.StringUtil;
 import org.seasar.framework.util.Tokenizer;
 
@@ -31,12 +30,6 @@ import org.seasar.framework.util.Tokenizer;
  * @author higa
  */
 public class DxoUtil {
-
-    /** OGNL式による{@link Map}リテラルの接頭辞です。 */
-    protected static final String OGNL_MAP_PREFIX = "#@java.util.LinkedHashMap@{";
-
-    /** OGNL式による{@link Map}リテラルの接尾辞です。 */
-    protected static final String OGNL_MAP_SUFFIX = "}";
 
     /** genericな{@link Map}から値の型を取得するためのメソッドです。 */
     protected static final Method GET_VALUE_TYPE_OF_TARGET_MAP_METHOD = getValueTypeOfTargetMapMethod();
@@ -87,21 +80,21 @@ public class DxoUtil {
     }
 
     /**
-     * OGNL式の{@link Map}リテラルを解析した結果のオブジェクトを返します。
+     * 変換ルールを解析した結果の式オブジェクトを返します。
      * 
-     * @param expression
-     *            OGNL式の{@link Map}リテラル
-     * @return OGNL式の{@link Map}リテラルを解析した結果のオブジェクト
+     * @param rule
+     *            変換ルール
+     * @return 変換ルールを解析した結果の式オブジェクト
      */
-    public static Object parseMap(final String expression) {
-        if (StringUtil.isEmpty(expression)) {
+    public static Expression parseRule(final String rule) {
+        if (StringUtil.isEmpty(rule)) {
             return null;
         }
-        String s = expression;
-        if (!expression.startsWith("'")) {
-            s = addQuote(expression);
+        Expression exp = SimpleExpressionParser.parse(rule);
+        if (exp == null) {
+            exp = new OgnlExpression(rule);
         }
-        return OgnlUtil.parseExpression(OGNL_MAP_PREFIX + s + OGNL_MAP_SUFFIX);
+        return exp;
     }
 
     /**

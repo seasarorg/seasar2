@@ -26,10 +26,10 @@ import org.seasar.extension.dxo.converter.ConversionContext;
 import org.seasar.extension.dxo.converter.Converter;
 import org.seasar.extension.dxo.converter.ConverterFactory;
 import org.seasar.extension.dxo.util.DxoUtil;
+import org.seasar.extension.dxo.util.Expression;
 import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.beans.factory.BeanDescFactory;
-import org.seasar.framework.util.OgnlUtil;
 import org.seasar.framework.util.StringUtil;
 
 /**
@@ -39,8 +39,8 @@ import org.seasar.framework.util.StringUtil;
  */
 public class BeanToMapDxoCommand extends AbstractDxoCommand {
 
-    /** パーズ済みの変換ルール (OGNL式) です。 */
-    protected Object parsedExpression;
+    /** パーズ済みの変換ルールです。 */
+    protected Expression parsedExpression;
 
     /** 変換先の{@link Map}に<code>null</code>のマッピングを追加しない場合に<code>true</code>。 */
     protected boolean excludeNull;
@@ -88,7 +88,7 @@ public class BeanToMapDxoCommand extends AbstractDxoCommand {
             final AnnotationReader annotationReader, final String expression) {
         super(dxoClass, method, converterFactory, annotationReader);
         if (expression != null) {
-            parsedExpression = DxoUtil.parseMap(expression);
+            parsedExpression = DxoUtil.parseRule(expression);
         }
         excludeNull = annotationReader.isExcludeNull(dxoClass, method);
         sourcePrefix = annotationReader.getSourcePrefix(dxoClass, method);
@@ -101,11 +101,10 @@ public class BeanToMapDxoCommand extends AbstractDxoCommand {
     protected Object convertScalar(final Object source) {
         final Map dest;
         if (parsedExpression != null) {
-            dest = (Map) OgnlUtil.getValue(parsedExpression, source);
+            dest = parsedExpression.evaluate(source);
         } else {
             final String expression = createConversionRule(source.getClass());
-            dest = (Map) OgnlUtil
-                    .getValue(DxoUtil.parseMap(expression), source);
+            dest = DxoUtil.parseRule(expression).evaluate(source);
         }
         if (excludeNull) {
             removeNullEntry(dest);
@@ -188,7 +187,7 @@ public class BeanToMapDxoCommand extends AbstractDxoCommand {
                 if (destPropertyName == null) {
                     continue;
                 }
-                buf.append("'").append(destPropertyName).append("': ").append(
+                buf.append(destPropertyName).append(": ").append(
                         sourcePropertyName).append(", ");
             }
         }

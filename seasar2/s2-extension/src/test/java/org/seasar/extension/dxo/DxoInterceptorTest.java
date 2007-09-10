@@ -423,7 +423,7 @@ public class DxoInterceptorTest extends S2TestCase {
         /**
          * 
          */
-        String convert_Employee_CONVERSION_RULE = "'mname' : mgr != null ? mgr.ename : null";
+        String convert_Employee_CONVERSION_RULE = "mname : mgr.ename";
 
         /**
          * @param emp
