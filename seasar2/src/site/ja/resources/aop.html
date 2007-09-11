@@ -4,7 +4,7 @@
 <head>
 <title>S2AOP</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Style-Type" content="text/css">
 <link href="seasar_b.css" type="text/css" rel="stylesheet" media="screen" />
 <link href="seasar_p.css" type="text/css" rel="stylesheet" media="print" />
 <script src="seasar_b.js" type="text/JavaScript" language="JavaScript">
@@ -152,20 +152,25 @@ public class MyThrowableInterceptor extends ThrowsInterceptor {
 <h5>クラス名</h5>
 <p>org.seasar.framework.aop.interceptors.RemoveSessionInterceptor</p>
 <h5>説明</h5>
-<p>セッションに格納されているオブジェクトをメソッドが正常に終了した(例外が発生しなかった)場合に、
-自動的に削除するためのInterceptorです。
-メソッドにRemoveSessionアノテーションを指定して使います。
-</p>
-<p>次の例では、hoge()メソッドを呼び出しが正常終了した場合に、
-セッションに格納されているfooオブジェクトを削除します。</p>
-<pre>
-@SessionRemove("foo")
+<p>セッションに格納されているオブジェクトを、メソッドが正常に終了した(例外が発生しなかった)場合に、 自動的に削除するためのInterceptorです。
+            メソッドにRemoveSessionアノテーションを指定して使います。</p>
+<p>次の例では、hoge()メソッドの呼び出しが正常終了した場合に、 セッションに格納されているfooオブジェクトを削除します。</p>
+<pre>@RemoveSession(&quot;foo&quot;)
 public void hoge() {
     ...
-}
-</pre>
-
-<h4><a name="InterceptorChain" id="InterceptorChain">InterceptorChain</a></h4>
+}</pre>
+            <h4><a name="RemoveSessionInterceptor" id="RemoveSessionInterceptor">InvalidateSessionInterceptor</a></h4>
+<h5>クラス名</h5>
+<p>org.seasar.framework.aop.interceptors.InvalidateSessionInterceptor</p>
+<h5>説明</h5>
+<p>セッションを、メソッドが正常に終了した(例外が発生しなかった)場合に、 自動的に破棄するためのInterceptorです。 メソッドにInvalidateSessionアノテーションを指定して使います。</p>
+<p>次の例では、hoge()メソッドの呼び出しが正常終了した場合に、 HTTPセッションを破棄します。実際には、セッションの破棄はS2Containerの提供するServlet
+            Filter (S2ContainerFilter) によって行われます。</p>
+<pre>@InvalidateSession
+public void hoge() {
+    ...
+}</pre>
+            <h4><a name="InterceptorChain" id="InterceptorChain">InterceptorChain</a></h4>
 <h5>クラス名</h5>
 <p>org.seasar.framework.aop.interceptors.InterceptorChain</p>
 <h5>説明</h5>

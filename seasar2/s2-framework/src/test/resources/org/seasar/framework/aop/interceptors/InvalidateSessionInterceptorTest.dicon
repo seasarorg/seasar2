@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN"
+	"http://www.seasar.org/dtd/components24.dtd">
+<components>
+	<component name="hoge"
+			class="org.seasar.framework.aop.interceptors.InvalidateSessionInterceptorTest$Hoge">
+		<aspect pointcut="end">
+			<component name="invalidateSessionInterceptor"
+				class="org.seasar.framework.aop.interceptors.InvalidateSessionInterceptor"/>
+		</aspect>
+		<aspect pointcut="fail">
+			<component name="removeSessionInterceptor" instance="prototype"
+				class="org.seasar.framework.aop.interceptors.InvalidateSessionInterceptor"/>
+		</aspect>
+	</component>
+</components>

@@ -23,11 +23,14 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.seasar.framework.container.ExternalContext;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 import org.seasar.framework.exception.EmptyRuntimeException;
+import org.seasar.framework.log.Logger;
 
 /**
  * {@link S2Container}用の {@link Filter}です。
@@ -36,6 +39,16 @@ import org.seasar.framework.exception.EmptyRuntimeException;
  * 
  */
 public class S2ContainerFilter implements Filter {
+
+    /**
+     * HTTP セッションを無効にする場合のキーです。
+     * 
+     * @see #invalidateSession(ServletRequest)
+     */
+    public static final String INVALIDATE_SESSION = "Seasar2-invalidateSession";
+
+    private static final Logger logger = Logger
+            .getLogger(S2ContainerFilter.class);
 
     /**
      * {@link S2ContainerFilter}を作成します。
@@ -65,6 +78,31 @@ public class S2ContainerFilter implements Filter {
         } finally {
             externalContext.setRequest(null);
             externalContext.setResponse(null);
+            invalidateSession(request);
         }
     }
+
+    /**
+     * リクエストの属性に{@link #INVALIDATE_SESSION}が{@link Boolean#TRUE}で設定されていた場合、
+     * {@link HttpSession}を破棄します。
+     * 
+     * @param request
+     *            リクエスト
+     */
+    protected void invalidateSession(final ServletRequest request) {
+        final Object invalidateSession = request
+                .getAttribute(INVALIDATE_SESSION);
+        if (Boolean.TRUE.equals(invalidateSession)) {
+            final HttpSession session = ((HttpServletRequest) request)
+                    .getSession(false);
+            if (session != null) {
+                final String id = session.getId();
+                session.invalidate();
+                if (logger.isDebugEnabled()) {
+                    logger.log("DSSR0117", new Object[] { id });
+                }
+            }
+        }
+    }
+
 }
