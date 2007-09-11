@@ -13,18 +13,21 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.tx;
+package org.seasar.extension.tx.control;
 
 import javax.transaction.Status;
 import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
 
+import org.seasar.extension.tx.TransactionCallback;
+import org.seasar.extension.tx.TransactionControl;
 import org.seasar.framework.exception.SIllegalStateException;
 import org.seasar.framework.log.Logger;
 
 /**
- * @author koichik
+ * JTAの{@link UserTransaction}を使用してトランザクションを制御する、 {@link TransacstionControl}の実装です。
  * 
+ * @author koichik
  */
 public class UserTransactionControl implements TransactionControl {
 
@@ -50,26 +53,6 @@ public class UserTransactionControl implements TransactionControl {
         this.userTransaction = userTransaction;
     }
 
-    public Object mandatory(final TransactionCallback callback)
-            throws Throwable {
-        if (!hasTransaction()) {
-            throw new SIllegalStateException("ESSR0311", null);
-        }
-        return callback.execute(this);
-    }
-
-    public Object never(final TransactionCallback callback) throws Throwable {
-        if (hasTransaction()) {
-            throw new SIllegalStateException("ESSR0317", null);
-        }
-        return callback.execute(this);
-    }
-
-    public Object notSupported(final TransactionCallback callback)
-            throws Throwable {
-        throw new UnsupportedOperationException("NOT_SUPPORTED");
-    }
-
     public Object required(final TransactionCallback callback) throws Throwable {
         final boolean began = begin();
         try {
@@ -84,6 +67,26 @@ public class UserTransactionControl implements TransactionControl {
     public Object requiresNew(final TransactionCallback callback)
             throws Throwable {
         throw new UnsupportedOperationException("REQUIRES_NEW");
+    }
+
+    public Object mandatory(final TransactionCallback callback)
+            throws Throwable {
+        if (!hasTransaction()) {
+            throw new SIllegalStateException("ESSR0311", null);
+        }
+        return callback.execute(this);
+    }
+
+    public Object notSupported(final TransactionCallback callback)
+            throws Throwable {
+        throw new UnsupportedOperationException("NOT_SUPPORTED");
+    }
+
+    public Object never(final TransactionCallback callback) throws Throwable {
+        if (hasTransaction()) {
+            throw new SIllegalStateException("ESSR0317", null);
+        }
+        return callback.execute(this);
     }
 
     public void setRollbackOnly() {
@@ -103,7 +106,7 @@ public class UserTransactionControl implements TransactionControl {
      * 
      * @return 現在のスレッド上でトランザクションがアクティブな場合は<code>true</code>
      * @throws SystemException
-     *             トランザクションマネージャで例外が発生した場合にスローされます
+     *             ユーザトランザクションで例外が発生した場合にスローされます
      * @see javax.transaction.UserTransaction#getStatus()
      */
     protected boolean hasTransaction() throws SystemException {
@@ -118,7 +121,7 @@ public class UserTransactionControl implements TransactionControl {
      * 
      * @return トランザクションを開始した場合は<code>true</code>
      * @throws Exception
-     *             トランザクションマネージャで例外が発生した場合にスローされます
+     *             ユーザトランザクションで例外が発生した場合にスローされます
      * @see javax.transaction.UserTransaction#begin()
      */
     protected boolean begin() throws Exception {
@@ -137,7 +140,7 @@ public class UserTransactionControl implements TransactionControl {
      * </p>
      * 
      * @throws Exception
-     *             トランザクションマネージャで例外が発生した場合にスローされます
+     *             ユーザトランザクションャで例外が発生した場合にスローされます
      * @see javax.transaction.UserTransaction#commit()
      * @see javax.transaction.UserTransaction#rollback()
      */

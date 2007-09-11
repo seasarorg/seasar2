@@ -26,39 +26,6 @@ package org.seasar.extension.tx;
 public interface TransactionControl {
 
     /**
-     * トランザクション属性がMANDATORYの制御下で{@link TransactionCallback}をコールバックします。
-     * 
-     * @param callback
-     *            トランザクション制御下でコールバックされるオブジェクト
-     * @return callbackの戻り値
-     * @throws Throwable
-     *             callbackの呼び出し中に例外がスローされた場合
-     */
-    Object mandatory(TransactionCallback callback) throws Throwable;
-
-    /**
-     * トランザクション属性がNEVERの制御下で{@link TransactionCallback}をコールバックします。
-     * 
-     * @param callback
-     *            トランザクション制御下でコールバックされるオブジェクト
-     * @return callbackの戻り値
-     * @throws Throwable
-     *             callbackの呼び出し中に例外がスローされた場合
-     */
-    Object never(TransactionCallback callback) throws Throwable;
-
-    /**
-     * トランザクション属性がNOT_SUPPORTEDの制御下で{@link TransactionCallback}をコールバックします。
-     * 
-     * @param callback
-     *            トランザクション制御下でコールバックされるオブジェクト
-     * @return callbackの戻り値
-     * @throws Throwable
-     *             callbackの呼び出し中に例外がスローされた場合
-     */
-    Object notSupported(TransactionCallback callback) throws Throwable;
-
-    /**
      * トランザクション属性がREQUIREDの制御下で{@link TransactionCallback}をコールバックします。
      * 
      * @param callback
@@ -79,6 +46,39 @@ public interface TransactionControl {
      *             callbackの呼び出し中に例外がスローされた場合
      */
     Object requiresNew(TransactionCallback callback) throws Throwable;
+
+    /**
+     * トランザクション属性がMANDATORYの制御下で{@link TransactionCallback}をコールバックします。
+     * 
+     * @param callback
+     *            トランザクション制御下でコールバックされるオブジェクト
+     * @return callbackの戻り値
+     * @throws Throwable
+     *             callbackの呼び出し中に例外がスローされた場合
+     */
+    Object mandatory(TransactionCallback callback) throws Throwable;
+
+    /**
+     * トランザクション属性がNOT_SUPPORTEDの制御下で{@link TransactionCallback}をコールバックします。
+     * 
+     * @param callback
+     *            トランザクション制御下でコールバックされるオブジェクト
+     * @return callbackの戻り値
+     * @throws Throwable
+     *             callbackの呼び出し中に例外がスローされた場合
+     */
+    Object notSupported(TransactionCallback callback) throws Throwable;
+
+    /**
+     * トランザクション属性がNEVERの制御下で{@link TransactionCallback}をコールバックします。
+     * 
+     * @param callback
+     *            トランザクション制御下でコールバックされるオブジェクト
+     * @return callbackの戻り値
+     * @throws Throwable
+     *             callbackの呼び出し中に例外がスローされた場合
+     */
+    Object never(TransactionCallback callback) throws Throwable;
 
     /**
      * トランザクションをロールバックするようマークします。

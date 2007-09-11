@@ -38,8 +38,6 @@ public class AbstTxInterceptorTest extends S2TestCase {
 
     private TestInterceptor testTx;
 
-    private boolean committed;
-
     protected void setUp() throws Exception {
         include(PATH);
     }

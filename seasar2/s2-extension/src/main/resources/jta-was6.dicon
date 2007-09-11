@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN"
+	"http://www.seasar.org/dtd/components24.dtd">
+<components namespace="jta">
+	<description>
+		WebSphere Application Server version 6 (6.0.2.19以降または6.1.0.9以降) が提供する，
+		UOW API を使用するための設定ファイルです．
+
+		この設定ファイルでは，以下の全てのトランザクション属性がサポートされます．
+		・REQUIRED
+		・MANDATORY
+		・NEVER
+		・REQUIRES_NEW
+		・NOT_SUPPORTED
+	</description>
+
+	<!-- UserTransaction from JNDI -->
+	<component name="UserTransaction"
+			class="javax.transaction.UserTransaction">
+		@org.seasar.extension.j2ee.JndiResourceLocator@lookup("java:comp/UserTransaction")
+	</component>
+	
+	<!-- TransactionSynchronizationRegistry from JNDI -->
+	<component name="TransactionSynchronizationRegistry"
+			class="javax.transaction.TransactionSynchronizationRegistry">
+		@org.seasar.extension.j2ee.JndiResourceLocator@lookup("java:comp/TransactionSynchronizationRegistry")
+	</component>
+
+	<!-- UOWManager from JNDI -->
+	<component name="UOWManager"
+			class="javax.transaction.UserTransaction">
+		@org.seasar.extension.j2ee.JndiResourceLocator@lookup("java:comp/websphere/UOWManager")
+	</component>
+
+	<component name="transactionControl"
+		class="org.seasar.extension.tx.control.WAS6TransactionControl"/>
+</components>

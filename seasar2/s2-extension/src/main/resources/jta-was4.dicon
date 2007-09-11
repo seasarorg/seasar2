@@ -3,7 +3,10 @@
 	"http://www.seasar.org/dtd/components24.dtd">
 <components namespace="jta">
 	<description>
-		Seasar2 が提供する JTA 実装 (S2JTA) を使用するための設定ファイルです．
+		WebSphere Application Server version 4 が提供する JTA 実装を使用するための設定ファイルです．
+
+		WebSphere はアプリケーションからの TransactionManager の利用はサポートしていません．
+		IBM のサポートが必要な場合は jta-usertx.dicon を使用してください．
 
 		この設定ファイルでは，以下の全てのトランザクション属性がサポートされます．
 		・REQUIRED
@@ -14,7 +17,9 @@
 	</description>
 
 	<component name="TransactionManager"
-		class="org.seasar.extension.jta.TransactionManagerImpl"/>
+			class="javax.transaction.TransactionManager">
+		@com.ibm.ejs.jts.jta.JTSXA@getTransactionManager()
+	</component>
 
 	<component name="UserTransaction"
 		class="org.seasar.extension.jta.UserTransactionImpl"/>

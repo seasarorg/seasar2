@@ -13,19 +13,23 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.tx;
+package org.seasar.extension.tx.control;
 
 import javax.transaction.Status;
 import javax.transaction.SystemException;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
 
+import org.seasar.extension.tx.TransactionCallback;
+import org.seasar.extension.tx.TransactionControl;
 import org.seasar.framework.exception.SIllegalStateException;
 import org.seasar.framework.log.Logger;
 
 /**
- * @author koichik
+ * JTAの{@link TransactionManager}を使用してトランザクションを制御する、
+ * {@link TransacstionControl}の実装です。
  * 
+ * @author koichik
  */
 public class TransactionManagerControl implements TransactionControl {
 
@@ -50,33 +54,6 @@ public class TransactionManagerControl implements TransactionControl {
     public void setTransactionManager(
             final TransactionManager transactionManager) {
         this.transactionManager = transactionManager;
-    }
-
-    public Object mandatory(final TransactionCallback callback)
-            throws Throwable {
-        if (!hasTransaction()) {
-            throw new SIllegalStateException("ESSR0311", null);
-        }
-        return callback.execute(this);
-    }
-
-    public Object never(final TransactionCallback callback) throws Throwable {
-        if (hasTransaction()) {
-            throw new SIllegalStateException("ESSR0317", null);
-        }
-        return callback.execute(this);
-    }
-
-    public Object notSupported(final TransactionCallback callback)
-            throws Throwable {
-        final Transaction tx = hasTransaction() ? suspend() : null;
-        try {
-            return callback.execute(this);
-        } finally {
-            if (tx != null) {
-                resume(tx);
-            }
-        }
     }
 
     public Object required(final TransactionCallback callback) throws Throwable {
@@ -105,6 +82,33 @@ public class TransactionManagerControl implements TransactionControl {
                 resume(tx);
             }
         }
+    }
+
+    public Object mandatory(final TransactionCallback callback)
+            throws Throwable {
+        if (!hasTransaction()) {
+            throw new SIllegalStateException("ESSR0311", null);
+        }
+        return callback.execute(this);
+    }
+
+    public Object notSupported(final TransactionCallback callback)
+            throws Throwable {
+        final Transaction tx = hasTransaction() ? suspend() : null;
+        try {
+            return callback.execute(this);
+        } finally {
+            if (tx != null) {
+                resume(tx);
+            }
+        }
+    }
+
+    public Object never(final TransactionCallback callback) throws Throwable {
+        if (hasTransaction()) {
+            throw new SIllegalStateException("ESSR0317", null);
+        }
+        return callback.execute(this);
     }
 
     public void setRollbackOnly() {

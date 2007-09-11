@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN"
+	"http://www.seasar.org/dtd/components24.dtd">
+<components namespace="jta">
+	<description>
+		JavaEE5 (JTA1.1) 対応の AP サーバで，JTA の UserTransaction および
+		TransactionSynchronizationRegistry を
+		JNDI からルックアップして使用するための設定ファイルです．
+
+		UserTransaction と TransactionSynchronizationRegistry を利用する
+		機能が限定された TransactionManager を使用することができます．
+		このため，Kuina-Dao や S2Hibernate を利用することが可能です．
+
+		この設定ファイルでは，以下のトランザクション属性がサポートされます．
+		・REQUIRED
+		・MANDATORY
+		・NEVER
+
+		以下のトランザクション属性はサポートされません．
+		・REQUIRES_NEW
+		・NOT_SUPPORTED
+	</description>
+
+	<!-- UserTransaction from JNDI -->
+	<component name="UserTransaction"
+			class="javax.transaction.UserTransaction">
+		@org.seasar.extension.j2ee.JndiResourceLocator@lookup("java:comp/UserTransaction")
+	</component>
+
+	<!-- TransactionSynchronizationRegistry from JNDI -->
+	<component name="TransactionSynchronizationRegistry"
+			class="javax.transaction.TransactionSynchronizationRegistry">
+		@org.seasar.extension.j2ee.JndiResourceLocator@lookup("java:comp/TransactionSynchronizationRegistry")
+	</component>
+
+	<!-- UserTransction と TransactionSynchronizationRegistry を利用する制限付き TransactionManager -->
+	<component name="TransactionManager"
+		class="org.seasar.extension.jta.RestrictedTransactionManagerImpl"/>
+
+	<component name="transacstionControl"
+		class="org.seasar.extension.tx.control.UserTransactionControl"/>
+</components>

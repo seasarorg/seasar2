@@ -3,9 +3,10 @@
 <!-- don't edit start -->
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="Content-Style-Type" content="text/css">
 <title>Transactionの設定</title>
-<link href="seasar_b.css" type="text/css" rel="stylesheet" media="screen" />
-<link href="seasar_p.css" type="text/css" rel="stylesheet" media="print" />
+<link href="seasar_b.css" type="text/css" rel="stylesheet" media="screen">
+<link href="seasar_p.css" type="text/css" rel="stylesheet" media="print">
 <script src="seasar_b.js" type="text/JavaScript" language="JavaScript">
 </script>
 </head>
@@ -15,165 +16,169 @@
 <td align="left" valign="top" width="780">
 <table width="780" border="0" cellspacing="0" cellpadding="0" class="white">
 <tr>
-<td colspan="7"><img height="5" width="780" src="images/top01_b.gif" alt="" /></td>
+<td colspan="7"><img height="5" width="780" src="images/top01_b.gif" alt=""></td>
 </tr>
 <tr>
-<td><img height="117" width="235" src="images/top02_b.gif" alt="Seasar" /></td>
-<td colspan="3"><img height="117" width="289" src="images/top03.gif" alt="DI Container with AOP" /></td>
-<td colspan="3"><img height="117" width="256" src="images/spacer.gif" alt="" /></td>
+<td><img height="117" width="235" src="images/top02_b.gif" alt="Seasar"></td>
+<td colspan="3"><img height="117" width="289" src="images/top03.gif" alt="DI Container with AOP"></td>
+<td colspan="3"><img height="117" width="256" src="images/spacer.gif" alt=""></td>
 </tr>
 <tr>
-<td rowspan="2"><img src="images/top04.gif" alt="" height="49" width="235" /></td>
-<td><a href="http://www.seasar.org/index.html"><img src="images/menu01_b_ja.gif" height="30" width="78" border="0" alt="" id="menu01" onmouseover="swap(1)" onmouseout="restore(1)" /></a></td>
-<td><a href="http://www.seasar.org/projects.html"><img src="images/menu02_b_ja.gif" height="30" width="101" border="0" alt="" id="menu02" onmouseover="swap(2)" onmouseout="restore(2)" /></a></td>
-<td><a href="http://www.seasar.org/products.html"><img src="images/menu03_b_ja.gif" height="30" width="110" border="0" alt="" id="menu03" onmouseover="swap(3)" onmouseout="restore(3)" /></a></td>
-<td><a href="http://www.seasar.org/resources.html"><img src="images/menu04_b_ja.gif" height="30" width="113" border="0" alt="" id="menu04" onmouseover="swap(4)" onmouseout="restore(4)" /></a></td>
-<td><img src="images/menu05_b_ja.gif" height="30" width="109" border="0" alt="" id="menu05" onmouseover="swap(5)" onmouseout="restore(5)" /></td>
-<td><img height="30" width="34" src="images/menu06.gif" alt="" /></td>
+<td rowspan="2"><img src="images/top04.gif" alt="" height="49" width="235"></td>
+<td><a href="http://www.seasar.org/index.html"><img src="images/menu01_b_ja.gif" height="30" width="78" border="0" alt="" id="menu01" onmouseover="swap(1)" onmouseout="restore(1)"></a></td>
+<td><a href="http://www.seasar.org/projects.html"><img src="images/menu02_b_ja.gif" height="30" width="101" border="0" alt="" id="menu02" onmouseover="swap(2)" onmouseout="restore(2)"></a></td>
+<td><a href="http://www.seasar.org/products.html"><img src="images/menu03_b_ja.gif" height="30" width="110" border="0" alt="" id="menu03" onmouseover="swap(3)" onmouseout="restore(3)"></a></td>
+<td><a href="http://www.seasar.org/resources.html"><img src="images/menu04_b_ja.gif" height="30" width="113" border="0" alt="" id="menu04" onmouseover="swap(4)" onmouseout="restore(4)"></a></td>
+<td><img src="images/menu05_b_ja.gif" height="30" width="109" border="0" alt="" id="menu05" onmouseover="swap(5)" onmouseout="restore(5)"></td>
+<td><img height="30" width="34" src="images/menu06.gif" alt=""></td>
 </tr>
 <tr>
-<td colspan="6"><img height="19" width="545" src="images/spacer.gif" alt="" /></td>
+<td colspan="6"><img height="19" width="545" src="images/spacer.gif" alt=""></td>
 </tr>
 </table>
 <table width="780" border="0" cellspacing="0" cellpadding="0" class="white">
 <tr align="left" valign="top">
-<td width="14"><img height="14" width="14" src="images/spacer.gif" alt="" /></td>
+<td width="14"><img height="14" width="14" src="images/spacer.gif" alt=""></td>
 <td width="752" class="main"><!-- don't edit end -->
 <!-- document start -->
-<ul>
-<li><a href="#setup">セットアップ</a>
-<ul>
-<li><a href="#S2JTA">S2JTA</a>
-<li><a href="#Oracle10gAS">Oracle 10g AS</a>
-<li><a href="#JBoss">JBoss</a>
-<li><a href="#WebSphere51">WebSphere 5.1</a>
-<li><a href="#WebLogic">WebLogic</a>
+            <h2>目次</h2>
+            <ul>
+<li><a href="#abstraction">概要</a>
+
 </li>
-</ul>
-</li>
-</ul>
-<h2><a name="setup">セットアップ</a></h2>
-<p>Javaでトランザクション処理を行なうには、JTA(Java Transaction API)を使います。
-JTAは通常、アプリケーションサーバが実装しますが、
-TomcatのようなJTAの実装のないアプリケーションサーバ用に<a href="#S2JTA">S2JTA</a>を用意しています。
-</p>
-<p>
-JTAの設定は、jta.diconで行ないます。
-<a href="#S2JTA">S2JTA</a>用のjta.diconは、
-s2-extension-x.x.x.jarに含まれているので、
-<a href="#S2JTA">S2JTA</a>を使う場合には、
-特に設定を行なう必要はありません。</p>
-<p>
-<a href="#S2JTA">S2JTA</a>以外のJPA実装を使う場合には、
-お使いのアプリケーションサーバ用にjta.diconを設定してください。
-jta.diconはクラスパスの通っているディレクトリ、
-通常はWEB-INF/classesにおきます。
-</p>
-<p>
-それぞれのアプリケーションサーバ用の設定は次のようになります。
-S2JTAの設定は必要ありませんが参考までに載せておきます。
-</p>
-
-<h3><a name="S2JTA">S2JTA</a></h2>
-<pre>
-&lt;?xml version="1.0" encoding="UTF-8"?&gt
-&lt;!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN" 
-	"http://www.seasar.org/dtd/components24.dtd"&gt
-&lt;components&gt
-    &lt;component name="TransactionManager"
-      class="org.seasar.extension.jta.TransactionManagerImpl"/&gt;
-    
-    &lt;component name="UserTransaction"
-      class="org.seasar.extension.jta.UserTransactionImpl"/&gt;
-
-    &lt;component name="TransactionSynchronizationRegistry"
-      class="org.seasar.extension.jta.TransactionSynchronizationRegistryImpl"/&gt;
-&lt;/components&gt
-</pre>
-
-<h3><a name="Oracle10gAS">Oracle 10g AS</a></h3>
-<pre>
-&lt;?xml version="1.0" encoding="UTF-8"?&gt
-&lt;!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN" 
-	"http://www.seasar.org/dtd/components24.dtd"&gt
-&lt;components&gt
-    &lt;component name="TransactionManager"
-      class="javax.transaction.TransactionManager"&gt;
-        @org.seasar.extension.j2ee.JndiResourceLocator@lookup("java:comp/UserTransaction")
-    &lt;/component&gt;
-    
-    &lt;component name="UserTransaction"
-      class="javax.transaction.UserTransaction"&gt;
-        @org.seasar.extension.j2ee.JndiResourceLocator@lookup("java:comp/UserTransaction")
-    &lt;/component&gt;
-&lt;/components&gt
-</pre>
-
-<h3><a name="JBoss">JBoss</a></h3>
-<pre>
-&lt;?xml version="1.0" encoding="UTF-8"?&gt
-&lt;!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN" 
-	"http://www.seasar.org/dtd/components24.dtd"&gt
-&lt;components&gt
-    &lt;component name="TransactionManager"
-      class="javax.transaction.TransactionManager"&gt;
-        @org.seasar.extension.j2ee.JndiResourceLocator@lookup("java:/TransactionManager")
-    &lt;/component&gt;
-    
-    &lt;component name="UserTransaction"
-      class="javax.transaction.UserTransaction"&gt;
-        @org.seasar.extension.j2ee.JndiResourceLocator@lookup("java:comp/UserTransaction")
-    &lt;/component&gt;
-&lt;/components&gt
-</pre>
-
-<h3><a name="WebSphere51">WebSphere 5.1</a></h3>
-<pre>
-&lt;?xml version="1.0" encoding="UTF-8"?&gt
-&lt;!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN" 
-	"http://www.seasar.org/dtd/components24.dtd"&gt
-&lt;components&gt
-    &lt;component name="TransactionManager"
-      class="javax.transaction.TransactionManager"&gt;
-        @com.ibm.ws.Transction.TransactionManagerFactory@getTransactionManager()
-    &lt;/component&gt;
-    
-    &lt;component name="UserTransaction"
-      class="javax.transaction.UserTransaction"&gt;
-        @org.seasar.extension.j2ee.JndiResourceLocator@lookup("java:comp/UserTransaction")
-    &lt;/component&gt;
-&lt;/components&gt
-</pre>
-
-<h3><a name="WebLogic">WebLogic</a></h3>
-<pre>
-&lt;?xml version="1.0" encoding="UTF-8"?&gt
-&lt;!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN" 
-	"http://www.seasar.org/dtd/components24.dtd"&gt
-&lt;components&gt
-    &lt;component name="TransactionManager"
-      class="javax.transaction.TransactionManager"&gt;
-        @org.seasar.extension.j2ee.JndiResourceLocator@lookup("javax.transaction.TransactionManager")
-    &lt;/component&gt;
-    
-    &lt;component name="UserTransaction"
-      class="javax.transaction.UserTransaction"&gt;
-        @org.seasar.extension.j2ee.JndiResourceLocator@lookup("java:comp/UserTransaction")
-    &lt;/component&gt;
-
-&lt;/components&gt
-</pre>
-
+              <li><a href="#dicon">設定ファイル</a></li>
+              <li><a href="#change">設定ファイルの切り替え</a></li>
+            </ul>
+            <h2><a name="abstraction">概要</a></h2>
+            <p>Javaでトランザクション処理を行なうには，JTA (Java Transaction API) を使います． JTAは通常，アプリケーションサーバが実装を提供しますが，TomcatのようなJTAの実装のない環境用に，S2JTAを用意しています．</p>
+            <h2><a name="dicon">設定ファイル</a></h2>
+            <p>JTAの設定は，diconファイルで行ないます．Seasar2では，以下の表に示す環境用の設定ファイルを<code>s2-extension-2.4.x.jar</code>ファイルの中に含めています．</p>
+            <table border="1" width="100%">
+              <col span="2">
+              <col span="5" width="30" align="center">
+              <tbody>
+                <tr>
+                  <th rowspan="2">設定ファイル</th>
+                  <th rowspan="2">対象</th>
+                  <th colspan="5">トランザクション属性</th>
+                </tr>
+                <tr>
+                  <th>R</th>
+                  <th>RN</th>
+                  <th>M</th>
+                  <th>NS</th>
+                  <th>NV</th>
+                </tr>
+                <tr>
+                  <td><code><a href="https://www.seasar.org/svn/s2container/trunk/seasar2/s2-extension/src/main/resources/jta.dicon">jta.dicon</a></code></td>
+                  <td>S2JTA</td>
+                  <td>○</td>
+                  <td>○</td>
+                  <td>○</td>
+                  <td>○</td>
+                  <td>○</td>
+                </tr>
+                <tr>
+                  <td><code><a href="https://www.seasar.org/svn/s2container/trunk/seasar2/s2-extension/src/main/resources/jta-10.dicon">jta-10.dicon</a></code></td>
+                  <td>J2EE1.4 (JTA1.0) 対応APサーバ</td>
+                  <td>○</td>
+                  <td>×</td>
+                  <td>○</td>
+                  <td>×</td>
+                  <td>○</td>
+                </tr>
+                <tr>
+                  <td><code><a href="https://www.seasar.org/svn/s2container/trunk/seasar2/s2-extension/src/main/resources/jta-11.dicon">jta-11.dicon</a></code></td>
+                  <td>JavaEE5 (JTA1.1) 対応APサーバ</td>
+                  <td>○</td>
+                  <td>×</td>
+                  <td>○</td>
+                  <td>×</td>
+                  <td>○</td>
+                </tr>
+                <tr>
+                  <td><code><a href="https://www.seasar.org/svn/s2container/trunk/seasar2/s2-extension/src/main/resources/jta-was4.dicon">jta-was4.dicon</a></code></td>
+                  <td>IBM WebSphere Application Server version 4.0 (注1)</td>
+                  <td>○</td>
+                  <td>○</td>
+                  <td>○</td>
+                  <td>○</td>
+                  <td>○</td>
+                </tr>
+                <tr>
+                  <td><code><a href="https://www.seasar.org/svn/s2container/trunk/seasar2/s2-extension/src/main/resources/jta-was50.dicon">jta-was50.dicon</a></code></td>
+                  <td>IBM WebSphere Application Server version 5.0 (注1)</td>
+                  <td>○</td>
+                  <td>○</td>
+                  <td>○</td>
+                  <td>○</td>
+                  <td>○</td>
+                </tr>
+                <tr>
+                  <td><code><a href="https://www.seasar.org/svn/s2container/trunk/seasar2/s2-extension/src/main/resources/jta-was51.dicon">jta-was51.dicon</a></code></td>
+                  <td>IBM WebSphere Application Server version 5.1 (注1)</td>
+                  <td>○</td>
+                  <td>○</td>
+                  <td>○</td>
+                  <td>○</td>
+                  <td>○</td>
+                </tr>
+                <tr>
+                  <td><code><a href="https://www.seasar.org/svn/s2container/trunk/seasar2/s2-extension/src/main/resources/jta-was6.dicon">jta-was6.dicon</a></code></td>
+                  <td>IBM WebSphere Application Server version 6.0および6.1</td>
+                  <td>○</td>
+                  <td>○</td>
+                  <td>○</td>
+                  <td>○</td>
+                  <td>○</td>
+                </tr>
+                <tr>
+                  <td><code><a href="https://www.seasar.org/svn/s2container/trunk/seasar2/s2-extension/src/main/resources/jta-wls.dicon">jta-wls.dicon</a></code></td>
+                  <td>BEA WebLogic Server</td>
+                  <td>○</td>
+                  <td>○</td>
+                  <td>○</td>
+                  <td>○</td>
+                  <td>○</td>
+                </tr>
+                <tr>
+                  <td><code><a href="https://www.seasar.org/svn/s2container/trunk/seasar2/s2-extension/src/main/resources/jta-jboss.dicon">jta-jboss.dicon</a></code></td>
+                  <td>JBoss Application Server</td>
+                  <td>○</td>
+                  <td>○</td>
+                  <td>○</td>
+                  <td>○</td>
+                  <td>○</td>
+                </tr>
+              </tbody>
+            </table>
+            <p>(注1) … これらの設定ファイルはIBM社がサポートしない方法でJTA TransactionManagerを使用します．IBM社のサポートが必要な場合は，これらの設定ファイルは使用しないで，代わりに<code>jta-10.dicon</code>を使用してください．</p>
+            <ul>
+              <li>R&nbsp;&nbsp;…REQUIRED
+              <li>RN…REQUIRES_NEW
+              <li>M&nbsp;&nbsp;…MANDATORY
+              <li>NS…NOT_SUPPORT
+              <li>NV…NEVER
+            </ul>
+            <h2><a name="change">設定ファイルの差し替え</a></h2>
+            <p>標準では，<code>j2ee.dicon</code>等から<code>jta.dicon</code>がインクルードされてS2JTAが使用されます．使用する環境に合わせてJTAの設定ファイルを差し替えるには，s2container.diconで指定します．</p>
+            <pre>&lt;component class=&quot;org.seasar.framework.container.factory.SimplePathResolver&quot;&gt;
+  &lt;initMethod name=&quot;addRealPath&quot;&gt;
+    &lt;arg&gt;&quot;jta.dicon&lt;/arg&gt;
+    &lt;arg&gt;&quot;jta-was6.dicon&quot;&lt;/arg&gt;&lt;!-- 実際に使用するJTA設定ファイル --&gt;
+  &lt;/initMethod&gt;
+&lt;/component&gt;</pre>
+            <p>この設定により，j2ee.dicon等が'<code>jta.dicon</code>&quot;という名前でdiconファイルをインクルードすると，実際には'<code>jta-was6.dicon</code>'がインクルードされます．詳細は「<a href="DIContainer.html">DIContainer</a>」－「<a href="DIContainer.html#ConfigFileReplace">インクルードファイルの差し替え</a>」を参照してください．</p>
 <!-- document end -->
 <!-- don't edit start --></td>
-<td width="14"><img height="14" width="14" src="images/spacer.gif" alt="" /></td>
+<td width="14"><img height="14" width="14" src="images/spacer.gif" alt=""></td>
 </tr>
 <tr>
-<td width="14"><img height="30" width="14" src="images/spacer.gif" alt="" /></td>
-<td width="766"><img height="30" width="592" src="images/spacer.gif" alt="" /></td>
+<td width="14"><img height="30" width="14" src="images/spacer.gif" alt=""></td>
+<td width="766"><img height="30" width="592" src="images/spacer.gif" alt=""></td>
 </tr>
 <tr>
-<td width="14"><img height="14" width="14" src="images/spacer.gif" alt="" /></td>
+<td width="14"><img height="14" width="14" src="images/spacer.gif" alt=""></td>
 <td width="766" class="copyright">Copyright© 2004-2005, The Seasar Foundation and the others. All rights reserved.</td>
 </tr>
 </table>
