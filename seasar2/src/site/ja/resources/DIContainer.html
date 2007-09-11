@@ -67,8 +67,12 @@
 <li><a href="#S2ContainerLifecycle">S2Containerのライフサイクル</a></li>
 <li><a href="#ComponentLifecycle">コンポーネントのライフサイクル</a></li>
 <li><a href="#Env">環境名</a></li>
-<li><a href="#Include">定義ファイルのインクルード</a></li>
-<li><a href="#ConditionalInclude">定義ファイルの条件インクルード</a></li>
+<li><a href="#Include">定義ファイルのインクルード</a>
+<ul>
+<li type="circle"><a href="#ConfigFileReplacement">定義ファイルの差し替え</a></li>
+<li type="circle"><a href="#ConditionalInclude">定義ファイルの条件インクルード</a></li>
+</ul>
+</li>
 <li><a href="#XInclude">定義ファイルの埋め込みインクルード(XInclude)</a></li>
 <li><a href="#Namespace">名前空間</a></li>
 <li><a href="#S2ContainerFilter">S2ContainerFilter</a></li>
@@ -485,7 +489,41 @@ Webアプリケーションでは<code>WEB-INF/classes</code>になります。
 見つからない場合は、インクルードいる順に子供の定義ファイルを検索し、
 最初に見つかったコンポーネントが対象になります。</p>
 
-<h3><a name="ConditionalInclude" id="ConditionalInclude">定義ファイルの条件インクルード</a></h3>
+<h4><a name="ConfigFileReplacement" id="ConfigFileReplacement">定義ファイルの差し替え</a></h4>
+<p>インクルード元の定義ファイルを変更することなくインクルード先の定義ファイルを切り替えたい場合があります。
+記述上はデフォルトの定義ファイルをインクルードしているが実際にはデフォルト以外の定義ファイルを利用したいという場合です。</p>
+<p>このような場合に利用できるのが定義ファイルの差し替えです。</p>
+<p>定義ファイルを差し替えるには、s2container.diconに<code>SimplePathResolver</code>のコンポーネントを定義し、差し替え対象の定義ファイルと実際に利用したい定義ファイルを対応付けます。
+例えば、デフォルトのjta.diconをWAS6用のjta-was6.diconに差し替えたい場合は次のように記述します。</p>
+<pre>
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN" 
+    "http://www.seasar.org/dtd/components24.dtd"&gt;
+&lt;components&gt;
+    &lt;include condition="#ENV == 'ut'" path="hotdeploy.dicon"/&gt;
+    &lt;include condition="#ENV != 'ut'" path="cooldeploy.dicon"/&gt;
+
+    <b>&lt;component class="org.seasar.framework.container.factory.SimplePathResolver"&gt;
+        &lt;initMethod name="addRealPath"&gt;
+            &lt;arg&gt;"jta.dicon"&lt;/arg&gt;
+            &lt;arg&gt;"jta-was6.dicon"&lt;/arg&gt;
+        &lt;/initMethod&gt;
+    &lt;/component&gt;</b>
+&lt;/components&gt;
+</pre>
+<p>
+この場合、インクルード元の定義ファイルが次のように記述されていれば実際にはjta.diconではなくjta-was6.diconがインクルードされます。
+</p>
+<pre>
+&lt;components&gt;
+    &lt;include path="jta.dicon"/&gt;
+&lt;/components&gt;
+</pre>
+<p>
+定義ファイルの差し替え機能は、インクルード元の定義ファイルがjarファイル内にあり直接変更できない場合や、インクルード元の定義ファイルが複数あり一括でインクルード先を切り替えたい場合に役立ちます。
+</p>
+
+<h4><a name="ConditionalInclude" id="ConditionalInclude">定義ファイルの条件インクルード</a></h4>
 <p>一つのアプリケーションで利用されるdiconファイルであっても、
 状況によって異なった設定が必要になることがあります。
 RDBMSの接続情報などは、<a href="#Env">環境</a>によって変える必要があることがほとんどです、</p>
@@ -500,7 +538,7 @@ RDBMSの接続情報などは、<a href="#Env">環境</a>によって変える�
 <li>明示的な条件インクルード<br />
 OGNL式によって指定した条件が真となる場合のみdiconをインクルードする機能です。</li>
 </ul>
-<h4><a name="ImplicitConditionalInclude" id="ImplicitConditionalInclude">暗黙的な条件インクルード</a></h4>
+<h5><a name="ImplicitConditionalInclude" id="ImplicitConditionalInclude">暗黙的な条件インクルード</a></h5>
 <p>暗黙的な条件インクルードとは、<code>include</code>タグの<code>path</code>属性で指定されたdicon名に、
 環境名をサフィックスとして持つdiconがあればそれをインクルードする機能です。</p>
 <p>暗黙的な条件インクルードを使う場合，インクルードする側のdiconは通常通り記述します．</p>
@@ -522,7 +560,7 @@ OGNL式によって指定した条件が真となる場合のみdiconをイン�
 <li><code>foo.dicon</code><br />
 環境名が<code>ut</code>でも<code>ct</code>でもない場合にインクルードされます。</li>
 </ul>
-<h4><a name="ExplicitConditionalInclude" id="ExplicitConditionalInclude">明示的な条件インクルード</a></h4>
+<h5><a name="ExplicitConditionalInclude" id="ExplicitConditionalInclude">明示的な条件インクルード</a></h5>
 <p>より複雑な状況でインクルードするdiconを切り替えたい場合には、
 <code>include</code>タグの<code>condition</code>属性でインクルードする条件をOGNL式で明示的に指定することができます。
 この場合には、指定された条件が満たされた場合のみ、指定されたdiconがインクルードされます。</p>
@@ -543,7 +581,7 @@ OGNL式によって指定した条件が真となる場合のみdiconをイン�
 OGNL式については「<a href="ognl.html">OGNLガイド</a>」を参照してください。</p>
 <p>条件インクルードはSeasar2.4以上が必要です。</p>
 
-<h3><a name="XInclude" id="XInclude">設定ファイルの埋め込みインクルード(XInclude)</a></h2>
+<h3><a name="XInclude" id="XInclude">設定ファイルの埋め込みインクルード(XInclude)</a></h3>
 <p><a href="http://www.w3.org/TR/xinclude/">XInclude (XML Inclusion)</a> は、
 複数の XML ドキュメントを一つの XML ドキュメントに統合するための仕様です。
 Seasar2.4 で導入された XInclude のサポートにより、複数の dicon ファイルを一つの dicon ファイルのように扱うことが可能になります。</p>
