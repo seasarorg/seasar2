@@ -39,6 +39,26 @@ public class ClassPoolUtil {
     protected static final Map classPoolMap = Collections
             .synchronizedMap(new WeakHashMap());
 
+    /** クラスが初期化済みであることを示します。 */
+    protected static boolean initialized;
+
+    /**
+     * クラスを初期化します。
+     */
+    public static synchronized void initialize() {
+        if (!initialized) {
+            DisposableUtil.add(new Disposable() {
+                public void dispose() {
+                    synchronized (ClassPoolUtil.class) {
+                        classPoolMap.clear();
+                        initialized = false;
+                    }
+                }
+            });
+            initialized = true;
+        }
+    }
+
     /**
      * ClassPoolを返します。
      * 
@@ -56,6 +76,7 @@ public class ClassPoolUtil {
      * @return ClassPool
      */
     public static ClassPool getClassPool(final ClassLoader classLoader) {
+        initialize();
         ClassPool classPool = (ClassPool) classPoolMap.get(classLoader);
         if (classPool == null) {
             if (classLoader == null) {
