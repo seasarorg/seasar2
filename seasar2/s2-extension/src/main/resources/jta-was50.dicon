@@ -6,7 +6,7 @@
 		WebSphere Application Server version 5.0 が提供する JTA 実装を使用するための設定ファイルです．
 
 		WebSphere はアプリケーションからの TransactionManager の利用はサポートしていません．
-		IBM のサポートが必要な場合は jta-usertx.dicon を使用してください．
+		IBM のサポートが必要な場合は jta-10.dicon を使用してください．
 
 		この設定ファイルでは，以下の全てのトランザクション属性がサポートされます．
 		・REQUIRED
