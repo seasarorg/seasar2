@@ -38,15 +38,27 @@ public class RemoveSessionInterceptorTest extends S2FrameworkTestCase {
         HttpSession session = getRequest().getSession();
         session.setAttribute("foo", "Foo");
         session.setAttribute("bar", "Bar");
+        session.setAttribute("baz", "Baz");
 
         Hoge hoge = (Hoge) getComponent("hoge");
         hoge.begin();
         assertEquals("Foo", session.getAttribute("foo"));
         assertEquals("Bar", session.getAttribute("bar"));
+        assertEquals("Foo", session.getAttribute("foo"));
+
+        try {
+            hoge.fail();
+            fail();
+        } catch (RuntimeException expected) {
+        }
+        assertEquals("Foo", session.getAttribute("foo"));
+        assertEquals("Bar", session.getAttribute("bar"));
+        assertEquals("Foo", session.getAttribute("foo"));
 
         hoge.end();
         assertEquals("Foo", session.getAttribute("foo"));
         assertNull(session.getAttribute("bar"));
+        assertEquals("Foo", session.getAttribute("foo"));
     }
 
     /**
@@ -59,20 +71,19 @@ public class RemoveSessionInterceptorTest extends S2FrameworkTestCase {
     }
 
     /**
-     * @author higa
-     *
      */
     public static class Hoge {
-        /**
-         * 
-         */
+        /** */
         public void begin() {
         }
 
-        /**
-         * 
-         */
+        /** */
         public void end() {
+        }
+
+        /** */
+        public void fail() {
+            throw new RuntimeException();
         }
     }
 }

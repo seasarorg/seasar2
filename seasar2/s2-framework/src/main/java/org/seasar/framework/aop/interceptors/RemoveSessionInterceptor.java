@@ -67,11 +67,9 @@ public class RemoveSessionInterceptor extends AbstractInterceptor {
     }
 
     public Object invoke(final MethodInvocation invocation) throws Throwable {
-        try {
-            return invocation.proceed();
-        } finally {
-            removeSession();
-        }
+        final Object result = invocation.proceed();
+        removeSession();
+        return result;
     }
 
     /**

@@ -10,5 +10,11 @@
 				<property name="name">new String[] {"bar"}</property>
 			</component>
 		</aspect>
+		<aspect pointcut="fail">
+			<component name="removeSessionInterceptor" instance="prototype"
+				class="org.seasar.framework.aop.interceptors.RemoveSessionInterceptor">
+				<property name="name">new String[] {"baz"}</property>
+			</component>
+		</aspect>
 	</component>
 </components>
