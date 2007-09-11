@@ -32,16 +32,16 @@ import com.ibm.wsspi.uow.UOWManager;
 public class WAS6TransactionControl implements TransactionControl {
 
     /** グローバルトランザクションを示します */
-    protected boolean GLOBAL_TX = true;
+    protected static final int GLOBAL_TX = UOWSynchronizationRegistry.UOW_TYPE_GLOBAL_TRANSACTION;
 
     /** ローカルトランザクションを示します */
-    protected boolean LOCAL_TX = false;
+    protected static final int LOCAL_TX = UOWSynchronizationRegistry.UOW_TYPE_LOCAL_TRANSACTION;
 
     /** 既存のトランザクションがあれば参加することを示します */
-    protected boolean JOIN_TX = true;
+    protected static final boolean JOIN_TX = true;
 
     /** 新規のトランザクションを開始することを示します */
-    protected boolean NEW_TX = true;
+    protected static final boolean NEW_TX = false;
 
     /** <coce>uowManager</code>プロパティのバインディング定義です。 */
     public static final String uowManager_BINDING = "bindingType=must";
@@ -89,7 +89,7 @@ public class WAS6TransactionControl implements TransactionControl {
     /**
      * @param callback
      *            トランザクションコールバック
-     * @param globalTransaction
+     * @param transactionType
      *            {@link #GLOBAL_TX}または{@link #LOCAL_TX}
      * @param joinTransaction
      *            {@link #JOIN_TX}または{@link #NEW_TX}
@@ -98,12 +98,10 @@ public class WAS6TransactionControl implements TransactionControl {
      *             トランザクションコールバックが例外をスローした場合
      */
     protected Object execute(final TransactionCallback callback,
-            final boolean globalTransaction, final boolean joinTransaction)
+            final int transactionType, final boolean joinTransaction)
             throws Throwable {
-        final int type = globalTransaction ? UOWSynchronizationRegistry.UOW_TYPE_GLOBAL_TRANSACTION
-                : UOWSynchronizationRegistry.UOW_TYPE_LOCAL_TRANSACTION;
         final UOWActionImpl action = new UOWActionImpl(callback);
-        uowManager.runUnderUOW(type, joinTransaction, action);
+        uowManager.runUnderUOW(transactionType, joinTransaction, action);
         return action.getResult();
     }
 
@@ -164,4 +162,5 @@ public class WAS6TransactionControl implements TransactionControl {
         }
 
     }
+
 }
