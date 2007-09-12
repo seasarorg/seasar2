@@ -142,6 +142,24 @@
                   <td>○</td>
                 </tr>
                 <tr>
+                  <td><code><a href="https://www.seasar.org/svn/s2container/trunk/seasar2/s2-extension/src/main/resources/jta-oc4j.dicon">jta-oc4j.dicon</a></code></td>
+                  <td>Oracle Application Server (OC4J) version 10.1.2以前</td>
+                  <td>○</td>
+                  <td>○</td>
+                  <td>○</td>
+                  <td>○</td>
+                  <td>○</td>
+                </tr>
+                <tr>
+                  <td><code><a href="https://www.seasar.org/svn/s2container/trunk/seasar2/s2-extension/src/main/resources/jta-oc4j1013.dicon">jta-oc4j1013.dicon</a></code></td>
+                  <td>Oracle Application Server (OC4J) version 10.1.3以降</td>
+                  <td>○</td>
+                  <td>○</td>
+                  <td>○</td>
+                  <td>○</td>
+                  <td>○</td>
+                </tr>
+                <tr>
                   <td><code><a href="https://www.seasar.org/svn/s2container/trunk/seasar2/s2-extension/src/main/resources/jta-jboss.dicon">jta-jboss.dicon</a></code></td>
                   <td>JBoss Application Server</td>
                   <td>○</td>
@@ -152,7 +170,9 @@
                 </tr>
               </tbody>
             </table>
-            <p>(注1) … これらの設定ファイルはIBM社がサポートしない方法でJTA TransactionManagerを使用します．IBM社のサポートが必要な場合は，これらの設定ファイルは使用しないで，代わりに<code>jta-10.dicon</code>を使用してください．</p>
+            <p>
+              (注1) … これらの設定ファイルはJTA TransactionManagerを使用しますが，これはIBM社のサポート対象外です．
+              IBM社のサポートが必要な場合は，これらの設定ファイルは使用しないで，代わりに<code>jta-10.dicon</code>を使用してください．</p>
             <ul>
               <li>R&nbsp;&nbsp;…REQUIRED
               <li>RN…REQUIRES_NEW

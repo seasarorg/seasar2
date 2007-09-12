@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN"
+	"http://www.seasar.org/dtd/components24.dtd">
+<components namespace="jta">
+	<description>
+		Oracle Application Server 10g (OC4J) version 10.1.3 以降が提供する
+		JTA 実装を使用するための設定ファイルです．
+
+		この設定ファイルでは，以下の全てのトランザクション属性がサポートされます．
+		・REQUIRED
+		・MANDATORY
+		・NEVER
+		・REQUIRES_NEW
+		・NOT_SUPPORTED
+	</description>
+
+	<!-- TransactionManager from TransactionUtility -->
+	<component name="TransactionManager"
+			class="javax.transaction.TransactionManager">
+		@oracle.j2ee.transaction.TransactionUtility@getOC4JTransactionManager()
+	</component>
+
+	<!-- UserTransaction from TransactionUtility -->
+	<component name="UserTransaction"
+			class="javax.transaction.UserTransaction">
+		@oracle.j2ee.transaction.TransactionUtility@getOC4JUserTransaction()
+	</component>
+
+	<!-- TransactionManager を利用する TransactionSynchronizationRegistry -->
+	<component name="TransactionSynchronizationRegistry"
+		class="org.seasar.extension.jta.TransactionSynchronizationRegistryImpl"/>
+
+	<!-- TransactionSynchronizationRegistry from JNDI -->
+	<!--
+	<component name="TransactionSynchronizationRegistry"
+			class="javax.transaction.TransactionSynchronizationRegistry">
+		@org.seasar.extension.j2ee.JndiResourceLocator@lookup("java:comp/TransactionSynchronizationRegistry")
+	</component>
+	-->
+
+	<component name="transactionControl"
+		class="org.seasar.extension.tx.control.TransactionManagerControl"/>
+</components>
