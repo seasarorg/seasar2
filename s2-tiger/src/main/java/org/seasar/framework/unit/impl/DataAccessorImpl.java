@@ -15,75 +15,32 @@
  */
 package org.seasar.framework.unit.impl;
 
-import java.io.File;
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-
 import javax.persistence.EntityManager;
-import javax.sql.DataSource;
 import javax.transaction.TransactionManager;
 
-import org.seasar.extension.dataset.DataColumn;
-import org.seasar.extension.dataset.DataReader;
 import org.seasar.extension.dataset.DataSet;
 import org.seasar.extension.dataset.DataTable;
-import org.seasar.extension.dataset.DataWriter;
-import org.seasar.extension.dataset.impl.DataSetImpl;
-import org.seasar.extension.dataset.impl.SqlDeleteTableWriter;
-import org.seasar.extension.dataset.impl.SqlReader;
-import org.seasar.extension.dataset.impl.SqlReloadReader;
-import org.seasar.extension.dataset.impl.SqlReloadTableReader;
-import org.seasar.extension.dataset.impl.SqlTableReader;
-import org.seasar.extension.dataset.impl.SqlWriter;
-import org.seasar.extension.dataset.impl.XlsReader;
-import org.seasar.extension.dataset.impl.XlsWriter;
-import org.seasar.extension.jdbc.UpdateHandler;
-import org.seasar.extension.jdbc.impl.BasicUpdateHandler;
-import org.seasar.extension.jdbc.util.ConnectionUtil;
-import org.seasar.extension.jdbc.util.DataSourceUtil;
 import org.seasar.framework.container.annotation.tiger.Binding;
 import org.seasar.framework.container.annotation.tiger.BindingType;
-import org.seasar.framework.exception.EmptyRuntimeException;
 import org.seasar.framework.unit.DataAccessor;
-import org.seasar.framework.unit.TestContext;
-import org.seasar.framework.util.FileOutputStreamUtil;
-import org.seasar.framework.util.ResourceUtil;
 import org.seasar.framework.util.TransactionManagerUtil;
 
 /**
- * Excelファイルやデータベースにアクセスする実装クラスです。
+ * {@link EntityManager}のキャッシュに影響されない{@link DataAccessor}の実装です。
+ * <p>
+ * 必要に応じて{@link EntityManager#flush()}を呼び出すことで、キャッシュの影響を受けずにデータの取得、更新をします。
+ * このクラスは<code>EntityManager</code>の利用の有無に関わらず使用することができます。
+ * </p>
  * 
  * @author taedium
  */
-public class DataAccessorImpl implements DataAccessor {
-
-    /** テストコンテキスト */
-    protected TestContext testContext;
+public class DataAccessorImpl extends SimpleDataAccessor {
 
     /** トランザクションマネジャー */
     protected TransactionManager tm;
 
     /** エンティティマネジャー */
     protected EntityManager em;
-
-    private DataSource dataSource;
-
-    private Connection connection;
-
-    private DatabaseMetaData dbMetaData;
-
-    private SqlWriter sqlWriter;
-
-    /**
-     * テストコンテキストを設定します。
-     * 
-     * @param testContext
-     *            テストコンテキスト
-     */
-    @Binding(bindingType = BindingType.MUST)
-    public void setTestContext(final TestContext testContext) {
-        this.testContext = testContext;
-    }
 
     /**
      * トランザクションマネジャーを設定します。
@@ -97,17 +54,6 @@ public class DataAccessorImpl implements DataAccessor {
     }
 
     /**
-     * データソースを設定します。
-     * 
-     * @param dataSource
-     *            データソース
-     */
-    @Binding(bindingType = BindingType.SHOULD)
-    public void setDataSource(final DataSource dataSource) {
-        this.dataSource = dataSource;
-    }
-
-    /**
      * エンティティマネジャーを設定します。
      * 
      * @param em
@@ -118,202 +64,82 @@ public class DataAccessorImpl implements DataAccessor {
         this.em = em;
     }
 
-    /**
-     * SQLライターを設定します。
-     * 
-     * @param sqlWriter
-     *            SQLライター
-     */
-    @Binding(bindingType = BindingType.MAY)
-    public void setSqlWriter(final SqlWriter sqlWriter) {
-        this.sqlWriter = sqlWriter;
-    }
-
-    /**
-     * データソースを取得します。
-     * 
-     * @return データソース
-     */
-    public DataSource getDataSource() {
-        if (dataSource == null) {
-            throw new EmptyRuntimeException("dataSource");
-        }
-        return dataSource;
-    }
-
-    /**
-     * コネクションを取得します。
-     * 
-     * @return コネクション
-     */
-    public Connection getConnection() {
-        if (connection != null) {
-            return connection;
-        }
-        connection = DataSourceUtil.getConnection(getDataSource());
-        return connection;
-    }
-
-    /**
-     * データベースに関するメタデータを取得します。
-     * 
-     * @return データベースに関するメタデータ
-     */
-    public DatabaseMetaData getDatabaseMetaData() {
-        if (dbMetaData != null) {
-            return dbMetaData;
-        }
-        dbMetaData = ConnectionUtil.getMetaData(getConnection());
-        return dbMetaData;
-    }
-
-    /**
-     * SQLライターを取得します。
-     * 
-     * @return SQLライター
-     */
-    protected SqlWriter getSqlWriter() {
-        return sqlWriter != null ? sqlWriter : new SqlWriter(getDataSource());
-    }
-
-    public DataSet readXls(String path) {
-        return readXls(path, true);
-    }
-
-    public DataSet readXls(String path, boolean trimString) {
-        DataReader reader = new XlsReader(convertPath(path), trimString);
-        return reader.read();
-    }
-
-    public void writeXls(String path, DataSet dataSet) {
-        File dir = ResourceUtil.getBuildDir(getClass());
-        File file = new File(dir, convertPath(path));
-        DataWriter writer = new XlsWriter(FileOutputStreamUtil.create(file));
-        writer.write(dataSet);
-    }
-
+    @Override
     public void writeDb(DataSet dataSet) {
         flushIfNecessary();
-        DataWriter writer = getSqlWriter();
-        writer.write(dataSet);
+        super.writeDb(dataSet);
     }
 
+    @Override
     public DataSet readDb(DataSet dataSet) {
         flushIfNecessary();
-        SqlReader reader = new SqlReader(getDataSource());
-        reader.addDataSet(dataSet);
-        return reader.read();
+        return super.readDb(dataSet);
     }
 
+    @Override
     public DataTable readDbByTable(String table) {
         flushIfNecessary();
-        return readDbByTable(table, null);
+        return super.readDbByTable(table);
     }
 
+    @Override
     public DataTable readDbByTable(String table, String condition) {
         flushIfNecessary();
-        SqlTableReader reader = new SqlTableReader(getDataSource());
-        reader.setTable(table, condition);
-        return reader.read();
+        return super.readDbByTable(table, condition);
     }
 
+    @Override
     public DataTable readDbBySql(String sql, String tableName) {
         flushIfNecessary();
-        SqlTableReader reader = new SqlTableReader(getDataSource());
-        reader.setSql(sql, tableName);
-        return reader.read();
+        return super.readDbBySql(sql, tableName);
     }
 
-    public void readXlsWriteDb(String path) {
-        readXlsWriteDb(path, true);
-    }
-
+    @Override
     public void readXlsWriteDb(String path, boolean trimString) {
         flushIfNecessary();
-        writeDb(readXls(path, trimString));
+        super.readXlsWriteDb(path, trimString);
     }
 
-    public void readXlsReplaceDb(String path) {
-        readXlsAllReplaceDb(path, true);
-    }
-
+    @Override
     public void readXlsReplaceDb(String path, boolean trimString) {
         flushIfNecessary();
-        DataSet dataSet = readXls(path, trimString);
-        deleteDb(dataSet);
-        writeDb(dataSet);
+        super.readXlsReplaceDb(path, trimString);
     }
 
-    public void readXlsAllReplaceDb(String path) {
-        readXlsAllReplaceDb(path, true);
-    }
-
+    @Override
     public void readXlsAllReplaceDb(String path, boolean trimString) {
         flushIfNecessary();
-        DataSet dataSet = readXls(path, trimString);
-        for (int i = dataSet.getTableSize() - 1; i >= 0; --i) {
-            deleteTable(dataSet.getTable(i).getTableName());
-        }
-        writeDb(dataSet);
+        super.readXlsAllReplaceDb(path, trimString);
     }
 
+    @Override
     public DataSet reload(DataSet dataSet) {
         flushIfNecessary();
-        return new SqlReloadReader(getDataSource(), dataSet).read();
+        return super.reload(dataSet);
     }
 
+    @Override
     public DataTable reload(DataTable table) {
         flushIfNecessary();
-        return new SqlReloadTableReader(getDataSource(), table).read();
+        return super.reload(table);
     }
 
+    @Override
     public DataSet reloadOrReadDb(DataSet dataSet) {
         flushIfNecessary();
-        DataSet newDataSet = new DataSetImpl();
-        outer: for (int i = 0; i < dataSet.getTableSize(); i++) {
-            DataTable table = dataSet.getTable(i);
-            if (!table.hasMetaData()) {
-                table.setupMetaData(getDatabaseMetaData());
-            }
-            for (int j = 0; i < table.getColumnSize(); j++) {
-                DataColumn column = table.getColumn(j);
-                if (column.isPrimaryKey()) {
-                    newDataSet.addTable(reload(table));
-                    continue outer;
-                }
-            }
-            newDataSet.addTable(readDbByTable(table.getTableName()));
-        }
-        return newDataSet;
+        return super.reloadOrReadDb(dataSet);
     }
 
+    @Override
     public void deleteDb(DataSet dataSet) {
         flushIfNecessary();
-        SqlDeleteTableWriter writer = new SqlDeleteTableWriter(getDataSource());
-        for (int i = dataSet.getTableSize() - 1; i >= 0; --i) {
-            writer.write(dataSet.getTable(i));
-        }
+        super.deleteDb(dataSet);
     }
 
+    @Override
     public void deleteTable(String tableName) {
         flushIfNecessary();
-        UpdateHandler handler = new BasicUpdateHandler(getDataSource(),
-                "DELETE FROM " + tableName);
-        handler.execute(null);
-    }
-
-    /**
-     * パスを適切に変換して返します。
-     * 
-     * @param path
-     *            パス
-     * @return 指定されたパスのリソースが存在すればそのパス、存在しなければテストコンテキストに応じたパス
-     */
-    protected String convertPath(String path) {
-        if (ResourceUtil.isExist(path)) {
-            return path;
-        }
-        return testContext.getTestClassPackagePath() + "/" + path;
+        super.deleteTable(tableName);
     }
 
     /**

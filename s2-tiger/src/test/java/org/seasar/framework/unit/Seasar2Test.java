@@ -614,7 +614,7 @@ public class Seasar2Test extends TestCase {
     @RunWith(Seasar2.class)
     public static class FieldBindingTest {
 
-        private static List<Object> values;
+        private static List<Object> values = new ArrayList<Object>();
 
         private S2Container container;
 
