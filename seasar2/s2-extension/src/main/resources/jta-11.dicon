@@ -37,6 +37,7 @@
 	<component name="TransactionManager"
 		class="org.seasar.extension.jta.RestrictedTransactionManagerImpl"/>
 
+	<!- UserTransaction を利用する TransactionControl -->
 	<component name="transacstionControl"
 		class="org.seasar.extension.tx.control.UserTransactionControl"/>
 </components>

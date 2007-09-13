@@ -30,14 +30,7 @@
 	<component name="TransactionSynchronizationRegistry"
 		class="org.seasar.extension.jta.TransactionSynchronizationRegistryImpl"/>
 
-	<!-- TransactionSynchronizationRegistry from JNDI -->
-	<!--
-	<component name="TransactionSynchronizationRegistry"
-			class="javax.transaction.TransactionSynchronizationRegistry">
-		@org.seasar.extension.j2ee.JndiResourceLocator@lookup("java:comp/TransactionSynchronizationRegistry")
-	</component>
-	-->
-
+	<!- TransactionManager を利用する TransactionControl -->
 	<component name="transactionControl"
 		class="org.seasar.extension.tx.control.TransactionManagerControl"/>
 </components>

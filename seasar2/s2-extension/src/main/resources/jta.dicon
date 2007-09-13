@@ -19,9 +19,11 @@
 	<component name="UserTransaction"
 		class="org.seasar.extension.jta.UserTransactionImpl"/>
 
+	<!-- TransactionManager を利用する TransactionSynchronizationRegistry -->
 	<component name="TransactionSynchronizationRegistry"
 		class="org.seasar.extension.jta.TransactionSynchronizationRegistryImpl"/>
 
+	<!- TransactionManager を利用する TransactionControl -->
 	<component name="transactionControl"
 		class="org.seasar.extension.tx.control.TransactionManagerControl"/>
 </components>

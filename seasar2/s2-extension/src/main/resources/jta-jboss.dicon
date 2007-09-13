@@ -3,7 +3,7 @@
 	"http://www.seasar.org/dtd/components24.dtd">
 <components namespace="jta">
 	<description>
-		JBoss Application Server が提供する JTA 実装を使用するための設定ファイルです．
+		JBoss Application Server version 4.1 以前が提供する JTA 実装を使用するための設定ファイルです．
 
 		この設定ファイルでは，以下の全てのトランザクション属性がサポートされます．
 		・REQUIRED
@@ -25,18 +25,11 @@
 		@org.seasar.extension.j2ee.JndiResourceLocator@lookup("java:comp/UserTransaction")
 	</component>
 
-	<!-- TransactionManager を利用する TransactionSynchronizationRegistry (JBoss AS 4.1 以前) -->
+	<!-- TransactionManager を利用する TransactionSynchronizationRegistry -->
 	<component name="TransactionSynchronizationRegistry"
 		class="org.seasar.extension.jta.TransactionSynchronizationRegistryImpl"/>
 
-	<!-- TransactionSynchronizationRegistry from JNDI (JBoss AS 4.2 以降) -->
-	<!--
-	<component name="TransactionSynchronizationRegistry"
-			class="javax.transaction.TransactionSynchronizationRegistry">
-		@org.seasar.extension.j2ee.JndiResourceLocator@lookup("java:comp/TransactionSynchronizationRegistry")
-	</component>
-	-->
-
+	<!- TransactionManager を利用する TransactionControl -->
 	<component name="transactionControl"
 		class="org.seasar.extension.tx.control.TransactionManagerControl"/>
 </components>

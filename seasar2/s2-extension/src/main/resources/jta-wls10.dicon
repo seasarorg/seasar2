@@ -3,8 +3,7 @@
 	"http://www.seasar.org/dtd/components24.dtd">
 <components namespace="jta">
 	<description>
-		Oracle Application Server 10g (OC4J) version 10.1.2 以前が提供する
-		JTA 実装を使用するための設定ファイルです．
+		WebLogic Server version 10 以降が提供する JTA 実装を使用するための設定ファイルです．
 
 		この設定ファイルでは，以下の全てのトランザクション属性がサポートされます．
 		・REQUIRED
@@ -17,7 +16,7 @@
 	<!-- TransactionManager from JNDI -->
 	<component name="TransactionManager"
 			class="javax.transaction.TransactionManager">
-		@org.seasar.extension.j2ee.JndiResourceLocator@lookup("java:comp/UserTransaction")
+		@org.seasar.extension.j2ee.JndiResourceLocator@lookup("javax.transaction.TransactionManager")
 	</component>
 
 	<!-- UserTransaction from JNDI -->
@@ -26,9 +25,11 @@
 		@org.seasar.extension.j2ee.JndiResourceLocator@lookup("java:comp/UserTransaction")
 	</component>
 
-	<!-- TransactionManager を利用する TransactionSynchronizationRegistry -->
+	<!-- TransactionSynchronizationRegistry from JNDI -->
 	<component name="TransactionSynchronizationRegistry"
-		class="org.seasar.extension.jta.TransactionSynchronizationRegistryImpl"/>
+			class="javax.transaction.TransactionSynchronizationRegistry">
+		@org.seasar.extension.j2ee.JndiResourceLocator@lookup("java:comp/TransactionSynchronizationRegistry")
+	</component>
 
 	<!- TransactionManager を利用する TransactionControl -->
 	<component name="transactionControl"

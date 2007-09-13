@@ -27,6 +27,7 @@
 	<component name="TransactionSynchronizationRegistry"
 		class="org.seasar.extension.jta.TransactionSynchronizationRegistryImpl"/>
 
+	<!- TransactionManager を利用する TransactionControl -->
 	<component name="transactionControl"
 		class="org.seasar.extension.tx.control.TransactionManagerControl"/>
 </components>
