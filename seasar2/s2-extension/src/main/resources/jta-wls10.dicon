@@ -31,7 +31,7 @@
 		@org.seasar.extension.j2ee.JndiResourceLocator@lookup("java:comp/TransactionSynchronizationRegistry")
 	</component>
 
-	<!- TransactionManager を利用する TransactionControl -->
+	<!-- TransactionManager を利用する TransactionControl -->
 	<component name="transactionControl"
 		class="org.seasar.extension.tx.control.TransactionManagerControl"/>
 </components>
