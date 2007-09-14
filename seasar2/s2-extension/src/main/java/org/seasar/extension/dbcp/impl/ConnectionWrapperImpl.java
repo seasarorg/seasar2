@@ -251,9 +251,7 @@ public class ConnectionWrapperImpl implements ConnectionWrapper {
         if (closed_) {
             return;
         }
-        if (localTx_) {
-            connectionPool_.checkIn(this);
-        }
+        connectionPool_.checkIn(this);
     }
 
     public void setTransactionIsolation(final int level) throws SQLException {

@@ -329,21 +329,28 @@ public class ConnectionPoolImpl implements ConnectionPool, Synchronization {
     }
 
     public synchronized void checkIn(ConnectionWrapper connection) {
+        final Transaction tx = getTransaction();
         if (logger.isDebugEnabled()) {
-            logger.log("DSSR0002", new Object[] { getTransaction() });
+            logger.log("DSSR0002", new Object[] { tx });
+        }
+        if (tx != null && txActivePool.get(tx) == connection) {
+            return;
         }
         activePool.remove(connection);
         connection.cleanup();
+        checkInFreePool(connection);
+    }
+
+    private void checkInFreePool(ConnectionWrapper connection) {
         if (getMaxPoolSize() > 0) {
-            checkInFreePool(connection);
+            freePool.addLast(new FreeItem(connection));
             notify();
         } else {
             connection.closeReally();
         }
     }
 
-    private void checkInFreePool(ConnectionWrapper connection) {
-        freePool.addLast(new FreeItem(connection));
+    public final void beforeCompletion() {
     }
 
     public void afterCompletion(int status) {
@@ -360,19 +367,11 @@ public class ConnectionPoolImpl implements ConnectionPool, Synchronization {
         if (tx == null) {
             return;
         }
-        ConnectionWrapper con = checkOutTxPool(tx);
+        ConnectionWrapper con = (ConnectionWrapper) txActivePool.remove(tx);
         if (con == null) {
             return;
         }
         checkInFreePool(con);
-        notify();
-    }
-
-    private ConnectionWrapper checkOutTxPool(Transaction tx) {
-        return (ConnectionWrapper) txActivePool.remove(tx);
-    }
-
-    public final void beforeCompletion() {
     }
 
     public final synchronized void close() {

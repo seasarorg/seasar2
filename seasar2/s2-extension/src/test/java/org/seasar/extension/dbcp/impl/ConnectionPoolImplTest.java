@@ -152,6 +152,26 @@ public class ConnectionPoolImplTest extends S2TestCase {
     /**
      * @throws Exception
      */
+    public void testTransaction3() throws Exception {
+        ((ConnectionPoolImpl) pool_).setMaxPoolSize(0);
+        tm_.begin();
+        ConnectionWrapper con = pool_.checkOut();
+        ConnectionWrapper con2 = pool_.checkOut();
+        assertEquals("1", 0, pool_.getActivePoolSize());
+        assertEquals("2", 1, pool_.getTxActivePoolSize());
+        con.close();
+        con2.close();
+        assertEquals("3", 0, pool_.getActivePoolSize());
+        assertEquals("4", 1, pool_.getTxActivePoolSize());
+        tm_.commit();
+        assertEquals("5", 0, pool_.getActivePoolSize());
+        assertEquals("6", 0, pool_.getTxActivePoolSize());
+        assertEquals("7", 0, pool_.getFreePoolSize());
+    }
+
+    /**
+     * @throws Exception
+     */
     public void testIrregularUsecase() throws Exception {
         ConnectionWrapper con = pool_.checkOut();
         assertEquals("1", 1, pool_.getActivePoolSize());
