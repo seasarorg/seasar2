@@ -140,9 +140,12 @@ public final class FieldUtil {
             throw new IllegalAccessRuntimeException(field.getDeclaringClass(),
                     e);
         } catch (IllegalArgumentException e) {
-            throw new SIllegalArgumentException("ESSR0094",
+            throw new SIllegalArgumentException(
+                    "ESSR0094",
                     new Object[] { field.getDeclaringClass().getName(),
-                            field.getName(), value }, e);
+                            field.getName(), value,
+                            target == null ? null : target.getClass().getName() },
+                    e);
         }
 
     }
