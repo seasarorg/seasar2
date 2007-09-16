@@ -150,7 +150,7 @@ public class SqlParserImplTest extends TestCase {
         ctx.addArg("$2", new Integer(1000), Integer.class);
         root.accept(ctx);
         System.out.println(ctx.getSql());
-        assertEquals("1", sql, ctx.getSql());
+        assertEquals("BETWEEN sal ? AND ?", ctx.getSql());
         Object[] vars = ctx.getBindVariables();
         assertEquals("2", 2, vars.length);
         assertEquals("3", new Integer(0), vars[0]);

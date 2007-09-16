@@ -180,15 +180,6 @@ public class SqlTokenizerImpl implements SqlTokenizer {
     }
 
     /**
-     * 自動でつけられる次の変数名を返します。
-     * 
-     * @return 自動でつけられる次の変数名
-     */
-    protected String nextBindVariableName() {
-        return "$" + ++bindVariableNum;
-    }
-
-    /**
      * コメントを解析します。
      */
     protected void parseComment() {
@@ -233,6 +224,15 @@ public class SqlTokenizerImpl implements SqlTokenizer {
         token = null;
         tokenType = EOF;
         nextTokenType = EOF;
+    }
+
+    /**
+     * 位置パラメータ用のバインド変数名を返します。
+     * 
+     * @return 位置パラメータ用のバインド変数名
+     */
+    protected String nextBindVariableName() {
+        return "$" + ++bindVariableNum;
     }
 
     public String skipToken() {

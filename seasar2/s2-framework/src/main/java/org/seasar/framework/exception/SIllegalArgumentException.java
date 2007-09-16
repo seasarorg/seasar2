@@ -33,13 +33,34 @@ public class SIllegalArgumentException extends IllegalArgumentException {
      * {@link SIllegalArgumentException}を作成します。
      * 
      * @param messageCode
+     *            メッセージコード
      * @param args
+     *            引数の配列
      */
     public SIllegalArgumentException(String messageCode, Object[] args) {
         super(MessageFormatter.getMessage(messageCode, args));
 
         this.messageCode = messageCode;
         this.args = args;
+    }
+
+    /**
+     * {@link SIllegalArgumentException}を作成します。
+     * 
+     * @param messageCode
+     *            メッセージコード
+     * @param args
+     *            引数の配列
+     * @param cause
+     *            原因
+     */
+    public SIllegalArgumentException(String messageCode, Object[] args,
+            IllegalArgumentException cause) {
+        super(MessageFormatter.getMessage(messageCode, args));
+
+        this.messageCode = messageCode;
+        this.args = args;
+        initCause(cause);
     }
 
     /**

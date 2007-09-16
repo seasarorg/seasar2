@@ -19,6 +19,8 @@ import java.lang.reflect.Field;
 
 import junit.framework.TestCase;
 
+import org.seasar.framework.exception.SIllegalArgumentException;
+
 /**
  * @author y-komori
  * 
@@ -132,6 +134,19 @@ public class FieldUtilTest extends TestCase {
             fail();
         } catch (NoSuchFieldException e) {
             fail();
+        }
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testSet() throws Exception {
+        Field field = getClass().getField("intField");
+        try {
+            FieldUtil.set(field, this, "abc");
+            fail();
+        } catch (SIllegalArgumentException e) {
+            System.out.println(e);
         }
     }
 }

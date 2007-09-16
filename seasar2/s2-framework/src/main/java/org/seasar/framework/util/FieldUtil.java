@@ -19,6 +19,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
 import org.seasar.framework.exception.IllegalAccessRuntimeException;
+import org.seasar.framework.exception.SIllegalArgumentException;
 
 /**
  * {@link Field}用のユーティリティクラスです。
@@ -135,9 +136,13 @@ public final class FieldUtil {
 
         try {
             field.set(target, value);
-        } catch (IllegalAccessException ex) {
+        } catch (IllegalAccessException e) {
             throw new IllegalAccessRuntimeException(field.getDeclaringClass(),
-                    ex);
+                    e);
+        } catch (IllegalArgumentException e) {
+            throw new SIllegalArgumentException("ESSR0094",
+                    new Object[] { field.getDeclaringClass().getName(),
+                            field.getName(), value }, e);
         }
 
     }

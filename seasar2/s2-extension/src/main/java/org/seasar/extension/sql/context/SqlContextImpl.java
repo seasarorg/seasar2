@@ -101,7 +101,7 @@ public class SqlContextImpl implements SqlContext {
             if (argTypes.size() == 1) {
                 return (Class) argTypes.get(0);
             }
-            logger.log("WKND0001", new Object[] { name });
+            logger.log("WSSR0010", new Object[] { name });
             return null;
         }
     }
