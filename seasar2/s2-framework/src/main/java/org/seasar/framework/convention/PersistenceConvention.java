@@ -27,6 +27,7 @@ public interface PersistenceConvention {
      * テーブル名をエンティティ名に変換します。
      * 
      * @param tableName
+     *            テーブル名
      * @return エンティティ名
      */
     String fromTableNameToEntityName(String tableName);
@@ -35,6 +36,7 @@ public interface PersistenceConvention {
      * エンティティ名をテーブル名に変更します。
      * 
      * @param entityName
+     *            エンティティ名
      * @return テーブル名
      */
     String fromEntityNameToTableName(String entityName);
@@ -43,6 +45,7 @@ public interface PersistenceConvention {
      * カラム名をプロパティ名に変換します。
      * 
      * @param columnName
+     *            カラム名
      * @return プロパティ名
      */
     String fromColumnNameToPropertyName(String columnName);
@@ -51,7 +54,26 @@ public interface PersistenceConvention {
      * プロパティ名をカラム名に変換します。
      * 
      * @param propertyName
+     *            プロパティ名
      * @return カラム名
      */
     String fromPropertyNameToColumnName(String propertyName);
+
+    /**
+     * フィールド名をプロパティ名に変換します。
+     * 
+     * @param fieldName
+     *            フィールド名
+     * @return プロパティ名
+     */
+    String fromFieldNameToPropertyName(String fieldName);
+
+    /**
+     * プロパティ名をフィールド名に変換します。
+     * 
+     * @param propertyName
+     *            プロパティ名
+     * @return フィールド名
+     */
+    String fromPropertyNameToFieldName(String propertyName);
 }

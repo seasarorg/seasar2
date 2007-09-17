@@ -68,6 +68,14 @@ public class PersistenceConventionImpl implements PersistenceConvention {
         return StringUtil.decamelize(propertyName);
     }
 
+    public String fromFieldNameToPropertyName(String fieldName) {
+        return fieldName;
+    }
+
+    public String fromPropertyNameToFieldName(String propertyName) {
+        return propertyName;
+    }
+
     /**
      * 無視するテーブルの<code>prefix</code>を返します。
      * 
