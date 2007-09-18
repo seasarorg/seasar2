@@ -207,7 +207,7 @@ public class MockServletContextImpl implements MockServletContext, Serializable 
      * @return 調整後のパス
      */
     protected String adjustPath(String path) {
-        if (path != null && path.length() >= 0 && path.charAt(0) == '/') {
+        if (path != null && path.length() > 0 && path.charAt(0) == '/') {
             return path.substring(1);
         }
         return path;
