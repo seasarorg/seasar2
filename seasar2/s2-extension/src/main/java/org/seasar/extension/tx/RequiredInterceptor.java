@@ -38,7 +38,7 @@ public class RequiredInterceptor extends AbstractTxInterceptor {
     }
 
     public Object invoke(final MethodInvocation invocation) throws Throwable {
-        return transactionControl.required(new DefaultTransactionCallback(
+        return transactionManagerAdapter.required(new DefaultTransactionCallback(
                 invocation, txRules));
     }
 

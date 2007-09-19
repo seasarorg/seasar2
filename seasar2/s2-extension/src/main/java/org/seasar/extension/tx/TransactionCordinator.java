@@ -16,22 +16,17 @@
 package org.seasar.extension.tx;
 
 /**
- * トランザクション制御下でコールバックされるオブジェクトのインターフェースです。
- * 
  * @author koichik
  * @version 2.4.18
  */
-public interface TransactionCallback {
+public interface TransactionCordinator {
 
     /**
-     * トランザクション制御下で呼び出されます。
-     * 
-     * @param cordinator
-     *            トランザクションコーディネータ
-     * @return 任意の戻り値
-     * @throws Throwable
-     *             コールバック処理中に例外が発生した場合
+     * トランザクションをロールバックするようマークします。
+     * <p>
+     * このメソッドは失敗しても例外をスローしません。
+     * </p>
      */
-    Object execute(TransactionCordinator cordinator) throws Throwable;
+    void setRollbackOnly();
 
 }

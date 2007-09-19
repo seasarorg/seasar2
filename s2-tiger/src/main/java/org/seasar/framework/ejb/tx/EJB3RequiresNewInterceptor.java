@@ -40,7 +40,7 @@ public class EJB3RequiresNewInterceptor extends RequiresNewInterceptor {
 
     @Override
     public Object invoke(final MethodInvocation invocation) throws Throwable {
-        return transactionControl.requiresNew(new EJB3TransactionCallback(
+        return transactionManagerAdapter.requiresNew(new EJB3TransactionCallback(
                 invocation, txRules));
     }
 

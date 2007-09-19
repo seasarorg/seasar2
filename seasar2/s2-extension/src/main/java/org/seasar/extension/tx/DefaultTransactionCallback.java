@@ -20,20 +20,31 @@ import java.util.List;
 import org.aopalliance.intercept.MethodInvocation;
 
 /**
- * @author koichik
+ * トランザクションコールバックのデフォルト実装クラスです。
+ * <p>
+ * このクラスは、宣言的トランザクションを実現するインターセプタによってインスタンス化されて
+ * {@link TransactionManagerAdapter}の実装クラスに渡され、トランザクション境界の中から コールバックされます。
+ * コールバックされたメソッドの中から、 インターセプタが適用されているメソッド (宣言的トランザクションの対象となるメソッド) を呼び出します。
+ * </p>
  * 
+ * @author koichik
+ * @version 2.4.18
  */
 public class DefaultTransactionCallback implements TransactionCallback {
 
-    /** {@link MethodInvocation} */
+    /** インターセプタが適用されているメソッドを起動するための{@link MethodInvocation} */
     protected final MethodInvocation methodInvocation;
 
     /** トランザクションルールのリスト */
     protected final List txRules;
 
     /**
+     * インスタンスを構築します。
+     * 
      * @param methodInvocation
+     *            インターセプタが適用されているメソッドを起動するための{@link MethodInvocation}
      * @param txRules
+     *            例外が発生した場合にトランザクションをコミットするかロールバックするかを表現する{@link TxRule}のリスト
      */
     public DefaultTransactionCallback(final MethodInvocation methodInvocation,
             final List txRules) {
@@ -41,34 +52,37 @@ public class DefaultTransactionCallback implements TransactionCallback {
         this.txRules = txRules;
     }
 
-    public Object execute(final TransactionControl control) throws Throwable {
+    public Object execute(final TransactionCordinator cordinator)
+            throws Throwable {
         try {
             return methodInvocation.proceed();
         } catch (final Throwable t) {
-            applyTxRule(control, t);
-            control.setRollbackOnly();
+            applyTxRule(cordinator, t);
             throw t;
         }
     }
 
     /**
-     * 発生した例外に応じたトランザクションルールが登録されていれば適用します。
+     * トランザクション処理中に発生した例外に応じたトランザクションルールが登録されていれば適用します。
+     * <p>
+     * トランザクション処理中に発生した例外に応じたトランザクションルールが登録されていない場合は、 トランザクションをロールバックするために{@link TransactionCordinator#setRollbackOnly()}を呼び出します。
+     * </p>
      * 
-     * @param control
-     *            トランザクションコントロール
+     * @param cordinator
+     *            トランザクションコーディネータ
      * @param t
-     *            例外
-     * @throws Throwable
-     *             トランザクションルールを適用した場合にスローされます。
+     *            トランザクション処理中に例外
      */
-    protected void applyTxRule(final TransactionControl control,
-            final Throwable t) throws Throwable {
+    protected void applyTxRule(final TransactionCordinator cordinator,
+            final Throwable t) {
         for (int i = 0; i < txRules.size(); ++i) {
             final TxRule rule = (TxRule) txRules.get(i);
             if (rule.isAssignableFrom(t)) {
-                rule.complete(control);
-                throw t;
+                rule.complete(cordinator);
+                return;
             }
         }
+        cordinator.setRollbackOnly();
     }
+
 }

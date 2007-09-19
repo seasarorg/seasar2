@@ -22,8 +22,9 @@ package org.seasar.extension.tx;
  * </p>
  * 
  * @author koichik
+ * @version 2.4.18
  */
-public interface TransactionControl {
+public interface TransactionManagerAdapter {
 
     /**
      * トランザクション属性がREQUIREDの制御下で{@link TransactionCallback}をコールバックします。
@@ -79,20 +80,5 @@ public interface TransactionControl {
      *             callbackの呼び出し中に例外がスローされた場合
      */
     Object never(TransactionCallback callback) throws Throwable;
-
-    /**
-     * トランザクションをロールバックするようマークします。
-     * <p>
-     * このメソッドはマークに失敗しても例外をスローしません。
-     * </p>
-     */
-    void setRollbackOnly();
-
-    /**
-     * トランザクションをコミットした場合は<code>true</code>、それ以外の場合は<code>false</code>を返します。
-     * 
-     * @return トランザクションをコミットした場合は<code>true</code>、それ以外の場合は<code>false</code>
-     */
-    boolean isCommitted();
 
 }

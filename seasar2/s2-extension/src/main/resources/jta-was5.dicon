@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN"
+	"http://www.seasar.org/dtd/components24.dtd">
+<components namespace="jta">
+	<description>
+		WebSphere Application Server version 5.0.2 以降が提供する Transaction API を使用するための設定ファイルです．
+
+		TransactionManager および，JavaEE5 (JTA1.1) で追加された
+		TransactionSynchronizationRegistry は使用できません．
+		このため，Kuina-Dao や S2Hibernate を利用することはできません．
+
+		この設定ファイルでは，以下の全てのトランザクション属性がサポートされます．
+		・REQUIRED
+		・MANDATORY
+		・NEVER
+		・REQUIRES_NEW
+		・NOT_SUPPORTED
+	</description>
+
+	<component name="UserTransaction"
+		class="org.seasar.extension.jta.UserTransactionImpl"/>
+
+	<component name="TransactionControl"
+			class="javax.transaction.TransactionManager">
+		@org.seasar.extension.j2ee.JndiResourceLocator@lookup(@com.ibm.ws.extensionhelper.ExtensionHelper@JNDI_NAME).transactionControl
+	</component>
+
+	<!-- WAS5 の TransactionControl を利用する TransactionManagerAdapter -->
+	<component
+		class="org.seasar.extension.tx.adapter.WAS5TransactionControlAdapter"/>
+</components>

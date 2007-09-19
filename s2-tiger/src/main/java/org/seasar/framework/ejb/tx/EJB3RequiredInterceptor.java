@@ -39,7 +39,7 @@ public class EJB3RequiredInterceptor extends RequiredInterceptor {
 
     @Override
     public Object invoke(final MethodInvocation invocation) throws Throwable {
-        return transactionControl.required(new EJB3TransactionCallback(
+        return transactionManagerAdapter.required(new EJB3TransactionCallback(
                 invocation, txRules));
     }
 

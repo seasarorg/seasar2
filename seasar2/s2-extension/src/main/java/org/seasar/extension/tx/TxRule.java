@@ -44,16 +44,16 @@ public class TxRule {
     }
 
     /**
-     * ルールに従ってトランザクションをロールバックします。
+     * ルールに従ってトランザクションをロールバックするようマークします。
      * 
-     * @param control
-     *            トランザクションコントロール
+     * @param cordinator
+     *            トランザクションコーディネータ
      * @throws Exception
      *             トランザクション制御で例外が発生した場合にスローされます
      */
-    public void complete(final TransactionControl control) {
+    public void complete(final TransactionCordinator cordinator) {
         if (!commit) {
-            control.setRollbackOnly();
+            cordinator.setRollbackOnly();
         }
     }
 

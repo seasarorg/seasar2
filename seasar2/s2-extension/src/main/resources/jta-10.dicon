@@ -26,7 +26,7 @@
 		@org.seasar.extension.j2ee.JndiResourceLocator@lookup("java:comp/UserTransaction")
 	</component>
 
-	<!-- UserTransaction を利用する TransactionControl -->
-	<component name="transacstionControl"
-		class="org.seasar.extension.tx.control.UserTransactionControl"/>
+	<!-- JTA の UserTransaction を利用する TransactionManagerAdapter -->
+	<component
+		class="org.seasar.extension.tx.adapter.JTAUserTransactionAdapter"/>
 </components>

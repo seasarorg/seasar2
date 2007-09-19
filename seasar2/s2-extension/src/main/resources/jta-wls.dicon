@@ -30,6 +30,6 @@
 		class="org.seasar.extension.jta.TransactionSynchronizationRegistryImpl"/>
 
 	<!-- TransactionManager を利用する TransactionControl -->
-	<component name="transactionControl"
-		class="org.seasar.extension.tx.control.TransactionManagerControl"/>
+	<component
+		class="org.seasar.extension.tx.adapter.JTATransactionManagerAdapter"/>
 </components>

@@ -13,10 +13,11 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.tx.control;
+package org.seasar.extension.tx.adapter;
 
 import org.seasar.extension.tx.TransactionCallback;
-import org.seasar.extension.tx.TransactionControl;
+import org.seasar.extension.tx.TransactionCordinator;
+import org.seasar.extension.tx.TransactionManagerAdapter;
 import org.seasar.framework.exception.SIllegalStateException;
 
 import com.ibm.websphere.uow.UOWSynchronizationRegistry;
@@ -25,11 +26,13 @@ import com.ibm.wsspi.uow.UOWManager;
 
 /**
  * WebSphere version 6 (6.0.2.19以降または6.1.0.9以降) が提供するUOW APIを使用してトランザクションを制御する、
- * {@link TransacstionControl}の実装です。
+ * {@link TransactionManagerAdapter}の実装です。
  * 
  * @author koichik
+ * @version 2.4.18
  */
-public class WAS6TransactionControl implements TransactionControl {
+public class WAS6UOWManagerAdapter implements TransactionManagerAdapter,
+        TransactionCordinator {
 
     /** グローバルトランザクションを示します */
     protected static final int GLOBAL_TX = UOWSynchronizationRegistry.UOW_TYPE_GLOBAL_TRANSACTION;
@@ -46,8 +49,14 @@ public class WAS6TransactionControl implements TransactionControl {
     /** <coce>uowManager</code>プロパティのバインディング定義です。 */
     public static final String uowManager_BINDING = "bindingType=must";
 
-    /** UOW SPI の提供するトランザクションマネージャ */
+    /** UOW API の提供するトランザクションマネージャ */
     protected UOWManager uowManager;
+
+    /**
+     * インスタンスを構築します。
+     */
+    public WAS6UOWManagerAdapter() {
+    }
 
     public Object required(final TransactionCallback callback) throws Throwable {
         return execute(callback, GLOBAL_TX, JOIN_TX);
@@ -82,11 +91,9 @@ public class WAS6TransactionControl implements TransactionControl {
         uowManager.setRollbackOnly();
     }
 
-    public boolean isCommitted() {
-        return uowManager.getUOWStatus() == UOWSynchronizationRegistry.UOW_STATUS_COMMITTED;
-    }
-
     /**
+     * トランザクション制御下でトランザクションコールバックを呼び出します。
+     * 
      * @param callback
      *            トランザクションコールバック
      * @param transactionType
@@ -142,7 +149,7 @@ public class WAS6TransactionControl implements TransactionControl {
          */
         public void run() throws Exception {
             try {
-                result = callback.execute(WAS6TransactionControl.this);
+                result = callback.execute(WAS6UOWManagerAdapter.this);
             } catch (final Exception e) {
                 throw e;
             } catch (final Error e) {

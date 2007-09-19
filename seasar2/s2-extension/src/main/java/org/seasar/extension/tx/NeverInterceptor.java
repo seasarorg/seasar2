@@ -35,7 +35,7 @@ public class NeverInterceptor extends AbstractTxInterceptor {
     }
 
     public Object invoke(final MethodInvocation invocation) throws Throwable {
-        return transactionControl.never(new DefaultTransactionCallback(
+        return transactionManagerAdapter.never(new DefaultTransactionCallback(
                 invocation, txRules));
     }
 

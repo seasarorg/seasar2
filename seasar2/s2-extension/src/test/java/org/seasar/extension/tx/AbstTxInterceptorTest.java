@@ -18,9 +18,7 @@ package org.seasar.extension.tx;
 import java.rmi.AccessException;
 import java.rmi.RemoteException;
 
-import javax.transaction.Status;
 import javax.transaction.SystemException;
-import javax.transaction.TransactionManager;
 
 import org.aopalliance.intercept.MethodInvocation;
 import org.seasar.extension.unit.S2TestCase;
@@ -30,11 +28,11 @@ import org.seasar.extension.unit.S2TestCase;
  */
 public class AbstTxInterceptorTest extends S2TestCase {
 
-    private static final String PATH = "AbstractTxInterceptorTest.dicon";
+    private static final String PATH = "AbstTxInterceptorTest.dicon";
 
     private ExceptionBean exBean;
 
-    private TransactionManager tm;
+    private TestAdapter adapter;
 
     private TestInterceptor testTx;
 
@@ -79,8 +77,7 @@ public class AbstTxInterceptorTest extends S2TestCase {
         } catch (Exception expected) {
             System.out.println(expected);
         }
-        assertEquals("2", Status.STATUS_NO_TRANSACTION, tm.getStatus());
-        assertFalse("3", testTx.transactionControl.isCommitted());
+        assertTrue(adapter.rollbackOnly);
     }
 
     /**
@@ -96,8 +93,7 @@ public class AbstTxInterceptorTest extends S2TestCase {
         } catch (Throwable expected) {
             System.out.println(expected);
         }
-        assertEquals("2", Status.STATUS_NO_TRANSACTION, tm.getStatus());
-        assertTrue("3", testTx.transactionControl.isCommitted());
+        assertFalse(adapter.rollbackOnly);
     }
 
     /**
@@ -113,8 +109,7 @@ public class AbstTxInterceptorTest extends S2TestCase {
         } catch (Throwable expected) {
             System.out.println(expected);
         }
-        assertEquals("2", Status.STATUS_NO_TRANSACTION, tm.getStatus());
-        assertFalse("3", testTx.transactionControl.isCommitted());
+        assertTrue(adapter.rollbackOnly);
     }
 
     /**
@@ -130,8 +125,7 @@ public class AbstTxInterceptorTest extends S2TestCase {
         } catch (Throwable expected) {
             System.out.println(expected);
         }
-        assertEquals("2", Status.STATUS_NO_TRANSACTION, tm.getStatus());
-        assertFalse("3", testTx.transactionControl.isCommitted());
+        assertTrue(adapter.rollbackOnly);
     }
 
     /**
@@ -147,8 +141,7 @@ public class AbstTxInterceptorTest extends S2TestCase {
         } catch (Throwable expected) {
             System.out.println(expected);
         }
-        assertEquals("2", Status.STATUS_NO_TRANSACTION, tm.getStatus());
-        assertFalse("3", testTx.transactionControl.isCommitted());
+        assertTrue(adapter.rollbackOnly);
     }
 
     /**
@@ -164,18 +157,48 @@ public class AbstTxInterceptorTest extends S2TestCase {
         } catch (Throwable expected) {
             System.out.println(expected);
         }
-        assertEquals("2", Status.STATUS_NO_TRANSACTION, tm.getStatus());
-        assertFalse("3", testTx.transactionControl.isCommitted());
+        assertTrue(adapter.rollbackOnly);
     }
 
     /**
      * 
      */
     public static class TestInterceptor extends AbstractTxInterceptor {
-
         public Object invoke(MethodInvocation invocation) throws Throwable {
-            return transactionControl.required(new DefaultTransactionCallback(
-                    invocation, txRules));
+            return transactionManagerAdapter
+                    .required(new DefaultTransactionCallback(invocation,
+                            txRules));
+        }
+    }
+
+    public static class TestAdapter implements TransactionManagerAdapter,
+            TransactionCordinator {
+        private boolean rollbackOnly;
+
+        public void setRollbackOnly() {
+            rollbackOnly = true;
+        }
+
+        public Object mandatory(TransactionCallback callback) throws Throwable {
+            return callback.execute(this);
+        }
+
+        public Object never(TransactionCallback callback) throws Throwable {
+            return callback.execute(this);
+        }
+
+        public Object notSupported(TransactionCallback callback)
+                throws Throwable {
+            return callback.execute(this);
+        }
+
+        public Object required(TransactionCallback callback) throws Throwable {
+            return callback.execute(this);
+        }
+
+        public Object requiresNew(TransactionCallback callback)
+                throws Throwable {
+            return callback.execute(this);
         }
     }
 }

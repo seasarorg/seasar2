@@ -13,47 +13,45 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.tx.control;
+package org.seasar.extension.tx.adapter;
 
 import javax.transaction.Status;
 import javax.transaction.SystemException;
-import javax.transaction.Transaction;
-import javax.transaction.TransactionManager;
+import javax.transaction.UserTransaction;
 
 import org.seasar.extension.tx.TransactionCallback;
-import org.seasar.extension.tx.TransactionControl;
+import org.seasar.extension.tx.TransactionCordinator;
+import org.seasar.extension.tx.TransactionManagerAdapter;
 import org.seasar.framework.exception.SIllegalStateException;
 import org.seasar.framework.log.Logger;
 
 /**
- * JTAの{@link TransactionManager}を使用してトランザクションを制御する、
- * {@link TransacstionControl}の実装です。
+ * JTAの{@link UserTransaction}を使用してトランザクションを制御する、
+ * {@link TransactionManagerAdapter}の実装です。
  * 
  * @author koichik
+ * @version 2.4.18
  */
-public class TransactionManagerControl implements TransactionControl {
+public class JTAUserTransactionAdapter implements TransactionManagerAdapter,
+        TransactionCordinator {
 
     private static final Logger logger = Logger
-            .getLogger(TransactionManagerControl.class);
+            .getLogger(JTAUserTransactionAdapter.class);
 
     /** <coce>transactionManager</code>プロパティのバインディング定義です。 */
-    public static final String transactionManager_BINDING = "bindingType=must";
+    public static final String userTransaction_BINDING = "bindingType=must";
 
-    /** トランザクションマネージャ */
-    protected TransactionManager transactionManager;
-
-    /** トランザクションをコミットした場合は<code>true</code> */
-    protected boolean committed;
+    /** ユーザトランザクション */
+    protected UserTransaction userTransaction;
 
     /**
-     * トランザクションマネージャを設定します。
+     * ユーザトランザクションを設定します。
      * 
-     * @param transactionManager
-     *            トランザクションマネージャ
+     * @param userTransaction
+     *            ユーザトランザクション
      */
-    public void setTransactionManager(
-            final TransactionManager transactionManager) {
-        this.transactionManager = transactionManager;
+    public void setUserTransaction(final UserTransaction userTransaction) {
+        this.userTransaction = userTransaction;
     }
 
     public Object required(final TransactionCallback callback) throws Throwable {
@@ -69,19 +67,7 @@ public class TransactionManagerControl implements TransactionControl {
 
     public Object requiresNew(final TransactionCallback callback)
             throws Throwable {
-        final Transaction tx = hasTransaction() ? suspend() : null;
-        try {
-            begin();
-            try {
-                return callback.execute(this);
-            } finally {
-                end();
-            }
-        } finally {
-            if (tx != null) {
-                resume(tx);
-            }
-        }
+        throw new UnsupportedOperationException("REQUIRES_NEW");
     }
 
     public Object mandatory(final TransactionCallback callback)
@@ -94,14 +80,7 @@ public class TransactionManagerControl implements TransactionControl {
 
     public Object notSupported(final TransactionCallback callback)
             throws Throwable {
-        final Transaction tx = hasTransaction() ? suspend() : null;
-        try {
-            return callback.execute(this);
-        } finally {
-            if (tx != null) {
-                resume(tx);
-            }
-        }
+        throw new UnsupportedOperationException("NOT_SUPPORTED");
     }
 
     public Object never(final TransactionCallback callback) throws Throwable {
@@ -113,14 +92,10 @@ public class TransactionManagerControl implements TransactionControl {
 
     public void setRollbackOnly() {
         try {
-            transactionManager.setRollbackOnly();
+            userTransaction.setRollbackOnly();
         } catch (final Exception e) {
             logger.log("ESSR0017", new Object[] { e.getMessage() }, e);
         }
-    }
-
-    public boolean isCommitted() {
-        return committed;
     }
 
     /**
@@ -128,11 +103,11 @@ public class TransactionManagerControl implements TransactionControl {
      * 
      * @return 現在のスレッド上でトランザクションがアクティブな場合は<code>true</code>
      * @throws SystemException
-     *             トランザクションマネージャで例外が発生した場合にスローされます
+     *             ユーザトランザクションで例外が発生した場合にスローされます
      * @see javax.transaction.UserTransaction#getStatus()
      */
     protected boolean hasTransaction() throws SystemException {
-        return transactionManager.getStatus() != Status.STATUS_NO_TRANSACTION;
+        return userTransaction.getStatus() != Status.STATUS_NO_TRANSACTION;
     }
 
     /**
@@ -143,14 +118,14 @@ public class TransactionManagerControl implements TransactionControl {
      * 
      * @return トランザクションを開始した場合は<code>true</code>
      * @throws Exception
-     *             トランザクションマネージャで例外が発生した場合にスローされます
-     * @see javax.transaction.TransactionManager#begin()
+     *             ユーザトランザクションで例外が発生した場合にスローされます
+     * @see javax.transaction.UserTransaction#begin()
      */
     protected boolean begin() throws Exception {
         if (hasTransaction()) {
             return false;
         }
-        transactionManager.begin();
+        userTransaction.begin();
         return true;
     }
 
@@ -162,42 +137,16 @@ public class TransactionManagerControl implements TransactionControl {
      * </p>
      * 
      * @throws Exception
-     *             トランザクションマネージャで例外が発生した場合にスローされます
-     * @see javax.transaction.TransactionManager#commit()
-     * @see javax.transaction.TransactionManager#rollback()
+     *             ユーザトランザクションャで例外が発生した場合にスローされます
+     * @see javax.transaction.UserTransaction#commit()
+     * @see javax.transaction.UserTransaction#rollback()
      */
     protected void end() throws Exception {
-        if (transactionManager.getStatus() == Status.STATUS_ACTIVE) {
-            transactionManager.commit();
-            committed = true;
+        if (userTransaction.getStatus() == Status.STATUS_ACTIVE) {
+            userTransaction.commit();
         } else {
-            transactionManager.rollback();
+            userTransaction.rollback();
         }
-    }
-
-    /**
-     * トランザクションを中断します。
-     * 
-     * @return 中断された{@link javax.transaction.Transaction トランザクション}
-     * @throws Exception
-     *             トランザクションマネージャで例外が発生した場合にスローされます
-     * @see javax.transaction.TransactionManager#suspend()
-     */
-    protected Transaction suspend() throws Exception {
-        return transactionManager.suspend();
-    }
-
-    /**
-     * トランザクションを再開します。
-     * 
-     * @param transaction
-     *            再開する{@link javax.transaction.Transaction トランザクション}
-     * @throws Exception
-     *             トランザクションマネージャで例外が発生した場合にスローされます
-     * @see javax.transaction.TransactionManager#resume(Transaction)
-     */
-    protected void resume(final Transaction transaction) throws Exception {
-        transactionManager.resume(transaction);
     }
 
 }

@@ -24,11 +24,12 @@ import org.aopalliance.intercept.MethodInterceptor;
  * 宣言的トランザクションのための抽象クラスです。
  * 
  * @author higa
+ * @author koichik
  */
 public abstract class AbstractTxInterceptor implements MethodInterceptor {
 
-    /** トランザクションコントロール */
-    protected TransactionControl transactionControl;
+    /** トランザクションマネージャへのアダプタ */
+    protected TransactionManagerAdapter transactionManagerAdapter;
 
     /** {@link TxRule}の{@link List} */
     protected final List txRules = new ArrayList();
@@ -40,14 +41,14 @@ public abstract class AbstractTxInterceptor implements MethodInterceptor {
     }
 
     /**
-     * トランザクションコントロールを設定します。
+     * トランザクションマネージャへのアダプタを設定します。
      * 
-     * @param transactionControl
-     *            用のトランザクションコントロール
+     * @param transactionManagerAdapter
+     *            トランザクションマネージャへのアダプタ
      */
     public void setTransactionControl(
-            final TransactionControl transactionControl) {
-        this.transactionControl = transactionControl;
+            final TransactionManagerAdapter transactionManagerAdapter) {
+        this.transactionManagerAdapter = transactionManagerAdapter;
     }
 
     /**

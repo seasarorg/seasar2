@@ -36,7 +36,7 @@ public class NotSupportedInterceptor extends AbstractTxInterceptor {
     }
 
     public Object invoke(final MethodInvocation invocation) throws Throwable {
-        return transactionControl.notSupported(new DefaultTransactionCallback(
+        return transactionManagerAdapter.notSupported(new DefaultTransactionCallback(
                 invocation, txRules));
     }
 

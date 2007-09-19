@@ -22,11 +22,17 @@ import javax.ejb.ApplicationException;
 
 import org.aopalliance.intercept.MethodInvocation;
 import org.seasar.extension.tx.DefaultTransactionCallback;
-import org.seasar.extension.tx.TransactionControl;
+import org.seasar.extension.tx.TransactionCordinator;
 
 /**
- * @author koichik
+ * EJB3用のトランザクションコールバック実装クラスです。
+ * <p>
+ * 宣言的トランザクションが適用されたメソッドから{@link ApplicationException}で注釈された例外がスローされた場合は、
+ * {@link ApplicationException#rollback()}の指定に従いトランザクションをロールバックするようマークします。
+ * </p>
  * 
+ * @author koichik
+ * @version 2.4.18
  */
 public class EJB3TransactionCallback extends DefaultTransactionCallback {
 
@@ -41,13 +47,13 @@ public class EJB3TransactionCallback extends DefaultTransactionCallback {
     }
 
     @Override
-    protected void applyTxRule(final TransactionControl control,
-            final Throwable t) throws Throwable {
+    protected void applyTxRule(final TransactionCordinator cordinator,
+            final Throwable t) {
         if (isRollingBack(t)) {
-            control.setRollbackOnly();
-            throw t;
+            cordinator.setRollbackOnly();
+            return;
         }
-        super.applyTxRule(control, t);
+        super.applyTxRule(cordinator, t);
     }
 
     /**

@@ -38,7 +38,7 @@ public class RequiresNewInterceptor extends AbstractTxInterceptor {
     }
 
     public Object invoke(final MethodInvocation invocation) throws Throwable {
-        return transactionControl.requiresNew(new DefaultTransactionCallback(
+        return transactionManagerAdapter.requiresNew(new DefaultTransactionCallback(
                 invocation, txRules));
     }
 
