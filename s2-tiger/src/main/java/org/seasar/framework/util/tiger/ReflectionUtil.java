@@ -478,6 +478,19 @@ public abstract class ReflectionUtil {
     }
 
     /**
+     * 指定されたフィールドのパラメタ化されたリストの要素型を返します。
+     * 
+     * @param field
+     *            フィールド
+     * @return 指定されたフィールドのパラメタ化されたリストの要素型
+     * @version 2.4.18
+     */
+    public static Class<?> getElementTypeOfListFromFieldType(final Field field) {
+        final Type type = field.getGenericType();
+        return getElementTypeOfList(type);
+    }
+
+    /**
      * 指定されたメソッドの引数型として宣言されているパラメタ化されたリストの要素型を返します。
      * 
      * @param method

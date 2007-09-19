@@ -16,6 +16,7 @@
 package org.seasar.framework.util;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
 import org.seasar.framework.exception.IllegalAccessRuntimeException;
@@ -28,6 +29,16 @@ import org.seasar.framework.exception.SIllegalArgumentException;
  * 
  */
 public final class FieldUtil {
+
+    /**
+     * ReflectUtilのクラス名です。
+     */
+    protected static final String REFLECTION_UTIL_CLASS_NAME = "org.seasar.framework.util.tiger.ReflectionUtil";
+
+    /**
+     * {@link #getElementTypeOfListFromParameterMethod()}への定数参照です
+     */
+    protected static final Method GET_ELEMENT_TYPE_FROM_FIELD_TYPE_METHOD = getElementTypeOfListFromFieldTypeMethod();
 
     private FieldUtil() {
     }
@@ -171,4 +182,39 @@ public final class FieldUtil {
         int mod = field.getModifiers();
         return Modifier.isPublic(mod);
     }
+
+    /**
+     * Java5以上の場合は、指定されたフィールドのパラメタ化されたリストの要素型を返します。
+     * 
+     * @param field
+     *            フィールド
+     * @return フィールドのパラメタ化されたリストの要素型
+     */
+    public static Class getElementTypeOfListFromFieldType(final Field field) {
+        if (GET_ELEMENT_TYPE_FROM_FIELD_TYPE_METHOD == null) {
+            return null;
+        }
+        return (Class) MethodUtil.invoke(
+                GET_ELEMENT_TYPE_FROM_FIELD_TYPE_METHOD, null,
+                new Object[] { field });
+    }
+
+    /**
+     * <code>ReflectionUtil#getElementTypeOfListFromFieldType()</code>の
+     * {@link Method}を返します。
+     * 
+     * @return <code>ReflectionUtil#getElementTypeOfListFromFieldType()</code>の{@link Method}
+     */
+    protected static Method getElementTypeOfListFromFieldTypeMethod() {
+        try {
+            final Class reflectionUtilClass = Class
+                    .forName(REFLECTION_UTIL_CLASS_NAME);
+            return reflectionUtilClass.getMethod(
+                    "getElementTypeOfListFromFieldType",
+                    new Class[] { Field.class });
+        } catch (final Throwable ignore) {
+        }
+        return null;
+    }
+
 }

@@ -16,6 +16,7 @@
 package org.seasar.framework.util;
 
 import java.lang.reflect.Field;
+import java.util.List;
 
 import junit.framework.TestCase;
 
@@ -148,5 +149,22 @@ public class FieldUtilTest extends TestCase {
         } catch (SIllegalArgumentException e) {
             System.out.println(e);
         }
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testGetElementTypeOfListFromFieldType() throws Exception {
+        assertNull(FieldUtil.getElementTypeOfListFromFieldType(Baz.class
+                .getField("list")));
+    }
+
+    /**
+     * 
+     */
+    public static class Baz {
+
+        /** */
+        public List list;
     }
 }
