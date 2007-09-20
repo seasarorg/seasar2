@@ -46,6 +46,16 @@ public class ModifierUtilTest extends TestCase {
     }
 
     /**
+     * @throws Exception
+     */
+    public void testIsTransient() throws Exception {
+        Field f = Hoge.class.getDeclaredField("bbb");
+        assertTrue(ModifierUtil.isTransient(f));
+        f = Hoge.class.getDeclaredField("s");
+        assertFalse(ModifierUtil.isTransient(f));
+    }
+
+    /**
      * 
      */
     public static class Hoge {
@@ -66,5 +76,10 @@ public class ModifierUtilTest extends TestCase {
          * 
          */
         public String aaa;
+
+        /**
+         * 
+         */
+        public transient String bbb;
     }
 }

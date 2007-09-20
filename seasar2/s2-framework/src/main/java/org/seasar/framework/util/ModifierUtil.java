@@ -56,6 +56,7 @@ public class ModifierUtil {
      * <code>public</code>,<code>static</code>,<code>final</code>かどうか返します。
      * 
      * @param f
+     *            フィールド
      * @return <code>public</code>,<code>static</code>,<code>final</code>かどうか
      */
     public static boolean isPublicStaticFinalField(Field f) {
@@ -66,6 +67,7 @@ public class ModifierUtil {
      * <code>public</code>,<code>static</code>,<code>final</code>かどうか返します。
      * 
      * @param modifier
+     *            モディファイヤ
      * @return <code>public</code>,<code>static</code>,<code>final</code>かどうか
      */
     public static boolean isPublicStaticFinal(int modifier) {
@@ -76,6 +78,7 @@ public class ModifierUtil {
      * <code>public</code>かどうか返します。
      * 
      * @param modifier
+     *            モディファイヤ
      * @return <code>public</code>かどうか
      */
     public static boolean isPublic(int modifier) {
@@ -86,6 +89,7 @@ public class ModifierUtil {
      * <code>static</code>かどうか返します。
      * 
      * @param modifier
+     *            モディファイヤ
      * @return <code>static</code>かどうか
      */
     public static boolean isStatic(int modifier) {
@@ -96,10 +100,34 @@ public class ModifierUtil {
      * <code>final</code>かどうか返します。
      * 
      * @param modifier
-     * @return <code>final</code>か
+     *            モディファイヤ
+     * @return <code>final</code>かどうか
      */
     public static boolean isFinal(int modifier) {
         return Modifier.isFinal(modifier);
+    }
+
+    /**
+     * <code>transient</code>かどうか返します。
+     * 
+     * @param field
+     *            フィールド
+     * @return <code>transient</code>かどうか
+     * @see #isTransient(int)
+     */
+    public static boolean isTransient(Field field) {
+        return isTransient(field.getModifiers());
+    }
+
+    /**
+     * <code>transient</code>かどうか返します。
+     * 
+     * @param modifier
+     *            モディファイヤ
+     * @return <code>transient</code>かどうか
+     */
+    public static boolean isTransient(int modifier) {
+        return Modifier.isTransient(modifier);
     }
 
     /**
