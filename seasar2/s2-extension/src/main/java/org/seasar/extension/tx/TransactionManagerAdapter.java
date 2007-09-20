@@ -81,4 +81,12 @@ public interface TransactionManagerAdapter {
      */
     Object never(TransactionCallback callback) throws Throwable;
 
+    /**
+     * トランザクションをロールバックするようマークします。
+     * <p>
+     * このメソッドは失敗しても例外をスローしてはいけません。
+     * </p>
+     */
+    void setRollbackOnly();
+
 }

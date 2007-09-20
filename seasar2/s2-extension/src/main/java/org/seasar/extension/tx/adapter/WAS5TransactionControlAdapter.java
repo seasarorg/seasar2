@@ -20,9 +20,9 @@ import javax.transaction.NotSupportedException;
 import javax.transaction.SystemException;
 
 import org.seasar.extension.tx.TransactionCallback;
-import org.seasar.extension.tx.TransactionCordinator;
 import org.seasar.extension.tx.TransactionManagerAdapter;
 import org.seasar.framework.exception.SIllegalStateException;
+import org.seasar.framework.log.Logger;
 
 /**
  * WebSphere version 5.0.2以降が提供するTransaction SPIを使用してトランザクションを制御する、
@@ -44,13 +44,10 @@ public class WAS5TransactionControlAdapter implements TransactionManagerAdapter 
             false };
 
     /** 現在のスレッドに関連づけられている{@link TransactionCordinator} */
-    protected static final ThreadLocal currentCordinator = new ThreadLocal();
+    protected static final ThreadLocal currentAction = new ThreadLocal();
 
-    /** 何もしない{@link TransactionCordinator}の実装 */
-    protected static final TransactionCordinator NULL_CORDINATOR = new TransactionCordinator() {
-        public void setRollbackOnly() {
-        }
-    };
+    private static final Logger logger = Logger
+            .getLogger(WAS5TransactionControlAdapter.class);
 
     /** <coce>transactionControl</code>プロパティのバインディング定義です。 */
     public static final String transactionControl_BINDING = "bindingType=must";
@@ -77,7 +74,7 @@ public class WAS5TransactionControlAdapter implements TransactionManagerAdapter 
 
     public Object required(final TransactionCallback callback) throws Throwable {
         if (hasTransaction()) {
-            return callback.execute(getCurrentCordinator());
+            return callback.execute(this);
         }
         return execute(callback, REQUIRED);
     }
@@ -92,7 +89,7 @@ public class WAS5TransactionControlAdapter implements TransactionManagerAdapter 
         if (!hasTransaction()) {
             throw new SIllegalStateException("ESSR0311", null);
         }
-        return callback.execute(getCurrentCordinator());
+        return callback.execute(this);
     }
 
     public Object notSupported(final TransactionCallback callback)
@@ -104,7 +101,16 @@ public class WAS5TransactionControlAdapter implements TransactionManagerAdapter 
         if (hasTransaction()) {
             throw new SIllegalStateException("ESSR0317", null);
         }
-        return callback.execute(NULL_CORDINATOR);
+        return callback.execute(this);
+    }
+
+    public void setRollbackOnly() {
+        final TransactionalAction action = getCurrentAction();
+        if (action == null) {
+            logger.log("ESSR0311", null);
+            return;
+        }
+        action.setRollbackOnly();
     }
 
     /**
@@ -120,8 +126,7 @@ public class WAS5TransactionControlAdapter implements TransactionManagerAdapter 
      */
     protected Object execute(final TransactionCallback callback,
             final boolean[] txAttribute) throws Throwable {
-        final TransactionCordinatorImpl action = new TransactionCordinatorImpl(
-                callback);
+        final TransactionalAction action = new TransactionalAction(callback);
         return action.run(txAttribute[0], txAttribute[1]);
     }
 
@@ -131,39 +136,42 @@ public class WAS5TransactionControlAdapter implements TransactionManagerAdapter 
      * @return 現在のスレッド上でトランザクションがアクティブな場合は<code>true</code>
      */
     protected boolean hasTransaction() {
-        return currentCordinator.get() != null;
+        return currentAction.get() != null;
     }
 
     /**
-     * 現在のスレッドに関連づけられている{@link TransactionCordinator}を返します。
+     * 現在のスレッドに関連づけられている{@link TransactionalAction}を返します。
      * 
-     * @return 現在のスレッドに関連づけられている{@link TransactionCordinator}
+     * @return 現在のスレッドに関連づけられている{@link TransactionalAction}
      */
-    protected TransactionCordinator getCurrentCordinator() {
-        return (TransactionCordinator) currentCordinator.get();
+    protected TransactionalAction getCurrentAction() {
+        return (TransactionalAction) currentAction.get();
     }
 
     /**
-     * 現在のスレッドに{@link TransactionCordinator}を関連づけます。
+     * 現在のスレッドに{@link TransactionalAction}を関連づけます。
+     * <p>
+     * 現在のスレッドにすでに<code>TransactionalAction</code>が関連づけられている場合、 その<code>TransactionalAction</code>を切り離して返します。
+     * </p>
      * 
-     * @param cordinator
-     *            新たに現在のスレッド上に関連づけられた{@link TransactionCordinator}
-     * @return 現在のスレッドから切り離された{@link TransactionCordinator}
+     * @param action
+     *            新たに現在のスレッド上に関連づけられる{@link TransactionalAction}
+     * @return 現在のスレッドから切り離された{@link TransactionalAction}
      */
-    protected TransactionCordinator enter(final TransactionCordinator cordinator) {
-        final TransactionCordinator current = getCurrentCordinator();
-        currentCordinator.set(cordinator);
+    protected TransactionalAction enter(final TransactionalAction action) {
+        final TransactionalAction current = getCurrentAction();
+        currentAction.set(action);
         return current;
     }
 
     /**
-     * 現在のスレッドから{@link TransactionCordinator}を切り離し、以前に関連付けられていた<code>TransactionControl</code>を関連づけます。
+     * 現在のスレッドから{@link TransactionalAction}を切り離し、以前に関連付けられていた<code>TransactionalAction</code>を関連づけます。
      * 
      * @param suspended
-     *            以前に現在のスレッドに関連づけられた{@link TransactionCordinator}
+     *            以前に現在のスレッドに関連づけられた{@link TransactionalAction}
      */
-    protected void leave(final TransactionCordinator suspended) {
-        currentCordinator.set(suspended);
+    protected void leave(final TransactionalAction suspended) {
+        currentAction.set(suspended);
     }
 
     /**
@@ -171,7 +179,7 @@ public class WAS5TransactionControlAdapter implements TransactionManagerAdapter 
      * 
      * @author koichik
      */
-    public class TransactionCordinatorImpl implements TransactionCordinator {
+    public class TransactionalAction {
 
         /** トランザクションコールバック */
         protected TransactionCallback callback;
@@ -185,12 +193,12 @@ public class WAS5TransactionControlAdapter implements TransactionManagerAdapter 
          * @param callback
          *            トランザクションコールバック
          */
-        public TransactionCordinatorImpl(final TransactionCallback callback) {
+        public TransactionalAction(final TransactionCallback callback) {
             this.callback = callback;
         }
 
         /**
-         * <code>UOWManager</code>から呼び出されます。
+         * トランザクション境界内で実行されるアクションです。
          * 
          * @param forceLocalTx
          *            新たにローカルトランザクションを開始する場合に<code>true</code>
@@ -202,13 +210,13 @@ public class WAS5TransactionControlAdapter implements TransactionManagerAdapter 
          */
         public Object run(final boolean forceLocalTx,
                 final boolean forceGlobalTx) throws Throwable {
-            final TransactionCordinator suspended = enter(forceLocalTx ? null
+            final TransactionalAction suspended = enter(forceLocalTx ? null
                     : this);
             try {
                 final TxHandle txHandle = transactionControl.preinvoke(
                         forceLocalTx, forceGlobalTx);
                 try {
-                    return callback.execute(this);
+                    return callback.execute(WAS5TransactionControlAdapter.this);
                 } finally {
                     if (!rollbackOnly) {
                         transactionControl.postinvoke(txHandle);
@@ -221,6 +229,9 @@ public class WAS5TransactionControlAdapter implements TransactionManagerAdapter 
             }
         }
 
+        /**
+         * トランザクションをロールバックするようマークします。
+         */
         public void setRollbackOnly() {
             this.rollbackOnly = true;
         }

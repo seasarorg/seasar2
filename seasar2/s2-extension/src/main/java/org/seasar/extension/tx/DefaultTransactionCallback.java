@@ -52,12 +52,12 @@ public class DefaultTransactionCallback implements TransactionCallback {
         this.txRules = txRules;
     }
 
-    public Object execute(final TransactionCordinator cordinator)
+    public Object execute(final TransactionManagerAdapter adapter)
             throws Throwable {
         try {
             return methodInvocation.proceed();
         } catch (final Throwable t) {
-            applyTxRule(cordinator, t);
+            applyTxRule(adapter, t);
             throw t;
         }
     }
@@ -68,21 +68,21 @@ public class DefaultTransactionCallback implements TransactionCallback {
      * トランザクション処理中に発生した例外に応じたトランザクションルールが登録されていない場合は、 トランザクションをロールバックするために{@link TransactionCordinator#setRollbackOnly()}を呼び出します。
      * </p>
      * 
-     * @param cordinator
-     *            トランザクションコーディネータ
+     * @param adapter
+     *            トランザクションマネージャへのアダプタ
      * @param t
      *            トランザクション処理中に例外
      */
-    protected void applyTxRule(final TransactionCordinator cordinator,
+    protected void applyTxRule(final TransactionManagerAdapter adapter,
             final Throwable t) {
         for (int i = 0; i < txRules.size(); ++i) {
             final TxRule rule = (TxRule) txRules.get(i);
             if (rule.isAssignableFrom(t)) {
-                rule.complete(cordinator);
+                rule.complete(adapter);
                 return;
             }
         }
-        cordinator.setRollbackOnly();
+        adapter.setRollbackOnly();
     }
 
 }

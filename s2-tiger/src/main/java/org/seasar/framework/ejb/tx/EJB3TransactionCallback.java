@@ -22,7 +22,7 @@ import javax.ejb.ApplicationException;
 
 import org.aopalliance.intercept.MethodInvocation;
 import org.seasar.extension.tx.DefaultTransactionCallback;
-import org.seasar.extension.tx.TransactionCordinator;
+import org.seasar.extension.tx.TransactionManagerAdapter;
 
 /**
  * EJB3用のトランザクションコールバック実装クラスです。
@@ -47,13 +47,13 @@ public class EJB3TransactionCallback extends DefaultTransactionCallback {
     }
 
     @Override
-    protected void applyTxRule(final TransactionCordinator cordinator,
+    protected void applyTxRule(final TransactionManagerAdapter adapter,
             final Throwable t) {
         if (isRollingBack(t)) {
-            cordinator.setRollbackOnly();
+            adapter.setRollbackOnly();
             return;
         }
-        super.applyTxRule(cordinator, t);
+        super.applyTxRule(adapter, t);
     }
 
     /**

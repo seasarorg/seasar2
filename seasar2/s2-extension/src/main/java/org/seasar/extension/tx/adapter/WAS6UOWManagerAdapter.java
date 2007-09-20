@@ -16,7 +16,6 @@
 package org.seasar.extension.tx.adapter;
 
 import org.seasar.extension.tx.TransactionCallback;
-import org.seasar.extension.tx.TransactionCordinator;
 import org.seasar.extension.tx.TransactionManagerAdapter;
 import org.seasar.framework.exception.SIllegalStateException;
 
@@ -31,8 +30,7 @@ import com.ibm.wsspi.uow.UOWManager;
  * @author koichik
  * @version 2.4.18
  */
-public class WAS6UOWManagerAdapter implements TransactionManagerAdapter,
-        TransactionCordinator {
+public class WAS6UOWManagerAdapter implements TransactionManagerAdapter {
 
     /** グローバルトランザクションを示します */
     protected static final int GLOBAL_TX = UOWSynchronizationRegistry.UOW_TYPE_GLOBAL_TRANSACTION;

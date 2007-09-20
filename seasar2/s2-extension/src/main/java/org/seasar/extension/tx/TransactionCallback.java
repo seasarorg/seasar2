@@ -26,12 +26,12 @@ public interface TransactionCallback {
     /**
      * トランザクション制御下で呼び出されます。
      * 
-     * @param cordinator
-     *            トランザクションコーディネータ
+     * @param adapter
+     *            トランザクションマネージャへのアダプタ
      * @return 任意の戻り値
      * @throws Throwable
      *             コールバック処理中に例外が発生した場合
      */
-    Object execute(TransactionCordinator cordinator) throws Throwable;
+    Object execute(TransactionManagerAdapter adapter) throws Throwable;
 
 }

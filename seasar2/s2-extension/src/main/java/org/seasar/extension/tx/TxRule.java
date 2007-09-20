@@ -46,14 +46,14 @@ public class TxRule {
     /**
      * ルールに従ってトランザクションをロールバックするようマークします。
      * 
-     * @param cordinator
-     *            トランザクションコーディネータ
+     * @param adapter
+     *            トランザクションマネージャへのアダプタ
      * @throws Exception
      *             トランザクション制御で例外が発生した場合にスローされます
      */
-    public void complete(final TransactionCordinator cordinator) {
+    public void complete(final TransactionManagerAdapter adapter) {
         if (!commit) {
-            cordinator.setRollbackOnly();
+            adapter.setRollbackOnly();
         }
     }
 

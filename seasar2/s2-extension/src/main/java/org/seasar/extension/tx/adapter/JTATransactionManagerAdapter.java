@@ -21,7 +21,6 @@ import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
 
 import org.seasar.extension.tx.TransactionCallback;
-import org.seasar.extension.tx.TransactionCordinator;
 import org.seasar.extension.tx.TransactionManagerAdapter;
 import org.seasar.framework.exception.SIllegalStateException;
 import org.seasar.framework.log.Logger;
@@ -33,8 +32,7 @@ import org.seasar.framework.log.Logger;
  * @author koichik
  * @version 2.4.18
  */
-public class JTATransactionManagerAdapter implements TransactionManagerAdapter,
-        TransactionCordinator {
+public class JTATransactionManagerAdapter implements TransactionManagerAdapter {
 
     private static final Logger logger = Logger
             .getLogger(JTATransactionManagerAdapter.class);
