@@ -138,7 +138,7 @@ public class MyThrowableInterceptor extends ThrowsInterceptor {
     public void handleThrowable(NullPointerException e, MethodInvocation invocation)
         throws Throwable {
         System.out.println("ぬるぽ");
-        throws e;
+        throw e;
     }
 }
 </pre>
