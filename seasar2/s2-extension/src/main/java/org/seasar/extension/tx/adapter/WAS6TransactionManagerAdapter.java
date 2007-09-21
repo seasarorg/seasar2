@@ -15,9 +15,12 @@
  */
 package org.seasar.extension.tx.adapter;
 
+import java.lang.reflect.UndeclaredThrowableException;
+
 import org.seasar.extension.tx.TransactionCallback;
 import org.seasar.extension.tx.TransactionManagerAdapter;
 import org.seasar.framework.exception.SIllegalStateException;
+import org.seasar.framework.log.Logger;
 
 import com.ibm.websphere.uow.UOWSynchronizationRegistry;
 import com.ibm.wsspi.uow.UOWAction;
@@ -30,7 +33,7 @@ import com.ibm.wsspi.uow.UOWManager;
  * @author koichik
  * @version 2.4.18
  */
-public class WAS6UOWManagerAdapter implements TransactionManagerAdapter {
+public class WAS6TransactionManagerAdapter implements TransactionManagerAdapter {
 
     /** グローバルトランザクションを示します */
     protected static final int GLOBAL_TX = UOWSynchronizationRegistry.UOW_TYPE_GLOBAL_TRANSACTION;
@@ -44,25 +47,29 @@ public class WAS6UOWManagerAdapter implements TransactionManagerAdapter {
     /** 新規のトランザクションを開始することを示します */
     protected static final boolean NEW_TX = false;
 
-    /** <coce>uowManager</code>プロパティのバインディング定義です。 */
-    public static final String uowManager_BINDING = "bindingType=must";
+    private static final Logger logger = Logger
+            .getLogger(WAS6TransactionManagerAdapter.class);
 
     /** UOW API の提供するトランザクションマネージャ */
-    protected UOWManager uowManager;
+    protected final UOWManager uowManager;
 
     /**
      * インスタンスを構築します。
+     * 
+     * @param uowManager
+     *            UOW API の提供するトランザクションマネージャ
      */
-    public WAS6UOWManagerAdapter() {
+    public WAS6TransactionManagerAdapter(final UOWManager uowManager) {
+        this.uowManager = uowManager;
     }
 
     public Object required(final TransactionCallback callback) throws Throwable {
-        return execute(callback, GLOBAL_TX, JOIN_TX);
+        return executeCallback(callback, GLOBAL_TX, JOIN_TX);
     }
 
     public Object requiresNew(final TransactionCallback callback)
             throws Throwable {
-        return execute(callback, GLOBAL_TX, NEW_TX);
+        return executeCallback(callback, GLOBAL_TX, NEW_TX);
     }
 
     public Object mandatory(final TransactionCallback callback)
@@ -75,7 +82,7 @@ public class WAS6UOWManagerAdapter implements TransactionManagerAdapter {
 
     public Object notSupported(final TransactionCallback callback)
             throws Throwable {
-        return execute(callback, LOCAL_TX, NEW_TX);
+        return executeCallback(callback, LOCAL_TX, NEW_TX);
     }
 
     public Object never(final TransactionCallback callback) throws Throwable {
@@ -86,7 +93,13 @@ public class WAS6UOWManagerAdapter implements TransactionManagerAdapter {
     }
 
     public void setRollbackOnly() {
-        uowManager.setRollbackOnly();
+        try {
+            if (hasTransaction()) {
+                uowManager.setRollbackOnly();
+            }
+        } catch (final Exception e) {
+            logger.log("ESSR0017", new Object[] { e.getMessage() }, e);
+        }
     }
 
     /**
@@ -102,12 +115,16 @@ public class WAS6UOWManagerAdapter implements TransactionManagerAdapter {
      * @throws Throwable
      *             トランザクションコールバックが例外をスローした場合
      */
-    protected Object execute(final TransactionCallback callback,
+    protected Object executeCallback(final TransactionCallback callback,
             final int transactionType, final boolean joinTransaction)
             throws Throwable {
-        final UOWActionImpl action = new UOWActionImpl(callback);
-        uowManager.runUnderUOW(transactionType, joinTransaction, action);
-        return action.getResult();
+        try {
+            final UOWActionImpl action = new UOWActionImpl(callback);
+            uowManager.runUnderUOW(transactionType, joinTransaction, action);
+            return action.getResult();
+        } catch (final UndeclaredThrowableException e) {
+            throw e.getCause();
+        }
     }
 
     /**
@@ -147,13 +164,13 @@ public class WAS6UOWManagerAdapter implements TransactionManagerAdapter {
          */
         public void run() throws Exception {
             try {
-                result = callback.execute(WAS6UOWManagerAdapter.this);
+                result = callback.execute(WAS6TransactionManagerAdapter.this);
             } catch (final Exception e) {
                 throw e;
             } catch (final Error e) {
                 throw e;
             } catch (final Throwable e) {
-                throw new Exception(e);
+                throw new UndeclaredThrowableException(e);
             }
         }
 

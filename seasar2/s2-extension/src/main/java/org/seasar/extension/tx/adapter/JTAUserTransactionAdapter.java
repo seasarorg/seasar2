@@ -36,19 +36,16 @@ public class JTAUserTransactionAdapter implements TransactionManagerAdapter {
     private static final Logger logger = Logger
             .getLogger(JTAUserTransactionAdapter.class);
 
-    /** <coce>transactionManager</code>プロパティのバインディング定義です。 */
-    public static final String userTransaction_BINDING = "bindingType=must";
-
     /** ユーザトランザクション */
-    protected UserTransaction userTransaction;
+    protected final UserTransaction userTransaction;
 
     /**
-     * ユーザトランザクションを設定します。
+     * インスタンスを構築します。
      * 
      * @param userTransaction
      *            ユーザトランザクション
      */
-    public void setUserTransaction(final UserTransaction userTransaction) {
+    public JTAUserTransactionAdapter(final UserTransaction userTransaction) {
         this.userTransaction = userTransaction;
     }
 
@@ -90,7 +87,9 @@ public class JTAUserTransactionAdapter implements TransactionManagerAdapter {
 
     public void setRollbackOnly() {
         try {
-            userTransaction.setRollbackOnly();
+            if (hasTransaction()) {
+                userTransaction.setRollbackOnly();
+            }
         } catch (final Exception e) {
             logger.log("ESSR0017", new Object[] { e.getMessage() }, e);
         }
@@ -111,10 +110,10 @@ public class JTAUserTransactionAdapter implements TransactionManagerAdapter {
     /**
      * トランザクションを開始します。
      * <p>
-     * トランザクションを開始した場合は<code>true</code>、それ以外の場合は<code>false</code>を返します。
+     * 新しいトランザクションを開始した場合は<code>true</code>、それ以外の場合は<code>false</code>を返します。
      * </p>
      * 
-     * @return トランザクションを開始した場合は<code>true</code>
+     * @return 新しいトランザクションを開始した場合は<code>true</code>
      * @throws Exception
      *             ユーザトランザクションで例外が発生した場合にスローされます
      * @see javax.transaction.UserTransaction#begin()

@@ -91,5 +91,12 @@
       <version>2.2</version>
       <type>jar</type>
     </dependency>
+    <dependency>
+      <groupId>ibm.websphere</groupId>
+      <artifactId>websphere_uow_api</artifactId>
+      <version>6</version>
+      <type>jar</type>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 </project>

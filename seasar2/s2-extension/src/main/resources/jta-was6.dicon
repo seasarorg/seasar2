@@ -19,20 +19,18 @@
 			class="javax.transaction.UserTransaction">
 		@org.seasar.extension.j2ee.JndiResourceLocator@lookup("java:comp/UserTransaction")
 	</component>
-	
-	<!-- TransactionSynchronizationRegistry from JNDI -->
-	<component name="TransactionSynchronizationRegistry"
-			class="javax.transaction.TransactionSynchronizationRegistry">
-		@org.seasar.extension.j2ee.JndiResourceLocator@lookup("java:comp/TransactionSynchronizationRegistry")
-	</component>
 
 	<!-- UOWManager from JNDI -->
 	<component name="UOWManager"
-			class="javax.transaction.UserTransaction">
-		@org.seasar.extension.j2ee.JndiResourceLocator@lookup("java:comp/websphere/UOWManager")
+			class="com.ibm.wsspi.uow.UOWManager">
+		@com.ibm.wsspi.uow.UOWManagerFactory@getUOWManager()
 	</component>
 
-	<!-- WAS の UOWManager を利用する TransactionManagerAdapter -->
+	<!-- WAS6 の UOWManager を利用する TransactionManagerAdapter -->
 	<component
-		class="org.seasar.extension.tx.adapter.WAS6UOWManagerAdapter"/>
+		class="org.seasar.extension.tx.adapter.WAS6TransactionManagerAdapter"/>
+
+	<!-- WAS6 の UOWManager を利用する TransactionSynchronizationRegistry -->
+	<component name="TransactionSynchronizationRegistry"
+		class="org.seasar.extension.tx.adapter.WAS6TransactionSynchronizationRegistry"/>
 </components>

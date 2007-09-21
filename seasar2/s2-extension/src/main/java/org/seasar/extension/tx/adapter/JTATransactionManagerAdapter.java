@@ -37,19 +37,16 @@ public class JTATransactionManagerAdapter implements TransactionManagerAdapter {
     private static final Logger logger = Logger
             .getLogger(JTATransactionManagerAdapter.class);
 
-    /** <coce>transactionManager</code>プロパティのバインディング定義です。 */
-    public static final String transactionManager_BINDING = "bindingType=must";
-
     /** トランザクションマネージャ */
-    protected TransactionManager transactionManager;
+    protected final TransactionManager transactionManager;
 
     /**
-     * トランザクションマネージャを設定します。
+     * インスタンスを構築します。
      * 
      * @param transactionManager
      *            トランザクションマネージャ
      */
-    public void setTransactionManager(
+    public JTATransactionManagerAdapter(
             final TransactionManager transactionManager) {
         this.transactionManager = transactionManager;
     }
@@ -67,7 +64,7 @@ public class JTATransactionManagerAdapter implements TransactionManagerAdapter {
 
     public Object requiresNew(final TransactionCallback callback)
             throws Throwable {
-        final Transaction tx = hasTransaction() ? suspend() : null;
+        final Transaction tx = suspend();
         try {
             begin();
             try {
@@ -92,7 +89,7 @@ public class JTATransactionManagerAdapter implements TransactionManagerAdapter {
 
     public Object notSupported(final TransactionCallback callback)
             throws Throwable {
-        final Transaction tx = hasTransaction() ? suspend() : null;
+        final Transaction tx = suspend();
         try {
             return callback.execute(this);
         } finally {
@@ -111,7 +108,9 @@ public class JTATransactionManagerAdapter implements TransactionManagerAdapter {
 
     public void setRollbackOnly() {
         try {
-            transactionManager.setRollbackOnly();
+            if (hasTransaction()) {
+                transactionManager.setRollbackOnly();
+            }
         } catch (final Exception e) {
             logger.log("ESSR0017", new Object[] { e.getMessage() }, e);
         }
@@ -132,10 +131,10 @@ public class JTATransactionManagerAdapter implements TransactionManagerAdapter {
     /**
      * トランザクションを開始します。
      * <p>
-     * トランザクションを開始した場合は<code>true</code>、それ以外の場合は<code>false</code>を返します。
+     * 新しいトランザクションを開始した場合は<code>true</code>、それ以外の場合は<code>false</code>を返します。
      * </p>
      * 
-     * @return トランザクションを開始した場合は<code>true</code>
+     * @return 新しいトランザクションを開始した場合は<code>true</code>
      * @throws Exception
      *             トランザクションマネージャで例外が発生した場合にスローされます
      * @see javax.transaction.TransactionManager#begin()
@@ -170,6 +169,9 @@ public class JTATransactionManagerAdapter implements TransactionManagerAdapter {
 
     /**
      * トランザクションを中断します。
+     * <p>
+     * 現在のスレッド上でトランザクションが開始されていなければ<code>null</code>を返します。
+     * </p>
      * 
      * @return 中断された{@link javax.transaction.Transaction トランザクション}
      * @throws Exception
@@ -177,7 +179,7 @@ public class JTATransactionManagerAdapter implements TransactionManagerAdapter {
      * @see javax.transaction.TransactionManager#suspend()
      */
     protected Transaction suspend() throws Exception {
-        return transactionManager.suspend();
+        return hasTransaction() ? transactionManager.suspend() : null;
     }
 
     /**
