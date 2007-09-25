@@ -15,8 +15,10 @@
  */
 package org.seasar.extension.tx.adapter;
 
+import javax.transaction.Status;
+import javax.transaction.UserTransaction;
+
 import org.seasar.extension.tx.TransactionCallback;
-import org.seasar.extension.tx.adapter.WAS5TransactionManagerAdapter.TransactionContext;
 import org.seasar.extension.tx.adapter.WAS5TransactionManagerAdapter.TransactionControl;
 import org.seasar.extension.tx.adapter.WAS5TransactionManagerAdapter.TxHandle;
 
@@ -47,23 +49,23 @@ import static org.easymock.EasyMock.*;
  * @author koichik
  */
 public class WAS5TransactionManagerAdapterTest extends
-        AbstractTransactionManagerAdapterTest {
+        AbstractTransactionManagerAdapterTest implements Status {
 
     WAS5TransactionManagerAdapter target;
 
-    TransactionContext context;
+    UserTransaction ut;
 
     TransactionControl control;
 
-    TxHandle status;
+    TxHandle txHandle;
 
     @Override
     protected void setUp() throws Exception {
         super.setUp();
+        ut = createStrictMock(UserTransaction.class);
         control = createStrictMock(TransactionControl.class);
-        status = createStrictMock(TxHandle.class);
-        target = new WAS5TransactionManagerAdapter(control);
-        context = target.new TransactionContext(null);
+        txHandle = createStrictMock(TxHandle.class);
+        target = new WAS5TransactionManagerAdapter(ut, control);
     }
 
     /**
@@ -77,8 +79,9 @@ public class WAS5TransactionManagerAdapterTest extends
      * @throws Throwable
      */
     public void recordRequired_withoutTx_returnCommit() throws Throwable {
-        expect(control.preinvoke(eq(false), eq(false))).andReturn(status);
-        control.postinvoke(status);
+        expect(control.preinvoke(eq(false), eq(false))).andReturn(txHandle);
+        expect(ut.getStatus()).andReturn(STATUS_ACTIVE);
+        control.postinvoke(txHandle);
     }
 
     /**
@@ -92,8 +95,11 @@ public class WAS5TransactionManagerAdapterTest extends
      * @throws Throwable
      */
     public void recordRequired_withoutTx_returnRollback() throws Throwable {
-        expect(control.preinvoke(eq(false), eq(false))).andReturn(status);
-        control.handleException(status);
+        expect(control.preinvoke(eq(false), eq(false))).andReturn(txHandle);
+        expect(ut.getStatus()).andReturn(STATUS_ACTIVE);
+        ut.setRollbackOnly();
+        expect(ut.getStatus()).andReturn(STATUS_MARKED_ROLLBACK);
+        control.handleException(txHandle);
     }
 
     /**
@@ -111,8 +117,9 @@ public class WAS5TransactionManagerAdapterTest extends
      * @throws Throwable
      */
     public void recordRequired_withoutTx_exceptionCommit() throws Throwable {
-        expect(control.preinvoke(eq(false), eq(false))).andReturn(status);
-        control.postinvoke(status);
+        expect(control.preinvoke(eq(false), eq(false))).andReturn(txHandle);
+        expect(ut.getStatus()).andReturn(STATUS_ACTIVE);
+        control.postinvoke(txHandle);
     }
 
     /**
@@ -130,77 +137,88 @@ public class WAS5TransactionManagerAdapterTest extends
      * @throws Throwable
      */
     public void recordRequired_withoutTx_exceptionRollback() throws Throwable {
-        expect(control.preinvoke(eq(false), eq(false))).andReturn(status);
-        control.handleException(status);
+        expect(control.preinvoke(eq(false), eq(false))).andReturn(txHandle);
+        expect(ut.getStatus()).andReturn(STATUS_ACTIVE);
+        ut.setRollbackOnly();
+        expect(ut.getStatus()).andReturn(STATUS_MARKED_ROLLBACK);
+        control.handleException(txHandle);
     }
 
     /**
      * @throws Throwable
      */
     public void testRequired_withTx_returnCommit() throws Throwable {
-        target.enter(context);
         assertEquals("hoge", target.required(new ReturnCommitCallback()));
-        assertFalse(context.getRollbackOnly());
     }
 
     /**
      * @throws Throwable
      */
     public void recordRequired_withTx_returnCommit() throws Throwable {
+        expect(control.preinvoke(eq(false), eq(false))).andReturn(txHandle);
+        expect(ut.getStatus()).andReturn(STATUS_ACTIVE);
+        control.postinvoke(txHandle);
     }
 
     /**
      * @throws Throwable
      */
     public void testRequired_withTx_returnRollback() throws Throwable {
-        target.enter(context);
         assertEquals("hoge", target.required(new ReturnRollbackCallback()));
-        assertTrue(context.getRollbackOnly());
     }
 
     /**
      * @throws Throwable
      */
     public void recordRequired_withTx_returnRollback() throws Throwable {
+        expect(control.preinvoke(eq(false), eq(false))).andReturn(txHandle);
+        expect(ut.getStatus()).andReturn(STATUS_ACTIVE);
+        ut.setRollbackOnly();
+        expect(ut.getStatus()).andReturn(STATUS_MARKED_ROLLBACK);
+        control.handleException(txHandle);
     }
 
     /**
      * @throws Throwable
      */
     public void testRequired_withTx_exceptionCommit() throws Throwable {
-        target.enter(context);
         try {
             assertEquals("hoge", target.required(new ExceptionCommitCallback()));
             fail();
         } catch (Exception expected) {
         }
-        assertFalse(context.getRollbackOnly());
     }
 
     /**
      * @throws Throwable
      */
     public void recordRequired_withTx_exceptionCommit() throws Throwable {
+        expect(control.preinvoke(eq(false), eq(false))).andReturn(txHandle);
+        expect(ut.getStatus()).andReturn(STATUS_ACTIVE);
+        control.postinvoke(txHandle);
     }
 
     /**
      * @throws Throwable
      */
     public void testRequired_withTx_exceptionRollback() throws Throwable {
-        target.enter(context);
         try {
             assertEquals("hoge", target
                     .required(new ExceptionRollbackCallback()));
             fail();
         } catch (Exception expected) {
         }
-        assertTrue(context.getRollbackOnly());
     }
 
     /**
      * @throws Throwable
      */
     public void recordRequired_withTx_exceptionRollback() throws Throwable {
+        expect(control.preinvoke(eq(false), eq(false))).andReturn(txHandle);
+        expect(ut.getStatus()).andReturn(STATUS_ACTIVE);
+        ut.setRollbackOnly();
+        expect(ut.getStatus()).andReturn(STATUS_MARKED_ROLLBACK);
+        control.handleException(txHandle);
     }
 
     /**
@@ -214,8 +232,9 @@ public class WAS5TransactionManagerAdapterTest extends
      * @throws Throwable
      */
     public void recordRequiresNew_withoutTx_returnCommit() throws Throwable {
-        expect(control.preinvoke(eq(false), eq(true))).andReturn(status);
-        control.postinvoke(status);
+        expect(control.preinvoke(eq(false), eq(true))).andReturn(txHandle);
+        expect(ut.getStatus()).andReturn(STATUS_ACTIVE);
+        control.postinvoke(txHandle);
     }
 
     /**
@@ -229,8 +248,11 @@ public class WAS5TransactionManagerAdapterTest extends
      * @throws Throwable
      */
     public void recordRequiresNew_withoutTx_returnRollback() throws Throwable {
-        expect(control.preinvoke(eq(false), eq(true))).andReturn(status);
-        control.handleException(status);
+        expect(control.preinvoke(eq(false), eq(true))).andReturn(txHandle);
+        expect(ut.getStatus()).andReturn(STATUS_ACTIVE);
+        ut.setRollbackOnly();
+        expect(ut.getStatus()).andReturn(STATUS_MARKED_ROLLBACK);
+        control.handleException(txHandle);
     }
 
     /**
@@ -249,8 +271,9 @@ public class WAS5TransactionManagerAdapterTest extends
      * @throws Throwable
      */
     public void recordRequiresNew_withoutTx_exceptionCommit() throws Throwable {
-        expect(control.preinvoke(eq(false), eq(true))).andReturn(status);
-        control.postinvoke(status);
+        expect(control.preinvoke(eq(false), eq(true))).andReturn(txHandle);
+        expect(ut.getStatus()).andReturn(STATUS_ACTIVE);
+        control.postinvoke(txHandle);
     }
 
     /**
@@ -270,86 +293,89 @@ public class WAS5TransactionManagerAdapterTest extends
      */
     public void recordRequiresNew_withoutTx_exceptionRollback()
             throws Throwable {
-        expect(control.preinvoke(eq(false), eq(true))).andReturn(status);
-        control.handleException(status);
+        expect(control.preinvoke(eq(false), eq(true))).andReturn(txHandle);
+        expect(ut.getStatus()).andReturn(STATUS_ACTIVE);
+        ut.setRollbackOnly();
+        expect(ut.getStatus()).andReturn(STATUS_MARKED_ROLLBACK);
+        control.handleException(txHandle);
     }
 
     /**
      * @throws Throwable
      */
     public void testRequiresNew_withTx_returnCommit() throws Throwable {
-        target.enter(context);
         assertEquals("hoge", target.requiresNew(new ReturnCommitCallback()));
-        assertFalse(context.getRollbackOnly());
     }
 
     /**
      * @throws Throwable
      */
     public void recordRequiresNew_withTx_returnCommit() throws Throwable {
-        expect(control.preinvoke(eq(false), eq(true))).andReturn(status);
-        control.postinvoke(status);
+        expect(control.preinvoke(eq(false), eq(true))).andReturn(txHandle);
+        expect(ut.getStatus()).andReturn(STATUS_ACTIVE);
+        control.postinvoke(txHandle);
     }
 
     /**
      * @throws Throwable
      */
     public void testRequiresNew_withTx_returnRollback() throws Throwable {
-        target.enter(context);
         assertEquals("hoge", target.requiresNew(new ReturnRollbackCallback()));
-        assertFalse(context.getRollbackOnly());
     }
 
     /**
      * @throws Throwable
      */
     public void recordRequiresNew_withTx_returnRollback() throws Throwable {
-        expect(control.preinvoke(eq(false), eq(true))).andReturn(status);
-        control.handleException(status);
+        expect(control.preinvoke(eq(false), eq(true))).andReturn(txHandle);
+        expect(ut.getStatus()).andReturn(STATUS_ACTIVE);
+        ut.setRollbackOnly();
+        expect(ut.getStatus()).andReturn(STATUS_MARKED_ROLLBACK);
+        control.handleException(txHandle);
     }
 
     /**
      * @throws Throwable
      */
     public void testRequiresNew_withTx_exceptionCommit() throws Throwable {
-        target.enter(context);
         try {
             assertEquals("hoge", target
                     .requiresNew(new ExceptionCommitCallback()));
             fail();
         } catch (Exception expected) {
         }
-        assertFalse(context.getRollbackOnly());
     }
 
     /**
      * @throws Throwable
      */
     public void recordRequiresNew_withTx_exceptionCommit() throws Throwable {
-        expect(control.preinvoke(eq(false), eq(true))).andReturn(status);
-        control.postinvoke(status);
+        expect(control.preinvoke(eq(false), eq(true))).andReturn(txHandle);
+        expect(ut.getStatus()).andReturn(STATUS_ACTIVE);
+        control.postinvoke(txHandle);
     }
 
     /**
      * @throws Throwable
      */
     public void testRequiresNew_withTx_exceptionRollback() throws Throwable {
-        target.enter(context);
         try {
             assertEquals("hoge", target
                     .requiresNew(new ExceptionRollbackCallback()));
             fail();
         } catch (Exception expected) {
         }
-        assertFalse(context.getRollbackOnly());
     }
 
     /**
      * @throws Throwable
      */
     public void recordRequiresNew_withTx_exceptionRollback() throws Throwable {
-        expect(control.preinvoke(eq(false), eq(true))).andReturn(status);
-        control.handleException(status);
+        expect(control.preinvoke(eq(false), eq(true))).andReturn(txHandle);
+        expect(ut.getStatus()).andReturn(STATUS_ACTIVE);
+        ut.setRollbackOnly();
+        expect(ut.getStatus()).andReturn(STATUS_MARKED_ROLLBACK);
+        control.handleException(txHandle);
     }
 
     /**
@@ -367,6 +393,7 @@ public class WAS5TransactionManagerAdapterTest extends
      * @throws Throwable
      */
     public void recordMandatory_withoutTx_returnCommit() throws Throwable {
+        expect(ut.getStatus()).andReturn(STATUS_NO_TRANSACTION);
     }
 
     /**
@@ -384,6 +411,7 @@ public class WAS5TransactionManagerAdapterTest extends
      * @throws Throwable
      */
     public void recordMandatory_withoutTx_returnRollback() throws Throwable {
+        expect(ut.getStatus()).andReturn(STATUS_NO_TRANSACTION);
     }
 
     /**
@@ -402,6 +430,7 @@ public class WAS5TransactionManagerAdapterTest extends
      * @throws Throwable
      */
     public void recordMandatory_withoutTx_exceptionCommit() throws Throwable {
+        expect(ut.getStatus()).andReturn(STATUS_NO_TRANSACTION);
     }
 
     /**
@@ -420,76 +449,77 @@ public class WAS5TransactionManagerAdapterTest extends
      * @throws Throwable
      */
     public void recordMandatory_withoutTx_exceptionRollback() throws Throwable {
+        expect(ut.getStatus()).andReturn(STATUS_NO_TRANSACTION);
     }
 
     /**
      * @throws Throwable
      */
     public void testMandatory_withTx_returnCommit() throws Throwable {
-        target.enter(context);
         assertEquals("hoge", target.mandatory(new ReturnCommitCallback()));
-        assertFalse(context.getRollbackOnly());
     }
 
     /**
      * @throws Throwable
      */
     public void recordMandatory_withTx_returnCommit() throws Throwable {
+        expect(ut.getStatus()).andReturn(STATUS_ACTIVE);
     }
 
     /**
      * @throws Throwable
      */
     public void testMandatory_withTx_returnRollback() throws Throwable {
-        target.enter(context);
         assertEquals("hoge", target.mandatory(new ReturnRollbackCallback()));
-        assertTrue(context.getRollbackOnly());
     }
 
     /**
      * @throws Throwable
      */
     public void recordMandatory_withTx_returnRollback() throws Throwable {
+        expect(ut.getStatus()).andReturn(STATUS_ACTIVE);
+        expect(ut.getStatus()).andReturn(STATUS_ACTIVE);
+        ut.setRollbackOnly();
     }
 
     /**
      * @throws Throwable
      */
     public void testMandatory_withTx_exceptionCommit() throws Throwable {
-        target.enter(context);
         try {
             assertEquals("hoge", target
                     .mandatory(new ExceptionCommitCallback()));
             fail();
         } catch (Exception expected) {
         }
-        assertFalse(context.getRollbackOnly());
     }
 
     /**
      * @throws Throwable
      */
     public void recordMandatory_withTx_exceptionCommit() throws Throwable {
+        expect(ut.getStatus()).andReturn(STATUS_ACTIVE);
     }
 
     /**
      * @throws Throwable
      */
     public void testMandatory_withTx_exceptionRollback() throws Throwable {
-        target.enter(context);
         try {
             assertEquals("hoge", target
                     .mandatory(new ExceptionRollbackCallback()));
             fail();
         } catch (Exception expected) {
         }
-        assertTrue(context.getRollbackOnly());
     }
 
     /**
      * @throws Throwable
      */
     public void recordMandatory_withTx_exceptionRollback() throws Throwable {
+        expect(ut.getStatus()).andReturn(STATUS_ACTIVE);
+        expect(ut.getStatus()).andReturn(STATUS_ACTIVE);
+        ut.setRollbackOnly();
     }
 
     /**
@@ -503,8 +533,9 @@ public class WAS5TransactionManagerAdapterTest extends
      * @throws Throwable
      */
     public void recordNotSupported_withoutTx_returnCommit() throws Throwable {
-        expect(control.preinvoke(eq(true), eq(false))).andReturn(status);
-        control.postinvoke(status);
+        expect(control.preinvoke(eq(true), eq(false))).andReturn(txHandle);
+        expect(ut.getStatus()).andReturn(STATUS_ACTIVE);
+        control.postinvoke(txHandle);
     }
 
     /**
@@ -518,8 +549,9 @@ public class WAS5TransactionManagerAdapterTest extends
      * @throws Throwable
      */
     public void recordNotSupported_withoutTx_returnRollback() throws Throwable {
-        expect(control.preinvoke(eq(true), eq(false))).andReturn(status);
-        control.postinvoke(status);
+        expect(control.preinvoke(eq(true), eq(false))).andReturn(txHandle);
+        expect(ut.getStatus()).andReturn(STATUS_NO_TRANSACTION);
+        control.handleException(txHandle);
     }
 
     /**
@@ -538,8 +570,9 @@ public class WAS5TransactionManagerAdapterTest extends
      * @throws Throwable
      */
     public void recordNotSupported_withoutTx_exceptionCommit() throws Throwable {
-        expect(control.preinvoke(eq(true), eq(false))).andReturn(status);
-        control.postinvoke(status);
+        expect(control.preinvoke(eq(true), eq(false))).andReturn(txHandle);
+        expect(ut.getStatus()).andReturn(STATUS_NO_TRANSACTION);
+        control.handleException(txHandle);
     }
 
     /**
@@ -559,86 +592,83 @@ public class WAS5TransactionManagerAdapterTest extends
      */
     public void recordNotSupported_withoutTx_exceptionRollback()
             throws Throwable {
-        expect(control.preinvoke(eq(true), eq(false))).andReturn(status);
-        control.postinvoke(status);
+        expect(control.preinvoke(eq(true), eq(false))).andReturn(txHandle);
+        expect(ut.getStatus()).andReturn(STATUS_NO_TRANSACTION);
+        control.handleException(txHandle);
     }
 
     /**
      * @throws Throwable
      */
     public void testNotSupported_withTx_returnCommit() throws Throwable {
-        target.enter(context);
         assertEquals("hoge", target.notSupported(new ReturnCommitCallback()));
-        assertFalse(context.getRollbackOnly());
     }
 
     /**
      * @throws Throwable
      */
     public void recordNotSupported_withTx_returnCommit() throws Throwable {
-        expect(control.preinvoke(eq(true), eq(false))).andReturn(status);
-        control.postinvoke(status);
+        expect(control.preinvoke(eq(true), eq(false))).andReturn(txHandle);
+        expect(ut.getStatus()).andReturn(STATUS_NO_TRANSACTION);
+        control.handleException(txHandle);
     }
 
     /**
      * @throws Throwable
      */
     public void testNotSupported_withTx_returnRollback() throws Throwable {
-        target.enter(context);
         assertEquals("hoge", target.notSupported(new ReturnRollbackCallback()));
-        assertFalse(context.getRollbackOnly());
     }
 
     /**
      * @throws Throwable
      */
     public void recordNotSupported_withTx_returnRollback() throws Throwable {
-        expect(control.preinvoke(eq(true), eq(false))).andReturn(status);
-        control.postinvoke(status);
+        expect(control.preinvoke(eq(true), eq(false))).andReturn(txHandle);
+        expect(ut.getStatus()).andReturn(STATUS_NO_TRANSACTION);
+        control.handleException(txHandle);
     }
 
     /**
      * @throws Throwable
      */
     public void testNotSupported_withTx_exceptionCommit() throws Throwable {
-        target.enter(context);
         try {
             assertEquals("hoge", target
                     .notSupported(new ExceptionCommitCallback()));
             fail();
         } catch (Exception expected) {
         }
-        assertFalse(context.getRollbackOnly());
     }
 
     /**
      * @throws Throwable
      */
     public void recordNotSupported_withTx_exceptionCommit() throws Throwable {
-        expect(control.preinvoke(eq(true), eq(false))).andReturn(status);
-        control.postinvoke(status);
+        expect(control.preinvoke(eq(true), eq(false))).andReturn(txHandle);
+        expect(ut.getStatus()).andReturn(STATUS_NO_TRANSACTION);
+        control.handleException(txHandle);
     }
 
     /**
      * @throws Throwable
      */
     public void testNotSupported_withTx_exceptionRollback() throws Throwable {
-        target.enter(context);
         try {
             assertEquals("hoge", target
                     .notSupported(new ExceptionRollbackCallback()));
             fail();
         } catch (Exception expected) {
         }
-        assertFalse(context.getRollbackOnly());
     }
 
     /**
      * @throws Throwable
      */
     public void recordNotSupported_withTx_exceptionRollback() throws Throwable {
-        expect(control.preinvoke(eq(true), eq(false))).andReturn(status);
-        control.postinvoke(status);
+        expect(control.preinvoke(eq(true), eq(false))).andReturn(txHandle);
+        expect(ut.getStatus()).andReturn(STATUS_NO_TRANSACTION);
+        control.handleException(txHandle);
     }
 
     /**
@@ -652,6 +682,7 @@ public class WAS5TransactionManagerAdapterTest extends
      * @throws Throwable
      */
     public void recordNever_withoutTx_returnCommit() throws Throwable {
+        expect(ut.getStatus()).andReturn(STATUS_NO_TRANSACTION);
     }
 
     /**
@@ -665,6 +696,8 @@ public class WAS5TransactionManagerAdapterTest extends
      * @throws Throwable
      */
     public void recordNever_withoutTx_returnRollback() throws Throwable {
+        expect(ut.getStatus()).andReturn(STATUS_NO_TRANSACTION);
+        expect(ut.getStatus()).andReturn(STATUS_NO_TRANSACTION);
     }
 
     /**
@@ -682,6 +715,7 @@ public class WAS5TransactionManagerAdapterTest extends
      * @throws Throwable
      */
     public void recordNever_withoutTx_exceptionCommit() throws Throwable {
+        expect(ut.getStatus()).andReturn(STATUS_NO_TRANSACTION);
     }
 
     /**
@@ -699,82 +733,80 @@ public class WAS5TransactionManagerAdapterTest extends
      * @throws Throwable
      */
     public void recordNever_withoutTx_exceptionRollback() throws Throwable {
+        expect(ut.getStatus()).andReturn(STATUS_NO_TRANSACTION);
+        expect(ut.getStatus()).andReturn(STATUS_NO_TRANSACTION);
     }
 
     /**
      * @throws Throwable
      */
     public void testNever_withTx_returnCommit() throws Throwable {
-        target.enter(context);
         try {
             assertEquals("hoge", target.never(new ReturnCommitCallback()));
             fail();
         } catch (IllegalStateException expected) {
         }
-        assertFalse(context.getRollbackOnly());
     }
 
     /**
      * @throws Throwable
      */
     public void recordNever_withTx_returnCommit() throws Throwable {
+        expect(ut.getStatus()).andReturn(STATUS_ACTIVE);
     }
 
     /**
      * @throws Throwable
      */
     public void testNever_withTx_returnRollback() throws Throwable {
-        target.enter(context);
         try {
             assertEquals("hoge", target.never(new ReturnRollbackCallback()));
             fail();
         } catch (IllegalStateException expected) {
         }
-        assertFalse(context.getRollbackOnly());
     }
 
     /**
      * @throws Throwable
      */
     public void recordNever_withTx_returnRollback() throws Throwable {
+        expect(ut.getStatus()).andReturn(STATUS_ACTIVE);
     }
 
     /**
      * @throws Throwable
      */
     public void testNever_withTx_exceptionCommit() throws Throwable {
-        target.enter(context);
         try {
             assertEquals("hoge", target.never(new ExceptionCommitCallback()));
             fail();
         } catch (IllegalStateException expected) {
         }
-        assertFalse(context.getRollbackOnly());
     }
 
     /**
      * @throws Throwable
      */
     public void recordNever_withTx_exceptionCommit() throws Throwable {
+        expect(ut.getStatus()).andReturn(STATUS_ACTIVE);
     }
 
     /**
      * @throws Throwable
      */
     public void testNever_withTx_exceptionRollback() throws Throwable {
-        target.enter(context);
         try {
             assertEquals("hoge", target.never(new ExceptionRollbackCallback()));
             fail();
         } catch (IllegalStateException expected) {
         }
-        assertFalse(context.getRollbackOnly());
     }
 
     /**
      * @throws Throwable
      */
     public void recordNever_withTx_exceptionRollback() throws Throwable {
+        expect(ut.getStatus()).andReturn(STATUS_ACTIVE);
     }
 
 }
