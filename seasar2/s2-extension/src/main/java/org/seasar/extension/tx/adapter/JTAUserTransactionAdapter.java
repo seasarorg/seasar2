@@ -31,7 +31,8 @@ import org.seasar.framework.log.Logger;
  * @author koichik
  * @version 2.4.18
  */
-public class JTAUserTransactionAdapter implements TransactionManagerAdapter {
+public class JTAUserTransactionAdapter implements TransactionManagerAdapter,
+        Status {
 
     private static final Logger logger = Logger
             .getLogger(JTAUserTransactionAdapter.class);
@@ -104,7 +105,8 @@ public class JTAUserTransactionAdapter implements TransactionManagerAdapter {
      * @see javax.transaction.UserTransaction#getStatus()
      */
     protected boolean hasTransaction() throws SystemException {
-        return userTransaction.getStatus() != Status.STATUS_NO_TRANSACTION;
+        final int status = userTransaction.getStatus();
+        return status != STATUS_NO_TRANSACTION && status != STATUS_UNKNOWN;
     }
 
     /**
@@ -139,7 +141,7 @@ public class JTAUserTransactionAdapter implements TransactionManagerAdapter {
      * @see javax.transaction.UserTransaction#rollback()
      */
     protected void end() throws Exception {
-        if (userTransaction.getStatus() == Status.STATUS_ACTIVE) {
+        if (userTransaction.getStatus() == STATUS_ACTIVE) {
             userTransaction.commit();
         } else {
             userTransaction.rollback();

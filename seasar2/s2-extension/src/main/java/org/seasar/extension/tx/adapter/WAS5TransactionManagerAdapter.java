@@ -15,17 +15,10 @@
  */
 package org.seasar.extension.tx.adapter;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 import javax.transaction.InvalidTransactionException;
-import javax.transaction.NotSupportedException;
 import javax.transaction.Status;
-import javax.transaction.Synchronization;
 import javax.transaction.SystemException;
+import javax.transaction.UserTransaction;
 
 import org.seasar.extension.tx.TransactionCallback;
 import org.seasar.extension.tx.TransactionManagerAdapter;
@@ -39,7 +32,8 @@ import org.seasar.framework.log.Logger;
  * @author koichik
  * @version 2.4.18
  */
-public class WAS5TransactionManagerAdapter implements TransactionManagerAdapter {
+public class WAS5TransactionManagerAdapter implements
+        TransactionManagerAdapter, Status {
 
     /** REQUIREDトランザクション属性のためのフラグを示します */
     protected static final boolean[] REQUIRED = new boolean[] { false, false };
@@ -54,8 +48,8 @@ public class WAS5TransactionManagerAdapter implements TransactionManagerAdapter 
     private static final Logger logger = Logger
             .getLogger(WAS5TransactionManagerAdapter.class);
 
-    /** 現在のスレッドに関連づけられている{@link TransactionContext} */
-    protected final ThreadLocal currentContexts = new ThreadLocal();
+    /** ユーザトランザクション */
+    protected final UserTransaction userTransaction;
 
     /** WAS5 Transaction APIの提供するトランザクションコントロール */
     protected final TransactionControl transactionControl;
@@ -63,18 +57,18 @@ public class WAS5TransactionManagerAdapter implements TransactionManagerAdapter 
     /**
      * インスタンスを構築します。
      * 
+     * @param userTransaction
+     *            ユーザトランザクション
      * @param transactionControl
      *            WAS5 Transaction APIの提供するトランザクションコントロール
      */
-    public WAS5TransactionManagerAdapter(
+    public WAS5TransactionManagerAdapter(final UserTransaction userTransaction,
             final TransactionControl transactionControl) {
+        this.userTransaction = userTransaction;
         this.transactionControl = transactionControl;
     }
 
     public Object required(final TransactionCallback callback) throws Throwable {
-        if (hasTransaction()) {
-            return callback.execute(this);
-        }
         return executeCallback(callback, REQUIRED);
     }
 
@@ -104,12 +98,13 @@ public class WAS5TransactionManagerAdapter implements TransactionManagerAdapter 
     }
 
     public void setRollbackOnly() {
-        final TransactionContext context = getCurrentContext();
-        if (context == null) {
-            logger.log("ESSR0311", null);
-            return;
+        try {
+            if (hasTransaction()) {
+                userTransaction.setRollbackOnly();
+            }
+        } catch (final Exception e) {
+            logger.log("ESSR0017", new Object[] { e.getMessage() }, e);
         }
-        context.setRollbackOnly();
     }
 
     /**
@@ -125,240 +120,59 @@ public class WAS5TransactionManagerAdapter implements TransactionManagerAdapter 
      */
     protected Object executeCallback(final TransactionCallback callback,
             final boolean[] txAttribute) throws Throwable {
-        final TransactionContext action = new TransactionContext(callback);
-        return action.run(txAttribute[0], txAttribute[1]);
+        final TxHandle txHandle = transactionControl.preinvoke(txAttribute[0],
+                txAttribute[1]);
+        try {
+            return callback.execute(WAS5TransactionManagerAdapter.this);
+        } finally {
+            if (getStatus() == STATUS_ACTIVE) {
+                transactionControl.postinvoke(txHandle);
+            } else {
+                transactionControl.handleException(txHandle);
+            }
+        }
     }
 
     /**
      * 現在のスレッド上でトランザクションがアクティブな場合は<code>true</code>を、 それ以外の場合は<code>false</code>を返します。
      * 
      * @return 現在のスレッド上でトランザクションがアクティブな場合は<code>true</code>
+     * @throws SystemException
+     *             ユーザトランザクションで例外が発生した場合にスローされます
+     * @see javax.transaction.UserTransaction#getStatus()
      */
-    protected boolean hasTransaction() {
-        return currentContexts.get() != null;
+    protected boolean hasTransaction() throws SystemException {
+        final int status = userTransaction.getStatus();
+        return status != STATUS_NO_TRANSACTION && status != STATUS_UNKNOWN;
     }
 
     /**
-     * 現在のスレッドに関連づけられている{@link TransactionContext}を返します。
+     * トランザクションの状態を返します。
      * 
-     * @return 現在のスレッドに関連づけられている{@link TransactionContext}
+     * @return トランザクションの状態
+     * @see UserTransaction#getStatus()
      */
-    protected TransactionContext getCurrentContext() {
-        return (TransactionContext) currentContexts.get();
+    protected int getStatus() {
+        try {
+            return userTransaction.getStatus();
+        } catch (final Throwable e) {
+            return STATUS_UNKNOWN;
+        }
     }
 
-    /**
-     * 現在のスレッドに{@link TransactionContext}を関連づけます。
-     * <p>
-     * 現在のスレッドにすでに<code>TransactionalAction</code>が関連づけられている場合、 その<code>TransactionalAction</code>を切り離して返します。
-     * </p>
-     * 
-     * @param context
-     *            新たに現在のスレッド上に関連づけられる{@link TransactionContext}
-     * @return 現在のスレッドから切り離された{@link TransactionContext}
-     */
-    protected TransactionContext enter(final TransactionContext context) {
-        final TransactionContext current = getCurrentContext();
-        currentContexts.set(context);
-        return current;
-    }
+    public static interface ExtendedJTATransaction {
+        byte[] getGlobalId();
 
-    /**
-     * 現在のスレッドから{@link TransactionContext}を切り離し、以前に関連付けられていた<code>TransactionalAction</code>を関連づけます。
-     * 
-     * @param suspended
-     *            以前に現在のスレッドに関連づけられた{@link TransactionContext}
-     */
-    protected void leave(final TransactionContext suspended) {
-        currentContexts.set(suspended);
-    }
+        int getLocalId();
 
-    /**
-     * <code>TransactionControl</code>が制御するトランザクション中のコンテキストを表すクラスです。
-     * 
-     * @author koichik
-     */
-    public class TransactionContext implements Status {
+        void registerSynchronizationCallback(SynchronizationCallback sync)
+                throws NotSupportedException;
 
-        /** トランザクションコールバック */
-        protected TransactionCallback callback;
+        void registerSynchronizationCallbackForCurrentTran(
+                SynchronizationCallback sync) throws NotSupportedException;
 
-        /**
-         * 現在のトランザクションの状態
-         * 
-         * @see Status
-         */
-        protected int status = STATUS_UNKNOWN;
-
-        /** 現在のトランザクションに登録されている{@link Synchronization}のリスト */
-        protected final List syncronizations = new ArrayList();
-
-        /** トランザクションに関連づけられているリソースの{@link Mah} */
-        protected final Map resources = new HashMap();
-
-        /**
-         * インスタンスを構築します。
-         * 
-         * @param callback
-         *            トランザクションコールバック
-         */
-        public TransactionContext(final TransactionCallback callback) {
-            this.callback = callback;
-        }
-
-        /**
-         * トランザクション境界内で実行されるアクションです。
-         * 
-         * @param forceLocalTx
-         *            新たにローカルトランザクションを開始する場合に<code>true</code>
-         * @param forceGlobalTx
-         *            新たにグローバルトランザクションを開始する場合に<code>true</code>
-         * @return トランザクションコールバックの戻り値
-         * @throws Throwable
-         *             トランザクションコールバックが例外をスローした場合
-         */
-        public Object run(final boolean forceLocalTx,
-                final boolean forceGlobalTx) throws Throwable {
-            final TransactionContext suspended = enter(forceLocalTx ? null
-                    : this);
-            try {
-                final TxHandle txHandle = transactionControl.preinvoke(
-                        forceLocalTx, forceGlobalTx);
-                try {
-                    status = STATUS_ACTIVE;
-                    final Object result = callback
-                            .execute(WAS5TransactionManagerAdapter.this);
-                    beforeCompletion();
-                    return result;
-                } finally {
-                    completion(txHandle);
-                }
-            } finally {
-                leave(suspended);
-            }
-        }
-
-        /**
-         * トランザクションの状態を返します。
-         * 
-         * @return トランザクションの状態
-         * @see Status
-         */
-        public int getStatus() {
-            return status;
-        }
-
-        /**
-         * トランザクションをロールバックするようマークされていれば<code>true</code>を返します。
-         * 
-         * @return トランザクションをロールバックするようマークされていれば<code>true</code>
-         */
-        public boolean getRollbackOnly() {
-            return status == STATUS_MARKED_ROLLBACK;
-        }
-
-        /**
-         * トランザクションをロールバックするようマークします。
-         */
-        public void setRollbackOnly() {
-            status = STATUS_MARKED_ROLLBACK;
-        }
-
-        /**
-         * {@link Synchronization}をトランザクションに関連づけます。
-         * 
-         * @param sync
-         *            トランザクションに関連づけられる同期オブジェクト
-         */
-        public void registerSynchronization(final Synchronization sync) {
-            syncronizations.add(sync);
-        }
-
-        /**
-         * キーに関連づけられたリソースを返します。
-         * 
-         * @param key
-         *            キー
-         * @return キーに関連づけられたリソース
-         * @throws NullPointerException
-         *             キーが<code>null</code>の場合
-         */
-        public Object getResource(final Object key) {
-            if (key == null) {
-                throw new NullPointerException();
-            }
-            return resources.get(key);
-        }
-
-        /**
-         * キーに値を関連づけます。
-         * 
-         * @param key
-         *            キー
-         * @param value
-         *            値
-         * @throws NullPointerException
-         *             キーが<code>null</code>の場合
-         */
-        public void putResource(final Object key, final Object value) {
-            if (key == null) {
-                throw new NullPointerException();
-            }
-            resources.put(key, value);
-        }
-
-        /**
-         * トランザクションがコミットされることを登録されている{@link Synchronization}に通知します。
-         * 
-         */
-        protected void beforeCompletion() {
-            if (status == STATUS_ACTIVE) {
-                for (final Iterator it = syncronizations.iterator(); it
-                        .hasNext();) {
-                    final Synchronization sync = (Synchronization) it.next();
-                    sync.beforeCompletion();
-                }
-            }
-        }
-
-        /**
-         * @param txHandle
-         * @throws InvalidTransactionException
-         * @throws SystemException
-         */
-        protected void completion(final TxHandle txHandle)
-                throws InvalidTransactionException, SystemException {
-            try {
-                if (status == STATUS_ACTIVE) {
-                    status = STATUS_COMMITTING;
-                    transactionControl.postinvoke(txHandle);
-                    status = STATUS_COMMITTED;
-                } else {
-                    status = STATUS_ROLLING_BACK;
-                    transactionControl.handleException(txHandle);
-                }
-            } finally {
-                if (status != STATUS_COMMITTED) {
-                    status = STATUS_ROLLEDBACK;
-                }
-                afterCompletion();
-            }
-        }
-
-        /**
-         * トランザクションが終了したことを登録されている{@link Synchronization}に通知します。
-         * 
-         */
-        protected void afterCompletion() {
-            for (final Iterator it = syncronizations.iterator(); it.hasNext();) {
-                final Synchronization sync = (Synchronization) it.next();
-                try {
-                    sync.afterCompletion(status);
-                } catch (final Throwable t) {
-                    logger.log(t);
-                }
-            }
-        }
+        void unRegisterSynchronizationCallback(SynchronizationCallback sync)
+                throws CallbackNotRegisteredException;
     }
 
     public static interface TransactionControl {
@@ -372,6 +186,18 @@ public class WAS5TransactionManagerAdapter implements TransactionManagerAdapter 
     }
 
     public interface TxHandle {
+    }
+
+    public interface SynchronizationCallback {
+        void beforeCompletion(int localId, byte[] globalId);
+
+        void afterCompletion(int localId, byte[] globalId, boolean committed);
+    }
+
+    public static class NotSupportedException extends Exception {
+    }
+
+    public static class CallbackNotRegisteredException extends Exception {
     }
 
 }

@@ -16,6 +16,11 @@
 	<component name="UserTransaction"
 		class="org.seasar.extension.jta.UserTransactionImpl"/>
 
+	<component name="ExtendedTransaction"
+			class="com.ibm.websphere.jtaextensions.ExtendedJTATransaction">
+		@org.seasar.extension.j2ee.JndiResourceLocator@lookup("java:comp/websphere/ExtendedJTATransaction")
+	</component>
+
 	<component name="TransactionControl"
 			class="TransactionControl">
 		@org.seasar.extension.j2ee.JndiResourceLocator@lookup(@com.ibm.ws.extensionhelper.ExtensionHelper@JNDI_NAME).getTransactionControl()
@@ -25,7 +30,7 @@
 	<component
 		class="org.seasar.extension.tx.adapter.WAS5TransactionManagerAdapter"/>
 
-	<!-- WAS5 の TransactionControl を利用する TransactionSynchronizationRegistry -->
+	<!-- WAS5 の ExtendedJTATransaction を利用する TransactionSynchronizationRegistry -->
 	<component name="TransactionSynchronizationRegistry"
 		class="org.seasar.extension.tx.adapter.WAS5TransactionSynchronizationRegistry"/>
 </components>
