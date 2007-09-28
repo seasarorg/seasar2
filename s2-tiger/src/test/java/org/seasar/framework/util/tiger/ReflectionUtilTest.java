@@ -19,7 +19,9 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import junit.framework.TestCase;
 
@@ -160,8 +162,40 @@ public class ReflectionUtilTest extends TestCase {
     /**
      * @throws Exception
      */
-    public void testGetElementTypeOfList() throws Exception {
-        Type clazz = ReflectionUtil.getField(Foo.class, "array")
+    public void testGetElementTypeOfCollectionFromField() throws Exception {
+        Type clazz = ReflectionUtil.getField(Foo.class, "collection")
+                .getGenericType();
+        assertEquals(String.class, ReflectionUtil
+                .getElementTypeOfCollection(clazz));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testGetElementTypeOfCollectionFromParameter() throws Exception {
+        Method m = Foo.class.getMethod("convert", Collection.class,
+                Collection.class);
+        assertEquals(Object.class, ReflectionUtil
+                .getElementTypeOfCollectionFromParameterType(m, 0));
+        assertEquals(Integer.class, ReflectionUtil
+                .getElementTypeOfCollectionFromParameterType(m, 1));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testGetElementTypeOfCollectionFromReturnType() throws Exception {
+        Method m = Foo.class.getMethod("convert", Collection.class,
+                Collection.class);
+        assertEquals(String.class, ReflectionUtil
+                .getElementTypeOfCollectionFromReturnType(m));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testGetElementTypeOfListFromField() throws Exception {
+        Type clazz = ReflectionUtil.getField(Foo.class, "list")
                 .getGenericType();
         assertEquals(String.class, ReflectionUtil.getElementTypeOfList(clazz));
     }
@@ -187,24 +221,53 @@ public class ReflectionUtilTest extends TestCase {
     }
 
     /**
+     * @throws Exception
+     */
+    public void testGetElementTypeOfSetFromField() throws Exception {
+        Type clazz = ReflectionUtil.getField(Foo.class, "set").getGenericType();
+        assertEquals(String.class, ReflectionUtil.getElementTypeOfSet(clazz));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testGetElementTypeOfSetFromParameter() throws Exception {
+        Method m = Foo.class.getMethod("convert", Set.class, Set.class);
+        assertEquals(Object.class, ReflectionUtil
+                .getElementTypeOfSetFromParameterType(m, 0));
+        assertEquals(Integer.class, ReflectionUtil
+                .getElementTypeOfSetFromParameterType(m, 1));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testGetElementTypeOfSetFromReturnType() throws Exception {
+        Method m = Foo.class.getMethod("convert", Set.class, Set.class);
+        assertEquals(String.class, ReflectionUtil
+                .getElementTypeOfSetFromReturnType(m));
+    }
+
+    /**
      * 
      */
     public static class Foo {
+
         private int n;
 
-        /**
-         * 
-         */
-        public List<String> array;
+        /** */
+        public Collection<String> collection;
 
-        /**
-         * 
-         */
+        /** */
+        public List<String> list;
+
+        /** */
+        public Set<String> set;
+
+        /** */
         public String s;
 
-        /**
-         * 
-         */
+        /** */
         public Foo() {
         }
 
@@ -241,7 +304,28 @@ public class ReflectionUtilTest extends TestCase {
          * @return
          */
         @SuppressWarnings("unused")
+        public Collection<String> convert(Collection<Object> o,
+                Collection<Integer> i) {
+            return null;
+        }
+
+        /**
+         * @param o
+         * @param i
+         * @return
+         */
+        @SuppressWarnings("unused")
         public List<String> convert(List<Object> o, List<Integer> i) {
+            return null;
+        }
+
+        /**
+         * @param o
+         * @param i
+         * @return
+         */
+        @SuppressWarnings("unused")
+        public Set<String> convert(Set<Object> o, Set<Integer> i) {
             return null;
         }
     }

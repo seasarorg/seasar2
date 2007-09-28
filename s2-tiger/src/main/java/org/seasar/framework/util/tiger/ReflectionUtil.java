@@ -466,6 +466,60 @@ public abstract class ReflectionUtil {
     }
 
     /**
+     * パラメタ化されたコレクションの要素型を返します。
+     * 
+     * @param parameterizedCollection
+     *            パラメタ化されたコレクションの型
+     * @return パラメタ化されたコレクションの要素型
+     */
+    public static Class<?> getElementTypeOfCollection(
+            final Type parameterizedCollection) {
+        return GenericUtil.getRawClass(GenericUtil
+                .getElementTypeOfCollection(parameterizedCollection));
+    }
+
+    /**
+     * 指定されたフィールドのパラメタ化されたコレクションの要素型を返します。
+     * 
+     * @param field
+     *            フィールド
+     * @return 指定されたフィールドのパラメタ化されたコレクションの要素型
+     * @version 2.4.18
+     */
+    public static Class<?> getElementTypeOfCollectionFromFieldType(
+            final Field field) {
+        final Type type = field.getGenericType();
+        return getElementTypeOfCollection(type);
+    }
+
+    /**
+     * 指定されたメソッドの引数型として宣言されているパラメタ化されたコレクションの要素型を返します。
+     * 
+     * @param method
+     *            メソッド
+     * @param parameterPosition
+     *            パラメタ化されたコレクションが宣言されているメソッド引数の位置
+     * @return 指定されたメソッドの引数型として宣言されているパラメタ化されたコレクションの要素型
+     */
+    public static Class<?> getElementTypeOfCollectionFromParameterType(
+            final Method method, final int parameterPosition) {
+        final Type[] parameterTypes = method.getGenericParameterTypes();
+        return getElementTypeOfCollection(parameterTypes[parameterPosition]);
+    }
+
+    /**
+     * 指定されたメソッドの戻り値型として宣言されているパラメタ化されたコレクションの要素型を返します。
+     * 
+     * @param method
+     *            メソッド
+     * @return 指定されたメソッドの戻り値型として宣言されているコレクション化されたリストの要素型
+     */
+    public static Class<?> getElementTypeOfCollectionFromReturnType(
+            final Method method) {
+        return getElementTypeOfCollection(method.getGenericReturnType());
+    }
+
+    /**
      * パラメタ化されたリストの要素型を返します。
      * 
      * @param parameterizedList
@@ -515,6 +569,57 @@ public abstract class ReflectionUtil {
     public static Class<?> getElementTypeOfListFromReturnType(
             final Method method) {
         return getElementTypeOfList(method.getGenericReturnType());
+    }
+
+    /**
+     * パラメタ化されたセットの要素型を返します。
+     * 
+     * @param parameterizedSet
+     *            パラメタ化されたセットの型
+     * @return パラメタ化されたセットの要素型
+     */
+    public static Class<?> getElementTypeOfSet(final Type parameterizedSet) {
+        return GenericUtil.getRawClass(GenericUtil
+                .getElementTypeOfSet(parameterizedSet));
+    }
+
+    /**
+     * 指定されたフィールドのパラメタ化されたセットの要素型を返します。
+     * 
+     * @param field
+     *            フィールド
+     * @return 指定されたフィールドのパラメタ化されたセットの要素型
+     * @version 2.4.18
+     */
+    public static Class<?> getElementTypeOfSetFromFieldType(final Field field) {
+        final Type type = field.getGenericType();
+        return getElementTypeOfSet(type);
+    }
+
+    /**
+     * 指定されたメソッドの引数型として宣言されているパラメタ化されたセットの要素型を返します。
+     * 
+     * @param method
+     *            メソッド
+     * @param parameterPosition
+     *            パラメタ化されたセットが宣言されているメソッド引数の位置
+     * @return 指定されたメソッドの引数型として宣言されているパラメタ化されたセットの要素型
+     */
+    public static Class<?> getElementTypeOfSetFromParameterType(
+            final Method method, final int parameterPosition) {
+        final Type[] parameterTypes = method.getGenericParameterTypes();
+        return getElementTypeOfSet(parameterTypes[parameterPosition]);
+    }
+
+    /**
+     * 指定されたメソッドの戻り値型として宣言されているパラメタ化されたセットの要素型を返します。
+     * 
+     * @param method
+     *            メソッド
+     * @return 指定されたメソッドの戻り値型として宣言されているパラメタ化されたセットの要素型
+     */
+    public static Class<?> getElementTypeOfSetFromReturnType(final Method method) {
+        return getElementTypeOfSet(method.getGenericReturnType());
     }
 
 }
