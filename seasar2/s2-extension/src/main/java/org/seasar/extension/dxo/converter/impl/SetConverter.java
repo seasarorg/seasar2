@@ -15,18 +15,18 @@
  */
 package org.seasar.extension.dxo.converter.impl;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.seasar.extension.dxo.converter.ConversionContext;
 
 /**
+ * 変換元オブジェクトを{@link Set}に変換するコンバータです。
+ * 
  * @author Satoshi Kimura
  * @author koichik
  */
-public class SetConverter extends AbstractConverter {
+public class SetConverter extends AbstractCollectionConverter {
 
     public Class[] getSourceClasses() {
         return new Class[] { Object.class };
@@ -40,20 +40,22 @@ public class SetConverter extends AbstractConverter {
             final ConversionContext context) {
         if (source == null) {
             return null;
-        }
-        if (source instanceof Set) {
+        } else if (source instanceof Set) {
             return source;
         }
-        if (source.getClass().isArray()) {
-            return new HashSet(Arrays.asList((Object[]) source));
+        final Set dest = new LinkedHashSet();
+        convert(source, dest, context);
+        return dest;
+    }
+
+    public Object convert(final Object source, final Class destClass,
+            final Class destElementClass, final ConversionContext context) {
+        if (source == null) {
+            return null;
         }
-        final Set set = new HashSet();
-        if (source instanceof Collection) {
-            set.addAll((Collection) source);
-        } else {
-            set.add(source);
-        }
-        return set;
+        final Set dest = new LinkedHashSet();
+        convert(source, dest, destElementClass, context);
+        return dest;
     }
 
 }

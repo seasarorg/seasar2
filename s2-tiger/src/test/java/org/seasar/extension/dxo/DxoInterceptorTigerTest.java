@@ -17,7 +17,9 @@ package org.seasar.extension.dxo;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -138,6 +140,33 @@ public class DxoInterceptorTigerTest extends S2TestCase {
         assertEquals(200, hoge.getFoo());
         assertEquals("HogeHoge", hoge.getBar());
         assertEquals(new BigDecimal("2000"), hoge.getBaz());
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testBean_GenericProperty() throws Exception {
+        Aaa src = new Aaa();
+        src.prop1 = new Integer[] { 1, 2, 3, null, 5 };
+        src.setProp2(Arrays.asList(1, 2, 3, 4, null));
+
+        Bbb dest = beanDxo.convert(src);
+
+        assertNotNull(dest);
+        assertEquals(5, dest.getProp1().size());
+        assertEquals("1", dest.getProp1().get(0));
+        assertEquals("2", dest.getProp1().get(1));
+        assertEquals("3", dest.getProp1().get(2));
+        assertNull(dest.getProp1().get(3));
+        assertEquals("5", dest.getProp1().get(4));
+
+        assertEquals(5, dest.prop2.size());
+        Iterator<String> it = dest.prop2.iterator();
+        assertEquals("1", it.next());
+        assertEquals("2", it.next());
+        assertEquals("3", it.next());
+        assertEquals("4", it.next());
+        assertNull(it.next());
     }
 
     /**
@@ -394,7 +423,7 @@ public class DxoInterceptorTigerTest extends S2TestCase {
     }
 
     /**
-     *
+     * 
      */
     public interface BeanDxo {
 
@@ -440,10 +469,16 @@ public class DxoInterceptorTigerTest extends S2TestCase {
          * @return
          */
         Bar convert(Foo foo);
+
+        /**
+         * @param aaa
+         * @return
+         */
+        Bbb convert(Aaa aaa);
     }
 
     /**
-     *
+     * 
      */
     @SuppressWarnings("unchecked")
     public interface FromMapDxo {
@@ -468,7 +503,7 @@ public class DxoInterceptorTigerTest extends S2TestCase {
     }
 
     /**
-     *
+     * 
      */
     @SuppressWarnings("unchecked")
     public interface ToMapDxo {

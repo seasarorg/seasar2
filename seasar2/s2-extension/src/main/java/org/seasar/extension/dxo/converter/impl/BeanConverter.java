@@ -20,6 +20,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.seasar.extension.dxo.converter.CollectionConverter;
 import org.seasar.extension.dxo.converter.ConversionContext;
 import org.seasar.extension.dxo.converter.Converter;
 import org.seasar.extension.dxo.converter.DatePropertyInfo;
@@ -146,12 +147,19 @@ public class BeanConverter extends AbstractConverter {
             return;
         }
         final Class sourcePropertyClass = sourcePropertyValue.getClass();
-        if (sourcePropertyClass == destPropertyClass) {
+        if (sourcePropertyClass.isAssignableFrom(destPropertyClass)) {
             destPropertyDesc.setValue(dest, sourcePropertyValue);
             return;
         }
         final Converter converter = getConverter(sourcePropertyClass, dest
                 .getClass(), destPropertyName, destPropertyClass, context);
+        if (converter instanceof CollectionConverter) {
+            final Object convertedValue = ((CollectionConverter) converter)
+                    .convert(sourcePropertyValue, destPropertyClass,
+                            destPropertyDesc.getElementType(), context);
+            destPropertyDesc.setValue(dest, convertedValue);
+            return;
+        }
         final Object convertedValue = converter.convert(sourcePropertyValue,
                 destPropertyClass, context);
         destPropertyDesc.setValue(dest, convertedValue);

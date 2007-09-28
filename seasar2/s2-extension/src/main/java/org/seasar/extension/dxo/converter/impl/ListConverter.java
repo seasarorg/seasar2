@@ -16,17 +16,17 @@
 package org.seasar.extension.dxo.converter.impl;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 
 import org.seasar.extension.dxo.converter.ConversionContext;
 
 /**
+ * 変換元オブジェクトを{@link List}に変換するコンバータです。
+ * 
  * @author Satoshi Kimura
  * @author koichik
  */
-public class ListConverter extends AbstractConverter {
+public class ListConverter extends AbstractCollectionConverter {
 
     public Class[] getSourceClasses() {
         return new Class[] { Object.class };
@@ -44,16 +44,19 @@ public class ListConverter extends AbstractConverter {
         if (source instanceof List) {
             return source;
         }
-        if (source.getClass().isArray()) {
-            return Arrays.asList((Object[]) source);
+        final List dest = new ArrayList();
+        convert(source, dest, context);
+        return dest;
+    }
+
+    public Object convert(final Object source, final Class destClass,
+            final Class destElementClass, final ConversionContext context) {
+        if (source == null) {
+            return null;
         }
-        final List list = new ArrayList();
-        if (source instanceof Collection) {
-            list.addAll((Collection) source);
-        } else {
-            list.add(source);
-        }
-        return list;
+        final List dest = new ArrayList();
+        convert(source, dest, destElementClass, context);
+        return dest;
     }
 
 }

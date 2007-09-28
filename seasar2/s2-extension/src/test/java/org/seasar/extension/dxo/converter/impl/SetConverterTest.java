@@ -16,19 +16,21 @@
 package org.seasar.extension.dxo.converter.impl;
 
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author Satoshi Kimura
  * @author koichik
  */
-public class ListConverterTest extends AbsConverterTest {
+public class SetConverterTest extends AbsConverterTest {
 
     private AbstractCollectionConverter converter;
 
     protected void setUp() throws Exception {
         super.setUp();
-        converter = new ListConverter();
+        converter = new SetConverter();
     }
 
     /**
@@ -36,18 +38,20 @@ public class ListConverterTest extends AbsConverterTest {
      */
     public void testConvertFromArray() throws Exception {
         Object[] array1 = { new Integer(1), new Integer(5) };
-        List dest = (List) converter.convert(array1, null, createContext(
+        Set dest = (Set) converter.convert(array1, null, createContext(
                 "testConvertFromArray", null));
         assertEquals(2, dest.size());
-        assertEquals(new Integer(1), dest.get(0));
-        assertEquals(new Integer(5), dest.get(1));
+        Iterator it = dest.iterator();
+        assertEquals(new Integer(1), it.next());
+        assertEquals(new Integer(5), it.next());
 
         String[] array2 = { "a", "b" };
-        dest = (List) converter.convert(array2, null, createContext(
+        dest = (Set) converter.convert(array2, null, createContext(
                 "testConvertFromArray", null));
         assertEquals(2, dest.size());
-        assertEquals("a", dest.get(0));
-        assertEquals("b", dest.get(1));
+        it = dest.iterator();
+        assertEquals("a", it.next());
+        assertEquals("b", it.next());
     }
 
     /**
@@ -56,18 +60,20 @@ public class ListConverterTest extends AbsConverterTest {
     public void testConvertFromList() throws Exception {
         List source = Arrays.asList(new Object[] { new Integer(1),
                 new Integer(5) });
-        List dest = (List) converter.convert(source, null, createContext(
+        Set dest = (Set) converter.convert(source, null, createContext(
                 "testConvertFromList", null));
         assertEquals(2, dest.size());
-        assertEquals(new Integer(1), dest.get(0));
-        assertEquals(new Integer(5), dest.get(1));
+        Iterator it = dest.iterator();
+        assertEquals(new Integer(1), it.next());
+        assertEquals(new Integer(5), it.next());
 
         source = Arrays.asList(new String[] { "a", "b" });
-        dest = (List) converter.convert(source, null, createContext(
+        dest = (Set) converter.convert(source, null, createContext(
                 "testConvertFromList", null));
         assertEquals(2, dest.size());
-        assertEquals("a", dest.get(0));
-        assertEquals("b", dest.get(1));
+        it = dest.iterator();
+        assertEquals("a", it.next());
+        assertEquals("b", it.next());
     }
 
     /**
@@ -75,12 +81,13 @@ public class ListConverterTest extends AbsConverterTest {
      */
     public void testConvertFromArrayWithElementClass() throws Exception {
         Object[] array1 = { new Integer(1), new Integer(5), null };
-        List dest = (List) converter.convert(array1, null, String.class,
+        Set dest = (Set) converter.convert(array1, null, String.class,
                 createContext("testConvertFromArrayWithElementClass", null));
         assertEquals(3, dest.size());
-        assertEquals("1", dest.get(0));
-        assertEquals("5", dest.get(1));
-        assertNull(dest.get(2));
+        Iterator it = dest.iterator();
+        assertEquals("1", it.next());
+        assertEquals("5", it.next());
+        assertNull(it.next());
     }
 
     /**
@@ -89,12 +96,13 @@ public class ListConverterTest extends AbsConverterTest {
     public void testConvertFromListWithElementClass() throws Exception {
         List source = Arrays.asList(new Object[] { new Integer(1),
                 new Integer(5), null });
-        List dest = (List) converter.convert(source, null, String.class,
+        Set dest = (Set) converter.convert(source, null, String.class,
                 createContext("testConvertFromListWithElementClass", null));
         assertEquals(3, dest.size());
-        assertEquals("1", dest.get(0));
-        assertEquals("5", dest.get(1));
-        assertNull(dest.get(2));
+        Iterator it = dest.iterator();
+        assertEquals("1", it.next());
+        assertEquals("5", it.next());
+        assertNull(it.next());
     }
 
 }
