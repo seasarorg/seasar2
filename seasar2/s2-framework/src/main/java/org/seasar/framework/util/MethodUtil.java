@@ -40,14 +40,34 @@ public final class MethodUtil {
     protected static final String REFLECTION_UTIL_CLASS_NAME = "org.seasar.framework.util.tiger.ReflectionUtil";
 
     /**
+     * {@link #getElementTypeOfCollectionFromParameterMethod()}への定数参照です
+     */
+    protected static final Method GET_ELEMENT_TYPE_OF_COLLECTION_FROM_PARAMETER_METHOD = getElementTypeFromParameterMethod("Collection");
+
+    /**
+     * {@link #getElementTypeOfCollectionFromReturnMethod()}への定数参照です。
+     */
+    protected static final Method GET_ELEMENT_TYPE_OF_COLLECTION_FROM_RETURN_METHOD = getElementTypeFromReturnMethod("Collection");
+
+    /**
      * {@link #getElementTypeOfListFromParameterMethod()}への定数参照です
      */
-    protected static final Method GET_ELEMENT_TYPE_FROM_PARAMETER_METHOD = getElementTypeOfListFromParameterMethod();
+    protected static final Method GET_ELEMENT_TYPE_OF_LIST_FROM_PARAMETER_METHOD = getElementTypeFromParameterMethod("List");
 
     /**
      * {@link #getElementTypeOfListFromReturnMethod()}への定数参照です。
      */
-    protected static final Method GET_ELEMENT_TYPE_FROM_RETURN_METHOD = getElementTypeOfListFromReturnMethod();
+    protected static final Method GET_ELEMENT_TYPE_OF_LIST_FROM_RETURN_METHOD = getElementTypeFromReturnMethod("List");
+
+    /**
+     * {@link #getElementTypeOfSetFromParameterMethod()}への定数参照です
+     */
+    protected static final Method GET_ELEMENT_TYPE_OF_SET_FROM_PARAMETER_METHOD = getElementTypeFromParameterMethod("Set");
+
+    /**
+     * {@link #getElementTypeOfSetFromReturnMethod()}への定数参照です。
+     */
+    protected static final Method GET_ELEMENT_TYPE_OF_SET_FROM_RETURN_METHOD = getElementTypeFromReturnMethod("Set");
 
     private MethodUtil() {
     }
@@ -230,65 +250,146 @@ public final class MethodUtil {
     }
 
     /**
-     * Java5以上の場合は、引数のGenericsなListの要素を返します。
+     * Java5以上の場合は、メソッドの引数型 (パラメタ化されたコレクション) の要素型を返します。
      * 
      * @param method
+     *            メソッド
      * @param position
-     * @return GenericsなListの要素
+     *            パラメタ化されたコレクションが宣言されているメソッド引数の位置
+     * @return 指定されたメソッドの引数型として宣言されているパラメタ化されたコレクションの要素型
      */
-    public static Class getElementTypeOfListFromParameterType(
+    public static Class getElementTypeOfCollectionFromParameterType(
             final Method method, final int position) {
-        if (GET_ELEMENT_TYPE_FROM_PARAMETER_METHOD == null) {
+        if (GET_ELEMENT_TYPE_OF_COLLECTION_FROM_PARAMETER_METHOD == null) {
             return null;
         }
         return (Class) MethodUtil.invoke(
-                GET_ELEMENT_TYPE_FROM_PARAMETER_METHOD, null, new Object[] {
-                        method, new Integer(position) });
+                GET_ELEMENT_TYPE_OF_COLLECTION_FROM_PARAMETER_METHOD, null,
+                new Object[] { method, new Integer(position) });
     }
 
     /**
-     * Java5以上の場合は、戻り値のGenericsなListの要素を返します。
+     * 指定されたメソッドの戻り値型として宣言されているパラメタ化されたコレクションの要素型を返します。
      * 
      * @param method
-     * @return GenericsなListの要素
+     *            メソッド
+     * @return 指定されたメソッドの戻り値型として宣言されているパラメタ化されたコレクションの要素型
      */
-    public static Class getElementTypeOfListFromReturnType(final Method method) {
-        if (GET_ELEMENT_TYPE_FROM_RETURN_METHOD == null) {
+    public static Class getElementTypeOfCollectionFromReturnType(
+            final Method method) {
+        if (GET_ELEMENT_TYPE_OF_COLLECTION_FROM_RETURN_METHOD == null) {
             return null;
         }
-        return (Class) MethodUtil.invoke(GET_ELEMENT_TYPE_FROM_RETURN_METHOD,
-                null, new Object[] { method });
+        return (Class) MethodUtil.invoke(
+                GET_ELEMENT_TYPE_OF_COLLECTION_FROM_RETURN_METHOD, null,
+                new Object[] { method });
     }
 
     /**
-     * getElementTypeOfListFromParameterの {@link Method}を返します。
+     * Java5以上の場合は、メソッドの引数型 (パラメタ化されたリスト) の要素型を返します。
+     * 
+     * @param method
+     *            メソッド
+     * @param position
+     *            パラメタ化されたリストが宣言されているメソッド引数の位置
+     * @return 指定されたメソッドの引数型として宣言されているパラメタ化されたリストの要素型
+     */
+    public static Class getElementTypeOfListFromParameterType(
+            final Method method, final int position) {
+        if (GET_ELEMENT_TYPE_OF_LIST_FROM_PARAMETER_METHOD == null) {
+            return null;
+        }
+        return (Class) MethodUtil.invoke(
+                GET_ELEMENT_TYPE_OF_LIST_FROM_PARAMETER_METHOD, null,
+                new Object[] { method, new Integer(position) });
+    }
+
+    /**
+     * 指定されたメソッドの戻り値型として宣言されているパラメタ化されたリストの要素型を返します。
+     * 
+     * @param method
+     *            メソッド
+     * @return 指定されたメソッドの戻り値型として宣言されているパラメタ化されたリストの要素型
+     */
+    public static Class getElementTypeOfListFromReturnType(final Method method) {
+        if (GET_ELEMENT_TYPE_OF_LIST_FROM_RETURN_METHOD == null) {
+            return null;
+        }
+        return (Class) MethodUtil.invoke(
+                GET_ELEMENT_TYPE_OF_LIST_FROM_RETURN_METHOD, null,
+                new Object[] { method });
+    }
+
+    /**
+     * Java5以上の場合は、メソッドの引数型 (パラメタ化されたセット) の要素型を返します。
+     * 
+     * @param method
+     *            メソッド
+     * @param position
+     *            パラメタ化されたコレクションが宣言されているメソッド引数の位置
+     * @return 指定されたメソッドの引数型として宣言されているパラメタ化されたセットの要素型
+     */
+    public static Class getElementTypeOfSetFromParameterType(
+            final Method method, final int position) {
+        if (GET_ELEMENT_TYPE_OF_SET_FROM_PARAMETER_METHOD == null) {
+            return null;
+        }
+        return (Class) MethodUtil.invoke(
+                GET_ELEMENT_TYPE_OF_SET_FROM_PARAMETER_METHOD, null,
+                new Object[] { method, new Integer(position) });
+    }
+
+    /**
+     * 指定されたメソッドの戻り値型として宣言されているパラメタ化されたセットの要素型を返します。
+     * 
+     * @param method
+     *            メソッド
+     * @return 指定されたメソッドの戻り値型として宣言されているパラメタ化されたセットの要素型
+     */
+    public static Class getElementTypeOfSetFromReturnType(final Method method) {
+        if (GET_ELEMENT_TYPE_OF_SET_FROM_RETURN_METHOD == null) {
+            return null;
+        }
+        return (Class) MethodUtil.invoke(
+                GET_ELEMENT_TYPE_OF_SET_FROM_RETURN_METHOD, null,
+                new Object[] { method });
+    }
+
+    /**
+     * <code>ReflectionUtil#getElementTypeOf<var>Xxx</var>FromParameter</code>の
+     * {@link Method}を返します。
+     * 
+     * @param type
+     *            取得するメソッドが対象とする型名
      * 
      * @return {@link Method}
      */
-    protected static Method getElementTypeOfListFromParameterMethod() {
+    protected static Method getElementTypeFromParameterMethod(final String type) {
         try {
             final Class reflectionUtilClass = Class
                     .forName(REFLECTION_UTIL_CLASS_NAME);
-            return reflectionUtilClass.getMethod(
-                    "getElementTypeOfListFromParameterType", new Class[] {
-                            Method.class, int.class });
+            return reflectionUtilClass.getMethod("getElementTypeOf" + type
+                    + "FromParameterType", new Class[] { Method.class,
+                    int.class });
         } catch (final Throwable ignore) {
         }
         return null;
     }
 
     /**
-     * getElementTypeOfListFromReturnの {@link Method}を返します。
+     * <code>ReflectionUtil#getElementTypeOf<var>Xxx</var>FromReturn</code>の
+     * {@link Method}を返します。
      * 
+     * @param type
+     *            取得するメソッドが対象とする型名
      * @return {@link Method}
      */
-    protected static Method getElementTypeOfListFromReturnMethod() {
+    protected static Method getElementTypeFromReturnMethod(final String type) {
         try {
             final Class reflectionUtilClass = Class
                     .forName(REFLECTION_UTIL_CLASS_NAME);
-            return reflectionUtilClass.getMethod(
-                    "getElementTypeOfListFromReturnType",
-                    new Class[] { Method.class });
+            return reflectionUtilClass.getMethod("getElementTypeOf" + type
+                    + "FromReturnType", new Class[] { Method.class });
         } catch (final Throwable ignore) {
         }
         return null;

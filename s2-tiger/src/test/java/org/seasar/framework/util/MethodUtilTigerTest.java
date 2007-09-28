@@ -17,7 +17,9 @@ package org.seasar.framework.util;
 
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import junit.framework.TestCase;
 
@@ -44,6 +46,34 @@ public class MethodUtilTigerTest extends TestCase {
     /**
      * @throws Exception
      */
+    public void testGetElementTypeOfCollectionFromParameterType()
+            throws Exception {
+        assertEquals(Integer.class,
+                MethodUtil.getElementTypeOfCollectionFromParameterType(
+                        Baz.class.getMethod("hoge",
+                                new Class[] { Collection.class }), 0));
+        assertEquals(Double.class, MethodUtil
+                .getElementTypeOfCollectionFromParameterType(Baz.class
+                        .getMethod("hoge", new Class[] { Collection.class,
+                                Collection.class }), 0));
+        assertEquals(BigDecimal.class, MethodUtil
+                .getElementTypeOfCollectionFromParameterType(Baz.class
+                        .getMethod("hoge", new Class[] { Collection.class,
+                                Collection.class }), 1));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testGetElementTypeOfCollectionFromReturnType() throws Exception {
+        assertEquals(String.class, MethodUtil
+                .getElementTypeOfCollectionFromReturnType(Baz.class.getMethod(
+                        "hoge", new Class[] { Collection.class })));
+    }
+
+    /**
+     * @throws Exception
+     */
     public void testGetElementTypeOfListFromParameterType() throws Exception {
         assertEquals(Integer.class, MethodUtil
                 .getElementTypeOfListFromParameterType(Baz.class.getMethod(
@@ -63,6 +93,30 @@ public class MethodUtilTigerTest extends TestCase {
         assertEquals(String.class, MethodUtil
                 .getElementTypeOfListFromReturnType(Baz.class.getMethod("hoge",
                         new Class[] { List.class })));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testGetElementTypeOfSetFromParameterType() throws Exception {
+        assertEquals(Integer.class, MethodUtil
+                .getElementTypeOfSetFromParameterType(Baz.class.getMethod(
+                        "hoge", new Class[] { Set.class }), 0));
+        assertEquals(Double.class, MethodUtil
+                .getElementTypeOfSetFromParameterType(Baz.class.getMethod(
+                        "hoge", new Class[] { Set.class, Set.class }), 0));
+        assertEquals(BigDecimal.class, MethodUtil
+                .getElementTypeOfSetFromParameterType(Baz.class.getMethod(
+                        "hoge", new Class[] { Set.class, Set.class }), 1));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testGetElementTypeOfSetFromReturnType() throws Exception {
+        assertEquals(String.class, MethodUtil
+                .getElementTypeOfSetFromReturnType(Baz.class.getMethod("hoge",
+                        new Class[] { Set.class })));
     }
 
     /**
@@ -98,6 +152,18 @@ public class MethodUtilTigerTest extends TestCase {
          * @param src
          * @return
          */
+        Collection<String> hoge(Collection<Integer> src);
+
+        /**
+         * @param src
+         * @param dest
+         */
+        void hoge(Collection<Double> src, Collection<BigDecimal> dest);
+
+        /**
+         * @param src
+         * @return
+         */
         List<String> hoge(List<Integer> src);
 
         /**
@@ -105,6 +171,19 @@ public class MethodUtilTigerTest extends TestCase {
          * @param dest
          */
         void hoge(List<Double> src, List<BigDecimal> dest);
+
+        /**
+         * @param src
+         * @return
+         */
+        Set<String> hoge(Set<Integer> src);
+
+        /**
+         * @param src
+         * @param dest
+         */
+        void hoge(Set<Double> src, Set<BigDecimal> dest);
+
     }
 
 }

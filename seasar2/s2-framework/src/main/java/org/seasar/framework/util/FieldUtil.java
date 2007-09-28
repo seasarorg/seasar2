@@ -36,9 +36,19 @@ public final class FieldUtil {
     protected static final String REFLECTION_UTIL_CLASS_NAME = "org.seasar.framework.util.tiger.ReflectionUtil";
 
     /**
+     * {@link #getElementTypeOfCollectionFromParameterMethod()}への定数参照です
+     */
+    protected static final Method GET_ELEMENT_TYPE_OF_COLLECTION_FROM_FIELD_TYPE_METHOD = getElementTypeFromFieldTypeMethod("Collection");
+
+    /**
      * {@link #getElementTypeOfListFromParameterMethod()}への定数参照です
      */
-    protected static final Method GET_ELEMENT_TYPE_FROM_FIELD_TYPE_METHOD = getElementTypeOfListFromFieldTypeMethod();
+    protected static final Method GET_ELEMENT_TYPE_OF_LIST_FROM_FIELD_TYPE_METHOD = getElementTypeFromFieldTypeMethod("List");
+
+    /**
+     * {@link #getElementTypeOfSetFromParameterMethod()}への定数参照です
+     */
+    protected static final Method GET_ELEMENT_TYPE_OF_SET_FROM_FIELD_TYPE_METHOD = getElementTypeFromFieldTypeMethod("Set");
 
     private FieldUtil() {
     }
@@ -184,6 +194,23 @@ public final class FieldUtil {
     }
 
     /**
+     * Java5以上の場合は、指定されたフィールドのパラメタ化されたコレクションの要素型を返します。
+     * 
+     * @param field
+     *            フィールド
+     * @return フィールドのパラメタ化されたコレクションの要素型
+     */
+    public static Class getElementTypeOfCollectionFromFieldType(
+            final Field field) {
+        if (GET_ELEMENT_TYPE_OF_COLLECTION_FROM_FIELD_TYPE_METHOD == null) {
+            return null;
+        }
+        return (Class) MethodUtil.invoke(
+                GET_ELEMENT_TYPE_OF_COLLECTION_FROM_FIELD_TYPE_METHOD, null,
+                new Object[] { field });
+    }
+
+    /**
      * Java5以上の場合は、指定されたフィールドのパラメタ化されたリストの要素型を返します。
      * 
      * @param field
@@ -191,27 +218,44 @@ public final class FieldUtil {
      * @return フィールドのパラメタ化されたリストの要素型
      */
     public static Class getElementTypeOfListFromFieldType(final Field field) {
-        if (GET_ELEMENT_TYPE_FROM_FIELD_TYPE_METHOD == null) {
+        if (GET_ELEMENT_TYPE_OF_LIST_FROM_FIELD_TYPE_METHOD == null) {
             return null;
         }
         return (Class) MethodUtil.invoke(
-                GET_ELEMENT_TYPE_FROM_FIELD_TYPE_METHOD, null,
+                GET_ELEMENT_TYPE_OF_LIST_FROM_FIELD_TYPE_METHOD, null,
                 new Object[] { field });
     }
 
     /**
-     * <code>ReflectionUtil#getElementTypeOfListFromFieldType()</code>の
+     * Java5以上の場合は、指定されたフィールドのパラメタ化されたセットの要素型を返します。
+     * 
+     * @param field
+     *            フィールド
+     * @return フィールドのパラメタ化されたセットの要素型
+     */
+    public static Class getElementTypeOfSetFromFieldType(final Field field) {
+        if (GET_ELEMENT_TYPE_OF_SET_FROM_FIELD_TYPE_METHOD == null) {
+            return null;
+        }
+        return (Class) MethodUtil.invoke(
+                GET_ELEMENT_TYPE_OF_SET_FROM_FIELD_TYPE_METHOD, null,
+                new Object[] { field });
+    }
+
+    /**
+     * <code>ReflectionUtil#getElementTypeOf<var>Xxx</var>FromFieldType()</code>の
      * {@link Method}を返します。
      * 
-     * @return <code>ReflectionUtil#getElementTypeOfListFromFieldType()</code>の{@link Method}
+     * @param type
+     *            取得するメソッドが対象とする型名
+     * @return <code>ReflectionUtil#getElementTypeOf<var>Xxx</var>FromFieldType()</code>の{@link Method}
      */
-    protected static Method getElementTypeOfListFromFieldTypeMethod() {
+    protected static Method getElementTypeFromFieldTypeMethod(final String type) {
         try {
             final Class reflectionUtilClass = Class
                     .forName(REFLECTION_UTIL_CLASS_NAME);
-            return reflectionUtilClass.getMethod(
-                    "getElementTypeOfListFromFieldType",
-                    new Class[] { Field.class });
+            return reflectionUtilClass.getMethod("getElementTypeOf" + type
+                    + "FromFieldType", new Class[] { Field.class });
         } catch (final Throwable ignore) {
         }
         return null;

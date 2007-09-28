@@ -512,7 +512,7 @@ public abstract class ReflectionUtil {
      * 
      * @param method
      *            メソッド
-     * @return 指定されたメソッドの戻り値型として宣言されているコレクション化されたリストの要素型
+     * @return 指定されたメソッドの戻り値型として宣言されているパラメタ化されたコレクションの要素型
      */
     public static Class<?> getElementTypeOfCollectionFromReturnType(
             final Method method) {

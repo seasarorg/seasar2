@@ -293,4 +293,19 @@ public final class PropertyDescImpl implements PropertyDesc {
         return arg;
     }
 
+    public Class getElementType() {
+        if (field != null) {
+            return FieldUtil.getElementTypeOfCollectionFromFieldType(field);
+        }
+        if (readMethod != null) {
+            return MethodUtil
+                    .getElementTypeOfCollectionFromReturnType(readMethod);
+        }
+        if (writeMethod != null) {
+            return MethodUtil.getElementTypeOfCollectionFromParameterType(
+                    writeMethod, 0);
+        }
+        return null;
+    }
+
 }

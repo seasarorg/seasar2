@@ -17,6 +17,7 @@ package org.seasar.framework.beans;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.Collection;
 
 /**
  * プロパティを扱うためのインターフェースです。
@@ -148,4 +149,15 @@ public interface PropertyDesc {
      * @return Bean記述
      */
     BeanDesc getBeanDesc();
+
+    /**
+     * 実行環境がJava5以降で、このプロパティがパラメタ化された{@link Collection}の場合、その要素型を返します。
+     * <p>
+     * 実行環境がJava5以降でない場合、このプロパティがパラメタ化された<code>Collection</code>でない場合は<code>false</code>を返します。
+     * </p>
+     * 
+     * @return このプロパティがパラメタ化された{@link Collection}の場合、その要素型
+     */
+    Class getElementType();
+
 }

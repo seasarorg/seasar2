@@ -16,7 +16,9 @@
 package org.seasar.framework.util;
 
 import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import junit.framework.TestCase;
 
@@ -24,6 +26,18 @@ import junit.framework.TestCase;
  * @author koichik
  */
 public class FieldUtilTigerTest extends TestCase {
+
+    /**
+     * @throws Exception
+     */
+    public void testGetElementTypeOfCollectionFromFieldType() throws Exception {
+        assertEquals(String.class, FieldUtil
+                .getElementTypeOfCollectionFromFieldType(Baz.class
+                        .getField("collectionOfString")));
+        assertEquals(BigDecimal.class, FieldUtil
+                .getElementTypeOfCollectionFromFieldType(Baz.class
+                        .getField("collectionOfBigDecimal")));
+    }
 
     /**
      * @throws Exception
@@ -38,15 +52,39 @@ public class FieldUtilTigerTest extends TestCase {
     }
 
     /**
+     * @throws Exception
+     */
+    public void testGetElementTypeOfSetFromFieldType() throws Exception {
+        assertEquals(String.class, FieldUtil
+                .getElementTypeOfSetFromFieldType(Baz.class
+                        .getField("setOfString")));
+        assertEquals(BigDecimal.class, FieldUtil
+                .getElementTypeOfSetFromFieldType(Baz.class
+                        .getField("setOfBigDecimal")));
+    }
+
+    /**
      * 
      */
     public static class Baz {
+
+        /** */
+        public Collection<String> collectionOfString;
+
+        /** */
+        public Collection<BigDecimal> collectionOfBigDecimal;
 
         /** */
         public List<String> listOfString;
 
         /** */
         public List<BigDecimal> listOfBigDecimal;
+
+        /** */
+        public Set<String> setOfString;
+
+        /** */
+        public Set<BigDecimal> setOfBigDecimal;
     }
 
 }
