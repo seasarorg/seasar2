@@ -111,10 +111,10 @@ font-size : 10pt;
 <dl>
 <dt><code>org.seasar.framework.unit.EasyMockTestCase</code>
 <dd><code>junit.framework.TestCase</code>の派生クラスで，S2コンテナを利用しない場合に使用します．
-<dt><code>org.seasar.framework.unit.S2EasyMockTestCase</code>
+<dt><code>org.seasar.framework.unit.S2TigerTestCase</code>
 <dd><code>org.seasar.framework.unit.S2TestCase</code>の派生クラスで，S2コンテナを利用する場合に使用します．
 </dl>
-<pre>public class HogeTest extends S2EasyMockTestCase {
+<pre>public class HogeTest extends S2TigerTestCase {
     ・・・
 }</pre>
 <h3>JUnit4</h3>
@@ -126,7 +126,7 @@ public class HogeTest {
 <h2><a name="createMock">モックの作成</a></h2>
 <h3><a name="annotationCreate">アノテーションによるモックの作成</a></h3>
 <p>モックを作成するにはテストクラスのフィールドに<code>@EasyMock</code>アノテーションを指定します．</p>
-<pre>public class HogeTest extends S2EasyMockTestCase {
+<pre>public class HogeTest extends S2TigerTestCase {
     @EasyMock
     private Foo foo;
     ・・・
@@ -134,7 +134,7 @@ public class HogeTest {
 <p>@EasyMockアノテーションが付けられたフィールドの型からモックが作成され，フィールドに設定されます．</p>
 <h4><a name="mockType">モックの種類を指定する</a></h4>
 <p>モックの種類を指定することもできます．それには<code>@EasyMock</code>アノテーションの<code>value</code>要素で列挙型<code>EasyMockType</code>の定数を指定します．</p>
-<pre>public class HogeTest extends S2EasyMockTestCase {
+<pre>public class HogeTest extends S2TigerTestCase {
     @EasyMock(EasyMockType.STRICT)
     private Foo foo;
     ・・・
@@ -151,8 +151,8 @@ Strictモードのモックは指定されていないメソッドが呼び出�
 <dd>Niceモードのモックを作成します．Niceモードのモックは指定されていないメソッド呼び出しが行われても例外をスローしません．
 </dl>
 <h4><a name="registerMock">モックをS2コンテナに登録する</a></h4>
-<p><code>S2EasyMockTestCase</code>のサブクラスでは，作成されたモックをS2コンテナに登録することができます．それには@EasyMockアノテーションの<code>register</code>要素で<code>true</code>を指定します．</p>
-<pre>public class HogeTest extends S2EasyMockTestCase {
+<p><code>S2TigerTestCase</code>のサブクラスでは，作成されたモックをS2コンテナに登録することができます．それには@EasyMockアノテーションの<code>register</code>要素で<code>true</code>を指定します．</p>
+<pre>public class HogeTest extends S2TigerTestCase {
     @EasyMock(register=true)
     private Foo foo;
    ・・・
@@ -160,13 +160,13 @@ Strictモードのモックは指定されていないメソッドが呼び出�
 <p>モックのコンポーネント名はフィールド名となります．</p>
 <p>モックの登録はS2コンテナの初期化前に行われるため，登録されたモックは他のコンポーネントにDIされる対象となります．モックに対するDIは行われません．</p>
 <h3><a name="explicitCreate">明示的にモックを作成する</a></h3>
-<p>JUnit3では，<code>@EasyMock</code>アノテーションを使わず，<code>setUp()</code>メソッドまたは<code>setUpXxx()</code>メソッド (<code>S2EasyMockTestCase</code>のサブクラスのみ) の中で明示的にモックを作成することもできます．それには以下のメソッドを使用します．</p>
+<p>JUnit3では，<code>@EasyMock</code>アノテーションを使わず，<code>setUp()</code>メソッドまたは<code>setUpXxx()</code>メソッド (<code>S2TigerTestCase</code>のサブクラスのみ) の中で明示的にモックを作成することもできます．それには以下のメソッドを使用します．</p>
 <ul>
 <li><code>T createMock(Class&lt;T&gt;)</code>
 <li><code>T createStrictMock(Class&lt;T&gt;)</code>
 <li><code>T createNiceMock(Class&lt;T&gt;)</code>
 </ul>
-<pre>public class HogeTest extends S2EasyMockTestCase {
+<pre>public class HogeTest extends S2TigerTestCase {
     private Foo foo;
 
     protected void setUp() throws Exception {
@@ -178,7 +178,7 @@ Strictモードのモックは指定されていないメソッドが呼び出�
 <h2><a name="record">モックの振る舞いを記録する</a></h2>
 <p>モックの振る舞いを記録するには，&quot;record&quot;メソッドを使用します．</p>
 <p>&quot;record&quot;メソッドはテストメソッドの接頭辞&quot;test&quot;を&quot;record&quot;にした名前を持つ<code>public</code>なインスタンスメソッドです．</p>
-<pre>public class HogeTest extends S2EasyMockTestCase {
+<pre>public class HogeTest extends S2TigerTestCase {
     public void recordXxx() throws Exception {
         ・・・
     }
