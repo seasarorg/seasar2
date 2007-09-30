@@ -16,15 +16,29 @@
 package org.seasar.framework.unit;
 
 /**
- * <code>UnitTest</code>用の{@link ClassLoader}です。
+ * {@link S2FrameworkTestCase}を使用した単体テスト等で使用する{@link ClassLoader クラスローダ}です。
+ * <p>
+ * アスペクトが適用されたクラスを大量に使用するテストを連続して実行する際に、 {@link OutOfMemoryError}
+ * の頻発を回避する目的で使用します。
+ * </p>
+ * <p>
+ * クラスは通常、 システムクラスローダによりVMのパーマネント領域にロードされますが、 新たにクラスをロードする領域がなくなると、
+ * <code>OutOfMemoryError</code>が発生します。 <code>S2FrameworkTestCase</code>では、
+ * テストメソッド毎に、 この<code>UnitClassLoader</code>を生成、 使用、 消滅させることにより、
+ * アスペクトが適用されたクラスがGCされることで、 パーマネント領域が不足する問題を回避しています。
+ * </p>
  * 
  * @author higa
- * 
+ * @author belltree
+ * @author goto
  */
 public class UnitClassLoader extends ClassLoader {
 
     /**
+     * 親クラスローダを指定して<code>UnitClassLoader</code>を構築します。
+     * 
      * @param parent
+     *            親クラスローダ
      */
     public UnitClassLoader(ClassLoader parent) {
         super(parent);
