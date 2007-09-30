@@ -38,6 +38,7 @@ public class PropertyDescImplTigerTest extends TestCase {
     public void testFieldType() throws Exception {
         BeanDesc bd = BeanDescFactory.getBeanDesc(Hoge.class);
         PropertyDesc pd = bd.getPropertyDesc("foo");
+        assertTrue(pd.isParameterized());
         assertEquals(String.class, pd.getElementClassOfCollection());
 
         ParameterizedClassDesc pcd = pd.getParameterizedClassDesc();
@@ -52,6 +53,7 @@ public class PropertyDescImplTigerTest extends TestCase {
     public void testGetter() throws Exception {
         BeanDesc bd = BeanDescFactory.getBeanDesc(Hoge.class);
         PropertyDesc pd = bd.getPropertyDesc("bar");
+        assertTrue(pd.isParameterized());
         assertEquals(Integer.class, pd.getElementClassOfCollection());
 
         ParameterizedClassDesc pcd = pd.getParameterizedClassDesc();
@@ -66,6 +68,7 @@ public class PropertyDescImplTigerTest extends TestCase {
     public void testSetter() throws Exception {
         BeanDesc bd = BeanDescFactory.getBeanDesc(Hoge.class);
         PropertyDesc pd = bd.getPropertyDesc("baz");
+        assertTrue(pd.isParameterized());
         assertEquals(String.class, pd.getKeyClassOfMap());
         assertEquals(Date.class, pd.getValueClassOfMap());
 
