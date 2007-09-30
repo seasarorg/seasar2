@@ -13,7 +13,7 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.framework.beans.impl;
+package org.seasar.framework.beans.factory;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -24,12 +24,11 @@ import java.util.Set;
 import junit.framework.TestCase;
 
 import org.seasar.framework.beans.ParameterizedClassDesc;
-import org.seasar.framework.beans.factory.ParameterizedClassDescFactory;
 
 /**
  * @author koichik
  */
-public class ParameterizedClassDescProviderTest extends TestCase {
+public class ParameterizedClassDescFactoryTest extends TestCase {
 
     /**
      * @throws Exception
