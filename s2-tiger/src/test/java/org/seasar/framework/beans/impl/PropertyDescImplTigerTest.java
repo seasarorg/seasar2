@@ -83,7 +83,8 @@ public class PropertyDescImplTigerTest extends TestCase {
         /**
          * @param date
          */
-        public void setBaz(Collection<Date> date) {
+        public void setBaz(@SuppressWarnings("unused")
+        Collection<Date> date) {
         }
 
     }
