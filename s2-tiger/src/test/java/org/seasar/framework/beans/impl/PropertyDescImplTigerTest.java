@@ -15,15 +15,16 @@
  */
 package org.seasar.framework.beans.impl;
 
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import junit.framework.TestCase;
 
 import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.ParameterizedClassDesc;
+import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.beans.factory.BeanDescFactory;
 
 /**
@@ -36,11 +37,13 @@ public class PropertyDescImplTigerTest extends TestCase {
      */
     public void testFieldType() throws Exception {
         BeanDesc bd = BeanDescFactory.getBeanDesc(Hoge.class);
-        ParameterizedClassDesc pd = bd.getPropertyDesc("foo")
-                .getParameterizedClassDesc();
-        assertEquals(List.class, pd.getRawClass());
-        assertEquals(1, pd.getArguments().length);
-        assertEquals(String.class, pd.getArguments()[0].getRawClass());
+        PropertyDesc pd = bd.getPropertyDesc("foo");
+        assertEquals(String.class, pd.getElementClassOfCollection());
+
+        ParameterizedClassDesc pcd = pd.getParameterizedClassDesc();
+        assertEquals(List.class, pcd.getRawClass());
+        assertEquals(1, pcd.getArguments().length);
+        assertEquals(String.class, pcd.getArguments()[0].getRawClass());
     }
 
     /**
@@ -48,11 +51,13 @@ public class PropertyDescImplTigerTest extends TestCase {
      */
     public void testGetter() throws Exception {
         BeanDesc bd = BeanDescFactory.getBeanDesc(Hoge.class);
-        ParameterizedClassDesc pd = bd.getPropertyDesc("bar")
-                .getParameterizedClassDesc();
-        assertEquals(Set.class, pd.getRawClass());
-        assertEquals(1, pd.getArguments().length);
-        assertEquals(Integer.class, pd.getArguments()[0].getRawClass());
+        PropertyDesc pd = bd.getPropertyDesc("bar");
+        assertEquals(Integer.class, pd.getElementClassOfCollection());
+
+        ParameterizedClassDesc pcd = pd.getParameterizedClassDesc();
+        assertEquals(Set.class, pcd.getRawClass());
+        assertEquals(1, pcd.getArguments().length);
+        assertEquals(Integer.class, pcd.getArguments()[0].getRawClass());
     }
 
     /**
@@ -60,11 +65,15 @@ public class PropertyDescImplTigerTest extends TestCase {
      */
     public void testSetter() throws Exception {
         BeanDesc bd = BeanDescFactory.getBeanDesc(Hoge.class);
-        ParameterizedClassDesc pd = bd.getPropertyDesc("baz")
-                .getParameterizedClassDesc();
-        assertEquals(Collection.class, pd.getRawClass());
-        assertEquals(1, pd.getArguments().length);
-        assertEquals(Date.class, pd.getArguments()[0].getRawClass());
+        PropertyDesc pd = bd.getPropertyDesc("baz");
+        assertEquals(String.class, pd.getKeyClassOfMap());
+        assertEquals(Date.class, pd.getValueClassOfMap());
+
+        ParameterizedClassDesc pcd = pd.getParameterizedClassDesc();
+        assertEquals(Map.class, pcd.getRawClass());
+        assertEquals(2, pcd.getArguments().length);
+        assertEquals(String.class, pcd.getArguments()[0].getRawClass());
+        assertEquals(Date.class, pcd.getArguments()[1].getRawClass());
     }
 
     /** */
@@ -84,8 +93,9 @@ public class PropertyDescImplTigerTest extends TestCase {
          * @param date
          */
         public void setBaz(@SuppressWarnings("unused")
-        Collection<Date> date) {
+        Map<String, Date> date) {
         }
 
     }
+
 }

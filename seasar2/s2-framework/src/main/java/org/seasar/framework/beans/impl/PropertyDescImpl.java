@@ -20,6 +20,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.util.Collection;
+import java.util.Map;
 
 import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.IllegalPropertyRuntimeException;
@@ -319,6 +321,28 @@ public final class PropertyDescImpl implements PropertyDesc {
 
     public ParameterizedClassDesc getParameterizedClassDesc() {
         return parameterizedClassDesc;
+    }
+
+    public Class getElementClassOfCollection() {
+        if (!Collection.class.isAssignableFrom(propertyType)
+                || !isParameterized()) {
+            return null;
+        }
+        return parameterizedClassDesc.getArguments()[0].getRawClass();
+    }
+
+    public Class getKeyClassOfMap() {
+        if (!Map.class.isAssignableFrom(propertyType) || !isParameterized()) {
+            return null;
+        }
+        return parameterizedClassDesc.getArguments()[0].getRawClass();
+    }
+
+    public Class getValueClassOfMap() {
+        if (!Map.class.isAssignableFrom(propertyType) || !isParameterized()) {
+            return null;
+        }
+        return parameterizedClassDesc.getArguments()[1].getRawClass();
     }
 
 }
