@@ -23,7 +23,9 @@ import java.sql.Timestamp;
 
 import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.IllegalPropertyRuntimeException;
+import org.seasar.framework.beans.ParameterizedClassDesc;
 import org.seasar.framework.beans.PropertyDesc;
+import org.seasar.framework.beans.factory.ParameterizedClassDescFactory;
 import org.seasar.framework.exception.EmptyRuntimeException;
 import org.seasar.framework.util.BooleanConversionUtil;
 import org.seasar.framework.util.CalendarConversionUtil;
@@ -41,7 +43,6 @@ import org.seasar.framework.util.TimestampConversionUtil;
  * {@link PropertyDesc}の実装クラスです。
  * 
  * @author higa
- * 
  */
 public final class PropertyDescImpl implements PropertyDesc {
 
@@ -66,6 +67,8 @@ public final class PropertyDescImpl implements PropertyDesc {
     private boolean readable = false;
 
     private boolean writable = false;
+
+    private ParameterizedClassDesc parameterizedClassDesc;
 
     /**
      * {@link PropertyDescImpl}を作成します。
@@ -111,6 +114,7 @@ public final class PropertyDescImpl implements PropertyDesc {
         this.beanDesc = beanDesc;
         setupStringConstructor();
         setupValueOfMethod();
+        setUpParameterizedClassDesc();
     }
 
     private void setupStringConstructor() {
@@ -140,6 +144,21 @@ public final class PropertyDescImpl implements PropertyDesc {
                 valueOfMethod = method;
                 break;
             }
+        }
+    }
+
+    private void setUpParameterizedClassDesc() {
+        if (field != null) {
+            parameterizedClassDesc = ParameterizedClassDescFactory
+                    .createParameterizedClassDesc(field);
+        }
+        if (readMethod != null) {
+            parameterizedClassDesc = ParameterizedClassDescFactory
+                    .createParameterizedClassDesc(readMethod);
+        }
+        if (writeMethod != null) {
+            parameterizedClassDesc = ParameterizedClassDescFactory
+                    .createParameterizedClassDesc(writeMethod, 0);
         }
     }
 
@@ -293,19 +312,13 @@ public final class PropertyDescImpl implements PropertyDesc {
         return arg;
     }
 
-    public Class getElementType() {
-        if (field != null) {
-            return FieldUtil.getElementTypeOfCollectionFromFieldType(field);
-        }
-        if (readMethod != null) {
-            return MethodUtil
-                    .getElementTypeOfCollectionFromReturnType(readMethod);
-        }
-        if (writeMethod != null) {
-            return MethodUtil.getElementTypeOfCollectionFromParameterType(
-                    writeMethod, 0);
-        }
-        return null;
+    public boolean isParameterized() {
+        return parameterizedClassDesc != null
+                && parameterizedClassDesc.isParameterizedClass();
+    }
+
+    public ParameterizedClassDesc getParameterizedClassDesc() {
+        return parameterizedClassDesc;
     }
 
 }

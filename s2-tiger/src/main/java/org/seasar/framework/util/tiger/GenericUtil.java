@@ -77,6 +77,13 @@ public abstract class GenericUtil {
                     .cast(type);
             return getRawClass(parameterizedType.getRawType());
         }
+        if (GenericArrayType.class.isInstance(type)) {
+            final GenericArrayType genericArrayType = GenericArrayType.class
+                    .cast(type);
+            final Class<?> rawClass = getRawClass(genericArrayType
+                    .getGenericComponentType());
+            return Array.newInstance(rawClass, 0).getClass();
+        }
         return null;
     }
 
@@ -91,10 +98,14 @@ public abstract class GenericUtil {
      * @return <code>type</code>の型引数の配列
      */
     public static Type[] getGenericParameter(final Type type) {
-        if (!ParameterizedType.class.isInstance(type)) {
-            return null;
+        if (ParameterizedType.class.isInstance(type)) {
+            return ParameterizedType.class.cast(type).getActualTypeArguments();
         }
-        return ParameterizedType.class.cast(type).getActualTypeArguments();
+        if (GenericArrayType.class.isInstance(type)) {
+            return getGenericParameter(GenericArrayType.class.cast(type)
+                    .getGenericComponentType());
+        }
+        return null;
     }
 
     /**

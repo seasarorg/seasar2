@@ -19,6 +19,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.seasar.extension.dxo.converter.ConversionContext;
+import org.seasar.framework.beans.ParameterizedClassDesc;
 
 /**
  * 変換元オブジェクトを{@link Set}に変換するコンバータです。
@@ -26,7 +27,7 @@ import org.seasar.extension.dxo.converter.ConversionContext;
  * @author Satoshi Kimura
  * @author koichik
  */
-public class SetConverter extends AbstractCollectionConverter {
+public class SetConverter extends AbstractParameterizedCollectionConverter {
 
     public Class[] getSourceClasses() {
         return new Class[] { Object.class };
@@ -49,12 +50,13 @@ public class SetConverter extends AbstractCollectionConverter {
     }
 
     public Object convert(final Object source, final Class destClass,
-            final Class destElementClass, final ConversionContext context) {
+            final ParameterizedClassDesc parameterizedClassDesc,
+            final ConversionContext context) {
         if (source == null) {
             return null;
         }
         final Set dest = new LinkedHashSet();
-        convert(source, dest, destElementClass, context);
+        convert(source, dest, parameterizedClassDesc, context);
         return dest;
     }
 

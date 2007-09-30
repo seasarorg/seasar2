@@ -17,13 +17,11 @@ package org.seasar.framework.beans;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.Collection;
 
 /**
  * プロパティを扱うためのインターフェースです。
  * 
  * @author higa
- * 
  */
 public interface PropertyDesc {
 
@@ -151,13 +149,22 @@ public interface PropertyDesc {
     BeanDesc getBeanDesc();
 
     /**
-     * 実行環境がJava5以降で、このプロパティがパラメタ化された{@link Collection}の場合、その要素型を返します。
+     * 実行環境がJava5以降で、このプロパティがパラメタ化された型の場合に<code>true</code>を返します。
+     * 
+     * @return このプロパティがパラメタ化された型の場合に<code>true</code>
+     * @since 2.4.18
+     */
+    boolean isParameterized();
+
+    /**
+     * 実行環境がJava5以降で、このプロパティがパラメタ化された型の場合、その情報を返します。
      * <p>
-     * 実行環境がJava5以降でない場合、このプロパティがパラメタ化された<code>Collection</code>でない場合は<code>false</code>を返します。
+     * 実行環境がJava5以降でない場合、このプロパティがパラメタ化された型でない場合は<code>null</code>を返します。
      * </p>
      * 
-     * @return このプロパティがパラメタ化された{@link Collection}の場合、その要素型
+     * @return このプロパティがパラメタ化された型の場合、その情報
+     * @since 2.4.18
      */
-    Class getElementType();
+    ParameterizedClassDesc getParameterizedClassDesc();
 
 }

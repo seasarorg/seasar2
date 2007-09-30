@@ -15,15 +15,18 @@
  */
 package org.seasar.extension.dxo.converter;
 
+import org.seasar.framework.beans.ParameterizedClassDesc;
+
 /**
- * 変換元クラスのインスタンスを変換先コレクションクラスのインスタンスに変換するコンバータを表します。
+ * 変換元クラスのインスタンスをパラメタ化された変換先クラスのインスタンスに変換するコンバータです。
  * 
+ * @since 2.4.18
  * @author koichik
  */
-public interface CollectionConverter extends Converter {
+public interface ParameterizedClassConverter extends Converter {
 
     /**
-     * <code>source</code>を<code>destElementClass</code>を要素とするコレクション<code>dest</code>に変換します。
+     * <code>source</code>をパラメタ化された型の<code>dest</code>に変換します。
      * <p>
      * このメソッドはJavaBeansや配列，{@link java.util.List}など、
      * 可変なオブジェクトへの変換を行うコンバータでサポートされます。 不変なオブジェクトへの変換を行うコンバータはこのメソッドを実装できないため、
@@ -34,30 +37,32 @@ public interface CollectionConverter extends Converter {
      *            変換元のオブジェクト
      * @param dest
      *            変換先のオブジェクト
-     * @param destElementClass
-     *            変換先の要素の型
+     * @param parameterizedClassDesc
+     *            変換先のパラメタ化された型の情報
      * @param context
      *            変換コンテキスト
      * @throws UnsupportedOperationException
      *             この変換がサポートされていない場合にスローします
      */
-    void convert(Object source, Object dest, Class destElementClass,
+    void convert(Object source, Object dest,
+            ParameterizedClassDesc parameterizedClassDesc,
             ConversionContext context);
 
     /**
-     * <code>source</code>を<code>destElementClass</code>を要素とする<code>destClass</code>型のコレクションに変換したオブジェクトを返します。
+     * <code>source</code>をパラメタ化された型の<code>destClass</code>に変換したオブジェクトを返します。
      * 
      * @param source
      *            変換元のオブジェクト
      * @param destClass
      *            変換先のクラス
-     * @param destElementClass
-     *            変換先の要素の型
+     * @param parameterizedClassDesc
+     *            変換先のパラメタ化された型の情報
      * @param context
      *            変換コンテキスト
      * @return 変換先のオブジェクト。これは<code>destClass</code>のインスタンスです。
      */
-    Object convert(Object source, Class destClass, Class destElementClass,
+    Object convert(Object source, Class destClass,
+            ParameterizedClassDesc parameterizedClassDesc,
             ConversionContext context);
 
 }

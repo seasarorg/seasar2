@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.seasar.extension.dxo.converter.ConversionContext;
+import org.seasar.framework.beans.ParameterizedClassDesc;
 
 /**
  * 変換元オブジェクトを{@link List}に変換するコンバータです。
@@ -26,7 +27,7 @@ import org.seasar.extension.dxo.converter.ConversionContext;
  * @author Satoshi Kimura
  * @author koichik
  */
-public class ListConverter extends AbstractCollectionConverter {
+public class ListConverter extends AbstractParameterizedCollectionConverter {
 
     public Class[] getSourceClasses() {
         return new Class[] { Object.class };
@@ -50,12 +51,13 @@ public class ListConverter extends AbstractCollectionConverter {
     }
 
     public Object convert(final Object source, final Class destClass,
-            final Class destElementClass, final ConversionContext context) {
+            final ParameterizedClassDesc parameterizedClassDesc,
+            final ConversionContext context) {
         if (source == null) {
             return null;
         }
         final List dest = new ArrayList();
-        convert(source, dest, destElementClass, context);
+        convert(source, dest, parameterizedClassDesc, context);
         return dest;
     }
 

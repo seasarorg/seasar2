@@ -20,13 +20,16 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.seasar.framework.beans.ParameterizedClassDesc;
+import org.seasar.framework.beans.impl.ParameterizedClassDescImpl;
+
 /**
  * @author Satoshi Kimura
  * @author koichik
  */
 public class SetConverterTest extends AbsConverterTest {
 
-    private AbstractCollectionConverter converter;
+    private AbstractParameterizedCollectionConverter converter;
 
     protected void setUp() throws Exception {
         super.setUp();
@@ -81,8 +84,15 @@ public class SetConverterTest extends AbsConverterTest {
      */
     public void testConvertFromArrayWithElementClass() throws Exception {
         Object[] array1 = { new Integer(1), new Integer(5), null };
-        Set dest = (Set) converter.convert(array1, null, String.class,
-                createContext("testConvertFromArrayWithElementClass", null));
+        Set dest = (Set) converter
+                .convert(
+                        array1,
+                        null,
+                        new ParameterizedClassDescImpl(
+                                Set.class,
+                                new ParameterizedClassDesc[] { new ParameterizedClassDescImpl(
+                                        String.class) }), createContext(
+                                "testConvertFromArrayWithElementClass", null));
         assertEquals(3, dest.size());
         Iterator it = dest.iterator();
         assertEquals("1", it.next());
@@ -96,8 +106,15 @@ public class SetConverterTest extends AbsConverterTest {
     public void testConvertFromListWithElementClass() throws Exception {
         List source = Arrays.asList(new Object[] { new Integer(1),
                 new Integer(5), null });
-        Set dest = (Set) converter.convert(source, null, String.class,
-                createContext("testConvertFromListWithElementClass", null));
+        Set dest = (Set) converter
+                .convert(
+                        source,
+                        null,
+                        new ParameterizedClassDescImpl(
+                                Set.class,
+                                new ParameterizedClassDesc[] { new ParameterizedClassDescImpl(
+                                        String.class) }), createContext(
+                                "testConvertFromListWithElementClass", null));
         assertEquals(3, dest.size());
         Iterator it = dest.iterator();
         assertEquals("1", it.next());

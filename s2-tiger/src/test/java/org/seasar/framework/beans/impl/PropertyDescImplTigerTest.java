@@ -23,6 +23,7 @@ import java.util.Set;
 import junit.framework.TestCase;
 
 import org.seasar.framework.beans.BeanDesc;
+import org.seasar.framework.beans.ParameterizedClassDesc;
 import org.seasar.framework.beans.factory.BeanDescFactory;
 
 /**
@@ -33,11 +34,37 @@ public class PropertyDescImplTigerTest extends TestCase {
     /**
      * @throws Exception
      */
-    public void testElementType() throws Exception {
+    public void testFieldType() throws Exception {
         BeanDesc bd = BeanDescFactory.getBeanDesc(Hoge.class);
-        assertEquals(String.class, bd.getPropertyDesc("foo").getElementType());
-        assertEquals(Integer.class, bd.getPropertyDesc("bar").getElementType());
-        assertEquals(Date.class, bd.getPropertyDesc("baz").getElementType());
+        ParameterizedClassDesc pd = bd.getPropertyDesc("foo")
+                .getParameterizedClassDesc();
+        assertEquals(List.class, pd.getRawClass());
+        assertEquals(1, pd.getArguments().length);
+        assertEquals(String.class, pd.getArguments()[0].getRawClass());
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testGetter() throws Exception {
+        BeanDesc bd = BeanDescFactory.getBeanDesc(Hoge.class);
+        ParameterizedClassDesc pd = bd.getPropertyDesc("bar")
+                .getParameterizedClassDesc();
+        assertEquals(Set.class, pd.getRawClass());
+        assertEquals(1, pd.getArguments().length);
+        assertEquals(Integer.class, pd.getArguments()[0].getRawClass());
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testSetter() throws Exception {
+        BeanDesc bd = BeanDescFactory.getBeanDesc(Hoge.class);
+        ParameterizedClassDesc pd = bd.getPropertyDesc("baz")
+                .getParameterizedClassDesc();
+        assertEquals(Collection.class, pd.getRawClass());
+        assertEquals(1, pd.getArguments().length);
+        assertEquals(Date.class, pd.getArguments()[0].getRawClass());
     }
 
     /** */
