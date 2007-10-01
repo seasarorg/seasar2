@@ -146,8 +146,7 @@ public class SimpleExpression implements Expression {
                 final String destProperty = (String) it.next();
                 if (source instanceof Map) {
                     source = ((Map) source).get(destProperty);
-                }
-                {
+                } else {
                     final BeanDesc beanDesc = BeanDescFactory
                             .getBeanDesc(source.getClass());
                     final PropertyDesc propertyDesc = beanDesc
