@@ -22,59 +22,20 @@ import junit.framework.TestCase;
 /**
  * @author koichik
  */
-public class SimpleExpressionTest extends TestCase {
+public class OgnlExpressionTest extends TestCase {
 
     /**
      * @throws Exception
      */
-    public void test1() throws Exception {
+    public void test() throws Exception {
         Foo foo = new Foo();
         foo.bar = new Bar();
         foo.bar.baz = new Baz();
         foo.bar.baz.name = "hoge";
-        SimpleExpression exp = SimpleExpressionParser.parse("a : bar.baz.name");
+        OgnlExpression exp = new OgnlExpression("'a':bar.baz.name");
         Map map = exp.evaluate(foo);
         assertEquals(1, map.size());
         assertEquals("hoge", map.get("a"));
-    }
-
-    /**
-     * @throws Exception
-     */
-    public void test2() throws Exception {
-        Foo foo = new Foo();
-        foo.bar = new Bar();
-        foo.bar.baz = new Baz();
-        SimpleExpression exp = SimpleExpressionParser
-                .parse("result : bar.baz.name");
-        Map map = exp.evaluate(foo);
-        assertEquals(1, map.size());
-        assertNull(map.get("result"));
-    }
-
-    /**
-     * @throws Exception
-     */
-    public void test3() throws Exception {
-        Foo foo = new Foo();
-        foo.bar = new Bar();
-        SimpleExpression exp = SimpleExpressionParser
-                .parse("result : bar.baz.name");
-        Map map = exp.evaluate(foo);
-        assertEquals(1, map.size());
-        assertNull(map.get("result"));
-    }
-
-    /**
-     * @throws Exception
-     */
-    public void test4() throws Exception {
-        Foo foo = new Foo();
-        SimpleExpression exp = SimpleExpressionParser
-                .parse("result : bar.baz.name");
-        Map map = exp.evaluate(foo);
-        assertEquals(1, map.size());
-        assertNull(map.get("result"));
     }
 
     /**

@@ -15,7 +15,10 @@
  */
 package org.seasar.extension.dxo.util;
 
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.seasar.framework.util.OgnlUtil;
 
@@ -47,7 +50,20 @@ public class OgnlExpression implements Expression {
     }
 
     public Map evaluate(final Object source) {
-        return (Map) OgnlUtil.getValue(parsedExpression, source);
+        final Map map = (Map) OgnlUtil.getValue(parsedExpression, source);
+        final Map result = new LinkedHashMap(map.size());
+        for (final Iterator it = map.entrySet().iterator(); it.hasNext();) {
+            final Entry entry = (Entry) it.next();
+            final Object key = entry.getKey();
+            final Object value = entry.getValue();
+            if (key instanceof Character) {
+                result.put(new String(new char[] { ((Character) key)
+                        .charValue() }), value);
+            } else {
+                result.put(key, value);
+            }
+        }
+        return result;
     }
 
 }
