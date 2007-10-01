@@ -16,6 +16,8 @@
 package org.seasar.framework.util.tiger;
 
 import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.IdentityHashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.TreeMap;
@@ -33,12 +35,9 @@ import java.util.concurrent.ConcurrentHashMap;
  * </pre>
  * 
  * @author koichik
- * @param <K>
- *            <code>Map</code>のキーの型
- * @param <V>
- *            <code>Map</code>の値の型
+ * @since 2.4.18
  */
-public class Maps<K, V> {
+public class Maps {
 
     /**
      * {@link HashMap}のインスタンスを生成し、値を設定して返します。
@@ -101,6 +100,21 @@ public class Maps<K, V> {
     }
 
     /**
+     * {@link IdentityHashMap}のインスタンスを生成し、値を設定して返します。
+     * 
+     * @param <K>
+     *            <code>Map</code>のキーの型
+     * @param <V>
+     *            <code>Map</code>の値の型
+     * @param pairs
+     *            <code>Map</code>に設定する値
+     * @return {@link IdentityHashMap}
+     */
+    public static <K, V> Map<K, V> identityHashMap(Pair<K, V>... pairs) {
+        return putAll(new IdentityHashMap<K, V>(), pairs);
+    }
+
+    /**
      * {@link ConcurrentHashMap}のインスタンスを生成し、値を設定して返します。
      * 
      * @param <K>
@@ -128,6 +142,21 @@ public class Maps<K, V> {
      */
     public static <K, V> Map<K, V> treeMap(Pair<K, V>... pairs) {
         return putAll(new TreeMap<K, V>(), pairs);
+    }
+
+    /**
+     * {@link Hashtable}のインスタンスを生成し、値を設定して返します。
+     * 
+     * @param <K>
+     *            <code>Map</code>のキーの型
+     * @param <V>
+     *            <code>Map</code>の値の型
+     * @param pairs
+     *            <code>Map</code>に設定する値
+     * @return {@link Hashtable}
+     */
+    public static <K, V> Map<K, V> hashtable(Pair<K, V>... pairs) {
+        return putAll(new Hashtable<K, V>(), pairs);
     }
 
     /**

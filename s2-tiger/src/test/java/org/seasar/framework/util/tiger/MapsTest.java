@@ -17,12 +17,12 @@ package org.seasar.framework.util.tiger;
 
 import java.util.Map;
 
-import junit.framework.TestCase;
 import static org.seasar.framework.util.tiger.Maps.*;
+
+import junit.framework.TestCase;
 
 /**
  * @author koichik
- * 
  */
 public class MapsTest extends TestCase {
 
@@ -30,7 +30,7 @@ public class MapsTest extends TestCase {
      * @throws Exception
      */
     public void test() throws Exception {
-        Map<String, Integer> map = hashMap($("a", 1), $("b", 2), $("c", 3));
+        Map<String, Integer> map = map($("a", 1), $("b", 2), $("c", 3));
         assertEquals(3, map.size());
         assertEquals(new Integer(1), map.get("a"));
         assertEquals(new Integer(2), map.get("b"));
