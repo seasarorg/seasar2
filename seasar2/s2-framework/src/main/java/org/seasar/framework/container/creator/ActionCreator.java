@@ -21,17 +21,31 @@ import org.seasar.framework.container.deployer.InstanceDefFactory;
 import org.seasar.framework.convention.NamingConvention;
 
 /**
- * Action用の {@link ComponentCreator}です。
+ * Actionクラス用の {@link ComponentCreator}です。
+ * <P>
+ * 決められた命名規約に従って、クラスからActionクラスのコンポーネント定義を作成します。
+ * 作成されるコンポーネント定義の各種属性は以下になります。
+ * 
+ * <table>
+ * <tr><th>サフィックス</th> <th>{@link NamingConvention#getActionSuffix() Action(デフォルト)}</th></tr>
+ * <tr> <td>インスタンス定義</td>       <td>request</td> </tr>
+ * <tr> <td>自動バインディング</td>     <td>auto</td>    </tr>
+ * <tr> <td>外部バインディング</td>     <td>無効</td>    </tr>
+ * <tr> <td>インターフェース</td>       <td>対象外</td>  </tr>
+ * <tr> <td>抽象クラス</td>            <td>対象外</td>   </tr>
+ * </table>
+ * </p>
  * 
  * @author higa
+ * @author vestige
  * 
  */
 public class ActionCreator extends ComponentCreatorImpl {
 
     /**
-     * {@link ActionCreator}を作成します。
+     * 指定された{@link NamingConvention 命名規約}に従った{@link ActionCreator}を作成します。
      * 
-     * @param namingConvention
+     * @param namingConvention 命名規約
      */
     public ActionCreator(NamingConvention namingConvention) {
         super(namingConvention);
@@ -42,7 +56,7 @@ public class ActionCreator extends ComponentCreatorImpl {
     /**
      * {@link ComponentCustomizer}を返します。
      * 
-     * @return {@link ComponentCustomizer}
+     * @return コンポーネントカスタマイザ
      */
     public ComponentCustomizer getActionCustomizer() {
         return getCustomizer();
@@ -51,7 +65,7 @@ public class ActionCreator extends ComponentCreatorImpl {
     /**
      * {@link ComponentCustomizer}を設定します。
      * 
-     * @param customizer
+     * @param customizer コンポーネントカスタマイザ
      */
     public void setActionCustomizer(ComponentCustomizer customizer) {
         setCustomizer(customizer);
