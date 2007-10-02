@@ -58,9 +58,12 @@ import org.seasar.framework.util.BooleanConversionUtil;
  * {@link AutoSelect}の実装クラスです。
  * 
  * @author higa
+ * @param <T>
+ *            エンティティの型です。
  * 
  */
-public class AutoSelectImpl extends AbstractSelect implements AutoSelect {
+public class AutoSelectImpl<T> extends AbstractSelect<T> implements
+        AutoSelect<T> {
 
     /**
      * 結合メタデータのリストです。
@@ -130,58 +133,58 @@ public class AutoSelectImpl extends AbstractSelect implements AutoSelect {
      * @param baseClass
      *            ベースクラス
      */
-    public AutoSelectImpl(JdbcManager jdbcManager, Class<?> baseClass) {
+    public AutoSelectImpl(JdbcManager jdbcManager, Class<T> baseClass) {
         super(jdbcManager, baseClass);
     }
 
-    public AutoSelect callerClass(Class<?> callerClass) {
+    public AutoSelect<T> callerClass(Class<?> callerClass) {
         this.callerClass = callerClass;
         return this;
     }
 
-    public AutoSelect callerMethodName(String callerMethodName) {
+    public AutoSelect<T> callerMethodName(String callerMethodName) {
         this.callerMethodName = callerMethodName;
         return this;
     }
 
-    public AutoSelect maxRows(int maxRows) {
+    public AutoSelect<T> maxRows(int maxRows) {
         this.maxRows = maxRows;
         return this;
     }
 
-    public AutoSelect fetchSize(int fetchSize) {
+    public AutoSelect<T> fetchSize(int fetchSize) {
         this.fetchSize = fetchSize;
         return this;
     }
 
-    public AutoSelect queryTimeout(int queryTimeout) {
+    public AutoSelect<T> queryTimeout(int queryTimeout) {
         this.queryTimeout = queryTimeout;
         return this;
     }
 
-    public AutoSelect limit(int limit) {
+    public AutoSelect<T> limit(int limit) {
         this.limit = limit;
         return this;
     }
 
-    public AutoSelect offset(int offset) {
+    public AutoSelect<T> offset(int offset) {
         this.offset = offset;
         return this;
     }
 
-    public AutoSelect join(String name) {
+    public AutoSelect<T> join(String name) {
         return join(name, JoinType.LEFT_OUTER);
     }
 
-    public AutoSelect join(String name, JoinType joinType) {
+    public AutoSelect<T> join(String name, JoinType joinType) {
         return join(name, joinType, true);
     }
 
-    public AutoSelect join(String name, boolean fetch) {
+    public AutoSelect<T> join(String name, boolean fetch) {
         return join(name, JoinType.LEFT_OUTER, fetch);
     }
 
-    public AutoSelect join(String name, JoinType joinType, boolean fetch) {
+    public AutoSelect<T> join(String name, JoinType joinType, boolean fetch) {
         joinMetaList.add(new JoinMeta(name, joinType, fetch));
         return this;
     }
@@ -206,13 +209,13 @@ public class AutoSelectImpl extends AbstractSelect implements AutoSelect {
         return joinMetaList.get(index);
     }
 
-    public <T> List<T> getResultList() {
+    public List<T> getResultList() {
         prepare("getResultList");
         logSql();
         return getResultListInternal();
     }
 
-    public <T> T getSingleResult() throws SNonUniqueResultException {
+    public T getSingleResult() throws SNonUniqueResultException {
         prepare("getSingleResult");
         logSql();
         return getSingleResultInternal();
@@ -661,7 +664,7 @@ public class AutoSelectImpl extends AbstractSelect implements AutoSelect {
                 .append(whereClause.toSql()).toString();
     }
 
-    public AutoSelect where(Map<String, Object> conditions) {
+    public AutoSelect<T> where(Map<String, Object> conditions) {
         this.conditions = conditions;
         return this;
     }

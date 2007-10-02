@@ -23,58 +23,65 @@ package org.seasar.extension.jdbc;
  */
 public interface JdbcManager {
 
-	/**
-	 * SQL検索を作成します。
-	 * 
-	 * @param baseClass
-	 *            ベースクラス
-	 * @param sql
-	 *            SQL
-	 * @return SQL検索
-	 * @see #selectBySql(Class, String, Object[])
-	 */
-	SqlSelect selectBySql(Class<?> baseClass, String sql);
+    /**
+     * SQL検索を作成します。
+     * 
+     * @param <T>
+     *            戻り値のベースの型です。
+     * @param baseClass
+     *            ベースクラス
+     * @param sql
+     *            SQL
+     * @return SQL検索
+     * @see #selectBySql(Class, String, Object[])
+     */
+    <T> SqlSelect<T> selectBySql(Class<T> baseClass, String sql);
 
-	/**
-	 * SQL検索を作成します。
-	 * 
-	 * @param baseClass
-	 *            ベースクラス
-	 * @param sql
-	 *            SQL
-	 * @param parameters
-	 *            パラメータの配列
-	 * @return SQL検索
-	 */
-	SqlSelect selectBySql(Class<?> baseClass, String sql, Object... parameters);
+    /**
+     * SQL検索を作成します。
+     * 
+     * @param <T>
+     *            戻り値のベースの型です。
+     * @param baseClass
+     *            ベースクラス
+     * @param sql
+     *            SQL
+     * @param parameters
+     *            パラメータの配列
+     * @return SQL検索
+     */
+    <T> SqlSelect<T> selectBySql(Class<T> baseClass, String sql,
+            Object... parameters);
 
-	/**
-	 * 自動検索を作成します。
-	 * 
-	 * @param baseClass
-	 *            ベースクラス
-	 * @return 自動検索
-	 */
-	AutoSelect from(Class<?> baseClass);
+    /**
+     * 自動検索を作成します。
+     * 
+     * @param <T>
+     *            戻り値のベースの型です。
+     * @param baseClass
+     *            ベースクラス
+     * @return 自動検索
+     */
+    <T> AutoSelect<T> from(Class<T> baseClass);
 
-	/**
-	 * JDBCコンテキストを返します。
-	 * 
-	 * @return JDBCコンテキスト
-	 */
-	JdbcContext getJdbcContext();
+    /**
+     * JDBCコンテキストを返します。
+     * 
+     * @return JDBCコンテキスト
+     */
+    JdbcContext getJdbcContext();
 
-	/**
-	 * データベースの方言を返します。
-	 * 
-	 * @return データベースの方言
-	 */
-	DbmsDialect getDialect();
+    /**
+     * データベースの方言を返します。
+     * 
+     * @return データベースの方言
+     */
+    DbmsDialect getDialect();
 
-	/**
-	 * エンティティメタデータファクトリを返します。
-	 * 
-	 * @return エンティティメタデータファクトリ
-	 */
-	EntityMetaFactory getEntityMetaFactory();
+    /**
+     * エンティティメタデータファクトリを返します。
+     * 
+     * @return エンティティメタデータファクトリ
+     */
+    EntityMetaFactory getEntityMetaFactory();
 }

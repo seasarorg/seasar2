@@ -88,7 +88,7 @@ public class AbstractSelectTest extends TestCase {
      */
     public void testSetupPreparedStatement() throws Exception {
         String sql = "select * from aaa where id = ?";
-        MySelect query = new MySelect(manager, Aaa.class);
+        MySelect<Aaa> query = new MySelect<Aaa>(manager, Aaa.class);
         query.fetchSize = 10;
         query.maxRows = 20;
         query.queryTimeout = 30;
@@ -120,7 +120,7 @@ public class AbstractSelectTest extends TestCase {
      */
     public void testGetPreparedStatement() throws Exception {
         String sql = "select * from aaa where id = ?";
-        MySelect query = new MySelect(manager, Aaa.class);
+        MySelect<Aaa> query = new MySelect<Aaa>(manager, Aaa.class);
         query.fetchSize = 10;
         query.maxRows = 20;
         query.queryTimeout = 30;
@@ -139,7 +139,7 @@ public class AbstractSelectTest extends TestCase {
      */
     public void testGetCursorPreparedStatement() throws Exception {
         String sql = "select * from aaa where id = ?";
-        MySelect query = new MySelect(manager, Aaa.class);
+        MySelect<Aaa> query = new MySelect<Aaa>(manager, Aaa.class);
         query.fetchSize = 10;
         query.maxRows = 20;
         query.queryTimeout = 30;
@@ -157,7 +157,7 @@ public class AbstractSelectTest extends TestCase {
      * 
      */
     public void testHandleResultSet() throws Exception {
-        MySelect query = new MySelect(manager, Aaa.class);
+        MySelect<Aaa> query = new MySelect<Aaa>(manager, Aaa.class);
         MockResultSetMetaData rsMeta = new MockResultSetMetaData();
         MockColumnMetaData columnMeta = new MockColumnMetaData();
         columnMeta.setColumnLabel("ID");
@@ -182,7 +182,7 @@ public class AbstractSelectTest extends TestCase {
      * 
      */
     public void testCreateResultSet_noPaging() throws Exception {
-        MySelect query = new MySelect(manager, Aaa.class);
+        MySelect<Aaa> query = new MySelect<Aaa>(manager, Aaa.class);
         JdbcContext jdbcContext = manager.getJdbcContext();
         ResultSet rs = query.createResultSet(jdbcContext);
         assertEquals(ResultSet.TYPE_FORWARD_ONLY, rs.getType());
@@ -195,7 +195,7 @@ public class AbstractSelectTest extends TestCase {
      */
     public void testCreateResultSet_limit_supportOffset() throws Exception {
         manager.setDialect(new PostgreDialect());
-        MySelect query = new MySelect(manager, Aaa.class);
+        MySelect<Aaa> query = new MySelect<Aaa>(manager, Aaa.class);
         query.offset = 5;
         query.limit = 10;
         JdbcContext jdbcContext = manager.getJdbcContext();
@@ -211,7 +211,7 @@ public class AbstractSelectTest extends TestCase {
     public void testCreateResultSet_limit_supportOffset_offsetOnly()
             throws Exception {
         manager.setDialect(new PostgreDialect());
-        MySelect query = new MySelect(manager, Aaa.class);
+        MySelect<Aaa> query = new MySelect<Aaa>(manager, Aaa.class);
         query.offset = 5;
         JdbcContext jdbcContext = manager.getJdbcContext();
         ResultSet rs = query.createResultSet(jdbcContext);
@@ -226,7 +226,7 @@ public class AbstractSelectTest extends TestCase {
     public void testCreateResultSet_limit_supportOffset_offsetOnly_notSupportOffsetWithoutLimit()
             throws Exception {
         manager.setDialect(new MySQLDialect());
-        final MySelect query = new MySelect(manager, Aaa.class) {
+        final MySelect<Aaa> query = new MySelect<Aaa>(manager, Aaa.class) {
 
             MockResultSet rs = new MockResultSet();
 
@@ -266,7 +266,7 @@ public class AbstractSelectTest extends TestCase {
      */
     public void testCreateResultSet_notSupportOffset_cursorSupport()
             throws Exception {
-        final MySelect query = new MySelect(manager, Aaa.class) {
+        final MySelect<Aaa> query = new MySelect<Aaa>(manager, Aaa.class) {
 
             MockResultSet rs = new MockResultSet();
 
@@ -304,8 +304,9 @@ public class AbstractSelectTest extends TestCase {
     /**
      * 
      */
+    @SuppressWarnings("unchecked")
     public void testGetResultListInternal() {
-        MySelect query = new MySelect(manager, AaaDto.class) {
+        MySelect<AaaDto> query = new MySelect<AaaDto>(manager, AaaDto.class) {
 
             @Override
             protected ResultSetHandler createResultListResultSetHandler() {
@@ -344,7 +345,7 @@ public class AbstractSelectTest extends TestCase {
      * 
      */
     public void testGetSingleResultInternal() {
-        MySelect query = new MySelect(manager, AaaDto.class) {
+        MySelect<AaaDto> query = new MySelect<AaaDto>(manager, AaaDto.class) {
 
             @Override
             protected ResultSetHandler createSingleResultResultSetHandler() {
@@ -382,7 +383,7 @@ public class AbstractSelectTest extends TestCase {
      */
     public void testConvertLimitSql() {
         manager.setDialect(new PostgreDialect());
-        MySelect query = new MySelect(manager, Aaa.class);
+        MySelect<Aaa> query = new MySelect<Aaa>(manager, Aaa.class);
         query.limit = 10;
         assertEquals("select * from aaa limit 10", query
                 .convertLimitSql("select * from aaa"));
@@ -393,7 +394,7 @@ public class AbstractSelectTest extends TestCase {
      */
     public void testConvertSql_supportOffsetWithoutLimit() {
         manager.setDialect(new PostgreDialect());
-        MySelect query = new MySelect(manager, Aaa.class);
+        MySelect<Aaa> query = new MySelect<Aaa>(manager, Aaa.class);
         query.offset = 5;
         assertEquals("select * from aaa offset 5", query
                 .convertLimitSql("select * from aaa"));
@@ -403,21 +404,21 @@ public class AbstractSelectTest extends TestCase {
      * 
      */
     public void testConvertSql_notSupportLimit() {
-        MySelect query = new MySelect(manager, Aaa.class);
+        MySelect<Aaa> query = new MySelect<Aaa>(manager, Aaa.class);
         query.limit = 10;
         query.offset = 5;
         assertEquals("select * from aaa", query
                 .convertLimitSql("select * from aaa"));
     }
 
-    private static class MySelect extends AbstractSelect {
+    private static class MySelect<T> extends AbstractSelect<T> {
 
         /**
          * @param jdbcManager
          * @param baseClass
          * 
          */
-        public MySelect(JdbcManager jdbcManager, Class<?> baseClass) {
+        public MySelect(JdbcManager jdbcManager, Class<T> baseClass) {
             super(jdbcManager, baseClass);
         }
 

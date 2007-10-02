@@ -73,7 +73,7 @@ public class SqlSelectImplTest extends TestCase {
      * 
      */
     public void testCallerClass() {
-        SqlSelectImpl query = new SqlSelectImpl(manager, Aaa.class,
+        SqlSelectImpl<Aaa> query = new SqlSelectImpl<Aaa>(manager, Aaa.class,
                 "select * from aaa");
         assertSame(query, query.callerClass(getClass()));
         assertEquals(getClass(), query.callerClass);
@@ -83,7 +83,7 @@ public class SqlSelectImplTest extends TestCase {
      * 
      */
     public void testCallerMethodName() {
-        SqlSelectImpl query = new SqlSelectImpl(manager, Aaa.class,
+        SqlSelectImpl<Aaa> query = new SqlSelectImpl<Aaa>(manager, Aaa.class,
                 "select * from aaa");
         assertSame(query, query.callerMethodName("hoge"));
         assertEquals("hoge", query.callerMethodName);
@@ -93,7 +93,7 @@ public class SqlSelectImplTest extends TestCase {
      * 
      */
     public void testMaxRows() {
-        SqlSelectImpl query = new SqlSelectImpl(manager, Aaa.class,
+        SqlSelectImpl<Aaa> query = new SqlSelectImpl<Aaa>(manager, Aaa.class,
                 "select * from aaa");
         assertSame(query, query.maxRows(100));
         assertEquals(100, query.maxRows);
@@ -103,7 +103,7 @@ public class SqlSelectImplTest extends TestCase {
      * 
      */
     public void testFetchSize() {
-        SqlSelectImpl query = new SqlSelectImpl(manager, Aaa.class,
+        SqlSelectImpl<Aaa> query = new SqlSelectImpl<Aaa>(manager, Aaa.class,
                 "select * from aaa");
         assertSame(query, query.fetchSize(100));
         assertEquals(100, query.fetchSize);
@@ -113,7 +113,7 @@ public class SqlSelectImplTest extends TestCase {
      * 
      */
     public void testQueryTimeout() {
-        SqlSelectImpl query = new SqlSelectImpl(manager, Aaa.class,
+        SqlSelectImpl<Aaa> query = new SqlSelectImpl<Aaa>(manager, Aaa.class,
                 "select * from aaa");
         assertSame(query, query.queryTimeout(100));
         assertEquals(100, query.queryTimeout);
@@ -123,7 +123,7 @@ public class SqlSelectImplTest extends TestCase {
      * 
      */
     public void testLimit() {
-        SqlSelectImpl query = new SqlSelectImpl(manager, Aaa.class,
+        SqlSelectImpl<Aaa> query = new SqlSelectImpl<Aaa>(manager, Aaa.class,
                 "select * from aaa");
         assertSame(query, query.limit(100));
         assertEquals(100, query.limit);
@@ -133,7 +133,7 @@ public class SqlSelectImplTest extends TestCase {
      * 
      */
     public void testOffset() {
-        SqlSelectImpl query = new SqlSelectImpl(manager, Aaa.class,
+        SqlSelectImpl<Aaa> query = new SqlSelectImpl<Aaa>(manager, Aaa.class,
                 "select * from aaa");
         assertSame(query, query.offset(100));
         assertEquals(100, query.offset);
@@ -144,7 +144,7 @@ public class SqlSelectImplTest extends TestCase {
      */
     public void testPrepare_executedSql() {
         manager.setDialect(new PostgreDialect());
-        SqlSelectImpl query = new SqlSelectImpl(manager, Aaa.class,
+        SqlSelectImpl<Aaa> query = new SqlSelectImpl<Aaa>(manager, Aaa.class,
                 "select * from aaa");
         query.limit(10);
         query.prepare("getResultList");
@@ -156,7 +156,7 @@ public class SqlSelectImplTest extends TestCase {
      */
     public void testConstructor_nullPointer() {
         try {
-            new SqlSelectImpl(manager, AaaDto.class,
+            new SqlSelectImpl<AaaDto>(manager, AaaDto.class,
                     "select foo2, aaa_bbb from hoge where aaa = ?",
                     (Object[]) null);
             fail();
@@ -169,8 +169,9 @@ public class SqlSelectImplTest extends TestCase {
      * 
      */
     public void testPrepare_nullBindVariable2() {
-        SqlSelectImpl query = new SqlSelectImpl(manager, AaaDto.class,
-                "select foo2, aaa_bbb from hoge where aaa = ?", (Object) null);
+        SqlSelectImpl<AaaDto> query = new SqlSelectImpl<AaaDto>(manager,
+                AaaDto.class, "select foo2, aaa_bbb from hoge where aaa = ?",
+                (Object) null);
         try {
             query.prepare("getSingleResult");
             fail();
@@ -183,8 +184,9 @@ public class SqlSelectImplTest extends TestCase {
      * 
      */
     public void testPrepare_nullBindVariable3() {
-        SqlSelectImpl query = new SqlSelectImpl(manager, AaaDto.class,
-                "select foo2, aaa_bbb from hoge where aaa = ?", "aaa", null);
+        SqlSelectImpl<AaaDto> query = new SqlSelectImpl<AaaDto>(manager,
+                AaaDto.class, "select foo2, aaa_bbb from hoge where aaa = ?",
+                "aaa", null);
         try {
             query.prepare("getSingleResult");
             fail();
@@ -197,8 +199,8 @@ public class SqlSelectImplTest extends TestCase {
      * 
      */
     public void testGetResultList() {
-        SqlSelectImpl query = new SqlSelectImpl(manager, AaaDto.class,
-                "select foo2, aaa_bbb from hoge") {
+        SqlSelectImpl<AaaDto> query = new SqlSelectImpl<AaaDto>(manager,
+                AaaDto.class, "select foo2, aaa_bbb from hoge") {
 
             @Override
             protected ResultSet createResultSet(JdbcContext jdbcContext) {
@@ -231,8 +233,8 @@ public class SqlSelectImplTest extends TestCase {
      * 
      */
     public void testGetResultList_prepare() {
-        SqlSelectImpl query = new SqlSelectImpl(manager, AaaDto.class,
-                "select foo2, aaa_bbb from hoge") {
+        SqlSelectImpl<AaaDto> query = new SqlSelectImpl<AaaDto>(manager,
+                AaaDto.class, "select foo2, aaa_bbb from hoge") {
 
             @Override
             protected ResultSet createResultSet(JdbcContext jdbcContext) {
@@ -261,8 +263,8 @@ public class SqlSelectImplTest extends TestCase {
      */
     public void testGetResultList_paging() {
         manager.setDialect(new PostgreDialect());
-        SqlSelectImpl query = new SqlSelectImpl(manager, AaaDto.class,
-                "select foo2, aaa_bbb from hoge") {
+        SqlSelectImpl<AaaDto> query = new SqlSelectImpl<AaaDto>(manager,
+                AaaDto.class, "select foo2, aaa_bbb from hoge") {
 
             @Override
             protected ResultSet createResultSet(JdbcContext jdbcContext) {
@@ -296,7 +298,8 @@ public class SqlSelectImplTest extends TestCase {
      * 
      */
     public void testGetResultList_parameters() {
-        SqlSelectImpl query = new SqlSelectImpl(manager, AaaDto.class,
+        SqlSelectImpl<AaaDto> query = new SqlSelectImpl<AaaDto>(manager,
+                AaaDto.class,
                 "select foo2, aaa_bbb from hoge where aaa = ? and bbb = ?",
                 "111", "222") {
 
@@ -333,7 +336,8 @@ public class SqlSelectImplTest extends TestCase {
      */
     public void testGetResultList_parameters_paging() {
         manager.setDialect(new PostgreDialect());
-        SqlSelectImpl query = new SqlSelectImpl(manager, AaaDto.class,
+        SqlSelectImpl<AaaDto> query = new SqlSelectImpl<AaaDto>(manager,
+                AaaDto.class,
                 "select foo2, aaa_bbb from hoge where aaa = ? and bbb = ?",
                 "111", "222") {
 
@@ -369,8 +373,8 @@ public class SqlSelectImplTest extends TestCase {
      * 
      */
     public void testGetSingleResult() {
-        SqlSelectImpl query = new SqlSelectImpl(manager, AaaDto.class,
-                "select foo2, aaa_bbb from hoge") {
+        SqlSelectImpl<AaaDto> query = new SqlSelectImpl<AaaDto>(manager,
+                AaaDto.class, "select foo2, aaa_bbb from hoge") {
 
             @Override
             protected ResultSet createResultSet(JdbcContext jdbcContext) {
@@ -402,8 +406,8 @@ public class SqlSelectImplTest extends TestCase {
      * 
      */
     public void testGetSingleResult_prepare() {
-        SqlSelectImpl query = new SqlSelectImpl(manager, AaaDto.class,
-                "select foo2, aaa_bbb from hoge") {
+        SqlSelectImpl<AaaDto> query = new SqlSelectImpl<AaaDto>(manager,
+                AaaDto.class, "select foo2, aaa_bbb from hoge") {
 
             @Override
             protected ResultSet createResultSet(JdbcContext jdbcContext) {
@@ -432,8 +436,8 @@ public class SqlSelectImplTest extends TestCase {
      */
     public void testGetSingleResult_paging() {
         manager.setDialect(new PostgreDialect());
-        SqlSelectImpl query = new SqlSelectImpl(manager, AaaDto.class,
-                "select foo2, aaa_bbb from hoge") {
+        SqlSelectImpl<AaaDto> query = new SqlSelectImpl<AaaDto>(manager,
+                AaaDto.class, "select foo2, aaa_bbb from hoge") {
 
             @Override
             protected ResultSet createResultSet(JdbcContext jdbcContext) {
@@ -466,8 +470,8 @@ public class SqlSelectImplTest extends TestCase {
      * 
      */
     public void testGetSingleResult_simpleType() {
-        SqlSelectImpl query = new SqlSelectImpl(manager, int.class,
-                "select count(*) as cnt from aaa") {
+        SqlSelectImpl<Integer> query = new SqlSelectImpl<Integer>(manager,
+                Integer.class, "select count(*) as cnt from aaa") {
 
             @Override
             protected ResultSet createResultSet(JdbcContext jdbcContext) {
@@ -483,16 +487,16 @@ public class SqlSelectImplTest extends TestCase {
             }
 
         };
-        int count = query.getSingleResult();
-        assertEquals(5, count);
+        Integer count = query.getSingleResult();
+        assertEquals(5, count.intValue());
     }
 
     /**
      * 
      */
     public void testGetSingleResult_nodata() {
-        SqlSelectImpl query = new SqlSelectImpl(manager, AaaDto.class,
-                "select foo2, aaa_bbb from hoge") {
+        SqlSelectImpl<AaaDto> query = new SqlSelectImpl<AaaDto>(manager,
+                AaaDto.class, "select foo2, aaa_bbb from hoge") {
 
             @Override
             protected ResultSet createResultSet(JdbcContext jdbcContext) {
@@ -517,8 +521,8 @@ public class SqlSelectImplTest extends TestCase {
      * 
      */
     public void testGetSingleResult_nonunique() {
-        SqlSelectImpl query = new SqlSelectImpl(manager, AaaDto.class,
-                "select foo2, aaa_bbb from hoge where aaa = ?") {
+        SqlSelectImpl<AaaDto> query = new SqlSelectImpl<AaaDto>(manager,
+                AaaDto.class, "select foo2, aaa_bbb from hoge where aaa = ?") {
 
             @Override
             protected ResultSet createResultSet(JdbcContext jdbcContext) {
@@ -554,7 +558,8 @@ public class SqlSelectImplTest extends TestCase {
      * 
      */
     public void testGetSingleResult_parameters() {
-        SqlSelectImpl query = new SqlSelectImpl(manager, AaaDto.class,
+        SqlSelectImpl<AaaDto> query = new SqlSelectImpl<AaaDto>(manager,
+                AaaDto.class,
                 "select foo2, aaa_bbb from hoge where aaa = ? and bbb = ?",
                 "111", "222") {
 
@@ -590,7 +595,8 @@ public class SqlSelectImplTest extends TestCase {
      */
     public void testGetSingleResult_parameters_paging() {
         manager.setDialect(new PostgreDialect());
-        SqlSelectImpl query = new SqlSelectImpl(manager, AaaDto.class,
+        SqlSelectImpl<AaaDto> query = new SqlSelectImpl<AaaDto>(manager,
+                AaaDto.class,
                 "select foo2, aaa_bbb from hoge where aaa = ? and bbb = ?",
                 "111", "222") {
 
@@ -626,7 +632,7 @@ public class SqlSelectImplTest extends TestCase {
      * 
      */
     public void testCreateResultListResultSetHandler() throws Exception {
-        SqlSelectImpl query = new SqlSelectImpl(manager, Aaa.class,
+        SqlSelectImpl<Aaa> query = new SqlSelectImpl<Aaa>(manager, Aaa.class,
                 "select * from aaa");
         ResultSetHandler handler = query.createResultListResultSetHandler();
         assertEquals(BeanListResultSetHandler.class, handler.getClass());
@@ -637,8 +643,8 @@ public class SqlSelectImplTest extends TestCase {
      * 
      */
     public void testCreateResultListResultSetHandler_simple() throws Exception {
-        SqlSelectImpl query = new SqlSelectImpl(manager, int.class,
-                "select id from aaa");
+        SqlSelectImpl<Integer> query = new SqlSelectImpl<Integer>(manager,
+                Integer.class, "select id from aaa");
         ResultSetHandler handler = query.createResultListResultSetHandler();
         assertEquals(ObjectListResultSetHandler.class, handler.getClass());
     }
@@ -650,7 +656,7 @@ public class SqlSelectImplTest extends TestCase {
     public void testCreateResultListResultSetHandler_limit_supportLimit()
             throws Exception {
         manager.setDialect(new PostgreDialect());
-        SqlSelectImpl query = new SqlSelectImpl(manager, Aaa.class,
+        SqlSelectImpl<Aaa> query = new SqlSelectImpl<Aaa>(manager, Aaa.class,
                 "select * from aaa");
         query.limit(10);
         ResultSetHandler handler = query.createResultListResultSetHandler();
@@ -663,7 +669,7 @@ public class SqlSelectImplTest extends TestCase {
      */
     public void testCreateResultListResultSetHandler_limit_notSupportLimit()
             throws Exception {
-        SqlSelectImpl query = new SqlSelectImpl(manager, Aaa.class,
+        SqlSelectImpl<Aaa> query = new SqlSelectImpl<Aaa>(manager, Aaa.class,
                 "select * from aaa");
         query.limit(10);
         ResultSetHandler handler = query.createResultListResultSetHandler();
@@ -678,8 +684,8 @@ public class SqlSelectImplTest extends TestCase {
     public void testCreateResultListResultSetHandler_simpleType_limit_supportLimit()
             throws Exception {
         manager.setDialect(new PostgreDialect());
-        SqlSelectImpl query = new SqlSelectImpl(manager, int.class,
-                "select id from aaa");
+        SqlSelectImpl<Integer> query = new SqlSelectImpl<Integer>(manager,
+                Integer.class, "select id from aaa");
         query.limit(10);
         ResultSetHandler handler = query.createResultListResultSetHandler();
         assertEquals(ObjectListResultSetHandler.class, handler.getClass());
@@ -691,8 +697,8 @@ public class SqlSelectImplTest extends TestCase {
      */
     public void testCreateResultListResultSetHandler_simpleType_limit_notSupportLimit()
             throws Exception {
-        SqlSelectImpl query = new SqlSelectImpl(manager, int.class,
-                "select id from aaa");
+        SqlSelectImpl<Integer> query = new SqlSelectImpl<Integer>(manager,
+                Integer.class, "select id from aaa");
         query.limit(10);
         ResultSetHandler handler = query.createResultListResultSetHandler();
         assertEquals(ObjectListSupportLimitResultSetHandler.class, handler
@@ -704,8 +710,8 @@ public class SqlSelectImplTest extends TestCase {
      * 
      */
     public void testCreateSingleResultResultSetHandler() throws Exception {
-        SqlSelectImpl query = new SqlSelectImpl(manager, AaaDto.class,
-                "select h.* from hoge h where aaa = ?");
+        SqlSelectImpl<AaaDto> query = new SqlSelectImpl<AaaDto>(manager,
+                AaaDto.class, "select h.* from hoge h where aaa = ?");
         ResultSetHandler handler = query.createSingleResultResultSetHandler();
         assertEquals(BeanResultSetHandler.class, handler.getClass());
     }
@@ -716,8 +722,8 @@ public class SqlSelectImplTest extends TestCase {
      */
     public void testCreateSingleResultResultSetHandler_simpleType()
             throws Exception {
-        SqlSelectImpl query = new SqlSelectImpl(manager, int.class,
-                "select count(*) from hoge");
+        SqlSelectImpl<Integer> query = new SqlSelectImpl<Integer>(manager,
+                Integer.class, "select count(*) from hoge");
         ResultSetHandler handler = query.createSingleResultResultSetHandler();
         assertEquals(ObjectResultSetHandler.class, handler.getClass());
     }

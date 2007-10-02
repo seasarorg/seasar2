@@ -17,9 +17,8 @@ package org.seasar.framework.util.tiger;
 
 import java.util.Map;
 
-import static org.seasar.framework.util.tiger.Maps.*;
-
 import junit.framework.TestCase;
+import static org.seasar.framework.util.tiger.Maps.*;
 
 /**
  * @author koichik
@@ -29,7 +28,9 @@ public class MapsTest extends TestCase {
     /**
      * @throws Exception
      */
+    @SuppressWarnings("unchecked")
     public void test() throws Exception {
+        // TODO
         Map<String, Integer> map = map($("a", 1), $("b", 2), $("c", 3));
         assertEquals(3, map.size());
         assertEquals(new Integer(1), map.get("a"));

@@ -25,9 +25,11 @@ import org.seasar.extension.jdbc.exception.SNonUniqueResultException;
  * SQLを自動生成する検索です。
  * 
  * @author higa
+ * @param <T>
+ *            エンティティの型です。
  * 
  */
-public interface AutoSelect {
+public interface AutoSelect<T> {
 
     /**
      * =です。
@@ -106,7 +108,7 @@ public interface AutoSelect {
      *            検索を呼び出すクラス
      * @return 自動検索
      */
-    AutoSelect callerClass(Class<?> callerClass);
+    AutoSelect<T> callerClass(Class<?> callerClass);
 
     /**
      * 検索を呼び出すメソッド名を設定します。デフォルトはgetResultListあるいはgetSingleResultになります。
@@ -115,7 +117,7 @@ public interface AutoSelect {
      *            検索を呼び出すメソッド名
      * @return 自動検索
      */
-    AutoSelect callerMethodName(String callerMethodName);
+    AutoSelect<T> callerMethodName(String callerMethodName);
 
     /**
      * 最大行数を設定します。
@@ -124,7 +126,7 @@ public interface AutoSelect {
      *            最大行数
      * @return 自動検索
      */
-    AutoSelect maxRows(int maxRows);
+    AutoSelect<T> maxRows(int maxRows);
 
     /**
      * フェッチ数を設定します。
@@ -133,7 +135,7 @@ public interface AutoSelect {
      *            フェッチ数
      * @return 自動検索
      */
-    AutoSelect fetchSize(int fetchSize);
+    AutoSelect<T> fetchSize(int fetchSize);
 
     /**
      * クエリタイムアウトの秒数を設定します。
@@ -142,7 +144,7 @@ public interface AutoSelect {
      *            クエリタイムアウトの秒数
      * @return 自動検索
      */
-    AutoSelect queryTimeout(int queryTimeout);
+    AutoSelect<T> queryTimeout(int queryTimeout);
 
     /**
      * リミットを設定します。
@@ -151,7 +153,7 @@ public interface AutoSelect {
      *            リミット
      * @return 自動検索
      */
-    AutoSelect limit(int limit);
+    AutoSelect<T> limit(int limit);
 
     /**
      * オフセットを設定します。
@@ -160,7 +162,7 @@ public interface AutoSelect {
      *            オフセット
      * @return 自動検索
      */
-    AutoSelect offset(int offset);
+    AutoSelect<T> offset(int offset);
 
     /**
      * <p>
@@ -176,7 +178,7 @@ public interface AutoSelect {
      * @see JoinMeta
      * @see #join(String, JoinType)
      */
-    AutoSelect join(String name);
+    AutoSelect<T> join(String name);
 
     /**
      * <p>
@@ -193,7 +195,7 @@ public interface AutoSelect {
      * @return 自動検索
      * @see #join(String, JoinType, boolean)
      */
-    AutoSelect join(String name, JoinType joinType);
+    AutoSelect<T> join(String name, JoinType joinType);
 
     /**
      * <p>
@@ -210,7 +212,7 @@ public interface AutoSelect {
      * @return 自動検索
      * @see #join(String, JoinType, boolean)
      */
-    AutoSelect join(String name, boolean fetch);
+    AutoSelect<T> join(String name, boolean fetch);
 
     /**
      * <p>
@@ -233,7 +235,7 @@ public interface AutoSelect {
      *            関連するエンティティをフェッチするかどうか。
      * @return 自動検索
      */
-    AutoSelect join(String name, JoinType joinType, boolean fetch);
+    AutoSelect<T> join(String name, JoinType joinType, boolean fetch);
 
     /**
      * where句の条件を指定します。
@@ -295,39 +297,35 @@ public interface AutoSelect {
      * 
      * @return 自動検索
      */
-    AutoSelect where(Map<String, Object> conditions);
+    AutoSelect<T> where(Map<String, Object> conditions);
 
     /**
      * 検索してベースオブジェクトのリストを返します。
      * 
-     * @param <T>
-     *            ベースの型
      * @return
-     *            <p>
-     *            ベースオブジェクトのリスト。
-     *            </p>
-     *            <p>
-     *            1件も対象がないときはnullではなく空のリストを返します。
-     *            </p>
+     * <p>
+     * ベースオブジェクトのリスト。
+     * </p>
+     * <p>
+     * 1件も対象がないときはnullではなく空のリストを返します。
+     * </p>
      * @throws OrderByNotFoundRuntimeException
      *             ページング処理で<code>order by</code>が見つからない場合
      */
-    <T> List<T> getResultList() throws OrderByNotFoundRuntimeException;
+    List<T> getResultList() throws OrderByNotFoundRuntimeException;
 
     /**
      * 検索してベースオブジェクトを返します。
      * 
-     * @param <T>
-     *            ベースの型
      * @return
-     *            <p>
-     *            ベースオブジェクト。
-     *            </p>
-     *            <p>
-     *            1件も対象がないときはnullを返します。
-     *            </p>
+     * <p>
+     * ベースオブジェクト。
+     * </p>
+     * <p>
+     * 1件も対象がないときはnullを返します。
+     * </p>
      * @throws SNonUniqueResultException
      *             検索結果がユニークでない場合。
      */
-    <T> T getSingleResult() throws SNonUniqueResultException;
+    T getSingleResult() throws SNonUniqueResultException;
 }

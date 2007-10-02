@@ -37,9 +37,11 @@ import org.seasar.extension.jdbc.types.ValueTypes;
  * {@link SqlSelect}の実装クラスです。
  * 
  * @author higa
+ * @param <T>
+ *            戻り値のベースの型です。
  * 
  */
-public class SqlSelectImpl extends AbstractSelect implements SqlSelect {
+public class SqlSelectImpl<T> extends AbstractSelect<T> implements SqlSelect<T> {
 
     /**
      * 空のパラメータです。
@@ -68,7 +70,7 @@ public class SqlSelectImpl extends AbstractSelect implements SqlSelect {
      * @param parameters
      *            パラメータの配列です。
      */
-    public SqlSelectImpl(JdbcManager jdbcManager, Class<?> baseClass, String sql) {
+    public SqlSelectImpl(JdbcManager jdbcManager, Class<T> baseClass, String sql) {
         this(jdbcManager, baseClass, sql, EMPTY_PARAMETERS);
     }
 
@@ -84,7 +86,7 @@ public class SqlSelectImpl extends AbstractSelect implements SqlSelect {
      * @param parameters
      *            パラメータの配列です。
      */
-    public SqlSelectImpl(JdbcManager jdbcManager, Class<?> baseClass,
+    public SqlSelectImpl(JdbcManager jdbcManager, Class<T> baseClass,
             String sql, Object... parameters) {
         super(jdbcManager, baseClass);
         if (sql == null) {
@@ -97,48 +99,48 @@ public class SqlSelectImpl extends AbstractSelect implements SqlSelect {
         bindVariableList.addAll(Arrays.asList(parameters));
     }
 
-    public SqlSelect callerClass(Class<?> callerClass) {
+    public SqlSelect<T> callerClass(Class<?> callerClass) {
         this.callerClass = callerClass;
         return this;
     }
 
-    public SqlSelect callerMethodName(String callerMethodName) {
+    public SqlSelect<T> callerMethodName(String callerMethodName) {
         this.callerMethodName = callerMethodName;
         return this;
     }
 
-    public SqlSelect maxRows(int maxRows) {
+    public SqlSelect<T> maxRows(int maxRows) {
         this.maxRows = maxRows;
         return this;
     }
 
-    public SqlSelect fetchSize(int fetchSize) {
+    public SqlSelect<T> fetchSize(int fetchSize) {
         this.fetchSize = fetchSize;
         return this;
     }
 
-    public SqlSelect queryTimeout(int queryTimeout) {
+    public SqlSelect<T> queryTimeout(int queryTimeout) {
         this.queryTimeout = queryTimeout;
         return this;
     }
 
-    public SqlSelect limit(int limit) {
+    public SqlSelect<T> limit(int limit) {
         this.limit = limit;
         return this;
     }
 
-    public SqlSelect offset(int offset) {
+    public SqlSelect<T> offset(int offset) {
         this.offset = offset;
         return this;
     }
 
-    public <T> List<T> getResultList() {
+    public List<T> getResultList() {
         prepare("getResultList");
         logSql();
         return getResultListInternal();
     }
 
-    public <T> T getSingleResult() throws SNonUniqueResultException {
+    public T getSingleResult() throws SNonUniqueResultException {
         prepare("getSingleResult");
         logSql();
         return getSingleResultInternal();

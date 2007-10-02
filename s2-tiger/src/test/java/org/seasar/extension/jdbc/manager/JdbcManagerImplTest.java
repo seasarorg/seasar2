@@ -6,8 +6,6 @@ import junit.framework.TestCase;
 
 import org.seasar.extension.jdbc.JdbcContext;
 import org.seasar.extension.jdbc.entity.Aaa;
-import org.seasar.extension.jdbc.manager.JdbcContextImpl;
-import org.seasar.extension.jdbc.manager.JdbcManagerImpl;
 import org.seasar.extension.jdbc.query.AutoSelectImpl;
 import org.seasar.extension.jdbc.query.SqlSelectImpl;
 import org.seasar.extension.jta.TransactionImpl;
@@ -20,103 +18,104 @@ import org.seasar.framework.mock.sql.MockDataSource;
  */
 public class JdbcManagerImplTest extends TestCase {
 
-	private JdbcManagerImpl manager;
+    private JdbcManagerImpl manager;
 
-	private TransactionManager transactionManager;
+    private TransactionManager transactionManager;
 
-	@Override
-	protected void setUp() throws Exception {
-		manager = new JdbcManagerImpl();
-		transactionManager = new TransactionManagerImpl();
-		manager.setTransactionManager(transactionManager);
-		manager.setDataSource(new MockDataSource());
-	}
+    @Override
+    protected void setUp() throws Exception {
+        manager = new JdbcManagerImpl();
+        transactionManager = new TransactionManagerImpl();
+        manager.setTransactionManager(transactionManager);
+        manager.setDataSource(new MockDataSource());
+    }
 
-	@Override
-	protected void tearDown() throws Exception {
-		manager = null;
-	}
+    @Override
+    protected void tearDown() throws Exception {
+        manager = null;
+    }
 
-	/**
-	 * @throws Exception
-	 * 
-	 */
-	public void testSelectBySql() throws Exception {
-		String sql = "select * from aaa";
-		SqlSelectImpl select = (SqlSelectImpl) manager.selectBySql(Aaa.class,
-				sql);
-		assertNotNull(select);
-		assertSame(manager, select.getJdbcManager());
-		assertEquals(Aaa.class, select.getBaseClass());
-		assertEquals(sql, select.getSql());
-	}
+    /**
+     * @throws Exception
+     * 
+     */
+    public void testSelectBySql() throws Exception {
+        String sql = "select * from aaa";
+        SqlSelectImpl<Aaa> select = (SqlSelectImpl<Aaa>) manager.selectBySql(
+                Aaa.class, sql);
+        assertNotNull(select);
+        assertSame(manager, select.getJdbcManager());
+        assertEquals(Aaa.class, select.getBaseClass());
+        assertEquals(sql, select.getSql());
+    }
 
-	/**
-	 * @throws Exception
-	 * 
-	 */
-	public void testSelectBySql_parameters() throws Exception {
-		String sql = "select * from aaa where id = ?";
-		SqlSelectImpl query = (SqlSelectImpl) manager.selectBySql(Aaa.class,
-				sql, 1);
-		assertNotNull(query);
-		assertSame(manager, query.getJdbcManager());
-		assertEquals(Aaa.class, query.getBaseClass());
-		assertEquals(sql, query.getSql());
-		Object[] vars = query.getBindVariables();
-		assertEquals(1, vars.length);
-		assertEquals(1, vars[0]);
-	}
+    /**
+     * @throws Exception
+     * 
+     */
+    public void testSelectBySql_parameters() throws Exception {
+        String sql = "select * from aaa where id = ?";
+        SqlSelectImpl<Aaa> query = (SqlSelectImpl<Aaa>) manager.selectBySql(
+                Aaa.class, sql, 1);
+        assertNotNull(query);
+        assertSame(manager, query.getJdbcManager());
+        assertEquals(Aaa.class, query.getBaseClass());
+        assertEquals(sql, query.getSql());
+        Object[] vars = query.getBindVariables();
+        assertEquals(1, vars.length);
+        assertEquals(1, vars[0]);
+    }
 
-	/**
-	 * @throws Exception
-	 * 
-	 */
-	public void testFrom() throws Exception {
-		AutoSelectImpl query = (AutoSelectImpl) manager.from(Aaa.class);
-		assertNotNull(query);
-		assertSame(manager, query.getJdbcManager());
-		assertEquals(Aaa.class, query.getBaseClass());
-	}
+    /**
+     * @throws Exception
+     * 
+     */
+    public void testFrom() throws Exception {
+        AutoSelectImpl<Aaa> query = (AutoSelectImpl<Aaa>) manager
+                .from(Aaa.class);
+        assertNotNull(query);
+        assertSame(manager, query.getJdbcManager());
+        assertEquals(Aaa.class, query.getBaseClass());
+    }
 
-	/**
-	 * @throws Exception
-	 * 
-	 */
-	public void testGetJdbcContext_tx() throws Exception {
-		transactionManager.begin();
-		JdbcContext ctx = manager.getJdbcContext();
-		assertNotNull(ctx);
-		assertTrue(ctx.isTransactional());
-		assertSame(ctx, manager.getJdbcContext());
-		TransactionImpl tx = (TransactionImpl) transactionManager
-				.getTransaction();
-		assertEquals(1, tx.getSynchronizations().size());
-		assertSame(manager, tx.getSynchronizations().get(0));
-	}
+    /**
+     * @throws Exception
+     * 
+     */
+    public void testGetJdbcContext_tx() throws Exception {
+        transactionManager.begin();
+        JdbcContext ctx = manager.getJdbcContext();
+        assertNotNull(ctx);
+        assertTrue(ctx.isTransactional());
+        assertSame(ctx, manager.getJdbcContext());
+        TransactionImpl tx = (TransactionImpl) transactionManager
+                .getTransaction();
+        assertEquals(1, tx.getSynchronizations().size());
+        assertSame(manager, tx.getSynchronizations().get(0));
+    }
 
-	/**
-	 * @throws Exception
-	 * 
-	 */
-	public void testBeforeCompletion() throws Exception {
-		transactionManager.begin();
-		JdbcContextImpl ctx = (JdbcContextImpl) manager.getJdbcContext();
-		ctx.getStatement();
-		transactionManager.commit();
-		assertTrue(ctx.isConnectionNull());
-		assertTrue(ctx.isStatementNull());
-		assertTrue(manager.isJdbcContextNull());
-	}
+    /**
+     * @throws Exception
+     * 
+     */
+    public void testBeforeCompletion() throws Exception {
+        transactionManager.begin();
+        JdbcContextImpl ctx = (JdbcContextImpl) manager.getJdbcContext();
+        ctx.getStatement();
+        transactionManager.commit();
+        assertTrue(ctx.isConnectionNull());
+        assertTrue(ctx.isStatementNull());
+        assertTrue(manager.isJdbcContextNull());
+    }
 
-	/**
-	 * @throws Exception
-	 * 
-	 */
-	public void testGetJdbcContext_notx() throws Exception {
-		JdbcContext ctx = manager.getJdbcContext();
-		assertNotNull(ctx);
-		assertFalse(ctx.isTransactional());
-		assertNotSame(ctx, manager.getJdbcContext());
-	}
+    /**
+     * @throws Exception
+     * 
+     */
+    public void testGetJdbcContext_notx() throws Exception {
+        JdbcContext ctx = manager.getJdbcContext();
+        assertNotNull(ctx);
+        assertFalse(ctx.isTransactional());
+        assertNotSame(ctx, manager.getJdbcContext());
+    }
 }

@@ -92,11 +92,12 @@
       <type>jar</type>
     </dependency>
     <dependency>
-      <groupId>ibm.websphere</groupId>
-      <artifactId>websphere_uow_api</artifactId>
+      <groupId>com.ibm.websphere</groupId>
+      <artifactId>uow_api</artifactId>
       <version>6</version>
       <type>jar</type>
-      <scope>test</scope>
+      <scope>provided</scope>
+      <optional>true</optional>
     </dependency>
   </dependencies>
 </project>

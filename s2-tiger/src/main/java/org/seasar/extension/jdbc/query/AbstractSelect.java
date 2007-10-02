@@ -34,14 +34,16 @@ import org.seasar.framework.util.StatementUtil;
  * 検索の抽象クラスです。
  * 
  * @author higa
+ * @param <T>
+ *            戻り値のベースの型です。
  * 
  */
-public abstract class AbstractSelect extends AbstractQuery {
+public abstract class AbstractSelect<T> extends AbstractQuery {
 
     /**
      * ベースクラスです。
      */
-    protected Class<?> baseClass;
+    protected Class<T> baseClass;
 
     /**
      * 最大行数です。
@@ -76,7 +78,7 @@ public abstract class AbstractSelect extends AbstractQuery {
      * @param baseClass
      *            ベースクラス
      */
-    public AbstractSelect(JdbcManager jdbcManager, Class<?> baseClass) {
+    public AbstractSelect(JdbcManager jdbcManager, Class<T> baseClass) {
         super(jdbcManager);
         this.baseClass = baseClass;
 
@@ -102,12 +104,10 @@ public abstract class AbstractSelect extends AbstractQuery {
     /**
      * 検索してベースオブジェクトのリストを返します。
      * 
-     * @param <T>
-     *            ベースの型
      * @return ベースオブジェクトのリスト
      */
     @SuppressWarnings("unchecked")
-    protected <T> List<T> getResultListInternal() {
+    protected List<T> getResultListInternal() {
         ResultSetHandler handler = createResultListResultSetHandler();
         List<T> ret = null;
         JdbcContext jdbcContext = jdbcManager.getJdbcContext();
@@ -125,12 +125,10 @@ public abstract class AbstractSelect extends AbstractQuery {
     /**
      * 検索してベースオブジェクトを返します。
      * 
-     * @param <T>
-     *            ベースの型
      * @return ベースオブジェクト
      */
     @SuppressWarnings("unchecked")
-    protected <T> T getSingleResultInternal() {
+    protected T getSingleResultInternal() {
         ResultSetHandler handler = createSingleResultResultSetHandler();
         T ret = null;
         JdbcContext jdbcContext = jdbcManager.getJdbcContext();
@@ -285,7 +283,7 @@ public abstract class AbstractSelect extends AbstractQuery {
      * 
      * @return ベースクラス
      */
-    public Class<?> getBaseClass() {
+    public Class<T> getBaseClass() {
         return baseClass;
     }
 

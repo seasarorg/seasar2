@@ -42,226 +42,226 @@ import org.seasar.framework.util.TransactionUtil;
  */
 public class JdbcManagerImpl implements JdbcManager, Synchronization {
 
-	private static final Object[] EMPTY_PARAMETERS = new Object[0];
+    private static final Object[] EMPTY_PARAMETERS = new Object[0];
 
-	private TransactionManager transactionManager;
+    private TransactionManager transactionManager;
 
-	private DataSource dataSource;
+    private DataSource dataSource;
 
-	private DbmsDialect dialect;
+    private DbmsDialect dialect;
 
-	private EntityMetaFactory entityMetaFactory;
+    private EntityMetaFactory entityMetaFactory;
 
-	private ThreadLocal<JdbcContext> jdbcContexts = new ThreadLocal<JdbcContext>();
+    private ThreadLocal<JdbcContext> jdbcContexts = new ThreadLocal<JdbcContext>();
 
-	private int maxRows = 0;
+    private int maxRows = 0;
 
-	private int fetchSize = 100;
+    private int fetchSize = 100;
 
-	private int queryTimeout = 0;
+    private int queryTimeout = 0;
 
-	public SqlSelect selectBySql(Class<?> baseClass, String sql) {
-		return selectBySql(baseClass, sql, EMPTY_PARAMETERS);
-	}
+    public <T> SqlSelect<T> selectBySql(Class<T> baseClass, String sql) {
+        return selectBySql(baseClass, sql, EMPTY_PARAMETERS);
+    }
 
-	public SqlSelect selectBySql(Class<?> baseClass, String sql,
-			Object... parameters) {
-		return new SqlSelectImpl(this, baseClass, sql, parameters).maxRows(
-				maxRows).fetchSize(fetchSize).queryTimeout(queryTimeout);
-	}
+    public <T> SqlSelect<T> selectBySql(Class<T> baseClass, String sql,
+            Object... parameters) {
+        return new SqlSelectImpl<T>(this, baseClass, sql, parameters).maxRows(
+                maxRows).fetchSize(fetchSize).queryTimeout(queryTimeout);
+    }
 
-	public AutoSelect from(Class<?> baseClass) {
-		return new AutoSelectImpl(this, baseClass);
-	}
+    public <T> AutoSelect<T> from(Class<T> baseClass) {
+        return new AutoSelectImpl<T>(this, baseClass);
+    }
 
-	public void afterCompletion(int status) {
-	}
+    public void afterCompletion(int status) {
+    }
 
-	public void beforeCompletion() {
-		JdbcContext ctx = jdbcContexts.get();
-		if (ctx == null) {
-			throw new NullPointerException("jdbcContext");
-		}
-		jdbcContexts.set(null);
-		ctx.destroy();
-	}
+    public void beforeCompletion() {
+        JdbcContext ctx = jdbcContexts.get();
+        if (ctx == null) {
+            throw new NullPointerException("jdbcContext");
+        }
+        jdbcContexts.set(null);
+        ctx.destroy();
+    }
 
-	/**
-	 * JDBCコンテキストを返します。
-	 * 
-	 * @return JDBCコンテキスト
-	 */
-	public JdbcContext getJdbcContext() {
-		JdbcContext ctx = jdbcContexts.get();
-		if (ctx != null) {
-			return ctx;
-		}
-		Transaction tx = TransactionManagerUtil
-				.getTransaction(transactionManager);
-		Connection con = DataSourceUtil.getConnection(dataSource);
-		if (tx != null) {
-			ctx = createJdbcContext(con, true);
-			jdbcContexts.set(ctx);
-			TransactionUtil.registerSynchronization(tx, this);
-		} else {
-			ctx = createJdbcContext(con, false);
-		}
-		return ctx;
-	}
+    /**
+     * JDBCコンテキストを返します。
+     * 
+     * @return JDBCコンテキスト
+     */
+    public JdbcContext getJdbcContext() {
+        JdbcContext ctx = jdbcContexts.get();
+        if (ctx != null) {
+            return ctx;
+        }
+        Transaction tx = TransactionManagerUtil
+                .getTransaction(transactionManager);
+        Connection con = DataSourceUtil.getConnection(dataSource);
+        if (tx != null) {
+            ctx = createJdbcContext(con, true);
+            jdbcContexts.set(ctx);
+            TransactionUtil.registerSynchronization(tx, this);
+        } else {
+            ctx = createJdbcContext(con, false);
+        }
+        return ctx;
+    }
 
-	/**
-	 * JDBCコンテキストがnullかどうかを返します。
-	 * 
-	 * @return JDBCコンテキストがnullかどうか
-	 */
-	protected boolean isJdbcContextNull() {
-		return jdbcContexts.get() == null;
-	}
+    /**
+     * JDBCコンテキストがnullかどうかを返します。
+     * 
+     * @return JDBCコンテキストがnullかどうか
+     */
+    protected boolean isJdbcContextNull() {
+        return jdbcContexts.get() == null;
+    }
 
-	/**
-	 * JDBCコンテキストを作成します。
-	 * 
-	 * @param connection
-	 *            コネクション
-	 * @param transactional
-	 *            トランザクション中かどうか
-	 * @return JDBCコンテキスト
-	 */
-	protected JdbcContext createJdbcContext(Connection connection,
-			boolean transactional) {
-		return new JdbcContextImpl(connection, transactional);
-	}
+    /**
+     * JDBCコンテキストを作成します。
+     * 
+     * @param connection
+     *            コネクション
+     * @param transactional
+     *            トランザクション中かどうか
+     * @return JDBCコンテキスト
+     */
+    protected JdbcContext createJdbcContext(Connection connection,
+            boolean transactional) {
+        return new JdbcContextImpl(connection, transactional);
+    }
 
-	/**
-	 * トランザクションマネージャを返します。
-	 * 
-	 * @return トランザクションマネージャ
-	 */
-	public TransactionManager getTransactionManager() {
-		return transactionManager;
-	}
+    /**
+     * トランザクションマネージャを返します。
+     * 
+     * @return トランザクションマネージャ
+     */
+    public TransactionManager getTransactionManager() {
+        return transactionManager;
+    }
 
-	/**
-	 * トランザクションマネージャを設定します。
-	 * 
-	 * @param transactionManager
-	 *            トランザクションマネージャ
-	 */
-	public void setTransactionManager(TransactionManager transactionManager) {
-		this.transactionManager = transactionManager;
-	}
+    /**
+     * トランザクションマネージャを設定します。
+     * 
+     * @param transactionManager
+     *            トランザクションマネージャ
+     */
+    public void setTransactionManager(TransactionManager transactionManager) {
+        this.transactionManager = transactionManager;
+    }
 
-	/**
-	 * データソースを返します。
-	 * 
-	 * @return データソース
-	 */
-	public DataSource getDataSource() {
-		return dataSource;
-	}
+    /**
+     * データソースを返します。
+     * 
+     * @return データソース
+     */
+    public DataSource getDataSource() {
+        return dataSource;
+    }
 
-	/**
-	 * データソースを設定します。
-	 * 
-	 * @param dataSource
-	 *            データソース
-	 */
-	public void setDataSource(DataSource dataSource) {
-		this.dataSource = dataSource;
-	}
+    /**
+     * データソースを設定します。
+     * 
+     * @param dataSource
+     *            データソース
+     */
+    public void setDataSource(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
 
-	/**
-	 * フェッチ数を返します。
-	 * 
-	 * @return フェッチ数
-	 */
-	public int getFetchSize() {
-		return fetchSize;
-	}
+    /**
+     * フェッチ数を返します。
+     * 
+     * @return フェッチ数
+     */
+    public int getFetchSize() {
+        return fetchSize;
+    }
 
-	/**
-	 * フェッチ数を設定します。
-	 * 
-	 * @param fetchSize
-	 *            フェッチ数
-	 */
-	public void setFetchSize(int fetchSize) {
-		this.fetchSize = fetchSize;
-	}
+    /**
+     * フェッチ数を設定します。
+     * 
+     * @param fetchSize
+     *            フェッチ数
+     */
+    public void setFetchSize(int fetchSize) {
+        this.fetchSize = fetchSize;
+    }
 
-	/**
-	 * 最大行数を返します。
-	 * 
-	 * @return 最大行数
-	 */
-	public int getMaxRows() {
-		return maxRows;
-	}
+    /**
+     * 最大行数を返します。
+     * 
+     * @return 最大行数
+     */
+    public int getMaxRows() {
+        return maxRows;
+    }
 
-	/**
-	 * 最大行数を設定します。
-	 * 
-	 * @param maxRows
-	 *            最大行数
-	 */
-	public void setMaxRows(int maxRows) {
-		this.maxRows = maxRows;
-	}
+    /**
+     * 最大行数を設定します。
+     * 
+     * @param maxRows
+     *            最大行数
+     */
+    public void setMaxRows(int maxRows) {
+        this.maxRows = maxRows;
+    }
 
-	/**
-	 * クエリタイムアウトを返します。
-	 * 
-	 * @return クエリタイムアウト
-	 */
-	public int getQueryTimeout() {
-		return queryTimeout;
-	}
+    /**
+     * クエリタイムアウトを返します。
+     * 
+     * @return クエリタイムアウト
+     */
+    public int getQueryTimeout() {
+        return queryTimeout;
+    }
 
-	/**
-	 * クエリタイムアウトを設定します。
-	 * 
-	 * @param queryTimeout
-	 *            クエリタイムアウト
-	 */
-	public void setQueryTimeout(int queryTimeout) {
-		this.queryTimeout = queryTimeout;
-	}
+    /**
+     * クエリタイムアウトを設定します。
+     * 
+     * @param queryTimeout
+     *            クエリタイムアウト
+     */
+    public void setQueryTimeout(int queryTimeout) {
+        this.queryTimeout = queryTimeout;
+    }
 
-	/**
-	 * データベースの方言を返します。
-	 * 
-	 * @return データベースの方言
-	 */
-	public DbmsDialect getDialect() {
-		return dialect;
-	}
+    /**
+     * データベースの方言を返します。
+     * 
+     * @return データベースの方言
+     */
+    public DbmsDialect getDialect() {
+        return dialect;
+    }
 
-	/**
-	 * データベースの方言を設定します。
-	 * 
-	 * @param dialect
-	 *            データベースの方言
-	 */
-	public void setDialect(DbmsDialect dialect) {
-		this.dialect = dialect;
-	}
+    /**
+     * データベースの方言を設定します。
+     * 
+     * @param dialect
+     *            データベースの方言
+     */
+    public void setDialect(DbmsDialect dialect) {
+        this.dialect = dialect;
+    }
 
-	/**
-	 * エンティティメタデータファクトリを返します。
-	 * 
-	 * @return エンティティメタデータファクトリ
-	 */
-	public EntityMetaFactory getEntityMetaFactory() {
-		return entityMetaFactory;
-	}
+    /**
+     * エンティティメタデータファクトリを返します。
+     * 
+     * @return エンティティメタデータファクトリ
+     */
+    public EntityMetaFactory getEntityMetaFactory() {
+        return entityMetaFactory;
+    }
 
-	/**
-	 * エンティティメタデータファクトリを設定します。
-	 * 
-	 * @param entityMetaFactory
-	 *            エンティティメタデータファクトリ
-	 */
-	public void setEntityMetaFactory(EntityMetaFactory entityMetaFactory) {
-		this.entityMetaFactory = entityMetaFactory;
-	}
+    /**
+     * エンティティメタデータファクトリを設定します。
+     * 
+     * @param entityMetaFactory
+     *            エンティティメタデータファクトリ
+     */
+    public void setEntityMetaFactory(EntityMetaFactory entityMetaFactory) {
+        this.entityMetaFactory = entityMetaFactory;
+    }
 }
