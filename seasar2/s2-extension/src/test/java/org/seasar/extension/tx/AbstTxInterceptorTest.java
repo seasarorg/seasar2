@@ -171,6 +171,9 @@ public class AbstTxInterceptorTest extends S2TestCase {
         }
     }
 
+    /**
+     * 
+     */
     public static class TestAdapter implements TransactionManagerAdapter {
         private boolean rollbackOnly;
 
