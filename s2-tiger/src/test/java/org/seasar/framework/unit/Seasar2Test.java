@@ -522,7 +522,7 @@ public class Seasar2Test extends TestCase {
      * 
      */
     @RunWith(Seasar2.class)
-    public static class ParametarizedTest {
+    public static class ParameterizedTest {
 
         /**
          * @return
@@ -541,7 +541,7 @@ public class Seasar2Test extends TestCase {
          * @param a
          * @param b
          */
-        public ParametarizedTest(int a, int b) {
+        public ParameterizedTest(int a, int b) {
             this.a = a;
             this.b = b;
         }
@@ -559,9 +559,9 @@ public class Seasar2Test extends TestCase {
     /**
      * 
      */
-    public void testParametarizedTest() {
+    public void testParameterizedTest() {
         JUnitCore core = new JUnitCore();
-        Result result = core.run(ParametarizedTest.class);
+        Result result = core.run(ParameterizedTest.class);
         printFailures(result.getFailures());
         assertTrue(result.wasSuccessful());
         assertEquals(3, count);
