@@ -10,6 +10,7 @@ import org.seasar.extension.jdbc.query.AutoSelectImpl;
 import org.seasar.extension.jdbc.query.SqlSelectImpl;
 import org.seasar.extension.jta.TransactionImpl;
 import org.seasar.extension.jta.TransactionManagerImpl;
+import org.seasar.extension.jta.TransactionSynchronizationRegistryImpl;
 import org.seasar.framework.mock.sql.MockDataSource;
 
 /**
@@ -26,7 +27,8 @@ public class JdbcManagerImplTest extends TestCase {
     protected void setUp() throws Exception {
         manager = new JdbcManagerImpl();
         transactionManager = new TransactionManagerImpl();
-        manager.setTransactionManager(transactionManager);
+        manager.setSyncRegistry(new TransactionSynchronizationRegistryImpl(
+                transactionManager));
         manager.setDataSource(new MockDataSource());
     }
 
@@ -90,8 +92,8 @@ public class JdbcManagerImplTest extends TestCase {
         assertSame(ctx, manager.getJdbcContext());
         TransactionImpl tx = (TransactionImpl) transactionManager
                 .getTransaction();
-        assertEquals(1, tx.getSynchronizations().size());
-        assertSame(manager, tx.getSynchronizations().get(0));
+        assertEquals(1, tx.getInterposedSynchronizations().size());
+        assertSame(manager, tx.getInterposedSynchronizations().get(0));
     }
 
     /**

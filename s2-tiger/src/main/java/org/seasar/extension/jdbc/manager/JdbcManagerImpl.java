@@ -18,9 +18,9 @@ package org.seasar.extension.jdbc.manager;
 import java.sql.Connection;
 
 import javax.sql.DataSource;
+import javax.transaction.Status;
 import javax.transaction.Synchronization;
-import javax.transaction.Transaction;
-import javax.transaction.TransactionManager;
+import javax.transaction.TransactionSynchronizationRegistry;
 
 import org.seasar.extension.jdbc.AutoSelect;
 import org.seasar.extension.jdbc.DbmsDialect;
@@ -31,34 +31,57 @@ import org.seasar.extension.jdbc.SqlSelect;
 import org.seasar.extension.jdbc.query.AutoSelectImpl;
 import org.seasar.extension.jdbc.query.SqlSelectImpl;
 import org.seasar.extension.jdbc.util.DataSourceUtil;
-import org.seasar.framework.util.TransactionManagerUtil;
-import org.seasar.framework.util.TransactionUtil;
 
 /**
  * {@link JdbcManager}の実装クラスです。
  * 
  * @author higa
  * 
+ * 
  */
 public class JdbcManagerImpl implements JdbcManager, Synchronization {
 
     private static final Object[] EMPTY_PARAMETERS = new Object[0];
 
-    private TransactionManager transactionManager;
+    /**
+     * トランザクション同期レジストリです。
+     */
+    protected TransactionSynchronizationRegistry syncRegistry;
 
-    private DataSource dataSource;
+    /**
+     * データソースです。
+     */
+    protected DataSource dataSource;
 
-    private DbmsDialect dialect;
+    /**
+     * データベースの方言です。
+     */
+    protected DbmsDialect dialect;
 
-    private EntityMetaFactory entityMetaFactory;
+    /**
+     * エンティティメタデータファクトリです。
+     */
+    protected EntityMetaFactory entityMetaFactory;
 
-    private ThreadLocal<JdbcContext> jdbcContexts = new ThreadLocal<JdbcContext>();
+    /**
+     * JDBCコンテキストのスレッドローカルです。
+     */
+    protected ThreadLocal<JdbcContext> jdbcContexts = new ThreadLocal<JdbcContext>();
 
-    private int maxRows = 0;
+    /**
+     * デフォルトの最大行数です。
+     */
+    protected int maxRows = 0;
 
-    private int fetchSize = 100;
+    /**
+     * デフォルトのフェッチサイズです。
+     */
+    protected int fetchSize = 100;
 
-    private int queryTimeout = 0;
+    /**
+     * デフォルトのクエリタイムアウトです。
+     */
+    protected int queryTimeout = 0;
 
     public <T> SqlSelect<T> selectBySql(Class<T> baseClass, String sql) {
         return selectBySql(baseClass, sql, EMPTY_PARAMETERS);
@@ -71,7 +94,8 @@ public class JdbcManagerImpl implements JdbcManager, Synchronization {
     }
 
     public <T> AutoSelect<T> from(Class<T> baseClass) {
-        return new AutoSelectImpl<T>(this, baseClass);
+        return new AutoSelectImpl<T>(this, baseClass).maxRows(maxRows)
+                .fetchSize(fetchSize).queryTimeout(queryTimeout);
     }
 
     public void afterCompletion(int status) {
@@ -96,13 +120,12 @@ public class JdbcManagerImpl implements JdbcManager, Synchronization {
         if (ctx != null) {
             return ctx;
         }
-        Transaction tx = TransactionManagerUtil
-                .getTransaction(transactionManager);
+        int status = syncRegistry.getTransactionStatus();
         Connection con = DataSourceUtil.getConnection(dataSource);
-        if (tx != null) {
+        if (status == Status.STATUS_ACTIVE) {
             ctx = createJdbcContext(con, true);
             jdbcContexts.set(ctx);
-            TransactionUtil.registerSynchronization(tx, this);
+            syncRegistry.registerInterposedSynchronization(this);
         } else {
             ctx = createJdbcContext(con, false);
         }
@@ -133,22 +156,22 @@ public class JdbcManagerImpl implements JdbcManager, Synchronization {
     }
 
     /**
-     * トランザクションマネージャを返します。
+     * トランザクション同期レジストリを返します。
      * 
-     * @return トランザクションマネージャ
+     * @return トランザクション同期レジストリ
      */
-    public TransactionManager getTransactionManager() {
-        return transactionManager;
+    public TransactionSynchronizationRegistry getSyncRegistry() {
+        return syncRegistry;
     }
 
     /**
-     * トランザクションマネージャを設定します。
+     * トランザクション同期レジストリを設定します。
      * 
-     * @param transactionManager
-     *            トランザクションマネージャ
+     * @param syncRegistry
+     *            トランザクション同期レジストリ
      */
-    public void setTransactionManager(TransactionManager transactionManager) {
-        this.transactionManager = transactionManager;
+    public void setSyncRegistry(TransactionSynchronizationRegistry syncRegistry) {
+        this.syncRegistry = syncRegistry;
     }
 
     /**
@@ -171,57 +194,57 @@ public class JdbcManagerImpl implements JdbcManager, Synchronization {
     }
 
     /**
-     * フェッチ数を返します。
+     * デフォルトのフェッチ数を返します。
      * 
-     * @return フェッチ数
+     * @return デフォルトのフェッチ数
      */
     public int getFetchSize() {
         return fetchSize;
     }
 
     /**
-     * フェッチ数を設定します。
+     * デフォルトのフェッチ数を設定します。
      * 
      * @param fetchSize
-     *            フェッチ数
+     *            デフォルトのフェッチ数
      */
     public void setFetchSize(int fetchSize) {
         this.fetchSize = fetchSize;
     }
 
     /**
-     * 最大行数を返します。
+     * デフォルトの最大行数を返します。
      * 
-     * @return 最大行数
+     * @return デフォルトの最大行数
      */
     public int getMaxRows() {
         return maxRows;
     }
 
     /**
-     * 最大行数を設定します。
+     * デフォルトの最大行数を設定します。
      * 
      * @param maxRows
-     *            最大行数
+     *            デフォルトの最大行数
      */
     public void setMaxRows(int maxRows) {
         this.maxRows = maxRows;
     }
 
     /**
-     * クエリタイムアウトを返します。
+     * デフォルトのクエリタイムアウトを返します。
      * 
-     * @return クエリタイムアウト
+     * @return デフォルトのクエリタイムアウト
      */
     public int getQueryTimeout() {
         return queryTimeout;
     }
 
     /**
-     * クエリタイムアウトを設定します。
+     * デフォルトのクエリタイムアウトを設定します。
      * 
      * @param queryTimeout
-     *            クエリタイムアウト
+     *            デフォルトのクエリタイムアウト
      */
     public void setQueryTimeout(int queryTimeout) {
         this.queryTimeout = queryTimeout;

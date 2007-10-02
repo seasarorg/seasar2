@@ -63,6 +63,7 @@ import org.seasar.extension.jdbc.meta.PropertyMetaFactoryImpl;
 import org.seasar.extension.jdbc.meta.TableMetaFactoryImpl;
 import org.seasar.extension.jdbc.types.ValueTypes;
 import org.seasar.extension.jta.TransactionManagerImpl;
+import org.seasar.extension.jta.TransactionSynchronizationRegistryImpl;
 import org.seasar.framework.convention.impl.PersistenceConventionImpl;
 import org.seasar.framework.mock.sql.MockDataSource;
 import org.seasar.framework.util.DisposableUtil;
@@ -78,7 +79,8 @@ public class AutoSelectImplTest extends TestCase {
     @Override
     protected void setUp() throws Exception {
         manager = new JdbcManagerImpl();
-        manager.setTransactionManager(new TransactionManagerImpl());
+        manager.setSyncRegistry(new TransactionSynchronizationRegistryImpl(
+                new TransactionManagerImpl()));
         manager.setDataSource(new MockDataSource());
         manager.setDialect(new StandardDialect());
 

@@ -38,6 +38,7 @@ import org.seasar.extension.jdbc.handler.BeanResultSetHandler;
 import org.seasar.extension.jdbc.manager.JdbcContextImpl;
 import org.seasar.extension.jdbc.manager.JdbcManagerImpl;
 import org.seasar.extension.jta.TransactionManagerImpl;
+import org.seasar.extension.jta.TransactionSynchronizationRegistryImpl;
 import org.seasar.framework.mock.sql.MockColumnMetaData;
 import org.seasar.framework.mock.sql.MockDataSource;
 import org.seasar.framework.mock.sql.MockPreparedStatement;
@@ -70,7 +71,8 @@ public class AbstractSelectTest extends TestCase {
             }
 
         };
-        manager.setTransactionManager(new TransactionManagerImpl());
+        manager.setSyncRegistry(new TransactionSynchronizationRegistryImpl(
+                new TransactionManagerImpl()));
         manager.setDataSource(new MockDataSource());
         manager.setDialect(new StandardDialect());
 
