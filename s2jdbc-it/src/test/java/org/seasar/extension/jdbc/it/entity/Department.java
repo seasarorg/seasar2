@@ -15,13 +15,11 @@
  */
 package org.seasar.extension.jdbc.it.entity;
 
-import java.math.BigDecimal;
-import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Version;
 
 /**
@@ -29,29 +27,20 @@ import javax.persistence.Version;
  * 
  */
 @Entity
-public class Employee {
+public class Department {
 
     @Id
-    public Integer employeeId;
-
-    public Integer employeeNo;
-
-    public String employeeName;
-
-    public Integer managerId;
-
-    public Date hiredate;
-
-    public BigDecimal salary;
-
     public Integer departmentId;
 
-    // TODO
-    // 仕様確認：name要素に小文字は認めない？小文字にするとEntityMeta#hasColumnPropertyMetaがfalseを返す
-    @ManyToOne
-    @JoinColumn(name = "DEPARTMENT_ID", referencedColumnName = "DEPARTMENT_ID")
-    public Department department;
+    public Integer departmentNo;
+
+    public String departmentName;
+
+    public String location;
 
     @Version
     public Integer Version;
+
+    @OneToMany(mappedBy = "department")
+    public List<Employee> employees;
 }
