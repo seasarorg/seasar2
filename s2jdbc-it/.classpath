@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src/test/java"/>
+	<classpathentry kind="src" path="src/test/resources"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/s2-tiger"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/seasar2"/>
+	<classpathentry kind="lib" path="lib/db2jcc_license_cu.jar"/>
+	<classpathentry kind="lib" path="lib/db2jcc.jar"/>
+	<classpathentry kind="lib" path="lib/mysql-connector-java-5.0.7-bin.jar"/>
+	<classpathentry kind="lib" path="lib/ojdbc5.jar"/>
+	<classpathentry kind="lib" path="lib/postgresql-8.3dev-601.jdbc3.jar"/>
+	<classpathentry kind="lib" path="lib/sqljdbc.jar"/>
+	<classpathentry kind="output" path="build/classes"/>
+</classpath>

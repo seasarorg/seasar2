@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN"
+	"http://www.seasar.org/dtd/components24.dtd">
+<components>
+	<component name="xaDataSource"
+		class="org.seasar.extension.dbcp.impl.XADataSourceImpl">
+		<property name="driverClassName">
+			"org.hsqldb.jdbcDriver"
+		</property>
+		<property name="URL">
+			"jdbc:hsqldb:file:"
+				+ @org.seasar.framework.util.ResourceUtil@getBuildDir(@org.seasar.extension.jdbc.it.entity.Employee@class).getCanonicalPath()
+				+ "/data-hsql/demo"
+		</property>
+		<property name="user">"sa"</property>
+		<property name="password">""</property>
+	</component>
+	<component class="org.seasar.extension.jdbc.dialect.HSQLDialect"/>
+</components>
