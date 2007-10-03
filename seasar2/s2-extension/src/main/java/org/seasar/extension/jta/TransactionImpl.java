@@ -608,4 +608,13 @@ public final class TransactionImpl implements ExtendedTransaction {
     public List getSynchronizations() {
         return synchronizations;
     }
+
+    /**
+     * {@link Synchronization}のリストを返します。
+     * 
+     * @return
+     */
+    public List getInterposedSynchronizations() {
+        return interposedSynchronizations;
+    }
 }
