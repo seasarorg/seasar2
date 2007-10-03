@@ -40,7 +40,6 @@ import org.seasar.extension.jdbc.WhereClause;
 import org.seasar.extension.jdbc.exception.BaseJoinNotFoundRuntimeException;
 import org.seasar.extension.jdbc.exception.JoinDuplicatedRuntimeException;
 import org.seasar.extension.jdbc.exception.NonArrayOrListInPropertyRuntimeException;
-import org.seasar.extension.jdbc.exception.SNonUniqueResultException;
 import org.seasar.extension.jdbc.handler.BeanAutoResultSetHandler;
 import org.seasar.extension.jdbc.handler.BeanListAutoResultSetHandler;
 import org.seasar.extension.jdbc.handler.BeanListSupportLimitAutoResultSetHandler;
@@ -209,24 +208,7 @@ public class AutoSelectImpl<T> extends AbstractSelect<T> implements
         return joinMetaList.get(index);
     }
 
-    public List<T> getResultList() {
-        prepare("getResultList");
-        logSql();
-        return getResultListInternal();
-    }
-
-    public T getSingleResult() throws SNonUniqueResultException {
-        prepare("getSingleResult");
-        logSql();
-        return getSingleResultInternal();
-    }
-
-    /**
-     * 検索の準備をします。
-     * 
-     * @param methodName
-     *            メソッド名
-     */
+    @Override
     protected void prepare(String methodName) {
         prepareCallerClassAndMethodName(methodName);
         prepareTarget();

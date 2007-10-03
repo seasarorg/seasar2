@@ -33,40 +33,40 @@ import org.seasar.extension.jdbc.types.ValueTypes;
  */
 public class StandardDialect implements DbmsDialect {
 
-	public String getName() {
-		return "";
-	}
+    public String getName() {
+        return null;
+    }
 
-	public boolean supportsLimit() {
-		return false;
-	}
+    public boolean supportsLimit() {
+        return false;
+    }
 
-	public boolean supportsOffset() {
-		return supportsLimit();
-	}
+    public boolean supportsOffset() {
+        return supportsLimit();
+    }
 
-	public boolean supportsOffsetWithoutLimit() {
-		return supportsOffset();
-	}
+    public boolean supportsOffsetWithoutLimit() {
+        return supportsOffset();
+    }
 
-	public boolean supportsCursor() {
-		return true;
-	}
+    public boolean supportsCursor() {
+        return true;
+    }
 
-	public String convertLimitSql(String sql, int offset, int limit) {
-		return sql;
-	}
+    public String convertLimitSql(String sql, int offset, int limit) {
+        return sql;
+    }
 
-	public ValueType getValueType(Class<?> clazz) {
-		return ValueTypes.getValueType(clazz);
-	}
+    public ValueType getValueType(Class<?> clazz) {
+        return ValueTypes.getValueType(clazz);
+    }
 
-	public void setupJoin(FromClause fromClause, WhereClause whereClause,
-			JoinType joinType, String tableName, String tableAlias,
-			String fkTableAlias, String pkTableAlias,
-			List<JoinColumnMeta> joinColumnMetaList) {
-		fromClause.addSql(joinType, tableName, tableAlias, fkTableAlias,
-				pkTableAlias, joinColumnMetaList);
+    public void setupJoin(FromClause fromClause, WhereClause whereClause,
+            JoinType joinType, String tableName, String tableAlias,
+            String fkTableAlias, String pkTableAlias,
+            List<JoinColumnMeta> joinColumnMetaList) {
+        fromClause.addSql(joinType, tableName, tableAlias, fkTableAlias,
+                pkTableAlias, joinColumnMetaList);
 
-	}
+    }
 }

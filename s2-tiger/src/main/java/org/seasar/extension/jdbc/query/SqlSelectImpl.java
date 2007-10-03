@@ -16,22 +16,10 @@
 package org.seasar.extension.jdbc.query;
 
 import java.util.Arrays;
-import java.util.List;
 
-import org.seasar.extension.jdbc.DbmsDialect;
 import org.seasar.extension.jdbc.JdbcManager;
-import org.seasar.extension.jdbc.ResultSetHandler;
 import org.seasar.extension.jdbc.SqlSelect;
-import org.seasar.extension.jdbc.ValueType;
 import org.seasar.extension.jdbc.exception.NullBindVariableRuntimeException;
-import org.seasar.extension.jdbc.exception.SNonUniqueResultException;
-import org.seasar.extension.jdbc.handler.BeanListResultSetHandler;
-import org.seasar.extension.jdbc.handler.BeanListSupportLimitResultSetHandler;
-import org.seasar.extension.jdbc.handler.BeanResultSetHandler;
-import org.seasar.extension.jdbc.handler.ObjectListResultSetHandler;
-import org.seasar.extension.jdbc.handler.ObjectListSupportLimitResultSetHandler;
-import org.seasar.extension.jdbc.handler.ObjectResultSetHandler;
-import org.seasar.extension.jdbc.types.ValueTypes;
 
 /**
  * {@link SqlSelect}の実装クラスです。
@@ -41,7 +29,8 @@ import org.seasar.extension.jdbc.types.ValueTypes;
  *            戻り値のベースの型です。
  * 
  */
-public class SqlSelectImpl<T> extends AbstractSelect<T> implements SqlSelect<T> {
+public class SqlSelectImpl<T> extends AbstractSqlSelect<T> implements
+        SqlSelect<T> {
 
     /**
      * 空のパラメータです。
@@ -54,11 +43,6 @@ public class SqlSelectImpl<T> extends AbstractSelect<T> implements SqlSelect<T> 
     protected String sql;
 
     /**
-     * 準備が終わっているかどうかです。
-     */
-    protected volatile boolean prepared = false;
-
-    /**
      * {@link SqlSelectImpl}を作成します。
      * 
      * @param jdbcManager
@@ -67,8 +51,7 @@ public class SqlSelectImpl<T> extends AbstractSelect<T> implements SqlSelect<T> 
      *            ベースクラス
      * @param sql
      *            SQL
-     * @param parameters
-     *            パラメータの配列です。
+     * @see #SqlSelectImpl(JdbcManager, Class, String, Object[])
      */
     public SqlSelectImpl(JdbcManager jdbcManager, Class<T> baseClass, String sql) {
         this(jdbcManager, baseClass, sql, EMPTY_PARAMETERS);
@@ -134,24 +117,7 @@ public class SqlSelectImpl<T> extends AbstractSelect<T> implements SqlSelect<T> 
         return this;
     }
 
-    public List<T> getResultList() {
-        prepare("getResultList");
-        logSql();
-        return getResultListInternal();
-    }
-
-    public T getSingleResult() throws SNonUniqueResultException {
-        prepare("getSingleResult");
-        logSql();
-        return getSingleResultInternal();
-    }
-
-    /**
-     * 検索の準備をします。
-     * 
-     * @param methodName
-     *            メソッド名
-     */
+    @Override
     protected void prepare(String methodName) {
         prepareCallerClassAndMethodName(methodName);
         prepareParameters();
@@ -169,44 +135,13 @@ public class SqlSelectImpl<T> extends AbstractSelect<T> implements SqlSelect<T> 
         for (int i = 0; i < size; i++) {
             Object var = bindVariableList.get(i);
             if (var == null) {
-                logger.log("ESlimDao0009", new Object[] {
-                        callerClass.getName(), callerMethodName });
-                logger.log("ESlimDao0032", new Object[] { sql });
+                logger.log("ESSR0709", new Object[] { callerClass.getName(),
+                        callerMethodName });
+                logger.log("ESSR0732", new Object[] { sql });
                 throw new NullBindVariableRuntimeException();
             }
             bindVariableClassList.add(var.getClass());
         }
-    }
-
-    @Override
-    protected ResultSetHandler createResultListResultSetHandler() {
-        DbmsDialect dialect = jdbcManager.getDialect();
-        boolean simple = ValueTypes.isSimpleType(baseClass);
-        ValueType valueType = simple ? dialect.getValueType(baseClass) : null;
-        if (limit > 0 && !dialect.supportsLimit()) {
-            if (simple) {
-                return new ObjectListSupportLimitResultSetHandler(valueType,
-                        limit);
-            }
-            return new BeanListSupportLimitResultSetHandler(baseClass, dialect,
-                    executedSql, limit);
-
-        }
-        if (simple) {
-            return new ObjectListResultSetHandler(valueType);
-        }
-        return new BeanListResultSetHandler(baseClass, dialect, executedSql);
-
-    }
-
-    @Override
-    protected ResultSetHandler createSingleResultResultSetHandler() {
-        DbmsDialect dialect = jdbcManager.getDialect();
-        if (ValueTypes.isSimpleType(baseClass)) {
-            ValueType valueType = dialect.getValueType(baseClass);
-            return new ObjectResultSetHandler(valueType, executedSql);
-        }
-        return new BeanResultSetHandler(baseClass, dialect, executedSql);
     }
 
     /**

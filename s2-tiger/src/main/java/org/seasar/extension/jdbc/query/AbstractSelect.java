@@ -24,7 +24,9 @@ import org.seasar.extension.jdbc.DbmsDialect;
 import org.seasar.extension.jdbc.JdbcContext;
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.ResultSetHandler;
+import org.seasar.extension.jdbc.Select;
 import org.seasar.extension.jdbc.ValueType;
+import org.seasar.extension.jdbc.exception.SNonUniqueResultException;
 import org.seasar.framework.exception.SQLRuntimeException;
 import org.seasar.framework.util.PreparedStatementUtil;
 import org.seasar.framework.util.ResultSetUtil;
@@ -38,7 +40,8 @@ import org.seasar.framework.util.StatementUtil;
  *            戻り値のベースの型です。
  * 
  */
-public abstract class AbstractSelect<T> extends AbstractQuery {
+public abstract class AbstractSelect<T> extends AbstractQuery implements
+        Select<T> {
 
     /**
      * ベースクラスです。
@@ -94,12 +97,32 @@ public abstract class AbstractSelect<T> extends AbstractQuery {
     protected String convertLimitSql(String sql) {
         DbmsDialect dialect = jdbcManager.getDialect();
         if (dialect.supportsLimit()
-                && (limit > 0 || limit == 0
+                && (limit > 0 || limit == 0 && offset > 0
                         && dialect.supportsOffsetWithoutLimit())) {
             return dialect.convertLimitSql(sql, offset, limit);
         }
         return sql;
     }
+
+    public List<T> getResultList() {
+        prepare("getResultList");
+        logSql();
+        return getResultListInternal();
+    }
+
+    public T getSingleResult() throws SNonUniqueResultException {
+        prepare("getSingleResult");
+        logSql();
+        return getSingleResultInternal();
+    }
+
+    /**
+     * 検索の準備をします。
+     * 
+     * @param methodName
+     *            メソッド名
+     */
+    protected abstract void prepare(String methodName);
 
     /**
      * 検索してベースオブジェクトのリストを返します。

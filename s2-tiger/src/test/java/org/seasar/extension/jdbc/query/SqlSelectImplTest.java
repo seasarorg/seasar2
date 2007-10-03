@@ -21,7 +21,6 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.seasar.extension.jdbc.JdbcContext;
-import org.seasar.extension.jdbc.ResultSetHandler;
 import org.seasar.extension.jdbc.SqlLog;
 import org.seasar.extension.jdbc.SqlLogRegistry;
 import org.seasar.extension.jdbc.SqlLogRegistryLocator;
@@ -31,12 +30,6 @@ import org.seasar.extension.jdbc.dto.AaaDto;
 import org.seasar.extension.jdbc.entity.Aaa;
 import org.seasar.extension.jdbc.exception.NullBindVariableRuntimeException;
 import org.seasar.extension.jdbc.exception.SNonUniqueResultException;
-import org.seasar.extension.jdbc.handler.BeanListResultSetHandler;
-import org.seasar.extension.jdbc.handler.BeanListSupportLimitResultSetHandler;
-import org.seasar.extension.jdbc.handler.BeanResultSetHandler;
-import org.seasar.extension.jdbc.handler.ObjectListResultSetHandler;
-import org.seasar.extension.jdbc.handler.ObjectListSupportLimitResultSetHandler;
-import org.seasar.extension.jdbc.handler.ObjectResultSetHandler;
 import org.seasar.extension.jdbc.manager.JdbcManagerImpl;
 import org.seasar.extension.jta.TransactionManagerImpl;
 import org.seasar.extension.jta.TransactionSynchronizationRegistryImpl;
@@ -627,106 +620,5 @@ public class SqlSelectImplTest extends TestCase {
         assertEquals(
                 "select foo2, aaa_bbb from hoge where aaa = '111' and bbb = '222' limit 10 offset 5",
                 sqlLog.getCompleteSql());
-    }
-
-    /**
-     * @throws Exception
-     * 
-     */
-    public void testCreateResultListResultSetHandler() throws Exception {
-        SqlSelectImpl<Aaa> query = new SqlSelectImpl<Aaa>(manager, Aaa.class,
-                "select * from aaa");
-        ResultSetHandler handler = query.createResultListResultSetHandler();
-        assertEquals(BeanListResultSetHandler.class, handler.getClass());
-    }
-
-    /**
-     * @throws Exception
-     * 
-     */
-    public void testCreateResultListResultSetHandler_simple() throws Exception {
-        SqlSelectImpl<Integer> query = new SqlSelectImpl<Integer>(manager,
-                Integer.class, "select id from aaa");
-        ResultSetHandler handler = query.createResultListResultSetHandler();
-        assertEquals(ObjectListResultSetHandler.class, handler.getClass());
-    }
-
-    /**
-     * @throws Exception
-     * 
-     */
-    public void testCreateResultListResultSetHandler_limit_supportLimit()
-            throws Exception {
-        manager.setDialect(new PostgreDialect());
-        SqlSelectImpl<Aaa> query = new SqlSelectImpl<Aaa>(manager, Aaa.class,
-                "select * from aaa");
-        query.limit(10);
-        ResultSetHandler handler = query.createResultListResultSetHandler();
-        assertEquals(BeanListResultSetHandler.class, handler.getClass());
-    }
-
-    /**
-     * @throws Exception
-     * 
-     */
-    public void testCreateResultListResultSetHandler_limit_notSupportLimit()
-            throws Exception {
-        SqlSelectImpl<Aaa> query = new SqlSelectImpl<Aaa>(manager, Aaa.class,
-                "select * from aaa");
-        query.limit(10);
-        ResultSetHandler handler = query.createResultListResultSetHandler();
-        assertEquals(BeanListSupportLimitResultSetHandler.class, handler
-                .getClass());
-    }
-
-    /**
-     * @throws Exception
-     * 
-     */
-    public void testCreateResultListResultSetHandler_simpleType_limit_supportLimit()
-            throws Exception {
-        manager.setDialect(new PostgreDialect());
-        SqlSelectImpl<Integer> query = new SqlSelectImpl<Integer>(manager,
-                Integer.class, "select id from aaa");
-        query.limit(10);
-        ResultSetHandler handler = query.createResultListResultSetHandler();
-        assertEquals(ObjectListResultSetHandler.class, handler.getClass());
-    }
-
-    /**
-     * @throws Exception
-     * 
-     */
-    public void testCreateResultListResultSetHandler_simpleType_limit_notSupportLimit()
-            throws Exception {
-        SqlSelectImpl<Integer> query = new SqlSelectImpl<Integer>(manager,
-                Integer.class, "select id from aaa");
-        query.limit(10);
-        ResultSetHandler handler = query.createResultListResultSetHandler();
-        assertEquals(ObjectListSupportLimitResultSetHandler.class, handler
-                .getClass());
-    }
-
-    /**
-     * @throws Exception
-     * 
-     */
-    public void testCreateSingleResultResultSetHandler() throws Exception {
-        SqlSelectImpl<AaaDto> query = new SqlSelectImpl<AaaDto>(manager,
-                AaaDto.class, "select h.* from hoge h where aaa = ?");
-        ResultSetHandler handler = query.createSingleResultResultSetHandler();
-        assertEquals(BeanResultSetHandler.class, handler.getClass());
-    }
-
-    /**
-     * @throws Exception
-     * 
-     */
-    public void testCreateSingleResultResultSetHandler_simpleType()
-            throws Exception {
-        SqlSelectImpl<Integer> query = new SqlSelectImpl<Integer>(manager,
-                Integer.class, "select count(*) from hoge");
-        ResultSetHandler handler = query.createSingleResultResultSetHandler();
-        assertEquals(ObjectResultSetHandler.class, handler.getClass());
     }
 }

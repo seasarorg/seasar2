@@ -434,5 +434,8 @@ public class AbstractSelectTest extends TestCase {
             return null;
         }
 
+        @Override
+        protected void prepare(String methodName) {
+        }
     }
 }

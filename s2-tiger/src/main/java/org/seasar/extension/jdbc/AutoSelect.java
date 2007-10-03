@@ -15,11 +15,7 @@
  */
 package org.seasar.extension.jdbc;
 
-import java.util.List;
 import java.util.Map;
-
-import org.seasar.extension.jdbc.exception.OrderByNotFoundRuntimeException;
-import org.seasar.extension.jdbc.exception.SNonUniqueResultException;
 
 /**
  * SQLを自動生成する検索です。
@@ -29,7 +25,7 @@ import org.seasar.extension.jdbc.exception.SNonUniqueResultException;
  *            エンティティの型です。
  * 
  */
-public interface AutoSelect<T> {
+public interface AutoSelect<T> extends Select<T> {
 
     /**
      * =です。
@@ -298,34 +294,4 @@ public interface AutoSelect<T> {
      * @return 自動検索
      */
     AutoSelect<T> where(Map<String, Object> conditions);
-
-    /**
-     * 検索してベースオブジェクトのリストを返します。
-     * 
-     * @return
-     * <p>
-     * ベースオブジェクトのリスト。
-     * </p>
-     * <p>
-     * 1件も対象がないときはnullではなく空のリストを返します。
-     * </p>
-     * @throws OrderByNotFoundRuntimeException
-     *             ページング処理で<code>order by</code>が見つからない場合
-     */
-    List<T> getResultList() throws OrderByNotFoundRuntimeException;
-
-    /**
-     * 検索してベースオブジェクトを返します。
-     * 
-     * @return
-     * <p>
-     * ベースオブジェクト。
-     * </p>
-     * <p>
-     * 1件も対象がないときはnullを返します。
-     * </p>
-     * @throws SNonUniqueResultException
-     *             検索結果がユニークでない場合。
-     */
-    T getSingleResult() throws SNonUniqueResultException;
 }

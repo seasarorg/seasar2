@@ -16,23 +16,23 @@
 package org.seasar.extension.jdbc;
 
 /**
- * SQLを直接指定する検索です。
+ * SQLファイルを使う検索です。
  * 
  * @author higa
  * @param <T>
  *            戻り値のベースの型です。
  * 
  */
-public interface SqlSelect<T> extends Select<T> {
+public interface SqlFileSelect<T> extends Select<T> {
 
     /**
-     * 検索を呼び出すクラスを設定します。デフォルトは {@link SqlSelect}の実装クラスです。
+     * 検索を呼び出すクラスを設定します。デフォルトは {@link SqlFileSelect}の実装クラスです。
      * 
      * @param callerClass
      *            検索を呼び出すクラス
      * @return SQL検索
      */
-    SqlSelect<T> callerClass(Class<?> callerClass);
+    SqlFileSelect<T> callerClass(Class<?> callerClass);
 
     /**
      * 検索を呼び出すメソッド名を設定します。デフォルトはgetResultListあるいはgetSingleResultになります。
@@ -41,7 +41,7 @@ public interface SqlSelect<T> extends Select<T> {
      *            検索を呼び出すメソッド名
      * @return SQL検索
      */
-    SqlSelect<T> callerMethodName(String callerMethodName);
+    SqlFileSelect<T> callerMethodName(String callerMethodName);
 
     /**
      * 最大行数を設定します。
@@ -50,7 +50,7 @@ public interface SqlSelect<T> extends Select<T> {
      *            最大行数
      * @return SQL検索
      */
-    SqlSelect<T> maxRows(int maxRows);
+    SqlFileSelect<T> maxRows(int maxRows);
 
     /**
      * フェッチ数を設定します。
@@ -59,7 +59,7 @@ public interface SqlSelect<T> extends Select<T> {
      *            フェッチ数
      * @return SQL検索
      */
-    SqlSelect<T> fetchSize(int fetchSize);
+    SqlFileSelect<T> fetchSize(int fetchSize);
 
     /**
      * クエリタイムアウトの秒数を設定します。
@@ -68,7 +68,7 @@ public interface SqlSelect<T> extends Select<T> {
      *            クエリタイムアウトの秒数
      * @return SQL検索
      */
-    SqlSelect<T> queryTimeout(int queryTimeout);
+    SqlFileSelect<T> queryTimeout(int queryTimeout);
 
     /**
      * リミットを設定します。
@@ -77,7 +77,7 @@ public interface SqlSelect<T> extends Select<T> {
      *            リミット
      * @return SQL検索
      */
-    SqlSelect<T> limit(int limit);
+    SqlFileSelect<T> limit(int limit);
 
     /**
      * オフセットを設定します。
@@ -86,5 +86,5 @@ public interface SqlSelect<T> extends Select<T> {
      *            オフセット
      * @return SQL検索
      */
-    SqlSelect<T> offset(int offset);
+    SqlFileSelect<T> offset(int offset);
 }
