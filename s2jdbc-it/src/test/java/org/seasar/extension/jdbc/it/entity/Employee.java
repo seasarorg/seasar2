@@ -18,6 +18,7 @@ package org.seasar.extension.jdbc.it.entity;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Version;
 
@@ -25,23 +26,24 @@ import javax.persistence.Version;
  * @author taedium
  * 
  */
+@Entity
 public class Employee {
 
-	@Id
-	public Integer employeeId;
+    @Id
+    public Integer employeeId;
 
-	public Integer employeeNo;
+    public Integer employeeNo;
 
-	public String employeeName;
+    public String employeeName;
 
-	public Integer managerId;
+    public Integer managerId;
 
-	public Date hiredate;
+    public Date hiredate;
 
-	public BigDecimal salary;
+    public BigDecimal salary;
 
-	public Integer departmentId;
+    public Integer departmentId;
 
-	@Version
-	public Integer Version;
+    @Version
+    public Integer Version;
 }
