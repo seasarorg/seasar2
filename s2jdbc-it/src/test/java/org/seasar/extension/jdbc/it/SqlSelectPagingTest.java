@@ -18,9 +18,7 @@ package org.seasar.extension.jdbc.it;
 import java.util.List;
 
 import org.seasar.extension.jdbc.JdbcManager;
-import org.seasar.extension.jdbc.SqlSelect;
 import org.seasar.extension.jdbc.it.entity.Employee;
-import org.seasar.extension.jdbc.query.SqlSelectImpl;
 import org.seasar.extension.unit.S2TestCase;
 
 /**
@@ -44,9 +42,8 @@ public class SqlSelectPagingTest extends S2TestCase {
      * @throws Exception
      */
     public void test() throws Exception {
-        SqlSelect<Employee> query = new SqlSelectImpl<Employee>(jdbcManager,
-                Employee.class, sql);
-        List<Employee> list = query.offset(0).limit(0).getResultList();
+        List<Employee> list = jdbcManager.selectBySql(Employee.class, sql)
+                .offset(0).limit(0).getResultList();
         assertEquals(14, list.size());
     }
 
@@ -55,9 +52,8 @@ public class SqlSelectPagingTest extends S2TestCase {
      * @throws Exception
      */
     public void test_offsetOnly() throws Exception {
-        SqlSelect<Employee> query = new SqlSelectImpl<Employee>(jdbcManager,
-                Employee.class, sql);
-        List<Employee> list = query.offset(3).limit(0).getResultList();
+        List<Employee> list = jdbcManager.selectBySql(Employee.class, sql)
+                .offset(3).limit(0).getResultList();
         assertEquals(11, list.size());
         assertEquals(4, list.get(0).employeeId.intValue());
         assertEquals(14, list.get(10).employeeId.intValue());
@@ -68,9 +64,8 @@ public class SqlSelectPagingTest extends S2TestCase {
      * @throws Exception
      */
     public void test_limitOnly() throws Exception {
-        SqlSelect<Employee> query = new SqlSelectImpl<Employee>(jdbcManager,
-                Employee.class, sql);
-        List<Employee> list = query.offset(0).limit(3).getResultList();
+        List<Employee> list = jdbcManager.selectBySql(Employee.class, sql)
+                .offset(0).limit(3).getResultList();
         assertEquals(3, list.size());
         assertEquals(1, list.get(0).employeeId.intValue());
         assertEquals(3, list.get(2).employeeId.intValue());
@@ -81,9 +76,8 @@ public class SqlSelectPagingTest extends S2TestCase {
      * @throws Exception
      */
     public void test_offset_limit() throws Exception {
-        SqlSelect<Employee> query = new SqlSelectImpl<Employee>(jdbcManager,
-                Employee.class, sql);
-        List<Employee> list = query.offset(3).limit(5).getResultList();
+        List<Employee> list = jdbcManager.selectBySql(Employee.class, sql)
+                .offset(3).limit(5).getResultList();
         assertEquals(5, list.size());
         assertEquals(4, list.get(0).employeeId.intValue());
         assertEquals(8, list.get(4).employeeId.intValue());
