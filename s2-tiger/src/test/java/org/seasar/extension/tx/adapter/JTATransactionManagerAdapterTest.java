@@ -17,6 +17,7 @@ package org.seasar.extension.tx.adapter;
 
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
+import javax.transaction.UserTransaction;
 
 import org.seasar.extension.tx.TransactionCallback;
 
@@ -53,6 +54,8 @@ public class JTATransactionManagerAdapterTest extends
 
     JTATransactionManagerAdapter target;
 
+    UserTransaction ut;
+
     TransactionManager tm;
 
     Transaction tx;
@@ -60,9 +63,10 @@ public class JTATransactionManagerAdapterTest extends
     @Override
     protected void setUp() throws Exception {
         super.setUp();
+        ut = createStrictMock(UserTransaction.class);
         tm = createStrictMock(TransactionManager.class);
         tx = createStrictMock(Transaction.class);
-        target = new JTATransactionManagerAdapter(tm);
+        target = new JTATransactionManagerAdapter(ut, tm);
     }
 
     /**
@@ -76,10 +80,10 @@ public class JTATransactionManagerAdapterTest extends
      * @throws Throwable
      */
     public void recordRequired_withoutTx_returnCommit() throws Throwable {
-        expect(tm.getStatus()).andReturn(STATUS_NO_TRANSACTION);
-        tm.begin();
-        expect(tm.getStatus()).andReturn(STATUS_ACTIVE);
-        tm.commit();
+        expect(ut.getStatus()).andReturn(STATUS_NO_TRANSACTION);
+        ut.begin();
+        expect(ut.getStatus()).andReturn(STATUS_ACTIVE);
+        ut.commit();
     }
 
     /**
@@ -93,12 +97,12 @@ public class JTATransactionManagerAdapterTest extends
      * @throws Throwable
      */
     public void recordRequired_withoutTx_returnRollback() throws Throwable {
-        expect(tm.getStatus()).andReturn(STATUS_NO_TRANSACTION);
-        tm.begin();
-        expect(tm.getStatus()).andReturn(STATUS_ACTIVE);
-        tm.setRollbackOnly();
-        expect(tm.getStatus()).andReturn(STATUS_MARKED_ROLLBACK);
-        tm.rollback();
+        expect(ut.getStatus()).andReturn(STATUS_NO_TRANSACTION);
+        ut.begin();
+        expect(ut.getStatus()).andReturn(STATUS_ACTIVE);
+        ut.setRollbackOnly();
+        expect(ut.getStatus()).andReturn(STATUS_MARKED_ROLLBACK);
+        ut.rollback();
     }
 
     /**
@@ -116,10 +120,10 @@ public class JTATransactionManagerAdapterTest extends
      * @throws Throwable
      */
     public void recordRequired_withoutTx_exceptionCommit() throws Throwable {
-        expect(tm.getStatus()).andReturn(STATUS_NO_TRANSACTION);
-        tm.begin();
-        expect(tm.getStatus()).andReturn(STATUS_ACTIVE);
-        tm.commit();
+        expect(ut.getStatus()).andReturn(STATUS_NO_TRANSACTION);
+        ut.begin();
+        expect(ut.getStatus()).andReturn(STATUS_ACTIVE);
+        ut.commit();
     }
 
     /**
@@ -137,12 +141,12 @@ public class JTATransactionManagerAdapterTest extends
      * @throws Throwable
      */
     public void recordRequired_withoutTx_exceptionRollback() throws Throwable {
-        expect(tm.getStatus()).andReturn(STATUS_NO_TRANSACTION);
-        tm.begin();
-        expect(tm.getStatus()).andReturn(STATUS_ACTIVE);
-        tm.setRollbackOnly();
-        expect(tm.getStatus()).andReturn(STATUS_MARKED_ROLLBACK);
-        tm.rollback();
+        expect(ut.getStatus()).andReturn(STATUS_NO_TRANSACTION);
+        ut.begin();
+        expect(ut.getStatus()).andReturn(STATUS_ACTIVE);
+        ut.setRollbackOnly();
+        expect(ut.getStatus()).andReturn(STATUS_MARKED_ROLLBACK);
+        ut.rollback();
     }
 
     /**
@@ -156,7 +160,7 @@ public class JTATransactionManagerAdapterTest extends
      * @throws Throwable
      */
     public void recordRequired_withTx_returnCommit() throws Throwable {
-        expect(tm.getStatus()).andReturn(STATUS_ACTIVE);
+        expect(ut.getStatus()).andReturn(STATUS_ACTIVE);
     }
 
     /**
@@ -170,9 +174,9 @@ public class JTATransactionManagerAdapterTest extends
      * @throws Throwable
      */
     public void recordRequired_withTx_returnRollback() throws Throwable {
-        expect(tm.getStatus()).andReturn(STATUS_ACTIVE);
-        expect(tm.getStatus()).andReturn(STATUS_ACTIVE);
-        tm.setRollbackOnly();
+        expect(ut.getStatus()).andReturn(STATUS_ACTIVE);
+        expect(ut.getStatus()).andReturn(STATUS_ACTIVE);
+        ut.setRollbackOnly();
     }
 
     /**
@@ -190,7 +194,7 @@ public class JTATransactionManagerAdapterTest extends
      * @throws Throwable
      */
     public void recordRequired_withTx_exceptionCommit() throws Throwable {
-        expect(tm.getStatus()).andReturn(STATUS_ACTIVE);
+        expect(ut.getStatus()).andReturn(STATUS_ACTIVE);
     }
 
     /**
@@ -209,9 +213,9 @@ public class JTATransactionManagerAdapterTest extends
      * @throws Throwable
      */
     public void recordRequired_withTx_exceptionRollback() throws Throwable {
-        expect(tm.getStatus()).andReturn(STATUS_ACTIVE);
-        expect(tm.getStatus()).andReturn(STATUS_ACTIVE);
-        tm.setRollbackOnly();
+        expect(ut.getStatus()).andReturn(STATUS_ACTIVE);
+        expect(ut.getStatus()).andReturn(STATUS_ACTIVE);
+        ut.setRollbackOnly();
     }
 
     /**
@@ -225,11 +229,11 @@ public class JTATransactionManagerAdapterTest extends
      * @throws Throwable
      */
     public void recordRequiresNew_withoutTx_returnCommit() throws Throwable {
-        expect(tm.getStatus()).andReturn(STATUS_NO_TRANSACTION);
-        expect(tm.getStatus()).andReturn(STATUS_NO_TRANSACTION);
-        tm.begin();
-        expect(tm.getStatus()).andReturn(STATUS_ACTIVE);
-        tm.commit();
+        expect(ut.getStatus()).andReturn(STATUS_NO_TRANSACTION);
+        expect(ut.getStatus()).andReturn(STATUS_NO_TRANSACTION);
+        ut.begin();
+        expect(ut.getStatus()).andReturn(STATUS_ACTIVE);
+        ut.commit();
     }
 
     /**
@@ -243,13 +247,13 @@ public class JTATransactionManagerAdapterTest extends
      * @throws Throwable
      */
     public void recordRequiresNew_withoutTx_returnRollback() throws Throwable {
-        expect(tm.getStatus()).andReturn(STATUS_NO_TRANSACTION);
-        expect(tm.getStatus()).andReturn(STATUS_NO_TRANSACTION);
-        tm.begin();
-        expect(tm.getStatus()).andReturn(STATUS_ACTIVE);
-        tm.setRollbackOnly();
-        expect(tm.getStatus()).andReturn(STATUS_MARKED_ROLLBACK);
-        tm.rollback();
+        expect(ut.getStatus()).andReturn(STATUS_NO_TRANSACTION);
+        expect(ut.getStatus()).andReturn(STATUS_NO_TRANSACTION);
+        ut.begin();
+        expect(ut.getStatus()).andReturn(STATUS_ACTIVE);
+        ut.setRollbackOnly();
+        expect(ut.getStatus()).andReturn(STATUS_MARKED_ROLLBACK);
+        ut.rollback();
     }
 
     /**
@@ -268,11 +272,11 @@ public class JTATransactionManagerAdapterTest extends
      * @throws Throwable
      */
     public void recordRequiresNew_withoutTx_exceptionCommit() throws Throwable {
-        expect(tm.getStatus()).andReturn(STATUS_NO_TRANSACTION);
-        expect(tm.getStatus()).andReturn(STATUS_NO_TRANSACTION);
-        tm.begin();
-        expect(tm.getStatus()).andReturn(STATUS_ACTIVE);
-        tm.commit();
+        expect(ut.getStatus()).andReturn(STATUS_NO_TRANSACTION);
+        expect(ut.getStatus()).andReturn(STATUS_NO_TRANSACTION);
+        ut.begin();
+        expect(ut.getStatus()).andReturn(STATUS_ACTIVE);
+        ut.commit();
     }
 
     /**
@@ -292,13 +296,13 @@ public class JTATransactionManagerAdapterTest extends
      */
     public void recordRequiresNew_withoutTx_exceptionRollback()
             throws Throwable {
-        expect(tm.getStatus()).andReturn(STATUS_NO_TRANSACTION);
-        expect(tm.getStatus()).andReturn(STATUS_NO_TRANSACTION);
-        tm.begin();
-        expect(tm.getStatus()).andReturn(STATUS_ACTIVE);
-        tm.setRollbackOnly();
-        expect(tm.getStatus()).andReturn(STATUS_MARKED_ROLLBACK);
-        tm.rollback();
+        expect(ut.getStatus()).andReturn(STATUS_NO_TRANSACTION);
+        expect(ut.getStatus()).andReturn(STATUS_NO_TRANSACTION);
+        ut.begin();
+        expect(ut.getStatus()).andReturn(STATUS_ACTIVE);
+        ut.setRollbackOnly();
+        expect(ut.getStatus()).andReturn(STATUS_MARKED_ROLLBACK);
+        ut.rollback();
     }
 
     /**
@@ -312,12 +316,12 @@ public class JTATransactionManagerAdapterTest extends
      * @throws Throwable
      */
     public void recordRequiresNew_withTx_returnCommit() throws Throwable {
-        expect(tm.getStatus()).andReturn(STATUS_ACTIVE);
+        expect(ut.getStatus()).andReturn(STATUS_ACTIVE);
         expect(tm.suspend()).andReturn(tx);
-        expect(tm.getStatus()).andReturn(STATUS_NO_TRANSACTION);
-        tm.begin();
-        expect(tm.getStatus()).andReturn(STATUS_ACTIVE);
-        tm.commit();
+        expect(ut.getStatus()).andReturn(STATUS_NO_TRANSACTION);
+        ut.begin();
+        expect(ut.getStatus()).andReturn(STATUS_ACTIVE);
+        ut.commit();
         tm.resume(tx);
     }
 
@@ -332,14 +336,14 @@ public class JTATransactionManagerAdapterTest extends
      * @throws Throwable
      */
     public void recordRequiresNew_withTx_returnRollback() throws Throwable {
-        expect(tm.getStatus()).andReturn(STATUS_ACTIVE);
+        expect(ut.getStatus()).andReturn(STATUS_ACTIVE);
         expect(tm.suspend()).andReturn(tx);
-        expect(tm.getStatus()).andReturn(STATUS_NO_TRANSACTION);
-        tm.begin();
-        expect(tm.getStatus()).andReturn(STATUS_ACTIVE);
-        tm.setRollbackOnly();
-        expect(tm.getStatus()).andReturn(STATUS_MARKED_ROLLBACK);
-        tm.rollback();
+        expect(ut.getStatus()).andReturn(STATUS_NO_TRANSACTION);
+        ut.begin();
+        expect(ut.getStatus()).andReturn(STATUS_ACTIVE);
+        ut.setRollbackOnly();
+        expect(ut.getStatus()).andReturn(STATUS_MARKED_ROLLBACK);
+        ut.rollback();
         tm.resume(tx);
     }
 
@@ -359,12 +363,12 @@ public class JTATransactionManagerAdapterTest extends
      * @throws Throwable
      */
     public void recordRequiresNew_withTx_exceptionCommit() throws Throwable {
-        expect(tm.getStatus()).andReturn(STATUS_ACTIVE);
+        expect(ut.getStatus()).andReturn(STATUS_ACTIVE);
         expect(tm.suspend()).andReturn(tx);
-        expect(tm.getStatus()).andReturn(STATUS_NO_TRANSACTION);
-        tm.begin();
-        expect(tm.getStatus()).andReturn(STATUS_ACTIVE);
-        tm.commit();
+        expect(ut.getStatus()).andReturn(STATUS_NO_TRANSACTION);
+        ut.begin();
+        expect(ut.getStatus()).andReturn(STATUS_ACTIVE);
+        ut.commit();
         tm.resume(tx);
     }
 
@@ -384,14 +388,14 @@ public class JTATransactionManagerAdapterTest extends
      * @throws Throwable
      */
     public void recordRequiresNew_withTx_exceptionRollback() throws Throwable {
-        expect(tm.getStatus()).andReturn(STATUS_ACTIVE);
+        expect(ut.getStatus()).andReturn(STATUS_ACTIVE);
         expect(tm.suspend()).andReturn(tx);
-        expect(tm.getStatus()).andReturn(STATUS_NO_TRANSACTION);
-        tm.begin();
-        expect(tm.getStatus()).andReturn(STATUS_ACTIVE);
-        tm.setRollbackOnly();
-        expect(tm.getStatus()).andReturn(STATUS_MARKED_ROLLBACK);
-        tm.rollback();
+        expect(ut.getStatus()).andReturn(STATUS_NO_TRANSACTION);
+        ut.begin();
+        expect(ut.getStatus()).andReturn(STATUS_ACTIVE);
+        ut.setRollbackOnly();
+        expect(ut.getStatus()).andReturn(STATUS_MARKED_ROLLBACK);
+        ut.rollback();
         tm.resume(tx);
     }
 
@@ -410,7 +414,7 @@ public class JTATransactionManagerAdapterTest extends
      * @throws Throwable
      */
     public void recordMandatory_withoutTx_returnCommit() throws Throwable {
-        expect(tm.getStatus()).andReturn(STATUS_NO_TRANSACTION);
+        expect(ut.getStatus()).andReturn(STATUS_NO_TRANSACTION);
     }
 
     /**
@@ -428,7 +432,7 @@ public class JTATransactionManagerAdapterTest extends
      * @throws Throwable
      */
     public void recordMandatory_withoutTx_returnRollback() throws Throwable {
-        expect(tm.getStatus()).andReturn(STATUS_NO_TRANSACTION);
+        expect(ut.getStatus()).andReturn(STATUS_NO_TRANSACTION);
     }
 
     /**
@@ -447,7 +451,7 @@ public class JTATransactionManagerAdapterTest extends
      * @throws Throwable
      */
     public void recordMandatory_withoutTx_exceptionCommit() throws Throwable {
-        expect(tm.getStatus()).andReturn(STATUS_NO_TRANSACTION);
+        expect(ut.getStatus()).andReturn(STATUS_NO_TRANSACTION);
     }
 
     /**
@@ -466,7 +470,7 @@ public class JTATransactionManagerAdapterTest extends
      * @throws Throwable
      */
     public void recordMandatory_withoutTx_exceptionRollback() throws Throwable {
-        expect(tm.getStatus()).andReturn(STATUS_NO_TRANSACTION);
+        expect(ut.getStatus()).andReturn(STATUS_NO_TRANSACTION);
     }
 
     /**
@@ -480,7 +484,7 @@ public class JTATransactionManagerAdapterTest extends
      * @throws Throwable
      */
     public void recordMandatory_withTx_returnCommit() throws Throwable {
-        expect(tm.getStatus()).andReturn(STATUS_ACTIVE);
+        expect(ut.getStatus()).andReturn(STATUS_ACTIVE);
     }
 
     /**
@@ -494,9 +498,9 @@ public class JTATransactionManagerAdapterTest extends
      * @throws Throwable
      */
     public void recordMandatory_withTx_returnRollback() throws Throwable {
-        expect(tm.getStatus()).andReturn(STATUS_ACTIVE);
-        expect(tm.getStatus()).andReturn(STATUS_ACTIVE);
-        tm.setRollbackOnly();
+        expect(ut.getStatus()).andReturn(STATUS_ACTIVE);
+        expect(ut.getStatus()).andReturn(STATUS_ACTIVE);
+        ut.setRollbackOnly();
     }
 
     /**
@@ -515,7 +519,7 @@ public class JTATransactionManagerAdapterTest extends
      * @throws Throwable
      */
     public void recordMandatory_withTx_exceptionCommit() throws Throwable {
-        expect(tm.getStatus()).andReturn(STATUS_ACTIVE);
+        expect(ut.getStatus()).andReturn(STATUS_ACTIVE);
     }
 
     /**
@@ -534,9 +538,9 @@ public class JTATransactionManagerAdapterTest extends
      * @throws Throwable
      */
     public void recordMandatory_withTx_exceptionRollback() throws Throwable {
-        expect(tm.getStatus()).andReturn(STATUS_ACTIVE);
-        expect(tm.getStatus()).andReturn(STATUS_ACTIVE);
-        tm.setRollbackOnly();
+        expect(ut.getStatus()).andReturn(STATUS_ACTIVE);
+        expect(ut.getStatus()).andReturn(STATUS_ACTIVE);
+        ut.setRollbackOnly();
     }
 
     /**
@@ -550,7 +554,7 @@ public class JTATransactionManagerAdapterTest extends
      * @throws Throwable
      */
     public void recordNotSupported_withoutTx_returnCommit() throws Throwable {
-        expect(tm.getStatus()).andReturn(STATUS_NO_TRANSACTION);
+        expect(ut.getStatus()).andReturn(STATUS_NO_TRANSACTION);
     }
 
     /**
@@ -564,8 +568,8 @@ public class JTATransactionManagerAdapterTest extends
      * @throws Throwable
      */
     public void recordNotSupported_withoutTx_returnRollback() throws Throwable {
-        expect(tm.getStatus()).andReturn(STATUS_NO_TRANSACTION);
-        expect(tm.getStatus()).andReturn(STATUS_NO_TRANSACTION);
+        expect(ut.getStatus()).andReturn(STATUS_NO_TRANSACTION);
+        expect(ut.getStatus()).andReturn(STATUS_NO_TRANSACTION);
     }
 
     /**
@@ -584,7 +588,7 @@ public class JTATransactionManagerAdapterTest extends
      * @throws Throwable
      */
     public void recordNotSupported_withoutTx_exceptionCommit() throws Throwable {
-        expect(tm.getStatus()).andReturn(STATUS_NO_TRANSACTION);
+        expect(ut.getStatus()).andReturn(STATUS_NO_TRANSACTION);
     }
 
     /**
@@ -604,8 +608,8 @@ public class JTATransactionManagerAdapterTest extends
      */
     public void recordNotSupported_withoutTx_exceptionRollback()
             throws Throwable {
-        expect(tm.getStatus()).andReturn(STATUS_NO_TRANSACTION);
-        expect(tm.getStatus()).andReturn(STATUS_NO_TRANSACTION);
+        expect(ut.getStatus()).andReturn(STATUS_NO_TRANSACTION);
+        expect(ut.getStatus()).andReturn(STATUS_NO_TRANSACTION);
     }
 
     /**
@@ -619,7 +623,7 @@ public class JTATransactionManagerAdapterTest extends
      * @throws Throwable
      */
     public void recordNotSupported_withTx_returnCommit() throws Throwable {
-        expect(tm.getStatus()).andReturn(STATUS_ACTIVE);
+        expect(ut.getStatus()).andReturn(STATUS_ACTIVE);
         expect(tm.suspend()).andReturn(tx);
         tm.resume(tx);
     }
@@ -635,9 +639,9 @@ public class JTATransactionManagerAdapterTest extends
      * @throws Throwable
      */
     public void recordNotSupported_withTx_returnRollback() throws Throwable {
-        expect(tm.getStatus()).andReturn(STATUS_ACTIVE);
+        expect(ut.getStatus()).andReturn(STATUS_ACTIVE);
         expect(tm.suspend()).andReturn(tx);
-        expect(tm.getStatus()).andReturn(STATUS_NO_TRANSACTION);
+        expect(ut.getStatus()).andReturn(STATUS_NO_TRANSACTION);
         tm.resume(tx);
     }
 
@@ -657,7 +661,7 @@ public class JTATransactionManagerAdapterTest extends
      * @throws Throwable
      */
     public void recordNotSupported_withTx_exceptionCommit() throws Throwable {
-        expect(tm.getStatus()).andReturn(STATUS_ACTIVE);
+        expect(ut.getStatus()).andReturn(STATUS_ACTIVE);
         expect(tm.suspend()).andReturn(tx);
         tm.resume(tx);
     }
@@ -678,9 +682,9 @@ public class JTATransactionManagerAdapterTest extends
      * @throws Throwable
      */
     public void recordNotSupported_withTx_exceptionRollback() throws Throwable {
-        expect(tm.getStatus()).andReturn(STATUS_ACTIVE);
+        expect(ut.getStatus()).andReturn(STATUS_ACTIVE);
         expect(tm.suspend()).andReturn(tx);
-        expect(tm.getStatus()).andReturn(STATUS_NO_TRANSACTION);
+        expect(ut.getStatus()).andReturn(STATUS_NO_TRANSACTION);
         tm.resume(tx);
     }
 
@@ -695,7 +699,7 @@ public class JTATransactionManagerAdapterTest extends
      * @throws Throwable
      */
     public void recordNever_withoutTx_returnCommit() throws Throwable {
-        expect(tm.getStatus()).andReturn(STATUS_NO_TRANSACTION);
+        expect(ut.getStatus()).andReturn(STATUS_NO_TRANSACTION);
     }
 
     /**
@@ -709,8 +713,8 @@ public class JTATransactionManagerAdapterTest extends
      * @throws Throwable
      */
     public void recordNever_withoutTx_returnRollback() throws Throwable {
-        expect(tm.getStatus()).andReturn(STATUS_NO_TRANSACTION);
-        expect(tm.getStatus()).andReturn(STATUS_NO_TRANSACTION);
+        expect(ut.getStatus()).andReturn(STATUS_NO_TRANSACTION);
+        expect(ut.getStatus()).andReturn(STATUS_NO_TRANSACTION);
     }
 
     /**
@@ -728,7 +732,7 @@ public class JTATransactionManagerAdapterTest extends
      * @throws Throwable
      */
     public void recordNever_withoutTx_exceptionCommit() throws Throwable {
-        expect(tm.getStatus()).andReturn(STATUS_NO_TRANSACTION);
+        expect(ut.getStatus()).andReturn(STATUS_NO_TRANSACTION);
     }
 
     /**
@@ -746,8 +750,8 @@ public class JTATransactionManagerAdapterTest extends
      * @throws Throwable
      */
     public void recordNever_withoutTx_exceptionRollback() throws Throwable {
-        expect(tm.getStatus()).andReturn(STATUS_NO_TRANSACTION);
-        expect(tm.getStatus()).andReturn(STATUS_NO_TRANSACTION);
+        expect(ut.getStatus()).andReturn(STATUS_NO_TRANSACTION);
+        expect(ut.getStatus()).andReturn(STATUS_NO_TRANSACTION);
     }
 
     /**
@@ -765,7 +769,7 @@ public class JTATransactionManagerAdapterTest extends
      * @throws Throwable
      */
     public void recordNever_withTx_returnCommit() throws Throwable {
-        expect(tm.getStatus()).andReturn(STATUS_ACTIVE);
+        expect(ut.getStatus()).andReturn(STATUS_ACTIVE);
     }
 
     /**
@@ -783,7 +787,7 @@ public class JTATransactionManagerAdapterTest extends
      * @throws Throwable
      */
     public void recordNever_withTx_returnRollback() throws Throwable {
-        expect(tm.getStatus()).andReturn(STATUS_ACTIVE);
+        expect(ut.getStatus()).andReturn(STATUS_ACTIVE);
     }
 
     /**
@@ -801,7 +805,7 @@ public class JTATransactionManagerAdapterTest extends
      * @throws Throwable
      */
     public void recordNever_withTx_exceptionCommit() throws Throwable {
-        expect(tm.getStatus()).andReturn(STATUS_ACTIVE);
+        expect(ut.getStatus()).andReturn(STATUS_ACTIVE);
     }
 
     /**
@@ -819,7 +823,7 @@ public class JTATransactionManagerAdapterTest extends
      * @throws Throwable
      */
     public void recordNever_withTx_exceptionRollback() throws Throwable {
-        expect(tm.getStatus()).andReturn(STATUS_ACTIVE);
+        expect(ut.getStatus()).andReturn(STATUS_ACTIVE);
     }
 
 }

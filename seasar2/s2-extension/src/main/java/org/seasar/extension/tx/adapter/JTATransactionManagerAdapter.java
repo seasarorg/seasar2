@@ -19,6 +19,7 @@ import javax.transaction.Status;
 import javax.transaction.SystemException;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
+import javax.transaction.UserTransaction;
 
 import org.seasar.extension.tx.TransactionCallback;
 import org.seasar.extension.tx.TransactionManagerAdapter;
@@ -38,17 +39,23 @@ public class JTATransactionManagerAdapter implements TransactionManagerAdapter,
     private static final Logger logger = Logger
             .getLogger(JTATransactionManagerAdapter.class);
 
+    /** ユーザトランザクション */
+    protected final UserTransaction userTransaction;
+
     /** トランザクションマネージャ */
     protected final TransactionManager transactionManager;
 
     /**
      * インスタンスを構築します。
      * 
+     * @param userTransaction
+     *            ユーザトランザクション
      * @param transactionManager
      *            トランザクションマネージャ
      */
-    public JTATransactionManagerAdapter(
+    public JTATransactionManagerAdapter(final UserTransaction userTransaction,
             final TransactionManager transactionManager) {
+        this.userTransaction = userTransaction;
         this.transactionManager = transactionManager;
     }
 
@@ -110,7 +117,7 @@ public class JTATransactionManagerAdapter implements TransactionManagerAdapter,
     public void setRollbackOnly() {
         try {
             if (hasTransaction()) {
-                transactionManager.setRollbackOnly();
+                userTransaction.setRollbackOnly();
             }
         } catch (final Exception e) {
             logger.log("ESSR0017", new Object[] { e.getMessage() }, e);
@@ -126,7 +133,7 @@ public class JTATransactionManagerAdapter implements TransactionManagerAdapter,
      * @see javax.transaction.UserTransaction#getStatus()
      */
     protected boolean hasTransaction() throws SystemException {
-        final int status = transactionManager.getStatus();
+        final int status = userTransaction.getStatus();
         return status != STATUS_NO_TRANSACTION && status != STATUS_UNKNOWN;
     }
 
@@ -145,7 +152,7 @@ public class JTATransactionManagerAdapter implements TransactionManagerAdapter,
         if (hasTransaction()) {
             return false;
         }
-        transactionManager.begin();
+        userTransaction.begin();
         return true;
     }
 
@@ -162,10 +169,10 @@ public class JTATransactionManagerAdapter implements TransactionManagerAdapter,
      * @see javax.transaction.TransactionManager#rollback()
      */
     protected void end() throws Exception {
-        if (transactionManager.getStatus() == STATUS_ACTIVE) {
-            transactionManager.commit();
+        if (userTransaction.getStatus() == STATUS_ACTIVE) {
+            userTransaction.commit();
         } else {
-            transactionManager.rollback();
+            userTransaction.rollback();
         }
     }
 
