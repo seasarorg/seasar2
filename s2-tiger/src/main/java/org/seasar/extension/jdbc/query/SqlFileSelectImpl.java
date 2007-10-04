@@ -15,11 +15,21 @@
  */
 package org.seasar.extension.jdbc.query;
 
+import java.util.Arrays;
+import java.util.Collection;
+
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.SqlFileSelect;
+import org.seasar.extension.jdbc.types.ValueTypes;
 import org.seasar.extension.sql.Node;
+import org.seasar.extension.sql.SqlContext;
 import org.seasar.extension.sql.cache.NodeCache;
+import org.seasar.extension.sql.context.SqlContextImpl;
+import org.seasar.framework.beans.BeanDesc;
+import org.seasar.framework.beans.PropertyDesc;
+import org.seasar.framework.beans.factory.BeanDescFactory;
 import org.seasar.framework.exception.ResourceNotFoundRuntimeException;
+import org.seasar.framework.util.IntegerConversionUtil;
 
 /**
  * {@link SqlFileSelect}の実装クラスです。
@@ -46,6 +56,11 @@ public class SqlFileSelectImpl<T> extends AbstractSqlSelect<T> implements
      * SQLの解析ノードです。
      */
     protected Node node;
+
+    /**
+     * SQLコンテキストです。
+     */
+    protected SqlContext sqlContext;
 
     /**
      * {@link SqlFileSelectImpl}を作成します。
@@ -119,11 +134,21 @@ public class SqlFileSelectImpl<T> extends AbstractSqlSelect<T> implements
         return this;
     }
 
+    /**
+     * SQLファイルのパスを返します。
+     * 
+     * @return SQLファイルのパス
+     */
+    public String getPath() {
+        return path;
+    }
+
     @Override
     protected void prepare(String methodName) {
         prepareCallerClassAndMethodName(methodName);
         prepareNode();
-        // executedSql = convertLimitSql(sql);
+        prepareParameter();
+        prepareSql();
     }
 
     /**
@@ -140,5 +165,47 @@ public class SqlFileSelectImpl<T> extends AbstractSqlSelect<T> implements
                     callerMethodName });
             throw new ResourceNotFoundRuntimeException(path);
         }
+    }
+
+    /**
+     * パラメータを準備します。
+     */
+    @SuppressWarnings("unchecked")
+    protected void prepareParameter() {
+        sqlContext = new SqlContextImpl();
+        if (parameter != null) {
+            Class<?> clazz = parameter.getClass();
+            if (ValueTypes.isSimpleType(clazz)) {
+                sqlContext.addArg("$1", parameter, clazz);
+            } else {
+                BeanDesc beanDesc = BeanDescFactory.getBeanDesc(clazz);
+                for (int i = 0; i < beanDesc.getPropertyDescSize(); i++) {
+                    PropertyDesc pd = beanDesc.getPropertyDesc(i);
+                    if (!pd.isReadable()) {
+                        continue;
+                    }
+                    Object value = pd.getValue(parameter);
+                    if (pd.getPropertyName().equals("limit")) {
+                        limit = IntegerConversionUtil.toPrimitiveInt(value);
+                    } else if (pd.getPropertyName().equals("offset")) {
+                        offset = IntegerConversionUtil.toPrimitiveInt(value);
+                    } else {
+                        sqlContext.addArg(pd.getPropertyName(), value, pd
+                                .getPropertyType());
+                    }
+                }
+            }
+        }
+        node.accept(sqlContext);
+        bindVariableList.addAll(Arrays.asList(sqlContext.getBindVariables()));
+        bindVariableClassList.addAll((Collection<? extends Class<?>>) Arrays
+                .asList(sqlContext.getBindVariableTypes()));
+    }
+
+    /**
+     * SQLを準備します。
+     */
+    protected void prepareSql() {
+        executedSql = convertLimitSql(sqlContext.getSql());
     }
 }

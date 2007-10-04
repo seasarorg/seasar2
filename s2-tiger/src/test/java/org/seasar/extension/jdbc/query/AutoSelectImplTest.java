@@ -1361,6 +1361,16 @@ public class AutoSelectImplTest extends TestCase {
         assertEquals(0, variableClasses.length);
     }
 
+    /**
+     * 
+     */
+    public void testPrepareSql() {
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        query.prepare("getResultList");
+        query.prepareSql();
+        assertNotNull(query.executedSql);
+    }
+
     @Entity
     private static class BadAaa {
 

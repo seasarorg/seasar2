@@ -121,7 +121,7 @@ public class SqlSelectImpl<T> extends AbstractSqlSelect<T> implements
     protected void prepare(String methodName) {
         prepareCallerClassAndMethodName(methodName);
         prepareParameters();
-        executedSql = convertLimitSql(sql);
+        prepareSql();
     }
 
     /**
@@ -142,6 +142,13 @@ public class SqlSelectImpl<T> extends AbstractSqlSelect<T> implements
             }
             bindVariableClassList.add(var.getClass());
         }
+    }
+
+    /**
+     * SQLを準備します。
+     */
+    protected void prepareSql() {
+        executedSql = convertLimitSql(sql);
     }
 
     /**

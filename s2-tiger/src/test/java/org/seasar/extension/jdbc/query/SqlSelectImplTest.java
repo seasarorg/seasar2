@@ -621,4 +621,15 @@ public class SqlSelectImplTest extends TestCase {
                 "select foo2, aaa_bbb from hoge where aaa = '111' and bbb = '222' limit 10 offset 5",
                 sqlLog.getCompleteSql());
     }
+
+    /**
+     * 
+     */
+    public void testPrepareSql() {
+        SqlSelectImpl<Aaa> query = new SqlSelectImpl<Aaa>(manager, Aaa.class,
+                "select * from aaa");
+        query.prepare("getResultList");
+        query.prepareSql();
+        assertNotNull(query.executedSql);
+    }
 }

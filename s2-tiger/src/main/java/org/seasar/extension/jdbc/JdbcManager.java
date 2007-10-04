@@ -49,9 +49,48 @@ public interface JdbcManager {
      * @param parameters
      *            パラメータの配列
      * @return SQL検索
+     * @see SqlSelect
      */
     <T> SqlSelect<T> selectBySql(Class<T> baseClass, String sql,
             Object... parameters);
+
+    /**
+     * SQLファイル検索を作成します。
+     * 
+     * @param <T>
+     *            戻り値のベースの型です。
+     * @param baseClass
+     *            ベースクラス
+     * @param path
+     *            SQLファイルのパス
+     * @return SQLファイル検索
+     * @see #selectBySqlFile(Class, String, Object)
+     */
+    <T> SqlFileSelect<T> selectBySqlFile(Class<T> baseClass, String path);
+
+    /**
+     * SQLファイル検索を作成します。
+     * 
+     * @param <T>
+     *            戻り値のベースの型です。
+     * @param baseClass
+     *            ベースクラス
+     * @param path
+     *            SQLファイルのパス
+     * @param parameter
+     *            <p>
+     *            パラメータ。
+     *            </p>
+     *            <p>
+     *            パラメータが1つしかない場合は、値を直接指定します。 パラメータが複数ある場合は、JavaBeansを作って、
+     *            プロパティ名をSQLファイルのバインド変数名とあわせます。
+     *            JavaBeansはpublicフィールドで定義することもできます。
+     *            </p>
+     * @return SQLファイル検索
+     * @see SqlFileSelect
+     */
+    <T> SqlFileSelect<T> selectBySqlFile(Class<T> baseClass, String path,
+            Object parameter);
 
     /**
      * 自動検索を作成します。

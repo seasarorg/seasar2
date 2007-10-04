@@ -15,10 +15,16 @@
  */
 package org.seasar.extension.jdbc.query;
 
+import java.sql.ResultSet;
+import java.util.List;
+
 import junit.framework.TestCase;
 
+import org.seasar.extension.jdbc.JdbcContext;
+import org.seasar.extension.jdbc.SqlLog;
 import org.seasar.extension.jdbc.SqlLogRegistry;
 import org.seasar.extension.jdbc.SqlLogRegistryLocator;
+import org.seasar.extension.jdbc.dialect.PostgreDialect;
 import org.seasar.extension.jdbc.dialect.StandardDialect;
 import org.seasar.extension.jdbc.entity.Aaa;
 import org.seasar.extension.jdbc.manager.JdbcManagerImpl;
@@ -26,13 +32,20 @@ import org.seasar.extension.jta.TransactionManagerImpl;
 import org.seasar.extension.jta.TransactionSynchronizationRegistryImpl;
 import org.seasar.extension.sql.cache.NodeCache;
 import org.seasar.framework.exception.ResourceNotFoundRuntimeException;
+import org.seasar.framework.mock.sql.MockColumnMetaData;
 import org.seasar.framework.mock.sql.MockDataSource;
+import org.seasar.framework.mock.sql.MockResultSet;
+import org.seasar.framework.mock.sql.MockResultSetMetaData;
+import org.seasar.framework.util.ArrayMap;
 
 /**
  * @author higa
  * 
  */
 public class SqlFileSelectImplTest extends TestCase {
+
+    private static final String PATH = SqlFileSelectImplTest.class.getName()
+            + "_select";
 
     private JdbcManagerImpl manager;
 
@@ -129,7 +142,7 @@ public class SqlFileSelectImplTest extends TestCase {
      */
     public void testPrepareNode() {
         SqlFileSelectImpl<Aaa> query = new SqlFileSelectImpl<Aaa>(manager,
-                Aaa.class, getClass().getName() + "_select");
+                Aaa.class, PATH);
         query.prepareCallerClassAndMethodName("getResultList");
         query.prepareNode();
         assertNotNull(query.node);
@@ -149,5 +162,170 @@ public class SqlFileSelectImplTest extends TestCase {
             System.out.println(e);
             assertEquals("xxx", e.getPath());
         }
+    }
+
+    /**
+     * 
+     */
+    public void testPrepareParameter_simpleType() {
+        SqlFileSelectImpl<Aaa> query = new SqlFileSelectImpl<Aaa>(manager,
+                Aaa.class, PATH, 1);
+        query.prepareCallerClassAndMethodName("getResultList");
+        query.prepareNode();
+        query.prepareParameter();
+        assertEquals("select * from aaa where id = ?", query.sqlContext
+                .getSql());
+        assertEquals(1, query.bindVariableList.size());
+        assertEquals(1, query.bindVariableList.get(0));
+        assertEquals(1, query.bindVariableClassList.size());
+        assertEquals(Integer.class, query.bindVariableClassList.get(0));
+    }
+
+    /**
+     * 
+     */
+    public void testPrepareParameter_dto() {
+        MyDto dto = new MyDto();
+        dto.id = 1;
+        dto.offset = 5;
+        dto.limit = 10;
+        SqlFileSelectImpl<Aaa> query = new SqlFileSelectImpl<Aaa>(manager,
+                Aaa.class, PATH, dto);
+        query.prepareCallerClassAndMethodName("getResultList");
+        query.prepareNode();
+        query.prepareParameter();
+        assertEquals("select * from aaa where id = ?", query.sqlContext
+                .getSql());
+        assertEquals(1, query.bindVariableList.size());
+        assertEquals(1, query.bindVariableList.get(0));
+        assertEquals(1, query.bindVariableClassList.size());
+        assertEquals(Integer.class, query.bindVariableClassList.get(0));
+        assertEquals(10, query.limit);
+        assertEquals(5, query.offset);
+    }
+
+    /**
+     * 
+     */
+    public void testPrepareSql_dto() {
+        MyDto dto = new MyDto();
+        dto.id = 1;
+        dto.offset = 5;
+        dto.limit = 10;
+        manager.setDialect(new PostgreDialect());
+        SqlFileSelectImpl<Aaa> query = new SqlFileSelectImpl<Aaa>(manager,
+                Aaa.class, PATH, dto);
+        query.prepareCallerClassAndMethodName("getResultList");
+        query.prepareNode();
+        query.prepareParameter();
+        query.prepareSql();
+        assertEquals("select * from aaa where id = ? limit 10 offset 5",
+                query.executedSql);
+    }
+
+    /**
+     * 
+     */
+    public void testGetResultList() {
+        MyDto dto = new MyDto();
+        dto.id = 1;
+        dto.offset = 5;
+        dto.limit = 10;
+        manager.setDialect(new PostgreDialect());
+        SqlFileSelectImpl<Aaa> query = new SqlFileSelectImpl<Aaa>(manager,
+                Aaa.class, PATH, dto) {
+
+            @Override
+            protected ResultSet createResultSet(JdbcContext jdbcContext) {
+                MockResultSetMetaData rsMeta = new MockResultSetMetaData();
+                MockColumnMetaData columnMeta = new MockColumnMetaData();
+                columnMeta.setColumnLabel("ID");
+                rsMeta.addColumnMetaData(columnMeta);
+                columnMeta = new MockColumnMetaData();
+                columnMeta.setColumnLabel("NAME");
+                rsMeta.addColumnMetaData(columnMeta);
+                columnMeta = new MockColumnMetaData();
+                columnMeta.setColumnLabel("BBB_ID");
+                rsMeta.addColumnMetaData(columnMeta);
+                MockResultSet rs = new MockResultSet(rsMeta);
+                ArrayMap data = new ArrayMap();
+                data.put("ID", 1);
+                data.put("NAME", "AAA");
+                data.put("BBB_ID", 2);
+                rs.addRowData(data);
+                return rs;
+            }
+
+        };
+        List<Aaa> ret = query.getResultList();
+        assertEquals(1, ret.size());
+        Aaa aaa = ret.get(0);
+        assertEquals(new Integer(1), aaa.id);
+        assertEquals("AAA", aaa.name);
+        assertEquals(new Integer(2), aaa.bbbId);
+        SqlLog sqlLog = SqlLogRegistryLocator.getInstance().getLast();
+        assertEquals("select * from aaa where id = 1 limit 10 offset 5", sqlLog
+                .getCompleteSql());
+    }
+
+    /**
+     * 
+     */
+    public void testGetSingleResult() {
+        MyDto dto = new MyDto();
+        dto.id = 1;
+        dto.offset = 5;
+        dto.limit = 10;
+        manager.setDialect(new PostgreDialect());
+        SqlFileSelectImpl<Aaa> query = new SqlFileSelectImpl<Aaa>(manager,
+                Aaa.class, PATH, dto) {
+
+            @Override
+            protected ResultSet createResultSet(JdbcContext jdbcContext) {
+                MockResultSetMetaData rsMeta = new MockResultSetMetaData();
+                MockColumnMetaData columnMeta = new MockColumnMetaData();
+                columnMeta.setColumnLabel("ID");
+                rsMeta.addColumnMetaData(columnMeta);
+                columnMeta = new MockColumnMetaData();
+                columnMeta.setColumnLabel("NAME");
+                rsMeta.addColumnMetaData(columnMeta);
+                columnMeta = new MockColumnMetaData();
+                columnMeta.setColumnLabel("BBB_ID");
+                rsMeta.addColumnMetaData(columnMeta);
+                MockResultSet rs = new MockResultSet(rsMeta);
+                ArrayMap data = new ArrayMap();
+                data.put("ID", 1);
+                data.put("NAME", "AAA");
+                data.put("BBB_ID", 2);
+                rs.addRowData(data);
+                return rs;
+            }
+
+        };
+        Aaa aaa = query.getSingleResult();
+        assertEquals(new Integer(1), aaa.id);
+        assertEquals("AAA", aaa.name);
+        assertEquals(new Integer(2), aaa.bbbId);
+        SqlLog sqlLog = SqlLogRegistryLocator.getInstance().getLast();
+        assertEquals("select * from aaa where id = 1 limit 10 offset 5", sqlLog
+                .getCompleteSql());
+    }
+
+    private static class MyDto {
+
+        /**
+         * 
+         */
+        public Integer id;
+
+        /**
+         * 
+         */
+        public int limit;
+
+        /**
+         * 
+         */
+        public int offset;
     }
 }

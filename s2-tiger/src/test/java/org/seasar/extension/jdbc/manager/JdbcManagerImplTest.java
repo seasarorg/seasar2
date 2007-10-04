@@ -7,6 +7,7 @@ import junit.framework.TestCase;
 import org.seasar.extension.jdbc.JdbcContext;
 import org.seasar.extension.jdbc.entity.Aaa;
 import org.seasar.extension.jdbc.query.AutoSelectImpl;
+import org.seasar.extension.jdbc.query.SqlFileSelectImpl;
 import org.seasar.extension.jdbc.query.SqlSelectImpl;
 import org.seasar.extension.jta.TransactionImpl;
 import org.seasar.extension.jta.TransactionManagerImpl;
@@ -66,6 +67,20 @@ public class JdbcManagerImplTest extends TestCase {
         Object[] vars = query.getBindVariables();
         assertEquals(1, vars.length);
         assertEquals(1, vars[0]);
+    }
+
+    /**
+     * @throws Exception
+     * 
+     */
+    public void testSelectBySqlFile() throws Exception {
+        String path = "select.sql";
+        SqlFileSelectImpl<Aaa> query = (SqlFileSelectImpl<Aaa>) manager
+                .selectBySqlFile(Aaa.class, path);
+        assertNotNull(query);
+        assertSame(manager, query.getJdbcManager());
+        assertEquals(Aaa.class, query.getBaseClass());
+        assertEquals(path, query.getPath());
     }
 
     /**

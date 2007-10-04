@@ -214,7 +214,7 @@ public class AutoSelectImpl<T> extends AbstractSelect<T> implements
         prepareTarget();
         prepareJoins();
         prepareConditions();
-        executedSql = convertLimitSql(toSql());
+        prepareSql();
     }
 
     /**
@@ -861,6 +861,13 @@ public class AutoSelectImpl<T> extends AbstractSelect<T> implements
             bindVariableList.add(Array.get(bindVariables, i));
             bindVariableClassList.add(bindVariableClass);
         }
+    }
+
+    /**
+     * SQLを準備します。
+     */
+    protected void prepareSql() {
+        executedSql = convertLimitSql(toSql());
     }
 
     @Override

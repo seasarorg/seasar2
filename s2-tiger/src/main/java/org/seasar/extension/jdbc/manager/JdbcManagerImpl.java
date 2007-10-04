@@ -27,8 +27,10 @@ import org.seasar.extension.jdbc.DbmsDialect;
 import org.seasar.extension.jdbc.EntityMetaFactory;
 import org.seasar.extension.jdbc.JdbcContext;
 import org.seasar.extension.jdbc.JdbcManager;
+import org.seasar.extension.jdbc.SqlFileSelect;
 import org.seasar.extension.jdbc.SqlSelect;
 import org.seasar.extension.jdbc.query.AutoSelectImpl;
+import org.seasar.extension.jdbc.query.SqlFileSelectImpl;
 import org.seasar.extension.jdbc.query.SqlSelectImpl;
 import org.seasar.extension.jdbc.util.DataSourceUtil;
 
@@ -91,6 +93,17 @@ public class JdbcManagerImpl implements JdbcManager, Synchronization {
             Object... parameters) {
         return new SqlSelectImpl<T>(this, baseClass, sql, parameters).maxRows(
                 maxRows).fetchSize(fetchSize).queryTimeout(queryTimeout);
+    }
+
+    public <T> SqlFileSelect<T> selectBySqlFile(Class<T> baseClass, String path) {
+        return selectBySqlFile(baseClass, path, null);
+    }
+
+    public <T> SqlFileSelect<T> selectBySqlFile(Class<T> baseClass,
+            String path, Object parameter) {
+        return new SqlFileSelectImpl<T>(this, baseClass, path, parameter)
+                .maxRows(maxRows).fetchSize(fetchSize).queryTimeout(
+                        queryTimeout);
     }
 
     public <T> AutoSelect<T> from(Class<T> baseClass) {
