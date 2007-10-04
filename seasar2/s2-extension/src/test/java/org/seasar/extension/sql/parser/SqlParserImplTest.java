@@ -592,4 +592,18 @@ public class SqlParserImplTest extends TestCase {
             System.out.println(e);
         }
     }
+
+    /**
+     * @throws Exception
+     */
+    public void testEmbeddedValue_orderBy() throws Exception {
+        String sql = "/*orderBy*/";
+        SqlParser parser = new SqlParserImpl(sql);
+        Node root = parser.parse();
+        SqlContext ctx = new SqlContextImpl();
+        ctx.addArg("orderBy", "id desc", String.class);
+        root.accept(ctx);
+        System.out.println(ctx.getSql());
+        assertEquals("id desc", ctx.getSql());
+    }
 }

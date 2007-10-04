@@ -202,6 +202,8 @@ public class SqlParserImpl implements SqlParser {
             peek().addChild(new ParenBindVariableNode(expr));
         } else if (expr.startsWith("$")) {
             peek().addChild(new EmbeddedValueNode(expr.substring(1)));
+        } else if (expr.equals("orderBy")) {
+            peek().addChild(new EmbeddedValueNode(expr));
         } else {
             peek().addChild(new BindVariableNode(expr));
         }
