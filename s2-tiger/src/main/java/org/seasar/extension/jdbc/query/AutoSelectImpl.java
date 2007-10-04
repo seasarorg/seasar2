@@ -283,7 +283,7 @@ public class AutoSelectImpl<T> extends AbstractSelect<T> implements
      * @return テーブル別名
      */
     protected String createTableAlias() {
-        return "_T" + ++tableIndex;
+        return "T" + ++tableIndex + "_";
     }
 
     /**

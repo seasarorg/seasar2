@@ -28,6 +28,7 @@ import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.ResultSetHandler;
 import org.seasar.extension.jdbc.SqlLogRegistry;
 import org.seasar.extension.jdbc.SqlLogRegistryLocator;
+import org.seasar.extension.jdbc.dialect.DB2Dialect;
 import org.seasar.extension.jdbc.dialect.MySQLDialect;
 import org.seasar.extension.jdbc.dialect.PostgreDialect;
 import org.seasar.extension.jdbc.dialect.StandardDialect;
@@ -388,6 +389,16 @@ public class AbstractSelectTest extends TestCase {
         MySelect<Aaa> query = new MySelect<Aaa>(manager, Aaa.class);
         query.limit = 10;
         assertEquals("select * from aaa limit 10", query
+                .convertLimitSql("select * from aaa"));
+    }
+
+    /**
+     * 
+     */
+    public void testConvertLimitSql_limitOffsetZero_db2() {
+        manager.setDialect(new DB2Dialect());
+        MySelect<Aaa> query = new MySelect<Aaa>(manager, Aaa.class);
+        assertEquals("select * from aaa", query
                 .convertLimitSql("select * from aaa"));
     }
 

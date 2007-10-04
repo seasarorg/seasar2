@@ -229,8 +229,8 @@ public class AutoSelectImplTest extends TestCase {
      */
     public void testCreateTableAlias() {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
-        assertEquals("_T1", query.createTableAlias());
-        assertEquals("_T2", query.createTableAlias());
+        assertEquals("T1_", query.createTableAlias());
+        assertEquals("T2_", query.createTableAlias());
     }
 
     /**
@@ -239,7 +239,7 @@ public class AutoSelectImplTest extends TestCase {
     public void testPrepareTableAlias() {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
         String tableAlias = query.prepareTableAlias(null);
-        assertEquals("_T1", tableAlias);
+        assertEquals("T1_", tableAlias);
         assertSame(tableAlias, query.getTableAlias(null));
     }
 
@@ -281,7 +281,7 @@ public class AutoSelectImplTest extends TestCase {
         String tableAlias = query.prepareTableAlias(null);
         query.prepareEntity(entityMeta, tableAlias, propertyMapperList,
                 idIndexList);
-        assertEquals("select _T1.ID, _T1.NAME, _T1.BBB_ID", query.selectClause
+        assertEquals("select T1_.ID, T1_.NAME, T1_.BBB_ID", query.selectClause
                 .toSql());
     }
 
@@ -387,7 +387,7 @@ public class AutoSelectImplTest extends TestCase {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
         query.prepareCallerClassAndMethodName("getResultList");
         query.prepareTarget();
-        assertEquals(" from AAA _T1", query.fromClause.toSql());
+        assertEquals(" from AAA T1_", query.fromClause.toSql());
     }
 
     /**
@@ -399,7 +399,7 @@ public class AutoSelectImplTest extends TestCase {
         query.prepareCallerClassAndMethodName("getResultList");
         query.prepareTarget();
         query.prepareJoin(new JoinMeta("bbb"));
-        assertEquals("_T2", query.getTableAlias("bbb"));
+        assertEquals("T2_", query.getTableAlias("bbb"));
     }
 
     /**
@@ -727,7 +727,7 @@ public class AutoSelectImplTest extends TestCase {
         query.prepareCallerClassAndMethodName("getResultList");
         query.prepareTarget();
         query.prepareJoin(new JoinMeta("bbb"));
-        String expected = "select _T1.ID, _T1.NAME, _T1.BBB_ID, _T2.ID, _T2.NAME, _T2.CCC_ID from AAA _T1 left outer join BBB _T2 on _T1.BBB_ID = _T2.ID";
+        String expected = "select T1_.ID, T1_.NAME, T1_.BBB_ID, T2_.ID, T2_.NAME, T2_.CCC_ID from AAA T1_ left outer join BBB T2_ on T1_.BBB_ID = T2_.ID";
         assertEquals(expected, query.toSql());
     }
 
@@ -740,7 +740,7 @@ public class AutoSelectImplTest extends TestCase {
         query.prepareCallerClassAndMethodName("getResultList");
         query.prepareTarget();
         query.prepareJoin(new JoinMeta("aaa"));
-        String expected = "select _T1.ID, _T1.NAME, _T1.CCC_ID, _T2.ID, _T2.NAME, _T2.BBB_ID from BBB _T1 left outer join AAA _T2 on _T2.BBB_ID = _T1.ID";
+        String expected = "select T1_.ID, T1_.NAME, T1_.CCC_ID, T2_.ID, T2_.NAME, T2_.BBB_ID from BBB T1_ left outer join AAA T2_ on T2_.BBB_ID = T1_.ID";
         assertEquals(expected, query.toSql());
     }
 
@@ -754,7 +754,7 @@ public class AutoSelectImplTest extends TestCase {
         query.prepareTarget();
         query.prepareJoin(new JoinMeta("bbb"));
         query.prepareJoin(new JoinMeta("bbb.ccc"));
-        String expected = "select _T1.ID, _T1.NAME, _T1.BBB_ID, _T2.ID, _T2.NAME, _T2.CCC_ID, _T3.ID, _T3.NAME from AAA _T1 left outer join BBB _T2 on _T1.BBB_ID = _T2.ID left outer join CCC _T3 on _T2.CCC_ID = _T3.ID";
+        String expected = "select T1_.ID, T1_.NAME, T1_.BBB_ID, T2_.ID, T2_.NAME, T2_.CCC_ID, T3_.ID, T3_.NAME from AAA T1_ left outer join BBB T2_ on T1_.BBB_ID = T2_.ID left outer join CCC T3_ on T2_.CCC_ID = T3_.ID";
         assertEquals(expected, query.toSql());
     }
 
@@ -843,8 +843,8 @@ public class AutoSelectImplTest extends TestCase {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
         query.prepare("getResultList");
         int[] vars = new int[] { 1, 2 };
-        query.addInCondition("_T1.AAA_ID in (?, ?)", vars, int.class, 2);
-        assertEquals(" where _T1.AAA_ID in (?, ?)", query.whereClause.toSql());
+        query.addInCondition("T1_.AAA_ID in (?, ?)", vars, int.class, 2);
+        assertEquals(" where T1_.AAA_ID in (?, ?)", query.whereClause.toSql());
         Object[] variables = query.getBindVariables();
         assertEquals(2, variables.length);
         assertEquals(1, variables[0]);
@@ -862,7 +862,7 @@ public class AutoSelectImplTest extends TestCase {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
         query.prepare("getResultList");
         query.prepareCondition("id", 1);
-        assertEquals(" where _T1.ID = ?", query.whereClause.toSql());
+        assertEquals(" where T1_.ID = ?", query.whereClause.toSql());
         Object[] variables = query.getBindVariables();
         assertEquals(1, variables.length);
         assertEquals(1, variables[0]);
@@ -878,7 +878,7 @@ public class AutoSelectImplTest extends TestCase {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
         query.prepare("getResultList");
         query.prepareCondition("id_EQ", 1);
-        assertEquals(" where _T1.ID = ?", query.whereClause.toSql());
+        assertEquals(" where T1_.ID = ?", query.whereClause.toSql());
         Object[] variables = query.getBindVariables();
         assertEquals(1, variables.length);
         assertEquals(1, variables[0]);
@@ -895,7 +895,7 @@ public class AutoSelectImplTest extends TestCase {
         query.join("bbb");
         query.prepare("getResultList");
         query.prepareCondition("bbb.id", 1);
-        assertEquals(" where _T2.ID = ?", query.whereClause.toSql());
+        assertEquals(" where T2_.ID = ?", query.whereClause.toSql());
         Object[] variables = query.getBindVariables();
         assertEquals(1, variables.length);
         assertEquals(1, variables[0]);
@@ -911,7 +911,7 @@ public class AutoSelectImplTest extends TestCase {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
         query.prepare("getResultList");
         query.prepareCondition("id_NE", 1);
-        assertEquals(" where _T1.ID <> ?", query.whereClause.toSql());
+        assertEquals(" where T1_.ID <> ?", query.whereClause.toSql());
         Object[] variables = query.getBindVariables();
         assertEquals(1, variables.length);
         assertEquals(1, variables[0]);
@@ -928,7 +928,7 @@ public class AutoSelectImplTest extends TestCase {
         query.join("bbb");
         query.prepare("getResultList");
         query.prepareCondition("bbb.id_NE", 1);
-        assertEquals(" where _T2.ID <> ?", query.whereClause.toSql());
+        assertEquals(" where T2_.ID <> ?", query.whereClause.toSql());
         Object[] variables = query.getBindVariables();
         assertEquals(1, variables.length);
         assertEquals(1, variables[0]);
@@ -944,7 +944,7 @@ public class AutoSelectImplTest extends TestCase {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
         query.prepare("getResultList");
         query.prepareCondition("id_LT", 1);
-        assertEquals(" where _T1.ID < ?", query.whereClause.toSql());
+        assertEquals(" where T1_.ID < ?", query.whereClause.toSql());
         Object[] variables = query.getBindVariables();
         assertEquals(1, variables.length);
         assertEquals(1, variables[0]);
@@ -961,7 +961,7 @@ public class AutoSelectImplTest extends TestCase {
         query.join("bbb");
         query.prepare("getResultList");
         query.prepareCondition("bbb.id_LT", 1);
-        assertEquals(" where _T2.ID < ?", query.whereClause.toSql());
+        assertEquals(" where T2_.ID < ?", query.whereClause.toSql());
         Object[] variables = query.getBindVariables();
         assertEquals(1, variables.length);
         assertEquals(1, variables[0]);
@@ -977,7 +977,7 @@ public class AutoSelectImplTest extends TestCase {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
         query.prepare("getResultList");
         query.prepareCondition("id_LE", 1);
-        assertEquals(" where _T1.ID <= ?", query.whereClause.toSql());
+        assertEquals(" where T1_.ID <= ?", query.whereClause.toSql());
         Object[] variables = query.getBindVariables();
         assertEquals(1, variables.length);
         assertEquals(1, variables[0]);
@@ -994,7 +994,7 @@ public class AutoSelectImplTest extends TestCase {
         query.join("bbb");
         query.prepare("getResultList");
         query.prepareCondition("bbb.id_LE", 1);
-        assertEquals(" where _T2.ID <= ?", query.whereClause.toSql());
+        assertEquals(" where T2_.ID <= ?", query.whereClause.toSql());
         Object[] variables = query.getBindVariables();
         assertEquals(1, variables.length);
         assertEquals(1, variables[0]);
@@ -1010,7 +1010,7 @@ public class AutoSelectImplTest extends TestCase {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
         query.prepare("getResultList");
         query.prepareCondition("id_GT", 1);
-        assertEquals(" where _T1.ID > ?", query.whereClause.toSql());
+        assertEquals(" where T1_.ID > ?", query.whereClause.toSql());
         Object[] variables = query.getBindVariables();
         assertEquals(1, variables.length);
         assertEquals(1, variables[0]);
@@ -1027,7 +1027,7 @@ public class AutoSelectImplTest extends TestCase {
         query.join("bbb");
         query.prepare("getResultList");
         query.prepareCondition("bbb.id_GT", 1);
-        assertEquals(" where _T2.ID > ?", query.whereClause.toSql());
+        assertEquals(" where T2_.ID > ?", query.whereClause.toSql());
         Object[] variables = query.getBindVariables();
         assertEquals(1, variables.length);
         assertEquals(1, variables[0]);
@@ -1043,7 +1043,7 @@ public class AutoSelectImplTest extends TestCase {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
         query.prepare("getResultList");
         query.prepareCondition("id_GE", 1);
-        assertEquals(" where _T1.ID >= ?", query.whereClause.toSql());
+        assertEquals(" where T1_.ID >= ?", query.whereClause.toSql());
         Object[] variables = query.getBindVariables();
         assertEquals(1, variables.length);
         assertEquals(1, variables[0]);
@@ -1060,7 +1060,7 @@ public class AutoSelectImplTest extends TestCase {
         query.join("bbb");
         query.prepare("getResultList");
         query.prepareCondition("bbb.id_GE", 1);
-        assertEquals(" where _T2.ID >= ?", query.whereClause.toSql());
+        assertEquals(" where T2_.ID >= ?", query.whereClause.toSql());
         Object[] variables = query.getBindVariables();
         assertEquals(1, variables.length);
         assertEquals(1, variables[0]);
@@ -1076,7 +1076,7 @@ public class AutoSelectImplTest extends TestCase {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
         query.prepare("getResultList");
         query.prepareCondition("id_IN", Arrays.asList(1, 2));
-        assertEquals(" where _T1.ID in (?, ?)", query.whereClause.toSql());
+        assertEquals(" where T1_.ID in (?, ?)", query.whereClause.toSql());
         Object[] variables = query.getBindVariables();
         assertEquals(2, variables.length);
         assertEquals(1, variables[0]);
@@ -1095,7 +1095,7 @@ public class AutoSelectImplTest extends TestCase {
         query.join("bbb");
         query.prepare("getResultList");
         query.prepareCondition("bbb.id_IN", Arrays.asList(1, 2));
-        assertEquals(" where _T2.ID in (?, ?)", query.whereClause.toSql());
+        assertEquals(" where T2_.ID in (?, ?)", query.whereClause.toSql());
         Object[] variables = query.getBindVariables();
         assertEquals(2, variables.length);
         assertEquals(1, variables[0]);
@@ -1113,7 +1113,7 @@ public class AutoSelectImplTest extends TestCase {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
         query.prepare("getResultList");
         query.prepareCondition("id_NOT_IN", Arrays.asList(1, 2));
-        assertEquals(" where _T1.ID not in (?, ?)", query.whereClause.toSql());
+        assertEquals(" where T1_.ID not in (?, ?)", query.whereClause.toSql());
         Object[] variables = query.getBindVariables();
         assertEquals(2, variables.length);
         assertEquals(1, variables[0]);
@@ -1132,7 +1132,7 @@ public class AutoSelectImplTest extends TestCase {
         query.join("bbb");
         query.prepare("getResultList");
         query.prepareCondition("bbb.id_NOT_IN", Arrays.asList(1, 2));
-        assertEquals(" where _T2.ID not in (?, ?)", query.whereClause.toSql());
+        assertEquals(" where T2_.ID not in (?, ?)", query.whereClause.toSql());
         Object[] variables = query.getBindVariables();
         assertEquals(2, variables.length);
         assertEquals(1, variables[0]);
@@ -1150,7 +1150,7 @@ public class AutoSelectImplTest extends TestCase {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
         query.prepare("getResultList");
         query.prepareCondition("name_LIKE", "aaa");
-        assertEquals(" where _T1.NAME like ?", query.whereClause.toSql());
+        assertEquals(" where T1_.NAME like ?", query.whereClause.toSql());
         Object[] variables = query.getBindVariables();
         assertEquals(1, variables.length);
         assertEquals("aaa", variables[0]);
@@ -1167,7 +1167,7 @@ public class AutoSelectImplTest extends TestCase {
         query.join("bbb");
         query.prepare("getResultList");
         query.prepareCondition("bbb.name_LIKE", "aaa");
-        assertEquals(" where _T2.NAME like ?", query.whereClause.toSql());
+        assertEquals(" where T2_.NAME like ?", query.whereClause.toSql());
         Object[] variables = query.getBindVariables();
         assertEquals(1, variables.length);
         assertEquals("aaa", variables[0]);
@@ -1183,7 +1183,7 @@ public class AutoSelectImplTest extends TestCase {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
         query.prepare("getResultList");
         query.prepareCondition("name_STARTS", "aaa");
-        assertEquals(" where _T1.NAME like ?", query.whereClause.toSql());
+        assertEquals(" where T1_.NAME like ?", query.whereClause.toSql());
         Object[] variables = query.getBindVariables();
         assertEquals(1, variables.length);
         assertEquals("aaa%", variables[0]);
@@ -1200,7 +1200,7 @@ public class AutoSelectImplTest extends TestCase {
         query.join("bbb");
         query.prepare("getResultList");
         query.prepareCondition("bbb.name_STARTS", "aaa");
-        assertEquals(" where _T2.NAME like ?", query.whereClause.toSql());
+        assertEquals(" where T2_.NAME like ?", query.whereClause.toSql());
         Object[] variables = query.getBindVariables();
         assertEquals(1, variables.length);
         assertEquals("aaa%", variables[0]);
@@ -1216,7 +1216,7 @@ public class AutoSelectImplTest extends TestCase {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
         query.prepare("getResultList");
         query.prepareCondition("name_ENDS", "aaa");
-        assertEquals(" where _T1.NAME like ?", query.whereClause.toSql());
+        assertEquals(" where T1_.NAME like ?", query.whereClause.toSql());
         Object[] variables = query.getBindVariables();
         assertEquals(1, variables.length);
         assertEquals("%aaa", variables[0]);
@@ -1233,7 +1233,7 @@ public class AutoSelectImplTest extends TestCase {
         query.join("bbb");
         query.prepare("getResultList");
         query.prepareCondition("bbb.name_ENDS", "aaa");
-        assertEquals(" where _T2.NAME like ?", query.whereClause.toSql());
+        assertEquals(" where T2_.NAME like ?", query.whereClause.toSql());
         Object[] variables = query.getBindVariables();
         assertEquals(1, variables.length);
         assertEquals("%aaa", variables[0]);
@@ -1249,7 +1249,7 @@ public class AutoSelectImplTest extends TestCase {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
         query.prepare("getResultList");
         query.prepareCondition("name_CONTAINS", "aaa");
-        assertEquals(" where _T1.NAME like ?", query.whereClause.toSql());
+        assertEquals(" where T1_.NAME like ?", query.whereClause.toSql());
         Object[] variables = query.getBindVariables();
         assertEquals(1, variables.length);
         assertEquals("%aaa%", variables[0]);
@@ -1266,7 +1266,7 @@ public class AutoSelectImplTest extends TestCase {
         query.join("bbb");
         query.prepare("getResultList");
         query.prepareCondition("bbb.name_CONTAINS", "aaa");
-        assertEquals(" where _T2.NAME like ?", query.whereClause.toSql());
+        assertEquals(" where T2_.NAME like ?", query.whereClause.toSql());
         Object[] variables = query.getBindVariables();
         assertEquals(1, variables.length);
         assertEquals("%aaa%", variables[0]);
@@ -1282,7 +1282,7 @@ public class AutoSelectImplTest extends TestCase {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
         query.prepare("getResultList");
         query.prepareCondition("name_IS_NULL", true);
-        assertEquals(" where _T1.NAME is null", query.whereClause.toSql());
+        assertEquals(" where T1_.NAME is null", query.whereClause.toSql());
         Object[] variables = query.getBindVariables();
         assertEquals(0, variables.length);
         Class<?>[] variableClasses = query.getBindVariableClasses();
@@ -1311,7 +1311,7 @@ public class AutoSelectImplTest extends TestCase {
         query.join("bbb");
         query.prepare("getResultList");
         query.prepareCondition("bbb.name_IS_NULL", true);
-        assertEquals(" where _T2.NAME is null", query.whereClause.toSql());
+        assertEquals(" where T2_.NAME is null", query.whereClause.toSql());
         Object[] variables = query.getBindVariables();
         assertEquals(0, variables.length);
         Class<?>[] variableClasses = query.getBindVariableClasses();
@@ -1325,7 +1325,7 @@ public class AutoSelectImplTest extends TestCase {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
         query.prepare("getResultList");
         query.prepareCondition("name_IS_NOT_NULL", true);
-        assertEquals(" where _T1.NAME is not null", query.whereClause.toSql());
+        assertEquals(" where T1_.NAME is not null", query.whereClause.toSql());
         Object[] variables = query.getBindVariables();
         assertEquals(0, variables.length);
         Class<?>[] variableClasses = query.getBindVariableClasses();
@@ -1354,7 +1354,7 @@ public class AutoSelectImplTest extends TestCase {
         query.join("bbb");
         query.prepare("getResultList");
         query.prepareCondition("bbb.name_IS_NOT_NULL", true);
-        assertEquals(" where _T2.NAME is not null", query.whereClause.toSql());
+        assertEquals(" where T2_.NAME is not null", query.whereClause.toSql());
         Object[] variables = query.getBindVariables();
         assertEquals(0, variables.length);
         Class<?>[] variableClasses = query.getBindVariableClasses();
