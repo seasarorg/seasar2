@@ -59,11 +59,9 @@ public class Employee {
     /** */
     public int departmentId;
 
-    // TODO
-    // 仕様確認：name要素に小文字は認めない？小文字にするとEntityMeta#hasColumnPropertyMetaがfalseを返す
     /** */
     @ManyToOne
-    @JoinColumn(name = "DEPARTMENT_ID", referencedColumnName = "DEPARTMENT_ID")
+    @JoinColumn(name = "department_id", referencedColumnName = "DEPARTMENT_ID")
     public Department department;
 
     /** */
