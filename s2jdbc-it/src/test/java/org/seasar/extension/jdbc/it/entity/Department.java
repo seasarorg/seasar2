@@ -44,7 +44,7 @@ public class Department {
 
     /** */
     @Version
-    public int Version;
+    public int version;
 
     /** */
     @OneToMany(mappedBy = "department")

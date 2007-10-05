@@ -34,7 +34,7 @@ public class Address {
 
     /** */
     @Version
-    public int Version;
+    public int version;
 
     /** */
     @OneToOne(mappedBy = "address")

@@ -74,5 +74,5 @@ public class Employee {
 
     /** */
     @Version
-    public int Version;
+    public int version;
 }
