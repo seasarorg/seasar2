@@ -16,7 +16,6 @@
 package org.seasar.extension.jdbc;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -24,6 +23,7 @@ import org.seasar.extension.jdbc.exception.ColumnDuplicatedRuntimeException;
 import org.seasar.extension.jdbc.exception.EntityColumnNotFoundRuntimeException;
 import org.seasar.extension.jdbc.exception.PropertyNotFoundRuntimeException;
 import org.seasar.framework.util.ArrayMap;
+import org.seasar.framework.util.CaseInsensitiveMap;
 
 /**
  * エンティティのメタデータです。
@@ -51,7 +51,7 @@ public class EntityMeta {
     /**
      * プロパティメタデータの配列マップです。
      */
-    protected ArrayMap propertyMetaMap = new ArrayMap();
+    protected CaseInsensitiveMap propertyMetaMap = new CaseInsensitiveMap();
 
     /**
      * 追加情報の配列マップです。
@@ -66,12 +66,12 @@ public class EntityMeta {
     /**
      * MappedByで注釈されているプロパティメタデータのマップです。
      */
-    protected Map<String, Map<String, PropertyMeta>> mappedByPropertyMetaMap = new HashMap<String, Map<String, PropertyMeta>>();
+    protected CaseInsensitiveMap mappedByPropertyMetaMap = new CaseInsensitiveMap();
 
     /**
      * カラム名をキーにしたプロパティメタデータの配列マップです。
      */
-    protected ArrayMap columnPropertyMetaMap = new ArrayMap();
+    protected CaseInsensitiveMap columnPropertyMetaMap = new CaseInsensitiveMap();
 
     /**
      * 関連が解決されたかどうかです。
@@ -270,13 +270,14 @@ public class EntityMeta {
      *            関連クラス
      * @return MappedByで注釈されているプロパティメタデータ
      */
+    @SuppressWarnings("unchecked")
     public PropertyMeta getMappedByPropertyMeta(String mappedBy,
             Class<?> relationshipClass) {
-        Map<String, PropertyMeta> m = mappedByPropertyMetaMap.get(mappedBy);
+        Map m = (Map) mappedByPropertyMetaMap.get(mappedBy);
         if (m == null) {
             return null;
         }
-        return m.get(relationshipClass.getName());
+        return (PropertyMeta) m.get(relationshipClass.getName());
     }
 
     /**
@@ -291,10 +292,10 @@ public class EntityMeta {
             idPropertyMetaList.add(propertyMeta);
         }
         if (propertyMeta.getMappedBy() != null) {
-            Map<String, PropertyMeta> m = mappedByPropertyMetaMap
+            CaseInsensitiveMap m = (CaseInsensitiveMap) mappedByPropertyMetaMap
                     .get(propertyMeta.getMappedBy());
             if (m == null) {
-                m = new HashMap<String, PropertyMeta>();
+                m = new CaseInsensitiveMap();
                 mappedByPropertyMetaMap.put(propertyMeta.getMappedBy(), m);
             }
             m.put(propertyMeta.getRelationshipClass().getName(), propertyMeta);
