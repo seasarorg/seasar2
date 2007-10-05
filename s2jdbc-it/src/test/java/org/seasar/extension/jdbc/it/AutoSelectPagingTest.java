@@ -52,8 +52,8 @@ public class AutoSelectPagingTest extends S2TestCase {
         List<Employee> list = jdbcManager.from(Employee.class).offset(3)
                 .getResultList();
         assertEquals(11, list.size());
-        assertEquals(4, list.get(0).employeeId.intValue());
-        assertEquals(14, list.get(10).employeeId.intValue());
+        assertEquals(4, list.get(0).employeeId);
+        assertEquals(14, list.get(10).employeeId);
     }
 
     /**
@@ -64,8 +64,8 @@ public class AutoSelectPagingTest extends S2TestCase {
         List<Employee> list = jdbcManager.from(Employee.class).limit(3)
                 .getResultList();
         assertEquals(3, list.size());
-        assertEquals(1, list.get(0).employeeId.intValue());
-        assertEquals(3, list.get(2).employeeId.intValue());
+        assertEquals(1, list.get(0).employeeId);
+        assertEquals(3, list.get(2).employeeId);
     }
 
     /**
@@ -86,8 +86,8 @@ public class AutoSelectPagingTest extends S2TestCase {
         List<Employee> list = jdbcManager.from(Employee.class).offset(3).limit(
                 0).getResultList();
         assertEquals(11, list.size());
-        assertEquals(4, list.get(0).employeeId.intValue());
-        assertEquals(14, list.get(10).employeeId.intValue());
+        assertEquals(4, list.get(0).employeeId);
+        assertEquals(14, list.get(10).employeeId);
     }
 
     /**
@@ -98,8 +98,8 @@ public class AutoSelectPagingTest extends S2TestCase {
         List<Employee> list = jdbcManager.from(Employee.class).offset(0).limit(
                 3).getResultList();
         assertEquals(3, list.size());
-        assertEquals(1, list.get(0).employeeId.intValue());
-        assertEquals(3, list.get(2).employeeId.intValue());
+        assertEquals(1, list.get(0).employeeId);
+        assertEquals(3, list.get(2).employeeId);
     }
 
     /**
@@ -110,7 +110,7 @@ public class AutoSelectPagingTest extends S2TestCase {
         List<Employee> list = jdbcManager.from(Employee.class).offset(3).limit(
                 5).getResultList();
         assertEquals(5, list.size());
-        assertEquals(4, list.get(0).employeeId.intValue());
-        assertEquals(8, list.get(4).employeeId.intValue());
+        assertEquals(4, list.get(0).employeeId);
+        assertEquals(8, list.get(4).employeeId);
     }
 }

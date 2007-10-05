@@ -44,18 +44,10 @@ public class OneToManyTest extends S2TestCase {
         List<Department> list = jdbcManager.from(Department.class).join(
                 "employees").getResultList();
         assertEquals(4, list.size());
-        Department department = list.get(0);
-        assertEquals(new Integer(1), department.departmentId);
-        assertEquals(3, department.employees.size());
-        department = list.get(1);
-        assertEquals(new Integer(2), department.departmentId);
-        assertEquals(5, department.employees.size());
-        department = list.get(2);
-        assertEquals(new Integer(3), department.departmentId);
-        assertEquals(6, department.employees.size());
-        department = list.get(3);
-        assertEquals(new Integer(4), department.departmentId);
-        assertEquals(0, department.employees.size());
+        assertNotNull(list.get(0).employees);
+        assertNotNull(list.get(1).employees);
+        assertNotNull(list.get(2).employees);
+        assertNotNull(list.get(3).employees);
     }
 
     /**
@@ -66,18 +58,10 @@ public class OneToManyTest extends S2TestCase {
         List<Department> list = jdbcManager.from(Department.class).join(
                 "employees", false).getResultList();
         assertEquals(4, list.size());
-        Department department = list.get(0);
-        assertEquals(new Integer(1), department.departmentId);
-        assertNull(department.employees);
-        department = list.get(1);
-        assertEquals(new Integer(2), department.departmentId);
-        assertNull(department.employees);
-        department = list.get(2);
-        assertEquals(new Integer(3), department.departmentId);
-        assertNull(department.employees);
-        department = list.get(3);
-        assertEquals(new Integer(4), department.departmentId);
-        assertNull(department.employees);
+        assertNull(list.get(0).employees);
+        assertNull(list.get(1).employees);
+        assertNull(list.get(2).employees);
+        assertNull(list.get(3).employees);
     }
 
     /**
@@ -88,15 +72,9 @@ public class OneToManyTest extends S2TestCase {
         List<Department> list = jdbcManager.from(Department.class).join(
                 "employees", JoinType.INNER).getResultList();
         assertEquals(3, list.size());
-        Department department = list.get(0);
-        assertEquals(new Integer(1), department.departmentId);
-        assertEquals(3, department.employees.size());
-        department = list.get(1);
-        assertEquals(new Integer(2), department.departmentId);
-        assertEquals(5, department.employees.size());
-        department = list.get(2);
-        assertEquals(new Integer(3), department.departmentId);
-        assertEquals(6, department.employees.size());
+        assertNotNull(list.get(0).employees);
+        assertNotNull(list.get(1).employees);
+        assertNotNull(list.get(2).employees);
     }
 
     /**
@@ -107,14 +85,8 @@ public class OneToManyTest extends S2TestCase {
         List<Department> list = jdbcManager.from(Department.class).join(
                 "employees", JoinType.INNER, false).getResultList();
         assertEquals(3, list.size());
-        Department department = list.get(0);
-        assertEquals(new Integer(1), department.departmentId);
-        assertNull(department.employees);
-        department = list.get(1);
-        assertEquals(new Integer(2), department.departmentId);
-        assertNull(department.employees);
-        department = list.get(2);
-        assertEquals(new Integer(3), department.departmentId);
-        assertNull(department.employees);
+        assertNull(list.get(0).employees);
+        assertNull(list.get(1).employees);
+        assertNull(list.get(2).employees);
     }
 }

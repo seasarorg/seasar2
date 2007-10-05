@@ -92,4 +92,18 @@ public class ManyToOneTest extends S2TestCase {
         }
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
+    public void test_fetch_innerJoin_self() throws Exception {
+        List<Employee> list = jdbcManager.from(Employee.class).join("manager",
+                JoinType.INNER).getResultList();
+        assertEquals(13, list.size());
+        for (Employee e : list) {
+            assertNotNull(e);
+            assertNotNull(e.manager);
+        }
+    }
+
 }

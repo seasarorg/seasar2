@@ -22,6 +22,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Version;
 
 /**
@@ -31,27 +32,49 @@ import javax.persistence.Version;
 @Entity
 public class Employee {
 
+    /** */
     @Id
-    public Integer employeeId;
+    public int employeeId;
 
-    public Integer employeeNo;
+    /** */
+    public int employeeNo;
 
+    /** */
     public String employeeName;
 
-    public Integer managerId;
+    /** */
+    public int managerId;
 
+    /** */
+    @ManyToOne
+    @JoinColumn(name = "MANAGER_ID", referencedColumnName = "EMPLOYEE_ID")
+    public Employee manager;
+
+    /** */
     public Date hiredate;
 
+    /** */
     public BigDecimal salary;
 
-    public Integer departmentId;
+    /** */
+    public int departmentId;
 
     // TODO
     // 仕様確認：name要素に小文字は認めない？小文字にするとEntityMeta#hasColumnPropertyMetaがfalseを返す
+    /** */
     @ManyToOne
     @JoinColumn(name = "DEPARTMENT_ID", referencedColumnName = "DEPARTMENT_ID")
     public Department department;
 
+    /** */
+    public int addressId;
+
+    /** */
+    @OneToOne()
+    @JoinColumn(name = "ADDRESS_ID", referencedColumnName = "ADDRESS_ID")
+    public Address address;
+
+    /** */
     @Version
-    public Integer Version;
+    public int Version;
 }
