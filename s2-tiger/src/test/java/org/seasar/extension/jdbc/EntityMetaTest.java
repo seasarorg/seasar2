@@ -22,6 +22,7 @@ import junit.framework.TestCase;
 import org.seasar.extension.jdbc.entity.Aaa;
 import org.seasar.extension.jdbc.exception.ColumnDuplicatedRuntimeException;
 import org.seasar.extension.jdbc.exception.EntityColumnNotFoundRuntimeException;
+import org.seasar.extension.jdbc.exception.PropertyDuplicatedRuntimeException;
 
 /**
  * @author higa
@@ -181,6 +182,27 @@ public class EntityMetaTest extends TestCase {
             assertEquals("aaaName", e.getPropertyName());
             assertEquals("aaaName2", e.getPropertyName2());
             assertEquals("aaa_name", e.getColumnName());
+        }
+    }
+
+    /**
+     * 
+     */
+    public void testAddPropertyMeta_propertyDuplicated() {
+        EntityMeta em = new EntityMeta();
+        em.setName("Hoge");
+        PropertyMeta pm = new PropertyMeta();
+        pm.setName("aaaName");
+        em.addPropertyMeta(pm);
+        try {
+            PropertyMeta pm2 = new PropertyMeta();
+            pm2.setName("aaaname");
+            em.addPropertyMeta(pm2);
+            fail();
+        } catch (PropertyDuplicatedRuntimeException e) {
+            System.out.println(e);
+            assertEquals("Hoge", e.getEntityName());
+            assertEquals("aaaname", e.getPropertyName());
         }
     }
 }

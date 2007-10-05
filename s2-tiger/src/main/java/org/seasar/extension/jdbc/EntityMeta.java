@@ -21,6 +21,7 @@ import java.util.Map;
 
 import org.seasar.extension.jdbc.exception.ColumnDuplicatedRuntimeException;
 import org.seasar.extension.jdbc.exception.EntityColumnNotFoundRuntimeException;
+import org.seasar.extension.jdbc.exception.PropertyDuplicatedRuntimeException;
 import org.seasar.extension.jdbc.exception.PropertyNotFoundRuntimeException;
 import org.seasar.framework.util.ArrayMap;
 import org.seasar.framework.util.CaseInsensitiveMap;
@@ -287,7 +288,10 @@ public class EntityMeta {
      *            プロパティメタデータ
      */
     public void addPropertyMeta(PropertyMeta propertyMeta) {
-        propertyMetaMap.put(propertyMeta.getName(), propertyMeta);
+        if (propertyMetaMap.put(propertyMeta.getName(), propertyMeta) != null) {
+            throw new PropertyDuplicatedRuntimeException(name, propertyMeta
+                    .getName());
+        }
         if (propertyMeta.isId()) {
             idPropertyMetaList.add(propertyMeta);
         }
