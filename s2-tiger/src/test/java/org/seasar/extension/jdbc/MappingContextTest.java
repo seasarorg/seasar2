@@ -55,6 +55,21 @@ public class MappingContextTest extends TestCase {
     /**
      * 
      */
+    public void testCheckDone_entityMapper() {
+        MappingContext ctx = new MappingContext(10);
+        EntityMapper mapper = new MyEntityMapper();
+        Aaa aaa = new Aaa();
+        Aaa aaa2 = new Aaa();
+        assertFalse(ctx.checkDone(mapper, null, aaa));
+        assertTrue(ctx.checkDone(mapper, null, aaa));
+        assertFalse(ctx.checkDone(mapper, null, aaa2));
+        assertTrue(ctx.checkDone(mapper, null, aaa2));
+        assertTrue(ctx.checkDone(mapper, null, aaa));
+    }
+
+    /**
+     * 
+     */
     public void testClear() {
         MappingContext ctx = new MappingContext(10);
         EntityMapper mapper = new MyEntityMapper();

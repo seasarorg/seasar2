@@ -16,7 +16,9 @@
 package org.seasar.extension.jdbc;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * マッピング中の状態を管理するためのコンテキストです。
@@ -34,7 +36,7 @@ public class MappingContext {
     /**
      * 処理済みのエンティティのマップです。
      */
-    protected Map<Object, Map<Object, Object>> doneEntityMap;
+    protected Map<Object, Map<Object, Set<Object>>> doneEntityMap;
 
     /**
      * {@link MappingContext}を作成します。
@@ -52,7 +54,7 @@ public class MappingContext {
      */
     public MappingContext(int initialCapacity) {
         cache = new HashMap<String, Map<Object, Object>>(initialCapacity);
-        doneEntityMap = new HashMap<Object, Map<Object, Object>>(
+        doneEntityMap = new HashMap<Object, Map<Object, Set<Object>>>(
                 initialCapacity * 2);
     }
 
@@ -104,12 +106,17 @@ public class MappingContext {
      * @return 同一のエンティティマッパーで処理しているエンティティが処理済みか
      */
     public boolean checkDone(Object entityMapper, Object target, Object entity) {
-        Map<Object, Object> m = doneEntityMap.get(entityMapper);
+        Map<Object, Set<Object>> m = doneEntityMap.get(entityMapper);
         if (m == null) {
-            m = new HashMap<Object, Object>();
+            m = new HashMap<Object, Set<Object>>();
             doneEntityMap.put(entityMapper, m);
         }
-        return m.put(target, entity) == entity && entity != null;
+        Set<Object> entities = m.get(target);
+        if (entities == null) {
+            entities = new HashSet<Object>();
+            m.put(target, entities);
+        }
+        return !entities.add(entity);
     }
 
     /**
