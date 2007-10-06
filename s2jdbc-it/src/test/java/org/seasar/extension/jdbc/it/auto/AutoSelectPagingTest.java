@@ -25,7 +25,6 @@ import org.seasar.extension.unit.S2TestCase;
  * @author taedium
  * 
  */
-// TODO: orderbyをつける
 public class AutoSelectPagingTest extends S2TestCase {
 
     private JdbcManager jdbcManager;
@@ -41,7 +40,8 @@ public class AutoSelectPagingTest extends S2TestCase {
      * @throws Exception
      */
     public void test() throws Exception {
-        List<Employee> list = jdbcManager.from(Employee.class).getResultList();
+        List<Employee> list = jdbcManager.from(Employee.class).orderBy(
+                "employeeId").getResultList();
         assertEquals(14, list.size());
     }
 
@@ -51,7 +51,7 @@ public class AutoSelectPagingTest extends S2TestCase {
      */
     public void test_offsetOnly() throws Exception {
         List<Employee> list = jdbcManager.from(Employee.class).offset(3)
-                .getResultList();
+                .orderBy("employeeId").getResultList();
         assertEquals(11, list.size());
         assertEquals(4, list.get(0).employeeId);
         assertEquals(14, list.get(10).employeeId);
@@ -63,7 +63,7 @@ public class AutoSelectPagingTest extends S2TestCase {
      */
     public void test_limitOnly() throws Exception {
         List<Employee> list = jdbcManager.from(Employee.class).limit(3)
-                .getResultList();
+                .orderBy("employeeId").getResultList();
         assertEquals(3, list.size());
         assertEquals(1, list.get(0).employeeId);
         assertEquals(3, list.get(2).employeeId);
@@ -75,7 +75,7 @@ public class AutoSelectPagingTest extends S2TestCase {
      */
     public void test_offsetZero_limitZero() throws Exception {
         List<Employee> list = jdbcManager.from(Employee.class).offset(0).limit(
-                0).getResultList();
+                0).orderBy("employeeId").getResultList();
         assertEquals(14, list.size());
     }
 
@@ -85,7 +85,7 @@ public class AutoSelectPagingTest extends S2TestCase {
      */
     public void test_offset_limitZero() throws Exception {
         List<Employee> list = jdbcManager.from(Employee.class).offset(3).limit(
-                0).getResultList();
+                0).orderBy("employeeId").getResultList();
         assertEquals(11, list.size());
         assertEquals(4, list.get(0).employeeId);
         assertEquals(14, list.get(10).employeeId);
@@ -97,7 +97,7 @@ public class AutoSelectPagingTest extends S2TestCase {
      */
     public void test_offsetZero_limit() throws Exception {
         List<Employee> list = jdbcManager.from(Employee.class).offset(0).limit(
-                3).getResultList();
+                3).orderBy("employeeId").getResultList();
         assertEquals(3, list.size());
         assertEquals(1, list.get(0).employeeId);
         assertEquals(3, list.get(2).employeeId);
@@ -109,7 +109,7 @@ public class AutoSelectPagingTest extends S2TestCase {
      */
     public void test_offset_limit() throws Exception {
         List<Employee> list = jdbcManager.from(Employee.class).offset(3).limit(
-                5).getResultList();
+                5).orderBy("employeeId").getResultList();
         assertEquals(5, list.size());
         assertEquals(4, list.get(0).employeeId);
         assertEquals(8, list.get(4).employeeId);
