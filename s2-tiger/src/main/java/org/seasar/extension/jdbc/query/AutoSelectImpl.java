@@ -31,6 +31,7 @@ import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.JoinColumnMeta;
 import org.seasar.extension.jdbc.JoinMeta;
 import org.seasar.extension.jdbc.JoinType;
+import org.seasar.extension.jdbc.OrderByClause;
 import org.seasar.extension.jdbc.PropertyMapper;
 import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.ResultSetHandler;
@@ -52,6 +53,7 @@ import org.seasar.extension.jdbc.mapper.OneToOneEntityMapperImpl;
 import org.seasar.extension.jdbc.mapper.PropertyMapperImpl;
 import org.seasar.extension.jdbc.util.ConditionUtil;
 import org.seasar.framework.util.BooleanConversionUtil;
+import org.seasar.framework.util.StringUtil;
 
 /**
  * {@link AutoSelect}の実装クラスです。
@@ -103,6 +105,16 @@ public class AutoSelectImpl<T> extends AbstractSelect<T> implements
      * where句です。
      */
     protected WhereClause whereClause = new WhereClause();
+
+    /**
+     * order by句です。
+     */
+    protected OrderByClause orderByClause = new OrderByClause();
+
+    /**
+     * ソート順です。
+     */
+    protected String orderBy = "";
 
     /**
      * 値タイプのリストです。
@@ -214,6 +226,7 @@ public class AutoSelectImpl<T> extends AbstractSelect<T> implements
         prepareTarget();
         prepareJoins();
         prepareConditions();
+        prepareOrderBy();
         prepareSql();
     }
 
@@ -641,9 +654,11 @@ public class AutoSelectImpl<T> extends AbstractSelect<T> implements
      */
     protected String toSql() {
         StringBuilder sb = new StringBuilder(selectClause.getLength()
-                + fromClause.getLength() + whereClause.getLength());
+                + fromClause.getLength() + whereClause.getLength()
+                + orderByClause.getLength());
         return sb.append(selectClause.toSql()).append(fromClause.toSql())
-                .append(whereClause.toSql()).toString();
+                .append(whereClause.toSql()).append(orderByClause.toSql())
+                .toString();
     }
 
     public AutoSelect<T> where(Map<String, Object> conditions) {
@@ -656,7 +671,7 @@ public class AutoSelectImpl<T> extends AbstractSelect<T> implements
      * 
      */
     protected void prepareConditions() {
-        if (conditions == null) {
+        if (conditions == null || conditions.size() == 0) {
             return;
         }
         for (Map.Entry<String, Object> e : conditions.entrySet()) {
@@ -810,14 +825,14 @@ public class AutoSelectImpl<T> extends AbstractSelect<T> implements
             if (BooleanConversionUtil.toPrimitiveBoolean(value)) {
                 condition = ConditionUtil.getIsNullCondition(tableAlias,
                         columnName);
-                whereClause.addSql(condition);
+                whereClause.addAndSql(condition);
             }
             break;
         case IS_NOT_NULL:
             if (BooleanConversionUtil.toPrimitiveBoolean(value)) {
                 condition = ConditionUtil.getIsNotNullCondition(tableAlias,
                         columnName);
-                whereClause.addSql(condition);
+                whereClause.addAndSql(condition);
             }
             break;
         default:
@@ -837,7 +852,7 @@ public class AutoSelectImpl<T> extends AbstractSelect<T> implements
      */
     protected void addCondition(String condition, Object bindVariable,
             Class<?> bindVariableClass) {
-        whereClause.addSql(condition);
+        whereClause.addAndSql(condition);
         bindVariableList.add(bindVariable);
         bindVariableClassList.add(bindVariableClass);
     }
@@ -856,7 +871,7 @@ public class AutoSelectImpl<T> extends AbstractSelect<T> implements
      */
     protected void addInCondition(String condition, Object bindVariables,
             Class<?> bindVariableClass, int size) {
-        whereClause.addSql(condition);
+        whereClause.addAndSql(condition);
         for (int i = 0; i < size; i++) {
             bindVariableList.add(Array.get(bindVariables, i));
             bindVariableClassList.add(bindVariableClass);
@@ -894,5 +909,53 @@ public class AutoSelectImpl<T> extends AbstractSelect<T> implements
      */
     protected EntityMapper getEntityMapper() {
         return (EntityMapper) getEntityMapper(null);
+    }
+
+    public AutoSelect<T> orderBy(String orderBy) {
+        if (orderBy == null) {
+            throw new NullPointerException("orderBy");
+        }
+        this.orderBy = orderBy;
+        return this;
+    }
+
+    /**
+     * order by句の準備をします。
+     */
+    protected void prepareOrderBy() {
+        if (StringUtil.isEmpty(orderBy)) {
+            return;
+        }
+        orderByClause.addSql(convertCriteria(orderBy));
+    }
+
+    /**
+     * プロパティ名で記述されたクライテリアをカラム名に変換します。
+     * 
+     * @param criteria
+     *            クライテリア
+     * @return カラム名で記述されたクライテリア
+     */
+    protected String convertCriteria(String criteria) {
+        StringBuilder sb = new StringBuilder(20 + criteria.length());
+        QueryTokenizer tokenizer = new QueryTokenizer(criteria);
+        for (int type = tokenizer.nextToken(); type != QueryTokenizer.TT_EOF; type = tokenizer
+                .nextToken()) {
+            String token = tokenizer.getToken();
+            if (type == QueryTokenizer.TT_WORD) {
+                String[] names = splitBaseAndProperty(token);
+                String tableAlias = getTableAlias(names[0]);
+                EntityMeta entityMeta = getEntityMeta(names[0]);
+                if (entityMeta == null || !entityMeta.hasPropertyMeta(names[1])) {
+                    sb.append(token);
+                } else {
+                    PropertyMeta pm = entityMeta.getPropertyMeta(names[1]);
+                    sb.append(tableAlias + "." + pm.getColumnMeta().getName());
+                }
+            } else {
+                sb.append(token);
+            }
+        }
+        return sb.toString();
     }
 }

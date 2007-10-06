@@ -59,11 +59,6 @@ public abstract class AbstractSelect<T> extends AbstractQuery implements
     protected int fetchSize;
 
     /**
-     * クエリタイムアウトの秒数です。
-     */
-    protected int queryTimeout;
-
-    /**
      * オフセットです。
      */
     protected int offset;
@@ -115,14 +110,6 @@ public abstract class AbstractSelect<T> extends AbstractQuery implements
         logSql();
         return getSingleResultInternal();
     }
-
-    /**
-     * 検索の準備をします。
-     * 
-     * @param methodName
-     *            メソッド名
-     */
-    protected abstract void prepare(String methodName);
 
     /**
      * 検索してベースオブジェクトのリストを返します。
@@ -344,14 +331,5 @@ public abstract class AbstractSelect<T> extends AbstractQuery implements
      */
     public int getOffset() {
         return offset;
-    }
-
-    /**
-     * クエリタイムアウトを返します。
-     * 
-     * @return クエリタイムアウト
-     */
-    public int getQueryTimeout() {
-        return queryTimeout;
     }
 }

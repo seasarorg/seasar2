@@ -19,7 +19,6 @@ import java.util.Arrays;
 
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.SqlSelect;
-import org.seasar.extension.jdbc.exception.NullBindVariableRuntimeException;
 
 /**
  * {@link SqlSelect}の実装クラスです。
@@ -31,11 +30,6 @@ import org.seasar.extension.jdbc.exception.NullBindVariableRuntimeException;
  */
 public class SqlSelectImpl<T> extends AbstractSqlSelect<T> implements
         SqlSelect<T> {
-
-    /**
-     * 空のパラメータです。
-     */
-    protected static final Object[] EMPTY_PARAMETERS = new Object[0];
 
     /**
      * SQLです。
@@ -51,35 +45,20 @@ public class SqlSelectImpl<T> extends AbstractSqlSelect<T> implements
      *            ベースクラス
      * @param sql
      *            SQL
-     * @see #SqlSelectImpl(JdbcManager, Class, String, Object[])
-     */
-    public SqlSelectImpl(JdbcManager jdbcManager, Class<T> baseClass, String sql) {
-        this(jdbcManager, baseClass, sql, EMPTY_PARAMETERS);
-    }
-
-    /**
-     * {@link SqlSelectImpl}を作成します。
-     * 
-     * @param jdbcManager
-     *            JDBCマネージャ
-     * @param baseClass
-     *            ベースクラス
-     * @param sql
-     *            SQL
-     * @param parameters
+     * @param params
      *            パラメータの配列です。
      */
     public SqlSelectImpl(JdbcManager jdbcManager, Class<T> baseClass,
-            String sql, Object... parameters) {
+            String sql, Object... params) {
         super(jdbcManager, baseClass);
         if (sql == null) {
             throw new NullPointerException("sql");
         }
         this.sql = sql;
-        if (parameters == null) {
+        if (params == null) {
             throw new NullPointerException("parameters");
         }
-        bindVariableList.addAll(Arrays.asList(parameters));
+        bindVariableList.addAll(Arrays.asList(params));
     }
 
     public SqlSelect<T> callerClass(Class<?> callerClass) {
@@ -120,28 +99,8 @@ public class SqlSelectImpl<T> extends AbstractSqlSelect<T> implements
     @Override
     protected void prepare(String methodName) {
         prepareCallerClassAndMethodName(methodName);
-        prepareParameters();
+        prepareBindVariableClassList();
         prepareSql();
-    }
-
-    /**
-     * パラメータを準備します。
-     * 
-     * @throws NullBindVariableRuntimeException
-     *             パラメータの値が<code>null</code>の場合
-     */
-    protected void prepareParameters() throws NullBindVariableRuntimeException {
-        int size = bindVariableList.size();
-        for (int i = 0; i < size; i++) {
-            Object var = bindVariableList.get(i);
-            if (var == null) {
-                logger.log("ESSR0709", new Object[] { callerClass.getName(),
-                        callerMethodName });
-                logger.log("ESSR0732", new Object[] { sql });
-                throw new NullBindVariableRuntimeException();
-            }
-            bindVariableClassList.add(var.getClass());
-        }
     }
 
     /**

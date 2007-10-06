@@ -178,21 +178,6 @@ public class SqlSelectImplTest extends TestCase {
     /**
      * 
      */
-    public void testPrepare_nullBindVariable3() {
-        SqlSelectImpl<AaaDto> query = new SqlSelectImpl<AaaDto>(manager,
-                AaaDto.class, "select foo2, aaa_bbb from hoge where aaa = ?",
-                "aaa", null);
-        try {
-            query.prepare("getSingleResult");
-            fail();
-        } catch (NullBindVariableRuntimeException e) {
-            System.out.println(e);
-        }
-    }
-
-    /**
-     * 
-     */
     public void testGetResultList() {
         SqlSelectImpl<AaaDto> query = new SqlSelectImpl<AaaDto>(manager,
                 AaaDto.class, "select foo2, aaa_bbb from hoge") {

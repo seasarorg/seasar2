@@ -1367,8 +1367,40 @@ public class AutoSelectImplTest extends TestCase {
     public void testPrepareSql() {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
         query.prepare("getResultList");
-        query.prepareSql();
         assertNotNull(query.executedSql);
+    }
+
+    /**
+     * 
+     */
+    public void testConvertCriteria() {
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        query.join("bbb");
+        query.prepare("getResultList");
+        assertEquals("T1_.ID=? or T2_.ID=?", query
+                .convertCriteria("id=? or bbb.id=?"));
+    }
+
+    /**
+     * 
+     */
+    public void testPrepareOrderBy() {
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        query.join("bbb").orderBy("bbb.id desc");
+        query.prepare("getResultList");
+        assertEquals(" order by T2_.ID desc", query.orderByClause.toSql());
+    }
+
+    /**
+     * 
+     */
+    public void testPrepareOrderBy_sql() {
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        query.join("bbb").orderBy("bbb.id desc");
+        query.prepare("getResultList");
+        assertEquals(
+                "select T1_.ID, T1_.NAME, T1_.BBB_ID, T2_.ID, T2_.NAME, T2_.CCC_ID from AAA T1_ left outer join BBB T2_ on T1_.BBB_ID = T2_.ID order by T2_.ID desc",
+                query.toSql());
     }
 
     @Entity

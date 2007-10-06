@@ -21,26 +21,25 @@ import junit.framework.TestCase;
  * @author higa
  * 
  */
-public class SelectClauseTest extends TestCase {
+public class OrderByClauseTest extends TestCase {
 
     /**
      * 
      */
     public void testAddSql() {
-        SelectClause selectClause = new SelectClause();
-        selectClause.addSql("T1_", "AAA_ID");
-        assertEquals("select T1_.AAA_ID", selectClause.toSql());
-        selectClause.addSql("T1_", "AAA_NAME");
-        assertEquals("select T1_.AAA_ID, T1_.AAA_NAME", selectClause.toSql());
+        OrderByClause clause = new OrderByClause();
+        clause.addSql("T1_.ID desc");
+        assertEquals(" order by T1_.ID desc", clause.toSql());
     }
 
     /**
      * 
      */
     public void testGetLength() {
-        SelectClause selectClause = new SelectClause();
-        assertEquals(0, selectClause.getLength());
-        selectClause.addSql("T1_", "AAA_ID");
-        assertEquals("select T1_.AAA_ID".length(), selectClause.getLength());
+        OrderByClause clause = new OrderByClause();
+        assertEquals(0, clause.getLength());
+        String sql = "T1_.ID desc";
+        clause.addSql(sql);
+        assertEquals(" order by ".length() + sql.length(), clause.getLength());
     }
 }

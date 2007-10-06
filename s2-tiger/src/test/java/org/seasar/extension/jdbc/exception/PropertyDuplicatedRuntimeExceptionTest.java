@@ -13,7 +13,7 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.jdbc;
+package org.seasar.extension.jdbc.exception;
 
 import junit.framework.TestCase;
 
@@ -21,26 +21,16 @@ import junit.framework.TestCase;
  * @author higa
  * 
  */
-public class SelectClauseTest extends TestCase {
+public class PropertyDuplicatedRuntimeExceptionTest extends TestCase {
 
     /**
      * 
      */
-    public void testAddSql() {
-        SelectClause selectClause = new SelectClause();
-        selectClause.addSql("T1_", "AAA_ID");
-        assertEquals("select T1_.AAA_ID", selectClause.toSql());
-        selectClause.addSql("T1_", "AAA_NAME");
-        assertEquals("select T1_.AAA_ID, T1_.AAA_NAME", selectClause.toSql());
-    }
-
-    /**
-     * 
-     */
-    public void testGetLength() {
-        SelectClause selectClause = new SelectClause();
-        assertEquals(0, selectClause.getLength());
-        selectClause.addSql("T1_", "AAA_ID");
-        assertEquals("select T1_.AAA_ID".length(), selectClause.getLength());
+    public void testAll() {
+        PropertyDuplicatedRuntimeException ex = new PropertyDuplicatedRuntimeException(
+                "Hoge", "aaaName");
+        System.out.println(ex.getMessage());
+        assertEquals("Hoge", ex.getEntityName());
+        assertEquals("aaaName", ex.getPropertyName());
     }
 }

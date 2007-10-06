@@ -15,8 +15,6 @@
  */
 package org.seasar.extension.jdbc;
 
-import org.seasar.extension.jdbc.WhereClause;
-
 import junit.framework.TestCase;
 
 /**
@@ -25,16 +23,47 @@ import junit.framework.TestCase;
  */
 public class WhereClauseTest extends TestCase {
 
-	/**
-	 * 
-	 */
-	public void testAddSql() {
-		WhereClause whereClause = new WhereClause();
-		whereClause.addSql("_T1.BBB_ID = _T2.BBB_ID");
-		assertEquals(" where _T1.BBB_ID = _T2.BBB_ID", whereClause.toSql());
-		whereClause.addSql("_T1.BBB_ID = ?");
-		assertEquals(" where _T1.BBB_ID = _T2.BBB_ID and _T1.BBB_ID = ?",
-				whereClause.toSql());
-	}
+    /**
+     * 
+     */
+    public void testAddAndSql() {
+        WhereClause whereClause = new WhereClause();
+        assertEquals(30, whereClause.addAndSql("T1_.BBB_ID = _T2.BBB_ID"));
+        assertEquals(" where T1_.BBB_ID = _T2.BBB_ID", whereClause.toSql());
+        whereClause.addAndSql("T1_.BBB_ID = ?");
+        assertEquals(" where T1_.BBB_ID = _T2.BBB_ID and T1_.BBB_ID = ?",
+                whereClause.toSql());
+    }
 
+    /**
+     * 
+     */
+    public void testAddSql() {
+        WhereClause whereClause = new WhereClause();
+        whereClause.addAndSql("T1_.BBB_ID = _T2.BBB_ID");
+        assertEquals(" where T1_.BBB_ID = _T2.BBB_ID", whereClause.toSql());
+        whereClause.addAndSql("(");
+        assertEquals(" where T1_.BBB_ID = _T2.BBB_ID and (", whereClause
+                .toSql());
+        whereClause.addSql("T1_.BBB_ID = 1 or T1_.BBB_ID = 2");
+        assertEquals(
+                " where T1_.BBB_ID = _T2.BBB_ID and (T1_.BBB_ID = 1 or T1_.BBB_ID = 2",
+                whereClause.toSql());
+        whereClause.addSql(")");
+        assertEquals(
+                " where T1_.BBB_ID = _T2.BBB_ID and (T1_.BBB_ID = 1 or T1_.BBB_ID = 2)",
+                whereClause.toSql());
+    }
+
+    /**
+     * 
+     */
+    public void testRemoveSql() {
+        WhereClause whereClause = new WhereClause();
+        int length = whereClause.addAndSql("(");
+        assertEquals(" where (", whereClause.toSql());
+        whereClause.removeSql(length);
+        assertEquals("", whereClause.toSql());
+        assertEquals(0, whereClause.getLength());
+    }
 }

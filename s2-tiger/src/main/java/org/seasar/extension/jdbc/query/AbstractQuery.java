@@ -22,6 +22,7 @@ import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.SqlLog;
 import org.seasar.extension.jdbc.SqlLogRegistry;
 import org.seasar.extension.jdbc.SqlLogRegistryLocator;
+import org.seasar.extension.jdbc.exception.NullBindVariableRuntimeException;
 import org.seasar.extension.jdbc.impl.SqlLogImpl;
 import org.seasar.extension.jdbc.util.BindVariableUtil;
 import org.seasar.framework.log.Logger;
@@ -54,6 +55,11 @@ public abstract class AbstractQuery {
     protected String callerMethodName;
 
     /**
+     * クエリタイムアウトの秒数です。
+     */
+    protected int queryTimeout;
+
+    /**
      * ログを出力するオブジェクトです。
      */
     protected Logger logger;
@@ -84,6 +90,14 @@ public abstract class AbstractQuery {
     public AbstractQuery(JdbcManager jdbcManager) {
         this.jdbcManager = jdbcManager;
     }
+
+    /**
+     * クエリの準備をします。
+     * 
+     * @param methodName
+     *            メソッド名
+     */
+    protected abstract void prepare(String methodName);
 
     /**
      * SQLをログに出力します。
@@ -126,13 +140,12 @@ public abstract class AbstractQuery {
     }
 
     /**
-     * バインド変数のクラスの配列を返します。
+     * 実行されるSQLを返します。
      * 
-     * @return バインド変数のクラスの配列
+     * @return 実行されるSQL
      */
-    public Class<?>[] getBindVariableClasses() {
-        return bindVariableClassList.toArray(new Class[bindVariableClassList
-                .size()]);
+    public String getExecutedSql() {
+        return executedSql;
     }
 
     /**
@@ -142,6 +155,16 @@ public abstract class AbstractQuery {
      */
     public Object[] getBindVariables() {
         return bindVariableList.toArray(new Object[bindVariableList.size()]);
+    }
+
+    /**
+     * バインド変数のクラスの配列を返します。
+     * 
+     * @return バインド変数のクラスの配列
+     */
+    public Class<?>[] getBindVariableClasses() {
+        return bindVariableClassList.toArray(new Class[bindVariableClassList
+                .size()]);
     }
 
     /**
@@ -163,12 +186,12 @@ public abstract class AbstractQuery {
     }
 
     /**
-     * 実行されるSQLを返します。
+     * クエリタイムアウトを返します。
      * 
-     * @return 実行されるSQL
+     * @return クエリタイムアウト
      */
-    public String getExecutedSql() {
-        return executedSql;
+    public int getQueryTimeout() {
+        return queryTimeout;
     }
 
     /**
@@ -178,5 +201,25 @@ public abstract class AbstractQuery {
      */
     public JdbcManager getJdbcManager() {
         return jdbcManager;
+    }
+
+    /**
+     * バインド変数のクラスのリストを準備します。
+     * 
+     * @throws NullBindVariableRuntimeException
+     *             バインド変数の値が<code>null</code>の場合
+     */
+    protected void prepareBindVariableClassList()
+            throws NullBindVariableRuntimeException {
+        int size = bindVariableList.size();
+        for (int i = 0; i < size; i++) {
+            Object var = bindVariableList.get(i);
+            if (var == null) {
+                logger.log("ESSR0709", new Object[] { callerClass.getName(),
+                        callerMethodName });
+                throw new NullBindVariableRuntimeException();
+            }
+            bindVariableClassList.add(var.getClass());
+        }
     }
 }

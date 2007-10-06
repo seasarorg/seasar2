@@ -22,6 +22,7 @@ import org.seasar.extension.jdbc.SqlLog;
 import org.seasar.extension.jdbc.SqlLogRegistry;
 import org.seasar.extension.jdbc.SqlLogRegistryLocator;
 import org.seasar.extension.jdbc.dialect.StandardDialect;
+import org.seasar.extension.jdbc.exception.NullBindVariableRuntimeException;
 import org.seasar.extension.jdbc.manager.JdbcManagerImpl;
 import org.seasar.framework.mock.sql.MockDataSource;
 
@@ -92,6 +93,32 @@ public class AbstractQueryTest extends TestCase {
         assertEquals("foo", query.callerMethodName);
     }
 
+    /**
+     * 
+     */
+    public void testPrepareBindVariableClassList() {
+        MyQuery query = new MyQuery(manager);
+        query.bindVariableList.add(1);
+        query.prepareBindVariableClassList();
+        assertEquals(1, query.bindVariableClassList.size());
+        assertEquals(Integer.class, query.bindVariableClassList.get(0));
+    }
+
+    /**
+     * 
+     */
+    public void testPrepareBindVariableClassList_nullBindVariable() {
+        MyQuery query = new MyQuery(manager);
+        query.bindVariableList.add(null);
+        query.prepareCallerClassAndMethodName("hoge");
+        try {
+            query.prepareBindVariableClassList();
+            fail();
+        } catch (NullBindVariableRuntimeException e) {
+            System.out.println(e);
+        }
+    }
+
     private static class MyQuery extends AbstractQuery {
 
         /**
@@ -99,6 +126,12 @@ public class AbstractQueryTest extends TestCase {
          */
         public MyQuery(JdbcManager jdbcManager) {
             super(jdbcManager);
+        }
+
+        /* (non-Javadoc)
+         * @see org.seasar.extension.jdbc.query.AbstractQuery#prepare(java.lang.String)
+         */
+        protected void prepare(String methodName) {
         }
     }
 }

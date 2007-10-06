@@ -294,4 +294,12 @@ public interface AutoSelect<T> extends Select<T> {
      * @return 自動検索
      */
     AutoSelect<T> where(Map<String, Object> conditions);
+
+    /**
+     * ソート順を追加します。
+     * 
+     * @param orderBy
+     * @return 自動検索
+     */
+    AutoSelect<T> orderBy(String orderBy);
 }
