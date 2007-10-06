@@ -27,9 +27,9 @@ import org.seasar.extension.unit.S2TestCase;
  */
 public class SqlFileSelectPagingTest extends S2TestCase {
 
-    private static String path = SqlFileSelectPagingTest.class.getPackage()
-            .getName().replace(".", "/")
-            + "/select.sql";
+    private static String path = SqlFileSelectPagingTest.class.getName()
+            .replace(".", "/")
+            + ".sql";
 
     private JdbcManager jdbcManager;
 

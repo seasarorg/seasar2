@@ -31,7 +31,7 @@ import static java.util.Arrays.*;
  * @author taedium
  * 
  */
-public class AutoSelectConditionTest extends S2TestCase {
+public class AutoSelectParameterTest extends S2TestCase {
 
     private JdbcManager jdbcManager;
 
