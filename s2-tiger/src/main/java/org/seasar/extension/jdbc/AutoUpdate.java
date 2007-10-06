@@ -24,34 +24,7 @@ import java.util.Map;
  * @param <T>
  *            エンティティの型です。
  */
-public interface AutoUpdate<T> extends Update {
-
-    /**
-     * 検索を呼び出すクラスを設定します。デフォルトは {@link AutoSelect}の実装クラスです。
-     * 
-     * @param callerClass
-     *            検索を呼び出すクラス
-     * @return 自動検索
-     */
-    AutoUpdate<T> callerClass(Class<?> callerClass);
-
-    /**
-     * 検索を呼び出すメソッド名を設定します。デフォルトはgetResultListあるいはgetSingleResultになります。
-     * 
-     * @param callerMethodName
-     *            検索を呼び出すメソッド名
-     * @return 自動検索
-     */
-    AutoUpdate<T> callerMethodName(String callerMethodName);
-
-    /**
-     * クエリタイムアウトの秒数を設定します。
-     * 
-     * @param queryTimeout
-     *            クエリタイムアウトの秒数
-     * @return 自動検索
-     */
-    AutoUpdate<T> queryTimeout(int queryTimeout);
+public interface AutoUpdate<T> extends Update<AutoUpdate<T>> {
 
     /**
      * バージョンプロパティを更新対象に含めます。

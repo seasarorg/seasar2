@@ -16,7 +16,6 @@
 package org.seasar.extension.jdbc.query;
 
 import java.util.Arrays;
-import java.util.Collection;
 
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.SqlFileSelect;
@@ -39,8 +38,8 @@ import org.seasar.framework.util.IntegerConversionUtil;
  *            戻り値のベースの型です。
  * 
  */
-public class SqlFileSelectImpl<T> extends AbstractSqlSelect<T> implements
-        SqlFileSelect<T> {
+public class SqlFileSelectImpl<T> extends
+        AbstractSqlSelect<T, SqlFileSelect<T>> implements SqlFileSelect<T> {
 
     /**
      * SQLファイルのパスです。
@@ -99,41 +98,6 @@ public class SqlFileSelectImpl<T> extends AbstractSqlSelect<T> implements
         this.parameter = parameter;
     }
 
-    public SqlFileSelect<T> callerClass(Class<?> callerClass) {
-        this.callerClass = callerClass;
-        return this;
-    }
-
-    public SqlFileSelect<T> callerMethodName(String callerMethodName) {
-        this.callerMethodName = callerMethodName;
-        return this;
-    }
-
-    public SqlFileSelect<T> maxRows(int maxRows) {
-        this.maxRows = maxRows;
-        return this;
-    }
-
-    public SqlFileSelect<T> fetchSize(int fetchSize) {
-        this.fetchSize = fetchSize;
-        return this;
-    }
-
-    public SqlFileSelect<T> queryTimeout(int queryTimeout) {
-        this.queryTimeout = queryTimeout;
-        return this;
-    }
-
-    public SqlFileSelect<T> limit(int limit) {
-        this.limit = limit;
-        return this;
-    }
-
-    public SqlFileSelect<T> offset(int offset) {
-        this.offset = offset;
-        return this;
-    }
-
     /**
      * SQLファイルのパスを返します。
      * 
@@ -170,7 +134,6 @@ public class SqlFileSelectImpl<T> extends AbstractSqlSelect<T> implements
     /**
      * パラメータを準備します。
      */
-    @SuppressWarnings("unchecked")
     protected void prepareParameter() {
         sqlContext = new SqlContextImpl();
         if (parameter != null) {
@@ -198,8 +161,8 @@ public class SqlFileSelectImpl<T> extends AbstractSqlSelect<T> implements
         }
         node.accept(sqlContext);
         bindVariableList.addAll(Arrays.asList(sqlContext.getBindVariables()));
-        bindVariableClassList.addAll((Collection<? extends Class<?>>) Arrays
-                .asList(sqlContext.getBindVariableTypes()));
+        Class<?>[] types = sqlContext.getBindVariableTypes();
+        bindVariableClassList.addAll(Arrays.asList(types));
     }
 
     /**

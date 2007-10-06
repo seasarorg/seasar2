@@ -149,7 +149,7 @@ public class AbstractQueryTest extends TestCase {
         assertEquals(1, parameterIndex);
     }
 
-    private static class MyQuery extends AbstractQuery {
+    private static class MyQuery extends AbstractQuery<MyQuery> {
 
         /**
          * @param jdbcManager

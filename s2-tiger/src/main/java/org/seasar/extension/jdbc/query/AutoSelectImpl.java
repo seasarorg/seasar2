@@ -63,8 +63,8 @@ import org.seasar.framework.util.StringUtil;
  *            エンティティの型です。
  * 
  */
-public class AutoSelectImpl<T> extends AbstractSelect<T> implements
-        AutoSelect<T> {
+public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
+        implements AutoSelect<T> {
 
     /**
      * 結合メタデータのリストです。
@@ -146,41 +146,6 @@ public class AutoSelectImpl<T> extends AbstractSelect<T> implements
      */
     public AutoSelectImpl(JdbcManager jdbcManager, Class<T> baseClass) {
         super(jdbcManager, baseClass);
-    }
-
-    public AutoSelect<T> callerClass(Class<?> callerClass) {
-        this.callerClass = callerClass;
-        return this;
-    }
-
-    public AutoSelect<T> callerMethodName(String callerMethodName) {
-        this.callerMethodName = callerMethodName;
-        return this;
-    }
-
-    public AutoSelect<T> maxRows(int maxRows) {
-        this.maxRows = maxRows;
-        return this;
-    }
-
-    public AutoSelect<T> fetchSize(int fetchSize) {
-        this.fetchSize = fetchSize;
-        return this;
-    }
-
-    public AutoSelect<T> queryTimeout(int queryTimeout) {
-        this.queryTimeout = queryTimeout;
-        return this;
-    }
-
-    public AutoSelect<T> limit(int limit) {
-        this.limit = limit;
-        return this;
-    }
-
-    public AutoSelect<T> offset(int offset) {
-        this.offset = offset;
-        return this;
     }
 
     public AutoSelect<T> join(String name) {

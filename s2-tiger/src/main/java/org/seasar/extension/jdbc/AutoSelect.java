@@ -25,7 +25,7 @@ import java.util.Map;
  *            エンティティの型です。
  * 
  */
-public interface AutoSelect<T> extends Select<T> {
+public interface AutoSelect<T> extends Select<T, AutoSelect<T>> {
 
     /**
      * =です。
@@ -96,69 +96,6 @@ public interface AutoSelect<T> extends Select<T> {
      * is not nullです。
      */
     int IS_NOT_NULL = 14;
-
-    /**
-     * 検索を呼び出すクラスを設定します。デフォルトは {@link AutoSelect}の実装クラスです。
-     * 
-     * @param callerClass
-     *            検索を呼び出すクラス
-     * @return 自動検索
-     */
-    AutoSelect<T> callerClass(Class<?> callerClass);
-
-    /**
-     * 検索を呼び出すメソッド名を設定します。デフォルトはgetResultListあるいはgetSingleResultになります。
-     * 
-     * @param callerMethodName
-     *            検索を呼び出すメソッド名
-     * @return 自動検索
-     */
-    AutoSelect<T> callerMethodName(String callerMethodName);
-
-    /**
-     * 最大行数を設定します。
-     * 
-     * @param maxRows
-     *            最大行数
-     * @return 自動検索
-     */
-    AutoSelect<T> maxRows(int maxRows);
-
-    /**
-     * フェッチ数を設定します。
-     * 
-     * @param fetchSize
-     *            フェッチ数
-     * @return 自動検索
-     */
-    AutoSelect<T> fetchSize(int fetchSize);
-
-    /**
-     * クエリタイムアウトの秒数を設定します。
-     * 
-     * @param queryTimeout
-     *            クエリタイムアウトの秒数
-     * @return 自動検索
-     */
-    AutoSelect<T> queryTimeout(int queryTimeout);
-
-    /**
-     * リミットを設定します。
-     * 
-     * @param limit
-     *            リミット
-     * @return 自動検索
-     */
-    AutoSelect<T> limit(int limit);
-
-    /**
-     * オフセットを設定します。
-     * 
-     * @param offset
-     *            オフセット
-     * @return 自動検索
-     */
-    AutoSelect<T> offset(int offset);
 
     /**
      * <p>
@@ -302,4 +239,5 @@ public interface AutoSelect<T> extends Select<T> {
      * @return 自動検索
      */
     AutoSelect<T> orderBy(String orderBy);
+
 }

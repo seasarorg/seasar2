@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.seasar.extension.jdbc.DbmsDialect;
 import org.seasar.extension.jdbc.JdbcManager;
+import org.seasar.extension.jdbc.Query;
 import org.seasar.extension.jdbc.SqlLog;
 import org.seasar.extension.jdbc.SqlLogRegistry;
 import org.seasar.extension.jdbc.SqlLogRegistryLocator;
@@ -40,9 +41,10 @@ import org.seasar.framework.log.Logger;
  * クエリの抽象クラスです。
  * 
  * @author higa
- * 
+ * @param <S>
+ *            <code>Query</code>のサブタイプです。
  */
-public abstract class AbstractQuery {
+public abstract class AbstractQuery<S extends Query<S>> implements Query<S> {
 
     /**
      * JDBCマネージャです。
@@ -94,6 +96,24 @@ public abstract class AbstractQuery {
      */
     public AbstractQuery(JdbcManager jdbcManager) {
         this.jdbcManager = jdbcManager;
+    }
+
+    @SuppressWarnings("unchecked")
+    public S callerClass(Class<?> callerClass) {
+        this.callerClass = callerClass;
+        return (S) this;
+    }
+
+    @SuppressWarnings("unchecked")
+    public S callerMethodName(String callerMethodName) {
+        this.callerMethodName = callerMethodName;
+        return (S) this;
+    }
+
+    @SuppressWarnings("unchecked")
+    public S queryTimeout(int queryTimeout) {
+        this.queryTimeout = queryTimeout;
+        return (S) this;
     }
 
     /**

@@ -42,7 +42,8 @@ import org.seasar.framework.util.tiger.CollectionsUtil;
  * @param <T>
  *            エンティティの型です。
  */
-public class AutoUpdateImpl<T> extends AbstractQuery implements AutoUpdate<T> {
+public class AutoUpdateImpl<T> extends AbstractQuery<AutoUpdate<T>> implements
+        AutoUpdate<T> {
 
     /** UDPATE文のキーワード */
     protected static final String UPDATE_STATEMENT = "update ";
@@ -91,21 +92,6 @@ public class AutoUpdateImpl<T> extends AbstractQuery implements AutoUpdate<T> {
         this.entity = entity;
         this.entityMeta = jdbcManager.getEntityMetaFactory().getEntityMeta(
                 entity.getClass());
-    }
-
-    public AutoUpdate<T> callerClass(Class<?> callerClass) {
-        this.callerClass = callerClass;
-        return this;
-    }
-
-    public AutoUpdate<T> callerMethodName(String callerMethodName) {
-        this.callerMethodName = callerMethodName;
-        return this;
-    }
-
-    public AutoUpdate<T> queryTimeout(int queryTimeout) {
-        this.queryTimeout = queryTimeout;
-        return this;
     }
 
     public AutoUpdate<T> includeVersion() {

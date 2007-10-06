@@ -18,6 +18,7 @@ package org.seasar.extension.jdbc.query;
 import org.seasar.extension.jdbc.DbmsDialect;
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.ResultSetHandler;
+import org.seasar.extension.jdbc.Select;
 import org.seasar.extension.jdbc.ValueType;
 import org.seasar.extension.jdbc.handler.BeanListResultSetHandler;
 import org.seasar.extension.jdbc.handler.BeanListSupportLimitResultSetHandler;
@@ -33,9 +34,11 @@ import org.seasar.extension.jdbc.types.ValueTypes;
  * @author higa
  * @param <T>
  *            戻り値のベースの型です。
- * 
+ * @param <S>
+ *            <code>Select</code>のサブタイプです。
  */
-public abstract class AbstractSqlSelect<T> extends AbstractSelect<T> {
+public abstract class AbstractSqlSelect<T, S extends Select<T, S>> extends
+        AbstractSelect<T, S> implements Select<T, S> {
 
     /**
      * {@link AbstractSqlSelect}を作成します。

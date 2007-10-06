@@ -30,7 +30,8 @@ import org.seasar.framework.util.StatementUtil;
  * @author higa
  * 
  */
-public class SqlUpdateImpl extends AbstractQuery implements SqlUpdate {
+public class SqlUpdateImpl extends AbstractQuery<SqlUpdate> implements
+        SqlUpdate {
 
     /**
      * {@link SqlUpdateImpl}を作成します。
@@ -53,21 +54,6 @@ public class SqlUpdateImpl extends AbstractQuery implements SqlUpdate {
             throw new NullPointerException("paramClasses");
         }
         bindVariableClassList.addAll(Arrays.asList(paramClasses));
-    }
-
-    public SqlUpdate callerClass(Class<?> callerClass) {
-        this.callerClass = callerClass;
-        return this;
-    }
-
-    public SqlUpdate callerMethodName(String callerMethodName) {
-        this.callerMethodName = callerMethodName;
-        return this;
-    }
-
-    public SqlUpdate queryTimeout(int queryTimeout) {
-        this.queryTimeout = queryTimeout;
-        return this;
     }
 
     public SqlUpdate params(Object... params) {

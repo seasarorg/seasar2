@@ -154,7 +154,7 @@ public class AbstractSqlSelectTest extends TestCase {
         assertEquals(ObjectResultSetHandler.class, handler.getClass());
     }
 
-    private static class MySelect<T> extends AbstractSqlSelect<T> {
+    private static class MySelect<T> extends AbstractSqlSelect<T, MySelect<T>> {
 
         /**
          * @param jdbcManager

@@ -22,7 +22,28 @@ package org.seasar.extension.jdbc;
  * @param <T>
  *            エンティティの型です。
  */
-public interface AutoBatchUpdate<T> extends BatchUpdate {
+public interface AutoBatchUpdate<T> extends BatchUpdate<AutoBatchUpdate<T>> {
+
+    /**
+     * バージョンプロパティを更新対象に含めます。
+     * <p>
+     * このメソッドが呼び出されると、<code>update</code>文の<code>where</code>句にはバージョンのチェックが含まれなくなり、
+     * バージョンプロパティは通常のプロパティと同じように更新対象に含められます ({@link #excludeNull()}や{@link #changedFrom(Object)}等も同じように適用されます)。
+     * 
+     * </p>
+     * 
+     * @return このインスタンス自身
+     */
+    AutoUpdate<T> includeVersion();
+
+    /**
+     * 指定のプロパティのみを更新対象とします。
+     * 
+     * @param propertyNames
+     *            更新対象とするプロパティ名の並び
+     * @return このインスタンス自身
+     */
+    AutoUpdate<T> include(String... propertyNames);
 
     /**
      * 指定のプロパティを更新対象から除外します。
@@ -32,12 +53,5 @@ public interface AutoBatchUpdate<T> extends BatchUpdate {
      * @return このインスタンス自身
      */
     AutoBatchUpdate<T> exclude(String... propertyNames);
-
-    /**
-     * バージョンカラムをエンティティの値で強制的に更新します。
-     * 
-     * @return このインスタンス自身
-     */
-    AutoUpdate<T> forceVersion();
 
 }

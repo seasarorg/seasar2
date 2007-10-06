@@ -21,34 +21,7 @@ package org.seasar.extension.jdbc;
  * @author higa
  * 
  */
-public interface SqlUpdate extends Update {
-
-    /**
-     * 更新を呼び出すクラスを設定します。デフォルトは {@link SqlUpdate}の実装クラスです。
-     * 
-     * @param callerClass
-     *            更新を呼び出すクラス
-     * @return SQL更新
-     */
-    SqlUpdate callerClass(Class<?> callerClass);
-
-    /**
-     * 更新を呼び出すメソッド名を設定します。
-     * 
-     * @param callerMethodName
-     *            更新を呼び出すメソッド名
-     * @return SQL更新
-     */
-    SqlUpdate callerMethodName(String callerMethodName);
-
-    /**
-     * クエリタイムアウトの秒数を設定します。
-     * 
-     * @param queryTimeout
-     *            クエリタイムアウトの秒数
-     * @return SQL更新
-     */
-    SqlUpdate queryTimeout(int queryTimeout);
+public interface SqlUpdate extends Update<SqlUpdate> {
 
     /**
      * パラメータを設定します。

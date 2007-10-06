@@ -19,9 +19,11 @@ package org.seasar.extension.jdbc;
  * 更新のベースとなるインターフェースです。
  * 
  * @author higa
+ * @param <S>
+ *            <code>Update</code>のサブタイプです。
  * 
  */
-public interface Update {
+public interface Update<S extends Update<S>> extends Query<S> {
 
     /**
      * 更新します。

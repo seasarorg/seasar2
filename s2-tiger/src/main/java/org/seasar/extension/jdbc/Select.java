@@ -26,9 +26,46 @@ import org.seasar.extension.jdbc.exception.SNonUniqueResultException;
  * @author higa
  * @param <T>
  *            戻り値のベースの型です。
- * 
+ * @param <S>
+ *            <code>Select</code>のサブタイプです。
  */
-public interface Select<T> {
+public interface Select<T, S extends Select<T, S>> extends Query<Select<T, S>> {
+
+    /**
+     * 最大行数を設定します。
+     * 
+     * @param maxRows
+     *            最大行数
+     * @return このインスタンス自身
+     */
+    S maxRows(int maxRows);
+
+    /**
+     * フェッチ数を設定します。
+     * 
+     * @param fetchSize
+     *            フェッチ数
+     * @return このインスタンス自身
+     */
+    S fetchSize(int fetchSize);
+
+    /**
+     * リミットを設定します。
+     * 
+     * @param limit
+     *            リミット
+     * @return このインスタンス自身
+     */
+    S limit(int limit);
+
+    /**
+     * オフセットを設定します。
+     * 
+     * @param offset
+     *            オフセット
+     * @return このインスタンス自身
+     */
+    S offset(int offset);
 
     /**
      * 検索してベースオブジェクトのリストを返します。

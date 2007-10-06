@@ -409,7 +409,7 @@ public class AbstractSelectTest extends TestCase {
                 .convertLimitSql("select * from aaa"));
     }
 
-    private static class MySelect<T> extends AbstractSelect<T> {
+    private static class MySelect<T> extends AbstractSelect<T, MySelect<T>> {
 
         /**
          * @param jdbcManager

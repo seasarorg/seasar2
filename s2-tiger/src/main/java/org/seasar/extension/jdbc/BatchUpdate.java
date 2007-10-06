@@ -19,9 +19,10 @@ package org.seasar.extension.jdbc;
  * バッチ更新のベースとなるインターフェースです。
  * 
  * @author higa
- * 
+ * @param <S>
+ *            <code>Query</code>のサブタイプです。
  */
-public interface BatchUpdate {
+public interface BatchUpdate<S extends BatchUpdate<S>> extends Query<S> {
 
     /**
      * バッチ更新します。

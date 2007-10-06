@@ -37,10 +37,11 @@ import org.seasar.framework.util.StatementUtil;
  * @author higa
  * @param <T>
  *            戻り値のベースの型です。
- * 
+ * @param <S>
+ *            <code>Select</code>のサブタイプです。
  */
-public abstract class AbstractSelect<T> extends AbstractQuery implements
-        Select<T> {
+public abstract class AbstractSelect<T, S extends Select<T, S>> extends
+        AbstractQuery<Select<T, S>> implements Select<T, S> {
 
     /**
      * ベースクラスです。
@@ -79,6 +80,51 @@ public abstract class AbstractSelect<T> extends AbstractQuery implements
         super(jdbcManager);
         this.baseClass = baseClass;
 
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public S callerClass(Class<?> callerClass) {
+        this.callerClass = callerClass;
+        return (S) this;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public S callerMethodName(String callerMethodName) {
+        this.callerMethodName = callerMethodName;
+        return (S) this;
+    }
+
+    @SuppressWarnings("unchecked")
+    public S maxRows(int maxRows) {
+        this.maxRows = maxRows;
+        return (S) this;
+    }
+
+    @SuppressWarnings("unchecked")
+    public S fetchSize(int fetchSize) {
+        this.fetchSize = fetchSize;
+        return (S) this;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public S queryTimeout(int queryTimeout) {
+        this.queryTimeout = queryTimeout;
+        return (S) this;
+    }
+
+    @SuppressWarnings("unchecked")
+    public S limit(int limit) {
+        this.limit = limit;
+        return (S) this;
+    }
+
+    @SuppressWarnings("unchecked")
+    public S offset(int offset) {
+        this.offset = offset;
+        return (S) this;
     }
 
     /**

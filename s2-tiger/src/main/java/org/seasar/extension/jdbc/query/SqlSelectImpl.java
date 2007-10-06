@@ -26,10 +26,9 @@ import org.seasar.extension.jdbc.SqlSelect;
  * @author higa
  * @param <T>
  *            戻り値のベースの型です。
- * 
  */
-public class SqlSelectImpl<T> extends AbstractSqlSelect<T> implements
-        SqlSelect<T> {
+public class SqlSelectImpl<T> extends AbstractSqlSelect<T, SqlSelect<T>>
+        implements SqlSelect<T> {
 
     /**
      * SQLです。
@@ -59,41 +58,6 @@ public class SqlSelectImpl<T> extends AbstractSqlSelect<T> implements
             throw new NullPointerException("parameters");
         }
         bindVariableList.addAll(Arrays.asList(params));
-    }
-
-    public SqlSelect<T> callerClass(Class<?> callerClass) {
-        this.callerClass = callerClass;
-        return this;
-    }
-
-    public SqlSelect<T> callerMethodName(String callerMethodName) {
-        this.callerMethodName = callerMethodName;
-        return this;
-    }
-
-    public SqlSelect<T> maxRows(int maxRows) {
-        this.maxRows = maxRows;
-        return this;
-    }
-
-    public SqlSelect<T> fetchSize(int fetchSize) {
-        this.fetchSize = fetchSize;
-        return this;
-    }
-
-    public SqlSelect<T> queryTimeout(int queryTimeout) {
-        this.queryTimeout = queryTimeout;
-        return this;
-    }
-
-    public SqlSelect<T> limit(int limit) {
-        this.limit = limit;
-        return this;
-    }
-
-    public SqlSelect<T> offset(int offset) {
-        this.offset = offset;
-        return this;
     }
 
     @Override
