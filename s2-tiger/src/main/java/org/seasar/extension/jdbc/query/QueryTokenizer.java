@@ -156,10 +156,11 @@ public class QueryTokenizer {
             }
         }
         token = str.substring(pos, length);
-        type = TT_EOF;
         if (type == TT_WORD) {
+            type = TT_EOF;
             return TT_WORD;
         }
+        type = TT_EOF;
         return TT_OTHER;
     }
 

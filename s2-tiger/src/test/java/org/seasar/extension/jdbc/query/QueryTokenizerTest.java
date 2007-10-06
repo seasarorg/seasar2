@@ -88,4 +88,14 @@ public class QueryTokenizerTest extends TestCase {
         assertEquals("'xxx'", tokenizer.getToken());
         assertEquals(QueryTokenizer.TT_EOF, tokenizer.nextToken());
     }
+
+    /**
+     * 
+     */
+    public void test_word() {
+        QueryTokenizer tokenizer = new QueryTokenizer("aaa");
+        assertEquals(QueryTokenizer.TT_WORD, tokenizer.nextToken());
+        assertEquals("aaa", tokenizer.getToken());
+        assertEquals(QueryTokenizer.TT_EOF, tokenizer.nextToken());
+    }
 }
