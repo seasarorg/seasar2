@@ -16,6 +16,7 @@
 package org.seasar.extension.jdbc;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -63,6 +64,11 @@ public class EntityMeta {
      * 識別子になっているプロパティメタデータのリストです。
      */
     protected List<PropertyMeta> idPropertyMetaList = new ArrayList<PropertyMeta>();
+
+    /**
+     * バージョンを表すプロパティメタデータです。
+     */
+    protected PropertyMeta versionPropertyMeta;
 
     /**
      * MappedByで注釈されているプロパティメタデータのマップです。
@@ -243,6 +249,36 @@ public class EntityMeta {
     }
 
     /**
+     * 全てのプロパティメタデータの{@link Iterable}を返します。
+     * 
+     * @return 全てのプロパティメタデータの{@link Iterable}
+     */
+    public Iterable<PropertyMeta> getAllPropertyMeta() {
+        return new Iterable<PropertyMeta>() {
+
+            public Iterator<PropertyMeta> iterator() {
+                return new Iterator<PropertyMeta>() {
+
+                    private int i;
+
+                    public boolean hasNext() {
+                        return i < propertyMetaMap.size();
+                    }
+
+                    public PropertyMeta next() {
+                        return PropertyMeta.class
+                                .cast(propertyMetaMap.get(i++));
+                    }
+
+                    public void remove() {
+                        throw new UnsupportedOperationException();
+                    }
+                };
+            }
+        };
+    }
+
+    /**
      * カラムに結びつくプロパティメタデータを返します。
      * 
      * @param index
@@ -254,12 +290,60 @@ public class EntityMeta {
     }
 
     /**
+     * カラムに結びつく全てのプロパティメタデータの{@link Iterable}を返します。
+     * 
+     * @return カラムに結びつく全てのプロパティメタデータの{@link Iterable}
+     */
+    public Iterable<PropertyMeta> getAllColumnPropertyMeta() {
+        return new Iterable<PropertyMeta>() {
+
+            public Iterator<PropertyMeta> iterator() {
+                return new Iterator<PropertyMeta>() {
+
+                    private int i;
+
+                    public boolean hasNext() {
+                        return i < columnPropertyMetaMap.size();
+                    }
+
+                    public PropertyMeta next() {
+                        return PropertyMeta.class.cast(columnPropertyMetaMap
+                                .get(i++));
+                    }
+
+                    public void remove() {
+                        throw new UnsupportedOperationException();
+                    }
+                };
+            }
+        };
+    }
+
+    /**
      * 識別子になっているプロパティメタデータのリストを返します。
      * 
      * @return 識別子になっているプロパティメタデータのリスト
      */
     public List<PropertyMeta> getIdPropertyMetaList() {
         return idPropertyMetaList;
+    }
+
+    /**
+     * バージョンを表すプロパティメタデータがあれば<code>true</code>を返します。
+     * 
+     * @return バージョンを表すプロパティメタデータがあれば<code>true</code>
+     */
+    public boolean hasVersionPropertyMeta() {
+        return versionPropertyMeta != null;
+    }
+
+    /**
+     * バージョンを表すプロパティメタデータを返します。
+     * 
+     * @return バージョンを表すプロパティメタデータ
+     */
+    public PropertyMeta getVersionPropertyMeta() {
+        return versionPropertyMeta;
     }
 
     /**
@@ -294,6 +378,9 @@ public class EntityMeta {
         }
         if (propertyMeta.isId()) {
             idPropertyMetaList.add(propertyMeta);
+        }
+        if (propertyMeta.isVersion()) {
+            versionPropertyMeta = propertyMeta;
         }
         if (propertyMeta.getMappedBy() != null) {
             CaseInsensitiveMap m = (CaseInsensitiveMap) mappedByPropertyMetaMap

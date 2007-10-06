@@ -23,6 +23,7 @@ import javax.transaction.Synchronization;
 import javax.transaction.TransactionSynchronizationRegistry;
 
 import org.seasar.extension.jdbc.AutoSelect;
+import org.seasar.extension.jdbc.AutoUpdate;
 import org.seasar.extension.jdbc.DbmsDialect;
 import org.seasar.extension.jdbc.EntityMetaFactory;
 import org.seasar.extension.jdbc.JdbcContext;
@@ -31,6 +32,7 @@ import org.seasar.extension.jdbc.SqlFileSelect;
 import org.seasar.extension.jdbc.SqlSelect;
 import org.seasar.extension.jdbc.SqlUpdate;
 import org.seasar.extension.jdbc.query.AutoSelectImpl;
+import org.seasar.extension.jdbc.query.AutoUpdateImpl;
 import org.seasar.extension.jdbc.query.SqlFileSelectImpl;
 import org.seasar.extension.jdbc.query.SqlSelectImpl;
 import org.seasar.extension.jdbc.query.SqlUpdateImpl;
@@ -110,6 +112,10 @@ public class JdbcManagerImpl implements JdbcManager, Synchronization {
     public <T> AutoSelect<T> from(Class<T> baseClass) {
         return new AutoSelectImpl<T>(this, baseClass).maxRows(maxRows)
                 .fetchSize(fetchSize).queryTimeout(queryTimeout);
+    }
+
+    public <T> AutoUpdate<T> update(T entity) {
+        return new AutoUpdateImpl<T>(this, entity);
     }
 
     public void afterCompletion(int status) {

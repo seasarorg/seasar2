@@ -15,6 +15,8 @@
  */
 package org.seasar.extension.jdbc.util;
 
+import org.seasar.framework.util.StringUtil;
+
 /**
  * where句の条件を組み立てるためのユーティリティクラスです。
  * 
@@ -23,171 +25,185 @@ package org.seasar.extension.jdbc.util;
  */
 public final class ConditionUtil {
 
-	private ConditionUtil() {
-	}
+    private ConditionUtil() {
+    }
 
-	/**
-	 * =用の条件を返します。
-	 * 
-	 * @param tableAlias
-	 *            テーブル別名
-	 * @param columnName
-	 *            カラム名
-	 * @return =用の条件
-	 */
-	public static String getEqCondition(String tableAlias, String columnName) {
-		return tableAlias + "." + columnName + " = ?";
-	}
+    /**
+     * =用の条件を返します。
+     * 
+     * @param columnName
+     *            カラム名
+     * @return =用の条件
+     */
+    public static String getEqCondition(String columnName) {
+        return getEqCondition(null, columnName);
+    }
 
-	/**
-	 * &lt;&gt;用の条件を返します。
-	 * 
-	 * @param tableAlias
-	 *            テーブル別名
-	 * @param columnName
-	 *            カラム名
-	 * @return &lt;&gt;用の条件
-	 */
-	public static String getNeCondition(String tableAlias, String columnName) {
-		return tableAlias + "." + columnName + " <> ?";
-	}
+    /**
+     * =用の条件を返します。
+     * 
+     * @param tableAlias
+     *            テーブル別名
+     * @param columnName
+     *            カラム名
+     * @return =用の条件
+     */
+    public static String getEqCondition(String tableAlias, String columnName) {
+        if (StringUtil.isEmpty(tableAlias)) {
+            return columnName + " = ?";
+        }
+        return tableAlias + "." + columnName + " = ?";
+    }
 
-	/**
-	 * &lt;用の条件を返します。
-	 * 
-	 * @param tableAlias
-	 *            テーブル別名
-	 * @param columnName
-	 *            カラム名
-	 * @return &lt;用の条件
-	 */
-	public static String getLtCondition(String tableAlias, String columnName) {
-		return tableAlias + "." + columnName + " < ?";
-	}
+    /**
+     * &lt;&gt;用の条件を返します。
+     * 
+     * @param tableAlias
+     *            テーブル別名
+     * @param columnName
+     *            カラム名
+     * @return &lt;&gt;用の条件
+     */
+    public static String getNeCondition(String tableAlias, String columnName) {
+        return tableAlias + "." + columnName + " <> ?";
+    }
 
-	/**
-	 * &lt;=用の条件を返します。
-	 * 
-	 * @param tableAlias
-	 *            テーブル別名
-	 * @param columnName
-	 *            カラム名
-	 * @return &lt;=用の条件
-	 */
-	public static String getLeCondition(String tableAlias, String columnName) {
-		return tableAlias + "." + columnName + " <= ?";
-	}
+    /**
+     * &lt;用の条件を返します。
+     * 
+     * @param tableAlias
+     *            テーブル別名
+     * @param columnName
+     *            カラム名
+     * @return &lt;用の条件
+     */
+    public static String getLtCondition(String tableAlias, String columnName) {
+        return tableAlias + "." + columnName + " < ?";
+    }
 
-	/**
-	 * &gt;用の条件を返します。
-	 * 
-	 * @param tableAlias
-	 *            テーブル別名
-	 * @param columnName
-	 *            カラム名
-	 * @return &gt;用の条件
-	 */
-	public static String getGtCondition(String tableAlias, String columnName) {
-		return tableAlias + "." + columnName + " > ?";
-	}
+    /**
+     * &lt;=用の条件を返します。
+     * 
+     * @param tableAlias
+     *            テーブル別名
+     * @param columnName
+     *            カラム名
+     * @return &lt;=用の条件
+     */
+    public static String getLeCondition(String tableAlias, String columnName) {
+        return tableAlias + "." + columnName + " <= ?";
+    }
 
-	/**
-	 * &gt;=用の条件を返します。
-	 * 
-	 * @param tableAlias
-	 *            テーブル別名
-	 * @param columnName
-	 *            カラム名
-	 * @return &gt;=用の条件
-	 */
-	public static String getGeCondition(String tableAlias, String columnName) {
-		return tableAlias + "." + columnName + " >= ?";
-	}
+    /**
+     * &gt;用の条件を返します。
+     * 
+     * @param tableAlias
+     *            テーブル別名
+     * @param columnName
+     *            カラム名
+     * @return &gt;用の条件
+     */
+    public static String getGtCondition(String tableAlias, String columnName) {
+        return tableAlias + "." + columnName + " > ?";
+    }
 
-	/**
-	 * in用の条件を返します。
-	 * 
-	 * @param tableAlias
-	 *            テーブル別名
-	 * @param columnName
-	 *            カラム名
-	 * @param size
-	 *            変数の数
-	 * @return in用の条件
-	 */
-	public static String getInCondition(String tableAlias, String columnName,
-			int size) {
-		return getInternalInCondition(tableAlias, columnName, size, "in");
-	}
+    /**
+     * &gt;=用の条件を返します。
+     * 
+     * @param tableAlias
+     *            テーブル別名
+     * @param columnName
+     *            カラム名
+     * @return &gt;=用の条件
+     */
+    public static String getGeCondition(String tableAlias, String columnName) {
+        return tableAlias + "." + columnName + " >= ?";
+    }
 
-	/**
-	 * not in用の条件を返します。
-	 * 
-	 * @param tableAlias
-	 *            テーブル別名
-	 * @param columnName
-	 *            カラム名
-	 * @param size
-	 *            変数の数
-	 * @return in用の条件
-	 */
-	public static String getNotInCondition(String tableAlias,
-			String columnName, int size) {
-		return getInternalInCondition(tableAlias, columnName, size, "not in");
-	}
+    /**
+     * in用の条件を返します。
+     * 
+     * @param tableAlias
+     *            テーブル別名
+     * @param columnName
+     *            カラム名
+     * @param size
+     *            変数の数
+     * @return in用の条件
+     */
+    public static String getInCondition(String tableAlias, String columnName,
+            int size) {
+        return getInternalInCondition(tableAlias, columnName, size, "in");
+    }
 
-	private static String getInternalInCondition(String tableAlias,
-			String columnName, int size, String str) {
-		StringBuilder buf = new StringBuilder(30);
-		buf.append(tableAlias).append(".").append(columnName);
-		buf.append(" ").append(str).append(" (");
-		for (int i = 0; i < size; i++) {
-			if (i != 0) {
-				buf.append(", ");
-			}
-			buf.append("?");
-		}
-		buf.append(")");
-		return buf.toString();
-	}
+    /**
+     * not in用の条件を返します。
+     * 
+     * @param tableAlias
+     *            テーブル別名
+     * @param columnName
+     *            カラム名
+     * @param size
+     *            変数の数
+     * @return in用の条件
+     */
+    public static String getNotInCondition(String tableAlias,
+            String columnName, int size) {
+        return getInternalInCondition(tableAlias, columnName, size, "not in");
+    }
 
-	/**
-	 * likeの条件を返します。
-	 * 
-	 * @param tableAlias
-	 *            テーブル別名
-	 * @param columnName
-	 *            カラム名
-	 * @return like用の条件
-	 */
-	public static String getLikeCondition(String tableAlias, String columnName) {
-		return tableAlias + "." + columnName + " like ?";
-	}
+    private static String getInternalInCondition(String tableAlias,
+            String columnName, int size, String str) {
+        StringBuilder buf = new StringBuilder(30);
+        buf.append(tableAlias).append(".").append(columnName);
+        buf.append(" ").append(str).append(" (");
+        for (int i = 0; i < size; i++) {
+            if (i != 0) {
+                buf.append(", ");
+            }
+            buf.append("?");
+        }
+        buf.append(")");
+        return buf.toString();
+    }
 
-	/**
-	 * is nullの条件を返します。
-	 * 
-	 * @param tableAlias
-	 *            テーブル別名
-	 * @param columnName
-	 *            カラム名
-	 * @return is null用の条件
-	 */
-	public static String getIsNullCondition(String tableAlias, String columnName) {
-		return tableAlias + "." + columnName + " is null";
-	}
+    /**
+     * likeの条件を返します。
+     * 
+     * @param tableAlias
+     *            テーブル別名
+     * @param columnName
+     *            カラム名
+     * @return like用の条件
+     */
+    public static String getLikeCondition(String tableAlias, String columnName) {
+        return tableAlias + "." + columnName + " like ?";
+    }
 
-	/**
-	 * is not nullの条件を返します。
-	 * 
-	 * @param tableAlias
-	 *            テーブル別名
-	 * @param columnName
-	 *            カラム名
-	 * @return is not null用の条件
-	 */
-	public static String getIsNotNullCondition(String tableAlias,
-			String columnName) {
-		return tableAlias + "." + columnName + " is not null";
-	}
+    /**
+     * is nullの条件を返します。
+     * 
+     * @param tableAlias
+     *            テーブル別名
+     * @param columnName
+     *            カラム名
+     * @return is null用の条件
+     */
+    public static String getIsNullCondition(String tableAlias, String columnName) {
+        return tableAlias + "." + columnName + " is null";
+    }
+
+    /**
+     * is not nullの条件を返します。
+     * 
+     * @param tableAlias
+     *            テーブル別名
+     * @param columnName
+     *            カラム名
+     * @return is not null用の条件
+     */
+    public static String getIsNotNullCondition(String tableAlias,
+            String columnName) {
+        return tableAlias + "." + columnName + " is not null";
+    }
 }

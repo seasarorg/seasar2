@@ -101,6 +101,17 @@ public interface JdbcManager {
     <T> AutoSelect<T> from(Class<T> baseClass);
 
     /**
+     * 自動更新を作成します。
+     * 
+     * @param <T>
+     *            更新するエンティティの型です。
+     * @param entity
+     *            エンティティ
+     * @return 自動更新
+     */
+    <T> AutoUpdate<T> update(T entity);
+
+    /**
      * JDBCコンテキストを返します。
      * 
      * @return JDBCコンテキスト

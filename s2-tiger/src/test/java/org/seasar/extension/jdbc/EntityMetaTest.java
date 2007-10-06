@@ -51,6 +51,29 @@ public class EntityMetaTest extends TestCase {
     /**
      * 
      */
+    public void testGetVersionPropertyMetaList() {
+        EntityMeta em = new EntityMeta();
+        PropertyMeta pm = new PropertyMeta();
+        pm.setName("aaa");
+        pm.setId(true);
+        em.addPropertyMeta(pm);
+        pm = new PropertyMeta();
+        pm.setName("bbb");
+        em.addPropertyMeta(pm);
+        pm = new PropertyMeta();
+        assertFalse(em.hasVersionPropertyMeta());
+        assertNull(em.getVersionPropertyMeta());
+
+        pm.setName("ccc");
+        pm.setVersion(true);
+        em.addPropertyMeta(pm);
+        assertTrue(em.hasVersionPropertyMeta());
+        assertEquals("ccc", em.getVersionPropertyMeta().getName());
+    }
+
+    /**
+     * 
+     */
     public void testGetMappedByPropertyMeta() {
         EntityMeta em = new EntityMeta();
         PropertyMeta pm = new PropertyMeta();
