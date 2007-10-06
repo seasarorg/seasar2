@@ -22,6 +22,8 @@ import javax.transaction.Status;
 import javax.transaction.Synchronization;
 import javax.transaction.TransactionSynchronizationRegistry;
 
+import org.seasar.extension.jdbc.AutoDelete;
+import org.seasar.extension.jdbc.AutoInsert;
 import org.seasar.extension.jdbc.AutoSelect;
 import org.seasar.extension.jdbc.AutoUpdate;
 import org.seasar.extension.jdbc.DbmsDialect;
@@ -31,6 +33,8 @@ import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.SqlFileSelect;
 import org.seasar.extension.jdbc.SqlSelect;
 import org.seasar.extension.jdbc.SqlUpdate;
+import org.seasar.extension.jdbc.query.AutoDeleteImpl;
+import org.seasar.extension.jdbc.query.AutoInsertImpl;
 import org.seasar.extension.jdbc.query.AutoSelectImpl;
 import org.seasar.extension.jdbc.query.AutoUpdateImpl;
 import org.seasar.extension.jdbc.query.SqlFileSelectImpl;
@@ -115,8 +119,16 @@ public class JdbcManagerImpl implements JdbcManager, Synchronization {
                 maxRows).fetchSize(fetchSize).queryTimeout(queryTimeout);
     }
 
+    public <T> AutoInsert<T> insert(T entity) {
+        return new AutoInsertImpl<T>(this, entity);
+    }
+
     public <T> AutoUpdate<T> update(T entity) {
         return new AutoUpdateImpl<T>(this, entity);
+    }
+
+    public <T> AutoDelete<T> delete(T entity) {
+        return new AutoDeleteImpl<T>(this, entity);
     }
 
     public void afterCompletion(int status) {

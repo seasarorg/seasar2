@@ -16,25 +16,13 @@
 package org.seasar.extension.jdbc;
 
 /**
- * SQLを自動生成するバッチ更新です。
+ * SQLを自動生成するバッチ挿入です。
  * 
  * @author koichik
  * @param <T>
  *            エンティティの型です。
  */
-public interface AutoBatchUpdate<T> extends BatchUpdate<AutoBatchUpdate<T>> {
-
-    /**
-     * バージョンプロパティを更新対象に含めます。
-     * <p>
-     * このメソッドが呼び出されると、<code>update</code>文の<code>where</code>句にはバージョンのチェックが含まれなくなり、
-     * バージョンプロパティは通常のプロパティと同じように更新対象に含められます ({@link #excludesNull()}や{@link #changedFrom(Object)}等も同じように適用されます)。
-     * 
-     * </p>
-     * 
-     * @return このインスタンス自身
-     */
-    AutoUpdate<T> includeVersion();
+public interface AutoBatchInsert<T> extends BatchUpdate<AutoBatchInsert<T>> {
 
     /**
      * 指定のプロパティのみを更新対象とします。
@@ -52,6 +40,6 @@ public interface AutoBatchUpdate<T> extends BatchUpdate<AutoBatchUpdate<T>> {
      *            更新対象から除外するプロパティ名の並び
      * @return このインスタンス自身
      */
-    AutoBatchUpdate<T> exclude(String... propertyNames);
+    AutoBatchInsert<T> exclude(String... propertyNames);
 
 }

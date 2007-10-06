@@ -15,43 +15,39 @@
  */
 package org.seasar.extension.jdbc;
 
+
 /**
- * SQLを自動生成するバッチ更新です。
+ * SQLを自動生成する挿入です。
  * 
  * @author koichik
  * @param <T>
  *            エンティティの型です。
  */
-public interface AutoBatchUpdate<T> extends BatchUpdate<AutoBatchUpdate<T>> {
+public interface AutoInsert<T> extends Update<AutoInsert<T>> {
 
     /**
-     * バージョンプロパティを更新対象に含めます。
-     * <p>
-     * このメソッドが呼び出されると、<code>update</code>文の<code>where</code>句にはバージョンのチェックが含まれなくなり、
-     * バージョンプロパティは通常のプロパティと同じように更新対象に含められます ({@link #excludesNull()}や{@link #changedFrom(Object)}等も同じように適用されます)。
-     * 
-     * </p>
+     * <code>null</code>値のプロパティを挿入対象から除外します。
      * 
      * @return このインスタンス自身
      */
-    AutoUpdate<T> includeVersion();
+    AutoInsert<T> excludesNull();
 
     /**
-     * 指定のプロパティのみを更新対象とします。
+     * 指定のプロパティのみを挿入対象とします。
      * 
      * @param propertyNames
-     *            更新対象とするプロパティ名の並び
+     *            挿入対象とするプロパティ名の並び
      * @return このインスタンス自身
      */
-    AutoUpdate<T> include(String... propertyNames);
+    AutoInsert<T> includes(String... propertyNames);
 
     /**
-     * 指定のプロパティを更新対象から除外します。
+     * 指定のプロパティを挿入対象から除外します。
      * 
      * @param propertyNames
-     *            更新対象から除外するプロパティ名の並び
+     *            挿入対象から除外するプロパティ名の並び
      * @return このインスタンス自身
      */
-    AutoBatchUpdate<T> exclude(String... propertyNames);
+    AutoInsert<T> excludes(String... propertyNames);
 
 }

@@ -101,6 +101,17 @@ public interface JdbcManager {
     <T> AutoSelect<T> from(Class<T> baseClass);
 
     /**
+     * 自動挿入を作成します。
+     * 
+     * @param <T>
+     *            挿入するエンティティの型です。
+     * @param entity
+     *            エンティティ
+     * @return 自動挿入
+     */
+    <T> AutoInsert<T> insert(T entity);
+
+    /**
      * 自動更新を作成します。
      * 
      * @param <T>
@@ -110,6 +121,17 @@ public interface JdbcManager {
      * @return 自動更新
      */
     <T> AutoUpdate<T> update(T entity);
+
+    /**
+     * 自動削除を作成します。
+     * 
+     * @param <T>
+     *            削除するエンティティの型です。
+     * @param entity
+     *            エンティティ
+     * @return 自動更新
+     */
+    <T> AutoDelete<T> delete(T entity);
 
     /**
      * JDBCコンテキストを返します。

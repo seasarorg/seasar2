@@ -30,20 +30,20 @@ public interface AutoUpdate<T> extends Update<AutoUpdate<T>> {
      * バージョンプロパティを更新対象に含めます。
      * <p>
      * このメソッドが呼び出されると、<code>update</code>文の<code>where</code>句にはバージョンのチェックが含まれなくなり、
-     * バージョンプロパティは通常のプロパティと同じように更新対象に含められます ({@link #excludeNull()}や{@link #changedFrom(Object)}等も同じように適用されます)。
+     * バージョンプロパティは通常のプロパティと同じように更新対象に含められます ({@link #excludesNull()}や{@link #changedFrom(Object)}等も同じように適用されます)。
      * 
      * </p>
      * 
      * @return このインスタンス自身
      */
-    AutoUpdate<T> includeVersion();
+    AutoUpdate<T> includesVersion();
 
     /**
      * <code>null</code>値のプロパティを更新対象から除外します。
      * 
      * @return このインスタンス自身
      */
-    AutoUpdate<T> excludeNull();
+    AutoUpdate<T> excludesNull();
 
     /**
      * 指定のプロパティのみを更新対象とします。
@@ -52,7 +52,7 @@ public interface AutoUpdate<T> extends Update<AutoUpdate<T>> {
      *            更新対象とするプロパティ名の並び
      * @return このインスタンス自身
      */
-    AutoUpdate<T> include(String... propertyNames);
+    AutoUpdate<T> includes(String... propertyNames);
 
     /**
      * 指定のプロパティを更新対象から除外します。
@@ -61,7 +61,7 @@ public interface AutoUpdate<T> extends Update<AutoUpdate<T>> {
      *            更新対象から除外するプロパティ名の並び
      * @return このインスタンス自身
      */
-    AutoUpdate<T> exclude(String... propertyNames);
+    AutoUpdate<T> excludes(String... propertyNames);
 
     /**
      * <code>before</code>から変更のあったプロパティだけを更新対象とします。

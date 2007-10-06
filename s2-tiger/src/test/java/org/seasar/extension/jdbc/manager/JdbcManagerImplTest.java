@@ -6,13 +6,22 @@ import junit.framework.TestCase;
 
 import org.seasar.extension.jdbc.JdbcContext;
 import org.seasar.extension.jdbc.entity.Aaa;
+import org.seasar.extension.jdbc.entity.Eee;
+import org.seasar.extension.jdbc.meta.ColumnMetaFactoryImpl;
+import org.seasar.extension.jdbc.meta.EntityMetaFactoryImpl;
+import org.seasar.extension.jdbc.meta.PropertyMetaFactoryImpl;
+import org.seasar.extension.jdbc.meta.TableMetaFactoryImpl;
+import org.seasar.extension.jdbc.query.AutoDeleteImpl;
+import org.seasar.extension.jdbc.query.AutoInsertImpl;
 import org.seasar.extension.jdbc.query.AutoSelectImpl;
+import org.seasar.extension.jdbc.query.AutoUpdateImpl;
 import org.seasar.extension.jdbc.query.SqlFileSelectImpl;
 import org.seasar.extension.jdbc.query.SqlSelectImpl;
 import org.seasar.extension.jdbc.query.SqlUpdateImpl;
 import org.seasar.extension.jta.TransactionImpl;
 import org.seasar.extension.jta.TransactionManagerImpl;
 import org.seasar.extension.jta.TransactionSynchronizationRegistryImpl;
+import org.seasar.framework.convention.impl.PersistenceConventionImpl;
 import org.seasar.framework.mock.sql.MockDataSource;
 
 /**
@@ -32,6 +41,22 @@ public class JdbcManagerImplTest extends TestCase {
         manager.setSyncRegistry(new TransactionSynchronizationRegistryImpl(
                 transactionManager));
         manager.setDataSource(new MockDataSource());
+
+        PersistenceConventionImpl convention = new PersistenceConventionImpl();
+        EntityMetaFactoryImpl emFactory = new EntityMetaFactoryImpl();
+        emFactory.setPersistenceConvention(convention);
+        TableMetaFactoryImpl tableMetaFactory = new TableMetaFactoryImpl();
+        tableMetaFactory.setPersistenceConvention(convention);
+        emFactory.setTableMetaFactory(tableMetaFactory);
+
+        PropertyMetaFactoryImpl pFactory = new PropertyMetaFactoryImpl();
+        pFactory.setPersistenceConvention(convention);
+        ColumnMetaFactoryImpl cmFactory = new ColumnMetaFactoryImpl();
+        cmFactory.setPersistenceConvention(convention);
+        pFactory.setColumnMetaFactory(cmFactory);
+        emFactory.setPropertyMetaFactory(pFactory);
+        emFactory.initialize();
+        manager.setEntityMetaFactory(emFactory);
     }
 
     @Override
@@ -111,6 +136,42 @@ public class JdbcManagerImplTest extends TestCase {
         assertNotNull(query);
         assertSame(manager, query.getJdbcManager());
         assertEquals(Aaa.class, query.getBaseClass());
+    }
+
+    /**
+     * @throws Exception
+     * 
+     */
+    public void testInsert() throws Exception {
+        Eee eee = new Eee();
+        AutoInsertImpl<Eee> query = (AutoInsertImpl<Eee>) manager.insert(eee);
+        assertNotNull(query);
+        assertSame(manager, query.getJdbcManager());
+        assertSame(eee, query.getEntity());
+    }
+
+    /**
+     * @throws Exception
+     * 
+     */
+    public void testUpdate() throws Exception {
+        Eee eee = new Eee();
+        AutoUpdateImpl<Eee> query = (AutoUpdateImpl<Eee>) manager.update(eee);
+        assertNotNull(query);
+        assertSame(manager, query.getJdbcManager());
+        assertSame(eee, query.getEntity());
+    }
+
+    /**
+     * @throws Exception
+     * 
+     */
+    public void testDelete() throws Exception {
+        Eee eee = new Eee();
+        AutoDeleteImpl<Eee> query = (AutoDeleteImpl<Eee>) manager.delete(eee);
+        assertNotNull(query);
+        assertSame(manager, query.getJdbcManager());
+        assertSame(eee, query.getEntity());
     }
 
     /**

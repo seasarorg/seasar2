@@ -13,54 +13,22 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.jdbc.entity;
-
-import java.sql.Timestamp;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
-import javax.persistence.Version;
+package org.seasar.extension.jdbc;
 
 /**
+ * SQLを自動生成する削除です。
+ * 
  * @author koichik
+ * @param <T>
+ *            エンティティの型です。
  */
-@Entity
-public class Eee {
+public interface AutoDelete<T> extends Update<AutoDelete<T>> {
 
     /**
+     * バージョンプロパティを無視して削除します。
      * 
+     * @return このインスタンス自身
      */
-    @Id
-    public Integer id;
-
-    /**
-     * 
-     */
-    public String name;
-
-    /**
-     * 
-     */
-    public Integer fffId;
-
-    /**
-     * 
-     */
-    @OneToOne
-    public Fff fff;
-
-    /**
-     * 
-     */
-    @Version
-    public Long version;
-
-    /**
-     * 
-     */
-    @Column(insertable = false, updatable = false)
-    public Timestamp lastUpdated;
+    AutoDelete<T> ignoreVersion();
 
 }

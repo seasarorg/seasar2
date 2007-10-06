@@ -17,7 +17,6 @@ package org.seasar.extension.jdbc.query;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.Map;
 
 import junit.framework.TestCase;
 
@@ -26,7 +25,6 @@ import org.seasar.extension.jdbc.SqlLog;
 import org.seasar.extension.jdbc.SqlLogRegistry;
 import org.seasar.extension.jdbc.SqlLogRegistryLocator;
 import org.seasar.extension.jdbc.dialect.StandardDialect;
-import org.seasar.extension.jdbc.entity.Aaa;
 import org.seasar.extension.jdbc.entity.Eee;
 import org.seasar.extension.jdbc.manager.JdbcManagerImpl;
 import org.seasar.extension.jdbc.meta.ColumnMetaFactoryImpl;
@@ -38,12 +36,11 @@ import org.seasar.extension.jta.TransactionSynchronizationRegistryImpl;
 import org.seasar.framework.convention.impl.PersistenceConventionImpl;
 import org.seasar.framework.mock.sql.MockDataSource;
 import org.seasar.framework.mock.sql.MockPreparedStatement;
-import org.seasar.framework.util.tiger.CollectionsUtil;
 
 /**
  * @author koichik
  */
-public class AutoUpdateTest extends TestCase {
+public class AutoInsertTest extends TestCase {
 
     private JdbcManagerImpl manager;
 
@@ -83,7 +80,7 @@ public class AutoUpdateTest extends TestCase {
      * 
      */
     public void testCallerClass() {
-        AutoUpdateImpl<Eee> query = new AutoUpdateImpl<Eee>(manager, new Eee());
+        AutoInsertImpl<Eee> query = new AutoInsertImpl<Eee>(manager, new Eee());
         assertSame(query, query.callerClass(getClass()));
         assertEquals(getClass(), query.callerClass);
     }
@@ -92,7 +89,7 @@ public class AutoUpdateTest extends TestCase {
      * 
      */
     public void testCallerMethodName() {
-        AutoUpdateImpl<Eee> query = new AutoUpdateImpl<Eee>(manager, new Eee());
+        AutoInsertImpl<Eee> query = new AutoInsertImpl<Eee>(manager, new Eee());
         assertSame(query, query.callerMethodName("hoge"));
         assertEquals("hoge", query.callerMethodName);
     }
@@ -101,7 +98,7 @@ public class AutoUpdateTest extends TestCase {
      * 
      */
     public void testQueryTimeout() {
-        AutoUpdateImpl<Eee> query = new AutoUpdateImpl<Eee>(manager, new Eee());
+        AutoInsertImpl<Eee> query = new AutoInsertImpl<Eee>(manager, new Eee());
         assertSame(query, query.queryTimeout(100));
         assertEquals(100, query.queryTimeout);
     }
@@ -109,18 +106,8 @@ public class AutoUpdateTest extends TestCase {
     /**
      * 
      */
-    public void testIncludesVersion() {
-        AutoUpdateImpl<Eee> query = new AutoUpdateImpl<Eee>(manager, new Eee());
-        assertFalse(query.includeVersion);
-        assertSame(query, query.includesVersion());
-        assertTrue(query.includeVersion);
-    }
-
-    /**
-     * 
-     */
     public void testExcludesNull() {
-        AutoUpdateImpl<Eee> query = new AutoUpdateImpl<Eee>(manager, new Eee());
+        AutoInsertImpl<Eee> query = new AutoInsertImpl<Eee>(manager, new Eee());
         assertFalse(query.excludesNull);
         assertSame(query, query.excludesNull());
         assertTrue(query.excludesNull);
@@ -130,7 +117,7 @@ public class AutoUpdateTest extends TestCase {
      * 
      */
     public void testIncludes() {
-        AutoUpdateImpl<Eee> query = new AutoUpdateImpl<Eee>(manager, new Eee());
+        AutoInsertImpl<Eee> query = new AutoInsertImpl<Eee>(manager, new Eee());
         assertTrue(query.excludesProperties.isEmpty());
 
         assertSame(query, query.includes("name"));
@@ -150,7 +137,7 @@ public class AutoUpdateTest extends TestCase {
      * 
      */
     public void testExcludes() {
-        AutoUpdateImpl<Eee> query = new AutoUpdateImpl<Eee>(manager, new Eee());
+        AutoInsertImpl<Eee> query = new AutoInsertImpl<Eee>(manager, new Eee());
         assertTrue(query.excludesProperties.isEmpty());
 
         assertSame(query, query.excludes("name"));
@@ -169,66 +156,18 @@ public class AutoUpdateTest extends TestCase {
     /**
      * 
      */
-    public void testChangedFrom_entity() {
-        Eee before = new Eee();
-        before.id = 100;
-        before.name = "hoge";
-        before.version = 1L;
-        AutoUpdateImpl<Eee> query = new AutoUpdateImpl<Eee>(manager, new Eee());
-        assertSame(query, query.changedFrom(before));
-        assertEquals(6, query.beforeStates.size());
-        assertEquals(new Integer(100), query.beforeStates.get("id"));
-        assertEquals("hoge", query.beforeStates.get("name"));
-        assertNull(query.beforeStates.get("bbbId"));
-        assertNull(query.beforeStates.get("bbb"));
-        assertEquals(new Long(1), query.beforeStates.get("version"));
-        assertNull(query.beforeStates.get("lastUpdate"));
-    }
-
-    /**
-     * 
-     */
-    public void testChangedFrom_map() {
-        Map<String, Object> before = CollectionsUtil.newHashMap();
-        before.put("id", 100);
-        before.put("name", "hoge");
-        AutoUpdateImpl<Aaa> query = new AutoUpdateImpl<Aaa>(manager, new Aaa());
-        assertSame(query, query.changedFrom(before));
-        assertEquals(2, query.beforeStates.size());
-        assertEquals(new Integer(100), query.beforeStates.get("id"));
-        assertEquals("hoge", query.beforeStates.get("name"));
-    }
-
-    /**
-     * 
-     */
     public void testPrepareTarget() {
         Eee eee = new Eee();
         eee.id = 100;
         eee.name = "hoge";
         eee.version = 1L;
-        AutoUpdateImpl<Eee> query = new AutoUpdateImpl<Eee>(manager, eee);
+        AutoInsertImpl<Eee> query = new AutoInsertImpl<Eee>(manager, eee);
         query.prepareTargetProperties();
-        assertEquals(2, query.targetProperties.size());
-        assertEquals("name", query.targetProperties.get(0).getName());
-        assertEquals("fffId", query.targetProperties.get(1).getName());
-    }
-
-    /**
-     * 
-     */
-    public void testPrepareTarget_includesVersion() {
-        Eee eee = new Eee();
-        eee.id = 100;
-        eee.name = "hoge";
-        eee.version = 1L;
-        AutoUpdateImpl<Eee> query = new AutoUpdateImpl<Eee>(manager, eee);
-        query.includesVersion();
-        query.prepareTargetProperties();
-        assertEquals(3, query.targetProperties.size());
-        assertEquals("name", query.targetProperties.get(0).getName());
-        assertEquals("fffId", query.targetProperties.get(1).getName());
-        assertEquals("version", query.targetProperties.get(2).getName());
+        assertEquals(4, query.targetProperties.size());
+        assertEquals("id", query.targetProperties.get(0).getName());
+        assertEquals("name", query.targetProperties.get(1).getName());
+        assertEquals("fffId", query.targetProperties.get(2).getName());
+        assertEquals("version", query.targetProperties.get(3).getName());
     }
 
     /**
@@ -239,11 +178,13 @@ public class AutoUpdateTest extends TestCase {
         eee.id = 100;
         eee.name = "hoge";
         eee.version = 1L;
-        AutoUpdateImpl<Eee> query = new AutoUpdateImpl<Eee>(manager, eee);
+        AutoInsertImpl<Eee> query = new AutoInsertImpl<Eee>(manager, eee);
         query.excludesNull();
         query.prepareTargetProperties();
-        assertEquals(1, query.targetProperties.size());
-        assertEquals("name", query.targetProperties.get(0).getName());
+        assertEquals(3, query.targetProperties.size());
+        assertEquals("id", query.targetProperties.get(0).getName());
+        assertEquals("name", query.targetProperties.get(1).getName());
+        assertEquals("version", query.targetProperties.get(2).getName());
     }
 
     /**
@@ -254,11 +195,12 @@ public class AutoUpdateTest extends TestCase {
         eee.id = 100;
         eee.name = "hoge";
         eee.version = 1L;
-        AutoUpdateImpl<Eee> query = new AutoUpdateImpl<Eee>(manager, eee);
-        query.includes("name");
+        AutoInsertImpl<Eee> query = new AutoInsertImpl<Eee>(manager, eee);
+        query.includes("id", "version");
         query.prepareTargetProperties();
-        assertEquals(1, query.targetProperties.size());
-        assertEquals("name", query.targetProperties.get(0).getName());
+        assertEquals(2, query.targetProperties.size());
+        assertEquals("id", query.targetProperties.get(0).getName());
+        assertEquals("version", query.targetProperties.get(1).getName());
     }
 
     /**
@@ -269,11 +211,13 @@ public class AutoUpdateTest extends TestCase {
         eee.id = 100;
         eee.name = "hoge";
         eee.version = 1L;
-        AutoUpdateImpl<Eee> query = new AutoUpdateImpl<Eee>(manager, eee);
+        AutoInsertImpl<Eee> query = new AutoInsertImpl<Eee>(manager, eee);
         query.excludes("name");
         query.prepareTargetProperties();
-        assertEquals(1, query.targetProperties.size());
-        assertEquals("fffId", query.targetProperties.get(0).getName());
+        assertEquals(3, query.targetProperties.size());
+        assertEquals("id", query.targetProperties.get(0).getName());
+        assertEquals("fffId", query.targetProperties.get(1).getName());
+        assertEquals("version", query.targetProperties.get(2).getName());
     }
 
     /**
@@ -284,11 +228,12 @@ public class AutoUpdateTest extends TestCase {
         eee.id = 100;
         eee.name = "hoge";
         eee.version = 1L;
-        AutoUpdateImpl<Eee> query = new AutoUpdateImpl<Eee>(manager, eee);
-        query.includes("name", "fffId").excludes("fffId");
+        AutoInsertImpl<Eee> query = new AutoInsertImpl<Eee>(manager, eee);
+        query.includes("id", "name", "fffId").excludes("fffId");
         query.prepareTargetProperties();
-        assertEquals(1, query.targetProperties.size());
-        assertEquals("name", query.targetProperties.get(0).getName());
+        assertEquals(2, query.targetProperties.size());
+        assertEquals("id", query.targetProperties.get(0).getName());
+        assertEquals("name", query.targetProperties.get(1).getName());
     }
 
     /**
@@ -299,104 +244,38 @@ public class AutoUpdateTest extends TestCase {
         eee.id = 100;
         eee.name = "hoge";
         eee.version = 1L;
-        AutoUpdateImpl<Eee> query = new AutoUpdateImpl<Eee>(manager, eee);
-        query.includes("name", "fffId").excludesNull();
+        AutoInsertImpl<Eee> query = new AutoInsertImpl<Eee>(manager, eee);
+        query.includes("id", "name", "fffId").excludesNull();
         query.prepareTargetProperties();
-        assertEquals(1, query.targetProperties.size());
-        assertEquals("name", query.targetProperties.get(0).getName());
+        assertEquals(2, query.targetProperties.size());
+        assertEquals("id", query.targetProperties.get(0).getName());
+        assertEquals("name", query.targetProperties.get(1).getName());
     }
 
     /**
      * 
      */
-    public void testPrepareTarget_changedFromEntity() {
-        Eee eee = new Eee();
-        eee.id = 100;
-        eee.name = "foo";
-        eee.version = 1L;
-        Eee before = new Eee();
-        before.id = 100;
-        before.name = "bar";
-        eee.version = 1L;
-        AutoUpdateImpl<Eee> query = new AutoUpdateImpl<Eee>(manager, eee);
-        query.changedFrom(before);
-        query.prepareTargetProperties();
-        assertEquals(1, query.targetProperties.size());
-        assertEquals("name", query.targetProperties.get(0).getName());
-    }
-
-    /**
-     * 
-     */
-    public void testPrepareTarget_changedFromMap() {
-        Eee eee = new Eee();
-        eee.id = 100;
-        eee.name = "foo";
-        eee.version = 1L;
-        Map<String, Object> before = CollectionsUtil.newHashMap();
-        before.put("id", 100);
-        before.put("name", "hoge");
-        AutoUpdateImpl<Eee> query = new AutoUpdateImpl<Eee>(manager, eee);
-        query.changedFrom(before);
-        query.prepareTargetProperties();
-        assertEquals(1, query.targetProperties.size());
-        assertEquals("name", query.targetProperties.get(0).getName());
-    }
-
-    /**
-     * 
-     */
-    public void testPrepareSetClause() {
+    public void testPrepareIntoClause() {
         Eee eee = new Eee();
         eee.id = 100;
         eee.name = "hoge";
         eee.version = 1L;
-        AutoUpdateImpl<Eee> query = new AutoUpdateImpl<Eee>(manager, eee);
+        AutoInsertImpl<Eee> query = new AutoInsertImpl<Eee>(manager, eee);
         query.prepare("execute");
-        assertEquals(" set NAME = ?, FFF_ID = ?, VERSION = VERSION + 1",
-                query.setClause.toSql());
+        assertEquals(" (ID, NAME, FFF_ID, VERSION)", query.intoClause.toSql());
     }
 
     /**
      * 
      */
-    public void testPrepareSetClause_includesVersion() {
+    public void testPrepareValuesClause() {
         Eee eee = new Eee();
         eee.id = 100;
         eee.name = "hoge";
         eee.version = 1L;
-        AutoUpdateImpl<Eee> query = new AutoUpdateImpl<Eee>(manager, eee);
-        query.includesVersion();
+        AutoInsertImpl<Eee> query = new AutoInsertImpl<Eee>(manager, eee);
         query.prepare("execute");
-        assertEquals(" set NAME = ?, FFF_ID = ?, VERSION = ?", query.setClause
-                .toSql());
-    }
-
-    /**
-     * 
-     */
-    public void testPrepareWhereClause() {
-        Eee eee = new Eee();
-        eee.id = 100;
-        eee.name = "hoge";
-        eee.version = 1L;
-        AutoUpdateImpl<Eee> query = new AutoUpdateImpl<Eee>(manager, eee);
-        query.prepare("execute");
-        assertEquals(" where ID = ? and VERSION = ?", query.whereClause.toSql());
-    }
-
-    /**
-     * 
-     */
-    public void testPrepareWhereClause_inclduesVersion() {
-        Eee eee = new Eee();
-        eee.id = 100;
-        eee.name = "hoge";
-        eee.version = 1L;
-        AutoUpdateImpl<Eee> query = new AutoUpdateImpl<Eee>(manager, eee);
-        query.includesVersion();
-        query.prepare("execute");
-        assertEquals(" where ID = ?", query.whereClause.toSql());
+        assertEquals(" values (?, ?, ?, ?)", query.valuesClause.toSql());
     }
 
     /**
@@ -407,31 +286,13 @@ public class AutoUpdateTest extends TestCase {
         eee.id = 100;
         eee.name = "hoge";
         eee.version = 1L;
-        AutoUpdateImpl<Eee> query = new AutoUpdateImpl<Eee>(manager, eee);
+        AutoInsertImpl<Eee> query = new AutoInsertImpl<Eee>(manager, eee);
         query.prepare("execute");
         assertEquals(4, query.bindVariableList.size());
-        assertEquals("hoge", query.bindVariableList.get(0));
-        assertNull(query.bindVariableList.get(1));
-        assertEquals(new Integer(100), query.bindVariableList.get(2));
+        assertEquals(new Integer(100), query.bindVariableList.get(0));
+        assertEquals("hoge", query.bindVariableList.get(1));
+        assertNull(query.bindVariableList.get(2));
         assertEquals(new Long(1L), query.bindVariableList.get(3));
-    }
-
-    /**
-     * 
-     */
-    public void testPrepareParams_includesVersion() {
-        Eee eee = new Eee();
-        eee.id = 100;
-        eee.name = "hoge";
-        eee.version = 1L;
-        AutoUpdateImpl<Eee> query = new AutoUpdateImpl<Eee>(manager, eee);
-        query.includesVersion();
-        query.prepare("execute");
-        assertEquals(4, query.bindVariableList.size());
-        assertEquals("hoge", query.bindVariableList.get(0));
-        assertNull(query.bindVariableList.get(1));
-        assertEquals(new Long(1L), query.bindVariableList.get(2));
-        assertEquals(new Integer(100), query.bindVariableList.get(3));
     }
 
     /**
@@ -442,12 +303,12 @@ public class AutoUpdateTest extends TestCase {
         eee.id = 100;
         eee.name = "hoge";
         eee.version = 1L;
-        AutoUpdateImpl<Eee> query = new AutoUpdateImpl<Eee>(manager, eee);
+        AutoInsertImpl<Eee> query = new AutoInsertImpl<Eee>(manager, eee);
         query.excludesNull();
         query.prepare("execute");
         assertEquals(3, query.bindVariableList.size());
-        assertEquals("hoge", query.bindVariableList.get(0));
-        assertEquals(new Integer(100), query.bindVariableList.get(1));
+        assertEquals(new Integer(100), query.bindVariableList.get(0));
+        assertEquals("hoge", query.bindVariableList.get(1));
         assertEquals(new Long(1L), query.bindVariableList.get(2));
     }
 
@@ -459,26 +320,10 @@ public class AutoUpdateTest extends TestCase {
         eee.id = 100;
         eee.name = "hoge";
         eee.version = 1L;
-        AutoUpdateImpl<Eee> query = new AutoUpdateImpl<Eee>(manager, eee);
+        AutoInsertImpl<Eee> query = new AutoInsertImpl<Eee>(manager, eee);
         query.prepare("execute");
         assertEquals(
-                "update EEE set NAME = ?, FFF_ID = ?, VERSION = VERSION + 1 where ID = ? and VERSION = ?",
-                query.executedSql);
-    }
-
-    /**
-     * 
-     */
-    public void testPrepareSql_includesVersion() {
-        Eee eee = new Eee();
-        eee.id = 100;
-        eee.name = "hoge";
-        eee.version = 1L;
-        AutoUpdateImpl<Eee> query = new AutoUpdateImpl<Eee>(manager, eee);
-        query.includesVersion();
-        query.prepare("execute");
-        assertEquals(
-                "update EEE set NAME = ?, FFF_ID = ?, VERSION = ? where ID = ?",
+                "insert into EEE (ID, NAME, FFF_ID, VERSION) values (?, ?, ?, ?)",
                 query.executedSql);
     }
 
@@ -490,11 +335,10 @@ public class AutoUpdateTest extends TestCase {
         eee.id = 100;
         eee.name = "hoge";
         eee.version = 1L;
-        AutoUpdateImpl<Eee> query = new AutoUpdateImpl<Eee>(manager, eee);
+        AutoInsertImpl<Eee> query = new AutoInsertImpl<Eee>(manager, eee);
         query.excludesNull();
         query.prepare("execute");
-        assertEquals(
-                "update EEE set NAME = ?, VERSION = VERSION + 1 where ID = ? and VERSION = ?",
+        assertEquals("insert into EEE (ID, NAME, VERSION) values (?, ?, ?)",
                 query.executedSql);
     }
 
@@ -506,7 +350,7 @@ public class AutoUpdateTest extends TestCase {
         eee.id = 100;
         eee.name = "hoge";
         eee.version = 1L;
-        AutoUpdateImpl<Eee> query = new AutoUpdateImpl<Eee>(manager, eee) {
+        AutoInsertImpl<Eee> query = new AutoInsertImpl<Eee>(manager, eee) {
 
             @Override
             protected PreparedStatement getPreparedStatement(
@@ -525,39 +369,7 @@ public class AutoUpdateTest extends TestCase {
         assertEquals(1, query.execute());
         SqlLog sqlLog = SqlLogRegistryLocator.getInstance().getLast();
         assertEquals(
-                "update EEE set NAME = 'hoge', FFF_ID = null, VERSION = VERSION + 1 where ID = 100 and VERSION = 1",
-                sqlLog.getCompleteSql());
-    }
-
-    /**
-     * @throws Exception
-     */
-    public void testExecute_includesVersion() throws Exception {
-        Eee eee = new Eee();
-        eee.id = 100;
-        eee.name = "hoge";
-        eee.version = 1L;
-        AutoUpdateImpl<Eee> query = new AutoUpdateImpl<Eee>(manager, eee) {
-
-            @Override
-            protected PreparedStatement getPreparedStatement(
-                    JdbcContext jdbcContext) {
-                MockPreparedStatement ps = new MockPreparedStatement(null, null) {
-
-                    @Override
-                    public int executeUpdate() throws SQLException {
-                        return 1;
-                    }
-                };
-                return ps;
-            }
-
-        };
-        query.includesVersion();
-        assertEquals(1, query.execute());
-        SqlLog sqlLog = SqlLogRegistryLocator.getInstance().getLast();
-        assertEquals(
-                "update EEE set NAME = 'hoge', FFF_ID = null, VERSION = 1 where ID = 100",
+                "insert into EEE (ID, NAME, FFF_ID, VERSION) values (100, 'hoge', null, 1)",
                 sqlLog.getCompleteSql());
     }
 
@@ -569,7 +381,7 @@ public class AutoUpdateTest extends TestCase {
         eee.id = 100;
         eee.name = "hoge";
         eee.version = 1L;
-        AutoUpdateImpl<Eee> query = new AutoUpdateImpl<Eee>(manager, eee) {
+        AutoInsertImpl<Eee> query = new AutoInsertImpl<Eee>(manager, eee) {
 
             @Override
             protected PreparedStatement getPreparedStatement(
@@ -589,7 +401,7 @@ public class AutoUpdateTest extends TestCase {
         assertEquals(1, query.execute());
         SqlLog sqlLog = SqlLogRegistryLocator.getInstance().getLast();
         assertEquals(
-                "update EEE set NAME = 'hoge', VERSION = VERSION + 1 where ID = 100 and VERSION = 1",
+                "insert into EEE (ID, NAME, VERSION) values (100, 'hoge', 1)",
                 sqlLog.getCompleteSql());
     }
 
