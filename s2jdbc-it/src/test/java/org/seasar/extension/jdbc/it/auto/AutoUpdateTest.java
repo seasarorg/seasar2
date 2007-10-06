@@ -73,7 +73,7 @@ public class AutoUpdateTest extends S2TestCase {
         m.put("departmentId", 1);
         department = jdbcManager.from(Department.class).where(m)
                 .getSingleResult();
-        assertEquals(1, department.departmentId = 1);
+        assertEquals(1, department.departmentId);
         assertEquals(0, department.departmentNo);
         assertEquals("hoge", department.departmentName);
         assertNull(department.location);
@@ -95,7 +95,7 @@ public class AutoUpdateTest extends S2TestCase {
         m.put("departmentId", 1);
         department = jdbcManager.from(Department.class).where(m)
                 .getSingleResult();
-        assertEquals(1, department.departmentId = 1);
+        assertEquals(1, department.departmentId);
         assertEquals(0, department.departmentNo);
         assertEquals("hoge", department.departmentName);
         assertEquals("NEW YORK", department.location);
@@ -120,7 +120,7 @@ public class AutoUpdateTest extends S2TestCase {
         m.put("departmentId", 1);
         department = jdbcManager.from(Department.class).where(m)
                 .getSingleResult();
-        assertEquals(1, department.departmentId = 1);
+        assertEquals(1, department.departmentId);
         assertEquals(10, department.departmentNo);
         assertEquals("hoge", department.departmentName);
         assertEquals("foo", department.location);
@@ -145,7 +145,7 @@ public class AutoUpdateTest extends S2TestCase {
         m.put("departmentId", 1);
         department = jdbcManager.from(Department.class).where(m)
                 .getSingleResult();
-        assertEquals(1, department.departmentId = 1);
+        assertEquals(1, department.departmentId);
         assertEquals(99, department.departmentNo);
         assertEquals("ACCOUNTING", department.departmentName);
         assertEquals("NEW YORK", department.location);
