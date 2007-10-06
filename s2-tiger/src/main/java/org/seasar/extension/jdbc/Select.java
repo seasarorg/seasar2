@@ -29,7 +29,7 @@ import org.seasar.extension.jdbc.exception.SNonUniqueResultException;
  * @param <S>
  *            <code>Select</code>のサブタイプです。
  */
-public interface Select<T, S extends Select<T, S>> extends Query<Select<T, S>> {
+public interface Select<T, S extends Select<T, S>> extends Query<S> {
 
     /**
      * 最大行数を設定します。

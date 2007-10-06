@@ -41,7 +41,7 @@ import org.seasar.framework.util.StatementUtil;
  *            <code>Select</code>のサブタイプです。
  */
 public abstract class AbstractSelect<T, S extends Select<T, S>> extends
-        AbstractQuery<Select<T, S>> implements Select<T, S> {
+        AbstractQuery<S> implements Select<T, S> {
 
     /**
      * ベースクラスです。

@@ -100,9 +100,8 @@ public class JdbcManagerImpl implements JdbcManager, Synchronization {
 
     public <T> SqlSelect<T> selectBySql(Class<T> baseClass, String sql,
             Object... params) {
-        return (SqlSelect<T>) new SqlSelectImpl<T>(this, baseClass, sql, params)
-                .maxRows(maxRows).fetchSize(fetchSize).queryTimeout(
-                        queryTimeout);
+        return new SqlSelectImpl<T>(this, baseClass, sql, params).maxRows(
+                maxRows).fetchSize(fetchSize).queryTimeout(queryTimeout);
     }
 
     public SqlUpdate updateBySql(String sql, Class<?>... paramClasses) {
@@ -116,14 +115,14 @@ public class JdbcManagerImpl implements JdbcManager, Synchronization {
 
     public <T> SqlFileSelect<T> selectBySqlFile(Class<T> baseClass,
             String path, Object parameter) {
-        return (SqlFileSelect<T>) new SqlFileSelectImpl<T>(this, baseClass,
-                path, parameter).maxRows(maxRows).fetchSize(fetchSize)
-                .queryTimeout(queryTimeout);
+        return new SqlFileSelectImpl<T>(this, baseClass, path, parameter)
+                .maxRows(maxRows).fetchSize(fetchSize).queryTimeout(
+                        queryTimeout);
     }
 
     public <T> AutoSelect<T> from(Class<T> baseClass) {
-        return (AutoSelect<T>) new AutoSelectImpl<T>(this, baseClass).maxRows(
-                maxRows).fetchSize(fetchSize).queryTimeout(queryTimeout);
+        return new AutoSelectImpl<T>(this, baseClass).maxRows(maxRows)
+                .fetchSize(fetchSize).queryTimeout(queryTimeout);
     }
 
     public <T> AutoInsert<T> insert(T entity) {
