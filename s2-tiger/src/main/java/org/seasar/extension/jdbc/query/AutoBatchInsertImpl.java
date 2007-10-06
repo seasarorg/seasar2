@@ -15,12 +15,12 @@
  */
 package org.seasar.extension.jdbc.query;
 
-import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
-import org.seasar.extension.jdbc.AutoInsert;
+import org.seasar.extension.jdbc.AutoBatchInsert;
+import org.seasar.extension.jdbc.AutoBatchUpdate;
 import org.seasar.extension.jdbc.IntoClause;
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.PropertyMeta;
@@ -29,20 +29,18 @@ import org.seasar.framework.util.FieldUtil;
 import org.seasar.framework.util.tiger.CollectionsUtil;
 
 /**
- * {@link AutoInsert}の実装クラスです。
+ * {@link AutoBatchUpdate}の実装クラスです。
  * 
  * @author koichik
  * @param <T>
  *            エンティティの型です。
  */
-public class AutoInsertImpl<T> extends AbstractAutoUpdate<T, AutoInsert<T>>
-        implements AutoInsert<T> {
+public class AutoBatchInsertImpl<T> extends
+        AbstractAutoBatchUpdate<T, AutoBatchInsert<T>> implements
+        AutoBatchInsert<T> {
 
     /** INSERT文 */
     protected static final String INSERT_STATEMENT = "insert into ";
-
-    /** <code>null</code>値のプロパティを挿入から除外する場合<code>true</code> */
-    protected boolean excludesNull;
 
     /** 挿入対象とするプロパティ */
     protected final Set<String> includesProperties = CollectionsUtil
@@ -52,7 +50,7 @@ public class AutoInsertImpl<T> extends AbstractAutoUpdate<T, AutoInsert<T>>
     protected final Set<String> excludesProperties = CollectionsUtil
             .newHashSet();
 
-    /** 挿入対象となるプロパティメタデータの{@link List} */
+    /** 更新対象となるプロパティメタデータの{@link List} */
     protected final List<PropertyMeta> targetProperties = CollectionsUtil
             .newArrayList();
 
@@ -65,24 +63,30 @@ public class AutoInsertImpl<T> extends AbstractAutoUpdate<T, AutoInsert<T>>
     /**
      * @param jdbcManager
      *            JDBCマネージャ
-     * @param entity
-     *            エンティティ
+     * @param entities
+     *            エンティティのリスト
      */
-    public AutoInsertImpl(final JdbcManager jdbcManager, final T entity) {
-        super(jdbcManager, entity);
+    public AutoBatchInsertImpl(final JdbcManager jdbcManager,
+            final List<T> entities) {
+        super(jdbcManager, entities);
     }
 
-    public AutoInsert<T> excludesNull() {
-        excludesNull = true;
-        return this;
+    /**
+     * @param jdbcManager
+     *            JDBCマネージャ
+     * @param entities
+     *            エンティティの配列
+     */
+    public AutoBatchInsertImpl(final JdbcManager jdbcManager, final T[] entities) {
+        super(jdbcManager, Arrays.asList(entities));
     }
 
-    public AutoInsert<T> includes(final String... propertyNames) {
+    public AutoBatchInsert<T> includes(final String... propertyNames) {
         includesProperties.addAll(Arrays.asList(propertyNames));
         return this;
     }
 
-    public AutoInsert<T> excludes(final String... propertyNames) {
+    public AutoBatchInsert<T> excludes(final String... propertyNames) {
         excludesProperties.addAll(Arrays.asList(propertyNames));
         return this;
     }
@@ -93,19 +97,16 @@ public class AutoInsertImpl<T> extends AbstractAutoUpdate<T, AutoInsert<T>>
         prepareTargetProperties();
         prepareIntoClause();
         prepareValuesClause();
-        prepareParams();
         prepareSql();
     }
 
     /**
-     * into句およびvalues句に設定されるプロパティの準備をします。
+     * into句に設定されるプロパティの準備をします。
      */
     protected void prepareTargetProperties() {
         for (final PropertyMeta propertyMeta : entityMeta
                 .getAllColumnPropertyMeta()) {
             final String propertyName = propertyMeta.getName();
-            final Field field = propertyMeta.getField();
-            final Object value = FieldUtil.get(field, entity);
             if (propertyMeta.isRelationship()
                     || !propertyMeta.getColumnMeta().isInsertable()) {
                 continue;
@@ -115,9 +116,6 @@ public class AutoInsertImpl<T> extends AbstractAutoUpdate<T, AutoInsert<T>>
                 continue;
             }
             if (excludesProperties.contains(propertyName)) {
-                continue;
-            }
-            if (excludesNull && value == null) {
                 continue;
             }
             targetProperties.add(propertyMeta);
@@ -143,10 +141,8 @@ public class AutoInsertImpl<T> extends AbstractAutoUpdate<T, AutoInsert<T>>
         }
     }
 
-    /**
-     * バインド変数を準備します．
-     */
-    protected void prepareParams() {
+    @Override
+    protected void prepareParams(final T entity) {
         for (final PropertyMeta propertyMeta : targetProperties) {
             final Object value = FieldUtil.get(propertyMeta.getField(), entity);
             bindVariableList.add(value);
@@ -168,4 +164,5 @@ public class AutoInsertImpl<T> extends AbstractAutoUpdate<T, AutoInsert<T>>
         return new String(buf.append(INSERT_STATEMENT).append(tableName)
                 .append(intoClause.toSql()).append(valuesClause.toSql()));
     }
+
 }

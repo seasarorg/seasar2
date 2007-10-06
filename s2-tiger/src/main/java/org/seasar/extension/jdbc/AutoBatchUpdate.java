@@ -34,7 +34,7 @@ public interface AutoBatchUpdate<T> extends BatchUpdate<AutoBatchUpdate<T>> {
      * 
      * @return このインスタンス自身
      */
-    AutoUpdate<T> includeVersion();
+    AutoBatchUpdate<T> includesVersion();
 
     /**
      * 指定のプロパティのみを更新対象とします。
@@ -43,7 +43,7 @@ public interface AutoBatchUpdate<T> extends BatchUpdate<AutoBatchUpdate<T>> {
      *            更新対象とするプロパティ名の並び
      * @return このインスタンス自身
      */
-    AutoUpdate<T> include(String... propertyNames);
+    AutoBatchUpdate<T> includes(String... propertyNames);
 
     /**
      * 指定のプロパティを更新対象から除外します。
@@ -52,6 +52,6 @@ public interface AutoBatchUpdate<T> extends BatchUpdate<AutoBatchUpdate<T>> {
      *            更新対象から除外するプロパティ名の並び
      * @return このインスタンス自身
      */
-    AutoBatchUpdate<T> exclude(String... propertyNames);
+    AutoBatchUpdate<T> excludes(String... propertyNames);
 
 }

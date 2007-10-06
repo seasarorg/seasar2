@@ -55,12 +55,27 @@ public class Eee {
      * 
      */
     @Version
-    public Long version;
+    public Long version = 0L;
 
     /**
      * 
      */
     @Column(insertable = false, updatable = false)
     public Timestamp lastUpdated;
+
+    /**
+     * 
+     */
+    public Eee() {
+    }
+
+    /**
+     * @param id
+     * @param name
+     */
+    public Eee(Integer id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 
 }
