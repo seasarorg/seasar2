@@ -57,10 +57,6 @@ public class AbstractSelectTest extends TestCase {
 
     private JdbcContextImpl jdbcContext;
 
-    private Object bindVariable;
-
-    private int parameterIndex;
-
     @Override
     protected void setUp() throws Exception {
         manager = new JdbcManagerImpl() {
@@ -98,23 +94,12 @@ public class AbstractSelectTest extends TestCase {
         query.executedSql = sql;
         query.bindVariableList.add("aaa");
         query.bindVariableClassList.add(String.class);
-        MockPreparedStatement ps = new MockPreparedStatement(null, sql) {
-
-            @Override
-            public void setString(int index, String x) throws SQLException {
-                bindVariable = x;
-                parameterIndex = index;
-                super.setString(parameterIndex, x);
-            }
-
-        };
+        MockPreparedStatement ps = new MockPreparedStatement(null, sql);
         query.setupPreparedStatement(ps);
         assertEquals(ResultSet.TYPE_FORWARD_ONLY, ps.getResultSetType());
         assertEquals(10, ps.getFetchSize());
         assertEquals(20, ps.getMaxRows());
         assertEquals(30, ps.getQueryTimeout());
-        assertEquals("aaa", bindVariable);
-        assertEquals(1, parameterIndex);
     }
 
     /**

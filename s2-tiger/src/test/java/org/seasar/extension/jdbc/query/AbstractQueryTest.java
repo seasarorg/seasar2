@@ -15,6 +15,8 @@
  */
 package org.seasar.extension.jdbc.query;
 
+import java.sql.SQLException;
+
 import junit.framework.TestCase;
 
 import org.seasar.extension.jdbc.JdbcManager;
@@ -25,6 +27,7 @@ import org.seasar.extension.jdbc.dialect.StandardDialect;
 import org.seasar.extension.jdbc.exception.NullBindVariableRuntimeException;
 import org.seasar.extension.jdbc.manager.JdbcManagerImpl;
 import org.seasar.framework.mock.sql.MockDataSource;
+import org.seasar.framework.mock.sql.MockPreparedStatement;
 
 /**
  * @author higa
@@ -33,6 +36,10 @@ import org.seasar.framework.mock.sql.MockDataSource;
 public class AbstractQueryTest extends TestCase {
 
     private JdbcManagerImpl manager;
+
+    private Object bindVariable;
+
+    private int parameterIndex;
 
     @Override
     protected void setUp() throws Exception {
@@ -119,6 +126,29 @@ public class AbstractQueryTest extends TestCase {
         }
     }
 
+    /**
+     * @throws Exception
+     * 
+     */
+    public void testPrepareBindVariables() throws Exception {
+        MyQuery query = new MyQuery(manager);
+        query.bindVariableList.add("aaa");
+        query.bindVariableClassList.add(String.class);
+        MockPreparedStatement ps = new MockPreparedStatement(null, null) {
+
+            @Override
+            public void setString(int index, String x) throws SQLException {
+                bindVariable = x;
+                parameterIndex = index;
+                super.setString(parameterIndex, x);
+            }
+
+        };
+        query.prepareBindVariables(ps);
+        assertEquals("aaa", bindVariable);
+        assertEquals(1, parameterIndex);
+    }
+
     private static class MyQuery extends AbstractQuery {
 
         /**
@@ -128,9 +158,7 @@ public class AbstractQueryTest extends TestCase {
             super(jdbcManager);
         }
 
-        /* (non-Javadoc)
-         * @see org.seasar.extension.jdbc.query.AbstractQuery#prepare(java.lang.String)
-         */
+        @Override
         protected void prepare(String methodName) {
         }
     }

@@ -25,7 +25,6 @@ import org.seasar.extension.jdbc.JdbcContext;
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.ResultSetHandler;
 import org.seasar.extension.jdbc.Select;
-import org.seasar.extension.jdbc.ValueType;
 import org.seasar.extension.jdbc.exception.SNonUniqueResultException;
 import org.seasar.framework.exception.SQLRuntimeException;
 import org.seasar.framework.util.PreparedStatementUtil;
@@ -202,17 +201,7 @@ public abstract class AbstractSelect<T> extends AbstractQuery implements
         if (queryTimeout > 0) {
             StatementUtil.setQueryTimeout(ps, queryTimeout);
         }
-        DbmsDialect dialect = jdbcManager.getDialect();
-        int size = bindVariableList.size();
-        for (int i = 0; i < size; i++) {
-            ValueType valueType = dialect.getValueType(bindVariableClassList
-                    .get(i));
-            try {
-                valueType.bindValue(ps, i + 1, bindVariableList.get(i));
-            } catch (SQLException e) {
-                throw new SQLRuntimeException(e);
-            }
-        }
+        prepareBindVariables(ps);
     }
 
     /**

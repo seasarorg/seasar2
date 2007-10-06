@@ -29,9 +29,11 @@ import org.seasar.extension.jdbc.JdbcContext;
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.SqlFileSelect;
 import org.seasar.extension.jdbc.SqlSelect;
+import org.seasar.extension.jdbc.SqlUpdate;
 import org.seasar.extension.jdbc.query.AutoSelectImpl;
 import org.seasar.extension.jdbc.query.SqlFileSelectImpl;
 import org.seasar.extension.jdbc.query.SqlSelectImpl;
+import org.seasar.extension.jdbc.query.SqlUpdateImpl;
 import org.seasar.extension.jdbc.util.DataSourceUtil;
 
 /**
@@ -42,8 +44,6 @@ import org.seasar.extension.jdbc.util.DataSourceUtil;
  * 
  */
 public class JdbcManagerImpl implements JdbcManager, Synchronization {
-
-    private static final Object[] EMPTY_PARAMETERS = new Object[0];
 
     /**
      * トランザクション同期レジストリです。
@@ -85,14 +85,15 @@ public class JdbcManagerImpl implements JdbcManager, Synchronization {
      */
     protected int queryTimeout = 0;
 
-    public <T> SqlSelect<T> selectBySql(Class<T> baseClass, String sql) {
-        return selectBySql(baseClass, sql, EMPTY_PARAMETERS);
+    public <T> SqlSelect<T> selectBySql(Class<T> baseClass, String sql,
+            Object... params) {
+        return new SqlSelectImpl<T>(this, baseClass, sql, params).maxRows(
+                maxRows).fetchSize(fetchSize).queryTimeout(queryTimeout);
     }
 
-    public <T> SqlSelect<T> selectBySql(Class<T> baseClass, String sql,
-            Object... parameters) {
-        return new SqlSelectImpl<T>(this, baseClass, sql, parameters).maxRows(
-                maxRows).fetchSize(fetchSize).queryTimeout(queryTimeout);
+    public SqlUpdate updateBySql(String sql, Class<?>... paramClasses) {
+        return new SqlUpdateImpl(this, sql, paramClasses)
+                .queryTimeout(queryTimeout);
     }
 
     public <T> SqlFileSelect<T> selectBySqlFile(Class<T> baseClass, String path) {

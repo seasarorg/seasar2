@@ -32,27 +32,24 @@ public interface JdbcManager {
      *            ベースクラス
      * @param sql
      *            SQL
-     * @return SQL検索
-     * @see #selectBySql(Class, String, Object[])
-     */
-    <T> SqlSelect<T> selectBySql(Class<T> baseClass, String sql);
-
-    /**
-     * SQL検索を作成します。
-     * 
-     * @param <T>
-     *            戻り値のベースの型です。
-     * @param baseClass
-     *            ベースクラス
-     * @param sql
-     *            SQL
-     * @param parameters
+     * @param params
      *            パラメータの配列
      * @return SQL検索
      * @see SqlSelect
      */
     <T> SqlSelect<T> selectBySql(Class<T> baseClass, String sql,
-            Object... parameters);
+            Object... params);
+
+    /**
+     * SQL更新を返します。
+     * 
+     * @param sql
+     *            SQL
+     * @param paramClasses
+     *            パラメータのクラスの配列
+     * @return SQL更新
+     */
+    SqlUpdate updateBySql(String sql, Class<?>... paramClasses);
 
     /**
      * SQLファイル検索を作成します。

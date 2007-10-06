@@ -15,16 +15,21 @@
  */
 package org.seasar.extension.jdbc.query;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.seasar.extension.jdbc.DbmsDialect;
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.SqlLog;
 import org.seasar.extension.jdbc.SqlLogRegistry;
 import org.seasar.extension.jdbc.SqlLogRegistryLocator;
+import org.seasar.extension.jdbc.ValueType;
 import org.seasar.extension.jdbc.exception.NullBindVariableRuntimeException;
 import org.seasar.extension.jdbc.impl.SqlLogImpl;
 import org.seasar.extension.jdbc.util.BindVariableUtil;
+import org.seasar.framework.exception.SQLRuntimeException;
 import org.seasar.framework.log.Logger;
 
 /**
@@ -220,6 +225,26 @@ public abstract class AbstractQuery {
                 throw new NullBindVariableRuntimeException();
             }
             bindVariableClassList.add(var.getClass());
+        }
+    }
+
+    /**
+     * バインド変数を準備します。
+     * 
+     * @param ps
+     *            準備されたステートメント
+     */
+    protected void prepareBindVariables(PreparedStatement ps) {
+        DbmsDialect dialect = jdbcManager.getDialect();
+        int size = bindVariableList.size();
+        for (int i = 0; i < size; i++) {
+            ValueType valueType = dialect.getValueType(bindVariableClassList
+                    .get(i));
+            try {
+                valueType.bindValue(ps, i + 1, bindVariableList.get(i));
+            } catch (SQLException e) {
+                throw new SQLRuntimeException(e);
+            }
         }
     }
 }

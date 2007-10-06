@@ -9,6 +9,7 @@ import org.seasar.extension.jdbc.entity.Aaa;
 import org.seasar.extension.jdbc.query.AutoSelectImpl;
 import org.seasar.extension.jdbc.query.SqlFileSelectImpl;
 import org.seasar.extension.jdbc.query.SqlSelectImpl;
+import org.seasar.extension.jdbc.query.SqlUpdateImpl;
 import org.seasar.extension.jta.TransactionImpl;
 import org.seasar.extension.jta.TransactionManagerImpl;
 import org.seasar.extension.jta.TransactionSynchronizationRegistryImpl;
@@ -81,6 +82,23 @@ public class JdbcManagerImplTest extends TestCase {
         assertSame(manager, query.getJdbcManager());
         assertEquals(Aaa.class, query.getBaseClass());
         assertEquals(path, query.getPath());
+    }
+
+    /**
+     * @throws Exception
+     * 
+     */
+    public void testUpdateBySql() throws Exception {
+        String sql = "update aaa set name = ? where id = ?";
+        SqlUpdateImpl query = (SqlUpdateImpl) manager.updateBySql(sql,
+                String.class, Integer.class);
+        assertNotNull(query);
+        assertSame(manager, query.getJdbcManager());
+        assertEquals(sql, query.getExecutedSql());
+        Class<?>[] classes = query.getBindVariableClasses();
+        assertEquals(2, classes.length);
+        assertEquals(String.class, classes[0]);
+        assertEquals(Integer.class, classes[1]);
     }
 
     /**
