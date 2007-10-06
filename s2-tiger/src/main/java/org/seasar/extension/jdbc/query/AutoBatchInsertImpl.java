@@ -71,16 +71,6 @@ public class AutoBatchInsertImpl<T> extends
         super(jdbcManager, entities);
     }
 
-    /**
-     * @param jdbcManager
-     *            JDBCマネージャ
-     * @param entities
-     *            エンティティの配列
-     */
-    public AutoBatchInsertImpl(final JdbcManager jdbcManager, final T[] entities) {
-        super(jdbcManager, Arrays.asList(entities));
-    }
-
     public AutoBatchInsert<T> includes(final String... propertyNames) {
         includesProperties.addAll(Arrays.asList(propertyNames));
         return this;

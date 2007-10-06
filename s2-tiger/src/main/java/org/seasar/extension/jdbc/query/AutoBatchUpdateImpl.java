@@ -74,16 +74,6 @@ public class AutoBatchUpdateImpl<T> extends
         super(jdbcManager, entities);
     }
 
-    /**
-     * @param jdbcManager
-     *            JDBCマネージャ
-     * @param entities
-     *            エンティティの配列
-     */
-    public AutoBatchUpdateImpl(final JdbcManager jdbcManager, final T[] entities) {
-        super(jdbcManager, Arrays.asList(entities));
-    }
-
     public AutoBatchUpdate<T> includesVersion() {
         includeVersion = true;
         return this;

@@ -130,10 +130,10 @@ public interface JdbcManager {
      * @param <T>
      *            挿入するエンティティの型です。
      * @param entities
-     *            エンティティの配列
+     *            エンティティの並び
      * @return 自動バッチ挿入
      */
-    <T> AutoBatchInsert<T> insert(T[] entities);
+    <T> AutoBatchInsert<T> insert(T... entities);
 
     /**
      * 自動更新を作成します。
@@ -163,10 +163,10 @@ public interface JdbcManager {
      * @param <T>
      *            更新するエンティティの型です。
      * @param entities
-     *            エンティティの配列
+     *            エンティティの並び
      * @return 自動バッチ更新
      */
-    <T> AutoBatchUpdate<T> update(T[] entities);
+    <T> AutoBatchUpdate<T> update(T... entities);
 
     /**
      * 自動削除を作成します。
@@ -196,10 +196,10 @@ public interface JdbcManager {
      * @param <T>
      *            削除するエンティティの型です。
      * @param entities
-     *            エンティティの配列
+     *            エンティティの並び
      * @return 自動バッチ削除
      */
-    <T> AutoBatchDelete<T> delete(T[] entities);
+    <T> AutoBatchDelete<T> delete(T... entities);
 
     /**
      * JDBCコンテキストを返します。

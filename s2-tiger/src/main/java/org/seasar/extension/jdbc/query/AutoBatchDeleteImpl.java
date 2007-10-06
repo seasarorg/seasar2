@@ -15,7 +15,6 @@
  */
 package org.seasar.extension.jdbc.query;
 
-import java.util.Arrays;
 import java.util.List;
 
 import org.seasar.extension.jdbc.AutoBatchDelete;
@@ -55,16 +54,6 @@ public class AutoBatchDeleteImpl<T> extends
     public AutoBatchDeleteImpl(final JdbcManager jdbcManager,
             final List<T> entities) {
         super(jdbcManager, entities);
-    }
-
-    /**
-     * @param jdbcManager
-     *            JDBCマネージャ
-     * @param entities
-     *            エンティティの配列
-     */
-    public AutoBatchDeleteImpl(final JdbcManager jdbcManager, final T[] entities) {
-        super(jdbcManager, Arrays.asList(entities));
     }
 
     public AutoBatchDelete<T> ignoreVersion() {
