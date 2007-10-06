@@ -16,12 +16,16 @@
 package org.seasar.extension.jdbc.manager;
 
 import java.sql.Connection;
+import java.util.List;
 
 import javax.sql.DataSource;
 import javax.transaction.Status;
 import javax.transaction.Synchronization;
 import javax.transaction.TransactionSynchronizationRegistry;
 
+import org.seasar.extension.jdbc.AutoBatchDelete;
+import org.seasar.extension.jdbc.AutoBatchInsert;
+import org.seasar.extension.jdbc.AutoBatchUpdate;
 import org.seasar.extension.jdbc.AutoDelete;
 import org.seasar.extension.jdbc.AutoInsert;
 import org.seasar.extension.jdbc.AutoSelect;
@@ -33,6 +37,9 @@ import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.SqlFileSelect;
 import org.seasar.extension.jdbc.SqlSelect;
 import org.seasar.extension.jdbc.SqlUpdate;
+import org.seasar.extension.jdbc.query.AutoBatchDeleteImpl;
+import org.seasar.extension.jdbc.query.AutoBatchInsertImpl;
+import org.seasar.extension.jdbc.query.AutoBatchUpdateImpl;
 import org.seasar.extension.jdbc.query.AutoDeleteImpl;
 import org.seasar.extension.jdbc.query.AutoInsertImpl;
 import org.seasar.extension.jdbc.query.AutoSelectImpl;
@@ -120,15 +127,45 @@ public class JdbcManagerImpl implements JdbcManager, Synchronization {
     }
 
     public <T> AutoInsert<T> insert(T entity) {
-        return new AutoInsertImpl<T>(this, entity);
+        return new AutoInsertImpl<T>(this, entity).queryTimeout(queryTimeout);
+    }
+
+    public <T> AutoBatchInsert<T> insert(List<T> entities) {
+        return new AutoBatchInsertImpl<T>(this, entities)
+                .queryTimeout(queryTimeout);
+    }
+
+    public <T> AutoBatchInsert<T> insert(T[] entities) {
+        return new AutoBatchInsertImpl<T>(this, entities)
+                .queryTimeout(queryTimeout);
     }
 
     public <T> AutoUpdate<T> update(T entity) {
-        return new AutoUpdateImpl<T>(this, entity);
+        return new AutoUpdateImpl<T>(this, entity).queryTimeout(queryTimeout);
+    }
+
+    public <T> AutoBatchUpdate<T> update(List<T> entities) {
+        return new AutoBatchUpdateImpl<T>(this, entities)
+                .queryTimeout(queryTimeout);
+    }
+
+    public <T> AutoBatchUpdate<T> update(T[] entities) {
+        return new AutoBatchUpdateImpl<T>(this, entities)
+                .queryTimeout(queryTimeout);
     }
 
     public <T> AutoDelete<T> delete(T entity) {
-        return new AutoDeleteImpl<T>(this, entity);
+        return new AutoDeleteImpl<T>(this, entity).queryTimeout(queryTimeout);
+    }
+
+    public <T> AutoBatchDelete<T> delete(List<T> entities) {
+        return new AutoBatchDeleteImpl<T>(this, entities)
+                .queryTimeout(queryTimeout);
+    }
+
+    public <T> AutoBatchDelete<T> delete(T[] entities) {
+        return new AutoBatchDeleteImpl<T>(this, entities)
+                .queryTimeout(queryTimeout);
     }
 
     public void afterCompletion(int status) {

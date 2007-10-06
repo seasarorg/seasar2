@@ -15,6 +15,8 @@
  */
 package org.seasar.extension.jdbc;
 
+import java.util.List;
+
 /**
  * <code>JDBC</code>による<code>SQL</code>の実行を管理するインターフェースです。
  * 
@@ -112,6 +114,28 @@ public interface JdbcManager {
     <T> AutoInsert<T> insert(T entity);
 
     /**
+     * 自動バッチ挿入を作成します。
+     * 
+     * @param <T>
+     *            挿入するエンティティの型です。
+     * @param entities
+     *            エンティティのリスト
+     * @return 自動バッチ挿入
+     */
+    <T> AutoBatchInsert<T> insert(List<T> entities);
+
+    /**
+     * 自動バッチ挿入を作成します。
+     * 
+     * @param <T>
+     *            挿入するエンティティの型です。
+     * @param entities
+     *            エンティティの配列
+     * @return 自動バッチ挿入
+     */
+    <T> AutoBatchInsert<T> insert(T[] entities);
+
+    /**
      * 自動更新を作成します。
      * 
      * @param <T>
@@ -123,6 +147,28 @@ public interface JdbcManager {
     <T> AutoUpdate<T> update(T entity);
 
     /**
+     * 自動バッチ更新を作成します。
+     * 
+     * @param <T>
+     *            更新するエンティティの型です。
+     * @param entities
+     *            エンティティのリスト
+     * @return 自動バッチ更新
+     */
+    <T> AutoBatchUpdate<T> update(List<T> entities);
+
+    /**
+     * 自動バッチ更新を作成します。
+     * 
+     * @param <T>
+     *            更新するエンティティの型です。
+     * @param entities
+     *            エンティティの配列
+     * @return 自動バッチ更新
+     */
+    <T> AutoBatchUpdate<T> update(T[] entities);
+
+    /**
      * 自動削除を作成します。
      * 
      * @param <T>
@@ -132,6 +178,28 @@ public interface JdbcManager {
      * @return 自動更新
      */
     <T> AutoDelete<T> delete(T entity);
+
+    /**
+     * 自動バッチ削除を作成します。
+     * 
+     * @param <T>
+     *            削除するエンティティの型です。
+     * @param entities
+     *            エンティティのリスト
+     * @return 自動バッチ更新
+     */
+    <T> AutoBatchDelete<T> delete(List<T> entities);
+
+    /**
+     * 自動バッチ削除を作成します。
+     * 
+     * @param <T>
+     *            削除するエンティティの型です。
+     * @param entities
+     *            エンティティの配列
+     * @return 自動バッチ削除
+     */
+    <T> AutoBatchDelete<T> delete(T[] entities);
 
     /**
      * JDBCコンテキストを返します。
