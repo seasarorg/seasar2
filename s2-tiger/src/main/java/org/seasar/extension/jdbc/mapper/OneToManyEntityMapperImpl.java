@@ -23,7 +23,7 @@ import org.seasar.extension.jdbc.PropertyMapper;
 import org.seasar.framework.util.FieldUtil;
 
 /**
- * 一対一関連のエンティティマッパーです。
+ * 一対多関連のエンティティマッパーです。
  * 
  * @author higa
  * 
