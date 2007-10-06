@@ -16,17 +16,17 @@
 package org.seasar.extension.jdbc;
 
 /**
- * 更新のベースとなるインターフェースです。
+ * バッチ更新のベースとなるインターフェースです。
  * 
  * @author higa
  * 
  */
-public interface Update {
+public interface BatchUpdate {
 
     /**
-     * 更新します。
+     * バッチ更新します。
      * 
-     * @return 更新した行数。
+     * @return 更新した行数の配列
      */
-    int execute();
+    int[] executeBatch();
 }
