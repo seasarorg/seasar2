@@ -62,12 +62,12 @@ public class AutoUpdateTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void test_includeVersionTx() throws Exception {
+    public void test_includesVersionTx() throws Exception {
         Department department = new Department();
         department.departmentId = 1;
         department.departmentName = "hoge";
         department.version = 100;
-        int result = jdbcManager.update(department).includeVersion().execute();
+        int result = jdbcManager.update(department).includesVersion().execute();
         assertEquals(1, result);
         Map<String, Object> m = new HashMap<String, Object>();
         m.put("departmentId", 1);
@@ -84,12 +84,12 @@ public class AutoUpdateTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void test_excludeNullTx() throws Exception {
+    public void test_excludesNullTx() throws Exception {
         Department department = new Department();
         department.departmentId = 1;
         department.departmentName = "hoge";
         department.version = 1;
-        int result = jdbcManager.update(department).excludeNull().execute();
+        int result = jdbcManager.update(department).excludesNull().execute();
         assertEquals(1, result);
         Map<String, Object> m = new HashMap<String, Object>();
         m.put("departmentId", 1);
@@ -106,14 +106,14 @@ public class AutoUpdateTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void test_includeTx() throws Exception {
+    public void test_includesTx() throws Exception {
         Department department = new Department();
         department.departmentId = 1;
         department.departmentNo = 99;
         department.departmentName = "hoge";
         department.location = "foo";
         department.version = 1;
-        int result = jdbcManager.update(department).include("departmentName",
+        int result = jdbcManager.update(department).includes("departmentName",
                 "location").execute();
         assertEquals(1, result);
         Map<String, Object> m = new HashMap<String, Object>();
@@ -131,14 +131,14 @@ public class AutoUpdateTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void test_excludeTx() throws Exception {
+    public void test_excludesTx() throws Exception {
         Department department = new Department();
         department.departmentId = 1;
         department.departmentNo = 99;
         department.departmentName = "hoge";
         department.location = "foo";
         department.version = 1;
-        int result = jdbcManager.update(department).exclude("departmentName",
+        int result = jdbcManager.update(department).excludes("departmentName",
                 "location").execute();
         assertEquals(1, result);
         Map<String, Object> m = new HashMap<String, Object>();
