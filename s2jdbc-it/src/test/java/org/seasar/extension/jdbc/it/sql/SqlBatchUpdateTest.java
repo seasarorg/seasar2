@@ -16,15 +16,17 @@
 package org.seasar.extension.jdbc.it.sql;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import org.seasar.extension.jdbc.JdbcManager;
+import org.seasar.extension.jdbc.it.entity.Employee;
 import org.seasar.extension.unit.S2TestCase;
 
 /**
  * @author taedium
  * 
  */
-public class SqlUpdateParameterTest extends S2TestCase {
+public class SqlBatchUpdateTest extends S2TestCase {
 
     private JdbcManager jdbcManager;
 
@@ -39,9 +41,14 @@ public class SqlUpdateParameterTest extends S2TestCase {
      * @throws Exception
      */
     public void test_no_parameterTx() throws Exception {
-        String sql = "delete from Employee";
-        int actual = jdbcManager.updateBySql(sql).execute();
-        assertEquals(14, actual);
+        String sql = "update Employee set salary = salary * 2 where employee_id = 1";
+        int[] result = jdbcManager.updateBatchBySql(sql).params().params()
+                .executeBatch();
+        assertEquals(2, result.length);
+        BigDecimal salary = jdbcManager.selectBySql(BigDecimal.class,
+                "select salary from Employee where employee_id = 1")
+                .getSingleResult();
+        assertEquals(new BigDecimal(3200), salary);
     }
 
     /**
@@ -50,8 +57,13 @@ public class SqlUpdateParameterTest extends S2TestCase {
      */
     public void test_parameterTx() throws Exception {
         String sql = "delete from Employee where department_Id = ? and salary > ?";
-        int actual = jdbcManager.updateBySql(sql, int.class, BigDecimal.class)
-                .params(3, new BigDecimal(1000)).execute();
-        assertEquals(5, actual);
+        int[] result = jdbcManager.updateBatchBySql(sql, int.class,
+                BigDecimal.class).params(1, new BigDecimal(3000)).params(2,
+                new BigDecimal(2000)).executeBatch();
+        assertEquals(2, result.length);
+        List<Employee> list = jdbcManager.selectBySql(Employee.class,
+                "select * from Employee where employee_id in (4,8,9,13)")
+                .getResultList();
+        assertTrue(list.isEmpty());
     }
 }
