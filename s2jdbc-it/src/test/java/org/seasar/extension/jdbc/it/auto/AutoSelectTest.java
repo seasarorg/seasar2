@@ -31,7 +31,7 @@ import static java.util.Arrays.*;
  * @author taedium
  * 
  */
-public class AutoSelectParameterTest extends S2TestCase {
+public class AutoSelectTest extends S2TestCase {
 
     private JdbcManager jdbcManager;
 
@@ -39,6 +39,86 @@ public class AutoSelectParameterTest extends S2TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         include("jdbc.dicon");
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void test() throws Exception {
+        List<Employee> list = jdbcManager.from(Employee.class).orderBy(
+                "employeeId").getResultList();
+        assertEquals(14, list.size());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void test_offsetOnly() throws Exception {
+        List<Employee> list = jdbcManager.from(Employee.class).offset(3)
+                .orderBy("employeeId").getResultList();
+        assertEquals(11, list.size());
+        assertEquals(4, list.get(0).employeeId);
+        assertEquals(14, list.get(10).employeeId);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void test_limitOnly() throws Exception {
+        List<Employee> list = jdbcManager.from(Employee.class).limit(3)
+                .orderBy("employeeId").getResultList();
+        assertEquals(3, list.size());
+        assertEquals(1, list.get(0).employeeId);
+        assertEquals(3, list.get(2).employeeId);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void test_offsetZero_limitZero() throws Exception {
+        List<Employee> list = jdbcManager.from(Employee.class).offset(0).limit(
+                0).orderBy("employeeId").getResultList();
+        assertEquals(14, list.size());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void test_offset_limitZero() throws Exception {
+        List<Employee> list = jdbcManager.from(Employee.class).offset(3).limit(
+                0).orderBy("employeeId").getResultList();
+        assertEquals(11, list.size());
+        assertEquals(4, list.get(0).employeeId);
+        assertEquals(14, list.get(10).employeeId);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void test_offsetZero_limit() throws Exception {
+        List<Employee> list = jdbcManager.from(Employee.class).offset(0).limit(
+                3).orderBy("employeeId").getResultList();
+        assertEquals(3, list.size());
+        assertEquals(1, list.get(0).employeeId);
+        assertEquals(3, list.get(2).employeeId);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void test_offset_limit() throws Exception {
+        List<Employee> list = jdbcManager.from(Employee.class).offset(3).limit(
+                5).orderBy("employeeId").getResultList();
+        assertEquals(5, list.size());
+        assertEquals(4, list.get(0).employeeId);
+        assertEquals(8, list.get(4).employeeId);
     }
 
     /**
@@ -192,7 +272,7 @@ public class AutoSelectParameterTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void test_nestjoin() throws Exception {
+    public void test_nest_join() throws Exception {
         Map<String, Object> m = new HashMap<String, Object>();
         m.put("employees.addressId", 3);
         List<Department> list = jdbcManager.from(Department.class).join(
@@ -204,7 +284,7 @@ public class AutoSelectParameterTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void test_starJoin() throws Exception {
+    public void test_star_join() throws Exception {
         Map<String, Object> m = new HashMap<String, Object>();
         m.put("department.departmentName", "RESEARCH");
         m.put("address.street_STARTS", "STREET");

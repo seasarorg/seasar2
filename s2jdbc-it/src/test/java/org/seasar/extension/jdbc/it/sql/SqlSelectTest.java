@@ -13,7 +13,7 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.jdbc.it.sqlfile;
+package org.seasar.extension.jdbc.it.sql;
 
 import java.util.List;
 
@@ -25,11 +25,9 @@ import org.seasar.extension.unit.S2TestCase;
  * @author taedium
  * 
  */
-public class SqlFileSelectPagingTest extends S2TestCase {
+public class SqlSelectTest extends S2TestCase {
 
-    private static String path = SqlFileSelectPagingTest.class.getName()
-            .replace(".", "/")
-            + ".sql";
+    private static String sql = "select * from Employee order by employee_no";
 
     private JdbcManager jdbcManager;
 
@@ -44,7 +42,7 @@ public class SqlFileSelectPagingTest extends S2TestCase {
      * @throws Exception
      */
     public void test() throws Exception {
-        List<Employee> list = jdbcManager.selectBySqlFile(Employee.class, path)
+        List<Employee> list = jdbcManager.selectBySql(Employee.class, sql)
                 .getResultList();
         assertEquals(14, list.size());
     }
@@ -54,7 +52,7 @@ public class SqlFileSelectPagingTest extends S2TestCase {
      * @throws Exception
      */
     public void test_offsetOnly() throws Exception {
-        List<Employee> list = jdbcManager.selectBySqlFile(Employee.class, path)
+        List<Employee> list = jdbcManager.selectBySql(Employee.class, sql)
                 .offset(3).getResultList();
         assertEquals(11, list.size());
         assertEquals(4, list.get(0).employeeId);
@@ -66,7 +64,7 @@ public class SqlFileSelectPagingTest extends S2TestCase {
      * @throws Exception
      */
     public void test_limitOnly() throws Exception {
-        List<Employee> list = jdbcManager.selectBySqlFile(Employee.class, path)
+        List<Employee> list = jdbcManager.selectBySql(Employee.class, sql)
                 .limit(3).getResultList();
         assertEquals(3, list.size());
         assertEquals(1, list.get(0).employeeId);
@@ -78,7 +76,7 @@ public class SqlFileSelectPagingTest extends S2TestCase {
      * @throws Exception
      */
     public void test_offsetZero_limitZero() throws Exception {
-        List<Employee> list = jdbcManager.selectBySqlFile(Employee.class, path)
+        List<Employee> list = jdbcManager.selectBySql(Employee.class, sql)
                 .offset(0).limit(0).getResultList();
         assertEquals(14, list.size());
     }
@@ -88,7 +86,7 @@ public class SqlFileSelectPagingTest extends S2TestCase {
      * @throws Exception
      */
     public void test_offset_limitZero() throws Exception {
-        List<Employee> list = jdbcManager.selectBySqlFile(Employee.class, path)
+        List<Employee> list = jdbcManager.selectBySql(Employee.class, sql)
                 .offset(3).limit(0).getResultList();
         assertEquals(11, list.size());
         assertEquals(4, list.get(0).employeeId);
@@ -100,7 +98,7 @@ public class SqlFileSelectPagingTest extends S2TestCase {
      * @throws Exception
      */
     public void test_offsetZero_limit() throws Exception {
-        List<Employee> list = jdbcManager.selectBySqlFile(Employee.class, path)
+        List<Employee> list = jdbcManager.selectBySql(Employee.class, sql)
                 .offset(0).limit(3).getResultList();
         assertEquals(3, list.size());
         assertEquals(1, list.get(0).employeeId);
@@ -112,11 +110,32 @@ public class SqlFileSelectPagingTest extends S2TestCase {
      * @throws Exception
      */
     public void test_offset_limit() throws Exception {
-        List<Employee> list = jdbcManager.selectBySqlFile(Employee.class, path)
+        List<Employee> list = jdbcManager.selectBySql(Employee.class, sql)
                 .offset(3).limit(5).getResultList();
         assertEquals(5, list.size());
         assertEquals(4, list.get(0).employeeId);
         assertEquals(8, list.get(4).employeeId);
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
+    public void test_no_parameter() throws Exception {
+        String sql = "select * from Employee";
+        List<Employee> list = jdbcManager.selectBySql(Employee.class, sql)
+                .getResultList();
+        assertEquals(14, list.size());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void test_parameter() throws Exception {
+        String sql = "select * from Employee where department_Id = ? and salary = ?";
+        List<Employee> list = jdbcManager.selectBySql(Employee.class, sql, 2,
+                3000).getResultList();
+        assertEquals(2, list.size());
+    }
 }

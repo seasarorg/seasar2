@@ -24,7 +24,7 @@ import org.seasar.extension.unit.S2TestCase;
  * @author taedium
  * 
  */
-public class SqlUpdateParameterTest extends S2TestCase {
+public class SqlUpdateTest extends S2TestCase {
 
     private JdbcManager jdbcManager;
 

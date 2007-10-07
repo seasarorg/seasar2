@@ -26,7 +26,11 @@ import org.seasar.extension.unit.S2TestCase;
  * @author taedium
  * 
  */
-public class SqlFileSelectParameterTest extends S2TestCase {
+public class SqlFileSelectTest extends S2TestCase {
+
+    private static String path = SqlFileSelectTest.class.getName().replace(".",
+            "/")
+            + "_paging.sql";
 
     private JdbcManager jdbcManager;
 
@@ -34,6 +38,86 @@ public class SqlFileSelectParameterTest extends S2TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         include("jdbc.dicon");
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void test() throws Exception {
+        List<Employee> list = jdbcManager.selectBySqlFile(Employee.class, path)
+                .getResultList();
+        assertEquals(14, list.size());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void test_offsetOnly() throws Exception {
+        List<Employee> list = jdbcManager.selectBySqlFile(Employee.class, path)
+                .offset(3).getResultList();
+        assertEquals(11, list.size());
+        assertEquals(4, list.get(0).employeeId);
+        assertEquals(14, list.get(10).employeeId);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void test_limitOnly() throws Exception {
+        List<Employee> list = jdbcManager.selectBySqlFile(Employee.class, path)
+                .limit(3).getResultList();
+        assertEquals(3, list.size());
+        assertEquals(1, list.get(0).employeeId);
+        assertEquals(3, list.get(2).employeeId);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void test_offsetZero_limitZero() throws Exception {
+        List<Employee> list = jdbcManager.selectBySqlFile(Employee.class, path)
+                .offset(0).limit(0).getResultList();
+        assertEquals(14, list.size());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void test_offset_limitZero() throws Exception {
+        List<Employee> list = jdbcManager.selectBySqlFile(Employee.class, path)
+                .offset(3).limit(0).getResultList();
+        assertEquals(11, list.size());
+        assertEquals(4, list.get(0).employeeId);
+        assertEquals(14, list.get(10).employeeId);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void test_offsetZero_limit() throws Exception {
+        List<Employee> list = jdbcManager.selectBySqlFile(Employee.class, path)
+                .offset(0).limit(3).getResultList();
+        assertEquals(3, list.size());
+        assertEquals(1, list.get(0).employeeId);
+        assertEquals(3, list.get(2).employeeId);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void test_offset_limit() throws Exception {
+        List<Employee> list = jdbcManager.selectBySqlFile(Employee.class, path)
+                .offset(3).limit(5).getResultList();
+        assertEquals(5, list.size());
+        assertEquals(4, list.get(0).employeeId);
+        assertEquals(8, list.get(4).employeeId);
     }
 
     /**
