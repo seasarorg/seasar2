@@ -54,6 +54,17 @@ public interface JdbcManager {
     SqlUpdate updateBySql(String sql, Class<?>... paramClasses);
 
     /**
+     * SQLバッチ更新を返します。
+     * 
+     * @param sql
+     *            SQL
+     * @param paramClasses
+     *            パラメータのクラスの配列
+     * @return SQLバッチ更新
+     */
+    SqlBatchUpdate updateBatchBySql(String sql, Class<?>... paramClasses);
+
+    /**
      * SQLファイル検索を作成します。
      * 
      * @param <T>

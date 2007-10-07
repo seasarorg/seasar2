@@ -21,6 +21,7 @@ import org.seasar.extension.jdbc.query.AutoDeleteImpl;
 import org.seasar.extension.jdbc.query.AutoInsertImpl;
 import org.seasar.extension.jdbc.query.AutoSelectImpl;
 import org.seasar.extension.jdbc.query.AutoUpdateImpl;
+import org.seasar.extension.jdbc.query.SqlBatchUpdateImpl;
 import org.seasar.extension.jdbc.query.SqlFileSelectImpl;
 import org.seasar.extension.jdbc.query.SqlSelectImpl;
 import org.seasar.extension.jdbc.query.SqlUpdateImpl;
@@ -123,6 +124,23 @@ public class JdbcManagerImplTest extends TestCase {
         String sql = "update aaa set name = ? where id = ?";
         SqlUpdateImpl query = (SqlUpdateImpl) manager.updateBySql(sql,
                 String.class, Integer.class);
+        assertNotNull(query);
+        assertSame(manager, query.getJdbcManager());
+        assertEquals(sql, query.getExecutedSql());
+        Class<?>[] classes = query.getBindVariableClasses();
+        assertEquals(2, classes.length);
+        assertEquals(String.class, classes[0]);
+        assertEquals(Integer.class, classes[1]);
+    }
+
+    /**
+     * @throws Exception
+     * 
+     */
+    public void testUpdateBatchBySql() throws Exception {
+        String sql = "update aaa set name = ? where id = ?";
+        SqlBatchUpdateImpl query = (SqlBatchUpdateImpl) manager
+                .updateBatchBySql(sql, String.class, Integer.class);
         assertNotNull(query);
         assertSame(manager, query.getJdbcManager());
         assertEquals(sql, query.getExecutedSql());
