@@ -45,11 +45,11 @@ public class AutoBatchInsertTest extends S2TestCase {
     public void testTx() throws Exception {
         List<Department> list = new ArrayList<Department>();
         Department department = new Department();
-        department.departmentId = 99;
+        department.departmentId = 98;
         department.departmentName = "hoge";
         list.add(department);
         Department department2 = new Department();
-        department2.departmentId = 100;
+        department2.departmentId = 99;
         department2.departmentName = "foo";
         list.add(department2);
 
@@ -57,19 +57,19 @@ public class AutoBatchInsertTest extends S2TestCase {
         assertEquals(2, result.length);
 
         Map<String, Object> m = new HashMap<String, Object>();
-        m.put("departmentId", 99);
+        m.put("departmentId", 98);
         department = jdbcManager.from(Department.class).where(m)
                 .getSingleResult();
-        assertEquals(99, department.departmentId);
+        assertEquals(98, department.departmentId);
         assertEquals(0, department.departmentNo);
         assertEquals("hoge", department.departmentName);
         assertNull(department.location);
         assertEquals(0, department.version);
 
-        m.put("departmentId", 100);
+        m.put("departmentId", 99);
         department = jdbcManager.from(Department.class).where(m)
                 .getSingleResult();
-        assertEquals(100, department.departmentId);
+        assertEquals(99, department.departmentId);
         assertEquals(0, department.departmentNo);
         assertEquals("foo", department.departmentName);
         assertNull(department.location);
@@ -83,15 +83,15 @@ public class AutoBatchInsertTest extends S2TestCase {
     public void test_includesTx() throws Exception {
         List<Department> list = new ArrayList<Department>();
         Department department = new Department();
-        department.departmentId = 99;
-        department.departmentNo = 99;
+        department.departmentId = 98;
+        department.departmentNo = 98;
         department.departmentName = "hoge";
         department.location = "foo";
         department.version = 1;
         list.add(department);
         Department department2 = new Department();
-        department2.departmentId = 100;
-        department2.departmentNo = 100;
+        department2.departmentId = 99;
+        department2.departmentNo = 99;
         department2.departmentName = "bar";
         department2.location = "baz";
         department2.version = 1;
@@ -102,20 +102,20 @@ public class AutoBatchInsertTest extends S2TestCase {
         assertEquals(2, result.length);
 
         Map<String, Object> m = new HashMap<String, Object>();
+        m.put("departmentId", 98);
+        department = jdbcManager.from(Department.class).where(m)
+                .getSingleResult();
+        assertEquals(98, department.departmentId);
+        assertEquals(98, department.departmentNo);
+        assertNull(department.departmentName);
+        assertEquals("foo", department.location);
+        assertEquals(1, department.version);
+
         m.put("departmentId", 99);
         department = jdbcManager.from(Department.class).where(m)
                 .getSingleResult();
         assertEquals(99, department.departmentId);
         assertEquals(99, department.departmentNo);
-        assertNull(department.departmentName);
-        assertEquals("foo", department.location);
-        assertEquals(1, department.version);
-
-        m.put("departmentId", 100);
-        department = jdbcManager.from(Department.class).where(m)
-                .getSingleResult();
-        assertEquals(100, department.departmentId);
-        assertEquals(100, department.departmentNo);
         assertNull(department.departmentName);
         assertEquals("baz", department.location);
         assertEquals(1, department.version);
@@ -128,15 +128,15 @@ public class AutoBatchInsertTest extends S2TestCase {
     public void test_excludesTx() throws Exception {
         List<Department> list = new ArrayList<Department>();
         Department department = new Department();
-        department.departmentId = 99;
-        department.departmentNo = 99;
+        department.departmentId = 98;
+        department.departmentNo = 98;
         department.departmentName = "hoge";
         department.location = "foo";
         department.version = 1;
         list.add(department);
         Department department2 = new Department();
-        department2.departmentId = 100;
-        department2.departmentNo = 100;
+        department2.departmentId = 99;
+        department2.departmentNo = 99;
         department2.departmentName = "bar";
         department2.location = "baz";
         department2.version = 1;
@@ -147,20 +147,20 @@ public class AutoBatchInsertTest extends S2TestCase {
         assertEquals(2, result.length);
 
         Map<String, Object> m = new HashMap<String, Object>();
+        m.put("departmentId", 98);
+        department = jdbcManager.from(Department.class).where(m)
+                .getSingleResult();
+        assertEquals(98, department.departmentId);
+        assertEquals(98, department.departmentNo);
+        assertNull(department.departmentName);
+        assertEquals("TOKYO", department.location);
+        assertEquals(1, department.version);
+
         m.put("departmentId", 99);
         department = jdbcManager.from(Department.class).where(m)
                 .getSingleResult();
         assertEquals(99, department.departmentId);
         assertEquals(99, department.departmentNo);
-        assertNull(department.departmentName);
-        assertEquals("TOKYO", department.location);
-        assertEquals(1, department.version);
-
-        m.put("departmentId", 100);
-        department = jdbcManager.from(Department.class).where(m)
-                .getSingleResult();
-        assertEquals(100, department.departmentId);
-        assertEquals(100, department.departmentNo);
         assertNull(department.departmentName);
         assertEquals("TOKYO", department.location);
         assertEquals(1, department.version);

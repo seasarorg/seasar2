@@ -172,14 +172,14 @@ public class AutoBatchUpdateTest extends S2TestCase {
         List<Department> list = new ArrayList<Department>();
         Department department = new Department();
         department.departmentId = 1;
-        department.departmentNo = 99;
+        department.departmentNo = 98;
         department.departmentName = "hoge";
         department.location = "foo";
         department.version = 1;
         list.add(department);
         Department department2 = new Department();
         department2.departmentId = 2;
-        department2.departmentNo = 100;
+        department2.departmentNo = 99;
         department2.departmentName = "bar";
         department2.location = "baz";
         department2.version = 1;
@@ -194,7 +194,7 @@ public class AutoBatchUpdateTest extends S2TestCase {
         department = jdbcManager.from(Department.class).where(m)
                 .getSingleResult();
         assertEquals(1, department.departmentId);
-        assertEquals(99, department.departmentNo);
+        assertEquals(98, department.departmentNo);
         assertEquals("ACCOUNTING", department.departmentName);
         assertEquals("NEW YORK", department.location);
         assertEquals(2, department.version);
@@ -203,7 +203,7 @@ public class AutoBatchUpdateTest extends S2TestCase {
         department = jdbcManager.from(Department.class).where(m)
                 .getSingleResult();
         assertEquals(2, department.departmentId);
-        assertEquals(100, department.departmentNo);
+        assertEquals(99, department.departmentNo);
         assertEquals("RESEARCH", department.departmentName);
         assertEquals("DALLAS", department.location);
         assertEquals(2, department.version);
