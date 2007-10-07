@@ -50,6 +50,9 @@ public abstract class AbstractAutoUpdate<T, S extends Update<S>> extends
      */
     public AbstractAutoUpdate(final JdbcManager jdbcManager, final T entity) {
         super(jdbcManager);
+        if (entity == null) {
+            throw new NullPointerException("entity");
+        }
         this.entity = entity;
         this.entityMeta = jdbcManager.getEntityMetaFactory().getEntityMeta(
                 entity.getClass());
@@ -100,9 +103,15 @@ public abstract class AbstractAutoUpdate<T, S extends Update<S>> extends
      */
     protected int executeInternal() {
         final JdbcContext jdbcContext = jdbcManager.getJdbcContext();
-        final PreparedStatement ps = getPreparedStatement(jdbcContext);
-        prepareBindVariables(ps);
-        return PreparedStatementUtil.executeUpdate(ps);
+        try {
+            final PreparedStatement ps = getPreparedStatement(jdbcContext);
+            prepareBindVariables(ps);
+            return PreparedStatementUtil.executeUpdate(ps);
+        } finally {
+            if (!jdbcContext.isTransactional()) {
+                jdbcContext.destroy();
+            }
+        }
     }
 
     /**

@@ -55,8 +55,11 @@ public abstract class AbstractAutoBatchUpdate<T, S extends BatchUpdate<S>>
     public AbstractAutoBatchUpdate(final JdbcManager jdbcManager,
             final List<T> entities) {
         super(jdbcManager);
+        if (entities == null) {
+            throw new NullPointerException("entities");
+        }
         if (entities.isEmpty()) {
-            throw new EmptyRuntimeException("entity");
+            throw new EmptyRuntimeException("entities");
         }
         this.entities = entities;
         entityMeta = jdbcManager.getEntityMetaFactory().getEntityMeta(
@@ -98,15 +101,21 @@ public abstract class AbstractAutoBatchUpdate<T, S extends BatchUpdate<S>>
      */
     protected int[] executeInternal() {
         final JdbcContext jdbcContext = jdbcManager.getJdbcContext();
-        final PreparedStatement ps = getPreparedStatement(jdbcContext);
-        for (final T entity : entities) {
-            prepareParams(entity);
-            logSql();
-            prepareBindVariables(ps);
-            PreparedStatementUtil.addBatch(ps);
-            resetBindVariable();
+        try {
+            final PreparedStatement ps = getPreparedStatement(jdbcContext);
+            for (final T entity : entities) {
+                prepareParams(entity);
+                logSql();
+                prepareBindVariables(ps);
+                PreparedStatementUtil.addBatch(ps);
+                resetBindVariable();
+            }
+            return PreparedStatementUtil.executeBatch(ps);
+        } finally {
+            if (!jdbcContext.isTransactional()) {
+                jdbcContext.destroy();
+            }
         }
-        return PreparedStatementUtil.executeBatch(ps);
     }
 
     /**
