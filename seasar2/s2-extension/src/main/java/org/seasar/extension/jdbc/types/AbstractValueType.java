@@ -82,4 +82,12 @@ public abstract class AbstractValueType implements ValueType {
         cs.registerOutParameter(parameterName, sqlType);
     }
 
+    /**
+     * SQLのタイプを返します。
+     * 
+     * @return SQLのタイプ
+     */
+    public int getSqlType() {
+        return sqlType;
+    }
 }

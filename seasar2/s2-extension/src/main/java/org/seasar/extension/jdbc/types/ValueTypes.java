@@ -122,6 +122,11 @@ public final class ValueTypes {
     public final static ValueType BOOLEAN_INTEGER = new BooleanIntegerType();
 
     /**
+     * 結果セット用の値タイプです。
+     */
+    public final static ValueType RESULT_SET = new ResultSetType();
+
+    /**
      * 汎用的な値タイプです。
      */
     public final static ValueType OBJECT = new ObjectType();
@@ -225,6 +230,9 @@ public final class ValueTypes {
         ValueType valueType = createUserDefineValueType(clazz);
         if (valueType != null) {
             return valueType;
+        }
+        if (List.class.isAssignableFrom(clazz)) {
+            return RESULT_SET;
         }
         return OBJECT;
     }

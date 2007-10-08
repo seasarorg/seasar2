@@ -209,7 +209,7 @@ public class MockStatement implements Statement {
     }
 
     public ResultSet getResultSet() throws SQLException {
-        return null;
+        return new MockResultSet();
     }
 
     public int getResultSetConcurrency() throws SQLException {
