@@ -127,6 +127,11 @@ public final class ValueTypes {
     public final static ValueType RESULT_SET = new ResultSetType();
 
     /**
+     * オラクルの結果セット用の値タイプです。
+     */
+    public final static ValueType ORACLE_RESULT_SET = new OracleResultSetType();
+
+    /**
      * 汎用的な値タイプです。
      */
     public final static ValueType OBJECT = new ObjectType();
