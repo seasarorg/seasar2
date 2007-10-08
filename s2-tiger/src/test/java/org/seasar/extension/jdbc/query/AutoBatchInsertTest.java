@@ -271,27 +271,27 @@ public class AutoBatchInsertTest extends TestCase {
         query.prepare("execute");
 
         query.prepareParams(entities.get(0));
-        assertEquals(4, query.bindVariableList.size());
-        assertEquals(new Integer(1), query.bindVariableList.get(0));
-        assertEquals("foo", query.bindVariableList.get(1));
-        assertNull(query.bindVariableList.get(2));
-        assertEquals(new Long(0L), query.bindVariableList.get(3));
-        query.resetBindVariable();
+        assertEquals(4, query.getParamSize());
+        assertEquals(new Integer(1), query.getParam(0).value);
+        assertEquals("foo", query.getParam(1).value);
+        assertNull(query.getParam(2).value);
+        assertEquals(new Long(0L), query.getParam(3).value);
+        query.resetParams();
 
         query.prepareParams(entities.get(1));
-        assertEquals(4, query.bindVariableList.size());
-        assertEquals(new Integer(2), query.bindVariableList.get(0));
-        assertEquals("bar", query.bindVariableList.get(1));
-        assertNull(query.bindVariableList.get(2));
-        assertEquals(new Long(0L), query.bindVariableList.get(3));
-        query.resetBindVariable();
+        assertEquals(4, query.getParamSize());
+        assertEquals(new Integer(2), query.getParam(0).value);
+        assertEquals("bar", query.getParam(1).value);
+        assertNull(query.getParam(2).value);
+        assertEquals(new Long(0L), query.getParam(3).value);
+        query.resetParams();
 
         query.prepareParams(entities.get(2));
-        assertEquals(4, query.bindVariableList.size());
-        assertEquals(new Integer(3), query.bindVariableList.get(0));
-        assertEquals("baz", query.bindVariableList.get(1));
-        assertNull(query.bindVariableList.get(2));
-        assertEquals(new Long(0L), query.bindVariableList.get(3));
+        assertEquals(4, query.getParamSize());
+        assertEquals(new Integer(3), query.getParam(0).value);
+        assertEquals("baz", query.getParam(1).value);
+        assertNull(query.getParam(2).value);
+        assertEquals(new Long(0L), query.getParam(3).value);
     }
 
     /**

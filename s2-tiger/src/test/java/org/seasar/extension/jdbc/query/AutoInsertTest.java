@@ -288,11 +288,11 @@ public class AutoInsertTest extends TestCase {
         eee.version = 1L;
         AutoInsertImpl<Eee> query = new AutoInsertImpl<Eee>(manager, eee);
         query.prepare("execute");
-        assertEquals(4, query.bindVariableList.size());
-        assertEquals(new Integer(100), query.bindVariableList.get(0));
-        assertEquals("hoge", query.bindVariableList.get(1));
-        assertNull(query.bindVariableList.get(2));
-        assertEquals(new Long(1L), query.bindVariableList.get(3));
+        assertEquals(4, query.getParamSize());
+        assertEquals(new Integer(100), query.getParam(0).value);
+        assertEquals("hoge", query.getParam(1).value);
+        assertNull(query.getParam(2).value);
+        assertEquals(new Long(1L), query.getParam(3).value);
     }
 
     /**
@@ -306,10 +306,10 @@ public class AutoInsertTest extends TestCase {
         AutoInsertImpl<Eee> query = new AutoInsertImpl<Eee>(manager, eee);
         query.excludesNull();
         query.prepare("execute");
-        assertEquals(3, query.bindVariableList.size());
-        assertEquals(new Integer(100), query.bindVariableList.get(0));
-        assertEquals("hoge", query.bindVariableList.get(1));
-        assertEquals(new Long(1L), query.bindVariableList.get(2));
+        assertEquals(3, query.getParamSize());
+        assertEquals(new Integer(100), query.getParam(0).value);
+        assertEquals("hoge", query.getParam(1).value);
+        assertEquals(new Long(1L), query.getParam(2).value);
     }
 
     /**

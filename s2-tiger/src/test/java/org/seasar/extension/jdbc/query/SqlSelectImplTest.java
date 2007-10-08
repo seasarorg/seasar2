@@ -28,7 +28,6 @@ import org.seasar.extension.jdbc.dialect.PostgreDialect;
 import org.seasar.extension.jdbc.dialect.StandardDialect;
 import org.seasar.extension.jdbc.dto.AaaDto;
 import org.seasar.extension.jdbc.entity.Aaa;
-import org.seasar.extension.jdbc.exception.NullBindVariableRuntimeException;
 import org.seasar.extension.jdbc.exception.SNonUniqueResultException;
 import org.seasar.extension.jdbc.manager.JdbcManagerImpl;
 import org.seasar.extension.jta.TransactionManagerImpl;
@@ -164,13 +163,12 @@ public class SqlSelectImplTest extends TestCase {
      * 
      */
     public void testPrepare_nullBindVariable2() {
-        SqlSelectImpl<AaaDto> query = new SqlSelectImpl<AaaDto>(manager,
-                AaaDto.class, "select foo2, aaa_bbb from hoge where aaa = ?",
-                (Object) null);
         try {
-            query.prepare("getSingleResult");
+            new SqlSelectImpl<AaaDto>(manager, AaaDto.class,
+                    "select foo2, aaa_bbb from hoge where aaa = ?",
+                    (Object) null);
             fail();
-        } catch (NullBindVariableRuntimeException e) {
+        } catch (NullPointerException e) {
             System.out.println(e);
         }
     }

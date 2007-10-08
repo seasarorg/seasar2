@@ -97,7 +97,7 @@ public class JdbcManagerImplTest extends TestCase {
         assertSame(manager, query.getJdbcManager());
         assertEquals(Aaa.class, query.getBaseClass());
         assertEquals(sql, query.getSql());
-        Object[] vars = query.getBindVariables();
+        Object[] vars = query.getParamValues();
         assertEquals(1, vars.length);
         assertEquals(1, vars[0]);
     }
@@ -127,7 +127,7 @@ public class JdbcManagerImplTest extends TestCase {
         assertNotNull(query);
         assertSame(manager, query.getJdbcManager());
         assertEquals(sql, query.getExecutedSql());
-        Class<?>[] classes = query.getBindVariableClasses();
+        Class<?>[] classes = query.getParamClasses();
         assertEquals(2, classes.length);
         assertEquals(String.class, classes[0]);
         assertEquals(Integer.class, classes[1]);
@@ -144,7 +144,7 @@ public class JdbcManagerImplTest extends TestCase {
         assertNotNull(query);
         assertSame(manager, query.getJdbcManager());
         assertEquals(sql, query.getExecutedSql());
-        Class<?>[] classes = query.getBindVariableClasses();
+        Class<?>[] classes = query.getParamClasses();
         assertEquals(2, classes.length);
         assertEquals(String.class, classes[0]);
         assertEquals(Integer.class, classes[1]);

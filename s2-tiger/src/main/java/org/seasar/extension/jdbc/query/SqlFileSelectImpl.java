@@ -15,8 +15,6 @@
  */
 package org.seasar.extension.jdbc.query;
 
-import java.util.Arrays;
-
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.SqlFileSelect;
 import org.seasar.extension.jdbc.types.ValueTypes;
@@ -160,9 +158,12 @@ public class SqlFileSelectImpl<T> extends
             }
         }
         node.accept(sqlContext);
-        bindVariableList.addAll(Arrays.asList(sqlContext.getBindVariables()));
+        Object[] vars = sqlContext.getBindVariables();
         Class<?>[] types = sqlContext.getBindVariableTypes();
-        bindVariableClassList.addAll(Arrays.asList(types));
+        int size = vars.length;
+        for (int i = 0; i < size; i++) {
+            addParam(vars[i], types[i]);
+        }
     }
 
     /**

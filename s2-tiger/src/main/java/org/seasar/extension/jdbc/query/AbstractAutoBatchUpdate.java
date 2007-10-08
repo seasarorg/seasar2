@@ -106,9 +106,9 @@ public abstract class AbstractAutoBatchUpdate<T, S extends BatchUpdate<S>>
             for (final T entity : entities) {
                 prepareParams(entity);
                 logSql();
-                prepareBindVariables(ps);
+                prepareInParams(ps);
                 PreparedStatementUtil.addBatch(ps);
-                resetBindVariable();
+                resetParams();
             }
             return PreparedStatementUtil.executeBatch(ps);
         } finally {
@@ -132,7 +132,7 @@ public abstract class AbstractAutoBatchUpdate<T, S extends BatchUpdate<S>>
         if (queryTimeout > 0) {
             StatementUtil.setQueryTimeout(ps, queryTimeout);
         }
-        prepareBindVariables(ps);
+        prepareInParams(ps);
         return ps;
     }
 
@@ -143,13 +143,5 @@ public abstract class AbstractAutoBatchUpdate<T, S extends BatchUpdate<S>>
      *            エンティティ
      */
     protected abstract void prepareParams(T entity);
-
-    /**
-     * バインド変数をリセットします。
-     */
-    protected void resetBindVariable() {
-        bindVariableList.clear();
-        bindVariableClassList.clear();
-    }
 
 }

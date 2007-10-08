@@ -15,8 +15,6 @@
  */
 package org.seasar.extension.jdbc.query;
 
-import java.util.Arrays;
-
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.SqlSelect;
 
@@ -57,13 +55,14 @@ public class SqlSelectImpl<T> extends AbstractSqlSelect<T, SqlSelect<T>>
         if (params == null) {
             throw new NullPointerException("parameters");
         }
-        bindVariableList.addAll(Arrays.asList(params));
+        for (Object o : params) {
+            addParam(o);
+        }
     }
 
     @Override
     protected void prepare(String methodName) {
         prepareCallerClassAndMethodName(methodName);
-        prepareBindVariableClassList();
         prepareSql();
     }
 

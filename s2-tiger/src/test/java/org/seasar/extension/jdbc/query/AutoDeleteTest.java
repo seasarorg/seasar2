@@ -150,9 +150,9 @@ public class AutoDeleteTest extends TestCase {
         eee.version = 1L;
         AutoDeleteImpl<Eee> query = new AutoDeleteImpl<Eee>(manager, eee);
         query.prepare("execute");
-        assertEquals(2, query.bindVariableList.size());
-        assertEquals(new Integer(100), query.bindVariableList.get(0));
-        assertEquals(new Long(1L), query.bindVariableList.get(1));
+        assertEquals(2, query.getParamSize());
+        assertEquals(new Integer(100), query.getParam(0).value);
+        assertEquals(new Long(1L), query.getParam(1).value);
     }
 
     /**
@@ -166,8 +166,8 @@ public class AutoDeleteTest extends TestCase {
         AutoDeleteImpl<Eee> query = new AutoDeleteImpl<Eee>(manager, eee);
         query.ignoreVersion();
         query.prepare("execute");
-        assertEquals(1, query.bindVariableList.size());
-        assertEquals(new Integer(100), query.bindVariableList.get(0));
+        assertEquals(1, query.getParamSize());
+        assertEquals(new Integer(100), query.getParam(0).value);
     }
 
     /**

@@ -26,6 +26,7 @@ import org.seasar.extension.jdbc.SqlLog;
 import org.seasar.extension.jdbc.SqlLogRegistry;
 import org.seasar.extension.jdbc.SqlLogRegistryLocator;
 import org.seasar.extension.jdbc.dialect.StandardDialect;
+import org.seasar.extension.jdbc.exception.IllegalParamSizeRuntimeException;
 import org.seasar.extension.jdbc.manager.JdbcManagerImpl;
 import org.seasar.extension.jta.TransactionManagerImpl;
 import org.seasar.extension.jta.TransactionSynchronizationRegistryImpl;
@@ -118,7 +119,7 @@ public class SqlBatchUpdateImplTest extends TestCase {
      * 
      */
     public void testGetPreparedStatement() throws Exception {
-        SqlUpdateImpl query = new SqlUpdateImpl(manager,
+        SqlBatchUpdateImpl query = new SqlBatchUpdateImpl(manager,
                 "update aaa set name = ? where id = ?", String.class,
                 Integer.class);
         query.queryTimeout = 30;
@@ -132,7 +133,7 @@ public class SqlBatchUpdateImplTest extends TestCase {
      * @throws Exception
      * 
      */
-    public void testExecute() throws Exception {
+    public void testExecuteBatch() throws Exception {
         String sql = "update aaa set name = ? where id = ?";
         SqlBatchUpdateImpl query = new SqlBatchUpdateImpl(manager, sql,
                 String.class, Integer.class) {
@@ -158,9 +159,9 @@ public class SqlBatchUpdateImplTest extends TestCase {
             }
 
             @Override
-            protected void prepareBindVariables(PreparedStatement ps) {
+            protected void prepareInParams(PreparedStatement ps) {
                 preparedBindVariables = true;
-                super.prepareBindVariables(ps);
+                super.prepareInParams(ps);
             }
 
         };
@@ -177,5 +178,23 @@ public class SqlBatchUpdateImplTest extends TestCase {
         sqlLog = registry.get(1);
         assertEquals("update aaa set name = 'hoge2' where id = 2", sqlLog
                 .getCompleteSql());
+    }
+
+    /**
+     * @throws Exception
+     * 
+     */
+    public void testExecuteBatch_illegalParamSize() throws Exception {
+        String sql = "update aaa set name = ? where id = ?";
+        SqlBatchUpdateImpl query = new SqlBatchUpdateImpl(manager, sql,
+                String.class, Integer.class);
+        try {
+            query.params("hoge").executeBatch();
+            fail();
+        } catch (IllegalParamSizeRuntimeException e) {
+            System.out.println(e);
+            assertEquals(1, e.getParamSize());
+            assertEquals(2, e.getParamClassSize());
+        }
     }
 }

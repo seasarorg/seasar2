@@ -175,10 +175,9 @@ public class SqlFileSelectImplTest extends TestCase {
         query.prepareParameter();
         assertEquals("select * from aaa where id = ?", query.sqlContext
                 .getSql());
-        assertEquals(1, query.bindVariableList.size());
-        assertEquals(1, query.bindVariableList.get(0));
-        assertEquals(1, query.bindVariableClassList.size());
-        assertEquals(Integer.class, query.bindVariableClassList.get(0));
+        assertEquals(1, query.getParamSize());
+        assertEquals(1, query.getParam(0).value);
+        assertEquals(Integer.class, query.getParam(0).paramClass);
     }
 
     /**
@@ -196,10 +195,9 @@ public class SqlFileSelectImplTest extends TestCase {
         query.prepareParameter();
         assertEquals("select * from aaa where id = ?", query.sqlContext
                 .getSql());
-        assertEquals(1, query.bindVariableList.size());
-        assertEquals(1, query.bindVariableList.get(0));
-        assertEquals(1, query.bindVariableClassList.size());
-        assertEquals(Integer.class, query.bindVariableClassList.get(0));
+        assertEquals(1, query.getParamSize());
+        assertEquals(1, query.getParam(0).value);
+        assertEquals(Integer.class, query.getParam(0).paramClass);
         assertEquals(10, query.limit);
         assertEquals(5, query.offset);
     }

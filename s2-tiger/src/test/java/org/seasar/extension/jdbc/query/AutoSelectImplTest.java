@@ -830,10 +830,9 @@ public class AutoSelectImplTest extends TestCase {
         query.prepare("getResultList");
         query.addCondition("id = ?", 1, Integer.class);
         assertEquals(" where id = ?", query.whereClause.toSql());
-        assertEquals(1, query.bindVariableList.size());
-        assertEquals(1, query.bindVariableList.get(0));
-        assertEquals(1, query.bindVariableClassList.size());
-        assertEquals(Integer.class, query.bindVariableClassList.get(0));
+        assertEquals(1, query.paramList.size());
+        assertEquals(1, query.paramList.get(0).value);
+        assertEquals(Integer.class, query.paramList.get(0).paramClass);
     }
 
     /**
@@ -845,11 +844,11 @@ public class AutoSelectImplTest extends TestCase {
         int[] vars = new int[] { 1, 2 };
         query.addInCondition("T1_.AAA_ID in (?, ?)", vars, int.class, 2);
         assertEquals(" where T1_.AAA_ID in (?, ?)", query.whereClause.toSql());
-        Object[] variables = query.getBindVariables();
+        Object[] variables = query.getParamValues();
         assertEquals(2, variables.length);
         assertEquals(1, variables[0]);
         assertEquals(2, variables[1]);
-        Class<?>[] variableClasses = query.getBindVariableClasses();
+        Class<?>[] variableClasses = query.getParamClasses();
         assertEquals(2, variableClasses.length);
         assertEquals(int.class, variableClasses[0]);
         assertEquals(int.class, variableClasses[1]);
@@ -863,10 +862,10 @@ public class AutoSelectImplTest extends TestCase {
         query.prepare("getResultList");
         query.prepareCondition("id", 1);
         assertEquals(" where T1_.ID = ?", query.whereClause.toSql());
-        Object[] variables = query.getBindVariables();
+        Object[] variables = query.getParamValues();
         assertEquals(1, variables.length);
         assertEquals(1, variables[0]);
-        Class<?>[] variableClasses = query.getBindVariableClasses();
+        Class<?>[] variableClasses = query.getParamClasses();
         assertEquals(1, variableClasses.length);
         assertEquals(Integer.class, variableClasses[0]);
     }
@@ -879,10 +878,10 @@ public class AutoSelectImplTest extends TestCase {
         query.prepare("getResultList");
         query.prepareCondition("id_EQ", 1);
         assertEquals(" where T1_.ID = ?", query.whereClause.toSql());
-        Object[] variables = query.getBindVariables();
+        Object[] variables = query.getParamValues();
         assertEquals(1, variables.length);
         assertEquals(1, variables[0]);
-        Class<?>[] variableClasses = query.getBindVariableClasses();
+        Class<?>[] variableClasses = query.getParamClasses();
         assertEquals(1, variableClasses.length);
         assertEquals(Integer.class, variableClasses[0]);
     }
@@ -896,10 +895,10 @@ public class AutoSelectImplTest extends TestCase {
         query.prepare("getResultList");
         query.prepareCondition("bbb.id", 1);
         assertEquals(" where T2_.ID = ?", query.whereClause.toSql());
-        Object[] variables = query.getBindVariables();
+        Object[] variables = query.getParamValues();
         assertEquals(1, variables.length);
         assertEquals(1, variables[0]);
-        Class<?>[] variableClasses = query.getBindVariableClasses();
+        Class<?>[] variableClasses = query.getParamClasses();
         assertEquals(1, variableClasses.length);
         assertEquals(Integer.class, variableClasses[0]);
     }
@@ -912,10 +911,10 @@ public class AutoSelectImplTest extends TestCase {
         query.prepare("getResultList");
         query.prepareCondition("id_NE", 1);
         assertEquals(" where T1_.ID <> ?", query.whereClause.toSql());
-        Object[] variables = query.getBindVariables();
+        Object[] variables = query.getParamValues();
         assertEquals(1, variables.length);
         assertEquals(1, variables[0]);
-        Class<?>[] variableClasses = query.getBindVariableClasses();
+        Class<?>[] variableClasses = query.getParamClasses();
         assertEquals(1, variableClasses.length);
         assertEquals(Integer.class, variableClasses[0]);
     }
@@ -929,10 +928,10 @@ public class AutoSelectImplTest extends TestCase {
         query.prepare("getResultList");
         query.prepareCondition("bbb.id_NE", 1);
         assertEquals(" where T2_.ID <> ?", query.whereClause.toSql());
-        Object[] variables = query.getBindVariables();
+        Object[] variables = query.getParamValues();
         assertEquals(1, variables.length);
         assertEquals(1, variables[0]);
-        Class<?>[] variableClasses = query.getBindVariableClasses();
+        Class<?>[] variableClasses = query.getParamClasses();
         assertEquals(1, variableClasses.length);
         assertEquals(Integer.class, variableClasses[0]);
     }
@@ -945,10 +944,10 @@ public class AutoSelectImplTest extends TestCase {
         query.prepare("getResultList");
         query.prepareCondition("id_LT", 1);
         assertEquals(" where T1_.ID < ?", query.whereClause.toSql());
-        Object[] variables = query.getBindVariables();
+        Object[] variables = query.getParamValues();
         assertEquals(1, variables.length);
         assertEquals(1, variables[0]);
-        Class<?>[] variableClasses = query.getBindVariableClasses();
+        Class<?>[] variableClasses = query.getParamClasses();
         assertEquals(1, variableClasses.length);
         assertEquals(Integer.class, variableClasses[0]);
     }
@@ -962,10 +961,10 @@ public class AutoSelectImplTest extends TestCase {
         query.prepare("getResultList");
         query.prepareCondition("bbb.id_LT", 1);
         assertEquals(" where T2_.ID < ?", query.whereClause.toSql());
-        Object[] variables = query.getBindVariables();
+        Object[] variables = query.getParamValues();
         assertEquals(1, variables.length);
         assertEquals(1, variables[0]);
-        Class<?>[] variableClasses = query.getBindVariableClasses();
+        Class<?>[] variableClasses = query.getParamClasses();
         assertEquals(1, variableClasses.length);
         assertEquals(Integer.class, variableClasses[0]);
     }
@@ -978,10 +977,10 @@ public class AutoSelectImplTest extends TestCase {
         query.prepare("getResultList");
         query.prepareCondition("id_LE", 1);
         assertEquals(" where T1_.ID <= ?", query.whereClause.toSql());
-        Object[] variables = query.getBindVariables();
+        Object[] variables = query.getParamValues();
         assertEquals(1, variables.length);
         assertEquals(1, variables[0]);
-        Class<?>[] variableClasses = query.getBindVariableClasses();
+        Class<?>[] variableClasses = query.getParamClasses();
         assertEquals(1, variableClasses.length);
         assertEquals(Integer.class, variableClasses[0]);
     }
@@ -995,10 +994,10 @@ public class AutoSelectImplTest extends TestCase {
         query.prepare("getResultList");
         query.prepareCondition("bbb.id_LE", 1);
         assertEquals(" where T2_.ID <= ?", query.whereClause.toSql());
-        Object[] variables = query.getBindVariables();
+        Object[] variables = query.getParamValues();
         assertEquals(1, variables.length);
         assertEquals(1, variables[0]);
-        Class<?>[] variableClasses = query.getBindVariableClasses();
+        Class<?>[] variableClasses = query.getParamClasses();
         assertEquals(1, variableClasses.length);
         assertEquals(Integer.class, variableClasses[0]);
     }
@@ -1011,10 +1010,10 @@ public class AutoSelectImplTest extends TestCase {
         query.prepare("getResultList");
         query.prepareCondition("id_GT", 1);
         assertEquals(" where T1_.ID > ?", query.whereClause.toSql());
-        Object[] variables = query.getBindVariables();
+        Object[] variables = query.getParamValues();
         assertEquals(1, variables.length);
         assertEquals(1, variables[0]);
-        Class<?>[] variableClasses = query.getBindVariableClasses();
+        Class<?>[] variableClasses = query.getParamClasses();
         assertEquals(1, variableClasses.length);
         assertEquals(Integer.class, variableClasses[0]);
     }
@@ -1028,10 +1027,10 @@ public class AutoSelectImplTest extends TestCase {
         query.prepare("getResultList");
         query.prepareCondition("bbb.id_GT", 1);
         assertEquals(" where T2_.ID > ?", query.whereClause.toSql());
-        Object[] variables = query.getBindVariables();
+        Object[] variables = query.getParamValues();
         assertEquals(1, variables.length);
         assertEquals(1, variables[0]);
-        Class<?>[] variableClasses = query.getBindVariableClasses();
+        Class<?>[] variableClasses = query.getParamClasses();
         assertEquals(1, variableClasses.length);
         assertEquals(Integer.class, variableClasses[0]);
     }
@@ -1044,10 +1043,10 @@ public class AutoSelectImplTest extends TestCase {
         query.prepare("getResultList");
         query.prepareCondition("id_GE", 1);
         assertEquals(" where T1_.ID >= ?", query.whereClause.toSql());
-        Object[] variables = query.getBindVariables();
+        Object[] variables = query.getParamValues();
         assertEquals(1, variables.length);
         assertEquals(1, variables[0]);
-        Class<?>[] variableClasses = query.getBindVariableClasses();
+        Class<?>[] variableClasses = query.getParamClasses();
         assertEquals(1, variableClasses.length);
         assertEquals(Integer.class, variableClasses[0]);
     }
@@ -1061,10 +1060,10 @@ public class AutoSelectImplTest extends TestCase {
         query.prepare("getResultList");
         query.prepareCondition("bbb.id_GE", 1);
         assertEquals(" where T2_.ID >= ?", query.whereClause.toSql());
-        Object[] variables = query.getBindVariables();
+        Object[] variables = query.getParamValues();
         assertEquals(1, variables.length);
         assertEquals(1, variables[0]);
-        Class<?>[] variableClasses = query.getBindVariableClasses();
+        Class<?>[] variableClasses = query.getParamClasses();
         assertEquals(1, variableClasses.length);
         assertEquals(Integer.class, variableClasses[0]);
     }
@@ -1077,11 +1076,11 @@ public class AutoSelectImplTest extends TestCase {
         query.prepare("getResultList");
         query.prepareCondition("id_IN", Arrays.asList(1, 2));
         assertEquals(" where T1_.ID in (?, ?)", query.whereClause.toSql());
-        Object[] variables = query.getBindVariables();
+        Object[] variables = query.getParamValues();
         assertEquals(2, variables.length);
         assertEquals(1, variables[0]);
         assertEquals(2, variables[1]);
-        Class<?>[] variableClasses = query.getBindVariableClasses();
+        Class<?>[] variableClasses = query.getParamClasses();
         assertEquals(2, variableClasses.length);
         assertEquals(Integer.class, variableClasses[0]);
         assertEquals(Integer.class, variableClasses[1]);
@@ -1096,11 +1095,11 @@ public class AutoSelectImplTest extends TestCase {
         query.prepare("getResultList");
         query.prepareCondition("bbb.id_IN", Arrays.asList(1, 2));
         assertEquals(" where T2_.ID in (?, ?)", query.whereClause.toSql());
-        Object[] variables = query.getBindVariables();
+        Object[] variables = query.getParamValues();
         assertEquals(2, variables.length);
         assertEquals(1, variables[0]);
         assertEquals(2, variables[1]);
-        Class<?>[] variableClasses = query.getBindVariableClasses();
+        Class<?>[] variableClasses = query.getParamClasses();
         assertEquals(2, variableClasses.length);
         assertEquals(Integer.class, variableClasses[0]);
         assertEquals(Integer.class, variableClasses[1]);
@@ -1114,11 +1113,11 @@ public class AutoSelectImplTest extends TestCase {
         query.prepare("getResultList");
         query.prepareCondition("id_NOT_IN", Arrays.asList(1, 2));
         assertEquals(" where T1_.ID not in (?, ?)", query.whereClause.toSql());
-        Object[] variables = query.getBindVariables();
+        Object[] variables = query.getParamValues();
         assertEquals(2, variables.length);
         assertEquals(1, variables[0]);
         assertEquals(2, variables[1]);
-        Class<?>[] variableClasses = query.getBindVariableClasses();
+        Class<?>[] variableClasses = query.getParamClasses();
         assertEquals(2, variableClasses.length);
         assertEquals(Integer.class, variableClasses[0]);
         assertEquals(Integer.class, variableClasses[1]);
@@ -1133,11 +1132,11 @@ public class AutoSelectImplTest extends TestCase {
         query.prepare("getResultList");
         query.prepareCondition("bbb.id_NOT_IN", Arrays.asList(1, 2));
         assertEquals(" where T2_.ID not in (?, ?)", query.whereClause.toSql());
-        Object[] variables = query.getBindVariables();
+        Object[] variables = query.getParamValues();
         assertEquals(2, variables.length);
         assertEquals(1, variables[0]);
         assertEquals(2, variables[1]);
-        Class<?>[] variableClasses = query.getBindVariableClasses();
+        Class<?>[] variableClasses = query.getParamClasses();
         assertEquals(2, variableClasses.length);
         assertEquals(Integer.class, variableClasses[0]);
         assertEquals(Integer.class, variableClasses[1]);
@@ -1151,10 +1150,10 @@ public class AutoSelectImplTest extends TestCase {
         query.prepare("getResultList");
         query.prepareCondition("name_LIKE", "aaa");
         assertEquals(" where T1_.NAME like ?", query.whereClause.toSql());
-        Object[] variables = query.getBindVariables();
+        Object[] variables = query.getParamValues();
         assertEquals(1, variables.length);
         assertEquals("aaa", variables[0]);
-        Class<?>[] variableClasses = query.getBindVariableClasses();
+        Class<?>[] variableClasses = query.getParamClasses();
         assertEquals(1, variableClasses.length);
         assertEquals(String.class, variableClasses[0]);
     }
@@ -1168,10 +1167,10 @@ public class AutoSelectImplTest extends TestCase {
         query.prepare("getResultList");
         query.prepareCondition("bbb.name_LIKE", "aaa");
         assertEquals(" where T2_.NAME like ?", query.whereClause.toSql());
-        Object[] variables = query.getBindVariables();
+        Object[] variables = query.getParamValues();
         assertEquals(1, variables.length);
         assertEquals("aaa", variables[0]);
-        Class<?>[] variableClasses = query.getBindVariableClasses();
+        Class<?>[] variableClasses = query.getParamClasses();
         assertEquals(1, variableClasses.length);
         assertEquals(String.class, variableClasses[0]);
     }
@@ -1184,10 +1183,10 @@ public class AutoSelectImplTest extends TestCase {
         query.prepare("getResultList");
         query.prepareCondition("name_STARTS", "aaa");
         assertEquals(" where T1_.NAME like ?", query.whereClause.toSql());
-        Object[] variables = query.getBindVariables();
+        Object[] variables = query.getParamValues();
         assertEquals(1, variables.length);
         assertEquals("aaa%", variables[0]);
-        Class<?>[] variableClasses = query.getBindVariableClasses();
+        Class<?>[] variableClasses = query.getParamClasses();
         assertEquals(1, variableClasses.length);
         assertEquals(String.class, variableClasses[0]);
     }
@@ -1201,10 +1200,10 @@ public class AutoSelectImplTest extends TestCase {
         query.prepare("getResultList");
         query.prepareCondition("bbb.name_STARTS", "aaa");
         assertEquals(" where T2_.NAME like ?", query.whereClause.toSql());
-        Object[] variables = query.getBindVariables();
+        Object[] variables = query.getParamValues();
         assertEquals(1, variables.length);
         assertEquals("aaa%", variables[0]);
-        Class<?>[] variableClasses = query.getBindVariableClasses();
+        Class<?>[] variableClasses = query.getParamClasses();
         assertEquals(1, variableClasses.length);
         assertEquals(String.class, variableClasses[0]);
     }
@@ -1217,10 +1216,10 @@ public class AutoSelectImplTest extends TestCase {
         query.prepare("getResultList");
         query.prepareCondition("name_ENDS", "aaa");
         assertEquals(" where T1_.NAME like ?", query.whereClause.toSql());
-        Object[] variables = query.getBindVariables();
+        Object[] variables = query.getParamValues();
         assertEquals(1, variables.length);
         assertEquals("%aaa", variables[0]);
-        Class<?>[] variableClasses = query.getBindVariableClasses();
+        Class<?>[] variableClasses = query.getParamClasses();
         assertEquals(1, variableClasses.length);
         assertEquals(String.class, variableClasses[0]);
     }
@@ -1234,10 +1233,10 @@ public class AutoSelectImplTest extends TestCase {
         query.prepare("getResultList");
         query.prepareCondition("bbb.name_ENDS", "aaa");
         assertEquals(" where T2_.NAME like ?", query.whereClause.toSql());
-        Object[] variables = query.getBindVariables();
+        Object[] variables = query.getParamValues();
         assertEquals(1, variables.length);
         assertEquals("%aaa", variables[0]);
-        Class<?>[] variableClasses = query.getBindVariableClasses();
+        Class<?>[] variableClasses = query.getParamClasses();
         assertEquals(1, variableClasses.length);
         assertEquals(String.class, variableClasses[0]);
     }
@@ -1250,10 +1249,10 @@ public class AutoSelectImplTest extends TestCase {
         query.prepare("getResultList");
         query.prepareCondition("name_CONTAINS", "aaa");
         assertEquals(" where T1_.NAME like ?", query.whereClause.toSql());
-        Object[] variables = query.getBindVariables();
+        Object[] variables = query.getParamValues();
         assertEquals(1, variables.length);
         assertEquals("%aaa%", variables[0]);
-        Class<?>[] variableClasses = query.getBindVariableClasses();
+        Class<?>[] variableClasses = query.getParamClasses();
         assertEquals(1, variableClasses.length);
         assertEquals(String.class, variableClasses[0]);
     }
@@ -1267,10 +1266,10 @@ public class AutoSelectImplTest extends TestCase {
         query.prepare("getResultList");
         query.prepareCondition("bbb.name_CONTAINS", "aaa");
         assertEquals(" where T2_.NAME like ?", query.whereClause.toSql());
-        Object[] variables = query.getBindVariables();
+        Object[] variables = query.getParamValues();
         assertEquals(1, variables.length);
         assertEquals("%aaa%", variables[0]);
-        Class<?>[] variableClasses = query.getBindVariableClasses();
+        Class<?>[] variableClasses = query.getParamClasses();
         assertEquals(1, variableClasses.length);
         assertEquals(String.class, variableClasses[0]);
     }
@@ -1283,9 +1282,9 @@ public class AutoSelectImplTest extends TestCase {
         query.prepare("getResultList");
         query.prepareCondition("name_IS_NULL", true);
         assertEquals(" where T1_.NAME is null", query.whereClause.toSql());
-        Object[] variables = query.getBindVariables();
+        Object[] variables = query.getParamValues();
         assertEquals(0, variables.length);
-        Class<?>[] variableClasses = query.getBindVariableClasses();
+        Class<?>[] variableClasses = query.getParamClasses();
         assertEquals(0, variableClasses.length);
     }
 
@@ -1297,9 +1296,9 @@ public class AutoSelectImplTest extends TestCase {
         query.prepare("getResultList");
         query.prepareCondition("name_IS_NULL", false);
         assertEquals("", query.whereClause.toSql());
-        Object[] variables = query.getBindVariables();
+        Object[] variables = query.getParamValues();
         assertEquals(0, variables.length);
-        Class<?>[] variableClasses = query.getBindVariableClasses();
+        Class<?>[] variableClasses = query.getParamClasses();
         assertEquals(0, variableClasses.length);
     }
 
@@ -1312,9 +1311,9 @@ public class AutoSelectImplTest extends TestCase {
         query.prepare("getResultList");
         query.prepareCondition("bbb.name_IS_NULL", true);
         assertEquals(" where T2_.NAME is null", query.whereClause.toSql());
-        Object[] variables = query.getBindVariables();
+        Object[] variables = query.getParamValues();
         assertEquals(0, variables.length);
-        Class<?>[] variableClasses = query.getBindVariableClasses();
+        Class<?>[] variableClasses = query.getParamClasses();
         assertEquals(0, variableClasses.length);
     }
 
@@ -1326,9 +1325,9 @@ public class AutoSelectImplTest extends TestCase {
         query.prepare("getResultList");
         query.prepareCondition("name_IS_NOT_NULL", true);
         assertEquals(" where T1_.NAME is not null", query.whereClause.toSql());
-        Object[] variables = query.getBindVariables();
+        Object[] variables = query.getParamValues();
         assertEquals(0, variables.length);
-        Class<?>[] variableClasses = query.getBindVariableClasses();
+        Class<?>[] variableClasses = query.getParamClasses();
         assertEquals(0, variableClasses.length);
     }
 
@@ -1340,9 +1339,9 @@ public class AutoSelectImplTest extends TestCase {
         query.prepare("getResultList");
         query.prepareCondition("name_IS_NOT_NULL", false);
         assertEquals("", query.whereClause.toSql());
-        Object[] variables = query.getBindVariables();
+        Object[] variables = query.getParamValues();
         assertEquals(0, variables.length);
-        Class<?>[] variableClasses = query.getBindVariableClasses();
+        Class<?>[] variableClasses = query.getParamClasses();
         assertEquals(0, variableClasses.length);
     }
 
@@ -1355,9 +1354,9 @@ public class AutoSelectImplTest extends TestCase {
         query.prepare("getResultList");
         query.prepareCondition("bbb.name_IS_NOT_NULL", true);
         assertEquals(" where T2_.NAME is not null", query.whereClause.toSql());
-        Object[] variables = query.getBindVariables();
+        Object[] variables = query.getParamValues();
         assertEquals(0, variables.length);
-        Class<?>[] variableClasses = query.getBindVariableClasses();
+        Class<?>[] variableClasses = query.getParamClasses();
         assertEquals(0, variableClasses.length);
     }
 

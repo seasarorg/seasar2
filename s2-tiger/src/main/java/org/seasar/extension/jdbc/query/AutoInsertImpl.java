@@ -149,8 +149,7 @@ public class AutoInsertImpl<T> extends AbstractAutoUpdate<T, AutoInsert<T>>
     protected void prepareParams() {
         for (final PropertyMeta propertyMeta : targetProperties) {
             final Object value = FieldUtil.get(propertyMeta.getField(), entity);
-            bindVariableList.add(value);
-            bindVariableClassList.add(propertyMeta.getPropertyClass());
+            addParam(value, propertyMeta.getPropertyClass());
         }
     }
 

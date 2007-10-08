@@ -409,11 +409,11 @@ public class AutoUpdateTest extends TestCase {
         eee.version = 1L;
         AutoUpdateImpl<Eee> query = new AutoUpdateImpl<Eee>(manager, eee);
         query.prepare("execute");
-        assertEquals(4, query.bindVariableList.size());
-        assertEquals("hoge", query.bindVariableList.get(0));
-        assertNull(query.bindVariableList.get(1));
-        assertEquals(new Integer(100), query.bindVariableList.get(2));
-        assertEquals(new Long(1L), query.bindVariableList.get(3));
+        assertEquals(4, query.getParamSize());
+        assertEquals("hoge", query.getParam(0).value);
+        assertNull(query.getParam(1).value);
+        assertEquals(new Integer(100), query.getParam(2).value);
+        assertEquals(new Long(1L), query.getParam(3).value);
     }
 
     /**
@@ -427,11 +427,11 @@ public class AutoUpdateTest extends TestCase {
         AutoUpdateImpl<Eee> query = new AutoUpdateImpl<Eee>(manager, eee);
         query.includesVersion();
         query.prepare("execute");
-        assertEquals(4, query.bindVariableList.size());
-        assertEquals("hoge", query.bindVariableList.get(0));
-        assertNull(query.bindVariableList.get(1));
-        assertEquals(new Long(1L), query.bindVariableList.get(2));
-        assertEquals(new Integer(100), query.bindVariableList.get(3));
+        assertEquals(4, query.getParamSize());
+        assertEquals("hoge", query.getParam(0).value);
+        assertNull(query.getParam(1).value);
+        assertEquals(new Long(1L), query.getParam(2).value);
+        assertEquals(new Integer(100), query.getParam(3).value);
     }
 
     /**
@@ -445,10 +445,10 @@ public class AutoUpdateTest extends TestCase {
         AutoUpdateImpl<Eee> query = new AutoUpdateImpl<Eee>(manager, eee);
         query.excludesNull();
         query.prepare("execute");
-        assertEquals(3, query.bindVariableList.size());
-        assertEquals("hoge", query.bindVariableList.get(0));
-        assertEquals(new Integer(100), query.bindVariableList.get(1));
-        assertEquals(new Long(1L), query.bindVariableList.get(2));
+        assertEquals(3, query.getParamSize());
+        assertEquals("hoge", query.getParam(0).value);
+        assertEquals(new Integer(100), query.getParam(1).value);
+        assertEquals(new Long(1L), query.getParam(2).value);
     }
 
     /**

@@ -88,15 +88,13 @@ public class AutoDeleteImpl<T> extends AbstractAutoUpdate<T, AutoDelete<T>>
         for (final PropertyMeta propertyMeta : entityMeta
                 .getIdPropertyMetaList()) {
             final Object value = FieldUtil.get(propertyMeta.getField(), entity);
-            bindVariableList.add(value);
-            bindVariableClassList.add(propertyMeta.getPropertyClass());
+            addParam(value, propertyMeta.getPropertyClass());
         }
         if (!ignoreVersion && entityMeta.hasVersionPropertyMeta()) {
             final PropertyMeta propertyMeta = entityMeta
                     .getVersionPropertyMeta();
             final Object value = FieldUtil.get(propertyMeta.getField(), entity);
-            bindVariableList.add(value);
-            bindVariableClassList.add(propertyMeta.getPropertyClass());
+            addParam(value, propertyMeta.getPropertyClass());
         }
     }
 

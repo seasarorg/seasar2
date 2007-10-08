@@ -16,11 +16,11 @@
 package org.seasar.extension.jdbc.query;
 
 import java.sql.PreparedStatement;
-import java.util.Arrays;
 
 import org.seasar.extension.jdbc.JdbcContext;
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.SqlUpdate;
+import org.seasar.extension.jdbc.exception.IllegalParamSizeRuntimeException;
 import org.seasar.framework.util.PreparedStatementUtil;
 import org.seasar.framework.util.StatementUtil;
 
@@ -32,6 +32,13 @@ import org.seasar.framework.util.StatementUtil;
  */
 public class SqlUpdateImpl extends AbstractQuery<SqlUpdate> implements
         SqlUpdate {
+
+    private static final Object[] EMPTY_PARAMS = new Object[0];
+
+    /**
+     * パラメータの配列です。
+     */
+    protected Object[] params = EMPTY_PARAMS;
 
     /**
      * {@link SqlUpdateImpl}を作成します。
@@ -53,16 +60,28 @@ public class SqlUpdateImpl extends AbstractQuery<SqlUpdate> implements
         if (paramClasses == null) {
             throw new NullPointerException("paramClasses");
         }
-        bindVariableClassList.addAll(Arrays.asList(paramClasses));
+        for (Class<?> c : paramClasses) {
+            addParam(null, c);
+        }
     }
 
     public SqlUpdate params(Object... params) {
-        bindVariableList.addAll(Arrays.asList(params));
+        this.params = params;
         return this;
     }
 
     public int execute() {
         prepare("execute");
+        if (params.length != paramList.size()) {
+            logger.log("ESSR0709", new Object[] { callerClass.getName(),
+                    callerMethodName });
+            throw new IllegalParamSizeRuntimeException(params.length, paramList
+                    .size());
+        }
+        for (int j = 0; j < params.length; j++) {
+            Param param = getParam(j);
+            param.value = params[j];
+        }
         logSql();
         int ret = 0;
         JdbcContext jdbcContext = jdbcManager.getJdbcContext();
@@ -89,7 +108,7 @@ public class SqlUpdateImpl extends AbstractQuery<SqlUpdate> implements
         if (queryTimeout > 0) {
             StatementUtil.setQueryTimeout(ps, queryTimeout);
         }
-        prepareBindVariables(ps);
+        prepareInParams(ps);
         return ps;
     }
 

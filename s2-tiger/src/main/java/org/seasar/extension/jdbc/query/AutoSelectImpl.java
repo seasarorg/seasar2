@@ -810,16 +810,15 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
      * 
      * @param condition
      *            条件
-     * @param bindVariable
-     *            バインド変数
-     * @param bindVariableClass
-     *            バインド変数のクラス
+     * @param value
+     *            パラメータの値
+     * @param paramClass
+     *            パラメータのクラス
      */
-    protected void addCondition(String condition, Object bindVariable,
-            Class<?> bindVariableClass) {
+    protected void addCondition(String condition, Object value,
+            Class<?> paramClass) {
         whereClause.addAndSql(condition);
-        bindVariableList.add(bindVariable);
-        bindVariableClassList.add(bindVariableClass);
+        addParam(value, paramClass);
     }
 
     /**
@@ -827,19 +826,18 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
      * 
      * @param condition
      *            条件
-     * @param bindVariables
-     *            バインド変数の配列
-     * @param bindVariableClass
-     *            バインド変数のクラス
+     * @param values
+     *            パラメータの値の配列
+     * @param paramClass
+     *            パラメータのクラス
      * @param size
      *            配列のサイズ
      */
-    protected void addInCondition(String condition, Object bindVariables,
-            Class<?> bindVariableClass, int size) {
+    protected void addInCondition(String condition, Object values,
+            Class<?> paramClass, int size) {
         whereClause.addAndSql(condition);
         for (int i = 0; i < size; i++) {
-            bindVariableList.add(Array.get(bindVariables, i));
-            bindVariableClassList.add(bindVariableClass);
+            addParam(Array.get(values, i), paramClass);
         }
     }
 

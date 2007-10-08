@@ -15,6 +15,8 @@
  */
 package org.seasar.extension.jdbc.dialect;
 
+import java.util.List;
+
 import org.seasar.extension.jdbc.ValueType;
 import org.seasar.extension.jdbc.types.ValueTypes;
 
@@ -26,111 +28,113 @@ import org.seasar.extension.jdbc.types.ValueTypes;
  */
 public class OracleDialect extends StandardDialect {
 
-	private boolean supportsBooleanToInt = true;
+    private boolean supportsBooleanToInt = true;
 
-	private boolean supportsWaveDashToFullwidthTilde = true;
+    private boolean supportsWaveDashToFullwidthTilde = true;
 
-	@Override
-	public String getName() {
-		return "oracle";
-	}
+    @Override
+    public String getName() {
+        return "oracle";
+    }
 
-	@Override
-	public boolean supportsLimit() {
-		return true;
-	}
+    @Override
+    public boolean supportsLimit() {
+        return true;
+    }
 
-	/**
-	 * <p>
-	 * booleanからintへの変換をサポートしているかどうかを返します。
-	 * </p>
-	 * <p>
-	 * オラクルのようなbooleanをサポートしていないデータベースでは必要になります。
-	 * </p>
-	 * 
-	 * @return booleanからintへの変換をサポートしているかどうか
-	 */
-	public boolean supportsBooleanToInt() {
-		return supportsBooleanToInt;
-	}
+    /**
+     * <p>
+     * booleanからintへの変換をサポートしているかどうかを返します。
+     * </p>
+     * <p>
+     * オラクルのようなbooleanをサポートしていないデータベースでは必要になります。
+     * </p>
+     * 
+     * @return booleanからintへの変換をサポートしているかどうか
+     */
+    public boolean supportsBooleanToInt() {
+        return supportsBooleanToInt;
+    }
 
-	/**
-	 * <p>
-	 * WAVE DASH(U+301C)からFULLWIDTH TILDE(U+FF5E)への変換をサポートしているかどうかを返します。
-	 * </p>
-	 * <p>
-	 * オラクルのようなFULLWIDTH TILDEの変換にバグがあるデータベースでは必要になります。
-	 * </p>
-	 * 
-	 * @return WAVE DASH(U+301C)からFULLWIDTH TILDE(U+FF5E)への変換をサポートしているかどうか
-	 */
-	public boolean supportsWaveDashToFullwidthTilde() {
-		return supportsWaveDashToFullwidthTilde;
-	}
+    /**
+     * <p>
+     * WAVE DASH(U+301C)からFULLWIDTH TILDE(U+FF5E)への変換をサポートしているかどうかを返します。
+     * </p>
+     * <p>
+     * オラクルのようなFULLWIDTH TILDEの変換にバグがあるデータベースでは必要になります。
+     * </p>
+     * 
+     * @return WAVE DASH(U+301C)からFULLWIDTH TILDE(U+FF5E)への変換をサポートしているかどうか
+     */
+    public boolean supportsWaveDashToFullwidthTilde() {
+        return supportsWaveDashToFullwidthTilde;
+    }
 
-	@Override
-	public String convertLimitSql(String sql, int offset, int limit) {
-		StringBuilder buf = new StringBuilder(sql.length() + 100);
-		sql = sql.trim();
-		String lowerSql = sql.toLowerCase();
-		boolean isForUpdate = false;
-		if (lowerSql.endsWith(" for update")) {
-			sql = sql.substring(0, sql.length() - 11);
-			isForUpdate = true;
-		}
-		boolean hasOffset = offset > 0;
-		if (hasOffset) {
-			buf
-					.append("select * from ( select temp_.*, rownum rownum_ from ( ");
-			buf.append(sql);
-			buf.append(" ) temp_");
-			if (limit > 0) {
-				buf.append(" where rownum <= ");
-				buf.append(offset + limit);
-			}
-			buf.append(" ) where rownum_ > ");
-			buf.append(offset);
-		} else {
-			buf.append("select * from ( ");
-			buf.append(sql);
-			buf.append(" ) where rownum <= ");
-			buf.append(limit);
-		}
-		if (isForUpdate) {
-			buf.append(" for update");
-		}
-		return buf.toString();
-	}
+    @Override
+    public String convertLimitSql(String sql, int offset, int limit) {
+        StringBuilder buf = new StringBuilder(sql.length() + 100);
+        sql = sql.trim();
+        String lowerSql = sql.toLowerCase();
+        boolean isForUpdate = false;
+        if (lowerSql.endsWith(" for update")) {
+            sql = sql.substring(0, sql.length() - 11);
+            isForUpdate = true;
+        }
+        boolean hasOffset = offset > 0;
+        if (hasOffset) {
+            buf
+                    .append("select * from ( select temp_.*, rownum rownum_ from ( ");
+            buf.append(sql);
+            buf.append(" ) temp_");
+            if (limit > 0) {
+                buf.append(" where rownum <= ");
+                buf.append(offset + limit);
+            }
+            buf.append(" ) where rownum_ > ");
+            buf.append(offset);
+        } else {
+            buf.append("select * from ( ");
+            buf.append(sql);
+            buf.append(" ) where rownum <= ");
+            buf.append(limit);
+        }
+        if (isForUpdate) {
+            buf.append(" for update");
+        }
+        return buf.toString();
+    }
 
-	@Override
-	public ValueType getValueType(Class<?> clazz) {
-		if (clazz == String.class && supportsWaveDashToFullwidthTilde()) {
-			return ValueTypes.WAVE_DASH_STRING;
-		} else if ((clazz == Boolean.class || clazz == boolean.class)
-				&& supportsBooleanToInt()) {
-			return ValueTypes.BOOLEAN_INTEGER;
-		}
-		return ValueTypes.getValueType(clazz);
-	}
+    @Override
+    public ValueType getValueType(Class<?> clazz) {
+        if (clazz == String.class && supportsWaveDashToFullwidthTilde()) {
+            return ValueTypes.WAVE_DASH_STRING;
+        } else if ((clazz == Boolean.class || clazz == boolean.class)
+                && supportsBooleanToInt()) {
+            return ValueTypes.BOOLEAN_INTEGER;
+        } else if (List.class.isAssignableFrom(clazz)) {
+            return ValueTypes.ORACLE_RESULT_SET;
+        }
+        return ValueTypes.getValueType(clazz);
+    }
 
-	/**
-	 * booleanからintへの変換をサポートしているかどうかを設定します。
-	 * 
-	 * @param supportsBooleanToInt
-	 *            booleanからintへの変換をサポートしているかどうか
-	 */
-	public void setSupportsBooleanToInt(boolean supportsBooleanToInt) {
-		this.supportsBooleanToInt = supportsBooleanToInt;
-	}
+    /**
+     * booleanからintへの変換をサポートしているかどうかを設定します。
+     * 
+     * @param supportsBooleanToInt
+     *            booleanからintへの変換をサポートしているかどうか
+     */
+    public void setSupportsBooleanToInt(boolean supportsBooleanToInt) {
+        this.supportsBooleanToInt = supportsBooleanToInt;
+    }
 
-	/**
-	 * WAVE DASH(U+301C)からFULLWIDTH TILDE(U+FF5E)への変換をサポートしているかどうかを設定します。
-	 * 
-	 * @param supportsWaveDashToFullwidthTilde
-	 *            WAVE DASH(U+301C)からFULLWIDTH TILDE(U+FF5E)への変換をサポートしているかどうか
-	 */
-	public void setSupportsWaveDashToFullwidthTilde(
-			boolean supportsWaveDashToFullwidthTilde) {
-		this.supportsWaveDashToFullwidthTilde = supportsWaveDashToFullwidthTilde;
-	}
+    /**
+     * WAVE DASH(U+301C)からFULLWIDTH TILDE(U+FF5E)への変換をサポートしているかどうかを設定します。
+     * 
+     * @param supportsWaveDashToFullwidthTilde
+     *            WAVE DASH(U+301C)からFULLWIDTH TILDE(U+FF5E)への変換をサポートしているかどうか
+     */
+    public void setSupportsWaveDashToFullwidthTilde(
+            boolean supportsWaveDashToFullwidthTilde) {
+        this.supportsWaveDashToFullwidthTilde = supportsWaveDashToFullwidthTilde;
+    }
 }

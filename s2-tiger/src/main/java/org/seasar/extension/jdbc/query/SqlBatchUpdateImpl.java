@@ -17,13 +17,13 @@ package org.seasar.extension.jdbc.query;
 
 import java.sql.PreparedStatement;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.seasar.extension.jdbc.JdbcContext;
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.SqlBatchUpdate;
 import org.seasar.extension.jdbc.SqlUpdate;
+import org.seasar.extension.jdbc.exception.IllegalParamSizeRuntimeException;
 import org.seasar.framework.util.PreparedStatementUtil;
 import org.seasar.framework.util.StatementUtil;
 
@@ -61,7 +61,9 @@ public class SqlBatchUpdateImpl extends AbstractQuery<SqlBatchUpdate> implements
         if (paramClasses == null) {
             throw new NullPointerException("paramClasses");
         }
-        bindVariableClassList.addAll(Arrays.asList(paramClasses));
+        for (Class<?> c : paramClasses) {
+            addParam(null, c);
+        }
     }
 
     public SqlBatchUpdate params(Object... params) {
@@ -76,10 +78,19 @@ public class SqlBatchUpdateImpl extends AbstractQuery<SqlBatchUpdate> implements
         try {
             PreparedStatement ps = getPreparedStatement(jdbcContext);
             for (int i = 0; i < paramsList.size(); ++i) {
-                bindVariableList.clear();
-                bindVariableList.addAll(Arrays.asList(paramsList.get(i)));
+                Object[] params = paramsList.get(i);
+                if (params.length != paramList.size()) {
+                    logger.log("ESSR0709", new Object[] {
+                            callerClass.getName(), callerMethodName });
+                    throw new IllegalParamSizeRuntimeException(params.length,
+                            paramList.size());
+                }
+                for (int j = 0; j < params.length; j++) {
+                    Param param = getParam(j);
+                    param.value = params[j];
+                }
                 logSql();
-                prepareBindVariables(ps);
+                prepareInParams(ps);
                 PreparedStatementUtil.addBatch(ps);
             }
             ret = PreparedStatementUtil.executeBatch(ps);

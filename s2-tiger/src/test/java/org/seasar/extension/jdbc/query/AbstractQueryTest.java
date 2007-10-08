@@ -24,8 +24,8 @@ import org.seasar.extension.jdbc.SqlLog;
 import org.seasar.extension.jdbc.SqlLogRegistry;
 import org.seasar.extension.jdbc.SqlLogRegistryLocator;
 import org.seasar.extension.jdbc.dialect.StandardDialect;
-import org.seasar.extension.jdbc.exception.NullBindVariableRuntimeException;
 import org.seasar.extension.jdbc.manager.JdbcManagerImpl;
+import org.seasar.extension.jdbc.types.ValueTypes;
 import org.seasar.framework.mock.sql.MockDataSource;
 import org.seasar.framework.mock.sql.MockPreparedStatement;
 
@@ -63,8 +63,7 @@ public class AbstractQueryTest extends TestCase {
         String completeSql = "select * from aaa where id = 1";
         MyQuery query = new MyQuery(manager);
         query.executedSql = sql;
-        query.bindVariableList.add(1);
-        query.bindVariableClassList.add(Integer.class);
+        query.addParam(1);
         query.prepareCallerClassAndMethodName("testLogSql");
         query.logSql();
         SqlLogRegistry registry = SqlLogRegistryLocator.getInstance();
@@ -103,25 +102,23 @@ public class AbstractQueryTest extends TestCase {
     /**
      * 
      */
-    public void testPrepareBindVariableClassList() {
+    public void testAddParam() {
         MyQuery query = new MyQuery(manager);
-        query.bindVariableList.add(1);
-        query.prepareBindVariableClassList();
-        assertEquals(1, query.bindVariableClassList.size());
-        assertEquals(Integer.class, query.bindVariableClassList.get(0));
+        Param param = query.addParam(1);
+        assertEquals(1, param.value);
+        assertEquals(Integer.class, param.paramClass);
+        assertEquals(ValueTypes.INTEGER, param.valueType);
     }
 
     /**
      * 
      */
-    public void testPrepareBindVariableClassList_nullBindVariable() {
+    public void testAddParam_null() {
         MyQuery query = new MyQuery(manager);
-        query.bindVariableList.add(null);
-        query.prepareCallerClassAndMethodName("hoge");
         try {
-            query.prepareBindVariableClassList();
+            query.addParam(null);
             fail();
-        } catch (NullBindVariableRuntimeException e) {
+        } catch (NullPointerException e) {
             System.out.println(e);
         }
     }
@@ -130,10 +127,13 @@ public class AbstractQueryTest extends TestCase {
      * @throws Exception
      * 
      */
-    public void testPrepareBindVariables() throws Exception {
+    public void testPrepareInParams() throws Exception {
         MyQuery query = new MyQuery(manager);
-        query.bindVariableList.add("aaa");
-        query.bindVariableClassList.add(String.class);
+        Param param = new Param();
+        param.value = "aaa";
+        param.paramClass = String.class;
+        param.valueType = ValueTypes.STRING;
+        query.paramList.add(param);
         MockPreparedStatement ps = new MockPreparedStatement(null, null) {
 
             @Override
@@ -144,9 +144,37 @@ public class AbstractQueryTest extends TestCase {
             }
 
         };
-        query.prepareBindVariables(ps);
+        query.prepareInParams(ps);
         assertEquals("aaa", bindVariable);
         assertEquals(1, parameterIndex);
+    }
+
+    /**
+     * 
+     */
+    public void testResetParams() {
+        MyQuery query = new MyQuery(manager);
+        query.addParam(1);
+        query.resetParams();
+        assertEquals(0, query.paramList.size());
+    }
+
+    /**
+     * 
+     */
+    public void testGetParamSize() {
+        MyQuery query = new MyQuery(manager);
+        query.addParam(1);
+        assertEquals(1, query.getParamSize());
+    }
+
+    /**
+     * 
+     */
+    public void testGetParam() {
+        MyQuery query = new MyQuery(manager);
+        Param param = query.addParam(1);
+        assertSame(param, query.getParam(0));
     }
 
     private static class MyQuery extends AbstractQuery<MyQuery> {

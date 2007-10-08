@@ -105,7 +105,7 @@ public abstract class AbstractAutoUpdate<T, S extends Update<S>> extends
         final JdbcContext jdbcContext = jdbcManager.getJdbcContext();
         try {
             final PreparedStatement ps = getPreparedStatement(jdbcContext);
-            prepareBindVariables(ps);
+            prepareInParams(ps);
             return PreparedStatementUtil.executeUpdate(ps);
         } finally {
             if (!jdbcContext.isTransactional()) {
@@ -128,7 +128,7 @@ public abstract class AbstractAutoUpdate<T, S extends Update<S>> extends
         if (queryTimeout > 0) {
             StatementUtil.setQueryTimeout(ps, queryTimeout);
         }
-        prepareBindVariables(ps);
+        prepareInParams(ps);
         return ps;
     }
 

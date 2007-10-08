@@ -83,20 +83,6 @@ public abstract class AbstractSelect<T, S extends Select<T, S>> extends
     }
 
     @SuppressWarnings("unchecked")
-    @Override
-    public S callerClass(Class<?> callerClass) {
-        this.callerClass = callerClass;
-        return (S) this;
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public S callerMethodName(String callerMethodName) {
-        this.callerMethodName = callerMethodName;
-        return (S) this;
-    }
-
-    @SuppressWarnings("unchecked")
     public S maxRows(int maxRows) {
         this.maxRows = maxRows;
         return (S) this;
@@ -105,13 +91,6 @@ public abstract class AbstractSelect<T, S extends Select<T, S>> extends
     @SuppressWarnings("unchecked")
     public S fetchSize(int fetchSize) {
         this.fetchSize = fetchSize;
-        return (S) this;
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public S queryTimeout(int queryTimeout) {
-        this.queryTimeout = queryTimeout;
         return (S) this;
     }
 
@@ -231,10 +210,6 @@ public abstract class AbstractSelect<T, S extends Select<T, S>> extends
      * 
      * @param ps
      *            準備されたステートメント
-     * @param bindVariables
-     *            バインド変数の配列
-     * @param bindVariableClasses
-     *            バインド変数のクラスの配列
      * 
      */
     protected void setupPreparedStatement(PreparedStatement ps) {
@@ -247,7 +222,7 @@ public abstract class AbstractSelect<T, S extends Select<T, S>> extends
         if (queryTimeout > 0) {
             StatementUtil.setQueryTimeout(ps, queryTimeout);
         }
-        prepareBindVariables(ps);
+        prepareInParams(ps);
     }
 
     /**

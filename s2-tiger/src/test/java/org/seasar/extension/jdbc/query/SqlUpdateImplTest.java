@@ -26,6 +26,7 @@ import org.seasar.extension.jdbc.SqlLog;
 import org.seasar.extension.jdbc.SqlLogRegistry;
 import org.seasar.extension.jdbc.SqlLogRegistryLocator;
 import org.seasar.extension.jdbc.dialect.StandardDialect;
+import org.seasar.extension.jdbc.exception.IllegalParamSizeRuntimeException;
 import org.seasar.extension.jdbc.manager.JdbcManagerImpl;
 import org.seasar.extension.jta.TransactionManagerImpl;
 import org.seasar.extension.jta.TransactionSynchronizationRegistryImpl;
@@ -100,9 +101,9 @@ public class SqlUpdateImplTest extends TestCase {
                 "update aaa set name = ? where id = ?", String.class,
                 Integer.class);
         query.params("hoge", 1);
-        assertEquals(2, query.bindVariableList.size());
-        assertEquals("hoge", query.bindVariableList.get(0));
-        assertEquals(1, query.bindVariableList.get(1));
+        assertEquals(2, query.params.length);
+        assertEquals("hoge", query.params[0]);
+        assertEquals(1, query.params[1]);
     }
 
     /**
@@ -115,8 +116,8 @@ public class SqlUpdateImplTest extends TestCase {
                 Integer.class) {
 
             @Override
-            protected void prepareBindVariables(PreparedStatement ps) {
-                super.prepareBindVariables(ps);
+            protected void prepareInParams(PreparedStatement ps) {
+                super.prepareInParams(ps);
                 preparedBindVariables = true;
             }
 
@@ -156,5 +157,23 @@ public class SqlUpdateImplTest extends TestCase {
         SqlLog sqlLog = SqlLogRegistryLocator.getInstance().getLast();
         assertEquals("update aaa set name = 'hoge' where id = 1", sqlLog
                 .getCompleteSql());
+    }
+
+    /**
+     * @throws Exception
+     * 
+     */
+    public void testExecute_illegalParamSize() throws Exception {
+        String sql = "update aaa set name = ? where id = ?";
+        SqlUpdateImpl query = new SqlUpdateImpl(manager, sql, String.class,
+                Integer.class);
+        try {
+            query.params("hoge").execute();
+            fail();
+        } catch (IllegalParamSizeRuntimeException e) {
+            System.out.println(e);
+            assertEquals(1, e.getParamSize());
+            assertEquals(2, e.getParamClassSize());
+        }
     }
 }

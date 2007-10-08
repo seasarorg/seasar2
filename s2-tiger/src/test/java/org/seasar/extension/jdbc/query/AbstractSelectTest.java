@@ -85,6 +85,46 @@ public class AbstractSelectTest extends TestCase {
      * @throws Exception
      * 
      */
+    public void testMaxRows() throws Exception {
+        MySelect<Aaa> query = new MySelect<Aaa>(manager, Aaa.class);
+        assertSame(query, query.maxRows(100));
+        assertEquals(100, query.maxRows);
+    }
+
+    /**
+     * @throws Exception
+     * 
+     */
+    public void testFetchSize() throws Exception {
+        MySelect<Aaa> query = new MySelect<Aaa>(manager, Aaa.class);
+        assertSame(query, query.fetchSize(10));
+        assertEquals(10, query.fetchSize);
+    }
+
+    /**
+     * @throws Exception
+     * 
+     */
+    public void testLimit() throws Exception {
+        MySelect<Aaa> query = new MySelect<Aaa>(manager, Aaa.class);
+        assertSame(query, query.limit(9));
+        assertEquals(9, query.limit);
+    }
+
+    /**
+     * @throws Exception
+     * 
+     */
+    public void testOffset() throws Exception {
+        MySelect<Aaa> query = new MySelect<Aaa>(manager, Aaa.class);
+        assertSame(query, query.offset(8));
+        assertEquals(8, query.offset);
+    }
+
+    /**
+     * @throws Exception
+     * 
+     */
     public void testSetupPreparedStatement() throws Exception {
         String sql = "select * from aaa where id = ?";
         MySelect<Aaa> query = new MySelect<Aaa>(manager, Aaa.class);
@@ -92,8 +132,7 @@ public class AbstractSelectTest extends TestCase {
         query.maxRows = 20;
         query.queryTimeout = 30;
         query.executedSql = sql;
-        query.bindVariableList.add("aaa");
-        query.bindVariableClassList.add(String.class);
+        query.addParam("aaa");
         MockPreparedStatement ps = new MockPreparedStatement(null, sql);
         query.setupPreparedStatement(ps);
         assertEquals(ResultSet.TYPE_FORWARD_ONLY, ps.getResultSetType());
@@ -115,6 +154,7 @@ public class AbstractSelectTest extends TestCase {
         query.executedSql = sql;
         JdbcContext jdbcContext = manager.getJdbcContext();
         PreparedStatement ps = query.getPreparedStatement(jdbcContext);
+        assertNotNull(ps);
         assertEquals(ResultSet.TYPE_FORWARD_ONLY, ps.getResultSetType());
         assertEquals(10, ps.getFetchSize());
         assertEquals(20, ps.getMaxRows());

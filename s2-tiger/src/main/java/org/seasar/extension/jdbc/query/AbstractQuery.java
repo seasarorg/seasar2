@@ -20,14 +20,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.seasar.extension.jdbc.DbmsDialect;
 import org.seasar.extension.jdbc.JdbcManager;
+import org.seasar.extension.jdbc.ParamType;
 import org.seasar.extension.jdbc.Query;
 import org.seasar.extension.jdbc.SqlLog;
 import org.seasar.extension.jdbc.SqlLogRegistry;
 import org.seasar.extension.jdbc.SqlLogRegistryLocator;
-import org.seasar.extension.jdbc.ValueType;
-import org.seasar.extension.jdbc.exception.NullBindVariableRuntimeException;
 import org.seasar.extension.jdbc.impl.SqlLogImpl;
 import org.seasar.extension.jdbc.util.BindVariableUtil;
 import org.seasar.framework.exception.SQLRuntimeException;
@@ -77,14 +75,9 @@ public abstract class AbstractQuery<S extends Query<S>> implements Query<S> {
     protected String executedSql;
 
     /**
-     * バインド変数のリストです。
+     * パラメータのリストです。
      */
-    protected List<Object> bindVariableList = new ArrayList<Object>();
-
-    /**
-     * バインド変数のクラスのリストです。
-     */
-    protected List<Class<?>> bindVariableClassList = new ArrayList<Class<?>>();
+    protected List<Param> paramList = new ArrayList<Param>();
 
     /**
      * {@link AbstractQuery}を作成します。
@@ -131,19 +124,19 @@ public abstract class AbstractQuery<S extends Query<S>> implements Query<S> {
         String completeSql = null;
         Object[] vars = null;
         if (logger.isDebugEnabled()) {
-            vars = getBindVariables();
+            vars = getParamValues();
             completeSql = BindVariableUtil.getCompleteSql(executedSql, vars);
             logger.debug(completeSql);
         }
         SqlLogRegistry sqlLogRegistry = SqlLogRegistryLocator.getInstance();
         if (sqlLogRegistry != null) {
             if (completeSql == null) {
-                vars = getBindVariables();
+                vars = getParamValues();
                 completeSql = BindVariableUtil
                         .getCompleteSql(executedSql, vars);
             }
             SqlLog sqlLog = new SqlLogImpl(executedSql, completeSql, vars,
-                    getBindVariableClasses());
+                    getParamClasses());
             sqlLogRegistry.add(sqlLog);
         }
     }
@@ -174,22 +167,29 @@ public abstract class AbstractQuery<S extends Query<S>> implements Query<S> {
     }
 
     /**
-     * バインド変数の配列を返します。
+     * パラメータの値の配列を返します。
      * 
-     * @return バインド変数の配列
+     * @return パラメータの値の配列
      */
-    public Object[] getBindVariables() {
-        return bindVariableList.toArray(new Object[bindVariableList.size()]);
+    public Object[] getParamValues() {
+        Object[] ret = new Object[paramList.size()];
+        for (int i = 0; i < paramList.size(); i++) {
+            ret[i] = paramList.get(i).value;
+        }
+        return ret;
     }
 
     /**
-     * バインド変数のクラスの配列を返します。
+     * パラメータの値のクラスの配列を返します。
      * 
-     * @return バインド変数のクラスの配列
+     * @return パラメータの値のクラスの配列
      */
-    public Class<?>[] getBindVariableClasses() {
-        return bindVariableClassList.toArray(new Class[bindVariableClassList
-                .size()]);
+    public Class<?>[] getParamClasses() {
+        Class<?>[] ret = new Class<?>[paramList.size()];
+        for (int i = 0; i < paramList.size(); i++) {
+            ret[i] = paramList.get(i).paramClass;
+        }
+        return ret;
     }
 
     /**
@@ -229,42 +229,82 @@ public abstract class AbstractQuery<S extends Query<S>> implements Query<S> {
     }
 
     /**
-     * バインド変数のクラスのリストを準備します。
+     * パラメータを返します。
      * 
-     * @throws NullBindVariableRuntimeException
-     *             バインド変数の値が<code>null</code>の場合
+     * @param index
+     *            インデックス
+     * @return パラメータ
      */
-    protected void prepareBindVariableClassList()
-            throws NullBindVariableRuntimeException {
-        int size = bindVariableList.size();
-        for (int i = 0; i < size; i++) {
-            Object var = bindVariableList.get(i);
-            if (var == null) {
-                logger.log("ESSR0709", new Object[] { callerClass.getName(),
-                        callerMethodName });
-                throw new NullBindVariableRuntimeException();
-            }
-            bindVariableClassList.add(var.getClass());
-        }
+    protected Param getParam(int index) {
+        return paramList.get(index);
     }
 
     /**
-     * バインド変数を準備します。
+     * パラメータの数を返します。
+     * 
+     * @return パラメータの数
+     */
+    protected int getParamSize() {
+        return paramList.size();
+    }
+
+    /**
+     * パラメータを追加します。
+     * 
+     * @param value
+     *            パラメータの値
+     * @return パラメータ
+     */
+    protected Param addParam(Object value) {
+        if (value == null) {
+            throw new NullPointerException("value");
+        }
+        return addParam(value, value.getClass());
+    }
+
+    /**
+     * パラメータを追加します。
+     * 
+     * @param value
+     *            パラメータの値
+     * @param paramClass
+     *            パラメータのクラス
+     * @return パラメータ
+     */
+    protected Param addParam(Object value, Class<?> paramClass) {
+        Param param = new Param(value, paramClass);
+        if (paramClass == null) {
+            throw new NullPointerException("paramClass");
+        }
+        param.valueType = jdbcManager.getDialect().getValueType(paramClass);
+        paramList.add(param);
+        return param;
+    }
+
+    /**
+     * <code>IN</code>パラメータの準備をします。
      * 
      * @param ps
      *            準備されたステートメント
      */
-    protected void prepareBindVariables(PreparedStatement ps) {
-        DbmsDialect dialect = jdbcManager.getDialect();
-        int size = bindVariableList.size();
-        for (int i = 0; i < size; i++) {
-            ValueType valueType = dialect.getValueType(bindVariableClassList
-                    .get(i));
-            try {
-                valueType.bindValue(ps, i + 1, bindVariableList.get(i));
-            } catch (SQLException e) {
-                throw new SQLRuntimeException(e);
+    protected void prepareInParams(PreparedStatement ps) {
+        int size = paramList.size();
+        try {
+            for (int i = 0; i < size; i++) {
+                Param param = paramList.get(i);
+                if (param.paramType != ParamType.OUT) {
+                    param.valueType.bindValue(ps, i + 1, param.value);
+                }
             }
+        } catch (SQLException e) {
+            throw new SQLRuntimeException(e);
         }
+    }
+
+    /**
+     * パラメータをリセットします。
+     */
+    protected void resetParams() {
+        paramList.clear();
     }
 }
