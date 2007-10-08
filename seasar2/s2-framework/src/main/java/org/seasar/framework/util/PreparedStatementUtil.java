@@ -67,6 +67,24 @@ public final class PreparedStatementUtil {
     }
 
     /**
+     * 実行します。
+     * 
+     * @param ps
+     * @return 結果セットを返すかどうか
+     * @throws SQLRuntimeException
+     *             {@link SQLException}が発生した場合
+     * @see PreparedStatement#execute()
+     */
+    public static boolean execute(PreparedStatement ps)
+            throws SQLRuntimeException {
+        try {
+            return ps.execute();
+        } catch (SQLException ex) {
+            throw new SQLRuntimeException(ex);
+        }
+    }
+
+    /**
      * バッチ更新を行ないます。
      * 
      * @param ps
