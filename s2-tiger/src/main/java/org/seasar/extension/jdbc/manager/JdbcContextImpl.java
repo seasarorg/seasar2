@@ -25,7 +25,7 @@ import java.sql.Statement;
 import org.seasar.extension.jdbc.JdbcContext;
 import org.seasar.extension.jdbc.util.ConnectionUtil;
 import org.seasar.extension.jdbc.util.StatementCache;
-import org.seasar.framework.exception.SQLRuntimeException;
+import org.seasar.framework.log.Logger;
 
 /**
  * {@link JdbcContext}の実装クラスです。
@@ -35,243 +35,241 @@ import org.seasar.framework.exception.SQLRuntimeException;
  */
 public class JdbcContextImpl implements JdbcContext {
 
-	private Connection connection;
+    private static final Logger logger = Logger
+            .getLogger(JdbcContextImpl.class);
 
-	private Statement statement;
+    private Connection connection;
 
-	private boolean transactional;
+    private Statement statement;
 
-	private int preparedStatementCacheSize = 10;
+    private boolean transactional;
 
-	private int cursorPreparedStatementCacheSize = 5;
+    private int preparedStatementCacheSize = 10;
 
-	private int callableStatementCacheSize = 5;
+    private int cursorPreparedStatementCacheSize = 5;
 
-	private StatementCache preparedStatementCache = new StatementCache(
-			preparedStatementCacheSize);
+    private int callableStatementCacheSize = 5;
 
-	private StatementCache cursorPreparedStatementCache = new StatementCache(
-			cursorPreparedStatementCacheSize);
+    private StatementCache preparedStatementCache = new StatementCache(
+            preparedStatementCacheSize);
 
-	private StatementCache callableStatementCache = new StatementCache(
-			callableStatementCacheSize);
+    private StatementCache cursorPreparedStatementCache = new StatementCache(
+            cursorPreparedStatementCacheSize);
 
-	/**
-	 * {@link JdbcContextImpl}を作成します。
-	 * 
-	 * @param connection
-	 *            コネクション
-	 * @param transactional
-	 *            トランザクション中に作成されたかどうか
-	 */
-	public JdbcContextImpl(Connection connection, boolean transactional) {
-		this.connection = connection;
-		this.transactional = transactional;
-	}
+    private StatementCache callableStatementCache = new StatementCache(
+            callableStatementCacheSize);
 
-	public void destroy() {
-		if (connection == null) {
-			return;
-		}
-		SQLException e = null;
-		if (statement != null) {
-			try {
-				statement.close();
-			} catch (SQLException ex) {
-				e = ex;
-			}
-			statement = null;
-		}
-		try {
-			preparedStatementCache.destroy();
-		} catch (SQLException ex) {
-			e = ex;
-		}
-		try {
-			cursorPreparedStatementCache.destroy();
-		} catch (SQLException ex) {
-			e = ex;
-		}
-		try {
-			callableStatementCache.destroy();
-		} catch (SQLException ex) {
-			e = ex;
-		}
-		try {
-			connection.close();
-		} catch (SQLException ex) {
-			e = ex;
-		}
-		connection = null;
-		if (e != null) {
-			throw new SQLRuntimeException(e);
-		}
+    /**
+     * {@link JdbcContextImpl}を作成します。
+     * 
+     * @param connection
+     *            コネクション
+     * @param transactional
+     *            トランザクション中に作成されたかどうか
+     */
+    public JdbcContextImpl(Connection connection, boolean transactional) {
+        this.connection = connection;
+        this.transactional = transactional;
+    }
 
-	}
+    public void destroy() {
+        if (connection == null) {
+            return;
+        }
+        if (statement != null) {
+            try {
+                statement.close();
+            } catch (SQLException e) {
+                logger.log(e);
+            }
+            statement = null;
+        }
+        try {
+            preparedStatementCache.destroy();
+        } catch (SQLException e) {
+            logger.log(e);
+        }
+        try {
+            cursorPreparedStatementCache.destroy();
+        } catch (SQLException e) {
+            logger.log(e);
+        }
+        try {
+            callableStatementCache.destroy();
+        } catch (SQLException e) {
+            logger.log(e);
+        }
+        try {
+            connection.close();
+        } catch (SQLException e) {
+            logger.log(e);
+        }
+        connection = null;
+    }
 
-	public boolean isTransactional() {
-		return transactional;
-	}
+    public boolean isTransactional() {
+        return transactional;
+    }
 
-	public Statement getStatement() {
-		if (statement != null) {
-			return statement;
-		}
-		statement = ConnectionUtil.createStatement(connection);
-		return statement;
-	}
+    public Statement getStatement() {
+        if (statement != null) {
+            return statement;
+        }
+        statement = ConnectionUtil.createStatement(connection);
+        return statement;
+    }
 
-	@SuppressWarnings("unchecked")
-	public PreparedStatement getPreparedStatement(String sql) {
-		PreparedStatement ps = (PreparedStatement) preparedStatementCache
-				.get(sql);
-		if (ps != null) {
-			return ps;
-		}
-		ps = ConnectionUtil.prepareStatement(connection, sql);
-		preparedStatementCache.put(sql, ps);
-		return ps;
-	}
+    @SuppressWarnings("unchecked")
+    public PreparedStatement getPreparedStatement(String sql) {
+        PreparedStatement ps = (PreparedStatement) preparedStatementCache
+                .get(sql);
+        if (ps != null) {
+            return ps;
+        }
+        ps = ConnectionUtil.prepareStatement(connection, sql);
+        preparedStatementCache.put(sql, ps);
+        return ps;
+    }
 
-	@SuppressWarnings("unchecked")
-	public PreparedStatement getCursorPreparedStatement(String sql) {
-		PreparedStatement ps = (PreparedStatement) cursorPreparedStatementCache
-				.get(sql);
-		if (ps != null) {
-			return ps;
-		}
-		ps = ConnectionUtil.prepareStatement(connection, sql,
-				ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-		cursorPreparedStatementCache.put(sql, ps);
-		return ps;
-	}
+    @SuppressWarnings("unchecked")
+    public PreparedStatement getCursorPreparedStatement(String sql) {
+        PreparedStatement ps = (PreparedStatement) cursorPreparedStatementCache
+                .get(sql);
+        if (ps != null) {
+            return ps;
+        }
+        ps = ConnectionUtil.prepareStatement(connection, sql,
+                ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+        cursorPreparedStatementCache.put(sql, ps);
+        return ps;
+    }
 
-	@SuppressWarnings("unchecked")
-	public CallableStatement getCallableStatement(String sql) {
-		CallableStatement cs = (CallableStatement) callableStatementCache
-				.get(sql);
-		if (cs != null) {
-			return cs;
-		}
-		cs = ConnectionUtil.prepareCall(connection, sql);
-		callableStatementCache.put(sql, cs);
-		return cs;
-	}
+    @SuppressWarnings("unchecked")
+    public CallableStatement getCallableStatement(String sql) {
+        CallableStatement cs = (CallableStatement) callableStatementCache
+                .get(sql);
+        if (cs != null) {
+            return cs;
+        }
+        cs = ConnectionUtil.prepareCall(connection, sql);
+        callableStatementCache.put(sql, cs);
+        return cs;
+    }
 
-	/**
-	 * JDBCコンテキストが破棄されたかどうかを返します。
-	 * 
-	 * @return JDBCコンテキストが破棄されたかどうか
-	 */
-	public boolean idDestroyed() {
-		return isConnectionNull();
-	}
+    /**
+     * JDBCコンテキストが破棄されたかどうかを返します。
+     * 
+     * @return JDBCコンテキストが破棄されたかどうか
+     */
+    public boolean idDestroyed() {
+        return isConnectionNull();
+    }
 
-	/**
-	 * コネクションが<code>null</code>かどうかを返します。
-	 * 
-	 * @return コネクションが<code>null</code>かどうか
-	 */
-	public boolean isConnectionNull() {
-		return connection == null;
-	}
+    /**
+     * コネクションが<code>null</code>かどうかを返します。
+     * 
+     * @return コネクションが<code>null</code>かどうか
+     */
+    public boolean isConnectionNull() {
+        return connection == null;
+    }
 
-	/**
-	 * ステートメントが<code>null</code>かどうかを返します。
-	 * 
-	 * @return ステートメントが<code>null</code>かどうか
-	 */
-	public boolean isStatementNull() {
-		return statement == null;
-	}
+    /**
+     * ステートメントが<code>null</code>かどうかを返します。
+     * 
+     * @return ステートメントが<code>null</code>かどうか
+     */
+    public boolean isStatementNull() {
+        return statement == null;
+    }
 
-	/**
-	 * 準備されたステートメントのキャッシュが空かどうかを返します。
-	 * 
-	 * @return 準備されたステートメントのキャッシュが空かどうか
-	 */
-	public boolean isPreparedStatementCacheEmpty() {
-		return preparedStatementCache.isEmpty();
-	}
+    /**
+     * 準備されたステートメントのキャッシュが空かどうかを返します。
+     * 
+     * @return 準備されたステートメントのキャッシュが空かどうか
+     */
+    public boolean isPreparedStatementCacheEmpty() {
+        return preparedStatementCache.isEmpty();
+    }
 
-	/**
-	 * カーソルつきの準備されたステートメントのキャッシュが空かどうかを返します。
-	 * 
-	 * @return カーソルつきの準備されたステートメントのキャッシュが空かどうか
-	 */
-	public boolean isCursorPreparedStatementCacheEmpty() {
-		return cursorPreparedStatementCache.isEmpty();
-	}
+    /**
+     * カーソルつきの準備されたステートメントのキャッシュが空かどうかを返します。
+     * 
+     * @return カーソルつきの準備されたステートメントのキャッシュが空かどうか
+     */
+    public boolean isCursorPreparedStatementCacheEmpty() {
+        return cursorPreparedStatementCache.isEmpty();
+    }
 
-	/**
-	 * 呼び出し可能なステートメントのキャッシュが空かどうかを返します。
-	 * 
-	 * @return 呼び出し可能なステートメントのキャッシュが空かどうか
-	 */
-	public boolean isCallableStatementCacheEmpty() {
-		return callableStatementCache.isEmpty();
-	}
+    /**
+     * 呼び出し可能なステートメントのキャッシュが空かどうかを返します。
+     * 
+     * @return 呼び出し可能なステートメントのキャッシュが空かどうか
+     */
+    public boolean isCallableStatementCacheEmpty() {
+        return callableStatementCache.isEmpty();
+    }
 
-	/**
-	 * 準備されたステートメントをキャッシュする数を返します。
-	 * 
-	 * @return 準備されたステートメントをキャッシュする数
-	 */
-	public int getPreparedStatementCacheSize() {
-		return preparedStatementCacheSize;
-	}
+    /**
+     * 準備されたステートメントをキャッシュする数を返します。
+     * 
+     * @return 準備されたステートメントをキャッシュする数
+     */
+    public int getPreparedStatementCacheSize() {
+        return preparedStatementCacheSize;
+    }
 
-	/**
-	 * 準備されたステートメントをキャッシュする数を設定します。
-	 * 
-	 * @param preparedStatementCacheSize
-	 *            準備されたステートメントをキャッシュする数
-	 */
-	public void setPreparedStatementCacheSize(int preparedStatementCacheSize) {
-		this.preparedStatementCacheSize = preparedStatementCacheSize;
-		preparedStatementCache = new StatementCache(preparedStatementCacheSize);
-	}
+    /**
+     * 準備されたステートメントをキャッシュする数を設定します。
+     * 
+     * @param preparedStatementCacheSize
+     *            準備されたステートメントをキャッシュする数
+     */
+    public void setPreparedStatementCacheSize(int preparedStatementCacheSize) {
+        this.preparedStatementCacheSize = preparedStatementCacheSize;
+        preparedStatementCache = new StatementCache(preparedStatementCacheSize);
+    }
 
-	/**
-	 * カーソルつきの準備されたステートメントをキャッシュする数を返します。
-	 * 
-	 * @return カーソルつきの準備されたステートメントをキャッシュする数
-	 */
-	public int getCursorPreparedStatementCacheSize() {
-		return cursorPreparedStatementCacheSize;
-	}
+    /**
+     * カーソルつきの準備されたステートメントをキャッシュする数を返します。
+     * 
+     * @return カーソルつきの準備されたステートメントをキャッシュする数
+     */
+    public int getCursorPreparedStatementCacheSize() {
+        return cursorPreparedStatementCacheSize;
+    }
 
-	/**
-	 * カーソルつきの準備されたステートメントをキャッシュする数を設定します。
-	 * 
-	 * @param cursorPreparedStatementCacheSize
-	 *            カーソルつきの準備されたステートメントをキャッシュする数
-	 */
-	public void setCursorPreparedStatementCacheSize(
-			int cursorPreparedStatementCacheSize) {
-		this.cursorPreparedStatementCacheSize = cursorPreparedStatementCacheSize;
-		cursorPreparedStatementCache = new StatementCache(
-				cursorPreparedStatementCacheSize);
-	}
+    /**
+     * カーソルつきの準備されたステートメントをキャッシュする数を設定します。
+     * 
+     * @param cursorPreparedStatementCacheSize
+     *            カーソルつきの準備されたステートメントをキャッシュする数
+     */
+    public void setCursorPreparedStatementCacheSize(
+            int cursorPreparedStatementCacheSize) {
+        this.cursorPreparedStatementCacheSize = cursorPreparedStatementCacheSize;
+        cursorPreparedStatementCache = new StatementCache(
+                cursorPreparedStatementCacheSize);
+    }
 
-	/**
-	 * 呼び出し可能なステートメントをキャッシュする数を返します。
-	 * 
-	 * @return 呼び出し可能なステートメントをキャッシュする数
-	 */
-	public int getCallableStatementCacheSize() {
-		return callableStatementCacheSize;
-	}
+    /**
+     * 呼び出し可能なステートメントをキャッシュする数を返します。
+     * 
+     * @return 呼び出し可能なステートメントをキャッシュする数
+     */
+    public int getCallableStatementCacheSize() {
+        return callableStatementCacheSize;
+    }
 
-	/**
-	 * 呼び出し可能なステートメントをキャッシュする数を設定します。
-	 * 
-	 * @param callableStatementCacheSize
-	 *            呼び出し可能なステートメントをキャッシュする数
-	 */
-	public void setCallableStatementCacheSize(int callableStatementCacheSize) {
-		this.callableStatementCacheSize = callableStatementCacheSize;
-		callableStatementCache = new StatementCache(callableStatementCacheSize);
-	}
+    /**
+     * 呼び出し可能なステートメントをキャッシュする数を設定します。
+     * 
+     * @param callableStatementCacheSize
+     *            呼び出し可能なステートメントをキャッシュする数
+     */
+    public void setCallableStatementCacheSize(int callableStatementCacheSize) {
+        this.callableStatementCacheSize = callableStatementCacheSize;
+        callableStatementCache = new StatementCache(callableStatementCacheSize);
+    }
 
 }

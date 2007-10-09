@@ -186,10 +186,10 @@ public class JdbcManagerImpl implements JdbcManager, Synchronization {
                 .queryTimeout(queryTimeout);
     }
 
-    public void afterCompletion(int status) {
+    public void beforeCompletion() {
     }
 
-    public void beforeCompletion() {
+    public void afterCompletion(int status) {
         JdbcContext ctx = jdbcContexts.get();
         if (ctx == null) {
             throw new NullPointerException("jdbcContext");
