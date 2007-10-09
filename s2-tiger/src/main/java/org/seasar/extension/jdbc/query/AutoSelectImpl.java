@@ -52,6 +52,7 @@ import org.seasar.extension.jdbc.mapper.OneToManyEntityMapperImpl;
 import org.seasar.extension.jdbc.mapper.OneToOneEntityMapperImpl;
 import org.seasar.extension.jdbc.mapper.PropertyMapperImpl;
 import org.seasar.extension.jdbc.util.ConditionUtil;
+import org.seasar.extension.jdbc.util.QueryTokenizer;
 import org.seasar.framework.util.BooleanConversionUtil;
 import org.seasar.framework.util.StringUtil;
 
