@@ -23,6 +23,7 @@ import org.seasar.extension.jdbc.query.AutoInsertImpl;
 import org.seasar.extension.jdbc.query.AutoSelectImpl;
 import org.seasar.extension.jdbc.query.AutoUpdateImpl;
 import org.seasar.extension.jdbc.query.SqlBatchUpdateImpl;
+import org.seasar.extension.jdbc.query.SqlFileBatchUpdateImpl;
 import org.seasar.extension.jdbc.query.SqlFileSelectImpl;
 import org.seasar.extension.jdbc.query.SqlFileUpdateImpl;
 import org.seasar.extension.jdbc.query.SqlSelectImpl;
@@ -109,33 +110,6 @@ public class JdbcManagerImplTest extends TestCase {
      * @throws Exception
      * 
      */
-    public void testSelectBySqlFile() throws Exception {
-        String path = "select.sql";
-        SqlFileSelectImpl<Aaa> query = (SqlFileSelectImpl<Aaa>) manager
-                .selectBySqlFile(Aaa.class, path);
-        assertNotNull(query);
-        assertSame(manager, query.getJdbcManager());
-        assertEquals(Aaa.class, query.getBaseClass());
-        assertEquals(path, query.getPath());
-    }
-
-    /**
-     * @throws Exception
-     * 
-     */
-    public void testUpdateBySqlFile() throws Exception {
-        String path = "update.sql";
-        SqlFileUpdateImpl query = (SqlFileUpdateImpl) manager
-                .updateBySqlFile(path);
-        assertNotNull(query);
-        assertSame(manager, query.getJdbcManager());
-        assertEquals(path, query.getPath());
-    }
-
-    /**
-     * @throws Exception
-     * 
-     */
     public void testUpdateBySql() throws Exception {
         String sql = "update aaa set name = ? where id = ?";
         SqlUpdateImpl query = (SqlUpdateImpl) manager.updateBySql(sql,
@@ -164,6 +138,46 @@ public class JdbcManagerImplTest extends TestCase {
         assertEquals(2, classes.length);
         assertEquals(String.class, classes[0]);
         assertEquals(Integer.class, classes[1]);
+    }
+
+    /**
+     * @throws Exception
+     * 
+     */
+    public void testSelectBySqlFile() throws Exception {
+        String path = "select.sql";
+        SqlFileSelectImpl<Aaa> query = (SqlFileSelectImpl<Aaa>) manager
+                .selectBySqlFile(Aaa.class, path);
+        assertNotNull(query);
+        assertSame(manager, query.getJdbcManager());
+        assertEquals(Aaa.class, query.getBaseClass());
+        assertEquals(path, query.getPath());
+    }
+
+    /**
+     * @throws Exception
+     * 
+     */
+    public void testUpdateBySqlFile() throws Exception {
+        String path = "update.sql";
+        SqlFileUpdateImpl query = (SqlFileUpdateImpl) manager
+                .updateBySqlFile(path);
+        assertNotNull(query);
+        assertSame(manager, query.getJdbcManager());
+        assertEquals(path, query.getPath());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testUpdateBatchBySqlFile() throws Exception {
+        String path = "update.sql";
+        SqlFileBatchUpdateImpl query = (SqlFileBatchUpdateImpl) manager
+                .updateBatchBySqlFile(path);
+        assertNotNull(query);
+        assertSame(manager, query.getJdbcManager());
+        assertEquals(path, query.getPath());
     }
 
     /**

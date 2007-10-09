@@ -132,6 +132,16 @@ public interface JdbcManager {
     SqlFileUpdate updateBySqlFile(String path, Object parameter);
 
     /**
+     * SQLバッチファイル更新を作成します。
+     * 
+     * @param path
+     *            SQLファイルのパス
+     * @return SQLバッチファイル更新
+     * @see SqlFileBatchUpdate
+     */
+    SqlFileBatchUpdate updateBatchBySqlFile(String path);
+
+    /**
      * 自動検索を作成します。
      * 
      * @param <T>
