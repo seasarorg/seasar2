@@ -45,10 +45,6 @@ public class SqlBatchUpdateTest extends S2TestCase {
         int[] result = jdbcManager.updateBatchBySql(sql).params().params()
                 .executeBatch();
         assertEquals(2, result.length);
-        BigDecimal salary = jdbcManager.selectBySql(BigDecimal.class,
-                "select salary from Employee where employee_id = 1")
-                .getSingleResult();
-        assertEquals(0, new BigDecimal(3200).compareTo(salary));
     }
 
     /**
