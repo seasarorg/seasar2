@@ -182,6 +182,17 @@ public class EntityMetaTest extends TestCase {
     /**
      * 
      */
+    public void testGetColumnPropertyMetaSize_notColumn() {
+        EntityMeta em = new EntityMeta();
+        PropertyMeta pm = new PropertyMeta();
+        pm.setName("aaaName");
+        em.addPropertyMeta(pm);
+        assertEquals(0, em.getColumnPropertyMetaSize());
+    }
+
+    /**
+     * 
+     */
     public void testAddPropertyMeta_columnDuplicated() {
         EntityMeta em = new EntityMeta();
         em.setName("Hoge");

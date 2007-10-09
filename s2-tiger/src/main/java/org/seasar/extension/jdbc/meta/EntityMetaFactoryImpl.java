@@ -233,9 +233,9 @@ public class EntityMetaFactoryImpl implements EntityMetaFactory {
      *            エンティティメタデータ
      */
     protected void resolveRelationship(EntityMeta entityMeta) {
-        int size = entityMeta.getColumnPropertyMetaSize();
+        int size = entityMeta.getPropertyMetaSize();
         for (int i = 0; i < size; i++) {
-            PropertyMeta propertyMeta = entityMeta.getColumnPropertyMeta(i);
+            PropertyMeta propertyMeta = entityMeta.getPropertyMeta(i);
             if (!propertyMeta.isRelationship()) {
                 continue;
             }

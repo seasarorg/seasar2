@@ -60,414 +60,416 @@ import org.seasar.framework.util.tiger.ReflectionUtil;
  */
 public class PropertyMetaFactoryImpl implements PropertyMetaFactory {
 
-	/**
-	 * カラムメタデータファクトリです。
-	 */
-	protected ColumnMetaFactory columnMetaFactory;
+    /**
+     * カラムメタデータファクトリです。
+     */
+    protected ColumnMetaFactory columnMetaFactory;
 
-	/**
-	 * 永続化層の命名規約です。
-	 */
-	protected PersistenceConvention persistenceConvention;
+    /**
+     * 永続化層の命名規約です。
+     */
+    protected PersistenceConvention persistenceConvention;
 
-	public PropertyMeta createPropertyMeta(Field field, EntityMeta entityMeta) {
-		PropertyMeta propertyMeta = new PropertyMeta();
-		doField(propertyMeta, field, entityMeta);
-		doName(propertyMeta, field, entityMeta);
-		doTransient(propertyMeta, field, entityMeta);
-		if (!propertyMeta.isTransient()) {
-			doColumnMeta(propertyMeta, field, entityMeta);
-			doId(propertyMeta, field, entityMeta);
-			doVersion(propertyMeta, field, entityMeta);
-			doRelationship(propertyMeta, field, entityMeta);
-		}
-		doCustomize(propertyMeta, field, entityMeta);
-		return propertyMeta;
-	}
+    public PropertyMeta createPropertyMeta(Field field, EntityMeta entityMeta) {
+        PropertyMeta propertyMeta = new PropertyMeta();
+        doField(propertyMeta, field, entityMeta);
+        doName(propertyMeta, field, entityMeta);
+        doTransient(propertyMeta, field, entityMeta);
+        if (!propertyMeta.isTransient()) {
+            doColumnMeta(propertyMeta, field, entityMeta);
+            doId(propertyMeta, field, entityMeta);
+            doVersion(propertyMeta, field, entityMeta);
+            doRelationship(propertyMeta, field, entityMeta);
+        }
+        doCustomize(propertyMeta, field, entityMeta);
+        return propertyMeta;
+    }
 
-	/**
-	 * フィールドを処理します。
-	 * 
-	 * @param propertyMeta
-	 *            プロパティメタデータ
-	 * @param field
-	 *            フィールド
-	 * @param entityMeta
-	 *            エンティティメタデータ
-	 */
-	protected void doField(PropertyMeta propertyMeta, Field field,
-			@SuppressWarnings("unused")
+    /**
+     * フィールドを処理します。
+     * 
+     * @param propertyMeta
+     *            プロパティメタデータ
+     * @param field
+     *            フィールド
+     * @param entityMeta
+     *            エンティティメタデータ
+     */
+    protected void doField(PropertyMeta propertyMeta, Field field,
+            @SuppressWarnings("unused")
             EntityMeta entityMeta) {
-		propertyMeta.setField(field);
-	}
+        propertyMeta.setField(field);
+    }
 
-	/**
-	 * 名前を処理します。
-	 * 
-	 * @param propertyMeta
-	 *            プロパティメタデータ
-	 * @param field
-	 *            フィールド
-	 * @param entityMeta
-	 *            エンティティメタデータ
-	 */
-	protected void doName(PropertyMeta propertyMeta, Field field,
-			@SuppressWarnings("unused")
+    /**
+     * 名前を処理します。
+     * 
+     * @param propertyMeta
+     *            プロパティメタデータ
+     * @param field
+     *            フィールド
+     * @param entityMeta
+     *            エンティティメタデータ
+     */
+    protected void doName(PropertyMeta propertyMeta, Field field,
+            @SuppressWarnings("unused")
             EntityMeta entityMeta) {
-		propertyMeta.setName(persistenceConvention
-				.fromFieldNameToPropertyName(field.getName()));
-	}
+        propertyMeta.setName(persistenceConvention
+                .fromFieldNameToPropertyName(field.getName()));
+    }
 
-	/**
-	 * カラムメタデータを処理します。
-	 * 
-	 * @param propertyMeta
-	 *            プロパティメタデータ
-	 * @param field
-	 *            フィールド
-	 * @param entityMeta
-	 *            エンティティメタデータ
-	 */
-	protected void doColumnMeta(PropertyMeta propertyMeta, Field field,
-			EntityMeta entityMeta) {
-		propertyMeta.setColumnMeta(columnMetaFactory.createColumnMeta(field,
-				entityMeta));
-	}
-
-	/**
-	 * 識別子メタデータを処理します。
-	 * 
-	 * @param propertyMeta
-	 *            プロパティメタデータ
-	 * @param field
-	 *            フィールド
-	 * @param entityMeta
-	 *            エンティティメタデータ
-	 */
-	protected void doId(PropertyMeta propertyMeta, Field field,
-			@SuppressWarnings("unused")
+    /**
+     * カラムメタデータを処理します。
+     * 
+     * @param propertyMeta
+     *            プロパティメタデータ
+     * @param field
+     *            フィールド
+     * @param entityMeta
+     *            エンティティメタデータ
+     */
+    protected void doColumnMeta(PropertyMeta propertyMeta, Field field,
             EntityMeta entityMeta) {
-		propertyMeta.setId(field.getAnnotation(Id.class) != null);
-	}
+        if (ValueTypes.isSimpleType(propertyMeta.getPropertyClass())) {
+            propertyMeta.setColumnMeta(columnMetaFactory.createColumnMeta(
+                    field, entityMeta));
+        }
+    }
 
-	/**
-	 * バージョンチェック用かどうかを処理します。
-	 * 
-	 * @param propertyMeta
-	 *            プロパティメタデータ
-	 * @param field
-	 *            フィールド
-	 * @param entityMeta
-	 *            エンティティメタデータ
-	 */
-	protected void doVersion(PropertyMeta propertyMeta, Field field,
-			@SuppressWarnings("unused")
+    /**
+     * 識別子メタデータを処理します。
+     * 
+     * @param propertyMeta
+     *            プロパティメタデータ
+     * @param field
+     *            フィールド
+     * @param entityMeta
+     *            エンティティメタデータ
+     */
+    protected void doId(PropertyMeta propertyMeta, Field field,
+            @SuppressWarnings("unused")
             EntityMeta entityMeta) {
-		propertyMeta.setVersion(field.getAnnotation(Version.class) != null);
-	}
+        propertyMeta.setId(field.getAnnotation(Id.class) != null);
+    }
 
-	/**
-	 * 一時的かどうかを処理します。
-	 * 
-	 * @param propertyMeta
-	 *            プロパティメタデータ
-	 * @param field
-	 *            フィールド
-	 * @param entityMeta
-	 *            エンティティメタデータ
-	 */
-	protected void doTransient(PropertyMeta propertyMeta, Field field,
-			@SuppressWarnings("unused")
+    /**
+     * バージョンチェック用かどうかを処理します。
+     * 
+     * @param propertyMeta
+     *            プロパティメタデータ
+     * @param field
+     *            フィールド
+     * @param entityMeta
+     *            エンティティメタデータ
+     */
+    protected void doVersion(PropertyMeta propertyMeta, Field field,
+            @SuppressWarnings("unused")
             EntityMeta entityMeta) {
-		propertyMeta.setTransient(field.getAnnotation(Transient.class) != null
-				|| ModifierUtil.isTransient(field));
-	}
+        propertyMeta.setVersion(field.getAnnotation(Version.class) != null);
+    }
 
-	/**
-	 * 関連を処理します。
-	 * 
-	 * @param propertyMeta
-	 *            プロパティメタデータ
-	 * @param field
-	 *            フィールド
-	 * @param entityMeta
-	 *            エンティティメタデータ
-	 */
-	protected void doRelationship(PropertyMeta propertyMeta, Field field,
-			EntityMeta entityMeta) {
-		doJoinColumn(propertyMeta, field, entityMeta);
-		OneToOne oneToOne = field.getAnnotation(OneToOne.class);
-		if (oneToOne != null) {
-			doOneToOne(propertyMeta, field, entityMeta, oneToOne);
-		} else {
-			OneToMany oneToMany = field.getAnnotation(OneToMany.class);
-			if (oneToMany != null) {
-				doOneToMany(propertyMeta, field, entityMeta, oneToMany);
-			} else {
-				ManyToOne manyToOne = field.getAnnotation(ManyToOne.class);
-				if (manyToOne != null) {
-					doManyToOne(propertyMeta, field, entityMeta, manyToOne);
-				} else if (!ValueTypes.isSimpleType(propertyMeta
-						.getPropertyClass())) {
-					throw new NonRelationshipRuntimeException(entityMeta
-							.getName(), propertyMeta.getName());
-				} else if (propertyMeta.getJoinColumnMetaList().size() > 0) {
-					throw new JoinColumnNotAllowedRuntimeException(entityMeta
-							.getName(), propertyMeta.getName());
-				}
-			}
-		}
-	}
+    /**
+     * 一時的かどうかを処理します。
+     * 
+     * @param propertyMeta
+     *            プロパティメタデータ
+     * @param field
+     *            フィールド
+     * @param entityMeta
+     *            エンティティメタデータ
+     */
+    protected void doTransient(PropertyMeta propertyMeta, Field field,
+            @SuppressWarnings("unused")
+            EntityMeta entityMeta) {
+        propertyMeta.setTransient(field.getAnnotation(Transient.class) != null
+                || ModifierUtil.isTransient(field));
+    }
 
-	/**
-	 * JoinColumnを処理します。
-	 * 
-	 * @param propertyMeta
-	 *            プロパティメタデータ
-	 * @param field
-	 *            フィールド
-	 * @param entityMeta
-	 *            エンティティメタデータ
-	 */
-	protected void doJoinColumn(PropertyMeta propertyMeta, Field field,
-			EntityMeta entityMeta) {
-		JoinColumn joinColumn = field.getAnnotation(JoinColumn.class);
-		if (joinColumn != null) {
-			JoinColumnMeta meta = new JoinColumnMeta(joinColumn.name(),
-					joinColumn.referencedColumnName());
-			propertyMeta.addJoinColumnMeta(meta);
-		} else {
-			JoinColumns joinColumns = field.getAnnotation(JoinColumns.class);
-			if (joinColumns != null) {
-				JoinColumn[] array = joinColumns.value();
-				for (int i = 0; i < array.length; i++) {
-					JoinColumn jc = array[i];
-					JoinColumnMeta meta = new JoinColumnMeta(jc.name(), jc
-							.referencedColumnName());
-					if (i > 0
-							&& (meta.getName() == null || meta
-									.getReferencedColumnName() == null)) {
-						throw new JoinColumnNameAndReferencedColumnNameMandatoryRuntimeException(
-								entityMeta.getName(), propertyMeta.getName(),
-								i + 1);
-					}
-					propertyMeta.addJoinColumnMeta(meta);
-				}
-			}
-		}
-	}
+    /**
+     * 関連を処理します。
+     * 
+     * @param propertyMeta
+     *            プロパティメタデータ
+     * @param field
+     *            フィールド
+     * @param entityMeta
+     *            エンティティメタデータ
+     */
+    protected void doRelationship(PropertyMeta propertyMeta, Field field,
+            EntityMeta entityMeta) {
+        doJoinColumn(propertyMeta, field, entityMeta);
+        OneToOne oneToOne = field.getAnnotation(OneToOne.class);
+        if (oneToOne != null) {
+            doOneToOne(propertyMeta, field, entityMeta, oneToOne);
+        } else {
+            OneToMany oneToMany = field.getAnnotation(OneToMany.class);
+            if (oneToMany != null) {
+                doOneToMany(propertyMeta, field, entityMeta, oneToMany);
+            } else {
+                ManyToOne manyToOne = field.getAnnotation(ManyToOne.class);
+                if (manyToOne != null) {
+                    doManyToOne(propertyMeta, field, entityMeta, manyToOne);
+                } else if (!ValueTypes.isSimpleType(propertyMeta
+                        .getPropertyClass())) {
+                    throw new NonRelationshipRuntimeException(entityMeta
+                            .getName(), propertyMeta.getName());
+                } else if (propertyMeta.getJoinColumnMetaList().size() > 0) {
+                    throw new JoinColumnNotAllowedRuntimeException(entityMeta
+                            .getName(), propertyMeta.getName());
+                }
+            }
+        }
+    }
 
-	/**
-	 * 一対一の関連を処理します。
-	 * 
-	 * @param propertyMeta
-	 *            プロパティメタデータ
-	 * @param field
-	 *            フィールド
-	 * @param entityMeta
-	 *            エンティティメタデータ
-	 * @param oneToOne
-	 *            一対一関連
-	 */
-	protected void doOneToOne(PropertyMeta propertyMeta, Field field,
-			EntityMeta entityMeta, OneToOne oneToOne) {
-		propertyMeta.setRelationshipType(RelationshipType.ONE_TO_ONE);
-		Class<?> relationshipClass = field.getType();
-		if (relationshipClass.getAnnotation(Entity.class) == null) {
-			throw new RelationshipNotEntityRuntimeException(entityMeta
-					.getName(), propertyMeta.getName(), relationshipClass);
-		}
-		propertyMeta.setRelationshipClass(relationshipClass);
-		String mappedBy = oneToOne.mappedBy();
-		if (!StringUtil.isEmpty(mappedBy)) {
-			if (propertyMeta.getJoinColumnMetaList().size() > 0) {
-				throw new BothMappedByAndJoinColumnRuntimeException(entityMeta
-						.getName(), propertyMeta.getName());
-			}
-			propertyMeta.setMappedBy(mappedBy);
-			checkMappedBy(propertyMeta, field, entityMeta);
-		}
-	}
+    /**
+     * JoinColumnを処理します。
+     * 
+     * @param propertyMeta
+     *            プロパティメタデータ
+     * @param field
+     *            フィールド
+     * @param entityMeta
+     *            エンティティメタデータ
+     */
+    protected void doJoinColumn(PropertyMeta propertyMeta, Field field,
+            EntityMeta entityMeta) {
+        JoinColumn joinColumn = field.getAnnotation(JoinColumn.class);
+        if (joinColumn != null) {
+            JoinColumnMeta meta = new JoinColumnMeta(joinColumn.name(),
+                    joinColumn.referencedColumnName());
+            propertyMeta.addJoinColumnMeta(meta);
+        } else {
+            JoinColumns joinColumns = field.getAnnotation(JoinColumns.class);
+            if (joinColumns != null) {
+                JoinColumn[] array = joinColumns.value();
+                for (int i = 0; i < array.length; i++) {
+                    JoinColumn jc = array[i];
+                    JoinColumnMeta meta = new JoinColumnMeta(jc.name(), jc
+                            .referencedColumnName());
+                    if (i > 0
+                            && (meta.getName() == null || meta
+                                    .getReferencedColumnName() == null)) {
+                        throw new JoinColumnNameAndReferencedColumnNameMandatoryRuntimeException(
+                                entityMeta.getName(), propertyMeta.getName(),
+                                i + 1);
+                    }
+                    propertyMeta.addJoinColumnMeta(meta);
+                }
+            }
+        }
+    }
 
-	/**
-	 * 一対多の関連を処理します。
-	 * 
-	 * @param propertyMeta
-	 *            プロパティメタデータ
-	 * @param field
-	 *            フィールド
-	 * @param entityMeta
-	 *            エンティティメタデータ
-	 * @param oneToMany
-	 *            一対多関連
-	 */
-	protected void doOneToMany(PropertyMeta propertyMeta, Field field,
-			EntityMeta entityMeta, OneToMany oneToMany) {
-		propertyMeta.setRelationshipType(RelationshipType.ONE_TO_MANY);
-		if (!List.class.isAssignableFrom(field.getType())) {
-			throw new OneToManyNotListRuntimeException(entityMeta.getName(),
-					propertyMeta.getName());
-		}
-		Class<?> relationshipClass = ReflectionUtil.getElementTypeOfList(field
-				.getGenericType());
-		if (relationshipClass == null) {
-			throw new OneToManyNotGenericsRuntimeException(
-					entityMeta.getName(), propertyMeta.getName());
-		}
-		if (relationshipClass.getAnnotation(Entity.class) == null) {
-			throw new RelationshipNotEntityRuntimeException(entityMeta
-					.getName(), propertyMeta.getName(), relationshipClass);
-		}
-		propertyMeta.setRelationshipClass(relationshipClass);
-		String mappedBy = oneToMany.mappedBy();
-		if (!StringUtil.isEmpty(mappedBy)) {
-			if (propertyMeta.getJoinColumnMetaList().size() > 0) {
-				throw new BothMappedByAndJoinColumnRuntimeException(entityMeta
-						.getName(), propertyMeta.getName());
-			}
-			propertyMeta.setMappedBy(mappedBy);
-			checkMappedBy(propertyMeta, field, entityMeta);
-		} else {
-			throw new MappedByMandatoryRuntimeException(entityMeta.getName(),
-					propertyMeta.getName());
-		}
-	}
+    /**
+     * 一対一の関連を処理します。
+     * 
+     * @param propertyMeta
+     *            プロパティメタデータ
+     * @param field
+     *            フィールド
+     * @param entityMeta
+     *            エンティティメタデータ
+     * @param oneToOne
+     *            一対一関連
+     */
+    protected void doOneToOne(PropertyMeta propertyMeta, Field field,
+            EntityMeta entityMeta, OneToOne oneToOne) {
+        propertyMeta.setRelationshipType(RelationshipType.ONE_TO_ONE);
+        Class<?> relationshipClass = field.getType();
+        if (relationshipClass.getAnnotation(Entity.class) == null) {
+            throw new RelationshipNotEntityRuntimeException(entityMeta
+                    .getName(), propertyMeta.getName(), relationshipClass);
+        }
+        propertyMeta.setRelationshipClass(relationshipClass);
+        String mappedBy = oneToOne.mappedBy();
+        if (!StringUtil.isEmpty(mappedBy)) {
+            if (propertyMeta.getJoinColumnMetaList().size() > 0) {
+                throw new BothMappedByAndJoinColumnRuntimeException(entityMeta
+                        .getName(), propertyMeta.getName());
+            }
+            propertyMeta.setMappedBy(mappedBy);
+            checkMappedBy(propertyMeta, field, entityMeta);
+        }
+    }
 
-	/**
-	 * 多対一の関連を処理します。
-	 * 
-	 * @param propertyMeta
-	 *            プロパティメタデータ
-	 * @param field
-	 *            フィールド
-	 * @param entityMeta
-	 *            エンティティメタデータ
-	 * @param manyToOne
-	 *            多対一関連
-	 */
-	protected void doManyToOne(PropertyMeta propertyMeta, Field field,
-			EntityMeta entityMeta, @SuppressWarnings("unused")
+    /**
+     * 一対多の関連を処理します。
+     * 
+     * @param propertyMeta
+     *            プロパティメタデータ
+     * @param field
+     *            フィールド
+     * @param entityMeta
+     *            エンティティメタデータ
+     * @param oneToMany
+     *            一対多関連
+     */
+    protected void doOneToMany(PropertyMeta propertyMeta, Field field,
+            EntityMeta entityMeta, OneToMany oneToMany) {
+        propertyMeta.setRelationshipType(RelationshipType.ONE_TO_MANY);
+        if (!List.class.isAssignableFrom(field.getType())) {
+            throw new OneToManyNotListRuntimeException(entityMeta.getName(),
+                    propertyMeta.getName());
+        }
+        Class<?> relationshipClass = ReflectionUtil.getElementTypeOfList(field
+                .getGenericType());
+        if (relationshipClass == null) {
+            throw new OneToManyNotGenericsRuntimeException(
+                    entityMeta.getName(), propertyMeta.getName());
+        }
+        if (relationshipClass.getAnnotation(Entity.class) == null) {
+            throw new RelationshipNotEntityRuntimeException(entityMeta
+                    .getName(), propertyMeta.getName(), relationshipClass);
+        }
+        propertyMeta.setRelationshipClass(relationshipClass);
+        String mappedBy = oneToMany.mappedBy();
+        if (!StringUtil.isEmpty(mappedBy)) {
+            if (propertyMeta.getJoinColumnMetaList().size() > 0) {
+                throw new BothMappedByAndJoinColumnRuntimeException(entityMeta
+                        .getName(), propertyMeta.getName());
+            }
+            propertyMeta.setMappedBy(mappedBy);
+            checkMappedBy(propertyMeta, field, entityMeta);
+        } else {
+            throw new MappedByMandatoryRuntimeException(entityMeta.getName(),
+                    propertyMeta.getName());
+        }
+    }
+
+    /**
+     * 多対一の関連を処理します。
+     * 
+     * @param propertyMeta
+     *            プロパティメタデータ
+     * @param field
+     *            フィールド
+     * @param entityMeta
+     *            エンティティメタデータ
+     * @param manyToOne
+     *            多対一関連
+     */
+    protected void doManyToOne(PropertyMeta propertyMeta, Field field,
+            EntityMeta entityMeta, @SuppressWarnings("unused")
             ManyToOne manyToOne) {
-		propertyMeta.setRelationshipType(RelationshipType.MANY_TO_ONE);
-		Class<?> relationshipClass = field.getType();
-		if (relationshipClass.getAnnotation(Entity.class) == null) {
-			throw new RelationshipNotEntityRuntimeException(entityMeta
-					.getName(), propertyMeta.getName(), relationshipClass);
-		}
-		propertyMeta.setRelationshipClass(relationshipClass);
-	}
+        propertyMeta.setRelationshipType(RelationshipType.MANY_TO_ONE);
+        Class<?> relationshipClass = field.getType();
+        if (relationshipClass.getAnnotation(Entity.class) == null) {
+            throw new RelationshipNotEntityRuntimeException(entityMeta
+                    .getName(), propertyMeta.getName(), relationshipClass);
+        }
+        propertyMeta.setRelationshipClass(relationshipClass);
+    }
 
-	/**
-	 * mappedByで指定されたプロパティが存在するかチェックします。
-	 * 
-	 * @param propertyMeta
-	 *            プロパティメタデータ
-	 * @param field
-	 *            フィールド
-	 * @param entityMeta
-	 *            エンティティメタデータ
-	 */
-	protected void checkMappedBy(PropertyMeta propertyMeta, @SuppressWarnings("unused")
-    Field field,
-			EntityMeta entityMeta) {
-		String fName = persistenceConvention
-				.fromPropertyNameToFieldName(propertyMeta.getMappedBy());
-		try {
-			Field f = propertyMeta.getRelationshipClass().getDeclaredField(
-					fName);
-			if (entityMeta.getEntityClass() != f.getType()) {
-				throw new MappedByNotIdenticalRuntimeException(entityMeta
-						.getName(), propertyMeta.getName(), propertyMeta
-						.getMappedBy(), entityMeta.getEntityClass(),
-						propertyMeta.getRelationshipClass(), propertyMeta
-								.getMappedBy(), f.getType());
-			}
-		} catch (NoSuchFieldException e) {
-			throw new MappedByPropertyNotFoundRuntimeException(entityMeta
-					.getName(), propertyMeta.getName(), propertyMeta
-					.getMappedBy(), propertyMeta.getRelationshipClass());
-		}
-	}
+    /**
+     * mappedByで指定されたプロパティが存在するかチェックします。
+     * 
+     * @param propertyMeta
+     *            プロパティメタデータ
+     * @param field
+     *            フィールド
+     * @param entityMeta
+     *            エンティティメタデータ
+     */
+    protected void checkMappedBy(PropertyMeta propertyMeta,
+            @SuppressWarnings("unused")
+            Field field, EntityMeta entityMeta) {
+        String fName = persistenceConvention
+                .fromPropertyNameToFieldName(propertyMeta.getMappedBy());
+        try {
+            Field f = propertyMeta.getRelationshipClass().getDeclaredField(
+                    fName);
+            if (entityMeta.getEntityClass() != f.getType()) {
+                throw new MappedByNotIdenticalRuntimeException(entityMeta
+                        .getName(), propertyMeta.getName(), propertyMeta
+                        .getMappedBy(), entityMeta.getEntityClass(),
+                        propertyMeta.getRelationshipClass(), propertyMeta
+                                .getMappedBy(), f.getType());
+            }
+        } catch (NoSuchFieldException e) {
+            throw new MappedByPropertyNotFoundRuntimeException(entityMeta
+                    .getName(), propertyMeta.getName(), propertyMeta
+                    .getMappedBy(), propertyMeta.getRelationshipClass());
+        }
+    }
 
-	/**
-	 * 関連用のクラスを返します。
-	 * 
-	 * @param propertyMeta
-	 *            プロパティメタデータ
-	 * @param field
-	 *            フィールド
-	 * @param entityMeta
-	 *            エンティティメタデータ
-	 * @return 関連用のクラス
-	 * @throws OneToManyNotGenericsRuntimeException
-	 *             一対多の関連がジェネリクスのリストではない場合。
-	 */
-	protected Class<?> getRelationshipClass(PropertyMeta propertyMeta,
-			Field field, EntityMeta entityMeta)
-			throws OneToManyNotGenericsRuntimeException {
-		Class<?> clazz = field.getType();
-		if (List.class.isAssignableFrom(clazz)) {
-			clazz = ReflectionUtil.getElementTypeOfList(field.getGenericType());
-			if (clazz == null) {
-				throw new OneToManyNotGenericsRuntimeException(entityMeta
-						.getName(), propertyMeta.getName());
-			}
-		}
-		return clazz;
-	}
+    /**
+     * 関連用のクラスを返します。
+     * 
+     * @param propertyMeta
+     *            プロパティメタデータ
+     * @param field
+     *            フィールド
+     * @param entityMeta
+     *            エンティティメタデータ
+     * @return 関連用のクラス
+     * @throws OneToManyNotGenericsRuntimeException
+     *             一対多の関連がジェネリクスのリストではない場合。
+     */
+    protected Class<?> getRelationshipClass(PropertyMeta propertyMeta,
+            Field field, EntityMeta entityMeta)
+            throws OneToManyNotGenericsRuntimeException {
+        Class<?> clazz = field.getType();
+        if (List.class.isAssignableFrom(clazz)) {
+            clazz = ReflectionUtil.getElementTypeOfList(field.getGenericType());
+            if (clazz == null) {
+                throw new OneToManyNotGenericsRuntimeException(entityMeta
+                        .getName(), propertyMeta.getName());
+            }
+        }
+        return clazz;
+    }
 
-	/**
-	 * カスタマイズします。
-	 * 
-	 * @param propertyMeta
-	 *            プロパティメタデータ
-	 * @param field
-	 *            フィールド
-	 * @param entityMeta
-	 *            エンティティメタデータ
-	 */
-	@SuppressWarnings("unused")
-	protected void doCustomize(PropertyMeta propertyMeta, Field field,
-			EntityMeta entityMeta) {
-	}
+    /**
+     * カスタマイズします。
+     * 
+     * @param propertyMeta
+     *            プロパティメタデータ
+     * @param field
+     *            フィールド
+     * @param entityMeta
+     *            エンティティメタデータ
+     */
+    @SuppressWarnings("unused")
+    protected void doCustomize(PropertyMeta propertyMeta, Field field,
+            EntityMeta entityMeta) {
+    }
 
-	/**
-	 * カラムメタデータファクトリを返します。
-	 * 
-	 * @return カラムメタデータファクトリ
-	 */
-	public ColumnMetaFactory getColumnMetaFactory() {
-		return columnMetaFactory;
-	}
+    /**
+     * カラムメタデータファクトリを返します。
+     * 
+     * @return カラムメタデータファクトリ
+     */
+    public ColumnMetaFactory getColumnMetaFactory() {
+        return columnMetaFactory;
+    }
 
-	/**
-	 * カラムメタデータファクトリを設定します。
-	 * 
-	 * @param columnMetaFactory
-	 *            カラムメタデータファクトリ
-	 */
-	@Binding(bindingType = BindingType.MUST)
-	public void setColumnMetaFactory(ColumnMetaFactory columnMetaFactory) {
-		this.columnMetaFactory = columnMetaFactory;
-	}
+    /**
+     * カラムメタデータファクトリを設定します。
+     * 
+     * @param columnMetaFactory
+     *            カラムメタデータファクトリ
+     */
+    @Binding(bindingType = BindingType.MUST)
+    public void setColumnMetaFactory(ColumnMetaFactory columnMetaFactory) {
+        this.columnMetaFactory = columnMetaFactory;
+    }
 
-	/**
-	 * 永続化層の命名規約を返します。
-	 * 
-	 * @return 永続化層の命名規約
-	 */
-	public PersistenceConvention getPersistenceConvention() {
-		return persistenceConvention;
-	}
+    /**
+     * 永続化層の命名規約を返します。
+     * 
+     * @return 永続化層の命名規約
+     */
+    public PersistenceConvention getPersistenceConvention() {
+        return persistenceConvention;
+    }
 
-	/**
-	 * 永続化層の命名規約を設定します。
-	 * 
-	 * @param persistenceConvention
-	 *            永続化層の命名規約
-	 */
-	public void setPersistenceConvention(
-			PersistenceConvention persistenceConvention) {
-		this.persistenceConvention = persistenceConvention;
-	}
+    /**
+     * 永続化層の命名規約を設定します。
+     * 
+     * @param persistenceConvention
+     *            永続化層の命名規約
+     */
+    public void setPersistenceConvention(
+            PersistenceConvention persistenceConvention) {
+        this.persistenceConvention = persistenceConvention;
+    }
 }
