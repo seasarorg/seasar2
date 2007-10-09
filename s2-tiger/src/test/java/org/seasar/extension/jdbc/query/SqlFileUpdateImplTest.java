@@ -123,15 +123,34 @@ public class SqlFileUpdateImplTest extends TestCase {
      * 
      */
     public void testPrepareParameter_simpleType() {
-        SqlFileUpdateImpl query = new SqlFileUpdateImpl(manager, PATH_SIMPLE, 1);
+        SqlFileUpdateImpl query = new SqlFileUpdateImpl(manager, PATH_SIMPLE,
+                String.class);
+        query.param("foo");
         query.prepareCallerClassAndMethodName("execute");
         query.prepareNode();
         query.prepareParameter();
-        assertEquals("update aaa set name = 'hoge' where id = ?",
-                query.sqlContext.getSql());
+        assertEquals("update aaa set name = ? where id = 1", query.sqlContext
+                .getSql());
         assertEquals(1, query.getParamSize());
-        assertEquals(1, query.getParam(0).value);
-        assertEquals(Integer.class, query.getParam(0).paramClass);
+        assertEquals("foo", query.getParam(0).value);
+        assertEquals(String.class, query.getParam(0).paramClass);
+    }
+
+    /**
+     * 
+     */
+    public void testPrepareParameter_simpleType_bindNull() {
+        SqlFileUpdateImpl query = new SqlFileUpdateImpl(manager, PATH_SIMPLE,
+                String.class);
+        query.param(null);
+        query.prepareCallerClassAndMethodName("execute");
+        query.prepareNode();
+        query.prepareParameter();
+        assertEquals("update aaa set name = ? where id = 1", query.sqlContext
+                .getSql());
+        assertEquals(1, query.getParamSize());
+        assertNull(query.getParam(0).value);
+        assertEquals(String.class, query.getParam(0).paramClass);
     }
 
     /**
@@ -141,7 +160,9 @@ public class SqlFileUpdateImplTest extends TestCase {
         MyDto dto = new MyDto();
         dto.id = 1;
         dto.name = "foo";
-        SqlFileUpdateImpl query = new SqlFileUpdateImpl(manager, PATH_DTO, dto);
+        SqlFileUpdateImpl query = new SqlFileUpdateImpl(manager, PATH_DTO,
+                MyDto.class);
+        query.param(dto);
         query.prepareCallerClassAndMethodName("getResultList");
         query.prepareNode();
         query.prepareParameter();
@@ -159,7 +180,8 @@ public class SqlFileUpdateImplTest extends TestCase {
      * 
      */
     public void testExecute() throws Exception {
-        SqlFileUpdateImpl query = new SqlFileUpdateImpl(manager, PATH_SIMPLE, 1) {
+        SqlFileUpdateImpl query = new SqlFileUpdateImpl(manager, PATH_SIMPLE,
+                String.class) {
 
             @Override
             protected PreparedStatement getPreparedStatement(
@@ -175,9 +197,10 @@ public class SqlFileUpdateImplTest extends TestCase {
             }
 
         };
+        query.param("foo");
         assertEquals(1, query.execute());
         SqlLog sqlLog = SqlLogRegistryLocator.getInstance().getLast();
-        assertEquals("update aaa set name = 'hoge' where id = 1", sqlLog
+        assertEquals("update aaa set name = 'foo' where id = 1", sqlLog
                 .getCompleteSql());
     }
 

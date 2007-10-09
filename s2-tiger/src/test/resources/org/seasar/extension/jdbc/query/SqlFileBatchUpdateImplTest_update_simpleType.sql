@@ -1,1 +1,1 @@
-update aaa set name = 'hoge' where id = /*id*/1
+update aaa set name = /*name*/'hoge' where id = 1

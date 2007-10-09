@@ -20,6 +20,7 @@ import java.sql.PreparedStatement;
 import org.seasar.extension.jdbc.JdbcContext;
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.SqlFileUpdate;
+import org.seasar.extension.jdbc.exception.IllegalParamTypeRuntimeException;
 import org.seasar.extension.jdbc.types.ValueTypes;
 import org.seasar.extension.sql.Node;
 import org.seasar.extension.sql.SqlContext;
@@ -52,6 +53,11 @@ public class SqlFileUpdateImpl extends AbstractQuery<SqlFileUpdate> implements
     protected Object parameter;
 
     /**
+     * パラメータのクラスです。
+     */
+    protected Class<?> paramClass;
+
+    /**
      * SQLの解析ノードです。
      */
     protected Node node;
@@ -80,17 +86,17 @@ public class SqlFileUpdateImpl extends AbstractQuery<SqlFileUpdate> implements
      *            JDBCマネージャ
      * @param path
      *            SQLファイルのパス
-     * @param parameter
-     *            パラメータ
+     * @param paramClass
+     *            パラメータのクラス
      */
     public SqlFileUpdateImpl(JdbcManager jdbcManager, String path,
-            Object parameter) {
+            Class<?> paramClass) {
         super(jdbcManager);
         if (path == null) {
             throw new NullPointerException("path");
         }
         this.path = path;
-        this.parameter = parameter;
+        this.paramClass = paramClass;
     }
 
     /**
@@ -100,6 +106,19 @@ public class SqlFileUpdateImpl extends AbstractQuery<SqlFileUpdate> implements
      */
     public String getPath() {
         return path;
+    }
+
+    public SqlFileUpdate param(Object param) {
+        if (paramClass == null && param != null) {
+            throw new IllegalParamTypeRuntimeException(null, param.getClass());
+        } else if (paramClass != null && param != null) {
+            if (paramClass != param.getClass()) {
+                throw new IllegalParamTypeRuntimeException(paramClass, param
+                        .getClass());
+            }
+        }
+        parameter = param;
+        return this;
     }
 
     public int execute() {
@@ -163,12 +182,11 @@ public class SqlFileUpdateImpl extends AbstractQuery<SqlFileUpdate> implements
      */
     protected void prepareParameter() {
         sqlContext = new SqlContextImpl();
-        if (parameter != null) {
-            Class<?> clazz = parameter.getClass();
-            if (ValueTypes.isSimpleType(clazz)) {
-                sqlContext.addArg("$1", parameter, clazz);
+        if (paramClass != null) {
+            if (ValueTypes.isSimpleType(paramClass)) {
+                sqlContext.addArg("$1", parameter, paramClass);
             } else {
-                BeanDesc beanDesc = BeanDescFactory.getBeanDesc(clazz);
+                BeanDesc beanDesc = BeanDescFactory.getBeanDesc(paramClass);
                 for (int i = 0; i < beanDesc.getPropertyDescSize(); i++) {
                     PropertyDesc pd = beanDesc.getPropertyDesc(i);
                     if (!pd.isReadable()) {

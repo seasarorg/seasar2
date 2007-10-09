@@ -22,4 +22,13 @@ package org.seasar.extension.jdbc;
  * 
  */
 public interface SqlFileUpdate extends Update<SqlFileUpdate> {
+
+    /**
+     * パラメータを設定します。
+     * 
+     * @param param
+     *            パラメータ
+     * @return SQLバッチ更新
+     */
+    SqlFileUpdate param(Object param);
 }

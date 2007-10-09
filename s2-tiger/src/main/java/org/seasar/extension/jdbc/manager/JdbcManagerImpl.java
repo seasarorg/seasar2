@@ -136,13 +136,19 @@ public class JdbcManagerImpl implements JdbcManager, Synchronization {
         return new SqlFileUpdateImpl(this, path).queryTimeout(queryTimeout);
     }
 
-    public SqlFileUpdate updateBySqlFile(String path, Object parameter) {
-        return new SqlFileUpdateImpl(this, path, parameter)
+    public SqlFileUpdate updateBySqlFile(String path, Class<?> paramClass) {
+        return new SqlFileUpdateImpl(this, path, paramClass)
                 .queryTimeout(queryTimeout);
     }
 
     public SqlFileBatchUpdate updateBatchBySqlFile(String path) {
         return new SqlFileBatchUpdateImpl(this, path)
+                .queryTimeout(queryTimeout);
+    }
+
+    public SqlFileBatchUpdate updateBatchBySqlFile(String path,
+            Class<?> paramClass) {
+        return new SqlFileBatchUpdateImpl(this, path, paramClass)
                 .queryTimeout(queryTimeout);
     }
 

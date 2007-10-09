@@ -60,6 +60,11 @@ public class SqlFileBatchUpdateImpl extends AbstractQuery<SqlFileBatchUpdate>
     protected SqlContext sqlContext;
 
     /**
+     * パラメータのクラスです。
+     */
+    protected Class<?> paramClass;
+
+    /**
      * パラメータの配列のリストです。
      */
     protected List<Object> paramsList = new ArrayList<Object>();
@@ -73,11 +78,27 @@ public class SqlFileBatchUpdateImpl extends AbstractQuery<SqlFileBatchUpdate>
      *            SQLファイルのパス
      */
     public SqlFileBatchUpdateImpl(JdbcManager jdbcManager, String path) {
+        this(jdbcManager, path, null);
+    }
+
+    /**
+     * {@link SqlFileBatchUpdate}を作成します。
+     * 
+     * @param jdbcManager
+     *            JDBCマネージャ
+     * @param path
+     *            SQLファイルのパス
+     * @param paramClass
+     *            パラメータのクラス
+     */
+    public SqlFileBatchUpdateImpl(JdbcManager jdbcManager, String path,
+            Class<?> paramClass) {
         super(jdbcManager);
         if (path == null) {
             throw new NullPointerException("path");
         }
         this.path = path;
+        this.paramClass = paramClass;
     }
 
     public int[] executeBatch() {
@@ -105,19 +126,12 @@ public class SqlFileBatchUpdateImpl extends AbstractQuery<SqlFileBatchUpdate>
     }
 
     public SqlFileBatchUpdate param(Object param) {
-        if (!paramsList.isEmpty()) {
-            Object first = paramsList.get(0);
-            if (first == null && param != null) {
-                throw new IllegalParamTypeRuntimeException(null, param
+        if (paramClass == null && param != null) {
+            throw new IllegalParamTypeRuntimeException(null, param.getClass());
+        } else if (paramClass != null && param != null) {
+            if (paramClass != param.getClass()) {
+                throw new IllegalParamTypeRuntimeException(paramClass, param
                         .getClass());
-            } else if (first != null && param == null) {
-                throw new IllegalParamTypeRuntimeException(first.getClass(),
-                        null);
-            } else {
-                if (first.getClass() != param.getClass()) {
-                    throw new IllegalParamTypeRuntimeException(
-                            first.getClass(), param.getClass());
-                }
             }
         }
         paramsList.add(param);
@@ -178,12 +192,11 @@ public class SqlFileBatchUpdateImpl extends AbstractQuery<SqlFileBatchUpdate>
      */
     protected void prepareParameter(Object parameter) {
         sqlContext = new SqlContextImpl();
-        if (parameter != null) {
-            Class<?> clazz = parameter.getClass();
-            if (ValueTypes.isSimpleType(clazz)) {
-                sqlContext.addArg("$1", parameter, clazz);
+        if (paramClass != null) {
+            if (ValueTypes.isSimpleType(paramClass)) {
+                sqlContext.addArg("$1", parameter, paramClass);
             } else {
-                BeanDesc beanDesc = BeanDescFactory.getBeanDesc(clazz);
+                BeanDesc beanDesc = BeanDescFactory.getBeanDesc(paramClass);
                 for (int i = 0; i < beanDesc.getPropertyDescSize(); i++) {
                     PropertyDesc pd = beanDesc.getPropertyDesc(i);
                     if (!pd.isReadable()) {

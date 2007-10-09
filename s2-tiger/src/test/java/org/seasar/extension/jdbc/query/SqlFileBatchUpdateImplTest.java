@@ -107,7 +107,7 @@ public class SqlFileBatchUpdateImplTest extends TestCase {
      */
     public void testParam() {
         SqlFileBatchUpdateImpl query = new SqlFileBatchUpdateImpl(manager,
-                "aaa.sql");
+                "aaa.sql", String.class);
         query.param("hoge").param("hoge2");
         assertEquals(2, query.paramsList.size());
         Object param = query.paramsList.get(0);
@@ -122,7 +122,7 @@ public class SqlFileBatchUpdateImplTest extends TestCase {
      */
     public void testExecuteBatch() throws Exception {
         SqlFileBatchUpdateImpl query = new SqlFileBatchUpdateImpl(manager,
-                PATH_SIMPLE) {
+                PATH_SIMPLE, String.class) {
 
             @Override
             protected PreparedStatement getPreparedStatement(
@@ -152,7 +152,7 @@ public class SqlFileBatchUpdateImplTest extends TestCase {
             }
 
         };
-        int[] ret = query.param(1).param(2).executeBatch();
+        int[] ret = query.param("foo").param("bar").executeBatch();
         assertEquals(2, ret.length);
         assertTrue(executedBatch);
         assertEquals(2, batchSize);
@@ -160,10 +160,10 @@ public class SqlFileBatchUpdateImplTest extends TestCase {
         SqlLogRegistry registry = SqlLogRegistryLocator.getInstance();
         assertEquals(2, registry.getSize());
         SqlLog sqlLog = registry.get(0);
-        assertEquals("update aaa set name = 'hoge' where id = 1", sqlLog
+        assertEquals("update aaa set name = 'foo' where id = 1", sqlLog
                 .getCompleteSql());
         sqlLog = registry.get(1);
-        assertEquals("update aaa set name = 'hoge' where id = 2", sqlLog
+        assertEquals("update aaa set name = 'bar' where id = 1", sqlLog
                 .getCompleteSql());
     }
 
@@ -173,9 +173,9 @@ public class SqlFileBatchUpdateImplTest extends TestCase {
      */
     public void testExecuteBatch_illegalParamType() throws Exception {
         SqlFileBatchUpdateImpl query = new SqlFileBatchUpdateImpl(manager,
-                PATH_SIMPLE);
+                PATH_SIMPLE, String.class);
         try {
-            query.param("hoge").param(1).executeBatch();
+            query.param(1).executeBatch();
             fail();
         } catch (IllegalParamTypeRuntimeException e) {
             System.out.println(e);
@@ -188,35 +188,16 @@ public class SqlFileBatchUpdateImplTest extends TestCase {
      * @throws Exception
      * 
      */
-    public void testExecuteBatch_illegalParamType_null_integer()
-            throws Exception {
+    public void testExecuteBatch_illegalParamType_null() throws Exception {
         SqlFileBatchUpdateImpl query = new SqlFileBatchUpdateImpl(manager,
                 PATH_SIMPLE);
         try {
-            query.param(null).param(1).executeBatch();
+            query.param(1).executeBatch();
             fail();
         } catch (IllegalParamTypeRuntimeException e) {
             System.out.println(e);
             assertEquals(null, e.getExpectedType());
             assertEquals(Integer.class, e.getActualType());
-        }
-    }
-
-    /**
-     * @throws Exception
-     * 
-     */
-    public void testExecuteBatch_illegalParamType_integer_null()
-            throws Exception {
-        SqlFileBatchUpdateImpl query = new SqlFileBatchUpdateImpl(manager,
-                PATH_SIMPLE);
-        try {
-            query.param(1).param(null).executeBatch();
-            fail();
-        } catch (IllegalParamTypeRuntimeException e) {
-            System.out.println(e);
-            assertEquals(Integer.class, e.getExpectedType());
-            assertEquals(null, e.getActualType());
         }
     }
 
@@ -252,22 +233,46 @@ public class SqlFileBatchUpdateImplTest extends TestCase {
      */
     public void testPrepareParameter_simpleType() {
         SqlFileBatchUpdateImpl query = new SqlFileBatchUpdateImpl(manager,
-                PATH_SIMPLE);
+                PATH_SIMPLE, String.class);
         query.prepareCallerClassAndMethodName("execute");
         query.prepareNode();
-        query.prepareParameter(1);
-        assertEquals("update aaa set name = 'hoge' where id = ?",
-                query.sqlContext.getSql());
+        query.prepareParameter("foo");
+        assertEquals("update aaa set name = ? where id = 1", query.sqlContext
+                .getSql());
         assertEquals(1, query.getParamSize());
-        assertEquals(1, query.getParam(0).value);
-        assertEquals(Integer.class, query.getParam(0).paramClass);
+        assertEquals("foo", query.getParam(0).value);
+        assertEquals(String.class, query.getParam(0).paramClass);
         query.resetParams();
-        query.prepareParameter(2);
-        assertEquals("update aaa set name = 'hoge' where id = ?",
-                query.sqlContext.getSql());
+        query.prepareParameter("bar");
+        assertEquals("update aaa set name = ? where id = 1", query.sqlContext
+                .getSql());
         assertEquals(1, query.getParamSize());
-        assertEquals(2, query.getParam(0).value);
-        assertEquals(Integer.class, query.getParam(0).paramClass);
+        assertEquals("bar", query.getParam(0).value);
+        assertEquals(String.class, query.getParam(0).paramClass);
+        query.resetParams();
+    }
+
+    /**
+     * 
+     */
+    public void testPrepareParameter_simpleType_bindNull() {
+        SqlFileBatchUpdateImpl query = new SqlFileBatchUpdateImpl(manager,
+                PATH_SIMPLE, String.class);
+        query.prepareCallerClassAndMethodName("execute");
+        query.prepareNode();
+        query.prepareParameter(null);
+        assertEquals("update aaa set name = ? where id = 1", query.sqlContext
+                .getSql());
+        assertEquals(1, query.getParamSize());
+        assertNull(query.getParam(0).value);
+        assertEquals(String.class, query.getParam(0).paramClass);
+        query.resetParams();
+        query.prepareParameter(null);
+        assertEquals("update aaa set name = ? where id = 1", query.sqlContext
+                .getSql());
+        assertEquals(1, query.getParamSize());
+        assertNull(query.getParam(0).value);
+        assertEquals(String.class, query.getParam(0).paramClass);
         query.resetParams();
     }
 
@@ -276,7 +281,7 @@ public class SqlFileBatchUpdateImplTest extends TestCase {
      */
     public void testPrepareParameter_dto() {
         SqlFileBatchUpdateImpl query = new SqlFileBatchUpdateImpl(manager,
-                PATH_DTO);
+                PATH_DTO, MyDto.class);
         query.prepareCallerClassAndMethodName("getResultList");
         query.prepareNode();
         MyDto dto = new MyDto();

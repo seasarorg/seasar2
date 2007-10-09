@@ -117,19 +117,12 @@ public interface JdbcManager {
      * 
      * @param path
      *            SQLファイルのパス
-     * @param parameter
-     *            <p>
-     *            パラメータ。
-     *            </p>
-     *            <p>
-     *            パラメータが1つしかない場合は、値を直接指定します。 パラメータが複数ある場合は、JavaBeansを作って、
-     *            プロパティ名をSQLファイルのバインド変数名とあわせます。
-     *            JavaBeansはpublicフィールドで定義することもできます。
-     *            </p>
+     * @param paramClass
+     *            パラメータのクラス
      * @return SQLファイル更新
      * @see SqlFileUpdate
      */
-    SqlFileUpdate updateBySqlFile(String path, Object parameter);
+    SqlFileUpdate updateBySqlFile(String path, Class<?> paramClass);
 
     /**
      * SQLバッチファイル更新を作成します。
@@ -137,9 +130,21 @@ public interface JdbcManager {
      * @param path
      *            SQLファイルのパス
      * @return SQLバッチファイル更新
-     * @see SqlFileBatchUpdate
+     * @see #updateBatchBySqlFile(String, Class)
      */
     SqlFileBatchUpdate updateBatchBySqlFile(String path);
+
+    /**
+     * SQLバッチファイル更新を作成します。
+     * 
+     * @param path
+     *            SQLファイルのパス
+     * @param paramClass
+     *            パラメータのクラス
+     * @return SQLバッチファイル更新
+     * @see SqlFileBatchUpdate
+     */
+    SqlFileBatchUpdate updateBatchBySqlFile(String path, Class<?> paramClass);
 
     /**
      * 自動検索を作成します。
