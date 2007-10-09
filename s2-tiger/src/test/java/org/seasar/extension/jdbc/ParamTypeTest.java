@@ -21,7 +21,7 @@ import junit.framework.TestCase;
  * @author higa
  * 
  */
-public class CallParamTypeTest extends TestCase {
+public class ParamTypeTest extends TestCase {
 
     /**
      * 

@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.seasar.extension.jdbc.AutoSelect;
+import org.seasar.extension.jdbc.ConditionType;
 import org.seasar.extension.jdbc.DbmsDialect;
 import org.seasar.extension.jdbc.EntityMapper;
 import org.seasar.extension.jdbc.EntityMeta;
@@ -659,52 +660,11 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
             return;
         }
         Class<?> clazz = value.getClass();
-        String pname = name;
-        int conditionType = EQ;
-        if (name.endsWith("_EQ")) {
-            pname = name.substring(0, name.length() - 3);
-        } else if (name.endsWith("_NE")) {
-            conditionType = NE;
-            pname = name.substring(0, name.length() - 3);
-        } else if (name.endsWith("_LT")) {
-            conditionType = LT;
-            pname = name.substring(0, name.length() - 3);
-        } else if (name.endsWith("_LE")) {
-            conditionType = LE;
-            pname = name.substring(0, name.length() - 3);
-        } else if (name.endsWith("_GT")) {
-            conditionType = GT;
-            pname = name.substring(0, name.length() - 3);
-        } else if (name.endsWith("_GE")) {
-            conditionType = GE;
-            pname = name.substring(0, name.length() - 3);
-        } else if (name.endsWith("_NOT_IN")) {
-            conditionType = NOT_IN;
-            pname = name.substring(0, name.length() - 7);
-        } else if (name.endsWith("_IN")) {
-            conditionType = IN;
-            pname = name.substring(0, name.length() - 3);
-        } else if (name.endsWith("_LIKE")) {
-            conditionType = LIKE;
-            pname = name.substring(0, name.length() - 5);
-        } else if (name.endsWith("_STARTS")) {
-            conditionType = STARTS;
-            pname = name.substring(0, name.length() - 7);
-        } else if (name.endsWith("_ENDS")) {
-            conditionType = ENDS;
-            pname = name.substring(0, name.length() - 5);
-        } else if (name.endsWith("_CONTAINS")) {
-            conditionType = CONTAINS;
-            pname = name.substring(0, name.length() - 9);
-        } else if (name.endsWith("_IS_NULL")) {
-            conditionType = IS_NULL;
-            pname = name.substring(0, name.length() - 8);
-        } else if (name.endsWith("_IS_NOT_NULL")) {
-            conditionType = IS_NOT_NULL;
-            pname = name.substring(0, name.length() - 12);
-        }
+        ConditionType conditionType = ConditionType.getConditionType(name);
+        String pname = conditionType.removeSuffix(name);
         int arraySize = 0;
-        if (conditionType == IN || conditionType == NOT_IN) {
+        if (conditionType == ConditionType.IN
+                || conditionType == ConditionType.NOT_IN) {
             if (value instanceof List) {
                 List list = (List) value;
                 arraySize = list.size();

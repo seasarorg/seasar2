@@ -23,60 +23,133 @@ package org.seasar.extension.jdbc;
  */
 public enum ConditionType {
 
-	/**
-	 * =です。
-	 */
-	EQ,
-	/**
-	 * &lt;&gt;です。
-	 */
-	NE,
-	/**
-	 * &ltです。
-	 */
-	LT,
-	/**
-	 * &lt=です。
-	 */
-	LE,
-	/**
-	 * &gtです。
-	 */
-	GT,
-	/**
-	 * &gt=です。
-	 */
-	GE,
-	/**
-	 * inです。
-	 */
-	IN,
-	/**
-	 * not inです。
-	 */
-	NOT_IN,
-	/**
-	 * likeです。
-	 */
-	LIKE,
-	/**
-	 * like '?%'です。
-	 */
-	STARTS,
-	/**
-	 * like '%?'です。
-	 */
-	ENDS,
-	/**
-	 * like '%?%'です。
-	 */
-	CONTAINS,
-	/**
-	 * is nullです。
-	 */
-	IS_NULL,
-	/**
-	 * is not nullです。
-	 */
-	IS_NOT_NULL
+    /**
+     * =です。
+     */
+    EQ,
+    /**
+     * &lt;&gt;です。
+     */
+    NE,
+    /**
+     * &lt;です。
+     */
+    LT,
+    /**
+     * &lt;=です。
+     */
+    LE,
+    /**
+     * &gt;です。
+     */
+    GT,
+    /**
+     * &gt;=です。
+     */
+    GE,
+    /**
+     * inです。
+     */
+    IN,
+    /**
+     * not inです。
+     */
+    NOT_IN,
+    /**
+     * likeです。
+     */
+    LIKE,
+    /**
+     * like '?%'です。
+     */
+    STARTS,
+    /**
+     * like '%?'です。
+     */
+    ENDS,
+    /**
+     * like '%?%'です。
+     */
+    CONTAINS,
+    /**
+     * is nullです。
+     */
+    IS_NULL,
+    /**
+     * is not nullです。
+     */
+    IS_NOT_NULL;
+
+    /**
+     * 名前に応じた条件タイプを返します。
+     * 
+     * @param name
+     *            名前
+     * @return 条件タイプ
+     */
+    public static ConditionType getConditionType(String name) {
+        if (NE.hasSuffix(name)) {
+            return NE;
+        } else if (LT.hasSuffix(name)) {
+            return LT;
+        } else if (LE.hasSuffix(name)) {
+            return LE;
+        } else if (GT.hasSuffix(name)) {
+            return GT;
+        } else if (GE.hasSuffix(name)) {
+            return GE;
+        } else if (NOT_IN.hasSuffix(name)) {
+            return NOT_IN;
+        } else if (IN.hasSuffix(name)) {
+            return IN;
+        } else if (LIKE.hasSuffix(name)) {
+            return LIKE;
+        } else if (STARTS.hasSuffix(name)) {
+            return STARTS;
+        } else if (ENDS.hasSuffix(name)) {
+            return ENDS;
+        } else if (CONTAINS.hasSuffix(name)) {
+            return CONTAINS;
+        } else if (IS_NULL.hasSuffix(name)) {
+            return IS_NULL;
+        } else if (IS_NOT_NULL.hasSuffix(name)) {
+            return IS_NOT_NULL;
+        }
+        return EQ;
+    }
+
+    /**
+     * サフィックスを返します。
+     * 
+     * @return サフィックス
+     */
+    public String getSuffix() {
+        return "_" + name();
+    }
+
+    /**
+     * サフィックスを持っているかどうかを返します。
+     * 
+     * @param name
+     *            名前
+     * @return サフィックスを持っているかどうか
+     */
+    public boolean hasSuffix(String name) {
+        return name.endsWith(getSuffix());
+    }
+
+    /**
+     * サフィックスを削除します。
+     * 
+     * @param s
+     *            文字列
+     * @return サフィックスが削除された文字列
+     */
+    public String removeSuffix(String s) {
+        String suffix = getSuffix();
+        if (s.endsWith(suffix)) {
+            return s.substring(0, s.length() - getSuffix().length());
+        }
+        return s;
+    }
 }
