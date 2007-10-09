@@ -167,4 +167,10 @@ public class AutoInsertImpl<T> extends AbstractAutoUpdate<T, AutoInsert<T>>
         return new String(buf.append(INSERT_STATEMENT).append(tableName)
                 .append(intoClause.toSql()).append(valuesClause.toSql()));
     }
+
+    @Override
+    protected boolean isOptimisticLock() {
+        return false;
+    }
+
 }

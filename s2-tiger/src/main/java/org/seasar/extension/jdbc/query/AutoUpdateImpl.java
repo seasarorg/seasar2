@@ -235,4 +235,9 @@ public class AutoUpdateImpl<T> extends AbstractAutoUpdate<T, AutoUpdate<T>>
                 .append(setClause.toSql()).append(whereClause.toSql()));
     }
 
+    @Override
+    protected boolean isOptimisticLock() {
+        return !includeVersion && entityMeta.hasVersionPropertyMeta();
+    }
+
 }

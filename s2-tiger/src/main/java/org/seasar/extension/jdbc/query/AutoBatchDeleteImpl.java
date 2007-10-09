@@ -114,4 +114,9 @@ public class AutoBatchDeleteImpl<T> extends
                 .append(whereClause.toSql()));
     }
 
+    @Override
+    protected boolean isOptimisticLock() {
+        return !ignoreVersion && entityMeta.hasVersionPropertyMeta();
+    }
+
 }

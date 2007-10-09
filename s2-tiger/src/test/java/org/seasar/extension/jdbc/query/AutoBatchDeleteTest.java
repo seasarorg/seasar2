@@ -20,6 +20,8 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.persistence.OptimisticLockException;
+
 import junit.framework.TestCase;
 
 import org.seasar.extension.jdbc.JdbcContext;
@@ -304,6 +306,80 @@ public class AutoBatchDeleteTest extends TestCase {
         assertEquals(3, result.length);
         SqlLog sqlLog = SqlLogRegistryLocator.getInstance().getLast();
         assertEquals("delete from EEE where ID = 3", sqlLog.getCompleteSql());
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testOptimisticLock() throws Exception {
+        List<Eee> entities = Arrays.asList(new Eee(1, "foo"),
+                new Eee(2, "bar"), new Eee(3, "baz"));
+        AutoBatchDeleteImpl<Eee> query = new AutoBatchDeleteImpl<Eee>(manager,
+                entities) {
+
+            @Override
+            protected PreparedStatement getPreparedStatement(
+                    JdbcContext jdbcContext) {
+                MockPreparedStatement ps = new MockPreparedStatement(null, null) {
+
+                    @Override
+                    public int[] executeBatch() throws SQLException {
+                        return new int[] { 1, 0, 1 };
+                    }
+
+                    @Override
+                    public void addBatch() throws SQLException {
+                        ++addBatchCalled;
+                    }
+                };
+                return ps;
+            }
+
+        };
+        try {
+            query.executeBatch();
+            fail();
+        } catch (OptimisticLockException expected) {
+            expected.printStackTrace();
+            assertSame(entities.get(1), expected.getEntity());
+        }
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testOptimisticLock_includesVersion() throws Exception {
+        List<Eee> entities = Arrays.asList(new Eee(1, "foo"),
+                new Eee(2, "bar"), new Eee(3, "baz"));
+        AutoBatchDeleteImpl<Eee> query = new AutoBatchDeleteImpl<Eee>(manager,
+                entities) {
+
+            @Override
+            protected PreparedStatement getPreparedStatement(
+                    JdbcContext jdbcContext) {
+                MockPreparedStatement ps = new MockPreparedStatement(null, null) {
+
+                    @Override
+                    public int[] executeBatch() throws SQLException {
+                        return new int[] { 1, 0, 1 };
+                    }
+
+                    @Override
+                    public void addBatch() throws SQLException {
+                        ++addBatchCalled;
+                    }
+                };
+                return ps;
+            }
+
+        };
+        query.ignoreVersion();
+        int[] result = query.executeBatch();
+        assertEquals(3, addBatchCalled);
+        assertEquals(3, result.length);
+        assertEquals(1, result[0]);
+        assertEquals(0, result[1]);
+        assertEquals(1, result[2]);
     }
 
 }

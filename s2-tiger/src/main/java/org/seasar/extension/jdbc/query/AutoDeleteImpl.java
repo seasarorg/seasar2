@@ -112,4 +112,9 @@ public class AutoDeleteImpl<T> extends AbstractAutoUpdate<T, AutoDelete<T>>
                 .append(whereClause.toSql()));
     }
 
+    @Override
+    protected boolean isOptimisticLock() {
+        return !ignoreVersion && entityMeta.hasVersionPropertyMeta();
+    }
+
 }

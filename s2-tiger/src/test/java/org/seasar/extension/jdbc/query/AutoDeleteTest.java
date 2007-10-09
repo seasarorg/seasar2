@@ -18,6 +18,8 @@ package org.seasar.extension.jdbc.query;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+import javax.persistence.OptimisticLockException;
+
 import junit.framework.TestCase;
 
 import org.seasar.extension.jdbc.JdbcContext;
@@ -256,6 +258,67 @@ public class AutoDeleteTest extends TestCase {
         assertEquals(1, query.execute());
         SqlLog sqlLog = SqlLogRegistryLocator.getInstance().getLast();
         assertEquals("delete from EEE where ID = 100", sqlLog.getCompleteSql());
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testOptimisticLock() throws Exception {
+        Eee eee = new Eee();
+        eee.id = 100;
+        eee.name = "hoge";
+        eee.version = 1L;
+        AutoDeleteImpl<Eee> query = new AutoDeleteImpl<Eee>(manager, eee) {
+
+            @Override
+            protected PreparedStatement getPreparedStatement(
+                    JdbcContext jdbcContext) {
+                MockPreparedStatement ps = new MockPreparedStatement(null, null) {
+
+                    @Override
+                    public int executeUpdate() throws SQLException {
+                        return 0;
+                    }
+                };
+                return ps;
+            }
+
+        };
+        try {
+            query.execute();
+            fail();
+        } catch (OptimisticLockException expected) {
+            expected.printStackTrace();
+            assertSame(eee, expected.getEntity());
+        }
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testOptimisticLock_ignoreVersion() throws Exception {
+        Eee eee = new Eee();
+        eee.id = 100;
+        eee.name = "hoge";
+        eee.version = 1L;
+        AutoDeleteImpl<Eee> query = new AutoDeleteImpl<Eee>(manager, eee) {
+
+            @Override
+            protected PreparedStatement getPreparedStatement(
+                    JdbcContext jdbcContext) {
+                MockPreparedStatement ps = new MockPreparedStatement(null, null) {
+
+                    @Override
+                    public int executeUpdate() throws SQLException {
+                        return 0;
+                    }
+                };
+                return ps;
+            }
+
+        };
+        query.ignoreVersion();
+        assertEquals(0, query.execute());
     }
 
 }

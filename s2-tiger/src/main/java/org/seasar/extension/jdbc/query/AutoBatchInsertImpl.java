@@ -154,4 +154,9 @@ public class AutoBatchInsertImpl<T> extends
                 .append(intoClause.toSql()).append(valuesClause.toSql()));
     }
 
+    @Override
+    protected boolean isOptimisticLock() {
+        return false;
+    }
+
 }

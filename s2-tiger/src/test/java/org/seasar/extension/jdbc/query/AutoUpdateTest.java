@@ -19,6 +19,8 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Map;
 
+import javax.persistence.OptimisticLockException;
+
 import junit.framework.TestCase;
 
 import org.seasar.extension.jdbc.JdbcContext;
@@ -591,6 +593,67 @@ public class AutoUpdateTest extends TestCase {
         assertEquals(
                 "update EEE set NAME = 'hoge', VERSION = VERSION + 1 where ID = 100 and VERSION = 1",
                 sqlLog.getCompleteSql());
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testOptimisticLock() throws Exception {
+        Eee eee = new Eee();
+        eee.id = 100;
+        eee.name = "hoge";
+        eee.version = 1L;
+        AutoUpdateImpl<Eee> query = new AutoUpdateImpl<Eee>(manager, eee) {
+
+            @Override
+            protected PreparedStatement getPreparedStatement(
+                    JdbcContext jdbcContext) {
+                MockPreparedStatement ps = new MockPreparedStatement(null, null) {
+
+                    @Override
+                    public int executeUpdate() throws SQLException {
+                        return 0;
+                    }
+                };
+                return ps;
+            }
+
+        };
+        try {
+            query.execute();
+            fail();
+        } catch (OptimisticLockException expected) {
+            expected.printStackTrace();
+            assertSame(eee, expected.getEntity());
+        }
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testOptimisticLock_includesVersion() throws Exception {
+        Eee eee = new Eee();
+        eee.id = 100;
+        eee.name = "hoge";
+        eee.version = 1L;
+        AutoUpdateImpl<Eee> query = new AutoUpdateImpl<Eee>(manager, eee) {
+
+            @Override
+            protected PreparedStatement getPreparedStatement(
+                    JdbcContext jdbcContext) {
+                MockPreparedStatement ps = new MockPreparedStatement(null, null) {
+
+                    @Override
+                    public int executeUpdate() throws SQLException {
+                        return 0;
+                    }
+                };
+                return ps;
+            }
+
+        };
+        query.includesVersion();
+        assertEquals(0, query.execute());
     }
 
 }

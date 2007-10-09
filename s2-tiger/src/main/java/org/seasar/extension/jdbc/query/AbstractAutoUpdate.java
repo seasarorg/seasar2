@@ -17,10 +17,13 @@ package org.seasar.extension.jdbc.query;
 
 import java.sql.PreparedStatement;
 
+import javax.persistence.OptimisticLockException;
+
 import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.JdbcContext;
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.Update;
+import org.seasar.extension.jdbc.exception.SOptimisticLockException;
 import org.seasar.framework.util.PreparedStatementUtil;
 import org.seasar.framework.util.StatementUtil;
 
@@ -106,7 +109,11 @@ public abstract class AbstractAutoUpdate<T, S extends Update<S>> extends
         try {
             final PreparedStatement ps = getPreparedStatement(jdbcContext);
             prepareInParams(ps);
-            return PreparedStatementUtil.executeUpdate(ps);
+            final int rows = PreparedStatementUtil.executeUpdate(ps);
+            if (isOptimisticLock()) {
+                validateRows(rows);
+            }
+            return rows;
         } finally {
             if (!jdbcContext.isTransactional()) {
                 jdbcContext.destroy();
@@ -130,6 +137,27 @@ public abstract class AbstractAutoUpdate<T, S extends Update<S>> extends
         }
         prepareInParams(ps);
         return ps;
+    }
+
+    /**
+     * 楽観的同時実行制御を行っている場合は<code>true</code>を返します。
+     * 
+     * @return 楽観的同時実行制御を行っている場合は<code>true</code>
+     */
+    protected abstract boolean isOptimisticLock();
+
+    /**
+     * 行を更新または削除できたかどうかチェックします。
+     * 
+     * @param rows
+     *            更新行数
+     * @throws OptimisticLockException
+     *             行を更新または削除できなかった場合
+     */
+    protected void validateRows(final int rows) {
+        if (rows == 0) {
+            throw new SOptimisticLockException(entity);
+        }
     }
 
 }
