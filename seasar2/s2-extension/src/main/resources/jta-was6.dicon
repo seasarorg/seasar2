@@ -3,7 +3,7 @@
 	"http://www.seasar.org/dtd/components24.dtd">
 <components namespace="jta">
 	<description>
-		WebSphere Application Server version 6 (6.0.2.19以降または6.1.0.9以降) が提供する，
+		WebSphere Application Server (WAS) version 6 (6.0.2.19以降または6.1.0.9以降) が提供する，
 		UOW API を使用するための設定ファイルです．
 
 		この設定ファイルでは，以下の全てのトランザクション属性がサポートされます．
