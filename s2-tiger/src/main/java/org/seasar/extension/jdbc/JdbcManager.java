@@ -103,6 +103,35 @@ public interface JdbcManager {
             Object parameter);
 
     /**
+     * SQLファイル更新を作成します。
+     * 
+     * @param path
+     *            SQLファイルのパス
+     * @return SQLファイル更新
+     * @see #updateBySqlFile(String, Object)
+     */
+    SqlFileUpdate updateBySqlFile(String path);
+
+    /**
+     * SQLファイル更新を作成します。
+     * 
+     * @param path
+     *            SQLファイルのパス
+     * @param parameter
+     *            <p>
+     *            パラメータ。
+     *            </p>
+     *            <p>
+     *            パラメータが1つしかない場合は、値を直接指定します。 パラメータが複数ある場合は、JavaBeansを作って、
+     *            プロパティ名をSQLファイルのバインド変数名とあわせます。
+     *            JavaBeansはpublicフィールドで定義することもできます。
+     *            </p>
+     * @return SQLファイル更新
+     * @see SqlFileUpdate
+     */
+    SqlFileUpdate updateBySqlFile(String path, Object parameter);
+
+    /**
      * 自動検索を作成します。
      * 
      * @param <T>

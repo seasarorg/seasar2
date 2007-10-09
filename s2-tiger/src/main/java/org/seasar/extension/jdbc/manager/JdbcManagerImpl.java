@@ -37,6 +37,7 @@ import org.seasar.extension.jdbc.JdbcContext;
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.SqlBatchUpdate;
 import org.seasar.extension.jdbc.SqlFileSelect;
+import org.seasar.extension.jdbc.SqlFileUpdate;
 import org.seasar.extension.jdbc.SqlSelect;
 import org.seasar.extension.jdbc.SqlUpdate;
 import org.seasar.extension.jdbc.query.AutoBatchDeleteImpl;
@@ -48,6 +49,7 @@ import org.seasar.extension.jdbc.query.AutoSelectImpl;
 import org.seasar.extension.jdbc.query.AutoUpdateImpl;
 import org.seasar.extension.jdbc.query.SqlBatchUpdateImpl;
 import org.seasar.extension.jdbc.query.SqlFileSelectImpl;
+import org.seasar.extension.jdbc.query.SqlFileUpdateImpl;
 import org.seasar.extension.jdbc.query.SqlSelectImpl;
 import org.seasar.extension.jdbc.query.SqlUpdateImpl;
 import org.seasar.extension.jdbc.util.DataSourceUtil;
@@ -126,6 +128,15 @@ public class JdbcManagerImpl implements JdbcManager, Synchronization {
         return new SqlFileSelectImpl<T>(this, baseClass, path, parameter)
                 .maxRows(maxRows).fetchSize(fetchSize).queryTimeout(
                         queryTimeout);
+    }
+
+    public SqlFileUpdate updateBySqlFile(String path) {
+        return new SqlFileUpdateImpl(this, path).queryTimeout(queryTimeout);
+    }
+
+    public SqlFileUpdate updateBySqlFile(String path, Object parameter) {
+        return new SqlFileUpdateImpl(this, path, parameter)
+                .queryTimeout(queryTimeout);
     }
 
     public <T> AutoSelect<T> from(Class<T> baseClass) {

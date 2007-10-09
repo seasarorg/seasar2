@@ -24,6 +24,7 @@ import org.seasar.extension.jdbc.query.AutoSelectImpl;
 import org.seasar.extension.jdbc.query.AutoUpdateImpl;
 import org.seasar.extension.jdbc.query.SqlBatchUpdateImpl;
 import org.seasar.extension.jdbc.query.SqlFileSelectImpl;
+import org.seasar.extension.jdbc.query.SqlFileUpdateImpl;
 import org.seasar.extension.jdbc.query.SqlSelectImpl;
 import org.seasar.extension.jdbc.query.SqlUpdateImpl;
 import org.seasar.extension.jta.TransactionImpl;
@@ -115,6 +116,19 @@ public class JdbcManagerImplTest extends TestCase {
         assertNotNull(query);
         assertSame(manager, query.getJdbcManager());
         assertEquals(Aaa.class, query.getBaseClass());
+        assertEquals(path, query.getPath());
+    }
+
+    /**
+     * @throws Exception
+     * 
+     */
+    public void testUpdateBySqlFile() throws Exception {
+        String path = "update.sql";
+        SqlFileUpdateImpl query = (SqlFileUpdateImpl) manager
+                .updateBySqlFile(path);
+        assertNotNull(query);
+        assertSame(manager, query.getJdbcManager());
         assertEquals(path, query.getPath());
     }
 
