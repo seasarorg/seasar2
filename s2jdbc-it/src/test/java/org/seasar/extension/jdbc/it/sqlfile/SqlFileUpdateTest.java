@@ -39,7 +39,7 @@ public class SqlFileUpdateTest extends S2TestCase {
      */
     public void test_no_parameterTx() throws Exception {
         String path = getClass().getName().replace(".", "/") + "_no.sql";
-        int result = jdbcManager.updateBySqlFile(path).execute();
+        int result = jdbcManager.updateBySqlFile(path).param(null).execute();
         assertEquals(1, result);
         Department department = jdbcManager.selectBySql(Department.class,
                 "select * from Department where department_id = 1")
@@ -58,7 +58,8 @@ public class SqlFileUpdateTest extends S2TestCase {
     public void test_simple_parameterTx() throws Exception {
         String path = getClass().getName().replace(".", "/")
                 + "_simpleType.sql";
-        int result = jdbcManager.updateBySqlFile(path, 2).execute();
+        int result = jdbcManager.updateBySqlFile(path, Integer.class).param(2)
+                .execute();
         assertEquals(1, result);
         Department department = jdbcManager.selectBySql(Department.class,
                 "select * from Department where department_id = 2")
@@ -79,7 +80,8 @@ public class SqlFileUpdateTest extends S2TestCase {
         MyDto myDto = new MyDto();
         myDto.departmentId = 2;
         myDto.location = "foo";
-        int result = jdbcManager.updateBySqlFile(path, myDto).execute();
+        int result = jdbcManager.updateBySqlFile(path, MyDto.class)
+                .param(myDto).execute();
         assertEquals(1, result);
         Department department = jdbcManager.selectBySql(Department.class,
                 "select * from Department where department_id = 2")
