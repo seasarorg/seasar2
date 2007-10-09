@@ -8,6 +8,7 @@ import javax.transaction.TransactionManager;
 import junit.framework.TestCase;
 
 import org.seasar.extension.jdbc.JdbcContext;
+import org.seasar.extension.jdbc.dialect.StandardDialect;
 import org.seasar.extension.jdbc.entity.Aaa;
 import org.seasar.extension.jdbc.entity.Eee;
 import org.seasar.extension.jdbc.meta.ColumnMetaFactoryImpl;
@@ -44,6 +45,7 @@ public class JdbcManagerImplTest extends TestCase {
     @Override
     protected void setUp() throws Exception {
         manager = new JdbcManagerImpl();
+        manager.setDialect(new StandardDialect());
         transactionManager = new TransactionManagerImpl();
         manager.setSyncRegistry(new TransactionSynchronizationRegistryImpl(
                 transactionManager));
