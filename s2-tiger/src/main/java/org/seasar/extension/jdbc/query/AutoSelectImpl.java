@@ -139,6 +139,11 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
     protected Map<String, Object> conditions;
 
     /**
+     * クライテリアです。
+     */
+    protected String criteria;
+
+    /**
      * {@link AutoSelectImpl}を作成します。
      * 
      * @param jdbcManager
@@ -193,6 +198,7 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
         prepareTarget();
         prepareJoins();
         prepareConditions();
+        prepareCriteria();
         prepareOrderBy();
         prepareSql();
     }
@@ -633,6 +639,20 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
         return this;
     }
 
+    public AutoSelect<T> where(String criteria, Object... params) {
+        if (criteria == null) {
+            throw new NullPointerException("criteria");
+        }
+        this.criteria = criteria;
+        if (params == null) {
+            throw new NullPointerException("params");
+        }
+        for (Object o : params) {
+            addParam(o);
+        }
+        return this;
+    }
+
     /**
      * where句の条件を準備します。
      * 
@@ -803,6 +823,18 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
     }
 
     /**
+     * クライテリアの準備をします。
+     */
+    protected void prepareCriteria() {
+        if (criteria == null) {
+            return;
+        }
+        whereClause.addAndSql("(");
+        whereClause.addSql(convertCriteria(criteria));
+        whereClause.addSql(convertCriteria(")"));
+    }
+
+    /**
      * SQLを準備します。
      */
     protected void prepareSql() {
@@ -856,13 +888,13 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
     /**
      * プロパティ名で記述されたクライテリアをカラム名に変換します。
      * 
-     * @param criteria
+     * @param str
      *            クライテリア
      * @return カラム名で記述されたクライテリア
      */
-    protected String convertCriteria(String criteria) {
-        StringBuilder sb = new StringBuilder(20 + criteria.length());
-        QueryTokenizer tokenizer = new QueryTokenizer(criteria);
+    protected String convertCriteria(String str) {
+        StringBuilder sb = new StringBuilder(20 + str.length());
+        QueryTokenizer tokenizer = new QueryTokenizer(str);
         for (int type = tokenizer.nextToken(); type != QueryTokenizer.TT_EOF; type = tokenizer
                 .nextToken()) {
             String token = tokenizer.getToken();

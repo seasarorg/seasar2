@@ -163,6 +163,18 @@ public interface AutoSelect<T> extends Select<T, AutoSelect<T>> {
     AutoSelect<T> where(Map<String, Object> conditions);
 
     /**
+     * where句の条件を指定します。
+     * 
+     * @param criteria
+     *            クライテリア
+     * @param params
+     *            パラメータの配列
+     * 
+     * @return 自動検索
+     */
+    AutoSelect<T> where(String criteria, Object... params);
+
+    /**
      * ソート順を追加します。
      * 
      * @param orderBy

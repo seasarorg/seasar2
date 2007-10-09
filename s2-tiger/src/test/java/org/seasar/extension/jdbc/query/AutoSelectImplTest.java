@@ -825,6 +825,18 @@ public class AutoSelectImplTest extends TestCase {
      * @throws Exception
      * 
      */
+    public void testWhere_criteria() throws Exception {
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        assertSame(query, query.where("id = ?", 1));
+        assertEquals("id = ?", query.criteria);
+        assertEquals(1, query.getParamSize());
+        assertEquals(1, query.getParam(0).value);
+    }
+
+    /**
+     * @throws Exception
+     * 
+     */
     public void testAddCondition() throws Exception {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
         query.prepare("getResultList");
@@ -1399,6 +1411,18 @@ public class AutoSelectImplTest extends TestCase {
         query.prepare("getResultList");
         assertEquals(
                 "select T1_.ID, T1_.NAME, T1_.BBB_ID, T2_.ID, T2_.NAME, T2_.CCC_ID from AAA T1_ left outer join BBB T2_ on T1_.BBB_ID = T2_.ID order by T2_.ID desc",
+                query.toSql());
+    }
+
+    /**
+     * 
+     */
+    public void testPrepareCriteria() {
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        query.join("bbb").where("bbb.id = ?", 1);
+        query.prepare("getResultList");
+        assertEquals(
+                "select T1_.ID, T1_.NAME, T1_.BBB_ID, T2_.ID, T2_.NAME, T2_.CCC_ID from AAA T1_ left outer join BBB T2_ on T1_.BBB_ID = T2_.ID where (T2_.ID = ?)",
                 query.toSql());
     }
 
