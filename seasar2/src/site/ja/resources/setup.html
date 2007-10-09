@@ -3,7 +3,7 @@
 <!-- don't edit start -->
 <head>
 <title>Seasar - DI Container with AOP -</title>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta http-equiv="Content-Style-Type" content="text/css">
 <link href="seasar_b.css" type="text/css" rel="stylesheet" media="screen" />
 <link href="seasar_p.css" type="text/css" rel="stylesheet" media="print" />
@@ -50,7 +50,7 @@
 <li>Tomcat Plugin3.2</li>
 <li><b>Dolteng</b></li>
 <li>DbLauncher</li>
-<li>日本語でプロパティファイルを入力するためのプラグイン</li>
+<li>日本語でプロパティファイルを入力するためのプラグイン (任意)</li>
 </ul>
 <p>
 JDK5.0を<a href="http://java.sun.com/j2se/1.5.0/ja/download.html">このリンク</a>から指示に従ってインストールします。
@@ -58,7 +58,7 @@ JDK5.0を<a href="http://java.sun.com/j2se/1.5.0/ja/download.html">このリン�
 次にJDK1.5がPCのデフォルトのJavaになっているのか確認します。
 コマンドプロンプトからjava –versionを実行してください。</p>
 <pre>
-D:\USER\workspace2\teeda>java -version
+D:\USER\workspace2\teeda&lt;java -version
 java version "1.5.0_07"
 Java(TM) 2 Runtime Environment, Standard Edition (build 1.5.0_07-b03)
 Java HotSpot(TM) Client VM (build 1.5.0_07-b03, mixed mode, sharing)
@@ -66,7 +66,7 @@ Java HotSpot(TM) Client VM (build 1.5.0_07-b03, mixed mode, sharing)
 <p>
 上記のようにバージョンが1.5.0_xxxのように表示されればOKです。
 もし、OKでない場合は、環境変数のJAVA_HOMEとPATHを確認してください。</p>
-<p>Eclipseのバージョン3.2を<a href="http://download.eclipse.org/eclipse/downloads/drops/R-3.2.1-200609210945/index.php">このリンク</a>から指示に従ってインストールします。
+<p>Eclipseのバージョン3.2を<a href="http://archive.eclipse.org/eclipse/downloads/drops/R-3.2.2-200702121330/index.php">このリンク</a>から指示に従ってインストールします。
 既にインストール済みの場合はその必要はありません。
 標準のJDKのバージョンが1.5系でない場合、Eclipseの起動引数に</p>
 <pre>
@@ -75,18 +75,18 @@ eclipse.exe -vm "C:\Program Files\Java\jdk1.5.0_07\bin\javaw.exe"
 <p>のように1.5系のjavaw.exeを指定する必要があります。</p>
 <p>Tomcat5.5.xを<a href="http://tomcat.apache.org/download-55.cgi">このリンク</a>から指示に従ってインストールします。
 既にインストール済みの場合はその必要はありません。</p>
-<p>Tomcat Plugin3.2を<a href="http://www.sysdeo.com/eclipse/tomcatplugin">このリンク</a>から指示に従ってインストールします。
+<p>Tomcat Plugin3.2.1を<a href="http://www.eclipsetotale.com/tomcatPlugin.html">このリンク</a>から指示に従ってインストールします。
 既にインストール済みの場合はその必要はありません。
 インストールが終わったら、Eclipseを起動してTomcat Pluginの設定を行います。
-メニューの[Window] -> [Preferences…] -> [Tomcat]を選択してください。
+メニューの[Window] -&gt; [Preferences…] -&gt; [Tomcat]を選択してください。
 Tomcatバージョンにバージョン5.xを選択し、Tomcatホームにインストールしたディレクトリを指定します。
 コンテキスト宣言モードにコンテキストファイルを選び、[OK]をクリックします。</p>
 <p>これで、Tomcat Pluginの設定は完了しました。
-早速、Tomcatを起動してみましょう。メニューから[Tomcat] -> [Tomcat起動]を選択して、Tomcatを起動します。
+早速、Tomcatを起動してみましょう。メニューから[Tomcat] -&gt; [Tomcat起動]を選択して、Tomcatを起動します。
 エラーなしに無事に起動したのを確認して、一旦、Tomcatを停止させましょう。
-メニューから[Tomcat] -> [Tomcat停止]を選択します。</p>
-<p>Dolteng、DbLauncherは、Seasarプロジェクトで開発されているEclipse用のPluginです。
-Eclipseのメニューから[Help] -> [Software Updates] -> [Find and Install…]を選択し、
+メニューから[Tomcat] -&gt; [Tomcat停止]を選択します。</p>
+<p>DoltengとDbLauncherは、Seasarプロジェクトで開発されているEclipse用のPluginです。
+Eclipseのメニューから[Help] -&gt; [Software Updates] -&gt; [Find and Install…]を選択し、
 Install/Updateのダイアログを表示させます。
 [Search for new features to install]のラジオボタンをチェックして[Next]ボタンをクリックします。
 [New Remote site]ボタンをクリックして[Name]を[Seasar Plugin3.2]、
@@ -95,10 +95,10 @@ Install/Updateのダイアログを表示させます。
 DoltengとDbLauncherが出てくるのでそのままインストールしましょう。
 既にインストール済みの場合はその必要はありません。</p>
 <p>日本語でプロパティファイルを入力するためのプラグインとしてプロパティエディタを
-<a href="http://propedit.sourceforge.jp/">このリンク</a>から指示に従ってインストールします。
+<a href="http://propedit.sourceforge.jp/">このリンク</a>から指示に従ってインストールします (必須ではありません)。
 既にインストール済みの場合は、その必要はありません。</p>
 <p>すべてのインストールがうまく行ったかどうかを確認するために、Hello Worldと表示する単純な画面を作ってみましょう。
-Eclipseのメニューから[File] -> [New] -> [Project]を選びます。
+Eclipseのメニューから[File] -&gt; [New] -&gt; [Project]を選びます。
 図1のようなダイアログが表示されるので、[Chura Project]を選択します。</p><br />
 <img src="images/setup1.jpg"/><br /><br />
 <p>[Next]のボタンをクリックしてください。
@@ -108,14 +108,14 @@ JREコンテナーが[Use Default JRE(1.5)]になっていることを確認し�
 <img src="images/setup2.jpg"/><br /><br />
 <p>[Project type]に[Super Agile(Teeda + S2Dao)]を選択し、
 [Finish]ボタンをクリックしてください。chura-tutorialのプロジェクトが作成されます。</p>
-<p>プロジェクトを右クリックして、[Tomcatプロジェクト] -> [Tomcatのコンテキストを更新]を選択します。
+<p>プロジェクトを右クリックして、[Tomcatプロジェクト] -&gt; [Tomcatのコンテキストを更新]を選択します。
 これで開発を始めるための必要な設定は完了しました。
-メニューから[Tomcat] -> [Tomcat起動]を選択して、Tomcatを立ち上げます。
+メニューから[Tomcat] -&gt; [Tomcat起動]を選択して、Tomcatを立ち上げます。
 HOT deployで開発するので、アプリケーションサーバを起動したままで開発することが可能です。</p>
-<p>プロジェクトのツリーを開き、src/main/webapp/viewを右クリックして[New] -> [File]を選びます。</p>
+<p>プロジェクトのツリーを開き、src/main/webapp/viewを右クリックして[New] -&gt; [File]を選びます。</p>
 <p>[Enter or select the parent folder]に[chura-tutorial/src/main/webapp/view/hello]と入力し、
 [File name]に[hello.html]と入力して、[Finish]ボタンをクリックします。</p>
-<p>ファイルが作成されたので、Package Exploreからhello.htmlを右クリックして[Open With] -> [Text Editor]を選びます。
+<p>ファイルが作成されたので、Package Exploreからhello.htmlを右クリックして[Open With] -&gt; [Text Editor]を選びます。
 次のようにHTMLを入力してください。 </p>
 <pre>
 &lt;html&gt;
@@ -124,7 +124,7 @@ Hello World
 &lt;/body&gt;
 &lt;/html&gt;
 </pre>
-<p>入力が終わったら、hello.html を右クリックして、[Dolteng] -> [View on Server]を選びましょう。
+<p>入力が終わったら、hello.html を右クリックして、[Dolteng] -&gt; [View on Server]を選びましょう。
 http://localhost:8080/chura-tutorial/view/hello/hello.htmlにアクセスするはずです。
 無事にHello Worldと表示されたらプロジェクトの設定はうまくいっています。</p><br />
 <p>Doltengを使わないSeasar2の設定方法は次のようになります。</p>
@@ -135,7 +135,7 @@ http://localhost:8080/chura-tutorial/view/hello/hello.htmlにアクセスする�
 <li>lib/commons-logging-1.1.jar</li>
 <li>lib/javassist-3.4.ga.jar</li>
 <li>lib/ognl-2.6.9-patch-20070624.jar</li>
-<li>lib/s2-framework-2.x.x.jar</li>
+<li>lib/s2-framework-2.4.x.jar</li>
 <li>lib/geronimo-j2ee_1.4_spec-1.0.jar (オプション，下記参照)</li>
 <li>lib/portlet-api-1.0.jar (オプション)</li>
 <li>lib/log4j-1.2.13.jar (オプション)</li>
@@ -149,7 +149,7 @@ http://localhost:8080/chura-tutorial/view/hello/hello.htmlにアクセスする�
 <ul>
 <li>lib/junit-3.8.2.jar</li>
 <li>lib/poi-3.0-FINAL.jar</li>
-<li>lib/s2-extension-2.x.x.jar</li>
+<li>lib/s2-extension-2.4.x.jar</li>
 <li>lib/geronimo-jta_1.1_spec-1.0.jar (オプション，下記参照)</li>
 <li>lib/geronimo-ejb_2.1_spec-1.0.jar (オプション，下記参照)</li>
 <li>resources/jdbc.dicon</li>
@@ -158,108 +158,147 @@ http://localhost:8080/chura-tutorial/view/hello/hello.htmlにアクセスする�
 <table border="1">
 <tr>
 <th>環境</th>
-<th>geronimo-j2ee_1.4<br>
-                  _spec-1.0.jar</th>
-<th>geronimo-jta_1.1<br>
-                  _spec-1.0.jar</th>
-<th>geronimo-ejb_2.1<br>
-                  _spec-1.0.jar</th>
+<th>geronimo-j2ee _1.4_spec-1.0.jar</th>
+<th>geronimo-jta _1.1_spec-1.0.jar</th>
+<th>geronimo-ejb _2.1_spec-1.0.jar</th>
 </tr>
 <tr align="center">
 <td>J2EEフル対応でないWebコンテナ<br />
 (Tomcat等)</td>
-<td>不要</td>
-<td>要<br />
+<td>-</td>
+<td><strong>要</strong><br />
 (S2JTA,S2Txを使う場合)</td>
-<td>要<br />
+<td><strong>要</strong><br />
 (S2Tigerを使う場合)</td>
 </tr>
 <tr align="center">
 <td>J2EEフル対応のAPサーバ<br />
 (JBoss, WebSphere, WebLogic等)</td>
-<td>不要</td>
-<td>要<br />
+<td>-</td>
+<td><strong>要</strong><br />
 (S2JTAを使う場合)</td>
-<td>不要</td>
+<td>-</td>
 </tr>
 <tr align="center">
 <td>スタンドアロン</td>
-<td>要<br />
+<td><strong>要</strong><br />
 (S2JTA,S2Txを使う場合)</td>
-<td>要<br />
+<td><strong>要</strong><br />
 (S2JTA,S2Txを使う場合)</td>
-<td>不要</td>
+<td>-</td>
 </tr>
 </table>
 <br />
 <p>データベースに関する機能を簡単に試すことができるように、RDBMSとしてHSQLDBを用意しています。オラクルでも直ぐに機能を試せるように、hsql/sql/demo-oracle.sqlが用意されています。SQL*Plusなどで実行した後、jdbc.diconの<a href="dbcp.html#Setup">XADataSourceImplの設定項目</a>を環境に合わせて書き換えてください。</p>
 <p><a href="http://www.seasar.org/updates.html">S2Container用のプラグインKijimuna</a>も是非ご利用ください。</p>
             <h2>S2-Tiger</h2>
-            <p>Java5対応機能を使いたい場合は､S2TigerXXX.zipを解凍してできたs2-tigerディレクトリをEclipseで、 ｢ファイル→インポート→既存のプロジェクトをワークスペースへ｣でインポートしてください。
-            Seasar2の設定の上に、さらに以下のファイルを追加でCLASSPATHに含める必要があります。</p>
+            <p>Java5対応機能を使いたい場合は､S2Tiger-2.4.x.zipを解凍してできたs2-tigerディレクトリをEclipseで、 ｢ファイル→インポート→既存のプロジェクトをワークスペースへ｣でインポートしてください。
+Seasar2の設定の上に、さらに以下のファイルを追加でCLASSPATHに含める必要があります。</p>
 <ul>
-<li>lib/s2-tiger-x.x.x.jar</li>
+<li>lib/s2-tiger-2.4.x.jar</li>
               <li>lib/geronimo-annotation_1.0_spec-1.0.jar (オプション，下記参照)</li>
               <li>lib/geronimo-ejb_3.0_spec-1.0.jar (オプション，下記参照)</li>
               <li>lib/geronimo-interceptor_3.0_spec-1.0.jar (オプション，下記参照)</li>
               <li>lib/geronimo-jpa_3.0_spec-1.0.jar (オプション，下記参照)</li>
             </ul>
-            <p>オプションのJarファイルは、EJB3やJPAのサポート機能をJavaEE5対応でない環境で使う場合に必要となります。詳細は以下の表を参照してください。</p>
-            <table border="1">
+            <p>オプションのJarファイルは、S2JDBCやEJB3、JPAのサポート機能をJavaEE5対応でない環境で使う場合に必要となります。詳細は以下の表を参照してください。</p>
+<h3>S2JDBC拡張機能またはJPAを使う場合</h3>
+<table border="1">
               <col span="5" align="center">
               <tbody>
                 <tr>
 <th>環境</th>
-<th>geronimo-annotation_1.0<br>
-                  _spec-1.0.jar</th>
-                  <th>geronimo-ejb_3.0<br>
-                  _spec-1.0.jar</th>
-                  <th>geronimo-interceptor_3.0<br>
-                  _spec-1.0.jar</th>
-<th>geronimo-jpa_3.0<br>
-                  _spec-1.0.jar</th>
+<th>geronimo-annotation _1.0_spec-1.0.jar</th>
+                  <th>geronimo-ejb _3.0_spec-1.0.jar</th>
+                  <th>geronimo-interceptor _3.0_spec-1.0.jar</th>
+<th>geronimo-jpa _3.0_spec-1.0.jar</th>
 </tr>
                 <tr>
 <td>Servlet2.4対応のWebコンテナ<br>
                   (Tomcat5.x等)</td>
-<td>要</td>
-                  <td>要</td>
-                  <td>要<br>
-                  (EJB3を使う場合)</td>
-<td>要</td>
+<td>-</td>
+                  <td>-</td>
+                  <td>-</td>
+<td><strong>要</strong></td>
 </tr>
                 <tr>
                   <td>Servlet2.5対応のWebコンテナ<br>
                   (Tomcat6)</td>
-                  <td>不要</td>
-                  <td>要</td>
-                  <td>要<br>
-                  (EJB3を使う場合)</td>
-                  <td>要<br>
-                  (JPAを使う場合)</td>
+                  <td>-</td>
+                  <td>-</td>
+                  <td>-</td>
+                  <td><strong>要</strong></td>
                 </tr>
                 <tr>
 <td>J2EE1.4対応のAPサーバ</td>
-<td>要</td>
-                  <td>要</td>
-                  <td>要<br>
-                  (EJB3を使う場合)</td>
-<td>要</td>
+<td>-</td>
+                  <td>-</td>
+                  <td>-</td>
+<td><strong>要</strong></td>
 </tr>
                 <tr>
                   <td>JavaEE5対応のAPサーバ</td>
-                  <td>不要</td>
-                  <td>不要</td>
-                  <td>不要</td>
-                  <td>不要</td>
+                  <td>-</td>
+                  <td>-</td>
+                  <td>-</td>
+                  <td>-</td>
                 </tr>
                 <tr>
 <td>スタンドアロン</td>
-<td>要</td>
-                  <td>要</td>
-                  <td>要<br>
-                  (EJB3を使う場合)</td>
-<td>要</td>
+<td>-</td>
+                  <td>-</td>
+                  <td>-</td>
+<td><strong>要</strong></td>
+</tr>
+              </tbody>
+            </table>
+<h3>EJB3を使う場合</h3>
+<table border="1">
+              <col span="5" align="center">
+              <tbody>
+                <tr>
+<th>環境</th>
+<th>geronimo-annotation _1.0_spec-1.0.jar</th>
+                  <th>geronimo-ejb _3.0_spec-1.0.jar</th>
+                  <th>geronimo-interceptor _3.0_spec-1.0.jar</th>
+<th>geronimo-jpa _3.0_spec-1.0.jar</th>
+</tr>
+                <tr>
+<td>Servlet2.4対応のWebコンテナ<br>
+                  (Tomcat5.x等)</td>
+<td><strong>要</strong></td>
+                  <td><strong>要</strong></td>
+                  <td><strong>要</strong></td>
+<td>-</td>
+</tr>
+                <tr>
+                  <td>Servlet2.5対応のWebコンテナ<br>
+                  (Tomcat6)</td>
+                  <td>-</td>
+                  <td><strong>要</strong></td>
+                  <td><strong>要</strong></td>
+                  <td>-</td>
+                </tr>
+                <tr>
+<td>J2EE1.4対応のAPサーバ</td>
+<td><strong>要</strong></td>
+                  <td><strong>要</strong></td>
+                  <td><strong>要</strong></td>
+<td>-</td>
+</tr>
+                <tr>
+                  <td>JavaEE5対応のAPサーバ</td>
+                  <td>-</td>
+                  <td>-</td>
+                  <td>-</td>
+                  <td>-</td>
+                </tr>
+                <tr>
+<td>スタンドアロン</td>
+<td><strong>要</strong></td>
+                  <td><strong>要</strong></td>
+                  <td><strong>要</strong></td>
+<td>-</td>
 </tr>
               </tbody>
             </table>
