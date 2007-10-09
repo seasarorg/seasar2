@@ -151,16 +151,6 @@ public class PropertyMetaFactoryImplTest extends TestCase {
     /**
      * @throws Exception
      */
-    public void testColumnMeta_relationship() throws Exception {
-        Field field = Aaa.class.getDeclaredField("bbb");
-        PropertyMeta propertyMeta = factory.createPropertyMeta(field,
-                entityMeta);
-        assertNull(propertyMeta.getColumnMeta());
-    }
-
-    /**
-     * @throws Exception
-     */
     public void testField() throws Exception {
         Field field = Aaa.class.getDeclaredField("id");
         PropertyMeta propertyMeta = factory.createPropertyMeta(field,
@@ -275,6 +265,7 @@ public class PropertyMetaFactoryImplTest extends TestCase {
                 .getRelationshipType());
         assertEquals(MyBbb.class, propertyMeta.getRelationshipClass());
         assertEquals(1, propertyMeta.getJoinColumnMetaList().size());
+        assertNull(propertyMeta.getColumnMeta());
     }
 
     /**
@@ -290,6 +281,7 @@ public class PropertyMetaFactoryImplTest extends TestCase {
                 .getRelationshipType());
         assertEquals(MyAaa.class, propertyMeta.getRelationshipClass());
         assertEquals("bbb", propertyMeta.getMappedBy());
+        assertNull(propertyMeta.getColumnMeta());
     }
 
     /**
@@ -380,6 +372,7 @@ public class PropertyMetaFactoryImplTest extends TestCase {
                 .getRelationshipType());
         assertEquals(MyDdd.class, propertyMeta.getRelationshipClass());
         assertEquals("bbb", propertyMeta.getMappedBy());
+        assertNull(propertyMeta.getColumnMeta());
     }
 
     /**
@@ -520,6 +513,7 @@ public class PropertyMetaFactoryImplTest extends TestCase {
                 .getRelationshipType());
         assertEquals(MyBbb.class, propertyMeta.getRelationshipClass());
         assertEquals(1, propertyMeta.getJoinColumnMetaList().size());
+        assertNull(propertyMeta.getColumnMeta());
     }
 
     /**

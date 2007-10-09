@@ -130,10 +130,8 @@ public class PropertyMetaFactoryImpl implements PropertyMetaFactory {
      */
     protected void doColumnMeta(PropertyMeta propertyMeta, Field field,
             EntityMeta entityMeta) {
-        if (ValueTypes.isSimpleType(propertyMeta.getPropertyClass())) {
-            propertyMeta.setColumnMeta(columnMetaFactory.createColumnMeta(
-                    field, entityMeta));
-        }
+        propertyMeta.setColumnMeta(columnMetaFactory.createColumnMeta(field,
+                entityMeta));
     }
 
     /**
@@ -273,6 +271,7 @@ public class PropertyMetaFactoryImpl implements PropertyMetaFactory {
      */
     protected void doOneToOne(PropertyMeta propertyMeta, Field field,
             EntityMeta entityMeta, OneToOne oneToOne) {
+        propertyMeta.setColumnMeta(null);
         propertyMeta.setRelationshipType(RelationshipType.ONE_TO_ONE);
         Class<?> relationshipClass = field.getType();
         if (relationshipClass.getAnnotation(Entity.class) == null) {
@@ -305,6 +304,7 @@ public class PropertyMetaFactoryImpl implements PropertyMetaFactory {
      */
     protected void doOneToMany(PropertyMeta propertyMeta, Field field,
             EntityMeta entityMeta, OneToMany oneToMany) {
+        propertyMeta.setColumnMeta(null);
         propertyMeta.setRelationshipType(RelationshipType.ONE_TO_MANY);
         if (!List.class.isAssignableFrom(field.getType())) {
             throw new OneToManyNotListRuntimeException(entityMeta.getName(),
@@ -350,6 +350,7 @@ public class PropertyMetaFactoryImpl implements PropertyMetaFactory {
     protected void doManyToOne(PropertyMeta propertyMeta, Field field,
             EntityMeta entityMeta, @SuppressWarnings("unused")
             ManyToOne manyToOne) {
+        propertyMeta.setColumnMeta(null);
         propertyMeta.setRelationshipType(RelationshipType.MANY_TO_ONE);
         Class<?> relationshipClass = field.getType();
         if (relationshipClass.getAnnotation(Entity.class) == null) {
