@@ -25,6 +25,7 @@ import org.seasar.extension.jdbc.ValueType;
 import org.seasar.extension.jdbc.WhereClause;
 import org.seasar.extension.jdbc.exception.OrderByNotFoundRuntimeException;
 import org.seasar.extension.jdbc.types.ValueTypes;
+import org.seasar.extension.jdbc.util.QueryTokenizer;
 import org.seasar.framework.util.StringUtil;
 
 /**
@@ -104,7 +105,8 @@ public class StandardDialect implements DbmsDialect {
         buf.append(getRowNumberFunctionName()).append(" over(");
         int orderByIndex = lowerSql.lastIndexOf("order by");
         if (orderByIndex > 0) {
-            buf.append(sql.substring(orderByIndex));
+            String orderBy = sql.substring(orderByIndex);
+            buf.append(convertOrderBy(orderBy));
             sql = StringUtil.rtrim(sql.substring(0, orderByIndex));
         } else {
             throw new OrderByNotFoundRuntimeException(sql);
@@ -119,5 +121,32 @@ public class StandardDialect implements DbmsDialect {
             buf.append(offset + limit);
         }
         return buf.toString();
+    }
+
+    /**
+     * order by句のテーブルのエイリアスを一時的なテーブル名に変換します。
+     * 
+     * @param orderBy
+     *            order by句
+     * @return 変換後のorder by句
+     */
+    protected String convertOrderBy(String orderBy) {
+        StringBuilder sb = new StringBuilder(10 + orderBy.length());
+        QueryTokenizer tokenizer = new QueryTokenizer(orderBy);
+        for (int type = tokenizer.nextToken(); type != QueryTokenizer.TT_EOF; type = tokenizer
+                .nextToken()) {
+            String token = tokenizer.getToken();
+            if (type == QueryTokenizer.TT_WORD) {
+                String[] names = StringUtil.split(token, ".");
+                if (names.length == 2) {
+                    sb.append("temp_.").append(names[1]);
+                } else {
+                    sb.append(token);
+                }
+            } else {
+                sb.append(token);
+            }
+        }
+        return sb.toString();
     }
 }

@@ -40,8 +40,19 @@ public class StandardDialectTest extends TestCase {
         String expected = "select * from ( select "
                 + "temp_.*, row_number() over(order by id) as rownumber_ from ( select * from emp ) as temp_ ) as temp2_"
                 + " where rownumber_ >= 6 and rownumber_ <= 15";
-        assertEquals(expected, dialect.convertLimitSqlByRowNumber(sql, 5,
-                10));
+        assertEquals(expected, dialect.convertLimitSqlByRowNumber(sql, 5, 10));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testConvertLimitSqlByRowNumber_offsetLimit_tableAlias()
+            throws Exception {
+        String sql = "select * from emp T1_ order by T1_.id";
+        String expected = "select * from ( select "
+                + "temp_.*, row_number() over(order by temp_.id) as rownumber_ from ( select * from emp T1_ ) as temp_ ) as temp2_"
+                + " where rownumber_ >= 6 and rownumber_ <= 15";
+        assertEquals(expected, dialect.convertLimitSqlByRowNumber(sql, 5, 10));
     }
 
     /**
@@ -52,8 +63,16 @@ public class StandardDialectTest extends TestCase {
         String expected = "select * from ( select "
                 + "temp_.*, row_number() over(order by id) as rownumber_ from ( select * from emp ) as temp_ ) as temp2_"
                 + " where rownumber_ >= 6";
-        assertEquals(expected, dialect.convertLimitSqlByRowNumber(sql, 5,
-                0));
+        assertEquals(expected, dialect.convertLimitSqlByRowNumber(sql, 5, 0));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testConvertOrderBy() throws Exception {
+        assertEquals("order by id", dialect.convertOrderBy("order by id"));
+        assertEquals("order by temp_.id", dialect
+                .convertOrderBy("order by T1_.id"));
     }
 
     /**
