@@ -26,6 +26,7 @@ import org.seasar.extension.jdbc.query.SqlBatchUpdateImpl;
 import org.seasar.extension.jdbc.query.SqlFileBatchUpdateImpl;
 import org.seasar.extension.jdbc.query.SqlFileSelectImpl;
 import org.seasar.extension.jdbc.query.SqlFileUpdateImpl;
+import org.seasar.extension.jdbc.query.SqlProcedureCallImpl;
 import org.seasar.extension.jdbc.query.SqlSelectImpl;
 import org.seasar.extension.jdbc.query.SqlUpdateImpl;
 import org.seasar.extension.jta.TransactionImpl;
@@ -178,6 +179,26 @@ public class JdbcManagerImplTest extends TestCase {
         assertNotNull(query);
         assertSame(manager, query.getJdbcManager());
         assertEquals(path, query.getPath());
+    }
+
+    /**
+     * @throws Exception
+     * 
+     */
+    public void testCallBySql() throws Exception {
+        manager.maxRows = 100;
+        manager.fetchSize = 10;
+        manager.queryTimeout = 5;
+        String sql = "{call hoge(?)}";
+        SqlProcedureCallImpl query = (SqlProcedureCallImpl) manager.callBySql(
+                sql, 1);
+        assertNotNull(query);
+        assertSame(manager, query.getJdbcManager());
+        assertEquals(100, query.getMaxRows());
+        assertEquals(10, query.getFetchSize());
+        assertEquals(5, query.getQueryTimeout());
+        assertEquals(sql, query.getExecutedSql());
+        assertEquals(1, query.getParameter());
     }
 
     /**

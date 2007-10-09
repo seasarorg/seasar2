@@ -203,4 +203,13 @@ public abstract class AbstractProcedureCall<S extends ProcedureCall<S>> extends
     public int getMaxRows() {
         return maxRows;
     }
+
+    /**
+     * パラメータを返します。
+     * 
+     * @return パラメータ
+     */
+    public Object getParameter() {
+        return parameter;
+    }
 }

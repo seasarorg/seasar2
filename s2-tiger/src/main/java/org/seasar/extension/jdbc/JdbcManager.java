@@ -65,6 +65,45 @@ public interface JdbcManager {
     SqlBatchUpdate updateBatchBySql(String sql, Class<?>... paramClasses);
 
     /**
+     * SQLプロシージャ呼び出しを返します。
+     * 
+     * @param sql
+     *            SQL
+     * @return SQLプロシージャ呼び出し
+     * @see #callBySql(String, Object)
+     */
+    SqlProcedureCall callBySql(String sql);
+
+    /**
+     * SQLプロシージャ呼び出しを返します。
+     * 
+     * @param sql
+     *            SQL
+     * @param parameter
+     *            <p>
+     *            パラメータです。
+     *            </p>
+     *            <p>
+     *            INパラメータが1つしかない場合は、数値や文字列などを直接指定します。 それ以外は、JavaBeansを指定します。
+     *            </p>
+     *            <p>
+     *            プロシージャを呼び出すバインド変数の順番にJavaBeansのフィールドを定義します。
+     *            フィールド名が_OUTで終わっている場合<code>OUT</code>パラメータになります。
+     *            フィールド名が_IN_OUTで終わっている場合<code>IN OUT</code>パラメータになります。
+     *            フィールド名が_INで終わっている場合<code>IN</code>パラメータになります。
+     *            フィールド名が_OUT、_IN_OUT、_INで終わっていない場合は、<code>IN</code>パラメータになります。
+     *            </p>
+     *            <p>
+     *            プロシージャが結果セットを返す場合、フィールドの型は<code>List<レコードの型></code>にします。
+     *            </p>
+     *            <p>
+     *            JavaBeansの場合、継承もとのクラスのフィールドは認識しません。
+     *            </p>
+     * @return SQLプロシージャ呼び出し
+     */
+    SqlProcedureCall callBySql(String sql, Object parameter);
+
+    /**
      * SQLファイル検索を作成します。
      * 
      * @param <T>

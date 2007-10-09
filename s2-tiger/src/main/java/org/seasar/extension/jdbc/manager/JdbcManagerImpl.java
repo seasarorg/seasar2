@@ -39,6 +39,7 @@ import org.seasar.extension.jdbc.SqlBatchUpdate;
 import org.seasar.extension.jdbc.SqlFileBatchUpdate;
 import org.seasar.extension.jdbc.SqlFileSelect;
 import org.seasar.extension.jdbc.SqlFileUpdate;
+import org.seasar.extension.jdbc.SqlProcedureCall;
 import org.seasar.extension.jdbc.SqlSelect;
 import org.seasar.extension.jdbc.SqlUpdate;
 import org.seasar.extension.jdbc.query.AutoBatchDeleteImpl;
@@ -52,6 +53,7 @@ import org.seasar.extension.jdbc.query.SqlBatchUpdateImpl;
 import org.seasar.extension.jdbc.query.SqlFileBatchUpdateImpl;
 import org.seasar.extension.jdbc.query.SqlFileSelectImpl;
 import org.seasar.extension.jdbc.query.SqlFileUpdateImpl;
+import org.seasar.extension.jdbc.query.SqlProcedureCallImpl;
 import org.seasar.extension.jdbc.query.SqlSelectImpl;
 import org.seasar.extension.jdbc.query.SqlUpdateImpl;
 import org.seasar.extension.jdbc.util.DataSourceUtil;
@@ -119,6 +121,15 @@ public class JdbcManagerImpl implements JdbcManager, Synchronization {
     public SqlBatchUpdate updateBatchBySql(String sql, Class<?>... paramClasses) {
         return new SqlBatchUpdateImpl(this, sql, paramClasses)
                 .queryTimeout(queryTimeout);
+    }
+
+    public SqlProcedureCall callBySql(String sql) {
+        return callBySql(sql, null);
+    }
+
+    public SqlProcedureCall callBySql(String sql, Object parameter) {
+        return new SqlProcedureCallImpl(this, sql, parameter).maxRows(maxRows)
+                .fetchSize(fetchSize).queryTimeout(queryTimeout);
     }
 
     public <T> SqlFileSelect<T> selectBySqlFile(Class<T> baseClass, String path) {
