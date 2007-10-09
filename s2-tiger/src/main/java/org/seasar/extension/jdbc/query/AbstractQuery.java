@@ -16,6 +16,7 @@
 package org.seasar.extension.jdbc.query;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +24,7 @@ import java.util.List;
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.ParamType;
 import org.seasar.extension.jdbc.Query;
+import org.seasar.extension.jdbc.ResultSetHandler;
 import org.seasar.extension.jdbc.SqlLog;
 import org.seasar.extension.jdbc.SqlLogRegistry;
 import org.seasar.extension.jdbc.SqlLogRegistryLocator;
@@ -30,6 +32,7 @@ import org.seasar.extension.jdbc.impl.SqlLogImpl;
 import org.seasar.extension.jdbc.util.BindVariableUtil;
 import org.seasar.framework.exception.SQLRuntimeException;
 import org.seasar.framework.log.Logger;
+import org.seasar.framework.util.ResultSetUtil;
 
 /**
  * @author higa
@@ -306,5 +309,28 @@ public abstract class AbstractQuery<S extends Query<S>> implements Query<S> {
      */
     protected void resetParams() {
         paramList.clear();
+    }
+
+    /**
+     * 結果セットを処理します。
+     * 
+     * @param handler
+     *            結果セットハンドラ
+     * @param rs
+     *            結果セット
+     * @return 処理結果
+     * @throws SQLRuntimeException
+     *             SQL例外が発生した場合。
+     */
+    protected Object handleResultSet(ResultSetHandler handler, ResultSet rs) throws SQLRuntimeException {
+        Object ret = null;
+        try {
+            ret = handler.handle(rs);
+        } catch (SQLException e) {
+            throw new SQLRuntimeException(e);
+        } finally {
+            ResultSetUtil.close(rs);
+        }
+        return ret;
     }
 }

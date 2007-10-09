@@ -184,31 +184,6 @@ public class AbstractSelectTest extends TestCase {
      * @throws Exception
      * 
      */
-    public void testHandleResultSet() throws Exception {
-        MySelect<Aaa> query = new MySelect<Aaa>(manager, Aaa.class);
-        MockResultSetMetaData rsMeta = new MockResultSetMetaData();
-        MockColumnMetaData columnMeta = new MockColumnMetaData();
-        columnMeta.setColumnLabel("ID");
-        rsMeta.addColumnMetaData(columnMeta);
-        columnMeta = new MockColumnMetaData();
-        columnMeta.setColumnLabel("NAME");
-        rsMeta.addColumnMetaData(columnMeta);
-        MockResultSet rs = new MockResultSet(rsMeta);
-        ArrayMap data = new ArrayMap();
-        data.put("ID", "111");
-        data.put("NAME", "222");
-        rs.addRowData(data);
-        BeanResultSetHandler handler = new BeanResultSetHandler(Aaa.class,
-                manager.getDialect(), "select * from aaa");
-        Object ret = query.handleResultSet(handler, rs);
-        assertTrue(rs.isClosed());
-        assertNotNull(ret);
-    }
-
-    /**
-     * @throws Exception
-     * 
-     */
     public void testCreateResultSet_noPaging() throws Exception {
         MySelect<Aaa> query = new MySelect<Aaa>(manager, Aaa.class);
         JdbcContext jdbcContext = manager.getJdbcContext();

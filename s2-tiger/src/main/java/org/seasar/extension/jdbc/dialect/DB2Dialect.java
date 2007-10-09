@@ -15,9 +15,6 @@
  */
 package org.seasar.extension.jdbc.dialect;
 
-import org.seasar.extension.jdbc.exception.OrderByNotFoundRuntimeException;
-import org.seasar.framework.util.StringUtil;
-
 /**
  * DB2用の方言をあつかうクラスです。
  * 
@@ -26,80 +23,50 @@ import org.seasar.framework.util.StringUtil;
  */
 public class DB2Dialect extends StandardDialect {
 
-	@Override
-	public String getName() {
-		return "db2";
-	}
+    @Override
+    public String getName() {
+        return "db2";
+    }
 
-	@Override
-	public boolean supportsLimit() {
-		return true;
-	}
+    @Override
+    public boolean supportsLimit() {
+        return true;
+    }
 
-	@Override
-	public String convertLimitSql(String sql, int offset, int limit) {
-		if (offset > 0) {
-			return convertOffsetLimitSql(sql, offset, limit);
-		}
-		return convertLimitOnlySql(sql, limit);
+    /**
+     * 行番号ファンクション名を返します。
+     * 
+     * @return 行番号ファンクション名
+     */
+    @Override
+    public String getRowNumberFunctionName() {
+        return "rownumber()";
+    }
 
-	}
+    @Override
+    public String convertLimitSql(String sql, int offset, int limit) {
+        if (offset > 0) {
+            return convertLimitSqlByRowNumber(sql, offset, limit);
+        }
+        return convertLimitOnlySql(sql, limit);
 
-	/**
-	 * offset、limitつきのSQLに変換します。
-	 * 
-	 * @param sql
-	 *            SQL
-	 * @param offset
-	 *            オフセット
-	 * @param limit
-	 *            リミット
-	 * @return offset、limitつきのSQL
-	 * @throws OrderByNotFoundRuntimeException
-	 *             <code>ordr by</code>が見つからない場合。
-	 */
-	protected String convertOffsetLimitSql(String sql, int offset, int limit)
-			throws OrderByNotFoundRuntimeException {
-		StringBuilder buf = new StringBuilder(sql.length() + 150);
-		String lowerSql = sql.toLowerCase();
-		int startOfSelect = lowerSql.indexOf("select");
-		buf.append(sql.substring(0, startOfSelect));
-		buf.append("select * from ( select ");
-		buf.append("rownumber() over(");
-		int orderByIndex = lowerSql.lastIndexOf("order by");
-		if (orderByIndex > 0) {
-			buf.append(sql.substring(orderByIndex));
-			sql = StringUtil.rtrim(sql.substring(0, orderByIndex));
-		} else {
-			throw new OrderByNotFoundRuntimeException(sql);
-		}
-		buf.append(") as rownumber_, temp_.* from ( ");
-		buf.append(sql.substring(startOfSelect));
-		buf.append(" ) as temp_");
-		buf.append(" ) as temp2_ where rownumber_ >= ");
-		buf.append(offset + 1);
-		if (limit > 0) {
-			buf.append(" and rownumber_ <= ");
-			buf.append(offset + limit);
-		}
-		return buf.toString();
-	}
+    }
 
-	/**
-	 * limitのみがついたのSQLに変換します。
-	 * 
-	 * @param sql
-	 *            SQL
-	 * @param limit
-	 *            リミット
-	 * @return limitのみがついたのSQL
-	 */
-	protected String convertLimitOnlySql(String sql, int limit) {
-		StringBuilder buf = new StringBuilder(sql.length() + 30);
-		buf.append(sql);
-		buf.append(" fetch first ");
-		buf.append(limit);
-		buf.append(" rows only");
-		return buf.toString();
-	}
+    /**
+     * limitのみがついたのSQLに変換します。
+     * 
+     * @param sql
+     *            SQL
+     * @param limit
+     *            リミット
+     * @return limitのみがついたのSQL
+     */
+    protected String convertLimitOnlySql(String sql, int limit) {
+        StringBuilder buf = new StringBuilder(sql.length() + 30);
+        buf.append(sql);
+        buf.append(" fetch first ");
+        buf.append(limit);
+        buf.append(" rows only");
+        return buf.toString();
+    }
 }

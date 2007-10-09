@@ -24,10 +24,16 @@ import org.seasar.extension.jdbc.SqlLog;
 import org.seasar.extension.jdbc.SqlLogRegistry;
 import org.seasar.extension.jdbc.SqlLogRegistryLocator;
 import org.seasar.extension.jdbc.dialect.StandardDialect;
+import org.seasar.extension.jdbc.entity.Aaa;
+import org.seasar.extension.jdbc.handler.BeanResultSetHandler;
 import org.seasar.extension.jdbc.manager.JdbcManagerImpl;
 import org.seasar.extension.jdbc.types.ValueTypes;
+import org.seasar.framework.mock.sql.MockColumnMetaData;
 import org.seasar.framework.mock.sql.MockDataSource;
 import org.seasar.framework.mock.sql.MockPreparedStatement;
+import org.seasar.framework.mock.sql.MockResultSet;
+import org.seasar.framework.mock.sql.MockResultSetMetaData;
+import org.seasar.framework.util.ArrayMap;
 
 /**
  * @author higa
@@ -175,6 +181,31 @@ public class AbstractQueryTest extends TestCase {
         MyQuery query = new MyQuery(manager);
         Param param = query.addParam(1);
         assertSame(param, query.getParam(0));
+    }
+
+    /**
+     * @throws Exception
+     * 
+     */
+    public void testHandleResultSet() throws Exception {
+        MyQuery query = new MyQuery(manager);
+        MockResultSetMetaData rsMeta = new MockResultSetMetaData();
+        MockColumnMetaData columnMeta = new MockColumnMetaData();
+        columnMeta.setColumnLabel("ID");
+        rsMeta.addColumnMetaData(columnMeta);
+        columnMeta = new MockColumnMetaData();
+        columnMeta.setColumnLabel("NAME");
+        rsMeta.addColumnMetaData(columnMeta);
+        MockResultSet rs = new MockResultSet(rsMeta);
+        ArrayMap data = new ArrayMap();
+        data.put("ID", "111");
+        data.put("NAME", "222");
+        rs.addRowData(data);
+        BeanResultSetHandler handler = new BeanResultSetHandler(Aaa.class,
+                manager.getDialect(), "select * from aaa");
+        Object ret = query.handleResultSet(handler, rs);
+        assertTrue(rs.isClosed());
+        assertNotNull(ret);
     }
 
     private static class MyQuery extends AbstractQuery<MyQuery> {

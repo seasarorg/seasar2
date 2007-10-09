@@ -15,8 +15,6 @@
  */
 package org.seasar.extension.jdbc.dialect;
 
-import org.seasar.extension.jdbc.exception.OrderByNotFoundRuntimeException;
-import org.seasar.framework.util.StringUtil;
 
 /**
  * MS SQLServer用の方言をあつかうクラスです。
@@ -26,56 +24,17 @@ import org.seasar.framework.util.StringUtil;
  */
 public class MSSQL2005Dialect extends MSSQLDialect {
 
-	@Override
-	public boolean supportsOffset() {
-		return true;
-	}
+    @Override
+    public boolean supportsOffset() {
+        return true;
+    }
 
-	@Override
-	public String convertLimitSql(String sql, int offset, int limit) {
-		if (offset > 0) {
-			return convertOffsetLimitSql(sql, offset, limit);
-		}
-		return super.convertLimitSql(sql, offset, limit);
+    @Override
+    public String convertLimitSql(String sql, int offset, int limit) {
+        if (offset > 0) {
+            return convertLimitSqlByRowNumber(sql, offset, limit);
+        }
+        return super.convertLimitSql(sql, offset, limit);
 
-	}
-
-	/**
-	 * offset、limitつきのSQLに変換します。
-	 * 
-	 * @param sql
-	 *            SQL
-	 * @param offset
-	 *            オフセット
-	 * @param limit
-	 *            リミット
-	 * @return offset、limitつきのSQL
-	 * @throws OrderByNotFoundRuntimeException
-	 *             <code>order by</code>が見つからない場合。
-	 */
-	protected String convertOffsetLimitSql(String sql, int offset, int limit)
-			throws OrderByNotFoundRuntimeException {
-		StringBuilder buf = new StringBuilder(sql.length() + 150);
-		String lowerSql = sql.toLowerCase();
-		int startOfSelect = lowerSql.indexOf("select");
-		buf.append(sql.substring(0, startOfSelect));
-		buf.append("select * from ( select ");
-		buf.append("row_number() over(");
-		int orderByIndex = lowerSql.lastIndexOf("order by");
-		if (orderByIndex > 0) {
-			buf.append(sql.substring(orderByIndex));
-			sql = StringUtil.rtrim(sql.substring(0, orderByIndex));
-		} else {
-			throw new OrderByNotFoundRuntimeException(sql);
-		}
-		buf.append(") as rownumber_,");
-		buf.append(sql.substring(startOfSelect + 6));
-		buf.append(" ) as temp_ where rownumber_ >= ");
-		buf.append(offset + 1);
-		if (limit > 0) {
-			buf.append(" and rownumber_ <= ");
-			buf.append(offset + limit);
-		}
-		return buf.toString();
-	}
+    }
 }

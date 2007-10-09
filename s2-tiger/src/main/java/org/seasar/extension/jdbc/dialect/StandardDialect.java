@@ -23,7 +23,9 @@ import org.seasar.extension.jdbc.JoinColumnMeta;
 import org.seasar.extension.jdbc.JoinType;
 import org.seasar.extension.jdbc.ValueType;
 import org.seasar.extension.jdbc.WhereClause;
+import org.seasar.extension.jdbc.exception.OrderByNotFoundRuntimeException;
 import org.seasar.extension.jdbc.types.ValueTypes;
+import org.seasar.framework.util.StringUtil;
 
 /**
  * 標準的な方言をあつかうクラスです
@@ -68,5 +70,54 @@ public class StandardDialect implements DbmsDialect {
         fromClause.addSql(joinType, tableName, tableAlias, fkTableAlias,
                 pkTableAlias, joinColumnMetaList);
 
+    }
+
+    /**
+     * 行番号ファンクション名を返します。
+     * 
+     * @return 行番号ファンクション名
+     */
+    public String getRowNumberFunctionName() {
+        return "row_number()";
+    }
+
+    /**
+     * 行番号を使ったSQLに変換します。
+     * 
+     * @param sql
+     *            SQL
+     * @param offset
+     *            オフセット
+     * @param limit
+     *            リミット
+     * @return offset、limitつきのSQL
+     * @throws OrderByNotFoundRuntimeException
+     *             <code>order by</code>が見つからない場合。
+     */
+    protected String convertLimitSqlByRowNumber(String sql, int offset,
+            int limit) throws OrderByNotFoundRuntimeException {
+        StringBuilder buf = new StringBuilder(sql.length() + 150);
+        String lowerSql = sql.toLowerCase();
+        int startOfSelect = lowerSql.indexOf("select");
+        buf.append(sql.substring(0, startOfSelect));
+        buf.append("select * from ( select temp_.*, ");
+        buf.append(getRowNumberFunctionName()).append(" over(");
+        int orderByIndex = lowerSql.lastIndexOf("order by");
+        if (orderByIndex > 0) {
+            buf.append(sql.substring(orderByIndex));
+            sql = StringUtil.rtrim(sql.substring(0, orderByIndex));
+        } else {
+            throw new OrderByNotFoundRuntimeException(sql);
+        }
+        buf.append(") as rownumber_ from ( ");
+        buf.append(sql.substring(startOfSelect));
+        buf.append(" ) as temp_");
+        buf.append(" ) as temp2_ where rownumber_ >= ");
+        buf.append(offset + 1);
+        if (limit > 0) {
+            buf.append(" and rownumber_ <= ");
+            buf.append(offset + limit);
+        }
+        return buf.toString();
     }
 }

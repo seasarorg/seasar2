@@ -17,7 +17,6 @@ package org.seasar.extension.jdbc.query;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 
 import org.seasar.extension.jdbc.DbmsDialect;
@@ -26,7 +25,6 @@ import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.ResultSetHandler;
 import org.seasar.extension.jdbc.Select;
 import org.seasar.extension.jdbc.exception.SNonUniqueResultException;
-import org.seasar.framework.exception.SQLRuntimeException;
 import org.seasar.framework.util.PreparedStatementUtil;
 import org.seasar.framework.util.ResultSetUtil;
 import org.seasar.framework.util.StatementUtil;
@@ -272,30 +270,6 @@ public abstract class AbstractSelect<T, S extends Select<T, S>> extends
         }
         PreparedStatement ps = getPreparedStatement(jdbcContext);
         return PreparedStatementUtil.executeQuery(ps);
-    }
-
-    /**
-     * 結果セットを処理します。
-     * 
-     * @param handler
-     *            結果セットハンドラ
-     * @param rs
-     *            結果セット
-     * @return 処理結果
-     * @throws SQLRuntimeException
-     *             SQL例外が発生した場合。
-     */
-    protected Object handleResultSet(ResultSetHandler handler, ResultSet rs)
-            throws SQLRuntimeException {
-        Object ret = null;
-        try {
-            ret = handler.handle(rs);
-        } catch (SQLException e) {
-            throw new SQLRuntimeException(e);
-        } finally {
-            ResultSetUtil.close(rs);
-        }
-        return ret;
     }
 
     /**
