@@ -124,7 +124,7 @@ public final class ValueTypes {
     /**
      * PostgreSQLの結果セット用の値タイプです。
      */
-    public final static ValueType PostgreRESULT_SET = new PostgreResultSetType();
+    public final static ValueType POSTGRE_RESULT_SET = new PostgreResultSetType();
 
     /**
      * オラクルの結果セット用の値タイプです。
