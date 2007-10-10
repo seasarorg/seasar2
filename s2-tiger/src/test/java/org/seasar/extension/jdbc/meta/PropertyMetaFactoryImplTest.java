@@ -42,7 +42,6 @@ import org.seasar.extension.jdbc.exception.JoinColumnNotAllowedRuntimeException;
 import org.seasar.extension.jdbc.exception.MappedByMandatoryRuntimeException;
 import org.seasar.extension.jdbc.exception.MappedByNotIdenticalRuntimeException;
 import org.seasar.extension.jdbc.exception.MappedByPropertyNotFoundRuntimeException;
-import org.seasar.extension.jdbc.exception.NonRelationshipRuntimeException;
 import org.seasar.extension.jdbc.exception.OneToManyNotGenericsRuntimeException;
 import org.seasar.extension.jdbc.exception.OneToManyNotListRuntimeException;
 import org.seasar.extension.jdbc.exception.RelationshipNotEntityRuntimeException;
@@ -536,23 +535,6 @@ public class PropertyMetaFactoryImplTest extends TestCase {
     /**
      * @throws Exception
      */
-    public void testRelation_dtoNotRelationship() throws Exception {
-        entityMeta.setEntityClass(BadAaa2.class);
-        entityMeta.setName("BadAaa2");
-        Field field = BadAaa2.class.getDeclaredField("myDto2");
-        try {
-            factory.createPropertyMeta(field, entityMeta);
-            fail();
-        } catch (NonRelationshipRuntimeException e) {
-            System.out.println(e);
-            assertEquals("BadAaa2", e.getEntityName());
-            assertEquals("myDto2", e.getPropertyName());
-        }
-    }
-
-    /**
-     * @throws Exception
-     */
     public void testRelation_joinColumnNotAllowed() throws Exception {
         entityMeta.setEntityClass(BadAaa2.class);
         entityMeta.setName("BadAaa2");
@@ -565,6 +547,16 @@ public class PropertyMetaFactoryImplTest extends TestCase {
             assertEquals("BadAaa2", e.getEntityName());
             assertEquals("id", e.getPropertyName());
         }
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testUserDefined() throws Exception {
+        entityMeta.setName("MyAaa");
+        entityMeta.setEntityClass(MyAaa.class);
+        Field field = MyAaa.class.getDeclaredField("myInt");
+        assertNotNull(factory.createPropertyMeta(field, entityMeta));
     }
 
     @Entity
@@ -587,6 +579,11 @@ public class PropertyMetaFactoryImplTest extends TestCase {
         @OneToOne
         @JoinColumn(name = "BBB_ID", referencedColumnName = "ID")
         public MyBbb bbb;
+
+        /**
+         * 
+         */
+        public MyInt myInt;
     }
 
     @Entity
@@ -674,11 +671,6 @@ public class PropertyMetaFactoryImplTest extends TestCase {
          */
         @OneToOne
         public MyDto myDto;
-
-        /**
-         * 
-         */
-        public MyDto myDto2;
 
         /**
          * 
@@ -772,5 +764,32 @@ public class PropertyMetaFactoryImplTest extends TestCase {
 
     private static class MyDto {
 
+    }
+
+    private static class MyInt {
+
+        private int value;
+
+        /**
+         * @param value
+         */
+        public MyInt(int value) {
+            this.value = value;
+        }
+
+        /**
+         * @param i
+         * @return
+         */
+        public static MyInt valueOf(int i) {
+            return new MyInt(i);
+        }
+
+        /**
+         * @return
+         */
+        public int value() {
+            return value;
+        }
     }
 }

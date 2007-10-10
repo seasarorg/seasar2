@@ -40,11 +40,9 @@ import org.seasar.extension.jdbc.exception.JoinColumnNotAllowedRuntimeException;
 import org.seasar.extension.jdbc.exception.MappedByMandatoryRuntimeException;
 import org.seasar.extension.jdbc.exception.MappedByNotIdenticalRuntimeException;
 import org.seasar.extension.jdbc.exception.MappedByPropertyNotFoundRuntimeException;
-import org.seasar.extension.jdbc.exception.NonRelationshipRuntimeException;
 import org.seasar.extension.jdbc.exception.OneToManyNotGenericsRuntimeException;
 import org.seasar.extension.jdbc.exception.OneToManyNotListRuntimeException;
 import org.seasar.extension.jdbc.exception.RelationshipNotEntityRuntimeException;
-import org.seasar.extension.jdbc.types.ValueTypes;
 import org.seasar.framework.container.annotation.tiger.Binding;
 import org.seasar.framework.container.annotation.tiger.BindingType;
 import org.seasar.framework.convention.PersistenceConvention;
@@ -207,10 +205,6 @@ public class PropertyMetaFactoryImpl implements PropertyMetaFactory {
                 ManyToOne manyToOne = field.getAnnotation(ManyToOne.class);
                 if (manyToOne != null) {
                     doManyToOne(propertyMeta, field, entityMeta, manyToOne);
-                } else if (!ValueTypes.isSimpleType(propertyMeta
-                        .getPropertyClass())) {
-                    throw new NonRelationshipRuntimeException(entityMeta
-                            .getName(), propertyMeta.getName());
                 } else if (propertyMeta.getJoinColumnMetaList().size() > 0) {
                     throw new JoinColumnNotAllowedRuntimeException(entityMeta
                             .getName(), propertyMeta.getName());
