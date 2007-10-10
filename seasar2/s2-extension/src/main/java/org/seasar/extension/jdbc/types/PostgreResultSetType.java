@@ -29,12 +29,12 @@ import org.seasar.extension.jdbc.ValueType;
  * @author higa
  * 
  */
-public class ResultSetType extends AbstractValueType {
+public class PostgreResultSetType extends AbstractValueType {
 
     /**
      * インスタンスを構築します。
      */
-    public ResultSetType() {
+    public PostgreResultSetType() {
         super(Types.OTHER);
     }
 
@@ -48,12 +48,12 @@ public class ResultSetType extends AbstractValueType {
     }
 
     public Object getValue(CallableStatement cs, int index) throws SQLException {
-        return cs.getResultSet();
+        return cs.getObject(index);
     }
 
     public Object getValue(CallableStatement cs, String parameterName)
             throws SQLException {
-        return cs.getResultSet();
+        return cs.getObject(parameterName);
     }
 
     public void bindValue(PreparedStatement ps, int index, Object value)

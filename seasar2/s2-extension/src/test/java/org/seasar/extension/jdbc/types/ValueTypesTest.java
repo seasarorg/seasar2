@@ -17,7 +17,6 @@ package org.seasar.extension.jdbc.types;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.GregorianCalendar;
 
 import junit.framework.TestCase;
@@ -36,8 +35,7 @@ public class ValueTypesTest extends TestCase {
     public void testGetValueTypes() throws Exception {
         assertEquals(ValueTypes.TIMESTAMP, ValueTypes
                 .getValueType(GregorianCalendar.class));
-        assertEquals(ValueTypes.RESULT_SET, ValueTypes
-                .getValueType(ArrayList.class));
+
     }
 
     /**

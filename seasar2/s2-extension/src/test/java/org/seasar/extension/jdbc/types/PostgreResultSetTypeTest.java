@@ -15,19 +15,19 @@
  */
 package org.seasar.extension.jdbc.types;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 
 import junit.framework.TestCase;
 
 import org.seasar.framework.mock.sql.MockCallableStatement;
+import org.seasar.framework.mock.sql.MockResultSet;
 
 /**
  * @author higa
  * 
  */
-public class ResultSetTypeTest extends TestCase {
+public class PostgreResultSetTypeTest extends TestCase {
 
     private boolean gotResultSet;
 
@@ -37,12 +37,12 @@ public class ResultSetTypeTest extends TestCase {
      */
     public void testGetValueCallableStatementInt() throws Exception {
         MockCallableStatement cs = new MockCallableStatement(null, null) {
-            public ResultSet getResultSet() throws SQLException {
+            public Object getObject(int index) throws SQLException {
                 gotResultSet = true;
-                return super.getResultSet();
+                return new MockResultSet();
             }
         };
-        ResultSetType rsType = new ResultSetType();
+        PostgreResultSetType rsType = new PostgreResultSetType();
         assertNotNull(rsType.getValue(cs, 1));
         assertTrue(gotResultSet);
     }
@@ -51,7 +51,7 @@ public class ResultSetTypeTest extends TestCase {
      * 
      */
     public void testSqlType() {
-        ResultSetType rsType = new ResultSetType();
+        PostgreResultSetType rsType = new PostgreResultSetType();
         assertEquals(Types.OTHER, rsType.getSqlType());
     }
 }
