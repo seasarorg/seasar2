@@ -58,4 +58,11 @@ public class OracleDialectTest extends TestCase {
         assertEquals(ValueTypes.ORACLE_RESULT_SET, dialect
                 .getValueType(ArrayList.class));
     }
+
+    /**
+     * @throws Exception
+     */
+    public void testNeedsParameterForResultSet() throws Exception {
+        assertTrue(dialect.needsParameterForResultSet());
+    }
 }

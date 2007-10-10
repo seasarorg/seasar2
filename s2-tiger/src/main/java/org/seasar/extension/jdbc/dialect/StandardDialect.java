@@ -56,6 +56,10 @@ public class StandardDialect implements DbmsDialect {
         return true;
     }
 
+    public boolean needsParameterForResultSet() {
+        return false;
+    }
+
     public String convertLimitSql(String sql, int offset, int limit) {
         return sql;
     }

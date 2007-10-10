@@ -31,8 +31,10 @@ import org.seasar.extension.jdbc.ParamType;
 import org.seasar.extension.jdbc.SqlLog;
 import org.seasar.extension.jdbc.SqlLogRegistry;
 import org.seasar.extension.jdbc.SqlLogRegistryLocator;
+import org.seasar.extension.jdbc.dialect.OracleDialect;
 import org.seasar.extension.jdbc.dialect.StandardDialect;
 import org.seasar.extension.jdbc.entity.Aaa;
+import org.seasar.extension.jdbc.exception.FieldNotGenericsRuntimeException;
 import org.seasar.extension.jdbc.manager.JdbcManagerImpl;
 import org.seasar.extension.jta.TransactionManagerImpl;
 import org.seasar.extension.jta.TransactionSynchronizationRegistryImpl;
@@ -181,7 +183,7 @@ public class AbstractProcedureCallTest extends TestCase {
      * @throws Exception
      * 
      */
-    public void testHandleOutParams_resultSet() throws Exception {
+    public void testHandleOutParams_nonParam_resultSet() throws Exception {
         MyCall query = new MyCall(manager);
         MockCallableStatement cs = new MockCallableStatement(null, null) {
 
@@ -205,6 +207,45 @@ public class AbstractProcedureCallTest extends TestCase {
         };
         Field field = MyDto.class.getDeclaredField("aaaList_OUT");
         field.setAccessible(true);
+        query.addNonParam(field);
+        MyDto dto = new MyDto();
+        query.parameter = dto;
+        query.handleOutParams(cs);
+        assertNotNull(dto.aaaList_OUT);
+        assertEquals(1, dto.aaaList_OUT.size());
+        Aaa aaa = dto.aaaList_OUT.get(0);
+        assertEquals(new Integer(1), aaa.id);
+        assertEquals("aaa", aaa.name);
+    }
+
+    /**
+     * @throws Exception
+     * 
+     */
+    public void testHandleOutParams_outParam_resultSet() throws Exception {
+        manager.setDialect(new OracleDialect());
+        MyCall query = new MyCall(manager);
+        MockCallableStatement cs = new MockCallableStatement(null, null) {
+
+            @Override
+            public Object getObject(int parameterIndex) throws SQLException {
+                MockResultSetMetaData rsMeta = new MockResultSetMetaData();
+                MockColumnMetaData columnMeta = new MockColumnMetaData();
+                columnMeta.setColumnLabel("ID");
+                rsMeta.addColumnMetaData(columnMeta);
+                columnMeta = new MockColumnMetaData();
+                columnMeta.setColumnLabel("NAME");
+                rsMeta.addColumnMetaData(columnMeta);
+                MockResultSet rs = new MockResultSet(rsMeta);
+                ArrayMap data = new ArrayMap();
+                data.put("ID", 1);
+                data.put("NAME", "aaa");
+                rs.addRowData(data);
+                return rs;
+            }
+        };
+        Field field = MyDto.class.getDeclaredField("aaaList_OUT");
+        field.setAccessible(true);
         Param param = query.addParam(null, field.getType());
         param.paramType = ParamType.OUT;
         param.field = field;
@@ -216,6 +257,49 @@ public class AbstractProcedureCallTest extends TestCase {
         Aaa aaa = dto.aaaList_OUT.get(0);
         assertEquals(new Integer(1), aaa.id);
         assertEquals("aaa", aaa.name);
+    }
+
+    /**
+     * @throws Exception
+     * 
+     */
+    public void testHandleOutParams_resultSet_notGenerics() throws Exception {
+        manager.setDialect(new OracleDialect());
+        MyCall query = new MyCall(manager);
+        MockCallableStatement cs = new MockCallableStatement(null, null) {
+
+            @Override
+            public Object getObject(int parameterIndex) throws SQLException {
+                MockResultSetMetaData rsMeta = new MockResultSetMetaData();
+                MockColumnMetaData columnMeta = new MockColumnMetaData();
+                columnMeta.setColumnLabel("ID");
+                rsMeta.addColumnMetaData(columnMeta);
+                columnMeta = new MockColumnMetaData();
+                columnMeta.setColumnLabel("NAME");
+                rsMeta.addColumnMetaData(columnMeta);
+                MockResultSet rs = new MockResultSet(rsMeta);
+                ArrayMap data = new ArrayMap();
+                data.put("ID", 1);
+                data.put("NAME", "aaa");
+                rs.addRowData(data);
+                return rs;
+            }
+        };
+        Field field = BadDto.class.getDeclaredField("aaaList_OUT");
+        field.setAccessible(true);
+        Param param = query.addParam(null, field.getType());
+        param.paramType = ParamType.OUT;
+        param.field = field;
+        BadDto dto = new BadDto();
+        query.parameter = dto;
+        query.prepare("call");
+        try {
+            query.handleOutParams(cs);
+            fail();
+        } catch (FieldNotGenericsRuntimeException e) {
+            System.out.println(e);
+            assertEquals(field, e.getField());
+        }
     }
 
     /**
@@ -280,6 +364,21 @@ public class AbstractProcedureCallTest extends TestCase {
         assertEquals("{null = call myfunc()}", sqlLog.getCompleteSql());
     }
 
+    /**
+     * @throws Exception
+     * 
+     */
+    public void testNonParam() throws Exception {
+        MyCall query = new MyCall(manager);
+        Field field = MyDto.class.getDeclaredField("aaaList_OUT");
+        field.setAccessible(true);
+        Param param = query.addNonParam(field);
+        assertNotNull(param);
+        assertEquals(1, query.getNonParamSize());
+        assertSame(param, query.getNonParam(0));
+        assertSame(field, param.field);
+    }
+
     private static class MyCall extends AbstractProcedureCall<MyCall> {
 
         /**
@@ -302,6 +401,15 @@ public class AbstractProcedureCallTest extends TestCase {
          * 
          */
         public List<Aaa> aaaList_OUT;
+    }
+
+    private static final class BadDto {
+
+        /**
+         * 
+         */
+        @SuppressWarnings("unchecked")
+        public List aaaList_OUT;
     }
 
     private static final class MyDto2 {

@@ -15,6 +15,11 @@
  */
 package org.seasar.extension.jdbc.dialect;
 
+import java.util.List;
+
+import org.seasar.extension.jdbc.ValueType;
+import org.seasar.extension.jdbc.types.ValueTypes;
+
 /**
  * PostgreSQL用の方言をあつかうクラスです。
  * 
@@ -23,28 +28,41 @@ package org.seasar.extension.jdbc.dialect;
  */
 public class PostgreDialect extends StandardDialect {
 
-	@Override
-	public String getName() {
-		return "postgre";
-	}
+    @Override
+    public String getName() {
+        return "postgre";
+    }
 
-	@Override
-	public boolean supportsLimit() {
-		return true;
-	}
+    @Override
+    public boolean supportsLimit() {
+        return true;
+    }
 
-	@Override
-	public String convertLimitSql(String sql, int offset, int limit) {
-		StringBuilder buf = new StringBuilder(sql.length() + 20);
-		buf.append(sql);
-		if (limit > 0) {
-			buf.append(" limit ");
-			buf.append(limit);
-		}
-		if (offset > 0) {
-			buf.append(" offset ");
-			buf.append(offset);
-		}
-		return buf.toString();
-	}
+    @Override
+    public boolean needsParameterForResultSet() {
+        return true;
+    }
+
+    @Override
+    public String convertLimitSql(String sql, int offset, int limit) {
+        StringBuilder buf = new StringBuilder(sql.length() + 20);
+        buf.append(sql);
+        if (limit > 0) {
+            buf.append(" limit ");
+            buf.append(limit);
+        }
+        if (offset > 0) {
+            buf.append(" offset ");
+            buf.append(offset);
+        }
+        return buf.toString();
+    }
+
+    @Override
+    public ValueType getValueType(Class<?> clazz) {
+        if (List.class.isAssignableFrom(clazz)) {
+            return ValueTypes.POSTGRE_RESULT_SET;
+        }
+        return ValueTypes.getValueType(clazz);
+    }
 }

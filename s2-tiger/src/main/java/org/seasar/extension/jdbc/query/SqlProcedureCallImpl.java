@@ -16,6 +16,7 @@
 package org.seasar.extension.jdbc.query;
 
 import java.lang.reflect.Field;
+import java.util.List;
 
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.ParamType;
@@ -98,6 +99,8 @@ public class SqlProcedureCallImpl extends
         if (parameter == null) {
             return;
         }
+        boolean needsParameterForResultSet = jdbcManager.getDialect()
+                .needsParameterForResultSet();
         Class<?> paramClass = parameter.getClass();
         if (ValueTypes.isSimpleType(paramClass)) {
             addParam(parameter, paramClass);
@@ -115,9 +118,14 @@ public class SqlProcedureCallImpl extends
                     p.paramType = ParamType.IN_OUT;
                     p.field = f;
                 } else if (name.endsWith(ParamType.OUT.getSuffix())) {
-                    Param p = addParam(null, clazz);
-                    p.paramType = ParamType.OUT;
-                    p.field = f;
+                    if (List.class.isAssignableFrom(clazz)
+                            && !needsParameterForResultSet) {
+                        addNonParam(f);
+                    } else {
+                        Param p = addParam(null, clazz);
+                        p.paramType = ParamType.OUT;
+                        p.field = f;
+                    }
                 } else {
                     addParam(FieldUtil.get(f, parameter), clazz);
                 }

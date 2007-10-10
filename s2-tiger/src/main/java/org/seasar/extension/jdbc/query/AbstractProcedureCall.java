@@ -15,11 +15,13 @@
  */
 package org.seasar.extension.jdbc.query;
 
+import java.lang.reflect.Field;
 import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.seasar.extension.jdbc.DbmsDialect;
 import org.seasar.extension.jdbc.JdbcContext;
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.ParamType;
@@ -57,6 +59,11 @@ public abstract class AbstractProcedureCall<S extends ProcedureCall<S>> extends
      * パラメータです。
      */
     protected Object parameter;
+
+    /**
+     * MS SQLServerのような結果セットを<code>OUT</code>パラメータにマッピングしない場合のパラメータのリストです。
+     */
+    protected List<Param> nonParamList = new ArrayList<Param>();
 
     /**
      * {@link AbstractProcedureCall}を作成します。
@@ -157,33 +164,83 @@ public abstract class AbstractProcedureCall<S extends ProcedureCall<S>> extends
      *            呼び出し可能なステートメント
      */
     protected void handleOutParams(CallableStatement cs) {
-        DbmsDialect dialect = jdbcManager.getDialect();
-        int size = getParamSize();
         try {
-            for (int i = 0; i < size; i++) {
+            for (int i = 0; i < nonParamList.size(); i++) {
+                Param param = nonParamList.get(i);
+                Object value = handleResultSet(param.field, cs.getResultSet());
+                FieldUtil.set(param.field, parameter, value);
+            }
+            for (int i = 0; i < getParamSize(); i++) {
                 Param param = getParam(i);
                 if (param.paramType == ParamType.IN) {
                     continue;
                 }
                 Object value = param.valueType.getValue(cs, i + 1);
                 if (value instanceof ResultSet) {
-                    ResultSet rs = (ResultSet) value;
-                    Class<?> baseClass = ReflectionUtil
-                            .getElementTypeOfListFromFieldType(param.field);
-                    if (baseClass == null) {
-                        logger.log("ESSR0709", new Object[] {
-                                callerClass.getName(), callerMethodName });
-                        throw new FieldNotGenericsRuntimeException(param.field);
-                    }
-                    ResultSetHandler handler = new BeanListResultSetHandler(
-                            baseClass, dialect, null);
-                    value = handleResultSet(handler, rs);
+                    value = handleResultSet(param.field, (ResultSet) value);
                 }
                 FieldUtil.set(param.field, parameter, value);
             }
         } catch (SQLException e) {
             throw new SQLRuntimeException(e);
         }
+    }
+
+    /**
+     * 結果セットを処理します。
+     * 
+     * @param field
+     *            フィールド
+     * @param rs
+     *            結果セット
+     * @return 処理した結果
+     */
+    protected Object handleResultSet(Field field, ResultSet rs) {
+        Class<?> baseClass = ReflectionUtil
+                .getElementTypeOfListFromFieldType(field);
+        if (baseClass == null) {
+            logger.log("ESSR0709", new Object[] { callerClass.getName(),
+                    callerMethodName });
+            throw new FieldNotGenericsRuntimeException(field);
+        }
+        ResultSetHandler handler = new BeanListResultSetHandler(baseClass,
+                jdbcManager.getDialect(), null);
+        return handleResultSet(handler, rs);
+    }
+
+    /**
+     * 直接パラメータでは指定しないパラメータの数を返します。
+     * 
+     * @return 直接パラメータでは指定しないパラメータの数
+     */
+    protected int getNonParamSize() {
+        return nonParamList.size();
+    }
+
+    /**
+     * 直接パラメータでは指定しないパラメータを返します。
+     * 
+     * @param index
+     *            インデックス
+     * @return 直接パラメータでは指定しないパラメータ
+     */
+    protected Param getNonParam(int index) {
+        return nonParamList.get(index);
+    }
+
+    /**
+     * 直接パラメータでは指定しないパラメータを追加します。
+     * 
+     * @param field
+     *            フィールド
+     * @return 追加されたパラメータ
+     */
+    protected Param addNonParam(Field field) {
+        Param param = new Param();
+        param.field = field;
+        param.paramType = ParamType.OUT;
+        nonParamList.add(param);
+        return param;
     }
 
     /**

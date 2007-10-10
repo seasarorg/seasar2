@@ -71,6 +71,11 @@ public class OracleDialect extends StandardDialect {
     }
 
     @Override
+    public boolean needsParameterForResultSet() {
+        return true;
+    }
+
+    @Override
     public String convertLimitSql(String sql, int offset, int limit) {
         StringBuilder buf = new StringBuilder(sql.length() + 100);
         sql = sql.trim();
