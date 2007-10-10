@@ -256,6 +256,7 @@ public final class ValueTypes {
             int mod = method.getModifiers();
             if (method.getName().equals("valueOf")
                     && method.getParameterTypes().length == 1
+                    && method.getReturnType() == clazz
                     && ModifierUtil.isPublic(mod) && ModifierUtil.isStatic(mod)) {
                 valueOfMethods.add(method);
             } else if (method.getName().equals("value")
