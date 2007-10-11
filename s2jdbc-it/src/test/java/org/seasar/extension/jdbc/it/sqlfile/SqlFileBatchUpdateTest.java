@@ -23,7 +23,7 @@ import org.seasar.extension.unit.S2TestCase;
  * @author taedium
  * 
  */
-public class SqlFileUpdateTest extends S2TestCase {
+public class SqlFileBatchUpdateTest extends S2TestCase {
 
     private JdbcManager jdbcManager;
 
@@ -39,33 +39,37 @@ public class SqlFileUpdateTest extends S2TestCase {
      */
     public void test_no_parameterTx() throws Exception {
         String path = getClass().getName().replace(".", "/") + "_no.sql";
-        int result = jdbcManager.updateBySqlFile(path, null).execute();
-        assertEquals(1, result);
-        Department department = jdbcManager.selectBySql(Department.class,
-                "select * from Department where department_id = 1")
-                .getSingleResult();
-        assertEquals(1, department.departmentId);
-        assertEquals(10, department.departmentNo);
-        assertEquals("ACCOUNTING", department.departmentName);
-        assertEquals("hoge", department.location);
-        assertEquals(1, department.version);
+        int[] result = jdbcManager.updateBatchBySqlFile(path, null, null)
+                .executeBatch();
+        assertEquals(2, result.length);
     }
 
     /**
      * 
      * @throws Exception
      */
-    public void test_simple_parameterTx() throws Exception {
+    public void test_simpleType_parameterTx() throws Exception {
         String path = getClass().getName().replace(".", "/")
                 + "_simpleType.sql";
-        int result = jdbcManager.updateBySqlFile(path, 2).execute();
-        assertEquals(1, result);
+        int[] result = jdbcManager.updateBatchBySqlFile(path, 2, 3)
+                .executeBatch();
+        assertEquals(2, result.length);
+
         Department department = jdbcManager.selectBySql(Department.class,
                 "select * from Department where department_id = 2")
                 .getSingleResult();
         assertEquals(2, department.departmentId);
         assertEquals(20, department.departmentNo);
         assertEquals("RESEARCH", department.departmentName);
+        assertEquals("hoge", department.location);
+        assertEquals(1, department.version);
+
+        department = jdbcManager.selectBySql(Department.class,
+                "select * from Department where department_id = 3")
+                .getSingleResult();
+        assertEquals(3, department.departmentId);
+        assertEquals(30, department.departmentNo);
+        assertEquals("SALES", department.departmentName);
         assertEquals("hoge", department.location);
         assertEquals(1, department.version);
     }
@@ -76,11 +80,16 @@ public class SqlFileUpdateTest extends S2TestCase {
      */
     public void test_dto_parameterTx() throws Exception {
         String path = getClass().getName().replace(".", "/") + "_dto.sql";
-        MyDto myDto = new MyDto();
-        myDto.departmentId = 2;
-        myDto.location = "foo";
-        int result = jdbcManager.updateBySqlFile(path, myDto).execute();
-        assertEquals(1, result);
+        MyDto dto = new MyDto();
+        dto.departmentId = 2;
+        dto.location = "foo";
+        MyDto dto2 = new MyDto();
+        dto2.departmentId = 3;
+        dto2.location = "bar";
+        int[] result = jdbcManager.updateBatchBySqlFile(path, dto, dto2)
+                .executeBatch();
+        assertEquals(2, result.length);
+
         Department department = jdbcManager.selectBySql(Department.class,
                 "select * from Department where department_id = 2")
                 .getSingleResult();
@@ -88,6 +97,15 @@ public class SqlFileUpdateTest extends S2TestCase {
         assertEquals(20, department.departmentNo);
         assertEquals("RESEARCH", department.departmentName);
         assertEquals("foo", department.location);
+        assertEquals(1, department.version);
+
+        department = jdbcManager.selectBySql(Department.class,
+                "select * from Department where department_id = 3")
+                .getSingleResult();
+        assertEquals(3, department.departmentId);
+        assertEquals(30, department.departmentNo);
+        assertEquals("SALES", department.departmentName);
+        assertEquals("bar", department.location);
         assertEquals(1, department.version);
     }
 
