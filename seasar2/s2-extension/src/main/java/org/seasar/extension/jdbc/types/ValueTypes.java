@@ -19,6 +19,10 @@ import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
+import java.sql.CallableStatement;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.sql.Types;
 import java.util.ArrayList;
@@ -30,6 +34,9 @@ import java.util.Map;
 
 import org.seasar.extension.jdbc.ValueType;
 import org.seasar.framework.util.ConstructorUtil;
+import org.seasar.framework.util.Disposable;
+import org.seasar.framework.util.DisposableUtil;
+import org.seasar.framework.util.MapUtil;
 import org.seasar.framework.util.MethodUtil;
 import org.seasar.framework.util.ModifierUtil;
 
@@ -136,6 +143,8 @@ public final class ValueTypes {
      */
     public final static ValueType OBJECT = new ObjectType();
 
+    private static final ValueType NULL = new NullType();
+
     private static final Class BYTE_ARRAY_CLASS = new byte[0].getClass();
 
     private static Map types = new HashMap();
@@ -143,6 +152,10 @@ public final class ValueTypes {
     private static Constructor enumTypeConstructor;
 
     private static Method isEnumMethod;
+
+    private static volatile boolean initialized;
+
+    private static Map valueTypeCache = MapUtil.createHashMap(50);
 
     static {
         registerValueType(String.class, STRING);
@@ -180,9 +193,30 @@ public final class ValueTypes {
                     .getConstructor(new Class[] { Class.class });
         } catch (Throwable ignore) {
         }
+        initialize();
     }
 
     private ValueTypes() {
+    }
+
+    /**
+     * 初期化を行ないます。
+     */
+    public static void initialize() {
+        DisposableUtil.add(new Disposable() {
+            public void dispose() {
+                clear();
+            }
+        });
+        initialized = true;
+    }
+
+    /**
+     * キャッシュをクリアします。
+     */
+    public static void clear() {
+        valueTypeCache.clear();
+        initialized = false;
     }
 
     /**
@@ -203,7 +237,7 @@ public final class ValueTypes {
      */
     public static ValueType getValueType(Object obj) {
         if (obj == null) {
-            return OBJECT;
+            throw new NullPointerException("obj");
         }
         return getValueType(obj.getClass());
     }
@@ -216,7 +250,7 @@ public final class ValueTypes {
      */
     public static ValueType getValueType(Class clazz) {
         if (clazz == null) {
-            return OBJECT;
+            throw new NullPointerException("clazz");
         }
         for (Class c = clazz; c != null && c != Object.class; c = c
                 .getSuperclass()) {
@@ -225,6 +259,47 @@ public final class ValueTypes {
                 return valueType;
             }
         }
+        ValueType valueType = getCachedValueType(clazz);
+        if (valueType != null) {
+            return valueType;
+        }
+        return null;
+    }
+
+    private static ValueType getValueType0(Class clazz) {
+        return (ValueType) types.get(clazz);
+    }
+
+    private static boolean hasCachedValueType(Class clazz) {
+        return getCachedValueType(clazz) != null;
+    }
+
+    private static ValueType getCachedValueType(Class clazz) {
+        if (!initialized) {
+            initialize();
+        }
+        ValueType valueType = (ValueType) valueTypeCache.get(clazz.getName());
+        if (valueType == NULL) {
+            return null;
+        }
+        if (valueType != null) {
+            return valueType;
+        }
+        valueType = createEnumValueType(clazz);
+        if (valueType != null) {
+            valueTypeCache.put(clazz.getName(), valueType);
+            return valueType;
+        }
+        valueType = createUserDefineValueType(clazz);
+        if (valueType != null) {
+            valueTypeCache.put(clazz.getName(), valueType);
+            return valueType;
+        }
+        valueTypeCache.put(clazz.getName(), NULL);
+        return null;
+    }
+
+    private static ValueType createEnumValueType(Class clazz) {
         if (enumTypeConstructor != null
                 && isEnumMethod != null
                 && MethodUtil.invoke(isEnumMethod, clazz, null).equals(
@@ -232,15 +307,7 @@ public final class ValueTypes {
             return (ValueType) ConstructorUtil.newInstance(enumTypeConstructor,
                     new Class[] { clazz });
         }
-        ValueType valueType = createUserDefineValueType(clazz);
-        if (valueType != null) {
-            return valueType;
-        }
-        return OBJECT;
-    }
-
-    private static ValueType getValueType0(Class clazz) {
-        return (ValueType) types.get(clazz);
+        return null;
     }
 
     private static ValueType createUserDefineValueType(Class clazz) {
@@ -351,16 +418,54 @@ public final class ValueTypes {
         if (clazz == null) {
             throw new NullPointerException("clazz");
         }
-        return clazz == String.class
-                || clazz.isPrimitive()
-                || clazz == Boolean.class
-                || clazz == Character.class
+        return clazz == String.class || clazz.isPrimitive()
+                || clazz == Boolean.class || clazz == Character.class
                 || Number.class.isAssignableFrom(clazz)
                 || Date.class.isAssignableFrom(clazz)
                 || Calendar.class.isAssignableFrom(clazz)
-                || clazz == BYTE_ARRAY_CLASS
-                || isEnumMethod != null
-                && MethodUtil.invoke(isEnumMethod, clazz, null).equals(
-                        Boolean.TRUE);
+                || clazz == BYTE_ARRAY_CLASS || hasCachedValueType(clazz);
+    }
+
+    private static class NullType implements ValueType {
+
+        public void bindValue(CallableStatement cs, String parameterName,
+                Object value) throws SQLException {
+            throw new SQLException("not supported");
+        }
+
+        public void bindValue(PreparedStatement ps, int index, Object value)
+                throws SQLException {
+            throw new SQLException("not supported");
+        }
+
+        public Object getValue(CallableStatement cs, int index)
+                throws SQLException {
+            throw new SQLException("not supported");
+        }
+
+        public Object getValue(CallableStatement cs, String parameterName)
+                throws SQLException {
+            throw new SQLException("not supported");
+        }
+
+        public Object getValue(ResultSet resultSet, int index)
+                throws SQLException {
+            throw new SQLException("not supported");
+        }
+
+        public Object getValue(ResultSet resultSet, String columnName)
+                throws SQLException {
+            throw new SQLException("not supported");
+        }
+
+        public void registerOutParameter(CallableStatement cs, int index)
+                throws SQLException {
+            throw new SQLException("not supported");
+        }
+
+        public void registerOutParameter(CallableStatement cs,
+                String parameterName) throws SQLException {
+            throw new SQLException("not supported");
+        }
     }
 }

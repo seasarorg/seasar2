@@ -32,10 +32,18 @@ public class ValueTypesTest extends TestCase {
     /**
      * @throws Exception
      */
-    public void testGetValueTypes() throws Exception {
+    public void testGetValueType() throws Exception {
         assertEquals(ValueTypes.TIMESTAMP, ValueTypes
                 .getValueType(GregorianCalendar.class));
 
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testGetValueType_unknownClass() throws Exception {
+        assertNull(ValueTypes.getValueType(getClass()));
+        ValueTypes.getValueType(getClass());
     }
 
     /**
