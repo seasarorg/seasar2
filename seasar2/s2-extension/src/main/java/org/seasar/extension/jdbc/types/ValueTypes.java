@@ -237,7 +237,7 @@ public final class ValueTypes {
      */
     public static ValueType getValueType(Object obj) {
         if (obj == null) {
-            throw new NullPointerException("obj");
+            return OBJECT;
         }
         return getValueType(obj.getClass());
     }
@@ -250,7 +250,7 @@ public final class ValueTypes {
      */
     public static ValueType getValueType(Class clazz) {
         if (clazz == null) {
-            throw new NullPointerException("clazz");
+            return OBJECT;
         }
         for (Class c = clazz; c != null && c != Object.class; c = c
                 .getSuperclass()) {
