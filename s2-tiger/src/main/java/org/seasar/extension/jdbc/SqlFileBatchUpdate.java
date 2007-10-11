@@ -19,16 +19,9 @@ package org.seasar.extension.jdbc;
  * SQL文を使用するバッチ更新(insert, update, delete)です。
  * 
  * @author taedium
- * 
+ * @param <T>
+ *            パラメータの型です。
  */
-public interface SqlFileBatchUpdate extends BatchUpdate<SqlFileBatchUpdate> {
-
-    /**
-     * パラメータを設定します。
-     * 
-     * @param param
-     *            パラメータ
-     * @return SQLバッチ更新
-     */
-    SqlFileBatchUpdate param(Object param);
+public interface SqlFileBatchUpdate<T> extends
+        BatchUpdate<SqlFileBatchUpdate<T>> {
 }

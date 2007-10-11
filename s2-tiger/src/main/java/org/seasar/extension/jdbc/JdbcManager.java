@@ -156,34 +156,61 @@ public interface JdbcManager {
      * 
      * @param path
      *            SQLファイルのパス
-     * @param paramClass
-     *            パラメータのクラス
+     * @param parameter
+     *            <p>
+     *            パラメータ。
+     *            </p>
+     *            <p>
+     *            パラメータが1つしかない場合は、値を直接指定します。 パラメータが複数ある場合は、JavaBeansを作って、
+     *            プロパティ名をSQLファイルのバインド変数名とあわせます。
+     *            JavaBeansはpublicフィールドで定義することもできます。
+     *            </p>
      * @return SQLファイル更新
      * @see SqlFileUpdate
      */
-    SqlFileUpdate updateBySqlFile(String path, Class<?> paramClass);
+    SqlFileUpdate updateBySqlFile(String path, Object parameter);
 
     /**
      * SQLバッチファイル更新を作成します。
      * 
+     * @param <T>
+     *            パラメータの型です。
      * @param path
      *            SQLファイルのパス
-     * @return SQLバッチファイル更新
-     * @see #updateBatchBySqlFile(String, Class)
-     */
-    SqlFileBatchUpdate updateBatchBySqlFile(String path);
-
-    /**
-     * SQLバッチファイル更新を作成します。
-     * 
-     * @param path
-     *            SQLファイルのパス
-     * @param paramClass
-     *            パラメータのクラス
+     * @param params
+     *            <p>
+     *            パラメータのリスト。
+     *            </p>
+     *            <p>
+     *            パラメータが1つしかない場合は、値のリストを指定します。 パラメータが複数ある場合は、JavaBeansを作って、
+     *            プロパティ名をSQLファイルのバインド変数名とあわせ、JavaBeansのリストを指定します。
+     *            JavaBeansはpublicフィールドで定義することもできます。
+     *            </p>
      * @return SQLバッチファイル更新
      * @see SqlFileBatchUpdate
      */
-    SqlFileBatchUpdate updateBatchBySqlFile(String path, Class<?> paramClass);
+    <T> SqlFileBatchUpdate<T> updateBatchBySqlFile(String path, List<T> params);
+
+    /**
+     * SQLバッチファイル更新を作成します。
+     * 
+     * @param <T>
+     *            パラメータの型です。
+     * @param path
+     *            SQLファイルのパス
+     * @param params
+     *            <p>
+     *            パラメータの配列。
+     *            </p>
+     *            <p>
+     *            パラメータが1つしかない場合は、値の配列を指定します。 パラメータが複数ある場合は、JavaBeansを作って、
+     *            プロパティ名をSQLファイルのバインド変数名とあわせ、JavaBeansの配列を指定します。
+     *            JavaBeansはpublicフィールドで定義することもできます。
+     *            </p>
+     * @return SQLバッチファイル更新
+     * @see SqlFileBatchUpdate
+     */
+    <T> SqlFileBatchUpdate<T> updateBatchBySqlFile(String path, T... params);
 
     /**
      * 自動検索を作成します。

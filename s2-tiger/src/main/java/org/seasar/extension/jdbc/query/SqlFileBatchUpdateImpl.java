@@ -16,13 +16,11 @@
 package org.seasar.extension.jdbc.query;
 
 import java.sql.PreparedStatement;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.seasar.extension.jdbc.JdbcContext;
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.SqlFileBatchUpdate;
-import org.seasar.extension.jdbc.exception.IllegalParamTypeRuntimeException;
 import org.seasar.extension.jdbc.types.ValueTypes;
 import org.seasar.extension.sql.Node;
 import org.seasar.extension.sql.SqlContext;
@@ -39,15 +37,21 @@ import org.seasar.framework.util.StatementUtil;
  * {@link SqlFileBatchUpdate}の実装クラスです。
  * 
  * @author taedium
- * 
+ * @param <T>
+ *            パラメータの型です。
  */
-public class SqlFileBatchUpdateImpl extends AbstractQuery<SqlFileBatchUpdate>
-        implements SqlFileBatchUpdate {
+public class SqlFileBatchUpdateImpl<T> extends
+        AbstractQuery<SqlFileBatchUpdate<T>> implements SqlFileBatchUpdate<T> {
 
     /**
      * SQLファイルのパスです。
      */
     protected String path;
+
+    /**
+     * パラメータの配列のリストです。
+     */
+    protected List<T> parameterList;
 
     /**
      * SQLの解析ノードです。
@@ -60,45 +64,23 @@ public class SqlFileBatchUpdateImpl extends AbstractQuery<SqlFileBatchUpdate>
     protected SqlContext sqlContext;
 
     /**
-     * パラメータのクラスです。
-     */
-    protected Class<?> paramClass;
-
-    /**
-     * パラメータの配列のリストです。
-     */
-    protected List<Object> paramsList = new ArrayList<Object>();
-
-    /**
      * {@link SqlFileBatchUpdate}を作成します。
      * 
      * @param jdbcManager
      *            JDBCマネージャ
      * @param path
      *            SQLファイルのパス
-     */
-    public SqlFileBatchUpdateImpl(JdbcManager jdbcManager, String path) {
-        this(jdbcManager, path, null);
-    }
-
-    /**
-     * {@link SqlFileBatchUpdate}を作成します。
-     * 
-     * @param jdbcManager
-     *            JDBCマネージャ
-     * @param path
-     *            SQLファイルのパス
-     * @param paramClass
-     *            パラメータのクラス
+     * @param parameterList
+     *            パラメータのリスト
      */
     public SqlFileBatchUpdateImpl(JdbcManager jdbcManager, String path,
-            Class<?> paramClass) {
+            List<T> parameterList) {
         super(jdbcManager);
         if (path == null) {
             throw new NullPointerException("path");
         }
         this.path = path;
-        this.paramClass = paramClass;
+        this.parameterList = parameterList;
     }
 
     public int[] executeBatch() {
@@ -107,9 +89,8 @@ public class SqlFileBatchUpdateImpl extends AbstractQuery<SqlFileBatchUpdate>
         JdbcContext jdbcContext = jdbcManager.getJdbcContext();
         try {
             PreparedStatement ps = getPreparedStatement(jdbcContext);
-            for (int i = 0; i < paramsList.size(); ++i) {
-                Object param = paramsList.get(i);
-                prepareParameter(param);
+            for (T parameter : parameterList) {
+                prepareParameter(parameter);
                 prepareSql();
                 logSql();
                 prepareInParams(ps);
@@ -123,19 +104,6 @@ public class SqlFileBatchUpdateImpl extends AbstractQuery<SqlFileBatchUpdate>
             }
         }
         return ret;
-    }
-
-    public SqlFileBatchUpdate param(Object param) {
-        if (paramClass == null && param != null) {
-            throw new IllegalParamTypeRuntimeException(null, param.getClass());
-        } else if (paramClass != null && param != null) {
-            if (paramClass != param.getClass()) {
-                throw new IllegalParamTypeRuntimeException(paramClass, param
-                        .getClass());
-            }
-        }
-        paramsList.add(param);
-        return this;
     }
 
     /**
@@ -190,13 +158,14 @@ public class SqlFileBatchUpdateImpl extends AbstractQuery<SqlFileBatchUpdate>
      * @param parameter
      *            パラメータ
      */
-    protected void prepareParameter(Object parameter) {
+    protected void prepareParameter(T parameter) {
         sqlContext = new SqlContextImpl();
-        if (paramClass != null) {
-            if (ValueTypes.isSimpleType(paramClass)) {
-                sqlContext.addArg("$1", parameter, paramClass);
+        if (parameter != null) {
+            Class<?> clazz = parameter.getClass();
+            if (ValueTypes.isSimpleType(clazz)) {
+                sqlContext.addArg("$1", parameter, clazz);
             } else {
-                BeanDesc beanDesc = BeanDescFactory.getBeanDesc(paramClass);
+                BeanDesc beanDesc = BeanDescFactory.getBeanDesc(clazz);
                 for (int i = 0; i < beanDesc.getPropertyDescSize(); i++) {
                     PropertyDesc pd = beanDesc.getPropertyDesc(i);
                     if (!pd.isReadable()) {
