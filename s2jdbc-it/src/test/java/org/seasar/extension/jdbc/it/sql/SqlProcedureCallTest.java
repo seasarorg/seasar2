@@ -71,9 +71,15 @@ public class SqlProcedureCallTest extends S2TestCase {
      * @throws Exception
      */
     public void test_one_result() throws Exception {
+        String query = null;
+        if (jdbcManager.getDialect().needsParameterForResultSet()) {
+            query = "{call ONE_RESULT(?, ?)}";
+        } else {
+            query = "{call ONE_RESULT(?)}";
+        }
         OneResultsDto dto = new OneResultsDto();
         dto.employeeId = 10;
-        jdbcManager.callBySql("{call ONE_RESULT(?, ?)}", dto).call();
+        jdbcManager.callBySql(query, dto).call();
         List<Employee> employees = dto.employees_OUT;
         assertNotNull(employees);
         assertEquals(4, employees.size());
@@ -88,10 +94,16 @@ public class SqlProcedureCallTest extends S2TestCase {
      * @throws Exception
      */
     public void test_two_results() throws Exception {
+        String query = null;
+        if (jdbcManager.getDialect().needsParameterForResultSet()) {
+            query = "{call TWO_RESULTS(?, ?, ?, ?)}";
+        } else {
+            query = "{call TWO_RESULTS(?, ?)}";
+        }
         TwoResultsDto dto = new TwoResultsDto();
         dto.employeeId = 10;
         dto.departmentId = 2;
-        jdbcManager.callBySql("{call TWO_RESULTS(?, ?, ?, ?)}", dto).call();
+        jdbcManager.callBySql(query, dto).call();
         List<Employee> employees = dto.employees_OUT;
         assertNotNull(employees);
         assertEquals(4, employees.size());

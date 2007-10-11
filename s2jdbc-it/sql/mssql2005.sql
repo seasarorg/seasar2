@@ -34,3 +34,56 @@ INSERT INTO EMPLOYEE VALUES(11,7876,'ADAMS',8,'1983-01-12',1100,2,11,1);
 INSERT INTO EMPLOYEE VALUES(12,7900,'JAMES',6,'1981-12-03',950,3,12,1);
 INSERT INTO EMPLOYEE VALUES(13,7902,'FORD',4,'1981-12-03',3000,2,13,1);
 INSERT INTO EMPLOYEE VALUES(14,7934,'MILLER',7,'1982-01-23',1300,1,14,1);
+GO
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[NO_PARAM] 
+AS
+BEGIN
+    SET NOCOUNT ON;
+END
+GO
+
+CREATE PROCEDURE [dbo].[SIMPLETYPE_PARAM]
+    @param1 int
+AS
+BEGIN
+    SET NOCOUNT ON;
+END
+GO
+
+CREATE PROCEDURE [dbo].[DTO_PARAM]
+    @param1 int,
+    @param2 int OUTPUT,
+    @param3 int OUTPUT
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SET @param2 = @param2 + @param1;
+    SET @param3 = @param1;
+END
+GO
+
+CREATE PROCEDURE [dbo].[ONE_RESULT]
+    @employeeId int
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SELECT * FROM EMPLOYEE WHERE employee_id > @employeeId ORDER BY employee_id;
+END
+GO
+
+CREATE PROCEDURE [dbo].[TWO_RESULTS]
+    @employeeId int,
+    @departmentId int
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SELECT * FROM EMPLOYEE WHERE employee_id > @employeeId ORDER BY employee_id;  
+    SELECT * FROM DEPARTMENT WHERE department_id > @departmentId ORDER BY department_id;
+END
+GO
