@@ -22,6 +22,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinColumns;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -76,9 +77,13 @@ public class PropertyMetaFactoryImpl implements PropertyMetaFactory {
         doTransient(propertyMeta, field, entityMeta);
         if (!propertyMeta.isTransient()) {
             doColumnMeta(propertyMeta, field, entityMeta);
-            doId(propertyMeta, field, entityMeta);
-            doVersion(propertyMeta, field, entityMeta);
-            doRelationship(propertyMeta, field, entityMeta);
+            if (propertyMeta.getColumnMeta() != null) {
+                doId(propertyMeta, field, entityMeta);
+                doVersion(propertyMeta, field, entityMeta);
+                doLob(propertyMeta, field, entityMeta);
+            } else {
+                doRelationship(propertyMeta, field, entityMeta);
+            }
         }
         doCustomize(propertyMeta, field, entityMeta);
         return propertyMeta;
@@ -148,9 +153,7 @@ public class PropertyMetaFactoryImpl implements PropertyMetaFactory {
     protected void doId(PropertyMeta propertyMeta, Field field,
             @SuppressWarnings("unused")
             EntityMeta entityMeta) {
-        if (propertyMeta.getColumnMeta() != null) {
-            propertyMeta.setId(field.getAnnotation(Id.class) != null);
-        }
+        propertyMeta.setId(field.getAnnotation(Id.class) != null);
     }
 
     /**
@@ -166,9 +169,7 @@ public class PropertyMetaFactoryImpl implements PropertyMetaFactory {
     protected void doVersion(PropertyMeta propertyMeta, Field field,
             @SuppressWarnings("unused")
             EntityMeta entityMeta) {
-        if (propertyMeta.getColumnMeta() != null) {
-            propertyMeta.setVersion(field.getAnnotation(Version.class) != null);
-        }
+        propertyMeta.setVersion(field.getAnnotation(Version.class) != null);
     }
 
     /**
@@ -189,6 +190,22 @@ public class PropertyMetaFactoryImpl implements PropertyMetaFactory {
     }
 
     /**
+     * <code>LOB</code>かどうかを処理します。
+     * 
+     * @param propertyMeta
+     *            プロパティメタデータ
+     * @param field
+     *            フィールド
+     * @param entityMeta
+     *            エンティティメタデータ
+     */
+    protected void doLob(PropertyMeta propertyMeta, Field field,
+            @SuppressWarnings("unused")
+            EntityMeta entityMeta) {
+        propertyMeta.setLob(field.getAnnotation(Lob.class) != null);
+    }
+
+    /**
      * 関連を処理します。
      * 
      * @param propertyMeta
@@ -200,9 +217,6 @@ public class PropertyMetaFactoryImpl implements PropertyMetaFactory {
      */
     protected void doRelationship(PropertyMeta propertyMeta, Field field,
             EntityMeta entityMeta) {
-        if (propertyMeta.getColumnMeta() != null || propertyMeta.isTransient()) {
-            return;
-        }
         doJoinColumn(propertyMeta, field, entityMeta);
         OneToOne oneToOne = field.getAnnotation(OneToOne.class);
         if (oneToOne != null) {

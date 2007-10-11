@@ -130,6 +130,18 @@ public class AbstractQueryTest extends TestCase {
     }
 
     /**
+     * 
+     */
+    public void testAddParam_valueType() {
+        MyQuery query = new MyQuery(manager);
+        Param param = query.addParam(1, Integer.class, ValueTypes.INTEGER);
+        assertEquals(1, query.getParamSize());
+        assertEquals(1, param.value);
+        assertEquals(Integer.class, param.paramClass);
+        assertEquals(ValueTypes.INTEGER, param.valueType);
+    }
+
+    /**
      * @throws Exception
      * 
      */
@@ -206,6 +218,17 @@ public class AbstractQueryTest extends TestCase {
         Object ret = query.handleResultSet(handler, rs);
         assertTrue(rs.isClosed());
         assertNotNull(ret);
+    }
+
+    /**
+     * @throws Exception
+     * 
+     */
+    public void testGetValueType() throws Exception {
+        MyQuery query = new MyQuery(manager);
+        assertEquals(ValueTypes.CLOB, query.getValueType(String.class, true));
+        assertEquals(ValueTypes.INTEGER, query.getValueType(Integer.class,
+                false));
     }
 
     private static class MyQuery extends AbstractQuery<MyQuery> {

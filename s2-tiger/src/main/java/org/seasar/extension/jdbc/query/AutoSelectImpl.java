@@ -235,14 +235,13 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
      */
     protected void prepareEntity(EntityMeta em, String tableAlias,
             List<PropertyMapper> propertyMapperList, List<Integer> idIndexList) {
-        DbmsDialect dialect = jdbcManager.getDialect();
         for (int i = 0; i < em.getPropertyMetaSize(); i++) {
             PropertyMeta pm = em.getPropertyMeta(i);
             if (pm.isTransient() || pm.isRelationship()) {
                 continue;
             }
             selectClause.addSql(tableAlias, pm.getColumnMeta().getName());
-            valueTypeList.add(dialect.getValueType(pm.getPropertyClass()));
+            valueTypeList.add(getValueType(pm.getPropertyClass(), pm.isLob()));
             propertyMapperList.add(new PropertyMapperImpl(pm.getField(),
                     selectListIndex));
             if (pm.isId()) {

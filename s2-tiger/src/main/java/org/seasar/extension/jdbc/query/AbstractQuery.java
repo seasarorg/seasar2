@@ -28,7 +28,9 @@ import org.seasar.extension.jdbc.ResultSetHandler;
 import org.seasar.extension.jdbc.SqlLog;
 import org.seasar.extension.jdbc.SqlLogRegistry;
 import org.seasar.extension.jdbc.SqlLogRegistryLocator;
+import org.seasar.extension.jdbc.ValueType;
 import org.seasar.extension.jdbc.impl.SqlLogImpl;
+import org.seasar.extension.jdbc.types.ValueTypes;
 import org.seasar.extension.jdbc.util.BindVariableUtil;
 import org.seasar.framework.exception.SQLRuntimeException;
 import org.seasar.framework.log.Logger;
@@ -285,6 +287,41 @@ public abstract class AbstractQuery<S extends Query<S>> implements Query<S> {
     }
 
     /**
+     * パラメータを追加します。
+     * 
+     * @param value
+     *            パラメータの値
+     * @param paramClass
+     *            パラメータのクラス
+     * @param valueType
+     *            値タイプ
+     * @return パラメータ
+     */
+    protected Param addParam(Object value, Class<?> paramClass,
+            ValueType valueType) {
+        Param param = new Param(value, paramClass);
+        param.valueType = valueType;
+        paramList.add(param);
+        return param;
+    }
+
+    /**
+     * 値タイプを返します。
+     * 
+     * @param paramClass
+     *            パラメータのクラス
+     * @param lob
+     *            <code>LOB</code>かどうか
+     * @return
+     */
+    protected ValueType getValueType(Class<?> paramClass, boolean lob) {
+        if (lob && paramClass == String.class) {
+            return ValueTypes.CLOB;
+        }
+        return jdbcManager.getDialect().getValueType(paramClass);
+    }
+
+    /**
      * <code>IN</code>パラメータの準備をします。
      * 
      * @param ps
@@ -322,7 +359,8 @@ public abstract class AbstractQuery<S extends Query<S>> implements Query<S> {
      * @throws SQLRuntimeException
      *             SQL例外が発生した場合。
      */
-    protected Object handleResultSet(ResultSetHandler handler, ResultSet rs) throws SQLRuntimeException {
+    protected Object handleResultSet(ResultSetHandler handler, ResultSet rs)
+            throws SQLRuntimeException {
         Object ret = null;
         try {
             ret = handler.handle(rs);

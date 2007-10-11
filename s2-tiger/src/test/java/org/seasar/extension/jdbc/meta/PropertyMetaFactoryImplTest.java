@@ -22,6 +22,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinColumns;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -140,11 +141,31 @@ public class PropertyMetaFactoryImplTest extends TestCase {
     /**
      * @throws Exception
      */
+    public void testTransient_dto() throws Exception {
+        Field field = MyAaa.class.getDeclaredField("myDto");
+        PropertyMeta propertyMeta = factory.createPropertyMeta(field,
+                entityMeta);
+        assertTrue(propertyMeta.isTransient());
+    }
+
+    /**
+     * @throws Exception
+     */
     public void testColumnMeta() throws Exception {
         Field field = Aaa.class.getDeclaredField("id");
         PropertyMeta propertyMeta = factory.createPropertyMeta(field,
                 entityMeta);
         assertNotNull(propertyMeta.getColumnMeta());
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testColumnMeta_transient() throws Exception {
+        Field field = MyAaa.class.getDeclaredField("ignore");
+        PropertyMeta propertyMeta = factory.createPropertyMeta(field,
+                entityMeta);
+        assertNull(propertyMeta.getColumnMeta());
     }
 
     /**
@@ -195,6 +216,16 @@ public class PropertyMetaFactoryImplTest extends TestCase {
         PropertyMeta propertyMeta = factory.createPropertyMeta(field,
                 entityMeta);
         assertFalse(propertyMeta.isVersion());
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testLob() throws Exception {
+        Field field = MyAaa.class.getDeclaredField("largeName");
+        PropertyMeta propertyMeta = factory.createPropertyMeta(field,
+                entityMeta);
+        assertTrue(propertyMeta.isLob());
     }
 
     /**
@@ -584,6 +615,24 @@ public class PropertyMetaFactoryImplTest extends TestCase {
          * 
          */
         public MyInt myInt;
+
+        /**
+         * 
+         */
+        @Transient
+        public String ignore;
+
+        /**
+         * 
+         */
+        @Transient
+        public MyDto myDto;
+
+        /**
+         * 
+         */
+        @Lob
+        public String largeName;
     }
 
     @Entity

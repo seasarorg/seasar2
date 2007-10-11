@@ -18,10 +18,13 @@ package org.seasar.extension.jdbc.query;
 import java.lang.reflect.Field;
 import java.util.List;
 
+import javax.persistence.Lob;
+
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.ParamType;
 import org.seasar.extension.jdbc.SqlProcedureCall;
 import org.seasar.extension.jdbc.SqlUpdate;
+import org.seasar.extension.jdbc.ValueType;
 import org.seasar.extension.jdbc.types.ValueTypes;
 import org.seasar.framework.util.FieldUtil;
 import org.seasar.framework.util.ModifierUtil;
@@ -113,8 +116,11 @@ public class SqlProcedureCallImpl extends
                 f.setAccessible(true);
                 String name = f.getName();
                 Class<?> clazz = f.getType();
+                boolean lob = f.getAnnotation(Lob.class) != null;
+                ValueType valueType = getValueType(clazz, lob);
                 if (name.endsWith(ParamType.IN_OUT.getSuffix())) {
-                    Param p = addParam(FieldUtil.get(f, parameter), clazz);
+                    Param p = addParam(FieldUtil.get(f, parameter), clazz,
+                            valueType);
                     p.paramType = ParamType.IN_OUT;
                     p.field = f;
                 } else if (name.endsWith(ParamType.OUT.getSuffix())) {
@@ -122,12 +128,12 @@ public class SqlProcedureCallImpl extends
                             && !needsParameterForResultSet) {
                         addNonParam(f);
                     } else {
-                        Param p = addParam(null, clazz);
+                        Param p = addParam(null, clazz, valueType);
                         p.paramType = ParamType.OUT;
                         p.field = f;
                     }
                 } else {
-                    addParam(FieldUtil.get(f, parameter), clazz);
+                    addParam(FieldUtil.get(f, parameter), clazz, valueType);
                 }
             }
         }

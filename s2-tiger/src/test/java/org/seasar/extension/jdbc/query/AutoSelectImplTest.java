@@ -23,6 +23,7 @@ import java.util.Map;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.OneToOne;
 
 import junit.framework.TestCase;
@@ -350,6 +351,27 @@ public class AutoSelectImplTest extends TestCase {
         int[] idIndices = query.toIdIndexArray(idIndexList);
         assertEquals(1, idIndices.length);
         assertEquals(0, idIndices[0]);
+    }
+
+    /**
+     * @throws Exception
+     * 
+     */
+    public void testPrepareEntity_clob() throws Exception {
+        AutoSelectImpl<MyAaa> query = new AutoSelectImpl<MyAaa>(manager,
+                MyAaa.class);
+        query.prepareCallerClassAndMethodName("getResultList");
+        List<PropertyMapper> propertyMapperList = new ArrayList<PropertyMapper>(
+                50);
+        List<Integer> idIndexList = new ArrayList<Integer>();
+        EntityMeta entityMeta = query.prepareEntityMeta(query.baseClass, null);
+        String tableAlias = query.prepareTableAlias(null);
+        query.prepareEntity(entityMeta, tableAlias, propertyMapperList,
+                idIndexList);
+        ValueType[] valueTypes = query.getValueTypes();
+        assertEquals(2, valueTypes.length);
+        assertEquals(ValueTypes.INTEGER, valueTypes[0]);
+        assertEquals(ValueTypes.CLOB, valueTypes[1]);
     }
 
     /**
@@ -1424,6 +1446,21 @@ public class AutoSelectImplTest extends TestCase {
         assertEquals(
                 "select T1_.ID, T1_.NAME, T1_.BBB_ID, T2_.ID, T2_.NAME, T2_.CCC_ID from AAA T1_ left outer join BBB T2_ on T1_.BBB_ID = T2_.ID where (T2_.ID = ?)",
                 query.toSql());
+    }
+
+    @Entity
+    private static class MyAaa {
+
+        /**
+         * 
+         */
+        public Integer id;
+
+        /**
+         * 
+         */
+        @Lob
+        public String largeName;
     }
 
     @Entity

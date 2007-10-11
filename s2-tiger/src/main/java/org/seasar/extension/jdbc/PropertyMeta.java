@@ -65,6 +65,11 @@ public class PropertyMeta {
     protected boolean trnsient;
 
     /**
+     * <code>LOB</code>かどうかです。
+     */
+    protected boolean lob;
+
+    /**
      * 結合カラムメタデータのリストです。
      */
     protected List<JoinColumnMeta> joinColumnMetaList = new ArrayList<JoinColumnMeta>();
@@ -210,6 +215,25 @@ public class PropertyMeta {
      */
     public void setVersion(boolean version) {
         this.version = version;
+    }
+
+    /**
+     * <code>LOB</code>かどうかを返します。
+     * 
+     * @return <code>LOB</code>かどうか
+     */
+    public boolean isLob() {
+        return lob;
+    }
+
+    /**
+     * <code>LOB</code>かどうかを設定します。
+     * 
+     * @param lob
+     *            <code>LOB</code>
+     */
+    public void setLob(boolean lob) {
+        this.lob = lob;
     }
 
     /**

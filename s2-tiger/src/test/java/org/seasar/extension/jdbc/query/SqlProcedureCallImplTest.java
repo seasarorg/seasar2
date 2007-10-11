@@ -16,9 +16,10 @@
 package org.seasar.extension.jdbc.query;
 
 import java.sql.CallableStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+
+import javax.persistence.Lob;
 
 import junit.framework.TestCase;
 
@@ -34,11 +35,7 @@ import org.seasar.extension.jdbc.types.ValueTypes;
 import org.seasar.extension.jta.TransactionManagerImpl;
 import org.seasar.extension.jta.TransactionSynchronizationRegistryImpl;
 import org.seasar.framework.mock.sql.MockCallableStatement;
-import org.seasar.framework.mock.sql.MockColumnMetaData;
 import org.seasar.framework.mock.sql.MockDataSource;
-import org.seasar.framework.mock.sql.MockResultSet;
-import org.seasar.framework.mock.sql.MockResultSetMetaData;
-import org.seasar.framework.util.ArrayMap;
 
 /**
  * @author higa
@@ -119,40 +116,29 @@ public class SqlProcedureCallImplTest extends TestCase {
     public void testPrepareParameter_resultSet() throws Exception {
         MyDto2 dto = new MyDto2();
         SqlProcedureCallImpl query = new SqlProcedureCallImpl(manager,
-                "{call hoge(?)}", dto) {
-
-            @Override
-            protected CallableStatement getCallableStatement(
-                    JdbcContext jdbcContext) {
-                MockCallableStatement cs = new MockCallableStatement(null, null) {
-
-                    @Override
-                    public ResultSet getResultSet() throws SQLException {
-                        MockResultSetMetaData rsMeta = new MockResultSetMetaData();
-                        MockColumnMetaData columnMeta = new MockColumnMetaData();
-                        columnMeta.setColumnLabel("ID");
-                        rsMeta.addColumnMetaData(columnMeta);
-                        columnMeta = new MockColumnMetaData();
-                        columnMeta.setColumnLabel("NAME");
-                        rsMeta.addColumnMetaData(columnMeta);
-                        MockResultSet rs = new MockResultSet(rsMeta);
-                        ArrayMap data = new ArrayMap();
-                        data.put("ID", 1);
-                        data.put("NAME", "aaa");
-                        rs.addRowData(data);
-                        return rs;
-                    }
-                };
-                return cs;
-            }
-
-        };
+                "{call hoge(?)}", dto);
         query.prepareParameter();
         assertEquals(0, query.getParamSize());
         assertEquals(1, query.getNonParamSize());
         assertEquals(ParamType.OUT, query.getNonParam(0).paramType);
         assertEquals(MyDto2.class.getDeclaredField("result_OUT"), query
                 .getNonParam(0).field);
+    }
+
+    /**
+     * @throws Exception
+     * 
+     */
+    public void testPrepareParameter_clob() throws Exception {
+        MyDto3 dto = new MyDto3();
+        dto.largeName = "aaa";
+        SqlProcedureCallImpl query = new SqlProcedureCallImpl(manager,
+                "{call hoge(?)}", dto);
+        query.prepareParameter();
+        assertEquals(1, query.getParamSize());
+        assertEquals("aaa", query.getParam(0).value);
+        assertEquals(ParamType.IN, query.getParam(0).paramType);
+        assertEquals(ValueTypes.CLOB, query.getParam(0).valueType);
     }
 
     /**
@@ -213,5 +199,14 @@ public class SqlProcedureCallImplTest extends TestCase {
          * 
          */
         public List<Aaa> result_OUT;
+    }
+
+    private static final class MyDto3 {
+
+        /**
+         * 
+         */
+        @Lob
+        public String largeName;
     }
 }
