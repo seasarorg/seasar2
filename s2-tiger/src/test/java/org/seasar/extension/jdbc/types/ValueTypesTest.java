@@ -34,6 +34,7 @@ public class ValueTypesTest extends TestCase {
         assertTrue(valueType instanceof EnumType);
         EnumType enumType = (EnumType) valueType;
         assertEquals(MyEnum.ONE, enumType.toEnum("ONE"));
+        assertSame(valueType, ValueTypes.getValueType(MyEnum.class));
     }
 
     /**

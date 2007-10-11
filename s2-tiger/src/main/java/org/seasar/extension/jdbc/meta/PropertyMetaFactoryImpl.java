@@ -36,13 +36,14 @@ import org.seasar.extension.jdbc.PropertyMetaFactory;
 import org.seasar.extension.jdbc.RelationshipType;
 import org.seasar.extension.jdbc.exception.BothMappedByAndJoinColumnRuntimeException;
 import org.seasar.extension.jdbc.exception.JoinColumnNameAndReferencedColumnNameMandatoryRuntimeException;
-import org.seasar.extension.jdbc.exception.JoinColumnNotAllowedRuntimeException;
 import org.seasar.extension.jdbc.exception.MappedByMandatoryRuntimeException;
 import org.seasar.extension.jdbc.exception.MappedByNotIdenticalRuntimeException;
 import org.seasar.extension.jdbc.exception.MappedByPropertyNotFoundRuntimeException;
+import org.seasar.extension.jdbc.exception.NonRelationshipRuntimeException;
 import org.seasar.extension.jdbc.exception.OneToManyNotGenericsRuntimeException;
 import org.seasar.extension.jdbc.exception.OneToManyNotListRuntimeException;
 import org.seasar.extension.jdbc.exception.RelationshipNotEntityRuntimeException;
+import org.seasar.extension.jdbc.types.ValueTypes;
 import org.seasar.framework.container.annotation.tiger.Binding;
 import org.seasar.framework.container.annotation.tiger.BindingType;
 import org.seasar.framework.convention.PersistenceConvention;
@@ -128,8 +129,10 @@ public class PropertyMetaFactoryImpl implements PropertyMetaFactory {
      */
     protected void doColumnMeta(PropertyMeta propertyMeta, Field field,
             EntityMeta entityMeta) {
-        propertyMeta.setColumnMeta(columnMetaFactory.createColumnMeta(field,
-                entityMeta));
+        if (ValueTypes.isSimpleType(propertyMeta.getPropertyClass())) {
+            propertyMeta.setColumnMeta(columnMetaFactory.createColumnMeta(
+                    field, entityMeta));
+        }
     }
 
     /**
@@ -145,7 +148,9 @@ public class PropertyMetaFactoryImpl implements PropertyMetaFactory {
     protected void doId(PropertyMeta propertyMeta, Field field,
             @SuppressWarnings("unused")
             EntityMeta entityMeta) {
-        propertyMeta.setId(field.getAnnotation(Id.class) != null);
+        if (propertyMeta.getColumnMeta() != null) {
+            propertyMeta.setId(field.getAnnotation(Id.class) != null);
+        }
     }
 
     /**
@@ -161,7 +166,9 @@ public class PropertyMetaFactoryImpl implements PropertyMetaFactory {
     protected void doVersion(PropertyMeta propertyMeta, Field field,
             @SuppressWarnings("unused")
             EntityMeta entityMeta) {
-        propertyMeta.setVersion(field.getAnnotation(Version.class) != null);
+        if (propertyMeta.getColumnMeta() != null) {
+            propertyMeta.setVersion(field.getAnnotation(Version.class) != null);
+        }
     }
 
     /**
@@ -193,6 +200,9 @@ public class PropertyMetaFactoryImpl implements PropertyMetaFactory {
      */
     protected void doRelationship(PropertyMeta propertyMeta, Field field,
             EntityMeta entityMeta) {
+        if (propertyMeta.getColumnMeta() != null || propertyMeta.isTransient()) {
+            return;
+        }
         doJoinColumn(propertyMeta, field, entityMeta);
         OneToOne oneToOne = field.getAnnotation(OneToOne.class);
         if (oneToOne != null) {
@@ -205,8 +215,8 @@ public class PropertyMetaFactoryImpl implements PropertyMetaFactory {
                 ManyToOne manyToOne = field.getAnnotation(ManyToOne.class);
                 if (manyToOne != null) {
                     doManyToOne(propertyMeta, field, entityMeta, manyToOne);
-                } else if (propertyMeta.getJoinColumnMetaList().size() > 0) {
-                    throw new JoinColumnNotAllowedRuntimeException(entityMeta
+                } else {
+                    throw new NonRelationshipRuntimeException(entityMeta
                             .getName(), propertyMeta.getName());
                 }
             }
@@ -265,7 +275,6 @@ public class PropertyMetaFactoryImpl implements PropertyMetaFactory {
      */
     protected void doOneToOne(PropertyMeta propertyMeta, Field field,
             EntityMeta entityMeta, OneToOne oneToOne) {
-        propertyMeta.setColumnMeta(null);
         propertyMeta.setRelationshipType(RelationshipType.ONE_TO_ONE);
         Class<?> relationshipClass = field.getType();
         if (relationshipClass.getAnnotation(Entity.class) == null) {
@@ -298,7 +307,6 @@ public class PropertyMetaFactoryImpl implements PropertyMetaFactory {
      */
     protected void doOneToMany(PropertyMeta propertyMeta, Field field,
             EntityMeta entityMeta, OneToMany oneToMany) {
-        propertyMeta.setColumnMeta(null);
         propertyMeta.setRelationshipType(RelationshipType.ONE_TO_MANY);
         if (!List.class.isAssignableFrom(field.getType())) {
             throw new OneToManyNotListRuntimeException(entityMeta.getName(),
@@ -344,7 +352,6 @@ public class PropertyMetaFactoryImpl implements PropertyMetaFactory {
     protected void doManyToOne(PropertyMeta propertyMeta, Field field,
             EntityMeta entityMeta, @SuppressWarnings("unused")
             ManyToOne manyToOne) {
-        propertyMeta.setColumnMeta(null);
         propertyMeta.setRelationshipType(RelationshipType.MANY_TO_ONE);
         Class<?> relationshipClass = field.getType();
         if (relationshipClass.getAnnotation(Entity.class) == null) {

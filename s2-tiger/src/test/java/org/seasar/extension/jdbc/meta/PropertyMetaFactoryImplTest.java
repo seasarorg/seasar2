@@ -38,10 +38,10 @@ import org.seasar.extension.jdbc.entity.Aaa;
 import org.seasar.extension.jdbc.entity.Bbb;
 import org.seasar.extension.jdbc.exception.BothMappedByAndJoinColumnRuntimeException;
 import org.seasar.extension.jdbc.exception.JoinColumnNameAndReferencedColumnNameMandatoryRuntimeException;
-import org.seasar.extension.jdbc.exception.JoinColumnNotAllowedRuntimeException;
 import org.seasar.extension.jdbc.exception.MappedByMandatoryRuntimeException;
 import org.seasar.extension.jdbc.exception.MappedByNotIdenticalRuntimeException;
 import org.seasar.extension.jdbc.exception.MappedByPropertyNotFoundRuntimeException;
+import org.seasar.extension.jdbc.exception.NonRelationshipRuntimeException;
 import org.seasar.extension.jdbc.exception.OneToManyNotGenericsRuntimeException;
 import org.seasar.extension.jdbc.exception.OneToManyNotListRuntimeException;
 import org.seasar.extension.jdbc.exception.RelationshipNotEntityRuntimeException;
@@ -535,17 +535,17 @@ public class PropertyMetaFactoryImplTest extends TestCase {
     /**
      * @throws Exception
      */
-    public void testRelation_joinColumnNotAllowed() throws Exception {
+    public void testRelationship_dto() throws Exception {
         entityMeta.setEntityClass(BadAaa2.class);
         entityMeta.setName("BadAaa2");
-        Field field = BadAaa2.class.getDeclaredField("id");
+        Field field = BadAaa2.class.getDeclaredField("myDto5");
         try {
             factory.createPropertyMeta(field, entityMeta);
             fail();
-        } catch (JoinColumnNotAllowedRuntimeException e) {
+        } catch (NonRelationshipRuntimeException e) {
             System.out.println(e);
             assertEquals("BadAaa2", e.getEntityName());
-            assertEquals("id", e.getPropertyName());
+            assertEquals("myDto5", e.getPropertyName());
         }
     }
 
@@ -683,6 +683,11 @@ public class PropertyMetaFactoryImplTest extends TestCase {
          */
         @ManyToOne
         public MyDto myDto4;
+
+        /**
+         * 
+         */
+        public MyDto myDto5;
 
         /**
          * 
