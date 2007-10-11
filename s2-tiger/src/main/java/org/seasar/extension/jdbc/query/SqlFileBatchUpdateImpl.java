@@ -88,10 +88,13 @@ public class SqlFileBatchUpdateImpl<T> extends
         int[] ret = null;
         JdbcContext jdbcContext = jdbcManager.getJdbcContext();
         try {
-            PreparedStatement ps = getPreparedStatement(jdbcContext);
+            PreparedStatement ps = null;
             for (T parameter : parameterList) {
                 prepareParameter(parameter);
-                prepareSql();
+                if (ps == null) {
+                    prepareSql();
+                    ps = getPreparedStatement(jdbcContext);
+                }
                 logSql();
                 prepareInParams(ps);
                 PreparedStatementUtil.addBatch(ps);

@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import junit.framework.TestCase;
 
 import org.seasar.extension.jdbc.JdbcContext;
-import org.seasar.extension.jdbc.SqlLog;
 import org.seasar.extension.jdbc.SqlLogRegistry;
 import org.seasar.extension.jdbc.SqlLogRegistryLocator;
 import org.seasar.extension.jdbc.dialect.StandardDialect;
@@ -118,57 +117,6 @@ public class SqlFileBatchUpdateImplTest extends TestCase {
     }
 
     /**
-     * @throws Exception
-     * 
-     */
-    public void testExecuteBatch() throws Exception {
-        SqlFileBatchUpdateImpl<String> query = new SqlFileBatchUpdateImpl<String>(
-                manager, PATH_SIMPLE, asList("foo", "bar")) {
-
-            @Override
-            protected PreparedStatement getPreparedStatement(
-                    JdbcContext jdbcContext) {
-                MockPreparedStatement ps = new MockPreparedStatement(null, null) {
-
-                    @Override
-                    public void addBatch() throws SQLException {
-                        batchSize++;
-
-                        super.addBatch();
-                    }
-
-                    @Override
-                    public int[] executeBatch() throws SQLException {
-                        executedBatch = true;
-                        return new int[] { 1, 1 };
-                    }
-                };
-                return ps;
-            }
-
-            @Override
-            protected void prepareInParams(PreparedStatement ps) {
-                preparedBindVariables = true;
-                super.prepareInParams(ps);
-            }
-
-        };
-        int[] ret = query.executeBatch();
-        assertEquals(2, ret.length);
-        assertTrue(executedBatch);
-        assertEquals(2, batchSize);
-        assertTrue(preparedBindVariables);
-        SqlLogRegistry registry = SqlLogRegistryLocator.getInstance();
-        assertEquals(2, registry.getSize());
-        SqlLog sqlLog = registry.get(0);
-        assertEquals("update aaa set name = 'foo' where id = 1", sqlLog
-                .getCompleteSql());
-        sqlLog = registry.get(1);
-        assertEquals("update aaa set name = 'bar' where id = 1", sqlLog
-                .getCompleteSql());
-    }
-
-    /**
      * 
      */
     public void testPrepareNode() {
@@ -205,19 +153,37 @@ public class SqlFileBatchUpdateImplTest extends TestCase {
             @Override
             protected PreparedStatement getPreparedStatement(
                     JdbcContext jdbcContext) {
+                assertNotNull(executedSql);
                 MockPreparedStatement ps = new MockPreparedStatement(null, null) {
 
                     @Override
+                    public void addBatch() throws SQLException {
+                        batchSize++;
+
+                        super.addBatch();
+                    }
+
+                    @Override
                     public int[] executeBatch() throws SQLException {
+                        executedBatch = true;
                         return new int[] { 1, 1 };
                     }
                 };
                 return ps;
             }
 
+            @Override
+            protected void prepareInParams(PreparedStatement ps) {
+                preparedBindVariables = true;
+                super.prepareInParams(ps);
+            }
+
         };
-        int[] results = query.executeBatch();
-        assertEquals(2, results.length);
+        int[] ret = query.executeBatch();
+        assertEquals(2, ret.length);
+        assertTrue(executedBatch);
+        assertEquals(2, batchSize);
+        assertTrue(preparedBindVariables);
         assertEquals("update aaa set name = ? where id = 1", query.sqlContext
                 .getSql());
         SqlLogRegistry sqlLogRegistry = SqlLogRegistryLocator.getInstance();
@@ -238,14 +204,29 @@ public class SqlFileBatchUpdateImplTest extends TestCase {
             @Override
             protected PreparedStatement getPreparedStatement(
                     JdbcContext jdbcContext) {
+                assertNotNull(executedSql);
                 MockPreparedStatement ps = new MockPreparedStatement(null, null) {
 
                     @Override
+                    public void addBatch() throws SQLException {
+                        batchSize++;
+
+                        super.addBatch();
+                    }
+
+                    @Override
                     public int[] executeBatch() throws SQLException {
+                        executedBatch = true;
                         return new int[] { 1, 1 };
                     }
                 };
                 return ps;
+            }
+
+            @Override
+            protected void prepareInParams(PreparedStatement ps) {
+                preparedBindVariables = true;
+                super.prepareInParams(ps);
             }
 
         };
@@ -272,19 +253,37 @@ public class SqlFileBatchUpdateImplTest extends TestCase {
             @Override
             protected PreparedStatement getPreparedStatement(
                     JdbcContext jdbcContext) {
+                assertNotNull(executedSql);
                 MockPreparedStatement ps = new MockPreparedStatement(null, null) {
 
                     @Override
+                    public void addBatch() throws SQLException {
+                        batchSize++;
+
+                        super.addBatch();
+                    }
+
+                    @Override
                     public int[] executeBatch() throws SQLException {
+                        executedBatch = true;
                         return new int[] { 1, 1 };
                     }
                 };
                 return ps;
             }
 
+            @Override
+            protected void prepareInParams(PreparedStatement ps) {
+                preparedBindVariables = true;
+                super.prepareInParams(ps);
+            }
+
         };
-        int[] results = query.executeBatch();
-        assertEquals(2, results.length);
+        int[] ret = query.executeBatch();
+        assertEquals(2, ret.length);
+        assertTrue(executedBatch);
+        assertEquals(2, batchSize);
+        assertTrue(preparedBindVariables);
         assertEquals("update aaa set name = ? where id = ?", query.sqlContext
                 .getSql());
         SqlLogRegistry sqlLogRegistry = SqlLogRegistryLocator.getInstance();
