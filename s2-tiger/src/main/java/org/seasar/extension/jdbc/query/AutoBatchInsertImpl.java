@@ -97,8 +97,7 @@ public class AutoBatchInsertImpl<T> extends
         for (final PropertyMeta propertyMeta : entityMeta
                 .getAllColumnPropertyMeta()) {
             final String propertyName = propertyMeta.getName();
-            if (propertyMeta.isRelationship()
-                    || !propertyMeta.getColumnMeta().isInsertable()) {
+            if (!propertyMeta.getColumnMeta().isInsertable()) {
                 continue;
             }
             if (!includesProperties.isEmpty()
@@ -135,7 +134,7 @@ public class AutoBatchInsertImpl<T> extends
     protected void prepareParams(final T entity) {
         for (final PropertyMeta propertyMeta : targetProperties) {
             final Object value = FieldUtil.get(propertyMeta.getField(), entity);
-            addParam(value, propertyMeta.getPropertyClass());
+            addParam(value, propertyMeta);
         }
     }
 

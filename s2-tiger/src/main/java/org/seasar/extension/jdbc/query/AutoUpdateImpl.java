@@ -137,7 +137,7 @@ public class AutoUpdateImpl<T> extends AbstractAutoUpdate<T, AutoUpdate<T>>
             final String propertyName = propertyMeta.getName();
             final Field field = propertyMeta.getField();
             final Object value = FieldUtil.get(field, entity);
-            if (propertyMeta.isId() || propertyMeta.isRelationship()
+            if (propertyMeta.isId()
                     || !propertyMeta.getColumnMeta().isUpdatable()) {
                 continue;
             }
@@ -205,18 +205,18 @@ public class AutoUpdateImpl<T> extends AbstractAutoUpdate<T, AutoUpdate<T>>
     protected void prepareParams() {
         for (final PropertyMeta propertyMeta : targetProperties) {
             final Object value = FieldUtil.get(propertyMeta.getField(), entity);
-            addParam(value, propertyMeta.getPropertyClass());
+            addParam(value, propertyMeta);
         }
         for (final PropertyMeta propertyMeta : entityMeta
                 .getIdPropertyMetaList()) {
             final Object value = FieldUtil.get(propertyMeta.getField(), entity);
-            addParam(value, propertyMeta.getPropertyClass());
+            addParam(value, propertyMeta);
         }
         if (!includeVersion && entityMeta.hasVersionPropertyMeta()) {
             final PropertyMeta propertyMeta = entityMeta
                     .getVersionPropertyMeta();
             final Object value = FieldUtil.get(propertyMeta.getField(), entity);
-            addParam(value, propertyMeta.getPropertyClass());
+            addParam(value, propertyMeta);
         }
     }
 

@@ -23,6 +23,7 @@ import java.util.List;
 
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.ParamType;
+import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.Query;
 import org.seasar.extension.jdbc.ResultSetHandler;
 import org.seasar.extension.jdbc.SqlLog;
@@ -265,6 +266,24 @@ public abstract class AbstractQuery<S extends Query<S>> implements Query<S> {
             throw new NullPointerException("value");
         }
         return addParam(value, value.getClass());
+    }
+
+    /**
+     * パラメータを追加します。
+     * 
+     * @param value
+     *            パラメータの値
+     * @param propertyMeta
+     *            プロパティのメタデータ
+     * @return パラメータ
+     */
+    protected Param addParam(Object value, PropertyMeta propertyMeta) {
+        if (propertyMeta == null) {
+            throw new NullPointerException("propertyMeta");
+        }
+        Class<?> propertyClass = propertyMeta.getPropertyClass();
+        ValueType valueType = getValueType(propertyClass, propertyMeta.isLob());
+        return addParam(value, propertyClass, valueType);
     }
 
     /**

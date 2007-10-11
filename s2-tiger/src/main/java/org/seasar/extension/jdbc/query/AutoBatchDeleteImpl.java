@@ -90,13 +90,13 @@ public class AutoBatchDeleteImpl<T> extends
         for (final PropertyMeta propertyMeta : entityMeta
                 .getIdPropertyMetaList()) {
             final Object value = FieldUtil.get(propertyMeta.getField(), entity);
-            addParam(value, propertyMeta.getPropertyClass());
+            addParam(value, propertyMeta);
         }
         if (!ignoreVersion && entityMeta.hasVersionPropertyMeta()) {
             final PropertyMeta propertyMeta = entityMeta
                     .getVersionPropertyMeta();
             final Object value = FieldUtil.get(propertyMeta.getField(), entity);
-            addParam(value, propertyMeta.getPropertyClass());
+            addParam(value, propertyMeta);
         }
     }
 

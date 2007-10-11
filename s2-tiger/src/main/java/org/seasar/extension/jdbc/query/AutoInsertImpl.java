@@ -106,8 +106,7 @@ public class AutoInsertImpl<T> extends AbstractAutoUpdate<T, AutoInsert<T>>
             final String propertyName = propertyMeta.getName();
             final Field field = propertyMeta.getField();
             final Object value = FieldUtil.get(field, entity);
-            if (propertyMeta.isRelationship()
-                    || !propertyMeta.getColumnMeta().isInsertable()) {
+            if (!propertyMeta.getColumnMeta().isInsertable()) {
                 continue;
             }
             if (!includesProperties.isEmpty()
@@ -149,7 +148,7 @@ public class AutoInsertImpl<T> extends AbstractAutoUpdate<T, AutoInsert<T>>
     protected void prepareParams() {
         for (final PropertyMeta propertyMeta : targetProperties) {
             final Object value = FieldUtil.get(propertyMeta.getField(), entity);
-            addParam(value, propertyMeta.getPropertyClass());
+            addParam(value, propertyMeta);
         }
     }
 
