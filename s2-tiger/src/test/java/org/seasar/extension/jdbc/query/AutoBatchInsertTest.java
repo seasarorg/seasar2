@@ -33,6 +33,7 @@ import org.seasar.extension.jdbc.meta.ColumnMetaFactoryImpl;
 import org.seasar.extension.jdbc.meta.EntityMetaFactoryImpl;
 import org.seasar.extension.jdbc.meta.PropertyMetaFactoryImpl;
 import org.seasar.extension.jdbc.meta.TableMetaFactoryImpl;
+import org.seasar.extension.jdbc.types.StringClobType;
 import org.seasar.extension.jta.TransactionManagerImpl;
 import org.seasar.extension.jta.TransactionSynchronizationRegistryImpl;
 import org.seasar.framework.convention.impl.PersistenceConventionImpl;
@@ -171,11 +172,12 @@ public class AutoBatchInsertTest extends TestCase {
         AutoBatchInsertImpl<Eee> query = new AutoBatchInsertImpl<Eee>(manager,
                 entities);
         query.prepareTargetProperties();
-        assertEquals(4, query.targetProperties.size());
+        assertEquals(5, query.targetProperties.size());
         assertEquals("id", query.targetProperties.get(0).getName());
         assertEquals("name", query.targetProperties.get(1).getName());
-        assertEquals("fffId", query.targetProperties.get(2).getName());
-        assertEquals("version", query.targetProperties.get(3).getName());
+        assertEquals("longText", query.targetProperties.get(2).getName());
+        assertEquals("fffId", query.targetProperties.get(3).getName());
+        assertEquals("version", query.targetProperties.get(4).getName());
     }
 
     /**
@@ -202,10 +204,11 @@ public class AutoBatchInsertTest extends TestCase {
                 entities);
         query.excludes("name");
         query.prepareTargetProperties();
-        assertEquals(3, query.targetProperties.size());
+        assertEquals(4, query.targetProperties.size());
         assertEquals("id", query.targetProperties.get(0).getName());
-        assertEquals("fffId", query.targetProperties.get(1).getName());
-        assertEquals("version", query.targetProperties.get(2).getName());
+        assertEquals("longText", query.targetProperties.get(1).getName());
+        assertEquals("fffId", query.targetProperties.get(2).getName());
+        assertEquals("version", query.targetProperties.get(3).getName());
     }
 
     /**
@@ -231,7 +234,8 @@ public class AutoBatchInsertTest extends TestCase {
         AutoBatchInsertImpl<Eee> query = new AutoBatchInsertImpl<Eee>(manager,
                 entities);
         query.prepare("execute");
-        assertEquals(" (ID, NAME, FFF_ID, VERSION)", query.intoClause.toSql());
+        assertEquals(" (ID, NAME, LONG_TEXT, FFF_ID, VERSION)",
+                query.intoClause.toSql());
     }
 
     /**
@@ -243,7 +247,7 @@ public class AutoBatchInsertTest extends TestCase {
         AutoBatchInsertImpl<Eee> query = new AutoBatchInsertImpl<Eee>(manager,
                 entities);
         query.prepare("execute");
-        assertEquals(" values (?, ?, ?, ?)", query.valuesClause.toSql());
+        assertEquals(" values (?, ?, ?, ?, ?)", query.valuesClause.toSql());
     }
 
     /**
@@ -256,7 +260,7 @@ public class AutoBatchInsertTest extends TestCase {
                 entities);
         query.prepare("execute");
         assertEquals(
-                "insert into EEE (ID, NAME, FFF_ID, VERSION) values (?, ?, ?, ?)",
+                "insert into EEE (ID, NAME, LONG_TEXT, FFF_ID, VERSION) values (?, ?, ?, ?, ?)",
                 query.executedSql);
     }
 
@@ -271,27 +275,33 @@ public class AutoBatchInsertTest extends TestCase {
         query.prepare("execute");
 
         query.prepareParams(entities.get(0));
-        assertEquals(4, query.getParamSize());
+        assertEquals(5, query.getParamSize());
         assertEquals(new Integer(1), query.getParam(0).value);
         assertEquals("foo", query.getParam(1).value);
         assertNull(query.getParam(2).value);
-        assertEquals(new Long(0L), query.getParam(3).value);
+        assertTrue(query.getParam(2).valueType instanceof StringClobType);
+        assertNull(query.getParam(3).value);
+        assertEquals(new Long(0L), query.getParam(4).value);
         query.resetParams();
 
         query.prepareParams(entities.get(1));
-        assertEquals(4, query.getParamSize());
+        assertEquals(5, query.getParamSize());
         assertEquals(new Integer(2), query.getParam(0).value);
         assertEquals("bar", query.getParam(1).value);
         assertNull(query.getParam(2).value);
-        assertEquals(new Long(0L), query.getParam(3).value);
+        assertTrue(query.getParam(2).valueType instanceof StringClobType);
+        assertNull(query.getParam(3).value);
+        assertEquals(new Long(0L), query.getParam(4).value);
         query.resetParams();
 
         query.prepareParams(entities.get(2));
-        assertEquals(4, query.getParamSize());
+        assertEquals(5, query.getParamSize());
         assertEquals(new Integer(3), query.getParam(0).value);
         assertEquals("baz", query.getParam(1).value);
         assertNull(query.getParam(2).value);
-        assertEquals(new Long(0L), query.getParam(3).value);
+        assertTrue(query.getParam(2).valueType instanceof StringClobType);
+        assertNull(query.getParam(3).value);
+        assertEquals(new Long(0L), query.getParam(4).value);
     }
 
     /**
@@ -327,7 +337,7 @@ public class AutoBatchInsertTest extends TestCase {
         assertEquals(3, result.length);
         SqlLog sqlLog = SqlLogRegistryLocator.getInstance().getLast();
         assertEquals(
-                "insert into EEE (ID, NAME, FFF_ID, VERSION) values (3, 'baz', null, 0)",
+                "insert into EEE (ID, NAME, LONG_TEXT, FFF_ID, VERSION) values (3, 'baz', null, null, 0)",
                 sqlLog.getCompleteSql());
     }
 

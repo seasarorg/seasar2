@@ -20,6 +20,7 @@ import java.sql.Timestamp;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.OneToOne;
 import javax.persistence.Version;
 
@@ -39,6 +40,12 @@ public class Eee {
      * 
      */
     public String name;
+
+    /**
+     * 
+     */
+    @Lob
+    public String longText;
 
     /**
      * 
@@ -76,6 +83,18 @@ public class Eee {
     public Eee(Integer id, String name) {
         this.id = id;
         this.name = name;
+    }
+
+    /**
+     * @param id
+     * @param name
+     * @param longText
+     */
+    public Eee(Integer id, String name, String longText) {
+        super();
+        this.id = id;
+        this.name = name;
+        this.longText = longText;
     }
 
 }

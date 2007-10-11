@@ -35,6 +35,7 @@ import org.seasar.extension.jdbc.meta.ColumnMetaFactoryImpl;
 import org.seasar.extension.jdbc.meta.EntityMetaFactoryImpl;
 import org.seasar.extension.jdbc.meta.PropertyMetaFactoryImpl;
 import org.seasar.extension.jdbc.meta.TableMetaFactoryImpl;
+import org.seasar.extension.jdbc.types.StringClobType;
 import org.seasar.extension.jta.TransactionManagerImpl;
 import org.seasar.extension.jta.TransactionSynchronizationRegistryImpl;
 import org.seasar.framework.convention.impl.PersistenceConventionImpl;
@@ -186,9 +187,10 @@ public class AutoBatchUpdateTest extends TestCase {
         AutoBatchUpdateImpl<Eee> query = new AutoBatchUpdateImpl<Eee>(manager,
                 entities);
         query.prepareTargetProperties();
-        assertEquals(2, query.targetProperties.size());
+        assertEquals(3, query.targetProperties.size());
         assertEquals("name", query.targetProperties.get(0).getName());
-        assertEquals("fffId", query.targetProperties.get(1).getName());
+        assertEquals("longText", query.targetProperties.get(1).getName());
+        assertEquals("fffId", query.targetProperties.get(2).getName());
     }
 
     /**
@@ -201,10 +203,11 @@ public class AutoBatchUpdateTest extends TestCase {
                 entities);
         query.includesVersion();
         query.prepareTargetProperties();
-        assertEquals(3, query.targetProperties.size());
+        assertEquals(4, query.targetProperties.size());
         assertEquals("name", query.targetProperties.get(0).getName());
-        assertEquals("fffId", query.targetProperties.get(1).getName());
-        assertEquals("version", query.targetProperties.get(2).getName());
+        assertEquals("longText", query.targetProperties.get(1).getName());
+        assertEquals("fffId", query.targetProperties.get(2).getName());
+        assertEquals("version", query.targetProperties.get(3).getName());
     }
 
     /**
@@ -231,8 +234,9 @@ public class AutoBatchUpdateTest extends TestCase {
                 entities);
         query.excludes("name");
         query.prepareTargetProperties();
-        assertEquals(1, query.targetProperties.size());
-        assertEquals("fffId", query.targetProperties.get(0).getName());
+        assertEquals(2, query.targetProperties.size());
+        assertEquals("longText", query.targetProperties.get(0).getName());
+        assertEquals("fffId", query.targetProperties.get(1).getName());
     }
 
     /**
@@ -258,7 +262,8 @@ public class AutoBatchUpdateTest extends TestCase {
         AutoBatchUpdateImpl<Eee> query = new AutoBatchUpdateImpl<Eee>(manager,
                 entities);
         query.prepare("execute");
-        assertEquals(" set NAME = ?, FFF_ID = ?, VERSION = VERSION + 1",
+        assertEquals(
+                " set NAME = ?, LONG_TEXT = ?, FFF_ID = ?, VERSION = VERSION + 1",
                 query.setClause.toSql());
     }
 
@@ -272,8 +277,8 @@ public class AutoBatchUpdateTest extends TestCase {
                 entities);
         query.includesVersion();
         query.prepare("execute");
-        assertEquals(" set NAME = ?, FFF_ID = ?, VERSION = ?", query.setClause
-                .toSql());
+        assertEquals(" set NAME = ?, LONG_TEXT = ?, FFF_ID = ?, VERSION = ?",
+                query.setClause.toSql());
     }
 
     /**
@@ -311,7 +316,7 @@ public class AutoBatchUpdateTest extends TestCase {
                 entities);
         query.prepare("execute");
         assertEquals(
-                "update EEE set NAME = ?, FFF_ID = ?, VERSION = VERSION + 1 where ID = ? and VERSION = ?",
+                "update EEE set NAME = ?, LONG_TEXT = ?, FFF_ID = ?, VERSION = VERSION + 1 where ID = ? and VERSION = ?",
                 query.executedSql);
     }
 
@@ -326,7 +331,7 @@ public class AutoBatchUpdateTest extends TestCase {
         query.includesVersion();
         query.prepare("execute");
         assertEquals(
-                "update EEE set NAME = ?, FFF_ID = ?, VERSION = ? where ID = ?",
+                "update EEE set NAME = ?, LONG_TEXT = ?, FFF_ID = ?, VERSION = ? where ID = ?",
                 query.executedSql);
     }
 
@@ -341,27 +346,33 @@ public class AutoBatchUpdateTest extends TestCase {
         query.prepare("execute");
 
         query.prepareParams(entities.get(0));
-        assertEquals(4, query.getParamSize());
+        assertEquals(5, query.getParamSize());
         assertEquals("foo", query.getParam(0).value);
         assertNull(query.getParam(1).value);
-        assertEquals(new Integer(1), query.getParam(2).value);
-        assertEquals(new Long(0L), query.getParam(3).value);
+        assertTrue(query.getParam(1).valueType instanceof StringClobType);
+        assertNull(query.getParam(2).value);
+        assertEquals(new Integer(1), query.getParam(3).value);
+        assertEquals(new Long(0L), query.getParam(4).value);
         query.resetParams();
 
         query.prepareParams(entities.get(1));
-        assertEquals(4, query.getParamSize());
+        assertEquals(5, query.getParamSize());
         assertEquals("bar", query.getParam(0).value);
         assertNull(query.getParam(1).value);
-        assertEquals(new Integer(2), query.getParam(2).value);
-        assertEquals(new Long(0L), query.getParam(3).value);
+        assertTrue(query.getParam(1).valueType instanceof StringClobType);
+        assertNull(query.getParam(2).value);
+        assertEquals(new Integer(2), query.getParam(3).value);
+        assertEquals(new Long(0L), query.getParam(4).value);
         query.resetParams();
 
         query.prepareParams(entities.get(2));
-        assertEquals(4, query.getParamSize());
+        assertEquals(5, query.getParamSize());
         assertEquals("baz", query.getParam(0).value);
         assertNull(query.getParam(1).value);
-        assertEquals(new Integer(3), query.getParam(2).value);
-        assertEquals(new Long(0L), query.getParam(3).value);
+        assertTrue(query.getParam(1).valueType instanceof StringClobType);
+        assertNull(query.getParam(2).value);
+        assertEquals(new Integer(3), query.getParam(3).value);
+        assertEquals(new Long(0L), query.getParam(4).value);
     }
 
     /**
@@ -376,27 +387,33 @@ public class AutoBatchUpdateTest extends TestCase {
         query.prepare("execute");
 
         query.prepareParams(entities.get(0));
-        assertEquals(4, query.getParamSize());
+        assertEquals(5, query.getParamSize());
         assertEquals("foo", query.getParam(0).value);
         assertNull(query.getParam(1).value);
-        assertEquals(new Long(0L), query.getParam(2).value);
-        assertEquals(new Integer(1), query.getParam(3).value);
+        assertTrue(query.getParam(1).valueType instanceof StringClobType);
+        assertNull(query.getParam(2).value);
+        assertEquals(new Long(0L), query.getParam(3).value);
+        assertEquals(new Integer(1), query.getParam(4).value);
         query.resetParams();
 
         query.prepareParams(entities.get(1));
-        assertEquals(4, query.getParamSize());
+        assertEquals(5, query.getParamSize());
         assertEquals("bar", query.getParam(0).value);
         assertNull(query.getParam(1).value);
-        assertEquals(new Long(0L), query.getParam(2).value);
-        assertEquals(new Integer(2), query.getParam(3).value);
+        assertTrue(query.getParam(1).valueType instanceof StringClobType);
+        assertNull(query.getParam(2).value);
+        assertEquals(new Long(0L), query.getParam(3).value);
+        assertEquals(new Integer(2), query.getParam(4).value);
         query.resetParams();
 
         query.prepareParams(entities.get(2));
-        assertEquals(4, query.getParamSize());
+        assertEquals(5, query.getParamSize());
         assertEquals("baz", query.getParam(0).value);
         assertNull(query.getParam(1).value);
-        assertEquals(new Long(0L), query.getParam(2).value);
-        assertEquals(new Integer(3), query.getParam(3).value);
+        assertTrue(query.getParam(1).valueType instanceof StringClobType);
+        assertNull(query.getParam(2).value);
+        assertEquals(new Long(0L), query.getParam(3).value);
+        assertEquals(new Integer(3), query.getParam(4).value);
     }
 
     /**
@@ -432,7 +449,7 @@ public class AutoBatchUpdateTest extends TestCase {
         assertEquals(3, result.length);
         SqlLog sqlLog = SqlLogRegistryLocator.getInstance().getLast();
         assertEquals(
-                "update EEE set NAME = 'baz', FFF_ID = null, VERSION = VERSION + 1 where ID = 3 and VERSION = 0",
+                "update EEE set NAME = 'baz', LONG_TEXT = null, FFF_ID = null, VERSION = VERSION + 1 where ID = 3 and VERSION = 0",
                 sqlLog.getCompleteSql());
     }
 
@@ -470,7 +487,7 @@ public class AutoBatchUpdateTest extends TestCase {
         assertEquals(3, result.length);
         SqlLog sqlLog = SqlLogRegistryLocator.getInstance().getLast();
         assertEquals(
-                "update EEE set NAME = 'baz', FFF_ID = null, VERSION = 0 where ID = 3",
+                "update EEE set NAME = 'baz', LONG_TEXT = null, FFF_ID = null, VERSION = 0 where ID = 3",
                 sqlLog.getCompleteSql());
     }
 
