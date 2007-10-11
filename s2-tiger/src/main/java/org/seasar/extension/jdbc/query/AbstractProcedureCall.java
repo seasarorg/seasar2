@@ -93,7 +93,9 @@ public abstract class AbstractProcedureCall<S extends ProcedureCall<S>> extends
         JdbcContext jdbcContext = jdbcManager.getJdbcContext();
         try {
             CallableStatement cs = getCallableStatement(jdbcContext);
-            PreparedStatementUtil.execute(cs);
+            if (PreparedStatementUtil.execute(cs)) {
+                handleNonParamResultSets(cs);
+            }
             handleOutParams(cs);
         } finally {
             if (!jdbcContext.isTransactional()) {
@@ -158,6 +160,27 @@ public abstract class AbstractProcedureCall<S extends ProcedureCall<S>> extends
     }
 
     /**
+     * <code>OUT</code>パラメータにマッピングされない1つ以上の結果セットを処理します。
+     * 
+     * @param cs
+     *            呼び出し可能なステートメント
+     */
+    protected void handleNonParamResultSets(CallableStatement cs) {
+        try {
+            for (int i = 0; i < nonParamList.size(); i++) {
+                Param param = nonParamList.get(i);
+                Object value = handleResultSet(param.field, cs.getResultSet());
+                FieldUtil.set(param.field, parameter, value);
+                if (!cs.getMoreResults()) {
+                    break;
+                }
+            }
+        } catch (SQLException e) {
+            throw new SQLRuntimeException(e);
+        }
+    }
+
+    /**
      * <code>OUT</code>パラメータを処理します。
      * 
      * @param cs
@@ -165,11 +188,6 @@ public abstract class AbstractProcedureCall<S extends ProcedureCall<S>> extends
      */
     protected void handleOutParams(CallableStatement cs) {
         try {
-            for (int i = 0; i < nonParamList.size(); i++) {
-                Param param = nonParamList.get(i);
-                Object value = handleResultSet(param.field, cs.getResultSet());
-                FieldUtil.set(param.field, parameter, value);
-            }
             for (int i = 0; i < getParamSize(); i++) {
                 Param param = getParam(i);
                 if (param.paramType == ParamType.IN) {

@@ -210,6 +210,7 @@ public class AbstractProcedureCallTest extends TestCase {
         query.addNonParam(field);
         MyDto dto = new MyDto();
         query.parameter = dto;
+        query.handleNonParamResultSets(cs);
         query.handleOutParams(cs);
         assertNotNull(dto.aaaList_OUT);
         assertEquals(1, dto.aaaList_OUT.size());
