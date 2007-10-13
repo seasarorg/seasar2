@@ -18,6 +18,7 @@ package org.seasar.extension.jdbc.it.sql;
 import java.util.List;
 
 import org.seasar.extension.jdbc.JdbcManager;
+import org.seasar.extension.jdbc.dialect.HSQLDialect;
 import org.seasar.extension.jdbc.it.entity.Department;
 import org.seasar.extension.jdbc.it.entity.Employee;
 import org.seasar.extension.unit.S2TestCase;
@@ -40,7 +41,10 @@ public class SqlProcedureCallTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void test_no_parameter() throws Exception {
+    public void test_no_parameterTx() throws Exception {
+        if (!supportsProcedure()) {
+            return;
+        }
         jdbcManager.callBySql("{call NO_PARAM()}").call();
     }
 
@@ -48,7 +52,10 @@ public class SqlProcedureCallTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void test_simpleType_parameter() throws Exception {
+    public void test_simpleType_parameterTx() throws Exception {
+        if (!supportsProcedure()) {
+            return;
+        }
         jdbcManager.callBySql("{call SIMPLETYPE_PARAM(?)}", 1).call();
     }
 
@@ -56,7 +63,10 @@ public class SqlProcedureCallTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void test_dto_parameter() throws Exception {
+    public void test_dto_parameterTx() throws Exception {
+        if (!supportsProcedure()) {
+            return;
+        }
         MyDto dto = new MyDto();
         dto.param1 = 3;
         dto.param2_IN_OUT = 5;
@@ -70,7 +80,10 @@ public class SqlProcedureCallTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void test_one_result() throws Exception {
+    public void test_one_resultTx() throws Exception {
+        if (!supportsProcedure()) {
+            return;
+        }
         String query = null;
         if (jdbcManager.getDialect().needsParameterForResultSet()) {
             query = "{call ONE_RESULT(?, ?)}";
@@ -93,7 +106,10 @@ public class SqlProcedureCallTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void test_two_results() throws Exception {
+    public void test_two_resultsTx() throws Exception {
+        if (!supportsProcedure()) {
+            return;
+        }
         String query = null;
         if (jdbcManager.getDialect().needsParameterForResultSet()) {
             query = "{call TWO_RESULTS(?, ?, ?, ?)}";
@@ -116,6 +132,13 @@ public class SqlProcedureCallTest extends S2TestCase {
         assertEquals(2, departments.size());
         assertEquals("SALES", departments.get(0).departmentName);
         assertEquals("OPERATIONS", departments.get(1).departmentName);
+    }
+
+    private boolean supportsProcedure() {
+        if (jdbcManager.getDialect() instanceof HSQLDialect) {
+            return false;
+        }
+        return true;
     }
 
     /**
