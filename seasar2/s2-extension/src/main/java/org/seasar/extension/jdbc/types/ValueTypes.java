@@ -268,7 +268,7 @@ public final class ValueTypes {
         if (valueType != null) {
             return valueType;
         }
-        return null;
+        return OBJECT;
     }
 
     private static ValueType getValueType0(Class clazz) {

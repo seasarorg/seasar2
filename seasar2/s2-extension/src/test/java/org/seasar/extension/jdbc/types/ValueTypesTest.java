@@ -42,8 +42,7 @@ public class ValueTypesTest extends TestCase {
      * @throws Exception
      */
     public void testGetValueType_unknownClass() throws Exception {
-        assertNull(ValueTypes.getValueType(getClass()));
-        ValueTypes.getValueType(getClass());
+        assertEquals(ValueTypes.OBJECT, ValueTypes.getValueType(getClass()));
     }
 
     /**
