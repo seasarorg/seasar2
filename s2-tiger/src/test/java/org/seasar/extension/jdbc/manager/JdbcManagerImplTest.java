@@ -174,7 +174,7 @@ public class JdbcManagerImplTest extends TestCase {
      */
     public void testUpdateBatchBySqlFile() throws Exception {
         String path = "update.sql";
-        SqlFileBatchUpdateImpl<?> query = (SqlFileBatchUpdateImpl<?>) manager
+        SqlFileBatchUpdateImpl<String> query = (SqlFileBatchUpdateImpl<String>) manager
                 .updateBatchBySqlFile(path, "foo", "bar");
         assertNotNull(query);
         assertSame(manager, query.getJdbcManager());
