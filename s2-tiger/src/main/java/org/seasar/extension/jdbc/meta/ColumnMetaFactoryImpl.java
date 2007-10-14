@@ -22,6 +22,7 @@ import javax.persistence.Column;
 import org.seasar.extension.jdbc.ColumnMeta;
 import org.seasar.extension.jdbc.ColumnMetaFactory;
 import org.seasar.extension.jdbc.EntityMeta;
+import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.framework.container.annotation.tiger.Binding;
 import org.seasar.framework.container.annotation.tiger.BindingType;
 import org.seasar.framework.convention.PersistenceConvention;
@@ -35,46 +36,47 @@ import org.seasar.framework.util.StringUtil;
  */
 public class ColumnMetaFactoryImpl implements ColumnMetaFactory {
 
-	private PersistenceConvention persistenceConvention;
+    private PersistenceConvention persistenceConvention;
 
-	public ColumnMeta createColumnMeta(Field field, EntityMeta entityMeta) {
-		ColumnMeta columnMeta = new ColumnMeta();
-		String defaultName = persistenceConvention
-				.fromPropertyNameToColumnName(field.getName());
-		Column column = field.getAnnotation(Column.class);
-		if (column != null) {
-			String name = column.name();
-			if (StringUtil.isEmpty(name)) {
-				name = defaultName;
-			}
-			columnMeta.setName(name);
-			columnMeta.setInsertable(column.insertable());
-			columnMeta.setUpdatable(column.updatable());
-		} else {
-			columnMeta.setName(defaultName);
-		}
-		return columnMeta;
-	}
+    public ColumnMeta createColumnMeta(Field field, EntityMeta entityMeta,
+            PropertyMeta propertyMeta) {
+        ColumnMeta columnMeta = new ColumnMeta();
+        String defaultName = persistenceConvention
+                .fromPropertyNameToColumnName(propertyMeta.getName());
+        Column column = field.getAnnotation(Column.class);
+        if (column != null) {
+            String name = column.name();
+            if (StringUtil.isEmpty(name)) {
+                name = defaultName;
+            }
+            columnMeta.setName(name);
+            columnMeta.setInsertable(column.insertable());
+            columnMeta.setUpdatable(column.updatable());
+        } else {
+            columnMeta.setName(defaultName);
+        }
+        return columnMeta;
+    }
 
-	/**
-	 * 永続化用の規約を返します。
-	 * 
-	 * @return 永続化用の規約
-	 */
-	public PersistenceConvention getPersistenceConvention() {
-		return persistenceConvention;
-	}
+    /**
+     * 永続化用の規約を返します。
+     * 
+     * @return 永続化用の規約
+     */
+    public PersistenceConvention getPersistenceConvention() {
+        return persistenceConvention;
+    }
 
-	/**
-	 * 永続化用の規約を設定します。
-	 * 
-	 * @param persistenceConvention
-	 *            永続化用の規約
-	 */
-	@Binding(bindingType = BindingType.MUST)
-	public void setPersistenceConvention(
-			PersistenceConvention persistenceConvention) {
-		this.persistenceConvention = persistenceConvention;
-	}
+    /**
+     * 永続化用の規約を設定します。
+     * 
+     * @param persistenceConvention
+     *            永続化用の規約
+     */
+    @Binding(bindingType = BindingType.MUST)
+    public void setPersistenceConvention(
+            PersistenceConvention persistenceConvention) {
+        this.persistenceConvention = persistenceConvention;
+    }
 
 }

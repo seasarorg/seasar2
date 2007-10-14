@@ -22,7 +22,7 @@ import javax.persistence.Column;
 import junit.framework.TestCase;
 
 import org.seasar.extension.jdbc.ColumnMeta;
-import org.seasar.extension.jdbc.meta.ColumnMetaFactoryImpl;
+import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.framework.convention.impl.PersistenceConventionImpl;
 
 /**
@@ -31,47 +31,53 @@ import org.seasar.framework.convention.impl.PersistenceConventionImpl;
  */
 public class ColumnMetaFactoryImplTest extends TestCase {
 
-	private ColumnMetaFactoryImpl factory;
+    private ColumnMetaFactoryImpl factory;
 
-	@Override
-	protected void setUp() {
-		factory = new ColumnMetaFactoryImpl();
-		factory.setPersistenceConvention(new PersistenceConventionImpl());
-	}
+    @Override
+    protected void setUp() {
+        factory = new ColumnMetaFactoryImpl();
+        factory.setPersistenceConvention(new PersistenceConventionImpl());
+    }
 
-	/**
-	 * @throws Exception
-	 */
-	public void testCreateColumnMeta_annotation() throws Exception {
-		Field field = MyEntity.class.getDeclaredField("aaa");
-		ColumnMeta columnMeta = factory.createColumnMeta(field, null);
-		assertEquals("aaa2", columnMeta.getName());
-		assertFalse(columnMeta.isInsertable());
-		assertFalse(columnMeta.isUpdatable());
-	}
+    /**
+     * @throws Exception
+     */
+    public void testCreateColumnMeta_annotation() throws Exception {
+        Field field = MyEntity.class.getDeclaredField("aaa");
+        PropertyMeta propertyMeta = new PropertyMeta();
+        propertyMeta.setName("aaa");
+        ColumnMeta columnMeta = factory.createColumnMeta(field, null,
+                propertyMeta);
+        assertEquals("aaa2", columnMeta.getName());
+        assertFalse(columnMeta.isInsertable());
+        assertFalse(columnMeta.isUpdatable());
+    }
 
-	/**
-	 * @throws Exception
-	 */
-	public void testCreateColumnMeta_noannotation() throws Exception {
-		Field field = MyEntity.class.getDeclaredField("bbb");
-		ColumnMeta columnMeta = factory.createColumnMeta(field, null);
-		assertEquals("BBB", columnMeta.getName());
-		assertTrue(columnMeta.isInsertable());
-		assertTrue(columnMeta.isUpdatable());
-	}
+    /**
+     * @throws Exception
+     */
+    public void testCreateColumnMeta_noannotation() throws Exception {
+        Field field = MyEntity.class.getDeclaredField("bbb");
+        PropertyMeta propertyMeta = new PropertyMeta();
+        propertyMeta.setName("bbb");
+        ColumnMeta columnMeta = factory.createColumnMeta(field, null,
+                propertyMeta);
+        assertEquals("BBB", columnMeta.getName());
+        assertTrue(columnMeta.isInsertable());
+        assertTrue(columnMeta.isUpdatable());
+    }
 
-	private static class MyEntity {
+    private static class MyEntity {
 
-		/**
-		 * 
-		 */
-		@Column(name = "aaa2", insertable = false, updatable = false)
-		public String aaa;
+        /**
+         * 
+         */
+        @Column(name = "aaa2", insertable = false, updatable = false)
+        public String aaa;
 
-		/**
-		 * 
-		 */
-		public String bbb;
-	}
+        /**
+         * 
+         */
+        public String bbb;
+    }
 }

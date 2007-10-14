@@ -25,14 +25,17 @@ import java.lang.reflect.Field;
  */
 public interface ColumnMetaFactory {
 
-	/**
-	 * カラムメタデータを作成します。
-	 * 
-	 * @param field
-	 *            フィールド
-	 * @param entityMeta
-	 *            エンティティメタデータ
-	 * @return カラムメタデータ
-	 */
-	ColumnMeta createColumnMeta(Field field, EntityMeta entityMeta);
+    /**
+     * カラムメタデータを作成します。
+     * 
+     * @param field
+     *            フィールド
+     * @param entityMeta
+     *            エンティティメタデータ
+     * @param propertyMeta
+     *            プロパティメタデータ
+     * @return カラムメタデータ
+     */
+    ColumnMeta createColumnMeta(Field field, EntityMeta entityMeta,
+            PropertyMeta propertyMeta);
 }

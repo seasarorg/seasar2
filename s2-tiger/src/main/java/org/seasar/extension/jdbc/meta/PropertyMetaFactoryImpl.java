@@ -158,7 +158,7 @@ public class PropertyMetaFactoryImpl implements PropertyMetaFactory {
             EntityMeta entityMeta) {
         if (ValueTypes.isSimpleType(propertyMeta.getPropertyClass())) {
             propertyMeta.setColumnMeta(columnMetaFactory.createColumnMeta(
-                    field, entityMeta));
+                    field, entityMeta, propertyMeta));
         }
     }
 
