@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.seasar.extension.jdbc.JdbcManager;
+import org.seasar.extension.jdbc.it.entity.CompKeyDepartment;
 import org.seasar.extension.jdbc.it.entity.Department;
 import org.seasar.extension.unit.S2TestCase;
 
@@ -179,5 +180,30 @@ public class AutoUpdateTest extends S2TestCase {
         assertEquals("hoge", department.departmentName);
         assertEquals(before.location, department.location);
         assertEquals(before.version + 1, department.version);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testCompKeyTx() throws Exception {
+        CompKeyDepartment department = new CompKeyDepartment();
+        department.departmentId1 = 1;
+        department.departmentId2 = 1;
+        department.departmentName = "hoge";
+        department.version = 1;
+        int result = jdbcManager.update(department).execute();
+        assertEquals(1, result);
+        Map<String, Object> m = new HashMap<String, Object>();
+        m.put("departmentId1", 1);
+        m.put("departmentId2", 1);
+        department = jdbcManager.from(CompKeyDepartment.class).where(m)
+                .getSingleResult();
+        assertEquals(1, department.departmentId1);
+        assertEquals(1, department.departmentId2);
+        assertEquals(0, department.departmentNo);
+        assertEquals("hoge", department.departmentName);
+        assertNull(department.location);
+        assertEquals(2, department.version);
     }
 }

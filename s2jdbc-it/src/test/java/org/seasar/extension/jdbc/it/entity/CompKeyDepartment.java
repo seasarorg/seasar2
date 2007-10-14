@@ -15,9 +15,11 @@
  */
 package org.seasar.extension.jdbc.it.entity;
 
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Version;
 
 /**
@@ -25,20 +27,30 @@ import javax.persistence.Version;
  * 
  */
 @Entity
-public class Address {
+public class CompKeyDepartment {
 
     /** */
     @Id
-    public int addressId;
+    public int departmentId1;
 
     /** */
-    public String street;
+    @Id
+    public int departmentId2;
+
+    /** */
+    public int departmentNo;
+
+    /** */
+    public String departmentName;
+
+    /** */
+    public String location;
 
     /** */
     @Version
     public int version;
 
     /** */
-    @OneToOne(mappedBy = "address")
-    public Employee employee;
+    @OneToMany(mappedBy = "department")
+    public List<CompKeyEmployee> employees;
 }

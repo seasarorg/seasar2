@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.seasar.extension.jdbc.JdbcManager;
+import org.seasar.extension.jdbc.it.entity.CompKeyEmployee;
 import org.seasar.extension.jdbc.it.entity.Employee;
 import org.seasar.extension.unit.S2TestCase;
 
@@ -68,4 +69,22 @@ public class AutoDeleteTest extends S2TestCase {
         assertNull(employee);
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testCompKeyTx() throws Exception {
+        CompKeyEmployee employee = new CompKeyEmployee();
+        employee.employeeId1 = 1;
+        employee.employeeId2 = 1;
+        employee.version = 1;
+        int result = jdbcManager.delete(employee).execute();
+        assertEquals(1, result);
+        Map<String, Object> m = new HashMap<String, Object>();
+        m.put("employeeId1", 1);
+        m.put("employeeId2", 1);
+        employee = jdbcManager.from(CompKeyEmployee.class).where(m)
+                .getSingleResult();
+        assertNull(employee);
+    }
 }

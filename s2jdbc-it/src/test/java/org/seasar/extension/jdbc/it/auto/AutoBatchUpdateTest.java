@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.seasar.extension.jdbc.JdbcManager;
+import org.seasar.extension.jdbc.it.entity.CompKeyDepartment;
 import org.seasar.extension.jdbc.it.entity.Department;
 import org.seasar.extension.unit.S2TestCase;
 
@@ -206,6 +207,52 @@ public class AutoBatchUpdateTest extends S2TestCase {
         assertEquals(99, department.departmentNo);
         assertEquals("RESEARCH", department.departmentName);
         assertEquals("DALLAS", department.location);
+        assertEquals(2, department.version);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testCompKeyTx() throws Exception {
+        List<CompKeyDepartment> list = new ArrayList<CompKeyDepartment>();
+        CompKeyDepartment department = new CompKeyDepartment();
+        department.departmentId1 = 1;
+        department.departmentId2 = 1;
+        department.departmentName = "hoge";
+        department.version = 1;
+        list.add(department);
+        CompKeyDepartment department2 = new CompKeyDepartment();
+        department2.departmentId1 = 2;
+        department2.departmentId2 = 2;
+        department2.departmentName = "foo";
+        department2.version = 1;
+        list.add(department2);
+
+        int[] result = jdbcManager.update(list).executeBatch();
+        assertEquals(2, result.length);
+
+        Map<String, Object> m = new HashMap<String, Object>();
+        m.put("departmentId1", 1);
+        m.put("departmentId2", 1);
+        department = jdbcManager.from(CompKeyDepartment.class).where(m)
+                .getSingleResult();
+        assertEquals(1, department.departmentId1);
+        assertEquals(1, department.departmentId2);
+        assertEquals(0, department.departmentNo);
+        assertEquals("hoge", department.departmentName);
+        assertNull(department.location);
+        assertEquals(2, department.version);
+
+        m.put("departmentId1", 2);
+        m.put("departmentId2", 2);
+        department = jdbcManager.from(CompKeyDepartment.class).where(m)
+                .getSingleResult();
+        assertEquals(2, department.departmentId1);
+        assertEquals(2, department.departmentId2);
+        assertEquals(0, department.departmentNo);
+        assertEquals("foo", department.departmentName);
+        assertNull(department.location);
         assertEquals(2, department.version);
     }
 

@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.seasar.extension.jdbc.JdbcManager;
+import org.seasar.extension.jdbc.it.entity.CompKeyEmployee;
 import org.seasar.extension.jdbc.it.entity.Employee;
 import org.seasar.extension.unit.S2TestCase;
 
@@ -91,6 +92,40 @@ public class AutoBatchDeleteTest extends S2TestCase {
 
         m.put("employeeId", 2);
         employee = jdbcManager.from(Employee.class).where(m).getSingleResult();
+        assertNull(employee);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testCompKeyTx() throws Exception {
+        List<CompKeyEmployee> list = new ArrayList<CompKeyEmployee>();
+        CompKeyEmployee employee = new CompKeyEmployee();
+        employee.employeeId1 = 1;
+        employee.employeeId2 = 1;
+        employee.version = 1;
+        list.add(employee);
+        CompKeyEmployee employee2 = new CompKeyEmployee();
+        employee2.employeeId1 = 2;
+        employee2.employeeId2 = 2;
+        employee2.version = 1;
+        list.add(employee2);
+
+        int[] result = jdbcManager.delete(list).executeBatch();
+        assertEquals(2, result.length);
+
+        Map<String, Object> m = new HashMap<String, Object>();
+        m.put("employeeId1", 1);
+        m.put("employeeId2", 1);
+        employee = jdbcManager.from(CompKeyEmployee.class).where(m)
+                .getSingleResult();
+        assertNull(employee);
+
+        m.put("employeeId1", 2);
+        m.put("employeeId2", 2);
+        employee = jdbcManager.from(CompKeyEmployee.class).where(m)
+                .getSingleResult();
         assertNull(employee);
     }
 

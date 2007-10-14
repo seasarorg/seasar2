@@ -25,11 +25,15 @@ import javax.persistence.Version;
  * 
  */
 @Entity
-public class Address {
+public class CompKeyAddress {
 
     /** */
     @Id
-    public int addressId;
+    public int addressId1;
+
+    /** */
+    @Id
+    public int addressId2;
 
     /** */
     public String street;
@@ -40,5 +44,5 @@ public class Address {
 
     /** */
     @OneToOne(mappedBy = "address")
-    public Employee employee;
+    public CompKeyEmployee employee;
 }
