@@ -213,6 +213,45 @@ public interface JdbcManager {
     <T> SqlFileBatchUpdate<T> updateBatchBySqlFile(String path, T... params);
 
     /**
+     * SQLファイルプロシージャ呼び出しを返します。
+     * 
+     * @param path
+     *            SQLファイルのパス
+     * @return SQLファイルプロシージャ呼び出し
+     * @see #callBySqlFile(String, Object)
+     */
+    SqlFileProcedureCall callBySqlFile(String path);
+
+    /**
+     * SQLファイルプロシージャ呼び出しを返します。
+     * 
+     * @param path
+     *            SQLファイルのパス
+     * @param parameter
+     *            <p>
+     *            パラメータです。
+     *            </p>
+     *            <p>
+     *            INパラメータが1つしかない場合は、数値や文字列などを直接指定します。 それ以外は、JavaBeansを指定します。
+     *            </p>
+     *            <p>
+     *            プロシージャを呼び出すバインド変数の順番にJavaBeansのフィールドを定義します。
+     *            フィールド名が_OUTで終わっている場合<code>OUT</code>パラメータになります。
+     *            フィールド名が_IN_OUTで終わっている場合<code>IN OUT</code>パラメータになります。
+     *            フィールド名が_INで終わっている場合<code>IN</code>パラメータになります。
+     *            フィールド名が_OUT、_IN_OUT、_INで終わっていない場合は、<code>IN</code>パラメータになります。
+     *            </p>
+     *            <p>
+     *            プロシージャが結果セットを返す場合、フィールドの型は<code>List<レコードの型></code>にします。
+     *            </p>
+     *            <p>
+     *            JavaBeansの場合、継承もとのクラスのフィールドは認識しません。
+     *            </p>
+     * @return SQLファイルプロシージャ呼び出し
+     */
+    SqlFileProcedureCall callBySqlFile(String path, Object parameter);
+
+    /**
      * 自動検索を作成します。
      * 
      * @param <T>

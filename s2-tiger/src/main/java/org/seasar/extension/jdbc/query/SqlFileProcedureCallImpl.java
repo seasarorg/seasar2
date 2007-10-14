@@ -16,38 +16,53 @@
 package org.seasar.extension.jdbc.query;
 
 import org.seasar.extension.jdbc.JdbcManager;
-import org.seasar.extension.jdbc.SqlProcedureCall;
-import org.seasar.extension.jdbc.SqlUpdate;
+import org.seasar.extension.jdbc.SqlFileProcedureCall;
+import org.seasar.extension.sql.Node;
+import org.seasar.extension.sql.SqlContext;
+import org.seasar.extension.sql.cache.NodeCache;
+import org.seasar.extension.sql.context.SqlContextImpl;
+import org.seasar.framework.exception.ResourceNotFoundRuntimeException;
 
 /**
- * {@link SqlUpdate}の実装クラスです。
+ * {@link SqlFileProcedureCall}の実装クラスです。
  * 
- * @author higa
+ * @author taedium
  * 
  */
-public class SqlProcedureCallImpl extends
-        AbstractProcedureCall<SqlProcedureCall> implements SqlProcedureCall {
+public class SqlFileProcedureCallImpl extends
+        AbstractProcedureCall<SqlFileProcedureCall> implements
+        SqlFileProcedureCall {
 
     /**
-     * {@link SqlProcedureCallImpl}を作成します。
+     * SQLファイルのパスです。
+     */
+    protected String path;
+
+    /**
+     * SQLの解析ノードです。
+     */
+    protected Node node;
+
+    /**
+     * {@link SqlFileProcedureCallImpl}を作成します。
      * 
      * @param jdbcManager
      *            JDBCマネージャ
-     * @param sql
-     *            SQL
-     * @see #SqlProcedureCallImpl(JdbcManager, String, Object)
+     * @param path
+     *            SQLファイルのパス
+     * @see #SqlFileProcedureCallImpl(JdbcManager, String, Object)
      */
-    public SqlProcedureCallImpl(JdbcManager jdbcManager, String sql) {
-        this(jdbcManager, sql, null);
+    public SqlFileProcedureCallImpl(JdbcManager jdbcManager, String path) {
+        this(jdbcManager, path, null);
     }
 
     /**
-     * {@link SqlProcedureCallImpl}を作成します。
+     * {@link SqlFileProcedureCallImpl}を作成します。
      * 
      * @param jdbcManager
      *            JDBCマネージャ
-     * @param sql
-     *            SQL
+     * @param path
+     *            SQLファイルのパス
      * @param param
      *            <p>
      *            パラメータです。
@@ -69,20 +84,55 @@ public class SqlProcedureCallImpl extends
      *            継承もとのクラスのフィールドは認識しません。
      *            </p>
      */
-    public SqlProcedureCallImpl(JdbcManager jdbcManager, String sql,
+    public SqlFileProcedureCallImpl(JdbcManager jdbcManager, String path,
             Object param) {
         super(jdbcManager);
-        if (sql == null) {
-            throw new NullPointerException("sql");
+        if (path == null) {
+            throw new NullPointerException("path");
         }
-        this.executedSql = sql;
+        this.path = path;
         this.parameter = param;
+    }
+
+    /**
+     * SQLファイルのパスを返します。
+     * 
+     * @return SQLファイルのパス
+     */
+    public String getPath() {
+        return path;
     }
 
     @Override
     protected void prepare(String methodName) {
         prepareCallerClassAndMethodName(methodName);
+        prepareNode();
+        prepareSql();
         prepareParameter();
     }
 
+    /**
+     * SQLの解析ノードを準備します。
+     * 
+     * @throws ResourceNotFoundRuntimeException
+     *             パスに対応するリソースが見つからない場合。
+     * 
+     */
+    protected void prepareNode() throws ResourceNotFoundRuntimeException {
+        node = NodeCache.getNode(path, jdbcManager.getDialect().getName());
+        if (node == null) {
+            logger.log("ESSR0709", new Object[] { callerClass.getName(),
+                    callerMethodName });
+            throw new ResourceNotFoundRuntimeException(path);
+        }
+    }
+
+    /**
+     * SQLを準備します。
+     */
+    protected void prepareSql() {
+        SqlContext sqlContext = new SqlContextImpl();
+        node.accept(sqlContext);
+        executedSql = sqlContext.getSql();
+    }
 }

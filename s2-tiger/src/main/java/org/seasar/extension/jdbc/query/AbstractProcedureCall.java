@@ -22,15 +22,20 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Lob;
+
 import org.seasar.extension.jdbc.JdbcContext;
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.ParamType;
 import org.seasar.extension.jdbc.ProcedureCall;
 import org.seasar.extension.jdbc.ResultSetHandler;
+import org.seasar.extension.jdbc.ValueType;
 import org.seasar.extension.jdbc.exception.FieldNotGenericsRuntimeException;
 import org.seasar.extension.jdbc.handler.BeanListResultSetHandler;
+import org.seasar.extension.jdbc.types.ValueTypes;
 import org.seasar.framework.exception.SQLRuntimeException;
 import org.seasar.framework.util.FieldUtil;
+import org.seasar.framework.util.ModifierUtil;
 import org.seasar.framework.util.PreparedStatementUtil;
 import org.seasar.framework.util.StatementUtil;
 import org.seasar.framework.util.tiger.ReflectionUtil;
@@ -102,7 +107,50 @@ public abstract class AbstractProcedureCall<S extends ProcedureCall<S>> extends
                 jdbcContext.destroy();
             }
         }
+    }
 
+    /**
+     * パラメータの準備をします。
+     */
+    protected void prepareParameter() {
+        if (parameter == null) {
+            return;
+        }
+        boolean needsParameterForResultSet = jdbcManager.getDialect()
+                .needsParameterForResultSet();
+        Class<?> paramClass = parameter.getClass();
+        if (ValueTypes.isSimpleType(paramClass)) {
+            addParam(parameter, paramClass);
+        } else {
+            Field[] fields = paramClass.getDeclaredFields();
+            for (Field f : fields) {
+                if (!ModifierUtil.isInstanceField(f)) {
+                    continue;
+                }
+                f.setAccessible(true);
+                String name = f.getName();
+                Class<?> clazz = f.getType();
+                boolean lob = f.getAnnotation(Lob.class) != null;
+                ValueType valueType = getValueType(clazz, lob);
+                if (name.endsWith(ParamType.IN_OUT.getSuffix())) {
+                    Param p = addParam(FieldUtil.get(f, parameter), clazz,
+                            valueType);
+                    p.paramType = ParamType.IN_OUT;
+                    p.field = f;
+                } else if (name.endsWith(ParamType.OUT.getSuffix())) {
+                    if (List.class.isAssignableFrom(clazz)
+                            && !needsParameterForResultSet) {
+                        addNonParam(f);
+                    } else {
+                        Param p = addParam(null, clazz, valueType);
+                        p.paramType = ParamType.OUT;
+                        p.field = f;
+                    }
+                } else {
+                    addParam(FieldUtil.get(f, parameter), clazz, valueType);
+                }
+            }
+        }
     }
 
     /**
