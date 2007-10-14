@@ -16,7 +16,7 @@
 package org.seasar.extension.jdbc;
 
 /**
- * SQL文を使用するバッチ更新(insert, update, delete)です。
+ * SQLファイルを使うバッチ更新(insert, update, delete)です。
  * 
  * @author taedium
  * @param <T>
