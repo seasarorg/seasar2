@@ -15,6 +15,8 @@
  */
 package org.seasar.extension.jdbc.dialect;
 
+import javax.persistence.GenerationType;
+
 /**
  * MS SQLServer用の方言をあつかうクラスです。
  * 
@@ -23,34 +25,56 @@ package org.seasar.extension.jdbc.dialect;
  */
 public class MSSQLDialect extends StandardDialect {
 
-	@Override
-	public String getName() {
-		return "mssql";
-	}
+    @Override
+    public String getName() {
+        return "mssql";
+    }
 
-	@Override
-	public boolean supportsLimit() {
-		return true;
-	}
+    @Override
+    public boolean supportsLimit() {
+        return true;
+    }
 
-	@Override
-	public boolean supportsOffset() {
-		return false;
-	}
+    @Override
+    public boolean supportsOffset() {
+        return false;
+    }
 
-	@Override
-	public String convertLimitSql(String sql, int offset, int limit) {
-		StringBuilder buf = new StringBuilder(sql.length() + 20);
-		String lowerSql = sql.toLowerCase();
-		int startOfSelect = lowerSql.indexOf("select");
-		int endOfSelect = startOfSelect + 6;
-		if (" distinct".equals(lowerSql.substring(6, 15))) {
-			endOfSelect = startOfSelect + 15;
-		}
-		buf.append(sql.substring(0, endOfSelect));
-		buf.append(" top ");
-		buf.append(offset + limit);
-		buf.append(sql.substring(endOfSelect));
-		return buf.toString();
-	}
+    @Override
+    public String convertLimitSql(String sql, int offset, int limit) {
+        StringBuilder buf = new StringBuilder(sql.length() + 20);
+        String lowerSql = sql.toLowerCase();
+        int startOfSelect = lowerSql.indexOf("select");
+        int endOfSelect = startOfSelect + 6;
+        if (" distinct".equals(lowerSql.substring(6, 15))) {
+            endOfSelect = startOfSelect + 15;
+        }
+        buf.append(sql.substring(0, endOfSelect));
+        buf.append(" top ");
+        buf.append(offset + limit);
+        buf.append(sql.substring(endOfSelect));
+        return buf.toString();
+    }
+
+    @Override
+    public GenerationType getDefaultGenerationType() {
+        return GenerationType.IDENTITY;
+    }
+
+    @Override
+    public boolean supportIdentity() {
+        return true;
+    }
+
+    @Override
+    public boolean supportGetGeneratedKeys() {
+        return true;
+    }
+
+    @Override
+    public String getIdentitySelectString(final String tableName,
+            final String columnName) {
+        return "select @@identity";
+    }
+
 }

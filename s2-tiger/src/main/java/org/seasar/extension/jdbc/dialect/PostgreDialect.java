@@ -17,6 +17,8 @@ package org.seasar.extension.jdbc.dialect;
 
 import java.util.List;
 
+import javax.persistence.GenerationType;
+
 import org.seasar.extension.jdbc.ValueType;
 import org.seasar.extension.jdbc.types.ValueTypes;
 
@@ -65,4 +67,38 @@ public class PostgreDialect extends StandardDialect {
         }
         return ValueTypes.getValueType(clazz);
     }
+
+    @Override
+    public GenerationType getDefaultGenerationType() {
+        return GenerationType.IDENTITY;
+    }
+
+    @Override
+    public boolean supportIdentity() {
+        return true;
+    }
+
+    @Override
+    public boolean supportGetGeneratedKeys() {
+        return false;
+    }
+
+    @Override
+    public String getIdentitySelectString(final String tableName,
+            final String columnName) {
+        return new String(new StringBuilder(64).append("select currval('")
+                .append(tableName).append('_').append(columnName).append(
+                        "_seq')"));
+    }
+
+    @Override
+    public boolean supportSequence() {
+        return true;
+    }
+
+    @Override
+    public String getSequenceNextValString(final String sequenceName) {
+        return "values nextval for " + sequenceName;
+    }
+
 }

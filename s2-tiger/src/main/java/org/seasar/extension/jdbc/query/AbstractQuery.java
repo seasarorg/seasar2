@@ -29,6 +29,7 @@ import org.seasar.extension.jdbc.ResultSetHandler;
 import org.seasar.extension.jdbc.SqlLog;
 import org.seasar.extension.jdbc.SqlLogRegistry;
 import org.seasar.extension.jdbc.SqlLogRegistryLocator;
+import org.seasar.extension.jdbc.SqlLogger;
 import org.seasar.extension.jdbc.ValueType;
 import org.seasar.extension.jdbc.impl.SqlLogImpl;
 import org.seasar.extension.jdbc.types.ValueTypes;
@@ -48,7 +49,8 @@ import org.seasar.framework.util.ResultSetUtil;
  * @param <S>
  *            <code>Query</code>のサブタイプです。
  */
-public abstract class AbstractQuery<S extends Query<S>> implements Query<S> {
+public abstract class AbstractQuery<S extends Query<S>> implements Query<S>,
+        SqlLogger {
 
     /**
      * JDBCマネージャです。
@@ -115,6 +117,25 @@ public abstract class AbstractQuery<S extends Query<S>> implements Query<S> {
         return (S) this;
     }
 
+    public void logSql(String sql, Object... vars) {
+        String completeSql = null;
+        if (logger.isDebugEnabled()) {
+            vars = getParamValues();
+            completeSql = BindVariableUtil.getCompleteSql(sql, vars);
+            logger.debug(completeSql);
+        }
+        SqlLogRegistry sqlLogRegistry = SqlLogRegistryLocator.getInstance();
+        if (sqlLogRegistry != null) {
+            if (completeSql == null) {
+                vars = getParamValues();
+                completeSql = BindVariableUtil.getCompleteSql(sql, vars);
+            }
+            SqlLog sqlLog = new SqlLogImpl(sql, completeSql, vars,
+                    getParamClasses());
+            sqlLogRegistry.add(sqlLog);
+        }
+    }
+
     /**
      * クエリの準備をします。
      * 
@@ -127,24 +148,7 @@ public abstract class AbstractQuery<S extends Query<S>> implements Query<S> {
      * SQLをログに出力します。
      */
     protected void logSql() {
-        String completeSql = null;
-        Object[] vars = null;
-        if (logger.isDebugEnabled()) {
-            vars = getParamValues();
-            completeSql = BindVariableUtil.getCompleteSql(executedSql, vars);
-            logger.debug(completeSql);
-        }
-        SqlLogRegistry sqlLogRegistry = SqlLogRegistryLocator.getInstance();
-        if (sqlLogRegistry != null) {
-            if (completeSql == null) {
-                vars = getParamValues();
-                completeSql = BindVariableUtil
-                        .getCompleteSql(executedSql, vars);
-            }
-            SqlLog sqlLog = new SqlLogImpl(executedSql, completeSql, vars,
-                    getParamClasses());
-            sqlLogRegistry.add(sqlLog);
-        }
+        logSql(executedSql, getParamValues());
     }
 
     /**

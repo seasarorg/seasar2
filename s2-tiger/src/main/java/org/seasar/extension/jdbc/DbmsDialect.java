@@ -15,7 +15,11 @@
  */
 package org.seasar.extension.jdbc;
 
+import java.sql.Statement;
 import java.util.List;
+
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 
 /**
  * データベースごとの方言をあつかうインターフェースです。
@@ -114,4 +118,62 @@ public interface DbmsDialect {
             JoinType joinType, String tableName, String tableAlias,
             String fkTableAlias, String pkTableAlias,
             List<JoinColumnMeta> joinColumnMetaList);
+
+    /**
+     * {@link GeneratedValue#strategy()}に{@link GenerationType#AUTO}が指定された場合の、
+     * デフォルトの{@link GenerationType}を返します。
+     * 
+     * @return デフォルトの{@link GenerationType}
+     */
+    GenerationType getDefaultGenerationType();
+
+    /**
+     * {@link GenerationType#IDENTITY}をサポートしている場合は<code>true</code>を返します。
+     * 
+     * @return {@link GenerationType#IDENTITY}をサポートしている場合は<code>true</code>
+     */
+    boolean supportIdentity();
+
+    /**
+     * 識別子が{@link GenerationType#IDENTITY}で生成される場合に、 識別子をINSERT文に含める場合は<code>true</code>を返します。
+     * 
+     * @return 識別子をINSERT文に含める場合は<code>true</code>
+     */
+    boolean isInsertIdentityColumn();
+
+    /**
+     * 識別子が{@link GenerationType#IDENTITY}で自動生成される場合に、 生成された主キーの値を{@link Statement#getGeneratedKeys()}で取得できる場合は<code>true</code>を返します。
+     * 
+     * @return 生成された識別子の値を{@link Statement#getGeneratedKeys()}で取得できる場合は<code>true</code>
+     */
+    boolean supportGetGeneratedKeys();
+
+    /**
+     * 識別子が{@link GenerationType#IDENTITY}で自動生成される場合に、
+     * 生成された主キーの値を取得するSQLを返します。
+     * 
+     * @param tableName
+     *            テーブル名
+     * @param columnName
+     *            識別子のカラム名
+     * @return 生成された識別子の値を取得するSQL
+     */
+    String getIdentitySelectString(String tableName, String columnName);
+
+    /**
+     * {@link GenerationType#SEQUENCE}をサポートしている場合は<code>true</code>を返します。
+     * 
+     * @return {@link GenerationType#SEQUENCE}をサポートしている場合は<code>true</code>
+     */
+    boolean supportSequence();
+
+    /**
+     * 識別子が{@link GenerationType#SEQUENCE}で自動生成される場合に、 シーケンスの値を取得するSQLを返します。
+     * 
+     * @param sequenceName
+     *            シーケンス名
+     * @return シーケンスの値を取得するSQL
+     */
+    String getSequenceNextValString(String sequenceName);
+
 }

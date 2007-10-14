@@ -16,15 +16,20 @@
 package org.seasar.extension.jdbc.query;
 
 import java.lang.reflect.Field;
+import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
 import org.seasar.extension.jdbc.AutoInsert;
+import org.seasar.extension.jdbc.IdGenerator;
 import org.seasar.extension.jdbc.IntoClause;
+import org.seasar.extension.jdbc.JdbcContext;
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.ValuesClause;
+import org.seasar.extension.jdbc.exception.IdPropertyNotAssignedRuntimeException;
 import org.seasar.framework.util.FieldUtil;
 import org.seasar.framework.util.tiger.CollectionsUtil;
 
@@ -61,6 +66,9 @@ public class AutoInsertImpl<T> extends AbstractAutoUpdate<T, AutoInsert<T>>
 
     /** values句 */
     protected final ValuesClause valuesClause = new ValuesClause();
+
+    /** {@link Statement#getGeneratedKeys()}を使用する場合は<code>true</code> */
+    protected boolean useGetGeneratedKeys;
 
     /**
      * @param jdbcManager
@@ -109,14 +117,32 @@ public class AutoInsertImpl<T> extends AbstractAutoUpdate<T, AutoInsert<T>>
             if (!propertyMeta.getColumnMeta().isInsertable()) {
                 continue;
             }
+            if (propertyMeta.isId()) {
+                if (propertyMeta.hasIdGenerator()) {
+                    final IdGenerator idGenerator = propertyMeta
+                            .getIdGenerator(jdbcManager.getDialect());
+                    useGetGeneratedKeys |= idGenerator
+                            .useGetGeneratedKeys(jdbcManager);
+                    if (idGenerator.isInsertInto(jdbcManager)) {
+                        targetProperties.add(propertyMeta);
+                    }
+                    continue;
+                }
+                if (value != null) {
+                    targetProperties.add(propertyMeta);
+                    continue;
+                }
+                throw new IdPropertyNotAssignedRuntimeException(entityMeta
+                        .getName(), propertyMeta.getName());
+            }
+            if (excludesNull && value == null) {
+                continue;
+            }
             if (!includesProperties.isEmpty()
                     && !includesProperties.contains(propertyName)) {
                 continue;
             }
             if (excludesProperties.contains(propertyName)) {
-                continue;
-            }
-            if (excludesNull && value == null) {
                 continue;
             }
             targetProperties.add(propertyMeta);
@@ -133,7 +159,7 @@ public class AutoInsertImpl<T> extends AbstractAutoUpdate<T, AutoInsert<T>>
     }
 
     /**
-     * where句の準備をします。
+     * value句の準備をします。
      */
     @SuppressWarnings("unused")
     protected void prepareValuesClause() {
@@ -147,9 +173,27 @@ public class AutoInsertImpl<T> extends AbstractAutoUpdate<T, AutoInsert<T>>
      */
     protected void prepareParams() {
         for (final PropertyMeta propertyMeta : targetProperties) {
-            final Object value = FieldUtil.get(propertyMeta.getField(), entity);
+            final Object value;
+            if (propertyMeta.isId() && propertyMeta.hasIdGenerator()) {
+                value = getIdValue(propertyMeta);
+            } else {
+                value = FieldUtil.get(propertyMeta.getField(), entity);
+            }
             addParam(value, propertyMeta);
         }
+    }
+
+    /**
+     * バインドする識別子の値を返します。
+     * 
+     * @param propertyMeta
+     *            プロパティメタデータ
+     * @return 識別子の値
+     */
+    protected Object getIdValue(final PropertyMeta propertyMeta) {
+        final IdGenerator idGenerator = propertyMeta.getIdGenerator(jdbcManager
+                .getDialect());
+        return idGenerator.preInsert(jdbcManager, entity, this);
     }
 
     /**
@@ -165,6 +209,28 @@ public class AutoInsertImpl<T> extends AbstractAutoUpdate<T, AutoInsert<T>>
                 + valuesClause.getLength());
         return new String(buf.append(INSERT_STATEMENT).append(tableName)
                 .append(intoClause.toSql()).append(valuesClause.toSql()));
+    }
+
+    @Override
+    protected PreparedStatement createPreparedStatement(
+            final JdbcContext jdbcContext) {
+        if (useGetGeneratedKeys) {
+            return jdbcContext.getPreparedStatement(executedSql,
+                    Statement.RETURN_GENERATED_KEYS);
+        }
+        return super.createPreparedStatement(jdbcContext);
+    }
+
+    @Override
+    protected void postExecute(final PreparedStatement ps) {
+        for (final PropertyMeta propertyMeta : entityMeta
+                .getIdPropertyMetaList()) {
+            if (propertyMeta.hasIdGenerator()) {
+                final IdGenerator idGenerator = propertyMeta
+                        .getIdGenerator(jdbcManager.getDialect());
+                idGenerator.postInsert(jdbcManager, entity, ps, this);
+            }
+        }
     }
 
     @Override

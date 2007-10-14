@@ -15,6 +15,8 @@
  */
 package org.seasar.extension.jdbc.dialect;
 
+import javax.persistence.GenerationType;
+
 /**
  * DB2用の方言をあつかうクラスです。
  * 
@@ -69,4 +71,36 @@ public class DB2Dialect extends StandardDialect {
         buf.append(" rows only");
         return buf.toString();
     }
+
+    @Override
+    public GenerationType getDefaultGenerationType() {
+        return GenerationType.IDENTITY;
+    }
+
+    @Override
+    public boolean supportIdentity() {
+        return true;
+    }
+
+    @Override
+    public boolean supportGetGeneratedKeys() {
+        return true;
+    }
+
+    @Override
+    public String getIdentitySelectString(final String tableName,
+            final String columnName) {
+        return "values identity_val_local()";
+    }
+
+    @Override
+    public boolean supportSequence() {
+        return true;
+    }
+
+    @Override
+    public String getSequenceNextValString(final String sequenceName) {
+        return "values nextval for " + sequenceName;
+    }
+
 }

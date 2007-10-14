@@ -17,6 +17,8 @@ package org.seasar.extension.jdbc.dialect;
 
 import java.util.List;
 
+import javax.persistence.GenerationType;
+
 import org.seasar.extension.jdbc.DbmsDialect;
 import org.seasar.extension.jdbc.FromClause;
 import org.seasar.extension.jdbc.JoinColumnMeta;
@@ -75,6 +77,35 @@ public class StandardDialect implements DbmsDialect {
         fromClause.addSql(joinType, tableName, tableAlias, fkTableAlias,
                 pkTableAlias, joinColumnMetaList);
 
+    }
+
+    public GenerationType getDefaultGenerationType() {
+        return GenerationType.TABLE;
+    }
+
+    public boolean supportIdentity() {
+        return false;
+    }
+
+    public boolean isInsertIdentityColumn() {
+        return false;
+    }
+
+    public boolean supportGetGeneratedKeys() {
+        return false;
+    }
+
+    public String getIdentitySelectString(final String tableName,
+            final String columnName) {
+        return null;
+    }
+
+    public boolean supportSequence() {
+        return false;
+    }
+
+    public String getSequenceNextValString(final String sequenceName) {
+        return null;
     }
 
     /**

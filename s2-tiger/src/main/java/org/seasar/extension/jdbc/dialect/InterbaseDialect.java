@@ -15,6 +15,8 @@
  */
 package org.seasar.extension.jdbc.dialect;
 
+import javax.persistence.GenerationType;
+
 /**
  * Interbase用の方言をあつかうクラスです。
  * 
@@ -23,29 +25,45 @@ package org.seasar.extension.jdbc.dialect;
  */
 public class InterbaseDialect extends StandardDialect {
 
-	@Override
-	public String getName() {
-		return "interbase";
-	}
+    @Override
+    public String getName() {
+        return "interbase";
+    }
 
-	@Override
-	public boolean supportsLimit() {
-		return true;
-	}
+    @Override
+    public boolean supportsLimit() {
+        return true;
+    }
 
-	@Override
-	public String convertLimitSql(String sql, int offset, int limit) {
-		StringBuilder buf = new StringBuilder(sql.length() + 15);
-		buf.append(sql);
-		if (offset > 0) {
-			buf.append(" rows ");
-			buf.append(offset);
-			buf.append(" to ");
-			buf.append(limit);
-		} else {
-			buf.append(" rows ");
-			buf.append(limit);
-		}
-		return buf.toString();
-	}
+    @Override
+    public String convertLimitSql(String sql, int offset, int limit) {
+        StringBuilder buf = new StringBuilder(sql.length() + 15);
+        buf.append(sql);
+        if (offset > 0) {
+            buf.append(" rows ");
+            buf.append(offset);
+            buf.append(" to ");
+            buf.append(limit);
+        } else {
+            buf.append(" rows ");
+            buf.append(limit);
+        }
+        return buf.toString();
+    }
+
+    @Override
+    public GenerationType getDefaultGenerationType() {
+        return GenerationType.SEQUENCE;
+    }
+
+    @Override
+    public boolean supportSequence() {
+        return true;
+    }
+
+    @Override
+    public String getSequenceNextValString(final String sequenceName) {
+        return "select RDB$GENERATOR_NAME from RDB$GENERATORS";
+    }
+
 }

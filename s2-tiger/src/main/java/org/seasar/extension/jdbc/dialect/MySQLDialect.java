@@ -15,6 +15,8 @@
  */
 package org.seasar.extension.jdbc.dialect;
 
+import javax.persistence.GenerationType;
+
 /**
  * MySQL用の方言をあつかうクラスです。
  * 
@@ -23,36 +25,58 @@ package org.seasar.extension.jdbc.dialect;
  */
 public class MySQLDialect extends StandardDialect {
 
-	@Override
-	public String getName() {
-		return "mysql";
-	}
+    @Override
+    public String getName() {
+        return "mysql";
+    }
 
-	@Override
-	public boolean supportsLimit() {
-		return true;
-	}
+    @Override
+    public boolean supportsLimit() {
+        return true;
+    }
 
-	@Override
-	public boolean supportsOffsetWithoutLimit() {
-		return false;
-	}
+    @Override
+    public boolean supportsOffsetWithoutLimit() {
+        return false;
+    }
 
-	@Override
-	public String convertLimitSql(String sql, int offset, int limit) {
-		StringBuilder buf = new StringBuilder(sql.length() + 20);
-		buf.append(sql);
-		if (offset > 0 && limit > 0) {
-			buf.append(" limit ");
-			buf.append(offset);
-			buf.append(", ");
-			buf.append(limit);
-		} else if (offset == 0 && limit > 0) {
-			buf.append(" limit ");
-			buf.append(limit);
-		} else if (offset > 0 && limit == 0) {
-			throw new IllegalArgumentException("limit is zero");
-		}
-		return buf.toString();
-	}
+    @Override
+    public String convertLimitSql(String sql, int offset, int limit) {
+        StringBuilder buf = new StringBuilder(sql.length() + 20);
+        buf.append(sql);
+        if (offset > 0 && limit > 0) {
+            buf.append(" limit ");
+            buf.append(offset);
+            buf.append(", ");
+            buf.append(limit);
+        } else if (offset == 0 && limit > 0) {
+            buf.append(" limit ");
+            buf.append(limit);
+        } else if (offset > 0 && limit == 0) {
+            throw new IllegalArgumentException("limit is zero");
+        }
+        return buf.toString();
+    }
+
+    @Override
+    public GenerationType getDefaultGenerationType() {
+        return GenerationType.IDENTITY;
+    }
+
+    @Override
+    public boolean supportIdentity() {
+        return true;
+    }
+
+    @Override
+    public boolean supportGetGeneratedKeys() {
+        return true;
+    }
+
+    @Override
+    public String getIdentitySelectString(final String tableName,
+            final String columnName) {
+        return "select last_insert_id()";
+    }
+
 }

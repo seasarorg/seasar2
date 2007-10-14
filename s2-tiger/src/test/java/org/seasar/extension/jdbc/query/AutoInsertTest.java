@@ -21,11 +21,16 @@ import java.sql.SQLException;
 import junit.framework.TestCase;
 
 import org.seasar.extension.jdbc.JdbcContext;
+import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.SqlLog;
 import org.seasar.extension.jdbc.SqlLogRegistry;
 import org.seasar.extension.jdbc.SqlLogRegistryLocator;
+import org.seasar.extension.jdbc.dialect.DB2Dialect;
+import org.seasar.extension.jdbc.dialect.HSQLDialect;
+import org.seasar.extension.jdbc.dialect.OracleDialect;
 import org.seasar.extension.jdbc.dialect.StandardDialect;
 import org.seasar.extension.jdbc.entity.Eee;
+import org.seasar.extension.jdbc.entity.Fff;
 import org.seasar.extension.jdbc.manager.JdbcManagerImpl;
 import org.seasar.extension.jdbc.meta.ColumnMetaFactoryImpl;
 import org.seasar.extension.jdbc.meta.EntityMetaFactoryImpl;
@@ -175,6 +180,69 @@ public class AutoInsertTest extends TestCase {
     /**
      * 
      */
+    public void testPrepareTarget_identity() {
+        manager.setDialect(new DB2Dialect());
+        Fff fff = new Fff();
+        fff.name = "hoge";
+        fff.version = 1L;
+        AutoInsertImpl<Fff> query = new AutoInsertImpl<Fff>(manager, fff);
+        query.prepareTargetProperties();
+        assertEquals(2, query.targetProperties.size());
+        assertEquals("name", query.targetProperties.get(0).getName());
+        assertEquals("version", query.targetProperties.get(1).getName());
+    }
+
+    /**
+     * 
+     */
+    public void testPrepareTarget_identityInto() {
+        manager.setDialect(new HSQLDialect());
+        Fff fff = new Fff();
+        fff.name = "hoge";
+        fff.version = 1L;
+        AutoInsertImpl<Fff> query = new AutoInsertImpl<Fff>(manager, fff);
+        query.prepareTargetProperties();
+        assertEquals(3, query.targetProperties.size());
+        assertEquals("id", query.targetProperties.get(0).getName());
+        assertEquals("name", query.targetProperties.get(1).getName());
+        assertEquals("version", query.targetProperties.get(2).getName());
+    }
+
+    /**
+     * 
+     */
+    public void testPrepareTarget_sequence() {
+        manager.setDialect(new OracleDialect());
+        Fff fff = new Fff();
+        fff.name = "hoge";
+        fff.version = 1L;
+        AutoInsertImpl<Fff> query = new AutoInsertImpl<Fff>(manager, fff);
+        query.prepareTargetProperties();
+        assertEquals(3, query.targetProperties.size());
+        assertEquals("id", query.targetProperties.get(0).getName());
+        assertEquals("name", query.targetProperties.get(1).getName());
+        assertEquals("version", query.targetProperties.get(2).getName());
+    }
+
+    /**
+     * 
+     */
+    public void testPrepareTarget_table() {
+        manager.setDialect(new StandardDialect());
+        Fff fff = new Fff();
+        fff.name = "hoge";
+        fff.version = 1L;
+        AutoInsertImpl<Fff> query = new AutoInsertImpl<Fff>(manager, fff);
+        query.prepareTargetProperties();
+        assertEquals(3, query.targetProperties.size());
+        assertEquals("id", query.targetProperties.get(0).getName());
+        assertEquals("name", query.targetProperties.get(1).getName());
+        assertEquals("version", query.targetProperties.get(2).getName());
+    }
+
+    /**
+     * 
+     */
     public void testPrepareTarget_excludesNull() {
         Eee eee = new Eee();
         eee.id = 100;
@@ -272,6 +340,72 @@ public class AutoInsertTest extends TestCase {
     /**
      * 
      */
+    public void testPrepareIntoClause_identity() {
+        manager.setDialect(new DB2Dialect());
+        Fff fff = new Fff();
+        fff.name = "hoge";
+        fff.version = 1L;
+        AutoInsertImpl<Fff> query = new AutoInsertImpl<Fff>(manager, fff);
+        query.prepare("execute");
+        assertEquals(" (NAME, VERSION)", query.intoClause.toSql());
+    }
+
+    /**
+     * 
+     */
+    public void testPrepareIntoClause_identityInto() {
+        manager.setDialect(new HSQLDialect());
+        Fff fff = new Fff();
+        fff.name = "hoge";
+        fff.version = 1L;
+        AutoInsertImpl<Fff> query = new AutoInsertImpl<Fff>(manager, fff);
+        query.prepare("execute");
+        assertEquals(" (ID, NAME, VERSION)", query.intoClause.toSql());
+    }
+
+    /**
+     * 
+     */
+    public void testPrepareIntoClause_sequence() {
+        manager.setDialect(new OracleDialect());
+        Fff fff = new Fff();
+        fff.name = "hoge";
+        fff.version = 1L;
+        AutoInsertImpl<Fff> query = new AutoInsertImpl<Fff>(manager, fff) {
+
+            @Override
+            protected Object getIdValue(PropertyMeta propertyMeta) {
+                return 10L;
+            }
+
+        };
+        query.prepare("execute");
+        assertEquals(" (ID, NAME, VERSION)", query.intoClause.toSql());
+    }
+
+    /**
+     * 
+     */
+    public void testPrepareIntoClause_table() {
+        manager.setDialect(new StandardDialect());
+        Fff fff = new Fff();
+        fff.name = "hoge";
+        fff.version = 1L;
+        AutoInsertImpl<Fff> query = new AutoInsertImpl<Fff>(manager, fff) {
+
+            @Override
+            protected Object getIdValue(PropertyMeta propertyMeta) {
+                return 10L;
+            }
+
+        };
+        query.prepare("execute");
+        assertEquals(" (ID, NAME, VERSION)", query.intoClause.toSql());
+    }
+
+    /**
+     * 
+     */
     public void testPrepareValuesClause() {
         Eee eee = new Eee();
         eee.id = 100;
@@ -280,6 +414,72 @@ public class AutoInsertTest extends TestCase {
         AutoInsertImpl<Eee> query = new AutoInsertImpl<Eee>(manager, eee);
         query.prepare("execute");
         assertEquals(" values (?, ?, ?, ?, ?)", query.valuesClause.toSql());
+    }
+
+    /**
+     * 
+     */
+    public void testPrepareValuesClause_identity() {
+        manager.setDialect(new DB2Dialect());
+        Fff fff = new Fff();
+        fff.name = "hoge";
+        fff.version = 1L;
+        AutoInsertImpl<Fff> query = new AutoInsertImpl<Fff>(manager, fff);
+        query.prepare("execute");
+        assertEquals(" values (?, ?)", query.valuesClause.toSql());
+    }
+
+    /**
+     * 
+     */
+    public void testPrepareValuesClause_identityInto() {
+        manager.setDialect(new HSQLDialect());
+        Fff fff = new Fff();
+        fff.name = "hoge";
+        fff.version = 1L;
+        AutoInsertImpl<Fff> query = new AutoInsertImpl<Fff>(manager, fff);
+        query.prepare("execute");
+        assertEquals(" values (?, ?, ?)", query.valuesClause.toSql());
+    }
+
+    /**
+     * 
+     */
+    public void testPrepareValuesClause_sequence() {
+        manager.setDialect(new OracleDialect());
+        Fff fff = new Fff();
+        fff.name = "hoge";
+        fff.version = 1L;
+        AutoInsertImpl<Fff> query = new AutoInsertImpl<Fff>(manager, fff) {
+
+            @Override
+            protected Object getIdValue(PropertyMeta propertyMeta) {
+                return 10L;
+            }
+
+        };
+        query.prepare("execute");
+        assertEquals(" values (?, ?, ?)", query.valuesClause.toSql());
+    }
+
+    /**
+     * 
+     */
+    public void testPrepareValuesClause_table() {
+        manager.setDialect(new StandardDialect());
+        Fff fff = new Fff();
+        fff.name = "hoge";
+        fff.version = 1L;
+        AutoInsertImpl<Fff> query = new AutoInsertImpl<Fff>(manager, fff) {
+
+            @Override
+            protected Object getIdValue(PropertyMeta propertyMeta) {
+                return 10L;
+            }
+
+        };
+        query.prepare("execute");
+        assertEquals(" values (?, ?, ?)", query.valuesClause.toSql());
     }
 
     /**
@@ -299,6 +499,83 @@ public class AutoInsertTest extends TestCase {
         assertTrue(query.getParam(2).valueType instanceof StringClobType);
         assertNull(query.getParam(3).value);
         assertEquals(new Long(1L), query.getParam(4).value);
+    }
+
+    /**
+     * 
+     */
+    public void testPrepareParams_identity() {
+        manager.setDialect(new DB2Dialect());
+        Fff fff = new Fff();
+        fff.name = "hoge";
+        fff.version = 1L;
+        AutoInsertImpl<Fff> query = new AutoInsertImpl<Fff>(manager, fff);
+        query.prepare("execute");
+        assertEquals(2, query.getParamSize());
+        assertEquals("hoge", query.getParam(0).value);
+        assertEquals(new Long(1L), query.getParam(1).value);
+    }
+
+    /**
+     * 
+     */
+    public void testPrepareParams_identityInto() {
+        manager.setDialect(new HSQLDialect());
+        Fff fff = new Fff();
+        fff.name = "hoge";
+        fff.version = 1L;
+        AutoInsertImpl<Fff> query = new AutoInsertImpl<Fff>(manager, fff);
+        query.prepare("execute");
+        assertEquals(3, query.getParamSize());
+        assertNull(query.getParam(0).value);
+        assertEquals("hoge", query.getParam(1).value);
+        assertEquals(new Long(1L), query.getParam(2).value);
+    }
+
+    /**
+     * 
+     */
+    public void testPrepareParams_sequence() {
+        manager.setDialect(new OracleDialect());
+        Fff fff = new Fff();
+        fff.name = "hoge";
+        fff.version = 1L;
+        AutoInsertImpl<Fff> query = new AutoInsertImpl<Fff>(manager, fff) {
+
+            @Override
+            protected Object getIdValue(PropertyMeta propertyMeta) {
+                return 10L;
+            }
+
+        };
+        query.prepare("execute");
+        assertEquals(3, query.getParamSize());
+        assertEquals(new Long(10), query.getParam(0).value);
+        assertEquals("hoge", query.getParam(1).value);
+        assertEquals(new Long(1L), query.getParam(2).value);
+    }
+
+    /**
+     * 
+     */
+    public void testPrepareParams_table() {
+        manager.setDialect(new StandardDialect());
+        Fff fff = new Fff();
+        fff.name = "hoge";
+        fff.version = 1L;
+        AutoInsertImpl<Fff> query = new AutoInsertImpl<Fff>(manager, fff) {
+
+            @Override
+            protected Object getIdValue(PropertyMeta propertyMeta) {
+                return 10L;
+            }
+
+        };
+        query.prepare("execute");
+        assertEquals(3, query.getParamSize());
+        assertEquals(new Long(10), query.getParam(0).value);
+        assertEquals("hoge", query.getParam(1).value);
+        assertEquals(new Long(1L), query.getParam(2).value);
     }
 
     /**
@@ -336,6 +613,76 @@ public class AutoInsertTest extends TestCase {
     /**
      * 
      */
+    public void testPrepareSql_identity() {
+        manager.setDialect(new DB2Dialect());
+        Fff fff = new Fff();
+        fff.name = "hoge";
+        fff.version = 1L;
+        AutoInsertImpl<Fff> query = new AutoInsertImpl<Fff>(manager, fff);
+        query.prepare("execute");
+        assertEquals("insert into FFF (NAME, VERSION) values (?, ?)",
+                query.executedSql);
+    }
+
+    /**
+     * 
+     */
+    public void testPrepareSql_identityInto() {
+        manager.setDialect(new HSQLDialect());
+        Fff fff = new Fff();
+        fff.name = "hoge";
+        fff.version = 1L;
+        AutoInsertImpl<Fff> query = new AutoInsertImpl<Fff>(manager, fff);
+        query.prepare("execute");
+        assertEquals("insert into FFF (ID, NAME, VERSION) values (?, ?, ?)",
+                query.executedSql);
+    }
+
+    /**
+     * 
+     */
+    public void testPrepareSql_sequence() {
+        manager.setDialect(new OracleDialect());
+        Fff fff = new Fff();
+        fff.name = "hoge";
+        fff.version = 1L;
+        AutoInsertImpl<Fff> query = new AutoInsertImpl<Fff>(manager, fff) {
+
+            @Override
+            protected Object getIdValue(PropertyMeta propertyMeta) {
+                return 10L;
+            }
+
+        };
+        query.prepare("execute");
+        assertEquals("insert into FFF (ID, NAME, VERSION) values (?, ?, ?)",
+                query.executedSql);
+    }
+
+    /**
+     * 
+     */
+    public void testPrepareSql_table() {
+        manager.setDialect(new StandardDialect());
+        Fff fff = new Fff();
+        fff.name = "hoge";
+        fff.version = 1L;
+        AutoInsertImpl<Fff> query = new AutoInsertImpl<Fff>(manager, fff) {
+
+            @Override
+            protected Object getIdValue(PropertyMeta propertyMeta) {
+                return 10L;
+            }
+
+        };
+        query.prepare("execute");
+        assertEquals("insert into FFF (ID, NAME, VERSION) values (?, ?, ?)",
+                query.executedSql);
+    }
+
+    /**
+     * 
+     */
     public void testPrepareSql_excludesNull() {
         Eee eee = new Eee();
         eee.id = 100;
@@ -359,8 +706,9 @@ public class AutoInsertTest extends TestCase {
         AutoInsertImpl<Eee> query = new AutoInsertImpl<Eee>(manager, eee) {
 
             @Override
-            protected PreparedStatement getPreparedStatement(
+            protected PreparedStatement createPreparedStatement(
                     JdbcContext jdbcContext) {
+                assertFalse(useGetGeneratedKeys);
                 MockPreparedStatement ps = new MockPreparedStatement(null, null) {
 
                     @Override
@@ -382,6 +730,151 @@ public class AutoInsertTest extends TestCase {
     /**
      * @throws Exception
      */
+    public void testExecute_identity() throws Exception {
+        manager.setDialect(new DB2Dialect());
+        Fff fff = new Fff();
+        fff.name = "hoge";
+        fff.version = 1L;
+        AutoInsertImpl<Fff> query = new AutoInsertImpl<Fff>(manager, fff) {
+
+            @Override
+            protected PreparedStatement createPreparedStatement(
+                    JdbcContext jdbcContext) {
+                assertTrue(useGetGeneratedKeys);
+                MockPreparedStatement ps = new MockPreparedStatement(null, null) {
+
+                    @Override
+                    public int executeUpdate() throws SQLException {
+                        return 1;
+                    }
+                };
+                return ps;
+            }
+
+            @Override
+            protected void postExecute(PreparedStatement ps) {
+            }
+
+        };
+        assertEquals(1, query.execute());
+        SqlLog sqlLog = SqlLogRegistryLocator.getInstance().getLast();
+        assertEquals("insert into FFF (NAME, VERSION) values ('hoge', 1)",
+                sqlLog.getCompleteSql());
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testExecute_identityInto() throws Exception {
+        manager.setDialect(new HSQLDialect());
+        Fff fff = new Fff();
+        fff.name = "hoge";
+        fff.version = 1L;
+        AutoInsertImpl<Fff> query = new AutoInsertImpl<Fff>(manager, fff) {
+
+            @Override
+            protected PreparedStatement createPreparedStatement(
+                    JdbcContext jdbcContext) {
+                assertFalse(useGetGeneratedKeys);
+                MockPreparedStatement ps = new MockPreparedStatement(null, null) {
+
+                    @Override
+                    public int executeUpdate() throws SQLException {
+                        return 1;
+                    }
+                };
+                return ps;
+            }
+
+            @Override
+            protected void postExecute(PreparedStatement ps) {
+            }
+
+        };
+        assertEquals(1, query.execute());
+        SqlLog sqlLog = SqlLogRegistryLocator.getInstance().getLast();
+        assertEquals(
+                "insert into FFF (ID, NAME, VERSION) values (null, 'hoge', 1)",
+                sqlLog.getCompleteSql());
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testExecute_sequence() throws Exception {
+        manager.setDialect(new OracleDialect());
+        Fff fff = new Fff();
+        fff.name = "hoge";
+        fff.version = 1L;
+        AutoInsertImpl<Fff> query = new AutoInsertImpl<Fff>(manager, fff) {
+
+            @Override
+            protected PreparedStatement createPreparedStatement(
+                    JdbcContext jdbcContext) {
+                assertFalse(useGetGeneratedKeys);
+                MockPreparedStatement ps = new MockPreparedStatement(null, null) {
+
+                    @Override
+                    public int executeUpdate() throws SQLException {
+                        return 1;
+                    }
+                };
+                return ps;
+            }
+
+            @Override
+            protected Object getIdValue(PropertyMeta propertyMeta) {
+                return 100L;
+            }
+
+        };
+        assertEquals(1, query.execute());
+        SqlLog sqlLog = SqlLogRegistryLocator.getInstance().getLast();
+        assertEquals(
+                "insert into FFF (ID, NAME, VERSION) values (100, 'hoge', 1)",
+                sqlLog.getCompleteSql());
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testExecute_table() throws Exception {
+        manager.setDialect(new StandardDialect());
+        Fff fff = new Fff();
+        fff.name = "hoge";
+        fff.version = 1L;
+        AutoInsertImpl<Fff> query = new AutoInsertImpl<Fff>(manager, fff) {
+
+            @Override
+            protected PreparedStatement createPreparedStatement(
+                    JdbcContext jdbcContext) {
+                assertFalse(useGetGeneratedKeys);
+                MockPreparedStatement ps = new MockPreparedStatement(null, null) {
+
+                    @Override
+                    public int executeUpdate() throws SQLException {
+                        return 1;
+                    }
+                };
+                return ps;
+            }
+
+            @Override
+            protected Object getIdValue(PropertyMeta propertyMeta) {
+                return 100L;
+            }
+
+        };
+        assertEquals(1, query.execute());
+        SqlLog sqlLog = SqlLogRegistryLocator.getInstance().getLast();
+        assertEquals(
+                "insert into FFF (ID, NAME, VERSION) values (100, 'hoge', 1)",
+                sqlLog.getCompleteSql());
+    }
+
+    /**
+     * @throws Exception
+     */
     public void testExecute_excludesNull() throws Exception {
         Eee eee = new Eee();
         eee.id = 100;
@@ -390,8 +883,9 @@ public class AutoInsertTest extends TestCase {
         AutoInsertImpl<Eee> query = new AutoInsertImpl<Eee>(manager, eee) {
 
             @Override
-            protected PreparedStatement getPreparedStatement(
+            protected PreparedStatement createPreparedStatement(
                     JdbcContext jdbcContext) {
+                assertFalse(useGetGeneratedKeys);
                 MockPreparedStatement ps = new MockPreparedStatement(null, null) {
 
                     @Override

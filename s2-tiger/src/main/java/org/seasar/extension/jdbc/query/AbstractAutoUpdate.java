@@ -81,7 +81,6 @@ public abstract class AbstractAutoUpdate<T, S extends Update<S>> extends
 
     public int execute() {
         prepare("execute");
-        logSql();
         return executeInternal();
     }
 
@@ -107,9 +106,11 @@ public abstract class AbstractAutoUpdate<T, S extends Update<S>> extends
     protected int executeInternal() {
         final JdbcContext jdbcContext = jdbcManager.getJdbcContext();
         try {
+            logSql();
             final PreparedStatement ps = getPreparedStatement(jdbcContext);
             prepareInParams(ps);
             final int rows = PreparedStatementUtil.executeUpdate(ps);
+            postExecute(ps);
             if (isOptimisticLock()) {
                 validateRows(rows);
             }
@@ -130,13 +131,34 @@ public abstract class AbstractAutoUpdate<T, S extends Update<S>> extends
      */
     protected PreparedStatement getPreparedStatement(
             final JdbcContext jdbcContext) {
-        final PreparedStatement ps = jdbcContext
-                .getPreparedStatement(executedSql);
+        final PreparedStatement ps = createPreparedStatement(jdbcContext);
         if (queryTimeout > 0) {
             StatementUtil.setQueryTimeout(ps, queryTimeout);
         }
         prepareInParams(ps);
         return ps;
+    }
+
+    /**
+     * 準備されたステートメントを作成します。
+     * 
+     * @param jdbcContext
+     *            JDBCコンテキスト
+     * @return 準備されたステートメント
+     */
+    protected PreparedStatement createPreparedStatement(
+            final JdbcContext jdbcContext) {
+        return jdbcContext.getPreparedStatement(executedSql);
+    }
+
+    /**
+     * 準備されたステートメントの後処理を行います。
+     * 
+     * @param ps
+     *            準備されたステートメント
+     */
+    @SuppressWarnings("unused")
+    protected void postExecute(final PreparedStatement ps) {
     }
 
     /**

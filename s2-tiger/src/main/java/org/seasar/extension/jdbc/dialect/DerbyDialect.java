@@ -15,6 +15,8 @@
  */
 package org.seasar.extension.jdbc.dialect;
 
+import javax.persistence.GenerationType;
+
 /**
  * Derby用の方言をあつかうクラスです。
  * 
@@ -23,8 +25,30 @@ package org.seasar.extension.jdbc.dialect;
  */
 public class DerbyDialect extends StandardDialect {
 
-	@Override
-	public String getName() {
-		return "derby";
-	}
+    @Override
+    public String getName() {
+        return "derby";
+    }
+
+    @Override
+    public GenerationType getDefaultGenerationType() {
+        return GenerationType.IDENTITY;
+    }
+
+    @Override
+    public boolean supportIdentity() {
+        return true;
+    }
+
+    @Override
+    public boolean supportGetGeneratedKeys() {
+        return false;
+    }
+
+    @Override
+    public String getIdentitySelectString(final String tableName,
+            final String columnName) {
+        return "values identity_val_local()";
+    }
+
 }

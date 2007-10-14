@@ -15,17 +15,23 @@
  */
 package org.seasar.extension.jdbc.query;
 
+import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.GenerationType;
+
 import org.seasar.extension.jdbc.AutoBatchInsert;
 import org.seasar.extension.jdbc.AutoBatchUpdate;
+import org.seasar.extension.jdbc.IdGenerator;
 import org.seasar.extension.jdbc.IntoClause;
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.ValuesClause;
 import org.seasar.framework.util.FieldUtil;
+import org.seasar.framework.util.PreparedStatementUtil;
 import org.seasar.framework.util.tiger.CollectionsUtil;
 
 /**
@@ -59,6 +65,12 @@ public class AutoBatchInsertImpl<T> extends
 
     /** values句 */
     protected final ValuesClause valuesClause = new ValuesClause();
+
+    /** バッチ更新が可能な場合は<code>true</code> */
+    protected boolean supportBatch = true;
+
+    /** {@link Statement#getGeneratedKeys()}を使用する場合は<code>true</code> */
+    protected boolean useGetGeneratedKeys;
 
     /**
      * @param jdbcManager
@@ -100,6 +112,21 @@ public class AutoBatchInsertImpl<T> extends
             if (!propertyMeta.getColumnMeta().isInsertable()) {
                 continue;
             }
+            if (propertyMeta.isId()) {
+                if (propertyMeta.hasIdGenerator()) {
+                    final IdGenerator idGenerator = propertyMeta
+                            .getIdGenerator(jdbcManager.getDialect());
+                    supportBatch &= idGenerator.supportBatch(jdbcManager);
+                    useGetGeneratedKeys |= idGenerator
+                            .useGetGeneratedKeys(jdbcManager);
+                    if (idGenerator.isInsertInto(jdbcManager)) {
+                        targetProperties.add(propertyMeta);
+                    }
+                    continue;
+                }
+                targetProperties.add(propertyMeta);
+                continue;
+            }
             if (!includesProperties.isEmpty()
                     && !includesProperties.contains(propertyName)) {
                 continue;
@@ -130,14 +157,6 @@ public class AutoBatchInsertImpl<T> extends
         }
     }
 
-    @Override
-    protected void prepareParams(final T entity) {
-        for (final PropertyMeta propertyMeta : targetProperties) {
-            final Object value = FieldUtil.get(propertyMeta.getField(), entity);
-            addParam(value, propertyMeta);
-        }
-    }
-
     /**
      * SQLに変換します。
      * 
@@ -151,6 +170,75 @@ public class AutoBatchInsertImpl<T> extends
                 + valuesClause.getLength());
         return new String(buf.append(INSERT_STATEMENT).append(tableName)
                 .append(intoClause.toSql()).append(valuesClause.toSql()));
+    }
+
+    @Override
+    protected int[] executeBatch(PreparedStatement ps) {
+        if (supportBatch) {
+            return super.executeBatch(ps);
+        }
+        final int[] updateRows = new int[entities.size()];
+        for (int i = 0; i < updateRows.length; ++i) {
+            final T entity = entities.get(i);
+            prepareParams(entity);
+            logSql();
+            prepareInParams(ps);
+            updateRows[i] = PreparedStatementUtil.executeUpdate(ps);
+            postExecute(ps, entity);
+            resetParams();
+        }
+        return updateRows;
+    }
+
+    @Override
+    protected void prepareParams(final T entity) {
+        for (final PropertyMeta propertyMeta : targetProperties) {
+            final Object value;
+            if (propertyMeta.isId() && propertyMeta.hasIdGenerator()) {
+                value = getIdValue(propertyMeta, entity);
+            } else {
+                value = FieldUtil.get(propertyMeta.getField(), entity);
+            }
+            addParam(value, propertyMeta);
+        }
+    }
+
+    /**
+     * バインドする識別子の値を返します。
+     * 
+     * @param propertyMeta
+     *            プロパティメタデータ
+     * @param entity
+     *            エンティティ
+     * @return 識別子の値
+     */
+    protected Object getIdValue(final PropertyMeta propertyMeta, final T entity) {
+        final IdGenerator idGenerator = propertyMeta.getIdGenerator(jdbcManager
+                .getDialect());
+        return idGenerator.preInsert(jdbcManager, entity, this);
+    }
+
+    /**
+     * INSERT文を実行後処理を行います。
+     * <p>
+     * {@link GenerationType#IDENTITY}方式で識別子の値を自動生成するIDジェネレータが使われた場合は、
+     * 生成された値をエンティティに反映します
+     * </p>
+     * 
+     * @param ps
+     *            INSERT文を実行した{@link Statement}
+     * @param entity
+     *            エンティティ
+     */
+    protected void postExecute(final PreparedStatement ps, final T entity) {
+        for (final PropertyMeta propertyMeta : entityMeta
+                .getIdPropertyMetaList()) {
+            if (propertyMeta.hasIdGenerator()) {
+                final IdGenerator idGenerator = propertyMeta
+                        .getIdGenerator(jdbcManager.getDialect());
+                idGenerator.postInsert(jdbcManager, entity, ps, this);
+            }
+        }
     }
 
     @Override

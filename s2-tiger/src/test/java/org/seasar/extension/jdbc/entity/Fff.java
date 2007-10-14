@@ -19,6 +19,8 @@ import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Version;
@@ -33,6 +35,7 @@ public class Fff {
      * 
      */
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     public Integer id;
 
     /**
@@ -57,5 +60,19 @@ public class Fff {
      */
     @Column(insertable = false, updatable = false)
     public Timestamp lastUpdated;
+
+    /**
+     * 
+     */
+    public Fff() {
+    }
+
+    /**
+     * @param name
+     */
+    public Fff(String name) {
+        this.name = name;
+        this.version = 0L;
+    }
 
 }

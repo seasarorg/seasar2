@@ -15,6 +15,8 @@
  */
 package org.seasar.extension.jdbc.dialect;
 
+import javax.persistence.GenerationType;
+
 /**
  * Firebird用の方言をあつかうクラスです。
  * 
@@ -23,32 +25,48 @@ package org.seasar.extension.jdbc.dialect;
  */
 public class FirebirdDialect extends StandardDialect {
 
-	@Override
-	public String getName() {
-		return "firebird";
-	}
+    @Override
+    public String getName() {
+        return "firebird";
+    }
 
-	@Override
-	public boolean supportsLimit() {
-		return true;
-	}
+    @Override
+    public boolean supportsLimit() {
+        return true;
+    }
 
-	@Override
-	public String convertLimitSql(String sql, int offset, int limit) {
-		StringBuilder buf = new StringBuilder(sql.length() + 20);
-		String lowerSql = sql.toLowerCase();
-		int startOfSelect = lowerSql.indexOf("select");
-		buf.append(sql.substring(0, startOfSelect + 6));
-		if (offset > 0) {
-			buf.append(" first ");
-			buf.append(offset + limit);
-			buf.append(" skip ");
-			buf.append(offset);
-		} else {
-			buf.append(" first ");
-			buf.append(limit);
-		}
-		buf.append(sql.substring(startOfSelect + 6));
-		return buf.toString();
-	}
+    @Override
+    public String convertLimitSql(String sql, int offset, int limit) {
+        StringBuilder buf = new StringBuilder(sql.length() + 20);
+        String lowerSql = sql.toLowerCase();
+        int startOfSelect = lowerSql.indexOf("select");
+        buf.append(sql.substring(0, startOfSelect + 6));
+        if (offset > 0) {
+            buf.append(" first ");
+            buf.append(offset + limit);
+            buf.append(" skip ");
+            buf.append(offset);
+        } else {
+            buf.append(" first ");
+            buf.append(limit);
+        }
+        buf.append(sql.substring(startOfSelect + 6));
+        return buf.toString();
+    }
+
+    @Override
+    public GenerationType getDefaultGenerationType() {
+        return GenerationType.SEQUENCE;
+    }
+
+    @Override
+    public boolean supportSequence() {
+        return true;
+    }
+
+    @Override
+    public String getSequenceNextValString(final String sequenceName) {
+        return "select RDB$GENERATOR_NAME from RDB$GENERATORS";
+    }
+
 }

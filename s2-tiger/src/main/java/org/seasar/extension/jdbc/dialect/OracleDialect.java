@@ -17,6 +17,8 @@ package org.seasar.extension.jdbc.dialect;
 
 import java.util.List;
 
+import javax.persistence.GenerationType;
+
 import org.seasar.extension.jdbc.ValueType;
 import org.seasar.extension.jdbc.types.ValueTypes;
 
@@ -142,4 +144,20 @@ public class OracleDialect extends StandardDialect {
             boolean supportsWaveDashToFullwidthTilde) {
         this.supportsWaveDashToFullwidthTilde = supportsWaveDashToFullwidthTilde;
     }
+
+    @Override
+    public GenerationType getDefaultGenerationType() {
+        return GenerationType.SEQUENCE;
+    }
+
+    @Override
+    public boolean supportSequence() {
+        return true;
+    }
+
+    @Override
+    public String getSequenceNextValString(final String sequenceName) {
+        return "select " + sequenceName + ".nextval from dual";
+    }
+
 }

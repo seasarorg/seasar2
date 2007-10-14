@@ -23,11 +23,16 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.seasar.extension.jdbc.JdbcContext;
+import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.SqlLog;
 import org.seasar.extension.jdbc.SqlLogRegistry;
 import org.seasar.extension.jdbc.SqlLogRegistryLocator;
+import org.seasar.extension.jdbc.dialect.DB2Dialect;
+import org.seasar.extension.jdbc.dialect.HSQLDialect;
+import org.seasar.extension.jdbc.dialect.OracleDialect;
 import org.seasar.extension.jdbc.dialect.StandardDialect;
 import org.seasar.extension.jdbc.entity.Eee;
+import org.seasar.extension.jdbc.entity.Fff;
 import org.seasar.extension.jdbc.manager.JdbcManagerImpl;
 import org.seasar.extension.jdbc.meta.ColumnMetaFactoryImpl;
 import org.seasar.extension.jdbc.meta.EntityMetaFactoryImpl;
@@ -190,8 +195,9 @@ public class AutoBatchInsertTest extends TestCase {
                 entities);
         query.includes("name");
         query.prepareTargetProperties();
-        assertEquals(1, query.targetProperties.size());
-        assertEquals("name", query.targetProperties.get(0).getName());
+        assertEquals(2, query.targetProperties.size());
+        assertEquals("id", query.targetProperties.get(0).getName());
+        assertEquals("name", query.targetProperties.get(1).getName());
     }
 
     /**
@@ -221,8 +227,9 @@ public class AutoBatchInsertTest extends TestCase {
                 entities);
         query.includes("name", "fffId").excludes("fffId");
         query.prepareTargetProperties();
-        assertEquals(1, query.targetProperties.size());
-        assertEquals("name", query.targetProperties.get(0).getName());
+        assertEquals(2, query.targetProperties.size());
+        assertEquals("id", query.targetProperties.get(0).getName());
+        assertEquals("name", query.targetProperties.get(1).getName());
     }
 
     /**
@@ -314,8 +321,9 @@ public class AutoBatchInsertTest extends TestCase {
                 entities) {
 
             @Override
-            protected PreparedStatement getPreparedStatement(
+            protected PreparedStatement createPreparedStatement(
                     JdbcContext jdbcContext) {
+                assertFalse(useGetGeneratedKeys);
                 MockPreparedStatement ps = new MockPreparedStatement(null, null) {
 
                     @Override
@@ -338,6 +346,197 @@ public class AutoBatchInsertTest extends TestCase {
         SqlLog sqlLog = SqlLogRegistryLocator.getInstance().getLast();
         assertEquals(
                 "insert into EEE (ID, NAME, LONG_TEXT, FFF_ID, VERSION) values (3, 'baz', null, null, 0)",
+                sqlLog.getCompleteSql());
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testExecute_identity() throws Exception {
+        manager.setDialect(new DB2Dialect());
+        List<Fff> entities = Arrays.asList(new Fff("foo"), new Fff("bar"),
+                new Fff("baz"));
+        AutoBatchInsertImpl<Fff> query = new AutoBatchInsertImpl<Fff>(manager,
+                entities) {
+
+            @Override
+            protected PreparedStatement createPreparedStatement(
+                    JdbcContext jdbcContext) {
+                assertTrue(useGetGeneratedKeys);
+                MockPreparedStatement ps = new MockPreparedStatement(null, null) {
+
+                    @Override
+                    public int[] executeBatch() throws SQLException {
+                        return new int[] { 1, 1, 1 };
+                    }
+
+                    @Override
+                    public void addBatch() throws SQLException {
+                        ++addBatchCalled;
+                    }
+                };
+                return ps;
+            }
+
+            @Override
+            protected Object getIdValue(PropertyMeta propertyMeta, Fff entity) {
+                return null;
+            }
+
+            @Override
+            protected void postExecute(PreparedStatement ps, Fff entity) {
+            }
+
+        };
+        int[] result = query.executeBatch();
+        assertEquals(0, addBatchCalled);
+        assertEquals(3, result.length);
+        SqlLog sqlLog = SqlLogRegistryLocator.getInstance().getLast();
+        assertEquals("insert into FFF (NAME, VERSION) values ('baz', 0)",
+                sqlLog.getCompleteSql());
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testExecute_identityInto() throws Exception {
+        manager.setDialect(new HSQLDialect());
+        List<Fff> entities = Arrays.asList(new Fff("foo"), new Fff("bar"),
+                new Fff("baz"));
+        AutoBatchInsertImpl<Fff> query = new AutoBatchInsertImpl<Fff>(manager,
+                entities) {
+
+            @Override
+            protected PreparedStatement createPreparedStatement(
+                    JdbcContext jdbcContext) {
+                assertFalse(useGetGeneratedKeys);
+                MockPreparedStatement ps = new MockPreparedStatement(null, null) {
+
+                    @Override
+                    public int[] executeBatch() throws SQLException {
+                        return new int[] { 1, 1, 1 };
+                    }
+
+                    @Override
+                    public void addBatch() throws SQLException {
+                        ++addBatchCalled;
+                    }
+                };
+                return ps;
+            }
+
+            @Override
+            protected Object getIdValue(PropertyMeta propertyMeta, Fff entity) {
+                return null;
+            }
+
+            @Override
+            protected void postExecute(PreparedStatement ps, Fff entity) {
+            }
+
+        };
+        int[] result = query.executeBatch();
+        assertEquals(0, addBatchCalled);
+        assertEquals(3, result.length);
+        SqlLog sqlLog = SqlLogRegistryLocator.getInstance().getLast();
+        assertEquals(
+                "insert into FFF (ID, NAME, VERSION) values (null, 'baz', 0)",
+                sqlLog.getCompleteSql());
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testExecute_sequence() throws Exception {
+        manager.setDialect(new OracleDialect());
+        List<Fff> entities = Arrays.asList(new Fff("foo"), new Fff("bar"),
+                new Fff("baz"));
+        AutoBatchInsertImpl<Fff> query = new AutoBatchInsertImpl<Fff>(manager,
+                entities) {
+
+            @Override
+            protected PreparedStatement createPreparedStatement(
+                    JdbcContext jdbcContext) {
+                assertFalse(useGetGeneratedKeys);
+                MockPreparedStatement ps = new MockPreparedStatement(null, null) {
+
+                    @Override
+                    public int[] executeBatch() throws SQLException {
+                        return new int[] { 1, 1, 1 };
+                    }
+
+                    @Override
+                    public void addBatch() throws SQLException {
+                        ++addBatchCalled;
+                    }
+                };
+                return ps;
+            }
+
+            @Override
+            protected Object getIdValue(PropertyMeta propertyMeta, Fff entity) {
+                return 10L;
+            }
+
+            @Override
+            protected void postExecute(PreparedStatement ps, Fff entity) {
+            }
+
+        };
+        int[] result = query.executeBatch();
+        assertEquals(3, addBatchCalled);
+        assertEquals(3, result.length);
+        SqlLog sqlLog = SqlLogRegistryLocator.getInstance().getLast();
+        assertEquals(
+                "insert into FFF (ID, NAME, VERSION) values (10, 'baz', 0)",
+                sqlLog.getCompleteSql());
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testExecute_table() throws Exception {
+        manager.setDialect(new StandardDialect());
+        List<Fff> entities = Arrays.asList(new Fff("foo"), new Fff("bar"),
+                new Fff("baz"));
+        AutoBatchInsertImpl<Fff> query = new AutoBatchInsertImpl<Fff>(manager,
+                entities) {
+
+            @Override
+            protected PreparedStatement createPreparedStatement(
+                    JdbcContext jdbcContext) {
+                assertFalse(useGetGeneratedKeys);
+                MockPreparedStatement ps = new MockPreparedStatement(null, null) {
+
+                    @Override
+                    public int[] executeBatch() throws SQLException {
+                        return new int[] { 1, 1, 1 };
+                    }
+
+                    @Override
+                    public void addBatch() throws SQLException {
+                        ++addBatchCalled;
+                    }
+                };
+                return ps;
+            }
+
+            @Override
+            protected Object getIdValue(PropertyMeta propertyMeta, Fff entity) {
+                return 10L;
+            }
+
+            @Override
+            protected void postExecute(PreparedStatement ps, Fff entity) {
+            }
+
+        };
+        int[] result = query.executeBatch();
+        assertEquals(3, addBatchCalled);
+        assertEquals(3, result.length);
+        SqlLog sqlLog = SqlLogRegistryLocator.getInstance().getLast();
+        assertEquals(
+                "insert into FFF (ID, NAME, VERSION) values (10, 'baz', 0)",
                 sqlLog.getCompleteSql());
     }
 

@@ -106,14 +106,7 @@ public abstract class AbstractAutoBatchUpdate<T, S extends BatchUpdate<S>>
         final JdbcContext jdbcContext = jdbcManager.getJdbcContext();
         try {
             final PreparedStatement ps = getPreparedStatement(jdbcContext);
-            for (final T entity : entities) {
-                prepareParams(entity);
-                logSql();
-                prepareInParams(ps);
-                PreparedStatementUtil.addBatch(ps);
-                resetParams();
-            }
-            final int[] rows = PreparedStatementUtil.executeBatch(ps);
+            final int[] rows = executeBatch(ps);
             if (isOptimisticLock()) {
                 validateRows(rows);
             }
@@ -126,6 +119,24 @@ public abstract class AbstractAutoBatchUpdate<T, S extends BatchUpdate<S>>
     }
 
     /**
+     * バッチ更新を実行します。
+     * 
+     * @param ps
+     *            準備されたステートメント
+     * @return 更新された行数の配列
+     */
+    protected int[] executeBatch(final PreparedStatement ps) {
+        for (final T entity : entities) {
+            prepareParams(entity);
+            logSql();
+            prepareInParams(ps);
+            PreparedStatementUtil.addBatch(ps);
+            resetParams();
+        }
+        return PreparedStatementUtil.executeBatch(ps);
+    }
+
+    /**
      * 準備されたステートメントを返します。
      * 
      * @param jdbcContext
@@ -134,13 +145,24 @@ public abstract class AbstractAutoBatchUpdate<T, S extends BatchUpdate<S>>
      */
     protected PreparedStatement getPreparedStatement(
             final JdbcContext jdbcContext) {
-        final PreparedStatement ps = jdbcContext
-                .getPreparedStatement(executedSql);
+        final PreparedStatement ps = createPreparedStatement(jdbcContext);
         if (queryTimeout > 0) {
             StatementUtil.setQueryTimeout(ps, queryTimeout);
         }
         prepareInParams(ps);
         return ps;
+    }
+
+    /**
+     * 準備されたステートメントを作成します。
+     * 
+     * @param jdbcContext
+     *            JDBCコンテキスト
+     * @return 準備されたステートメント
+     */
+    protected PreparedStatement createPreparedStatement(
+            final JdbcContext jdbcContext) {
+        return jdbcContext.getPreparedStatement(executedSql);
     }
 
     /**

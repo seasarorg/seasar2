@@ -19,6 +19,8 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.GenerationType;
+
 import org.seasar.framework.util.ArrayMap;
 
 /**
@@ -53,6 +55,26 @@ public class PropertyMeta {
      * 識別子かどうかです。
      */
     protected boolean id;
+
+    /**
+     * IDを自動生成する方法です。
+     */
+    protected GenerationType generationType;
+
+    /**
+     * {@link GenerationType#IDENTITY}で識別子を自動生成するIDジェネレータです。
+     */
+    protected IdGenerator identityIdGenerator;
+
+    /**
+     * {@link GenerationType#SEQUENCE}で識別子を自動生成するIDジェネレータです。
+     */
+    protected IdGenerator sequenceIdGenerator;
+
+    /**
+     * {@link GenerationType#TABLE}で識別子を自動生成するIDジェネレータです。
+     */
+    protected IdGenerator tableIdGenerator;
 
     /**
      * バージョン用かどうかです。
@@ -177,6 +199,84 @@ public class PropertyMeta {
      */
     public void setId(boolean id) {
         this.id = id;
+    }
+
+    /**
+     * 識別子を自動生成する方法を返します。
+     * 
+     * @return 識別子を自動生成する方法
+     */
+    public GenerationType getGenerationType() {
+        return generationType;
+    }
+
+    /**
+     * 識別子を自動生成する方法
+     * 
+     * @param generationType
+     *            識別子を自動生成する方法
+     */
+    public void setGenerationType(GenerationType generationType) {
+        this.generationType = generationType;
+    }
+
+    /**
+     * 識別子を自動生成するIDジェネレータを設定します。
+     * 
+     * @return 識別子を自動生成するIDジェネレータ
+     */
+    public boolean hasIdGenerator() {
+        return generationType != null;
+    }
+
+    /**
+     * 識別子を自動生成するIDジェネレータを返します。
+     * 
+     * @param dialect
+     *            データベースの方言
+     * @return 識別子を自動生成するIDジェネレータ
+     */
+    public IdGenerator getIdGenerator(DbmsDialect dialect) {
+        switch (generationType == GenerationType.AUTO ? dialect
+                .getDefaultGenerationType() : generationType) {
+        case IDENTITY:
+            return identityIdGenerator;
+        case SEQUENCE:
+            return sequenceIdGenerator;
+        case TABLE:
+            return tableIdGenerator;
+        }
+        return null; // unreachable
+    }
+
+    /**
+     * {@link GenerationType#IDENTITY}で識別子を自動生成するIDジェネレータを設定します。
+     * 
+     * @param idGenerator
+     *            {@link GenerationType#IDENTITY}で識別子を自動生成するIDジェネレータ
+     */
+    public void setIdentityIdGenerator(IdGenerator idGenerator) {
+        identityIdGenerator = idGenerator;
+    }
+
+    /**
+     * {@link GenerationType#SEQUENCE}で識別子を自動生成するIDジェネレータを設定します。
+     * 
+     * @param idGenerator
+     *            {@link GenerationType#SEQUENCE}で識別子を自動生成するIDジェネレータ
+     */
+    public void setSequenceIdGenerator(IdGenerator idGenerator) {
+        sequenceIdGenerator = idGenerator;
+    }
+
+    /**
+     * {@link GenerationType#TABLE}で識別子を自動生成するIDジェネレータを設定します。
+     * 
+     * @param idGenerator
+     *            {@link GenerationType#TABLE}で識別子を自動生成するIDジェネレータ
+     */
+    public void setTableIdGenerator(IdGenerator idGenerator) {
+        tableIdGenerator = idGenerator;
     }
 
     /**

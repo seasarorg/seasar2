@@ -17,6 +17,8 @@ package org.seasar.extension.jdbc;
 
 import java.util.List;
 
+import javax.sql.DataSource;
+
 /**
  * <code>JDBC</code>による<code>SQL</code>の実行を管理するインターフェースです。
  * 
@@ -367,6 +369,13 @@ public interface JdbcManager {
      * @return JDBCコンテキスト
      */
     JdbcContext getJdbcContext();
+
+    /**
+     * データソースを返します。
+     * 
+     * @return データソース
+     */
+    DataSource getDataSource();
 
     /**
      * データベースの方言を返します。

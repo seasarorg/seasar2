@@ -15,6 +15,8 @@
  */
 package org.seasar.extension.jdbc.dialect;
 
+import javax.persistence.GenerationType;
+
 /**
  * H2用の方言をあつかうクラスです。
  * 
@@ -23,29 +25,66 @@ package org.seasar.extension.jdbc.dialect;
  */
 public class H2Dialect extends StandardDialect {
 
-	@Override
-	public String getName() {
-		return "h2";
-	}
+    @Override
+    public String getName() {
+        return "h2";
+    }
 
-	@Override
-	public boolean supportsLimit() {
-		return true;
-	}
+    @Override
+    public boolean supportsLimit() {
+        return true;
+    }
 
-	@Override
-	public String convertLimitSql(String sql, int offset, int limit) {
-		StringBuilder buf = new StringBuilder(sql.length() + 20);
-		buf.append(sql);
-		if (offset > 0) {
-			buf.append(" limit ");
-			buf.append(limit);
-			buf.append(" offset ");
-			buf.append(offset);
-		} else {
-			buf.append(" limit ");
-			buf.append(limit);
-		}
-		return buf.toString();
-	}
+    @Override
+    public String convertLimitSql(String sql, int offset, int limit) {
+        StringBuilder buf = new StringBuilder(sql.length() + 20);
+        buf.append(sql);
+        if (offset > 0) {
+            buf.append(" limit ");
+            buf.append(limit);
+            buf.append(" offset ");
+            buf.append(offset);
+        } else {
+            buf.append(" limit ");
+            buf.append(limit);
+        }
+        return buf.toString();
+    }
+
+    @Override
+    public GenerationType getDefaultGenerationType() {
+        return GenerationType.IDENTITY;
+    }
+
+    @Override
+    public boolean supportIdentity() {
+        return true;
+    }
+
+    @Override
+    public boolean isInsertIdentityColumn() {
+        return true;
+    }
+
+    @Override
+    public boolean supportGetGeneratedKeys() {
+        return true;
+    }
+
+    @Override
+    public String getIdentitySelectString(final String tableName,
+            final String columnName) {
+        return "call identity()";
+    }
+
+    @Override
+    public boolean supportSequence() {
+        return true;
+    }
+
+    @Override
+    public String getSequenceNextValString(final String sequenceName) {
+        return "call next value for " + sequenceName;
+    }
+
 }

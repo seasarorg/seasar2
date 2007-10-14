@@ -19,6 +19,8 @@ import java.lang.reflect.Field;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinColumns;
@@ -26,6 +28,8 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.TableGenerator;
 import javax.persistence.Transient;
 import javax.persistence.Version;
 
@@ -36,6 +40,7 @@ import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.PropertyMetaFactory;
 import org.seasar.extension.jdbc.RelationshipType;
 import org.seasar.extension.jdbc.exception.BothMappedByAndJoinColumnRuntimeException;
+import org.seasar.extension.jdbc.exception.IdGeneratorNotFoundRuntimeException;
 import org.seasar.extension.jdbc.exception.JoinColumnNameAndReferencedColumnNameMandatoryRuntimeException;
 import org.seasar.extension.jdbc.exception.MappedByMandatoryRuntimeException;
 import org.seasar.extension.jdbc.exception.MappedByNotIdenticalRuntimeException;
@@ -44,6 +49,9 @@ import org.seasar.extension.jdbc.exception.NonRelationshipRuntimeException;
 import org.seasar.extension.jdbc.exception.OneToManyNotGenericsRuntimeException;
 import org.seasar.extension.jdbc.exception.OneToManyNotListRuntimeException;
 import org.seasar.extension.jdbc.exception.RelationshipNotEntityRuntimeException;
+import org.seasar.extension.jdbc.id.IdentityIdGenerator;
+import org.seasar.extension.jdbc.id.SequenceIdGenerator;
+import org.seasar.extension.jdbc.id.TableIdGenerator;
 import org.seasar.extension.jdbc.types.ValueTypes;
 import org.seasar.framework.container.annotation.tiger.Binding;
 import org.seasar.framework.container.annotation.tiger.BindingType;
@@ -58,7 +66,21 @@ import org.seasar.framework.util.tiger.ReflectionUtil;
  * @author higa
  * 
  */
+@SequenceGenerator(name = "default")
+@TableGenerator(name = "default")
 public class PropertyMetaFactoryImpl implements PropertyMetaFactory {
+
+    /**
+     * デフォルトの{@link SequenceGenerator}です。
+     */
+    protected static final SequenceGenerator DEFAULT_SEQUENCE_GENERATOR = PropertyMetaFactoryImpl.class
+            .getAnnotation(SequenceGenerator.class);
+
+    /**
+     * デフォルトの{@link TableGenerator}です。
+     */
+    protected static final TableGenerator DEFAULT_TABLE_GENERATOR = PropertyMetaFactoryImpl.class
+            .getAnnotation(TableGenerator.class);
 
     /**
      * カラムメタデータファクトリです。
@@ -151,9 +173,122 @@ public class PropertyMetaFactoryImpl implements PropertyMetaFactory {
      *            エンティティメタデータ
      */
     protected void doId(PropertyMeta propertyMeta, Field field,
-            @SuppressWarnings("unused")
             EntityMeta entityMeta) {
         propertyMeta.setId(field.getAnnotation(Id.class) != null);
+        GeneratedValue generatedValue = field
+                .getAnnotation(GeneratedValue.class);
+        if (generatedValue == null) {
+            return;
+        }
+        GenerationType generationType = generatedValue.strategy();
+        propertyMeta.setGenerationType(generationType);
+        switch (generationType) {
+        case AUTO:
+            doIdentityIdGenerator(propertyMeta, entityMeta);
+            doSequenceIdGenerator(propertyMeta, generatedValue, entityMeta);
+            doTableIdGenerator(propertyMeta, generatedValue, entityMeta);
+            break;
+        case IDENTITY:
+            doIdentityIdGenerator(propertyMeta, entityMeta);
+            break;
+        case SEQUENCE:
+            if (!doSequenceIdGenerator(propertyMeta, generatedValue, entityMeta)) {
+                throw new IdGeneratorNotFoundRuntimeException(entityMeta
+                        .getName(), propertyMeta.getName(), generatedValue
+                        .generator());
+            }
+            break;
+        case TABLE:
+            if (!doTableIdGenerator(propertyMeta, generatedValue, entityMeta)) {
+                throw new IdGeneratorNotFoundRuntimeException(entityMeta
+                        .getName(), propertyMeta.getName(), generatedValue
+                        .generator());
+            }
+            break;
+        }
+    }
+
+    /**
+     * {@link GenerationType#IDENTITY}方式で識別子の値を自動生成するIDジェネレータを処理します。
+     * 
+     * @param propertyMeta
+     *            プロパティメタデータ
+     * @param entityMeta
+     *            エンティティのメタデータ
+     */
+    protected void doIdentityIdGenerator(PropertyMeta propertyMeta,
+            EntityMeta entityMeta) {
+        propertyMeta.setIdentityIdGenerator(new IdentityIdGenerator(entityMeta,
+                propertyMeta));
+    }
+
+    /**
+     * {@link GenerationType#SEQUENCE}方式で識別子の値を自動生成するIDジェネレータを処理します。
+     * 
+     * @param propertyMeta
+     *            プロパティメタデータ
+     * @param generatedValue
+     *            識別子に付けられた{@link GeneratedValue}アノテーション
+     * @param entityMeta
+     *            エンティティのメタデータ
+     * @return {@link GenerationType#SEQUENCE}方式で識別子の値を自動生成するIDジェネレータが存在した場合に<code>true</code>
+     */
+    protected boolean doSequenceIdGenerator(PropertyMeta propertyMeta,
+            GeneratedValue generatedValue, EntityMeta entityMeta) {
+        String name = generatedValue.generator();
+        SequenceGenerator sequenceGenerator;
+        if (StringUtil.isEmpty(name)) {
+            sequenceGenerator = DEFAULT_SEQUENCE_GENERATOR;
+        } else {
+            sequenceGenerator = propertyMeta.getField().getAnnotation(
+                    SequenceGenerator.class);
+            if (sequenceGenerator == null
+                    || !name.equals(sequenceGenerator.name())) {
+                sequenceGenerator = entityMeta.getEntityClass().getAnnotation(
+                        SequenceGenerator.class);
+                if (sequenceGenerator == null
+                        || name.equals(sequenceGenerator.name())) {
+                    return false;
+                }
+            }
+        }
+        propertyMeta.setSequenceIdGenerator(new SequenceIdGenerator(entityMeta,
+                propertyMeta, sequenceGenerator));
+        return true;
+    }
+
+    /**
+     * {@link GenerationType#TABLE}方式で識別子の値を自動生成するIDジェネレータを処理します。
+     * 
+     * @param propertyMeta
+     *            プロパティメタデータ
+     * @param generatedValue
+     *            識別子に付けられた{@link GeneratedValue}アノテーション
+     * @param entityMeta
+     *            エンティティのメタデータ
+     * @return {@link GenerationType#TABLE}方式で識別子の値を自動生成するIDジェネレータが存在した場合に<code>true</code>
+     */
+    protected boolean doTableIdGenerator(PropertyMeta propertyMeta,
+            GeneratedValue generatedValue, EntityMeta entityMeta) {
+        String name = generatedValue.generator();
+        TableGenerator tableGenerator;
+        if (StringUtil.isEmpty(name)) {
+            tableGenerator = DEFAULT_TABLE_GENERATOR;
+        } else {
+            tableGenerator = propertyMeta.getField().getAnnotation(
+                    TableGenerator.class);
+            if (tableGenerator == null || !name.equals(tableGenerator.name())) {
+                tableGenerator = entityMeta.getEntityClass().getAnnotation(
+                        TableGenerator.class);
+                if (tableGenerator == null
+                        || name.equals(tableGenerator.name())) {
+                    return false;
+                }
+            }
+        }
+        propertyMeta.setTableIdGenerator(new TableIdGenerator(entityMeta,
+                propertyMeta, tableGenerator));
+        return true;
     }
 
     /**

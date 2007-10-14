@@ -15,6 +15,8 @@
  */
 package org.seasar.extension.jdbc.dialect;
 
+import javax.persistence.GenerationType;
+
 /**
  * Sybase用の方言をあつかうクラスです。
  * 
@@ -23,8 +25,30 @@ package org.seasar.extension.jdbc.dialect;
  */
 public class SybaseDialect extends StandardDialect {
 
-	@Override
-	public String getName() {
-		return "sybase";
-	}
+    @Override
+    public String getName() {
+        return "sybase";
+    }
+
+    @Override
+    public GenerationType getDefaultGenerationType() {
+        return GenerationType.IDENTITY;
+    }
+
+    @Override
+    public boolean supportIdentity() {
+        return true;
+    }
+
+    @Override
+    public boolean supportGetGeneratedKeys() {
+        return true;
+    }
+
+    @Override
+    public String getIdentitySelectString(final String tableName,
+            final String columnName) {
+        return "select @@identity";
+    }
+
 }
