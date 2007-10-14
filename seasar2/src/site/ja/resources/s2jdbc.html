@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja" lang="ja">
 <!-- don't edit start -->
 <head>
-<title>Seasar - DI Container with AOP -</title>
+<title>S2JDBC</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link href="seasar_b.css" type="text/css" rel="stylesheet" media="screen" />
 <link href="seasar_p.css" type="text/css" rel="stylesheet" media="print" />
@@ -41,49 +41,428 @@
 <td width="740" class="main"><!-- don't edit end -->
 <!-- document start -->
 <ul>
-<li><a href="OracleUnicode">OracleのUnicode問題</a></li>
-<li><a href="BooleanToInt">Booleanの扱い</a></li>
-<li><a href="SqlLog">SQLのログの取得</a></li>
+<li><a href="#about">S2JDBCとは</a>
+<ul>
+<li><a href="#autoGenerateSql">90%のSQLを自動生成する</a></li>
+<li><a href="#utilizeJava">Javaのよさを生かす</a></li>
+<li><a href="#easySql">SQLの扱いが簡単</a></li>
+<li><a href="#simpleProperty">シンプルなプロパティ</a></li>
+<li><a href="#lowLearningCost">学習コストが低い</a></li>
+<li><a href="#lessTrouble">トラブリにくい</a></li>
+<li><a href="#betterJPA">より良いJPA</a></li>
+</ul>
+</li>
+
+<li><a href="#featureReference">機能リファレンス</a>
+<ul>
+<li><a href="#autoSql">SQLの自動生成</a></li>
+<li><a href="#sql">SQLを明示的に指定</a></li>
+<li><a href="#sqlFile">S2Dao譲りのSQLファイル</a></li>
+<li><a href="#SqlLog">SQLのログ</a></li>
+</ul>
+</li>
+
+<li><a href="#annotationReference">アノテーションリファレンス</a>
+<ul>
+<li><a href="#EntityAnnotation">Entityアノテーション</a></li>
+<li><a href="#TableAnnotation">Tableアノテーション</a></li>
+<li><a href="#ColumnAnnotation">Columnアノテーション</a></li>
+</ul>
 </ul>
 
-<h2><a name="OracleUnicode" id="OracleUnicode">OracleのUnicode問題</a></h2>
-<p>OracleのJDBC Driverは、Unicodeのマッピングに一部問題があり、～が化けてしまいます。この問題に対処するには、jdbc.diconのResultSetFactoryの設定を変更します。通常は下記のようになっています。</p>
-<pre>
-&lt;component class="org.seasar.extension.jdbc.impl.BasicResultSetFactory"/&gt;
-&lt;!--<br />&lt;component class="org.seasar.extension.jdbc.impl.OracleResultSetFactory"/&gt;<br />--&gt;
-</pre>
-<p>BasicResultSetFactoryの部分をコメントアウトし、かわりに直ぐ下のOracleResultSetFactoryの部分のコメントをはずし有効にします。</p>
-<pre>
-&lt;!--<br />&lt;component class="org.seasar.extension.jdbc.impl.BasicResultSetFactory"/&gt;<br />--&gt;<br />&lt;component class="org.seasar.extension.jdbc.impl.OracleResultSetFactory"/&gt;
-</pre>
-<h2><a name="BooleanToInt" id="BooleanToInt">Booleanの扱い</a></h2>
-<p>Oracleのようにboolean型に対応していないRDBMSもあります。この問題に対処するには、jdbc.diconのStatementFactoryの設定を変更します。通常は下記のようになっています。<p>
-<pre>
-&lt;component class="org.seasar.extension.jdbc.impl.ConfigurableStatementFactory"&gt;
-  &lt;arg&gt;
-    &lt;component class="org.seasar.extension.jdbc.impl.BasicStatementFactory"/&gt;
-    &lt;!--
-    &lt;component class="org.seasar.extension.jdbc.impl.BooleanToIntStatementFactory"/&gt;
-    --&gt;
-    ...
-  &lt;/arg&gt;
-&lt;/component&gt;
-</pre>
-<p>BasicStatementFactoryの部分をコメントアウトし、かわりにBooleanToIntStatementFactoryの部分のコメントをはずし有効にします。</p>
-<pre>
-&lt;component class="org.seasar.extension.jdbc.impl.ConfigurableStatementFactory"&gt;
-  &lt;arg&gt;
-    &lt;!--
-    &lt;component class="org.seasar.extension.jdbc.impl.BasicStatementFactory"/&gt;
-    --&gt;
-    &lt;component class="org.seasar.extension.jdbc.impl.BooleanToIntStatementFactory"/&gt;
-    ...
-  &lt;/arg&gt;
-&lt;/component&gt;
-</pre>
-<h2><a name="SqlLog" id="SqlLog">SQLのログの取得</a></h2>
+<h2><a name="about">S2JDBCとは</a></h2>
 <p>
-S2JDBCで実行したSQLはログとして記録されるためアプリケーションから参照することが可能です。
+S2JDBCは、データベースプログラミングの生産性を10倍以上高めることを目標として作成した
+Seasar2のO/R Mapperです。
+なんに比べて生産性が10倍かというとJava標準のJPA(Java Persistence API)に対してです。
+次のような特徴があります。
+</p>
+<h3><a name="autoGenerateSql">90%のSQLを自動生成する</a></h3>
+<p>
+SQLは文字列で組み立てるため、書きづらく間違いやすいものです。
+S2JDBCは、クエリのOne Liner呼び出しにより、SQLを自動生成します。
+One Liner呼び出しとは、基本的に一行で必要な機能を呼び出すことができるということです。
+簡単な例を見てもらったほうがわかりやすいでしょう。
+</p>
+<pre>
+List&lt;Employee&gt; results = jdbcManager.from(Employee.class).join("department")
+                            .where("id in (? , ?)", 11, 22)
+                            .orderBy("name desc")
+                            .getResultList();
+</pre>
+<p>
+これは、次のようなSQLに展開されます。
+</p>
+<pre>
+select T1_.ID, T1_.NAME, T1.DEPARTMENT_ID, T2_.ID, T2_.NAME
+  from EMPLOYEE T1_ left outer join DEPARTMENT T2_ on T1_.DEPARTMENT_ID = T2_.ID
+ where T1_.ID in (?, ?)
+ order by T1_.NAME desc
+</pre>
+<p>
+クエリの呼び出しがSQLに対応しているので可読性が高いだけでなく、
+selectリスト句でのカラムの指定や結合の指定など面倒な指定を
+する必要がありません。また、from(),join(),where(),orderBy()など
+'.'をIDEで入力するとコード補完によって呼び出せる機能を教えてもらえるので、
+何ができるんだろうと悩む必要もなく、さくさくと開発ができます。
+</p>
+<p>
+これに対し、Javaの標準であるJPA(Java Persistence API)はどうでしょうか。
+JPAもSQLを自動生成できます。それでは、同じことをJPAでやってみましょう。
+</p>
+<pre>
+List&lt;Employee&gt; results = (List&lt;Employee&gt;) entityManager.createQuery(
+                            "select e from Employee e left join fetch e.department" +
+                            " where e.id in (?1, ?2) order by e.name")
+                            .setParameter(1, 11)
+                            .setParameter(2, 22)
+                            .getResultList();
+</pre>
+<p>
+JPQL(select ... の文字列)の部分は、Seasar2のクエリとほぼ同じように見えますが、
+文字列で組み立てているので、書き間違える可能性が増えます。
+文字列で組み立てるより、クエリのメソッド呼び出しで設定したほうが、
+間違いも減るし、IDEによる自動補完が効くのでより生産性があがるのです。
+</p>
+<p>
+departmentの関連がEAGERであれば、left join fetchの部分は省略できますが、
+関連はLAZYにするのが安全なので、left join fetchを記述しています。
+</p>
+
+<h3><a name="utilizeJava">Javaの良さを生かす</a></h3>
+<p>
+最近、<a href="http://www.oreilly.co.jp/books/9784873113203/">JavaからRubyへ</a>
+なんて言われ、生産性の低い言語としてすっかりレッテルが貼られてしまったJavaですが、
+古いJavaのイメージで語られていることが多い気がします。
+</p>
+<p>
+アノテーション、Generics、列挙型、可変長引数、Auto Boxingなど、
+今のJavaには、生産性を向上させるための機能がいろいろ用意されています。
+ただ、残念なことにこれらのすばらしい機能をフルに活用したフレームワークは
+あまりないのが現状です。
+</p>
+<p>
+Seasar2では、Javaのよさを生かし、生産性を向上させます。
+例えば、先ほどのJPAの戻り値のキャストを見てみましょう。
+</p>
+<pre>
+List&lt;Employee&gt; results = (List&lt;Employee&gt;) entityManager.createQuery("select e from Employee e ...")
+                            ...
+                            .getResultList();
+</pre>
+<p>
+Seasar2では、Genericsを使って、うざったいキャストを不要にしています。
+</p>
+<pre>
+List&lt;Employee&gt; results = jdbcManager.from(Employee.class)
+                            ...
+                            .getResultList();
+</pre>
+<p>
+JPAでは、文字列でEmployeeと指定していますが、Seasar2ではfrom()の引数でEmployee.classと
+クラスリテラルを渡しているので、Genericsを利用できます。
+</p>
+<p>
+キャストの手間自体はたいしたことはないのですが、JPQLでEmployeeと指定しているのに、
+さらに(List&lt;Employee&gt;)とキャストしなければいけないという二度手間感が
+開発者のやる気を低下させてしまいます。
+</p>
+<p>
+それに対し、Seasar2では、select文を書くような気持ちで、自然にメソッドを呼び出していけば、
+キャスト不要で欲しいデータを取り出すことができます。
+リズムに乗って開発できるので、開発者の生産性はさらに向上します。
+開発者のやる気が、生産性を向上させる最も重要なポイントなのです。
+</p>
+<p>
+もう1つ、バインド変数の例を見てみましょう。JPAでは次のようにバインド変数を指定しています。
+</p>
+<pre>
+entityManager.createQuery("select ... where e.id in (?1, ?2) ...")
+    .setParameter(1, 11)
+    .setParameter(2, 22)
+    ...
+</pre>
+<p>
+setParameter()の呼び出しがうざったい感じです。Seasar2の場合は次のようになります。
+</p>
+<pre>
+jdbcManager.from(...
+    .where("id in (? , ?)", 11, 22)
+    ...
+</pre>
+<p>
+where()の二番目以降の引数は可変長引数になっていて、?の数にあわせて、引数を可変にできます。
+例えば、次のようにすることも可能です。
+</p>
+<pre>
+where("id in (? , ?, ?, ?)", 11, 22, 33, 44)
+</pre>
+<p>
+Javaも良さを生かせば、さくさくソースを書けることがわかったいただけたでしょうか。
+</p>
+
+<h3><a name="easySql">SQLの扱いが簡単</a></h3>
+<p>
+SQLの自動生成ですべてがうまくいけば問題ありませんが、
+実案件では、複雑なSQLを自前で組み立てる必要が出てくる場合があります。
+複雑なSQLで複雑な結果を返す場合、JPAでは次のようになります。
+</p>
+<pre>
+List&lt;Object[]&gt; results = (List&lt;Object[]&gt;) entityManager.createNativeQuery("複雑なSQL")
+                                       ...
+                                       .getResultList();
+</pre>
+<p>
+1行に相当する部分がオブジェクトの配列で返ってくるなんてがっかりです。
+Seasar2では、結果セットのカラム名とJavaBeansのプロパティ名を同じにしておけば、
+結果セットの1行をJavaBeansに自動的にマッピングします。
+また、aaa_bbbのような'_'を使ったカラム名をaaaBbbのようなキャメル記法のプロパティ名に
+自動的にマッピングします。
+Seasar2を使った例は次のようになります。
+</p>
+<pre>
+List&lt;MyDto&gt; results = jdbcManager.selectBySql(MyDto.class, "複雑なSQL")
+                                       ...
+                                       .getResultList();
+</pre>
+<p>
+オブジェクトの配列かJavaBeansかの違いですが、
+開発者としては、配列にインデックスでアクセスすると型も不明だし、
+何が返ってくるかわからないので不安ですが、
+プロパティにアクセスすると型も名前もわかっているので安心です。
+このようなところも開発者のやる気につながってくるのです。
+</p>
+<p>
+明示的にSQLを指定する必要があるのは、複雑なSQLの場合だけとは限りません。
+既存システムをベースに新システムを作るというのは、よくある話です。
+その場合に既存の資産で生かせるものはできる限り生かしたいものです。
+そのような既存の資産の代表的なものがSQLです。
+</p>
+<p>
+JPAで既存のSQLをそのまま生かそうとするとオブジェクトの配列が返ってきちゃうし、
+SQLをJPQLに変換するのは結構面倒な作業です。
+どちらを選ぶにせよ、やるきがそがれるのは間違いないでしょう。
+Seasar2を使えば、JavaBeansにスムーズにマッピングできるので、
+快適に既存のSQLを再利用できます。
+</p>
+
+<h3><a name="simpleProperty">シンプルなプロパティ</a></h3>
+<p>
+Javaでプロパティを作るには、フィールドとgetter、setterメソッドの定義が必要でした。
+getter、setterメソッドは、カプセル化の観点から必要とされてきましたが、
+本当にどんな場合でも必要なのでしょうか。
+</p>
+<p>
+Javaでは、テーブルの一行に対応するデータの入れ物をエンティティと呼ぶことが一般的です。
+テーブルのカラムのデータは、もともとpublicな存在なので、
+エンティティのプロパティがカラムに一対一に対応するなら、
+プロパティのgetter, setterメソッドを省略して、
+publicフィールドにしても良いのではないでしょうか。
+</p>
+<p>
+エンティティはテーブルの鏡であるという位置づけにするなら、
+エンティティのプロパティをpublicフィールドにするのも別におかしなことではありません。
+Seasar2では、エンティティはテーブルの鏡であるという立場をとることによって、
+エンティティのプロパティをpublicフィールドとして定義できるようにしています。
+もちろん、publicフィールドに抵抗のある方は、
+これまでどおりに、getter, setterメソッドを定義することもできます。
+それでは、getter, setterメソッドのありなしを比べて見ましょう。
+</p>
+<pre>
+@Entity
+public class Employee {
+    @Id
+    private Integer id;
+    
+    private String name;
+    
+    private BigDecimal salary;
+    
+    public Integer getId() {
+        return id;
+    }
+    
+    public void setId(Integer id) {
+        this.id = id;
+    }
+    
+    public String getName() {
+        return name;
+    }
+    
+    public void setName(String name) {
+        this.name = name;
+    }
+    
+    public BigDecimal getSalary() {
+        return salary;
+    }
+    
+    public void setSalary(BigDecimal salary) {
+        this.salary = salary;
+    }
+}
+</pre>
+<pre>
+@Entity
+public class Employee {
+    @Id
+    public Integer id;
+    
+    public String name;
+    
+    public BigDecimal salary;
+}
+</pre>
+<p>
+どっちがすっきりして見やすいかは一目瞭然ですね。
+これは、すべてのプロパティをpublicフィールドにすべきだという意味ではありません。
+カプセル化が必要なケースももちろんあります。
+でも、エンティティがテーブルの鏡だとする全体が成り立つなら、
+プロパティをpublicフィールドにするのも十分にありだということです。
+</p>
+<p>
+プロパティへのアクセスも
+</p>
+<pre>
+String s = employee.getName();
+employee.setName("hoge");
+</pre>
+<p>
+よりも
+</p>
+<pre>
+String s = employee.name;
+employee.name = "hoge";
+</pre>
+<p>
+のほうが直感的で、気分よく記述できるでしょう。
+このような気分のよさも生産性につながってくるのです。
+</p>
+
+<h3><a name="lowLearningCost">学習コストが低い</a></h3>
+<p>
+昔のフレームワークなら、機能が盛りだくさんで、使いこなすには時間がかかるけど、
+使いこなせれば、威力を発揮するというのも許されたでしょう。
+<a href="http://www.hibernate.org/">Hibernate</a>は、
+まさしくそのようなフレームワークです。
+</p>
+<p>
+しかし、時代は変わりました。
+今は、一ヶ月以内に成果を出すことを求められるのもよくある話です。
+使いこなすのに時間がかかっては間に合わないのです。
+</p>
+<p>
+そのような時代の要求を受け、機能を盛りだくさんにするのではなく、
+データアクセス用のフレームワークとして本質的な機能に集中することで、
+短期間で使えるようになることを可能にしました。
+</p>
+
+<h3><a name="lessTrouble">トラブリにくい</a></h3>
+<p>
+<a href="#lowLearningCost">学習コストが低い</a>でも取り上げましたが、
+機能が盛りだくさんだと、覚えるのに時間がかかるだけではなく、
+トラブルに見舞われやすくなり、その解決に時間がかかるようになります。
+</p>
+<p>
+例えば、一対一、一対多、多対一などのエンティティ間の関連を取り上げてみます。
+それぞれの関連は、データをロードするタイミングを指定することができ、
+関連のプロパティにアクセスしたときにはじめてデータをロードする<code>Lazy loading</code>と、
+関連元のエンティティにアクセスするのと同時に関連先のデータをロードする<code>Eager loading</code>があります。
+</p>
+<p>
+従業員と部署のエンティティに多対一の関連がある場合、
+<code>Eager loading</code>だと、従業員を取得するのと同時に部署も取得されます。
+<code>Lazy loading</code>だと、従業員を取得したときは、
+単に従業員のデータだけが取得され、部署のプロパティにアクセスしたときにはじめて
+部署のデータが取得されます。
+</p>
+<p>
+また、それとは別に、関連は<code>Lazy loading</code>にしておいて、
+クエリを実行するときに、どの関連を結合で取得してくるかを指定する方法もあります。
+この方法は、フェッチ結合と呼ばれます。
+以前のサンプルでも次のようにフェッチ結合が使われていました。
+</p>
+<pre>
+select e from Employee e left join fetch e.department
+</pre>
+<p>
+どのようなケースにも対応できるようにするため、
+このようにいろいろな選択肢が用意されているのですが、
+いろんな選択肢があるのでトラブルが起こる確率も増えてしまうのです。
+</p>
+<p>
+例えば、一対一、多対一には<code>Eager loading</code>、
+一対多には<code>Lazy loading</code>を適用するというルールにしたとしましょう。JPAのデフォルトはそうなっています。
+</p>
+<p>
+<code>Eager loading</code>が設定されている関連元のエンティティにアクセスするときは、
+必要かどうかにかかわらず常に関連先のデータまで取得されてしまうため、
+大量のデータを取得する場合は、パフォーマンスやメモリ不足の問題を引き起こすことがあります。
+少量のデータでテストしていたときには気づかず、本番相当のデータを用意したときにはじめて
+発覚するというのも困りものです。
+</p>
+<p>
+それでは、<code>Eager loading</code>を<code>Lazy loading</code>に変えれば、
+すべての問題は解決するのでしょうか。残念ながら次の「N+1検索問題」を引き起こします。
+</p>
+<p>
+1000件の従業員のリストを表示するという機能があるとしましょう。
+従業員のデータ以外に部署名も表示させる必要があるとします。
+最初の1回の検索で1000件の従業員のデータを取得します。
+その後、部署名を表示させるために、従業員.部署.名前のようにアクセスすると、
+部署のプロパティにアクセスした瞬間に<code>Lazy loading</code>がおきます。
+これが従業員の件数分(N)起こるので、「N+1検索問題」といわれています。
+</p>
+<p>
+大量の検索が発行されるので、深刻なパフォーマンス問題を引き起こします。
+実際は、同じ部署へのアクセスはキャッシュが使われるので、N件起こることはないのですが、
+それでも部署の件数分の検索が行なわれパフォーマンス問題を引き起こすことには変わりはありません。
+</p>
+<p>
+最も良い解決策は、関連は<code>Lazy loading</code>にしておき、
+検索のときにフェッチ結合を使うことです。
+<code>Lazy loading</code>にするのは、<code>Lazy loading</code>にしたいからではなく、
+<code>Eager loading</code>させないための回避策です。
+フェッチ結合は、特定の検索のときだけ、<code>Eager loading</code>になるような効果があります。
+</p>
+<p>
+ここまで説明してきたようにJPAは、機能が豊富だけどトラブリやすいという問題があります。
+Seasar2では、トラブリにくくするために、いたずらに機能を増やすのではなく、
+トラブリやすい機能は意図的に削っています。
+</p>
+<p>
+例えば、関連のLoding問題についていえば、<code>Eager loading</code>も
+<code>Lazy loading</code>もサポートせず、次のようなフェッチ結合のみをサポートしています。
+join()メソッドのデフォルトはフェッチ結合になります。
+</p>
+<pre>
+jdbcManager.from(Employee.class).join("department")
+</pre>
+<p>
+実際の開発において、予想外に多くの時間を費やしているのはトラブルシューティングの時間でないでしょうか。
+トラブリにくくすることも、生産性向上の重要な要因なのです。
+</p>
+
+<h3><a name="betterJPA">より良いJPA</a></h3>
+<p>
+これまで、JPAの問題点をいくつか指摘してきましたが、
+JPAは標準であり、一方的に無視してよいものでもありません。
+そこで、Seasar2では、エンティティとテーブルのマッピングの仕様は、
+JPAとあわせ、いまいちなEntityManagerやJPQLの部分は、
+独自仕様でいくことにしました。
+</p>
+<p>
+JPAを使ってパフォーマンスが出なかったり、
+トラブルに巻き込まれて困っている方は、
+より良いJPAとしてSeasar2を使ってみてはいかがでしょうか。
+</p>
+
+<h2><a name="featureReference">機能リファレンス</a></h2>
+
+<h3><a name="SqlLog" id="SqlLog">SQLのログ</a></h3>
+<p>
+Seasar2で実行したSQLのログは、アプリケーションから参照することが可能です。
 SQLのログは<code>org.seasar.extension.jdbc.SqlRegistry</code>のインスタンスから取得します。
 </p>
 <p>
@@ -115,6 +494,82 @@ SqlLog sqlLog = sqlLogRegistry.getLast();
 <li>SQLにバインドされる値の配列</li>
 <li>SQLにバインドされる値の型の配列</li>
 </ul>
+
+<h2><a name="annotationReference">アノテーションリファレンス</a></h2>
+<p>
+S2JDBCで使われているアノテーションを説明します。
+</p>
+<h3 style="background-color:red">注意点</h3>
+<p>
+エンティティとテーブルのマッピング用のアノテーションは、
+JPAのものをそのまま利用していますが、
+すべてのアノテーションや属性をサポートしているわけではありません。
+ここに取り上げられているもののみサポートされているとお考えください。
+</p>
+
+<h3><a name="EntityAnnotation">Entityアノテーション(必須)</a></h3>
+<p>
+エンティティであることをあらわすアノテーションです。
+エンティティには必ず指定しなければいけません。
+</p>
+<pre>
+@Entity
+public class Employee {
+    ...
+}
+</pre>
+<h4><a name="EntityNameAttr">name属性(任意)</a></h4>
+<p>
+エンティティ名を指定することができます。
+指定しなかった場合、エンティティのクラス名からパッケージ名を除いた部分になります。
+例えば、クラス名が<code>examples.entity.Employee</code>の場合、
+デフォルトのエンティティ名は、<code>Employee</code>になります。
+</p>
+
+<h3><a name="TableAnnotation">Tableアノテーション(任意)</a></h3>
+<p>
+テーブル情報を指定するアノテーションです。
+</p>
+<h4><a name="TableNameAttr">name属性(任意)</a></h4>
+<p>
+テーブル名を指定することができます。
+指定しなかった場合、テーブル名はエンティティ名と同じになります。
+エンティティ名が、<code>AaaBbb</code>のようなキャメル記法の場合、
+テーブル名は、<code>AAA_BBB</code>のように'_'区切りだとみなされます。
+</p>
+<p>
+このルールは、convention.diconで指定されている
+<code>org.seasar.framework.convention.impl.PersistenceNamingConventionImpl</code>の
+fromEntityNameToTableName()の実装を変えることで、カスタマイズすることができます。
+</p>
+<h4><a name="TableSchemaAttr">schema属性(任意)</a></h4>
+<p>
+スキーマを指定することができます。
+指定した場合、自動生成されるSQLのテーブル名がスキーマ.テーブル名になります。
+</p>
+
+<h3><a name="ColumnAnnotation">Columnアノテーション(任意)</a></h3>
+<p>
+カラム情報を指定するアノテーションです。
+</p>
+<h4><a name="ColumnNameAttr">name属性(任意)</a></h4>
+<p>
+カラム名を指定することができます。
+指定しなかった場合、カラム名はフィールド名と同じになります。
+フィールド名が、<code>aaaBbb</code>のようなキャメル記法の場合、
+カラム名は、<code>AAA_BBB</code>のように'_'区切りだとみなされます。
+</p>
+<p>
+このルールは、convention.diconで指定されている
+<code>org.seasar.framework.convention.impl.PersistenceNamingConventionImpl</code>の
+fromPropertyNameToColumnName()の実装を変えることで、カスタマイズすることができます。
+</p>
+<p>
+デフォルトでは、プロパティ名とフィールド名は同じになりますが、convention.diconで指定されている
+<code>org.seasar.framework.convention.impl.PersistenceNamingConventionImpl</code>の
+fromFieldNameToPropertyName()の実装を変えることで、カスタマイズすることができます。
+</p>
+
 <!-- document end -->
 <!-- don't edit start --></td>
 <td width="14"><img height="14" width="14" src="images/spacer.gif" alt="" /></td>
@@ -125,7 +580,7 @@ SqlLog sqlLog = sqlLogRegistry.getLast();
 </tr>
 <tr>
 <td width="14"><img height="14" width="14" src="images/spacer.gif" alt="" /></td>
-<td width="766" class="copyright">Copyright© 2004-2005, The Seasar Foundation and the others. All rights reserved.</td>
+<td width="766" class="copyright">Copyright© 2004-2007, The Seasar Foundation and the others. All rights reserved.</td>
 </tr>
 </table>
 </td>

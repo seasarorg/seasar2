@@ -1,0 +1,141 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja" lang="ja">
+<!-- don't edit start -->
+<head>
+<title>Seasar - DI Container with AOP -</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="seasar_b.css" type="text/css" rel="stylesheet" media="screen" />
+<link href="seasar_p.css" type="text/css" rel="stylesheet" media="print" />
+<script src="seasar_b.js" type="text/JavaScript" language="JavaScript">
+</script>
+</head>
+<body onload="preload('ja')">
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="left">
+<tr>
+<td align="left" valign="top" width="780">
+<table width="780" border="0" cellspacing="0" cellpadding="0" class="white">
+<tr>
+<td colspan="7"><img height="5" width="780" src="images/top01_b.gif" alt="" /></td>
+</tr>
+<tr>
+<td><img height="117" width="235" src="images/top02_b.gif" alt="Seasar" /></td>
+<td colspan="3"><img height="117" width="289" src="images/top03.gif" alt="DI Container with AOP" /></td>
+<td colspan="3"><img height="117" width="256" src="images/spacer.gif" alt="" /></td>
+</tr>
+<tr>
+<td rowspan="2"><img src="images/top04.gif" alt="" height="49" width="235" /></td>
+<td><a href="http://www.seasar.org/index.html"><img src="images/menu01_b_ja.gif" height="30" width="78" border="0" alt="" id="menu01" onmouseover="swap(1)" onmouseout="restore(1)" name="menu01" /></a></td>
+<td><a href="http://www.seasar.org/projects.html"><img src="images/menu02_b_ja.gif" height="30" width="101" border="0" alt="" id="menu02" onmouseover="swap(2)" onmouseout="restore(2)" name="menu02" /></a></td>
+<td><a href="http://www.seasar.org/products.html"><img src="images/menu03_b_ja.gif" height="30" width="110" border="0" alt="" id="menu03" onmouseover="swap(3)" onmouseout="restore(3)" name="menu03" /></a></td>
+<td><a href="http://www.seasar.org/resources.html"><img src="images/menu04_b_ja.gif" height="30" width="113" border="0" alt="" id="menu04" onmouseover="swap(4)" onmouseout="restore(4)" name="menu04" /></a></td>
+<td><img src="images/menu05_b_ja.gif" height="30" width="109" border="0" alt="" id="menu05" onmouseover="swap(5)" onmouseout="restore(5)" name="menu05" /></td>
+<td><img height="30" width="34" src="images/menu06.gif" alt="" /></td>
+</tr>
+<tr>
+<td colspan="6"><img height="19" width="545" src="images/spacer.gif" alt="" /></td>
+</tr>
+</table>
+<table width="780" border="0" cellspacing="0" cellpadding="0" class="white">
+<tr align="left" valign="top">
+<td width="14"><img height="14" width="14" src="images/spacer.gif" alt="" /></td>
+<td width="740" class="main"><!-- don't edit end -->
+<!-- document start -->
+<ul>
+<li><a href="OracleUnicode">OracleのUnicode問題</a></li>
+<li><a href="BooleanToInt">Booleanの扱い</a></li>
+<li><a href="SqlLog">SQLのログの取得</a></li>
+</ul>
+
+<h2><a name="OracleUnicode" id="OracleUnicode">OracleのUnicode問題</a></h2>
+<p>OracleのJDBC Driverは、Unicodeのマッピングに一部問題があり、～が化けてしまいます。この問題に対処するには、jdbc.diconのResultSetFactoryの設定を変更します。通常は下記のようになっています。</p>
+<pre>
+&lt;component class="org.seasar.extension.jdbc.impl.BasicResultSetFactory"/&gt;
+&lt;!--<br />&lt;component class="org.seasar.extension.jdbc.impl.OracleResultSetFactory"/&gt;<br />--&gt;
+</pre>
+<p>BasicResultSetFactoryの部分をコメントアウトし、かわりに直ぐ下のOracleResultSetFactoryの部分のコメントをはずし有効にします。</p>
+<pre>
+&lt;!--<br />&lt;component class="org.seasar.extension.jdbc.impl.BasicResultSetFactory"/&gt;<br />--&gt;<br />&lt;component class="org.seasar.extension.jdbc.impl.OracleResultSetFactory"/&gt;
+</pre>
+<h2><a name="BooleanToInt" id="BooleanToInt">Booleanの扱い</a></h2>
+<p>Oracleのようにboolean型に対応していないRDBMSもあります。この問題に対処するには、jdbc.diconのStatementFactoryの設定を変更します。通常は下記のようになっています。<p>
+<pre>
+&lt;component class="org.seasar.extension.jdbc.impl.ConfigurableStatementFactory"&gt;
+  &lt;arg&gt;
+    &lt;component class="org.seasar.extension.jdbc.impl.BasicStatementFactory"/&gt;
+    &lt;!--
+    &lt;component class="org.seasar.extension.jdbc.impl.BooleanToIntStatementFactory"/&gt;
+    --&gt;
+    ...
+  &lt;/arg&gt;
+&lt;/component&gt;
+</pre>
+<p>BasicStatementFactoryの部分をコメントアウトし、かわりにBooleanToIntStatementFactoryの部分のコメントをはずし有効にします。</p>
+<pre>
+&lt;component class="org.seasar.extension.jdbc.impl.ConfigurableStatementFactory"&gt;
+  &lt;arg&gt;
+    &lt;!--
+    &lt;component class="org.seasar.extension.jdbc.impl.BasicStatementFactory"/&gt;
+    --&gt;
+    &lt;component class="org.seasar.extension.jdbc.impl.BooleanToIntStatementFactory"/&gt;
+    ...
+  &lt;/arg&gt;
+&lt;/component&gt;
+</pre>
+<h2><a name="SqlLog" id="SqlLog">SQLのログの取得</a></h2>
+<p>
+S2JDBCで実行したSQLはログとして記録されるためアプリケーションから参照することが可能です。
+SQLのログは<code>org.seasar.extension.jdbc.SqlRegistry</code>のインスタンスから取得します。
+</p>
+<p>
+<code>SqlRegistry</code>のインスタンスはDIもしくはルックアップにより取得できます。
+</p>
+<p>
+DIのための設定は次のようになります。
+</p>
+<pre>
+&lt;component name="sqlLogRegistry" class="org.seasar.extension.jdbc.SqlLogRegistry">
+  @org.seasar.extension.jdbc.SqlLogRegistryLocator@getInstance()
+&lt;/component&gt;
+</pre>
+<p>
+プログラムから直接ルックアップする場合は次のようなコードが必要です。
+</p>
+<pre>
+SqlLogRegistry sqlLogRegistry = SqlLogRegistryLocator.getInstance();
+</pre>
+<code>SqlRegistry</code>のインスタンスは複数のログを保持しています（デフォルトでは最新3つのログを保持します）。
+最新の（最後に実行された）SQLのログは次のようなコードで取得できます。
+<pre>
+SqlLog sqlLog = sqlLogRegistry.getLast();
+</pre>
+<code>org.seasar.extension.jdbc.SqlLog</code>のインスタンスは次の情報を保持しています。
+<ul>
+<li>未加工のSQL</li>
+<li>バインド変数を実際の値で置き換えた完全なSQL</li>
+<li>SQLにバインドされる値の配列</li>
+<li>SQLにバインドされる値の型の配列</li>
+</ul>
+<!-- document end -->
+<!-- don't edit start --></td>
+<td width="14"><img height="14" width="14" src="images/spacer.gif" alt="" /></td>
+</tr>
+<tr>
+<td width="14"><img height="30" width="14" src="images/spacer.gif" alt="" /></td>
+<td width="766"><img height="30" width="592" src="images/spacer.gif" alt="" /></td>
+</tr>
+<tr>
+<td width="14"><img height="14" width="14" src="images/spacer.gif" alt="" /></td>
+<td width="766" class="copyright">Copyright© 2004-2005, The Seasar Foundation and the others. All rights reserved.</td>
+</tr>
+</table>
+</td>
+<td class="backright" align="left" valign="top">&nbsp;</td>
+</tr>
+<tr>
+<td class="backunder" align="left" valign="top" width="780" height="16">&nbsp;</td>
+<td class="backcorner" align="left" valign="top" height="16">&nbsp;</td>
+</tr>
+</table>
+<!-- don't edit end -->
+</body>
+</html>
