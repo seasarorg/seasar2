@@ -1,0 +1,1 @@
+{call SIMPLETYPE_PARAM(?)}
