@@ -56,7 +56,7 @@ public class AutoBatchUpdateTest extends S2TestCase {
         department2.version = 1;
         list.add(department2);
 
-        int[] result = jdbcManager.update(list).executeBatch();
+        int[] result = jdbcManager.updateBatch(list).executeBatch();
         assertEquals(2, result.length);
 
         Map<String, Object> m = new HashMap<String, Object>();
@@ -96,7 +96,7 @@ public class AutoBatchUpdateTest extends S2TestCase {
         department2.version = 200;
         list.add(department2);
 
-        int[] result = jdbcManager.update(list).includesVersion()
+        int[] result = jdbcManager.updateBatch(list).includesVersion()
                 .executeBatch();
         assertEquals(2, result.length);
 
@@ -141,7 +141,7 @@ public class AutoBatchUpdateTest extends S2TestCase {
         department2.version = 1;
         list.add(department2);
 
-        int[] result = jdbcManager.update(list).includes("departmentName",
+        int[] result = jdbcManager.updateBatch(list).includes("departmentName",
                 "location").executeBatch();
         assertEquals(2, result.length);
 
@@ -186,7 +186,7 @@ public class AutoBatchUpdateTest extends S2TestCase {
         department2.version = 1;
         list.add(department2);
 
-        int[] result = jdbcManager.update(list).excludes("departmentName",
+        int[] result = jdbcManager.updateBatch(list).excludes("departmentName",
                 "location").executeBatch();
         assertEquals(2, result.length);
 
@@ -229,7 +229,7 @@ public class AutoBatchUpdateTest extends S2TestCase {
         department2.version = 1;
         list.add(department2);
 
-        int[] result = jdbcManager.update(list).executeBatch();
+        int[] result = jdbcManager.updateBatch(list).executeBatch();
         assertEquals(2, result.length);
 
         Map<String, Object> m = new HashMap<String, Object>();

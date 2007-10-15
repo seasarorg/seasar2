@@ -54,7 +54,7 @@ public class AutoBatchDeleteTest extends S2TestCase {
         employee2.version = 1;
         list.add(employee2);
 
-        int[] result = jdbcManager.delete(list).executeBatch();
+        int[] result = jdbcManager.deleteBatch(list).executeBatch();
         assertEquals(2, result.length);
 
         Map<String, Object> m = new HashMap<String, Object>();
@@ -82,7 +82,7 @@ public class AutoBatchDeleteTest extends S2TestCase {
         employee2.version = 99;
         list.add(employee2);
 
-        int[] result = jdbcManager.delete(list).ignoreVersion().executeBatch();
+        int[] result = jdbcManager.deleteBatch(list).ignoreVersion().executeBatch();
         assertEquals(2, result.length);
 
         Map<String, Object> m = new HashMap<String, Object>();
@@ -112,7 +112,7 @@ public class AutoBatchDeleteTest extends S2TestCase {
         employee2.version = 1;
         list.add(employee2);
 
-        int[] result = jdbcManager.delete(list).executeBatch();
+        int[] result = jdbcManager.deleteBatch(list).executeBatch();
         assertEquals(2, result.length);
 
         Map<String, Object> m = new HashMap<String, Object>();

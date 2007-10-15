@@ -184,13 +184,13 @@ public class JdbcManagerImpl implements JdbcManager, Synchronization {
         return new AutoInsertImpl<T>(this, entity).queryTimeout(queryTimeout);
     }
 
-    public <T> AutoBatchInsert<T> insert(final List<T> entities) {
-        return new AutoBatchInsertImpl<T>(this, entities)
+    public <T> AutoBatchInsert<T> insertBatch(final T... entities) {
+        return new AutoBatchInsertImpl<T>(this, Arrays.asList(entities))
                 .queryTimeout(queryTimeout);
     }
 
-    public <T> AutoBatchInsert<T> insert(final T... entities) {
-        return new AutoBatchInsertImpl<T>(this, Arrays.asList(entities))
+    public <T> AutoBatchInsert<T> insertBatch(final List<T> entities) {
+        return new AutoBatchInsertImpl<T>(this, entities)
                 .queryTimeout(queryTimeout);
     }
 
@@ -198,13 +198,13 @@ public class JdbcManagerImpl implements JdbcManager, Synchronization {
         return new AutoUpdateImpl<T>(this, entity).queryTimeout(queryTimeout);
     }
 
-    public <T> AutoBatchUpdate<T> update(final List<T> entities) {
-        return new AutoBatchUpdateImpl<T>(this, entities)
+    public <T> AutoBatchUpdate<T> updateBatch(final T... entities) {
+        return new AutoBatchUpdateImpl<T>(this, Arrays.asList(entities))
                 .queryTimeout(queryTimeout);
     }
 
-    public <T> AutoBatchUpdate<T> update(final T... entities) {
-        return new AutoBatchUpdateImpl<T>(this, Arrays.asList(entities))
+    public <T> AutoBatchUpdate<T> updateBatch(final List<T> entities) {
+        return new AutoBatchUpdateImpl<T>(this, entities)
                 .queryTimeout(queryTimeout);
     }
 
@@ -212,13 +212,13 @@ public class JdbcManagerImpl implements JdbcManager, Synchronization {
         return new AutoDeleteImpl<T>(this, entity).queryTimeout(queryTimeout);
     }
 
-    public <T> AutoBatchDelete<T> delete(final List<T> entities) {
-        return new AutoBatchDeleteImpl<T>(this, entities)
+    public <T> AutoBatchDelete<T> deleteBatch(final T... entities) {
+        return new AutoBatchDeleteImpl<T>(this, Arrays.asList(entities))
                 .queryTimeout(queryTimeout);
     }
 
-    public <T> AutoBatchDelete<T> delete(final T... entities) {
-        return new AutoBatchDeleteImpl<T>(this, Arrays.asList(entities))
+    public <T> AutoBatchDelete<T> deleteBatch(final List<T> entities) {
+        return new AutoBatchDeleteImpl<T>(this, entities)
                 .queryTimeout(queryTimeout);
     }
 

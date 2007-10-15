@@ -281,10 +281,10 @@ public interface JdbcManager {
      * @param <T>
      *            挿入するエンティティの型です。
      * @param entities
-     *            エンティティのリスト
+     *            エンティティの並び
      * @return 自動バッチ挿入
      */
-    <T> AutoBatchInsert<T> insert(List<T> entities);
+    <T> AutoBatchInsert<T> insertBatch(T... entities);
 
     /**
      * 自動バッチ挿入を作成します。
@@ -292,10 +292,10 @@ public interface JdbcManager {
      * @param <T>
      *            挿入するエンティティの型です。
      * @param entities
-     *            エンティティの並び
+     *            エンティティのリスト
      * @return 自動バッチ挿入
      */
-    <T> AutoBatchInsert<T> insert(T... entities);
+    <T> AutoBatchInsert<T> insertBatch(List<T> entities);
 
     /**
      * 自動更新を作成します。
@@ -314,10 +314,10 @@ public interface JdbcManager {
      * @param <T>
      *            更新するエンティティの型です。
      * @param entities
-     *            エンティティのリスト
+     *            エンティティの並び
      * @return 自動バッチ更新
      */
-    <T> AutoBatchUpdate<T> update(List<T> entities);
+    <T> AutoBatchUpdate<T> updateBatch(T... entities);
 
     /**
      * 自動バッチ更新を作成します。
@@ -325,10 +325,10 @@ public interface JdbcManager {
      * @param <T>
      *            更新するエンティティの型です。
      * @param entities
-     *            エンティティの並び
+     *            エンティティのリスト
      * @return 自動バッチ更新
      */
-    <T> AutoBatchUpdate<T> update(T... entities);
+    <T> AutoBatchUpdate<T> updateBatch(List<T> entities);
 
     /**
      * 自動削除を作成します。
@@ -347,10 +347,10 @@ public interface JdbcManager {
      * @param <T>
      *            削除するエンティティの型です。
      * @param entities
-     *            エンティティのリスト
-     * @return 自動バッチ更新
+     *            エンティティの並び
+     * @return 自動バッチ削除
      */
-    <T> AutoBatchDelete<T> delete(List<T> entities);
+    <T> AutoBatchDelete<T> deleteBatch(T... entities);
 
     /**
      * 自動バッチ削除を作成します。
@@ -358,10 +358,10 @@ public interface JdbcManager {
      * @param <T>
      *            削除するエンティティの型です。
      * @param entities
-     *            エンティティの並び
-     * @return 自動バッチ削除
+     *            エンティティのリスト
+     * @return 自動バッチ更新
      */
-    <T> AutoBatchDelete<T> delete(T... entities);
+    <T> AutoBatchDelete<T> deleteBatch(List<T> entities);
 
     /**
      * JDBCコンテキストを返します。

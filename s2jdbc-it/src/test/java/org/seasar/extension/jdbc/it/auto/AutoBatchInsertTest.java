@@ -54,7 +54,7 @@ public class AutoBatchInsertTest extends S2TestCase {
         department2.departmentName = "foo";
         list.add(department2);
 
-        int[] result = jdbcManager.insert(list).executeBatch();
+        int[] result = jdbcManager.insertBatch(list).executeBatch();
         assertEquals(2, result.length);
 
         Map<String, Object> m = new HashMap<String, Object>();
@@ -98,7 +98,7 @@ public class AutoBatchInsertTest extends S2TestCase {
         department2.version = 1;
         list.add(department2);
 
-        int[] result = jdbcManager.insert(list).includes("departmentId",
+        int[] result = jdbcManager.insertBatch(list).includes("departmentId",
                 "departmentNo", "location", "version").executeBatch();
         assertEquals(2, result.length);
 
@@ -143,7 +143,7 @@ public class AutoBatchInsertTest extends S2TestCase {
         department2.version = 1;
         list.add(department2);
 
-        int[] result = jdbcManager.insert(list).excludes("departmentName",
+        int[] result = jdbcManager.insertBatch(list).excludes("departmentName",
                 "location").executeBatch();
         assertEquals(2, result.length);
 
@@ -184,7 +184,7 @@ public class AutoBatchInsertTest extends S2TestCase {
         department2.departmentName = "foo";
         list.add(department2);
 
-        int[] result = jdbcManager.insert(list).executeBatch();
+        int[] result = jdbcManager.insertBatch(list).executeBatch();
         assertEquals(2, result.length);
 
         Map<String, Object> m = new HashMap<String, Object>();

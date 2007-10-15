@@ -247,30 +247,30 @@ public class JdbcManagerImplTest extends TestCase {
     /**
      * @throws Exception
      */
-    public void testAutoBatchInsert_list() throws Exception {
-        List<Eee> entities = Arrays.asList(new Eee(1, "foo"),
-                new Eee(2, "bar"), new Eee(3, "baz"));
-        AutoBatchInsertImpl<Eee> query = (AutoBatchInsertImpl<Eee>) manager
-                .insert(entities);
-        assertNotNull(query);
-        assertSame(manager, query.getJdbcManager());
-        assertSame(entities, query.getEntities());
-    }
-
-    /**
-     * @throws Exception
-     */
     public void testAutoBatchInsert_array() throws Exception {
         Eee[] entities = new Eee[] { new Eee(1, "foo"), new Eee(2, "bar"),
                 new Eee(3, "baz") };
         AutoBatchInsertImpl<Eee> query = (AutoBatchInsertImpl<Eee>) manager
-                .insert(entities);
+                .insertBatch(entities);
         assertNotNull(query);
         assertSame(manager, query.getJdbcManager());
         assertEquals(3, query.getEntities().size());
         assertSame(entities[0], query.getEntities().get(0));
         assertSame(entities[1], query.getEntities().get(1));
         assertSame(entities[2], query.getEntities().get(2));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testAutoBatchInsert_list() throws Exception {
+        List<Eee> entities = Arrays.asList(new Eee(1, "foo"),
+                new Eee(2, "bar"), new Eee(3, "baz"));
+        AutoBatchInsertImpl<Eee> query = (AutoBatchInsertImpl<Eee>) manager
+                .insertBatch(entities);
+        assertNotNull(query);
+        assertSame(manager, query.getJdbcManager());
+        assertSame(entities, query.getEntities());
     }
 
     /**
@@ -288,30 +288,30 @@ public class JdbcManagerImplTest extends TestCase {
     /**
      * @throws Exception
      */
-    public void testAutoBatchUpdate_list() throws Exception {
-        List<Eee> entities = Arrays.asList(new Eee(1, "foo"),
-                new Eee(2, "bar"), new Eee(3, "baz"));
-        AutoBatchUpdateImpl<Eee> query = (AutoBatchUpdateImpl<Eee>) manager
-                .update(entities);
-        assertNotNull(query);
-        assertSame(manager, query.getJdbcManager());
-        assertSame(entities, query.getEntities());
-    }
-
-    /**
-     * @throws Exception
-     */
     public void testAutoBatchUpdate_array() throws Exception {
         Eee[] entities = new Eee[] { new Eee(1, "foo"), new Eee(2, "bar"),
                 new Eee(3, "baz") };
         AutoBatchUpdateImpl<Eee> query = (AutoBatchUpdateImpl<Eee>) manager
-                .update(entities);
+                .updateBatch(entities);
         assertNotNull(query);
         assertSame(manager, query.getJdbcManager());
         assertEquals(3, query.getEntities().size());
         assertSame(entities[0], query.getEntities().get(0));
         assertSame(entities[1], query.getEntities().get(1));
         assertSame(entities[2], query.getEntities().get(2));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testAutoBatchUpdate_list() throws Exception {
+        List<Eee> entities = Arrays.asList(new Eee(1, "foo"),
+                new Eee(2, "bar"), new Eee(3, "baz"));
+        AutoBatchUpdateImpl<Eee> query = (AutoBatchUpdateImpl<Eee>) manager
+                .updateBatch(entities);
+        assertNotNull(query);
+        assertSame(manager, query.getJdbcManager());
+        assertSame(entities, query.getEntities());
     }
 
     /**
@@ -329,30 +329,30 @@ public class JdbcManagerImplTest extends TestCase {
     /**
      * @throws Exception
      */
-    public void testAutoBatchDelete_list() throws Exception {
-        List<Eee> entities = Arrays.asList(new Eee(1, "foo"),
-                new Eee(2, "bar"), new Eee(3, "baz"));
-        AutoBatchDeleteImpl<Eee> query = (AutoBatchDeleteImpl<Eee>) manager
-                .delete(entities);
-        assertNotNull(query);
-        assertSame(manager, query.getJdbcManager());
-        assertSame(entities, query.getEntities());
-    }
-
-    /**
-     * @throws Exception
-     */
     public void testAutoBatchDelete_array() throws Exception {
         Eee[] entities = new Eee[] { new Eee(1, "foo"), new Eee(2, "bar"),
                 new Eee(3, "baz") };
         AutoBatchDeleteImpl<Eee> query = (AutoBatchDeleteImpl<Eee>) manager
-                .delete(entities);
+                .deleteBatch(entities);
         assertNotNull(query);
         assertSame(manager, query.getJdbcManager());
         assertEquals(3, query.getEntities().size());
         assertSame(entities[0], query.getEntities().get(0));
         assertSame(entities[1], query.getEntities().get(1));
         assertSame(entities[2], query.getEntities().get(2));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testAutoBatchDelete_list() throws Exception {
+        List<Eee> entities = Arrays.asList(new Eee(1, "foo"),
+                new Eee(2, "bar"), new Eee(3, "baz"));
+        AutoBatchDeleteImpl<Eee> query = (AutoBatchDeleteImpl<Eee>) manager
+                .deleteBatch(entities);
+        assertNotNull(query);
+        assertSame(manager, query.getJdbcManager());
+        assertSame(entities, query.getEntities());
     }
 
     /**
