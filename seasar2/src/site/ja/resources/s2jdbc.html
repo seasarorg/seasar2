@@ -52,22 +52,29 @@
 <li><a href="#betterJPA">より良いJPA</a></li>
 </ul>
 </li>
-
-<li><a href="#featureReference">機能リファレンス</a>
+<li><a href="#setup">セットアップ</a></li>
+<li><a href="#entity">エンティティ</a>
 <ul>
-<li><a href="#autoSql">SQLの自動生成</a></li>
-<li><a href="#sql">SQLを明示的に指定</a></li>
-<li><a href="#sqlFile">S2Dao譲りのSQLファイル</a></li>
+<li><a href="#EntityDefinition">エンティティ定義</a></li>
+<li><a href="#TableDefinition">テーブル定義</a></li>
+<li><a href="#ColumnDefinition">カラム定義</a></li>
+<li><a href="#IdDefinition">識別子定義</a></li>
+<li><a href="#VersionDefinition">バージョン定義</a></li>
+<li><a href="#TransientDefinition">永続化対象外定義</a></li>
+<li><a href="#LobDefinition">ラージオブジェクト定義</a></li>
+<li><a href="#ManyToOneDefinition">多対一関連定義</a></li>
+<li><a href="#OneToManyDefinition">一対多関連定義</a></li>
+<li><a href="#OneToOneDefinition">一対一関連定義</a></li>
+<li><a href="#JoinColumnDefinition">結合カラム定義</a></li>
+</ul>
+</li>
+<li><a href="#jdbcManager">JDBCマネージャ</a></li>
+<li><a href="#other">その他の機能</a>
+<ul>
 <li><a href="#SqlLog">SQLのログ</a></li>
 </ul>
 </li>
 
-<li><a href="#annotationReference">アノテーションリファレンス</a>
-<ul>
-<li><a href="#EntityAnnotation">Entityアノテーション</a></li>
-<li><a href="#TableAnnotation">Tableアノテーション</a></li>
-<li><a href="#ColumnAnnotation">Columnアノテーション</a></li>
-</ul>
 </ul>
 
 <h2><a name="about">S2JDBCとは</a></h2>
@@ -458,7 +465,367 @@ JPAを使ってパフォーマンスが出なかったり、
 より良いJPAとしてSeasar2を使ってみてはいかがでしょうか。
 </p>
 
-<h2><a name="featureReference">機能リファレンス</a></h2>
+<h2><a name="setup">セットアップ</a></h2>
+
+<h2><a name="entity">エンティティ</a></h2>
+<p>
+エンティティの定義の仕方を説明します。
+ここでいっているエンティティとは、
+データベースに永続化されるものだと考えてください。
+</p>
+<h3 style="background-color:red">注意点</h3>
+<p>
+エンティティ用のアノテーションは、JPAのものをそのまま利用していますが、
+すべてのアノテーションや属性をサポートしているわけではありません。
+ここに取り上げられているもののみサポートされているとお考えください。
+</p>
+
+<h3><a name="EntityDefinition">エンティティ定義</a></h3>
+<p>
+エンティティにするためには、<code>@Entity</code>を必ず指定する必要があります。
+</p>
+<pre>
+@Entity
+public class Employee {
+    ...
+}
+</pre>
+<p>
+name属性でエンティティ名を指定することができます。
+次の例では、Empというエンティティ名を指定しています。
+</p>
+<pre>
+@Entity(name = "Emp")
+public class Employee {
+    ...
+}
+</pre>
+<p>
+name属性を指定しなかった場合、エンティティのクラス名からパッケージ名を除いた部分が、
+デフォルトのエンティティ名になります。
+例えば、クラス名が<code>examples.entity.Employee</code>の場合、
+デフォルトのエンティティ名は、<code>Employee</code>になります。
+</p>
+
+<h3><a name="TableDefinition">テーブル定義</a></h3>
+<p>
+テーブル情報を指定するには、<code>@Table</code>を使います。
+</p>
+<p>
+name属性でテーブル名を指定することができます。
+指定しなかった場合、テーブル名はエンティティ名と同じになります。
+エンティティ名が、<code>AaaBbb</code>のようなキャメル記法の場合、
+テーブル名は、<code>AAA_BBB</code>のように'_'区切りだとみなされます。
+</p>
+<p>
+このルールは、convention.diconで指定されている
+<code>org.seasar.framework.convention.impl.PersistenceNamingConventionImpl</code>の
+fromEntityNameToTableName()の実装を変えることで、カスタマイズすることができます。
+</p>
+<p>
+次の例では、EMPというテーブル名を指定しています。
+</p>
+<pre>
+@Entity
+@Table(name = "EMP")
+public class Employee {
+    ...
+}
+</pre>
+<p>
+schema属性でスキーマを指定することができます。
+指定した場合、自動生成されるSQLのテーブル名がスキーマ.テーブル名になります。
+</p>
+
+<h3><a name="ColumnDefinition">カラム定義</a></h3>
+<p>
+カラム情報を指定するには、<code>@Column</code>を使います。
+</p>
+<p>
+name属性でカラム名を指定することができます。
+指定しなかった場合、カラム名はフィールド名と同じになります。
+フィールド名が、<code>aaaBbb</code>のようなキャメル記法の場合、
+カラム名は、<code>AAA_BBB</code>のように'_'区切りだとみなされます。
+</p>
+<p>
+このルールは、convention.diconで指定されている
+<code>org.seasar.framework.convention.impl.PersistenceNamingConventionImpl</code>の
+fromPropertyNameToColumnName()の実装を変えることで、カスタマイズすることができます。
+</p>
+<p>
+デフォルトでは、プロパティ名とフィールド名は同じになりますが、convention.diconで指定されている
+<code>org.seasar.framework.convention.impl.PersistenceNamingConventionImpl</code>の
+fromFieldNameToPropertyName()の実装を変えることで、カスタマイズすることができます。
+</p>
+<p>
+次の例では、AB1234というカラム名を指定しています。
+</p>
+<pre>
+@Column(name = "AB1234")
+public String shortName;
+</pre>
+<p>
+insertable属性で挿入可能かどうかを指定することができます。
+デフォルトはtrueです。
+falseの場合、挿入用のSQLにこのカラムは含まれません。
+カラムにデフォルト値を適用したい場合は、falseにすると良いでしょう。
+</p>
+<p>
+updatable属性で更新可能かどうかを指定することができます。
+デフォルトはtrueです。
+falseの場合、更新用のSQLにこのカラムは含まれません。
+カラムにデフォルト値を適用したい場合は、falseにすると良いでしょう。
+</p>
+
+<h3><a name="IdDefinition">識別子定義</a></h3>
+<p>
+識別子(主キー)であることを指定するには、<code>@Id</code>を使います。
+</p>
+<pre>
+@Id
+public Integer id;
+</pre>
+<p>
+複合主キーの場合は、<code>@Id</code>を複数つけます。
+</p>
+<pre>
+@Id
+public Integer id;
+
+@Id
+public Integer id2;
+</pre>
+<p>
+識別子は、アプリケーション側で生成することもできますが、
+Seasar2に自動生成させることもできます。
+自動生成させるには、<code>@GeneratedValue</code>を使います。
+</p>
+<p>
+自動生成のタイプは、<code>@GeneratedValue</code>の<code>strategy</code>属性で指定します。
+指定できるタイプのは次の4つです。
+</p>
+<p>
+<ul>
+<li>GenerationType.TABLE<br />テーブルを使います。</li>
+<li>GenerationType.SEQUENCE<br />シーケンスを使います。</li>
+<li>GenerationType.IDENTITY<br />データベース固有の識別子自動生成を使います。</li>
+<li>GenerationType.AUTO(デフォルト)<br />データベースに応じてTABLE・SEQUENCE・IDENTITYのどちらかが選択されます。</li>
+</ul>
+</p>
+<p>
+GenerationType.TABLEは次のようにして使います。
+</p>
+<pre>
+@TableGenerator(
+    name = "EMPLOYEE_GEN",
+    table = "ID_GEN",
+    pkColumnName = "GEN_NAME",
+    valueColumnName = "GEN_VALUE")
+@Id @GeneratedValue(strategy = GenerationType.TABLE, generator = "EMPLOYEE_GEN")
+public Integer id;
+</pre>
+<p>
+上記のようなTableGeneratorを定義した場合、
+あらかじめ、次のようなテーブルとデータを用意しておく必要があります。
+</p>
+<pre>
+create table ID_GEN {
+  GEN_NAME varchar(80) not null primary key,
+  GEN_VALUE integer);
+</pre>
+<pre>
+insert into ID_GEN (GEN_NAME, GEN_VALUE) values ('EMPLOYEE_GEN', 0);
+</pre>
+<p>
+GenerationType.SEQUENCEは次のようにして使います。
+</p>
+<pre>
+@SequenceGenerator(
+    name = "EMPLOYEE_GEN",
+    sequenceName = "EMPLOYEE_SEQ")
+@Id @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "EMPLOYEE_GEN")
+public Integer id;
+</pre>
+<p>
+上記のようなSequenceGeneratorを定義した場合、
+あらかじめ、次のようなシーケンスを用意しておく必要があります。
+</p>
+<pre>
+create sequence EMPLOYEE_SEQ
+  incremet by 50;
+</pre>
+<p>
+GenerationType.IDENTITYは次のようにして使います。
+</p>
+<pre>
+@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+public Integer id;
+</pre>
+<p>
+GenerationType.IDENTITYを使う場合、
+識別子はデータベース固有の方法を使って自動生成されるようにしてください。
+</p>
+<pre>
+create table Employee {
+  ID integer not null primary key generated always as identity,
+  ...);
+</pre>
+
+<h3><a name="VersionDefinition">バージョン定義</a></h3>
+<p>
+バージョンチェック用であることを指定するには、<code>@Version</code>を使います。
+更新時に、エンティティの値とカラムの値が同一かどうかをチェックし、
+同一ならカラムの値がインクリメントされて更新されます。
+同一でない場合、<code>javax.persistence.OptimisticLockException</code>が発生します。
+</p>
+<p>
+例えば、エンティティのバージョンチェック用のプロパティの値が0だったとします。
+更新時にカラムの値が0のままならOKで、1に更新されます。
+カラムの値が0でない場合は、他で更新されているということなので、
+<code>javax.persistence.OptimisticLockException</code>が発生します。
+</p>
+<pre>
+@Version
+public Long version = 0L;
+</pre>
+
+<h3><a name="TransientDefinition">永続化対象外定義</a></h3>
+<p>
+永続化対象外であることを指定するには、<code>@Transient</code>を使います。
+<code>transient</code>修飾子も指定することもできますが、
+セッションリプリケーションなどの直列化の対象から外れてしまうので、
+<code>@Transient</code>の方をお勧めします。
+</p>
+<pre>
+@Transient
+public MyDto myDto;
+
+//こちらはお勧めしない
+public transient MyDto myDto2;
+</pre>
+
+<h3><a name="LobDefinition">ラージオブジェクト定義</a></h3>
+<p>
+ラージオブジェクトであることを指定するには、<code>@Lob</code>を使います。
+プロパティの型がbyte[]の場合、自動的にBLOBと判定できるので指定する必要はありませんが、
+プロパティの型がStringの場合、カラムの型が通常の文字列なのか、
+CLOBなのか判断できないので、CLOBの場合は、<code>@Lob</code>を指定します。
+</p>
+<pre>
+@Lob
+public String largeName;
+</pre>
+
+<h3><a name="ManyToOneDefinition">多対一関連定義</a></h3>
+<p>
+多対一関連であることを指定するには、<code>@ManyToOne</code>を使います。
+複数のEmployeeに1つのDepartementが関連付けられる場合、
+EmployeeからみてDepartmentは多対一関連になります。
+関連には、所有者、非所有者という概念があり、外部キーを持っているほうが所有者になります。
+</p>
+<p>
+上記のケースは、Employeeのテーブルに、
+department_id(プロパティ名はdepartmentId)という外部キーがあるので、
+Employeeは関連の所有者になります。
+</p>
+<p>
+<code>@ManyToOne</code>を定義するエンティティは、
+必ず関連の所有者になるので、
+外部キーに対応するプロパティが必要です。
+</p>
+<pre>
+public class Employee {
+    ...
+    public Integer departementId;
+    
+    @ManyToOne
+    public Department department;
+}
+</pre>
+
+<h3><a name="OneToManyDefinition">一対多関連定義</a></h3>
+<p>
+一対多関連であることを指定するには、<code>@OneToMany</code>を使います。
+1つのDepartmentに複数のEmployeeが関連付けられる場合、
+DepartmentからみてEmployeeは一対多関連になります。
+関連には、所有者、非所有者という概念があり、外部キーを持っているほうが所有者になります。
+</p>
+<p>
+上記のケースは、Employeeのテーブルに、
+department_id(プロパティ名はdepartmentId)という外部キーがあり、
+Departmentの方は、外部キーを持っていないので、
+Departmentは関連の非所有者になります。
+</p>
+<p>
+関連の非所有者の場合、必ずmappedBy属性で逆側の関連のプロパティ名を指定します。
+Departmentからみて一対多でEmployeeが関連付けられていて、
+そのEmployeeからみるとDepartmentがdepartmentプロパティとして、
+多対一で関連付けられています。
+お互いが相互の関連であることを示すために<code>mappedBy</code>でdepartmentを指定します。
+</p>
+<p>
+一対多の関連の型は、<code>List&lt;エンティティ型&gt;</code>にします。
+どのエンティティのリストなのかを示すためにGenericsの指定を忘れないようにしてください。
+</p>
+<pre>
+public class Department {
+    ...
+    @OneToMany(mappedBy = "department")
+    public List&lt;Employee&gt; employeeList;
+}
+</pre>
+
+<h3><a name="OneToOneDefinition">一対一関連定義</a></h3>
+<p>
+一対一関連であることを指定するには、<code>@OneToOne</code>を使います。
+1つのEmployeeに1つのAddressが関連付けられる場合、
+EmployeeからみてAddressは一対一関連になります。
+同じように、1つのAddressに1つのEmployeeが関連付けられているので、
+AddressからみてEmployeeも一対一関連になります。
+関連には、所有者、非所有者という概念があり、外部キーを持っているほうが所有者になります。
+</p>
+<p>
+上記のケースは、Employeeのテーブルに、
+address_id(プロパティ名はaddressId)という外部キーがあるので、
+Employeeは関連の所有者になります。
+Addressの方は、外部キーを持っていないので、
+Addressは関連の非所有者になります。
+</p>
+<p>
+関連の非所有者の場合、必ずmappedBy属性で逆側の関連のプロパティ名を指定します。
+Addressから見ると一対一でEmployeeが関連付けられていて、
+そのEmployeeからみるとAddressがaddressプロパティとして、
+一対一で関連付けられています。
+お互いが相互の関連であることを示すために<code>mappedBy</code>でaddressを指定します。
+</p>
+<pre>
+public class Employee {
+    ...
+    public Integer addressId;
+    
+    @OneToOne
+    public Address address;
+}
+</pre>
+<pre>
+public class Address {
+    ...
+    @OneToOne(mappedBy = "address")
+    public Employee employee;
+}
+</pre>
+
+<h3><a name="JoinColumnAnnotation">JoinColumnアノテーション(任意)</a></h3>
+<p>
+一対一関連であることを指定するアノテーションです。
+1つのEmployeeに1つのAddressが関連付けられる場合、
+Addressは一対一関連になります。
+</p>
+
+
+<h2><a name="jdbcManager">JDBCマネージャ</a></h2>
+
+<h2><a name="other">その他の機能</a></h2>
 
 <h3><a name="SqlLog" id="SqlLog">SQLのログ</a></h3>
 <p>
@@ -494,81 +861,6 @@ SqlLog sqlLog = sqlLogRegistry.getLast();
 <li>SQLにバインドされる値の配列</li>
 <li>SQLにバインドされる値の型の配列</li>
 </ul>
-
-<h2><a name="annotationReference">アノテーションリファレンス</a></h2>
-<p>
-S2JDBCで使われているアノテーションを説明します。
-</p>
-<h3 style="background-color:red">注意点</h3>
-<p>
-エンティティとテーブルのマッピング用のアノテーションは、
-JPAのものをそのまま利用していますが、
-すべてのアノテーションや属性をサポートしているわけではありません。
-ここに取り上げられているもののみサポートされているとお考えください。
-</p>
-
-<h3><a name="EntityAnnotation">Entityアノテーション(必須)</a></h3>
-<p>
-エンティティであることをあらわすアノテーションです。
-エンティティには必ず指定しなければいけません。
-</p>
-<pre>
-@Entity
-public class Employee {
-    ...
-}
-</pre>
-<h4><a name="EntityNameAttr">name属性(任意)</a></h4>
-<p>
-エンティティ名を指定することができます。
-指定しなかった場合、エンティティのクラス名からパッケージ名を除いた部分になります。
-例えば、クラス名が<code>examples.entity.Employee</code>の場合、
-デフォルトのエンティティ名は、<code>Employee</code>になります。
-</p>
-
-<h3><a name="TableAnnotation">Tableアノテーション(任意)</a></h3>
-<p>
-テーブル情報を指定するアノテーションです。
-</p>
-<h4><a name="TableNameAttr">name属性(任意)</a></h4>
-<p>
-テーブル名を指定することができます。
-指定しなかった場合、テーブル名はエンティティ名と同じになります。
-エンティティ名が、<code>AaaBbb</code>のようなキャメル記法の場合、
-テーブル名は、<code>AAA_BBB</code>のように'_'区切りだとみなされます。
-</p>
-<p>
-このルールは、convention.diconで指定されている
-<code>org.seasar.framework.convention.impl.PersistenceNamingConventionImpl</code>の
-fromEntityNameToTableName()の実装を変えることで、カスタマイズすることができます。
-</p>
-<h4><a name="TableSchemaAttr">schema属性(任意)</a></h4>
-<p>
-スキーマを指定することができます。
-指定した場合、自動生成されるSQLのテーブル名がスキーマ.テーブル名になります。
-</p>
-
-<h3><a name="ColumnAnnotation">Columnアノテーション(任意)</a></h3>
-<p>
-カラム情報を指定するアノテーションです。
-</p>
-<h4><a name="ColumnNameAttr">name属性(任意)</a></h4>
-<p>
-カラム名を指定することができます。
-指定しなかった場合、カラム名はフィールド名と同じになります。
-フィールド名が、<code>aaaBbb</code>のようなキャメル記法の場合、
-カラム名は、<code>AAA_BBB</code>のように'_'区切りだとみなされます。
-</p>
-<p>
-このルールは、convention.diconで指定されている
-<code>org.seasar.framework.convention.impl.PersistenceNamingConventionImpl</code>の
-fromPropertyNameToColumnName()の実装を変えることで、カスタマイズすることができます。
-</p>
-<p>
-デフォルトでは、プロパティ名とフィールド名は同じになりますが、convention.diconで指定されている
-<code>org.seasar.framework.convention.impl.PersistenceNamingConventionImpl</code>の
-fromFieldNameToPropertyName()の実装を変えることで、カスタマイズすることができます。
-</p>
 
 <!-- document end -->
 <!-- don't edit start --></td>
