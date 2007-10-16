@@ -21,8 +21,14 @@ import java.util.List;
 import java.util.Map;
 
 import org.seasar.extension.jdbc.JdbcManager;
+import org.seasar.extension.jdbc.it.entity.AutoStrategy;
 import org.seasar.extension.jdbc.it.entity.CompKeyDepartment;
 import org.seasar.extension.jdbc.it.entity.Department;
+import org.seasar.extension.jdbc.it.entity.IdentityStrategy;
+import org.seasar.extension.jdbc.it.entity.SequenceStrategy;
+import org.seasar.extension.jdbc.it.entity.SequenceStrategy2;
+import org.seasar.extension.jdbc.it.entity.TableStrategy;
+import org.seasar.extension.jdbc.it.entity.TableStrategy2;
 import org.seasar.extension.unit.S2TestCase;
 
 /**
@@ -211,4 +217,135 @@ public class AutoBatchInsertTest extends S2TestCase {
         assertEquals(1, department.version);
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testId_autoTx() throws Exception {
+        Integer previousId1 = null;
+        Integer previousId2 = null;
+        for (int i = 0; i < 110; i++) {
+            AutoStrategy entity1 = new AutoStrategy();
+            AutoStrategy entity2 = new AutoStrategy();
+            jdbcManager.insertBatch(entity1, entity2).executeBatch();
+            assertNotNull(entity1.id);
+            assertNotNull(entity2.id);
+            if (previousId1 != null) {
+                assertTrue(entity1.id.compareTo(previousId1) > 0);
+                assertTrue(entity2.id.compareTo(previousId2) > 0);
+            }
+            previousId1 = entity1.id;
+            previousId2 = entity2.id;
+        }
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testId_identityTx() throws Exception {
+        Integer previousId1 = null;
+        Integer previousId2 = null;
+        for (int i = 0; i < 110; i++) {
+            IdentityStrategy entity1 = new IdentityStrategy();
+            IdentityStrategy entity2 = new IdentityStrategy();
+            jdbcManager.insertBatch(entity1, entity2).executeBatch();
+            assertNotNull(entity1.id);
+            assertNotNull(entity2.id);
+            if (previousId1 != null) {
+                assertTrue(entity1.id.compareTo(previousId1) > 0);
+                assertTrue(entity2.id.compareTo(previousId2) > 0);
+            }
+            previousId1 = entity1.id;
+            previousId2 = entity2.id;
+        }
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testId_sequenceTx() throws Exception {
+        Integer previousId1 = null;
+        Integer previousId2 = null;
+        for (int i = 0; i < 110; i++) {
+            SequenceStrategy entity1 = new SequenceStrategy();
+            SequenceStrategy entity2 = new SequenceStrategy();
+            jdbcManager.insertBatch(entity1, entity2).executeBatch();
+            assertNotNull(entity1.id);
+            assertNotNull(entity2.id);
+            if (previousId1 != null) {
+                assertTrue(entity1.id.compareTo(previousId1) > 0);
+                assertTrue(entity2.id.compareTo(previousId2) > 0);
+            }
+            previousId1 = entity1.id;
+            previousId2 = entity2.id;
+        }
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testId_sequence_explicitGeneratorTx() throws Exception {
+        Integer previousId1 = null;
+        Integer previousId2 = null;
+        for (int i = 0; i < 110; i++) {
+            SequenceStrategy2 entity1 = new SequenceStrategy2();
+            SequenceStrategy2 entity2 = new SequenceStrategy2();
+            jdbcManager.insertBatch(entity1, entity2).executeBatch();
+            assertNotNull(entity1.id);
+            assertNotNull(entity2.id);
+            if (previousId1 != null) {
+                assertTrue(entity1.id.compareTo(previousId1) > 0);
+                assertTrue(entity2.id.compareTo(previousId2) > 0);
+            }
+            previousId1 = entity1.id;
+            previousId2 = entity2.id;
+        }
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testId_tableTx() throws Exception {
+        Integer previousId1 = null;
+        Integer previousId2 = null;
+        for (int i = 0; i < 110; i++) {
+            TableStrategy entity1 = new TableStrategy();
+            TableStrategy entity2 = new TableStrategy();
+            jdbcManager.insertBatch(entity1, entity2).executeBatch();
+            assertNotNull(entity1.id);
+            assertNotNull(entity2.id);
+            if (previousId1 != null) {
+                assertTrue(entity1.id.compareTo(previousId1) > 0);
+                assertTrue(entity2.id.compareTo(previousId2) > 0);
+            }
+            previousId1 = entity1.id;
+            previousId2 = entity2.id;
+        }
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testId_table_explicitGeneratorTx() throws Exception {
+        Integer previousId1 = null;
+        Integer previousId2 = null;
+        for (int i = 0; i < 110; i++) {
+            TableStrategy2 entity1 = new TableStrategy2();
+            TableStrategy2 entity2 = new TableStrategy2();
+            jdbcManager.insertBatch(entity1, entity2).executeBatch();
+            assertNotNull(entity1.id);
+            assertNotNull(entity2.id);
+            if (previousId1 != null) {
+                assertTrue(entity1.id.compareTo(previousId1) > 0);
+                assertTrue(entity2.id.compareTo(previousId2) > 0);
+            }
+            previousId1 = entity1.id;
+            previousId2 = entity2.id;
+        }
+    }
 }
