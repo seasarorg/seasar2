@@ -30,6 +30,7 @@ import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.ValuesClause;
 import org.seasar.extension.jdbc.exception.IdPropertyNotAssignedRuntimeException;
+import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.FieldUtil;
 import org.seasar.framework.util.NumberConversionUtil;
 import org.seasar.framework.util.tiger.CollectionsUtil;
@@ -186,9 +187,12 @@ public class AutoInsertImpl<T> extends AbstractAutoUpdate<T, AutoInsert<T>>
                     if (value == null
                             || Number.class.cast(value).longValue() <= 0L) {
                         value = INITIAL_VERSION;
+                        final Class<?> fieldClass = ClassUtil
+                                .getWrapperClassIfPrimitive(propertyMeta
+                                        .getPropertyClass());
                         FieldUtil.set(propertyMeta.getField(), entity,
-                                NumberConversionUtil.convertNumber(propertyMeta
-                                        .getPropertyClass(), value));
+                                NumberConversionUtil.convertNumber(fieldClass,
+                                        value));
                     }
                 }
             }

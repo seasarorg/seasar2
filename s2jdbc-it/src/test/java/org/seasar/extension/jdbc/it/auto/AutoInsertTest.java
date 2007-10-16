@@ -55,7 +55,7 @@ public class AutoInsertTest extends S2TestCase {
         assertEquals(0, department.departmentNo);
         assertEquals("hoge", department.departmentName);
         assertNull(department.location);
-        assertEquals(0, department.version);
+        assertEquals(1, department.version);
     }
 
     /**
@@ -76,7 +76,7 @@ public class AutoInsertTest extends S2TestCase {
         assertEquals(0, department.departmentNo);
         assertEquals("hoge", department.departmentName);
         assertEquals("TOKYO", department.location);
-        assertEquals(0, department.version);
+        assertEquals(1, department.version);
     }
 
     /**
@@ -150,6 +150,6 @@ public class AutoInsertTest extends S2TestCase {
         assertEquals(0, department.departmentNo);
         assertEquals("hoge", department.departmentName);
         assertNull(department.location);
-        assertEquals(0, department.version);
+        assertEquals(1, department.version);
     }
 }

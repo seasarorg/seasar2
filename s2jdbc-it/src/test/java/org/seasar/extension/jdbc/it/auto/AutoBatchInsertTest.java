@@ -65,7 +65,7 @@ public class AutoBatchInsertTest extends S2TestCase {
         assertEquals(0, department.departmentNo);
         assertEquals("hoge", department.departmentName);
         assertNull(department.location);
-        assertEquals(0, department.version);
+        assertEquals(1, department.version);
 
         m.put("departmentId", 99);
         department = jdbcManager.from(Department.class).where(m)
@@ -74,7 +74,7 @@ public class AutoBatchInsertTest extends S2TestCase {
         assertEquals(0, department.departmentNo);
         assertEquals("foo", department.departmentName);
         assertNull(department.location);
-        assertEquals(0, department.version);
+        assertEquals(1, department.version);
     }
 
     /**
@@ -197,7 +197,7 @@ public class AutoBatchInsertTest extends S2TestCase {
         assertEquals(0, department.departmentNo);
         assertEquals("hoge", department.departmentName);
         assertNull(department.location);
-        assertEquals(0, department.version);
+        assertEquals(1, department.version);
 
         m.put("departmentId1", 99);
         m.put("departmentId2", 99);
@@ -208,7 +208,7 @@ public class AutoBatchInsertTest extends S2TestCase {
         assertEquals(0, department.departmentNo);
         assertEquals("foo", department.departmentName);
         assertNull(department.location);
-        assertEquals(0, department.version);
+        assertEquals(1, department.version);
     }
 
 }
