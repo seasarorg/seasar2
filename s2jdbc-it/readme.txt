@@ -2,7 +2,7 @@
 
 SQL Server 2005 のJDBCドライバは以下のURLからダウンロードできます。
 ダウンロードしたファイルに含まれる sqljdbc.jar を使用してください。
-http://www.microsoft.com/downloads/details.aspx?FamilyID=6d483869-816a-44cb-9787-a866235efc7c&DisplayLang=ja
+http://www.microsoft.com/downloads/details.aspx?familyid=c47053eb-3b64-4794-950d-81e1ec91c1ba&displaylang=en
 
 Oracle のJDBCドライバは以下のURLからダウンロードできます。
 ojdbc5.jar を使用してください。
