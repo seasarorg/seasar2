@@ -489,7 +489,6 @@ public class AutoInsertTest extends TestCase {
         Eee eee = new Eee();
         eee.id = 100;
         eee.name = "hoge";
-        eee.version = 1L;
         AutoInsertImpl<Eee> query = new AutoInsertImpl<Eee>(manager, eee);
         query.prepare("execute");
         assertEquals(5, query.getParamSize());
@@ -499,6 +498,7 @@ public class AutoInsertTest extends TestCase {
         assertTrue(query.getParam(2).valueType instanceof StringClobType);
         assertNull(query.getParam(3).value);
         assertEquals(new Long(1L), query.getParam(4).value);
+        assertEquals(new Long(1), eee.version);
     }
 
     /**

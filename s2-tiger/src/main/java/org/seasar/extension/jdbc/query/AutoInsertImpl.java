@@ -31,6 +31,7 @@ import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.ValuesClause;
 import org.seasar.extension.jdbc.exception.IdPropertyNotAssignedRuntimeException;
 import org.seasar.framework.util.FieldUtil;
+import org.seasar.framework.util.NumberConversionUtil;
 import org.seasar.framework.util.tiger.CollectionsUtil;
 
 /**
@@ -45,6 +46,9 @@ public class AutoInsertImpl<T> extends AbstractAutoUpdate<T, AutoInsert<T>>
 
     /** INSERT文 */
     protected static final String INSERT_STATEMENT = "insert into ";
+
+    /** バージョンプロパティの初期値 */
+    protected static final Long INITIAL_VERSION = Long.valueOf(1L);
 
     /** <code>null</code>値のプロパティを挿入から除外する場合<code>true</code> */
     protected boolean excludesNull;
@@ -173,11 +177,20 @@ public class AutoInsertImpl<T> extends AbstractAutoUpdate<T, AutoInsert<T>>
      */
     protected void prepareParams() {
         for (final PropertyMeta propertyMeta : targetProperties) {
-            final Object value;
+            Object value;
             if (propertyMeta.isId() && propertyMeta.hasIdGenerator()) {
                 value = getIdValue(propertyMeta);
             } else {
                 value = FieldUtil.get(propertyMeta.getField(), entity);
+                if (propertyMeta.isVersion()) {
+                    if (value == null
+                            || Number.class.cast(value).longValue() <= 0L) {
+                        value = INITIAL_VERSION;
+                        FieldUtil.set(propertyMeta.getField(), entity,
+                                NumberConversionUtil.convertNumber(propertyMeta
+                                        .getPropertyClass(), value));
+                    }
+                }
             }
             addParam(value, propertyMeta);
         }

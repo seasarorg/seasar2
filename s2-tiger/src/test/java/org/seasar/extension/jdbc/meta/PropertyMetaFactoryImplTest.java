@@ -16,6 +16,7 @@
 package org.seasar.extension.jdbc.meta;
 
 import java.lang.reflect.Field;
+import java.sql.Timestamp;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -52,6 +53,7 @@ import org.seasar.extension.jdbc.exception.NonRelationshipRuntimeException;
 import org.seasar.extension.jdbc.exception.OneToManyNotGenericsRuntimeException;
 import org.seasar.extension.jdbc.exception.OneToManyNotListRuntimeException;
 import org.seasar.extension.jdbc.exception.RelationshipNotEntityRuntimeException;
+import org.seasar.extension.jdbc.exception.VersionPropertyNotNumberRuntimeException;
 import org.seasar.extension.jdbc.id.IdentityIdGenerator;
 import org.seasar.extension.jdbc.id.SequenceIdGenerator;
 import org.seasar.extension.jdbc.id.TableIdGenerator;
@@ -72,6 +74,10 @@ public class PropertyMetaFactoryImplTest extends TestCase {
     @SuppressWarnings("unused")
     @Version
     private Integer version;
+
+    @SuppressWarnings("unused")
+    @Version
+    private Timestamp illegalVersion;
 
     @SuppressWarnings("unused")
     @OneToOne
@@ -282,6 +288,19 @@ public class PropertyMetaFactoryImplTest extends TestCase {
         PropertyMeta propertyMeta = factory.createPropertyMeta(field,
                 entityMeta);
         assertFalse(propertyMeta.isVersion());
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testVersion_notNumber() throws Exception {
+        Field field = getClass().getDeclaredField("illegalVersion");
+        try {
+            PropertyMeta propertyMeta = factory.createPropertyMeta(field,
+                    entityMeta);
+            fail();
+        } catch (VersionPropertyNotNumberRuntimeException expected) {
+        }
     }
 
     /**

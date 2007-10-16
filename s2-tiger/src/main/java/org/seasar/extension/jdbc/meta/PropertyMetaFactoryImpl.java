@@ -49,6 +49,7 @@ import org.seasar.extension.jdbc.exception.NonRelationshipRuntimeException;
 import org.seasar.extension.jdbc.exception.OneToManyNotGenericsRuntimeException;
 import org.seasar.extension.jdbc.exception.OneToManyNotListRuntimeException;
 import org.seasar.extension.jdbc.exception.RelationshipNotEntityRuntimeException;
+import org.seasar.extension.jdbc.exception.VersionPropertyNotNumberRuntimeException;
 import org.seasar.extension.jdbc.id.IdentityIdGenerator;
 import org.seasar.extension.jdbc.id.SequenceIdGenerator;
 import org.seasar.extension.jdbc.id.TableIdGenerator;
@@ -56,6 +57,7 @@ import org.seasar.extension.jdbc.types.ValueTypes;
 import org.seasar.framework.container.annotation.tiger.Binding;
 import org.seasar.framework.container.annotation.tiger.BindingType;
 import org.seasar.framework.convention.PersistenceConvention;
+import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.ModifierUtil;
 import org.seasar.framework.util.StringUtil;
 import org.seasar.framework.util.tiger.ReflectionUtil;
@@ -304,7 +306,15 @@ public class PropertyMetaFactoryImpl implements PropertyMetaFactory {
     protected void doVersion(PropertyMeta propertyMeta, Field field,
             @SuppressWarnings("unused")
             EntityMeta entityMeta) {
-        propertyMeta.setVersion(field.getAnnotation(Version.class) != null);
+        if (field.getAnnotation(Version.class) == null) {
+            return;
+        }
+        Class<?> clazz = ClassUtil.getWrapperClassIfPrimitive(field.getType());
+        if (!Number.class.isAssignableFrom(clazz)) {
+            throw new VersionPropertyNotNumberRuntimeException(entityMeta
+                    .getName(), propertyMeta.getName());
+        }
+        propertyMeta.setVersion(true);
     }
 
     /**

@@ -288,7 +288,8 @@ public class AutoBatchInsertTest extends TestCase {
         assertNull(query.getParam(2).value);
         assertTrue(query.getParam(2).valueType instanceof StringClobType);
         assertNull(query.getParam(3).value);
-        assertEquals(new Long(0L), query.getParam(4).value);
+        assertEquals(new Long(1L), query.getParam(4).value);
+        assertEquals(new Long(1L), entities.get(0).version);
         query.resetParams();
 
         query.prepareParams(entities.get(1));
@@ -298,7 +299,8 @@ public class AutoBatchInsertTest extends TestCase {
         assertNull(query.getParam(2).value);
         assertTrue(query.getParam(2).valueType instanceof StringClobType);
         assertNull(query.getParam(3).value);
-        assertEquals(new Long(0L), query.getParam(4).value);
+        assertEquals(new Long(1L), query.getParam(4).value);
+        assertEquals(new Long(1L), entities.get(1).version);
         query.resetParams();
 
         query.prepareParams(entities.get(2));
@@ -308,7 +310,8 @@ public class AutoBatchInsertTest extends TestCase {
         assertNull(query.getParam(2).value);
         assertTrue(query.getParam(2).valueType instanceof StringClobType);
         assertNull(query.getParam(3).value);
-        assertEquals(new Long(0L), query.getParam(4).value);
+        assertEquals(new Long(1L), query.getParam(4).value);
+        assertEquals(new Long(1L), entities.get(1).version);
     }
 
     /**
@@ -345,7 +348,7 @@ public class AutoBatchInsertTest extends TestCase {
         assertEquals(3, result.length);
         SqlLog sqlLog = SqlLogRegistryLocator.getInstance().getLast();
         assertEquals(
-                "insert into EEE (ID, NAME, LONG_TEXT, FFF_ID, VERSION) values (3, 'baz', null, null, 0)",
+                "insert into EEE (ID, NAME, LONG_TEXT, FFF_ID, VERSION) values (3, 'baz', null, null, 1)",
                 sqlLog.getCompleteSql());
     }
 
@@ -392,7 +395,7 @@ public class AutoBatchInsertTest extends TestCase {
         assertEquals(0, addBatchCalled);
         assertEquals(3, result.length);
         SqlLog sqlLog = SqlLogRegistryLocator.getInstance().getLast();
-        assertEquals("insert into FFF (NAME, VERSION) values ('baz', 0)",
+        assertEquals("insert into FFF (NAME, VERSION) values ('baz', 1)",
                 sqlLog.getCompleteSql());
     }
 
@@ -440,7 +443,7 @@ public class AutoBatchInsertTest extends TestCase {
         assertEquals(3, result.length);
         SqlLog sqlLog = SqlLogRegistryLocator.getInstance().getLast();
         assertEquals(
-                "insert into FFF (ID, NAME, VERSION) values (null, 'baz', 0)",
+                "insert into FFF (ID, NAME, VERSION) values (null, 'baz', 1)",
                 sqlLog.getCompleteSql());
     }
 
@@ -488,7 +491,7 @@ public class AutoBatchInsertTest extends TestCase {
         assertEquals(3, result.length);
         SqlLog sqlLog = SqlLogRegistryLocator.getInstance().getLast();
         assertEquals(
-                "insert into FFF (ID, NAME, VERSION) values (10, 'baz', 0)",
+                "insert into FFF (ID, NAME, VERSION) values (10, 'baz', 1)",
                 sqlLog.getCompleteSql());
     }
 
@@ -536,7 +539,7 @@ public class AutoBatchInsertTest extends TestCase {
         assertEquals(3, result.length);
         SqlLog sqlLog = SqlLogRegistryLocator.getInstance().getLast();
         assertEquals(
-                "insert into FFF (ID, NAME, VERSION) values (10, 'baz', 0)",
+                "insert into FFF (ID, NAME, VERSION) values (10, 'baz', 1)",
                 sqlLog.getCompleteSql());
     }
 

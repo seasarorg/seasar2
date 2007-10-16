@@ -31,6 +31,7 @@ import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.ValuesClause;
 import org.seasar.framework.util.FieldUtil;
+import org.seasar.framework.util.NumberConversionUtil;
 import org.seasar.framework.util.PreparedStatementUtil;
 import org.seasar.framework.util.tiger.CollectionsUtil;
 
@@ -47,6 +48,9 @@ public class AutoBatchInsertImpl<T> extends
 
     /** INSERT文 */
     protected static final String INSERT_STATEMENT = "insert into ";
+
+    /** バージョンプロパティの初期値 */
+    protected static final Long INITIAL_VERSION = Long.valueOf(1L);
 
     /** 挿入対象とするプロパティ */
     protected final Set<String> includesProperties = CollectionsUtil
@@ -193,11 +197,20 @@ public class AutoBatchInsertImpl<T> extends
     @Override
     protected void prepareParams(final T entity) {
         for (final PropertyMeta propertyMeta : targetProperties) {
-            final Object value;
+            Object value;
             if (propertyMeta.isId() && propertyMeta.hasIdGenerator()) {
                 value = getIdValue(propertyMeta, entity);
             } else {
                 value = FieldUtil.get(propertyMeta.getField(), entity);
+                if (propertyMeta.isVersion()) {
+                    if (value == null
+                            || Number.class.cast(value).longValue() <= 0L) {
+                        value = INITIAL_VERSION;
+                        FieldUtil.set(propertyMeta.getField(), entity,
+                                NumberConversionUtil.convertNumber(propertyMeta
+                                        .getPropertyClass(), value));
+                    }
+                }
             }
             addParam(value, propertyMeta);
         }
