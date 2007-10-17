@@ -21,6 +21,8 @@ import java.util.List;
 
 import javax.persistence.GenerationType;
 
+import org.seasar.extension.jdbc.exception.IdentityGeneratorNotSupportedRuntimeException;
+import org.seasar.extension.jdbc.exception.SequenceGeneratorNotSupportedRuntimeException;
 import org.seasar.framework.util.ArrayMap;
 
 /**
@@ -232,16 +234,26 @@ public class PropertyMeta {
     /**
      * 識別子を自動生成するIDジェネレータを返します。
      * 
+     * @param entityMeta
+     *            エンティティメタデータ
      * @param dialect
      *            データベースの方言
      * @return 識別子を自動生成するIDジェネレータ
      */
-    public IdGenerator getIdGenerator(DbmsDialect dialect) {
+    public IdGenerator getIdGenerator(EntityMeta entityMeta, DbmsDialect dialect) {
         switch (generationType == GenerationType.AUTO ? dialect
                 .getDefaultGenerationType() : generationType) {
         case IDENTITY:
+            if (!dialect.supportIdentity()) {
+                throw new IdentityGeneratorNotSupportedRuntimeException(
+                        entityMeta.getName(), getName(), dialect.getName());
+            }
             return identityIdGenerator;
         case SEQUENCE:
+            if (!dialect.supportSequence()) {
+                throw new SequenceGeneratorNotSupportedRuntimeException(
+                        entityMeta.getName(), getName(), dialect.getName());
+            }
             return sequenceIdGenerator;
         case TABLE:
             return tableIdGenerator;

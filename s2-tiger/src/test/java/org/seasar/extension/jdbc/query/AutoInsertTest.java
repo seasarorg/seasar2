@@ -27,10 +27,15 @@ import org.seasar.extension.jdbc.SqlLogRegistry;
 import org.seasar.extension.jdbc.SqlLogRegistryLocator;
 import org.seasar.extension.jdbc.dialect.DB2Dialect;
 import org.seasar.extension.jdbc.dialect.HSQLDialect;
+import org.seasar.extension.jdbc.dialect.MSSQLDialect;
 import org.seasar.extension.jdbc.dialect.OracleDialect;
 import org.seasar.extension.jdbc.dialect.StandardDialect;
 import org.seasar.extension.jdbc.entity.Eee;
 import org.seasar.extension.jdbc.entity.Fff;
+import org.seasar.extension.jdbc.entity.Identity;
+import org.seasar.extension.jdbc.entity.Sequence;
+import org.seasar.extension.jdbc.exception.IdentityGeneratorNotSupportedRuntimeException;
+import org.seasar.extension.jdbc.exception.SequenceGeneratorNotSupportedRuntimeException;
 import org.seasar.extension.jdbc.manager.JdbcManagerImpl;
 import org.seasar.extension.jdbc.meta.ColumnMetaFactoryImpl;
 import org.seasar.extension.jdbc.meta.EntityMetaFactoryImpl;
@@ -211,6 +216,22 @@ public class AutoInsertTest extends TestCase {
     /**
      * 
      */
+    public void testPrepareTarget_identityNotSupported() {
+        manager.setDialect(new OracleDialect());
+        Identity entity = new Identity();
+        AutoInsertImpl<Identity> query = new AutoInsertImpl<Identity>(manager,
+                entity);
+        try {
+            query.prepareTargetProperties();
+            fail();
+        } catch (IdentityGeneratorNotSupportedRuntimeException expected) {
+            expected.printStackTrace();
+        }
+    }
+
+    /**
+     * 
+     */
     public void testPrepareTarget_sequence() {
         manager.setDialect(new OracleDialect());
         Fff fff = new Fff();
@@ -222,6 +243,22 @@ public class AutoInsertTest extends TestCase {
         assertEquals("id", query.targetProperties.get(0).getName());
         assertEquals("name", query.targetProperties.get(1).getName());
         assertEquals("version", query.targetProperties.get(2).getName());
+    }
+
+    /**
+     * 
+     */
+    public void testPrepareTarget_sequenceNotSupported() {
+        manager.setDialect(new MSSQLDialect());
+        Sequence entity = new Sequence();
+        AutoInsertImpl<Sequence> query = new AutoInsertImpl<Sequence>(manager,
+                entity);
+        try {
+            query.prepareTargetProperties();
+            fail();
+        } catch (SequenceGeneratorNotSupportedRuntimeException expected) {
+            expected.printStackTrace();
+        }
     }
 
     /**

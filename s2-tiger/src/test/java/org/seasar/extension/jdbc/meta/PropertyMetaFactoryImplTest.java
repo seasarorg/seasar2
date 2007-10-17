@@ -45,6 +45,7 @@ import org.seasar.extension.jdbc.dialect.StandardDialect;
 import org.seasar.extension.jdbc.entity.Aaa;
 import org.seasar.extension.jdbc.entity.Bbb;
 import org.seasar.extension.jdbc.exception.BothMappedByAndJoinColumnRuntimeException;
+import org.seasar.extension.jdbc.exception.IdentityGeneratorNotSupportedRuntimeException;
 import org.seasar.extension.jdbc.exception.JoinColumnNameAndReferencedColumnNameMandatoryRuntimeException;
 import org.seasar.extension.jdbc.exception.MappedByMandatoryRuntimeException;
 import org.seasar.extension.jdbc.exception.MappedByNotIdenticalRuntimeException;
@@ -53,6 +54,7 @@ import org.seasar.extension.jdbc.exception.NonRelationshipRuntimeException;
 import org.seasar.extension.jdbc.exception.OneToManyNotGenericsRuntimeException;
 import org.seasar.extension.jdbc.exception.OneToManyNotListRuntimeException;
 import org.seasar.extension.jdbc.exception.RelationshipNotEntityRuntimeException;
+import org.seasar.extension.jdbc.exception.SequenceGeneratorNotSupportedRuntimeException;
 import org.seasar.extension.jdbc.exception.VersionPropertyNotNumberRuntimeException;
 import org.seasar.extension.jdbc.id.IdentityIdGenerator;
 import org.seasar.extension.jdbc.id.SequenceIdGenerator;
@@ -126,9 +128,10 @@ public class PropertyMetaFactoryImplTest extends TestCase {
         assertTrue(propertyMeta.isId());
         assertTrue(propertyMeta.hasIdGenerator());
         assertEquals(GenerationType.AUTO, propertyMeta.getGenerationType());
-        assertTrue(propertyMeta.getIdGenerator(new DB2Dialect()) instanceof IdentityIdGenerator);
-        assertTrue(propertyMeta.getIdGenerator(new OracleDialect()) instanceof SequenceIdGenerator);
-        assertTrue(propertyMeta.getIdGenerator(new StandardDialect()) instanceof TableIdGenerator);
+        assertTrue(propertyMeta.getIdGenerator(entityMeta, new DB2Dialect()) instanceof IdentityIdGenerator);
+        assertTrue(propertyMeta.getIdGenerator(entityMeta, new OracleDialect()) instanceof SequenceIdGenerator);
+        assertTrue(propertyMeta.getIdGenerator(entityMeta,
+                new StandardDialect()) instanceof TableIdGenerator);
     }
 
     /**
@@ -141,7 +144,11 @@ public class PropertyMetaFactoryImplTest extends TestCase {
         assertTrue(propertyMeta.isId());
         assertTrue(propertyMeta.hasIdGenerator());
         assertEquals(GenerationType.IDENTITY, propertyMeta.getGenerationType());
-        assertTrue(propertyMeta.getIdGenerator(new StandardDialect()) instanceof IdentityIdGenerator);
+        try {
+            propertyMeta.getIdGenerator(entityMeta, new StandardDialect());
+            fail();
+        } catch (IdentityGeneratorNotSupportedRuntimeException expected) {
+        }
     }
 
     /**
@@ -154,7 +161,11 @@ public class PropertyMetaFactoryImplTest extends TestCase {
         assertTrue(propertyMeta.isId());
         assertTrue(propertyMeta.hasIdGenerator());
         assertEquals(GenerationType.SEQUENCE, propertyMeta.getGenerationType());
-        assertTrue(propertyMeta.getIdGenerator(new StandardDialect()) instanceof SequenceIdGenerator);
+        try {
+            propertyMeta.getIdGenerator(entityMeta, new StandardDialect());
+            fail();
+        } catch (SequenceGeneratorNotSupportedRuntimeException expected) {
+        }
     }
 
     /**
@@ -167,7 +178,8 @@ public class PropertyMetaFactoryImplTest extends TestCase {
         assertTrue(propertyMeta.isId());
         assertTrue(propertyMeta.hasIdGenerator());
         assertEquals(GenerationType.TABLE, propertyMeta.getGenerationType());
-        assertTrue(propertyMeta.getIdGenerator(new StandardDialect()) instanceof TableIdGenerator);
+        assertTrue(propertyMeta.getIdGenerator(entityMeta,
+                new StandardDialect()) instanceof TableIdGenerator);
     }
 
     /**
@@ -296,8 +308,7 @@ public class PropertyMetaFactoryImplTest extends TestCase {
     public void testVersion_notNumber() throws Exception {
         Field field = getClass().getDeclaredField("illegalVersion");
         try {
-            PropertyMeta propertyMeta = factory.createPropertyMeta(field,
-                    entityMeta);
+            factory.createPropertyMeta(field, entityMeta);
             fail();
         } catch (VersionPropertyNotNumberRuntimeException expected) {
         }

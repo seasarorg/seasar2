@@ -120,7 +120,8 @@ public class AutoBatchInsertImpl<T> extends
             if (propertyMeta.isId()) {
                 if (propertyMeta.hasIdGenerator()) {
                     final IdGenerator idGenerator = propertyMeta
-                            .getIdGenerator(jdbcManager.getDialect());
+                            .getIdGenerator(entityMeta, jdbcManager
+                                    .getDialect());
                     supportBatch &= idGenerator.supportBatch(jdbcManager);
                     useGetGeneratedKeys |= idGenerator
                             .useGetGeneratedKeys(jdbcManager);
@@ -230,8 +231,8 @@ public class AutoBatchInsertImpl<T> extends
      * @return 識別子の値
      */
     protected Object getIdValue(final PropertyMeta propertyMeta, final T entity) {
-        final IdGenerator idGenerator = propertyMeta.getIdGenerator(jdbcManager
-                .getDialect());
+        final IdGenerator idGenerator = propertyMeta.getIdGenerator(entityMeta,
+                jdbcManager.getDialect());
         return idGenerator.preInsert(jdbcManager, entity, this);
     }
 
@@ -251,8 +252,8 @@ public class AutoBatchInsertImpl<T> extends
         for (final PropertyMeta propertyMeta : entityMeta
                 .getIdPropertyMetaList()) {
             if (propertyMeta.hasIdGenerator()) {
-                final IdGenerator idGenerator = propertyMeta
-                        .getIdGenerator(jdbcManager.getDialect());
+                final IdGenerator idGenerator = propertyMeta.getIdGenerator(
+                        entityMeta, jdbcManager.getDialect());
                 idGenerator.postInsert(jdbcManager, entity, ps, this);
             }
         }

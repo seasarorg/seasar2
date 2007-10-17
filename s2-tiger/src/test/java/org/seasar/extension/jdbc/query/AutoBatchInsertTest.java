@@ -29,10 +29,15 @@ import org.seasar.extension.jdbc.SqlLogRegistry;
 import org.seasar.extension.jdbc.SqlLogRegistryLocator;
 import org.seasar.extension.jdbc.dialect.DB2Dialect;
 import org.seasar.extension.jdbc.dialect.HSQLDialect;
+import org.seasar.extension.jdbc.dialect.MSSQLDialect;
 import org.seasar.extension.jdbc.dialect.OracleDialect;
 import org.seasar.extension.jdbc.dialect.StandardDialect;
 import org.seasar.extension.jdbc.entity.Eee;
 import org.seasar.extension.jdbc.entity.Fff;
+import org.seasar.extension.jdbc.entity.Identity;
+import org.seasar.extension.jdbc.entity.Sequence;
+import org.seasar.extension.jdbc.exception.IdentityGeneratorNotSupportedRuntimeException;
+import org.seasar.extension.jdbc.exception.SequenceGeneratorNotSupportedRuntimeException;
 import org.seasar.extension.jdbc.manager.JdbcManagerImpl;
 import org.seasar.extension.jdbc.meta.ColumnMetaFactoryImpl;
 import org.seasar.extension.jdbc.meta.EntityMetaFactoryImpl;
@@ -183,6 +188,38 @@ public class AutoBatchInsertTest extends TestCase {
         assertEquals("longText", query.targetProperties.get(2).getName());
         assertEquals("fffId", query.targetProperties.get(3).getName());
         assertEquals("version", query.targetProperties.get(4).getName());
+    }
+
+    /**
+     * 
+     */
+    public void testPrepareTarget_identityNotSupported() {
+        manager.setDialect(new OracleDialect());
+        List<Identity> entities = Arrays.asList(new Identity(), new Identity(),
+                new Identity());
+        AutoBatchInsertImpl<Identity> query = new AutoBatchInsertImpl<Identity>(
+                manager, entities);
+        try {
+            query.prepareTargetProperties();
+            fail();
+        } catch (IdentityGeneratorNotSupportedRuntimeException expected) {
+        }
+    }
+
+    /**
+     * 
+     */
+    public void testPrepareTarget_sequenceNotSupported() {
+        manager.setDialect(new MSSQLDialect());
+        List<Sequence> entities = Arrays.asList(new Sequence(), new Sequence(),
+                new Sequence());
+        AutoBatchInsertImpl<Sequence> query = new AutoBatchInsertImpl<Sequence>(
+                manager, entities);
+        try {
+            query.prepareTargetProperties();
+            fail();
+        } catch (SequenceGeneratorNotSupportedRuntimeException expected) {
+        }
     }
 
     /**

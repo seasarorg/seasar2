@@ -125,7 +125,8 @@ public class AutoInsertImpl<T> extends AbstractAutoUpdate<T, AutoInsert<T>>
             if (propertyMeta.isId()) {
                 if (propertyMeta.hasIdGenerator()) {
                     final IdGenerator idGenerator = propertyMeta
-                            .getIdGenerator(jdbcManager.getDialect());
+                            .getIdGenerator(entityMeta, jdbcManager
+                                    .getDialect());
                     useGetGeneratedKeys |= idGenerator
                             .useGetGeneratedKeys(jdbcManager);
                     if (idGenerator.isInsertInto(jdbcManager)) {
@@ -208,8 +209,8 @@ public class AutoInsertImpl<T> extends AbstractAutoUpdate<T, AutoInsert<T>>
      * @return 識別子の値
      */
     protected Object getIdValue(final PropertyMeta propertyMeta) {
-        final IdGenerator idGenerator = propertyMeta.getIdGenerator(jdbcManager
-                .getDialect());
+        final IdGenerator idGenerator = propertyMeta.getIdGenerator(entityMeta,
+                jdbcManager.getDialect());
         return idGenerator.preInsert(jdbcManager, entity, this);
     }
 
@@ -243,8 +244,8 @@ public class AutoInsertImpl<T> extends AbstractAutoUpdate<T, AutoInsert<T>>
         for (final PropertyMeta propertyMeta : entityMeta
                 .getIdPropertyMetaList()) {
             if (propertyMeta.hasIdGenerator()) {
-                final IdGenerator idGenerator = propertyMeta
-                        .getIdGenerator(jdbcManager.getDialect());
+                final IdGenerator idGenerator = propertyMeta.getIdGenerator(
+                        entityMeta, jdbcManager.getDialect());
                 idGenerator.postInsert(jdbcManager, entity, ps, this);
             }
         }
