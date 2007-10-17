@@ -21,6 +21,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.seasar.extension.jdbc.JdbcManager;
+import org.seasar.extension.jdbc.exception.IdentityGeneratorNotSupportedRuntimeException;
+import org.seasar.extension.jdbc.exception.SequenceGeneratorNotSupportedRuntimeException;
 import org.seasar.extension.jdbc.it.entity.AutoStrategy;
 import org.seasar.extension.jdbc.it.entity.CompKeyDepartment;
 import org.seasar.extension.jdbc.it.entity.Department;
@@ -222,20 +224,12 @@ public class AutoBatchInsertTest extends S2TestCase {
      * @throws Exception
      */
     public void testId_autoTx() throws Exception {
-        Integer previousId1 = null;
-        Integer previousId2 = null;
         for (int i = 0; i < 110; i++) {
             AutoStrategy entity1 = new AutoStrategy();
             AutoStrategy entity2 = new AutoStrategy();
             jdbcManager.insertBatch(entity1, entity2).executeBatch();
             assertNotNull(entity1.id);
             assertNotNull(entity2.id);
-            if (previousId1 != null) {
-                assertTrue(entity1.id.compareTo(previousId1) > 0);
-                assertTrue(entity2.id.compareTo(previousId2) > 0);
-            }
-            previousId1 = entity1.id;
-            previousId2 = entity2.id;
         }
     }
 
@@ -244,20 +238,21 @@ public class AutoBatchInsertTest extends S2TestCase {
      * @throws Exception
      */
     public void testId_identityTx() throws Exception {
-        Integer previousId1 = null;
-        Integer previousId2 = null;
-        for (int i = 0; i < 110; i++) {
-            IdentityStrategy entity1 = new IdentityStrategy();
-            IdentityStrategy entity2 = new IdentityStrategy();
-            jdbcManager.insertBatch(entity1, entity2).executeBatch();
-            assertNotNull(entity1.id);
-            assertNotNull(entity2.id);
-            if (previousId1 != null) {
-                assertTrue(entity1.id.compareTo(previousId1) > 0);
-                assertTrue(entity2.id.compareTo(previousId2) > 0);
+        try {
+            for (int i = 0; i < 110; i++) {
+                IdentityStrategy entity1 = new IdentityStrategy();
+                IdentityStrategy entity2 = new IdentityStrategy();
+                jdbcManager.insertBatch(entity1, entity2).executeBatch();
+                if (!jdbcManager.getDialect().supportIdentity()) {
+                    fail();
+                }
+                assertNotNull(entity1.id);
+                assertNotNull(entity2.id);
             }
-            previousId1 = entity1.id;
-            previousId2 = entity2.id;
+        } catch (IdentityGeneratorNotSupportedRuntimeException e) {
+            if (jdbcManager.getDialect().supportIdentity()) {
+                fail();
+            }
         }
     }
 
@@ -266,20 +261,21 @@ public class AutoBatchInsertTest extends S2TestCase {
      * @throws Exception
      */
     public void testId_sequenceTx() throws Exception {
-        Integer previousId1 = null;
-        Integer previousId2 = null;
-        for (int i = 0; i < 110; i++) {
-            SequenceStrategy entity1 = new SequenceStrategy();
-            SequenceStrategy entity2 = new SequenceStrategy();
-            jdbcManager.insertBatch(entity1, entity2).executeBatch();
-            assertNotNull(entity1.id);
-            assertNotNull(entity2.id);
-            if (previousId1 != null) {
-                assertTrue(entity1.id.compareTo(previousId1) > 0);
-                assertTrue(entity2.id.compareTo(previousId2) > 0);
+        try {
+            for (int i = 0; i < 110; i++) {
+                SequenceStrategy entity1 = new SequenceStrategy();
+                SequenceStrategy entity2 = new SequenceStrategy();
+                jdbcManager.insertBatch(entity1, entity2).executeBatch();
+                if (!jdbcManager.getDialect().supportSequence()) {
+                    fail();
+                }
+                assertNotNull(entity1.id);
+                assertNotNull(entity2.id);
             }
-            previousId1 = entity1.id;
-            previousId2 = entity2.id;
+        } catch (SequenceGeneratorNotSupportedRuntimeException e) {
+            if (jdbcManager.getDialect().supportSequence()) {
+                fail();
+            }
         }
     }
 
@@ -288,20 +284,21 @@ public class AutoBatchInsertTest extends S2TestCase {
      * @throws Exception
      */
     public void testId_sequence_explicitGeneratorTx() throws Exception {
-        Integer previousId1 = null;
-        Integer previousId2 = null;
-        for (int i = 0; i < 110; i++) {
-            SequenceStrategy2 entity1 = new SequenceStrategy2();
-            SequenceStrategy2 entity2 = new SequenceStrategy2();
-            jdbcManager.insertBatch(entity1, entity2).executeBatch();
-            assertNotNull(entity1.id);
-            assertNotNull(entity2.id);
-            if (previousId1 != null) {
-                assertTrue(entity1.id.compareTo(previousId1) > 0);
-                assertTrue(entity2.id.compareTo(previousId2) > 0);
+        try {
+            for (int i = 0; i < 110; i++) {
+                SequenceStrategy2 entity1 = new SequenceStrategy2();
+                SequenceStrategy2 entity2 = new SequenceStrategy2();
+                jdbcManager.insertBatch(entity1, entity2).executeBatch();
+                if (!jdbcManager.getDialect().supportSequence()) {
+                    fail();
+                }
+                assertNotNull(entity1.id);
+                assertNotNull(entity2.id);
             }
-            previousId1 = entity1.id;
-            previousId2 = entity2.id;
+        } catch (SequenceGeneratorNotSupportedRuntimeException e) {
+            if (jdbcManager.getDialect().supportSequence()) {
+                fail();
+            }
         }
     }
 
@@ -310,20 +307,12 @@ public class AutoBatchInsertTest extends S2TestCase {
      * @throws Exception
      */
     public void testId_tableTx() throws Exception {
-        Integer previousId1 = null;
-        Integer previousId2 = null;
         for (int i = 0; i < 110; i++) {
             TableStrategy entity1 = new TableStrategy();
             TableStrategy entity2 = new TableStrategy();
             jdbcManager.insertBatch(entity1, entity2).executeBatch();
             assertNotNull(entity1.id);
             assertNotNull(entity2.id);
-            if (previousId1 != null) {
-                assertTrue(entity1.id.compareTo(previousId1) > 0);
-                assertTrue(entity2.id.compareTo(previousId2) > 0);
-            }
-            previousId1 = entity1.id;
-            previousId2 = entity2.id;
         }
     }
 
@@ -332,20 +321,12 @@ public class AutoBatchInsertTest extends S2TestCase {
      * @throws Exception
      */
     public void testId_table_explicitGeneratorTx() throws Exception {
-        Integer previousId1 = null;
-        Integer previousId2 = null;
         for (int i = 0; i < 110; i++) {
             TableStrategy2 entity1 = new TableStrategy2();
             TableStrategy2 entity2 = new TableStrategy2();
             jdbcManager.insertBatch(entity1, entity2).executeBatch();
             assertNotNull(entity1.id);
             assertNotNull(entity2.id);
-            if (previousId1 != null) {
-                assertTrue(entity1.id.compareTo(previousId1) > 0);
-                assertTrue(entity2.id.compareTo(previousId2) > 0);
-            }
-            previousId1 = entity1.id;
-            previousId2 = entity2.id;
         }
     }
 }

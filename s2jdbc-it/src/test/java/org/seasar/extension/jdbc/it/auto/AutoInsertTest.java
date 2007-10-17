@@ -19,6 +19,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.seasar.extension.jdbc.JdbcManager;
+import org.seasar.extension.jdbc.exception.IdentityGeneratorNotSupportedRuntimeException;
+import org.seasar.extension.jdbc.exception.SequenceGeneratorNotSupportedRuntimeException;
 import org.seasar.extension.jdbc.it.entity.AutoStrategy;
 import org.seasar.extension.jdbc.it.entity.CompKeyDepartment;
 import org.seasar.extension.jdbc.it.entity.Department;
@@ -164,15 +166,10 @@ public class AutoInsertTest extends S2TestCase {
      * @throws Exception
      */
     public void testId_autoTx() throws Exception {
-        Integer previousId = null;
         for (int i = 0; i < 110; i++) {
             AutoStrategy entity = new AutoStrategy();
             jdbcManager.insert(entity).execute();
             assertNotNull(entity.id);
-            if (previousId != null) {
-                assertTrue(entity.id.compareTo(previousId) > 0);
-            }
-            previousId = entity.id;
         }
     }
 
@@ -181,15 +178,19 @@ public class AutoInsertTest extends S2TestCase {
      * @throws Exception
      */
     public void testId_identityTx() throws Exception {
-        Integer previousId = null;
-        for (int i = 0; i < 110; i++) {
-            IdentityStrategy entity = new IdentityStrategy();
-            jdbcManager.insert(entity).execute();
-            assertNotNull(entity.id);
-            if (previousId != null) {
-                assertTrue(entity.id.compareTo(previousId) > 0);
+        try {
+            for (int i = 0; i < 110; i++) {
+                IdentityStrategy entity = new IdentityStrategy();
+                jdbcManager.insert(entity).execute();
+                if (!jdbcManager.getDialect().supportIdentity()) {
+                    fail();
+                }
+                assertNotNull(entity.id);
             }
-            previousId = entity.id;
+        } catch (IdentityGeneratorNotSupportedRuntimeException e) {
+            if (jdbcManager.getDialect().supportIdentity()) {
+                fail();
+            }
         }
     }
 
@@ -198,15 +199,19 @@ public class AutoInsertTest extends S2TestCase {
      * @throws Exception
      */
     public void testId_sequenceTx() throws Exception {
-        Integer previousId = null;
-        for (int i = 0; i < 110; i++) {
-            SequenceStrategy entity = new SequenceStrategy();
-            jdbcManager.insert(entity).execute();
-            assertNotNull(entity.id);
-            if (previousId != null) {
-                assertTrue(entity.id.compareTo(previousId) > 0);
+        try {
+            for (int i = 0; i < 110; i++) {
+                SequenceStrategy entity = new SequenceStrategy();
+                jdbcManager.insert(entity).execute();
+                if (!jdbcManager.getDialect().supportSequence()) {
+                    fail();
+                }
+                assertNotNull(entity.id);
             }
-            previousId = entity.id;
+        } catch (SequenceGeneratorNotSupportedRuntimeException e) {
+            if (jdbcManager.getDialect().supportSequence()) {
+                fail();
+            }
         }
     }
 
@@ -215,15 +220,19 @@ public class AutoInsertTest extends S2TestCase {
      * @throws Exception
      */
     public void testId_sequence_explicitGeneratorTx() throws Exception {
-        Integer previousId = null;
-        for (int i = 0; i < 110; i++) {
-            SequenceStrategy2 entity = new SequenceStrategy2();
-            jdbcManager.insert(entity).execute();
-            assertNotNull(entity.id);
-            if (previousId != null) {
-                assertTrue(entity.id.compareTo(previousId) > 0);
+        try {
+            for (int i = 0; i < 110; i++) {
+                SequenceStrategy2 entity = new SequenceStrategy2();
+                jdbcManager.insert(entity).execute();
+                if (!jdbcManager.getDialect().supportSequence()) {
+                    fail();
+                }
+                assertNotNull(entity.id);
             }
-            previousId = entity.id;
+        } catch (SequenceGeneratorNotSupportedRuntimeException e) {
+            if (jdbcManager.getDialect().supportSequence()) {
+                fail();
+            }
         }
     }
 
@@ -232,15 +241,10 @@ public class AutoInsertTest extends S2TestCase {
      * @throws Exception
      */
     public void testId_tableTx() throws Exception {
-        Integer previousId = null;
         for (int i = 0; i < 110; i++) {
             TableStrategy entity = new TableStrategy();
             jdbcManager.insert(entity).execute();
             assertNotNull(entity.id);
-            if (previousId != null) {
-                assertTrue(entity.id.compareTo(previousId) > 0);
-            }
-            previousId = entity.id;
         }
     }
 
@@ -249,15 +253,10 @@ public class AutoInsertTest extends S2TestCase {
      * @throws Exception
      */
     public void testId_table_explicitGeneratorTx() throws Exception {
-        Integer previousId = null;
         for (int i = 0; i < 110; i++) {
             TableStrategy2 entity = new TableStrategy2();
             jdbcManager.insert(entity).execute();
             assertNotNull(entity.id);
-            if (previousId != null) {
-                assertTrue(entity.id.compareTo(previousId) > 0);
-            }
-            previousId = entity.id;
         }
     }
 }
