@@ -88,12 +88,6 @@ public class DB2Dialect extends StandardDialect {
     }
 
     @Override
-    public String getIdentitySelectString(final String tableName,
-            final String columnName) {
-        return "values identity_val_local()";
-    }
-
-    @Override
     public boolean supportSequence() {
         return true;
     }

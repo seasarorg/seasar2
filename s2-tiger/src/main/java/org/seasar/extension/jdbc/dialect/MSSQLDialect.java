@@ -71,10 +71,4 @@ public class MSSQLDialect extends StandardDialect {
         return true;
     }
 
-    @Override
-    public String getIdentitySelectString(final String tableName,
-            final String columnName) {
-        return "select @@identity";
-    }
-
 }

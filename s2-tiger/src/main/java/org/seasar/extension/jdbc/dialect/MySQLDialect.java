@@ -73,10 +73,4 @@ public class MySQLDialect extends StandardDialect {
         return true;
     }
 
-    @Override
-    public String getIdentitySelectString(final String tableName,
-            final String columnName) {
-        return "select last_insert_id()";
-    }
-
 }
