@@ -27,6 +27,7 @@ import org.seasar.extension.jdbc.AutoBatchInsert;
 import org.seasar.extension.jdbc.AutoBatchUpdate;
 import org.seasar.extension.jdbc.IdGenerator;
 import org.seasar.extension.jdbc.IntoClause;
+import org.seasar.extension.jdbc.JdbcContext;
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.ValuesClause;
@@ -176,6 +177,16 @@ public class AutoBatchInsertImpl<T> extends
                 + valuesClause.getLength());
         return new String(buf.append(INSERT_STATEMENT).append(tableName)
                 .append(intoClause.toSql()).append(valuesClause.toSql()));
+    }
+
+    @Override
+    protected PreparedStatement createPreparedStatement(
+            final JdbcContext jdbcContext) {
+        if (useGetGeneratedKeys) {
+            return jdbcContext.getPreparedStatement(executedSql,
+                    Statement.RETURN_GENERATED_KEYS);
+        }
+        return super.createPreparedStatement(jdbcContext);
     }
 
     @Override
