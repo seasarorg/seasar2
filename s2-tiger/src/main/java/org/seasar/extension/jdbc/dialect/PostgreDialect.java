@@ -98,7 +98,7 @@ public class PostgreDialect extends StandardDialect {
 
     @Override
     public String getSequenceNextValString(final String sequenceName) {
-        return "values nextval for " + sequenceName;
+        return "select nextval('" + sequenceName + "')";
     }
 
 }
