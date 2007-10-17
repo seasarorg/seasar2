@@ -815,13 +815,62 @@ public class Address {
 }
 </pre>
 
-<h3><a name="JoinColumnAnnotation">JoinColumnアノテーション(任意)</a></h3>
+<h3><a name="JoinColumnDefinition">結合カラム定義</a></h3>
 <p>
-一対一関連であることを指定するアノテーションです。
-1つのEmployeeに1つのAddressが関連付けられる場合、
-Addressは一対一関連になります。
+外部キーを持っている方を関連の所有者といいますが、
+関連の所有者側では、<code>@JoinColumn</code>を使って、
+結合用のカラムを指定することができます。
 </p>
-
+<p>
+name属性で、外部キーを指定します。
+name属性を省略した場合、「関連のプロパティ名_関連テーブルの主キー」が
+自動的に設定されます。
+主キーは、プロパティ名ではなく、カラム名なので注意してください。
+</p>
+<pre>
+public class Employee {
+    ...
+    public Integer departementId;
+    
+    @ManyToOne
+    public Department department;
+}
+</pre>
+<p>
+上記の例では、<code>@JoinColumn</code>が省略されているので、
+name属性は、「関連のプロパティ名(department)_関連テーブルの主キー(ID)」、
+つまりDEPARTMENT_IDになります。
+</p>
+<p>
+departmentがDEPARTMENTに変換されているのは、
+プロパティ名をカラム名に変換するときに、
+キャメル記法は、'_'区切りになり、'_'以外は大文字に変換されるというルールがあるからです。
+</p>
+<p>
+このルールは、convention.diconで指定されている
+<code>org.seasar.framework.convention.impl.PersistenceNamingConventionImpl</code>の
+fromPropertyNameToColumnName()の実装を変えることで、カスタマイズすることができます。
+</p>
+<p>
+referencedColumnName属性で、関連テーブルの主キーを指定します。
+referencedColumnName属性を省略した場合、
+「関連テーブルの主キー」が自動的に設定されます。
+主キーは、プロパティ名ではなく、カラム名なので注意してください。
+</p>
+<pre>
+public class Employee {
+    ...
+    public Integer departementId;
+    
+    @ManyToOne
+    public Department department;
+}
+</pre>
+<p>
+上記の例では、<code>@JoinColumn</code>が省略されているので、
+referencedColumnName属性は、「関連テーブルの主キー(ID)」、
+つまりIDになります。
+</p>
 
 <h2><a name="jdbcManager">JDBCマネージャ</a></h2>
 
