@@ -151,44 +151,57 @@ http://localhost:8080/chura-tutorial/view/hello/hello.htmlにアクセスする�
 <li>lib/poi-3.0-FINAL.jar</li>
 <li>lib/s2-extension-2.4.x.jar</li>
 <li>lib/geronimo-jta_1.1_spec-1.0.jar (オプション，下記参照)</li>
-<li>lib/geronimo-ejb_2.1_spec-1.0.jar (オプション，下記参照)</li>
-<li>resources/jdbc.dicon</li>
+              <li>lib/geronimo-jta_1.1_spec-1.0-tsr.jar (オプション，下記参照)
+              <li>lib/geronimo-ejb_2.1_spec-1.0.jar (オプション，下記参照)</li>
+              <li>resources/jdbc.dicon</li>
 </ul>
 <p>アプリケーションの実行環境により、J2EE関連Jarファイルのいずれが必要になるかが異なります。</p>
-<table border="1">
-<tr>
+            <table border="1">
+              <col span="5" align="center">
+              <tr>
 <th>環境</th>
 <th>geronimo-j2ee _1.4_spec-1.0.jar</th>
 <th>geronimo-jta _1.1_spec-1.0.jar</th>
-<th>geronimo-ejb _2.1_spec-1.0.jar</th>
+                  <th>geronimo-jta _1.1_spec-1.0-tsr.jar</th>
+                  <th>geronimo-ejb _2.1_spec-1.0.jar</th>
 </tr>
 <tr align="center">
-<td>J2EEフル対応でないWebコンテナ<br />
+<td>Servlet対応のWebコンテナ<br />
 (Tomcat等)</td>
 <td>-</td>
 <td><strong>要</strong><br />
 (S2JTA,S2Txを使う場合)</td>
-<td><strong>要</strong><br />
-(S2Tigerを使う場合)</td>
+                  <td></td>
+                  <td><strong>要</strong><br />
+                  (S2TxでEJB互換機能を使う場合)</td>
 </tr>
 <tr align="center">
-<td>J2EEフル対応のAPサーバ<br />
-(JBoss, WebSphere, WebLogic等)</td>
+<td>J2EE1.4対応のAPサーバ</td>
 <td>-</td>
-<td><strong>要</strong><br />
-(S2JTAを使う場合)</td>
 <td>-</td>
+                  <td><strong>要</strong><br />
+                  (S2JTA,S2Txを使う場合)</td>
+                  <td>-</td>
 </tr>
-<tr align="center">
+                <tr>
+                  <td>JavaEE5対応のAPサーバ</td>
+                  <td>-</td>
+                  <td>-</td>
+                  <td>-</td>
+                  <td>-</td>
+                </tr>
+                <tr align="center">
 <td>スタンドアロン</td>
 <td><strong>要</strong><br />
 (S2JTA,S2Txを使う場合)</td>
 <td><strong>要</strong><br />
-(S2JTA,S2Txを使う場合)</td>
-<td>-</td>
+                  (S2JTA,S2Txを使う場合)</td>
+                  <td>-</td>
+                  <td><strong>要</strong><br />
+                  (S2TxでEJB互換機能を使う場合)</td>
 </tr>
 </table>
-<br />
+            <br />
 <p>データベースに関する機能を簡単に試すことができるように、RDBMSとしてHSQLDBを用意しています。オラクルでも直ぐに機能を試せるように、hsql/sql/demo-oracle.sqlが用意されています。SQL*Plusなどで実行した後、jdbc.diconの<a href="dbcp.html#Setup">XADataSourceImplの設定項目</a>を環境に合わせて書き換えてください。</p>
 <p><a href="http://www.seasar.org/updates.html">S2Container用のプラグインKijimuna</a>も是非ご利用ください。</p>
             <h2>S2-Tiger</h2>
@@ -208,47 +221,24 @@ Seasar2の設定の上に、さらに以下のファイルを追加でCLASSPATH�
               <tbody>
                 <tr>
 <th>環境</th>
-<th>geronimo-annotation _1.0_spec-1.0.jar</th>
-                  <th>geronimo-ejb _3.0_spec-1.0.jar</th>
-                  <th>geronimo-interceptor _3.0_spec-1.0.jar</th>
-<th>geronimo-jpa _3.0_spec-1.0.jar</th>
+                  <th>geronimo-jpa _3.0_spec-1.0.jar</th>
 </tr>
                 <tr>
-<td>Servlet2.4対応のWebコンテナ<br>
-                  (Tomcat5.x等)</td>
-<td>-</td>
-                  <td>-</td>
-                  <td>-</td>
-<td><strong>要</strong></td>
-</tr>
-                <tr>
-                  <td>Servlet2.5対応のWebコンテナ<br>
-                  (Tomcat6)</td>
-                  <td>-</td>
-                  <td>-</td>
-                  <td>-</td>
+<td>Servlet対応のWebコンテナ<br />
+(Tomcat等)</td>
                   <td><strong>要</strong></td>
-                </tr>
+</tr>
                 <tr>
 <td>J2EE1.4対応のAPサーバ</td>
-<td>-</td>
-                  <td>-</td>
-                  <td>-</td>
-<td><strong>要</strong></td>
+                  <td><strong>要</strong></td>
 </tr>
                 <tr>
                   <td>JavaEE5対応のAPサーバ</td>
                   <td>-</td>
-                  <td>-</td>
-                  <td>-</td>
-                  <td>-</td>
                 </tr>
                 <tr>
 <td>スタンドアロン</td>
-<td>-</td>
-                  <td>-</td>
-                  <td>-</td>
-<td><strong>要</strong></td>
+                  <td><strong>要</strong></td>
 </tr>
               </tbody>
             </table>
@@ -261,34 +251,29 @@ Seasar2の設定の上に、さらに以下のファイルを追加でCLASSPATH�
 <th>geronimo-annotation _1.0_spec-1.0.jar</th>
                   <th>geronimo-ejb _3.0_spec-1.0.jar</th>
                   <th>geronimo-interceptor _3.0_spec-1.0.jar</th>
-<th>geronimo-jpa _3.0_spec-1.0.jar</th>
-</tr>
+                </tr>
                 <tr>
 <td>Servlet2.4対応のWebコンテナ<br>
                   (Tomcat5.x等)</td>
 <td><strong>要</strong></td>
                   <td><strong>要</strong></td>
                   <td><strong>要</strong></td>
-<td>-</td>
-</tr>
+                </tr>
                 <tr>
                   <td>Servlet2.5対応のWebコンテナ<br>
                   (Tomcat6)</td>
                   <td>-</td>
                   <td><strong>要</strong></td>
                   <td><strong>要</strong></td>
-                  <td>-</td>
                 </tr>
                 <tr>
 <td>J2EE1.4対応のAPサーバ</td>
 <td><strong>要</strong></td>
                   <td><strong>要</strong></td>
                   <td><strong>要</strong></td>
-<td>-</td>
-</tr>
+                </tr>
                 <tr>
                   <td>JavaEE5対応のAPサーバ</td>
-                  <td>-</td>
                   <td>-</td>
                   <td>-</td>
                   <td>-</td>
@@ -298,8 +283,7 @@ Seasar2の設定の上に、さらに以下のファイルを追加でCLASSPATH�
 <td><strong>要</strong></td>
                   <td><strong>要</strong></td>
                   <td><strong>要</strong></td>
-<td>-</td>
-</tr>
+                </tr>
               </tbody>
             </table>
             <!-- document end -->
