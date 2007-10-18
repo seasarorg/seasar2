@@ -90,11 +90,6 @@ public class JdbcManagerImpl implements JdbcManager, Synchronization {
     protected EntityMetaFactory entityMetaFactory;
 
     /**
-     * JDBCコンテキストのスレッドローカルです。
-     */
-    protected ThreadLocal<JdbcContext> jdbcContexts = new ThreadLocal<JdbcContext>();
-
-    /**
      * デフォルトの最大行数です。
      */
     protected int maxRows = 0;
@@ -226,11 +221,10 @@ public class JdbcManagerImpl implements JdbcManager, Synchronization {
     }
 
     public void afterCompletion(int status) {
-        JdbcContext ctx = jdbcContexts.get();
+        JdbcContext ctx = getTxBoundJdbcContext();
         if (ctx == null) {
             throw new NullPointerException("jdbcContext");
         }
-        jdbcContexts.set(null);
         ctx.destroy();
     }
 
@@ -240,20 +234,56 @@ public class JdbcManagerImpl implements JdbcManager, Synchronization {
      * @return JDBCコンテキスト
      */
     public JdbcContext getJdbcContext() {
-        JdbcContext ctx = jdbcContexts.get();
+        JdbcContext ctx = getTxBoundJdbcContext();
         if (ctx != null) {
             return ctx;
         }
-        int status = syncRegistry.getTransactionStatus();
         Connection con = DataSourceUtil.getConnection(dataSource);
-        if (status == Status.STATUS_ACTIVE) {
+        if (hasTransaction()) {
             ctx = createJdbcContext(con, true);
-            jdbcContexts.set(ctx);
-            syncRegistry.registerInterposedSynchronization(this);
+            setTxBoundJdbcContext(ctx);
         } else {
             ctx = createJdbcContext(con, false);
         }
         return ctx;
+    }
+
+    /**
+     * 現在のトランザクションに関連づけられたJDBCコンテキストを返します。
+     * 
+     * @return 現在のトランザクションに関連づけられたJDBCコンテキスト
+     */
+    protected JdbcContext getTxBoundJdbcContext() {
+        if (hasTransaction()) {
+            final JdbcContext ctx = JdbcContext.class.cast(syncRegistry
+                    .getResource(this));
+            if (ctx != null) {
+                return ctx;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 現在のトランザクションにJDBCコンテキストを関連づけます。
+     * 
+     * @param ctx
+     *            現在のトランザクションに関連づけるJDBCコンテキスト
+     */
+    protected void setTxBoundJdbcContext(final JdbcContext ctx) {
+        syncRegistry.putResource(this, ctx);
+        syncRegistry.registerInterposedSynchronization(this);
+    }
+
+    /**
+     * 現在のスレッドでトランザクションが開始されていれば<code>true</code>を返します。
+     * 
+     * @return 現在のスレッドでトランザクションが開始されていれば<code>true</code>
+     */
+    protected boolean hasTransaction() {
+        final int status = syncRegistry.getTransactionStatus();
+        return status != Status.STATUS_NO_TRANSACTION
+                && status != Status.STATUS_UNKNOWN;
     }
 
     /**
@@ -262,7 +292,7 @@ public class JdbcManagerImpl implements JdbcManager, Synchronization {
      * @return JDBCコンテキストがnullかどうか
      */
     protected boolean isJdbcContextNull() {
-        return jdbcContexts.get() == null;
+        return getTxBoundJdbcContext() == null;
     }
 
     /**
