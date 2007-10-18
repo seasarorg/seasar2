@@ -546,7 +546,6 @@ public final class TransactionImpl implements ExtendedTransaction {
     public void putResource(Object key, Object value)
             throws IllegalStateException {
         assertNotSuspended();
-        assertActive();
         resourceMap.put(key, value);
     }
 
@@ -561,7 +560,6 @@ public final class TransactionImpl implements ExtendedTransaction {
      */
     public Object getResource(Object key) throws IllegalStateException {
         assertNotSuspended();
-        assertActive();
         return resourceMap.get(key);
     }
 
