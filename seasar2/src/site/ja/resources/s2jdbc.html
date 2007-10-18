@@ -44,6 +44,7 @@
 <ul>
 <li><a href="#about">S2JDBCとは</a>
 <ul>
+<li><a href="#fluentInterface">流れるようなインターフェースと脱CoC</a></li>
 <li><a href="#autoGenerateSql">90%のSQLを自動生成する</a></li>
 <li><a href="#utilizeJava">Javaのよさを生かす</a></li>
 <li><a href="#easySql">SQLの扱いが簡単</a></li>
@@ -54,7 +55,7 @@
 </ul>
 </li>
 <li><a href="#setup">セットアップ</a></li>
-<li><a href="#entity">エンティティ</a>
+<li><a href="#Entity">エンティティ</a>
 <ul>
 <li><a href="#EntityDefinition">エンティティ定義</a></li>
 <li><a href="#TableDefinition">テーブル定義</a></li>
@@ -73,6 +74,8 @@
 <ul>
 <li><a href="#getResultList">複数件検索</a></li>
 <li><a href="#getSingleResult">1件検索</a></li>
+<li><a href="#join">結合</a></li>
+<li><a href="#where">条件指定</a></li>
 </ul>
 <li><a href="#other">その他の機能</a>
 <ul>
@@ -85,12 +88,65 @@
 <h2><a name="about">S2JDBCとは</a></h2>
 <p>S2JDBCは、データベースプログラミングの生産性を10倍以上高めることを目標として作成した Seasar2のO/R Mapperです。 何に比べて生産性が10倍かというとJava標準のJPA(Java
             Persistence API)に対してです。 次のような特徴があります。</p>
+<h3><a name="fluentInterface">流れるようなインターフェースと脱CoC</a></h3>
+<p>
+「流れるようなインターフェース」とは、文章を記述していくようにメソッドを呼び出していく手法です。
+詳しくは、ファウラーたんの<a href="http://martinfowler.com/bliki/FluentInterface.html">FluentInterface</a>
+を参照してください。あれこれ説明するよりも、検索の例を見たほうがわかりやすいでしょう。
+</p>
+<pre>
+List&lt;Employee&gt; results = jdbcManager.from(Employee.class)
+                             .join("department")
+                             .where("id in (? , ?)", 11, 22)
+                             .orderBy("name")
+                             .getResultList();
+</pre>
+<p>
+一番の特徴は、可読性の高さです。何をやっているのかが一目瞭然ではないでしょうか。
+</p>
+<p>
+二番目の特徴は、IDEと組み合わせることで、APIを覚えていなくても自然に使えることです。
+何か記述したかったら、コード補完によって使える単語(メソッド)が自動的に選択されます。
+これが脱Convention over Configuration(以後CoCと省略)につながってきます。
+</p>
+<p>
+CoCは、「規約を守っておけばフレームワークが自動的に設定してあげる」というもので、
+CoCによって開発者は、あまりソースコードを書かなくてもすむようになります。
+CoCは、確かに私たちを設定ファイル地獄から救ってくれました。
+</p>
+<p>
+しかし、CoCにも暗黒面があります。
+ソースコードに明示されている部分が少ないので、
+自動化されている部分がブラックボックスになり、
+規約を知らない人が見ると何をやっているのかがまったくわからなくなってしまうのです。
+</p>
+<p>
+また、規約を知らないと何もできなくなるので、
+ちょっとしたことでも、自分の知らないことであれば、
+いろいろ調べたり試行錯誤を繰り返すことになります。
+このような試行錯誤の時間は馬鹿になりません。
+最終的なソースコードは確かに少なくなったけど、
+かかった時間は大して変わらなかったなんてことも十分にありえます。
+自動化されているので最初はとっつきやすいのですが、
+知らないことやイレギュラーなことに弱いのです。
+</p>
+<p>
+それに対して「流れるようなインターフェース」の場合は、
+可読性が高いので、誰が見ても何をやっているのかが明快です。
+また、IDEがコード補完によって自動的にできることを教えてくれるので、
+事前に知らなくても使いながら学習していくことができます。
+知らない機能を使うために試行錯誤を繰り返す必要はありません。
+単語(メソッド)の間違いもそんなメソッドないよとIDE(コンパイラ)が教えてくれます。
+</p>
+<p>
+「流れるようなインターフェース」によって、CoCより安全で効率的な開発が可能になるのです。
+</p>
+
 <h3><a name="autoGenerateSql">90%のSQLを自動生成する</a></h3>
 <p>
 SQLは文字列で組み立てるため、書きづらく間違いやすいものです。
-S2JDBCは、クエリのOne Liner呼び出しにより、SQLを自動生成します。
-One Liner呼び出しとは、基本的に一行で必要な機能を呼び出すことができるということです。
-簡単な例を見てもらったほうがわかりやすいでしょう。
+S2JDBCは、「流れるようなインターフェース」により、SQLを自動生成します。
+先ほどの例をもう一度見てみましょう。
 </p>
 <pre>
 List&lt;Employee&gt; results = jdbcManager.from(Employee.class).join("department")
@@ -110,9 +166,7 @@ select T1_.ID, T1_.NAME, T1.DEPARTMENT_ID, T2_.ID, T2_.NAME
 <p>
 クエリの呼び出しがSQLに対応しているので可読性が高いだけでなく、
 selectリスト句でのカラムの指定や結合の指定など面倒な指定を
-する必要がありません。また、from(),join(),where(),orderBy()など
-'.'をIDEで入力するとコード補完によって呼び出せる機能を教えてもらえるので、
-何ができるんだろうと悩む必要もなく、さくさくと開発ができます。
+する必要がありません。
 </p>
 <p>
 これに対し、Javaの標準であるJPA(Java Persistence API)はどうでしょうか。
@@ -129,7 +183,7 @@ List&lt;Employee&gt; results = (List&lt;Employee&gt;) entityManager.createQuery(
 <p>
 JPQL(select ... の文字列)の部分は、Seasar2のクエリとほぼ同じように見えますが、
 文字列で組み立てているので、書き間違える可能性が増えます。
-文字列で組み立てるより、クエリのメソッド呼び出しで設定したほうが、
+文字列で組み立てるより、「流れるようなインターフェース」のほうが、
 間違いも減るし、IDEによる自動補完が効くのでより生産性があがるのです。
 </p>
 <p>
@@ -365,6 +419,12 @@ employee.name = "hoge";
 データアクセス用のフレームワークとして本質的な機能に集中することで、
 短期間で使えるようになることを可能にしました。
 </p>
+<p>
+このドキュメントに対応するのががHibernateの
+<a href="http://www.hibernate.org/hib_docs/annotations/reference/fr/html_single/">Hibernate Annotationsのドキュメント</a>
+と<a href="http://www.hibernate.org/hib_docs/entitymanager/reference/en/html_single/">Hibernate EntityManagerのドキュメント</a>
+になります。学習コストが低いということが実感していただけるのではないでしょうか。
+</p>
 
 <h3><a name="lessTrouble">トラブリにくい</a></h3>
 <p>
@@ -468,7 +528,7 @@ JPAを使ってパフォーマンスが出なかったり、
 
 <h2><a name="setup">セットアップ</a></h2>
 
-<h2><a name="entity">エンティティ</a></h2>
+<h2><a name="Entity">エンティティ</a></h2>
 <p>
 エンティティの定義の仕方を説明します。
 ここでいっているエンティティとは、
@@ -950,7 +1010,7 @@ List&lt;Employee&gt; results = jdbcManager.from(Employee.class)
 <pre>
 List&lt;Employee&gt; results = jdbcManager.from(Employee.class)
                                     .join("department", JoinType.INNER, false)
-                                    .where("department.name = 'RESEARCH')
+                                    .where("department.name = 'RESEARCH'")
                                     .getResultList();
 </pre>
 <p>
@@ -968,6 +1028,8 @@ List&lt;Department&gt; results = jdbcManager.from(Department.class)
 結合は、多対一関連、一対多関連、一対一関連のどれでも可能で、
 いくつでもネストすることが可能です。
 </p>
+
+<h3><a name="where">条件指定</a></h3>
 
 <h2><a name="other">その他の機能</a></h2>
 
