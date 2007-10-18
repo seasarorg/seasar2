@@ -69,7 +69,11 @@
 <li><a href="#JoinColumnDefinition">結合カラム定義</a></li>
 </ul>
 </li>
-<li><a href="#jdbcManager">JDBCマネージャ</a></li>
+<li><a href="#JdbcManager">JDBCマネージャ</a></li>
+<ul>
+<li><a href="#getResultList">複数件検索</a></li>
+<li><a href="#getSingleResult">1件検索</a></li>
+</ul>
 <li><a href="#other">その他の機能</a>
 <ul>
 <li><a href="#SqlLog">SQLのログ</a></li>
@@ -882,7 +886,88 @@ referencedColumnName属性は、「関連テーブルの主キー(ID)」、
 つまりIDになります。
 </p>
 
-<h2><a name="jdbcManager">JDBCマネージャ</a></h2>
+<h2><a name="JdbcManager">JDBCマネージャ</a></h2>
+<p>
+JdbcManagerは、データベースにアクセスするために使われるAPIです。
+設定ファイルを<a href="#setup">セットアップ</a>して、
+利用したいクラスで次のようにプロパティを定義しておけば、
+Seasar2によってJdbcManagerは自動的に設定されます。
+</p>
+<pre>
+public JdbcManager jdbcManager;
+</pre>
+<p>
+Connection, Statementは同一トランザクション中はキャッシュされ、
+トランザクション終了時に自動的にクローズされます。
+トランザクション外で呼び出されたときは、キャッシュは行なわれず毎回自動的にクローズされます。
+</p>
+<p>
+トランザクション管理は、<a href="tx.html">S2Tx</a>を使ってください。
+</p>
+
+<h3><a name="getResultList">複数件検索</a></h3>
+<p>
+複数件を検索する場合は、gerResultList()を使います。
+</p>
+<pre>
+List&lt;Employee&gt; results = jdbcManager.from(Employee.class).getResultList();
+</pre>
+<p>
+検索するエンティティは、from()で指定します。
+</p>
+
+<h3><a name="getSingleResult">1件検索</a></h3>
+<p>
+1件検索する場合は、getSingleResult()を使います。
+</p>
+<pre>
+Employee result = jdbcManager.from(Employee.class).getSingleResult();
+</pre>
+<p>
+結果が複数件になる場合は、<code>javax.persistence.NonUniqueResultException</code>が発生します。
+</p>
+
+<h3><a name="join">結合</a></h3>
+<p>
+他のエンティティを結合する場合は、join()を使います。
+引数は、結合したいエンティティのプロパティ名です。
+</p>
+<pre>
+List&lt;Employee&gt; results = jdbcManager.from(Employee.class).join("department").getResultList();
+</pre>
+<p>
+デフォルトは、左外部結合で、結合で指定したエンティティは、検索結果に含まれます。
+次のように内部結合にすることもできます。
+</p>
+<pre>
+List&lt;Employee&gt; results = jdbcManager.from(Employee.class)
+                                    .join("department", JoinType.INNER).getResultList();
+</pre>
+<p>
+検索条件には含めたいけど、検索結果には含めたくない場合、
+3番名の引数をfalseにします。
+</p>
+<pre>
+List&lt;Employee&gt; results = jdbcManager.from(Employee.class)
+                                    .join("department", JoinType.INNER, false)
+                                    .where("department.name = 'RESEARCH')
+                                    .getResultList();
+</pre>
+<p>
+結合は、employee.addressのようにネストすることもできます。
+ネストする場合は、必ずベースとなる結合を先に指定します。
+employee.addressの場合、employeeがベースとなる結合です。
+</p>
+<pre>
+List&lt;Department&gt; results = jdbcManager.from(Department.class)
+                                    .join("employee")
+                                    .join("employee.address")
+                                    .getResultList();
+</pre>
+<p>
+結合は、多対一関連、一対多関連、一対一関連のどれでも可能で、
+いくつでもネストすることが可能です。
+</p>
 
 <h2><a name="other">その他の機能</a></h2>
 
