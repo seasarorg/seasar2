@@ -4,6 +4,7 @@
 <head>
 <title>S2JDBC</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Style-Type" content="text/css">
 <link href="seasar_b.css" type="text/css" rel="stylesheet" media="screen" />
 <link href="seasar_p.css" type="text/css" rel="stylesheet" media="print" />
 <script src="seasar_b.js" type="text/JavaScript" language="JavaScript">
@@ -78,12 +79,8 @@
 </ul>
 
 <h2><a name="about">S2JDBCとは</a></h2>
-<p>
-S2JDBCは、データベースプログラミングの生産性を10倍以上高めることを目標として作成した
-Seasar2のO/R Mapperです。
-なんに比べて生産性が10倍かというとJava標準のJPA(Java Persistence API)に対してです。
-次のような特徴があります。
-</p>
+<p>S2JDBCは、データベースプログラミングの生産性を10倍以上高めることを目標として作成した Seasar2のO/R Mapperです。 何に比べて生産性が10倍かというとJava標準のJPA(Java
+            Persistence API)に対してです。 次のような特徴があります。</p>
 <h3><a name="autoGenerateSql">90%のSQLを自動生成する</a></h3>
 <p>
 SQLは文字列で組み立てるため、書きづらく間違いやすいものです。
@@ -604,26 +601,34 @@ Seasar2に自動生成させることもできます。
 自動生成のタイプは、<code>@GeneratedValue</code>の<code>strategy</code>属性で指定します。
 指定できるタイプのは次の4つです。
 </p>
-<p>
 <ul>
 <li>GenerationType.TABLE<br />テーブルを使います。</li>
 <li>GenerationType.SEQUENCE<br />シーケンスを使います。</li>
 <li>GenerationType.IDENTITY<br />データベース固有の識別子自動生成を使います。</li>
 <li>GenerationType.AUTO(デフォルト)<br />データベースに応じてTABLE・SEQUENCE・IDENTITYのどちらかが選択されます。</li>
 </ul>
-</p>
-<p>
+            <h4>GenerationType.TABLE</h4>
+            <p>
 GenerationType.TABLEは次のようにして使います。
 </p>
-<pre>
+            <pre>@Id
+@GeneratedValue(strategy = GenerationType.TABLE)
+public Integer id;</pre>
+<p>上記のように指定した場合、 あらかじめ、次のようなテーブルとデータを用意しておく必要があります。</p>
+<pre>create table ID_GENERATOR {
+  PK varchar(80) not null primary key,
+  VALUE integer);</pre>
+<pre>insert into ID_GENERATOR (PK, VALUE) values ('EMPLOYEE_ID', 1);</pre>
+            <p>ID_GENERATORテーブルのPKカラムには、&lt;テーブル名&gt;_&lt;識別子のカラム名&gt;を設定します。</p>
+            <p>テーブル名やカラム名をカスタマイズするには、次のように@TableGeneratorアノテーションで指定します。</p>
+            <pre>@Id
+@GeneratedValue(strategy = GenerationType.TABLE, generator = &quot;EMPLOYEE_GEN&quot;)
 @TableGenerator(
-    name = "EMPLOYEE_GEN",
-    table = "ID_GEN",
-    pkColumnName = "GEN_NAME",
-    valueColumnName = "GEN_VALUE")
-@Id @GeneratedValue(strategy = GenerationType.TABLE, generator = "EMPLOYEE_GEN")
-public Integer id;
-</pre>
+    name = &quot;EMPLOYEE_GEN&quot;,
+    table = &quot;ID_GEN&quot;,
+    pkColumnName = &quot;GEN_NAME&quot;,
+    valueColumnName = &quot;GEN_VALUE&quot;)
+public Integer id;</pre>
 <p>
 上記のようなTableGeneratorを定義した場合、
 あらかじめ、次のようなテーブルとデータを用意しておく必要があります。
@@ -633,19 +638,25 @@ create table ID_GEN {
   GEN_NAME varchar(80) not null primary key,
   GEN_VALUE integer);
 </pre>
-<pre>
-insert into ID_GEN (GEN_NAME, GEN_VALUE) values ('EMPLOYEE_GEN', 0);
-</pre>
-<p>
+<pre>insert into ID_GEN (GEN_NAME, GEN_VALUE) values ('EMPLOYEE_GEN', 1);</pre>
+            <h4>GenerationType.SEQUENCE</h4>
+            <p>
 GenerationType.SEQUENCEは次のようにして使います。
 </p>
-<pre>
+            <pre>@Id
+@GeneratedValue(strategy = GenerationType.SEQUENCE)
+public Integer id;</pre>
+<p>上記のように指定した場合、 あらかじめ、次のようなシーケンスを用意しておく必要があります。</p>
+<pre>create sequence EMPLOYEE_ID
+  incremet by 50;</pre>
+            <p>シーケンス名は、&lt;テーブル名&gt;_&lt;識別子のカラム名&gt;となります。</p>
+            <p>シーケンス名をカスタマイズするには、次のように@SequenceGeneratorアノテーションで指定します。</p>
+            <pre>@Id
+@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = &quot;EMPLOYEE_GEN&quot;)
 @SequenceGenerator(
-    name = "EMPLOYEE_GEN",
-    sequenceName = "EMPLOYEE_SEQ")
-@Id @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "EMPLOYEE_GEN")
-public Integer id;
-</pre>
+    name = &quot;EMPLOYEE_GEN&quot;,
+    sequenceName = &quot;EMPLOYEE_SEQ&quot;)
+public Integer id;</pre>
 <p>
 上記のようなSequenceGeneratorを定義した場合、
 あらかじめ、次のようなシーケンスを用意しておく必要があります。
@@ -654,7 +665,8 @@ public Integer id;
 create sequence EMPLOYEE_SEQ
   incremet by 50;
 </pre>
-<p>
+            <h4>GenerationType.IDENTITY</h4>
+            <p>
 GenerationType.IDENTITYは次のようにして使います。
 </p>
 <pre>
@@ -678,18 +690,16 @@ create table Employee {
 同一ならカラムの値がインクリメントされて更新されます。
 同一でない場合、<code>javax.persistence.OptimisticLockException</code>が発生します。
 </p>
-<p>
-例えば、エンティティのバージョンチェック用のプロパティの値が0だったとします。
-更新時にカラムの値が0のままならOKで、1に更新されます。
-カラムの値が0でない場合は、他で更新されているということなので、
-<code>javax.persistence.OptimisticLockException</code>が発生します。
+<p>例えば、エンティティのバージョンチェック用のプロパティの値が1だったとします。 更新時にカラムの値が1のままならOKで、2に更新されます。 カラムの値が1でない場合は、他で更新されているということなので、
+            <code>javax.persistence.OptimisticLockException</code>が発生します。
 </p>
 <pre>
 @Version
 public Long version = 0L;
 </pre>
-
-<h3><a name="TransientDefinition">永続化対象外定義</a></h3>
+            <h3 style="background-color:red">注意点</h3>
+<p>@Versionアノテーションは数値型のフィールドにのみ指定することができます。JPA仕様ではTimestamp型のフィールドもバージョンチェックに使用できることになっていますが、S2JDBCではサポートしていません。更新時刻の保持と排他制御は目的が違うので別のフィールドにしてください。</p>
+            <h3><a name="TransientDefinition">永続化対象外定義</a></h3>
 <p>
 永続化対象外であることを指定するには、<code>@Transient</code>を使います。
 <code>transient</code>修飾子も指定することもできますが、
@@ -888,7 +898,7 @@ SQLのログは<code>org.seasar.extension.jdbc.SqlRegistry</code>のインスタ
 DIのための設定は次のようになります。
 </p>
 <pre>
-&lt;component name="sqlLogRegistry" class="org.seasar.extension.jdbc.SqlLogRegistry">
+&lt;component name="sqlLogRegistry" class="org.seasar.extension.jdbc.SqlLogRegistry"&gt;
   @org.seasar.extension.jdbc.SqlLogRegistryLocator@getInstance()
 &lt;/component&gt;
 </pre>
