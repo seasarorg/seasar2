@@ -16,13 +16,17 @@
 		・NOT_SUPPORTED
 	</description>
 
+	<!-- UserTransaction from JNDI -->
+	<component name="UserTransaction"
+			class="javax.transaction.UserTransaction">
+		@org.seasar.extension.j2ee.JndiResourceLocator@lookup("java:comp/UserTransaction")
+	</component>
+
+	<!-- TransactionManager from TransactionManagerFactory -->
 	<component name="TransactionManager"
 			class="javax.transaction.TransactionManager">
 		@com.ibm.ejs.jts.jta.TransactionManagerFactory@getTransactionManager()
 	</component>
-
-	<component name="UserTransaction"
-		class="org.seasar.extension.jta.UserTransactionImpl"/>
 
 	<!-- TransactionManager を利用する TransactionSynchronizationRegistry -->
 	<component name="TransactionSynchronizationRegistry"

@@ -3,10 +3,7 @@
 	"http://www.seasar.org/dtd/components24.dtd">
 <components namespace="jta">
 	<description>
-		WebSphere Application Server (WAS) version 4 が提供する JTA 実装を使用するための設定ファイルです．
-
-		WAS はアプリケーションからの TransactionManager の利用はサポートしていません．
-		IBM のサポートが必要な場合は jta-10.dicon を使用してください．
+		Sun Java System Application Server version 7～8 が提供する JTA 実装を使用するための設定ファイルです．
 
 		この設定ファイルでは，以下の全てのトランザクション属性がサポートされます．
 		・REQUIRED
@@ -22,10 +19,10 @@
 		@org.seasar.extension.j2ee.JndiResourceLocator@lookup("java:comp/UserTransaction")
 	</component>
 
-	<!-- TransactionManager from JTSXA -->
+	<!-- TransactionManager from TransactionManagerImpl -->
 	<component name="TransactionManager"
 			class="javax.transaction.TransactionManager">
-		@com.ibm.ejs.jts.jta.JTSXA@getTransactionManager()
+		@com.sun.jts.jta.TransactionManagerImpl@getTransactionManagerImpl()
 	</component>
 
 	<!-- TransactionManager を利用する TransactionSynchronizationRegistry -->

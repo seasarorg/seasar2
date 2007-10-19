@@ -14,15 +14,15 @@
 		・NOT_SUPPORTED
 	</description>
 
-	<!-- TransactionManager from JNDI -->
-	<component name="TransactionManager"
-			class="javax.transaction.TransactionManager">
-		@org.seasar.extension.j2ee.JndiResourceLocator@lookup("java:comp/UserTransaction")
-	</component>
-
 	<!-- UserTransaction from JNDI -->
 	<component name="UserTransaction"
 			class="javax.transaction.UserTransaction">
+		@org.seasar.extension.j2ee.JndiResourceLocator@lookup("java:comp/UserTransaction")
+	</component>
+
+	<!-- TransactionManager from JNDI -->
+	<component name="TransactionManager"
+			class="javax.transaction.TransactionManager">
 		@org.seasar.extension.j2ee.JndiResourceLocator@lookup("java:comp/UserTransaction")
 	</component>
 

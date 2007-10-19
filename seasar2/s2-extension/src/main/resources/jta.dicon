@@ -13,11 +13,11 @@
 		・NOT_SUPPORTED
 	</description>
 
-	<component name="TransactionManager"
-		class="org.seasar.extension.jta.TransactionManagerImpl"/>
-
 	<component name="UserTransaction"
 		class="org.seasar.extension.jta.UserTransactionImpl"/>
+
+	<component name="TransactionManager"
+		class="org.seasar.extension.jta.TransactionManagerImpl"/>
 
 	<!-- TransactionManager を利用する TransactionSynchronizationRegistry -->
 	<component name="TransactionSynchronizationRegistry"

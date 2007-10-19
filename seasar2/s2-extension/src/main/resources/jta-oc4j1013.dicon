@@ -14,16 +14,16 @@
 		・NOT_SUPPORTED
 	</description>
 
-	<!-- TransactionManager from TransactionUtility -->
-	<component name="TransactionManager"
-			class="javax.transaction.TransactionManager">
-		@oracle.j2ee.transaction.TransactionUtility@getOC4JTransactionManager()
-	</component>
-
 	<!-- UserTransaction from TransactionUtility -->
 	<component name="UserTransaction"
 			class="javax.transaction.UserTransaction">
 		@oracle.j2ee.transaction.TransactionUtility@getOC4JUserTransaction()
+	</component>
+
+	<!-- TransactionManager from TransactionUtility -->
+	<component name="TransactionManager"
+			class="javax.transaction.TransactionManager">
+		@oracle.j2ee.transaction.TransactionUtility@getOC4JTransactionManager()
 	</component>
 
 	<!-- TransactionManager を利用する TransactionSynchronizationRegistry -->
