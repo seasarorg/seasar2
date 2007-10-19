@@ -74,6 +74,8 @@ public class NamingConventionImplTest extends TestCase {
      */
     public void testFromSuffixToPackageName() throws Exception {
         assertEquals("logic", convention.fromSuffixToPackageName("Logic"));
+        assertEquals("directorydao", convention
+                .fromSuffixToPackageName("DirectoryDao"));
     }
 
     /**

@@ -440,7 +440,7 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
         if (StringUtil.isEmpty(suffix)) {
             throw new EmptyRuntimeException("suffix");
         }
-        return StringUtil.decapitalize(suffix);
+        return suffix.toLowerCase();
     }
 
     public String fromClassNameToShortComponentName(String className) {
@@ -786,7 +786,7 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
                         + "." + shortClassName)) {
             return false;
         }
-        final String middlePkgName = StringUtil.decapitalize(suffix);
+        final String middlePkgName = fromSuffixToPackageName(suffix);
         for (int i = 0; i < rootPackageNames.length; ++i) {
             if (className.startsWith(rootPackageNames[i] + "." + middlePkgName
                     + ".")) {
