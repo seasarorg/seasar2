@@ -19,8 +19,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.seasar.extension.jdbc.JdbcManager;
+import org.seasar.extension.jdbc.exception.SOptimisticLockException;
 import org.seasar.extension.jdbc.it.entity.CompKeyDepartment;
 import org.seasar.extension.jdbc.it.entity.Department;
+import org.seasar.extension.jdbc.it.entity.Employee;
 import org.seasar.extension.unit.S2TestCase;
 
 /**
@@ -207,4 +209,20 @@ public class AutoUpdateTest extends S2TestCase {
         assertEquals(2, department.version);
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testSOptimisticLockExceptionTx() throws Exception {
+        Employee employee1 = jdbcManager.from(Employee.class).where(
+                "employeeId = ?", 1).getSingleResult();
+        Employee employee2 = jdbcManager.from(Employee.class).where(
+                "employeeId = ?", 1).getSingleResult();
+        jdbcManager.update(employee1).execute();
+        try {
+            jdbcManager.update(employee2).execute();
+            fail();
+        } catch (SOptimisticLockException ignore) {
+        }
+    }
 }

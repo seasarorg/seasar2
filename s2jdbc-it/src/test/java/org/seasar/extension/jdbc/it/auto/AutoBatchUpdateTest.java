@@ -21,8 +21,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.seasar.extension.jdbc.JdbcManager;
+import org.seasar.extension.jdbc.exception.SOptimisticLockException;
 import org.seasar.extension.jdbc.it.entity.CompKeyDepartment;
 import org.seasar.extension.jdbc.it.entity.Department;
+import org.seasar.extension.jdbc.it.entity.Employee;
 import org.seasar.extension.unit.S2TestCase;
 
 /**
@@ -256,4 +258,39 @@ public class AutoBatchUpdateTest extends S2TestCase {
         assertEquals(2, department.version);
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testSOptimisticLockExceptionTx() throws Exception {
+        Employee employee1 = jdbcManager.from(Employee.class).where(
+                "employeeId = ?", 1).getSingleResult();
+        Employee employee2 = jdbcManager.from(Employee.class).where(
+                "employeeId = ?", 1).getSingleResult();
+        Employee employee3 = jdbcManager.from(Employee.class).where(
+                "employeeId = ?", 2).getSingleResult();
+        jdbcManager.update(employee1).execute();
+        try {
+            jdbcManager.updateBatch(employee2, employee3).executeBatch();
+            fail();
+        } catch (SOptimisticLockException ignore) {
+        }
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testSOptimisticLockException_includesVersionTx()
+            throws Exception {
+        Employee employee1 = jdbcManager.from(Employee.class).where(
+                "employeeId = ?", 1).getSingleResult();
+        Employee employee2 = jdbcManager.from(Employee.class).where(
+                "employeeId = ?", 1).getSingleResult();
+        Employee employee3 = jdbcManager.from(Employee.class).where(
+                "employeeId = ?", 2).getSingleResult();
+        jdbcManager.update(employee1).execute();
+        jdbcManager.updateBatch(employee2, employee3).includesVersion()
+                .executeBatch();
+    }
 }
