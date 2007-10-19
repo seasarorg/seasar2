@@ -49,7 +49,7 @@ public class AutoInsertTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void testTx() throws Exception {
+    public void testExecuteTx() throws Exception {
         Department department = new Department();
         department.departmentId = 99;
         department.departmentName = "hoge";
@@ -70,7 +70,7 @@ public class AutoInsertTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void test_excludesNullTx() throws Exception {
+    public void testExecute_excludesNullTx() throws Exception {
         Department department = new Department();
         department.departmentId = 99;
         department.departmentName = "hoge";
@@ -91,7 +91,7 @@ public class AutoInsertTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void test_includesTx() throws Exception {
+    public void testExecute_includesTx() throws Exception {
         Department department = new Department();
         department.departmentId = 99;
         department.departmentNo = 99;
@@ -116,7 +116,7 @@ public class AutoInsertTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void test_excludesTx() throws Exception {
+    public void testExecute_excludesTx() throws Exception {
         Department department = new Department();
         department.departmentId = 99;
         department.departmentNo = 99;

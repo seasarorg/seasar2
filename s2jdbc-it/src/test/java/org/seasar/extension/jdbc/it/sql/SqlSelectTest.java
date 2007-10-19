@@ -41,7 +41,7 @@ public class SqlSelectTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void test() throws Exception {
+    public void testPaging() throws Exception {
         List<Employee> list = jdbcManager.selectBySql(Employee.class, sql)
                 .getResultList();
         assertEquals(14, list.size());
@@ -51,7 +51,7 @@ public class SqlSelectTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void test_offsetOnly() throws Exception {
+    public void testPaging_offsetOnly() throws Exception {
         List<Employee> list = jdbcManager.selectBySql(Employee.class, sql)
                 .offset(3).getResultList();
         assertEquals(11, list.size());
@@ -63,7 +63,7 @@ public class SqlSelectTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void test_limitOnly() throws Exception {
+    public void testPaging_limitOnly() throws Exception {
         List<Employee> list = jdbcManager.selectBySql(Employee.class, sql)
                 .limit(3).getResultList();
         assertEquals(3, list.size());
@@ -75,7 +75,7 @@ public class SqlSelectTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void test_offsetZero_limitZero() throws Exception {
+    public void testPaging_offsetZero_limitZero() throws Exception {
         List<Employee> list = jdbcManager.selectBySql(Employee.class, sql)
                 .offset(0).limit(0).getResultList();
         assertEquals(14, list.size());
@@ -85,7 +85,7 @@ public class SqlSelectTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void test_offset_limitZero() throws Exception {
+    public void testPaging_offset_limitZero() throws Exception {
         List<Employee> list = jdbcManager.selectBySql(Employee.class, sql)
                 .offset(3).limit(0).getResultList();
         assertEquals(11, list.size());
@@ -97,7 +97,7 @@ public class SqlSelectTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void test_offsetZero_limit() throws Exception {
+    public void testPaging_offsetZero_limit() throws Exception {
         List<Employee> list = jdbcManager.selectBySql(Employee.class, sql)
                 .offset(0).limit(3).getResultList();
         assertEquals(3, list.size());
@@ -109,7 +109,7 @@ public class SqlSelectTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void test_offset_limit() throws Exception {
+    public void testPaging_offset_limit() throws Exception {
         List<Employee> list = jdbcManager.selectBySql(Employee.class, sql)
                 .offset(3).limit(5).getResultList();
         assertEquals(5, list.size());
@@ -121,7 +121,7 @@ public class SqlSelectTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void test_no_parameter() throws Exception {
+    public void testPaging_no_parameter() throws Exception {
         String sql = "select * from Employee";
         List<Employee> list = jdbcManager.selectBySql(Employee.class, sql)
                 .getResultList();
@@ -132,7 +132,7 @@ public class SqlSelectTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void test_parameter() throws Exception {
+    public void testParameter() throws Exception {
         String sql = "select * from Employee where department_Id = ? and salary = ?";
         List<Employee> list = jdbcManager.selectBySql(Employee.class, sql, 2,
                 3000).getResultList();

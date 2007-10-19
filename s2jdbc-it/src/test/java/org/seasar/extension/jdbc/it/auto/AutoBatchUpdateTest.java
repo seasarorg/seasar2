@@ -43,7 +43,7 @@ public class AutoBatchUpdateTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void testTx() throws Exception {
+    public void testExecuteTx() throws Exception {
         List<Department> list = new ArrayList<Department>();
         Department department = new Department();
         department.departmentId = 1;
@@ -83,7 +83,7 @@ public class AutoBatchUpdateTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void test_includesVersionTx() throws Exception {
+    public void testExecute_includesVersionTx() throws Exception {
         List<Department> list = new ArrayList<Department>();
         Department department = new Department();
         department.departmentId = 1;
@@ -124,7 +124,7 @@ public class AutoBatchUpdateTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void test_includesTx() throws Exception {
+    public void testExecute_includesTx() throws Exception {
         List<Department> list = new ArrayList<Department>();
         Department department = new Department();
         department.departmentId = 1;
@@ -169,7 +169,7 @@ public class AutoBatchUpdateTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void test_excludesTx() throws Exception {
+    public void testExecute_excludesTx() throws Exception {
         List<Department> list = new ArrayList<Department>();
         Department department = new Department();
         department.departmentId = 1;

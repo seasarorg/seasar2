@@ -40,7 +40,7 @@ public class OneToManyTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void test_fetch_leftOuterJoin() throws Exception {
+    public void testLeftOuterJoin_fetch() throws Exception {
         List<Department> list = jdbcManager.from(Department.class).join(
                 "employees").getResultList();
         assertEquals(4, list.size());
@@ -54,7 +54,7 @@ public class OneToManyTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void test_leftOuterJoin() throws Exception {
+    public void testLeftOuterJoin() throws Exception {
         List<Department> list = jdbcManager.from(Department.class).join(
                 "employees", false).getResultList();
         assertEquals(4, list.size());
@@ -68,7 +68,7 @@ public class OneToManyTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void test_fetch_innerJoin() throws Exception {
+    public void testInnerJoin_fetch() throws Exception {
         List<Department> list = jdbcManager.from(Department.class).join(
                 "employees", JoinType.INNER).getResultList();
         assertEquals(3, list.size());
@@ -81,7 +81,7 @@ public class OneToManyTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void test_innerJoin() throws Exception {
+    public void testInnerJoin() throws Exception {
         List<Department> list = jdbcManager.from(Department.class).join(
                 "employees", JoinType.INNER, false).getResultList();
         assertEquals(3, list.size());

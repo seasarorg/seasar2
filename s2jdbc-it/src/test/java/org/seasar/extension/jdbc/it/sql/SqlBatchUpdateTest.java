@@ -40,7 +40,7 @@ public class SqlBatchUpdateTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void test_no_parameterTx() throws Exception {
+    public void testParameter_noneTx() throws Exception {
         String sql = "update Employee set salary = salary * 2 where employee_id = 1";
         int[] result = jdbcManager.updateBatchBySql(sql).params().params()
                 .executeBatch();
@@ -51,7 +51,7 @@ public class SqlBatchUpdateTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void test_parameterTx() throws Exception {
+    public void testParameterTx() throws Exception {
         String sql = "delete from Employee where department_Id = ? and salary > ?";
         int[] result = jdbcManager.updateBatchBySql(sql, int.class,
                 BigDecimal.class).params(1, new BigDecimal(3000)).params(2,

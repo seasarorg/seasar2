@@ -43,7 +43,7 @@ public class AutoBatchDeleteTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void testTx() throws Exception {
+    public void testExecuteTx() throws Exception {
         List<Employee> list = new ArrayList<Employee>();
         Employee employee = new Employee();
         employee.employeeId = 1;
@@ -71,7 +71,7 @@ public class AutoBatchDeleteTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void test_ignoreVersionTx() throws Exception {
+    public void testExecute_ignoreVersionTx() throws Exception {
         List<Employee> list = new ArrayList<Employee>();
         Employee employee = new Employee();
         employee.employeeId = 1;
@@ -82,7 +82,8 @@ public class AutoBatchDeleteTest extends S2TestCase {
         employee2.version = 99;
         list.add(employee2);
 
-        int[] result = jdbcManager.deleteBatch(list).ignoreVersion().executeBatch();
+        int[] result = jdbcManager.deleteBatch(list).ignoreVersion()
+                .executeBatch();
         assertEquals(2, result.length);
 
         Map<String, Object> m = new HashMap<String, Object>();

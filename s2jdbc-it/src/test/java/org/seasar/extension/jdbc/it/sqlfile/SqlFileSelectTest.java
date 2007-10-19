@@ -44,7 +44,7 @@ public class SqlFileSelectTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void test() throws Exception {
+    public void testPaging() throws Exception {
         List<Employee> list = jdbcManager.selectBySqlFile(Employee.class, PATH)
                 .getResultList();
         assertEquals(14, list.size());
@@ -54,7 +54,7 @@ public class SqlFileSelectTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void test_offsetOnly() throws Exception {
+    public void testPaging_offsetOnly() throws Exception {
         List<Employee> list = jdbcManager.selectBySqlFile(Employee.class, PATH)
                 .offset(3).getResultList();
         assertEquals(11, list.size());
@@ -66,7 +66,7 @@ public class SqlFileSelectTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void test_limitOnly() throws Exception {
+    public void testPaging_limitOnly() throws Exception {
         List<Employee> list = jdbcManager.selectBySqlFile(Employee.class, PATH)
                 .limit(3).getResultList();
         assertEquals(3, list.size());
@@ -78,7 +78,7 @@ public class SqlFileSelectTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void test_offsetZero_limitZero() throws Exception {
+    public void testPaging_offsetZero_limitZero() throws Exception {
         List<Employee> list = jdbcManager.selectBySqlFile(Employee.class, PATH)
                 .offset(0).limit(0).getResultList();
         assertEquals(14, list.size());
@@ -88,7 +88,7 @@ public class SqlFileSelectTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void test_offset_limitZero() throws Exception {
+    public void testPaging_offset_limitZero() throws Exception {
         List<Employee> list = jdbcManager.selectBySqlFile(Employee.class, PATH)
                 .offset(3).limit(0).getResultList();
         assertEquals(11, list.size());
@@ -100,7 +100,7 @@ public class SqlFileSelectTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void test_offsetZero_limit() throws Exception {
+    public void testPaging_offsetZero_limit() throws Exception {
         List<Employee> list = jdbcManager.selectBySqlFile(Employee.class, PATH)
                 .offset(0).limit(3).getResultList();
         assertEquals(3, list.size());
@@ -112,7 +112,7 @@ public class SqlFileSelectTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void test_offset_limit() throws Exception {
+    public void testPaging_offset_limit() throws Exception {
         List<Employee> list = jdbcManager.selectBySqlFile(Employee.class, PATH)
                 .offset(3).limit(5).getResultList();
         assertEquals(5, list.size());
@@ -124,7 +124,7 @@ public class SqlFileSelectTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void test_no_parameter() throws Exception {
+    public void testParameter_none() throws Exception {
         String path = getClass().getName().replace(".", "/") + "_no.sql";
         List<Employee> list = jdbcManager.selectBySqlFile(Employee.class, path)
                 .getResultList();
@@ -135,7 +135,7 @@ public class SqlFileSelectTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void test_simple_parameter() throws Exception {
+    public void testParameter_simpleType() throws Exception {
         String path = getClass().getName().replace(".", "/")
                 + "_simpleType.sql";
         List<Employee> list = jdbcManager.selectBySqlFile(Employee.class, path,
@@ -153,7 +153,7 @@ public class SqlFileSelectTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void test_dto_parameter() throws Exception {
+    public void testParameter_dto() throws Exception {
         String path = getClass().getName().replace(".", "/") + "_dto.sql";
         Param param = new Param();
         param.departmentId = 3;

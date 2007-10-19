@@ -41,7 +41,7 @@ public class AutoUpdateTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void testTx() throws Exception {
+    public void testExecuteTx() throws Exception {
         Department department = new Department();
         department.departmentId = 1;
         department.departmentName = "hoge";
@@ -63,7 +63,7 @@ public class AutoUpdateTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void test_includesVersionTx() throws Exception {
+    public void testExecute_includesVersionTx() throws Exception {
         Department department = new Department();
         department.departmentId = 1;
         department.departmentName = "hoge";
@@ -85,7 +85,7 @@ public class AutoUpdateTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void test_excludesNullTx() throws Exception {
+    public void testExecute_excludesNullTx() throws Exception {
         Department department = new Department();
         department.departmentId = 1;
         department.departmentName = "hoge";
@@ -107,7 +107,7 @@ public class AutoUpdateTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void test_includesTx() throws Exception {
+    public void testExecute_includesTx() throws Exception {
         Department department = new Department();
         department.departmentId = 1;
         department.departmentNo = 99;
@@ -132,7 +132,7 @@ public class AutoUpdateTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void test_excludesTx() throws Exception {
+    public void testExecute_excludesTx() throws Exception {
         Department department = new Department();
         department.departmentId = 1;
         department.departmentNo = 99;
@@ -157,7 +157,7 @@ public class AutoUpdateTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void test_changeFromTx() throws Exception {
+    public void testExecute_changeFromTx() throws Exception {
         Map<String, Object> m = new HashMap<String, Object>();
         m.put("departmentId", 1);
         Department before = jdbcManager.from(Department.class).where(m)
@@ -206,4 +206,5 @@ public class AutoUpdateTest extends S2TestCase {
         assertNull(department.location);
         assertEquals(2, department.version);
     }
+
 }

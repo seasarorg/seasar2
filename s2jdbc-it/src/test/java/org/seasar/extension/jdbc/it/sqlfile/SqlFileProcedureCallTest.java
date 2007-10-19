@@ -41,7 +41,7 @@ public class SqlFileProcedureCallTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void test_no_parameterTx() throws Exception {
+    public void testParameter_noneTx() throws Exception {
         if (!supportsProcedure()) {
             return;
         }
@@ -53,7 +53,7 @@ public class SqlFileProcedureCallTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void test_simpleType_parameterTx() throws Exception {
+    public void testParameter_simpleTypeTx() throws Exception {
         if (!supportsProcedure()) {
             return;
         }
@@ -66,7 +66,7 @@ public class SqlFileProcedureCallTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void test_dto_parameterTx() throws Exception {
+    public void testParameter_dtoTx() throws Exception {
         if (!supportsProcedure()) {
             return;
         }
@@ -84,7 +84,7 @@ public class SqlFileProcedureCallTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void test_one_resultTx() throws Exception {
+    public void testParameter_oneResultTx() throws Exception {
         if (!supportsProcedure()) {
             return;
         }
@@ -110,7 +110,7 @@ public class SqlFileProcedureCallTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void test_two_resultsTx() throws Exception {
+    public void testParameter_twoResultsTx() throws Exception {
         if (!supportsProcedure()) {
             return;
         }

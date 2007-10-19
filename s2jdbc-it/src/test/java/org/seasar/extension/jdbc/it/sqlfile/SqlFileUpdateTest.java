@@ -37,7 +37,7 @@ public class SqlFileUpdateTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void test_no_parameterTx() throws Exception {
+    public void testParameter_noneTx() throws Exception {
         String path = getClass().getName().replace(".", "/") + "_no.sql";
         int result = jdbcManager.updateBySqlFile(path, null).execute();
         assertEquals(1, result);
@@ -55,7 +55,7 @@ public class SqlFileUpdateTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void test_simple_parameterTx() throws Exception {
+    public void testParamter_simpleTypeTx() throws Exception {
         String path = getClass().getName().replace(".", "/")
                 + "_simpleType.sql";
         int result = jdbcManager.updateBySqlFile(path, 2).execute();
@@ -74,7 +74,7 @@ public class SqlFileUpdateTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void test_dto_parameterTx() throws Exception {
+    public void testParamter_dtoTx() throws Exception {
         String path = getClass().getName().replace(".", "/") + "_dto.sql";
         MyDto myDto = new MyDto();
         myDto.departmentId = 2;

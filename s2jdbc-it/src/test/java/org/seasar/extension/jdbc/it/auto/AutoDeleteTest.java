@@ -57,7 +57,7 @@ public class AutoDeleteTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void test_ignoreVersionTx() throws Exception {
+    public void testExecute_ignoreVersionTx() throws Exception {
         Employee employee = new Employee();
         employee.employeeId = 1;
         employee.version = 99;
@@ -87,4 +87,5 @@ public class AutoDeleteTest extends S2TestCase {
                 .getSingleResult();
         assertNull(employee);
     }
+
 }
