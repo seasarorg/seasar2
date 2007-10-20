@@ -28,7 +28,7 @@ public interface SqlUpdate extends Update<SqlUpdate> {
      * 
      * @param params
      *            パラメータの配列
-     * @return SQL更新
+     * @return このインスタンス自身
      */
     SqlUpdate params(Object... params);
 }

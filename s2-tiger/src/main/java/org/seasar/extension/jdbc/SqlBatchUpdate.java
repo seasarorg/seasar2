@@ -28,7 +28,7 @@ public interface SqlBatchUpdate extends BatchUpdate<SqlBatchUpdate> {
      * 
      * @param params
      *            パラメータの配列
-     * @return SQLバッチ更新
+     * @return このインスタンス自身
      */
     SqlBatchUpdate params(Object... params);
 }

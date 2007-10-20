@@ -37,7 +37,7 @@ public interface AutoSelect<T> extends Select<T, AutoSelect<T>> {
      * 
      * @param name
      *            結合するプロパティ名
-     * @return 自動検索
+     * @return このインスタンス自身
      * @see JoinMeta
      * @see #join(String, JoinType)
      */
@@ -55,7 +55,7 @@ public interface AutoSelect<T> extends Select<T, AutoSelect<T>> {
      *            結合するプロパティ名
      * @param joinType
      *            結合タイプ
-     * @return 自動検索
+     * @return このインスタンス自身
      * @see #join(String, JoinType, boolean)
      */
     AutoSelect<T> join(String name, JoinType joinType);
@@ -72,7 +72,7 @@ public interface AutoSelect<T> extends Select<T, AutoSelect<T>> {
      *            結合するプロパティ名
      * @param fetch
      *            関連するエンティティをフェッチするかどうか。
-     * @return 自動検索
+     * @return このインスタンス自身
      * @see #join(String, JoinType, boolean)
      */
     AutoSelect<T> join(String name, boolean fetch);
@@ -96,7 +96,7 @@ public interface AutoSelect<T> extends Select<T, AutoSelect<T>> {
      *            結合タイプ
      * @param fetch
      *            関連するエンティティをフェッチするかどうか。
-     * @return 自動検索
+     * @return このインスタンス自身
      */
     AutoSelect<T> join(String name, JoinType joinType, boolean fetch);
 
@@ -158,7 +158,7 @@ public interface AutoSelect<T> extends Select<T, AutoSelect<T>> {
      *            値がnullもしくはfalseだった場合、条件には追加されません。
      *            </p>
      * 
-     * @return 自動検索
+     * @return このインスタンス自身
      */
     AutoSelect<T> where(Map<String, Object> conditions);
 
@@ -170,7 +170,7 @@ public interface AutoSelect<T> extends Select<T, AutoSelect<T>> {
      * @param params
      *            パラメータの配列
      * 
-     * @return 自動検索
+     * @return このインスタンス自身
      */
     AutoSelect<T> where(String criteria, Object... params);
 
@@ -178,7 +178,7 @@ public interface AutoSelect<T> extends Select<T, AutoSelect<T>> {
      * ソート順を追加します。
      * 
      * @param orderBy
-     * @return 自動検索
+     * @return このインスタンス自身
      */
     AutoSelect<T> orderBy(String orderBy);
 
