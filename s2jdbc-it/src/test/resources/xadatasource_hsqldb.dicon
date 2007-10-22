@@ -15,5 +15,5 @@
 		<property name="user">"sa"</property>
 		<property name="password">""</property>
 	</component>
-	<component class="org.seasar.extension.jdbc.dialect.HSQLDialect"/>
+	<component class="org.seasar.extension.jdbc.dialect.HsqlDialect"/>
 </components>
