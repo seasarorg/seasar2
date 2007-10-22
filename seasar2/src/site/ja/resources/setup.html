@@ -41,6 +41,18 @@
 <td width="14"><img height="14" width="14" src="images/spacer.gif" alt="" /></td>
 <td width="740" class="main"><!-- don't edit end -->
 <!-- document start -->
+<h2>目次</h2>
+<ul>
+<li><a href="#dolteng">Doltengを使う場合</a></li>
+<li><a href="#notdolteng">Doltengを使わない場合</a>
+              <ul>
+                <li><a href="#s2framework">S2-Frameowrk</a>
+                <li><a href="#s2extension">S2-Extension</a>
+                <li><a href="#s2tiger">S2-Tiger</a>
+              </ul>
+              </li>
+</ul>
+<h2><a name="dolteng">Doltengを使う場合</a></h2>
 <p>Seasar2を最も簡単に試すには、Eclipseを使うのがお勧めです。
 次のソフトウェアをインストールしておきます。</p>
 <ul>
@@ -126,98 +138,115 @@ Hello World
 </pre>
 <p>入力が終わったら、hello.html を右クリックして、[Dolteng] -&gt; [View on Server]を選びましょう。
 http://localhost:8080/chura-tutorial/view/hello/hello.htmlにアクセスするはずです。
-無事にHello Worldと表示されたらプロジェクトの設定はうまくいっています。</p><br />
+無事にHello Worldと表示されたらプロジェクトの設定はうまくいっています。</p>
+<h2><a name="notdolteng">Doltengを使わない場合</a></h2>
 <p>Doltengを使わないSeasar2の設定方法は次のようになります。</p>
-<h2>S2-Framework</h2>
+<h2><a name="s2framework">S2-Framework</a></h2>
 <p>Seasar2の基本機能(S2Container, S2AOP)を利用する場合には以下のファイルをCLASSPATHに含める必要があります。</p>
 <ul>
-<li>lib/aopalliance-1.0.jar</li>
-<li>lib/commons-logging-1.1.jar</li>
+              <li>lib/s2-framework-2.4.x.jar
+              <li>lib/aopalliance-1.0.jar</li>
+              <li>lib/commons-logging-1.1.jar</li>
 <li>lib/javassist-3.4.ga.jar</li>
 <li>lib/ognl-2.6.9-patch-20070624.jar</li>
-<li>lib/s2-framework-2.4.x.jar</li>
-<li>lib/geronimo-j2ee_1.4_spec-1.0.jar (オプション，下記参照)</li>
-<li>lib/portlet-api-1.0.jar (オプション)</li>
-<li>lib/log4j-1.2.13.jar (オプション)</li>
-<li>resources/log4j.properties (オプション)</li>
-<li>resources/convention.dicon (オプション)</li>
-<li>resources/creator.dicon (オプション)</li>
-<li>resources/customizer.dicon (オプション)</li>
+              <li>lib/geronimo-j2ee_1.4_spec-1.0.jar (オプション、非J2EE環境で使う場合)</li>
+<li>lib/portlet-api-1.0.jar (オプション、Portletを使う場合)</li>
+<li>lib/log4j-1.2.13.jar (オプション、Log4Jを使う場合)</li>
+<li>resources/log4j.properties (オプション、Log4Jを使う場合)</li>
+<li>resources/convention.dicon (オプション、「<a href="DIContainer.html#SMARTdeploy">SMART deploy</a>」を使う場合)</li>
+<li>resources/creator.dicon (オプション、「<a href="DIContainer.html#SMARTdeploy">SMART deploy</a>」を使う場合)</li>
+<li>resources/customizer.dicon (オプション、「<a href="DIContainer.html#SMARTdeploy">SMART deploy</a>」を使う場合)</li>
 </ul>
-            <h2>S2-Extension</h2>
+            <h2><a name="s2extension">S2-Extension</a></h2>
             <p>Seasar2の拡張機能(S2JTA, S2DBCP, S2JDBC, S2Unit, S2Tx, S2DataSet)を利用する場合には以下のファイルを追加でCLASSPATHに含める必要があります。</p>
 <ul>
-<li>lib/junit-3.8.2.jar</li>
-<li>lib/poi-3.0-FINAL.jar</li>
-<li>lib/s2-extension-2.4.x.jar</li>
-<li>lib/geronimo-jta_1.1_spec-1.0.jar (オプション，下記参照)</li>
-              <li>lib/geronimo-jta_1.1_spec-1.0-tsr.jar (オプション，下記参照)
-              <li>lib/geronimo-ejb_2.1_spec-1.0.jar (オプション，下記参照)</li>
+              <li>lib/s2-extension-2.4.x.jar
+              <li>lib/junit-3.8.2.jar (オプション、単体テスト環境で使う場合)</li>
+              <li>lib/poi-3.0-FINAL.jar (オプション、「<a href="S2Unit.html#s2unitexcel">単体テストでExcelを使う</a>」場合)</li>
+              <li>lib/geronimo-jta_1.1_spec-1.0.jar (オプション，「<a href="#s2jta">S2JTAまたはS2Txを使う場合</a>」参照)</li>
+              <li>lib/geronimo-jta_1.1_spec-1.0-tsr.jar (オプション，「<a href="#s2jta">S2JTAまたはS2Txを使う場合</a>」参照)
+              <li>lib/geronimo-ejb_2.1_spec-1.0.jar (オプション，「<a href="#ejb">S2TxでEJB互換機能を使う場合</a>」参照)</li>
               <li>resources/jdbc.dicon</li>
 </ul>
 <p>アプリケーションの実行環境により、J2EE関連Jarファイルのいずれが必要になるかが異なります。</p>
+            <h3><a name="s2jta">S2JTAまたはS2Txを使う場合</a></h3>
+            <p>アプリケーションの実行環境により、geronimo-jta_1.1_spec-1.0.jarまたはgeronimo-jta_1.1_spec-1.0-tsr.jarが必要になります。</p>
             <table border="1">
-              <col span="5" align="center">
+              <col span="3" align="center">
               <tr>
 <th>環境</th>
-<th>geronimo-j2ee _1.4_spec-1.0.jar</th>
-<th>geronimo-jta _1.1_spec-1.0.jar</th>
-                  <th>geronimo-jta _1.1_spec-1.0-tsr.jar</th>
-                  <th>geronimo-ejb _2.1_spec-1.0.jar</th>
-</tr>
+                  <th>geronimo-jta_1.1_spec-1.0.jar</th>
+                  <th>geronimo-jta_1.1_spec-1.0-tsr.jar</th>
+                </tr>
 <tr align="center">
 <td>Servlet対応のWebコンテナ<br />
 (Tomcat等)</td>
-<td>-</td>
-<td><strong>要</strong><br />
-(S2JTA,S2Txを使う場合)</td>
+                  <td><strong>要</strong></td>
                   <td></td>
-                  <td><strong>要</strong><br />
-                  (S2TxでEJB互換機能を使う場合)</td>
-</tr>
+                </tr>
 <tr align="center">
 <td>J2EE1.4対応のAPサーバ</td>
-<td>-</td>
-<td>-</td>
-                  <td><strong>要</strong><br />
-                  (S2JTA,S2Txを使う場合)</td>
                   <td>-</td>
-</tr>
+                  <td><strong>要</strong></td>
+                </tr>
                 <tr>
                   <td>JavaEE5対応のAPサーバ</td>
-                  <td>-</td>
-                  <td>-</td>
                   <td>-</td>
                   <td>-</td>
                 </tr>
                 <tr align="center">
 <td>スタンドアロン</td>
-<td><strong>要</strong><br />
-(S2JTA,S2Txを使う場合)</td>
-<td><strong>要</strong><br />
-                  (S2JTA,S2Txを使う場合)</td>
+                  <td><strong>要</strong></td>
                   <td>-</td>
-                  <td><strong>要</strong><br />
-                  (S2TxでEJB互換機能を使う場合)</td>
-</tr>
+                </tr>
 </table>
-            <br />
-<p>データベースに関する機能を簡単に試すことができるように、RDBMSとしてHSQLDBを用意しています。オラクルでも直ぐに機能を試せるように、hsql/sql/demo-oracle.sqlが用意されています。SQL*Plusなどで実行した後、jdbc.diconの<a href="dbcp.html#Setup">XADataSourceImplの設定項目</a>を環境に合わせて書き換えてください。</p>
+            <h3><a name="ejb">S2TxでEJB互換機能を使う場合</a></h3>
+            <p>アプリケーションの実行環境により、geronimo-ejb_2.1_spec-1.0.jarが必要になります。</p>
+            <p>※<a href="#ejb3">S2-TigerでEJB3を使う</a>場合は必要ありません．</p>
+            <table border="1">
+              <col span="2" align="center">
+              <tbody>
+                <tr>
+<th>環境</th>
+                  <th>geronimo-ejb_2.1_spec-1.0.jar</th>
+</tr>
+<tr align="center">
+<td>Servlet対応のWebコンテナ<br>
+(Tomcat等)</td>
+                  <td><strong>要</strong></td>
+</tr>
+<tr align="center">
+<td>J2EE1.4対応のAPサーバ</td>
+                  <td>-</td>
+</tr>
+                <tr>
+                  <td>JavaEE5対応のAPサーバ</td>
+                  <td>-</td>
+                </tr>
+                <tr align="center">
+<td>スタンドアロン</td>
+                  <td><strong>要</strong></td>
+</tr>
+</tbody>
+            </table>
+            <p>データベースに関する機能を簡単に試すことができるように、RDBMSとしてHSQLDBを用意しています。オラクルでも直ぐに機能を試せるように、hsql/sql/demo-oracle.sqlが用意されています。SQL*Plusなどで実行した後、jdbc.diconの<a href="dbcp.html#Setup">XADataSourceImplの設定項目</a>を環境に合わせて書き換えてください。</p>
 <p><a href="http://www.seasar.org/updates.html">S2Container用のプラグインKijimuna</a>も是非ご利用ください。</p>
-            <h2>S2-Tiger</h2>
+            <h2><a name="s2tiger">S2-Tiger</a></h2>
             <p>Java5対応機能を使いたい場合は､S2Tiger-2.4.x.zipを解凍してできたs2-tigerディレクトリをEclipseで、 ｢ファイル→インポート→既存のプロジェクトをワークスペースへ｣でインポートしてください。
 Seasar2の設定の上に、さらに以下のファイルを追加でCLASSPATHに含める必要があります。</p>
 <ul>
 <li>lib/s2-tiger-2.4.x.jar</li>
-              <li>lib/geronimo-annotation_1.0_spec-1.0.jar (オプション，下記参照)</li>
-              <li>lib/geronimo-ejb_3.0_spec-1.0.jar (オプション，下記参照)</li>
-              <li>lib/geronimo-interceptor_3.0_spec-1.0.jar (オプション，下記参照)</li>
-              <li>lib/geronimo-jpa_3.0_spec-1.0.jar (オプション，下記参照)</li>
+              <li>lib/geronimo-jpa_3.0_spec-1.0.jar (オプション，「<a href="#s2jdbc">S2JDBCまたはJPAを使う場合</a>」参照)
+              <li>lib/geronimo-annotation_1.0_spec-1.0.jar (オプション，「<a href="#ejb3">EJB3を使う場合</a>」参照)</li>
+              <li>lib/geronimo-ejb_3.0_spec-1.0.jar (オプション，「<a href="#ejb3">EJB3を使う場合</a>」参照)</li>
+              <li>lib/geronimo-interceptor_3.0_spec-1.0.jar (オプション，「<a href="#ejb3">EJB3を使う場合</a>」参照)</li>
+              <li></li>
             </ul>
             <p>オプションのJarファイルは、S2JDBCやEJB3、JPAのサポート機能をJavaEE5対応でない環境で使う場合に必要となります。詳細は以下の表を参照してください。</p>
-<h3>S2JDBC拡張機能またはJPAを使う場合</h3>
-<table border="1">
-              <col span="5" align="center">
+<h3><a name="s2jdbc">S2JDBC拡張機能またはJPAを使う場合</a></h3>
+            <p>アプリケーションの実行環境により、gegeronimo-jpa _3.0_spec-1.0.jarが必要になります。</p>
+            <table border="1">
+              <col span="2" align="center">
               <tbody>
                 <tr>
 <th>環境</th>
@@ -242,15 +271,19 @@ Seasar2の設定の上に、さらに以下のファイルを追加でCLASSPATH�
 </tr>
               </tbody>
             </table>
-<h3>EJB3を使う場合</h3>
-<table border="1">
-              <col span="5" align="center">
+<h3><a name="ejb3">EJB3を使う場合</a></h3>
+            <p>アプリケーションの実行環境により、geronimo-annotation_1.0_spec-1.0.jar、geronimo-ejb_3.0_spec-1.0.jar、geronimo-interceptor_3.0_spec-1.0.jarが必要になります。</p>
+            <table border="1">
+              <col span="4" align="center">
               <tbody>
                 <tr>
 <th>環境</th>
-<th>geronimo-annotation _1.0_spec-1.0.jar</th>
-                  <th>geronimo-ejb _3.0_spec-1.0.jar</th>
-                  <th>geronimo-interceptor _3.0_spec-1.0.jar</th>
+<th>geronimo-annotation_<br>
+                  1.0_spec-1.0.jar</th>
+                  <th>geronimo-ejb_<br>
+                  3.0_spec-1.0.jar</th>
+                  <th>geronimo-interceptor_<br>
+                  3.0_spec-1.0.jar</th>
                 </tr>
                 <tr>
 <td>Servlet2.4対応のWebコンテナ<br>
@@ -261,7 +294,7 @@ Seasar2の設定の上に、さらに以下のファイルを追加でCLASSPATH�
                 </tr>
                 <tr>
                   <td>Servlet2.5対応のWebコンテナ<br>
-                  (Tomcat6)</td>
+                  (Tomcat6等)</td>
                   <td>-</td>
                   <td><strong>要</strong></td>
                   <td><strong>要</strong></td>
