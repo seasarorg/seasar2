@@ -213,20 +213,6 @@ XADataSourceのインスタンスを設定します。S2Containerで設定する
 &lt;/components&gt;
 </pre>
 
-<h3><a name="OracleUnicode">オラクルのUnicode問題</a></h3>
-<p>OracleのJDBC Driverは、Unicodeのマッピングに一部問題があり、～が化ける場合があります。
-これに対応するためには、BasicResultSetFactoryのかわりに、
-OracleResultSetFactoryを使います。
-詳細は<a href="s2jdbc.html#OracleUnicode">オラクルのUnicode問題</a>を参照してください。
-</p>
-
-<h3><a name="BooleanToInt">Booleanの扱い</a></h3>
-<p>
-Javaではbooleanで扱いたいけど、データベースがbooleanに対応していない場合は、
-BasicStatementFactoryのかわりに、BooleanToIntStatementFactoryを使います。
-詳細は<a href="s2jdbc.html#BooleanToInt">Booleanの扱い</a>を参照してください。
-</p>
-
 <!-- document end -->
 <!-- don't edit start --></td>
 <td width="14"><img height="14" width="14" src="images/spacer.gif" alt="" /></td>

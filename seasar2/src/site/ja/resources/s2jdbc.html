@@ -75,7 +75,12 @@
 <li><a href="#getResultList">複数件検索</a></li>
 <li><a href="#getSingleResult">1件検索</a></li>
 <li><a href="#join">結合</a></li>
-<li><a href="#where">条件指定</a></li>
+<li><a href="#where">検索条件</a></li>
+<li><a href="#orderBy">ソート順</a></li>
+<li><a href="#paging">ページング</a></li>
+<li><a href="#maxRows">最大行数</a></li>
+<li><a href="#fetchSize">フェッチサイズ</a></li>
+<li><a href="#queryTimeout">クエリタイムアウト</a></li>
 </ul>
 <li><a href="#other">その他の機能</a>
 <ul>
@@ -1029,9 +1034,369 @@ List&lt;Department&gt; results = jdbcManager.from(Department.class)
 いくつでもネストすることが可能です。
 </p>
 
-<h3><a name="where">条件指定</a></h3>
+<h3><a name="where">検索条件</a></h3>
 <p>
+検索条件を指定する場合は、where()を使います。
+where()に書くことのできる条件は、SQLと同じです。
+SQLとの違いは、カラム名の変わりにプロパティ名を書くことです。
+関連先のプロパティを指定する場合は、join()で指定した名前. プロパティ名になります。
 </p>
+<pre>
+jdbcManager.from(Department.class)
+    .join("employeeList")
+    .join("employeeList.address")
+    .where("employeeList.salary between ? and ? and employeeList.address.street like ?", ...)
+    .getResultList();
+</pre>
+<p>
+検索条件の入力画面などでは、ユーザの入力があった部分をandでつないで、
+条件を組み立てるということが良く行われます。
+このようなケースを簡単に処理するために、
+SimpleWhereとMapでも、検索条件を指定できるようにしています。
+</p>
+<p>
+名前、仕事タイプ、給与の上限下限を条件に検索する画面を考えてみましょう。
+べたに検索条件を組み立てるとはこんな感じになるはずです。
+</p>
+<pre>
+public String departmentName;
+public String[] jobTypes = new String[0];
+public BigDecimal salaryMax;
+public BigDecimal salaryMin;
+...
+StringBuilder sb = new StringBuilder(100);
+boolean found = false;
+List&lt;Object&gt; values = new ArrayList&lt;Object&gt;();
+if (departmentName != null) {
+    sb.append("department.name = ?");
+    values.add(departmentName);
+    found = true;
+}
+if (jobTypes.length > 0) {
+    if (found) {
+        sb.append(" and ");
+    }
+    sb.append("jobType in (");
+    for (JobType jt : jobTypes) {
+        sb.append("?, ");
+        values.add(jt);
+    }
+    sb.setLength(sb.length() - 2);
+    sb.append(")");
+    found = true;
+}
+if (salaryMin != null) {
+    if (found) {
+        sb.append(" and ");
+    }
+    sb.append("salary >= ?");
+    values.add(salaryMin);
+    found = true;
+}
+if (salaryMax != null) {
+    if (found) {
+        sb.append(" and ");
+    }
+    sb.append("salary <= ?");
+    values.add(salaryMax);
+    found = true;
+}
+jdbcManager.from(Employee.class).where(sb.toString(), values.toArray()).getResultList();
+</pre>
+<p>
+SimpleWhereを使って組み立てれば、こんなに簡単になります。
+</p>
+<pre>
+public String departmentName;
+public String[] jobTypes = new String[0];
+public BigDecimal salaryMax;
+public BigDecimal salaryMin;
+...
+jdbcManager.from(Employee.class).where(
+    new SimpleWhere().eq("department.name", departmentName).in("jobType", jobTypes)
+        .ge("salary", salaryMin).le("salary", salaryMax))
+    .getResultList();
+</pre>
+<p>
+SimpleWhereには次のメソッドがあります。
+</p>
+<p>
+<table border="1">
+<tr bgcolor="#D1F3F4" align="center">
+<th width="260px">メソッド</th>
+<th>説明</th>
+</tr>
+<tr>
+<td>eq(String propertyName, Object value)</td>
+<td><code>propertyName = ?</code>の条件を追加します。valueがnullの時は追加されません。</td>
+</tr>
+<tr>
+<td>ne(String propertyName, Object value)</td>
+<td><code>propertyName &lt;&gt; ?</code>の条件を追加します。valueがnullの時は追加されません。
+</td>
+</tr>
+<tr>
+<td>lt(String propertyName, Object value)</td>
+<td><code>propertyName &lt; ?</code>の条件を追加します。valueがnullの時は追加されません。</td>
+</tr>
+<tr>
+<td>le(String propertyName, Object value)</td>
+<td><code>propertyName &lt;= ?</code>の条件を追加します。valueがnullの時は追加されません。
+</td>
+</tr>
+<tr>
+<td>gt(String propertyName, Object value)</td>
+<td><code>propertyName &gt; ?</code>の条件を追加します。valueがnullの時は追加されません。
+</td>
+</tr>
+<tr>
+<td>ge(String propertyName, Object value)</td>
+<td><code>propertyName &gt;= ?</code>の条件を追加します。valueがnullの時は追加されません。
+</td>
+</tr>
+<tr>
+<td>in(String propertyName, Object... values)</td>
+<td><code>propertyName in (?, ...)</code>の条件を追加します。
+valuesの配列の長さが0の時は追加されません。
+</td>
+</tr>
+<tr>
+<td>not in(String propertyName, Object... values)</td>
+<td><code>propertyName not in (?, ...)</code>の条件を追加します。
+valuesの配列の長さが0の時は追加されません。
+</td>
+</tr>
+<tr>
+<td>like(String propertyName, String value)</td>
+<td><code>propertyName like ?</code>の条件を追加します。
+valueがnullの時は追加されません。
+</td>
+</tr>
+<tr>
+<td>starts(String propertyName, String value)</td>
+<td><code>propertyName like ?</code>の条件を追加します。
+valueがnullの時は追加されません。
+valueの最後に自動的に<code>%</code>が追加されます。
+</td>
+</tr>
+<tr>
+<td>ends(String propertyName, String value)</td>
+<td><code>propertyName like ?</code>の条件を追加します。
+valueがnullの時は追加されません。
+valueの最初に自動的に<code>%</code>が追加されます。
+</td>
+</tr>
+<tr>
+<td>contains(String propertyName, String value)</td>
+<td><code>propertyName like ?</code>の条件を追加します。
+valueがnullの時は追加されません。
+valueの最初と最後に自動的に<code>%</code>が追加されます。
+</td>
+</tr>
+<tr>
+<td>isNull(String propertyName, Boolean value)</td>
+<td><code>propertyName is null</code>の条件を追加します。
+valueがnullあるいはBoolean.FALSEの時は追加されません。
+</td>
+</tr>
+<tr>
+<td>isNotNull(String propertyName, Boolean value)</td>
+<td><code>propertyName is not null</code>の条件を追加します。
+valueがnullあるいはBoolean.FALSEの時は追加されません。
+</td>
+</tr>
+</table>
+</p>
+<p>
+Mapを使うと次のようになります。
+</p>
+<pre>
+public String departmentName;
+public String[] jobTypes = new String[0];
+public BigDecimal salaryMax;
+public BigDecimal salaryMin;
+...
+Map&lt;String, Object&gt; w = new HashMap&lt;String, Object&gt;();
+w.put("department.name", departmentName);
+w.put("jobType_IN", jobTypes);
+w.put("salary_LE", salaryMax);
+w.put("salary_GE", salaryMin);
+jdbcManager.from(Employee.class).where(w).getResultList();
+</pre>
+<p>
+マップのキーにプロパティ名_サフィックスを指定します。
+サフィックスがない場合は、<code>_EQ</code>が指定されたとみなされます。
+</p>
+<p>
+次のサフィックスを使うことができます。
+</p>
+<p>
+<table border="1">
+<tr bgcolor="#D1F3F4" align="center">
+<th>サフィックス</th>
+<th>説明</th>
+</tr>
+<tr>
+<td>_EQ</td>
+<td><code>propertyName = ?</code>の条件を追加します。valueがnullの時は追加されません。
+</td>
+</tr>
+<tr>
+<td>_NE</td>
+<td><code>propertyName &lt;&gt; ?</code>の条件を追加します。valueがnullの時は追加されません。
+</td>
+</tr>
+<tr>
+<td>_LT</td>
+<td><code>propertyName &lt; ?</code>の条件を追加します。valueがnullの時は追加されません。
+</td>
+</tr>
+<tr>
+<td>_LE</td>
+<td><code>propertyName &lt;= ?</code>の条件を追加します。valueがnullの時は追加されません。
+</td>
+</tr>
+<tr>
+<td>_GT</td>
+<td><code>propertyName &gt; ?</code>の条件を追加します。valueがnullの時は追加されません。
+</td>
+</tr>
+<tr>
+<td>_GE</td>
+<td><code>propertyName &gt;= ?</code>の条件を追加します。valueがnullの時は追加されません。
+</td>
+</tr>
+<tr>
+<td>_IN</td>
+<td><code>propertyName in (?, ...)</code>の条件を追加します。
+valuesの配列の長さが0の時は追加されません。
+値は配列のみをサポートしています。</td>
+</tr>
+<tr>
+<td>_NOT_IN</td>
+<td><code>propertyName not in (?, ...)</code>の条件を追加します。
+valuesの配列の長さが0の時は追加されません。
+値は配列のみをサポートしています。</td>
+</tr>
+<tr>
+<td>_LIKE</td>
+<td><code>propertyName like ?</code>の条件を追加します。
+valueがnullの時は追加されません。
+</td>
+</tr>
+<tr>
+<td>_STARTS</td>
+<td><code>propertyName like ?</code>の条件を追加します。
+valueがnullの時は追加されません。
+valueの最後に自動的に<code>%</code>が追加されます。
+</td>
+</tr>
+<tr>
+<td>_ENDS</td>
+<td><code>propertyName like ?</code>の条件を追加します。
+valueがnullの時は追加されません。
+valueの最初に自動的に<code>%</code>が追加されます。
+</td>
+</tr>
+<tr>
+<td>_CONTAINS</td>
+<td><code>propertyName like ?</code>の条件を追加します。
+valueがnullの時は追加されません。
+valueの最初と最後に自動的に<code>%</code>が追加されます。
+</td>
+</tr>
+<tr>
+<td>_IS_NULL</td>
+<td><code>propertyName is null</code>の条件を追加します。
+valueがnullあるいはBoolean.FALSEの時は追加されません。
+値はBooleanのみをサポートしています。
+</td>
+<tr>
+<td>_IS_NOT_NULL</td>
+<td><code>propertyName is not null</code>の条件を追加します。
+valueがnullあるいはBoolean.FALSEの時は追加されません。
+値はBooleanのみをサポートしています。</td>
+</tr>
+</table>
+</p>
+<p>
+マップの組み立てを手動でやる必要は、基本的にありません。
+なぜなら、SimpleWhereのほうが便利だからです。
+マップを使う場合は、次のように<code>org.seasar.framework.beans.util.BeanUtil.createProperties()</code>と組み合わせます。
+<code>createProperties()</code>の第二引数には、プロパティ名のプレフィックスを指定します。
+プレフィックスを指定した場合、プレフィックスを持つプロパティだけが対象になります。
+プロパティ名がマップのキーに変換されるときに、
+プレフィックスは削除され、'$'は'.'に変換されます。
+</p>
+<pre>
+public String where_department$name;
+public String[] where_jobType_IN = new String[0];
+public BigDecimal where_salary_LE;
+public BigDecimal where_salary_GE;
+...
+jdbcManager.from(Employee.class).where(BeanUtil.createProperties(this, "where_")).getResultList();
+</pre>
+
+<h3><a name="orderBy">ソート順</a></h3>
+<p>
+ソート順を指定する場合は、<code>orderBy()</code>を使います。
+<code>orderBy()</code>に書くことのできる条件は、SQLと同じです。
+SQLとの違いは、カラム名の変わりにプロパティ名を書くことです。
+関連先のプロパティを指定する場合は、join()で指定した名前. プロパティ名になります。
+</p>
+<pre>
+jdbcManager.from(Employee.class)
+    .join("department")
+    .orderBy("name, department.name")
+    .getResultList();
+</pre>
+
+<h3><a name="paging">ページング</a></h3>
+<p>
+ページングを指定する場合は、<code>limit(), offset()</code>を使います。
+<code>limit()</code>には、取得する行数を指定します。
+<code>offset()</code>には、最初に取得する行の位置を指定します。
+最初の行の位置は0になります。
+ページングを指定するには、必ず<a href="#orderBy">ソート順</a>の指定も必要です。
+</p>
+<pre>
+jdbcManager.from(Employee.class)
+    .orderBy("name")
+    .limit(100)
+    .offset(10)
+    .getResultList();
+</pre>
+
+<h3><a name="maxRows">最大行数</a></h3>
+<p>
+最大行数を指定する場合は、<code>maxRows()</code>を使います。
+最大行数を超える行は、通知なしに除外されます。
+</p>
+<pre>
+jdbcManager.from(Employee.class)
+    .maxRows(1000)
+    .getResultList();
+</pre>
+
+<h3><a name="fetchSize">フェッチサイズ</a></h3>
+<p>
+フェッチサイズを指定する場合は、<code>fetchSize()</code>を使います。
+</p>
+<pre>
+jdbcManager.from(Employee.class)
+    .fetchSize(100)
+    .getResultList();
+</pre>
+
+<h3><a name="queryTimeout">クエリタイムアウト</a></h3>
+<p>
+クエリタイムアウト(秒)を指定する場合は、<code>queryTimeout()</code>を使います。
+</p>
+<pre>
+jdbcManager.from(Employee.class)
+    .queryTimeout(10)
+    .getResultList();
+</pre>
 
 <h2><a name="other">その他の機能</a></h2>
 
