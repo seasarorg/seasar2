@@ -97,7 +97,7 @@ public class JdbcManagerImpl implements JdbcManager, Synchronization {
     /**
      * デフォルトのフェッチサイズです。
      */
-    protected int fetchSize = 100;
+    protected int fetchSize = 0;
 
     /**
      * デフォルトのクエリタイムアウトです。
