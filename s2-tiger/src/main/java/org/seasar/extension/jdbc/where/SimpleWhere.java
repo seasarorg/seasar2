@@ -66,7 +66,7 @@ public class SimpleWhere implements Where {
      * @return このインスタンス自身
      */
     public SimpleWhere eq(String propertyName, Object value) {
-        if (value != null) {
+        if (ConditionType.EQ.isTarget(value)) {
             addCondition(ConditionType.EQ, propertyName, value);
         }
         return this;
@@ -80,7 +80,7 @@ public class SimpleWhere implements Where {
      * @return このインスタンス自身
      */
     public SimpleWhere ne(String propertyName, Object value) {
-        if (value != null) {
+        if (ConditionType.NE.isTarget(value)) {
             addCondition(ConditionType.NE, propertyName, value);
         }
         return this;
@@ -94,7 +94,7 @@ public class SimpleWhere implements Where {
      * @return このインスタンス自身
      */
     public SimpleWhere lt(String propertyName, Object value) {
-        if (value != null) {
+        if (ConditionType.LT.isTarget(value)) {
             addCondition(ConditionType.LT, propertyName, value);
         }
         return this;
@@ -108,7 +108,7 @@ public class SimpleWhere implements Where {
      * @return このインスタンス自身
      */
     public SimpleWhere le(String propertyName, Object value) {
-        if (value != null) {
+        if (ConditionType.LE.isTarget(value)) {
             addCondition(ConditionType.LE, propertyName, value);
         }
         return this;
@@ -122,7 +122,7 @@ public class SimpleWhere implements Where {
      * @return このインスタンス自身
      */
     public SimpleWhere gt(String propertyName, Object value) {
-        if (value != null) {
+        if (ConditionType.GT.isTarget(value)) {
             addCondition(ConditionType.GT, propertyName, value);
         }
         return this;
@@ -136,7 +136,7 @@ public class SimpleWhere implements Where {
      * @return このインスタンス自身
      */
     public SimpleWhere ge(String propertyName, Object value) {
-        if (value != null) {
+        if (ConditionType.GE.isTarget(value)) {
             addCondition(ConditionType.GE, propertyName, value);
         }
         return this;
@@ -150,7 +150,7 @@ public class SimpleWhere implements Where {
      * @return このインスタンス自身
      */
     public SimpleWhere in(String propertyName, Object... values) {
-        if (values != null && values.length > 0) {
+        if (ConditionType.IN.isTarget(values)) {
             addCondition(ConditionType.IN, propertyName, values);
         }
         return this;
@@ -164,7 +164,7 @@ public class SimpleWhere implements Where {
      * @return このインスタンス自身
      */
     public SimpleWhere notIn(String propertyName, Object... values) {
-        if (values != null && values.length > 0) {
+        if (ConditionType.NOT_IN.isTarget(values)) {
             addCondition(ConditionType.NOT_IN, propertyName, values);
         }
         return this;
@@ -177,8 +177,8 @@ public class SimpleWhere implements Where {
      * @param value
      * @return このインスタンス自身
      */
-    public SimpleWhere like(String propertyName, Object value) {
-        if (value != null) {
+    public SimpleWhere like(String propertyName, String value) {
+        if (ConditionType.LIKE.isTarget(value)) {
             addCondition(ConditionType.LIKE, propertyName, value);
         }
         return this;
@@ -191,8 +191,8 @@ public class SimpleWhere implements Where {
      * @param value
      * @return このインスタンス自身
      */
-    public SimpleWhere starts(String propertyName, Object value) {
-        if (value != null) {
+    public SimpleWhere starts(String propertyName, String value) {
+        if (ConditionType.STARTS.isTarget(value)) {
             addCondition(ConditionType.STARTS, propertyName, value);
         }
         return this;
@@ -205,8 +205,8 @@ public class SimpleWhere implements Where {
      * @param value
      * @return このインスタンス自身
      */
-    public SimpleWhere ends(String propertyName, Object value) {
-        if (value != null) {
+    public SimpleWhere ends(String propertyName, String value) {
+        if (ConditionType.ENDS.isTarget(value)) {
             addCondition(ConditionType.ENDS, propertyName, value);
         }
         return this;
@@ -219,8 +219,8 @@ public class SimpleWhere implements Where {
      * @param value
      * @return このインスタンス自身
      */
-    public SimpleWhere contains(String propertyName, Object value) {
-        if (value != null) {
+    public SimpleWhere contains(String propertyName, String value) {
+        if (ConditionType.CONTAINS.isTarget(value)) {
             addCondition(ConditionType.CONTAINS, propertyName, value);
         }
         return this;
@@ -233,8 +233,8 @@ public class SimpleWhere implements Where {
      * @param value
      * @return このインスタンス自身
      */
-    public SimpleWhere isNull(String propertyName, Object value) {
-        if (value != null && Boolean.TRUE.equals(value)) {
+    public SimpleWhere isNull(String propertyName, Boolean value) {
+        if (ConditionType.IS_NULL.isTarget(value)) {
             addCondition(ConditionType.IS_NULL, propertyName, value);
         }
         return this;
@@ -247,8 +247,8 @@ public class SimpleWhere implements Where {
      * @param value
      * @return このインスタンス自身
      */
-    public SimpleWhere isNotNull(String propertyName, Object value) {
-        if (value != null && Boolean.TRUE.equals(value)) {
+    public SimpleWhere isNotNull(String propertyName, Boolean value) {
+        if (ConditionType.IS_NOT_NULL.isTarget(value)) {
             addCondition(ConditionType.IS_NOT_NULL, propertyName, value);
         }
         return this;
