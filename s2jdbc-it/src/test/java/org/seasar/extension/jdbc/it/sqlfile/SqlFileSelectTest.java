@@ -18,6 +18,8 @@ package org.seasar.extension.jdbc.it.sqlfile;
 import java.math.BigDecimal;
 import java.util.List;
 
+import javax.persistence.NonUniqueResultException;
+
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.it.entity.Employee;
 import org.seasar.extension.unit.S2TestCase;
@@ -167,6 +169,44 @@ public class SqlFileSelectTest extends S2TestCase {
         assertEquals("BLAKE", list.get(0).employeeName);
         assertEquals("MARTIN", list.get(1).employeeName);
         assertEquals("TURNER", list.get(2).employeeName);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testGetSingleResult() throws Exception {
+        String path = getClass().getName().replace(".", "/")
+                + "_getSingleResult.sql";
+        Employee employee = jdbcManager.selectBySqlFile(Employee.class, path)
+                .getSingleResult();
+        assertNotNull(employee);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testGetSingleResult_null() throws Exception {
+        String path = getClass().getName().replace(".", "/")
+                + "_getSingleResult_null.sql";
+        Employee employee = jdbcManager.selectBySqlFile(Employee.class, path)
+                .getSingleResult();
+        assertNull(employee);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testGetSingleResult_NonUniqueResultException() throws Exception {
+        String path = getClass().getName().replace(".", "/")
+                + "_getSingleResult_NonUniqueResultException.sql";
+        try {
+            jdbcManager.selectBySqlFile(Employee.class, path).getSingleResult();
+            fail();
+        } catch (NonUniqueResultException e) {
+        }
     }
 
     /**

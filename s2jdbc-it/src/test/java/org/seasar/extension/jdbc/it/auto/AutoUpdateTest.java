@@ -213,7 +213,7 @@ public class AutoUpdateTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void testSOptimisticLockExceptionTx() throws Exception {
+    public void testOptimisticLockExceptionTx() throws Exception {
         Employee employee1 = jdbcManager.from(Employee.class).where(
                 "employeeId = ?", 1).getSingleResult();
         Employee employee2 = jdbcManager.from(Employee.class).where(

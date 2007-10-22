@@ -20,8 +20,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.OptimisticLockException;
+
 import org.seasar.extension.jdbc.JdbcManager;
-import org.seasar.extension.jdbc.exception.SOptimisticLockException;
 import org.seasar.extension.jdbc.it.entity.CompKeyDepartment;
 import org.seasar.extension.jdbc.it.entity.Department;
 import org.seasar.extension.jdbc.it.entity.Employee;
@@ -262,7 +263,7 @@ public class AutoBatchUpdateTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void testSOptimisticLockExceptionTx() throws Exception {
+    public void testOptimisticLockExceptionTx() throws Exception {
         Employee employee1 = jdbcManager.from(Employee.class).where(
                 "employeeId = ?", 1).getSingleResult();
         Employee employee2 = jdbcManager.from(Employee.class).where(
@@ -273,7 +274,7 @@ public class AutoBatchUpdateTest extends S2TestCase {
         try {
             jdbcManager.updateBatch(employee2, employee3).executeBatch();
             fail();
-        } catch (SOptimisticLockException ignore) {
+        } catch (OptimisticLockException ignore) {
         }
     }
 
@@ -281,7 +282,7 @@ public class AutoBatchUpdateTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void testSOptimisticLockException_includesVersionTx()
+    public void testOptimisticLockException_includesVersionTx()
             throws Exception {
         Employee employee1 = jdbcManager.from(Employee.class).where(
                 "employeeId = ?", 1).getSingleResult();

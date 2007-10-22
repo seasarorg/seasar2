@@ -17,6 +17,8 @@ package org.seasar.extension.jdbc.it.sql;
 
 import java.util.List;
 
+import javax.persistence.NonUniqueResultException;
+
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.it.entity.Employee;
 import org.seasar.extension.unit.S2TestCase;
@@ -137,5 +139,40 @@ public class SqlSelectTest extends S2TestCase {
         List<Employee> list = jdbcManager.selectBySql(Employee.class, sql, 2,
                 3000).getResultList();
         assertEquals(2, list.size());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testGetSingleResult() throws Exception {
+        String sql = "select * from Employee where employee_Id = 1";
+        Employee employee = jdbcManager.selectBySql(Employee.class, sql)
+                .getSingleResult();
+        assertNotNull(employee);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testGetSingleResult_null() throws Exception {
+        String sql = "select * from Employee where employee_Id = 100";
+        Employee employee = jdbcManager.selectBySql(Employee.class, sql)
+                .getSingleResult();
+        assertNull(employee);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testGetSingleResult_NonUniqueResultException() throws Exception {
+        String sql = "select * from Employee where department_Id = 1";
+        try {
+            jdbcManager.selectBySql(Employee.class, sql).getSingleResult();
+            fail();
+        } catch (NonUniqueResultException e) {
+        }
     }
 }

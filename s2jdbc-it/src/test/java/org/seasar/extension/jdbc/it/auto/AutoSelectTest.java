@@ -19,10 +19,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.NonUniqueResultException;
+
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.JoinType;
+import org.seasar.extension.jdbc.exception.NonArrayInConditionRuntimeException;
+import org.seasar.extension.jdbc.exception.NonBooleanIsNullConditionRuntimeException;
 import org.seasar.extension.jdbc.it.entity.Department;
 import org.seasar.extension.jdbc.it.entity.Employee;
+import org.seasar.extension.jdbc.where.SimpleWhere;
 import org.seasar.extension.unit.S2TestCase;
 
 import static java.util.Arrays.*;
@@ -177,7 +182,7 @@ public class AutoSelectTest extends S2TestCase {
      */
     public void testWhere_in() throws Exception {
         Map<String, Object> m = new HashMap<String, Object>();
-        m.put("employeeNo_IN", asList(7654, 7900, 7934));
+        m.put("employeeNo_IN", new Object[] { 7654, 7900, 7934 });
         List<Employee> list = jdbcManager.from(Employee.class).where(m)
                 .getResultList();
         assertEquals(3, list.size());
@@ -187,12 +192,42 @@ public class AutoSelectTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void testWhere_not_in() throws Exception {
+    public void testWhere_in_NonArrayInConditionRuntimeException()
+            throws Exception {
         Map<String, Object> m = new HashMap<String, Object>();
-        m.put("employeeNo_NOT_IN", asList(7654, 7900, 7934));
+        m.put("employeeNo_IN", asList(7654, 7900, 7934));
+        try {
+            jdbcManager.from(Employee.class).where(m).getResultList();
+            fail();
+        } catch (NonArrayInConditionRuntimeException e) {
+        }
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testWhere_notIn() throws Exception {
+        Map<String, Object> m = new HashMap<String, Object>();
+        m.put("employeeNo_NOT_IN", new Object[] { 7654, 7900, 7934 });
         List<Employee> list = jdbcManager.from(Employee.class).where(m)
                 .getResultList();
         assertEquals(11, list.size());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testWhere_notIn_NonArrayInConditionRuntimeException()
+            throws Exception {
+        Map<String, Object> m = new HashMap<String, Object>();
+        m.put("employeeNo_NOT_IN", asList(7654, 7900, 7934));
+        try {
+            jdbcManager.from(Employee.class).where(m).getResultList();
+            fail();
+        } catch (NonArrayInConditionRuntimeException e) {
+        }
     }
 
     /**
@@ -248,7 +283,7 @@ public class AutoSelectTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void testWhere_is_null() throws Exception {
+    public void testWhere_isNull() throws Exception {
         Map<String, Object> m = new HashMap<String, Object>();
         m.put("managerId_IS_NULL", true);
         List<Employee> list = jdbcManager.from(Employee.class).where(m)
@@ -260,12 +295,42 @@ public class AutoSelectTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void testWhere_is_not_null() throws Exception {
+    public void testWhere_isNull_NonBooleanIsNullConditionRuntimeException()
+            throws Exception {
+        Map<String, Object> m = new HashMap<String, Object>();
+        m.put("managerId_IS_NULL", "true");
+        try {
+            jdbcManager.from(Employee.class).where(m).getResultList();
+            fail();
+        } catch (NonBooleanIsNullConditionRuntimeException e) {
+        }
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testWhere_isNotNull() throws Exception {
         Map<String, Object> m = new HashMap<String, Object>();
         m.put("managerId_IS_NOT_NULL", true);
         List<Employee> list = jdbcManager.from(Employee.class).where(m)
                 .getResultList();
         assertEquals(13, list.size());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testWhere_isNotNull_NonBooleanIsNullConditionRuntimeException()
+            throws Exception {
+        Map<String, Object> m = new HashMap<String, Object>();
+        m.put("managerId_IS_NOT_NULL", "true");
+        try {
+            jdbcManager.from(Employee.class).where(m).getResultList();
+            fail();
+        } catch (NonBooleanIsNullConditionRuntimeException e) {
+        }
     }
 
     /**
@@ -293,5 +358,38 @@ public class AutoSelectTest extends S2TestCase {
                 JoinType.INNER).join("department").join("address").where(m)
                 .getResultList();
         assertEquals(3, list.size());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testGetSingleResult() throws Exception {
+        Employee employee = jdbcManager.from(Employee.class).where(
+                new SimpleWhere().eq("employeeId", 1)).getSingleResult();
+        assertNotNull(employee);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testGetSingleResult_null() throws Exception {
+        Employee employee = jdbcManager.from(Employee.class).where(
+                new SimpleWhere().eq("employeeId", 100)).getSingleResult();
+        assertNull(employee);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testGetSingleResult_NonUniqueResultException() throws Exception {
+        try {
+            jdbcManager.from(Employee.class).where(
+                    new SimpleWhere().eq("departmentId", 1)).getSingleResult();
+            fail();
+        } catch (NonUniqueResultException e) {
+        }
     }
 }
