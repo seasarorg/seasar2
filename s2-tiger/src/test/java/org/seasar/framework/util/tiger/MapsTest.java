@@ -28,13 +28,12 @@ public class MapsTest extends TestCase {
     /**
      * @throws Exception
      */
-    @SuppressWarnings("unchecked")
     public void test() throws Exception {
-        // TODO
-        Map<String, Integer> map = map($("a", 1), $("b", 2), $("c", 3));
+        Map<String, Integer> map = map("a", 1).$("b", 2).$("c", 3).$();
         assertEquals(3, map.size());
         assertEquals(new Integer(1), map.get("a"));
         assertEquals(new Integer(2), map.get("b"));
         assertEquals(new Integer(3), map.get("c"));
     }
+
 }
