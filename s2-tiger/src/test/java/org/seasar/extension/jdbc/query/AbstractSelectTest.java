@@ -28,8 +28,8 @@ import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.ResultSetHandler;
 import org.seasar.extension.jdbc.SqlLogRegistry;
 import org.seasar.extension.jdbc.SqlLogRegistryLocator;
-import org.seasar.extension.jdbc.dialect.DB2Dialect;
-import org.seasar.extension.jdbc.dialect.MySQLDialect;
+import org.seasar.extension.jdbc.dialect.Db2Dialect;
+import org.seasar.extension.jdbc.dialect.MysqlDialect;
 import org.seasar.extension.jdbc.dialect.PostgreDialect;
 import org.seasar.extension.jdbc.dialect.StandardDialect;
 import org.seasar.extension.jdbc.dto.AaaDto;
@@ -228,7 +228,7 @@ public class AbstractSelectTest extends TestCase {
      */
     public void testCreateResultSet_limit_supportOffset_offsetOnly_notSupportOffsetWithoutLimit()
             throws Exception {
-        manager.setDialect(new MySQLDialect());
+        manager.setDialect(new MysqlDialect());
         final MySelect<Aaa> query = new MySelect<Aaa>(manager, Aaa.class) {
 
             MockResultSet rs = new MockResultSet();
@@ -396,7 +396,7 @@ public class AbstractSelectTest extends TestCase {
      * 
      */
     public void testConvertLimitSql_limitOffsetZero_db2() {
-        manager.setDialect(new DB2Dialect());
+        manager.setDialect(new Db2Dialect());
         MySelect<Aaa> query = new MySelect<Aaa>(manager, Aaa.class);
         assertEquals("select * from aaa", query
                 .convertLimitSql("select * from aaa"));

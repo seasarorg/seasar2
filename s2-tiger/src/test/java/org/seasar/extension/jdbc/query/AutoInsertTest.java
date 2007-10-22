@@ -25,9 +25,9 @@ import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.SqlLog;
 import org.seasar.extension.jdbc.SqlLogRegistry;
 import org.seasar.extension.jdbc.SqlLogRegistryLocator;
-import org.seasar.extension.jdbc.dialect.DB2Dialect;
-import org.seasar.extension.jdbc.dialect.HSQLDialect;
-import org.seasar.extension.jdbc.dialect.MSSQLDialect;
+import org.seasar.extension.jdbc.dialect.Db2Dialect;
+import org.seasar.extension.jdbc.dialect.HsqlDialect;
+import org.seasar.extension.jdbc.dialect.MssqlDialect;
 import org.seasar.extension.jdbc.dialect.OracleDialect;
 import org.seasar.extension.jdbc.dialect.StandardDialect;
 import org.seasar.extension.jdbc.entity.Eee;
@@ -186,7 +186,7 @@ public class AutoInsertTest extends TestCase {
      * 
      */
     public void testPrepareTarget_identity() {
-        manager.setDialect(new DB2Dialect());
+        manager.setDialect(new Db2Dialect());
         Fff fff = new Fff();
         fff.name = "hoge";
         fff.version = 1L;
@@ -201,7 +201,7 @@ public class AutoInsertTest extends TestCase {
      * 
      */
     public void testPrepareTarget_identityInto() {
-        manager.setDialect(new HSQLDialect());
+        manager.setDialect(new HsqlDialect());
         Fff fff = new Fff();
         fff.name = "hoge";
         fff.version = 1L;
@@ -249,7 +249,7 @@ public class AutoInsertTest extends TestCase {
      * 
      */
     public void testPrepareTarget_sequenceNotSupported() {
-        manager.setDialect(new MSSQLDialect());
+        manager.setDialect(new MssqlDialect());
         Sequence entity = new Sequence();
         AutoInsertImpl<Sequence> query = new AutoInsertImpl<Sequence>(manager,
                 entity);
@@ -378,7 +378,7 @@ public class AutoInsertTest extends TestCase {
      * 
      */
     public void testPrepareIntoClause_identity() {
-        manager.setDialect(new DB2Dialect());
+        manager.setDialect(new Db2Dialect());
         Fff fff = new Fff();
         fff.name = "hoge";
         fff.version = 1L;
@@ -391,7 +391,7 @@ public class AutoInsertTest extends TestCase {
      * 
      */
     public void testPrepareIntoClause_identityInto() {
-        manager.setDialect(new HSQLDialect());
+        manager.setDialect(new HsqlDialect());
         Fff fff = new Fff();
         fff.name = "hoge";
         fff.version = 1L;
@@ -457,7 +457,7 @@ public class AutoInsertTest extends TestCase {
      * 
      */
     public void testPrepareValuesClause_identity() {
-        manager.setDialect(new DB2Dialect());
+        manager.setDialect(new Db2Dialect());
         Fff fff = new Fff();
         fff.name = "hoge";
         fff.version = 1L;
@@ -470,7 +470,7 @@ public class AutoInsertTest extends TestCase {
      * 
      */
     public void testPrepareValuesClause_identityInto() {
-        manager.setDialect(new HSQLDialect());
+        manager.setDialect(new HsqlDialect());
         Fff fff = new Fff();
         fff.name = "hoge";
         fff.version = 1L;
@@ -542,7 +542,7 @@ public class AutoInsertTest extends TestCase {
      * 
      */
     public void testPrepareParams_identity() {
-        manager.setDialect(new DB2Dialect());
+        manager.setDialect(new Db2Dialect());
         Fff fff = new Fff();
         fff.name = "hoge";
         fff.version = 1L;
@@ -557,7 +557,7 @@ public class AutoInsertTest extends TestCase {
      * 
      */
     public void testPrepareParams_identityInto() {
-        manager.setDialect(new HSQLDialect());
+        manager.setDialect(new HsqlDialect());
         Fff fff = new Fff();
         fff.name = "hoge";
         fff.version = 1L;
@@ -651,7 +651,7 @@ public class AutoInsertTest extends TestCase {
      * 
      */
     public void testPrepareSql_identity() {
-        manager.setDialect(new DB2Dialect());
+        manager.setDialect(new Db2Dialect());
         Fff fff = new Fff();
         fff.name = "hoge";
         fff.version = 1L;
@@ -665,7 +665,7 @@ public class AutoInsertTest extends TestCase {
      * 
      */
     public void testPrepareSql_identityInto() {
-        manager.setDialect(new HSQLDialect());
+        manager.setDialect(new HsqlDialect());
         Fff fff = new Fff();
         fff.name = "hoge";
         fff.version = 1L;
@@ -768,7 +768,7 @@ public class AutoInsertTest extends TestCase {
      * @throws Exception
      */
     public void testExecute_identity() throws Exception {
-        manager.setDialect(new DB2Dialect());
+        manager.setDialect(new Db2Dialect());
         Fff fff = new Fff();
         fff.name = "hoge";
         fff.version = 1L;
@@ -803,7 +803,7 @@ public class AutoInsertTest extends TestCase {
      * @throws Exception
      */
     public void testExecute_identityInto() throws Exception {
-        manager.setDialect(new HSQLDialect());
+        manager.setDialect(new HsqlDialect());
         Fff fff = new Fff();
         fff.name = "hoge";
         fff.version = 1L;

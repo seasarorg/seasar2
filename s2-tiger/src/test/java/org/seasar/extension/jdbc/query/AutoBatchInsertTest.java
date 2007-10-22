@@ -27,9 +27,9 @@ import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.SqlLog;
 import org.seasar.extension.jdbc.SqlLogRegistry;
 import org.seasar.extension.jdbc.SqlLogRegistryLocator;
-import org.seasar.extension.jdbc.dialect.DB2Dialect;
-import org.seasar.extension.jdbc.dialect.HSQLDialect;
-import org.seasar.extension.jdbc.dialect.MSSQLDialect;
+import org.seasar.extension.jdbc.dialect.Db2Dialect;
+import org.seasar.extension.jdbc.dialect.HsqlDialect;
+import org.seasar.extension.jdbc.dialect.MssqlDialect;
 import org.seasar.extension.jdbc.dialect.OracleDialect;
 import org.seasar.extension.jdbc.dialect.StandardDialect;
 import org.seasar.extension.jdbc.entity.Eee;
@@ -210,7 +210,7 @@ public class AutoBatchInsertTest extends TestCase {
      * 
      */
     public void testPrepareTarget_sequenceNotSupported() {
-        manager.setDialect(new MSSQLDialect());
+        manager.setDialect(new MssqlDialect());
         List<Sequence> entities = Arrays.asList(new Sequence(), new Sequence(),
                 new Sequence());
         AutoBatchInsertImpl<Sequence> query = new AutoBatchInsertImpl<Sequence>(
@@ -393,7 +393,7 @@ public class AutoBatchInsertTest extends TestCase {
      * @throws Exception
      */
     public void testExecute_identity() throws Exception {
-        manager.setDialect(new DB2Dialect());
+        manager.setDialect(new Db2Dialect());
         List<Fff> entities = Arrays.asList(new Fff("foo"), new Fff("bar"),
                 new Fff("baz"));
         AutoBatchInsertImpl<Fff> query = new AutoBatchInsertImpl<Fff>(manager,
@@ -440,7 +440,7 @@ public class AutoBatchInsertTest extends TestCase {
      * @throws Exception
      */
     public void testExecute_identityInto() throws Exception {
-        manager.setDialect(new HSQLDialect());
+        manager.setDialect(new HsqlDialect());
         List<Fff> entities = Arrays.asList(new Fff("foo"), new Fff("bar"),
                 new Fff("baz"));
         AutoBatchInsertImpl<Fff> query = new AutoBatchInsertImpl<Fff>(manager,

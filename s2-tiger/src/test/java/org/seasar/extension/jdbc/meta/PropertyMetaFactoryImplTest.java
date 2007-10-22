@@ -39,7 +39,7 @@ import org.seasar.extension.jdbc.JoinColumnMeta;
 import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.RelationshipType;
 import org.seasar.extension.jdbc.TableMeta;
-import org.seasar.extension.jdbc.dialect.DB2Dialect;
+import org.seasar.extension.jdbc.dialect.Db2Dialect;
 import org.seasar.extension.jdbc.dialect.OracleDialect;
 import org.seasar.extension.jdbc.dialect.StandardDialect;
 import org.seasar.extension.jdbc.entity.Aaa;
@@ -128,7 +128,7 @@ public class PropertyMetaFactoryImplTest extends TestCase {
         assertTrue(propertyMeta.isId());
         assertTrue(propertyMeta.hasIdGenerator());
         assertEquals(GenerationType.AUTO, propertyMeta.getGenerationType());
-        assertTrue(propertyMeta.getIdGenerator(entityMeta, new DB2Dialect()) instanceof IdentityIdGenerator);
+        assertTrue(propertyMeta.getIdGenerator(entityMeta, new Db2Dialect()) instanceof IdentityIdGenerator);
         assertTrue(propertyMeta.getIdGenerator(entityMeta, new OracleDialect()) instanceof SequenceIdGenerator);
         assertTrue(propertyMeta.getIdGenerator(entityMeta,
                 new StandardDialect()) instanceof TableIdGenerator);
