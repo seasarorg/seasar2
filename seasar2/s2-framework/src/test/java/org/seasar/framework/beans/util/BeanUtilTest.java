@@ -97,6 +97,35 @@ public class BeanUtilTest extends TestCase {
     }
 
     /**
+     * @throws Exception
+     */
+    public void testCreateProperties() throws Exception {
+        HogeDto2 hoge = new HogeDto2();
+        hoge.aaa = "1";
+        hoge.where_bbb = "2";
+        hoge.where_ccc$ddd = "3";
+        Map map = BeanUtil.createProperties(hoge, "where_");
+        assertEquals(2, map.size());
+        assertEquals("2", map.get("bbb"));
+        assertEquals("3", map.get("ccc.ddd"));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testCreateProperties_nonPrefix() throws Exception {
+        HogeDto2 hoge = new HogeDto2();
+        hoge.aaa = "1";
+        hoge.where_bbb = "2";
+        hoge.where_ccc$ddd = "3";
+        Map map = BeanUtil.createProperties(hoge);
+        assertEquals(3, map.size());
+        assertEquals("1", map.get("aaa"));
+        assertEquals("2", map.get("where_bbb"));
+        assertEquals("3", map.get("where_ccc.ddd"));
+    }
+
+    /**
      * 
      */
     public static class HogeDto {
@@ -147,6 +176,15 @@ public class BeanUtilTest extends TestCase {
         public void setC(int c) {
             this.c = c;
         }
+    }
+
+    public static class HogeDto2 {
+
+        public String aaa;
+
+        public String where_bbb;
+
+        public String where_ccc$ddd;
     }
 
     /**

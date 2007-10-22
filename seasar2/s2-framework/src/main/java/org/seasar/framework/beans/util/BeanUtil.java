@@ -15,12 +15,14 @@
  */
 package org.seasar.framework.beans.util;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
 import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.beans.factory.BeanDescFactory;
+import org.seasar.framework.util.StringUtil;
 
 /**
  * JavaBeans用のユーティリティです。
@@ -120,5 +122,46 @@ public final class BeanUtil {
                 }
             }
         }
+    }
+
+    /**
+     * JavaBeansの値から{@link Map}を作成します。
+     * 
+     * @param src
+     *            ソース
+     * @return JavaBeansの値を使ったマップ
+     */
+    public static Map createProperties(Object src) {
+        return createProperties(src, null);
+    }
+
+    /**
+     * JavaBeansの値から{@link Map}を作成します。
+     * 
+     * @param src
+     *            ソース
+     * @param prefix
+     *            プレフィックス
+     * @return JavaBeansの値を使ったマップ
+     */
+    public static Map createProperties(Object src, String prefix) {
+        Map map = new HashMap();
+        if (src == null) {
+            return map;
+        }
+        final BeanDesc beanDesc = BeanDescFactory.getBeanDesc(src.getClass());
+        final int size = beanDesc.getPropertyDescSize();
+        for (int i = 0; i < size; ++i) {
+            final PropertyDesc pd = beanDesc.getPropertyDesc(i);
+            if (pd.isReadable()
+                    && (prefix == null || prefix != null
+                            && pd.getPropertyName().startsWith(prefix))) {
+                final Object value = pd.getValue(src);
+                String name = StringUtil.ltrim(pd.getPropertyName(), prefix)
+                        .replace('$', '.');
+                map.put(name, value);
+            }
+        }
+        return map;
     }
 }
