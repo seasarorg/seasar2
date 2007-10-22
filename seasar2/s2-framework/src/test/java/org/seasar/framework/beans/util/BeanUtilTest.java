@@ -178,12 +178,24 @@ public class BeanUtilTest extends TestCase {
         }
     }
 
+    /**
+     * 
+     */
     public static class HogeDto2 {
 
+        /**
+         * 
+         */
         public String aaa;
 
+        /**
+         * 
+         */
         public String where_bbb;
 
+        /**
+         * 
+         */
         public String where_ccc$ddd;
     }
 
