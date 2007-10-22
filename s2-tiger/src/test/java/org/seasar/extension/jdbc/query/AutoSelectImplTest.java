@@ -16,7 +16,6 @@
 package org.seasar.extension.jdbc.query;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +24,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.OneToOne;
+import javax.persistence.Transient;
 
 import junit.framework.TestCase;
 
@@ -45,6 +45,7 @@ import org.seasar.extension.jdbc.entity.Bbb;
 import org.seasar.extension.jdbc.entity.Ccc;
 import org.seasar.extension.jdbc.entity.Ddd;
 import org.seasar.extension.jdbc.exception.BaseJoinNotFoundRuntimeException;
+import org.seasar.extension.jdbc.exception.EntityColumnNotFoundRuntimeException;
 import org.seasar.extension.jdbc.exception.JoinDuplicatedRuntimeException;
 import org.seasar.extension.jdbc.exception.NonEntityRuntimeException;
 import org.seasar.extension.jdbc.exception.PropertyNotFoundRuntimeException;
@@ -63,6 +64,7 @@ import org.seasar.extension.jdbc.meta.EntityMetaFactoryImpl;
 import org.seasar.extension.jdbc.meta.PropertyMetaFactoryImpl;
 import org.seasar.extension.jdbc.meta.TableMetaFactoryImpl;
 import org.seasar.extension.jdbc.types.ValueTypes;
+import org.seasar.extension.jdbc.where.SimpleWhere;
 import org.seasar.extension.jta.TransactionManagerImpl;
 import org.seasar.extension.jta.TransactionSynchronizationRegistryImpl;
 import org.seasar.framework.convention.impl.PersistenceConventionImpl;
@@ -835,7 +837,7 @@ public class AutoSelectImplTest extends TestCase {
      * @throws Exception
      * 
      */
-    public void testWhere() throws Exception {
+    public void testWhere_map() throws Exception {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
         Map<String, Object> m = new HashMap<String, Object>();
         m.put("aaa", 1);
@@ -850,6 +852,18 @@ public class AutoSelectImplTest extends TestCase {
     public void testWhere_criteria() throws Exception {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
         assertSame(query, query.where("id = ?", 1));
+        assertEquals("id = ?", query.criteria);
+        assertEquals(1, query.getParamSize());
+        assertEquals(1, query.getParam(0).value);
+    }
+
+    /**
+     * @throws Exception
+     * 
+     */
+    public void testWhere_where() throws Exception {
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        assertSame(query, query.where(new SimpleWhere().eq("id", 1)));
         assertEquals("id = ?", query.criteria);
         assertEquals(1, query.getParamSize());
         assertEquals(1, query.getParam(0).value);
@@ -893,12 +907,14 @@ public class AutoSelectImplTest extends TestCase {
      */
     public void testPrepareCondition_EQ() {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        Map<String, Object> w = new HashMap<String, Object>();
+        w.put("id", "1");
+        query.where(w);
         query.prepare("getResultList");
-        query.prepareCondition("id", 1);
         assertEquals(" where T1_.ID = ?", query.whereClause.toSql());
         Object[] variables = query.getParamValues();
         assertEquals(1, variables.length);
-        assertEquals(1, variables[0]);
+        assertEquals("1", variables[0]);
         Class<?>[] variableClasses = query.getParamClasses();
         assertEquals(1, variableClasses.length);
         assertEquals(Integer.class, variableClasses[0]);
@@ -909,8 +925,10 @@ public class AutoSelectImplTest extends TestCase {
      */
     public void testPrepareCondition_EQ2() {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        Map<String, Object> w = new HashMap<String, Object>();
+        w.put("id_EQ", 1);
+        query.where(w);
         query.prepare("getResultList");
-        query.prepareCondition("id_EQ", 1);
         assertEquals(" where T1_.ID = ?", query.whereClause.toSql());
         Object[] variables = query.getParamValues();
         assertEquals(1, variables.length);
@@ -925,9 +943,10 @@ public class AutoSelectImplTest extends TestCase {
      */
     public void testPrepareCondition_EQ_NEST() {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
-        query.join("bbb");
+        Map<String, Object> w = new HashMap<String, Object>();
+        w.put("bbb.id", 1);
+        query.join("bbb").where(w);
         query.prepare("getResultList");
-        query.prepareCondition("bbb.id", 1);
         assertEquals(" where T2_.ID = ?", query.whereClause.toSql());
         Object[] variables = query.getParamValues();
         assertEquals(1, variables.length);
@@ -942,8 +961,10 @@ public class AutoSelectImplTest extends TestCase {
      */
     public void testPrepareCondition_NE() {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        Map<String, Object> w = new HashMap<String, Object>();
+        w.put("id_NE", 1);
+        query.where(w);
         query.prepare("getResultList");
-        query.prepareCondition("id_NE", 1);
         assertEquals(" where T1_.ID <> ?", query.whereClause.toSql());
         Object[] variables = query.getParamValues();
         assertEquals(1, variables.length);
@@ -959,8 +980,10 @@ public class AutoSelectImplTest extends TestCase {
     public void testPrepareCondition_NE_NEST() {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
         query.join("bbb");
+        Map<String, Object> w = new HashMap<String, Object>();
+        w.put("bbb.id_NE", 1);
+        query.where(w);
         query.prepare("getResultList");
-        query.prepareCondition("bbb.id_NE", 1);
         assertEquals(" where T2_.ID <> ?", query.whereClause.toSql());
         Object[] variables = query.getParamValues();
         assertEquals(1, variables.length);
@@ -975,8 +998,10 @@ public class AutoSelectImplTest extends TestCase {
      */
     public void testPrepareCondition_LT() {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        Map<String, Object> w = new HashMap<String, Object>();
+        w.put("id_LT", 1);
+        query.where(w);
         query.prepare("getResultList");
-        query.prepareCondition("id_LT", 1);
         assertEquals(" where T1_.ID < ?", query.whereClause.toSql());
         Object[] variables = query.getParamValues();
         assertEquals(1, variables.length);
@@ -992,8 +1017,10 @@ public class AutoSelectImplTest extends TestCase {
     public void testPrepareCondition_LT_NEST() {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
         query.join("bbb");
+        Map<String, Object> w = new HashMap<String, Object>();
+        w.put("bbb.id_LT", 1);
+        query.where(w);
         query.prepare("getResultList");
-        query.prepareCondition("bbb.id_LT", 1);
         assertEquals(" where T2_.ID < ?", query.whereClause.toSql());
         Object[] variables = query.getParamValues();
         assertEquals(1, variables.length);
@@ -1008,8 +1035,10 @@ public class AutoSelectImplTest extends TestCase {
      */
     public void testPrepareCondition_LE() {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        Map<String, Object> w = new HashMap<String, Object>();
+        w.put("id_LE", 1);
+        query.where(w);
         query.prepare("getResultList");
-        query.prepareCondition("id_LE", 1);
         assertEquals(" where T1_.ID <= ?", query.whereClause.toSql());
         Object[] variables = query.getParamValues();
         assertEquals(1, variables.length);
@@ -1025,8 +1054,10 @@ public class AutoSelectImplTest extends TestCase {
     public void testPrepareCondition_LE_NEST() {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
         query.join("bbb");
+        Map<String, Object> w = new HashMap<String, Object>();
+        w.put("bbb.id_LE", 1);
+        query.where(w);
         query.prepare("getResultList");
-        query.prepareCondition("bbb.id_LE", 1);
         assertEquals(" where T2_.ID <= ?", query.whereClause.toSql());
         Object[] variables = query.getParamValues();
         assertEquals(1, variables.length);
@@ -1041,8 +1072,10 @@ public class AutoSelectImplTest extends TestCase {
      */
     public void testPrepareCondition_GT() {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        Map<String, Object> w = new HashMap<String, Object>();
+        w.put("id_GT", 1);
+        query.where(w);
         query.prepare("getResultList");
-        query.prepareCondition("id_GT", 1);
         assertEquals(" where T1_.ID > ?", query.whereClause.toSql());
         Object[] variables = query.getParamValues();
         assertEquals(1, variables.length);
@@ -1058,8 +1091,10 @@ public class AutoSelectImplTest extends TestCase {
     public void testPrepareCondition_GT_NEST() {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
         query.join("bbb");
+        Map<String, Object> w = new HashMap<String, Object>();
+        w.put("bbb.id_GT", 1);
+        query.where(w);
         query.prepare("getResultList");
-        query.prepareCondition("bbb.id_GT", 1);
         assertEquals(" where T2_.ID > ?", query.whereClause.toSql());
         Object[] variables = query.getParamValues();
         assertEquals(1, variables.length);
@@ -1074,8 +1109,10 @@ public class AutoSelectImplTest extends TestCase {
      */
     public void testPrepareCondition_GE() {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        Map<String, Object> w = new HashMap<String, Object>();
+        w.put("id_GE", 1);
+        query.where(w);
         query.prepare("getResultList");
-        query.prepareCondition("id_GE", 1);
         assertEquals(" where T1_.ID >= ?", query.whereClause.toSql());
         Object[] variables = query.getParamValues();
         assertEquals(1, variables.length);
@@ -1091,8 +1128,10 @@ public class AutoSelectImplTest extends TestCase {
     public void testPrepareCondition_GE_NEST() {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
         query.join("bbb");
+        Map<String, Object> w = new HashMap<String, Object>();
+        w.put("bbb.id_GE", 1);
+        query.where(w);
         query.prepare("getResultList");
-        query.prepareCondition("bbb.id_GE", 1);
         assertEquals(" where T2_.ID >= ?", query.whereClause.toSql());
         Object[] variables = query.getParamValues();
         assertEquals(1, variables.length);
@@ -1107,8 +1146,10 @@ public class AutoSelectImplTest extends TestCase {
      */
     public void testPrepareCondition_IN() {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        Map<String, Object> w = new HashMap<String, Object>();
+        w.put("id_IN", new Object[] { 1, 2 });
+        query.where(w);
         query.prepare("getResultList");
-        query.prepareCondition("id_IN", Arrays.asList(1, 2));
         assertEquals(" where T1_.ID in (?, ?)", query.whereClause.toSql());
         Object[] variables = query.getParamValues();
         assertEquals(2, variables.length);
@@ -1126,8 +1167,10 @@ public class AutoSelectImplTest extends TestCase {
     public void testPrepareCondition_IN_nest() {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
         query.join("bbb");
+        Map<String, Object> w = new HashMap<String, Object>();
+        w.put("bbb.id_IN", new Object[] { 1, 2 });
+        query.where(w);
         query.prepare("getResultList");
-        query.prepareCondition("bbb.id_IN", Arrays.asList(1, 2));
         assertEquals(" where T2_.ID in (?, ?)", query.whereClause.toSql());
         Object[] variables = query.getParamValues();
         assertEquals(2, variables.length);
@@ -1144,8 +1187,10 @@ public class AutoSelectImplTest extends TestCase {
      */
     public void testPrepareCondition_NOT_IN() {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        Map<String, Object> w = new HashMap<String, Object>();
+        w.put("id_NOT_IN", new Object[] { 1, 2 });
+        query.where(w);
         query.prepare("getResultList");
-        query.prepareCondition("id_NOT_IN", Arrays.asList(1, 2));
         assertEquals(" where T1_.ID not in (?, ?)", query.whereClause.toSql());
         Object[] variables = query.getParamValues();
         assertEquals(2, variables.length);
@@ -1163,8 +1208,10 @@ public class AutoSelectImplTest extends TestCase {
     public void testPrepareCondition_NOT_IN_nest() {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
         query.join("bbb");
+        Map<String, Object> w = new HashMap<String, Object>();
+        w.put("bbb.id_NOT_IN", new Object[] { 1, 2 });
+        query.where(w);
         query.prepare("getResultList");
-        query.prepareCondition("bbb.id_NOT_IN", Arrays.asList(1, 2));
         assertEquals(" where T2_.ID not in (?, ?)", query.whereClause.toSql());
         Object[] variables = query.getParamValues();
         assertEquals(2, variables.length);
@@ -1181,8 +1228,10 @@ public class AutoSelectImplTest extends TestCase {
      */
     public void testPrepareCondition_LIKE() {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        Map<String, Object> w = new HashMap<String, Object>();
+        w.put("name_LIKE", "aaa");
+        query.where(w);
         query.prepare("getResultList");
-        query.prepareCondition("name_LIKE", "aaa");
         assertEquals(" where T1_.NAME like ?", query.whereClause.toSql());
         Object[] variables = query.getParamValues();
         assertEquals(1, variables.length);
@@ -1198,8 +1247,10 @@ public class AutoSelectImplTest extends TestCase {
     public void testPrepareCondition_LIKE_nest() {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
         query.join("bbb");
+        Map<String, Object> w = new HashMap<String, Object>();
+        w.put("bbb.name_LIKE", "aaa");
+        query.where(w);
         query.prepare("getResultList");
-        query.prepareCondition("bbb.name_LIKE", "aaa");
         assertEquals(" where T2_.NAME like ?", query.whereClause.toSql());
         Object[] variables = query.getParamValues();
         assertEquals(1, variables.length);
@@ -1214,8 +1265,10 @@ public class AutoSelectImplTest extends TestCase {
      */
     public void testPrepareCondition_STARTS() {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        Map<String, Object> w = new HashMap<String, Object>();
+        w.put("name_STARTS", "aaa");
+        query.where(w);
         query.prepare("getResultList");
-        query.prepareCondition("name_STARTS", "aaa");
         assertEquals(" where T1_.NAME like ?", query.whereClause.toSql());
         Object[] variables = query.getParamValues();
         assertEquals(1, variables.length);
@@ -1231,8 +1284,10 @@ public class AutoSelectImplTest extends TestCase {
     public void testPrepareCondition_STARTS_nest() {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
         query.join("bbb");
+        Map<String, Object> w = new HashMap<String, Object>();
+        w.put("bbb.name_STARTS", "aaa");
+        query.where(w);
         query.prepare("getResultList");
-        query.prepareCondition("bbb.name_STARTS", "aaa");
         assertEquals(" where T2_.NAME like ?", query.whereClause.toSql());
         Object[] variables = query.getParamValues();
         assertEquals(1, variables.length);
@@ -1247,8 +1302,10 @@ public class AutoSelectImplTest extends TestCase {
      */
     public void testPrepareCondition_ENDS() {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        Map<String, Object> w = new HashMap<String, Object>();
+        w.put("name_ENDS", "aaa");
+        query.where(w);
         query.prepare("getResultList");
-        query.prepareCondition("name_ENDS", "aaa");
         assertEquals(" where T1_.NAME like ?", query.whereClause.toSql());
         Object[] variables = query.getParamValues();
         assertEquals(1, variables.length);
@@ -1264,8 +1321,10 @@ public class AutoSelectImplTest extends TestCase {
     public void testPrepareCondition_ENDS_nest() {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
         query.join("bbb");
+        Map<String, Object> w = new HashMap<String, Object>();
+        w.put("bbb.name_ENDS", "aaa");
+        query.where(w);
         query.prepare("getResultList");
-        query.prepareCondition("bbb.name_ENDS", "aaa");
         assertEquals(" where T2_.NAME like ?", query.whereClause.toSql());
         Object[] variables = query.getParamValues();
         assertEquals(1, variables.length);
@@ -1280,8 +1339,10 @@ public class AutoSelectImplTest extends TestCase {
      */
     public void testPrepareCondition_CONTAINS() {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        Map<String, Object> w = new HashMap<String, Object>();
+        w.put("name_CONTAINS", "aaa");
+        query.where(w);
         query.prepare("getResultList");
-        query.prepareCondition("name_CONTAINS", "aaa");
         assertEquals(" where T1_.NAME like ?", query.whereClause.toSql());
         Object[] variables = query.getParamValues();
         assertEquals(1, variables.length);
@@ -1297,8 +1358,10 @@ public class AutoSelectImplTest extends TestCase {
     public void testPrepareCondition_CONTAINS_nest() {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
         query.join("bbb");
+        Map<String, Object> w = new HashMap<String, Object>();
+        w.put("bbb.name_CONTAINS", "aaa");
+        query.where(w);
         query.prepare("getResultList");
-        query.prepareCondition("bbb.name_CONTAINS", "aaa");
         assertEquals(" where T2_.NAME like ?", query.whereClause.toSql());
         Object[] variables = query.getParamValues();
         assertEquals(1, variables.length);
@@ -1313,23 +1376,11 @@ public class AutoSelectImplTest extends TestCase {
      */
     public void testPrepareCondition_IS_NULL() {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        Map<String, Object> w = new HashMap<String, Object>();
+        w.put("name_IS_NULL", true);
+        query.where(w);
         query.prepare("getResultList");
-        query.prepareCondition("name_IS_NULL", true);
         assertEquals(" where T1_.NAME is null", query.whereClause.toSql());
-        Object[] variables = query.getParamValues();
-        assertEquals(0, variables.length);
-        Class<?>[] variableClasses = query.getParamClasses();
-        assertEquals(0, variableClasses.length);
-    }
-
-    /**
-     * 
-     */
-    public void testPrepareCondition_IS_NULL_false() {
-        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
-        query.prepare("getResultList");
-        query.prepareCondition("name_IS_NULL", false);
-        assertEquals("", query.whereClause.toSql());
         Object[] variables = query.getParamValues();
         assertEquals(0, variables.length);
         Class<?>[] variableClasses = query.getParamClasses();
@@ -1342,8 +1393,10 @@ public class AutoSelectImplTest extends TestCase {
     public void testPrepareCondition_IS_NULL_nest() {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
         query.join("bbb");
+        Map<String, Object> w = new HashMap<String, Object>();
+        w.put("bbb.name_IS_NULL", true);
+        query.where(w);
         query.prepare("getResultList");
-        query.prepareCondition("bbb.name_IS_NULL", true);
         assertEquals(" where T2_.NAME is null", query.whereClause.toSql());
         Object[] variables = query.getParamValues();
         assertEquals(0, variables.length);
@@ -1356,23 +1409,11 @@ public class AutoSelectImplTest extends TestCase {
      */
     public void testPrepareCondition_IS_NOT_NULL() {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        Map<String, Object> w = new HashMap<String, Object>();
+        w.put("name_IS_NOT_NULL", true);
+        query.where(w);
         query.prepare("getResultList");
-        query.prepareCondition("name_IS_NOT_NULL", true);
         assertEquals(" where T1_.NAME is not null", query.whereClause.toSql());
-        Object[] variables = query.getParamValues();
-        assertEquals(0, variables.length);
-        Class<?>[] variableClasses = query.getParamClasses();
-        assertEquals(0, variableClasses.length);
-    }
-
-    /**
-     * 
-     */
-    public void testPrepareCondition_IS_NOT_NULL_false() {
-        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
-        query.prepare("getResultList");
-        query.prepareCondition("name_IS_NOT_NULL", false);
-        assertEquals("", query.whereClause.toSql());
         Object[] variables = query.getParamValues();
         assertEquals(0, variables.length);
         Class<?>[] variableClasses = query.getParamClasses();
@@ -1385,13 +1426,34 @@ public class AutoSelectImplTest extends TestCase {
     public void testPrepareCondition_IS_NOT_NULL_nest() {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
         query.join("bbb");
+        Map<String, Object> w = new HashMap<String, Object>();
+        w.put("bbb.name_IS_NOT_NULL", true);
+        query.where(w);
         query.prepare("getResultList");
-        query.prepareCondition("bbb.name_IS_NOT_NULL", true);
         assertEquals(" where T2_.NAME is not null", query.whereClause.toSql());
         Object[] variables = query.getParamValues();
         assertEquals(0, variables.length);
         Class<?>[] variableClasses = query.getParamClasses();
         assertEquals(0, variableClasses.length);
+    }
+
+    /**
+     * 
+     */
+    public void testPrepareCondition_columnNotFound() {
+        AutoSelectImpl<BadAaa> query = new AutoSelectImpl<BadAaa>(manager,
+                BadAaa.class);
+        Map<String, Object> w = new HashMap<String, Object>();
+        w.put("dummy", "hoge");
+        query.where(w);
+        try {
+            query.prepare("getResultList");
+            fail();
+        } catch (EntityColumnNotFoundRuntimeException e) {
+            System.out.println(e);
+            assertEquals("BadAaa", e.getEntityName());
+            assertEquals("dummy", e.getColumnName());
+        }
     }
 
     /**
@@ -1463,7 +1525,7 @@ public class AutoSelectImplTest extends TestCase {
         public String largeName;
     }
 
-    @Entity
+    @Entity(name = "BadAaa")
     private static class BadAaa {
 
         /**
@@ -1482,6 +1544,12 @@ public class AutoSelectImplTest extends TestCase {
          */
         @OneToOne
         public BadBbb bbb;
+
+        /**
+         * 
+         */
+        @Transient
+        public String dummy;
     }
 
     @Entity(name = "BadBbb")

@@ -15,24 +15,22 @@
  */
 package org.seasar.extension.jdbc.exception;
 
-import org.seasar.extension.jdbc.exception.NonArrayOrListInPropertyRuntimeException;
-
 import junit.framework.TestCase;
 
 /**
  * @author higa
  * 
  */
-public class NonArrayOrListInPropertyRuntimeExceptionTest extends TestCase {
+public class NonArrayInConditionRuntimeExceptionTest extends TestCase {
 
-	/**
-	 * 
-	 */
-	public void testAll() {
-		NonArrayOrListInPropertyRuntimeException ex = new NonArrayOrListInPropertyRuntimeException(
-				"Aaa", "hoge");
-		System.out.println(ex.getMessage());
-		assertEquals("Aaa", ex.getEntityName());
-		assertEquals("hoge", ex.getPropertyName());
-	}
+    /**
+     * 
+     */
+    public void testAll() {
+        NonArrayInConditionRuntimeException ex = new NonArrayInConditionRuntimeException(
+                "in", String.class);
+        System.out.println(ex.getMessage());
+        assertEquals("in", ex.getConditionName());
+        assertEquals(String.class, ex.getValueClass());
+    }
 }

@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.seasar.extension.jdbc.AutoSelect;
+import org.seasar.extension.jdbc.ColumnMeta;
 import org.seasar.extension.jdbc.ConditionType;
 import org.seasar.extension.jdbc.DbmsDialect;
 import org.seasar.extension.jdbc.EntityMapper;
@@ -38,10 +39,11 @@ import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.ResultSetHandler;
 import org.seasar.extension.jdbc.SelectClause;
 import org.seasar.extension.jdbc.ValueType;
+import org.seasar.extension.jdbc.Where;
 import org.seasar.extension.jdbc.WhereClause;
 import org.seasar.extension.jdbc.exception.BaseJoinNotFoundRuntimeException;
+import org.seasar.extension.jdbc.exception.EntityColumnNotFoundRuntimeException;
 import org.seasar.extension.jdbc.exception.JoinDuplicatedRuntimeException;
-import org.seasar.extension.jdbc.exception.NonArrayOrListInPropertyRuntimeException;
 import org.seasar.extension.jdbc.handler.BeanAutoResultSetHandler;
 import org.seasar.extension.jdbc.handler.BeanListAutoResultSetHandler;
 import org.seasar.extension.jdbc.handler.BeanListSupportLimitAutoResultSetHandler;
@@ -52,9 +54,7 @@ import org.seasar.extension.jdbc.mapper.ManyToOneEntityMapperImpl;
 import org.seasar.extension.jdbc.mapper.OneToManyEntityMapperImpl;
 import org.seasar.extension.jdbc.mapper.OneToOneEntityMapperImpl;
 import org.seasar.extension.jdbc.mapper.PropertyMapperImpl;
-import org.seasar.extension.jdbc.util.ConditionUtil;
 import org.seasar.extension.jdbc.util.QueryTokenizer;
-import org.seasar.framework.util.BooleanConversionUtil;
 import org.seasar.framework.util.StringUtil;
 
 /**
@@ -652,6 +652,13 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
         return this;
     }
 
+    public AutoSelect<T> where(Where where) {
+        if (where == null) {
+            throw new NullPointerException("where");
+        }
+        return where(where.getCriteria(), where.getParams());
+    }
+
     /**
      * where句の条件を準備します。
      * 
@@ -660,8 +667,14 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
         if (conditions == null || conditions.size() == 0) {
             return;
         }
+        List<Object> valueList = new ArrayList<Object>();
+        List<Class<?>> valueClassList = new ArrayList<Class<?>>();
         for (Map.Entry<String, Object> e : conditions.entrySet()) {
-            prepareCondition(e.getKey(), e.getValue());
+            prepareCondition(e.getKey(), e.getValue(), valueList,
+                    valueClassList);
+        }
+        for (int i = 0; i < valueList.size(); i++) {
+            addParam(valueList.get(i), valueClassList.get(i));
         }
     }
 
@@ -672,116 +685,40 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
      *            プロパティ名
      * @param value
      *            プロパティの値
+     * @param valueList
+     *            値のリスト
+     * @param valueClassList
+     *            値のクラスのリスト
      */
-    @SuppressWarnings("unchecked")
-    protected void prepareCondition(String name, Object value) {
-        if (value == null) {
-            return;
-        }
-        Class<?> clazz = value.getClass();
+    protected void prepareCondition(String name, Object value,
+            List<Object> valueList, List<Class<?>> valueClassList) {
         ConditionType conditionType = ConditionType.getConditionType(name);
         String pname = conditionType.removeSuffix(name);
-        int arraySize = 0;
-        if (conditionType == ConditionType.IN
-                || conditionType == ConditionType.NOT_IN) {
-            if (value instanceof List) {
-                List list = (List) value;
-                arraySize = list.size();
-                value = list.toArray();
-            } else if (clazz.isArray()) {
-                arraySize = Array.getLength(value);
-            } else {
-                logger.log("ESSR0709", new Object[] { callerClass.getName(),
-                        callerMethodName });
-                throw new NonArrayOrListInPropertyRuntimeException(entityName,
-                        pname);
-            }
-            if (arraySize == 0) {
-                return;
-            }
-        }
         String[] names = splitBaseAndProperty(pname);
         String tableAlias = getTableAlias(names[0]);
         if (tableAlias == null) {
             logger.log("ESSR0709", new Object[] { callerClass.getName(),
                     callerMethodName });
-            logger.log("ESSR0716", new Object[] { pname });
+            logger.log("ESSR0716", new Object[] { name });
             throw new BaseJoinNotFoundRuntimeException(entityName, pname,
                     names[0]);
         }
         EntityMeta baseEntityMeta = getBaseEntityMeta(pname, names[0]);
         PropertyMeta propertyMeta = getPropertyMeta(baseEntityMeta, pname,
                 names[1]);
-        String columnName = propertyMeta.getColumnMeta().getName();
-        String condition = null;
-        clazz = propertyMeta.getField().getType();
-        switch (conditionType) {
-        case EQ:
-            condition = ConditionUtil.getEqCondition(tableAlias, columnName);
-            addCondition(condition, value, clazz);
-            break;
-        case NE:
-            condition = ConditionUtil.getNeCondition(tableAlias, columnName);
-            addCondition(condition, value, clazz);
-            break;
-        case LT:
-            condition = ConditionUtil.getLtCondition(tableAlias, columnName);
-            addCondition(condition, value, clazz);
-            break;
-        case LE:
-            condition = ConditionUtil.getLeCondition(tableAlias, columnName);
-            addCondition(condition, value, clazz);
-            break;
-        case GT:
-            condition = ConditionUtil.getGtCondition(tableAlias, columnName);
-            addCondition(condition, value, clazz);
-            break;
-        case GE:
-            condition = ConditionUtil.getGeCondition(tableAlias, columnName);
-            addCondition(condition, value, clazz);
-            break;
-        case IN:
-            condition = ConditionUtil.getInCondition(tableAlias, columnName,
-                    arraySize);
-            addInCondition(condition, value, clazz, arraySize);
-            break;
-        case NOT_IN:
-            condition = ConditionUtil.getNotInCondition(tableAlias, columnName,
-                    arraySize);
-            addInCondition(condition, value, clazz, arraySize);
-            break;
-        case LIKE:
-            condition = ConditionUtil.getLikeCondition(tableAlias, columnName);
-            addCondition(condition, value, clazz);
-            break;
-        case STARTS:
-            condition = ConditionUtil.getLikeCondition(tableAlias, columnName);
-            addCondition(condition, value + "%", clazz);
-            break;
-        case ENDS:
-            condition = ConditionUtil.getLikeCondition(tableAlias, columnName);
-            addCondition(condition, "%" + value, clazz);
-            break;
-        case CONTAINS:
-            condition = ConditionUtil.getLikeCondition(tableAlias, columnName);
-            addCondition(condition, "%" + value + "%", clazz);
-            break;
-        case IS_NULL:
-            if (BooleanConversionUtil.toPrimitiveBoolean(value)) {
-                condition = ConditionUtil.getIsNullCondition(tableAlias,
-                        columnName);
-                whereClause.addAndSql(condition);
-            }
-            break;
-        case IS_NOT_NULL:
-            if (BooleanConversionUtil.toPrimitiveBoolean(value)) {
-                condition = ConditionUtil.getIsNotNullCondition(tableAlias,
-                        columnName);
-                whereClause.addAndSql(condition);
-            }
-            break;
-        default:
-            throw new IllegalArgumentException(String.valueOf(conditionType));
+        ColumnMeta columnMeta = propertyMeta.getColumnMeta();
+        if (columnMeta == null) {
+            logger.log("ESSR0709", new Object[] { callerClass.getName(),
+                    callerMethodName });
+            logger.log("ESSR0716", new Object[] { name });
+            throw new EntityColumnNotFoundRuntimeException(entityName,
+                    propertyMeta.getName());
+        }
+        String columnName = columnMeta.getName();
+        int size = conditionType.addCondition(tableAlias, columnName, value,
+                whereClause, valueList);
+        for (int i = 0; i < size; i++) {
+            valueClassList.add(propertyMeta.getPropertyClass());
         }
     }
 

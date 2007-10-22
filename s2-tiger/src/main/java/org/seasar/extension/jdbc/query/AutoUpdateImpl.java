@@ -22,11 +22,11 @@ import java.util.Map;
 import java.util.Set;
 
 import org.seasar.extension.jdbc.AutoUpdate;
+import org.seasar.extension.jdbc.ConditionType;
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.SetClause;
 import org.seasar.extension.jdbc.WhereClause;
-import org.seasar.extension.jdbc.util.ConditionUtil;
 import org.seasar.framework.util.FieldUtil;
 import org.seasar.framework.util.tiger.CollectionsUtil;
 
@@ -188,14 +188,14 @@ public class AutoUpdateImpl<T> extends AbstractAutoUpdate<T, AutoUpdate<T>>
     protected void prepareWhereClause() {
         for (final PropertyMeta propertyMeta : entityMeta
                 .getIdPropertyMetaList()) {
-            whereClause.addAndSql(ConditionUtil.getEqCondition(propertyMeta
-                    .getColumnMeta().getName()));
+            whereClause.addAndSql(ConditionType.EQ.getCondition(propertyMeta
+                    .getColumnMeta().getName(), null));
         }
         if (!includeVersion && entityMeta.hasVersionPropertyMeta()) {
             final PropertyMeta propertyMeta = entityMeta
                     .getVersionPropertyMeta();
-            whereClause.addAndSql(ConditionUtil.getEqCondition(propertyMeta
-                    .getColumnMeta().getName()));
+            whereClause.addAndSql(ConditionType.EQ.getCondition(propertyMeta
+                    .getColumnMeta().getName(), null));
         }
     }
 

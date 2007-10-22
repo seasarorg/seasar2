@@ -15,6 +15,14 @@
  */
 package org.seasar.extension.jdbc;
 
+import java.lang.reflect.Array;
+import java.util.Arrays;
+import java.util.List;
+
+import org.seasar.extension.jdbc.exception.NonArrayInConditionRuntimeException;
+import org.seasar.extension.jdbc.exception.NonBooleanIsNullConditionRuntimeException;
+import org.seasar.framework.util.StringUtil;
+
 /**
  * where句の条件タイプです。
  * 
@@ -26,59 +34,249 @@ public enum ConditionType {
     /**
      * =です。
      */
-    EQ,
+    EQ {
+
+        /**
+         * 条件を返します。
+         * 
+         * @param name
+         *            名前
+         * @return 条件
+         */
+        @SuppressWarnings("unused")
+        public String getCondition(String name) {
+            return getCondition(null, name);
+        }
+
+        /**
+         * 条件を返します。
+         * 
+         * @param tableAlias
+         *            テーブルエイリアス
+         * @param columnName
+         *            カラム名
+         * @return 条件
+         */
+        public String getCondition(String tableAlias, String columnName) {
+            return getCondition(tableAlias, columnName, null);
+        }
+
+        @Override
+        public String getCondition(String tableAlias, String columnName,
+                Object value) {
+            return makeName(tableAlias, columnName) + " = ?";
+        }
+    },
     /**
      * &lt;&gt;です。
      */
-    NE,
+    NE {
+
+        @Override
+        public String getCondition(String tableAlias, String columnName,
+                Object value) {
+            return makeName(tableAlias, columnName) + " <> ?";
+        }
+    },
     /**
      * &lt;です。
      */
-    LT,
+    LT {
+
+        @Override
+        public String getCondition(String tableAlias, String columnName,
+                Object value) {
+            return makeName(tableAlias, columnName) + " < ?";
+        }
+    },
     /**
      * &lt;=です。
      */
-    LE,
+    LE {
+
+        @Override
+        public String getCondition(String tableAlias, String columnName,
+                Object value) {
+            return makeName(tableAlias, columnName) + " <= ?";
+        }
+    },
     /**
      * &gt;です。
      */
-    GT,
+    GT {
+
+        @Override
+        public String getCondition(String tableAlias, String columnName,
+                Object value) {
+            return makeName(tableAlias, columnName) + " > ?";
+        }
+    },
     /**
      * &gt;=です。
      */
-    GE,
+    GE {
+
+        @Override
+        public String getCondition(String tableAlias, String columnName,
+                Object value) {
+            return makeName(tableAlias, columnName) + " >= ?";
+        }
+    },
     /**
      * inです。
      */
-    IN,
+    IN {
+
+        @Override
+        public boolean isTarget(Object value) {
+            assertArrayInCondition("in", value);
+            return super.isTarget(value) && value.getClass().isArray()
+                    && Array.getLength(value) > 0;
+        }
+
+        @Override
+        public String getCondition(String tableAlias, String columnName,
+                Object value) {
+            return getInConditionInternal(makeName(tableAlias, columnName),
+                    "in", value);
+        }
+
+        @Override
+        public int addValue(List<Object> paramList, Object value) {
+            Object[] values = (Object[]) value;
+            paramList.addAll(Arrays.asList(values));
+            return values.length;
+        }
+    },
     /**
      * not inです。
      */
-    NOT_IN,
+    NOT_IN {
+
+        @Override
+        public boolean isTarget(Object value) {
+            assertArrayInCondition("not in", value);
+            return super.isTarget(value) && value.getClass().isArray()
+                    && Array.getLength(value) > 0;
+        }
+
+        @Override
+        public String getCondition(String tableAlias, String columnName,
+                Object value) {
+            return getInConditionInternal(makeName(tableAlias, columnName),
+                    "not in", value);
+        }
+
+        @Override
+        public int addValue(List<Object> paramList, Object value) {
+            Object[] values = (Object[]) value;
+            paramList.addAll(Arrays.asList(values));
+            return values.length;
+        }
+    },
     /**
      * likeです。
      */
-    LIKE,
+    LIKE {
+
+        @Override
+        public String getCondition(String tableAlias, String columnName,
+                Object value) {
+            return makeName(tableAlias, columnName) + " like ?";
+        }
+    },
     /**
      * like '?%'です。
      */
-    STARTS,
+    STARTS {
+
+        @Override
+        public String getCondition(String tableAlias, String columnName,
+                Object value) {
+            return makeName(tableAlias, columnName) + " like ?";
+        }
+
+        @Override
+        public int addValue(List<Object> valueList, Object value) {
+            return super.addValue(valueList, value + "%");
+        }
+    },
     /**
      * like '%?'です。
      */
-    ENDS,
+    ENDS {
+
+        @Override
+        public String getCondition(String tableAlias, String columnName,
+                Object value) {
+            return makeName(tableAlias, columnName) + " like ?";
+        }
+
+        @Override
+        public int addValue(List<Object> valueList, Object value) {
+            return super.addValue(valueList, "%" + value);
+        }
+    },
     /**
      * like '%?%'です。
      */
-    CONTAINS,
+    CONTAINS {
+
+        @Override
+        public String getCondition(String tableAlias, String columnName,
+                Object value) {
+            return makeName(tableAlias, columnName) + " like ?";
+        }
+
+        @Override
+        public int addValue(List<Object> valueList, Object value) {
+            return super.addValue(valueList, "%" + value + "%");
+        }
+    },
     /**
      * is nullです。
      */
-    IS_NULL,
+    IS_NULL {
+
+        @Override
+        public boolean isTarget(Object value) {
+            assertBooleanIsNullCondition("is null", value);
+            return super.isTarget(value) && Boolean.TRUE.equals(value);
+        }
+
+        @Override
+        public String getCondition(String tableAlias, String columnName,
+                Object value) {
+            return makeName(tableAlias, columnName) + " is null";
+        }
+
+        @Override
+        public int addValue(List<Object> paramList, Object value) {
+            return 0;
+        }
+    },
     /**
      * is not nullです。
      */
-    IS_NOT_NULL;
+    IS_NOT_NULL {
+
+        @Override
+        public boolean isTarget(Object value) {
+            assertBooleanIsNullCondition("is not null", value);
+            return super.isTarget(value) && Boolean.TRUE.equals(value);
+        }
+
+        @Override
+        public String getCondition(String tableAlias, String columnName,
+                Object value) {
+            return makeName(tableAlias, columnName) + " is not null";
+        }
+
+        @Override
+        public int addValue(List<Object> paramList, Object value) {
+            return 0;
+        }
+    };
 
     /**
      * 名前に応じた条件タイプを返します。
@@ -151,5 +349,174 @@ public enum ConditionType {
             return s.substring(0, s.length() - getSuffix().length());
         }
         return s;
+    }
+
+    /**
+     * 条件を追加します。
+     * 
+     * @param name
+     *            名前
+     * @param value
+     *            値
+     * @param whereClause
+     *            where句
+     * @param valueList
+     *            値のリスト
+     * @return 追加した値の数
+     */
+    public int addCondition(String name, Object value, WhereClause whereClause,
+            List<Object> valueList) {
+        return addCondition(null, name, value, whereClause, valueList);
+    }
+
+    /**
+     * 条件を追加します。
+     * 
+     * @param tableAlias
+     *            テーブルエイリアス
+     * @param columnName
+     *            カラム名
+     * @param value
+     *            値
+     * @param whereClause
+     *            where句
+     * @param valueList
+     *            値のリスト
+     * @return 追加した値の数
+     */
+    public int addCondition(String tableAlias, String columnName, Object value,
+            WhereClause whereClause, List<Object> valueList) {
+        if (isTarget(value)) {
+            whereClause.addAndSql(getCondition(tableAlias, columnName, value));
+            return addValue(valueList, value);
+        }
+        return 0;
+    }
+
+    /**
+     * 条件に追加する対象かどうかを返します。
+     * 
+     * @param value
+     *            値
+     * @return 条件に追加する対象かどうか
+     */
+    public boolean isTarget(Object value) {
+        return value != null;
+    }
+
+    /**
+     * 条件を返します。
+     * 
+     * @param name
+     *            名前
+     * @param value
+     *            値
+     * @return 条件
+     */
+    public String getCondition(String name, Object value) {
+        return getCondition(null, name, value);
+    }
+
+    /**
+     * 条件を返します。
+     * 
+     * @param tableAlias
+     *            テーブルエイリアス
+     * @param columnName
+     *            カラム名
+     * @param value
+     *            値
+     * @return 条件
+     */
+    public abstract String getCondition(String tableAlias, String columnName,
+            Object value);
+
+    /**
+     * 値を追加します。
+     * 
+     * @param valueList
+     *            値のリスト
+     * @param value
+     *            値
+     * @return 追加した値の数
+     */
+    public int addValue(List<Object> valueList, Object value) {
+        valueList.add(value);
+        return 1;
+    }
+
+    /**
+     * 名前を組み立てます。
+     * 
+     * @param tableAlias
+     *            テーブルエイリアス
+     * @param columnName
+     *            カラム名
+     * @return 名前
+     */
+    protected String makeName(String tableAlias, String columnName) {
+        if (StringUtil.isEmpty(tableAlias)) {
+            return columnName;
+        }
+        return tableAlias + "." + columnName;
+    }
+
+    /**
+     * <code>in, not in</code>用の内部的なメソッドです。
+     * 
+     * @param name
+     *            名前
+     * @param conditionName
+     *            条件名
+     * @param value
+     *            値
+     * 
+     * @return 条件
+     */
+    protected String getInConditionInternal(String name, String conditionName,
+            Object value) {
+        int size = Array.getLength(value);
+        StringBuilder buf = new StringBuilder(30);
+        buf.append(name);
+        buf.append(" ").append(conditionName).append(" (");
+        for (int i = 0; i < size; i++) {
+            if (i != 0) {
+                buf.append(", ");
+            }
+            buf.append("?");
+        }
+        buf.append(")");
+        return buf.toString();
+    }
+
+    /**
+     * IN用の条件の値が配列であることを表明します。
+     * 
+     * @param conditionName
+     *            条件名
+     * @param value
+     *            値
+     */
+    protected void assertArrayInCondition(String conditionName, Object value) {
+        if (value != null && !value.getClass().isArray()) {
+            throw new NonArrayInConditionRuntimeException(conditionName, value
+                    .getClass());
+        }
+    }
+
+    /**
+     * IS NULL用の条件の値がBooleanであることを表明します。
+     * 
+     * @param conditionName
+     *            条件名
+     * @param value
+     *            値
+     */
+    protected void assertBooleanIsNullCondition(String conditionName,
+            Object value) {
+        if (value != null && value.getClass() != Boolean.class) {
+            throw new NonBooleanIsNullConditionRuntimeException(conditionName,
+                    value.getClass());
+        }
     }
 }
