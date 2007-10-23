@@ -62,7 +62,7 @@ public class AutoBatchUpdateTest extends S2TestCase {
         department2.version = 1;
         list.add(department2);
 
-        int[] result = jdbcManager.updateBatch(list).executeBatch();
+        int[] result = jdbcManager.updateBatch(list).execute();
         assertEquals(2, result.length);
 
         Map<String, Object> m = new HashMap<String, Object>();
@@ -103,7 +103,7 @@ public class AutoBatchUpdateTest extends S2TestCase {
         list.add(department2);
 
         int[] result = jdbcManager.updateBatch(list).includesVersion()
-                .executeBatch();
+                .execute();
         assertEquals(2, result.length);
 
         Map<String, Object> m = new HashMap<String, Object>();
@@ -148,7 +148,7 @@ public class AutoBatchUpdateTest extends S2TestCase {
         list.add(department2);
 
         int[] result = jdbcManager.updateBatch(list).includes("departmentName",
-                "location").executeBatch();
+                "location").execute();
         assertEquals(2, result.length);
 
         Map<String, Object> m = new HashMap<String, Object>();
@@ -193,7 +193,7 @@ public class AutoBatchUpdateTest extends S2TestCase {
         list.add(department2);
 
         int[] result = jdbcManager.updateBatch(list).excludes("departmentName",
-                "location").executeBatch();
+                "location").execute();
         assertEquals(2, result.length);
 
         Map<String, Object> m = new HashMap<String, Object>();
@@ -235,7 +235,7 @@ public class AutoBatchUpdateTest extends S2TestCase {
         department2.version = 1;
         list.add(department2);
 
-        int[] result = jdbcManager.updateBatch(list).executeBatch();
+        int[] result = jdbcManager.updateBatch(list).execute();
         assertEquals(2, result.length);
 
         Map<String, Object> m = new HashMap<String, Object>();
@@ -275,7 +275,7 @@ public class AutoBatchUpdateTest extends S2TestCase {
                 "employeeId = ?", 2).getSingleResult();
         jdbcManager.update(employee1).execute();
         try {
-            jdbcManager.updateBatch(employee2, employee3).executeBatch();
+            jdbcManager.updateBatch(employee2, employee3).execute();
             fail();
         } catch (OptimisticLockException ignore) {
         }
@@ -295,7 +295,7 @@ public class AutoBatchUpdateTest extends S2TestCase {
                 "employeeId = ?", 2).getSingleResult();
         jdbcManager.update(employee1).execute();
         jdbcManager.updateBatch(employee2, employee3).includesVersion()
-                .executeBatch();
+                .execute();
     }
 
     /**
@@ -313,7 +313,7 @@ public class AutoBatchUpdateTest extends S2TestCase {
         department2.departmentName = "foo";
         list.add(department2);
 
-        int[] result = jdbcManager.updateBatch(list).executeBatch();
+        int[] result = jdbcManager.updateBatch(list).execute();
         assertEquals(2, result.length);
         String sql = "select department_name from Department where department_id = ?";
         String departmentName = jdbcManager.selectBySql(String.class, sql, 1)
@@ -339,7 +339,7 @@ public class AutoBatchUpdateTest extends S2TestCase {
         department2.departmentName = "foo";
         list.add(department2);
 
-        int[] result = jdbcManager.updateBatch(list).executeBatch();
+        int[] result = jdbcManager.updateBatch(list).execute();
         assertEquals(2, result.length);
         String sql = "select department_name from Department where department_id = ?";
         String departmentName = jdbcManager.selectBySql(String.class, sql, 1)
@@ -365,7 +365,7 @@ public class AutoBatchUpdateTest extends S2TestCase {
         department2.departmentName = "foo";
         list.add(department2);
 
-        int[] result = jdbcManager.updateBatch(list).executeBatch();
+        int[] result = jdbcManager.updateBatch(list).execute();
         assertEquals(2, result.length);
         String sql = "select department_name from Department where department_id = ?";
         String departmentName = jdbcManager.selectBySql(String.class, sql, 1)

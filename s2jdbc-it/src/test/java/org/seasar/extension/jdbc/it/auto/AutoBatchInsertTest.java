@@ -65,7 +65,7 @@ public class AutoBatchInsertTest extends S2TestCase {
         department2.departmentName = "foo";
         list.add(department2);
 
-        int[] result = jdbcManager.insertBatch(list).executeBatch();
+        int[] result = jdbcManager.insertBatch(list).execute();
         assertEquals(2, result.length);
 
         Map<String, Object> m = new HashMap<String, Object>();
@@ -110,7 +110,7 @@ public class AutoBatchInsertTest extends S2TestCase {
         list.add(department2);
 
         int[] result = jdbcManager.insertBatch(list).includes("departmentId",
-                "departmentNo", "location", "version").executeBatch();
+                "departmentNo", "location", "version").execute();
         assertEquals(2, result.length);
 
         Map<String, Object> m = new HashMap<String, Object>();
@@ -155,7 +155,7 @@ public class AutoBatchInsertTest extends S2TestCase {
         list.add(department2);
 
         int[] result = jdbcManager.insertBatch(list).excludes("departmentName",
-                "location").executeBatch();
+                "location").execute();
         assertEquals(2, result.length);
 
         Map<String, Object> m = new HashMap<String, Object>();
@@ -195,7 +195,7 @@ public class AutoBatchInsertTest extends S2TestCase {
         department2.departmentName = "foo";
         list.add(department2);
 
-        int[] result = jdbcManager.insertBatch(list).executeBatch();
+        int[] result = jdbcManager.insertBatch(list).execute();
         assertEquals(2, result.length);
 
         Map<String, Object> m = new HashMap<String, Object>();
@@ -230,7 +230,7 @@ public class AutoBatchInsertTest extends S2TestCase {
         for (int i = 0; i < 110; i++) {
             AutoStrategy entity1 = new AutoStrategy();
             AutoStrategy entity2 = new AutoStrategy();
-            jdbcManager.insertBatch(entity1, entity2).executeBatch();
+            jdbcManager.insertBatch(entity1, entity2).execute();
             assertNotNull(entity1.id);
             assertNotNull(entity2.id);
         }
@@ -245,7 +245,7 @@ public class AutoBatchInsertTest extends S2TestCase {
             for (int i = 0; i < 110; i++) {
                 IdentityStrategy entity1 = new IdentityStrategy();
                 IdentityStrategy entity2 = new IdentityStrategy();
-                jdbcManager.insertBatch(entity1, entity2).executeBatch();
+                jdbcManager.insertBatch(entity1, entity2).execute();
                 if (!jdbcManager.getDialect().supportsIdentity()) {
                     fail();
                 }
@@ -268,7 +268,7 @@ public class AutoBatchInsertTest extends S2TestCase {
             for (int i = 0; i < 110; i++) {
                 SequenceStrategy entity1 = new SequenceStrategy();
                 SequenceStrategy entity2 = new SequenceStrategy();
-                jdbcManager.insertBatch(entity1, entity2).executeBatch();
+                jdbcManager.insertBatch(entity1, entity2).execute();
                 if (!jdbcManager.getDialect().supportsSequence()) {
                     fail();
                 }
@@ -291,7 +291,7 @@ public class AutoBatchInsertTest extends S2TestCase {
             for (int i = 0; i < 110; i++) {
                 SequenceStrategy2 entity1 = new SequenceStrategy2();
                 SequenceStrategy2 entity2 = new SequenceStrategy2();
-                jdbcManager.insertBatch(entity1, entity2).executeBatch();
+                jdbcManager.insertBatch(entity1, entity2).execute();
                 if (!jdbcManager.getDialect().supportsSequence()) {
                     fail();
                 }
@@ -313,7 +313,7 @@ public class AutoBatchInsertTest extends S2TestCase {
         for (int i = 0; i < 110; i++) {
             TableStrategy entity1 = new TableStrategy();
             TableStrategy entity2 = new TableStrategy();
-            jdbcManager.insertBatch(entity1, entity2).executeBatch();
+            jdbcManager.insertBatch(entity1, entity2).execute();
             assertNotNull(entity1.id);
             assertNotNull(entity2.id);
         }
@@ -327,7 +327,7 @@ public class AutoBatchInsertTest extends S2TestCase {
         for (int i = 0; i < 110; i++) {
             TableStrategy2 entity1 = new TableStrategy2();
             TableStrategy2 entity2 = new TableStrategy2();
-            jdbcManager.insertBatch(entity1, entity2).executeBatch();
+            jdbcManager.insertBatch(entity1, entity2).execute();
             assertNotNull(entity1.id);
             assertNotNull(entity2.id);
         }
@@ -348,7 +348,7 @@ public class AutoBatchInsertTest extends S2TestCase {
         department2.departmentName = "foo";
 
         int[] result = jdbcManager.insertBatch(department, department2)
-                .executeBatch();
+                .execute();
         assertEquals(2, result.length);
         String sql = "select department_name from Department where department_id = ?";
         String departmentName = jdbcManager.selectBySql(String.class, sql, 98)
@@ -374,7 +374,7 @@ public class AutoBatchInsertTest extends S2TestCase {
         department2.departmentName = "foo";
 
         int[] result = jdbcManager.insertBatch(department, department2)
-                .executeBatch();
+                .execute();
         assertEquals(2, result.length);
         String sql = "select department_name from Department where department_id = ?";
         String departmentName = jdbcManager.selectBySql(String.class, sql, 98)
@@ -400,7 +400,7 @@ public class AutoBatchInsertTest extends S2TestCase {
         department2.departmentName = "foo";
 
         int[] result = jdbcManager.insertBatch(department, department2)
-                .executeBatch();
+                .execute();
         assertEquals(2, result.length);
         String sql = "select department_name from Department where department_id = ?";
         String departmentName = jdbcManager.selectBySql(String.class, sql, 98)

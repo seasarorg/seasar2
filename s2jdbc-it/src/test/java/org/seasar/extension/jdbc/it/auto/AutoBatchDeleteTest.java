@@ -56,7 +56,7 @@ public class AutoBatchDeleteTest extends S2TestCase {
         employee2.version = 1;
         list.add(employee2);
 
-        int[] result = jdbcManager.deleteBatch(list).executeBatch();
+        int[] result = jdbcManager.deleteBatch(list).execute();
         assertEquals(2, result.length);
 
         Map<String, Object> m = new HashMap<String, Object>();
@@ -84,8 +84,7 @@ public class AutoBatchDeleteTest extends S2TestCase {
         employee2.version = 99;
         list.add(employee2);
 
-        int[] result = jdbcManager.deleteBatch(list).ignoreVersion()
-                .executeBatch();
+        int[] result = jdbcManager.deleteBatch(list).ignoreVersion().execute();
         assertEquals(2, result.length);
 
         Map<String, Object> m = new HashMap<String, Object>();
@@ -115,7 +114,7 @@ public class AutoBatchDeleteTest extends S2TestCase {
         employee2.version = 1;
         list.add(employee2);
 
-        int[] result = jdbcManager.deleteBatch(list).executeBatch();
+        int[] result = jdbcManager.deleteBatch(list).execute();
         assertEquals(2, result.length);
 
         Map<String, Object> m = new HashMap<String, Object>();
@@ -145,7 +144,7 @@ public class AutoBatchDeleteTest extends S2TestCase {
                 "employeeId = ?", 2).getSingleResult();
         jdbcManager.delete(employee1).execute();
         try {
-            jdbcManager.deleteBatch(employee2, employee3).executeBatch();
+            jdbcManager.deleteBatch(employee2, employee3).execute();
             fail();
         } catch (OptimisticLockException ignore) {
             ignore.printStackTrace();
@@ -164,7 +163,6 @@ public class AutoBatchDeleteTest extends S2TestCase {
         Employee employee3 = jdbcManager.from(Employee.class).where(
                 "employeeId = ?", 2).getSingleResult();
         jdbcManager.delete(employee1).execute();
-        jdbcManager.deleteBatch(employee2, employee3).ignoreVersion()
-                .executeBatch();
+        jdbcManager.deleteBatch(employee2, employee3).ignoreVersion().execute();
     }
 }

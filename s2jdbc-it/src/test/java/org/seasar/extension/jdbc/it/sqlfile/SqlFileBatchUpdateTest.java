@@ -40,7 +40,7 @@ public class SqlFileBatchUpdateTest extends S2TestCase {
     public void testParamter_noneTx() throws Exception {
         String path = getClass().getName().replace(".", "/") + "_no.sql";
         int[] result = jdbcManager.updateBatchBySqlFile(path, null, null)
-                .executeBatch();
+                .execute();
         assertEquals(2, result.length);
     }
 
@@ -51,8 +51,7 @@ public class SqlFileBatchUpdateTest extends S2TestCase {
     public void testParamter_simpleTypeTx() throws Exception {
         String path = getClass().getName().replace(".", "/")
                 + "_simpleType.sql";
-        int[] result = jdbcManager.updateBatchBySqlFile(path, 2, 3)
-                .executeBatch();
+        int[] result = jdbcManager.updateBatchBySqlFile(path, 2, 3).execute();
         assertEquals(2, result.length);
 
         Department department = jdbcManager.selectBySql(Department.class,
@@ -87,7 +86,7 @@ public class SqlFileBatchUpdateTest extends S2TestCase {
         dto2.departmentId = 3;
         dto2.location = "bar";
         int[] result = jdbcManager.updateBatchBySqlFile(path, dto, dto2)
-                .executeBatch();
+                .execute();
         assertEquals(2, result.length);
 
         Department department = jdbcManager.selectBySql(Department.class,
