@@ -380,7 +380,7 @@ public class AutoBatchInsertTest extends TestCase {
             }
 
         };
-        int[] result = query.executeBatch();
+        int[] result = query.execute();
         assertEquals(3, addBatchCalled);
         assertEquals(3, result.length);
         SqlLog sqlLog = SqlLogRegistryLocator.getInstance().getLast();
@@ -428,7 +428,7 @@ public class AutoBatchInsertTest extends TestCase {
             }
 
         };
-        int[] result = query.executeBatch();
+        int[] result = query.execute();
         assertEquals(0, addBatchCalled);
         assertEquals(3, result.length);
         SqlLog sqlLog = SqlLogRegistryLocator.getInstance().getLast();
@@ -475,7 +475,7 @@ public class AutoBatchInsertTest extends TestCase {
             }
 
         };
-        int[] result = query.executeBatch();
+        int[] result = query.execute();
         assertEquals(0, addBatchCalled);
         assertEquals(3, result.length);
         SqlLog sqlLog = SqlLogRegistryLocator.getInstance().getLast();
@@ -523,7 +523,7 @@ public class AutoBatchInsertTest extends TestCase {
             }
 
         };
-        int[] result = query.executeBatch();
+        int[] result = query.execute();
         assertEquals(3, addBatchCalled);
         assertEquals(3, result.length);
         SqlLog sqlLog = SqlLogRegistryLocator.getInstance().getLast();
@@ -571,7 +571,7 @@ public class AutoBatchInsertTest extends TestCase {
             }
 
         };
-        int[] result = query.executeBatch();
+        int[] result = query.execute();
         assertEquals(3, addBatchCalled);
         assertEquals(3, result.length);
         SqlLog sqlLog = SqlLogRegistryLocator.getInstance().getLast();

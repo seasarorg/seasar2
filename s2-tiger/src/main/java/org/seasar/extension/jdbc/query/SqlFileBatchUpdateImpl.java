@@ -83,7 +83,7 @@ public class SqlFileBatchUpdateImpl<T> extends
         this.parameterList = parameterList;
     }
 
-    public int[] executeBatch() {
+    public int[] execute() {
         prepare("executeBatch");
         int[] ret = null;
         JdbcContext jdbcContext = jdbcManager.getJdbcContext();

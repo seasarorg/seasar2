@@ -29,5 +29,5 @@ public interface BatchUpdate<S extends BatchUpdate<S>> extends Query<S> {
      * 
      * @return 更新した行数の配列
      */
-    int[] executeBatch();
+    int[] execute();
 }

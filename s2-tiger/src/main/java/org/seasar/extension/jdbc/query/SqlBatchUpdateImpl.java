@@ -71,7 +71,7 @@ public class SqlBatchUpdateImpl extends AbstractQuery<SqlBatchUpdate> implements
         return this;
     }
 
-    public int[] executeBatch() {
+    public int[] execute() {
         prepare("executeBatch");
         int[] ret = null;
         JdbcContext jdbcContext = jdbcManager.getJdbcContext();

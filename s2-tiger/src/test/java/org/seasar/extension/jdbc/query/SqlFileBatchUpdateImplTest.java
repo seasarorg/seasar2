@@ -179,7 +179,7 @@ public class SqlFileBatchUpdateImplTest extends TestCase {
             }
 
         };
-        int[] ret = query.executeBatch();
+        int[] ret = query.execute();
         assertEquals(2, ret.length);
         assertTrue(executedBatch);
         assertEquals(2, batchSize);
@@ -279,7 +279,7 @@ public class SqlFileBatchUpdateImplTest extends TestCase {
             }
 
         };
-        int[] ret = query.executeBatch();
+        int[] ret = query.execute();
         assertEquals(2, ret.length);
         assertTrue(executedBatch);
         assertEquals(2, batchSize);

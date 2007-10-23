@@ -165,7 +165,7 @@ public class SqlBatchUpdateImplTest extends TestCase {
             }
 
         };
-        int[] ret = query.params("hoge", 1).params("hoge2", 2).executeBatch();
+        int[] ret = query.params("hoge", 1).params("hoge2", 2).execute();
         assertEquals(2, ret.length);
         assertTrue(executedBatch);
         assertEquals(2, batchSize);
@@ -189,7 +189,7 @@ public class SqlBatchUpdateImplTest extends TestCase {
         SqlBatchUpdateImpl query = new SqlBatchUpdateImpl(manager, sql,
                 String.class, Integer.class);
         try {
-            query.params("hoge").executeBatch();
+            query.params("hoge").execute();
             fail();
         } catch (IllegalParamSizeRuntimeException e) {
             System.out.println(e);

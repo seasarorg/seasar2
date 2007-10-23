@@ -264,7 +264,7 @@ public class AutoBatchDeleteTest extends TestCase {
             }
 
         };
-        int[] result = query.executeBatch();
+        int[] result = query.execute();
         assertEquals(3, addBatchCalled);
         assertEquals(3, result.length);
         SqlLog sqlLog = SqlLogRegistryLocator.getInstance().getLast();
@@ -301,7 +301,7 @@ public class AutoBatchDeleteTest extends TestCase {
 
         };
         query.ignoreVersion();
-        int[] result = query.executeBatch();
+        int[] result = query.execute();
         assertEquals(3, addBatchCalled);
         assertEquals(3, result.length);
         SqlLog sqlLog = SqlLogRegistryLocator.getInstance().getLast();
@@ -337,7 +337,7 @@ public class AutoBatchDeleteTest extends TestCase {
 
         };
         try {
-            query.executeBatch();
+            query.execute();
             fail();
         } catch (OptimisticLockException expected) {
             expected.printStackTrace();
@@ -374,7 +374,7 @@ public class AutoBatchDeleteTest extends TestCase {
 
         };
         query.ignoreVersion();
-        int[] result = query.executeBatch();
+        int[] result = query.execute();
         assertEquals(3, addBatchCalled);
         assertEquals(3, result.length);
         assertEquals(1, result[0]);

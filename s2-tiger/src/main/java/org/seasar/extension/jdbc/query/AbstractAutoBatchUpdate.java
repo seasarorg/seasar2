@@ -78,7 +78,7 @@ public abstract class AbstractAutoBatchUpdate<T, S extends BatchUpdate<S>>
         return entities;
     }
 
-    public int[] executeBatch() {
+    public int[] execute() {
         prepare("executeBatch");
         return executeInternal();
     }

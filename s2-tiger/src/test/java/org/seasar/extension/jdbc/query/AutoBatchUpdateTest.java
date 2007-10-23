@@ -444,7 +444,7 @@ public class AutoBatchUpdateTest extends TestCase {
             }
 
         };
-        int[] result = query.executeBatch();
+        int[] result = query.execute();
         assertEquals(3, addBatchCalled);
         assertEquals(3, result.length);
         SqlLog sqlLog = SqlLogRegistryLocator.getInstance().getLast();
@@ -482,7 +482,7 @@ public class AutoBatchUpdateTest extends TestCase {
 
         };
         query.includesVersion();
-        int[] result = query.executeBatch();
+        int[] result = query.execute();
         assertEquals(3, addBatchCalled);
         assertEquals(3, result.length);
         SqlLog sqlLog = SqlLogRegistryLocator.getInstance().getLast();
@@ -520,7 +520,7 @@ public class AutoBatchUpdateTest extends TestCase {
 
         };
         try {
-            query.executeBatch();
+            query.execute();
             fail();
         } catch (OptimisticLockException expected) {
             expected.printStackTrace();
@@ -557,7 +557,7 @@ public class AutoBatchUpdateTest extends TestCase {
 
         };
         query.includesVersion();
-        int[] result = query.executeBatch();
+        int[] result = query.execute();
         assertEquals(3, addBatchCalled);
         assertEquals(3, result.length);
         assertEquals(1, result[0]);

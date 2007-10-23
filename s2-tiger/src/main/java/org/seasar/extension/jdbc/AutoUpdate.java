@@ -27,7 +27,7 @@ import java.util.Map;
 public interface AutoUpdate<T> extends Update<AutoUpdate<T>> {
 
     /**
-     * バージョンプロパティを更新対象に含めます。
+     * バージョンプロパティを通常の更新対象に含め、バージョンチェックの対象外とします。
      * <p>
      * このメソッドが呼び出されると、<code>update</code>文の<code>where</code>句にはバージョンのチェックが含まれなくなり、
      * バージョンプロパティは通常のプロパティと同じように更新対象に含められます ({@link #excludesNull()}や{@link #changedFrom(Object)}等も同じように適用されます)。
