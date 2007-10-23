@@ -18,7 +18,7 @@ package org.seasar.extension.jdbc.it.sql;
 import java.util.List;
 
 import org.seasar.extension.jdbc.JdbcManager;
-import org.seasar.extension.jdbc.dialect.HSQLDialect;
+import org.seasar.extension.jdbc.dialect.HsqlDialect;
 import org.seasar.extension.jdbc.it.entity.Department;
 import org.seasar.extension.jdbc.it.entity.Employee;
 import org.seasar.extension.unit.S2TestCase;
@@ -135,7 +135,7 @@ public class SqlProcedureCallTest extends S2TestCase {
     }
 
     private boolean supportsProcedure() {
-        if (jdbcManager.getDialect() instanceof HSQLDialect) {
+        if (jdbcManager.getDialect() instanceof HsqlDialect) {
             return false;
         }
         return true;
