@@ -24,6 +24,9 @@ import org.seasar.extension.jdbc.exception.SequenceGeneratorNotSupportedRuntimeE
 import org.seasar.extension.jdbc.it.entity.AutoStrategy;
 import org.seasar.extension.jdbc.it.entity.CompKeyDepartment;
 import org.seasar.extension.jdbc.it.entity.Department;
+import org.seasar.extension.jdbc.it.entity.Department2;
+import org.seasar.extension.jdbc.it.entity.Department3;
+import org.seasar.extension.jdbc.it.entity.Department4;
 import org.seasar.extension.jdbc.it.entity.IdentityStrategy;
 import org.seasar.extension.jdbc.it.entity.SequenceStrategy;
 import org.seasar.extension.jdbc.it.entity.SequenceStrategy2;
@@ -258,5 +261,62 @@ public class AutoInsertTest extends S2TestCase {
             jdbcManager.insert(entity).execute();
             assertNotNull(entity.id);
         }
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testColumnAnnotationTx() throws Exception {
+        Department2 department = new Department2();
+        department.departmentId = 99;
+        department.departmentNo = 99;
+        department.departmentName = "hoge";
+        int result = jdbcManager.insert(department).execute();
+        assertEquals(1, result);
+        String departmentName = jdbcManager
+                .selectBySql(
+                        String.class,
+                        "select department_name from Department where department_id = ?",
+                        99).getSingleResult();
+        assertNull(departmentName);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testTransientAnnotationTx() throws Exception {
+        Department3 department = new Department3();
+        department.departmentId = 99;
+        department.departmentNo = 99;
+        department.departmentName = "hoge";
+        int result = jdbcManager.insert(department).execute();
+        assertEquals(1, result);
+        String departmentName = jdbcManager
+                .selectBySql(
+                        String.class,
+                        "select department_name from Department where department_id = ?",
+                        99).getSingleResult();
+        assertNull(departmentName);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testTransientModifierTx() throws Exception {
+        Department4 department = new Department4();
+        department.departmentId = 99;
+        department.departmentNo = 99;
+        department.departmentName = "hoge";
+        int result = jdbcManager.insert(department).execute();
+        assertEquals(1, result);
+        String departmentName = jdbcManager
+                .selectBySql(
+                        String.class,
+                        "select department_name from Department where department_id = ?",
+                        99).getSingleResult();
+        assertNull(departmentName);
     }
 }

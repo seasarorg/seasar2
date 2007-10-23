@@ -25,6 +25,9 @@ import javax.persistence.OptimisticLockException;
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.it.entity.CompKeyDepartment;
 import org.seasar.extension.jdbc.it.entity.Department;
+import org.seasar.extension.jdbc.it.entity.Department2;
+import org.seasar.extension.jdbc.it.entity.Department3;
+import org.seasar.extension.jdbc.it.entity.Department4;
 import org.seasar.extension.jdbc.it.entity.Employee;
 import org.seasar.extension.unit.S2TestCase;
 
@@ -293,5 +296,83 @@ public class AutoBatchUpdateTest extends S2TestCase {
         jdbcManager.update(employee1).execute();
         jdbcManager.updateBatch(employee2, employee3).includesVersion()
                 .executeBatch();
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testColumnAnnotationTx() throws Exception {
+        List<Department2> list = new ArrayList<Department2>();
+        Department2 department = new Department2();
+        department.departmentId = 1;
+        department.departmentName = "hoge";
+        list.add(department);
+        Department2 department2 = new Department2();
+        department2.departmentId = 2;
+        department2.departmentName = "foo";
+        list.add(department2);
+
+        int[] result = jdbcManager.updateBatch(list).executeBatch();
+        assertEquals(2, result.length);
+        String sql = "select department_name from Department where department_id = ?";
+        String departmentName = jdbcManager.selectBySql(String.class, sql, 1)
+                .getSingleResult();
+        assertEquals("ACCOUNTING", departmentName);
+        departmentName = jdbcManager.selectBySql(String.class, sql, 2)
+                .getSingleResult();
+        assertEquals("RESEARCH", departmentName);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testTransientAnnotationTx() throws Exception {
+        List<Department3> list = new ArrayList<Department3>();
+        Department3 department = new Department3();
+        department.departmentId = 1;
+        department.departmentName = "hoge";
+        list.add(department);
+        Department3 department2 = new Department3();
+        department2.departmentId = 2;
+        department2.departmentName = "foo";
+        list.add(department2);
+
+        int[] result = jdbcManager.updateBatch(list).executeBatch();
+        assertEquals(2, result.length);
+        String sql = "select department_name from Department where department_id = ?";
+        String departmentName = jdbcManager.selectBySql(String.class, sql, 1)
+                .getSingleResult();
+        assertEquals("ACCOUNTING", departmentName);
+        departmentName = jdbcManager.selectBySql(String.class, sql, 2)
+                .getSingleResult();
+        assertEquals("RESEARCH", departmentName);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testTransientModifierTx() throws Exception {
+        List<Department4> list = new ArrayList<Department4>();
+        Department4 department = new Department4();
+        department.departmentId = 1;
+        department.departmentName = "hoge";
+        list.add(department);
+        Department4 department2 = new Department4();
+        department2.departmentId = 2;
+        department2.departmentName = "foo";
+        list.add(department2);
+
+        int[] result = jdbcManager.updateBatch(list).executeBatch();
+        assertEquals(2, result.length);
+        String sql = "select department_name from Department where department_id = ?";
+        String departmentName = jdbcManager.selectBySql(String.class, sql, 1)
+                .getSingleResult();
+        assertEquals("ACCOUNTING", departmentName);
+        departmentName = jdbcManager.selectBySql(String.class, sql, 2)
+                .getSingleResult();
+        assertEquals("RESEARCH", departmentName);
     }
 }

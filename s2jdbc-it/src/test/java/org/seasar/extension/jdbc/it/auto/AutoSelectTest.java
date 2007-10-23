@@ -26,6 +26,8 @@ import org.seasar.extension.jdbc.JoinType;
 import org.seasar.extension.jdbc.exception.NonArrayInConditionRuntimeException;
 import org.seasar.extension.jdbc.exception.NonBooleanIsNullConditionRuntimeException;
 import org.seasar.extension.jdbc.it.entity.Department;
+import org.seasar.extension.jdbc.it.entity.Department3;
+import org.seasar.extension.jdbc.it.entity.Department4;
 import org.seasar.extension.jdbc.it.entity.Employee;
 import org.seasar.extension.jdbc.where.SimpleWhere;
 import org.seasar.extension.unit.S2TestCase;
@@ -391,5 +393,25 @@ public class AutoSelectTest extends S2TestCase {
             fail();
         } catch (NonUniqueResultException e) {
         }
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testTransientAnnotationTx() throws Exception {
+        Department3 department = jdbcManager.from(Department3.class).where(
+                new SimpleWhere().eq("departmentId", 1)).getSingleResult();
+        assertNull(department.departmentName);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testTransientModifierTx() throws Exception {
+        Department4 department = jdbcManager.from(Department4.class).where(
+                new SimpleWhere().eq("departmentId", 1)).getSingleResult();
+        assertNull(department.departmentName);
     }
 }

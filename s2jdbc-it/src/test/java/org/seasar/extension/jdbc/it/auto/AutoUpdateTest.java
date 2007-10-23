@@ -22,6 +22,9 @@ import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.exception.SOptimisticLockException;
 import org.seasar.extension.jdbc.it.entity.CompKeyDepartment;
 import org.seasar.extension.jdbc.it.entity.Department;
+import org.seasar.extension.jdbc.it.entity.Department2;
+import org.seasar.extension.jdbc.it.entity.Department3;
+import org.seasar.extension.jdbc.it.entity.Department4;
 import org.seasar.extension.jdbc.it.entity.Employee;
 import org.seasar.extension.unit.S2TestCase;
 
@@ -224,5 +227,59 @@ public class AutoUpdateTest extends S2TestCase {
             fail();
         } catch (SOptimisticLockException ignore) {
         }
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testColumnAnnotationTx() throws Exception {
+        Department2 department = new Department2();
+        department.departmentId = 1;
+        department.departmentName = "hoge";
+        int result = jdbcManager.update(department).execute();
+        assertEquals(1, result);
+        String departmentName = jdbcManager
+                .selectBySql(
+                        String.class,
+                        "select department_name from Department where department_id = ?",
+                        1).getSingleResult();
+        assertEquals("ACCOUNTING", departmentName);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testTransientAnnotationTx() throws Exception {
+        Department3 department = new Department3();
+        department.departmentId = 1;
+        department.departmentName = "hoge";
+        int result = jdbcManager.update(department).execute();
+        assertEquals(1, result);
+        String departmentName = jdbcManager
+                .selectBySql(
+                        String.class,
+                        "select department_name from Department where department_id = ?",
+                        1).getSingleResult();
+        assertEquals("ACCOUNTING", departmentName);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testTransientModifierTx() throws Exception {
+        Department4 department = new Department4();
+        department.departmentId = 1;
+        department.departmentName = "hoge";
+        int result = jdbcManager.update(department).execute();
+        assertEquals(1, result);
+        String departmentName = jdbcManager
+                .selectBySql(
+                        String.class,
+                        "select department_name from Department where department_id = ?",
+                        1).getSingleResult();
+        assertEquals("ACCOUNTING", departmentName);
     }
 }
