@@ -57,7 +57,7 @@ public class HsqlDialect extends StandardDialect {
     }
 
     @Override
-    public boolean supportIdentity() {
+    public boolean supportsIdentity() {
         return true;
     }
 
@@ -73,7 +73,7 @@ public class HsqlDialect extends StandardDialect {
     }
 
     @Override
-    public boolean supportSequence() {
+    public boolean supportsSequence() {
         return true;
     }
 

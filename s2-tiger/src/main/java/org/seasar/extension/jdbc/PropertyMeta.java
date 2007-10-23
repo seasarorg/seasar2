@@ -244,13 +244,13 @@ public class PropertyMeta {
         switch (generationType == GenerationType.AUTO ? dialect
                 .getDefaultGenerationType() : generationType) {
         case IDENTITY:
-            if (!dialect.supportIdentity()) {
+            if (!dialect.supportsIdentity()) {
                 throw new IdentityGeneratorNotSupportedRuntimeException(
                         entityMeta.getName(), getName(), dialect.getName());
             }
             return identityIdGenerator;
         case SEQUENCE:
-            if (!dialect.supportSequence()) {
+            if (!dialect.supportsSequence()) {
                 throw new SequenceGeneratorNotSupportedRuntimeException(
                         entityMeta.getName(), getName(), dialect.getName());
             }

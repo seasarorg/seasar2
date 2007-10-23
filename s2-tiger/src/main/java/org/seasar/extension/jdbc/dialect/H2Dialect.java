@@ -57,7 +57,7 @@ public class H2Dialect extends StandardDialect {
     }
 
     @Override
-    public boolean supportIdentity() {
+    public boolean supportsIdentity() {
         return true;
     }
 
@@ -78,7 +78,7 @@ public class H2Dialect extends StandardDialect {
     }
 
     @Override
-    public boolean supportSequence() {
+    public boolean supportsSequence() {
         return true;
     }
 

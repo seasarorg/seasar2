@@ -160,7 +160,7 @@ public interface AutoSelect<T> extends Select<T, AutoSelect<T>> {
      * 
      * @return このインスタンス自身
      */
-    AutoSelect<T> where(Map<String, Object> conditions);
+    AutoSelect<T> where(Map<String, ? extends Object> conditions);
 
     /**
      * where句の条件を指定します。

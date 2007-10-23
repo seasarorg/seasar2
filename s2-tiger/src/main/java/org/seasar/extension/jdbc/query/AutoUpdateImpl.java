@@ -112,7 +112,8 @@ public class AutoUpdateImpl<T> extends AbstractAutoUpdate<T, AutoUpdate<T>>
         return this;
     }
 
-    public AutoUpdate<T> changedFrom(final Map<String, Object> beforeStates) {
+    public AutoUpdate<T> changedFrom(
+            final Map<String, ? extends Object> beforeStates) {
         this.beforeStates = CollectionsUtil.newHashMap(beforeStates.size());
         this.beforeStates.putAll(beforeStates);
         return this;

@@ -182,13 +182,13 @@ public class AutoInsertTest extends S2TestCase {
             for (int i = 0; i < 110; i++) {
                 IdentityStrategy entity = new IdentityStrategy();
                 jdbcManager.insert(entity).execute();
-                if (!jdbcManager.getDialect().supportIdentity()) {
+                if (!jdbcManager.getDialect().supportsIdentity()) {
                     fail();
                 }
                 assertNotNull(entity.id);
             }
         } catch (IdentityGeneratorNotSupportedRuntimeException e) {
-            if (jdbcManager.getDialect().supportIdentity()) {
+            if (jdbcManager.getDialect().supportsIdentity()) {
                 fail();
             }
         }
@@ -203,13 +203,13 @@ public class AutoInsertTest extends S2TestCase {
             for (int i = 0; i < 110; i++) {
                 SequenceStrategy entity = new SequenceStrategy();
                 jdbcManager.insert(entity).execute();
-                if (!jdbcManager.getDialect().supportSequence()) {
+                if (!jdbcManager.getDialect().supportsSequence()) {
                     fail();
                 }
                 assertNotNull(entity.id);
             }
         } catch (SequenceGeneratorNotSupportedRuntimeException e) {
-            if (jdbcManager.getDialect().supportSequence()) {
+            if (jdbcManager.getDialect().supportsSequence()) {
                 fail();
             }
         }
@@ -224,13 +224,13 @@ public class AutoInsertTest extends S2TestCase {
             for (int i = 0; i < 110; i++) {
                 SequenceStrategy2 entity = new SequenceStrategy2();
                 jdbcManager.insert(entity).execute();
-                if (!jdbcManager.getDialect().supportSequence()) {
+                if (!jdbcManager.getDialect().supportsSequence()) {
                     fail();
                 }
                 assertNotNull(entity.id);
             }
         } catch (SequenceGeneratorNotSupportedRuntimeException e) {
-            if (jdbcManager.getDialect().supportSequence()) {
+            if (jdbcManager.getDialect().supportsSequence()) {
                 fail();
             }
         }

@@ -136,7 +136,7 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
     /**
      * Mapによるwhere句の条件指定です。
      */
-    protected Map<String, Object> conditions;
+    protected Map<String, ? extends Object> conditions;
 
     /**
      * クライテリアです。
@@ -633,7 +633,7 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
                 .toString();
     }
 
-    public AutoSelect<T> where(Map<String, Object> conditions) {
+    public AutoSelect<T> where(Map<String, ? extends Object> conditions) {
         this.conditions = conditions;
         return this;
     }
@@ -669,7 +669,7 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
         }
         List<Object> valueList = new ArrayList<Object>();
         List<Class<?>> valueClassList = new ArrayList<Class<?>>();
-        for (Map.Entry<String, Object> e : conditions.entrySet()) {
+        for (Map.Entry<String, ? extends Object> e : conditions.entrySet()) {
             prepareCondition(e.getKey(), e.getValue(), valueList,
                     valueClassList);
         }

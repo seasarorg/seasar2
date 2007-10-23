@@ -132,7 +132,7 @@ public interface DbmsDialect {
      * 
      * @return {@link GenerationType#IDENTITY}をサポートしている場合は<code>true</code>
      */
-    boolean supportIdentity();
+    boolean supportsIdentity();
 
     /**
      * 識別子が{@link GenerationType#IDENTITY}で生成される場合に、 識別子をINSERT文に含める場合は<code>true</code>を返します。
@@ -165,7 +165,7 @@ public interface DbmsDialect {
      * 
      * @return {@link GenerationType#SEQUENCE}をサポートしている場合は<code>true</code>
      */
-    boolean supportSequence();
+    boolean supportsSequence();
 
     /**
      * 識別子が{@link GenerationType#SEQUENCE}で自動生成される場合に、 シーケンスの値を取得するSQLを返します。

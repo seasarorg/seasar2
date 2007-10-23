@@ -79,6 +79,6 @@ public interface AutoUpdate<T> extends Update<AutoUpdate<T>> {
      *            変更前の状態を持つ{@link Map}
      * @return このインスタンス自身
      */
-    AutoUpdate<T> changedFrom(Map<String, Object> before);
+    AutoUpdate<T> changedFrom(Map<String, ? extends Object> before);
 
 }

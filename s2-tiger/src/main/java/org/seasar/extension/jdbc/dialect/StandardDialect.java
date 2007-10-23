@@ -83,7 +83,7 @@ public class StandardDialect implements DbmsDialect {
         return GenerationType.TABLE;
     }
 
-    public boolean supportIdentity() {
+    public boolean supportsIdentity() {
         return false;
     }
 
@@ -100,7 +100,7 @@ public class StandardDialect implements DbmsDialect {
         return null;
     }
 
-    public boolean supportSequence() {
+    public boolean supportsSequence() {
         return false;
     }
 

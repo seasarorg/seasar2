@@ -36,7 +36,7 @@ public class SybaseDialect extends StandardDialect {
     }
 
     @Override
-    public boolean supportIdentity() {
+    public boolean supportsIdentity() {
         return true;
     }
 

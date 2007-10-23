@@ -60,7 +60,7 @@ public class FirebirdDialect extends StandardDialect {
     }
 
     @Override
-    public boolean supportSequence() {
+    public boolean supportsSequence() {
         return true;
     }
 

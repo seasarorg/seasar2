@@ -57,7 +57,7 @@ public class InterbaseDialect extends StandardDialect {
     }
 
     @Override
-    public boolean supportSequence() {
+    public boolean supportsSequence() {
         return true;
     }
 

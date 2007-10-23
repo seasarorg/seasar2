@@ -243,14 +243,14 @@ public class AutoBatchInsertTest extends S2TestCase {
                 IdentityStrategy entity1 = new IdentityStrategy();
                 IdentityStrategy entity2 = new IdentityStrategy();
                 jdbcManager.insertBatch(entity1, entity2).executeBatch();
-                if (!jdbcManager.getDialect().supportIdentity()) {
+                if (!jdbcManager.getDialect().supportsIdentity()) {
                     fail();
                 }
                 assertNotNull(entity1.id);
                 assertNotNull(entity2.id);
             }
         } catch (IdentityGeneratorNotSupportedRuntimeException e) {
-            if (jdbcManager.getDialect().supportIdentity()) {
+            if (jdbcManager.getDialect().supportsIdentity()) {
                 fail();
             }
         }
@@ -266,14 +266,14 @@ public class AutoBatchInsertTest extends S2TestCase {
                 SequenceStrategy entity1 = new SequenceStrategy();
                 SequenceStrategy entity2 = new SequenceStrategy();
                 jdbcManager.insertBatch(entity1, entity2).executeBatch();
-                if (!jdbcManager.getDialect().supportSequence()) {
+                if (!jdbcManager.getDialect().supportsSequence()) {
                     fail();
                 }
                 assertNotNull(entity1.id);
                 assertNotNull(entity2.id);
             }
         } catch (SequenceGeneratorNotSupportedRuntimeException e) {
-            if (jdbcManager.getDialect().supportSequence()) {
+            if (jdbcManager.getDialect().supportsSequence()) {
                 fail();
             }
         }
@@ -289,14 +289,14 @@ public class AutoBatchInsertTest extends S2TestCase {
                 SequenceStrategy2 entity1 = new SequenceStrategy2();
                 SequenceStrategy2 entity2 = new SequenceStrategy2();
                 jdbcManager.insertBatch(entity1, entity2).executeBatch();
-                if (!jdbcManager.getDialect().supportSequence()) {
+                if (!jdbcManager.getDialect().supportsSequence()) {
                     fail();
                 }
                 assertNotNull(entity1.id);
                 assertNotNull(entity2.id);
             }
         } catch (SequenceGeneratorNotSupportedRuntimeException e) {
-            if (jdbcManager.getDialect().supportSequence()) {
+            if (jdbcManager.getDialect().supportsSequence()) {
                 fail();
             }
         }
