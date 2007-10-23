@@ -10,7 +10,7 @@ public class DialectDiconTest extends S2TestCase {
 
     @Override
     protected void setUp() {
-        include("s2jdbc-dialect.dicon");
+        include("s2jdbc-internal.dicon");
     }
 
     /**

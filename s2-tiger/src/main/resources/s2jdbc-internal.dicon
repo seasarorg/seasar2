@@ -2,6 +2,7 @@
 <!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN"
 	"http://www.seasar.org/dtd/components24.dtd">
 <components>
+	<include path="convention.dicon"/>
     <component class="org.seasar.framework.container.autoregister.ComponentAutoRegister">
 		<initMethod name="addReferenceClass">
 			<arg>@org.seasar.extension.jdbc.dialect.StandardDialect@class</arg>
@@ -9,6 +10,10 @@
 		<initMethod name="addClassPattern">
 			<arg>"org.seasar.extension.jdbc.dialect"</arg>
 			<arg>"..*Dialect"</arg>
+		</initMethod>
+		<initMethod name="addClassPattern">
+			<arg>"org.seasar.extension.jdbc.meta"</arg>
+			<arg>"..*FactoryImpl"</arg>
 		</initMethod>
 	</component>
 </components>
