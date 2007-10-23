@@ -54,7 +54,11 @@
 <li><a href="#betterJPA">より良いJPA</a></li>
 </ul>
 </li>
-<li><a href="#setup">セットアップ</a></li>
+<li><a href="#setup">セットアップ</a>
+<ul>
+<li><a href="#dialect">ダイアレクト</a></li>
+</ul>
+</li>
 <li><a href="#Entity">エンティティ</a>
 <ul>
 <li><a href="#EntityDefinition">エンティティ定義</a></li>
@@ -81,6 +85,17 @@
 <li><a href="#maxRows">最大行数</a></li>
 <li><a href="#fetchSize">フェッチサイズ</a></li>
 <li><a href="#queryTimeout">クエリタイムアウト</a></li>
+<li><a href="#insert">挿入</a></li>
+<li><a href="#insertBatch">バッチ挿入</a></li>
+<li><a href="#excludesNull">nullの項目を更新しない</a></li>
+<li><a href="#includes">指定したプロパティのみを更新対象にする</a></li>
+<li><a href="#excludes">指定したプロパティを更新対象から除外する</a></li>
+<li><a href="#update">更新</a></li>
+<li><a href="#updateBatch">バッチ更新</a></li>
+<li><a href="#includesVersion">バージョンプロパティを通常の更新対象にする</a></li>
+<li><a href="#changedFrom">変更のあったプロパティのみを更新対象にする</a></li>
+<li><a href="#delete">削除</a></li>
+<li><a href="#deleteBatch">バッチ削除</a></li>
 </ul>
 <li><a href="#other">その他の機能</a>
 <ul>
@@ -532,6 +547,117 @@ JPAを使ってパフォーマンスが出なかったり、
 </p>
 
 <h2><a name="setup">セットアップ</a></h2>
+<p>
+Seasar2の基本的な<a href="setup.html">セットアップ</a>をした後に、
+<a href="jdbc.html">JDBCのセットアップ</a>をします。
+</p>
+<p>
+S2JDBCの設定は、s2jdbc.diconに対して行ないます。
+s2jdbc.diconは、S2Tiger-2.4.x.zipを解凍してできたs2-tigerのresourcesにあるので、
+コピーしてCLASSPATHに含めます。
+</p>
+<p>
+s2jdbc.diconの中身は、次のようになっているので、
+dialectプロパティをお使いのデータベースにあわせて書き換えます。
+</p>
+<pre>
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN"
+    "http://www.seasar.org/dtd/components24.dtd"&gt;
+&lt;components&gt;
+    &lt;include path="jdbc.dicon"/&gt;
+    &lt;include path="s2jdbc-internal.dicon"/&gt;
+    &lt;component name="jdbcManager" class="org.seasar.extension.jdbc.manager.JdbcManagerImpl"&gt;
+        &lt;property name="maxRows"&gt;0&lt;/property&gt;
+        &lt;property name="fetchSize"&gt;0&lt;/property&gt;
+        &lt;property name="queryTimeout"&gt;0&lt;/property&gt;
+        &lt;property name="dialect"&gt;hsqlDialect&lt;/property&gt;
+    &lt;/component&gt;
+&lt;/components&gt;
+</pre>
+<p>
+<code>maxRows, fetchSize, queryTimeout</code>は、JdbcManagerのデフォルト値になります。
+個別のクエリの呼び出し時に上書きすることもできます。
+<a href="#maxRows">最大行数</a>、
+<a href="#fetchSize">フェッチサイズ</a>、
+<a href="#queryTimeout">クエリタイムアウト</a>を参照してください。
+<p>
+<h3><a name="dialect">ダイアレクト</a></h3>
+<p>
+ダイアレクトは次のものが用意されています。
+</p>
+<p>
+<table border="1">
+<tr bgcolor="#D1F3F4" align="center">
+<th width="200">名前</th>
+<th width="200">説明</th>
+</tr>
+<tr>
+<td>db2390Dialect</td>
+<td>DB2/390</td>
+</tr>
+<tr>
+<td>db2400Dialect</td>
+<td>DB2/400</td>
+</tr>
+<tr>
+<td>db2Dialect</td>
+<td>DB2</td>
+</tr>
+<tr>
+<td>derbyDialect</td>
+<td>Derby</td>
+</tr>
+<tr>
+<td>firebirdDialect</td>
+<td>Firebird</td>
+</tr>
+<tr>
+<td>h2Dialect</td>
+<td>H2</td>
+</tr>
+<tr>
+<td>hsqlDialect</td>
+<td>HSQLDB</td>
+</tr>
+<tr>
+<td>interbaseDialect</td>
+<td>Interbase</td>
+</tr>
+<tr>
+<td>maxdbDialect</td>
+<td>MaxDB</td>
+</tr>
+<tr>
+<td>mssql2005Dialect</td>
+<td>MS SQLServer 2005</td>
+</tr>
+<tr>
+<td>mssqlDialect</td>
+<td>MS SQLServer</td>
+</tr>
+<tr>
+<td>mysqlDialect</td>
+<td>MySQL</td>
+</tr>
+<tr>
+<td>oracleDialect</td>
+<td>Oracle</td>
+</tr>
+<tr>
+<td>postgreDialect</td>
+<td>PostgreSQL</td>
+</tr>
+<tr>
+<td>standardDialect</td>
+<td>どれにも当てはまらないときに選ぶ標準的なダイアレクト</td>
+</tr>
+<tr>
+<td>sybaseDialect</td>
+<td>Sybase</td>
+</tr>
+</table>
+</p>
 
 <h2><a name="Entity">エンティティ</a></h2>
 <p>
@@ -1397,6 +1523,126 @@ jdbcManager.from(Employee.class)
     .queryTimeout(10)
     .getResultList();
 </pre>
+
+<h3><a name="insert">挿入</a></h3>
+<p>
+エンティティを挿入する場合は、<code>insert()</code>と<code>execute()</code>を組み合わせます。
+</p>
+<pre>
+int count = jdbcManager.insert(employee).execute();
+</pre>
+<p>
+引数はエンティティで、戻り値は、更新した行数です。
+挿入するときに、識別子を自動設定することができます。
+詳しくは、<a href="#IdDefinition">識別子定義</a>を参照してください。
+</p>
+
+<h3><a name="insertBatch">バッチ挿入</a></h3>
+<p>
+複数のエンティティをバッチ挿入する場合は、<code>insertBatch()</code>と<code>execute()</code>を組み合わせます。
+</p>
+<pre>
+int[] countArray = jdbcManager.insertBatch(employees).execute();
+</pre>
+<p>
+引数はエンティティのリストあるいは配列(可変長引数)で、戻り値は、更新した行数の配列です。
+挿入するときに、識別子を自動設定することができます。
+詳しくは、<a href="#IdDefinition">識別子定義</a>を参照してください。
+</p>
+
+<h3><a name="excludesNull">nullの項目を更新しない</a></h3>
+<p>
+更新の対象からnullの項目を除外する場合は、<code>excludesNull()</code>を使います。
+バッチ系の更新は、すべてのエンティティに同じSQLを適用しなければならないので、
+nullを除外してバッチ更新することはできません。
+なぜなら、すべてのエンティティのnullの項目が同じだとは限らないからです。
+</p>
+<pre>
+int count = jdbcManager.insert(employee).excludesNull().execute();
+</pre>
+
+<h3><a name="includes">指定したプロパティのみを更新対象にする</a></h3>
+<p>
+指定したプロパティのみを更新対象にする場合は、<code>includes()</code>を使います。
+</p>
+<pre>
+int count = jdbcManager.insert(employee).includes("id", "name").execute();
+</pre>
+
+<h3><a name="excludes">指定したプロパティを更新対象から除外する</a></h3>
+<p>
+指定したプロパティを更新対象から除外する場合は、<code>excludes()</code>を使います。
+</p>
+<pre>
+int count = jdbcManager.insert(employee).includes("version").execute();
+</pre>
+
+<h3><a name="update">更新</a></h3>
+<p>
+エンティティを更新する場合は、<code>update()</code>と<code>execute()</code>を組み合わせます。
+</p>
+<pre>
+int count = jdbcManager.update(employee).execute();
+</pre>
+<p>
+引数はエンティティで、戻り値は、更新した行数です。
+更新するときに、バージョンによる楽観的排他制御をすることができます。
+詳しくは、<a href="#VersionDefinition">バージョン定義</a>を参照してください。
+</p>
+
+<h3><a name="updateBatch">バッチ更新</a></h3>
+<p>
+複数のエンティティをバッチ更新する場合は、<code>updateBatch()</code>と<code>execute()</code>を組み合わせます。
+</p>
+<pre>
+int[] countArray = jdbcManager.updateBatch(employees).execute();
+</pre>
+<p>
+引数はエンティティのリストあるいは配列(可変長引数)で、戻り値は、更新した行数の配列です。
+更新するときに、バージョンによる楽観的排他制御をすることができます。
+詳しくは、<a href="#VersionDefinition">バージョン定義</a>を参照してください。
+</p>
+
+<h3><a name="includesVersion">バージョンプロパティを通常の更新対象にする</a></h3>
+<p>
+バージョンプロパティを通常の更新対象に含め、バージョンチェックの対象外にする場合は、
+<code>includesVersion()</code>を使います。
+</p>
+<pre>
+int count = jdbcManager.update(employee).includesVersion().execute();
+</pre>
+
+<h3><a name="changedFrom">変更のあったプロパティのみを更新対象にする</a></h3>
+<p>
+変更のあったプロパティのみを更新対象にする場合は、
+<code>changedFrom()</code>を使います。
+最初の引数は、比較の対象にする以前のエンティティもしくはマップです。
+</p>
+<pre>
+int count = jdbcManager.update(employee).changedFrom(before).execute();
+</pre>
+
+<h3><a name="delete">削除</a></h3>
+<p>
+エンティティを削除する場合は、<code>delete()</code>と<code>execute()</code>を組み合わせます。
+</p>
+<pre>
+int count = jdbcManager.delete(employee).execute();
+</pre>
+<p>
+引数はエンティティで、戻り値は、更新した行数です。
+</p>
+
+<h3><a name="deleteBatch">バッチ削除</a></h3>
+<p>
+複数のエンティティをバッチ削除する場合は、<code>deleteBatch()</code>と<code>execute()</code>を組み合わせます。
+</p>
+<pre>
+int[] countArray = jdbcManager.deleteBatch(employees).execute();
+</pre>
+<p>
+引数はエンティティのリストあるいは配列(可変長引数)で、戻り値は、更新した行数の配列です。
+</p>
 
 <h2><a name="other">その他の機能</a></h2>
 
