@@ -436,20 +436,7 @@ public class AutoSelectTest extends S2TestCase {
     public void testTransientModifierTx() throws Exception {
         Department4 department =
             jdbcManager.from(Department4.class).where(
-                new SimpleWhere()
-                    .eq("departmentId", 1)
-                    .eq("aaa", "bbb")
-                    .eq("aaa", "bbb")
-                    .eq("aaa", "bbb")
-                    .eq("aaa", "bbb")
-                    .eq("aaa", "bbb")
-                    .eq("aaa", "bbb")
-                    .eq("aaa", "bbb")
-                    .eq("aaa", "bbb")
-                    .eq("aaa", "bbb")
-                    .eq("aaa", "bbb")
-                    .eq("aaa", "bbb")
-                    .eq("aaa", "bbb")).getSingleResult();
+                new SimpleWhere().eq("departmentId", 1)).getSingleResult();
         assertNull(department.departmentName);
     }
 }
