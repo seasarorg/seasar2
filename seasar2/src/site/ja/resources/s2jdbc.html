@@ -44,314 +44,168 @@
 <ul>
 <li><a href="#about">S2JDBCとは</a>
 <ul>
-<li><a href="#fluentInterface">流れるようなインターフェースと脱CoC</a></li>
-<li><a href="#autoGenerateSql">90%のSQLを自動生成する</a></li>
-<li><a href="#utilizeJava">Javaのよさを生かす</a></li>
-<li><a href="#easySql">SQLの扱いが簡単</a></li>
-<li><a href="#simpleProperty">シンプルなプロパティ</a></li>
-<li><a href="#lowLearningCost">学習コストが低い</a></li>
-<li><a href="#lessTrouble">トラブリにくい</a></li>
-<li><a href="#betterJPA">より良いJPA</a></li>
+<li><a href="#fluentInterface">流れるようなインターフェースと脱CoC</a>
+<li><a href="#autoGenerateSql">90%のSQLを自動生成する</a>
+<li><a href="#utilizeJava">Javaのよさを生かす</a>
+<li><a href="#easySql">SQLの扱いが簡単</a>
+<li><a href="#simpleProperty">シンプルなプロパティ</a>
+<li><a href="#lowLearningCost">学習コストが低い</a>
+<li><a href="#lessTrouble">トラブリにくい</a>
+<li><a href="#betterJPA">より良いJPA</a>
 </ul>
-</li>
 <li><a href="#setup">セットアップ</a>
 <ul>
-<li><a href="#dialect">ダイアレクト</a></li>
+<li><a href="#dialect">ダイアレクト</a>
+<li><a href="#eclipseFormatter">Eclipseのフォーマッタ</a>
 </ul>
-</li>
 <li><a href="#Entity">エンティティ</a>
 <ul>
-<li><a href="#EntityDefinition">エンティティ定義</a></li>
-<li><a href="#TableDefinition">テーブル定義</a></li>
-<li><a href="#ColumnDefinition">カラム定義</a></li>
-<li><a href="#IdDefinition">識別子定義</a></li>
-<li><a href="#VersionDefinition">バージョン定義</a></li>
-<li><a href="#TransientDefinition">永続化対象外定義</a></li>
-<li><a href="#LobDefinition">ラージオブジェクト定義</a></li>
-<li><a href="#ManyToOneDefinition">多対一関連定義</a></li>
-<li><a href="#OneToManyDefinition">一対多関連定義</a></li>
-<li><a href="#OneToOneDefinition">一対一関連定義</a></li>
-<li><a href="#JoinColumnDefinition">結合カラム定義</a></li>
+<li><a href="#EntityDefinition">エンティティ定義</a>
+<li><a href="#TableDefinition">テーブル定義</a>
+<li><a href="#ColumnDefinition">カラム定義</a>
+<li><a href="#IdDefinition">識別子定義</a>
+<li><a href="#VersionDefinition">バージョン定義</a>
+<li><a href="#TransientDefinition">永続化対象外定義</a>
+<li><a href="#LobDefinition">ラージオブジェクト定義</a>
+<li><a href="#ManyToOneDefinition">多対一関連定義</a>
+<li><a href="#OneToManyDefinition">一対多関連定義</a>
+<li><a href="#OneToOneDefinition">一対一関連定義</a>
+<li><a href="#JoinColumnDefinition">結合カラム定義</a>
 </ul>
-</li>
-<li><a href="#JdbcManager">JDBCマネージャ</a></li>
+<li><a href="#JdbcManager">JDBCマネージャ</a>
 <ul>
-<li><a href="#getResultList">複数件検索</a></li>
-<li><a href="#getSingleResult">1件検索</a></li>
-<li><a href="#join">結合</a></li>
-<li><a href="#where">検索条件</a></li>
-<li><a href="#orderBy">ソート順</a></li>
-<li><a href="#paging">ページング</a></li>
-<li><a href="#maxRows">最大行数</a></li>
-<li><a href="#fetchSize">フェッチサイズ</a></li>
-<li><a href="#queryTimeout">クエリタイムアウト</a></li>
-<li><a href="#insert">挿入</a></li>
-<li><a href="#insertBatch">バッチ挿入</a></li>
-<li><a href="#excludesNull">nullの項目を更新しない</a></li>
-<li><a href="#includes">指定したプロパティのみを更新対象にする</a></li>
-<li><a href="#excludes">指定したプロパティを更新対象から除外する</a></li>
-<li><a href="#update">更新</a></li>
-<li><a href="#updateBatch">バッチ更新</a></li>
-<li><a href="#includesVersion">バージョンプロパティを通常の更新対象にする</a></li>
-<li><a href="#changedFrom">変更のあったプロパティのみを更新対象にする</a></li>
-<li><a href="#delete">削除</a></li>
-<li><a href="#deleteBatch">バッチ削除</a></li>
+<li><a href="#getResultList">複数件検索</a>
+<li><a href="#getSingleResult">1件検索</a>
+<li><a href="#join">結合</a>
+<li><a href="#where">検索条件</a>
+<li><a href="#orderBy">ソート順</a>
+<li><a href="#paging">ページング</a>
+<li><a href="#maxRows">最大行数</a>
+<li><a href="#fetchSize">フェッチサイズ</a>
+<li><a href="#queryTimeout">クエリタイムアウト</a>
+<li><a href="#insert">挿入</a>
+<li><a href="#insertBatch">バッチ挿入</a>
+<li><a href="#insertExcludesNull">nullの項目を挿入しない</a>
+<li><a href="#insertIncludes">指定したプロパティのみを挿入対象にする</a>
+<li><a href="#insertExcludes">指定したプロパティを挿入対象から除外する</a>
+<li><a href="#update">更新</a>
+<li><a href="#updateBatch">バッチ更新</a>
+<li><a href="#includesVersion">バージョンプロパティを通常の更新対象にする</a>
+<li><a href="#updateExcludesNull">nullの項目を更新しない</a>
+<li><a href="#updateIncludes">指定したプロパティのみを更新対象にする</a>
+<li><a href="#updateExcludes">指定したプロパティを更新対象から除外する</a>
+<li><a href="#changedFrom">変更のあったプロパティのみを更新対象にする</a>
+<li><a href="#delete">削除</a>
+<li><a href="#deleteBatch">バッチ削除</a>
+<li><a href="#deleteIgnoreVersion">バージョンをチェックしないで削除する</a>
 </ul>
 <li><a href="#other">その他の機能</a>
 <ul>
-<li><a href="#SqlLog">SQLのログ</a></li>
+<li><a href="#SqlLog">SQLのログ</a>
 </ul>
-</li>
-
 </ul>
-
 <h2><a name="about">S2JDBCとは</a></h2>
 <p>S2JDBCは、データベースプログラミングの生産性を10倍以上高めることを目標として作成した Seasar2のO/R Mapperです。 何に比べて生産性が10倍かというとJava標準のJPA(Java
-            Persistence API)に対してです。 次のような特徴があります。</p>
+Persistence API)に対してです。 次のような特徴があります。</p>
 <h3><a name="fluentInterface">流れるようなインターフェースと脱CoC</a></h3>
-<p>
-「流れるようなインターフェース」とは、文章を記述していくようにメソッドを呼び出していく手法です。
-詳しくは、ファウラーたんの<a href="http://martinfowler.com/bliki/FluentInterface.html">FluentInterface</a>
-を参照してください。あれこれ説明するよりも、検索の例を見たほうがわかりやすいでしょう。
-</p>
-<pre>
-List&lt;Employee&gt; results = jdbcManager.from(Employee.class)
-                             .join("department")
-                             .where("id in (? , ?)", 11, 22)
-                             .orderBy("name")
-                             .getResultList();
-</pre>
-<p>
-一番の特徴は、可読性の高さです。何をやっているのかが一目瞭然ではないでしょうか。
-</p>
-<p>
-二番目の特徴は、IDEと組み合わせることで、APIを覚えていなくても自然に使えることです。
-何か記述したかったら、コード補完によって使える単語(メソッド)が自動的に選択されます。
-これが脱Convention over Configuration(以後CoCと省略)につながってきます。
-</p>
-<p>
-CoCは、「規約を守っておけばフレームワークが自動的に設定してあげる」というもので、
-CoCによって開発者は、あまりソースコードを書かなくてもすむようになります。
-CoCは、確かに私たちを設定ファイル地獄から救ってくれました。
-</p>
-<p>
-しかし、CoCにも暗黒面があります。
-ソースコードに明示されている部分が少ないので、
-自動化されている部分がブラックボックスになり、
-規約を知らない人が見ると何をやっているのかがまったくわからなくなってしまうのです。
-</p>
-<p>
-また、規約を知らないと何もできなくなるので、
-ちょっとしたことでも、自分の知らないことであれば、
-いろいろ調べたり試行錯誤を繰り返すことになります。
-このような試行錯誤の時間は馬鹿になりません。
-最終的なソースコードは確かに少なくなったけど、
-かかった時間は大して変わらなかったなんてことも十分にありえます。
-自動化されているので最初はとっつきやすいのですが、
-知らないことやイレギュラーなことに弱いのです。
-</p>
-<p>
-それに対して「流れるようなインターフェース」の場合は、
-可読性が高いので、誰が見ても何をやっているのかが明快です。
-また、IDEがコード補完によって自動的にできることを教えてくれるので、
-事前に知らなくても使いながら学習していくことができます。
-知らない機能を使うために試行錯誤を繰り返す必要はありません。
-単語(メソッド)の間違いもそんなメソッドないよとIDE(コンパイラ)が教えてくれます。
-</p>
-<p>
-「流れるようなインターフェース」によって、CoCより安全で効率的な開発が可能になるのです。
-</p>
-
+<p>「流れるようなインターフェース」とは、文章を記述していくようにメソッドを呼び出していく手法です。 詳しくは、ファウラーたんの<a href="http://martinfowler.com/bliki/FluentInterface.html">FluentInterface</a> を参照してください。あれこれ説明するよりも、検索の例を見たほうがわかりやすいでしょう。</p>
+<pre>List&lt;Employee&gt; results = jdbcManager.from(Employee.class)
+                             .join(&quot;department&quot;)
+                             .where(&quot;id in (? , ?)&quot;, 11, 22)
+                             .orderBy(&quot;name&quot;)
+                             .getResultList();</pre>
+<p>一番の特徴は、可読性の高さです。何をやっているのかが一目瞭然ではないでしょうか。</p>
+<p>二番目の特徴は、IDEと組み合わせることで、APIを覚えていなくても自然に使えることです。 何か記述したかったら、コード補完によって使える単語(メソッド)が自動的に選択されます。
+これが脱Convention over Configuration(以後CoCと省略)につながってきます。</p>
+<p>CoCは、「規約を守っておけばフレームワークが自動的に設定してあげる」というもので、 CoCによって開発者は、あまりソースコードを書かなくてもすむようになります。
+CoCは、確かに私たちを設定ファイル地獄から救ってくれました。</p>
+<p>しかし、CoCにも暗黒面があります。 ソースコードに明示されている部分が少ないので、 自動化されている部分がブラックボックスになり、 規約を知らない人が見ると何をやっているのかがまったくわからなくなってしまうのです。</p>
+<p>また、規約を知らないと何もできなくなるので、 ちょっとしたことでも、自分の知らないことであれば、 いろいろ調べたり試行錯誤を繰り返すことになります。
+このような試行錯誤の時間は馬鹿になりません。 最終的なソースコードは確かに少なくなったけど、 かかった時間は大して変わらなかったなんてことも十分にありえます。
+自動化されているので最初はとっつきやすいのですが、 知らないことやイレギュラーなことに弱いのです。</p>
+<p>それに対して「流れるようなインターフェース」の場合は、 可読性が高いので、誰が見ても何をやっているのかが明快です。 また、IDEがコード補完によって自動的にできることを教えてくれるので、
+事前に知らなくても使いながら学習していくことができます。 知らない機能を使うために試行錯誤を繰り返す必要はありません。 単語(メソッド)の間違いもそんなメソッドないよとIDE(コンパイラ)が教えてくれます。</p>
+<p>「流れるようなインターフェース」によって、CoCより安全で効率的な開発が可能になるのです。</p>
 <h3><a name="autoGenerateSql">90%のSQLを自動生成する</a></h3>
-<p>
-SQLは文字列で組み立てるため、書きづらく間違いやすいものです。
-S2JDBCは、「流れるようなインターフェース」により、SQLを自動生成します。
-先ほどの例をもう一度見てみましょう。
-</p>
-<pre>
-List&lt;Employee&gt; results = jdbcManager.from(Employee.class).join("department")
-                            .where("id in (? , ?)", 11, 22)
-                            .orderBy("name desc")
-                            .getResultList();
-</pre>
-<p>
-これは、次のようなSQLに展開されます。
-</p>
-<pre>
-select T1_.ID, T1_.NAME, T1.DEPARTMENT_ID, T2_.ID, T2_.NAME
+<p>SQLは文字列で組み立てるため、書きづらく間違いやすいものです。 S2JDBCは、「流れるようなインターフェース」により、SQLを自動生成します。
+先ほどの例をもう一度見てみましょう。</p>
+<pre>List&lt;Employee&gt; results = jdbcManager.from(Employee.class).join(&quot;department&quot;)
+                            .where(&quot;id in (? , ?)&quot;, 11, 22)
+                            .orderBy(&quot;name desc&quot;)
+                            .getResultList();</pre>
+<p>これは、次のようなSQLに展開されます。</p>
+<pre>select T1_.ID, T1_.NAME, T1.DEPARTMENT_ID, T2_.ID, T2_.NAME
   from EMPLOYEE T1_ left outer join DEPARTMENT T2_ on T1_.DEPARTMENT_ID = T2_.ID
  where T1_.ID in (?, ?)
- order by T1_.NAME desc
-</pre>
-<p>
-クエリの呼び出しがSQLに対応しているので可読性が高いだけでなく、
-selectリスト句でのカラムの指定や結合の指定など面倒な指定を
-する必要がありません。
-</p>
-<p>
-これに対し、Javaの標準であるJPA(Java Persistence API)はどうでしょうか。
-JPAもSQLを自動生成できます。それでは、同じことをJPAでやってみましょう。
-</p>
-<pre>
-List&lt;Employee&gt; results = (List&lt;Employee&gt;) entityManager.createQuery(
-                            "select e from Employee e left join fetch e.department" +
-                            " where e.id in (?1, ?2) order by e.name")
+ order by T1_.NAME desc</pre>
+<p>クエリの呼び出しがSQLに対応しているので可読性が高いだけでなく、 selectリスト句でのカラムの指定や結合の指定など面倒な指定を する必要がありません。</p>
+<p>これに対し、Javaの標準であるJPA(Java Persistence API)はどうでしょうか。 JPAもSQLを自動生成できます。それでは、同じことをJPAでやってみましょう。</p>
+<pre>List&lt;Employee&gt; results = (List&lt;Employee&gt;) entityManager.createQuery(
+                            &quot;select e from Employee e left join fetch e.department&quot; +
+                            &quot; where e.id in (?1, ?2) order by e.name&quot;)
                             .setParameter(1, 11)
                             .setParameter(2, 22)
-                            .getResultList();
-</pre>
-<p>
-JPQL(select ... の文字列)の部分は、Seasar2のクエリとほぼ同じように見えますが、
-文字列で組み立てているので、書き間違える可能性が増えます。
-文字列で組み立てるより、「流れるようなインターフェース」のほうが、
-間違いも減るし、IDEによる自動補完が効くのでより生産性があがるのです。
-</p>
-<p>
-departmentの関連がEAGERであれば、left join fetchの部分は省略できますが、
-関連はLAZYにするのが安全なので、left join fetchを記述しています。
-</p>
-
+                            .getResultList();</pre>
+<p>JPQL(select ... の文字列)の部分は、Seasar2のクエリとほぼ同じように見えますが、 文字列で組み立てているので、書き間違える可能性が増えます。
+文字列で組み立てるより、「流れるようなインターフェース」のほうが、 間違いも減るし、IDEによる自動補完が効くのでより生産性があがるのです。</p>
+<p>departmentの関連がEAGERであれば、left join fetchの部分は省略できますが、 関連はLAZYにするのが安全なので、left
+join fetchを記述しています。</p>
 <h3><a name="utilizeJava">Javaの良さを生かす</a></h3>
-<p>
-最近、<a href="http://www.oreilly.co.jp/books/9784873113203/">JavaからRubyへ</a>
-なんて言われ、生産性の低い言語としてすっかりレッテルが貼られてしまったJavaですが、
-古いJavaのイメージで語られていることが多い気がします。
-</p>
-<p>
-アノテーション、Generics、列挙型、可変長引数、Auto Boxingなど、
-今のJavaには、生産性を向上させるための機能がいろいろ用意されています。
-ただ、残念なことにこれらのすばらしい機能をフルに活用したフレームワークは
-あまりないのが現状です。
-</p>
-<p>
-Seasar2では、Javaのよさを生かし、生産性を向上させます。
-例えば、先ほどのJPAの戻り値のキャストを見てみましょう。
-</p>
-<pre>
-List&lt;Employee&gt; results = (List&lt;Employee&gt;) entityManager.createQuery("select e from Employee e ...")
+<p>最近、<a href="http://www.oreilly.co.jp/books/9784873113203/">JavaからRubyへ</a> なんて言われ、生産性の低い言語としてすっかりレッテルが貼られてしまったJavaですが、 古いJavaのイメージで語られていることが多い気がします。</p>
+<p>アノテーション、Generics、列挙型、可変長引数、Auto Boxingなど、 今のJavaには、生産性を向上させるための機能がいろいろ用意されています。
+ただ、残念なことにこれらのすばらしい機能をフルに活用したフレームワークは あまりないのが現状です。</p>
+<p>Seasar2では、Javaのよさを生かし、生産性を向上させます。 例えば、先ほどのJPAの戻り値のキャストを見てみましょう。</p>
+<pre>List&lt;Employee&gt; results = (List&lt;Employee&gt;) entityManager.createQuery(&quot;select e from Employee e ...&quot;)
                             ...
-                            .getResultList();
-</pre>
-<p>
-Seasar2では、Genericsを使って、うざったいキャストを不要にしています。
-</p>
-<pre>
-List&lt;Employee&gt; results = jdbcManager.from(Employee.class)
+                            .getResultList();</pre>
+<p>Seasar2では、Genericsを使って、うざったいキャストを不要にしています。</p>
+<pre>List&lt;Employee&gt; results = jdbcManager.from(Employee.class)
                             ...
-                            .getResultList();
-</pre>
-<p>
-JPAでは、文字列でEmployeeと指定していますが、Seasar2ではfrom()の引数でEmployee.classと
-クラスリテラルを渡しているので、Genericsを利用できます。
-</p>
-<p>
-キャストの手間自体はたいしたことはないのですが、JPQLでEmployeeと指定しているのに、
-さらに(List&lt;Employee&gt;)とキャストしなければいけないという二度手間感が
-開発者のやる気を低下させてしまいます。
-</p>
-<p>
-それに対し、Seasar2では、select文を書くような気持ちで、自然にメソッドを呼び出していけば、
-キャスト不要で欲しいデータを取り出すことができます。
-リズムに乗って開発できるので、開発者の生産性はさらに向上します。
-開発者のやる気が、生産性を向上させる最も重要なポイントなのです。
-</p>
-<p>
-もう1つ、バインド変数の例を見てみましょう。JPAでは次のようにバインド変数を指定しています。
-</p>
-<pre>
-entityManager.createQuery("select ... where e.id in (?1, ?2) ...")
+                            .getResultList();</pre>
+<p>JPAでは、文字列でEmployeeと指定していますが、Seasar2ではfrom()の引数でEmployee.classと クラスリテラルを渡しているので、Genericsを利用できます。</p>
+<p>キャストの手間自体はたいしたことはないのですが、JPQLでEmployeeと指定しているのに、 さらに(List&lt;Employee&gt;)とキャストしなければいけないという二度手間感が
+開発者のやる気を低下させてしまいます。</p>
+<p>それに対し、Seasar2では、select文を書くような気持ちで、自然にメソッドを呼び出していけば、 キャスト不要で欲しいデータを取り出すことができます。
+リズムに乗って開発できるので、開発者の生産性はさらに向上します。 開発者のやる気が、生産性を向上させる最も重要なポイントなのです。</p>
+<p>もう1つ、バインド変数の例を見てみましょう。JPAでは次のようにバインド変数を指定しています。</p>
+<pre>entityManager.createQuery(&quot;select ... where e.id in (?1, ?2) ...&quot;)
     .setParameter(1, 11)
     .setParameter(2, 22)
-    ...
-</pre>
-<p>
-setParameter()の呼び出しがうざったい感じです。Seasar2の場合は次のようになります。
-</p>
-<pre>
-jdbcManager.from(...
-    .where("id in (? , ?)", 11, 22)
-    ...
-</pre>
-<p>
-where()の二番目以降の引数は可変長引数になっていて、?の数にあわせて、引数を可変にできます。
-例えば、次のようにすることも可能です。
-</p>
-<pre>
-where("id in (? , ?, ?, ?)", 11, 22, 33, 44)
-</pre>
-<p>
-Javaも良さを生かせば、さくさくソースを書けることがわかったいただけたでしょうか。
-</p>
-
+    ...</pre>
+<p>setParameter()の呼び出しがうざったい感じです。Seasar2の場合は次のようになります。</p>
+<pre>jdbcManager.from(...
+    .where(&quot;id in (? , ?)&quot;, 11, 22)
+    ...</pre>
+<p>where()の二番目以降の引数は可変長引数になっていて、?の数にあわせて、引数を可変にできます。 例えば、次のようにすることも可能です。</p>
+<pre>where(&quot;id in (? , ?, ?, ?)&quot;, 11, 22, 33, 44)</pre>
+<p>Javaも良さを生かせば、さくさくソースを書けることがわかったいただけたでしょうか。</p>
 <h3><a name="easySql">SQLの扱いが簡単</a></h3>
-<p>
-SQLの自動生成ですべてがうまくいけば問題ありませんが、
-実案件では、複雑なSQLを自前で組み立てる必要が出てくる場合があります。
-複雑なSQLで複雑な結果を返す場合、JPAでは次のようになります。
-</p>
-<pre>
-List&lt;Object[]&gt; results = (List&lt;Object[]&gt;) entityManager.createNativeQuery("複雑なSQL")
+<p>SQLの自動生成ですべてがうまくいけば問題ありませんが、 実案件では、複雑なSQLを自前で組み立てる必要が出てくる場合があります。 複雑なSQLで複雑な結果を返す場合、JPAでは次のようになります。</p>
+<pre>List&lt;Object[]&gt; results = (List&lt;Object[]&gt;) entityManager.createNativeQuery(&quot;複雑なSQL&quot;)
                                        ...
-                                       .getResultList();
-</pre>
-<p>
-1行に相当する部分がオブジェクトの配列で返ってくるなんてがっかりです。
-Seasar2では、結果セットのカラム名とJavaBeansのプロパティ名を同じにしておけば、
-結果セットの1行をJavaBeansに自動的にマッピングします。
-また、aaa_bbbのような'_'を使ったカラム名をaaaBbbのようなキャメル記法のプロパティ名に
-自動的にマッピングします。
-Seasar2を使った例は次のようになります。
-</p>
-<pre>
-List&lt;MyDto&gt; results = jdbcManager.selectBySql(MyDto.class, "複雑なSQL")
+                                       .getResultList();</pre>
+<p>1行に相当する部分がオブジェクトの配列で返ってくるなんてがっかりです。 Seasar2では、結果セットのカラム名とJavaBeansのプロパティ名を同じにしておけば、
+結果セットの1行をJavaBeansに自動的にマッピングします。 また、aaa_bbbのような'_'を使ったカラム名をaaaBbbのようなキャメル記法のプロパティ名に
+自動的にマッピングします。 Seasar2を使った例は次のようになります。</p>
+<pre>List&lt;MyDto&gt; results = jdbcManager.selectBySql(MyDto.class, &quot;複雑なSQL&quot;)
                                        ...
-                                       .getResultList();
-</pre>
-<p>
-オブジェクトの配列かJavaBeansかの違いですが、
-開発者としては、配列にインデックスでアクセスすると型も不明だし、
-何が返ってくるかわからないので不安ですが、
-プロパティにアクセスすると型も名前もわかっているので安心です。
-このようなところも開発者のやる気につながってくるのです。
-</p>
-<p>
-明示的にSQLを指定する必要があるのは、複雑なSQLの場合だけとは限りません。
-既存システムをベースに新システムを作るというのは、よくある話です。
-その場合に既存の資産で生かせるものはできる限り生かしたいものです。
-そのような既存の資産の代表的なものがSQLです。
-</p>
-<p>
-JPAで既存のSQLをそのまま生かそうとするとオブジェクトの配列が返ってきちゃうし、
-SQLをJPQLに変換するのは結構面倒な作業です。
-どちらを選ぶにせよ、やるきがそがれるのは間違いないでしょう。
-Seasar2を使えば、JavaBeansにスムーズにマッピングできるので、
-快適に既存のSQLを再利用できます。
-</p>
-
+                                       .getResultList();</pre>
+<p>オブジェクトの配列かJavaBeansかの違いですが、 開発者としては、配列にインデックスでアクセスすると型も不明だし、 何が返ってくるかわからないので不安ですが、
+プロパティにアクセスすると型も名前もわかっているので安心です。 このようなところも開発者のやる気につながってくるのです。</p>
+<p>明示的にSQLを指定する必要があるのは、複雑なSQLの場合だけとは限りません。 既存システムをベースに新システムを作るというのは、よくある話です。
+その場合に既存の資産で生かせるものはできる限り生かしたいものです。 そのような既存の資産の代表的なものがSQLです。</p>
+<p>JPAで既存のSQLをそのまま生かそうとするとオブジェクトの配列が返ってきちゃうし、 SQLをJPQLに変換するのは結構面倒な作業です。 どちらを選ぶにせよ、やるきがそがれるのは間違いないでしょう。
+Seasar2を使えば、JavaBeansにスムーズにマッピングできるので、 快適に既存のSQLを再利用できます。</p>
 <h3><a name="simpleProperty">シンプルなプロパティ</a></h3>
-<p>
-Javaでプロパティを作るには、フィールドとgetter、setterメソッドの定義が必要でした。
-getter、setterメソッドは、カプセル化の観点から必要とされてきましたが、
-本当にどんな場合でも必要なのでしょうか。
-</p>
-<p>
-Javaでは、テーブルの一行に対応するデータの入れ物をエンティティと呼ぶことが一般的です。
-テーブルのカラムのデータは、もともとpublicな存在なので、
-エンティティのプロパティがカラムに一対一に対応するなら、
-プロパティのgetter, setterメソッドを省略して、
-publicフィールドにしても良いのではないでしょうか。
-</p>
-<p>
-エンティティはテーブルの鏡であるという位置づけにするなら、
-エンティティのプロパティをpublicフィールドにするのも別におかしなことではありません。
-Seasar2では、エンティティはテーブルの鏡であるという立場をとることによって、
-エンティティのプロパティをpublicフィールドとして定義できるようにしています。
-もちろん、publicフィールドに抵抗のある方は、
-これまでどおりに、getter, setterメソッドを定義することもできます。
-それでは、getter, setterメソッドのありなしを比べて見ましょう。
-</p>
-<pre>
-@Entity
+<p>Javaでプロパティを作るには、フィールドとgetter、setterメソッドの定義が必要でした。 getter、setterメソッドは、カプセル化の観点から必要とされてきましたが、
+本当にどんな場合でも必要なのでしょうか。</p>
+<p>Javaでは、テーブルの一行に対応するデータの入れ物をエンティティと呼ぶことが一般的です。 テーブルのカラムのデータは、もともとpublicな存在なので、
+エンティティのプロパティがカラムに一対一に対応するなら、 プロパティのgetter, setterメソッドを省略して、 publicフィールドにしても良いのではないでしょうか。</p>
+<p>エンティティはテーブルの鏡であるという位置づけにするなら、 エンティティのプロパティをpublicフィールドにするのも別におかしなことではありません。
+Seasar2では、エンティティはテーブルの鏡であるという立場をとることによって、 エンティティのプロパティをpublicフィールドとして定義できるようにしています。
+もちろん、publicフィールドに抵抗のある方は、 これまでどおりに、getter, setterメソッドを定義することもできます。 それでは、getter,
+setterメソッドのありなしを比べて見ましょう。</p>
+<pre>@Entity
 public class Employee {
     @Id
     private Integer id;
@@ -383,10 +237,8 @@ public class Employee {
     public void setSalary(BigDecimal salary) {
         this.salary = salary;
     }
-}
-</pre>
-<pre>
-@Entity
+}</pre>
+<pre>@Entity
 public class Employee {
     @Id
     public Integer id;
@@ -394,200 +246,70 @@ public class Employee {
     public String name;
     
     public BigDecimal salary;
-}
-</pre>
-<p>
-どっちがすっきりして見やすいかは一目瞭然ですね。
-これは、すべてのプロパティをpublicフィールドにすべきだという意味ではありません。
-カプセル化が必要なケースももちろんあります。
-でも、エンティティがテーブルの鏡だとする全体が成り立つなら、
-プロパティをpublicフィールドにするのも十分にありだということです。
-</p>
-<p>
-プロパティへのアクセスも
-</p>
-<pre>
-String s = employee.getName();
-employee.setName("hoge");
-</pre>
-<p>
-よりも
-</p>
-<pre>
-String s = employee.name;
-employee.name = "hoge";
-</pre>
-<p>
-のほうが直感的で、気分よく記述できるでしょう。
-このような気分のよさも生産性につながってくるのです。
-</p>
-
+}</pre>
+<p>どっちがすっきりして見やすいかは一目瞭然ですね。 これは、すべてのプロパティをpublicフィールドにすべきだという意味ではありません。 カプセル化が必要なケースももちろんあります。
+でも、エンティティがテーブルの鏡だとする全体が成り立つなら、 プロパティをpublicフィールドにするのも十分にありだということです。</p>
+<p>プロパティへのアクセスも</p>
+<pre>String s = employee.getName();
+employee.setName(&quot;hoge&quot;);</pre>
+<p>よりも</p>
+<pre>String s = employee.name;
+employee.name = &quot;hoge&quot;;</pre>
+<p>のほうが直感的で、気分よく記述できるでしょう。 このような気分のよさも生産性につながってくるのです。</p>
 <h3><a name="lowLearningCost">学習コストが低い</a></h3>
-<p>
-昔のフレームワークなら、機能が盛りだくさんで、使いこなすには時間がかかるけど、
-使いこなせれば、威力を発揮するというのも許されたでしょう。
-<a href="http://www.hibernate.org/">Hibernate</a>は、
-まさしくそのようなフレームワークです。
-</p>
-<p>
-しかし、時代は変わりました。
-今は、一ヶ月以内に成果を出すことを求められるのもよくある話です。
-使いこなすのに時間がかかっては間に合わないのです。
-</p>
-<p>
-そのような時代の要求を受け、機能を盛りだくさんにするのではなく、
-データアクセス用のフレームワークとして本質的な機能に集中することで、
-短期間で使えるようになることを可能にしました。
-</p>
-<p>
-このドキュメントに対応するのががHibernateの
-<a href="http://www.hibernate.org/hib_docs/annotations/reference/fr/html_single/">Hibernate Annotationsのドキュメント</a>
-と<a href="http://www.hibernate.org/hib_docs/entitymanager/reference/en/html_single/">Hibernate EntityManagerのドキュメント</a>
-になります。学習コストが低いということが実感していただけるのではないでしょうか。
-</p>
-
+<p>昔のフレームワークなら、機能が盛りだくさんで、使いこなすには時間がかかるけど、 使いこなせれば、威力を発揮するというのも許されたでしょう。 <a href="http://www.hibernate.org/">Hibernate</a>は、 まさしくそのようなフレームワークです。</p>
+<p>しかし、時代は変わりました。 今は、一ヶ月以内に成果を出すことを求められるのもよくある話です。 使いこなすのに時間がかかっては間に合わないのです。</p>
+<p>そのような時代の要求を受け、機能を盛りだくさんにするのではなく、 データアクセス用のフレームワークとして本質的な機能に集中することで、 短期間で使えるようになることを可能にしました。</p>
+<p>このドキュメントに対応するのががHibernateの <a href="http://www.hibernate.org/hib_docs/annotations/reference/fr/html_single/">Hibernate Annotationsのドキュメント</a> と<a href="http://www.hibernate.org/hib_docs/entitymanager/reference/en/html_single/">Hibernate EntityManagerのドキュメント</a> になります。学習コストが低いということが実感していただけるのではないでしょうか。</p>
 <h3><a name="lessTrouble">トラブリにくい</a></h3>
-<p>
-<a href="#lowLearningCost">学習コストが低い</a>でも取り上げましたが、
-機能が盛りだくさんだと、覚えるのに時間がかかるだけではなく、
-トラブルに見舞われやすくなり、その解決に時間がかかるようになります。
-</p>
-<p>
-例えば、一対一、一対多、多対一などのエンティティ間の関連を取り上げてみます。
-それぞれの関連は、データをロードするタイミングを指定することができ、
-関連のプロパティにアクセスしたときにはじめてデータをロードする<code>Lazy loading</code>と、
-関連元のエンティティにアクセスするのと同時に関連先のデータをロードする<code>Eager loading</code>があります。
-</p>
-<p>
-従業員と部署のエンティティに多対一の関連がある場合、
-<code>Eager loading</code>だと、従業員を取得するのと同時に部署も取得されます。
-<code>Lazy loading</code>だと、従業員を取得したときは、
-単に従業員のデータだけが取得され、部署のプロパティにアクセスしたときにはじめて
-部署のデータが取得されます。
-</p>
-<p>
-また、それとは別に、関連は<code>Lazy loading</code>にしておいて、
-クエリを実行するときに、どの関連を結合で取得してくるかを指定する方法もあります。
-この方法は、フェッチ結合と呼ばれます。
-以前のサンプルでも次のようにフェッチ結合が使われていました。
-</p>
-<pre>
-select e from Employee e left join fetch e.department
-</pre>
-<p>
-どのようなケースにも対応できるようにするため、
-このようにいろいろな選択肢が用意されているのですが、
-いろんな選択肢があるのでトラブルが起こる確率も増えてしまうのです。
-</p>
-<p>
-例えば、一対一、多対一には<code>Eager loading</code>、
-一対多には<code>Lazy loading</code>を適用するというルールにしたとしましょう。JPAのデフォルトはそうなっています。
-</p>
-<p>
-<code>Eager loading</code>が設定されている関連元のエンティティにアクセスするときは、
-必要かどうかにかかわらず常に関連先のデータまで取得されてしまうため、
-大量のデータを取得する場合は、パフォーマンスやメモリ不足の問題を引き起こすことがあります。
-少量のデータでテストしていたときには気づかず、本番相当のデータを用意したときにはじめて
-発覚するというのも困りものです。
-</p>
-<p>
-それでは、<code>Eager loading</code>を<code>Lazy loading</code>に変えれば、
-すべての問題は解決するのでしょうか。残念ながら次の「N+1検索問題」を引き起こします。
-</p>
-<p>
-1000件の従業員のリストを表示するという機能があるとしましょう。
-従業員のデータ以外に部署名も表示させる必要があるとします。
-最初の1回の検索で1000件の従業員のデータを取得します。
-その後、部署名を表示させるために、従業員.部署.名前のようにアクセスすると、
-部署のプロパティにアクセスした瞬間に<code>Lazy loading</code>がおきます。
-これが従業員の件数分(N)起こるので、「N+1検索問題」といわれています。
-</p>
-<p>
-大量の検索が発行されるので、深刻なパフォーマンス問題を引き起こします。
-実際は、同じ部署へのアクセスはキャッシュが使われるので、N件起こることはないのですが、
-それでも部署の件数分の検索が行なわれパフォーマンス問題を引き起こすことには変わりはありません。
-</p>
-<p>
-最も良い解決策は、関連は<code>Lazy loading</code>にしておき、
-検索のときにフェッチ結合を使うことです。
-<code>Lazy loading</code>にするのは、<code>Lazy loading</code>にしたいからではなく、
-<code>Eager loading</code>させないための回避策です。
-フェッチ結合は、特定の検索のときだけ、<code>Eager loading</code>になるような効果があります。
-</p>
-<p>
-ここまで説明してきたようにJPAは、機能が豊富だけどトラブリやすいという問題があります。
-Seasar2では、トラブリにくくするために、いたずらに機能を増やすのではなく、
-トラブリやすい機能は意図的に削っています。
-</p>
-<p>
-例えば、関連のLoding問題についていえば、<code>Eager loading</code>も
-<code>Lazy loading</code>もサポートせず、次のようなフェッチ結合のみをサポートしています。
-join()メソッドのデフォルトはフェッチ結合になります。
-</p>
-<pre>
-jdbcManager.from(Employee.class).join("department")
-</pre>
-<p>
-実際の開発において、予想外に多くの時間を費やしているのはトラブルシューティングの時間でないでしょうか。
-トラブリにくくすることも、生産性向上の重要な要因なのです。
-</p>
-
+<p><a href="#lowLearningCost">学習コストが低い</a>でも取り上げましたが、 機能が盛りだくさんだと、覚えるのに時間がかかるだけではなく、 トラブルに見舞われやすくなり、その解決に時間がかかるようになります。</p>
+<p>例えば、一対一、一対多、多対一などのエンティティ間の関連を取り上げてみます。 それぞれの関連は、データをロードするタイミングを指定することができ、
+関連のプロパティにアクセスしたときにはじめてデータをロードする<code>Lazy loading</code>と、 関連元のエンティティにアクセスするのと同時に関連先のデータをロードする<code>Eager loading</code>があります。</p>
+<p>従業員と部署のエンティティに多対一の関連がある場合、 <code>Eager loading</code>だと、従業員を取得するのと同時に部署も取得されます。 <code>Lazy loading</code>だと、従業員を取得したときは、 単に従業員のデータだけが取得され、部署のプロパティにアクセスしたときにはじめて 部署のデータが取得されます。</p>
+<p>また、それとは別に、関連は<code>Lazy loading</code>にしておいて、 クエリを実行するときに、どの関連を結合で取得してくるかを指定する方法もあります。 この方法は、フェッチ結合と呼ばれます。 以前のサンプルでも次のようにフェッチ結合が使われていました。</p>
+<pre>select e from Employee e left join fetch e.department</pre>
+<p>どのようなケースにも対応できるようにするため、 このようにいろいろな選択肢が用意されているのですが、 いろんな選択肢があるのでトラブルが起こる確率も増えてしまうのです。</p>
+<p>例えば、一対一、多対一には<code>Eager loading</code>、 一対多には<code>Lazy loading</code>を適用するというルールにしたとしましょう。JPAのデフォルトはそうなっています。</p>
+<p><code>Eager loading</code>が設定されている関連元のエンティティにアクセスするときは、 必要かどうかにかかわらず常に関連先のデータまで取得されてしまうため、 大量のデータを取得する場合は、パフォーマンスやメモリ不足の問題を引き起こすことがあります。
+少量のデータでテストしていたときには気づかず、本番相当のデータを用意したときにはじめて 発覚するというのも困りものです。</p>
+<p>それでは、<code>Eager loading</code>を<code>Lazy loading</code>に変えれば、 すべての問題は解決するのでしょうか。残念ながら次の「N+1検索問題」を引き起こします。</p>
+<p>1000件の従業員のリストを表示するという機能があるとしましょう。 従業員のデータ以外に部署名も表示させる必要があるとします。 最初の1回の検索で1000件の従業員のデータを取得します。
+その後、部署名を表示させるために、従業員.部署.名前のようにアクセスすると、 部署のプロパティにアクセスした瞬間に<code>Lazy loading</code>がおきます。 これが従業員の件数分(N)起こるので、「N+1検索問題」といわれています。</p>
+<p>大量の検索が発行されるので、深刻なパフォーマンス問題を引き起こします。 実際は、同じ部署へのアクセスはキャッシュが使われるので、N件起こることはないのですが、
+それでも部署の件数分の検索が行なわれパフォーマンス問題を引き起こすことには変わりはありません。</p>
+<p>最も良い解決策は、関連は<code>Lazy loading</code>にしておき、 検索のときにフェッチ結合を使うことです。 <code>Lazy loading</code>にするのは、<code>Lazy loading</code>にしたいからではなく、 <code>Eager loading</code>させないための回避策です。 フェッチ結合は、特定の検索のときだけ、<code>Eager loading</code>になるような効果があります。</p>
+<p>ここまで説明してきたようにJPAは、機能が豊富だけどトラブリやすいという問題があります。 Seasar2では、トラブリにくくするために、いたずらに機能を増やすのではなく、
+トラブリやすい機能は意図的に削っています。</p>
+<p>例えば、関連のLoding問題についていえば、<code>Eager loading</code>も <code>Lazy loading</code>もサポートせず、次のようなフェッチ結合のみをサポートしています。 join()メソッドのデフォルトはフェッチ結合になります。</p>
+<pre>jdbcManager.from(Employee.class).join(&quot;department&quot;)</pre>
+<p>実際の開発において、予想外に多くの時間を費やしているのはトラブルシューティングの時間でないでしょうか。 トラブリにくくすることも、生産性向上の重要な要因なのです。</p>
 <h3><a name="betterJPA">より良いJPA</a></h3>
-<p>
-これまで、JPAの問題点をいくつか指摘してきましたが、
-JPAは標準であり、一方的に無視してよいものでもありません。
-そこで、Seasar2では、エンティティとテーブルのマッピングの仕様は、
-JPAとあわせ、いまいちなEntityManagerやJPQLの部分は、
-独自仕様でいくことにしました。
-</p>
-<p>
-JPAを使ってパフォーマンスが出なかったり、
-トラブルに巻き込まれて困っている方は、
-より良いJPAとしてSeasar2を使ってみてはいかがでしょうか。
-</p>
-
+<p>これまで、JPAの問題点をいくつか指摘してきましたが、 JPAは標準であり、一方的に無視してよいものでもありません。 そこで、Seasar2では、エンティティとテーブルのマッピングの仕様は、
+JPAとあわせ、いまいちなEntityManagerやJPQLの部分は、 独自仕様でいくことにしました。</p>
+<p>JPAを使ってパフォーマンスが出なかったり、 トラブルに巻き込まれて困っている方は、 より良いJPAとしてSeasar2を使ってみてはいかがでしょうか。</p>
 <h2><a name="setup">セットアップ</a></h2>
-<p>
-Seasar2の基本的な<a href="setup.html">セットアップ</a>をした後に、
-<a href="jdbc.html">JDBCのセットアップ</a>をします。
-</p>
-<p>
-S2JDBCの設定は、s2jdbc.diconに対して行ないます。
-s2jdbc.diconは、S2Tiger-2.4.x.zipを解凍してできたs2-tigerのresourcesにあるので、
-コピーしてCLASSPATHに含めます。
-</p>
-<p>
-s2jdbc.diconの中身は、次のようになっているので、
-dialectプロパティをお使いのデータベースにあわせて書き換えます。
-</p>
-<pre>
-&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN"
-    "http://www.seasar.org/dtd/components24.dtd"&gt;
+<p>Seasar2の基本的な<a href="setup.html">セットアップ</a>をした後に、 <a href="jdbc.html">JDBCのセットアップ</a>をします。</p>
+<p>S2JDBCの設定は、s2jdbc.diconに対して行ないます。 s2jdbc.diconは、S2Tiger-2.4.x.zipを解凍してできたs2-tigerのresourcesにあるので、
+コピーしてCLASSPATHに含めます。</p>
+<p>s2jdbc.diconの中身は、次のようになっているので、 dialectプロパティをお使いのデータベースにあわせて書き換えます。</p>
+<pre>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;!DOCTYPE components PUBLIC &quot;-//SEASAR//DTD S2Container 2.4//EN&quot;
+    &quot;http://www.seasar.org/dtd/components24.dtd&quot;&gt;
 &lt;components&gt;
-    &lt;include path="jdbc.dicon"/&gt;
-    &lt;include path="s2jdbc-internal.dicon"/&gt;
-    &lt;component name="jdbcManager" class="org.seasar.extension.jdbc.manager.JdbcManagerImpl"&gt;
-        &lt;property name="maxRows"&gt;0&lt;/property&gt;
-        &lt;property name="fetchSize"&gt;0&lt;/property&gt;
-        &lt;property name="queryTimeout"&gt;0&lt;/property&gt;
-        &lt;property name="dialect"&gt;hsqlDialect&lt;/property&gt;
+    &lt;include path=&quot;jdbc.dicon&quot;/&gt;
+    &lt;include path=&quot;s2jdbc-internal.dicon&quot;/&gt;
+    &lt;component name=&quot;jdbcManager&quot; class=&quot;org.seasar.extension.jdbc.manager.JdbcManagerImpl&quot;&gt;
+        &lt;property name=&quot;maxRows&quot;&gt;0&lt;/property&gt;
+        &lt;property name=&quot;fetchSize&quot;&gt;0&lt;/property&gt;
+        &lt;property name=&quot;queryTimeout&quot;&gt;0&lt;/property&gt;
+        &lt;property name=&quot;dialect&quot;&gt;hsqlDialect&lt;/property&gt;
     &lt;/component&gt;
-&lt;/components&gt;
-</pre>
-<p>
-<code>maxRows, fetchSize, queryTimeout</code>は、JdbcManagerのデフォルト値になります。
-個別のクエリの呼び出し時に上書きすることもできます。
-<a href="#maxRows">最大行数</a>、
-<a href="#fetchSize">フェッチサイズ</a>、
-<a href="#queryTimeout">クエリタイムアウト</a>を参照してください。
-<p>
+&lt;/components&gt;</pre>
+<p><code>maxRows, fetchSize, queryTimeout</code>は、JdbcManagerのデフォルト値になります。 個別のクエリの呼び出し時に上書きすることもできます。 <a href="#maxRows">最大行数</a>、 <a href="#fetchSize">フェッチサイズ</a>、 <a href="#queryTimeout">クエリタイムアウト</a>を参照してください。</p>
 <h3><a name="dialect">ダイアレクト</a></h3>
-<p>
-ダイアレクトは次のものが用意されています。
-</p>
-<p>
+<p>ダイアレクトは次のものが用意されています。</p>
 <table border="1">
+<tbody>
 <tr bgcolor="#D1F3F4" align="center">
 <th width="200">名前</th>
 <th width="200">説明</th>
@@ -656,157 +378,84 @@ dialectプロパティをお使いのデータベースにあわせて書き換�
 <td>sybaseDialect</td>
 <td>Sybase</td>
 </tr>
+</tbody>
 </table>
-</p>
-
-<h2><a name="Entity">エンティティ</a></h2>
-<p>
-エンティティの定義の仕方を説明します。
-ここでいっているエンティティとは、
-データベースに永続化されるものだと考えてください。
-</p>
-<h3 style="background-color:red">注意点</h3>
-<p>
-エンティティ用のアノテーションは、JPAのものをそのまま利用していますが、
-すべてのアノテーションや属性をサポートしているわけではありません。
-ここに取り上げられているもののみサポートされているとお考えください。
-</p>
-
-<h3><a name="EntityDefinition">エンティティ定義</a></h3>
-<p>
-エンティティにするためには、<code>@Entity</code>を必ず指定する必要があります。
-</p>
-<pre>
-@Entity
-public class Employee {
-    ...
-}
-</pre>
-<p>
-name属性でエンティティ名を指定することができます。
-次の例では、Empというエンティティ名を指定しています。
-</p>
-<pre>
-@Entity(name = "Emp")
-public class Employee {
-    ...
-}
-</pre>
-<p>
-name属性を指定しなかった場合、エンティティのクラス名からパッケージ名を除いた部分が、
-デフォルトのエンティティ名になります。
-例えば、クラス名が<code>examples.entity.Employee</code>の場合、
-デフォルトのエンティティ名は、<code>Employee</code>になります。
-</p>
-
-<h3><a name="TableDefinition">テーブル定義</a></h3>
-<p>
-テーブル情報を指定するには、<code>@Table</code>を使います。
-</p>
-<p>
-name属性でテーブル名を指定することができます。
-指定しなかった場合、テーブル名はエンティティ名と同じになります。
-エンティティ名が、<code>AaaBbb</code>のようなキャメル記法の場合、
-テーブル名は、<code>AAA_BBB</code>のように'_'区切りだとみなされます。
-</p>
-<p>
-このルールは、convention.diconで指定されている
-<code>org.seasar.framework.convention.impl.PersistenceNamingConventionImpl</code>の
-fromEntityNameToTableName()の実装を変えることで、カスタマイズすることができます。
-</p>
-<p>
-次の例では、EMPというテーブル名を指定しています。
-</p>
-<pre>
-@Entity
-@Table(name = "EMP")
-public class Employee {
-    ...
-}
-</pre>
-<p>
-schema属性でスキーマを指定することができます。
-指定した場合、自動生成されるSQLのテーブル名がスキーマ.テーブル名になります。
-</p>
-
-<h3><a name="ColumnDefinition">カラム定義</a></h3>
-<p>
-カラム情報を指定するには、<code>@Column</code>を使います。
-</p>
-<p>
-name属性でカラム名を指定することができます。
-指定しなかった場合、カラム名はフィールド名と同じになります。
-フィールド名が、<code>aaaBbb</code>のようなキャメル記法の場合、
-カラム名は、<code>AAA_BBB</code>のように'_'区切りだとみなされます。
-</p>
-<p>
-このルールは、convention.diconで指定されている
-<code>org.seasar.framework.convention.impl.PersistenceNamingConventionImpl</code>の
-fromPropertyNameToColumnName()の実装を変えることで、カスタマイズすることができます。
-</p>
-<p>
-デフォルトでは、プロパティ名とフィールド名は同じになりますが、convention.diconで指定されている
-<code>org.seasar.framework.convention.impl.PersistenceNamingConventionImpl</code>の
-fromFieldNameToPropertyName()の実装を変えることで、カスタマイズすることができます。
-</p>
-<p>
-次の例では、AB1234というカラム名を指定しています。
-</p>
-<pre>
-@Column(name = "AB1234")
-public String shortName;
-</pre>
-<p>
-insertable属性で挿入可能かどうかを指定することができます。
-デフォルトはtrueです。
-falseの場合、挿入用のSQLにこのカラムは含まれません。
-カラムにデフォルト値を適用したい場合は、falseにすると良いでしょう。
-</p>
-<p>
-updatable属性で更新可能かどうかを指定することができます。
-デフォルトはtrueです。
-falseの場合、更新用のSQLにこのカラムは含まれません。
-カラムにデフォルト値を適用したい場合は、falseにすると良いでしょう。
-</p>
-
-<h3><a name="IdDefinition">識別子定義</a></h3>
-<p>
-識別子(主キー)であることを指定するには、<code>@Id</code>を使います。
-</p>
-<pre>
-@Id
-public Integer id;
-</pre>
-<p>
-複合主キーの場合は、<code>@Id</code>を複数つけます。
-</p>
-<pre>
-@Id
-public Integer id;
-
-@Id
-public Integer id2;
-</pre>
-<p>
-識別子は、アプリケーション側で生成することもできますが、
-Seasar2に自動生成させることもできます。
-自動生成させるには、<code>@GeneratedValue</code>を使います。
-</p>
-<p>
-自動生成のタイプは、<code>@GeneratedValue</code>の<code>strategy</code>属性で指定します。
-指定できるタイプのは次の4つです。
-</p>
+<h3><a name="eclipseFormatter">Eclipseのフォーマッタ</a></h3>
+<p>S2JDBCの「流れるようなインターフェース」を使ったソースの可読性はソースのフォーマットに影響されます。Eclipseを使っている場合は、次のようにフォーマッタを設定すると読みやすくなります。</p>
 <ul>
-<li>GenerationType.TABLE<br />テーブルを使います。</li>
-<li>GenerationType.SEQUENCE<br />シーケンスを使います。</li>
-<li>GenerationType.IDENTITY<br />データベース固有の識別子自動生成を使います。</li>
-<li>GenerationType.AUTO(デフォルト)<br />データベースに応じてTABLE・SEQUENCE・IDENTITYのどちらかが選択されます。</li>
+<li>ワークスペースの設定を変更するには[Window]-[Properties]でダイアログを開き、左のペインで[Java]-[Code Style]-[Formatter]を選択し、右のペインで[Edit]ボタンを押します。
+<li>プロジェクトの設定を変更するには[Project]-[Properties]でダイアログを開き、左のペインで[Java Code Style]-[Formatter]を選択し、右のペインで[Edit]ボタンを押します。
+<li>上のタブで[Line Wrapping]を選択します。
+<li>左のペインのツリーで[Function Calls]を選択し、[Line wrapping policy]で[Wrap all elements,
+every element on a new line]を、[Indentation policy]で[Indent by one]を選択します。
+<li>ツリーで[Expressions]を選択し、[Line wrapping policy]で[Wrap all elements, every
+element on a new line]を、[Indentation policy]で[Indent by one]を選択します。
 </ul>
-            <h4>GenerationType.TABLE</h4>
-            <p>
-GenerationType.TABLEは次のようにして使います。
-</p>
-            <pre>@Id
+<h2><a name="Entity">エンティティ</a></h2>
+<p>エンティティの定義の仕方を説明します。 ここでいっているエンティティとは、 データベースに永続化されるものだと考えてください。</p>
+<h3 style="background-color:red">注意点</h3>
+<p>エンティティ用のアノテーションは、JPAのものをそのまま利用していますが、 すべてのアノテーションや属性をサポートしているわけではありません。
+ここに取り上げられているもののみサポートされているとお考えください。</p>
+<h3><a name="EntityDefinition">エンティティ定義</a></h3>
+<p>エンティティにするためには、<code>@Entity</code>を必ず指定する必要があります。</p>
+<pre>@Entity
+public class Employee {
+    ...
+}</pre>
+<p>name属性でエンティティ名を指定することができます。 次の例では、Empというエンティティ名を指定しています。</p>
+<pre>@Entity(name = &quot;Emp&quot;)
+public class Employee {
+    ...
+}</pre>
+<p>name属性を指定しなかった場合、エンティティのクラス名からパッケージ名を除いた部分が、 デフォルトのエンティティ名になります。 例えば、クラス名が<code>examples.entity.Employee</code>の場合、 デフォルトのエンティティ名は、<code>Employee</code>になります。</p>
+<h3><a name="TableDefinition">テーブル定義</a></h3>
+<p>テーブル情報を指定するには、<code>@Table</code>を使います。</p>
+<p>name属性でテーブル名を指定することができます。 指定しなかった場合、テーブル名はエンティティ名と同じになります。 エンティティ名が、<code>AaaBbb</code>のようなキャメル記法の場合、 テーブル名は、<code>AAA_BBB</code>のように'_'区切りだとみなされます。</p>
+<p>このルールは、convention.diconで指定されている <code>org.seasar.framework.convention.impl.PersistenceNamingConventionImpl</code>の fromEntityNameToTableName()の実装を変えることで、カスタマイズすることができます。</p>
+<p>次の例では、EMPというテーブル名を指定しています。</p>
+<pre>@Entity
+@Table(name = &quot;EMP&quot;)
+public class Employee {
+    ...
+}</pre>
+<p>schema属性でスキーマを指定することができます。 指定した場合、自動生成されるSQLのテーブル名がスキーマ.テーブル名になります。</p>
+<h3><a name="ColumnDefinition">カラム定義</a></h3>
+<p>カラム情報を指定するには、<code>@Column</code>を使います。</p>
+<p>name属性でカラム名を指定することができます。 指定しなかった場合、カラム名はフィールド名と同じになります。 フィールド名が、<code>aaaBbb</code>のようなキャメル記法の場合、 カラム名は、<code>AAA_BBB</code>のように'_'区切りだとみなされます。</p>
+<p>このルールは、convention.diconで指定されている <code>org.seasar.framework.convention.impl.PersistenceNamingConventionImpl</code>の fromPropertyNameToColumnName()の実装を変えることで、カスタマイズすることができます。</p>
+<p>デフォルトでは、プロパティ名とフィールド名は同じになりますが、convention.diconで指定されている <code>org.seasar.framework.convention.impl.PersistenceNamingConventionImpl</code>の fromFieldNameToPropertyName()の実装を変えることで、カスタマイズすることができます。</p>
+<p>次の例では、AB1234というカラム名を指定しています。</p>
+<pre>@Column(name = &quot;AB1234&quot;)
+public String shortName;</pre>
+<p>insertable属性で挿入可能かどうかを指定することができます。 デフォルトはtrueです。 falseの場合、挿入用のSQLにこのカラムは含まれません。
+カラムにデフォルト値を適用したい場合は、falseにすると良いでしょう。</p>
+<p>updatable属性で更新可能かどうかを指定することができます。 デフォルトはtrueです。 falseの場合、更新用のSQLにこのカラムは含まれません。
+カラムにデフォルト値を適用したい場合は、falseにすると良いでしょう。</p>
+<h3><a name="IdDefinition">識別子定義</a></h3>
+<p>識別子(主キー)であることを指定するには、<code>@Id</code>を使います。</p>
+<pre>@Id
+public Integer id;</pre>
+<p>複合主キーの場合は、<code>@Id</code>を複数つけます。</p>
+<pre>@Id
+public Integer id;
+
+@Id
+public Integer id2;</pre>
+<p>識別子は、アプリケーション側で生成することもできますが、 Seasar2に自動生成させることもできます。 自動生成させるには、<code>@GeneratedValue</code>を使います。</p>
+<p>自動生成のタイプは、<code>@GeneratedValue</code>の<code>strategy</code>属性で指定します。 指定できるタイプのは次の4つです。</p>
+<ul>
+<li>GenerationType.TABLE<br>
+テーブルを使います。
+<li>GenerationType.SEQUENCE<br>
+シーケンスを使います。
+<li>GenerationType.IDENTITY<br>
+データベース固有の識別子自動生成を使います。
+<li>GenerationType.AUTO(デフォルト)<br>
+データベースに応じてTABLE・SEQUENCE・IDENTITYのどちらかが選択されます。
+</ul>
+<h4>GenerationType.TABLE</h4>
+<p>GenerationType.TABLEは次のようにして使います。</p>
+<pre>@Id
 @GeneratedValue(strategy = GenerationType.TABLE)
 public Integer id;</pre>
 <p>上記のように指定した場合、 あらかじめ、次のようなテーブルとデータを用意しておく必要があります。</p>
@@ -814,9 +463,9 @@ public Integer id;</pre>
   PK varchar(80) not null primary key,
   VALUE integer);</pre>
 <pre>insert into ID_GENERATOR (PK, VALUE) values ('EMPLOYEE_ID', 1);</pre>
-            <p>ID_GENERATORテーブルのPKカラムには、&lt;テーブル名&gt;_&lt;識別子のカラム名&gt;を設定します。</p>
-            <p>テーブル名やカラム名をカスタマイズするには、次のように@TableGeneratorアノテーションで指定します。</p>
-            <pre>@Id
+<p>ID_GENERATORテーブルのPKカラムには、&lt;テーブル名&gt;_&lt;識別子のカラム名&gt;を設定します。</p>
+<p>テーブル名やカラム名をカスタマイズするには、次のように@TableGeneratorアノテーションで指定します。</p>
+<pre>@Id
 @GeneratedValue(strategy = GenerationType.TABLE, generator = &quot;EMPLOYEE_GEN&quot;)
 @TableGenerator(
     name = &quot;EMPLOYEE_GEN&quot;,
@@ -824,368 +473,169 @@ public Integer id;</pre>
     pkColumnName = &quot;GEN_NAME&quot;,
     valueColumnName = &quot;GEN_VALUE&quot;)
 public Integer id;</pre>
-<p>
-上記のようなTableGeneratorを定義した場合、
-あらかじめ、次のようなテーブルとデータを用意しておく必要があります。
-</p>
-<pre>
-create table ID_GEN {
+<p>上記のようなTableGeneratorを定義した場合、 あらかじめ、次のようなテーブルとデータを用意しておく必要があります。</p>
+<pre>create table ID_GEN {
   GEN_NAME varchar(80) not null primary key,
-  GEN_VALUE integer);
-</pre>
+  GEN_VALUE integer);</pre>
 <pre>insert into ID_GEN (GEN_NAME, GEN_VALUE) values ('EMPLOYEE_GEN', 1);</pre>
-            <h4>GenerationType.SEQUENCE</h4>
-            <p>
-GenerationType.SEQUENCEは次のようにして使います。
-</p>
-            <pre>@Id
+<h4>GenerationType.SEQUENCE</h4>
+<p>GenerationType.SEQUENCEは次のようにして使います。</p>
+<pre>@Id
 @GeneratedValue(strategy = GenerationType.SEQUENCE)
 public Integer id;</pre>
 <p>上記のように指定した場合、 あらかじめ、次のようなシーケンスを用意しておく必要があります。</p>
 <pre>create sequence EMPLOYEE_ID
   incremet by 50;</pre>
-            <p>シーケンス名は、&lt;テーブル名&gt;_&lt;識別子のカラム名&gt;となります。</p>
-            <p>シーケンス名をカスタマイズするには、次のように@SequenceGeneratorアノテーションで指定します。</p>
-            <pre>@Id
+<p>シーケンス名は、&lt;テーブル名&gt;_&lt;識別子のカラム名&gt;となります。</p>
+<p>シーケンス名をカスタマイズするには、次のように@SequenceGeneratorアノテーションで指定します。</p>
+<pre>@Id
 @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = &quot;EMPLOYEE_GEN&quot;)
 @SequenceGenerator(
     name = &quot;EMPLOYEE_GEN&quot;,
     sequenceName = &quot;EMPLOYEE_SEQ&quot;)
 public Integer id;</pre>
-<p>
-上記のようなSequenceGeneratorを定義した場合、
-あらかじめ、次のようなシーケンスを用意しておく必要があります。
-</p>
-<pre>
-create sequence EMPLOYEE_SEQ
-  incremet by 50;
-</pre>
-            <h4>GenerationType.IDENTITY</h4>
-            <p>
-GenerationType.IDENTITYは次のようにして使います。
-</p>
-<pre>
-@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-public Integer id;
-</pre>
-<p>
-GenerationType.IDENTITYを使う場合、
-識別子はデータベース固有の方法を使って自動生成されるようにしてください。
-</p>
-<pre>
-create table Employee {
+<p>上記のようなSequenceGeneratorを定義した場合、 あらかじめ、次のようなシーケンスを用意しておく必要があります。</p>
+<pre>create sequence EMPLOYEE_SEQ
+  incremet by 50;</pre>
+<h4>GenerationType.IDENTITY</h4>
+<p>GenerationType.IDENTITYは次のようにして使います。</p>
+<pre>@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+public Integer id;</pre>
+<p>GenerationType.IDENTITYを使う場合、 識別子はデータベース固有の方法を使って自動生成されるようにしてください。</p>
+<pre>create table Employee {
   ID integer not null primary key generated always as identity,
-  ...);
-</pre>
-
+  ...);</pre>
 <h3><a name="VersionDefinition">バージョン定義</a></h3>
-<p>
-バージョンチェック用であることを指定するには、<code>@Version</code>を使います。
-更新時に、エンティティの値とカラムの値が同一かどうかをチェックし、
-同一ならカラムの値がインクリメントされて更新されます。
-同一でない場合、<code>javax.persistence.OptimisticLockException</code>が発生します。
-</p>
+<p>バージョンチェック用であることを指定するには、<code>@Version</code>を使います。 更新時に、エンティティの値とカラムの値が同一かどうかをチェックし、 同一ならカラムの値がインクリメントされて更新されます。 同一でない場合、<code>javax.persistence.OptimisticLockException</code>が発生します。</p>
 <p>例えば、エンティティのバージョンチェック用のプロパティの値が1だったとします。 更新時にカラムの値が1のままならOKで、2に更新されます。 カラムの値が1でない場合は、他で更新されているということなので、
-            <code>javax.persistence.OptimisticLockException</code>が発生します。
-</p>
-<pre>
-@Version
-public Long version = 0L;
-</pre>
-            <h3 style="background-color:red">注意点</h3>
+<code>javax.persistence.OptimisticLockException</code>が発生します。</p>
+<pre>@Version
+public Long version = 0L;</pre>
+<h3 style="background-color:red">注意点</h3>
 <p>@Versionアノテーションは数値型のフィールドにのみ指定することができます。JPA仕様ではTimestamp型のフィールドもバージョンチェックに使用できることになっていますが、S2JDBCではサポートしていません。更新時刻の保持と排他制御は目的が違うので別のフィールドにしてください。</p>
-            <h3><a name="TransientDefinition">永続化対象外定義</a></h3>
-<p>
-永続化対象外であることを指定するには、<code>@Transient</code>を使います。
-<code>transient</code>修飾子も指定することもできますが、
-セッションリプリケーションなどの直列化の対象から外れてしまうので、
-<code>@Transient</code>の方をお勧めします。
-</p>
-<pre>
-@Transient
+<h3><a name="TransientDefinition">永続化対象外定義</a></h3>
+<p>永続化対象外であることを指定するには、<code>@Transient</code>を使います。 <code>transient</code>修飾子も指定することもできますが、 セッションリプリケーションなどの直列化の対象から外れてしまうので、 <code>@Transient</code>の方をお勧めします。</p>
+<pre>@Transient
 public MyDto myDto;
 
 //こちらはお勧めしない
-public transient MyDto myDto2;
-</pre>
-
+public transient MyDto myDto2;</pre>
 <h3><a name="LobDefinition">ラージオブジェクト定義</a></h3>
-<p>
-ラージオブジェクトであることを指定するには、<code>@Lob</code>を使います。
-プロパティの型がbyte[]の場合、自動的にBLOBと判定できるので指定する必要はありませんが、
-プロパティの型がStringの場合、カラムの型が通常の文字列なのか、
-CLOBなのか判断できないので、CLOBの場合は、<code>@Lob</code>を指定します。
-</p>
-<pre>
-@Lob
-public String largeName;
-</pre>
-
+<p>ラージオブジェクトであることを指定するには、<code>@Lob</code>を使います。 プロパティの型がbyte[]の場合、自動的にBLOBと判定できるので指定する必要はありませんが、 プロパティの型がStringの場合、カラムの型が通常の文字列なのか、
+CLOBなのか判断できないので、CLOBの場合は、<code>@Lob</code>を指定します。</p>
+<pre>@Lob
+public String largeName;</pre>
 <h3><a name="ManyToOneDefinition">多対一関連定義</a></h3>
-<p>
-多対一関連であることを指定するには、<code>@ManyToOne</code>を使います。
-複数のEmployeeに1つのDepartementが関連付けられる場合、
-EmployeeからみてDepartmentは多対一関連になります。
-関連には、所有者、非所有者という概念があり、外部キーを持っているほうが所有者になります。
-</p>
-<p>
-上記のケースは、Employeeのテーブルに、
-department_id(プロパティ名はdepartmentId)という外部キーがあるので、
-Employeeは関連の所有者になります。
-</p>
-<p>
-<code>@ManyToOne</code>を定義するエンティティは、
-必ず関連の所有者になるので、
-外部キーに対応するプロパティが必要です。
-</p>
-<pre>
-public class Employee {
+<p>多対一関連であることを指定するには、<code>@ManyToOne</code>を使います。 複数のEmployeeに1つのDepartementが関連付けられる場合、 EmployeeからみてDepartmentは多対一関連になります。
+関連には、所有者、非所有者という概念があり、外部キーを持っているほうが所有者になります。</p>
+<p>上記のケースは、Employeeのテーブルに、 department_id(プロパティ名はdepartmentId)という外部キーがあるので、
+Employeeは関連の所有者になります。</p>
+<p><code>@ManyToOne</code>を定義するエンティティは、 必ず関連の所有者になるので、 外部キーに対応するプロパティが必要です。</p>
+<pre>public class Employee {
     ...
     public Integer departementId;
     
     @ManyToOne
     public Department department;
-}
-</pre>
-
+}</pre>
 <h3><a name="OneToManyDefinition">一対多関連定義</a></h3>
-<p>
-一対多関連であることを指定するには、<code>@OneToMany</code>を使います。
-1つのDepartmentに複数のEmployeeが関連付けられる場合、
-DepartmentからみてEmployeeは一対多関連になります。
-関連には、所有者、非所有者という概念があり、外部キーを持っているほうが所有者になります。
-</p>
-<p>
-上記のケースは、Employeeのテーブルに、
-department_id(プロパティ名はdepartmentId)という外部キーがあり、
-Departmentの方は、外部キーを持っていないので、
-Departmentは関連の非所有者になります。
-</p>
-<p>
-関連の非所有者の場合、必ずmappedBy属性で逆側の関連のプロパティ名を指定します。
-Departmentからみて一対多でEmployeeが関連付けられていて、
-そのEmployeeからみるとDepartmentがdepartmentプロパティとして、
-多対一で関連付けられています。
-お互いが相互の関連であることを示すために<code>mappedBy</code>でdepartmentを指定します。
-</p>
-<p>
-一対多の関連の型は、<code>List&lt;エンティティ型&gt;</code>にします。
-どのエンティティのリストなのかを示すためにGenericsの指定を忘れないようにしてください。
-</p>
-<pre>
-public class Department {
+<p>一対多関連であることを指定するには、<code>@OneToMany</code>を使います。 1つのDepartmentに複数のEmployeeが関連付けられる場合、 DepartmentからみてEmployeeは一対多関連になります。
+関連には、所有者、非所有者という概念があり、外部キーを持っているほうが所有者になります。</p>
+<p>上記のケースは、Employeeのテーブルに、 department_id(プロパティ名はdepartmentId)という外部キーがあり、 Departmentの方は、外部キーを持っていないので、
+Departmentは関連の非所有者になります。</p>
+<p>関連の非所有者の場合、必ずmappedBy属性で逆側の関連のプロパティ名を指定します。 Departmentからみて一対多でEmployeeが関連付けられていて、
+そのEmployeeからみるとDepartmentがdepartmentプロパティとして、 多対一で関連付けられています。 お互いが相互の関連であることを示すために<code>mappedBy</code>でdepartmentを指定します。</p>
+<p>一対多の関連の型は、<code>List&lt;エンティティ型&gt;</code>にします。 どのエンティティのリストなのかを示すためにGenericsの指定を忘れないようにしてください。</p>
+<pre>public class Department {
     ...
-    @OneToMany(mappedBy = "department")
+    @OneToMany(mappedBy = &quot;department&quot;)
     public List&lt;Employee&gt; employeeList;
-}
-</pre>
-
+}</pre>
 <h3><a name="OneToOneDefinition">一対一関連定義</a></h3>
-<p>
-一対一関連であることを指定するには、<code>@OneToOne</code>を使います。
-1つのEmployeeに1つのAddressが関連付けられる場合、
-EmployeeからみてAddressは一対一関連になります。
-同じように、1つのAddressに1つのEmployeeが関連付けられているので、
-AddressからみてEmployeeも一対一関連になります。
-関連には、所有者、非所有者という概念があり、外部キーを持っているほうが所有者になります。
-</p>
-<p>
-上記のケースは、Employeeのテーブルに、
-address_id(プロパティ名はaddressId)という外部キーがあるので、
-Employeeは関連の所有者になります。
-Addressの方は、外部キーを持っていないので、
-Addressは関連の非所有者になります。
-</p>
-<p>
-関連の非所有者の場合、必ずmappedBy属性で逆側の関連のプロパティ名を指定します。
-Addressから見ると一対一でEmployeeが関連付けられていて、
-そのEmployeeからみるとAddressがaddressプロパティとして、
-一対一で関連付けられています。
-お互いが相互の関連であることを示すために<code>mappedBy</code>でaddressを指定します。
-</p>
-<pre>
-public class Employee {
+<p>一対一関連であることを指定するには、<code>@OneToOne</code>を使います。 1つのEmployeeに1つのAddressが関連付けられる場合、 EmployeeからみてAddressは一対一関連になります。
+同じように、1つのAddressに1つのEmployeeが関連付けられているので、 AddressからみてEmployeeも一対一関連になります。
+関連には、所有者、非所有者という概念があり、外部キーを持っているほうが所有者になります。</p>
+<p>上記のケースは、Employeeのテーブルに、 address_id(プロパティ名はaddressId)という外部キーがあるので、 Employeeは関連の所有者になります。
+Addressの方は、外部キーを持っていないので、 Addressは関連の非所有者になります。</p>
+<p>関連の非所有者の場合、必ずmappedBy属性で逆側の関連のプロパティ名を指定します。 Addressから見ると一対一でEmployeeが関連付けられていて、
+そのEmployeeからみるとAddressがaddressプロパティとして、 一対一で関連付けられています。 お互いが相互の関連であることを示すために<code>mappedBy</code>でaddressを指定します。</p>
+<pre>public class Employee {
     ...
     public Integer addressId;
     
     @OneToOne
     public Address address;
-}
-</pre>
-<pre>
-public class Address {
+}</pre>
+<pre>public class Address {
     ...
-    @OneToOne(mappedBy = "address")
+    @OneToOne(mappedBy = &quot;address&quot;)
     public Employee employee;
-}
-</pre>
-
+}</pre>
 <h3><a name="JoinColumnDefinition">結合カラム定義</a></h3>
-<p>
-外部キーを持っている方を関連の所有者といいますが、
-関連の所有者側では、<code>@JoinColumn</code>を使って、
-結合用のカラムを指定することができます。
-</p>
-<p>
-name属性で、外部キーを指定します。
-name属性を省略した場合、「関連のプロパティ名_関連テーブルの主キー」が
-自動的に設定されます。
-主キーは、プロパティ名ではなく、カラム名なので注意してください。
-</p>
-<pre>
-public class Employee {
+<p>外部キーを持っている方を関連の所有者といいますが、 関連の所有者側では、<code>@JoinColumn</code>を使って、 結合用のカラムを指定することができます。</p>
+<p>name属性で、外部キーを指定します。 name属性を省略した場合、「関連のプロパティ名_関連テーブルの主キー」が 自動的に設定されます。 主キーは、プロパティ名ではなく、カラム名なので注意してください。</p>
+<pre>public class Employee {
     ...
     public Integer departementId;
     
     @ManyToOne
     public Department department;
-}
-</pre>
-<p>
-上記の例では、<code>@JoinColumn</code>が省略されているので、
-name属性は、「関連のプロパティ名(department)_関連テーブルの主キー(ID)」、
-つまりDEPARTMENT_IDになります。
-</p>
-<p>
-departmentがDEPARTMENTに変換されているのは、
-プロパティ名をカラム名に変換するときに、
-キャメル記法は、'_'区切りになり、'_'以外は大文字に変換されるというルールがあるからです。
-</p>
-<p>
-このルールは、convention.diconで指定されている
-<code>org.seasar.framework.convention.impl.PersistenceNamingConventionImpl</code>の
-fromPropertyNameToColumnName()の実装を変えることで、カスタマイズすることができます。
-</p>
-<p>
-referencedColumnName属性で、関連テーブルの主キーを指定します。
-referencedColumnName属性を省略した場合、
-「関連テーブルの主キー」が自動的に設定されます。
-主キーは、プロパティ名ではなく、カラム名なので注意してください。
-</p>
-<pre>
-public class Employee {
+}</pre>
+<p>上記の例では、<code>@JoinColumn</code>が省略されているので、 name属性は、「関連のプロパティ名(department)_関連テーブルの主キー(ID)」、 つまりDEPARTMENT_IDになります。</p>
+<p>departmentがDEPARTMENTに変換されているのは、 プロパティ名をカラム名に変換するときに、 キャメル記法は、'_'区切りになり、'_'以外は大文字に変換されるというルールがあるからです。</p>
+<p>このルールは、convention.diconで指定されている <code>org.seasar.framework.convention.impl.PersistenceNamingConventionImpl</code>の fromPropertyNameToColumnName()の実装を変えることで、カスタマイズすることができます。</p>
+<p>referencedColumnName属性で、関連テーブルの主キーを指定します。 referencedColumnName属性を省略した場合、
+「関連テーブルの主キー」が自動的に設定されます。 主キーは、プロパティ名ではなく、カラム名なので注意してください。</p>
+<pre>public class Employee {
     ...
     public Integer departementId;
     
     @ManyToOne
     public Department department;
-}
-</pre>
-<p>
-上記の例では、<code>@JoinColumn</code>が省略されているので、
-referencedColumnName属性は、「関連テーブルの主キー(ID)」、
-つまりIDになります。
-</p>
-
+}</pre>
+<p>上記の例では、<code>@JoinColumn</code>が省略されているので、 referencedColumnName属性は、「関連テーブルの主キー(ID)」、 つまりIDになります。</p>
 <h2><a name="JdbcManager">JDBCマネージャ</a></h2>
-<p>
-JdbcManagerは、データベースにアクセスするために使われるAPIです。
-設定ファイルを<a href="#setup">セットアップ</a>して、
-利用したいクラスで次のようにプロパティを定義しておけば、
-Seasar2によってJdbcManagerは自動的に設定されます。
-</p>
-<pre>
-public JdbcManager jdbcManager;
-</pre>
-<p>
-Connection, Statementは同一トランザクション中はキャッシュされ、
-トランザクション終了時に自動的にクローズされます。
-トランザクション外で呼び出されたときは、キャッシュは行なわれず毎回自動的にクローズされます。
-</p>
-<p>
-トランザクション管理は、<a href="tx.html">S2Tx</a>を使ってください。
-</p>
-
+<p>JdbcManagerは、データベースにアクセスするために使われるAPIです。 設定ファイルを<a href="#setup">セットアップ</a>して、 利用したいクラスで次のようにプロパティを定義しておけば、 Seasar2によってJdbcManagerは自動的に設定されます。</p>
+<pre>public JdbcManager jdbcManager;</pre>
+<p>Connection, Statementは同一トランザクション中はキャッシュされ、 トランザクション終了時に自動的にクローズされます。 トランザクション外で呼び出されたときは、キャッシュは行なわれず毎回自動的にクローズされます。</p>
+<p>トランザクション管理は、<a href="tx.html">S2Tx</a>を使ってください。</p>
 <h3><a name="getResultList">複数件検索</a></h3>
-<p>
-複数件を検索する場合は、gerResultList()を使います。
-</p>
-<pre>
-List&lt;Employee&gt; results = jdbcManager.from(Employee.class).getResultList();
-</pre>
-<p>
-検索するエンティティは、from()で指定します。
-</p>
-
+<p>複数件を検索する場合は、gerResultList()を使います。</p>
+<pre>List&lt;Employee&gt; results = jdbcManager.from(Employee.class).getResultList();</pre>
+<p>検索するエンティティは、from()で指定します。</p>
 <h3><a name="getSingleResult">1件検索</a></h3>
-<p>
-1件検索する場合は、getSingleResult()を使います。
-</p>
-<pre>
-Employee result = jdbcManager.from(Employee.class).getSingleResult();
-</pre>
-<p>
-結果が複数件になる場合は、<code>javax.persistence.NonUniqueResultException</code>が発生します。
-</p>
-
+<p>1件検索する場合は、getSingleResult()を使います。</p>
+<pre>Employee result = jdbcManager.from(Employee.class).getSingleResult();</pre>
+<p>結果が複数件になる場合は、<code>javax.persistence.NonUniqueResultException</code>が発生します。</p>
 <h3><a name="join">結合</a></h3>
-<p>
-他のエンティティを結合する場合は、join()を使います。
-引数は、結合したいエンティティのプロパティ名です。
-</p>
-<pre>
-List&lt;Employee&gt; results = jdbcManager.from(Employee.class).join("department").getResultList();
-</pre>
-<p>
-デフォルトは、左外部結合で、結合で指定したエンティティは、検索結果に含まれます。
-次のように内部結合にすることもできます。
-</p>
-<pre>
-List&lt;Employee&gt; results = jdbcManager.from(Employee.class)
-                                    .join("department", JoinType.INNER).getResultList();
-</pre>
-<p>
-検索条件には含めたいけど、検索結果には含めたくない場合、
-3番名の引数をfalseにします。
-</p>
-<pre>
-List&lt;Employee&gt; results = jdbcManager.from(Employee.class)
-                                    .join("department", JoinType.INNER, false)
-                                    .where("department.name = 'RESEARCH'")
-                                    .getResultList();
-</pre>
-<p>
-結合は、employee.addressのようにネストすることもできます。
-ネストする場合は、必ずベースとなる結合を先に指定します。
-employee.addressの場合、employeeがベースとなる結合です。
-</p>
-<pre>
-List&lt;Department&gt; results = jdbcManager.from(Department.class)
-                                    .join("employee")
-                                    .join("employee.address")
-                                    .getResultList();
-</pre>
-<p>
-結合は、多対一関連、一対多関連、一対一関連のどれでも可能で、
-いくつでもネストすることが可能です。
-</p>
-
+<p>他のエンティティを結合する場合は、join()を使います。 引数は、結合したいエンティティのプロパティ名です。</p>
+<pre>List&lt;Employee&gt; results = jdbcManager.from(Employee.class).join(&quot;department&quot;).getResultList();</pre>
+<p>デフォルトは、左外部結合で、結合で指定したエンティティは、検索結果に含まれます。 次のように内部結合にすることもできます。</p>
+<pre>List&lt;Employee&gt; results = jdbcManager.from(Employee.class)
+                                    .join(&quot;department&quot;, JoinType.INNER).getResultList();</pre>
+<p>検索条件には含めたいけど、検索結果には含めたくない場合、 3番名の引数をfalseにします。</p>
+<pre>List&lt;Employee&gt; results = jdbcManager.from(Employee.class)
+                                    .join(&quot;department&quot;, JoinType.INNER, false)
+                                    .where(&quot;department.name = 'RESEARCH'&quot;)
+                                    .getResultList();</pre>
+<p>結合は、employee.addressのようにネストすることもできます。 ネストする場合は、必ずベースとなる結合を先に指定します。 employee.addressの場合、employeeがベースとなる結合です。</p>
+<pre>List&lt;Department&gt; results = jdbcManager.from(Department.class)
+                                    .join(&quot;employee&quot;)
+                                    .join(&quot;employee.address&quot;)
+                                    .getResultList();</pre>
+<p>結合は、多対一関連、一対多関連、一対一関連のどれでも可能で、 いくつでもネストすることが可能です。</p>
 <h3><a name="where">検索条件</a></h3>
-<p>
-検索条件を指定する場合は、where()を使います。
-where()に書くことのできる条件は、SQLと同じです。
-SQLとの違いは、カラム名の変わりにプロパティ名を書くことです。
-関連先のプロパティを指定する場合は、join()で指定した名前. プロパティ名になります。
-</p>
-<pre>
-jdbcManager.from(Department.class)
-    .join("employeeList")
-    .join("employeeList.address")
-    .where("employeeList.salary between ? and ? and employeeList.address.street like ?", ...)
-    .getResultList();
-</pre>
-<p>
-検索条件の入力画面などでは、ユーザの入力があった部分をandでつないで、
-条件を組み立てるということが良く行われます。
-このようなケースを簡単に処理するために、
-SimpleWhereとMapでも、検索条件を指定できるようにしています。
-</p>
-<p>
-名前、仕事タイプ、給与の上限下限を条件に検索する画面を考えてみましょう。
-べたに検索条件を組み立てるとはこんな感じになるはずです。
-</p>
-<pre>
-public String departmentName;
+<p>検索条件を指定する場合は、where()を使います。 where()に書くことのできる条件は、SQLと同じです。 SQLとの違いは、カラム名の変わりにプロパティ名を書くことです。
+関連先のプロパティを指定する場合は、join()で指定した名前. プロパティ名になります。</p>
+<pre>jdbcManager.from(Department.class)
+    .join(&quot;employeeList&quot;)
+    .join(&quot;employeeList.address&quot;)
+    .where(&quot;employeeList.salary between ? and ? and employeeList.address.street like ?&quot;, ...)
+    .getResultList();</pre>
+<p>検索条件の入力画面などでは、ユーザの入力があった部分をandでつないで、 条件を組み立てるということが良く行われます。 このようなケースを簡単に処理するために、
+SimpleWhereとMapでも、検索条件を指定できるようにしています。</p>
+<p>名前、仕事タイプ、給与の上限下限を条件に検索する画面を考えてみましょう。 べたに検索条件を組み立てるとはこんな感じになるはずです。</p>
+<pre>public String departmentName;
 public String[] jobTypes = new String[0];
 public BigDecimal salaryMax;
 public BigDecimal salaryMin;
@@ -1194,60 +644,53 @@ StringBuilder sb = new StringBuilder(100);
 boolean found = false;
 List&lt;Object&gt; values = new ArrayList&lt;Object&gt;();
 if (departmentName != null) {
-    sb.append("department.name = ?");
+    sb.append(&quot;department.name = ?&quot;);
     values.add(departmentName);
     found = true;
 }
-if (jobTypes.length > 0) {
+if (jobTypes.length &gt; 0) {
     if (found) {
-        sb.append(" and ");
+        sb.append(&quot; and &quot;);
     }
-    sb.append("jobType in (");
+    sb.append(&quot;jobType in (&quot;);
     for (JobType jt : jobTypes) {
-        sb.append("?, ");
+        sb.append(&quot;?, &quot;);
         values.add(jt);
     }
     sb.setLength(sb.length() - 2);
-    sb.append(")");
+    sb.append(&quot;)&quot;);
     found = true;
 }
 if (salaryMin != null) {
     if (found) {
-        sb.append(" and ");
+        sb.append(&quot; and &quot;);
     }
-    sb.append("salary >= ?");
+    sb.append(&quot;salary &gt;= ?&quot;);
     values.add(salaryMin);
     found = true;
 }
 if (salaryMax != null) {
     if (found) {
-        sb.append(" and ");
+        sb.append(&quot; and &quot;);
     }
-    sb.append("salary <= ?");
+    sb.append(&quot;salary &lt;= ?&quot;);
     values.add(salaryMax);
     found = true;
 }
-jdbcManager.from(Employee.class).where(sb.toString(), values.toArray()).getResultList();
-</pre>
-<p>
-SimpleWhereを使って組み立てれば、こんなに簡単になります。
-</p>
-<pre>
-public String departmentName;
+jdbcManager.from(Employee.class).where(sb.toString(), values.toArray()).getResultList();</pre>
+<p>SimpleWhereを使って組み立てれば、こんなに簡単になります。</p>
+<pre>public String departmentName;
 public String[] jobTypes = new String[0];
 public BigDecimal salaryMax;
 public BigDecimal salaryMin;
 ...
 jdbcManager.from(Employee.class).where(
-    new SimpleWhere().eq("department.name", departmentName).in("jobType", jobTypes)
-        .ge("salary", salaryMin).le("salary", salaryMax))
-    .getResultList();
-</pre>
-<p>
-SimpleWhereには次のメソッドがあります。
-</p>
-<p>
+    new SimpleWhere().eq(&quot;department.name&quot;, departmentName).in(&quot;jobType&quot;, jobTypes)
+        .ge(&quot;salary&quot;, salaryMin).le(&quot;salary&quot;, salaryMax))
+    .getResultList();</pre>
+<p>SimpleWhereには次のメソッドがあります。</p>
 <table border="1">
+<tbody>
 <tr bgcolor="#D1F3F4" align="center">
 <th width="260px">メソッド</th>
 <th>説明</th>
@@ -1258,8 +701,7 @@ SimpleWhereには次のメソッドがあります。
 </tr>
 <tr>
 <td>ne(String propertyName, Object value)</td>
-<td><code>propertyName &lt;&gt; ?</code>の条件を追加します。valueがnullの時は追加されません。
-</td>
+<td><code>propertyName &lt;&gt; ?</code>の条件を追加します。valueがnullの時は追加されません。</td>
 </tr>
 <tr>
 <td>lt(String propertyName, Object value)</td>
@@ -1267,420 +709,241 @@ SimpleWhereには次のメソッドがあります。
 </tr>
 <tr>
 <td>le(String propertyName, Object value)</td>
-<td><code>propertyName &lt;= ?</code>の条件を追加します。valueがnullの時は追加されません。
-</td>
+<td><code>propertyName &lt;= ?</code>の条件を追加します。valueがnullの時は追加されません。</td>
 </tr>
 <tr>
 <td>gt(String propertyName, Object value)</td>
-<td><code>propertyName &gt; ?</code>の条件を追加します。valueがnullの時は追加されません。
-</td>
+<td><code>propertyName &gt; ?</code>の条件を追加します。valueがnullの時は追加されません。</td>
 </tr>
 <tr>
 <td>ge(String propertyName, Object value)</td>
-<td><code>propertyName &gt;= ?</code>の条件を追加します。valueがnullの時は追加されません。
-</td>
+<td><code>propertyName &gt;= ?</code>の条件を追加します。valueがnullの時は追加されません。</td>
 </tr>
 <tr>
 <td>in(String propertyName, Object... values)</td>
-<td><code>propertyName in (?, ...)</code>の条件を追加します。
-valuesの配列の長さが0の時は追加されません。
-</td>
+<td><code>propertyName in (?, ...)</code>の条件を追加します。 valuesの配列の長さが0の時は追加されません。</td>
 </tr>
 <tr>
 <td>not in(String propertyName, Object... values)</td>
-<td><code>propertyName not in (?, ...)</code>の条件を追加します。
-valuesの配列の長さが0の時は追加されません。
-</td>
+<td><code>propertyName not in (?, ...)</code>の条件を追加します。 valuesの配列の長さが0の時は追加されません。</td>
 </tr>
 <tr>
 <td>like(String propertyName, String value)</td>
-<td><code>propertyName like ?</code>の条件を追加します。
-valueがnullの時は追加されません。
-</td>
+<td><code>propertyName like ?</code>の条件を追加します。 valueがnullの時は追加されません。</td>
 </tr>
 <tr>
 <td>starts(String propertyName, String value)</td>
-<td><code>propertyName like ?</code>の条件を追加します。
-valueがnullの時は追加されません。
-valueの最後に自動的に<code>%</code>が追加されます。
-</td>
+<td><code>propertyName like ?</code>の条件を追加します。 valueがnullの時は追加されません。 valueの最後に自動的に<code>%</code>が追加されます。</td>
 </tr>
 <tr>
 <td>ends(String propertyName, String value)</td>
-<td><code>propertyName like ?</code>の条件を追加します。
-valueがnullの時は追加されません。
-valueの最初に自動的に<code>%</code>が追加されます。
-</td>
+<td><code>propertyName like ?</code>の条件を追加します。 valueがnullの時は追加されません。 valueの最初に自動的に<code>%</code>が追加されます。</td>
 </tr>
 <tr>
 <td>contains(String propertyName, String value)</td>
-<td><code>propertyName like ?</code>の条件を追加します。
-valueがnullの時は追加されません。
-valueの最初と最後に自動的に<code>%</code>が追加されます。
-</td>
+<td><code>propertyName like ?</code>の条件を追加します。 valueがnullの時は追加されません。 valueの最初と最後に自動的に<code>%</code>が追加されます。</td>
 </tr>
 <tr>
 <td>isNull(String propertyName, Boolean value)</td>
-<td><code>propertyName is null</code>の条件を追加します。
-valueがnullあるいはBoolean.FALSEの時は追加されません。
-</td>
+<td><code>propertyName is null</code>の条件を追加します。 valueがnullあるいはBoolean.FALSEの時は追加されません。</td>
 </tr>
 <tr>
 <td>isNotNull(String propertyName, Boolean value)</td>
-<td><code>propertyName is not null</code>の条件を追加します。
-valueがnullあるいはBoolean.FALSEの時は追加されません。
-</td>
+<td><code>propertyName is not null</code>の条件を追加します。 valueがnullあるいはBoolean.FALSEの時は追加されません。</td>
 </tr>
+</tbody>
 </table>
-</p>
-<p>
-Mapを使うと次のようになります。
-</p>
-<pre>
-public String departmentName;
+<p>Mapを使うと次のようになります。</p>
+<pre>public String departmentName;
 public String[] jobTypes = new String[0];
 public BigDecimal salaryMax;
 public BigDecimal salaryMin;
 ...
 Map&lt;String, Object&gt; w = new HashMap&lt;String, Object&gt;();
-w.put("department.name", departmentName);
-w.put("jobType_IN", jobTypes);
-w.put("salary_LE", salaryMax);
-w.put("salary_GE", salaryMin);
-jdbcManager.from(Employee.class).where(w).getResultList();
-</pre>
-<p>
-マップのキーにプロパティ名_サフィックスを指定します。
-サフィックスがない場合は、<code>_EQ</code>が指定されたとみなされます。
-</p>
-<p>
-次のサフィックスを使うことができます。
-</p>
-<p>
+w.put(&quot;department.name&quot;, departmentName);
+w.put(&quot;jobType_IN&quot;, jobTypes);
+w.put(&quot;salary_LE&quot;, salaryMax);
+w.put(&quot;salary_GE&quot;, salaryMin);
+jdbcManager.from(Employee.class).where(w).getResultList();</pre>
+<p>マップのキーにプロパティ名_サフィックスを指定します。 サフィックスがない場合は、<code>_EQ</code>が指定されたとみなされます。</p>
+<p>次のサフィックスを使うことができます。</p>
 <table border="1">
+<tbody>
 <tr bgcolor="#D1F3F4" align="center">
 <th>サフィックス</th>
 <th>説明</th>
 </tr>
 <tr>
 <td>_EQ</td>
-<td><code>propertyName = ?</code>の条件を追加します。valueがnullの時は追加されません。
-</td>
+<td><code>propertyName = ?</code>の条件を追加します。valueがnullの時は追加されません。</td>
 </tr>
 <tr>
 <td>_NE</td>
-<td><code>propertyName &lt;&gt; ?</code>の条件を追加します。valueがnullの時は追加されません。
-</td>
+<td><code>propertyName &lt;&gt; ?</code>の条件を追加します。valueがnullの時は追加されません。</td>
 </tr>
 <tr>
 <td>_LT</td>
-<td><code>propertyName &lt; ?</code>の条件を追加します。valueがnullの時は追加されません。
-</td>
+<td><code>propertyName &lt; ?</code>の条件を追加します。valueがnullの時は追加されません。</td>
 </tr>
 <tr>
 <td>_LE</td>
-<td><code>propertyName &lt;= ?</code>の条件を追加します。valueがnullの時は追加されません。
-</td>
+<td><code>propertyName &lt;= ?</code>の条件を追加します。valueがnullの時は追加されません。</td>
 </tr>
 <tr>
 <td>_GT</td>
-<td><code>propertyName &gt; ?</code>の条件を追加します。valueがnullの時は追加されません。
-</td>
+<td><code>propertyName &gt; ?</code>の条件を追加します。valueがnullの時は追加されません。</td>
 </tr>
 <tr>
 <td>_GE</td>
-<td><code>propertyName &gt;= ?</code>の条件を追加します。valueがnullの時は追加されません。
-</td>
+<td><code>propertyName &gt;= ?</code>の条件を追加します。valueがnullの時は追加されません。</td>
 </tr>
 <tr>
 <td>_IN</td>
-<td><code>propertyName in (?, ...)</code>の条件を追加します。
-valuesの配列の長さが0の時は追加されません。
-値は配列のみをサポートしています。</td>
+<td><code>propertyName in (?, ...)</code>の条件を追加します。 valuesの配列の長さが0の時は追加されません。 値は配列のみをサポートしています。</td>
 </tr>
 <tr>
 <td>_NOT_IN</td>
-<td><code>propertyName not in (?, ...)</code>の条件を追加します。
-valuesの配列の長さが0の時は追加されません。
-値は配列のみをサポートしています。</td>
+<td><code>propertyName not in (?, ...)</code>の条件を追加します。 valuesの配列の長さが0の時は追加されません。 値は配列のみをサポートしています。</td>
 </tr>
 <tr>
 <td>_LIKE</td>
-<td><code>propertyName like ?</code>の条件を追加します。
-valueがnullの時は追加されません。
-</td>
+<td><code>propertyName like ?</code>の条件を追加します。 valueがnullの時は追加されません。</td>
 </tr>
 <tr>
 <td>_STARTS</td>
-<td><code>propertyName like ?</code>の条件を追加します。
-valueがnullの時は追加されません。
-valueの最後に自動的に<code>%</code>が追加されます。
-</td>
+<td><code>propertyName like ?</code>の条件を追加します。 valueがnullの時は追加されません。 valueの最後に自動的に<code>%</code>が追加されます。</td>
 </tr>
 <tr>
 <td>_ENDS</td>
-<td><code>propertyName like ?</code>の条件を追加します。
-valueがnullの時は追加されません。
-valueの最初に自動的に<code>%</code>が追加されます。
-</td>
+<td><code>propertyName like ?</code>の条件を追加します。 valueがnullの時は追加されません。 valueの最初に自動的に<code>%</code>が追加されます。</td>
 </tr>
 <tr>
 <td>_CONTAINS</td>
-<td><code>propertyName like ?</code>の条件を追加します。
-valueがnullの時は追加されません。
-valueの最初と最後に自動的に<code>%</code>が追加されます。
-</td>
+<td><code>propertyName like ?</code>の条件を追加します。 valueがnullの時は追加されません。 valueの最初と最後に自動的に<code>%</code>が追加されます。</td>
 </tr>
 <tr>
 <td>_IS_NULL</td>
-<td><code>propertyName is null</code>の条件を追加します。
-valueがnullあるいはBoolean.FALSEの時は追加されません。
-値はBooleanのみをサポートしています。
-</td>
+<td><code>propertyName is null</code>の条件を追加します。 valueがnullあるいはBoolean.FALSEの時は追加されません。 値はBooleanのみをサポートしています。</td>
+</tr>
 <tr>
 <td>_IS_NOT_NULL</td>
-<td><code>propertyName is not null</code>の条件を追加します。
-valueがnullあるいはBoolean.FALSEの時は追加されません。
-値はBooleanのみをサポートしています。</td>
+<td><code>propertyName is not null</code>の条件を追加します。 valueがnullあるいはBoolean.FALSEの時は追加されません。 値はBooleanのみをサポートしています。</td>
 </tr>
+</tbody>
 </table>
-</p>
-<p>
-マップの組み立てを手動でやる必要は、基本的にありません。
-なぜなら、SimpleWhereのほうが便利だからです。
-マップを使う場合は、次のように<code>org.seasar.framework.beans.util.BeanUtil.createProperties()</code>と組み合わせます。
-<code>createProperties()</code>の第二引数には、プロパティ名のプレフィックスを指定します。
-プレフィックスを指定した場合、プレフィックスを持つプロパティだけが対象になります。
-プロパティ名がマップのキーに変換されるときに、
-プレフィックスは削除され、'$'は'.'に変換されます。
-</p>
-<pre>
-public String where_department$name;
+<p>マップの組み立てを手動でやる必要は、基本的にありません。 なぜなら、SimpleWhereのほうが便利だからです。 マップを使う場合は、次のように<code>org.seasar.framework.beans.util.BeanUtil.createProperties()</code>と組み合わせます。 <code>createProperties()</code>の第二引数には、プロパティ名のプレフィックスを指定します。 プレフィックスを指定した場合、プレフィックスを持つプロパティだけが対象になります。
+プロパティ名がマップのキーに変換されるときに、 プレフィックスは削除され、'$'は'.'に変換されます。</p>
+<pre>public String where_department$name;
 public String[] where_jobType_IN = new String[0];
 public BigDecimal where_salary_LE;
 public BigDecimal where_salary_GE;
 ...
-jdbcManager.from(Employee.class).where(BeanUtil.createProperties(this, "where_")).getResultList();
-</pre>
-
+jdbcManager.from(Employee.class).where(BeanUtil.createProperties(this, &quot;where_&quot;)).getResultList();</pre>
 <h3><a name="orderBy">ソート順</a></h3>
-<p>
-ソート順を指定する場合は、<code>orderBy()</code>を使います。
-<code>orderBy()</code>に書くことのできる条件は、SQLと同じです。
-SQLとの違いは、カラム名の変わりにプロパティ名を書くことです。
-関連先のプロパティを指定する場合は、join()で指定した名前. プロパティ名になります。
-</p>
-<pre>
-jdbcManager.from(Employee.class)
-    .join("department")
-    .orderBy("name, department.name")
-    .getResultList();
-</pre>
-
+<p>ソート順を指定する場合は、<code>orderBy()</code>を使います。 <code>orderBy()</code>に書くことのできる条件は、SQLと同じです。 SQLとの違いは、カラム名の変わりにプロパティ名を書くことです。 関連先のプロパティを指定する場合は、join()で指定した名前.
+プロパティ名になります。</p>
+<pre>jdbcManager.from(Employee.class)
+    .join(&quot;department&quot;)
+    .orderBy(&quot;name, department.name&quot;)
+    .getResultList();</pre>
 <h3><a name="paging">ページング</a></h3>
-<p>
-ページングを指定する場合は、<code>limit(), offset()</code>を使います。
-<code>limit()</code>には、取得する行数を指定します。
-<code>offset()</code>には、最初に取得する行の位置を指定します。
-最初の行の位置は0になります。
-ページングを指定するには、必ず<a href="#orderBy">ソート順</a>の指定も必要です。
-</p>
-<pre>
-jdbcManager.from(Employee.class)
-    .orderBy("name")
+<p>ページングを指定する場合は、<code>limit(), offset()</code>を使います。 <code>limit()</code>には、取得する行数を指定します。 <code>offset()</code>には、最初に取得する行の位置を指定します。 最初の行の位置は0になります。 ページングを指定するには、必ず<a href="#orderBy">ソート順</a>の指定も必要です。</p>
+<pre>jdbcManager.from(Employee.class)
+    .orderBy(&quot;name&quot;)
     .limit(100)
     .offset(10)
-    .getResultList();
-</pre>
-
+    .getResultList();</pre>
 <h3><a name="maxRows">最大行数</a></h3>
-<p>
-最大行数を指定する場合は、<code>maxRows()</code>を使います。
-最大行数を超える行は、通知なしに除外されます。
-</p>
-<pre>
-jdbcManager.from(Employee.class)
+<p>最大行数を指定する場合は、<code>maxRows()</code>を使います。 最大行数を超える行は、通知なしに除外されます。</p>
+<pre>jdbcManager.from(Employee.class)
     .maxRows(1000)
-    .getResultList();
-</pre>
-
+    .getResultList();</pre>
 <h3><a name="fetchSize">フェッチサイズ</a></h3>
-<p>
-フェッチサイズを指定する場合は、<code>fetchSize()</code>を使います。
-</p>
-<pre>
-jdbcManager.from(Employee.class)
+<p>フェッチサイズを指定する場合は、<code>fetchSize()</code>を使います。</p>
+<pre>jdbcManager.from(Employee.class)
     .fetchSize(100)
-    .getResultList();
-</pre>
-
+    .getResultList();</pre>
 <h3><a name="queryTimeout">クエリタイムアウト</a></h3>
-<p>
-クエリタイムアウト(秒)を指定する場合は、<code>queryTimeout()</code>を使います。
-</p>
-<pre>
-jdbcManager.from(Employee.class)
+<p>クエリタイムアウト(秒)を指定する場合は、<code>queryTimeout()</code>を使います。</p>
+<pre>jdbcManager.from(Employee.class)
     .queryTimeout(10)
-    .getResultList();
-</pre>
-
+    .getResultList();</pre>
 <h3><a name="insert">挿入</a></h3>
-<p>
-エンティティを挿入する場合は、<code>insert()</code>と<code>execute()</code>を組み合わせます。
-</p>
-<pre>
-int count = jdbcManager.insert(employee).execute();
-</pre>
-<p>
-引数はエンティティで、戻り値は、更新した行数です。
-挿入するときに、識別子を自動設定することができます。
-詳しくは、<a href="#IdDefinition">識別子定義</a>を参照してください。
-</p>
-
+<p>エンティティを挿入する場合は、<code>insert()</code>と<code>execute()</code>を組み合わせます。</p>
+<pre>int count = jdbcManager.insert(employee).execute();</pre>
+<p>引数はエンティティで、戻り値は、更新した行数です。 挿入するときに、識別子を自動設定することができます。 詳しくは、<a href="#IdDefinition">識別子定義</a>を参照してください。</p>
 <h3><a name="insertBatch">バッチ挿入</a></h3>
-<p>
-複数のエンティティをバッチ挿入する場合は、<code>insertBatch()</code>と<code>execute()</code>を組み合わせます。
-</p>
-<pre>
-int[] countArray = jdbcManager.insertBatch(employees).execute();
-</pre>
-<p>
-引数はエンティティのリストあるいは配列(可変長引数)で、戻り値は、更新した行数の配列です。
-挿入するときに、識別子を自動設定することができます。
-詳しくは、<a href="#IdDefinition">識別子定義</a>を参照してください。
-</p>
-
-<h3><a name="excludesNull">nullの項目を更新しない</a></h3>
-<p>
-更新の対象からnullの項目を除外する場合は、<code>excludesNull()</code>を使います。
-バッチ系の更新は、すべてのエンティティに同じSQLを適用しなければならないので、
-nullを除外してバッチ更新することはできません。
-なぜなら、すべてのエンティティのnullの項目が同じだとは限らないからです。
-</p>
-<pre>
-int count = jdbcManager.insert(employee).excludesNull().execute();
-</pre>
-
-<h3><a name="includes">指定したプロパティのみを更新対象にする</a></h3>
-<p>
-指定したプロパティのみを更新対象にする場合は、<code>includes()</code>を使います。
-</p>
-<pre>
-int count = jdbcManager.insert(employee).includes("id", "name").execute();
-</pre>
-
-<h3><a name="excludes">指定したプロパティを更新対象から除外する</a></h3>
-<p>
-指定したプロパティを更新対象から除外する場合は、<code>excludes()</code>を使います。
-</p>
-<pre>
-int count = jdbcManager.insert(employee).excludes("version").execute();
-</pre>
-
+<p>複数のエンティティをバッチ挿入する場合は、<code>insertBatch()</code>と<code>execute()</code>を組み合わせます。</p>
+<pre>int[] countArray = jdbcManager.insertBatch(employees).execute();</pre>
+<p>引数はエンティティのリストあるいは配列(可変長引数)で、戻り値は、更新した行数の配列です。 挿入するときに、識別子を自動設定することができます。
+詳しくは、<a href="#IdDefinition">識別子定義</a>を参照してください。</p>
+<h3><a name="insertExcludesNull">nullの項目を挿入しない</a></h3>
+<p>挿入の対象からnullの項目を除外する場合は、<code>excludesNull()</code>を使います。 バッチ系の挿入は、すべてのエンティティに同じSQLを適用しなければならないので、 nullを除外してバッチ挿入することはできません。
+なぜなら、すべてのエンティティのnullの項目が同じだとは限らないからです。</p>
+<pre>int count = jdbcManager.insert(employee).excludesNull().execute();</pre>
+<h3><a name="insertIncludes">指定したプロパティのみを挿入対象にする</a></h3>
+<p>指定したプロパティのみを挿入対象にする場合は、<code>includes()</code>を使います。</p>
+<pre>int count = jdbcManager.insert(employee).includes(&quot;id&quot;, &quot;name&quot;).execute();</pre>
+<h3><a name="insertExcludes">指定したプロパティを挿入対象から除外する</a></h3>
+<p>指定したプロパティを挿入対象から除外する場合は、<code>excludes()</code>を使います。</p>
+<pre>int count = jdbcManager.insert(employee).excludes(&quot;version&quot;).execute();</pre>
 <h3><a name="update">更新</a></h3>
-<p>
-エンティティを更新する場合は、<code>update()</code>と<code>execute()</code>を組み合わせます。
-</p>
-<pre>
-int count = jdbcManager.update(employee).execute();
-</pre>
-<p>
-引数はエンティティで、戻り値は、更新した行数です。
-更新するときに、バージョンによる楽観的排他制御をすることができます。
-詳しくは、<a href="#VersionDefinition">バージョン定義</a>を参照してください。
-</p>
-
+<p>エンティティを更新する場合は、<code>update()</code>と<code>execute()</code>を組み合わせます。</p>
+<pre>int count = jdbcManager.update(employee).execute();</pre>
+<p>引数はエンティティで、戻り値は、更新した行数です。 更新するときに、バージョンによる楽観的排他制御をすることができます。 詳しくは、<a href="#VersionDefinition">バージョン定義</a>を参照してください。</p>
 <h3><a name="updateBatch">バッチ更新</a></h3>
-<p>
-複数のエンティティをバッチ更新する場合は、<code>updateBatch()</code>と<code>execute()</code>を組み合わせます。
-</p>
-<pre>
-int[] countArray = jdbcManager.updateBatch(employees).execute();
-</pre>
-<p>
-引数はエンティティのリストあるいは配列(可変長引数)で、戻り値は、更新した行数の配列です。
-更新するときに、バージョンによる楽観的排他制御をすることができます。
-詳しくは、<a href="#VersionDefinition">バージョン定義</a>を参照してください。
-</p>
-
+<p>複数のエンティティをバッチ更新する場合は、<code>updateBatch()</code>と<code>execute()</code>を組み合わせます。</p>
+<pre>int[] countArray = jdbcManager.updateBatch(employees).execute();</pre>
+<p>引数はエンティティのリストあるいは配列(可変長引数)で、戻り値は、更新した行数の配列です。 更新するときに、バージョンによる楽観的排他制御をすることができます。
+詳しくは、<a href="#VersionDefinition">バージョン定義</a>を参照してください。</p>
 <h3><a name="includesVersion">バージョンプロパティを通常の更新対象にする</a></h3>
-<p>
-バージョンプロパティを通常の更新対象に含め、バージョンチェックの対象外にする場合は、
-<code>includesVersion()</code>を使います。
-</p>
-<pre>
-int count = jdbcManager.update(employee).includesVersion().execute();
-</pre>
-
+<p>バージョンプロパティを通常の更新対象に含め、バージョンチェックの対象外にする場合は、 <code>includesVersion()</code>を使います。</p>
+<pre>int count = jdbcManager.update(employee).includesVersion().execute();</pre>
+<h3><a name="updateExcludesNull">nullの項目を更新しない</a></h3>
+<p>更新の対象からnullの項目を除外する場合は、<code>excludesNull()</code>を使います。 バッチ系の更新は、すべてのエンティティに同じSQLを適用しなければならないので、 nullを除外してバッチ更新することはできません。
+なぜなら、すべてのエンティティのnullの項目が同じだとは限らないからです。</p>
+<pre>int count = jdbcManager.update(employee).excludesNull().execute();</pre>
+<h3><a name="updateIncludes">指定したプロパティのみを更新対象にする</a></h3>
+<p>指定したプロパティのみを更新対象にする場合は、<code>includes()</code>を使います。</p>
+<pre>int count = jdbcManager.update(employee).includes(&quot;id&quot;, &quot;name&quot;).execute();</pre>
+<h3><a name="updateExcludes">指定したプロパティを更新対象から除外する</a></h3>
+<p>指定したプロパティを更新対象から除外する場合は、<code>excludes()</code>を使います。</p>
+<pre>int count = jdbcManager.update(employee).excludes(&quot;version&quot;).execute();</pre>
 <h3><a name="changedFrom">変更のあったプロパティのみを更新対象にする</a></h3>
-<p>
-変更のあったプロパティのみを更新対象にする場合は、
-<code>changedFrom()</code>を使います。
-最初の引数は、比較の対象にする以前のエンティティもしくはマップです。
-</p>
-<pre>
-int count = jdbcManager.update(employee).changedFrom(before).execute();
-</pre>
-
+<p>変更のあったプロパティのみを更新対象にする場合は、 <code>changedFrom()</code>を使います。 最初の引数は、比較の対象にする以前のエンティティもしくはマップです。</p>
+<pre>Employee before = ...;
+int count = jdbcManager.update(employee).changedFrom(before).execute();</pre>
 <h3><a name="delete">削除</a></h3>
-<p>
-エンティティを削除する場合は、<code>delete()</code>と<code>execute()</code>を組み合わせます。
-</p>
-<pre>
-int count = jdbcManager.delete(employee).execute();
-</pre>
-<p>
-引数はエンティティで、戻り値は、更新した行数です。
-</p>
-
+<p>エンティティを削除する場合は、<code>delete()</code>と<code>execute()</code>を組み合わせます。</p>
+<pre>int count = jdbcManager.delete(employee).execute();</pre>
+<p>引数はエンティティで、戻り値は、更新した行数です。 削除するときに、バージョンによる楽観的排他制御をすることができます。 詳しくは、<a href="#VersionDefinition">バージョン定義</a>を参照してください。</p>
 <h3><a name="deleteBatch">バッチ削除</a></h3>
-<p>
-複数のエンティティをバッチ削除する場合は、<code>deleteBatch()</code>と<code>execute()</code>を組み合わせます。
-</p>
-<pre>
-int[] countArray = jdbcManager.deleteBatch(employees).execute();
-</pre>
-<p>
-引数はエンティティのリストあるいは配列(可変長引数)で、戻り値は、更新した行数の配列です。
-</p>
-
+<p>複数のエンティティをバッチ削除する場合は、<code>deleteBatch()</code>と<code>execute()</code>を組み合わせます。</p>
+<pre>int[] countArray = jdbcManager.deleteBatch(employees).execute();</pre>
+<p>引数はエンティティのリストあるいは配列(可変長引数)で、戻り値は、更新した行数の配列です。 削除するときに、バージョンによる楽観的排他制御をすることができます。
+詳しくは、<a href="#VersionDefinition">バージョン定義</a>を参照してください。</p>
+<h3><a name="deleteIgnoreVersion">バージョンをチェックしないで削除する</a></h3>
+<p>バージョンをチェックしないで削除する場合は、 <code>ignoreVersion()</code>を使います。</p>
+<pre>int count = jdbcManager.delete(employee).ignoreVersion().execute();</pre>
 <h2><a name="other">その他の機能</a></h2>
-
 <h3><a name="SqlLog" id="SqlLog">SQLのログ</a></h3>
-<p>
-Seasar2で実行したSQLのログは、アプリケーションから参照することが可能です。
-SQLのログは<code>org.seasar.extension.jdbc.SqlRegistry</code>のインスタンスから取得します。
-</p>
-<p>
-<code>SqlRegistry</code>のインスタンスはDIもしくはルックアップにより取得できます。
-</p>
-<p>
-DIのための設定は次のようになります。
-</p>
-<pre>
-&lt;component name="sqlLogRegistry" class="org.seasar.extension.jdbc.SqlLogRegistry"&gt;
+<p>Seasar2で実行したSQLのログは、アプリケーションから参照することが可能です。 SQLのログは<code>org.seasar.extension.jdbc.SqlRegistry</code>のインスタンスから取得します。</p>
+<p><code>SqlRegistry</code>のインスタンスはDIもしくはルックアップにより取得できます。</p>
+<p>DIのための設定は次のようになります。</p>
+<pre>&lt;component name=&quot;sqlLogRegistry&quot; class=&quot;org.seasar.extension.jdbc.SqlLogRegistry&quot;&gt;
   @org.seasar.extension.jdbc.SqlLogRegistryLocator@getInstance()
-&lt;/component&gt;
-</pre>
-<p>
-プログラムから直接ルックアップする場合は次のようなコードが必要です。
-</p>
-<pre>
-SqlLogRegistry sqlLogRegistry = SqlLogRegistryLocator.getInstance();
-</pre>
-<code>SqlRegistry</code>のインスタンスは複数のログを保持しています（デフォルトでは最新3つのログを保持します）。
-最新の（最後に実行された）SQLのログは次のようなコードで取得できます。
-<pre>
-SqlLog sqlLog = sqlLogRegistry.getLast();
-</pre>
+&lt;/component&gt;</pre>
+<p>プログラムから直接ルックアップする場合は次のようなコードが必要です。</p>
+<pre>SqlLogRegistry sqlLogRegistry = SqlLogRegistryLocator.getInstance();</pre>
+<code>SqlRegistry</code>のインスタンスは複数のログを保持しています（デフォルトでは最新3つのログを保持します）。 最新の（最後に実行された）SQLのログは次のようなコードで取得できます。
+<pre>SqlLog sqlLog = sqlLogRegistry.getLast();</pre>
 <code>org.seasar.extension.jdbc.SqlLog</code>のインスタンスは次の情報を保持しています。
 <ul>
-<li>未加工のSQL</li>
-<li>バインド変数を実際の値で置き換えた完全なSQL</li>
-<li>SQLにバインドされる値の配列</li>
-<li>SQLにバインドされる値の型の配列</li>
+<li>未加工のSQL
+<li>バインド変数を実際の値で置き換えた完全なSQL
+<li>SQLにバインドされる値の配列
+<li>SQLにバインドされる値の型の配列
 </ul>
-
 <!-- document end -->
 <!-- don't edit start --></td>
 <td width="14"><img height="14" width="14" src="images/spacer.gif" alt="" /></td>
