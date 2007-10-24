@@ -16,15 +16,14 @@
 package org.seasar.extension.jdbc.it.auto;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.persistence.OptimisticLockException;
 
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.it.entity.CompKeyEmployee;
 import org.seasar.extension.jdbc.it.entity.Employee;
+import org.seasar.extension.jdbc.where.SimpleWhere;
 import org.seasar.extension.unit.S2TestCase;
 
 /**
@@ -59,13 +58,14 @@ public class AutoBatchDeleteTest extends S2TestCase {
         int[] result = jdbcManager.deleteBatch(list).execute();
         assertEquals(2, result.length);
 
-        Map<String, Object> m = new HashMap<String, Object>();
-        m.put("employeeId", 1);
-        employee = jdbcManager.from(Employee.class).where(m).getSingleResult();
+        employee =
+            jdbcManager.from(Employee.class).where(
+                new SimpleWhere().eq("employeeId", 1)).getSingleResult();
         assertNull(employee);
 
-        m.put("employeeId", 2);
-        employee = jdbcManager.from(Employee.class).where(m).getSingleResult();
+        employee =
+            jdbcManager.from(Employee.class).where(
+                new SimpleWhere().eq("employeeId", 2)).getSingleResult();
         assertNull(employee);
     }
 
@@ -87,13 +87,14 @@ public class AutoBatchDeleteTest extends S2TestCase {
         int[] result = jdbcManager.deleteBatch(list).ignoreVersion().execute();
         assertEquals(2, result.length);
 
-        Map<String, Object> m = new HashMap<String, Object>();
-        m.put("employeeId", 1);
-        employee = jdbcManager.from(Employee.class).where(m).getSingleResult();
+        employee =
+            jdbcManager.from(Employee.class).where(
+                new SimpleWhere().eq("employeeId", 1)).getSingleResult();
         assertNull(employee);
 
-        m.put("employeeId", 2);
-        employee = jdbcManager.from(Employee.class).where(m).getSingleResult();
+        employee =
+            jdbcManager.from(Employee.class).where(
+                new SimpleWhere().eq("employeeId", 2)).getSingleResult();
         assertNull(employee);
     }
 
@@ -117,17 +118,20 @@ public class AutoBatchDeleteTest extends S2TestCase {
         int[] result = jdbcManager.deleteBatch(list).execute();
         assertEquals(2, result.length);
 
-        Map<String, Object> m = new HashMap<String, Object>();
-        m.put("employeeId1", 1);
-        m.put("employeeId2", 1);
         employee =
-            jdbcManager.from(CompKeyEmployee.class).where(m).getSingleResult();
+            jdbcManager
+                .from(CompKeyEmployee.class)
+                .where(
+                    new SimpleWhere().eq("employeeId1", 1).eq("employeeId2", 1))
+                .getSingleResult();
         assertNull(employee);
 
-        m.put("employeeId1", 2);
-        m.put("employeeId2", 2);
         employee =
-            jdbcManager.from(CompKeyEmployee.class).where(m).getSingleResult();
+            jdbcManager
+                .from(CompKeyEmployee.class)
+                .where(
+                    new SimpleWhere().eq("employeeId1", 2).eq("employeeId2", 2))
+                .getSingleResult();
         assertNull(employee);
     }
 

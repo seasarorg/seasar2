@@ -26,6 +26,7 @@ import org.seasar.extension.jdbc.it.entity.Department2;
 import org.seasar.extension.jdbc.it.entity.Department3;
 import org.seasar.extension.jdbc.it.entity.Department4;
 import org.seasar.extension.jdbc.it.entity.Employee;
+import org.seasar.extension.jdbc.where.SimpleWhere;
 import org.seasar.extension.unit.S2TestCase;
 
 /**
@@ -53,10 +54,9 @@ public class AutoUpdateTest extends S2TestCase {
         department.version = 1;
         int result = jdbcManager.update(department).execute();
         assertEquals(1, result);
-        Map<String, Object> m = new HashMap<String, Object>();
-        m.put("departmentId", 1);
         department =
-            jdbcManager.from(Department.class).where(m).getSingleResult();
+            jdbcManager.from(Department.class).where(
+                new SimpleWhere().eq("departmentId", 1)).getSingleResult();
         assertEquals(1, department.departmentId);
         assertEquals(0, department.departmentNo);
         assertEquals("hoge", department.departmentName);
@@ -75,10 +75,9 @@ public class AutoUpdateTest extends S2TestCase {
         department.version = 100;
         int result = jdbcManager.update(department).includesVersion().execute();
         assertEquals(1, result);
-        Map<String, Object> m = new HashMap<String, Object>();
-        m.put("departmentId", 1);
         department =
-            jdbcManager.from(Department.class).where(m).getSingleResult();
+            jdbcManager.from(Department.class).where(
+                new SimpleWhere().eq("departmentId", 1)).getSingleResult();
         assertEquals(1, department.departmentId);
         assertEquals(0, department.departmentNo);
         assertEquals("hoge", department.departmentName);
@@ -97,10 +96,9 @@ public class AutoUpdateTest extends S2TestCase {
         department.version = 1;
         int result = jdbcManager.update(department).excludesNull().execute();
         assertEquals(1, result);
-        Map<String, Object> m = new HashMap<String, Object>();
-        m.put("departmentId", 1);
         department =
-            jdbcManager.from(Department.class).where(m).getSingleResult();
+            jdbcManager.from(Department.class).where(
+                new SimpleWhere().eq("departmentId", 1)).getSingleResult();
         assertEquals(1, department.departmentId);
         assertEquals(0, department.departmentNo);
         assertEquals("hoge", department.departmentName);
@@ -124,10 +122,9 @@ public class AutoUpdateTest extends S2TestCase {
                 "departmentName",
                 "location").execute();
         assertEquals(1, result);
-        Map<String, Object> m = new HashMap<String, Object>();
-        m.put("departmentId", 1);
         department =
-            jdbcManager.from(Department.class).where(m).getSingleResult();
+            jdbcManager.from(Department.class).where(
+                new SimpleWhere().eq("departmentId", 1)).getSingleResult();
         assertEquals(1, department.departmentId);
         assertEquals(10, department.departmentNo);
         assertEquals("hoge", department.departmentName);
@@ -151,10 +148,9 @@ public class AutoUpdateTest extends S2TestCase {
                 "departmentName",
                 "location").execute();
         assertEquals(1, result);
-        Map<String, Object> m = new HashMap<String, Object>();
-        m.put("departmentId", 1);
         department =
-            jdbcManager.from(Department.class).where(m).getSingleResult();
+            jdbcManager.from(Department.class).where(
+                new SimpleWhere().eq("departmentId", 1)).getSingleResult();
         assertEquals(1, department.departmentId);
         assertEquals(99, department.departmentNo);
         assertEquals("ACCOUNTING", department.departmentName);
@@ -167,10 +163,9 @@ public class AutoUpdateTest extends S2TestCase {
      * @throws Exception
      */
     public void testExecute_changeFromTx() throws Exception {
-        Map<String, Object> m = new HashMap<String, Object>();
-        m.put("departmentId", 1);
         Department before =
-            jdbcManager.from(Department.class).where(m).getSingleResult();
+            jdbcManager.from(Department.class).where(
+                new SimpleWhere().eq("departmentId", 1)).getSingleResult();
 
         Department department = new Department();
         department.departmentId = before.departmentId;
@@ -183,7 +178,8 @@ public class AutoUpdateTest extends S2TestCase {
             jdbcManager.update(department).changedFrom(before).execute();
         assertEquals(1, result);
         department =
-            jdbcManager.from(Department.class).where(m).getSingleResult();
+            jdbcManager.from(Department.class).where(
+                new SimpleWhere().eq("departmentId", 1)).getSingleResult();
         assertEquals(before.departmentId, department.departmentId);
         assertEquals(before.departmentNo, department.departmentNo);
         assertEquals("hoge", department.departmentName);
@@ -209,7 +205,10 @@ public class AutoUpdateTest extends S2TestCase {
         department =
             jdbcManager
                 .from(CompKeyDepartment.class)
-                .where(m)
+                .where(
+                    new SimpleWhere().eq("departmentId1", 1).eq(
+                        "departmentId2",
+                        1))
                 .getSingleResult();
         assertEquals(1, department.departmentId1);
         assertEquals(1, department.departmentId2);

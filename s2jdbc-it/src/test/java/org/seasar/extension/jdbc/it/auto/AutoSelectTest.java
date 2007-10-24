@@ -15,24 +15,18 @@
  */
 package org.seasar.extension.jdbc.it.auto;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.persistence.NonUniqueResultException;
 
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.JoinType;
-import org.seasar.extension.jdbc.exception.NonArrayInConditionRuntimeException;
-import org.seasar.extension.jdbc.exception.NonBooleanIsNullConditionRuntimeException;
 import org.seasar.extension.jdbc.it.entity.Department;
 import org.seasar.extension.jdbc.it.entity.Department3;
 import org.seasar.extension.jdbc.it.entity.Department4;
 import org.seasar.extension.jdbc.it.entity.Employee;
 import org.seasar.extension.jdbc.where.SimpleWhere;
 import org.seasar.extension.unit.S2TestCase;
-
-import static java.util.Arrays.*;
 
 /**
  * @author taedium
@@ -148,10 +142,9 @@ public class AutoSelectTest extends S2TestCase {
      * @throws Exception
      */
     public void testWhere_eq() throws Exception {
-        Map<String, Object> m = new HashMap<String, Object>();
-        m.put("employeeName", "SMITH");
         List<Employee> list =
-            jdbcManager.from(Employee.class).where(m).getResultList();
+            jdbcManager.from(Employee.class).where(
+                new SimpleWhere().eq("employeeName", "SMITH")).getResultList();
         assertEquals(1, list.size());
     }
 
@@ -159,11 +152,21 @@ public class AutoSelectTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void testWhere_ne() throws Exception {
-        Map<String, Object> m = new HashMap<String, Object>();
-        m.put("employeeName_NE", "SMITH");
+    public void ignore_testWhere_eq_null() throws Exception {
         List<Employee> list =
-            jdbcManager.from(Employee.class).where(m).getResultList();
+            jdbcManager.from(Employee.class).where(
+                new SimpleWhere().eq("employeeName", null)).getResultList();
+        assertEquals(14, list.size());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testWhere_ne() throws Exception {
+        List<Employee> list =
+            jdbcManager.from(Employee.class).where(
+                new SimpleWhere().ne("employeeName", "SMITH")).getResultList();
         assertEquals(13, list.size());
     }
 
@@ -172,11 +175,11 @@ public class AutoSelectTest extends S2TestCase {
      * @throws Exception
      */
     public void testWhere_gt_lt() throws Exception {
-        Map<String, Object> m = new HashMap<String, Object>();
-        m.put("salary_GT", 1100);
-        m.put("salary_LT", 2000);
         List<Employee> list =
-            jdbcManager.from(Employee.class).where(m).getResultList();
+            jdbcManager
+                .from(Employee.class)
+                .where(new SimpleWhere().gt("salary", 1100).lt("salary", 2000))
+                .getResultList();
         assertEquals(5, list.size());
     }
 
@@ -185,11 +188,11 @@ public class AutoSelectTest extends S2TestCase {
      * @throws Exception
      */
     public void testWhere_ge_le() throws Exception {
-        Map<String, Object> m = new HashMap<String, Object>();
-        m.put("salary_GE", 1100);
-        m.put("salary_LE", 2000);
         List<Employee> list =
-            jdbcManager.from(Employee.class).where(m).getResultList();
+            jdbcManager
+                .from(Employee.class)
+                .where(new SimpleWhere().ge("salary", 1100).le("salary", 2000))
+                .getResultList();
         assertEquals(6, list.size());
     }
 
@@ -198,10 +201,11 @@ public class AutoSelectTest extends S2TestCase {
      * @throws Exception
      */
     public void testWhere_in() throws Exception {
-        Map<String, Object> m = new HashMap<String, Object>();
-        m.put("employeeNo_IN", new Object[] { 7654, 7900, 7934 });
         List<Employee> list =
-            jdbcManager.from(Employee.class).where(m).getResultList();
+            jdbcManager
+                .from(Employee.class)
+                .where(new SimpleWhere().in("employeeNo", 7654, 7900, 7934))
+                .getResultList();
         assertEquals(3, list.size());
     }
 
@@ -209,26 +213,12 @@ public class AutoSelectTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void testWhere_in_NonArrayInConditionRuntimeException()
-            throws Exception {
-        Map<String, Object> m = new HashMap<String, Object>();
-        m.put("employeeNo_IN", asList(7654, 7900, 7934));
-        try {
-            jdbcManager.from(Employee.class).where(m).getResultList();
-            fail();
-        } catch (NonArrayInConditionRuntimeException e) {
-        }
-    }
-
-    /**
-     * 
-     * @throws Exception
-     */
     public void testWhere_notIn() throws Exception {
-        Map<String, Object> m = new HashMap<String, Object>();
-        m.put("employeeNo_NOT_IN", new Object[] { 7654, 7900, 7934 });
         List<Employee> list =
-            jdbcManager.from(Employee.class).where(m).getResultList();
+            jdbcManager
+                .from(Employee.class)
+                .where(new SimpleWhere().notIn("employeeNo", 7654, 7900, 7934))
+                .getResultList();
         assertEquals(11, list.size());
     }
 
@@ -236,26 +226,10 @@ public class AutoSelectTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void testWhere_notIn_NonArrayInConditionRuntimeException()
-            throws Exception {
-        Map<String, Object> m = new HashMap<String, Object>();
-        m.put("employeeNo_NOT_IN", asList(7654, 7900, 7934));
-        try {
-            jdbcManager.from(Employee.class).where(m).getResultList();
-            fail();
-        } catch (NonArrayInConditionRuntimeException e) {
-        }
-    }
-
-    /**
-     * 
-     * @throws Exception
-     */
     public void testWhere_like() throws Exception {
-        Map<String, Object> m = new HashMap<String, Object>();
-        m.put("employeeName_LIKE", "S%");
         List<Employee> list =
-            jdbcManager.from(Employee.class).where(m).getResultList();
+            jdbcManager.from(Employee.class).where(
+                new SimpleWhere().like("employeeName", "S%")).getResultList();
         assertEquals(2, list.size());
     }
 
@@ -264,10 +238,9 @@ public class AutoSelectTest extends S2TestCase {
      * @throws Exception
      */
     public void testWhere_starts() throws Exception {
-        Map<String, Object> m = new HashMap<String, Object>();
-        m.put("employeeName_STARTS", "S");
         List<Employee> list =
-            jdbcManager.from(Employee.class).where(m).getResultList();
+            jdbcManager.from(Employee.class).where(
+                new SimpleWhere().starts("employeeName", "S")).getResultList();
         assertEquals(2, list.size());
 
     }
@@ -277,10 +250,9 @@ public class AutoSelectTest extends S2TestCase {
      * @throws Exception
      */
     public void testWhere_ends() throws Exception {
-        Map<String, Object> m = new HashMap<String, Object>();
-        m.put("employeeName_ENDS", "S");
         List<Employee> list =
-            jdbcManager.from(Employee.class).where(m).getResultList();
+            jdbcManager.from(Employee.class).where(
+                new SimpleWhere().ends("employeeName", "S")).getResultList();
         assertEquals(3, list.size());
     }
 
@@ -289,10 +261,11 @@ public class AutoSelectTest extends S2TestCase {
      * @throws Exception
      */
     public void testWhere_contains() throws Exception {
-        Map<String, Object> m = new HashMap<String, Object>();
-        m.put("employeeName_CONTAINS", "LL");
         List<Employee> list =
-            jdbcManager.from(Employee.class).where(m).getResultList();
+            jdbcManager
+                .from(Employee.class)
+                .where(new SimpleWhere().contains("employeeName", "LL"))
+                .getResultList();
         assertEquals(2, list.size());
     }
 
@@ -301,10 +274,9 @@ public class AutoSelectTest extends S2TestCase {
      * @throws Exception
      */
     public void testWhere_isNull() throws Exception {
-        Map<String, Object> m = new HashMap<String, Object>();
-        m.put("managerId_IS_NULL", true);
         List<Employee> list =
-            jdbcManager.from(Employee.class).where(m).getResultList();
+            jdbcManager.from(Employee.class).where(
+                new SimpleWhere().isNull("managerId", true)).getResultList();
         assertEquals(1, list.size());
     }
 
@@ -312,26 +284,10 @@ public class AutoSelectTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void testWhere_isNull_NonBooleanIsNullConditionRuntimeException()
-            throws Exception {
-        Map<String, Object> m = new HashMap<String, Object>();
-        m.put("managerId_IS_NULL", "true");
-        try {
-            jdbcManager.from(Employee.class).where(m).getResultList();
-            fail();
-        } catch (NonBooleanIsNullConditionRuntimeException e) {
-        }
-    }
-
-    /**
-     * 
-     * @throws Exception
-     */
     public void testWhere_isNotNull() throws Exception {
-        Map<String, Object> m = new HashMap<String, Object>();
-        m.put("managerId_IS_NOT_NULL", true);
         List<Employee> list =
-            jdbcManager.from(Employee.class).where(m).getResultList();
+            jdbcManager.from(Employee.class).where(
+                new SimpleWhere().isNotNull("managerId", true)).getResultList();
         assertEquals(13, list.size());
     }
 
@@ -339,27 +295,11 @@ public class AutoSelectTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void testWhere_isNotNull_NonBooleanIsNullConditionRuntimeException()
-            throws Exception {
-        Map<String, Object> m = new HashMap<String, Object>();
-        m.put("managerId_IS_NOT_NULL", "true");
-        try {
-            jdbcManager.from(Employee.class).where(m).getResultList();
-            fail();
-        } catch (NonBooleanIsNullConditionRuntimeException e) {
-        }
-    }
-
-    /**
-     * 
-     * @throws Exception
-     */
     public void testJoin_nest() throws Exception {
-        Map<String, Object> m = new HashMap<String, Object>();
-        m.put("employees.addressId", 3);
         List<Department> list =
             jdbcManager.from(Department.class).join("employees").join(
-                "employees.address").where(m).getResultList();
+                "employees.address").where(
+                new SimpleWhere().eq("employees.addressId", 3)).getResultList();
         assertEquals(1, list.size());
     }
 
@@ -368,17 +308,18 @@ public class AutoSelectTest extends S2TestCase {
      * @throws Exception
      */
     public void testJoin_star() throws Exception {
-        Map<String, Object> m = new HashMap<String, Object>();
-        m.put("department.departmentName", "RESEARCH");
-        m.put("address.street_STARTS", "STREET");
-        m.put("salary_GE", 2000);
         List<Employee> list =
             jdbcManager
                 .from(Employee.class)
                 .join("manager", JoinType.INNER)
                 .join("department")
                 .join("address")
-                .where(m)
+                .where(
+                    new SimpleWhere().eq(
+                        "department.departmentName",
+                        "RESEARCH").starts("address.street", "STREET").ge(
+                        "salary",
+                        2000))
                 .getResultList();
         assertEquals(3, list.size());
     }
@@ -439,4 +380,5 @@ public class AutoSelectTest extends S2TestCase {
                 new SimpleWhere().eq("departmentId", 1)).getSingleResult();
         assertNull(department.departmentName);
     }
+
 }

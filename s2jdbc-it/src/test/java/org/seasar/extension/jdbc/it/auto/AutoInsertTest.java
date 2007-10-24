@@ -15,9 +15,6 @@
  */
 package org.seasar.extension.jdbc.it.auto;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.exception.IdentityGeneratorNotSupportedRuntimeException;
 import org.seasar.extension.jdbc.exception.SequenceGeneratorNotSupportedRuntimeException;
@@ -32,6 +29,7 @@ import org.seasar.extension.jdbc.it.entity.SequenceStrategy;
 import org.seasar.extension.jdbc.it.entity.SequenceStrategy2;
 import org.seasar.extension.jdbc.it.entity.TableStrategy;
 import org.seasar.extension.jdbc.it.entity.TableStrategy2;
+import org.seasar.extension.jdbc.where.SimpleWhere;
 import org.seasar.extension.unit.S2TestCase;
 
 /**
@@ -58,10 +56,9 @@ public class AutoInsertTest extends S2TestCase {
         department.departmentName = "hoge";
         int result = jdbcManager.insert(department).execute();
         assertEquals(1, result);
-        Map<String, Object> m = new HashMap<String, Object>();
-        m.put("departmentId", 99);
         department =
-            jdbcManager.from(Department.class).where(m).getSingleResult();
+            jdbcManager.from(Department.class).where(
+                new SimpleWhere().eq("departmentId", 99)).getSingleResult();
         assertEquals(99, department.departmentId);
         assertEquals(0, department.departmentNo);
         assertEquals("hoge", department.departmentName);
@@ -79,10 +76,9 @@ public class AutoInsertTest extends S2TestCase {
         department.departmentName = "hoge";
         int result = jdbcManager.insert(department).excludesNull().execute();
         assertEquals(1, result);
-        Map<String, Object> m = new HashMap<String, Object>();
-        m.put("departmentId", 99);
         department =
-            jdbcManager.from(Department.class).where(m).getSingleResult();
+            jdbcManager.from(Department.class).where(
+                new SimpleWhere().eq("departmentId", 99)).getSingleResult();
         assertEquals(99, department.departmentId);
         assertEquals(0, department.departmentNo);
         assertEquals("hoge", department.departmentName);
@@ -108,10 +104,9 @@ public class AutoInsertTest extends S2TestCase {
                 "location",
                 "version").execute();
         assertEquals(1, result);
-        Map<String, Object> m = new HashMap<String, Object>();
-        m.put("departmentId", 99);
         department =
-            jdbcManager.from(Department.class).where(m).getSingleResult();
+            jdbcManager.from(Department.class).where(
+                new SimpleWhere().eq("departmentId", 99)).getSingleResult();
         assertEquals(99, department.departmentId);
         assertEquals(99, department.departmentNo);
         assertNull(department.departmentName);
@@ -135,10 +130,9 @@ public class AutoInsertTest extends S2TestCase {
                 "departmentName",
                 "location").execute();
         assertEquals(1, result);
-        Map<String, Object> m = new HashMap<String, Object>();
-        m.put("departmentId", 99);
         department =
-            jdbcManager.from(Department.class).where(m).getSingleResult();
+            jdbcManager.from(Department.class).where(
+                new SimpleWhere().eq("departmentId", 99)).getSingleResult();
         assertEquals(99, department.departmentId);
         assertEquals(99, department.departmentNo);
         assertNull(department.departmentName);
@@ -157,14 +151,11 @@ public class AutoInsertTest extends S2TestCase {
         department.departmentName = "hoge";
         int result = jdbcManager.insert(department).execute();
         assertEquals(1, result);
-        Map<String, Object> m = new HashMap<String, Object>();
-        m.put("departmentId1", 99);
-        m.put("departmentId2", 99);
         department =
-            jdbcManager
-                .from(CompKeyDepartment.class)
-                .where(m)
-                .getSingleResult();
+            jdbcManager.from(CompKeyDepartment.class).where(
+                new SimpleWhere().eq("departmentId1", 99).eq(
+                    "departmentId2",
+                    99)).getSingleResult();
         assertEquals(99, department.departmentId1);
         assertEquals(99, department.departmentId2);
         assertEquals(0, department.departmentNo);

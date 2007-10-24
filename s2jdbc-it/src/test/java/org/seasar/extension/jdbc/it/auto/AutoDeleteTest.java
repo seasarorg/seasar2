@@ -15,14 +15,12 @@
  */
 package org.seasar.extension.jdbc.it.auto;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.persistence.OptimisticLockException;
 
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.it.entity.CompKeyEmployee;
 import org.seasar.extension.jdbc.it.entity.Employee;
+import org.seasar.extension.jdbc.where.SimpleWhere;
 import org.seasar.extension.unit.S2TestCase;
 
 /**
@@ -43,15 +41,15 @@ public class AutoDeleteTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void testTx() throws Exception {
+    public void testExecuteTx() throws Exception {
         Employee employee = new Employee();
         employee.employeeId = 1;
         employee.version = 1;
         int result = jdbcManager.delete(employee).execute();
         assertEquals(1, result);
-        Map<String, Object> m = new HashMap<String, Object>();
-        m.put("employeeId", 1);
-        employee = jdbcManager.from(Employee.class).where(m).getSingleResult();
+        employee =
+            jdbcManager.from(Employee.class).where(
+                new SimpleWhere().eq("employeeId", 1)).getSingleResult();
         assertNull(employee);
     }
 
@@ -65,9 +63,9 @@ public class AutoDeleteTest extends S2TestCase {
         employee.version = 99;
         int result = jdbcManager.delete(employee).ignoreVersion().execute();
         assertEquals(1, result);
-        Map<String, Object> m = new HashMap<String, Object>();
-        m.put("employeeId", 1);
-        employee = jdbcManager.from(Employee.class).where(m).getSingleResult();
+        employee =
+            jdbcManager.from(Employee.class).where(
+                new SimpleWhere().eq("employeeId", 1)).getSingleResult();
         assertNull(employee);
     }
 
@@ -82,11 +80,12 @@ public class AutoDeleteTest extends S2TestCase {
         employee.version = 1;
         int result = jdbcManager.delete(employee).execute();
         assertEquals(1, result);
-        Map<String, Object> m = new HashMap<String, Object>();
-        m.put("employeeId1", 1);
-        m.put("employeeId2", 1);
         employee =
-            jdbcManager.from(CompKeyEmployee.class).where(m).getSingleResult();
+            jdbcManager
+                .from(CompKeyEmployee.class)
+                .where(
+                    new SimpleWhere().eq("employeeId1", 1).eq("employeeId2", 1))
+                .getSingleResult();
         assertNull(employee);
     }
 
