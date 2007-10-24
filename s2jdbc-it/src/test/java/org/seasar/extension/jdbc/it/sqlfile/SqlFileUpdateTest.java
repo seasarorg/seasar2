@@ -41,8 +41,11 @@ public class SqlFileUpdateTest extends S2TestCase {
         String path = getClass().getName().replace(".", "/") + "_no.sql";
         int result = jdbcManager.updateBySqlFile(path, null).execute();
         assertEquals(1, result);
-        Department department = jdbcManager.selectBySql(Department.class,
-                "select * from Department where department_id = 1")
+        Department department =
+            jdbcManager
+                .selectBySql(
+                    Department.class,
+                    "select * from Department where department_id = 1")
                 .getSingleResult();
         assertEquals(1, department.departmentId);
         assertEquals(10, department.departmentNo);
@@ -56,12 +59,15 @@ public class SqlFileUpdateTest extends S2TestCase {
      * @throws Exception
      */
     public void testParamter_simpleTypeTx() throws Exception {
-        String path = getClass().getName().replace(".", "/")
-                + "_simpleType.sql";
+        String path =
+            getClass().getName().replace(".", "/") + "_simpleType.sql";
         int result = jdbcManager.updateBySqlFile(path, 2).execute();
         assertEquals(1, result);
-        Department department = jdbcManager.selectBySql(Department.class,
-                "select * from Department where department_id = 2")
+        Department department =
+            jdbcManager
+                .selectBySql(
+                    Department.class,
+                    "select * from Department where department_id = 2")
                 .getSingleResult();
         assertEquals(2, department.departmentId);
         assertEquals(20, department.departmentNo);
@@ -81,8 +87,11 @@ public class SqlFileUpdateTest extends S2TestCase {
         myDto.location = "foo";
         int result = jdbcManager.updateBySqlFile(path, myDto).execute();
         assertEquals(1, result);
-        Department department = jdbcManager.selectBySql(Department.class,
-                "select * from Department where department_id = 2")
+        Department department =
+            jdbcManager
+                .selectBySql(
+                    Department.class,
+                    "select * from Department where department_id = 2")
                 .getSingleResult();
         assertEquals(2, department.departmentId);
         assertEquals(20, department.departmentNo);

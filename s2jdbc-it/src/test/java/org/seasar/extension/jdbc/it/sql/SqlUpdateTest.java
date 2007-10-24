@@ -49,9 +49,12 @@ public class SqlUpdateTest extends S2TestCase {
      * @throws Exception
      */
     public void testParameterTx() throws Exception {
-        String sql = "delete from Employee where department_Id = ? and salary > ?";
-        int actual = jdbcManager.updateBySql(sql, int.class, BigDecimal.class)
-                .params(3, new BigDecimal(1000)).execute();
+        String sql =
+            "delete from Employee where department_Id = ? and salary > ?";
+        int actual =
+            jdbcManager.updateBySql(sql, int.class, BigDecimal.class).params(
+                3,
+                new BigDecimal(1000)).execute();
         assertEquals(5, actual);
     }
 }

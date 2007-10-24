@@ -85,8 +85,8 @@ public class AutoDeleteTest extends S2TestCase {
         Map<String, Object> m = new HashMap<String, Object>();
         m.put("employeeId1", 1);
         m.put("employeeId2", 1);
-        employee = jdbcManager.from(CompKeyEmployee.class).where(m)
-                .getSingleResult();
+        employee =
+            jdbcManager.from(CompKeyEmployee.class).where(m).getSingleResult();
         assertNull(employee);
     }
 
@@ -95,10 +95,16 @@ public class AutoDeleteTest extends S2TestCase {
      * @throws Exception
      */
     public void testOptimisticLockExceptionTx() throws Exception {
-        Employee employee1 = jdbcManager.from(Employee.class).where(
-                "employeeId = ?", 1).getSingleResult();
-        Employee employee2 = jdbcManager.from(Employee.class).where(
-                "employeeId = ?", 1).getSingleResult();
+        Employee employee1 =
+            jdbcManager
+                .from(Employee.class)
+                .where("employeeId = ?", 1)
+                .getSingleResult();
+        Employee employee2 =
+            jdbcManager
+                .from(Employee.class)
+                .where("employeeId = ?", 1)
+                .getSingleResult();
         jdbcManager.delete(employee1).execute();
         try {
             jdbcManager.delete(employee2).execute();

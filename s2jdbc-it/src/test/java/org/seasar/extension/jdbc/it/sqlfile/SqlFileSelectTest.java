@@ -30,9 +30,8 @@ import org.seasar.extension.unit.S2TestCase;
  */
 public class SqlFileSelectTest extends S2TestCase {
 
-    private static String PATH = SqlFileSelectTest.class.getName().replace(".",
-            "/")
-            + "_paging.sql";
+    private static String PATH =
+        SqlFileSelectTest.class.getName().replace(".", "/") + "_paging.sql";
 
     private JdbcManager jdbcManager;
 
@@ -47,8 +46,8 @@ public class SqlFileSelectTest extends S2TestCase {
      * @throws Exception
      */
     public void testPaging() throws Exception {
-        List<Employee> list = jdbcManager.selectBySqlFile(Employee.class, PATH)
-                .getResultList();
+        List<Employee> list =
+            jdbcManager.selectBySqlFile(Employee.class, PATH).getResultList();
         assertEquals(14, list.size());
     }
 
@@ -57,8 +56,11 @@ public class SqlFileSelectTest extends S2TestCase {
      * @throws Exception
      */
     public void testPaging_offsetOnly() throws Exception {
-        List<Employee> list = jdbcManager.selectBySqlFile(Employee.class, PATH)
-                .offset(3).getResultList();
+        List<Employee> list =
+            jdbcManager
+                .selectBySqlFile(Employee.class, PATH)
+                .offset(3)
+                .getResultList();
         assertEquals(11, list.size());
         assertEquals(4, list.get(0).employeeId);
         assertEquals(14, list.get(10).employeeId);
@@ -69,8 +71,11 @@ public class SqlFileSelectTest extends S2TestCase {
      * @throws Exception
      */
     public void testPaging_limitOnly() throws Exception {
-        List<Employee> list = jdbcManager.selectBySqlFile(Employee.class, PATH)
-                .limit(3).getResultList();
+        List<Employee> list =
+            jdbcManager
+                .selectBySqlFile(Employee.class, PATH)
+                .limit(3)
+                .getResultList();
         assertEquals(3, list.size());
         assertEquals(1, list.get(0).employeeId);
         assertEquals(3, list.get(2).employeeId);
@@ -81,8 +86,12 @@ public class SqlFileSelectTest extends S2TestCase {
      * @throws Exception
      */
     public void testPaging_offsetZero_limitZero() throws Exception {
-        List<Employee> list = jdbcManager.selectBySqlFile(Employee.class, PATH)
-                .offset(0).limit(0).getResultList();
+        List<Employee> list =
+            jdbcManager
+                .selectBySqlFile(Employee.class, PATH)
+                .offset(0)
+                .limit(0)
+                .getResultList();
         assertEquals(14, list.size());
     }
 
@@ -91,8 +100,12 @@ public class SqlFileSelectTest extends S2TestCase {
      * @throws Exception
      */
     public void testPaging_offset_limitZero() throws Exception {
-        List<Employee> list = jdbcManager.selectBySqlFile(Employee.class, PATH)
-                .offset(3).limit(0).getResultList();
+        List<Employee> list =
+            jdbcManager
+                .selectBySqlFile(Employee.class, PATH)
+                .offset(3)
+                .limit(0)
+                .getResultList();
         assertEquals(11, list.size());
         assertEquals(4, list.get(0).employeeId);
         assertEquals(14, list.get(10).employeeId);
@@ -103,8 +116,12 @@ public class SqlFileSelectTest extends S2TestCase {
      * @throws Exception
      */
     public void testPaging_offsetZero_limit() throws Exception {
-        List<Employee> list = jdbcManager.selectBySqlFile(Employee.class, PATH)
-                .offset(0).limit(3).getResultList();
+        List<Employee> list =
+            jdbcManager
+                .selectBySqlFile(Employee.class, PATH)
+                .offset(0)
+                .limit(3)
+                .getResultList();
         assertEquals(3, list.size());
         assertEquals(1, list.get(0).employeeId);
         assertEquals(3, list.get(2).employeeId);
@@ -115,8 +132,12 @@ public class SqlFileSelectTest extends S2TestCase {
      * @throws Exception
      */
     public void testPaging_offset_limit() throws Exception {
-        List<Employee> list = jdbcManager.selectBySqlFile(Employee.class, PATH)
-                .offset(3).limit(5).getResultList();
+        List<Employee> list =
+            jdbcManager
+                .selectBySqlFile(Employee.class, PATH)
+                .offset(3)
+                .limit(5)
+                .getResultList();
         assertEquals(5, list.size());
         assertEquals(4, list.get(0).employeeId);
         assertEquals(8, list.get(4).employeeId);
@@ -128,8 +149,8 @@ public class SqlFileSelectTest extends S2TestCase {
      */
     public void testParameter_none() throws Exception {
         String path = getClass().getName().replace(".", "/") + "_no.sql";
-        List<Employee> list = jdbcManager.selectBySqlFile(Employee.class, path)
-                .getResultList();
+        List<Employee> list =
+            jdbcManager.selectBySqlFile(Employee.class, path).getResultList();
         assertEquals(14, list.size());
     }
 
@@ -138,10 +159,12 @@ public class SqlFileSelectTest extends S2TestCase {
      * @throws Exception
      */
     public void testParameter_simpleType() throws Exception {
-        String path = getClass().getName().replace(".", "/")
-                + "_simpleType.sql";
-        List<Employee> list = jdbcManager.selectBySqlFile(Employee.class, path,
-                3).getResultList();
+        String path =
+            getClass().getName().replace(".", "/") + "_simpleType.sql";
+        List<Employee> list =
+            jdbcManager
+                .selectBySqlFile(Employee.class, path, 3)
+                .getResultList();
         assertEquals(6, list.size());
         assertEquals("ALLEN", list.get(0).employeeName);
         assertEquals("BLAKE", list.get(1).employeeName);
@@ -163,8 +186,10 @@ public class SqlFileSelectTest extends S2TestCase {
         param.orderBy = "employee_name";
         param.offset = 1;
         param.limit = 3;
-        List<Employee> list = jdbcManager.selectBySqlFile(Employee.class, path,
-                param).getResultList();
+        List<Employee> list =
+            jdbcManager
+                .selectBySqlFile(Employee.class, path, param)
+                .getResultList();
         assertEquals(3, list.size());
         assertEquals("BLAKE", list.get(0).employeeName);
         assertEquals("MARTIN", list.get(1).employeeName);
@@ -176,10 +201,10 @@ public class SqlFileSelectTest extends S2TestCase {
      * @throws Exception
      */
     public void testGetSingleResult() throws Exception {
-        String path = getClass().getName().replace(".", "/")
-                + "_getSingleResult.sql";
-        Employee employee = jdbcManager.selectBySqlFile(Employee.class, path)
-                .getSingleResult();
+        String path =
+            getClass().getName().replace(".", "/") + "_getSingleResult.sql";
+        Employee employee =
+            jdbcManager.selectBySqlFile(Employee.class, path).getSingleResult();
         assertNotNull(employee);
     }
 
@@ -188,10 +213,11 @@ public class SqlFileSelectTest extends S2TestCase {
      * @throws Exception
      */
     public void testGetSingleResult_null() throws Exception {
-        String path = getClass().getName().replace(".", "/")
+        String path =
+            getClass().getName().replace(".", "/")
                 + "_getSingleResult_null.sql";
-        Employee employee = jdbcManager.selectBySqlFile(Employee.class, path)
-                .getSingleResult();
+        Employee employee =
+            jdbcManager.selectBySqlFile(Employee.class, path).getSingleResult();
         assertNull(employee);
     }
 
@@ -200,7 +226,8 @@ public class SqlFileSelectTest extends S2TestCase {
      * @throws Exception
      */
     public void testGetSingleResult_NonUniqueResultException() throws Exception {
-        String path = getClass().getName().replace(".", "/")
+        String path =
+            getClass().getName().replace(".", "/")
                 + "_getSingleResult_NonUniqueResultException.sql";
         try {
             jdbcManager.selectBySqlFile(Employee.class, path).getSingleResult();

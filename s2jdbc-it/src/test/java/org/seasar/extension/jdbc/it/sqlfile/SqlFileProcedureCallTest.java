@@ -57,8 +57,8 @@ public class SqlFileProcedureCallTest extends S2TestCase {
         if (!supportsProcedure()) {
             return;
         }
-        String path = getClass().getName().replace(".", "/") + "_simpleType"
-                + ".sql";
+        String path =
+            getClass().getName().replace(".", "/") + "_simpleType" + ".sql";
         jdbcManager.callBySqlFile(path, 1).call();
     }
 

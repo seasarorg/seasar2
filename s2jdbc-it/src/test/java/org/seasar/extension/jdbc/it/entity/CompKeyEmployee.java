@@ -56,8 +56,8 @@ public class CompKeyEmployee {
     /** */
     @ManyToOne
     @JoinColumns( {
-            @JoinColumn(name = "MANAGER_ID1", referencedColumnName = "EMPLOYEE_ID1"),
-            @JoinColumn(name = "MANAGER_ID2", referencedColumnName = "EMPLOYEE_ID2") })
+        @JoinColumn(name = "MANAGER_ID1", referencedColumnName = "EMPLOYEE_ID1"),
+        @JoinColumn(name = "MANAGER_ID2", referencedColumnName = "EMPLOYEE_ID2") })
     public CompKeyEmployee manager;
 
     /** */
@@ -75,8 +75,8 @@ public class CompKeyEmployee {
     /** */
     @ManyToOne
     @JoinColumns( {
-            @JoinColumn(name = "department_id1", referencedColumnName = "DEPARTMENT_ID1"),
-            @JoinColumn(name = "department_id2", referencedColumnName = "DEPARTMENT_ID2") })
+        @JoinColumn(name = "department_id1", referencedColumnName = "DEPARTMENT_ID1"),
+        @JoinColumn(name = "department_id2", referencedColumnName = "DEPARTMENT_ID2") })
     public CompKeyDepartment department;
 
     /** */
@@ -88,8 +88,8 @@ public class CompKeyEmployee {
     /** */
     @OneToOne()
     @JoinColumns( {
-            @JoinColumn(name = "ADDRESS_ID1", referencedColumnName = "ADDRESS_ID1"),
-            @JoinColumn(name = "ADDRESS_ID2", referencedColumnName = "ADDRESS_ID2") })
+        @JoinColumn(name = "ADDRESS_ID1", referencedColumnName = "ADDRESS_ID1"),
+        @JoinColumn(name = "ADDRESS_ID2", referencedColumnName = "ADDRESS_ID2") })
     public CompKeyAddress address;
 
     /** */

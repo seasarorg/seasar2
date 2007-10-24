@@ -43,8 +43,11 @@ public class CompKeyOneToOneTest extends S2TestCase {
      * @throws Exception
      */
     public void testLeftOuterJoin_fetch_fromOwnerToInverse() throws Exception {
-        List<CompKeyEmployee> list = jdbcManager.from(CompKeyEmployee.class)
-                .join("address").getResultList();
+        List<CompKeyEmployee> list =
+            jdbcManager
+                .from(CompKeyEmployee.class)
+                .join("address")
+                .getResultList();
         assertEquals(14, list.size());
         for (CompKeyEmployee e : list) {
             assertNotNull(e.address);
@@ -56,8 +59,11 @@ public class CompKeyOneToOneTest extends S2TestCase {
      * @throws Exception
      */
     public void testLeftOuterJoin_fromOwnerToInverse() throws Exception {
-        List<CompKeyEmployee> list = jdbcManager.from(CompKeyEmployee.class)
-                .join("address", false).getResultList();
+        List<CompKeyEmployee> list =
+            jdbcManager
+                .from(CompKeyEmployee.class)
+                .join("address", false)
+                .getResultList();
         assertEquals(14, list.size());
         for (CompKeyEmployee e : list) {
             assertNull(e.address);
@@ -69,8 +75,10 @@ public class CompKeyOneToOneTest extends S2TestCase {
      * @throws Exception
      */
     public void testInnerJoin_fetch_fromOwnerToInverse() throws Exception {
-        List<CompKeyEmployee> list = jdbcManager.from(CompKeyEmployee.class)
-                .join("address", JoinType.INNER).getResultList();
+        List<CompKeyEmployee> list =
+            jdbcManager.from(CompKeyEmployee.class).join(
+                "address",
+                JoinType.INNER).getResultList();
         assertEquals(14, list.size());
         for (CompKeyEmployee e : list) {
             assertNotNull(e.address);
@@ -82,8 +90,11 @@ public class CompKeyOneToOneTest extends S2TestCase {
      * @throws Exception
      */
     public void testInnerJoin_fromOwnerToInverse() throws Exception {
-        List<CompKeyEmployee> list = jdbcManager.from(CompKeyEmployee.class)
-                .join("address", JoinType.INNER, false).getResultList();
+        List<CompKeyEmployee> list =
+            jdbcManager.from(CompKeyEmployee.class).join(
+                "address",
+                JoinType.INNER,
+                false).getResultList();
         assertEquals(14, list.size());
         for (CompKeyEmployee e : list) {
             assertNull(e.address);
@@ -95,8 +106,11 @@ public class CompKeyOneToOneTest extends S2TestCase {
      * @throws Exception
      */
     public void testLeftOuterJoin_fetch_fromInverseToOwner() throws Exception {
-        List<CompKeyAddress> list = jdbcManager.from(CompKeyAddress.class)
-                .join("employee").getResultList();
+        List<CompKeyAddress> list =
+            jdbcManager
+                .from(CompKeyAddress.class)
+                .join("employee")
+                .getResultList();
         assertEquals(14, list.size());
         for (CompKeyAddress e : list) {
             assertNotNull(e.employee);
@@ -108,8 +122,11 @@ public class CompKeyOneToOneTest extends S2TestCase {
      * @throws Exception
      */
     public void testLeftOuterJoin_fromInverseToOwner() throws Exception {
-        List<CompKeyAddress> list = jdbcManager.from(CompKeyAddress.class)
-                .join("employee", false).getResultList();
+        List<CompKeyAddress> list =
+            jdbcManager
+                .from(CompKeyAddress.class)
+                .join("employee", false)
+                .getResultList();
         assertEquals(14, list.size());
         for (CompKeyAddress e : list) {
             assertNull(e.employee);
@@ -121,8 +138,10 @@ public class CompKeyOneToOneTest extends S2TestCase {
      * @throws Exception
      */
     public void testInnerJoin_fetch_fromInverseToOwner() throws Exception {
-        List<CompKeyAddress> list = jdbcManager.from(CompKeyAddress.class)
-                .join("employee", JoinType.INNER).getResultList();
+        List<CompKeyAddress> list =
+            jdbcManager.from(CompKeyAddress.class).join(
+                "employee",
+                JoinType.INNER).getResultList();
         assertEquals(14, list.size());
         for (CompKeyAddress e : list) {
             assertNotNull(e.employee);
@@ -134,8 +153,11 @@ public class CompKeyOneToOneTest extends S2TestCase {
      * @throws Exception
      */
     public void testInnerJoin_fromInverseToOwner() throws Exception {
-        List<CompKeyAddress> list = jdbcManager.from(CompKeyAddress.class)
-                .join("employee", JoinType.INNER, false).getResultList();
+        List<CompKeyAddress> list =
+            jdbcManager.from(CompKeyAddress.class).join(
+                "employee",
+                JoinType.INNER,
+                false).getResultList();
         assertEquals(14, list.size());
         for (CompKeyAddress e : list) {
             assertNull(e.employee);

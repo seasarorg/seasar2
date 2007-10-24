@@ -42,9 +42,9 @@ public class CompKeyMultiJoinTest extends S2TestCase {
      * @throws Exception
      */
     public void testJoin_nest() throws Exception {
-        List<CompKeyDepartment> list = jdbcManager
-                .from(CompKeyDepartment.class).join("employees").join(
-                        "employees.address").getResultList();
+        List<CompKeyDepartment> list =
+            jdbcManager.from(CompKeyDepartment.class).join("employees").join(
+                "employees.address").getResultList();
         assertEquals(4, list.size());
         assertNotNull(list.get(0).employees);
         assertNotNull(list.get(0).employees.get(0).address);
@@ -55,9 +55,13 @@ public class CompKeyMultiJoinTest extends S2TestCase {
      * @throws Exception
      */
     public void testJoin_star() throws Exception {
-        List<CompKeyEmployee> list = jdbcManager.from(CompKeyEmployee.class)
-                .join("manager", JoinType.INNER).join("department").join(
-                        "address").getResultList();
+        List<CompKeyEmployee> list =
+            jdbcManager
+                .from(CompKeyEmployee.class)
+                .join("manager", JoinType.INNER)
+                .join("department")
+                .join("address")
+                .getResultList();
         assertEquals(13, list.size());
         assertNotNull(list.get(0).department);
         assertNotNull(list.get(0).manager);

@@ -70,8 +70,8 @@ public class AutoBatchInsertTest extends S2TestCase {
 
         Map<String, Object> m = new HashMap<String, Object>();
         m.put("departmentId", 98);
-        department = jdbcManager.from(Department.class).where(m)
-                .getSingleResult();
+        department =
+            jdbcManager.from(Department.class).where(m).getSingleResult();
         assertEquals(98, department.departmentId);
         assertEquals(0, department.departmentNo);
         assertEquals("hoge", department.departmentName);
@@ -79,8 +79,8 @@ public class AutoBatchInsertTest extends S2TestCase {
         assertEquals(1, department.version);
 
         m.put("departmentId", 99);
-        department = jdbcManager.from(Department.class).where(m)
-                .getSingleResult();
+        department =
+            jdbcManager.from(Department.class).where(m).getSingleResult();
         assertEquals(99, department.departmentId);
         assertEquals(0, department.departmentNo);
         assertEquals("foo", department.departmentName);
@@ -109,14 +109,18 @@ public class AutoBatchInsertTest extends S2TestCase {
         department2.version = 1;
         list.add(department2);
 
-        int[] result = jdbcManager.insertBatch(list).includes("departmentId",
-                "departmentNo", "location", "version").execute();
+        int[] result =
+            jdbcManager.insertBatch(list).includes(
+                "departmentId",
+                "departmentNo",
+                "location",
+                "version").execute();
         assertEquals(2, result.length);
 
         Map<String, Object> m = new HashMap<String, Object>();
         m.put("departmentId", 98);
-        department = jdbcManager.from(Department.class).where(m)
-                .getSingleResult();
+        department =
+            jdbcManager.from(Department.class).where(m).getSingleResult();
         assertEquals(98, department.departmentId);
         assertEquals(98, department.departmentNo);
         assertNull(department.departmentName);
@@ -124,8 +128,8 @@ public class AutoBatchInsertTest extends S2TestCase {
         assertEquals(1, department.version);
 
         m.put("departmentId", 99);
-        department = jdbcManager.from(Department.class).where(m)
-                .getSingleResult();
+        department =
+            jdbcManager.from(Department.class).where(m).getSingleResult();
         assertEquals(99, department.departmentId);
         assertEquals(99, department.departmentNo);
         assertNull(department.departmentName);
@@ -154,14 +158,17 @@ public class AutoBatchInsertTest extends S2TestCase {
         department2.version = 1;
         list.add(department2);
 
-        int[] result = jdbcManager.insertBatch(list).excludes("departmentName",
-                "location").execute();
+        int[] result =
+            jdbcManager
+                .insertBatch(list)
+                .excludes("departmentName", "location")
+                .execute();
         assertEquals(2, result.length);
 
         Map<String, Object> m = new HashMap<String, Object>();
         m.put("departmentId", 98);
-        department = jdbcManager.from(Department.class).where(m)
-                .getSingleResult();
+        department =
+            jdbcManager.from(Department.class).where(m).getSingleResult();
         assertEquals(98, department.departmentId);
         assertEquals(98, department.departmentNo);
         assertNull(department.departmentName);
@@ -169,8 +176,8 @@ public class AutoBatchInsertTest extends S2TestCase {
         assertEquals(1, department.version);
 
         m.put("departmentId", 99);
-        department = jdbcManager.from(Department.class).where(m)
-                .getSingleResult();
+        department =
+            jdbcManager.from(Department.class).where(m).getSingleResult();
         assertEquals(99, department.departmentId);
         assertEquals(99, department.departmentNo);
         assertNull(department.departmentName);
@@ -201,7 +208,10 @@ public class AutoBatchInsertTest extends S2TestCase {
         Map<String, Object> m = new HashMap<String, Object>();
         m.put("departmentId1", 98);
         m.put("departmentId2", 98);
-        department = jdbcManager.from(CompKeyDepartment.class).where(m)
+        department =
+            jdbcManager
+                .from(CompKeyDepartment.class)
+                .where(m)
                 .getSingleResult();
         assertEquals(98, department.departmentId1);
         assertEquals(98, department.departmentId2);
@@ -212,7 +222,10 @@ public class AutoBatchInsertTest extends S2TestCase {
 
         m.put("departmentId1", 99);
         m.put("departmentId2", 99);
-        department = jdbcManager.from(CompKeyDepartment.class).where(m)
+        department =
+            jdbcManager
+                .from(CompKeyDepartment.class)
+                .where(m)
                 .getSingleResult();
         assertEquals(99, department.departmentId1);
         assertEquals(99, department.departmentId2);
@@ -347,15 +360,16 @@ public class AutoBatchInsertTest extends S2TestCase {
         department2.departmentNo = 99;
         department2.departmentName = "foo";
 
-        int[] result = jdbcManager.insertBatch(department, department2)
-                .execute();
+        int[] result =
+            jdbcManager.insertBatch(department, department2).execute();
         assertEquals(2, result.length);
-        String sql = "select department_name from Department where department_id = ?";
-        String departmentName = jdbcManager.selectBySql(String.class, sql, 98)
-                .getSingleResult();
+        String sql =
+            "select department_name from Department where department_id = ?";
+        String departmentName =
+            jdbcManager.selectBySql(String.class, sql, 98).getSingleResult();
         assertNull(departmentName);
-        departmentName = jdbcManager.selectBySql(String.class, sql, 99)
-                .getSingleResult();
+        departmentName =
+            jdbcManager.selectBySql(String.class, sql, 99).getSingleResult();
         assertNull(departmentName);
     }
 
@@ -373,15 +387,16 @@ public class AutoBatchInsertTest extends S2TestCase {
         department2.departmentNo = 99;
         department2.departmentName = "foo";
 
-        int[] result = jdbcManager.insertBatch(department, department2)
-                .execute();
+        int[] result =
+            jdbcManager.insertBatch(department, department2).execute();
         assertEquals(2, result.length);
-        String sql = "select department_name from Department where department_id = ?";
-        String departmentName = jdbcManager.selectBySql(String.class, sql, 98)
-                .getSingleResult();
+        String sql =
+            "select department_name from Department where department_id = ?";
+        String departmentName =
+            jdbcManager.selectBySql(String.class, sql, 98).getSingleResult();
         assertNull(departmentName);
-        departmentName = jdbcManager.selectBySql(String.class, sql, 99)
-                .getSingleResult();
+        departmentName =
+            jdbcManager.selectBySql(String.class, sql, 99).getSingleResult();
         assertNull(departmentName);
     }
 
@@ -399,15 +414,16 @@ public class AutoBatchInsertTest extends S2TestCase {
         department2.departmentNo = 99;
         department2.departmentName = "foo";
 
-        int[] result = jdbcManager.insertBatch(department, department2)
-                .execute();
+        int[] result =
+            jdbcManager.insertBatch(department, department2).execute();
         assertEquals(2, result.length);
-        String sql = "select department_name from Department where department_id = ?";
-        String departmentName = jdbcManager.selectBySql(String.class, sql, 98)
-                .getSingleResult();
+        String sql =
+            "select department_name from Department where department_id = ?";
+        String departmentName =
+            jdbcManager.selectBySql(String.class, sql, 98).getSingleResult();
         assertNull(departmentName);
-        departmentName = jdbcManager.selectBySql(String.class, sql, 99)
-                .getSingleResult();
+        departmentName =
+            jdbcManager.selectBySql(String.class, sql, 99).getSingleResult();
         assertNull(departmentName);
     }
 

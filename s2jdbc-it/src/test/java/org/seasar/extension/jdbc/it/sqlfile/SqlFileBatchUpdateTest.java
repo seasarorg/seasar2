@@ -39,8 +39,8 @@ public class SqlFileBatchUpdateTest extends S2TestCase {
      */
     public void testParamter_noneTx() throws Exception {
         String path = getClass().getName().replace(".", "/") + "_no.sql";
-        int[] result = jdbcManager.updateBatchBySqlFile(path, null, null)
-                .execute();
+        int[] result =
+            jdbcManager.updateBatchBySqlFile(path, null, null).execute();
         assertEquals(2, result.length);
     }
 
@@ -49,13 +49,16 @@ public class SqlFileBatchUpdateTest extends S2TestCase {
      * @throws Exception
      */
     public void testParamter_simpleTypeTx() throws Exception {
-        String path = getClass().getName().replace(".", "/")
-                + "_simpleType.sql";
+        String path =
+            getClass().getName().replace(".", "/") + "_simpleType.sql";
         int[] result = jdbcManager.updateBatchBySqlFile(path, 2, 3).execute();
         assertEquals(2, result.length);
 
-        Department department = jdbcManager.selectBySql(Department.class,
-                "select * from Department where department_id = 2")
+        Department department =
+            jdbcManager
+                .selectBySql(
+                    Department.class,
+                    "select * from Department where department_id = 2")
                 .getSingleResult();
         assertEquals(2, department.departmentId);
         assertEquals(20, department.departmentNo);
@@ -63,8 +66,11 @@ public class SqlFileBatchUpdateTest extends S2TestCase {
         assertEquals("hoge", department.location);
         assertEquals(1, department.version);
 
-        department = jdbcManager.selectBySql(Department.class,
-                "select * from Department where department_id = 3")
+        department =
+            jdbcManager
+                .selectBySql(
+                    Department.class,
+                    "select * from Department where department_id = 3")
                 .getSingleResult();
         assertEquals(3, department.departmentId);
         assertEquals(30, department.departmentNo);
@@ -85,12 +91,15 @@ public class SqlFileBatchUpdateTest extends S2TestCase {
         MyDto dto2 = new MyDto();
         dto2.departmentId = 3;
         dto2.location = "bar";
-        int[] result = jdbcManager.updateBatchBySqlFile(path, dto, dto2)
-                .execute();
+        int[] result =
+            jdbcManager.updateBatchBySqlFile(path, dto, dto2).execute();
         assertEquals(2, result.length);
 
-        Department department = jdbcManager.selectBySql(Department.class,
-                "select * from Department where department_id = 2")
+        Department department =
+            jdbcManager
+                .selectBySql(
+                    Department.class,
+                    "select * from Department where department_id = 2")
                 .getSingleResult();
         assertEquals(2, department.departmentId);
         assertEquals(20, department.departmentNo);
@@ -98,8 +107,11 @@ public class SqlFileBatchUpdateTest extends S2TestCase {
         assertEquals("foo", department.location);
         assertEquals(1, department.version);
 
-        department = jdbcManager.selectBySql(Department.class,
-                "select * from Department where department_id = 3")
+        department =
+            jdbcManager
+                .selectBySql(
+                    Department.class,
+                    "select * from Department where department_id = 3")
                 .getSingleResult();
         assertEquals(3, department.departmentId);
         assertEquals(30, department.departmentNo);

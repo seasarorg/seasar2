@@ -41,8 +41,10 @@ public class CompKeyOneToManyTest extends S2TestCase {
      * @throws Exception
      */
     public void testLeftOuterJoin_fetch() throws Exception {
-        List<CompKeyDepartment> list = jdbcManager
-                .from(CompKeyDepartment.class).join("employees")
+        List<CompKeyDepartment> list =
+            jdbcManager
+                .from(CompKeyDepartment.class)
+                .join("employees")
                 .getResultList();
         assertEquals(4, list.size());
         assertNotNull(list.get(0).employees);
@@ -56,8 +58,10 @@ public class CompKeyOneToManyTest extends S2TestCase {
      * @throws Exception
      */
     public void testLeftOuterJoin() throws Exception {
-        List<CompKeyDepartment> list = jdbcManager
-                .from(CompKeyDepartment.class).join("employees", false)
+        List<CompKeyDepartment> list =
+            jdbcManager
+                .from(CompKeyDepartment.class)
+                .join("employees", false)
                 .getResultList();
         assertEquals(4, list.size());
         assertNull(list.get(0).employees);
@@ -71,9 +75,10 @@ public class CompKeyOneToManyTest extends S2TestCase {
      * @throws Exception
      */
     public void testInnerJoin_fetch() throws Exception {
-        List<CompKeyDepartment> list = jdbcManager
-                .from(CompKeyDepartment.class)
-                .join("employees", JoinType.INNER).getResultList();
+        List<CompKeyDepartment> list =
+            jdbcManager.from(CompKeyDepartment.class).join(
+                "employees",
+                JoinType.INNER).getResultList();
         assertEquals(3, list.size());
         assertNotNull(list.get(0).employees);
         assertNotNull(list.get(1).employees);
@@ -85,9 +90,11 @@ public class CompKeyOneToManyTest extends S2TestCase {
      * @throws Exception
      */
     public void testInnerJoin() throws Exception {
-        List<CompKeyDepartment> list = jdbcManager
-                .from(CompKeyDepartment.class).join("employees",
-                        JoinType.INNER, false).getResultList();
+        List<CompKeyDepartment> list =
+            jdbcManager.from(CompKeyDepartment.class).join(
+                "employees",
+                JoinType.INNER,
+                false).getResultList();
         assertEquals(3, list.size());
         assertNull(list.get(0).employees);
         assertNull(list.get(1).employees);

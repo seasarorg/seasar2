@@ -120,14 +120,14 @@ public class AutoBatchDeleteTest extends S2TestCase {
         Map<String, Object> m = new HashMap<String, Object>();
         m.put("employeeId1", 1);
         m.put("employeeId2", 1);
-        employee = jdbcManager.from(CompKeyEmployee.class).where(m)
-                .getSingleResult();
+        employee =
+            jdbcManager.from(CompKeyEmployee.class).where(m).getSingleResult();
         assertNull(employee);
 
         m.put("employeeId1", 2);
         m.put("employeeId2", 2);
-        employee = jdbcManager.from(CompKeyEmployee.class).where(m)
-                .getSingleResult();
+        employee =
+            jdbcManager.from(CompKeyEmployee.class).where(m).getSingleResult();
         assertNull(employee);
     }
 
@@ -136,12 +136,21 @@ public class AutoBatchDeleteTest extends S2TestCase {
      * @throws Exception
      */
     public void testOptimisticLockExceptionTx() throws Exception {
-        Employee employee1 = jdbcManager.from(Employee.class).where(
-                "employeeId = ?", 1).getSingleResult();
-        Employee employee2 = jdbcManager.from(Employee.class).where(
-                "employeeId = ?", 1).getSingleResult();
-        Employee employee3 = jdbcManager.from(Employee.class).where(
-                "employeeId = ?", 2).getSingleResult();
+        Employee employee1 =
+            jdbcManager
+                .from(Employee.class)
+                .where("employeeId = ?", 1)
+                .getSingleResult();
+        Employee employee2 =
+            jdbcManager
+                .from(Employee.class)
+                .where("employeeId = ?", 1)
+                .getSingleResult();
+        Employee employee3 =
+            jdbcManager
+                .from(Employee.class)
+                .where("employeeId = ?", 2)
+                .getSingleResult();
         jdbcManager.delete(employee1).execute();
         try {
             jdbcManager.deleteBatch(employee2, employee3).execute();
@@ -156,12 +165,21 @@ public class AutoBatchDeleteTest extends S2TestCase {
      * @throws Exception
      */
     public void testOptimisticLockException_ignoreVersionTx() throws Exception {
-        Employee employee1 = jdbcManager.from(Employee.class).where(
-                "employeeId = ?", 1).getSingleResult();
-        Employee employee2 = jdbcManager.from(Employee.class).where(
-                "employeeId = ?", 1).getSingleResult();
-        Employee employee3 = jdbcManager.from(Employee.class).where(
-                "employeeId = ?", 2).getSingleResult();
+        Employee employee1 =
+            jdbcManager
+                .from(Employee.class)
+                .where("employeeId = ?", 1)
+                .getSingleResult();
+        Employee employee2 =
+            jdbcManager
+                .from(Employee.class)
+                .where("employeeId = ?", 1)
+                .getSingleResult();
+        Employee employee3 =
+            jdbcManager
+                .from(Employee.class)
+                .where("employeeId = ?", 2)
+                .getSingleResult();
         jdbcManager.delete(employee1).execute();
         jdbcManager.deleteBatch(employee2, employee3).ignoreVersion().execute();
     }

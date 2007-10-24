@@ -42,8 +42,8 @@ public class OneToOneTest extends S2TestCase {
      * @throws Exception
      */
     public void testLeftOuterJoin_fetch_fromOwnerToInverse() throws Exception {
-        List<Employee> list = jdbcManager.from(Employee.class).join("address")
-                .getResultList();
+        List<Employee> list =
+            jdbcManager.from(Employee.class).join("address").getResultList();
         assertEquals(14, list.size());
         for (Employee e : list) {
             assertNotNull(e.address);
@@ -55,8 +55,11 @@ public class OneToOneTest extends S2TestCase {
      * @throws Exception
      */
     public void testLeftOuterJoin_fromOwnerToInverse() throws Exception {
-        List<Employee> list = jdbcManager.from(Employee.class).join("address",
-                false).getResultList();
+        List<Employee> list =
+            jdbcManager
+                .from(Employee.class)
+                .join("address", false)
+                .getResultList();
         assertEquals(14, list.size());
         for (Employee e : list) {
             assertNull(e.address);
@@ -68,8 +71,11 @@ public class OneToOneTest extends S2TestCase {
      * @throws Exception
      */
     public void testInnerJoin_fetch_fromOwnerToInverse() throws Exception {
-        List<Employee> list = jdbcManager.from(Employee.class).join("address",
-                JoinType.INNER).getResultList();
+        List<Employee> list =
+            jdbcManager
+                .from(Employee.class)
+                .join("address", JoinType.INNER)
+                .getResultList();
         assertEquals(14, list.size());
         for (Employee e : list) {
             assertNotNull(e.address);
@@ -81,8 +87,11 @@ public class OneToOneTest extends S2TestCase {
      * @throws Exception
      */
     public void testInnerJoin_fromOwnerToInverse() throws Exception {
-        List<Employee> list = jdbcManager.from(Employee.class).join("address",
-                JoinType.INNER, false).getResultList();
+        List<Employee> list =
+            jdbcManager.from(Employee.class).join(
+                "address",
+                JoinType.INNER,
+                false).getResultList();
         assertEquals(14, list.size());
         for (Employee e : list) {
             assertNull(e.address);
@@ -94,8 +103,8 @@ public class OneToOneTest extends S2TestCase {
      * @throws Exception
      */
     public void testLeftOuterJoin_fetch_fromInverseToOwner() throws Exception {
-        List<Address> list = jdbcManager.from(Address.class).join("employee")
-                .getResultList();
+        List<Address> list =
+            jdbcManager.from(Address.class).join("employee").getResultList();
         assertEquals(14, list.size());
         for (Address e : list) {
             assertNotNull(e.employee);
@@ -107,8 +116,11 @@ public class OneToOneTest extends S2TestCase {
      * @throws Exception
      */
     public void testLeftOuterJoin_fromInverseToOwner() throws Exception {
-        List<Address> list = jdbcManager.from(Address.class).join("employee",
-                false).getResultList();
+        List<Address> list =
+            jdbcManager
+                .from(Address.class)
+                .join("employee", false)
+                .getResultList();
         assertEquals(14, list.size());
         for (Address e : list) {
             assertNull(e.employee);
@@ -120,8 +132,11 @@ public class OneToOneTest extends S2TestCase {
      * @throws Exception
      */
     public void testInnerJoin_fetch_fromInverseToOwner() throws Exception {
-        List<Address> list = jdbcManager.from(Address.class).join("employee",
-                JoinType.INNER).getResultList();
+        List<Address> list =
+            jdbcManager
+                .from(Address.class)
+                .join("employee", JoinType.INNER)
+                .getResultList();
         assertEquals(14, list.size());
         for (Address e : list) {
             assertNotNull(e.employee);
@@ -133,8 +148,11 @@ public class OneToOneTest extends S2TestCase {
      * @throws Exception
      */
     public void testInnerJoin_fromInverseToOwner() throws Exception {
-        List<Address> list = jdbcManager.from(Address.class).join("employee",
-                JoinType.INNER, false).getResultList();
+        List<Address> list =
+            jdbcManager.from(Address.class).join(
+                "employee",
+                JoinType.INNER,
+                false).getResultList();
         assertEquals(14, list.size());
         for (Address e : list) {
             assertNull(e.employee);

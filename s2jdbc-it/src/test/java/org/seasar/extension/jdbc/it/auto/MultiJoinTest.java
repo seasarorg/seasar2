@@ -42,8 +42,9 @@ public class MultiJoinTest extends S2TestCase {
      * @throws Exception
      */
     public void testJoin_nest() throws Exception {
-        List<Department> list = jdbcManager.from(Department.class).join(
-                "employees").join("employees.address").getResultList();
+        List<Department> list =
+            jdbcManager.from(Department.class).join("employees").join(
+                "employees.address").getResultList();
         assertEquals(4, list.size());
         assertNotNull(list.get(0).employees);
         assertNotNull(list.get(0).employees.get(0).address);
@@ -54,8 +55,12 @@ public class MultiJoinTest extends S2TestCase {
      * @throws Exception
      */
     public void testJoin_star() throws Exception {
-        List<Employee> list = jdbcManager.from(Employee.class).join("manager",
-                JoinType.INNER).join("department").join("address")
+        List<Employee> list =
+            jdbcManager
+                .from(Employee.class)
+                .join("manager", JoinType.INNER)
+                .join("department")
+                .join("address")
                 .getResultList();
         assertEquals(13, list.size());
         assertNotNull(list.get(0).department);
