@@ -1574,7 +1574,7 @@ int count = jdbcManager.insert(employee).includes("id", "name").execute();
 指定したプロパティを更新対象から除外する場合は、<code>excludes()</code>を使います。
 </p>
 <pre>
-int count = jdbcManager.insert(employee).includes("version").execute();
+int count = jdbcManager.insert(employee).excludes("version").execute();
 </pre>
 
 <h3><a name="update">更新</a></h3>
