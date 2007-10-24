@@ -98,6 +98,10 @@
 <li><a href="#delete">削除</a>
 <li><a href="#deleteBatch">バッチ削除</a>
 <li><a href="#deleteIgnoreVersion">バージョンをチェックしないで削除する</a>
+<li><a href="#selectBySqlGetResultList">SQLを使った複数件検索</a></li>
+<li><a href="#selectBySqlGetSingleResult">SQLを使った1件検索</a></li>
+<li><a href="#updateBySql">SQLを使った更新</a></li>
+<li><a href="#updateBatchBySql">SQLを使ったバッチ更新</a></li>
 </ul>
 <li><a href="#other">その他の機能</a>
 <ul>
@@ -925,6 +929,56 @@ int count = jdbcManager.update(employee).changedFrom(before).execute();</pre>
 <h3><a name="deleteIgnoreVersion">バージョンをチェックしないで削除する</a></h3>
 <p>バージョンをチェックしないで削除する場合は、 <code>ignoreVersion()</code>を使います。</p>
 <pre>int count = jdbcManager.delete(employee).ignoreVersion().execute();</pre>
+<h3><a name="selectBySqlGetResultList">SQLを使った複数件検索</a></h3>
+<p>
+SQLを使って複数件検索をする場合は、<code>selectBySql()</code>と<code>getResultList()</code>を組み合わせます。
+</p>
+<pre>
+List&lt;EmployeeDto&gt; results = jdbcManager.selectBySql(
+    EmployeeDto.class, "select ... where department_id = ?", 10)
+    .getResultList();
+</pre>
+
+<h3><a name="selectBySqlGetSingleResult">SQLを使った1件検索</a></h3>
+<p>
+SQLを使って1件検索をする場合は、<code>selectBySql()</code>と<code>getSingleResult()</code>を組み合わせます。
+</p>
+<pre>
+Integer count = jdbcManager.selectBySql(
+    Integer.class, "select count(*) from emp")
+    .getSingleResult();
+</pre>
+
+<h3><a name="updateBySql">SQLを使った更新</a></h3>
+<p>
+SQLを使ってエンティティを更新する場合は、<code>updateBySql()</code>、<code>params()</code>、<code>execute()</code>を組み合わせます。
+<code>updateBySql()</code>の2番目以降の引数はパラメータのクラスの可変長引数です。
+挿入、削除も<code>updateBySql()</code>を使います。
+</p>
+<pre>
+int count = jdbcManager.updateBySql(
+    "update employee set salary = ? where id = ?", BigDecimal.class, Integer.class)
+    .params(null, 1)
+    .execute();
+</pre>
+
+<h3><a name="updateBatchBySql">SQLを使ったバッチ更新</a></h3>
+<p>
+SQLを使って複数エンティティをバッチ更新する場合は、<code>updateBatchBySql()</code>、<code>params()</code>、<code>execute()</code>を組み合わせます。
+<code>updateBatchBySql()</code>の2番目以降の引数はパラメータのクラスの可変長引数です。
+挿入、削除も<code>updateBatchBySql()</code>を使います。
+</p>
+<pre>
+List&lt;EmployeeDto&gt; dtoList = ...;
+...
+SqlBatchUpdate batchUpdate = jdbcManager.updateBatchBySql(
+    "update employee set salary = ? where id = ?", BigDecimal.class, Integer.class);
+for (EmployeeDto dto : dtoList) {
+    batchUpdate.params(dto.salary, dto.id);
+}
+int[] countArray = batchUpdate.execute();
+</pre>
+
 <h2><a name="other">その他の機能</a></h2>
 <h3><a name="SqlLog" id="SqlLog">SQLのログ</a></h3>
 <p>Seasar2で実行したSQLのログは、アプリケーションから参照することが可能です。 SQLのログは<code>org.seasar.extension.jdbc.SqlRegistry</code>のインスタンスから取得します。</p>
