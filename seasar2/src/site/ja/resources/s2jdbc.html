@@ -102,6 +102,7 @@
 <li><a href="#selectBySqlGetSingleResult">SQLを使った1件検索</a></li>
 <li><a href="#updateBySql">SQLを使った更新</a></li>
 <li><a href="#updateBatchBySql">SQLを使ったバッチ更新</a></li>
+<li><a href="#callBySql">SQLを使ったプロシージャ呼び出し</a></li>
 </ul>
 <li><a href="#other">その他の機能</a>
 <ul>
@@ -977,6 +978,67 @@ for (EmployeeDto dto : dtoList) {
     batchUpdate.params(dto.salary, dto.id);
 }
 int[] countArray = batchUpdate.execute();
+</pre>
+
+<h3><a name="callBySql">SQLを使ったプロシージャ呼び出し</a></h3>
+<p>
+SQLを使ってプロシージャを呼び出す場合は、<code>callBySql()</code>、<code>call()</code>を組み合わせます。
+最初の例は、パラメータのない場合です。
+</p>
+<pre>
+jdbcManager.callBySql("{call myproc()}").call();
+</pre>
+<p>
+INのパラメータが1つだけで、そのパラメータが<code>null</code>にならない場合は、
+<code>callBySql()</code>の2番目の引数で値を直接指定します。
+</p>
+<pre>
+jdbcManager.callBySql("{call myproc(?)}", "hoge").call();
+</pre>
+<p>
+上記以外の場合は、<code>callBySql()</code>の2番目の引数にJavaBeansを指定します。
+プロシージャを呼び出すパラメータの順番にJavaBeansのフィールドを定義します。<br />
+<ul>
+<li>フィールド名が_OUTで終わっている場合<code>OUT</code>パラメータになります。</li>
+<li>フィールド名が_IN_OUTで終わっている場合<code>IN OUT</code>パラメータになります。</li>
+<li>フィールド名が_INで終わっている場合<code>IN</code>パラメータになります。</li>
+<li>フィールド名が_OUT、_IN_OUT、_INで終わっていない場合は、<code>IN</code>パラメータになります。</li>
+</ul>
+</p>
+<pre>
+public class MyDto {
+
+    public String result_OUT;
+    
+    public int arg1_IN_OUT;
+    
+    public int arg2_IN;
+}
+</pre>
+<pre>
+MyDto dto = new MyDto();
+dto.arg1_IN_OUT = 1;
+dto.arg2_IN = 2;
+jdbcManager.callBySql("{? = call myproc(?, ?)}", dto).call();
+System.out.println(dto.result_OUT);
+System.out.println(dto.arg1_IN_OUT);
+</pre>
+<p>
+プロシージャが結果セットを返す場合は、対応するフィールドの型をList&lt;結果セットに対応する型&gt;にします。
+</p>
+<pre>
+public class MyDto {
+
+    public List&lt;EmployeeDto&gt; result_OUT;
+    
+    public int arg1_IN;
+}
+</pre>
+<pre>
+MyDto dto = new MyDto();
+dto.arg1_IN = 1;
+jdbcManager.callBySql("{? = call myproc(?)}", dto).call();
+System.out.println(dto.result_OUT);
 </pre>
 
 <h2><a name="other">その他の機能</a></h2>
