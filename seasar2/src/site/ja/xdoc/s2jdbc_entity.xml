@@ -1,0 +1,604 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+	<properties>
+		<title>S2JDBC - エンティティ</title>
+	</properties>
+	<body>
+		<section name="エンティティ">
+			<p></p>
+			<ul>
+				<li>
+					<p>
+						<a href="#概要">概要</a>
+					</p>
+				</li>
+				<li>
+					<p>
+						<a href="#エンティティ定義">エンティティ定義</a>
+					</p>
+					<ul>
+						<li>
+							<p>
+								<a href="#テーブル定義">テーブル定義</a>
+							</p>
+						</li>
+					</ul>
+				</li>
+				<li>
+					<p>
+						<a href="#プロパティ定義">プロパティ定義</a>
+					</p>
+					<ul>
+						<li>
+							<p>
+								<a href="#カラム定義">カラム定義</a>
+							</p>
+						</li>
+						<li>
+							<p>
+								<a href="#識別子定義">識別子定義</a>
+							</p>
+						</li>
+						<li>
+							<p>
+								<a href="#バージョン定義">バージョン定義</a>
+							</p>
+						</li>
+						<li>
+							<p>
+								<a href="#永続化対象外定義">永続化対象外定義</a>
+							</p>
+						</li>
+						<li>
+							<p>
+								<a href="#ラージオブジェクト定義">ラージオブジェクト定義</a>
+							</p>
+						</li>
+					</ul>
+				</li>
+				<li>
+					<p>
+						<a href="#関連定義">関連定義</a>
+					</p>
+					<ul>
+						<li>
+							<p>
+								<a href="#多対一関連定義">多対一関連定義</a>
+							</p>
+						</li>
+						<li>
+							<p>
+								<a href="#一対多関連定義">一対多関連定義</a>
+							</p>
+						</li>
+						<li>
+							<p>
+								<a href="#一対一関連定義">一対一関連定義</a>
+							</p>
+						</li>
+						<li>
+							<p>
+								<a href="#結合カラム定義">結合カラム定義</a>
+							</p>
+						</li>
+					</ul>
+				</li>
+			</ul>
+		</section>
+
+		<section name="概要">
+			<p>
+				エンティティの定義の仕方を説明します。ここでいっているエンティティとは、
+				データベースに永続化されるものだと考えてください。
+			</p>
+
+			<p>
+				<div
+					style="background-color: red; font-weight: bold; font-size: larger;">
+					注意点
+				</div>
+			</p>
+			<p>
+				エンティティ用のアノテーションは、JPAのものをそのまま利用していますが、
+				すべてのアノテーションや属性をサポートしているわけではありません。
+				ここに取り上げられているもののみサポートされているとお考えください。
+			</p>
+		</section>
+
+		<section name="エンティティ定義">
+			<p>
+				エンティティにするためには、
+				<code>@Entity</code>
+				を必ず指定する必要があります。
+			</p>
+			<source><![CDATA[@Entity
+public class Employee {
+    ...
+}
+]]></source>
+			<p>
+				name属性でエンティティ名を指定することができます。 次の例では、Empというエンティティ名を指定しています。
+			</p>
+			<source><![CDATA[@Entity(name = &quot;Emp&quot;)
+public class Employee {
+    ...
+}]]></source>
+			<p>
+				name属性を指定しなかった場合、エンティティのクラス名からパッケージ名を除いた部分が、
+				デフォルトのエンティティ名になります。例えば、クラス名が
+				<code>examples.entity.Employee</code>
+				の場合、デフォルトのエンティティ名は、
+				<code>Employee</code>
+				になります。
+			</p>
+
+			<subsection name="テーブル定義">
+				<p>
+					テーブル情報を指定するには、
+					<code>@Table</code>
+					を使います。
+				</p>
+				<p>
+					name属性でテーブル名を指定することができます。
+					指定しなかった場合、テーブル名はエンティティ名と同じになります。エンティティ名が、
+					<code>AaaBbb</code>
+					のようなキャメル記法の場合、テーブル名は、
+					<code>AAA_BBB</code>
+					のように'_'区切りだとみなされます。
+				</p>
+				<p>
+					このルールは、convention.diconで指定されている
+					<code>
+						org.seasar.framework.convention.impl.PersistenceNamingConventionImpl
+					</code>
+					のfromEntityNameToTableName()の実装を変えることで、カスタマイズすることができます。
+				</p>
+				<p>次の例では、EMPというテーブル名を指定しています。</p>
+				<source><![CDATA[@Entity
+@Table(name = "EMP")
+public class Employee {
+    ...
+}]]></source>
+				<p>
+					schema属性でスキーマを指定することができます。
+					指定した場合、自動生成されるSQLのテーブル名がスキーマ.テーブル名になります。
+				</p>
+			</subsection>
+		</section>
+
+		<section name="プロパティ定義">
+			<subsection name="カラム定義">
+				<p>
+					カラム情報を指定するには、
+					<code>@Column</code>
+					を使います。
+				</p>
+				<p>
+					name属性でカラム名を指定することができます。
+					指定しなかった場合、カラム名はフィールド名と同じになります。フィールド名が、
+					<code>aaaBbb</code>
+					のようなキャメル記法の場合、カラム名は、
+					<code>AAA_BBB</code>
+					のように'_'区切りだとみなされます。
+				</p>
+				<p>
+					このルールは、convention.diconで指定されている
+					<code>
+						org.seasar.framework.convention.impl.PersistenceNamingConventionImpl
+					</code>
+					のfromPropertyNameToColumnName()の実装を変えることで、カスタマイズすることができます。
+				</p>
+				<p>
+					デフォルトでは、プロパティ名とフィールド名は同じになりますが、convention.diconで指定されている
+					<code>
+						org.seasar.framework.convention.impl.PersistenceNamingConventionImpl
+					</code>
+					のfromFieldNameToPropertyName()の実装を変えることで、カスタマイズすることができます。
+				</p>
+				<p>次の例では、AB1234というカラム名を指定しています。</p>
+				<source><![CDATA[
+@Column(name = "AB1234")
+public String shortName;
+]]></source>
+				<p>
+					insertable属性で挿入可能かどうかを指定することができます。デフォルトはtrueです。
+					falseの場合、挿入用のSQLにこのカラムは含まれません。
+					カラムにデフォルト値を適用したい場合は、falseにすると良いでしょう。
+				</p>
+				<p>
+					updatable属性で更新可能かどうかを指定することができます。デフォルトはtrueです。
+					falseの場合、更新用のSQLにこのカラムは含まれません。
+					カラムにデフォルト値を適用したい場合は、falseにすると良いでしょう。
+				</p>
+			</subsection>
+
+			<subsection name="識別子定義">
+				<p>
+					識別子(主キー)であることを指定するには、
+					<code>@Id</code>
+					を使います。
+				</p>
+				<source><![CDATA[
+@Id
+public Integer id;
+]]></source>
+				<p>
+					複合主キーの場合は、
+					<code>@Id</code>
+					を複数つけます。
+				</p>
+				<source><![CDATA[
+@Id
+public Integer id;
+
+@Id
+public Integer id2;
+]]></source>
+				<p>
+					識別子は、アプリケーション側で生成することもできますが、
+					Seasar2に自動生成させることもできます。自動生成させるには、
+					<code>@GeneratedValue</code>
+					を使います。
+				</p>
+				<p>
+					自動生成のタイプは、
+					<code>@GeneratedValue</code>
+					の
+					<code>strategy</code>
+					属性で指定します。指定できるタイプのは次の4つです。
+				</p>
+				<dl>
+					<dt>GenerationType.TABLE</dt>
+					<dd>テーブルを使います。</dd>
+					<dt>GenerationType.SEQUENCE</dt>
+					<dd>シーケンスを使います。</dd>
+					<dt>GenerationType.IDENTITY</dt>
+					<dd>データベース固有の識別子自動生成を使います。</dd>
+					<dt>GenerationType.AUTO(デフォルト)</dt>
+					<dd>
+						データベースに応じてTABLE・SEQUENCE・IDENTITYのどちらかが選択されます。
+					</dd>
+				</dl>
+
+				<h4>GenerationType.TABLE</h4>
+				<p>GenerationType.TABLEは次のようにして使います。</p>
+				<source><![CDATA[
+@Id
+@GeneratedValue(strategy = GenerationType.TABLE)
+public Integer id;
+]]></source>
+				<p>上記のように指定した場合、あらかじめ、次のようなテーブルとデータを用意しておく必要があります。</p>
+				<source><![CDATA[
+create table ID_GENERATOR {
+  PK varchar(80) not null primary key,
+  VALUE integer);
+]]></source>
+				<source><![CDATA[
+insert into ID_GENERATOR (PK, VALUE) values ('EMPLOYEE_ID', 1);
+]]></source>
+				<p>
+					ID_GENERATORテーブルのPKカラムには、&lt;テーブル名&gt;_&lt;識別子のカラム名&gt;を設定します。
+				</p>
+				<p>
+					テーブル名やカラム名をカスタマイズするには、次のように@TableGeneratorアノテーションで指定します。
+				</p>
+				<source><![CDATA[
+@Id
+@GeneratedValue(strategy = GenerationType.TABLE, generator = "EMPLOYEE_GEN")
+@TableGenerator(
+    name = "EMPLOYEE_GEN",
+    table = "ID_GEN",
+    pkColumnName = "GEN_NAME",
+    valueColumnName = "GEN_VALUE")
+public Integer id;
+]]></source>
+				<p>
+					上記のようなTableGeneratorを定義した場合、
+					あらかじめ、次のようなテーブルとデータを用意しておく必要があります。
+				</p>
+				<source><![CDATA[
+create table ID_GEN {
+  GEN_NAME varchar(80) not null primary key,
+  GEN_VALUE integer);
+]]></source>
+				<source><![CDATA[
+insert into ID_GEN (GEN_NAME, GEN_VALUE) values ('EMPLOYEE_GEN', 1);
+]]></source>
+
+				<h4>GenerationType.SEQUENCE</h4>
+				<p>GenerationType.SEQUENCEは次のようにして使います。</p>
+				<source><![CDATA[
+@Id
+@GeneratedValue(strategy = GenerationType.SEQUENCE)
+public Integer id;
+]]></source>
+				<p>上記のように指定した場合、あらかじめ、次のようなシーケンスを用意しておく必要があります。</p>
+				<source><![CDATA[
+create sequence EMPLOYEE_ID
+  incremet by 50;
+]]></source>
+				<p>シーケンス名は、&lt;テーブル名&gt;_&lt;識別子のカラム名&gt;となります。</p>
+				<p>
+					シーケンス名をカスタマイズするには、次のように@SequenceGeneratorアノテーションで指定します。
+				</p>
+				<source><![CDATA[
+@Id
+@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "EMPLOYEE_GEN")
+@SequenceGenerator(
+    name = "EMPLOYEE_GEN",
+    sequenceName = "EMPLOYEE_SEQ")
+public Integer id;
+]]></source>
+				<p>
+					上記のようなSequenceGeneratorを定義した場合、
+					あらかじめ、次のようなシーケンスを用意しておく必要があります。
+				</p>
+				<source><![CDATA[
+create sequence EMPLOYEE_SEQ
+  incremet by 50;
+]]></source>
+
+				<h4>GenerationType.IDENTITY</h4>
+				<p>GenerationType.IDENTITYは次のようにして使います。</p>
+				<source><![CDATA[
+@Id
+@GeneratedValue(strategy = GenerationType.IDENTITY)
+public Integer id;
+]]></source>
+				<p>
+					GenerationType.IDENTITYを使う場合、
+					識別子はデータベース固有の方法を使って自動生成されるようにしてください。
+				</p>
+				<source><![CDATA[
+create table Employee {
+  ID integer not null primary key generated always as identity,
+  ...);
+]]></source>
+			</subsection>
+
+			<subsection name="バージョン定義">
+				<p>
+					バージョンチェック用であることを指定するには、
+					<code>@Version</code>
+					を使います。更新時に、エンティティの値とカラムの値が同一かどうかをチェックし、
+					同一ならカラムの値がインクリメントされて更新されます。同一でない場合、
+					<code>
+						javax.persistence.OptimisticLockException
+					</code>
+					が発生します。
+				</p>
+				<p>
+					例えば、エンティティのバージョンチェック用のプロパティの値が1だったとします。
+					更新時にカラムの値が1のままならOKで、2に更新されます。
+					カラムの値が1でない場合は、他で更新されているということなので、
+					<code>
+						javax.persistence.OptimisticLockException
+					</code>
+					が発生します。
+				</p>
+				<source><![CDATA[
+@Version
+public Long version = 0L;
+]]></source>
+				<p>
+					<div
+						style="background-color: red; font-weight: bold; font-size: larger;">
+						注意点
+					</div>
+				</p>
+				<p>
+					@Versionアノテーションは数値型のフィールドにのみ指定することができます。JPA仕様ではTimestamp型のフィールドもバージョンチェックに使用できることになっていますが、S2JDBCではサポートしていません。更新時刻の保持と排他制御は目的が違うので別のフィールドにしてください。
+				</p>
+			</subsection>
+
+			<subsection name="永続化対象外定義">
+				<p>
+					永続化対象外であることを指定するには、
+					<code>@Transient</code>
+					を使います。
+					<code>transient</code>
+					修飾子も指定することもできますが、セッションリプリケーションなどの直列化の対象から外れてしまうので、
+					<code>@Transient</code>
+					の方をお勧めします。
+				</p>
+				<source><![CDATA[
+@Transient
+public MyDto myDto;
+
+//こちらはお勧めしない
+public transient MyDto myDto2;
+]]></source>
+			</subsection>
+
+			<subsection name="ラージオブジェクト定義">
+				<p>
+					ラージオブジェクトであることを指定するには、
+					<code>@Lob</code>
+					を使います。
+					プロパティの型がbyte[]の場合、自動的にBLOBと判定できるので指定する必要はありませんが、
+					プロパティの型がStringの場合、カラムの型が通常の文字列なのか、
+					CLOBなのか判断できないので、CLOBの場合は、
+					<code>@Lob</code>
+					を指定します。
+				</p>
+				<source><![CDATA[
+@Lob
+public String largeName;
+]]></source>
+			</subsection>
+		</section>
+
+		<section name="関連定義">
+			<subsection name="多対一関連定義">
+				<p>
+					多対一関連であることを指定するには、
+					<code>@ManyToOne</code>
+					を使います。複数のEmployeeに1つのDepartementが関連付けられる場合、
+					EmployeeからみてDepartmentは多対一関連になります。
+					関連には、所有者、非所有者という概念があり、外部キーを持っているほうが所有者になります。
+				</p>
+				<p>
+					上記のケースは、Employeeのテーブルに、
+					department_id(プロパティ名はdepartmentId)という外部キーがあるので、
+					Employeeは関連の所有者になります。
+				</p>
+				<p>
+					<code>@ManyToOne</code>
+					を定義するエンティティは、必ず関連の所有者になるので、外部キーに対応するプロパティが必要です。
+				</p>
+				<source><![CDATA[
+public class Employee {
+    ...
+    public Integer departementId;
+    
+    @ManyToOne
+    public Department department;
+}
+]]></source>
+			</subsection>
+
+			<subsection name="一対多関連定義">
+				<p>
+					一対多関連であることを指定するには、
+					<code>@OneToMany</code>
+					を使います。1つのDepartmentに複数のEmployeeが関連付けられる場合、
+					DepartmentからみてEmployeeは一対多関連になります。
+					関連には、所有者、非所有者という概念があり、外部キーを持っているほうが所有者になります。
+				</p>
+				<p>
+					上記のケースは、Employeeのテーブルに、
+					department_id(プロパティ名はdepartmentId)という外部キーがあり、
+					Departmentの方は、外部キーを持っていないので、
+					Departmentは関連の非所有者になります。
+				</p>
+				<p>
+					関連の非所有者の場合、必ずmappedBy属性で逆側の関連のプロパティ名を指定します。
+					Departmentからみて一対多でEmployeeが関連付けられていて、
+					そのEmployeeからみるとDepartmentがdepartmentプロパティとして、
+					多対一で関連付けられています。お互いが相互の関連であることを示すために
+					<code>mappedBy</code>
+					でdepartmentを指定します。
+				</p>
+				<p>
+					一対多の関連の型は、
+					<code>List&lt;エンティティ型&gt;</code>
+					にします。
+					どのエンティティのリストなのかを示すためにGenericsの指定を忘れないようにしてください。
+				</p>
+				<source><![CDATA[
+public class Department {
+    ...
+    @OneToMany(mappedBy = "department")
+    public List&lt;Employee&gt; employeeList;
+}
+]]></source>
+			</subsection>
+
+			<subsection name="一対一関連定義">
+				<p>
+					一対一関連であることを指定するには、
+					<code>@OneToOne</code>
+					を使います。1つのEmployeeに1つのAddressが関連付けられる場合、
+					EmployeeからみてAddressは一対一関連になります。
+					同じように、1つのAddressに1つのEmployeeが関連付けられているので、
+					AddressからみてEmployeeも一対一関連になります。
+					関連には、所有者、非所有者という概念があり、外部キーを持っているほうが所有者になります。
+				</p>
+				<p>
+					上記のケースは、Employeeのテーブルに、
+					address_id(プロパティ名はaddressId)という外部キーがあるので、
+					Employeeは関連の所有者になります。Addressの方は、外部キーを持っていないので、
+					Addressは関連の非所有者になります。
+				</p>
+				<p>
+					関連の非所有者の場合、必ずmappedBy属性で逆側の関連のプロパティ名を指定します。
+					Addressから見ると一対一でEmployeeが関連付けられていて、
+					そのEmployeeからみるとAddressがaddressプロパティとして、
+					一対一で関連付けられています。お互いが相互の関連であることを示すために
+					<code>mappedBy</code>
+					でaddressを指定します。
+				</p>
+				<source><![CDATA[
+public class Employee {
+    ...
+    public Integer addressId;
+    
+    @OneToOne
+    public Address address;
+}
+]]></source>
+				<source><![CDATA[
+public class Address {
+    ...
+    @OneToOne(mappedBy = &quot;address&quot;)
+    public Employee employee;
+}
+]]></source>
+			</subsection>
+
+			<subsection name="結合カラム定義">
+				<p>
+					外部キーを持っている方を関連の所有者といいますが、関連の所有者側では、
+					<code>@JoinColumn</code>
+					を使って、結合用のカラムを指定することができます。
+				</p>
+				<p>
+					name属性で、外部キーを指定します。
+					name属性を省略した場合、「関連のプロパティ名_関連テーブルの主キー」が 自動的に設定されます。
+					主キーは、プロパティ名ではなく、カラム名なので注意してください。
+				</p>
+				<source><![CDATA[
+public class Employee {
+    ...
+    public Integer departementId;
+    
+    @ManyToOne
+    public Department department;
+}
+]]></source>
+				<p>
+					上記の例では、
+					<code>@JoinColumn</code>
+					が省略されているので、
+					name属性は、「関連のプロパティ名(department)_関連テーブルの主キー(ID)」、
+					つまりDEPARTMENT_IDになります。
+				</p>
+				<p>
+					departmentがDEPARTMENTに変換されているのは、
+					プロパティ名をカラム名に変換するときに、
+					キャメル記法は、'_'区切りになり、'_'以外は大文字に変換されるというルールがあるからです。
+				</p>
+				<p>
+					このルールは、convention.diconで指定されている
+					<code>
+						org.seasar.framework.convention.impl.PersistenceNamingConventionImpl
+					</code>
+					の
+					fromPropertyNameToColumnName()の実装を変えることで、カスタマイズすることができます。
+				</p>
+				<p>
+					referencedColumnName属性で、関連テーブルの主キーを指定します。
+					referencedColumnName属性を省略した場合、
+					「関連テーブルの主キー」が自動的に設定されます。
+					主キーは、プロパティ名ではなく、カラム名なので注意してください。
+				</p>
+				<source><![CDATA[
+public class Employee {
+    ...
+    public Integer departementId;
+    
+    @ManyToOne
+    public Department department;
+}
+]]></source>
+				<p>
+					上記の例では、
+					<code>@JoinColumn</code>
+					が省略されているので、
+					referencedColumnName属性は、「関連テーブルの主キー(ID)」、
+					つまりIDになります。
+				</p>
+			</subsection>
+		</section>
+	</body>
+</document>

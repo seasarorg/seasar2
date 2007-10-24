@@ -1,0 +1,507 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<document>
+	<properties>
+		<title>S2JDBC - S2JDBCとは</title>
+	</properties>
+	<body>
+		<section name="S2JDBCとは">
+			<ul>
+				<li>
+					<p>
+						<a href="#概要">概要</a>
+					</p>
+					<ul>
+						<li>
+							<p>
+								<a href="#流れるようなインターフェースと脱CoC">
+									流れるようなインターフェースと脱CoC
+								</a>
+							</p>
+						</li>
+						<li>
+							<p>
+								<a href="#90%のSQLを自動生成する">
+									90%のSQLを自動生成する
+								</a>
+							</p>
+						</li>
+						<li>
+							<p>
+								<a href="#Javaのよさを生かす">Javaのよさを生かす</a>
+							</p>
+						</li>
+						<li>
+							<p>
+								<a href="#SQLの扱いが簡単">SQLの扱いが簡単</a>
+							</p>
+						</li>
+						<li>
+							<p>
+								<a href="#シンプルなプロパティ">シンプルなプロパティ</a>
+							</p>
+						</li>
+						<li>
+							<p>
+								<a href="#学習コストが低い">学習コストが低い</a>
+							</p>
+						</li>
+						<li>
+							<p>
+								<a href="#トラブリにくい">トラブリにくい</a>
+							</p>
+						</li>
+						<li>
+							<p>
+								<a href="#より良いJPA">より良いJPA</a>
+							</p>
+						</li>
+					</ul>
+				</li>
+			</ul>
+		</section>
+
+		<section name="概要">
+			<p>
+				S2JDBCは、データベースプログラミングの生産性を10倍以上高めることを目標として作成した
+				Seasar2のO/R Mapperです。何に比べて生産性が10倍かというとJava標準のJPA(Java
+				Persistence API)に対してです。次のような特徴があります。
+			</p>
+
+			<subsection name="流れるようなインターフェースと脱CoC">
+				<p>
+					「流れるようなインターフェース」とは、文章を記述していくようにメソッドを呼び出していく手法です。
+					詳しくは、ファウラーたんの
+					<a
+						href="http://martinfowler.com/bliki/FluentInterface.html">
+						FluentInterface
+					</a>
+					を参照してください。あれこれ説明するよりも、検索の例を見たほうがわかりやすいでしょう。
+				</p>
+				<source><![CDATA[
+List<Employee> results = jdbcManager.from(Employee.class)
+                             .join("department")
+                             .where("id in (? , ?)", 11, 22)
+                             .orderBy("name")
+                             .getResultList();
+]]></source>
+				<p>一番の特徴は、可読性の高さです。何をやっているのかが一目瞭然ではないでしょうか。</p>
+				<p>
+					二番目の特徴は、IDEと組み合わせることで、APIを覚えていなくても自然に使えることです。
+					何か記述したかったら、コード補完によって使える単語(メソッド)が自動的に選択されます。
+					これが脱Convention over
+					Configuration(以後CoCと省略)につながってきます。
+				</p>
+				<p>
+					CoCは、「規約を守っておけばフレームワークが自動的に設定してあげる」というもので、CoCによって開発者は、あまりソースコードを書かなくてもすむようになります。
+					CoCは、確かに私たちを設定ファイル地獄から救ってくれました。
+				</p>
+				<p>
+					しかし、CoCにも暗黒面があります。ソースコードに明示されている部分が少ないので、
+					自動化されている部分がブラックボックスになり、
+					規約を知らない人が見ると何をやっているのかがまったくわからなくなってしまうのです。
+				</p>
+				<p>
+					また、規約を知らないと何もできなくなるので、ちょっとしたことでも、自分の知らないことであれば、
+					いろいろ調べたり試行錯誤を繰り返すことになります。このような試行錯誤の時間は馬鹿になりません。
+					最終的なソースコードは確かに少なくなったけど、
+					かかった時間は大して変わらなかったなんてことも十分にありえます。
+					自動化されているので最初はとっつきやすいのですが、知らないことやイレギュラーなことに弱いのです。
+				</p>
+				<p>
+					それに対して「流れるようなインターフェース」の場合は、
+					可読性が高いので、誰が見ても何をやっているのかが明快です。
+					また、IDEがコード補完によって自動的にできることを教えてくれるので、事前に知らなくても使いながら学習していくことができます。
+					知らない機能を使うために試行錯誤を繰り返す必要はありません。
+					単語(メソッド)の間違いもそんなメソッドないよとIDE(コンパイラ)が教えてくれます。
+				</p>
+				<p>「流れるようなインターフェース」によって、CoCより安全で効率的な開発が可能になるのです。</p>
+			</subsection>
+
+			<subsection name="90%のSQLを自動生成する">
+				<p>
+					SQLは文字列で組み立てるため、書きづらく間違いやすいものです。
+					2JDBCは、「流れるようなインターフェース」により、SQLを自動生成します。
+					先ほどの例をもう一度見てみましょう。
+				</p>
+				<source><![CDATA[
+List<Employee> results = jdbcManager.from(Employee.class).join("department")
+                            .where("id in (? , ?)", 11, 22)
+                            .orderBy("name desc")
+                            .getResultList();
+]]></source>
+				<p>これは、次のようなSQLに展開されます。</p>
+				<source><![CDATA[
+select T1_.ID, T1_.NAME, T1.DEPARTMENT_ID, T2_.ID, T2_.NAME
+ from EMPLOYEE T1_ left outer join DEPARTMENT T2_ on T1_.DEPARTMENT_ID = T2_.ID
+ where T1_.ID in (?, ?)
+ order by T1_.NAME desc
+]]></source>
+				<p>
+					クエリの呼び出しがSQLに対応しているので可読性が高いだけでなく、
+					selectリスト句でのカラムの指定や結合の指定など面倒な指定を する必要がありません。
+				</p>
+				<p>
+					これに対し、Javaの標準であるJPA(Java Persistence API)はどうでしょうか。
+					JPAもSQLを自動生成できます。それでは、同じことをJPAでやってみましょう。
+				</p>
+				<source><![CDATA[
+List<Employee> results = (List<Employee>) entityManager.createQuery(
+                            "select e from Employee e left join fetch e.department" +
+                            " where e.id in (?1, ?2) order by e.name")
+                            .setParameter(1, 11)
+                            .setParameter(2, 22)
+                            .getResultList();
+]]></source>
+				<p>
+					JPQL(select ...
+					の文字列)の部分は、Seasar2のクエリとほぼ同じように見えますが、文字列で組み立てているので、書き間違える可能性が増えます。
+					文字列で組み立てるより、「流れるようなインターフェース」のほうが、間違いも減るし、IDEによる自動補完が効くのでより生産性があがるのです。
+				</p>
+				<p>
+					departmentの関連がEAGERであれば、left join fetchの部分は省略できますが、
+					関連はLAZYにするのが安全なので、left join fetchを記述しています。
+				</p>
+			</subsection>
+
+			<subsection name="Javaの良さを生かす">
+				<p>
+					最近、
+					<a
+						href="http://www.oreilly.co.jp/books/9784873113203/">
+						JavaからRubyへ
+					</a>
+					なんて言われ、生産性の低い言語としてすっかりレッテルが貼られてしまったJavaですが、
+					古いJavaのイメージで語られていることが多い気がします。
+				</p>
+				<p>
+					アノテーション、Generics、列挙型、可変長引数、Auto Boxingなど、
+					今のJavaには、生産性を向上させるための機能がいろいろ用意されています。
+					ただ、残念なことにこれらのすばらしい機能をフルに活用したフレームワークは あまりないのが現状です。
+				</p>
+				<p>
+					Seasar2では、Javaのよさを生かし、生産性を向上させます。
+					例えば、先ほどのJPAの戻り値のキャストを見てみましょう。
+				</p>
+				<source><![CDATA[
+List<Employee> results = (List<Employee>) entityManager.createQuery("select e from Employee e ...")
+                            ...
+                            .getResultList();
+]]></source>
+				<p>Seasar2では、Genericsを使って、うざったいキャストを不要にしています。</p>
+				<source><![CDATA[
+List<Employee> results = jdbcManager.from(Employee.class)
+                            ...
+                            .getResultList();
+]]></source>
+				<p>
+					JPAでは、文字列でEmployeeと指定していますが、Seasar2ではfrom()の引数でEmployee.classと
+					クラスリテラルを渡しているので、Genericsを利用できます。
+				</p>
+				<p>
+					キャストの手間自体はたいしたことはないのですが、JPQLでEmployeeと指定しているのに、さらに(List&lt;Employee&gt;)とキャストしなければいけないという二度手間感が開発者のやる気を低下させてしまいます。
+				</p>
+				<p>
+					それに対し、Seasar2では、select文を書くような気持ちで、自然にメソッドを呼び出していけば、
+					キャスト不要で欲しいデータを取り出すことができます。
+					リズムに乗って開発できるので、開発者の生産性はさらに向上します。
+					開発者のやる気が、生産性を向上させる最も重要なポイントなのです。
+				</p>
+				<p>もう1つ、バインド変数の例を見てみましょう。JPAでは次のようにバインド変数を指定しています。</p>
+				<source><![CDATA[
+entityManager.createQuery("select ... where e.id in (?1, ?2) ...")
+    .setParameter(1, 11)
+    .setParameter(2, 22)
+    ...
+]]></source>
+				<p>
+					setParameter()の呼び出しがうざったい感じです。Seasar2の場合は次のようになります。
+				</p>
+				<source><![CDATA[
+jdbcManager.from(...
+    .where("id in (? , ?)", 11, 22)
+    ...
+]]></source>
+				<p>
+					where()の二番目以降の引数は可変長引数になっていて、?の数にあわせて、引数を可変にできます。
+					例えば、次のようにすることも可能です。
+				</p>
+				<source><![CDATA[
+where("id in (? , ?, ?, ?)", 11, 22, 33, 44)
+]]></source>
+				<p>Javaも良さを生かせば、さくさくソースを書けることがわかったいただけたでしょうか。</p>
+			</subsection>
+
+			<subsection name="SQLの扱いが簡単">
+				<p>
+					SQLの自動生成ですべてがうまくいけば問題ありませんが、
+					実案件では、複雑なSQLを自前で組み立てる必要が出てくる場合があります。
+					複雑なSQLで複雑な結果を返す場合、JPAでは次のようになります。
+				</p>
+				<source><![CDATA[
+List<Object[]> results = (List<Object[]>) entityManager.createNativeQuery("複雑なSQL")
+                                       ...
+                                       .getResultList();
+]]></source>
+				<p>
+					1行に相当する部分がオブジェクトの配列で返ってくるなんてがっかりです。
+					Seasar2では、結果セットのカラム名とJavaBeansのプロパティ名を同じにしておけば、結果セットの1行をJavaBeansに自動的にマッピングします。
+					また、aaa_bbbのような'_'を使ったカラム名をaaaBbbのようなキャメル記法のプロパティ名に自動的にマッピングします。
+					Seasar2を使った例は次のようになります。
+				</p>
+				<source><![CDATA[
+List<MyDto> results = jdbcManager.selectBySql(MyDto.class, "複雑なSQL")
+                                       ...
+                                       .getResultList();
+]]></source>
+				<p>
+					オブジェクトの配列かJavaBeansかの違いですが、
+					開発者としては、配列にインデックスでアクセスすると型も不明だし、
+					何が返ってくるかわからないので不安ですが、プロパティにアクセスすると型も名前もわかっているので安心です。
+					このようなところも開発者のやる気につながってくるのです。
+				</p>
+				<p>
+					明示的にSQLを指定する必要があるのは、複雑なSQLの場合だけとは限りません。
+					既存システムをベースに新システムを作るというのは、よくある話です。
+					その場合に既存の資産で生かせるものはできる限り生かしたいものです。
+					そのような既存の資産の代表的なものがSQLです。
+				</p>
+				<p>
+					JPAで既存のSQLをそのまま生かそうとするとオブジェクトの配列が返ってきちゃうし、SQLをJPQLに変換するのは結構面倒な作業です。
+					どちらを選ぶにせよ、やるきがそがれるのは間違いないでしょう。
+					Seasar2を使えば、JavaBeansにスムーズにマッピングできるので、
+					快適に既存のSQLを再利用できます。
+				</p>
+			</subsection>
+
+			<subsection name="シンプルなプロパティ">
+				<p>
+					Javaでプロパティを作るには、フィールドとgetter、setterメソッドの定義が必要でした。
+					getter、setterメソッドは、カプセル化の観点から必要とされてきましたが、本当にどんな場合でも必要なのでしょうか。
+				</p>
+				<p>
+					Javaでは、テーブルの一行に対応するデータの入れ物をエンティティと呼ぶことが一般的です。
+					テーブルのカラムのデータは、もともとpublicな存在なので、エンティティのプロパティがカラムに一対一に対応するなら、
+					プロパティのgetter, setterメソッドを省略して、
+					publicフィールドにしても良いのではないでしょうか。
+				</p>
+				<p>
+					エンティティはテーブルの鏡であるという位置づけにするなら、エンティティのプロパティをpublicフィールドにするのも別におかしなことではありません。
+					Seasar2では、エンティティはテーブルの鏡であるという立場をとることによって、エンティティのプロパティをpublicフィールドとして定義できるようにしています。
+					もちろん、publicフィールドに抵抗のある方は、これまでどおりに、getter,
+					setterメソッドを定義することもできます。それでは、getter,
+					setterメソッドのありなしを比べて見ましょう。
+				</p>
+				<source><![CDATA[
+@Entity
+public class Employee {
+    @Id
+    private Integer id;
+    
+    private String name;
+    
+    private BigDecimal salary;
+    
+    public Integer getId() {
+        return id;
+    }
+    
+    public void setId(Integer id) {
+        this.id = id;
+    }
+    
+    public String getName() {
+        return name;
+    }
+    
+    public void setName(String name) {
+        this.name = name;
+    }
+    
+    public BigDecimal getSalary() {
+        return salary;
+    }
+    
+    public void setSalary(BigDecimal salary) {
+        this.salary = salary;
+    }
+}
+]]></source>
+				<source><![CDATA[
+@Entity
+public class Employee {
+    @Id
+    public Integer id;
+    
+    public String name;
+    
+    public BigDecimal salary;
+}
+]]></source>
+				<p>
+					どっちがすっきりして見やすいかは一目瞭然ですね。
+					これは、すべてのプロパティをpublicフィールドにすべきだという意味ではありません。
+					カプセル化が必要なケースももちろんあります。
+					でも、エンティティがテーブルの鏡だとする全体が成り立つなら、
+					プロパティをpublicフィールドにするのも十分にありだということです。
+				</p>
+				<p>プロパティへのアクセスも</p>
+				<soruce><![CDATA[
+String s = employee.getName();
+employee.setName("hoge");
+]]></soruce>
+				<p>よりも</p>
+				<source><![CDATA[
+String s = employee.name;
+employee.name = "hoge";
+]]></source>
+				<p>のほうが直感的で、気分よく記述できるでしょう。このような気分のよさも生産性につながってくるのです。</p>
+			</subsection>
+
+			<subsection name="学習コストが低い">
+				<p>
+					昔のフレームワークなら、機能が盛りだくさんで、使いこなすには時間がかかるけど、
+					使いこなせれば、威力を発揮するというのも許されたでしょう。
+					<a href="http://www.hibernate.org/">Hibernate</a>
+					は、まさしくそのようなフレームワークです。
+				</p>
+				<p>
+					しかし、時代は変わりました。今は、一ヶ月以内に成果を出すことを求められるのもよくある話です。
+					使いこなすのに時間がかかっては間に合わないのです。
+				</p>
+				<p>
+					そのような時代の要求を受け、機能を盛りだくさんにするのではなく、
+					データアクセス用のフレームワークとして本質的な機能に集中することで、短期間で使えるようになることを可能にしました。
+				</p>
+				<p>
+					このドキュメントに対応するのがHibernateの
+					<a
+						href="http://www.hibernate.org/hib_docs/annotations/reference/fr/html_single/">
+						Hibernate Annotationsのドキュメント
+					</a>
+					と
+					<a
+						href="http://www.hibernate.org/hib_docs/entitymanager/reference/en/html_single/">
+						Hibernate EntityManagerのドキュメント
+					</a>
+					になります。学習コストが低いということが実感していただけるのではないでしょうか。
+				</p>
+			</subsection>
+
+			<subsection name="トラブリにくい">
+				<p>
+					<a href="#学習コストが低い">学習コストが低い</a>
+					でも取り上げましたが、機能が盛りだくさんだと、覚えるのに時間がかかるだけではなく、
+					トラブルに見舞われやすくなり、その解決に時間がかかるようになります。
+				</p>
+				<p>
+					例えば、一対一、一対多、多対一などのエンティティ間の関連を取り上げてみます。
+					それぞれの関連は、データをロードするタイミングを指定することができ、関連のプロパティにアクセスしたときにはじめてデータをロードする
+					<code>Lazy loading</code>
+					と、関連元のエンティティにアクセスするのと同時に関連先のデータをロードする
+					<code>Eager loading</code>
+					があります。
+				</p>
+				<p>
+					従業員と部署のエンティティに多対一の関連がある場合、
+					<code>Eager loading</code>
+					だと、従業員を取得するのと同時に部署も取得されます。
+					<code>Lazy loading</code>
+					だと、従業員を取得したときは、
+					単に従業員のデータだけが取得され、部署のプロパティにアクセスしたときにはじめて
+					部署のデータが取得されます。
+				</p>
+				<p>
+					また、それとは別に、関連は
+					<code>Lazy loading</code>
+					にしておいて、クエリを実行するときに、どの関連を結合で取得してくるかを指定する方法もあります。
+					この方法は、フェッチ結合と呼ばれます。以前のサンプルでも次のようにフェッチ結合が使われていました。
+				</p>
+				<source><![CDATA[
+select e from Employee e left join fetch e.department
+]]></source>
+				<p>
+					どのようなケースにも対応できるようにするため、このようにいろいろな選択肢が用意されているのですが、
+					いろんな選択肢があるのでトラブルが起こる確率も増えてしまうのです。
+				</p>
+				<p>
+					例えば、一対一、多対一には
+					<code>Eager loading</code>
+					、一対多には
+					<code>Lazy loading</code>
+					を適用するというルールにしたとしましょう。JPAのデフォルトはそうなっています。
+				</p>
+				<p>
+					<code>Eager loading</code>
+					が設定されている関連元のエンティティにアクセスするときは、必要かどうかにかかわらず常に関連先のデータまで取得されてしまうため、
+					大量のデータを取得する場合は、パフォーマンスやメモリ不足の問題を引き起こすことがあります。
+					少量のデータでテストしていたときには気づかず、本番相当のデータを用意したときにはじめて
+					発覚するというのも困りものです。
+				</p>
+				<p>
+					それでは、
+					<code>Eager loading</code>
+					を
+					<code>Lazy loading</code>
+					に変えれば、すべての問題は解決するのでしょうか。残念ながら次の「N+1検索問題」を引き起こします。
+				</p>
+				<p>
+					1000件の従業員のリストを表示するという機能があるとしましょう。
+					従業員のデータ以外に部署名も表示させる必要があるとします。
+					最初の1回の検索で1000件の従業員のデータを取得します。
+					その後、部署名を表示させるために、従業員.部署.名前のようにアクセスすると、
+					部署のプロパティにアクセスした瞬間に
+					<code>Lazy loading</code>
+					がおきます。これが従業員の件数分(N)起こるので、「N+1検索問題」といわれています。
+				</p>
+				<p>
+					大量の検索が発行されるので、深刻なパフォーマンス問題を引き起こします。
+					実際は、同じ部署へのアクセスはキャッシュが使われるので、N件起こることはないのですが、それでも部署の件数分の検索が行なわれパフォーマンス問題を引き起こすことには変わりはありません。
+				</p>
+				<p>
+					最も良い解決策は、関連は
+					<code>Lazy loading</code>
+					にしておき、検索のときにフェッチ結合を使うことです。
+					<code>Lazy loading</code>
+					にするのは、
+					<code>Lazy loading</code>
+					にしたいからではなく、
+					<code>Eager loading</code>
+					させないための回避策です。フェッチ結合は、特定の検索のときだけ、
+					<code>Eager loading</code>
+					になるような効果があります。
+				</p>
+				<p>
+					ここまで説明してきたようにJPAは、機能が豊富だけどトラブリやすいという問題があります。
+					Seasar2では、トラブリにくくするために、いたずらに機能を増やすのではなく、トラブリやすい機能は意図的に削っています。
+				</p>
+				<p>
+					例えば、関連のLoding問題についていえば、
+					<code>Eager loading</code>
+					も
+					<code>Lazy loading</code>
+					もサポートせず、次のようなフェッチ結合のみをサポートしています。
+					join()メソッドのデフォルトはフェッチ結合になります。
+				</p>
+				<source><![CDATA[
+jdbcManager.from(Employee.class).join("department")
+]]></source>
+				<p>
+					実際の開発において、予想外に多くの時間を費やしているのはトラブルシューティングの時間でないでしょうか。
+					トラブリにくくすることも、生産性向上の重要な要因なのです。
+				</p>
+			</subsection>
+
+			<subsection name="より良いJPA">
+				<p>
+					これまで、JPAの問題点をいくつか指摘してきましたが、
+					JPAは標準であり、一方的に無視してよいものでもありません。
+					そこで、Seasar2では、エンティティとテーブルのマッピングの仕様は、JPAとあわせ、いまいちなEntityManagerやJPQLの部分は、独自仕様でいくことにしました。
+				</p>
+				<p>
+					JPAを使ってパフォーマンスが出なかったり、
+					トラブルに巻き込まれて困っている方は、より良いJPAとしてSeasar2を使ってみてはいかがでしょうか。
+				</p>
+			</subsection>
+		</section>
+	</body>
+</document>

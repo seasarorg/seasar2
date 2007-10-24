@@ -1,0 +1,360 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+	<properties>
+		<title>S2JDBC</title>
+	</properties>
+	<body>
+		<section name="目次">
+			<ul>
+				<li>
+					<p>
+						<a href="s2jdbc_abstract.html">S2JDBCとは</a>
+					</p>
+					<ul>
+						<li>
+							<p>
+								<a href="s2jdbc_abstract.html#概要">概要</a>
+							</p>
+							<ul>
+								<li>
+									<p>
+										<a
+											href="s2jdbc_abstract.html#流れるようなインターフェースと脱CoC">
+											流れるようなインターフェースと脱CoC
+										</a>
+									</p>
+								</li>
+								<li>
+									<p>
+										<a href="s2jdbc_abstract.html#90%のSQLを自動生成する">
+											90%のSQLを自動生成する
+										</a>
+									</p>
+								</li>
+								<li>
+									<p>
+										<a href="s2jdbc_abstract.html#Javaのよさを生かす">
+											Javaのよさを生かす
+										</a>
+									</p>
+								</li>
+								<li>
+									<p>
+										<a href="s2jdbc_abstract.html#SQLの扱いが簡単">
+											SQLの扱いが簡単
+										</a>
+									</p>
+								</li>
+								<li>
+									<p>
+										<a href="s2jdbc_abstract.html#シンプルなプロパティ">
+											シンプルなプロパティ
+										</a>
+									</p>
+								</li>
+								<li>
+									<p>
+										<a href="s2jdbc_abstract.html#学習コストが低い">学習コストが低い</a>
+									</p>
+								</li>
+								<li>
+									<p>
+										<a href="s2jdbc_abstract.html#トラブリにくい">トラブリにくい</a>
+									</p>
+								</li>
+								<li>
+									<p>
+										<a href="s2jdbc_abstract.html#より良いJPA">より良いJPA</a>
+									</p>
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</li>
+				<li>
+					<p>
+						<a href="s2jdbc_entity.html">エンティティとは</a>
+					</p>
+					<ul>
+						<li>
+							<p>
+								<a href="s2jdbc_entity.html#概要">概要</a>
+							</p>
+						</li>
+						<li>
+							<p>
+								<a href="s2jdbc_entity.html#エンティティ定義">エンティティ定義</a>
+							</p>
+							<ul>
+								<li>
+									<p>
+										<a href="s2jdbc_entity.html#テーブル定義">テーブル定義</a>
+									</p>
+								</li>
+							</ul>
+						</li>
+						<li>
+							<p>
+								<a href="s2jdbc_entity.html#プロパティ定義">プロパティ定義</a>
+							</p>
+							<ul>
+								<li>
+									<p>
+										<a href="s2jdbc_entity.html#カラム定義">カラム定義</a>
+									</p>
+								</li>
+								<li>
+									<p>
+										<a href="s2jdbc_entity.html#識別子定義">識別子定義</a>
+									</p>
+								</li>
+								<li>
+									<p>
+										<a href="s2jdbc_entity.html#バージョン定義">バージョン定義</a>
+									</p>
+								</li>
+								<li>
+									<p>
+										<a href="s2jdbc_entity.html#永続化対象外定義">永続化対象外定義</a>
+									</p>
+								</li>
+								<li>
+									<p>
+										<a href="s2jdbc_entity.html#ラージオブジェクト定義">
+											ラージオブジェクト定義
+										</a>
+									</p>
+								</li>
+							</ul>
+						</li>
+						<li>
+							<p>
+								<a href="s2jdbc_entity.html#関連定義">関連定義</a>
+							</p>
+							<ul>
+								<li>
+									<p>
+										<a href="s2jdbc_entity.html#多対一関連定義">多対一関連定義</a>
+									</p>
+								</li>
+								<li>
+									<p>
+										<a href="s2jdbc_entity.html#一対多関連定義">一対多関連定義</a>
+									</p>
+								</li>
+								<li>
+									<p>
+										<a href="s2jdbc_entity.html#一対一関連定義">一対一関連定義</a>
+									</p>
+								</li>
+								<li>
+									<p>
+										<a href="s2jdbc_entity.html#結合カラム定義">結合カラム定義</a>
+									</p>
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</li>
+				<li>
+					<p>
+						<a href="s2jdbc_manager.html">JdbcManager</a>
+					</p>
+					<ul>
+						<li>
+							<p>
+								<a href="s2jdbc_manager.html#概要">概要</a>
+							</p>
+						</li>
+						<li>
+							<p>
+								<a href="s2jdbc_manager.html#検索">検索</a>
+							</p>
+							<ul>
+								<li>
+									<p>
+										<a href="s2jdbc_manager.html#複数件検索">複数件検索</a>
+									</p>
+								</li>
+								<li>
+									<p>
+										<a href="s2jdbc_manager.html#1件検索">1件検索</a>
+									</p>
+								</li>
+								<li>
+									<p>
+										<a href="s2jdbc_manager.html#結合">結合</a>
+									</p>
+								</li>
+								<li>
+									<p>
+										<a href="s2jdbc_manager.html#検索条件">検索条件</a>
+									</p>
+								</li>
+								<li>
+									<p>
+										<a href="s2jdbc_manager.html#ソート順">ソート順</a>
+									</p>
+								</li>
+								<li>
+									<p>
+										<a href="s2jdbc_manager.html#ページング">ページング</a>
+									</p>
+								</li>
+								<li>
+									<p>
+										<a href="s2jdbc_manager.html#最大行数">最大行数</a>
+									</p>
+								</li>
+								<li>
+									<p>
+										<a href="s2jdbc_manager.html#フェッチサイズ">フェッチサイズ</a>
+									</p>
+								</li>
+								<li>
+									<p>
+										<a href="s2jdbc_manager.html#クエリタイムアウト">
+											クエリタイムアウト
+										</a>
+									</p>
+								</li>
+							</ul>
+						</li>
+						<li>
+							<p>
+								<a href="s2jdbc_manager.html#挿入">挿入</a>
+							</p>
+							<ul>
+								<li>
+									<p>
+										<a href="s2jdbc_manager.html#1件挿入">1件挿入</a>
+									</p>
+								</li>
+								<li>
+									<p>
+										<a href="s2jdbc_manager.html#バッチ挿入">バッチ挿入</a>
+									</p>
+								</li>
+								<li>
+									<p>
+										<a href="s2jdbc_manager.html#nullの項目を挿入しない">
+											nullの項目を挿入しない
+										</a>
+									</p>
+								</li>
+								<li>
+									<p>
+										<a
+											href="s2jdbc_manager.html#指定したプロパティのみを挿入対象にする">
+											指定したプロパティのみを挿入対象にする
+										</a>
+									</p>
+								</li>
+								<li>
+									<p>
+										<a
+											href="s2jdbc_manager.html#指定したプロパティを挿入対象から除外する">
+											指定したプロパティを挿入対象から除外する
+										</a>
+									</p>
+								</li>
+							</ul>
+						</li>
+						<li>
+							<p>
+								<a href="s2jdbc_manager.html#更新">更新</a>
+							</p>
+							<ul>
+								<li>
+									<p>
+										<a href="s2jdbc_manager.html#1件更新">1件更新</a>
+									</p>
+								</li>
+								<li>
+									<p>
+										<a href="s2jdbc_manager.html#バッチ更新">バッチ更新</a>
+									</p>
+								</li>
+								<li>
+									<p>
+										<a
+											href="s2jdbc_manager.html#バージョンプロパティを通常の更新対象にする">
+											バージョンプロパティを通常の更新対象にする
+										</a>
+									</p>
+								</li>
+								<li>
+									<p>
+										<a href="s2jdbc_manager.html#nullの項目を更新しない">
+											nullの項目を更新しない
+										</a>
+									</p>
+								</li>
+								<li>
+									<p>
+										<a
+											href="s2jdbc_manager.html#指定したプロパティのみを更新対象にする">
+											指定したプロパティのみを更新対象にする
+										</a>
+									</p>
+								</li>
+								<li>
+									<p>
+										<a
+											href="s2jdbc_manager.html#指定したプロパティを更新対象から除外する">
+											指定したプロパティを更新対象から除外する
+										</a>
+									</p>
+								</li>
+								<li>
+									<p>
+										<a
+											href="s2jdbc_manager.html#変更のあったプロパティのみを更新対象にする">
+											変更のあったプロパティのみを更新対象にする
+										</a>
+									</p>
+								</li>
+							</ul>
+						</li>
+						<li>
+							<p>
+								<a href="s2jdbc_manager.html#削除">削除</a>
+							</p>
+							<ul>
+								<li>
+									<p>
+										<a href="s2jdbc_manager.html#1件削除">1件削除</a>
+									</p>
+								</li>
+								<li>
+									<p>
+										<a href="s2jdbc_manager.html#バッチ削除">バッチ削除</a>
+									</p>
+								</li>
+								<li>
+									<p>
+										<a href="s2jdbc_manager.html#バージョンをチェックしないで削除する">
+											バージョンをチェックしないで削除する
+										</a>
+									</p>
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</li>
+				<li>
+					<p>
+						<a href="s2jdbc_other.html">その他の機能</a>
+					</p>
+					<ul>
+						<li>
+							<p>
+								<a href="s2jdbc_other.html#SQLのログ">SQLのログ</a>
+							</p>
+						</li>
+					</ul>
+				</li>
+			</ul>
+		</section>
+	</body>
+</document>

@@ -1,0 +1,969 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+	<properties>
+		<title>S2JDBC - JdbcManager</title>
+	</properties>
+	<body>
+		<section name="JdbcManager">
+			<p></p>
+			<ul>
+				<li>
+					<p>
+						<a href="#概要">概要</a>
+					</p>
+				</li>
+				<li>
+					<p>
+						<a href="#検索">検索</a>
+					</p>
+					<ul>
+						<li>
+							<p>
+								<a href="#複数件検索">複数件検索</a>
+							</p>
+						</li>
+						<li>
+							<p>
+								<a href="#1件検索">1件検索</a>
+							</p>
+						</li>
+						<li>
+							<p>
+								<a href="#結合">結合</a>
+							</p>
+						</li>
+						<li>
+							<p>
+								<a href="#検索条件">検索条件</a>
+							</p>
+						</li>
+						<li>
+							<p>
+								<a href="#ソート順">ソート順</a>
+							</p>
+						</li>
+						<li>
+							<p>
+								<a href="#ページング">ページング</a>
+							</p>
+						</li>
+						<li>
+							<p>
+								<a href="#最大行数">最大行数</a>
+							</p>
+						</li>
+						<li>
+							<p>
+								<a href="#フェッチサイズ">フェッチサイズ</a>
+							</p>
+						</li>
+						<li>
+							<p>
+								<a href="#クエリタイムアウト">クエリタイムアウト</a>
+							</p>
+						</li>
+					</ul>
+				</li>
+				<li>
+					<p>
+						<a href="#挿入">挿入</a>
+					</p>
+					<ul>
+						<li>
+							<p>
+								<a href="#1件挿入">1件挿入</a>
+							</p>
+						</li>
+						<li>
+							<p>
+								<a href="#バッチ挿入">バッチ挿入</a>
+							</p>
+						</li>
+						<li>
+							<p>
+								<a href="#nullの項目を挿入しない">
+									nullの項目を挿入しない
+								</a>
+							</p>
+						</li>
+						<li>
+							<p>
+								<a href="#指定したプロパティのみを挿入対象にする">
+									指定したプロパティのみを挿入対象にする
+								</a>
+							</p>
+						</li>
+						<li>
+							<p>
+								<a href="#指定したプロパティを挿入対象から除外する">
+									指定したプロパティを挿入対象から除外する
+								</a>
+							</p>
+						</li>
+					</ul>
+				</li>
+				<li>
+					<p>
+						<a href="#更新">更新</a>
+					</p>
+					<ul>
+						<li>
+							<p>
+								<a href="#1件更新">1件更新</a>
+							</p>
+						</li>
+						<li>
+							<p>
+								<a href="#バッチ更新">バッチ更新</a>
+							</p>
+						</li>
+						<li>
+							<p>
+								<a href="#バージョンプロパティを通常の更新対象にする">
+									バージョンプロパティを通常の更新対象にする
+								</a>
+							</p>
+						</li>
+						<li>
+							<p>
+								<a href="#nullの項目を更新しない">
+									nullの項目を更新しない
+								</a>
+							</p>
+						</li>
+						<li>
+							<p>
+								<a href="#指定したプロパティのみを更新対象にする">
+									指定したプロパティのみを更新対象にする
+								</a>
+							</p>
+						</li>
+						<li>
+							<p>
+								<a href="#指定したプロパティを更新対象から除外する">
+									指定したプロパティを更新対象から除外する
+								</a>
+							</p>
+						</li>
+						<li>
+							<p>
+								<a href="#変更のあったプロパティのみを更新対象にする">
+									変更のあったプロパティのみを更新対象にする
+								</a>
+							</p>
+						</li>
+					</ul>
+				</li>
+				<li>
+					<p>
+						<a href="#削除">削除</a>
+					</p>
+					<ul>
+						<li>
+							<p>
+								<a href="#1件削除">1件削除</a>
+							</p>
+						</li>
+						<li>
+							<p>
+								<a href="#バッチ削除">バッチ削除</a>
+							</p>
+						</li>
+						<li>
+							<p>
+								<a href="#バージョンをチェックしないで削除する">
+									バージョンをチェックしないで削除する
+								</a>
+							</p>
+						</li>
+					</ul>
+				</li>
+			</ul>
+		</section>
+
+		<section name="概要">
+			<p>
+				JdbcManagerは、データベースにアクセスするために使われるAPIです。 設定ファイルを
+				<a href="#setup">セットアップ</a>
+				して、 利用したいクラスで次のようにプロパティを定義しておけば、
+				Seasar2によってJdbcManagerは自動的に設定されます。
+			</p>
+			<source><![CDATA[
+public JdbcManager jdbcManager;
+]]></source>
+			<p>
+				Connection, Statementは同一トランザクション中はキャッシュされ、
+				トランザクション終了時に自動的にクローズされます。
+				トランザクション外で呼び出されたときは、キャッシュは行なわれず毎回自動的にクローズされます。
+			</p>
+			<p>
+				トランザクション管理は、
+				<a href="tx.html">S2Tx</a>
+				を使ってください。
+			</p>
+		</section>
+
+		<section name="検索">
+			<subsection name="複数件検索">
+				<p>複数件を検索する場合は、gerResultList()を使います。</p>
+				<source><![CDATA[
+List<Employee> results = jdbcManager.from(Employee.class).getResultList();
+]]></source>
+				<p>検索するエンティティは、from()で指定します。</p>
+			</subsection>
+
+			<subsection name="1件検索">
+				<p>1件検索する場合は、getSingleResult()を使います。</p>
+				<source><![CDATA[
+Employee result = jdbcManager.from(Employee.class).getSingleResult();
+]]></source>
+				<p>
+					結果が複数件になる場合は、
+					<code>
+						javax.persistence.NonUniqueResultException
+					</code>
+					が発生します。
+				</p>
+			</subsection>
+
+			<subsection name="結合">
+				<p>
+					他のエンティティを結合する場合は、join()を使います。
+					引数は、結合したいエンティティのプロパティ名です。
+				</p>
+				<source><![CDATA[
+List<Employee> results = jdbcManager.from(Employee.class).join("department").getResultList();
+]]></source>
+				<p>
+					デフォルトは、左外部結合で、結合で指定したエンティティは、検索結果に含まれます。
+					次のように内部結合にすることもできます。
+				</p>
+				<source><![CDATA[
+List<Employee> results = jdbcManager.from(Employee.class)
+                                    .join("department", JoinType.INNER).getResultList();
+]]></source>
+				<p>検索条件には含めたいけど、検索結果には含めたくない場合、 3番名の引数をfalseにします。</p>
+				<source><![CDATA[
+List<Employee> results = jdbcManager.from(Employee.class)
+                                    .join("department", JoinType.INNER, false)
+                                    .where("department.name = 'RESEARCH'")
+                                    .getResultList();
+]]></source>
+				<p>
+					結合は、employee.addressのようにネストすることもできます。
+					ネストする場合は、必ずベースとなる結合を先に指定します。
+					employee.addressの場合、employeeがベースとなる結合です。
+				</p>
+				<source><![CDATA[
+List<Department> results = jdbcManager.from(Department.class)
+                                    .join("employee")
+                                    .join("employee.address")
+                                    .getResultList();
+]]></source>
+				<p>結合は、多対一関連、一対多関連、一対一関連のどれでも可能で、 いくつでもネストすることが可能です。</p>
+			</subsection>
+
+			<subsection name="検索条件">
+				<p>
+					検索条件を指定する場合は、where()を使います。
+					where()に書くことのできる条件は、SQLと同じです。
+					SQLとの違いは、カラム名の変わりにプロパティ名を書くことです。
+					関連先のプロパティを指定する場合は、join()で指定した名前. プロパティ名になります。
+				</p>
+				<source><![CDATA[
+jdbcManager.from(Department.class)
+    .join("employeeList")
+    .join("employeeList.address")
+    .where("employeeList.salary between ? and ? and employeeList.address.street like ?", ...)
+    .getResultList();
+]]></source>
+				<p>
+					検索条件の入力画面などでは、ユーザの入力があった部分をandでつないで、
+					条件を組み立てるということが良く行われます。 このようなケースを簡単に処理するために、
+					SimpleWhereとMapでも、検索条件を指定できるようにしています。
+				</p>
+				<p>
+					名前、仕事タイプ、給与の上限下限を条件に検索する画面を考えてみましょう。
+					べたに検索条件を組み立てるとはこんな感じになるはずです。
+				</p>
+				<source><![CDATA[
+public String departmentName;
+public String[] jobTypes = new String[0];
+public BigDecimal salaryMax;
+public BigDecimal salaryMin;
+...
+StringBuilder sb = new StringBuilder(100);
+boolean found = false;
+List<Object> values = new ArrayList<Object>();
+if (departmentName != null) {
+    sb.append("department.name = ?");
+    values.add(departmentName);
+    found = true;
+}
+if (jobTypes.length > 0) {
+    if (found) {
+        sb.append(" and ");
+    }
+    sb.append("jobType in (");
+    for (JobType jt : jobTypes) {
+        sb.append("?, ");
+        values.add(jt);
+    }
+    sb.setLength(sb.length() - 2);
+    sb.append(")");
+    found = true;
+}
+if (salaryMin != null) {
+    if (found) {
+        sb.append(" and ");
+    }
+    sb.append("salary >= ?");
+    values.add(salaryMin);
+    found = true;
+}
+if (salaryMax != null) {
+    if (found) {
+        sb.append(" and ");
+    }
+    sb.append("salary <= ?");
+    values.add(salaryMax);
+    found = true;
+}
+jdbcManager.from(Employee.class).where(sb.toString(), values.toArray()).getResultList();
+]]></source>
+				<p>SimpleWhereを使って組み立てれば、こんなに簡単になります。</p>
+				<source><![CDATA[
+public String departmentName;
+public String[] jobTypes = new String[0];
+public BigDecimal salaryMax;
+public BigDecimal salaryMin;
+...
+jdbcManager.from(Employee.class).where(
+    new SimpleWhere().eq("department.name", departmentName).in("jobType", jobTypes)
+        .ge("salary", salaryMin).le("salary", salaryMax))
+    .getResultList();
+]]></source>
+				<p>SimpleWhereには次のメソッドがあります。</p>
+				<table border="1">
+					<tbody>
+						<tr>
+							<th>メソッド</th>
+							<th>説明</th>
+						</tr>
+						<tr>
+							<td>
+								eq(String propertyName, Object value)
+							</td>
+							<td>
+								<code>propertyName = ?</code>
+								の条件を追加します。valueがnullの時は追加されません。
+							</td>
+						</tr>
+						<tr>
+							<td>
+								ne(String propertyName, Object value)
+							</td>
+							<td>
+								<code>propertyName &lt;&gt; ?</code>
+								の条件を追加します。valueがnullの時は追加されません。
+							</td>
+						</tr>
+						<tr>
+							<td>
+								lt(String propertyName, Object value)
+							</td>
+							<td>
+								<code>propertyName &lt; ?</code>
+								の条件を追加します。valueがnullの時は追加されません。
+							</td>
+						</tr>
+						<tr>
+							<td>
+								le(String propertyName, Object value)
+							</td>
+							<td>
+								<code>propertyName &lt;= ?</code>
+								の条件を追加します。valueがnullの時は追加されません。
+							</td>
+						</tr>
+						<tr>
+							<td>
+								gt(String propertyName, Object value)
+							</td>
+							<td>
+								<code>propertyName &gt; ?</code>
+								の条件を追加します。valueがnullの時は追加されません。
+							</td>
+						</tr>
+						<tr>
+							<td>
+								ge(String propertyName, Object value)
+							</td>
+							<td>
+								<code>propertyName &gt;= ?</code>
+								の条件を追加します。valueがnullの時は追加されません。
+							</td>
+						</tr>
+						<tr>
+							<td>
+								in(String propertyName, Object...
+								values)
+							</td>
+							<td>
+								<code>propertyName in (?, ...)</code>
+								の条件を追加します。 valuesの配列の長さが0の時は追加されません。
+							</td>
+						</tr>
+						<tr>
+							<td>
+								not in(String propertyName, Object...
+								values)
+							</td>
+							<td>
+								<code>
+									propertyName not in (?, ...)
+								</code>
+								の条件を追加します。 valuesの配列の長さが0の時は追加されません。
+							</td>
+						</tr>
+						<tr>
+							<td>
+								like(String propertyName, String value)
+							</td>
+							<td>
+								<code>propertyName like ?</code>
+								の条件を追加します。 valueがnullの時は追加されません。
+							</td>
+						</tr>
+						<tr>
+							<td>
+								starts(String propertyName, String
+								value)
+							</td>
+							<td>
+								<code>propertyName like ?</code>
+								の条件を追加します。 valueがnullの時は追加されません。
+								valueの最後に自動的に
+								<code>%</code>
+								が追加されます。
+							</td>
+						</tr>
+						<tr>
+							<td>
+								ends(String propertyName, String value)
+							</td>
+							<td>
+								<code>propertyName like ?</code>
+								の条件を追加します。 valueがnullの時は追加されません。
+								valueの最初に自動的に
+								<code>%</code>
+								が追加されます。
+							</td>
+						</tr>
+						<tr>
+							<td>
+								contains(String propertyName, String
+								value)
+							</td>
+							<td>
+								<code>propertyName like ?</code>
+								の条件を追加します。 valueがnullの時は追加されません。
+								valueの最初と最後に自動的に
+								<code>%</code>
+								が追加されます。
+							</td>
+						</tr>
+						<tr>
+							<td>
+								isNull(String propertyName, Boolean
+								value)
+							</td>
+							<td>
+								<code>propertyName is null</code>
+								の条件を追加します。
+								valueがnullあるいはBoolean.FALSEの時は追加されません。
+							</td>
+						</tr>
+						<tr>
+							<td>
+								isNotNull(String propertyName, Boolean
+								value)
+							</td>
+							<td>
+								<code>propertyName is not null</code>
+								の条件を追加します。
+								valueがnullあるいはBoolean.FALSEの時は追加されません。
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<p>Mapを使うと次のようになります。</p>
+				<source><![CDATA[
+public String departmentName;
+public String[] jobTypes = new String[0];
+public BigDecimal salaryMax;
+public BigDecimal salaryMin;
+...
+Map<String, Object> w = new HashMap<String, Object>();
+w.put("department.name", departmentName);
+w.put("jobType_IN", jobTypes);
+w.put("salary_LE", salaryMax);
+w.put("salary_GE", salaryMin);
+jdbcManager.from(Employee.class).where(w).getResultList();
+]]></source>
+				<p>
+					マップのキーにプロパティ名_サフィックスを指定します。 サフィックスがない場合は、
+					<code>_EQ</code>
+					が指定されたとみなされます。
+				</p>
+				<p>次のサフィックスを使うことができます。</p>
+				<table border="1">
+					<tbody>
+						<tr>
+							<th>サフィックス</th>
+							<th>説明</th>
+						</tr>
+						<tr>
+							<td>_EQ</td>
+							<td>
+								<code>propertyName = ?</code>
+								の条件を追加します。valueがnullの時は追加されません。
+							</td>
+						</tr>
+						<tr>
+							<td>_NE</td>
+							<td>
+								<code>propertyName &lt;&gt; ?</code>
+								の条件を追加します。valueがnullの時は追加されません。
+							</td>
+						</tr>
+						<tr>
+							<td>_LT</td>
+							<td>
+								<code>propertyName &lt; ?</code>
+								の条件を追加します。valueがnullの時は追加されません。
+							</td>
+						</tr>
+						<tr>
+							<td>_LE</td>
+							<td>
+								<code>propertyName &lt;= ?</code>
+								の条件を追加します。valueがnullの時は追加されません。
+							</td>
+						</tr>
+						<tr>
+							<td>_GT</td>
+							<td>
+								<code>propertyName &gt; ?</code>
+								の条件を追加します。valueがnullの時は追加されません。
+							</td>
+						</tr>
+						<tr>
+							<td>_GE</td>
+							<td>
+								<code>propertyName &gt;= ?</code>
+								の条件を追加します。valueがnullの時は追加されません。
+							</td>
+						</tr>
+						<tr>
+							<td>_IN</td>
+							<td>
+								<code>propertyName in (?, ...)</code>
+								の条件を追加します。 valuesの配列の長さが0の時は追加されません。
+								値は配列のみをサポートしています。
+							</td>
+						</tr>
+						<tr>
+							<td>_NOT_IN</td>
+							<td>
+								<code>
+									propertyName not in (?, ...)
+								</code>
+								の条件を追加します。 valuesの配列の長さが0の時は追加されません。
+								値は配列のみをサポートしています。
+							</td>
+						</tr>
+						<tr>
+							<td>_LIKE</td>
+							<td>
+								<code>propertyName like ?</code>
+								の条件を追加します。 valueがnullの時は追加されません。
+							</td>
+						</tr>
+						<tr>
+							<td>_STARTS</td>
+							<td>
+								<code>propertyName like ?</code>
+								の条件を追加します。 valueがnullの時は追加されません。
+								valueの最後に自動的に
+								<code>%</code>
+								が追加されます。
+							</td>
+						</tr>
+						<tr>
+							<td>_ENDS</td>
+							<td>
+								<code>propertyName like ?</code>
+								の条件を追加します。 valueがnullの時は追加されません。
+								valueの最初に自動的に
+								<code>%</code>
+								が追加されます。
+							</td>
+						</tr>
+						<tr>
+							<td>_CONTAINS</td>
+							<td>
+								<code>propertyName like ?</code>
+								の条件を追加します。 valueがnullの時は追加されません。
+								valueの最初と最後に自動的に
+								<code>%</code>
+								が追加されます。
+							</td>
+						</tr>
+						<tr>
+							<td>_IS_NULL</td>
+							<td>
+								<code>propertyName is null</code>
+								の条件を追加します。
+								valueがnullあるいはBoolean.FALSEの時は追加されません。
+								値はBooleanのみをサポートしています。
+							</td>
+						</tr>
+						<tr>
+							<td>_IS_NOT_NULL</td>
+							<td>
+								<code>propertyName is not null</code>
+								の条件を追加します。
+								valueがnullあるいはBoolean.FALSEの時は追加されません。
+								値はBooleanのみをサポートしています。
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<p>
+					マップの組み立てを手動でやる必要は、基本的にありません。
+					なぜなら、SimpleWhereのほうが便利だからです。 マップを使う場合は、次のように
+					<code>
+						org.seasar.framework.beans.util.BeanUtil.createProperties()
+					</code>
+					と組み合わせます。
+					<code>createProperties()</code>
+					の第二引数には、プロパティ名のプレフィックスを指定します。
+					プレフィックスを指定した場合、プレフィックスを持つプロパティだけが対象になります。
+					プロパティ名がマップのキーに変換されるときに、 プレフィックスは削除され、'$'は'.'に変換されます。
+				</p>
+				<source><![CDATA[
+public String where_department$name;
+public String[] where_jobType_IN = new String[0];
+public BigDecimal where_salary_LE;
+public BigDecimal where_salary_GE;
+...
+jdbcManager.from(Employee.class).where(BeanUtil.createProperties(this, "where_")).getResultList();
+]]></source>
+			</subsection>
+
+			<subsection name="ソート順">
+				<p>
+					ソート順を指定する場合は、
+					<code>orderBy()</code>
+					を使います。
+					<code>orderBy()</code>
+					に書くことのできる条件は、SQLと同じです。
+					SQLとの違いは、カラム名の変わりにプロパティ名を書くことです。
+					関連先のプロパティを指定する場合は、join()で指定した名前. プロパティ名になります。
+				</p>
+				<source><![CDATA[
+jdbcManager.from(Employee.class)
+    .join("department")
+    .orderBy("name, department.name")
+    .getResultList();
+]]></source>
+			</subsection>
+
+			<subsection name="ページング">
+				<p>
+					ページングを指定する場合は、
+					<code>limit(), offset()</code>
+					を使います。
+					<code>limit()</code>
+					には、取得する行数を指定します。
+					<code>offset()</code>
+					には、最初に取得する行の位置を指定します。 最初の行の位置は0になります。
+					ページングを指定するには、必ず
+					<a href="#orderBy">ソート順</a>
+					の指定も必要です。
+				</p>
+				<source><![CDATA[
+jdbcManager.from(Employee.class)
+    .orderBy("name")
+    .limit(100)
+    .offset(10)
+    .getResultList();
+]]></source>
+			</subsection>
+
+			<subsection name="最大行数">
+				<p>
+					最大行数を指定する場合は、
+					<code>maxRows()</code>
+					を使います。 最大行数を超える行は、通知なしに除外されます。
+				</p>
+				<source><![CDATA[
+jdbcManager.from(Employee.class)
+    .maxRows(1000)
+    .getResultList();
+]]></source>
+			</subsection>
+
+			<subsection name="フェッチサイズ">
+				<p>
+					フェッチサイズを指定する場合は、
+					<code>fetchSize()</code>
+					を使います。
+				</p>
+				<source><![CDATA[
+jdbcManager.from(Employee.class)
+    .fetchSize(100)
+    .getResultList();
+]]></source>
+			</subsection>
+
+			<subsection name="クエリタイムアウト">
+				<p>
+					クエリタイムアウト(秒)を指定する場合は、
+					<code>queryTimeout()</code>
+					を使います。
+				</p>
+				<source><![CDATA[
+jdbcManager.from(Employee.class)
+    .queryTimeout(10)
+    .getResultList();
+]]></source>
+			</subsection>
+		</section>
+
+		<section name="挿入">
+			<subsection name="1件挿入">
+				<p>
+					エンティティを挿入する場合は、
+					<code>insert()</code>
+					と
+					<code>execute()</code>
+					を組み合わせます。
+				</p>
+				<source><![CDATA[
+int count = jdbcManager.insert(employee).execute();
+]]></source>
+				<p>
+					引数はエンティティで、戻り値は、更新した行数です。 挿入するときに、識別子を自動設定することができます。
+					詳しくは、
+					<a href="s2jdbc_entity.html#識別子定義">識別子定義</a>
+					を参照してください。
+				</p>
+			</subsection>
+
+			<subsection name="バッチ挿入">
+				<p>
+					複数のエンティティをバッチ挿入する場合は、
+					<code>insertBatch()</code>
+					と
+					<code>execute()</code>
+					を組み合わせます。
+				</p>
+				<source><![CDATA[
+int[] countArray = jdbcManager.insertBatch(employees).execute();
+]]></source>
+				<p>
+					引数はエンティティのリストあるいは配列(可変長引数)で、戻り値は、更新した行数の配列です。
+					挿入するときに、識別子を自動設定することができます。 詳しくは、
+					<a href="s2jdbc_entity.html#識別子定義">識別子定義</a>
+					を参照してください。
+				</p>
+			</subsection>
+
+			<subsection name="nullの項目を挿入しない">
+				<p>
+					挿入の対象からnullの項目を除外する場合は、
+					<code>excludesNull()</code>
+					を使います。 バッチ系の挿入は、すべてのエンティティに同じSQLを適用しなければならないので、
+					nullを除外してバッチ挿入することはできません。
+					なぜなら、すべてのエンティティのnullの項目が同じだとは限らないからです。
+				</p>
+				<source><![CDATA[
+int count = jdbcManager.insert(employee).excludesNull().execute();
+]]></source>
+			</subsection>
+
+			<subsection name="指定したプロパティのみを挿入対象にする">
+				<p>
+					指定したプロパティのみを挿入対象にする場合は、
+					<code>includes()</code>
+					を使います。
+				</p>
+				<source><![CDATA[
+int count = jdbcManager.insert(employee).includes("id", "name").execute();
+]]></source>
+			</subsection>
+
+			<subsection name="指定したプロパティを挿入対象から除外する">
+				<p>
+					指定したプロパティを挿入対象から除外する場合は、
+					<code>excludes()</code>
+					を使います。
+				</p>
+				<source><![CDATA[
+int count = jdbcManager.insert(employee).excludes("version").execute();
+]]></source>
+			</subsection>
+		</section>
+
+		<section name="更新">
+			<subsection name="1件更新">
+				<p>
+					エンティティを更新する場合は、
+					<code>update()</code>
+					と
+					<code>execute()</code>
+					を組み合わせます。
+				</p>
+				<source><![CDATA[
+int count = jdbcManager.update(employee).execute();
+]]></source>
+				<p>
+					引数はエンティティで、戻り値は、更新した行数です。
+					更新するときに、バージョンによる楽観的排他制御をすることができます。 詳しくは、
+					<a href="s2jdbc_entity.html#バージョン定義">バージョン定義</a>
+					を参照してください。
+				</p>
+			</subsection>
+
+			<subsection name="バッチ更新">
+				<p>
+					複数のエンティティをバッチ更新する場合は、
+					<code>updateBatch()</code>
+					と
+					<code>execute()</code>
+					を組み合わせます。
+				</p>
+				<source><![CDATA[
+int[] countArray = jdbcManager.updateBatch(employees).execute();
+]]></source>
+				<p>
+					引数はエンティティのリストあるいは配列(可変長引数)で、戻り値は、更新した行数の配列です。
+					更新するときに、バージョンによる楽観的排他制御をすることができます。 詳しくは、
+					<a href="s2jdbc_entity.html#バージョン定義">バージョン定義</a>
+					を参照してください。
+				</p>
+			</subsection>
+
+			<subsection name="バージョンプロパティを通常の更新対象にする">
+				<p>
+					バージョンプロパティを通常の更新対象に含め、バージョンチェックの対象外にする場合は、
+					<code>includesVersion()</code>
+					を使います。
+				</p>
+				<source><![CDATA[
+int count = jdbcManager.update(employee).includesVersion().execute();
+]]></source>
+			</subsection>
+
+			<subsection name="nullの項目を更新しない">
+				<p>
+					更新の対象からnullの項目を除外する場合は、
+					<code>excludesNull()</code>
+					を使います。 バッチ系の更新は、すべてのエンティティに同じSQLを適用しなければならないので、
+					nullを除外してバッチ更新することはできません。
+					なぜなら、すべてのエンティティのnullの項目が同じだとは限らないからです。
+				</p>
+				<source><![CDATA[
+int count = jdbcManager.update(employee).excludesNull().execute();
+]]></source>
+			</subsection>
+
+			<subsection name="指定したプロパティのみを更新対象にする">
+				<p>
+					指定したプロパティのみを更新対象にする場合は、
+					<code>includes()</code>
+					を使います。
+				</p>
+				<source><![CDATA[
+int count = jdbcManager.update(employee).includes("id", "name").execute();
+]]></source>
+			</subsection>
+
+			<subsection name="指定したプロパティを更新対象から除外する">
+				<p>
+					指定したプロパティを更新対象から除外する場合は、
+					<code>excludes()</code>
+					を使います。
+				</p>
+				<source><![CDATA[
+int count = jdbcManager.update(employee).excludes("version").execute();
+]]></source>
+			</subsection>
+
+			<subsection name="変更のあったプロパティのみを更新対象にする">
+				<p>
+					変更のあったプロパティのみを更新対象にする場合は、
+					<code>changedFrom()</code>
+					を使います。 最初の引数は、比較の対象にする以前のエンティティもしくはマップです。
+				</p>
+				<source><![CDATA[
+Employee before = ...;
+int count = jdbcManager.update(employee).changedFrom(before).execute();
+]]></source>
+			</subsection>
+		</section>
+
+		<section name="削除">
+			<subsection name="1件削除">
+				<p>
+					エンティティを削除する場合は、
+					<code>delete()</code>
+					と
+					<code>execute()</code>
+					を組み合わせます。
+				</p>
+				<source><![CDATA[
+int count = jdbcManager.delete(employee).execute();
+]]></source>
+				<p>
+					引数はエンティティで、戻り値は、更新した行数です。
+					削除するときに、バージョンによる楽観的排他制御をすることができます。 詳しくは、
+					<a href="s2jdbc_entity.html#バージョン定義">バージョン定義</a>
+					を参照してください。
+				</p>
+			</subsection>
+
+			<subsection name="バッチ削除">
+				<p>
+					複数のエンティティをバッチ削除する場合は、
+					<code>deleteBatch()</code>
+					と
+					<code>execute()</code>
+					を組み合わせます。
+				</p>
+				<source><![CDATA[
+int[] countArray = jdbcManager.deleteBatch(employees).execute();
+]]></source>
+				<p>
+					引数はエンティティのリストあるいは配列(可変長引数)で、戻り値は、更新した行数の配列です。
+					削除するときに、バージョンによる楽観的排他制御をすることができます。 詳しくは、
+					<a href="s2jdbc_entity.html#バージョン定義">バージョン定義</a>
+					を参照してください。
+				</p>
+			</subsection>
+
+			<subsection name="バージョンをチェックしないで削除する">
+				<p>
+					バージョンをチェックしないで削除する場合は、
+					<code>ignoreVersion()</code>
+					を使います。
+				</p>
+				<source><![CDATA[
+int count = jdbcManager.delete(employee).ignoreVersion().execute();
+]]></source>
+			</subsection>
+		</section>
+	</body>
+</document>

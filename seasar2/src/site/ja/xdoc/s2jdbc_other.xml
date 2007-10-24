@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+	<properties>
+		<title>S2JDBC - その他の機能</title>
+	</properties>
+	<body>
+		<section name="その他の機能">
+			<p></p>
+			<ul>
+				<li>
+					<p>
+						<a href="#SQLのログ">SQLのログ</a>
+					</p>
+				</li>
+			</ul>
+		</section>
+
+		<section name="SQLのログ">
+			<p>
+				Seasar2で実行したSQLのログは、アプリケーションから参照することが可能です。 SQLのログは
+				<code>org.seasar.extension.jdbc.SqlRegistry</code>
+				のインスタンスから取得します。
+			</p>
+			<p>
+				<code>SqlRegistry</code>
+				のインスタンスはDIもしくはルックアップにより取得できます。
+			</p>
+			<p>DIのための設定は次のようになります。</p>
+			<source><![CDATA[
+<component name="sqlLogRegistry" class="org.seasar.extension.jdbc.SqlLogRegistry">
+  @org.seasar.extension.jdbc.SqlLogRegistryLocator@getInstance()
+</component>
+]]></source>
+			<p>プログラムから直接ルックアップする場合は次のようなコードが必要です。</p>
+			<source><![CDATA[
+SqlLogRegistry sqlLogRegistry = SqlLogRegistryLocator.getInstance();
+]]></source>
+			<code>SqlRegistry</code>
+			のインスタンスは複数のログを保持しています（デフォルトでは最新3つのログを保持します）。
+			最新の（最後に実行された）SQLのログは次のようなコードで取得できます。
+			<source><![CDATA[
+SqlLog sqlLog = sqlLogRegistry.getLast();
+]]></source>
+			<code>org.seasar.extension.jdbc.SqlLog</code>
+			のインスタンスは次の情報を保持しています。
+			<ul>
+				<li>
+					<p>未加工のSQL</p>
+				</li>
+				<li>
+					<p>バインド変数を実際の値で置き換えた完全なSQL</p>
+				</li>
+				<li>
+					<p>SQLにバインドされる値の配列</p>
+				</li>
+				<li>
+					<p>SQLにバインドされる値の型の配列</p>
+				</li>
+			</ul>
+		</section>
+	</body>
+</document>
