@@ -119,7 +119,7 @@ public class Employee {
 			<p>
 				name属性でエンティティ名を指定することができます。 次の例では、Empというエンティティ名を指定しています。
 			</p>
-			<source><![CDATA[@Entity(name = &quot;Emp&quot;)
+			<source><![CDATA[@Entity(name = "Emp")
 public class Employee {
     ...
 }]]></source>
@@ -530,7 +530,7 @@ public class Employee {
 				<source><![CDATA[
 public class Address {
     ...
-    @OneToOne(mappedBy = &quot;address&quot;)
+    @OneToOne(mappedBy = "address")
     public Employee employee;
 }
 ]]></source>

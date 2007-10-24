@@ -178,6 +178,51 @@
 						</li>
 					</ul>
 				</li>
+				<li>
+					<p>
+						<a href="#SQLを使った検索">SQLを使った検索</a>
+					</p>
+					<ul>
+						<li>
+							<p>
+								<a href="#SQLを使った複数件検索">SQLを使った複数件検索</a>
+							</p>
+						</li>
+						<li>
+							<p>
+								<a href="#SQLを使った1件検索">SQLを使った1件検索</a>
+							</p>
+						</li>
+					</ul>
+				</li>
+				<li>
+					<p>
+						<a href="#SQLを使った挿入・更新・削除">SQLを使った挿入・更新・削除</a>
+					</p>
+					<ul>
+						<li>
+							<p>
+								<a href="#SQLを使った1件挿入・更新・削除">
+									SQLを使った1件挿入・更新・削除
+								</a>
+							</p>
+						</li>
+						<li>
+							<p>
+								<a href="#SQLを使ったバッチ挿入・更新・削除">
+									SQLを使ったバッチ挿入・更新・削除
+								</a>
+							</p>
+						</li>
+					</ul>
+				</li>
+				<li>
+					<p>
+						<a href="#SQLを使ったプロシージャ呼び出し">
+							SQLを使ったプロシージャ呼び出し
+						</a>
+					</p>
+				</li>
 			</ul>
 		</section>
 
@@ -965,5 +1010,176 @@ int count = jdbcManager.delete(employee).ignoreVersion().execute();
 ]]></source>
 			</subsection>
 		</section>
+
+		<section name="SQLを使った検索">
+			<subsection name="SQLを使った複数件検索">
+				<p>
+					SQLを使って複数件検索をする場合は、
+					<code>selectBySql()</code>
+					と
+					<code>getResultList()</code>
+					を組み合わせます。
+				</p>
+				<source><![CDATA[
+List<EmployeeDto> results = jdbcManager.selectBySql(
+    EmployeeDto.class, "select ... where department_id = ?", 10)
+    .getResultList();
+]]></source>
+			</subsection>
+
+			<subsection name="SQLを使った1件検索">
+				<p>
+					SQLを使って1件検索をする場合は、
+					<code>selectBySql()</code>
+					と
+					<code>getSingleResult()</code>
+					を組み合わせます。
+				</p>
+				<source><![CDATA[
+Integer count = jdbcManager.selectBySql(
+    Integer.class, "select count(*) from emp")
+    .getSingleResult();
+]]></source>
+			</subsection>
+		</section>
+
+		<section name="SQLを使った挿入・更新・削除">
+			<subsection name="SQLを使った1件挿入・更新・削除">
+				<p>
+					SQLを使ってエンティティを更新する場合は、
+					<code>updateBySql()</code>
+					、
+					<code>params()</code>
+					、
+					<code>execute()</code>
+					を組み合わせます。
+					<code>updateBySql()</code>
+					の2番目以降の引数はパラメータのクラスの可変長引数です。 挿入、削除も
+					<code>updateBySql()</code>
+					を使います。
+				</p>
+				<source><![CDATA[
+int count = jdbcManager.updateBySql(
+    "update employee set salary = ? where id = ?", BigDecimal.class, Integer.class)
+    .params(null, 1)
+    .execute();
+]]></source>
+			</subsection>
+
+			<subsection name="SQLを使ったバッチ挿入・更新・削除">
+				<p>
+					SQLを使って複数エンティティをバッチ更新する場合は、
+					<code>updateBatchBySql()</code>
+					、
+					<code>params()</code>
+					、
+					<code>execute()</code>
+					を組み合わせます。
+					<code>updateBatchBySql()</code>
+					の2番目以降の引数はパラメータのクラスの可変長引数です。 挿入、削除も
+					<code>updateBatchBySql()</code>
+					を使います。
+				</p>
+				<source><![CDATA[
+List<EmployeeDto> dtoList = ...;
+...
+SqlBatchUpdate batchUpdate = jdbcManager.updateBatchBySql(
+    "update employee set salary = ? where id = ?", BigDecimal.class, Integer.class);
+for (EmployeeDto dto : dtoList) {
+    batchUpdate.params(dto.salary, dto.id);
+}
+int[] countArray = batchUpdate.execute();
+]]></source>
+			</subsection>
+		</section>
+
+		<section name="SQLを使ったプロシージャ呼び出し">
+			<p>
+				SQLを使ってプロシージャを呼び出す場合は、
+				<code>callBySql()</code>
+				、
+				<code>call()</code>
+				を組み合わせます。 最初の例は、パラメータのない場合です。
+			</p>
+			<source><![CDATA[
+jdbcManager.callBySql("{call myproc()}").call();
+]]></source>
+			<p>
+				INのパラメータが1つだけで、そのパラメータが
+				<code>null</code>
+				にならない場合は、
+				<code>callBySql()</code>
+				の2番目の引数で値を直接指定します。
+			</p>
+			<source><![CDATA[
+jdbcManager.callBySql("{call myproc(?)}", "hoge").call();
+]]></source>
+			<p>
+				上記以外の場合は、
+				<code>callBySql()</code>
+				の2番目の引数にJavaBeansを指定します。
+				プロシージャを呼び出すパラメータの順番にJavaBeansのフィールドを定義します。
+				<br />
+				<ul>
+					<li>
+						フィールド名が_OUTで終わっている場合
+						<code>OUT</code>
+						パラメータになります。
+					</li>
+					<li>
+						フィールド名が_IN_OUTで終わっている場合
+						<code>IN OUT</code>
+						パラメータになります。
+					</li>
+					<li>
+						フィールド名が_INで終わっている場合
+						<code>IN</code>
+						パラメータになります。
+					</li>
+					<li>
+						フィールド名が_OUT、_IN_OUT、_INで終わっていない場合は、
+						<code>IN</code>
+						パラメータになります。
+					</li>
+				</ul>
+			</p>
+			<source><![CDATA[
+public class MyDto {
+
+    public String result_OUT;
+    
+    public int arg1_IN_OUT;
+    
+    public int arg2_IN;
+}
+]]></source>
+			<source><![CDATA[
+MyDto dto = new MyDto();
+dto.arg1_IN_OUT = 1;
+dto.arg2_IN = 2;
+jdbcManager.callBySql("{? = call myproc(?, ?)}", dto).call();
+System.out.println(dto.result_OUT);
+System.out.println(dto.arg1_IN_OUT);
+]]></source>
+			<p>
+				プロシージャが結果セットを返す場合は、対応するフィールドの型をList
+				&lt;結果セットに対応する型&gt;にします。
+			</p>
+			<source><![CDATA[
+public class MyDto {
+
+    public List<EmployeeDto> result_OUT;
+    
+    public int arg1_IN;
+}
+]]></source>
+			<source><![CDATA[
+MyDto dto = new MyDto();
+dto.arg1_IN = 1;
+jdbcManager.callBySql("{? = call myproc(?)}", dto).call();
+System.out.println(dto.result_OUT);
+]]></source>
+		</section>
+
 	</body>
 </document>

@@ -3,7 +3,7 @@
 		<format property="releaseDate" pattern="yyyy-MM-dd" locale="ja,JP"/>
 	</tstamp>
 
-	<target name="dist" depends="make-reference">
+	<target name="dist">
 		<antcall target="fix-site">
 			<param name="site" value="${basedir}/target/site"/>
 		</antcall>
