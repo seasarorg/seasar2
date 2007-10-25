@@ -152,10 +152,26 @@ public class AutoSelectTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void ignore_testWhere_eq_null() throws Exception {
+    public void testWhere_eq_null() throws Exception {
         List<Employee> list =
             jdbcManager.from(Employee.class).where(
                 new SimpleWhere().eq("employeeName", null)).getResultList();
+        assertEquals(14, list.size());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testWhere_eq_ignoreWhitespace() throws Exception {
+        List<Employee> list =
+            jdbcManager
+                .from(Employee.class)
+                .where(
+                    new SimpleWhere().ignoreWhitespace().eq(
+                        "employeeName",
+                        "  "))
+                .getResultList();
         assertEquals(14, list.size());
     }
 
@@ -284,11 +300,102 @@ public class AutoSelectTest extends S2TestCase {
      * 
      * @throws Exception
      */
+    public void testWhere_isNull_false() throws Exception {
+        List<Employee> list =
+            jdbcManager.from(Employee.class).where(
+                new SimpleWhere().isNull("managerId", false)).getResultList();
+        assertEquals(14, list.size());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testWhere_isNull_null() throws Exception {
+        List<Employee> list =
+            jdbcManager.from(Employee.class).where(
+                new SimpleWhere().isNull("managerId", null)).getResultList();
+        assertEquals(14, list.size());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
     public void testWhere_isNotNull() throws Exception {
         List<Employee> list =
             jdbcManager.from(Employee.class).where(
                 new SimpleWhere().isNotNull("managerId", true)).getResultList();
         assertEquals(13, list.size());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testWhere_isNotNull_false() throws Exception {
+        List<Employee> list =
+            jdbcManager
+                .from(Employee.class)
+                .where(new SimpleWhere().isNotNull("managerId", false))
+                .getResultList();
+        assertEquals(14, list.size());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testWhere_isNotNull_null() throws Exception {
+        List<Employee> list =
+            jdbcManager.from(Employee.class).where(
+                new SimpleWhere().isNotNull("managerId", null)).getResultList();
+        assertEquals(14, list.size());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testWhere_or() throws Exception {
+        List<Employee> list =
+            jdbcManager
+                .from(Employee.class)
+                .where(
+                    new SimpleWhere().eq("departmentId", 1).or().ge(
+                        "salary",
+                        3000))
+                .orderBy("employeeName")
+                .getResultList();
+        assertEquals(5, list.size());
+        assertEquals("CLARK", list.get(0).employeeName);
+        assertEquals("FORD", list.get(1).employeeName);
+        assertEquals("KING", list.get(2).employeeName);
+        assertEquals("MILLER", list.get(3).employeeName);
+        assertEquals("SCOTT", list.get(4).employeeName);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testWhere_or_ignoreWhitespace() throws Exception {
+        List<Employee> list =
+            jdbcManager
+                .from(Employee.class)
+                .where(
+                    new SimpleWhere()
+                        .ignoreWhitespace()
+                        .eq("employeeName", "")
+                        .or()
+                        .ge("salary", 3000)
+                        .eq("employeeName", ""))
+                .orderBy("employeeName")
+                .getResultList();
+        assertEquals(3, list.size());
+        assertEquals("FORD", list.get(0).employeeName);
+        assertEquals("KING", list.get(1).employeeName);
+        assertEquals("SCOTT", list.get(2).employeeName);
     }
 
     /**
