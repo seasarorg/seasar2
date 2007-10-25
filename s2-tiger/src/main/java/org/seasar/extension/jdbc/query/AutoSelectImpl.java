@@ -656,7 +656,11 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
         if (where == null) {
             throw new NullPointerException("where");
         }
-        return where(where.getCriteria(), where.getParams());
+        String criteria = where.getCriteria();
+        if (StringUtil.isEmpty(criteria)) {
+            return this;
+        }
+        return where(criteria, where.getParams());
     }
 
     /**

@@ -873,6 +873,17 @@ public class AutoSelectImplTest extends TestCase {
      * @throws Exception
      * 
      */
+    public void testWhere_emptyWhere() throws Exception {
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        assertSame(query, query.where(new SimpleWhere().eq("name", null)));
+        assertNull(query.criteria);
+        assertEquals(0, query.getParamSize());
+    }
+
+    /**
+     * @throws Exception
+     * 
+     */
     public void testAddCondition() throws Exception {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
         query.prepare("getResultList");
