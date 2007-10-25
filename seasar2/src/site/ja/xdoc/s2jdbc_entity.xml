@@ -489,7 +489,7 @@ public class Employee {
 public class Department {
     ...
     @OneToMany(mappedBy = "department")
-    public List<Employee> employees;
+    public List<Employee> employeeList;
 }
 ]]></source>
 			</subsection>
