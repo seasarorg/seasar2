@@ -15,6 +15,7 @@
  */
 package org.seasar.extension.jdbc.it.auto;
 
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -291,10 +292,14 @@ public class AutoBatchUpdateTest extends S2TestCase {
                 .where("employeeId = ?", 2)
                 .getSingleResult();
         jdbcManager.update(employee1).execute();
+        int[] result = null;
         try {
-            jdbcManager.updateBatch(employee2, employee3).execute();
-            fail();
+            result = jdbcManager.updateBatch(employee2, employee3).execute();
         } catch (OptimisticLockException ignore) {
+            return;
+        }
+        if (!containsSuccessNoInfo(result)) {
+            fail();
         }
     }
 
@@ -405,5 +410,14 @@ public class AutoBatchUpdateTest extends S2TestCase {
         departmentName =
             jdbcManager.selectBySql(String.class, sql, 2).getSingleResult();
         assertEquals("RESEARCH", departmentName);
+    }
+
+    private boolean containsSuccessNoInfo(int[] batchResult) {
+        for (int i : batchResult) {
+            if (i == Statement.SUCCESS_NO_INFO) {
+                return true;
+            }
+        }
+        return false;
     }
 }
