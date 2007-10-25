@@ -9,27 +9,23 @@
 			<ul>
 				<li>
 					<p>
-						<a href="セットアップ">セットアップ</a>
+						<a href="#概要">概要</a>
 					</p>
-					<ul>
-						<li>
-							<p>
-								<a href="ダイアレクト">ダイアレクト</a>
-							</p>
-						</li>
-						<li>
-							<p>
-								<a href="Eclipseのフォーマッタ">
-									Eclipseのフォーマッタ
-								</a>
-							</p>
-						</li>
-					</ul>
+				</li>
+				<li>
+					<p>
+						<a href="#ダイアレクト">ダイアレクト</a>
+					</p>
+				</li>
+				<li>
+					<p>
+						<a href="#Eclipseのフォーマッタ">Eclipseのフォーマッタ</a>
+					</p>
 				</li>
 			</ul>
 		</section>
 
-		<section name="セットアップ">
+		<section name="概要">
 			<p>
 				Seasar2の基本的な
 				<a href="setup.html">セットアップ</a>
@@ -70,123 +66,123 @@
 				<a href="#クエリタイムアウト">クエリタイムアウト</a>
 				を参照してください。
 			</p>
+		</section>
 
-			<subsection name="ダイアレクト">
-				<p>ダイアレクトは次のものが用意されています。</p>
-				<table border="1">
-					<tbody>
-						<tr bgcolor="#D1F3F4" align="center">
-							<th width="200">名前</th>
-							<th width="200">説明</th>
-						</tr>
-						<tr>
-							<td>db2390Dialect</td>
-							<td>DB2/390</td>
-						</tr>
-						<tr>
-							<td>db2400Dialect</td>
-							<td>DB2/400</td>
-						</tr>
-						<tr>
-							<td>db2Dialect</td>
-							<td>DB2</td>
-						</tr>
-						<tr>
-							<td>derbyDialect</td>
-							<td>Derby</td>
-						</tr>
-						<tr>
-							<td>firebirdDialect</td>
-							<td>Firebird</td>
-						</tr>
-						<tr>
-							<td>h2Dialect</td>
-							<td>H2</td>
-						</tr>
-						<tr>
-							<td>hsqlDialect</td>
-							<td>HSQLDB</td>
-						</tr>
-						<tr>
-							<td>interbaseDialect</td>
-							<td>Interbase</td>
-						</tr>
-						<tr>
-							<td>maxdbDialect</td>
-							<td>MaxDB</td>
-						</tr>
-						<tr>
-							<td>mssql2005Dialect</td>
-							<td>MS SQLServer 2005</td>
-						</tr>
-						<tr>
-							<td>mssqlDialect</td>
-							<td>MS SQLServer</td>
-						</tr>
-						<tr>
-							<td>mysqlDialect</td>
-							<td>MySQL</td>
-						</tr>
-						<tr>
-							<td>oracleDialect</td>
-							<td>Oracle</td>
-						</tr>
-						<tr>
-							<td>postgreDialect</td>
-							<td>PostgreSQL</td>
-						</tr>
-						<tr>
-							<td>standardDialect</td>
-							<td>どれにも当てはまらないときに選ぶ標準的なダイアレクト</td>
-						</tr>
-						<tr>
-							<td>sybaseDialect</td>
-							<td>Sybase</td>
-						</tr>
-					</tbody>
-				</table>
-			</subsection>
+		<section name="ダイアレクト">
+			<p>ダイアレクトは次のものが用意されています。</p>
+			<table border="1">
+				<tbody>
+					<tr bgcolor="#D1F3F4" align="center">
+						<th width="200">名前</th>
+						<th width="200">説明</th>
+					</tr>
+					<tr>
+						<td>db2390Dialect</td>
+						<td>DB2/390</td>
+					</tr>
+					<tr>
+						<td>db2400Dialect</td>
+						<td>DB2/400</td>
+					</tr>
+					<tr>
+						<td>db2Dialect</td>
+						<td>DB2</td>
+					</tr>
+					<tr>
+						<td>derbyDialect</td>
+						<td>Derby</td>
+					</tr>
+					<tr>
+						<td>firebirdDialect</td>
+						<td>Firebird</td>
+					</tr>
+					<tr>
+						<td>h2Dialect</td>
+						<td>H2</td>
+					</tr>
+					<tr>
+						<td>hsqlDialect</td>
+						<td>HSQLDB</td>
+					</tr>
+					<tr>
+						<td>interbaseDialect</td>
+						<td>Interbase</td>
+					</tr>
+					<tr>
+						<td>maxdbDialect</td>
+						<td>MaxDB</td>
+					</tr>
+					<tr>
+						<td>mssql2005Dialect</td>
+						<td>MS SQLServer 2005</td>
+					</tr>
+					<tr>
+						<td>mssqlDialect</td>
+						<td>MS SQLServer</td>
+					</tr>
+					<tr>
+						<td>mysqlDialect</td>
+						<td>MySQL</td>
+					</tr>
+					<tr>
+						<td>oracleDialect</td>
+						<td>Oracle</td>
+					</tr>
+					<tr>
+						<td>postgreDialect</td>
+						<td>PostgreSQL</td>
+					</tr>
+					<tr>
+						<td>standardDialect</td>
+						<td>どれにも当てはまらないときに選ぶ標準的なダイアレクト</td>
+					</tr>
+					<tr>
+						<td>sybaseDialect</td>
+						<td>Sybase</td>
+					</tr>
+				</tbody>
+			</table>
+		</section>
 
-			<subsection name="Eclipseのフォーマッタ">
-				<p>
-					S2JDBCの「流れるようなインターフェース」を使ったソースの可読性はソースのフォーマットに影響されます。
-					Eclipseを使っている場合は、次のようにフォーマッタを設定すると読みやすくなります。
-				</p>
-				<ul>
-					<li>
-						<p>
-							ワークスペースの設定を変更するには[Window]-[Properties]でダイアログを開き、左のペインで[Java]-[Code
-							Style]-[Formatter]を選択し、右のペインで[Edit]ボタンを押します。
-						</p>
-					</li>
-					<li>
-						<p>
-							プロジェクトの設定を変更するには[Project]-[Properties]でダイアログを開き、左のペインで[Java
-							Code
-							Style]-[Formatter]を選択し、右のペインで[Edit]ボタンを押します。
-						</p>
-					</li>
-					<li>
-						<p>上のタブで[Line Wrapping]を選択します。</p>
-					</li>
-					<li>
-						<p>
-							左のペインのツリーで[Function Calls]を選択し、[Line
-							wrapping policy]で[Wrap all elements, every
-							element on a new line]を、[Indentation
-							policy]で[Indent by one]を選択します。
-						</p>
-					</li>
-					<li>
-						<p>
-							ツリーで[Expressions]を選択し、[Line wrapping
-							policy]で[Wrap all elements, every element on
-							a new line]を、[Indentation policy]で[Indent by
-							one]を選択します。
-						</p>
-					</li>
-				</ul>
-			</subsection>
+		<section name="Eclipseのフォーマッタ">
+			<p>
+				S2JDBCの「流れるようなインターフェース」を使ったソースの可読性はソースのフォーマットに影響されます。
+				Eclipseを使っている場合は、次のようにフォーマッタを設定すると読みやすくなります。
+			</p>
+			<ul>
+				<li>
+					<p>
+						ワークスペースの設定を変更するには[Window]-[Properties]でダイアログを開き、左のペインで[Java]-[Code
+						Style]-[Formatter]を選択し、右のペインで[Edit]ボタンを押します。
+					</p>
+				</li>
+				<li>
+					<p>
+						プロジェクトの設定を変更するには[Project]-[Properties]でダイアログを開き、左のペインで[Java
+						Code
+						Style]-[Formatter]を選択し、右のペインで[Edit]ボタンを押します。
+					</p>
+				</li>
+				<li>
+					<p>上のタブで[Line Wrapping]を選択します。</p>
+				</li>
+				<li>
+					<p>
+						左のペインのツリーで[Function Calls]を選択し、[Line wrapping
+						policy]で[Wrap all elements, every element on a
+						new line]を、[Indentation policy]で[Indent by
+						one]を選択します。
+					</p>
+				</li>
+				<li>
+					<p>
+						ツリーで[Expressions]を選択し、[Line wrapping
+						policy]で[Wrap all elements, every element on a
+						new line]を、[Indentation policy]で[Indent by
+						one]を選択します。
+					</p>
+				</li>
+			</ul>
 		</section>
 	</body>
 </document>

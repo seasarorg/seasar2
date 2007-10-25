@@ -15,72 +15,97 @@
 							<p>
 								<a href="s2jdbc_abstract.html#概要">概要</a>
 							</p>
-							<ul>
-								<li>
-									<p>
-										<a
-											href="s2jdbc_abstract.html#流れるようなインターフェースと脱CoC">
-											流れるようなインターフェースと脱CoC
-										</a>
-									</p>
-								</li>
-								<li>
-									<p>
-										<a
-											href="s2jdbc_abstract.html#90%のSQLを自動生成する">
-											90%のSQLを自動生成する
-										</a>
-									</p>
-								</li>
-								<li>
-									<p>
-										<a
-											href="s2jdbc_abstract.html#Javaのよさを生かす">
-											Javaのよさを生かす
-										</a>
-									</p>
-								</li>
-								<li>
-									<p>
-										<a
-											href="s2jdbc_abstract.html#SQLの扱いが簡単">
-											SQLの扱いが簡単
-										</a>
-									</p>
-								</li>
-								<li>
-									<p>
-										<a
-											href="s2jdbc_abstract.html#シンプルなプロパティ">
-											シンプルなプロパティ
-										</a>
-									</p>
-								</li>
-								<li>
-									<p>
-										<a
-											href="s2jdbc_abstract.html#学習コストが低い">
-											学習コストが低い
-										</a>
-									</p>
-								</li>
-								<li>
-									<p>
-										<a
-											href="s2jdbc_abstract.html#トラブリにくい">
-											トラブリにくい
-										</a>
-									</p>
-								</li>
-								<li>
-									<p>
-										<a
-											href="s2jdbc_abstract.html#より良いJPA">
-											より良いJPA
-										</a>
-									</p>
-								</li>
-							</ul>
+						</li>
+						<li>
+							<p>
+								<a
+									href="s2jdbc_abstract.html#流れるようなインターフェースと脱CoC">
+									流れるようなインターフェースと脱CoC
+								</a>
+							</p>
+						</li>
+						<li>
+							<p>
+								<a
+									href="s2jdbc_abstract.html#90%のSQLを自動生成する">
+									90%のSQLを自動生成する
+								</a>
+							</p>
+						</li>
+						<li>
+							<p>
+								<a
+									href="s2jdbc_abstract.html#Javaのよさを生かす">
+									Javaのよさを生かす
+								</a>
+							</p>
+						</li>
+						<li>
+							<p>
+								<a
+									href="s2jdbc_abstract.html#SQLの扱いが簡単">
+									SQLの扱いが簡単
+								</a>
+							</p>
+						</li>
+						<li>
+							<p>
+								<a
+									href="s2jdbc_abstract.html#シンプルなプロパティ">
+									シンプルなプロパティ
+								</a>
+							</p>
+						</li>
+						<li>
+							<p>
+								<a
+									href="s2jdbc_abstract.html#学習コストが低い">
+									学習コストが低い
+								</a>
+							</p>
+						</li>
+						<li>
+							<p>
+								<a
+									href="s2jdbc_abstract.html#トラブリにくい">
+									トラブリにくい
+								</a>
+							</p>
+						</li>
+						<li>
+							<p>
+								<a
+									href="s2jdbc_abstract.html#より良いJPA">
+									より良いJPA
+								</a>
+							</p>
+						</li>
+					</ul>
+				</li>
+				<li>
+					<p>
+						<a href="s2jdbc_setup.html">セットアップ</a>
+					</p>
+					<ul>
+						<li>
+							<p>
+								<a href="s2jdbc_setup.html#概要">概要</a>
+							</p>
+						</li>
+						<li>
+							<p>
+								<a href="s2jdbc_setup.html#ダイアレクト">
+									ダイアレクト
+								</a>
+							</p>
+						</li>
+						<li>
+							<p>
+								<a
+									href="s2jdbc_setup.html#Eclipseのフォーマッタ">
+									Eclipseのフォーマッタ
+								</a>
+							</p>
 						</li>
 					</ul>
 				</li>
@@ -435,19 +460,24 @@
 						</li>
 						<li>
 							<p>
-								<a href="s2jdbc_manager.html#SQLを使った検索">SQLを使った検索</a>
+								<a
+									href="s2jdbc_manager.html#SQLを使った検索">
+									SQLを使った検索
+								</a>
 							</p>
 							<ul>
 								<li>
 									<p>
-										<a href="s2jdbc_manager.html#SQLを使った複数件検索">
+										<a
+											href="s2jdbc_manager.html#SQLを使った複数件検索">
 											SQLを使った複数件検索
 										</a>
 									</p>
 								</li>
 								<li>
 									<p>
-										<a href="s2jdbc_manager.html#SQLを使った1件検索">
+										<a
+											href="s2jdbc_manager.html#SQLを使った1件検索">
 											SQLを使った1件検索
 										</a>
 									</p>
@@ -456,21 +486,24 @@
 						</li>
 						<li>
 							<p>
-								<a href="s2jdbc_manager.html#SQLを使った挿入・更新・削除">
+								<a
+									href="s2jdbc_manager.html#SQLを使った挿入・更新・削除">
 									SQLを使った挿入・更新・削除
 								</a>
 							</p>
 							<ul>
 								<li>
 									<p>
-										<a href="s2jdbc_manager.html#SQLを使った1件挿入・更新・削除">
+										<a
+											href="s2jdbc_manager.html#SQLを使った1件挿入・更新・削除">
 											SQLを使った1件挿入・更新・削除
 										</a>
 									</p>
 								</li>
 								<li>
 									<p>
-										<a href="s2jdbc_manager.html#SQLを使ったバッチ挿入・更新・削除">
+										<a
+											href="s2jdbc_manager.html#SQLを使ったバッチ挿入・更新・削除">
 											SQLを使ったバッチ挿入・更新・削除
 										</a>
 									</p>
@@ -479,7 +512,8 @@
 						</li>
 						<li>
 							<p>
-								<a href="s2jdbc_manager.html#SQLを使ったプロシージャ呼び出し">
+								<a
+									href="s2jdbc_manager.html#SQLを使ったプロシージャ呼び出し">
 									SQLを使ったプロシージャ呼び出し
 								</a>
 							</p>
