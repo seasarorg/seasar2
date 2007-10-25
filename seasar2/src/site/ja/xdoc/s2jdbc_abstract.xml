@@ -25,7 +25,7 @@
 				</li>
 				<li>
 					<p>
-						<a href="#Javaのよさを生かす">Javaのよさを生かす</a>
+						<a href="#Javaの良さを生かす">Javaの良さを生かす</a>
 					</p>
 				</li>
 				<li>
@@ -115,7 +115,7 @@ List<Employee> results = jdbcManager.from(Employee.class)
 		<section name="90%のSQLを自動生成する">
 			<p>
 				SQLは文字列で組み立てるため、書きづらく間違いやすいものです。
-				2JDBCは、「流れるようなインターフェース」により、SQLを自動生成します。
+				S2JDBCは、「流れるようなインターフェース」により、SQLを自動生成します。
 				先ほどの例をもう一度見てみましょう。
 			</p>
 			<source><![CDATA[
@@ -149,7 +149,7 @@ List<Employee> results = (List<Employee>) entityManager.createQuery(
 ]]></source>
 			<p>
 				JPQL(select ...
-				の文字列)の部分は、Seasar2のクエリとほぼ同じように見えますが、文字列で組み立てているので、書き間違える可能性が増えます。
+				の文字列)の部分は、S2JDBCのクエリとほぼ同じように見えますが、文字列で組み立てているので、書き間違える可能性が増えます。
 				文字列で組み立てるより、「流れるようなインターフェース」のほうが、間違いも減るし、IDEによる自動補完が効くのでより生産性があがるのです。
 			</p>
 			<p>
@@ -174,7 +174,7 @@ List<Employee> results = (List<Employee>) entityManager.createQuery(
 				ただ、残念なことにこれらのすばらしい機能をフルに活用したフレームワークは あまりないのが現状です。
 			</p>
 			<p>
-				Seasar2では、Javaのよさを生かし、生産性を向上させます。
+				S2JDBCでは、Javaのよさを生かし、生産性を向上させます。
 				例えば、先ほどのJPAの戻り値のキャストを見てみましょう。
 			</p>
 			<source><![CDATA[
@@ -182,21 +182,21 @@ List<Employee> results = (List<Employee>) entityManager.createQuery("select e fr
                             ...
                             .getResultList();
 ]]></source>
-			<p>Seasar2では、Genericsを使って、うざったいキャストを不要にしています。</p>
+			<p>S2JDBCでは、Genericsを使って、うざったいキャストを不要にしています。</p>
 			<source><![CDATA[
 List<Employee> results = jdbcManager.from(Employee.class)
                             ...
                             .getResultList();
 ]]></source>
 			<p>
-				JPAでは、文字列でEmployeeと指定していますが、Seasar2ではfrom()の引数でEmployee.classと
+				JPAでは、文字列でEmployeeと指定していますが、S2JDBCではfrom()の引数でEmployee.classと
 				クラスリテラルを渡しているので、Genericsを利用できます。
 			</p>
 			<p>
 				キャストの手間自体はたいしたことはないのですが、JPQLでEmployeeと指定しているのに、さらに(List&lt;Employee&gt;)とキャストしなければいけないという二度手間感が開発者のやる気を低下させてしまいます。
 			</p>
 			<p>
-				それに対し、Seasar2では、select文を書くような気持ちで、自然にメソッドを呼び出していけば、
+				それに対し、S2JDBCでは、select文を書くような気持ちで、自然にメソッドを呼び出していけば、
 				キャスト不要で欲しいデータを取り出すことができます。
 				リズムに乗って開発できるので、開発者の生産性はさらに向上します。
 				開発者のやる気が、生産性を向上させる最も重要なポイントなのです。
@@ -208,7 +208,7 @@ entityManager.createQuery("select ... where e.id in (?1, ?2) ...")
     .setParameter(2, 22)
     ...
 ]]></source>
-			<p>setParameter()の呼び出しがうざったい感じです。Seasar2の場合は次のようになります。</p>
+			<p>setParameter()の呼び出しがうざったい感じです。S2JDBCの場合は次のようになります。</p>
 			<source><![CDATA[
 jdbcManager.from(...
     .where("id in (? , ?)", 11, 22)
@@ -221,7 +221,7 @@ jdbcManager.from(...
 			<source><![CDATA[
 where("id in (? , ?, ?, ?)", 11, 22, 33, 44)
 ]]></source>
-			<p>Javaも良さを生かせば、さくさくソースを書けることがわかったいただけたでしょうか。</p>
+			<p>Javaも良さを生かせば、さくさくソースを書けることがわかっていただけたでしょうか。</p>
 		</section>
 
 		<section name="SQLの扱いが簡単">
@@ -237,9 +237,9 @@ List<Object[]> results = (List<Object[]>) entityManager.createNativeQuery("複�
 ]]></source>
 			<p>
 				1行に相当する部分がオブジェクトの配列で返ってくるなんてがっかりです。
-				Seasar2では、結果セットのカラム名とJavaBeansのプロパティ名を同じにしておけば、結果セットの1行をJavaBeansに自動的にマッピングします。
+				S2JDBCでは、結果セットのカラム名とJavaBeansのプロパティ名を同じにしておけば、結果セットの1行をJavaBeansに自動的にマッピングします。
 				また、aaa_bbbのような'_'を使ったカラム名をaaaBbbのようなキャメル記法のプロパティ名に自動的にマッピングします。
-				Seasar2を使った例は次のようになります。
+				S2JDBCを使った例は次のようになります。
 			</p>
 			<source><![CDATA[
 List<MyDto> results = jdbcManager.selectBySql(MyDto.class, "複雑なSQL")
@@ -261,7 +261,7 @@ List<MyDto> results = jdbcManager.selectBySql(MyDto.class, "複雑なSQL")
 			<p>
 				JPAで既存のSQLをそのまま生かそうとするとオブジェクトの配列が返ってきちゃうし、SQLをJPQLに変換するのは結構面倒な作業です。
 				どちらを選ぶにせよ、やるきがそがれるのは間違いないでしょう。
-				Seasar2を使えば、JavaBeansにスムーズにマッピングできるので、
+				S2JDBCを使えば、JavaBeansにスムーズにマッピングできるので、
 				快適に既存のSQLを再利用できます。
 			</p>
 		</section>
@@ -279,7 +279,7 @@ List<MyDto> results = jdbcManager.selectBySql(MyDto.class, "複雑なSQL")
 			</p>
 			<p>
 				エンティティはテーブルの鏡であるという位置づけにするなら、エンティティのプロパティをpublicフィールドにするのも別におかしなことではありません。
-				Seasar2では、エンティティはテーブルの鏡であるという立場をとることによって、エンティティのプロパティをpublicフィールドとして定義できるようにしています。
+				S2JDBCでは、エンティティはテーブルの鏡であるという立場をとることによって、エンティティのプロパティをpublicフィールドとして定義できるようにしています。
 				もちろん、publicフィールドに抵抗のある方は、これまでどおりに、getter,
 				setterメソッドを定義することもできます。それでは、getter,
 				setterメソッドのありなしを比べて見ましょう。
@@ -463,7 +463,7 @@ select e from Employee e left join fetch e.department
 			</p>
 			<p>
 				ここまで説明してきたようにJPAは、機能が豊富だけどトラブリやすいという問題があります。
-				Seasar2では、トラブリにくくするために、いたずらに機能を増やすのではなく、トラブリやすい機能は意図的に削っています。
+				S2JDBCでは、トラブリにくくするために、いたずらに機能を増やすのではなく、トラブリやすい機能は意図的に削っています。
 			</p>
 			<p>
 				例えば、関連のLoding問題についていえば、
@@ -486,11 +486,11 @@ jdbcManager.from(Employee.class).join("department")
 			<p>
 				これまで、JPAの問題点をいくつか指摘してきましたが、
 				JPAは標準であり、一方的に無視してよいものでもありません。
-				そこで、Seasar2では、エンティティとテーブルのマッピングの仕様は、JPAとあわせ、いまいちなEntityManagerやJPQLの部分は、独自仕様でいくことにしました。
+				そこで、S2JDBCでは、エンティティとテーブルのマッピングの仕様は、JPAとあわせ、いまいちなEntityManagerやJPQLの部分は、独自仕様でいくことにしました。
 			</p>
 			<p>
 				JPAを使ってパフォーマンスが出なかったり、
-				トラブルに巻き込まれて困っている方は、より良いJPAとしてSeasar2を使ってみてはいかがでしょうか。
+				トラブルに巻き込まれて困っている方は、より良いJPAとしてS2JDBCを使ってみてはいかがでしょうか。
 			</p>
 		</section>
 	</body>
