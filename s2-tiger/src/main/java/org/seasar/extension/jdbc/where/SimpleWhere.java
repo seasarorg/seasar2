@@ -16,11 +16,14 @@
 package org.seasar.extension.jdbc.where;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.seasar.extension.jdbc.ConditionType;
 import org.seasar.extension.jdbc.Where;
 import org.seasar.framework.util.StringUtil;
+import org.seasar.framework.util.tiger.CollectionsUtil;
 
 /**
  * 入力された項目をandでつなげていくような検索条件を組み立てるクラスです。
@@ -31,6 +34,9 @@ import org.seasar.framework.util.StringUtil;
 public class SimpleWhere implements Where {
 
     private StringBuilder criteriaSb = new StringBuilder(100);
+
+    private LinkedList<StringBuilder> criteriaList = CollectionsUtil
+            .newLinkedList(Arrays.asList(criteriaSb));
 
     private List<Object> paramList = new ArrayList<Object>();
 
@@ -106,6 +112,19 @@ public class SimpleWhere implements Where {
      */
     public SimpleWhere ignoreWhitespace() {
         ignoreWhitespace = true;
+        return this;
+    }
+
+    /**
+     * これまでに追加された条件とこれから追加される条件をORで結合します。
+     * 
+     * @return このインスタンス自身
+     */
+    public SimpleWhere or() {
+        if (criteriaSb.length() > 0) {
+            criteriaSb = new StringBuilder(100);
+            criteriaList.addLast(criteriaSb);
+        }
         return this;
     }
 
@@ -318,7 +337,26 @@ public class SimpleWhere implements Where {
     }
 
     public String getCriteria() {
-        return criteriaSb.toString();
+        if (criteriaSb.length() == 0) {
+            criteriaList.removeLast();
+        }
+        if (criteriaList.isEmpty()) {
+            return "";
+        }
+        if (criteriaList.size() == 1) {
+            return new String(criteriaList.getFirst());
+        }
+
+        int size = 0;
+        for (StringBuilder buf : criteriaList) {
+            size += buf.length();
+        }
+        StringBuilder buf = new StringBuilder(size + 50);
+        for (StringBuilder criteria : criteriaList) {
+            buf.append("(").append(criteria).append(") or ");
+        }
+        buf.setLength(buf.length() - 4);
+        return new String(buf);
     }
 
     public Object[] getParams() {

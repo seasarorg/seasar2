@@ -469,4 +469,47 @@ public class SimpleWhereTest extends TestCase {
         assertEquals("", w.getCriteria());
     }
 
+    /**
+     * 
+     */
+    public void testOr2() {
+        SimpleWhere w = new SimpleWhere();
+        w.eq("a", 1).eq("b", 2).or().eq("c", 3).eq("d", 4);
+        assertEquals("(a = ? and b = ?) or (c = ? and d = ?)", w.getCriteria());
+        assertEquals(4, w.getParams().length);
+    }
+
+    /**
+     * 
+     */
+    public void testOr3() {
+        SimpleWhere w = new SimpleWhere();
+        w.eq("a", 1).eq("b", 2).or().eq("c", 3).eq("d", 4).or().eq("e", 5).eq(
+                "f", 6);
+        assertEquals(
+                "(a = ? and b = ?) or (c = ? and d = ?) or (e = ? and f = ?)",
+                w.getCriteria());
+        assertEquals(6, w.getParams().length);
+    }
+
+    /**
+     * 
+     */
+    public void testOrEnds() {
+        SimpleWhere w = new SimpleWhere();
+        w.eq("a", 1).eq("b", 2).or().eq("c", 3).eq("d", 4).or();
+        assertEquals("(a = ? and b = ?) or (c = ? and d = ?)", w.getCriteria());
+        assertEquals(4, w.getParams().length);
+    }
+
+    /**
+     * 
+     */
+    public void testOrEmptyTerm() {
+        SimpleWhere w = new SimpleWhere();
+        w.eq("a", null).eq("b", null).or().eq("c", 3).eq("d", 4);
+        assertEquals("c = ? and d = ?", w.getCriteria());
+        assertEquals(2, w.getParams().length);
+    }
+
 }
