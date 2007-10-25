@@ -130,8 +130,17 @@ public enum ConditionType {
         @Override
         public boolean isTarget(Object value) {
             assertArrayInCondition("in", value);
-            return super.isTarget(value) && value.getClass().isArray()
-                    && Array.getLength(value) > 0;
+            if (!super.isTarget(value) || !value.getClass().isArray()
+                    || Array.getLength(value) == 0) {
+                return false;
+            }
+            Object[] values = Object[].class.cast(value);
+            for (Object element : values) {
+                if (super.isTarget(element)) {
+                    return true;
+                }
+            }
+            return false;
         }
 
         @Override
@@ -156,8 +165,17 @@ public enum ConditionType {
         @Override
         public boolean isTarget(Object value) {
             assertArrayInCondition("not in", value);
-            return super.isTarget(value) && value.getClass().isArray()
-                    && Array.getLength(value) > 0;
+            if (!super.isTarget(value) || !value.getClass().isArray()
+                    || Array.getLength(value) == 0) {
+                return false;
+            }
+            Object[] values = Object[].class.cast(value);
+            for (Object element : values) {
+                if (super.isTarget(element)) {
+                    return true;
+                }
+            }
+            return false;
         }
 
         @Override

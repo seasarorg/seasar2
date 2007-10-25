@@ -301,6 +301,8 @@ public class ConditionTypeTest extends TestCase {
         assertTrue(ConditionType.IN.isTarget(new Object[] { 1 }));
         assertFalse(ConditionType.IN.isTarget(null));
         assertFalse(ConditionType.IN.isTarget(new Object[0]));
+        assertFalse(ConditionType.IN.isTarget(new Object[] { null }));
+        assertFalse(ConditionType.IN.isTarget(new Object[] { null, null }));
     }
 
     /**
@@ -352,6 +354,8 @@ public class ConditionTypeTest extends TestCase {
         assertTrue(ConditionType.NOT_IN.isTarget(new Object[] { 1 }));
         assertFalse(ConditionType.NOT_IN.isTarget(null));
         assertFalse(ConditionType.NOT_IN.isTarget(new Object[0]));
+        assertFalse(ConditionType.NOT_IN.isTarget(new Object[] { null }));
+        assertFalse(ConditionType.NOT_IN.isTarget(new Object[] { null, null }));
     }
 
     /**

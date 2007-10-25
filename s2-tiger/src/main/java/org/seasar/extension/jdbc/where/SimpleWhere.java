@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.seasar.extension.jdbc.ConditionType;
 import org.seasar.extension.jdbc.Where;
+import org.seasar.framework.util.StringUtil;
 
 /**
  * 入力された項目をandでつなげていくような検索条件を組み立てるクラスです。
@@ -32,6 +33,8 @@ public class SimpleWhere implements Where {
     private StringBuilder criteriaSb = new StringBuilder(100);
 
     private List<Object> paramList = new ArrayList<Object>();
+
+    private boolean ignoreWhitespace;
 
     /**
      * {@link SimpleWhere}を作成します。
@@ -59,6 +62,54 @@ public class SimpleWhere implements Where {
     }
 
     /**
+     * {@link #ignoreWhitespace()}が呼び出された場合でパラメータ値が空文字列または空白のみの文字列なら<code>null</code>を、
+     * それ以外なら<code>value</code>をそのまま返します。
+     * 
+     * @param value
+     *            パラメータ値
+     * @return {@link #ignoreWhitespace()}が呼び出された場合でパラメータ値が空文字列または空白のみの文字列なら<code>null</code>、
+     *         それ以外なら<code>value</code>
+     */
+    protected Object normalize(Object value) {
+        if (ignoreWhitespace && value instanceof String) {
+            if (StringUtil.isEmpty(String.class.cast(value).trim())) {
+                return null;
+            }
+        }
+        return value;
+    }
+
+    /**
+     * {@link #ignoreWhitespace()}が呼び出された場合でパラメータ値が空文字列または空白のみの文字列なら<code>null</code>を、
+     * それ以外なら<code>value</code>をそのまま返します。
+     * 
+     * @param values
+     *            パラメータ値の配列
+     * @return {@link #ignoreWhitespace()}が呼び出された場合でパラメータ値が空文字列または空白のみの文字列なら<code>null</code>、
+     *         それ以外なら元の値からなる配列
+     */
+    protected Object[] normalize(Object... values) {
+        if (values == null) {
+            return null;
+        }
+        Object[] result = new Object[values.length];
+        for (int i = 0; i < values.length; ++i) {
+            result[i] = normalize(values[i]);
+        }
+        return result;
+    }
+
+    /**
+     * {@link #eq(String, Object)}等で渡されたパラメータ値が空文字列または空白のみの文字列なら<code>null</code>として扱い、条件に加えないことを指定します。
+     * 
+     * @return このインスタンス自身
+     */
+    public SimpleWhere ignoreWhitespace() {
+        ignoreWhitespace = true;
+        return this;
+    }
+
+    /**
      * <code>=</code>の条件を追加します。
      * 
      * @param propertyName
@@ -66,6 +117,7 @@ public class SimpleWhere implements Where {
      * @return このインスタンス自身
      */
     public SimpleWhere eq(String propertyName, Object value) {
+        value = normalize(value);
         if (ConditionType.EQ.isTarget(value)) {
             addCondition(ConditionType.EQ, propertyName, value);
         }
@@ -80,6 +132,7 @@ public class SimpleWhere implements Where {
      * @return このインスタンス自身
      */
     public SimpleWhere ne(String propertyName, Object value) {
+        value = normalize(value);
         if (ConditionType.NE.isTarget(value)) {
             addCondition(ConditionType.NE, propertyName, value);
         }
@@ -94,6 +147,7 @@ public class SimpleWhere implements Where {
      * @return このインスタンス自身
      */
     public SimpleWhere lt(String propertyName, Object value) {
+        value = normalize(value);
         if (ConditionType.LT.isTarget(value)) {
             addCondition(ConditionType.LT, propertyName, value);
         }
@@ -108,6 +162,7 @@ public class SimpleWhere implements Where {
      * @return このインスタンス自身
      */
     public SimpleWhere le(String propertyName, Object value) {
+        value = normalize(value);
         if (ConditionType.LE.isTarget(value)) {
             addCondition(ConditionType.LE, propertyName, value);
         }
@@ -122,6 +177,7 @@ public class SimpleWhere implements Where {
      * @return このインスタンス自身
      */
     public SimpleWhere gt(String propertyName, Object value) {
+        value = normalize(value);
         if (ConditionType.GT.isTarget(value)) {
             addCondition(ConditionType.GT, propertyName, value);
         }
@@ -136,6 +192,7 @@ public class SimpleWhere implements Where {
      * @return このインスタンス自身
      */
     public SimpleWhere ge(String propertyName, Object value) {
+        value = normalize(value);
         if (ConditionType.GE.isTarget(value)) {
             addCondition(ConditionType.GE, propertyName, value);
         }
@@ -150,6 +207,7 @@ public class SimpleWhere implements Where {
      * @return このインスタンス自身
      */
     public SimpleWhere in(String propertyName, Object... values) {
+        values = normalize(values);
         if (ConditionType.IN.isTarget(values)) {
             addCondition(ConditionType.IN, propertyName, values);
         }
@@ -164,6 +222,7 @@ public class SimpleWhere implements Where {
      * @return このインスタンス自身
      */
     public SimpleWhere notIn(String propertyName, Object... values) {
+        values = normalize(values);
         if (ConditionType.NOT_IN.isTarget(values)) {
             addCondition(ConditionType.NOT_IN, propertyName, values);
         }
@@ -178,8 +237,9 @@ public class SimpleWhere implements Where {
      * @return このインスタンス自身
      */
     public SimpleWhere like(String propertyName, String value) {
-        if (ConditionType.LIKE.isTarget(value)) {
-            addCondition(ConditionType.LIKE, propertyName, value);
+        Object normalizedValue = normalize(value);
+        if (ConditionType.LIKE.isTarget(normalizedValue)) {
+            addCondition(ConditionType.LIKE, propertyName, normalizedValue);
         }
         return this;
     }
@@ -192,8 +252,9 @@ public class SimpleWhere implements Where {
      * @return このインスタンス自身
      */
     public SimpleWhere starts(String propertyName, String value) {
-        if (ConditionType.STARTS.isTarget(value)) {
-            addCondition(ConditionType.STARTS, propertyName, value);
+        Object normalizedValue = normalize(value);
+        if (ConditionType.STARTS.isTarget(normalizedValue)) {
+            addCondition(ConditionType.STARTS, propertyName, normalizedValue);
         }
         return this;
     }
@@ -206,8 +267,9 @@ public class SimpleWhere implements Where {
      * @return このインスタンス自身
      */
     public SimpleWhere ends(String propertyName, String value) {
-        if (ConditionType.ENDS.isTarget(value)) {
-            addCondition(ConditionType.ENDS, propertyName, value);
+        Object normalizedValue = normalize(value);
+        if (ConditionType.ENDS.isTarget(normalizedValue)) {
+            addCondition(ConditionType.ENDS, propertyName, normalizedValue);
         }
         return this;
     }
@@ -220,8 +282,9 @@ public class SimpleWhere implements Where {
      * @return このインスタンス自身
      */
     public SimpleWhere contains(String propertyName, String value) {
-        if (ConditionType.CONTAINS.isTarget(value)) {
-            addCondition(ConditionType.CONTAINS, propertyName, value);
+        Object normalizedValue = normalize(value);
+        if (ConditionType.CONTAINS.isTarget(normalizedValue)) {
+            addCondition(ConditionType.CONTAINS, propertyName, normalizedValue);
         }
         return this;
     }
