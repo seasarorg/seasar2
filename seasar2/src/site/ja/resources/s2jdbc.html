@@ -103,6 +103,7 @@
 <li><a href="#updateBySql">SQLを使った更新</a></li>
 <li><a href="#updateBatchBySql">SQLを使ったバッチ更新</a></li>
 <li><a href="#callBySql">SQLを使ったプロシージャ呼び出し</a></li>
+<li><a href="#SqlFile">S2Dao譲りのSQLファイル</a></li>
 </ul>
 <li><a href="#other">その他の機能</a>
 <ul>
@@ -1039,6 +1040,25 @@ MyDto dto = new MyDto();
 dto.arg1_IN = 1;
 jdbcManager.callBySql("{? = call myproc(?)}", dto).call();
 System.out.println(dto.result_OUT);
+</pre>
+
+<h3><a name="SqlFile">S2Dao譲りのSQLファイル</a></h3>
+<p>
+S2Dao譲りのSQLファイルを使うこともできます。
+SQLファイルとは、SQLをソースコードに記述するのではなく、
+ファイルに記述したものです。
+単純なSQLだとソースコードに直接記述したほうが、
+めんどくさくなくて楽(わざわざファイルを作る必要がない)ですが、
+複雑なSQLは、ファイルに記述したほうが、メンテナンス性が高いでしょう。
+</p>
+<p>
+SQLファイルは、クラスパス上にあるならどこにおいてもかまいませんが、。
+</p>
+<pre>
+int count = jdbcManager.updateBySql(
+    "update employee set salary = ? where id = ?", BigDecimal.class, Integer.class)
+    .params(null, 1)
+    .execute();
 </pre>
 
 <h2><a name="other">その他の機能</a></h2>

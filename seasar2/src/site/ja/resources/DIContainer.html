@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja" lang="ja">
 <!-- don't edit start -->
 <head>
-<title>Seasar - DI Container with AOP -</title>
+<title>S2Container</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Style-Type" content="text/css" />
 <link href="seasar_b.css" type="text/css" rel="stylesheet" media="screen" />
@@ -86,6 +86,7 @@
 <ul>
 <li><a href="#SMARTdeployS2ContainerDicon">SMART deployの切り替え</a></li>
 <li><a href="#SMARTdeployPackage">SMART deployのパッケージ構成</a></li>
+<li><a href="#SMARTdeployComponentName">コンポーネント名</a></li>
 <li><a href="#Creator">クリエータ</a></li>
 <li><a href="#Customizer">カスタマイザ</a></li>
 <li><a href="#CustomizerConfigExample">カスタマイザ設定例</a></li>
@@ -1276,7 +1277,7 @@ utのときにはWARM deploy、ctのときはHOT deploy、それ以外はCOOL de
 </dl>
 <p>examples.aaaを<a name="rootPackage">ルートパッケージ</a>と呼びます。
 ルートパッケージの配下に役割に応じてパッケージを配置します。</p>
-<p>examples.aaa.web.xxx、examples.aaa.web.yyyを<a name="subApplicationPackage">サブアプリケーションパッケージ</a>と呼びます。
+<p>examples.aaa.web.xxx、examples.aaa.web.yyyを<a name="subApplicationPackage"><b>サブアプリケーションパッケージ</b></a>と呼びます。
 xxx、yyyがサブアプリケーション名になります。
 サブアプリケーションはユースケースと置き換えても良いでしょう。
 複数の関連のある画面を1つにまとめたものがサブアプリケーションです。
@@ -1293,9 +1294,9 @@ HTMLと一対一に結びつくPageクラスやPageクラスとDTOの変換を�
 <p>examples.aaa.serviceを<a name="servicePackage">サービスパッケージ</a>と呼びます。
 このパッケージには、複数のサブアプリケーションから共通に使われるユースケースを実装するServiceクラスを格納します。</p>
 <p>examples.aaa.utilを<a name="utilPackage">ユーティリティパッケージ</a>と呼びます。
-このパッケージには、Utilityクラスを格納します。</p>
+このパッケージには、<code>static</code>なメソッドで構成されるユーティリティクラスを格納します。</p>
 <p>examples.aaa.helperを<a name="helperPackage">ヘルパパッケージ</a>と呼びます。
-このパッケージにも、Utilityクラスを格納します。
+このパッケージにも、ユーティリティクラスを格納します。
 ユーティリティパッケージとの違いは、DIやパラメータが必要なクラスを格納することです。</p>
 <p>examples.aaa.interceptorを<a name="interceptorPackage">インタセプタパッケージ</a>を呼びます。
 このパッケージには、AOPのモジュールを格納します。</p>
@@ -1303,10 +1304,34 @@ HTMLと一対一に結びつくPageクラスやPageクラスとDTOの変換を�
 このパッケージには、データ変換を行なうモジュールを格納します。</p>
 <p>examples.aaa.validatorを<a name="validatorPackage">バリデータパッケージ</a>を呼びます。
 このパッケージには、値の検証用のモジュールを格納します。</p>
-<p>entity、daoなどのルートパッケージ直下のパッケージを共通パッケージと呼びます。
-複数のサブアプリケーションから共通に使われるクラスを格納します。
+<p>entity、serviceなどのルートパッケージ直下のパッケージを<a name="commonPackage"><b>共通パッケージ</b></a>と呼びます。
+共通パッケージには、複数のサブアプリケーションから共通に使われるクラスを格納します。
 DTOクラスなどで特定のサブアプリケーションでしか使わない場合は、
 Dtoパッケージではなく、サブアプリケーションパッケージに格納してください。</p>
+
+<h4><a name="SMARTdeployComponentName">コンポーネント名</a></h4>
+<p>
+クラス名の先頭を小文字にしたものが基本的なコンポーネント名になります。<br />
+ただし、<span style="background-color:red">XXaaaPageのように2つ以上大文字が続いている場合は、
+大文字のままです。これはJavaBeansの仕様です。</span></p>
+<p>
+<a href="#subApplicationPackage">サブアプリケーションパッケージ</a>に格納されるコンポーネントは、
+"サブアプリケーション名_"がプレフィックスにつきます。<br />
+<span style="background-color:red">アンダースコア(_)をプレフィックスの区切りに使っているので、
+サブアプリケーション名やコンポーネント名にアンダースコア(_)は使えません。
+これは、Seasar2の制限です。</span>
+</p>
+<p>
+<a href="#subApplicationPackage">サブアプリケーションパッケージ</a>、
+<a href="#commonPackage">共通パッケージ</a>は、
+さらにサブパッケージで区切ることもできます。
+サブパッケージを使った場合は、"サブパッケージ名_"をプレフィックスに追加します。
+サブパッケージはいくらでもネストすることができます<br />
+例えば、<code>examples.aaa.web.bbb.ccc.DddPage</code>のコンポーネント名は、
+<code>bbb_ccc_dddPage</code>になります。<br />
+<code>examples.aaa.service.bbb.CccService</code>のコンポーネント名は、
+<code>bbb_cccService</code>になります。
+</p>
 
 <h4><a name="Creator">クリエータ</a></h4>
 <p>
@@ -1351,16 +1376,6 @@ hogeDaoの場合、サフィックスはDaoになります。
 daoの場合は、ルートパッケージ.daoになります。
 コンポーネント名の先頭を大文字にしてパッケージ名とつなぎ合わせてクラス名を求めます。
 今回の場合は、ルートパッケージ.dao.HogeDaoになります。</p>
-<p>
-サブアプリケーションパッケージにあるコンポーネントは、
-サブアプリケーション_がコンポーネント名のプレフィックスにつきます。
-例えば、ルートパッケージ.web.emp.EmpListPageクラスのコンポーネント名は、
-emp_empListPageになります。
-クラス名の最初はempListPageのように小文字になりますが、
-XXaaaPageのように2つ以上大文字が続いている場合は、
-大文字のままです。これはJavaBeansの仕様です。
-</p>
-<br />
 
 <h4><a name="Customizer">カスタマイザ</a></h4>
 <p>
