@@ -518,6 +518,64 @@
 								</a>
 							</p>
 						</li>
+						<li>
+							<p>
+								<a
+									href="s2jdbc_manager.html#S2Dao譲りのSQLファイル">
+									S2Dao譲りのSQLファイル
+								</a>
+							</p>
+							<ul>
+								<li>
+									<p>
+										<a
+											href="s2jdbc_manager.html#SQLファイルのパス">
+											SQLファイルのパス
+										</a>
+									</p>
+								</li>
+								<li>
+									<p>
+										<a
+											href="s2jdbc_manager.html#SQLファイルを使った複数件検索">
+											SQLファイルを使った複数件検索
+										</a>
+									</p>
+								</li>
+								<li>
+									<p>
+										<a
+											href="s2jdbc_manager.html#SQLファイルを使った1件検索">
+											SQLファイルを使った1件検索
+										</a>
+									</p>
+								</li>
+								<li>
+									<p>
+										<a
+											href="s2jdbc_manager.html#SQLファイルを使った更新">
+											SQLファイルを使った更新
+										</a>
+									</p>
+								</li>
+								<li>
+									<p>
+										<a
+											href="s2jdbc_manager.html#SQLファイルを使ったバッチ更新">
+											SQLファイルを使ったバッチ更新
+										</a>
+									</p>
+								</li>
+								<li>
+									<p>
+										<a
+											href="s2jdbc_manager.html#SQLファイルを使ったプロシージャ呼び出し">
+											SQLファイルを使ったプロシージャ呼び出し
+										</a>
+									</p>
+								</li>
+							</ul>
+						</li>
 					</ul>
 				</li>
 				<li>

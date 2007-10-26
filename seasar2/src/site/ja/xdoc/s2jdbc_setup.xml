@@ -69,76 +69,99 @@
 		</section>
 
 		<section name="ダイアレクト">
-			<p>ダイアレクトは次のものが用意されています。</p>
+			<p>
+				ダイアレクトは次のものが用意されています。サフィックスは、
+				<a href="s2jdbc_manager.html#SQLファイルのパス">SQLファイルのパス</a>
+				を決めるところで使われます
+			</p>
 			<table border="1">
 				<tbody>
 					<tr>
 						<th width="200">名前</th>
 						<th width="200">説明</th>
+						<th width="100">サフィックス</th>
 					</tr>
 					<tr>
 						<td>db2390Dialect</td>
 						<td>DB2/390</td>
+						<td>_db2</td>
 					</tr>
 					<tr>
 						<td>db2400Dialect</td>
 						<td>DB2/400</td>
+						<td>_db2</td>
 					</tr>
 					<tr>
 						<td>db2Dialect</td>
 						<td>DB2</td>
+						<td>_db2</td>
 					</tr>
 					<tr>
 						<td>derbyDialect</td>
 						<td>Derby</td>
+						<td>_derby</td>
 					</tr>
 					<tr>
 						<td>firebirdDialect</td>
 						<td>Firebird</td>
+						<td>_firebird</td>
 					</tr>
 					<tr>
 						<td>h2Dialect</td>
 						<td>H2</td>
+						<td>_h2</td>
 					</tr>
 					<tr>
 						<td>hsqlDialect</td>
 						<td>HSQLDB</td>
+						<td>_hsql</td>
 					</tr>
 					<tr>
 						<td>interbaseDialect</td>
 						<td>Interbase</td>
+						<td>_interbase</td>
 					</tr>
 					<tr>
 						<td>maxdbDialect</td>
 						<td>MaxDB</td>
+						<td>_maxdb</td>
 					</tr>
 					<tr>
 						<td>mssql2005Dialect</td>
 						<td>MS SQLServer 2005</td>
+						<td>_mssql</td>
 					</tr>
 					<tr>
 						<td>mssqlDialect</td>
 						<td>MS SQLServer</td>
+						<td>_mssql</td>
 					</tr>
 					<tr>
 						<td>mysqlDialect</td>
 						<td>MySQL</td>
+						<td>_mysql</td>
 					</tr>
 					<tr>
 						<td>oracleDialect</td>
 						<td>Oracle</td>
+						<td>_oracle</td>
 					</tr>
 					<tr>
 						<td>postgreDialect</td>
 						<td>PostgreSQL</td>
+						<td>_postgre</td>
 					</tr>
 					<tr>
 						<td>standardDialect</td>
 						<td>どれにも当てはまらないときに選ぶ標準的なダイアレクト</td>
+						<td>
+							<br />
+						</td>
 					</tr>
 					<tr>
 						<td>sybaseDialect</td>
 						<td>Sybase</td>
+						<td>_sybase</td>
 					</tr>
 				</tbody>
 			</table>

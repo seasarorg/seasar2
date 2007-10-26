@@ -223,13 +223,62 @@
 						</a>
 					</p>
 				</li>
+				<li>
+					<p>
+						<a href="#S2Dao譲りのSQLファイル">S2Dao譲りのSQLファイル</a>
+					</p>
+					<ul>
+						<li>
+							<p>
+								<a href="#SQLファイルのパス">
+									SQLファイルのパス
+								</a>
+							</p>
+						</li>
+						<li>
+							<p>
+								<a href="#SQLファイルを使った複数件検索">
+									SQLファイルを使った複数件検索
+								</a>
+							</p>
+						</li>
+						<li>
+							<p>
+								<a href="#SQLファイルを使った1件検索">
+									SQLファイルを使った1件検索
+								</a>
+							</p>
+						</li>
+						<li>
+							<p>
+								<a href="#SQLファイルを使った更新">
+									SQLファイルを使った更新
+								</a>
+							</p>
+						</li>
+						<li>
+							<p>
+								<a href="#SQLファイルを使ったバッチ更新">
+									SQLファイルを使ったバッチ更新
+								</a>
+							</p>
+						</li>
+						<li>
+							<p>
+								<a href="#SQLファイルを使ったプロシージャ呼び出し">
+									SQLファイルを使ったプロシージャ呼び出し
+								</a>
+							</p>
+						</li>
+					</ul>
+				</li>
 			</ul>
 		</section>
 
 		<section name="概要">
 			<p>
 				JdbcManagerは、データベースにアクセスするために使われるAPIです。 設定ファイルを
-				<a href="#setup">セットアップ</a>
+				<a href="s2jdbc_setup.html">セットアップ</a>
 				して、 利用したいクラスで次のようにプロパティを定義しておけば、
 				Seasar2によってJdbcManagerは自動的に設定されます。
 			</p>
@@ -383,9 +432,12 @@ public String[] jobTypes = new String[0];
 public BigDecimal salaryMax;
 public BigDecimal salaryMin;
 ...
-jdbcManager.from(Employee.class).where(
-    new SimpleWhere().eq("department.name", departmentName).in("jobType", jobTypes)
-        .ge("salary", salaryMin).le("salary", salaryMax))
+jdbcManager.from(Employee.class)
+    .where(new SimpleWhere()
+        .eq("department.name", departmentName)
+        .in("jobType", jobTypes)
+        .ge("salary", salaryMin)
+        .le("salary", salaryMax))
     .getResultList();
 ]]></source>
 				<p>SimpleWhereには次のメソッドがあります。</p>
@@ -540,8 +592,35 @@ jdbcManager.from(Employee.class).where(
 								valueがnullあるいはBoolean.FALSEの時は追加されません。
 							</td>
 						</tr>
+						<!--
+							<tr>
+							<td>or()</td>
+							<td>
+							これまでに追加された条件とこれから追加される条件をORで結合します。 次に
+							or() が呼び出されるまでの条件は AND で結合されます。
+							</td>
+							</tr>
+							<tr>
+							<td>ignoreWhitespace()</td>
+							<td>
+							上記のメソッドに渡されたパラメータ値がnullの場合に加え、
+							空文字列や空白だけの文字列の場合も条件に追加しないことを指定します。
+							このメソッドが呼び出された後に追加される条件にのみ適用されます。
+							</td>
+							</tr>
+						-->
 					</tbody>
 				</table>
+				<!--
+					<p>ORを使うには次のようにします。</p>
+					<source><![CDATA[
+					jdbcManager.from(Employee.class)
+					.where(new SimpleWhere()
+					.le("salary", salaryMin).or().ge("salary", salaryMax)
+					.or().
+					.getResultList();
+					]]></source>
+				-->
 				<p>Mapを使うと次のようになります。</p>
 				<source><![CDATA[
 public String departmentName;
@@ -703,8 +782,13 @@ public String[] where_jobType_IN = new String[0];
 public BigDecimal where_salary_LE;
 public BigDecimal where_salary_GE;
 ...
-jdbcManager.from(Employee.class).where(BeanUtil.createProperties(this, "where_")).getResultList();
+jdbcManager.from(Employee.class)
+    .where(BeanUtil.createProperties(this, "where_"))
+    .getResultList();
 ]]></source>
+				<!--
+					<p>マップを使った場合にはORはサポートされていません。</p>
+				-->
 			</subsection>
 
 			<subsection name="ソート順">
@@ -735,7 +819,7 @@ jdbcManager.from(Employee.class)
 					<code>offset()</code>
 					には、最初に取得する行の位置を指定します。 最初の行の位置は0になります。
 					ページングを指定するには、必ず
-					<a href="#orderBy">ソート順</a>
+					<a href="#ソート順">ソート順</a>
 					の指定も必要です。
 				</p>
 				<source><![CDATA[
@@ -1122,24 +1206,32 @@ jdbcManager.callBySql("{call myproc(?)}", "hoge").call();
 				<br />
 				<ul>
 					<li>
-						フィールド名が_OUTで終わっている場合
-						<code>OUT</code>
-						パラメータになります。
+						<p>
+							フィールド名が_OUTで終わっている場合
+							<code>OUT</code>
+							パラメータになります。
+						</p>
 					</li>
 					<li>
-						フィールド名が_IN_OUTで終わっている場合
-						<code>IN OUT</code>
-						パラメータになります。
+						<p>
+							フィールド名が_IN_OUTで終わっている場合
+							<code>IN OUT</code>
+							パラメータになります。
+						</p>
 					</li>
 					<li>
-						フィールド名が_INで終わっている場合
-						<code>IN</code>
-						パラメータになります。
+						<p>
+							フィールド名が_INで終わっている場合
+							<code>IN</code>
+							パラメータになります。
+						</p>
 					</li>
 					<li>
-						フィールド名が_OUT、_IN_OUT、_INで終わっていない場合は、
-						<code>IN</code>
-						パラメータになります。
+						<p>
+							フィールド名が_OUT、_IN_OUT、_INで終わっていない場合は、
+							<code>IN</code>
+							パラメータになります。
+						</p>
 					</li>
 				</ul>
 			</p>
@@ -1162,8 +1254,8 @@ System.out.println(dto.result_OUT);
 System.out.println(dto.arg1_IN_OUT);
 ]]></source>
 			<p>
-				プロシージャが結果セットを返す場合は、対応するフィールドの型をList
-				&lt;結果セットに対応する型&gt;にします。
+				プロシージャが結果セットを返す場合は、
+				対応するフィールドの型をList&lt;結果セットに対応する型&gt;にします。
 			</p>
 			<source><![CDATA[
 public class MyDto {
@@ -1181,5 +1273,498 @@ System.out.println(dto.result_OUT);
 ]]></source>
 		</section>
 
+		<section name="S2Dao譲りのSQLファイル">
+			<p>S2Dao譲りのSQLファイルを使うこともできます。</p>
+			<p>
+				SQLファイルとは、SQLをソースコードに記述するのではなく、 ファイルに記述したものです。
+				単純なSQLだとソースコードに直接記述したほうが、
+				めんどくさくなくて楽(わざわざファイルを作る必要がない)ですが、
+				複雑なSQLは、ファイルに記述したほうが、メンテナンス性が高いでしょう。
+			</p>
+			<p>
+				SQLファイルは、クラスパス上にあるならどこにおいてもかまいませんが、
+				<code>ルートパッケージ.entity.エンティティ名</code>
+				のパッケージ配下に置くことを推奨します。 例えば、
+				<code>Employee</code>
+				エンティティに関するSQLは、
+				<code>examples.entity.Employee</code>
+				パッケージにおくと良いでしょう。
+			</p>
+			<p>
+				複数のテーブルを結合するような場合は、 一番主軸となっているテーブルのエンティティを選びます。
+				プロシージャの場合も同様です。
+			</p>
+			<p>何のパラメータもない単純なSQLファイルは次のようになります。</p>
+			<source><![CDATA[
+select * from employee
+where
+salary >= 1000
+and salary <= 2000
+]]></source>
+			<p>
+				1000の部分を
+				<code>salaryMin</code>
+				というパラメータで置き換えるには、
+				次のように置き換えたいリテラルの左にSQLコメントでパラメータ名を埋め込みます。
+				リテラルを文字列として直接置き換えるのではなく、
+				<code>PreparedStatment</code>
+				を使ったバインド変数に置き換えるので、SQLインジェクション対策も問題ありません。
+			</p>
+			<source><![CDATA[
+select * from employee
+where
+salary >= /*salaryMin*/1000
+and salary <= 2000
+]]></source>
+			<p>
+				<code>in</code>
+				を置き換える場合は次のようにします。 ()で囲まれている部分を置き換えます。
+				idのパラメータの型は、配列かリストになります。
+			</p>
+			<source><![CDATA[
+select * from employee
+where
+id in /*id*/(1, 2)
+]]></source>
+			<p>
+				同様に2000の部分も
+				<code>salaryMax</code>
+				というパラメータで置き換えます。
+			</p>
+			<source><![CDATA[
+select * from employee
+where
+salary >= /*salaryMin*/1000
+and salary <= /*salaryMax*/2000
+]]></source>
+			<p>
+				検索条件の入力画面などで、何か条件が入力されていれば、
+				検索条件に追加し、入力されていなければ条件には追加しないということを実装してみましょう。
+				このような場合は、IFコメントとENDコメントを組み合わせます。
+			</p>
+			<source><![CDATA[
+select * from employee
+where
+/*IF salaryMin != null*/
+salary >= /*salaryMin*/1000
+/*END*/
+/*IF salaryMax != null*/
+and salary <= /*salaryMax*/2000
+/*END*/
+]]></source>
+			<p>
+				IFコメントの内容が
+				<code>true</code>
+				なら、 IFコメントとENDコメントで囲んでいる内容が出力されます。
+				IFコメントの条件は、OGNLによって評価されます。 詳しくは、
+				<a href="ognl.html">OGNLガイド</a>
+				を参照してください。
+			</p>
+			<p>
+				上記のように記述すると、salaryMinがnullでsalaryMaxがnullではないときは、
+				次のような不正(andがwhereの直後にある)なSQLになります。
+			</p>
+			<source><![CDATA[
+select * from employee
+where
+and salary <= ?
+]]></source>
+			<p>
+				また、salaryMinもsalaryMaxもnullの場合も、
+				次のような不正(whereだけがある)なSQLになります。
+			</p>
+			<source><![CDATA[
+select * from employee
+where
+]]></source>
+			<p>
+				こういう問題に対応するためには、where句の部分を次のように、 BEGINコメントとENDコメントで囲みます。
+			</p>
+			<source><![CDATA[
+select * from employee
+/*BEGIN*/
+where
+/*IF salaryMin != null*/
+salary >= /*salaryMin*/1000
+/*END*/
+/*IF salaryMax != null*/
+and salary <= /*salaryMax*/2000
+/*END*/
+/*END*/
+]]></source>
+			<p>
+				このようにすると、salaryMinがnullでsalaryMaxがnullではないときは、
+				salaryMaxの条件は、BEGINコメントとENDコメントで囲まれた最初の条件なので、
+				<code>and</code>
+				の部分が自動的に削除されて次のようになります。
+			</p>
+			<source><![CDATA[
+select * from employee
+where
+salary <= ?
+]]></source>
+			<p>
+				また、salaryMinもsalaryMaxもnullの場合は、
+				BEGINコメントとENDコメントで囲まれた部分で1つも条件に一致するものがないので、
+				BEGINコメントとENDコメントで囲まれた部分がカットされて次のようになります。
+			</p>
+			<source><![CDATA[
+select * from employee
+]]></source>
+			<p>
+				バインド変数ではなく、SQLに直接リテラルを埋め込むには、 埋め込み変数コメントを使います。
+				<br />
+				埋め込み変数コメントは、/*$パラメータ名*/のように指定します。
+				直接リテラルを埋め込むとSQLインジェクションの危険がありますが、
+				埋め込み変数の値に、セミコロン(;)が入っていると例外にしているので、 問題はありません。
+			</p>
+			<p>ELSEコメントは、IFコメントとENDコメントの間に行コメントとして埋め込みます。</p>
+			<source><![CDATA[
+/*IF jobType != null*/
+jobType = /*jobType*/'CLERK'
+-- ELSE jobType is null
+/*END*/
+]]></source>
+
+			<subsection name="SQLファイルのパス">
+				<p>
+					SQLファイルのパスは、
+					<code>examples.entity.Employee.selectAll</code>
+					のように指定します。 このパスに対するデフォルトの物理的なファイルは、
+					<code>examples/entity/Employee/selectAll.sql</code>
+					になります。 ただし、
+					<a href="s2jdbc_setup.html#ダイアレクト">ダイアレクト</a>
+					のサフィックスに対応するファイルがあれば、 そちらが優先されます。
+				</p>
+				<p>
+					例えば、オラクルを使っている場合、
+					<code>
+						examples/entity/Employee/selectAll_oracle.sql
+					</code>
+					があれば、デフォルトより優先されます。
+				</p>
+			</subsection>
+
+			<subsection name="SQLファイルを使った複数件検索">
+				<p>
+					SQLファイルを使って複数件検索をする場合は、
+					<code>selectBySqlFile()</code>
+					と
+					<code>getResultList()</code>
+					を組み合わせます。
+					<code>selectBySqlFile()</code>
+					の2番目の引数は、
+					<a href="#SQLファイルのパス">SQLファイルのパス</a>
+					です。
+				</p>
+				<p>SQLファイルにパラメータがない場合は、次のようにして呼び出します。</p>
+				<source><![CDATA[
+List<EmployeeDto> results = jdbcManager.selectBySqlFile(
+    EmployeeDto.class, "examples.entity.Employee.selectAll")
+    .getResultList();
+]]></source>
+				<p>
+					SQLファイルのパラメータが1つの場合は、
+					<code>selectBySqlFile()</code>
+					の3番目の引数で値を直接指定します。
+				</p>
+				<source><![CDATA[
+List<EmployeeDto> results = jdbcManager.selectBySqlFile(
+    EmployeeDto.class, "examples.entity.Employee.selectAll", 10)
+    .getResultList();
+]]></source>
+				<p>
+					SQLファイルのパラメータが複数の場合は、
+					<code>selectBySqlFile()</code>
+					の3番目の引数をJavaBeansにして、
+					パラメータの名前とJavaBeansのプロパティ名を一致させます。
+				</p>
+				<source><![CDATA[
+package examples.entity.Employee;
+
+public class SelectAllParam {
+    public BigDecimal salaryMin;
+    public BigDecimal salaryMax;
+}
+]]></source>
+				<source><![CDATA[
+select * from employee where
+salary <= /*salaryMin*/1000
+and salary >= /*salaryMax*/2000
+]]></source>
+				<source><![CDATA[
+SelectAllParam param = new SelectAllParam();
+param.salaryMin = new BigDecimal(1200);
+param.salaryMax = new BigDecimal(1800);
+List<EmployeeDto> results = jdbcManager.selectBySqlFile(
+    EmployeeDto.class, "examples.entity.Employee.selectAll", param)
+    .getResultList();
+]]></source>
+				<p>
+					パラメータ用のJavaBeansにlimit、offsetという名前のプロパティがあれば、
+					ページングが行なわれます。
+				</p>
+				<div
+					style="background-color: red; font-weight: bold; font-size: larger;">
+					<p>
+						limit,
+						offsetはパラメータ用のJavaBeansのプロパティの予約語なので注意してください。
+					</p>
+				</div>
+			</subsection>
+
+			<subsection name="SQLファイルを使った1件検索">
+				<p>
+					SQLファイルを使って1件検索をする場合は、
+					<code>selectBySqlFile()</code>
+					と
+					<code>getSingleResult()</code>
+					を組み合わせます。
+					<code>selectBySqlFile()</code>
+					の2番目の引数は、
+					<a href="#SQLファイルのパス">SQLファイルのパス</a>
+					です。
+				</p>
+				<p>SQLファイルにパラメータがない場合は、次のようにして呼び出します。</p>
+				<source><![CDATA[
+EmployeeDto result = jdbcManager.selectBySqlFile(
+    EmployeeDto.class, "examples.entity.Employee.selectSingle")
+    .getSingleResult();
+]]></source>
+				<p>
+					SQLファイルのパラメータが1つの場合は、
+					<code>selectBySqlFile()</code>
+					の3番目の引数で値を直接指定します。
+				</p>
+				<source><![CDATA[
+EmployeeDto result = jdbcManager.selectBySqlFile(
+    EmployeeDto.class, "examples.entity.Employee.selectSingle", 10)
+    .getSingleResult();
+]]></source>
+				<p>
+					SQLファイルのパラメータが複数の場合は、
+					<code>selectBySqlFile()</code>
+					の3番目の引数をJavaBeansにして、
+					パラメータの名前とJavaBeansのプロパティ名を一致させます。
+				</p>
+				<p>
+					パラメータ用のJavaBeansにlimit、offsetという名前のプロパティがあれば、
+					ページングが行なわれます。
+				</p>
+				<div
+					style="background-color: red; font-weight: bold; font-size: larger;">
+					<p>
+						limit,
+						offsetはパラメータ用のJavaBeansのプロパティの予約語なので注意してください。
+					</p>
+				</div>
+			</subsection>
+
+			<subsection name="SQLファイルを使った更新">
+				<p>
+					SQLファイルを使ってエンティティを更新する場合は、
+					<code>updateBySqlFile()</code>
+					、
+					<code>execute()</code>
+					を組み合わせます。 挿入、削除も
+					<code>updateBySqlFile()</code>
+					を使います。
+				</p>
+				<p>SQLファイルにパラメータがない場合は、次のようにして呼び出します。</p>
+				<source><![CDATA[
+int count = jdbcManager.updateBySqlFile(
+    "examples.entity.Employee.update")
+    .execute();
+]]></source>
+				<p>
+					SQLファイルのパラメータが1つで値が
+					<code>null</code>
+					にならない場合は、
+					<code>updateBySqlFile()</code>
+					の2番目の引数で値を直接指定します。
+				</p>
+				<source><![CDATA[
+int count = jdbcManager.updateBySqlFile(
+    "examples.entity.Employee.update", 10)
+    .execute();
+]]></source>
+				<p>
+					上記以外の場合は、
+					<code>updateBySqlFile()</code>
+					の2番目の引数をJavaBeansにして、
+					パラメータの名前とJavaBeansのプロパティ名を一致させます。
+				</p>
+				<source><![CDATA[
+package examples.entity.Employee;
+
+public class UpdateParam {
+    public Integer id;
+    public BigDecimal salary;
+}
+]]></source>
+				<source><![CDATA[
+update emp set salary = /*salary*/1000
+where id = /*id*/1
+]]></source>
+				<source><![CDATA[
+UpdateParam param = new UpdateParam();
+param.salary = new BigDecimal(1200);
+param.id = 10;
+int count = jdbcManager.updateBySqlFile(
+    "examples.entity.Employee.update", param)
+    .execute();
+]]></source>
+			</subsection>
+
+			<subsection name="SQLファイルを使ったバッチ更新">
+				<p>
+					SQLファイルを使ってエンティティをバッチ更新する場合は、
+					<code>updateBatchBySqlFile()</code>
+					、
+					<code>execute()</code>
+					を組み合わせます。 挿入、削除も
+					<code>updateBatchBySqlFile()</code>
+					を使います。
+				</p>
+				<p>
+					SQLファイルのパラメータが1つで値が
+					<code>null</code>
+					にならない場合は、
+					<code>updateBatchBySqlFile()</code>
+					の2番目の引数で値のリストを指定します。
+				</p>
+				<source><![CDATA[
+List<Integer> paramList = new ArrayList<Integer>();
+...
+int[] countArray = jdbcManager.updateBatchBySqlFile(
+    "examples.entity.Employee.update", paramList)
+    .execute();
+]]></source>
+				<p>
+					上記以外の場合は、
+					<code>updateBatchBySqlFile()</code>
+					の2番目の引数を、 JavaBeansのリストあるいは配列(可変長引数)にして、
+					パラメータの名前とJavaBeansのプロパティ名を一致させます。
+				</p>
+				<source><![CDATA[
+package examples.entity.Employee;
+
+public class UpdateParam {
+    public Integer id;
+    public BigDecimal salary;
+}
+]]></source>
+				<source><![CDATA[
+update emp set salary = /*salary*/1000
+where id = /*id*/1
+]]></source>
+				<source><![CDATA[
+List<UpdateParam> paramList = new ArrayList<UpdateParam>();
+...
+int[] countArray = jdbcManager.updateBatchBySqlFile(
+    "examples.entity.Employee.update", paramList)
+    .execute();
+]]></source>
+			</subsection>
+
+			<subsection name="SQLファイルを使ったプロシージャ呼び出し">
+				<p>
+					SQLファイルを使ってプロシージャを呼び出す場合は、
+					<code>callBySqlFile()</code>
+					、
+					<code>call()</code>
+					を組み合わせます。
+					<code>callBySqlFile()</code>
+					の最初の引数は、
+					<a href="#SQLファイルのパス">SQLファイルのパス</a>
+					です。 最初の例は、パラメータのない場合です。
+				</p>
+				<source><![CDATA[
+jdbcManager.callBySqlFile("examples.entity.Employee.callMyProc").call();
+]]></source>
+				<p>
+					INのパラメータが1つだけで、そのパラメータが
+					<code>null</code>
+					にならない場合は、
+					<code>callBySqlFile()</code>
+					の2番目の引数で値を直接指定します。
+				</p>
+				<source><![CDATA[
+jdbcManager.callBySqlFile("examples.entity.Employee.callMyProc", "hoge").call();
+]]></source>
+				<p>
+					上記以外の場合は、
+					<code>callBySqlFile()</code>
+					の2番目の引数にJavaBeansを指定します。
+					プロシージャを呼び出すパラメータの順番にJavaBeansのフィールドを定義します。
+					<br />
+					<ul>
+						<li>
+							<p>
+								フィールド名が_OUTで終わっている場合
+								<code>OUT</code>
+								パラメータになります。
+							</p>
+						</li>
+						<li>
+							<p>
+								フィールド名が_IN_OUTで終わっている場合
+								<code>IN OUT</code>
+								パラメータになります。
+							</p>
+						</li>
+						<li>
+							<p>
+								フィールド名が_INで終わっている場合
+								<code>IN</code>
+								パラメータになります。
+							</p>
+						</li>
+						<li>
+							<p>
+								フィールド名が_OUT、_IN_OUT、_INで終わっていない場合は、
+								<code>IN</code>
+								パラメータになります。
+							</p>
+						</li>
+					</ul>
+				</p>
+				<source><![CDATA[
+public class MyDto {
+
+    public String result_OUT;
+    
+    public int arg1_IN_OUT;
+    
+    public int arg2_IN;
+}
+]]></source>
+				<source><![CDATA[
+MyDto dto = new MyDto();
+dto.arg1_IN_OUT = 1;
+dto.arg2_IN = 2;
+jdbcManager.callBySqlFile("examples.entity.Employee.callMyProc", dto).call();
+System.out.println(dto.result_OUT);
+System.out.println(dto.arg1_IN_OUT);
+]]></source>
+				<p>
+					プロシージャが結果セットを返す場合は、対応するフィールドの型をList&lt;結果セットに対応する型&gt;にします。
+				</p>
+				<source><![CDATA[
+public class MyDto {
+
+    public List<EmployeeDto> result_OUT;
+    
+    public int arg1_IN;
+}
+]]></source>
+				<source><![CDATA[
+MyDto dto = new MyDto();
+dto.arg1_IN = 1;
+jdbcManager.callBySqlFile("examples.entity.Employee.callMyProc", dto).call();
+System.out.println(dto.result_OUT);
+]]></source>
+			</subsection>
+		</section>
 	</body>
 </document>
