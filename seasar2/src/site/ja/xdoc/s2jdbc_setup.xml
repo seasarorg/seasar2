@@ -35,7 +35,7 @@
 			</p>
 			<p>
 				S2JDBCの設定は、s2jdbc.diconに対して行ないます。
-				s2jdbc.diconは、S2Tiger-2.4.x.zipを解凍してできたs2-tigerのresourcesにあるので、コピーしてCLASSPATHに含めます。
+				s2jdbc.diconは、S2Tiger-2.4.x.zipを解凍してできたs2-tigerのsrc/test/resourcesにあるので、コピーしてCLASSPATHに含めます。
 			</p>
 			<p>
 				s2jdbc.diconの中身は、次のようになっているので、
