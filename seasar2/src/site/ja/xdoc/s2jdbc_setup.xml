@@ -59,11 +59,11 @@
 			<p>
 				<code>maxRows, fetchSize, queryTimeout</code>
 				は、JdbcManagerのデフォルト値になります。個別のクエリの呼び出し時に上書きすることもできます。
-				<a href="#最大行数">最大行数</a>
+				<a href="s2jdbc_manager.html#最大行数">最大行数</a>
 				、
-				<a href="#フェッチサイズ">フェッチサイズ</a>
+				<a href="s2jdbc_manager.html#フェッチサイズ">フェッチサイズ</a>
 				、
-				<a href="#クエリタイムアウト">クエリタイムアウト</a>
+				<a href="s2jdbc_manager.html#クエリタイムアウト">クエリタイムアウト</a>
 				を参照してください。
 			</p>
 		</section>
@@ -72,7 +72,7 @@
 			<p>ダイアレクトは次のものが用意されています。</p>
 			<table border="1">
 				<tbody>
-					<tr bgcolor="#D1F3F4" align="center">
+					<tr>
 						<th width="200">名前</th>
 						<th width="200">説明</th>
 					</tr>
