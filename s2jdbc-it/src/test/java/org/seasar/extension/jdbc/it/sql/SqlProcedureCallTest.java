@@ -18,7 +18,7 @@ package org.seasar.extension.jdbc.it.sql;
 import java.util.List;
 
 import org.seasar.extension.jdbc.JdbcManager;
-import org.seasar.extension.jdbc.dialect.HsqlDialect;
+import org.seasar.extension.jdbc.it.S2JdbcItUtil;
 import org.seasar.extension.jdbc.it.entity.Department;
 import org.seasar.extension.jdbc.it.entity.Employee;
 import org.seasar.extension.unit.S2TestCase;
@@ -42,7 +42,7 @@ public class SqlProcedureCallTest extends S2TestCase {
      * @throws Exception
      */
     public void testParameter_noneTx() throws Exception {
-        if (!supportsProcedure()) {
+        if (!S2JdbcItUtil.supportsProcedure(jdbcManager)) {
             return;
         }
         jdbcManager.callBySql("{call NO_PARAM()}").call();
@@ -53,7 +53,7 @@ public class SqlProcedureCallTest extends S2TestCase {
      * @throws Exception
      */
     public void testParameter_simpleTypeTx() throws Exception {
-        if (!supportsProcedure()) {
+        if (!S2JdbcItUtil.supportsProcedure(jdbcManager)) {
             return;
         }
         jdbcManager.callBySql("{call SIMPLETYPE_PARAM(?)}", 1).call();
@@ -64,7 +64,7 @@ public class SqlProcedureCallTest extends S2TestCase {
      * @throws Exception
      */
     public void testParameter_dtoTx() throws Exception {
-        if (!supportsProcedure()) {
+        if (!S2JdbcItUtil.supportsProcedure(jdbcManager)) {
             return;
         }
         MyDto dto = new MyDto();
@@ -81,7 +81,7 @@ public class SqlProcedureCallTest extends S2TestCase {
      * @throws Exception
      */
     public void testParameter_oneResultTx() throws Exception {
-        if (!supportsProcedure()) {
+        if (!S2JdbcItUtil.supportsProcedure(jdbcManager)) {
             return;
         }
         String query = null;
@@ -106,8 +106,8 @@ public class SqlProcedureCallTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void testCParameter_twoResultsTx() throws Exception {
-        if (!supportsProcedure()) {
+    public void testParameter_twoResultsTx() throws Exception {
+        if (!S2JdbcItUtil.supportsProcedure(jdbcManager)) {
             return;
         }
         String query = null;
@@ -132,13 +132,6 @@ public class SqlProcedureCallTest extends S2TestCase {
         assertEquals(2, departments.size());
         assertEquals("SALES", departments.get(0).departmentName);
         assertEquals("OPERATIONS", departments.get(1).departmentName);
-    }
-
-    private boolean supportsProcedure() {
-        if (jdbcManager.getDialect() instanceof HsqlDialect) {
-            return false;
-        }
-        return true;
     }
 
     /**

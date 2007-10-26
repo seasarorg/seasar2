@@ -18,7 +18,7 @@ package org.seasar.extension.jdbc.it.sqlfile;
 import java.util.List;
 
 import org.seasar.extension.jdbc.JdbcManager;
-import org.seasar.extension.jdbc.dialect.HsqlDialect;
+import org.seasar.extension.jdbc.it.S2JdbcItUtil;
 import org.seasar.extension.jdbc.it.entity.Department;
 import org.seasar.extension.jdbc.it.entity.Employee;
 import org.seasar.extension.unit.S2TestCase;
@@ -42,7 +42,7 @@ public class SqlFileProcedureCallTest extends S2TestCase {
      * @throws Exception
      */
     public void testParameter_noneTx() throws Exception {
-        if (!supportsProcedure()) {
+        if (!S2JdbcItUtil.supportsProcedure(jdbcManager)) {
             return;
         }
         String path = getClass().getName().replace(".", "/") + "_no" + ".sql";
@@ -54,7 +54,7 @@ public class SqlFileProcedureCallTest extends S2TestCase {
      * @throws Exception
      */
     public void testParameter_simpleTypeTx() throws Exception {
-        if (!supportsProcedure()) {
+        if (!S2JdbcItUtil.supportsProcedure(jdbcManager)) {
             return;
         }
         String path =
@@ -67,7 +67,7 @@ public class SqlFileProcedureCallTest extends S2TestCase {
      * @throws Exception
      */
     public void testParameter_dtoTx() throws Exception {
-        if (!supportsProcedure()) {
+        if (!S2JdbcItUtil.supportsProcedure(jdbcManager)) {
             return;
         }
         String path = getClass().getName().replace(".", "/") + "_dto" + ".sql";
@@ -85,7 +85,7 @@ public class SqlFileProcedureCallTest extends S2TestCase {
      * @throws Exception
      */
     public void testParameter_oneResultTx() throws Exception {
-        if (!supportsProcedure()) {
+        if (!S2JdbcItUtil.supportsProcedure(jdbcManager)) {
             return;
         }
         String path = getClass().getName().replace(".", "/") + "_one_result";
@@ -111,7 +111,7 @@ public class SqlFileProcedureCallTest extends S2TestCase {
      * @throws Exception
      */
     public void testParameter_twoResultsTx() throws Exception {
-        if (!supportsProcedure()) {
+        if (!S2JdbcItUtil.supportsProcedure(jdbcManager)) {
             return;
         }
         String path = getClass().getName().replace(".", "/") + "_two_results";
@@ -136,13 +136,6 @@ public class SqlFileProcedureCallTest extends S2TestCase {
         assertEquals(2, departments.size());
         assertEquals("SALES", departments.get(0).departmentName);
         assertEquals("OPERATIONS", departments.get(1).departmentName);
-    }
-
-    private boolean supportsProcedure() {
-        if (jdbcManager.getDialect() instanceof HsqlDialect) {
-            return false;
-        }
-        return true;
     }
 
     /**

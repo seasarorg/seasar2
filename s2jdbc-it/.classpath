@@ -11,5 +11,6 @@
 	<classpathentry kind="lib" path="lib/ojdbc5.jar"/>
 	<classpathentry kind="lib" path="lib/postgresql-8.3dev-601.jdbc3.jar"/>
 	<classpathentry kind="lib" path="lib/sqljdbc.jar"/>
+	<classpathentry kind="lib" path="lib/h2-1.0.60.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
