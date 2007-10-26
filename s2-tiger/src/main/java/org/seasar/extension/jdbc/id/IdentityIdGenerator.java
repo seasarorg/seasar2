@@ -100,10 +100,6 @@ public class IdentityIdGenerator extends AbstractIdGenerator {
      * 
      * @param jdbcManager
      *            JDBCマネージャ
-     * @param entityMeta
-     *            エンティティメタデータ
-     * @param propertyMeta
-     *            プロパティメタデータ
      * @param sqlLogger
      *            SQLロガー
      * @return 自動生成された識別子の値

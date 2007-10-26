@@ -26,7 +26,7 @@ import org.seasar.framework.beans.impl.ParameterizedClassDescImpl;
 import static org.seasar.framework.util.tiger.GenericUtil.*;
 
 /**
- * {@link ParameterizedClassDescFactory}の機能を提供する実装クラスです。
+ * {@link Provider}の機能を提供する実装クラスです。
  * 
  * @since 2.4.18
  * @author koichik

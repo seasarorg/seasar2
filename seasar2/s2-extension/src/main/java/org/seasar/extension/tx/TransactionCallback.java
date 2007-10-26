@@ -19,7 +19,7 @@ package org.seasar.extension.tx;
  * トランザクション制御下でコールバックされるオブジェクトのインターフェースです。
  * 
  * @author koichik
- * @version 2.4.18
+ * @since 2.4.18
  */
 public interface TransactionCallback {
 

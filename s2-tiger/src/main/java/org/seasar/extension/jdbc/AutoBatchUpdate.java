@@ -28,7 +28,7 @@ public interface AutoBatchUpdate<T> extends BatchUpdate<AutoBatchUpdate<T>> {
      * バージョンプロパティを更新対象に含めます。
      * <p>
      * このメソッドが呼び出されると、<code>update</code>文の<code>where</code>句にはバージョンのチェックが含まれなくなり、
-     * バージョンプロパティは通常のプロパティと同じように更新対象に含められます ({@link #excludesNull()}や{@link #changedFrom(Object)}等も同じように適用されます)。
+     * バージョンプロパティは通常のプロパティと同じように更新対象に含められます。
      * 
      * </p>
      * 

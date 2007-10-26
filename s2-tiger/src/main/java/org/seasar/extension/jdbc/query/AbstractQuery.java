@@ -92,8 +92,6 @@ public abstract class AbstractQuery<S extends Query<S>> implements Query<S>,
      * 
      * @param jdbcManager
      *            JDBCマネージャ
-     * @param baseClass
-     *            ベースクラス
      */
     public AbstractQuery(JdbcManager jdbcManager) {
         this.jdbcManager = jdbcManager;
@@ -335,7 +333,7 @@ public abstract class AbstractQuery<S extends Query<S>> implements Query<S>,
      *            パラメータのクラス
      * @param lob
      *            <code>LOB</code>かどうか
-     * @return
+     * @return 値タイプ
      */
     protected ValueType getValueType(Class<?> paramClass, boolean lob) {
         if (lob && paramClass == String.class) {

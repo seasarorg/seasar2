@@ -483,8 +483,8 @@ public abstract class ReflectionUtil {
      * 
      * @param field
      *            フィールド
-     * @return 指定されたフィールドのパラメタ化されたコレクションの要素型
-     * @version 2.4.18
+     * @return 指定されたフィールドのパラメタ化されたコレクションの要素型 since 2.4.18
+     * since 2.4.18
      */
     public static Class<?> getElementTypeOfCollectionFromFieldType(
             final Field field) {
@@ -536,8 +536,8 @@ public abstract class ReflectionUtil {
      * 
      * @param field
      *            フィールド
-     * @return 指定されたフィールドのパラメタ化されたリストの要素型
-     * @version 2.4.18
+     * @return 指定されたフィールドのパラメタ化されたリストの要素型 since 2.4.18
+     * since 2.4.18
      */
     public static Class<?> getElementTypeOfListFromFieldType(final Field field) {
         final Type type = field.getGenericType();
@@ -588,8 +588,8 @@ public abstract class ReflectionUtil {
      * 
      * @param field
      *            フィールド
-     * @return 指定されたフィールドのパラメタ化されたセットの要素型
-     * @version 2.4.18
+     * @return 指定されたフィールドのパラメタ化されたセットの要素型 since 2.4.18
+     * since 2.4.18
      */
     public static Class<?> getElementTypeOfSetFromFieldType(final Field field) {
         final Type type = field.getGenericType();

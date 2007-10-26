@@ -31,7 +31,7 @@ import com.ibm.wsspi.uow.UOWManager;
  * {@link TransactionManagerAdapter}の実装です。
  * 
  * @author koichik
- * @version 2.4.18
+ * @since 2.4.18
  */
 public class WAS6TransactionManagerAdapter implements TransactionManagerAdapter {
 

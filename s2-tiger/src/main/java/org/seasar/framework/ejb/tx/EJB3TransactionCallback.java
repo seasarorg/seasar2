@@ -32,7 +32,7 @@ import org.seasar.extension.tx.TransactionManagerAdapter;
  * </p>
  * 
  * @author koichik
- * @version 2.4.18
+ * @since 2.4.18
  */
 public class EJB3TransactionCallback extends DefaultTransactionCallback {
 

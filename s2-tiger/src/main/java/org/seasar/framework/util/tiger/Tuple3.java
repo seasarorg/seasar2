@@ -19,7 +19,7 @@ package org.seasar.framework.util.tiger;
  * 3つの値の組です。
  * 
  * @author koichik
- * @version 2.4.18
+ * @since 2.4.18
  * @param <T1>
  *            1番目の値の型
  * @param <T2>
