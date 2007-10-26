@@ -21,6 +21,8 @@ import javax.persistence.NonUniqueResultException;
 
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.JoinType;
+import org.seasar.extension.jdbc.it.condition.DepartmentCondition;
+import org.seasar.extension.jdbc.it.condition.EmployeeCondition;
 import org.seasar.extension.jdbc.it.entity.Department;
 import org.seasar.extension.jdbc.it.entity.Department3;
 import org.seasar.extension.jdbc.it.entity.Department4;
@@ -179,10 +181,36 @@ public class AutoSelectTest extends S2TestCase {
      * 
      * @throws Exception
      */
+    public void testWhere_eqCondition() throws Exception {
+        List<Employee> list =
+            jdbcManager
+                .from(Employee.class)
+                .where(new EmployeeCondition().employeeName.eq("SMITH"))
+                .getResultList();
+        assertEquals(1, list.size());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
     public void testWhere_ne() throws Exception {
         List<Employee> list =
             jdbcManager.from(Employee.class).where(
                 new SimpleWhere().ne("employeeName", "SMITH")).getResultList();
+        assertEquals(13, list.size());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testWhere_neCondition() throws Exception {
+        List<Employee> list =
+            jdbcManager
+                .from(Employee.class)
+                .where(new EmployeeCondition().employeeName.ne("SMITH"))
+                .getResultList();
         assertEquals(13, list.size());
     }
 
@@ -253,6 +281,19 @@ public class AutoSelectTest extends S2TestCase {
      * 
      * @throws Exception
      */
+    public void testWhere_likeCondition() throws Exception {
+        List<Employee> list =
+            jdbcManager
+                .from(Employee.class)
+                .where(new EmployeeCondition().employeeName.like("S%"))
+                .getResultList();
+        assertEquals(2, list.size());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
     public void testWhere_starts() throws Exception {
         List<Employee> list =
             jdbcManager.from(Employee.class).where(
@@ -293,6 +334,17 @@ public class AutoSelectTest extends S2TestCase {
         List<Employee> list =
             jdbcManager.from(Employee.class).where(
                 new SimpleWhere().isNull("managerId", true)).getResultList();
+        assertEquals(1, list.size());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testWhere_isNullCondition() throws Exception {
+        List<Employee> list =
+            jdbcManager.from(Employee.class).where(
+                new EmployeeCondition().managerId.isNull()).getResultList();
         assertEquals(1, list.size());
     }
 
@@ -407,6 +459,21 @@ public class AutoSelectTest extends S2TestCase {
             jdbcManager.from(Department.class).join("employees").join(
                 "employees.address").where(
                 new SimpleWhere().eq("employees.addressId", 3)).getResultList();
+        assertEquals(1, list.size());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testJoin_nestCondition() throws Exception {
+        List<Department> list =
+            jdbcManager
+                .from(Department.class)
+                .join("employees")
+                .join("employees.address")
+                .where(new DepartmentCondition().employees().addressId.eq(3))
+                .getResultList();
         assertEquals(1, list.size());
     }
 
