@@ -104,6 +104,12 @@
 <li><a href="#updateBatchBySql">SQLを使ったバッチ更新</a></li>
 <li><a href="#callBySql">SQLを使ったプロシージャ呼び出し</a></li>
 <li><a href="#SqlFile">S2Dao譲りのSQLファイル</a></li>
+<li><a href="#SqlFilePath">SQLファイルのパス</a></li>
+<li><a href="#selectBySqlFileGetResultList">SQLファイルを使った複数件検索</a></li>
+<li><a href="#selectBySqlFileGetSingleResult">SQLファイルを使った1件検索</a></li>
+<li><a href="#updateBySqlFile">SQLファイルを使った更新</a></li>
+<li><a href="#updateBatchBySqlFile">SQLファイルを使ったバッチ更新</a></li>
+<li><a href="#callBySqlFile">SQLファイルを使ったプロシージャ呼び出し</a></li>
 </ul>
 <li><a href="#other">その他の機能</a>
 <ul>
@@ -313,76 +319,94 @@ JPAとあわせ、いまいちなEntityManagerやJPQLの部分は、 独自仕�
 &lt;/components&gt;</pre>
 <p><code>maxRows, fetchSize, queryTimeout</code>は、JdbcManagerのデフォルト値になります。 個別のクエリの呼び出し時に上書きすることもできます。 <a href="#maxRows">最大行数</a>、 <a href="#fetchSize">フェッチサイズ</a>、 <a href="#queryTimeout">クエリタイムアウト</a>を参照してください。</p>
 <h3><a name="dialect">ダイアレクト</a></h3>
-<p>ダイアレクトは次のものが用意されています。</p>
+<p>ダイアレクトは次のものが用意されています。
+サフィックスは、<a href="#SqlFilePath">SQLファイルのパス</a>を決めるところで使われます</p>
 <table border="1">
 <tbody>
 <tr bgcolor="#D1F3F4" align="center">
 <th width="200">名前</th>
 <th width="200">説明</th>
+<th width="100">サフィックス</th>
 </tr>
 <tr>
 <td>db2390Dialect</td>
 <td>DB2/390</td>
+<td>_db2</td>
 </tr>
 <tr>
 <td>db2400Dialect</td>
 <td>DB2/400</td>
+<td>_db2</td>
 </tr>
 <tr>
 <td>db2Dialect</td>
 <td>DB2</td>
+<td>_db2</td>
 </tr>
 <tr>
 <td>derbyDialect</td>
 <td>Derby</td>
+<td>_derby</td>
 </tr>
 <tr>
 <td>firebirdDialect</td>
 <td>Firebird</td>
+<td>_firebird</td>
 </tr>
 <tr>
 <td>h2Dialect</td>
 <td>H2</td>
+<td>_h2</td>
 </tr>
 <tr>
 <td>hsqlDialect</td>
 <td>HSQLDB</td>
+<td>_hsql</td>
 </tr>
 <tr>
 <td>interbaseDialect</td>
 <td>Interbase</td>
+<td>_interbase</td>
 </tr>
 <tr>
 <td>maxdbDialect</td>
 <td>MaxDB</td>
+<td>_maxdb</td>
 </tr>
 <tr>
 <td>mssql2005Dialect</td>
 <td>MS SQLServer 2005</td>
+<td>_mssql</td>
 </tr>
 <tr>
 <td>mssqlDialect</td>
 <td>MS SQLServer</td>
+<td>_mssql</td>
 </tr>
 <tr>
 <td>mysqlDialect</td>
 <td>MySQL</td>
+<td>_mysql</td>
 </tr>
 <tr>
 <td>oracleDialect</td>
 <td>Oracle</td>
+<td>_oracle</td>
 </tr>
 <tr>
 <td>postgreDialect</td>
 <td>PostgreSQL</td>
+<td>_postgre</td>
 </tr>
 <tr>
 <td>standardDialect</td>
 <td>どれにも当てはまらないときに選ぶ標準的なダイアレクト</td>
+<td><br /></td>
 </tr>
 <tr>
 <td>sybaseDialect</td>
 <td>Sybase</td>
+<td>_sybase</td>
 </tr>
 </tbody>
 </table>
@@ -931,6 +955,7 @@ int count = jdbcManager.update(employee).changedFrom(before).execute();</pre>
 <h3><a name="deleteIgnoreVersion">バージョンをチェックしないで削除する</a></h3>
 <p>バージョンをチェックしないで削除する場合は、 <code>ignoreVersion()</code>を使います。</p>
 <pre>int count = jdbcManager.delete(employee).ignoreVersion().execute();</pre>
+
 <h3><a name="selectBySqlGetResultList">SQLを使った複数件検索</a></h3>
 <p>
 SQLを使って複数件検索をする場合は、<code>selectBySql()</code>と<code>getResultList()</code>を組み合わせます。
@@ -1058,6 +1083,11 @@ SQLファイルは、クラスパス上にあるならどこにおいてもか�
 <code>examples.entity.Employee</code>パッケージにおくと良いでしょう。
 </p>
 <p>
+複数のテーブルを結合するような場合は、
+一番主軸となっているテーブルのエンティティを選びます。
+プロシージャの場合も同様です。
+</p>
+<p>
 何のパラメータもない単純なSQLファイルは次のようになります。
 </p>
 <pre>
@@ -1176,8 +1206,272 @@ select * from employee
 埋め込み変数コメントは、/*$パラメータ名*/のように指定します。
 直接リテラルを埋め込むとSQLインジェクションの危険がありますが、
 埋め込み変数の値に、セミコロン(;)が入っていると例外にしているので、
-問題はないはずです。
+問題はありません。
 </p>
+<p>
+ELSEコメントは、IFコメントとENDコメントの間に行コメントとして埋め込みます。
+</p>
+<pre>
+/*IF jobType != null*/
+jobType = /*jobType*/'CLERK'
+-- ELSE jobType is null
+/*END*/
+</pre>
+
+<h3><a name="SqlFilePath">SQLファイルのパス</a></h3>
+<p>
+SQLファイルのパスは、<code>examples.entity.Employee.selectAll</code>のように指定します。
+このパスに対するデフォルトの物理的なファイルは、
+<code>examples/entity/Employee/selectAll.sql</code>になります。
+ただし、<a href="#dialect">ダイレクト</a>のサフィックスに対応するファイルがあれば、
+そちらが優先されます。
+</p>
+<p>
+例えば、オラクルを使っている場合、
+<code>examples/entity/Employee/selectAll_oracle.sql</code>
+があれば、デフォルトより優先されます。
+</p>
+
+<h3><a name="selectBySqlFileGetResultList">SQLファイルを使った複数件検索</a></h3>
+<p>
+SQLファイルを使って複数件検索をする場合は、
+<code>selectBySqlFile()</code>と<code>getResultList()</code>を組み合わせます。
+<code>selectBySqlFile()</code>の2番目の引数は、<a href="#SqlFilePath">SQLファイルのパス</a>です。
+</p>
+<p>
+SQLファイルにパラメータがない場合は、次のようにして呼び出します。
+</p>
+<pre>
+List&lt;EmployeeDto&gt; results = jdbcManager.selectBySqlFile(
+    EmployeeDto.class, "examples.entity.Employee.selectAll")
+    .getResultList();
+</pre>
+<p>
+SQLファイルのパラメータが1つの場合は、<code>selectBySqlFile()</code>の3番目の引数で値を直接指定します。
+</p>
+<pre>
+List&lt;EmployeeDto&gt; results = jdbcManager.selectBySqlFile(
+    EmployeeDto.class, "examples.entity.Employee.selectAll", 10)
+    .getResultList();
+</pre>
+<p>
+SQLファイルのパラメータが複数の場合は、<code>selectBySqlFile()</code>の3番目の引数をJavaBeansにして、
+パラメータの名前とJavaBeansのプロパティ名を一致させます。
+</p>
+<pre>
+package examples.entity.Employee;
+
+public class SelectAllParam {
+    public BigDecimal salaryMin;
+    public BigDecimal salaryMax;
+}
+</pre>
+<pre>
+select * from employee where
+salary &gt;= /*salaryMin*/1000
+and salary &lt;= /*salaryMax*/2000
+</pre>
+<pre>
+SelectAllParam param = new SelectAllParam();
+param.salaryMin = new BigDecimal(1200);
+param.salaryMax = new BigDecimal(1800);
+List&lt;EmployeeDto&gt; results = jdbcManager.selectBySqlFile(
+    EmployeeDto.class, "examples.entity.Employee.selectAll", param)
+    .getResultList();
+</pre>
+<p>
+パラメータ用のJavaBeansにlimit、offsetという名前のプロパティがあれば、
+ページングが行なわれます。<br />
+<span style="background-color:red">
+limit, offsetはパラメータ用のJavaBeansのプロパティの予約語なので注意してください。
+</span>
+</p>
+
+<h3><a name="selectBySqlFileGetSingleResult">SQLファイルを使った1件検索</a></h3>
+<p>
+SQLファイルを使って1件検索をする場合は、
+<code>selectBySqlFile()</code>と<code>getSingleResult()</code>を組み合わせます。
+<code>selectBySqlFile()</code>の2番目の引数は、<a href="#SqlFilePath">SQLファイルのパス</a>です。
+</p>
+<p>
+SQLファイルにパラメータがない場合は、次のようにして呼び出します。
+</p>
+<pre>
+EmployeeDto result = jdbcManager.selectBySqlFile(
+    EmployeeDto.class, "examples.entity.Employee.selectSingle")
+    .getSingleResult();
+</pre>
+<p>
+SQLファイルのパラメータが1つの場合は、<code>selectBySqlFile()</code>の3番目の引数で値を直接指定します。
+</p>
+<pre>
+EmployeeDto result = jdbcManager.selectBySqlFile(
+    EmployeeDto.class, "examples.entity.Employee.selectSingle", 10)
+    .getSingleResult();
+</pre>
+<p>
+SQLファイルのパラメータが複数の場合は、<code>selectBySqlFile()</code>の3番目の引数をJavaBeansにして、
+パラメータの名前とJavaBeansのプロパティ名を一致させます。
+</p>
+<p>
+パラメータ用のJavaBeansにlimit、offsetという名前のプロパティがあれば、
+ページングが行なわれます。<br />
+<span style="background-color:red">
+limit, offsetはパラメータ用のJavaBeansのプロパティの予約語なので注意してください。
+</span>
+</p>
+
+<h3><a name="updateBySqlFile">SQLファイルを使った更新</a></h3>
+<p>
+SQLファイルを使ってエンティティを更新する場合は、<code>updateBySqlFile()</code>、<code>execute()</code>を組み合わせます。
+挿入、削除も<code>updateBySqlFile()</code>を使います。
+</p>
+<p>
+SQLファイルにパラメータがない場合は、次のようにして呼び出します。
+</p>
+<pre>
+int count = jdbcManager.updateBySqlFile(
+    "examples.entity.Employee.update")
+    .execute();
+</pre>
+<p>
+SQLファイルのパラメータが1つで値が<code>null</code>にならない場合は、
+<code>updateBySqlFile()</code>の2番目の引数で値を直接指定します。
+</p>
+<pre>
+int count = jdbcManager.updateBySqlFile(
+    "examples.entity.Employee.update", 10)
+    .execute();
+</pre>
+<p>
+上記以外の場合は、<code>updateBySqlFile()</code>の2番目の引数をJavaBeansにして、
+パラメータの名前とJavaBeansのプロパティ名を一致させます。
+</p>
+<pre>
+package examples.entity.Employee;
+
+public class UpdateParam {
+    public Integer id;
+    public BigDecimal salary;
+}
+</pre>
+<pre>
+update emp set salary = /*salary*/1000
+where id = /*id*/1
+</pre>
+<pre>
+UpdateParam param = new UpdateParam();
+param.salary = new BigDecimal(1200);
+param.id = 10;
+int count = jdbcManager.updateBySqlFile(
+    "examples.entity.Employee.update", param)
+    .execute();
+</pre>
+
+<h3><a name="updateBatchBySqlFile">SQLファイルを使ったバッチ更新</a></h3>
+<p>
+SQLファイルを使ってエンティティをバッチ更新する場合は、<code>updateBatchBySqlFile()</code>、<code>execute()</code>を組み合わせます。
+挿入、削除も<code>updateBatchBySqlFile()</code>を使います。
+</p>
+<p>
+SQLファイルのパラメータが1つで値が<code>null</code>にならない場合は、
+<code>updateBatchBySqlFile()</code>の2番目の引数で値のリストを指定します。
+</p>
+<pre>
+List&lt;Integer&gt; paramList = new ArrayList&lt;Integer&gt;();
+...
+int[] countArray = jdbcManager.updateBatchBySqlFile(
+    "examples.entity.Employee.update", paramList)
+    .execute();
+</pre>
+<p>
+上記以外の場合は、<code>updateBatchBySqlFile()</code>の2番目の引数を、
+JavaBeansのリストあるいは配列(可変長引数)にして、
+パラメータの名前とJavaBeansのプロパティ名を一致させます。
+</p>
+<pre>
+package examples.entity.Employee;
+
+public class UpdateParam {
+    public Integer id;
+    public BigDecimal salary;
+}
+</pre>
+<pre>
+update emp set salary = /*salary*/1000
+where id = /*id*/1
+</pre>
+<pre>
+List&lt;UpdateParam&gt; paramList = new ArrayList&lt;UpdateParam&gt;();
+...
+int[] countArray = jdbcManager.updateBatchBySqlFile(
+    "examples.entity.Employee.update", paramList)
+    .execute();
+</pre>
+
+<h3><a name="callBySqlFile">SQLファイルを使ったプロシージャ呼び出し</a></h3>
+<p>
+SQLファイルを使ってプロシージャを呼び出す場合は、
+<code>callBySqlFile()</code>、<code>call()</code>を組み合わせます。
+<code>callBySqlFile()</code>の最初の引数は、<a href="#SqlFilePath">SQLファイルのパス</a>です。
+最初の例は、パラメータのない場合です。
+</p>
+<pre>
+jdbcManager.callBySqlFile("examples.entity.Employee.callMyProc").call();
+</pre>
+<p>
+INのパラメータが1つだけで、そのパラメータが<code>null</code>にならない場合は、
+<code>callBySqlFile()</code>の2番目の引数で値を直接指定します。
+</p>
+<pre>
+jdbcManager.callBySqlFile("examples.entity.Employee.callMyProc", "hoge").call();
+</pre>
+<p>
+上記以外の場合は、<code>callBySqlFile()</code>の2番目の引数にJavaBeansを指定します。
+プロシージャを呼び出すパラメータの順番にJavaBeansのフィールドを定義します。<br />
+<ul>
+<li>フィールド名が_OUTで終わっている場合<code>OUT</code>パラメータになります。</li>
+<li>フィールド名が_IN_OUTで終わっている場合<code>IN OUT</code>パラメータになります。</li>
+<li>フィールド名が_INで終わっている場合<code>IN</code>パラメータになります。</li>
+<li>フィールド名が_OUT、_IN_OUT、_INで終わっていない場合は、<code>IN</code>パラメータになります。</li>
+</ul>
+</p>
+<pre>
+public class MyDto {
+
+    public String result_OUT;
+    
+    public int arg1_IN_OUT;
+    
+    public int arg2_IN;
+}
+</pre>
+<pre>
+MyDto dto = new MyDto();
+dto.arg1_IN_OUT = 1;
+dto.arg2_IN = 2;
+jdbcManager.callBySqlFile("examples.entity.Employee.callMyProc", dto).call();
+System.out.println(dto.result_OUT);
+System.out.println(dto.arg1_IN_OUT);
+</pre>
+<p>
+プロシージャが結果セットを返す場合は、対応するフィールドの型をList&lt;結果セットに対応する型&gt;にします。
+</p>
+<pre>
+public class MyDto {
+
+    public List&lt;EmployeeDto&gt; result_OUT;
+    
+    public int arg1_IN;
+}
+</pre>
+<pre>
+MyDto dto = new MyDto();
+dto.arg1_IN = 1;
+jdbcManager.callBySqlFile("examples.entity.Employee.callMyProc", dto).call();
+System.out.println(dto.result_OUT);
+</pre>
+
 
 <h2><a name="other">その他の機能</a></h2>
 <h3><a name="SqlLog" id="SqlLog">SQLのログ</a></h3>
