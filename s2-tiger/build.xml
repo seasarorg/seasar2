@@ -20,7 +20,7 @@
 				<include name="s2-tiger-${ver}-sources.jar"/>
 			</zipfileset>
 			<zipfileset prefix="s2-tiger/resources" dir="src/test/resources">
-				<include name="jdbc.dicon"/>
+				<include name="s2jdbc.dicon"/>
 				<include name="s2junit4.dicon"/>
 			</zipfileset>
 			<zipfileset prefix="s2-tiger/doc" dir="target/site">
