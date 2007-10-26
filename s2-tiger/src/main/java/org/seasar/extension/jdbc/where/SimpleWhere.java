@@ -69,12 +69,12 @@ public class SimpleWhere implements Where {
 
     /**
      * {@link #ignoreWhitespace()}が呼び出された場合でパラメータ値が空文字列または空白のみの文字列なら<code>null</code>を、
-     * それ以外なら<code>value</code>をそのまま返します。
+     * それ以外なら元の値をそのまま返します。
      * 
      * @param value
      *            パラメータ値
      * @return {@link #ignoreWhitespace()}が呼び出された場合でパラメータ値が空文字列または空白のみの文字列なら<code>null</code>、
-     *         それ以外なら<code>value</code>
+     *         それ以外なら元の値
      */
     protected Object normalize(Object value) {
         if (ignoreWhitespace && value instanceof String) {
@@ -86,23 +86,26 @@ public class SimpleWhere implements Where {
     }
 
     /**
-     * {@link #ignoreWhitespace()}が呼び出された場合でパラメータ値が空文字列または空白のみの文字列なら<code>null</code>を、
-     * それ以外なら<code>value</code>をそのまま返します。
+     * {@link #ignoreWhitespace()}が呼び出された場合で パラメータ値の要素が空文字列または空白のみの文字列なら<code>null</code>、
+     * それ以外なら元の値からなる配列を返します。
      * 
      * @param values
      *            パラメータ値の配列
-     * @return {@link #ignoreWhitespace()}が呼び出された場合でパラメータ値が空文字列または空白のみの文字列なら<code>null</code>、
+     * @return {@link #ignoreWhitespace()}が呼び出された場合でパラメータ値の要素が空文字列または空白のみの文字列なら<code>null</code>、
      *         それ以外なら元の値からなる配列
      */
     protected Object[] normalize(Object... values) {
-        if (values == null) {
-            return null;
+        if (!ignoreWhitespace || values == null) {
+            return values;
         }
-        Object[] result = new Object[values.length];
+        List<Object> list = CollectionsUtil.newArrayList(values.length);
         for (int i = 0; i < values.length; ++i) {
-            result[i] = normalize(values[i]);
+            Object normalizedValue = normalize(values[i]);
+            if (normalizedValue != null) {
+                list.add(normalizedValue);
+            }
         }
-        return result;
+        return list.toArray(new Object[list.size()]);
     }
 
     /**
@@ -125,6 +128,26 @@ public class SimpleWhere implements Where {
             criteriaSb = new StringBuilder(100);
             criteriaList.addLast(criteriaSb);
         }
+        return this;
+    }
+
+    /**
+     * これまでに追加された条件と、引数で渡された条件全体をANDで結合します。
+     * 
+     * @param factor
+     *            ANDで結合される条件
+     * @return このインスタンス自身
+     */
+    public SimpleWhere and(Where factor) {
+        String factorCriteria = factor.getCriteria();
+        if (StringUtil.isEmpty(factorCriteria)) {
+            return this;
+        }
+        if (criteriaSb.length() > 0) {
+            criteriaSb.append(" and (");
+        }
+        criteriaSb.append(factorCriteria).append(")");
+        paramList.addAll(Arrays.asList(factor.getParams()));
         return this;
     }
 

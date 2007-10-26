@@ -66,11 +66,8 @@ public class SimpleWhereTest extends TestCase {
 
         assertNull(w.normalize((Object[]) null));
         normalized = w.normalize(null, "", " ", Integer.valueOf(1));
-        assertEquals(4, normalized.length);
-        assertNull(normalized[0]);
-        assertNull(normalized[1]);
-        assertNull(normalized[2]);
-        assertEquals(Integer.valueOf(1), normalized[3]);
+        assertEquals(1, normalized.length);
+        assertEquals(Integer.valueOf(1), normalized[0]);
     }
 
     /**
@@ -510,6 +507,20 @@ public class SimpleWhereTest extends TestCase {
         w.eq("a", null).eq("b", null).or().eq("c", 3).eq("d", 4);
         assertEquals("c = ? and d = ?", w.getCriteria());
         assertEquals(2, w.getParams().length);
+    }
+
+    /**
+     * 
+     */
+    public void testAnd() {
+        SimpleWhere w = new SimpleWhere();
+        w.eq("a", 1).eq("b", 2).and(
+                new SimpleWhere().eq("c", 3).or().eq("d", 4)).eq("e", 5).eq(
+                "f", 6);
+        assertEquals(
+                "a = ? and b = ? and ((c = ?) or (d = ?)) and e = ? and f = ?",
+                w.getCriteria());
+        assertEquals(6, w.getParams().length);
     }
 
 }
