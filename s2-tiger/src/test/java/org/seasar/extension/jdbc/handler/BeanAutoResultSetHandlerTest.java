@@ -76,6 +76,45 @@ public class BeanAutoResultSetHandlerTest extends TestCase {
      * @throws Exception
      * 
      */
+    public void testHandle_uniqueResult() throws Exception {
+        ValueType[] valueTypes = new ValueType[] { ValueTypes.INTEGER,
+                ValueTypes.STRING };
+        Field field1 = Aaa.class.getDeclaredField("id");
+        PropertyMapperImpl propertyMapper = new PropertyMapperImpl(field1, 0);
+        Field field2 = Aaa.class.getDeclaredField("name");
+        PropertyMapperImpl propertyMapper2 = new PropertyMapperImpl(field2, 1);
+        EntityMapperImpl entityMapper = new EntityMapperImpl(Aaa.class,
+                new PropertyMapper[] { propertyMapper, propertyMapper2 },
+                new int[] { 0 });
+
+        BeanAutoResultSetHandler handler = new BeanAutoResultSetHandler(
+                valueTypes, entityMapper, "select * from aaa");
+        MockResultSetMetaData rsMeta = new MockResultSetMetaData();
+        MockColumnMetaData columnMeta = new MockColumnMetaData();
+        columnMeta.setColumnLabel("ID");
+        rsMeta.addColumnMetaData(columnMeta);
+        columnMeta = new MockColumnMetaData();
+        columnMeta.setColumnLabel("NAME");
+        rsMeta.addColumnMetaData(columnMeta);
+        MockResultSet rs = new MockResultSet(rsMeta);
+        rs.setType(ResultSet.TYPE_SCROLL_INSENSITIVE);
+        ArrayMap data1 = new ArrayMap();
+        data1.put("ID", new Integer(1));
+        data1.put("NAME", "SCOTT");
+        rs.addRowData(data1);
+        ArrayMap data2 = new ArrayMap();
+        data2.put("ID", new Integer(1));
+        data2.put("NAME", "SCOTT");
+        rs.addRowData(data2);
+        Aaa aaa = (Aaa) handler.handle(rs);
+        assertEquals(new Integer(1), aaa.id);
+        assertEquals("SCOTT", aaa.name);
+    }
+
+    /**
+     * @throws Exception
+     * 
+     */
     public void testHandle_nonUniqueResult() throws Exception {
         ValueType[] valueTypes = new ValueType[] { ValueTypes.INTEGER,
                 ValueTypes.STRING };
@@ -98,11 +137,14 @@ public class BeanAutoResultSetHandlerTest extends TestCase {
         rsMeta.addColumnMetaData(columnMeta);
         MockResultSet rs = new MockResultSet(rsMeta);
         rs.setType(ResultSet.TYPE_SCROLL_INSENSITIVE);
-        ArrayMap data = new ArrayMap();
-        data.put("ID", new Integer(1));
-        data.put("NAME", "SCOTT");
-        rs.addRowData(data);
-        rs.addRowData(data);
+        ArrayMap data1 = new ArrayMap();
+        data1.put("ID", new Integer(1));
+        data1.put("NAME", "SCOTT");
+        rs.addRowData(data1);
+        ArrayMap data2 = new ArrayMap();
+        data2.put("ID", new Integer(2));
+        data2.put("NAME", "TIGER");
+        rs.addRowData(data2);
         try {
             handler.handle(rs);
             fail();
@@ -111,4 +153,5 @@ public class BeanAutoResultSetHandlerTest extends TestCase {
             assertEquals("select * from aaa", e.getSql());
         }
     }
+
 }

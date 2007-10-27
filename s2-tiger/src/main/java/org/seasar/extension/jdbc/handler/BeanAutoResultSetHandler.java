@@ -32,30 +32,33 @@ import org.seasar.extension.jdbc.exception.SNonUniqueResultException;
  */
 public class BeanAutoResultSetHandler extends AbstractBeanAutoResultSetHandler {
 
-	/**
-	 * {@link BeanAutoResultSetHandler}を作成します。
-	 * 
-	 * @param valueTypes
-	 *            値タイプの配列
-	 * @param entityMapper
-	 *            エンティティマッパー
-	 * @param sql
-	 *            SQL
-	 */
-	public BeanAutoResultSetHandler(ValueType[] valueTypes,
-			EntityMapper entityMapper, String sql) {
-		super(valueTypes, entityMapper, sql);
-	}
+    /**
+     * {@link BeanAutoResultSetHandler}を作成します。
+     * 
+     * @param valueTypes
+     *            値タイプの配列
+     * @param entityMapper
+     *            エンティティマッパー
+     * @param sql
+     *            SQL
+     */
+    public BeanAutoResultSetHandler(ValueType[] valueTypes,
+            EntityMapper entityMapper, String sql) {
+        super(valueTypes, entityMapper, sql);
+    }
 
-	public Object handle(ResultSet rs) throws SQLException {
-		MappingContext mappingContext = new MappingContext();
-		Object ret = null;
-		if (rs.next()) {
-			ret = createEntity(rs, mappingContext);
-			if (rs.next()) {
-				throw new SNonUniqueResultException(sql);
-			}
-		}
-		return ret;
-	}
+    public Object handle(ResultSet rs) throws SQLException {
+        MappingContext mappingContext = new MappingContext();
+        Object ret = null;
+        if (rs.next()) {
+            ret = createEntity(rs, mappingContext);
+            while (rs.next()) {
+                if (createEntity(rs, mappingContext) != null) {
+                    throw new SNonUniqueResultException(sql);
+                }
+            }
+        }
+        return ret;
+    }
+
 }
