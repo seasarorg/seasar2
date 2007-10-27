@@ -18,7 +18,7 @@ package org.seasar.extension.jdbc.query;
 import java.sql.PreparedStatement;
 
 import org.seasar.extension.jdbc.JdbcContext;
-import org.seasar.extension.jdbc.JdbcManager;
+import org.seasar.extension.jdbc.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.SqlFileUpdate;
 import org.seasar.extension.jdbc.types.ValueTypes;
 import org.seasar.extension.sql.Node;
@@ -65,11 +65,11 @@ public class SqlFileUpdateImpl extends AbstractQuery<SqlFileUpdate> implements
      * {@link SqlFileUpdateImpl}を作成します。
      * 
      * @param jdbcManager
-     *            JDBCマネージャ
+     *            内部的なJDBCマネージャ
      * @param path
      *            SQLファイルのパス
      */
-    public SqlFileUpdateImpl(JdbcManager jdbcManager, String path) {
+    public SqlFileUpdateImpl(JdbcManagerImplementor jdbcManager, String path) {
         this(jdbcManager, path, null);
     }
 
@@ -77,13 +77,13 @@ public class SqlFileUpdateImpl extends AbstractQuery<SqlFileUpdate> implements
      * {@link SqlFileUpdateImpl}を作成します。
      * 
      * @param jdbcManager
-     *            JDBCマネージャ
+     *            内部的なJDBCマネージャ
      * @param path
      *            SQLファイルのパス
      * @param parameter
      *            パラメータ
      */
-    public SqlFileUpdateImpl(JdbcManager jdbcManager, String path,
+    public SqlFileUpdateImpl(JdbcManagerImplementor jdbcManager, String path,
             Object parameter) {
         super(jdbcManager);
         if (path == null) {

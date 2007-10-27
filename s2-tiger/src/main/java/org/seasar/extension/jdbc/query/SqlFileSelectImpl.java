@@ -15,7 +15,7 @@
  */
 package org.seasar.extension.jdbc.query;
 
-import org.seasar.extension.jdbc.JdbcManager;
+import org.seasar.extension.jdbc.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.SqlFileSelect;
 import org.seasar.extension.jdbc.types.ValueTypes;
 import org.seasar.extension.sql.Node;
@@ -63,14 +63,14 @@ public class SqlFileSelectImpl<T> extends
      * {@link SqlFileSelectImpl}を作成します。
      * 
      * @param jdbcManager
-     *            JDBCマネージャ
+     *            内部的なJDBCマネージャ
      * @param baseClass
      *            ベースクラス
      * @param path
      *            SQLファイルのパス
      */
-    public SqlFileSelectImpl(JdbcManager jdbcManager, Class<T> baseClass,
-            String path) {
+    public SqlFileSelectImpl(JdbcManagerImplementor jdbcManager,
+            Class<T> baseClass, String path) {
         this(jdbcManager, baseClass, path, null);
     }
 
@@ -78,7 +78,7 @@ public class SqlFileSelectImpl<T> extends
      * {@link SqlFileSelectImpl}を作成します。
      * 
      * @param jdbcManager
-     *            JDBCマネージャ
+     *            内部的なJDBCマネージャ
      * @param baseClass
      *            ベースクラス
      * @param path
@@ -86,8 +86,8 @@ public class SqlFileSelectImpl<T> extends
      * @param parameter
      *            パラメータ
      */
-    public SqlFileSelectImpl(JdbcManager jdbcManager, Class<T> baseClass,
-            String path, Object parameter) {
+    public SqlFileSelectImpl(JdbcManagerImplementor jdbcManager,
+            Class<T> baseClass, String path, Object parameter) {
         super(jdbcManager, baseClass);
         if (path == null) {
             throw new NullPointerException("path");

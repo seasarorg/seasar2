@@ -17,7 +17,7 @@ package org.seasar.extension.jdbc.query;
 
 import org.seasar.extension.jdbc.AutoDelete;
 import org.seasar.extension.jdbc.ConditionType;
-import org.seasar.extension.jdbc.JdbcManager;
+import org.seasar.extension.jdbc.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.WhereClause;
 import org.seasar.framework.util.FieldUtil;
@@ -43,11 +43,12 @@ public class AutoDeleteImpl<T> extends AbstractAutoUpdate<T, AutoDelete<T>>
 
     /**
      * @param jdbcManager
-     *            JDBCマネージャ
+     *            内部的なJDBCマネージャ
      * @param entity
      *            エンティティ
      */
-    public AutoDeleteImpl(final JdbcManager jdbcManager, final T entity) {
+    public AutoDeleteImpl(final JdbcManagerImplementor jdbcManager,
+            final T entity) {
         super(jdbcManager, entity);
     }
 

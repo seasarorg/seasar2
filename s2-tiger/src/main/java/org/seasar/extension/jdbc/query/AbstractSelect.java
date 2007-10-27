@@ -21,7 +21,7 @@ import java.util.List;
 
 import org.seasar.extension.jdbc.DbmsDialect;
 import org.seasar.extension.jdbc.JdbcContext;
-import org.seasar.extension.jdbc.JdbcManager;
+import org.seasar.extension.jdbc.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.ResultSetHandler;
 import org.seasar.extension.jdbc.Select;
 import org.seasar.extension.jdbc.exception.SNonUniqueResultException;
@@ -70,11 +70,11 @@ public abstract class AbstractSelect<T, S extends Select<T, S>> extends
      * {@link AbstractSelect}を作成します。
      * 
      * @param jdbcManager
-     *            JDBCマネージャ
+     *            内部的なJDBCマネージャ
      * @param baseClass
      *            ベースクラス
      */
-    public AbstractSelect(JdbcManager jdbcManager, Class<T> baseClass) {
+    public AbstractSelect(JdbcManagerImplementor jdbcManager, Class<T> baseClass) {
         super(jdbcManager);
         this.baseClass = baseClass;
 

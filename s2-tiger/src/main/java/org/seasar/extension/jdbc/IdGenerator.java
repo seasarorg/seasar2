@@ -28,47 +28,48 @@ public interface IdGenerator {
      * このIDジェネレータがバッチ更新に対応している場合は<code>true</code>を返します。
      * 
      * @param jdbcManager
-     *            JDBCマネージャ
+     *            内部的なJDBCマネージャ
      * @return このIDジェネレータがバッチ更新に対応している場合は<code>true</code>
      */
-    boolean supportBatch(JdbcManager jdbcManager);
+    boolean supportBatch(JdbcManagerImplementor jdbcManager);
 
     /**
      * 生成された識別子の値を{@link Statement#getGeneratedKeys()}で取得する場合は<code>true</code>を返します。
      * 
      * @param jdbcManager
-     *            JDBCマネージャ
+     *            内部的なJDBCマネージャ
      * @return 生成された識別子の値を{@link Statement#getGeneratedKeys()}で取得する場合は<code>true</code>
      */
-    boolean useGetGeneratedKeys(JdbcManager jdbcManager);
+    boolean useGetGeneratedKeys(JdbcManagerImplementor jdbcManager);
 
     /**
      * 自動生成される識別子をINSERT文に含める場合は<code>true</code>を返します。
      * 
      * @param jdbcManager
-     *            JDBCマネージャ
+     *            内部的なJDBCマネージャ
      * @return 自動生成される識別子をINSERT文に含める場合は<code>true</code>
      */
-    boolean isInsertInto(JdbcManager jdbcManager);
+    boolean isInsertInto(JdbcManagerImplementor jdbcManager);
 
     /**
      * INSERTの実行前処理を行います。
      * 
      * @param jdbcManager
-     *            JDBCマネージャ
+     *            内部的なJDBCマネージャ
      * @param entity
      *            INSERT対象のエンティティ
      * @param sqlLogger
      *            SQLのロガー
      * @return INSERT文に渡すバインド変数の値
      */
-    Object preInsert(JdbcManager jdbcManager, Object entity, SqlLogger sqlLogger);
+    Object preInsert(JdbcManagerImplementor jdbcManager, Object entity,
+            SqlLogger sqlLogger);
 
     /**
      * INSERTの実行後処理を行います。
      * 
      * @param jdbcManager
-     *            JDBCマネージャ
+     *            内部的なJDBCマネージャ
      * @param entity
      *            INSERT対象のエンティティ
      * @param statement
@@ -76,7 +77,7 @@ public interface IdGenerator {
      * @param sqlLogger
      *            SQLのロガー
      */
-    void postInsert(JdbcManager jdbcManager, Object entity,
+    void postInsert(JdbcManagerImplementor jdbcManager, Object entity,
             Statement statement, SqlLogger sqlLogger);
 
 }

@@ -22,7 +22,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.SequenceGenerator;
 
 import org.seasar.extension.jdbc.EntityMeta;
-import org.seasar.extension.jdbc.JdbcManager;
+import org.seasar.extension.jdbc.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.SqlLogger;
 import org.seasar.framework.util.PreparedStatementUtil;
@@ -57,7 +57,7 @@ public class SequenceIdGenerator extends AbstractPreAllocateIdGenerator {
     }
 
     @Override
-    protected long getNewInitialValue(final JdbcManager jdbcManager,
+    protected long getNewInitialValue(final JdbcManagerImplementor jdbcManager,
             final SqlLogger sqlLogger) {
         final String sql = jdbcManager.getDialect().getSequenceNextValString(
                 sequenceName);

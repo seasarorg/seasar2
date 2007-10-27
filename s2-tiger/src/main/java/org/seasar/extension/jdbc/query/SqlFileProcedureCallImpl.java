@@ -15,7 +15,7 @@
  */
 package org.seasar.extension.jdbc.query;
 
-import org.seasar.extension.jdbc.JdbcManager;
+import org.seasar.extension.jdbc.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.SqlFileProcedureCall;
 import org.seasar.extension.sql.Node;
 import org.seasar.extension.sql.SqlContext;
@@ -47,12 +47,13 @@ public class SqlFileProcedureCallImpl extends
      * {@link SqlFileProcedureCallImpl}を作成します。
      * 
      * @param jdbcManager
-     *            JDBCマネージャ
+     *            内部的なJDBCマネージャ
      * @param path
      *            SQLファイルのパス
-     * @see #SqlFileProcedureCallImpl(JdbcManager, String, Object)
+     * @see #SqlFileProcedureCallImpl(JdbcManagerImplementor, String, Object)
      */
-    public SqlFileProcedureCallImpl(JdbcManager jdbcManager, String path) {
+    public SqlFileProcedureCallImpl(JdbcManagerImplementor jdbcManager,
+            String path) {
         this(jdbcManager, path, null);
     }
 
@@ -60,7 +61,7 @@ public class SqlFileProcedureCallImpl extends
      * {@link SqlFileProcedureCallImpl}を作成します。
      * 
      * @param jdbcManager
-     *            JDBCマネージャ
+     *            内部的なJDBCマネージャ
      * @param path
      *            SQLファイルのパス
      * @param param
@@ -84,8 +85,8 @@ public class SqlFileProcedureCallImpl extends
      *            継承もとのクラスのフィールドは認識しません。
      *            </p>
      */
-    public SqlFileProcedureCallImpl(JdbcManager jdbcManager, String path,
-            Object param) {
+    public SqlFileProcedureCallImpl(JdbcManagerImplementor jdbcManager,
+            String path, Object param) {
         super(jdbcManager);
         if (path == null) {
             throw new NullPointerException("path");

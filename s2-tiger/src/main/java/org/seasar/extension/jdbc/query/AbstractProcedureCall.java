@@ -25,7 +25,7 @@ import java.util.List;
 import javax.persistence.Lob;
 
 import org.seasar.extension.jdbc.JdbcContext;
-import org.seasar.extension.jdbc.JdbcManager;
+import org.seasar.extension.jdbc.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.ParamType;
 import org.seasar.extension.jdbc.ProcedureCall;
 import org.seasar.extension.jdbc.ResultSetHandler;
@@ -74,9 +74,9 @@ public abstract class AbstractProcedureCall<S extends ProcedureCall<S>> extends
      * {@link AbstractProcedureCall}を作成します。
      * 
      * @param jdbcManager
-     *            JDBCマネージャ
+     *            内部的なJDBCマネージャ
      */
-    public AbstractProcedureCall(JdbcManager jdbcManager) {
+    public AbstractProcedureCall(JdbcManagerImplementor jdbcManager) {
         super(jdbcManager);
     }
 

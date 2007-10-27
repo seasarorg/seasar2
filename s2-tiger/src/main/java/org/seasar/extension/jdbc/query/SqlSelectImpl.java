@@ -15,7 +15,7 @@
  */
 package org.seasar.extension.jdbc.query;
 
-import org.seasar.extension.jdbc.JdbcManager;
+import org.seasar.extension.jdbc.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.SqlSelect;
 
 /**
@@ -37,7 +37,7 @@ public class SqlSelectImpl<T> extends AbstractSqlSelect<T, SqlSelect<T>>
      * {@link SqlSelectImpl}を作成します。
      * 
      * @param jdbcManager
-     *            JDBCマネージャ
+     *            内部的なJDBCマネージャ
      * @param baseClass
      *            ベースクラス
      * @param sql
@@ -45,8 +45,8 @@ public class SqlSelectImpl<T> extends AbstractSqlSelect<T, SqlSelect<T>>
      * @param params
      *            パラメータの配列です。
      */
-    public SqlSelectImpl(JdbcManager jdbcManager, Class<T> baseClass,
-            String sql, Object... params) {
+    public SqlSelectImpl(JdbcManagerImplementor jdbcManager,
+            Class<T> baseClass, String sql, Object... params) {
         super(jdbcManager, baseClass);
         if (sql == null) {
             throw new NullPointerException("sql");

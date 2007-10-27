@@ -35,6 +35,7 @@ import org.seasar.extension.jdbc.DbmsDialect;
 import org.seasar.extension.jdbc.EntityMetaFactory;
 import org.seasar.extension.jdbc.JdbcContext;
 import org.seasar.extension.jdbc.JdbcManager;
+import org.seasar.extension.jdbc.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.SqlBatchUpdate;
 import org.seasar.extension.jdbc.SqlFileBatchUpdate;
 import org.seasar.extension.jdbc.SqlFileProcedureCall;
@@ -59,6 +60,7 @@ import org.seasar.extension.jdbc.query.SqlProcedureCallImpl;
 import org.seasar.extension.jdbc.query.SqlSelectImpl;
 import org.seasar.extension.jdbc.query.SqlUpdateImpl;
 import org.seasar.extension.jdbc.util.DataSourceUtil;
+import org.seasar.framework.convention.PersistenceConvention;
 
 /**
  * {@link JdbcManager}の実装クラスです。
@@ -67,7 +69,8 @@ import org.seasar.extension.jdbc.util.DataSourceUtil;
  * 
  * 
  */
-public class JdbcManagerImpl implements JdbcManager, Synchronization {
+public class JdbcManagerImpl implements JdbcManager, JdbcManagerImplementor,
+        Synchronization {
 
     /**
      * トランザクション同期レジストリです。
@@ -88,6 +91,11 @@ public class JdbcManagerImpl implements JdbcManager, Synchronization {
      * エンティティメタデータファクトリです。
      */
     protected EntityMetaFactory entityMetaFactory;
+
+    /**
+     * 永続化層の規約です。
+     */
+    protected PersistenceConvention persistenceConvention;
 
     /**
      * デフォルトの最大行数です。
@@ -440,5 +448,20 @@ public class JdbcManagerImpl implements JdbcManager, Synchronization {
      */
     public void setEntityMetaFactory(EntityMetaFactory entityMetaFactory) {
         this.entityMetaFactory = entityMetaFactory;
+    }
+
+    public PersistenceConvention getPersistenceConvention() {
+        return persistenceConvention;
+    }
+
+    /**
+     * 永続化層の規約を設定します。
+     * 
+     * @param persistenceConvention
+     *            永続化層の規約
+     */
+    public void setPersistenceConvention(
+            PersistenceConvention persistenceConvention) {
+        this.persistenceConvention = persistenceConvention;
     }
 }

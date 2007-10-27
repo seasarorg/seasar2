@@ -19,7 +19,7 @@ import java.sql.SQLException;
 
 import junit.framework.TestCase;
 
-import org.seasar.extension.jdbc.JdbcManager;
+import org.seasar.extension.jdbc.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.SqlLog;
 import org.seasar.extension.jdbc.SqlLogRegistry;
 import org.seasar.extension.jdbc.SqlLogRegistryLocator;
@@ -236,7 +236,7 @@ public class AbstractQueryTest extends TestCase {
         /**
          * @param jdbcManager
          */
-        public MyQuery(JdbcManager jdbcManager) {
+        public MyQuery(JdbcManagerImplementor jdbcManager) {
             super(jdbcManager);
         }
 

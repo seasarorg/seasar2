@@ -19,7 +19,7 @@ import javax.persistence.TableGenerator;
 import javax.sql.DataSource;
 
 import org.seasar.extension.jdbc.EntityMeta;
-import org.seasar.extension.jdbc.JdbcManager;
+import org.seasar.extension.jdbc.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.SqlLogger;
 import org.seasar.extension.jdbc.exception.IdGenerationFailedRuntimeException;
@@ -94,7 +94,7 @@ public class TableIdGenerator extends AbstractPreAllocateIdGenerator {
     }
 
     @Override
-    protected long getNewInitialValue(final JdbcManager jdbcManager,
+    protected long getNewInitialValue(final JdbcManagerImplementor jdbcManager,
             final SqlLogger sqlLogger) {
         try {
             final TransactionManagerAdapter txAdapter = SingletonS2Container
@@ -125,10 +125,10 @@ public class TableIdGenerator extends AbstractPreAllocateIdGenerator {
      * </p>
      * 
      * @param jdbcManager
-     *            JDBCマネージャ
+     *            内部的なJDBCマネージャ
      * @return 次の識別子の値
      */
-    protected Number updateIdTable(final JdbcManager jdbcManager) {
+    protected Number updateIdTable(final JdbcManagerImplementor jdbcManager) {
         final DataSource ds = jdbcManager.getDataSource();
         final BasicUpdateHandler updateHandler = new BasicUpdateHandler(ds,
                 updateSql);

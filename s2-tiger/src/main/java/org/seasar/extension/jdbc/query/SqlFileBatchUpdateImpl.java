@@ -19,7 +19,7 @@ import java.sql.PreparedStatement;
 import java.util.List;
 
 import org.seasar.extension.jdbc.JdbcContext;
-import org.seasar.extension.jdbc.JdbcManager;
+import org.seasar.extension.jdbc.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.SqlFileBatchUpdate;
 import org.seasar.extension.jdbc.types.ValueTypes;
 import org.seasar.extension.sql.Node;
@@ -67,14 +67,14 @@ public class SqlFileBatchUpdateImpl<T> extends
      * {@link SqlFileBatchUpdate}を作成します。
      * 
      * @param jdbcManager
-     *            JDBCマネージャ
+     *            内部的なJDBCマネージャ
      * @param path
      *            SQLファイルのパス
      * @param parameterList
      *            パラメータのリスト
      */
-    public SqlFileBatchUpdateImpl(JdbcManager jdbcManager, String path,
-            List<T> parameterList) {
+    public SqlFileBatchUpdateImpl(JdbcManagerImplementor jdbcManager,
+            String path, List<T> parameterList) {
         super(jdbcManager);
         if (path == null) {
             throw new NullPointerException("path");

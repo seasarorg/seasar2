@@ -23,7 +23,7 @@ import javax.persistence.OptimisticLockException;
 import org.seasar.extension.jdbc.BatchUpdate;
 import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.JdbcContext;
-import org.seasar.extension.jdbc.JdbcManager;
+import org.seasar.extension.jdbc.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.exception.SOptimisticLockException;
 import org.seasar.framework.exception.EmptyRuntimeException;
 import org.seasar.framework.util.PreparedStatementUtil;
@@ -49,13 +49,13 @@ public abstract class AbstractAutoBatchUpdate<T, S extends BatchUpdate<S>>
 
     /**
      * @param jdbcManager
-     *            JDBCマネージャ
+     *            内部的なJDBCマネージャ
      * @param entities
      *            エンティティのリスト
      * @throws EmptyRuntimeException
      *             エンティティのリストが空の場合
      */
-    public AbstractAutoBatchUpdate(final JdbcManager jdbcManager,
+    public AbstractAutoBatchUpdate(final JdbcManagerImplementor jdbcManager,
             final List<T> entities) {
         super(jdbcManager);
         if (entities == null) {

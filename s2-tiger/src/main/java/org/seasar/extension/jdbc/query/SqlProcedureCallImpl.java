@@ -15,7 +15,7 @@
  */
 package org.seasar.extension.jdbc.query;
 
-import org.seasar.extension.jdbc.JdbcManager;
+import org.seasar.extension.jdbc.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.SqlProcedureCall;
 import org.seasar.extension.jdbc.SqlUpdate;
 
@@ -32,12 +32,12 @@ public class SqlProcedureCallImpl extends
      * {@link SqlProcedureCallImpl}を作成します。
      * 
      * @param jdbcManager
-     *            JDBCマネージャ
+     *            内部的なJDBCマネージャ
      * @param sql
      *            SQL
-     * @see #SqlProcedureCallImpl(JdbcManager, String, Object)
+     * @see #SqlProcedureCallImpl(JdbcManagerImplementor, String, Object)
      */
-    public SqlProcedureCallImpl(JdbcManager jdbcManager, String sql) {
+    public SqlProcedureCallImpl(JdbcManagerImplementor jdbcManager, String sql) {
         this(jdbcManager, sql, null);
     }
 
@@ -45,7 +45,7 @@ public class SqlProcedureCallImpl extends
      * {@link SqlProcedureCallImpl}を作成します。
      * 
      * @param jdbcManager
-     *            JDBCマネージャ
+     *            内部的なJDBCマネージャ
      * @param sql
      *            SQL
      * @param param
@@ -69,7 +69,7 @@ public class SqlProcedureCallImpl extends
      *            継承もとのクラスのフィールドは認識しません。
      *            </p>
      */
-    public SqlProcedureCallImpl(JdbcManager jdbcManager, String sql,
+    public SqlProcedureCallImpl(JdbcManagerImplementor jdbcManager, String sql,
             Object param) {
         super(jdbcManager);
         if (sql == null) {

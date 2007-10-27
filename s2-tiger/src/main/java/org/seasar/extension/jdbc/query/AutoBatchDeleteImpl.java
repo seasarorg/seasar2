@@ -20,7 +20,7 @@ import java.util.List;
 import org.seasar.extension.jdbc.AutoBatchDelete;
 import org.seasar.extension.jdbc.AutoBatchUpdate;
 import org.seasar.extension.jdbc.ConditionType;
-import org.seasar.extension.jdbc.JdbcManager;
+import org.seasar.extension.jdbc.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.WhereClause;
 import org.seasar.framework.util.FieldUtil;
@@ -47,11 +47,11 @@ public class AutoBatchDeleteImpl<T> extends
 
     /**
      * @param jdbcManager
-     *            JDBCマネージャ
+     *            内部的なJDBCマネージャ
      * @param entities
      *            エンティティのリスト
      */
-    public AutoBatchDeleteImpl(final JdbcManager jdbcManager,
+    public AutoBatchDeleteImpl(final JdbcManagerImplementor jdbcManager,
             final List<T> entities) {
         super(jdbcManager, entities);
     }

@@ -28,7 +28,7 @@ import org.seasar.extension.jdbc.AutoBatchUpdate;
 import org.seasar.extension.jdbc.IdGenerator;
 import org.seasar.extension.jdbc.IntoClause;
 import org.seasar.extension.jdbc.JdbcContext;
-import org.seasar.extension.jdbc.JdbcManager;
+import org.seasar.extension.jdbc.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.ValuesClause;
 import org.seasar.framework.util.ClassUtil;
@@ -80,11 +80,11 @@ public class AutoBatchInsertImpl<T> extends
 
     /**
      * @param jdbcManager
-     *            JDBCマネージャ
+     *            内部的なJDBCマネージャ
      * @param entities
      *            エンティティのリスト
      */
-    public AutoBatchInsertImpl(final JdbcManager jdbcManager,
+    public AutoBatchInsertImpl(final JdbcManagerImplementor jdbcManager,
             final List<T> entities) {
         super(jdbcManager, entities);
     }

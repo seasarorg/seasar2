@@ -26,7 +26,7 @@ import org.seasar.extension.jdbc.AutoInsert;
 import org.seasar.extension.jdbc.IdGenerator;
 import org.seasar.extension.jdbc.IntoClause;
 import org.seasar.extension.jdbc.JdbcContext;
-import org.seasar.extension.jdbc.JdbcManager;
+import org.seasar.extension.jdbc.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.ValuesClause;
 import org.seasar.extension.jdbc.exception.IdPropertyNotAssignedRuntimeException;
@@ -77,11 +77,12 @@ public class AutoInsertImpl<T> extends AbstractAutoUpdate<T, AutoInsert<T>>
 
     /**
      * @param jdbcManager
-     *            JDBCマネージャ
+     *            内部的なJDBCマネージャ
      * @param entity
      *            エンティティ
      */
-    public AutoInsertImpl(final JdbcManager jdbcManager, final T entity) {
+    public AutoInsertImpl(final JdbcManagerImplementor jdbcManager,
+            final T entity) {
         super(jdbcManager, entity);
     }
 

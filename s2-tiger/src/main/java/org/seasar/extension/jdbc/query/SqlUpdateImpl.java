@@ -18,7 +18,7 @@ package org.seasar.extension.jdbc.query;
 import java.sql.PreparedStatement;
 
 import org.seasar.extension.jdbc.JdbcContext;
-import org.seasar.extension.jdbc.JdbcManager;
+import org.seasar.extension.jdbc.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.SqlUpdate;
 import org.seasar.extension.jdbc.exception.IllegalParamSizeRuntimeException;
 import org.seasar.framework.util.PreparedStatementUtil;
@@ -44,13 +44,13 @@ public class SqlUpdateImpl extends AbstractQuery<SqlUpdate> implements
      * {@link SqlUpdateImpl}を作成します。
      * 
      * @param jdbcManager
-     *            JDBCマネージャ
+     *            内部的なJDBCマネージャ
      * @param sql
      *            SQL
      * @param paramClasses
      *            パラメータのクラスの配列です。
      */
-    public SqlUpdateImpl(JdbcManager jdbcManager, String sql,
+    public SqlUpdateImpl(JdbcManagerImplementor jdbcManager, String sql,
             Class<?>... paramClasses) {
         super(jdbcManager);
         if (sql == null) {

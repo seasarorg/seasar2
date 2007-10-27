@@ -29,7 +29,7 @@ import org.seasar.extension.jdbc.DbmsDialect;
 import org.seasar.extension.jdbc.EntityMapper;
 import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.FromClause;
-import org.seasar.extension.jdbc.JdbcManager;
+import org.seasar.extension.jdbc.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.JoinColumnMeta;
 import org.seasar.extension.jdbc.JoinMeta;
 import org.seasar.extension.jdbc.JoinType;
@@ -147,11 +147,11 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
      * {@link AutoSelectImpl}を作成します。
      * 
      * @param jdbcManager
-     *            JDBCマネージャ
+     *            内部的なJDBCマネージャ
      * @param baseClass
      *            ベースクラス
      */
-    public AutoSelectImpl(JdbcManager jdbcManager, Class<T> baseClass) {
+    public AutoSelectImpl(JdbcManagerImplementor jdbcManager, Class<T> baseClass) {
         super(jdbcManager, baseClass);
     }
 

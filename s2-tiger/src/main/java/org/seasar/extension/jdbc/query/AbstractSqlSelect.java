@@ -15,18 +15,24 @@
  */
 package org.seasar.extension.jdbc.query;
 
+import java.util.Map;
+
 import org.seasar.extension.jdbc.DbmsDialect;
-import org.seasar.extension.jdbc.JdbcManager;
+import org.seasar.extension.jdbc.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.ResultSetHandler;
 import org.seasar.extension.jdbc.Select;
 import org.seasar.extension.jdbc.ValueType;
 import org.seasar.extension.jdbc.handler.BeanListResultSetHandler;
 import org.seasar.extension.jdbc.handler.BeanListSupportLimitResultSetHandler;
 import org.seasar.extension.jdbc.handler.BeanResultSetHandler;
+import org.seasar.extension.jdbc.handler.MapListResultSetHandler;
+import org.seasar.extension.jdbc.handler.MapListSupportLimitResultSetHandler;
+import org.seasar.extension.jdbc.handler.MapResultSetHandler;
 import org.seasar.extension.jdbc.handler.ObjectListResultSetHandler;
 import org.seasar.extension.jdbc.handler.ObjectListSupportLimitResultSetHandler;
 import org.seasar.extension.jdbc.handler.ObjectResultSetHandler;
 import org.seasar.extension.jdbc.types.ValueTypes;
+import org.seasar.framework.convention.PersistenceConvention;
 
 /**
  * SQLをあつかう検索用の抽象クラスです。
@@ -44,23 +50,32 @@ public abstract class AbstractSqlSelect<T, S extends Select<T, S>> extends
      * {@link AbstractSqlSelect}を作成します。
      * 
      * @param jdbcManager
-     *            JDBCマネージャ
+     *            内部的なJDBCマネージャ
      * @param baseClass
      *            ベースクラス
      */
-    public AbstractSqlSelect(JdbcManager jdbcManager, Class<T> baseClass) {
+    public AbstractSqlSelect(JdbcManagerImplementor jdbcManager,
+            Class<T> baseClass) {
         super(jdbcManager, baseClass);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     protected ResultSetHandler createResultListResultSetHandler() {
         DbmsDialect dialect = jdbcManager.getDialect();
+        PersistenceConvention persistenceConvention = jdbcManager
+                .getPersistenceConvention();
         boolean simple = ValueTypes.isSimpleType(baseClass);
         ValueType valueType = simple ? dialect.getValueType(baseClass) : null;
         if (limit > 0 && !dialect.supportsLimit()) {
             if (simple) {
                 return new ObjectListSupportLimitResultSetHandler(valueType,
                         limit);
+            }
+            if (Map.class.isAssignableFrom(baseClass)) {
+                return new MapListSupportLimitResultSetHandler(
+                        (Class<? extends Map>) baseClass, dialect,
+                        persistenceConvention, executedSql, limit);
             }
             return new BeanListSupportLimitResultSetHandler(baseClass, dialect,
                     executedSql, limit);
@@ -69,16 +84,28 @@ public abstract class AbstractSqlSelect<T, S extends Select<T, S>> extends
         if (simple) {
             return new ObjectListResultSetHandler(valueType);
         }
+        if (Map.class.isAssignableFrom(baseClass)) {
+            return new MapListResultSetHandler(
+                    (Class<? extends Map>) baseClass, dialect,
+                    persistenceConvention, executedSql);
+        }
         return new BeanListResultSetHandler(baseClass, dialect, executedSql);
 
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     protected ResultSetHandler createSingleResultResultSetHandler() {
         DbmsDialect dialect = jdbcManager.getDialect();
+        PersistenceConvention persistenceConvention = jdbcManager
+                .getPersistenceConvention();
         if (ValueTypes.isSimpleType(baseClass)) {
             ValueType valueType = dialect.getValueType(baseClass);
             return new ObjectResultSetHandler(valueType, executedSql);
+        }
+        if (Map.class.isAssignableFrom(baseClass)) {
+            return new MapResultSetHandler((Class<? extends Map>) baseClass,
+                    dialect, persistenceConvention, executedSql);
         }
         return new BeanResultSetHandler(baseClass, dialect, executedSql);
     }

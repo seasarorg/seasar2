@@ -21,7 +21,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.seasar.extension.jdbc.JdbcManager;
+import org.seasar.extension.jdbc.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.ParamType;
 import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.Query;
@@ -53,9 +53,9 @@ public abstract class AbstractQuery<S extends Query<S>> implements Query<S>,
         SqlLogger {
 
     /**
-     * JDBCマネージャです。
+     * 内部的なJDBCマネージャです。
      */
-    protected JdbcManager jdbcManager;
+    protected JdbcManagerImplementor jdbcManager;
 
     /**
      * クエリを呼び出すクラスです。
@@ -91,9 +91,9 @@ public abstract class AbstractQuery<S extends Query<S>> implements Query<S>,
      * {@link AbstractQuery}を作成します。
      * 
      * @param jdbcManager
-     *            JDBCマネージャ
+     *            内部的なJDBCマネージャ
      */
-    public AbstractQuery(JdbcManager jdbcManager) {
+    public AbstractQuery(JdbcManagerImplementor jdbcManager) {
         this.jdbcManager = jdbcManager;
     }
 
@@ -166,6 +166,15 @@ public abstract class AbstractQuery<S extends Query<S>> implements Query<S>,
     }
 
     /**
+     * 内部的なJDBCマネージャを返します。
+     * 
+     * @return 内部的なJDBCマネージャ
+     */
+    public JdbcManagerImplementor getJdbcManager() {
+        return jdbcManager;
+    }
+
+    /**
      * 実行されるSQLを返します。
      * 
      * @return 実行されるSQL
@@ -225,15 +234,6 @@ public abstract class AbstractQuery<S extends Query<S>> implements Query<S>,
      */
     public int getQueryTimeout() {
         return queryTimeout;
-    }
-
-    /**
-     * JDBCマネージャを返します。
-     * 
-     * @return JDBCマネージャ
-     */
-    public JdbcManager getJdbcManager() {
-        return jdbcManager;
     }
 
     /**

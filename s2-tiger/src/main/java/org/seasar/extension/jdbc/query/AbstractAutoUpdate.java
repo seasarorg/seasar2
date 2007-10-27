@@ -21,7 +21,7 @@ import javax.persistence.OptimisticLockException;
 
 import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.JdbcContext;
-import org.seasar.extension.jdbc.JdbcManager;
+import org.seasar.extension.jdbc.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.Update;
 import org.seasar.extension.jdbc.exception.SOptimisticLockException;
 import org.seasar.framework.util.PreparedStatementUtil;
@@ -47,11 +47,12 @@ public abstract class AbstractAutoUpdate<T, S extends Update<S>> extends
 
     /**
      * @param jdbcManager
-     *            JDBCマネージャ
+     *            内部的なJDBCマネージャ
      * @param entity
      *            エンティティ
      */
-    public AbstractAutoUpdate(final JdbcManager jdbcManager, final T entity) {
+    public AbstractAutoUpdate(final JdbcManagerImplementor jdbcManager,
+            final T entity) {
         super(jdbcManager);
         if (entity == null) {
             throw new NullPointerException("entity");

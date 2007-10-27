@@ -26,7 +26,7 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.seasar.extension.jdbc.JdbcContext;
-import org.seasar.extension.jdbc.JdbcManager;
+import org.seasar.extension.jdbc.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.ParamType;
 import org.seasar.extension.jdbc.SqlLog;
 import org.seasar.extension.jdbc.SqlLogRegistry;
@@ -386,7 +386,7 @@ public class AbstractProcedureCallTest extends TestCase {
          * @param jdbcManager
          * 
          */
-        public MyCall(JdbcManager jdbcManager) {
+        public MyCall(JdbcManagerImplementor jdbcManager) {
             super(jdbcManager);
         }
 

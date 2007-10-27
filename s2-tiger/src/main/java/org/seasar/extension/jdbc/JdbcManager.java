@@ -17,8 +17,6 @@ package org.seasar.extension.jdbc;
 
 import java.util.List;
 
-import javax.sql.DataSource;
-
 /**
  * <code>JDBC</code>による<code>SQL</code>の実行を管理するインターフェースです。
  * 
@@ -370,32 +368,4 @@ public interface JdbcManager {
      * @return 自動バッチ更新
      */
     <T> AutoBatchDelete<T> deleteBatch(List<T> entities);
-
-    /**
-     * JDBCコンテキストを返します。
-     * 
-     * @return JDBCコンテキスト
-     */
-    JdbcContext getJdbcContext();
-
-    /**
-     * データソースを返します。
-     * 
-     * @return データソース
-     */
-    DataSource getDataSource();
-
-    /**
-     * データベースの方言を返します。
-     * 
-     * @return データベースの方言
-     */
-    DbmsDialect getDialect();
-
-    /**
-     * エンティティメタデータファクトリを返します。
-     * 
-     * @return エンティティメタデータファクトリ
-     */
-    EntityMetaFactory getEntityMetaFactory();
 }

@@ -22,7 +22,7 @@ import java.util.concurrent.ConcurrentMap;
 import javax.sql.DataSource;
 
 import org.seasar.extension.jdbc.EntityMeta;
-import org.seasar.extension.jdbc.JdbcManager;
+import org.seasar.extension.jdbc.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.SqlLogger;
 import org.seasar.framework.util.tiger.CollectionsUtil;
@@ -58,38 +58,39 @@ public abstract class AbstractPreAllocateIdGenerator extends
         this.allocationSize = allocationSize;
     }
 
-    public boolean supportBatch(final JdbcManager jdbcManager) {
+    public boolean supportBatch(final JdbcManagerImplementor jdbcManager) {
         return true;
     }
 
-    public boolean useGetGeneratedKeys(final JdbcManager jdbcManager) {
+    public boolean useGetGeneratedKeys(final JdbcManagerImplementor jdbcManager) {
         return false;
     }
 
-    public boolean isInsertInto(final JdbcManager jdbcManager) {
+    public boolean isInsertInto(final JdbcManagerImplementor jdbcManager) {
         return true;
     }
 
-    public Object preInsert(final JdbcManager jdbcManager, final Object entity,
-            final SqlLogger sqlLogger) {
+    public Object preInsert(final JdbcManagerImplementor jdbcManager,
+            final Object entity, final SqlLogger sqlLogger) {
         final long id = getIdContext(jdbcManager).getNextValue(jdbcManager,
                 sqlLogger);
         setId(entity, id);
         return Long.valueOf(id);
     }
 
-    public void postInsert(final JdbcManager jdbcManager, final Object entity,
-            final Statement statement, final SqlLogger sqlLogger) {
+    public void postInsert(final JdbcManagerImplementor jdbcManager,
+            final Object entity, final Statement statement,
+            final SqlLogger sqlLogger) {
     }
 
     /**
      * IDコンテキストを返します。
      * 
      * @param jdbcManager
-     *            JDBCマネージャ
+     *            内部的なJDBCマネージャ
      * @return IDコンテキスト
      */
-    protected IdContext getIdContext(final JdbcManager jdbcManager) {
+    protected IdContext getIdContext(final JdbcManagerImplementor jdbcManager) {
         final DataSource ds = jdbcManager.getDataSource();
         final IdContext context = idContextMap.get(ds);
         if (context != null) {
@@ -102,13 +103,13 @@ public abstract class AbstractPreAllocateIdGenerator extends
      * 次の初期値を返します。
      * 
      * @param jdbcManager
-     *            JDBCマネージャ
+     *            内部的なJDBCマネージャ
      * @param sqlLogger
      *            SQLロガー
      * @return 次の初期値
      */
-    protected abstract long getNewInitialValue(JdbcManager jdbcManager,
-            SqlLogger sqlLogger);
+    protected abstract long getNewInitialValue(
+            JdbcManagerImplementor jdbcManager, SqlLogger sqlLogger);
 
     /**
      * 自動生成される識別子のコンテキスト情報を保持するクラスです。
@@ -127,12 +128,13 @@ public abstract class AbstractPreAllocateIdGenerator extends
          * 自動生成された識別子の値を返します。
          * 
          * @param jdbcManager
-         *            JDBCマネージャ
+         *            内部的なJDBCマネージャ
          * @param sqlLogger
          *            SQLロガー
          * @return 自動生成された識別子の値
          */
-        public synchronized long getNextValue(final JdbcManager jdbcManager,
+        public synchronized long getNextValue(
+                final JdbcManagerImplementor jdbcManager,
                 final SqlLogger sqlLogger) {
             if (allocated < allocationSize) {
                 return initialValue + allocated++;

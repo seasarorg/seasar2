@@ -23,7 +23,7 @@ import java.util.Set;
 
 import org.seasar.extension.jdbc.AutoUpdate;
 import org.seasar.extension.jdbc.ConditionType;
-import org.seasar.extension.jdbc.JdbcManager;
+import org.seasar.extension.jdbc.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.SetClause;
 import org.seasar.extension.jdbc.WhereClause;
@@ -72,11 +72,12 @@ public class AutoUpdateImpl<T> extends AbstractAutoUpdate<T, AutoUpdate<T>>
 
     /**
      * @param jdbcManager
-     *            JDBCマネージャ
+     *            内部的なJDBCマネージャ
      * @param entity
      *            エンティティ
      */
-    public AutoUpdateImpl(final JdbcManager jdbcManager, final T entity) {
+    public AutoUpdateImpl(final JdbcManagerImplementor jdbcManager,
+            final T entity) {
         super(jdbcManager, entity);
     }
 

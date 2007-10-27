@@ -23,7 +23,7 @@ import java.sql.Statement;
 import javax.persistence.GenerationType;
 
 import org.seasar.extension.jdbc.EntityMeta;
-import org.seasar.extension.jdbc.JdbcManager;
+import org.seasar.extension.jdbc.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.SqlLogger;
 import org.seasar.extension.jdbc.exception.IdGenerationFailedRuntimeException;
@@ -50,25 +50,26 @@ public class IdentityIdGenerator extends AbstractIdGenerator {
         super(entityMeta, propertyMeta);
     }
 
-    public boolean supportBatch(final JdbcManager jdbcManager) {
+    public boolean supportBatch(final JdbcManagerImplementor jdbcManager) {
         return false;
     }
 
-    public boolean useGetGeneratedKeys(final JdbcManager jdbcManager) {
+    public boolean useGetGeneratedKeys(final JdbcManagerImplementor jdbcManager) {
         return jdbcManager.getDialect().supportGetGeneratedKeys();
     }
 
-    public boolean isInsertInto(final JdbcManager jdbcManager) {
+    public boolean isInsertInto(final JdbcManagerImplementor jdbcManager) {
         return jdbcManager.getDialect().isInsertIdentityColumn();
     }
 
-    public Object preInsert(final JdbcManager jdbcManager, final Object entity,
-            final SqlLogger sqlLogger) {
+    public Object preInsert(final JdbcManagerImplementor jdbcManager,
+            final Object entity, final SqlLogger sqlLogger) {
         return null;
     }
 
-    public void postInsert(final JdbcManager jdbcManager, final Object entity,
-            final Statement statement, final SqlLogger sqlLogger) {
+    public void postInsert(final JdbcManagerImplementor jdbcManager,
+            final Object entity, final Statement statement,
+            final SqlLogger sqlLogger) {
         final long id;
         if (jdbcManager.getDialect().supportGetGeneratedKeys()) {
             id = getGeneratedId(statement);
@@ -99,12 +100,12 @@ public class IdentityIdGenerator extends AbstractIdGenerator {
      * DBMS固有のSQLを使用して自動生成された識別子の値を取得して返します。
      * 
      * @param jdbcManager
-     *            JDBCマネージャ
+     *            内部的なJDBCマネージャ
      * @param sqlLogger
      *            SQLロガー
      * @return 自動生成された識別子の値
      */
-    protected long getGeneratedId(final JdbcManager jdbcManager,
+    protected long getGeneratedId(final JdbcManagerImplementor jdbcManager,
             final SqlLogger sqlLogger) {
         final String sql = jdbcManager.getDialect().getIdentitySelectString(
                 entityMeta.getTableMeta().getName(),

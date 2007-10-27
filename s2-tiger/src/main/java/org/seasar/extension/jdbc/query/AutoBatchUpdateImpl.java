@@ -21,7 +21,7 @@ import java.util.Set;
 
 import org.seasar.extension.jdbc.AutoBatchUpdate;
 import org.seasar.extension.jdbc.ConditionType;
-import org.seasar.extension.jdbc.JdbcManager;
+import org.seasar.extension.jdbc.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.SetClause;
 import org.seasar.extension.jdbc.WhereClause;
@@ -65,11 +65,11 @@ public class AutoBatchUpdateImpl<T> extends
 
     /**
      * @param jdbcManager
-     *            JDBCマネージャ
+     *            内部的なJDBCマネージャ
      * @param entities
      *            エンティティのリスト
      */
-    public AutoBatchUpdateImpl(final JdbcManager jdbcManager,
+    public AutoBatchUpdateImpl(final JdbcManagerImplementor jdbcManager,
             final List<T> entities) {
         super(jdbcManager, entities);
     }
