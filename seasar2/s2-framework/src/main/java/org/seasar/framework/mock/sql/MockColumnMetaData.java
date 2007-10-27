@@ -15,6 +15,8 @@
  */
 package org.seasar.framework.mock.sql;
 
+import java.sql.Types;
+
 /**
  * @author higa
  * 
@@ -29,7 +31,7 @@ public class MockColumnMetaData {
 
     private String columnName;
 
-    private int columnType;
+    private int columnType = Types.VARCHAR;
 
     private String columnTypeName;
 
