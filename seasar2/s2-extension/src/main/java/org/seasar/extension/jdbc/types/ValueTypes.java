@@ -283,6 +283,9 @@ public final class ValueTypes {
         if (!initialized) {
             initialize();
         }
+        if (Map.class.isAssignableFrom(clazz)) {
+            return null;
+        }
         ValueType valueType = (ValueType) valueTypeCache.get(clazz.getName());
         if (valueType == NULL) {
             return null;

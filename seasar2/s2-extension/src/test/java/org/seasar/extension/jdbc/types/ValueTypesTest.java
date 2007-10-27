@@ -18,6 +18,7 @@ package org.seasar.extension.jdbc.types;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 
 import junit.framework.TestCase;
 
@@ -59,6 +60,13 @@ public class ValueTypesTest extends TestCase {
         };
         final Authority value = (Authority) valueType.getValue(resultSet, 0);
         assertEquals(2, value.value());
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testIsSimpleType() throws Exception {
+        assertFalse(ValueTypes.isSimpleType(HashMap.class));
     }
 
     private static class MockResultSet extends ResultSetWrapper {
