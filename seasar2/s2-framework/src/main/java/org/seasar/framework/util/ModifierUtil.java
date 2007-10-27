@@ -86,6 +86,28 @@ public class ModifierUtil {
     }
 
     /**
+     * <code>abstract</code>かどうか返します。
+     * 
+     * @param clazz
+     *            クラス
+     * @return <code>abstract</code>かどうか
+     */
+    public static boolean isAbstract(Class clazz) {
+        return isAbstract(clazz.getModifiers());
+    }
+
+    /**
+     * <code>abstract</code>かどうか返します。
+     * 
+     * @param modifier
+     *            モディファイヤ
+     * @return <code>abstract</code>かどうか
+     */
+    public static boolean isAbstract(int modifier) {
+        return Modifier.isAbstract(modifier);
+    }
+
+    /**
      * <code>static</code>かどうか返します。
      * 
      * @param modifier

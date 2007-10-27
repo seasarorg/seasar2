@@ -17,6 +17,8 @@ package org.seasar.framework.util;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
 
 import junit.framework.TestCase;
 
@@ -53,6 +55,14 @@ public class ModifierUtilTest extends TestCase {
         assertTrue(ModifierUtil.isTransient(f));
         f = Hoge.class.getDeclaredField("s");
         assertFalse(ModifierUtil.isTransient(f));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testIsAbstract() throws Exception {
+        assertTrue(ModifierUtil.isAbstract(Map.class));
+        assertFalse(ModifierUtil.isAbstract(HashMap.class));
     }
 
     /**
