@@ -193,6 +193,11 @@
 								<a href="#SQLを使った1件検索">SQLを使った1件検索</a>
 							</p>
 						</li>
+						<li>
+							<p>
+								<a href="#SQLを使ったページング">SQLを使ったページング</a>
+							</p>
+						</li>
 					</ul>
 				</li>
 				<li>
@@ -247,6 +252,11 @@
 								<a href="#SQLファイルを使った1件検索">
 									SQLファイルを使った1件検索
 								</a>
+							</p>
+						</li>
+						<li>
+							<p>
+								<a href="#SQLファイルを使ったページング">SQLファイルを使ったページング</a>
 							</p>
 						</li>
 						<li>
@@ -1169,6 +1179,27 @@ RowMap result = jdbcManager.selectBySql(
 					のfromColumnNameToPropertyName()の実装を変えることで、カスタマイズすることができます。
 				</p>
 			</subsection>
+			
+			<subsection name="SQLを使ったページング">
+				<p>
+					ページングを指定する場合は、
+					<code>limit(), offset()</code>
+					を使います。
+					<code>limit()</code>
+					には、取得する行数を指定します。
+					<code>offset()</code>
+					には、最初に取得する行の位置を指定します。 最初の行の位置は0になります。
+					ページングを指定するには、必ず<code>ordey by</code>句が必要です。
+					order by句で指定するカラムは、selectリストにも含めるようにしてください。
+				</p>
+				<source><![CDATA[
+jdbcManager.selectBySql(EmployeeDto.class,
+    "select id, name from employee order by name")
+    .limit(100)
+    .offset(10)
+    .getResultList();
+]]></source>
+			</subsection>
 		</section>
 
 		<section name="SQLを使った挿入・更新・削除">
@@ -1665,6 +1696,30 @@ RowMap result = jdbcManager.selectBySqlFile(
 					</code>
 					のfromColumnNameToPropertyName()の実装を変えることで、カスタマイズすることができます。
 				</p>
+			</subsection>
+			
+			<subsection name="SQLファイルを使ったページング">
+				<p>
+					ページングを指定する場合は、
+					<code>limit(), offset()</code>
+					を使います。
+					<code>limit()</code>
+					には、取得する行数を指定します。
+					<code>offset()</code>
+					には、最初に取得する行の位置を指定します。 最初の行の位置は0になります。
+					ページングを指定するには、必ず<code>ordey by</code>句が必要です。
+					order by句で指定するカラムは、selectリストにも含めるようにしてください。
+				</p>
+				<source><![CDATA[
+select id, name, ... from employee order by name
+]]></source>
+				<source><![CDATA[
+jdbcManager.selectBySqlFile(EmployeeDto.class,
+    "examples.entity.Employee.selectAll")
+    .limit(100)
+    .offset(10)
+    .getResultList();
+]]></source>
 			</subsection>
 
 			<subsection name="SQLファイルを使った更新">
