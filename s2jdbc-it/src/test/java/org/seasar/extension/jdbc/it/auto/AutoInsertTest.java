@@ -17,6 +17,9 @@ package org.seasar.extension.jdbc.it.auto;
 
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.JdbcManagerImplementor;
+import org.seasar.extension.jdbc.exception.IdGenerationFailedRuntimeException;
+import org.seasar.extension.jdbc.exception.IdGeneratorNotFoundRuntimeException;
+import org.seasar.extension.jdbc.exception.IdPropertyNotAssignedRuntimeException;
 import org.seasar.extension.jdbc.exception.IdentityGeneratorNotSupportedRuntimeException;
 import org.seasar.extension.jdbc.exception.SequenceGeneratorNotSupportedRuntimeException;
 import org.seasar.extension.jdbc.it.entity.AutoStrategy;
@@ -25,11 +28,15 @@ import org.seasar.extension.jdbc.it.entity.Department;
 import org.seasar.extension.jdbc.it.entity.Department2;
 import org.seasar.extension.jdbc.it.entity.Department3;
 import org.seasar.extension.jdbc.it.entity.Department4;
+import org.seasar.extension.jdbc.it.entity.Department5;
 import org.seasar.extension.jdbc.it.entity.IdentityStrategy;
 import org.seasar.extension.jdbc.it.entity.SequenceStrategy;
 import org.seasar.extension.jdbc.it.entity.SequenceStrategy2;
+import org.seasar.extension.jdbc.it.entity.SequenceStrategy3;
 import org.seasar.extension.jdbc.it.entity.TableStrategy;
 import org.seasar.extension.jdbc.it.entity.TableStrategy2;
+import org.seasar.extension.jdbc.it.entity.TableStrategy3;
+import org.seasar.extension.jdbc.it.entity.TableStrategy4;
 import org.seasar.extension.jdbc.where.SimpleWhere;
 import org.seasar.extension.unit.S2TestCase;
 
@@ -171,6 +178,18 @@ public class AutoInsertTest extends S2TestCase {
      * 
      * @throws Exception
      */
+    public void testId_IdPropertyNotAssignedRuntimeException() throws Exception {
+        try {
+            jdbcManager.insert(new Department5()).execute();
+            fail();
+        } catch (IdPropertyNotAssignedRuntimeException e) {
+        }
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
     public void testId_autoTx() throws Exception {
         for (int i = 0; i < 110; i++) {
             AutoStrategy entity = new AutoStrategy();
@@ -246,6 +265,19 @@ public class AutoInsertTest extends S2TestCase {
      * 
      * @throws Exception
      */
+    public void testId_sequence_IdGeneratorNotFoundRuntimeExceptionTx()
+            throws Exception {
+        try {
+            jdbcManager.insert(new SequenceStrategy3()).execute();
+            fail();
+        } catch (IdGeneratorNotFoundRuntimeException e) {
+        }
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
     public void testId_tableTx() throws Exception {
         for (int i = 0; i < 110; i++) {
             TableStrategy entity = new TableStrategy();
@@ -263,6 +295,32 @@ public class AutoInsertTest extends S2TestCase {
             TableStrategy2 entity = new TableStrategy2();
             jdbcManager.insert(entity).execute();
             assertNotNull(entity.id);
+        }
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testId_table_IdGenerationFailedRuntimeExceptionTx()
+            throws Exception {
+        try {
+            jdbcManager.insert(new TableStrategy3()).execute();
+            fail();
+        } catch (IdGenerationFailedRuntimeException e) {
+        }
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testId_table_IdGeneratorNotFoundRuntimeExceptionTx()
+            throws Exception {
+        try {
+            jdbcManager.insert(new TableStrategy4()).execute();
+            fail();
+        } catch (IdGeneratorNotFoundRuntimeException e) {
         }
     }
 
