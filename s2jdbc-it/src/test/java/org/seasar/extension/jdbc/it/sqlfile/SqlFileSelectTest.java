@@ -17,6 +17,7 @@ package org.seasar.extension.jdbc.it.sqlfile;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.NonUniqueResultException;
 
@@ -45,7 +46,7 @@ public class SqlFileSelectTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void testPaging() throws Exception {
+    public void testBean_paging() throws Exception {
         List<Employee> list =
             jdbcManager.selectBySqlFile(Employee.class, PATH).getResultList();
         assertEquals(14, list.size());
@@ -55,7 +56,7 @@ public class SqlFileSelectTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void testPaging_offsetOnly() throws Exception {
+    public void testBean_paging_offsetOnly() throws Exception {
         List<Employee> list =
             jdbcManager
                 .selectBySqlFile(Employee.class, PATH)
@@ -70,7 +71,7 @@ public class SqlFileSelectTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void testPaging_limitOnly() throws Exception {
+    public void testBean_paging_limitOnly() throws Exception {
         List<Employee> list =
             jdbcManager
                 .selectBySqlFile(Employee.class, PATH)
@@ -85,7 +86,7 @@ public class SqlFileSelectTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void testPaging_offsetZero_limitZero() throws Exception {
+    public void testBean_paging_offsetZero_limitZero() throws Exception {
         List<Employee> list =
             jdbcManager
                 .selectBySqlFile(Employee.class, PATH)
@@ -99,7 +100,7 @@ public class SqlFileSelectTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void testPaging_offset_limitZero() throws Exception {
+    public void testBean_paging_offset_limitZero() throws Exception {
         List<Employee> list =
             jdbcManager
                 .selectBySqlFile(Employee.class, PATH)
@@ -115,7 +116,7 @@ public class SqlFileSelectTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void testPaging_offsetZero_limit() throws Exception {
+    public void testBean_paging_offsetZero_limit() throws Exception {
         List<Employee> list =
             jdbcManager
                 .selectBySqlFile(Employee.class, PATH)
@@ -131,7 +132,7 @@ public class SqlFileSelectTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void testPaging_offset_limit() throws Exception {
+    public void testBean_paging_offset_limit() throws Exception {
         List<Employee> list =
             jdbcManager
                 .selectBySqlFile(Employee.class, PATH)
@@ -147,7 +148,7 @@ public class SqlFileSelectTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void testParameter_none() throws Exception {
+    public void testBean_parameter_none() throws Exception {
         String path = getClass().getName().replace(".", "/") + "_no.sql";
         List<Employee> list =
             jdbcManager.selectBySqlFile(Employee.class, path).getResultList();
@@ -158,7 +159,7 @@ public class SqlFileSelectTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void testParameter_simpleType() throws Exception {
+    public void testBean_parameter_simpleType() throws Exception {
         String path =
             getClass().getName().replace(".", "/") + "_simpleType.sql";
         List<Employee> list =
@@ -178,7 +179,7 @@ public class SqlFileSelectTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void testParameter_dto() throws Exception {
+    public void testBean_parameter_dto() throws Exception {
         String path = getClass().getName().replace(".", "/") + "_dto.sql";
         Param param = new Param();
         param.departmentId = 3;
@@ -200,7 +201,7 @@ public class SqlFileSelectTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void testGetSingleResult() throws Exception {
+    public void testBean_getSingleResult() throws Exception {
         String path =
             getClass().getName().replace(".", "/") + "_getSingleResult.sql";
         Employee employee =
@@ -212,7 +213,7 @@ public class SqlFileSelectTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void testGetSingleResult_null() throws Exception {
+    public void testBean_getSingleResult_null() throws Exception {
         String path =
             getClass().getName().replace(".", "/")
                 + "_getSingleResult_null.sql";
@@ -225,12 +226,215 @@ public class SqlFileSelectTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void testGetSingleResult_NonUniqueResultException() throws Exception {
+    public void testBean_getSingleResult_NonUniqueResultException()
+            throws Exception {
         String path =
             getClass().getName().replace(".", "/")
                 + "_getSingleResult_NonUniqueResultException.sql";
         try {
             jdbcManager.selectBySqlFile(Employee.class, path).getSingleResult();
+            fail();
+        } catch (NonUniqueResultException e) {
+        }
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testMap_paging() throws Exception {
+        @SuppressWarnings("unchecked")
+        List<Map> list =
+            jdbcManager.selectBySqlFile(Map.class, PATH).getResultList();
+        assertEquals(14, list.size());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testMap_paging_offsetOnly() throws Exception {
+        @SuppressWarnings("unchecked")
+        List<Map> list =
+            jdbcManager
+                .selectBySqlFile(Map.class, PATH)
+                .offset(3)
+                .getResultList();
+        assertEquals(11, list.size());
+        assertEquals(4, list.get(0).get("employeeId"));
+        assertEquals(14, list.get(10).get("employeeId"));
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testMap_paging_limitOnly() throws Exception {
+        @SuppressWarnings("unchecked")
+        List<Map> list =
+            jdbcManager
+                .selectBySqlFile(Map.class, PATH)
+                .limit(3)
+                .getResultList();
+        assertEquals(3, list.size());
+        assertEquals(1, list.get(0).get("employeeId"));
+        assertEquals(3, list.get(2).get("employeeId"));
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testMap_paging_offsetZero_limitZero() throws Exception {
+        @SuppressWarnings("unchecked")
+        List<Map> list =
+            jdbcManager
+                .selectBySqlFile(Map.class, PATH)
+                .offset(0)
+                .limit(0)
+                .getResultList();
+        assertEquals(14, list.size());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testMap_paging_offset_limitZero() throws Exception {
+        @SuppressWarnings("unchecked")
+        List<Map> list =
+            jdbcManager
+                .selectBySqlFile(Map.class, PATH)
+                .offset(3)
+                .limit(0)
+                .getResultList();
+        assertEquals(11, list.size());
+        assertEquals(4, list.get(0).get("employeeId"));
+        assertEquals(14, list.get(10).get("employeeId"));
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testMap_paging_offsetZero_limit() throws Exception {
+        @SuppressWarnings("unchecked")
+        List<Map> list =
+            jdbcManager
+                .selectBySqlFile(Map.class, PATH)
+                .offset(0)
+                .limit(3)
+                .getResultList();
+        assertEquals(3, list.size());
+        assertEquals(1, list.get(0).get("employeeId"));
+        assertEquals(3, list.get(2).get("employeeId"));
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testMap_paging_offset_limit() throws Exception {
+        @SuppressWarnings("unchecked")
+        List<Map> list =
+            jdbcManager
+                .selectBySqlFile(Map.class, PATH)
+                .offset(3)
+                .limit(5)
+                .getResultList();
+        assertEquals(5, list.size());
+        assertEquals(4, list.get(0).get("employeeId"));
+        assertEquals(8, list.get(4).get("employeeId"));
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testMap_parameter_none() throws Exception {
+        String path = getClass().getName().replace(".", "/") + "_no.sql";
+        @SuppressWarnings("unchecked")
+        List<Map> list =
+            jdbcManager.selectBySqlFile(Map.class, path).getResultList();
+        assertEquals(14, list.size());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testMap_parameter_simpleType() throws Exception {
+        String path =
+            getClass().getName().replace(".", "/") + "_simpleType.sql";
+        @SuppressWarnings("unchecked")
+        List<Map> list =
+            jdbcManager.selectBySqlFile(Map.class, path, 3).getResultList();
+        assertEquals(6, list.size());
+        assertEquals("ALLEN", list.get(0).get("employeeName"));
+        assertEquals("BLAKE", list.get(1).get("employeeName"));
+        assertEquals("JAMES", list.get(2).get("employeeName"));
+        assertEquals("MARTIN", list.get(3).get("employeeName"));
+        assertEquals("TURNER", list.get(4).get("employeeName"));
+        assertEquals("WARD", list.get(5).get("employeeName"));
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testMap_parameter_dto() throws Exception {
+        String path = getClass().getName().replace(".", "/") + "_dto.sql";
+        Param param = new Param();
+        param.departmentId = 3;
+        param.salary = new BigDecimal(1000);
+        param.orderBy = "employee_name";
+        param.offset = 1;
+        param.limit = 3;
+        @SuppressWarnings("unchecked")
+        List<Map> list =
+            jdbcManager.selectBySqlFile(Map.class, path, param).getResultList();
+        assertEquals(3, list.size());
+        assertEquals("BLAKE", list.get(0).get("employeeName"));
+        assertEquals("MARTIN", list.get(1).get("employeeName"));
+        assertEquals("TURNER", list.get(2).get("employeeName"));
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testMap_getSingleResult() throws Exception {
+        String path =
+            getClass().getName().replace(".", "/") + "_getSingleResult.sql";
+        Map<?, ?> employee =
+            jdbcManager.selectBySqlFile(Map.class, path).getSingleResult();
+        assertNotNull(employee);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testMap_getSingleResult_null() throws Exception {
+        String path =
+            getClass().getName().replace(".", "/")
+                + "_getSingleResult_null.sql";
+        Map<?, ?> employee =
+            jdbcManager.selectBySqlFile(Map.class, path).getSingleResult();
+        assertNull(employee);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testMap_getSingleResult_NonUniqueResultException()
+            throws Exception {
+        String path =
+            getClass().getName().replace(".", "/")
+                + "_getSingleResult_NonUniqueResultException.sql";
+        try {
+            jdbcManager.selectBySqlFile(Map.class, path).getSingleResult();
             fail();
         } catch (NonUniqueResultException e) {
         }

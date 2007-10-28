@@ -15,7 +15,11 @@
  */
 package org.seasar.extension.jdbc.it.sql;
 
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import javax.persistence.NonUniqueResultException;
 
@@ -43,7 +47,7 @@ public class SqlSelectTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void testPaging() throws Exception {
+    public void testBean_paging() throws Exception {
         List<Employee> list =
             jdbcManager.selectBySql(Employee.class, sql).getResultList();
         assertEquals(14, list.size());
@@ -53,7 +57,7 @@ public class SqlSelectTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void testPaging_offsetOnly() throws Exception {
+    public void testBean_paging_offsetOnly() throws Exception {
         List<Employee> list =
             jdbcManager
                 .selectBySql(Employee.class, sql)
@@ -68,7 +72,7 @@ public class SqlSelectTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void testPaging_limitOnly() throws Exception {
+    public void testBean_paging_limitOnly() throws Exception {
         List<Employee> list =
             jdbcManager
                 .selectBySql(Employee.class, sql)
@@ -83,7 +87,7 @@ public class SqlSelectTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void testPaging_offsetZero_limitZero() throws Exception {
+    public void testBean_paging_offsetZero_limitZero() throws Exception {
         List<Employee> list =
             jdbcManager
                 .selectBySql(Employee.class, sql)
@@ -97,7 +101,7 @@ public class SqlSelectTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void testPaging_offset_limitZero() throws Exception {
+    public void testBean_paging_offset_limitZero() throws Exception {
         List<Employee> list =
             jdbcManager
                 .selectBySql(Employee.class, sql)
@@ -113,7 +117,7 @@ public class SqlSelectTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void testPaging_offsetZero_limit() throws Exception {
+    public void testBean_paging_offsetZero_limit() throws Exception {
         List<Employee> list =
             jdbcManager
                 .selectBySql(Employee.class, sql)
@@ -129,7 +133,7 @@ public class SqlSelectTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void testPaging_offset_limit() throws Exception {
+    public void testBean_paging_offset_limit() throws Exception {
         List<Employee> list =
             jdbcManager
                 .selectBySql(Employee.class, sql)
@@ -145,7 +149,7 @@ public class SqlSelectTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void testPaging_no_parameter() throws Exception {
+    public void testBean_paging_parameter_none() throws Exception {
         String sql = "select * from Employee";
         List<Employee> list =
             jdbcManager.selectBySql(Employee.class, sql).getResultList();
@@ -156,7 +160,7 @@ public class SqlSelectTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void testParameter() throws Exception {
+    public void testBean_parameter() throws Exception {
         String sql =
             "select * from Employee where department_Id = ? and salary = ?";
         List<Employee> list =
@@ -170,7 +174,7 @@ public class SqlSelectTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void testGetSingleResult() throws Exception {
+    public void testBean_getSingleResult() throws Exception {
         String sql = "select * from Employee where employee_Id = 1";
         Employee employee =
             jdbcManager.selectBySql(Employee.class, sql).getSingleResult();
@@ -181,7 +185,7 @@ public class SqlSelectTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void testGetSingleResult_null() throws Exception {
+    public void testBean_getSingleResult_null() throws Exception {
         String sql = "select * from Employee where employee_Id = 100";
         Employee employee =
             jdbcManager.selectBySql(Employee.class, sql).getSingleResult();
@@ -192,12 +196,213 @@ public class SqlSelectTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void testGetSingleResult_NonUniqueResultException() throws Exception {
+    public void testBean_getSingleResult_NonUniqueResultException()
+            throws Exception {
         String sql = "select * from Employee where department_Id = 1";
         try {
             jdbcManager.selectBySql(Employee.class, sql).getSingleResult();
             fail();
         } catch (NonUniqueResultException e) {
         }
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testMap_paging() throws Exception {
+        @SuppressWarnings("unchecked")
+        List<Map> list =
+            jdbcManager.selectBySql(Map.class, sql).getResultList();
+        assertEquals(14, list.size());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testMap_paging_offsetOnly() throws Exception {
+        @SuppressWarnings("unchecked")
+        List<Map> list =
+            jdbcManager.selectBySql(Map.class, sql).offset(3).getResultList();
+        assertEquals(11, list.size());
+        assertEquals(4, list.get(0).get("employeeId"));
+        assertEquals(14, list.get(10).get("employeeId"));
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testMap_paging_limitOnly() throws Exception {
+        @SuppressWarnings("unchecked")
+        List<Map> list =
+            jdbcManager.selectBySql(Map.class, sql).limit(3).getResultList();
+        assertEquals(3, list.size());
+        assertEquals(1, list.get(0).get("employeeId"));
+        assertEquals(3, list.get(2).get("employeeId"));
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testMap_paging_offsetZero_limitZero() throws Exception {
+        @SuppressWarnings("unchecked")
+        List<Map> list =
+            jdbcManager
+                .selectBySql(Map.class, sql)
+                .offset(0)
+                .limit(0)
+                .getResultList();
+        assertEquals(14, list.size());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testMap_paging_offset_limitZero() throws Exception {
+        @SuppressWarnings("unchecked")
+        List<Map> list =
+            jdbcManager
+                .selectBySql(Map.class, sql)
+                .offset(3)
+                .limit(0)
+                .getResultList();
+        assertEquals(11, list.size());
+        assertEquals(4, list.get(0).get("employeeId"));
+        assertEquals(14, list.get(10).get("employeeId"));
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testMap_paging_offsetZero_limit() throws Exception {
+        @SuppressWarnings("unchecked")
+        List<Map> list =
+            jdbcManager
+                .selectBySql(Map.class, sql)
+                .offset(0)
+                .limit(3)
+                .getResultList();
+        assertEquals(3, list.size());
+        assertEquals(1, list.get(0).get("employeeId"));
+        assertEquals(3, list.get(2).get("employeeId"));
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testMap_paging_offset_limit() throws Exception {
+        @SuppressWarnings("unchecked")
+        List<Map> list =
+            jdbcManager
+                .selectBySql(Map.class, sql)
+                .offset(3)
+                .limit(5)
+                .getResultList();
+        assertEquals(5, list.size());
+        assertEquals(4, list.get(0).get("employeeId"));
+        assertEquals(8, list.get(4).get("employeeId"));
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testMap_Paging_parameter_none() throws Exception {
+        String sql = "select * from Employee";
+        @SuppressWarnings("unchecked")
+        List<Map> list =
+            jdbcManager.selectBySql(Map.class, sql).getResultList();
+        assertEquals(14, list.size());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testMap_Parameter() throws Exception {
+        String sql =
+            "select * from Employee where department_Id = ? and salary = ?";
+        @SuppressWarnings("unchecked")
+        List<Map> list =
+            jdbcManager.selectBySql(Map.class, sql, 2, 3000).getResultList();
+        assertEquals(2, list.size());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testMap_getSingleResult() throws Exception {
+        String sql = "select * from Employee where employee_Id = 1";
+        Map<?, ?> employee =
+            jdbcManager.selectBySql(Map.class, sql).getSingleResult();
+        assertNotNull(employee);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testMap_getSingleResult_null() throws Exception {
+        String sql = "select * from Employee where employee_Id = 100";
+        Map<?, ?> employee =
+            jdbcManager.selectBySql(Map.class, sql).getSingleResult();
+        assertNull(employee);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testMap_getSingleResult_NonUniqueResultException()
+            throws Exception {
+        String sql = "select * from Employee where department_Id = 1";
+        try {
+            jdbcManager.selectBySql(Map.class, sql).getSingleResult();
+            fail();
+        } catch (NonUniqueResultException e) {
+        }
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testMap_linkedHashMap() throws Exception {
+        String sql =
+            "select version, employee_name, employee_Id from Employee where employee_Id = 1";
+        Map<?, ?> employee =
+            jdbcManager.selectBySql(LinkedHashMap.class, sql).getSingleResult();
+        Iterator<?> it = employee.keySet().iterator();
+        assertEquals("version", (String) it.next());
+        assertNotNull(employee.get("version"));
+        assertEquals("employeeName", (String) it.next());
+        assertNotNull(employee.get("employeeName"));
+        assertEquals("employeeId", (String) it.next());
+        assertNotNull(employee.get("employeeId"));
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testMap_treeMap() throws Exception {
+        String sql =
+            "select version, employee_name, employee_Id from Employee where employee_Id = 1";
+        Map<?, ?> employee =
+            jdbcManager.selectBySql(TreeMap.class, sql).getSingleResult();
+        Iterator<?> it = employee.keySet().iterator();
+        assertEquals("employeeId", (String) it.next());
+        assertNotNull(employee.get("employeeId"));
+        assertEquals("employeeName", (String) it.next());
+        assertNotNull(employee.get("employeeName"));
+        assertEquals("version", (String) it.next());
+        assertNotNull(employee.get("version"));
     }
 }

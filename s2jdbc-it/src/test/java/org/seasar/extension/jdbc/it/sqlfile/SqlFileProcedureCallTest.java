@@ -97,7 +97,7 @@ public class SqlFileProcedureCallTest extends S2TestCase {
         } else {
             path += "2.sql";
         }
-        OneResultsDto dto = new OneResultsDto();
+        OneResultDto dto = new OneResultDto();
         dto.employeeId = 10;
         jdbcManager.callBySqlFile(path, dto).call();
         List<Employee> employees = dto.employees_OUT;
@@ -163,7 +163,7 @@ public class SqlFileProcedureCallTest extends S2TestCase {
      * @author taedium
      * 
      */
-    public class OneResultsDto {
+    public class OneResultDto {
 
         /** */
         public List<Employee> employees_OUT;
