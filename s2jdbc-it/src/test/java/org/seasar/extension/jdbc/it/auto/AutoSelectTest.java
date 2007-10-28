@@ -513,6 +513,17 @@ public class AutoSelectTest extends S2TestCase {
      * 
      * @throws Exception
      */
+    public void testGetSingleResult_oneToMany() throws Exception {
+        Department department =
+            jdbcManager.from(Department.class).join("employees").where(
+                new SimpleWhere().eq("departmentId", 1)).getSingleResult();
+        assertNotNull(department);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
     public void testGetSingleResult_null() throws Exception {
         Employee employee =
             jdbcManager.from(Employee.class).where(
@@ -537,7 +548,7 @@ public class AutoSelectTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void testTransientAnnotationTx() throws Exception {
+    public void testTransientAnnotation() throws Exception {
         Department3 department =
             jdbcManager.from(Department3.class).where(
                 new SimpleWhere().eq("departmentId", 1)).getSingleResult();
@@ -548,7 +559,7 @@ public class AutoSelectTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void testTransientModifierTx() throws Exception {
+    public void testTransientModifier() throws Exception {
         Department4 department =
             jdbcManager.from(Department4.class).where(
                 new SimpleWhere().eq("departmentId", 1)).getSingleResult();
