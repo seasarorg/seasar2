@@ -1411,6 +1411,17 @@ salary >= /*salaryMin*/1000
 and salary <= 2000
 ]]></source>
 			<p>
+				同様に2000の部分も
+				<code>salaryMax</code>
+				というパラメータで置き換えます。
+			</p>
+			<source><![CDATA[
+select * from employee
+where
+salary >= /*salaryMin*/1000
+and salary <= /*salaryMax*/2000
+]]></source>
+			<p>
 				<code>in</code>
 				を置き換える場合は次のようにします。 ()で囲まれている部分を置き換えます。
 				idのパラメータの型は、配列かリストになります。
@@ -1421,15 +1432,14 @@ where
 id in /*id*/(1, 2)
 ]]></source>
 			<p>
-				同様に2000の部分も
-				<code>salaryMax</code>
-				というパラメータで置き換えます。
+				<code>like</code>
+				を置き換える場合は次のようにします。 '(シングルクオート)で囲まれている部分を置き換えます。
+				ワイルドカードを使いたい場合は、パラメータの値に埋め込んでください。
 			</p>
 			<source><![CDATA[
 select * from employee
 where
-salary >= /*salaryMin*/1000
-and salary <= /*salaryMax*/2000
+name like /*name*/'S%'
 ]]></source>
 			<p>
 				検索条件の入力画面などで、何か条件が入力されていれば、
@@ -1512,6 +1522,13 @@ select * from employee
 				直接リテラルを埋め込むとSQLインジェクションの危険がありますが、
 				埋め込み変数の値に、セミコロン(;)が入っていると例外にしているので、 問題はありません。
 			</p>
+			<p>
+			<code>order by</code>句をパラメータで変えたい場合は、
+			/*$orderBy*/と指定します。
+			</p>
+			<source><![CDATA[
+select * from employee order by /*$orderBy*/id
+]]></source>
 			<p>ELSEコメントは、IFコメントとENDコメントの間に行コメントとして埋め込みます。</p>
 			<source><![CDATA[
 /*IF jobType != null*/
