@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN" 
+	"http://www.seasar.org/dtd/components24.dtd">
+<components>
+	<include path="default-customizer.dicon"/>
+
+	<!--
+		Teeda-Extension の Page・Action のカスタマイズは以下のコメントを参考にしてください．
+		アスペクトを設定する場合はポイントカットの指定を忘れないようにしてください．
+		app.dicon で aop.dicon 等必要な dicon をインクルードしてください．
+	-->
+	<!--
+	<component name="pageCustomizer" class="org.seasar.framework.container.customizer.CustomizerChain">
+		<initMethod name="addAspectCustomizer">
+			<arg>"aop.traceInterceptor"</arg>
+			<arg>"do.*, initialize, prerender"</arg>
+		</initMethod>
+	</component>
+	-->
+
+	<!--
+		Dao のカスタマイズは以下のコメントを参考にしてください．
+		追加するカスタマイザ名は使用する Dao に合わせて変更してください．
+			S2Dao     : s2DaoCustomizer
+			Uuji      : uujiCustomizer
+			Kuina-Dao : kuinaDaoCustomizer
+		app.dicon で各 Dao で必要な dicon をインクルードしてください．
+			S2Dao     : dao.dicon
+			Uuji      : uuji.dicon
+			Kuina-Dao : kuina-dao.dicon
+	-->
+	<!--
+	<component name="daoCustomizer" class="org.seasar.framework.container.customizer.CustomizerChain">
+		<initMethod name="addCustomizer">
+			<arg>traceCustomizer</arg>
+		</initMethod>
+		<initMethod name="addCustomizer">
+			<arg>s2DaoCustomizer</arg>
+		</initMethod>
+	</component>
+	-->
+
+	<!--
+		Dxo のカスタマイズは以下のコメントを参考にしてください．
+		app.dicon で dxo.dicon をインクルードしてください．
+	-->
+	<!--
+	<component name="dxoCustomizer" class="org.seasar.framework.container.customizer.CustomizerChain">
+		<initMethod name="addCustomizer">
+			<arg>traceCustomizer</arg>
+		</initMethod>
+		<initMethod name="addCustomizer">
+			<arg>s2DxoCustomizer</arg>
+		</initMethod>
+	</component>
+	-->
+
+	<!--
+		その他のカスタマイズは以下のコメントを参考にしてください．
+		コンポーネント名はカスタマイズ対象に合わせて変更してください．
+		app.dicon で aop.dicon 等必要な dicon をインクルードしてください．
+	-->
+	<!--
+	<component name="xxxCustomizer" class="org.seasar.framework.container.customizer.CustomizerChain">
+		<initMethod name="addCustomizer">
+			<arg>traceCustomizer</arg>
+		</initMethod>
+	</component>
+	-->
+</components>

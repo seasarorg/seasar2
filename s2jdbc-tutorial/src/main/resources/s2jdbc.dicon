@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN"
+	"http://www.seasar.org/dtd/components24.dtd">
+<components>
+	<include path="jdbc.dicon"/>
+	<include path="s2jdbc-internal.dicon"/>
+	<component name="jdbcManager" class="org.seasar.extension.jdbc.manager.JdbcManagerImpl">
+		<property name="maxRows">0</property>
+		<property name="fetchSize">0</property>
+		<property name="queryTimeout">0</property>
+		<property name="dialect">h2Dialect</property>
+		<!--
+		<property name="dialect">db2390Dialect</property>
+		<property name="dialect">db2400Dialect</property>
+		<property name="dialect">db2Dialect</property>
+		<property name="dialect">derbyDialect</property>
+		<property name="dialect">firebirdDialect</property>
+		<property name="dialect">h2Dialect</property>
+		<property name="dialect">hsqlDialect</property>
+		<property name="dialect">interbaseDialect</property>
+		<property name="dialect">maxdbDialect</property>
+		<property name="dialect">mssql2005Dialect</property>
+		<property name="dialect">mssqlDialect</property>
+		<property name="dialect">mysqlDialect</property>
+		<property name="dialect">oracleDialect</property>
+		<property name="dialect">postgreDialect</property>
+		<property name="dialect">standardDialect</property>
+		<property name="dialect">sybaseDialect</property>
+		-->
+	</component>
+</components>
