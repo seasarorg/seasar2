@@ -36,7 +36,7 @@ public class SqlSelectTest extends S2TestCase {
     private static String sql = "select * from Employee order by employee_no";
 
     private static String sql2 =
-        "select employee_id from Employee order by employee_no";
+        "select employee_id, employee_no from Employee order by employee_no";
 
     private JdbcManager jdbcManager;
 
@@ -152,7 +152,7 @@ public class SqlSelectTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void testBean_paging_parameter_none() throws Exception {
+    public void testBean_parameter_none() throws Exception {
         String sql = "select * from Employee";
         List<Employee> list =
             jdbcManager.selectBySql(Employee.class, sql).getResultList();
@@ -316,7 +316,7 @@ public class SqlSelectTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void testMap_Paging_parameter_none() throws Exception {
+    public void testMap_parameter_none() throws Exception {
         String sql = "select * from Employee";
         @SuppressWarnings("unchecked")
         List<Map> list =
@@ -328,7 +328,7 @@ public class SqlSelectTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void testMap_Parameter() throws Exception {
+    public void testMap_parameter() throws Exception {
         String sql =
             "select * from Employee where department_Id = ? and salary = ?";
         @SuppressWarnings("unchecked")
@@ -515,7 +515,7 @@ public class SqlSelectTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void testObject_paging_parameter_none() throws Exception {
+    public void testObject_parameter_none() throws Exception {
         String sql = "select employee_id from Employee";
         List<Integer> list =
             jdbcManager.selectBySql(Integer.class, sql).getResultList();
