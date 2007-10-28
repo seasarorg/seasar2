@@ -69,8 +69,8 @@
 				「流れるようなインターフェース」とは、文章を記述していくようにメソッドを呼び出していく手法です。
 				詳しくは、ファウラーたんの
 				<a
-					href="http://martinfowler.com/bliki/FluentInterface.html">
-					FluentInterface
+					href="http://capsctrl.que.jp/kdmsnr/wiki/bliki/?FluentInterface">
+					流れるようなインターフェース
 				</a>
 				を参照してください。あれこれ説明するよりも、検索の例を見たほうがわかりやすいでしょう。
 			</p>

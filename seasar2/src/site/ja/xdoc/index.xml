@@ -1,50 +1,39 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <document>
 	<properties>
-		<title>DI Container with AOP</title>
+		<title>Seasar2</title>
 	</properties>
 	<body>
 		<section name="Welcome">
 			<p>
-				「Seasar2」とは、「Javaのアプリケーション開発」で悩みを抱えている「開発者」向けの 「軽量コンテナ」であり、
-				「高い生産性と品質」を提供します。 
-				そして、「他の軽量コンテナ」とは違って、「設定ファイルをほとんど書く必要がなく」、
-				 「アプリケーションを修正したときでも再起動なしで即座にその変更を認識できるので、
-				スクリプト言語並みのさくさく感」が得られます。
+				「Javaを使った開発は生産性が低い」、最近そんな声をよく耳にします。
+				確かに、たくさん設定ファイルを書く必要があったり、
+				ソースコードを修正するたびにアプリケーションサーバを再起動する必要があったり、
+				面倒なことがいっぱいありました。
 			</p>
 			<p>
-				設定ファイルを書かなくてもすむように、<b>Convention over Configuration</b>の考え方が取り入れられています。
-				Convention over Configurationとは、 「適切な規約を守れば特に面倒な設定をしなくても、
-				フレームワークが自動的に適切な設定をしてくれるという考え」で、
-				<a href="http://www.rubyonrails.org/">Ruby on Rails</a>によって 提唱されました。
-				Seasar2のConvention over Configurationは、Ruby on Railsから ヒントを得ました。
+				しかし、それは過去の話です。
 			</p>
 			<p>
-				Seasar2を使えばテーブルをメンテナンスするだけの簡単なアプリケーションなら3分間もあれば作成できます。
-				<ul>
-					<li><p>動画(Flash)によるデモは<a href="demo/chura.html">こちら</a>。</p></li>
-				</ul>
+				Seasar2は、Javaを使った開発の生産性を高めるために開発されたフレームワークです。
+				設定ファイルを書く必要はほとんどありません。
+				また、ソースコードの修正をアプリケーションサーバの再起動なしに
+				<b>HOT</b>に認識することができます。
 			</p>
 			<p>
-				アプリケーションを修正したときでも再起動なしで即座にその変更を認識できる機能のことを、
-				Seasar2では<b>HOT deploy</b>と呼んでいます。
+				Seasar2の生産性の高さは、<a href="http://capsctrl.que.jp/kdmsnr/wiki/bliki/?FluentInterface">流れるようなインターフェース</a>を持つ
+				<a href="s2jdbc_abstract.html">S2JDBC</a>を見ていただくと実感できるのではないかと思います。
 			</p>
+			<source><![CDATA[
+List<Employee> results = jdbcManager.from(Employee.class)
+                             .join("department")
+                             .where("id in (? , ?)", 11, 22)
+                             .orderBy("name")
+                             .getResultList();
+]]></source>
 			<p>
-				Seasar2をつくるにあたって参考にした以下のプロダクトに対して、 感謝いたします。
-				<ul>
-					<li><p><a href="http://www.rubyonrails.org/">Ruby on Rails</a></p></li>
-					<li><p><a href="http://www.springframework.org">Spring Framework</a></p></li>
-					<li><p><a href="http://www.picocontainer.org/">PicoContainer</a></p></li>
-				</ul>
+				流れるようにコーディングして、ほとんどのSQLを自動生成することができます。
 			</p>
-			<h4>Flashによる<a name="demo" id="demo">デモ</a></h4>
-			<dl>
-				<dt><a href="demo/chura.html">3分でできるWebアプリケーション</a></dt>
-				<dd>
-					Seasar2を使えばテーブルをメンテナンスするだけの簡単なアプリケーションなら3分間もあれば作成できます。<br />
-					デモアプリケーションが動くまでを見てみましょう。
-				</dd>
-			</dl>
 		</section>
 		<section name="メーリングリスト">
 			<dl>

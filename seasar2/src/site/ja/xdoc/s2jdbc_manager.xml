@@ -1109,6 +1109,28 @@ List<EmployeeDto> results = jdbcManager.selectBySql(
     EmployeeDto.class, "select ... where department_id = ?", 10)
     .getResultList();
 ]]></source>
+				<p>
+				結果を<code>Map</code>で受け取ることもできます。
+				</p>
+				<source><![CDATA[
+List<RowMap> results = jdbcManager.selectBySql(
+    RowMap.class, "select ...")
+    .getResultList();
+]]></source>
+				<p>
+				RowMapはMap&lt;String, Object&gt;なクラスで、
+				存在しないキーにアクセスすると
+				例外が発生します。
+				キーの値は、AAA_BBBのような'_'記法の値ををaaaBbbのようなキャメル記法に
+				変換したものです。
+				</p>
+				<p>
+					このルールは、convention.diconで指定されている
+					<code>
+						org.seasar.framework.convention.impl.PersistenceNamingConventionImpl
+					</code>
+					のfromColumnNameToPropertyName()の実装を変えることで、カスタマイズすることができます。
+				</p>
 			</subsection>
 
 			<subsection name="SQLを使った1件検索">
@@ -1124,6 +1146,28 @@ Integer count = jdbcManager.selectBySql(
     Integer.class, "select count(*) from emp")
     .getSingleResult();
 ]]></source>
+				<p>
+				結果を<code>Map</code>で受け取ることもできます。
+				</p>
+				<source><![CDATA[
+RowMap result = jdbcManager.selectBySql(
+    RowMap.class, "select ...")
+    .getSingleResult();
+]]></source>
+				<p>
+				RowMapはMap&lt;String, Object&gt;なクラスで、
+				存在しないキーにアクセスすると
+				例外が発生します。
+				キーの値は、AAA_BBBのような'_'記法の値ををaaaBbbのようなキャメル記法に
+				変換したものです。
+				</p>
+				<p>
+					このルールは、convention.diconで指定されている
+					<code>
+						org.seasar.framework.convention.impl.PersistenceNamingConventionImpl
+					</code>
+					のfromColumnNameToPropertyName()の実装を変えることで、カスタマイズすることができます。
+				</p>
 			</subsection>
 		</section>
 
@@ -1272,6 +1316,25 @@ jdbcManager.callBySql("{? = call myproc(?)}", dto).call();
 System.out.println(dto.result_OUT);
 ]]></source>
 		</section>
+			<p>
+			オラクルとMySQL以外は、結果セットの受け取りをパラメータで定義する必要はありません。
+			JavaBeansの最初のフィールドを結果セット用に定義し、
+			2番目以降をパラメータに対応したフィールドにします。
+			</p>
+			<source><![CDATA[
+public class MyDto {
+
+    public List<EmployeeDto> result_OUT;
+    
+    public int arg1_IN;
+}
+]]></source>
+			<source><![CDATA[
+MyDto dto = new MyDto();
+dto.arg1_IN = 1;
+jdbcManager.callBySql("{call myproc(?)}", dto).call();
+System.out.println(dto.result_OUT);
+]]></source>
 
 		<section name="S2Dao譲りのSQLファイル">
 			<p>S2Dao譲りのSQLファイルを使うこともできます。</p>
@@ -1511,6 +1574,28 @@ List<EmployeeDto> results = jdbcManager.selectBySqlFile(
 						offsetはパラメータ用のJavaBeansのプロパティの予約語なので注意してください。
 					</p>
 				</div>
+				<p>
+				結果を<code>Map</code>で受け取ることもできます。
+				</p>
+				<source><![CDATA[
+List<RowMap> results = jdbcManager.selectBySqlFile(
+    RowMap.class, "examples.entity.Employee.selectAll")
+    .getResultList();
+]]></source>
+				<p>
+				RowMapはMap&lt;String, Object&gt;なクラスで、
+				存在しないキーにアクセスすると
+				例外が発生します。
+				キーの値は、AAA_BBBのような'_'記法の値ををaaaBbbのようなキャメル記法に
+				変換したものです。
+				</p>
+				<p>
+					このルールは、convention.diconで指定されている
+					<code>
+						org.seasar.framework.convention.impl.PersistenceNamingConventionImpl
+					</code>
+					のfromColumnNameToPropertyName()の実装を変えることで、カスタマイズすることができます。
+				</p>
 			</subsection>
 
 			<subsection name="SQLファイルを使った1件検索">
@@ -1558,6 +1643,28 @@ EmployeeDto result = jdbcManager.selectBySqlFile(
 						offsetはパラメータ用のJavaBeansのプロパティの予約語なので注意してください。
 					</p>
 				</div>
+				<p>
+				結果を<code>Map</code>で受け取ることもできます。
+				</p>
+				<source><![CDATA[
+RowMap result = jdbcManager.selectBySqlFile(
+    RowMap.class, "examples.entity.Employee.selectSingle")
+    .getSingleResult();
+]]></source>
+				<p>
+				RowMapはMap&lt;String, Object&gt;なクラスで、
+				存在しないキーにアクセスすると
+				例外が発生します。
+				キーの値は、AAA_BBBのような'_'記法の値ををaaaBbbのようなキャメル記法に
+				変換したものです。
+				</p>
+				<p>
+					このルールは、convention.diconで指定されている
+					<code>
+						org.seasar.framework.convention.impl.PersistenceNamingConventionImpl
+					</code>
+					のfromColumnNameToPropertyName()の実装を変えることで、カスタマイズすることができます。
+				</p>
 			</subsection>
 
 			<subsection name="SQLファイルを使った更新">
@@ -1762,6 +1869,25 @@ public class MyDto {
 MyDto dto = new MyDto();
 dto.arg1_IN = 1;
 jdbcManager.callBySqlFile("examples.entity.Employee.callMyProc", dto).call();
+System.out.println(dto.result_OUT);
+]]></source>
+			<p>
+			オラクルとMySQL以外は、結果セットの受け取りをパラメータで定義する必要はありません。
+			JavaBeansの最初のフィールドを結果セット用に定義し、
+			2番目以降をパラメータに対応したフィールドにします。
+			</p>
+			<source><![CDATA[
+public class MyDto {
+
+    public List<EmployeeDto> result_OUT;
+    
+    public int arg1_IN;
+}
+]]></source>
+			<source><![CDATA[
+MyDto dto = new MyDto();
+dto.arg1_IN = 1;
+jdbcManager.callBySql("{call myproc(?)}", dto).call();
 System.out.println(dto.result_OUT);
 ]]></source>
 			</subsection>
