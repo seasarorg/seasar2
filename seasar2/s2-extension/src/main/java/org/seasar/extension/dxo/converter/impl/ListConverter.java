@@ -42,7 +42,7 @@ public class ListConverter extends AbstractParameterizedCollectionConverter {
         if (source == null) {
             return null;
         }
-        if (source instanceof List) {
+        if (shallowCopy && source instanceof List) {
             return source;
         }
         final List dest = new ArrayList();

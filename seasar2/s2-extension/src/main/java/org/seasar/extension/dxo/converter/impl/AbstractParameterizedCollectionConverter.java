@@ -58,7 +58,8 @@ public abstract class AbstractParameterizedCollectionConverter extends
         } else if (source instanceof Collection) {
             convertFromCollection((Collection) source, destCollection,
                     destElementClass, context);
-        } else if (destElementClass.isAssignableFrom(source.getClass())) {
+        } else if (shallowCopy
+                && destElementClass.isAssignableFrom(source.getClass())) {
             destCollection.add(source);
         } else {
             final Converter converter = context.getConverterFactory()
@@ -115,8 +116,9 @@ public abstract class AbstractParameterizedCollectionConverter extends
             final Object sourceElement = source[i];
             if (sourceElement == null) {
                 dest.add(null);
-            } else if (destElementClass.isAssignableFrom(sourceElement
-                    .getClass())) {
+            } else if (shallowCopy
+                    && destElementClass.isAssignableFrom(sourceElement
+                            .getClass())) {
                 dest.add(sourceElement);
             } else {
                 dest.add(converter.convert(sourceElement, destElementClass,
@@ -148,8 +150,9 @@ public abstract class AbstractParameterizedCollectionConverter extends
             final Object sourceElement = it.next();
             if (sourceElement == null) {
                 dest.add(null);
-            } else if (destElementClass.isAssignableFrom(sourceElement
-                    .getClass())) {
+            } else if (shallowCopy
+                    && destElementClass.isAssignableFrom(sourceElement
+                            .getClass())) {
                 dest.add(sourceElement);
             } else {
                 final Converter converter = context.getConverterFactory()

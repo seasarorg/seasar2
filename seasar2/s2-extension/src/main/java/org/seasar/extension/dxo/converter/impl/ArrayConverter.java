@@ -54,7 +54,7 @@ public class ArrayConverter extends AbstractConverter {
             return null;
         }
 
-        if (destClass.isAssignableFrom(source.getClass())) {
+        if (shallowCopy && destClass.isAssignableFrom(source.getClass())) {
             return source;
         }
         if (source.getClass().isArray()) {

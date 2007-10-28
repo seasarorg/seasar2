@@ -54,7 +54,7 @@ public class SqlTimestampConverter extends AbstractConverter {
         if (source == null) {
             return null;
         }
-        if (source instanceof java.sql.Timestamp) {
+        if (shallowCopy && source instanceof java.sql.Timestamp) {
             return source;
         }
         if (source instanceof Date) {

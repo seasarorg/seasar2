@@ -54,7 +54,10 @@ public class CalendarConverter extends AbstractConverter {
             return null;
         }
         if (source instanceof Calendar) {
-            return source;
+            if (shallowCopy) {
+                return source;
+            }
+            return ((Calendar) source).clone();
         }
         if (source instanceof Date) {
             return toCalendar((Date) source);

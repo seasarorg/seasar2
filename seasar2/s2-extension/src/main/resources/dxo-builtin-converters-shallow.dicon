@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN"
+	"http://www.seasar.org/dtd/components24.dtd">
+<components namespace="dxo">
+	<component class="org.seasar.extension.dxo.converter.impl.ArrayConverter">
+		<property name="shallowCopy">true</property>
+	</component>
+	<component class="org.seasar.extension.dxo.converter.impl.BeanConverter">
+		<property name="shallowCopy">true</property>
+	</component>
+	<component class="org.seasar.extension.dxo.converter.impl.BigDecimalConverter"/>
+	<component class="org.seasar.extension.dxo.converter.impl.BigIntegerConverter"/>
+	<component class="org.seasar.extension.dxo.converter.impl.BooleanConverter"/>
+	<component class="org.seasar.extension.dxo.converter.impl.ByteConverter"/>
+	<component class="org.seasar.extension.dxo.converter.impl.CalendarConverter">
+		<property name="shallowCopy">true</property>
+	</component>
+	<component class="org.seasar.extension.dxo.converter.impl.CharacterConverter"/>
+	<component class="org.seasar.extension.dxo.converter.impl.CharArrayConverter">
+		<property name="shallowCopy">true</property>
+	</component>
+	<component class="org.seasar.extension.dxo.converter.impl.DateConverter">
+		<property name="shallowCopy">true</property>
+	</component>
+	<component class="org.seasar.extension.dxo.converter.impl.DoubleConverter"/>
+	<component class="org.seasar.extension.dxo.converter.impl.FloatConverter"/>
+	<component class="org.seasar.extension.dxo.converter.impl.IntegerConverter"/>
+	<component class="org.seasar.extension.dxo.converter.impl.ListConverter">
+		<property name="shallowCopy">true</property>
+	</component>
+	<component class="org.seasar.extension.dxo.converter.impl.LongConverter"/>
+	<component class="org.seasar.extension.dxo.converter.impl.SetConverter">
+		<property name="shallowCopy">true</property>
+	</component>
+	<component class="org.seasar.extension.dxo.converter.impl.ShortConverter"/>
+	<component class="org.seasar.extension.dxo.converter.impl.SqlDateConverter">
+		<property name="shallowCopy">true</property>
+	</component>
+	<component class="org.seasar.extension.dxo.converter.impl.SqlTimeConverter">
+		<property name="shallowCopy">true</property>
+	</component>
+	<component class="org.seasar.extension.dxo.converter.impl.SqlTimestampConverter">
+		<property name="shallowCopy">true</property>
+	</component>
+	<component class="org.seasar.extension.dxo.converter.impl.StringConverter"/>
+</components>

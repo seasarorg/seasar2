@@ -41,7 +41,7 @@ public class SetConverter extends AbstractParameterizedCollectionConverter {
             final ConversionContext context) {
         if (source == null) {
             return null;
-        } else if (source instanceof Set) {
+        } else if (shallowCopy && source instanceof Set) {
             return source;
         }
         final Set dest = new LinkedHashSet();

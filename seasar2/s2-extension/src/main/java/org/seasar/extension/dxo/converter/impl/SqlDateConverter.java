@@ -54,7 +54,7 @@ public class SqlDateConverter extends AbstractConverter {
         if (source == null) {
             return null;
         }
-        if (source instanceof java.sql.Date) {
+        if (shallowCopy && source instanceof java.sql.Date) {
             return source;
         }
         if (source instanceof Date) {

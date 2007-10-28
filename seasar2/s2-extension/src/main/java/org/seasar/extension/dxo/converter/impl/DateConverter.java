@@ -54,7 +54,10 @@ public class DateConverter extends AbstractConverter {
             return null;
         }
         if (source instanceof Date) {
-            return source;
+            if (shallowCopy) {
+                return source;
+            }
+            return new Date(((Date) source).getTime());
         }
         if (source instanceof Calendar) {
             return toDate((Calendar) source);

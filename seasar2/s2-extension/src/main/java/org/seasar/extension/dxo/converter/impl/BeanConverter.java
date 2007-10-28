@@ -20,11 +20,11 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import org.seasar.extension.dxo.converter.ParameterizedClassConverter;
 import org.seasar.extension.dxo.converter.ConversionContext;
 import org.seasar.extension.dxo.converter.Converter;
 import org.seasar.extension.dxo.converter.DatePropertyInfo;
 import org.seasar.extension.dxo.converter.NestedPropertyInfo;
+import org.seasar.extension.dxo.converter.ParameterizedClassConverter;
 import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.beans.factory.BeanDescFactory;
@@ -57,7 +57,13 @@ public class BeanConverter extends AbstractConverter {
         }
 
         final Class sourceClass = source.getClass();
-        if (destClass.isAssignableFrom(sourceClass)) {
+        if (sourceClass == Object.class || sourceClass == String.class
+                || sourceClass == Boolean.class
+                || sourceClass == Character.class
+                || Number.class.isAssignableFrom(sourceClass)) {
+            return source;
+        }
+        if (shallowCopy && destClass.isAssignableFrom(sourceClass)) {
             return source;
         }
 
@@ -147,7 +153,8 @@ public class BeanConverter extends AbstractConverter {
             return;
         }
         final Class sourcePropertyClass = sourcePropertyValue.getClass();
-        if (sourcePropertyClass.isAssignableFrom(destPropertyClass)) {
+        if (shallowCopy
+                && sourcePropertyClass.isAssignableFrom(destPropertyClass)) {
             destPropertyDesc.setValue(dest, sourcePropertyValue);
             return;
         }

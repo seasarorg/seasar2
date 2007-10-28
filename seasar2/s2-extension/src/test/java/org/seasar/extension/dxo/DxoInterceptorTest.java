@@ -52,7 +52,10 @@ public class DxoInterceptorTest extends S2TestCase {
         Hoge dest = beanDxo.convert1(src);
 
         assertNotNull(dest);
-        assertSame(src, dest);
+        assertEquals(src.getFoo(), dest.getFoo());
+        assertEquals(src.getBar(), dest.getBar());
+        assertEquals(src.getBarBar(), dest.getBarBar());
+        assertEquals(src.getBaz(), dest.getBaz());
     }
 
     /**
@@ -97,7 +100,10 @@ public class DxoInterceptorTest extends S2TestCase {
         HogeHoge dest = beanDxo.convert4(src);
 
         assertNotNull(dest);
-        assertSame(src, dest);
+        assertEquals(src.getFoo(), dest.getFoo());
+        assertEquals(src.getBar(), dest.getBar());
+        assertEquals(src.getBaz(), dest.getBaz());
+        assertEquals(src.getHoge(), dest.getHoge());
     }
 
     /**

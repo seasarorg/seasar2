@@ -47,7 +47,13 @@ public class CharArrayConverter extends AbstractConverter {
             return null;
         }
         if (source instanceof char[]) {
-            return source;
+            if (shallowCopy) {
+                return source;
+            }
+            final char[] sourceArray = (char[]) source;
+            final char[] dest = new char[sourceArray.length];
+            System.arraycopy(sourceArray, 0, dest, 0, sourceArray.length);
+            return sourceArray;
         }
         if (source instanceof String) {
             return ((String) source).toCharArray();

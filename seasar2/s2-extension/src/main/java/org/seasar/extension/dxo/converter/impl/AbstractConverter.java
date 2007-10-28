@@ -25,6 +25,21 @@ import org.seasar.extension.dxo.converter.Converter;
  */
 public abstract class AbstractConverter implements Converter {
 
+    /**
+     * 変換元のオブジェクトが変換先の型でもある場合、変換元のオブジェクトをそのまま返す場合は<code>true</code>。
+     */
+    protected boolean shallowCopy;
+
+    /**
+     * 変換元のオブジェクトが変換先の型でもある場合、変換元のオブジェクトをそのまま返す場合は<code>true</code>を設定します。
+     * 
+     * @param shallowCopy
+     *            変換元のオブジェクトが変換先の型でもある場合、変換元のオブジェクトをそのまま返す場合は<code>true</code>
+     */
+    public void setShallowCopy(final boolean shallowCopy) {
+        this.shallowCopy = shallowCopy;
+    }
+
     public void convert(Object source, Object dest, ConversionContext context) {
         throw new UnsupportedOperationException();
     }

@@ -54,7 +54,7 @@ public class SqlTimeConverter extends AbstractConverter {
         if (source == null) {
             return null;
         }
-        if (source instanceof java.sql.Time) {
+        if (shallowCopy && source instanceof java.sql.Time) {
             return source;
         }
         if (source instanceof Date) {
