@@ -34,6 +34,9 @@ public class SqlFileSelectTest extends S2TestCase {
     private static String PATH =
         SqlFileSelectTest.class.getName().replace(".", "/") + "_paging.sql";
 
+    private static String PATH2 =
+        SqlFileSelectTest.class.getName().replace(".", "/") + "_paging2.sql";
+
     private JdbcManager jdbcManager;
 
     @Override
@@ -435,6 +438,200 @@ public class SqlFileSelectTest extends S2TestCase {
                 + "_getSingleResult_NonUniqueResultException.sql";
         try {
             jdbcManager.selectBySqlFile(Map.class, path).getSingleResult();
+            fail();
+        } catch (NonUniqueResultException e) {
+        }
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testObject_paging() throws Exception {
+        List<Integer> list =
+            jdbcManager.selectBySqlFile(Integer.class, PATH2).getResultList();
+        assertEquals(14, list.size());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testObject_paging_offsetOnly() throws Exception {
+        List<Integer> list =
+            jdbcManager
+                .selectBySqlFile(Integer.class, PATH2)
+                .offset(3)
+                .getResultList();
+        assertEquals(11, list.size());
+        assertEquals(4, list.get(0).intValue());
+        assertEquals(14, list.get(10).intValue());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testObject_paging_limitOnly() throws Exception {
+        List<Integer> list =
+            jdbcManager
+                .selectBySqlFile(Integer.class, PATH2)
+                .limit(3)
+                .getResultList();
+        assertEquals(3, list.size());
+        assertEquals(1, list.get(0).intValue());
+        assertEquals(3, list.get(2).intValue());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testObject_paging_offsetZero_limitZero() throws Exception {
+        List<Integer> list =
+            jdbcManager
+                .selectBySqlFile(Integer.class, PATH2)
+                .offset(0)
+                .limit(0)
+                .getResultList();
+        assertEquals(14, list.size());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testObject_paging_offset_limitZero() throws Exception {
+        List<Integer> list =
+            jdbcManager
+                .selectBySqlFile(Integer.class, PATH2)
+                .offset(3)
+                .limit(0)
+                .getResultList();
+        assertEquals(11, list.size());
+        assertEquals(4, list.get(0).intValue());
+        assertEquals(14, list.get(10).intValue());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testObject_paging_offsetZero_limit() throws Exception {
+        List<Integer> list =
+            jdbcManager
+                .selectBySqlFile(Integer.class, PATH2)
+                .offset(0)
+                .limit(3)
+                .getResultList();
+        assertEquals(3, list.size());
+        assertEquals(1, list.get(0).intValue());
+        assertEquals(3, list.get(2).intValue());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testObject_paging_offset_limit() throws Exception {
+        List<Integer> list =
+            jdbcManager
+                .selectBySqlFile(Integer.class, PATH2)
+                .offset(3)
+                .limit(5)
+                .getResultList();
+        assertEquals(5, list.size());
+        assertEquals(4, list.get(0).intValue());
+        assertEquals(8, list.get(4).intValue());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testObject_parameter_none() throws Exception {
+        String path = getClass().getName().replace(".", "/") + "_no2.sql";
+        List<Integer> list =
+            jdbcManager.selectBySqlFile(Integer.class, path).getResultList();
+        assertEquals(14, list.size());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testObject_parameter_simpleType() throws Exception {
+        String path =
+            getClass().getName().replace(".", "/") + "_simpleType2.sql";
+        List<Integer> list =
+            jdbcManager.selectBySqlFile(Integer.class, path, 3).getResultList();
+        assertEquals(6, list.size());
+        assertEquals(2, list.get(0).intValue());
+        assertEquals(6, list.get(1).intValue());
+        assertEquals(12, list.get(2).intValue());
+        assertEquals(5, list.get(3).intValue());
+        assertEquals(10, list.get(4).intValue());
+        assertEquals(3, list.get(5).intValue());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testObject_parameter_dto() throws Exception {
+        String path = getClass().getName().replace(".", "/") + "_dto2.sql";
+        Param param = new Param();
+        param.departmentId = 3;
+        param.salary = new BigDecimal(1000);
+        param.orderBy = "employee_name";
+        param.offset = 1;
+        param.limit = 3;
+        List<Integer> list =
+            jdbcManager
+                .selectBySqlFile(Integer.class, path, param)
+                .getResultList();
+        assertEquals(3, list.size());
+        assertEquals(6, list.get(0).intValue());
+        assertEquals(5, list.get(1).intValue());
+        assertEquals(10, list.get(2).intValue());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testObject_getSingleResult() throws Exception {
+        String path =
+            getClass().getName().replace(".", "/") + "_getSingleResult2.sql";
+        Integer employeeId =
+            jdbcManager.selectBySqlFile(Integer.class, path).getSingleResult();
+        assertNotNull(employeeId);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testBObject_getSingleResult_null() throws Exception {
+        String path =
+            getClass().getName().replace(".", "/")
+                + "_getSingleResult_null2.sql";
+        Integer employeeId =
+            jdbcManager.selectBySqlFile(Integer.class, path).getSingleResult();
+        assertNull(employeeId);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testObject_getSingleResult_NonUniqueResultException()
+            throws Exception {
+        String path =
+            getClass().getName().replace(".", "/")
+                + "_getSingleResult_NonUniqueResultException2.sql";
+        try {
+            jdbcManager.selectBySqlFile(Integer.class, path).getSingleResult();
             fail();
         } catch (NonUniqueResultException e) {
         }

@@ -35,6 +35,9 @@ public class SqlSelectTest extends S2TestCase {
 
     private static String sql = "select * from Employee order by employee_no";
 
+    private static String sql2 =
+        "select employee_id from Employee order by employee_no";
+
     private JdbcManager jdbcManager;
 
     @Override
@@ -404,5 +407,168 @@ public class SqlSelectTest extends S2TestCase {
         assertNotNull(employee.get("employeeName"));
         assertEquals("version", (String) it.next());
         assertNotNull(employee.get("version"));
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testObject_paging() throws Exception {
+        List<Integer> list =
+            jdbcManager.selectBySql(Integer.class, sql2).getResultList();
+        assertEquals(14, list.size());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testObject_paging_offsetOnly() throws Exception {
+        List<Integer> list =
+            jdbcManager
+                .selectBySql(Integer.class, sql2)
+                .offset(3)
+                .getResultList();
+        assertEquals(11, list.size());
+        assertEquals(4, list.get(0).intValue());
+        assertEquals(14, list.get(10).intValue());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testObject_paging_limitOnly() throws Exception {
+        List<Integer> list =
+            jdbcManager
+                .selectBySql(Integer.class, sql2)
+                .limit(3)
+                .getResultList();
+        assertEquals(3, list.size());
+        assertEquals(1, list.get(0).intValue());
+        assertEquals(3, list.get(2).intValue());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testObject_paging_offsetZero_limitZero() throws Exception {
+        List<Integer> list =
+            jdbcManager
+                .selectBySql(Integer.class, sql2)
+                .offset(0)
+                .limit(0)
+                .getResultList();
+        assertEquals(14, list.size());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testObject_paging_offset_limitZero() throws Exception {
+        List<Integer> list =
+            jdbcManager
+                .selectBySql(Integer.class, sql2)
+                .offset(3)
+                .limit(0)
+                .getResultList();
+        assertEquals(11, list.size());
+        assertEquals(4, list.get(0).intValue());
+        assertEquals(14, list.get(10).intValue());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testObject_paging_offsetZero_limit() throws Exception {
+        List<Employee> list =
+            jdbcManager
+                .selectBySql(Employee.class, sql2)
+                .offset(0)
+                .limit(3)
+                .getResultList();
+        assertEquals(3, list.size());
+        assertEquals(1, list.get(0).employeeId);
+        assertEquals(3, list.get(2).employeeId);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testObject_paging_offset_limit() throws Exception {
+        List<Integer> list =
+            jdbcManager
+                .selectBySql(Integer.class, sql2)
+                .offset(3)
+                .limit(5)
+                .getResultList();
+        assertEquals(5, list.size());
+        assertEquals(4, list.get(0).intValue());
+        assertEquals(8, list.get(4).intValue());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testObject_paging_parameter_none() throws Exception {
+        String sql = "select employee_id from Employee";
+        List<Integer> list =
+            jdbcManager.selectBySql(Integer.class, sql).getResultList();
+        assertEquals(14, list.size());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testObject_parameter() throws Exception {
+        String sql =
+            "select employee_id from Employee where department_Id = ? and salary = ?";
+        List<Integer> list =
+            jdbcManager
+                .selectBySql(Integer.class, sql, 2, 3000)
+                .getResultList();
+        assertEquals(2, list.size());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testObject_getSingleResult() throws Exception {
+        String sql = "select employee_id from Employee where employee_Id = 1";
+        Integer employeeId =
+            jdbcManager.selectBySql(Integer.class, sql).getSingleResult();
+        assertNotNull(employeeId);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testObject_getSingleResult_null() throws Exception {
+        String sql = "select employee_id from Employee where employee_Id = 100";
+        Integer employeeId =
+            jdbcManager.selectBySql(Integer.class, sql).getSingleResult();
+        assertNull(employeeId);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testObject_getSingleResult_NonUniqueResultException()
+            throws Exception {
+        String sql = "select employee_id from Employee where department_Id = 1";
+        try {
+            jdbcManager.selectBySql(Integer.class, sql).getSingleResult();
+            fail();
+        } catch (NonUniqueResultException e) {
+        }
     }
 }

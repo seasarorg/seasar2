@@ -1,0 +1,1 @@
+select employee_id from Employee
