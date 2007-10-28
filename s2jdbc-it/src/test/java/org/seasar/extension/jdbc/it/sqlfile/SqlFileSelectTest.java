@@ -250,6 +250,8 @@ public class SqlFileSelectTest extends S2TestCase {
         List<Map> list =
             jdbcManager.selectBySqlFile(Map.class, PATH).getResultList();
         assertEquals(14, list.size());
+        assertEquals(9, list.get(0).size());
+
     }
 
     /**
@@ -264,6 +266,7 @@ public class SqlFileSelectTest extends S2TestCase {
                 .offset(3)
                 .getResultList();
         assertEquals(11, list.size());
+        assertEquals(9, list.get(0).size());
         assertEquals(4, ((Number) list.get(0).get("employeeId")).intValue());
         assertEquals(14, ((Number) list.get(10).get("employeeId")).intValue());
     }
@@ -280,6 +283,7 @@ public class SqlFileSelectTest extends S2TestCase {
                 .limit(3)
                 .getResultList();
         assertEquals(3, list.size());
+        assertEquals(9, list.get(0).size());
         assertEquals(1, ((Number) list.get(0).get("employeeId")).intValue());
         assertEquals(3, ((Number) list.get(2).get("employeeId")).intValue());
     }
@@ -297,6 +301,7 @@ public class SqlFileSelectTest extends S2TestCase {
                 .limit(0)
                 .getResultList();
         assertEquals(14, list.size());
+        assertEquals(9, list.get(0).size());
     }
 
     /**
@@ -312,6 +317,7 @@ public class SqlFileSelectTest extends S2TestCase {
                 .limit(0)
                 .getResultList();
         assertEquals(11, list.size());
+        assertEquals(9, list.get(0).size());
         assertEquals(4, ((Number) list.get(0).get("employeeId")).intValue());
         assertEquals(14, ((Number) list.get(10).get("employeeId")).intValue());
     }
@@ -329,6 +335,7 @@ public class SqlFileSelectTest extends S2TestCase {
                 .limit(3)
                 .getResultList();
         assertEquals(3, list.size());
+        assertEquals(9, list.get(0).size());
         assertEquals(1, ((Number) list.get(0).get("employeeId")).intValue());
         assertEquals(3, ((Number) list.get(2).get("employeeId")).intValue());
     }
@@ -346,6 +353,7 @@ public class SqlFileSelectTest extends S2TestCase {
                 .limit(5)
                 .getResultList();
         assertEquals(5, list.size());
+        assertEquals(9, list.get(0).size());
         assertEquals(4, ((Number) list.get(0).get("employeeId")).intValue());
         assertEquals(8, ((Number) list.get(4).get("employeeId")).intValue());
     }
@@ -612,7 +620,7 @@ public class SqlFileSelectTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void testBObject_getSingleResult_null() throws Exception {
+    public void testObject_getSingleResult_null() throws Exception {
         String path =
             getClass().getName().replace(".", "/")
                 + "_getSingleResult_null2.sql";

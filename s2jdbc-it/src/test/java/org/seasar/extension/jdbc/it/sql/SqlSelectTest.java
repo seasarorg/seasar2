@@ -218,6 +218,7 @@ public class SqlSelectTest extends S2TestCase {
         List<Map> list =
             jdbcManager.selectBySql(Map.class, sql).getResultList();
         assertEquals(14, list.size());
+        assertEquals(9, list.get(0).size());
     }
 
     /**
@@ -229,6 +230,7 @@ public class SqlSelectTest extends S2TestCase {
         List<Map> list =
             jdbcManager.selectBySql(Map.class, sql).offset(3).getResultList();
         assertEquals(11, list.size());
+        assertEquals(9, list.get(0).size());
         assertEquals(4, ((Number) list.get(0).get("employeeId")).intValue());
         assertEquals(14, ((Number) list.get(10).get("employeeId")).intValue());
     }
@@ -242,6 +244,7 @@ public class SqlSelectTest extends S2TestCase {
         List<Map> list =
             jdbcManager.selectBySql(Map.class, sql).limit(3).getResultList();
         assertEquals(3, list.size());
+        assertEquals(9, list.get(0).size());
         assertEquals(1, ((Number) list.get(0).get("employeeId")).intValue());
         assertEquals(3, ((Number) list.get(2).get("employeeId")).intValue());
     }
@@ -274,6 +277,7 @@ public class SqlSelectTest extends S2TestCase {
                 .limit(0)
                 .getResultList();
         assertEquals(11, list.size());
+        assertEquals(9, list.get(0).size());
         assertEquals(4, ((Number) list.get(0).get("employeeId")).intValue());
         assertEquals(14, ((Number) list.get(10).get("employeeId")).intValue());
     }
@@ -291,6 +295,7 @@ public class SqlSelectTest extends S2TestCase {
                 .limit(3)
                 .getResultList();
         assertEquals(3, list.size());
+        assertEquals(9, list.get(0).size());
         assertEquals(1, ((Number) list.get(0).get("employeeId")).intValue());
         assertEquals(3, ((Number) list.get(2).get("employeeId")).intValue());
     }
@@ -308,6 +313,7 @@ public class SqlSelectTest extends S2TestCase {
                 .limit(5)
                 .getResultList();
         assertEquals(5, list.size());
+        assertEquals(9, list.get(0).size());
         assertEquals(4, ((Number) list.get(0).get("employeeId")).intValue());
         assertEquals(8, ((Number) list.get(4).get("employeeId")).intValue());
     }
