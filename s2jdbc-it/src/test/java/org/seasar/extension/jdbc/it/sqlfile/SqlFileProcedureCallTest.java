@@ -18,6 +18,7 @@ package org.seasar.extension.jdbc.it.sqlfile;
 import java.util.List;
 
 import org.seasar.extension.jdbc.JdbcManager;
+import org.seasar.extension.jdbc.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.it.S2JdbcItUtil;
 import org.seasar.extension.jdbc.it.entity.Department;
 import org.seasar.extension.jdbc.it.entity.Employee;
@@ -31,6 +32,8 @@ public class SqlFileProcedureCallTest extends S2TestCase {
 
     private JdbcManager jdbcManager;
 
+    private JdbcManagerImplementor jdbcManagerImplementor;
+
     @Override
     protected void setUp() throws Exception {
         super.setUp();
@@ -42,7 +45,7 @@ public class SqlFileProcedureCallTest extends S2TestCase {
      * @throws Exception
      */
     public void testParameter_noneTx() throws Exception {
-        if (!S2JdbcItUtil.supportsProcedure(jdbcManager)) {
+        if (!S2JdbcItUtil.supportsProcedure(jdbcManagerImplementor)) {
             return;
         }
         String path = getClass().getName().replace(".", "/") + "_no" + ".sql";
@@ -54,7 +57,7 @@ public class SqlFileProcedureCallTest extends S2TestCase {
      * @throws Exception
      */
     public void testParameter_simpleTypeTx() throws Exception {
-        if (!S2JdbcItUtil.supportsProcedure(jdbcManager)) {
+        if (!S2JdbcItUtil.supportsProcedure(jdbcManagerImplementor)) {
             return;
         }
         String path =
@@ -67,7 +70,7 @@ public class SqlFileProcedureCallTest extends S2TestCase {
      * @throws Exception
      */
     public void testParameter_dtoTx() throws Exception {
-        if (!S2JdbcItUtil.supportsProcedure(jdbcManager)) {
+        if (!S2JdbcItUtil.supportsProcedure(jdbcManagerImplementor)) {
             return;
         }
         String path = getClass().getName().replace(".", "/") + "_dto" + ".sql";
@@ -85,11 +88,11 @@ public class SqlFileProcedureCallTest extends S2TestCase {
      * @throws Exception
      */
     public void testParameter_oneResultTx() throws Exception {
-        if (!S2JdbcItUtil.supportsProcedure(jdbcManager)) {
+        if (!S2JdbcItUtil.supportsProcedure(jdbcManagerImplementor)) {
             return;
         }
         String path = getClass().getName().replace(".", "/") + "_one_result";
-        if (jdbcManager.getDialect().needsParameterForResultSet()) {
+        if (jdbcManagerImplementor.getDialect().needsParameterForResultSet()) {
             path += ".sql";
         } else {
             path += "2.sql";
@@ -111,11 +114,11 @@ public class SqlFileProcedureCallTest extends S2TestCase {
      * @throws Exception
      */
     public void testParameter_twoResultsTx() throws Exception {
-        if (!S2JdbcItUtil.supportsProcedure(jdbcManager)) {
+        if (!S2JdbcItUtil.supportsProcedure(jdbcManagerImplementor)) {
             return;
         }
         String path = getClass().getName().replace(".", "/") + "_two_results";
-        if (jdbcManager.getDialect().needsParameterForResultSet()) {
+        if (jdbcManagerImplementor.getDialect().needsParameterForResultSet()) {
             path += ".sql";
         } else {
             path += "2.sql";

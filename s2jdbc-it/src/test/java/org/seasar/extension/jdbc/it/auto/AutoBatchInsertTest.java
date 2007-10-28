@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.seasar.extension.jdbc.JdbcManager;
+import org.seasar.extension.jdbc.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.exception.IdentityGeneratorNotSupportedRuntimeException;
 import org.seasar.extension.jdbc.exception.SequenceGeneratorNotSupportedRuntimeException;
 import org.seasar.extension.jdbc.it.entity.AutoStrategy;
@@ -42,6 +43,8 @@ import org.seasar.extension.unit.S2TestCase;
 public class AutoBatchInsertTest extends S2TestCase {
 
     private JdbcManager jdbcManager;
+
+    private JdbcManagerImplementor jdbcManagerImplementor;
 
     @Override
     protected void setUp() throws Exception {
@@ -250,14 +253,14 @@ public class AutoBatchInsertTest extends S2TestCase {
                 IdentityStrategy entity1 = new IdentityStrategy();
                 IdentityStrategy entity2 = new IdentityStrategy();
                 jdbcManager.insertBatch(entity1, entity2).execute();
-                if (!jdbcManager.getDialect().supportsIdentity()) {
+                if (!jdbcManagerImplementor.getDialect().supportsIdentity()) {
                     fail();
                 }
                 assertNotNull(entity1.id);
                 assertNotNull(entity2.id);
             }
         } catch (IdentityGeneratorNotSupportedRuntimeException e) {
-            if (jdbcManager.getDialect().supportsIdentity()) {
+            if (jdbcManagerImplementor.getDialect().supportsIdentity()) {
                 fail();
             }
         }
@@ -273,14 +276,14 @@ public class AutoBatchInsertTest extends S2TestCase {
                 SequenceStrategy entity1 = new SequenceStrategy();
                 SequenceStrategy entity2 = new SequenceStrategy();
                 jdbcManager.insertBatch(entity1, entity2).execute();
-                if (!jdbcManager.getDialect().supportsSequence()) {
+                if (!jdbcManagerImplementor.getDialect().supportsSequence()) {
                     fail();
                 }
                 assertNotNull(entity1.id);
                 assertNotNull(entity2.id);
             }
         } catch (SequenceGeneratorNotSupportedRuntimeException e) {
-            if (jdbcManager.getDialect().supportsSequence()) {
+            if (jdbcManagerImplementor.getDialect().supportsSequence()) {
                 fail();
             }
         }
@@ -296,14 +299,14 @@ public class AutoBatchInsertTest extends S2TestCase {
                 SequenceStrategy2 entity1 = new SequenceStrategy2();
                 SequenceStrategy2 entity2 = new SequenceStrategy2();
                 jdbcManager.insertBatch(entity1, entity2).execute();
-                if (!jdbcManager.getDialect().supportsSequence()) {
+                if (!jdbcManagerImplementor.getDialect().supportsSequence()) {
                     fail();
                 }
                 assertNotNull(entity1.id);
                 assertNotNull(entity2.id);
             }
         } catch (SequenceGeneratorNotSupportedRuntimeException e) {
-            if (jdbcManager.getDialect().supportsSequence()) {
+            if (jdbcManagerImplementor.getDialect().supportsSequence()) {
                 fail();
             }
         }

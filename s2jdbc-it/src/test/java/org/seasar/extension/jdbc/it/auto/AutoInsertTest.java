@@ -16,6 +16,7 @@
 package org.seasar.extension.jdbc.it.auto;
 
 import org.seasar.extension.jdbc.JdbcManager;
+import org.seasar.extension.jdbc.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.exception.IdentityGeneratorNotSupportedRuntimeException;
 import org.seasar.extension.jdbc.exception.SequenceGeneratorNotSupportedRuntimeException;
 import org.seasar.extension.jdbc.it.entity.AutoStrategy;
@@ -39,6 +40,8 @@ import org.seasar.extension.unit.S2TestCase;
 public class AutoInsertTest extends S2TestCase {
 
     private JdbcManager jdbcManager;
+
+    private JdbcManagerImplementor jdbcManagerImplementor;
 
     @Override
     protected void setUp() throws Exception {
@@ -185,13 +188,13 @@ public class AutoInsertTest extends S2TestCase {
             for (int i = 0; i < 110; i++) {
                 IdentityStrategy entity = new IdentityStrategy();
                 jdbcManager.insert(entity).execute();
-                if (!jdbcManager.getDialect().supportsIdentity()) {
+                if (!jdbcManagerImplementor.getDialect().supportsIdentity()) {
                     fail();
                 }
                 assertNotNull(entity.id);
             }
         } catch (IdentityGeneratorNotSupportedRuntimeException e) {
-            if (jdbcManager.getDialect().supportsIdentity()) {
+            if (jdbcManagerImplementor.getDialect().supportsIdentity()) {
                 fail();
             }
         }
@@ -206,13 +209,13 @@ public class AutoInsertTest extends S2TestCase {
             for (int i = 0; i < 110; i++) {
                 SequenceStrategy entity = new SequenceStrategy();
                 jdbcManager.insert(entity).execute();
-                if (!jdbcManager.getDialect().supportsSequence()) {
+                if (!jdbcManagerImplementor.getDialect().supportsSequence()) {
                     fail();
                 }
                 assertNotNull(entity.id);
             }
         } catch (SequenceGeneratorNotSupportedRuntimeException e) {
-            if (jdbcManager.getDialect().supportsSequence()) {
+            if (jdbcManagerImplementor.getDialect().supportsSequence()) {
                 fail();
             }
         }
@@ -227,13 +230,13 @@ public class AutoInsertTest extends S2TestCase {
             for (int i = 0; i < 110; i++) {
                 SequenceStrategy2 entity = new SequenceStrategy2();
                 jdbcManager.insert(entity).execute();
-                if (!jdbcManager.getDialect().supportsSequence()) {
+                if (!jdbcManagerImplementor.getDialect().supportsSequence()) {
                     fail();
                 }
                 assertNotNull(entity.id);
             }
         } catch (SequenceGeneratorNotSupportedRuntimeException e) {
-            if (jdbcManager.getDialect().supportsSequence()) {
+            if (jdbcManagerImplementor.getDialect().supportsSequence()) {
                 fail();
             }
         }

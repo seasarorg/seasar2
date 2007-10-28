@@ -15,7 +15,7 @@
  */
 package org.seasar.extension.jdbc.it;
 
-import org.seasar.extension.jdbc.JdbcManager;
+import org.seasar.extension.jdbc.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.dialect.H2Dialect;
 import org.seasar.extension.jdbc.dialect.HsqlDialect;
 
@@ -31,12 +31,13 @@ public class S2JdbcItUtil {
     /**
      * プロシージャをテスト対象とする場合{@code true}を返します。
      * 
-     * @param jdbcManager
+     * @param jdbcManagerImplementor
      * @return テスト対象とする場合{@code true}
      */
-    public static boolean supportsProcedure(JdbcManager jdbcManager) {
-        if (jdbcManager.getDialect() instanceof HsqlDialect
-            || jdbcManager.getDialect() instanceof H2Dialect) {
+    public static boolean supportsProcedure(
+            JdbcManagerImplementor jdbcManagerImplementor) {
+        if (jdbcManagerImplementor.getDialect() instanceof HsqlDialect
+            || jdbcManagerImplementor.getDialect() instanceof H2Dialect) {
             return false;
         }
         return true;
