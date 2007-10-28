@@ -134,8 +134,12 @@ public abstract class AbstractMapResultSetHandler implements ResultSetHandler {
 
         Map row = (Map) ClassUtil.newInstance(mapClass);
         for (int i = 0; i < propertyTypes.length; ++i) {
-            Object value = propertyTypes[i].getValueType().getValue(rs, i + 1);
-            row.put(propertyTypes[i].getPropertyName(), value);
+            PropertyType pt = propertyTypes[i];
+            if (pt.getColumnName().endsWith("_")) {
+                continue;
+            }
+            Object value = pt.getValueType().getValue(rs, i + 1);
+            row.put(pt.getPropertyName(), value);
         }
         return row;
     }

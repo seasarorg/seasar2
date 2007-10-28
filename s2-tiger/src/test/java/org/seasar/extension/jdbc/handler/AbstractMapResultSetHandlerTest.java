@@ -94,17 +94,23 @@ public class AbstractMapResultSetHandlerTest extends TestCase {
         columnMeta = new MockColumnMetaData();
         columnMeta.setColumnLabel("AAA_BBB");
         rsMeta.addColumnMetaData(columnMeta);
+        columnMeta = new MockColumnMetaData();
+        columnMeta.setColumnLabel("rownumber_");
+        rsMeta.addColumnMetaData(columnMeta);
         MockResultSet rs = new MockResultSet(rsMeta);
         ArrayMap data = new ArrayMap();
         data.put("FOO", "111");
         data.put("AAA_BBB", "222");
+        data.put("rownumber_", 1);
         rs.addRowData(data);
         rs.next();
         PropertyType[] ptypes = handler.createPropertyTypes(rsMeta);
         Map<String, Object> map = (Map<String, Object>) handler.createRow(rs,
                 ptypes);
+        assertEquals(2, map.size());
         assertEquals(111, map.get("foo"));
         assertEquals("222", map.get("aaaBbb"));
+        assertFalse(map.containsKey("rownumber_"));
     }
 
     private static class MyHandler extends AbstractMapResultSetHandler {
