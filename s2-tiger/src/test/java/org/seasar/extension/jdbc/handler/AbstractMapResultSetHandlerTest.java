@@ -95,13 +95,13 @@ public class AbstractMapResultSetHandlerTest extends TestCase {
         columnMeta.setColumnLabel("AAA_BBB");
         rsMeta.addColumnMetaData(columnMeta);
         columnMeta = new MockColumnMetaData();
-        columnMeta.setColumnLabel("rownumber_");
+        columnMeta.setColumnLabel("ROWNUMBER_");
         rsMeta.addColumnMetaData(columnMeta);
         MockResultSet rs = new MockResultSet(rsMeta);
         ArrayMap data = new ArrayMap();
         data.put("FOO", "111");
         data.put("AAA_BBB", "222");
-        data.put("rownumber_", 1);
+        data.put("ROWNUMBER_", 1);
         rs.addRowData(data);
         rs.next();
         PropertyType[] ptypes = handler.createPropertyTypes(rsMeta);
