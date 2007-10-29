@@ -15,6 +15,8 @@
  */
 package org.seasar.extension.jdbc.it.auto;
 
+import junitx.framework.ArrayAssert;
+
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.exception.IdGenerationFailedRuntimeException;
@@ -30,6 +32,7 @@ import org.seasar.extension.jdbc.it.entity.Department3;
 import org.seasar.extension.jdbc.it.entity.Department4;
 import org.seasar.extension.jdbc.it.entity.Department5;
 import org.seasar.extension.jdbc.it.entity.IdentityStrategy;
+import org.seasar.extension.jdbc.it.entity.LargeObject;
 import org.seasar.extension.jdbc.it.entity.SequenceStrategy;
 import org.seasar.extension.jdbc.it.entity.SequenceStrategy2;
 import org.seasar.extension.jdbc.it.entity.SequenceStrategy3;
@@ -385,5 +388,30 @@ public class AutoInsertTest extends S2TestCase {
                     99)
                 .getSingleResult();
         assertNull(departmentName);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testLargeObjectTx() throws Exception {
+        byte[] bytes = new byte[10000];
+        for (int i = 0; i < bytes.length; i++) {
+            bytes[i] = (byte) 'b';
+        }
+        char[] chars = new char[10000];
+        for (int i = 0; i < chars.length; i++) {
+            chars[i] = 'c';
+        }
+        LargeObject largeObject = new LargeObject();
+        largeObject.id = 1;
+        largeObject.blobValue = bytes;
+        largeObject.clobValue = new String(chars);
+        jdbcManager.insert(largeObject).execute();
+        largeObject =
+            jdbcManager.from(LargeObject.class).where(
+                new SimpleWhere().eq("id", 1)).getSingleResult();
+        ArrayAssert.assertEquals(bytes, largeObject.blobValue);
+        assertEquals(new String(chars), largeObject.clobValue);
     }
 }

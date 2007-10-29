@@ -108,8 +108,7 @@ public class AutoDeleteTest extends S2TestCase {
         try {
             jdbcManager.delete(employee2).execute();
             fail();
-        } catch (OptimisticLockException ignore) {
-            ignore.printStackTrace();
+        } catch (OptimisticLockException e) {
         }
     }
 }
