@@ -31,40 +31,44 @@ public class NodeCacheTest extends TestCase {
         NodeCache.clear();
     }
 
+    String getPath() {
+        return getClass().getName().replace('.', '/') + ".sql";
+    }
+
     /**
      * 
      */
     public void testGetNode() {
-        Node node = NodeCache.getNode(getClass().getName(), null);
+        Node node = NodeCache.getNode(getPath(), null);
         assertNotNull(node);
         SqlContextImpl ctx = new SqlContextImpl();
         node.accept(ctx);
         assertEquals("standard", ctx.getSql());
-        assertSame(node, NodeCache.getNode(getClass().getName(), null));
+        assertSame(node, NodeCache.getNode(getPath(), null));
     }
 
     /**
      * 
      */
     public void testGetNode_dbmsName() {
-        Node node = NodeCache.getNode(getClass().getName(), "oracle");
+        Node node = NodeCache.getNode(getPath(), "oracle");
         assertNotNull(node);
         SqlContextImpl ctx = new SqlContextImpl();
         node.accept(ctx);
         assertEquals("oracle", ctx.getSql());
-        assertSame(node, NodeCache.getNode(getClass().getName(), "oracle"));
+        assertSame(node, NodeCache.getNode(getPath(), "oracle"));
     }
 
     /**
      * 
      */
     public void testGetNode_dbmsName_notFound() {
-        Node node = NodeCache.getNode(getClass().getName(), "xxx");
+        Node node = NodeCache.getNode(getPath(), "xxx");
         assertNotNull(node);
         SqlContextImpl ctx = new SqlContextImpl();
         node.accept(ctx);
         assertEquals("standard", ctx.getSql());
-        assertSame(node, NodeCache.getNode(getClass().getName(), "xxx"));
+        assertSame(node, NodeCache.getNode(getPath(), "xxx"));
     }
 
     /**

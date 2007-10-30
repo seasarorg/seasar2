@@ -46,7 +46,7 @@ public final class NodeCache {
      * キャッシュしているノードを返します。 まだ、解析していないときにはファイルからSQLを取得して解析し、 結果をキャッシュします。
      * 
      * @param path
-     *            パス。examples.dao.EmployeeDao_selectXxxのような'.'区切りのパスです。
+     *            パス。examples/dao/EmployeeDao_selectXxx.sqlのような'/'区切りのパスです。
      * @param dbmsName
      *            DBMS名
      * @return キャッシュしているノード
@@ -54,6 +54,9 @@ public final class NodeCache {
     public static Node getNode(String path, String dbmsName) {
         if (!initialized) {
             initialize();
+        }
+        if (path.endsWith(".sql")) {
+            path = path.substring(0, path.length() - 4);
         }
         String s = null;
         Node node = null;
