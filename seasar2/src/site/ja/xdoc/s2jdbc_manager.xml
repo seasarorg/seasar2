@@ -235,9 +235,7 @@
 					<ul>
 						<li>
 							<p>
-								<a href="#SQLファイルのパス">
-									SQLファイルのパス
-								</a>
+								<a href="#SQLファイルのパス">SQLファイルのパス</a>
 							</p>
 						</li>
 						<li>
@@ -256,7 +254,9 @@
 						</li>
 						<li>
 							<p>
-								<a href="#SQLファイルを使ったページング">SQLファイルを使ったページング</a>
+								<a href="#SQLファイルを使ったページング">
+									SQLファイルを使ったページング
+								</a>
 							</p>
 						</li>
 						<li>
@@ -1120,7 +1120,9 @@ List<EmployeeDto> results = jdbcManager.selectBySql(
     .getResultList();
 ]]></source>
 				<p>
-				結果を<code>Map</code>で受け取ることもできます。
+					結果を
+					<code>Map</code>
+					で受け取ることもできます。
 				</p>
 				<source><![CDATA[
 List<RowMap> results = jdbcManager.selectBySql(
@@ -1128,11 +1130,10 @@ List<RowMap> results = jdbcManager.selectBySql(
     .getResultList();
 ]]></source>
 				<p>
-				RowMapはMap&lt;String, Object&gt;なクラスで、
-				存在しないキーにアクセスすると
-				例外が発生します。
-				キーの値は、AAA_BBBのような'_'記法の値ををaaaBbbのようなキャメル記法に
-				変換したものです。
+					RowMapはMap&lt;String, Object&gt;なクラスで、
+					存在しないキーにアクセスすると 例外が発生します。
+					キーの値は、AAA_BBBのような'_'記法の値ををaaaBbbのようなキャメル記法に
+					変換したものです。
 				</p>
 				<p>
 					このルールは、convention.diconで指定されている
@@ -1157,7 +1158,9 @@ Integer count = jdbcManager.selectBySql(
     .getSingleResult();
 ]]></source>
 				<p>
-				結果を<code>Map</code>で受け取ることもできます。
+					結果を
+					<code>Map</code>
+					で受け取ることもできます。
 				</p>
 				<source><![CDATA[
 RowMap result = jdbcManager.selectBySql(
@@ -1165,11 +1168,10 @@ RowMap result = jdbcManager.selectBySql(
     .getSingleResult();
 ]]></source>
 				<p>
-				RowMapはMap&lt;String, Object&gt;なクラスで、
-				存在しないキーにアクセスすると
-				例外が発生します。
-				キーの値は、AAA_BBBのような'_'記法の値ををaaaBbbのようなキャメル記法に
-				変換したものです。
+					RowMapはMap&lt;String, Object&gt;なクラスで、
+					存在しないキーにアクセスすると 例外が発生します。
+					キーの値は、AAA_BBBのような'_'記法の値ををaaaBbbのようなキャメル記法に
+					変換したものです。
 				</p>
 				<p>
 					このルールは、convention.diconで指定されている
@@ -1179,7 +1181,7 @@ RowMap result = jdbcManager.selectBySql(
 					のfromColumnNameToPropertyName()の実装を変えることで、カスタマイズすることができます。
 				</p>
 			</subsection>
-			
+
 			<subsection name="SQLを使ったページング">
 				<p>
 					ページングを指定する場合は、
@@ -1189,8 +1191,9 @@ RowMap result = jdbcManager.selectBySql(
 					には、取得する行数を指定します。
 					<code>offset()</code>
 					には、最初に取得する行の位置を指定します。 最初の行の位置は0になります。
-					ページングを指定するには、必ず<code>ordey by</code>句が必要です。
-					order by句で指定するカラムは、selectリストにも含めるようにしてください。
+					ページングを指定するには、必ず
+					<code>ordey by</code>
+					句が必要です。 order by句で指定するカラムは、selectリストにも含めるようにしてください。
 				</p>
 				<source><![CDATA[
 jdbcManager.selectBySql(EmployeeDto.class,
@@ -1347,12 +1350,11 @@ jdbcManager.callBySql("{? = call myproc(?)}", dto).call();
 System.out.println(dto.result_OUT);
 ]]></source>
 		</section>
-			<p>
+		<p>
 			オラクルとPostgreSQL以外は、結果セットの受け取りをパラメータで定義する必要はありません。
-			JavaBeansの最初のフィールドを結果セット用に定義し、
-			2番目以降をパラメータに対応したフィールドにします。
-			</p>
-			<source><![CDATA[
+			JavaBeansの最初のフィールドを結果セット用に定義し、 2番目以降をパラメータに対応したフィールドにします。
+		</p>
+		<source><![CDATA[
 public class MyDto {
 
     public List<EmployeeDto> result_OUT;
@@ -1360,7 +1362,7 @@ public class MyDto {
     public int arg1_IN;
 }
 ]]></source>
-			<source><![CDATA[
+		<source><![CDATA[
 MyDto dto = new MyDto();
 dto.arg1_IN = 1;
 jdbcManager.callBySql("{call myproc(?)}", dto).call();
@@ -1378,11 +1380,11 @@ System.out.println(dto.result_OUT);
 			<p>
 				SQLファイルは、クラスパス上にあるならどこにおいてもかまいませんが、
 				<code>ルートパッケージ.entity.エンティティ名</code>
-				のパッケージ配下に置くことを推奨します。 例えば、
-				<code>Employee</code>
-				エンティティに関するSQLは、
+				のパッケージに対応したディレクトリ配下に置くことを推奨します。 例えば、
 				<code>examples.entity.Employee</code>
-				パッケージにおくと良いでしょう。
+				エンティティに関するSQLファイルは、
+				<code>examples/entity/Employee</code>
+				ディレクトリにおくと良いでしょう。
 			</p>
 			<p>
 				複数のテーブルを結合するような場合は、 一番主軸となっているテーブルのエンティティを選びます。
@@ -1523,8 +1525,8 @@ select * from employee
 				埋め込み変数の値に、セミコロン(;)が入っていると例外にしているので、 問題はありません。
 			</p>
 			<p>
-			<code>order by</code>句をパラメータで変えたい場合は、
-			/*$orderBy*/と指定します。
+				<code>order by</code>
+				句をパラメータで変えたい場合は、 /*$orderBy*/と指定します。
 			</p>
 			<source><![CDATA[
 select * from employee order by /*$orderBy*/id
@@ -1540,8 +1542,8 @@ jobType = /*jobType*/'CLERK'
 			<subsection name="SQLファイルのパス">
 				<p>
 					SQLファイルのパスは、
-					<code>examples.entity.Employee.selectAll</code>
-					のように指定します。 このパスに対するデフォルトの物理的なファイルは、
+					<code>examples/entity/Employee/selectAll.sql</code>
+					のように指定します。 このパスに対するデフォルトの物理的なファイルは、 そのまま
 					<code>examples/entity/Employee/selectAll.sql</code>
 					になります。 ただし、
 					<a href="s2jdbc_setup.html#ダイアレクト">ダイアレクト</a>
@@ -1571,7 +1573,7 @@ jobType = /*jobType*/'CLERK'
 				<p>SQLファイルにパラメータがない場合は、次のようにして呼び出します。</p>
 				<source><![CDATA[
 List<EmployeeDto> results = jdbcManager.selectBySqlFile(
-    EmployeeDto.class, "examples.entity.Employee.selectAll")
+    EmployeeDto.class, "examples/entity/Employee/selectAll.sql")
     .getResultList();
 ]]></source>
 				<p>
@@ -1581,7 +1583,7 @@ List<EmployeeDto> results = jdbcManager.selectBySqlFile(
 				</p>
 				<source><![CDATA[
 List<EmployeeDto> results = jdbcManager.selectBySqlFile(
-    EmployeeDto.class, "examples.entity.Employee.selectAll", 10)
+    EmployeeDto.class, "examples/entity/Employee/selectAll.sql", 10)
     .getResultList();
 ]]></source>
 				<p>
@@ -1608,7 +1610,7 @@ SelectAllParam param = new SelectAllParam();
 param.salaryMin = new BigDecimal(1200);
 param.salaryMax = new BigDecimal(1800);
 List<EmployeeDto> results = jdbcManager.selectBySqlFile(
-    EmployeeDto.class, "examples.entity.Employee.selectAll", param)
+    EmployeeDto.class, "examples/entity/Employee/selectAll.sql", param)
     .getResultList();
 ]]></source>
 				<p>
@@ -1623,19 +1625,20 @@ List<EmployeeDto> results = jdbcManager.selectBySqlFile(
 					</p>
 				</div>
 				<p>
-				結果を<code>Map</code>で受け取ることもできます。
+					結果を
+					<code>Map</code>
+					で受け取ることもできます。
 				</p>
 				<source><![CDATA[
 List<RowMap> results = jdbcManager.selectBySqlFile(
-    RowMap.class, "examples.entity.Employee.selectAll")
+    RowMap.class, "examples/entity/Employee/selectAll.sql")
     .getResultList();
 ]]></source>
 				<p>
-				RowMapはMap&lt;String, Object&gt;なクラスで、
-				存在しないキーにアクセスすると
-				例外が発生します。
-				キーの値は、AAA_BBBのような'_'記法の値ををaaaBbbのようなキャメル記法に
-				変換したものです。
+					RowMapはMap&lt;String, Object&gt;なクラスで、
+					存在しないキーにアクセスすると 例外が発生します。
+					キーの値は、AAA_BBBのような'_'記法の値ををaaaBbbのようなキャメル記法に
+					変換したものです。
 				</p>
 				<p>
 					このルールは、convention.diconで指定されている
@@ -1661,7 +1664,7 @@ List<RowMap> results = jdbcManager.selectBySqlFile(
 				<p>SQLファイルにパラメータがない場合は、次のようにして呼び出します。</p>
 				<source><![CDATA[
 EmployeeDto result = jdbcManager.selectBySqlFile(
-    EmployeeDto.class, "examples.entity.Employee.selectSingle")
+    EmployeeDto.class, "examples/entity/Employee/selectSingle.sql")
     .getSingleResult();
 ]]></source>
 				<p>
@@ -1671,7 +1674,7 @@ EmployeeDto result = jdbcManager.selectBySqlFile(
 				</p>
 				<source><![CDATA[
 EmployeeDto result = jdbcManager.selectBySqlFile(
-    EmployeeDto.class, "examples.entity.Employee.selectSingle", 10)
+    EmployeeDto.class, "examples/entity/Employee/selectSingle.sql", 10)
     .getSingleResult();
 ]]></source>
 				<p>
@@ -1692,19 +1695,20 @@ EmployeeDto result = jdbcManager.selectBySqlFile(
 					</p>
 				</div>
 				<p>
-				結果を<code>Map</code>で受け取ることもできます。
+					結果を
+					<code>Map</code>
+					で受け取ることもできます。
 				</p>
 				<source><![CDATA[
 RowMap result = jdbcManager.selectBySqlFile(
-    RowMap.class, "examples.entity.Employee.selectSingle")
+    RowMap.class, "examples/entity/Employee/selectSingle.sql")
     .getSingleResult();
 ]]></source>
 				<p>
-				RowMapはMap&lt;String, Object&gt;なクラスで、
-				存在しないキーにアクセスすると
-				例外が発生します。
-				キーの値は、AAA_BBBのような'_'記法の値ををaaaBbbのようなキャメル記法に
-				変換したものです。
+					RowMapはMap&lt;String, Object&gt;なクラスで、
+					存在しないキーにアクセスすると 例外が発生します。
+					キーの値は、AAA_BBBのような'_'記法の値ををaaaBbbのようなキャメル記法に
+					変換したものです。
 				</p>
 				<p>
 					このルールは、convention.diconで指定されている
@@ -1714,7 +1718,7 @@ RowMap result = jdbcManager.selectBySqlFile(
 					のfromColumnNameToPropertyName()の実装を変えることで、カスタマイズすることができます。
 				</p>
 			</subsection>
-			
+
 			<subsection name="SQLファイルを使ったページング">
 				<p>
 					ページングを指定する場合は、
@@ -1724,15 +1728,16 @@ RowMap result = jdbcManager.selectBySqlFile(
 					には、取得する行数を指定します。
 					<code>offset()</code>
 					には、最初に取得する行の位置を指定します。 最初の行の位置は0になります。
-					ページングを指定するには、必ず<code>ordey by</code>句が必要です。
-					order by句で指定するカラムは、selectリストにも含めるようにしてください。
+					ページングを指定するには、必ず
+					<code>ordey by</code>
+					句が必要です。 order by句で指定するカラムは、selectリストにも含めるようにしてください。
 				</p>
 				<source><![CDATA[
 select id, name, ... from employee order by name
 ]]></source>
 				<source><![CDATA[
 jdbcManager.selectBySqlFile(EmployeeDto.class,
-    "examples.entity.Employee.selectAll")
+    "examples/entity/Employee/selectAll.sql")
     .limit(100)
     .offset(10)
     .getResultList();
@@ -1752,7 +1757,7 @@ jdbcManager.selectBySqlFile(EmployeeDto.class,
 				<p>SQLファイルにパラメータがない場合は、次のようにして呼び出します。</p>
 				<source><![CDATA[
 int count = jdbcManager.updateBySqlFile(
-    "examples.entity.Employee.update")
+    "examples/entity/Employee/update.sql")
     .execute();
 ]]></source>
 				<p>
@@ -1764,7 +1769,7 @@ int count = jdbcManager.updateBySqlFile(
 				</p>
 				<source><![CDATA[
 int count = jdbcManager.updateBySqlFile(
-    "examples.entity.Employee.update", 10)
+    "examples/entity/Employee/update.sql", 10)
     .execute();
 ]]></source>
 				<p>
@@ -1790,7 +1795,7 @@ UpdateParam param = new UpdateParam();
 param.salary = new BigDecimal(1200);
 param.id = 10;
 int count = jdbcManager.updateBySqlFile(
-    "examples.entity.Employee.update", param)
+    "examples/entity/Employee/update.sql", param)
     .execute();
 ]]></source>
 			</subsection>
@@ -1816,7 +1821,7 @@ int count = jdbcManager.updateBySqlFile(
 List<Integer> paramList = new ArrayList<Integer>();
 ...
 int[] countArray = jdbcManager.updateBatchBySqlFile(
-    "examples.entity.Employee.update", paramList)
+    "examples/entity/Employee/update.sql", paramList)
     .execute();
 ]]></source>
 				<p>
@@ -1841,7 +1846,7 @@ where id = /*id*/1
 List<UpdateParam> paramList = new ArrayList<UpdateParam>();
 ...
 int[] countArray = jdbcManager.updateBatchBySqlFile(
-    "examples.entity.Employee.update", paramList)
+    "examples/entity/Employee/update.sql", paramList)
     .execute();
 ]]></source>
 			</subsection>
@@ -1859,7 +1864,7 @@ int[] countArray = jdbcManager.updateBatchBySqlFile(
 					です。 最初の例は、パラメータのない場合です。
 				</p>
 				<source><![CDATA[
-jdbcManager.callBySqlFile("examples.entity.Employee.callMyProc").call();
+jdbcManager.callBySqlFile("examples/entity/Employee/callMyProc.sql").call();
 ]]></source>
 				<p>
 					INのパラメータが1つだけで、そのパラメータが
@@ -1869,7 +1874,7 @@ jdbcManager.callBySqlFile("examples.entity.Employee.callMyProc").call();
 					の2番目の引数で値を直接指定します。
 				</p>
 				<source><![CDATA[
-jdbcManager.callBySqlFile("examples.entity.Employee.callMyProc", "hoge").call();
+jdbcManager.callBySqlFile("examples/entity/Employee/callMyProc.sql", "hoge").call();
 ]]></source>
 				<p>
 					上記以外の場合は、
@@ -1922,7 +1927,7 @@ public class MyDto {
 MyDto dto = new MyDto();
 dto.arg1_IN_OUT = 1;
 dto.arg2_IN = 2;
-jdbcManager.callBySqlFile("examples.entity.Employee.callMyProc", dto).call();
+jdbcManager.callBySqlFile("examples/entity/Employee/callMyProc.sql", dto).call();
 System.out.println(dto.result_OUT);
 System.out.println(dto.arg1_IN_OUT);
 ]]></source>
@@ -1940,15 +1945,15 @@ public class MyDto {
 				<source><![CDATA[
 MyDto dto = new MyDto();
 dto.arg1_IN = 1;
-jdbcManager.callBySqlFile("examples.entity.Employee.callMyProc", dto).call();
+jdbcManager.callBySqlFile("examples/entity/Employee/callMyProc.sql", dto).call();
 System.out.println(dto.result_OUT);
 ]]></source>
-			<p>
-			オラクルとPostgreSQL以外は、結果セットの受け取りをパラメータで定義する必要はありません。
-			JavaBeansの最初のフィールドを結果セット用に定義し、
-			2番目以降をパラメータに対応したフィールドにします。
-			</p>
-			<source><![CDATA[
+				<p>
+					オラクルとPostgreSQL以外は、結果セットの受け取りをパラメータで定義する必要はありません。
+					JavaBeansの最初のフィールドを結果セット用に定義し、
+					2番目以降をパラメータに対応したフィールドにします。
+				</p>
+				<source><![CDATA[
 public class MyDto {
 
     public List<EmployeeDto> result_OUT;
@@ -1956,7 +1961,7 @@ public class MyDto {
     public int arg1_IN;
 }
 ]]></source>
-			<source><![CDATA[
+				<source><![CDATA[
 MyDto dto = new MyDto();
 dto.arg1_IN = 1;
 jdbcManager.callBySql("{call myproc(?)}", dto).call();
