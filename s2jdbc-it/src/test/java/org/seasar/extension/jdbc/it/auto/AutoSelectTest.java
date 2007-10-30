@@ -15,6 +15,7 @@
  */
 package org.seasar.extension.jdbc.it.auto;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.persistence.NonUniqueResultException;
@@ -27,6 +28,7 @@ import org.seasar.extension.jdbc.it.entity.Department;
 import org.seasar.extension.jdbc.it.entity.Department3;
 import org.seasar.extension.jdbc.it.entity.Department4;
 import org.seasar.extension.jdbc.it.entity.Employee;
+import org.seasar.extension.jdbc.where.ComplexWhere;
 import org.seasar.extension.jdbc.where.SimpleWhere;
 import org.seasar.extension.unit.S2TestCase;
 
@@ -181,7 +183,7 @@ public class AutoSelectTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void testWhere_eqCondition() throws Exception {
+    public void testWhere_eq_condition() throws Exception {
         List<Employee> list =
             jdbcManager
                 .from(Employee.class)
@@ -205,7 +207,7 @@ public class AutoSelectTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void testWhere_neCondition() throws Exception {
+    public void testWhere_ne_condition() throws Exception {
         List<Employee> list =
             jdbcManager
                 .from(Employee.class)
@@ -231,11 +233,41 @@ public class AutoSelectTest extends S2TestCase {
      * 
      * @throws Exception
      */
+    public void testWhere_gt_lt_condition() throws Exception {
+        List<Employee> list =
+            jdbcManager
+                .from(Employee.class)
+                .where(
+                    new EmployeeCondition().salary.gt(new BigDecimal("1100")).salary
+                        .lt(new BigDecimal("2000")))
+                .getResultList();
+        assertEquals(5, list.size());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
     public void testWhere_ge_le() throws Exception {
         List<Employee> list =
             jdbcManager
                 .from(Employee.class)
                 .where(new SimpleWhere().ge("salary", 1100).le("salary", 2000))
+                .getResultList();
+        assertEquals(6, list.size());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testWhere_ge_le_condition() throws Exception {
+        List<Employee> list =
+            jdbcManager
+                .from(Employee.class)
+                .where(
+                    new EmployeeCondition().salary.ge(new BigDecimal("1100")).salary
+                        .le(new BigDecimal("2000")))
                 .getResultList();
         assertEquals(6, list.size());
     }
@@ -257,11 +289,38 @@ public class AutoSelectTest extends S2TestCase {
      * 
      * @throws Exception
      */
+    public void testWhere_in_condition() throws Exception {
+        List<Employee> list =
+            jdbcManager
+                .from(Employee.class)
+                .where(new EmployeeCondition().employeeNo.in(7654, 7900, 7934))
+                .getResultList();
+        assertEquals(3, list.size());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
     public void testWhere_notIn() throws Exception {
         List<Employee> list =
             jdbcManager
                 .from(Employee.class)
                 .where(new SimpleWhere().notIn("employeeNo", 7654, 7900, 7934))
+                .getResultList();
+        assertEquals(11, list.size());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testWhere_notIn_condition() throws Exception {
+        List<Employee> list =
+            jdbcManager
+                .from(Employee.class)
+                .where(
+                    new EmployeeCondition().employeeNo.notIn(7654, 7900, 7934))
                 .getResultList();
         assertEquals(11, list.size());
     }
@@ -281,7 +340,7 @@ public class AutoSelectTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void testWhere_likeCondition() throws Exception {
+    public void testWhere_like_condition() throws Exception {
         List<Employee> list =
             jdbcManager
                 .from(Employee.class)
@@ -299,7 +358,19 @@ public class AutoSelectTest extends S2TestCase {
             jdbcManager.from(Employee.class).where(
                 new SimpleWhere().starts("employeeName", "S")).getResultList();
         assertEquals(2, list.size());
+    }
 
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testWhere_starts_condition() throws Exception {
+        List<Employee> list =
+            jdbcManager
+                .from(Employee.class)
+                .where(new EmployeeCondition().employeeName.starts("S"))
+                .getResultList();
+        assertEquals(2, list.size());
     }
 
     /**
@@ -310,6 +381,17 @@ public class AutoSelectTest extends S2TestCase {
         List<Employee> list =
             jdbcManager.from(Employee.class).where(
                 new SimpleWhere().ends("employeeName", "S")).getResultList();
+        assertEquals(3, list.size());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testWhere_ends_condition() throws Exception {
+        List<Employee> list =
+            jdbcManager.from(Employee.class).where(
+                new EmployeeCondition().employeeName.ends("S")).getResultList();
         assertEquals(3, list.size());
     }
 
@@ -330,6 +412,19 @@ public class AutoSelectTest extends S2TestCase {
      * 
      * @throws Exception
      */
+    public void testWhere_contains_condition() throws Exception {
+        List<Employee> list =
+            jdbcManager
+                .from(Employee.class)
+                .where(new EmployeeCondition().employeeName.contains("LL"))
+                .getResultList();
+        assertEquals(2, list.size());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
     public void testWhere_isNull() throws Exception {
         List<Employee> list =
             jdbcManager.from(Employee.class).where(
@@ -341,7 +436,7 @@ public class AutoSelectTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void testWhere_isNullCondition() throws Exception {
+    public void testWhere_isNull_condition() throws Exception {
         List<Employee> list =
             jdbcManager.from(Employee.class).where(
                 new EmployeeCondition().managerId.isNull()).getResultList();
@@ -385,6 +480,17 @@ public class AutoSelectTest extends S2TestCase {
      * 
      * @throws Exception
      */
+    public void testWhere_isNotNull_condition() throws Exception {
+        List<Employee> list =
+            jdbcManager.from(Employee.class).where(
+                new EmployeeCondition().managerId.isNotNull()).getResultList();
+        assertEquals(13, list.size());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
     public void testWhere_isNotNull_false() throws Exception {
         List<Employee> list =
             jdbcManager
@@ -414,7 +520,7 @@ public class AutoSelectTest extends S2TestCase {
             jdbcManager
                 .from(Employee.class)
                 .where(
-                    new SimpleWhere().eq("departmentId", 1).or().ge(
+                    new ComplexWhere().eq("departmentId", 1).or().ge(
                         "salary",
                         3000))
                 .orderBy("employeeName")
@@ -436,7 +542,7 @@ public class AutoSelectTest extends S2TestCase {
             jdbcManager
                 .from(Employee.class)
                 .where(
-                    new SimpleWhere()
+                    new ComplexWhere()
                         .ignoreWhitespace()
                         .eq("employeeName", "")
                         .or()
@@ -466,7 +572,7 @@ public class AutoSelectTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void testJoin_nestCondition() throws Exception {
+    public void testJoin_nest_condition() throws Exception {
         List<Department> list =
             jdbcManager
                 .from(Department.class)
@@ -494,6 +600,27 @@ public class AutoSelectTest extends S2TestCase {
                         "RESEARCH").starts("address.street", "STREET").ge(
                         "salary",
                         2000))
+                .getResultList();
+        assertEquals(3, list.size());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testJoin_star_condition() throws Exception {
+        List<Employee> list =
+            jdbcManager
+                .from(Employee.class)
+                .join("manager", JoinType.INNER)
+                .join("department")
+                .join("address")
+                .where(
+                    new EmployeeCondition().salary
+                        .ge(new BigDecimal("2000"))
+                        .department().departmentName.eq("RESEARCH").and(
+                        new EmployeeCondition().address().street
+                            .starts("STREET")))
                 .getResultList();
         assertEquals(3, list.size());
     }

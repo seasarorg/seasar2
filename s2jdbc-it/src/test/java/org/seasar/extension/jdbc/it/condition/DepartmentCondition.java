@@ -15,6 +15,7 @@
  */
 package org.seasar.extension.jdbc.it.condition;
 
+import org.seasar.extension.jdbc.where.ComplexWhere;
 import org.seasar.extension.jdbc.where.condition.AbstractEntityCondition;
 import org.seasar.extension.jdbc.where.condition.NotNullableCondition;
 import org.seasar.extension.jdbc.where.condition.NullableCondition;
@@ -34,9 +35,10 @@ public class DepartmentCondition extends
 
     /**
      * @param prefix
+     * @param where
      */
-    public DepartmentCondition(String prefix) {
-        super(prefix);
+    public DepartmentCondition(String prefix, ComplexWhere where) {
+        super(prefix, where);
     }
 
     /** */
@@ -67,7 +69,7 @@ public class DepartmentCondition extends
      * @return
      */
     public EmployeeCondition employees() {
-        return new EmployeeCondition(prefix + "employees.");
+        return new EmployeeCondition(prefix + "employees.", where);
     }
 
 }

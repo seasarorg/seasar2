@@ -18,6 +18,7 @@ package org.seasar.extension.jdbc.it.condition;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import org.seasar.extension.jdbc.where.ComplexWhere;
 import org.seasar.extension.jdbc.where.condition.AbstractEntityCondition;
 import org.seasar.extension.jdbc.where.condition.NotNullableCondition;
 import org.seasar.extension.jdbc.where.condition.NullableCondition;
@@ -37,9 +38,10 @@ public class EmployeeCondition extends
 
     /**
      * @param prefix
+     * @param where
      */
-    public EmployeeCondition(String prefix) {
-        super(prefix);
+    public EmployeeCondition(String prefix, ComplexWhere where) {
+        super(prefix, where);
     }
 
     /** */
@@ -62,7 +64,7 @@ public class EmployeeCondition extends
      * @return
      */
     public EmployeeCondition manager() {
-        return new EmployeeCondition(prefix + "manager.");
+        return new EmployeeCondition(prefix + "manager.", where);
     }
 
     /** */
@@ -81,12 +83,19 @@ public class EmployeeCondition extends
      * @return
      */
     public DepartmentCondition department() {
-        return new DepartmentCondition(prefix + "department.");
+        return new DepartmentCondition(prefix + "department.", where);
     }
 
     /** */
     public NullableCondition<EmployeeCondition, Integer> addressId =
         new NullableCondition<EmployeeCondition, Integer>("addressId", this);
+
+    /**
+     * @return
+     */
+    public AddressCondition address() {
+        return new AddressCondition(prefix + "address.", where);
+    }
 
     /** */
     public NullableCondition<EmployeeCondition, Integer> version =

@@ -15,6 +15,7 @@
  */
 package org.seasar.extension.jdbc.it.condition;
 
+import org.seasar.extension.jdbc.where.ComplexWhere;
 import org.seasar.extension.jdbc.where.condition.AbstractEntityCondition;
 import org.seasar.extension.jdbc.where.condition.NotNullableCondition;
 import org.seasar.extension.jdbc.where.condition.NullableCondition;
@@ -33,9 +34,10 @@ public class AddressCondition extends AbstractEntityCondition<AddressCondition> 
 
     /**
      * @param prefix
+     * @param where
      */
-    public AddressCondition(String prefix) {
-        super(prefix);
+    public AddressCondition(String prefix, ComplexWhere where) {
+        super(prefix, where);
     }
 
     /** */
@@ -54,7 +56,7 @@ public class AddressCondition extends AbstractEntityCondition<AddressCondition> 
      * @return
      */
     public EmployeeCondition employee() {
-        return new EmployeeCondition(prefix + "employee.");
+        return new EmployeeCondition(prefix + "employee.", where);
     }
 
 }

@@ -16,6 +16,7 @@
 package org.seasar.extension.jdbc.where.condition;
 
 import org.seasar.extension.jdbc.Where;
+import org.seasar.extension.jdbc.where.ComplexWhere;
 import org.seasar.extension.jdbc.where.SimpleWhere;
 
 /**
@@ -28,8 +29,8 @@ import org.seasar.extension.jdbc.where.SimpleWhere;
 public abstract class AbstractEntityCondition<CONDITION extends AbstractEntityCondition<CONDITION>>
         implements Where {
 
-    /** WHERE句を組み立てる{@link SimpleWhere} */
-    protected SimpleWhere where = new SimpleWhere();
+    /** WHERE句を組み立てる{@link ComplexWhere} */
+    protected ComplexWhere where;
 
     /** このエンティティを表す関連名を含む接頭辞 */
     protected String prefix;
@@ -38,7 +39,7 @@ public abstract class AbstractEntityCondition<CONDITION extends AbstractEntityCo
      * インスタンスを構築します。
      */
     public AbstractEntityCondition() {
-        this("");
+        this("", new ComplexWhere());
     }
 
     /**
@@ -46,9 +47,12 @@ public abstract class AbstractEntityCondition<CONDITION extends AbstractEntityCo
      * 
      * @param prefix
      *            このエンティティを表す関連名を含む接頭辞
+     * @param where
+     *            WHERE句を組み立てる{@link ComplexWhere}
      */
-    public AbstractEntityCondition(final String prefix) {
+    public AbstractEntityCondition(final String prefix, ComplexWhere where) {
         this.prefix = prefix;
+        this.where = where;
     }
 
     /**
@@ -73,7 +77,7 @@ public abstract class AbstractEntityCondition<CONDITION extends AbstractEntityCo
      */
     @SuppressWarnings("unchecked")
     public CONDITION and(final Where factor) {
-        where.and(where);
+        where.and(factor);
         return (CONDITION) this;
     }
 
