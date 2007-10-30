@@ -1348,7 +1348,7 @@ System.out.println(dto.result_OUT);
 ]]></source>
 		</section>
 			<p>
-			オラクルとMySQL以外は、結果セットの受け取りをパラメータで定義する必要はありません。
+			オラクルとPostgreSQL以外は、結果セットの受け取りをパラメータで定義する必要はありません。
 			JavaBeansの最初のフィールドを結果セット用に定義し、
 			2番目以降をパラメータに対応したフィールドにします。
 			</p>
@@ -1944,7 +1944,7 @@ jdbcManager.callBySqlFile("examples.entity.Employee.callMyProc", dto).call();
 System.out.println(dto.result_OUT);
 ]]></source>
 			<p>
-			オラクルとMySQL以外は、結果セットの受け取りをパラメータで定義する必要はありません。
+			オラクルとPostgreSQL以外は、結果セットの受け取りをパラメータで定義する必要はありません。
 			JavaBeansの最初のフィールドを結果セット用に定義し、
 			2番目以降をパラメータに対応したフィールドにします。
 			</p>
