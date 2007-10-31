@@ -45,14 +45,14 @@ public class Employee {
 	public String name;
 
 	/**
-	 * 給与です。
-	 */
-	public Integer salary;
-
-	/**
 	 * 仕事のタイプです。
 	 */
 	public JobType jobType;
+
+	/**
+	 * 給与です。
+	 */
+	public Integer salary;
 
 	/**
 	 * 部署の識別子です。
