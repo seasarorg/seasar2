@@ -40,7 +40,7 @@ public class JdbcManagerTest extends S2TestCase {
 			.from(Employee.class)
 			.getResultList();
 		for (Employee e : results) {
-			System.out.println(e.name + " " + e.jobType);
+			System.out.println(e.name);
 		}
 	}
 }

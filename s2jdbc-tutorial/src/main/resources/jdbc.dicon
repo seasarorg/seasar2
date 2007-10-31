@@ -1,54 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN"
-	"http://www.seasar.org/dtd/components24.dtd">
+<!DOCTYPE components PUBLIC "-//SEASAR2.1//DTD S2Container//EN"
+	"http://www.seasar.org/dtd/components21.dtd">
 <components namespace="jdbc">
 	<include path="jta.dicon"/>
 
-	<!-- for HSQLDB -->
-	<!--
-	<component name="xaDataSource"
-		class="org.seasar.extension.dbcp.impl.XADataSourceImpl">
-		<property name="driverClassName">
-			"org.hsqldb.jdbcDriver"
-		</property>
-		<property name="URL">
-			"jdbc:hsqldb:file:"
-				+ @org.seasar.framework.util.ResourceUtil@getBuildDir(@org.seasar.extension.dbcp.impl.ConnectionPoolImplTest@class).getCanonicalPath()
-				+ "/data/demo"
-		</property>
-		<property name="user">"sa"</property>
-		<property name="password">""</property>
-	</component>
-　　-->
 	<!-- for H2 -->
-	
 	<component name="xaDataSource"
 		class="org.seasar.extension.dbcp.impl.XADataSourceImpl">
 		<property name="driverClassName">
 			"org.h2.Driver"
 		</property>
 		<property name="URL">
-			"jdbc:h2:tcp://localhost:9092/demo"
+			"jdbc:h2:file:"
+				+ @org.seasar.framework.util.ResourceUtil@getBuildDir(@examples.entity.JdbcManagerTest@class).getCanonicalPath()
+				+ "/data/demo;DB_CLOSE_ON_EXIT=FALSE"
 		</property>
 		<property name="user">"sa"</property>
-		<property name="password">""</property>
+		<property name="password"></property>
 	</component>
-	
-
-	<!-- for Derby -->
-	<!--
-	<component name="xaDataSource"
-		class="org.seasar.extension.dbcp.impl.XADataSourceImpl">
-		<property name="driverClassName">
-			"org.apache.derby.jdbc.EmbeddedDriver"
-		</property>
-		<property name="URL">
-			"jdbc:derby:demo"
-		</property>
-		<property name="user">""</property>
-		<property name="password">""</property>
-	</component>
-	-->
 
 	<!-- for Oracle -->
 	<!--
@@ -62,10 +31,6 @@
 		</property>
 		<property name="user">"xxx"</property>
 		<property name="password">"xxx"</property>
-		<initMethod name="addProperty">
-			<arg>"includeSynonyms"</arg>
-			<arg>"true"</arg>
-		</initMethod>
 	</component>
 	-->
 
@@ -110,8 +75,6 @@
 	- 上記以外の場合は，my.cnfでdefault-character-setの設定を適切に
 		(cp932やutf8など．デフォルトのlatin1は不可)行なっていれば，
 		文字化けは防げます．
-	-->
-	<!--
 	<component name="xaDataSource"
 		class="org.seasar.extension.dbcp.impl.XADataSourceImpl">
 		<property name="driverClassName">
@@ -148,18 +111,18 @@
 		<destroyMethod name="close"/>
 	</component>
 
-	<component name="dataSource"
+	<component name="DataSource"
 		class="org.seasar.extension.dbcp.impl.DataSourceImpl"
 	/>
 
 	<!-- from JNDI -->
 	<!--
-	<component name="dataSource"
+	<component name="DataSource"
 		class="javax.sql.DataSource">
 		@org.seasar.extension.j2ee.JndiResourceLocator@lookup("java:comp/env/jdbc/DataSource")
 	</component>
 	-->
-	
+
 	<!--
 	<component name="dataSource"
 		class="org.seasar.extension.datasource.impl.SelectableDataSourceProxy"/>
