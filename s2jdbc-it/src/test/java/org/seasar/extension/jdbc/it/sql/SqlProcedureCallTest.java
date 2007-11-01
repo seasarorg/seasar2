@@ -48,7 +48,7 @@ public class SqlProcedureCallTest extends S2TestCase {
         if (!S2JdbcItUtil.supportsProcedure(jdbcManagerImplementor)) {
             return;
         }
-        jdbcManager.callBySql("{call NO_PARAM()}").call();
+        jdbcManager.callBySql("{call PROC_NONE_PARAM()}").call();
     }
 
     /**
@@ -59,7 +59,7 @@ public class SqlProcedureCallTest extends S2TestCase {
         if (!S2JdbcItUtil.supportsProcedure(jdbcManagerImplementor)) {
             return;
         }
-        jdbcManager.callBySql("{call SIMPLETYPE_PARAM(?)}", 1).call();
+        jdbcManager.callBySql("{call PROC_SIMPLETYPE_PARAM(?)}", 1).call();
     }
 
     /**
@@ -73,7 +73,7 @@ public class SqlProcedureCallTest extends S2TestCase {
         MyDto dto = new MyDto();
         dto.param1 = 3;
         dto.param2_IN_OUT = 5;
-        jdbcManager.callBySql("{call DTO_PARAM(?, ?, ?)}", dto).call();
+        jdbcManager.callBySql("{call PROC_DTO_PARAM(?, ?, ?)}", dto).call();
         assertEquals(new Integer(3), dto.param1);
         assertEquals(new Integer(8), dto.param2_IN_OUT);
         assertEquals(new Integer(3), dto.param3_OUT);
@@ -83,17 +83,17 @@ public class SqlProcedureCallTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void testParameter_oneResultTx() throws Exception {
+    public void testParameter_resultSetTx() throws Exception {
         if (!S2JdbcItUtil.supportsProcedure(jdbcManagerImplementor)) {
             return;
         }
         String query = null;
         if (jdbcManagerImplementor.getDialect().needsParameterForResultSet()) {
-            query = "{call ONE_RESULT(?, ?)}";
+            query = "{call PROC_RESULTSET(?, ?)}";
         } else {
-            query = "{call ONE_RESULT(?)}";
+            query = "{call PROC_RESULTSET(?)}";
         }
-        OneResultDto dto = new OneResultDto();
+        ResultSetDto dto = new ResultSetDto();
         dto.employeeId = 10;
         jdbcManager.callBySql(query, dto).call();
         List<Employee> employees = dto.employees_OUT;
@@ -109,17 +109,78 @@ public class SqlProcedureCallTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void testParameter_twoResultsTx() throws Exception {
+    public void testParameter_resultSetOutTx() throws Exception {
         if (!S2JdbcItUtil.supportsProcedure(jdbcManagerImplementor)) {
             return;
         }
         String query = null;
         if (jdbcManagerImplementor.getDialect().needsParameterForResultSet()) {
-            query = "{call TWO_RESULTS(?, ?, ?, ?)}";
+            query = "{call PROC_RESULTSET_OUT(?, ?, ?)}";
         } else {
-            query = "{call TWO_RESULTS(?, ?)}";
+            query = "{call PROC_RESULTSET_OUT(?, ?)}";
         }
-        TwoResultsDto dto = new TwoResultsDto();
+        ResultSetOutDto dto = new ResultSetOutDto();
+        dto.employeeId = 10;
+        jdbcManager.callBySql(query, dto).call();
+        List<Employee> employees = dto.employees_OUT;
+        assertNotNull(employees);
+        assertEquals(4, employees.size());
+        assertEquals("ADAMS", employees.get(0).employeeName);
+        assertEquals("JAMES", employees.get(1).employeeName);
+        assertEquals("FORD", employees.get(2).employeeName);
+        assertEquals("MILLER", employees.get(3).employeeName);
+        assertEquals(14, dto.count_OUT);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testParameter_resultSetUpdateTx() throws Exception {
+        if (!S2JdbcItUtil.supportsProcedure(jdbcManagerImplementor)) {
+            return;
+        }
+        String query = null;
+        if (jdbcManagerImplementor.getDialect().needsParameterForResultSet()) {
+            query = "{call PROC_RESULTSET_UPDATE(?, ?)}";
+        } else {
+            query = "{call PROC_RESULTSET_UPDATE(?)}";
+        }
+        ResultSetUpdateDto dto = new ResultSetUpdateDto();
+        dto.employeeId = 10;
+        jdbcManager.callBySql(query, dto).call();
+        List<Employee> employees = dto.employees_OUT;
+        assertNotNull(employees);
+        assertEquals(4, employees.size());
+        assertEquals("ADAMS", employees.get(0).employeeName);
+        assertEquals("JAMES", employees.get(1).employeeName);
+        assertEquals("FORD", employees.get(2).employeeName);
+        assertEquals("MILLER", employees.get(3).employeeName);
+        String departmentName =
+            jdbcManager
+                .selectBySql(
+                    String.class,
+                    "select department_name from Department where department_id = ?",
+                    1)
+                .getSingleResult();
+        assertEquals("HOGE", departmentName);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testParameter_resultSetsTx() throws Exception {
+        if (!S2JdbcItUtil.supportsProcedure(jdbcManagerImplementor)) {
+            return;
+        }
+        String query = null;
+        if (jdbcManagerImplementor.getDialect().needsParameterForResultSet()) {
+            query = "{call PROC_RESULTSETS(?, ?, ?, ?)}";
+        } else {
+            query = "{call PROC_RESULTSETS(?, ?)}";
+        }
+        ResultSetsDto dto = new ResultSetsDto();
         dto.employeeId = 10;
         dto.departmentId = 2;
         jdbcManager.callBySql(query, dto).call();
@@ -135,6 +196,51 @@ public class SqlProcedureCallTest extends S2TestCase {
         assertEquals(2, departments.size());
         assertEquals("SALES", departments.get(0).departmentName);
         assertEquals("OPERATIONS", departments.get(1).departmentName);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void ignore_testParameter_resultSetsUpdatesOutTx() throws Exception {
+        if (!S2JdbcItUtil.supportsProcedure(jdbcManagerImplementor)) {
+            return;
+        }
+        String query = null;
+        if (jdbcManagerImplementor.getDialect().needsParameterForResultSet()) {
+            query = "{call PROC_RESULTSETS_UPDATES_OUT(?, ?, ?, ?, ?)}";
+        } else {
+            query = "{call PROC_RESULTSETS_UPDATES_OUT(?, ?, ?)}";
+        }
+        ResultSetsUpdatesOutDto dto = new ResultSetsUpdatesOutDto();
+        dto.employeeId = 10;
+        dto.departmentId = 2;
+        jdbcManager.callBySql(query, dto).call();
+        List<Employee> employees = dto.employees_OUT;
+        assertNotNull(employees);
+        assertEquals(4, employees.size());
+        assertEquals("ADAMS", employees.get(0).employeeName);
+        assertEquals("JAMES", employees.get(1).employeeName);
+        assertEquals("FORD", employees.get(2).employeeName);
+        assertEquals("MILLER", employees.get(3).employeeName);
+        List<Department> departments = dto.departments_OUT;
+        assertNotNull(departments);
+        assertEquals(2, departments.size());
+        assertEquals("SALES", departments.get(0).departmentName);
+        assertEquals("OPERATIONS", departments.get(1).departmentName);
+        String street =
+            jdbcManager.selectBySql(
+                String.class,
+                "select street from Address where address_id = ?",
+                1).getSingleResult();
+        assertEquals("HOGE", street);
+        street =
+            jdbcManager.selectBySql(
+                String.class,
+                "select street from Address where address_id = ?",
+                2).getSingleResult();
+        assertEquals("FOO", street);
+        assertEquals(14, dto.count_OUT);
     }
 
     /**
@@ -159,7 +265,7 @@ public class SqlProcedureCallTest extends S2TestCase {
      * @author taedium
      * 
      */
-    public class OneResultDto {
+    public class ResultSetDto {
 
         /** */
         public List<Employee> employees_OUT;
@@ -173,7 +279,40 @@ public class SqlProcedureCallTest extends S2TestCase {
      * @author taedium
      * 
      */
-    public class TwoResultsDto {
+    public class ResultSetOutDto {
+
+        /** */
+        public List<Employee> employees_OUT;
+
+        /** */
+        public int employeeId;
+
+        /** */
+        public int count_OUT;
+
+    }
+
+    /**
+     * 
+     * @author taedium
+     * 
+     */
+    public class ResultSetUpdateDto {
+
+        /** */
+        public List<Employee> employees_OUT;
+
+        /** */
+        public int employeeId;
+
+    }
+
+    /**
+     * 
+     * @author taedium
+     * 
+     */
+    public class ResultSetsDto {
 
         /** */
         public List<Employee> employees_OUT;
@@ -186,6 +325,29 @@ public class SqlProcedureCallTest extends S2TestCase {
 
         /** */
         public int departmentId;
+    }
+
+    /**
+     * 
+     * @author taedium
+     * 
+     */
+    public class ResultSetsUpdatesOutDto {
+
+        /** */
+        public List<Employee> employees_OUT;
+
+        /** */
+        public List<Department> departments_OUT;
+
+        /** */
+        public int employeeId;
+
+        /** */
+        public int departmentId;
+
+        /** */
+        public int count_OUT;
     }
 
 }

@@ -1,1 +1,1 @@
-{call SIMPLETYPE_PARAM(?)}
+{call PROC_SIMPLETYPE_PARAM(?)}

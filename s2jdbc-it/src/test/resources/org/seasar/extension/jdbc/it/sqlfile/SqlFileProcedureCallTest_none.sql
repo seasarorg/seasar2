@@ -1,0 +1,1 @@
+{call PROC_NONE_PARAM()}

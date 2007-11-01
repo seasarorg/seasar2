@@ -48,7 +48,7 @@ public class SqlFileProcedureCallTest extends S2TestCase {
         if (!S2JdbcItUtil.supportsProcedure(jdbcManagerImplementor)) {
             return;
         }
-        String path = getClass().getName().replace(".", "/") + "_no" + ".sql";
+        String path = getClass().getName().replace(".", "/") + "_none" + ".sql";
         jdbcManager.callBySqlFile(path).call();
     }
 
@@ -87,17 +87,17 @@ public class SqlFileProcedureCallTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void testParameter_oneResultTx() throws Exception {
+    public void testParameter_resultSetTx() throws Exception {
         if (!S2JdbcItUtil.supportsProcedure(jdbcManagerImplementor)) {
             return;
         }
-        String path = getClass().getName().replace(".", "/") + "_one_result";
+        String path = getClass().getName().replace(".", "/") + "_resultSet";
         if (jdbcManagerImplementor.getDialect().needsParameterForResultSet()) {
             path += ".sql";
         } else {
             path += "2.sql";
         }
-        OneResultDto dto = new OneResultDto();
+        ResultSetDto dto = new ResultSetDto();
         dto.employeeId = 10;
         jdbcManager.callBySqlFile(path, dto).call();
         List<Employee> employees = dto.employees_OUT;
@@ -113,17 +113,79 @@ public class SqlFileProcedureCallTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void testParameter_twoResultsTx() throws Exception {
+    public void testParameter_resultSetOutTx() throws Exception {
         if (!S2JdbcItUtil.supportsProcedure(jdbcManagerImplementor)) {
             return;
         }
-        String path = getClass().getName().replace(".", "/") + "_two_results";
+        String path = getClass().getName().replace(".", "/") + "_resultSetOut";
         if (jdbcManagerImplementor.getDialect().needsParameterForResultSet()) {
             path += ".sql";
         } else {
             path += "2.sql";
         }
-        TwoResultsDto dto = new TwoResultsDto();
+        ResultSetOutDto dto = new ResultSetOutDto();
+        dto.employeeId = 10;
+        jdbcManager.callBySqlFile(path, dto).call();
+        List<Employee> employees = dto.employees_OUT;
+        assertNotNull(employees);
+        assertEquals(4, employees.size());
+        assertEquals("ADAMS", employees.get(0).employeeName);
+        assertEquals("JAMES", employees.get(1).employeeName);
+        assertEquals("FORD", employees.get(2).employeeName);
+        assertEquals("MILLER", employees.get(3).employeeName);
+        assertEquals(14, dto.count_OUT);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testParameter_resultSetUpdateTx() throws Exception {
+        if (!S2JdbcItUtil.supportsProcedure(jdbcManagerImplementor)) {
+            return;
+        }
+        String path =
+            getClass().getName().replace(".", "/") + "_resultSetUpdate";
+        if (jdbcManagerImplementor.getDialect().needsParameterForResultSet()) {
+            path += ".sql";
+        } else {
+            path += "2.sql";
+        }
+        ResultSetDto dto = new ResultSetDto();
+        dto.employeeId = 10;
+        jdbcManager.callBySqlFile(path, dto).call();
+        List<Employee> employees = dto.employees_OUT;
+        assertNotNull(employees);
+        assertEquals(4, employees.size());
+        assertEquals("ADAMS", employees.get(0).employeeName);
+        assertEquals("JAMES", employees.get(1).employeeName);
+        assertEquals("FORD", employees.get(2).employeeName);
+        assertEquals("MILLER", employees.get(3).employeeName);
+        String departmentName =
+            jdbcManager
+                .selectBySql(
+                    String.class,
+                    "select department_name from Department where department_id = ?",
+                    1)
+                .getSingleResult();
+        assertEquals("HOGE", departmentName);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testParameter_resultSetsTx() throws Exception {
+        if (!S2JdbcItUtil.supportsProcedure(jdbcManagerImplementor)) {
+            return;
+        }
+        String path = getClass().getName().replace(".", "/") + "_resultSets";
+        if (jdbcManagerImplementor.getDialect().needsParameterForResultSet()) {
+            path += ".sql";
+        } else {
+            path += "2.sql";
+        }
+        ResultSetsDto dto = new ResultSetsDto();
         dto.employeeId = 10;
         dto.departmentId = 2;
         jdbcManager.callBySqlFile(path, dto).call();
@@ -139,6 +201,52 @@ public class SqlFileProcedureCallTest extends S2TestCase {
         assertEquals(2, departments.size());
         assertEquals("SALES", departments.get(0).departmentName);
         assertEquals("OPERATIONS", departments.get(1).departmentName);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void ignore_testParameter_resultSetsUpdatesOutTx() throws Exception {
+        if (!S2JdbcItUtil.supportsProcedure(jdbcManagerImplementor)) {
+            return;
+        }
+        String path =
+            getClass().getName().replace(".", "/") + "_resultSetsUpdatesOut";
+        if (jdbcManagerImplementor.getDialect().needsParameterForResultSet()) {
+            path += ".sql";
+        } else {
+            path += "2.sql";
+        }
+        ResultSetsUpdatesOutDto dto = new ResultSetsUpdatesOutDto();
+        dto.employeeId = 10;
+        dto.departmentId = 2;
+        jdbcManager.callBySqlFile(path, dto).call();
+        List<Employee> employees = dto.employees_OUT;
+        assertNotNull(employees);
+        assertEquals(4, employees.size());
+        assertEquals("ADAMS", employees.get(0).employeeName);
+        assertEquals("JAMES", employees.get(1).employeeName);
+        assertEquals("FORD", employees.get(2).employeeName);
+        assertEquals("MILLER", employees.get(3).employeeName);
+        List<Department> departments = dto.departments_OUT;
+        assertNotNull(departments);
+        assertEquals(2, departments.size());
+        assertEquals("SALES", departments.get(0).departmentName);
+        assertEquals("OPERATIONS", departments.get(1).departmentName);
+        String street =
+            jdbcManager.selectBySql(
+                String.class,
+                "select street from Address where address_id = ?",
+                1).getSingleResult();
+        assertEquals("HOGE", street);
+        street =
+            jdbcManager.selectBySql(
+                String.class,
+                "select street from Address where address_id = ?",
+                2).getSingleResult();
+        assertEquals("FOO", street);
+        assertEquals(14, dto.count_OUT);
     }
 
     /**
@@ -163,7 +271,7 @@ public class SqlFileProcedureCallTest extends S2TestCase {
      * @author taedium
      * 
      */
-    public class OneResultDto {
+    public class ResultSetDto {
 
         /** */
         public List<Employee> employees_OUT;
@@ -177,7 +285,40 @@ public class SqlFileProcedureCallTest extends S2TestCase {
      * @author taedium
      * 
      */
-    public class TwoResultsDto {
+    public class ResultSetOutDto {
+
+        /** */
+        public List<Employee> employees_OUT;
+
+        /** */
+        public int employeeId;
+
+        /** */
+        public int count_OUT;
+
+    }
+
+    /**
+     * 
+     * @author taedium
+     * 
+     */
+    public class ResultSetUpdateDto {
+
+        /** */
+        public List<Employee> employees_OUT;
+
+        /** */
+        public int employeeId;
+
+    }
+
+    /**
+     * 
+     * @author taedium
+     * 
+     */
+    public class ResultSetsDto {
 
         /** */
         public List<Employee> employees_OUT;
@@ -190,6 +331,29 @@ public class SqlFileProcedureCallTest extends S2TestCase {
 
         /** */
         public int departmentId;
+    }
+
+    /**
+     * 
+     * @author taedium
+     * 
+     */
+    public class ResultSetsUpdatesOutDto {
+
+        /** */
+        public List<Employee> employees_OUT;
+
+        /** */
+        public List<Department> departments_OUT;
+
+        /** */
+        public int employeeId;
+
+        /** */
+        public int departmentId;
+
+        /** */
+        public int count_OUT;
     }
 
 }

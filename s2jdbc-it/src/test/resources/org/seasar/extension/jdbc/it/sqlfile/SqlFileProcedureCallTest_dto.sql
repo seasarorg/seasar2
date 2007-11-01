@@ -1,1 +1,1 @@
-{call DTO_PARAM(?, ?, ?)}
+{call PROC_DTO_PARAM(?, ?, ?)}

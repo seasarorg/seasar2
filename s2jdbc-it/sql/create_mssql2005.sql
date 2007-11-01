@@ -93,14 +93,14 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE PROCEDURE [dbo].[NO_PARAM] 
+CREATE PROCEDURE [dbo].[PROC_NONE_PARAM] 
 AS
 BEGIN
     SET NOCOUNT ON;
 END
 GO
 
-CREATE PROCEDURE [dbo].[SIMPLETYPE_PARAM]
+CREATE PROCEDURE [dbo].[PROC_SIMPLETYPE_PARAM]
     @param1 int
 AS
 BEGIN
@@ -108,34 +108,64 @@ BEGIN
 END
 GO
 
-CREATE PROCEDURE [dbo].[DTO_PARAM]
+CREATE PROCEDURE [dbo].[PROC_DTO_PARAM]
     @param1 int,
     @param2 int OUTPUT,
     @param3 int OUTPUT
 AS
 BEGIN
-    SET NOCOUNT ON;
     SET @param2 = @param2 + @param1;
     SET @param3 = @param1;
 END
 GO
 
-CREATE PROCEDURE [dbo].[ONE_RESULT]
+CREATE PROCEDURE [dbo].[PROC_RESULTSET]
     @employeeId int
 AS
 BEGIN
-    SET NOCOUNT ON;
     SELECT * FROM EMPLOYEE WHERE employee_id > @employeeId ORDER BY employee_id;
 END
 GO
 
-CREATE PROCEDURE [dbo].[TWO_RESULTS]
+CREATE PROCEDURE [dbo].[PROC_RESULTSET_OUT]
+    @employeeId int,
+    @count int OUTPUT
+AS
+BEGIN
+    SELECT * FROM EMPLOYEE WHERE employee_id > @employeeId ORDER BY employee_id;
+    SELECT @count = COUNT(*) FROM EMPLOYEE;
+END
+GO
+
+CREATE PROCEDURE [dbo].[PROC_RESULTSET_UPDATE]
+    @employeeId int
+AS
+BEGIN
+    SELECT * FROM EMPLOYEE WHERE employee_id > @employeeId ORDER BY employee_id;
+    UPDATE DEPARTMENT SET DEPARTMENT_NAME = 'HOGE' WHERE department_id = 1;
+END
+GO
+
+CREATE PROCEDURE [dbo].[PROC_RESULTSETS]
     @employeeId int,
     @departmentId int
 AS
 BEGIN
-    SET NOCOUNT ON;
     SELECT * FROM EMPLOYEE WHERE employee_id > @employeeId ORDER BY employee_id;  
     SELECT * FROM DEPARTMENT WHERE department_id > @departmentId ORDER BY department_id;
+END
+GO
+
+CREATE PROCEDURE [dbo].[PROC_RESULTSETS_UPDATES_OUT]
+    @employeeId int,
+    @departmentId int,
+    @count int OUTPUT
+AS
+BEGIN
+    SELECT * FROM EMPLOYEE WHERE employee_id > @employeeId ORDER BY employee_id;
+    UPDATE ADDRESS SET STREET = 'HOGE' WHERE address_id = 1;
+    SELECT * FROM DEPARTMENT WHERE department_id > @departmentId ORDER BY department_id;
+    UPDATE ADDRESS SET STREET = 'FOO' WHERE address_id = 2;
+    SELECT @count = COUNT(*) FROM EMPLOYEE;
 END
 GO
