@@ -32,6 +32,8 @@ import org.seasar.framework.util.PreparedStatementUtil;
  * ファンクションを呼び出す抽象クラスです。
  * 
  * @author koichik
+ * @param <T>
+ *            ファンクションの戻り値の型。戻り値が結果セットの場合は<code>List</code>の要素の型
  * @param <S>
  *            <code>FunctionCall</code>のサブタイプです。
  */
@@ -67,13 +69,6 @@ public abstract class AbstractFunctionCall<T, S extends FunctionCall<T, S>>
         return (S) this;
     }
 
-    public List<T> getResultList() {
-        resultList = true;
-        prepare("getResultList");
-        logSql();
-        return getResultListInternal();
-    }
-
     public T getSingleResult() {
         resultList = false;
         prepare("getSingleResult");
@@ -81,23 +76,18 @@ public abstract class AbstractFunctionCall<T, S extends FunctionCall<T, S>>
         return getSingleResultInternal();
     }
 
-    protected List<T> getResultListInternal() {
-        final JdbcContext jdbcContext = jdbcManager.getJdbcContext();
-        try {
-            final CallableStatement cs = getCallableStatement(jdbcContext);
-            if (PreparedStatementUtil.execute(cs)) {
-                handleNonParamResultSets(cs);
-            }
-            final List<T> result = handleResultList(cs);
-            handleOutParams(cs);
-            return result;
-        } finally {
-            if (!jdbcContext.isTransactional()) {
-                jdbcContext.destroy();
-            }
-        }
+    public List<T> getResultList() {
+        resultList = true;
+        prepare("getResultList");
+        logSql();
+        return getResultListInternal();
     }
 
+    /**
+     * ストアドファンクションを呼び出し、その戻り値を返します。
+     * 
+     * @return ストアドファンクションの戻り値
+     */
     protected T getSingleResultInternal() {
         final JdbcContext jdbcContext = jdbcManager.getJdbcContext();
         try {
@@ -115,6 +105,31 @@ public abstract class AbstractFunctionCall<T, S extends FunctionCall<T, S>>
         }
     }
 
+    /**
+     * 結果セットを返すストアドファンクションを呼び出し、その戻り値を返します。
+     * 
+     * @return ストアドファンクションの戻り値
+     */
+    protected List<T> getResultListInternal() {
+        final JdbcContext jdbcContext = jdbcManager.getJdbcContext();
+        try {
+            final CallableStatement cs = getCallableStatement(jdbcContext);
+            if (PreparedStatementUtil.execute(cs)) {
+                handleNonParamResultSets(cs);
+            }
+            final List<T> result = handleResultList(cs);
+            handleOutParams(cs);
+            return result;
+        } finally {
+            if (!jdbcContext.isTransactional()) {
+                jdbcContext.destroy();
+            }
+        }
+    }
+
+    /**
+     * ストアドファンクションの戻り値を受け取る<code>OUT</code>パラメータを準備します。
+     */
     protected void prepareReturnParameter() {
         final ValueType valueType = getValueType(resultList ? List.class
                 : resultClass, resultLob);
@@ -122,6 +137,30 @@ public abstract class AbstractFunctionCall<T, S extends FunctionCall<T, S>>
         p.paramType = ParamType.OUT;
     }
 
+    /**
+     * ストアドファンクションの戻り値を処理して、結果を返します。
+     * 
+     * @param cs
+     *            呼び出し可能なステートメント
+     * @return ストアドファンクションの戻り値を処理した結果
+     */
+    @SuppressWarnings("unchecked")
+    protected T handleSingleResult(final CallableStatement cs) {
+        try {
+            final Param param = getParam(0);
+            return (T) param.valueType.getValue(cs, 1);
+        } catch (final SQLException e) {
+            throw new SQLRuntimeException(e);
+        }
+    }
+
+    /**
+     * ストアドファンクションの戻り値を処理して、結果のリストを返します。
+     * 
+     * @param cs
+     *            呼び出し可能なステートメント
+     * @return ストアドファンクションの戻り値を処理した結果のリスト
+     */
     @SuppressWarnings("unchecked")
     protected List<T> handleResultList(final CallableStatement cs) {
         try {
@@ -129,16 +168,6 @@ public abstract class AbstractFunctionCall<T, S extends FunctionCall<T, S>>
             final ResultSet rs = ResultSet.class.cast(param.valueType.getValue(
                     cs, 1));
             return (List<T>) handleResultSet(param.field, rs);
-        } catch (final SQLException e) {
-            throw new SQLRuntimeException(e);
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    protected T handleSingleResult(final CallableStatement cs) {
-        try {
-            final Param param = getParam(0);
-            return (T) param.valueType.getValue(cs, 1);
         } catch (final SQLException e) {
             throw new SQLRuntimeException(e);
         }

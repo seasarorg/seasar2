@@ -118,7 +118,7 @@ public abstract class AbstractModuleCall<S extends ModuleCall<S>> extends
             return;
         }
 
-        boolean needsParameterForResultSet = jdbcManager.getDialect()
+        final boolean needsParameterForResultSet = jdbcManager.getDialect()
                 .needsParameterForResultSet();
         for (final ParamDesc paramDesc : getParamDescs(paramClass)) {
             final Class<?> clazz = paramDesc.paramClass;
@@ -145,15 +145,27 @@ public abstract class AbstractModuleCall<S extends ModuleCall<S>> extends
         }
     }
 
-    protected void addParam(Field field, Class<?> clazz, ValueType valueType,
-            ParamType paramType) {
+    /**
+     * パラメータを追加します。
+     * 
+     * @param field
+     *            パラメータとなるフィールド
+     * @param paramClass
+     *            パラメータのクラス
+     * @param valueType
+     *            値タイプ
+     * @param paramType
+     *            パラメータのタイプ
+     */
+    protected void addParam(final Field field, final Class<?> paramClass,
+            final ValueType valueType, final ParamType paramType) {
         final Object value;
         if (field != null && paramType != ParamType.OUT) {
             value = FieldUtil.get(field, parameter);
         } else {
             value = null;
         }
-        final Param p = addParam(value, clazz, valueType);
+        final Param p = addParam(value, paramClass, valueType);
         p.paramType = paramType;
         p.field = field;
     }
@@ -216,6 +228,9 @@ public abstract class AbstractModuleCall<S extends ModuleCall<S>> extends
 
     /**
      * <code>OUT</code>パラメータにマッピングされない1つ以上の結果セットを処理します。
+     * <p>
+     * このメソッドは{@link #handleOutParams(CallableStatement)}よりも前に呼び出さなくてはなりません。
+     * </p>
      * 
      * @param cs
      *            呼び出し可能なステートメント
@@ -231,6 +246,30 @@ public abstract class AbstractModuleCall<S extends ModuleCall<S>> extends
                 final Object value = handleResultSet(param.field, cs
                         .getResultSet());
                 FieldUtil.set(param.field, parameter, value);
+                cs.getMoreResults();
+            }
+        } catch (final SQLException e) {
+            throw new SQLRuntimeException(e);
+        }
+    }
+
+    /**
+     * <code>OUT/INOUT</code>パラメータとは別に戻される結果セットを返します。
+     * 
+     * @param cs
+     *            呼び出し可能なステートメント
+     * @return 結果セット
+     */
+    protected ResultSet getResultSet(final CallableStatement cs) {
+        try {
+            for (;;) {
+                final ResultSet rs = cs.getResultSet();
+                if (rs != null) {
+                    return rs;
+                }
+                if (cs.getUpdateCount() == -1) {
+                    return null;
+                }
                 cs.getMoreResults();
             }
         } catch (final SQLException e) {
@@ -263,20 +302,6 @@ public abstract class AbstractModuleCall<S extends ModuleCall<S>> extends
         }
     }
 
-    protected ResultSet getResultSet(final CallableStatement cs)
-            throws SQLException {
-        for (;;) {
-            final ResultSet rs = cs.getResultSet();
-            if (rs != null) {
-                return rs;
-            }
-            if (cs.getUpdateCount() == -1) {
-                return null;
-            }
-            cs.getMoreResults();
-        }
-    }
-
     /**
      * 結果セットを処理します。
      * 
@@ -300,14 +325,23 @@ public abstract class AbstractModuleCall<S extends ModuleCall<S>> extends
         return handleResultSet(elementClass, rs);
     }
 
-    protected Object handleResultSet(final Class<?> elementClass,
+    /**
+     * 結果セットを処理します。
+     * 
+     * @param resultClass
+     *            結果のクラス
+     * @param rs
+     *            結果セット
+     * @return 処理した結果
+     */
+    protected Object handleResultSet(final Class<?> resultClass,
             final ResultSet rs) {
         final ResultSetHandler handler;
-        if (ValueTypes.isSimpleType(elementClass)) {
+        if (ValueTypes.isSimpleType(resultClass)) {
             handler = new ObjectListResultSetHandler(ValueTypes
-                    .getValueType(elementClass));
+                    .getValueType(resultClass));
         } else {
-            handler = new BeanListResultSetHandler(elementClass, jdbcManager
+            handler = new BeanListResultSetHandler(resultClass, jdbcManager
                     .getDialect(), null);
         }
         return handleResultSet(handler, rs);
@@ -375,6 +409,9 @@ public abstract class AbstractModuleCall<S extends ModuleCall<S>> extends
         return parameter;
     }
 
+    /**
+     * 初期化します。
+     */
     protected synchronized void initialize() {
         if (initialized) {
             return;
@@ -390,6 +427,13 @@ public abstract class AbstractModuleCall<S extends ModuleCall<S>> extends
         initialized = true;
     }
 
+    /**
+     * パラメータとして渡されたDTOのフィールドを表す{@link ParamDesc}の配列を返します。
+     * 
+     * @param dtoClass
+     *            パラメータとして渡されたDTOのクラス
+     * @return パラメータとして渡されたDTOのフィールドを表す{@link ParamDesc}の配列
+     */
     protected ParamDesc[] getParamDescs(final Class<?> dtoClass) {
         initialize();
         final ParamDesc[] paramDesc = paramDescCache.get(dtoClass);
@@ -399,6 +443,13 @@ public abstract class AbstractModuleCall<S extends ModuleCall<S>> extends
         return createParamDesc(dtoClass);
     }
 
+    /**
+     * パラメータとして渡されたDTOのフィールドを表す{@link ParamDesc}の配列を作成して返します。
+     * 
+     * @param dtoClass
+     *            パラメータとして渡されたDTOのクラス
+     * @return パラメータとして渡されたDTOのフィールドを表す{@link ParamDesc}の配列
+     */
     protected ParamDesc[] createParamDesc(final Class<?> dtoClass) {
         final Field[] fields = dtoClass.getDeclaredFields();
         final List<ParamDesc> list = CollectionsUtil
@@ -431,20 +482,43 @@ public abstract class AbstractModuleCall<S extends ModuleCall<S>> extends
         return CollectionsUtil.putIfAbsent(paramDescCache, dtoClass, result);
     }
 
+    /**
+     * パラメータとして渡されたDTOのフィールドを表すクラスです。
+     * 
+     * @author koichik
+     */
     public static class ParamDesc {
 
+        /**
+         * パラメータのタイプを表す列挙です。
+         */
         public enum ParameterType {
-            IN, IN_OUT, OUT, RESULT_SET
-        };
+            /** <code>IN</code>パラメータを表します。 */
+            IN,
 
+            /** <code>INOUT</code>パラメータを表します。 */
+            IN_OUT,
+
+            /** <code>OUT</code>パラメータを表します。 */
+            OUT,
+
+            /** ストアドのパラメータとは別に戻される結果セットを表します。 */
+            RESULT_SET
+        }
+
+        /** パラメータを表すフィールド */
         public Field field;
 
+        /** パラメータ名 */
         public String name;
 
+        /** パラメータのクラス */
         public Class<?> paramClass;
 
+        /** パラメータのタイプ */
         public ParameterType paramType;
 
+        /** パラメータのS2JDBCでの型 */
         public ValueType valueType;
 
     }
