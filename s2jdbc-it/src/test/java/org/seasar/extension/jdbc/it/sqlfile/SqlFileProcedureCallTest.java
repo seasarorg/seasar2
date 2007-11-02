@@ -18,13 +18,13 @@ package org.seasar.extension.jdbc.it.sqlfile;
 import java.util.List;
 
 import org.seasar.extension.jdbc.JdbcManager;
-import org.seasar.extension.jdbc.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.annotation.InOut;
 import org.seasar.extension.jdbc.annotation.Out;
 import org.seasar.extension.jdbc.annotation.ResultSet;
 import org.seasar.extension.jdbc.it.S2JdbcItUtil;
 import org.seasar.extension.jdbc.it.entity.Department;
 import org.seasar.extension.jdbc.it.entity.Employee;
+import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.extension.unit.S2TestCase;
 
 /**

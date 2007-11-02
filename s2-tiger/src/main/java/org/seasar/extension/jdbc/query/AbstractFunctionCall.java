@@ -22,9 +22,9 @@ import java.util.List;
 
 import org.seasar.extension.jdbc.FunctionCall;
 import org.seasar.extension.jdbc.JdbcContext;
-import org.seasar.extension.jdbc.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.ParamType;
 import org.seasar.extension.jdbc.ValueType;
+import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.framework.exception.SQLRuntimeException;
 import org.seasar.framework.util.PreparedStatementUtil;
 

@@ -17,6 +17,8 @@ package org.seasar.extension.jdbc;
 
 import java.sql.Statement;
 
+import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
+
 
 /**
  * 識別子を自動生成するIDジェネレータのインターフェースです。

@@ -19,13 +19,13 @@ import javax.persistence.TableGenerator;
 import javax.sql.DataSource;
 
 import org.seasar.extension.jdbc.EntityMeta;
-import org.seasar.extension.jdbc.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.SqlLogger;
 import org.seasar.extension.jdbc.exception.IdGenerationFailedRuntimeException;
 import org.seasar.extension.jdbc.handler.ObjectResultSetHandler;
 import org.seasar.extension.jdbc.impl.BasicSelectHandler;
 import org.seasar.extension.jdbc.impl.BasicUpdateHandler;
+import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.types.LongType;
 import org.seasar.extension.tx.TransactionCallback;
 import org.seasar.extension.tx.TransactionManagerAdapter;

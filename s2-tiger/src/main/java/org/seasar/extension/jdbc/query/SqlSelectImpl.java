@@ -15,8 +15,8 @@
  */
 package org.seasar.extension.jdbc.query;
 
-import org.seasar.extension.jdbc.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.SqlSelect;
+import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 
 /**
  * {@link SqlSelect}の実装クラスです。

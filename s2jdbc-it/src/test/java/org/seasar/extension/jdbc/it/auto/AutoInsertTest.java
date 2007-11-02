@@ -18,7 +18,6 @@ package org.seasar.extension.jdbc.it.auto;
 import junitx.framework.ArrayAssert;
 
 import org.seasar.extension.jdbc.JdbcManager;
-import org.seasar.extension.jdbc.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.exception.IdGenerationFailedRuntimeException;
 import org.seasar.extension.jdbc.exception.IdGeneratorNotFoundRuntimeException;
 import org.seasar.extension.jdbc.exception.IdPropertyNotAssignedRuntimeException;
@@ -40,6 +39,7 @@ import org.seasar.extension.jdbc.it.entity.TableStrategy;
 import org.seasar.extension.jdbc.it.entity.TableStrategy2;
 import org.seasar.extension.jdbc.it.entity.TableStrategy3;
 import org.seasar.extension.jdbc.it.entity.TableStrategy4;
+import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.where.SimpleWhere;
 import org.seasar.extension.unit.S2TestCase;
 

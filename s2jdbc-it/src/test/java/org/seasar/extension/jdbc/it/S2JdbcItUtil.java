@@ -15,9 +15,9 @@
  */
 package org.seasar.extension.jdbc.it;
 
-import org.seasar.extension.jdbc.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.dialect.H2Dialect;
 import org.seasar.extension.jdbc.dialect.HsqlDialect;
+import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 
 /**
  * @author taedium

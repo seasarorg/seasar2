@@ -18,7 +18,6 @@ package org.seasar.extension.jdbc.query;
 import java.util.Map;
 
 import org.seasar.extension.jdbc.DbmsDialect;
-import org.seasar.extension.jdbc.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.ResultSetHandler;
 import org.seasar.extension.jdbc.Select;
 import org.seasar.extension.jdbc.ValueType;
@@ -31,6 +30,7 @@ import org.seasar.extension.jdbc.handler.MapResultSetHandler;
 import org.seasar.extension.jdbc.handler.ObjectListResultSetHandler;
 import org.seasar.extension.jdbc.handler.ObjectListSupportLimitResultSetHandler;
 import org.seasar.extension.jdbc.handler.ObjectResultSetHandler;
+import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.types.ValueTypes;
 import org.seasar.framework.convention.PersistenceConvention;
 

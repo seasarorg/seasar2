@@ -37,7 +37,6 @@ import org.seasar.extension.jdbc.DbmsDialect;
 import org.seasar.extension.jdbc.EntityMetaFactory;
 import org.seasar.extension.jdbc.JdbcContext;
 import org.seasar.extension.jdbc.JdbcManager;
-import org.seasar.extension.jdbc.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.SqlBatchUpdate;
 import org.seasar.extension.jdbc.SqlFileBatchUpdate;
 import org.seasar.extension.jdbc.SqlFileFunctionCall;

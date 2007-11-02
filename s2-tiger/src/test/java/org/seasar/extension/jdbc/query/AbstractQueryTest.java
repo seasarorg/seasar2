@@ -19,7 +19,6 @@ import java.sql.SQLException;
 
 import junit.framework.TestCase;
 
-import org.seasar.extension.jdbc.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.SqlLog;
 import org.seasar.extension.jdbc.SqlLogRegistry;
 import org.seasar.extension.jdbc.SqlLogRegistryLocator;
@@ -27,6 +26,7 @@ import org.seasar.extension.jdbc.dialect.StandardDialect;
 import org.seasar.extension.jdbc.entity.Aaa;
 import org.seasar.extension.jdbc.handler.BeanResultSetHandler;
 import org.seasar.extension.jdbc.manager.JdbcManagerImpl;
+import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.types.ValueTypes;
 import org.seasar.framework.mock.sql.MockColumnMetaData;
 import org.seasar.framework.mock.sql.MockDataSource;

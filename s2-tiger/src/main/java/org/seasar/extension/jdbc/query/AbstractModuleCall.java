@@ -26,7 +26,6 @@ import java.util.concurrent.ConcurrentMap;
 import javax.persistence.Lob;
 
 import org.seasar.extension.jdbc.JdbcContext;
-import org.seasar.extension.jdbc.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.ModuleCall;
 import org.seasar.extension.jdbc.ParamType;
 import org.seasar.extension.jdbc.ResultSetHandler;
@@ -38,6 +37,7 @@ import org.seasar.extension.jdbc.handler.BeanListResultSetHandler;
 import org.seasar.extension.jdbc.handler.BeanResultSetHandler;
 import org.seasar.extension.jdbc.handler.ObjectListResultSetHandler;
 import org.seasar.extension.jdbc.handler.ObjectResultSetHandler;
+import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.query.AbstractModuleCall.ParamDesc.ParameterType;
 import org.seasar.extension.jdbc.types.ValueTypes;
 import org.seasar.framework.exception.SQLRuntimeException;

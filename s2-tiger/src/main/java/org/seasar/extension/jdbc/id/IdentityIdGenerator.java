@@ -23,10 +23,10 @@ import java.sql.Statement;
 import javax.persistence.GenerationType;
 
 import org.seasar.extension.jdbc.EntityMeta;
-import org.seasar.extension.jdbc.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.SqlLogger;
 import org.seasar.extension.jdbc.exception.IdGenerationFailedRuntimeException;
+import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.framework.util.PreparedStatementUtil;
 import org.seasar.framework.util.ResultSetUtil;
 

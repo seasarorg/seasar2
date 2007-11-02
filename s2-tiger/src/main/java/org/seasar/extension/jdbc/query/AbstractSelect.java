@@ -21,10 +21,10 @@ import java.util.List;
 
 import org.seasar.extension.jdbc.DbmsDialect;
 import org.seasar.extension.jdbc.JdbcContext;
-import org.seasar.extension.jdbc.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.ResultSetHandler;
 import org.seasar.extension.jdbc.Select;
 import org.seasar.extension.jdbc.exception.SNonUniqueResultException;
+import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.framework.util.PreparedStatementUtil;
 import org.seasar.framework.util.ResultSetUtil;
 import org.seasar.framework.util.StatementUtil;

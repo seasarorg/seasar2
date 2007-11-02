@@ -18,8 +18,8 @@ package org.seasar.extension.jdbc.query;
 import java.sql.CallableStatement;
 
 import org.seasar.extension.jdbc.JdbcContext;
-import org.seasar.extension.jdbc.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.ProcedureCall;
+import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.framework.util.PreparedStatementUtil;
 
 /**

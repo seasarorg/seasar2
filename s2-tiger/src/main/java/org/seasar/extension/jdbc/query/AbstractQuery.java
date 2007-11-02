@@ -21,7 +21,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.seasar.extension.jdbc.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.ParamType;
 import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.Query;
@@ -32,6 +31,7 @@ import org.seasar.extension.jdbc.SqlLogRegistryLocator;
 import org.seasar.extension.jdbc.SqlLogger;
 import org.seasar.extension.jdbc.ValueType;
 import org.seasar.extension.jdbc.impl.SqlLogImpl;
+import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.types.ValueTypes;
 import org.seasar.extension.jdbc.util.BindVariableUtil;
 import org.seasar.framework.exception.SQLRuntimeException;

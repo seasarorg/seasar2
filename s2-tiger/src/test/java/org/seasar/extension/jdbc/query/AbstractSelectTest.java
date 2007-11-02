@@ -24,7 +24,6 @@ import junit.framework.TestCase;
 
 import org.seasar.extension.jdbc.DbmsDialect;
 import org.seasar.extension.jdbc.JdbcContext;
-import org.seasar.extension.jdbc.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.ResultSetHandler;
 import org.seasar.extension.jdbc.SqlLogRegistry;
 import org.seasar.extension.jdbc.SqlLogRegistryLocator;
@@ -38,6 +37,7 @@ import org.seasar.extension.jdbc.handler.BeanListResultSetHandler;
 import org.seasar.extension.jdbc.handler.BeanResultSetHandler;
 import org.seasar.extension.jdbc.manager.JdbcContextImpl;
 import org.seasar.extension.jdbc.manager.JdbcManagerImpl;
+import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.extension.jta.TransactionManagerImpl;
 import org.seasar.extension.jta.TransactionSynchronizationRegistryImpl;
 import org.seasar.framework.mock.sql.MockColumnMetaData;

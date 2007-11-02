@@ -13,10 +13,13 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.jdbc;
+package org.seasar.extension.jdbc.manager;
 
 import javax.sql.DataSource;
 
+import org.seasar.extension.jdbc.DbmsDialect;
+import org.seasar.extension.jdbc.EntityMetaFactory;
+import org.seasar.extension.jdbc.JdbcContext;
 import org.seasar.framework.convention.PersistenceConvention;
 
 /**

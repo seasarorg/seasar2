@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.seasar.extension.jdbc.JdbcManager;
-import org.seasar.extension.jdbc.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.exception.IdentityGeneratorNotSupportedRuntimeException;
 import org.seasar.extension.jdbc.exception.SequenceGeneratorNotSupportedRuntimeException;
 import org.seasar.extension.jdbc.it.entity.AutoStrategy;
@@ -33,6 +32,7 @@ import org.seasar.extension.jdbc.it.entity.SequenceStrategy;
 import org.seasar.extension.jdbc.it.entity.SequenceStrategy2;
 import org.seasar.extension.jdbc.it.entity.TableStrategy;
 import org.seasar.extension.jdbc.it.entity.TableStrategy2;
+import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.where.SimpleWhere;
 import org.seasar.extension.unit.S2TestCase;
 

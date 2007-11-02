@@ -21,9 +21,9 @@ import javax.persistence.OptimisticLockException;
 
 import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.JdbcContext;
-import org.seasar.extension.jdbc.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.Update;
 import org.seasar.extension.jdbc.exception.SOptimisticLockException;
+import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.framework.util.PreparedStatementUtil;
 import org.seasar.framework.util.StatementUtil;
 

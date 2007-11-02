@@ -19,8 +19,8 @@ import java.sql.PreparedStatement;
 import java.util.List;
 
 import org.seasar.extension.jdbc.JdbcContext;
-import org.seasar.extension.jdbc.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.SqlFileBatchUpdate;
+import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.types.ValueTypes;
 import org.seasar.extension.sql.Node;
 import org.seasar.extension.sql.SqlContext;

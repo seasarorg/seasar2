@@ -26,7 +26,6 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.seasar.extension.jdbc.JdbcContext;
-import org.seasar.extension.jdbc.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.ParamType;
 import org.seasar.extension.jdbc.SqlLog;
 import org.seasar.extension.jdbc.SqlLogRegistry;
@@ -36,6 +35,7 @@ import org.seasar.extension.jdbc.dialect.StandardDialect;
 import org.seasar.extension.jdbc.entity.Aaa;
 import org.seasar.extension.jdbc.exception.FieldNotGenericsRuntimeException;
 import org.seasar.extension.jdbc.manager.JdbcManagerImpl;
+import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.extension.jta.TransactionManagerImpl;
 import org.seasar.extension.jta.TransactionSynchronizationRegistryImpl;
 import org.seasar.framework.mock.sql.MockCallableStatement;

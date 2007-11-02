@@ -19,7 +19,6 @@ import java.util.Map;
 
 import junit.framework.TestCase;
 
-import org.seasar.extension.jdbc.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.ResultSetHandler;
 import org.seasar.extension.jdbc.SqlLogRegistry;
 import org.seasar.extension.jdbc.SqlLogRegistryLocator;
@@ -36,6 +35,7 @@ import org.seasar.extension.jdbc.handler.ObjectListResultSetHandler;
 import org.seasar.extension.jdbc.handler.ObjectListSupportLimitResultSetHandler;
 import org.seasar.extension.jdbc.handler.ObjectResultSetHandler;
 import org.seasar.extension.jdbc.manager.JdbcManagerImpl;
+import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.extension.jta.TransactionManagerImpl;
 import org.seasar.extension.jta.TransactionSynchronizationRegistryImpl;
 import org.seasar.framework.mock.sql.MockDataSource;

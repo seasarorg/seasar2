@@ -20,10 +20,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.seasar.extension.jdbc.JdbcContext;
-import org.seasar.extension.jdbc.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.SqlBatchUpdate;
 import org.seasar.extension.jdbc.SqlUpdate;
 import org.seasar.extension.jdbc.exception.IllegalParamSizeRuntimeException;
+import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.framework.util.PreparedStatementUtil;
 import org.seasar.framework.util.StatementUtil;
 

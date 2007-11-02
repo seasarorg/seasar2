@@ -17,9 +17,9 @@ package org.seasar.extension.jdbc.query;
 
 import org.seasar.extension.jdbc.AutoDelete;
 import org.seasar.extension.jdbc.ConditionType;
-import org.seasar.extension.jdbc.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.WhereClause;
+import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.framework.util.FieldUtil;
 
 /**

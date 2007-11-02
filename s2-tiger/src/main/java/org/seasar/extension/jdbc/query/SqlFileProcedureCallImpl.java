@@ -15,8 +15,8 @@
  */
 package org.seasar.extension.jdbc.query;
 
-import org.seasar.extension.jdbc.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.SqlFileProcedureCall;
+import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.extension.sql.Node;
 import org.seasar.extension.sql.SqlContext;
 import org.seasar.extension.sql.cache.NodeCache;

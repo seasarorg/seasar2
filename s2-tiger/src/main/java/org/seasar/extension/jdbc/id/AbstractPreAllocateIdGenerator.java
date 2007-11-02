@@ -22,9 +22,9 @@ import java.util.concurrent.ConcurrentMap;
 import javax.sql.DataSource;
 
 import org.seasar.extension.jdbc.EntityMeta;
-import org.seasar.extension.jdbc.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.SqlLogger;
+import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.framework.util.tiger.CollectionsUtil;
 
 /**

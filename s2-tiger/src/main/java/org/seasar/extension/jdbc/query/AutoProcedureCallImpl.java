@@ -16,9 +16,9 @@
 package org.seasar.extension.jdbc.query;
 
 import org.seasar.extension.jdbc.AutoProcedureCall;
-import org.seasar.extension.jdbc.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.annotation.InOut;
 import org.seasar.extension.jdbc.annotation.Out;
+import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 
 /**
  * {@link AutoProcedureCall}の実装クラスです。
